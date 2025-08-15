@@ -26,11 +26,11 @@ $(document).on("click", ".open-ReactionDialog", function () {
 
 	$.ajax({
 		url: 'app.php/bbreaction/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("bbreaction-profile-data"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #bbreaction-profile-data").html( s );
 		}
 	});
 });
@@ -45,11 +45,11 @@ $(document).on("click", ".ReactionPagination", function (e) {
 
 	$.ajax({
 		url: 'app.php/bbreaction/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("bbreaction-profile-data"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #bbreaction-profile-data").html( s );
 		}
 	});
 });

@@ -29,6 +29,7 @@ services:
             - @dbal.conn
             - @pagination
             - @path_helper
+            - @service_container
             - @dispatcher
             - @notification_manager
             - %core.root_path%

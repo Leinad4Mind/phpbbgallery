@@ -3,10 +3,10 @@
 	<div class="user-profile-tag">{L_BBREACTION}</div>
 		<div class="user-profile-output">
 			<div class="progress progress-sm"> 
-			  <div class="progress-bar progress-bar-success progress-bar-striped" aria-valuemax="100" style="width:{postrow.POSITIVE}%;">
+			  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{postrow.POSITIVE}" aria-valuemin="0" aria-valuemax="100" style="width:{postrow.POSITIVE}%;">
 			   {postrow.POSITIVE}%
 			  </div>
-			  <div class="progress-bar progress-bar-danger progress-bar-striped" aria-valuemax="100" style="width:{postrow.NEGATIVE}%;">
+			  <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="{postrow.NEGATIVE}" aria-valuemin="0" aria-valuemax="100" style="width:{postrow.NEGATIVE}%;">
 			  {postrow.NEGATIVE}%
 			  </div>
 			</div>

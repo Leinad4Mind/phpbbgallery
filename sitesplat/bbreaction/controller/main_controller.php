@@ -10,6 +10,8 @@
 
 namespace sitesplat\bbreaction\controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
 * Main controller
 */
@@ -47,13 +49,14 @@ class main_controller
 	/** @var \phpbb\notification\manager */
 	protected $notification_manager;
 
+	protected $container;
 	/** @var string */
 	protected $phpbb_root_path;
 	protected $php_ext;
 	protected $reward_table;
 	protected $reward_type_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, ContainerInterface $container, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -64,6 +67,7 @@ class main_controller
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->path_helper = $path_helper;
+		$this->container = $container;
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->notification_manager = $notification_manager;
 		$this->phpbb_root_path = $phpbb_root_path;
@@ -101,18 +105,34 @@ class main_controller
 				$start = $this->pagination->validate_start($start, $per_page, $total_likes);
 				$base_url = append_sid('app.' . $this->php_ext . '/bbreaction/likers.html?p=' . $this->request->variable('p', 0));
 
-				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, t.symbol, t.title, t.positive, l.like_time FROM ' . $this->reward_table . ' l 
+				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, t.symbol, t.title, t.positive, l.like_time FROM ' . $this->reward_table . ' l 
 						LEFT JOIN ' . $this->reward_type_table . ' t ON t.type_id = l.like_type
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.user_id
-						WHERE l.post_id = ' . $this->request->variable('p', 0) . ' ORDER BY l.like_time DESC';
+						WHERE l.post_id = ' . $this->request->variable('p', 0) . ' ORDER BY l.like_time DESC';	
 				$result = $this->db->sql_query_limit($sql, $per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					echo '<div class="avatar-likers" style="float:left;width:33.333%;margin:4px 0;">
-						  <img src="' . 
-						  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif'))) . ' " style="float:left;width:70px;">
-						  <div class="likers-time-stamp" style="float:left;display:block;text-align:center;padding-left:5px;">
+				  $match = array();
+				  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							  phpbb_get_user_avatar(
+								  array('avatar'			=> $row['user_avatar'], 
+								        'user_id'           => $row['user_id'],
+										'avatar_type'		=> $row['user_avatar_type'], 
+										'avatar_width'		=> $row['user_avatar_width'], 
+										'avatar_height'		=> $row['user_avatar_height'])), $match) :
+										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+
+
+
+					echo '<div class="avatar-likers" style="float:left;width:33.333%;">
+						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . 
+		/*				  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) */
+						  
+						  ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar)
+						  
+						  . ' " style="float:left;width:70px;">
+						  <div class="likers-time-stamp" style="text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a>
 						  <br /><i class="fa ' . $row['symbol'] . '" style="font-size:18px;color:' . (($row['positive']) ? 'green': 'red') . ';" title="' . $row['title'] . '"></i><br />' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';
 				}
@@ -121,7 +141,7 @@ class main_controller
 				echo '</ul></div>
 				<script>
 				$( document ).ready(function() {
-					$( "#profile-data .pull-right .pagination-sm > li a" ).addClass( "ReactionPagination" );
+					$( "#bbreaction-profile-data .pull-right .pagination-sm > li a" ).addClass( "ReactionPagination" );
 				});
 				</script>'; 
 				exit();
@@ -129,8 +149,21 @@ class main_controller
 			
 			case 'toplist':
 				$type = $this->request->variable('t', 0);
+				
+				$visibility = $this->container->get('content.visibility');
+				$forum_ary = array();
+				$forum_read_ary = $this->auth->acl_getf('f_read');
+		
+				foreach ($forum_read_ary as $forum_id => $allowed)
+				{
+					if ($allowed['f_read'])
+					{
+						$forum_ary[] = (int) $forum_id;
+					}
+				}
+				$forum_ary = array_unique($forum_ary);
 
-				$sql = 'SELECT COUNT(case when t.positive = 0 then 1 else null end) AS num_likes, COUNT(case when t.positive = 1 then 1 else null end) AS num_dislikes,  
+				$sql = 'SELECT COUNT(case when t.positive = 1 then 0 else null end) AS num_likes, COUNT(case when t.positive = 0 then 0 else null end) AS num_dislikes,				
 						' . (($type == 1) ? 'p.topic_id,  p.forum_id, o.topic_title' : 
 						(($type == 2) ? 'p.topic_id, p.post_id, p.forum_id, p.post_subject' : 
 						(($type == 3) ? 'l.user_id, p.username': 'p.forum_id, f.forum_name'))) . ' AS catname
@@ -140,15 +173,16 @@ class main_controller
 						
 						' . (($type == 1) ? 'LEFT JOIN ' . TOPICS_TABLE . ' o ON o.topic_id = p.topic_id' : 
 						(($type == 2) ? '' : 
-						(($type == 3) ? '' : 'LEFT JOIN ' . FORUMS_TABLE . ' f ON f.forum_id = p.forum_id'))) . '
+						(($type == 3) ? '' : 'LEFT JOIN ' . FORUMS_TABLE . ' f ON f.forum_id = p.forum_id'))) .
+						(($type == 3) ? '' : ' WHERE ' . str_replace('forum_id', 'p.forum_id', $visibility->get_forums_visibility_sql('post', $forum_ary))) . '
 						GROUP BY ' . (($type == 1) ? 'o.topic_id' : 
 						(($type == 2) ? 'p.post_id' : 
 						(($type == 3) ? 'l.user_id' : 'p.forum_id'))) . '
 						ORDER BY num_likes DESC';
-				//echo $sql;
+				
 				$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0);
-				$likes['name'] = 'Positive reactions';
-				$dislikes['name'] = 'Negative reactions';
+				$likes['name'] = $this->user->lang['REACTIONS_POSITIVE'];
+				$dislikes['name'] = $this->user->lang['REACTIONS_NEGATIVE'];
 				$categories['data'] = $likes['data'] = $dislikes['data'] = array();
 				while($row = $this->db->sql_fetchrow($result)) 
 				{
@@ -159,15 +193,20 @@ class main_controller
 					$likes['data'][] = array('y' => $row['num_likes'], 'url' => $url);
 					$dislikes['data'][] = array('y' => $row['num_dislikes'], 'url' => $url);
 					
-					$categories['data'][] = $row['catname'];
+					$categories['data'][] = htmlspecialchars_decode($row['catname']);
 				}
 				
 				$likes_dislikes = '[' . str_replace(array('"name"', '"data"', '"y"', '"url"'), array('name', 'data', 'y', 'url'), json_encode($likes, JSON_NUMERIC_CHECK)) . 
 								  ', ' . str_replace(array('"name"', '"data"', '"y"', '"url"'), array('name', 'data', 'y', 'url'), json_encode($dislikes, JSON_NUMERIC_CHECK)) . ']';
 
-				$title_type = array('Forum overview', 'Topic overview', 'Message overview', 'User overview');
+				$title_type = array(
+					$this->user->lang['REACTIONS_FORUM_OVERVIEW'],
+					$this->user->lang['REACTIONS_TOPIC_OVERVIEW'],
+					$this->user->lang['REACTIONS_POSTS_OVERVIEW'],
+					$this->user->lang['REACTIONS_USER_OVERVIEW']
+				);
 				$title['title'][] = $title_type[$type];
-				$title['descr'][] = 'Toplist BBreaction' . ': ';
+				$title['descr'][] = $this->user->lang['BBREACTION_TOP_LIST'] . ': ';
 
 				if ($this->request->variable('table', false))
 				{
@@ -219,7 +258,7 @@ class main_controller
 					}
 				}
 
-				if (!$this->user->data['is_registered']) 
+				if (!$this->user->data['is_registered'] || !$this->auth->acl_get('u_bbreaction')) 
 				{
 					$error[] = $this->user->lang['BBREACTION_POST_NO_AUTH'];
 				}
@@ -268,7 +307,7 @@ class main_controller
 					while ($row1 = $this->db->sql_fetchrow($result))
 					{
 						$total_ary['p'. $sql_ary['post_id'] . $row1['type_id']] = ($this->config['rewards_percent']) ? 
-								round(($row1['num_likes'] / $total) * 100, 1) . ' %' :
+								round(($row1['num_likes'] / (($total) ? $total : 1)) * 100, 1) . ' %' :
 								'# ' . (($row1['num_likes']) ? $row1['num_likes'] : 0);
 					}
 					
@@ -277,7 +316,7 @@ class main_controller
 					$notify = $this->db->sql_fetchfield('notify');
 					if ($notify)
 					{
-						$this->notification_manager->add_notifications("sitesplat.bbreaction.notification.type.reward_added", array(
+						$this->notification_manager->add_notifications('sitesplat.bbreaction.notification.type.reward_added', array(
 							'user_ids'		=> $row['poster_id'],
 							'parent_id'		=> $sql_ary['post_id'],
 							'post_id'		=> substr(time(), -5) ,
@@ -339,11 +378,11 @@ class main_controller
 			$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
 			$end_cnt = max(min($total_pages, $on_page + 4), 6);
 	
-			$page_string .= ($start_cnt > 1) ? '<span class="page-dots"> ... </span>' : $seperator;
+			$page_string .= ($start_cnt > 1) ? '<li class="page-dots"><a>...</a></li>' : $seperator;
 	
 			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a><li>';
 				if ($i < $end_cnt - 1)
 				{
 					$page_string .= $seperator;
@@ -384,5 +423,4 @@ class main_controller
 			
 		return $page_string;
 	}
-
 }

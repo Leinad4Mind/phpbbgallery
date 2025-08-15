@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* BBreaction.
+* BB reaction.
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -42,7 +42,7 @@ class bbreaction_module
 				$template->assign_block_vars('likestat', array(
 					'TITLE'				=> $row['title'],
 					'ICON'				=> $row['symbol'],
-					'S_POSITIVE'			=> $row['positive'],
+					'S_POSITIVE'		=> $row['positive'],
 					'GIVEN_RECIEVED'	=> (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED']),
 					'GIVE_RECIEVE'		=> $row['num']
 				));
@@ -109,7 +109,7 @@ class bbreaction_module
 						'TITLE'				=> $row['title'],
 						'ICON'				=> $row['symbol'],
 						'S_POSITIVE'		=> $row['positive'],
-						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? 'Given' : 'Recieved',
+						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED'],
 						'LIKE_TIME'			=> $user->format_date($row['like_time']),
 						'USERNAME'			=> $row['username']
 						)

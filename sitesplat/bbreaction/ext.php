@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* BBreaction.
+* BB reaction.
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -22,9 +22,18 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
 
-		return $manager->is_enabled('sitesplat/BBCore');
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 
@@ -43,16 +52,19 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 				if (empty($old_state))
 				{
-					global $user;
-					$user->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
-					$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['BBREACTION_NOTICE']) ? sprintf($user->lang['BBREACTION_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_QUICK_ACCESS'], $user->lang['ACP_BBREACTION']) : '');
+					$this->container->get('user')->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
+					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
+						(isset($this->container->get('user')->lang['BBREACTION_NOTICE']) ? 
+							sprintf($this->container->get('user')->lang['BBREACTION_NOTICE'], 
+							$this->container->get('user')->lang['ACP_CAT_GENERAL'], 
+							$this->container->get('user')->lang['ACP_QUICK_ACCESS'], 
+							$this->container->get('user')->lang['ACP_BBREACTION']) : ''));
 				}
 
 				// Enable BB reaction notifications
-				return $this->notification_handler('enable', array(
-					'sitesplat.bbreaction.notification.type.reward_added',
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->enable_notifications('sitesplat.bbreaction.notification.type.reward_added');
+				return 'notifications';
 			break;
 
 			default:
@@ -78,10 +90,9 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Disable BB reaction notifications
-				return $this->notification_handler('disable', array(
-					'sitesplat.bbreaction.notification.type.reward_added',
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->disable_notifications('sitesplat.bbreaction.notification.type.reward_added');
+				return 'notifications';
 			break;
 
 			default:
@@ -108,10 +119,9 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Purge BB reaction notifications
-				return $this->notification_handler('purge', array(
-					'sitesplat.bbreaction.notification.type.reward_added',
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->purge_notifications('sitesplat.bbdownloads.notification.type.added');
+				return 'notifications';
 			break;
 
 			default:
@@ -121,25 +131,5 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
-	}
-
-	/**
-	 * Notification handler to call notification enable/disable/purge steps
-	 *
-	 * @param string $step               The step (enable, disable, purge)
-	 * @param array  $notification_types The notification type names
-	 * @return string Return notifications as temporary state
-	 * @access protected
-	 */
-	protected function notification_handler($step, $notification_types)
-	{
-		$phpbb_notifications = $this->container->get('notification_manager');
-
-		foreach ($notification_types as $notification_type)
-		{
-			call_user_func(array($phpbb_notifications, $step . '_notifications'), $notification_type);
-		}
-
-		return 'notifications';
 	}
 }

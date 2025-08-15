@@ -29,7 +29,7 @@
 				credits: {
 					enabled: false,
 					text: 'sitesplat.com',
-					href: 'http://sitesplat.com'
+					href: '//sitesplat.com'
 				},
 				legend: {
 					enabled: false,
@@ -48,15 +48,6 @@
 						borderWidth: 0
 					},
 					series: {
-                    	cursor: 'pointer',
-                    	point: {
-                        	events: {
-                            	click: function () {
-                                	var url = this.options.url;
-                                	window.open(url);
-                             }
-                         }
-                     }
 	             }, 
 				},
 				series: stats,

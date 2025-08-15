@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'BBREACTION'						=> 'BBreaction',
-	'BBREACTION_TOP_LIST'				=> 'Reaction Toplist',
+	'BBREACTION_TOP_LIST'				=> 'Reactions Toplist',
 	'BBREACTION_OTHERS'				    => 'Others?',
 	
 	'BBREACTION_WHAT'					=> 'What\'s your reaction',
@@ -38,10 +38,19 @@ $lang = array_merge($lang, array(
 	'ADDED'								=> 'added',
 	'INFOMSG'						    => 'Heads up!',
 	
+	'REACTIONS_POSITIVE'				=> 'Positive reactions',
+	'REACTIONS_NEGATIVE'				=> 'Negative reactions',
+	
+	'REACTIONS_FORUM_OVERVIEW'			=> 'Forum overview',
+	'REACTIONS_TOPIC_OVERVIEW'			=> 'Topic overview',
+	'REACTIONS_POSTS_OVERVIEW'			=> 'Message overview',
+	'REACTIONS_USER_OVERVIEW'			=> 'User overview',
+	
 	'BBREACTION_GIVVEN'					=> 'Given',
 	'BBREACTION_RECIEVED'				=> 'Received',
 	'BBREACTION_NO_RECORDS'				=> 'No reactions available yet',
 	'UCP_BBREACTION_EXPLAIN'			=> 'An overview of reactions given and received',
+	'ACL_U_BBREACTION'					=> 'Can use BBreaction',
 	
 	'NOTIFICATION_TYPE_SITESPLAT.BBREACTION.NOTIFICATION.TYPE.REWARD_ADDED'	=> 'Someone reacted to your post',
 	

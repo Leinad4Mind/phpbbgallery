@@ -10,68 +10,132 @@
 
 namespace sitesplat\bbreaction\notification\type;
 
+/**
+* BBreaction notification class
+*/
+
 class reward_added extends \phpbb\notification\type\base
 {
 	/**
-	 * {@inheritdoc}
-	 */
+	* Get notification type name
+	*
+	* @return string
+	*/
 	public function get_type()
 	{
 		return 'sitesplat.bbreaction.notification.type.reward_added';
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Language key used to output the text
+	*
+	* @var string
+	*/
+	protected $language_key = 'NOTIFICATION_BBREACTIONS';
+
+	/**
+	* Notification option data (for outputting to the user)
+	*
+	* @var bool|array False if the service should use it's default data
+	* 					Array of data (including keys 'id', 'lang', and 'group')
+	*/
+	static public $notification_option = array(
+		'lang'	=> 'NOTIFICATION_TYPE_BBREACTIONS_ADD',
+		'group'	=> 'NOTIFICATION_GROUP_POSTING',
+	);
+
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	public function set_config(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
+	}
+
+	/**
+	* Is available
+	*/
 	public function is_available()
 	{
 		return true;
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public static function get_item_id($data)
+	* Get the id of the item
+	*
+	* @param array $post The data from the post
+	* @return int The post id
+	*/
+	static public function get_item_id($data)
 	{
 		return (int) $data['post_id'];
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public static function get_item_parent_id($data)
+	* Get the id of the parent
+	*
+	* @param array $post The data from the post
+	* @return int The topic id
+	*/
+	static public function get_item_parent_id($data)
 	{
 		return (int) $data['parent_id'];
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Find the users who want to receive notifications
+	*
+	* @param array $post Data from submit_post
+	* @param array $options Options for finding users for notification
+	*
+	* @return array
+	*/
 	public function find_users_for_notification($data, $options = array())
 	{
+		$options = array_merge(array(
+			'ignore_users'		=> array(),
+		), $options);
+
 		$users = array();
 
 		$data['user_ids'] = (!is_array($data['user_ids'])) ? array($data['user_ids']) : $data['user_ids'];
 
 		foreach ($data['user_ids'] as $user_id)
 		{
-			$users[$user_id] = array('');
+			$users[] = $user_id;
 		}
 
-		return $users;
+		if (empty($users))
+		{
+			return array();
+		}
+
+		$users = array_unique($users);
+
+		return $this->check_user_notification_options($users, $options);
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public function users_to_query()
+	* Get the user's avatar
+	*/
+	public function get_avatar()
 	{
-		return array();
+		return $this->user_loader->get_avatar($this->user->data['user_id'], false, true);
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Get the HTML formatted title of this notification
+	*
+	* @return string
+	*/
 	public function get_title()
 	{
 		$sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
@@ -83,32 +147,85 @@ class reward_added extends \phpbb\notification\type\base
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public function get_url()
+	* Get the HTML formatted reference of the notification
+	*
+	* @return string
+	*/
+	public function get_reference()
 	{
-		return append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'p=' . $this->get_data('parent_id') . '#p' . $this->get_data('parent_id'));
+		return ''; //$this->language->lang(
+		//	'NOTIFICATION_REFERENCE',
+	//		censor_text($this->get_data('topic_title'))
+	//	);
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Get email template
+	*
+	* @return string|bool
+	*/
 	public function get_email_template()
 	{
-		return false;
+		return '';
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Get email template variables
+	*
+	* @return array
+	*/
 	public function get_email_template_variables()
 	{
 		return array();
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
+	* Get the url to this item
+	*
+	* @return string URL
+	*/
+	public function get_url()
+	{
+		return append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'p=' . $this->get_data('parent_id') . '#p' . $this->get_data('parent_id'));
+	}
+
+	/**
+	* {inheritDoc}
+	*/
+	public function get_redirect_url()
+	{
+		return '';
+	}
+
+	/**
+	* Users needed to query before this notification can be displayed
+	*
+	* @return array Array of user_ids
+	*/
+	public function users_to_query()
+	{
+		return array();
+	}
+
+	/**
+	* Trim the user array passed down to 3 users if the array contains
+	* more than 4 users.
+	*
+	* @param array $users Array of users
+	* @return array Trimmed array of user_ids
+	*/
+	public function trim_user_ary($users)
+	{
+		if (sizeof($users) > 4)
+		{
+			array_splice($users, 3);
+		}
+		return $users;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function create_insert_array($data, $pre_create_data = array())
 	{
 		$this->set_data('like_txt', $data['like_txt']);

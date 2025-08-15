@@ -24,6 +24,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'								=> 'add_page_header_link',
+			'core.permissions'								=> 'add_permission',
 			'core.viewtopic_modify_post_row'				=> 'viewtopic_handle_posts',
 			'core.viewtopic_assign_template_vars_before'	=> 'view_topic_topic',
 			'core.delete_posts_after'						=> 'delete_like_dislike',
@@ -72,7 +73,8 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
 		
 		$this->template->assign_vars(array(
-			'U_BBREACTION_PAGE'		=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html'))
+			'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
+			'BBREACTION_DISPLAY_TOP'	=> $this->config['rewards_display_top']
 		));
 	}
 	
@@ -195,5 +197,16 @@ class listener implements EventSubscriberInterface
 		$haystack = explode($needle, $haystack, $limit + 1);
 		$haystack = array_slice($haystack, 0, $limit);
 		return implode($needle, $haystack);
+	}
+
+	/**
+	* Add permissions to page
+	* @access public
+	*/
+	public function add_permission($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_bbreaction'] = array('lang' => 'ACL_U_BBREACTION', 'cat' => 'post');
+		$event['permissions'] = $permissions;
 	}
 }

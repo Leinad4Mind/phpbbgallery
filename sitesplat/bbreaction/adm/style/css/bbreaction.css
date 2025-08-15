@@ -132,6 +132,13 @@
 .onoffswitch-inner-yn:after {
     content: "YES";
 }
+
+.onoffswitch-inner-top:before {
+    content: "ABOVE";
+}
+.onoffswitch-inner-top:after {
+    content: "BELOW";
+}
 	
 .onoffswitch-switch {
     display: block; width: 14px; margin: 3px;

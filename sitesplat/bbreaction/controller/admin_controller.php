@@ -75,6 +75,7 @@ class admin_controller implements admin_interface
 		$this->config->set('rewards_percent', $this->request->variable('rewards_percent', 0));
 		$this->config->set('rewards_progressbar', $this->request->variable('rewards_progressbar', 0));
 		$this->config->set('rewards_memberlist', $this->request->variable('rewards_memberlist', 0));
+		$this->config->set('rewards_display_top', $this->request->variable('rewards_display_top', 0));
 		
 		// Log the action
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BBREACTION_DELETE_LOG', time());
@@ -148,6 +149,7 @@ class admin_controller implements admin_interface
 			'PERCENT'		=> ($this->config['rewards_percent']) ? ' checked="checked"' : '',
 			'PROGRESS'		=> ($this->config['rewards_progressbar']) ? ' checked="checked"' : '',
 			'MEMBERLIST'	=> ($this->config['rewards_memberlist']) ? ' checked="checked"' : '',
+			'DISPLAY_TOP'	=> ($this->config['rewards_display_top']) ? ' checked="checked"' : '',
 
 			'U_ACTION'		=> $this->u_action,
 		));
@@ -191,7 +193,7 @@ class admin_controller implements admin_interface
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 
-		$symbol = split(' ', $row['symbol']);
+		$symbol = explode(' ', $row['symbol']);
 		$symbol_option = (sizeof($symbol) > 1) ? $symbol[1] : '';
 		$symbol = (sizeof($symbol) > 1) ? $symbol[0] : $row['symbol'];
 
