@@ -4,6 +4,7 @@
 *
 * @package phpBB Extension - Basic Stats
 * @copyright (c) 2015 OXPUS - www.oxpus.net
+* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -26,16 +27,15 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-   	'BASIC_STATS'	=> 'Basic Statistics',
-   	'DAILY'			=> 'Daily',
-   	'MONTHLY'		=> 'Monthly',
-   	'YEARLY'		=> 'Yearly',
-
+	'BASIC_STATS'			=> 'Basic Statistics',
+	'DAILY'					=> 'Daily',
+	'MONTHLY'				=> 'Monthly',
+	'YEARLY'				=> 'Yearly',
 	'ALL'					=> 'All',
-	'AS_ON'					=> 'As on %s',	
-	'AVG_POSTS_DAY'			=> 'Average posts per day',	
-	'AVG_POSTS_MONTH'		=> 'Average posts per month',	
-	'AVG_POSTS_YEAR'		=> 'Average posts per year',	
+	'AS_ON'					=> 'As on %s',
+	'AVG_POSTS_DAY'			=> 'Average posts per day',
+	'AVG_POSTS_MONTH'		=> 'Average posts per month',
+	'AVG_POSTS_YEAR'		=> 'Average posts per year',
 	'AVG_TOPICS_DAY'		=> 'Average topics per day',
 	'AVG_TOPICS_MONTH'		=> 'Average topics per month',
 	'AVG_TOPICS_YEAR'		=> 'Average topics per year',
@@ -61,5 +61,4 @@ $lang = array_merge($lang, array(
 	'TOTAL_USER_REGS'		=> 'Total user registrations',
 	'USER_REGS'				=> 'User registrations',
 	'Y_VIEW'				=> 'Yearly Statistics',
-
 ));

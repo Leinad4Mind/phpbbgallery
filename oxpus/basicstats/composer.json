@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Basic Stats",
 	"homepage": "http://phpbb3.oxpus.net",
-	"version": "1.0.1",
-	"time": "2015-10-05",
+	"version": "1.0.2",
+	"time": "2016-10-31",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "Karsten Ude",
@@ -12,6 +12,12 @@
 			"email": "karsten.ude@oxpus.net",
 			"homepage": "http://www.oxpus.net",
 			"role": "Lead Developer"
+		},
+		{
+			"name": "dmzx",
+			"homepage": "http://www.dmzx-web.net",
+			"email": "info@dmzx-web.net",
+			"role": "Extension Developer"
 		}],
 	"require": {
 		"php": ">=5.4.0"
@@ -19,7 +25,7 @@
 	"extra": {
 		"display-name": "Basic Stats",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1"
+			"phpbb/phpbb": ">=3.1,<3.3.0@dev"
 		},
 		"version-check": {
 			"host": "www.oxpus.net",
