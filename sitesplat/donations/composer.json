@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "A kick-ass donation extension for the phpBB board running SiteSplat Themes. Many modern and useful options included PayPal IPN and Bitcoin API.",
 	"homepage": "https://sitesplat.com",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"keywords": ["sitesplat", "phpbb", "extension", "donations", "bitcoin", "paypal"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [

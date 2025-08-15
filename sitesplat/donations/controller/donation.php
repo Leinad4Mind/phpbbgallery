@@ -61,42 +61,42 @@ class donation
 		{
 			trigger_error($this->user->lang['DONATION_DISABLED'], E_USER_NOTICE);
 		}
-	
+
 		$mode = $this->request->variable('mode', '') . (($this->request->is_set_post('bitcoin')) ? '_bitcoin' : '');
-		
+
 		switch ($mode)
 		{
 			case 'request':
-				// PayPal settings 
+				// PayPal settings
 				$paypal_email	= $this->config['donations_paypal_email'];
 				$url = generate_board_url(true);
 				$return_url	= $url . $this->helper->route('sitesplat_donations_controller', array('route' => 'index.html', 'mode' => 'verify'));
 				$cancel_url	= $url . $this->helper->route('sitesplat_donations_controller', array('route' => 'index.html', 'mode' => 'cancel'));
 				$notify_url	= $url . $this->helper->route('sitesplat_donations_controller', array('route' => 'index.html', 'mode' => 'notify'));
-	
+
 				$data = array(
 					'item_name'		=> 'Donation',
 					'amount'		=> (intval($this->request->variable('amount', 0))) . '.00',
 					'payer_email'	=> urlencode($this->user->data['user_email']),
 					'item_number'	=> time(),
 					);
-					
+
 				$querystring = '?';
 				foreach($data as $key => $value)
 				{
-					$querystring .= $key . '=' . urlencode($value) . '&'; 
+					$querystring .= $key . '=' . urlencode($value) . '&';
 				}
-				// Check if paypal request or response 
+				// Check if paypal request or response
 				if (!$this->request->is_set_post('txn_id') && !$this->request->is_set_post('txn_type'))
-				{ 
-					$querystring .= 'business=' . urlencode($paypal_email) . '&'; 
-					$querystring .= 'currency_code=' . $this->config['donations_currency'] . '&'; 
+				{
+					$querystring .= 'business=' . urlencode($paypal_email) . '&';
+					$querystring .= 'currency_code=' . $this->config['donations_currency'] . '&';
 					$querystring .= 'cmd=_xclick&no_note=1&lc=UK&bn=PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest&';
-	 
-					// Append paypal return addresses 
-					$querystring .= 'return=' . urlencode(stripslashes($return_url)) . '&'; 
-					$querystring .= 'cancel_return=' . urlencode(stripslashes($cancel_url)) . '&'; 
-					$querystring .= 'notify_url=' . urlencode($notify_url); 
+
+					// Append paypal return addresses
+					$querystring .= 'return=' . urlencode(stripslashes($return_url)) . '&';
+					$querystring .= 'cancel_return=' . urlencode(stripslashes($cancel_url)) . '&';
+					$querystring .= 'notify_url=' . urlencode($notify_url);
 
 					$data['payment_status'] = 'Not verified';
 					$data['user_id'] = $this->user->data['user_id'];
@@ -110,49 +110,52 @@ class donation
 					$sql = 'INSERT INTO ' . $this->donation_table . ' ' . $this->db->sql_build_array('INSERT', $data);
 					$this->db->sql_query($sql);
 
-					// Redirect to paypal IPN 
-					header('location:https://www.' . (($this->options['sandbox']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr' . $querystring); 
-					exit(); 
-				} 
+					// Redirect to paypal IPN
+					header('location:https://www.' . (($this->options['sandbox']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr' . $querystring);
+					exit();
+				}
 			break;
 
 			case 'notify':
 				$data = $this->manager->get_paypal_data();
-				$data = ($this->manager->updatePayments($data));
+				if (!empty($data)) {
+					$data = ($this->manager->updatePayments($data));
+				}
 			break;
-	
+
 			case 'verify':
 				$data = $this->manager->get_paypal_data();
-				$data = ($this->manager->updatePayments($data));
-							
-				/**
-				* This event is used for performing actions directly after a donation
-				* has been submitted. When a new donation is posted, the user ID is
-				* available in the $vars array.
-				*
-				* @event core.submit_donation_end
-				* @var	int		user_id				Variable user_id
-				*
-				* @since 3.1.3
-				*/
-				
-				$user_id = $data['user_id'];
-				$vars = array('user_id');
-				$this->phpbb_dispatcher->trigger_event('core.submit_donation_end', compact($vars));
-				
-				$this->notify = ($mode = 'verify') ? 
-								(($data['payment_status'] = 'Completed') ? $this->user->lang('DONATIONS_SUCCESS') : $this->user->lang('DONATIONS_ERROR')) : false;
-				
+				if (!empty($data)) {
+					$data = ($this->manager->updatePayments($data));
+
+					/**
+					* This event is used for performing actions directly after a donation
+					* has been submitted. When a new donation is posted, the user ID is
+					* available in the $vars array.
+					*
+					* @event core.submit_donation_end
+					* @var	int		user_id				Variable user_id
+					*
+					* @since 3.1.3
+					*/
+
+					$user_id = $data['user_id'];
+					$vars = array('user_id');
+					$this->phpbb_dispatcher->trigger_event('core.submit_donation_end', compact($vars));
+
+					$this->notify = ($mode = 'verify') ? (($data['payment_status'] = 'Completed') ? $this->user->lang('DONATIONS_SUCCESS') : $this->user->lang('DONATIONS_ERROR')) : false;
+				}
+
 				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
 			break;
-		
+
 			case 'cancel':
 				$this->notify = $this->user->lang('DONATIONS_CANCELLED');
 				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
 			break;
 
 			case 'request_bitcoin':
-			
+
 				$data = array(
 					'item_name'			=> 'Donation',
 					'payment_status'	=> 'Not verified',
@@ -168,20 +171,20 @@ class donation
 
 				$sql = 'INSERT INTO ' . $this->donation_table . ' ' . $this->db->sql_build_array('INSERT', $data);
 				$this->db->sql_query($sql);
-								
+
 				require_once($this->phpbb_root_path . '/ext/sitesplat/donations/vendor/vendor/autoload.php');
 				$configuration = Configuration::apiKey($bitcoin['key'], $bitcoin['secret']);
 				($this->options['sandbox']) ? $configuration->setApiUrl(Configuration::SANDBOX_API_URL) : $configuration->setApiUrl(Configuration::DEFAULT_API_URL);
 				$client = Client::create($configuration);
 
 				$PrimaryAccount = $client->getPrimaryAccount();
-				
+
 				$params = array(
 					'name'		=> $data['item_name'],
 					'amount'	=> new Money($data['mc_gross'], $data['mc_currency']),
 					'metadata'	=> array('order_id' =>  $data['item_number'], 'user_id' => $data['user_id'])
 				);
-				
+
 				$checkout = new Checkout($params);
 				$client->createCheckout($checkout);
 				$code = $checkout->getEmbedCode();
@@ -193,7 +196,7 @@ class donation
 
 				$notify = file_get_contents("php://input");
 				$notify = json_decode($notify, true);
-			
+
 				require_once($this->phpbb_root_path . '/ext/sitesplat/donations/vendor/vendor/autoload.php');
 				$configuration = Configuration::apiKey($bitcoin['key'], $bitcoin['secret']);
 				($this->options['sandbox']) ? $configuration->setApiUrl(Configuration::SANDBOX_API_URL) : $configuration->setApiUrl(Configuration::DEFAULT_API_URL);
@@ -226,7 +229,7 @@ class donation
 				}
 				exit();
 			break;
-			
+
 			case 'succes_bitcoin':
 			case 'cancel_bitcoin':
 			break;
@@ -235,7 +238,7 @@ class donation
 		$this->user->add_lang_ext('sitesplat/donations', 'common');
 		$currency_symbol = $this->manager->currency(0, $this->config['donations_currency']);
 		$donationtxt = explode("\n", $this->config_text->get('donations_text'));
-		
+
 		$amounts = json_decode($this->config['donations_amounts'], true);
 		foreach($amounts as $key => $amount)
 		{
@@ -246,7 +249,7 @@ class donation
 				'SYMBOL'	=> $amount['symbol']
 			));
 		}
-	
+
 		if ($this->options['list'])
 		{
 			$sql = 'SELECT u.user_id, u.username, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, d.custom, d.mc_gross
@@ -259,13 +262,13 @@ class donation
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$this->template->assign_block_vars('donors', array(
-					'NAME'		=> ($row['user_id'] == ANONYMOUS) ? $this->user->lang['GUEST'] : $row['username'],
-					'AVATAR'	=> (($row['user_avatar']) ? 
+					'NAME'		=> $row['username'],
+					'AVATAR'	=> (($row['user_avatar']) ?
 									 str_replace(array('<img', './../../'), array('<img class="avatar"', './'), phpbb_get_user_avatar(
 										array('avatar'			=> $row['user_avatar'],
-                                              'user_id'         => $row['user_id'],										
-											  'avatar_type'		=> $row['user_avatar_type'], 
-											  'avatar_width'	=> $row['user_avatar_width'], 
+                                              'user_id'         => $row['user_id'],
+											  'avatar_type'		=> $row['user_avatar_type'],
+											  'avatar_width'	=> $row['user_avatar_width'],
 											  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
 											  '<img class="avatar" title="' .  $row['username'] . '" src="' .
 											  generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png">'),
@@ -295,13 +298,13 @@ class donation
 			'PAYPAL_ENABLED'				=> (!empty($this->config['donations_paypal_email'])) ? true : false,
 			'BITCOIN_ENABLED'				=> (!empty($bitcoin['key']) && !empty($bitcoin['secret'])) ? true : false,
 		 ));
-	
+
 		 // Set up Navlinks
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME' 	=> $this->user->lang('DONATIONS'),
 			'U_VIEW_FORUM'	=> $this->helper->route('sitesplat_donations_controller', array('route' => 'index.html')),
 		));
-		
+
 		return $this->helper->render('donations.html', $this->user->lang('DONATIONS'));
 	}
 }

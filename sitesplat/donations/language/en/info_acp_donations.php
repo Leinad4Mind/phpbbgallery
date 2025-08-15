@@ -74,7 +74,7 @@ $lang = array_merge($lang, array(
 	'LICENSE_INFO'		        => 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    => 'Developer',
 	'ACP_NOTICE_CLOSE'			=> 'Close',
-	'ACP_DONATIONS_VERSION'     => '1.0.8',
+	'ACP_DONATIONS_VERSION'     => '1.0.9',
 	'ACP_LOADING'		        => 'Loading... Hold on',
 	
 	'EXT_BBD_DESCRIPTION_PAGE'	=> 'A kick-ass donation extension for the phpBB board running sitesplat themes. Many modern and useful options included PayPal IPN and Bitcoin API.',

@@ -48,7 +48,7 @@
  	</form>
 	<div class="space10"></div><p class="text-muted">{L_DONATION_DEPOSIT_DISCLAIMER}</p>
  </div>
- <div class="text-right"><small>{L_BBDONATION_COPY}</small>&nbsp;<i class="fa fa-heart text-flatboots-red heart-ss pulse-ss"></i>&nbsp;<small>{L_BY}<a href="http://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="{L_SITESPLAT_EXT_COPY}" target="_blank">&nbsp;{L_SITESPLAT}</a></small></div>
+ <div class="text-right"><small>{L_BBDONATION_COPY}</small>&nbsp;<i class="fa fa-heart text-flatboots-red heart-ss pulse-ss"></i>&nbsp;<small>{L_BY}<a href="https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="{L_SITESPLAT_EXT_COPY}" target="_blank">&nbsp;{L_SITESPLAT}</a></small></div>
 </div> 
 
  
@@ -56,18 +56,23 @@
 	<div class="space10"></div>
 	  <div class="space10"></div>
     <div class="side-segment"><h3>{L_DONATIONS_DONORS}</h3></div>
+	<div class="row">
 	<div class="panel panel-default">
 	 <div class="panel-body">
         <!-- BEGIN donors -->
+		<div class="col-md-3 col-sm-4 col-xs-4">
         <figure class="member-info">{donors.AVATAR}
 			<figcaption>
-                  <h3>{donors.NAME}<span>&nbsp;{donors.TXT}</span></h3>
+                  <h3>{donors.NAME}</h3>
+				  <span>&nbsp;{donors.TXT}</span>
                   <a>{DONATIONS_CURRENCY_SYMBOL}&nbsp;{donors.AMOUNT}</a>
             </figcaption>
         </figure>
+		</div>
         <!-- END donors -->
 	 </div>	
     </div>
+	</div>
 <!-- ENDIF -->  
 
 
