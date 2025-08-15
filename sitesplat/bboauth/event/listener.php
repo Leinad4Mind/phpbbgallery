@@ -45,6 +45,8 @@ class listener implements EventSubscriberInterface
 			'core.user_setup'                                       => 'onUserSetup',
 
 			'core.index_modify_page_title'	=> 'display_oauth_options',
+
+			'sitesplat.tfa.login_box_redirect'	=> 'set_login_type_common_tfa',
 		);
 	}
 
@@ -70,6 +72,14 @@ class listener implements EventSubscriberInterface
 					WHERE user_id = " . $event['result']['user_row']['user_id'];
 			$this->db->sql_query($sql);
 		}
+	}
+
+	public function set_login_type_common_tfa()
+	{
+		$sql = 'UPDATE ' . $this->users_table . "
+				SET user_last_login_type = ''
+				WHERE user_id = " . $this->user->data['user_id'];
+		$this->db->sql_query($sql);
 	}
 
 	public function display_login_type()

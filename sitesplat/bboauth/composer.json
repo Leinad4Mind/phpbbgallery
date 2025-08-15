@@ -24,7 +24,7 @@
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bboauth.json"
 		}
 	}
