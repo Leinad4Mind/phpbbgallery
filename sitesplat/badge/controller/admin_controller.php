@@ -248,7 +248,7 @@ class admin_controller implements admin_interface
 
 			if ($file->is_uploaded())
 			// https://area51.phpbb.com/docs/dev/32x/files/overview.html	
-			echo ($file->is_uploaded()) ? 'yes' : 'no';	
+		//	echo ($file->is_uploaded()) ? 'yes' : 'no';	
 			// weird weird weird world 
 			{
 				$sql = 'INSERT INTO ' . $this->badge_badges_table . ' (badge_id, badge) VALUES(null, "' . $file->get('realname') . '")

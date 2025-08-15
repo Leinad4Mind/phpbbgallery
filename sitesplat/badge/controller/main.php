@@ -106,7 +106,7 @@ class main
 			$value = $value[$return];
 		}, 'id');
 
-		$sql = 'SELECT r.rule_id, r.rule_type_id, r.rule_name, r.rule_description, rule_min_value, rule_max_value, e.user_id, u.username, u.badge_route, style_path,
+		$sql = 'SELECT r.rule_id, r.rule_type_id, r.rule_name, r.rule_description, rule_min_value, rule_max_value, e.user_id, u.username, u.badge_route, s.style_path,
 					   u.user_avatar AS avatar, u.user_avatar_width AS avatar_width, u.user_avatar_height AS avatar_height, u.user_avatar_type AS avatar_type, u.user_colour, 
 					   e.date, b.badge, t.rule_type_name
 				FROM ' . $this->badge_rules_table . ' r
@@ -116,7 +116,7 @@ class main
 				LEFT JOIN ' . STYLES_TABLE . ' s ON s.style_id = u.user_style
 				LEFT JOIN ' . $this->badge_badges_table . ' b ON b.badge_id = r.badge_id
 				' . ((!$userid ) ? ' WHERE r.rule_type_id IN (' . implode(',', $type_ids) . ')' : ' WHERE e.user_id = ' . $userid) . ' AND r.rule_type_id IN (' . implode(',', $type_ids) . ')
-				ORDER BY ' . (($route == 'recent.html') ? 't.rule_type_name, e.date DESC LIMIT 100' : 't.rule_type_name, r.rule_id, u.username');
+				ORDER BY ' . (($route == 'recent.html') ? 't.rule_type_name, e.date DESC LIMIT 100' : 't.rule_type_name, r.rule_id, u.username_clean');
 		$result = $this->db->sql_query($sql);
 		$ruleid = $rulename = '0';
 		
@@ -140,7 +140,7 @@ class main
 						'DESCRIPTION'		=> (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . (($row['rule_description']) ? '<br />' . $row['rule_description'] : '')
 					));
 				}
-				if ($row['user_id'])
+				if (!empty($row['username']))
 				{
 					$this->template->assign_block_vars('rules.badge.users', array(
 						'USERNAME'	=> $row['username'],
@@ -212,6 +212,7 @@ class main
 
 	protected function Slug($string)
 	{
-		return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
+		return strtolower(str_replace(array('&','#',';'), '', mb_convert_encoding($string, 'HTML-ENTITIES', 'UTF8')));
+//		return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
 	}
 }

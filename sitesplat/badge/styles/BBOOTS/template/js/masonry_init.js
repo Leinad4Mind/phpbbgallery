@@ -16,7 +16,11 @@ head.ready(function () {
       columnWidth: '.col-xs-6',
       itemSelector: '.col-xs-6'
     });
-	
+
+    var nano = document.querySelector('.user_view .nano');
+	if (nano) {
+		container.style.height = String(nano.offsetHeight + 10) + 'px';
+	}
   });
   
 });

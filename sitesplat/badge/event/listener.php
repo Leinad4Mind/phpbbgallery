@@ -89,7 +89,8 @@ class listener implements EventSubscriberInterface
 
 			'core.user_add_modify_data'			=> 'insert_user_data',
 			'core.update_username'				=> 'modify_user_data',
-			
+			'core.delete_user_after'			=> 'delete_user_badges',
+
 			// Badge Award "Posts" listeners
 			'core.submit_post_end'				=> 'submit_post_check',
 			'core.delete_posts_after'			=> 'delete_post_check',
@@ -167,6 +168,12 @@ class listener implements EventSubscriberInterface
 			'lang_set' => 'badge_common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	public function delete_user_badges($event)
+	{
+		$sql = "DELETE FROM {$this->badge_events_table} WHERE " . $this->db->sql_in_set('user_id', $event['user_ids']);
+		$this->db->sql_query($sql);
 	}
 
 	public function modify_post_row($event)

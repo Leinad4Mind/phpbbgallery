@@ -110,6 +110,6 @@ class signature extends \sitesplat\badge\conditions\type\base
 	protected function get_user_signature($user_sig)
 	{
 		// Return if signature used
-		return (strlen($user_sig) > 1) ? 1 : 0;
+		return (strlen(strip_tags($user_sig)) > 1) ? 1 : 0;
 	}
 }

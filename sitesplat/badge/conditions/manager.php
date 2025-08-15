@@ -83,13 +83,24 @@ class manager
 	{
 		foreach ($this->badge_types as $badge_type => $data)
 		{
+			$rowset = array();
 			$sql = 'SELECT r.rule_id, r.options FROM ' . $this->badge_rules_table . ' r
 					LEFT JOIN ' . $this->badge_types_table . ' t ON t.rule_type_id = r.rule_type_id
 					WHERE t.rule_type_name = "' . $badge_type . '" AND t.rule_type_name <> "sitesplat.badge.type.custom"';
+
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$this->check_condition($badge_type, $row['rule_id'], array('option' => $row['options']));
+				$rowset[] = $row;
+			}
+			$this->db->sql_freeresult($result);
+
+			if (!empty($rowset))
+			{
+				foreach ($rowset as $row)
+				{
+					$this->check_condition($badge_type, $row['rule_id'], array('option' => $row['options']));
+				}
 			}
 		}
 	}

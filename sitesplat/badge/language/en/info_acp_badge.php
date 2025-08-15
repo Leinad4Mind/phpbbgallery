@@ -41,7 +41,7 @@ $lang = array_merge($lang, array(
 	'ACP_BADGE_MANAGE'			=> 'Manage Badge Award',
 	'BADGE_TYPE_NOT_EXIST'		=> 'The Badge Award type `%1$s` does not exist.',
 	'BADGE_NOTICE'				=> '<div class="phpinfo"><p>The Setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br /><strong>Note:</strong> PayPal donations, likeBB and many other supported Premium Extension rules are <strong>only</strong> available if these Premium extensions are enabled!</p></div>',
-    'SS_HELPER_NOTY'	        => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+    'SS_HELPER_NOTY'	        => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'ERROR_BADGE_DISABLE'	    => 'You cannot disable BBawards because of other active BBawards related extensions:<br /><div class="phpinfo">» %s</div>',
 	
 	// Logs
