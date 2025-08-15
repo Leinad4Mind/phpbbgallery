@@ -26,6 +26,7 @@ class listener implements EventSubscriberInterface
 	protected $container;
 	protected $root_path;
 	protected $php_ext;
+	protected $translator;
 
 	/**
 	 * Constructor
@@ -42,6 +43,10 @@ class listener implements EventSubscriberInterface
 		$this->php_ext = $php_ext;
 		$this->manager = false;
 		$this->board_url = generate_board_url();
+
+		if ($container->has('sitesplat.bbseo.translator')) {
+			$this->translator = $container->get('sitesplat.bbseo.translator');
+		}
 	}
 
 	/**
@@ -91,14 +96,25 @@ class listener implements EventSubscriberInterface
 	//	$picture = ($event_number == 2) ? $event['detail_data']['picture'] : $this->find_picture($event['attachments']);
 	//	$imageinfo = getimagesize($picture);
 
+		if (!$event_number) {
+			$og_url = "{$this->board_url}/index.php";
+		}
+		else if ($event_number == 2) {
+			$og_url = "{$this->board_url}{$event['detail_data']['back_url']}";
+		}
+		else if (!empty($this->translator)) {
+			$og_url = $this->translator->seo_url("{$this->board_url}/viewtopic.php", "f={$event['forum_id']}&t={$event['topic_id']}#p{$event['topic_data']['topic_first_post_id']}", false, '');
+		}
+		else {
+			$og_url = "{$this->board_url}/viewtopic.php?f={$event['forum_id']}&t={$event['topic_id']}#p{$event['topic_data']['topic_first_post_id']}";
+		}
+
 		$this->template->assign_vars(array(
 			'OPENGRAPH_ID'			=> $this->config['opengraph_fb_id'],
 			'OPENGRAPH_APPID'		=> $this->config['opengraph_fb_app_id'],
 			'OPENGRAPH_TT_ID'		=> $this->config['opengraph_tw_id'],
 			'URL_BBOPENGRAPH_INDEX'	=> $board_url = generate_board_url() . '/',	
-			'URL_OPENGRAPH'			=> $this->board_url . ((!$event_number) ? '/index.' . $this->php_ext : 
-										(($event_number == 2) ? $event['detail_data']['back_url'] : 
-										'/viewtopic.' . $this->php_ext . '?f=' . $event['forum_id'] . '&t=' . $event['topic_id'] . '#p' . $event['topic_data']['topic_first_post_id'])),
+			'URL_OPENGRAPH'			=> $og_url,
 			'TITLE_OPENGRAPH'		=> ((!$event_number) ? $this->config['sitename'] : (($event_number == 2) ? $event['detail_data']['title'] : $event['topic_data']['topic_title'])),
 			'DESC_OPENGRAPH'		=> ((!$event_number) ? $this->config['site_desc'] : (($event_number == 2) ? $this->clean_up($event['detail_data']['text']) : $this->find_text($event))),
 			'IMG_OPENGRAPH'			=> ($event_number == 2) ? $event['detail_data']['picture'] : $this->find_picture($event['attachments']),
