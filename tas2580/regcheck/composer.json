@@ -1,42 +1,32 @@
 {
-    "name": "tas2580/regcheck",
+    "name": "pcgf/ajaxregistrationcheck",
     "type": "phpbb-extension",
-    "description": "Checks user input during the registration directly during the input of data.",
-    "homepage": "https://tas2580.net/downloads/phpbb-ajax-regcheck/",
+    "description": "An extension that checks data on the registration form with AJAX so that no invalid or unwanted data could be typed in",
+    "homepage": "https://github.com/MarkusWME/phpBB---AJAX-Registration-Check",
     "version": "1.0.0",
-    "keywords": [
-        "phpbb",
-        "extension",
-        "user",
-        "ajax",
-        "register"
-    ],
+    "time": "2017-05-21",
+    "keywords": ["ajax", "registration", "check", "registration check", "ajax check", "ajax registration check"],
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "tas2580",
-            "homepage": "https://tas2580.net",
-            "email": "mail@tas2580.net",
-            "role": "Developer"
+            "name": "MarkusWME",
+            "homepage": "https://github.com/MarkusWME",
+            "email": "markuswme@pcgamingfreaks.at",
+            "role": "Lead Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "composer/installers": "~1.0",
-        "phpbb/phpbb": ">=3.1.4-RC1,<3.2.0@dev"
-    },
-    "require-dev": {
-        "phpbb/epv": "dev-master"
+        "php": ">=5.3.3"
     },
     "extra": {
-        "display-name": "AJAX Registration check",
+        "display-name": "AJAX Registration Check",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.4-RC1,<3.2.0@dev"
+            "phpbb/phpbb": ">=3.1"
         },
         "version-check": {
-            "host": "www.phpbb.com",
-            "directory": "/customise/db/extension/ajax_regcheck",
-            "filename": "version_check"
+            "host": "api.pcgf.at",
+            "directory": "/phpbb",
+            "filename": "ajaxregistrationcheck.json"
         }
     }
 }
