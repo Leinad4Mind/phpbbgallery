@@ -49,7 +49,7 @@ class main
 	*/
 	public function handle($name)
 	{
-		$forum_ary = json_decode($this->config['bbfront_inc_forums'], true);
+		$forum_ary = (array) json_decode($this->config['bbfront_inc_forums'], true);
 		$config_aray = json_decode($this->config['bbfront_settings'], true);
 
 		if ($this->request->variable('action', '') == 'change-status')
@@ -65,20 +65,25 @@ class main
 			$this->table_bbtags_topic = $this->phpbb_container->getParameter('sitesplat.bbtags.tables.bbtags_topic');
 			$url = generate_board_url();
 		}
-		
+
 		$likes_enabled = $this->phpbb_container->get('ext.manager')->is_enabled('sitesplat/likedd');
 		if ($likes_enabled)
 		{
 			$this->phpbb_container->get('sitesplat.likedd.listener')->assign_buttons();
 		}
-		
+
 		if (sizeof($forum_ary))
 		{
 			$start = $this->request->variable('fstart', 0);
 			$per_page = $start > 0 ? $this->config['sitesplat_bbfront_per_page_load'] : $config_aray['per_page'];
-			$sql = 'SELECT COUNT(bbfront) AS total FROM ' . POSTS_TABLE . ' WHERE bbfront = 1';
-			$result = $this->db->sql_query($sql);	
+			$sql = 'SELECT COUNT(bbfront) AS total FROM ' . POSTS_TABLE . ' WHERE ' . $this->db->sql_in_set('forum_id', $forum_ary) . ' AND bbfront = 1';
+			$result = $this->db->sql_query($sql);
 			$total = $this->db->sql_fetchfield('total');
+			$this->db->sql_freeresult($result);
+
+			if (!$total) {
+				return $this->helper->render('bbfront.html', $name);
+			}
 
 			$ads_offset = 0;
 			if ($start && $this->config['sitesplat_bbfront_ad_frequency'])
@@ -124,13 +129,13 @@ class main
 			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 			$result = $this->db->sql_query_limit($sql, $per_page - $ads_this_load, $start - $ads_this_load);
 
-			if (!$this->db->sql_affectedrows())
-			{
-				throw new \phpbb\exception\http_exception(404);
-			}
+//			if (!$this->db->sql_affectedrows())
+//			{
+//				throw new \phpbb\exception\http_exception(404);
+//			}
 
 			$i = $ads_offset;
-			while ($row = $this->db->sql_fetchrow($result)) 
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				if ($this->config['sitesplat_bbfront_ad_frequency'] && $i % $this->config['sitesplat_bbfront_ad_frequency'] == $this->config['sitesplat_bbfront_ad_frequency'] - 1)
 				{
@@ -145,7 +150,7 @@ class main
 					$topic_data['topic_type'] = $row['topic_type'];
 					$post_row['POST_ID'] = $row['post_id'];
 					$post_row['MESSAGE'] = $row['post_text'];
-					
+
 					/**
 					* Event to apply extra data				*
 					* @event core.bbfront_before_display
@@ -161,26 +166,27 @@ class main
 					);
 					extract($this->phpbb_dispatcher->trigger_event('core.bbfront_before_display', compact($vars)));
 				}
-				
+
 				$tag_ary = array();
 				if ($bbtags_enabled)
 				{
-					$sql = 'SELECT tag.tag, tag.route FROM ' . $this->table_bbtags_topic . ' t 
+					$sql = 'SELECT tag.tag, tag.route FROM ' . $this->table_bbtags_topic . ' t
 							LEFT JOIN ' . $this->table_bbtags . ' tag ON tag.id = t.tag_id
 							WHERE t.topic_id = ' . $row['topic_id'];
 					$result1 = $this->db->sql_query($sql);
-					while ($row1 = $this->db->sql_fetchrow($result1)) 
+					while ($row1 = $this->db->sql_fetchrow($result1))
 					{
 						$tag_ary[] = $row1;
 					}
+					$this->db->sql_freeresult($result1);
 				}
-				
+
 				$attach_id = 0;
 				if ($row['post_attachment'])
 				{
 					$sql = 'SELECT attach_id, mimetype FROM ' . ATTACHMENTS_TABLE . ' WHERE post_msg_id = ' . $row['post_id'];
 					$result1 = $this->db->sql_query($sql);
-					while ($row1 = $this->db->sql_fetchrow($result1)) 
+					while ($row1 = $this->db->sql_fetchrow($result1))
 					{
 						if (strpos($row1['mimetype'], 'image') !== false)
 						{
@@ -191,13 +197,17 @@ class main
 							$row['post_text'] = (isset($attachment[0])) ? str_replace($attachment[0], '', $row['post_text']) : $row['post_text'];
 						}
 					}
+
+					$this->db->sql_freeresult($result1);
 				}
 
 				preg_match('/\[quote(.*?)](.*?)\[\/quote(.*?)\]/msi', $row['post_text'], $quote);
 				$row['post_text'] = (isset($quote[2])) ? $quote[2] : $row['post_text'];
-				$row['post_text'] = htmlspecialchars_decode($row['post_text']);
 
-				$attributes = (!isset($quote[2])) ? $this->matchUrl($row['post_text']) : null;
+//				$row['post_text'] = htmlspecialchars_decode($row['post_text']);
+//				$attributes = (!isset($quote[2])) ? $this->matchUrl($row['post_text']) : null;
+				$attributes = (!isset($quote[2])) ? $this->matchUrl(htmlspecialchars_decode($row['post_text'])) : null;
+
 				if (!empty($attributes['embed']) && $attributes['embed'] == 'googleplus')
 				{
 					if (isset($attributes['attributes']['oid']))
@@ -218,15 +228,15 @@ class main
 					'TEXT'		=> truncate_string(strip_tags(generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true)), $config_aray['chars'], $config_aray['chars'], true, " ..."),
 					'QUOTE'		=> (isset($quote[2])) ? true: false,
 					'PICTURE'	=> (!$attach_id) ? '' : generate_board_url() . '/download/file.php?id=' . $attach_id,
-					'EMBED'		=> ($attributes['embed']) ? $attributes['embed'] : '',
+					'EMBED'		=> !empty($attributes['embed']) ? $attributes['embed'] : '',
 					'VIDEO'		=> !empty($attributes['attributes']['id']) ? htmlspecialchars($attributes['attributes']['id'], 2) : '',
 					'MEDIUM'	=> !empty($attributes['attributes']['id']) ? htmlspecialchars(strtr($attributes['attributes']['id'], 'abcdef', '111111'), 2) : '',
 					'AUTHOR'	=> get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']),
 					'USER_QUOTE'=> get_username_string('username', $row['poster_id'], $row['username'], $row['user_colour']),
 					'AVATAR'	=> ($config_aray['use_avatar']) ? phpbb_get_user_avatar(array('avatar' => $row['user_avatar'],
 										  'user_id'         => $row['user_id'],
-										  'avatar_type'		=> $row['user_avatar_type'], 
-										  'avatar_width'	=> $row['user_avatar_width'], 
+										  'avatar_type'		=> $row['user_avatar_type'],
+										  'avatar_width'	=> $row['user_avatar_width'],
 										  'avatar_height'	=> $row['user_avatar_height'])) : '',
 					'DATE'		=> $this->user->format_date($row['post_time'], 'Y-m-d\TH:i:s'),
 					'DATE_OUT'	=> $this->user->format_date($row['post_time'], 'F j, Y, g:i a'),
@@ -235,7 +245,7 @@ class main
 					'U_LIKE'	=> isset($post_row['U_LIKE']) ? $post_row['U_LIKE'] : '',
 					'LIKES'		=> isset($post_row['LIKES']) ? $post_row['LIKES'] : '',
 					'U_DISLIKE'	=> isset($post_row['U_DISLIKE']) ? $post_row['U_DISLIKE'] : '',
-					'DISLIKES'	=> isset($post_row['DISLIKES']) ? $post_row['DISLIKES'] : ''				
+					'DISLIKES'	=> isset($post_row['DISLIKES']) ? $post_row['DISLIKES'] : ''
 				);
 
 				/**
@@ -255,7 +265,7 @@ class main
 				extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbfront.card_tpl_before', compact($vars)));
 
 				$this->template->assign_block_vars('masonry', $tpl_ary);
-				
+
 				foreach($tag_ary as $key => $value)
 				{
 					$this->template->assign_block_vars('masonry.tag', array(
@@ -264,11 +274,13 @@ class main
 					'ROUTE'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $value['route'])),
 					));
 				}
-				
 			}
+
+			$this->db->sql_freeresult($result);
+
 			$bbfront_url = $this->helper->route('sitesplat_bbfront_controller', array('name' => $config_aray['name']));
 			$this->template->assign_vars(array(
-				'BBBFRONT_START' => (!$start) ? true : false, 
+				'BBBFRONT_START' => (!$start) ? true : false,
 				'BBFRONT_END'	=> $start + $per_page >= $total,
 				'U_BBBFRONT_NEXT' => strpos($bbfront_url, '?') === false ? $bbfront_url . '?fstart=' . ($start + $per_page) : $bbfront_url . '&fstart=' . ($start + $per_page),
 				'BBFRONT_GRID_LAYOUT'	=> $this->config['sitesplat_bbfront_grid_layout'],
@@ -286,9 +298,9 @@ class main
 	{
 		if (!$this->phpbb_container->get('ext.manager')->is_enabled('sitesplat/bbembed'))
 		{
-			return false;	
+			return false;
 		}
-		
+
 		$regexps = array(
 		    'facebook' => array(
 				"@/(?!(?:apps|developers|graph)\\.)[-\\w.]*facebook\\.com/(?:[/\\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\\?v=)(?<id>\\d+)(?![^/?&#])@",
@@ -362,10 +374,11 @@ class main
 	{
 		$sql = 'UPDATE ' . POSTS_TABLE . ' SET bbfront = NOT bbfront WHERE post_id = ' . $id;
 		$this->db->sql_query($sql);
-		
+
 		$sql = 'SELECT bbfront, post_subject FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $id;
 		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);			
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
 		$return_ary = array(
 			'title'		=> ($row['bbfront']) ? $this->user->lang['BBFRONT_HIDE'] : $this->user->lang['BBFRONT_SHOW'],
@@ -379,7 +392,7 @@ class main
 	{
 		$this->template->assign_block_vars('masonry', array(
 			'S_IS_AD'	=> true,
-			'TEXT'		=> htmlspecialchars_decode($this->config_text->get('sitesplat_bbfront_ad_content')),			
+			'TEXT'		=> htmlspecialchars_decode($this->config_text->get('sitesplat_bbfront_ad_content')),
 		));
 	}
 }

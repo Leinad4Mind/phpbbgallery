@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Adds a modern and stylish front page with selectable post to publish in different formats, like video directly playable, quotes and post snippets...",
     "homepage": "https://sitesplat.com",
-	"version": "2.0.2",
+	"version": "2.0.4",
 	"keywords": ["sitesplat", "phpbb", "extension", "news", "portal"],
 	"license": "Proprietary/All rights reserved",
     "authors": [

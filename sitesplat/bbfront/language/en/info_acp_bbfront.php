@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'LICENSE_INFO'		        			=> 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_NOTICE_CLOSE'						=> 'Close',
-	'ACP_BBFRONT_VERSION'       			=> '2.0.2',
+	'ACP_BBFRONT_VERSION'       			=> '2.0.4',
 	'ACP_LOADING'		        			=> 'Loading... Hold on',
 
 	'EXT_BBF_DESCRIPTION_PAGE'				=> 'A modern front page WordPress style for your board',
