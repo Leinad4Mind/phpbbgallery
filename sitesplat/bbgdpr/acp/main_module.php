@@ -54,26 +54,32 @@ class main_module
 			$sitesplat_bbgdpr_privacy_policy = $this->request->variable('sitesplat_bbgdpr_privacy_policy', '', true);
 			if ($sitesplat_bbgdpr_privacy_policy != $this->config_text->get('sitesplat_bbgdpr_privacy_policy'))
 			{
+				$this->config->set('sitesplat_bbgdpr_privacy_update', time());
+
 				$sql = 'UPDATE ' . $this->users_table . '
-						SET user_privacy_accept_date = 0
+						SET user_privacy_old_accept_date = user_privacy_accept_date, user_privacy_accept_date = 0
 						WHERE user_privacy_accept_date <> 0';
 				$this->db->sql_query($sql);
 			}
 			$this->config_text->set('sitesplat_bbgdpr_privacy_policy', $sitesplat_bbgdpr_privacy_policy);
 			$this->config->set('sitesplat_bbgdpr_geoip', $this->request->variable('sitesplat_bbgdpr_geoip', false));
 			$this->config->set('sitesplat_bbgdpr_delete_keep_username', $this->request->variable('sitesplat_bbgdpr_delete_keep_username', false));
+			$this->config->set('sitesplat_bbgdpr_accept_old_users', $this->request->variable('sitesplat_bbgdpr_accept_old_users', false));
+			$this->config->set('sitesplat_bbgdpr_request_delete', $this->request->variable('sitesplat_bbgdpr_request_delete', false));
 
 			trigger_error($this->language->lang('ACP_GDPR_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
 
 		$this->template->assign_vars(array(
-			'U_ACTION'							=> $this->u_action,
-			'SITESPLAT_BBGDPR_JS'				=> $this->config_text->get('sitesplat_bbgdpr_js'),
-			'SITESPLAT_BBGDPR_ADSENSE'			=> $this->config_text->get('sitesplat_bbgdpr_adsense'),
-			'SITESPLAT_BBGDPR_PRIVACY_POLICY'	=> $this->config_text->get('sitesplat_bbgdpr_privacy_policy'),
-			'SITESPLAT_BBGDPR_GEOIP'			=> $this->config['sitesplat_bbgdpr_geoip'],
-			'SITESPLAT_BBGDPR_DELETED'			=> $this->config['sitesplat_bbgdpr_deleted'],
+			'U_ACTION'								=> $this->u_action,
+			'SITESPLAT_BBGDPR_JS'					=> $this->config_text->get('sitesplat_bbgdpr_js'),
+			'SITESPLAT_BBGDPR_ADSENSE'				=> $this->config_text->get('sitesplat_bbgdpr_adsense'),
+			'SITESPLAT_BBGDPR_PRIVACY_POLICY'		=> $this->config_text->get('sitesplat_bbgdpr_privacy_policy'),
+			'SITESPLAT_BBGDPR_GEOIP'				=> $this->config['sitesplat_bbgdpr_geoip'],
+			'SITESPLAT_BBGDPR_DELETED'				=> $this->config['sitesplat_bbgdpr_deleted'],
 			'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME' => $this->config['sitesplat_bbgdpr_delete_keep_username'],
+			'SITESPLAT_BBGDPR_ACCEPT_OLD_USERS' 	=> $this->config['sitesplat_bbgdpr_accept_old_users'],
+			'SITESPLAT_BBGDPR_REQUEST_DELETE' 		=> $this->config['sitesplat_bbgdpr_request_delete'],
 		));
 	}
 }

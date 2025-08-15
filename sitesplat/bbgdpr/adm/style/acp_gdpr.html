@@ -42,15 +42,31 @@
 	</fieldset>
 
 	<fieldset>
-			<legend>{{ lang('SETTINGS') }}</legend>
-			<dl>
-				<dt><label for="sitesplat_bbgdpr_delete_keep_username">{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN') }}</span></dt>
-				<dd>
-					<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="1"{% if SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_YES}</label>
-					<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="0"{% if not SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_NO}</label>
-				</dd>
-			</dl>
-		</fieldset>
+		<legend>{{ lang('SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_delete_keep_username">{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="1"{% if SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="0"{% if not SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_accept_old_users">{{ lang('SITESPLAT_BBGDPR_ACCEPT_OLD_USERS') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_ACCEPT_OLD_USERS_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_accept_old_users" value="1"{% if SITESPLAT_BBGDPR_ACCEPT_OLD_USERS %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_accept_old_users" value="0"{% if not SITESPLAT_BBGDPR_ACCEPT_OLD_USERS %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_request_delete">{{ lang('SITESPLAT_BBGDPR_REQUEST_DELETE') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_REQUEST_DELETE_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_request_delete" value="1"{% if SITESPLAT_BBGDPR_REQUEST_DELETE %} id="display_active" checked{% endif %} /> {L_REQUEST_DELETE}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_request_delete" value="0"{% if not SITESPLAT_BBGDPR_REQUEST_DELETE %} id="display_active" checked{% endif %} /> {L_SELF_DELETE}</label>
+			</dd>
+		</dl>
+	</fieldset>
 
 	<fieldset class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;

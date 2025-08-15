@@ -1,8 +1,10 @@
 {% include 'overall_header.html' %}
-<div class="side-segment"><h3>{{ lang('PRIVACY_POLICY') }}</h3></div>
+<div class="side-segment"><h3>{{ lang('BBGDPR_PRIVACY_POLICY') }}</h3></div>
 <div class="panel panel-gdpr panel-default">
    <div class="panel-body">
 	  {{ PRIVACY_POLICY }}
+	  <p><span class="label label label-slategray">{{ lang('LAST_UPDATED', UPDATE_DATE) }}</span></p>
+	  <a href="https://goo.gl/BNEDA3" target="_blank"><img class="gdpr-badge" src="https://i.imgur.com/qg7yJwr.png" alt="Europe GDPR compliant extension for phpBB by SiteSplat"></a>
    </div>
 </div>
 <!-- IF S_USER_LOGGED_IN -->
@@ -11,5 +13,7 @@
 	<input class="btn btn-block btn-danger btn-lg" type="submit" name="reject" value="{{ lang('REJECT_GDPR') }}">
 	{{ S_FORM_TOKEN }}
 </form>
+<div class="space10"></div>
+<a class="btn btn-block btn-info btn-lg" href="{{ U_UCP_PRIVACY_REVIEW }}">{{ lang('REVIEW_PERSONAL_DATA') }}</a>
 <!-- ENDIF -->
 {% include 'overall_footer.html' %}

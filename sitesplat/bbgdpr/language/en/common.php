@@ -18,7 +18,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// used both in ACP and/or UCP and/or all pages
-	'PRIVACY_POLICY'		=> 'Privacy policy',
+	'BBGDPR_TITLE'	        => 'GDPR',
+	'BBGDPR_PRIVACY_POLICY'	=> 'GDPR - General Data Protection Regulation',
 	'PRIVACY_ACCEPT_DATE'	=> 'Privacy policy acceptance date',
 	'COOKIE_ACCEPT_DATE'	=> 'Cookie policy acceptance date',
 	'NOT_ACCEPTED'			=> 'Policy has not been accepted',
@@ -47,4 +48,9 @@ $lang = array_merge($lang, array(
 	'GDPR_NOT_REVIEWED'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Review the GDPR guidelines: <a href="https://gdpr-info.eu/">https://gdpr-info.eu/</a>',
 	'GDPR_REVIEW_CONFIRM'	=> 'I confirm to have reviewed the GDPR guidelines',
 	'MCP_ACCEPT_FIRST'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Please, <a href="%s">confirm it before you perform any moderator action</a>.',
+
+	// privacy
+	'LAST_UPDATED'			=> 'Last updated: %s',
+	'REVIEW_PERSONAL_DATA'	=> 'Review your personal data',
+	'REACCEPT_COOKIE'		=> 'Looks like you previously rejected the cookie policy. Changed your mind?',
 ));

@@ -18,7 +18,12 @@
 		<dd>{{ PRIVACY_ACCEPT_DATE }}</dd>
 
 		<dt>{{ lang('COOKIE_ACCEPT_DATE') }}{{ lang('COLON') }}</dt>
-		<dd>{{ COOKIE_ACCEPT_DATE }}</dd>
+		<dd>
+			{{ COOKIE_ACCEPT_DATE }}
+			{% if COOKIE_DENIED %}
+				- <em>{{ lang('COOKIE_CHANGED_MIND', U_ACCEPT_COOKIES) }}</em>
+			{% endif %}
+		</dd>
 
 		{% if MCP_ACCEPT_DATE %}
 			<dt>{{ lang('MCP_ACCEPT_DATE') }}{{ lang('COLON') }}</dt>

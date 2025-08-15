@@ -37,7 +37,7 @@ class main_listener implements EventSubscriberInterface
 			'core.ucp_register_data_after'						=> 'check_reg_data',
 			'core.ucp_register_user_row_after'					=> 'add_acceptance_date',
 			'core.ucp_register_modify_template_data'			=> 'template_reg_data',
-			'core.login_box_redirect'							=> array(
+			'core.user_setup_after'								=> array(
 				'privacy_redirect',
 				999, // Needed to allow this to run before any other extension.
 			),
@@ -51,8 +51,9 @@ class main_listener implements EventSubscriberInterface
 	protected $language;
 	protected $config;
 	protected $request;
+	protected $auth;
 	protected $root_path;
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config, \phpbb\request\request $request, $root_path)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config, \phpbb\request\request $request, \phpbb\auth\auth $auth, $root_path)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -61,6 +62,7 @@ class main_listener implements EventSubscriberInterface
 		$this->language = $language;
 		$this->config = $config;
 		$this->request = $request;
+		$this->auth = $auth;
 		$this->root_path = $root_path;
 	}
 
@@ -74,6 +76,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		$this->template->assign_vars(array(
 			'PRIVACY_ACCEPT_DATE'	=> $event['user_row']['user_privacy_accept_date'] > 0 ? $this->user->format_date($event['user_row']['user_privacy_accept_date'], false, true) : $this->language->lang('NOT_ACCEPTED'),
+			'COOKIE_ACCEPT_DATE'	=> $event['user_row']['user_cookie_accept_date'] > 0 ? $this->user->format_date($event['user_row']['user_cookie_accept_date'], false, true) : $this->language->lang('NOT_ACCEPTED'),
 			'MCP_ACCEPT_DATE'		=> $event['user_row']['user_mcp_accept_date'] > 0 ? $this->user->format_date($event['user_row']['user_mcp_accept_date'], false, true) : $this->language->lang('NOT_ACCEPTED'),
 		));
 	}
@@ -107,6 +110,7 @@ class main_listener implements EventSubscriberInterface
 			'GDPR_JS'					=> $this->tracking_codes_allowed() ? htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_js')) : false,
 			'S_COOKIE_NOTICE'			=> false, // Disable phpBB Cookie Notice
 			'S_DISPLAY_COOKIE_BANNER'	=> $this->display_cookie_notice(),
+			'COOKIE_NAME'				=> $this->config['cookie_name'],
 			'U_COOKIE_REJECT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'reject']),
 			'U_COOKIE_ACCEPT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'accept']),
 			'GDPR_ADSENSE'				=> $this->tracking_codes_allowed() ? htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_adsense')) : false,
@@ -144,7 +148,10 @@ class main_listener implements EventSubscriberInterface
 
 	public function add_acceptance_date($event)
 	{
-		$event->update_subarray('user_row', 'user_privacy_accept_date', $event['user_row']['user_regdate']);
+		if ($this->config['sitesplat_bbgdpr_accept_old_users'])
+		{
+			$event->update_subarray('user_row', 'user_privacy_accept_date', $event['user_row']['user_regdate']);
+		}
 	}
 
 	public function template_reg_data($event)
@@ -157,14 +164,66 @@ class main_listener implements EventSubscriberInterface
 
 	public function privacy_redirect()
 	{
-		if ($this->user->data['user_privacy_accept_date'] == 0)
+		if (!$this->user->data['is_registered'] || !empty($user->data['is_bot']) || $this->auth->acl_get('a_'))
+		{
+			return;
+		}
+
+		if ($this->user->data['user_privacy_accept_date'] == 0 && !$this->on_exception_page())
 		{
 			redirect($this->helper->route('sitesplat_bbgdpr_privacy'));
 		}
 	}
 
+	protected function on_exception_page()
+	{
+		$url = $this->request->server('REQUEST_URI', '');
+		// logout
+		if (strpos($url, 'ucp.') !== false && strpos($url, 'mode=logout') !== false)
+		{
+			return true;
+		}
+
+		// privacy page itself
+		if (substr($url, -12) == 'privacy.html')
+		{
+			return true;
+		}
+
+		// accept cookie
+		if (substr($url, -20) == 'bbgdpr/cookie/accept')
+		{
+			return true;
+		}
+
+		// reject cookie
+		if (substr($url, -20) == 'bbgdpr/cookie/reject')
+		{
+			return true;
+		}
+
+		// contact us
+		if (strpos($url, 'memberlist.') !== false && strpos($url, 'mode=contactadmin') !== false)
+		{
+			return true;
+		}
+
+		// review personal data
+		if (strpos($url, 'ucp.') !== false && strpos($url, 'mode=review') !== false && strpos($url, 'i=-sitesplat-bbgdpr-ucp-main_module') !== false)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	protected function display_cookie_notice()
 	{
+		if ($this->request->is_set($this->config['cookie_name'] . '_sitesplat_bbgdpr_hide_cookie_notice', \phpbb\request\request_interface::COOKIE))
+		{
+			return false;
+		}
+	
 		if ($this->user->data['user_id'] != ANONYMOUS)
 		{
 			if ($this->user->data['user_cookie_accept'] != ext::COOKIE_NOT_YET)

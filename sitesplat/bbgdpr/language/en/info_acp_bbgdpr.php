@@ -27,6 +27,7 @@ $lang = array_merge($lang, array(
 	
 	'ACP_GDPR_SETTINGS_SAVED'	=> 'GDPR setting has been saved.',
 
+	'PRIVACY_POLICY'			=> 'Privacy Policy',
 	'PRIVACY_POLICY_EXPLAIN'	=> 'Content entered here will be displayed to all users to accept your policy as required by GDPR. You can use HTML.<br />Please note, everytime you edit this form the GDPR acceptance date will be reset and required to accept again for all users. This is so to make it easier for the Admins to enforce again the GDPR policy when an update occurs.<br /> Make sure to review the default policy right away as it is for general forums coverage and it might not be a good fit for your forum.',
 
 	'COOKIES_BANNER'					=> 'Cookies EU banner',
@@ -39,4 +40,12 @@ $lang = array_merge($lang, array(
 
 	'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME'			=> 'Keep username when deleting account',
 	'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN'	=> 'Set to No to generate random username which will replace current username when user deletes their account.',
+	'SITESPLAT_BBGDPR_ACCEPT_OLD_USERS'				=> 'Force GDPR page for existent users only',
+	'SITESPLAT_BBGDPR_ACCEPT_OLD_USERS_EXPLAIN'		=> 'There is no need for new users to be forced as these user already accepted on registration page. Set to No to force all users to accept GDPR page.',
+	'SITESPLAT_BBGDPR_REQUEST_DELETE'				=> 'Type of deletion',
+	'SITESPLAT_BBGDPR_REQUEST_DELETE_EXPLAIN'		=> 'Set to Request to receive an PM from user who wants to delete their account. Otherwise users will be able to delete their account themselves.',
+	'REQUEST_DELETE'								=> 'Request',
+	'SELF_DELETE'									=> 'Self',
+
+	'LOG_USER_REJECTED_PRIVACY'	=> '<strong>Rejected new privacy policy.</strong><br>» Previous acceptance date: %s',
 ));

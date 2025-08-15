@@ -114,9 +114,7 @@ class m3_acp extends \phpbb\db\migration\migration
           &lt;li&gt;Network Advertising Initiative: &lt;a href=&quot;http://www.networkadvertising.org/&quot;&gt;http://www.networkadvertising.org/&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/dd&gt;
-    &lt;/dl&gt;
-    &lt;p&gt;&lt;span class=&quot;label label label-slategray&quot;&gt;Last updated: May 25, 2018&lt;/span&gt;&lt;/p&gt;
-	  &lt;a href=&quot;https://goo.gl/BNEDA3&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;gdpr-badge&quot; src=&quot;https://i.imgur.com/qg7yJwr.png&quot; alt=&quot;Europe GDPR compliant extension for phpBB by SiteSplat&quot;&gt;&lt;/a&gt;')),
+    &lt;/dl&gt;')),
 
 			array('permission.add', array('u_delete_my_account_posts')),
 			array('permission.add', array('u_delete_my_account_pms')),

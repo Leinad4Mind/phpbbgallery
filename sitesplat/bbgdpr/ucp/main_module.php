@@ -8,6 +8,7 @@
 
 namespace sitesplat\bbgdpr\ucp;
 
+use \sitesplat\bbgdpr\ext;
 use \sitesplat\bbgdpr\RecursiveZipArchive;
 
 /**
@@ -28,6 +29,8 @@ class main_module
 	protected $log;
 	protected $notification_manager;
 	protected $config;
+	protected $helper;
+	protected $groups_table;
 	protected $root_path;
 	protected $php_ext;
 	public function __construct()
@@ -45,6 +48,8 @@ class main_module
 		$this->log = $phpbb_container->get('log');
 		$this->notification_manager = $phpbb_container->get('notification_manager');
 		$this->config = $phpbb_container->get('config');
+		$this->helper = $phpbb_container->get('controller.helper');
+		$this->groups_table = $phpbb_container->getParameter('tables.groups');
 		$this->root_path = $phpbb_container->getParameter('core.root_path');
 		$this->php_ext = $phpbb_container->getParameter('core.php_ext');
 	}
@@ -225,13 +230,55 @@ class main_module
 
 				if (confirm_box(true))
 				{
-					// send notification to admins
-					$this->notification_manager->add_notifications('sitesplat.bbgdpr.notification.type.user_deleted', array(
-						'user_id'	=> $this->user->data['user_id'],
-						'username'	=> $this->user->data['username'],
-					));
+					if ($this->config['sitesplat_bbgdpr_request_delete'])
+					{
+						if (!function_exists('submit_pm'))
+						{
+							include($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
+						}
+						if (!class_exists('parse_message'))
+						{
+							include($this->root_path . 'includes/message_parser.' . $this->php_ext);
+						}
 
-					$this->delete_account();
+						$sql = 'SELECT group_id
+								FROM ' . $this->groups_table . "
+								WHERE group_name = 'ADMINISTRATORS'";
+						$result = $this->db->sql_query($sql);
+						$admin_group_id = $this->db->sql_fetchfield('group_id');
+						$this->db->sql_freeresult($result);
+
+						$message_parser = new \parse_message();
+						$message_parser->message = $this->language->lang('REQUEST_FOR_DELETION_BODY');
+						$message_parser->parse(false, false, false, false, false, false, true);
+						$data = [
+							'from_user_id'			=> $this->user->data['user_id'],
+							'from_user_ip'			=> $this->user->ip,
+							'from_username'			=> $this->user->data['username'],
+							'enable_sig'			=> false,
+							'enable_bbcode'			=> false,
+							'enable_smilies'		=> false,
+							'enable_urls'			=> false,
+							'icon_id'				=> 0,
+							'bbcode_bitfield'		=> $message_parser->bbcode_bitfield,
+							'bbcode_uid'			=> $message_parser->bbcode_uid,
+							'message'				=> $message_parser->message,
+							'address_list'			=> array('g' => array($admin_group_id => 'to')),
+						];
+						submit_pm('post', $this->language->lang('REQUEST_FOR_DELETION_SUBJECT'), $data, false);
+
+						trigger_error('REQUEST_FOR_DELETION_SENT');
+					}
+					else
+					{
+						// send notification to admins
+						$this->notification_manager->add_notifications('sitesplat.bbgdpr.notification.type.user_deleted', array(
+							'user_id'	=> $this->user->data['user_id'],
+							'username'	=> $this->user->data['username'],
+						));
+
+						$this->delete_account();
+					}
 				}
 				else
 				{
@@ -239,7 +286,7 @@ class main_module
 					{
 						$delete_type = $this->delete_confirmation();
 		
-						confirm_box(false, 'DELETE_FINAL', build_hidden_fields(array(
+						confirm_box(false, $this->config['sitesplat_bbgdpr_request_delete'] ? 'DELETE_REQUEST_REALLY' : 'DELETE_FINAL', build_hidden_fields(array(
 							'submit'		=> false,
 							'delete_type'	=> $delete_type,
 							'remove_pms'	=> $this->request->variable('remove_pms', false),
@@ -271,6 +318,8 @@ class main_module
 			'USERNAME'				=> $row['username'],
 			'PRIVACY_ACCEPT_DATE'	=> ($row['user_privacy_accept_date'] > 0) ? $this->user->format_date($row['user_privacy_accept_date'], false, true) : $this->language->lang('NOT_ACCEPTED'),
 			'COOKIE_ACCEPT_DATE'	=> ($row['user_cookie_accept_date'] > 0) ? $this->user->format_date($row['user_cookie_accept_date'], false, true) : $this->language->lang('NOT_ACCEPTED'),
+			'COOKIE_DENIED'			=> $row['user_cookie_accept'] == ext::COOKIE_DENIED,
+			'U_ACCEPT_COOKIES'		=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'accept']),
 			'BIRTHDAY'				=> $row['user_birthday'],
 			'EMAIL'					=> $row['user_email'],
 			'REG_DATE'				=> $this->user->format_date($row['user_regdate'], false, true),
