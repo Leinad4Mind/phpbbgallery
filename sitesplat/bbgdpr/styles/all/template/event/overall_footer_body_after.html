@@ -1,5 +1,37 @@
-{% if GDPR_JS %}
 <script>
-	{{ GDPR_JS }}
+var gdpr_dd_running = false;
+function set_gdpr_dd(e, elem) {
+	e.preventDefault();
+
+	if (gdpr_dd_running) {
+		return;
+	}
+
+	gdpr_dd_running = true;
+	var gdpr_dd = new XMLHttpRequest();
+	gdpr_dd.onreadystatechange = function() {
+		if (gdpr_dd.readyState == 4 && gdpr_dd.status == 200) {
+			window.location.reload();
+		}
+		else if (gdpr_dd.readyState == 4) {
+			alert('An error occurred. Please try again later');
+			gdpr_dd_running = false;
+		}
+	};
+
+	gdpr_dd.open('GET', elem.href, true);
+	gdpr_dd.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	gdpr_dd.send();
+}
+
+var gdpr_dd_ajax = document.querySelectorAll('.gdpr-dd-ajax');
+if (gdpr_dd_ajax) {
+	gdpr_dd_ajax.forEach(function(elem) {
+		elem.onclick = function(e) {set_gdpr_dd(e, this);};
+	});
+}
 </script>
+
+{% if GDPR_JS %}
+<script>{{ GDPR_JS }}</script>
 {% endif %}

@@ -14,12 +14,15 @@ class cookie
 {
 	protected $user;
 	protected $db;
+	protected $request;
 	protected $users_table;
 	protected $root_path;
-	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db, $users_table, $root_path)
+
+	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, $users_table, $root_path)
 	{
 		$this->user = $user;
 		$this->db = $db;
+		$this->request = $request;
 		$this->users_table = $users_table;
 		$this->root_path = $root_path;
 	}
@@ -61,6 +64,12 @@ class cookie
 			break;
 		}
 
-		redirect($this->root_path . $this->user->data['session_page']);
+		// if an AJAX request, we're done
+		if ($this->request->is_ajax()) {
+			exit;
+		}
+
+//		redirect($this->root_path . $this->user->data['session_page']);
+		redirect("{$this->root_path}index.php");
 	}
 }

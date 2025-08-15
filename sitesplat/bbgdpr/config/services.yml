@@ -19,6 +19,7 @@ services:
         arguments:
             - '@user'
             - '@dbal.conn'
+            - '@request'
             - '%tables.users%'
             - '%core.root_path%'
 
