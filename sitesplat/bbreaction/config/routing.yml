@@ -1,0 +1,3 @@
+sitesplat_bbreaction_main_controller:
+    path: /bbreaction/{route}
+    defaults: { _controller: sitesplat.bbreaction.controller:display }

@@ -1,0 +1,52 @@
+imports:
+    - { resource: tables.yml }
+    - { resource: notifications.yml }
+
+services:
+    sitesplat.bbreaction.listener:
+        class: sitesplat\bbreaction\event\listener
+        arguments:
+            - @config
+            - @dbal.conn
+            - @user
+            - @request
+            - @template
+            - @controller.helper
+            - %sitesplat.bbreaction.tables.reward%
+            - %sitesplat.bbreaction.tables.reward_type%
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbreaction.controller:
+        class: sitesplat\bbreaction\controller\main_controller
+        arguments:
+            - @config
+            - @controller.helper
+            - @template
+            - @user
+            - @auth
+            - @request
+            - @dbal.conn
+            - @pagination
+            - @path_helper
+            - @dispatcher
+            - @notification_manager
+            - %core.root_path%
+            - %core.php_ext%
+            - %sitesplat.bbreaction.tables.reward%
+            - %sitesplat.bbreaction.tables.reward_type%
+
+    sitesplat.bbreaction.admin_controller:
+        class: sitesplat\bbreaction\controller\admin_controller
+        arguments:
+            - @config
+            - @dbal.conn
+            - @service_container
+            - @log
+            - @request
+            - @template
+            - @user
+            - @pagination
+            - %core.root_path%
+            - %sitesplat.bbreaction.tables.reward%
+            - %sitesplat.bbreaction.tables.reward_type%
