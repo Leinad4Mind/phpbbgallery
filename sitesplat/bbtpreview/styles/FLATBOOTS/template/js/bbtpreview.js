@@ -11,7 +11,7 @@ $(document).on("click", ".open-bbtpreview", function (event) {
 	in_bbtag  = (in_bbtag > 0) ? '&b=1': '';
 
 	$.ajax({
-		url: boardurl + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
+		url: sitesplat_board_url + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
 		context: document.getElementById("BBTPreviewProfile"),
 		error: function (e, text, ee) {
 	//		console.log('error');

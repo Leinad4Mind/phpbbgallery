@@ -1,3 +1,4 @@
+{% if topicrow or searchresults or BB_LOAD_IN_POSTING %}
 <!-- INCLUDEJS @sitesplat_bbtpreview/js/bbtpreview.js -->
 <div class="modal fade" id="BBTPreviewDialog" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-bbpreview">
@@ -32,3 +33,4 @@
 		</div>
 	</div>
 </div>
+{% endif %}
