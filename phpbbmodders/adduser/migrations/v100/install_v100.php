@@ -8,9 +8,9 @@
  *
  */
 
-namespace phpbbmodders\adduser\migrations\v10;
+namespace phpbbmodders\adduser\migrations\v100;
 
-class install_adduser extends \phpbb\db\migration\migration
+class install_v100 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
