@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Adds an Ajax Topic preview on the topic list for a quick view of the first topic. It comes with some useful options like Ajax Views counter, Attachments, user info etc.",
 	"homepage": "https://sitesplat.com",
-	"version": "1.0.11",
+	"version": "1.0.12",
 	"keywords": ["phpbb", "extension", "premium", "Topic preview", "SiteSplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
