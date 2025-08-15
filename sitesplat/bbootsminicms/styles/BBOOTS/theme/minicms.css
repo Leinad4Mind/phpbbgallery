@@ -16,3 +16,14 @@
        -o-transition: all .2s ease-in-out;
           transition: all .2s ease-in-out;
 }
+
+
+.panel-login-modal {
+    background: transparent;
+    padding-bottom: 0;
+	padding-top: 10px;
+}
+
+.panel-login-modal .signin-text span {
+    background: #fff;
+}

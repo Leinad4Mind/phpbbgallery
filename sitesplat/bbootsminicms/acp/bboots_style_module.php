@@ -32,16 +32,21 @@ class bboots_style_module
 
 				if ($request->is_set_post('submit'))
 				{
-					$sql = 'SELECT *
-							FROM ' . $table_prefix . 'bboots_style_config';
-					$result = $db->sql_query($sql);
-
+					$sql_ary = array(
+						'SELECT'	=> 'bsc.*',
+						'FROM'		=> array(
+							$table_prefix . 'bboots_style_config'	=> 'bsc',
+						),
+					);
+					$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$value	= $request->variable($row['config_name'], '', true);
 
 						$sql = 'UPDATE ' . $table_prefix . 'bboots_style_config
-								SET config_value = "' . $value . '"
+								SET ' . $db->sql_build_array('UPDATE', array(
+									'config_value'	=> $value,
+								)) . '
 								WHERE config_name = "'. $row['config_name'] . '"';
 						$db->sql_query($sql);
 					}
@@ -52,10 +57,13 @@ class bboots_style_module
 					trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 				}		 
 
-				$sql = 'SELECT *
-						FROM ' . $table_prefix . 'bboots_style_config';
-				$result = $db->sql_query($sql);
-						
+				$sql_ary = array(
+					'SELECT'	=> 'bsc.*',
+					'FROM'		=> array(
+						$table_prefix . 'bboots_style_config'	=> 'bsc',
+					),
+				);
+				$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));	
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$template->assign_vars(array(
@@ -122,19 +130,31 @@ class bboots_style_module
 							$button_only_guest	= $request->variable('button_only_guest', 0);
 							$button_icon	= $request->variable('button_icon', '');
 
-							$sql = 'SELECT MAX(right_id) AS right_id
-									FROM ' . $table_prefix . 'bboots_style_links';
-							$result = $db->sql_query($sql);
+							$sql_ary = array(
+								'SELECT'	=> 'MAX(bsl.right_id) AS right_id',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_links'	=> 'bsl',
+								),
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							$row = $db->sql_fetchrow($result);
 							$db->sql_freeresult($result);
 
 							$left_id = $row['right_id'] + 1;
 							$right_id = $row['right_id'] + 2;
 
-							$sql = 'INSERT INTO ' . $table_prefix . 'bboots_style_links (button_url, button_name, button_external, button_display, button_only_registered, button_only_guest, left_id, right_id, icon)
-									VALUES ("' . $button_url . '", "' . $button_name . '", ' . $button_external . ', ' . $button_display . ',
-									' . $button_only_registered . ', ' . $button_only_guest . ', ' . $left_id . ', ' . $right_id . ', "' . $button_icon . '")';
-							$db->sql_query($sql);
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'button_external'			=> $button_external,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'left_id'					=> $left_id,
+								'right_id'					=> $right_id,
+								'icon'						=> $button_icon,
+							);
+							$db->sql_query('INSERT INTO ' . $table_prefix . 'bboots_style_links ' . $db->sql_build_array('INSERT', $sql_ary));
 
 							trigger_error($user->lang('LINK_ADDED') . adm_back_link($this->u_action));
 						}
@@ -143,10 +163,14 @@ class bboots_style_module
 
 					case "edit_button":
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_links
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+						$sql_ary = array(
+							'SELECT'	=> 'bsl.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_links'	=> 'bsl',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 
 						$template->assign_vars(array(
@@ -172,10 +196,17 @@ class bboots_style_module
 							$button_only_guest	= $request->variable('button_only_guest', 0);
 							$button_icon	= $request->variable('button_icon', '');
 
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'button_external'			=> $button_external,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'icon'						=> $button_icon,
+							);
 							$sql = 'UPDATE ' . $table_prefix . 'bboots_style_links
-									SET button_url = "' . $button_url . '", button_name = "' . $button_name . '", button_external = ' . $button_external . ',
-										button_display = ' . $button_display . ', button_only_registered = ' . $button_only_registered . ',
-										button_only_guest = ' . $button_only_guest . ', icon = "' . $button_icon . '"
+									SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 									WHERE button_id = ' . $button_id;
 							$db->sql_query($sql);
 
@@ -187,10 +218,14 @@ class bboots_style_module
 					case 'move_up':
 					case 'move_down':
 
-						$sql = 'SELECT left_id, right_id
-								FROM ' . $table_prefix . 'bboots_style_links
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+						$sql_ary = array(
+							'SELECT'	=> 'bsl.left_id, bsl.right_id',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_links'	=> 'bsl',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 
 						$this->acp_move_button($table_prefix . 'bboots_style_links', $row, $action);
@@ -201,11 +236,14 @@ class bboots_style_module
 
 					default:
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_links
-								ORDER BY left_id';
-						$result = $db->sql_query($sql);
-
+						$sql_ary = array(
+							'SELECT'	=> 'bsl.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_links'	=> 'bsl',
+							),
+							'ORDER_BY'		=> 'left_id',
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$template->assign_block_vars('links', array(
@@ -420,11 +458,14 @@ class bboots_style_module
 			
 						if (confirm_box(true))
 						{
-							$sql = 'SELECT button_id
-									FROM ' . $table_prefix . 'bboots_style_menu
-									WHERE parent_id = ' . $button_id;
-							$result = $db->sql_query($sql);
-				
+							$sql_ary = array(
+								'SELECT'	=> 'bsm.button_id',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_menu'	=> 'bsm',
+								),
+								'WHERE'		=> 'parent_id = ' . $button_id,
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							while ($row = $db->sql_fetchrow($result))
 							{	 
 								$sql = 'DELETE FROM ' . $table_prefix . 'bboots_style_menu
@@ -441,11 +482,14 @@ class bboots_style_module
 						}
 						else
 						{
-							$sql = 'SELECT button_id
-									FROM ' . $table_prefix . 'bboots_style_menu
-									WHERE parent_id = ' . $button_id;
-							$result = $db->sql_query($sql);
-
+							$sql_ary = array(
+								'SELECT'	=> 'bsm.button_id',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_menu'	=> 'bsm',
+								),
+								'WHERE'		=> 'parent_id = ' . $button_id,
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							if ($db->sql_affectedrows())
 							{
 								confirm_box(false, $user->lang('DELETE_SUBBUTTONS_CONFIRM'));
@@ -468,14 +512,17 @@ class bboots_style_module
 							'S_NAME'					 => $button_name,
 							'S_MENU_CREATE_BUTTON'	 => true,
 						));
-			
+
 						// Load buttons for select
-						$sql = 'SELECT button_name, button_id
-								FROM ' . $table_prefix . 'bboots_style_menu
-								WHERE parent_id = 0
-								ORDER BY left_id';
-						$result = $db->sql_query($sql);
-					
+						$sql_ary = array(
+							'SELECT'	=> 'bsm.button_name, bsm.button_id',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_menu'	=> 'bsm',
+							),
+							'WHERE'		=> 'parent_id = 0',
+							'ORDER_BY'	=> 'left_id',
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						while ($row = $db->sql_fetchrow($result))
 						{	 
 							$template->assign_block_vars('parents', array(
@@ -496,21 +543,35 @@ class bboots_style_module
 							$button_only_registered	= $request->variable('button_only_registered', 0);	 
 							$button_only_guest	= $request->variable('button_only_guest', 0);
 							$button_icon	= $request->variable('button_icon', '');
-				
-							$sql = 'SELECT MAX(right_id) AS right_id
-									FROM ' . $table_prefix . 'bboots_style_menu';
-							$result = $db->sql_query($sql);
+
+							$sql_ary = array(
+								'SELECT'	=> 'MAX(bsm.right_id) AS right_id',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_menu'	=> 'bsm',
+								),
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							$row = $db->sql_fetchrow($result);
 							$db->sql_freeresult($result);
 							
 							$left_id = $row['right_id'] + 1;
 							$right_id = $row['right_id'] + 2;
 
-							$sql = 'INSERT INTO ' . $table_prefix . 'bboots_style_menu (button_url, button_name, button_desc, button_external, button_display, button_only_registered, button_only_guest, left_id, right_id, parent_id, icon)
-									VALUES ("' . $button_url . '", "' . $button_name . '", "' . $button_desc . '", ' . $button_external . ', ' . $button_display . ',
-									' . $button_only_registered . ', ' . $button_only_guest . ', ' . $left_id . ', ' . $right_id . ', ' . $button_parent . ', "' . $button_icon . '")';
-							$db->sql_query($sql);
-	
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'button_desc'				=> $button_desc,
+								'button_external'			=> $button_external,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'left_id'					=> $left_id,
+								'right_id'					=> $right_id,
+								'parent_id'					=> $button_parent,
+								'icon'						=> $button_icon,
+							);
+							$db->sql_query('INSERT INTO ' . $table_prefix . 'bboots_style_menu ' . $db->sql_build_array('INSERT', $sql_ary));
+
 							trigger_error($user->lang('BUTTON_ADDED') . adm_back_link($this->u_action.'&amp;parent_id='.$button_parent));
 						}
 			
@@ -519,13 +580,16 @@ class bboots_style_module
 					case "edit_button":
 
 						// Load buttons for select
-						$sql = 'SELECT button_name, button_id
-								FROM ' . $table_prefix . 'bboots_style_menu
-								WHERE parent_id = 0
-								AND button_id <> ' . $button_id . '
-								ORDER BY left_id';
-						$result = $db->sql_query($sql);
-					
+
+						$sql_ary = array(
+							'SELECT'	=> 'bsm.button_name, bsm.button_id',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_menu'	=> 'bsm',
+							),
+							'WHERE'		=> 'parent_id = 0 AND button_id <> ' . $button_id,
+							'ORDER_BY'	=> 'left_id',
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						while ($row = $db->sql_fetchrow($result))
 						{	 
 							$template->assign_block_vars('parents', array(
@@ -535,10 +599,14 @@ class bboots_style_module
 						}
 						$db->sql_freeresult($result);
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_menu
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+						$sql_ary = array(
+							'SELECT'	=> 'bsm.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_menu'	=> 'bsm',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 					
 						$template->assign_vars(array(
@@ -570,21 +638,34 @@ class bboots_style_module
 							
 							if ($button_parent && !$row['parent_id'])
 							{
-								$sql = 'SELECT button_id
-										FROM ' . $table_prefix . 'bboots_style_menu
-										WHERE parent_id = ' . $button_id;
-								$result = $db->sql_query($sql);
-							
+
+								$sql_ary = array(
+									'SELECT'	=> 'bsm.button_id',
+									'FROM'		=> array(
+										$table_prefix . 'bboots_style_menu'	=> 'bsm',
+									),
+									'WHERE'		=> 'parent_id = ' . $parent_id,
+								);
+								$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 								if ($db->sql_affectedrows())
 								{
 									trigger_error($user->lang('MOVE_BUTTON_WITH_SUBS') . adm_back_link($this->u_action.'&amp;parent_id='.$parent_id), E_USER_WARNING);	
 								}
 							}
-						
+
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'button_desc'				=> $button_desc,
+								'button_external'			=> $button_external,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'parent_id'					=> $button_parent,
+								'icon'						=> $button_icon,
+							);
 							$sql = 'UPDATE ' . $table_prefix . 'bboots_style_menu
-									SET button_url = "' . $button_url . '", button_name = "' . $button_name . '", button_desc = "' . $button_desc . '", button_external = ' . $button_external . ',
-									button_display = ' . $button_display . ', button_only_registered = ' . $button_only_registered . ',
-									button_only_guest = ' . $button_only_guest . ', parent_id = ' . $button_parent . ', icon = "' . $button_icon . '"
+									SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 									WHERE button_id = ' . $button_id;
 							$db->sql_query($sql);
 
@@ -595,11 +676,15 @@ class bboots_style_module
 					
 					case 'move_up':
 					case 'move_down':
-					
-						$sql = 'SELECT left_id, right_id, parent_id
-								FROM ' . $table_prefix . 'bboots_style_menu
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+
+						$sql_ary = array(
+							'SELECT'	=> 'bsm.left_id, bsm.right_id, bsm.parent_id',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_menu'	=> 'bsm',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 
 					//	$this->acp_move_button($table_prefix . 'bboots_style_menu', $row, $action);
@@ -610,12 +695,15 @@ class bboots_style_module
 						
 					default:
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_menu
-								WHERE parent_id = ' . $parent_id . '
-								ORDER BY left_id';
-						$result = $db->sql_query($sql);
-		
+						$sql_ary = array(
+							'SELECT'	=> 'bsm.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_menu'	=> 'bsm',
+							),
+							'WHERE'		=> 'parent_id = ' . $parent_id,
+							'ORDER_BY'	=> 'left_id',
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$template->assign_block_vars('buttons', array(
@@ -641,11 +729,15 @@ class bboots_style_module
 			
 						if ($parent_id)
 						{
-							$sql = 'SELECT button_name
-									FROM ' . $table_prefix . 'bboots_style_menu
-									WHERE button_id = ' . $parent_id;
-							$result = $db->sql_query($sql);	
-							
+
+							$sql_ary = array(
+								'SELECT'	=> 'bsm.button_name',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_menu'	=> 'bsm',
+								),
+								'WHERE'		=> 'button_id = ' . $parent_id,
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							$button_nav .= ' » ' .$db->sql_fetchfield('button_name');
 						}
 							 
@@ -707,19 +799,30 @@ class bboots_style_module
 							$button_only_guest	= $request->variable('button_only_guest', 0);
 							$button_icon	= $request->variable('button_icon', '');
 
-							$sql = 'SELECT MAX(right_id) AS right_id
-									FROM ' . $table_prefix . 'bboots_style_social';
-							$result = $db->sql_query($sql);
+							$sql_ary = array(
+								'SELECT'	=> 'MAX(bss.right_id) AS right_id',
+								'FROM'		=> array(
+									$table_prefix . 'bboots_style_social'	=> 'bss',
+								),
+							);
+							$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 							$row = $db->sql_fetchrow($result);
 							$db->sql_freeresult($result);
 
 							$left_id = $row['right_id'] + 1;
 							$right_id = $row['right_id'] + 2;
 
-							$sql = 'INSERT INTO ' . $table_prefix . 'bboots_style_social (button_url, button_name, icon, button_display, button_only_registered, button_only_guest, left_id, right_id)
-									VALUES ("' . $button_url . '", "' . $button_name . '", "' . $button_icon . '", ' . $button_display . ',
-									' . $button_only_registered . ', ' . $button_only_guest . ', ' . $left_id . ', ' . $right_id . ')';
-							$db->sql_query($sql);
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'icon'						=> $button_icon,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'left_id'					=> $left_id,
+								'right_id'					=> $right_id,
+							);
+							$db->sql_query('INSERT INTO ' . $table_prefix . 'bboots_style_social ' . $db->sql_build_array('INSERT', $sql_ary));
 
 							trigger_error($user->lang('SOCIAL_ADDED') . adm_back_link($this->u_action));
 						}
@@ -728,10 +831,14 @@ class bboots_style_module
 
 					case "edit_button":
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_social
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+						$sql_ary = array(
+							'SELECT'	=> 'bss.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_social'	=> 'bss',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 
 						$template->assign_vars(array(
@@ -755,10 +862,16 @@ class bboots_style_module
 							$button_only_guest	= $request->variable('button_only_guest', 0);
 							$button_icon	= $request->variable('button_icon', '');
 
+							$sql_ary = array(
+								'button_url'				=> $button_url,
+								'button_name'				=> $button_name,
+								'button_display'			=> $button_display,
+								'button_only_registered'	=> $button_only_registered,
+								'button_only_guest'			=> $button_only_guest,
+								'icon'						=> $button_icon,
+							);
 							$sql = 'UPDATE ' . $table_prefix . 'bboots_style_social
-									SET button_url = "' . $button_url . '", button_name = "' . $button_name . '",
-										button_display = ' . $button_display . ', button_only_registered = ' . $button_only_registered . ',
-										button_only_guest = ' . $button_only_guest . ', icon = "' . $button_icon . '"
+									SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 									WHERE button_id = ' . $button_id;
 							$db->sql_query($sql);
 
@@ -770,10 +883,14 @@ class bboots_style_module
 					case 'move_up':
 					case 'move_down':
 
-						$sql = 'SELECT left_id, right_id
-								FROM ' . $table_prefix . 'bboots_style_social
-								WHERE button_id = ' . $button_id;
-						$result = $db->sql_query($sql);
+						$sql_ary = array(
+							'SELECT'	=> 'bss.left_id, bss.right_id',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_social'	=> 'bss',
+							),
+							'WHERE'		=> 'button_id = ' . $button_id,
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						$row = $db->sql_fetchrow($result);
 
 						$this->acp_move_button($table_prefix . 'bboots_style_social', $row, $action);
@@ -784,11 +901,14 @@ class bboots_style_module
 
 					default:
 
-						$sql = 'SELECT *
-								FROM ' . $table_prefix . 'bboots_style_social
-								ORDER BY left_id';
-						$result = $db->sql_query($sql);
-
+						$sql_ary = array(
+							'SELECT'	=> 'bss.*',
+							'FROM'		=> array(
+								$table_prefix . 'bboots_style_social'	=> 'bss',
+							),
+							'ORDER_BY'	=> 'left_id',
+						);
+						$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$template->assign_block_vars('social', array(
@@ -853,12 +973,17 @@ class bboots_style_module
 		* siblings between the current spot and the target then the
 		* menu will move as far as possible
 		*/
-		$sql = 'SELECT button_id, left_id, right_id
-			FROM ' . $table_prefix . 'bboots_style_menu' . "
-			WHERE  parent_id = " . (int) $module_row['parent_id'] . '
-				AND ' . (($action == 'move_up') ? 'right_id < ' . (int) $module_row['right_id'] . ' 
-				ORDER BY right_id DESC' : 'left_id > ' . (int) $module_row['left_id'] . ' ORDER BY left_id ASC');
-		$result = $db->sql_query_limit($sql, $steps);
+
+		$sql_ary = array(
+			'SELECT'	=> 'bsm.button_id, bsm.left_id, bsm.right_id',
+			'FROM'		=> array(
+				$table_prefix . 'bboots_style_menu'	=> 'bsm',
+			),
+			'WHERE'		=> 'parent_id = ' . (int) $module_row['parent_id'] . '
+								AND ' . (($action == 'move_up') ? 'right_id < ' . (int) $module_row['right_id'] : 'left_id > ' . (int) $module_row['left_id']),
+			'ORDER_BY'	=> ($action == 'move_up') ? 'right_id DESC' : 'left_id ASC',
+		);
+		$result = $db->sql_query_limit($db->sql_build_query('SELECT', $sql_ary), $steps);
 
 		$target = array();
 		while ($row = $db->sql_fetchrow($result))
@@ -921,13 +1046,16 @@ class bboots_style_module
 	protected function acp_move_button($table, $button_row, $action = 'move_up')
 	{
 		global $db;
-	
-		$sql_extend = ( $action == 'move_up' ) ? "right_id < {$button_row['right_id']} ORDER BY right_id DESC" : "left_id > {$button_row['left_id']} ORDER BY left_id ASC";
 
-		$sql = 'SELECT *
-				FROM ' . $table . '
-				WHERE ' . $sql_extend;
-		$result = $db->sql_query_limit($sql, 1);
+		$sql_ary = array(
+			'SELECT'	=> 'tbl.*',
+			'FROM'		=> array(
+				$table	=> 'tbl',
+			),
+			'WHERE'		=> ($action == 'move_up') ? "right_id < {$button_row['right_id']}" : "left_id > {$button_row['left_id']}",
+			'ORDER_BY'	=> ($action == 'move_up') ? 'right_id DESC' : 'left_id ASC',
+		);
+		$result = $db->sql_query_limit($db->sql_build_query('SELECT', $sql_ary), 1);
 
 		$target = array();
 		while ($row = $db->sql_fetchrow($result))

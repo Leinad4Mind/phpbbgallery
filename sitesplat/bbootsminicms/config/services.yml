@@ -10,6 +10,7 @@ services:
             - @template
             - @user
             - %core.root_path%
+            - %core.php_ext%
             - %sitesplat.bbootsminicms.tables.bboots_style_menu%
             - %sitesplat.bbootsminicms.tables.bboots_style_config%
             - %sitesplat.bbootsminicms.tables.bboots_style_links%
