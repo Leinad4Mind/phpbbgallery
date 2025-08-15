@@ -117,7 +117,7 @@ class listener implements EventSubscriberInterface
 
 			for ($i = 0; $i < min(10, sizeof($row)); $i++)
 			{
-				if ($row[$i]['author_username'])
+				if (!empty($row[$i]['author_username']))
 				{
 					$this->template->assign_block_vars('participants_avatars', array(
 						'TOPIC_AVATAR'	=> $row[$i]['avatar'],
