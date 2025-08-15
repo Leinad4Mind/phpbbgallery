@@ -1,0 +1,128 @@
+services:
+# ----- Auto groups types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badgeautogroups.type.avatar:
+        class: sitesplat\badgeautogroups\conditions\type\avatar
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.badges:
+        class: sitesplat\badgeautogroups\conditions\type\badges
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.custom:
+        class: sitesplat\badgeautogroups\conditions\type\custom
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.donations:
+        class: sitesplat\badgeautogroups\conditions\type\donations
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.likedd:
+        class: sitesplat\badgeautogroups\conditions\type\likedd
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.profilewall:
+        class: sitesplat\badgeautogroups\conditions\type\profilewall
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.signature:
+        class: sitesplat\badgeautogroups\conditions\type\signature
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.zebra_foes:
+        class: sitesplat\badgeautogroups\conditions\type\zebra_foes
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.zebra_friends:
+        class: sitesplat\badgeautogroups\conditions\type\zebra_friends
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
