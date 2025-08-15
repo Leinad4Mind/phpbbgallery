@@ -51,6 +51,8 @@ class donations extends \phpbb\cron\task\base
 			$ids = $admin_mod_ary = array();
 			if ($group_amount['time'])
 			{
+				$sql = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));";
+				$this->db->sql_query($sql);
 				$sql = 'SELECT d.user_id FROM ' . $this->donation_table . ' d
 						INNER JOIN ' . USER_GROUP_TABLE . ' g ON g.user_id = d.user_id
 						WHERE d.payment_date < ' .  (time() - ($group_amount['time'] * 86400)) . ' 

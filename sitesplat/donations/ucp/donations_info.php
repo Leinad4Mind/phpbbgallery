@@ -14,7 +14,7 @@ class donations_info
 	function module()
 	{
 		return array(
-			'filename'		=> 'sitesplat\donations\ucp\donations_module',
+			'filename'		=> '\sitesplat\donations\ucp\donations_module',
 			'title'			=> 'UCP_DONATION_TITLE',
 			'version'		=> '1.0.0',
 			'modes'			=> array(
