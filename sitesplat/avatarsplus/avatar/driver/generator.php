@@ -40,7 +40,7 @@ class generator extends \phpbb\avatar\driver\driver
 		$root_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $this->path_helper->get_web_root_path();
 
 		// return '<img data-name="' . $user->data['username'] . '" class="material_profile"/>';
-		return '<img src="' . $root_path . 'images/avatars/generator/' . $row['avatar'] . '.png" ' .
+		return '<img class="avatar" src="' . $root_path . 'images/avatars/generator/' . $row['avatar'] . '.png" ' .
 			($row['avatar_width'] ? ('width="' . $row['avatar_width'] . '" ') : '') .
 			($row['avatar_height'] ? ('height="' . $row['avatar_height'] . '" ') : '') .
 			'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';

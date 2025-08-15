@@ -2,14 +2,14 @@
     "name": "sitesplat/avatarsplus",
     "type": "phpbb-extension",
     "description": "Adds new super cool avatar drivers to your board.",
-    "homepage": "http://www.sitesplat.com",
-    "version": "2.0.0",
+    "homepage": "https://www.sitesplat.com",
+    "version": "2.0.1",
     "license": "@license Proprietary",
     "authors": [
         {
             "name": "SiteSplat",
             "email": "info@sitesplat.com",
-            "homepage": "http://sitesplat.com"
+            "homepage": "https://sitesplat.com"
         }
     ],
     "require": {
@@ -23,9 +23,10 @@
             "phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
         },
 		"version-check": {
-			"host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "avatarsplus.json"
+			"host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "avatarsplus.json",
+			"ssl": true
 		}
     }
 }
