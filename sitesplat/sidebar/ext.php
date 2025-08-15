@@ -13,8 +13,18 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
-		return $manager->is_enabled('sitesplat/BBCore');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/sidebar', 'info_acp_sidebar');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);
+		}
+
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
+
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 	function enable_step($old_state)
@@ -24,21 +34,25 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 				if (empty($old_state))
 				{
-					global $user;
-					$user->add_lang_ext('sitesplat/sidebar', 'info_acp_sidebar');
-					$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['SIDEBAR_NOTICE']) ? sprintf($user->lang['SIDEBAR_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_QUICK_ACCESS'], $user->lang['ACP_SIDEBAR_CONFIG']) : '');
+					$this->container->get('user')->add_lang_ext('sitesplat/sidebar', 'info_acp_sidebar');
+					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
+						(isset($this->container->get('user')->lang['SIDEBAR_NOTICE']) ?
+							sprintf($this->container->get('user')->lang['SIDEBAR_NOTICE'],
+									$this->container->get('user')->lang['ACP_CAT_GENERAL'],
+									$this->container->get('user')->lang['ACP_QUICK_ACCESS'],
+									$this->container->get('user')->lang['ACP_SIDEBAR_CONFIG']) : ''));
 				}
 
 				// Run parent enable step method
 				return parent::enable_step($old_state);
-			
+
 			break;
-			
+
 			default:
-			
+
 				// Run parent enable step method
 				return parent::enable_step($old_state);
-				
+
 			break;
 		}
 	}
@@ -57,10 +71,10 @@ class ext extends \phpbb\extension\base
 				{
 					// Continue
 				}
-	
+
 				return 'sidebar_slot';
 			break;
-	
+
 			default:
 				return parent::purge_step($old_state);
 			break;
@@ -76,11 +90,10 @@ class ext extends \phpbb\extension\base
 	 */
 	protected function sidebar_handler($step)
 	{
-		global $db;
-		$sql = 'DELETE FROM ' . CONFIG_TABLE . ' WHERE config_name like "sidebar_slot%"';
-		$db->sql_query($sql);
-		$sql = 'DELETE FROM ' . CONFIG_TEXT_TABLE . ' WHERE config_name like "sidebar_slot%"';
-		$db->sql_query($sql);
+		$sql = 'DELETE FROM ' . CONFIG_TABLE . " WHERE config_name like 'sidebar_slot%'";
+		$this->container->get('dbal.conn')->sql_query($sql);
+		$sql = 'DELETE FROM ' . CONFIG_TEXT_TABLE . " WHERE config_name like 'sidebar_slot%'";
+		$this->container->get('dbal.conn')->sql_query($sql);
 
 		return 'sidebar_slot';
 	}

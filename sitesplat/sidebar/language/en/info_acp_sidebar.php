@@ -30,8 +30,10 @@ $lang = array_merge($lang, array(
 	'ACP_SIDEBAR_SLOTS_EXPLAIN'			=> 'Set how many slots you would you like to use. Maximum is 10',
 	'ACP_SIDEBAR_SLOT' 					=> 'Active slot',
 	
+	'ACP_SIDEBAR_PANEL_PAGES'			=> 'View Sidebar in the setting pages',
+	'ACP_SIDEBAR_PANEL_PAGES_EXPLAIN'	=> 'Enable or disable the sidebar in the UCP and MCP pages',
 	'ACP_SIDEBAR_ALL_PAGES'				=> 'View Sidebar in all pages',
-	'ACP_SIDEBAR_ALL_PAGES_EXPLAIN'		=> 'Se to ON to have the side blocks display in any forum page',
+	'ACP_SIDEBAR_ALL_PAGES_EXPLAIN'		=> 'Set to ON to have the side blocks display in any forum page',
 	'ACP_SIDEBAR_SHUFFLE'				=> 'Shuffle blocks',
 	'ACP_SIDEBAR_SHUFFLE_EXPLAIN'		=> 'Set to ON to randomize the blocks at each page refresh',
 	
@@ -77,7 +79,9 @@ $lang = array_merge($lang, array(
 	'NOTICE_BBREACTION'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=27"><strong>BBreaction</strong></a> is not installed, you can NOT use the BBreaction type block.',
 	'NOTICE_LIKEDD'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type block.',
 	'NOTICE_NEWSLETTER'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=21"><strong>E-mail Subscribers</strong></a> is not installed, you can NOT use the E-mail Subscribers type block.',
+	'NOTICE_BBDOWNLOAD'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php"><strong>BBdownload</strong></a> is not installed, you can NOT use the Download type block.',
 	'SIDEBAR_NOTICE'					=> '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
+	'SS_HELPER_NOTY'					=> 'The BBcore addon does not exist!<br />Download the <a href="#">BBcore</a> and copy the folder to your sitesplat extension folder.',
 	
 	'SIDEBAR_TYPE_BBPOINTS'				=> 'BB points',
 	'SIDEBAR_TYPE_LAST_BADGES'			=> 'Last badges',
@@ -91,6 +95,7 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_TYPE_CLOCK'				=> 'Clock',
 	'SIDEBAR_TYPE_POLL'					=> 'Last poll',
 	'SIDEBAR_TYPE_NEWSLETTER'			=> 'Newsletter',
+	'SIDEBAR_TYPE_BBDOWNLOADS'			=> 'BBdownloads',
 	
 	'ONE_S'					            => 'S',
 	'ONE_I'			                    => 'I',
@@ -107,7 +112,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.3.6',
+	'ACP_SIDEBAR_VERSION'		        => '1.3.7',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',

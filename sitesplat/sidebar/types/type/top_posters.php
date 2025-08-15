@@ -94,7 +94,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			$user_posts[0] = $user_posts[1] = $user_posts[2] = array();
 
 			// do the main sql query		
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, user_posts
 				FROM ' . USERS_TABLE . '
 				 ' . $sql_where . ' ' . $sql_and . '
 				' . $sql_other . '
@@ -103,15 +103,21 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				  $match = array();
+				  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							  phpbb_get_user_avatar(
+								  array('avatar'			=> $row['user_avatar'], 
+								        'user_id'      => $row['user_id'],
+										'avatar_type'		=> $row['user_avatar_type'], 
+										'avatar_width'	=> $row['user_avatar_width'], 
+										'avatar_height'	=> $row['user_avatar_height'])), $match) :
+										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+				
 				$user_posts[0][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
-						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
-						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
-						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
+					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -119,7 +125,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, COUNT(p.post_id) AS user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, COUNT(p.post_id) AS user_posts
 					FROM ' . POSTS_TABLE . ' p
 					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
 					' . $sql_where . ' ' . $sql_and . '
@@ -130,15 +136,21 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							phpbb_get_user_avatar(
+								array('avatar'			=> $row['user_avatar'], 
+								      'user_id'      => $row['user_id'],
+									  'avatar_type'		=> $row['user_avatar_type'], 
+									  'avatar_width'	=> $row['user_avatar_width'], 
+									  'avatar_height'	=> $row['user_avatar_height'])), $match) :
+									  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+
 				$user_posts[1][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
-						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
-						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
-						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
+					'avatar'		=> (sizeof($match) > 1) ? array_pop($match) : $avatar,
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -146,7 +158,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, COUNT(p.post_id) AS user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, COUNT(p.post_id) AS user_posts
 					FROM ' . POSTS_TABLE . ' p
 					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
 					' . $sql_where . ' ' . $sql_and . '
@@ -157,15 +169,21 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							phpbb_get_user_avatar(
+								array('avatar'			=> $row['user_avatar'], 
+								      'user_id'      => $row['user_id'],
+									  'avatar_type'		=> $row['user_avatar_type'], 
+									  'avatar_width'	=> $row['user_avatar_width'], 
+									  'avatar_height'	=> $row['user_avatar_height'])),$match) :
+									  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+
 				$user_posts[2][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
-						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
-						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
-						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
+					'avatar'		=> (sizeof($match) > 1) ? array_pop($match) : $avatar,
 					'user_posts'    => $row['user_posts'],
 				);
 			}

@@ -57,6 +57,7 @@ class admin_controller implements admin_interface
 			'S_NOTICE_BADGE'	    => (!$ext_manager->is_enabled('sitesplat/badge') && !$cookie) ? $this->user->lang['NOTICE_BADGE'] : '',
 			'S_NOTICE_BBPOINTS'	    => (!$ext_manager->is_enabled('sitesplat/bbpoints') && !$cookie) ? $this->user->lang['NOTICE_BBPOINTS'] : '',
 			'S_NOTICE_NEWSLETTER'	=> (!$ext_manager->is_enabled('sitesplat/exportemailsandsubscribers') && !$cookie) ? $this->user->lang['NOTICE_NEWSLETTER'] : '',
+			'S_NOTICE_BBDOWNLOAD'	=> (!$ext_manager->is_enabled('sitesplat/bbdownloads') && !$cookie) ? $this->user->lang['NOTICE_BBDOWNLOAD'] : '',
 			
 			'U_BADGE_NOTICE_CLOSE'	=> "{$this->u_action}&amp;hash=" . generate_link_hash('close_notice')
 		));
@@ -119,14 +120,14 @@ class admin_controller implements admin_interface
 			}
 		}
 		
-		$this->check_ext();
+		$ext_manager = $this->phpbb_container->get('ext.manager');
+		($ext_manager->is_enabled('sitesplat/BBCore')) ? $this->check_ext() : null;
 		$types  = $type_ids = $this->manager->get_sidebar_type_ids();
 		
 		array_walk($type_ids, function(&$value, $key, $return) {
 			$value = $value[$return];
 		}, 'id');
 
-		$this->user->add_lang('acp/common');
 		$this->user->add_lang_ext('sitesplat/sidebar', 'info_acp_sidebar');
 		$this->page_title = $this->user->lang['ACP_SIDEBAR_TITLE'];
 		add_form_key('acp_sidebar');
@@ -157,6 +158,7 @@ class admin_controller implements admin_interface
 			'SIDEBAR_WIDTH'			=> ($sidebar_config['width']) ? ' checked="checked"' : '',
 			'SIDEBAR_HEIGHT'		=> ($sidebar_config['height']) ? ' checked="checked"' : '',
 			'SIDEBAR_ALL_PAGES'		=> ($sidebar_config['all_pages']) ? ' checked="checked"' : '',
+			'SIDEBAR_PANEL_PAGES'	=> ($sidebar_config['panel_pages']) ? ' checked="checked"' : '',
 			'SIDEBAR_SHUFFLE'		=> ($sidebar_config['shuffle']) ? ' checked="checked"' : '',
 			'SLOTS'					=> $sidebar_config['slots'],
 			'HOWMANY'				=> $sidebar_config['how_many'],
@@ -195,6 +197,7 @@ class admin_controller implements admin_interface
 			'width'					=> $this->request->variable('width', 0),
 			'height'				=> $this->request->variable('height', 0),
 			'all_pages'				=> $this->request->variable('all_pages', 0),
+			'panel_pages'			=> $this->request->variable('panel_pages', 0),
 			'shuffle'				=> $this->request->variable('shuffle', 0),
 		
 			'slots'					=> $this->request->variable('slots', 1),

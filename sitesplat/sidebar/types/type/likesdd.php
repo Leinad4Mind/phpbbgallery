@@ -74,7 +74,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 			$board_url = generate_board_url();
 			
 			// grab users
-			$sql = 'SELECT p.poster_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, p.forum_id, l.post_id, p.post_subject, l.like_time 
+			$sql = 'SELECT p.poster_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, u.user_id, user_avatar_width, user_avatar_height, p.forum_id, l.post_id, p.post_subject, l.like_time 
 				FROM ' . $likes_table . ' l
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id
 				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = p.poster_id
@@ -85,14 +85,20 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+			  $match = array();
+			  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+						  phpbb_get_user_avatar(
+							  array('avatar'			=> $row['user_avatar'], 
+							        'user_id'           => $row['user_id'],
+									'avatar_type'		=> $row['user_avatar_type'], 
+									'avatar_width'	    => $row['user_avatar_width'], 
+									'avatar_height'	    => $row['user_avatar_height'])), $match) :
+									generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+
 				$newest_users[] = array(
 					'user_id'		=> $row['poster_id'],
 					'username'		=> $row['username'],
-					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
-						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
-						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
-						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
+					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),

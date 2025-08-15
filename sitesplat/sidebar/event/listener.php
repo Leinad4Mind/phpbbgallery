@@ -53,11 +53,14 @@ class listener implements EventSubscriberInterface
 	{
 		$sidebar_config = json_decode($this->config['sidebar_settings'], true);
 				
-		if (!$sidebar_config['all_pages'] || str_replace('.' . $this->php_ext, '', $this->user->page['page_name']) == 'index')
+		$page = str_replace('.' . $this->php_ext, '', $this->user->page['page_name']);
+		$show_page = (!$sidebar_config['all_pages']) ? (($sidebar_config['panel_pages']) ? !in_array($page, array('ucp', 'mcp')): true) : $page == 'index';
+		
+		if ($show_page)
 		{		
 			require_once $this->phpbb_root_path . 'ext/sitesplat/sidebar/vendor/Mobile_Detect.php';
 			$this->request->enable_super_globals();
-			$detect = new \Mobile_Detect($_SERVER); 
+			$detect = new \Mobile_Detect($_SERVER);
 			$this->request->disable_super_globals();
 			$isMobile = $detect->isMobile(); 
 			$isTablet = $detect->isTablet(); 
@@ -67,14 +70,17 @@ class listener implements EventSubscriberInterface
 			for($i = 1; $i <= $sidebar_config['slots']; $i++)
 			{
 				$type_name = $this->manager->get_sidebar_type_name($this->config['sidebar_slot' . $i . '_active']);
-				$type_name = ($type_name) ? $this->manager->get_sidebar_type_id($type_name) : null;
-				if ($isMobile && !substr($type_name['options'], 0, 1) || $isTablet && !substr($type_name['options'], 1, 1) || !$isTablet && !$isMobile)
+				$type_name = ($type_name) ? $this->manager->get_sidebar_type_id($type_name) : null; 
+				if ($isMobile && !substr($type_name['options'], 0, 1) || 
+					$isTablet && !substr($type_name['options'], 1, 1) || 
+					!$isTablet && !$isMobile && $type_name || 
+					$type_name == null)
 				{
 					$slot[] = array('id' => $this->config['sidebar_slot' . $i . '_active'], 'pos' => $i);
 				}
 			}
 			($sidebar_config['shuffle']) ? null : shuffle($slot);
-	
+
 			for ($i = 1; $i <= sizeof($slot); $i++)
 			{
 				$type_name = $this->manager->get_sidebar_type_name($slot[$i-1]['id']);

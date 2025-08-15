@@ -31,8 +31,8 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_WEEKLY'	=> 'Weekly',
 	
 	'BORN'				=> 'Born',
-	'CALENDAR'			=> 'Calendar',
-	'CLOCK'				=> 'Time',
+	'NEW_DOWNLOADS'		=> 'Newest',
+	'POP_DOWNLOADS'		=> 'Popular',
 	'LIKEDD'			=> 'Last likes',
 	
 	'LAST_BADGES'		=> 'Last badges',	

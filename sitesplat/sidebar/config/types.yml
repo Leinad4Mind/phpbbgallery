@@ -8,6 +8,23 @@ services:
 
 # ----- Badge types -----
 # Scope MUST be prototype for all the plugins to work.
+    sitesplat.sidebar.type.bbdownloads:
+        class: sitesplat\sidebar\types\type\bbdownloads
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
     sitesplat.sidebar.type.bbpoints:
         class: sitesplat\sidebar\types\type\bbpoints
         scope: prototype

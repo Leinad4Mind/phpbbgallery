@@ -38,7 +38,8 @@
 	 <!-- IF S_NOTICE_BBREACTION -->{S_NOTICE_BBREACTION}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_BADGE -->{S_NOTICE_BADGE}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_BBPOINTS -->{S_NOTICE_BBPOINTS}<br /><!-- ENDIF -->
-	 <!-- IF S_NOTICE_NEWSLETTER -->{S_NOTICE_NEWSLETTER}<!-- ENDIF -->
+	 <!-- IF S_NOTICE_NEWSLETTER -->{S_NOTICE_NEWSLETTER}<br /><!-- ENDIF -->
+	  <!-- IF S_NOTICE_BBDOWNLOAD -->{S_NOTICE_BBDOWNLOAD}<!-- ENDIF -->
 	</p>
 </div>
 <!-- ENDIF -->
@@ -93,6 +94,7 @@
 			
 			</div>
 		</div>
+		
 		</div>
 		
 
@@ -156,6 +158,21 @@
 				
 			</dd>
 		</dl>
+		
+		<dl>
+		<dt><label for="all_pages">{L_ACP_SIDEBAR_PANEL_PAGES}</label><br />{L_ACP_SIDEBAR_PANEL_PAGES_EXPLAIN}</dt>
+			<dd>
+				<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="panel_pages" name="panel_pages"{SIDEBAR_PANEL_PAGES}>
+						<label class="onoffswitch-label" for="panel_pages">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				
+			</dd>
+			</dl>
+		
 		<dl>
 			<dt><label for="shuffle">{L_ACP_SIDEBAR_SHUFFLE}</label><br />{L_ACP_SIDEBAR_SHUFFLE_EXPLAIN}</dt>
 			<dd>

@@ -41,7 +41,7 @@ class main_controller
 		$this->path_helper = $path_helper;
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->notification_manager = $notification_manager;
-		$this->phpbb_root_path = $phpbb_root_path;
+		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
 
@@ -55,7 +55,7 @@ class main_controller
 	public function handle($route)
 	{
 		$route = preg_replace('/\\.[^.\\s]{3,4}$/', '', $route);
-		$this->root_path = $this->path_helper->get_web_root_path();
+//		$this->root_path = $this->path_helper->get_web_root_path();
 		$this->user->add_lang_ext('sitesplat/sidebar', 'sidebar');
 
 		switch($route)
@@ -70,10 +70,9 @@ class main_controller
 						LEFT JOIN ' . FORUMS_TABLE . ' f ON f.forum_id = t.forum_id
 						WHERE t.topic_id = ' . $topic_id;
 				$result = $this->db->sql_query($sql);
-					$pol_info = $this->db->sql_fetchrow($result);
+				$pol_info = $this->db->sql_fetchrow($result);
 				if ($pol_info)
 				{
-					
 					$cur_voted = array();
 					if ($this->user->data['is_registered'])
 					{
