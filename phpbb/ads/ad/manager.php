@@ -398,7 +398,7 @@ class manager
 		switch ($this->db->get_sql_layer())
 		{
 			case 'oracle':
-				return 'VALUE()';
+				return 'DBMS_RANDOM.VALUE';
 
 			case 'postgres':
 				return 'RANDOM()';
@@ -407,6 +407,12 @@ class manager
 			case 'sqlite':
 			case 'sqlite3':
 				return '(0.5 - RANDOM() / CAST(-9223372036854775808 AS REAL) / 2)';
+
+			// https://improve.dk/weighted-random-selections-in-sql-server/
+			case 'mssql':
+			case 'mssql_odbc':
+			case 'mssqlnative':
+				return 'RAND(CAST(NEWID() AS VARBINARY))';
 
 			default:
 				return 'RAND()';

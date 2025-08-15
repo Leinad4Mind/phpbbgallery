@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "An extension for phpBB that allows administrators to manage and display advertisements on their forums.",
     "homepage": "https://www.phpbb.com",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "keywords": [
         "phpbb",
         "extension",
@@ -18,7 +18,7 @@
         },
         {
             "name": "Matt Friedman",
-            "homepage": "http://vsephpbb.github.io",
+            "homepage": "https://imattpro.github.io",
             "role": "Extensions Development Team Lead"
         },
         {
@@ -43,7 +43,8 @@
         "version-check": {
             "host": "www.phpbb.com",
             "directory": "/customise/db/extension/ads",
-            "filename": "version_check"
+            "filename": "version_check",
+            "ssl": true
         }
     }
 }
