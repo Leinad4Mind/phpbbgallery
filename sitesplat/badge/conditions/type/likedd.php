@@ -67,6 +67,14 @@ class likedd extends \sitesplat\badge\conditions\type\base
 	 * @return array Array of users ids as keys and their condition data as values
 	 * @access public
 	 */
+	 
+	/**	 
+	 * DISLIKE RECEIVED - Option = 0
+	 * DISLIKE GIVEN - Option = 1
+	 * LIKE RECEIVED - Option = 2
+	 * LIKE GIVEN - Option = 3
+	*/
+
 	public function get_users_for_condition($options = array())
 	{
 		$user_data = array();
@@ -88,10 +96,9 @@ class likedd extends \sitesplat\badge\conditions\type\base
 	
 			$this->likes_table = $this->container->getParameter('sitesplat.likedd.tables.likes');
 	
-			$rule_data['options'] = sprintf( "%02d", decbin($options['option'])); 
-	
-			$like_dislike = ((int) substr($rule_data['options'], 0, 1)) ? true : false;
-			$give_recieve = ((int) substr($rule_data['options'], 1, 1)) ? false : true;
+			$option = (int) $options['option'];
+			$like_dislike =  $option < 2;
+			$give_recieve = ($option % 2) ? 0 : 1;
 	
 			// Get data for the users to be checked (exclude bots, guests and inactive users)
 			$sql = ($give_recieve) ? 'SELECT u.user_id, COUNT(CASE WHEN l.ld = ' . (($like_dislike) ? 0 : 1) . ' THEN l.user_id END) AS likedd
@@ -100,7 +107,7 @@ class likedd extends \sitesplat\badge\conditions\type\base
 				LEFT JOIN ' . $this->likes_table . ' l ON l.post_id = p.post_id
 				WHERE 
 				' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-					AND ' . $this->db->sql_in_set('l.user_id', $user_ids, !sizeof($user_ids), true) . '
+					AND ' . $this->db->sql_in_set('u.user_id', $user_ids, !sizeof($user_ids), true) . '
 				group by u.user_id' :
 				'SELECT u.user_id, (SELECT COUNT(ld) FROM ' . $this->likes_table . ' WHERE ld = ' . (($like_dislike) ? 0 : 1) . ' AND user_id = u.user_id) AS likedd
 				FROM ' . USERS_TABLE . ' u 
