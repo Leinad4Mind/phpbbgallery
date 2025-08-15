@@ -23,11 +23,35 @@ td .fa {
 .img-responsive {max-height:56px;}
 
 
+
 .radio, .checkbox {
     display: inherit;
     margin-bottom: inherit;
 }
 
+
+.badges-uploaded-wrapper {
+    margin-top: 20px;
+}
+
+.badge-uploaded-single {
+    border: 1px solid #d7d7d7;
+    border-radius: 2px;
+    float: left;
+    height: 76px;
+    margin: 0 4px 8px;
+    padding: 4px 8px;
+    text-align: center;
+    width: 68px;
+}
+
+.badge-uploaded-single img {
+    margin-bottom: 4px;
+}
+
+.checkbox-delete-badge {
+    display: inline-block;
+}
 
 /* Extension details */
 .alert-update {

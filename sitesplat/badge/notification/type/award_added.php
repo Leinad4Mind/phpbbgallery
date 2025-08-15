@@ -2,7 +2,6 @@
 /**
 *
 * BBAwards extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -21,11 +20,45 @@ class award_added extends \phpbb\notification\type\base
 	}
 
 	/**
+	* Language key used to output the text
+	*
+	* @var string
+	*/
+	protected $language_key = 'NOTIFICATION_BADGE';
+
+	/**
+	* Notification option data (for outputting to the user)
+	*
+	* @var bool|array False if the service should use it's default data
+	* 					Array of data (including keys 'id', 'lang', and 'group')
+	*/
+	static public $notification_option = array(
+		'lang'	=> 'NOTIFICATION_TYPE_AWARD_ADDED',
+		'group'	=> 'NOTIFICATION_GROUP_POSTING',
+	);
+
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	public function set_config(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function is_available()
 	{
-		return false;
+		return true;
 	}
 
 	/**
@@ -55,10 +88,10 @@ class award_added extends \phpbb\notification\type\base
 
 		foreach ($data['user_ids'] as $user_id)
 		{
-			$users[$user_id] = array('');
+			$users[$user_id] = $user_id;
 		}
 
-		return $users;
+		return $this->check_user_notification_options($users, $options);
 	}
 
 	/**
@@ -82,7 +115,9 @@ class award_added extends \phpbb\notification\type\base
 	 */
 	public function get_url()
 	{
-		return append_sid($this->root_path . 'badge/index.html', "u={$this->user_id}");
+		$url = generate_board_url();
+		
+		return append_sid($url . '/app.php/badge/index.html', "u={$this->user_id}");
 	}
 
 	/**

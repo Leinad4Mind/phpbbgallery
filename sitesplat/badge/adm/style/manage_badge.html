@@ -16,7 +16,7 @@
 	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
 <!-- ENDIF -->
 
-<h1>{L_ACP_BADGE_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBAWARDS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+<h1>{L_ACP_BBAWARDS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBAWARDS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
 
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -242,33 +242,53 @@ function display_min_max(e)
 	<!-- ENDIF -->
 	<form id="badge_add_rule" method="post" action="{U_ACTION}">
 		<fieldset class="quick">
-			<input class="button2" type="submit" name="addrule" value="{L_ACP_BADGE_CREATE_RULE}" />
+			<input class="btn btn-default btn-success" type="submit" name="addrule" value="{L_ACP_BADGE_CREATE_RULE}" />
 			<input type="hidden" name="action" value="add" />
 			{S_FORM_TOKEN}
 		</fieldset>
 	</form>
 	
+	<fieldset style="margin: 20px 0 30px;">
+	  <legend>{L_ACP_BADGE_MANAGE_LEGEND_TITLE}</legend>
+		<p>{L_ACP_BADGE_MANAGE_LEGEND_EXPLAIN}</p>	
+	</fieldset>		
+	
 	<form id="badges_general_options" method="post" action="{U_ACTION}" enctype="multipart/form-data">
 		<fieldset>
-			<legend>{L_ACP_BADGE_AVAILABLE}</legend>
-			<dl>
-				<dt style="width:150px;"><label for="badge_ids">{L_ACP_BADGE_AVAILABLE}{L_COLON}</label><br /><span>{L_ACP_BADGE_AVAILABLE_EXPLAIN}</span></dt>
-				<dd style="margin-left:150px;">
+			<legend>{L_ACP_BADGE_OPTIONS}</legend>
+			<div class="clearfix">
+				<label for="badge_ids"><strong>{L_ACP_BADGE_AVAILABLE}{L_COLON}</strong></label><br /><span>{L_ACP_BADGE_AVAILABLE_EXPLAIN}</span>
+				<div class="badges-uploaded-wrapper">
 					<!-- BEGIN badges -->
-					<div style="float:left; margin:0 5px; text-align:center;"><img class="img-responsive" src="{badges.BADGE_IMG}" title="{badges.BADGE_RULES}" />
-					<!-- IF badges.BADGE_DEL --><br />del: <input type="radio" name="deletebadge[{badges.BADGE_ID}]" id="deletebadge_{badges.BADGE_ID}" value="{badges.BADGE_ID}" /><!-- ENDIF -->
+					<div class="badge-uploaded-single">
+					 <img class="img-responsive center-block" src="{badges.BADGE_IMG}" title="{badges.BADGE_RULES}" />
+					  <div class="checkbox-delete-badge"><!-- IF badges.BADGE_DEL --><input type="checkbox" name="deletebadge[{badges.BADGE_ID}]" id="deletebadge_{badges.BADGE_ID}" value="{badges.BADGE_ID}" /><!-- ENDIF --></div>
 					</div>
 					<!-- END badges -->
-				</dd>
+				</div>
+			</div>
+			
+			<div style="margin-top:40px;">
+			 <label for="fileupload"><strong>{L_ACP_BADGE_UPLOAD}{L_COLON}</strong></label><br /><span>{L_ACP_BADGE_UPLOAD_EXPLAIN}</span>
+				<div style="margin-top:10px;">
+					<input type="file" name="fileupload" id="fileupload" maxlength="255" value="" class="inputbox autowidth" /> 
+				</div>
+			</div>
+			
+			<div style="margin-top:40px;">
+			<dl>
+				<dt><label for="badgerandom">{L_ACP_BADGE_RANDOM}{L_COLON}</label><br /><span>{L_ACP_BADGE_RANDOM_EXPLAIN}</span></dt>
+				<dd><label><input type="radio" class="radio" id="badgerandom" name="badgerandom" value="1"<!-- IF BADGE_RANDOM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="badgerandom" value="0"<!-- IF not BADGE_RANDOM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 			</dl>
 			<dl>
-				<dt style="width:150px;"><label for="fileupload">{L_ACP_BADGE_UPLOAD}{L_COLON}</label><br /><span>{L_ACP_BADGE_UPLOAD_EXPLAIN}</span></dt>
-				<dd style="margin-left:150px;">
-					<input type="file" name="fileupload" id="fileupload" maxlength="255" value="" class="inputbox autowidth" /> 
-				</dd>
+				<dt><label for="badgeamount">{L_ACP_BADGE_AMOUNT}{L_COLON}</label><br /><span>{L_ACP_BADGE_AMOUNT_EXPLAIN}</span></dt>
+				<dd><input type="number" name="badgeamount" id="badgeamount" value="{BADGE_AMOUNT}" min="1" max="10" class="inputbox autowidth" /></dd>
 			</dl>
+			</div>
+			
 			<p class="quick">
-				<input class="button1" type="submit" id="generalsubmit" name="generalsubmit" value="{L_SUBMIT}" />
+				<input class="btn btn-default" type="submit" id="generalsubmit" name="generalsubmit" value="{L_SUBMIT}" />
 			</p>
 		</fieldset>
 	</form>

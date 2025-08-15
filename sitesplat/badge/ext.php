@@ -2,7 +2,6 @@
 /**
 *
 * BBAwards extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -22,9 +21,18 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/badge', 'info_acp_badge');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
 
-		return $manager->is_enabled('sitesplat/BBCore');
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 
@@ -43,17 +51,20 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 				if (empty($old_state))
 				{
-					global $user;
-					$user->add_lang_ext('sitesplat/badge', 'info_acp_badge');
-					$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['BADGE_NOTICE']) ? sprintf($user->lang['BADGE_NOTICE'], $user->lang['ACP_CAT_USERGROUP'], $user->lang['ACP_GROUPS'], $user->lang['ACP_BADGE_MANAGE']) : '');
+					$this->container->get('user')->add_lang_ext('sitesplat/badge', 'info_acp_badge');
+					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] . 
+						(isset($this->container->get('user')->lang['BADGE_NOTICE']) ?
+							sprintf($this->container->get('user')->lang['BADGE_NOTICE'],
+									$this->container->get('user')->lang['ACP_CAT_USERGROUP'],
+									$this->container->get('user')->lang['ACP_CAT_USERS'],
+									$this->container->get('user')->lang['ACP_BADGE_MANAGE']) : ''));
 				}
 
 				// Enable Badge Award notifications
-				return $this->notification_handler('enable', array(
-					'sitesplat.badge.notification.type.award_added',
-					'sitesplat.badge.notification.type.award_removed',
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->enable_notifications('sitesplat.badge.notification.type.award_added');
+				$phpbb_notifications->enable_notifications('sitesplat.badge.notification.type.award_removed');
+				return 'notifications';
 			break;
 
 			default:
@@ -78,12 +89,27 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
-				// Disable Badge Award notifications
-				return $this->notification_handler('disable', array(
-					'sitesplat.badge.notification.type.award_added',
-					'sitesplat.badge.notification.type.award_removed',
-				));
+				$this->extensions = $this->container->get('ext.manager')->all_enabled();
+				foreach($this->extensions as $key => $value)
+				{
+					if (strpos($value, 'sitesplat/badge') === false)
+					{
+						unset($this->extensions[$key]);	
+					}
+				}
+				
+				unset($this->extensions['sitesplat/badge']);	
+				if (sizeof($this->extensions))
+				{
+					$this->user = $this->container->get('user');
+					trigger_error(sprintf($this->user->lang['ERROR_BADGE_DISABLE'], implode('<br />» ', array_keys($this->extensions))), E_USER_WARNING);
+				}
 
+				// Disable Badge Award notifications
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->disable_notifications('sitesplat.badge.notification.type.award_added');
+				$phpbb_notifications->disable_notifications('sitesplat.badge.notification.type.award_removed');
+				return 'notifications';
 			break;
 
 			default:
@@ -110,11 +136,10 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Purge Badge Award notifications
-				return $this->notification_handler('purge', array(
-					'sitesplat.badge.notification.type.award_added',
-					'sitesplat.badge.notification.type.award_removed',
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->purge_notifications('sitesplat.badge.notification.type.award_added');
+				$phpbb_notifications->purge_notifications('sitesplat.badge.notification.type.award_removed');
+				return 'notifications';
 			break;
 
 			default:
@@ -124,25 +149,5 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
-	}
-
-	/**
-	 * Notification handler to call notification enable/disable/purge steps
-	 *
-	 * @param string $step               The step (enable, disable, purge)
-	 * @param array  $notification_types The notification type names
-	 * @return string Return notifications as temporary state
-	 * @access protected
-	 */
-	protected function notification_handler($step, $notification_types)
-	{
-		$phpbb_notifications = $this->container->get('notification_manager');
-
-		foreach ($notification_types as $notification_type)
-		{
-			call_user_func(array($phpbb_notifications, $step . '_notifications'), $notification_type);
-		}
-
-		return 'notifications';
 	}
 }

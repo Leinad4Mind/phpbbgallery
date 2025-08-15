@@ -37,7 +37,7 @@ class m4_initial_module extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('module.add', array(
-				'acp', 'ACP_GROUPS', array(
+				'acp', 'ACP_CAT_USERS', array(
 					'module_basename'	=> '\sitesplat\badge\acp\badge_module',
 					'modes'				=> array('manage'),
 				),

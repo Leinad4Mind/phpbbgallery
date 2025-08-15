@@ -10,6 +10,13 @@
 
 namespace sitesplat\badge\event;
 
+use sitesplat\badge\conditions\manager;
+use phpbb\controller\helper;
+use phpbb\template\template;
+use phpbb\db\driver\driver_interface;
+use phpbb\config\config;
+use phpbb\user;
+use phpbb\path_helper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -28,7 +35,7 @@ class listener implements EventSubscriberInterface
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
-
+	protected $config;
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -48,12 +55,13 @@ class listener implements EventSubscriberInterface
 	/** @var string The database table the badges are stored in */
 	protected $badge_badges_table;
 
-	public function __construct(\sitesplat\badge\conditions\manager $manager, \phpbb\controller\helper $controller_helper, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, $phpbb_root_path, \phpbb\path_helper $path_helper, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
+	public function __construct(manager $manager, helper $controller_helper, template $template, driver_interface $db, config $config, user $user, $phpbb_root_path, path_helper $path_helper, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
 	{
 		$this->manager = $manager;
 		$this->controller_helper = $controller_helper;
 		$this->template = $template;
 		$this->db = $db;
+		$this->config = $config;
 		$this->user = $user;
 		$this->root_path = $phpbb_root_path;
 		$this->path_helper = $path_helper;
@@ -172,15 +180,14 @@ class listener implements EventSubscriberInterface
 				LEFT JOIN ' . $this->badge_badges_table . ' b ON b.badge_id = r.badge_id
 				WHERE e.user_id = ' . $event['row']['user_id'] . ' AND
 				r.rule_type_id IN (' . implode(',', $this->type_ids) . ')
-				ORDER BY r.rule_type_id, r.rule_id';
+				ORDER BY ' . (($this->config['badgeaward_random']) ? 'RAND()' : 'r.rule_type_id, r.rule_id');
 		$result = $this->db->sql_query($sql);
 		$i = 0;
-		$imax = 5;
 		while ($row = $this->db->sql_fetchrow())
 		{
-			if ($i < $imax)
+			if ($i < $this->config['badgeaward_amount'])
 			{
-				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . '" style="vertical-align:middle;width:16px;height:16px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '"></a> ';
+				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . '" style="vertical-align:middle;width:16px;height:16px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '"></a> ';
 			}
 			$i++;
 		}
@@ -188,7 +195,7 @@ class listener implements EventSubscriberInterface
 		if ($event['row']['user_id'] != ANONYMOUS)
 		{
 			$post_row = $event['post_row'];
-			$post_row['BADGES'] = $badges . (($i > $imax) ? $this->user->lang('MORE_BADGES', $this->root_path . 'badge/index.html?u=' . $event['row']['user_id'], ($i - $imax)) : '');
+			$post_row['BADGES'] = $badges . (($i > $this->config['badgeaward_amount']) ? $this->user->lang('MORE_BADGES', $this->root_path . 'badge/index.html?u=' . $event['row']['user_id'], ($i - $this->config['badgeaward_amount'])) : '');
 			$event['post_row'] = $post_row;
 		}
 	}

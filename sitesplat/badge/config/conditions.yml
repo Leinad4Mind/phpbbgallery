@@ -2,203 +2,111 @@ services:
     sitesplat.badge.type_collection:
         class: phpbb\di\service_collection
         arguments:
-            - @service_container
+            - '@service_container'
         tags:
             - { name: service_collection, tag: sitesplat.badge.type }
 
+    sitesplat.badge.type:
+        abstract: true
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '@user'
+            - '%sitesplat.badge.tables.badge_rules%'
+            - '%sitesplat.badge.tables.badge_types%'
+            - '%sitesplat.badge.tables.badge_events%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
 # ----- Badge types -----
-# Scope MUST be prototype for all the plugins to work.
+# Services MUST not be shared for all the plugins to work.
     sitesplat.badge.type.avatar:
         class: sitesplat\badge\conditions\type\avatar
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.badges:
         class: sitesplat\badge\conditions\type\badges
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.birthdays:
         class: sitesplat\badge\conditions\type\birthdays
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.custom:
         class: sitesplat\badge\conditions\type\custom
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.donations:
         class: sitesplat\badge\conditions\type\donations
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.likedd:
         class: sitesplat\badge\conditions\type\likedd
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.membership:
         class: sitesplat\badge\conditions\type\membership
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.posts:
         class: sitesplat\badge\conditions\type\posts
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.profilewall:
         class: sitesplat\badge\conditions\type\profilewall
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.signature:
         class: sitesplat\badge\conditions\type\signature
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.warnings:
         class: sitesplat\badge\conditions\type\warnings
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.zebra.foes:
         class: sitesplat\badge\conditions\type\zebra_foes
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }
 
     sitesplat.badge.type.zebra.friends:
         class: sitesplat\badge\conditions\type\zebra_friends
-        scope: prototype
-        arguments:
-            - @service_container
-            - @dbal.conn
-            - @user
-            - %sitesplat.badge.tables.badge_rules%
-            - %sitesplat.badge.tables.badge_types%
-            - %sitesplat.badge.tables.badge_events%
-            - %core.root_path%
-            - %core.php_ext%
+        shared: false
+        parent: sitesplat.badge.type
         tags:
             - { name: sitesplat.badge.type }

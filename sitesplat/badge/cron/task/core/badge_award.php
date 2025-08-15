@@ -10,6 +10,9 @@
 
 namespace sitesplat\badge\cron\task\core;
 
+use phpbb\config\config;
+use sitesplat\badge\conditions\manager;
+
 /**
  * Badge Award cron task.
  */
@@ -28,7 +31,7 @@ class badge_award extends \phpbb\cron\task\base
 	 * @param \sitesplat\badge\conditions\manager $manager Badge Award condition manager object
 	 * @access public
 	 */
-	public function __construct(\phpbb\config\config $config, \sitesplat\badge\conditions\manager $manager)
+	public function __construct(config $config, manager $manager)
 	{
 		$this->config = $config;
 		$this->manager = $manager;

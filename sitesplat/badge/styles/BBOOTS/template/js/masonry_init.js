@@ -16,17 +16,7 @@ head.ready(function () {
       columnWidth: '.col-xs-6',
       itemSelector: '.col-xs-6'
     });
-    
-    // check on load
-    if(jQuery(window).width() <= 480 )
-        msnry.destroy();
-
-    // check on resize
-    jQuery(window).resize(function(){
-        if(jQuery(this).width() <= 480 )
-            msnry.destroy();
-    });
-
-
+	
   });
+  
 });

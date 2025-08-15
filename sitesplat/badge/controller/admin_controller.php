@@ -10,6 +10,14 @@
 
 namespace sitesplat\badge\controller;
 
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\log\log;
+use sitesplat\badge\conditions\manager;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\pagination;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -60,7 +68,7 @@ class admin_controller implements admin_interface
 	/** @var string Custom form action */
 	protected $u_action;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \sitesplat\badge\conditions\manager $manager, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, $phpbb_root_path, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
+	public function __construct(config $config, driver_interface $db, Container $phpbb_container, log $log, manager $manager, request $request, template $template, user $user, pagination $pagination, $phpbb_root_path, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -160,8 +168,7 @@ class admin_controller implements admin_interface
 
 		for($i = $start; $i < sizeof($rule_rows) && $i < $start + $per_page; $i++)
 		{
-	//		if (in_array($rule_rows[$i]['rule_type_id'], $type_ids))
-	//		{
+
 				$this->template->assign_block_vars('rules', array(
 					'RULE_ID'			=> $rule_rows[$i]['rule_id'],
 					'BADGE'				=> $this->root_path . 'ext/sitesplat/badge/badges/' . $rule_rows[$i]['badge'],
@@ -181,11 +188,13 @@ class admin_controller implements admin_interface
 					'U_SYNC'	=> ($rule_rows[$i]['rule_type_name'] != 'sitesplat.badge.type.custom') ? 
 									"{$this->u_action}&amp;action=sync&amp;rule_id=" . $rule_rows[$i]['rule_id'] . '&amp;hash=' . generate_link_hash('sync' . $rule_rows[$i]['rule_id']) : '',
 				));
-		//	}
+
 		}
 
 		$this->template->assign_vars(array(
-			'U_ACTION'	=> $this->u_action,
+			'BADGE_RANDOM'	=> $this->config['badgeaward_random'],
+			'BADGE_AMOUNT'	=> $this->config['badgeaward_amount'],
+			'U_ACTION'		=> $this->u_action,
 		));
 
 		// Display available badges
@@ -197,6 +206,9 @@ class admin_controller implements admin_interface
 	 */
 	public function submit_badge_options()
 	{
+		$this->config->set('badgeaward_random', $this->request->variable('badgerandom', 0));
+		$this->config->set('badgeaward_amount', $this->request->variable('badgeamount', 5));
+		
 		$delete_badges = $this->request->variable('deletebadge', array(0));
 		if (sizeof($delete_badges))
 		{
@@ -218,23 +230,26 @@ class admin_controller implements admin_interface
 			}
 		}
 
-		$this->user->add_lang('posting');
-		include($this->root_path . 'includes/functions_upload.php' );
-		$upload = new \fileupload();
-		$upload->set_allowed_extensions(array('jpg', 'gif', 'jpeg', 'png'));
+		$upload = $this->phpbb_container->get('files.factory')->get('upload')
+							->set_error_prefix('FILE_')
+							->set_allowed_extensions(array('jpg', 'gif', 'svg', 'jpeg', 'png'))
+							->set_max_filesize(0)
+							->set_allowed_dimensions(0,0,0,0)
+							->set_disallowed_content((isset($this->config['mime_triggers']) ? explode('|', $this->config['mime_triggers']) : false));
+							
 		$upload_dir = $this->root_path . 'ext/sitesplat/badge/badges/';
 
-		$file = $upload->form_upload('fileupload');
-		if ($file->realname != '')
+		$file = $upload->handle_upload('files.types.form', 'fileupload');
+		if ($file->get('realname') != '' && !sizeof($file->error))
 		{
 			$file->clean_filename('real');
 			$file->move_file(str_replace($this->root_path, '', $upload_dir), true, true, '0775');
-			chmod($upload_dir . $file->realname, 0775);
+			chmod($upload_dir . $file->get('realname'), 0775);
 
 			if ($file->is_uploaded())
 			{
-				$sql = 'INSERT INTO ' . $this->badge_badges_table . ' (badge_id, badge) VALUES(null, "' . $file->realname . '")
-				 		ON DUPLICATE KEY UPDATE badge = "' . $file->realname . '"';
+				$sql = 'INSERT INTO ' . $this->badge_badges_table . ' (badge_id, badge) VALUES(null, "' . $file->get('realname') . '")
+				 		ON DUPLICATE KEY UPDATE badge = "' . $file->get('realname') . '"';
 				$this->db->sql_query($sql);
 				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BADGE_IMG_UPLOAD_LOG', time());
 			}
@@ -272,7 +287,7 @@ class admin_controller implements admin_interface
 			'RULE_NAME'			=> isset($rule_data['rule_name']) ? $rule_data['rule_name'] : '',
 			'RULE_DESCRIPTION'	=> isset($rule_data['rule_description']) ? $rule_data['rule_description'] : '',
 			'BADGE'				=> ($rule_id) ? $this->root_path . 'ext/sitesplat/badge/badges/' . $rule_data['badge'] : 
-									$this->root_path . 'ext/sitesplat/badge/badges/eye_1.png',
+									$this->root_path . 'ext/sitesplat/badge/badges/ace.png',
 			'CONDITION_BOOL'	=> isset($rule_data['rule_name']) ? $this->manager->get_condition_bool($rule_data['rule_type_name']) : '',
 			'DISPLAY_USERLIST'	=> (isset($rule_data['rule_name']) && $rule_data['rule_type_name'] == 'sitesplat.badge.type.custom') ? true : false,
 			'DISPLAY_RULESLIST'	=> (isset($rule_data['rule_name']) && $rule_data['rule_type_name'] == 'sitesplat.badge.type.cross_badge') ? true : false,

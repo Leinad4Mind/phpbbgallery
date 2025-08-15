@@ -148,6 +148,15 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			'postser.png',
 			'r2d2.png',
 			'rocket.png',
+			'favorites_gold.svg',
+			'ace.png',
+			'badgestar.png',
+			'bluestar.png',
+			'crown.png',
+			'dragon.png',
+			'naked.png',
+			'shieldstar.png',
+			'swarm.png',
 			'skull.png'
 		);
 

@@ -10,6 +10,9 @@
 
 namespace sitesplat\badge\conditions;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\user;
+use phpbb\request\request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,7 +60,7 @@ class manager
 	 *
 	 * @access public
 	 */
-	public function __construct($badge_types, ContainerInterface $phpbb_container, \phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, $badge_rules_table, $badge_types_table, $badge_events_table)
+	public function __construct($badge_types, ContainerInterface $phpbb_container, \phpbb\cache\driver\driver_interface $cache, driver_interface $db, user $user, request $request, $badge_rules_table, $badge_types_table, $badge_events_table)
 	{
 		$this->badge_types = $badge_types;
 		$this->phpbb_container = $phpbb_container;

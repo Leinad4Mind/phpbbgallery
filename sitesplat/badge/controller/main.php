@@ -10,6 +10,12 @@
 
 namespace sitesplat\badge\controller;
 
+use sitesplat\badge\conditions\manager;
+use phpbb\db\driver\driver_interface;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\request\request;
+use phpbb\controller\helper;
 use Symfony\Component\DependencyInjection\Container;
 
 class main
@@ -51,7 +57,7 @@ class main
 	/** @var string The database table the badges are stored in */
 	protected $badge_badges_table;
 
-	public function __construct(\sitesplat\badge\conditions\manager $manager, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, $phpbb_root_path, \phpbb\path_helper $path_helper, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
+	public function __construct(manager $manager, driver_interface $db, Container $phpbb_container, template $template, user $user, request $request, helper $helper, $phpbb_root_path, \phpbb\path_helper $path_helper, $badge_rules_table, $badge_types_table, $badge_events_table, $badge_badges_table)
 	{
 		$this->manager = $manager;
 		$this->db = $db;
@@ -142,7 +148,7 @@ class main
 						'U_URL'		=> $this->helper->route('badge_award_controller', array('route' => 
 										(($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $row['user_id']))),
 						'U_COLOR'	=> $row['user_colour'],
-						'AVATAR'	=> ($row['avatar']) ? phpbb_get_user_avatar($row) : '<img style="width:19px;height:19px;" src="' . generate_board_url() . '/styles/' . $row['style_path'] . '/theme/images/no_avatar.gif">',
+						'AVATAR'	=> ($row['avatar']) ? phpbb_get_user_avatar($row) : '<img style="width:34px;height:34px;" src="' . generate_board_url() . '/styles/' . $row['style_path'] . '/theme/images/no_avatar.gif" alt="' . $this->user->lang['USER_AVATAR'] . '">',
 						'DATE'		=> ($row['date']) ? $this->user->format_date($row['date'], 'j M Y') : '',
 					));
 				}
@@ -179,8 +185,9 @@ class main
 						'USER_ID'	=> '',
 						'U_URL'		=> '',
 						'RULETITLE'	=> $row['rule_name'],
+					//	'DESCR'		=> $row['rule_name'] . '<br />' . $row['rule_description'],
 						'DESCR'		=> $row['rule_description'],
-						'AVATAR'	=> '<img title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;width:30px;height:30px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '">',
+						'AVATAR'	=> '<img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;width:30px;height:30px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '">',
 						'DATE'		=> ($row['date']) ? $this->user->format_date($row['date'], 'j M Y') : '',
 					));
 				}

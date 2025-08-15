@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "BBAwards is a system that allows your forum members to truly engage with the community rewarding them with special badges. Custom badge awards are available plus tons of combinations possible for specific conditions.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.3.8",
+	"version": "1.4.0",
 	"keywords": ["phpbb", "extension", "badge", "award", "sitesplat", "customization", "rewards", "FLATBOOTS", "bootstrap"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -23,11 +23,11 @@
 	"extra": {
 		"display-name": "BBAwards",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.2.0"
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbawards.json"
 		}
 

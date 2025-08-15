@@ -49,7 +49,7 @@ $lang = array_merge($lang, array(
 	'BADGE_WALL_TITLE'	        => 'My Awards collection wall',
 	
 	'UCP_BADGE_TITLE'		    => 'Badge Awards',
-	'UCP_BADGE_EXPLAIN'		    => 'An overview of awarded badges for you',
+	'UCP_BADGE_EXPLAIN'		    => 'An overview of all your awarded badges',
 
 	// Conditions
 	'BADGE_TYPE_AVATAR'			=> 'Avatar',
@@ -75,9 +75,9 @@ $lang = array_merge($lang, array(
 	// Notifications
 	'BADGE_NOTIFICATION_EVENT_ADDED'	=> '<strong>BBAwards update</strong>:<br />A new %1$s badge has been added.',
 	'BADGE_NOTIFICATION_EVENT_REMOVED'	=> '<strong>BBAwards update</strong>:<br />A %1$s badge has been removed.',
-	'BADGE_WHOHOO'	                    => 'Whoohoo!!!, There is a shiny new badge to celebrate!<hr><strong>You just unlocked a new badge</strong>, go to <a href="%1$s">your badge page</a> to see them all!',
+	'BADGE_WHOHOO'	                    => 'Whoohoo!!! There is a shiny new badge to celebrate, congrats!<hr><strong>You just unlocked a new badge</strong>, go to <a href="%1$s">your badge page</a> to see them all!',
 	
 	// Misc
-	'BADGE_LINK_AD'	                    => 'BBAwards system by SiteSplat',
+	'BADGE_LINK_AD'	                    => 'BBAwards by SiteSplat',
 	'BADGE_LINK_AD_TITLE'	            => 'Professional Premium Themes And Extensions',
 ));

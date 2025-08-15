@@ -33,15 +33,15 @@
 	
 	
 	<!-- BEGIN rules -->
-	<div class="badge_award" id="{rules.URL}" style="display:<!-- IF rules.S_FIRST_ROW -->block<!-- ELSE -->none<!-- ENDIF -->;">
+	<div class="badge_award"<!-- IF not IN_USER --> id="{rules.URL}"<!-- ENDIF --> style="display:<!-- IF rules.S_FIRST_ROW -->block<!-- ELSE -->none<!-- ENDIF -->;">
 	<h3>{rules.CONDITION_NAME}</h3>
 	<!-- BEGIN badge -->
 	<!-- IF badge.BADGE and IN_USER -->
 	<div class="media-left">
 	<figure> 
 		<img class="img-responsive img-badge thumbnail center-block" src="{badge.BADGE}" alt="{badge.GROUP_NAME}"/>
+	    <figcaption class="text-center">{L_BADGE_WALL_TITLE}</figcaption>
 	</figure>
-	<figcaption class="text-center">{L_BADGE_WALL_TITLE}</figcaption>
 	</div>
 	<!-- ENDIF -->
 	<!-- END badge -->
@@ -92,8 +92,8 @@
 				 </div>
 				</div>
 				<!-- IF not users.USERNAME -->
-				<div class="clearfix badge_title"><strong>{users.RULETITLE}</strong></div>
-				<div class="clearfix badge_description">{users.DESCR}</div>
+				<div class="badge_title"><strong>{users.RULETITLE}</strong></div>
+				<div class="badge_description">{users.DESCR}</div>
 				<!-- ENDIF -->
 				</div>
 			  </a>

@@ -10,6 +10,9 @@
 
 namespace sitesplat\badge\conditions\type;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\notification\manager;
+
 /**
  * Badge Award conditions type helper class
  */
@@ -40,7 +43,7 @@ class helper
 	 *
 	 * @access public
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\notification\manager $notification_manager, $phpbb_root_path, $php_ext, $badge_events_table)
+	public function __construct(driver_interface $db, manager $notification_manager, $phpbb_root_path, $php_ext, $badge_events_table)
 	{
 		$this->db = $db;
 		$this->notification_manager = $notification_manager;
@@ -59,7 +62,8 @@ class helper
 	public function get_users_rules($user_id_ary)
 	{
 		$rule_id_ary = array_flip($user_id_ary);
-		foreach ($user_id_ary as $key => $value) { 
+		foreach ($user_id_ary as $key => $value)
+		{ 
 		  $rule_id_ary[$value] = array();
 		}
 

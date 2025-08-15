@@ -33,7 +33,7 @@
 	
 	
 	<!-- BEGIN rules -->
-	<div class="badge_award" id="{rules.URL}" style="display:<!-- IF rules.S_FIRST_ROW -->block<!-- ELSE -->none<!-- ENDIF -->;">
+	<div class="badge_award"<!-- IF not IN_USER --> id="{rules.URL}"<!-- ENDIF --> style="display:<!-- IF rules.S_FIRST_ROW -->block<!-- ELSE -->none<!-- ENDIF -->;">
 	<h3>{rules.CONDITION_NAME}</h3>
 	<!-- BEGIN badge -->
 	<!-- IF badge.BADGE and IN_USER -->

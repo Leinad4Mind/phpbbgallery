@@ -10,6 +10,8 @@
 
 namespace sitesplat\badge\conditions\type;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\user;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -44,7 +46,7 @@ abstract class base implements type_interface
 	/** @var string */
 	protected $php_ext;
 
-	public function __construct(ContainerInterface $container, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, $badge_rules_table, $badge_types_table,  $badge_events_table, $phpbb_root_path, $php_ext)
+	public function __construct(ContainerInterface $container, driver_interface $db, user $user, $badge_rules_table, $badge_types_table,  $badge_events_table, $phpbb_root_path, $php_ext)
 	{
 		$this->container = $container;
 		$this->db = $db;
@@ -123,7 +125,7 @@ abstract class base implements type_interface
 		$rule_id = $rule_data['rule_id'];
 
 		// Add badge to the user
-		$this->user_badge_add($rule_id, $user_id_ary);
+		$this->user_badge_add($rule_data['rule_id'], $user_id_ary);
 
 		// Send notification
 		if ($rule_data['rule_notify'])
@@ -147,7 +149,7 @@ abstract class base implements type_interface
 		$rule_id = $rule_data['rule_id'];
 
 		// Delete badge from the user
-		$this->user_badge_dell($rule_id, $user_id_ary);
+		$this->user_badge_dell($rule_data['rule_id'], $user_id_ary);
 
 		// Send notification
 		if ($rule_data['rule_notify'])
