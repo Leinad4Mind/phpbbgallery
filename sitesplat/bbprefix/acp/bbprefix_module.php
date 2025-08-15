@@ -15,7 +15,7 @@ class bbprefix_module
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $config, $request, $phpbb_container, $phpbb_extension_manager, $phpbb_root_path;
+		global $db, $user, $auth, $template, $config, $request, $phpbb_container;
 		$this->db		= $db;
 		$this->user		= $user;
 		$this->template	= $template;
@@ -39,6 +39,7 @@ class bbprefix_module
 				$this->template->assign_vars([
 					'L_TITLE'			=> $this->user->lang('ACP_BBPREFIX_MANAGE'),
 					'L_TITLE_EXPLAIN'	=> $this->user->lang('ACP_BBPREFIX_MANAGE_EXPLAIN'),
+					'U_ACTION'			=> $this->u_action
 				]);
 
 				$action	= $this->request->variable('action', 'list');
@@ -49,69 +50,7 @@ class bbprefix_module
 				{
 					case 'details':
 						$this->user->add_lang_ext('sitesplat/bbprefix', 'info_acp_bbprefix');
-						$this->user->add_lang(array('install', 'acp/extensions', 'migrator'));
-						$ext_name = 'sitesplat/bbprefix';
-						$md_manager = (version_compare($this->config['version'], '3.2.*', '<')) ? 
-								new \phpbb\extension\metadata_manager($ext_name, $this->config, $phpbb_extension_manager, $this->template, $this->user, $phpbb_root_path) :
-								new \phpbb\extension\metadata_manager($ext_name, $this->config, $phpbb_extension_manager, $this->template, $phpbb_root_path);
-						try
-						{
-							$this->metadata = $md_manager->get_metadata('all');
-						}
-						catch(\phpbb\extension\exception $e)
-						{
-							trigger_error($e, E_USER_WARNING);
-						}
-			
-						$md_manager->output_template_data();
-			
-						if (isset($this->user->lang['ext_details']))
-						{
-							foreach($this->user->lang['ext_details'] as $key => $value)
-							{
-								foreach($value as $desc)
-								{
-									$this->template->assign_block_vars($key, array(
-										'DESCRIPTION'	=> $desc,
-									));
-								}
-							}
-						}
-						try
-						{
-							$updates_available = $this->version_check($md_manager, $this->request->variable('versioncheck_force', false));
-			
-							$template->assign_vars(array(
-								'S_UP_TO_DATE'		=> empty($updates_available),
-								'S_VERSIONCHECK'	=> true,
-								'UP_TO_DATE_MSG'	=> $this->user->lang(empty($updates_available) ? 'UP_TO_DATE' : 'NOT_UP_TO_DATE', $md_manager->get_metadata('display-name')),
-							));
-			
-							foreach ($updates_available as $branch => $version_data)
-							{
-								$this->template->assign_block_vars('updates_available', $version_data);
-							}
-						}
-						catch (\RuntimeException $e)
-						{
-							$this->template->assign_vars(array(
-								'S_VERSIONCHECK_STATUS'			=> $e->getCode(),
-								'VERSIONCHECK_FAIL_REASON'		=> ($e->getMessage() !== $this->user->lang('VERSIONCHECK_FAIL')) ? $e->getMessage() : '',
-							));
-						}
-			
-						if ($this->request->is_ajax())
-						{
-							$this->template->assign_vars(array(
-								'IS_AJAX'				=> true,
-							));
-						} else
-						{
-							$this->template->assign_vars(array(
-								'U_BACK'				=> $this->u_action,
-							));
-						}
-			
+						$phpbb_container->get('sitesplat.BBCore.helper')->detail('sitesplat/bbprefix');
 						$this->tpl_name = 'acp_ext_details';
 					break;
 					
@@ -152,7 +91,7 @@ class bbprefix_module
 							$prefix['bbcode_uid'] = $uid;
 							$prefix['bbcode_bitfield'] = $bitfield;
 
-							$error = $manager->validate_prefix($prefix);
+							$error = $manager->validate_prefix($prefix, $action);
 
 							if (!sizeof($error))
 							{
@@ -183,10 +122,12 @@ class bbprefix_module
 							$prefix['prefix'] = generate_text_for_edit($prefix['prefix'], $prefix['bbcode_uid'], OPTION_FLAG_BBCODE)['text'];
 
 							$this->template->assign_vars([
+								'PREFIX_ID'			=> $prefix_id,
 								'PREFIX_PREFIX'		=> isset($prefix['prefix']) ? $prefix['prefix'] : '',
 								'PREFIX_NAME'		=> isset($prefix['name']) ? $prefix['name'] : '',
 								'BBPREFIX_ON_INDEX'	=> $prefix['on_index'],
-								'PREFIX_FORUMS'		=>  make_forum_select(json_decode($prefix['forums'], true), 0, 0, 1),
+								'PREFIX_FORUMS'		=> make_forum_select(json_decode($prefix['forums'], true), 0, 0, 1),
+								'ACTION'			=> $action
 							]);
 							
 							$sql = 'SELECT group_id, group_type, group_name	FROM ' . GROUPS_TABLE . ' ORDER BY group_name ASC';
@@ -270,6 +211,8 @@ class bbprefix_module
 									'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;prefix_id=' . $prefix['id']
 								]);
 							}
+					//	Max 9 or will mess the prefix order in topics - issue with jQurey Serialize	
+					//		$this->template->assign_vars(['PREFIX_MAX' => ($i >= 9) ? true: false]);
 						}
 					break;
 				}
@@ -278,41 +221,5 @@ class bbprefix_module
 				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
 		}
-	}
-
-	/**
-	* Check the version and return the available updates.
-	*
-	* @param \phpbb\extension\metadata_manager $md_manager The metadata manager for the version to check.
-	* @param bool $force_update Ignores cached data. Defaults to false.
-	* @param bool $force_cache Force the use of the cache. Override $force_update.
-	* @return string
-	* @throws RuntimeException
-	*/
-	protected function version_check(\phpbb\extension\metadata_manager $md_manager, $force_update = false, $force_cache = false)
-	{
-		global $cache, $config, $user;
-		$meta = $md_manager->get_metadata('all');
-
-		if (!isset($meta['extra']['version-check']))
-		{
-			throw new \RuntimeException($this->user->lang('NO_VERSIONCHECK'), 1);
-		}
-
-		$version_check = $meta['extra']['version-check'];
-
-		if (version_compare($config['version'], '1.0.0', '>'))
-		{
-			$version_helper = new \phpbb\version_helper($cache, $config, new \phpbb\file_downloader(), $user);
-		}
-		else
-		{
-			$version_helper = new \phpbb\version_helper($cache, $config, $user);
-		}
-		$version_helper->set_current_version($meta['version']);
-		$version_helper->set_file_location($version_check['host'], $version_check['directory'], $version_check['filename']);
-		$version_helper->force_stability($config['extension_force_unstable'] ? 'unstable' : null);
-
-		return $updates = $version_helper->get_suggested_updates($force_update, $force_cache);
 	}
 }

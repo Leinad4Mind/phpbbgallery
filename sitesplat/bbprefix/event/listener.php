@@ -182,7 +182,7 @@ class listener implements EventSubscriberInterface
 		if ($this->manager->get_on_index_enabled($event))
 		{
 			$forum_row = $event['forum_row'];
-			$forum_row['TOPIC_PREFIX'] = $this->load_prefixes_topic($event, 'row', '', true). '';
+			$forum_row['TOPIC_PREFIX'] = $this->load_prefixes_topic($event, 'row', '', true);
 			$event['forum_row'] = $forum_row;
 		}
 	}

@@ -87,10 +87,18 @@ li.prefix_placeholder {
     max-width: inherit;
 }
 
+.bbprefix_tag img,
+.section-index .last-wrapper .bbprefix-index-tag,
+.section-search .desc-wrapper img {
+    max-height: 20px;
+}
+
+.section-viewtopic .bbprefix_tag {
+    margin-right: 5px;
+}
 
 .section-viewtopic .side-segment .label {
 	display: inline-block;
-	margin-right: 5px;
 }
 
 #postingbox .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a i.check-mark {

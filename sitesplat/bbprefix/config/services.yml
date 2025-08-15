@@ -2,15 +2,15 @@ services:
     bbprefix.manager:
         class: sitesplat\bbprefix\core\manager
         arguments:
-            - @dbal.conn
-            - @cache.driver
-            - @template
-            - @request
-            - @user
-            - @bbprefix.token.collection
-            - @controller.helper
-            - %core.root_path%
-            - %core.php_ext%
+            - '@dbal.conn'
+            - '@cache.driver'
+            - '@template'
+            - '@request'
+            - '@user'
+            - '@bbprefix.token.collection'
+            - '@controller.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     bbprefix.listener:
         class: sitesplat\bbprefix\event\listener
@@ -20,42 +20,42 @@ services:
     bbprefix.token.collection:
         class: phpbb\di\service_collection
         arguments:
-            - @service_container
+            - '@service_container'
         tags:
             - { name: service_collection, tag: bbprefix.token }
 
     bbprefix.token.username:
         class: sitesplat\bbprefix\core\token\username
         arguments:
-            - @user
-            - @auth
-            - @config
-            - @template
-            - @dbal.conn
-            - %core.table_prefix%
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '%core.table_prefix%'
         tags:
             - { name: bbprefix.token }
 
     bbprefix.token.poster:
         class: sitesplat\bbprefix\core\token\poster
         arguments:
-            - @user
-            - @auth
-            - @config
-            - @template
-            - @dbal.conn
-            - %core.table_prefix%
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '%core.table_prefix%'
         tags:
             - { name: bbprefix.token }
 
     bbprefix.token.date:
         class: sitesplat\bbprefix\core\token\date
         arguments:
-            - @user
-            - @auth
-            - @config
-            - @template
-            - @dbal.conn
-            - %core.table_prefix%
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '%core.table_prefix%'
         tags:
             - { name: bbprefix.token }

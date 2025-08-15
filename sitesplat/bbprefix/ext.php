@@ -16,8 +16,18 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
-		return $manager->is_enabled('sitesplat/BBCore');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/bbprefix', 'info_acp_bbprefix');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
+
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 	public function enable_step($old_state)

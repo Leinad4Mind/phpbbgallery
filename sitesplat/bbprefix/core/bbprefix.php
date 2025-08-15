@@ -61,7 +61,7 @@ class bbprefix extends \ArrayObject
 		// Now that the processing is all done, if there is a URL
 		// template variable, let's add <a> tags around the title.
 		if (!empty($vars['URL'])) {
-			$this['prefix'] = '<a href="' . $vars['URL'] . '">' . $this['prefix'] . '</a>';
+			$this['prefix'] = '<a class="bbprefix_tag" href="' . $vars['URL'] . '">' . $this['prefix'] . '</a>';
 		}
 		$tpl_vars = array_merge([
 			$var_prefix . 'ID'		=> $this['id'],
