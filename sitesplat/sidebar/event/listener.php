@@ -13,6 +13,7 @@ namespace sitesplat\sidebar\event;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Detection\MobileDetect;
 
 /**
 * Event listener
@@ -56,13 +57,12 @@ class listener implements EventSubscriberInterface
 		$page = str_replace('.' . $this->php_ext, '', $this->user->page['page_name']);
 
 		$show_page = (!$sidebar_config['all_pages']) ? (($sidebar_config['panel_pages']) ? !in_array($page, array('ucp', 'mcp')): true) : $page == 'index';
-		$in_no_pages = (strpos($page, 'classifieds') === false && strpos($page, 'bbfront') === false && strpos($page, 'downloads') === false) ? false : true;
+		$in_no_pages = (strpos($page, 'classifieds') === false && strpos($page, 'bbfront') === false && strpos($page, 'galleries') === false && strpos($page, 'downloads') === false) ? false : true;
 		
 		if ($show_page && !$in_no_pages)
-		{		
-			require_once $this->phpbb_root_path . 'ext/sitesplat/sidebar/vendor/Mobile_Detect.php';
+		{
 			$this->request->enable_super_globals();
-			$detect = new \Mobile_Detect($_SERVER);
+			$detect = new MobileDetect($_SERVER);
 			$this->request->disable_super_globals();
 			$isMobile = $detect->isMobile(); 
 			$isTablet = $detect->isTablet(); 

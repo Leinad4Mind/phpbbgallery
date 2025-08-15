@@ -105,7 +105,7 @@ class membership extends \sitesplat\sidebar\types\type\base
 					FROM ' . $membership_table . ' m
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = m.user_id
 					' . $sql_where . ' ' . $sql_and . " AND m.payment_status = 'Completed' 
-					GROUP BY m.mc_gross
+					GROUP BY m.mc_gross, m.mc_currency
 					ORDER BY m.mc_gross";
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while($row = $this->db->sql_fetchrow($result))

@@ -209,7 +209,8 @@ class admin_controller implements admin_interface
 			'ignore_admins_mods'	=> $this->request->variable('ignore_admins_mods', 0),
 		)));
 
-		$sidebar = $this->request->variable('sidebar', array('' => array('' => '')));
+	//	$sidebar = $this->request->variable('sidebar', array('' => array('' => '')));
+	    $sidebar = $this->request->variable('sidebar', array('' => array('' => '')),true);
 		$options = $this->request->variable('options', array('' => array('' => '')));
 		foreach($sidebar as $key => $value)
 		{

@@ -49,6 +49,7 @@ $lang = array_merge($lang, array(
 	'SIGN_IN_NEWS'		=> 'Sign in for our newsletter',
 	'SUBSCRIBE_BTN'		=> 'Subscribe',
 	'DOWNLOADS'			=> 'Downloads',
+	'UNREAD'			=> 'unread',
 	
 	'INFOMSG'			=> 'Information',
 	'VOTE_NOT_POSIIBLE'	=> 'Change of votes not possible',
@@ -57,7 +58,7 @@ $lang = array_merge($lang, array(
 	'NOT_FOUND'			=> 'Your poll is not found',
 	
 	'STAFF'				=> 'Staff online',
-	'UNKNOWN'			=> 'Unknown',
+	'STAFF_UNKNOWN'	    => 'N/A',
 	
 	'DONATIONS'			=> 'Donations',
 	'DONATE_ALSO'		=> 'Ready to donate? Awesome! here you go.',

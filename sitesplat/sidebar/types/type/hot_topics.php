@@ -162,14 +162,14 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			}
 			else
 			{
-				$this->template->assign_block_vars('top_topics', array(
+				$this->template->assign_block_vars('hot_topics', array(
 					'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
 				));
 			}
 		}
 		else
 		{
-			$this->template->assign_block_vars('top_topics', array(
+			$this->template->assign_block_vars('hot_topics', array(
 				'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
 			));
 		}

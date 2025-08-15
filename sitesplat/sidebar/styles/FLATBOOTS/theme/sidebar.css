@@ -68,7 +68,20 @@
 
 .fa-object {
     font-size: 16px;
-    margin-right: 10px;
+ /* margin-right: 10px; */
+    margin-top: 10px;
+}
+
+ /* special quick and dirty fix for this long icon */
+.icon-bbreact-emo-shoot.fa-object {
+    margin-right: -18px;
+}
+
+.media-left.bbreactions-emoji, .media > .pull-left {
+    padding-right: 26px;
+}
+
+.media-left.bbreactions-emoji .emoji {
     margin-top: 10px;
 }
 

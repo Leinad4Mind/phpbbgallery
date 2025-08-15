@@ -61,6 +61,18 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
+		$bbemoji_enabled = false;
+		$bbemoji_parser = null;
+		if ($this->container->get('ext.manager')->is_enabled('sitesplat/bbemoji'))
+		{
+			$bbemoji_enabled = true;
+			$bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($this->container->getParameter('sitesplat.bbemoji.url.generators'), $this->container->get('path_helper'), $this->container->get('template'), $this->container->get('request'), $this->container->get('user'), $this->db, $bbemoji_icons_table);
+			$this->template->assign_vars(array(
+				'BBREACTION_EMOJI'	=> true,
+			));
+		}
+		
+
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
 		$forum_ary = array();
@@ -87,7 +99,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 			$reward_type_table = $this->container->getParameter('sitesplat.bbreaction.tables.reward_type');
 
 			// grab users
-			$sql = 'SELECT b.user_id, r.title, r.symbol, r.positive, u.username, u.user_colour, b.like_time, b.post_id, p.forum_id 
+			$sql = 'SELECT b.user_id, r.*, u.username, u.user_colour, b.like_time, b.post_id, p.forum_id 
 				FROM ' . $reward_table . ' b
 				LEFT JOIN ' . $reward_type_table . ' r ON r.type_id = b.like_type
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = b.post_id
@@ -105,6 +117,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 					'user_colour'	=> $row['user_colour'],
 					'rule_name'		=> $row['title'],
 					'symbol'		=> $row['symbol'],
+					'emoji'			=> $bbemoji_enabled ? $bbemoji_parser->emoji_render($row['emoji']) : '',
 					'positive'		=> $row['positive'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
@@ -113,7 +126,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 			$this->db->sql_freeresult($result);
 
 			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_sidebar_last_bbreactions', $newest_users, 300);
+			$this->cache->put('_sidebar_last_bbreactions', $newest_users, 0);
 		}
 
 		foreach ($newest_users as $row)
@@ -127,6 +140,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 				'USERNAME_FULL'		=> $username_string,
 				'TYPE'				=> $row['rule_name'],
 				'SYMBOL'			=> $row['symbol'],
+				'EMOJI'				=> $row['emoji'],
 				'POSITIVE'			=> $row['positive'],
 				'POST_URL'			=> $row['post_url']
 			));

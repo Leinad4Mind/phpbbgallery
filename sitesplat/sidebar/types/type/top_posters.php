@@ -90,9 +90,12 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			}
 			$sql_other = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
 			$sql_other .=  ' user_posts <> 0';
-			$board_url = generate_board_url();
 			$user_posts[0] = $user_posts[1] = $user_posts[2] = array();
 
+		//  damn phpbb url rewrite and broken driver
+		//	$board_url = generate_board_url();
+			$board_url = generate_board_url() . '/';
+			
 			// do the main sql query		
 			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, user_posts
 				FROM ' . USERS_TABLE . '
@@ -111,13 +114,14 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 										'avatar_type'		=> $row['user_avatar_type'], 
 										'avatar_width'	=> $row['user_avatar_width'], 
 										'avatar_height'	=> $row['user_avatar_height'])), $match) :
-										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
 				$user_posts[0][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
 					'user_posts'    => $row['user_posts'],
 				);
 			}

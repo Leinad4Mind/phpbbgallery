@@ -82,7 +82,7 @@ class bbdownloads extends \sitesplat\sidebar\types\type\base
 							GROUP BY l.version_id
 							) x
 					LEFT JOIN ' . $bbdownloads_table . ' d ON d.id = x.download_id
-					GROUP BY x.download_id
+					GROUP BY x.download_id, x.total
 					ORDER BY total DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 

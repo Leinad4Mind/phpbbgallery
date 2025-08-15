@@ -28,8 +28,10 @@ services:
             - '@cache.driver'
             - '@dbal.conn'
             - '@user'
+            - '@template'
             - '@request'
             - '%sitesplat.sidebar.tables.sidebar_types%'
+            - '%core.table_prefix%emoji_icons'
 
     sitesplat.sidebar.admin_controller:
         class: sitesplat\sidebar\controller\admin_controller
