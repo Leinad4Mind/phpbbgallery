@@ -58,9 +58,11 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->config['allow_emailreuse'])
 		{
-			$sql = 'SELECT user_id, username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height FROM ' . USERS_TABLE . ' 
-					WHERE user_email_hash = ' . $this->user->data['user_email_hash'] . ' AND user_id <> ' . $this->user->data['user_id'] . ' 
-					ORDER BY username';
+			$email_eq = empty($this->user->data['user_email_hash']) ? "user_email = '{$this->user->data['user_email']}'" : "user_email_hash = {$this->user->data['user_email_hash']}";
+
+			$sql = 'SELECT user_id, username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height FROM ' . USERS_TABLE . " 
+					WHERE $email_eq AND user_id <> {$this->user->data['user_id']}
+					ORDER BY username";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -85,9 +87,11 @@ class listener implements EventSubscriberInterface
 	public function load_profile($event)
 	{
 		$user_data = $event['user_row'];
-		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' 
-				WHERE user_email_hash = ' . $user_data['user_email_hash'] . ' AND user_id <> ' . $user_data['user_id'] . ' 
-				ORDER BY username';
+		$email_eq = empty($user_data['user_email_hash']) ? "user_email = '{$user_data['user_email']}'" : "user_email_hash = {$user_data['user_email_hash']}";
+
+		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . " 
+				WHERE $email_eq AND user_id <> {$user_data['user_id']}
+				ORDER BY username";
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -103,8 +107,10 @@ class listener implements EventSubscriberInterface
 	{
 		$poster_id = $event['poster_id'];
 		$post_row_ary = array();
-		$sql = 'SELECT user_id, username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height FROM ' . USERS_TABLE . ' WHERE
-				user_email_hash = (SELECT user_email_hash FROM  ' . USERS_TABLE . ' WHERE user_id = ' . $poster_id . ') AND user_id <> ' . $poster_id;
+		$email_eq = empty($this->user->data['user_email_hash']) ? 'user_email = (SELECT user_email FROM' : 'user_email_hash = (SELECT user_email_hash FROM';
+
+		$sql = 'SELECT user_id, username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height FROM ' . USERS_TABLE . "
+				WHERE $email_eq " . USERS_TABLE . ' WHERE user_id = ' . $poster_id . ') AND user_id <> ' . $poster_id;
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{

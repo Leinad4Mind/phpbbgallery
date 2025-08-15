@@ -43,19 +43,24 @@ class controller
 		if ($this->config['allow_emailreuse'])
 		{
 			$route = preg_replace('/\\.[^.\\s]{3,4}$/', '', $route);
-	
-			$sql = 'SELECT user_id, username, user_email_hash FROM ' . USERS_TABLE . ' WHERE username_clean = "' . utf8_clean_string($route) . '"';
+			$emtype = empty($this->user->data['user_email_hash']) ? 'user_email' : 'user_email_hash';
+
+			$sql = "SELECT user_id, username, $emtype AS emdata FROM " . USERS_TABLE . ' WHERE username_clean = "' . utf8_clean_string($route) . '"';
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
 			
-			if ($this->user->data['user_email_hash'] == $row['user_email_hash'])
+			if ($this->user->data[$emtype] == $row['emdata'])
 			{
-				$sql = 'UPDATE ' . SESSIONS_TABLE . ' 
-						SET session_user_id = ' . $row['user_id'] . ' 
-						WHERE session_id = "' . $this->user->data['session_id'] . '" AND session_user_id = ' . $this->user->data['user_id'];
+				$sql = 'UPDATE ' . SESSIONS_TABLE . " SET session_user_id = {$row['user_id']}
+						WHERE session_id = '{$this->user->data['session_id']}'
+						AND session_user_id = {$this->user->data['user_id']}";
 				$this->db->sql_query($sql);
 				if ($this->db->sql_affectedrows())
 				{
+					$sql = 'UPDATE ' . USERS_TABLE . ' SET user_lastvisit = ' . time() . " 
+						WHERE user_id = {$this->user->data['user_id']}";
+					$this->db->sql_query($sql);
+
 					$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_ACCOUNTSWITCH', false, array(
 						'reportee_id' => $this->user->data['user_id'],
 						$row['username']

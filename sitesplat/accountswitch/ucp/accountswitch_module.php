@@ -24,10 +24,12 @@ class accountswitch_module
 		if ($config['allow_emailreuse'])
 		{
 			$board_url = generate_board_url() . '/';
+			$email_eq = empty($user->data['user_email_hash']) ? "user_email = '{$user->data['user_email']}'" : "user_email_hash = {$user->data['user_email_hash']}";
+
 			$sql = 'SELECT user_id, username, user_colour, user_posts, user_lastvisit, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height 
-					FROM ' . USERS_TABLE. ' 
-					WHERE user_email_hash = "' . $user->data['user_email_hash'] . '" AND NOT user_id = ' . $user->data['user_id'] . '
-					ORDER BY username';
+					FROM ' . USERS_TABLE. "
+					WHERE $email_eq AND user_id <> {$user->data['user_id']}
+					ORDER BY username";
 			$result = $db->sql_query($sql);
 			while($row = $db->sql_fetchrow($result)) 
 			{
