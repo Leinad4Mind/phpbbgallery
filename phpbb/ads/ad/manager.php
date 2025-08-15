@@ -83,6 +83,8 @@ class manager
 				LEFT JOIN ' . $this->ads_table . ' a
 					ON (al.ad_id = a.ad_id)
 				WHERE a.ad_enabled = 1
+					AND (a.ad_start_date = 0
+						OR a.ad_start_date < ' . time() . ')
 					AND (a.ad_end_date = 0
 						OR a.ad_end_date > ' . time() . ")
 					$sql_where_views
@@ -94,6 +96,11 @@ class manager
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return [];
+		}
 
 		$current_location_id = '';
 		$data = array_filter($data, function ($row) use (&$current_location_id) {
@@ -112,7 +119,7 @@ class manager
 	 */
 	public function get_all_ads()
 	{
-		$sql = 'SELECT ad_id, ad_priority, ad_name, ad_enabled, ad_end_date, ad_views, ad_clicks, ad_views_limit, ad_clicks_limit
+		$sql = 'SELECT ad_id, ad_priority, ad_name, ad_enabled, ad_start_date, ad_end_date, ad_views, ad_clicks, ad_views_limit, ad_clicks_limit
 			FROM ' . $this->ads_table;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrowset($result);
@@ -129,7 +136,7 @@ class manager
 	 */
 	public function get_ads_by_owner($user_id)
 	{
-		$sql = 'SELECT ad_id, ad_name, ad_enabled, ad_end_date, ad_views, ad_views_limit, ad_clicks, ad_clicks_limit
+		$sql = 'SELECT ad_id, ad_name, ad_enabled, ad_start_date, ad_end_date, ad_views, ad_views_limit, ad_clicks, ad_clicks_limit
 			FROM ' . $this->ads_table . '
 			WHERE ad_owner = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
@@ -369,6 +376,7 @@ class manager
 			'ad_note'			=> '',
 			'ad_code'			=> '',
 			'ad_enabled'		=> '',
+			'ad_start_date'		=> '',
 			'ad_end_date'		=> '',
 			'ad_priority'		=> '',
 			'ad_views_limit'	=> '',
