@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows a Random Gravatar avatars for newly registered users and also selectable in UCP. It also allows custom avatars that will be assigned randomly for newly registered users",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"keywords": ["phpbb", "extension", "gravatars", "avatar", "UCP", "cosmetic", "sitesplat"],
 	"license": "@license Proprietary",
 	"authors": [
@@ -23,7 +23,7 @@
 	"extra": {
 		"display-name": "BBrandom",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.8"
+			"phpbb/phpbb": ">=3.2.0,<3.3"
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
