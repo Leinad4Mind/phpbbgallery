@@ -69,9 +69,13 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function opengraph($event)
+	public function opengraph($event, $eventName)
 	{
-		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+		// this is incompatible with phpBB 3.3!!!
+//		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+
+		// this is compatible...
+		$event_number = array_search($eventName, array_keys($this->getSubscribedEvents()));
 		
 		$ext_manager = $this->container->get('ext.manager');
 		if ($ext_manager->is_enabled('sitesplat/bbtags'))

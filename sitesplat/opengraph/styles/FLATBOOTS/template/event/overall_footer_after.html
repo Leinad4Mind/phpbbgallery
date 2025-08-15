@@ -1,5 +1,5 @@
-<!-- IF SCRIPT_NAME == "index" or SCRIPT_NAME == "viewtopic" -->
-<!-- INCLUDEJS @sitesplat_opengraph/js/sharer.min.js -->
-<!-- INCLUDEJS @sitesplat_opengraph/js/bbopengraph.js -->
-<!-- ENDIF -->
+{% if BB_LOAD_IN_INDEX or BB_LOAD_IN_VIEWTOPIC %}
+	<!-- INCLUDEJS @sitesplat_opengraph/js/sharer.min.js -->
+	<!-- INCLUDEJS @sitesplat_opengraph/js/bbopengraph.js -->
+{% endif %}
 
