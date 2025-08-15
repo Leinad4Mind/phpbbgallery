@@ -1,12 +1,11 @@
 <?php
 /**
 *
-* Badge Award extension for the phpBB Forum Software package.
+* BBAwards AutoGroup Addon.
+* @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
+* @license SiteSplat 2015 all rights reserved
 *
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+**/
 
 if (!defined('IN_PHPBB'))
 {
@@ -31,5 +30,5 @@ $lang = array_merge($lang, array(
 	'BADGEAUTO_TYPE_ZEBRA_FOES'		=> 'Badge Award Foes',
 	'BADGEAUTO_TYPE_ZEBRA_FRIENDS'	=> 'Badge Award Friends',
 
-	'BADGE_AUTOGROUPS_NOTICE'		=> '<div style="width:80%%;margin:20px auto;"><p>The Setting for this extension are in %1$s » %2$s » %3$s.<br />Please note Badge Rules Types are added together! Extensions like LikeBB or Donation will not work if not enabled first.</p></div>'
+	'BADGE_AUTOGROUPS_NOTICE'		=> '<div class="phpinfo"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.<br />Please note, Badge Rules Types are added together! Extensions like LikeBB, Donation etc won\'t work if they are not installed.</p></div>'
 ));

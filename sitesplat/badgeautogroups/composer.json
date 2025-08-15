@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "BBAwards Custom Autogroup functions for the BBAwards extension",
     "homepage": "http://sitesplat.com",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "keywords": ["autogroup", "extension", "badge", "award", "sitesplat", "customization", "rewards", "FLATBOOTS", "bootstrap"],
     "license": "Proprietary/All rights reserved",
     "authors": [
@@ -23,11 +23,11 @@
     "extra": {
         "display-name": "BBAwards Autogroups",
         "soft-require": {
-			"phpbb/phpbb": ">=3.1.0-RC3,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.2.0"
         },
        "version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbawards_autogroup.json"
 		}
     }

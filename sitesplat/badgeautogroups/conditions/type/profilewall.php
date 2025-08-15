@@ -1,12 +1,11 @@
 <?php
 /**
 *
-* Badge Award extension for the phpBB Forum Software package.
+* BBAwards AutoGroup Addon.
+* @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
+* @license SiteSplat 2015 all rights reserved
 *
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+**/
 
 namespace sitesplat\badgeautogroups\conditions\type;
 
@@ -45,7 +44,7 @@ class profilewall extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type_name()
 	{
-		return $this->user->lang('BADGEAUTO_TYPE_PROFILEWALL');
+		return $this->language->lang('BADGEAUTO_TYPE_PROFILEWALL');
 	}
 
 	/**
