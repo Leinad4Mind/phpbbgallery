@@ -82,6 +82,10 @@ class main_listener implements EventSubscriberInterface
 	{
 		if ($this->user->data['user_mcp_accept_date'] == 0)
 		{
+			if ($this->request->is_ajax())
+			{
+				trigger_error($this->language->lang('MCP_ACCEPT_FIRST', $this->helper->route('sitesplat_bbgdpr_mcp')), E_USER_WARNING);
+			}
 			redirect($this->helper->route('sitesplat_bbgdpr_mcp'));
 		}
 	}
@@ -106,6 +110,7 @@ class main_listener implements EventSubscriberInterface
 			'U_COOKIE_REJECT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'reject']),
 			'U_COOKIE_ACCEPT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'accept']),
 			'GDPR_ADSENSE'				=> $this->tracking_codes_allowed() ? htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_adsense')) : false,
+			'S_GDPR_JS_ALLOWED'			=> $this->tracking_codes_allowed(),
 		));
 	}
 
@@ -179,8 +184,7 @@ class main_listener implements EventSubscriberInterface
 		{
 			$reader = new \GeoIp2\Database\Reader($this->root_path . 'ext/sitesplat/bbgdpr/data/GeoLite2-Country.mmdb');
 			try {
-				//$record = $reader->country($this->user->ip);
-				$record = $reader->country('188.167.251.181');
+				$record = $reader->country($this->user->ip);
 
 				if (!in_array($record->country->isoCode, array('BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK')))
 				{

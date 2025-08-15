@@ -73,6 +73,7 @@ class main_module
 			'SITESPLAT_BBGDPR_PRIVACY_POLICY'	=> $this->config_text->get('sitesplat_bbgdpr_privacy_policy'),
 			'SITESPLAT_BBGDPR_GEOIP'			=> $this->config['sitesplat_bbgdpr_geoip'],
 			'SITESPLAT_BBGDPR_DELETED'			=> $this->config['sitesplat_bbgdpr_deleted'],
+			'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME' => $this->config['sitesplat_bbgdpr_delete_keep_username'],
 		));
 	}
 }

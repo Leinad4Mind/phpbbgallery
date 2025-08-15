@@ -20,7 +20,7 @@ $lang = array_merge($lang, array(
 	'UCP_PRIVACY'	=> 'Privacy',
 
 	'UCP_REVIEW'				=> 'Review personal data',
-	'UCP_REVIEW_EXPLAIN'		=> 'Below you will find the details of your personal data that we store on this site. Don\'t forget to check the profile tab here to see other perosnal information.',
+	'UCP_REVIEW_EXPLAIN'		=> 'Below you will find the details of your personal data that we store on this site. Don\'t forget to check the profile tab here to see other personal information.',
 	'REG_DATE'					=> 'Registration date and time',
 	'REG_IP'					=> 'Registration IP',
 	'USER_IPS'					=> 'IP addresses that you have used',

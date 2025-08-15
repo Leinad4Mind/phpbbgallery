@@ -5,9 +5,11 @@
 	  {{ PRIVACY_POLICY }}
    </div>
 </div>
+<!-- IF S_USER_LOGGED_IN -->
 <form method="POST" action="{{ U_ACTION }}">
 	<input class="btn btn-block btn-success btn-lg" type="submit" name="accept" value="{{ lang('ACCEPT_GDPR') }}">
 	<input class="btn btn-block btn-danger btn-lg" type="submit" name="reject" value="{{ lang('REJECT_GDPR') }}">
 	{{ S_FORM_TOKEN }}
 </form>
+<!-- ENDIF -->
 {% include 'overall_footer.html' %}

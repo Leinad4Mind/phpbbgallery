@@ -5,7 +5,7 @@
 	"homepage": "http://sitesplat.com",
     "version": "1.0.0",
     "time": "2018-04-23",
-	"keywords": ["phpbb", "extension", "privacy", "user", "premium", "sitesplat", "cookie", "security"],
+	"keywords": ["phpbb", "extension", "privacy", "user", "premium", "sitesplat", "cookie", "gdpr", "security"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{

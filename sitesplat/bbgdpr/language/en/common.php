@@ -46,4 +46,5 @@ $lang = array_merge($lang, array(
 	'GDPR_REVIEW'			=> 'GDPR guidelines review',
 	'GDPR_NOT_REVIEWED'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Review the GDPR guidelines: <a href="https://gdpr-info.eu/">https://gdpr-info.eu/</a>',
 	'GDPR_REVIEW_CONFIRM'	=> 'I confirm to have reviewed the GDPR guidelines',
+	'MCP_ACCEPT_FIRST'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Please, <a href="%s">confirm it before you perform any moderator action</a>.',
 ));
