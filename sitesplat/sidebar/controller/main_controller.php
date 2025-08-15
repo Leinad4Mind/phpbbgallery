@@ -18,7 +18,7 @@ class main_controller
 	protected $helper;
 	protected $template;
 	protected $user;
-	protected  $auth;
+	protected $auth;
 	protected $request;
 	protected $db;
 	protected $pagination;

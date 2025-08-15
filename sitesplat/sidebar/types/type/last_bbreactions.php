@@ -62,9 +62,23 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 	public function outputblock()
 	{
 		$howmany = $this->howmany();
+		$visibility = $this->container->get('content.visibility');
+		$forum_ary = array();
+		$forum_read_ary = $this->auth->acl_getf('f_read');
+
+		foreach ($forum_read_ary as $forum_id => $allowed)
+		{
+			if ($allowed['f_read'])
+			{
+				$forum_ary[] = (int) $forum_id;
+			}
+		}
+		$forum_ary = array_unique($forum_ary);
+
 		$sql_where = str_replace('user_id', 'b.user_id', $this->ignore_users());
 
 		$sql_and = !empty($sql_where) ? ' AND user_inactive_reason = 0' : ' WHERE user_inactive_reason = 0';
+		$sql_and .= (sizeof($forum_ary)) ? ' AND ' . $visibility->get_forums_visibility_sql('post', $forum_ary) : '';
 		// latest users
 		if (($newest_users = $this->cache->get('_sidebar_last_bbreactions')) === false)
 		{
@@ -77,7 +91,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 				FROM ' . $reward_table . ' b
 				LEFT JOIN ' . $reward_type_table . ' r ON r.type_id = b.like_type
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = b.post_id
-				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = p.poster_id
+				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = b.user_id
 				' . $sql_where . '
 				' . $sql_and . '
 				ORDER BY b.like_time DESC';

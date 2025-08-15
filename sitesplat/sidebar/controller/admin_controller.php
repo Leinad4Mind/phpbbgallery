@@ -54,6 +54,8 @@ class admin_controller implements admin_interface
 		$this->template->assign_vars(array(
 			'S_NOTICE_LIKEDD'		=> (!$ext_manager->is_enabled('sitesplat/likedd') && !$cookie) ? $this->user->lang['NOTICE_LIKEDD'] : '',
 			'S_NOTICE_BBREACTION'	=> (!$ext_manager->is_enabled('sitesplat/bbreaction') && !$cookie) ? $this->user->lang['NOTICE_BBREACTION'] : '',
+			'S_NOTICE_BBDONATION'	=> (!$ext_manager->is_enabled('sitesplat/donations') && !$cookie) ? $this->user->lang['NOTICE_BBDONATION'] : '',
+			'S_NOTICE_BBMEMBERSHIP'	=> (!$ext_manager->is_enabled('sitesplat/bbmembership') && !$cookie) ? $this->user->lang['NOTICE_BBMEMBERSHIP'] : '',
 			'S_NOTICE_BADGE'	    => (!$ext_manager->is_enabled('sitesplat/badge') && !$cookie) ? $this->user->lang['NOTICE_BADGE'] : '',
 			'S_NOTICE_BBPOINTS'	    => (!$ext_manager->is_enabled('sitesplat/bbpoints') && !$cookie) ? $this->user->lang['NOTICE_BBPOINTS'] : '',
 			'S_NOTICE_NEWSLETTER'	=> (!$ext_manager->is_enabled('sitesplat/exportemailsandsubscribers') && !$cookie) ? $this->user->lang['NOTICE_NEWSLETTER'] : '',

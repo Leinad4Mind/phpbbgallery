@@ -34,10 +34,9 @@
 
 .panel-title {
     color: #313745;
-    font-family: "Open Sans","Helvetica Neue",Helvetica,sans-serif;
-    font-size: 12px;
+    font-family: "Roboto Condensed","Arial","Helvetica",sans-serif;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.2px;
     text-transform: uppercase;
 }
 

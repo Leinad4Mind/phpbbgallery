@@ -30,12 +30,14 @@
 
 <p>{L_AD_SIDEBAR_EXPLAIN}</p>
 
-<!-- IF S_NOTICE_LIKEDD or S_NOTICE_BBREACTION or S_NOTICE_BADGE or S_NOTICE_BBPOINTS or S_NOTICE_NEWSLETTER -->
+<!-- IF S_NOTICE_LIKEDD or S_NOTICE_BBREACTION or S_NOTICE_BBDONATION or S_NOTICE_BBMEMBERSHIP or S_NOTICE_BADGE or S_NOTICE_BBPOINTS or S_NOTICE_NEWSLETTER -->
 <div id="sidbar_notice" class="errorbox notice">
 	<a href="{U_BADGE_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_SIDEBAR_NOTICE_CLOSE}"></a>
 	<p>
 	 <!-- IF S_NOTICE_LIKEDD -->{S_NOTICE_LIKEDD}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_BBREACTION -->{S_NOTICE_BBREACTION}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBDONATION -->{S_NOTICE_BBDONATION}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBMEMBERSHIP -->{S_NOTICE_BBMEMBERSHIP}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_BADGE -->{S_NOTICE_BADGE}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_BBPOINTS -->{S_NOTICE_BBPOINTS}<br /><!-- ENDIF -->
 	 <!-- IF S_NOTICE_NEWSLETTER -->{S_NOTICE_NEWSLETTER}<br /><!-- ENDIF -->
@@ -259,6 +261,11 @@
 		
 	</fieldset>
 
+	
+	<fieldset class="dtdd-fix">
+		<legend>{L_ACP_SIDEBAR_HEADSUP}{L_COLON}</legend>
+		<p>{L_ACP_SIDEBAR_HEADSIP_EXPLAIN}</p>
+	</fieldset>	
 	
 	<fieldset class="dtdd-fix">
 		<legend>{L_ACP_SIDEBAR_SETTINGS}{L_COLON}</legend>

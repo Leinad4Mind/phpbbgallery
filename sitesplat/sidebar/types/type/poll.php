@@ -64,10 +64,9 @@ class poll extends \sitesplat\sidebar\types\type\base
 				FROM ' . TOPICS_TABLE . ' 
 				ORDER BY poll_start DESC LIMIT 1';
 		$result = $this->db->sql_query($sql);
-		if ($result)
+		$row = $this->db->sql_fetchrow($result);
+		if ($row['topic_id'])
 		{
-			$row = $this->db->sql_fetchrow($result);
-			
 			$poll_sql = 'SELECT poll_option_id, poll_option_text, poll_option_total FROM ' . POLL_OPTIONS_TABLE . '
 						WHERE topic_id = ' . $row['topic_id'] . ' ORDER BY poll_option_id';
 			$poll_result = $this->db->sql_query($poll_sql);
@@ -92,7 +91,7 @@ class poll extends \sitesplat\sidebar\types\type\base
 			}
 			
 			$this->template->assign_vars(array(
-				'TITLE'		=> $row['poll_title'],
+				'POLTITLE'	=> $row['poll_title'],
 				'URL'		=> append_sid('viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&t=' . $row['topic_id']),
 				'POLSTATS'	=> str_replace(array('"name"', '"y"', '"f"' , '"t"', '"v"'), array('name', 'y', 'f', 't', 'v'), json_encode($data, JSON_NUMERIC_CHECK))
 			));

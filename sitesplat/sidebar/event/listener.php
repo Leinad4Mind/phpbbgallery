@@ -54,9 +54,11 @@ class listener implements EventSubscriberInterface
 		$sidebar_config = json_decode($this->config['sidebar_settings'], true);
 				
 		$page = str_replace('.' . $this->php_ext, '', $this->user->page['page_name']);
+
 		$show_page = (!$sidebar_config['all_pages']) ? (($sidebar_config['panel_pages']) ? !in_array($page, array('ucp', 'mcp')): true) : $page == 'index';
+		$in_no_pages = (strpos($page, 'classifieds') === false && strpos($page, 'bbfront') === false && strpos($page, 'downloads') === false) ? false : true;
 		
-		if ($show_page)
+		if ($show_page && !$in_no_pages)
 		{		
 			require_once $this->phpbb_root_path . 'ext/sitesplat/sidebar/vendor/Mobile_Detect.php';
 			$this->request->enable_super_globals();

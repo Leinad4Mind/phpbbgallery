@@ -33,6 +33,9 @@ $lang = array_merge($lang, array(
 	'BORN'				=> 'Born',
 	'NEW_DOWNLOADS'		=> 'Newest',
 	'POP_DOWNLOADS'		=> 'Popular',
+
+	'CALENDAR'			=> 'Calendar',
+	'CLOCK'				=> 'Time',
 	'LIKEDD'			=> 'Last likes',
 	
 	'LAST_BADGES'		=> 'Last badges',	
@@ -45,11 +48,20 @@ $lang = array_merge($lang, array(
 	'NEWSLETTER'		=> 'Newsletter',
 	'SIGN_IN_NEWS'		=> 'Sign in for our newsletter',
 	'SUBSCRIBE_BTN'		=> 'Subscribe',
+	'DOWNLOADS'			=> 'Downloads',
 	
 	'INFOMSG'			=> 'Information',
 	'VOTE_NOT_POSIIBLE'	=> 'Change of votes not possible',
 	'VOTE_SAVED'		=> 'Your vote is saved',
 	'VOTE_CHANGED'		=> 'Your vote is changed',
-	'NOT_FOUND'			=> 'Your poll is not found'
+	'NOT_FOUND'			=> 'Your poll is not found',
 	
+	'STAFF'				=> 'Staff online',
+	'UNKNOWN'			=> 'Unknown',
+	
+	'DONATIONS'			=> 'Donations',
+	'DONATE_ALSO'		=> 'Ready to donate? Awesome! here you go.',
+	'MEMBERSHIPS'		=> 'Memberships',
+	'MEMBERSHIPS_CTA'	=> 'Got your Membership package yet?',
+	'HOT_TOPICS'		=> 'Hot topics'
 ));

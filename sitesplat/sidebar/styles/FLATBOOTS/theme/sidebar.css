@@ -204,10 +204,6 @@ transform:rotate(0.001deg);
     width: 24%!important;
 }
 
-.forum-time {
-    display: inline-block;
-    max-width: 120px;
-}
  
 .last-wrapper {
     max-width: 196px;

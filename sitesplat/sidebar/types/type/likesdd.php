@@ -65,6 +65,19 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 		$sql_where = str_replace('user_id', 'l.user_id', $this->ignore_users());
 
 		$sql_and = !empty($sql_where) ? ' AND user_inactive_reason = 0' : ' WHERE user_inactive_reason = 0';
+
+		$forum_read_ary = $this->auth->acl_getf('f_read');
+		foreach ($forum_read_ary as $forum_id => $allowed)
+		{
+			if ($allowed['f_read'])
+			{
+				$forum_ary[] = (int) $forum_id;
+			}
+		}
+		$forum_ary = array_unique($forum_ary);
+		$visibility = $this->container->get('content.visibility');
+		$sql_and .= ' AND ' . $visibility->get_forums_visibility_sql('post', $forum_ary);
+		
 		// latest users
 		if (($newest_users = $this->cache->get('_sidebar_likes')) === false)
 		{
