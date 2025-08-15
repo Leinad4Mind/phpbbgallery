@@ -38,6 +38,7 @@ class m2_initial_permission extends \phpbb\db\migration\migration
 		return array(
 			// Add permission
 			array('permission.add', array('f_hide_topic', 0, 1)),
+			array('permission.add', array('u_bbpoints_override', true)),
 
 			// Set permissions
 			array('permission.permission_set', array('ROLE_FORUM_FULL', 'f_hide_topic')),

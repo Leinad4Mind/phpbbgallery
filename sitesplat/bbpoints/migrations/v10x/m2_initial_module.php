@@ -47,9 +47,8 @@ class m2_initial_module extends \phpbb\db\migration\migration
 					'modes'				=> array('settings'),
 				),
 			)),
-			array('module.add', array('ucp', 'UCP_PROFILE', 'BBPOINTS')),
 			array('module.add', array(
-				'ucp', 'BBPOINTS', array(
+				'ucp', 'UCP_PROFILE', array(
 					'module_basename'	=> '\sitesplat\bbpoints\ucp\bbpoints_module',
 					'auth'				=> 'ext_sitesplat/bbpoints',
 					'modes'				=> array('bbpoints'),
