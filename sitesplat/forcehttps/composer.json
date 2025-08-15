@@ -2,15 +2,15 @@
 	"name": "sitesplat/forcehttps",
 	"type": "phpbb-extension",
 	"description": "Takes care of HTTPS various settings around the phpBB board. This assumes you have already installed a SSL certificate correctly first! Did you??!",
-	"homepage": "http://sitesplat.com",
-	"version": "1.0.0",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.1",
 	"keywords": ["sitesplat", "phpbb", "extension", "ssl", "security", "https"],
 	"license": "@license Proprietary",
 	"authors": [
 		{
 			"name": "Dave - SiteSplat",
 			"email": "info@sitesplat.com",
-            "homepage": "http://sitesplat.com",
+            "homepage": "https://sitesplat.com",
 			"role": "Developer"
 		}
 	],
@@ -24,9 +24,10 @@
            "phpbb/phpbb": ">=3.2.0"
         },
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbssl.json"
+            "filename": "bbssl.json",
+			"ssl": true
 		}
 	}
 }
