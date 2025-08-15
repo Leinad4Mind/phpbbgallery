@@ -1,0 +1,118 @@
+{% if S_BBCODE_ALLOWED %}
+	{% set IN_SNAPPY = S_SHOW_ATTACH_BTN %} {# sitesplat/snappy addition #}
+	{% set SELECTBOX_PRESENT = false %}
+	<div class="{% if IN_SNAPPY %}text-center{% else %}btn-toolbar{% endif %} btn-toolbar-bbcodeorder" role="toolbar">
+		<div class="btn-group">
+			{% for bbcode in loops.custom_tags %}
+				{% if bbcode.S_BBCODE_ALLOWED %}
+					{% if bbcode.BBCODE_TAG == 'b' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="0" title="{{ lang('BBCODE_B_HELP') }}">{{ lang('BBCODE_B') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="b" name="addbbcode0" onclick="bbstyle(0); return false;" title="{{ lang('BBCODE_B_HELP') }}"><i class="fa fa-bold"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'i' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="2" title="{{ lang('BBCODE_I_HELP') }}">{{ lang('BBCODE_I') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="i" name="addbbcode2" onclick="bbstyle(2); return false;" title="{{ lang('BBCODE_I_HELP') }}"><i class="fa fa-italic"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'u' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="4" title="{{ lang('BBCODE_U_HELP') }}">{{ lang('BBCODE_U') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="u" name="addbbcode4" onclick="bbstyle(4); return false;" title="{{ lang('BBCODE_U_HELP') }}"><i class="fa fa-underline"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'list' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="10" title="{{ lang('BBCODE_L_HELP') }}">{{ lang('BBCODE_L') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="l" name="addbbcode10" onclick="bbstyle(10); return false;" title="{{ lang('BBCODE_L_HELP') }}"><i class="fa fa-list"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'list=' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="12" title="{{ lang('BBCODE_O_HELP') }}">{{ lang('BBCODE_O') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="o" name="addbbcode12" onclick="bbstyle(12); return false;" title="{{ lang('BBCODE_O_HELP') }}"><i class="fa fa-list-ol"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == '*' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="-1" title="{{ lang('BBCODE_LISTITEM_HELP') }}">{{ lang('BBCODE_LISTITEM') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="y" name="addlistitem" onclick="bbstyle(-1); return false;" title="{{ lang('BBCODE_LISTITEM_HELP') }}"><i class="fa fa-asterisk"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'code' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="8" title="{{ lang('BBCODE_C_HELP') }}">{{ lang('BBCODE_C') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="c" name="addbbcode8" onclick="bbstyle(8); return false;" title="{{ lang('BBCODE_C_HELP') }}"><i class="fa fa-code"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'quote' and S_BBCODE_QUOTE %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="6" title="{{ lang('BBCODE_Q_HELP') }}">{{ lang('BBCODE_Q') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="q" name="addbbcode6" onclick="bbstyle(6); return false;" title="{{ lang('BBCODE_Q_HELP') }}"><i class="fa fa-comment"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'img' and S_BBCODE_IMG %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="14" title="{{ lang('BBCODE_P_HELP') }}">{{ lang('BBCODE_IMG') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="p" name="addbbcode14" onclick="bbstyle(14); return false;" title="{{ lang('BBCODE_P_HELP') }}"><i class="fa fa-picture-o"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'url' and S_LINKS_ALLOWED %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="16" title="{{ lang('BBCODE_W_HELP') }}">{{ lang('BBCODE_URL') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="w" name="addbbcode16" onclick="bbstyle(16); return false;" title="{{ lang('BBCODE_W_HELP') }}"><i class="fa fa-link"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'flash=' and S_BBCODE_FLASH %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="18" title="{{ lang('BBCODE_B_HELP') }}">{{ lang('BBCODE_FLASH') }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" accesskey="d" name="addbbcode18" onclick="bbstyle(18); return false;" title="{{ lang('BBCODE_D_HELP') }}"><i class="fa fa-font"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'color=' %}
+						{% if not SELECTBOX_PRESENT %}
+							<a href="#" class="btn btn-default" name="bbpalette" id="bbpalette" value="{L_FONT_COLOR}" onclick="change_palette(); return false;" title="{{ lang('BBCODE_S_HELP') }}"><i class="fa fa-tint"></i></a>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'size=' %}
+						{% if not SELECTBOX_PRESENT %}
+							<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+								<option value="50">{{ lang('FONT_TINY') }}</option>
+								<option value="85">{{ lang('FONT_SMALL') }}</option>
+								<option data-icon="fa fa-font" value="100" selected="selected">{{ lang('FONT_NORMAL') }}</option>
+								{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 %}
+									<option value="150">{{ lang('FONT_LARGE') }}</option>
+									{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 %}
+										<option value="200">{{ lang('FONT_HUGE') }}</option>
+									{% endif %}
+								{% endif %}
+							</select>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == '-' %}
+						</div>
+						<div class="btn-group">
+					{% elseif bbcode.BBCODE_TAG == '--' and not loop.last %}
+						{% set SELECTBOX_PRESENT = true %}
+						</div>
+						<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="bbcodeorder_selectbox" onchange="bbstyle(this.form.bbcodeorder_selectbox.options[this.form.bbcodeorder_selectbox.selectedIndex].value*1);this.form.bbcodeorder_selectbox.selectedIndex = 0;">
+							<option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
+					{% elseif bbcode.BBCODE_TAG != '--' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="{{ bbcode.BBCODE_ID }}" title="{{ bbcode.BBCODE_HELPLINE }}">{{ bbcode.BBCODE_TAG }}</option>
+						{% else %}
+							<a href="#" class="btn btn-default" onclick="bbstyle({{ bbcode.BBCODE_ID }}); return false;"title="{{ bbcode.BBCODE_HELPLINE }}"><i class="fa fa-{{ bbcode.BBCODE_ICON }}"></i>{% if not bbcode.BBCODE_ICON %}{{ bbcode.BBCODE_TAG }}{% endif %}</a>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% if SELECTBOX_PRESENT %}
+			</select>
+		{% else %}
+			</div>
+		{% endif %}
+		{% if IN_SNAPPY %}
+			<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
+		{% endif %}
+	</div>
+{% endif %}

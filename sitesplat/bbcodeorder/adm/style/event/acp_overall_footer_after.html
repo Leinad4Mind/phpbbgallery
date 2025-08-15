@@ -1,0 +1,84 @@
+{% if loops.bbcodes %}
+
+	{% INCLUDEJS '@sitesplat_bbcodeorder/js/tablednd.min.js' %}
+
+	<script>
+		(function($, window) {
+			'use strict';
+			$(function() {
+				var bbcodeTable = $('#down');
+
+				// add "new divider" button
+				$('.quick')
+					.after('<p>{{ lang('BBCODEORDER_EXPLAIN') }}</p>')
+					.prepend('<a class="button2" style="padding:1.5px 8px;position:relative;top:1px" href="{{ U_NEW_DIVIDER }}">{{ lang("NEW_DIVIDER") }}</a>');
+
+				// hide edit button for default bbcodes
+				$('.bbcode-is-default').each(function(){
+					var is_hidden = $(this).parent().find('.bbcode-is-hidden').length;
+					var a = $(this).parent().find('a')
+					a.eq(-2).hide();
+					if (!$(this).siblings('.bbcode-is-divider').length) {
+						a.last().remove();
+					}
+					$(this).css({
+						display: 'inline-block',
+						width: '16px'
+					});
+				});
+
+				// Get BBCode ids from the delete button,
+				// and create tr row IDs and is_default
+				// on the fly for use by tableDnD
+				bbcodeTable.find('tbody').find('tr').each(function() {
+					var is_default = $(this).find('.bbcode-is-default').length;
+					var delete_button = $(this).find('a').last();
+					var url = delete_button.attr('href');
+					if (url) {
+						$(this).attr('id', 'bbcode_' + url.split('bbcode=')[1]);
+						$(this).attr('data-is_default', Boolean(is_default));
+					}
+				});
+
+				// Enable table row drag-drop
+				bbcodeTable.tableDnD({
+					onDrop: function(table, row) {
+						// show loading indicator
+						var $loadingIndicator = phpbb.loadingIndicator();
+
+						// process data. We need to attach information if bbcode
+						// is default, which we will attach to bbcode_id
+						var data = $.tableDnD.serialize().split('&');
+						bbcodeTable.find('tbody').find('tr').each(function(index, elem){
+							data[index + 1] += '_' + $(elem).attr('data-is_default');
+						});
+						data = data.join('&');
+
+						$.ajax({
+							type: 'POST',
+							url: '{{ UA_DRAG_DROP }}&tablename=' + $(table).attr('id'),
+							data: data,
+							success: function(res) {
+								if (res.success) {
+									// hide loading indicator if everything is OK
+									phpbb.clearLoadingTimeout();
+									$loadingIndicator.fadeOut(phpbb.alertTime);
+								}
+								else
+								{
+									// show alert if something went wrong
+									phpbb.alert('{{ lang('INFORMATION') }}', '{{ lang('BBCODES_DIVIDERS_PROBLEM') }}');
+									// and reload the page, since tableDnD is unable to revert the changes. Sad, yes.
+									setTimeout(function(){
+										window.location.reload();
+									}, 3000);
+								}
+							}
+						});
+					}
+				});
+			});
+		})(jQuery, window);
+	</script>
+
+{% endif %}

@@ -1,0 +1,30 @@
+services:
+    sitesplat.bbcodeorder.acp_manager:
+        class: sitesplat\bbcodeorder\core\acp_manager
+        arguments:
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+            - '%core.table_prefix%default_bbcodes'
+
+    sitesplat.bbcodeorder.acp_listener:
+        class: sitesplat\bbcodeorder\event\acp_listener
+        arguments:
+            - '@sitesplat.bbcodeorder.acp_manager'
+            - '@request'
+            - '@dbal.conn'
+            - '@user'
+            - '%core.table_prefix%default_bbcodes'
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbcodeorder.listener:
+        class: sitesplat\bbcodeorder\event\listener
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@template'
+            - '%core.table_prefix%default_bbcodes'
+        tags:
+            - { name: event.listener }
