@@ -1,0 +1,3 @@
+sitesplat_sidebar_main_controller:
+    path: /sidebar/{route}
+    defaults: { _controller: sitesplat.sidebar.controller:handle }

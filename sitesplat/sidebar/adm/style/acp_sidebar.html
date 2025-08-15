@@ -1,0 +1,310 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/sidebar/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/sidebar/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/sidebar.css -->
+<!-- INCLUDECSS css/component.css -->
+
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_SIDEBAR_TITLE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_SIDEBAR_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_SIDEBAR_TITLE}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+
+<p>{L_AD_SIDEBAR_EXPLAIN}</p>
+
+<!-- IF S_NOTICE_LIKEDD or S_NOTICE_BBREACTION or S_NOTICE_BADGE or S_NOTICE_BBPOINTS or S_NOTICE_NEWSLETTER -->
+<div id="sidbar_notice" class="errorbox notice">
+	<a href="{U_BADGE_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_SIDEBAR_NOTICE_CLOSE}"></a>
+	<p>
+	 <!-- IF S_NOTICE_LIKEDD -->{S_NOTICE_LIKEDD}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBREACTION -->{S_NOTICE_BBREACTION}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BADGE -->{S_NOTICE_BADGE}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBPOINTS -->{S_NOTICE_BBPOINTS}<br /><!-- ENDIF -->
+	 <!-- IF S_NOTICE_NEWSLETTER -->{S_NOTICE_NEWSLETTER}<!-- ENDIF -->
+	</p>
+</div>
+<!-- ENDIF -->
+
+
+<form id="acp_sidebar" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ACP_SIDEBAR_OPTIONS}</legend>
+		<div style="float: right; width: 323px; margin-top: -25px;">
+		<style>
+			#sidebar-nav {
+				width:<!-- IF SIDEBAR_WIDTH -->50<!-- ELSE -->30<!-- ENDIF -->px;
+				float:<!-- IF SIDEBAR_TYPE -->right<!-- ELSE -->left<!-- ENDIF -->;
+			}
+			#sidebar-section {
+				width:<!-- IF SIDEBAR_WIDTH -->200<!-- ELSE -->220<!-- ENDIF -->px;
+				float:<!-- IF SIDEBAR_TYPE -->left<!-- ELSE -->right<!-- ENDIF -->;
+			}
+			</style> 
+			<div class="browser-window">
+			<div class="top-bar">
+			  <div class="circles">
+				 <div class="circle circle-red"></div>
+				 <div class="circle circle-yellow"></div>
+				 <div class="circle circle-green"></div>
+			  </div>
+			  <div class="dev-tools">
+			  <div class="bar">
+				<div class="dev-bar-content">{L_SITESPLAT_COM}</div>
+				<div class="close-x">X</div>
+				<div class="clear"></div>
+			  </div>
+			</div>
+			</div>
+			<div class="content">
+			
+			<div class="inner-browser">
+			<div id="sidebar-header">{L_FLATBOOTS}</div>
+			
+			<div id="sidebar-nav">{L_ONE_S}<br />{L_ONE_I}<br />{L_ONE_D}<br />{L_ONE_E}<br />{L_ONE_B}<br />{L_ONE_A}<br />{L_ONE_R}</div>
+			
+			<div id="sidebar-section">
+			<p class="forum-wrapper">
+			 <span class="forum-content">{L_FORUM_CONTENT}</span>
+			 <span class="forum-content">{L_FORUM_CONTENT}</span>
+			 <span class="forum-content">{L_FORUM_CONTENT}</span>
+			</p>
+			</div>
+			
+			<div id="sidebar-footer">{L_SITESPLAT_COPY}</div>
+			</div>
+			
+			</div>
+		</div>
+		
+		</div>
+		
+
+		<div style="float:left;width:80%;">
+		<dl>
+			<dt><label id="type" for="type">{L_ACP_SIDEBAR_TYPE}{L_COLON}</label><br /> {L_ACP_SIDEBAR_TYPE_EXPLAIN}</dt>
+			<dd>
+
+				    <div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="sidebartype" name="type"{SIDEBAR_TYPE}>
+						<label class="onoffswitch-label" for="sidebartype">
+							<span class="onoffswitch-inner onoffswitch-inner-position"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="width">{L_ACP_SIDEBAR_WIDTH_HEIGHT}</label><br />{L_ACP_SIDEBAR_HEIGHT_EXPLAIN}</dt>
+			<dd>
+				
+				 <div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="width_s" name="width"{SIDEBAR_WIDTH}>
+						<label class="onoffswitch-label" for="width_s">
+							<span class="onoffswitch-inner onoffswitch-inner-width"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+
+				<div class="label-entry-normal">{L_ACP_SIDEBAR_HEIGHT}</div>	
+					
+				<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="height" name="height"{SIDEBAR_HEIGHT}>
+						<label class="onoffswitch-label" for="height">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="all_pages">{L_ACP_SIDEBAR_ALL_PAGES}</label><br />{L_ACP_SIDEBAR_ALL_PAGES_EXPLAIN}</dt>
+			<dd>
+
+				<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="all_pages" name="all_pages"{SIDEBAR_ALL_PAGES}>
+						<label class="onoffswitch-label" for="all_pages">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="shuffle">{L_ACP_SIDEBAR_SHUFFLE}</label><br />{L_ACP_SIDEBAR_SHUFFLE_EXPLAIN}</dt>
+			<dd>
+
+				<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="shuffle" name="shuffle"{SIDEBAR_SHUFFLE}>
+						<label class="onoffswitch-label" for="shuffle">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+					
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="slots">{L_ACP_SIDEBAR_SLOTS}</label><br />{L_ACP_SIDEBAR_SLOTS_EXPLAIN}</dt>
+			<dd>
+			 <input type="range" name="slots" id="slots" min="1" max="10" step="1" value="{SLOTS}" oninput="rangevalue1.value=value" />
+             <output id="rangevalue1"></output>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label id="how_many" for="how_many">{L_HOWMANY}</label><br />{L_HOWMANY_EXPLAIN}</dt>
+			<dd>
+			 <input type="range" name="how_many" id="how_many" min="1" max="10" step="1" value="{HOWMANY}" oninput="rangevalue.value=value" />
+             <output id="rangevalue"></output>
+			</dd>
+		</dl>
+		
+		
+		
+		</div>
+		
+		<dl style="clear:both;">
+			<dt style="width:36%;">
+			<label id="ignore" for="ignore_inactive_users ignore_founder show_admins_mods">{L_IGNORE}</label><br />{L_IGNORE_EXPLAIN}</dt>
+			<dd style="margin-left:36%;">
+			<div class="label-entry">{L_IGNORE_USERS}</div>
+			<div class="label-entry">{L_IGNORE_FOUNDER}</div>
+			<div class="label-entry">{L_IGNORE_ADMINS_MODS}</div>
+			</dd>
+			
+			<dd style="margin-left:36%;">
+			
+				<div class="label-wrap">
+
+				 <div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="ignore_inactive_users" name="ignore_inactive_users"{IGNORE_INACTIVE}>
+						<label class="onoffswitch-label" for="ignore_inactive_users">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+					
+				</div>
+				
+				<div class="label-wrap">
+
+				    <div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="ignore_founder" name="ignore_founder"{IGNORE_FOUNDER}>
+						<label class="onoffswitch-label" for="ignore_founder">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				
+				</div>
+			
+				<div class="label-wrap">
+				
+				
+				    <div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="ignore_admins_mods" name="ignore_admins_mods"{IGNORE_ADMINS_MODS}>
+						<label class="onoffswitch-label" for="ignore_admins_mods">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				
+				</div>
+				
+			</dd>
+		</dl>
+		
+	</fieldset>
+
+	
+	<fieldset class="dtdd-fix">
+		<legend>{L_ACP_SIDEBAR_SETTINGS}{L_COLON}</legend>
+		<script>
+		var rule_type = [{OPTION_ARY}];
+		</script>
+		<dl>
+			<dt style="width:36%;"></dt>
+			<dd style="margin-left:36%;">
+				<span style="width:120px;display:inline-block;">{L_SHOW_TYPE}{L_COLON}</span>
+				<span style="width:150px;display:inline-block;">{L_SHOW_MOBILE}{L_COLON}</span>
+				<span style="width:150px;display:inline-block;">{L_SHOW_TABLET}{L_COLON}</span>
+			</dd>
+		</dl>
+		<!-- BEGIN slots -->
+		<dl>
+			<dt style="width:36%;"><label id="sidebar_slot{slots.ID}_active" for="sidebar_slot{slots.ID}_active">{L_ACP_SIDEBAR_SLOT} {slots.ID}</label></dt>
+			<dd style="margin-left:36%;">
+				<select style="float:left;" name="sidebar[slot{slots.ID}][_active]]" id="sidebar_slot{slots.ID}_active">{slots.ACTIVE_SLOT}</select>
+			
+			<div style="display:inline-block; margin-left:20px;">
+				<div id="show_mobile{slots.ID}" style="display:{slots.OPTION_SLOT};">
+					<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="sidebar_slot{slots.ID}_show_mobile" name="options[slot{slots.ID}][_mobile]]"{slots.SHOW_MOBILE}>
+						<label class="onoffswitch-label" for="sidebar_slot{slots.ID}_show_mobile">
+							<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div style="display:inline-block; margin-left:20px;">
+				<div id="show_tablet{slots.ID}" style="display:{slots.OPTION_SLOT};">
+				<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="sidebar_slot{slots.ID}_show_tablet" name="options[slot{slots.ID}][_tablet]]"{slots.SHOW_TABLET}>
+						<label class="onoffswitch-label" for="sidebar_slot{slots.ID}_show_tablet">
+							<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+				</div>
+				</div>
+			</div>	
+				
+			</dd>
+		</dl>
+		<div id="sidebar_slot{slots.ID}" style="display:{slots.VISIBILTY_SLOT};">
+		<dl>
+			<dt style="width:36%;"><label for="sidebar_slot{slots.ID}_title">{L_ACP_TITLE_SLOT} {slots.ID}</label><br />{L_ACP_TITLE_SLOT_EXPLAIN}</dt>
+			<dd style="margin-left:36%;">
+				<input type="text" name="sidebar[slot{slots.ID}][_title]]" value="{slots.SIDEBAR_TITLE}" size="50" />
+			</dd>
+		</dl>
+		<dl>
+			<dt style="width:36%;"><label for="sidebar_slot{slots.ID}_text">{L_ACP_SIDEBAR_TEXT}{L_COLON}</label><br />{L_ACP_SIDEBAR_TEXT_EXPLAIN}</dt>
+			<dd style="margin-left:36%;"><textarea name="sidebar[slot{slots.ID}][_text]]" rows="3" cols="40">{slots.SIDEBAR_TEXT}</textarea></dd>
+		</dl>
+		</div>
+		<hr />
+		<!-- END slots -->
+		<p class="submit-buttons">
+			<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			{S_FORM_TOKEN}
+		</p>
+	</fieldset>
+</form>
+
+<!-- INCLUDEJS js/sidebar.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/sidebar/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->

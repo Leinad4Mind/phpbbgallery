@@ -1,0 +1,179 @@
+services:
+    sitesplat.sidebar.type_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - @service_container
+        tags:
+            - { name: service_collection, tag: sitesplat.sidebar.type }
+
+# ----- Badge types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.sidebar.type.bbpoints:
+        class: sitesplat\sidebar\types\type\bbpoints
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.birthday:
+        class: sitesplat\sidebar\types\type\birthday
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.last_badges:
+        class: sitesplat\sidebar\types\type\last_badges
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.last_bbreactions:
+        class: sitesplat\sidebar\types\type\last_bbreactions
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.last_members:
+        class: sitesplat\sidebar\types\type\last_members
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.likesdd:
+        class: sitesplat\sidebar\types\type\likesdd
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.newsletter:
+        class: sitesplat\sidebar\types\type\newsletter
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.poll:
+        class: sitesplat\sidebar\types\type\poll
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.top_posters:
+        class: sitesplat\sidebar\types\type\top_posters
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }
+
+    sitesplat.sidebar.type.top_topics:
+        class: sitesplat\sidebar\types\type\top_topics
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - @config
+            - @cache.driver
+            - @auth
+            - @template
+            - %sitesplat.sidebar.tables.sidebar_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.sidebar.type }

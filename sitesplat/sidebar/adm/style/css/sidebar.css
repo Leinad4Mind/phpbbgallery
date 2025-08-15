@@ -1,0 +1,540 @@
+
+.dtdd-fix dt {
+	width:36%;
+	
+}
+	
+.dtdd-fix dd {
+	
+	margin-left:36%;
+}
+
+#sidebar-header {
+	background-color: #ddd;
+    color: #777;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+}
+
+#sidebar-nav {
+	background-color: #ddd;
+    border-radius: 2px;
+    font-size: 9px;
+    font-weight: bold;
+    height: 85px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 2px;
+    text-align: center;
+}
+
+#sidebar-section {
+	font-size:9px;
+	padding:5px 0 0; 
+}
+
+#sidebar-footer {
+	font-size:9px;
+	background-color: #ddd;
+	color: #555;
+	clear:both;
+	text-align:center;
+	padding:5px; 
+}
+
+.forum-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.forum-content {
+    background-color: #ccc;
+    border-radius: 2px;
+    color: #fff;
+    display: inline-block;
+    font-weight: bold;
+    height: 26px;
+    line-height: 26px;
+    margin-top: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+
+#sidbar_notice .close {
+	float: right;
+	width: 12px;
+	height: 12px;
+	background: transparent url("images/close.png") no-repeat 0 0;
+	opacity: 0.6;
+}
+
+
+
+.label-entry {
+    float: left;
+    font-size: inherit;
+    width: 32%;
+}	
+
+.label-wrap {
+    float: left;
+    font-size: inherit;
+    margin-top: 5px;
+    width: 32%;
+}
+
+
+
+
+/* simple input toggle love*/
+
+.onoffswitch {
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #ddd; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 20px; padding: 0; line-height: 20px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "OFF";
+    padding-left: 10px;
+    background-color: #C9DBE0; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "ON";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+
+.onoffswitch-inner-yn:before {
+    content: "NO";
+}
+.onoffswitch-inner-yn:after {
+    content: "YES";
+}
+
+.onoffswitch-inner-position:before {
+    content: "RIGHT";
+}
+.onoffswitch-inner-position:after {
+    content: "LEFT";
+}
+	
+.onoffswitch-inner-width:before {
+    content: "20";
+}
+.onoffswitch-inner-width:after {
+    content: "15";
+}
+	
+.onoffswitch-switch {
+    display: block; width: 14px; margin: 3px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 66px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+	
+dd label {
+    margin: inherit;
+}
+label {
+    cursor: pointer;
+    padding: inherit;
+}
+
+.label-entry-normal {
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+
+
+/* simple input range love*/
+
+#acp_sidebar input[type=range] {
+   background-color: #eee;
+}
+
+
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+    
+    /*required for proper track sizing in FF*/
+    width: 300px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+
+
+/* quick and dirty css to simulate the browser windows pane */
+
+.browser-window {
+  text-align: left;
+  margin: 20px;
+  width: 300px;
+  height: 160px;
+  display: inline-block;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.browser-window .top-bar {
+  height: 30px;
+  border-radius: 5px 5px 0 0;
+  border-top: thin solid #eaeae9;
+  border-bottom: thin solid #dfdfde;
+  background: linear-gradient(#e7e7e6, #e2e2e1);
+}
+
+.browser-window .circle {
+  height: 8px;
+  width: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.browser-window .circles {
+  margin: 5px 11px;
+}
+
+.circle.circle-red {
+    background-color: peru;
+}
+
+.circle.circle-yellow {
+    background-color: yellow;
+}
+
+.circle.circle-green {
+    background-color: lightgreen;
+}
+
+.browser-window .content {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  border-radius: 0 0 5px 5px;
+  background-color: #fafafa;
+}
+
+.browser-window .dev-tools {
+    position: absolute;
+    top: -25px;
+    width: 200px;
+}
+
+.browser-window .dev-tools .bar {
+  margin-top: -4px;
+  border-top: thin solid #e7e7e6;
+  border-bottom: thin solid #e7e7e6;
+  color: #e7e7e6;
+}
+.browser-window .dev-tools .bar .dev-bar-content {
+    color: #ccc;
+    float: left;
+    height: 16px;
+    margin-left: 5px;
+    margin-top: 0;
+    padding: 0;
+    width: 85%;
+}
+.browser-window .dev-tools .bar .close-x {
+  float: right;
+  border-left: thin solid #e7e7e6;
+  padding: 10px;
+}
+
+.browser-window .dev-tools .content .html {
+  height: 100%;
+  width: 69%;
+  border-right: thin solid #e7e7e6;
+}
+.browser-window .dev-tools .content .css {
+  float: right;
+  height: 100%;
+  width: 30%;
+}
+
+.clear {
+  clear: both;
+}
+
+.browser-window .dev-tools .bar {
+    background-color: #fff;
+    border-bottom: 2px solid #fff;
+    border-radius: 4px;
+    border-top: 2px solid #fff;
+    color: #e7e7e6;
+    content: "eee";
+    height: 16px;
+    left: 80px;
+    position: relative;
+    top: 40px;
+    width: 100%;
+}
+
+
+.browser-window .dev-tools .bar .close-x {
+    border-left: thin solid #e7e7e6;
+    float: right;
+    height: 5px;
+    line-height: 2px;
+    padding: 6px;
+}
+
+
+.inner-browser {
+    border: 4px solid #ddd;
+    padding: 5px;
+}
+
+
+
+
+
+/* Extension details */
+.alert-update {
+    border: 2px solid;
+}
+
+.modal-dialog {
+    margin: 130px auto;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.label {
+    padding: 0.2em 0.3em 0.1em 0.2em;
+}
+
+.md-trigger {
+    text-decoration: none!important;
+}
+
+
+.md-content h3 {
+    opacity: 1;
+}
+
+/* loading stuff */
+.loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #ce4233;
+  letter-spacing: 0.2em;
+}
+.loader::before, .loader::after {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #ce4233;
+  position: absolute;
+  -webkit-animation: load .7s infinite alternate ease-in-out;
+          animation: load .7s infinite alternate ease-in-out;
+}
+.loader::before {
+  top: 0;
+}
+.loader::after {
+  bottom: 0;
+}
+
+@-webkit-keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+
+.md-content button {
+	border: none;
+	padding: 0.6em 1.2em;
+	background: #c0392b;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+.md-content button:hover {
+	background: #A5281B;
+}
+
+
+.ExtensionName {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+#meta_homepage > a {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.description-ext span {
+ color: #fff;
+    font-weight: bold;
+}
+
+.extension_author_link {
+    color: #c0392b !important;
+}
+
+.description-ext > div {
+    margin-bottom: 10px;
+}

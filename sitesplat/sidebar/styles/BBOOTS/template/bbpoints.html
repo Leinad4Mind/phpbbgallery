@@ -1,0 +1,22 @@
+<!-- IF .bbpoints -->
+<div class="sidebar">
+<div id="bbpoints{slot.SIDEBAR_ID}" class="panel panel-inverse">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_BBPOINTS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerbbpoints{slot.SIDEBAR_ID}" class="inner">
+		<ul class="media-list user-list">
+		<!-- BEGIN bbpoints -->
+		<li class="media">
+		 <div class="media-body">
+		    {bbpoints.USERNAME_FULL}{L_COLON}&nbsp;<!-- IF SYMBOL_POS -->{BBPOINTS_SYMBOL}&nbsp;<!-- ENDIF -->{bbpoints.BBPOINTS}<!-- IF not SYMBOL_POS -->{BBPOINTS_SYMBOL}<!-- ENDIF --><!-- IF S_REGISTERED_USER and bbpoints.TRANSFER_URL -->&nbsp;<a href="{bbpoints.TRANSFER_URL}" data-ajax="true" title="{L_TRANSFER_TO}"><i class="fa fa-random"></i></a><!-- ENDIF -->
+		 </div>
+		</li>
+		<!-- END bbpoints -->		
+		</ul>
+	 </div>
+	</div>
+</div>
+</div>
+<!-- ENDIF -->
