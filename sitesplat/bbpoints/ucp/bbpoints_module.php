@@ -50,8 +50,8 @@ class bbpoints_module
 					$db->sql_query($sql);
 					$item_id = $db->sql_nextid();
 	
-					$amount = ($this->bbpoints_config['symbol_pos']) ? $this->bbpoints_config['currency'][0] . ' ' . $request->variable('amount', 0) :
-							   $request->variable('amount', 0) . ' ' . $this->bbpoints_config['currency'][0];
+					$amount = ($this->bbpoints_config['symbol_pos']) ? $this->bbpoints_config['currency'][0] . ' ' . number_format($request->variable('amount', 0), 2) :
+							  number_format($request->variable('amount', 0), 2) . ' ' . $this->bbpoints_config['currency'][0];
 					
 					$noti_ary = array(
 						'user_ids'		=> $request->variable('transfer_to', 0),
@@ -60,6 +60,7 @@ class bbpoints_module
 						'poster_id'		=> $userid,
 						'amount'		=> $request->variable('amount', 0),
 						'like_txt'		=> sprintf($user->lang('TRANSFER_NOTI'), $amount, $user->data['username'], $request->variable('comment', '')),
+						'currency'		=> $this->bbpoints_config['currency'],
 						'REFRESH_DATA'	=> array('time'	=> 3)
 					);
 					$this->bbpoints_helper->add_noti($noti_ary);

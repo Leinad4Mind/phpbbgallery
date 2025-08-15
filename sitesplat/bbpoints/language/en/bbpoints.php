@@ -29,6 +29,7 @@ $lang = array_merge($lang, array(
 	'BBPOINTS_TRANSFER_AMT'					=> 'Transfer amount',
 	'TRANSFER_DESCR'						=> 'Comment',  
 	'BBPOINTS_COMMENT_PLACEHOLDER'			=> 'Optional comment about the transaction',
+	'BBPOINTS_NO_RECORDS'			        => 'Sorry, there are no records yet!',
 	
 	'BBPOINTS_STATS'						=> 'Statistics',
 	'BBPOINTS_STATS_BAR'					=> 'and overall progress goal',

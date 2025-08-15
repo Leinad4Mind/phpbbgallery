@@ -83,7 +83,6 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
-
 	public function payed_topic($event)
 	{
 		if($event['topic_data']['bbpoints_payed'])

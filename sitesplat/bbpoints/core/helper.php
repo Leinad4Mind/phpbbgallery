@@ -28,8 +28,8 @@ class helper
 
 	public function currency($select = '', $currency = '')
 	{
-	    $currencies['NA'] = array('fa-na', 'N/A', '');
-   //   $currencies['PT'] = array('Points', 'Points', '');
+	    $currencies['N/A'] = array('fa-na', 'N/A', '');
+        $currencies['PTS'] = array('Points', 'Points', '');
 		$currencies['USD'] = array('fa-usd', 'Dollar', '&#36;');
 		$currencies['EUR'] = array('fa-eur', 'Euro', '&#128;');
 		$currencies['GBP'] = array('fa-gbp', 'Pound', '&#163;');

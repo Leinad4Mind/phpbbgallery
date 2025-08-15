@@ -22,8 +22,18 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
-		return $manager->is_enabled('sitesplat/BBCore');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/bbpoints', 'info_acp_bbpoints');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
+
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 	/**
@@ -51,9 +61,9 @@ class ext extends \phpbb\extension\base
 				}
 
 				// Enable BB points notifications
-				return $this->notification_handler('enable', array(
-					'sitesplat.bbpoints.notification.type.transfer',
-				));
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->enable_notifications('sitesplat.bbpoints.notification.type.transfer');
+				return 'notifications';
 
 			break;
 
@@ -80,9 +90,9 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Disable BB points notifications
-				return $this->notification_handler('disable', array(
-					'sitesplat.bbpoints.notification.type.transfer',
-				));
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->disable_notifications('sitesplat.bbpoints.notification.type.transfer');
+				return 'notifications';
 
 			break;
 
@@ -110,9 +120,9 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Purge BB points notifications
-				return $this->notification_handler('purge', array(
-					'sitesplat.bbpoints.notification.type.transfer',
-				));
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->purge_notifications('sitesplat.bbpoints.notification.type.transfer');
+				return 'notifications';
 
 			break;
 
@@ -123,25 +133,5 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
-	}
-
-	/**
-	 * Notification handler to call notification enable/disable/purge steps
-	 *
-	 * @param string $step               The step (enable, disable, purge)
-	 * @param array  $notification_types The notification type names
-	 * @return string Return notifications as temporary state
-	 * @access protected
-	 */
-	protected function notification_handler($step, $notification_types)
-	{
-		$phpbb_notifications = $this->container->get('notification_manager');
-
-		foreach ($notification_types as $notification_type)
-		{
-			call_user_func(array($phpbb_notifications, $step . '_notifications'), $notification_type);
-		}
-
-		return 'notifications';
 	}
 }

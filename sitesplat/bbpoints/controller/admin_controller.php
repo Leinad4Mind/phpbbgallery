@@ -298,8 +298,8 @@ class admin_controller
 			$buffer->flush();
 			
 			$currency_symbol = $this->bbpoints_helper->currency(0, $this->bbpoints_config['currency']);
-			$transfer_amount = ($this->bbpoints_config['symbol_pos']) ? $currency_symbol[0] . ' ' . $amount :
-							   $amount . ' ' . $currency_symbol[0];
+			$transfer_amount = ($this->bbpoints_config['symbol_pos']) ? $currency_symbol[2] . ' ' . number_format($amount, 2) :
+							   number_format($amount, 2) . ' ' . $currency_symbol[2];
 			if ($this->bbpoints_config['transfer_notify'])
 			{
 				$noti_ary = array(
@@ -308,7 +308,8 @@ class admin_controller
 					'post_id'		=> substr(time(), -5) ,
 					'poster_id'		=> $this->user->data['user_id'],
 					'amount'		=> $amount,
-					'like_txt'		=> sprintf($this->user->lang('TRANSFER_NOTI'), $transfer_amount, $this->config['sitename'], $pm_subject),
+					'like_txt'		=> sprintf($this->user->lang('TRANSFER_NOTI'), $transfer_amount, $this->config['sitename'] . '<br />', $pm_subject),
+					'currency'		=> $currency_symbol
 				);
 				$this->bbpoints_helper->add_noti($noti_ary);
 			}
@@ -320,7 +321,7 @@ class admin_controller
 				include($this->root_path . 'includes/message_parser.' . $this->php_ext);
 
 				$message_parser = new \parse_message();
-				$message_parser->message = sprintf($this->user->lang('TRANSFER_NOTI'), $transfer_amount, $this->config['sitename'], '') . "\n" . $pm_text;
+				$message_parser->message = sprintf($this->user->lang('TRANSFER_NOTI'), str_replace($currency_symbol[2], $currency_symbol[1], $transfer_amount), $this->config['sitename'], '') . "\n" . $pm_text;
 				$message_parser->parse(true, true, true, false, false, true, true);
 
 				$pm_data = array(

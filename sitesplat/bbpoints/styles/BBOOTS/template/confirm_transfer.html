@@ -5,15 +5,15 @@
 		
 	<div class="row">
 		<div class="col-md-6">
-		<label class="control-label" for="transfer_to">{L_BB_TRANSFER}{L_COLON}</label>
+		<label class="control-label" for="mtransfer_to">{L_BB_TRANSFER}{L_COLON}</label>
 		<div class="input-group">
 		<span class="input-group-addon"><i class="fa fa-user"></i></span>
-		    <input placeholder="{L_USERNAME}" id="transfer_to" value="" class="form-control" /><input type="hidden" id="transfer_id_to" name="transfer_to" value="0" />
+		    <input placeholder="{L_USERNAME}" id="mtransfer_to" value="" class="form-control" /><input type="hidden" id="mtransfer_id_to" name="transfer_to" value="0" />
 		</div>
 		</div>
 		
 		<div class="col-md-6">
-		<label class="control-label" for="transfer_to">{L_BB_AMOUNT}{L_COLON}</label>
+		<label class="control-label" for="mtransfer_to">{L_BB_AMOUNT}{L_COLON}</label>
 		<div class="input-group">
 			<span class="input-group-addon">{L_BBPOINTS}</span>
 		    <input placeholder="{L_BB_AMOUNT}" type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{USER_POINTS}" class="form-control" onkeypress="return isNumberKey(event)">
@@ -36,6 +36,8 @@
 		<input type="button" name="cancel" value="{L_NO}" class="btn btn-default" />
 	</fieldset>
 </form>	
+
+<script src="./ext/sitesplat/bbpoints/styles/FLATBOOTS/template/js/modal_bbpoints.js"></script>
 <!-- ELSE -->
 
 <!-- INCLUDE overall_header.html -->
@@ -74,6 +76,8 @@
 </div>
 </form>
 <!-- INCLUDE overall_footer.html -->
+
+<script src="./ext/sitesplat/bbpoints/styles/BBOOTS/template/js/bbpoints.js"></script>
 <!-- ENDIF -->
 
 <script>
@@ -86,5 +90,5 @@ function isNumberKey(evt){
     return true;
 }
 </script>
-<script src="./ext/sitesplat/bbpoints/styles/BBOOTS/template/js/bbpoints.js"></script>
+
 

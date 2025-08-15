@@ -99,8 +99,8 @@ class main_controller
 
 					if ($this->bbpoints_config['transfer_notify'])
 					{
-						$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . $this->request->variable('amount', 0) :
-								   $this->request->variable('amount', 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
+						$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($this->request->variable('amount', 0), 2) :
+								   number_format($this->request->variable('amount', 0), 2) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
 						$noti_ary = array(
 							'user_ids'		=> $this->request->variable('transfer_to', 0),
 							'parent_id'		=> 0,
@@ -108,8 +108,9 @@ class main_controller
 							'poster_id'		=> $user_id,
 							'amount'		=> $this->request->variable('amount', 0),
 							'like_txt'		=> sprintf($this->user->lang('TRANSFER_NOTI'), $amount, $this->user->data['username'], $this->request->variable('comment', '')),
+							'currency'		=> $this->bbpoints_config['currency']
 						);
-				//		$this->bbpoints_helper->add_noti($noti_ary);
+						$this->bbpoints_helper->add_noti($noti_ary);
 					}
 					trigger_error($this->user->lang['TRANSFER_SUCCESS']);	
 				} else
