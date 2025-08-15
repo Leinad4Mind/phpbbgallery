@@ -66,8 +66,8 @@ class dropbox extends \phpbb\auth\provider\oauth\service\base
 	*/
 	private function fetch_unique_id()
 	{
-		$result = json_decode($this->service_provider->request('/2/users/get_current_account'), true);
+		$extra_params = $this->service_provider->getStorage()->retrieveAccessToken($this->service_provider->service())->getExtraParams();
 
-		return $result['uid'];
+		return $extra_params['uid'];
 	}
 }

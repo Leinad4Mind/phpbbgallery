@@ -21,12 +21,15 @@ class oauth_reg_listener implements EventSubscriberInterface
 	protected $language;
 	protected $template;
 	protected $db;
+	protected $dispatcher;
 	protected $oauth_facebook;
 	protected $oauth_twitter;
+	protected $oauth_google;
 	protected $oauth_coinbase;
 	protected $oauth_discord;
 	protected $oauth_dropbox;
 	protected $oauth_github;
+	protected $oauth_razer;
 	protected $oauth_tokens_table;
 	protected $oauth_states_table;
 	protected $root_path;
@@ -35,8 +38,10 @@ class oauth_reg_listener implements EventSubscriberInterface
 	private $now;
 	private $token;
 	private $password;
+	private $login_link_data = [];
 	private $oauth_reg = false;
-	public function __construct(\phpbb\request\request $request, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\auth\provider\oauth\service\facebook $oauth_facebook, \phpbb\auth\provider\oauth\service\twitter $oauth_twitter, \sitesplat\bboauth\auth\provider\oauth\service\coinbase $oauth_coinbase, \sitesplat\bboauth\auth\provider\oauth\service\discord $oauth_discord, \sitesplat\bboauth\auth\provider\oauth\service\dropbox $oauth_dropbox, \sitesplat\bboauth\auth\provider\oauth\service\github $oauth_github, $oauth_tokens_table, $oauth_states_table, $root_path, $php_ext)
+	private $oauth_token = [];
+	public function __construct(\phpbb\request\request $request, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\auth\provider\oauth\service\facebook $oauth_facebook, \phpbb\auth\provider\oauth\service\twitter $oauth_twitter, \phpbb\auth\provider\oauth\service\google $oauth_google, \sitesplat\bboauth\auth\provider\oauth\service\coinbase $oauth_coinbase, \sitesplat\bboauth\auth\provider\oauth\service\discord $oauth_discord, \sitesplat\bboauth\auth\provider\oauth\service\dropbox $oauth_dropbox, \sitesplat\bboauth\auth\provider\oauth\service\github $oauth_github, \sitesplat\bboauth\auth\provider\oauth\service\razer $oauth_razer, $oauth_tokens_table, $oauth_states_table, $root_path, $php_ext)
 	{
 		$this->request = $request;
 		$this->config = $config;
@@ -45,12 +50,15 @@ class oauth_reg_listener implements EventSubscriberInterface
 		$this->language = $language;
 		$this->template = $template;
 		$this->db = $db;
+		$this->dispatcher = $dispatcher;
 		$this->oauth_facebook = $oauth_facebook;
 		$this->oauth_twitter = $oauth_twitter;
+		$this->oauth_google = $oauth_google;
 		$this->oauth_coinbase = $oauth_coinbase;
 		$this->oauth_discord = $oauth_discord;
 		$this->oauth_dropbox = $oauth_dropbox;
 		$this->oauth_github = $oauth_github;
+		$this->oauth_razer = $oauth_razer;
 		$this->oauth_tokens_table = $oauth_tokens_table;
 		$this->oauth_states_table = $oauth_states_table;
 		$this->root_path = $root_path;
@@ -60,161 +68,15 @@ class oauth_reg_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return [
-			'core.ucp_register_data_before'				=> [['preload_user_data'], ['skip_registration']],
 			'core.ucp_login_link_template_after'		=> 'replace_registration_btn_and_skip_terms',
+
+			'core.ucp_register_requests_after'			=> 'is_registration_oauth',
+			'core.ucp_register_data_before'				=> [['preload_user_data'], ['skip_registration']],
 			'core.add_form_key'							=> 'read_form_key',
-			'core.ucp_register_requests_after'			=> 'disable_captcha',
 			'core.ucp_register_data_after'				=> 'ignore_captcha_and_form_key',
 			'core.ucp_register_welcome_email_before'	=> 'welcome_email_password',
 			'core.ucp_register_register_after'			=> 'auto_login',
 		];
-	}
-
-	public function preload_user_data($event)
-	{
-		$data = $event['data'];
-
-		$login_link_data = $this->get_login_link_data_array();
-
-		if (!empty($login_link_data['oauth_service']))
-		{
-			$sql = 'SELECT oauth_token
-					FROM ' . $this->oauth_tokens_table . "
-					WHERE session_id = '" . $this->user->data['session_id'] . "'
-						AND provider = 'auth.provider.oauth.service." . $login_link_data['oauth_service'] . "'";
-			$result = $this->db->sql_query($sql);
-			$oauth_token = $this->db->sql_fetchfield('oauth_token', $result);
-			$this->db->sql_freeresult($result);
-
-			if ($oauth_token)
-			{
-				$oauth_token = json_decode($oauth_token, true);
-				$storage = new \phpbb\auth\provider\oauth\token_storage($this->db, $this->user, $this->oauth_tokens_table, $this->oauth_states_table);
-				$service_factory = new \OAuth\ServiceFactory();
-
-				switch ($login_link_data['oauth_service'])
-				{
-					case 'facebook':
-						// perform extra call to fetch user data
-						$service_credentials = $this->oauth_facebook->get_service_credentials();
-						$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-						$facebook_service = $service_factory->createService('Facebook', $credentials, $storage, $this->oauth_facebook->get_auth_scope());
-
-						$result = json_decode($facebook_service->request('me'), true);
-
-						$data = array_merge($data, [
-							'username'	=> $result['name'],
-							'email'		=> !empty($result['email']) ? $result['email'] : '',
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					// case 'twitter':
-					// print_r($oauth_token);die;
-					// 	// perform extra call to fetch user data
-					// 	$service_credentials = $this->oauth_twitter->get_service_credentials();
-					// 	$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-					// 	$twitter_service = $service_factory->createService('Twitter', $credentials, $storage, $this->oauth_twitter->get_auth_scope());
-
-					// 	$result = json_decode($twitter_service->request('me'), true);
-
-					// 	$data = array_merge($data, [
-					// 		'username'	=> $result['name'],
-					// 		'email'		=> !empty($result['email']) ? $result['email'] : '',
-					// 	]);
-					// 	$this->oauth_reg = true;
-					// break;
-
-					case 'coinbase':
-						// perform extra call to fetch user data
-						$service_credentials = $this->oauth_coinbase->get_service_credentials();
-						$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-						$coinbase_service = $service_factory->createService('Coinbase', $credentials, $storage, $this->oauth_coinbase->get_auth_scope());
-						
-						$result = json_decode($coinbase_service->request('user'), true);
-
-						$data = array_merge($data, [
-							'username'	=> !empty($result['data']['username']) ? $result['data']['username'] : $result['data']['name'],
-							'email'		=> $result['data']['email'],
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					case 'discord':
-						// perform extra call to fetch user data
-						$service_credentials = $this->oauth_discord->get_service_credentials();
-						$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-						$dropbox_service = $service_factory->createService('Discord', $credentials, $storage, $this->oauth_discord->get_auth_scope());
-						
-						$result = json_decode($dropbox_service->request('/users/@me'), true);
-
-						$data = array_merge($data, [
-							'username'	=> $result['username'],
-							'email'		=> $result['email'],
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					case 'dropbox':
-						// perform extra call to fetch user data
-						$service_credentials = $this->oauth_dropbox->get_service_credentials();
-						$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-						$dropbox_service = $service_factory->createService('Dropbox', $credentials, $storage, $this->oauth_dropbox->get_auth_scope());
-						
-						$result = json_decode($dropbox_service->request('/2/users/get_current_account'), true);
-
-						$data = array_merge($data, [
-							'username'	=> $result['name']['display_name'],
-							'email'		=> $result['email'] ?: '',
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					case 'github':
-						// perform extra call to fetch user data
-						$service_credentials = $this->oauth_github->get_service_credentials();
-						$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
-						$github_service = $service_factory->createService('Github', $credentials, $storage, $this->oauth_github->get_auth_scope());
-						
-						$result = json_decode($github_service->request('user'), true);
-
-						$data = array_merge($data, [
-							'username'	=> $result['login'],
-							'email'		=> $result['email'] ?: '',
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					case 'instagram':
-						$data = array_merge($data, [
-							'username'	=> $oauth_token['extraParams']['user']['username'],
-						]);
-						$this->oauth_reg = true;
-					break;
-
-					case 'slack':
-						$data = array_merge($data, [
-							'username'	=> $oauth_token['extraParams']['user']['name'],
-							'email'		=> $oauth_token['extraParams']['user']['email'],
-						]);
-						$this->oauth_reg = true;
-					break;
-				}
-
-				// disable CAPTCHA
-				if ($this->oauth_reg)
-				{
-					$this->config['enable_confirm'] = false;
-				}
-
-				$data = array_merge($data, [
-					'tz'	=> $this->config['board_timezone'],
-					'lang'	=> $this->user->lang_name,
-				]);
-			}
-		}
-
-		$event['data'] = $data;
 	}
 
 	public function replace_registration_btn_and_skip_terms($event)
@@ -224,6 +86,192 @@ class oauth_reg_listener implements EventSubscriberInterface
 		$this->template->assign_var('L_REGISTER', $this->language->lang('AGREE_AND_REGISTER', ucfirst($this->request->variable('login_link_oauth_service', ''))));
 
 		$event->update_subarray('tpl_ary', 'S_HIDDEN_FIELDS', $event['tpl_ary']['S_HIDDEN_FIELDS'] . build_hidden_fields(['agreed'	=> true]));
+
+		/**
+		 * Allows to execute code only when BBOAuth skips terms and attempts quick registration
+		 *
+		 * @event sitesplat.bboauth.ucp_login_link
+		 * @var	\phpbb\event\data	event	Event data from core.ucp_register_data_before
+		 * @since 1.2.0
+		 */
+		$this->dispatcher->trigger_event('sitesplat.bboauth.ucp_login_link');
+	}
+
+	public function is_registration_oauth()
+	{
+		$this->login_link_data = $this->get_login_link_data_array();
+		if (empty($this->login_link_data['oauth_service']))
+		{
+			return;
+		}
+
+		$sql = 'SELECT oauth_token
+				FROM ' . $this->oauth_tokens_table . "
+				WHERE session_id = '" . $this->user->data['session_id'] . "'
+					AND provider = 'auth.provider.oauth.service." . $this->db->sql_escape($this->login_link_data['oauth_service']) . "'";
+		$result = $this->db->sql_query($sql);
+		$oauth_token = $this->db->sql_fetchfield('oauth_token', $result);
+		$this->db->sql_freeresult($result);
+
+		if ($oauth_token)
+		{
+			$this->oauth_reg = true;
+			$this->oauth_token = json_decode($oauth_token, true);
+			$this->config['enable_confirm'] = false;
+		}
+	}
+
+	public function preload_user_data($event)
+	{
+		if (!$this->oauth_reg)
+		{
+			return;
+		}
+
+		if (empty($data['username']) && empty($data['email']))
+		{
+			$data = $event['data'];
+
+			$storage = new \phpbb\auth\provider\oauth\token_storage($this->db, $this->user, $this->oauth_tokens_table, $this->oauth_states_table);
+			$service_factory = new \OAuth\ServiceFactory();
+
+			switch ($this->login_link_data['oauth_service'])
+			{
+				case 'facebook':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_facebook->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$facebook_service = $service_factory->createService('Facebook', $credentials, $storage, $this->oauth_facebook->get_auth_scope());
+
+					$result = json_decode($facebook_service->request('me'), true);
+
+					$data = array_merge($data, [
+						'username'	=> $result['name'],
+						'email'		=> !empty($result['email']) ? $result['email'] : '',
+					]);
+				break;
+
+				// case 'twitter':
+				// print_r($oauth_token);die;
+				// 	// perform extra call to fetch user data
+				// 	$service_credentials = $this->oauth_twitter->get_service_credentials();
+				// 	$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+				// 	$twitter_service = $service_factory->createService('Twitter', $credentials, $storage, $this->oauth_twitter->get_auth_scope());
+
+				// 	$result = json_decode($twitter_service->request('me'), true);
+
+				// 	$data = array_merge($data, [
+				// 		'username'	=> $result['name'],
+				// 		'email'		=> !empty($result['email']) ? $result['email'] : '',
+				// 	]);
+				// break;
+
+				case 'google':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_google->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$google_service = $service_factory->createService('Google', $credentials, $storage, $this->oauth_google->get_auth_scope());
+
+					$result = json_decode($google_service->request('userinfo'), true);
+
+					$data = array_merge($data, [
+						'username'	=> !empty($result['name']) ? $result['name'] : '',
+						'email'		=> !empty($result['email']) ? $result['email'] : '',
+					]);
+				break;
+
+				case 'coinbase':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_coinbase->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$coinbase_service = $service_factory->createService('Coinbase', $credentials, $storage, $this->oauth_coinbase->get_auth_scope());
+					
+					$result = json_decode($coinbase_service->request('user'), true);
+
+					$data = array_merge($data, [
+						'username'	=> !empty($result['data']['username']) ? $result['data']['username'] : $result['data']['name'],
+						'email'		=> $result['data']['email'],
+					]);
+				break;
+
+				case 'discord':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_discord->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$dropbox_service = $service_factory->createService('Discord', $credentials, $storage, $this->oauth_discord->get_auth_scope());
+					
+					$result = json_decode($dropbox_service->request('/users/@me'), true);
+
+					$data = array_merge($data, [
+						'username'	=> $result['username'],
+						'email'		=> $result['email'],
+					]);
+				break;
+
+				// case 'dropbox':
+				// 	// perform extra call to fetch user data
+				// 	$service_credentials = $this->oauth_dropbox->get_service_credentials();
+				// 	$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+				// 	$dropbox_service = $service_factory->createService('Dropbox', $credentials, $storage, $this->oauth_dropbox->get_auth_scope());
+					
+				// 	$result = json_decode($dropbox_service->request('/2/users/get_current_account'), true);
+
+				// 	$data = array_merge($data, [
+				// 		'username'	=> $result['name']['display_name'],
+				// 		'email'		=> $result['email'] ?: '',
+				// 	]);
+				// 	$this->oauth_reg = true;
+				// break;
+
+				case 'github':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_github->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$github_service = $service_factory->createService('Github', $credentials, $storage, $this->oauth_github->get_auth_scope());
+					
+					$result = json_decode($github_service->request('user'), true);
+
+					$data = array_merge($data, [
+						'username'	=> $result['login'],
+						'email'		=> $result['email'] ?: '',
+					]);
+				break;
+
+				case 'instagram':
+					$data = array_merge($data, [
+						'username'	=> $this->oauth_token['extraParams']['user']['username'],
+					]);
+				break;
+
+				case 'slack':
+					$data = array_merge($data, [
+						'username'	=> $this->oauth_token['extraParams']['user']['name'],
+						'email'		=> $this->oauth_token['extraParams']['user']['email'],
+					]);
+				break;
+
+				case 'razer':
+					// perform extra call to fetch user data
+					$service_credentials = $this->oauth_razer->get_service_credentials();
+					$credentials = new \OAuth\Common\Consumer\Credentials($service_credentials['key'], $service_credentials['secret'], '');
+					$razer_service = $service_factory->createService('Razer', $credentials, $storage, $this->oauth_razer->get_auth_scope());
+					
+					$result = json_decode($razer_service->request('/userinfo'), true);
+
+					$data = array_merge($data, [
+						'username'	=> $result['razer_id'],
+						'email'		=> isset($result['email']) ? $result['email'] : '',
+					]);
+				break;
+			}
+
+			$data = array_merge($data, [
+				'tz'	=> $this->config['board_timezone'],
+				'lang'	=> $this->user->lang_name,
+			]);
+
+			$event['data'] = $data;
+		}
 	}
 
 	public function read_form_key($event)
@@ -235,20 +283,9 @@ class oauth_reg_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function disable_captcha($event)
-	{
-		if ($this->disabled($event['data']))
-		{
-			return;
-		}
-
-		// temporarily disable captcha to automatically register the user
-		$this->config['enable_confirm'] = false;
-	}
-
 	public function skip_registration($event)
 	{
-		if ($this->disabled($event['data']))
+		if (!$this->oauth_reg || $this->disabled($event['data']))
 		{
 			return;
 		}
@@ -258,6 +295,18 @@ class oauth_reg_listener implements EventSubscriberInterface
 		$event->update_subarray('data', 'password_confirm', $this->password);
 
 		$event['submit'] = true;
+
+		/**
+		 * Autofill other data
+		 *
+		 * @event sitesplat.bboauth.skip_registration
+		 * @var	\phpbb\event\data	event	Event data from core.ucp_register_data_before
+		 * @since 1.2.0
+		 */
+		$vars = array(
+			'event',
+		);
+		extract($this->dispatcher->trigger_event('sitesplat.bboauth.skip_registration', compact($vars)));
 
 		$this->request->overwrite('creation_time', $this->now);
 		$this->request->overwrite('form_token', $this->token);
@@ -269,28 +318,35 @@ class oauth_reg_listener implements EventSubscriberInterface
 
 	public function ignore_captcha_and_form_key($event)
 	{
-		if ($this->oauth_reg)
+		if (!$this->oauth_reg)
 		{
-			$error = $event['error'];
-
-			$captcha_error = array_search($this->language->lang('CONFIRM_CODE_WRONG'), $error);
-			if ($captcha_error !== false)
-			{
-				unset($error[$captcha_error]);
-			}
-			
-			$form_key_error = array_search($this->language->lang('FORM_INVALID'), $error);
-			if ($form_key_error !== false)
-			{
-				unset($error[$form_key_error]);
-			}
-
-			$event['error'] = $error;
+			return;
 		}
+
+		$error = $event['error'];
+
+		$captcha_error = array_search($this->language->lang('CONFIRM_CODE_WRONG'), $error);
+		if ($captcha_error !== false)
+		{
+			unset($error[$captcha_error]);
+		}
+		
+		$form_key_error = array_search($this->language->lang('FORM_INVALID'), $error);
+		if ($form_key_error !== false)
+		{
+			unset($error[$form_key_error]);
+		}
+
+		$event['error'] = $error;
 	}
 
 	public function welcome_email_password($event)
 	{
+		if (!$this->oauth_reg)
+		{
+			return;
+		}
+
 		$event['messenger']->template('@sitesplat_bboauth/user_welcome_password', $event['data']['lang']);
 		$event['messenger']->assign_vars([
 			'PASSWORD'		=> $this->password,
@@ -300,6 +356,11 @@ class oauth_reg_listener implements EventSubscriberInterface
 
 	public function auto_login($event)
 	{
+		if (!$this->oauth_reg || $this->config['require_activation'] != USER_ACTIVATION_NONE)
+		{
+			return;
+		}
+
 		$this->language->add_lang('registration', 'sitesplat/bboauth');
 
 		$event['message'] = $this->language->lang('OAUTH_ACCOUNT_ADDED');

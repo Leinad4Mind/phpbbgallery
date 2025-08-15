@@ -18,15 +18,19 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $template;
 	protected $config;
+	protected $auth;
+	protected $provider_collection;
 	protected $users_table;
-
 	private $oauth_service;
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\template\template $template, \phpbb\config\config $config, $users_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\template\template $template, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\auth\provider_collection $provider_collection, $users_table)
+    
 	{
 		$this->db = $db;
 		$this->user = $user;
 		$this->template = $template;
 		$this->config = $config;
+		$this->auth = $auth;
+		$this->provider_collection = $provider_collection;
 		$this->users_table = $users_table;
 	}
 	
@@ -39,6 +43,8 @@ class listener implements EventSubscriberInterface
 			'core.login_box_redirect'								=> 'set_login_type_common',
 			'core.page_header_after'								=> 'display_login_type',
 			'core.user_setup'                                       => 'onUserSetup',
+
+			'core.index_modify_page_title'	=> 'display_oauth_options',
 		);
 	}
 
@@ -73,7 +79,7 @@ class listener implements EventSubscriberInterface
 
 	public function add_to_oauth_group($event)
 	{
-		if ($this->config['sitesplat_bboauth_group'])
+		if ($this->config['sitesplat_bboauth_group'] && !$this->auth->acl_get('a_') && !$this->auth->acl_get('m_'))
 		{
 			group_user_add($this->config['sitesplat_bboauth_group'], [$event['row']['user_id']]);
 		}
@@ -87,5 +93,37 @@ class listener implements EventSubscriberInterface
 			'lang_set' => 'bboauth',
 		);
 		$event['lang_set_ext'] = $set;
+	}
+
+	public function display_oauth_options()
+	{
+		if (!$this->user->data['is_registered'])
+		{
+			$auth_provider = $this->provider_collection->get_provider();
+			$auth_provider_data = $auth_provider->get_login_data();
+			if ($auth_provider_data)
+			{
+				if (isset($auth_provider_data['VARS']))
+				{
+					$this->template->assign_vars($auth_provider_data['VARS']);
+				}
+
+				if (isset($auth_provider_data['BLOCK_VAR_NAME']))
+				{
+					foreach ($auth_provider_data['BLOCK_VARS'] as $block_vars)
+					{
+						// we need to fix URL first
+						$block_vars['REDIRECT_URL'] = str_replace(['index.', '?'], ['ucp.', '?mode=login'], $block_vars['REDIRECT_URL']);
+
+						$this->template->assign_block_vars($auth_provider_data['BLOCK_VAR_NAME'], $block_vars);
+					}
+				}
+
+				$this->template->assign_vars(array(
+					'S_IS_INDEX'				=> true,
+					'PROVIDER_TEMPLATE_FILE'	=> $auth_provider_data['TEMPLATE_FILE'],
+				));
+			}
+		}
 	}
 }

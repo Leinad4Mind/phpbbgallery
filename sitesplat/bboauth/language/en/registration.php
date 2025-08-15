@@ -20,5 +20,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'AGREE_AND_REGISTER'	=> 'Agree with terms and Register with %s',
-	'OAUTH_ACCOUNT_ADDED'	=> 'Thank you for registering, your account has been created.',
+	'OAUTH_ACCOUNT_ADDED'	=> 'Thank-you for registering, your account has been created via the social media selected and you have been automatically logged-in!',
 ));

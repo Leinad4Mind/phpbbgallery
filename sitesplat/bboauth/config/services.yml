@@ -44,6 +44,15 @@ services:
         tags:
             - { name: auth.provider.oauth.service }
 
+    auth.provider.oauth.service.razer:
+        class: sitesplat\bboauth\auth\provider\oauth\service\razer
+        arguments:
+            - '@config'
+            - '@request'
+            - '@user'
+        tags:
+            - { name: auth.provider.oauth.service }
+
     auth.provider.oauth.service.slack:
         class: sitesplat\bboauth\auth\provider\oauth\service\slack
         arguments:
@@ -60,6 +69,8 @@ services:
             - '@user'
             - '@template'
             - '@config'
+            - '@auth'
+            - '@auth.provider_collection'
             - '%tables.users%'
         tags:
             - { name: event.listener }
@@ -83,12 +94,15 @@ services:
             - '@language'
             - '@template'
             - '@dbal.conn'
+            - '@dispatcher'
             - '@auth.provider.oauth.service.facebook'
             - '@auth.provider.oauth.service.twitter'
+            - '@auth.provider.oauth.service.google'
             - '@auth.provider.oauth.service.coinbase'
             - '@auth.provider.oauth.service.discord'
             - '@auth.provider.oauth.service.dropbox'
             - '@auth.provider.oauth.service.github'
+            - '@auth.provider.oauth.service.razer'
             - '%tables.auth_provider_oauth_token_storage%'
             - '%tables.auth_provider_oauth_states%'
             - '%core.root_path%'
