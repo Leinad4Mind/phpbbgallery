@@ -116,12 +116,20 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 										'avatar_height'	=> $row['user_avatar_height'])), $match) :
 										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
+
 				$user_posts[0][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
 					'user_posts'    => $row['user_posts'],
 				);
 			}

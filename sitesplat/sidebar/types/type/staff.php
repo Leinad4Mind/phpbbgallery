@@ -97,9 +97,8 @@ class staff extends \sitesplat\sidebar\types\type\base
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id 
-					FROM ' . USER_GROUP_TABLE . ' u
-					INNER JOIN ' . GROUPS_TABLE . " g ON g.group_id = u.group_id 
-					WHERE LCASE(g.group_name) = 'staff'";
+					FROM ' . GROUPS_TABLE . ' g, ' . USER_GROUP_TABLE . " u
+					WHERE LOWER(g.group_name) LIKE '%staff%' AND u.group_id = g.group_id";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -125,12 +124,20 @@ class staff extends \sitesplat\sidebar\types\type\base
 									'avatar_height'	=> $row['user_avatar_height'])), $match) :
 									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
+
 				$staff_online[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
 					'last_visit'    => $row['session_time'],
 				);
 			}

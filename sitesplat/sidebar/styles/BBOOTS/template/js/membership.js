@@ -18,8 +18,8 @@ head.ready(function () {
 			},
 			credits: {
 				enabled: false,
-				text: 'ForumHulp.com',
-				href: 'http://forumhulp.com'
+				text: 'sitesplat.com',
+				href: 'https://sitesplat.com'
 			},
 			exporting: { enabled: false },
 			tooltip: {

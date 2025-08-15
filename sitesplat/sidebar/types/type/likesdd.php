@@ -102,8 +102,8 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 			
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-			  $match = array();
-			  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 						  phpbb_get_user_avatar(
 							  array('avatar'			=> $row['user_avatar'], 
 							        'user_id'           => $row['user_id'],
@@ -112,11 +112,19 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 									'avatar_height'	    => $row['user_avatar_height'])), $match) :
 									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
+
 				$newest_users[] = array(
 					'user_id'		=> $row['poster_id'],
 					'username'		=> $row['username'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
 					'post_url'		=> append_sid($board_url . 'viewtopic.' . $this->php_ext, 'p=' . $row['post_id'] . '#p'. $row['post_id']),

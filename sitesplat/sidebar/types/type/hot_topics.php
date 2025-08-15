@@ -80,7 +80,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT forum_id, topic_id, topic_type
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $visibility->get_forums_visibility_sql('topic', $forum_ary) . '
-				AND topic_status <> ' . ITEM_MOVED . '
+				AND topic_status <> ' . ITEM_MOVED . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'] . '
 				ORDER BY topic_last_post_time DESC';
 
 			$result = $this->db->sql_query_limit($sql, $howmany);
@@ -122,7 +122,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 							'ON'	=> 't.forum_id = f.forum_id',
 						),
 					),
-					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids) . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'],
+					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
 					'ORDER_BY'	=> 't.topic_last_post_time DESC',
 				);
 

@@ -99,11 +99,11 @@ class donations extends \sitesplat\sidebar\types\type\base
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height,
-				d.mc_gross, d.payment_date
+				d.mc_gross, d.payment_date, d.payment_status
 				FROM ' . $donations_table . ' d
-				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = d.user_id
-				 ' . $sql_where . ' ' . $sql_and . '
-				ORDER BY d.payment_date DESC';
+				LEFT JOIN ' . USERS_TABLE . " u ON u.user_id = d.user_id $sql_where $sql_and
+				AND d.payment_status = 'Completed'
+				ORDER BY d.payment_date DESC";
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -116,12 +116,20 @@ class donations extends \sitesplat\sidebar\types\type\base
 									'avatar_height'	=> $row['user_avatar_height'])), $match) :
 									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
+
 				$donations[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
 					'mc_gross'    => $row['mc_gross'],
 				);
 			}

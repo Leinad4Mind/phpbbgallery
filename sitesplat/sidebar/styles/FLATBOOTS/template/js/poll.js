@@ -19,7 +19,7 @@ head.ready(function () {
 			credits: {
 				enabled: false,
 				text: 'sitesplat.com',
-				href: 'http://sitesplat.com'
+				href: 'https://sitesplat.com'
 			},
 			exporting: { enabled: false },
 			tooltip: {
@@ -33,7 +33,7 @@ head.ready(function () {
                     events: {
                         click: function () {
 							$.ajax({ type: "POST", 
-							url: "app.php/sidebar/poll.html", 
+							url: sitesplat_board_url + "app.php/sidebar/poll.html", 
 							data: {"f" : this.f,
 									"t": this.t,
 									"v": this.v},
