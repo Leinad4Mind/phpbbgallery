@@ -27,9 +27,16 @@ $lang = array_merge($lang, array(
 	
 	'ACP_GDPR_SETTINGS_SAVED'	=> 'GDPR setting has been saved.',
 
-	'PRIVACY_POLICY_EXPLAIN'	=> 'Content entered here will be displayed to all users to accept your policy as required by GDPR. You can use HTML.<br />Please note, everytime you edit this form the GDPR acceptance date will be reset and required to accept again for all users. This is so to make it easier for the Admins to enforce again the GDPR policy when an update accurs.<br /> Make sure to review the default policy right away as it is for general forums coverage and it might not be a good fit for your forum.',
+	'PRIVACY_POLICY_EXPLAIN'	=> 'Content entered here will be displayed to all users to accept your policy as required by GDPR. You can use HTML.<br />Please note, everytime you edit this form the GDPR acceptance date will be reset and required to accept again for all users. This is so to make it easier for the Admins to enforce again the GDPR policy when an update occurs.<br /> Make sure to review the default policy right away as it is for general forums coverage and it might not be a good fit for your forum.',
 
-	'COOKIES_BANNER'			=> 'Cookies EU banner',
-	'TRACKING_CODES'			=> 'Tracking codes',
-	'TRACKING_CODES_EXPLAIN'	=> 'Paste all tracking codes you use for analytics and/or other purposes here without <samp>&lt;script&gt;</samp> tag wrapping it, separated by blank line. Codes will be executed only for users who accept cookies that such services generate (IE: Google Analytics).',
+	'COOKIES_BANNER'					=> 'Cookies EU banner',
+	'TRACKING_CODES'					=> 'Tracking codes',
+	'TRACKING_CODES_EXPLAIN'			=> 'Paste all tracking codes you use for analytics and/or other purposes here without <samp>&lt;script&gt;</samp> tag wrapping it, separated by blank line. Codes will be executed only for users who accept cookies that such services generate (IE: Google Analytics).',
+	'SITESPLAT_BBGDPR_ADSENSE'			=> 'AdSense code',
+	'SITESPLAT_BBGDPR_ADSENSE_EXPLAIN'	=> 'Paste your AdSense code which will be included only when user accepted cookies. Use <samp>{{ GDPR_ADSENSE }}</samp> in your style templates to display it.',
+	'SITESPLAT_BBGDPR_GEOIP'			=> 'Use GeoIP location service to determine EU citizens',
+	'SITESPLAT_BBGDPR_GEOIP_EXPLAIN'	=> 'This will allow locating users by their IP address in order to display Cookies EU banner only to EU citizens. Note that this location service is imprecise and can result in wrong detection of the user location. Also, IP lookup is a load-sensitive task which may slow down the server.',
+
+	'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME'			=> 'Keep username when deleting account',
+	'SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN'	=> 'Set to No to generate random username which will replace current username when user deletes their account.',
 ));

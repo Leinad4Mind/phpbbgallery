@@ -24,6 +24,7 @@ class m4_deleted_count extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('sitesplat_bbgdpr_deleted', 0)),
+			array('config.add', array('sitesplat_bbgdpr_delete_keep_username', 0)),
 		);
 	}
 }

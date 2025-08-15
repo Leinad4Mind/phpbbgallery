@@ -49,6 +49,7 @@ class main_module
 			}
 
 			$this->config_text->set('sitesplat_bbgdpr_js', $this->request->variable('sitesplat_bbgdpr_js', '', true));
+			$this->config_text->set('sitesplat_bbgdpr_adsense', $this->request->variable('sitesplat_bbgdpr_adsense', '', true));
 
 			$sitesplat_bbgdpr_privacy_policy = $this->request->variable('sitesplat_bbgdpr_privacy_policy', '', true);
 			if ($sitesplat_bbgdpr_privacy_policy != $this->config_text->get('sitesplat_bbgdpr_privacy_policy'))
@@ -59,6 +60,8 @@ class main_module
 				$this->db->sql_query($sql);
 			}
 			$this->config_text->set('sitesplat_bbgdpr_privacy_policy', $sitesplat_bbgdpr_privacy_policy);
+			$this->config->set('sitesplat_bbgdpr_geoip', $this->request->variable('sitesplat_bbgdpr_geoip', false));
+			$this->config->set('sitesplat_bbgdpr_delete_keep_username', $this->request->variable('sitesplat_bbgdpr_delete_keep_username', false));
 
 			trigger_error($this->language->lang('ACP_GDPR_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
@@ -66,7 +69,9 @@ class main_module
 		$this->template->assign_vars(array(
 			'U_ACTION'							=> $this->u_action,
 			'SITESPLAT_BBGDPR_JS'				=> $this->config_text->get('sitesplat_bbgdpr_js'),
+			'SITESPLAT_BBGDPR_ADSENSE'			=> $this->config_text->get('sitesplat_bbgdpr_adsense'),
 			'SITESPLAT_BBGDPR_PRIVACY_POLICY'	=> $this->config_text->get('sitesplat_bbgdpr_privacy_policy'),
+			'SITESPLAT_BBGDPR_GEOIP'			=> $this->config['sitesplat_bbgdpr_geoip'],
 			'SITESPLAT_BBGDPR_DELETED'			=> $this->config['sitesplat_bbgdpr_deleted'],
 		));
 	}

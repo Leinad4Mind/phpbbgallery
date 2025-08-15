@@ -51,7 +51,8 @@ class main_listener implements EventSubscriberInterface
 	protected $language;
 	protected $config;
 	protected $request;
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config, \phpbb\request\request $request)
+	protected $root_path;
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config, \phpbb\request\request $request, $root_path)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -60,6 +61,7 @@ class main_listener implements EventSubscriberInterface
 		$this->language = $language;
 		$this->config = $config;
 		$this->request = $request;
+		$this->root_path = $root_path;
 	}
 
 	public function add_permission($event)
@@ -98,11 +100,12 @@ class main_listener implements EventSubscriberInterface
 	{
 		$this->template->assign_vars(array(
 			'U_GDPR'					=> $this->helper->route('sitesplat_bbgdpr_privacy'),
-			'GDPR_JS'					=> $this->tracking_codes_allowed() ? $this->config_text->get('sitesplat_bbgdpr_js') : false,
+			'GDPR_JS'					=> $this->tracking_codes_allowed() ? htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_js')) : false,
 			'S_COOKIE_NOTICE'			=> false, // Disable phpBB Cookie Notice
 			'S_DISPLAY_COOKIE_BANNER'	=> $this->display_cookie_notice(),
 			'U_COOKIE_REJECT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'reject']),
 			'U_COOKIE_ACCEPT'			=> $this->helper->route('sitesplat_bbgdpr_cookie', ['mode' => 'accept']),
+			'GDPR_ADSENSE'				=> $this->tracking_codes_allowed() ? htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_adsense')) : false,
 		));
 	}
 
@@ -159,20 +162,37 @@ class main_listener implements EventSubscriberInterface
 	{
 		if ($this->user->data['user_id'] != ANONYMOUS)
 		{
-			if ($this->user->data['user_cookie_accept'] == ext::COOKIE_NOT_YET)
+			if ($this->user->data['user_cookie_accept'] != ext::COOKIE_NOT_YET)
 			{
-				return true;
+				return false;
 			}
 		}
 		else
 		{
-			if (!$this->request->is_set($this->config['cookie_name'] . '_sitesplat_bbgdpr_cookie', \phpbb\request\request_interface::COOKIE))
+			if ($this->request->is_set($this->config['cookie_name'] . '_sitesplat_bbgdpr_cookie', \phpbb\request\request_interface::COOKIE))
 			{
-				return true;
+				return false;
 			}
 		}
 
-		return false;
+		if ($this->config['sitesplat_bbgdpr_geoip'])
+		{
+			$reader = new \GeoIp2\Database\Reader($this->root_path . 'ext/sitesplat/bbgdpr/data/GeoLite2-Country.mmdb');
+			try {
+				//$record = $reader->country($this->user->ip);
+				$record = $reader->country('188.167.251.181');
+
+				if (!in_array($record->country->isoCode, array('BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK')))
+				{
+					return false;
+				}
+			}
+			catch (\Exception $e) // Problem? Let's decide based on next factors below...
+			{	
+			}
+		}
+
+		return true;
 	}
 
 	protected function tracking_codes_allowed()

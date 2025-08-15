@@ -23,7 +23,33 @@
 				<textarea name="sitesplat_bbgdpr_js" rows="15">{{ SITESPLAT_BBGDPR_JS }}</textarea>
 			</dd>
 		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_adsense">{{ lang('SITESPLAT_BBGDPR_ADSENSE') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_ADSENSE_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_adsense" rows="15">{{ SITESPLAT_BBGDPR_ADSENSE }}</textarea>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_geoip">{{ lang('SITESPLAT_BBGDPR_GEOIP') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_GEOIP_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_geoip" value="1"{% if SITESPLAT_BBGDPR_GEOIP %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_geoip" value="0"{% if not SITESPLAT_BBGDPR_GEOIP %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
 	</fieldset>
+
+	<fieldset>
+			<legend>{{ lang('SETTINGS') }}</legend>
+			<dl>
+				<dt><label for="sitesplat_bbgdpr_delete_keep_username">{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN') }}</span></dt>
+				<dd>
+					<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="1"{% if SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="0"{% if not SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_NO}</label>
+				</dd>
+			</dl>
+		</fieldset>
 
 	<fieldset class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;

@@ -95,7 +95,7 @@ class main_module
 				$action = $this->request->variable('action', '');
 
 				// prepare directory
-				if ($action == 'posts' || $action == 'everything')
+				if ($action == 'posts' || $action == 'personal_data')
 				{
 					$root_dir = $this->root_path . 'store/bbgdpr/' . $this->user->data['user_id'];
 					$this->rmdir($root_dir);
@@ -104,7 +104,7 @@ class main_module
 
 				switch ($action)
 				{
-					case 'everything':
+					case 'personal_data':
 
 						// Stores label => value
 						$personal_data = array();
@@ -155,7 +155,7 @@ class main_module
 						}
 						file_put_contents($root_dir . '/personal.txt', $template);
 
-					// no break;
+					break;
 
 					case 'posts':
 
@@ -178,43 +178,41 @@ class main_module
 							file_put_contents($post_dir . '/' . $row['post_time'] . '.html', $contents);
 						}
 					
-					// no break;
+					break;
+				}
 
-					default:
+				if (!empty($action))
+				{
+					/**
+					* Perform additional actions to prepare user data to be
+					* downloaded. Only store the data to subdorectories in $root_dir!
+					*
+					* @event sitesplat.bbgdpr.ucp_download_zip_before
+					* @var	string	$root_dir	Root dir to store data
+					*/
+					$vars = array(
+						'root_dir',
+					);
+					extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbgdpr.ucp_download_zip_before', compact($vars)));
 
-						if (!empty($action))
-						{
-							/**
-							* Perform additional actions to prepare user data to be
-							* downloaded. Only store the data to subdorectories in $root_dir!
-							*
-							* @event sitesplat.bbgdpr.ucp_download_zip_before
-							* @var	string	$root_dir	Root dir to store data
-							*/
-							$vars = array(
-								'root_dir',
-							);
-							extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbgdpr.ucp_download_zip_before', compact($vars)));
+					// Pack the data
+					$zip_filename = 'gdpr_' . $this->user->data['user_id'] . '.zip';
+					$zip_file = $this->root_path . 'store/bbgdpr/' . md5($zip_filename . time());
+					RecursiveZipArchive::zipTree($root_dir, $zip_file, \ZipArchive::CREATE);
+					$this->rmdir($root_dir);
 
-							// Pack the data
-							$zip_filename = 'gdpr_' . $this->user->data['user_id'] . '.zip';
-							$zip_file = $this->root_path . 'store/bbgdpr/' . md5($zip_filename . time());
-							RecursiveZipArchive::zipTree($root_dir, $zip_file, \ZipArchive::CREATE);
-							$this->rmdir($root_dir);
-
-							// Send the data
-							header('Content-type:  application/zip');
-							header('Content-Length: ' . filesize($zip_file));
-							header('Content-Disposition: attachment; filename="' . $zip_filename . '"');
-							readfile($zip_file);
-							exit;
-						}
+					// Send the data
+					header('Content-type:  application/zip');
+					header('Content-Length: ' . filesize($zip_file));
+					header('Content-Disposition: attachment; filename="' . $zip_filename . '"');
+					readfile($zip_file);
+					exit;
 				}
 
 				$this->template->assign_vars(array(
-					'U_DOWNLOAD_POSTS'		=> $this->u_action . '&action=posts',
-					'U_DOWNLOAD_EVERYTHING'	=> $this->u_action . '&action=everything',
-					'S_USER_HAS_POSTS'		=> (bool) $this->user->data['user_posts'],
+					'U_DOWNLOAD_POSTS'			=> $this->u_action . '&action=posts',
+					'U_DOWNLOAD_PERSONAL_DATA'	=> $this->u_action . '&action=personal_data',
+					'S_USER_HAS_POSTS'			=> (bool) $this->user->data['user_posts'],
 				));
 
 			break;
@@ -484,17 +482,20 @@ class main_module
 			$this->db->sql_query('DELETE FROM ' . PRIVMSGS_TABLE . ' WHERE author_id = ' . (int) $this->user->data['user_id']);
 		}
 
-		// Change the username so that it will be unique
-		$faker = \Faker\Factory::create();
-		$new_name = $faker->name;
+		if (!$this->config['sitesplat_bbgdpr_delete_keep_username'])
+		{
+			// Change the username so that it will be unique
+			$faker = \Faker\Factory::create();
+			$new_name = $faker->name;
 
-		// Update the various places it might be set outside of the user table
-		user_update_name($this->user->data['username'], $new_name);
+			// Update the various places it might be set outside of the user table
+			user_update_name($this->user->data['username'], $new_name);
 
-		// Update the user table but only the username column (not username-clean) because we'll delete the user next anyway
-		$this->db->sql_query('UPDATE ' . USERS_TABLE . " SET username = '" . $this->db->sql_escape($new_name) . "' WHERE user_id = " . (int) $this->user->data['user_id']);
-
-		// Delete the user (and the posts if requested otherwise we keep them with the new username)
+			// Update the user table but only the username column (not username-clean) because we'll delete the user next anyway
+			$this->db->sql_query('UPDATE ' . USERS_TABLE . " SET username = '" . $this->db->sql_escape($new_name) . "' WHERE user_id = " . (int) $this->user->data['user_id']);
+		}
+		
+		// Delete the user (and the posts if requested otherwise we keep them)
 		user_delete($delete_type, $this->user->data['user_id'], true);
 
 		// Update total amount of deleted GDPR users

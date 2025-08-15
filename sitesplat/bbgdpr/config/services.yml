@@ -43,6 +43,7 @@ services:
             - '@language'
             - '@config'
             - '@request'
+            - '%core.root_path%'
         tags:
             - { name: event.listener }
 

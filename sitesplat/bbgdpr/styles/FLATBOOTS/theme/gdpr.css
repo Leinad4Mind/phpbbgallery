@@ -19,3 +19,16 @@
 #cookies-eu-more {
     border-bottom: 1px dashed #d24d33;
 }
+
+@media (min-width: 360px) and (max-width: 718px) {
+	#cookies-eu-banner .btn-xs {
+		display: block;
+		margin-top: 5px;
+	}
+}
+
+@media (max-width: 600px) {
+	.gdpr-badge {
+		display: none;
+	}
+}

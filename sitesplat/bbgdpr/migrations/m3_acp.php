@@ -42,7 +42,7 @@ class m3_acp extends \phpbb\db\migration\migration
 			  &lt;ul&gt;
 				 &lt;li&gt;Username&lt;/li&gt;
 				 &lt;li&gt;E-mail&lt;/li&gt;
-				 &lt;li&gt;account password&lt;/li&gt;
+				 &lt;li&gt;Account password&lt;/li&gt;
 				 &lt;li&gt;User IP/s&lt;/li&gt;
 			  &lt;/ul&gt;
 			  &lt;strong&gt;Optional:&lt;/strong&gt;
@@ -86,7 +86,7 @@ class m3_acp extends \phpbb\db\migration\migration
       &lt;dd&gt;
         &lt;ul&gt;
             &lt;li&gt;To enable certain functions of the Service&lt;/li&gt;
-            &lt;li&gt;We use both session and persistent cookies on the Service and we use different types of cookies to run the Service:&lt;/li&gt;
+            &lt;li&gt;We use both session and persistent cookies on the Service and we use different types of cookies to run the Service.&lt;/li&gt;
             &lt;li&gt;Essential cookies. We may use essential cookies to authenticate users and prevent fraudulent use of user accounts.&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/dd&gt;

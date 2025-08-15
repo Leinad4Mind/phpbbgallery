@@ -1,0 +1,32 @@
+{% include 'ucp_header.html' %}
+<fieldset class="framed-ucp">
+    <legend>{{ lang('UCP_DELETE') }}</legend>
+	{% if S_CAN_DELETE %}
+	   <p>{{ lang('DELETE_MY_ACCOUNT_TEXT') }}</p>
+    	<form id="ucp" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<p><input type="checkbox" name="delete" id="delete" value="true" /><label class="radio-inline" for="delete">{{ lang('REALY_DELETE') }}</label></p>
+			<p><input type="checkbox" name="understand" id="understand" value="true" /><label class="radio-inline" for="understand">{{ lang('UNDERSTAND_DELETE') }}</label></p>
+			{% if S_CAN_DELPOSTS %}
+				<p><input type="checkbox" name="remove_posts" value="true" /> {{ lang('DELETE_MY_POSTS') }}</p>
+			{% endif %}
+			<div class="control-group">
+			   <div class="controls controls-row">	
+				<label class="control-label" for="password">{{ lang('ENTER_PASSWORD') }}</label>
+				  <span class="help-block">{{ lang('ENTER_PASSWORD_EXPLAIN') }}</span>
+				<input class="form-control" type="password" id="password" name="password" placeholder="{{ lang('ENTER_PASSWORD_HERE') }}" maxlength="64" autocomplete="off" />
+			   </div>
+			</div>
+		</fieldset>
+        <div class="space10"></div>
+		<fieldset class="submit-buttons">
+			{{ S_FORM_TOKEN }}
+			<input class="btn btn-default" type="reset" value="{{ lang('RESET') }}" name="reset" />
+			<input class="btn btn-default" type="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		</fieldset>
+	</form>
+	{% else %}
+		<p>{{ lang('CANNOT_DELETE_ACCOUNT') }}</p>
+	{% endif %}
+</fieldset>
+{% include 'ucp_footer.html' %}
