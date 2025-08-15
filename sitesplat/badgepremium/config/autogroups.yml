@@ -1,0 +1,86 @@
+services:
+# ----- Auto groups types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badgepremium.type.bookmarked:
+        class: sitesplat\badgepremium\autogroups\type\bookmarked
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.cross_badge:
+        class: sitesplat\badgepremium\autogroups\type\cross_badge
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.polls:
+        class: sitesplat\badgepremium\autogroups\type\polls
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.reports:
+        class: sitesplat\badgepremium\autogroups\type\reports
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.subscribed:
+        class: sitesplat\badgepremium\autogroups\type\subscribed
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.topics:
+        class: sitesplat\badgepremium\autogroups\type\topics
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %phpbb.autogroups.tables.autogroups_rules%
+            - %phpbb.autogroups.tables.autogroups_types%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: phpbb.autogroups.type }

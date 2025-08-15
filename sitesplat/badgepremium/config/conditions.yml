@@ -1,0 +1,92 @@
+services:
+# ----- Badge types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badge.type.bookmarked:
+        class: sitesplat\badgepremium\conditions\type\bookmarked
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.cross_badge:
+        class: sitesplat\badgepremium\conditions\type\cross_badge
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.polls:
+        class: sitesplat\badgepremium\conditions\type\polls
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.reports:
+        class: sitesplat\badgepremium\conditions\type\reports
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.subscribed:
+        class: sitesplat\badgepremium\conditions\type\subscribed
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.topics:
+        class: sitesplat\badgepremium\conditions\type\topics
+        scope: prototype
+        arguments:
+            - @service_container
+            - @dbal.conn
+            - @user
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: sitesplat.badge.type }
