@@ -119,6 +119,7 @@ class m3_acp extends \phpbb\db\migration\migration
 	  &lt;a href=&quot;https://goo.gl/BNEDA3&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;gdpr-badge&quot; src=&quot;https://i.imgur.com/qg7yJwr.png&quot; alt=&quot;Europe GDPR compliant extension for phpBB by SiteSplat&quot;&gt;&lt;/a&gt;')),
 
 			array('permission.add', array('u_delete_my_account_posts')),
+			array('permission.add', array('u_delete_my_account_pms')),
 
 			array('module.add', array(
 				'acp',

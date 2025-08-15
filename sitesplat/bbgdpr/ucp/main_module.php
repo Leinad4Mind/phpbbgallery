@@ -29,6 +29,7 @@ class main_module
 	protected $notification_manager;
 	protected $config;
 	protected $root_path;
+	protected $php_ext;
 	public function __construct()
 	{
 		global $phpbb_container;
@@ -45,6 +46,7 @@ class main_module
 		$this->notification_manager = $phpbb_container->get('notification_manager');
 		$this->config = $phpbb_container->get('config');
 		$this->root_path = $phpbb_container->getParameter('core.root_path');
+		$this->php_ext = $phpbb_container->getParameter('core.php_ext');
 	}
 
 	public function main($id, $mode)
@@ -242,6 +244,7 @@ class main_module
 						confirm_box(false, 'DELETE_FINAL', build_hidden_fields(array(
 							'submit'		=> false,
 							'delete_type'	=> $delete_type,
+							'remove_pms'	=> $this->request->variable('remove_pms', false),
 						)));
 					}
 				}
@@ -249,6 +252,7 @@ class main_module
 				$this->template->assign_vars(array(
 					'S_CAN_DELETE'		=> $this->user->data['user_type'] != USER_FOUNDER,
 					'S_CAN_DELPOSTS'	=> $this->auth->acl_get('u_delete_my_account_posts'),
+					'S_CAN_DELPMS'		=> $this->auth->acl_get('u_delete_my_account_pms'),
 					'U_ACTION'			=> $this->u_action,
 				));
 
@@ -410,6 +414,7 @@ class main_module
 		$understand   = $this->request->variable('understand', false);
 		$password     = $this->request->variable('password', '', true);
 		$remove_posts = $this->request->variable('remove_posts', false);
+		$remove_pms   = $this->request->variable('remove_pms', false);
 
 		if (!check_form_key('sitesplat/bbgdpr_delete'))
 		{
@@ -443,12 +448,19 @@ class main_module
 			trigger_error($this->language->lang('PASSWORD_ERROR') . $this->ucp_back_link(), E_USER_WARNING);
 		}
 
+		// Chack the user has permission to delete their PMs
+		if ($remove_pms && !$this->auth->acl_get('u_delete_my_account_pms'))
+		{
+			trigger_error($this->language->lang('DELETE_PMS_ERROR') . $this->ucp_back_link(), E_USER_WARNING);
+		}
+
 		return $delete_type;
 	}
 
 	private function delete_account()
 	{
 		$delete_type = $this->request->variable('delete_type', 'retain');
+		$remove_pms = $this->request->variable('remove_pms', false);
 
 		$postfix = 'NO';
 		if ($this->user->data['user_posts'] > 0)
@@ -462,6 +474,15 @@ class main_module
 		// Anonymize IP addresses stored in posts and PMs tables
 		$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET poster_ip = '1.1.1.1' WHERE poster_id = " . (int) $this->user->data['user_id']);
 		$this->db->sql_query('UPDATE ' . PRIVMSGS_TABLE . " SET author_ip = '1.1.1.1' WHERE author_id = " . (int) $this->user->data['user_id']);
+
+		// Remove PMs if user wishes
+		if ($remove_pms && $this->auth->acl_get('u_delete_my_account_pms'))
+		{
+			$this->db->sql_query('DELETE FROM ' . PRIVMSGS_TO_TABLE . ' WHERE author_id = ' . (int) $this->user->data['user_id']);
+			$this->db->sql_query('DELETE FROM ' . PRIVMSGS_RULES_TABLE . ' WHERE user_id = ' . (int) $this->user->data['user_id']);
+			$this->db->sql_query('DELETE FROM ' . PRIVMSGS_FOLDER_TABLE . ' WHERE user_id = ' . (int) $this->user->data['user_id']);
+			$this->db->sql_query('DELETE FROM ' . PRIVMSGS_TABLE . ' WHERE author_id = ' . (int) $this->user->data['user_id']);
+		}
 
 		// Change the username so that it will be unique
 		$faker = \Faker\Factory::create();

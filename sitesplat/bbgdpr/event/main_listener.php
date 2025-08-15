@@ -65,6 +65,7 @@ class main_listener implements EventSubscriberInterface
 	public function add_permission($event)
 	{
 		$event->update_subarray('permissions', 'u_delete_my_account_posts', array('lang' => 'ACL_U_DELETE_MY_ACCOUNT_POSTS', 'cat' => 'profile'));
+		$event->update_subarray('permissions', 'u_delete_my_account_pms', array('lang' => 'ACL_U_DELETE_MY_ACCOUNT_PMS', 'cat' => 'profile'));
 	}
 
 	public function add_accept_dates($event)
