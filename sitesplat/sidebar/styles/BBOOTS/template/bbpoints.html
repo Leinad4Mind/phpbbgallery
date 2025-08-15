@@ -10,7 +10,7 @@
 		<!-- BEGIN bbpoints -->
 		<li class="media">
 		 <div class="media-body">
-		    {bbpoints.USERNAME_FULL}{L_COLON}&nbsp;<!-- IF SYMBOL_POS -->{BBPOINTS_SYMBOL}&nbsp;<!-- ENDIF -->{bbpoints.BBPOINTS}<!-- IF not SYMBOL_POS -->{BBPOINTS_SYMBOL}<!-- ENDIF --><!-- IF S_REGISTERED_USER and bbpoints.TRANSFER_URL -->&nbsp;<a href="{bbpoints.TRANSFER_URL}" data-ajax="true" title="{L_TRANSFER_TO}"><i class="fa fa-random"></i></a><!-- ENDIF -->
+		    {bbpoints.USERNAME_FULL}{L_COLON}&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{bbpoints.BBPOINTS}<!-- IF not SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --><!-- IF S_REGISTERED_USER and bbpoints.TRANSFER_URL -->&nbsp;<a href="{bbpoints.TRANSFER_URL}" data-ajax="true" title="{L_TRANSFER_TO}"><i class="fa fa-random"></i></a><!-- ENDIF -->
 		 </div>
 		</li>
 		<!-- END bbpoints -->		

@@ -1,5 +1,5 @@
 #page-sidebar {
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 /***** PANELS *****/
@@ -17,8 +17,8 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     margin-bottom: 0;
-	height: 40px;
-    line-height: 40px;
+	height: 36px;
+    line-height: 36px;
 }
 
 .sidebar .panel-info > .panel-heading {
@@ -188,7 +188,10 @@ transform:rotate(0.001deg);
     width: 1%;
 }
 
-
+#page-sidebar .panel-warning > .panel-heading {
+    background-color: #e69049;
+    border-color: #e38233;
+}
 /***** MISC FIXES DUE TO SIDEBAR *****/
 .com-stuff {
     right: 26%;
@@ -203,17 +206,7 @@ transform:rotate(0.001deg);
    
 }
 
-.quick-reply .text-center {
-    text-align:left!important;
-}
 
-.quick-reply .col-md-9 {
-    width:66.6667%;
-}
-
-.quick-reply .col-md-3 {
-    width:33.3333%;
-}
 
 
 

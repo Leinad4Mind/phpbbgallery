@@ -34,10 +34,12 @@ $lang = array_merge($lang, array(
 	'ACP_SIDEBAR_ALL_PAGES_EXPLAIN'		=> 'Se to ON to have the side blocks display in any forum page',
 	'ACP_SIDEBAR_SHUFFLE'				=> 'Shuffle blocks',
 	'ACP_SIDEBAR_SHUFFLE_EXPLAIN'		=> 'Set to ON to randomize the blocks at each page refresh',
-	'ACP_SIDEBAR_WIDTH_HEIGHT'			=> 'Sidebar width & height',
+	
+	'ACP_SIDEBAR_WIDTH'			        => 'Sidebar width',
+	'ACP_SIDEBAR_WIDTH_EXPLAIN'			=> 'Choose the default sidebar width',
 
 	'ACP_SIDEBAR_HEIGHT' 				=> 'Dynamic height:',
-	'ACP_SIDEBAR_HEIGHT_EXPLAIN' 		=> 'If the dynamic height set to ON the height of the forum will be taken in consideration and the side blocks will <strong>never be longer</strong> then the forum',
+	'ACP_SIDEBAR_HEIGHT_EXPLAIN' 		=> 'If the dynamic height set to ON the height of the forum will be calculated and the side blocks will <strong>never be longer</strong> then the forum',
 	'ACP_SIDEBAR_HEIGHT_N' 				=> 'No',
 	
 	'ACP_SIDEBAR_WIDTH_15'				=> '15%',
@@ -70,7 +72,7 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_DEVELOPERS'				=> 'Developers',
 	
 	'SIDEBAR_TYPE_NOT_EXIST'			=> 'TheSidebar type `%1$s` does not exist.',
-	'NOTICE_BADGE'					    => 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=24"><strong>BBAwards</strong></a> is not installed, you can NOT use the BBAwardws type block.',
+	'NOTICE_BADGE'					    => 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=24"><strong>BBAwards</strong></a> is not installed, you can NOT use the BBAwards type block.',
 	'NOTICE_BBPOINTS'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints type block.',
 	'NOTICE_BBREACTION'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=27"><strong>BBreaction</strong></a> is not installed, you can NOT use the BBreaction type block.',
 	'NOTICE_LIKEDD'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type block.',
@@ -105,7 +107,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.3.2',
+	'ACP_SIDEBAR_VERSION'		        => '1.3.6',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',

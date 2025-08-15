@@ -68,7 +68,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 		if (($user_posts = $this->cache->get('_sidebar_posters')) === false)
 		{
-			include_once($this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext);
+			include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 			$user_posts = $admin_mod_array = array();
 			// quick check for forum moderators and administrators
 			// some may not want to show them
@@ -90,9 +90,11 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			}
 			$sql_other = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
 			$sql_other .=  ' user_posts <> 0';
+			$board_url = generate_board_url();
+			$user_posts[0] = $user_posts[1] = $user_posts[2] = array();
 
 			// do the main sql query		
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_posts
 				FROM ' . USERS_TABLE . '
 				 ' . $sql_where . ' ' . $sql_and . '
 				' . $sql_other . '
@@ -106,7 +108,10 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
 					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))),
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
+						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
+						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
+						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -114,7 +119,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, COUNT(p.post_id) AS user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, COUNT(p.post_id) AS user_posts
 					FROM ' . POSTS_TABLE . ' p
 					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
 					' . $sql_where . ' ' . $sql_and . '
@@ -130,7 +135,10 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
 					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))),
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
+						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
+						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
+						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -138,7 +146,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, COUNT(p.post_id) AS user_posts
+			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, COUNT(p.post_id) AS user_posts
 					FROM ' . POSTS_TABLE . ' p
 					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
 					' . $sql_where . ' ' . $sql_and . '
@@ -154,7 +162,10 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
 					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))),
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
+						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
+						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
+						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -170,7 +181,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 								get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 
 			$this->template->assign_block_vars('top_posters',array(
-				'S_SEARCH_ACTION'	=> append_sid("{$this->phpbb_root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
+				'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
 				'POSTS' 			=> number_format($row['user_posts']),
 				'USERNAME_FULL'		=> $username_string,
 				'AVATAR'			=> $row['avatar']
@@ -185,7 +196,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 									get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 	
 				$this->template->assign_block_vars('top_posters_day',array(
-					'S_SEARCH_ACTION'	=> append_sid("{$this->phpbb_root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
+					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
 					'POSTS' 			=> number_format($row['user_posts']),
 					'USERNAME_FULL'		=> $username_string,
 					'AVATAR'			=> $row['avatar']
@@ -201,7 +212,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 									get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 	
 				$this->template->assign_block_vars('top_posters_week',array(
-					'S_SEARCH_ACTION'	=> append_sid("{$this->phpbb_root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
+					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
 					'POSTS' 			=> number_format($row['user_posts']),
 					'USERNAME_FULL'		=> $username_string,
 					'AVATAR'			=> $row['avatar']

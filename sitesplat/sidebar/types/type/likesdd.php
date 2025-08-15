@@ -70,10 +70,11 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 		{
 			$newest_users = array();
 			$likes_table = $this->container->getParameter('sitesplat.likedd.tables.likes');
-			include_once($this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext);
+			include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
+			$board_url = generate_board_url();
 			
 			// grab users
-			$sql = 'SELECT p.poster_id, u.username, u.user_colour, u.user_avatar, p.forum_id, l.post_id, p.post_subject, l.like_time 
+			$sql = 'SELECT p.poster_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, p.forum_id, l.post_id, p.post_subject, l.like_time 
 				FROM ' . $likes_table . ' l
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id
 				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = p.poster_id
@@ -88,7 +89,10 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 					'user_id'		=> $row['poster_id'],
 					'username'		=> $row['username'],
 					'avatar'		=> ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif'))),
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? 
+						  (($row['user_avatar_type'] == 'avatar.driver.local') ? $board_url . '/images/avatars/gallery/' . $row['user_avatar'] :  
+						  $board_url . '/download/file.php?avatar=' . $row['user_avatar']) : $row['user_avatar']) : 
+						  $board_url . '/styles/prosilver/theme/images/no_avatar.gif'))),
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),

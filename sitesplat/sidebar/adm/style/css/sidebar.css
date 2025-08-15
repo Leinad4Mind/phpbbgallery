@@ -277,12 +277,19 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* quick and dirty css to simulate the browser windows pane */
 
+.sidebar-wrapper {
+    display: inline-block;
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .browser-window {
   text-align: left;
   margin: 20px;
   width: 300px;
-  height: 160px;
-  display: inline-block;
+  height: auto;
   border-radius: 5px;
   background-color: #fff;
 }
@@ -330,7 +337,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .browser-window .dev-tools {
     position: absolute;
-    top: -25px;
+    top: -8px;
     width: 200px;
 }
 

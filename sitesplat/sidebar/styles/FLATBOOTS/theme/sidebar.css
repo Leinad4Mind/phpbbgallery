@@ -84,6 +84,7 @@
 	margin-top: 5px;
     padding: 2px;
     width: 42px;
+	height: 42px;
 }
 
 .user-list .media-body small.date,
@@ -188,17 +189,6 @@ transform:rotate(0.001deg);
    
 }
 
-.quick-reply .text-center {
-    text-align:left!important;
-}
-
-.quick-reply .col-md-9 {
-    width:66.6667%;
-}
-
-.quick-reply .col-md-3 {
-    width:33.3333%;
-}
 
 
 

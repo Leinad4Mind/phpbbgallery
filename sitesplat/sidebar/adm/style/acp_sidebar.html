@@ -47,7 +47,7 @@
 <form id="acp_sidebar" method="post" action="{U_ACTION}">
 	<fieldset>
 		<legend>{L_ACP_SIDEBAR_OPTIONS}</legend>
-		<div style="float: right; width: 323px; margin-top: -25px;">
+		<div class="sidebar-wrapper">
 		<style>
 			#sidebar-nav {
 				width:<!-- IF SIDEBAR_WIDTH -->50<!-- ELSE -->30<!-- ENDIF -->px;
@@ -93,13 +93,12 @@
 			
 			</div>
 		</div>
-		
 		</div>
 		
 
 		<div style="float:left;width:80%;">
 		<dl>
-			<dt><label id="type" for="type">{L_ACP_SIDEBAR_TYPE}{L_COLON}</label><br /> {L_ACP_SIDEBAR_TYPE_EXPLAIN}</dt>
+			<dt><label id="type" for="sidebartype">{L_ACP_SIDEBAR_TYPE}{L_COLON}</label><br /> {L_ACP_SIDEBAR_TYPE_EXPLAIN}</dt>
 			<dd>
 
 				    <div class="onoffswitch">
@@ -113,7 +112,7 @@
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="width">{L_ACP_SIDEBAR_WIDTH_HEIGHT}</label><br />{L_ACP_SIDEBAR_HEIGHT_EXPLAIN}</dt>
+			<dt><label for="width_s">{L_ACP_SIDEBAR_WIDTH}</label><br />{L_ACP_SIDEBAR_WIDTH_EXPLAIN}</dt>
 			<dd>
 				
 				 <div class="onoffswitch">
@@ -123,8 +122,13 @@
 							<span class="onoffswitch-switch"></span>
 						</label>
 					</div>
-
-				<div class="label-entry-normal">{L_ACP_SIDEBAR_HEIGHT}</div>	
+				
+			</dd>
+		</dl>
+		
+		<dl>
+			<dt><label for="height">{L_ACP_SIDEBAR_HEIGHT}</label><br />{L_ACP_SIDEBAR_HEIGHT_EXPLAIN}</dt>
+			<dd>
 					
 				<div class="onoffswitch">
 						<input type="checkbox" class="onoffswitch-checkbox" value="1" id="height" name="height"{SIDEBAR_HEIGHT}>
@@ -136,6 +140,8 @@
 				
 			</dd>
 		</dl>
+		
+		
 		<dl>
 			<dt><label for="all_pages">{L_ACP_SIDEBAR_ALL_PAGES}</label><br />{L_ACP_SIDEBAR_ALL_PAGES_EXPLAIN}</dt>
 			<dd>
