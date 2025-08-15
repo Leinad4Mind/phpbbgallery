@@ -1,80 +1,174 @@
-<!-- IF BBBFRONT_START -->
-{% INCLUDECSS '@sitesplat_bbfront/bbfront.css' %}
-<!-- INCLUDE overall_header.html -->
-<div class="row">
-<div class="grid" id="grid">
- <!-- // https://masonry.desandro.com/extras.html -->
- <!-- add sizing element for columnWidth and call all the different col- sizes -->
- <div class="grid-sizer col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3"></div>
-<!-- ENDIF -->
+{% if BBBFRONT_START %}
+	{% include 'overall_header.html' %}
 
-<!-- BEGIN masonry -->
-    <!-- items use Bootstrap .col- classes -->
-    <div class="col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3 cell cell2 app grid-item">
-	<!-- wrap item content in its own element -->
-	<div class="blog-item<!-- IF masonry.QUOTE --> blog-quote<!-- ENDIF -->">
-    <!-- IF masonry.PICTURE -->
-		<div class="blog-img"><img src="{masonry.PICTURE}" class="img-responsive" alt="" /></div>
-    <!-- ELSE IF masonry.EMBED == 'twitter' -->
-        <div class="blog-video twitter-front"><iframe src="//s9e.github.io/iframe/twitter.min.html#{masonry.VIDEO}" allowfullscreen></iframe></div>
-    <!-- ELSE IF masonry.EMBED == 'vimeo' -->
-        <div class="blog-video vimeo-front"><iframe src="//player.vimeo.com/video/{masonry.VIDEO}" allowfullscreen></iframe></div>
-	<!-- ELSE IF masonry.QUOTE -->
-        <div class="quote quote-primary"><a href="{masonry.URL}">{masonry.TEXT}<small class="quote-author">&#45;&nbsp;{masonry.USER_QUOTE}</small></a></div>
-    <!-- ENDIF -->
-        
-	<div class="blog-details content">		
-    <!-- IF not masonry.QUOTE -->
-        <h4 class="blog-title <!-- IF not masonry.PICTURE and not masonry.VIDEO -->no-media<!-- ENDIF -->"><a href="{masonry.URL}">{masonry.TITLE}</a></h4>
-    <!-- ENDIF -->
-	
-	<ul class="blog-metas">
-        <li><!-- IF masonry.AVATAR --><div class="avatar-blog">{masonry.AVATAR}</div>&nbsp;{masonry.AUTHOR}<!-- ELSE -->{L_POST_BY_AUTHOR}&nbsp;{masonry.AUTHOR}<!-- ENDIF --></li>
-        <li><span class="replies">{masonry.REPLIES}</span></li>
-		<li><time class="timeago" datetime="{masonry.DATE}">{masonry.DATE_OUT}</time></li> 
-    </ul>
-	
-    <!-- IF not masonry.QUOTE -->
-        <div class="blog-summary postbody">
-		  <p>{masonry.TEXT}</p>
-          <a class="btn btn-sm btn-white" href="{masonry.URL}">{L_BBFRONT_MORE}</a>
+	{% INCLUDECSS '@sitesplat_bbfront/bbfront.css' %}
+	<div class="row no-gutters grid--loading" style="{% if BBFRONT_GRID_LAYOUT == '4-l' %}{% else %}margin-left: -8px;margin-right:-8px;{% endif %}">
+		<div class="grid" id="grid">
+			{% if BBFRONT_GRID_LAYOUT != '5-s' %}
+				<div class="grid-sizer col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3"></div>
+			{% else %}
+				<div class="grid-sizer col-md-5ths"></div>
+			{% endif %}
+{% endif %}
+
+{% for item in masonry %}
+	<div class="{% if BBFRONT_GRID_LAYOUT != '5-s' %}col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3{% else %}col-md-5ths{% endif %} cell cell2 app grid-item{% if item.S_IS_AD %} blog-spnsr{% endif %}" style="{% if BBFRONT_GRID_LAYOUT == '4-l' %}{% else %}padding-left: 8px;padding-right:8px;{% endif %}">
+		<div class="blog-item{% if item.QUOTE %} blog-quote{% endif %}" style="opacity: 0;">
+			{% if item.PICTURE %}
+				<div class="blog-img"><img src="{{ item.PICTURE }}" class="img-responsive" alt="" /></div>
+			{% elseif item.EMBED == 'medium' %}
+				<div class="blog-video medium-front"><iframe src="//api.medium.com/embed?type=story&amp;path=//{{ item.VIDEO }}&id={{ item.MEDIUM }}" allowfullscreen></iframe></div>
+			{% elseif item.EMBED == 'facebook' %}
+				<div class="blog-video facebook-front"><iframe src="//s9e.github.io/iframe/facebook.min.html#{{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.EMBED == 'twitch' %}
+				<div class="blog-video twitch-front"><iframe src="//player.twitch.tv/?autoplay=false&channel={{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.EMBED == 'twitter' %}
+				<div class="blog-video twitter-front"><iframe src="//s9e.github.io/iframe/twitter.min.html#{{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.EMBED == 'vimeo' %}
+				<div class="blog-video vimeo-front"><iframe src="//player.vimeo.com/video/{{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.EMBED == 'youtube' %}
+				<div class="blog-video youtube-front"><iframe src="//youtube.com/embed/{{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.QUOTE %}
+				<div class="quote quote-primary"><a href="{{ item.URL }}">{{ item.TEXT }}<small class="quote-author">&#45;&nbsp;{{ item.USER_QUOTE }}</small></a></div>
+			{% endif %}
+
+			<div class="blog-details content">
+				{% if not item.QUOTE %}
+					<h4 class="blog-title {% if not item.PICTURE and not item.VIDEO %}no-media{% endif %}"><a href="{{ item.URL }}">{{ item.TITLE }}</a></h4>
+				{% endif %}
+
+				{% if not item.S_IS_AD %}
+					<ul class="blog-metas">
+						<li>
+							{% if item.AVATAR %}
+								<div class="avatar-blog">{{ item.AVATAR }}</div>&nbsp;{{ item.AUTHOR }}
+							{% else %}
+								{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ item.AUTHOR }}
+							{% endif %}
+						</li>
+						<li><span class="replies">{{ item.REPLIES }}</span></li>
+						<li><time class="timeago" datetime="{{ item.DATE }}">{{ item.DATE_OUT }}</time></li> 
+					</ul>
+				{% endif %}
+
+				{% if not item.QUOTE %}
+					<div class="blog-summary postbody">
+					   {{ item.TEXT }}
+						<div class="clearfix">
+						{% if not item.S_IS_AD %}
+							<a class="btn btn-sm btn-white" href="{{ item.URL }}">{{ lang('BBFRONT_MORE') }}</a>
+						{% endif %}
+						{% if not S_IS_BOT and S_USER_LOGGED_IN %}
+							{% if item.U_LIKE %}
+								<a class="btn btn-sm btn-white bbfront_likebb" href="#p{{ item.POST_ID }}" title="{{ lang('LIKES_LIKE_IT') }}" data-options="{{ item.U_LIKE }}">
+									<i class="fa {{ LIKE_ICON }}"></i>
+									<span id="l{{ item.POST_ID }}">{% if item.LIKES %}({{ item.LIKES }}){% endif %}</span>
+								</a>
+							{% endif %}
+
+							{% if item.U_DISLIKE %}
+								<a class="btn btn-sm btn-white bbfront_likebb" href="#p{{ item.POST_ID }}" title="{{ lang('LIKES_DISLIKE_IT') }}" data-options="{{ item.U_DISLIKE }}">
+									<i class="fa {{ DISLIKE_ICON }}"></i>
+									<span id="d{{ item.POST_ID }}">{% if item.DISLIKES %}({{ item.DISLIKES }}){% endif %}</span>
+								</a>
+							{% endif %}
+						{% endif %}
+						</div>
+					 </div>
+				{% endif %}
+			</div>
+
+			{% if item.tag %}
+				<a class="btn-sm btn-white fab"><i class="fa fa-tags"></i></a>
+				<div class="screen2">
+					<div class="close-bbtag"></div>
+					<div class="box1">
+						<ul class="post-tags">
+							{% for tag in item.tag %}
+								<li class="post-tag">
+									<a class="post-tag-anchor" href="{{ tag.ROUTE }}">{{ tag.TAG }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			{% endif %}
 		</div>
-    <!-- ENDIF -->
-    </div>
-	
 	</div>
-  </div>
-<!-- BEGINELSE -->
-<!-- IF not BBBFRONT_START -->
-   <!-- INCLUDE overall_header.html -->
-<!-- ENDIF -->
-    <div class="col-md-12">
-	 <div class="alert alert-warning fade in">
-		<i class="fa fa-info"></i>&nbsp;<strong>{L_INFORMATION}{L_COLON}</strong>&nbsp;{L_NO_POSTS_SELECTED}
-	 </div>
-	</div>	
+{% else %}
+	{% if not BBBFRONT_START %}
+		{% include 'overall_header.html' %}
+	{% endif %}
+
+	<div class="col-md-12">
+		<div class="alert alert-warning fade in">
+			<i class="fa fa-info"></i>
+			<strong>{{ lang('INFORMATION') ~ lang('COLON') }}</strong>
+			{{ lang('NO_POSTS_SELECTED') }}
+		</div>
+	</div>
 	<div class="space10"></div>
-<!-- END masonry -->
-    
-<!-- IF BBBFRONT_START -->
-</div>
-</div>
+{% endfor %}
 
-<div class="row">
- <div class="space10"></div>
- <div class="col-md-12">
-  <div class="space10"></div>
-	<button id="more_front" class="btn btn-default btn-block btn-lazy" data-start="{BBBFRONT_NEXT}" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_BBFRONT_LOAD_MORE}</button>
- </div>
-</div>   
+{% if BBBFRONT_START %}
+		</div>
+	</div>
 
+    <div class="row{% if BBFRONT_INFINITE_SCROLL %} infinite-btn{% endif %}">
+		<div class="space10"></div>
+		<div class="col-md-12">
+			<div class="space10"></div>
+			<a id="more_front" class="btn btn-default btn-block btn-lazy" href="{{ U_BBBFRONT_NEXT }}" data-loading-text="{{ lang('LOADING') }}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{{ lang('BBFRONT_LOAD_MORE') }}</a>
+		 {% if BBFRONT_INFINITE_SCROLL %}
+			<div class="tit"></div>
+			<div class="scroller">
+				<div class="mouse">
+					<div class="ball"></div>
+				<svg class="scroll-down" fill="#b6d6f2" height="75" viewBox="0 0 24 24" width="75" xmlns="http://www.w3.org/2000/svg">
+					<path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+					<path d="M0-.75h24v24H0z" fill="none"/>
+				</svg>
+				</div>
+			</div>
+         {% endif %}
+		</div>
+    </div>
+	 {% if BBFRONT_INFINITE_SCROLL %}	 
+		<div class="page-load-status">
+		<hr class="divider-unicorn footer__divider">
+		  <div class="loader-ellips infinite-scroll-request">
+			<div id="loading">
+			    <div class="circle"></div>
+			    <div class="circle"></div>
+			    <div class="circle"></div>
+			</div>		
+		  </div>
+		  <p class="infinite-scroll-last"><span class="badge badge-warning">{{ lang('NO_POSTS_EOC') }}</span></p>
+		  <p class="infinite-scroll-error"><span class="badge badge-warning">{{ lang('NO_POSTS_NMPTL') }}</span></p>
+		</div>
+	 {% endif %}
+<script>
+    var bbfront_grid_fx_first = '{{ BBFRONT_GRID_FX_FIRST|e('js') }}';
+	var bbfront_grid_fx_load = '{{ BBFRONT_GRID_FX_LOAD|e('js') }}';
+	var bbfront_infinite_scroll = {{ BBFRONT_INFINITE_SCROLL|e('js') }};
+	var bbfront_url = '{{ BBFRONT_URL|e('js') }}';
+</script>
+	{% INCLUDEJS '@sitesplat_bbfront/js/masonry.pkgd.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbfront/js/imagesloaded.pkgd.min.js' %}
+	{% if BBFRONT_INFINITE_SCROLL %}{% INCLUDEJS '@sitesplat_bbfront/js/infinite-scroll.pkgd.min.js' %}{% endif %}
+	{% INCLUDEJS '@sitesplat_bbfront/js/anime.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbfront/js/timeago.min.js' %}
 
-{% INCLUDEJS '@sitesplat_bbfront/js/masonry.pkgd.min.js' %}
-{% INCLUDEJS '@sitesplat_bbfront/js/imagesloaded.pkgd.min.js' %}
-{% INCLUDEJS '@sitesplat_bbfront/js/timeago.min.js' %}
-{% INCLUDEJS '@sitesplat_bbfront/js/bbfront.min.js' %}
-<!-- ELSE -->
-<div class="start">{BBBFRONT_NEXT}</div>
-<!-- ENDIF -->
+{% if not S_IS_BOT and S_USER_LOGGED_IN %}	
+	{% INCLUDEJS '@sitesplat_bbfront/js/event.js' %}
+	{% INCLUDEJS '@sitesplat_bbfront/js/likebb.js' %}
+	{% INCLUDEJS '@sitesplat_bbfront/js/bbtags.js' %}
+{% endif %}	
+	
+	{% INCLUDEJS '@sitesplat_bbfront/js/bbfront.min.js' %}
+{% else %}
+<a id="more_front" class="btn btn-default btn-block btn-lazy" href="{{ U_BBBFRONT_NEXT }}" data-loading-text="{{ lang('LOADING') }}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{{ lang('BBFRONT_LOAD_MORE') }}</a>
+{% if BBFRONT_END %}<div id="bbfront_end"></div>{% endif %}
+{% endif %}
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

@@ -32,7 +32,7 @@ class m1_initial_config extends \phpbb\db\migration\migration
 	public function update_config()
 	{
 		$bbfront_settings = json_decode($this->config['bbfront_settings'], true);
-		$bbfront_settings += array('per_page' => 8);
+		$bbfront_settings += array('per_page' => 5);
 		$this->config->set('bbfront_settings', json_encode($bbfront_settings));
 	}
 }

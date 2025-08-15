@@ -21,7 +21,7 @@ class m3_initial_config extends \phpbb\db\migration\migration
 		return array(
 			array('config.add', array('bbfront_inc_forums', '[]')),
 			array('config.add', array('bbfront_inc_groups', '[]')),
-			array('config.add', array('bbfront_settings', '{"name":"News","chars":"380", "use_avatar":"1"}'))
+			array('config.add', array('bbfront_settings', '{"name":"News","chars":"380", "use_avatar":"0"}'))
 		);
 	}
 }

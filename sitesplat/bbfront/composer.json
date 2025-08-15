@@ -1,9 +1,9 @@
 {
     "name": "sitesplat/bbfront",
     "type": "phpbb-extension",
-    "description": "Adds a modern and stylish front page with selectable post to publish in different formats, like video directly playable, quotes and post snippets...",
+    "description": "Adds a modern and stylish front page with selectable post to publish in different formats, like video direclty playable, quotes and post snippets...",
     "homepage": "http://sitesplat.com",
-	"version": "1.0.5",
+	"version": "2.0.0",
 	"keywords": ["sitesplat", "phpbb", "extension", "news", "portal"],
 	"license": "Proprietary/All rights reserved",
     "authors": [
@@ -21,14 +21,14 @@
 		"phpbb/epv": "dev-master"
 	},
     "extra": {
-        "display-name": "BBfront",
+        "display-name": "BBfront Advanced",
         "soft-require": {
             "phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
         },
 	    "version-check": {
 		    "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "bbfront.json"
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbfrontadvanced.json"
 		}
     }
 }

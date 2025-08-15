@@ -1,0 +1,48 @@
+<script>
+// some function that depends on bootstrap and jquery
+head.ready(function () {
+
+// Now the AJAX scall for the like/dislike button on the card - starts here
+function parseURL(url) {
+		var parser = document.createElement('a'),
+			id,
+			queries, split, i;
+	
+		parser.href = url;
+		queries = parser.search.replace(/^\?/, '').split('&');
+		for( i = 0; i < queries.length; i++ ) {
+			split = queries[i].split('=');
+			id = split[0] + split[1];
+		}
+	
+		return {
+			pathname: parser.href,
+			search: parser.search,
+			id: id
+		};
+	}
+
+// LikeBB magic
+	$(".bbfront_likebb").on("click",function(e) {
+		e.preventDefault();
+	//	var parser = document.createElement('a');
+		var uri = parseURL($(this).data("options"));
+
+		$.ajax({ type: "POST", 
+		url: uri.pathname, 
+		data: uri.search.replace(/^\?/, ''), //$(this).data("options"), 
+		dataType: "json", 
+		success: function (result) {
+			if (result.likes)
+			{
+				var val = uri.id;
+				 $("#" + val).text(result.likes);
+			}
+			phpbb.alert(result.info, result.txt, true);
+			phpbb.closeDarkenWrapper(4000);
+		   }
+		});
+	});
+	
+});
+</script>	

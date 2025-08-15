@@ -23,6 +23,7 @@ class bbfront_module
 		$this->template = $template;
 		$this->user = $user;
 		$this->phpbb_container = $phpbb_container;
+		$this->config_text = $phpbb_container->get('config_text');
 
 		if ($this->request->variable('action', '') == 'details')
 		{
@@ -52,6 +53,14 @@ class bbfront_module
 				$this->config->set('bbfront_inc_forums', json_encode($this->request->variable('bbfront_inc_forums', array(0))));
 				$this->config->set('bbfront_inc_groups', json_encode($this->request->variable('bbfront_inc_groups', array(0))));
 				$this->config->set('bbfront_settings', json_encode($this->request->variable('bbfront_settings', array('' => ''))));
+				$this->config->set('sitesplat_bbfront_grid_layout', $this->request->variable('bbfront_grid_layout', '4-l'));
+				$this->config->set('sitesplat_bbfront_grid_fx_first', $this->request->variable('bbfront_grid_fx_first', 'Hapi'));
+				$this->config->set('sitesplat_bbfront_grid_fx_load', $this->request->variable('bbfront_grid_fx_load', 'Hapi'));
+				$this->config->set('sitesplat_bbfront_per_page_load', $this->request->variable('bbfront_per_page_load', 5));
+				$this->config->set('sitesplat_bbfront_infinite_scroll', $this->request->variable('bbfront_infinite_scroll', false));
+				$this->config->set('sitesplat_bbfront_ajax_new_posts', $this->request->variable('bbfront_ajax_new_posts', false));
+				$this->config->set('sitesplat_bbfront_ad_frequency', $this->request->variable('bbfront_ad_frequency', 0));
+				$this->config_text->set('sitesplat_bbfront_ad_content', $this->request->variable('bbfront_ad_content', '', true));
 	
 				trigger_error($this->user->lang('ACP_BBFRONT_SETTING_SAVED') . adm_back_link($this->u_action));
 			}
@@ -81,13 +90,20 @@ class bbfront_module
 			$config_aray = json_decode($this->config['bbfront_settings'], true);
 	
 			$this->template->assign_vars(array(
-				'INC_FORUMS'		=> $forum_options,
-				'INC_GROUPS'		=> $group_options,
-				'U_ACTION'			=> $this->u_action,
-				'BBFRONT_NAME'		=> $config_aray['name'],
-				'BBFRONT_CHARS'		=> $config_aray['chars'],
-				'BBFRONT_PER_PAGE'	=> $config_aray['per_page'],
-				'USE_AVATAR'		=> $config_aray['use_avatar']
+				'INC_FORUMS'				=> $forum_options,
+				'INC_GROUPS'				=> $group_options,
+				'U_ACTION'					=> $this->u_action,
+				'BBFRONT_NAME'				=> $config_aray['name'],
+				'BBFRONT_CHARS'				=> $config_aray['chars'],
+				'BBFRONT_PER_PAGE'			=> $config_aray['per_page'],
+				'USE_AVATAR'				=> $config_aray['use_avatar'],
+				'BBFRONT_GRID_LAYOUT'		=> $this->config['sitesplat_bbfront_grid_layout'],
+				'BBFRONT_GRID_FX_FIRST'		=> $this->config['sitesplat_bbfront_grid_fx_first'],
+				'BBFRONT_GRID_FX_LOAD'		=> $this->config['sitesplat_bbfront_grid_fx_load'],
+				'BBFRONT_PER_PAGE_LOAD'		=> $this->config['sitesplat_bbfront_per_page_load'],
+				'BBFRONT_INFINITE_SCROLL'	=> $this->config['sitesplat_bbfront_infinite_scroll'],
+				'BBFRONT_AD_FREQUENCY'		=> $this->config['sitesplat_bbfront_ad_frequency'],
+				'BBFRONT_AD_CONTENT'		=> $this->config_text->get('sitesplat_bbfront_ad_content'),
 			));
 		}
 	}
