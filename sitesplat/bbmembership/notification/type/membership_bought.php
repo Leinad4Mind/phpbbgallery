@@ -135,7 +135,7 @@ class membership_bought extends \phpbb\notification\type\base
 	*/
 	public function get_email_template()
 	{
-		return '';
+		return false;
 	}
 
 	/**
@@ -151,7 +151,7 @@ class membership_bought extends \phpbb\notification\type\base
 	*/
 	public function get_url()
 	{
-		return '';
+		return false;
 	}
 
 	/**

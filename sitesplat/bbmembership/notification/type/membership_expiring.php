@@ -125,7 +125,7 @@ class membership_expiring extends \phpbb\notification\type\base
 	*/
 	public function get_url()
 	{
-		return '';
+		return false;
 	}
 
 	/**

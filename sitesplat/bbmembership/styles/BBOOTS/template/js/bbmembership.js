@@ -30,7 +30,7 @@ head.ready(function () {
 				$(this).html(event.strftime(format));
 			}).on('finish.countdown', function(event)
 			{
-				$(this).html('This offer has expired!').parent().addClass('disabled');
+				$(this).html('Membership has expired!').parent().addClass('disabled');
 			});
 		}
 	}

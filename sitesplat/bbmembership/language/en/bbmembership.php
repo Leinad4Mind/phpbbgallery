@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'PAYPAL_ALT'				        => 'Payments by PayPal',
 	'BBMEMBERSHIP_DEPOSIT_DISCLAIMER'   => '**Transactions can take any time from seconds to 24h to validate. For memberships superior to %s100, or for urgent matters, please contact the <a href="./memberlist.php?mode=contactadmin">Board Admin</a>',
 	'BBMEMBERSHIP_STATUS'		        => 'Current Membership status:',
-	'BBMEMBERSHIP_EXPIRED_INFO'			=> 'Expired!',
+	'BBMEMBERSHIP_EXPIRED_INFO'			=> 'N/A',
 	'DAYS_TO_EXPIRATION'				=> array(
 		0								=> '%1$s days',
 		1								=> '%1$s day',
@@ -45,7 +45,7 @@ $lang = array_merge($lang, array(
 	'BB_CURRENCY_ZERO_ZERO_DEC'			=> '.00',
 
 	'MEMBERSHIP_LEVEL'					=> 'Membership Lv',
-    'MEMBERSHIP_ENDS_IN'				=> 'ends in',
+    'MEMBERSHIP_ENDS_IN'				=> 'Ends in:',
 	'MEMBERSHIP_LIMITED'				=> 'Limited Time Only!',
 	'MEMBERSHIP_TIME'					=> 'Membership lifetime (in days)',
 	'MEMBERSHIP_UNLIMITED'				=> 'Unlimited',
@@ -53,8 +53,8 @@ $lang = array_merge($lang, array(
 	'MEMBERSHIP_FAILED_POINTS'			=> 'You do not have enough points for this membership!',
 	'MEMBERSHIP_FAILED_PP'				=> 'There was an error with the transaction. Please contact the forum Admin',
 	'MEMBERSHIP_DOUBLE'					=> 'You have already purchased a package',
-	'MEMBERSHIP_CANCELED'				=> 'Membership cancelled',
+	'MEMBERSHIP_CANCELED'				=> 'Membership canceled',
 	'PRIVATE_BOARD'					    => 'PRIVATE BOARD',
-	'MEMBERSHIP_NO_AUTH'				=> 'You are not authorised to use this url!',
+	'MEMBERSHIP_NO_AUTH'				=> 'You are not authorized to use this url!',
 	'BBMEMBERSHIP_CLUBMODE'				=> 'To access the board you will need to buy a valid membership. This board is private and available only for premium members.'
 ));

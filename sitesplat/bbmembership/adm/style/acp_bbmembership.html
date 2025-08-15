@@ -136,7 +136,7 @@
 			<td><a href="mailto:{transactions.EMAIL}?SUBJECT=Membership">{transactions.EMAIL}</a></td>
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{transactions.CURRENCY}  {transactions.AMOUNT}</td>
-			<td><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status label <!-- IF transactions.STATUS == 'Not verified' -->label-danger<!-- ELSEIF transactions.STATUS == 'Completed' -->label-success<!-- ELSEIF transactions.STATUS == 'Expired' -->label-default<!-- ENDIF -->" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>
+			<td><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status label<!-- IF transactions.STATUS == 'Not verified' --> label-danger<!-- ELSEIF transactions.STATUS == 'Pending' --> label-warning<!-- ELSEIF transactions.STATUS == 'Completed' --> label-success<!-- ELSEIF transactions.STATUS == 'Expired' --> label-default<!-- ENDIF -->" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_BBMEMBERSHIP_CH_STATUS}">{transactions.STATUS}</a></td>
 			<td>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL} {transactions.PACKAGE}</td>
 			<td>{transactions.TIME}</td>
 		</tr>

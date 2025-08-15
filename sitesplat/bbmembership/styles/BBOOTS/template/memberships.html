@@ -33,7 +33,7 @@
 								<div class="price">
 									<span class="currency"><!-- IF PAYPAL_ENABLED -->{BBMEMBER_CURRENCY}<!-- ENDIF --></span>
 									<span class="amount">{levels.DONATIONS_AMOUNT}</span>
-									<span class="period">&nbsp;&#47;&nbsp;{levels.DONATIONS_EXPIRE}&nbsp;{L_DAYS}</span>
+									<span class="period">&nbsp;&#47;&nbsp;{levels.DONATIONS_EXPIRE}</span>
 								</div>
 							</div>
 							<!--/header-->
@@ -54,7 +54,7 @@
 						<div class="col-md-3 col-sm-4">
 							<div class="avn-btn-main">
 								<!--button-->
-								<label for="option{levels.LEVEL}" class="price-toggler btn btn-block avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
+								<label for="option{levels.LEVEL}"<!-- IF levels.PACKAGE --> disabled<!-- ENDIF --> class="<!-- IF not levels.PACKAGE -->price-toggler <!-- ENDIF -->btn btn-block avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
 								  <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}"><!-- IF PAYPAL_ENABLED -->&nbsp;{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF -->&nbsp;{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
 								</label>
 								<!--/button-->
@@ -83,6 +83,7 @@
 				<!-- IF not BBMEMBER_COUNDOWN -->
                 	<h4><!-- IF not DAYS_TO_EXPIRATION -->{L_BBMEMBERSHIP_EXPIRED_INFO}<!-- ELSE --><!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br /><!-- ENDIF -->{L_MEMBERSHIP_ENDS_IN} {DAYS_TO_EXPIRATION}<!-- ENDIF --></h4>
 				<!-- ELSE -->
+				   <!-- IF BBMEMBER_PACKAGE --><h4>{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br /></h4><!-- ENDIF -->
                 	<div class="countdown">
 						<span id="clock"></span>
 					</div>
@@ -105,8 +106,11 @@
             </button>
             <!-- ENDIF -->
 			
+			<!-- IF BBPOINTS_ENABLED and PAYPAL_ENABLED -->
+			    <div class="or">{L_OR}</div>
+			<!-- ENDIF -->
+			
 			<!-- IF BBPOINTS_ENABLED -->
-			<div class="or">{L_OR}</div>
             <button type="submit" name="submitbtn" disabled="disabled" value="{L_BBMEMBERSHIP_POINTS}" class="btn btn-primary btn-lg btn-block btn-huge" id="loadpoints" data-loading-text="{L_CONNECTING_ON_BBPOINTS} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">
 		   <!-- BEGIN levels -->
             <span id="points{levels.LEVEL}" class="price-toggle" style="display:none;">{levels.DONATIONS_POINTS}&nbsp;{L_BBMEMBERSHIP_POINTS}</span> 

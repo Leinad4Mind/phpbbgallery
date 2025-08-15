@@ -57,6 +57,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.page_header_after'		=> 'page_header_after',
 			'core.user_setup'				=> 'user_setup',
+			'core.delete_user_after'		=> 'delete_users',
 		);
 	}
 
@@ -110,5 +111,15 @@ class listener implements EventSubscriberInterface
 		}
 
 		$this->user->add_lang_ext('sitesplat/bbmembership', 'bbmembership_common');
+	}
+
+	public function delete_users($event)
+	{
+		if (!empty($event['user_ids'])) {
+			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
+
+			$this->db->sql_query("DELETE FROM {$this->bbmembership_table } WHERE user_id $user_id_in	AND payment_status = 'Not verified'");
+			$this->db->sql_query("UPDATE {$this->bbmembership_table } SET user_id = 0 WHERE user_id $user_id_in");
+		}
 	}
 }

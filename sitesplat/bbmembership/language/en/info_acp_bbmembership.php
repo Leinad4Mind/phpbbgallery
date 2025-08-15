@@ -27,11 +27,11 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_SANDBOX_EXPLAIN'  	=> '<a href="https://developer.paypal.com/" target="_blank">More info</a>',
 	
 	'ACP_BBMEMBERSHIP_CLUBMODE'				=> 'Club Mode',
-	'ACP_BBMEMBERSHIP_CLUBMODE_EXPLAIN'		=> 'The user will be allowed to register but only be able to access the board if a membership package is bought succesfully',
+	'ACP_BBMEMBERSHIP_CLUBMODE_EXPLAIN'		=> 'The user will be allowed to register but only be able to access the board if a membership package is bought successfully',
 	'ACP_BBMEMBERSHIP_PAYPAL_EMAIL'			=> 'Paypal email',
 	'ACP_BBMEMBERSHIP_PAYPAL_EMAIL_EXPLAIN'	=> 'PayPal email or SandBox PayPal email if you are using the sandbox mode for testing purposes.',
 	'ACP_BBMEMBERSHIP_BBPOINTS'				=> 'BBpoints',
-	'ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN'		=> 'Allow users to purchase the membership with <a href="http://www.sitesplat.com/phpBB3/marketplace.php" target="_blank">BBpoints</a><br />  The moltiplication in bbpoints required for each package is (factor 100). e.g. Currency $5 means 500 BBpoints, $10 means 1000 and so on.',
+	'ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN'		=> 'Allow users to purchase the membership with <a href="http://www.sitesplat.com/phpBB3/marketplace.php" target="_blank">BBpoints</a><br />  The multiplication in bbpoints required for each package is (factor 100). e.g. Currency $5 means 500 BBpoints, $10 means 1000 and so on.',
         'ACP_BBMEMBERSHIP_COUNTDOWN'			=> 'Countdown clock',
 	'ACP_BBMEMBERSHIP_COUNTDOWN_EXPLAIN'	=> 'Countdown in weeks and days, note, this can be confusing for the user',
 	
@@ -49,7 +49,8 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. <br /><strong>please note, if the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" or "Pending". Therefore make sure you have enabled the correct currency on your PayPal acount first!</strong> ',
  
 	'ACP_BBMEMBERSHIP_FLAGS'			    => 'Payment Status Flag',
-	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> '<span class="label label-danger">Not verified</span>: An user attempted a purchase and either changed his mind or PayPal was not able to verify the transaction. <br />
+	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> '<span class="label label-danger">Not verified</span>: An user attempted a purchase and either changed his mind or PayPal was not able to verify the transaction.<br />
+	                                            <span class="label label-warning">Pending</span>: A pending transaction means the PayPal account does not have the selected currency approved/enabled. <a href="https://webinterpret.zendesk.com/hc/en-us/articles/203728826-How-to-set-up-your-PayPal-to-accept-foreign-currencies-PayPal-interface-" target="_blank">More info</a><br />
 												<span class="label label-success">Completed</span>: PayPal verified the transaction. <br />
 												<span class="label label-default">Expired</span>: The membership expired and the member has been automatically removed from the purchased package. 
 												<br />
@@ -69,10 +70,11 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_TRANSACTION_ID'		=> 'Transaction id',
 	'ACP_BBMEMBERSHIP_PAY_STATUS'			=> 'Payment status',
 	'ACP_BBMEMBERSHIP_EXPIRED'				=> 'Expired',
+	'ACP_BBMEMBERSHIP_CH_STATUS'			=> 'Manually force toggle/change transaction status',
 	'ACP_BBMEMBERSHIP_TIME'					=> 'Payment date & time',
 	
 	'ACP_BBPOINTS_NOTICE_CLOSE'				=> 'Close',
-	'BBPOINTS_NOTICE'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints Cart system.',
+	'BBPOINTS_NOTICE'						=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints Cart system.',
     'ACP_BBMEMBERSHIP_SAVE_ERROR'			=> 'Something went wrong while saving your setup, try again!',
 	'BBMEMBERSHIP_NOTICE'					=> '<div class="attach-image"><p>Settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>. <br />Setup your memberships and packages first, add PayPal and optionally enable the BBpoints extension for extra functionality.</p></div>',
 	
@@ -83,16 +85,16 @@ $lang = array_merge($lang, array(
 	'BBMEMBERSHIP_TASKS_2'					=> 'PayPal and BBpoints Gateway',
 	'BBMEMBERSHIP_TASKS_3'					=> 'Club mode for private forums',
 	'BBMEMBERSHIP_TASKS_4'					=> 'Synchronization with cron tasks and compatible with <a href="https://www.phpbb.com/customise/db/extension/cronstatus/">Cron Status</a> extension',
-	'BBMEMBERSHIP_TASKS_5'					=> 'Expandable with BBpoints functions to allow the members to purchase membership with points. Get the premium BBpoints extension on <a href="http://www.sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
+	'BBMEMBERSHIP_TASKS_5'					=> 'Expandable with BBpoints functions to allow the members to purchase membership with points. Get the premium BBpoints extension on <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'BBMEMBERSHIP_TASKS_6'					=> 'Much more..!',
 	
-	'SITESPLAT_COM'		       		        => 'http://sitesplat.com',
+	'SITESPLAT_COM'		       		        => 'https://sitesplat.com',
 	'SITESPLAT_COPY'		    			=> '&#169; SiteSplat',
 	'LICENSE_INFO'		        			=> 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBMEMBERSHIP_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.3',
+	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.4',
     'ACP_LOADING'			    			=> 'Hold On. Loading...',
 	
 ));

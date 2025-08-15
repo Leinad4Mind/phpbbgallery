@@ -10,9 +10,9 @@
 namespace sitesplat\bbmembership\migrations\v20x;
 
 /**
-* Migration stage 2: Initial config
+* Migration stage 3: Initial config
 */
-class m2_initial_config extends \phpbb\db\migration\migration
+class m3_initial_config extends \phpbb\db\migration\migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -35,7 +35,7 @@ class m2_initial_config extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('bbmembership_coundown', 0)),
+			array('config.add', array('bbmembership_countdown', 0)),
 		);
 	}
 }

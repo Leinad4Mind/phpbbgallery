@@ -23,11 +23,12 @@ class helper
 	protected $request;
 	protected $notification_manager;
 	protected $phpbb_container;
+	protected $phpbb_dispatcher;
 	protected $root_path;
 	protected $php_ext;
 	protected $bbmembership_table;
 
-	public function __construct(driver_interface $db, config $config, user $user, request $request, manager $notification_manager, Container $phpbb_container,  $root_path, $php_ext, $bbmembership_table)
+	public function __construct(driver_interface $db, config $config, user $user, request $request, manager $notification_manager, Container $phpbb_container, \phpbb\event\dispatcher $phpbb_dispatcher,  $root_path, $php_ext, $bbmembership_table)
 	{
 		$this->db = $db;
 		$this->config = $config;
@@ -35,6 +36,7 @@ class helper
 		$this->request = $request;
 		$this->notification_manager = $notification_manager;
 		$this->container = $phpbb_container;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbmembership_table = $bbmembership_table;
@@ -105,7 +107,19 @@ class helper
 			unset($data['item_number'], $data['user_id']);
 			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . (int) $row['id'];
 			$this->db->sql_query($sql);
-			
+// BBajaxnews ext
+			$lvl = 0;
+			foreach ($this->bbmembership_package as $price => $package)
+			{
+				$lvl++;
+				if ($price == (int) $data['mc_gross'])
+				{
+					break;
+				}
+			}
+			$vars = array('row', 'data', 'lvl');
+			$this->phpbb_dispatcher->trigger_event('sitesplat.bbmembership.payment_completed', compact($vars));
+	     // BBajaxnews ext	
 			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
 		}
 		
@@ -183,7 +197,7 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
-	public function add_group($user_id, $membership, $txn_id)
+	public function add_group($user_id, $membership, $txn_id, $sync = false)
 	{
 		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		
@@ -200,12 +214,15 @@ class helper
 			group_set_user_default($this->bbmembership_groups[$membership]['group'], array($user_id));
 		}
 		$memberships = array_keys($this->bbmembership_groups);
-		// send notification
-		$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
-			'txn_id'		=> $txn_id,
-			'user_id'		=> $user_id,
-			'amount'		=> array_search($membership, $memberships) + 1,
-		));
+		if (!$sync)
+		{
+			// send notification
+			$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
+				'txn_id'		=> $txn_id,
+				'user_id'		=> $user_id,
+				'amount'		=> array_search($membership, $memberships) + 1,
+			));
+		}
 	}
 	
 	/**
@@ -306,6 +323,7 @@ class helper
 		$currencies['PHP'] = array('&#8359;', 'Philippine peso');
 		$currencies['GBP'] = array('&#163;', 'Pound sterling');
 		$currencies['RWF'] = array('&#8355;', 'Rwandan franc');
+		$currencies['SEK'] = array('kr', 'Swedish Krona');
 		$currencies['SHP'] = array('&#163;', 'Saint Helena pound');
 		$currencies['SCR'] = array('&#x20B9;', 'Seychelles rupee');
 		$currencies['SGD'] = array('&#36;', 'Singapore dollar');

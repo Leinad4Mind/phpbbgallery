@@ -157,7 +157,7 @@ class main_controller
 		{
 			$group_amount = json_decode($this->config['bbmembership_groups'], true);
 
-			$membership = $days_to_expiration = false;
+			$membership = $days_to_expiration = $payment_date = false;
 			$mc_gross = 0;
 			$sql = 'SELECT membership, mc_gross, mc_currency, payment_status, payment_date FROM ' . $this->bbmembership_table . ' 
 					WHERE user_id = ' . $this->user->data['user_id'] . ' AND payment_status = "Completed" ORDER BY payment_date ASC';
@@ -208,7 +208,9 @@ class main_controller
 				'BBMEMBER_CURRENCY'		=> $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency']),
 				'BBMEMBER_PACKAGE'		=> $package,
 				'BBMEMBER_COUNDOWN'		=> $this->config['bbmembership_countdown'],
-				'MEMBERSHIP_END'		=> ($group_amount[$mc_gross]['expire'] == 0) ? '-1' : date('Y-m-d H:m:s', $payment_date + ($group_amount[$mc_gross]['expire'] * 86400)),
+                                'MEMBERSHIP_END'		=> (isset($membership[$mc_gross])) ? date('Y-m-d H:m:s', $payment_date + ($group_amount[$mc_gross]['expire'] * 86400)) : '-1',
+		        //	($group_amount[$mc_gross]['expire'] == 0) ? '-1' : date('Y-m-d H:m:s', $payment_date + ($group_amount[$mc_gross]['expire'] * 86400)),
+			//	'MEMBERSHIP_END'		=> ($group_amount[$mc_gross]['expire'] == 0) ? '-1' : date('Y-m-d H:m:s', $payment_date + ($group_amount[$mc_gross]['expire'] * 86400)),
 				'BBMEMBERSHIP_DEPOSIT'	=> $this->user->lang('BBMEMBERSHIP_DEPOSIT_DISCLAIMER', $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency'])),
 				'DAYS_TO_EXPIRATION'	=> (isset($membership[$mc_gross])) ? ($group_amount[$mc_gross]['expire'] == 0) ? 
 												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $this->user->lang('DAYS_TO_EXPIRATION', $group_amount[$mc_gross]['expire'])) : '',

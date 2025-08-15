@@ -126,7 +126,7 @@ class admin_controller
 			
 			if ($row['payment_status'] == 'Completed' && $membership)
 			{
-				$this->bbmembership_helper->add_group($row['user_id'], $mc_gross, $row['id']);
+				$this->bbmembership_helper->add_group($row['user_id'], $mc_gross, $row['id'], true);
 			} else
 			{
 				$this->bbmembership_helper->dell_group($row['user_id'], $mc_gross);
@@ -382,7 +382,7 @@ class admin_controller
 				{
 					if ($row['payment_status'] == 'Completed')
 					{
-						$this->bbmembership_helper->add_group($row['user_id'], $mc_gross, $row['id']);	
+						$this->bbmembership_helper->add_group($row['user_id'], $mc_gross, $row['id'], true);	
 					}
 					
 				} else
