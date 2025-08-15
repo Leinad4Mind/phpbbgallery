@@ -25,15 +25,41 @@ class ext extends \phpbb\extension\base
 	 * The current phpBB version should meet or exceed
 	 * the minimum version required by this extension:
 	 *
-	 * Requires phpBB 3.2.0 due to the revised notifications system
-	 * and new group helper.
-	 *
-	 * @return bool
+	 * @return bool|array
 	 * @access public
 	 */
 	public function is_enableable()
 	{
+		$enableable = $this->check_phpbb_version() && $this->check_php_version();
+
+		if (!$enableable && phpbb_version_compare(PHPBB_VERSION, '3.3.0-b1', '>='))
+		{
+			$language = $this->container->get('language');
+			$language->add_lang('autogroups_install', 'phpbb/autogroups');
+			return $language->lang('AUTOGROUPS_NOT_ENABLEABLE');
+		}
+
+		return $enableable;
+	}
+
+	/**
+	 * Require phpBB 3.2.0 due to the revised notifications system and new group helper.
+	 *
+	 * @return bool
+	 */
+	protected function check_phpbb_version()
+	{
 		return phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=');
+	}
+
+	/**
+	 * Requires PHP 5.5 due to array_column().
+	 *
+	 * @return bool
+	 */
+	protected function check_php_version()
+	{
+		return phpbb_version_compare(PHP_VERSION, '5.5.0', '>=');
 	}
 
 	/**
