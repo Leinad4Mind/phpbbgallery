@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "BBpoints allows your forum members to have fun and collect points for determined actions, like posting, birthday, upon new registration, points per words etc. The Admin can set how many points will user receive for those actions. You can also enable/disable Points extension for certain forum and/or assign specific points for specific forums. Users can transfer/donate their points to other users as well.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"keywords": ["phpbb", "extension", "bbpoints", "premium"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
