@@ -1,0 +1,80 @@
+<!-- IF BBBFRONT_START -->
+{% INCLUDECSS '@sitesplat_bbfront/bbfront.css' %}
+<!-- INCLUDE overall_header.html -->
+<div class="row">
+<div class="grid" id="grid">
+ <!-- // https://masonry.desandro.com/extras.html -->
+ <!-- add sizing element for columnWidth and call all the different col- sizes -->
+ <div class="grid-sizer col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3"></div>
+<!-- ENDIF -->
+
+<!-- BEGIN masonry -->
+    <!-- items use Bootstrap .col- classes -->
+    <div class="col-tn-12 col-xxs-12 col-xs-6 col-sm-4 col-md-3 cell cell2 app grid-item">
+	<!-- wrap item content in its own element -->
+	<div class="blog-item<!-- IF masonry.QUOTE --> blog-quote<!-- ENDIF -->">
+    <!-- IF masonry.PICTURE -->
+		<div class="blog-img"><img src="{masonry.PICTURE}" class="img-responsive" alt="" /></div>
+    <!-- ELSE IF masonry.EMBED == 'twitter' -->
+        <div class="blog-video twitter-front"><iframe src="//s9e.github.io/iframe/twitter.min.html#{masonry.VIDEO}" allowfullscreen></iframe></div>
+    <!-- ELSE IF masonry.EMBED == 'vimeo' -->
+        <div class="blog-video vimeo-front"><iframe src="//player.vimeo.com/video/{masonry.VIDEO}" allowfullscreen></iframe></div>
+	<!-- ELSE IF masonry.QUOTE -->
+        <div class="quote quote-primary"><a href="{masonry.URL}">{masonry.TEXT}<small class="quote-author">&#45;&nbsp;{masonry.USER_QUOTE}</small></a></div>
+    <!-- ENDIF -->
+        
+	<div class="blog-details content">		
+    <!-- IF not masonry.QUOTE -->
+        <h4 class="blog-title <!-- IF not masonry.PICTURE and not masonry.VIDEO -->no-media<!-- ENDIF -->"><a href="{masonry.URL}">{masonry.TITLE}</a></h4>
+    <!-- ENDIF -->
+	
+	<ul class="blog-metas">
+        <li><!-- IF masonry.AVATAR --><div class="avatar-blog">{masonry.AVATAR}</div>&nbsp;{masonry.AUTHOR}<!-- ELSE -->{L_POST_BY_AUTHOR}&nbsp;{masonry.AUTHOR}<!-- ENDIF --></li>
+        <li><span class="replies">{masonry.REPLIES}</span></li>
+		<li><time class="timeago" datetime="{masonry.DATE}">{masonry.DATE_OUT}</time></li> 
+    </ul>
+	
+    <!-- IF not masonry.QUOTE -->
+        <div class="blog-summary postbody">
+		  <p>{masonry.TEXT}</p>
+          <a class="btn btn-sm btn-white" href="{masonry.URL}">{L_BBFRONT_MORE}</a>
+		</div>
+    <!-- ENDIF -->
+    </div>
+	
+	</div>
+  </div>
+<!-- BEGINELSE -->
+<!-- IF not BBBFRONT_START -->
+   <!-- INCLUDE overall_header.html -->
+<!-- ENDIF -->
+    <div class="col-md-12">
+	 <div class="alert alert-warning fade in">
+		<i class="fa fa-info"></i>&nbsp;<strong>{L_INFORMATION}{L_COLON}</strong>&nbsp;{L_NO_POSTS_SELECTED}
+	 </div>
+	</div>	
+	<div class="space10"></div>
+<!-- END masonry -->
+    
+<!-- IF BBBFRONT_START -->
+</div>
+</div>
+
+<div class="row">
+ <div class="space10"></div>
+ <div class="col-md-12">
+  <div class="space10"></div>
+	<button id="more_front" class="btn btn-default btn-block btn-lazy" data-start="{BBBFRONT_NEXT}" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_BBFRONT_LOAD_MORE}</button>
+ </div>
+</div>   
+
+
+{% INCLUDEJS '@sitesplat_bbfront/js/masonry.pkgd.min.js' %}
+{% INCLUDEJS '@sitesplat_bbfront/js/imagesloaded.pkgd.min.js' %}
+{% INCLUDEJS '@sitesplat_bbfront/js/timeago.min.js' %}
+{% INCLUDEJS '@sitesplat_bbfront/js/bbfront.min.js' %}
+<!-- ELSE -->
+<div class="start">{BBBFRONT_NEXT}</div>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

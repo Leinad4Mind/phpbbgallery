@@ -1,0 +1,3 @@
+sitesplat_bbfront_controller:
+    path: /bbfront/{name}
+    defaults: { _controller: sitesplat.bbfront.controller:handle }

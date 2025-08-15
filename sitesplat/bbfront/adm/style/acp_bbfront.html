@@ -1,0 +1,85 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbfront/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbfront/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/bbfront.css -->
+<!-- INCLUDECSS css/component.css -->
+
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_BBFRONT} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBFRONT_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_BBFRONT}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+		<p>{L_ACP_BBFRONT_EXPLAIN}</p>
+
+<!-- IF S_NOTICE_BBTAGS or S_NOTICE_BBEMBED or S_NOTICE_LIKEBB -->
+<div id="ext_notice" class="errorbox notice">
+	<a href="{U_BBFRONT_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_BBTAGS_NOTICE_CLOSE}"></a>
+	 <!-- IF S_NOTICE_BBTAGS --><p>{L_NOTICE_BBTAGS}</p><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBEMBED --><p>{L_NOTICE_BBEMBED}</p><!-- ENDIF -->
+	 <!-- IF S_NOTICE_LIKEBB --><p>{L_NOTICE_LIKEBB}</p><!-- ENDIF -->
+</div>
+<!-- ENDIF -->
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl style="width:48%;float:left;">
+			<dt><label for="bbfront_inc_forums">{L_ACP_BBFRONT_FORUMS}{L_COLON}</label><br />{L_ACP_BBFRONT_FORUMS_EXPLAIN}</dt>
+			<dd><select multiple style="width:140px;" size="10" name="bbfront_inc_forums[]" id="bbfront_inc_forums" title="Included forums">{INC_FORUMS}</select></dd>
+
+		</dl>
+        <dl style="width:48%;float:left;">
+        	<dt><label for="bbfront_inc_groups">{L_ACP_BBFRONT_GROUPS}{L_COLON}</label><br />{L_ACP_BBFRONT_GROUPS_EXPLAIN}</dt>
+			<dd><select multiple style="width:140px;" size="10" name="bbfront_inc_groups[]" id="bbfront_inc_groups" title="Included groups">{INC_GROUPS}</select></dd>
+        </dl>
+        <dl style="width:48%;float:left;">
+			<dt><label for="bbfront_name">{L_ACP_BBFRONT_NAME}{L_COLON}</label><br />{L_ACP_BBFRONT_NAME_EXPLAIN}</dt>
+			<dd><input type="text" class="input" name="bbfront_settings[name]" value="{BBFRONT_NAME}" pattern=".{3,}" required title="3 characters minimum" /></dd>
+        </dl>
+        <dl style="width:48%;float:left;">
+			<dt><label for="bbfront_chars">{L_ACP_BBFRONT_CHARS}{L_COLON}</label><br />{L_ACP_BBFRONT_CHARS_EXPLAIN}</dt>
+			<dd><input type="number" class="input" name="bbfront_settings[chars]" value="{BBFRONT_CHARS}" min="100" max="700" /></dd>
+        </dl>
+		<dl style="width:48%;float:left;">
+			<dt><label for="bbfront_per_page">{L_ACP_BBFRONT_PAGES}</label><br />{L_ACP_BBFRONT_PAGES_EXPLAIN}</dt>
+			<dd><input type="number" class="input" name="bbfront_settings[per_page]" value="{BBFRONT_PER_PAGE}" min="5" max="20" /></dd>
+        </dl>
+        <dl style="clear:both;">
+            <dt><label for="avatar">{L_BBFRONT_USE_AVATAR}{L_COLON}</label><br />{L_BBFRONT_USE_AVATAR_EXPLAIN}</dt>
+            <dd>
+            <label><input type="radio" class="radio" name="bbfront_settings[use_avatar]" value="1"<!-- IF USE_AVATAR --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+            <label><input type="radio" class="radio" name="bbfront_settings[use_avatar]" value="0"<!-- IF not USE_AVATAR --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbfront/vendor/bootstrap/js/bootstrap.min.js -->
+<!-- INCLUDEJS js/bbfront.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
+<!-- if you need to use straight JS with jQuery dependency you need to do it after the overall_footer tag otherwise it will not be loaded properly -->
