@@ -308,6 +308,10 @@ class main_listener implements EventSubscriberInterface
 
 	public function search_display_svg_topic_icons($event)
 	{
+		if ($event['show_results'] !== 'topics')
+		{
+			return;
+		}
 		$this->template->assign_block_vars('topicrow', array(
 			'TOPIC_ID'								=> $event['row']['topic_id'],
 			'VIEWTOPIC_ICON_LOCK_SRC'				=> ($event['row']['forum_wt_icon_lock']) ? $this->root_path . $event['row']['forum_wt_icon_lock'] : '',

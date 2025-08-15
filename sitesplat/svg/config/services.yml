@@ -11,3 +11,11 @@ services:
             - '%tables.ranks%'
         tags:
             - { name: event.listener }
+
+    sitesplat.svg.bbprenext_listener:
+        class: sitesplat\svg\event\bbprenext_listener
+        arguments:
+            - '@template'
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
