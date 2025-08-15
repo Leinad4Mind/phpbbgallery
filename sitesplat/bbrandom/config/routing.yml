@@ -1,0 +1,3 @@
+sitesplat_bbrandom_controller:
+    path: /bbrandom/{route}
+    defaults: { _controller: sitesplat.bbrandom.controller:display }

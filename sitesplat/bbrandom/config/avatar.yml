@@ -1,0 +1,15 @@
+services:
+# ----- Avatar drivers -----
+    avatar.driver.rgravatar:
+        class: sitesplat\bbrandom\avatar\driver\rgravatar
+        arguments:
+            - @config
+       #    - @upload_imagesize //this is not used on 3.1
+            - %core.root_path%
+            - %core.php_ext%
+            - @path_helper
+            - @cache.driver
+        calls:
+            - [set_name, [avatar.driver.rgravatar]]
+        tags:
+            - { name: avatar.driver }
