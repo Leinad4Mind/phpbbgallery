@@ -56,7 +56,7 @@ $lang = array_merge($lang, array(
 	'POINTS_COMMENTS'						=> 'Allow comments',
 	'POINTS_COMMENTS_EXPLAIN'				=> 'Allow user to leave the comment about the points transfer',
 
-	'ACP_POINTS_VERSION'	                => '1.2.3',
+	'ACP_POINTS_VERSION'	                => '1.2.4',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
 
