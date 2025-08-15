@@ -14,7 +14,7 @@ class accountswitch_info
 	function module()
 	{
 		return array(
-			'filename'	=> 'sitesplat\accountswitch\ucp\accountswitch_module',
+			'filename'	=> '\sitesplat\accountswitch\ucp\accountswitch_module',
 			'title'     => 'ACCOUNTSWITCH',
 			'version'   => '1.0.0',
 			'modes'     => array(
