@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Allows administrators to add users to their forum",
     "homepage": "https://github.com/phpbbmodders/phpBB-3.1-ext-adduser",
-    "version": "1.0.3",
-    "time": "2016-04-21",
+    "version": "1.0.4",
+    "time": "2017-02-13",
     "keywords": [
         "phpbb",
         "extension",
@@ -27,7 +27,7 @@
     "extra": {
         "display-name": "Add User",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.0-RC2,<3.2"
+            "phpbb/phpbb": ">=3.1.0-RC2,<3.3"
         },
         "version-check": {
             "host": "www.phpbb.com",
