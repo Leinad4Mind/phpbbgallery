@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "This extension adds a flexible multi-block system for your forum. Tons of options available and it comes with many modern blocks by default",
 	"homepage": "https://sitesplat.com",
-	"version": "1.4.5",
+	"version": "1.4.6",
 	"keywords": ["phpbb", "extension", "sidebar", "sideblock", "sitesplat", "premium"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
