@@ -105,7 +105,7 @@ class listener implements EventSubscriberInterface
 			return $event;
 		}
 		
-		if (isset($event['login'], $event['login']['status']) && $event['login']['status'] == LOGIN_SUCCESS)
+		if (!$this->config['board_disable'] && isset($event['login'], $event['login']['status']) && $event['login']['status'] == LOGIN_SUCCESS)
 		{
 			if ($this->session_helper->isTfaRequired($event['login']['user_row']['user_id'], $event['admin'], $event['user_row']))
 			{
