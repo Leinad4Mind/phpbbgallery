@@ -220,7 +220,9 @@ class main_listener implements EventSubscriberInterface
 	public function ucp_load_svg_topic_icons($event)
 	{
 		$event['sql_select'] .= ', f.forum_wt_icon_lock, f.forum_wt_icon_global_unread, f.forum_wt_icon_global_read, f.forum_wt_icon_announce_unread, f.forum_wt_icon_announce_read, f.forum_wt_icon_sticky_unread, f.forum_wt_icon_sticky_read, f.forum_wt_icon_poll_unread, f.forum_wt_icon_poll_read, f.forum_wt_icon_moved_unread, f.forum_wt_icon_moved_read, f.forum_wt_icon_normal_unread, f.forum_wt_icon_normal_read';
-		$event['sql_from'] .= ' LEFT JOIN ' . FORUMS_TABLE . ' f ON (f.forum_id = t.forum_id)';
+		if (version_compare(PHPBB_VERSION, '3.3.9', '<')) {
+			$event['sql_from'] .= ' LEFT JOIN ' . FORUMS_TABLE . ' f ON (f.forum_id = t.forum_id)';
+		}
 
 		$this->template->assign_var('SITESPLAT_BBSVG_TOPICROW', true);
 	}
