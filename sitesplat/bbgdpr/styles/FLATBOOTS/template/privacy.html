@@ -3,13 +3,13 @@
 <div class="panel panel-gdpr panel-default">
    <div class="panel-body">
 	  {{ PRIVACY_POLICY }}
-	  <p><span class="label label label-slategray">{{ lang('LAST_UPDATED', UPDATE_DATE) }}</span></p>
+	  <p><span class="label label label-slategray">{{ lang('BBGDPR_LAST_UPDATED', UPDATE_DATE) }}</span></p>
 	  <a href="https://goo.gl/BNEDA3" target="_blank"><img class="gdpr-badge" src="https://i.imgur.com/qg7yJwr.png" alt="GDPR compliant extension for phpBB by SiteSplat"></a>
    </div>
 </div>
 <!-- IF S_USER_LOGGED_IN -->
 <form method="POST" action="{{ U_ACTION }}">
-	<input class="btn btn-block btn-success btn-lg" type="submit" name="accept" value="{{ lang('ACCEPT_GDPR') }}<!-- IF ACCEPT_DATE --> (Accepted on {{ ACCEPT_DATE }})<!-- ENDIF -->">
+	<input class="btn btn-block btn-success btn-lg" type="submit" name="accept" value="{{ lang('ACCEPT_GDPR') }}<!-- IF ACCEPT_DATE -->&#32;&#40;{{ lang('BBGDPR_GDPR_ACCEPTED') }}&#32;{{ ACCEPT_DATE }}&#41;<!-- ENDIF -->">
 	<input class="btn btn-block btn-danger btn-lg" type="submit" name="reject" value="{{ lang('REJECT_GDPR') }}">
 	{{ S_FORM_TOKEN }}
 </form>

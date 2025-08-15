@@ -51,7 +51,8 @@ $lang = array_merge($lang, array(
 	'MCP_ACCEPT_FIRST'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Please, <a href="%s">confirm it before you perform any moderator action</a>.',
 
 	// privacy
-	'LAST_UPDATED'			=> 'Last updated: %s',
+	'BBGDPR_LAST_UPDATED'			=> 'Last updated: %s',
+	'BBGDPR_GDPR_ACCEPTED'			=> 'Previously accepted on ',
 	'REVIEW_PERSONAL_DATA'	=> 'Review your personal data',
 	'REACCEPT_COOKIE'		=> 'Looks like you previously rejected the cookie policy. Changed your mind?',
 ));

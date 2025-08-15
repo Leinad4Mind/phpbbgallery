@@ -1,5 +1,5 @@
 sitesplat_bbgdpr_privacy:
-    path: /privacy.html
+    path: /privacy
     defaults: { _controller: sitesplat.bbgdpr.controller.privacy:handle }
 
 sitesplat_bbgdpr_cookie:
