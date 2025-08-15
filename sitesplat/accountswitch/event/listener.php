@@ -111,7 +111,8 @@ class listener implements EventSubscriberInterface
 			$post_row_ary[] = array(
 				'AVATAR' => (($row['user_avatar']) ? 
 							 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'title="' .  $row['username'] . '" alt=', './'), phpbb_get_user_avatar(
-								array('avatar'			=> $row['user_avatar'], 
+								array('avatar'			=> $row['user_avatar'],
+                                      'user_id'         => $row['user_id'],								
 									  'avatar_type'		=> $row['user_avatar_type'], 
 									  'avatar_width'	=> $row['user_avatar_width'], 
 									  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
