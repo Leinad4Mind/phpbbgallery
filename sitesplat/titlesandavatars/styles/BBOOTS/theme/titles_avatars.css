@@ -185,6 +185,11 @@
     white-space: nowrap;
 }
 
+.tabadge {
+    position: absolute;
+    right: 12px;
+}
+
 #footerContent .recent-topic .avatar {
     border-radius: 4px;
     height: 50px !important;

@@ -82,9 +82,11 @@ class main_controller
 				$start = $this->pagination->validate_start($start, $per_page, $total_posters);
 				$base_url = append_sid('app.' . $this->php_ext . '/titlesandavatars/avatars.html?t=' . $this->request->variable('t', 0));
 
-				$sql = 'SELECT DISTINCT l.poster_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_id, user_avatar_width, user_avatar_height FROM ' . POSTS_TABLE . ' l 
+				$sql = 'SELECT l.poster_id, COUNT(l.poster_id) AS posts, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_id, user_avatar_width, user_avatar_height 
+						FROM ' . POSTS_TABLE . ' l 
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.poster_id
-						WHERE l.topic_id = ' . $this->request->variable('t', 0) . ' ORDER BY l.post_time DESC';
+						WHERE l.topic_id = ' . $this->request->variable('t', 0) . ' 
+						GROUP BY l.poster_id';		
 				$result = $this->db->sql_query_limit($sql, $per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
@@ -96,20 +98,15 @@ class main_controller
 										'avatar_type'		=> $row['user_avatar_type'], 
 										'avatar_width'		=> $row['user_avatar_width'], 
 										'avatar_height'		=> $row['user_avatar_height'])), $match) :
-										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
 
 
-					echo '<div class="avatar-partecipants col-md-2 col-sm-3 col-xs-4">
-						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . 
-		/*				  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) */
-						  
-						  ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar)
-						  
-						  . ' " style="float:left;width:70px;">
+					echo '<div class="avatar-partecipants col-md-2 col-sm-3 col-xs-4">' .
+						  (($row['posts'] > 1) ? '<span class="badge badge-danger tabadge">' . $row['posts'] . '</span>' : '') . '
+						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar) . ' " style="float:left;width:70px;">
 						  <div class="partecipants-time-stamp" style="text-align:center;padding-left:5px;">
-						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a></div></div>';
+						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['poster_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a></div></div>';
 				}
 				echo '<br style="clear:both;"><div class="pagination-partecipants pull-right"><ul class="pagination pagination-sm">';
 				echo $this->generate_pagination($base_url, $total_posters, $per_page, $start, true);

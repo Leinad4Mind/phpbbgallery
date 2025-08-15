@@ -183,6 +183,11 @@
     white-space: nowrap;
 }
 
+.tabadge {
+    position: absolute;
+    right: 12px;
+}
+
 @media (max-width: 468px) {
 .partecipants-time-stamp {
     margin-top: 0;
