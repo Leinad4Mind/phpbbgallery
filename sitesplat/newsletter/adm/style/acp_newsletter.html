@@ -1,0 +1,260 @@
+<!-- IF not MAIL_ID -->
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/newsletter/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/newsletter/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/newsletter.css -->
+<!-- INCLUDECSS css/component.css -->
+
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+<!-- IF U_BACK --><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a><!-- ENDIF -->
+
+<h1>{L_ACP_NEWSLETTER} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_NEWS_VERSION} <i class="fa fa-info-circle"></i></span></a>   <a href="javascript:void(0)" class="md-trigger-tutorial" data-toggle="modal" data-target="#myModalTutorial"><span class="label label-info">{L_EXT_NEWS_TUTORIALS_TITLE} <i class="fa fa-book"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_NEWSLETTER}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+<p>{L_ACP_NEWSLETTER_EXPLAIN}</p>
+
+	<!-- IF WARNING_MSG -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{WARNING_MSG}</p>
+		</div>
+	<!-- ELSE -->
+        <form id="acp_email" method="post" action="{U_ACTION}">
+        <fieldset>
+        <span class="legend">{L_OPTIONS}</span>
+        <dl>
+            <dt><label for="group">{L_SEND_TO_GROUP}{L_COLON}</label></dt>
+            <dd><select id="group" name="newsletter_settings[group]">{S_GROUP_OPTIONS}</select></dd>
+        </dl>
+        <dl>
+            <dt><label for="priority">{L_MAIL_PRIORITY}{L_COLON}</label></dt>
+            <dd><select id="priority" name="newsletter_settings[priority]">{S_PRIORITY_OPTIONS}</select></dd>
+        </dl>
+        <dl>
+            <dt><label for="usernames">{L_SEND_TO_USERS}{L_COLON}</label><br /><span>{L_SEND_TO_USERS_EXPLAIN}</span></dt>
+            <dd><textarea name="newsletter_settings[usernames]" id="usernames" rows="5" cols="80" class="mceNoEditor" style="width:96%;">{USERNAMES}</textarea></dd>
+            <dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
+        </dl>
+        <dl>
+            <dt><label for="newuser">{L_NEW_USER}{L_COLON}</label></dt>
+            <dd>
+            <label><input type="radio" class="radio" name="newsletter_settings[newuser]" value="1"<!-- IF NEW_USER --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+            <label><input type="radio" class="radio" name="newsletter_settings[newuser]" value="0"<!-- IF not NEW_USER --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+        <dl>
+            <dt><label for="send">{L_SEND_IMMEDIATELY}{L_COLON}</label><br /><span>{L_SEND_IMMEDIATELY_EXPLAIN}</span></dt>
+            <dd>
+            <label><input type="radio" class="radio" name="newsletter_settings[immediately]" value="1"<!-- IF IMMEDIATELY --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+            <label><input type="radio" class="radio" name="newsletter_settings[immediately]" value="0"<!-- IF not IMMEDIATELY --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+        <dl title="{L_PERIOD_SEND}">
+            <dt><label for="period">{L_PERIOD}{L_COLON}</label><br /><span>{L_PERIOD_EXPLAIN}</span></dt>
+            <dd>
+            <label><input type="radio" class="radio" name="newsletter_settings[period]" value="2"<!-- IF PERIOD eq '2' --> checked="checked" <!-- ENDIF --> /> {L_WEEKLY}</label>
+            <label><input type="radio" class="radio" name="newsletter_settings[period]" value="1"<!-- IF PERIOD eq '1' --> checked="checked" <!-- ENDIF --> /> {L_MONTHLY}</label>
+            <label><input type="radio" class="radio" name="newsletter_settings[period]" value="0"<!-- IF not PERIOD --> checked="checked" <!-- ENDIF --> /> {L_NO_OVERVIEW}</label> 
+            </dd> 
+        </dl> 
+        <dl>
+            <dt><label for="use_html">{L_USE_HTML}{L_COLON}</label></dt>
+            <dd>
+            <label <!-- IF not ENABLE_HTML -->title="{L_FHHTML_EMAIL_NOT_ENABLED}"<!-- ENDIF -->><input type="radio" class="radio" name="newsletter_settings[use_html]" value="1"<!-- IF not ENABLE_HTML --> disabled<!-- ENDIF --><!-- IF USE_HTML --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+            <label><input type="radio" class="radio" name="newsletter_settings[use_html]" value="0"<!-- IF not ENABLE_HTML or not USE_HTML --> checked="checked" <!-- ENDIF --> /> {L_NO}</label> <!-- IF not ENABLE_HTML --><span class="text-danger">{L_FHHTML_EMAIL_DOWNLOAD}</span><!-- ENDIF -->
+            </dd>
+        </dl>
+        <dl style="float:left;width:40%;">
+            <dt><label for="compose">{L_COMPOSE_HTML}{L_COLON}</label><br /><span>{L_COMPOSE_HTML_EXPLAIN}</span></dt>
+            <dd>
+            <label><input type="radio" class="radio compose" name="compose" value="1" /> {L_YES}</label>
+            <label><input type="radio" class="radio compose" name="compose" id="compose" value="0" checked="checked" /> {L_NO}</label>
+            </dd>
+        </dl>
+        <p class="submit-buttons" style="float:left;">
+            <input class="button1" type="submit" id="submit" name="submit" value="{L_SAVE}" />&nbsp;
+            <input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+        </p>
+        {S_FORM_TOKEN}
+    
+        <div id="compose_man" style="clear:both;display:none;padding-top:10px;">
+		<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/BBCore/vendors/tinymce/tinymce.min.js -->
+        <hr>
+        <dl>
+            <dt><label for="subject">{L_SUBJECT}{L_COLON}</label></dt>
+            <dd style="width:75%;"><input name="subject" type="text" id="subject" value="{SUBJECT}" style="width:100%;" /></dd>
+        </dl>
+        <dl>
+            <dt style="margin-bottom:20px;"><label for="message">{L_MASS_MESSAGE}{L_COLON}</label><br /><span>{L_MASS_MESSAGE_EXPLAIN}</span></dt>
+            <dd style="width:75%;"><textarea id="message" name="message" rows="45" cols="100" class="mceEditor">{MESSAGE}</textarea></dd>
+        </dl>
+        <!-- INCLUDEJS js/scripts.js -->
+        </div>
+        </fieldset>
+        </form>
+    <!-- ENDIF -->
+	
+    <div style="margin-bottom:20px;">{LAST_SEND}<br /><small>{L_LAST_SEND_EXPLAIN}</small></div>
+	
+    <fieldset id="mailrows">
+    <span class="legend" id="legend">{L_LAST_SEND_LETTERS}</span>
+	<p>{L_LAST_NEWSLETTERS_EXPLAIN}</p>
+ 	<table class="table1" id="newsrow">
+		<col class="row1" ><col class="row1" ><col class="row1" ><col class="row1" ><col class="row1" ><col class="row1" >
+	<thead>
+		<tr>
+            <th>{L_SUBJECT}</th>
+            <th>{L_AUTHOR}</th>
+            <th>{L_VIEWS}</th>
+            <th>{L_TIME}</th>
+            <th>{L_NEWS_PAGE}</th>
+            <th>{L_ACTION}</th>
+         </tr>
+    </thead>
+    <tbody>
+    <!-- BEGIN mailrow -->
+        <tr class="ext_enabled row-highlight">
+            <td>
+			  <a href="{mailrow.U_VIEW}" data-src="{mailrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-arch" class="btn btn-default btn-xs modal-arch-btn"><i class="fa fa-envelope"></i>&nbsp;{mailrow.SUBJECT}</a>
+			</td>
+            <td>{mailrow.USERNAME_FULL}</td>
+            <td>{mailrow.HITS}</td>
+            <td>{mailrow.TIME}</td>
+            <td><a href="{mailrow.U_DISPLAY}"><!-- IF mailrow.DISPLAY_IT -->{L_HIDE}<!-- ELSE -->{L_SHOW}<!-- ENDIF --></a></td>
+            <td><a href="{mailrow.U_DELETE}">Delete</a></td>
+        </tr>
+    <!-- END mailrow -->
+    </tbody>
+    </table>
+ 	<table class="table1" id="userrow" style="display:none;">
+		<col class="row1" ><col class="row1" ><col class="row1" ><col class="row1" >
+	<thead>
+        <tr>
+            <th>#</th>
+            <th>{L_USERNAME}</th>
+            <th>{L_EMAIL}</th>
+            <th>{L_LANGUAGE}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <!-- BEGIN userrow -->
+        <tr class="ext_enabled row-highlight">
+            <td>{userrow.ID}</td>
+            <td>{userrow.USERNAME}</td>
+            <td>{userrow.EMAIL}</td>
+            <td>{userrow.LANG}</td>
+        </tr>
+    <!-- END userrow -->
+    </tbody>
+    </table>
+    </fieldset>
+
+	<div class="modal fade" id="myModalTutorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content md-content-tutorial">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_EXT_NEWS_TUTORIALS_TITLE}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div>
+				  <article class="markdown-body entry-content" itemprop="text">
+				   <ul>
+					{L_EXT_NEWS_TUTORIALS_EXPLAIN}
+					</ul>
+				  </article>
+				</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+	</div>
+		
+
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/newsletter/vendor/bootstrap/js/bootstrap.min.js -->
+<!-- INCLUDEJS js/newsletter.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
+<!-- if you need to use straight JS with jQuery dependency you need to do it after the overall_footer tag otherwise it will not be loaded properly -->
+<div class="modal modal-arch fade" id="myModalArch" tabindex="-2" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">{L_NEWSLETTER}</h4>
+			</div>
+			<div class="modal-body">
+			<div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" frameborder="0" src=""></iframe>
+			</div>	
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{L_CLOSE}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ENDIF -->
+<script>
+var loadingContent = '<div class="modal-header"><h1>Processing...</h1></div><div class="modal-body"><div class="progress"><div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%">loading...</div></div></div>';
+      
+	  // This is need so the content gets replaced correctly.
+		$(".modal-arch").on("show.bs.modal", function (e) {
+			$(this).find(".modal-body").html(loadingContent);        
+			var link = $(e.relatedTarget);
+			$(this).find(".modal-body").load(link.attr("href"));
+		//	$(".progress-bar").css('width', '100%');
+		});    
+
+		$(".modal-arch").on("hide.bs.modal", function (e) {
+			$(this).removeData('bs.modal');
+		});
+		
+		$("a.modal-arch-btn").on('click', function(e) {
+		  var src = $(this).attr('data-src');  
+		
+		     $(".modal-arch iframe").attr({'src':src});
+		});
+</script>
+<!-- IF MAIL_ID -->
+		<dl>
+			<dt><label for="subject">{L_AUTHOR}{L_COLON}</label></dt>
+			<dd>{USERNAME_FULL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="subject">{L_TIME}{L_COLON}</label></dt>
+			<dd>{TIME}</dd>
+		</dl>
+		<dl>
+			<dt><label for="display_it">{L_NEWS_PAGE}{L_COLON}</label></dt>
+			<dd>&nbsp;<!-- IF DISPLAY_IT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="subject">{L_SUBJECT}{L_COLON}</label></dt>
+			<dd>{SUBJECT}</dd>
+		</dl>
+		
+		<div class="wrap-email">
+             <div class="clearfix">{MESSAGE}</div>
+        </div>
+<!-- ENDIF -->

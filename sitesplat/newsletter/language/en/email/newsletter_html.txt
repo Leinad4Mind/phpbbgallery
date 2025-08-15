@@ -1,0 +1,6 @@
+Subject: Newsletter from "{SITENAME}"
+
+{MESSAGE}
+
+<a href="{NEWSLETTER_ONLINE}">All newsletter online</a>
+<p>Don't want to recieve our newsletter anymore? Unsubscribe <a href="{NEWSLETTER_OPTOUT}">here</a></p>
