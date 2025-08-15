@@ -53,7 +53,6 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_post_row'		  => 'onViewtopicDisplayPostSubject',
 			'core.display_forums_modify_template_vars'=> 'onLastPostDisplayPostSubject',
 			'core.viewforum_modify_topicrow'		  => 'onViewforumDisplayPostSubject',
-			'core.search_modify_tpl_ary'			  => 'onSearchDisplaySubject',
 			'core.mcp_topic_review_modify_row'		  => 'onMcpDisplaySubject',
 			'core.mcp_post_template_data'		 	  => 'onMcpPostDisplaySubject',
 			'core.mcp_queue_get_posts_for_posts_query_before'	=> 'onMcpQueuePostQuery',
@@ -76,14 +75,18 @@ class listener implements EventSubscriberInterface
 			'core.viewforum_get_announcement_topic_ids_data'	=> 'remove_duplicate_forum_join',
 			'core.search_get_posts_data'						=> 'retrieve_search_post_enable_subject_emoji',
 			'core.search_get_topic_data'						=> 'retrieve_search_topic_enable_subject_emoji',
+			'core.search_modify_tpl_ary'						=> 'onSearchDisplaySubject',
 		);
 	}
 
 	public function memberlist_view_parse_topic($event)
 	{
 		$active_t_row = $event['active_t_row'];
-		$active_t_row['topic_title'] = $this->render($this->parse($active_t_row['topic_title']));
-		$event['active_t_row'] = $active_t_row;
+		if (!empty($active_t_row['topic_title']))
+		{
+			$active_t_row['topic_title'] = $this->render($this->parse($active_t_row['topic_title']));
+			$event['active_t_row'] = $active_t_row;
+		}
 	}
 
 	public function topic_review($event)
@@ -153,7 +156,10 @@ class listener implements EventSubscriberInterface
 
 	public function retrieve_search_topic_enable_subject_emoji($event)
 	{
-		$event['sql_select'] .= ', f.enable_subject_emoji';
+		$this->loadIcons();
+		$sql_select = $event['sql_select'];
+		$sql_select .= ', f.enable_subject_emoji';
+		$event['sql_select'] = $sql_select;
 	}
 
 	public function loadIcons()
@@ -209,8 +215,8 @@ class listener implements EventSubscriberInterface
 				'ICON_HEIGHT'	=> 20,
 				'ICON_ALT'		=> $row['icons_emoji'],
 
-				'S_CHECKED'			=> ($row['icons_id'] == $event['post_data']['icon_id']) ? true : false,
-				'S_ICON_CHECKED'	=> ($row['icons_id'] == $event['post_data']['icon_id']) ? ' checked="checked"' : '',
+				'S_CHECKED'			=> (!empty($event['post_data']['icon_id']) && $row['icons_id'] == $event['post_data']['icon_id']) ? true : false,
+				'S_ICON_CHECKED'	=> (!empty($event['post_data']['icon_id']) && $row['icons_id'] == $event['post_data']['icon_id']) ? ' checked="checked"' : '',
 			));
 		}
 	}
@@ -287,6 +293,7 @@ class listener implements EventSubscriberInterface
 		{
 			$topic_row['TOPIC_TITLE'] = $this->render($this->parse($topic_row['TOPIC_TITLE']));
 		}
+
 		$topic_row['TOPIC_ICON_IMG'] = !empty($this->icons[$event['row']['icon_id']]) ? $this->icons[$event['row']['icon_id']] : '';
 		$topic_row['TOPIC_ICON_IMG_WIDTH'] = 20;
 		$topic_row['TOPIC_ICON_IMG_HEIGHT'] = 20;
@@ -295,16 +302,21 @@ class listener implements EventSubscriberInterface
 
 	public function onSearchDisplaySubject($event)
 	{
+		$tpl_ary = $event['tpl_ary'];
 		if ($event['row']['enable_subject_emoji'])
 		{
-			$tpl_ary = $event['tpl_ary'];
 			if (isset($event['row']['post_subject']))
 			{
 				$tpl_ary['POST_SUBJECT'] = $this->render($this->parse($event['row']['post_subject']));
 			}
 			$tpl_ary['TOPIC_TITLE'] = $this->render($this->parse($event['topic_title']));
-			$event['tpl_ary'] = $tpl_ary;
 		}
+
+		$tpl_ary['TOPIC_ICON_IMG'] = !empty($this->icons[$event['row']['icon_id']]) ? $this->icons[$event['row']['icon_id']] : '';
+		$tpl_ary['TOPIC_ICON_IMG_WIDTH'] = 20;
+		$tpl_ary['TOPIC_ICON_IMG_HEIGHT'] = 20;
+
+		$event['tpl_ary'] = $tpl_ary;
 	}
 
 	public function onMcpDisplaySubject($event)
