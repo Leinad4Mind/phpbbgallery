@@ -58,9 +58,6 @@ class advancedpolls
 		$this->dispatcher = $dispatcher;
 
 		$this->cur_voted_val = array();
-
-		// Add language vars
-		$this->user->add_lang_ext('wolfsblvt/advancedpolls', 'advancedpolls');
 	}
 
 	/**
@@ -71,23 +68,47 @@ class advancedpolls
 	 */
 	public function check_config_for_polls(&$poll)
 	{
-		// Only check for poll end specs
+		// Check for poll scoring options to be consistent
+		if ($this->config['wolfsblvt.advancedpolls.activate_poll_scoring'])
+		{
+			$poll_max_value = $this->request->variable('wolfsblvt_poll_max_value', 1);
+			$poll_total_value = $this->request->variable('wolfsblvt_poll_total_value', 1);
+
+			if ($poll_max_value > $poll_total_value)
+			{
+				return array($this->user->lang['AP_POLL_TOTAL_LOWER_MAX_VOTES']);
+			}
+			if ($poll_max_value === 1 && (int) $poll['poll_max_options'] > 1)
+			{
+				$poll_total_value = (int) $poll['poll_max_options'];
+				$this->request->overwrite('wolfsblvt_poll_total_value', (int) $poll['poll_max_options']);
+			}
+			if ((int) $poll['poll_max_options'] > $poll_total_value)
+			{
+				return array($this->user->lang['AP_POLL_TOTAL_LOWER_MAX_OPTS']);
+			}
+		}
+
+		// Check for poll end specs
 		if ($this->config['wolfsblvt.advancedpolls.activate_poll_end'])
 		{
 			// Poll data from the form
 			$current_time = time();
+			$poll_length_scale = $this->request->variable('wolfsblvt_poll_length_scale', 24);
 			$poll_start = $poll['poll_start'] ?: $current_time;
-			$poll_length = $poll['poll_length'] ? $poll['poll_length'] * 86400 : 0;
+			$poll_length = $poll['poll_length'] ? $poll['poll_length'] * $poll_length_scale * 3600 : 0;
 			$poll_end = $poll_start + $poll_length;
-			$poll_end_ary = getdate($poll_end ?: $current_time);
+			$poll_end_ary = array_map('intval', explode('-', $this->user->format_date($poll_end ?: $current_time, 'Y-n-j-G-i')));
+			$poll['poll_length'] = ceil($poll['poll_length'] * $poll_length_scale / 24);
+			$poll['poll_start'] = $poll_end - $poll['poll_length'] * 86400;
 
-			// Gather the options we should set, default to selected poll_end
+			// Gather the options we should set, default to selected poll_end, order is critical here
 			$opts = array('year', 'mon', 'mday', 'hours', 'minutes');
 			$new_poll_end_ary = array();
-			foreach ($opts as $opt)
+			foreach ($opts as $key => $opt)
 			{
 				$new_poll_end_ary[$opt] = $this->request->variable('wolfsblvt_poll_end_' . $opt, -1);
-				$new_poll_end_ary[$opt] = (($new_poll_end_ary[$opt] > 0) || (($new_poll_end_ary[$opt] == 0) && in_array($opt, array('hours', 'minutes')))) ? $new_poll_end_ary[$opt] : $poll_end_ary[$opt];
+				$new_poll_end_ary[$opt] = (($new_poll_end_ary[$opt] > 0) || (($new_poll_end_ary[$opt] == 0) && in_array($opt, array('hours', 'minutes')))) ? $new_poll_end_ary[$opt] : $poll_end_ary[$key];
 			}
 
 			// Check that the input date is valid
@@ -97,7 +118,7 @@ class advancedpolls
 			}
 
 			// Calculate poll_start and poll_length based on poll_end, if specified in the form
-			$new_poll_end = mktime($new_poll_end_ary['hours'], $new_poll_end_ary['minutes'], 0, $new_poll_end_ary['mon'], $new_poll_end_ary['mday'], $new_poll_end_ary['year']);
+			$new_poll_end = $this->user->get_timestamp_from_format('Y-n-j-G-i', sprintf('%d-%d-%d-%d-%d', $new_poll_end_ary['year'], $new_poll_end_ary['mon'], $new_poll_end_ary['mday'], $new_poll_end_ary['hours'], $new_poll_end_ary['minutes']));
 
 			$new_poll_length = 0;
 			if (abs($new_poll_end - $poll_end) > 60)
@@ -187,14 +208,15 @@ class advancedpolls
 		if ($post_data['poll_length'])
 		{
 			$poll_end = $post_data['poll_start'] + $post_data['poll_length'] * 86400;
-			$poll_end_ary = getdate($poll_end);
+			$poll_end_ary = array_map('intval', explode('-', $this->user->format_date($poll_end, 'Y-n-j-G-i')));
 
+			// Present the options we should set, order is critical here
 			$opts = array('year', 'mon', 'mday', 'hours', 'minutes');
-			foreach ($opts as $opt)
+			foreach ($opts as $key => $opt)
 			{
 				if (isset($options['wolfsblvt_poll_end_' . $opt]))
 				{
-					$options['wolfsblvt_poll_end_' . $opt] = $poll_end_ary[$opt];
+					$options['wolfsblvt_poll_end_' . $opt] = $poll_end_ary[$key];
 				}
 			}
 		}

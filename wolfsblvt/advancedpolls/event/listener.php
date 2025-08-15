@@ -89,7 +89,7 @@ class listener implements EventSubscriberInterface
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'wolfsblvt/advancedpolls',
-			'lang_set' => 'advancedpolls_common',
+			'lang_set' => array('advancedpolls', 'advancedpolls_common'),
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
@@ -104,7 +104,7 @@ class listener implements EventSubscriberInterface
 	{
 		$poll = $event['poll'];
 
-		if ($event['submit'] && isset($poll['poll_title']))
+		if ($event['submit'] && isset($poll['poll_title']) && $poll['poll_title'])
 		{
 			$error = $this->advancedpolls->check_config_for_polls($poll);
 			if (count($error))
