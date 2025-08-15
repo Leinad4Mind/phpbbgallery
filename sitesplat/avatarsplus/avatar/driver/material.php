@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package BBrandom
+* @package BBavatar+
 * @copyright (c) 2016 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -31,11 +31,17 @@ class material extends \phpbb\avatar\driver\driver
 	{
 		$root_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $this->path_helper->get_web_root_path();
 
-		// return '<img data-name="' . $user->data['username'] . '" class="material_profile"/>';
-		return '<img src="' . $root_path . 'images/avatars/material/' . $row['avatar'] . '.png" ' .
-			($row['avatar_width'] ? ('width="' . $row['avatar_width'] . '" ') : '') .
-			($row['avatar_height'] ? ('height="' . $row['avatar_height'] . '" ') : '') .
-			'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
+		if ($row['avatar'] == 'circle')
+		{
+			return '<img data-name="' . $user->data['username'] . '" class="material_profile"/>';
+		}
+		else
+		{
+			return '<img src="' . $root_path . 'images/avatars/material/' . $row['avatar'] . '.png" ' .
+				($row['avatar_width'] ? ('width="' . $row['avatar_width'] . '" ') : '') .
+				($row['avatar_height'] ? ('height="' . $row['avatar_height'] . '" ') : '') .
+				'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
+		}
 	}
 
 	public function prepare_form($request, $template, $user, $row, &$error)
@@ -62,16 +68,25 @@ class material extends \phpbb\avatar\driver\driver
 		// resolve avatar size
 		$size = min($this->config['avatar_max_width'], $this->config['avatar_max_height']);
 
-		// initialize avatar, make it as big as possible
-		$avatar = AvatarFactory::createAvatarMaker($shape, $size, class_exists('Imagick') ? 'imagick' : 'gd');
-		// load Arial font
-		$avatar->setFontFile($this->phpbb_root_path . 'ext/sitesplat/avatarsplus/vendor/shiftedwork/avatarmaker/demo/arial.ttf');
-		// delete old material avatar
-		$this->delete(array('id' => $row['avatar']));
-		// generate new material avatar filename
-		$filename = $user->data['user_id'] . '_' . time();
-		// save new material avatar
-		$avatar->makeAvatar($user->data['username'])->save($this->get_material_url($filename), 100);
+		$filename = '';
+		if ($shape != 'circle')
+		{
+			// initialize avatar, make it as big as possible
+			$avatar = AvatarFactory::createAvatarMaker($shape, $size, class_exists('Imagick') ? 'imagick' : 'gd');
+			// load Arial font
+			$avatar->setFontFile($this->phpbb_root_path . 'ext/sitesplat/avatarsplus/vendor/shiftedwork/avatarmaker/demo/arial.ttf');
+			// delete old material avatar
+			$this->delete(array('id' => $row['avatar']));
+			// generate new material avatar filename
+			$filename = $user->data['user_id'] . '_' . time();
+			// save new material avatar
+			$avatar->makeAvatar($user->data['username'])->save($this->get_material_url($filename), 100);
+		}
+		else
+		{
+			$filename = 'circle';
+		}
+		
 
 		// nothing much to store, but we obey interface
 		return array(

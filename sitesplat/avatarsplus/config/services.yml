@@ -2,11 +2,13 @@ services:
     avatar.driver.generator:
         class: sitesplat\avatarsplus\avatar\driver\generator
         arguments:
-            - @config
-            - %core.root_path%
-            - %core.php_ext%
-            - @path_helper
-            - @cache.driver
+            - '@config'
+            - '@upload_imagesize'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@path_helper'
+            - '@cache.driver'
+            - '@ext.manager'
         calls:
             - [set_name, [avatar.driver.generator]]
         tags:
@@ -15,11 +17,12 @@ services:
     avatar.driver.material:
         class: sitesplat\avatarsplus\avatar\driver\material
         arguments:
-            - @config
-            - %core.root_path%
-            - %core.php_ext%
-            - @path_helper
-            - @cache.driver
+            - '@config'
+            - '@upload_imagesize'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@path_helper'
+            - '@cache.driver'
         calls:
             - [set_name, [avatar.driver.material]]
         tags:

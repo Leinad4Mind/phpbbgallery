@@ -12,27 +12,27 @@ var path_to_folder = '{{ ROOT_PATH }}',
 	png_two_download_size = 0,
 	png_ios_download_size = {{ S_MAX_AVATAR_SIZE }},
 	png_win8tablet_download_size = {{ S_MAX_AVATAR_SIZE }},
-	gravatar_size = 0,
-	hide_save = true,
+	gravatar_size = {{ S_MAX_AVATAR_SIZE }},
+	hide_save = false,
 	hide_svg_download_on_Android = true,
 	hide_svg_download = true,
-	hide_png_one_download = true,
+	hide_png_one_download = false,
 	hide_png_two_download = true,
-	hide_gravatar = true,
+	hide_gravatar = false,
 	color_theme = 'light';
 
 //Share options
-var	hide_share = true,
-	share_image_size = 0,
-	facebook_app_id = '',
-	facebook = false,
+var	hide_share = {{ S_ENABLE_GENERATOR_SHARE }},
+	share_image_size = {{ S_MAX_AVATAR_SIZE }},
+	facebook_app_id = '{{ BBOPENGRAPH_APPID }}',
+	facebook = true,
 	twitter = false,
-	pinterest = false,
+	pinterest = true,
 	googleplus = false,
-	share_link = '',
-	share_title = '',
-	share_description = '',
-	share_credit = '';
+	share_link = '{{ U_BOARD_URL }}',
+	share_title = '{{ lang('AVATARSPLUS_SHARE_TITLE') }}',
+	share_description = '{{ lang('AVATARSPLUS_SHARE_DESC') }}',
+	share_credit = '{{ lang('AVATARSPLUS_SHARE_CREDIT') }}';
 
 head.ready(function(){
 	$(function(){

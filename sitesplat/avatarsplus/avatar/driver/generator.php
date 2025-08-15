@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package BBrandom
+* @package BBavatar+
 * @copyright (c) 2016 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -11,6 +11,16 @@ namespace sitesplat\avatarsplus\avatar\driver;
 
 class generator extends \phpbb\avatar\driver\driver
 {
+	protected $config;
+	protected $extension_manager;
+	public function __construct(\phpbb\config\config $config, \FastImageSize\FastImageSize $imagesize, $phpbb_root_path, $php_ext, \phpbb\path_helper $path_helper, \phpbb\cache\driver\driver_interface $cache = null, \phpbb\extension\manager $extension_manager)
+	{
+		parent::__construct($config, $imagesize, $phpbb_root_path, $php_ext, $path_helper, $cache);
+
+		$this->config = $config;
+		$this->extension_manager = $extension_manager;
+	}
+
 	public function get_config_name()
 	{
 		return 'generator';
@@ -41,11 +51,14 @@ class generator extends \phpbb\avatar\driver\driver
 		$user->add_lang_ext('sitesplat/avatarsplus', 'common');
 
 		$template->assign_vars(array(
-			'ROOT_PATH'				=> $this->phpbb_root_path,
-			'S_IN_AVATAR_GENERATOR'	=> true,
-			'S_MAX_AVATAR_SIZE'		=> min($this->config['avatar_max_width'], $this->config['avatar_max_height']),
+			'ROOT_PATH'					=> $this->phpbb_root_path,
+			'S_IN_AVATAR_GENERATOR'		=> true,
+			'S_MAX_AVATAR_SIZE'			=> min($this->config['avatar_max_width'], $this->config['avatar_max_height']),
+			'S_ENABLE_GENERATOR_SHARE'	=> $this->extension_manager->is_enabled('sitesplat/bbopengraph') ? 'false' : 'true',
+			'U_BOARD_URL'				=> generate_board_url(),
+			'BBOPENGRAPH_APPID'			=> isset($this->config['bbopengraph_fb_app_id']) ? $this->config['bbopengraph_fb_app_id'] : '',
 		));
-		
+
 		return true;
 	}
 

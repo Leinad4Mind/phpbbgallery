@@ -5,3 +5,15 @@ sitesplat_avatarsplus_male_data:
 sitesplat_avatarsplus_female_data:
     path: /json/svgavatars-female-data.json
     defaults: { _controller: sitesplat.avatarsplus.controller:json_data, gender: 'female' }
+
+sitesplat_avatarsplus_send_to_gravatar:
+    path: /php/send-to-gravatar.php
+    defaults: { _controller: sitesplat.avatarsplus.controller:send_to_gravatar }
+
+sitesplat_avatarsplus_save_temp_avatar:
+    path: /php/save-temp-avatar.php
+    defaults: { _controller: sitesplat.avatarsplus.controller:save_temp_avatar }
+
+sitesplat_avatarsplus_download_temp_avatar:
+    path: /php/download-temp-avatar.php
+    defaults: { _controller: sitesplat.avatarsplus.controller:download_temp_avatar }

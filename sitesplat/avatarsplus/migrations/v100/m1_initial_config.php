@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package BBrandom
+* @package BBavatar+
 * @copyright (c) 2016 SiteSplat All rights reserved
 * @license Proprietary
 *
