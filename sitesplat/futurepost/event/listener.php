@@ -93,11 +93,13 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 	public function temp_future_time($event)
 	{
+		$edit_topic = ($event['mode'] == 'edit' && intval($event['post_data']['topic_first_post_id']) != $event['post_id']) ? false : true;
+
 		if (
 			$this->auth->acl_get('u_futurepost') &&
-			$event['topic_data']['topic_status'] != ITEM_LOCKED &&
-			$event['topic_data']['topic_type'] != POST_GLOBAL && 
-			$event['topic_data']['topic_first_post_id'] == $event['row']['post_id'] &&
+			$event['post_data']['topic_status'] != ITEM_LOCKED &&
+			$event['post_data']['topic_type'] != POST_GLOBAL && 
+			$edit_topic &&
 			(
 				$event['mode'] == 'post' ||
 				$event['mode'] == 'edit'
