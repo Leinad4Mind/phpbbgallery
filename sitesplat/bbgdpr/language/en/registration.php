@@ -25,4 +25,8 @@ $lang = array_merge($lang, array(
 	'REG_UNDRSTD'	        	=> 'I understand and Agree',
 	
 	'AGREEMENTS_REQUIRED'		=> 'You must agree to Bulk emails (It\'s not Spam) and Privacy Policy',
+	
+	'BULK_EMAILS_QUICK_AGREE'				=> 'E-mails from the Board',
+	'PRIVACY_POLICY_QUICK_AGREE'				=> 'Board\'s GDPR',
+	
 ));

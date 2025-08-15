@@ -41,6 +41,10 @@ class main_listener implements EventSubscriberInterface
 				'privacy_redirect',
 				999, // Needed to allow this to run before any other extension.
 			),
+
+			// BBOAuth
+			'sitesplat.bboauth.ucp_login_link'		=> 'quickreg',
+			'sitesplat.bboauth.skip_registration'	=> 'skip_on_reg_page',
 		);
 	}
 
@@ -173,6 +177,18 @@ class main_listener implements EventSubscriberInterface
 		{
 			redirect($this->helper->route('sitesplat_bbgdpr_privacy'));
 		}
+	}
+
+	public function quickreg()
+	{
+		$this->language->add_lang('registration', 'sitesplat/bbgdpr');
+		$this->template->assign_var('S_QUICK_AGREE', true);
+	}
+
+	public function skip_on_reg_page($event)
+	{
+		$event['event']->update_subarray('data', 'sitesplat_bbgdpr_bulk_emails', true);
+		$event['event']->update_subarray('data', 'sitesplat_bbgdpr_privacy_policy', true);
 	}
 
 	protected function on_exception_page()
