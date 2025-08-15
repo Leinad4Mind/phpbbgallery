@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows you to login via Github, Slack, Dropbox or Instagram accounts.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": ["phpbb", "extension", "OAuth", "Github", "Slack", "Dropbox", "Instagram"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -21,6 +21,11 @@
 		"display-name": "BBOAuth",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.1.0,<3.2@dev"
+		},
+		"version-check": {
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb31/ext",
+            "filename": "bboauth.json"
 		}
 	}
 }
