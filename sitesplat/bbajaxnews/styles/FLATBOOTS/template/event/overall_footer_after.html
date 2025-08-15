@@ -1,7 +1,8 @@
 {% if S_REGISTERED_USER %}
-{% INCLUDEJS '@sitesplat_bbajaxnews/pubnub/pubnub.min.js' %}
 <script>
+	var bbajaxnews_driver = '{{ BBAJAXNEWS_DRIVER|e('js') }}';
 	var bbajaxnews_sub_key = '{{ BBAJAXNEWS_SUB_KEY|e('js') }}';
+	var bbajaxnews_cluster = '{{ BBAJAXNEWS_CLUSTER|e('js') }}';
 	var bbajaxnews_casual_interval = {{ BBAJAXNEWS_CASUAL_INTERVAL }};
 	var bbajaxnews_user_channel = '{{ BBAJAXNEWS_USER_CHANNEL|e('js') }}';
 	var bbajaxnews_casual_route = '{{ BBAJAXNEWS_CASUAL_ROUTE|e('js') }}';
@@ -15,5 +16,6 @@
 		{% INCLUDEJS '@sitesplat_bbajaxnews/mo.js/mo.min.js' %}
 {% endif %}
 	{% INCLUDEJS '@sitesplat_bbajaxnews/noty/noty.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbajaxnews/' ~ BBAJAXNEWS_DRIVER ~ '/' ~ BBAJAXNEWS_DRIVER ~ '.min.js' %}
 	{% INCLUDEJS '@sitesplat_bbajaxnews/bbajaxnews.js' %}
 {% endif %}

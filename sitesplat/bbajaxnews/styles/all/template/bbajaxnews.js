@@ -1,16 +1,28 @@
 var timeout = null;
 
-var pubnub = new PubNub({
-	subscribeKey: window.bbajaxnews_sub_key
-});
-pubnub.addListener({
-	message: function(response) {
-		display_ajaxnew(response.message.message, false);
-	}
-});
-pubnub.subscribe({
-	channels: [window.bbajaxnews_user_channel]
-});
+if (bbajaxnews_driver == 'pubnub') {
+	var pubnub = new PubNub({
+		subscribeKey: window.bbajaxnews_sub_key
+	});
+	pubnub.addListener({
+		message: function(response) {
+			display_ajaxnew(response.message.message, false);
+		}
+	});
+	pubnub.subscribe({
+		channels: [window.bbajaxnews_user_channel]
+	});
+} else if (bbajaxnews_driver == 'pusher') {
+	Pusher.logToConsole = true;
+	var pusher = new Pusher(window.bbajaxnews_sub_key, {
+		cluster: window.bbajaxnews_cluster,
+		encrypted: true
+	});
+	var channel = pusher.subscribe(window.bbajaxnews_user_channel);
+	channel.bind('ajaxnews', function(data) {
+		display_ajaxnew(data, false);
+	});
+}
 
 function display_ajaxnew(message, is_casual) {
 	if (message) {

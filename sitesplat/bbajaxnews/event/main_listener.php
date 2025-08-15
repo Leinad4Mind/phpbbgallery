@@ -1,11 +1,12 @@
 <?php
 /**
-*
-* @package BBajaxnews
-* @copyright (c) 2018 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBajaxnews. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2018, SiteSplat
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace sitesplat\bbajaxnews\event;
 
@@ -75,7 +76,7 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$this->template->assign_vars([
-			'BBAJAXNEWS_SUB_KEY'			=> $this->config['sitesplat_bbajaxnews_pubnub_sub'],
+			'BBAJAXNEWS_DRIVER'				=> $this->config['sitesplat_bbajaxnews_driver'],
 			'BBAJAXNEWS_USER_CHANNEL'		=> $this->user->data['session_id'],
 			'BBAJAXNEWS_CASUAL_ROUTE'		=> $this->helper->route('sitesplat_bbajaxnews_casual'),
 			'BBAJAXNEWS_CASUAL_INTERVAL'	=> $this->config['sitesplat_bbajaxnews_interval'] * 60000, // from minutes to milliseconds
@@ -85,6 +86,7 @@ class main_listener implements EventSubscriberInterface
 			'BBAJAXNEWS_LAYOUT'				=> $this->config['sitesplat_bbajaxnews_noty_layout'],
 			'BBAJAXNEWS_MO'					=> $this->config['sitesplat_bbajaxnews_noty_mo'],
 		]);
+		$this->ajaxnews_manager->assign_driver_vars();
 	}
 
 	public function friend_logged_in($event)
@@ -176,9 +178,9 @@ class main_listener implements EventSubscriberInterface
 		if ($group['group_type'] == GROUP_SPECIAL)
 		{
 			$users = [];
-			foreach ($event['user_id_ary'] as $user_id)
+			foreach ($event['user_id_ary'] as $index => $user_id)
 			{
-				$users[$user_id] = $event['username_ary'][$user_id];
+				$users[$user_id] = $event['username_ary'][$index];
 			}
 
 			$this->ajaxnews_manager->add_ajaxnews('sitesplat.bbajaxnews.ajaxnews.type.user_joined_group', [

@@ -27,10 +27,25 @@ $lang = array_merge($lang, array(
 	'SPECIAL_EXPLAIN'	=> 'Special news events are triggered when a specific rule criteria is met. IE: user registration, new topic, New announcement etc. (See below for the included news).',
 	'CASUAL_EXPLAIN'	=> 'Casual news events are triggered after a user is not presented with any other live news by a specified amount of time (configurable above).',
 
+	'SITESPLAT_BBAJAXNEWS_DRIVER'							=> 'Driver',
+	'SITESPLAT_BBAJAXNEWS_DRIVER_EXPLAIN'					=> 'Select from the list of providers which driver you want to use. Different providers have different pricing, but also different availability, support, etc.',
+	'DRIVER_PUSHER'											=> 'Pusher',
+	'DRIVER_PUBNUB'											=> 'PubNub',
+	
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB'						=> 'PubNub Publish Key',
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB_EXPLAIN'				=> 'You can find your PubNub Publish Key in <a href="https://admin.pubnub.com/">PubNub Admin</a>.',
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB'						=> 'PubNub Subscribe Key',
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB_EXPLAIN'				=> 'You can find your PubNub Subscribe Key in <a href="https://admin.pubnub.com/">PubNub Admin</a>.',
+	
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY'					=> 'Pusher App Key',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY_EXPLAIN'			=> 'You can find your Pusher App Key in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC'					=> 'Pusher App Secret',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC_EXPLAIN'			=> 'You can find your Pusher App Secret in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID'					=> 'Pusher App ID',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID_EXPLAIN'			=> 'You can find your Pusher App ID in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER'				=> 'Pusher Cluster',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER_EXPLAIN'		=> 'You can find your Pusher Cluster in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	
 	'SITESPLAT_BBAJAXNEWS_INTERVAL'							=> 'Interval between casual live news',
 	'SITESPLAT_BBAJAXNEWS_INTERVAL_EXPLAIN'					=> 'When user is not presented with any live news by specified number of minutes, one of causal live news will be displayed to them. Enter 0 to disable casual news.',
 	'SITESPLAT_BBAJAXNEWS_NOTY_VISIBILITY_CONTROL'			=> 'Visibility control',
