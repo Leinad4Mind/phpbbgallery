@@ -289,7 +289,7 @@ class listener implements EventSubscriberInterface
 	public function onViewforumDisplayPostSubject($event)
 	{
 		$topic_row = $event['topic_row'];
-		if ($event['row']['enable_subject_emoji'])
+		if (!empty($event['row']['enable_subject_emoji']))
 		{
 			$topic_row['TOPIC_TITLE'] = $this->render($this->parse($topic_row['TOPIC_TITLE']));
 		}
