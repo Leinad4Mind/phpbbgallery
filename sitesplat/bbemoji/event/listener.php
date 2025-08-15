@@ -46,6 +46,7 @@ class listener implements EventSubscriberInterface
 			'core.message_parser_check_message'       => 'onCheck',
 			'core.modify_format_display_text_after'   => 'onPreview',
 			'core.posting_modify_template_vars'		  => array(array('onPreviewSubject'), array('replaceTopicIcons')),
+			'core.ucp_pm_compose_template'				=> array(array('loadIcons'), array('replaceTopicIcons')),
 			'core.modify_submit_post_data'            => 'onSubmit',
 			'core.modify_text_for_display_after'      => 'onDisplay',
 			'core.viewtopic_modify_page_title'		  => 'onViewtopicDisplayTopicSubject',
@@ -184,8 +185,9 @@ class listener implements EventSubscriberInterface
 		$this->template->destroy_block_vars('topic_icon');
 
 		$sql = 'SELECT *
-				FROM ' . $this->emoji_icons_table . '
-				WHERE display_on_posting = 1';
+                FROM ' . $this->emoji_icons_table . '
+                WHERE display_on_posting = 1
+                ORDER BY icons_order';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -250,7 +252,9 @@ class listener implements EventSubscriberInterface
 		{
 			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
 		}
-		if (!empty($post_row['POST_ICON_IMG']))
+
+		//$post_row['POST_ICON_IMG'] = !empty($this->icons[$event['row']['emoji_icon_id']]) ? $this->icons[$event['row']['emoji_icon_id']] : '';
+		if (!empty($post_row['POST_ICON_IMG']) || !empty($event['row']['emoji_icon_id']))
 		{
 			$post_row['POST_ICON_IMG'] = !empty($this->icons[$event['row']['emoji_icon_id']]) ? $this->icons[$event['row']['emoji_icon_id']] : '';
 			$post_row['POST_ICON_IMG_WIDTH'] = 20;
