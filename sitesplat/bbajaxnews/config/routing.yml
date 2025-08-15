@@ -1,0 +1,3 @@
+sitesplat_bbajaxnews_casual:
+    path: /sitesplat/bbajaxnews
+    defaults: { _controller: sitesplat.bbajaxnews.controller:handle }
