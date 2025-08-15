@@ -217,6 +217,7 @@ class listener implements EventSubscriberInterface
 			// reset topic count
 			$cnt_ary = $sql_ary;
 			$cnt_ary['SELECT'] = 'COUNT(topic_id) AS cnt';
+			$cnt_ary['WHERE'] .= " AND t.forum_id = {$event['forum_id']}";
 			$sql = $this->db->sql_build_query('SELECT', $cnt_ary);
 			$result = $this->db->sql_query($sql);
 			$event['topics_count'] = (int) $this->db->sql_fetchfield('cnt');
