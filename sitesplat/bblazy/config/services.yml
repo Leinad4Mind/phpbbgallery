@@ -1,0 +1,7 @@
+services:
+    sitesplat.bblazy.listener:
+        class: sitesplat\bblazy\event\listener
+        arguments:
+            - '@template'
+        tags:
+            - { name: event.listener }
