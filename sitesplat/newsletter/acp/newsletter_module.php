@@ -213,6 +213,7 @@ class newsletter_module
 					'ENABLE_HTML'			=> $enable_html,
 					'NEW_USER'				=> $config_aray['newuser'],
 					'USE_HTML'				=> ($enable_html && $config_aray['use_html']) ? true : false,
+					'BOARD_URL'				=> generate_board_url(false),
 					'LAST_SEND'				=> $this->user->lang('LAST_SEND', $subscribed, $this->user->format_date(max($lastsend, $this->config['newsletter_last_gc'])))
 					)
 				);

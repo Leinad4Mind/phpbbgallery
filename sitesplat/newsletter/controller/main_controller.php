@@ -72,7 +72,7 @@ class main_controller
 		
 		$this->user->add_lang_ext('sitesplat/newsletter', 'newsletter');
 		
-		if (!$this->user->data['is_registered'])
+		if ($this->user->data['is_registered'])
 		{
 			$sql = 'SELECT user_id, user_allow_massemail 
 					FROM ' . USERS_TABLE . ' WHERE user_email_hash = '. phpbb_email_hash(strtolower($this->request->variable('email', '')));

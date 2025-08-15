@@ -1,8 +1,10 @@
 tinymce.init({
 	selector: "textarea.mceEditor",
 	relative_urls: false,
-		language : "en",
-		height : "300",
+	remove_script_host : false,
+	document_base_url : document_base_url,
+	language : "en",
+	height : "300",
 	forced_root_block : "", 
 	force_br_newlines : true,
 	force_p_newlines : false,

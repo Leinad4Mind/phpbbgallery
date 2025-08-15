@@ -33,6 +33,4 @@
 		}
 		$("#mailrows").show("slow");
 	});
-	
-	
 })(jQuery, window, document);

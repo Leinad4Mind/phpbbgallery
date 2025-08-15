@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'SEND_IMMEDIATELY'			=> 'Send immediately',
 	'SEND_IMMEDIATELY_EXPLAIN'	=> 'Attempt to send the emails immediately. This depends on the server email configuration parameters',
 	'PERIOD'					=> 'Email Overview (or Catch-up) Period',
-	'PERIOD_EXPLAIN'			=> 'This will send autmatic "Catch-up"  emails to the users that are subscribed. The e-mail will be generated based on the new topics in the forum. The user will receive an email with the purpose of engaging the user\'s interest in the recent board\'s activity. Edit the templates file named newsletter_html.txt for the HTML version and newsletter_txt.txt for the TXT version from:<br /> <code>root\ext\sitesplat\newsletter\language\en\email\</code> <br /> To learn how to send out professional looking HTML emails check out the tutorials over at <a href=" http://sitesplat.com/" target="_blank">sitesplat.com</a> or click the "Tutorials" label above.',
+	'PERIOD_EXPLAIN'			=> 'This will send autmatic "Catch-up"  emails to the users that are subscribed. The e-mail will be generated based on the new topics in the forum. The user will receive an email with the purpose of engaging the user\'s interest in the recent board\'s activity. Edit the templates file named newsletter_html.txt for the HTML version and newsletter_txt.txt for the TXT version from:<br /> <code>root\ext\sitesplat\newsletter\language\en\email\</code> <br /> To learn how to send out professional looking HTML emails check out the tutorials over at <a href=" https://sitesplat.com/" target="_blank">sitesplat.com</a> or click the "Tutorials" label above.',
 	'WEEKLY'					=> 'Weekly',
 	'MONTHLY'					=> 'Monthly',
 	'NO_OVERVIEW'				=> 'None',
@@ -54,15 +54,15 @@ $lang = array_merge($lang, array(
 	'HIDE'						=> 'Hide',
 	'SHOW'						=> 'Show',
 	'DELETE_MAIL_SUCCES'		=> 'Newsletter deleted',
-	'ACP_NEWSOVERVIEW_SEND'		=> 'Newsletter(s) sent succesfully',
-	'ACP_NEWSOVERVIEW_SAVED'	=> 'Settings saved succesfully',
+	'ACP_NEWSOVERVIEW_SEND'		=> 'Newsletter(s) sent successfully',
+	'ACP_NEWSOVERVIEW_SAVED'	=> 'Settings saved successfully',
 	
-	'SITESPLAT_COM'		        => 'http://sitesplat.com',
+	'SITESPLAT_COM'		        => 'https://sitesplat.com',
 	'SITESPLAT_COPY'		    => '&#169; SiteSplat',
 	'LICENSE_INFO'		        => 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    => 'Developer',
 	'ACP_NOTICE_CLOSE'			=> 'Close',
-	'ACP_NEWS_VERSION'          => '1.0.3',
+	'ACP_NEWS_VERSION'          => '1.0.5',
 	'ACP_LOADING'		        => 'Loading... Hold on',
 	'FORUM_CONTENT'		        => 'forum content',
 	'EXT_NEWS_DESCRIPTION_PAGE'	=> 'A Newsletter system with an archive, weekly, monthly and many more options to run your own HTML style newsletter like a pro!',
@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'EXT_NEWS_TASKS_2'			=> 'Full HTML Enabled',
 	'EXT_NEWS_TASKS_3'			=> 'Synchronization with Cron tasks and compatible with <a href="https://www.phpbb.com/customise/db/extension/cronstatus/">Cron Status</a>',
 	'EXT_NEWS_TASKS_4'			=> 'Scheduled Newsletter',
-	'EXT_NEWS_TASKS_5'			=> 'Checkout the other premium addons on <a href="http://www.sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
+	'EXT_NEWS_TASKS_5'			=> 'Checkout the other premium addons on <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'EXT_NEWS_TASKS_6'			=> 'phpBB 3.2 ready',
 
 	'NEWS_SUBSCRIBERS_INFO'     => 'Subscribers and news info',
@@ -158,7 +158,7 @@ $lang = array_merge($lang, array(
 	
 	
 	'NEWSLETTER_NOTICE'			=> '<div class="phpinfo"><p>The settings for this extension are under <strong>%1$s &#187; %2$s &#187; %3$s</strong>. <br />Please note, at first setup when the period is set (for example weekly) and the format (HTML) the first automatic newsletter overview is sent out immediately right after the settings are saved! <br />This is needed to start the Synchronization. With this in mind, consider using a test board before using the extension to make sure the end result of the newlsetter is the preferred look.</p></div>',
-	'SS_HELPER_NOTY'			=> 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'			=> 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 ));
 
 // Description of Donations extension
