@@ -16,9 +16,16 @@
 			<dt><label for="bbprofile_enabled">{L_BBPROFILE_ENABLED}</label><br><span>{L_BBPROFILE_ENABLED_EXPLAIN}</span></dt>
 			<dd>
 				<select multiple size="9" id="bbprofile_enabled" name="bbprofile_enabled[]">
-					{% for part in parts %}
-						<option value="{{ part.ID }}"{% if part.SELECTED %} selected{% endif %}>{{ part.LABEL }}</option>
-					{% endfor %}
+					<optgroup label="{{ lang('PREDEFINED') }}">
+						{% for part in parts %}
+							<option value="{{ part.ID }}"{% if part.SELECTED %} selected{% endif %}>{{ part.LABEL }}</option>
+						{% endfor %}
+					</optgroup>
+					<optgroup label="{{ lang('CPF') }}">
+						{% for cpf in cpfs %}
+							<option value="{{ cpf.ID }}"{% if cpf.SELECTED %} selected{% endif %}>{{ cpf.LABEL }}</option>
+						{% endfor %}
+					</optgroup>
 				</select>
 			</dd>
 		</dl>

@@ -4,19 +4,19 @@ namespace sitesplat\bbprofile\profile_parts\parts;
 
 class signature extends base
 {
-	public function is_enabled($profile_fields)
+	public function is_enabled()
 	{
 		return $this->config['allow_sig'] && $this->auth->acl_get('u_sig');
 	}
 
-	public function is_completed($profile_fields)
+	public function is_completed()
 	{
 		return !empty($this->user->data['user_sig']);
 	}
 
 	public function appeal_icon()
 	{
-		return 'signature';
+		return 'hand-o-right';
 	}
 
 	public function appeal_button()

@@ -5,7 +5,15 @@ services:
             - '@user'
             - '@profilefields.manager'
             - '@config_text'
+            - '@sitesplat.bbprofile.profile_parts.cpf_part'
             - '@sitesplat.bbprofile.profile_parts.parts_collection'
+
+    sitesplat.bbprofile.profile_parts.cpf_part:
+        class: sitesplat\bbprofile\profile_parts\cpf_part
+        arguments:
+            - '@language'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     sitesplat.bbprofile.profile_parts.parts.base:
         class: sitesplat\bbprofile\profile_parts\parts\base
@@ -40,36 +48,6 @@ services:
 
     sitesplat.bbprofile.profile_parts.parts.avatar:
         class: sitesplat\bbprofile\profile_parts\parts\avatar
-        parent: sitesplat.bbprofile.profile_parts.parts.base
-        tags:
-            - { name: sitesplat.bbprofile.profile_parts.parts }
-
-    sitesplat.bbprofile.profile_parts.parts.facebook:
-        class: sitesplat\bbprofile\profile_parts\parts\facebook
-        parent: sitesplat.bbprofile.profile_parts.parts.base
-        tags:
-            - { name: sitesplat.bbprofile.profile_parts.parts }
-
-    sitesplat.bbprofile.profile_parts.parts.twitter:
-        class: sitesplat\bbprofile\profile_parts\parts\twitter
-        parent: sitesplat.bbprofile.profile_parts.parts.base
-        tags:
-            - { name: sitesplat.bbprofile.profile_parts.parts }
-
-    sitesplat.bbprofile.profile_parts.parts.skype:
-        class: sitesplat\bbprofile\profile_parts\parts\skype
-        parent: sitesplat.bbprofile.profile_parts.parts.base
-        tags:
-            - { name: sitesplat.bbprofile.profile_parts.parts }
-
-    sitesplat.bbprofile.profile_parts.parts.youtube:
-        class: sitesplat\bbprofile\profile_parts\parts\youtube
-        parent: sitesplat.bbprofile.profile_parts.parts.base
-        tags:
-            - { name: sitesplat.bbprofile.profile_parts.parts }
-
-    sitesplat.bbprofile.profile_parts.parts.googleplus:
-        class: sitesplat\bbprofile\profile_parts\parts\googleplus
         parent: sitesplat.bbprofile.profile_parts.parts.base
         tags:
             - { name: sitesplat.bbprofile.profile_parts.parts }

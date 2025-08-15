@@ -22,6 +22,7 @@ class main_module
 	{
 		global $db, $config, $request, $template, $user, $phpbb_container, $phpbb_root_path, $phpEx;
 		$config_text = $phpbb_container->get('config_text');
+		$profilefields_manager = $phpbb_container->get('profilefields.manager');
 
 		if (!class_exists('auth_admin'))
 		{
@@ -81,6 +82,17 @@ class main_module
 				'ID'		=> $name,
 				'LABEL'		=> $user->lang('BBPROFILE_' . strtoupper($name) . '_BUTTON'),
 				'SELECTED'	=> in_array($name, $enabled_parts),
+			));
+		}
+
+		$profile_fields = $profilefields_manager->grab_profile_fields_data($user->data['user_id']);
+		foreach ($profile_fields[$user->data['user_id']] as $field)
+		{
+			$id = 'cpf_' . $field['data']['field_id'];
+			$template->assign_block_vars('cpfs', array(
+				'ID'		=> $id,
+				'LABEL'		=> $user->lang($field['data']['lang_name']),
+				'SELECTED'	=> in_array($id, $enabled_parts),
 			));
 		}
 

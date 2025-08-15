@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'BBPROFILE_BIRTHDATE_BUTTON'	=> 'Add your birthday',
 	'BBPROFILE_SIGNATURE_TEXT'		=> 'Promote your ideas.',
 	'BBPROFILE_SIGNATURE_BUTTON'	=> 'Add signature under every post',
-	'BBPROFILE_AVATAR_TEXT'			=> 'Show yourself.',
+	'BBPROFILE_AVATAR_TEXT'			=> 'Express yourself and show who you are or maybe represent, believe in...',
 	'BBPROFILE_AVATAR_BUTTON'		=> 'Add an avatar',
 	'BBPROFILE_FACEBOOK_TEXT'		=> 'Make friends.',
 	'BBPROFILE_FACEBOOK_BUTTON'		=> 'Add your Facebook account',
@@ -39,4 +39,7 @@ $lang = array_merge($lang, array(
 	'BBPROFILE_GOOGLEPLUS_BUTTON'	=> 'Add your Google+ account',
 	'BBPROFILE_FIRST_POST_TEXT'		=> 'Get involved in discussion. Select a forum and create a new topic!',
 	'BBPROFILE_FIRST_POST_BUTTON'	=> 'Create your first post.',
+
+	'BBPROFILE_CPF_TEXT'		=> 'What is your %s?',
+	'BBPROFILE_CPF_BTN_LABEL'	=> 'Add %s',
 ));

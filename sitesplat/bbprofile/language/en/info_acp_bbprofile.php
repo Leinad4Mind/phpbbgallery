@@ -31,6 +31,9 @@ $lang = array_merge($lang, array(
 
 	'BBPROFILE_ENABLED'				=> 'Enabled BBprofile parts:',
     'BBPROFILE_ENABLED_EXPLAIN'		=> 'Choose the profile parts that should be counted towards the 100% profile completion',
+
+        'PREDEFINED'					=> 'Predefined',
+	'CPF'							=> 'Custom Profile Fields',
 	
 	'BBPROFILE_HIDE_FOR_ADMINS'		=> 'Hide BBprofile box for admins:',
 	'HIDE_FOR_ADMINS'				=> 'Hide for admins',

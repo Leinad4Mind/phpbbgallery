@@ -10,7 +10,7 @@ interface part_interface
 	 * @param array $profile_fields User profile fields
 	 * @return bool True if this part is enabled
 	 */
-	public function is_enabled($profile_fields);
+	public function is_enabled();
 
 	/**
 	 * Tells whether this part is already completed.
@@ -18,7 +18,7 @@ interface part_interface
 	 * @param array $profile_fields User profile fields
 	 * @return bool True if this part is already completed
 	 */
-	public function is_completed($profile_fields);
+	public function is_completed();
 
 	/**
 	 * Text displayed on BBprofile box that asks user to complete this profile part.

@@ -4,12 +4,12 @@ namespace sitesplat\bbprofile\profile_parts\parts;
 
 class birthdate extends base
 {
-	public function is_enabled($profile_fields)
+	public function is_enabled()
 	{
 		return $this->auth->acl_get('u_chgprofileinfo');
 	}
 
-	public function is_completed($profile_fields)
+	public function is_completed()
 	{
 		$empty = empty($this->user->data['user_birthday']) || $this->user->data['user_birthday'] == ' 0- 0-   0';
 		return !$empty;
@@ -17,7 +17,7 @@ class birthdate extends base
 
 	public function appeal_icon()
 	{
-		return 'birthdate';
+		return 'birthday-cake';
 	}
 
 	public function appeal_button()
