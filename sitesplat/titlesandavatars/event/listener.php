@@ -75,6 +75,7 @@ class listener implements EventSubscriberInterface
 				$avatars[] = '<a href="memberlist.php?mode=viewprofile&u=' . $row['user_id'] . '">' . (($row['user_avatar']) ? 
 								 str_replace(array('class="avatar"', 'alt='), array('class="online_img"', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title='), phpbb_get_user_avatar(
 									array('avatar'			=> $row['user_avatar'], 
+										  'id'				=> $row['user_id'], 
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
@@ -131,8 +132,8 @@ class listener implements EventSubscriberInterface
 			'ON'    => 'uu.user_id = tt.topic_poster'
 		);
 		$sql_array['SELECT'] .= ', tt.topic_id, tt.topic_title,
-			u.user_avatar AS lpa, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
-			uu.user_avatar AS fpa, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
+			u.user_avatar AS lpa, u.user_id AS lpa_id, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
+			uu.user_avatar AS fpa, uu.user_id AS fpa_id, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
 
 		$event['sql_ary'] = $sql_array ;
 	}
@@ -144,12 +145,14 @@ class listener implements EventSubscriberInterface
 		$forum_rows = $event['forum_rows'];
 
 		$forum_rows[$parent_id]['lpa']			= $row['lpa'];
+		$forum_rows[$parent_id]['lpa_id']		= $row['lpa_id'];
 		$forum_rows[$parent_id]['lpa_type']		= $row['lpa_type'];
 		$forum_rows[$parent_id]['lpa_width']	= $row['lpa_width'];
 		$forum_rows[$parent_id]['lpa_height']	= $row['lpa_height'];
 		$forum_rows[$parent_id]['lpa_username']	= $row['lpa_username'];
 
 		$forum_rows[$parent_id]['fpa']			= $row['fpa'];
+		$forum_rows[$parent_id]['fpa_id']		= $row['fpa_id'];
 		$forum_rows[$parent_id]['fpa_type']		= $row['fpa_type'];
 		$forum_rows[$parent_id]['fpa_width']	= $row['fpa_width'];
 		$forum_rows[$parent_id]['fpa_height']	= $row['fpa_height'];		
@@ -166,12 +169,14 @@ class listener implements EventSubscriberInterface
 				
 		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['fpa'], 
+									  'id'				=> $row['fpa_id'], 
 									  'avatar_type'		=> $row['fpa_type'], 
 									  'avatar_width'	=> $row['fpa_width'], 
 									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
 
 		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['lpa'], 
+									  'id'				=> $row['lpa_id'], 
 									  'avatar_type'		=> $row['lpa_type'], 
 									  'avatar_width'	=> $row['lpa_width'], 
 									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
@@ -189,12 +194,14 @@ class listener implements EventSubscriberInterface
 		
 		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['fpa'], 
+									  'id'				=> $row['fpa_id'], 
 									  'avatar_type'		=> $row['fpa_type'], 
 									  'avatar_width'	=> $row['fpa_width'], 
 									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
 		
 		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['lpa'], 
+									  'id'				=> $row['lpa_id'], 
 									  'avatar_type'		=> $row['lpa_type'], 
 									  'avatar_width'	=> $row['lpa_width'], 
 									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
@@ -217,8 +224,8 @@ class listener implements EventSubscriberInterface
 			'ON'	=> 'uu.user_id = t.topic_poster'
 		);
 
-		$sql_array['SELECT'] .= ', u.user_avatar AS lpa, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
-				uu.user_avatar AS fpa, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
+		$sql_array['SELECT'] .= ', u.user_avatar AS lpa, u.user_id AS lpa_id, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
+				uu.user_avatar AS fpa, uu.user_id AS fpa_id, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
 
 		$event['sql_array'] = $sql_array;
 	}

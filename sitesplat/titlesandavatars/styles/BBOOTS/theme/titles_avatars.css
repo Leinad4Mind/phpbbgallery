@@ -1,3 +1,7 @@
+.large20 {
+    width: 24% !important;
+}
+
 .section-index .table > tbody > tr > td {
     padding: 6px 9px;
 }
@@ -99,23 +103,29 @@
 
 .contributor-avatars ul a {
     display: inline-block;
-    transition: all 0s ease 0s;
+    -webkit-transition: all 0s ease 0s;
+            transition: all 0s ease 0s;
 }
 .contributor-avatars .shown img {
     opacity: 1;
+    filter: alpha(opacity=100);
 }
 .contributor-avatars .shown img {
     border-radius: 4px;
     max-height: 20px;
     max-width: 20px;
     opacity: 0.7;
+    filter: alpha(opacity=70);
     vertical-align: text-bottom;
 }
 .contributor-avatars .shown a img:focus, 
 .contributor-avatars .shown a img:hover {
     outline: 0 none;
 	opacity: 1;
-    transform: scale(1.7);
+	filter: alpha(opacity=100);
+    -webkit-transform: scale(1.7);
+        -ms-transform: scale(1.7);
+            transform: scale(1.7);
 }
 
 .memberlist-avatar img {

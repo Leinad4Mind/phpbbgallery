@@ -9,11 +9,11 @@ $(document).on("click", ".open-AvatarsDialog", function () {
 
 	$.ajax({
 		url: 'app.php/titlesandavatars/avatars.html?t=' + topicid + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("profileBBavatar"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #profileBBavatar").html( s );
 		}
 	});
 });
@@ -28,11 +28,11 @@ $(document).on("click", ".AvatarsPagination", function (e) {
 
 	$.ajax({
 		url: 'app.php/titlesandavatars/avatars.html?t=' + topicid + '&start=' + start + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("profileBBavatar"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #profileBBavatar").html( s );
 		}
 	});
 });
