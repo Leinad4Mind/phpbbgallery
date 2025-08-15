@@ -50,8 +50,8 @@ class bbpoints_module
 					$db->sql_query($sql);
 					$item_id = $db->sql_nextid();
 	
-					$amount = ($this->bbpoints_config['symbol_pos']) ? $this->bbpoints_config['currency'][0] . ' ' . number_format($request->variable('amount', 0), 2) :
-							  number_format($request->variable('amount', 0), 2) . ' ' . $this->bbpoints_config['currency'][0];
+					$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i> ' . number_format($request->variable('amount', 0), 2) :
+							  number_format($request->variable('amount', 0), 2) . ' ' . '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i>';
 					
 					$noti_ary = array(
 						'user_ids'		=> $request->variable('transfer_to', 0),
@@ -64,6 +64,7 @@ class bbpoints_module
 						'REFRESH_DATA'	=> array('time'	=> 3)
 					);
 					$this->bbpoints_helper->add_noti($noti_ary);
+					$phpbb_container->get('cache')->destroy('sql', array($this->bbpoints_table));
 
 					if ($request->is_ajax())
 					{

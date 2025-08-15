@@ -132,8 +132,8 @@ class listener implements EventSubscriberInterface
 		
 							if ($this->bbpoints_config['transfer_notify'] && 1 == 0)
 							{
-								$amount = ($this->bbpoints_config['symbol_pos']) ? $this->bbpoints_config['currency'][0] . ' ' . $this->request->variable('amount', 0) :
-										   $this->request->variable('amount', 0) . ' ' . $this->bbpoints_config['currency'][0];
+								$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i> ' . $this->request->variable('amount', 0) :
+										   $this->request->variable('amount', 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '></i>';
 								$noti_ary = array(
 									'user_ids'		=> $this->request->variable('transfer_to', 0),
 									'parent_id'		=> 0,
