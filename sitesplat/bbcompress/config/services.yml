@@ -10,6 +10,7 @@ services:
         tags:
             - { name: event.listener }
 
+# optimizer
     sitesplat.bbcompress.optimizers.service:
         class: sitesplat\bbcompress\optimizers\service
         arguments:
@@ -19,15 +20,23 @@ services:
             - '@user'
             - '%core.table_prefix%'
 
-    sitesplat.bbcompress.optimizers.TinyPNG:
+# optimizer drivers
+    sitesplat.bbcompress.optimizers.driver.TinyPNG:
         class: sitesplat\bbcompress\optimizers\driver\TinyPNG
         arguments:
             - '@config'
             - '@log'
             - '@user'
 
-    sitesplat.bbcompress.optimizers.PHP:
+    sitesplat.bbcompress.optimizers.driver.PHP:
         class: sitesplat\bbcompress\optimizers\driver\PHP
         arguments:
+            - '@log'
+            - '@user'
+
+    sitesplat.bbcompress.optimizers.driver.Kraken:
+        class: sitesplat\bbcompress\optimizers\driver\Kraken
+        arguments:
+            - '@config'
             - '@log'
             - '@user'

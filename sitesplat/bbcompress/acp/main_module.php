@@ -39,12 +39,37 @@ class main_module
 
 			switch($driver)
 			{
+				case 'Kraken':
+
+					$config->set('kraken_api_key', $request->variable('kraken_api_key', ''));
+					$config->set('kraken_api_secret', $request->variable('kraken_api_secret', ''));
+
+					$kraken = new \Kraken($config['kraken_api_key'], $config['kraken_api_secret']);
+					$data = $kraken->status();
+
+					if ($data['success'])
+					{
+						if (!$data['active'])
+						{
+							trigger_error($user->lang('ACP_KRAKEN_INACTIVE') . adm_back_link($this->u_action), E_USER_WARNING);
+						}
+					}
+					else
+					{
+						trigger_error($user->lang('ACP_KRAKEN_API_KEY_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+				break;
+
 				case 'PHP':
 				break;
 
 				case 'TinyPNG':
 
 					$config->set('tinify_api_key', $request->variable('tinify_api_key', ''));
+					$config->set('tinify_resize', $request->variable('tinify_resize', ''));
+					$config->set('tinify_width', $request->variable('tinify_width', 0));
+					$config->set('tinify_height', $request->variable('tinify_height', 0));
 
 					try
 					{
@@ -82,6 +107,11 @@ class main_module
 			'BBCOMPRESS_ALLOWED_AVATARS'	=> $config['bbcompress_allowed_avatars'],
 			'BBCOMPRESS_DRIVER'				=> $config['bbcompress_driver'],
 			'TINIFY_API_KEY'				=> $config['tinify_api_key'],
+			'TINIFY_RESIZE'					=> $config['tinify_resize'],
+			'TINIFY_WIDTH'					=> $config['tinify_width'],
+			'TINIFY_HEIGHT'					=> $config['tinify_height'],
+			'KRAKEN_API_KEY'				=> $config['kraken_api_key'],
+			'KRAKEN_API_SECRET'				=> $config['kraken_api_secret'],
 		));
 	}
 }

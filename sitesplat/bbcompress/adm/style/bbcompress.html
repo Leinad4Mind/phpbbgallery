@@ -1,3 +1,4 @@
+<!-- INCLUDECSS css/bbcompress.css -->
 <!-- INCLUDE overall_header.html -->
 
 <h1>{L_ACP_BBCOMPRESS} {L_SETTINGS}</h1>
@@ -15,7 +16,6 @@
 				<label><input type="radio" class="radio" name="bbcompress_allowed_posts" value="0"<!-- IF not BBCOMPRESS_ALLOWED_POSTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
-		<!--
 		<dl>
 			<dt>
 				<label for="bbcompress_allowed_avatars">{L_ACP_BBCOMPRESS_ALLOWED_AVATARS}{L_COLON}</label><br /><span>{L_ACP_BBCOMPRESS_ALLOWED_AVATARS_EXPLAIN}</span>
@@ -25,7 +25,6 @@
 				<label><input type="radio" class="radio" name="bbcompress_allowed_avatars" value="0"<!-- IF not BBCOMPRESS_ALLOWED_AVATARS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
-		-->
 	</fieldset>
 
 	<fieldset>
@@ -42,6 +41,22 @@
 		</dl>
 	</fieldset>
 
+	<fieldset id="kraken_options"<!-- IF BBCOMPRESS_DRIVER neq 'Kraken' --> class="hidden"<!-- ENDIF -->>
+		<dl>
+			<dt><label for="kraken_api_key">{L_ACP_KRAKEN_API_KEY}{L_COLON}</label><br /><span>{L_ACP_KRAKEN_API_KEY_EXPLAIN}</span></dt>
+			<dd>
+				<input type="text" id="kraken_api_key" name="kraken_api_key" value="{KRAKEN_API_KEY}" size="35" />
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="kraken_api_secret">{L_ACP_KRAKEN_API_SECRET}{L_COLON}</label><br /><span>{L_ACP_KRAKEN_API_SECRET_EXPLAIN}</span></dt>
+			<dd>
+				<input type="text" id="kraken_api_secret" name="kraken_api_secret" value="{KRAKEN_API_SECRET}" size="40" />
+			</dd>
+		</dl>
+	</fieldset>
+
 	<fieldset id="tinify_options"<!-- IF BBCOMPRESS_DRIVER neq 'TinyPNG' --> class="hidden"<!-- ENDIF -->>
 		<dl>
 			<dt><label for="tinify_api_key">{L_ACP_TINIFY_API_KEY}{L_COLON}</label><br /><span>{L_ACP_TINIFY_API_KEY_EXPLAIN}</span></dt>
@@ -49,6 +64,31 @@
 				<input type="text" id="tinify_api_key" name="tinify_api_key" value="{TINIFY_API_KEY}" size="35" />
 			</dd>
 		</dl>
+
+		<dl>
+			<dt><label for="tinify_resize">{L_ACP_TINIFY_RESIZE}{L_COLON}</label><br /><span>{L_ACP_TINIFY_RESIZE_EXPLAIN}</span></dt>
+			<dd>
+				<label><input type="radio" id="tinify_resize" name="tinify_resize" value=""<!-- IF not TINIFY_RESIZE --> checked="checked"<!-- ENDIF --> class="radio" /> {L_NO_RESIZE}</label>
+				<label><input type="radio" name="tinify_resize" value="scale"<!-- IF TINIFY_RESIZE eq 'scale' --> checked="checked"<!-- ENDIF --> class="radio" /> {L_RESIZE_SCALE}</label>
+				<label><input type="radio" name="tinify_resize" value="fit"<!-- IF TINIFY_RESIZE eq 'fit' --> checked="checked"<!-- ENDIF --> class="radio" /> {L_RESIZE_FIT}</label>
+				<label><input type="radio" name="tinify_resize" value="cover"<!-- IF TINIFY_RESIZE eq 'cover' --> checked="checked"<!-- ENDIF --> class="radio" /> {L_RESIZE_COVER}</label>
+			</dd>
+		</dl>
+
+		<div id="tinify_resize_options"<!-- IF not TINIFY_RESIZE --> class="hidden"<!-- ENDIF -->>
+			<dl>
+				<dt><label for="tinify_width">{L_ACP_TINIFY_WIDTH}{L_COLON}</label><br />{L_ACP_TINIFY_WIDTH_EXPLAIN}</dt>
+				<dd>
+					<input type="number" id="tinify_width" name="tinify_width" value="{TINIFY_WIDTH}" size="10" />
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="tinify_height">{L_ACP_TINIFY_HEIGHT}{L_COLON}</label><br />{L_ACP_TINIFY_HEIGHT_EXPLAIN}</dt>
+				<dd>
+					<input type="number" id="tinify_height" name="tinify_height" value="{TINIFY_HEIGHT}" size="10" />
+				</dd>
+			</dl>
+		</div>
 	</fieldset>
 
 	<fieldset class="submit-buttons">
@@ -59,19 +99,30 @@
 
 	{S_FORM_TOKEN}
 </form>
-
 <!-- INCLUDE overall_footer.html -->
-
 <script>
 $(function(){
 	$('#bbcompress_driver').on('change', function(){
-		if($(this).val() == 'TinyPNG')
+		$('#tinify_options').hide();
+		$('#kraken_options').hide();
+
+		switch ($(this).val())
 		{
-			$('#tinify_options').show();
+			case 'TinyPNG':
+				$('#tinify_options').show();
+			break;
+
+			case 'Kraken':
+				$('#kraken_options').show();
+			break;
 		}
-		else
-		{
-			$('#tinify_options').hide();
+	});
+
+	$('input[name="tinify_resize"]').on('change', function(){
+		if(this.value != '') {
+			$('#tinify_resize_options').show();
+		} else {
+			$('#tinify_resize_options').hide();
 		}
 	});
 });

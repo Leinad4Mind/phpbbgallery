@@ -29,11 +29,11 @@ class service
 		$this->user = $user;
 		$this->table_prefix = $table_prefix;
 
-		$this->set_driver($this->container->get('sitesplat.bbcompress.optimizers.' . $this->config['bbcompress_driver']));
+		$this->set_driver($this->container->get('sitesplat.bbcompress.optimizers.driver.' . $this->config['bbcompress_driver']));
 	}
 
 	/**
-	* Replaces the cache driver used by this cache service.
+	* Replaces the optimizer driver used by this optimizer service.
 	*
 	* @param \sitesplat\bbcompress\optimizers\driver\driver_interface $driver The optimizer driver
 	*/
@@ -48,7 +48,7 @@ class service
 
 		if ($this->driver->optimize_image($img_src))
 		{
-			// optimized? Nice! Count the saved storage and mark image optimized in DB
+			// optimized? Nice! Count the saved storage
 			clearstatcache();
 			$optimized_size = filesize($img_src);
 			$this->config->set('bbcompress_saved_storage', $this->config['bbcompress_saved_storage'] + $original_size - $optimized_size);

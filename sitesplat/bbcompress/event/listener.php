@@ -24,7 +24,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.modify_uploaded_file'						=> 'modify_uploaded_file',
-			//'core.avatar_driver_upload_move_file_before'	=> 'avatar_driver_upload_move_file_before',
+			'core.avatar_driver_upload_move_file_before'	=> 'avatar_driver_upload_move_file_before',
 			'core.get_logs_main_query_before'				=> 'get_logs_main_query_before',
 		);
 	}
@@ -61,7 +61,6 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-/*
 	public function avatar_driver_upload_move_file_before($event)
 	{
 		if($this->config['bbcompress_allowed_avatars'])
@@ -69,7 +68,6 @@ class listener implements EventSubscriberInterface
 			$this->optimizer->optimize_image($event['filedata']['filename']);
 		}
 	}
-*/
 
 	public function get_logs_main_query_before()
 	{

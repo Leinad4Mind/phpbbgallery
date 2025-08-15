@@ -41,6 +41,11 @@ class PHP implements \sitesplat\bbcompress\optimizers\driver\driver_interface
 			case 'image/png':
 
 				$image = imagecreatefrompng($img_src);
+				$background = imagecolorallocatealpha($image, 255, 0, 255, 127);
+				imagecolortransparent($image, $background);
+				imagealphablending($image, false);
+				imagesavealpha($image, true);
+
 				if (!$image || !imagepng($image, $img_src, 9))
 				{
 					$this->log->add('user', $this->user->data['user_id'] ?: 0, $this->user->ip ?: 0, 'LOG_PHP_PNG_PROBLEM');

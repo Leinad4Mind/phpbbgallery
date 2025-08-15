@@ -19,9 +19,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'LOG_TINIFY_ACCOUNT_PROBLEM'		=> '<strong>TinyPNG account problem</strong><br />» %s',
-	'LOG_TINIFY_SOURCE_IMAGE_PROBLEM'	=> '<strong>Tinify source image problem</strong><br />» %s',
+	'LOG_KRAKEN_PROBLEM'	    		=> '<strong>Kraken account error</strong><br />» %s',
 
-	'LOG_PHP_JPEG_PROBLEM'	=> '<strong>PHP optimization JPEG problem</strong><br />» %s',
-	'LOG_PHP_PNG_PROBLEM'	=> '<strong>PHP optimization PNG problem</strong><br />» %s',
+	'LOG_TINIFY_ACCOUNT_PROBLEM'		=> '<strong>TinyPNG account error</strong><br />» %s',
+	'LOG_TINIFY_SOURCE_IMAGE_PROBLEM'	=> '<strong>Tinify source image error</strong><br />» %s',
+
+	'LOG_PHP_JPEG_PROBLEM'				=> '<strong>PHP optimization JPEG error</strong><br />» %s',
+	'LOG_PHP_PNG_PROBLEM'				=> '<strong>PHP optimization PNG error</strong><br />» %s',
 ));

@@ -22,7 +22,7 @@ class TinyPNG implements \sitesplat\bbcompress\optimizers\driver\driver_interfac
 		$this->log = $log;
 		$this->user = $user;
 
-		\Tinify\setKey($this->config['tinify_api_key']);		
+		\Tinify\setKey($this->config['tinify_api_key']);
 	}
 
 	public function optimize_image($img_src)
@@ -30,6 +30,46 @@ class TinyPNG implements \sitesplat\bbcompress\optimizers\driver\driver_interfac
 		try
 		{
 			$source = \Tinify\fromFile($img_src);
+
+			// do we resize?
+			if ($this->config['tinify_resize'] != '')
+			{
+				// general params
+				$params = array(
+					'method'	=> $this->config['tinify_resize'],
+				);
+
+				// scale only accepts one of width-height pair...
+				if ($this->config['tinify_resize'] == 'scale')
+				{
+					// ... we will pick the one with higher value
+					if ($this->config['tinify_width'] > $this->config['tinify_height'])
+					{
+						$params += array(
+							'width'		=> (int) $this->config['tinify_width'],
+						);
+					}
+					else
+					{
+						$params += array(
+							'height'	=> (int) $this->config['tinify_height'],
+						);
+					}
+				}
+				// other options require both width and height
+				else
+				{
+					$params += array(
+						'width'		=> (int) $this->config['tinify_width'],
+						'height'	=> (int) $this->config['tinify_height'],
+					);
+				}
+
+				// resize!
+				$source = $source->resize($params);
+			}
+
+			// save compressed file
 			$source->toFile($img_src);
 		}
 		catch(\Tinify\AccountException $e)
