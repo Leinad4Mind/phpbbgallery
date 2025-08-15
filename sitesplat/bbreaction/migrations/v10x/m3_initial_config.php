@@ -38,7 +38,7 @@ class m3_initial_config extends \phpbb\db\migration\migration
 			array('config.add', array('rewards_multivote', 1)),
 			array('config.add',	array('rewards_percent', 1)),
 			array('config.add',	array('rewards_memberlist', 1)),
-			array('config.add',	array('rewards_progressbar', 1)),
+			array('config.add',	array('rewards_progressbar', 0)),
 		);
 	}
 }

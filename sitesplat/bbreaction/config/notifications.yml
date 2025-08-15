@@ -1,6 +1,4 @@
 services:
-# ----- BBreaction notification types -----
-# Scope MUST be prototype for all the plugins to work.
     sitesplat.bbreaction.notification.type.reward_added:
         class: sitesplat\bbreaction\notification\type\reward_added
         shared: false

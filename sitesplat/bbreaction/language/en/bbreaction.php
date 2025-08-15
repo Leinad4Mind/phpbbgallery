@@ -56,5 +56,3 @@ $lang = array_merge($lang, array(
 	
 	'BBREACTION_NOTI_EVENT_ADDED'		=> '<strong>BBreaction update</strong>:<br />A reaction has been %1$s to your post by %2$s.',
 ));
-
-?>

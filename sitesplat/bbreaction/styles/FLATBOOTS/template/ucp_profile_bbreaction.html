@@ -1,4 +1,5 @@
 <!-- INCLUDE ucp_header.html -->
+<!-- INCLUDECSS @sitesplat_bbreaction/bbreaction.css -->
 <div class="tab-pane active">
 <fieldset class="framed-ucp">
 <legend>{L_BBREACTION}</legend>
@@ -7,11 +8,7 @@
 <div class="col-md-6">
  <ul class="list-unstyled">
  <!-- BEGIN likestat -->
- 	<!-- IF BBREACTION_EMOJI and likestat.EMOJI -->
-		<li>{likestat.EMOJI}&nbsp;{likestat.GIVEN_RECIEVED}{L_COLON}&nbsp;{likestat.GIVE_RECIEVE}</li>
-	<!-- ELSE -->
-		<li><i class="fa {likestat.ICON}"></i>&nbsp;{likestat.GIVEN_RECIEVED}{L_COLON}&nbsp;{likestat.GIVE_RECIEVE}</li>
-	<!-- ENDIF -->
+	<li><!-- IF likestat.ICON --><i class="fa {likestat.ICON}"></i><!-- ENDIF --><!-- IF likestat.CONTENTS -->{likestat.CONTENTS}<!-- ENDIF -->&nbsp;{likestat.GIVEN_RECIEVED}{L_COLON}&nbsp;{likestat.GIVE_RECIEVE}</li>
  <!-- END likestat -->
  </ul>
 </div>
@@ -43,11 +40,7 @@
 			<tr>
 				<td><a href="{likes.SUBJECTURL}">{likes.SUBJECT}</a></td>
 				<td>
-					<!-- IF BBREACTION_EMOJI and likes.EMOJI -->
-						{likes.EMOJI}&nbsp;{likes.GIVE_RECIEVE}
-					<!-- ELSE -->
-						<i class="fa {likes.ICON}"></i>&nbsp;{likes.GIVE_RECIEVE}
-					<!-- ENDIF -->
+					<!-- IF likes.ICON --><i class="fa {likes.ICON}"></i><!-- ENDIF --><!-- IF likes.CONTENTS -->{likes.CONTENTS}<!-- ENDIF -->&nbsp;{likes.GIVE_RECIEVE}
 				</td>
 				<td class="center">{likes.LIKE_TIME}</td>
 				<td class="center mark">{likes.USERNAME}</td>

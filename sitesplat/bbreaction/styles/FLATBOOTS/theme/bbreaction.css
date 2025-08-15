@@ -46,7 +46,7 @@
   margin-left: .2em;
  
   /* you can be more comfortable with increased icons size */
-  /* font-size: 120%; */
+  font-size: 120%;
  
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
@@ -87,6 +87,14 @@
 
 .bbreactionbar {
     margin-top: 10px;
+}
+
+.bbreactionbar i {
+    vertical-align: middle;
+}
+
+.bbreactionbar .emoji {
+    vertical-align: top;
 }
 
 .forum-answer, .forum-answer .panel-body {
@@ -618,7 +626,7 @@ padding: 5px 0 0 10px;
     max-width: 70px;
 }
 .likers-time-stamp {
-    line-height: 1.5;
+    line-height: 0.8;
     margin-left: 3px;
     margin-top: 10px;
     vertical-align: middle;
@@ -673,13 +681,13 @@ padding: 5px 0 0 10px;
 }
 
 .bbreaction-wrap .emoji {
-    width: 26px;
+    width: 24px;
 }
 
 #bbreaction-profile-data .emoji {
     border: none;
     height: auto;
-    width: 28px;
+    width: 26px;
 }
 
 /* likeBB and shareon fix for posts*/

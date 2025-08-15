@@ -165,7 +165,7 @@ class reward_added extends \phpbb\notification\type\base
 	*/
 	public function get_email_template()
 	{
-		return '';
+		return false;
 	}
 
 	/**
@@ -185,7 +185,7 @@ class reward_added extends \phpbb\notification\type\base
 	*/
 	public function get_url()
 	{
-		return append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'p=' . $this->get_data('parent_id') . '#p' . $this->get_data('parent_id'));
+		return append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'p=' . $this->get_data('parent_id') . '#p' . $this->get_data('parent_id'));
 	}
 
 	/**
@@ -193,7 +193,7 @@ class reward_added extends \phpbb\notification\type\base
 	*/
 	public function get_redirect_url()
 	{
-		return '';
+		return $this->get_url();
 	}
 
 	/**
@@ -231,6 +231,6 @@ class reward_added extends \phpbb\notification\type\base
 		$this->set_data('poster_id', $data['poster_id']);
 		$this->set_data('parent_id', $data['parent_id']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

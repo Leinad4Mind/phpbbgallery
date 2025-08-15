@@ -39,9 +39,7 @@ class admin_controller implements admin_interface
 
 	protected $pagination;
 
-	protected $bbemoji_icons_table;
-	protected $bbemoji_parser;
-	protected $bbemoji_enabled = false;
+	protected $phpbb_dispatcher;
 	
 	protected $phpbb_root_path;
 
@@ -54,7 +52,7 @@ class admin_controller implements admin_interface
 	/** @var string Custom form action */
 	protected $u_action;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $reward_table, $reward_type_table, $bbemoji_icons_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $phpbb_root_path, $reward_table, $reward_type_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -64,18 +62,18 @@ class admin_controller implements admin_interface
 		$this->template = $template;
 		$this->user = $user;
 		$this->pagination = $pagination;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->root_path = $phpbb_root_path;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
 
-		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
-		{
-			$this->bbemoji_enabled = true;
-			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'), $this->template, $this->request, $this->user, $this->db, $bbemoji_icons_table);
-			$this->template->assign_vars(array(
-				'BBREACTION_EMOJI'	=> true,
-			));
-		}
+		/**
+		* Event to run code at the end of admin controller constructor
+		*
+		* @event sitesplat.bbreaction.admin_controller_construct
+		* @since 1.3.0
+		*/
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.admin_controller_construct'));
 	}
 
 	/**
@@ -88,6 +86,8 @@ class admin_controller implements admin_interface
 		$this->config->set('rewards_progressbar', $this->request->variable('rewards_progressbar', 0));
 		$this->config->set('rewards_memberlist', $this->request->variable('rewards_memberlist', 0));
 		$this->config->set('rewards_display_top', $this->request->variable('rewards_display_top', 0));
+		$this->config->set('rewards_allow_locked', $this->request->variable('rewards_allow_locked', 0));
+		$this->config->set('rewards_allow_global', $this->request->variable('rewards_allow_global', 0));
 		
 		// Log the action
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BBREACTION_DELETE_LOG', time());
@@ -125,16 +125,18 @@ class admin_controller implements admin_interface
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->template->assign_block_vars('reward', array(
+			$ary_tpl = array(
 				'RULE_ID'		=> $row['type_id'],
 				'GROUP_NAME'	=> $row['title'],
 				'SYMBOL'		=> $row['symbol'],
-				'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 				'S_POSITIVE'	=> ($row['positive']) ? false : true,
 				'S_SEPERATOR'	=> ($row['seperator']) ? false : true,
 				'S_NOTIFY'		=> $row['notify'],
 				'USED'			=> $row['used'],
 				'S_DELETEABLE'	=> ($row['active'] && $row['used'] > 0) ? false : true,
+
+				'CLASSLIST'		=> 'fa ' . $row['symbol'],
+				'CONTENTS'		=> '',
 				
 				'S_MIN_WEIGHT'	=> ($row['weight'] == $row['min']) ? true : false,
 				'S_MAX_WEIGHT'	=> ($row['weight'] == $row['max']) ? true : false,
@@ -144,8 +146,24 @@ class admin_controller implements admin_interface
 				'U_EDIT'		=> $this->u_action . '&amp;action=edit&amp;type_id=' . $row['type_id'],
 				'U_ACTIVE'		=> $this->u_action . '&amp;action=active&amp;type_id=' . $row['type_id'],
 				'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;type_id=' . $row['type_id'],
-				'U_SYNC'		=> $this->u_action . '&amp;action=sync&amp;type_id=' . $row['type_id'] . '&amp;hash=' . generate_link_hash('sync' . $row['type_id'])
-			));
+	//			'U_SYNC'		=> $this->u_action . '&amp;action=sync&amp;type_id=' . $row['type_id'] . '&amp;hash=' . generate_link_hash('sync' . $row['type_id'])
+			);
+
+			/**
+			* Event to modify reward template variables
+			*
+			* @event sitesplat.bbreaction.display_reward_types_tpl
+			* @var	array	row	Reward data
+			* @var	array	ary_tpl	Current reward template array
+			* @since 1.3.0
+			*/
+			$vars = array(
+				'row',
+				'ary_tpl',
+			);
+			extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.display_reward_types_tpl', compact($vars)));
+
+			$this->template->assign_block_vars('reward', $ary_tpl);
 
 			$likes['data'][] = array('y' => $row['used']);
 			$categories['data'][] = $row['title'];
@@ -158,13 +176,16 @@ class admin_controller implements admin_interface
 			'HITSTITLE'		=> '\'' . $this->user->lang['ACP_REACTIONS'] . '\'',
 			'LABELENABLE'	=> 'true',
 			'BTNEN'			=> 'false',
-			'MULTIVOTE'		=> ($this->config['rewards_multivote']) ? ' checked="checked"' : '',
-			'PERCENT'		=> ($this->config['rewards_percent']) ? ' checked="checked"' : '',
-			'PROGRESS'		=> ($this->config['rewards_progressbar']) ? ' checked="checked"' : '',
-			'MEMBERLIST'	=> ($this->config['rewards_memberlist']) ? ' checked="checked"' : '',
-			'DISPLAY_TOP'	=> ($this->config['rewards_display_top']) ? ' checked="checked"' : '',
+			'MULTIVOTE'		=> !empty($this->config['rewards_multivote']) ? ' checked="checked"' : '',
+			'PERCENT'		=> !empty($this->config['rewards_percent']) ? ' checked="checked"' : '',
+			'PROGRESS'		=> !empty($this->config['rewards_progressbar']) ? ' checked="checked"' : '',
+			'MEMBERLIST'	=> !empty($this->config['rewards_memberlist']) ? ' checked="checked"' : '',
+			'DISPLAY_TOP'	=> !empty($this->config['rewards_display_top']) ? ' checked="checked"' : '',
+			'ALLOW_LOCKED'	=> !empty($this->config['rewards_allow_locked']) ? ' checked="checked"' : '',
+			'ALLOW_GLOBAL'	=> !empty($this->config['rewards_allow_global']) ? ' checked="checked"' : '',
 
-			'U_ACTION'		=> $this->u_action,
+			'S_ACP_BBREACTION'	=> true,
+			'U_ACTION'			=> $this->u_action,
 		));
 	}
 
@@ -210,7 +231,7 @@ class admin_controller implements admin_interface
 		$symbol_option = (sizeof($symbol) > 1) ? $symbol[1] : '';
 		$symbol = (sizeof($symbol) > 1) ? $symbol[0] : $row['symbol'];
 
-		$this->template->assign_vars(array(
+		$tpl_ary = array(
 			'S_ADD'				=> (bool) !$type_id,
 			'S_EDIT'			=> (bool) $type_id,
 
@@ -218,7 +239,6 @@ class admin_controller implements admin_interface
 			'DESCRIPTION'		=> isset($row['description']) ? $row['description'] : '',
 			'ICONS'				=> $this->like_icon($symbol),
 			'OPTION'			=> $symbol_option,
-			'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_unparse($row['emoji']) : '',
 			'S_POSITIVE'		=> ($row['positive']) ? '' : ' checked="checked"',
 			'S_SEPERATOR'		=> ($row['seperator']) ? '' : ' checked="checked"',
 			'S_NOTIFY'			=> ($row['notify']) ? '' : ' checked="checked"',
@@ -226,7 +246,23 @@ class admin_controller implements admin_interface
 			'U_FORM_ACTION'		=> $this->u_action . '&amp;action=' . (($type_id) ? 'edit' : 'add') . '&amp;type_id=' . $type_id,
 			'U_ACTION'			=> $this->u_action,
 			'U_BACK'			=> $this->u_action,
-		));
+		);
+
+		/**
+		* Event to modify reward template variables
+		*
+		* @event sitesplat.bbreaction.save_reward_type_tpl
+		* @var	array	row	Reward data
+		* @var	array	tpl	Reward template array
+		* @since 1.3.0
+		*/
+		$vars = array(
+			'row',
+			'tpl_ary',
+		);
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.save_reward_type_tpl', compact($vars)));
+
+		$this->template->assign_vars($tpl_ary);
 	}
 
 	/**
@@ -244,11 +280,23 @@ class admin_controller implements admin_interface
 			'title'			=> utf8_normalize_nfc($this->request->variable('title', '', true)),
 			'description'	=> utf8_normalize_nfc($this->request->variable('description', '', true)),
 			'symbol'		=> utf8_normalize_nfc($this->request->variable('symbol', '', true)) . ' ' . utf8_normalize_nfc($this->request->variable('option', '', true)),
-			'emoji'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_parse($this->request->variable('emoji', '', true)) : '',
 			'positive'		=> !$this->request->variable('rule_positive', false),
 			'seperator'		=> !$this->request->variable('rule_seperator', false),
 			'notify'		=> !$this->request->variable('rule_notify', false),
 		);
+
+		/**
+		* Event to modify reward template variables
+		*
+		* @event sitesplat.bbreaction.submit_reward_type_data
+		* @var	array	row	Reward data
+		* @var	array	tpl	Reward template array
+		* @since 1.3.0
+		*/
+		$vars = array(
+			'data',
+		);
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.submit_reward_type_data', compact($vars)));
 
 		$sql = 'SELECT title FROM ' . $this->reward_type_table . ' WHERE type_id <> ' . $type_id;
 		$result = $this->db->sql_query($sql);

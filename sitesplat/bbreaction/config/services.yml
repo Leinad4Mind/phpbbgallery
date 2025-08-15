@@ -15,9 +15,9 @@ services:
             - '@controller.helper'
             - '@ext.manager'
             - '@service_container'
+            - '@dispatcher'
             - '%sitesplat.bbreaction.tables.reward%'
             - '%sitesplat.bbreaction.tables.reward_type%'
-            - '%core.table_prefix%emoji_icons'
             - '%tables.posts%'
             - '%tables.topics%'
         tags:
@@ -43,7 +43,6 @@ services:
             - '%core.php_ext%'
             - '%sitesplat.bbreaction.tables.reward%'
             - '%sitesplat.bbreaction.tables.reward_type%'
-            - '%core.table_prefix%emoji_icons'
 
     sitesplat.bbreaction.admin_controller:
         class: sitesplat\bbreaction\controller\admin_controller
@@ -56,8 +55,7 @@ services:
             - '@template'
             - '@user'
             - '@pagination'
-            - '@ext.manager'
+            - '@dispatcher'
             - '%core.root_path%'
             - '%sitesplat.bbreaction.tables.reward%'
             - '%sitesplat.bbreaction.tables.reward_type%'
-            - '%core.table_prefix%emoji_icons'
