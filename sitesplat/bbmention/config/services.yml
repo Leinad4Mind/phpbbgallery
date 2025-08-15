@@ -26,4 +26,4 @@ services:
     tags:
       - { name: notification.type }
     calls:
-      - [setBbmentionTables, [%core.table_prefix%groups, %core.table_prefix%user_group, %tables.users%]]
+      - [setBbmentionTables, ['%core.table_prefix%groups', '%core.table_prefix%user_group', '%tables.users%']]
