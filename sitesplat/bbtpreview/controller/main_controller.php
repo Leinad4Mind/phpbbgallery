@@ -1,0 +1,126 @@
+<?php
+/**
+*
+* Topic preview
+*
+* @copyright (c) 2016 ForumHulp.com <http://sitesplat.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
+
+namespace sitesplat\bbtpreview\controller;
+
+/**
+* Main controller
+*/
+class main_controller
+{
+	protected $config;
+	protected $user;
+	protected $request;
+	protected $auth;
+	protected $db;
+	protected $php_ext;
+
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, $php_ext)
+	{
+		$this->config = $config;
+		$this->user = $user;
+		$this->request = $request;
+		$this->auth = $auth;
+		$this->db = $db;
+		$this->php_ext = $php_ext;
+	}
+
+	/**
+	* Display the page
+	*
+	* @param string $route The route name for a page
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	* @access public
+	*/
+	public function display($route)
+	{
+		$route = preg_replace('/\\.[^.\\s]{3,4}$/', '', $route);
+		
+		switch($route)
+		{
+			case 'topic':
+				if (!$this->request->is_ajax())
+				{
+					exit();
+				}
+				
+				$topic_id = $this->request->variable('t', 0);
+
+				// Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'
+				if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], '&t=' . $topic_id) === false || isset($this->user->data['session_created'])))
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . ' SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . ' WHERE topic_id = ' . $topic_id;
+					$this->db->sql_query($sql);
+				}
+
+				$sql = 'SELECT t.topic_poster, t.topic_first_poster_name, t.topic_first_poster_colour, t.topic_first_post_id, t.topic_time, t.topic_last_post_time,
+						t.topic_views, t.topic_posts_approved, t.forum_id, p.post_subject, p.post_text, p.bbcode_bitfield, p.bbcode_uid, COUNT(a.attach_id) AS attachments,
+						u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, r.rank_title
+						FROM ' . TOPICS_TABLE . '	t
+						LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = t.topic_first_post_id
+						LEFT JOIN ' . ATTACHMENTS_TABLE . ' a ON a.topic_id = t.topic_id
+						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t.topic_poster
+						LEFT JOIN ' . RANKS_TABLE . ' r ON r.rank_id = u.user_rank
+						WHERE t.topic_id = ' . $topic_id;
+				$result = $this->db->sql_query($sql);
+				$row = $this->db->sql_fetchrow($result);
+		
+				if (!empty($row['topic_poster']) && $this->auth->acl_get('f_read', $row['forum_id']))
+				{
+					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					
+					$json_response = new \phpbb\json_response();
+					$json_response->send(array(
+						'url'			=> append_sid('viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&t=' . $topic_id),
+						'subject'		=> censor_text($row['post_subject']),
+						'message'		=> generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
+						'author'		=> '<a href="memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . (($row['user_avatar']) ? 
+								 str_replace(array('class="avatar bbtpreview_img"', 'alt=', './../../'), array('class="bbtpreview_img"', 'class="bbtpreview_img" title=', './'), phpbb_get_user_avatar(
+									array('avatar'			=> $row['user_avatar'], 
+										  'avatar_type'		=> $row['user_avatar_type'], 
+										  'avatar_width'	=> $row['user_avatar_width'], 
+										  'avatar_height'	=> $row['user_avatar_height']), $row['topic_first_poster_name'])) :
+										  '<img class="bbtpreview_img" title="' .  $row['topic_first_poster_name'] . '" src="' .
+										  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif">') . '</a>',
+						'author_rank'	=> $row['topic_first_poster_name'] . '<br />' . $row['rank_title'],
+						'starttime'		=> $this->user->format_date($row['topic_time']),
+						'messages'		=> $row['topic_posts_approved'],
+						'views'			=> $row['topic_views'],
+						'attachments'	=> $row['attachments'],
+						'topictime'		=> $this->secondsToTime($row['topic_last_post_time'] - $row['topic_time'])
+					));
+				}
+				exit();
+			break;
+
+			default:
+				exit();
+			break;
+		}
+	}
+
+	function secondsToTime($inputSeconds)
+	{
+		$secondsInAMinute = 60;
+		$secondsInAnHour  = 60 * $secondsInAMinute;
+		$secondsInADay    = 24 * $secondsInAnHour;
+	
+		$days = floor($inputSeconds / $secondsInADay);
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+	
+		$days = ($days) ? $days . ' '. $this->user->lang['DAYS'] : '';
+		$hours = ($hours) ? $hours . ' '. $this->user->lang['HOURS'] : '';
+		$minutes = ($minutes) ? $minutes . ' '. $this->user->lang['MINUTES'] : '';
+		return (($days) ? $days : '') . (($hours) ? ', ' . $hours : '') . (($minutes) ? ', ' . $minutes : '');
+	}
+}

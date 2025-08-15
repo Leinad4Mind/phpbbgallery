@@ -1,0 +1,35 @@
+{
+	"name": "sitesplat/bbtpreview",
+	"type": "phpbb-extension",
+	"description": "Adds an Ajax Topic preview on the topic list for a quick view of the first topic. It comes with some useful options like Ajax Views counter, Attachments, user info etc.",
+	"homepage": "http://sitesplat.com",
+	"version": "1.0.4",
+	"keywords": ["phpbb", "extension", "premium", "Topic preview", "SiteSplat"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBpreview",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.6,<3.2.*@dev"
+		},
+		"version-check": {
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb31/ext",
+            "filename": "bbtpreview.json"
+		}
+
+	}
+}
