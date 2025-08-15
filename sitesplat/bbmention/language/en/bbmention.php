@@ -24,4 +24,3 @@ $lang = array_merge($lang, array(
     'NOTIFICATION_BBMENTION'					=> '<strong>Mentioned</strong> by %1$s in:',
 	'NOTIFICATION_TYPE_BBMENTION'				=> 'Someone mentions you (or a group you lead) in a post',
 ));
-?>
