@@ -67,3 +67,21 @@ services:
     parent: sitesplat.bbemoji.listener
     tags:
       - { name: event.listener }
+
+  sitesplat.bbemoji.bbfront_listener:
+    class: sitesplat\bbemoji\event\bbfront_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbtitle_listener:
+    class: sitesplat\bbemoji\event\bbtitle_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+      
+  sitesplat.bbemoji.bbchat_listener:
+    class: sitesplat\bbemoji\event\bbchat_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }      

@@ -55,6 +55,9 @@ class listener implements EventSubscriberInterface
 			'core.search_modify_tpl_ary'			  => 'onSearchDisplaySubject',
 			'core.mcp_topic_review_modify_row'		  => 'onMcpDisplaySubject',
 			'core.mcp_post_template_data'		 	  => 'onMcpPostDisplaySubject',
+			'core.mcp_queue_get_posts_for_posts_query_before'	=> 'onMcpQueuePostQuery',
+			'core.mcp_queue_get_posts_modify_post_row'			=> 'onMcpQueuePostDisplaySubject',
+			'core.mcp_queue_get_posts_for_topics_query_before'	=> 'onMcpQueueTopicQuery',
 			'core.modify_text_for_storage_after'      => 'onStorage',
 			'core.text_formatter_s9e_configure_after' => 'onConfigure',
 			'core.text_formatter_s9e_parser_setup'    => 'onParserSetup',
@@ -322,6 +325,33 @@ class listener implements EventSubscriberInterface
 			$mcp_post_template_data['POST_SUBJECT'] = $this->render($this->parse($event['post_info']['post_subject']));
 			$event['mcp_post_template_data'] = $mcp_post_template_data;
 		}
+	}
+
+	public function onMcpQueuePostQuery($event)
+	{
+		$event['sql'] = str_replace('u.user_colour', 'u.user_colour, f.enable_subject_emoji', $event['sql']);
+		$event['sql'] = str_replace(TOPICS_TABLE . ' t', TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f', $event['sql']);
+		$event['sql'] = str_replace('AND u.user_id = p.poster_id', 'AND u.user_id = p.poster_id AND p.forum_id = f.forum_id', $event['sql']);
+	}
+
+	public function onMcpQueuePostDisplaySubject($event)
+	{
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$post_row = $event['post_row'];
+			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
+			$post_row['TOPIC_TITLE'] = $this->render($this->parse($post_row['TOPIC_TITLE']));
+			$event['post_row'] = $post_row;
+		}
+	}
+
+	public function onMcpQueueTopicQuery($event)
+	{
+		$event['sql'] = str_replace('AS user_colour', 'AS user_colour, f.enable_subject_emoji', $event['sql']);
+		$event['sql'] = str_replace(TOPICS_TABLE . ' t', TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f', $event['sql']);
+		$event['sql'] = str_replace('AND topic_delete_user <> 0', 'AND topic_delete_user <> 0 AND t.forum_id = f.forum_id', $event['sql']);
+		// fix ambiguity
+		$event['sql'] = str_replace('WHERE forum_id', 'WHERE t.forum_id', $event['sql']);
 	}
 
 	public function onParserSetup($event)
