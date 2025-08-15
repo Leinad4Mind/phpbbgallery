@@ -17,4 +17,5 @@ services:
             - @request
             - @auth
             - @dbal.conn
+            - @ext.manager
             - %core.php_ext%

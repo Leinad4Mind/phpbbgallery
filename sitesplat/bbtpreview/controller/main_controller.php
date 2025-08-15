@@ -20,16 +20,20 @@ class main_controller
 	protected $request;
 	protected $auth;
 	protected $db;
+	protected $extension_manager;
 	protected $php_ext;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\extension\manager $extension_manager, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
 		$this->request = $request;
 		$this->auth = $auth;
 		$this->db = $db;
+		$this->extension_manager = $extension_manager;
 		$this->php_ext = $php_ext;
+
+		$this->private_post_ext_enabled = $this->extension_manager->is_enabled('sitesplat/privatepost');
 	}
 
 	/**
@@ -60,9 +64,10 @@ class main_controller
 					$this->db->sql_query($sql);
 				}
 
+				$private_post = ($this->private_post_ext_enabled) ? ', p.post_private' : '';
 				$sql = 'SELECT t.topic_poster, t.topic_first_poster_name, t.topic_first_poster_colour, t.topic_first_post_id, t.topic_time, t.topic_last_post_time,
 						t.topic_views, t.topic_posts_approved, t.forum_id, p.post_subject, p.post_text, p.bbcode_bitfield, p.bbcode_uid, COUNT(a.attach_id) AS attachments,
-						u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, r.rank_title
+						u.user_avatar, u.user_avatar_type, user_id, u.user_avatar_width, u.user_avatar_height, r.rank_title' . $private_post . '
 						FROM ' . TOPICS_TABLE . '	t
 						LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = t.topic_first_post_id
 						LEFT JOIN ' . ATTACHMENTS_TABLE . ' a ON a.topic_id = t.topic_id
@@ -75,6 +80,13 @@ class main_controller
 				if (!empty($row['topic_poster']) && $this->auth->acl_get('f_read', $row['forum_id']))
 				{
 					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+
+					if ($this->private_post_ext_enabled && $row['post_private'] == '1' && $row['topic_poster'] != $this->user->data['user_id'] && !$this->auth->acl_get('f_seeprivateposts', $row['forum_id']))
+					{
+						$this->user->add_lang_ext('sitesplat/bbtpreview', 'bbtpreview');
+
+						$row['post_text'] = $this->user->lang('POST_PRIVATE');
+					}
 					
 					$json_response = new \phpbb\json_response();
 					$json_response->send(array(
@@ -84,6 +96,7 @@ class main_controller
 						'author'		=> '<a href="memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . (($row['user_avatar']) ? 
 								 str_replace(array('class="avatar bbtpreview_img"', 'alt=', './../../'), array('class="bbtpreview_img"', 'class="bbtpreview_img" title=', './'), phpbb_get_user_avatar(
 									array('avatar'			=> $row['user_avatar'], 
+									      'user_id'         => $row['user_id'],
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['topic_first_poster_name'])) :

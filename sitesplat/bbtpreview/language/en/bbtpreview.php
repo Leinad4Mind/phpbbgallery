@@ -20,5 +20,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'TOPICSTART'	=> 'Topic start time',
-	'TOPICTIME'		=> 'Topic active time'
+	'TOPICTIME'		=> 'Topic active time',
+	'POST_PRIVATE'	=> '[private post]',
 ));
