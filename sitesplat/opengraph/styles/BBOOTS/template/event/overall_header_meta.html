@@ -10,7 +10,10 @@
 	<meta property="og:description" content="{SITE_DESCRIPTION}">
 	<meta property="og:url" content="{URL_BBOPENGRAPH_INDEX}"> 
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="{IMG_OPENGRAPH}">
+	<!-- IF IMG_OPENGRAPH --><meta property="og:image" content="{IMG_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGTYPE_OPENGRAPH --><meta property="og:image:type" content="{IMGTYPE_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGWIDTH_OPENGRAPH --><meta property="og:image:width" content="{IMGWIDTH_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGHEIGHT_OPENGRAPH --><meta property="og:image:height" content="{IMGHEIGHT_OPENGRAPH}"><!-- ENDIF -->
 {% endif %}
 
 {% if BB_LOAD_IN_VIEWTOPIC %}
@@ -19,6 +22,9 @@
 	<meta property="og:title" content="{TITLE_OPENGRAPH}">
 	<meta property="og:description" content="{DESC_OPENGRAPH}">
 	<!-- IF IMG_OPENGRAPH --><meta property="og:image" content="{IMG_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGTYPE_OPENGRAPH --><meta property="og:image:type" content="{IMGTYPE_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGWIDTH_OPENGRAPH --><meta property="og:image:width" content="{IMGWIDTH_OPENGRAPH}"><!-- ENDIF -->
+	<!-- IF IMGHEIGHT_OPENGRAPH --><meta property="og:image:height" content="{IMGHEIGHT_OPENGRAPH}"><!-- ENDIF -->
 	<!-- IF BBTAG_OPENGRAPH --><meta property="article:tag" content="{BBTAG_OPENGRAPH}"><!-- ENDIF -->
 {% endif %}
 
