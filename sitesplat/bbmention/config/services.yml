@@ -2,20 +2,20 @@ services:
   sitesplat.bbmention.controller:
     class: sitesplat\bbmention\controller\controller
     arguments:
-      - @auth
-      - @dbal.conn
-      - @request
-      - @user
-      - %core.table_prefix%groups
-      - %tables.posts%
-      - %tables.topics%
-      - %tables.users%
+      - '@auth'
+      - '@dbal.conn'
+      - '@request'
+      - '@user'
+      - '%core.table_prefix%groups'
+      - '%tables.posts%'
+      - '%tables.topics%'
+      - '%tables.users%'
   sitesplat.bbmention.listener:
     class: sitesplat\bbmention\event\listener
     arguments:
-      - @controller.helper
-      - @notification_manager
-      - @template
+      - '@controller.helper'
+      - '@notification_manager'
+      - '@template'
     tags:
       - { name: event.listener }
   sitesplat.bbmention.notification:
