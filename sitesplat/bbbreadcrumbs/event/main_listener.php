@@ -22,7 +22,7 @@ class main_listener implements EventSubscriberInterface
 			'core.modify_mcp_modules_display_option'	=> 'add_breadcrumbs_to_module',
 
 			// memberlist
-			'core.memberlist_team_modify_template_vars'	=> 'add_breadcrumbs_to_memberlist_team',
+			'core.memberlist_team_modify_query'			=> 'add_breadcrumbs_to_memberlist_team',
 			// $mode == 'contact'
 			'core.memberlist_view_profile'				=> 'add_breadcrumbs_to_memberlist_profile',
 			// $mode == 'contactadmin'
