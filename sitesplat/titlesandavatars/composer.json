@@ -2,15 +2,15 @@
 	"name": "sitesplat/titlesandavatars",
 	"type": "phpbb-extension",
 	"description": "Enable the display of the user avatars in various forum locations like the forumlist, online list, memberslist and in topics as a contributors list. Allows enable/disable for each options.",
-	"homepage": "http://sitesplat.com",
-	"version": "1.2.8",
+	"homepage": "https://sitesplat.com",
+	"version": "1.2.9",
 	"keywords": ["phpbb", "extension", "avatar", "users", "BBOOTS", "FLATBOOTS", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
@@ -26,9 +26,10 @@
 			"phpbb/phpbb": ">=3.1.7,<3.2.*@dev"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "title_avatars.json"
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "title_avatars.json",
+			"ssl": true
 		}
 
 	}

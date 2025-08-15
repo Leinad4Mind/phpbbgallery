@@ -163,11 +163,20 @@
 .avatar-partecipants {
    margin-bottom: 5px;
 }
-.avatar-partecipants img{
+
+
+#AvatarsDialog .modal-body {
+    padding: 15px 18px 10px 10px;
+}
+
+.avatar-partecipants img {
     border: 4px solid #dedede;
     border-radius: 50%;
-	max-height: 70px;
-    max-width: 70px;
+    height: 70px;
+    width: 70px;
+    object-fit: cover;
+    max-width: 100%;
+	box-sizing: content-box;
 }
 .pagination-partecipants {
     bottom: -62px;
