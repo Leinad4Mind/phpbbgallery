@@ -378,6 +378,11 @@ class bblinks
 			// and replace the local links with the configured text replacements
 			foreach ($matches as $match)
 			{
+				if (empty($match['type']))
+				{
+					continue;
+				}
+
 				switch ($match['type'])
 				{
 					case LOCALURLTOTEXT_TYPE_FORUM:
