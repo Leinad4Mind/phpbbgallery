@@ -64,7 +64,7 @@ class main_controller
 				$sql_ary = array(
 					'SELECT'	=> 't.topic_poster, t.topic_first_poster_name, t.topic_first_poster_colour, t.topic_first_post_id, t.topic_time, t.topic_last_post_time,
 									t.topic_views, t.topic_posts_approved, t.forum_id, p.post_subject, p.post_text, p.bbcode_bitfield, p.bbcode_uid, COUNT(a.attach_id) AS attachments,
-									u.user_avatar, u.user_avatar_type, user_id, u.user_avatar_width, u.user_avatar_height, r.rank_title',
+									u.user_avatar, u.user_avatar_type, u.user_id, u.username, u.user_avatar_width, u.user_avatar_height, r.rank_title',
 					'FROM'		=> array(
 						TOPICS_TABLE	=> 't',
 					),
@@ -123,6 +123,7 @@ class main_controller
 					extract($this->dispatcher->trigger_event('sitesplat.bbtpreview.controller_response_before', compact($vars)));
 
 					$match = array();
+					$board_url = generate_board_url();
 					$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 								  phpbb_get_user_avatar(
 									  array('avatar'			=> $row['user_avatar'], 
@@ -130,16 +131,16 @@ class main_controller
 											'avatar_type'		=> $row['user_avatar_type'], 
 											'avatar_width'		=> $row['user_avatar_width'], 
 											'avatar_height'		=> $row['user_avatar_height'])), $match) :
-											generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+											$board_url . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 					
 					$json_response = new \phpbb\json_response();
 					$json_response->send(array(
-						'url'			=> append_sid('viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&t=' . $topic_id),
+						'url'			=> append_sid($board_url . '/viewtopic.php', 'f=' . $row['forum_id'] . '&amp;t=' . $topic_id),
 						'subject'		=> censor_text($row['post_subject']),
 						'message'		=> generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
-						'author'		=> '<a href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '"><img class="bbtpreview_img" alt="' . $this->user->lang['USER_AVATAR'] . '" src="' .
+						'author'		=> '<a href="' . append_sid($board_url . '/memberlist.php', 'mode=viewprofile&amp;u=' . $row['topic_poster']) . '"><img class="bbtpreview_img" alt="' . $this->user->lang['USER_AVATAR'] . '" src="' .
 											((sizeof($match) > 1) ? str_replace('./' . ((!$in_bbtags) ? '../../': ''), './', array_pop($match)) : $avatar) . '" /></a>',
-						'author_rank'	=>  '<a style="font-weight:bold;color:#' . $row['topic_first_poster_colour'] . '" href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . $row['topic_first_poster_name'] . '</a><br />' . $row['rank_title'],
+						'author_rank'	=>  '<a style="font-weight:bold;color:#' . $row['topic_first_poster_colour'] . '" href="' . append_sid($board_url . '/memberlist.php', 'mode=viewprofile&amp;u=' . $row['topic_poster']) . '">' . $row['topic_first_poster_name'] . '</a><br />' . $row['rank_title'],
 						'starttime'		=> $this->user->format_date($row['topic_time']),
 						'messages'		=> $row['topic_posts_approved'],
 						'views'			=> $row['topic_views'],
