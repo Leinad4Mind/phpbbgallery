@@ -68,10 +68,10 @@ class v100_m1_install_schema extends \phpbb\db\migration\container_aware_migrati
 			'bbcode_tag'	=> '-',
 			'bbcode_icon'	=> '',
 		),
-		array(
-			'bbcode_tag'	=> 'flash=',
-			'bbcode_icon'	=> 'font',
-		),
+	//	array(
+	//		'bbcode_tag'	=> 'flash=',
+	//		'bbcode_icon'	=> 'font',
+	//	),
 		array(
 			'bbcode_tag'	=> 'color=',
 			'bbcode_icon'	=> 'tint',

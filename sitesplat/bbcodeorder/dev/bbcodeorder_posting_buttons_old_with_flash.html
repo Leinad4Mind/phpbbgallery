@@ -1,0 +1,139 @@
+{% if S_BBCODE_ALLOWED %}
+	{% set IN_SNAPPY = S_SHOW_ATTACH_BTN %} {# sitesplat/snappy addition #}
+	{% set SELECTBOX_PRESENT = false %}
+	<div class="{% if IN_SNAPPY %}text-center{% else %}btn-toolbar{% endif %} btn-toolbar-bbcodeorder posting-btns" role="toolbar">
+
+	<div id="colour_palette_bbcode_order" style="display: none;">
+	 <div class="space10"></div>  
+	   <div id="color_palette_placeholder_bbcode_order" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></div>
+     <div class="space10"></div>
+	</div>
+    
+		<div class="btn-group">
+			{% for bbcode in loops.custom_tags %}
+				{% if bbcode.S_BBCODE_ALLOWED %}
+					{% if bbcode.BBCODE_TAG == 'b' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="0" title="{{ lang('BBCODE_B_HELP') }}">{{ lang('BBCODE_B') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="b" name="addbbcode0" onclick="bbstyle(0);" title="{{ lang('BBCODE_B_HELP') }}"><i class="fa fa-bold"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'i' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="2" title="{{ lang('BBCODE_I_HELP') }}">{{ lang('BBCODE_I') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="i" name="addbbcode2" onclick="bbstyle(2);" title="{{ lang('BBCODE_I_HELP') }}"><i class="fa fa-italic"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'u' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="4" title="{{ lang('BBCODE_U_HELP') }}">{{ lang('BBCODE_U') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="u" name="addbbcode4" onclick="bbstyle(4);" title="{{ lang('BBCODE_U_HELP') }}"><i class="fa fa-underline"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'list' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="10" title="{{ lang('BBCODE_L_HELP') }}">{{ lang('BBCODE_L') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="l" name="addbbcode10" onclick="bbstyle(10);" title="{{ lang('BBCODE_L_HELP') }}"><i class="fa fa-list"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'list=' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="12" title="{{ lang('BBCODE_O_HELP') }}">{{ lang('BBCODE_O') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="o" name="addbbcode12" onclick="bbstyle(12);" title="{{ lang('BBCODE_O_HELP') }}"><i class="fa fa-list-ol"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == '*' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="-1" title="{{ lang('BBCODE_LISTITEM_HELP') }}">{{ lang('BBCODE_LISTITEM') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="y" name="addlistitem" onclick="bbstyle(-1);" title="{{ lang('BBCODE_LISTITEM_HELP') }}"><i class="fa fa-asterisk"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'code' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="8" title="{{ lang('BBCODE_C_HELP') }}">{{ lang('BBCODE_C') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="c" name="addbbcode8" onclick="bbstyle(8);" title="{{ lang('BBCODE_C_HELP') }}"><i class="fa fa-code"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'quote' and S_BBCODE_QUOTE %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="6" title="{{ lang('BBCODE_Q_HELP') }}">{{ lang('BBCODE_Q') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="q" name="addbbcode6" onclick="bbstyle(6);" title="{{ lang('BBCODE_Q_HELP') }}"><i class="fa fa-comment"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'img' and S_BBCODE_IMG %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="14" title="{{ lang('BBCODE_P_HELP') }}">{{ lang('BBCODE_IMG') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="p" name="addbbcode14" onclick="bbstyle(14);" title="{{ lang('BBCODE_P_HELP') }}"><i class="fa fa-picture-o"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'url' and S_LINKS_ALLOWED %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="16" title="{{ lang('BBCODE_W_HELP') }}">{{ lang('BBCODE_URL') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="w" name="addbbcode16" onclick="bbstyle(16);" title="{{ lang('BBCODE_W_HELP') }}"><i class="fa fa-link"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'flash=' and S_BBCODE_FLASH %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="18" title="{{ lang('BBCODE_B_HELP') }}">{{ lang('BBCODE_FLASH') }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" accesskey="d" name="addbbcode18" onclick="bbstyle(18);" title="{{ lang('BBCODE_D_HELP') }}"><i class="fa fa-font"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'color=' %}
+						{% if not SELECTBOX_PRESENT %}
+							<button style="display: none;" class="btn btn-default" type="button" name="bbpalette" id="bbpalette" value="{L_FONT_COLOR}" onclick="change_palette();" title="{{ lang('BBCODE_S_HELP') }}"><i class="fa fa-tint"></i></button>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == 'size=' %}
+						{% if not SELECTBOX_PRESENT %}
+							<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+								<option value="50">{{ lang('FONT_TINY') }}</option>
+								<option value="85">{{ lang('FONT_SMALL') }}</option>
+								<option data-icon="fa fa-font" value="100" selected="selected">{{ lang('FONT_NORMAL') }}</option>
+								{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 %}
+									<option value="150">{{ lang('FONT_LARGE') }}</option>
+									{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 %}
+										<option value="200">{{ lang('FONT_HUGE') }}</option>
+									{% endif %}
+								{% endif %}
+							</select>
+						{% endif %}
+					{% elseif bbcode.BBCODE_TAG == '-' %}
+						</div>
+						<div class="btn-group">
+					{% elseif bbcode.BBCODE_TAG == '--' and not loop.last %}
+						{% set SELECTBOX_PRESENT = true %}
+						</div>
+						<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="bbcodeorder_selectbox" onchange="bbstyle(this.form.bbcodeorder_selectbox.options[this.form.bbcodeorder_selectbox.selectedIndex].value*1);this.form.bbcodeorder_selectbox.selectedIndex = 0;">
+							<option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
+					{% elseif bbcode.BBCODE_TAG != '--' %}
+						{% if SELECTBOX_PRESENT %}
+							<option value="{{ bbcode.BBCODE_ID }}" title="{{ bbcode.BBCODE_HELPLINE }}">{{ bbcode.BBCODE_TAG }}</option>
+						{% else %}
+							<button class="btn btn-default" type="button" onclick="bbstyle({{ bbcode.BBCODE_ID }}); return false;"title="{{ bbcode.BBCODE_HELPLINE }}"><i class="fa fa-{{ bbcode.BBCODE_ICON }}"></i>{% if not bbcode.BBCODE_ICON %}{{ bbcode.BBCODE_TAG }}{% endif %}</button>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% if SELECTBOX_PRESENT %}
+			</select>
+		{% else %}
+			</div>
+		{% endif %}
+		{% if IN_SNAPPY %}
+			<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
+		{% endif %}
+		
+	   {% if IN_IMGUR and S_SNAPPY %}
+		<div class="fileinput fileinput-new" data-provides="fileinput">
+			<button type="submit" name="add_image" title="{{ lang('BBCODEORDER_IMGUR_UPLOAD') }}" class="btn btn-success fileinput-exists" {% if not S_PRIVMSGS %}onclick="document.getElementById('postform').action += '#imgurAnchor';"{% endif %} data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-upload"></i></button>
+			<span class="btn btn-default btn-file">
+				<span class="fileinput-new"><i class="fa fa-imgur"></i></span>
+				<span class="fileinput-exists"><i class="fa fa-edit"></i></span>
+				<input type="file" name="imgur" id="imgur" maxlength="{FILESIZE}" />
+			</span>
+			<i class="fa fa-picture-o fileinput-exists"></i> <span class="fileinput-filename"></span>
+			<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float:none"><i class="fa fa-times"></i></a>
+		</div>
+       {% endif %}
+	
+	</div>
+{% endif %}
