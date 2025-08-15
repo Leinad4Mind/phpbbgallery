@@ -42,9 +42,8 @@ class m4_initial_module extends \phpbb\db\migration\migration
 					'modes'				=> array('manage'),
 				),
 			)),
-			array('module.add', array('ucp', 'UCP_PROFILE', 'UCP_BADGE_TITLE')),
 			array('module.add', array(
-				'ucp', 'UCP_BADGE_TITLE', array(
+				'ucp', 'UCP_PROFILE', array(
 					'module_basename'	=> '\sitesplat\badge\ucp\badge_module',
 					'auth'				=> 'ext_sitesplat/badge',
 					'modes'				=> array('badge'),

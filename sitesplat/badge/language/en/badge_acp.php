@@ -56,7 +56,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBAWARDS_VERSION'				=> '1.3.6',
+	'ACP_BBAWARDS_VERSION'				=> '1.3.8',
 	'ACP_BBAWARDS'						=> 'BBAwards',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	

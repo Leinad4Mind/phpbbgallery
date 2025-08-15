@@ -1,3 +1,7 @@
+.wrapper-head {
+    margin-top: 18px!important;
+}
+
 .badge-intro {
     position: relative;
     z-index: 999;

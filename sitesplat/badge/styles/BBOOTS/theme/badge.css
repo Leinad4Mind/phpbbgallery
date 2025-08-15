@@ -55,13 +55,13 @@
 
 .img-avatar > img {
     border-radius: 50%;
-    display: inline-block !important;
-    height: 34px !important;
-    width: auto !important;
+    display: inline-block;
+    height: 34px;
+    width: 34px;
 }
 
 .badges_postrow img {
-    height: auto !important;
+    height: 22px !important;
     width: 22px !important;
 }
 

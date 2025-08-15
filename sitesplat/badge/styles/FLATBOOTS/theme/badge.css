@@ -55,9 +55,9 @@
 
 .img-avatar > img {
     border-radius: 50%;
-    display: inline-block !important;
-    height: 34px !important;
-    width: 34px !important;
+    display: inline-block;
+    height: 34px;
+    width: 34px;
 }
 
 .badges_postrow img {
