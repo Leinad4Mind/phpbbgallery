@@ -168,12 +168,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function privacy_redirect()
 	{
-		if (!$this->user->data['is_registered'] || !empty($user->data['is_bot']) || $this->auth->acl_get('a_'))
-		{
-			return;
-		}
-
-		if ($this->user->data['user_privacy_accept_date'] == 0 && !$this->on_exception_page())
+		if ($this->user->data['is_registered'] && $this->user->data['user_privacy_accept_date'] == 0 && !$this->auth->acl_get('a_') && !$this->on_exception_page())
 		{
 			redirect($this->helper->route('sitesplat_bbgdpr_privacy'));
 		}
@@ -194,6 +189,10 @@ class main_listener implements EventSubscriberInterface
 	protected function on_exception_page()
 	{
 		$url = $this->request->server('REQUEST_URI', '');
+
+		list($junk, $script_path) = explode('//', generate_board_url());
+		$script_path = (string) strstr($script_path, '/');
+
 		// logout
 		if (strpos($url, 'ucp.') !== false && strpos($url, 'mode=logout') !== false)
 		{
@@ -201,19 +200,13 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		// privacy page itself
-		if (substr($url, -12) == 'privacy.html')
+		if (strpos($url, "{$script_path}/privacy") === 0)
 		{
 			return true;
 		}
 
-		// accept cookie
-		if (substr($url, -20) == 'bbgdpr/cookie/accept')
-		{
-			return true;
-		}
-
-		// reject cookie
-		if (substr($url, -20) == 'bbgdpr/cookie/reject')
+		// cookie
+		if (strpos($url, 'sitesplat/bbgdpr/cookie/') !== false)
 		{
 			return true;
 		}

@@ -3,8 +3,7 @@
     "type": "phpbb-extension",
     "description": "BBgdpr aims at making your phpBB board compatible with the GDPR policy, keeping you the Admin out of trouble :-)",
 	"homepage": "https://sitesplat.com",
-    "version": "1.0.4",
-    "time": "2018-04-23",
+    "version": "1.0.5",
 	"keywords": ["phpbb", "extension", "privacy", "user", "premium", "sitesplat", "cookie", "gdpr", "security"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -15,7 +14,7 @@
 		}
 	],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.6",
         "composer/installers": "~1.0",
         "fzaninotto/faker": "^1.7",
         "geoip2/geoip2": "^2.9"
