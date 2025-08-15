@@ -130,7 +130,7 @@ class main_controller
 											'avatar_type'		=> $row['user_avatar_type'], 
 											'avatar_width'		=> $row['user_avatar_width'], 
 											'avatar_height'		=> $row['user_avatar_height'])), $match) :
-											generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+											generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 					
 					$json_response = new \phpbb\json_response();
 					$json_response->send(array(

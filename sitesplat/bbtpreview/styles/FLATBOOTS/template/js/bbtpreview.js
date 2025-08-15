@@ -14,6 +14,7 @@ $(document).on("click", ".open-bbtpreview", function (event) {
 		url: boardurl + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
 		context: document.getElementById("BBTPreviewProfile"),
 		error: function (e, text, ee) {
+	//		console.log('error');
 		},
 		success: function (s, x) {
 			$(".modal-header #modal-title").html( s.subject );

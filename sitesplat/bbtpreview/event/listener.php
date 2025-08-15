@@ -73,7 +73,7 @@ class listener implements EventSubscriberInterface
 							   );
 			} else
 			{
-				$bbtpreview = true;	
+				$bbtpreview = true;
 			}		
 		} else
 		{

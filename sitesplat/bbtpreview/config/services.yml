@@ -2,21 +2,21 @@ services:
     sitesplat.bbtpreview.listener:
         class: sitesplat\bbtpreview\event\listener
         arguments:
-            - @dbal.conn
-            - @user
-            - @request
-            - @auth
-            - @template
-            - @service_container
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@auth'
+            - '@template'
+            - '@service_container'
         tags:
             - { name: event.listener }
     sitesplat.bbtpreview.controller:
         class: sitesplat\bbtpreview\controller\main_controller
         arguments:
-            - @config
-            - @user
-            - @request
-            - @auth
-            - @dbal.conn
-            - @dispatcher
-            - %core.php_ext%
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@auth'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '%core.php_ext%'
