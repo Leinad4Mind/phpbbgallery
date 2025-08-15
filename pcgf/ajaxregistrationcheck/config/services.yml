@@ -15,4 +15,3 @@ services:
             - '@dbal.conn'
             - '@user'
             - '@dispatcher'
-            - '@?rmcgirr83.stopforumspam.mainlistener'

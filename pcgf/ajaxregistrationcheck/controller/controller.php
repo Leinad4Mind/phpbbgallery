@@ -30,28 +30,23 @@ class controller
     /** @var dispatcher $dispatcher phpBB event dispatcher */
     protected $dispatcher;
 
-    /** @var null|main_listener $sfs Stop Forum Spam listener object */
-    protected $sfs;
-
     /**
      * Controller constructor
      *
      * @access public
      * @since  1.0.0
      *
-     * @param request            $request    Request object
-     * @param factory            $db         Database object
-     * @param user               $user       User object
-     * @param dispatcher         $dispatcher phpBB event dispatcher
-     * @param main_listener|null $sfs        Stop Forum Spam listener object
+     * @param request    $request    Request object
+     * @param factory    $db         Database object
+     * @param user       $user       User object
+     * @param dispatcher $dispatcher phpBB event dispatcher
      */
-    public function __construct(request $request, factory $db, user $user, dispatcher $dispatcher, main_listener $sfs = null)
+    public function __construct(request $request, factory $db, user $user, dispatcher $dispatcher)
     {
         $this->request = $request;
         $this->db = $db;
         $this->user = $user;
         $this->dispatcher = $dispatcher;
-        $this->sfs = $sfs;
     }
 
     /**
@@ -158,19 +153,6 @@ class controller
                         }
                     }
                 break;
-            }
-            if ($this->sfs !== null)
-            {
-                // Check if user is banned via Stop Forum Spam
-                $error = array();
-                $data = array(
-                    'username' => isset($username) ? $username : '',
-                    'email'    => isset($email) ? $email : '',
-                );
-                // Trigger registration check event to get the Stom Forum Spam result
-                $vars = array('error', 'data');
-                extract($this->dispatcher->trigger_event('core.ucp_register_data_after', compact($vars)));
-                $response_text[2] = $error[0];
             }
         }
         $response->send($response_text);

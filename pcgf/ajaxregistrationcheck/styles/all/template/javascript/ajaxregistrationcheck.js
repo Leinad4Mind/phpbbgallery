@@ -1,5 +1,3 @@
-var pcgfAJAXRegistrationCheckSFS = $('#pcgf-ajaxregistrationcheck-sfs');
-var pcgfAJAXRegistrationCheckSFSField = $('#pcgf-ajaxregistrationcheck-sfs-field');
 var pcgfAJAXRegistrationCheckUsername = $('#pcgf-ajaxregistrationcheck-username');
 var pcgfAJAXRegistrationCheckEMail = $('#pcgf-ajaxregistrationcheck-email');
 var pcgfAJAXRegistrationCheckPassword = $('#pcgf-ajaxregistrationcheck-password');
@@ -27,13 +25,6 @@ function setLoading(message, messageField, field) {
 }
 
 $(document).ready(function() {
-    pcgfAJAXRegistrationCheckSFS.insertAfter($('fieldset.fields2').get(0));
-    pcgfAJAXRegistrationCheckSFSField.on('change', function() {
-        var value = $(this).val();
-        pcgfAJAXRegistrationCheckSFS.html(value);
-        $(this).get(0).setCustomValidity(value);
-    });
-    pcgfAJAXRegistrationCheckSFSField.trigger('change');
     var passwordField = $('#new_password');
     var passwordConfirmationField = $('#password_confirm');
     pcgfAJAXRegistrationCheckConfirmPassword.insertAfter(passwordConfirmationField);
@@ -169,11 +160,6 @@ $(document).ready(function() {
                         // Username not allowed for any reason
                         setInvalid(result[1], pcgfAJAXRegistrationCheckUsername, usernameField);
                     }
-                    if (result[2] !== null) {
-                        pcgfAJAXRegistrationCheckSFSField.val(result[2]).trigger('change');
-                    } else {
-                        pcgfAJAXRegistrationCheckSFSField.val('').trigger('change');
-                    }
                 }
             });
         }
@@ -203,11 +189,6 @@ $(document).ready(function() {
                     } else {
                         // The E-Mail address is not allowed for any reason
                         setInvalid(result[1], pcgfAJAXRegistrationCheckEMail, eMailField);
-                    }
-                    if (result[2] !== null) {
-                        pcgfAJAXRegistrationCheckSFSField.val(result[2]).trigger('change');
-                    } else {
-                        pcgfAJAXRegistrationCheckSFSField.val('').trigger('change');
                     }
                 }
             });
