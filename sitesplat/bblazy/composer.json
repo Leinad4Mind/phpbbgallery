@@ -1,10 +1,10 @@
 {
 	"name": "sitesplat/bblazy",
 	"type": "phpbb-extension",
-	"description": "Boost your Google ranking and make your forum mobile friendly by sparing users bandwidth with BBlazy. Lazy-load all images. User posts signatures, avatars, BBcode linked images, attachments.",
+	"description": "Lazy-load all posted images",
 	"homepage": "http://sitesplat.com",
 	"version": "1.0.0",
-	"keywords": ["phpbb", "extension", "BBlazy", "BBOOTS", "FLATBOOTS", "sitesplat"],
+	"keywords": ["phpbb", "extension", "lazyloading", "BBOOTS", "FLATBOOTS", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
