@@ -40,3 +40,10 @@ services:
             - '@config'
             - '@log'
             - '@user'
+
+    sitesplat.bbcompress.optimizers.driver.ImageOptim:
+        class: sitesplat\bbcompress\optimizers\driver\ImageOptim
+        arguments:
+            - '@config'
+            - '@log'
+            - '@user'

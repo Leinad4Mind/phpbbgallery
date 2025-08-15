@@ -41,6 +41,15 @@
 		</dl>
 	</fieldset>
 
+	<fieldset id="imageoptim_options"<!-- IF BBCOMPRESS_DRIVER neq 'ImageOptim' --> class="hidden"<!-- ENDIF -->>
+		<dl>
+			<dt><label for="imageoptim_username">{L_ACP_IMAGEOPTIM_USERNAME}{L_COLON}</label><br /><span>{L_ACP_IMAGEOPTIM_USERNAME_EXPLAIN}</span></dt>
+			<dd>
+				<input type="text" id="imageoptim_username" name="imageoptim_username" value="{IMAGEOPTIM_USERNAME}" size="35" />
+			</dd>
+		</dl>
+	</fieldset>
+
 	<fieldset id="kraken_options"<!-- IF BBCOMPRESS_DRIVER neq 'Kraken' --> class="hidden"<!-- ENDIF -->>
 		<dl>
 			<dt><label for="kraken_api_key">{L_ACP_KRAKEN_API_KEY}{L_COLON}</label><br /><span>{L_ACP_KRAKEN_API_KEY_EXPLAIN}</span></dt>
@@ -105,6 +114,7 @@ $(function(){
 	$('#bbcompress_driver').on('change', function(){
 		$('#tinify_options').hide();
 		$('#kraken_options').hide();
+		$('#imageoptim_options').hide();
 
 		switch ($(this).val())
 		{
@@ -114,6 +124,10 @@ $(function(){
 
 			case 'Kraken':
 				$('#kraken_options').show();
+			break;
+
+			case 'ImageOptim':
+				$('#imageoptim_options').show();
 			break;
 		}
 	});

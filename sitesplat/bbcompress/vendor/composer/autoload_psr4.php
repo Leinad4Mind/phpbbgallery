@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Tinify\\' => array($vendorDir . '/tinify/tinify/lib/Tinify'),
+    'ImageOptim\\' => array($vendorDir . '/imageoptim/imageoptim/src'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
 );

@@ -1,0 +1,26 @@
+<?php
+/**
+*
+* BBcompress
+*
+* @copyright (c) 2016 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
+namespace sitesplat\bbcompress\migrations;
+
+class release_2_1_0 extends \phpbb\db\migration\migration
+{
+	static public function depends_on()
+	{
+		return array('\sitesplat\bbcompress\migrations\release_2_0_1');
+	}
+
+	public function update_data()
+	{
+		return array(
+			array('config.add', array('imageoptim_username', '')),
+		);
+	}
+}

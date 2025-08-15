@@ -36,6 +36,7 @@ class release_1_0_0 extends \phpbb\db\migration\migration
 				'ACP_BBCOMPRESS_TITLE',
 				array(
 					'module_basename'	=> '\sitesplat\bbcompress\acp\main_module',
+					'modes'				=> array('settings'),
 				),
 			)),
 		);

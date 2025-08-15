@@ -82,6 +82,12 @@ class main_module
 					}
 
 				break;
+
+				case 'ImageOptim':
+
+					$config->set('imageoptim_username', $request->variable('imageoptim_username', ''));
+
+				break;
 			}
 
 			trigger_error($user->lang('ACP_BBCOMPRESS_SETTING_SAVED') . adm_back_link($this->u_action));
@@ -112,6 +118,7 @@ class main_module
 			'TINIFY_HEIGHT'					=> $config['tinify_height'],
 			'KRAKEN_API_KEY'				=> $config['kraken_api_key'],
 			'KRAKEN_API_SECRET'				=> $config['kraken_api_secret'],
+			'IMAGEOPTIM_USERNAME'			=> $config['imageoptim_username'],
 		));
 	}
 }

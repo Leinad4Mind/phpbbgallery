@@ -26,4 +26,9 @@ $lang = array_merge($lang, array(
 
 	'LOG_PHP_JPEG_PROBLEM'				=> '<strong>PHP optimization JPEG error</strong><br />» %s',
 	'LOG_PHP_PNG_PROBLEM'				=> '<strong>PHP optimization PNG error</strong><br />» %s',
+
+	'LOG_IMAGEOPTIM_ARGUMENT_PROBLEM'	=> '<strong>ImageOptim argument error</strong><br />» %s',
+	'LOG_IMAGEOPTIM_NETWORK_PROBLEM'	=> '<strong>ImageOptim network error</strong><br />» %s',
+	'LOG_IMAGEOPTIM_NOT_FOUND_PROBLEM'	=> '<strong>ImageOptim did not find image error</strong><br />» %s',
+	'LOG_IMAGEOPTIM_SERVER_PROBLEM'		=> '<strong>ImageOptim origin server error</strong><br />» %s',
 ));

@@ -40,6 +40,9 @@ $lang = array_merge($lang, array(
 	'ACP_OPTIMIZER_DRIVER'						=> 'Optimizer driver',
 	'ACP_OPTIMIZER_DRIVER_EXPLAIN'				=> 'Select from available list of optimizer drivers. Selected driver will optimize images before they are stored. Additional options may show up for selected driver, please, review them carefuly.',
 
+	'ACP_IMAGEOPTIM_USERNAME'					=> 'ImageOptim username',
+	'ACP_IMAGEOPTIM_USERNAME_EXPLAIN'			=> 'Please fill in an API username to start compressing images. Visit <a href="https://im2.io/register" target="_blank">ImageOptim API account registration page</a> to get an API username.',
+
 	'ACP_KRAKEN_API_KEY'						=> 'Kraken API key',
 	'ACP_KRAKEN_API_KEY_EXPLAIN'				=> 'Please fill in an API key to start compressing images. Visit <a href="https://kraken.io/account" target="_blank">Kraken Account section</a> to get an API key.',
 	'ACP_KRAKEN_API_SECRET'						=> 'Kraken API secret',
