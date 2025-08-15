@@ -37,8 +37,15 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
+	/**	prev function - used to replace all links and images - now images only
+	*	$event['html'] = preg_replace(
+	*		'(<(?>a\\b[^>]*\\bhref|img\\b[^>]*\\bsrc)="http(?=://))Ui',
+	*		'$0s',
+	*		$html
+	*	);
+	*/	
 		$event['html'] = preg_replace(
-			'(<(?>a\\b[^>]*\\bhref|img\\b[^>]*\\bsrc)="http(?=://))Ui',
+			'(<img\\b[^>]*\\bsrc="http(?=://))Ui',
 			'$0s',
 			$html
 		);
