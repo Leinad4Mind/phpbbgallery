@@ -1,0 +1,22 @@
+imports:
+    - { resource: profile_part.yml }
+
+services:
+    sitesplat.bbprofile.controller:
+        class: sitesplat\bbprofile\controller\main
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+
+    sitesplat.bbprofile.listener:
+        class: sitesplat\bbprofile\event\main_listener
+        arguments:
+            - '@config'
+            - '@user'
+            - '@template'
+            - '@auth'
+            - '@sitesplat.bbprofile.profile_parts.manager'
+        tags:
+            - { name: event.listener }

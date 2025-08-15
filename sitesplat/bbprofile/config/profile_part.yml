@@ -1,0 +1,81 @@
+services:
+    sitesplat.bbprofile.profile_parts.manager:
+        class: sitesplat\bbprofile\profile_parts\manager
+        arguments:
+            - '@user'
+            - '@profilefields.manager'
+            - '@config_text'
+            - '@sitesplat.bbprofile.profile_parts.parts_collection'
+
+    sitesplat.bbprofile.profile_parts.parts.base:
+        class: sitesplat\bbprofile\profile_parts\parts\base
+        abstract: true
+        arguments:
+            - '@user'
+            - '@language'
+            - '@config'
+            - '@auth'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+# ----- Profile parts -----
+    sitesplat.bbprofile.profile_parts.parts_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.birthdate:
+        class: sitesplat\bbprofile\profile_parts\parts\birthdate
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.signature:
+        class: sitesplat\bbprofile\profile_parts\parts\signature
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.avatar:
+        class: sitesplat\bbprofile\profile_parts\parts\avatar
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.facebook:
+        class: sitesplat\bbprofile\profile_parts\parts\facebook
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.twitter:
+        class: sitesplat\bbprofile\profile_parts\parts\twitter
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.skype:
+        class: sitesplat\bbprofile\profile_parts\parts\skype
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.youtube:
+        class: sitesplat\bbprofile\profile_parts\parts\youtube
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.googleplus:
+        class: sitesplat\bbprofile\profile_parts\parts\googleplus
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }
+
+    sitesplat.bbprofile.profile_parts.parts.first_post:
+        class: sitesplat\bbprofile\profile_parts\parts\first_post
+        parent: sitesplat.bbprofile.profile_parts.parts.base
+        tags:
+            - { name: sitesplat.bbprofile.profile_parts.parts }

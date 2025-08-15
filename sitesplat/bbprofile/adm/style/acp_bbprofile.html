@@ -1,0 +1,50 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_BBPROFILE} {L_SETTINGS}</h1>
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl>
+			<dt><label for="bbprofile_position">{L_BBPROFILE_LABEL}</label><br><span>{L_BBPROFILE_LABEL_EXPLAIN}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="bbprofile_position" value="ucp" <!-- IF BBPROFILE_POSITION eq 'ucp' -->checked="checked"<!-- ENDIF -->/> {L_UCP_ONLY}</label> &nbsp;
+				<label><input type="radio" class="radio" id="bbprofile_position" name="bbprofile_position" value="header" <!-- IF BBPROFILE_POSITION eq 'header' -->checked="checked"<!-- ENDIF --> /> {L_OVEARALL_HEADER}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="bbprofile_enabled">{L_BBPROFILE_ENABLED}</label><br><span>{L_BBPROFILE_ENABLED_EXPLAIN}</span></dt>
+			<dd>
+				<select multiple size="9" id="bbprofile_enabled" name="bbprofile_enabled[]">
+					{% for part in parts %}
+						<option value="{{ part.ID }}"{% if part.SELECTED %} selected{% endif %}>{{ part.LABEL }}</option>
+					{% endfor %}
+				</select>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="bbprofile_hide_for_admins">{L_BBPROFILE_HIDE_FOR_ADMINS}</label></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="bbprofile_hide_for_admins" value="1" <!-- IF BBPROFILE_HIDE_FOR_ADMINS -->checked="checked"<!-- ENDIF -->/> {L_YES}</label> &nbsp;
+				<label><input type="radio" class="radio" id="bbprofile_hide_for_admins" name="bbprofile_hide_for_admins" value="0" <!-- IF not BBPROFILE_HIDE_FOR_ADMINS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="bbprofile_hide_for_mods">{L_BBPROFILE_HIDE_FOR_MODS}</label></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="bbprofile_hide_for_mods" value="1" <!-- IF BBPROFILE_HIDE_FOR_MODS -->checked="checked"<!-- ENDIF -->/> {L_YES}</label> &nbsp;
+				<label><input type="radio" class="radio" id="bbprofile_hide_for_mods" name="bbprofile_hide_for_mods" value="0" <!-- IF not BBPROFILE_HIDE_FOR_MODS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

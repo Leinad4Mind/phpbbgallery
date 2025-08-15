@@ -1,0 +1,92 @@
+<style>
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+        border-top-width: 1px;
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+        border-left-width: 1px;
+    border-radius: 3px;
+}
+
+.shadow-base {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.21);
+}
+
+.card-title {
+    color: #212529;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+}
+
+.tx-inverse {
+    color: #343a40;
+}
+
+.mg-b-5 {
+    margin-bottom: 5px;
+}
+.display-4 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1.1;
+}
+
+
+.bg-primary {
+    background-color: #0866C6 !important;
+}
+
+
+.progress {
+    height: auto;
+}
+
+.progress-bar {
+    height: 1rem;
+    line-height: 1rem;
+    color: #fff;
+    background-color: #0866C6;
+    transition: width 0.6s ease;
+}
+
+
+
+</style>
+
+
+<div class="card shadow-base card-body pd-25 bd-0 mg-t-20">
+              <div class="row">
+                
+				<div class="col-sm-6">
+                 <div class="panel-body">
+				  <h6 class="card-title tx-uppercase tx-12">{{ lang('COMPLETE_PROFILE_TITLE') }}</h6>
+                  <p class="display-4 tx-medium tx-inverse mg-b-5 tx-lato">{{ COMPLETED_PERCENTAGE }}%</p>
+                 
+				  <div class="progress">
+					  <div class="progress-bar" role="progressbar" aria-valuenow="{{ COMPLETED_PERCENTAGE }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ COMPLETED_PERCENTAGE }}%;">
+						{{ L_COMPLETED_PERCENTAGE }}
+					  </div>
+					</div>
+				  
+                  <p class="tx-12">
+	               <span class="goal">{{ APPEAL_TEXT }}</span> </p>
+                  <p class="tx-11 lh-3 mg-b-0"><a class="btn btn-info btn-xs" href="{{ APPEAL_BUTTON_URL }}">{{ APPEAL_BUTTON_LABEL }}</a></p>
+                 </div>
+				</div><!-- col-6 -->
+				
+                <div class="col-sm-6 mg-t-20 mg-sm-t-0 d-flex align-items-center justify-content-center">
+                  <span class="task-icon {{ APPEAL_ICON }}"></span>
+                </div><!-- col-6 -->
+				
+              </div><!-- row -->
+       </div>
+	   <div class="space10"></div>
+	   <div class="space10"></div>
