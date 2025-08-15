@@ -104,6 +104,8 @@ class main_listener implements EventSubscriberInterface
 	public function set_permissions($event)
 	{
 		$event->update_subarray('permissions', 'u_phpbb_ads', ['lang' => 'ACL_U_PHPBB_ADS', 'cat' => 'misc']);
+		$event->update_subarray('permissions', 'a_phpbb_ads_m', ['lang' => 'ACL_A_PHPBB_ADS_M', 'cat' => 'misc']);
+		$event->update_subarray('permissions', 'a_phpbb_ads_s', ['lang' => 'ACL_A_PHPBB_ADS_S', 'cat' => 'misc']);
 	}
 
 	/**
@@ -158,7 +160,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function adblocker()
 	{
-		$this->template->assign_var('S_DISPLAY_ADBLOCKER', $this->config['phpbb_ads_adblocker_message']);
+		$this->template->assign_var('S_DISPLAY_ADBLOCKER', (int) $this->config['phpbb_ads_adblocker_message']);
 	}
 
 	/**
