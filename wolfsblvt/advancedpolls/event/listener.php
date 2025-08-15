@@ -53,12 +53,45 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
+			'core.permissions'								=> 'adv_polls_permissions',				// permissions
+			'core.user_setup'								=> 'load_language_on_setup',			// language for notifications
 			'core.posting_modify_submission_errors'			=> 'check_config_for_polls',			// posting check before saving
 			'core.posting_modify_template_vars'				=> 'config_for_polls_to_template',		// posting to template
 			'core.submit_post_modify_sql_data'				=> 'save_config_for_polls',				// posting to db
 			'core.viewtopic_modify_poll_data'				=> 'do_poll_voting_modifications',		// viewtopic to db
 			'core.viewtopic_modify_poll_template_data'		=> 'do_poll_template_modifications',	// viewtopic to template
 		);
+	}
+
+	/**
+	 * Adds the permission to the right permission category
+	 *
+	 * @param object $event The event object
+	 * @return void
+	 */
+	public function adv_polls_permissions($event)
+	{
+		$permissions = array_merge($event['permissions'], array(
+				'f_seevoters'		=> array('lang' => 'ACL_F_SEEVOTERS', 'cat' => 'polls'),
+				'm_seevoters'		=> array('lang' => 'ACL_M_SEEVOTERS', 'cat' => 'misc'),
+			));
+		$event['permissions'] = $permissions;
+	}
+
+	/**
+	* Load common language files during user setup
+	*
+	* @param object $event The event object
+	* @return void
+	*/
+	public function load_language_on_setup($event)
+	{
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'wolfsblvt/advancedpolls',
+			'lang_set' => 'advancedpolls_common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	/**
