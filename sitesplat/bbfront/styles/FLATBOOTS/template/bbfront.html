@@ -155,7 +155,9 @@
 </script>
 	{% INCLUDEJS '@sitesplat_bbfront/js/masonry.pkgd.min.js' %}
 	{% INCLUDEJS '@sitesplat_bbfront/js/imagesloaded.pkgd.min.js' %}
-	{% if BBFRONT_INFINITE_SCROLL %}{% INCLUDEJS '@sitesplat_bbfront/js/infinite-scroll.pkgd.min.js' %}{% endif %}
+	{% if BBFRONT_INFINITE_SCROLL %}
+	   {% INCLUDEJS '@sitesplat_bbfront/js/infinite-scroll.pkgd.min.js' %}
+	{% endif %}
 	{% INCLUDEJS '@sitesplat_bbfront/js/anime.min.js' %}
 	{% INCLUDEJS '@sitesplat_bbfront/js/timeago.min.js' %}
 
