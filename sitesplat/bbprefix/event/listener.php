@@ -21,18 +21,22 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $manager;
 	protected $table_prefix;
+	protected $bb_prefix = false;
 	protected $setup_has_been_run = false;
 
 	static public function getSubscribedEvents()
 	{
 		return [
 			'core.user_setup'							=> 'setup',
-			'core.viewtopic_modify_page_title'			=> 'get_viewtopic_topic_prefix',
 			'core.viewforum_modify_topicrow'			=> 'get_topiclist_topic_prefixes',
+			'core.viewtopic_modify_page_title'			=> 'get_viewtopic_topic_prefix',
 			'core.submit_post_end'						=> 'manage_prefixes_on_posting',
 			'core.posting_modify_template_vars'			=> 'generate_posting_form',
 			'core.mcp_view_forum_modify_topicrow'		=> 'get_topiclist_topic_prefixes',
+			'core.viewforum_get_topic_data'				=> 'prefilter_viewforum_by_prefix',
+			'core.viewforum_get_announcement_topic_ids_data' => 'hack_out_announcements',
 			'core.viewforum_get_topic_ids_data'			=> 'filter_viewforum_by_prefix',
+			'core.pagination_generate_page_link'		=> 'fix_viewforum_base_url',
 			'core.display_forums_modify_sql'			=> 'modify_forumlist_sql',
 			'core.display_forums_modify_template_vars'	=> 'get_forumlist_topic_prefixes',
 			'core.search_modify_tpl_ary'				=> 'get_searchlist_topic_prefixes', 
@@ -188,21 +192,77 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Allow showing only topics with the given prefix in viewforum
-	 *
-	 * @var Event $event
+	 * Functions to show approved topics with the given prefix in viewforum
 	 */
-	public function filter_viewforum_by_prefix($event)
+	public function prefilter_viewforum_by_prefix($event)
 	{
 		if ($prefix = $this->request->variable('prefix', 0))
 		{
+			$this->bb_prefix = (int) $prefix;
+
+			// approved topics only (a necessary hack)
+			$sql_where = 't.topic_visibility = ' . ITEM_APPROVED . " AND pr.prefix = {$this->bb_prefix} AND pr.topic = t.topic_id ";
+
+			$sql_ary = $event['sql_array'];
+			if (!empty($sql_ary['WHERE'])) {
+				$sql_ary['WHERE'] .= " AND $sql_where";
+			}
+			else {
+				$sql_ary['WHERE'] = $sql_where;
+			}
+
+			// LEFT JOIN will mess up topic count, so use CROSS JOIN
+			$sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
+
+			// reset topic count
+			$cnt_ary = $sql_ary;
+			$cnt_ary['SELECT'] = 'COUNT(topic_id) AS cnt';
+			$sql = $this->db->sql_build_query('SELECT', $cnt_ary);
+			$result = $this->db->sql_query($sql);
+			$event['topics_count'] = (int) $this->db->sql_fetchfield('cnt');
+			$this->db->sql_freeresult($result);
+
+			$event['sql_array'] = $sql_ary;
+		}
+	}
+
+	public function hack_out_announcements($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// remove announcements from display (a necessary hack)
 			$sql_ary = $event['sql_ary'];
-			$sql_ary['LEFT_JOIN'] = [[
-				'FROM'  => array(BBPREFIX_INSTANCES_TABLE => 'pr'),
-				'ON'    => 'pr.topic = t.topic_id',
-			]];
-			$sql_ary['WHERE'] .= 'AND pr.prefix = ' . (int) $prefix . ' ';
+			$sql_ary['SELECT'] = 't.topic_id';
+			$sql_ary['FROM'] = [TOPICS_TABLE => 't'];
+			$sql_ary['WHERE'] = '1 = 0';
+			unset($sql_ary['LEFT_JOIN'], $sql_ary['ORDER_BY']);
 			$event['sql_ary'] = $sql_ary;
+		}
+	}
+
+	public function filter_viewforum_by_prefix($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// disable sorting (a necessary hack)
+			$this->container->get('template')->assign_var('S_SELECT_SORT_DAYS', false);
+
+			// approved topics only (a necessary hack)
+			$sql_ary = $event['sql_ary'];
+			$sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
+			$sql_ary['WHERE'] .= ' AND t.topic_visibility = ' . ITEM_APPROVED . " AND pr.prefix = {$this->bb_prefix} AND pr.topic = t.topic_id ";
+			$event['sql_ary'] = $sql_ary;
+		}
+	}
+
+	public function fix_viewforum_base_url($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// add the prefix to query string in pagination
+			$url = $event['base_url'];
+			$delim = strpos($url, '?') ? '&amp;' : '?';
+			$event['base_url'] = $url . "{$delim}prefix={$this->bb_prefix}";
 		}
 	}
 
