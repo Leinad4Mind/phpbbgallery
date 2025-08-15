@@ -1,0 +1,271 @@
+#available_prefixes {
+	background-color: transparent;
+	color: #555;
+    height: 100%;
+    list-style: outside none none;
+    min-height: 80px;
+	max-width: 260px;
+    min-width: 124px;
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+}
+
+#used_prefixes {
+	background-color: transparent;
+    height: 28px;
+    line-height: 28px;
+    list-style: outside none none;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+#available_prefixes li{
+	padding:2px;
+	cursor:pointer;
+}
+
+/* uncomment if many prefixes are used */
+#available_prefixes li {
+    float: left;
+}
+
+
+#used_prefixes li {
+	padding:0 2px 0;
+	float:left;
+	cursor:pointer;
+}
+
+#used_prefixes li:first-child {
+    margin-left: 2px;
+}
+
+#available_prefixes li:hover {
+    background-color:transparent;
+}
+
+
+li.prefix_placeholder {
+	background-color:#e1ebf2;
+}
+
+#available_prefixes img,
+#used_prefixes img,
+.selectpicker img {
+    max-width: 20px;
+    vertical-align: middle;
+	display: inline-block;
+}
+
+
+.section-viewforum .desc-wrapper img.img-post,
+.section-viewforum .desc-wrapper img.postimage,
+.section-search .desc-wrapper img.img-post,
+.section-search .desc-wrapper img.postimage {
+    max-width: 20px;
+    vertical-align: middle;
+	display: inline-block;
+}
+
+.section-viewtopic .side-segment img.img-post,
+.section-viewtopic .side-segment img.postimage,
+.section-index img.img-post,
+.section-index img.postimage {
+    max-width: 20px;
+    vertical-align: middle;
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.section-viewtopic .side-segment .label {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+#postingbox .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a i.check-mark {
+    margin-top: 6.5px;
+    right: 0;
+}
+
+.section-viewtopic .side-segment .label,
+.section-index .last-wrapper .label {
+    font-size: 12px;
+    padding: 0.2em 0.4em;
+    text-transform: unset;
+    vertical-align: middle;
+}
+
+.section-viewtopic .side-segment .label{
+    font-size: 12px;
+    padding:0.4em 0.4em 0.2em;
+    text-transform: unset;
+    vertical-align: middle;
+}
+
+.ui-sortable-handle i {
+    vertical-align: text-bottom;
+}
+
+.ui-sortable li.ui-state-default {   
+    margin: 0;   
+    height: 45px;  
+    line-height: 48px;  
+    font-size: 1.4em;   
+    color: #fff;  
+    outline: 0;  
+    padding: 0;  
+    margin: 0;  
+    text-indent: 15px;  
+    background: #C1C1C1;
+    border-top: 1px solid rgba(255,255,255,.2);  
+    border-bottom: 1px solid rgba(0,0,0,.1);  
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);  
+    font-size: 1.1em;  
+    position: relative;  
+    cursor: pointer;  
+}  
+	
+.ui-sortable li.ui-state-default:first-child {  
+    border-top: 0;   
+}  
+	
+.ui-sortable li.ui-state-default:last-child {  
+    border-bottom: 0;  
+}  
+	
+.ui-sortable {   
+    margin: 0 auto;  
+    list-style-type: none; 
+    padding: 0;   
+}  
+	
+.ui-sortable-placeholder {  
+    border: 2px dashed #aaa;  
+    height: 28px;  
+    background: #fafafa;  
+}  
+	
+
+
+.prefix-popover-wrapper {
+  position: relative;
+}
+.prefix-popover {
+  opacity: 0;
+  display:none;
+  position: absolute;
+  padding: 10px;
+  text-align: center;
+  background-color: #ececec;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+.prefix-popover.is-visible {
+  opacity: 1;
+  display:block;
+}
+
+/* original fixed position and no border possible
+.prefix-popover:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ececec;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+original fixed position and no border possible */
+
+.prefix-popover::after {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #ccc;
+    content: "";
+    height: 0;
+    left: 50%;
+	margin-left: auto;
+    margin-right: auto;
+    margin-top: 6px;
+    position: absolute;
+    right: 0;
+    width: 0;
+}
+
+
+.prefix-popover.prefix-popover--top {
+  left: 50%;
+  bottom: 100%;
+  -webkit-transform: translate(-50%, -30px);
+          transform: translate(-50%, -30px);
+}
+.prefix-popover.prefix-popover--top:after {
+  top: calc(100% - 6px);
+  right: calc(50% - 6px);
+}
+
+
+.prefix-popover.prefix-popover--bottom {
+  left: 50%;
+  top: 100%;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  -webkit-transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, -webkit-transform 0.3s ease;
+}
+.prefix-popover.prefix-popover--bottom.is-visible {
+  -webkit-transform: translate(-50%, 40px);
+          transform: translate(-50%, 40px);
+}
+.prefix-popover.prefix-popover--bottom:after {
+  top: -6px;
+  left: calc(50% - 6px);
+}
+
+
+.prefix-popover.prefix-popover--left {
+  right: 100%;
+  top: 50%;
+  margin-right: 40px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.prefix-popover.prefix-popover--left:after {
+  top: calc(50% - 6px);
+  right: -6px;
+}
+
+
+.prefix-popover.prefix-popover--right {
+  left: 100%;
+  top: 50%;
+  margin-left: 40px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.prefix-popover.prefix-popover--right:after {
+  top: calc(50% - 6px);
+  left: -6px;
+}
+
+
+
+#PrefixBtn {
+    -webkit-transition: width 0.2s ease;
+    -moz-transition: width 0.2s ease;
+    -o-transition: width 0.2s ease;
+    transition: width 0.2s ease;
+    display: none;
+}
+#PrefixBtn.in {
+	display: table-cell;
+	margin: 0;
+    padding: 0;
+    width: 220px;
+	max-height: 30px;
+	border-right: 1px;
+}
