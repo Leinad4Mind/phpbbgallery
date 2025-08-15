@@ -63,7 +63,7 @@ class listener implements EventSubscriberInterface
 		$this->db = $db;
 		$this->config = $config;
 		$this->user = $user;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = generate_board_url() . '/';
 		$this->path_helper = $path_helper;
 		$this->badge_rules_table = $badge_rules_table;
 		$this->badge_types_table = $badge_types_table;
@@ -137,14 +137,15 @@ class listener implements EventSubscriberInterface
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-			
-		if (!defined('ADMIN_START') && $row['user_id'])
+
+		//fix by Dion
+		if (!defined('ADMIN_START') && !empty($row['user_id']))
 		{
 			$notification_data = unserialize($row['notification_data']);
 			
 			$this->template->assign_vars(array(
 				'NOTIFY_NEW_BADGE'	=> true,
-				'NEW_BADGE'			=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
+				'NEW_BADGE'			=> $this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge'],
 				'RULE_NAME'			=> addslashes($row['rule_name']),
 				'RULE_DESCR'		=> addslashes($row['rule_description']),
 				'BADGE_WHOHOO'		=> sprintf($this->user->lang['BADGE_WHOHOO'], $this->controller_helper->route('badge_award_controller', array('route' => 'index.html', 'u' => $row['user_id'])))
@@ -196,7 +197,7 @@ class listener implements EventSubscriberInterface
 		{
 			if ($i < $this->config['badgeaward_amount'])
 			{
-				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . '" style="vertical-align:middle;width:16px;height:16px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '"></a> ';
+				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . '" style="vertical-align:middle;width:16px;height:16px;" src="' . $this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge'] . '"></a> ';
 			}
 			$i++;
 		}

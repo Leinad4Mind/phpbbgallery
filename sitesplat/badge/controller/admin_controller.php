@@ -270,19 +270,20 @@ class admin_controller implements admin_interface
 		{
 			$this->submit_badge_rule($rule_id);
 		}
-
+		
 		// Get data for the badge rule so we can display it
 		$rule_data = $this->get_rule_data($rule_id);
 
 		// Process the badge data for display in the template
-		$this->display_available_badges($rule_data['badge_id']);
-		$this->build_type_menu($rule_data['rule_type_id']);
+		if ($rule_data) {
+			$rule_data['options'] = str_pad(decbin($rule_data['options']), 2, '0', STR_PAD_LEFT);
+			$this->build_rules_list($rule_id);
+		}
 		
 		$this->build_user_list($rule_id);
-		$this->build_rules_list($rule_id);
-		
-		$rule_data['options'] = str_pad(decbin($rule_data['options']), 2, '0', STR_PAD_LEFT);
-		
+		$this->display_available_badges($rule_data['badge_id'] ?? 0);
+		$this->build_type_menu($rule_data['rule_type_id'] ?? 0);
+
 		$this->template->assign_vars(array(
 			'S_ADD'				=> (bool) !$rule_id,
 			'S_EDIT'			=> (bool) $rule_id,
@@ -307,7 +308,7 @@ class admin_controller implements admin_interface
 			'S_OPTION2'			=> (isset($rule_data['rule_name']) && ($rule_data['rule_type_name'] == 'sitesplat.badge.type.profilewall')) ? true : false,
 			'S_OPTION2_SWITCH'	=> (isset($rule_data['rule_name']) && $rule_data['rule_type_name'] == 'sitesplat.badge.type.profilewall') ? (substr($rule_data['options'], 1, 2) ? true : false) : '',
 			
-			'U_FORM_ACTION'		=> $this->u_action . '&amp;action=' . (($rule_id) ? 'edit' : 'add') . '&amp;rule_id=' . $rule_id,
+			'U_FORM_ACTION'		=> $this->u_action . '&amp;action=' . (($rule_id) ? "edit&amp;rule_id=$rule_id" : 'add'),
 			'U_ACTION'			=> $this->u_action,
 			'U_BACK'			=> $this->u_action,
 		));
@@ -404,7 +405,7 @@ class admin_controller implements admin_interface
 
 		$sql = 'SELECT rule_name FROM ' . $this->badge_rules_table . ' WHERE rule_id <> ' . $rule_id;
 		$result = $this->db->sql_query($sql);
-		$rule_names = $this->db->sql_fetchrow();
+		$rule_names = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 		
 		if ($data['rule_name'] == '' || (is_array($rule_names) && in_array($data['rule_name'], $rule_names)))
@@ -452,16 +453,19 @@ class admin_controller implements admin_interface
 	 * @return array An badge rule and it's associated data
 	 * @access public
 	 */
-	protected function get_rule_data($id)
+	protected function get_rule_data($id = 0)
 	{
-		$sql = 'SELECT r.*, b.badge, t.rule_type_name
-			FROM ' . $this->badge_rules_table . ' r
-			LEFT JOIN ' . $this->badge_badges_table . ' b ON b.badge_id = r.badge_id
-			LEFT JOIN ' . $this->badge_types_table . ' t ON t.rule_type_id = r.rule_type_id
-			WHERE rule_id = ' . (int) $id;
-		$result = $this->db->sql_query($sql);
-		$rule_data = $this->db->sql_fetchrow();
-		$this->db->sql_freeresult($result);
+		$rule_data = false;
+		if ($id) {
+			$sql = 'SELECT r.*, b.badge, t.rule_type_name
+				FROM ' . $this->badge_rules_table . ' r
+				LEFT JOIN ' . $this->badge_badges_table . ' b ON b.badge_id = r.badge_id
+				LEFT JOIN ' . $this->badge_types_table . ' t ON t.rule_type_id = r.rule_type_id
+				WHERE rule_id = ' . (int) $id;
+			$result = $this->db->sql_query($sql);
+			$rule_data = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+		}
 
 		return $rule_data;
 	}
@@ -484,7 +488,7 @@ class admin_controller implements admin_interface
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		return $rows;
+		return $rows ?: [];
 	}
 
 	/**
@@ -502,7 +506,7 @@ class admin_controller implements admin_interface
 			ORDER BY badge';
 		$result = $this->db->sql_query($sql);
 
-		while ($row = $this->db->sql_fetchrow())
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->template->assign_block_vars('badges', array(
 				'BADGE_ID'		=> $row['badge_id'],
