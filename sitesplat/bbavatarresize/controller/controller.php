@@ -16,6 +16,7 @@ use phpbb\user;
 use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\controller\helper;
+use phpbb\event\dispatcher_interface;
 
 /**
 * Main controller
@@ -29,10 +30,11 @@ class controller
 	protected $template;
 	protected $container;
 	protected $helper;
+	protected $dispatcher;
 	protected $php_ext;
 	protected $root_path;
 
-	public function __construct(config $config, driver_interface $db, user $user, request_interface $request, template $template, ContainerInterface $container, helper $helper, $php_ext, $root_path)
+	public function __construct(config $config, driver_interface $db, user $user, request_interface $request, template $template, ContainerInterface $container, helper $helper, dispatcher_interface $dispatcher, $php_ext, $root_path)
 	{
 		$this->config		= $config;
 		$this->db			= $db;
@@ -41,6 +43,7 @@ class controller
 		$this->template		= $template;
 		$this->container	= $container;
 		$this->helper		= $helper;
+		$this->dispatcher	= $dispatcher;
 		$this->php_ext		= $php_ext;
 		$this->root_path	= $root_path;
 	}
@@ -85,6 +88,15 @@ class controller
 			SET ' . $this->db->sql_build_array('UPDATE', $result) . '
 			WHERE user_id = ' . (int) $this->user->data['user_id'];
 		$this->db->sql_query($sql);
+
+		/**
+		* Trigger events on successfull avatar change
+		*
+		* @event sitesplat.bbavatarresize.change_after
+		* @var	array	result	Array with data stored in DB
+		*/
+		$vars = array('result');
+		extract($this->dispatcher->trigger_event('sitesplat.bbavatarresize.change_after', compact($vars)));
 
 		$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'UCP_PROFILE_AVATAR'";
 		$result = $this->db->sql_query($sql);
@@ -182,7 +194,10 @@ class controller
 
 	protected function resize($data)
 	{
-		$nJPEGCompression = 100; 
+//		$nJPEGCompression = 100;
+//		small difference in quality, big difference in file size! (Dion)
+		$nJPEGCompression = 90;
+
 		file_put_contents($data['meta']->filename, $data['output']['data']);
 
 		$sImgSourceFilename = $data['meta']->filename;
@@ -228,6 +243,11 @@ class controller
 				if ($doResize)
 				{
 					$imgScaled = ImageCreateTrueColor($nImgWidth, $nImgHeight);
+
+					// Preserve alpha transparency (Dion)
+					@imagealphablending($imgScaled, false);
+					@imagesavealpha($imgScaled, true);
+
 					if (imagecopyresampled($imgScaled, $imgSource, 0, 0, 0, 0, $nImgWidth, $nImgHeight, $data['output']['width'], $data['output']['height']))
 					{
 						switch ($type['format'])

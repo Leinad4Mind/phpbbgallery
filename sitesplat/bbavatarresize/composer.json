@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows uploaded avatars to be cropped, resized via in browser canvas and smartly working around the dreadful avatar image size error",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"keywords": ["phpbb", "extension", "ucp", "avatar", "cosmetic", "sitesplat"],
 	"license": "@license Proprietary",
 	"authors": [
