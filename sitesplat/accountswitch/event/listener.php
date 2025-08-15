@@ -69,14 +69,14 @@ class listener implements EventSubscriberInterface
 					'USER_ID'	=> $row['user_id'],
 					'URL'		=> $this->helper->route('sitesplat_accountswitch_controller', array('route' => $row['username'])),
 					'AVATAR'	=> (($row['user_avatar']) ? 
-								 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'class="online_img" title=', './'), phpbb_get_user_avatar(
+								   str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'alt=', $this->board_url),
+								   phpbb_get_user_avatar(
 									array('avatar'			=> $row['user_avatar'], 
 									      'user_id'         => $row['user_id'],
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-										  '<img class="online_img" title="' .  $row['username'] . '" src="' .
-										  $this->board_url . 'styles/prosilver/theme/images/no_avatar.gif">')
+										  '<img class="online_img" src="' . $this->board_url . 'styles/prosilver/theme/images/no_avatar.gif" alt="' .  $row['username'] . '">')
 				));
 			}
 		}
@@ -110,13 +110,12 @@ class listener implements EventSubscriberInterface
 		{
 			$post_row_ary[] = array(
 				'AVATAR' => (($row['user_avatar']) ? 
-							 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'class="online_img" title=', './'), phpbb_get_user_avatar(
+							 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'title="' .  $row['username'] . '" alt=', './'), phpbb_get_user_avatar(
 								array('avatar'			=> $row['user_avatar'], 
 									  'avatar_type'		=> $row['user_avatar_type'], 
 									  'avatar_width'	=> $row['user_avatar_width'], 
 									  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-									  '<img class="online_img" title="' .  $row['username'] . '" src="' .
-									  $this->board_url . 'styles/prosilver/theme/images/no_avatar.gif">')
+									  '<img class="online_img" src="' . $this->board_url . 'styles/prosilver/theme/images/no_avatar.gif" alt="' .  $row['username'] . '" title="' .  $row['username'] . '">')
 			);
 		}
 		

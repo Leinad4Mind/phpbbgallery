@@ -36,13 +36,13 @@ class accountswitch_module
 					'USERPOSTS'		=> $row['user_posts'],
 					'LAST_VISIT'	=> $user->format_date($row['user_lastvisit']),
 					'AVATAR'	=> (($row['user_avatar']) ? 
-								 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'class="online_img" title=', './'), phpbb_get_user_avatar(
+								 str_replace(array('class="avatar"', 'alt=', './../../'), array('class="online_img"', 'class="online_img" alt=', './'), phpbb_get_user_avatar(
 									array('avatar'			=> $row['user_avatar'], 
 									      'user_id'         => $row['user_id'],
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-										  '<img class="online_img" title="' .  $row['username'] . '" src="' .
+										  '<img class="online_img" alt="' .  $row['username'] . '" src="' .
 										  $board_url . 'styles/prosilver/theme/images/no_avatar.gif">'),
 				));
 			}

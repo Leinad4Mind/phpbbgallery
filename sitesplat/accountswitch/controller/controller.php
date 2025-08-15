@@ -70,7 +70,7 @@ class controller
 		
 					$refresh_data = array(
 						'time'	=> 0,
-						'url'	=> $ref_url,
+						'url'	=> str_replace('&amp;', '&', $ref_url),
 					);
 					$json_response = new \phpbb\json_response();
 					$json_response->send(array(
