@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_PAYPAL_EMAIL'			=> 'Paypal email',
 	'ACP_BBMEMBERSHIP_PAYPAL_EMAIL_EXPLAIN'	=> 'PayPal email or SandBox PayPal email if you are using the sandbox mode for testing purposes.',
 	'ACP_BBMEMBERSHIP_BBPOINTS'				=> 'BBpoints',
-	'ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN'		=> 'Allow users to purchase the membership with <a href="http://www.sitesplat.com/phpBB3/marketplace.php" target="_blank">BBpoints</a><br />  The multiplication in bbpoints required for each package is (factor 100). e.g. Currency $5 means 500 BBpoints, $10 means 1000 and so on.',
+	'ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN'		=> 'Allow users to purchase the membership with <a href="https://sitesplat.com/phpBB3/marketplace.php" target="_blank">BBpoints</a><br />  The multiplication in bbpoints required for each package is (factor 100). e.g. Currency $5 means 500 BBpoints, $10 means 1000 and so on.',
         'ACP_BBMEMBERSHIP_COUNTDOWN'			=> 'Countdown clock',
 	'ACP_BBMEMBERSHIP_COUNTDOWN_EXPLAIN'	=> 'Countdown in weeks and days, note, this can be confusing for the user',
 	
@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_DEFAULT'				=> 'Default',
 	'ACP_BBMEMBERSHIP_HIDE'					=> 'Hide',
 	'ACP_BBMEMBERSHIP_CURRENCY'				=> 'Currency code',
-	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. <br /><strong>please note, if the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" or "Pending". Therefore make sure you have enabled the correct currency on your PayPal acount first!</strong> ',
+	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">PayPal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. <br /><strong>please note, if the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" or "Pending". Therefore make sure you have enabled the correct currency on your PayPal acount first!</strong> ',
  
 	'ACP_BBMEMBERSHIP_FLAGS'			    => 'Payment Status Flag',
 	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> '<span class="label label-danger">Not verified</span>: An user attempted a purchase and either changed his mind or PayPal was not able to verify the transaction.<br />
@@ -94,7 +94,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBMEMBERSHIP_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.4',
+	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.5',
     'ACP_LOADING'			    			=> 'Hold On. Loading...',
 	
 ));
