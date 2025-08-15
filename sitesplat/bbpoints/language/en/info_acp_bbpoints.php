@@ -33,8 +33,8 @@ $lang = array_merge($lang, array(
 	'EXT_SYMBOL'							=> 'Extension Symbol',
 	'EXT_SYMBOL_EXPLAIN'					=> 'Choose the symbol for this extension',
 	
-	'ACP_POINTS_EXPLAIN'					=> 'Set how much points a user will recieve in general. These values will be overidden if a different value is entered in forum management. <strong>ACP > FORUMS > Your forum</strong> Then click edit for existent forums or find the BBpoints setting for new forums.',
-	'ACP_POINTS_PER_EXPLAIN'				=> 'Set how much points a user will recieve per login, registration or on his birthday. Set to 0 to switch off.',
+	'ACP_POINTS_EXPLAIN'					=> 'Set how much points a user will receive in general. These values will be overridden if a different value is entered in forum management. <strong>ACP > FORUMS > Your forum</strong> Then click edit for existent forums or find the BBpoints setting for new forums.',
+	'ACP_POINTS_PER_EXPLAIN'				=> 'Set how much points a user will receive per login, registration or on his birthday. Set to 0 to switch off.',
 
 	'POINTS_PERLOGIN'						=> 'Points per login',
 	'POINTS_PERREGISTER'					=> 'Points on new registrations',
@@ -56,17 +56,17 @@ $lang = array_merge($lang, array(
 	'POINTS_COMMENTS'						=> 'Allow comments',
 	'POINTS_COMMENTS_EXPLAIN'				=> 'Allow user to leave the comment about the points transfer',
 
-	'ACP_POINTS_VERSION'	                => '1.2.2',
+	'ACP_POINTS_VERSION'	                => '1.2.3',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
 
-	'SITESPLAT_COM'		                    => 'http://sitesplat.com',
+	'SITESPLAT_COM'		                    => 'https://sitesplat.com',
 	'SITESPLAT_COPY'		                => '&#169; SiteSplat',
 	'LICENSE_INFO'		                    => 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'			        => 'Developer',
 	
 	'BBPOINTS_NOTICE'						=> '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.<br />Don\'t forget to check Forum Group Permissions and also the Forums Management options!</p></div>',
-	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	
 	'POINTS_DESCRIPTION'					=> 'BBpoints allows your forum members to have fun and collect points for determined actions...',
 	'POINTS_TASKS_1'						=> 'Points per topic, post, words, upon new registrations, birthdays and more!',

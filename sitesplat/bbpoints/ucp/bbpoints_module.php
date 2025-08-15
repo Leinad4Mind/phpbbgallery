@@ -50,8 +50,8 @@ class bbpoints_module
 					$db->sql_query($sql);
 					$item_id = $db->sql_nextid();
 	
-					$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i> ' . number_format($request->variable('amount', 0), 2) :
-							  number_format($request->variable('amount', 0), 2) . ' ' . '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i>';
+					$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($request->variable('amount', 0), 2) :
+							  number_format($request->variable('amount', 0), 2) . ' ' . '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
 					
 					$noti_ary = array(
 						'user_ids'		=> $request->variable('transfer_to', 0),

@@ -58,7 +58,7 @@ var boardurl = '{BOARD_URL}';
 			<tr>
 				<td><label for="{pointsucp.SUBJECT}"><!-- IF pointsucp.SUBJECTURL --><a href="{pointsucp.SUBJECTURL}"><!-- ENDIF -->{pointsucp.SUBJECT}<!-- IF pointsucp.SUBJECTURL --></a><!-- ENDIF --><!-- IF pointsucp.REASON -->&nbsp;<i class="fa fa-question-circle" title="{pointsucp.REASON}"></i><!-- ENDIF --></label></td>
 				<td title="{pointsucp.TITLE}"><!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i> <!-- ENDIF -->{pointsucp.GIVE_RECIEVE}<!-- IF not SYMBOL_POS --> <i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --></td>
-				<td class="center">{pointsucp.LIKE_TIME}</td>
+				<td class="center">{pointsucp.POINTS_TIME}</td>
 				<td class="center mark">{pointsucp.USERNAME}</td>
 			</tr>
 		<!-- BEGINELSE -->
