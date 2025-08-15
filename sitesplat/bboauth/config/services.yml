@@ -1,0 +1,45 @@
+services:
+    auth.provider.oauth.service.coinbase:
+        class: sitesplat\bboauth\auth\provider\oauth\service\coinbase
+        arguments:
+            - @config
+            - @request
+            - @user
+        tags:
+            - { name: auth.provider.oauth.service }
+
+    auth.provider.oauth.service.dropbox:
+        class: sitesplat\bboauth\auth\provider\oauth\service\dropbox
+        arguments:
+            - @config
+            - @request
+            - @user
+        tags:
+            - { name: auth.provider.oauth.service }
+
+    auth.provider.oauth.service.github:
+        class: sitesplat\bboauth\auth\provider\oauth\service\github
+        arguments:
+            - @config
+            - @request
+            - @user
+        tags:
+            - { name: auth.provider.oauth.service }
+
+    auth.provider.oauth.service.instagram:
+        class: sitesplat\bboauth\auth\provider\oauth\service\instagram
+        arguments:
+            - @config
+            - @request
+            - @user
+        tags:
+            - { name: auth.provider.oauth.service }
+
+    auth.provider.oauth.service.slack:
+        class: sitesplat\bboauth\auth\provider\oauth\service\slack
+        arguments:
+            - @config
+            - @request
+            - @user
+        tags:
+            - { name: auth.provider.oauth.service }
