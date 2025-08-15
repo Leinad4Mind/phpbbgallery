@@ -1,0 +1,2211 @@
+<!-- INCLUDE overall_header.html -->
+<!-- INCLUDEJS @sitesplat_bbmembership/js/bbmembership.js -->
+
+<div class="side-segment"><h3>{L_BBMEMBERSHIP}</h3></div>
+   
+
+<div class="bottom-style"><span></span></div>
+
+
+   <style>
+.bottom-style {
+    margin: 0 auto;
+    position: relative;
+    width: 100px;
+}
+.bottom-style::before {
+    border-bottom: 1px solid #cccccc;
+    bottom: 0;
+    content: "";
+    left: 50%;
+    margin-left: -30px;
+    position: absolute;
+    width: 60px;
+}
+.bottom-style::after, .bottom-style span::before {
+    background: #f15b5d none repeat scroll 0 0;
+    bottom: -2px;
+    content: "";
+    height: 5px;
+    position: absolute;
+    width: 20px;
+}
+.bottom-style::after {
+    left: 0;
+}
+.bottom-style span::before {
+    right: 0;
+}	
+	
+	
+	
+.planning-area {
+    display: table;
+    margin-bottom: 60px;
+}
+	
+	
+	
+	
+	#lite-pricing-table .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+#lite-pricing-table {
+    font-family: "Roboto",sans-serif;
+    padding: 30px 0;
+}
+#lite-pricing-table .price-heading {
+    margin-bottom: 50px;
+    margin-top: 20px;
+    text-align: center;
+}
+#lite-pricing-table .price-content {
+    perspective: 1700px;
+    perspective-origin: 50% 50%;
+    position: relative;
+    text-align: center;
+}
+#lite-pricing-table .price-content .popular-label {
+    height: 65px;
+    padding-top: 15px;
+    position: absolute;
+    right: 10px;
+    width: 50px;
+}
+#lite-pricing-table .price-content .popular-label::after {
+    bottom: 0;
+    content: "";
+    height: 0;
+    left: 0;
+    position: absolute;
+    width: 0;
+}
+#lite-pricing-table .price-content .popular-label .fa {
+    font-size: 22px;
+    line-height: 24px;
+}
+#lite-pricing-table .price-content .popular-label.compair {
+    height: 58px;
+    padding-top: 12px;
+    position: absolute;
+    right: 5px;
+    width: 34px;
+}
+#lite-pricing-table .price-content .popular-label.compair::after {
+    bottom: 0;
+    content: "";
+    height: 0;
+    left: 0;
+    position: absolute;
+    width: 0;
+}
+#lite-pricing-table .price-content .popular-label.compair .fa {
+    font-size: 18px;
+    line-height: 20px;
+}
+#lite-pricing-table .price-content:hover .popular-label::after {
+    bottom: 0;
+    content: "";
+    height: 0;
+    left: 0;
+    position: absolute;
+    width: 0;
+}
+#lite-pricing-table .price-content .head {
+    display: block;
+    margin-bottom: 0;
+    margin-right: auto;
+    position: absolute;
+    width: 60%;
+}
+#lite-pricing-table .price-content .price-details {
+    height: 22%;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    transform: rotateX(-90deg);
+    transform-origin: 0 0 0;
+    width: 100%;
+}
+#lite-pricing-table .price-content .head h3 {
+    font-size: 22px;
+    font-weight: 300;
+    height: 50px;
+    line-height: 2;
+    margin: 0;
+    padding: 4px 0;
+    text-transform: uppercase;
+}
+#lite-pricing-table .price-content .currency {
+    margin: 0;
+    padding: 30px 0;
+    position: relative;
+}
+#lite-pricing-table .price-content .currency .sign {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 35px;
+}
+#lite-pricing-table .price-content .currency .cost {
+    font-family: "roboto";
+    font-size: 50px;
+    font-weight: 100;
+    letter-spacing: -3px;
+    line-height: 50px;
+    vertical-align: top;
+}
+#lite-pricing-table .price-content .currency .month {
+    font-size: 16px;
+    vertical-align: bottom;
+}
+#lite-pricing-table .price-content .currency p {
+    font-size: 18px;
+    font-weight: 100;
+    letter-spacing: 0;
+    margin: 0;
+}
+#lite-pricing-table .price-content .plan-list {
+    margin-top: 70px;
+}
+#lite-pricing-table .price-content .plan-list ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+#lite-pricing-table .price-content .plan-list ul li {
+    margin: 10px 0;
+    padding: 8px 0;
+}
+#lite-pricing-table .price-content .plan-list ul li a {
+    display: block;
+    font-family: "roboto";
+    font-size: 18px;
+    font-weight: 300;
+    outline: medium none;
+    text-decoration: none;
+}
+#lite-pricing-table .price-content .plan-list ul li strong {
+    font-weight: 500;
+}
+#lite-pricing-table .price-content .plan-list ul li .check {
+    margin: 0 8px 0 0;
+}
+#lite-pricing-table .price-content .plan-list ul li .times {
+    margin: 0 8px 0 0;
+}
+#lite-pricing-table .price-content .price-btn {
+    padding: 10px 0 30px;
+}
+#lite-pricing-table .price-content .price-btn a {
+    border-radius: 0;
+    font-family: "roboto";
+    font-size: 16px;
+    font-weight: 400;
+    padding: 8px 20px;
+    text-transform: uppercase;
+}
+#lite-pricing-table .price-content .price-btn .btn .fa {
+    color: #fff;
+    font-size: 18px;
+    margin: 0 10px 0 0;
+}
+#lite-pricing-table .price-content:hover .price-details, #lite-pricing-table .price-content.active .price-details {
+    opacity: 1;
+    transform: rotateX(0deg);
+}
+#lite-pricing-table .price-content:hover .currency, #lite-pricing-table .price-content.active .currency {
+    margin: 0;
+    padding: 30px 0;
+    position: relative;
+}
+#lite-pricing-table .price-content:hover .head, #lite-pricing-table .price-content.active .head {
+    width: 100%;
+}
+#lite-pricing-table .price-content .plan-list ul li:hover, #lite-pricing-table .price-content .plan-list ul li.active {
+    margin: 10px 0;
+    padding: 8px 0;
+    transform-origin: center top 0;
+}
+#lite-pricing-table .price-content .price-btn a:hover, #lite-pricing-table .price-content.active .price-btn a {
+    border-radius: 0;
+    font-size: 16px;
+    padding: 8px 50px;
+}
+#lite-pricing-table .comparison {
+    height: 410px;
+    margin-top: 111px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+#lite-pricing-table .comparison .plan {
+    display: block;
+    margin-bottom: 0;
+    margin-right: auto;
+    position: absolute;
+    width: 70%;
+}
+#lite-pricing-table .comparison .plan h3 {
+    font-family: "roboto";
+    font-size: 22px;
+    font-weight: 300;
+    height: 50px;
+    line-height: 2;
+    margin: 0;
+    padding: 4px 0;
+    text-transform: uppercase;
+}
+#lite-pricing-table .comparison:hover .plan h3 {
+    border: medium none;
+}
+#lite-pricing-table .comparison:hover .plan {
+    width: 100%;
+}
+#lite-pricing-table .comparison .plan-list {
+    margin-top: 70px;
+}
+#lite-pricing-table .comparison .plan-list ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+#lite-pricing-table .comparison .plan-list ul li {
+    margin: 10px 0;
+    padding: 8px 0;
+}
+#lite-pricing-table .comparison .plan-list ul li:hover {
+    margin: 10px 0;
+    padding: 8px 0;
+    transform-origin: center top 0;
+}
+#lite-pricing-table .comparison .plan-list ul li a {
+    font-family: "roboto";
+    font-size: 18px;
+    font-weight: 400;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    text-transform: uppercase;
+}
+#lite-pricing-table .comparison .plan-list ul li strong {
+    font-weight: 500;
+}
+#lite-pricing-table .price-content .price-details, #lite-pricing-table .price-content:hover .price-details, #lite-pricing-table .price-content .popular-label, #lite-pricing-table .price-content:hover .popular-label, #lite-pricing-table .price-content .popular-label::after, #lite-pricing-table .price-content:hover .popular-label::after, #lite-pricing-table .price-content .head, #lite-pricing-table .price-content:hover .head, #lite-pricing-table .price-content .head h3, #lite-pricing-table .price-content:hover .head h3, #lite-pricing-table .price-content .currency, #lite-pricing-table .price-content:hover .currency, #lite-pricing-table .price-content .plan-list ul li, #lite-pricing-table .price-content .plan-list ul li:hover, #lite-pricing-table .price-content .plan-list ul li a, #lite-pricing-table .price-content .plan-list ul li:hover a, #lite-pricing-table .price-content .price-btn a, #lite-pricing-table .price-content .price-btn a:hover, #lite-pricing-table .comparison:hover .plan, #lite-pricing-table .comparison .plan, #lite-pricing-table .comparison .plan-list ul li:hover {
+    transition: all 0.3s ease-in-out 0s;
+}
+
+
+body.lite-pricing-table {
+    background-color: #efefef;
+}
+#lite-pricing-table {
+    background-color: #efefef;
+}
+#lite-pricing-table .price-heading h1 {
+    color: #666;
+}
+#lite-pricing-table .price-heading p {
+    color: #474747;
+}
+#lite-pricing-table .price-content {
+    background-color: #fff;
+}
+#lite-pricing-table .price-content {
+    background-color: #fff;
+    border: 1px solid #f4f4f4;
+}
+#lite-pricing-table .price-content .popular-label {
+    background-color: #34495e;
+}
+#lite-pricing-table .price-content .popular-label::after {
+    border-bottom: 15px solid #34495e;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+}
+#lite-pricing-table .price-content .popular-label .fa {
+    color: #fff;
+}
+#lite-pricing-table .price-content:hover .popular-label {
+    background-color: #2c3e50;
+    z-index: 999;
+}
+#lite-pricing-table .price-content .popular-label.compair {
+    background-color: #34495e;
+}
+#lite-pricing-table .price-content .popular-label.compair::after {
+    border-bottom: 15px solid #fff;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+}
+#lite-pricing-table .price-content .popular-label.compair .fa {
+    color: #fff;
+}
+#lite-pricing-table .price-content:hover .popular-label.compair {
+    background-color: #2c3e50;
+    z-index: 999;
+}
+#lite-pricing-table .price-content:hover .popular-label.compair::after, #lite-pricing-table .price-content.active .popular-label.compair::after {
+    border-bottom: 15px solid #34495e;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    z-index: 999;
+}
+#lite-pricing-table .price-content:hover .popular-label, #lite-pricing-table .price-content.active .popular-label {
+    background-color: #2c3e50;
+    z-index: 999;
+}
+#lite-pricing-table .price-content:hover .popular-label.compair, #lite-pricing-table .price-content.active .popular-label.compair {
+    background-color: #2c3e50;
+    z-index: 999;
+}
+#lite-pricing-table .price-content .price-details {
+    background-color: #34495e;
+}
+#lite-pricing-table .price-content .head {
+    background-color: #34495e;
+}
+#lite-pricing-table .price-content .head h3 {
+    color: #fff;
+}
+#lite-pricing-table .price-content .currency {
+    color: #494949;
+}
+#lite-pricing-table .price-content .plan-list ul li a {
+    color: #494949;
+}
+#lite-pricing-table .price-content .plan-list ul li .check {
+    color: #8ac700;
+}
+#lite-pricing-table .price-content .plan-list ul li .times {
+    color: #e7512f;
+}
+#lite-pricing-table .price-content .price-btn a {
+    background-color: #34495e;
+    color: #fff;
+}
+#lite-pricing-table .price-content:hover .popular-label, #lite-pricing-table .price-content.active .popular-label {
+    background-color: #2c3e50;
+    z-index: 999;
+}
+#lite-pricing-table .price-content:hover .popular-label::after, #lite-pricing-table .price-content.active .popular-label::after {
+    border-bottom: 15px solid #34495e;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    z-index: 999;
+}
+#lite-pricing-table .price-content:hover .head, #lite-pricing-table .price-content.active .head {
+    background-color: #2c3e50;
+}
+#lite-pricing-table .price-content:hover .currency, #lite-pricing-table .price-content.active .currency {
+    color: #fff;
+}
+#lite-pricing-table .price-content .plan-list ul li:hover {
+    background: #f6f6f6 none repeat scroll 0 0;
+}
+#lite-pricing-table .price-content:hover .price-btn a:hover, #lite-pricing-table .price-content.active .price-btn a {
+    background-color: #2c3e50;
+    color: #fff;
+}
+#lite-pricing-table .comparison {
+    background: #fff none repeat scroll 0 0;
+}
+#lite-pricing-table .comparison .plan {
+    background-color: #34495e;
+}
+#lite-pricing-table .comparison:hover .plan {
+    background-color: #2c3e50;
+}
+#lite-pricing-table .comparison .plan h3 {
+    color: #fff;
+}
+#lite-pricing-table .comparison .plan-list ul li:hover {
+    background: #f6f6f6 none repeat scroll 0 0;
+}
+#lite-pricing-table .comparison .plan-list ul li a {
+    color: #494949;
+}
+
+	</style>
+	
+	
+	
+	
+	<style>
+	.npt-format-1, .npt-format-2, .npt-format-3 {
+    font-family: "Open Sans",sans-serif;
+    font-size: 16px;
+}
+.npt-title, .npt-plan-name {
+    margin: 0;
+}
+.npt-plan-details p {
+    color: #737373;
+    font-family: "Open Sans";
+    font-size: 0.875em;
+    font-weight: 300;
+    line-height: 22px;
+}
+.npt-plan-details ul {
+    margin: 0;
+    padding: 0;
+}
+.npt-plan-details li {
+    display: inline-block;
+}
+
+.npt-item-description {
+    font-size: 14px;
+    letter-spacing: 0.115px;
+    padding-top: 14px;
+    word-spacing: -0.5px;
+}
+.npt-plan-name {
+    font-size: 1.125em;
+    font-weight: 400;
+    padding: 17px 0;
+    text-transform: uppercase;
+}
+.npt-cent, .npt-duration {
+    position: relative;
+}
+.npt-duration {
+    padding-left: 15px;
+    text-transform: lowercase;
+}
+.npt-cent::before, .npt-duration::before {
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+.npt-cent::before {
+    content: ".";
+    left: -5px;
+}
+.npt-duration::before {
+    content: "/";
+    transform: rotate(-55deg);
+}
+.npt-plan-details li {
+    display: block;
+    padding: 20px;
+    position: relative;
+}
+.npt-plan-details li::before {
+    background: #ecf0f1 none repeat scroll 0 0;
+    bottom: 0;
+    content: "";
+    height: 1px;
+    left: 50%;
+    margin-left: -72px;
+    position: absolute;
+    width: 144px;
+}
+.npt-plan-details p {
+    display: inline-block;
+    margin: 0;
+}
+.npt-plan-bottom {
+    padding: 30px;
+}
+.npt-plan-bottom .btn {
+    margin: 0;
+}
+.npt-item {
+    overflow: hidden;
+    position: relative;
+}
+.npt-btn {
+    border: 1px solid #0fb9db;
+    border-radius: 0;
+    color: #0fb9db;
+    font-family: "Open Sans";
+    font-size: 0.8125em;
+    margin-top: 10px;
+    overflow: hidden;
+    padding: 7px 20px;
+    position: relative;
+    transition: all 0.25s ease 0s;
+}
+.npt-btn:hover {
+    background: #0fb9db none repeat scroll 0 0;
+    border-color: #0fb9db;
+    color: #ffffff;
+}
+.npt-hex {
+    border-radius: 7px;
+    height: 78px;
+    margin: 30px auto 20px;
+    position: relative;
+    text-align: left;
+    width: 128px;
+}
+.npt-hex::before, .npt-hex::after {
+    background: inherit;
+    border-radius: inherit;
+    content: "";
+    height: inherit;
+    margin-left: -1px;
+    position: absolute;
+    width: inherit;
+}
+.npt-hex, .npt-hex::before, .npt-hex::after {
+    background-color: #0fb9db;
+    border-left: 2px solid #0fb9db;
+    border-right: 2px solid #0fb9db;
+    color: #fff;
+    transition: background-color 0.25s ease-out 0s;
+}
+.npt-hex::before {
+    transform: rotate(60deg);
+}
+.npt-hex::after {
+    transform: rotate(-60deg);
+}
+.npt-hex.hex-margin {
+    margin-bottom: 60px;
+}
+.npt-ribbon {
+    background: #0fb9db none repeat scroll 0 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    height: 25px;
+    left: -15px;
+    line-height: 25px;
+    padding-right: 17px;
+    position: absolute;
+    text-rendering: auto;
+    top: 6px;
+    transform: rotate(-30deg);
+    width: 120px;
+}
+.npt-ribbon.npt-ribbon-right {
+    left: inherit;
+    padding-left: 17px;
+    padding-right: 0;
+    right: -15px;
+    transform: rotate(30deg);
+}
+.npt-plan-details li::before {
+    background: #ecf0f1 none repeat scroll 0 0;
+    bottom: 0;
+    content: "";
+    height: 1px;
+    left: 50%;
+    margin-left: -72px;
+    position: absolute;
+    width: 144px;
+}
+.npt-plan-details p {
+    display: inline-block;
+    margin: 0 !important;
+}
+.npt-plan-details p > span {
+    border-bottom: 1px dotted #737373;
+    cursor: help;
+    display: inline-block;
+}
+.npt-plan-details > li {
+    position: relative;
+    z-index: 0;
+}
+.npt-plan-details p > span > i {
+    background: transparent none repeat scroll 0 0;
+    bottom: 100%;
+    color: #bfbebe;
+    font-size: 13px;
+    font-weight: 300;
+    left: 50%;
+    line-height: 19px;
+    margin-bottom: 20px;
+    margin-left: -72px;
+    position: absolute;
+    transition: all 0.25s ease 0s;
+    width: 144px;
+    z-index: -1;
+}
+.npt-plan-details p > span:hover > i {
+    background: #ffffff none repeat scroll 0 0;
+    margin-bottom: -11px;
+    z-index: 1;
+}
+.npt-format-1 .npt-item {
+    background: #ffffff none repeat scroll 0 0;
+    overflow: auto;
+    transition: all 0.35s ease-out 0s;
+}
+.npt-format-1 .npt-item .npt-plan-name {
+    color: #ffffff;
+}
+.npt-format-1 .npt-item-1 .npt-plan-name {
+    background: #00abcd none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-2 .npt-plan-name {
+    background: #d9a255 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-3 .npt-plan-name {
+    background: #97d955 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-4 .npt-plan-name {
+    background: #c355d9 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-5 .npt-plan-name {
+    background: #808080 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-plan-cost {
+    color: #ffffff;
+    padding-bottom: 13px;
+}
+.npt-format-1 .npt-item-1 .npt-plan-cost {
+    background: #0fb9db none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-2 .npt-plan-cost {
+    background: #e8b368 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-3 .npt-plan-cost {
+    background: #a8e868 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-4 .npt-plan-cost {
+    background: #d368e8 none repeat scroll 0 0;
+}
+.npt-format-1 .npt-item-5 .npt-plan-cost {
+    background: #8c8c8c none repeat scroll 0 0;
+}
+.npt-format-1 .npt-cost {
+    font-family: "Poiret One",sans-serif;
+    font-size: 3.43em;
+    font-weight: 600;
+}
+.npt-format-2 {
+    background: #ecf0f1 none repeat scroll 0 0;
+    overflow: auto;
+    padding: 60px 15px;
+    text-align: center;
+}
+.npt-format-2 .npt-item {
+    background: #ffffff none repeat scroll 0 0;
+    transition: all 0.35s ease-out 0s;
+}
+.npt-format-2 .npt-plan-name {
+    font-size: 1.43em;
+    font-weight: 700;
+    padding-top: 55px;
+    text-transform: uppercase;
+}
+.npt-format-2 .npt-plan-description {
+    font-size: 0.93em;
+    font-weight: 400;
+    padding-bottom: 23px;
+    padding-top: 10px;
+}
+.npt-format-2 .npt-plan-cost {
+    display: inline-block;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: all 0.35s ease-out 0s;
+    width: 100%;
+    z-index: 1;
+}
+.npt-format-2 .npt-item:hover .npt-plan-cost {
+}
+.npt-format-2 .npt-currency {
+    font-size: 1.43em;
+    line-height: 20px;
+}
+.npt-format-2 .npt-cost {
+    font-family: "Poiret One",sans-serif;
+    font-size: 3.43em;
+    font-weight: 700;
+    line-height: 45px;
+}
+.npt-format-2 .npt-duration {
+    line-height: 35px;
+    padding-left: 0;
+    text-transform: capitalize;
+}
+.npt-format-2 .npt-duration::before {
+    content: "";
+}
+.npt-format-2 .npt-plan-details {
+    padding-top: 20px;
+}
+.npt-format-2 .npt-plan-details li {
+    padding: 8px 20px;
+}
+.npt-offer-limit {
+    color: #737373;
+    display: inline-block;
+    font-size: 0.875em;
+}
+.npt-format-2 .npt-btn {
+    background: #0fb9db none repeat scroll 0 0;
+    border-color: #0fb9db;
+    color: #ffffff;
+    font-size: 1em;
+    padding: 12px 35px;
+}
+.npt-format-2 .npt-btn:hover {
+    background: #ffffff none repeat scroll 0 0;
+    color: #0fb9db;
+}
+.npt-format-2.npt-hex-hover .npt-item:hover .npt-hex, .npt-format-2.npt-hex-hover .npt-item:hover .npt-hex::after, .npt-format-2.npt-hex-hover .npt-item:hover .npt-hex::before {
+    background-color: transparent;
+    color: #0fb9db;
+}
+.npt-format-3 {
+    background: #ecf0f1 none repeat scroll 0 0;
+    overflow: auto;
+    padding: 60px 30px;
+}
+.npt-format-3 .npt-item {
+    background: #ffffff none repeat scroll 0 0;
+}
+.npt-format-3 .npt-plan-name {
+    font-size: 1.43em;
+    font-weight: 700;
+    padding-top: 55px;
+    text-transform: uppercase;
+}
+.npt-format-3 .col-sm-3 {
+    padding: 0;
+}
+.npt-format-3 .npt-item-1 .npt-plan-top {
+    background: #ecf0f1 none repeat scroll 0 0;
+}
+.npt-format-3 .npt-item-1 .npt-title {
+    background: #f5f9fa none repeat scroll 0 0;
+    color: #0fb9db;
+    font-size: 1.43em;
+    font-weight: 700;
+    margin-top: 25px;
+    padding: 26px 25px;
+    text-transform: uppercase;
+}
+.npt-format-3 .npt-item-1 li {
+    padding: 19px 25px 19.5px;
+}
+.npt-format-3 .npt-item-1 li::before {
+    left: 25px;
+    margin-left: 0;
+}
+.npt-format-3 .npt-plan-name {
+    padding: 35px 0;
+}
+.npt-format-3 .npt-plan-cost {
+    background: #f5f9fa none repeat scroll 0 0;
+    color: #0fb9db;
+    font-family: "Open Sans";
+}
+.npt-format-3 .npt-currency {
+    font-size: 1.43em;
+}
+.npt-format-3 .npt-cost {
+    font-family: "Poiret One",sans-serif;
+    font-size: 3.4em;
+    font-weight: 700;
+}
+.npt-format-3 .npt-duration::before {
+    transform: rotate(0deg);
+}
+.npt-format-3 .npt-has-ability .npt-ability-icon {
+    color: #0fb9db;
+}
+.npt-format-3 .npt-has-not-ability i {
+    color: #f15b5d;
+    transform: rotate(45deg);
+}
+.npt-format-3 .npt-plan-bottom {
+    padding-top: 60px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    padding: 70px 0;
+}
+.npt-format-3 .npt-btn {
+    background: #0fb9db none repeat scroll 0 0;
+    border-color: #0fb9db;
+    color: #ffffff;
+    font-size: 1em;
+    padding: 12px 35px;
+}
+.npt-format-3 .npt-btn:hover {
+    background: #ffffff none repeat scroll 0 0;
+    color: #0fb9db;
+}
+@media screen and (max-width: 1169px) {
+.npt-format-3 .npt-item-1 .npt-title {
+    font-size: 1.25em;
+    padding: 27px 25px;
+}
+.npt-format-2 {
+    padding: 30px;
+}
+.npt-format-3 .npt-item-1 li {
+    padding: 20px 10px 19px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    padding-bottom: 69px;
+}
+}
+@media screen and (max-width: 992px) {
+.npt-plan-details p {
+    letter-spacing: 0;
+    line-height: 23px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-details li::before {
+    left: 0;
+}
+.npt-plan-details li {
+    padding: 10px 7px;
+}
+.npt-format-1 .npt-cost {
+    font-size: 2.35em;
+}
+.npt-format-2 .npt-cost, .npt-format-3 .npt-cost {
+    font-size: 2.5em;
+}
+.npt-pricing-tables .npt-format-2 {
+    padding: 20px;
+}
+.npt-format-2 .npt-plan-cost {
+    height: 120px;
+    width: 120px;
+}
+.npt-format-2 .btn {
+    padding: 12px 35px;
+}
+.npt-format-3 {
+    padding: 15px 25px;
+}
+.npt-format-3 .npt-item-1 .npt-title {
+    font-size: 1.15em;
+    padding: 19px 15px 18px;
+}
+.npt-format-2 .npt-plan-name, .npt-format-3 .npt-plan-name {
+    font-size: 1.25em;
+}
+.npt-format-3 .npt-item-1 li {
+    padding: 10px 5px 9px;
+}
+.npt-format-2 .npt-btn, .npt-format-3 .npt-btn {
+    font-size: 0.875em;
+    padding: 10px 20px;
+}
+.npt-format-3 .npt-plan-cost {
+    height: 78px;
+    padding-top: 10px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    padding-bottom: 62px;
+}
+}
+@media screen and (max-width: 860px) {
+.npt-plan-details p {
+    letter-spacing: 0;
+    line-height: 23px;
+}
+.npt-format-3 .item-1 .plan-details li::before {
+    left: 0;
+}
+.npt-plan-details li {
+    padding: 5px;
+}
+.npt-format-1 .npt-cost {
+    font-size: 2.35em;
+}
+.npt-format-2 .npt-cost, .npt-format-3 .npt-cost {
+    font-size: 2.5em;
+}
+.npt-format-2 {
+    padding: 20px;
+}
+.npt-format-2 .npt-plan-cost {
+    height: 120px;
+    width: 120px;
+}
+.npt-format-3 .npt-plan-cost {
+    height: 78px;
+    padding-top: 14px;
+}
+.npt-pricing-tables .npt-format-2 .npt-btn {
+    padding: 12px 35px;
+}
+.npt-format-3 {
+    padding: 15px 25px;
+}
+.npt-format-3 .npt-item-1 .npt-title {
+    font-size: 1.15em;
+    padding: 19px 15px 18px;
+}
+.npt-format-2 .npt-plan-name, .npt-format-3 .npt-plan-name {
+    font-size: 1.25em;
+}
+.npt-format-3 .npt-item-1 li {
+    padding: 4px 5px 5px;
+}
+.npt-format-2 .npt-btn, .npt-format-3 .npt-btn {
+    font-size: 0.875em;
+    padding: 10px 20px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    padding: 66px 0;
+}
+}
+@media screen and (max-width: 767px) {
+.npt-plan-details li {
+    padding: 10px;
+}
+.npt-plan-includes {
+    display: none;
+}
+.npt-mobile-display {
+    display: inline-block !important;
+}
+.npt-format-2 {
+    padding: 15px 30px;
+}
+.npt-format-2 .item {
+    margin: 15px 0;
+}
+.npt-format-3 {
+    padding: 15px 30px;
+}
+.npt-format-3 .col-sm-3 {
+    padding: 0 15px;
+}
+.npt-item {
+    margin: 15px 0;
+    vertical-align: text-top;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    display: none;
+}
+.npt-format-3 .npt-item-1 .npt-title {
+    padding: 22px 25px;
+}
+.npt-format-3 .npt-col-sm-3 {
+    padding: 0 15px;
+}
+}
+
+
+@media screen and (max-width: 640px) {
+.section-description {
+    font-size: 0.93em;
+    padding: 0 15px 22px;
+}
+.npt-format-2 {
+    padding: 30px 0;
+}
+.npt-format-2 .item {
+    margin: 15px 0;
+    text-align: center;
+}
+.npt-format-2 .col-sm-3, .npt-format-2 .col-xs-6 {
+    padding: 0 15px;
+    width: 100%;
+}
+.npt-format-3 .npt-item-1 li::before {
+    left: inherit;
+    margin-left: -72px;
+}
+.npt-format-3 .npt-item-1 .npt-plan-name {
+    display: none;
+}
+.npt-format-3 .npt-item-1 .npt-plan-bottom {
+    padding: 45px 0;
+}
+.npt-planning-area .npt-format-3 {
+    padding: 20px;
+}
+}
+
+	</style>
+	
+	
+	
+	
+	
+	<style>
+	.pirius-plan {
+    background: #fff none repeat scroll 0 0;
+    cursor: default;
+    font-family: "Titillium Web",sans-serif;
+    height: 470px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+.pirius-header {
+    background: #ccc none repeat scroll 0 0;
+    float: left;
+    height: 70px;
+    padding-left: 10px;
+    position: relative;
+    width: 100%;
+}
+.pirius-header h5 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 400;
+    margin: 10px 0 5px;
+    text-transform: uppercase;
+}
+.pirius-price {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
+}
+.pirius-icon {
+    background: #333 none repeat scroll 0 0;
+    color: #fff;
+    font-size: 24px;
+    height: 70px;
+    padding-top: 15px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 70px;
+}
+.pirius-featurestitle {
+    background: #111 none repeat scroll 0 0;
+    color: #fff;
+    float: left;
+    font-weight: 600;
+    height: 40px;
+    letter-spacing: 0.5px;
+    padding-left: 10px;
+    padding-top: 10px;
+    text-transform: uppercase;
+    width: 100%;
+}
+.pirius-features {
+    float: left;
+}
+.pirius_plancolor {
+    background: #f7f7f7 none repeat scroll 0 0;
+}
+.pirius-features ul {
+    float: left;
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.pirius-features li {
+    color: #767a84;
+    float: left;
+    font-size: 13px;
+    font-weight: 400;
+    height: 50px;
+    letter-spacing: 0.3px;
+    padding-top: 14px;
+    width: 100%;
+}
+.pirius-features i {
+    color: #333;
+    padding-left: 14px;
+    padding-right: 10px;
+}
+.pirius-getaquote {
+    float: left;
+    height: 42px;
+    margin-left: 3%;
+    margin-top: 9px;
+    width: 94%;
+}
+.pirius-getaquote li {
+    list-style: outside none none;
+}
+.pirius-getaquote li a {
+    background: #222 none repeat scroll 0 0;
+    color: #fff;
+    float: left;
+    font-weight: 600;
+    height: 42px;
+    padding-top: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+    width: 100%;
+}
+.pirius-getaquote li a:hover {
+    text-decoration: none;
+}
+.pirius-onefeaturedbg {
+    background: #27a5da none repeat scroll 0 0;
+}
+.pirius-onefeaturedplanc {
+    background: #2bade4 none repeat scroll 0 0;
+}
+.pirius-onefeaturedcolor li {
+    color: #fff;
+}
+.pirius-onefeaturedcolor i {
+    color: #fff !important;
+}
+.pirius-onefeaturedquote li a {
+    background: #1792c6 none repeat scroll 0 0;
+}
+.pirius-onefeaturedquote li a:hover {
+    background: #1181b0 none repeat scroll 0 0;
+}
+.pirius-onebg {
+    background: #27a5da none repeat scroll 0 0;
+}
+.pirius-onebgfeattitle {
+    background: #2bade4 none repeat scroll 0 0;
+}
+.pirius-onebgicon {
+    background: #1792c6 none repeat scroll 0 0;
+}
+.pirius-onecolor {
+    color: #27a5da !important;
+}
+.pirius-onegetquote li a {
+    background: #2bade4 none repeat scroll 0 0;
+}
+.pirius-onegetquote li a:hover {
+    background: #37b8ef none repeat scroll 0 0;
+}
+	</style>
+	
+	
+	
+	
+	<div class="clearfix">
+	<!--Begin Standard Plan!-->
+	<div class="col-md-3 hvr-float">
+		<div class="pirius-plan">
+			<div class="pirius-header pirius-onebg">
+				<h5>Standard</h5>
+				<span class="pirius-price">14,95$ /per month</span>
+				<div class="pirius-icon pirius-onebgicon"><i class="fa fa-paper-plane"></i></div>
+			</div>
+			<div class="pirius-featurestitle pirius-onebgfeattitle">Features</div>
+			<div class="pirius-features">
+				<ul>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Design + HTML5 </li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> One Page Scroll-down Layout</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Pricing is for 5 vert. sections</li>
+					<li class="pirius_plancolor"><i class="fa fa-times-circle pirius-onecolor"></i> Responsive / Mobile Ready</li>
+					<li><i class="fa fa-times-circle pirius-onecolor"></i> Bootstrap Framework</li>
+					<li class="pirius_plancolor"><i class="fa fa-times-circle pirius-onecolor"></i> CSS3 &amp; jQuery Powered</li>
+				</ul>
+			</div>
+			<div class="pirius-getaquote pirius-onegetquote"><li><a href="#">Get a Quote</a></li></div>
+		</div>
+	</div>
+	<!--End Standard Plan!-->
+	
+	<!--Begin Premium Plan!-->
+	<div class="col-md-3 hvr-float">
+		<div class="pirius-plan">
+			<div class="pirius-header pirius-onebg">
+				<h5>Premium</h5>
+				<span class="pirius-price">15,95$ /per month</span>
+				<div class="pirius-icon pirius-onebgicon"><i class="fa fa-mortar-board"></i></div>
+			</div>
+			<div class="pirius-featurestitle pirius-onebgfeattitle">Features</div>
+			<div class="pirius-features">
+				<ul>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Design + HTML5 </li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> One Page Scroll-down Layout</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Pricing is for 5 vert. sections</li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> Responsive / Mobile Ready</li>
+					<li><i class="fa fa-times-circle pirius-onecolor"></i> Bootstrap Framework</li>
+					<li class="pirius_plancolor"><i class="fa fa-times-circle pirius-onecolor"></i> CSS3 &amp; jQuery Powered</li>
+				</ul>
+			</div>
+			<div class="pirius-getaquote pirius-onegetquote"><li><a href="#">Get a Quote</a></li></div>
+		</div>
+	</div>
+	<!--End Premium Plan!-->
+	
+	<!--Begin Business Plan!-->
+	<div class="col-md-3 hvr-float">
+		<div class="pirius-plan pirius-onefeaturedbg">
+			<div class="pirius-header pirius-onebg">
+				<h5>Business</h5>
+				<span class="pirius-price">16,95$ /per month</span>
+				<div class="pirius-icon pirius-onebgicon"><i class="fa fa-pie-chart"></i></div>
+			</div>
+			<div class="pirius-featurestitle pirius-onebgfeattitle">Features</div>
+			<div class="pirius-features pirius-onefeaturedcolor">
+				<ul>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Design + HTML5 </li>
+					<li class="pirius-onefeaturedplanc"><i class="fa fa-check-circle pirius-onecolor"></i> One Page Scroll-down Layout</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Pricing is for 5 vert. sections</li>
+					<li class="pirius-onefeaturedplanc"><i class="fa fa-check-circle pirius-onecolor"></i> Responsive / Mobile Ready</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Bootstrap Framework</li>
+					<li class="pirius-onefeaturedplanc"><i class="fa fa-times-circle pirius-onecolor"></i> CSS3 &amp; jQuery Powered</li>
+				</ul>
+			</div>
+			<div class="pirius-getaquote pirius-onefeaturedquote"><li><a href="#">Get a Quote</a></li></div>
+		</div>
+	</div>
+	<!--End Business Plan!-->
+	
+	<!--Begin Ultimate Plan!-->
+	<div class="col-md-3 hvr-float">
+		<div class="pirius-plan">
+			<div class="pirius-header pirius-onebg">
+				<h5>Ultimate</h5>
+				<span class="pirius-price">17,95$ /per month</span>
+				<div class="pirius-icon pirius-onebgicon"><i class="fa fa-rocket"></i></div>
+			</div>
+			<div class="pirius-featurestitle pirius-onebgfeattitle">Features</div>
+			<div class="pirius-features">
+				<ul>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Design + HTML5 </li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> One Page Scroll-down Layout</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Pricing is for 5 vert. sections</li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> Responsive / Mobile Ready</li>
+					<li><i class="fa fa-check-circle pirius-onecolor"></i> Bootstrap Framework</li>
+					<li class="pirius_plancolor"><i class="fa fa-check-circle pirius-onecolor"></i> CSS3 &amp; jQuery Powered</li>
+				</ul>
+			</div>
+			<div class="pirius-getaquote pirius-onegetquote"><li><a href="#">Get a Quote</a></li></div>
+		</div>
+	</div>
+	<!--End Ultimate Plan!-->
+</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="pricing-tables clearfix">
+		<div class="clearfix">
+			<div class="row"> 
+				<div class="section-top text-center">
+					<h2 class="section-title">membership tests test test</h2>
+					<p class="section-description">Pricing Plan Refers You the Method of Proper Usage the Products or Services.</p>
+					<div class="title-bottom">
+						<span class="tb-inner"><i></i></span> 
+					</div>
+				</div><!-- /.section-top -->
+
+
+
+				<!-- Pricing Table Format-1 --> 
+				<div class="planning-area text-center">
+					<div class="npt-format-1">
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-1">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Standard Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">39</span>
+										<span class="npt-cent">00</span>
+										<span class="npt-duration">Month</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Dedicated Hardware</p>
+										</li>
+										<li>
+											<p>Virtualization-Ready</p>
+										</li>
+										<li>
+											<p>Dedicated <span>Support<i>24/7 Support Over Phone, Chat and e-mail</i></span> Team</p>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Buy Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-2">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Pro Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">59</span>
+										<span class="npt-cent">00</span>
+										<span class="npt-duration">Month</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Dedicated Hardware</p>
+										</li>
+										<li>
+											<p>Virtualization-Ready</p>
+										</li>
+										<li>
+											<p>Dedicated <span>Support<i>24/7 Support Over Phone, Chat and e-mail</i></span> Team</p>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Buy Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-3">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Gold Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">79</span>
+										<span class="npt-cent">00</span>
+										<span class="npt-duration">Month</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Dedicated Hardware</p>
+										</li>
+										<li>
+											<p>Virtualization-Ready</p>
+										</li>
+										<li>
+											<p>Dedicated <span>Support<i>24/7 Support Over Phone, Chat and e-mail</i></span> Team</p>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Buy Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-4">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Diamond Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">99</span>
+										<span class="npt-cent">00</span>
+										<span class="npt-duration">Month</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Dedicated Hardware</p>
+										</li>
+										<li>
+											<p>Virtualization-Ready</p>
+										</li>
+										<li>
+											<p>Dedicated <span>Support<i>24/7 Support Over Phone, Chat and e-mail</i></span> Team</p>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Buy Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+					</div><!-- /.npt-format-1 -->
+				</div><!-- /.planning-area --> 
+				<!-- Pricing Table Format-1 End -->
+
+
+
+
+				<!-- Pricing Table Format-2 --> 
+				<div class="planning-area">
+					<div class="npt-format-2">
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-1">
+								<span class="npt-ribbon npt-ribbon-left">New</span>
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Basic Plan</h3>
+									<p class="npt-plan-description">30 Days Free Trial</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">29</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.npt-plan-cost -->
+									</div><!-- /.npt-hex -->
+								</div><!-- /.plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Disk usage
+											</p><div class="npt-offer-limit">
+												<span class="npt-count"> 11 </span>
+												GB
+											</div><!-- /.offer-limit -->
+
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 10 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 1 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div><!-- /.item -->
+						</div>
+
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-2">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Gold Plan</h3>
+									<p class="npt-plan-description">Payable in every 6 month</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">69</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.npt-plan-cost -->
+									</div>
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p><span>Disk<i>SSD Hard Drive</i></span> usage</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count">15 </span>
+												GB
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 15 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 2 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div>
+						</div>
+
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-3">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Diamond Plan</h3>
+									<p class="npt-plan-description">Payable in every year</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">99</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.plan-cost -->
+									</div>
+								</div><!-- /.plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p><span>Disk<i>SSD Hard Drive</i></span> usage</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 21 </span>
+												GB
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 20 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 3 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div><!-- /.item -->
+						</div>
+					</div><!-- /. format-2 -->
+				</div><!-- /.planning-area -->
+				<!-- Pricing Table Format-2 End --> 
+
+ 
+
+				<!-- Pricing Table Format-2 Hex Hover --> 
+				<div class="planning-area">
+					<div class="npt-format-2 npt-hex-hover">
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-1">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Basic Plan</h3>
+									<p class="npt-plan-description">30 Days Free Trial</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">29</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.npt-plan-cost -->
+									</div><!-- /.npt-hex -->
+								</div><!-- /.plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Disk usage</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 11 </span>
+												GB
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 10 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 1 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div><!-- /.item -->
+						</div>
+
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-2">
+							<span class="npt-ribbon npt-ribbon-right">Best Plan</span>
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Gold Plan</h3>
+									<p class="npt-plan-description">Payable in every 6 month</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">69</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.npt-plan-cost -->
+									</div>
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Disk usage</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count">15 </span>
+												GB
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 15 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 2 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div>
+						</div>
+
+						<div class="col-sm-4 col-xs-6">
+							<div class="npt-item npt-item-3">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Diamond Plan</h3>
+									<p class="npt-plan-description">Payable in every year</p>
+									<div class="npt-hex">
+										<div class="npt-plan-cost">
+											<span class="npt-currency">$</span>
+											<span class="npt-cost">99</span>
+											<span class="npt-duration">Monthly</span>
+										</div><!-- /.plan-cost -->
+									</div>
+								</div><!-- /.plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Disk usage</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 21 </span>
+												GB
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Subdomains Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 20 </span>
+											</div><!-- /.offer-limit -->
+										</li>
+										<li>
+											<p>Bandwidth Usage Limit</p>
+											<div class="npt-offer-limit">
+												<span class="npt-count"> 3 </span>
+												TB
+											</div><!-- /.offer-limit -->
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div><!-- /.item -->
+						</div>
+					</div><!-- /. format-2 -->
+				</div><!-- /.planning-area -->
+				<!-- Pricing Table Format-2 Hex Hover End -->
+
+
+
+				<!-- Pricing Table Format-3 -->
+				<div class="planning-area">
+					<div class="npt-format-3">
+						<div class="col-sm-3 col-xs-6 npt-plan-includes"> 
+							<div class="npt-item npt-item-1 text-left"> 
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name"></h3>
+									<h3 class="npt-title">Plan Includes</h3>
+								</div><!-- /.plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li>
+											<p>Dedicated hardware</p>
+										</li>
+										<li>
+											<p>100% Uptime Gurantee</p>
+										</li>
+										<li>
+											<p>Virtualization Ready</p>
+										</li>
+										<li>
+											<p>Branded Control Panel</p>
+										</li>
+										<li>
+											<p>Dedicated Support Team</p>
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+
+								</div><!-- /.plan-bottom -->
+							</div><!-- /.item --> 
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-2 text-center">
+							<span class="npt-ribbon npt-ribbon-right">New</span>
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Basic Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">29</span>
+										<span class="npt-duration">Monthly</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated hardware</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">100% Uptime Guarantee</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-not-ability">
+											<p class="npt-mobile-display">Virtualization Ready</p> <span class="npt-ability-icon"><i class="icon-close icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Branded Control Panel</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated Support Team</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-3 text-center">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Gold Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">69</span>
+										<span class="npt-duration">Monthly</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated hardware</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">100% Uptime Guarantee</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Virtualization Ready</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Branded Control Panel</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated Support Team</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+									</ul>
+								</div><!-- /.plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.plan-bottom -->
+							</div>
+						</div>
+
+						<div class="col-sm-3 col-xs-6">
+							<div class="npt-item npt-item-4 text-center">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">Diamond Plan</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency">$</span>
+										<span class="npt-cost">99</span>
+										<span class="npt-duration">Monthly</span>
+									</div><!-- /.npt-plan-cost -->
+								</div><!-- /.npt-plan-top -->
+								<div class="npt-plan-details">
+									<ul>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated hardware</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">100% Uptime Guarantee</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Virtualization Ready</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Branded Control Panel</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+										<li class="npt-has-ability">
+											<p class="npt-mobile-display">Dedicated Support Team</p> <span class="npt-ability-icon"><i class="icon-check icons"></i></span>
+										</li>
+									</ul>
+								</div><!-- /.npt-plan-details -->
+								<div class="npt-plan-bottom">
+									<a href="#" class="btn npt-btn npt-pricing-btn">Select Plan</a>
+								</div><!-- /.npt-plan-bottom -->
+							</div><!-- /.npt-item -->
+						</div>
+					</div><!-- /.npt-format-3 -->
+				</div><!-- /.planning-area -->
+				<!-- Pricing Table Format-3 -->
+
+
+			</div><!-- /.row -->
+		</div><!-- /.container -->
+	</div>
+	
+	
+	<section id="lite-pricing-table">
+    	<div class="clearfix">
+        	<div class="row">
+            	<div class="col-md-12">
+                    <!--PRICE HEADING START-->
+                	<div class="price-heading clearfix">
+                    	<h1>Design 5 Midnight Version</h1>
+                    </div>
+                    <!--//PRICE HEADING END-->
+                </div>
+            </div>
+            <!--BLOCK ROW START-->
+            <div class="row">
+            	<div class="col-md-4">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content clearfix">
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">69</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Basic</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong> Bandwidth</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong> Storage</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong> Email Address</a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong> Domain</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong> Support</a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+                <div class="col-md-4">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content active clearfix">
+                        <!--PRICE LABEL START-->
+                    	<div class="popular-label">
+                        	<i class="fa fa-star"></i>
+                        </div>
+                        <!--//PRICE LABEL END-->
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">89</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Unlimited</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong> Bandwidth</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong> Storage</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong> Email Address</a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong> Domain</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong> Support</a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+                <div class="col-md-4">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content clearfix">
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">99</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Premium</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong> Bandwidth</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong> Storage</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong> Email Address</a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong> Domain</a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong> Support</a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+            </div>
+            <!--//BLOCK ROW END-->
+            <div class="row"><div class="clearfix divider"></div></div>
+            <!--BLOCK ROW START-->
+            <div class="row">
+            	<div class="col-md-3 comparison-col no-padding">
+                	<!--COMPARISON CODE START-->
+                	<div class="comparison clearfix">
+                    	<div class="plan">
+                        	<h3>plan includes</h3>   	
+                        </div>
+                        <div class="plan-list">
+                        	<ul>
+                            	<li><a href="#">Bandwidth</a></li>
+                                <li><a href="#">Storage</a></li>
+                                <li><a href="#">Number of Email Account</a></li>
+                                <li><a href="#">Number of Domain</a></li>
+                                <li><a href="#">Support Hour</a></li>
+                            </ul>	
+                        </div>
+                    </div>
+                    <!--//COMPARISON CODE END-->
+                </div>
+            	<div class="col-md-3 no-padding">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content clearfix">
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">69</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Basic</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong><span class="pretext"> Bandwidth</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong><span class="pretext"> Storage</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong><span class="pretext"> Email Account</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong><span class="pretext"> Domain</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong><span class="pretext"> Support Hour</span></a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+                <div class="col-md-3 no-padding">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content active clearfix">
+                        <!--PRICE LABEL START-->
+                    	<div class="popular-label compair">
+                        	<i class="fa fa-star"></i>
+                        </div>
+                        <!--//PRICE LABEL END-->
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">89</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Unlimited</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong><span class="pretext"> Bandwidth</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong><span class="pretext"> Storage</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong><span class="pretext"> Email Account</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong><span class="pretext"> Domain</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong><span class="pretext"> Support Hour</span></a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+                <div class="col-md-3 no-padding">
+                    <!--PRICE CONTENT BLOCK START-->
+                	<div class="price-content clearfix">
+                        <!--PRICE CURRENCY START-->
+                        <div class="price-details"></div> 
+                        <div class="currency">
+                            <span class="sign">$</span>
+                            <span class="cost">99</span>
+                            <span class="month">/ per month</span>
+                        </div>
+                        <!--//PRICE CURRENCY END-->
+                        <!--PRICE HEAD START-->
+                        <div class="head">
+                            <h3>Premium</h3>
+                        </div>
+                        <!--//PRICE HEAD END-->
+                        <!--PRICE FEATURES LIST START-->
+                        <div class="plan-list">
+                            <ul>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>1GB</strong><span class="pretext"> Bandwidth</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>200GB</strong><span class="pretext"> Storage</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>20</strong><span class="pretext"> Email Account</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-times times"></i>59</strong><span class="pretext"> Domain</span></a></li>
+                                <li><a href="#"><strong><i class="fa fa-check check"></i>24/7</strong><span class="pretext"> Support Hour</span></a></li>
+                            </ul>	
+                        </div>
+                        <!--//PRICE FEATURES LIST END-->
+                        <!--TEAM BUTTON START-->
+                        <div class="price-btn">
+                            <a class="btn"><i class="fa fa-cart-arrow-down"></i>Sign Up</a>
+                        </div>
+                        <!--//TEAM BUTTON END-->
+                    </div>
+                    <!--//PRICE CONTENT BLOCK END-->
+                </div>
+            </div>
+            <!--//BLOCK ROW END-->
+        </div>
+    
+	
+	
+	
+	
+
+</section>
+	
+	
+	<div class="row">
+    
+    <div class="col-md-12">
+        <!-- IF CLUBMODE -->
+        <div class="alert alert-danger"> 
+          <p>{L_BBMEMBERSHIP_CLUBMODE}</p>
+        </div>
+        <!-- ENDIF -->
+    </div>
+    
+    <div class="col-md-9" role="main">
+        <form role="form" action="{U_DONATE}" method="post">
+        <fieldset>
+             <div class="space10"></div>
+             <div class="space10"></div>
+    
+            <div id="deposit-amounts" data-toggle="buttons">
+            <div class="row">
+    
+            <!-- BEGIN levels -->
+            <!-- IF not levels.DONATIONS_HIDE -->
+            <div class="col-md-3">
+            <div class="panel panel-default thumbnail"<!-- IF levels.PACKAGE --> style="border:#2E8A0E thin solid;"<!-- ENDIF -->>
+                <div class="panel-body bg-group-one tiles-information">
+                 <i class="fa fa-money icon-bg"></i>
+                <div class="tiles-inner text-center">
+                <h4 class="text-primary">{L_MEMBERSHIP_LEVEL} {levels.LEVEL}</h4>
+                 <span class="badge badge-primary">{levels.DONATIONS_EXPIRE}</span>
+                </div>
+                </div>
+                <ul class="list-group">
+                <!-- BEGIN packages -->
+                 <li class="list-group-item"><span class="glyphicon glyphicon<!-- IF packages.S_ROW_COUNT >= packages.PACKAGE -->-remove text-danger<!-- ELSE -->-ok text-green<!-- ENDIF -->"></span> {packages.DONATION_PACKAGE}</li>
+                 <!-- END packages -->
+                </ul>
+             <div class="panel-footer no-padding">
+              <label for="option{levels.LEVEL}" class="price-toggler btn btn-block" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
+                 <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}" autocomplete="off"> <!-- IF PAYPAL_ENABLED -->{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF --> {levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->00<!-- ENDIF -->.00
+              </label>
+             </div>
+            </div>
+            </div>
+            <!-- ENDIF -->
+            <!-- END levels -->
+             
+            </div>
+            </div>
+            <!-- IF BBPOINTS_ENABLED -->
+            <button type="submit" name="submitbtn" disabled="disabled" value="{L_BBMEMBERSHIP_POINTS}" class="btn btn-primary btn-lg btn-block btn-huge" id="loadpoints" autocomplete="off" data-loading-text="{L_CONNECTING_ON_BBPOINTS} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"<!-- IF PAYPAL_ENABLED --> style="float:left;width:49%; margin-top:0;margin-left:5px;"<!-- ENDIF -->>
+            <!-- BEGIN levels -->
+            <span id="points{levels.LEVEL}" class="price-toggle" style="display:none;">{levels.DONATIONS_POINTS} Points</span> 
+            <!-- END levels -->
+            {L_CONTINUE_ON_BBPOINTS} <i class="fa fa-money"></i>
+            </button>
+            <!-- ENDIF -->
+            <!-- IF PAYPAL_ENABLED -->
+            <button type="submit" name="submitbtn" disabled="disabled" value="{L_DONATIONS_DONATE}" class="btn btn-primary btn-lg btn-block btn-huge" id="load" autocomplete="off" data-loading-text="{L_CONNECTING_ON_PAYPAL} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"<!-- IF BBPOINTS_ENABLED --> style="float:left;width:49%;margin-top:0;margin-left:5px;"<!-- ENDIF -->>
+            <!-- BEGIN levels -->
+            <span id="points{levels.LEVEL}" class="price-toggle" style="display:none;">{BBMEMBER_CURRENCY} {levels.DONATIONS_AMOUNT}.00</span> 
+            <!-- END levels -->
+            {L_CONTINUE_ON_PAYPAL} <i class="icon-moon-paypal"></i>
+            </button>
+            <!-- ENDIF -->
+        </fieldset>
+     </form>
+     <div class="space10"></div>
+     <p class="text-muted">{L_BBMEMBERSHIP_DEPOSIT_DISCLAIMER}</p>
+    </div>
+        
+    <div class="col-md-3">
+        <div class="space10"></div>
+        <div class="space10"></div>
+        <div class="panel panel-default thumbnail">
+            <div class="bg-group-info tiles-information">
+                <i class="fa fa-money icon-bg"></i>
+            <div <!-- IF S_SUCCESS or S_ERROR -->style="display:none;"<!-- ELSE --><!-- ENDIF --> class="tiles-inner text-center">
+             <p>{L_BBMEMBERSHIP_STATUS}</p>
+            <h4><!-- IF not DAYS_TO_EXPIRATION -->{L_BBMEMBERSHIP_EXPIRED_INFO}<!-- ELSE --><!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL} {BBMEMBER_PACKAGE}<br /><!-- ENDIF -->{DAYS_TO_EXPIRATION} {L_DAYS}<!-- ENDIF --></h4>
+            <p><small>{CURRENT_TIME}</small></p>
+            <p><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" border="0" alt="Payments by PayPal"></p>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- IF NOTIFY_STATUS -->
+<script>
+    var info = '{L_INFORMATION}';
+    var notify = '{NOTIFY_STATUS}';
+</script>
+<!-- INCLUDEJS @sitesplat_bbmembership/js/notify_status.js -->
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

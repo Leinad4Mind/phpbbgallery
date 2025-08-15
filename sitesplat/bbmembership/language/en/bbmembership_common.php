@@ -1,0 +1,28 @@
+<?php
+/**
+*
+* BBmembership extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
+/**
+* DO NOT CHANGE
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if ( empty($lang) || !is_array($lang) )
+{
+	$lang = array();
+}
+
+$lang = array_merge($lang, array(
+	'MEMBERSHIPS'						=> 'Memberships',
+	'MEMBERSHIP_NOTIFICATION_BOUGHT'	=> '<strong>Membership bought</strong>: %1$s just purchased the membership level %2$s.',
+	'MEMBERSHIP_NOTIFICATION_EXPIRING'	=> '<strong>Expiring membership</strong>: %1$s, your membership is about to expire in less than one day.',
+));

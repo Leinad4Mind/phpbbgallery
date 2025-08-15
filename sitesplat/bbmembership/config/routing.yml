@@ -1,0 +1,3 @@
+sitesplat_bbmembership_main_controller:
+    path: /memberships.php
+    defaults: { _controller: sitesplat.bbmembership.controller:display }

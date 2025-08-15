@@ -1,0 +1,111 @@
+<?php
+/**
+*
+* BBmembership extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
+namespace sitesplat\bbmembership\event;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+/**
+ * Event listener
+ */
+class listener implements EventSubscriberInterface
+{
+	protected $db;
+	protected $request;
+	protected $template;
+	protected $user;
+	protected $config;
+	protected $root_path;
+	protected $php_ext;
+	protected $bbmembership_table;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
+	{
+		$this->db = $db;
+		$this->request = $request;
+		$this->template = $template;
+		$this->user = $user;
+		$this->config = $config;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
+		$this->bbmembership_table = $bbmembership_table;
+		$this->bbmembership_groups = json_decode($this->config['bbmembership_groups'], true);
+	}
+
+	/**
+	 * Assign functions defined in this class to event listeners in the core
+	 *
+	 * @return array
+	 * @static
+	 * @access public
+	 */
+	static public function getSubscribedEvents()
+	{
+		return array(
+			'core.page_header_after'		=> 'page_header_after',
+			'core.user_setup'				=> 'user_setup',
+		);
+	}
+
+	/**
+	 * Set navigation link
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function page_header_after($event)
+	{
+		$this->template->assign_vars(array(
+			'U_MEMBERSHIPS'	=>  append_sid($this->root_path . 'memberships.' . $this->php_ext),
+		));
+	}
+
+	/**
+	 * Check if user has a valid membership
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function user_setup($event)
+	{
+		$check_ary = array(
+			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'login',
+			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'logout',
+			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'register',
+			$this->user->page['page_name'] == 'app.php/memberships.php'
+		);
+		
+		if ($this->config['bbmembership_clubmode'] && $event['user_data']['user_type'] != USER_FOUNDER && !array_sum($check_ary))
+		{
+			$membership = false;
+			$sql = 'SELECT mc_gross, mc_currency, payment_date FROM ' . $this->bbmembership_table . ' 
+					WHERE user_id = ' . $this->user->data['user_id'] . ' AND payment_status = "Completed" ORDER BY payment_date DESC';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$mc_gross = ($row['mc_currency'] >= 'BBPOINTS') ? $row['mc_gross'] / 100 : $row['mc_gross'];
+				$membership = (($this->bbmembership_groups[(int) $mc_gross]['expire'] * 86400) + $row['payment_date'] > time()) ? true: false;
+				if ($membership) break;
+			}
+
+			if(!$membership)
+			{
+				redirect(append_sid($this->root_path . 'memberships.' . $this->php_ext));
+			}
+		}
+
+		$this->user->add_lang_ext('sitesplat/bbmembership', 'bbmembership_common');
+	}
+}

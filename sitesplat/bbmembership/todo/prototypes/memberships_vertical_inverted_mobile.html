@@ -1,0 +1,134 @@
+<!-- INCLUDE overall_header.html -->
+<!-- INCLUDEJS @sitesplat_bbmembership/js/bbmembership.js -->
+
+<div class="side-segment"><h3>{L_BBMEMBERSHIP}</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- IF CLUBMODE -->
+        <div class="alert alert-warning"> 
+          <strong><i class="fa fa-lock"></i>&nbsp;{L_PRIVATE_BOARD}</strong><p>{L_BBMEMBERSHIP_CLUBMODE}</p>
+        </div>
+        <!-- ENDIF -->
+    </div>
+    
+	
+	<div class="col-md-4 col-sm-4 col-sm-push-8">
+	 <div class="space10"></div>
+		<div class="space10"></div>
+		<div class="panel panel-default thumbnail">
+			<div class="bg-group-info tiles-information">
+			 <i class="fa fa-money icon-bg"></i>
+			<div class="tiles-inner text-center">
+				<p>{L_BBMEMBERSHIP_STATUS}</p>
+				<h4><!-- IF not DAYS_TO_EXPIRATION -->{L_NA}<br /><!-- ENDIF -->
+				<!-- IF BBMEMBER_PACKAGE == 1 -->silver<br />{DAYS_TO_EXPIRATION}&nbsp;{L_DAYS}<!-- ENDIF -->
+				<!-- IF BBMEMBER_PACKAGE == 2 -->gold<br />{DAYS_TO_EXPIRATION}&nbsp;{L_DAYS}<!-- ENDIF -->
+				<!-- IF BBMEMBER_PACKAGE == 3 -->platinum<br />{DAYS_TO_EXPIRATION}&nbsp;{L_DAYS}<!-- ENDIF -->
+				<!-- IF BBMEMBER_PACKAGE == 4 -->VIP<br />{DAYS_TO_EXPIRATION}&nbsp;{L_DAYS}<!-- ENDIF -->
+				</h4>
+				<p><small>{CURRENT_TIME}</small></p>
+				<p><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" border="0" alt="Payments by PayPal"></p>
+			</div>
+			</div>
+		</div>
+				
+	 <div class="space10"></div>
+		 <div class="space10"></div>
+		 
+            <!-- IF PAYPAL_ENABLED -->
+            <button type="submit" name="submitbtn" disabled="disabled" value="{L_DONATIONS_DONATE}" class="btn btn-primary btn-lg btn-block btn-huge" id="load" autocomplete="off" data-loading-text="{L_CONNECTING_ON_PAYPAL} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">
+            <!-- BEGIN levels -->
+            <span id="price{levels.LEVEL}" class="price-toggle" style="display:none;">{BBMEMBER_CURRENCY}&nbsp;{levels.DONATIONS_AMOUNT}{L_BB_CURRENCY_ZERO_ZERO_DEC}</span> 
+            <!-- END levels -->
+            {L_CONTINUE_ON_PAYPAL}&nbsp;<i class="icon-moon-paypal"></i>
+            </button>
+            <!-- ENDIF -->
+			
+			<!-- IF BBPOINTS_ENABLED -->
+			<div class="or">{L_OR}</div>
+            <button type="submit" name="submitbtn" disabled="disabled" value="{L_BBMEMBERSHIP_POINTS}" class="btn btn-primary btn-lg btn-block btn-huge" id="loadpoints" autocomplete="off" data-loading-text="{L_CONNECTING_ON_BBPOINTS} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">
+		   <!-- BEGIN levels -->
+            <span id="points{levels.LEVEL}" class="price-toggle" style="display:none;">{levels.DONATIONS_POINTS}&nbsp;{L_BBMEMBERSHIP_POINTS}</span> 
+            <!-- END levels -->
+            {L_CONTINUE_ON_BBPOINTS}&nbsp;<i class="fa fa-money"></i>
+            </button>
+            <!-- ENDIF -->
+				
+	</div>
+	
+	
+<div class="col-md-8 col-sm-8 col-sm-pull-4" role="main">
+    <form role="form" action="{U_DONATE}" method="post">
+    <fieldset>
+      <div class="space10"></div>
+        <div class="space10"></div>
+    <div id="deposit-amounts" data-toggle="buttons">	
+        <div class="row">
+	        <div class="planning-area text-center">
+			    <div class="npt-format-1">
+				<!-- BEGIN levels -->
+                    <!-- IF not levels.DONATIONS_HIDE -->
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div class="npt-item <!-- IF levels.LEVEL == 1 -->npt-item-1<!-- ELSEIF levels.LEVEL == 2 -->npt-item-2<!-- ELSEIF levels.LEVEL == 3 -->npt-item-3<!-- ELSEIF levels.LEVEL == 4 -->npt-item-4<!-- ENDIF --> <!-- IF levels.PACKAGE -->npt-item-purchased<!-- ENDIF -->">
+								<div class="npt-plan-top">
+									<h3 class="npt-plan-name">
+									<!-- IF levels.LEVEL == 1 -->
+									silver
+									<!-- ELSEIF levels.LEVEL == 2 -->
+									gold
+									<!-- ELSEIF levels.LEVEL == 3 -->
+									platinum
+									<!-- ELSEIF levels.LEVEL == 4 -->
+									VIP
+									<!-- ENDIF --> 
+									</h3>
+									<div class="npt-plan-cost">
+										<span class="npt-currency"><!-- IF PAYPAL_ENABLED -->{BBMEMBER_CURRENCY}<!-- ENDIF --></span>
+										<span class="npt-cost">{levels.DONATIONS_AMOUNT}</span>
+										<span class="npt-cent">{L_BB_CURRENCY_ZERO_ZERO}</span>
+										<span class="npt-duration">&nbsp;{levels.DONATIONS_EXPIRE}&nbsp;{L_DAYS}</span>
+									</div>
+								</div>
+								<div class="npt-plan-details">
+									<ul>
+									<!-- BEGIN packages -->
+									 <li><span class="glyphicon glyphicon<!-- IF packages.S_ROW_COUNT >= packages.PACKAGE -->-remove text-danger<!-- ELSE -->-ok text-green<!-- ENDIF -->"></span> {packages.DONATION_PACKAGE}</li>
+									<!-- END packages -->
+									</ul>
+								</div>
+								<div class="npt-plan-bottom">
+									<label for="option{levels.LEVEL}" class="price-toggler btn avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
+									  <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}" autocomplete="off"><!-- IF PAYPAL_ENABLED -->&nbsp;{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF -->&nbsp;{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
+									</label>
+								</div>
+							</div>
+						</div>
+					<!-- ENDIF -->
+                <!-- END levels -->	
+	            </div>
+	        </div>
+		</div>	
+
+    </div>
+			
+    </div>
+			
+
+
+    </fieldset>
+    </form>
+    <div class="space10"></div>
+     <p class="text-muted">{L_BBMEMBERSHIP_DEPOSIT_DISCLAIMER}</p>
+ </div>
+        
+   
+</div>
+<!-- IF NOTIFY_STATUS -->
+<script>
+    var info = '{L_INFORMATION}';
+    var notify = '{NOTIFY_STATUS}';
+</script>
+<!-- INCLUDEJS @sitesplat_bbmembership/js/notify_status.js -->
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->
