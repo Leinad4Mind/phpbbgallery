@@ -1,1 +1,3 @@
-{% INCLUDEJS '@sitesplat_bblazy/js/blazy_prev.min.js' %}
+{% if BB_LOAD_IN_VIEWTOPIC or BB_LOAD_IN_MEMBER_PROFILE or BB_LOAD_IN_UCP %}
+	{% INCLUDEJS '@sitesplat_bblazy/js/blazy_prev.min.js' %}
+{% endif %}

@@ -15,11 +15,9 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_modify_post_row'	=> 'modify_posts',
-
-			'core.posting_modify_template_vars'	=> 'modify_preview',
-			
-			'core.ucp_pm_view_message'	=> 'modify_pms',
+			'core.viewtopic_modify_post_row'		=> 'modify_posts',
+			'core.posting_modify_template_vars'		=> 'modify_preview',
+			'core.ucp_pm_view_message'				=> 'modify_pms',
 
 			'core.memberlist_view_profile'			=> 'modify_member_profile_signature',
 			'core.memberlist_prepare_profile_data'	=> 'modify_member_profile_avatar',
