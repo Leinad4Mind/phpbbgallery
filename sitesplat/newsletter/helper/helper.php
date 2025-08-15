@@ -145,13 +145,17 @@ class helper
 				)
 			);
 			
-			if (!$this->request->variable('compose', 0))
+	// topic limits //sql_query_limit($sql, 20)// to 20 topics max otherwise emails are impossible to read
+			$forum_ary = json_decode($this->config['newsletter_forums'], true);
+			if (!$this->request->variable('compose', 0) && sizeof($forum_ary))
 			{
 				$sql = 'SELECT t.topic_title, t.topic_id, t.topic_last_post_id, t.forum_id, f.forum_name
 						FROM ' . TOPICS_TABLE . ' t
 						LEFT JOIN ' . FORUMS_TABLE . ' f ON f.forum_id = t.forum_id
-						WHERE t.topic_visibility not IN (0, 3) AND t.topic_last_post_time BETWEEN ' . $this->config['newsletter_last_gc'] . ' AND ' . time();
-				$result = $this->db->sql_query($sql);
+						WHERE t.forum_id IN (' . implode(',', $forum_ary) . ') AND t.topic_visibility not IN (0, 3) 
+						AND t.topic_last_post_time BETWEEN ' . $this->config['newsletter_last_gc'] . ' AND ' . time() . '
+						ORDER BY topic_last_post_time DESC';
+				$result = $this->db->sql_query_limit($sql, 20);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
 					$messenger->assign_block_vars('mailrow', array(

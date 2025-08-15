@@ -50,6 +50,14 @@
             <dt><label for="priority">{L_MAIL_PRIORITY}{L_COLON}</label></dt>
             <dd><select id="priority" name="newsletter_settings[priority]">{S_PRIORITY_OPTIONS}</select></dd>
         </dl>
+		 <dl>
+            <dt><label for="priority">{L_FORUMS_NEWS_FROM}{L_COLON}</label><br /><span>{L_FORUMS_FROM_EXPLAIN}</span></dt>
+            <dd><select size="1" id="forums" name="newsletter_forums[]" multiple style="max-width:200px;max-height:160px;height:160px;">
+            <!-- BEGIN forumrows -->
+            <option value="{forumrows.ID}"{forumrows.SELECTED}>{forumrows.FORUMNAME}</option>
+            <!-- END forumrows -->
+            </select></dd>
+        </dl>
         <dl>
             <dt><label for="usernames">{L_SEND_TO_USERS}{L_COLON}</label><br /><span>{L_SEND_TO_USERS_EXPLAIN}</span></dt>
             <dd><textarea name="newsletter_settings[usernames]" id="usernames" rows="5" cols="80" class="mceNoEditor" style="width:96%;">{USERNAMES}</textarea></dd>
@@ -114,7 +122,14 @@
         </form>
     <!-- ENDIF -->
 	
-    <div style="margin-bottom:20px;">{LAST_SEND}<br /><small>{L_LAST_SEND_EXPLAIN}</small></div>
+	
+    <div style="margin-bottom:20px;">
+	 <fieldset>
+	   <span class="legend">{L_NEWS_SUBSCRIBERS_INFO}</span>
+	     {LAST_SEND}<br /><small>{L_LAST_SEND_EXPLAIN}</small>
+	 </fieldset>  
+	   
+	</div>
 	
     <fieldset id="mailrows">
     <span class="legend" id="legend">{L_LAST_SEND_LETTERS}</span>
@@ -169,6 +184,11 @@
     </table>
     </fieldset>
 
+	<fieldset style="background:#fff;">
+       <span class="legend">{L_NEWS_TRICKS_TITLE}</span>
+	   <div class="entry-content-limits">{L_ACP_NEWS_TRICK_EXPLAIN}</div>
+	</fieldset>
+	
 	<div class="modal fade" id="myModalTutorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content md-content md-content-tutorial">

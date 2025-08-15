@@ -938,7 +938,7 @@ Subject: Latest topic overview "{SITENAME}"
 		<div style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 173000px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;" class="layout one-col email-footer">
 			<div style="border-collapse: collapse;display: table;width: 100%;" class="layout__inner">
 				<!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0"><tr class="layout-email-footer"><td style="width: 600px;" class="w560"><![endif]-->
-				<div style="text-align: left;font-size: 12px;line-height: 19px;color: #99b0b8;font-family: &quot;Open Sans&quot;,sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);" class="column">
+				<div style="text-align: center;font-size: 12px;line-height: 19px;color: #99b0b8;font-family: &quot;Open Sans&quot;,sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);" class="column">
 					<div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
 						<div>
 							<span>

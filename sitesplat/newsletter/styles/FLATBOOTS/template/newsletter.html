@@ -23,7 +23,7 @@
 				  <a class="inline" data-toggle="collapse" href="#month_{archiverow.S_ROW_COUNT}"><i id="month_image_{archiverow.S_ROW_COUNT}" class="fa <!-- IF archiverow.S_ROW_COUNT >= 0 -->fa-bar-chart-o"<!-- ELSE -->fa-bar-chart"<!-- ENDIF -->></i>&nbsp;{archiverow.ARCHIVE}</a>
 				   <br />
 					<div id="month_{archiverow.S_ROW_COUNT}" class="collapse">
-					 <p>{L_OVERVIEW} {archiverow.ARCHIVE}</p>
+					 <p>{archiverow.ARCHIVE} {L_OVERVIEW_ARCHIVE} </p>
 						<ul class="mailrow list-unstyled">
 						<!-- BEGIN monthrow -->
 						 <li><a href="index.html?letter={archiverow.monthrow.U_VIEW}" data-src="index.html?letter={archiverow.monthrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-arch" class="btn btn-default btn-xs modal-arch-btn"><i class="fa fa-envelope"></i>&nbsp;{archiverow.monthrow.TITLE}&nbsp;&#45;&nbsp;{archiverow.monthrow.DATE}</a></li>
@@ -90,5 +90,41 @@
 
 <!-- IF not S_MAIL_VIEW -->
 <!-- INCLUDEJS @sitesplat_newsletter/js/newsletter.js -->
+<div class="modal modal-news fade" id="myModaNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">{L_NEWSLETTER}</h4>
+			</div>
+			<div class="modal-body">
+			<div class="embed-responsive embed-responsive-16by9">
+               <iframe class="embed-responsive-item" src="#"></iframe>
+			</div>	
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{L_CLOSE}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal modal-arch fade" id="myModalArchLabel" tabindex="-2" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalArch">{L_NEWSLETTER}</h4>
+			</div>
+			<div class="modal-body">
+			<div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="#"></iframe>
+			</div>	
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{L_CLOSE}</button>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- INCLUDE overall_footer.html -->
 <!-- ENDIF -->

@@ -104,6 +104,7 @@ class newsletter_module
 						trigger_error('FORM_INVALID');
 					}
 					$settings = $this->request->variable('newsletter_settings', array('' => ''));
+					$forums = $this->request->variable('newsletter_forums', array(0 => 0));
 					if ($this->request->variable('compose', 0))
 					{
 						$sql_ary = array(
@@ -124,6 +125,7 @@ class newsletter_module
 					} else
 					{
 						$this->config->set('newsletter_settings', json_encode($settings));
+						$this->config->set('newsletter_forums', json_encode($forums));
 						$this->config->set('newsletter_gc', ($settings['period'] > 1) ? 604800 : (604800 * 4));					
 					}
 					trigger_error($this->user->lang('ACP_NEWSOVERVIEW_' . (($this->request->variable('compose', 0)) ? 'SEND' : 'SAVED')) . adm_back_link($this->u_action));
@@ -183,10 +185,21 @@ class newsletter_module
 						'EMAIL'			=> $row['user_email'],
 						'LANG'			=> $row['lang_local_name']
 					));
-					
-
 				}
-				
+		
+				$sql = 'SELECT forum_id, forum_name FROM ' . FORUMS_TABLE . ' WHERE forum_type = 1 ORDER BY forum_name';
+				$result = $this->db->sql_query($sql);
+				$forum_ary = json_decode($this->config['newsletter_forums'], true);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$template->assign_block_vars('forumrows', array(
+						'ID'			=> $row['forum_id'],
+						'FORUMNAME'		=> $row['forum_name'],
+						'SELECTED'		=> (in_array($row['forum_id'], $forum_ary)) ? ' selected="selected"' : '',
+					));
+				}
+				$this->db->sql_freeresult($result);
+		
 				$enable_html = $phpbb_container->get('ext.manager')->is_enabled('forumhulp/htmlemail');
 				$template->assign_vars(array(
 					'WARNING_MSG'			=> (sizeof($error)) ? implode('<br />', $error) : '',
