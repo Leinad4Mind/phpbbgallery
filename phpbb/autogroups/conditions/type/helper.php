@@ -114,16 +114,13 @@ class helper
 	 */
 	public function prepare_users_for_query($user_ids)
 	{
-		if (is_array($user_ids))
+		if (!is_array($user_ids))
 		{
-			// Cast each array value to integer
-			$user_ids = array_map('intval', $user_ids);
+			$user_ids = array($user_ids);
 		}
-		else
-		{
-			// Cast user id to integer and put it inside an array
-			$user_ids = array((int) $user_ids);
-		}
+
+		// Cast each array value to integer
+		$user_ids = array_map('intval', $user_ids);
 
 		return $user_ids;
 	}
@@ -134,14 +131,14 @@ class helper
 	 * @param string $type       Type of notification to send (group_added|group_removed)
 	 * @param array $user_id_ary Array of user(s) to notify
 	 * @param int $group_id      The usergroup identifier
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function send_notifications($type, $user_id_ary, $group_id)
 	{
 		if (!function_exists('get_group_name'))
 		{
-			include($this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext);
+			include $this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext;
 		}
 
 		$this->notification_manager->add_notifications("phpbb.autogroups.notification.type.$type", array(

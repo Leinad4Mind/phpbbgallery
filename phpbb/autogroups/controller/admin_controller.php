@@ -134,7 +134,7 @@ class admin_controller implements admin_interface
 			'S_DEFAULT'		=> (bool) $autogroups_data['autogroups_default'],
 			'S_NOTIFY'		=> (bool) $autogroups_data['autogroups_notify'],
 
-			'U_FORM_ACTION'	=> $this->u_action . '&amp;action=' . (($autogroups_id) ? 'edit' : 'add') . '&amp;autogroups_id=' . $autogroups_id,
+			'U_FORM_ACTION'	=> $this->u_action . '&amp;action=' . ($autogroups_id ? 'edit' : 'add') . '&amp;autogroups_id=' . $autogroups_id,
 			'U_ACTION'		=> $this->u_action,
 			'U_BACK'		=> $this->u_action,
 		));
@@ -228,7 +228,7 @@ class admin_controller implements admin_interface
 	 *
 	 * @param int $autogroups_id An auto group identifier
 	 *                           A value of 0 is new, otherwise we're updating
-	 * @return null
+	 * @return void
 	 * @access protected
 	 */
 	protected function submit_autogroup_rule($autogroups_id = 0)
@@ -265,7 +265,7 @@ class admin_controller implements admin_interface
 		{
 			$sql = 'INSERT INTO ' . $this->autogroups_rules_table . ' ' . $this->db->sql_build_array('INSERT', $data);
 			$this->db->sql_query($sql);
-			$autogroups_id = $this->db->sql_nextid();
+			$autogroups_id = (int) $this->db->sql_nextid();
 		}
 
 		// Apply the auto group to all users
@@ -291,7 +291,7 @@ class admin_controller implements admin_interface
 			FROM ' . $this->autogroups_rules_table . '
 			WHERE autogroups_id = ' . (int) $id;
 		$result = $this->db->sql_query($sql);
-		$autogroups_data = $this->db->sql_fetchrow();
+		$autogroups_data = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
 		return $autogroups_data;
@@ -327,7 +327,7 @@ class admin_controller implements admin_interface
 	/**
 	 * Display multi-select box containing all user groups
 	 *
-	 * @return null
+	 * @return void
 	 * @access protected
 	 */
 	protected function display_group_exempt_options()
@@ -340,7 +340,7 @@ class admin_controller implements admin_interface
 			WHERE autogroup_default_exempt = 1';
 		$result = $this->db->sql_query($sql, 7200);
 
-		while ($row = $this->db->sql_fetchrow())
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$group_id_ary[] = $row['group_id'];
 		}
@@ -356,7 +356,7 @@ class admin_controller implements admin_interface
 	 *
 	 * @param array $selected                  An array of identifiers for selected group(s)
 	 * @param bool  $exclude_predefined_groups Exclude GROUP_SPECIAL
-	 * @return null
+	 * @return void
 	 * @access protected
 	 */
 	protected function build_groups_menu($selected, $exclude_predefined_groups = false)
@@ -365,11 +365,11 @@ class admin_controller implements admin_interface
 		$sql = 'SELECT group_id, group_name, group_type
 			FROM ' . GROUPS_TABLE . '
 			WHERE ' . $this->db->sql_in_set('group_name', array('BOTS', 'GUESTS'), true, true) .
-				(($exclude_predefined_groups) ? ' AND group_type <> ' . GROUP_SPECIAL : '') . '
+				($exclude_predefined_groups ? ' AND group_type <> ' . GROUP_SPECIAL : '') . '
 			ORDER BY group_name';
 		$result = $this->db->sql_query($sql);
 
-		while ($group_row = $this->db->sql_fetchrow())
+		while ($group_row = $this->db->sql_fetchrow($result))
 		{
 			$this->template->assign_block_vars('groups', array(
 				'GROUP_ID'		=> $group_row['group_id'],
@@ -385,7 +385,7 @@ class admin_controller implements admin_interface
 	 * Build template vars for a select menu of auto group conditions
 	 *
 	 * @param int $selected An identifier for the selected group
-	 * @return null
+	 * @return void
 	 * @access protected
 	 */
 	protected function build_conditions_menu($selected)

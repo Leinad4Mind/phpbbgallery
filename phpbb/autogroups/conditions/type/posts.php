@@ -75,7 +75,7 @@ class posts extends \phpbb\autogroups\conditions\type\base
 
 		// Is this a sync action? If so, we want to get all users
 		// by setting the $negate arg to true in sql_in_set for 1=1
-		$sync = $options['action'] == 'sync';
+		$sync = $options['action'] === 'sync';
 
 		// Get data for the users to be checked (exclude bots and guests)
 		$sql = 'SELECT user_id, ' . implode(', ', $condition_data) . '
@@ -99,7 +99,7 @@ class posts extends \phpbb\autogroups\conditions\type\base
 	 *
 	 * @param array $user_row Array of user data to perform checks on
 	 * @param array $options  Array of optional data
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function check($user_row, $options = array())
@@ -111,9 +111,9 @@ class posts extends \phpbb\autogroups\conditions\type\base
 
 		// We need to decrease the user's post count during post deletion
 		// because the database does not yet have updated post counts.
-		if ($options['action'] == 'delete')
+		if ($options['action'] === 'delete')
 		{
-			foreach ($user_row as $user_id => &$user_data)
+			foreach ($user_row as &$user_data)
 			{
 				$user_data['user_posts']--;
 			}

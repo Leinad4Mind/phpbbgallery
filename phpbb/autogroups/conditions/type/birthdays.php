@@ -76,7 +76,7 @@ class birthdays extends \phpbb\autogroups\conditions\type\base
 		$sql = 'SELECT user_id, ' . implode(', ', $condition_data) . '
 			FROM ' . USERS_TABLE . '
 			WHERE ' . $this->db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-				AND ' . $this->db->sql_in_set('user_id', $user_ids, !sizeof($user_ids), true);
+				AND ' . $this->db->sql_in_set('user_id', $user_ids, !count($user_ids), true);
 		$result = $this->db->sql_query($sql);
 
 		$user_data = array();
@@ -103,14 +103,19 @@ class birthdays extends \phpbb\autogroups\conditions\type\base
 
 		if (!isset($now))
 		{
-			// Get the current UTC timestamp
-			$now = phpbb_gmgetdate();
+			$now = new \DateTime('now');
 		}
 
-		// Get birth year from the stored birth date
-		$birthday_year = (int) substr($user_birthday, -4);
+		$age = 0;
 
-		// Return the users age
-		return ($birthday_year) ? (int) max(0, $now['year'] - $birthday_year) : 0;
+		$birthday_year = (int) substr($user_birthday, -4);
+		if ($birthday_year)
+		{
+			$birthday_datetime = new \DateTime(str_replace(' ', '', $user_birthday));
+			$diff = $birthday_datetime->diff($now);
+			$age = (int) $diff->format('%y');
+		}
+
+		return $age;
 	}
 }

@@ -65,7 +65,7 @@ class manager
 	/**
 	 * Check auto groups conditions and execute them
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function check_conditions()
@@ -82,7 +82,7 @@ class manager
 	 * @param string $type_name Name of the condition
 	 * @param array  $options   Array of optional data
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function check_condition($type_name, $options = array())
@@ -108,8 +108,11 @@ class manager
 	public function add_autogroups_type($autogroups_type_name)
 	{
 		// Insert the type name into the database
-		$sql = 'INSERT INTO ' . $this->autogroups_types_table . '
-			' . $this->db->sql_build_array('INSERT', array('autogroups_type_name' => $this->db->sql_escape($autogroups_type_name)));
+		$sql = 'INSERT INTO ' . $this->autogroups_types_table . ' ' .
+			$this->db->sql_build_array('INSERT', array(
+				'autogroups_type_name' => (string) $autogroups_type_name
+			)
+		);
 		$this->db->sql_query($sql);
 
 		// Return the id of the newly inserted condition type
@@ -123,7 +126,7 @@ class manager
 	 *
 	 * @param string $autogroups_type_name The name of the auto group type
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function purge_autogroups_type($autogroups_type_name)
@@ -156,7 +159,7 @@ class manager
 	 * Purge all autogroups rules related to a certain group_id
 	 *
 	 * @param int $group_id Group identifier
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function purge_autogroups_group($group_id)
@@ -304,7 +307,7 @@ class manager
 	 *
 	 * @param int     $autogroups_rule_id      The id of the auto group rule
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function sync_autogroups($autogroups_rule_id)
