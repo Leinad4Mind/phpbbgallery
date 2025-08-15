@@ -1,8 +1,8 @@
 <?php
 /**
  *
- * Advanced Polls [Japanese]
- * Japanese translation by tk6904 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1658156)*
+ * Advanced Polls [English]
+ *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
@@ -35,6 +35,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>投票結果が表示されます</strong>:',
-	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> '投票した結果が表示されるようになりました',
+	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Die Ergebnisse sind nun sichtbar für die Umfrage</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Die Ergebnisse für eine Umfrage, an der Sie teilgenommen haben, sind nun einsehbar.',
 ));

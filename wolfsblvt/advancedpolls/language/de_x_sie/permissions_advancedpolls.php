@@ -1,8 +1,8 @@
 <?php
 /**
  *
- * Advanced Polls [Japanese]
- * Japanese translation by tk6904 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1658156)*
+ * Advanced Polls [Deutsch]
+ *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
@@ -31,18 +31,17 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 /**
- * EXTENSION-DEVELOPERS PLEASE NOTE
- *
- * You are able to put your permission sets into your extension.
- * The permissions logic should be added via the 'core.permissions' event.
- * You can easily add new permission categories, types and permissions, by
- * simply merging them into the respective arrays.
- * The respective language strings should be added into a language file, that
- * start with 'permissions_', so they are automatically loaded within the ACP.
- */
+*	EXTENSION-DEVELOPERS PLEASE NOTE
+*
+*	You are able to put your permission sets into your extension.
+*	The permissions logic should be added via the 'core.permissions' event.
+*	You can easily add new permission categories, types and permissions, by
+*	simply merging them into the respective arrays.
+*	The respective language strings should be added into a language file, that
+*	start with 'permissions_', so they are automatically loaded within the ACP.
+*/
 
 // User Permissions
 $lang = array_merge($lang, array(
-	'ACL_F_SEEVOTERS'			=> '投票者を見る', // Can see poll voters
-	'ACL_M_SEEVOTERS'			=> '投票者情報を閲覧する', // Can view poll voters
+	'ACL_U_SEE_VOTERS'			=> 'Kann die Benutzer sehen, die abgestimmt haben',
 ));

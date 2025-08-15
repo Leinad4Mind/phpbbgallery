@@ -43,5 +43,5 @@ if (empty($lang) || !is_array($lang))
 
 // User Permissions
 $lang = array_merge($lang, array(
-	'ACL_U_SEE_VOTERS'			=> 'Kann die Benutzer sehen, abgestimmt haben, wenn aktiviert',
+	'ACL_U_SEE_VOTERS'			=> 'Kann die Benutzer sehen, die abgestimmt haben',
 ));
