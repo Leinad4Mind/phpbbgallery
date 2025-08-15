@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.tfa.tables.registration: %core.table_prefix%tfa_registration

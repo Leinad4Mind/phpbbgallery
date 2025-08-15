@@ -1,0 +1,31 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE} data-focus="otp">
+    <fieldset class="framed-ucp">
+	 <legend>{L_TFA_ADD_NEW_OTP_KEY}</legend>
+        <p>{L_TFA_ADD_OTP_KEY_MAIN}</p>
+    <div class="tfa">
+		<span class="tfa-qr">
+			<img class="center-block" alt="" src="{TFA_QR_CODE}" />
+		</span>
+		  <div class="space10"></div>
+		<div class="input-group tfa-input">
+            <span class="input-group-addon">
+				<span class="manual-code">{L_TFA_ADD_OTP_KEY_EXPLAIN}</span>
+			</span>
+			<input name="register" class="form-control" id="otp" type="search" title="{L_TFA_OTP_KEY}" size="20" maxlength="128" placeholder="{L_TFA_OTP_KEY}" value="" autocomplete="off">
+             <span class="input-group-btn">
+			<button title="{L_TFA_ADD_KEY}" class="btn btn-default btn-block" id="add_key" type="submit">
+			 <span class="hidden-xs">{L_SUBMIT}</span><span class="visible-xs"><i class="fa fa-send"></i></span>
+			</button>
+			</span>
+		</div>
+            <input type="hidden" name="md" value="{L_TFA_NEW}" />
+            {S_FORM_TOKEN}
+          {S_HIDDEN_FIELDS}
+         {S_HIDDEN_FIELDS_MODULE}
+    </div>
+	</fieldset>
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->

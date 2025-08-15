@@ -1,0 +1,50 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<fieldset class="framed-ucp">
+	 <legend>{L_TITLE}</legend>
+        <p>{L_TFA_KEYS}</p>
+		
+	<!-- IF ERROR -->
+		<div class="alert alert-danger fade in">
+         <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> {ERROR}
+        </div>
+	<!-- ENDIF -->
+	<!-- IF not .keys -->	
+		<div class="alert alert-info fade in">
+         <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> {L_TFA_NO_KEY_FOUND}
+        </div>
+	<!-- ENDIF -->	
+		
+    <div class="panel panel-default">
+            <table class="footable table table-striped table-primary table-hover">
+                <thead>
+                <tr>
+                    <th class="center">{L_TFA_REGISTERED}</th>
+                    <th class="center">{L_TFA_LAST_USED}</th>
+                    <th class="center">{L_TFA_LOGIN_FROM}</th>
+                    <th class="center mark">{L_DELETE}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- BEGIN keys -->
+                <tr>
+                    <td class="center">{keys.REGISTERED}</td>
+                    <td class="center"><!-- IF keys.LAST_USED -->{keys.LAST_USED}<!-- ELSE -->{L_TFA_KEY_NOT_USED}<!-- ENDIF --></td>
+                    <td class="center">{keys.LOGGED_IN}</td>
+                    <td class="center mark"><input type="checkbox" name="keys[]" value="{keys.ID}" id="key_{keys.ID}" /></td>
+                </tr>
+                <!-- BEGINELSE -->
+                    <tr><td colspan="4">{L_TFA_NO_KEYS}</td></tr>
+                <!-- END keys -->
+                </tbody>
+            </table>
+    </div>
+        {S_HIDDEN_FIELDS}
+        <!-- IF not .keys --><button type="submit" name="md" value="{L_TFA_NEW}" class="btn btn-success"><i class="fa fa-qrcode"></i> {L_TFA_NEW}</button><!-- ENDIF -->
+        <!-- IF .keys --><button type="submit" name="md" value="{L_DELETE_MARKED}" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> {L_DELETE_MARKED}</button><!-- ENDIF -->
+        {S_FORM_TOKEN}
+    </fieldset>
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->
