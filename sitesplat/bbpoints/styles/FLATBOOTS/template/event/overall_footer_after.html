@@ -1,0 +1,9 @@
+<!-- IF S_USER_LOGGED_IN -->
+<!-- INCLUDEJS @sitesplat_bbpoints/js/jquery-ui.min.js -->
+<!-- INCLUDEJS @sitesplat_bbpoints/js/bbpoints.js -->
+<script>
+	var boardurl = '{BOARD_URL}';
+	n = parseInt(document.getElementById("userbbpoint").innerHTML);
+	document.getElementById("userbbpoint").innerHTML = n.toFixed(2);
+</script>
+<!-- ENDIF -->

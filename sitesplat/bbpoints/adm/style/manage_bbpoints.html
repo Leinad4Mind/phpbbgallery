@@ -1,0 +1,195 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbpoints/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbpoints/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbpoints/vendor/jqueryui/jquery-ui.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/bbpoints.css -->
+<!-- INCLUDE overall_header.html -->
+<a name="maincontent"></a>
+
+<h1>{L_ACP_POINTS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_POINTS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_POINTS}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+		
+	<p>{L_ACP_POINTS_INDEX_EXPLAIN}</p>
+	<form id="acp_points_main" method="post" action="{U_ACTION}" data-ajax="true" data-refresh="true">
+	<fieldset>
+  		<legend>{L_ACP_POINTS_INDEX_TITLE}</legend> 	
+		<dl>
+    		<dt><label for="ext_symbol">{L_EXT_SYMBOL}{L_COLON}</label><br />{L_EXT_SYMBOL_EXPLAIN}</dt>
+    		<dd><select name="ext_symbol" style="font-family:FontAwesome;width:140px;font-size:1.2em;">{EXT_SYMBOL}</select></dd>
+    	</dl>		<dl>
+    		<dt><label for="symbol_pos currency">{L_POINTS_NAME}{L_COLON}</label><br />{L_POINTS_NAME_EXPLAIN}</dt>
+    		<dd><select name="currency" style="font-family:FontAwesome;width:140px;font-size:1.2em;">{CURRENCY}</select>
+				<label style="margin-left:10px;"><input type="radio" name="symbol_pos" value="1"<!-- IF SYMBOL_POS --> checked="checked" <!-- ENDIF --> /> {L_LEFT}</label>
+    			<label><input type="radio" name="symbol_pos" value="0"<!-- IF not SYMBOL_POS --> checked="checked" <!-- ENDIF --> /> {L_RIGHT}</label>
+			</dd>
+    	</dl>
+    	<dl>
+    		<dt><label for="per_topic per_post per_word">{L_ACP_POINTS}{L_COLON}</label><br /><span>{L_ACP_POINTS_EXPLAIN}</span></dt>
+    		<dd>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_FORUM_PERTOPIC}
+				</div>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_FORUM_PERPOST}
+				</div>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_FORUM_PERWORD}
+				</div>
+			</dd>
+			
+			<dd>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_topic" name="per_topic" value="{PER_TOPIC}" maxlength="8" size="10" />
+				</div>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_post" name="per_post" value="{PER_POST}" maxlength="8" size="10" />
+				</div>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_word" name="per_word" value="{PER_WORD}" maxlength="8" size="10" />
+				</div>
+			</dd>
+	   	</dl>
+    	<dl>
+    		<dt><label for="per_login per_register per_birthday">{L_ACP_POINTS}{L_COLON}</label><br /><span>{L_ACP_POINTS_PER_EXPLAIN}</span></dt>
+    		<dd>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_POINTS_PERLOGIN}
+				</div>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_POINTS_PERREGISTER}
+				</div>
+				<div style="float:left;width:33%;;font-size:0.85em;">
+					{L_POINTS_PERBIRTHDAY}
+				</div>
+			</dd>
+			
+			<dd>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_login" name="per_login" value="{PER_LOGIN}" maxlength="8" size="10" />
+				</div>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_register" name="per_register" value="{PER_REGISTER}" maxlength="8" size="10" />
+				</div>
+				<div style="float:left;width:33%;;">
+					<input type="number" id="per_birthday" name="per_birthday" value="{PER_BIRTHDAY}" maxlength="8" size="10" />
+				</div>
+			</dd>
+	   	</dl>
+    	<dl>
+    		<dt><label for="transfer_notify">{L_TRANSFER_NOTIFY}{L_COLON}</label><br />{L_TRANSFER_NOTIFY_EXPLAIN}</dt>
+    		<dd>
+         		<label><input type="radio" class="radio clickopen" name="transfer_notify" value="1"<!-- IF TRANSFER_NOTIFY --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+    			<label><input type="radio" class="radio clickclose" name="transfer_notify" value="0"<!-- IF not TRANSFER_NOTIFY --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+        	</dd>
+    	</dl>
+    	<dl id="comment" style="display:<!-- IF TRANSFER_NOTIFY -->block<!-- ELSE -->none<!-- ENDIF -->;">
+    		<dt><label for="comments_enable">{L_POINTS_COMMENTS}{L_COLON}</label><br />{L_POINTS_COMMENTS_EXPLAIN}</dt>
+    		<dd>
+    			<label><input type="radio" class="radio" name="comments_enable" value="1"<!-- IF COMMENTS_ENABLE --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+    			<label><input type="radio" class="radio" name="comments_enable" value="0"<!-- IF not COMMENTS_ENABLE --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+        	</dd>
+    	</dl>
+    	<dl>
+    		<dt><label>{L_ENABLE_STATS}{L_COLON}</label><br /><span>{L_ENABLE_STATS_EXPLAIN}</span></dt>
+    		<dd>
+    			<label><input type="radio" class="radio clickstatsopen" name="stats_enable" value="1"<!-- IF BAR_STATS or BBPOINTS_STATS --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+    			<label><input type="radio" class="radio clickstatsclose" name="stats_enable" value="0"<!-- IF not BAR_STATS and not BBPOINTS_STATS --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+        	</dd>
+    	</dl>
+    	<dl id="bar_stats" style="display:<!-- IF BBPOINTS_STATS or BAR_STATS -->block<!-- ELSE -->none<!-- ENDIF -->;">
+    		<dt><label>{L_BAR_STATS}{L_COLON}</label><br /><span>{L_BAR_STATS_EXPLAIN}</span></dt>
+    		<dd>
+    			<label><input type="radio" class="radio" name="bar_stats" value="1"<!-- IF BAR_STATS --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+    			<label><input type="radio" class="radio" id="radio_bar_stats" name="bar_stats" value="0"<!-- IF not BAR_STATS --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+				<input type="number" name="goal" value="{GOAL}" maxlength="8" size="10" />
+        	</dd>
+    	</dl>
+    	<dl id="bbpoints_stats" style="display:<!-- IF BBPOINTS_STATS or BAR_STATS -->block<!-- ELSE -->none<!-- ENDIF -->;">
+    		<dt><label>{L_BBPOINT_STATS}{L_COLON}</label><br /><span>{L_BBPOINT_STATS_EXPLAIN}</span></dt>
+    		<dd>
+    			<label><input type="radio" class="radio" name="bbpoints_stats" value="1"<!-- IF BBPOINTS_STATS --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+    			<label><input type="radio" class="radio" id="radio_bbpoints_stats" name="bbpoints_stats" value="0"<!-- IF not BBPOINTS_STATS --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+        	</dd>
+    	</dl>
+    	<dl>
+    		<dt><label for="sync_points">{L_SYNC_POINTS}{L_COLON}</label><br /><span>{L_SYNC_POINTS_EXPLAIN}</span></dt>
+    		<dd><input class="button2" type="submit" id="sync_points" name="sync_points" value="{L_RUN}" />
+			<div id="progressbar"><div id="progress"><div id="pbaranim"><span id="percent"></span></div></div></div>
+			</dd>
+    	</dl>
+  		<dl>
+  			<dt><label for="action_points">{L_RESET_POINTS}</label><br /><span>{L_RESET_POINTS_EXPLAIN}</span></dt>
+  			<dd><input type="hidden" name="action" value="reset" /><input class="button2" type="submit" id="action_points" name="reset_points" value="{L_RUN}" /></dd>
+  		</dl>
+    	<dl>
+    		<dt><label>{L_POINTS_GROUP_TRANSFER}{L_COLON}</label><br /><span>{L_POINTS_GROUP_TRANSFER_EXPLAIN}</span></dt>
+    		<dd><input id="transfer_to" value="" /><input type="hidden" id="transfer_id_to" name="transfer_to" value="0" /> <select name="group_id" id="group_id"><option value="0" selected="selected">-----</option>{GROUP_OPTIONS}</select></dd>
+    	</dl>
+    	<dl class="comments" style="display:none;">
+    		<dt><label>{L_POINTS_GROUP_TRANSFER_AMOUNT}{L_COLON}</label><br /><span>{L_POINTS_GROUP_TRANSFER_AMOUNT_EXPLAIN}</span></dt>
+    		<dd><input type="text" tabindex="1" class="post" name="transfer_amount" size="20" maxlength="18" />&nbsp;{POINTS_NAME}</dd>
+    	</dl>
+    	<dl class="comments" style="display:none;">
+    		<dt><label>{L_POINTS_GROUP_TRANSFER_PM_TITLE}{L_COLON}</label><br /><span>{L_POINTS_GROUP_TRANSFER_PM_TITLE_EXPLAIN}</span></dt>
+    		<dd><input type="text" tabindex="3" class="post" name="pm_subject" size="40" maxlength="255" /></dd>
+    	</dl>
+    	<dl class="comments" style="display:none;">
+    		<dt><label for="message">{L_POINTS_GROUP_TRANSFER_PM_COMMENT}{L_COLON}</label><br /><span>{L_POINTS_GROUP_TRANSFER_PM_COMMENT_EXPLAIN}</span></dt>
+    		<dd><script type="text/javascript">
+    			// <![CDATA[
+    				var form_name = 'acp_points_main';
+    				var text_name = 'message';
+    				var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[size=]','[/size]');
+    			// ]]>
+    			</script>
+    			<!-- INCLUDEJS {T_ASSETS_PATH}/javascript/editor.js -->
+    			<input type="button" class="button2" accesskey="b" name="addbbcode0" value=" B " style="font-weight:bold; width: 30px" onclick="bbstyle(0)" />
+    			<input type="button" class="button2" accesskey="i" name="addbbcode2" value=" i " style="font-style:italic; width: 30px" onclick="bbstyle(2)" />
+    			<input type="button" class="button2" accesskey="u" name="addbbcode4" value=" u " style="text-decoration: underline; width: 30px" onclick="bbstyle(4)" />
+    			<input type="button" class="button2" accesskey="q" name="addbbcode6" value="Quote" style="width: 50px" onclick="bbstyle(6)" />
+    			<input type="button" class="button2" accesskey="c" name="addbbcode8" value="Code" style="width: 40px" onclick="bbstyle(8)" />
+    			<input type="button" class="button2" accesskey="l" name="addbbcode10" value="List" style="width: 40px" onclick="bbstyle(10)" />
+    			<input type="button" class="button2" accesskey="o" name="addbbcode12" value="List=" style="width: 40px" onclick="bbstyle(12)" />
+    			<input type="button" class="button2" accesskey="t" name="addlitsitem" value="[*]" style="width: 40px" onclick="bbstyle(-1)" />
+    			<input type="button" class="button2" accesskey="p" name="addbbcode14" value="Img" style="width: 40px" onclick="bbstyle(14)" />
+    			<input type="button" class="button2" accesskey="w" name="addbbcode16" value="URL" style="text-decoration: underline; width: 40px" onclick="bbstyle(16)" />
+				<a href="{U_SMILIES}" style="margin-left:100px;" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_POINTS_SMILIES}</a>
+				<textarea id="message" tabindex="4" name="pm_text" cols="60" rows="4" >{COMMENT}</textarea>
+    		</dd>
+    	</dl>
+    	<dl>
+    		<dt><label for="set_config">{L_SUBMIT}{L_COLON}</label></dt>
+    		<dd><input class="button1" type="submit" id="set_config" name="set_config" value="{L_SUBMIT}" />{S_FORM_TOKEN}</dd>
+    	</dl>
+  	</fieldset>
+  	</form>
+	<script type="text/javascript">
+	// <![CDATA[
+		var adminurl ='{UA_PROGRESS_BAR}';
+		var boardurl = '{BOARD_URL}';
+	// ]]>
+	</script>
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbpoints/vendor/bootstrap/js/bootstrap.min.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbpoints/vendor/jqueryui/jquery-ui.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDEJS js/bbpoints.js -->
+<!-- INCLUDE overall_footer.html -->

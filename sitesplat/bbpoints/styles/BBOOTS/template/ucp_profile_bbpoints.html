@@ -1,0 +1,85 @@
+<!-- INCLUDE ucp_header.html -->
+<script>
+var boardurl = '{BOARD_URL}';
+</script>
+<div class="tab-pane active">
+	<fieldset class="framed-ucp">
+	 <legend>{L_BBPOINTS} {L_BBPOINT_LOG}</legend>
+		<p>{L_UCP_BBPOINTS_EXPLAIN}</p>
+<!-- IF U_ACTION -->
+<div class="clearfix">
+	<form  action="{U_ACTION}" method="post" data-ajax="true" data-refresh="true">  
+    <div class="row">
+		<div class="col-md-6">
+		<label class="control-label" for="transfer_to">{L_BB_TRANSFER}{L_COLON}</label>
+		<div class="input-group">
+		<span class="input-group-addon"><i class="fa fa-user"></i></span>
+		    <input placeholder="{L_USERNAME}" id="transfer_to" value="" class="form-control" /><input type="hidden" id="transfer_id_to" name="transfer_to" value="0" />
+		</div>
+		</div>
+		
+		<div class="col-md-6">
+		<label class="control-label" for="transfer_to">{L_BB_AMOUNT}{L_COLON}</label>
+		<div class="input-group">
+			<span class="input-group-addon">{L_BBPOINTS}</span>
+		    <input placeholder="{L_BB_AMOUNT}" type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{USER_POINTS}" class="form-control">
+		   <span class="input-group-btn"> 
+			<input type="submit" tabindex="4" name="submit" value="{L_SUBMIT}" class="btn btn-success" />
+		   </span>
+		</div>
+		</div>
+	</div>
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="comment">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45" />
+		  </div> 
+		</div> 
+		<!-- ENDIF -->
+	</form>
+   <div class="space10"></div>
+  <div class="space10"></div>
+</div>
+<!-- ENDIF -->
+
+<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+		<thead>
+			<tr>
+				<th class="name">{L_SUBJECT}</th>
+				<th class="center">{L_BBPOINTS}</th>
+				<th class="center">{L_POST_TIME}</th>
+				<th class="center mark">{L_USERNAME}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN likes -->
+			<tr>
+				<td <!-- IF likes.REASON --> title=""<!-- ENDIF -->><label for="{likes.SUBJECT}"><!-- IF likes.SUBJECTURL --><a href="{likes.SUBJECTURL}"><!-- ENDIF -->{likes.SUBJECT}<!-- IF likes.SUBJECTURL --></a><!-- ENDIF --></label></td>
+				<td title="{likes.TITLE}"><!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i> <!-- ENDIF -->{likes.GIVE_RECIEVE}<!-- IF not SYMBOL_POS --> <i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --></td>
+				<td class="center">{likes.LIKE_TIME}</td>
+				<td class="center mark">{likes.USERNAME}</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr><td colspan="4" class="text-center">{L_BBPOINTS_NO_RECORDS}</td></tr>
+		<!-- END likes -->
+		</tbody>
+	</table>	
+</div>
+
+<div class="clearfix">
+   <div class="pull-right">
+	 <ul class="pagination pagination-sm">
+	 <!-- IF .pagination or TOTAL_POSTS -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+	 <!-- ENDIF -->
+	 </ul>
+   </div>
+</div>
+
+</fieldset>
+</div>
+<!-- INCLUDE ucp_footer.html -->
