@@ -77,8 +77,8 @@
             <td><select name="bbmembership_group[{membership.BBMEMBERSHIP_ID}]">
             	<!-- BEGIN groups --><option value="{groups.GROUP_ID}"{groups.SELECTED}>{groups.GROUP_NAME}</option><!-- END groups -->
                 </select></td>
-            <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_default[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_DEFAULT} /></td>
-            <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_hide[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_HIDE} /></td>
+            <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_default[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_DEFAULT} /></label></td>
+            <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_hide[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_HIDE} /></label></td>
 		</tr>
         <!-- END membership -->
     </table></dd>
@@ -103,7 +103,7 @@
 
 <fieldset>
 	<legend style=" text-transform: capitalize;">{L_ACP_BBMEMBERSHIP_TRANSACTIONS}</legend>
-	<span style="margin-bottom: 20px; float: right; display: inline-grid;">{L_G_REGISTERED}{L_COLON}<select name="user_id" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
+	<span style="margin-bottom: 20px; float: right; display: inline-block;">{L_G_REGISTERED}{L_COLON} <select name="user_id" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
 	
 	<p style="font-size: 1em;">
 	 <label><strong>{L_ACP_BBMEMBERSHIP_FLAGS}{L_COLON}</strong></label><br>{L_ACP_BBMEMBERSHIP_FLAGS_EXPLAIN}
@@ -125,7 +125,7 @@
 	<!-- BEGIN transactions -->
 		<tr <!-- IF transactions.S_ROW_COUNT is even -->style="background-color: #DCEBFE;"<!-- ENDIF -->>
 			<td><a href="{transactions.DONATIONURL}">{transactions.USERNAME}</a></td>
-			<td><a href="mailto:{transactions.EMAIL}?SUBJECT=Donation">{transactions.EMAIL}</a></td>
+			<td><a href="mailto:{transactions.EMAIL}?SUBJECT=Membership">{transactions.EMAIL}</a></td>
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{transactions.CURRENCY}  {transactions.AMOUNT}</td>
 			<td><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status label <!-- IF transactions.STATUS == 'Not verified' -->label-danger<!-- ELSEIF transactions.STATUS == 'Completed' -->label-success<!-- ELSEIF transactions.STATUS == 'Expired' -->label-default<!-- ENDIF -->" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>

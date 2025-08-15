@@ -8,6 +8,13 @@
 */
 
 namespace sitesplat\bbmembership\controller;
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\config\config;
+use phpbb\pagination;
+use phpbb\json_response;
 
 /**
 * Main controller
@@ -30,7 +37,7 @@ class admin_controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\pagination $pagination, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
+	public function __construct(driver_interface $db, request $request, template $template, user $user, config $config, pagination $pagination, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
@@ -101,11 +108,13 @@ class admin_controller
 
 		if ($this->request->variable('status', '') == 'change')
 		{
-			$sql = 'SELECT id, user_id, payment_status, payment_date, mc_currency, mc_gross FROM ' . $this->bbmembership_table . ' 
+			$sql = 'SELECT id, user_id, membership, payment_status, payment_date, mc_currency, mc_gross FROM ' . $this->bbmembership_table . ' 
 					WHERE id = ' . $this->request->variable('txn_id', 0);
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
-			$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
+
+			$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+			$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 			$membership = (isset($this->bbmembership_groups[$mc_gross]) && 
 						   (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
 						   ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
@@ -162,9 +171,11 @@ class admin_controller
 											$this->show_result($this->user->lang['ACP_BBMEMBERSHIP_SAVE_ERROR']);
 
 			$group_amount = array();
+			$i = 0;
 			foreach ($donation_ary as $key => $value)
 			{
 				$group_amount[$value] = array(
+					'id'		=> ++$i,
 					'package'	=> $package_ary[$key],
 				);
 			}
@@ -261,7 +272,8 @@ class admin_controller
 			$amounts = array_keys($this->bbmembership_groups);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
+				$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$membership = (!$this->bbmembership_groups[$mc_gross]['expire'] || 
 							  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400) + $row['payment_date'] > time()) ? true: false;
 				$this->template->assign_block_vars('transactions', array(
@@ -284,20 +296,6 @@ class admin_controller
 
 		} else
 		{
-			$sql = 'SELECT user_id, username
-					FROM ' . USERS_TABLE . '
-					WHERE ' . $this->db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-					ORDER BY username';
-			$this->db->sql_query($sql);
-			$result = $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$this->template->assign_block_vars('users', array(
-					'USER_NAME'			=> $row['username'],
-					'USER_ID_URL'		=> $this->u_action . '&amp;user_id=' . $row['user_id'],
-				));
-			}
-			
 			$sql = 'SELECT COUNT(id) AS total FROM ' . $this->bbmembership_table;
 			$result = $this->db->sql_query($sql);
 			$total = $this->db->sql_fetchfield('total');
@@ -338,6 +336,23 @@ class admin_controller
 	/**
 	 * {@inheritdoc}
 	 */
+	public function search_user()
+	{
+		$term = strtolower($this->request->variable('term', '', true));
+		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' WHERE user_id <> ' . 0 . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
+		$result = $this->db->sql_query($sql);
+		$user_ary = array();
+		while($row = $this->db->sql_fetchrow($result)) 
+		{
+			$user_ary[] = array('value' => $row['user_id'], 'label' => $row['username']);
+		}
+		$json_response = new json_response();
+		$json_response->send($user_ary);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function sync_membership()
 	{
 		$this->get_max_id();
@@ -349,12 +364,13 @@ class admin_controller
 		
 		while (still_on_time(20) && $post_counter < $this->total_ids)
 		{
-			$sql = 'SELECT id, mc_gross, mc_currency, payment_status, payment_date, user_id FROM ' . $this->bbmembership_table . ' ORDER BY id ASC';
+			$sql = 'SELECT id, membership, mc_gross, mc_currency, payment_status, payment_date, user_id FROM ' . $this->bbmembership_table . ' ORDER BY id ASC';
 			$result = $this->db->sql_query_limit($sql, $this->batch_size, $post_counter);
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
+				$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$membership = (isset($this->bbmembership_groups[$mc_gross]) && 
 							  (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
 							  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||

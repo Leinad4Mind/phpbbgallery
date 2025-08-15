@@ -9,9 +9,13 @@
 
 namespace sitesplat\bbmembership\cron\task;
 
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\notification\manager;
+
 /**
 *
-* Ccron task.
+* Cron task.
 *
 */
 class membership extends \phpbb\cron\task\base
@@ -22,13 +26,14 @@ class membership extends \phpbb\cron\task\base
 	protected $bbmembership_table;
 	protected $root_path;
 	protected $php_ext;
+	protected $bbmembership_helper;
 
 	/**
 	* Constructor
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\notification\manager $notification_manager, $bbmembership_table, $root_path, $php_ext)
+	public function __construct(config $config, driver_interface $db, manager $notification_manager, $bbmembership_table, $root_path, $php_ext, $bbmembership_helper)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -37,6 +42,8 @@ class membership extends \phpbb\cron\task\base
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbmembership_groups = json_decode($this->config['bbmembership_groups'], true);
+		$this->bbmembership_helper = $bbmembership_helper;
+		$this->bbmembership_package = json_decode($this->config['bbmembership_package'], true);
 	}
 
 	/**
@@ -54,26 +61,30 @@ class membership extends \phpbb\cron\task\base
 		$ids = $expired_ids = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
+			$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+			$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 			$membership = (isset($this->bbmembership_groups[$mc_gross]) && 
 						  (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
-						  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time()) ? true: false;
-			$days_to_expiration = (isset($this->bbmembership_groups[$mc_gross])) ? round(((($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
-								  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / 
-								  (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 1 : 1), 0) : 0;
-								  
-			if ($membership && $days_to_expiration < 86400)
+						  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
+						  $this->bbmembership_groups[$mc_gross]['expire'] == 0) ? true: false;
+			
+			$days_to_expiration = floor((isset($bbmembership_groups[$mc_gross])) ?
+						((($bbmembership_groups[$mc_gross]['expire'] == 0) ? time() :
+						(($bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 :
+						$bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / 86400 : 1);
+         // echo $days_to_expiration;		  
+			if ($membership && !(max(0, $days_to_expiration -1)) && $row['payment_status'] == 'Completed')
 			{
 				$ids[$row['user_id']] = $row['id'];
 			}
 			
-			if (!$membership && $days_to_expiration < 0)
+			if (!$membership && $row['payment_status'] == 'Completed')
 			{
 				$expired_ids[$row['user_id']] = array('id' => $row['id'], 'mc_gross' => $mc_gross);
 			}	
 		}
-		
-		if (sizeof($ids))
+	
+		if (sizeof($ids) > 0)
 		{
 			foreach($ids as $user_id => $value)
 			{
@@ -85,7 +96,7 @@ class membership extends \phpbb\cron\task\base
 			}
 		}
 
-		if (sizeof($expired_ids))
+		if (sizeof($expired_ids) > 0)
 		{			
 			$ids = array_map(function($item) { return $item['id']; }, $expired_ids);
 			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET payment_status = "Expired" WHERE id IN (' . implode(',', $ids) . ')';

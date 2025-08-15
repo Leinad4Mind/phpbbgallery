@@ -56,6 +56,6 @@ services:
             - '@config'
             - '@controller.helper'
             - '%sitesplat.bbmembership.tables.bbmembership%'
-            - v@sitesplat.bbmembership.helper'
+            - '@sitesplat.bbmembership.helper'
         tags:
             - { name: event.listener, event: kernel.exception, method: onKernelException }

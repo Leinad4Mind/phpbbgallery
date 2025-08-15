@@ -10,6 +10,12 @@
 namespace sitesplat\bbmembership\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\config\config;
+use phpbb\controller\helper;
 
 /**
  * Event listener
@@ -27,7 +33,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\controller\helper $controller_helper, $bbmembership_table, $bbmembership_helper)
+	public function __construct(driver_interface $db, request $request, template $template, user $user, config $config, helper $controller_helper, $bbmembership_table, $bbmembership_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;

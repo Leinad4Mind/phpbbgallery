@@ -10,8 +10,8 @@
 namespace sitesplat\bbmembership\notification\type;
 
 /**
-* Admin activation notifications class
-* This class handles notifications for users requiring admin activation
+* BBmembership notifications class
+* This class handles notifications for users
 */
 
 class membership_bought extends \phpbb\notification\type\base
@@ -116,7 +116,7 @@ class membership_bought extends \phpbb\notification\type\base
 	*/
 	public function get_avatar()
 	{
-		return $this->user_loader->get_avatar($this->get_data('user_id'), false, true);
+		return $this->user_loader->get_avatar($this->get_data('user_id'), true, false);
 	}
 
 	/**

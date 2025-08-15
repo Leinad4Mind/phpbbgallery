@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -33,7 +32,8 @@ $lang = array_merge($lang, array(
 	'BBMEMBERSHIP_DEPOSIT_DISCLAIMER'   => '**Transactions can take any time from seconds to 24h to validate. For urgent matters, please contact the <a href="./memberlist.php?mode=contactadmin">Board Admin</a>',
 	'BBMEMBERSHIP_STATUS'		        => 'Current Membership status:',
 	'BBMEMBERSHIP_EXPIRED_INFO'			=> 'Expired!',
-	'BBMEMBERSHIP_PURCHASED'			=> 'Purchased',
+	'BBMEMBERSHIP_PURCHASED'			=> 'Purchased', 
+	'BBMEMBERSHIP_PENDING'			    => 'Pending',
 	'BBMEMBERSHIP_TAX_TEXT'			    => 'Includes taxes and/or fees',
 	'BB_CURRENCY_ZERO_ZERO'			    => '00',
 	'BB_CURRENCY_ZERO_ZERO_DEC'			=> '.00',

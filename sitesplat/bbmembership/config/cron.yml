@@ -8,6 +8,7 @@ services:
             - '%sitesplat.bbmembership.tables.bbmembership%'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '@sitesplat.bbmembership.helper'
         calls:
             - [set_name, [sitesplat.bbmembership]]
         tags:

@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -47,8 +46,15 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_CURRENCY'				=> 'Currency code',
 	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. If the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" ',
  
-    'ACP_BBMEMBERSHIP_FLAGS'			    => 'PayPal Flags',
-	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> 'If a transaction is flagged as <span class="label label-danger">Not verified</span> you can toggle the verification by clicking on the flag and it will be toggled as <span class="label label-success">Completed</span>. This will also automatically move the user to the intended group.<br /> Please make sure to verify the transaction with your PayPal account if the transaction status does not automatically change within 24h and you chose to force a "Completed" status.<br /> An <span class="label label-default">Expired</span> flag is a transaction that has been marked as such automatically by the Synch/Cron system therefore X user is removed from X group(membership level).',
+	'ACP_BBMEMBERSHIP_FLAGS'			    => 'Payment Status Flag',
+	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> '<span class="label label-danger">Not verified</span>: An user attempted a purchase and either changed his mind or PayPal was not able to verify the transaction. <br />
+												<span class="label label-success">Completed</span>: PayPal verified the transaction. <br />
+												<span class="label label-default">Expired</span>: The membership expired and the member has been automatically removed from the purchased package. 
+												<br />
+												<p><strong>NOTE:</strong> If a transaction is flagged as "Not verified" you can toggle the verification by clicking on the flag and it will be toggled as "Completed". This will also automatically move the user to the intended group.
+												Please make sure to verify the transaction with your PayPal account if the transaction status does not automatically change within 24h and you chose to force a "Completed" status.</p>
+												<p>An "Expired" flag is a transaction that has been marked as such automatically by the Synch/Cron system therefore X user is removed from X group(membership level).
+												Manually toggling "not verified" and "Completed" will move into or remove from X group accordingly. After a transaction is "Expired" you can toggle the status to "Not verified" or "Completed" but you cannot toggle back to "expired".</p>',
  
 	'ACP_BBMEMBERSHIP_SYNC'					=> 'Synchronization',
 	'ACP_BBMEMBERSHIP_SYNC_EXPLAIN'			=> 'This will force start a synchronization of the members package levels and groups.<br />Install <a href="https://github.com/ForumHulp/cronstatus" target="_blank">Cron Status Extension</a> to check the cron jobs. <br />Note: the sync automatically flags a "completed" transaction to "expired" if the criteria are met for X user.<br />The synchronization processes in batches of 50. Large forums with many users and memberships may take some time to get to 100% and complete the synchronization.',
@@ -58,7 +64,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_TOTAL'				=> 'Total amount',
 	'ACP_BBMEMBERSHIP_ADDRESS'				=> 'address',
 	'ACP_BBMEMBERSHIP_COUNTRY'				=> 'country',
-	'ACP_BBMEMBERSHIP_TRANSACTION_ID'		=> 'Tranaction id',
+	'ACP_BBMEMBERSHIP_TRANSACTION_ID'		=> 'Transaction id',
 	'ACP_BBMEMBERSHIP_PAY_STATUS'			=> 'Payment status',
 	'ACP_BBMEMBERSHIP_EXPIRED'				=> 'Expired',
 	'ACP_BBMEMBERSHIP_TIME'					=> 'Payment date & time',
@@ -66,7 +72,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBPOINTS_NOTICE_CLOSE'				=> 'Close',
 	'BBPOINTS_NOTICE'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints Cart system.',
     'ACP_BBMEMBERSHIP_SAVE_ERROR'			=> 'Something went wrong while saving your setup, try again!',
-	'BBMEMBERSHIP_NOTICE'					=> '<div class="attach-image"><p>Settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>. <br />Setup your memberships and packages first, add PayPal and optionally enable the BBpoints extension for extra functionality.</p></div>',
+	'BBMEMBERSHIP_NOTICE'					=> '<div class="attach-image"><p>Settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>. <br />Setup your memberships and packages first, add PayPal and optionally enable the BBpoints extension for extra functionality.</p></div>',
 	
 	
 	'BBMEMBERSHIP_DESCRIPTION'				=> 'Allows your board to run a true membership system. Optionally make the forum a private club available only for paid memebers. Many unique feautures included the possibility to pay for the membership with a BBpoints.',
@@ -84,7 +90,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBMEMBERSHIP_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.1',
+	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.3',
     'ACP_LOADING'			    			=> 'Hold On. Loading...',
 	
 ));

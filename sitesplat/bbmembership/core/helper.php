@@ -9,6 +9,11 @@
 namespace sitesplat\bbmembership\core;
 
 use Symfony\Component\DependencyInjection\Container;
+use phpbb\db\driver\driver_interface;
+use phpbb\config\config;
+use phpbb\user;
+use phpbb\request\request;
+use phpbb\notification\manager;
 
 class helper
 {
@@ -22,14 +27,14 @@ class helper
 	protected $php_ext;
 	protected $bbmembership_table;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\notification\manager $notification_manager, Container $phpbb_container,  $root_path, $php_ext, $bbmembership_table)
+	public function __construct(driver_interface $db, config $config, user $user, request $request, manager $notification_manager, Container $phpbb_container,  $root_path, $php_ext, $bbmembership_table)
 	{
 		$this->db = $db;
 		$this->config = $config;
 		$this->user = $user;
 		$this->request = $request;
 		$this->notification_manager = $notification_manager;
-		$this->phpbb_container = $phpbb_container;
+		$this->container = $phpbb_container;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbmembership_table = $bbmembership_table;
@@ -60,6 +65,33 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
+	public function get_paypal_verify()
+	{
+		$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
+		$data = array();
+		$include_ary = array('item_number','st','amt','cc','tx','payer_email','payment_date','address_country_code');
+		foreach ($names as $name)
+		{
+			$value = utf8_normalize_nfc($this->request->variable($name, '', true));
+			(in_array($name, $include_ary)) ? $data[$name] = $value : null;
+		}
+		$data['user_id'] 		= $this->user->data['user_id'];
+		$data['payment_date'] 	= isset($data['payment_date']) ? strtotime($data['payment_date']) : time();
+		$data['sender']			= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
+		$data['address']		= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
+
+		$data['payment_status'] = $data['st'];
+		$data['mc_gross'] 		= $data['amt'];
+		$data['mc_currency'] 	= $data['cc'];
+		$data['txn_id'] 		= $data['tx'];
+		unset($data['st'], $data['amt'], $data['cc'], $data['tx']);
+		
+		return $data;		
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function updatePayments($data)
 	{
 		$sql = 'SELECT id, user_id, txn_id, payment_status 
@@ -72,7 +104,8 @@ class helper
 			unset($data['item_number'], $data['user_id']);
 			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . (int) $row['id'];
 			$this->db->sql_query($sql);
-			$payment_updated = $this->db->sql_affectedrows();
+			
+			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
 		}
 		
 		return $data;
@@ -80,7 +113,7 @@ class helper
 	
 	public function bbpoints_enabled()
 	{
-		$ext_manager = $this->phpbb_container->get('ext.manager');	
+		$ext_manager = $this->container->get('ext.manager');	
 		return $ext_manager->is_enabled('sitesplat/bbpoints');
 	}
 
@@ -89,7 +122,7 @@ class helper
 		$cookie = $this->request->variable($this->config['cookie_name'] . '_bbmemdb', '', true, \phpbb\request\request_interface::COOKIE);
 		if (!$cookie)
 		{
-			$this->bbpoints_table = $this->phpbb_container->getParameter('sitesplat.bbpoints.table');	
+			$this->bbpoints_table = $this->container->getParameter('sitesplat.bbpoints.table');	
 			$user_id = $this->user->data['user_id'];
 			$sql = 'SELECT user_id, SUM(points) as total FROM (
 					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' 
@@ -157,7 +190,7 @@ class helper
 		$group_ids = $this->db->sql_fetchrowset($result);
 		$group_ids = array_map(function($item) { return $item['group_id']; }, $group_ids);
 		
-		group_user_add($this->bbmembership_groups[$membership]['group'], $user_id);
+		($membership) ? group_user_add($this->bbmembership_groups[$membership]['group'], $user_id) : null;
 		remove_newly_registered($user_id);
 
 		if ($this->bbmembership_groups[$membership]['default'] && !group_memberships($group_ids, $user_id, true))
@@ -204,7 +237,23 @@ class helper
 			trigger_error($message/* . adm_back_link($this->u_action)*/, E_USER_NOTICE);
 		}
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function find_membership($array, $field, $value)
+	{
+	   foreach($array as $key => $product)
+	   {
+		  if ($product[$field] === $value)
+			 return $key;
+	   }
+	   return false;
+	}
 	
+	/**
+	 * {@inheritdoc}
+	 */
 	public function currency($select = '', $currency = '')
 	{
 		$currencies['ARS'] = array('&#8359;', 'Argentine peso');
