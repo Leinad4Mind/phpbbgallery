@@ -42,3 +42,7 @@
 .text-ghost {
     color: #ccc;
 }
+
+#prime_subject_check_ajax_display .btn-xs{
+    padding: 0 5px;
+}

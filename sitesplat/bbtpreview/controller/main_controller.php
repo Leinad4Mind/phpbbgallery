@@ -102,7 +102,7 @@ class main_controller
 						'url'			=> append_sid('viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&t=' . $topic_id),
 						'subject'		=> censor_text($row['post_subject']),
 						'message'		=> generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
-						'author'		=> '<a href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '"><img class="online_img" alt="' . $this->user->lang['USER_AVATAR'] . '" src="' .
+						'author'		=> '<a href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '"><img class="bbtpreview_img" alt="' . $this->user->lang['USER_AVATAR'] . '" src="' .
 											((sizeof($match) > 1) ? str_replace('./' . ((!$in_bbtags) ? '../../': ''), './', array_pop($match)) : $avatar) . '" /></a>',
 						'author_rank'	=>  '<a style="font-weight:bold;color:#' . $row['topic_first_poster_colour'] . '" href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . $row['topic_first_poster_name'] . '</a><br />' . $row['rank_title'],
 						'starttime'		=> $this->user->format_date($row['topic_time']),
