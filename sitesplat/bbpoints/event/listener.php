@@ -122,7 +122,7 @@ class listener implements EventSubscriberInterface
 								SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
 								) t1 GROUP BY user_id';		
 						$result = $this->db->sql_query($sql);
-						$user_points  = $this->db->sql_fetchfield('total');
+						$user_points  = (int) $this->db->sql_fetchfield('total');
 					
 						if ($this->request->variable('amount', 0) <= $user_points)
 						{
@@ -288,7 +288,7 @@ class listener implements EventSubscriberInterface
 			$result = $this->db->sql_query_limit($sql, 10, 0, 300);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				if ($row['user_id'])
+				if (!empty($row['user_id']))
 				{
 					$this->template->assign_block_vars('richest_users', array(
 						'USERNAME'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
@@ -308,7 +308,7 @@ class listener implements EventSubscriberInterface
 					UNION 
 					SELECT SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1) t1';
 			$result = $this->db->sql_query($sql, 300);
-			$total = $this->db->sql_fetchfield('total');
+			$total = (int) $this->db->sql_fetchfield('total');
 
 			$this->template->assign_vars(array(
 				'TOTAL_POINTS' => ($total < $this->bbpoints_config['goal']) ? round($total / $this->bbpoints_config['goal'], 3) * 100 : 100,
@@ -357,7 +357,7 @@ class listener implements EventSubscriberInterface
 		$result = $this->db->sql_query($sql);
 		$forum_data = $this->db->sql_fetchrow($result);
 		
-		if ($forum_data['bbpoints_enabled'])
+		if (!empty($forum_data['bbpoints_enabled']))
 		{
 			if ($event['mode'] == 'post')
 			{
@@ -460,7 +460,7 @@ class listener implements EventSubscriberInterface
 				SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
 				) t1 GROUP BY user_id';
 		$result = $this->db->sql_query($sql);
-		$user_points  = $this->db->sql_fetchfield('total');
+		$user_points  = (int) $this->db->sql_fetchfield('total');
 		$this->db->sql_freeresult($result);
 
 		return $user_points;

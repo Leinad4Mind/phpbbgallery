@@ -90,7 +90,7 @@ class main_controller
 						SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
 						) t1 GROUP BY user_id';
 				$result = $this->db->sql_query($sql);
-				$user_points  = $this->db->sql_fetchfield('total');
+				$user_points  = (int) $this->db->sql_fetchfield('total');
 			
 				if ($this->request->variable('amount', 0) <= $user_points)
 				{
