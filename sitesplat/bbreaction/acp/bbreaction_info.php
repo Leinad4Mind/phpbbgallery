@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *

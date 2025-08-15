@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -29,6 +28,7 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_assign_template_vars_before'	=> 'view_topic_topic',
 			'core.delete_posts_after'						=> 'delete_like_dislike',
 			'core.memberlist_view_profile'					=> 'modify_profile',
+			'core.delete_forum_content_before_query'		=> 'delete_like_dislike_forum',
 		);
 	}
 
@@ -40,6 +40,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var \phpbb\user */
 	protected $user;
+	
+	/** @var \phpbb\auth\auth */
+    protected $auth;
 
 	/** @var \phpbb\request */
 	protected $request;
@@ -59,21 +62,34 @@ class listener implements EventSubscriberInterface
 	/** @var string The database table the reaction types are stored in */
 	protected $reward_type_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, $reward_table, $reward_type_table)
+	/** @var string */
+	protected $bbemoji_icons_table;
+	
+	/** @var string The database table the posts are stored in */
+	protected $posts_table;
+
+	/** @var string The database table the topics are stored in */
+	protected $topics_table;
+	
+
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, $reward_table, $reward_type_table, $bbemoji_icons_table, $posts_table, $topics_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
+		$this->auth = $auth;
 		$this->request = $request;
 		$this->template = $template;
 		$this->helper = $helper;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
+		$this->posts_table = $posts_table;
+		$this->topics_table = $topics_table;
 
 		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
 		{
 			$this->bbemoji_enabled = true;
-			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'));
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'), $template, $request, $user, $db, $bbemoji_icons_table);
 			$this->template->assign_vars(array(
 				'BBREACTION_EMOJI'	=> true,
 			));
@@ -85,7 +101,8 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
 		
 		$this->template->assign_vars(array(
-			'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
+		//	'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
+            'U_BBREACTION_PAGE'         => ($this->auth->acl_get('u_bbreaction_module')) ? $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')) : '',
 			'BBREACTION_DISPLAY_TOP'	=> $this->config['rewards_display_top']
 		));
 	}
@@ -222,6 +239,21 @@ class listener implements EventSubscriberInterface
 	{
 		$permissions = $event['permissions'];
 		$permissions['u_bbreaction'] = array('lang' => 'ACL_U_BBREACTION', 'cat' => 'post');
+		$permissions['u_bbreaction_module'] = array('lang' => 'ACL_U_BBREACTION_MODULE', 'cat' => 'post');
 		$event['permissions'] = $permissions;
+	}
+	
+	public function delete_like_dislike_forum($event)
+	{
+		$forum_id = $event['forum_id'];
+		$sql = 'DELETE FROM ' . $this->reward_table . '
+		WHERE post_id IN (
+			SELECT p.post_id
+			FROM ' . $this->topics_table . ' t
+			LEFT JOIN ' . $this->posts_table . ' p
+				ON (t.topic_id = p.topic_id)
+			WHERE t.forum_id = ' . (int) $forum_id . '
+		)';
+		$this->db->sql_query($sql);
 	}
 }

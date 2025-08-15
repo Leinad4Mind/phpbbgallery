@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BBreaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -51,8 +50,9 @@ $lang = array_merge($lang, array(
 	'BBREACTION_NO_RECORDS'				=> 'No reactions available yet',
 	'UCP_BBREACTION_EXPLAIN'			=> 'An overview of reactions given and received',
 	'ACL_U_BBREACTION'					=> 'Can use BBreaction',
+	'ACL_U_BBREACTION_MODULE'           => 'Can use BBreaction UCP module and BBreaction Toplist page',
 	
-	'NOTIFICATION_TYPE_SITESPLAT.BBREACTION.NOTIFICATION.TYPE.REWARD_ADDED'	=> 'Someone reacted to your post',
+	'NOTIFICATION_TYPE_BBREACTIONS_ADD'	=> 'Someone reacted to your post',
 	
 	'BBREACTION_NOTI_EVENT_ADDED'		=> '<strong>BBreaction update</strong>:<br />A reaction has been %1$s to your post by %2$s.',
 ));

@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -13,6 +12,8 @@ namespace sitesplat\bbreaction\ucp;
 class bbreaction_module
 {
 	public $u_action;
+	private $bbemoji_enabled = false;
+	private $bbemoji_parser;
 
 	function main($id, $mode)
 	{
@@ -24,6 +25,14 @@ class bbreaction_module
 		$this->tpl_name = 'ucp_profile_bbreaction';
 		$this->reward_table = $phpbb_container->getParameter('sitesplat.bbreaction.tables.reward');
 		$this->reward_type_table = $phpbb_container->getParameter('sitesplat.bbreaction.tables.reward_type');
+		if ($phpbb_container->get('ext.manager')->is_enabled('sitesplat/bbemoji'))
+		{
+			$this->bbemoji_enabled = true;
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'), $template, $request, $user, $db, $bbemoji_icons_table);
+			$template->assign_vars(array(
+				'BBREACTION_EMOJI'	=> true,
+			));
+		}
 
 		$userid = $user->data['user_id'];
 		$sql = 'SELECT *, (SELECT COUNT(like_id) FROM ' . $this->reward_table . ' WHERE like_type = t.type_id AND user_id = ' . $userid . ') AS num, "given" AS type
@@ -42,6 +51,7 @@ class bbreaction_module
 				$template->assign_block_vars('likestat', array(
 					'TITLE'				=> $row['title'],
 					'ICON'				=> $row['symbol'],
+					'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 					'S_POSITIVE'		=> $row['positive'],
 					'GIVEN_RECIEVED'	=> (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED']),
 					'GIVE_RECIEVE'		=> $row['num']
@@ -82,7 +92,7 @@ class bbreaction_module
 		$base_url = append_sid($this->u_action);
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $total_likes, $per_page, $start);
 
-		$sql = 'SELECT p.post_subject, p.post_id, p.topic_id, p.forum_id, l.user_id, u.username, t.title, t.symbol, t.positive, l.like_time
+		$sql = 'SELECT p.post_subject, p.post_id, p.topic_id, p.forum_id, l.user_id, u.username, t.*, l.like_time
 				FROM ' . $this->reward_table . ' l 
 				LEFT JOIN ' . $this->reward_type_table . ' t ON t.type_id = l.like_type
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id
@@ -91,7 +101,7 @@ class bbreaction_module
 				
 				UNION
 				
-				SELECT p.post_subject, p.post_id, p.topic_id, p.forum_id, l.user_id, u.username, t.title, t.symbol, t.positive, l.like_time
+				SELECT p.post_subject, p.post_id, p.topic_id, p.forum_id, l.user_id, u.username, t.*, l.like_time
 				FROM ' . POSTS_TABLE . ' p
 				INNER JOIN ' . $this->reward_table . ' l ON l.post_id = p.post_id
 				LEFT JOIN ' . $this->reward_type_table . ' t ON t.type_id = l.like_type
@@ -108,6 +118,7 @@ class bbreaction_module
 						'SUBJECTURL'		=> append_sid($url),
 						'TITLE'				=> $row['title'],
 						'ICON'				=> $row['symbol'],
+						'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 						'S_POSITIVE'		=> $row['positive'],
 						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED'],
 						'LIKE_TIME'			=> $user->format_date($row['like_time']),

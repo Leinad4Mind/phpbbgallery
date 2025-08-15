@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2017 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -12,9 +11,9 @@ namespace sitesplat\bbreaction\bbemoji;
 
 class parser extends \sitesplat\bbemoji\event\listener
 {
-	public function __construct(array $generators, \phpbb\path_helper $pathHelper)
+	public function __construct(array $generators, \phpbb\path_helper $pathHelper, \phpbb\template\template $template, \phpbb\request\request $request, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, $bbemoji_icons_table)
 	{
-        parent::__construct($generators, $pathHelper);
+        parent::__construct($generators, $pathHelper, $template, $request, $user, $db, $bbemoji_icons_table);
 	}
 
 	public function emoji_render($text)

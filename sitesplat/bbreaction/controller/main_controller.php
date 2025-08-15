@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -56,9 +55,10 @@ class main_controller
 	protected $reward_table;
 	protected $reward_type_table;
 
+	protected $bbemoji_icons_table;
 	protected $bbemoji_enabled = false;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, ContainerInterface $container, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, ContainerInterface $container, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table, $bbemoji_icons_table)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -80,7 +80,7 @@ class main_controller
 		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
 		{
 			$this->bbemoji_enabled = true;
-			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($container->getParameter('sitesplat.bbemoji.url.generators'), $container->get('path_helper'));
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($container->getParameter('sitesplat.bbemoji.url.generators'), $container->get('path_helper'), $container->get('template'), $container->get('request'), $container->get('user'), $db, $bbemoji_icons_table);
 		}
 	}
 
@@ -128,7 +128,7 @@ class main_controller
 										'avatar_type'		=> $row['user_avatar_type'], 
 										'avatar_width'		=> $row['user_avatar_width'], 
 										'avatar_height'		=> $row['user_avatar_height'])), $match) :
-										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
 
 
@@ -390,7 +390,7 @@ class main_controller
 	
 			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a><li>';
+				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a></li>';
 				if ($i < $end_cnt - 1)
 				{
 					$page_string .= $seperator;

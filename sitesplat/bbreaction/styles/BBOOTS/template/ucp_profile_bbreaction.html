@@ -34,7 +34,13 @@
 		<!-- BEGIN likes -->
 			<tr>
 				<td><a href="{likes.SUBJECTURL}">{likes.SUBJECT}</a></td>
-				<td><i class="fa {likes.ICON}"></i>&nbsp;{likes.GIVE_RECIEVE}</td>
+				<td>
+					<!-- IF BBREACTION_EMOJI and likes.EMOJI -->
+						{likes.EMOJI}&nbsp;{likes.GIVE_RECIEVE}
+					<!-- ELSE -->
+						<i class="fa {likes.ICON}"></i>&nbsp;{likes.GIVE_RECIEVE}
+					<!-- ENDIF -->
+				</td>
 				<td class="center">{likes.LIKE_TIME}</td>
 				<td class="center mark">{likes.USERNAME}</td>
 			</tr>

@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -40,6 +39,7 @@ class admin_controller implements admin_interface
 
 	protected $pagination;
 
+	protected $bbemoji_icons_table;
 	protected $bbemoji_parser;
 	protected $bbemoji_enabled = false;
 	
@@ -54,7 +54,7 @@ class admin_controller implements admin_interface
 	/** @var string Custom form action */
 	protected $u_action;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $reward_table, $reward_type_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $reward_table, $reward_type_table, $bbemoji_icons_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -71,7 +71,7 @@ class admin_controller implements admin_interface
 		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
 		{
 			$this->bbemoji_enabled = true;
-			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'));
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'), $this->template, $this->request, $this->user, $this->db, $bbemoji_icons_table);
 			$this->template->assign_vars(array(
 				'BBREACTION_EMOJI'	=> true,
 			));
