@@ -1,3 +1,0 @@
-sitesplat.nemtions.controller:
-    path: /nemtions/
-    defaults: { _controller: sitesplat.nemtions.controller:getMatches }
