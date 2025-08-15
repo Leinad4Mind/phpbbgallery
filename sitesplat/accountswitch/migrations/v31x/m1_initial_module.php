@@ -35,9 +35,8 @@ class m1_initial_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-		array('module.add', array('ucp', 'UCP_PROFILE', 'ACCOUNTSWITCH')),
 		array('module.add', array(
-			'ucp', 'ACCOUNTSWITCH', array(
+			'ucp', 'UCP_PROFILE', array(
 				'module_basename'	=> '\sitesplat\accountswitch\ucp\accountswitch_module',
 				'auth'				=> 'ext_sitesplat/accountswitch',
 				'modes'				=> array('accountswitch'),
