@@ -165,12 +165,12 @@ class membership_bought extends \phpbb\notification\type\base
 	/**
 	* {@inheritdoc}
 	*/
-	public function create_insert_array($data, $pre_create_data)
+	public function create_insert_array($data, $pre_create_data = array())
 	{
 		$this->set_data('txn_id', $data['txn_id']);
 		$this->set_data('user_id', $data['user_id']);
 		$this->set_data('amount', $data['amount']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

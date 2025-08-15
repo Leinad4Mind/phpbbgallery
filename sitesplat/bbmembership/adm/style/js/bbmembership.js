@@ -50,5 +50,36 @@ $(document).on("click", "#sync_membership", function (e) {
     });
 });
 
+	$('#jump_to').autocomplete({
+		source: function(request, response) {
+			$.ajax({
+				type: "POST",
+				url: $("#jump_to").data("source"),
+				dataType: "json",
+				data: {
+					term: request.term
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					alert('Error: ' + xhr.responseText);
+				},
+				success: function(data) {
+					response($.map(data, function(c) {
+						return {
+							value: c.value,
+							label: c.label,
+						};
+					}));
+				}
+			});
+		},
+		select: function(event, ui) { 
+			event.preventDefault(); 
+			$(this).val(ui.item.label);
+			window.location.href = window.location.href + '&user_id=' + ui.item.value;
+		},
+		placeholder: 'Enter user ...',
+		minLength: 2
+	});
+
 })(jQuery, window, document);
 

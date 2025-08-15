@@ -6,6 +6,7 @@
 <!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbmembership/vendor/bootstrap/css/bootstrap_modified.css -->
 <!-- INCLUDECSS css/component.css -->
 <!-- INCLUDECSS css/bbmembership.css -->
+<!-- INCLUDECSS css/jquery-ui.css -->
 <!-- INCLUDE overall_header.html -->
 
 <h1>{L_ACP_BBMEMBERSHIP_TITLE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBMEMBERSHIP_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
@@ -68,7 +69,7 @@
     <dl>
     <dt><label>{L_ACP_BBMEMBERSHIP_LEVELS}{L_COLON}</label><br>{L_ACP_BBMEMBERSHIP_LEVELS_EXPLAIN}</dt>
     <dd><table style="border:none;width:auto">
-        <tr><td>{L_ACP_BBMEMBERSHIP_AMT}</td><td>{L_ACP_BBMEMBERSHIP_EXPIRE}</td><td>{L_ACP_BBMEMBERSHIP_PACKAGE}</td><td>{L_ACP_BBMEMBERSHIP_GROUP}</td><td>{L_ACP_BBMEMBERSHIP_DEFAULT}</td><td>{L_ACP_BBMEMBERSHIP_HIDE}</td></tr>
+        <tr><td>{L_ACP_BBMEMBERSHIP_AMT}</td><td>{L_ACP_BBMEMBERSHIP_EXPIRE}</td><td>{L_ACP_BBMEMBERSHIP_PACKAGE}</td><td>{L_ACP_BBMEMBERSHIP_GROUP}</td><td>{L_ACP_BBMEMBERSHIP_DEFAULT}</td><td>{L_ACP_BBMEMBERSHIP_HIDE}</td><td>{L_ACP_BBMEMBERSHIP_NEW_USER}</td></tr>
 		<!-- BEGIN membership -->
         <tr>
         	<td><input type="text" name="bbmembership_amount[{membership.BBMEMBERSHIP_ID}]" value="{membership.BBMEMBERSHIP_AMOUNT}" size="4" /></td>
@@ -79,6 +80,7 @@
                 </select></td>
             <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_default[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_DEFAULT} /></label></td>
             <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_hide[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_HIDE} /></label></td>
+            <td style="text-align:center;"><label><input type="checkbox" name="bbmembership_new_user[{membership.BBMEMBERSHIP_ID}]" value="1"{membership.BBMEMBERSHIP_NEW_USER} /></label></td>
 		</tr>
         <!-- END membership -->
     </table></dd>
@@ -103,7 +105,7 @@
 
 <fieldset>
 	<legend style=" text-transform: capitalize;">{L_ACP_BBMEMBERSHIP_TRANSACTIONS}</legend>
-	<span style="margin-bottom: 20px; float: right; display: inline-block;">{L_G_REGISTERED}{L_COLON} <select name="user_id" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
+	<span style="margin-bottom: 20px; float: right; display: inline-block;">{L_FIND_USERNAME}{L_COLON} <input id="jump_to" data-source="{BBMEMBERSHIP_SEARCH}" value="" class="inputbox autowidth" /></span>
 	
 	<p style="font-size: 1em;">
 	 <label><strong>{L_ACP_BBMEMBERSHIP_FLAGS}{L_COLON}</strong></label><br>{L_ACP_BBMEMBERSHIP_FLAGS_EXPLAIN}
@@ -127,7 +129,7 @@
 			<td><a href="{transactions.DONATIONURL}">{transactions.USERNAME}</a></td>
 			<td><a href="mailto:{transactions.EMAIL}?SUBJECT=Membership">{transactions.EMAIL}</a></td>
 			<td>{transactions.PP_TRANSACTION}</td>
-			<td>{transactions.CURRENCY}  {transactions.AMOUNT}</td>
+			<td>{transactions.CURRENCY}{transactions.AMOUNT}</td>
 			<td><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status label <!-- IF transactions.STATUS == 'Not verified' -->label-danger<!-- ELSEIF transactions.STATUS == 'Completed' -->label-success<!-- ELSEIF transactions.STATUS == 'Expired' -->label-default<!-- ENDIF -->" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>
 			<td>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL} {transactions.PACKAGE}</td>
 			<td>{transactions.TIME}</td>
@@ -135,7 +137,7 @@
 	<!-- END transactions -->
 	</tbody>
 	</table>
-	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY} {BBMEMBERSHIP_TOTAL}<!-- IF BBPOINS_ENABLED -->,  ({L_ACP_BBMEMBERSHIP_BBPOINTS} {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
+	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY}{BBMEMBERSHIP_TOTAL}<!-- IF BBPOINS_ENABLED -->,  ({L_ACP_BBMEMBERSHIP_BBPOINTS} {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
 	<!-- IF .pagination -->
 	<div class="pagination top-pagination">
 		<!-- INCLUDE pagination.html -->
@@ -149,7 +151,7 @@
 	<fieldset>
     	<dl>
 			<dt><label>{L_ACP_BBMEMBERSHIP_TOTAL}</label></dt>
-			<dd>{TRANSACTION_CURRENCY} {TOTAL_EURO}, (BBpoints {TOTAL_BBPOINTS})</dd>
+			<dd>{TRANSACTION_CURRENCY}{TOTAL_EURO}<!-- IF BBPOINS_ENABLED -->, (BBpoints {TOTAL_BBPOINTS})<!-- ENDIF --></dd>
 		</dl>
     	<dl>
 			<dt><label>{USER_PROFILE}'s {L_ACP_BBMEMBERSHIP_ADDRESS}</label></dt>
@@ -172,7 +174,7 @@
 		<!-- BEGIN transactions -->
 		<tr <!-- IF transactions.S_ROW_COUNT is even -->style="background-color: #DCEBFE;"<!-- ENDIF -->>
 			<td>{transactions.PP_TRANSACTION}</td>
-			<td>{transactions.CURRENCY} {transactions.AMOUNT}</td>
+			<td>{transactions.CURRENCY}{transactions.AMOUNT}</td>
 			<td>{transactions.STATUS}</td>
 			<td>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL} {transactions.PACKAGE}</td>
 			<td style="text-align:center;">{transactions.EXPIRED}</td>
@@ -187,6 +189,7 @@
 	// ]]>
 	</script>
 	
+<!-- INCLUDEJS js/jquery-ui.min.js -->
 <!-- INCLUDEJS js/bbmembership.js -->
 <!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbmembership/vendor/bootstrap/js/bootstrap.min.js -->
 <div class="md-overlay"></div><!-- the overlay element -->

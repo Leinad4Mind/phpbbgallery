@@ -155,6 +155,7 @@ class admin_controller
 			$package_ary = $this->request->variable('bbmembership_package', array(0 => ''));
 			$default_ary = $this->request->variable('bbmembership_default', array(0 => 0));
 			$hide_ary = $this->request->variable('bbmembership_hide', array(0 => 0));
+			$new_user_ary = $this->request->variable('bbmembership_new_user', array(0 => 0));
 
 			$group_amount = array();
 			foreach ($donation_ary as $key => $value)
@@ -164,6 +165,7 @@ class admin_controller
 					'expire'	=> $expire_ary[$key],
 					'default'	=> (isset($default_ary[$key])) ? 1 : 0,
 					'hide'		=> (isset($hide_ary[$key])) ? 1 : 0,
+					'new_user'	=> (isset($new_user_ary[$key])) ? 1 : 0,
 				);
 			}
 			
@@ -204,7 +206,8 @@ class admin_controller
 					'BBMEMBERSHIP_EXPIRE'	=> $value['expire'],
 					'BBMEMBERSHIP_PACKAGE'	=> $this->bbmembership_package[$key]['package'],
 					'BBMEMBERSHIP_DEFAULT'	=> ($value['default']) ? ' checked="checked"' : '',
-					'BBMEMBERSHIP_HIDE'		=> ($value['hide']) ? ' checked="checked"' : ''
+					'BBMEMBERSHIP_HIDE'		=> ($value['hide']) ? ' checked="checked"' : '',
+					'BBMEMBERSHIP_NEW_USER'	=> ($value['new_user']) ? ' checked="checked"' : ''
 				));
 
 				foreach ($group_ary as $key2 => $value)
@@ -222,7 +225,8 @@ class admin_controller
 		$sql = 'SELECT 
 				SUM(CASE WHEN mc_currency = "BBPOINTS" THEN mc_gross ELSE 0 END) AS bbpoints, 
 				SUM(CASE WHEN mc_currency <> "BBPOINTS" THEN mc_gross ELSE 0 END) AS euro 
-				FROM ' . $this->bbmembership_table;
+				FROM ' . $this->bbmembership_table ."
+				WHERE payment_status <> 'Not verified'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$bbpointstotal = $row['bbpoints'];
@@ -239,7 +243,8 @@ class admin_controller
 			'BBMEMBERSHIP_BBPOINTS_TOTAL'	=> number_format(($bbpointstotal) ? $bbpointstotal : 0, 2),
 			'BBMEMBERSHIP_BBPOINTS'			=> $this->config['bbmembership_bbpoints'],
 			'LAST_MEMBERSHIP_CHECK'			=> ($this->config['bbmembership_last_gc']) ? $this->user->format_date($this->config['bbmembership_last_gc']) : '-',
-			'UA_PROGRESS_BAR'				=> html_entity_decode($this->u_action . '&amp;action=progressbar&time=' . time())
+			'UA_PROGRESS_BAR'				=> html_entity_decode($this->u_action . '&amp;action=progressbar&time=' . time()),
+			'BBMEMBERSHIP_SEARCH'			=> $this->root_path . 'bbmembership/search_user'
 		));
 
 		$txn_id = $this->request->variable('txn_id', 0);
@@ -304,7 +309,7 @@ class admin_controller
 			$start = $this->request->variable('start', 0);
 			$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $total);
 
-			$sql = 'SELECT d.id, d.txn_id, d.user_id, d.sender, d.payer_email, d.mc_gross, d.mc_currency, d.payment_status, d.payment_date, u.username, u.user_email 
+			$sql = 'SELECT d.id, d.txn_id, d.user_id, d.sender, d.payer_email, d.mc_gross, d.mc_currency, d.payment_status, d.payment_date, u.username, u.user_email, membership 
 					FROM ' . $this->bbmembership_table . ' d	
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = d.user_id
 					ORDER BY d.payment_date DESC, u.username ASC'; 
@@ -312,7 +317,8 @@ class admin_controller
 			$amounts = array_keys($this->bbmembership_groups);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
+				$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$this->template->assign_block_vars('transactions', array(
 					'ID'				=> $row['id'],
 					'USERNAME'			=> ($row['user_id'] > 1) ? $row['username'] : $row['sender'],

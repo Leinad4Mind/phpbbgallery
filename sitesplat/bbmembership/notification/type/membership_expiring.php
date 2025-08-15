@@ -139,10 +139,10 @@ class membership_expiring extends \phpbb\notification\type\base
 	/**
 	* {@inheritdoc}
 	*/
-	public function create_insert_array($data, $pre_create_data)
+	public function create_insert_array($data, $pre_create_data = array())
 	{
 		$this->set_data('user_id', $data['user_id']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

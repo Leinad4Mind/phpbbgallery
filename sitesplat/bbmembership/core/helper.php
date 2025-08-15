@@ -65,36 +65,9 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get_paypal_verify()
-	{
-		$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
-		$data = array();
-		$include_ary = array('item_number','st','amt','cc','tx','payer_email','payment_date','address_country_code');
-		foreach ($names as $name)
-		{
-			$value = utf8_normalize_nfc($this->request->variable($name, '', true));
-			(in_array($name, $include_ary)) ? $data[$name] = $value : null;
-		}
-		$data['user_id'] 		= $this->user->data['user_id'];
-		$data['payment_date'] 	= isset($data['payment_date']) ? strtotime($data['payment_date']) : time();
-		$data['sender']			= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
-		$data['address']		= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
-
-		$data['payment_status'] = $data['st'];
-		$data['mc_gross'] 		= $data['amt'];
-		$data['mc_currency'] 	= $data['cc'];
-		$data['txn_id'] 		= $data['tx'];
-		unset($data['st'], $data['amt'], $data['cc'], $data['tx']);
-		
-		return $data;		
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function updatePayments($data)
 	{
-		$sql = 'SELECT id, user_id, txn_id, payment_status 
+		$sql = 'SELECT id, user_id, txn_id, payment_status, membership 
 				FROM ' . $this->bbmembership_table . ' WHERE item_number = \'' . (isset($data['item_number']) ? $data['item_number'] : '') .'\'';
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -105,7 +78,14 @@ class helper
 			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . (int) $row['id'];
 			$this->db->sql_query($sql);
 			
-			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
+			$this->add_group((int) $row['user_id'], (int) $data['mc_gross'], $row['id']);
+
+			// send notification
+			$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
+				'txn_id'		=> $row['id'],
+				'user_id'		=> $row['user_id'],
+				'amount'		=> $row['membership'],
+			));
 		}
 		
 		return $data;
@@ -181,7 +161,7 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
-	public function add_group($user_id, $membership, $txn_id)
+	public function add_group($user_id, $membership)
 	{
 		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		
@@ -191,19 +171,16 @@ class helper
 		$group_ids = array_map(function($item) { return $item['group_id']; }, $group_ids);
 		
 		($membership) ? group_user_add($this->bbmembership_groups[$membership]['group'], $user_id) : null;
-		remove_newly_registered($user_id);
+
+		if (!$this->bbmembership_groups[$membership]['new_user'])
+		{
+			remove_newly_registered($user_id);
+		}
 
 		if ($this->bbmembership_groups[$membership]['default'] && !group_memberships($group_ids, $user_id, true))
 		{
 			group_set_user_default($this->bbmembership_groups[$membership]['group'], array($user_id));
 		}
-		$memberships = array_keys($this->bbmembership_groups);
-		// send notification
-		$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
-			'txn_id'		=> $txn_id,
-			'user_id'		=> $user_id,
-			'amount'		=> array_search($membership, $memberships) + 1,
-		));
 	}
 	
 	/**
@@ -237,7 +214,6 @@ class helper
 			trigger_error($message/* . adm_back_link($this->u_action)*/, E_USER_NOTICE);
 		}
 	}
-
 	/**
 	 * {@inheritdoc}
 	 */

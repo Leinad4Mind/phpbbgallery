@@ -3,5 +3,5 @@ sitesplat_bbmembership_auto_complete_controller:
     defaults: { _controller: sitesplat.bbmembership.admin_controller:search_user }
     methods:  [POST]
 sitesplat_bbmembership_main_controller:
-    path: /bbmemberships/{route}
+    path: /memberships/{route}
     defaults: { _controller: sitesplat.bbmembership.controller:display, route: "index" }
