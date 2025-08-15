@@ -57,11 +57,11 @@
     border-radius: 50%;
     display: inline-block !important;
     height: 34px !important;
-    width: auto !important;
+    width: 34px !important;
 }
 
 .badges_postrow img {
-    height: auto !important;
+    height: 22px !important;
     width: 22px !important;
 }
 

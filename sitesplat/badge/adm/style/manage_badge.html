@@ -35,11 +35,13 @@
 		</div>
 		
 <p>{L_ACP_BADGE_MANAGE_EXPLAIN}</p>
-<!-- IF S_NOTICE_LIKEDD or S_NOTICE_DONATION or S_NOTICE_PROFILEWALL -->
+<!-- IF S_NOTICE_LIKEDD or S_NOTICE_DONATION or S_NOTICE_PROFILEWALL or S_PREMIUM -->
 <div id="badgeaward_notice" class="errorbox notice">
 	<a href="{U_BADGE_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_BADGE_NOTICE_CLOSE}"></a>
-	<p>{S_NOTICE_LIKEDD}<!-- IF S_NOTICE_LIKEDD and S_NOTICE_DONATION --><br /><!-- ENDIF -->{S_NOTICE_DONATION}
-	<!-- IF S_NOTICE_LIKEDD and S_NOTICE_DONATION and S_NOTICE_PROFILEWALL --><br /><!-- ENDIF -->{S_NOTICE_PROFILEWALL}</p>
+	<!-- IF S_NOTICE_LIKEDD --><p>{S_NOTICE_LIKEDD}</p><!-- ENDIF -->
+	<!-- IF S_NOTICE_DONATION --><p>{S_NOTICE_DONATION}</p><!-- ENDIF -->
+	<!-- IF S_NOTICE_PROFILEWALL --><p>{S_NOTICE_PROFILEWALL}</p><!-- ENDIF -->
+	<!-- IF S_NOTICE_PREMIUM --><p>{S_NOTICE_PREMIUM}</p><!-- ENDIF -->
 </div>
 <!-- ENDIF -->
 <!-- IF S_ADD or S_EDIT -->

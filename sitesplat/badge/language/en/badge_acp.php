@@ -123,4 +123,5 @@ $lang = array_merge($lang, array(
 	'NOTICE_LIKEDD'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type rule.',
 	'NOTICE_DONATIONS'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=20"><strong>Forum Donation</strong></a> is not installed, you can NOT use the donation type rule.',
 	'NOTICE_PROFILEWALL'				=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=13"><strong>Profile Wall</strong></a> is not installed, you can NOT use the profile wall type rule.',
+	'NOTICE_PREMIUM'				    => 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=25"><strong>Premium Rules</strong></a> is not installed, you can NOT use the extra premium type rules.',
 ));

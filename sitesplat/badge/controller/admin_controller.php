@@ -89,6 +89,7 @@ class admin_controller implements admin_interface
 			'S_NOTICE_LIKEDD'		=> (!$ext_manager->is_enabled('sitesplat/likedd') && !$cookie) ? $this->user->lang['NOTICE_LIKEDD'] : '',
 			'S_NOTICE_DONATION'		=> (!$ext_manager->is_enabled('sitesplat/donations') && !$cookie) ? $this->user->lang['NOTICE_DONATIONS'] : '',
 			'S_NOTICE_PROFILEWALL'	=> (!$ext_manager->is_enabled('sitesplat/profilewall') && !$cookie) ? $this->user->lang['NOTICE_PROFILEWALL'] : '',
+			'S_NOTICE_PREMIUM'	    => (!$ext_manager->is_enabled('sitesplat/badgepremium') && !$cookie) ? $this->user->lang['NOTICE_PREMIUM'] : '',
 			'S_PREMIUM'				=> ($ext_manager->is_enabled('sitesplat/badgepremium')) ? true : false,
 			'U_BADGE_NOTICE_CLOSE'	=> "{$this->u_action}&amp;hash=" . generate_link_hash('close_notice')
 		));
