@@ -3,7 +3,7 @@
  * 
  * Advanced Polls [English]
  * 
- * @copyright (c) 2014 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -40,7 +40,7 @@ $lang = array_merge($lang, array(
 
 	'AP_TITLE'						=> 'Advanced Polls',
 	'AP_TITLE_EXPLAIN'				=> 'Advances the core poll system of phpBB with new features like hiding votes till end, showing poll voters, limiting the votes and more.',
-	'AP_COPYRIGHT'					=> '© 2014 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">More extensions of Wolfsblvt</a>]',
+	'AP_COPYRIGHT'					=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">More extensions of Wolfsblvt</a>]',
 
 	'AP_SETTINGS'					=> 'Advanced Polls Settings',
 
