@@ -224,7 +224,8 @@ class listener implements EventSubscriberInterface
 
 	protected function render($text)
 	{
-		if (strpos($text, '<!-- sitesplat:bbemoji') === false)
+		global $user;
+		if (strpos($text, '<!-- sitesplat:bbemoji') === false || !$user->optionget('viewsmilies'))
 		{
 			return $text;
 		}
