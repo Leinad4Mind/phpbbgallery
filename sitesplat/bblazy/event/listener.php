@@ -140,33 +140,25 @@ class listener implements EventSubscriberInterface
 
 	protected function lazify_img($html)
 	{
-		$internal_errors = libxml_use_internal_errors(true);
-
-		$doc = new \DOMDocument();
-		$doc->loadHTML($html, LIBXML_HTML_NODEFDTD);
-		$xpath = new \DOMXPath($doc);
-		foreach ($xpath->query('//img[@src]') as $img)
-		{
-			// Create a <noscript> element that contains a copy of the original <img>
-		//	$noscript = $doc->createElement('noscript');
-		//	$noscript->appendChild($img->cloneNode(true));
-
-			// Replace the src attribute with a data-original attribute
-			$img->setAttribute('data-src', $img->getAttribute('src'));
-			$img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-
-			// Add b-lazy class
-			$class = $img->getAttribute('class');
-			$img->removeAttribute('class');
-			$img->setAttribute('class', $class . ' b-lazy');
-
-			// Replace <img> with <noscript> then reinsert <img> before <noscript>
-		//	$img->parentNode->replaceChild($noscript, $img);
-		//	$noscript->parentNode->insertBefore($img, $noscript);
+		if (is_array($html)) {
+			return $html;
 		}
 
-		libxml_use_internal_errors($internal_errors);
+		// no need for <noscript> junk from old code because javascript is required anyway!
+		return preg_replace_callback('`<img (.*?)src\="(.*?)"(.*?) />`uis', function($matches) {
+			$part1 = $matches[1];
+			$part3 = $matches[3];
 
-		return str_replace(['<html><body>', '</body></html>'], '', $doc->saveHTML());
+			if (strpos($part1, 'class="') !== false) {
+				$part1 = preg_replace('`class\="(.*?)"`uis', 'class="$1  b-lazy"', $part1);
+			}
+			else if (strpos($part3, 'class="') !== false) {
+				$part3 = preg_replace('`class\="(.*?)"`uis', 'class="$1  b-lazy"', $part3);
+			}
+
+			// A default image shouldn't be needed. If for some reason it is, use commented-out line instead
+			return '<img ' . $part1 . 'src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="' . $matches[2] . '"' . $part3 . ' />';
+		//	return '<img ' . $part1 . 'src="" data-src="' . $matches[2] . '"' . $part3 . ' />';
+		}, $html);
 	}
 }
