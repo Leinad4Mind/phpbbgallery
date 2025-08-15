@@ -32,6 +32,8 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_PAYPAL_EMAIL_EXPLAIN'	=> 'PayPal email or SandBox PayPal email if you are using the sandbox mode for testing purposes.',
 	'ACP_BBMEMBERSHIP_BBPOINTS'				=> 'BBpoints',
 	'ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN'		=> 'Allow users to purchase the membership with <a href="http://www.sitesplat.com/phpBB3/marketplace.php" target="_blank">BBpoints</a><br />  The moltiplication in bbpoints required for each package is (factor 100). e.g. Currency $5 means 500 BBpoints, $10 means 1000 and so on.',
+        'ACP_BBMEMBERSHIP_COUNTDOWN'			=> 'Countdown clock',
+	'ACP_BBMEMBERSHIP_COUNTDOWN_EXPLAIN'	=> 'Countdown in weeks and days, note, this can be confusing for the user',
 	
 	'ACP_BBMEMBERSHIP_LEVELS'				=> 'Memberships levels',
 	'ACP_BBMEMBERSHIP_LEVELS_EXPLAIN'		=> 'Set the membership levels here, min. amount to join, expiry time in days, package description, group and optionally set it as default. <br /> Set expiry time to:<br />  &nbsp;&nbsp;&nbsp;<strong>0</strong> Never expire.  Unlimited Membership <br /> &nbsp;&nbsp;<strong>-1</strong> 5 minutes pass for testing purposes (For example with the PayPal sandbox)<br /> &nbsp;&nbsp;&nbsp;<strong>1</strong> Sets the days with 1 or more. EG, 2 equals 2 days etc <br />Do NOT use decimals. Checkmark the hide option to hide the membership package from the membership page.',

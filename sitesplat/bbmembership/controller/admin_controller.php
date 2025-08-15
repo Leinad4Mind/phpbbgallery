@@ -102,7 +102,7 @@ class admin_controller
 		$cookie = $this->request->variable($this->config['cookie_name'] . '_bbmem', '', true, \phpbb\request\request_interface::COOKIE);
 		$this->template->assign_vars(array(
 			'S_NOTICE_BBPOINTS'			=> (!$this->bbmembership_helper->bbpoints_enabled() && !$cookie) ? $this->user->lang['BBPOINTS_NOTICE'] : '',
-			'BBPOINS_ENABLED'			=> $this->bbmembership_helper->bbpoints_enabled(),
+			'BBPOINTS_ENABLED'			=> $this->bbmembership_helper->bbpoints_enabled(),
 			'U_BBPOINTS_NOTICE_CLOSE'	=> $this->u_action . '&amp;hash=' . generate_link_hash('close_notice')
 		));
 
@@ -114,7 +114,6 @@ class admin_controller
 			$row = $this->db->sql_fetchrow($result);
 
 			$mc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
-	//		$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 			$membership = (isset($this->bbmembership_groups[$mc_gross]) && 
 						   (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
 						   ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
@@ -148,6 +147,7 @@ class admin_controller
 			$this->config->set('bbmembership_paypal_email', $this->request->variable('bbmembership_paypal_email', ''));
 			$this->config->set('bbmembership_currency', $this->request->variable('bbmembership_currency', ''));
 			$this->config->set('bbmembership_bbpoints', $this->request->variable('bbmembership_bbpoints', 0));
+			$this->config->set('bbmembership_countdown', $this->request->variable('bbmembership_countdown', 0));
 
 			$donation_ary = $this->request->variable('bbmembership_amount', array(0 => 0));
 			$group_ary = $this->request->variable('bbmembership_group', array(0 => 0));
@@ -239,6 +239,7 @@ class admin_controller
 			'BBMEMBERSHIP_TOTAL'			=> number_format(($eurototal) ? $eurototal : 0, 2),
 			'BBMEMBERSHIP_BBPOINTS_TOTAL'	=> number_format(($bbpointstotal) ? $bbpointstotal : 0, 2),
 			'BBMEMBERSHIP_BBPOINTS'			=> $this->config['bbmembership_bbpoints'],
+			'BBMEMBERSHIP_COUNTDOWN'		=> $this->config['bbmembership_countdown'],
 			'LAST_MEMBERSHIP_CHECK'			=> ($this->config['bbmembership_last_gc']) ? $this->user->format_date($this->config['bbmembership_last_gc']) : '-',
 			'UA_PROGRESS_BAR'				=> html_entity_decode($this->u_action . '&amp;action=progressbar&time=' . time()),
 			'BBMEMBERSHIP_SEARCH'			=> $this->root_path . 'bbmembership/search_user'
@@ -275,7 +276,6 @@ class admin_controller
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$mc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
-			//	$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$membership = (!$this->bbmembership_groups[$mc_gross]['expire'] || 
 							  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400) + $row['payment_date'] > time()) ? true: false;
 				$this->template->assign_block_vars('transactions', array(
@@ -315,7 +315,6 @@ class admin_controller
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$mc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
-		//		$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$this->template->assign_block_vars('transactions', array(
 					'ID'				=> $row['id'],
 					'USERNAME'			=> ($row['user_id'] > 1) ? $row['username'] : $row['sender'],

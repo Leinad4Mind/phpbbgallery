@@ -66,7 +66,6 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
-/**	 
 	public function get_paypal_verify()
 	{
 		$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
@@ -90,7 +89,6 @@ class helper
 		
 		return $data;		
 	}
-*/	
 
 	/**
 	 * {@inheritdoc}
@@ -109,7 +107,6 @@ class helper
 			$this->db->sql_query($sql);
 			
 			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
-		//	$this->add_group((int) $row['user_id'], (int) $data['mc_gross'], $row['id']);
 		}
 		
 		return $data;

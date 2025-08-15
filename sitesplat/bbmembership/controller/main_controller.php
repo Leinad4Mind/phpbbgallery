@@ -117,17 +117,29 @@ class main_controller
 			break;
 
 			case 'notify':
-				$data = $this->bbmembership_helper->get_paypal_data();
-				$data = ($this->bbmembership_helper->updatePayments($data));
+				if ($this->request->is_set_post('item_number'))
+				{
+					$data = $this->bbmembership_helper->get_paypal_data();
+					$data = ($this->bbmembership_helper->updatePayments($data));
+				} else 
+				{
+					$this->notify = 'MEMBERSHIP_NO_AUTH';
+				}
+				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
 			break;
 	
 			case 'verify':
-				$data = $this->bbmembership_helper->get_paypal_data();
-				$data = ($this->bbmembership_helper->updatePayments($data));
-				
-				$this->notify = ($action == 'verify') ? ((isset($data['payment_status']) && $data['payment_status'] == 'Completed') ? 
-					'MEMBERSHIP_SUCCESS' : 'MEMBERSHIP_FAILED_PP') : false;
-				
+				if ($this->request->is_set_post('item_number'))
+				{
+					$data = $this->bbmembership_helper->get_paypal_data();
+					$data = ($this->bbmembership_helper->updatePayments($data));
+					
+					$this->notify = ($action == 'verify') ? ((isset($data['payment_status']) && $data['payment_status'] == 'Completed') ? 
+						'MEMBERSHIP_SUCCESS' : 'MEMBERSHIP_FAILED_PP') : false;
+				} else 
+				{
+					$this->notify = 'MEMBERSHIP_NO_AUTH';
+				}
 				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
 			break;
 		
@@ -153,13 +165,12 @@ class main_controller
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$mc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);
-
-//				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 				$membership[$mc_gross] = (isset($group_amount[$mc_gross]) && 
 							  (($group_amount[$mc_gross]['expire'] == -1) ? 300 : ($group_amount[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
 							  $group_amount[$mc_gross]['expire'] == 0) ? true: false;
 				$days_to_expiration = (isset($group_amount[$mc_gross])) ? round(((($group_amount[$mc_gross]['expire'] == -1) ? 300 : 
 									  ($group_amount[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / (($group_amount[$mc_gross]['expire'] == -1) ? 1 : 86400), 0) : 0;			
+				$payment_date = $row['payment_date'];
 			}
 
 			$count = $package = 0;
@@ -168,8 +179,8 @@ class main_controller
 				$this->template->assign_block_vars('levels', array(
 					'LEVEL'					=> ++$count,
 					'DONATIONS_AMOUNT'		=> $key,
-					'DONATIONS_EXPIRE'		=> ($group_amount[$key]['expire'] == 0) ? 
-												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$key]['expire'] == -1) ? '5 min' : $group_amount[$key]['expire']),
+					'DONATIONS_EXPIRE'		=> ($group_amount[$key]['expire'] == 0) ? $this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$key]['expire'] == -1) ? '5 min' : 
+												$this->user->lang('DAYS_TO_EXPIRATION', $group_amount[$key]['expire'])),
 					'DONATIONS_DEFAULT'		=> $group_amount[$key]['default'],
 					'PACKAGE'				=> (isset($membership[$key])) ? true : false,
 					'DONATIONS_HIDE'		=> $group_amount[$key]['hide'],
@@ -196,9 +207,11 @@ class main_controller
 				'CLUBMODE'				=> $this->config['bbmembership_clubmode'] && !$membership,
 				'BBMEMBER_CURRENCY'		=> $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency']),
 				'BBMEMBER_PACKAGE'		=> $package,
-			    'DAYS_TO_EXPIRATION'   => ($group_amount[$mc_gross]['expire'] == 0) ? 
-                                           $this->user->lang('MEMBERSHIP_UNLIMITED') : (($days_to_expiration < 0) ?
-										   $this->user->lang('BBMEMBERSHIP_PENDING') : $days_to_expiration . '&nbsp;' . $this->user->lang['DAYS']),						
+				'BBMEMBER_COUNDOWN'		=> $this->config['bbmembership_countdown'],
+				'MEMBERSHIP_END'		=> ($group_amount[$mc_gross]['expire'] == 0) ? '-1' : date('Y-m-d H:m:s', $payment_date + ($group_amount[$mc_gross]['expire'] * 86400)),
+				'BBMEMBERSHIP_DEPOSIT'	=> $this->user->lang('BBMEMBERSHIP_DEPOSIT_DISCLAIMER', $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency'])),
+				'DAYS_TO_EXPIRATION'	=> (isset($membership[$mc_gross])) ? ($group_amount[$mc_gross]['expire'] == 0) ? 
+												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $this->user->lang('DAYS_TO_EXPIRATION', $group_amount[$mc_gross]['expire'])) : '',
 				'NOTIFY_STATUS'			=> ($this->notify) ? $this->user->lang[$this->notify] : false
 			));
 		}

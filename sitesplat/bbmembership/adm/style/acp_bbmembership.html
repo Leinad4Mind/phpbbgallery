@@ -50,7 +50,14 @@
 		<dt><label>{L_ACP_BBMEMBERSHIP_CURRENCY}{L_COLON}</label><br>{L_ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN}</dt>
 		<dd><select name="bbmembership_currency" style="font-family:FontAwesome;width:180px;font-size:1.2em;">{BBMEMBERSHIP_CURRENCY_OPTIONS}</select></dd>
 	</dl>
-    <!-- IF BBPOINS_ENABLED -->
+<dl>
+        <dt><label>{L_ACP_BBMEMBERSHIP_COUNTDOWN}{L_COLON}</label><br>{L_ACP_BBMEMBERSHIP_COUNTDOWN_EXPLAIN}</dt>
+        <dd>
+            <label><input type="radio" class="radio" name="bbmembership_countdown" value="1" <!-- IF BBMEMBERSHIP_COUNTDOWN -->checked="checked"<!-- ENDIF --> /> {L_YES}</label> &nbsp;
+            <label><input type="radio" class="radio" name="bbmembership_countdown" value="0" <!-- IF not BBMEMBERSHIP_COUNTDOWN -->checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+        </dd>
+    </dl>
+    <!-- IF BBPOINTS_ENABLED -->
     <dl>
         <dt><label>{L_ACP_BBMEMBERSHIP_BBPOINTS}{L_COLON}</label><br>{L_ACP_BBMEMBERSHIP_BBPOINTS_EXPLAIN}</dt>
         <dd>
@@ -136,7 +143,7 @@
 	<!-- END transactions -->
 	</tbody>
 	</table>
-	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY} {BBMEMBERSHIP_TOTAL}<!-- IF BBPOINS_ENABLED -->,  ({L_ACP_BBMEMBERSHIP_BBPOINTS} {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
+	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY} {BBMEMBERSHIP_TOTAL}<!-- IF BBPOINTS_ENABLED -->,  ({L_ACP_BBMEMBERSHIP_BBPOINTS} {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
 	<!-- IF .pagination -->
 	<div class="pagination top-pagination">
 		<!-- INCLUDE pagination.html -->
@@ -150,14 +157,14 @@
 	<fieldset>
     	<dl>
 			<dt><label>{L_ACP_BBMEMBERSHIP_TOTAL}</label></dt>
-			<dd>{TRANSACTION_CURRENCY} {TOTAL_EURO}, (BBpoints {TOTAL_BBPOINTS})</dd>
+			<dd>{TRANSACTION_CURRENCY} {TOTAL_EURO}<!-- IF BBPOINTS_ENABLED -->, ({L_ACP_BBMEMBERSHIP_BBPOINTS} {TOTAL_BBPOINTS})<!-- ENDIF --></dd>
 		</dl>
     	<dl>
-			<dt><label>{USER_PROFILE}'s {L_ACP_BBMEMBERSHIP_ADDRESS}</label></dt>
+			<dt><label>{USER_PROFILE} {L_ACP_BBMEMBERSHIP_ADDRESS}</label></dt>
 			<dd>{USER_ADDRESS}</dd>
 		</dl>
 	    <dl>
-			<dt><label>{USER_PROFILE}'s {L_ACP_BBMEMBERSHIP_COUNTRY}</label></dt>
+			<dt><label>{USER_PROFILE} {L_ACP_BBMEMBERSHIP_COUNTRY}</label></dt>
 			<dd>{USER_COUNTRY}</dd>
 		</dl>
 	</fieldset>

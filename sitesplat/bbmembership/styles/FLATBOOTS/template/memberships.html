@@ -27,7 +27,7 @@
 										<span class="npt-currency"><!-- IF PAYPAL_ENABLED -->{BBMEMBER_CURRENCY}<!-- ENDIF --></span>
 										<span class="npt-cost">{levels.DONATIONS_AMOUNT}</span>
 										<span class="npt-cent">{L_BB_CURRENCY_ZERO_ZERO}</span>
-										<span class="npt-duration">&nbsp;{levels.DONATIONS_EXPIRE}&nbsp;{L_DAYS}</span>
+										<span class="npt-duration">&nbsp;{levels.DONATIONS_EXPIRE}</span>
 									</div>
 									<!-- IF levels.PACKAGE --><div class="purchased-package ribbon5 ribbon5_override">{L_BBMEMBERSHIP_PURCHASED}</div><!-- ENDIF -->
 								</div>
@@ -39,8 +39,8 @@
 									</ul>
 								</div>
 								<div class="npt-plan-bottom">
-									<label for="option{levels.LEVEL}" class="price-toggler btn avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
-									  <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}"><!-- IF PAYPAL_ENABLED -->&nbsp;{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF -->&nbsp;{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
+									<label for="option{levels.LEVEL}"<!-- IF levels.PACKAGE --> disabled<!-- ENDIF --> class="price-toggler btn avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
+									  <input type="radio"<!-- IF levels.PACKAGE --> disabled<!-- ENDIF --> name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}"><!-- IF PAYPAL_ENABLED -->&nbsp;{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF -->&nbsp;{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
 									</label>
 								</div>
 							</div>
@@ -63,8 +63,13 @@
 			 <i class="fa fa-money icon-bg"></i>
 			<div class="tiles-inner text-center">
 				<p>{L_BBMEMBERSHIP_STATUS}</p>
-				<h4><!-- IF DAYS_TO_EXPIRATION and not BBMEMBER_PACKAGE-->{L_NA}<!-- ENDIF -->
-                <!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br />{DAYS_TO_EXPIRATION}<!-- ENDIF --></h4>
+				<!-- IF not BBMEMBER_COUNDOWN -->
+                	<h4><!-- IF not DAYS_TO_EXPIRATION -->{L_BBMEMBERSHIP_EXPIRED_INFO}<!-- ELSE --><!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br /><!-- ENDIF -->{L_MEMBERSHIP_ENDS_IN} {DAYS_TO_EXPIRATION}<!-- ENDIF --></h4>
+				<!-- ELSE -->
+                	<div class="countdown">
+						<span id="clock"></span>
+					</div>
+                <!-- ENDIF -->
 				<p><small>{CURRENT_TIME}</small></p>
 				<p><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" alt="{L_PAYPAL_ALT}"></p>
 			</div>
@@ -98,9 +103,15 @@
     </fieldset>
     </form>
     <div class="space10"></div>
-     <p class="text-muted">{L_BBMEMBERSHIP_DEPOSIT_DISCLAIMER}</p>
+     <p class="text-muted">{BBMEMBERSHIP_DEPOSIT}</p>
  </div>
-        
+
+<!-- IF BBMEMBER_COUNDOWN -->
+<script>
+	var membership_end = '<!-- IF not DAYS_TO_EXPIRATION -->0<!-- ELSE -->{MEMBERSHIP_END}<!-- ENDIF -->';
+</script>
+<!-- INCLUDEJS @sitesplat_bbmembership/js/jquery.countdown.min.js -->
+<!-- ENDIF --> 
 <!-- IF NOTIFY_STATUS -->
 <script>
     var info = '{L_INFORMATION}';
