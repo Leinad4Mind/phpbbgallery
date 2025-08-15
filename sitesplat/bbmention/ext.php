@@ -127,6 +127,7 @@ class ext extends base
 		$bbcodes = array(
 			array(
 				'bbcode_tag'          => 'groupmention=',
+				'bbcode_helpline'     => '',
 				'display_on_posting'  => 0,
 				'bbcode_match'        => '[groupmention={NUMBER}]{TEXT}[/groupmention]',
 				'bbcode_tpl'          => '{TEXT}',
@@ -137,6 +138,7 @@ class ext extends base
 			),
 			array(
 				'bbcode_tag'          => 'usermention=',
+				'bbcode_helpline'     => '',
 				'display_on_posting'  => 0,
 				'bbcode_match'        => '[usermention={NUMBER}]{TEXT}[/usermention]',
 				'bbcode_tpl'          => '{TEXT}',

@@ -56,13 +56,13 @@ class listener implements EventSubscriberInterface
 	public function onPostingTemplate($event)
 	{
 		$vars = $event['page_data'];
-		$vars['U_S9E_NEMTIONS'] = $this->helper->route('sitesplat.bbmention.controller', array('t' => $event['topic_id']));
+		$vars['U_S9E_NEMTIONS'] = $this->helper->route('sitesplat.bbmention.controller', ['f' => $event['forum_id'], 't' => $event['topic_id']], false);
 		$event['page_data'] = $vars;
 	}
 
 	public function onQuickReplyTemplate($event)
 	{
-		$url = $this->helper->route('sitesplat.bbmention.controller', array('t' => $event['topic_id']));
+		$url = $this->helper->route('sitesplat.bbmention.controller', ['f' => $event['forum_id'], 't' => $event['topic_id']], false);
 		$this->template->assign_var('U_S9E_NEMTIONS', $url);
 	}
 
