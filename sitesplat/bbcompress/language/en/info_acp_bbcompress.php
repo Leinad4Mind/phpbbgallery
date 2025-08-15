@@ -26,6 +26,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBCOMPRESS_TITLE'						=> 'BBcompress',
 	'ACP_SETTINGS'								=> 'Settings',
 
+	'SS_HELPER_NOTY'	                        => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBCOMPRESS_NOTICE'						    => '<div class="phpinfo"><p>The settings for this extension are under the <strong>Extension</strong> tab.</p></div>',
 	'ACP_BBCOMPRESS_NOTE'					    => 'Please note, script timeout value as well as the max_upload_file_size might need to be increased. These can sometimes be overridden through .htaccess but not always. This is usually done via php.ini on your server configuration. If you get timeout errors ask your host to increase the script timeout value as well as the max_upload_file_size.',
 	
@@ -33,9 +34,9 @@ $lang = array_merge($lang, array(
 
 	'ACP_OPTIMIZER_GENERAL_OPTIONS'				=> 'General settings',
 	'ACP_BBCOMPRESS_ALLOWED_POSTS'				=> 'Allow optimization on new posted images',
-	'ACP_BBCOMPRESS_ALLOWED_POSTS_EXPLAIN'		=> 'This will allow extension to optimize all new images upladed as attachments to posts and PMs.',
+	'ACP_BBCOMPRESS_ALLOWED_POSTS_EXPLAIN'		=> 'This will allow extension to optimize all new images uploaded as attachments to posts and PMs.',
 	'ACP_BBCOMPRESS_ALLOWED_AVATARS'			=> 'Allow optimization on new avatars',
-	'ACP_BBCOMPRESS_ALLOWED_AVATARS_EXPLAIN'	=> 'This will allow extension to optimize all new images upladed as avatars.',
+	'ACP_BBCOMPRESS_ALLOWED_AVATARS_EXPLAIN'	=> 'This will allow extension to optimize all new images uploaded as avatars.',
 
 	'ACP_OPTIMIZER_DRIVER'						=> 'Optimizer driver',
 	'ACP_OPTIMIZER_DRIVER_EXPLAIN'				=> 'Select from available list of optimizer drivers. Selected driver will optimize images before they are stored. Additional options may show up for selected driver, please, review them carefuly.',
