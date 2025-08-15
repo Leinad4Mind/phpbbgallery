@@ -154,7 +154,7 @@ class main_controller
 			{
 				$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);
 
-				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
+				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $rowmc_gross;
 				$membership[$mc_gross] = (isset($group_amount[$mc_gross]) && 
 							  (($group_amount[$mc_gross]['expire'] == -1) ? 300 : ($group_amount[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
 							  $group_amount[$mc_gross]['expire'] == 0) ? true: false;
