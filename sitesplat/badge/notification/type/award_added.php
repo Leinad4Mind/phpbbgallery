@@ -143,6 +143,6 @@ class award_added extends \phpbb\notification\type\base
 	{
 		$this->set_data('rule_name', $data['rule_name']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

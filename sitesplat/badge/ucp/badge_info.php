@@ -15,7 +15,7 @@ class badge_info
 	function module()
 	{
 		return array(
-			'filename'	=> 'sitesplat\badge\ucp\badge_module',
+			'filename'	=> '\sitesplat\badge\ucp\badge_module',
 			'title'     => 'UCP_BADGE_TITLE',
 			'version'   => '1.0.0',
 			'modes'     => array(

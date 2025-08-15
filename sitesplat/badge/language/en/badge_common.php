@@ -77,6 +77,9 @@ $lang = array_merge($lang, array(
 	'BADGE_NOTIFICATION_EVENT_REMOVED'	=> '<strong>BBAwards update</strong>:<br />A %1$s badge has been removed.',
 	'BADGE_WHOHOO'	                    => 'Whoohoo!!! There is a shiny new badge to celebrate, congrats!<hr><strong>You just unlocked a new badge</strong>, go to <a href="%1$s">your badge page</a> to see them all!',
 	
+	'NOTIFICATION_TYPE_AWARD_ADDED'	    => 'When an Award has been added',
+	'NOTIFICATION_TYPE_AWARD_REMOVED'	=> 'When an Award has been removed',
+	
 	// Misc
 	'BADGE_LINK_AD'	                    => 'BBAwards by SiteSplat',
 	'BADGE_LINK_AD_TITLE'	            => 'Professional Premium Themes And Extensions',

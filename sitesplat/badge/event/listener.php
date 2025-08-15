@@ -83,6 +83,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'					=> 'add_page_header_link',
+		//	'core.user_setup'	                => 'load_language_on_setup',
 			'core.viewtopic_modify_post_row'	=> 'modify_post_row',
 			'core.memberlist_view_profile'		=> 'modify_profile',
 
