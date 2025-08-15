@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -41,6 +40,7 @@ class random_poll extends base
 		$sql = 'SELECT t.topic_id, t.poll_title
 				FROM ' . $this->topics_table . ' t
 				WHERE t.poll_start <> 0
+				    AND t.poll_start + t.poll_length > ' . time() . '
 					AND ' . $this->db->sql_in_set('t.forum_id', $forums) . '
 					AND (
 						SELECT COUNT(pv.vote_user_id)

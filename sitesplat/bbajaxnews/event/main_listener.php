@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\event;
 
@@ -105,7 +104,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function new_announcement_sticky($event)
 	{
-		if ($event['mode'] == 'delete')
+		if ($event['mode'] == 'delete' || $event['mode'] == 'reply')
 		{
 			return;
 		}
