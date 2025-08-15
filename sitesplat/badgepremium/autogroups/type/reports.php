@@ -2,11 +2,10 @@
 /**
 *
 * BBAwards premium rule PAK.
-*
 * @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
 * @license SiteSplat 2015 all rights reserved
 *
-*/
+**/
 
 namespace sitesplat\badgepremium\autogroups\type;
 
@@ -23,7 +22,7 @@ class reports extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type()
 	{
-		return 'sitesplat.badgeautogroups.type.reports';
+		return 'sitesplat.badgepremium.type.reports';
 	}
 
 	/**
@@ -45,7 +44,7 @@ class reports extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type_name()
 	{
-		return $this->user->lang('BADGEAUTO_TYPE_REPORTS');
+		return $this->language->lang('BADGEAUTO_TYPE_REPORTS');
 	}
 
 	/**

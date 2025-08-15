@@ -2,11 +2,10 @@
 /**
 *
 * BBAwards premium rule PAK.
-*
 * @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
 * @license SiteSplat 2015 all rights reserved
 *
-*/
+**/
 
 namespace sitesplat\badgepremium;
 
@@ -23,9 +22,13 @@ class ext extends \phpbb\extension\base
 	{
 		if (empty($old_state))
 		{
-			global $user;
-			$user->add_lang_ext('sitesplat/badgepremium', 'badgepremium');
-			$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['BADGE_PREMIUM_NOTICE']) ? sprintf($user->lang['BADGE_PREMIUM_NOTICE'], $user->lang['ACP_CAT_USERGROUP'], $user->lang['ACP_GROUPS'], $user->lang['ACP_BADGE_MANAGE']) : '');
+			$this->container->get('user')->add_lang_ext('sitesplat/badgepremium', 'badgepremium');
+			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] . 
+				(isset($this->container->get('user')->lang['BADGE_PREMIUM_NOTICE']) ?
+					sprintf($this->container->get('user')->lang['BADGE_PREMIUM_NOTICE'],
+							$this->container->get('user')->lang['ACP_CAT_USERGROUP'],
+							$this->container->get('user')->lang['ACP_CAT_USERS'],
+							$this->container->get('user')->lang['ACP_BADGE_MANAGE']) : ''));
 		}
 		// Run parent enable step method
 		return parent::enable_step($old_state);

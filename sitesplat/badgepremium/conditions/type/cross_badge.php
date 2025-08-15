@@ -2,11 +2,10 @@
 /**
 *
 * BBAwards premium rule PAK.
-*
 * @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
 * @license SiteSplat 2015 all rights reserved
 *
-*/
+**/
 
 namespace sitesplat\badgepremium\conditions\type;
 

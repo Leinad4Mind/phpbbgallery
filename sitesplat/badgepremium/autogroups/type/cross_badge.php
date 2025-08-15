@@ -2,11 +2,10 @@
 /**
 *
 * BBAwards premium rule PAK.
-*
 * @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
 * @license SiteSplat 2015 all rights reserved
 *
-*/
+**/
 
 namespace sitesplat\badgepremium\autogroups\type;
 
@@ -23,7 +22,7 @@ class cross_badge extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type()
 	{
-		return 'sitesplat.badgeautogroups.type.cross_badge';
+		return 'sitesplat.badgepremium.type.cross_badge';
 	}
 
 	/**
@@ -45,7 +44,7 @@ class cross_badge extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type_name()
 	{
-		return $this->user->lang('BADGEAUTO_TYPE_CROSS_BADGE');
+		return $this->language->lang('BADGEAUTO_TYPE_CROSS_BADGE');
 	}
 
 	/**
@@ -72,7 +71,7 @@ class cross_badge extends \phpbb\autogroups\conditions\type\base
 			$sql = 'SELECT r.rule_id 
 					FROM ' . $this->badge_rule_table . ' r	
 					LEFT JOIN ' . $this->badge_type_table . ' t ON t.rule_type_id = r.rule_type_id
-					WHERE t.rule_type_name = "sitesplat.badge.type.custom"'; 
+					WHERE t.rule_type_name = "sitesplat.badge.type.cross_badge"'; 
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{

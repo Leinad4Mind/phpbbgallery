@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "BBAwards Premium Rules for the BBAwards extension. It allows a series of special premium rules for the awards combinations.",
     "homepage": "http://sitesplat.com",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "keywords": ["style", "sitesplat", "phpbb", "extension", "pages", "bbawards"],
      "license": "Proprietary/All rights reserved",
     "authors": [
@@ -23,11 +23,11 @@
     "extra": {
         "display-name": "BBAwards Premium Rules",
         "soft-require": {
-			"phpbb/phpbb": ">=3.1.0-RC3,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.2.0"
         },
         "version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbawards_premium_one.json"
 		}
     }
