@@ -86,6 +86,9 @@ class ext extends base
 			$this->container->get('notification_manager')->purge_notifications($this->notificationType);
 		}
 
+		// this will delete the BBcodes, but doing so would mess up post content...so commented out
+//		$db->sql_query('DELETE FROM ' . BBCODES_TABLE . " WHERE bbcode_tag IN ('groupmention', 'usermention')");
+
 		return parent::purge_step($oldState);
 	}
 
@@ -93,14 +96,24 @@ class ext extends base
 	{
 		$db = $this->container->get('dbal.conn');
 
-		$sql    = 'SELECT bbcode_id FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '" . $bbcodeTag . "'";
+		$sql    = 'SELECT bbcode_id FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '{$bbcodeTag}='";
 		$result = $db->sql_query($sql);
 		$id     = $db->sql_fetchfield('bbcode_id');
 		$db->sql_freeresult($result);
 
+		// bugfix!! the #($&)* textformatter removes the '=' sign from the tag if the BBcode was edited!
+		// so check for tag without '=' sign if above wasn't found
+		if (!$id)
+		{
+			$sql    = 'SELECT bbcode_id FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '$bbcodeTag'";
+			$result = $db->sql_query($sql);
+			$id     = $db->sql_fetchfield('bbcode_id');
+			$db->sql_freeresult($result);
+		}
+
 		if ($id)
 		{
-			$db->sql_query('DELETE FROM ' . BBCODES_TABLE . ' WHERE bbcode_id = ' . $id);
+			$db->sql_query('DELETE FROM ' . BBCODES_TABLE . " WHERE bbcode_id = $id");
 		}
 		else
 		{
@@ -124,28 +137,38 @@ class ext extends base
 
 	protected function installBBCodes()
 	{
+		// no need for first/second pass stuff since phpBB 3.2.4+ is required
 		$bbcodes = array(
 			array(
-				'bbcode_tag'          => 'groupmention=',
+				'bbcode_tag'          => 'groupmention',
 				'bbcode_helpline'     => '',
 				'display_on_posting'  => 0,
 				'bbcode_match'        => '[groupmention={NUMBER}]{TEXT}[/groupmention]',
 				'bbcode_tpl'          => '{TEXT}',
-				'first_pass_match'    => '(\\[groupmention=([0-9]+)\\](.*?)\\[/groupmention\\])i',
-				'first_pass_replace'  => '[groupmention=$1:$uid]$2[/groupmention:$uid]',
-				'second_pass_match'   => '(\\[groupmention=[0-9]+:$uid\\](.*?)\\[/groupmention:$uid\\])',
-				'second_pass_replace' => '$1'
+//				'first_pass_match'    => '(\\[groupmention=([0-9]+)\\](.*?)\\[/groupmention\\])i',
+//				'first_pass_replace'  => '[groupmention=$1:$uid]$2[/groupmention:$uid]',
+//				'second_pass_match'   => '(\\[groupmention=[0-9]+:$uid\\](.*?)\\[/groupmention:$uid\\])',
+//				'second_pass_replace' => '$1'
+				'first_pass_match'    => '/(?!)/',
+				'first_pass_replace'  => '',
+				'second_pass_match'   => '/(?!)/',
+				'second_pass_replace' => ''
 			),
 			array(
-				'bbcode_tag'          => 'usermention=',
+				'bbcode_tag'          => 'usermention',
 				'bbcode_helpline'     => '',
 				'display_on_posting'  => 0,
 				'bbcode_match'        => '[usermention={NUMBER}]{TEXT}[/usermention]',
-				'bbcode_tpl'          => '{TEXT}',
-				'first_pass_match'    => '(\\[usermention=([0-9]+)\\](.*?)\\[/usermention\\])i',
-				'first_pass_replace'  => '[usermention=$1:$uid]$2[/usermention:$uid]',
-				'second_pass_match'   => '(\\[usermention=[0-9]+:$uid\\](.*?)\\[/usermention:$uid\\])',
-				'second_pass_replace' => '$1'
+				'bbcode_tpl'          => '<a href="memberlist.php?mode=viewprofile&u={NUMBER}">{TEXT}</a>',
+//				'first_pass_match'    => '(\\[usermention=([0-9]+)\\](.*?)\\[/usermention\\])i',
+//				'first_pass_replace'  => '[usermention=$1:$uid]$2[/usermention:$uid]',
+//				'second_pass_match'   => '(\\[usermention=([0-9]+):$uid\\](.*?)\\[/usermention:$uid\\])',
+//				'second_pass_replace' => '<a href="memberlist.php?mode=viewprofile&u=$1">$2</a>'
+				'first_pass_match'    => '/(?!)/',
+				'first_pass_replace'  => '',
+				'second_pass_match'   => '/(?!)/',
+				'second_pass_replace' => ''
+
 			)
 		);
 
