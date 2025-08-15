@@ -3,13 +3,13 @@
     "type": "phpbb-extension",
     "description": "An extension for phpBB that allows administrators to manage and display advertisements on their forums.",
     "homepage": "https://www.phpbb.com",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "keywords": [
         "phpbb",
         "extension",
         "advertisement"
     ],
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Jakub Senko",
@@ -30,7 +30,7 @@
     "require": {
         "php": ">=5.4",
         "composer/installers": "~1.0.0",
-        "phpbb/phpbb": ">=3.2.0"
+        "phpbb/phpbb": ">=3.2.1"
     },
     "require-dev": {
         "phing/phing": "2.4.*"
@@ -38,7 +38,7 @@
     "extra": {
         "display-name": "Advertisement Management",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2.0"
+            "phpbb/phpbb": ">=3.2.1"
         },
         "version-check": {
             "host": "www.phpbb.com",
