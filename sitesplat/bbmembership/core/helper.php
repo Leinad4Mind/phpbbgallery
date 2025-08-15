@@ -39,6 +39,7 @@ class helper
 		$this->php_ext = $php_ext;
 		$this->bbmembership_table = $bbmembership_table;
 		$this->bbmembership_groups = json_decode($this->config['bbmembership_groups'], true);
+		$this->bbmembership_package = json_decode($this->config['bbmembership_package'], true);
 	}
 
 	/**
@@ -65,9 +66,38 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
+/**	 
+	public function get_paypal_verify()
+	{
+		$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
+		$data = array();
+		$include_ary = array('item_number','st','amt','cc','tx','payer_email','payment_date','address_country_code');
+		foreach ($names as $name)
+		{
+			$value = utf8_normalize_nfc($this->request->variable($name, '', true));
+			(in_array($name, $include_ary)) ? $data[$name] = $value : null;
+		}
+		$data['user_id'] 		= $this->user->data['user_id'];
+		$data['payment_date'] 	= isset($data['payment_date']) ? strtotime($data['payment_date']) : time();
+		$data['sender']			= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
+		$data['address']		= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
+
+		$data['payment_status'] = $data['st'];
+		$data['mc_gross'] 		= $data['amt'];
+		$data['mc_currency'] 	= $data['cc'];
+		$data['txn_id'] 		= $data['tx'];
+		unset($data['st'], $data['amt'], $data['cc'], $data['tx']);
+		
+		return $data;		
+	}
+*/	
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function updatePayments($data)
 	{
-		$sql = 'SELECT id, user_id, txn_id, payment_status, membership 
+		$sql = 'SELECT id, user_id, txn_id, payment_status 
 				FROM ' . $this->bbmembership_table . ' WHERE item_number = \'' . (isset($data['item_number']) ? $data['item_number'] : '') .'\'';
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -78,14 +108,7 @@ class helper
 			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . (int) $row['id'];
 			$this->db->sql_query($sql);
 			
-			$this->add_group((int) $row['user_id'], (int) $data['mc_gross'], $row['id']);
-
-			// send notification
-			$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
-				'txn_id'		=> $row['id'],
-				'user_id'		=> $row['user_id'],
-				'amount'		=> $row['membership'],
-			));
+			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
 		}
 		
 		return $data;
@@ -105,14 +128,14 @@ class helper
 			$this->bbpoints_table = $this->container->getParameter('sitesplat.bbpoints.table');	
 			$user_id = $this->user->data['user_id'];
 			$sql = 'SELECT user_id, SUM(points) as total FROM (
-					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' 
+					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' GROUP BY poster_id 
 					UNION ALL
-					SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . '
+					SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . ' GROUP BY topic_poster
 					UNION ALL
-					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . '
+					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
 					UNION ALL
-					SELECT to_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . '
-					) t1';
+					SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY to_id
+					) t1 GROUP BY user_id';
 			$result = $this->db->sql_query($sql);
 			$user_points  = $this->db->sql_fetchfield('total');
 			
@@ -127,8 +150,9 @@ class helper
 					'payment_date'		=> time(),
 					'session_ip'		=> $this->user->ip,
 					'mc_gross'			=> $amount * 100 . '.00',
-					'mc_currency'		=> 'BBPOINTS'
-					);
+					'mc_currency'		=> 'BBPOINTS',
+					'membership'		=> $this->bbmembership_package[(int) $amount]['id']
+				);
 	
 				$sql = 'INSERT INTO ' . $this->bbmembership_table . ' ' . $this->db->sql_build_array('INSERT', $data);
 				$this->db->sql_query($sql);
@@ -161,7 +185,7 @@ class helper
 	/**
 	 * {@inheritdoc}
 	 */
-	public function add_group($user_id, $membership)
+	public function add_group($user_id, $membership, $txn_id)
 	{
 		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		
@@ -171,16 +195,19 @@ class helper
 		$group_ids = array_map(function($item) { return $item['group_id']; }, $group_ids);
 		
 		($membership) ? group_user_add($this->bbmembership_groups[$membership]['group'], $user_id) : null;
-
-		if (!$this->bbmembership_groups[$membership]['new_user'])
-		{
-			remove_newly_registered($user_id);
-		}
+		remove_newly_registered($user_id);
 
 		if ($this->bbmembership_groups[$membership]['default'] && !group_memberships($group_ids, $user_id, true))
 		{
 			group_set_user_default($this->bbmembership_groups[$membership]['group'], array($user_id));
 		}
+		$memberships = array_keys($this->bbmembership_groups);
+		// send notification
+		$this->notification_manager->add_notifications('sitesplat.bbmembership.notification.type.membership_bought', array(
+			'txn_id'		=> $txn_id,
+			'user_id'		=> $user_id,
+			'amount'		=> array_search($membership, $memberships) + 1,
+		));
 	}
 	
 	/**
@@ -214,6 +241,7 @@ class helper
 			trigger_error($message/* . adm_back_link($this->u_action)*/, E_USER_NOTICE);
 		}
 	}
+
 	/**
 	 * {@inheritdoc}
 	 */

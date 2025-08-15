@@ -87,7 +87,7 @@ class listener implements EventSubscriberInterface
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'login',
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'logout',
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'register',
-			$this->user->page['page_name'] == 'app.php/memberships/index.html'
+			$this->user->page['page_name'] == 'app.php/bbmemberships/index.html'
 		);
 		
 		if ($this->config['bbmembership_clubmode'] && $event['user_data']['user_type'] != USER_FOUNDER && !array_sum($check_ary))

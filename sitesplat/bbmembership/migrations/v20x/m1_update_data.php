@@ -75,12 +75,9 @@ class m1_update_data extends \phpbb\db\migration\migration
 	{
 		$this->bbmembership_package = json_decode($this->config['bbmembership_package'], true);
 		$i = 0;
-		if (!empty($this->bbmembership_package))
+		foreach ($this->bbmembership_package as $key => $value)
 		{
-			foreach ($this->bbmembership_package as $key => $value)
-				{
-					$this->bbmembership_package[$key] += array('id' => ++$i);
-				}
+			$this->bbmembership_package[$key] += array('id' => ++$i);
 		}
 		$this->config->set('bbmembership_package', json_encode($this->bbmembership_package));
 

@@ -61,8 +61,8 @@ class membership extends \phpbb\cron\task\base
 		$ids = $expired_ids = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$rowmc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
-			$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $rowmc_gross;
+			$mc_gross = $this->bbmembership_helper->find_membership($this->bbmembership_package, 'id', (int) $row['membership']);	
+	//		$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $rowmc_gross / 100 : (int) $rowmc_gross;
 			$membership = (isset($this->bbmembership_groups[$mc_gross]) && 
 						  (($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 : 
 						  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||

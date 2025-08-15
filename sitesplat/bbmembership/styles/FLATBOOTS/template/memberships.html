@@ -40,7 +40,7 @@
 								</div>
 								<div class="npt-plan-bottom">
 									<label for="option{levels.LEVEL}" class="price-toggler btn avn-btn" data-price-id="#price{levels.LEVEL}<!-- IF BBPOINTS_ENABLED -->, #points{levels.LEVEL}<!-- ENDIF -->">
-									  <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}"><!-- IF PAYPAL_ENABLED -->{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i>&nbsp;<!-- ENDIF -->{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
+									  <input type="radio" name="amount" value="{levels.DONATIONS_AMOUNT}" id="option{levels.LEVEL}"><!-- IF PAYPAL_ENABLED -->&nbsp;{BBMEMBER_CURRENCY}<!-- ELSE --><i class="fa fa-money"></i><!-- ENDIF -->&nbsp;{levels.DONATIONS_AMOUNT}<!-- IF not PAYPAL_ENABLED -->{L_BB_CURRENCY_ZERO_ZERO}<!-- ENDIF -->{L_BB_CURRENCY_ZERO_ZERO_DEC}
 									</label>
 								</div>
 							</div>
@@ -56,14 +56,15 @@
     </div>
 			
 	<div class="col-md-4 col-sm-4">
-	 <div class="space10 hidden-xs"></div>
+	 <div class="space10"></div>
+		<div class="space10"></div>
 		<div class="panel panel-default thumbnail">
 			<div class="bg-group-info tiles-information">
 			 <i class="fa fa-money icon-bg"></i>
 			<div class="tiles-inner text-center">
 				<p>{L_BBMEMBERSHIP_STATUS}</p>
 				<h4><!-- IF DAYS_TO_EXPIRATION and not BBMEMBER_PACKAGE-->{L_NA}<!-- ENDIF -->
-				<!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br />{DAYS_TO_EXPIRATION}<!-- ENDIF --></h4>
+                <!-- IF BBMEMBER_PACKAGE -->{L_MEMBERSHIP_LEVEL}&nbsp;{BBMEMBER_PACKAGE}<br />{DAYS_TO_EXPIRATION}<!-- ENDIF --></h4>
 				<p><small>{CURRENT_TIME}</small></p>
 				<p><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" alt="{L_PAYPAL_ALT}"></p>
 			</div>
@@ -76,7 +77,7 @@
             <!-- IF PAYPAL_ENABLED -->
             <button type="submit" name="submitbtn" disabled="disabled" value="{L_DONATIONS_DONATE}" class="btn btn-primary btn-lg btn-block btn-huge" id="load" data-loading-text="{L_CONNECTING_ON_PAYPAL} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">
             <!-- BEGIN levels -->
-            <span id="price{levels.LEVEL}" class="price-toggle" style="display:none;">{BBMEMBER_CURRENCY}{levels.DONATIONS_AMOUNT}{L_BB_CURRENCY_ZERO_ZERO_DEC}</span> 
+            <span id="price{levels.LEVEL}" class="price-toggle" style="display:none;">{BBMEMBER_CURRENCY}&nbsp;{levels.DONATIONS_AMOUNT}{L_BB_CURRENCY_ZERO_ZERO_DEC}</span> 
             <!-- END levels -->
             {L_CONTINUE_ON_PAYPAL}&nbsp;<i class="icon-moon-paypal"></i>
             </button>
@@ -96,11 +97,8 @@
 
     </fieldset>
     </form>
-    <div class="space10 visible-xs-block"></div>
-    <div class="space10 visible-xs-block"></div>
-    <div class="col-md-12 col-sm-12">
-     <p class="text-muted"><small>{L_BBMEMBERSHIP_DEPOSIT_DISCLAIMER}</small></p>
-    </div>
+    <div class="space10"></div>
+     <p class="text-muted">{L_BBMEMBERSHIP_DEPOSIT_DISCLAIMER}</p>
  </div>
         
 <!-- IF NOTIFY_STATUS -->
