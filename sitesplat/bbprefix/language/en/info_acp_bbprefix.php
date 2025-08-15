@@ -39,8 +39,8 @@ $lang = array_merge($lang, [
 	
 	
 	'TITLE_EXPLAIN_TIPS'			=> 'Tips and Usage:',
-	'TITLE_EXPLAIN_TIPS_EXPLAIN'	=> 'The current allowed variables are: (<strong>{DATE}</strong>, <strong>{POSTER}</strong> and <strong>{USERNAME}</strong>)<br /> Custom BBcodes would need to be created first and then the BBcode can be used for example as follows:',
-	'TITLE_EXPLAIN_TIPS_STAR'	    => '<small>**Create your custom BBcode under  ACP > POSTING > Messages > BBcodes. </small>',
+	'TITLE_EXPLAIN_TIPS_EXPLAIN'	=> 'The current allowed variables are: (<strong>{DATE}</strong>, <strong>{POSTER}</strong> and <strong>{USERNAME}</strong>)<br /> Custom BBcodes would need to be created <strong>first</strong> and then the BBcode can be used in BBprefix as follows for example:',
+	'TITLE_EXPLAIN_TIPS_STAR'	    => '<small>**Create your custom BBcode FIRST under  ACP > POSTING > Messages > BBcodes and then create your BBprefix entry.</small>',
 	
 	'BBPREFIX_NOTICE'				=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
 

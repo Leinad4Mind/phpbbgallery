@@ -77,6 +77,17 @@ li.prefix_placeholder {
 	margin-right: 5px;
 }
 
+/* quick and dirty reset for the img rules for the description section so ACP img code will work fine */
+.section-index .description img.img-post,
+.section-index .description img.postimage,
+.section-viewforum .description img.img-post,
+.section-viewforum .description img.postimage {
+    display: inherit;
+    margin-right: inherit;
+    max-width: inherit;
+}
+
+
 .section-viewtopic .side-segment .label {
 	display: inline-block;
 	margin-right: 5px;

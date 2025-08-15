@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "BBprefix allows to use topic prefix tags. It supports out of the box BBcode functionality to mark the prefixes and comes with several useful ACP options.",
     "homepage": "http://sitesplat.com",
-    "version": "1.0.5",
+    "version": "1.0.6",
 	"keywords": ["phpbb", "prefix", "extension", "topic", "sitesplat"],
     "license": "Proprietary/All rights reserved",
     "authors": [
@@ -26,7 +26,7 @@
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbprefix.json"
 		}
     }

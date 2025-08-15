@@ -241,7 +241,6 @@ class bbprefix_module
 						trigger_error('NO_PREFIX_ID_SPECIFIED');
 					break;
 
-					default:
 					case 'list':
 						$this->template->assign_vars([
 							'S_LIST'	=> true,
@@ -276,7 +275,6 @@ class bbprefix_module
 				}
 			break;
 
-			default:
 				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
 		}
