@@ -53,7 +53,7 @@ class main
 		$this->template 				= $template;
 		$this->user 					= $user;
 		$this->config 					= $config;
-		$this->u_action					= $this->helper->route('basicstats_controller');
+		$this->u_action					= $this->helper->route('oxpus_basicstats_controller');
 		$this->language					= $language;
 
 		if ($this->user->data['user_type'] <> USER_FOUNDER)
@@ -74,20 +74,20 @@ class main
 			case 'd':
 				$current_time		= getdate(time()); //calculate the time here which will be used henceforth to prevent any mismatch if date changes at the tick of midnight!!!
 				$board_starttime	= getdate($this->config['board_startdate']);
-				
+
 				$start_time = $end_time = $counted_days = 0;
 				if (!$s_month)
 				{
 					$s_month = date('n-Y', $current_time[0]);
 				}
 				$s_month = explode('-', $s_month, 2); //[0] => month, [1] => year
-				
+
 				if ($s_month[0] == $current_time['mon'] && $s_month[1] == $current_time['year']) //if its the current month
 				{
 					//check if this is the first month of the board
 					if ($board_starttime['mon'] == $current_time['mon'] && $board_starttime['year'] == $current_time['year'])
 					{
-						$start_time = $board_starttime[0];						
+						$start_time = $board_starttime[0];
 					}
 					else
 					{
@@ -108,10 +108,10 @@ class main
 					}
 					$end_time = mktime(0, 0, 0, $s_month[0] + 1, 1, $s_month[1]);
 				}
-				
+
 				$start_time	= getdate($start_time);
 				$end_time	= getdate($end_time);
-								
+
 				$totals = $max = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
 				$daily_data = array();
 				$first_day = $start_time['mday'];
@@ -119,47 +119,47 @@ class main
 				$last_day = date('j', $end_time[0] - 1);
 				$counted_days = $last_day - $first_day + 1;
 				for ($i = $first_day; $i <= $last_day; $i++)
-				{					
+				{
 					$daily_data[$i] = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
 				}
 				//free some memory
 				unset($first_day);
 				unset($last_day);
-				
+
 				//ok get the data now
-				//topics				
+				//topics
 				$sql = 'SELECT topic_time AS time FROM ' . TOPICS_TABLE . '
 							WHERE topic_visibility = ' . ITEM_APPROVED . '
-								AND topic_time >= ' . $start_time[0] . ' AND topic_time < ' . $end_time[0];				
+								AND topic_time >= ' . $start_time[0] . ' AND topic_time < ' . $end_time[0];
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
 					$daily_data[date('j', $row['time'])]['topics']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//posts
 				$sql = 'SELECT post_time AS time FROM ' . POSTS_TABLE . '
 							WHERE post_visibility = ' . ITEM_APPROVED . '
-								AND post_time >= ' . $start_time[0] . ' AND post_time < ' . $end_time[0];				
+								AND post_time >= ' . $start_time[0] . ' AND post_time < ' . $end_time[0];
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
 					$daily_data[date('j', $row['time'])]['posts']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//user regs
 				$sql = 'SELECT user_regdate AS time FROM ' . USERS_TABLE . '
 							WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
-								AND user_regdate >= ' . $start_time[0] . ' AND user_regdate < ' . $end_time[0];				
+								AND user_regdate >= ' . $start_time[0] . ' AND user_regdate < ' . $end_time[0];
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
 					$daily_data[date('j', $row['time'])]['user_reg']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//now calculate totals and max
 				foreach ($daily_data as $day => $data)
 				{
@@ -179,7 +179,7 @@ class main
 						$max['user_reg'] = $data['user_reg'];
 					}
 				}
-				
+
 				//now send data to template
 				if ($totals['topics'])
 				{
@@ -225,13 +225,13 @@ class main
 						));
 					}
 				}
-				
+
 				//we have to show the month-select box, so get all the months and their display from the board start date
 				//calculate the first month and year
 				$temp_month = $board_starttime['mon'];
 				$temp_year = $board_starttime['year'];
 				$month_options = array();
-				
+
 				while (($temp_epoch = mktime(0, 0, 0, $temp_month, 1, $board_starttime['year'])) <= $current_time[0])
 				{
 					$month_options = array_merge($month_options, array(
@@ -241,7 +241,7 @@ class main
 				}
 
 				$month_select_box = $this->make_select_box($month_options, $s_month[0] . '-' . $s_month[1], 's_month', $this->language->lang('SHOW_STATS_FOR_MONTH'), $this->language->lang('GO'), $this->u_action);
-				
+
 				$this->template->assign_vars(array(
 					'TOTAL_TOPICS'				=> $totals['topics'],
 					'TOTAL_POSTS'				=> $totals['posts'],
@@ -258,9 +258,9 @@ class main
 				$show_all = false; //whether to show from the board start date
 				//get the year for which to show stats, by default set it to the current month
 				$current_time		= getdate(time()); //calculate the time here which will be used henceforth to prevent any mismatch if date changes at the tick of midnight!!!
-				$board_starttime	= getdate($this->config['board_startdate']);				
+				$board_starttime	= getdate($this->config['board_startdate']);
 				$counted_months		= 0;
-				
+
 				if (!$s_year)
 				{
 					$s_year = $current_time['year'];
@@ -269,7 +269,7 @@ class main
 				{
 					$show_all = true;
 				}
-				
+
 				//now get the first and last time limit for the search
 				$start_time = $end_time = $counted_months = 0;
 				if ($show_all)
@@ -277,7 +277,7 @@ class main
 					$start_time = $board_starttime[0];
 					$end_time = $current_time[0];
 				}
-				else 
+				else
 				{
 					if ($s_year == $board_starttime['year']) //if the board started in the selected year, start from the board start month
 					{
@@ -297,19 +297,19 @@ class main
 					}
 				}
 				$start_time	= getdate($start_time);
-				$end_time	= getdate($end_time);				
-				
-				$monthly_data = array();				
+				$end_time	= getdate($end_time);
+
+				$monthly_data = array();
 				$offset_start_time = $start_time[0];
 				while ($offset_start_time < $end_time[0])
-				{				
+				{
 					$monthly_data[date('F Y', $offset_start_time)] = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
-					$counted_months++;					
+					$counted_months++;
 					$offset_start_time = mktime(0, 0, 0, $start_time['mon'] + $counted_months, 1, $start_time['year']);
-				}			
-				
+				}
+
 				//now get the queries
-				//topics				
+				//topics
 				$sql = 'SELECT topic_time AS time FROM ' . TOPICS_TABLE . '
 							WHERE topic_visibility = ' . ITEM_APPROVED;
 				if (!$show_all)
@@ -322,7 +322,7 @@ class main
 					$monthly_data[date('F Y', $row['time'])]['topics']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//posts
 				$sql = 'SELECT post_time AS time FROM ' . POSTS_TABLE . '
 							WHERE post_visibility = ' . ITEM_APPROVED;
@@ -336,7 +336,7 @@ class main
 					$monthly_data[date('F Y', $row['time'])]['posts']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//user regs
 				$sql = 'SELECT user_regdate AS time FROM ' . USERS_TABLE . '
 							WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER));
@@ -350,7 +350,7 @@ class main
 					$monthly_data[date('F Y', $row['time'])]['user_reg']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//all data retrieved now get the max and totals
 				$totals = $max = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
 				foreach ($monthly_data as $month => $data)
@@ -371,13 +371,13 @@ class main
 						$max['user_reg'] = $data['user_reg'];
 					}
 				}
-				
+
 				//show stats for topics
 				if ($totals['topics'])
 				{
 					$this->template->assign_var('S_MONTHLY_TOPICS', true);
 					foreach ($monthly_data as $month => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_topics_row', array(
 							'TIME_ELEMENT'	=> $month,
 							'COUNT'			=> $data['topics'],
@@ -392,7 +392,7 @@ class main
 				{
 					$this->template->assign_var('S_MONTHLY_POSTS', true);
 					foreach ($monthly_data as $month => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_posts_row', array(
 							'TIME_ELEMENT'	=> $month,
 							'COUNT'			=> $data['posts'],
@@ -402,13 +402,13 @@ class main
 						));
 					}
 				}
-				
+
 				//show stats for user_reg
 				if ($totals['user_reg'])
 				{
 					$this->template->assign_var('S_MONTHLY_USER_REGS', true);
 					foreach ($monthly_data as $month => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_user_regs_row', array(
 							'TIME_ELEMENT'	=> $month,
 							'COUNT'			=> $data['user_reg'],
@@ -418,10 +418,10 @@ class main
 						));
 					}
 				}
-				
-				//we have to show the month-select box, so get all the months and their display from the board start date				
+
+				//we have to show the month-select box, so get all the months and their display from the board start date
 				$temp_year = $board_starttime['year'];
-				$year_options = array();				
+				$year_options = array();
 				while ((int) $temp_year <= (int) $current_time['year'])
 				{
 					$year_options = array_merge($year_options, array(
@@ -433,9 +433,9 @@ class main
 				$year_options = array_merge($year_options, array(
 					'all' => $this->language->lang('ALL')
 				));
-				
+
 				$year_select_box = $this->make_select_box($year_options, ($show_all) ? 'all' : $s_year . ' ', 's_year', $this->language->lang('SHOW_STATS_FOR_YEAR'), $this->language->lang('GO'), $this->u_action);
-				
+
 				$this->template->assign_vars(array(
 					'TOTAL_TOPICS'			=> $totals['topics'],
 					'TOTAL_POSTS'			=> $totals['posts'],
@@ -447,29 +447,29 @@ class main
 					'MONTH_SELECT_BOX'		=> $year_select_box,
 				));
 			break;
-			
+
 			case 'y':
 				$show_all = false; //whether to show from the board start date
 				//get the year for which to show stats, by default set it to the current month
 				$current_time		= getdate(time()); //calculate the time here which will be used henceforth to prevent any mismatch if date changes at the tick of midnight!!!
-				$board_starttime	= getdate($this->config['board_startdate']);				
-				$counted_years		= 0;					
-				
+				$board_starttime	= getdate($this->config['board_startdate']);
+				$counted_years		= 0;
+
 				//now get the first and last time limit for the search
 				$start_time = getdate($board_starttime[0]);
 				$end_time	= $current_time;
-				
-				$yearly_data = array();				
+
+				$yearly_data = array();
 				$offset_start_time = $start_time[0];
 				while ($offset_start_time < $end_time[0])
-				{				
+				{
 					$yearly_data[date('Y', $offset_start_time)] = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
-					$counted_years++;					
+					$counted_years++;
 					$offset_start_time = mktime(0, 0, 0, 1, 1, $start_time['year'] + $counted_years);
-				}			
-				
+				}
+
 				//now get the queries
-				//topics				
+				//topics
 				$sql = 'SELECT topic_time AS time FROM ' . TOPICS_TABLE . '
 							WHERE topic_visibility = ' . ITEM_APPROVED;
 				$result = $this->db->sql_query($sql);
@@ -478,7 +478,7 @@ class main
 					$yearly_data[date('Y', $row['time'])]['topics']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//posts
 				$sql = 'SELECT post_time AS time FROM ' . POSTS_TABLE . '
 							WHERE post_visibility = ' . ITEM_APPROVED;
@@ -488,7 +488,7 @@ class main
 					$yearly_data[date('Y', $row['time'])]['posts']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//user regs
 				$sql = 'SELECT user_regdate AS time FROM ' . USERS_TABLE . '
 							WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER));
@@ -498,7 +498,7 @@ class main
 					$yearly_data[date('Y', $row['time'])]['user_reg']++;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				//all data retrieved now get the max and totals
 				$totals = $max = array('topics' => 0, 'posts' => 0, 'user_reg' => 0);
 				foreach ($yearly_data as $year => $data)
@@ -519,13 +519,13 @@ class main
 						$max['user_reg'] = $data['user_reg'];
 					}
 				}
-				
+
 				//show stats for topics
 				if ($totals['topics'])
 				{
 					$this->template->assign_var('S_YEARLY_TOPICS', true);
 					foreach ($yearly_data as $year => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_topics_row', array(
 							'TIME_ELEMENT'	=> $year,
 							'COUNT'			=> $data['topics'],
@@ -540,7 +540,7 @@ class main
 				{
 					$this->template->assign_var('S_YEARLY_POSTS', true);
 					foreach ($yearly_data as $year => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_posts_row', array(
 							'TIME_ELEMENT'	=> $year,
 							'COUNT'			=> $data['posts'],
@@ -550,13 +550,13 @@ class main
 						));
 					}
 				}
-				
+
 				//show stats for user_reg
 				if ($totals['user_reg'])
 				{
 					$this->template->assign_var('S_YEARLY_USER_REGS', true);
 					foreach ($yearly_data as $year => $data)
-					{	
+					{
 						$this->template->assign_block_vars('periodic_user_regs_row', array(
 							'TIME_ELEMENT'	=> $year,
 							'COUNT'			=> $data['user_reg'],
@@ -566,7 +566,7 @@ class main
 						));
 					}
 				}
-				
+
 				$this->template->assign_vars(array(
 					'TOTAL_TOPICS'				=> $totals['topics'],
 					'TOTAL_POSTS'				=> $totals['posts'],
@@ -576,19 +576,19 @@ class main
 					'AVG_USER_REGS'				=> number_format($totals['user_reg'] / $counted_years, 2),
 				));
 			break;
-			
+
 			default:
 		}
-		
+
 		$this->template->assign_vars(array(
-			'L_TITLE'		=> $this->language->lang('BASIC_STATS'),			
+			'L_TITLE'		=> $this->language->lang('BASIC_STATS'),
 			'U_D_MODE'		=> $this->u_action . '?mode=d',
 			'U_M_MODE'		=> $this->u_action . '?mode=m',
 			'U_Y_MODE'		=> $this->u_action . '?mode=y',
 			'S_FORM_ACTION'	=> $this->u_action . '?mode=' . $mode,
 			'AS_ON'			=> $this->language->lang('AS_ON', $this->user->format_date($current_time[0])),
 		));
-		
+
 		$this->template->set_filenames(array('body' => $mode . '_view.html'));
 		$page_title = $this->language->lang('STATISTICS') . ' &bull; ' . $this->language->lang(strtoupper($mode . '_view'));
 		page_header($page_title);
@@ -598,7 +598,7 @@ class main
 	private function make_select_box($options, $selected, $select_identifier, $label_prompt, $submit_prompt = 'submit', $action_url = '')
 	{
 		$return_str = $temp_str = '';
-		
+
 		foreach ($options as $option => $option_lang)
 		{
 			if ($option != $selected)
@@ -609,14 +609,14 @@ class main
 				$temp_str .= '<option value="' . $option . '" selected="selected">' . $option_lang . '</option>';
 			}
 		}
-		
+
 		$submit_prompt = ucfirst($submit_prompt);
-		
+
 		if ($options)
 		{
 			$return_str = '<fieldset><label for="' . $select_identifier . '">' . $label_prompt . ': </label><select name=' . $select_identifier . ' id="' . $select_identifier . '">' . $temp_str . '</select> <input class="button2" type="submit" value="' . $submit_prompt . '" /></fieldset>';
 		}
-		
+
 		return $return_str;
 	}
 }

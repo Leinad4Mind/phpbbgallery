@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Basic Stats",
 	"homepage": "http://phpbb3.oxpus.net",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"time": "2015-10-05",
 	"license": "GPL-2.0",
 	"authors": [{

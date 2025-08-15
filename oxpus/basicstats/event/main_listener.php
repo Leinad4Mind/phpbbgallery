@@ -37,7 +37,7 @@ class main_listener implements EventSubscriberInterface
 
 	/* @var \phpbb\template\template */
 	protected $template;
-	
+
 	/* @var \phpbb\user */
 	protected $user;
 
@@ -58,7 +58,7 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	public function load_language_on_setup($event)
-	{	
+	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'oxpus/basicstats',
@@ -72,7 +72,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		if ($this->user->data['user_type'] == USER_FOUNDER)
 		{
-			$ext_main_link = $this->helper->route('basicstats_controller');
+			$ext_main_link = $this->helper->route('oxpus_basicstats_controller');
 
 			$this->template->assign_vars(array(
 				'U_BASIC_STATS' => $ext_main_link,

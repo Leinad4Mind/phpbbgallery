@@ -1,3 +1,3 @@
-basicstats_controller:
+oxpus_basicstats_controller:
     path: /basicstats/
     defaults: { _controller: oxpus.basicstats.controller:handle }
