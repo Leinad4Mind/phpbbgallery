@@ -59,6 +59,8 @@ class listener implements EventSubscriberInterface
 	
 	public function resize_image($event)
 	{
+	if (!isset($event['row']['skip_auth']) && strpos($this->user->data['session_page'], 'adm') === false)
+	{
 		$filedata = $event['filedata'];
 		$image = file_get_contents($filedata['filename']);
 		$imagename = $event['destination'] . '/tmp_' . $event['prefix'] . $event['row']['id'] . '.' . $filedata['extension'];
@@ -91,5 +93,6 @@ class listener implements EventSubscriberInterface
 		{
 			unlink($imagename);
 		}
+	}
 	}
 }
