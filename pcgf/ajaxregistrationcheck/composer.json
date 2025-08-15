@@ -1,40 +1,32 @@
 {
-    "name": "pcgf/ajaxregistrationcheck",
+    "name": "welshpaul/ajaxusernamecheck",
     "type": "phpbb-extension",
-    "description": "An extension that checks data on the registration form with AJAX so that no invalid or unwanted data could be typed in",
-    "homepage": "https://github.com/MarkusWME/phpBB---AJAX-Registration-Check",
+    "description": "Checks in real time if the username entered on the registration form is already in use",
     "version": "1.0.1",
-    "time": "2017-05-28",
+    "time": "2020-12-20",
     "keywords": [
         "ajax",
-        "registration",
+        "username",
         "check",
-        "registration check",
+        "username check",
         "ajax check",
-        "ajax registration check"
+        "ajax username check"
     ],
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "MarkusWME",
-            "homepage": "https://github.com/MarkusWME",
-            "email": "markuswme@pcgamingfreaks.at",
+            "name": "WelshPaul",
             "role": "Lead Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "phpbb/phpbb": ">=3.1"
+        "php": ">=7.0.x",
+        "phpbb/phpbb": ">=3.2"
     },
     "extra": {
-        "display-name": "AJAX Registration Check",
+        "display-name": "AJAX Username Check",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1"
-        },
-        "version-check": {
-            "host": "www.phpbb.com",
-            "directory": "/customise/db/extension/ajax_registration_check",
-            "filename": "version_check"
+            "phpbb/phpbb": ">=3.2"
         }
     }
 }

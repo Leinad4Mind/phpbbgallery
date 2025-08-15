@@ -1,6 +1,6 @@
 services:
-    pcgf.ajaxregistrationcheck.listener:
-        class: pcgf\ajaxregistrationcheck\event\listener
+    welshpaul.ajaxusernamecheck.listener:
+        class: welshpaul\ajaxusernamecheck\event\listener
         arguments:
             - '@config'
             - '@controller.helper'
@@ -8,8 +8,8 @@ services:
             - '@user'
         tags:
             - { name: event.listener }
-    pcgf.ajaxregistrationcheck.controller:
-        class: pcgf\ajaxregistrationcheck\controller\controller
+    welshpaul.ajaxusernamecheck.controller:
+        class: welshpaul\ajaxusernamecheck\controller\controller
         arguments:
             - '@request'
             - '@dbal.conn'
