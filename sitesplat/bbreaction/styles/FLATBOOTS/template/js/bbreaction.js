@@ -11,7 +11,7 @@ function sitesplat_bbreaction_init() {
 				elem.onclick = function(e) {
 					e.preventDefault();
 					$.ajax({ type: "POST",
-						url: "app.php/bbreaction/index.html",
+						url: sitesplat_board_url + "app.php/bbreaction/index.html",
 						data: this.getAttribute('data-options'),
 						dataType: "json",
 						success: function (result) {
@@ -40,7 +40,7 @@ function sitesplat_bbreaction_init() {
 					var postid = elem.getAttribute('data-id');
 					var hack = new Date();
 					$.ajax({
-						url: 'app.php/bbreaction/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
+						url: sitesplat_board_url + 'app.php/bbreaction/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
 						context: document.getElementById("bbreaction-profile-data"),
 						error: function (e, text, ee) {
 						},
@@ -66,7 +66,7 @@ function sitesplat_bbreaction_init() {
 					var hack = new Date();
 
 					$.ajax({
-						url: 'app.php/bbreaction/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
+						url: sitesplat_board_url + 'app.php/bbreaction/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
 						context: document.getElementById("bbreaction-profile-data"),
 						error: function (e, text, ee) {
 						},

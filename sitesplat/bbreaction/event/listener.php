@@ -41,7 +41,7 @@ class listener implements EventSubscriberInterface
 
 	/** @var \phpbb\user */
 	protected $user;
-	
+
 	/** @var \phpbb\auth\auth */
     protected $auth;
 
@@ -67,7 +67,7 @@ class listener implements EventSubscriberInterface
 
 	/** @var string The database table the topics are stored in */
 	protected $topics_table;
-	
+
 
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $reward_table, $reward_type_table, $posts_table, $topics_table)
 	{
@@ -96,14 +96,14 @@ class listener implements EventSubscriberInterface
 	public function add_page_header_link($event)
 	{
 		$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
-		
+
 		$this->template->assign_vars(array(
 		//	'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
             'U_BBREACTION_PAGE'         => ($this->auth->acl_get('u_bbreaction_module')) ? $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')) : '',
 			'BBREACTION_DISPLAY_TOP'	=> $this->config['rewards_display_top']
 		));
 	}
-	
+
 	public function viewtopic_handle_posts($event)
 	{
 		if (($this->config['rewards_allow_locked'] || $event['topic_data']['topic_status'] != ITEM_LOCKED) &&
@@ -112,16 +112,16 @@ class listener implements EventSubscriberInterface
 			$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
 			$positive = $negative = 0;
 			$post_row = $event['post_row'];
-			
+
 			$sql = 'SELECT COUNT(r.like_id) AS total FROM ' . $this->reward_table . ' r
 					INNER JOIN ' . $this->reward_type_table . ' t ON t.type_id = like_type and t.active = 1
 					WHERE r.post_id = ' . $post_row['POST_ID'];
 			$result = $this->db->sql_query($sql);
 			$total = $this->db->sql_fetchfield('total');
 
-			$sql = 'SELECT *, (SELECT COUNT(1) FROM ' . $this->reward_table . ' WHERE like_type = type_id AND post_id = ' . $post_row['POST_ID'] . ') AS percent 
-					FROM ' . $this->reward_type_table . ' 
-					WHERE active = 1 
+			$sql = 'SELECT *, (SELECT COUNT(1) FROM ' . $this->reward_table . ' WHERE like_type = type_id AND post_id = ' . $post_row['POST_ID'] . ') AS percent
+					FROM ' . $this->reward_type_table . '
+					WHERE active = 1
 					ORDER BY weight ASC';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
@@ -133,11 +133,11 @@ class listener implements EventSubscriberInterface
 					'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
 					'S_POSITIVE'	=> ($row['positive']) ? true : false,
 					'SEPERATOR'		=> ($row['seperator']) ? true : false,
-					'U_LIKE'		=> append_sid($this->helper->route('sitesplat_bbreaction_main_controller', 
+					'U_LIKE'		=> append_sid($this->helper->route('sitesplat_bbreaction_main_controller',
 										array('route' => 'index.html', 'p=' . $post_row['POST_ID'], 'e=' . $row['type_id']))),
-					
+
 					'CLASSLIST'	=> 'fa ' . $row['symbol'],
-					'CONTENTS'	=> '', 
+					'CONTENTS'	=> '',
 				);
 
 				/**
@@ -167,56 +167,63 @@ class listener implements EventSubscriberInterface
 
 	public function view_topic_topic($event)
 	{
-		$topic_id = $event['topic_id'];
-		$postids = array();
-		$sql = 'SELECT post_id FROM ' . POSTS_TABLE . ' WHERE topic_id = ' . $topic_id;
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
+		if (($this->config['rewards_allow_locked'] || $event['topic_data']['topic_status'] != ITEM_LOCKED) &&
+			($this->config['rewards_allow_global'] || $event['topic_data']['topic_type'] != POST_GLOBAL))
 		{
-			$postids[] = $row['post_id'];	
-		}
-
-		$sql = 'SELECT COUNT(r.like_id) AS total FROM ' . $this->reward_table . ' r
-				INNER JOIN ' . $this->reward_type_table . ' t ON t.type_id = like_type and t.active = 1
-				WHERE r.post_id IN (' . implode(',', $postids) . ')';
-		$result = $this->db->sql_query($sql);
-		$total = $this->db->sql_fetchfield('total');
-
-		$sql = 'SELECT *, (SELECT COUNT(1) FROM ' . $this->reward_table . ' WHERE like_type = type_id AND post_id IN (' . implode(',', $postids) . ')) AS percent 
-				FROM ' . $this->reward_type_table . ' 
-				WHERE active = 1 
-				ORDER BY weight ASC';
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			if ($row['percent'])
+			$topic_id = $event['topic_id'];
+			$postids = array();
+			$sql = 'SELECT post_id FROM ' . POSTS_TABLE . ' WHERE topic_id = ' . $topic_id;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$ary_tpl = array(
-					'SYMBOL'		=> $row['symbol'],
-					'TITLE'			=> $row['title'],
-					'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
-					'S_POSITIVE'	=> ($row['positive']) ? true : false,
-
-					'CLASSLIST'	=> 'fa ' . $row['symbol'],
-					'CONTENTS'	=> '', 
-				);
-
-				/**
-				* Event to modify reward template variables
-				*
-				* @event sitesplat.bbreaction.listener_view_topic_topic
-				* @var	array	row		Reward data
-				* @var	array	ary_tpl	Current reward template array
-				* @since 1.3.0
-				*/
-				$vars = array(
-					'row',
-					'ary_tpl',
-				);
-				extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_view_topic_topic', compact($vars)));
-
-				$this->template->assign_block_vars('reward', $ary_tpl);
+				$postids[] = $row['post_id'];
 			}
+
+			$sql = 'SELECT COUNT(r.like_id) AS total FROM ' . $this->reward_table . ' r
+					INNER JOIN ' . $this->reward_type_table . ' t ON t.type_id = like_type and t.active = 1
+					WHERE r.post_id IN (' . implode(',', $postids) . ')';
+			$result = $this->db->sql_query($sql);
+			$total = $this->db->sql_fetchfield('total');
+
+			$sql = 'SELECT *, (SELECT COUNT(1) FROM ' . $this->reward_table . ' WHERE like_type = type_id AND post_id IN (' . implode(',', $postids) . ')) AS percent
+					FROM ' . $this->reward_type_table . '
+					WHERE active = 1
+					ORDER BY weight ASC';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				if ($row['percent'])
+				{
+					$ary_tpl = array(
+						'SYMBOL'		=> $row['symbol'],
+						'TITLE'			=> $row['title'],
+						'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
+						'S_POSITIVE'	=> ($row['positive']) ? true : false,
+
+						'CLASSLIST'	=> 'fa ' . $row['symbol'],
+						'CONTENTS'	=> '',
+					);
+
+					/**
+					* Event to modify reward template variables
+					*
+					* @event sitesplat.bbreaction.listener_view_topic_topic
+					* @var	array	row		Reward data
+					* @var	array	ary_tpl	Current reward template array
+					* @since 1.3.0
+					*/
+					$vars = array(
+						'row',
+						'ary_tpl',
+					);
+					extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_view_topic_topic', compact($vars)));
+
+					$this->template->assign_block_vars('reward', $ary_tpl);
+				}
+			}
+		}
+		else {
+			$this->template->assign_var('S_HIDE_BBREACTION', true);
 		}
 	}
 
@@ -233,17 +240,17 @@ class listener implements EventSubscriberInterface
 		{
 			$userid = $event['member']['user_id'];
 			$sql = 'SELECT *, (SELECT COUNT(like_id) FROM ' . $this->reward_table . ' WHERE like_type = t.type_id AND user_id = ' . $userid . ') AS num, "given" AS type
-					FROM ' . $this->reward_type_table . ' t WHERE active = 1 
-	
+					FROM ' . $this->reward_type_table . ' t WHERE active = 1
+
 					UNION
-	
+
 					SELECT *, (SELECT COUNT(r.like_id) FROM ' . $this->reward_table . ' r
 					LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = r.post_id WHERE r.like_type = t.type_id AND p.poster_id = ' . $userid . ') AS num, "recieved" AS type
-					FROM ' . $this->reward_type_table . ' t WHERE active = 1 
-					
+					FROM ' . $this->reward_type_table . ' t WHERE active = 1
+
 					ORDER BY weight, type';
 			$result = $this->db->sql_query($sql);
-			while($row = $this->db->sql_fetchrow($result)) 
+			while($row = $this->db->sql_fetchrow($result))
 			{
 				$ary_tpl = array(
 					'TITLE'				=> $row['title'],
@@ -293,7 +300,7 @@ class listener implements EventSubscriberInterface
 		$permissions['u_bbreaction_module'] = array('lang' => 'ACL_U_BBREACTION_MODULE', 'cat' => 'post');
 		$event['permissions'] = $permissions;
 	}
-	
+
 	public function delete_like_dislike_forum($event)
 	{
 		$sql = "DELETE r.* FROM {$this->reward_table} r INNER JOIN {$this->posts_table} p
@@ -312,7 +319,7 @@ class listener implements EventSubscriberInterface
 				$sql = "DELETE r.* FROM {$this->reward_table} r INNER JOIN {$this->posts_table} p
 					WHERE p.poster_id $user_id_in
 					AND r.post_id = p.post_id";
-	
+
 				$this->db->sql_query($sql);
 			}
 		}

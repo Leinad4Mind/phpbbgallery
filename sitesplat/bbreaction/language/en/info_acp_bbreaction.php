@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'BBREACTION_META_TASKS_5'				=> 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BBREACTION_META_TASKS_6'				=> 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.2.8',
+	'ACP_BBREACTION_VERSION'	            => '1.2.9',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
@@ -92,7 +92,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBREACTION_EMPTY'					=> 'No BBreaction records',
 
 	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-	'BBREACTION_NOTICE'	                    => '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group Permission and adjust as needed. The default reactions have the user notification already enabled.</p></div>',
+	'BBREACTION_NOTICE'	                    => '<div style="auto;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group Permission and adjust as needed. The default reactions have the user notification already enabled.</p></div>',
 
 	// BBemoji
 	'ACP_BBREACTION_EMOJI'			=> 'BBemoji',
