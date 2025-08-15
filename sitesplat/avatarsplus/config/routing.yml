@@ -1,0 +1,7 @@
+sitesplat_avatarsplus_male_data:
+    path: /json/svgavatars-male-data.json
+    defaults: { _controller: sitesplat.avatarsplus.controller:json_data, gender: 'male' }
+
+sitesplat_avatarsplus_female_data:
+    path: /json/svgavatars-female-data.json
+    defaults: { _controller: sitesplat.avatarsplus.controller:json_data, gender: 'female' }
