@@ -122,7 +122,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.4.3',
+	'ACP_SIDEBAR_VERSION'		        => '1.4.4',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',

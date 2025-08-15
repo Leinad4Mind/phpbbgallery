@@ -119,7 +119,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
-					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
+					'post_url'		=> append_sid($board_url . 'viewtopic.' . $this->php_ext, 'p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
 				);
 			}
