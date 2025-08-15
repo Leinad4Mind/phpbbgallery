@@ -167,7 +167,7 @@ class main_controller
 
 				$title_type = array('Forum overview', 'Topic overview', 'Message overview', 'User overview');
 				$title['title'][] = $title_type[$type];
-				$title['descr'][] = 'Toplist like Dislike' . ': ';
+				$title['descr'][] = 'Toplist BBreaction' . ': ';
 
 				if ($this->request->variable('table', false))
 				{
