@@ -1,0 +1,80 @@
+imports:
+    - { resource: conditions.yml }
+    - { resource: cron.yml }
+    - { resource: notifications.yml }
+    - { resource: tables.yml }
+
+services:
+    sitesplat.badge.main:
+        class: sitesplat\badge\controller\main
+        arguments:
+            - @sitesplat.badge.manager
+            - @dbal.conn
+            - @service_container
+            - @template
+            - @user
+            - @request
+            - @controller.helper
+            - %core.root_path%
+            - @path_helper
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %sitesplat.badge.tables.badges%
+
+    sitesplat.badge.listener:
+        class: sitesplat\badge\event\listener
+        arguments:
+            - @sitesplat.badge.manager
+            - @controller.helper
+            - @template
+            - @dbal.conn
+            - @user
+            - %core.root_path%
+            - @path_helper
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %sitesplat.badge.tables.badges%
+        tags:
+            - { name: event.listener }
+
+    sitesplat.badge.manager:
+        class: sitesplat\badge\conditions\manager
+        arguments:
+            - @sitesplat.badge.type_collection
+            - @service_container
+            - @cache.driver
+            - @dbal.conn
+            - @user
+            - @request
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+
+    sitesplat.badge.helper:
+        class: sitesplat\badge\conditions\type\helper
+        arguments:
+            - @dbal.conn
+            - @notification_manager
+            - %core.root_path%
+            - %core.php_ext%
+            - %sitesplat.badge.tables.badge_events%
+
+    sitesplat.badge.admin_controller:
+        class: sitesplat\badge\controller\admin_controller
+        arguments:
+            - @config
+            - @dbal.conn
+            - @service_container
+            - @log
+            - @sitesplat.badge.manager
+            - @request
+            - @template
+            - @user
+            - @pagination
+            - %core.root_path%
+            - %sitesplat.badge.tables.badge_rules%
+            - %sitesplat.badge.tables.badge_types%
+            - %sitesplat.badge.tables.badge_events%
+            - %sitesplat.badge.tables.badges%

@@ -1,0 +1,6 @@
+parameters:
+    sitesplat.badge.tables.badge_rules: %core.table_prefix%badge_rules
+    sitesplat.badge.tables.badge_types: %core.table_prefix%badge_types
+    sitesplat.badge.tables.badge_events: %core.table_prefix%badge_events
+    sitesplat.badge.tables.badges: %core.table_prefix%badge_badges
+    sitesplat.badge.tables.badge_lang: %core.table_prefix%badge_lang

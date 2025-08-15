@@ -1,0 +1,52 @@
+<!-- INCLUDECSS ../theme/badge.css -->
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-content">
+<div class="tab-pane active">
+<fieldset class="framed-ucp">
+<legend>{L_UCP_BADGE_TITLE}</legend>
+	<p>{L_UCP_BADGE_EXPLAIN}</p>
+	<!-- BEGIN rules -->
+	<div class="badge_award">
+	<div class="row"> 
+	<!-- BEGIN badge -->
+			<!-- IF badge.BADGE -->		
+			<div class="col-md-12">
+			 <div class="pull-left">	
+				<figure> 
+				 <img class="img-responsive img-badge thumbnail center-block" src="{badge.BADGE}" alt="{badge.GROUP_NAME}"/>
+				</figure>
+			 </div>
+			</div>
+			 <div class="space10"></div>
+			  <div class="space10"></div>
+			<!-- ELSE -->
+			<!-- ENDIF -->	
+		
+	        <!-- BEGIN users -->
+			 <div class="col-sm-4 col-md-3">
+			  <a <!-- IF users.USERNAME -->href="{users.U_URL}"<!-- ENDIF --> class="block block-bordered text-center block-rounded block-link-hover3">
+				<div class="block-content block-content-full clearfix">
+				<div class="clearfix">
+				 <div class="pull-right img-avatar">
+				  {users.AVATAR}
+				 </div>
+				 <div class="pull-left">
+				 <!-- IF users.USERNAME -->
+				 <div class="push-5"<!-- IF users.U_COLOR --> style="color:#{users.U_COLOR};font-weight:bold;"<!-- ENDIF -->>{users.USERNAME}</div>
+				 <!-- ENDIF -->
+				 <div class="text-muted">{users.DATE}</div>
+				 </div>
+				</div>
+			<!-- <div class="clearfix">{badge.DESCRIPTION}{users.DESCR}</div> -->
+				</div>
+			  </a>
+			</div>
+			<!-- END users -->	
+	<!-- END badge --> 
+	</div>
+	<!-- END rules -->
+<small><a class="btn-link pull-right" title="Professional Premium Themes And Extensions" href="http://goo.gl/LvmwlF"><i class="fa fa-trophy fa-lg onstart animated" data-animation="tada" data-animation-delay="4000" aria-hidden="true"></i>&nbsp;BBAwards system by SiteSplat</a></small>
+</fieldset>
+</div>
+</div>		
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,278 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/badge/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/badge/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/badge.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+<!-- IF S_PREMIUM -->
+<img title="BBAwards Premium package" alt="BBAwards" src="{ROOT_PATH}ext/sitesplat/badge/adm/style/css/images/premium.png" class="badge-premium"/>
+<!-- ENDIF -->
+<!-- IF S_ADD or S_EDIT -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+<!-- ENDIF -->
+
+<h1>{L_ACP_BADGE_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBAWARDS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="fa fa-trophy"></i> {L_ACP_BBAWARDS}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+		
+<p>{L_ACP_BADGE_MANAGE_EXPLAIN}</p>
+<!-- IF S_NOTICE_LIKEDD or S_NOTICE_DONATION or S_NOTICE_PROFILEWALL -->
+<div id="badgeaward_notice" class="errorbox notice">
+	<a href="{U_BADGE_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_BADGE_NOTICE_CLOSE}"></a>
+	<p>{S_NOTICE_LIKEDD}<!-- IF S_NOTICE_LIKEDD and S_NOTICE_DONATION --><br /><!-- ENDIF -->{S_NOTICE_DONATION}
+	<!-- IF S_NOTICE_LIKEDD and S_NOTICE_DONATION and S_NOTICE_PROFILEWALL --><br /><!-- ENDIF -->{S_NOTICE_PROFILEWALL}</p>
+</div>
+<!-- ENDIF -->
+<!-- IF S_ADD or S_EDIT -->
+<script>
+var rule_type = [{BOOL_CONDITION}];
+var help_line = {
+	<!-- BEGIN conditions -->
+		'cb_{conditions.CONDITION}': '{conditions.CONDITION_EXPLANATION}',
+	<!-- END conditions -->};
+
+
+function changebadge() 
+{
+	var e = document.getElementById("badge_id");
+	var selected = e.options[e.selectedIndex];
+	var extra = selected.getAttribute('data-badge');
+	document.getElementById("badge").src = extra;
+}
+
+function display_min_max(e)
+{
+	var x = document.getElementById("rule_type_id");
+	var selected = x.options[x.selectedIndex];
+	var extra = selected.getAttribute('data-condition');
+	document.getElementById("helpline").innerHTML = help_line['cb_'+ extra];
+	if (rule_type[e])
+	{
+		document.getElementById("MinDisplay").style.display="none"
+		document.getElementById("MaxDisplay").style.display="none"
+		document.getElementById("LikeDislikeDisplay").style.display="none"
+		if (extra == 'sitesplat.badge.type.custom')
+		{
+			document.getElementById("Userlist").style.display="block"
+		} else if (extra == 'sitesplat.badge.type.cross_badge')
+		{
+			document.getElementById("Ruleslist").style.display="block"
+		} else
+		{
+			document.getElementById("Userlist").style.display="none"
+			document.getElementById("Ruleslist").style.display="none"
+		}	
+	} else
+	{
+		document.getElementById("MinDisplay").style.display="block"
+		document.getElementById("MaxDisplay").style.display="block"
+		document.getElementById("Userlist").style.display="none"
+		document.getElementById("Ruleslist").style.display="none"
+		if (extra == 'sitesplat.badge.type.likedd')
+		{
+			document.getElementById("ProfileDisplay").style.display="none"
+			document.getElementById("LikeDislikeDisplay").style.display="block"
+
+		} else if (extra == 'sitesplat.badge.type.profilewall')
+		{
+			document.getElementById("LikeDislikeDisplay").style.display="none"
+			document.getElementById("ProfileDisplay").style.display="block"
+		} else
+		{
+			document.getElementById("LikeDislikeDisplay").style.display="none"
+			document.getElementById("ProfileDisplay").style.display="none"
+		}	
+	}
+}
+</script>
+<span id="helpline">{BADGE_TYPE_EXPLAIN}</span>
+	<form id="acp_badge_rule" method="post" action="{U_FORM_ACTION}">
+		<fieldset>
+			<legend><!-- IF S_ADD -->{L_ACP_BADGE_ADD}<!-- ELSE -->{L_ACP_BADGE_EDIT}<!-- ENDIF --></legend>
+			<div style="float:left;width:75%;">
+			<dl>
+				<dt style="width:60%;"><label for="rule_name">{L_ACP_BADGE_RULE_NAME}{L_COLON}</label><br /><span>{L_ACP_BADGE_RULE_NAME_EXPLAIN}</span></dt>
+				<dd style="margin: 0 0 0 60%;"><input id="rule_name" type="text" name="rule_name" value="{RULE_NAME}" style="width:200px;" /></dd>
+			</dl>
+			<dl>
+				<dt style="width:60%;"><label for="rule_description">{L_ACP_BADGE_RULE_DESCRIPTION}{L_COLON}</label><br /><span>{L_ACP_BADGE_RULE_DESCRIPTION_EXPLAIN}</span></dt>
+				<dd style="margin: 0 0 0 60%;"><textarea id="rule_description" name="rule_description">{RULE_DESCRIPTION}</textarea></dd>
+			</dl>
+			<dl>
+				<dt style="width:60%;"><label for="badge_id">{L_ACP_BADGE_IMAGE}{L_COLON}</label><br /><span>{L_ACP_BADGE_IMAGE_EXPLAIN}</span></dt>
+				<dd style="margin: 0 0 0 60%;">
+					<select name="badge_id" id="badge_id" onchange="changebadge()" style="width:200px;">
+					<!-- BEGIN badges -->
+						<option value="{badges.BADGE_ID}" data-badge="{badges.BADGE_IMG}"<!-- IF badges.S_SELECTED --> selected="selected"<!-- ENDIF -->>{badges.BADGE_NAME}</option>
+					<!-- BEGINELSE -->
+						<option value="">{L_ACP_BADGE_NO_IMAGE}</option>
+					<!-- END badges -->
+					</select>
+				</dd>
+			</dl>
+			</div>
+			<img id="badge" class ="img-responsive" src="{BADGE}" style="float:right;" />
+			<dl style="clear:left;">
+				<dt><label for="rule_type_id">{L_ACP_BADGE_CONDITION_NAME}{L_COLON}</label><br /><span>{L_ACP_BADGE_CONDITION_NAME_EXPLAIN}</span></dt>
+				<dd><select name="rule_type_id" id="rule_type_id" onchange="display_min_max(rule_type_id.options.selectedIndex)" style="width:200px;">
+				<!-- BEGIN conditions -->
+					<option value="{conditions.CONDITION_ID}" data-condition="{conditions.CONDITION}"<!-- IF conditions.S_SELECTED --> selected="selected"<!-- ENDIF -->>{conditions.CONDITION_NAME}</option>
+				<!-- END conditions -->
+				</select>
+				</dd>
+			</dl>
+			<dl id="MinDisplay" style="display:<!-- IF CONDITION_BOOL or S_ADD -->none<!-- ELSE -->block<!-- ENDIF -->;">
+				<dt><label for="rule_min_value">{L_ACP_BADGE_MIN_VALUE}{L_COLON}</label><br /><span>{L_ACP_BADGE_MIN_VALUE_EXPLAIN}</span></dt>
+				<dd><input id="rule_min_value" type="number" size="4" name="rule_min_value" value="{MIN_VALUE}" style="width:200px;" /></dd>
+			</dl>
+			<dl id="MaxDisplay" style="display:<!-- IF CONDITION_BOOL  or S_ADD -->none<!-- ELSE -->block<!-- ENDIF -->;">
+				<dt><label for="rule_max_value">{L_ACP_BADGE_MAX_VALUE}{L_COLON}</label><br /><span>{L_ACP_BADGE_MAX_VALUE_EXPLAIN}</span></dt>
+				<dd><input id="rule_max_value" type="number" size="4" name="rule_max_value" value="{MAX_VALUE}" style="width:200px;" /></dd>
+			</dl>
+			<dl id="Userlist" style="display:<!-- IF DISPLAY_USERLIST -->block<!-- ELSE -->none<!-- ENDIF -->;">
+				<dt><label for="userlist">{L_ACP_BADGE_USERLIST}{L_COLON}</label><br /><span>{L_ACP_BADGE_USERLIST_EXPLAIN}</span></dt>
+				<dd><select id="userlist" name="userlist[]" multiple="multiple" size="10" style="width:200px;">
+				<!-- BEGIN userlist -->
+					<option value="{userlist.USER_ID}"<!-- IF userlist.S_SELECTED --> selected="selected"<!-- ENDIF -->>{userlist.USERNAME}</option>
+				<!-- END userlist -->
+				</select>
+				</dd>
+			</dl>
+			<dl id="Ruleslist" style="display:<!-- IF DISPLAY_RULESLIST -->block<!-- ELSE -->none<!-- ENDIF -->;">
+				<dt><label for="ruleslist">{L_ACP_BADGE_RULESLIST}{L_COLON}</label><br /><span>{L_ACP_BADGE_RULESLIST_EXPLAIN}</span></dt>
+				<dd><select id="ruleslist" name="ruleslist[]" multiple="multiple" size="10" style="width:200px;">
+				<!-- BEGIN ruleslist -->
+					<option value="{ruleslist.USER_ID}"<!-- IF ruleslist.S_SELECTED --> selected="selected"<!-- ENDIF -->>{ruleslist.USERNAME}</option>
+				<!-- END ruleslist -->
+				</select>
+				</dd>
+			</dl>
+
+			<dl id="LikeDislikeDisplay" style="display:<!-- IF S_OPTION1 -->block<!-- ELSE -->none<!-- ENDIF -->;">
+				<dt><label for="option">{L_ACP_BADGE_LIKE_DISLIKE}{L_COLON}</label><br /><span>{L_ACP_BADGE_LIKE_DISLIKE_EXPLAIN}</span></dt>
+				<dd><label><input type="radio" class="radio" id="options" name="options" value="1"<!-- IF S_OPTION_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_LIKE}</label>
+					<label><input type="radio" class="radio" name="options" value="0"<!-- IF not S_OPTION_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_DISLIKE}</label></dd>
+
+
+				<dd><label><input type="radio" class="radio" id="options2" name="options2" value="1"<!-- IF S_OPTION1_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_GIVEN}</label>
+					<label><input type="radio" class="radio" name="options2" value="0"<!-- IF not S_OPTION1_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_RECIEVED}</label></dd>
+
+			</dl>
+
+			<dl id="ProfileDisplay" style="display:<!-- IF S_OPTION2 -->block<!-- ELSE -->none<!-- ENDIF -->;">
+				<dt><label for="option">{L_ACP_BADGE_PROFILEWALL}{L_COLON}</label><br /><span>{L_ACP_BADGE_PROFILEWALL_EXPLAIN}</span></dt>
+				<dd><label><input type="radio" class="radio" id="options" name="options3" value="1"<!-- IF S_OPTION2_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_COMMENTS_REPLIES}</label>
+					<label><input type="radio" class="radio" name="options3" value="0"<!-- IF not S_OPTION2_SWITCH --> checked="checked"<!-- ENDIF --> /> {L_ACP_BADGE_LIKES}</label></dd>
+
+			</dl>
+			<dl>
+				<dt><label for="rule_notify">{L_ACP_BADGE_NOTIFY}{L_COLON}</label><br /><span>{L_ACP_BADGE_NOTIFY_EXPLAIN}</span></dt>
+				<dd><label><input type="radio" class="radio" id="rule_notify" name="rule_notify" value="1"<!-- IF S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="rule_notify" value="0"<!-- IF not S_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			</dl>
+		</fieldset>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			{S_FORM_TOKEN}
+		</p>
+	</form>
+<!-- ELSE -->
+	<table class="table1 zebra-table fixed-width-table">
+		<thead>
+			<tr>
+				<th style="width: 40%;">{L_ACP_BADGE_RULE_NAME}</th>
+				<th style="width: 18%;">{L_ACP_BADGE_CONDITION_NAME}</th>
+				<th style="width: 21%;" colspan="2">{L_ACP_BADGE_VALUE}</th>
+				<th style="width: 11%;">{L_ACP_BADGE_NOTIFY}</th>
+				<th style="width: 10%;">{L_ACTION}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN rules -->
+				<tr>
+					<td><img src="{rules.BADGE}" style="height:16px;float:left;margin-right:5px;" /> <strong>{rules.GROUP_NAME}</strong></td>
+					<td>{rules.CONDITION_NAME}</td>
+					<!-- IF rules.CONDITION_BOOL -->
+					<td colspan="2" style="text-align:center;">{L_YES}</td>
+					<!-- ELSE -->
+					<td style="text-align:center;">{rules.MIN_VALUE}</td>
+					<td style="text-align:center;">{rules.MAX_VALUE}</td>
+					<!-- ENDIF -->
+					<td style="text-align:center;"><!-- IF rules.S_NOTIFY -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
+					<td style="text-align:center;"><!-- IF rules.S_AVAILABLE -->
+						<a href="{rules.U_EDIT}" title="{L_EDIT}" style="margin:0 5%"><i class="fa fa-pencil"></i></a>
+						<!-- IF rules.U_SYNC --><a href="{rules.U_SYNC}" title="{L_RESYNC}" style="margin:0 5%"><i id="circle{rules.RULE_ID}" class="fa fa-refresh"></i></a> 
+						<!-- ELSE --><span style="margin:0 5%;display:inline-block;width:12px;">&nbsp;</span> <!-- ENDIF -->
+						<!-- ELSE --><i class="fa fa-lock" style="margin:0 13%;display:inline-block;width:24px;"></i><!-- ENDIF -->
+						<a href="{rules.U_DELETE}" data-ajax="row_delete" title="{L_DELETE}" style="margin:0 5%"><i class="fa fa-trash-o"></i></a></td>
+				</tr>
+			<!-- BEGINELSE -->
+				<tr>
+					<td colspan="7" style="text-align: center;">{L_ACP_BADGE_EMPTY}</td>
+				</tr>
+			<!-- END rules -->
+		</tbody>
+	</table>
+	<!-- IF .pagination -->
+	<div class="pagination pull-left">
+		<!-- INCLUDE pagination.html -->
+	</div>
+	<!-- ENDIF -->
+	<form id="badge_add_rule" method="post" action="{U_ACTION}">
+		<fieldset class="quick">
+			<input class="button2" type="submit" name="addrule" value="{L_ACP_BADGE_CREATE_RULE}" />
+			<input type="hidden" name="action" value="add" />
+			{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+	
+	<form id="badges_general_options" method="post" action="{U_ACTION}" enctype="multipart/form-data">
+		<fieldset>
+			<legend>{L_ACP_BADGE_AVAILABLE}</legend>
+			<dl>
+				<dt style="width:150px;"><label for="badge_ids">{L_ACP_BADGE_AVAILABLE}{L_COLON}</label><br /><span>{L_ACP_BADGE_AVAILABLE_EXPLAIN}</span></dt>
+				<dd style="margin-left:150px;">
+					<!-- BEGIN badges -->
+					<div style="float:left; margin:0 5px; text-align:center;"><img class="img-responsive" src="{badges.BADGE_IMG}" title="{badges.BADGE_RULES}" />
+					<!-- IF badges.BADGE_DEL --><br />del: <input type="radio" name="deletebadge[{badges.BADGE_ID}]" id="deletebadge_{badges.BADGE_ID}" value="{badges.BADGE_ID}" /><!-- ENDIF -->
+					</div>
+					<!-- END badges -->
+				</dd>
+			</dl>
+			<dl>
+				<dt style="width:150px;"><label for="fileupload">{L_ACP_BADGE_UPLOAD}{L_COLON}</label><br /><span>{L_ACP_BADGE_UPLOAD_EXPLAIN}</span></dt>
+				<dd style="margin-left:150px;">
+					<input type="file" name="fileupload" id="fileupload" maxlength="255" value="" class="inputbox autowidth" /> 
+				</dd>
+			</dl>
+			<p class="quick">
+				<input class="button1" type="submit" id="generalsubmit" name="generalsubmit" value="{L_SUBMIT}" />
+			</p>
+		</fieldset>
+	</form>
+<!-- ENDIF -->
+
+<!-- INCLUDEJS js/badge.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/badge/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->

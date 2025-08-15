@@ -1,0 +1,7 @@
+badge_award_controller:
+    pattern: /badge/{route}
+    defaults: { _controller: sitesplat.badge.main:handle }
+
+badge_award_index:
+    pattern: /badge/
+    defaults: { _controller: sitesplat.badge.main:handle }
