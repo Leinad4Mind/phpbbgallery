@@ -94,7 +94,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBMEMBERSHIP_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.6',
+	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.8',
     'ACP_LOADING'			    			=> 'Hold On. Loading...',
 	
 ));

@@ -94,14 +94,19 @@ class listener implements EventSubscriberInterface
 		if ($this->config['bbmembership_clubmode'] && $event['user_data']['user_type'] != USER_FOUNDER && !array_sum($check_ary))
 		{
 			$membership = false;
+			$now = time();
 			$sql = 'SELECT mc_gross, mc_currency, payment_date FROM ' . $this->bbmembership_table . ' 
 					WHERE user_id = ' . $this->user->data['user_id'] . ' AND payment_status = "Completed" ORDER BY payment_date DESC';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$mc_gross = ($row['mc_currency'] >= 'BBPOINTS') ? $row['mc_gross'] / 100 : $row['mc_gross'];
-				$membership = (($this->bbmembership_groups[(int) $mc_gross]['expire'] * 86400) + $row['payment_date'] > time()) ? true: false;
-				if ($membership) break;
+				$mc_gross = intval(($row['mc_currency'] >= 'BBPOINTS') ? $row['mc_gross'] / 100 : $row['mc_gross']);
+				$expire = !empty($this->bbmembership_groups[$mc_gross]['expire']) ? $this->bbmembership_groups[$mc_gross]['expire'] * 86400 : 0;
+				$p_date = (int) $row['payment_date'];
+				if (($p_date && !$expire) || ($expire + $p_date > $now)) {
+					$membership = true;
+					break;
+				}
 			}
 
 			if(!$membership)
