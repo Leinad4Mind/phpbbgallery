@@ -1,0 +1,150 @@
+<?php
+/**
+*
+* Titles and Avatars
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
+namespace sitesplat\titlesandavatars\event;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+/**
+ * Event listener
+ */
+class listener implements EventSubscriberInterface
+{
+	protected $config;
+	protected $user;
+
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user)
+	{
+		$this->config = $config;
+		$this->user = $user;
+	}
+
+	/**
+	 * Assign functions defined in this class to event listeners in the core
+	 *
+	 * @return array
+	 * @static
+	 * @access public
+	 */
+	static public function getSubscribedEvents()
+	{
+		return array(
+			'core.viewforum_get_topic_data' 			=> 'modify_sql_array',
+			'core.display_forums_modify_sql'			=> 'modify_display_sql_array',
+			'core.display_forums_modify_forum_rows'		=> 'forums_modify_forum_rows',
+			'core.display_forums_modify_template_vars'	=> 'forums_modify_template_vars',
+			'core.viewforum_modify_topicrow'			=> 'modify_topicrow',
+		);
+	}
+
+	public function modify_display_sql_array($event)
+	{
+		$sql_array = $event['sql_ary'];
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'  => array(TOPICS_TABLE => 'tt'),
+			'ON'    => 'tt.forum_id = f.forum_id AND tt.topic_last_post_id = f.forum_last_post_id'
+		);
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'  => array(USERS_TABLE => 'u'),
+			'ON'    => 'u.user_id = tt.topic_last_poster_id'
+		);
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'  => array(USERS_TABLE => 'uu'),
+			'ON'    => 'uu.user_id = tt.topic_poster'
+		);
+		$sql_array['SELECT'] .= ', tt.topic_id, tt.topic_title,
+			u.user_avatar AS lpa, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
+			uu.user_avatar AS fpa, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
+
+		$event['sql_ary'] = $sql_array ;
+	}
+
+	public function forums_modify_forum_rows($event)
+	{
+		$row = $event['row'];
+		$parent_id = $event['parent_id'];
+		$forum_rows = $event['forum_rows'];
+		
+		$forum_rows[$parent_id]['lpa']			= $row['lpa'];
+		$forum_rows[$parent_id]['lpa_type']		= $row['lpa_type'];
+		$forum_rows[$parent_id]['lpa_width']	= $row['lpa_width'];
+		$forum_rows[$parent_id]['lpa_height']	= $row['lpa_height'];
+		$forum_rows[$parent_id]['lpa_username']	= $row['lpa_username'];
+
+		$forum_rows[$parent_id]['fpa']			= $row['fpa'];
+		$forum_rows[$parent_id]['fpa_type']		= $row['fpa_type'];
+		$forum_rows[$parent_id]['fpa_width']	= $row['fpa_width'];
+		$forum_rows[$parent_id]['fpa_height']	= $row['fpa_height'];		
+		$forum_rows[$parent_id]['fpa_username']	= $row['fpa_username'];		
+
+		$event['forum_rows'] = $forum_rows;
+	}
+
+	public function forums_modify_template_vars($event)
+	{
+		$this->user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
+		$row = $event['row'];
+		$template = $event['forum_row'];
+				
+		$template['FP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+								array('avatar'			=> $row['fpa'], 
+									  'avatar_type'		=> $row['fpa_type'], 
+									  'avatar_width'	=> $row['fpa_width'], 
+									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
+
+		$template['LP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+								array('avatar'			=> $row['lpa'], 
+									  'avatar_type'		=> $row['lpa_type'], 
+									  'avatar_width'	=> $row['lpa_width'], 
+									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
+
+		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
+		$event['forum_row'] = $template;
+	}
+		
+	public function modify_topicrow($event)
+	{
+		$this->user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
+		$row = $event['row'];
+		$template = $event['topic_row'];
+		$template['FP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+								array('avatar'			=> $row['fpa'], 
+									  'avatar_type'		=> $row['fpa_type'], 
+									  'avatar_width'	=> $row['fpa_width'], 
+									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
+		$template['LP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+								array('avatar'			=> $row['lpa'], 
+									  'avatar_type'		=> $row['lpa_type'], 
+									  'avatar_width'	=> $row['lpa_width'], 
+									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
+		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
+		$event['topic_row'] = $template;
+	}
+
+	public function modify_sql_array($event)
+	{
+		$sql_array = $event['sql_array'];
+
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'	=> array(USERS_TABLE => 'u'),
+			'ON'	=> 'u.user_id = t.topic_last_poster_id'
+		);
+	
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'	=> array(USERS_TABLE => 'uu'),
+			'ON'	=> 'uu.user_id = t.topic_poster'
+		);
+
+		$sql_array['SELECT'] .= ', u.user_avatar AS lpa, u.user_avatar_type AS lpa_type, u.user_avatar_width AS lpa_width, u.user_avatar_height AS lpa_height, u.username AS lpa_username,
+				uu.user_avatar AS fpa, uu.user_avatar_type AS fpa_type, uu.user_avatar_width AS fpa_width, uu.user_avatar_height AS fpa_height, uu.username AS fpa_username';
+
+		$event['sql_array'] = $sql_array;
+	}
+}
