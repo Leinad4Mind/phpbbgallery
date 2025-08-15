@@ -85,6 +85,9 @@
 .icon-bbreact-emo:before { content: '\e816'; } /* '' */
 /* BBreaction */
 
+.bbreactionbar {
+    margin-top: 10px;
+}
 
 .forum-answer, .forum-answer .panel-body {
     position: relative;

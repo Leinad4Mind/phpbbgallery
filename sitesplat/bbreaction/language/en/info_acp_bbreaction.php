@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_BBREACTION'			            => 'BB reaction',
+	'ACP_BBREACTION'			            => 'BBreaction',
 	'ACP_BBREACTION_EXPLAIN'	            => 'Manage your reaction types. Choose for multivote and/or percentage type. Move up and/or down for ordering your reaction types. Once a type has been voted for, you cannot delete it until you deactivate that reaction type. <br />Deleting a reaction type will also delete all votes. If you wish to keep the votes then simply deactivate the type. Deactivated types won\'t be calculated in the stats result',
     'ACP_BBREACTION_MANAGE'		            => 'Manage BBreaction',
 	
@@ -35,7 +35,7 @@ $lang = array_merge($lang, array(
 	'BADGE_TASKS_5'				            => 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BADGE_TASKS_6'				            => 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.0.4',
+	'ACP_BBREACTION_VERSION'	            => '1.0.6',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
@@ -85,9 +85,9 @@ $lang = array_merge($lang, array(
 	
 	'ACP_BBREACTION_USED'					=> 'Voted',
 	'ACP_REACTIONS'							=> 'BBreaction',
-	'ACP_BBREACTION_EMPTY'					=> 'No BB reaction records',
+	'ACP_BBREACTION_EMPTY'					=> 'No BBreaction records',
 
-	'BBREACTION_NOTICE'	                    => '<div style="width:80%%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s » %2$s » %3$s.</strong></p></div>',
+	'BBREACTION_NOTICE'	                    => '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s » %2$s » %3$s.</strong></p></div>',
 
 ));
 

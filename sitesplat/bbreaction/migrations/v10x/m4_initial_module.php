@@ -43,9 +43,8 @@ class m4_initial_module extends \phpbb\db\migration\migration
 				),
 				),
 			),
-			array('module.add', array('ucp', 'UCP_PROFILE', 'BBREACTION')),
 			array('module.add', array(
-				'ucp', 'BBREACTION', array(
+				'ucp', 'UCP_PROFILE', array(
 					'module_basename'	=> '\sitesplat\bbreaction\ucp\bbreaction_module',
 					'auth'				=> 'ext_sitesplat/bbreaction',
 					'modes'				=> array('bbreaction'),
