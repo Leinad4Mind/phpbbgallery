@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ACP_BBAJAXNEWS_TITLE'			=> 'BBajaxnews',
-	'ACP_BBAJAXNEWS_TITLE_EXPLAIN'	=> 'BBajaxnews is a powerful and revolutionary extension allows your phpBB forum running SiteSplat\'s premium products to have real live notifications for your users with at almost 0 server resources expense!<br/>Adjust your preferences below and make sure to clear the forum cache every time you change any settings here.',
+	'ACP_BBAJAXNEWS_TITLE_EXPLAIN'	=> 'BBajaxnews is a powerful and revolutionary extension allows your phpBB forum running SiteSplat\'s premium products to have real live notifications for your users!<br/>Adjust your preferences below and make sure to clear the forum cache every time you change any settings here.',
 	'ACP_BBAJAXNEWS_SETTING_SAVED'	=> 'BBajaxnews settings has been saved.',
 
 	'SPECIAL'	=> 'Special News',
@@ -33,18 +33,18 @@ $lang = array_merge($lang, array(
 	'DRIVER_PUBNUB'											=> 'PubNub',
 	
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB'						=> 'PubNub Publish Key',
-	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB_EXPLAIN'				=> 'You can find your PubNub Publish Key in <a href="https://admin.pubnub.com/">PubNub Admin</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB_EXPLAIN'				=> 'You can find your PubNub Publish Key in <a href="https://admin.pubnub.com/" target="_blank">PubNub Admin</a>.',
 	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB'						=> 'PubNub Subscribe Key',
-	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB_EXPLAIN'				=> 'You can find your PubNub Subscribe Key in <a href="https://admin.pubnub.com/">PubNub Admin</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB_EXPLAIN'				=> 'You can find your PubNub Subscribe Key in <a href="https://admin.pubnub.com/" target="_blank">PubNub Admin</a>.',
 	
 	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY'					=> 'Pusher App Key',
-	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY_EXPLAIN'			=> 'You can find your Pusher App Key in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY_EXPLAIN'			=> 'You can find your Pusher App Key in <a href="https://dashboard.pusher.com/" target="_blank">Pusher dashboard</a>.',
 	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC'					=> 'Pusher App Secret',
-	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC_EXPLAIN'			=> 'You can find your Pusher App Secret in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC_EXPLAIN'			=> 'You can find your Pusher App Secret in <a href="https://dashboard.pusher.com/" target="_blank">Pusher dashboard</a>.',
 	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID'					=> 'Pusher App ID',
-	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID_EXPLAIN'			=> 'You can find your Pusher App ID in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID_EXPLAIN'			=> 'You can find your Pusher App ID in <a href="https://dashboard.pusher.com/" target="_blank">Pusher dashboard</a>.',
 	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER'				=> 'Pusher Cluster',
-	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER_EXPLAIN'		=> 'You can find your Pusher Cluster in <a href="https://dashboard.pusher.com/">Pusher dashboard</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER_EXPLAIN'		=> 'You can find your Pusher Cluster in <a href="https://dashboard.pusher.com/" target="_blank">Pusher dashboard</a>.',
 	
 	'SITESPLAT_BBAJAXNEWS_INTERVAL'							=> 'Interval between casual live news',
 	'SITESPLAT_BBAJAXNEWS_INTERVAL_EXPLAIN'					=> 'When user is not presented with any live news by specified number of minutes, one of causal live news will be displayed to them. Enter 0 to disable casual news.',
