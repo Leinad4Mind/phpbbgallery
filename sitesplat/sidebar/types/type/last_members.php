@@ -69,7 +69,7 @@ class last_members extends \sitesplat\sidebar\types\type\base
 		{
 			$newest_users = array();
 			// grab users
-			$sql = 'SELECT user_id, username, user_colour, user_regdate
+			$sql = 'SELECT user_avatar, user_avatar_type, user_id, user_avatar_width, user_avatar_height, username, user_colour, user_regdate
 				FROM ' . USERS_TABLE . '
 				' . $sql_where . '
 				' . $sql_and . '
@@ -78,7 +78,18 @@ class last_members extends \sitesplat\sidebar\types\type\base
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+					phpbb_get_user_avatar(array(
+						'avatar'         => $row['user_avatar'], 
+						'user_id'        => $row['user_id'],
+						'avatar_type'      => $row['user_avatar_type'], 
+						'avatar_width'     => $row['user_avatar_width'], 
+						'avatar_height'    => $row['user_avatar_height'])), $match) :
+						generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+
 				$newest_users[$row['user_id']] = array(
+					'avatar'     			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
 					'user_id'				=> $row['user_id'],
 					'username'				=> $row['username'],
 					'user_colour'			=> $row['user_colour'],
@@ -99,6 +110,7 @@ class last_members extends \sitesplat\sidebar\types\type\base
 
 			$this->template->assign_block_vars('newest_users',array(
 				'REG_DATE'			=> $this->user->format_date($row['user_regdate']),
+				'AVATAR'      		=> $row['avatar'],
 				'USERNAME_FULL'		=> $username_string,
 			));
 		}

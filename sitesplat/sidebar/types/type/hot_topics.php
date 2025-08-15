@@ -59,6 +59,8 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
+		$phpbb_dispatcher = $this->container->get('dispatcher');
+
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
 		$forum_ary = array();
@@ -153,8 +155,21 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 						'TOPIC_TITLE' 		=> $topic_title,
+						'TOPIC_TITLE_NO_HTML'	=> $topic_title,
 						'FORUM_NAME'		=> $forum_name,
 					);
+
+					/**
+					* Event to modify reaction data before they are assigned
+					*
+					* @event sitesplat.bbsidebar.type.hot_topics_tpl_before
+					* @var	array	tpl_ary	Template array
+					* @since 1.5.0
+					*/
+					$vars = array(
+						'tpl_ary',
+					);
+					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.hot_topics_tpl_before', compact($vars)));
 
 					$this->template->assign_block_vars('hot_topics', $tpl_ary);
 				}

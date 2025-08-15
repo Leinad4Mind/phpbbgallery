@@ -135,8 +135,9 @@ class donations extends \sitesplat\sidebar\types\type\base
 		{
 			foreach ($donations as $row)
 			{
-				$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
-									get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+				$username_string = ($this->auth->acl_get('u_viewprofile')) ? 
+								get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
+								get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 	
 				$this->template->assign_block_vars('donations',array(
 					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),

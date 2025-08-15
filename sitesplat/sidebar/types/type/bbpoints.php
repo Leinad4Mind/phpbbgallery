@@ -107,9 +107,12 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 
 		foreach ($newest_users as $row)
 		{
+			$username_string = ($this->auth->acl_get('u_viewprofile')) ? 
+							get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
+							get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 			$this->template->assign_block_vars('bbpoints',array(
 				'BBPOINTS'			=> $row['bbpoints'],
-				'USERNAME_FULL'		=> get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']),
+				'USERNAME_FULL'		=> $username_string,
 				'TRANSFER_URL'		=> ($this->bbpoints_config['transfer_notify'] && $row['user_id'] != $this->user->data['user_id']) ? 
 										$this->helper->route('sitesplat_bbpoints_main_controller', array('u' => $row['user_id'])) : ''
 			));

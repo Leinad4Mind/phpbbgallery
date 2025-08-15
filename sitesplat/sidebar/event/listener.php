@@ -57,7 +57,7 @@ class listener implements EventSubscriberInterface
 		$page = str_replace('.' . $this->php_ext, '', $this->user->page['page_name']);
 
 		$show_page = (!$sidebar_config['all_pages']) ? (($sidebar_config['panel_pages']) ? !in_array($page, array('ucp', 'mcp')): true) : $page == 'index';
-		$in_no_pages = (strpos($page, 'classifieds') === false && strpos($page, 'bbfront') === false && strpos($page, 'galleries') === false && strpos($page, 'downloads') === false) ? false : true;
+		$in_no_pages = (strpos($page, 'classifieds') === false && strpos($page, 'bbfront') === false && strpos($page, 'privacy') === false && strpos($page, 'bbchat') === false && strpos($page, 'galleries') === false && strpos($page, 'downloads') === false) ? false : true;
 		
 		if ($show_page && !$in_no_pages)
 		{

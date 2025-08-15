@@ -1,2 +1,2 @@
 parameters:
-    sitesplat.sidebar.tables.sidebar_types: %core.table_prefix%sidebar_types
+    sitesplat.sidebar.tables.sidebar_types: '%core.table_prefix%sidebar_types'

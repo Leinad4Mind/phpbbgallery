@@ -61,17 +61,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
-		$bbemoji_enabled = false;
-		$bbemoji_parser = null;
-		if ($this->container->get('ext.manager')->is_enabled('sitesplat/bbemoji'))
-		{
-			$bbemoji_enabled = true;
-			$bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($this->container->getParameter('sitesplat.bbemoji.url.generators'), $this->container->get('path_helper'), $this->container->get('template'), $this->container->get('request'), $this->container->get('user'), $this->db, $bbemoji_icons_table);
-			$this->template->assign_vars(array(
-				'BBREACTION_EMOJI'	=> true,
-			));
-		}
-		
+		$phpbb_dispatcher = $this->container->get('dispatcher');
 
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
@@ -117,7 +107,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 					'user_colour'	=> $row['user_colour'],
 					'rule_name'		=> $row['title'],
 					'symbol'		=> $row['symbol'],
-					'emoji'			=> $bbemoji_enabled ? $bbemoji_parser->emoji_render($row['emoji']) : '',
+					'emoji'			=> $row['emoji'],
 					'positive'		=> $row['positive'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
@@ -135,7 +125,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 								get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
 								get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 
-			$this->template->assign_block_vars('last_bbreactions',array(
+			$tpl_ary = array(
 				'BADGE_DATE'		=> $this->user->format_date($row['date']),
 				'USERNAME_FULL'		=> $username_string,
 				'TYPE'				=> $row['rule_name'],
@@ -143,7 +133,23 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 				'EMOJI'				=> $row['emoji'],
 				'POSITIVE'			=> $row['positive'],
 				'POST_URL'			=> $row['post_url']
-			));
+			);
+
+			/**
+			* Event to modify reaction data before they are assigned
+			*
+			* @event sitesplat.bbsidebar.type.last_bbreaction_assign_before
+			* @var	array	row		Reaction row
+			* @var	array	tpl_ary	Template array
+			* @since 1.5.0
+			*/
+			$vars = array(
+				'row',
+				'tpl_ary',
+			);
+			extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.last_bbreaction_assign_before', compact($vars)));
+
+			$this->template->assign_block_vars('last_bbreactions', $tpl_ary);
 		}
 	}
 }

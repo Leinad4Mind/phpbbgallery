@@ -66,14 +66,14 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 
 		$sql_and = !empty($sql_where) ? ' AND user_inactive_reason = 0' : ' WHERE user_inactive_reason = 0';
 
-		$forum_read_ary = $this->auth->acl_getf('f_read');
-		foreach ($forum_read_ary as $forum_id => $allowed)
-		{
-			if ($allowed['f_read'])
-			{
-				$forum_ary[] = (int) $forum_id;
-			}
+		$forum_read_ary = $this->auth->acl_getf('f_read', true);
+		
+		// no readable forums, so we're done
+		if (!count($forum_read_ary)) {
+			return;
 		}
+		
+		$forum_ary = array_keys($forum_read_ary); 
 		$forum_ary = array_unique($forum_ary);
 		$visibility = $this->container->get('content.visibility');
 		$sql_and .= ' AND ' . $visibility->get_forums_visibility_sql('post', $forum_ary);
