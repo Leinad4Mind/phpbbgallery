@@ -44,7 +44,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBMEMBERSHIP_DEFAULT'				=> 'Default',
 	'ACP_BBMEMBERSHIP_HIDE'					=> 'Hide',
 	'ACP_BBMEMBERSHIP_CURRENCY'				=> 'Currency code',
-	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. If the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" ',
+	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. <br /><strong>please note, if the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" or "Pending". Therefore make sure you have enabled the correct currency on your PayPal acount first!</strong> ',
  
 	'ACP_BBMEMBERSHIP_FLAGS'			    => 'Payment Status Flag',
 	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> '<span class="label label-danger">Not verified</span>: An user attempted a purchase and either changed his mind or PayPal was not able to verify the transaction. <br />

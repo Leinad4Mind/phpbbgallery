@@ -68,11 +68,11 @@ class membership extends \phpbb\cron\task\base
 						  ($this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
 						  $this->bbmembership_groups[$mc_gross]['expire'] == 0) ? true: false;
 			
-			$days_to_expiration = floor((isset($bbmembership_groups[$mc_gross])) ?
-						((($bbmembership_groups[$mc_gross]['expire'] == 0) ? time() :
-						(($bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 :
-						$bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / 86400 : 1);
-         // echo $days_to_expiration;		  
+			$days_to_expiration = floor((isset($this->bbmembership_groups[$mc_gross])) ?
+						((($this->bbmembership_groups[$mc_gross]['expire'] == 0) ? time() :
+						(($this->bbmembership_groups[$mc_gross]['expire'] == -1) ? 300 :
+						$this->bbmembership_groups[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / 86400 : 1);
+        // echo $days_to_expiration;
 			if ($membership && !(max(0, $days_to_expiration -1)) && $row['payment_status'] == 'Completed')
 			{
 				$ids[$row['user_id']] = $row['id'];

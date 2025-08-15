@@ -109,6 +109,7 @@ class helper
 			$this->db->sql_query($sql);
 			
 			$this->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
+		//	$this->add_group((int) $row['user_id'], (int) $data['mc_gross'], $row['id']);
 		}
 		
 		return $data;
@@ -134,7 +135,7 @@ class helper
 					UNION ALL
 					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
 					UNION ALL
-					SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY to_id
+					SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
 					) t1 GROUP BY user_id';
 			$result = $this->db->sql_query($sql);
 			$user_points  = $this->db->sql_fetchfield('total');
