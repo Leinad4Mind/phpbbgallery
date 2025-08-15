@@ -158,7 +158,7 @@ class admin_controller implements admin_interface
 		{
 			$json_response = new \phpbb\json_response;
 			$json_response->send(array(
-				'MESSAGE_TITLE'	=> $this->user->lang['INFORMATION'],
+				'MESSAGE_TITLE'	=> $this->user->lang('INFORMATION'),
 				'MESSAGE_TEXT'	=> $this->user->lang('ACP_AUTOGROUPS_DELETE_SUCCESS'),
 				'REFRESH_DATA'	=> array(
 					'time'	=> 3
@@ -246,6 +246,12 @@ class admin_controller implements admin_interface
 		if (!$data['autogroups_group_id'])
 		{
 			trigger_error($this->user->lang('ACP_AUTOGROUPS_INVALID_GROUPS') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+
+		// Prevent form submit when min and max values are identical
+		if ($data['autogroups_min_value'] == $data['autogroups_max_value'])
+		{
+			trigger_error($this->user->lang('ACP_AUTOGROUPS_INVALID_RANGE') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
 		if ($autogroups_id != 0) // Update existing auto group data
