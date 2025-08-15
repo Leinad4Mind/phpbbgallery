@@ -79,8 +79,8 @@ class listener implements EventSubscriberInterface
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-										  '<img class="avatar" alt="" title="' .  $row['username'] . '" src="' .
-										  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif">') . '</a>';
+										  '<img class="avatar" alt="" title="' .  $row['username'] . '" src="./styles/' . 
+										  $this->user->style['style_path'] . '/theme/images/no-avatar.png" alt="">') . '</a>';
 			}
 			$event['online_userlist'] = str_replace($user_online_link, $avatars, $online_userlist);
 		}
@@ -100,11 +100,14 @@ class listener implements EventSubscriberInterface
 
 			for ($i = 0; $i < min(10, sizeof($row)); $i++)
 			{
-				$this->template->assign_block_vars('participants_avatars', array(
-					'TOPIC_AVATAR'	=> $row[$i]['avatar'],
-					'USERNAME'		=> $row[$i]['author_username'],
-					'URL'			=> $row[$i]['author_profile'],
-				));
+				if ($row[$i]['author_username'])
+				{
+					$this->template->assign_block_vars('participants_avatars', array(
+						'TOPIC_AVATAR'	=> $row[$i]['avatar'],
+						'USERNAME'		=> $row[$i]['author_username'],
+						'URL'			=> $row[$i]['author_profile'],
+					));
+				}
 			}
 		}
 	}

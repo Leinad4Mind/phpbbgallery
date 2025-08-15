@@ -110,12 +110,7 @@ class main_controller
 				}
 				echo '<br style="clear:both;"><div class="pagination-partecipants pull-right"><ul class="pagination pagination-sm">';
 				echo $this->generate_pagination($base_url, $total_posters, $per_page, $start, true);
-				echo '</ul></div>
-				<script>
-				$( document ).ready(function() {
-					$( "#profileBBavatar .pull-right .pagination-sm > li a" ).addClass( "AvatarsPagination" );
-				});
-				</script>'; 
+				echo '</ul></div>'; 
 				exit();
 			break;
 
@@ -145,7 +140,7 @@ class main_controller
 		$on_page = floor($start_item / $per_page) + 1;
 		$url_delim = (strpos($base_url, '?') === false) ? '?' : ((strpos($base_url, '?') === strlen($base_url) - 1) ? '' : '&amp;');
 	
-		$page_string = ($on_page == 1) ? '<li class="active"><span>1</span></li>' : '<li><a href="' . $base_url . '">1</a></li>';
+		$page_string = ($on_page == 1) ? '<li class="active"><span>1</span></li>' : '<li><a class="AvatarsPagination" href="' . $base_url . '">1</a></li>';
 	
 		if ($total_pages > 5)
 		{
@@ -156,7 +151,7 @@ class main_controller
 	
 			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a></li>';
+				$page_string .= ($i == $on_page) ? '<li class="active"><a>' . $i . '</a></li>' : '<li><a class="AvatarsPagination" href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a></li>';
 				if ($i < $end_cnt - 1)
 				{
 					$page_string .= $seperator;
@@ -171,7 +166,7 @@ class main_controller
 	
 			for ($i = 2; $i < $total_pages; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<li class="active"><span>' . $i . '</span></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '" role="button">' . $i . '</a></li>';
+				$page_string .= ($i == $on_page) ? '<li class="active"><span>' . $i . '</span></li>' : '<li><a class="AvatarsPagination" href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '" role="button">' . $i . '</a></li>';
 				
 				if ($i < $total_pages)
 				{
@@ -180,18 +175,18 @@ class main_controller
 			}
 		}
 	
-		$page_string .= ($on_page == $total_pages) ? '<li class="active"><span>' . $total_pages . '</span></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($total_pages - 1) * $per_page) . '">' . $total_pages . '</a></li>';
+		$page_string .= ($on_page == $total_pages) ? '<li class="active"><span>' . $total_pages . '</span></li>' : '<li><a class="AvatarsPagination" href="' . $base_url . "{$url_delim}start=" . (($total_pages - 1) * $per_page) . '">' . $total_pages . '</a></li>';
 	
 		if ($add_prevnext_text)
 		{
 			if ($on_page != 1)
 			{
-				$page_string = '<li class="previous"><a href="' . $base_url . "{$url_delim}start=" . (($on_page - 2) * $per_page) . '" rel="prev" role="button">' . $this->user->lang['PREVIOUS'] . '</a></li>&nbsp;&nbsp;' . $page_string;
+				$page_string = '<li class="previous"><a class="AvatarsPagination" href="' . $base_url . "{$url_delim}start=" . (($on_page - 2) * $per_page) . '" rel="prev" role="button">' . $this->user->lang['PREVIOUS'] . '</a></li>&nbsp;&nbsp;' . $page_string;
 			}
 	
 			if ($on_page != $total_pages)
 			{
-				$page_string .= '&nbsp;&nbsp;<li class="next"><a href="' . $base_url . "{$url_delim}start=" . ($on_page * $per_page) . '" rel="next" role="button">' . $this->user->lang['NEXT'] . '</a></li>';
+				$page_string .= '&nbsp;&nbsp;<li class="next"><a class="AvatarsPagination" href="' . $base_url . "{$url_delim}start=" . ($on_page * $per_page) . '" rel="next" role="button">' . $this->user->lang['NEXT'] . '</a></li>';
 			}
 		}
 			
