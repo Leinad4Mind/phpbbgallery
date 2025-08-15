@@ -7,55 +7,55 @@ services:
     sitesplat.bbmembership.helper:
         class: sitesplat\bbmembership\core\helper
         arguments:
-            - @dbal.conn
-            - @config
-            - @user
-            - @request
-            - @notification_manager
-            - @service_container
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbmembership.tables.bbmembership%
+            - '@dbal.conn'
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@notification_manager'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbmembership.tables.bbmembership%'
 
     sitesplat.bbmembership.controller:
         class: sitesplat\bbmembership\controller\main_controller
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @config
-            - @controller.helper
-            - @notification_manager
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbmembership.tables.bbmembership%
-            - @sitesplat.bbmembership.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@controller.helper'
+            - '@notification_manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbmembership.tables.bbmembership%'
+            - '@sitesplat.bbmembership.helper'
 
     sitesplat.bbmembership.admin_controller:
         class: sitesplat\bbmembership\controller\admin_controller
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @config
-            - @pagination
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbmembership.tables.bbmembership%
-            - @sitesplat.bbmembership.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@pagination'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbmembership.tables.bbmembership%'
+            - '@sitesplat.bbmembership.helper'
 
     sitesplat.bbmembership.listener:
         class: sitesplat\bbmembership\event\listener
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @config
-            - @controller.helper
-            - %sitesplat.bbmembership.tables.bbmembership%
-            - @sitesplat.bbmembership.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@controller.helper'
+            - '%sitesplat.bbmembership.tables.bbmembership%'
+            - v@sitesplat.bbmembership.helper'
         tags:
             - { name: event.listener, event: kernel.exception, method: onKernelException }

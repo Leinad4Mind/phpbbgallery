@@ -35,6 +35,48 @@ class helper
 		$this->bbmembership_table = $bbmembership_table;
 		$this->bbmembership_groups = json_decode($this->config['bbmembership_groups'], true);
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function get_paypal_data()
+	{
+		$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
+		$data = array();
+		$include_ary = array('item_number','payment_status','mc_gross','mc_currency','txn_id','payer_email','payment_date','address_country_code');
+		foreach ($names as $name)
+		{
+			$value = utf8_normalize_nfc($this->request->variable($name, '', true));
+			(in_array($name, $include_ary)) ? $data[$name] = $value : null;
+		}
+		$data['user_id'] 		= $this->user->data['user_id'];
+		$data['payment_date'] 	= isset($data['payment_date']) ? strtotime($data['payment_date']) : time();
+		$data['sender']			= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
+		$data['address']		= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
+		
+		return $data;		
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function updatePayments($data)
+	{
+		$sql = 'SELECT id, user_id, txn_id, payment_status 
+				FROM ' . $this->bbmembership_table . ' WHERE item_number = \'' . (isset($data['item_number']) ? $data['item_number'] : '') .'\'';
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+
+		if ($row['payment_status'] != 'Completed')
+		{
+			unset($data['item_number'], $data['user_id']);
+			$sql = 'UPDATE ' . $this->bbmembership_table . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . (int) $row['id'];
+			$this->db->sql_query($sql);
+			$payment_updated = $this->db->sql_affectedrows();
+		}
+		
+		return $data;
+	}
 	
 	public function bbpoints_enabled()
 	{

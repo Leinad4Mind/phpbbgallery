@@ -9,6 +9,15 @@
 
 namespace sitesplat\bbmembership\controller;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\notification\manager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 /**
 * Main controller
 */
@@ -31,7 +40,7 @@ class main_controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\notification\manager $notification_manager, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
+	public function __construct(driver_interface $db, request $request, template $template, user $user, config $config, helper $helper, manager $notification_manager, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
@@ -58,152 +67,78 @@ class main_controller
 	public function display()
 	{
 		$this->user->add_lang_ext('sitesplat/bbmembership', 'bbmembership');
-
-		$mode = $this->request->variable('mode', 'index');
 		$this->notify = false;
-		switch($mode)
-		{
-			case 'pay':
 
+		$action = $this->request->variable('action', '') . (($this->request->variable('submitbtn', '') == $this->user->lang['BBMEMBERSHIP_POINTS']) ? '_bbpoints': '');
+		
+		switch ($action)
+		{
+			case 'request':
 				if ($this->user->data['user_id'] == ANONYMOUS)
 				{
 					login_box(append_sid($this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html'))));
-				}
-
-				if ($this->bbmembership_helper->bbpoints_enabled() && $this->request->variable('submitbtn', '') == $this->user->lang['BBMEMBERSHIP_POINTS'])
-				{
-					$this->notify = $this->bbmembership_helper->pay_with_points($this->request->variable('amount', 0));
-				} else
-				{
-					// PayPal settings 
-					$paypal_email	= $this->config['bbmembership_paypal_email']; 
-					$url = generate_board_url(true);
-				    $return_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'verify'));
-				    $cancel_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'cancel'));
-				    $notify_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'notify'));
-				
-					$data = array(
-						'item_name'		=> $this->user->lang('BBMEMBERSHIP') . ' - ' . $this->config['sitename'],
-						'amount'		=> (intval($this->request->variable('amount', 0))) . '.00',
-						'payer_email'	=> $this->user->data['user_email'],
-						'mc_currency'	=> $this->config['bbmembership_currency'],
-						'item_number'	=> time()
-						);
-	
-					$querystring = '?';
-					foreach($data as $key => $value)
-					{
-						$querystring .= $key . '=' . urlencode($value) . '&'; 
-					}
-	
-					// Check if paypal request or response 
-					if (!$this->request->is_set_post('txn_id') && !$this->request->is_set_post('txn_type'))
-					{ 
-						$querystring .= 'business=' . urlencode($paypal_email) . '&'; 
-						$querystring .= 'currency_code=' . $this->config['bbmembership_currency'] . '&'; 
-						$querystring .= 'cmd=_xclick&no_note=1&lc=UK&bn=PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest&rm=2&tax=0&no_shipping=1&';
-						$querystring .= 'bn=' . urlencode('PP-DonationsBF') . '&'; 
-		 
-						// Append paypal return addresses 
-						$querystring .= 'return=' . urlencode(stripslashes($return_url)) . '&'; 
-						$querystring .= 'cancel_return=' . urlencode(stripslashes($cancel_url)) . '&'; 
-						$querystring .= 'notify_url=' . urlencode($notify_url); 
-	
-						$data['payment_status'] = 'Not verified';
-						$data['user_id'] = $this->user->data['user_id'];
-						$data['payment_date'] = time();
-						$data['session_ip'] = $this->user->ip;
-						$data['mc_gross'] = $data['amount'];
-						unset($data['amount']);
-						$sql = 'INSERT INTO ' . $this->bbmembership_table . ' ' . $this->db->sql_build_array('INSERT', $data);
-						$this->db->sql_query($sql);
-	
-						// Redirect to paypal IPN 
-						header('location:https://www' . (($this->config['bbmembership_sandbox']) ? '.sandbox' : '') . '.paypal.com/cgi-bin/webscr' . $querystring); 
-						exit(); 
-					}
-				}
-			break;
-
-			case 'verify':
- 
-				$req = 'cmd=_notify-validate';
-				$data = array();
-				$data['payment_status'] = 'Not verified';
-				
-				$names = $this->request->variable_names(\phpbb\request\request_interface::POST);
-				$include_ary = array('item_name','item_number','payment_status','mc_gross','mc_currency','txn_id','payer_email','custom','payment_date','address_country_code');
-				foreach ($names as $name)
-				{
-					$value = utf8_normalize_nfc($this->request->variable($name, '', true));
-					(in_array($name, $include_ary)) ? $data[$name] = $value : null;
-					$value = urlencode(stripslashes($value));
-					$value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);// IPN fix
-					$req .= '&'. $name . '=' . $value;
-				}
-				
-				// assign posted variables to local variables
-				$data['payment_date'] 		= (isset($data['payment_date'])) ? strtotime($data['payment_date']) : time();
-				$data['sender']				= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
-				$data['address']			= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
-				
-				$url = 'https://www.' . (($this->config['bbmembership_sandbox']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr';
-
-				$ch = curl_init(); 
-				curl_setopt($ch, CURLOPT_URL, $url); 
-				curl_setopt($ch, CURLOPT_FAILONERROR, 1);  
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-				curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
-				curl_setopt($ch, CURLOPT_POST, true); 
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
-				curl_setopt($ch, CURLOPT_HEADER, false);
-				curl_setopt($ch, CURLOPT_SSLVERSION, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				$this->response = curl_exec($ch); 
-				$this->response_status = strval(curl_getinfo($ch, CURLINFO_HTTP_CODE)); 
-				if ($this->response === false || $this->response_status == '0')  
-				{ 
-					 $errno = curl_errno($ch); 
-					 $errstr = curl_error($ch); 
-					 $this->notify = ("cURL error: [$errno] $errstr"); 
-				 } 
-				curl_close($ch); 
-
-				// if payment verified
-				if ($data['payment_status'] == 'Completed' && strcmp ($this->response, "VERIFIED") == 0) 
-				{
-					// Validate payment (Check unique txnid & correct price)
-					$valid_txnid = true; //$this->check_txnid($data['txn_id']);
-					$valid_price = true; //$this->check_price($data['mc_gross'], $data['item_number']);
-
-					if ($valid_txnid && $valid_price)
-					{
-						// If user exists assign BBpoints - TODO
-
-						$sql = 'UPDATE ' . $this->bbmembership_table . '
-								SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-								WHERE item_number = ' . (int) $data['item_number'];
-						$this->db->sql_query($sql);
-						$sql = 'SELECT id, user_id FROM ' . $this->bbmembership_table . '
-								WHERE item_number = ' . (int) $data['item_number'];
-						$result = $this->db->sql_query($sql);
-						$row = $this->db->sql_fetchrow($result);
-
-						$this->bbmembership_helper->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
+				}	
 						
-						$this->notify = 'MEMBERSHIP_SUCCESS';
-					} else
-					{
-						$this->notify = 'MEMBERSHIP_FAILED_PP';	
-					}
-				} else
+				$url = $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html'), true, '', UrlGeneratorInterface::ABSOLUTE_URL);
+				$data = array(
+					'item_name'		=> $this->user->lang('BBMEMBERSHIP') . ' - ' . $this->config['sitename'],
+					'amount'		=> (intval($this->request->variable('amount', 0))) . '.00',
+					'payer_email'	=> $this->user->data['user_email'],
+					'mc_currency'	=> $this->config['bbmembership_currency'],
+					'item_number'	=> time(),
+				);
+				$querystring = '?';
+				foreach($data as $key => $value)
 				{
-					$this->notify = 'MEMBERSHIP_FAILED_PP';	
+					$querystring .= $key . '=' . urlencode($value) . '&'; 
 				}
+				
+				$querystring .= 'business=' . urlencode($this->config['bbmembership_paypal_email']) . '&'; 
+				$querystring .= 'currency_code=' . $this->config['bbmembership_currency'] . '&'; 
+				$querystring .= 'cmd=_xclick&no_note=1&lc=UK&bn=PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest&rm=2&';
+ 
+				// Append paypal return addresses 
+				$querystring .= 'return=' . urlencode($url . '?action=verify') . '&'; 
+				$querystring .= 'cancel_return=' . urlencode(stripslashes($url . '?action=cancel')) . '&'; 
+				$querystring .= 'notify_url=' . urlencode($url . '?action=notify'); 
+
+				$data['payment_status'] = 'Not verified';
+				$data['user_id'] = $this->user->data['user_id'];
+				$data['payment_date'] = time();
+				$data['session_ip'] = $this->user->ip;
+				$data['mc_gross'] = $data['amount'];
+				unset($data['amount']);
+				$sql = 'INSERT INTO ' . $this->bbmembership_table . ' ' . $this->db->sql_build_array('INSERT', $data);
+				$this->db->sql_query($sql);
+				
+				// Redirect to paypal IPN 
+				header('location:https://www.' . (($this->config['bbmembership_sandbox']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr' . $querystring); 
+				exit(); 
 			break;
-			
+
+			case 'notify':
+				$data = $this->bbmembership_helper->get_paypal_data();
+				$data = ($this->bbmembership_helper->updatePayments($data));
+			break;
+	
+			case 'verify':
+				$data = $this->bbmembership_helper->get_paypal_data();
+				$data = ($this->bbmembership_helper->updatePayments($data));
+				
+				$this->notify = ($action == 'verify') ? ((isset($data['payment_status']) && $data['payment_status'] == 'Completed') ? 
+					'MEMBERSHIP_SUCCESS' : 'MEMBERSHIP_FAILED_PP') : false;
+				
+				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
+			break;
+		
 			case 'cancel':
-				$this->notify = 'MEMBERSHIP_CANCELED';	
+				$this->notify = 'MEMBERSHIP_CANCELED';
+				$this->template->assign_vars(array('NOTIFY_STATUS' => ($this->notify) ? $this->notify : false));
+			break;
+				
+			case 'request_bbpoints':
+				($this->bbmembership_helper->bbpoints_enabled()) ? $this->notify = $this->bbmembership_helper->pay_with_points($this->request->variable('amount', 0)) : null;
+			break;
 		}
 			
 		if (!empty($this->config['bbmembership_groups'])) 
@@ -250,14 +185,16 @@ class main_controller
 			}
 
 			$this->template->assign_vars(array(
-				'U_DONATE'				=> $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'pay')),
+				'U_DONATE'				=> $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'action' => 'request')),
 				'PAYPAL_ENABLED'		=> ($this->config['bbmembership_paypal_email']) ? true : false,
 				'BBPOINTS_ENABLED'		=> $this->bbmembership_helper->bbpoints_enabled() && $this->config['bbmembership_bbpoints'],
 				'CLUBMODE'				=> $this->config['bbmembership_clubmode'] && !$membership,
 				'BBMEMBER_CURRENCY'		=> $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency']),
 				'BBMEMBER_PACKAGE'		=> $package,
+			//	'DAYS_TO_EXPIRATION'	=> (isset($membership[$mc_gross])) ? ($group_amount[$mc_gross]['expire'] == 0) ? 
+			//									$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $group_amount[$mc_gross]['expire']) : '',
 				'DAYS_TO_EXPIRATION'	=> ($group_amount[$mc_gross]['expire'] == 0) ? 
-												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $group_amount[$mc_gross]['expire']),
+												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $group_amount[$mc_gross]['expire']),							
 				'NOTIFY_STATUS'			=> ($this->notify) ? $this->user->lang[$this->notify] : false
 			));
 		}

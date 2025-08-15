@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'CONNECTING_ON_PAYPAL'				=> 'Connecting with PayPal',
 	'PAYPAL_ALT'				        => 'Payments by PayPal',
 	'BBMEMBERSHIP_DEPOSIT_DISCLAIMER'   => '**Transactions can take any time from seconds to 24h to validate. For urgent matters, please contact the <a href="./memberlist.php?mode=contactadmin">Board Admin</a>',
-	'BBMEMBERSHIP_STATUS'		        => 'Current Membership status',
+	'BBMEMBERSHIP_STATUS'		        => 'Current Membership status:',
 	'BBMEMBERSHIP_EXPIRED_INFO'			=> 'Expired!',
 	'BBMEMBERSHIP_PURCHASED'			=> 'Purchased',
 	'BBMEMBERSHIP_TAX_TEXT'			    => 'Includes taxes and/or fees',

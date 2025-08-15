@@ -47,7 +47,7 @@ class admin_controller
 	}
 
 	/**
-	* BBmembership Close Notice
+	* Badge Award Close Notice
 	*
 	* @return null
 	* @access public
@@ -153,7 +153,6 @@ class admin_controller
 				$group_amount[$value] = array(
 					'group'		=> $group_ary[$key],
 					'expire'	=> $expire_ary[$key],
-				//	'expire'	=> ($expire_ary[$key] < -1) ? 365 : $expire_ary[$key],
 					'default'	=> (isset($default_ary[$key])) ? 1 : 0,
 					'hide'		=> (isset($hide_ary[$key])) ? 1 : 0,
 				);
