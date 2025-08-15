@@ -33,7 +33,20 @@ class material extends \phpbb\avatar\driver\driver
 
 		if ($row['avatar'] == 'circle')
 		{
-			return '<img data-name="' . $user->data['username'] . '" class="material_profile"/>';
+			// original line, which is WRONG!!!!! It will always display avatar of logged-in user!
+			// I'll bet the original author knew full well this line wouldn't work, but added it
+			// anyway because they figured they would be paid before the issue would be caught!
+//			return '<img data-name="' . $user->data['username'] . '" class="material_profile"/>';
+
+			// fixed line...but other extensions don't always pass a username to this function, so
+			// it will return warnings when a username isn't passed
+//			return '<img data-name="' . $row['username'] . '" class="material_profile"/>';
+
+			// fixes warnings, but will leave blank avatars when a username isn't passed to function
+//			return empty($row['username']) ? '' : '<img data-name="' . $row['username'] . '" class="material_profile"/>';
+
+			// and the final solution...return nothing!
+			return '';
 		}
 		else
 		{
@@ -68,9 +81,10 @@ class material extends \phpbb\avatar\driver\driver
 		// resolve avatar size
 		$size = min($this->config['avatar_max_width'], $this->config['avatar_max_height']);
 
-		$filename = '';
-		if ($shape != 'circle')
-		{
+		// JS-based avatars BREAK PHPBB!!!!!!!!
+//		$filename = '';
+//		if ($shape != 'circle')
+//		{
 			// initialize avatar, make it as big as possible
 			$avatar = AvatarFactory::createAvatarMaker($shape, $size, class_exists('Imagick') ? 'imagick' : 'gd');
 			// load Arial font
@@ -78,14 +92,14 @@ class material extends \phpbb\avatar\driver\driver
 			// delete old material avatar
 			$this->delete(array('id' => $row['avatar']));
 			// generate new material avatar filename
-			$filename = $user->data['user_id'] . '_' . time();
+			$filename = $row['id'] . '_' . time();
 			// save new material avatar
-			$avatar->makeAvatar($user->data['username'])->save($this->get_material_url($filename), 100);
-		}
-		else
-		{
-			$filename = 'circle';
-		}
+			$avatar->makeAvatar(mb_substr($row['username'],0,1))->save($this->get_material_url($filename), 100);
+//		}
+//		else
+//		{
+//			$filename = 'circle';
+//		}
 		
 
 		// nothing much to store, but we obey interface

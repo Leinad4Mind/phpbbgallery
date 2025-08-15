@@ -14,18 +14,21 @@ class ext extends \phpbb\extension\base
 	
 	public function is_enableable()
 	{
-		if (!class_exists('sitesplat\BBCore\helper'))
-		{
-			$this->container->get('user')->add_lang_ext('sitesplat/avatarsplus', 'info_acp_avatarplus');
-			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		if (!class_exists('Imagick', false) && !function_exists('imagefttext')) {
+			$error = 'PHP Imagick] or [PHP GD Freetype';
 		}
-		
-		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
-		{
-			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		else if (!function_exists('finfo_open')) {
+			$error = 'PHP FileInfo';
+		}
+		else if (!class_exists('sitesplat\BBCore\event\listener', false)) {
+			$error = 'BBCore';
+		}
+		else {
+			return true;
 		}
 
-		return class_exists('sitesplat\BBCore\helper');
+		global $module;
+		trigger_error($this->container->get('language')->lang('EXTENSION_NOT_INSTALLED', "<strong>[{$error}]</strong>") . adm_back_link($module->module->u_action), E_USER_WARNING);
 	}
 
 	/**
