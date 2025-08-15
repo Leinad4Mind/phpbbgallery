@@ -4,12 +4,12 @@ services:
     sitesplat.bbrandom.controller:
         class: sitesplat\bbrandom\controller\controller
         arguments:
-            - @service_container
-            - @user
-            - @controller.helper
+            - '@service_container'
+            - '@user'
+            - '@controller.helper'
     sitesplat.bbrandom.listener:
         class: sitesplat\bbrandom\event\listener
         arguments:
-            - @config
+            - '@config'
         tags:
             - { name: event.listener }
