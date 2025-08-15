@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
+* BBreaction.
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -120,7 +120,7 @@ class ext extends \phpbb\extension\base
 
 				// Purge BB reaction notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->purge_notifications('sitesplat.bbdownloads.notification.type.added');
+				$phpbb_notifications->purge_notifications('sitesplat.bbreaction.notification.type.added');
 				return 'notifications';
 			break;
 

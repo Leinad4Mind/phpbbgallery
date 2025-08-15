@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows a baord running SiteSplat's themes to provide a meaningful kick-ass post reaction system. Post reactions are an easy and fun way for your users to leave feedback on your topics.",
 	"homepage": "http://www.sitesplat.com",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"keywords": ["phpbb", "extension", "reaction", "topic", "premium", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -25,7 +25,7 @@
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbreaction.json"
 		}
 
