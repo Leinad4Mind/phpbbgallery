@@ -55,12 +55,11 @@ class mcp
 					WHERE user_id = ' . $this->user->data['user_id'];
 			$this->db->sql_query($sql);
 
-			redirect(reapply_sid($this->root_path . $this->request->variable('redirect', '')));
+			redirect(append_sid($this->root_path . 'mcp.' . $this->php_ext));
 		}
 
 		$this->template->assign_vars(array(
 			'U_ACTION'		=> $this->helper->route('sitesplat_bbgdpr_mcp'),
-			'U_REDIRECT'	=> $this->request->variable('redirect', $this->user->data['session_page']),
 		));
 
 		return $this->helper->render('mcp.html', $this->user->lang('GDPR_REVIEW'));

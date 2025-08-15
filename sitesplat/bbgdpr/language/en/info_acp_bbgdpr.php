@@ -31,5 +31,5 @@ $lang = array_merge($lang, array(
 
 	'COOKIES_BANNER'			=> 'Cookies EU banner',
 	'TRACKING_CODES'			=> 'Tracking codes',
-	'TRACKING_CODES_EXPLAIN'	=> 'Paste all tracking codes you use for analytics and/or other purposes here without <samp>&lt;script&gt;</samp> tag wrapping it, separated by blank line. Codes will be execuded only for users who accept cookies that such services generate (IE: Google Analytics).',
+	'TRACKING_CODES_EXPLAIN'	=> 'Paste all tracking codes you use for analytics and/or other purposes here without <samp>&lt;script&gt;</samp> tag wrapping it, separated by blank line. Codes will be executed only for users who accept cookies that such services generate (IE: Google Analytics).',
 ));

@@ -97,7 +97,7 @@ class main_module
 				{
 					$root_dir = $this->root_path . 'store/bbgdpr/' . $this->user->data['user_id'];
 					$this->rmdir($root_dir);
-					mkdir($root_dir, 0755, true);
+					@mkdir($root_dir, 0755, true);
 				}
 
 				switch ($action)
@@ -158,7 +158,7 @@ class main_module
 					case 'posts':
 
 						$posts_dir = $root_dir . '/posts';
-						mkdir($posts_dir, 0755, true);
+						@mkdir($posts_dir, 0755, true);
 
 						$sql = 'SELECT forum_id, topic_id, bbcode_bitfield, post_text, bbcode_uid, bbcode_bitfield, post_time
 								FROM ' . POSTS_TABLE . '
@@ -167,7 +167,7 @@ class main_module
 						while ($row = $this->db->sql_fetchrow($result))
 						{
 							$post_dir = $posts_dir . '/' . $row['forum_id'] . '/' . $row['topic_id'];
-							mkdir($post_dir, 0755, true);
+							@mkdir($post_dir, 0755, true);
 
 							$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 							$contents = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, false);
@@ -212,6 +212,7 @@ class main_module
 				$this->template->assign_vars(array(
 					'U_DOWNLOAD_POSTS'		=> $this->u_action . '&action=posts',
 					'U_DOWNLOAD_EVERYTHING'	=> $this->u_action . '&action=everything',
+					'S_USER_HAS_POSTS'		=> (bool) $this->user->data['user_posts'],
 				));
 
 			break;
@@ -449,21 +450,18 @@ class main_module
 	{
 		$delete_type = $this->request->variable('delete_type', 'retain');
 
-		// Create the log message
-		$log = $this->language->lang('LOG_USER_DELETED', $this->user->data['username'], $this->user->data['user_id']);
-
-		// Append the log message with a note about what happened to the posts
+		$postfix = 'NO';
 		if ($this->user->data['user_posts'] > 0)
 		{
-			$log .= ($delete_type == 'retain') ? $this->language->lang('LOG_POST_RETAINED') : $this->language->lang('LOG_POST_REMOVED');
-		}
-		else
-		{
-			$log .= $this->user->lang('LOG_NO_POSTS');
+			$postfix = ($delete_type == 'retain') ? 'RETAINED' : 'REMOVED';
 		}
 
 		// Add the deletion to the user log using ANONYMOUS user_id (we have to do this before the delete otherwise it won't work)
-		$this->log->add('user', ANONYMOUS, $this->user->data['user_ip'], 'LOG_USER_DELETED', time(), array('reportee_id' => ANONYMOUS, 'log_data' => $log));
+		$this->log->add('user', ANONYMOUS, $this->user->data['user_ip'], 'LOG_USER_DELETED_' . $postfix, time(), array('reportee_id' => ANONYMOUS, $this->user->data['username'], $this->user->data['user_id']));
+
+		// Anonymize IP addresses stored in posts and PMs tables
+		$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET poster_ip = '1.1.1.1' WHERE poster_id = " . (int) $this->user->data['user_id']);
+		$this->db->sql_query('UPDATE ' . PRIVMSGS_TABLE . " SET author_ip = '1.1.1.1' WHERE author_id = " . (int) $this->user->data['user_id']);
 
 		// Change the username so that it will be unique
 		$faker = \Faker\Factory::create();

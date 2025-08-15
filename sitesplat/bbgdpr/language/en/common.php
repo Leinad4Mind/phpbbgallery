@@ -28,6 +28,10 @@ $lang = array_merge($lang, array(
 	'LOG_POST_REMOVED'		=> 'Their posts were removed.',
 	'LOG_NO_POSTS'			=> 'They had no posts.',
 
+	'LOG_USER_DELETED_RETAINED'	=> '<strong>Deleted user via GDPR</strong><br />» User %s (ID %s) has deleted their own account. Their posts were retained.',
+	'LOG_USER_DELETED_REMOVED'	=> '<strong>Deleted user via GDPR</strong><br />» User %s (ID %s) has deleted their own account. Their posts were removed.',
+	'LOG_USER_DELETED_NO'		=> '<strong>Deleted user via GDPR</strong><br />» User %s (ID %s) has deleted their own account. They had no posts.',
+	
 	// notification
 	'SITESPLAT_BBGDPR_USER_DELETED'	=> 'User %s deleted their account.',
 	'NOTIFICATION_TYPE_BBGDPR'	    => 'A User deletes their account under GDPR',
@@ -37,6 +41,7 @@ $lang = array_merge($lang, array(
 	'REJECT'				=> 'Reject',
 	'ACCEPT'				=> 'I Accept Cookie Usage',
 	'ACCEPT_GDPR'	   		=> 'I Accept GDPR Policy',
+	'REJECT_GDPR'			=> 'Reject (You will be logged-out)',
 	// mcp
 	'GDPR_REVIEW'			=> 'GDPR guidelines review',
 	'GDPR_NOT_REVIEWED'		=> 'In order to access MCP, you need to confirm you have reviewed the GDPR guidelines. Review the GDPR guidelines: <a href="https://gdpr-info.eu/">https://gdpr-info.eu/</a>',

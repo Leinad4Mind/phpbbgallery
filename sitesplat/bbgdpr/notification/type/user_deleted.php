@@ -123,6 +123,14 @@ class user_deleted extends \phpbb\notification\type\base
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function is_available()
+	{
+		return $this->auth->acl_get('a_');
+	}
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function create_insert_array($data, $pre_create_data = array())

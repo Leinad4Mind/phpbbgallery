@@ -20,7 +20,7 @@ $lang = array_merge($lang, array(
 	'UCP_PRIVACY'	=> 'Privacy',
 
 	'UCP_REVIEW'				=> 'Review personal data',
-	'UCP_REVIEW_EXPLAIN'		=> 'Below you will find the details of your personal data that we store on this site.',
+	'UCP_REVIEW_EXPLAIN'		=> 'Below you will find the details of your personal data that we store on this site. Don\'t forget to check the profile tab here to see other perosnal information.',
 	'REG_DATE'					=> 'Registration date and time',
 	'REG_IP'					=> 'Registration IP',
 	'USER_IPS'					=> 'IP addresses that you have used',
@@ -29,6 +29,7 @@ $lang = array_merge($lang, array(
 	'UCP_DOWNLOAD_EXPLAIN'		=> 'Below you can download all data this board stores about you or your posts only. You will be provided with a ZIP file containing <samp>posts/</samp> directory with another subdirectories structured like this: first directory is forum ID, inside are other subdirectories named after topic ID in this forum. Inside these directories are HTML files named as UNIX timestamp of time when you created the post. If you choose to download all your data, you will be provided with another file named <samp>personal.txt</samp> where you can find all personal data that this board stores about you.',
     'UCP_DOWNLOAD_BTN_POSTS'	=> 'Download Posts',
 	'UCP_DOWNLOAD_BTN_DATA'		=> 'Download All your Data',
+	'UCP_USER_NO_POSTS'			=> 'You don\'t have any posts to download.',
 	
 	'UCP_DELETE'				=> 'Delete account',
 	'CANNOT_DELETE_ACCOUNT'		=> 'You cannot delete your account because you are a founder of this board.',

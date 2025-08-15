@@ -2,7 +2,11 @@
 <fieldset class="framed-ucp">
     <legend>{{ lang('UCP_DOWNLOAD') }}</legend>
     <p>{{ lang('UCP_DOWNLOAD_EXPLAIN') }}</p>
-	<a href="{{ U_DOWNLOAD_POSTS }}" class="btn btn-default"><i class="fa fa-commenting-o" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_POSTS') }}</a>
-	<a href="{{ U_DOWNLOAD_EVERYTHING }}" class="btn btn-default"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_DATA') }}</a>
+	{% if S_USER_HAS_POSTS %}
+		<a href="{{ U_DOWNLOAD_POSTS }}" class="btn btn-default"><i class="fa fa-commenting-o" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_POSTS') }}</a>
+	{% else %}
+		<button class="btn btn-default" title="{{ lang('UCP_USER_NO_POSTS') }}" disabled><i class="fa fa-commenting-o" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_POSTS') }}</button>
+	{% endif %}
+	    <a href="{{ U_DOWNLOAD_EVERYTHING }}" class="btn btn-default"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_DATA') }}</a>
 </fieldset>
 {% include 'ucp_footer.html' %}
