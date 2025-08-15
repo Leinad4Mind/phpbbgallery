@@ -32,14 +32,14 @@ class bbpoints_module
 			if ($request->variable('transfer_to', 0) && $request->variable('amount', 0) > 4)
 			{
 				$sql = 'SELECT user_id, SUM(points) as total FROM (
-						SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $userid . ' 
+						SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $userid . ' GROUP BY poster_id
 						UNION ALL
-						SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $userid . '
+						SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $userid . ' GROUP BY topic_poster
 						UNION ALL
-						SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $userid . '
+						SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $userid . ' GROUP BY to_id
 						UNION ALL
-						SELECT to_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $userid . '
-						) t1';
+						SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $userid . ' GROUP BY from_id
+						) t1 GROUP BY user_id';
 				$result = $db->sql_query($sql);
 				$user_points  = $db->sql_fetchfield('total');
 			

@@ -3,11 +3,13 @@
 	$(".clickopen").click(function()
 	{
 		$("#comment").show("slow");
+		$("#transfer").show("slow");
 	});
 
 	$(".clickclose").click(function()
 	{
 		$("#comment").hide("slow");
+		$("#transfer").hide("slow");
 	});
 
 	$(".clickstatsopen").click(function()

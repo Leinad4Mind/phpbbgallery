@@ -15,7 +15,7 @@ class bbpoints_info
 	function module()
 	{
 		return array(
-			'filename'	=> 'sitesplat\bbpoints\ucp\bbpoints_module',
+			'filename'	=> '\sitesplat\bbpoints\ucp\bbpoints_module',
 			'title'     => 'BBPOINTS',
 			'version'   => '1.0.0',
 			'modes'     => array(
