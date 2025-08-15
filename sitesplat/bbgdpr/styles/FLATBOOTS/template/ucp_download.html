@@ -1,0 +1,8 @@
+{% include 'ucp_header.html' %}
+<fieldset class="framed-ucp">
+    <legend>{{ lang('UCP_DOWNLOAD') }}</legend>
+    <p>{{ lang('UCP_DOWNLOAD_EXPLAIN') }}</p>
+	<a href="{{ U_DOWNLOAD_POSTS }}" class="btn btn-default"><i class="fa fa-commenting-o" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_POSTS') }}</a>
+	<a href="{{ U_DOWNLOAD_EVERYTHING }}" class="btn btn-default"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;{{ lang('UCP_DOWNLOAD_BTN_DATA') }}</a>
+</fieldset>
+{% include 'ucp_footer.html' %}

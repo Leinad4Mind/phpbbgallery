@@ -1,0 +1,30 @@
+{% include 'overall_header.html' %}
+<div class="side-segment"><h3>{{ lang('GDPR_REVIEW') }}</h3></div>
+<div class="alert alert-info">
+   <i class="fa fa-lock fa-lg"></i>
+	  {{ lang('GDPR_NOT_REVIEWED') }}
+</div>
+<form method="POST" action="{{ U_ACTION }}">
+	<div class="well">
+	   <input type="checkbox" name="accept" value="1" id="acceptmcp"><label class="radio-inline" for="acceptmcp">{{ lang('GDPR_REVIEW_CONFIRM') }}</label>
+	</div>
+	<input id="acceptmcpBtn" class="btn btn-block btn-success btn-lg" type="submit" value="{{ lang('SUBMIT') }}" disabled>
+	<input type="hidden" name="redirect" value="{{ U_REDIRECT }}">
+	{{ S_FORM_TOKEN }}
+</form>
+<div class="space10"></div>
+<script>
+head.ready(function () {
+// icheck plugin option to check the checkbox
+	$('#acceptmcp').on('ifChanged', function(event){
+		// now check if checkbox is checked or not
+		var checkboxChecked = $(this).is(':checked');
+		if(checkboxChecked) {
+		   document.getElementById('acceptmcpBtn').disabled = false;
+		}else{
+			document.getElementById('acceptmcpBtn').disabled = true;
+		}
+	});
+});
+</script>
+{% include 'overall_footer.html' %}

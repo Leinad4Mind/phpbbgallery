@@ -1,0 +1,13 @@
+{% include 'overall_header.html' %}
+<div class="side-segment"><h3>{{ lang('PRIVACY_POLICY') }}</h3></div>
+<div class="panel panel-gdpr panel-default">
+   <div class="panel-body">
+	  {{ PRIVACY_POLICY }}
+   </div>
+</div>
+<form method="POST" action="{{ U_ACTION }}">
+	<input class="btn btn-block btn-success btn-lg" type="submit" name="accept" value="{{ lang('ACCEPT_GDPR') }}">
+	<input class="btn btn-block btn-danger btn-lg" type="submit" name="reject" value="{{ lang('REJECT') }}">
+	{{ S_FORM_TOKEN }}
+</form>
+{% include 'overall_footer.html' %}

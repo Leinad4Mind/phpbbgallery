@@ -1,0 +1,54 @@
+services:
+    sitesplat.bbgdpr.controller.privacy:
+        class: sitesplat\bbgdpr\controller\privacy
+        arguments:
+            - '@config_text'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '%tables.users%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.bbgdpr.controller.cookie:
+        class: sitesplat\bbgdpr\controller\cookie
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '%tables.users%'
+            - '%core.root_path%'
+
+    sitesplat.bbgdpr.controller.mcp:
+        class: sitesplat\bbgdpr\controller\mcp
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '@auth'
+            - '@request'
+            - '@template'
+            - '@controller.helper'
+            - '%tables.users%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.bbgdpr.listener:
+        class: sitesplat\bbgdpr\event\main_listener
+        arguments:
+            - '@controller.helper'
+            - '@template'
+            - '@config_text'
+            - '@user'
+            - '@language'
+            - '@config'
+            - '@request'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbgdpr.notification.type.user_deleted:
+        class: sitesplat\bbgdpr\notification\type\user_deleted
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }

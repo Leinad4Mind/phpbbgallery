@@ -1,0 +1,6 @@
+The General Data Protection Regulation (GDPR) is a European Union regulation law for data protection and privacy covering all 
+individuals within the European Union. 
+GDPR addresses the export of personal data outside the EU. 
+The GDPR aims primarily to give control back to citizens and residents over their personal data and to simplify 
+the regulatory environment for international business by unifying the regulation within the EU. 
+The GDPR will go into action on May 25, 2018. 

@@ -1,0 +1,35 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('GDPR') }}</h1>
+<p>{{ lang('DELETED_USERS', SITESPLAT_BBGDPR_DELETED) }}<br />{{ lang('ACP_BBGDPR_EXPLAIN') }}</p>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('PRIVACY_POLICY') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_privacy_policy">{{ lang('PRIVACY_POLICY') ~ lang('COLON') }}</label><br><span>{{ lang('PRIVACY_POLICY_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_privacy_policy" rows="15">{{ SITESPLAT_BBGDPR_PRIVACY_POLICY }}</textarea>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('COOKIES_BANNER') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_js">{{ lang('TRACKING_CODES') ~ lang('COLON') }}</label><br><span>{{ lang('TRACKING_CODES_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_js" rows="15">{{ SITESPLAT_BBGDPR_JS }}</textarea>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+</form>
+
+{% include 'overall_footer.html' %}

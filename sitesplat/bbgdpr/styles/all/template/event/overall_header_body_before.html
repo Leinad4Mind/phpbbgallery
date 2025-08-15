@@ -1,0 +1,10 @@
+{% if S_DISPLAY_COOKIE_BANNER %}
+<div id="cookies-eu-banner" class="alert alert-warning alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<i class="fa fa-hand-o-right fa-lg"></i>&nbsp;{{ lang('COOKIE_CONSENT') }}
+	<a href="{{ U_GDPR }}" id="cookies-eu-more" class="btn-link">{{ lang('READ_MORE') }}</a>&nbsp;&nbsp;
+	<a href="{{ U_COOKIE_ACCEPT }}" id="cookies-eu-accept" class="btn btn-xs btn-success">{{ lang('ACCEPT') }}</a>
+	<a href="{{ U_COOKIE_REJECT }}" id="cookies-eu-reject" class="btn btn-xs btn-danger">{{ lang('REJECT') }}</a>
+	
+</div>
+{% endif %}

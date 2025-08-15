@@ -1,0 +1,33 @@
+{
+    "name": "sitesplat/bbgdpr",
+    "type": "phpbb-extension",
+    "description": "",
+	"homepage": "http://sitesplat.com",
+    "version": "1.0.0",
+    "time": "2018-04-23",
+	"keywords": ["phpbb", "extension", "privacy", "user", "premium", "sitesplat", "cookie", "security"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4",
+        "composer/installers": "~1.0",
+        "fzaninotto/faker": "^1.7"
+    },
+    "extra": {
+        "display-name": "BBgdpr",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbgdpr.json"
+		}
+    }
+}
