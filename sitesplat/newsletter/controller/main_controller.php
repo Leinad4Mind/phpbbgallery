@@ -69,16 +69,21 @@ class main_controller
 		$submit = $this->request->is_set_post('submit');
 		$action = $this->request->variable('action', '');
 		$deregister = 0;
-		
+
 		$this->user->add_lang_ext('sitesplat/newsletter', 'newsletter');
-		
+
+		// this is kinda dangerous...should be mb_strtolower
+		$email = strtolower($this->request->variable('email', ''));
+
+		$emtype = empty($this->user->data['user_email_hash']) ? " WHERE user_email = '" . $this->db->sql_escape($email) . "'" : ' WHERE user_email_hash = ' . phpbb_email_hash($email);
+
 		if ($this->user->data['is_registered'])
 		{
-			$sql = 'SELECT user_id, user_allow_massemail 
-					FROM ' . USERS_TABLE . ' WHERE user_email_hash = '. phpbb_email_hash(strtolower($this->request->variable('email', '')));
+			$sql = 'SELECT user_id, user_allow_massemail
+					FROM ' . USERS_TABLE . $emtype;
 			$result = $this->db->sql_query($sql);
 			$row =  $this->db->sql_fetchrow($result);
-					
+
 			if ($row['user_id'] > 1)
 			{
 				$deregister = $row['user_allow_massemail'];
@@ -91,24 +96,23 @@ class main_controller
 			if ($action == 'register' && !$deregister)
 			{
 				$uname = utf8_normalize_nfc($this->request->variable('username', '', true));
-				$email = strtolower($this->request->variable('email', ''));
-				
+
 				if ($this->user->data['is_registered'])
 				{
 					$sql = 'UPDATE ' . USERS_TABLE . ' SET user_allow_massemail = 1 WHERE user_id = ' . $this->user->data['user_id'];
 					$this->db->sql_query($sql);
-					
+
 					$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['SUBSCRIBED']));
 				} else
 				{
-					$sql = 'SELECT user_id, user_password FROM ' . USERS_TABLE . ' WHERE user_email_hash = '. phpbb_email_hash($email);
+					$sql = 'SELECT user_id, user_password FROM ' . USERS_TABLE . $emtype;
 					$result = $this->db->sql_query($sql);
 					$row =  $this->db->sql_fetchrow($result);
-					
+
 					if ($row['user_id'] > 1)
 					{
 						$pass = $this->request->variable('password', '', true);
-						
+
 						if ($pass)
 						{
 							$userid = $row['user_id'];
@@ -116,14 +120,14 @@ class main_controller
 							{
 								$sql = 'UPDATE ' . USERS_TABLE . ' SET user_allow_massemail = 1 WHERE user_id = ' . $userid;
 								$this->db->sql_query($sql);
-								
+
 								$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['SUBSCRIBED']));
 							} else
 							{
 								$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['LOGIN_ERROR_PASSWORD']));
 							}
 						} else
-						{						
+						{
 							$this->template->assign_vars(array('REGISTER' => true, 'PASS' => true,
 								'UNAME'		=> $uname,
 								'UEMAIL'	=> $email,
@@ -132,14 +136,14 @@ class main_controller
 					} else // No member
 					{
 						$pass = $this->request->variable('password', '', true);
-						
+
 						if ($pass)
 						{
-							$sql = 'SELECT group_id 
+							$sql = 'SELECT group_id
 									FROM ' . GROUPS_TABLE . " WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "' AND group_type = " . GROUP_SPECIAL;
 							$result = $this->db->sql_query($sql);
 							$row = $this->db->sql_fetchrow($result);
-							
+
 							$data = array(
 								'username'				=> $uname,
 								'user_password'			=> $this->passwords_manager->hash($pass),
@@ -155,7 +159,7 @@ class main_controller
 								'user_inactive_time'	=> 0,
 								'user_new'				=> 1,
 							);
-							
+
 							include ($this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext);
 							$error = validate_data($data, array(
 								'username'			=> array(
@@ -167,19 +171,19 @@ class main_controller
 								'user_timezone'		=> array('timezone'),
 								'user_lang'			=> array('language_iso_name'),
 							));
-							
+
 							$config_aray = json_decode($this->config['newsletter_settings'], true);
 							if (!$config_aray['newuser'])
 							{
 								$error[] = 'LOGIN_VIEWFORUM';
 							}
-							
-							if (sizeof($error))	
+
+							if (sizeof($error))
 							{
 								$this->user->lang = array_merge($this->user->lang, array(
 									'INVALID_CHARS'	=> $this->config['LOGIN_ERROR_USERNAME']
 								));
-	
+
 								// Replace "error" strings with their real, localised form
 								$error = array_map(array($this->user, 'lang'), $error);
 								$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => implode('<br />', $error) ));
@@ -187,7 +191,7 @@ class main_controller
 							{
 								$user_id = user_add($data);
 								$result = $this->auth->login($uname, $pass);
-								
+
 								$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['SUBSCRIBED']));
 							}
 						} else
@@ -197,29 +201,29 @@ class main_controller
 								'UEMAIL'	=> $email,
 							));
 						}
-					}					
+					}
 				}
-								
-				
+
+
 			} elseif ($action == 'deregister' || $deregister)
 			{
 				if ($this->user->data['is_registered'])
 				{
 					$sql = 'UPDATE ' . USERS_TABLE . ' SET user_allow_massemail = 0 WHERE user_id = ' . $this->user->data['user_id'];
 					$this->db->sql_query($sql);
-					
+
 					$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['UNSUBSCRIBED']));
 				} else
 				{
-					$sql = 'SELECT user_id, username, user_password 
-							FROM ' . USERS_TABLE . ' WHERE user_email_hash = '. phpbb_email_hash(strtolower($this->request->variable('email', '')));
+					$sql = 'SELECT user_id, username, user_password
+							FROM ' . USERS_TABLE . $emtype;
 					$result = $this->db->sql_query($sql);
 					$row =  $this->db->sql_fetchrow($result);
-					
+
 					if ($row['user_id'] > 1)
 					{
 						$pass = $this->request->variable('password', '', true);
-						
+
 						if ($pass)
 						{
 							$userid = $row['user_id'];
@@ -227,7 +231,7 @@ class main_controller
 							{
 								$sql = 'UPDATE ' . USERS_TABLE . ' SET user_allow_massemail = 0 WHERE user_id = ' . $userid;
 								$this->db->sql_query($sql);
-								
+
 								$this->template->assign_vars(array('REGISTER' => true, 'BEDANKT' => $this->user->lang['UNSUBSCRIBED']));
 							} else
 							{
@@ -240,19 +244,20 @@ class main_controller
 								'PASS'			=> true,
 								'DEREGISTER'	=> 1,
 								'UNAME'			=> $row['username'],
-								'UEMAIL'		=> strtolower($this->request->variable('email', ''))));
+								'UEMAIL'		=> $email,
+							));
 						}
 					} else
 					{
 						$this->template->assign_vars(array('REGISTER' => 1, 'DEREGISTER' => 1));
-					}					
+					}
 				}
 			} else
 			{
 				$this->template->assign_vars(array(
-					'REGISTER'		=> true, 
+					'REGISTER'		=> true,
 					'DEREGISTER'	=> $deregister,
-					'EMAIL'			=> ($this->user->data['user_email'] != '') ? $this->user->data['user_email'] : $this->request->variable('email', ''), 
+					'EMAIL'			=> ($this->user->data['user_email'] != '') ? $this->user->data['user_email'] : $email,
 					'USERNAME' 		=> ($this->user->data['user_id'] > 1) ? $this->user->data['username'] : '',
 				));
 			}
@@ -261,15 +266,15 @@ class main_controller
 				'SUBSCRIBE'		=> ($this->user->data['user_allow_massemail']) ? $this->user->lang['UNSUBSCRIBE'] : $this->user->lang['SUBSCRIBE']
 			));
 		}
-			
+
 		// Load the page data to display
 		$display = $this->load_page_data($route);
-		
-		
+
+
 		if ($action == 'deregister')
 		{
 			$this->template->assign_vars(array(
-				'REGISTER'		=> true, 
+				'REGISTER'		=> true,
 				'DEREGISTER'	=> $deregister
 			));
 		}
@@ -310,10 +315,10 @@ class main_controller
 				$letter = (int) $this->db->sql_fetchfield('id');
 				$this->db->sql_freeresult($result);
 			}
-		
+
 			$sql = 'SELECT * FROM ' . $this->newsletter_table . ' WHERE ' . $sqlwhere . ' AND id = ' . $letter;
 			$result = $this->db->sql_query_limit($sql, 1);
-								
+
 			if ($result)
 			{
 				$row = $this->db->sql_fetchrow($result);
@@ -330,12 +335,12 @@ class main_controller
 			}
 		} else
 		{
-			$sql = 'SELECT * FROM ' . $this->newsletter_table . ' 
-					WHERE ' . $sqlwhere . 
-					(sizeof($season) ? ' AND time BETWEEN ' . $season[key($season)]['datebegin'] . ' AND ' . $season[key($season)]['dateend'] : '') . ' 
+			$sql = 'SELECT * FROM ' . $this->newsletter_table . '
+					WHERE ' . $sqlwhere .
+					(sizeof($season) ? ' AND time BETWEEN ' . $season[key($season)]['datebegin'] . ' AND ' . $season[key($season)]['dateend'] : '') . '
 					ORDER BY id DESC';
 			$result = $this->db->sql_query($sql);
-						
+
 			if ($result)
 			{
 				$rows = $this->db->sql_fetchrowset($result);
@@ -354,12 +359,12 @@ class main_controller
 					$count++;
 				}
 			}
-	
+
 			$last_mon = 0;
 			$archive_rows = array();
 			foreach ($season as $key => $a)
 			{
-				$sql = 'SELECT id, subject, time as datum FROM ' . $this->newsletter_table . ' 
+				$sql = 'SELECT id, subject, time as datum FROM ' . $this->newsletter_table . '
 						WHERE display_it = 1 AND time BETWEEN ' . $a['datebegin'] . ' AND ' . $a['dateend'] . ' ORDER BY datum DESC';
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
@@ -372,23 +377,23 @@ class main_controller
 						);
 						$archive_rows[] = $archive_row;
 					}
-			
+
 					$archive_row_month = array(
 						'TITLE'			=> $row['subject'],
 						'U_VIEW'		=> $row['id'],
 						'DATE'			=> $this->user->format_date($row['datum'], 'j F Y'),
 					);
-			
+
 					$archive_rows[sizeof($archive_rows) - 1]['monthrow'][] = $archive_row_month;
 					$last_mon = $key;
 				}
 			}
-	
+
 			foreach($archive_rows as $row)
 			{
 				$this->template->assign_block_vars('archiverow', $row);
 			}
-		
+
 			$this->template->assign_vars(array(
 				'S_ARCHIVES'	=> (sizeof($archive_rows)) ? true : false,
 				'T_THEME_PATH'	=> '/styles/' . rawurlencode($this->user->style['style_path']) . '/theme',
@@ -405,7 +410,7 @@ class main_controller
 
 	protected function season($time)
 	{
-		$sql = 'SELECT DISTINCT FROM_UNIXTIME(time, "%Y") AS jaar FROM ' . $this->newsletter_table . ' WHERE display_it = 1 ORDER BY time DESC';
+		$sql = 'SELECT DISTINCT FROM_UNIXTIME(time, "%Y") AS jaar FROM ' . $this->newsletter_table . ' WHERE display_it = 1 ORDER BY jaar DESC';
 		$result = $this->db->sql_query($sql);
 		$i = 1;
 		$season = array();
