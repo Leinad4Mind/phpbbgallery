@@ -1,0 +1,19 @@
+services:
+    oxpus.basicstats.controller:
+        class: oxpus\basicstats\controller\main
+        arguments:
+            - @dbal.conn
+            - @controller.helper
+            - @request
+            - @template
+            - @user
+            - @config
+    oxpus.basicstats.listener:
+        class: oxpus\basicstats\event\main_listener
+        arguments:
+            - %core.php_ext%
+            - @controller.helper
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }

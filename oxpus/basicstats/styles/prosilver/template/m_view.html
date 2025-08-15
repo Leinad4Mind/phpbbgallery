@@ -1,0 +1,173 @@
+<!-- INCLUDE overall_header.html -->
+<style>
+div.fs {
+	font-size: 1.1em;
+}
+div.fs h3 {
+	font-size: 0.9em;
+}
+div.fs fieldset {
+	font-size: 1.0em;
+}
+div.fs thead {
+	font-weight: bold;
+}
+div.fs td {
+	vertical-align: top;
+	padding: 0 4px 0 4px;
+}
+div.fs div.user_prompt {
+	text-align: center;
+	width: 100%;
+}
+table.fs_details_list, table.fs_details_graphs {
+	width:100%;
+	table-layout: fixed;	
+}
+table.fs_details_list td.col1, table.fs_details_list td.col3 {
+	width: 25%;
+	text-align: right;
+}
+table.fs_details_list td.col2, table.fs_details_list td.col4 {
+	width: 25%;
+	padding-left: 5px;	
+}
+table.fs_details_graphs col.col_cat {
+	width: 50%;
+}
+table.fs_details_graphs col.col_bar {
+	width: 30%;	
+}
+table.fs_details_graphs col.col_count, table.fs_details_graphs col.col_pct {
+	width: 10%;	
+	text-align: right;
+}
+td.table_list {
+	margin-left: 50px;
+}
+table.fs_details_graphs div.graph {
+	background-color: #67A3EB;
+}
+table.fs_details_graphs tr {
+	border-bottom: 1px #000 dotted;
+}
+</style>
+<h2>{L_BASIC_STATS}</h2>
+<form id="fs" method="post" action="{S_FORM_ACTION}">
+
+<div id="tabs">
+	<ul>
+		<li class="tab" id="tab_d"><a href="#" onclick="window.open('{U_D_MODE}', '_self'); return false;"><div style="border: none;">{L_DAILY}</div></a></li>
+		<li class="tab activetab" id="tab_m"><a href="#" onclick="window.open('{U_M_MODE}', '_self'); return false;"><div style="border: none;">{L_MONTHLY}</div></a></li>
+		<li class="tab" id="tab_y"><a href="#" onclick="window.open('{U_Y_MODE}', '_self'); return false;"><div style="border: none;">{L_YEARLY}</div></a></li>
+	</ul>
+</div>
+<div class="panel">
+	<div class="inner">
+	
+	<div class="user_prompt"><span><i>{STATS_YEAR_EXPLAIN}</i></span></div>
+	<h3>{L_OVERALL}</h3>
+	<table class="fs_details_list">
+		<tr>
+			<td class="col1">{L_TOTAL_TOPICS}:</td> <td class="col2">{TOTAL_TOPICS}</td>
+			<td class="col3">{L_AVG_TOPICS_MONTH}:</td> <td class="col4">{AVG_TOPICS}</td>
+		</tr>
+		<tr>
+			<td class="col1">{L_TOTAL_POSTS}:</td> <td class="col2">{TOTAL_POSTS}</td>			
+			<td class="col3">{L_AVG_POSTS_MONTH}:</td> <td class="col4">{AVG_POSTS}</td>
+		</tr>
+		<tr>
+			<td class="col1">{L_TOTAL_USER_REGS}:</td> <td class="col2">{TOTAL_USER_REGS}</td>
+			<td class="col3">{L_AVG_USER_REGS_MONTH}:</td> <td class="col4">{AVG_USER_REGS}</td>
+		</tr>
+	</table><br />	
+	<h3>{L_TOPICS}</h3>
+	<!-- IF S_MONTHLY_TOPICS -->
+	<table class="fs_details_graphs">
+		<colgroup span="4">
+			<col class="col_cat" />
+			<col class="col_bar" />
+			<col class="col_count" />
+			<col class="col_pct" />
+		</colgroup>
+		<thead>
+			<td>{L_PERIODIC_MONTH}</td>
+			<td></td>
+			<td style="text-align: right;">{L_COUNT}</td>
+			<td style="text-align: right;">{L_PERCENT}</td>
+		</thead>
+		<tbody>
+		<!-- BEGIN periodic_topics_row -->
+			<tr<!-- IF periodic_topics_row.IS_MAX --> style="font-weight:bold"<!-- ENDIF -->>
+				<td>{periodic_topics_row.TIME_ELEMENT}</td>
+				<td><div class="graph" style="width:{periodic_topics_row.BARWIDTH}%;">&nbsp;</div></td>
+				<td style="text-align: right;">{periodic_topics_row.COUNT}</td>
+				<td style="text-align: right;">{periodic_topics_row.PCT}%</td>
+			</tr>
+		<!-- END periodic_topics_row -->
+		</tbody>	
+	</table><br />
+	<!-- ELSE -->{L_NONE}<br /><br />
+	<!-- ENDIF -->
+	<h3>{L_POSTS}</h3>
+	<!-- IF S_MONTHLY_POSTS -->
+	<table class="fs_details_graphs">
+		<colgroup span="4">
+			<col class="col_cat" />
+			<col class="col_bar" />
+			<col class="col_count" />
+			<col class="col_pct" />
+		</colgroup>
+		<thead>
+			<td>{L_PERIODIC_MONTH}</td>
+			<td></td>
+			<td style="text-align: right;">{L_COUNT}</td>
+			<td style="text-align: right;">{L_PERCENT}</td>
+		</thead>
+		<tbody>
+		<!-- BEGIN periodic_posts_row -->
+			<tr<!-- IF periodic_posts_row.IS_MAX --> style="font-weight:bold"<!-- ENDIF -->>
+				<td>{periodic_posts_row.TIME_ELEMENT}</td>
+				<td><div class="graph" style="width:{periodic_posts_row.BARWIDTH}%;">&nbsp;</div></td>
+				<td style="text-align: right;">{periodic_posts_row.COUNT}</td>
+				<td style="text-align: right;">{periodic_posts_row.PCT}%</td>
+			</tr>
+		<!-- END periodic_posts_row -->
+		</tbody>	
+	</table><br />
+	<!-- ELSE -->{L_NONE}<br /><br />
+	<!-- ENDIF -->
+	<h3>{L_USER_REGS}</h3>
+	<!-- IF S_MONTHLY_USER_REGS -->
+	<table class="fs_details_graphs">
+		<colgroup span="4">
+			<col class="col_cat" />
+			<col class="col_bar" />
+			<col class="col_count" />
+			<col class="col_pct" />
+		</colgroup>
+		<thead>
+			<td>{L_PERIODIC_MONTH}</td>
+			<td></td>
+			<td style="text-align: right;">{L_COUNT}</td>
+			<td style="text-align: right;">{L_PERCENT}</td>
+		</thead>
+		<tbody>
+		<!-- BEGIN periodic_user_regs_row -->
+			<tr<!-- IF periodic_user_regs_row.IS_MAX --> style="font-weight:bold"<!-- ENDIF -->>
+				<td>{periodic_user_regs_row.TIME_ELEMENT}</td>
+				<td><div class="graph" style="width:{periodic_user_regs_row.BARWIDTH}%;">&nbsp;</div></td>
+				<td style="text-align: right;">{periodic_user_regs_row.COUNT}</td>
+				<td style="text-align: right;">{periodic_user_regs_row.PCT}%</td>
+			</tr>
+		<!-- END periodic_user_regs_row -->
+		</tbody>	
+	</table><br />
+	<!-- ELSE -->{L_NONE}<br /><br />
+	<!-- ENDIF -->
+	<div class="user_prompt"><span>{MONTH_SELECT_BOX}</span></div>
+	<div style="float:right;font-size:x-small"><i>{AS_ON}</i></div>
+	</div>
+</div>
+</form>
+<!-- INCLUDE overall_footer.html -->
