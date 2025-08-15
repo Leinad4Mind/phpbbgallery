@@ -101,7 +101,7 @@ class session_helper implements session_helper_interface
 	{
 		if (empty($key))
 		{
-			throw new http_exception(400, 'TFA_NO_KEY_PROVIDED');
+			throw new http_exception(400, $this->user->lang['TFA_NO_KEY_PROVIDED']);
 		}
 
 		$sql = 'SELECT * FROM ' . $this->registration_table . ' WHERE user_id = ' . (int) $user_id;
@@ -171,7 +171,7 @@ class session_helper implements session_helper_interface
 			'RANDOM'		=> $random,
 		));
 
-		page_header('TFA_KEY_REQUIRED');
+		page_header($this->user->lang['TFA_KEY_REQUIRED']);
 
 		$this->template->set_filenames(array(
 			'body' => '@sitesplat_tfa/authenticate_main.html'
