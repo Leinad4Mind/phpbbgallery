@@ -6,6 +6,7 @@
 */
 namespace sitesplat\bbemoji\event;
 
+use ReflectionClass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
@@ -28,12 +29,14 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.message_parser_check_message'     => 'onCheck',
-			'core.modify_format_display_text_after' => 'onPreview',
-			'core.modify_submit_post_data'          => 'onSubmit',
-			'core.modify_text_for_display_after'    => 'onDisplay',
-			'core.modify_text_for_storage_after'    => 'onStorage',
-			'core.submit_pm_before'                 => 'onPmStorage'
+			'core.message_parser_check_message'       => 'onCheck',
+			'core.modify_format_display_text_after'   => 'onPreview',
+			'core.modify_submit_post_data'            => 'onSubmit',
+			'core.modify_text_for_display_after'      => 'onDisplay',
+			'core.modify_text_for_storage_after'      => 'onStorage',
+			'core.text_formatter_s9e_configure_after' => 'onConfigure',
+			'core.text_formatter_s9e_parser_setup'    => 'onParserSetup',
+			'core.submit_pm_before'                   => 'onPmStorage'
 		);
 	}
 
@@ -42,9 +45,33 @@ class listener implements EventSubscriberInterface
 		$event['message'] = self::encodeUnicodeSupplementaryCharacters($event['message']);
 	}
 
+	public function onConfigure($event)
+	{
+		$tag = $event['configurator']->Emoji->getTag();
+		$tag->template = '<xsl:choose><xsl:when test="$S_VIEWSMILIES">' . $this->renderEmoji('{@seq}', '{.}', true) . '</xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
+	}
+
 	public function onDisplay($event)
 	{
 		$event['text'] = $this->render($event['text']);
+	}
+
+	public function onParserSetup($event)
+	{
+		$className = 's9e\\TextFormatter\\Plugins\\Emoji\\Parser';
+		$propName  = 'map';
+		if (!class_exists($className))
+		{
+			return;
+		}
+
+		$reflectionClass = new ReflectionClass($className);
+		if ($reflectionClass->hasProperty($propName))
+		{
+			$reflectionProp = $reflectionClass->getProperty($propName);
+			$reflectionProp->setAccessible(true);
+			$reflectionProp->setValue($reflectionProp->getValue() + self::$map);
+		}
 	}
 
 	public function onPmStorage($event)
@@ -117,7 +144,7 @@ class listener implements EventSubscriberInterface
 			$seq = '00' . $seq;
 		}
 
-		return strtr($seq, 'abcdef', 'ABCDEF') . '.' . $ext;
+		return $seq . '.' . $ext;
 	}
 
 	protected function getErrorHandler($seq, $fallback)
@@ -184,6 +211,11 @@ class listener implements EventSubscriberInterface
 
 	protected function parse($text)
 	{
+		if (preg_match('(^<[rt][ />])', $text))
+		{
+			return $text;
+		}
+
 		$text = $this->replaceAsciiEmoji($text);
 		$text = $this->replaceUnicodeEmoji($text);
 
@@ -206,13 +238,20 @@ class listener implements EventSubscriberInterface
 
 	protected function renderCallback($m)
 	{
-		$seq = $m[1];
-		$alt = $m[2];
+		return $this->renderEmoji($m[1], $m[2]);
+	}
 
+	protected function renderEmoji($seq, $alt, $xsl = false)
+	{
 		$src     = $this->getUrl($seq, $this->generator);
 		$onerror = $this->getErrorHandler($seq, $this->fallback);
 
-		return '<img alt="' . $alt . '" class="emoji" draggable="false" height="20" onerror="' . $onerror . '" src="' . $src . '" width="20">';
+		if ($xsl)
+		{
+			$onerror = str_replace('function(){', 'function(){{', $onerror) . '}';
+		}
+
+		return '<img alt="' . $alt . '" class="emoji" draggable="false" height="20" onerror="' . $onerror . '" src="' . $src . '" width="20"' . (($xsl) ? '/>' : '>');
 	}
 
 	protected function replaceAsciiEmoji($text)
