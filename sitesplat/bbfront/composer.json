@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Adds a modern and stylish front page with selectable post to publish in different formats, like video directly playable, quotes and post snippets...",
     "homepage": "https://sitesplat.com",
-	"version": "2.0.4",
+	"version": "3.0.0",
 	"keywords": ["sitesplat", "phpbb", "extension", "news", "portal"],
 	"license": "Proprietary/All rights reserved",
     "authors": [
@@ -23,7 +23,7 @@
     "extra": {
         "display-name": "BBfront Advanced",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.0,<3.3.*@dev"
+            "phpbb/phpbb": ">=3.3.2"
         },
 	    "version-check": {
 		    "host": "sitesplat.com",

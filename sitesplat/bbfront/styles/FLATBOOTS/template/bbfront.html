@@ -16,18 +16,8 @@
 		<div class="blog-item{% if item.QUOTE %} blog-quote{% endif %}" style="opacity: 0;">
 			{% if item.PICTURE %}
 				<div class="blog-img"><img src="{{ item.PICTURE }}" class="img-responsive" alt="" /></div>
-			{% elseif item.EMBED == 'medium' %}
-				<div class="blog-video medium-front"><iframe src="//api.medium.com/embed?type=story&amp;path=//{{ item.VIDEO }}&id={{ item.MEDIUM }}" allowfullscreen></iframe></div>
-			{% elseif item.EMBED == 'facebook' %}
-				<div class="blog-video facebook-front"><iframe src="//s9e.github.io/iframe/facebook.min.html#{{ item.VIDEO }}" allowfullscreen></iframe></div>
-			{% elseif item.EMBED == 'twitch' %}
-				<div class="blog-video twitch-front"><iframe src="//player.twitch.tv/?autoplay=false&channel={{ item.VIDEO }}" allowfullscreen></iframe></div>
-			{% elseif item.EMBED == 'twitter' %}
-				<div class="blog-video twitter-front"><iframe src="//s9e.github.io/iframe/twitter.min.html#{{ item.VIDEO }}" allowfullscreen></iframe></div>
-			{% elseif item.EMBED == 'vimeo' %}
-				<div class="blog-video vimeo-front"><iframe src="//player.vimeo.com/video/{{ item.VIDEO }}" allowfullscreen></iframe></div>
-			{% elseif item.EMBED == 'youtube' %}
-				<div class="blog-video youtube-front"><iframe src="//youtube.com/embed/{{ item.VIDEO }}" allowfullscreen></iframe></div>
+			{% elseif item.VIDEO %}
+				<div class="blog-video {{ item.MEDIUM }}-front">{{ item.VIDEO }}</div>
 			{% elseif item.QUOTE %}
 				<div class="quote quote-primary"><a href="{{ item.URL }}">{{ item.TEXT }}<small class="quote-author">&#45;&nbsp;{{ item.USER_QUOTE }}</small></a></div>
 			{% endif %}

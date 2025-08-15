@@ -117,7 +117,7 @@ class bbfront_module
 		$cookie = $this->request->variable($this->config['cookie_name'] . '_bbfront', '', true, \phpbb\request\request_interface::COOKIE);
 		$this->template->assign_vars(array(
 			'S_NOTICE_BBTAGS'		=> (!$ext_manager->is_enabled('sitesplat/bbtags') && !$cookie) ? $this->user->lang['NOTICE_BBTAGS'] : '',
-			'S_NOTICE_BBEMBED'		=> (!$ext_manager->is_enabled('sitesplat/bbembed') && !$cookie) ? $this->user->lang['NOTICE_BBEMBED'] : '',
+			'S_NOTICE_BBEMBED'		=> (!$ext_manager->is_enabled('phpbb/mediaembed') && !$cookie) ? $this->user->lang['BBNOTICE_EMBED'] : '',
 			'S_NOTICE_LIKEBB'		=> (!$ext_manager->is_enabled('sitesplat/likedd') && !$cookie) ? $this->user->lang['NOTICE_LIKEBB'] : '',
 			'U_BBFRONT_NOTICE_CLOSE'	=> "{$this->u_action}&amp;hash=" . generate_link_hash('close_notice')
 		));

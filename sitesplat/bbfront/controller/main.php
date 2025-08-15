@@ -203,34 +203,29 @@ class main
 
 				preg_match('/\[quote(.*?)](.*?)\[\/quote(.*?)\]/msi', $row['post_text'], $quote);
 				$row['post_text'] = (isset($quote[2])) ? $quote[2] : $row['post_text'];
+				$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 
-//				$row['post_text'] = htmlspecialchars_decode($row['post_text']);
-//				$attributes = (!isset($quote[2])) ? $this->matchUrl($row['post_text']) : null;
-				$attributes = (!isset($quote[2])) ? $this->matchUrl(htmlspecialchars_decode($row['post_text'])) : null;
-
-				if (!empty($attributes['embed']) && $attributes['embed'] == 'googleplus')
-				{
-					if (isset($attributes['attributes']['oid']))
-					{
-						$attributes['attributes']['id'] = htmlspecialchars($attributes['attributes']['oid'], 2);
-					}
-					else
-					{
-						$attributes['attributes']['id'] = '+' . htmlspecialchars($attributes['attributes']['name'], 2);
-					}
-					$attributes['attributes']['id'] .= '/posts/' . htmlspecialchars($attributes['attributes']['pid'], 2);
+				// support for phpbb-mediaembed 2.0+ - comment out if using BBembed
+				$rendered_post = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+				$video = $medium = '';
+				if (preg_match('`<span data\-s9e\-mediaembed\="(.*?)"(.*?)</span>`', $rendered_post, $media)) {
+					$medium = $media[1];
+					$video = "<span data-s9e-mediaembed=\"$medium\"{$media[2]}</span></span>";
+				}
+				else if (preg_match('`<([a-z]+) data\-s9e\-mediaembed\="(.*?)"(.*?)</\\1>`', $rendered_post, $media)) {
+					$medium = $media[2];
+					$video = "<{$media[1]} data-s9e-mediaembed=\"$medium\"{$media[3]}</{$media[1]}>";
 				}
 
-				$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 				$tpl_ary = array(
 					'URL'		=> append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'] . '#p' . $row['post_id']),
 					'TITLE'		=> $row['post_subject'],
-					'TEXT'		=> truncate_string(strip_tags(generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true)), $config_aray['chars'], $config_aray['chars'], true, " ..."),
 					'QUOTE'		=> (isset($quote[2])) ? true: false,
 					'PICTURE'	=> (!$attach_id) ? '' : generate_board_url() . '/download/file.php?id=' . $attach_id,
-					'EMBED'		=> !empty($attributes['embed']) ? $attributes['embed'] : '',
-					'VIDEO'		=> !empty($attributes['attributes']['id']) ? htmlspecialchars($attributes['attributes']['id'], 2) : '',
-					'MEDIUM'	=> !empty($attributes['attributes']['id']) ? htmlspecialchars(strtr($attributes['attributes']['id'], 'abcdef', '111111'), 2) : '',
+					'TEXT'		=> truncate_string(strip_tags($rendered_post), $config_aray['chars'], $config_aray['chars'], true, " ..."),
+					'VIDEO'		=> $video,
+					'MEDIUM'	=> $medium,
+
 					'AUTHOR'	=> get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']),
 					'USER_QUOTE'=> get_username_string('username', $row['poster_id'], $row['username'], $row['user_colour']),
 					'AVATAR'	=> ($config_aray['use_avatar']) ? phpbb_get_user_avatar(array('avatar' => $row['user_avatar'],
@@ -294,6 +289,7 @@ class main
 		return $this->helper->render('bbfront.html', $name);
 	}
 
+// comment out the next two functions when enabling phpbb-mediaembed!!!
 	protected function matchUrl($url)
 	{
 		if (!$this->phpbb_container->get('ext.manager')->is_enabled('sitesplat/bbembed'))
