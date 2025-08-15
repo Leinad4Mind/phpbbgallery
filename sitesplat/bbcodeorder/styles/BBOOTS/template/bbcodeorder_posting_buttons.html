@@ -103,7 +103,7 @@
 						{% if SELECTBOX_PRESENT %}
 							<option value="{{ bbcode.BBCODE_ID }}" title="{{ bbcode.BBCODE_HELPLINE }}">{{ bbcode.BBCODE_TAG }}</option>
 						{% else %}
-							<button class="btn btn-default" type="button" onclick="bbstyle({{ bbcode.BBCODE_ID }}); return false;"title="{{ bbcode.BBCODE_HELPLINE }}"><i class="fa fa-{{ bbcode.BBCODE_ICON }}"></i>{% if not bbcode.BBCODE_ICON %}{{ bbcode.BBCODE_TAG }}{% endif %}</button>
+							<button class="btn btn-default" type="button" onclick="bbstyle({{ bbcode.BBCODE_ID }}); return false;" title="{{ bbcode.BBCODE_HELPLINE }}"><i class="fa fa-{{ bbcode.BBCODE_ICON }}"></i>{% if not bbcode.BBCODE_ICON %}{{ bbcode.BBCODE_TAG }}{% endif %}</button>
 						{% endif %}
 					{% endif %}
 				{% endif %}
