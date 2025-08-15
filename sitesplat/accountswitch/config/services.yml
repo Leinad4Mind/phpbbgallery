@@ -1,0 +1,21 @@
+services:
+    sitesplat.accountswitch.listener:
+        class: sitesplat\accountswitch\event\listener
+        arguments:
+            - @config
+            - @controller.helper
+            - @user
+            - @dbal.conn
+            - @template
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
+    sitesplat.accountswitch.controller:
+        class: sitesplat\accountswitch\controller\controller
+        arguments:
+            - @dbal.conn
+            - @user
+            - @config
+            - @log
+            - %core.php_ext%
