@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* Topic preview
-*
-* @copyright (c) 2016 ForumHulp.com <http://sitesplat.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
+* BBtpreview
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
 *
 */
 
@@ -32,7 +31,6 @@ class main_controller
 		$this->db = $db;
 		$this->extension_manager = $extension_manager;
 		$this->php_ext = $php_ext;
-
 		$this->private_post_ext_enabled = $this->extension_manager->is_enabled('sitesplat/privatepost');
 	}
 
@@ -79,6 +77,7 @@ class main_controller
 		
 				if (!empty($row['topic_poster']) && $this->auth->acl_get('f_read', $row['forum_id']))
 				{
+					$in_bbtags = $this->request->variable('b', 0);
 					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 
 					if ($this->private_post_ext_enabled && $row['post_private'] == '1' && $row['topic_poster'] != $this->user->data['user_id'] && !$this->auth->acl_get('f_seeprivateposts', $row['forum_id']))
@@ -88,21 +87,24 @@ class main_controller
 						$row['post_text'] = $this->user->lang('POST_PRIVATE');
 					}
 					
+					$match = array();
+					$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+								  phpbb_get_user_avatar(
+									  array('avatar'			=> $row['user_avatar'], 
+									        'user_id'           => $row['user_id'],
+											'avatar_type'		=> $row['user_avatar_type'], 
+											'avatar_width'		=> $row['user_avatar_width'], 
+											'avatar_height'		=> $row['user_avatar_height'])), $match) :
+											generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+					
 					$json_response = new \phpbb\json_response();
 					$json_response->send(array(
 						'url'			=> append_sid('viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&t=' . $topic_id),
 						'subject'		=> censor_text($row['post_subject']),
 						'message'		=> generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
-						'author'		=> '<a href="memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . (($row['user_avatar']) ? 
-								 str_replace(array('class="avatar bbtpreview_img"', 'alt=', './../../'), array('class="bbtpreview_img"', 'class="bbtpreview_img" title=', './'), phpbb_get_user_avatar(
-									array('avatar'			=> $row['user_avatar'], 
-									      'user_id'         => $row['user_id'],
-										  'avatar_type'		=> $row['user_avatar_type'], 
-										  'avatar_width'	=> $row['user_avatar_width'], 
-										  'avatar_height'	=> $row['user_avatar_height']), $row['topic_first_poster_name'])) :
-										  '<img class="bbtpreview_img" title="' .  $row['topic_first_poster_name'] . '" src="' .
-										  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif">') . '</a>',
-						'author_rank'	=> $row['topic_first_poster_name'] . '<br />' . $row['rank_title'],
+						'author'		=> '<a href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '"><img class="online_img" alt="' . $this->user->lang['USER_AVATAR'] . '" src="' .
+											((sizeof($match) > 1) ? str_replace('./' . ((!$in_bbtags) ? '../../': ''), './', array_pop($match)) : $avatar) . '" /></a>',
+						'author_rank'	=>  '<a style="font-weight:bold;color:#' . $row['topic_first_poster_colour'] . '" href="' . (($in_bbtags) ? '../../': '') . 'memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . $row['topic_first_poster_name'] . '</a><br />' . $row['rank_title'],
 						'starttime'		=> $this->user->format_date($row['topic_time']),
 						'messages'		=> $row['topic_posts_approved'],
 						'views'			=> $row['topic_views'],

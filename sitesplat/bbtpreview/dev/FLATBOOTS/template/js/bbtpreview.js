@@ -10,15 +10,15 @@ $(document).on("click", ".open-bbtpreview", function (event) {
 
 	$.ajax({
 		url: boardurl + 'app.php/bbtpreview/topic.html?t=' + topicid + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("BBTPreviewProfile"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
 			$(".modal-header #modal-title").html( s.subject );
 			$(".modal-header #starttime").html( s.starttime );
-			$(".modal-subheader #author").html( s.author );
-			$(".modal-subheader #author_rank").html( s.author_rank );
-			$(".modal-body #profile-data").html( s.message );
+			$(".modal-header #author").html( s.author );
+			$(".modal-header #author_rank").html( s.author_rank );
+			$(".modal-body #BBTPreviewContent").html( s.message );
 			$(".modal-footer #url").attr("href", s.url);
 			$(".modal-body #messages").html( s.messages );
 			$(".modal-body #views").html( s.views );
