@@ -82,6 +82,19 @@
 	      <li><a href="{menu.URL}"<!-- IF menu.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{menu.ICON}"></i> {menu.NAME}</a></li>
 	      <!-- ENDIF -->
 	<!-- END menu -->
+		<!-- Remove ext links -->
+		<!-- IF S_ALLOW_CUSTOMLINKS -->
+			<li class="item-with-ul">
+			<a href="javascript:void(0);"><i class="fa fa-globe"></i>&nbsp;{L_MORE}</a>
+		     <ul class="collapse viewmore list-unstyled">
+                <!-- EVENT overall_header_navigation_prepend -->
+					 <li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i>&nbsp;{L_FAQ}</a><span></span></li>
+				<!-- EVENT overall_header_navigation_append -->
+             </ul>
+			  <a class="touch-button" href="javascript:void(0);" data-toggle="collapse" data-target=".viewmore"><i class="navicon fa fa-sort-down"></i></a>
+		</li>
+		<!-- ENDIF -->
+		<!-- Remove ext links -->
         </ul>
 	  </div>
     </nav> 

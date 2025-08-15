@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "This extension allows the administrator to easily customize the BBOOTS style via ACP. Much like WordPress system.",
 	"homepage": "http://www.sitesplat.com",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"keywords": ["phpbb", "extension", "BBOOTS", "FLATBOOTS", "CMS"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -11,11 +11,6 @@
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
 			"homepage": "http://www.sitesplat.com"
-		},
-		{
-			"name": "John Peskens",
-			"email": "info@forumhulp.com",
-			"homepage": "http://forumhulp.com"
 		}
 	],
 	"require": {
