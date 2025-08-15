@@ -4,7 +4,6 @@
 *
 * @package phpBB Extension - Basic Stats
 * @copyright (c) 2015 OXPUS - www.oxpus.net
-* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -29,7 +28,7 @@ class release_1_0_1 extends \phpbb\db\migration\migration
 	{
 		return array(
 			// Set the current version
-			array('config.add', array('basicstats_version', $this->ext_version)),
+			array('config.update', array('basicstats_version', $this->ext_version)),
 		);
 	}
 }

@@ -8,6 +8,7 @@ services:
             - '@template'
             - '@user'
             - '@config'
+            - '@language'
     oxpus.basicstats.listener:
         class: oxpus\basicstats\event\main_listener
         arguments:
@@ -15,6 +16,5 @@ services:
             - '@controller.helper'
             - '@template'
             - '@user'
-            - '@?files.factory'
         tags:
             - { name: event.listener }

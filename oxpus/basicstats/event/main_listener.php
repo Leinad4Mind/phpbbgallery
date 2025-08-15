@@ -4,18 +4,31 @@
 *
 * @package phpBB Extension - Basic Stats
 * @copyright (c) 2015 OXPUS - www.oxpus.net
-* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace oxpus\basicstats\event;
 
+/**
+* @ignore
+*/
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+* Event listener
+*/
 class main_listener implements EventSubscriberInterface
 {
+	static public function getSubscribedEvents()
+	{
+		return array(
+			'core.user_setup'						=> 'load_language_on_setup',
+			'core.page_header'						=> 'add_link_to_stats',
+		);
+	}
+
 	/* @var string phpEx */
 	protected $php_ext;
 
@@ -24,12 +37,9 @@ class main_listener implements EventSubscriberInterface
 
 	/* @var \phpbb\template\template */
 	protected $template;
-
+	
 	/* @var \phpbb\user */
 	protected $user;
-
-	/** @var \phpbb\files\factory */
-	protected $files_factory;
 
 	/**
 	* Constructor
@@ -38,27 +48,24 @@ class main_listener implements EventSubscriberInterface
 	* @param \phpbb\controller\helper				$helper
 	* @param \phpbb\template\template				$template
 	* @param \phpbb\user							$user
-	* @param \phpbb\files\factory					$files_factory
 	*/
-	public function __construct(
-		$php_ext,
-		\phpbb\controller\helper $helper,
-		\phpbb\template\template $template,
-		\phpbb\user $user,
-		\phpbb\files\factory $files_factory = null)
+	public function __construct($php_ext, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user)
 	{
-		$this->php_ext 			= $php_ext;
-		$this->helper 			= $helper;
-		$this->template 		= $template;
-		$this->user 			= $user;
-		$this->files_factory 	= $files_factory;
+		$this->php_ext 		= $php_ext;
+		$this->helper 		= $helper;
+		$this->template 	= $template;
+		$this->user 		= $user;
 	}
 
-	static public function getSubscribedEvents()
-	{
-		return array(
-			'core.page_header'	=> 'add_link_to_stats',
+	public function load_language_on_setup($event)
+	{	
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'oxpus/basicstats',
+			'lang_set' => 'common',
 		);
+		$event['lang_set_ext'] = $lang_set_ext;
+
 	}
 
 	public function add_link_to_stats($event)
@@ -67,11 +74,8 @@ class main_listener implements EventSubscriberInterface
 		{
 			$ext_main_link = $this->helper->route('basicstats_controller');
 
-			$this->user->add_lang_ext('oxpus/basicstats', 'common');
-
 			$this->template->assign_vars(array(
 				'U_BASIC_STATS' => $ext_main_link,
-				'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
 			));
 		}
 	}
