@@ -39,18 +39,19 @@ $lang = array_merge($lang, array(
 
 	'ACP_BBMEMBERSHIP_AMT'					=> 'Amount',
 	'ACP_BBMEMBERSHIP_EXPIRE'				=> 'Expire',
-	'ACP_BBMEMBERSHIP_PACKAGE' 				=> 'Package',
+	'ACP_BBMEMBERSHIP_PACKAGE' 				=> 'Package description',
+	'ACP_BBMEMBERSHIP_PACKAGE_LEVEL' 		=> 'Membership Lv',
 	'ACP_BBMEMBERSHIP_GROUP'				=> 'Select Group',
 	'ACP_BBMEMBERSHIP_DEFAULT'				=> 'Default',
 	'ACP_BBMEMBERSHIP_HIDE'					=> 'Hide',
 	'ACP_BBMEMBERSHIP_CURRENCY'				=> 'Currency code',
-	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://www.paypal.com/multicurrency" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the curreency you are going to use is enabled on your PayPal account. If the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" ',
+	'ACP_BBMEMBERSHIP_CURRENCY_EXPLAIN'     => 'Currency code follows the allowed <a href="https://developer.paypal.com/docs/classic/api/currency_codes/" target="_blank">Paypal Multiple Currencies</a> standards. <br /> Make sure the currency you are going to use is enabled on your PayPal account. If the currency is not supported on your PayPal acccount the transactions will be returned as "Not verified" ',
  
     'ACP_BBMEMBERSHIP_FLAGS'			    => 'PayPal Flags',
-	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> 'if a transaction is flagged as <span class="label label-danger">Not verified</span> you can toggle the verification by clicking on the flag and it will be toggled as <span class="label label-success">Completed</span>. This will also automatically move the user to the intended group.<br /> Please make sure to verify the transaction with your PayPal account if the transaction status does not automatically change within 24h and you chose to force a "Completed" status.',
+	'ACP_BBMEMBERSHIP_FLAGS_EXPLAIN'		=> 'If a transaction is flagged as <span class="label label-danger">Not verified</span> you can toggle the verification by clicking on the flag and it will be toggled as <span class="label label-success">Completed</span>. This will also automatically move the user to the intended group.<br /> Please make sure to verify the transaction with your PayPal account if the transaction status does not automatically change within 24h and you chose to force a "Completed" status.<br /> An <span class="label label-default">Expired</span> flag is a transaction that has been marked as such automatically by the Synch/Cron system therefore X user is removed from X group(membership level).',
  
-	'ACP_BBMEMBERSHIP_SYNC'					=> 'Synchronize your members package levels',
-	'ACP_BBMEMBERSHIP_SYNC_EXPLAIN'			=> 'Synchronize your members package levels and groups manually<br />Install <a href="https://github.com/ForumHulp/cronstatus" target="_blank">Cron Status Extension</a> to check if the cron job runs succesfully.',
+	'ACP_BBMEMBERSHIP_SYNC'					=> 'Synchronization',
+	'ACP_BBMEMBERSHIP_SYNC_EXPLAIN'			=> 'This will force start a synchronization of the members package levels and groups.<br />Install <a href="https://github.com/ForumHulp/cronstatus" target="_blank">Cron Status Extension</a> to check the cron jobs. <br />Note: the sync automatically flags a "completed" transaction to "expired" if the criteria are met for X user.<br />The synchronization processes in batches of 50. Large forums with many users and memberships may take some time to get to 100% and complete the synchronization.',
 	'LAST_MEMBERSHIP_CHECK'					=> 'Last sync on:',
  
 	'ACP_BBMEMBERSHIP_TRANSACTIONS'			=> 'transactions',
@@ -64,7 +65,7 @@ $lang = array_merge($lang, array(
 	
 	'ACP_BBPOINTS_NOTICE_CLOSE'				=> 'Close',
 	'BBPOINTS_NOTICE'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints Cart system.',
-
+    'ACP_BBMEMBERSHIP_SAVE_ERROR'			=> 'Something went wrong while saving your setup, try again!',
 	'BBMEMBERSHIP_NOTICE'					=> '<div class="attach-image"><p>Settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>. <br />Setup your memberships and packages first, add PayPal and optionally enable the BBpoints extension for extra functionality.</p></div>',
 	
 	
@@ -83,7 +84,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBMEMBERSHIP_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBMEMBERSHIP_VERSION'				=> '1.3.2',
+	'ACP_BBMEMBERSHIP_VERSION'				=> '1.4.0',
     'ACP_LOADING'			    			=> 'Hold On. Loading...',
 	
 ));

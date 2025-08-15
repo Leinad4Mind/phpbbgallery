@@ -101,21 +101,9 @@
 	</fieldset>
 </form>
 
-<style>
-.change_status {
-    color: #fff !important;
-    font-size: 80%;
-    padding: 0.2em 0.6em 0.3em !important;
-}
-.label-success {
-    background-color: #5cb85c !important;
-}
-</style>
-
-
 <fieldset>
 	<legend style=" text-transform: capitalize;">{L_ACP_BBMEMBERSHIP_TRANSACTIONS}</legend>
-	<span style="margin-bottom: 20px; float: right; display: block;">{L_G_REGISTERED}{L_COLON}<select name="user_id" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
+	<span style="margin-bottom: 20px; float: right; display: inline-grid;">{L_G_REGISTERED}{L_COLON}<select name="user_id" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
 	
 	<p style="font-size: 1em;">
 	 <label><strong>{L_ACP_BBMEMBERSHIP_FLAGS}{L_COLON}</strong></label><br>{L_ACP_BBMEMBERSHIP_FLAGS_EXPLAIN}
@@ -129,6 +117,7 @@
 		<th>{L_ACP_BBMEMBERSHIP_TRANSACTION_ID}</th>
 		<th>{L_ACP_BBMEMBERSHIP_AMT}</th>
 		<th>{L_ACP_BBMEMBERSHIP_PAY_STATUS}</th>
+		<th>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL}</th>
 		<th>{L_ACP_BBMEMBERSHIP_TIME}</th>
 	</tr>
 	</thead>
@@ -140,12 +129,13 @@
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{transactions.CURRENCY}  {transactions.AMOUNT}</td>
 			<td><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status label <!-- IF transactions.STATUS == 'Not verified' -->label-danger<!-- ELSEIF transactions.STATUS == 'Completed' -->label-success<!-- ELSEIF transactions.STATUS == 'Expired' -->label-default<!-- ENDIF -->" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>
+			<td>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL} {transactions.PACKAGE}</td>
 			<td>{transactions.TIME}</td>
 		</tr>
 	<!-- END transactions -->
 	</tbody>
 	</table>
-	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY} {BBMEMBERSHIP_TOTAL}<!-- IF BBPOINS_ENABLED -->,  (BBpoints {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
+	<span style="float:left;display:block; margin-top:10px;">{L_ACP_BBMEMBERSHIP_TOTAL}{L_COLON} {BBMEMBERSHIP_CURRENCY} {BBMEMBERSHIP_TOTAL}<!-- IF BBPOINS_ENABLED -->,  ({L_ACP_BBMEMBERSHIP_BBPOINTS} {BBMEMBERSHIP_BBPOINTS_TOTAL})<!-- ENDIF --></span>
 	<!-- IF .pagination -->
 	<div class="pagination top-pagination">
 		<!-- INCLUDE pagination.html -->
@@ -176,7 +166,7 @@
 		<th>{L_ACP_BBMEMBERSHIP_TRANSACTION_ID}</th>
 		<th>{L_ACP_BBMEMBERSHIP_AMT}</th>
 		<th>{L_ACP_BBMEMBERSHIP_PAY_STATUS}</th>
-		<th>{L_ACP_BBMEMBERSHIP_PACKAGE}</th>
+		<th>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL}</th>
 		<th>{L_ACP_BBMEMBERSHIP_EXPIRED}</th>
 		<th>{L_ACP_BBMEMBERSHIP_TIME}</th>
 		<!-- BEGIN transactions -->
@@ -184,7 +174,7 @@
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{transactions.CURRENCY} {transactions.AMOUNT}</td>
 			<td>{transactions.STATUS}</td>
-			<td>{L_ACP_BBMEMBERSHIP_PACKAGE} {transactions.PACKAGE}</td>
+			<td>{L_ACP_BBMEMBERSHIP_PACKAGE_LEVEL} {transactions.PACKAGE}</td>
 			<td style="text-align:center;">{transactions.EXPIRED}</td>
 			<td>{transactions.TIME}</td>
 		</tr>

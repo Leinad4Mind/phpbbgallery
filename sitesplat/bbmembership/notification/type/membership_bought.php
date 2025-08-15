@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -37,6 +36,22 @@ class membership_bought extends \phpbb\notification\type\base
 		'lang'	=> 'NOTIFICATION_TYPE_BBMEMBERSHIP',
 		'group'	=> 'NOTIFICATION_GROUP_ADMINISTRATION',
 	);
+
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	public function set_config(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
+	}
 
 	/**
 	* {@inheritdoc}

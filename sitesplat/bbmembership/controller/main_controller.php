@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -46,6 +45,7 @@ class main_controller
 		$this->bbmembership_table = $bbmembership_table;
 		$this->bbmembership_helper = $bbmembership_helper;
 		$this->bbmembership_package = json_decode($this->config['bbmembership_package'], true);
+		$this->notify = false;
 	}
 
 	/**
@@ -60,27 +60,28 @@ class main_controller
 		$this->user->add_lang_ext('sitesplat/bbmembership', 'bbmembership');
 
 		$mode = $this->request->variable('mode', 'index');
-		$notify = false;
+		$this->notify = false;
 		switch($mode)
 		{
 			case 'pay':
 
 				if ($this->user->data['user_id'] == ANONYMOUS)
 				{
-					login_box(append_sid($this->root_path . 'memberships.' . $this->php_ext));
+					login_box(append_sid($this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html'))));
 				}
 
 				if ($this->bbmembership_helper->bbpoints_enabled() && $this->request->variable('submitbtn', '') == $this->user->lang['BBMEMBERSHIP_POINTS'])
 				{
-					$notify = $this->bbmembership_helper->pay_with_points($this->request->variable('amount', 0));
+					$this->notify = $this->bbmembership_helper->pay_with_points($this->request->variable('amount', 0));
 				} else
 				{
 					// PayPal settings 
 					$paypal_email	= $this->config['bbmembership_paypal_email']; 
-					$return_url		= generate_board_url() . '/memberships.' . $this->php_ext . '?mode=verify'; 
-					$cancel_url		= generate_board_url() . '/memberships.' . $this->php_ext. '?mode=verify'; 
-					$notify_url		= generate_board_url() . '/memberships.' . $this->php_ext . '?mode=verify'; 
-		
+					$url = generate_board_url(true);
+				    $return_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'verify'));
+				    $cancel_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'cancel'));
+				    $notify_url	= $url . $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'notify'));
+				
 					$data = array(
 						'item_name'		=> $this->user->lang('BBMEMBERSHIP') . ' - ' . $this->config['sitename'],
 						'amount'		=> (intval($this->request->variable('amount', 0))) . '.00',
@@ -146,14 +147,30 @@ class main_controller
 				$data['sender']				= $this->request->variable('first_name', '') . ' ' . $this->request->variable('last_name', '');
 				$data['address']			= $this->request->variable('address_street', '') . ' ' . $this->request->variable('address_city', '');
 				
-				// post back to PayPal system to validate
-				$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-				$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-				$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-				$fp = file_get_contents('https://' . (($this->config['bbmembership_sandbox']) ? 'sandbox' : 'www') . '.paypal.com/cgi-bin/webscr?' . $req);
+				$url = 'https://www.' . (($this->config['bbmembership_sandbox']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr';
+
+				$ch = curl_init(); 
+				curl_setopt($ch, CURLOPT_URL, $url); 
+				curl_setopt($ch, CURLOPT_FAILONERROR, 1);  
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+				curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+				curl_setopt($ch, CURLOPT_POST, true); 
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+				curl_setopt($ch, CURLOPT_HEADER, false);
+				curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				$this->response = curl_exec($ch); 
+				$this->response_status = strval(curl_getinfo($ch, CURLINFO_HTTP_CODE)); 
+				if ($this->response === false || $this->response_status == '0')  
+				{ 
+					 $errno = curl_errno($ch); 
+					 $errstr = curl_error($ch); 
+					 $this->notify = ("cURL error: [$errno] $errstr"); 
+				 } 
+				curl_close($ch); 
 
 				// if payment verified
-				if ($data['payment_status'] == 'Completed' && strcmp ($fp, "VERIFIED") == 0) 
+				if ($data['payment_status'] == 'Completed' && strcmp ($this->response, "VERIFIED") == 0) 
 				{
 					// Validate payment (Check unique txnid & correct price)
 					$valid_txnid = true; //$this->check_txnid($data['txn_id']);
@@ -174,16 +191,19 @@ class main_controller
 
 						$this->bbmembership_helper->add_group($row['user_id'], (int) $data['mc_gross'], $row['id']);
 						
-						$notify = 'MEMBERSHIP_SUCCESS';
+						$this->notify = 'MEMBERSHIP_SUCCESS';
 					} else
 					{
-						$notify = 'MEMBERSHIP_FAILED_PP';	
+						$this->notify = 'MEMBERSHIP_FAILED_PP';	
 					}
 				} else
 				{
-					$notify = 'MEMBERSHIP_FAILED_PP';	
+					$this->notify = 'MEMBERSHIP_FAILED_PP';	
 				}
-	
+			break;
+			
+			case 'cancel':
+				$this->notify = 'MEMBERSHIP_CANCELED';	
 		}
 			
 		if (!empty($this->config['bbmembership_groups'])) 
@@ -193,17 +213,16 @@ class main_controller
 			$membership = $days_to_expiration = false;
 			$mc_gross = 0;
 			$sql = 'SELECT mc_gross, mc_currency, payment_status, payment_date FROM ' . $this->bbmembership_table . ' 
-					WHERE user_id = ' . $this->user->data['user_id'] . ' AND payment_status = "Completed" ORDER BY payment_date DESC';
+					WHERE user_id = ' . $this->user->data['user_id'] . ' AND payment_status = "Completed" ORDER BY payment_date ASC';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
-				$membership = (isset($group_amount[$mc_gross]) && 
+				$membership[$mc_gross] = (isset($group_amount[$mc_gross]) && 
 							  (($group_amount[$mc_gross]['expire'] == -1) ? 300 : ($group_amount[$mc_gross]['expire'] * 86400)) + $row['payment_date'] > time() ||
 							  $group_amount[$mc_gross]['expire'] == 0) ? true: false;
 				$days_to_expiration = (isset($group_amount[$mc_gross])) ? round(((($group_amount[$mc_gross]['expire'] == -1) ? 300 : 
 									  ($group_amount[$mc_gross]['expire'] * 86400)) + $row['payment_date'] - time()) / (($group_amount[$mc_gross]['expire'] == -1) ? 1 : 86400), 0) : 0;			
-				if ($membership) break;
 			}
 
 			$count = $package = 0;
@@ -215,7 +234,7 @@ class main_controller
 					'DONATIONS_EXPIRE'		=> ($group_amount[$key]['expire'] == 0) ? 
 												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$key]['expire'] == -1) ? '5 min' : $group_amount[$key]['expire']),
 					'DONATIONS_DEFAULT'		=> $group_amount[$key]['default'],
-					'PACKAGE'				=> ($membership && $mc_gross == $key) ? true : false,
+					'PACKAGE'				=> (isset($membership[$key])) ? true : false,
 					'DONATIONS_HIDE'		=> $group_amount[$key]['hide'],
 					'DONATIONS_POINTS'		=> $key * 100
 				));
@@ -231,20 +250,20 @@ class main_controller
 			}
 
 			$this->template->assign_vars(array(
-				'U_DONATE'				=> append_sid($this->root_path . 'memberships.' . $this->php_ext, 'mode=pay'),
+				'U_DONATE'				=> $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html', 'mode' => 'pay')),
 				'PAYPAL_ENABLED'		=> ($this->config['bbmembership_paypal_email']) ? true : false,
 				'BBPOINTS_ENABLED'		=> $this->bbmembership_helper->bbpoints_enabled() && $this->config['bbmembership_bbpoints'],
 				'CLUBMODE'				=> $this->config['bbmembership_clubmode'] && !$membership,
 				'BBMEMBER_CURRENCY'		=> $this->bbmembership_helper->currency(0, $this->config['bbmembership_currency']),
 				'BBMEMBER_PACKAGE'		=> $package,
-				'DAYS_TO_EXPIRATION'	=> (isset($group_amount[$mc_gross]) && $group_amount[$mc_gross]['expire'] == 0 && $row['payment_status'] == 'Completed') ? 
-											$this->user->lang('MEMBERSHIP_UNLIMITED') : (($days_to_expiration < 0) ? 0 : $days_to_expiration),
-				'NOTIFY_STATUS'			=> ($notify) ? $this->user->lang[$notify] : false
+				'DAYS_TO_EXPIRATION'	=> ($group_amount[$mc_gross]['expire'] == 0) ? 
+												$this->user->lang('MEMBERSHIP_UNLIMITED') : (($group_amount[$mc_gross]['expire'] == -1) ? '5 min' : $group_amount[$mc_gross]['expire']),
+				'NOTIFY_STATUS'			=> ($this->notify) ? $this->user->lang[$this->notify] : false
 			));
 		}
 		
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'	=> append_sid($this->root_path . 'memberships.' . $this->php_ext),
+			'U_VIEW_FORUM'	=> $this->helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html')),
 			'FORUM_NAME'	=> $this->user->lang('BBMEMBERSHIP'),
 		));
 

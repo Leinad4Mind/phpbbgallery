@@ -54,8 +54,7 @@ services:
             - @template
             - @user
             - @config
-            - %core.root_path%
-            - %core.php_ext%
+            - @controller.helper
             - %sitesplat.bbmembership.tables.bbmembership%
             - @sitesplat.bbmembership.helper
         tags:

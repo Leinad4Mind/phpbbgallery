@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -12,6 +11,22 @@ namespace sitesplat\bbmembership;
 
 class ext extends \phpbb\extension\base
 {
+	public function is_enableable()
+	{
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/bbmembership', 'info_acp_bbmembership');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
+
+		return class_exists('sitesplat\BBCore\helper');
+	}
+
 	/**
 	 * Overwrite enable_step to enable BBmembership system notifications
 	 * before any included migrations are installed.
@@ -28,17 +43,20 @@ class ext extends \phpbb\extension\base
 
 				if (empty($old_state))
 				{
-					global $user;
-					$user->add_lang_ext('sitesplat/bbmembership', 'info_acp_bbmembership');
-					$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['BBMEMBERSHIP_NOTICE']) ? sprintf($user->lang['BBMEMBERSHIP_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_QUICK_ACCESS'], $user->lang['ACP_BBMEMBERSHIP_TITLE']) : '');
+					$this->container->get('user')->add_lang_ext('sitesplat/bbmembership', 'info_acp_bbmembership');
+					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
+						(isset($this->container->get('user')->lang['BBMEMBERSHIP_NOTICE']) ?
+							sprintf($this->container->get('user')->lang['BBMEMBERSHIP_NOTICE'],
+											$this->container->get('user')->lang['ACP_CAT_GENERAL'],
+											$this->container->get('user')->lang['ACP_QUICK_ACCESS'],
+											$this->container->get('user')->lang['ACP_BBMEMBERSHIP_TITLE'])  : ''));
 				}
 
 				// Enable Membership system notifications
-				return $this->notification_handler('enable', array(
-					'sitesplat.bbmembership.notification.type.membership_bought',
-					'sitesplat.bbmembership.notification.type.membership_expiring'
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->enable_notifications('sitesplat.bbmembership.notification.type.membership_bought');
+				$phpbb_notifications->enable_notifications('sitesplat.bbmembership.notification.type.membership_expiring');
+				return 'notifications';
 			break;
 
 			default:
@@ -65,11 +83,10 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Disable Membership system notifications
-				return $this->notification_handler('disable', array(
-					'sitesplat.bbmembership.notification.type.membership_bought',
-					'sitesplat.bbmembership.notification.type.membership_expiring'
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->disable_notifications('sitesplat.bbmembership.notification.type.membership_bought');
+				$phpbb_notifications->disable_notifications('sitesplat.bbmembership.notification.type.membership_expiring');
+				return 'notifications';
 			break;
 
 			default:
@@ -96,11 +113,10 @@ class ext extends \phpbb\extension\base
 			case '': // Empty means nothing has run yet
 
 				// Purge Forum Membership system notifications
-				return $this->notification_handler('purge', array(
-					'sitesplat.bbmembership.notification.type.membership_bought',
-					'sitesplat.bbmembership.notification.type.membership_expiring'
-				));
-
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->purge_notifications('sitesplat.bbmembership.notification.type.membership_bought');
+				$phpbb_notifications->purge_notifications('sitesplat.bbmembership.notification.type.membership_expiring');
+				return 'notifications';
 			break;
 
 			default:
@@ -110,25 +126,5 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
-	}
-
-	/**
-	 * Notification handler to call notification enable/disable/purge steps
-	 *
-	 * @param string $step               The step (enable, disable, purge)
-	 * @param array  $notification_types The notification type names
-	 * @return string Return notifications as temporary state
-	 * @access protected
-	 */
-	protected function notification_handler($step, $notification_types)
-	{
-		$phpbb_notifications = $this->container->get('notification_manager');
-
-		foreach ($notification_types as $notification_type)
-		{
-			call_user_func(array($phpbb_notifications, $step . '_notifications'), $notification_type);
-		}
-
-		return 'notifications';
 	}
 }

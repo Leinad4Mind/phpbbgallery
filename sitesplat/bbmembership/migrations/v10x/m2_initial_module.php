@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -35,11 +34,12 @@ class m2_initial_module extends \phpbb\db\migration\migration
 	 */
 	public function update_data()
 	{
+
 		return array(
 			array('module.add', array(
 				'acp', 'ACP_QUICK_ACCESS', array(
 					'module_basename'	=> '\sitesplat\bbmembership\acp\bbmembership_module',
-					'modes'				=> array('index'),
+					'modes'				=> array('settings'),
 					)
 				)
 			)

@@ -1055,3 +1055,73 @@ a.avn-btn {
    
 }
 
+.ribbon5 {
+	color: #fff;
+    background: #edba19;
+    border-radius: 2px 0 0 2px;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin-left: -10px;
+    margin-right: -10px;
+    position: relative;
+    text-align: center;
+    top: -4px;
+    width: calc(100% + 20px);
+}
+
+.ribbon5:before,
+.ribbon5:after {
+  content: "";
+  position: absolute;
+}
+
+.ribbon5:before {
+  height: 0;
+  width: 0;
+  bottom: -10px;
+  left: 0;
+  border-top: 10px solid #cd8d11;
+}
+
+.ribbon5:after {
+  height: 0;
+  width: 0;
+  right: 0;
+  bottom: -10px;
+  border-top: 10px solid #cd8d11;
+  border-right: 10px solid transparent;
+}
+
+
+
+
+/* 4 - override specific to fix the purchased ribbon
+---------------------------------------------------------------------- */
+.ribbon5_override {
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    position: absolute;
+	margin-left: auto;
+    margin-right: auto;
+	border-radius: 2px 2px 0;
+    right: -10px;
+    top: 120px;
+    width: calc(20% + 20px);
+	z-index: 2;
+}
+
+.npt-format-1 .npt-item {
+    overflow: unset;
+}
+
+.npt-item {
+    margin-bottom: 30px;
+}
+
+.npt-plan-name {
+    border-radius: 4px 4px 0 0;
+}
+/* 4 - override specific to fix the purchased ribbon
+---------------------------------------------------------------------- */

@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -48,7 +47,7 @@ class admin_controller
 	}
 
 	/**
-	* Badge Award Close Notice
+	* BBmembership Close Notice
 	*
 	* @return null
 	* @access public
@@ -153,14 +152,15 @@ class admin_controller
 			{
 				$group_amount[$value] = array(
 					'group'		=> $group_ary[$key],
-					'expire'	=> ($expire_ary[$key] < -1) ? 365 : $expire_ary[$key],
+					'expire'	=> $expire_ary[$key],
+				//	'expire'	=> ($expire_ary[$key] < -1) ? 365 : $expire_ary[$key],
 					'default'	=> (isset($default_ary[$key])) ? 1 : 0,
 					'hide'		=> (isset($hide_ary[$key])) ? 1 : 0,
 				);
 			}
 			
 			(sizeof($group_amount) == 4) ? $this->config->set('bbmembership_groups', json_encode($group_amount)) : 
-											$this->show_result('Something went wrong saving your setup, try again!');
+											$this->show_result($this->user->lang['ACP_BBMEMBERSHIP_SAVE_ERROR']);
 
 			$group_amount = array();
 			foreach ($donation_ary as $key => $value)
@@ -304,7 +304,7 @@ class admin_controller
 			$total = $this->db->sql_fetchfield('total');
 			$config['topics_per_page'] = 10;
 			
-			$start = request_var('start', 0);
+			$start = $this->request->variable('start', 0);
 			$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $total);
 
 			$sql = 'SELECT d.id, d.txn_id, d.user_id, d.sender, d.payer_email, d.mc_gross, d.mc_currency, d.payment_status, d.payment_date, u.username, u.user_email 
@@ -312,8 +312,10 @@ class admin_controller
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = d.user_id
 					ORDER BY d.payment_date DESC, u.username ASC'; 
 			$result = $this->db->sql_query_limit($sql, $config['topics_per_page'], $start);
+			$amounts = array_keys($this->bbmembership_groups);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				$mc_gross = ($row['mc_currency'] == 'BBPOINTS') ? (int) $row['mc_gross'] / 100 : (int) $row['mc_gross'];
 				$this->template->assign_block_vars('transactions', array(
 					'ID'				=> $row['id'],
 					'USERNAME'			=> ($row['user_id'] > 1) ? $row['username'] : $row['sender'],
@@ -323,6 +325,7 @@ class admin_controller
 					'CURRENCY'			=> ($row['mc_currency'] == 'BBPOINTS') ? 'BBpoints' : $this->bbmembership_helper->currency(0, $row['mc_currency']),
 					'AMOUNT'        	=> number_format($row['mc_gross'], 2),
 					'STATUS'			=> $row['payment_status'],
+					'PACKAGE'			=> array_search($mc_gross, $amounts) + 1,
 					'U_PAYMENT_STATUS'	=> '../../' . $this->u_action . '&action=orderdetail&amp;txn_id=' . $row['id'] . '&amp;status=change',
 					'TIME'           	=> $this->user->format_date($row['payment_date']),
 				));
@@ -345,7 +348,7 @@ class admin_controller
 		$starttime = $starttime[1] + $starttime[0];
 		$post_counter = $this->request->variable('skiprows', 0);
 		
-		while (still_on_time(20) && $post_counter <= $this->total_ids)
+		while (still_on_time(20) && $post_counter < $this->total_ids)
 		{
 			$sql = 'SELECT id, mc_gross, mc_currency, payment_status, payment_date, user_id FROM ' . $this->bbmembership_table . ' ORDER BY id ASC';
 			$result = $this->db->sql_query_limit($sql, $this->batch_size, $post_counter);
@@ -393,6 +396,7 @@ class admin_controller
 				'percent'	=> 100
 			);
 		}
+		
 		$this->config->set('bbmembership_last_gc', time());
 		echo json_encode($return);
 		exit();

@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -25,21 +24,11 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array('\phpbb\db\migration\data\v31x\v315');
+		//return array('\sitesplat\BBCore\migrations\v32x\m1_initial_file');
 	}
 
 	/**
 	 * Add the donations_transactions table schema to the database:
-	 *    donations_transactions:
-	 *        transaction_id
-	 *        pp_transaction
-	 *        user_id
-	 *        group_id
-	 *        amount
-	 *        time
-	 *        save_group_id
-	 *        expired
-	 *
-	 * @return array Array of table schema
 	 * @access public
 	 */
 	public function update_schema()

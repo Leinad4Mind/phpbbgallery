@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -12,16 +11,6 @@ namespace sitesplat\bbmembership\notification\type;
 
 class membership_expiring extends \phpbb\notification\type\base
 {
-	protected $helper;
-	
-	public function __construct(\phpbb\user_loader $user_loader, \phpbb\db\driver\driver_interface $db, \phpbb\cache\driver\driver_interface $cache, $user, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper, $phpbb_root_path, $php_ext, $notification_types_table, $notifications_table, $user_notifications_table)
-	{
-		$this->helper = $helper;
-
-		parent::__construct($user_loader, $db, $cache, $user, $auth, $config, $phpbb_root_path, $php_ext, $notification_types_table, $notifications_table, $user_notifications_table);
-	}
-
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -31,11 +20,40 @@ class membership_expiring extends \phpbb\notification\type\base
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $language_key = 'NOTIFICATION_BBMEMBERSHIP';
+
+	/**
+	* {@inheritdoc}
+	*/
+	public static $notification_option = array(
+		'lang'	=> 'NOTIFICATION_TYPE_BBMEMBERSHIP',
+		'group'	=> 'NOTIFICATION_GROUP_ADMINISTRATION',
+	);
+
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	public function set_config(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function is_available()
 	{
-		return false;
+		return true;
 	}
 
 	/**

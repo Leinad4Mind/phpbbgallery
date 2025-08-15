@@ -1,5 +1,14 @@
 /* CSS Document */
 
+.change_status {
+    color: #fff !important;
+    font-size: 80%;
+    padding: 0.2em 0.6em 0.3em !important;
+}
+.label-success {
+    background-color: #5cb85c !important;
+}
+
 /* style the close button */
 #bbpoints_notice .close {
 	float: right;
@@ -15,49 +24,43 @@ td .fa {
 
 .img-responsive {width:45px;}
 
+
+
+
 #progressbar {
 	display:none;
-    width: 180px;
-    height: 9px;
+    width: 200px;
+    height: 10px;
+	line-height: 10px;
+	color: #000;
     background-color: #eee;
-    padding: 2px;
-    vertical-align: middle;
-/*    margin: .6em 0 0 0;*/
+    padding: 1px;
+    vertical-align: text-bottom;
     border: 1px #000 double;
-    clear: both;
 }
 
 #progress {
     background: #A1C969; /*-- Color of the bar --*/
-    height: 9px;
+    height: 10px;
     width: 1%;
     max-width: 100%;
     float: left;
-    -webkit-animation: progress 8.5s 1 forwards;
-    animation: progress 8.5s 1 forwards;
-	animation-delay: 0.8s;
-}
-
-.done {
-    width: 100% !important;
-	 -webkit-transition: width 2s; /* Safari */
-    transition: width 2s;
+    -webkit-animation: progress 2s 1 forwards;
+    animation: progress 2s 1 forwards;
 }
 
 #percent {
-    color: #000;
 	font-size:9px;
 	display:block;
 	font-weight: bold;
-	line-height: 8px;
 }
 
 #pbaranim {
 	text-align:center;
-    height: 9px;
+    height: 10px;
     width: 100%;
     overflow: hidden;
-    background: url('./images/7uo1osj.gif') repeat-x;
+    background: url('images/7uo1osj.gif') repeat-x;
     -moz-opacity: 0.25;
     -khtml-opacity: 0.25;
     opacity: 0.25;
@@ -70,15 +73,25 @@ td .fa {
 @-webkit-keyframes progress {
     0%   {left: 0px; background: red; width: 10px;}
     4%    {width: 20px;}
-    100% {right: 40px; background: #A1C969; width: 180px;}
+    100% {right: 40px; background: #A1C969; width: 200px;}
 }
 
 /* Standard syntax */
 @keyframes progress {
      0%   {left: 0px; background: red; width: 10px;}
     4%    {width: 20px;}
-    100% {right: 40px; background: #A1C969; width: 180px;}
+    100% {right: 40px; background: #A1C969; width: 200px;}
 }
+
+
+
+
+.done {
+    width: 100% !important;
+	 -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
+}
+
 
 
 

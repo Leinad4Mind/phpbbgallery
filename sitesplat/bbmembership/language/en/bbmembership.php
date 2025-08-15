@@ -29,10 +29,12 @@ $lang = array_merge($lang, array(
 	'CONNECTING_ON_BBPOINTS'			=> 'Validating with BBpoints',
 	'CONTINUE_ON_PAYPAL'				=> 'with PayPal',
 	'CONNECTING_ON_PAYPAL'				=> 'Connecting with PayPal',
-	'BBMEMBERSHIP_DEPOSIT_DISCLAIMER'   => '**For memberships superior $100, please contact the <a href="./memberlist.php?mode=contactadmin">Board Admin</a>',
+	'PAYPAL_ALT'				        => 'Payments by PayPal',
+	'BBMEMBERSHIP_DEPOSIT_DISCLAIMER'   => '**Transactions can take any time from seconds to 24h to validate. For urgent matters, please contact the <a href="./memberlist.php?mode=contactadmin">Board Admin</a>',
 	'BBMEMBERSHIP_STATUS'		        => 'Current Membership status',
 	'BBMEMBERSHIP_EXPIRED_INFO'			=> 'Expired!',
-	'BBMEMBERSHIP_TAX_TEXT'			    => 'Includes taxes and or fees',
+	'BBMEMBERSHIP_PURCHASED'			=> 'Purchased',
+	'BBMEMBERSHIP_TAX_TEXT'			    => 'Includes taxes and/or fees',
 	'BB_CURRENCY_ZERO_ZERO'			    => '00',
 	'BB_CURRENCY_ZERO_ZERO_DEC'			=> '.00',
 
@@ -42,6 +44,7 @@ $lang = array_merge($lang, array(
 	'MEMBERSHIP_FAILED_POINTS'			=> 'You do not have enough points for this membership!',
 	'MEMBERSHIP_FAILED_PP'				=> 'There was an error with the transaction. Please contact the forum Admin',
 	'MEMBERSHIP_DOUBLE'					=> 'You have already purchased a package',
+	'MEMBERSHIP_CANCELED'				=> 'Membership cancelled',
 	'PRIVATE_BOARD'					    => 'PRIVATE BOARD',
 	'BBMEMBERSHIP_CLUBMODE'				=> 'To access the board you will need to buy a valid membership. This board is private and available only for premium members.'
 ));

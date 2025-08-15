@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -22,22 +21,20 @@ class listener implements EventSubscriberInterface
 	protected $template;
 	protected $user;
 	protected $config;
-	protected $root_path;
-	protected $php_ext;
+	protected $controller_helper;
 	protected $bbmembership_table;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext, $bbmembership_table, $bbmembership_helper)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\controller\helper $controller_helper, $bbmembership_table, $bbmembership_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
-		$this->root_path = $root_path;
-		$this->php_ext = $php_ext;
+		$this->controller_helper	= $controller_helper;
 		$this->bbmembership_table = $bbmembership_table;
 		$this->bbmembership_groups = json_decode($this->config['bbmembership_groups'], true);
 	}
@@ -67,7 +64,7 @@ class listener implements EventSubscriberInterface
 	public function page_header_after($event)
 	{
 		$this->template->assign_vars(array(
-			'U_MEMBERSHIPS'	=>  append_sid($this->root_path . 'memberships.' . $this->php_ext),
+			'U_MEMBERSHIPS'	=> $this->controller_helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html')),
 		));
 	}
 
@@ -84,7 +81,7 @@ class listener implements EventSubscriberInterface
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'login',
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'logout',
 			$this->user->page['page_name'] == 'ucp.php' && $this->request->variable('mode', '') == 'register',
-			$this->user->page['page_name'] == 'app.php/memberships.php'
+			$this->user->page['page_name'] == 'app.php/bbmemberships/index.html'
 		);
 		
 		if ($this->config['bbmembership_clubmode'] && $event['user_data']['user_type'] != USER_FOUNDER && !array_sum($check_ary))
@@ -102,7 +99,7 @@ class listener implements EventSubscriberInterface
 
 			if(!$membership)
 			{
-				redirect(append_sid($this->root_path . 'memberships.' . $this->php_ext));
+				redirect($this->controller_helper->route('sitesplat_bbmembership_main_controller', array('route' => 'index.html')));
 			}
 		}
 

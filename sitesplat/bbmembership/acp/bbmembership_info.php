@@ -2,7 +2,6 @@
 /**
 *
 * BBmembership extension for the phpBB Forum Software package.
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -18,7 +17,7 @@ class bbmembership_info
 			'filename'	=> '\sitesplat\bbmembership\acp\bbmembership_module',
 			'title'		=> 'ACP_BBMEMBERSHIP',
 			'modes'		=> array(
-				'index'	=> array(
+				'settings'	=> array(
 					'title'	=> 'ACP_BBMEMBERSHIP_TITLE',
 					'auth'	=> 'ext_sitesplat/bbmembership && acl_a_board',
 					'cat'	=> array('ACP_QUICK_ACCESS')
