@@ -45,7 +45,7 @@ class membership extends \phpbb\autogroups\conditions\type\base
 	 */
 	public function get_condition_type_name()
 	{
-		return $this->user->lang('AUTOGROUPS_TYPE_MEMBERSHIP');
+		return $this->language->lang('AUTOGROUPS_TYPE_MEMBERSHIP');
 	}
 
 	/**
@@ -145,7 +145,7 @@ class membership extends \phpbb\autogroups\conditions\type\base
 	 */
 	protected function days_to_timestamp($value)
 	{
-		return (int) time() - ($value * 86400);
+		return (int) strtotime((int) $value . ' days ago');
 	}
 
 	/**
@@ -157,6 +157,9 @@ class membership extends \phpbb\autogroups\conditions\type\base
 	 */
 	protected function timestamp_to_days($value)
 	{
-		return (int) round((time() - $value) / 86400);
+		$now  = new \DateTime();
+		$time = new \DateTime('@' . (int) $value);
+		$diff = $now->diff($time);
+		return (int) $diff->format('%a');
 	}
 }
