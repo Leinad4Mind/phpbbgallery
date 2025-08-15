@@ -6,7 +6,14 @@
     <ul class="list-inline bbreact-list">
     <!-- BEGIN postrow.rewards -->
 	 <li>
-	  <a class="btn-bbreaction reward" href="#p{postrow.POST_ID}" data-options="p={postrow.POST_ID}&e={postrow.rewards.TYPE_ID}"><i class="fa {postrow.rewards.SYMBOL}<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->"></i><br /> {postrow.rewards.TITLE}<br /><span id="p{postrow.POST_ID}{postrow.rewards.TYPE_ID}">{postrow.rewards.PERCENT}</span></a>
+	  <a class="btn-bbreaction reward" href="#p{postrow.POST_ID}" data-options="p={postrow.POST_ID}&e={postrow.rewards.TYPE_ID}">
+      <!-- IF BBREACTION_EMOJI and postrow.rewards.EMOJI -->
+      <i class="<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->">{postrow.rewards.EMOJI}</i>
+      <!-- ELSE -->
+      <i class="fa {postrow.rewards.SYMBOL}<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->"></i>
+      <!-- ENDIF -->
+      <br /> {postrow.rewards.TITLE}<br /><span id="p{postrow.POST_ID}{postrow.rewards.TYPE_ID}">{postrow.rewards.PERCENT}</span>
+    </a>
 	 </li>
 	<!-- END postrow.rewards -->	 
 	</ul>

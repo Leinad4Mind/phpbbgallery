@@ -4,7 +4,11 @@
 <ul class="collapse list-unstyled" id="collapseList">
 <!-- BEGIN rewards_memberlist -->
 <li>
-	<span class="icon fa {rewards_memberlist.ICON}" style="color:<!-- IF rewards_memberlist.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;"></span>
+  <!-- IF BBREACTION_EMOJI and rewards_memberlist.EMOJI -->
+	<span style="color:<!-- IF rewards_memberlist.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;">{rewards_memberlist.EMOJI}</span>
+  <!-- ELSE -->
+  <span class="icon fa {rewards_memberlist.ICON}" style="color:<!-- IF rewards_memberlist.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;"></span>
+  <!-- ENDIF -->
 	<label>&nbsp;&nbsp;{rewards_memberlist.GIVEN_RECIEVED}{L_COLON}</label>&nbsp;{rewards_memberlist.GIVE_RECIEVE}
 </li> 	
 <!-- END rewards_memberlist -->

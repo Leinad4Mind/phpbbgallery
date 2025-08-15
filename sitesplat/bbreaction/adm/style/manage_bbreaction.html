@@ -39,7 +39,7 @@
 			<legend><!-- IF S_ADD -->{L_ACP_BBREACTION_ADD}<!-- ELSE -->{L_ACP_BBREACTION_EDIT}<!-- ENDIF --></legend>
 			<dl>
 				<dt><label for="title">{L_ACP_BBREACTION_NAME}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NAME_EXPLAIN}</span></dt>
-				<dd><input id="title" type="text" name="title" value="{TITLE}" style="width:200px;" /></dd>
+				<dd><input id="title" type="text" name="title" maxlength="50" value="{TITLE}" style="width:200px;" /></dd>
 			</dl>
 			<dl>
 				<dt><label for="description">{L_ACP_BBREACTION_DESCRIPTION}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_DESCRIPTION_EXPLAIN}</span></dt>
@@ -51,6 +51,14 @@
 					{ICONS} <input id="option" type="text" name="option" value="{OPTION}" style="width:50px;" />
 				</dd>
 			</dl>
+			<!-- IF BBREACTION_EMOJI -->
+			<dl>
+				<dt><label for="bbemoji">{L_ACP_BBREACTION_EMOJI}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_EMOJI_EXPLAIN}</span></dt>
+				<dd>
+					<input id="bbemoji" type="text" name="emoji" value="{EMOJI}" autocomplete="off" />
+				</dd>
+			</dl>
+			<!-- ENDIF -->
 			<dl>
 				<dt><label for="rule_notify">{L_ACP_BBREACTION_NEGATIVE}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NEGATIVE_EXPLAIN}</span></dt>
 				<dd>
@@ -63,6 +71,8 @@
 				</div>
 				</dd>
 			</dl>
+			
+	<!-- active but not in used for now	
 			<dl>
 				<dt><label for="rule_notify">{L_ACP_BBREACTION_SEPERATOR}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_SEPERATOR_EXPLAIN}</span></dt>
 				<dd>
@@ -75,6 +85,7 @@
 				</div>
 				</dd>
 			</dl>
+	-->
 			<dl>
 				<dt><label for="rule_notify">{L_ACP_BBREACTION_NOTIFY}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NOTIFY_EXPLAIN}</span></dt>
 				<dd>
@@ -117,7 +128,13 @@
 			<!-- BEGIN reward -->
 				<tr>
 					<td><strong>{reward.GROUP_NAME}</strong></td>
-					<td style="text-align:center;"><i class="fa {reward.SYMBOL}" style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;"></i></td>
+					<td style="text-align:center;">
+						<!-- IF BBREACTION_EMOJI and reward.EMOJI -->
+							<i style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{reward.EMOJI}</i>
+						<!-- ELSE -->
+							<i class="fa {reward.SYMBOL}" style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;"></i>
+						<!-- ENDIF -->
+					</td>
 					<td style="text-align:center;">{reward.USED}</td>
 					<td style="text-align:center;"><!-- IF reward.S_NOTIFY -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
 					<td style="text-align:center;">

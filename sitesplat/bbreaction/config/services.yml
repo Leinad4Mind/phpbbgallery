@@ -12,6 +12,8 @@ services:
             - @request
             - @template
             - @controller.helper
+            - @ext.manager
+            - @service_container
             - %sitesplat.bbreaction.tables.reward%
             - %sitesplat.bbreaction.tables.reward_type%
         tags:
@@ -32,6 +34,7 @@ services:
             - @service_container
             - @dispatcher
             - @notification_manager
+            - @ext.manager
             - %core.root_path%
             - %core.php_ext%
             - %sitesplat.bbreaction.tables.reward%
@@ -48,6 +51,7 @@ services:
             - @template
             - @user
             - @pagination
+            - @ext.manager
             - %core.root_path%
             - %sitesplat.bbreaction.tables.reward%
             - %sitesplat.bbreaction.tables.reward_type%

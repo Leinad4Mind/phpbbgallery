@@ -39,6 +39,9 @@ class admin_controller implements admin_interface
 	protected $user;
 
 	protected $pagination;
+
+	protected $bbemoji_parser;
+	protected $bbemoji_enabled = false;
 	
 	protected $phpbb_root_path;
 
@@ -51,7 +54,7 @@ class admin_controller implements admin_interface
 	/** @var string Custom form action */
 	protected $u_action;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, $phpbb_root_path, $reward_table, $reward_type_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, Container $phpbb_container, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\pagination $pagination, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $reward_table, $reward_type_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -64,6 +67,15 @@ class admin_controller implements admin_interface
 		$this->root_path = $phpbb_root_path;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
+
+		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
+		{
+			$this->bbemoji_enabled = true;
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'));
+			$this->template->assign_vars(array(
+				'BBREACTION_EMOJI'	=> true,
+			));
+		}
 	}
 
 	/**
@@ -117,6 +129,7 @@ class admin_controller implements admin_interface
 				'RULE_ID'		=> $row['type_id'],
 				'GROUP_NAME'	=> $row['title'],
 				'SYMBOL'		=> $row['symbol'],
+				'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 				'S_POSITIVE'	=> ($row['positive']) ? false : true,
 				'S_SEPERATOR'	=> ($row['seperator']) ? false : true,
 				'S_NOTIFY'		=> $row['notify'],
@@ -205,6 +218,7 @@ class admin_controller implements admin_interface
 			'DESCRIPTION'		=> isset($row['description']) ? $row['description'] : '',
 			'ICONS'				=> $this->like_icon($symbol),
 			'OPTION'			=> $symbol_option,
+			'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_unparse($row['emoji']) : '',
 			'S_POSITIVE'		=> ($row['positive']) ? '' : ' checked="checked"',
 			'S_SEPERATOR'		=> ($row['seperator']) ? '' : ' checked="checked"',
 			'S_NOTIFY'			=> ($row['notify']) ? '' : ' checked="checked"',
@@ -230,6 +244,7 @@ class admin_controller implements admin_interface
 			'title'			=> utf8_normalize_nfc($this->request->variable('title', '', true)),
 			'description'	=> utf8_normalize_nfc($this->request->variable('description', '', true)),
 			'symbol'		=> utf8_normalize_nfc($this->request->variable('symbol', '', true)) . ' ' . utf8_normalize_nfc($this->request->variable('option', '', true)),
+			'emoji'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_parse($this->request->variable('emoji', '', true)) : '',
 			'positive'		=> !$this->request->variable('rule_positive', false),
 			'seperator'		=> !$this->request->variable('rule_seperator', false),
 			'notify'		=> !$this->request->variable('rule_notify', false),

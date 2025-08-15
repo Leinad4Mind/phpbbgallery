@@ -704,6 +704,16 @@ padding: 5px 0 0 10px;
 	margin-right:10px;
 }
 
+.bbreaction-wrap .emoji {
+    width: 26px;
+}
+
+#bbreaction-profile-data .emoji {
+    border: none;
+    height: auto;
+    width: 28px;
+}
+
 
 /* likeBB and shareon fix for posts*/
 .label-huskygray {

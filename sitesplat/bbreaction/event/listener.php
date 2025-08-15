@@ -50,13 +50,16 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	protected $bbemoji_parser;
+	protected $bbemoji_enabled = false;
+
 	/** @var string The database table the reactions are stored in */
 	protected $reward_table;
 
 	/** @var string The database table the reaction types are stored in */
 	protected $reward_type_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, $reward_table, $reward_type_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, $reward_table, $reward_type_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -66,6 +69,15 @@ class listener implements EventSubscriberInterface
 		$this->helper = $helper;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
+
+		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
+		{
+			$this->bbemoji_enabled = true;
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'));
+			$this->template->assign_vars(array(
+				'BBREACTION_EMOJI'	=> true,
+			));
+		}
 	}
 
 	public function add_page_header_link($event)
@@ -103,6 +115,7 @@ class listener implements EventSubscriberInterface
 				$rewards[] = array(
 					'TYPE_ID'		=> $row['type_id'],
 					'SYMBOL'		=> $row['symbol'],
+					'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 					'TITLE'			=> $row['title'],
 					'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
 					'S_POSITIVE'	=> ($row['positive']) ? true : false,
@@ -148,6 +161,7 @@ class listener implements EventSubscriberInterface
 			{
 			$this->template->assign_block_vars('reward', array(
 				'SYMBOL'		=> $row['symbol'],
+				'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 				'TITLE'			=> $row['title'],
 				'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
 				'S_POSITIVE'	=> ($row['positive']) ? true : false,
@@ -184,6 +198,7 @@ class listener implements EventSubscriberInterface
 				$this->template->assign_block_vars('rewards_memberlist', array(
 					'TITLE'				=> $row['title'],
 					'ICON'				=> $row['symbol'],
+					'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 					'S_POSITIVE'		=> $row['positive'],
 					'GIVEN_RECIEVED'	=> (($row['type'] == 'given') ? $this->user->lang['BBREACTION_GIVVEN'] : $this->user->lang['BBREACTION_RECIEVED']),
 					'GIVE_RECIEVE'		=> $row['num']

@@ -56,7 +56,9 @@ class main_controller
 	protected $reward_table;
 	protected $reward_type_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, ContainerInterface $container, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table)
+	protected $bbemoji_enabled = false;
+
+	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination, \phpbb\path_helper $path_helper, ContainerInterface $container, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\notification\manager $notification_manager, \phpbb\extension\manager $ext_manager, $phpbb_root_path, $php_ext, $reward_table, $reward_type_table)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -74,6 +76,12 @@ class main_controller
 		$this->php_ext = $php_ext;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
+
+		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
+		{
+			$this->bbemoji_enabled = true;
+			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($container->getParameter('sitesplat.bbemoji.url.generators'), $container->get('path_helper'));
+		}
 	}
 
 	/**
@@ -105,7 +113,7 @@ class main_controller
 				$start = $this->pagination->validate_start($start, $per_page, $total_likes);
 				$base_url = append_sid('app.' . $this->php_ext . '/bbreaction/likers.html?p=' . $this->request->variable('p', 0));
 
-				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, t.symbol, t.title, t.positive, l.like_time FROM ' . $this->reward_table . ' l 
+				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, t.symbol, t.title, t.emoji, t.positive, l.like_time FROM ' . $this->reward_table . ' l 
 						LEFT JOIN ' . $this->reward_type_table . ' t ON t.type_id = l.like_type
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.user_id
 						WHERE l.post_id = ' . $this->request->variable('p', 0) . ' ORDER BY l.like_time DESC';	
@@ -134,7 +142,7 @@ class main_controller
 						  . ' " style="float:left;width:70px;">
 						  <div class="likers-time-stamp" style="text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a>
-						  <br /><i class="fa ' . $row['symbol'] . '" style="font-size:18px;color:' . (($row['positive']) ? 'green': 'red') . ';" title="' . $row['title'] . '"></i><br />' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';
+						  <br /><i' . (($row['emoji'] == '') ? ' class="fa ' . $row['symbol'] . '"' : '') . ' style="font-size:18px;color:' . (($row['positive']) ? 'green': 'red') . ';" title="' . $row['title'] . '">' . (($this->bbemoji_enabled) ? $this->bbemoji_parser->emoji_render($row['emoji']) : '') . '</i><br />' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';
 				}
 				echo '<br style="clear:both;"><div class="pagination-likes pull-right"><ul class="pagination pagination-sm">';
 				echo $this->generate_pagination($base_url, $total_likes, $per_page, $start, true);

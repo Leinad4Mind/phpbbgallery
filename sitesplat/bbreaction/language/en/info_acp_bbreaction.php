@@ -35,7 +35,7 @@ $lang = array_merge($lang, array(
 	'BBREACTION_META_TASKS_5'				=> 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BBREACTION_META_TASKS_6'				=> 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.1.0',
+	'ACP_BBREACTION_VERSION'	            => '1.2.0',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
@@ -45,6 +45,7 @@ $lang = array_merge($lang, array(
 	'LICENSE_INFO'		                    => 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'			        => 'Developer',
 	
+	'NOTICE_BBEMOJI'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=29"><strong>BBeomji</strong></a> is not installed, you can NOT use the Emojis as reactions.',
 	'ACP_BBREACTION_DELETE_LOG'				=> 'Reaction type deleted',
 	'ACP_BBREACTION_ACTIVE_LOG'				=> 'Reaction %s is %s',
 	'ACP_ACTIVE'							=> 'activated',
@@ -91,6 +92,9 @@ $lang = array_merge($lang, array(
 	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBREACTION_NOTICE'	                    => '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group Permission and adjust as needed. The default reactions have the user notification already enabled.</p></div>',
 
+	// BBemoji
+	'ACP_BBREACTION_EMOJI'			=> 'BBemoji',
+	'ACP_BBREACTION_EMOJI_EXPLAIN'	=> 'Pick a BBemoji as icon. Start by typing :.',
 ));
 
 ?>
