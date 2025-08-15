@@ -1,0 +1,33 @@
+services:
+    sitesplat.bbcompress.listener:
+        class: sitesplat\bbcompress\event\listener
+        arguments:
+            - '@config'
+            - '@log'
+            - '@user'
+            - @sitesplat.bbcompress.optimizers.service
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbcompress.optimizers.service:
+        class: sitesplat\bbcompress\optimizers\service
+        arguments:
+            - '@service_container'
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '%core.table_prefix%'
+
+    sitesplat.bbcompress.optimizers.TinyPNG:
+        class: sitesplat\bbcompress\optimizers\driver\TinyPNG
+        arguments:
+            - '@config'
+            - '@log'
+            - '@user'
+
+    sitesplat.bbcompress.optimizers.PHP:
+        class: sitesplat\bbcompress\optimizers\driver\PHP
+        arguments:
+            - '@log'
+            - '@user'
