@@ -23,6 +23,7 @@ class listener implements EventSubscriberInterface
 
 			'core.memberlist_view_profile'			=> 'modify_member_profile_signature',
 			'core.memberlist_prepare_profile_data'	=> 'modify_member_profile_avatar',
+			'core.get_gravatar_url_after'			=> 'add_gravatar_class',
 		);
 	}
 
@@ -142,13 +143,18 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	public function add_gravatar_class($event)
+	{
+		$event->offsetSet('url', $event['url'] .= '" class="avatar');
+	}
+
 	protected function lazify_img($html)
 	{
 		if (is_array($html)) {
 			return $html;
 		}
 
-        // preg_rep better than xdom method
+        // Dion - preg_replace_callback() method is almost twice as fast as using DOM/XML. ( PHP7 also has optimizations for regular expressions.) 
 		// no need for <noscript> junk from old code because javascript is required for all sitesplat themes
 		return preg_replace_callback('`<img (.*?)src\="(.*?)"(.*?)>`uis', function($matches) {
 			$part1 = $matches[1];
@@ -181,9 +187,9 @@ class listener implements EventSubscriberInterface
 			}
 
 			// Gravatars
-			else if (strpos($matches[2], 'gravatar')) {
-				return '<img ' . $part1 . 'class="b-lazy" data-src="' . $matches[2] . '"' . $part3 . '>';
-			}
+//			else if (strpos($matches[2], 'gravatar')) {
+//				return '<img ' . $part1 . 'class="b-lazy" data-src="' . $matches[2] . '"' . $part3 . '>';
+//			}
 
 			// default image
 			return '<img ' . $part1 . 'src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="' . $matches[2] . '"' . $part3 . ' />';

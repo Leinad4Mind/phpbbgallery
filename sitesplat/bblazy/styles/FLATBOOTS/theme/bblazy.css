@@ -22,3 +22,6 @@
 	-webkit-filter: blur(0)!important;
 	        filter: blur(0)!important;
 }
+.avatar-over {
+    min-height: 75px;
+}

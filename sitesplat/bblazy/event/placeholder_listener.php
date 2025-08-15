@@ -25,7 +25,7 @@ class placeholder_listener implements EventSubscriberInterface
 	}
 
 	protected $root_path;
-	private $lqip;
+	private $lqip = '';
 	public function __construct($root_path)
 	{
 		$this->root_path = $root_path;
@@ -91,9 +91,12 @@ class placeholder_listener implements EventSubscriberInterface
 	}
 
 	public function assign_attachment_lqip($event)
-	{
-		$block_array = $event['block_array'];
-		$block_array['U_INLINE_LINK'] .= '" data-lqip="' . $event['attachment']['lqip'];
-		$event['block_array'] = $block_array;
-	}
+    {
+        $block_array = $event['block_array'];
+        if (!empty($block_array['U_INLINE_LINK']))
+        {
+                $block_array['U_INLINE_LINK'] .= '" data-lqip="' . $event['attachment']['lqip'];
+                $event['block_array'] = $block_array;
+        }
+    }
 }
