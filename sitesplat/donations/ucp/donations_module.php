@@ -16,11 +16,11 @@ class donations_module
 	{
 		global $db, $config, $user, $template, $request, $phpbb_container;
 
-		$this->page_title = $user->lang['DONATIONS'];
+		$user->add_lang_ext('sitesplat/donations', 'common');
+		$this->page_title = $user->lang['UCP_DONATION_TITLE'];
 		$this->tpl_name = 'ucp_donations';
 		$this->donations_table = $phpbb_container->getParameter('sitesplat.donation.tables.donations');
 		$table_countries = $phpbb_container->getParameter('sitesplat.donation.tables.countries');
-		$user->add_lang_ext('sitesplat/donations', 'common');
 		
 		$manager = $phpbb_container->get('sitesplat.donations.manager');
 		$currency_symbol = $manager->currency(0, $config['donations_currency']);

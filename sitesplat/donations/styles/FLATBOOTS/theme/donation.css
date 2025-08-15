@@ -403,7 +403,29 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
    
 }
 
+@media (max-width: 468px) {
+	
+	#submission .input-group {
+		display: block;
+	}
 
+	#submission .input-group-addon {
+        display: inline-block;
+    } 
+	
+	#submission .input-group .form-control, .input-group-addon, .input-group-btn {
+        display: inline-table;
+    }
+	
+	.input-group-addon, .input-group-btn {
+       width: 100%;
+    }
+	
+	#submission .form-control {
+       text-align: center;
+    }
+	
+}
 
 .heart-ss {
 	text-align: center;

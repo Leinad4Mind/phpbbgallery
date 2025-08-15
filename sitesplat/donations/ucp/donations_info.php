@@ -19,7 +19,7 @@ class donations_info
 			'version'		=> '1.0.0',
 			'modes'			=> array(
 				'donation'	=> array(
-					'title'	=> 'UCP_DONATION_USER',
+					'title'	=> 'UCP_DONATION_TITLE',
 					'auth'	=> 'ext_sitesplat/donations',
 					'cat'	=> array('UCP_MAIN')
 				),

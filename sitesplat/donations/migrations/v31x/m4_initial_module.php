@@ -42,9 +42,8 @@ class m4_initial_module extends \phpbb\db\migration\migration
 				),
 				),
 			),
-			array('module.add', array('ucp', 'UCP_MAIN', 'UCP_DONATION_TITLE')),
 			array('module.add', array(
-				'ucp', 'UCP_DONATION_TITLE', array(
+				'ucp', 'UCP_MAIN', array(
 					'module_basename'	=> '\sitesplat\donations\ucp\donations_module',
 					'auth'				=> 'ext_sitesplat/donations',
 					'modes'				=> array('donation'),

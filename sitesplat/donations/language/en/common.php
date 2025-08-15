@@ -65,5 +65,6 @@ $lang = array_merge($lang, array(
 	'SITESPLAT_EXT_COPY'	        => 'Professional Web Development and Premium Themes',
 	
 	'UCP_DONATION_TITLE'			=> 'Donation overview',
-	'UCP_DONATIONS_EXPLAIN'			=> 'Your donation transactions log'
+	'UCP_DONATIONS_EXPLAIN'         => 'Your donation transactions log',
+	'DONATION_ACTIVITY_UCP_EMPTY'   => 'You have no transactions'
 ));
