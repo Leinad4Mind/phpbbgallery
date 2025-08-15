@@ -1,1 +1,3 @@
-<!-- INCLUDECSS @sitesplat_bbcodeorder/bbcodeorder.css -->
+{% if SCRIPT_NAME == "viewtopic" or SCRIPT_NAME == "posting" %}
+   {% INCLUDECSS '@sitesplat_bbcodeorder/bbcodeorder.css' %}
+{% endif %}

@@ -6,3 +6,10 @@
     border-bottom-left-radius: 4px;
     border-top-left-radius: 4px;
 }
+
+@media (max-width: 767px) {
+   .btn-toolbar-bbcodeorder .btn-group {
+    margin-top: 5px;
+    margin-bottom: 5px;
+   }
+}
