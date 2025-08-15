@@ -135,6 +135,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 			$storage = new \phpbb\auth\provider\oauth\token_storage($this->db, $this->user, $this->oauth_tokens_table, $this->oauth_states_table);
 			$service_factory = new \OAuth\ServiceFactory();
 
+			$service_name = '';
 			switch ($this->login_link_data['oauth_service'])
 			{
 				case 'facebook':
@@ -145,6 +146,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 
 					$result = json_decode($facebook_service->request('me'), true);
 
+					$service_name = $facebook_service->service();
 					$data = array_merge($data, [
 						'username'	=> $result['name'],
 						'email'		=> !empty($result['email']) ? $result['email'] : '',
@@ -160,6 +162,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 
 				// 	$result = json_decode($twitter_service->request('me'), true);
 
+				//	$service_name = $twitter_service->service();
 				// 	$data = array_merge($data, [
 				// 		'username'	=> $result['name'],
 				// 		'email'		=> !empty($result['email']) ? $result['email'] : '',
@@ -174,6 +177,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 
 					$result = json_decode($google_service->request('userinfo'), true);
 
+					$service_name = $google_service->service();
 					$data = array_merge($data, [
 						'username'	=> !empty($result['name']) ? $result['name'] : '',
 						'email'		=> !empty($result['email']) ? $result['email'] : '',
@@ -188,6 +192,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 					
 					$result = json_decode($coinbase_service->request('user'), true);
 
+					$service_name = $coinbase_service->service();
 					$data = array_merge($data, [
 						'username'	=> !empty($result['data']['username']) ? $result['data']['username'] : $result['data']['name'],
 						'email'		=> $result['data']['email'],
@@ -202,6 +207,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 					
 					$result = json_decode($dropbox_service->request('/users/@me'), true);
 
+					$service_name = $dropbox_service->service();
 					$data = array_merge($data, [
 						'username'	=> $result['username'],
 						'email'		=> $result['email'],
@@ -216,6 +222,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 					
 				// 	$result = json_decode($dropbox_service->request('/2/users/get_current_account'), true);
 
+				//	$service_name = $dropbox_service->service();
 				// 	$data = array_merge($data, [
 				// 		'username'	=> $result['name']['display_name'],
 				// 		'email'		=> $result['email'] ?: '',
@@ -231,6 +238,7 @@ class oauth_reg_listener implements EventSubscriberInterface
 					
 					$result = json_decode($github_service->request('user'), true);
 
+					$service_name = $github_service->service();
 					$data = array_merge($data, [
 						'username'	=> $result['login'],
 						'email'		=> $result['email'] ?: '',
@@ -238,12 +246,14 @@ class oauth_reg_listener implements EventSubscriberInterface
 				break;
 
 				case 'instagram':
+					$service_name = 'instagram';
 					$data = array_merge($data, [
 						'username'	=> $this->oauth_token['extraParams']['user']['username'],
 					]);
 				break;
 
 				case 'slack':
+					$service_name = 'slack';
 					$data = array_merge($data, [
 						'username'	=> $this->oauth_token['extraParams']['user']['name'],
 						'email'		=> $this->oauth_token['extraParams']['user']['email'],
@@ -258,11 +268,40 @@ class oauth_reg_listener implements EventSubscriberInterface
 					
 					$result = json_decode($razer_service->request('/userinfo'), true);
 
+					$service_name = $razer_service->service();
 					$data = array_merge($data, [
 						'username'	=> $result['razer_id'],
 						'email'		=> isset($result['email']) ? $result['email'] : '',
 					]);
 				break;
+			}
+
+			// check whether email address exists...if it does,
+			// associate the user instead of completing registration
+			if (!empty($data['email']))
+			{
+				$email_where = (version_compare(PHPBB_VERSION, '3.2.99', '>')) ? ("user_email = '" . $this->db->sql_escape($data['email']) . "'") : 'user_email_hash = ' . phpbb_email_hash($data['email']);
+				$result = $this->db->sql_query("SELECT user_id FROM " . USERS_TABLE . " WHERE $email_where");
+				$user_id = (int) $this->db->sql_fetchfield('user_id');
+				$this->db->sql_freeresult($result);
+
+				if ($user_id) {
+					if ($this->config['sitesplat_bboauth_group'])
+					{
+						group_user_add($this->config['sitesplat_bboauth_group'], [$user_id]);
+					}
+
+					$this->user->session_create($user_id, false, true);
+
+					$sql = "UPDATE " . USERS_TABLE . "
+						SET user_last_login_type = '" . $this->db->sql_escape($service_name) . "'
+						WHERE user_id = $user_id";
+					$this->db->sql_query($sql);
+
+					garbage_collection();
+					header('Location: ' . generate_board_url());
+					exit;
+				}
 			}
 
 			$data = array_merge($data, [
