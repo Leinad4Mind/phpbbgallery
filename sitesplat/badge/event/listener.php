@@ -135,7 +135,8 @@ class listener implements EventSubscriberInterface
 				AND n.user_id = ' . $event['user_data']['user_id'] . ' AND n.notification_read = 0 LIMIT 1';
 
 		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow();
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 			
 		if (!defined('ADMIN_START') && $row['user_id'])
 		{
@@ -191,7 +192,7 @@ class listener implements EventSubscriberInterface
 				ORDER BY ' . (($this->config['badgeaward_random']) ? 'RAND()' : 'r.rule_type_id, r.rule_id');
 		$result = $this->db->sql_query($sql);
 		$i = 0;
-		while ($row = $this->db->sql_fetchrow())
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			if ($i < $this->config['badgeaward_amount'])
 			{
@@ -199,6 +200,8 @@ class listener implements EventSubscriberInterface
 			}
 			$i++;
 		}
+
+		$this->db->sql_freeresult($result);
 
 		if ($event['row']['user_id'] != ANONYMOUS)
 		{
@@ -213,7 +216,7 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/badge', 'badge_acp');
 
 		$badges = '';
-		$sql = 'SELECT r.rule_id, r.rule_type_id, r.rule_name, rule_min_value, rule_max_value, 
+		$sql = 'SELECT r.rule_id, r.rule_type_id, r.rule_name, r.rule_description, rule_min_value, rule_max_value, 
 					   e.date, b.badge, t.rule_type_name
 				FROM ' . $this->badge_rules_table . ' r
 				LEFT OUTER JOIN ' . $this->badge_events_table . ' e ON e.rule_id = r.rule_id
@@ -223,15 +226,18 @@ class listener implements EventSubscriberInterface
 				r.rule_type_id IN (' . implode(',', $this->type_ids) . ')
 				ORDER BY r.rule_type_id, r.rule_id';
 		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow())
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->template->assign_block_vars('badges', array(
-				'NAME'	=> $this->manager->get_condition_lang($row['rule_type_name']),
-				'BADGE'	=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
-				'TITLE'	=> ($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name'],
-				'DATE'	=> $this->user->format_date($row['date'], 'j M Y')
+				'NAME'			=> $this->manager->get_condition_lang($row['rule_type_name']),
+				'BADGE'			=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
+				'TITLE'			=> ($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name'],
+				'DESCRIPTION'	=> $row['rule_description'],
+				'DATE'			=> $this->user->format_date($row['date'], 'j M Y')
 			));
 		}
+
+		$this->db->sql_freeresult($result);
 	}
 
 	public function insert_user_data($event)
@@ -272,6 +278,7 @@ class listener implements EventSubscriberInterface
 		where t.rule_type_name = "sitesplat.badge.type.posts"';
 		$result = $this->db->sql_query($sql, 3600);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 		
 		foreach($rows as $rule)
 		{
@@ -296,6 +303,7 @@ class listener implements EventSubscriberInterface
 		where t.rule_type_name = "sitesplat.badge.type.posts"';
 		$result = $this->db->sql_query($sql, 3600);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		foreach($rows as $rule)
 		{
@@ -320,6 +328,7 @@ class listener implements EventSubscriberInterface
 		where t.rule_type_name = "sitesplat.badge.type.warnings"';
 		$result = $this->db->sql_query($sql, 3600);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		foreach($rows as $rule)
 		{
@@ -345,6 +354,7 @@ class listener implements EventSubscriberInterface
 		AND (options = ' . bindec(sprintf( "%02d", (string) !$event['ld'] . '0')) . ' OR options = ' . bindec(sprintf( "%02d", (string) !$event['ld'] . '1')) . ')';
 		$result = $this->db->sql_query($sql, 3600);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 		
 		foreach($rows as $rule)
 		{
@@ -363,6 +373,7 @@ class listener implements EventSubscriberInterface
 		where t.rule_type_name = "sitesplat.badge.type.donations"';
 		$result = $this->db->sql_query($sql, 3600);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		foreach($rows as $rule)
 		{

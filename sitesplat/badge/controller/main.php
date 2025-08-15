@@ -122,7 +122,7 @@ class main
 		
 		if (!$userid )
 		{
-			while ($row = $this->db->sql_fetchrow())
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				if ($rulename != $row['rule_type_name'])
 				{
@@ -157,7 +157,7 @@ class main
 			}
 		} else
 		{		
-			while ($row = $this->db->sql_fetchrow())
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				if ($rulename != $row['username'])
 				{
@@ -196,6 +196,8 @@ class main
 			}
 		}
 
+		$this->db->sql_freeresult($result);
+
 		foreach ($breadcrumb as $i => $value)
 		{
 			$this->template->assign_block_vars('navlinks', array(
@@ -212,7 +214,7 @@ class main
 
 	protected function Slug($string)
 	{
-		return strtolower(str_replace(array('&','#',';'), '', mb_convert_encoding($string, 'HTML-ENTITIES', 'UTF8')));
+		return strtolower(str_replace(array('&','#',';',' '), array('','','','_'), mb_convert_encoding($string, 'HTML-ENTITIES', 'UTF8')));
 //		return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
 	}
 }

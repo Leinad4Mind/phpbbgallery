@@ -217,6 +217,7 @@ class admin_controller implements admin_interface
 				$sql = 'SELECT badge FROM ' . $this->badge_badges_table . ' WHERE badge_id = ' . (int) $delete_badge;
 				$result = $this->db->sql_query($sql);
 				$badge = $this->db->sql_fetchfield('badge');
+				$this->db->sql_freeresult($result);
 				
 				if (@unlink($this->root_path . '/ext/sitesplat/badge/badges' . '/' . $badge))
 				{
@@ -512,6 +513,7 @@ class admin_controller implements admin_interface
 				'S_SELECTED'	=> ($selected == $row['badge_id']) ? true : false,
 			));
 		}
+
 		$this->db->sql_freeresult($result);
 	}
 
@@ -564,6 +566,8 @@ class admin_controller implements admin_interface
 				'S_SELECTED'	=> ($row['selected'] && $row['selected'] == $rule_id) ? true : false,
 			));
 		}
+
+		$this->db->sql_freeresult($result);
 	}
 
 	/**
@@ -594,6 +598,8 @@ class admin_controller implements admin_interface
 				'S_SELECTED'	=> (is_array($options) && in_array($row['rule_id'], $options)) ? true : false,
 			));
 		}
+
+		$this->db->sql_freeresult($result);
 	}
 
 	/**
