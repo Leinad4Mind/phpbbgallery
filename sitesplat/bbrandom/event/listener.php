@@ -37,7 +37,11 @@ class listener implements EventSubscriberInterface
 	public function user_default($event)
 	{
 		global $phpbb_root_path;
-		if ($this->config['allow_avatar_local'] && $this->config['default_cuavatar'])
+
+		$sql_ary = $event['sql_ary'];
+		$valid_user = in_array($sql_ary['user_type'], array(0,3));
+
+		if ($valid_user && $this->config['allow_avatar_local'] && $this->config['default_cuavatar'])
 		{
 			$path = $phpbb_root_path . $this->config['avatar_gallery_path'] . '/../random/';
 			try
@@ -62,7 +66,6 @@ class listener implements EventSubscriberInterface
 			
 			if (sizeof($cuavatar))
 			{
-				$sql_ary = $event['sql_ary'];
 				$sql_ary['user_avatar'] = '../random/' . $cuavatar[array_rand($cuavatar, 1)];
 				$sql_ary['user_avatar_height'] = $this->config['avatar_max_height'];
 				$sql_ary['user_avatar_width'] = $this->config['avatar_max_width'];
@@ -70,9 +73,8 @@ class listener implements EventSubscriberInterface
 			
 				$event['sql_ary'] = $sql_ary;
 			}
-		} else if ($this->config['allow_avatar_rgravatar'] && $this->config['default_rgravatar'])
+		} else if ($valid_user && $this->config['allow_avatar_rgravatar'] && $this->config['default_rgravatar'])
 		{
-			$sql_ary = $event['sql_ary'];
 			$sql_ary['user_avatar'] = $sql_ary['user_email'];
 			$sql_ary['user_avatar_height'] = $this->config['avatar_max_height'];
 			$sql_ary['user_avatar_width'] = $this->config['avatar_max_width'];
