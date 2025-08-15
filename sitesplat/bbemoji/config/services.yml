@@ -4,11 +4,66 @@ parameters:
     - ["EmojiOne", "$web_root_path$ext/sitesplat/bbemoji/images/",   "svg"]
 #    - ["Twemoji",  "//twemoji.maxcdn.com/svg/",               "svg"]
 #    - ["Gemoji",   "/path/to/gemoji/",                        "png"]
+
 services:
+# LISTENERS
   sitesplat.bbemoji.listener:
     class: sitesplat\bbemoji\event\listener
     arguments:
-      - %sitesplat.bbemoji.url.generators%
-      - @path_helper
+      - '%sitesplat.bbemoji.url.generators%'
+      - '@path_helper'
+      - '@template'
+      - '@request'
+      - '@user'
+      - '@dbal.conn'
+      - '%core.table_prefix%emoji_icons'
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbstatus_listener:
+    class: sitesplat\bbemoji\event\bbstatus_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbreaction_listener:
+    class: sitesplat\bbemoji\event\bbreaction_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbgreetings_listener:
+    class: sitesplat\bbemoji\event\bbgreetings_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbpreview_listener:
+    class: sitesplat\bbemoji\event\bbpreview_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbsidebar_linstener:
+    class: sitesplat\bbemoji\event\bbsidebar_linstener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbtags_listener:
+    class: sitesplat\bbemoji\event\bbtags_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.fltl_listener:
+    class: sitesplat\bbemoji\event\fltl_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
+
+  sitesplat.bbemoji.bbprenext_listener:
+    class: sitesplat\bbemoji\event\bbprenext_listener
+    parent: sitesplat.bbemoji.listener
     tags:
       - { name: event.listener }

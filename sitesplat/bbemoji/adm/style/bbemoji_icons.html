@@ -1,0 +1,73 @@
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+<h1>{L_ACP_BBEMOJI}</h1>
+<p>{L_ACP_BBEMOJI_TITLE_EXPLAIN}</p>
+{% if S_ADD or S_EDIT %}
+<form id="acp_icons" method="post" action="{U_ACTION}">
+<fieldset>
+	<dl>
+		<dt><label for="icon">{L_ICON}{L_COLON}</label><br />{L_ICON_EXPLAIN}</dt>
+		<dd><input type="text" id="icon" name="icon" value="{ICON}" autocomplete="off"></dd>
+	</dl>
+	<dl style="text-align: center;">
+		or
+	</dl>
+	<dl>
+		<dt><label for="bbemoji">{L_ICON_EMOJI}{L_COLON}</label><br />{L_ICON_EMOJI_EXPLAIN}</dt>
+		<dd><input type="text" id="bbemoji" name="icons_emoji" value="{ICON_EMOJI}" autocomplete="off"></dd>
+	</dl>
+	<dl>
+		<dt><label for="file">{L_DISPLAY_ON_POSTING}{L_COLON}</label></dt>
+		<dd><input type="checkbox" id="display_on_posting" name="display_on_posting"{% if DISPLAY_ON_POSTING%} checked="checked"{% endif %}></dd>
+	</dl>
+
+	<p class="submit-buttons">
+		{% if S_EDIT %}
+			<input type="hidden" name="id" value="{ICON_ID}" />
+			<input type="hidden" name="action" value="edit" />
+		{% else %}
+			<input type="hidden" name="action" value="add" />
+		{% endif %}
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+{% else %}
+<table class="table1 zebra-table table-bbemoji">
+	<thead>
+	<tr>
+		<th>{L_TITLE}</th>
+		<th>{L_OPTIONS}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN items -->
+		<tr>
+			<td class="bbemoji-row" style="width: 85%; text-align: center;">{items.IMG_SRC}</td>
+			<td class="actions" style="text-align: right;">
+				<span class="up-disabled" style="display:none;">{ICON_MOVE_UP_DISABLED}</span>
+				<span class="up"><a href="{items.U_MOVE_UP}" data-ajax="row_up">{ICON_MOVE_UP}</a></span>
+				<span class="down-disabled" style="display:none;">{ICON_MOVE_DOWN_DISABLED}</span>
+				<span class="down"><a href="{items.U_MOVE_DOWN}" data-ajax="row_down">{ICON_MOVE_DOWN}</a></span>
+				<a href="{items.U_EDIT}">{ICON_EDIT}</a> <a href="{items.U_DELETE}" data-ajax="row_delete">{ICON_DELETE}</a>
+			</td>
+		</tr>
+	<!-- BEGINELSE -->
+		<tr class="row3">
+			<td colspan="{COLSPAN}">{L_ACP_NO_ITEMS}</td>
+		</tr>
+	<!-- END items -->
+	</tbody>
+</table>
+<p class="quick">
+	<a href="{U_ICON_ADD}">{L_ICON_ADD}</a>
+</p>
+{% endif %}
+
+<!-- INCLUDE overall_footer.html -->

@@ -2,7 +2,7 @@
 	"name": "sitesplat/bbemoji",
 	"type": "phpbb-extension",
 	"description": "Enables Unicode emoji - By default it uses a CDN to serve the emojis and it uses SVG format. It also provides a local fallback if the CDN fails. You can also style the emoji via CSS. The class used is emoji.",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"keywords": ["phpbb","emoji"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
