@@ -66,6 +66,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			        => 'Developer',
 	
 	'BBPOINTS_NOTICE'						=> '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.<br />Don\'t forget to check Forum Group Permissions and also the Forums Management options!</p></div>',
+	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	
 	'POINTS_DESCRIPTION'					=> 'BBpoints allows your forum members to have fun and collect points for determined actions...',
 	'POINTS_TASKS_1'						=> 'Points per topic, post, words, upon new registrations, birthdays and more!',
@@ -95,12 +96,12 @@ $lang = array_merge($lang, array(
 	'POINTS_GROUP_TRANSFER_PM_ERROR'           => 'You have to enter the subject as well as the message to send the PM to the group.',
 	'POINTS_GROUP_TRANSFER_GROUP'              => 'Group',
 	'POINTS_GROUP_TRANSFER_AMOUNT'             => 'Amount',
-	'POINTS_GROUP_TRANSFER_AMOUNT_EXPLAIN'     => 'Enter the amount you would like to trnsfer to the group or user',
+	'POINTS_GROUP_TRANSFER_AMOUNT_EXPLAIN'     => 'Enter the amount you would like to transfer to the group or user',
 	'POINTS_SMILIES'                           => 'Smilies',
 	'POINTS_GROUP_TRANSFER_PM_TITLE'           => 'Personal message subject',
-	'POINTS_GROUP_TRANSFER_PM_TITLE_EXPLAIN'   => 'Enter a PM Subject about the transfer (Optional)',
+	'POINTS_GROUP_TRANSFER_PM_TITLE_EXPLAIN'   => 'Enter a PM Subject about the transfer',
 	'POINTS_GROUP_TRANSFER_PM_COMMENT'         => 'Personal message text',
-	'POINTS_GROUP_TRANSFER_PM_COMMENT_EXPLAIN' => 'Enter a message about the transfer (Optional)',
+	'POINTS_GROUP_TRANSFER_PM_COMMENT_EXPLAIN' => 'Enter a PM message about the transfer',
 	'POINTS_GROUP_TRANSFER_FUNCTION'           => 'Function',
 	'POINTS_GROUP_TRANSFER_ADD'                => 'Add',
 	'POINTS_GROUP_TRANSFER_SET'                => 'Set',

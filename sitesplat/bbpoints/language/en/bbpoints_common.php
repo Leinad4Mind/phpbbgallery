@@ -30,7 +30,7 @@ $lang = array_merge($lang, array(
 	'WAS_HIDDEN'					=> 'This is a payed up topic',
 	'BBPOINTS_HIDE_TOPIC'	        => 'Points Min.',
 	'BBPOINTS_HIDE_TOPIC_EXPLAIN'	=> 'Enter the Minimum Points required for the next user to read this topic. <br />(The points will be transfered to your account)',
-	'TRANSFER_NOTI'					=> 'You have received a donation of %1$s from %2$s &#45; %3$s',
+	'TRANSFER_NOTI'			        => 'You have received a donation of %1$s from %2$s %3$s',
 
 	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Someone transfered you BBpoints.',
 	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER' => 'Someone transfered you BBpoints',

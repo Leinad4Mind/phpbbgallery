@@ -129,12 +129,12 @@ class bbpoints_module
 			$result = $db->sql_query_limit($sql, $per_page, $start);
 			while($row = $db->sql_fetchrow($result)) 
 			{
-				$template->assign_block_vars('likes', array(
+				$template->assign_block_vars('pointsucp', array(
 					'SUBJECT'			=> ($row['post_id']) ? $row['post_subject'] : $user->lang[$row['post_subject']],
 					'SUBJECTURL'		=> ($row['post_id']) ? append_sid($phpbb_root_path . 'viewtopic.' . $phpEx . '?f=' . $row['forum_id'] . '&p=' . 
 											$row['post_id'] . '#p' . $row['post_id']) : '',
 					'REASON'			=> ($row['reason']) ? $row['reason'] : '',
-					'LIKE_TIME'			=> $user->format_date($row['post_time']),
+					'POINTS_TIME'		=> $user->format_date($row['post_time']),
 					'GIVE_RECIEVE'		=> (($row['post_subject'] == 'BB_TRANSFER') ? '- ' : '') . number_format($row['bbpoints'], 2),
 					'USERNAME'			=> ($row['poster_id']) ? get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']) : $config['sitename'],
 				));

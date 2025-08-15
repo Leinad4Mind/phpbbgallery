@@ -272,7 +272,7 @@ class admin_controller
 
 		if ($user_id) 
 		{
-			$user_ids[] = $user_id;
+			$user_ids = (array) $user_id;
 		}
 		
 		if (sizeof($user_ids))
@@ -342,7 +342,6 @@ class admin_controller
 					$pm_data['address_list'] = array('u' => array($user_id => 'to'));
 					submit_pm('post', $pm_subject, $pm_data, false); 
 				}
-				$this->db->sql_freeresult($result);
 			}
 			$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
 			$this->show_result($this->user->lang['POINTS_GROUP_TRANSFER_SUCCESS']);
