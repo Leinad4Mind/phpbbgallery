@@ -37,5 +37,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_U_FUTUREPOSTS'		=> 'Can manage Future Posts',
+	'ACL_U_FUTUREPOST'		=> 'Can manage Future Posts',
 ));

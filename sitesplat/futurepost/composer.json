@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allow to setup future posts and then post the content automatically once the date criteria is met.",
 	"homepage": "https://sitesplat.com",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"keywords": ["phpbb", "extension", "posts", "pages"],
 	"license": "@license Proprietary",
 	"authors": [
