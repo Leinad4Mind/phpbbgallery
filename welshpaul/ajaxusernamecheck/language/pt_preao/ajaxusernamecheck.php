@@ -1,7 +1,7 @@
 <?php
 /**
  * AJAX Username Check
- * @copyright (c) 2020 WelshPaul. All rights reserved.
+ * @copyright (c) 2020 WelshPaul. 2025 Leinad4Mind. All rights reserved.
  * @license Proprietary
  */
 

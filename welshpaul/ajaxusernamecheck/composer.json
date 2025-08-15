@@ -2,8 +2,8 @@
     "name": "welshpaul/ajaxusernamecheck",
     "type": "phpbb-extension",
     "description": "Checks in real time if the username entered on the registration form is already in use",
-    "version": "1.0.1",
-    "time": "2020-12-20",
+    "version": "1.0.2",
+    "time": "2025-08-15",
     "keywords": [
         "ajax",
         "username",
@@ -16,6 +16,10 @@
     "authors": [
         {
             "name": "WelshPaul",
+            "role": "Previous Developer"
+        },
+        {
+            "name": "Leinad4Mind",
             "role": "Lead Developer"
         }
     ],
