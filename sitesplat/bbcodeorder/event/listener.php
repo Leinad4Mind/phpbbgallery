@@ -41,7 +41,6 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 		$lang_set_ext[] = array(
 			'ext_name' => 'sitesplat/bbcodeorder',
 			'lang_set' => 'common',
-			'lang_set' => 'common_posting',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 	}

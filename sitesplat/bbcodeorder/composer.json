@@ -1,9 +1,9 @@
 {
     "name": "sitesplat/bbcodeorder",
     "type": "phpbb-extension",
-    "description": "Enhances default BBcodes and allows some essential combinations.",
+    "description": "Enhances default BBcodes and allows some essential combinations. Custom icons, Group permission, sorting, ordering and more...",
     "homepage": "http://sitesplat.com",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
