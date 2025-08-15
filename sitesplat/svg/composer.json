@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "ads svg support for ranks and topic status",
     "homepage": "https://sitesplat.com",
-    "version": "1.0.2",
+    "version": "1.0.3",
 	"keywords": ["phpbb", "extension", "svg", "cosmetic", "ui"],
     "license": "Proprietary/All rights reserved",
     "authors": [
