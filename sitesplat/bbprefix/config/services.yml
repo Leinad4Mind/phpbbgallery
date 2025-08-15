@@ -17,6 +17,13 @@ services:
         tags:
             - { name: event.listener }
 
+    bbprefix.bbchat_listener:
+        class: sitesplat\bbprefix\event\bbchat_listener
+        arguments:
+            - '@bbprefix.manager'
+        tags:
+            - { name: event.listener }
+
     bbprefix.token.collection:
         class: phpbb\di\service_collection
         arguments:

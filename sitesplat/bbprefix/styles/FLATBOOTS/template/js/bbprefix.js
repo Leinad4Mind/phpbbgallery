@@ -52,6 +52,7 @@
 	// Toggle prefix popover
 	document.querySelector("[data-toggle='toggle']").addEventListener('click', function(e){
 		var selector = e.target.parentNode.dataset.target
+		selector = typeof selector !== 'undefined' ? selector : '#PrefixBtn'; // Fix for Uncaught TypeError: Cannot read property 'classList' of null in chrome - You still need to pass a parameter to toggle(). It expects the parameter selector, and passes this parameter into 'querySelectorAll. If section` is undefined then querySelector() will return null and you will not be able to get a classList from null.
 		document.querySelector(selector).classList.toggle('in');
 		document.querySelector('.prefix-popover').classList.toggle('is-visible');
 	});

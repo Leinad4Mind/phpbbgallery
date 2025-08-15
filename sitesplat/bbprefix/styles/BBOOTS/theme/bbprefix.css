@@ -18,6 +18,7 @@
     list-style: outside none none;
     margin-bottom: 0;
     vertical-align: middle;
+	padding-left: 0;
 }
 
 #available_prefixes li{
@@ -286,4 +287,9 @@ original fixed position and no border possible */
     width: 220px;
 	max-height: 30px;
 	border-right: 1px;
+}
+
+
+.btn-group-bbprefix {
+    padding: 5px 9px;
 }

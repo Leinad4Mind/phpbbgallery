@@ -2,15 +2,15 @@
     "name": "sitesplat/bbprefix",
     "type": "phpbb-extension",
     "description": "BBprefix allows to use topic prefix tags. It supports out of the box BBcode functionality to mark the prefixes and comes with several useful ACP options.",
-    "homepage": "http://sitesplat.com",
-    "version": "1.0.7",
+    "homepage": "https://sitesplat.com",
+    "version": "1.0.8",
 	"keywords": ["phpbb", "prefix", "extension", "topic", "sitesplat"],
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
         }
     ],
     "require": {
@@ -22,12 +22,13 @@
     "extra": {
         "display-name": "BBprefix",
 		"soft-require": {
-            "phpbb/phpbb": "3.1.*@dev"
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbprefix.json"
+            "filename": "bbprefix.json",
+			"ssl": true
 		}
     }
 }

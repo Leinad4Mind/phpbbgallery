@@ -131,6 +131,8 @@ class manager
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		if ($row && $row['id'] != $this->request->variable('prefix_id', 0)) return array($this->user->lang['BBPREFIX_NAME_ERROR']);
+
+		return array();
 	}
 	
 	/**

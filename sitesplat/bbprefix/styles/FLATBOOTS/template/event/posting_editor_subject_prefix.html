@@ -3,21 +3,21 @@
     <div class="prefix-popover prefix-popover--top">
 	 <h5 class="prefix-popover-heading">{L_POSTING_PREFIXES}</h5>
 			<ul id="available_prefixes" class="prefixed_sortable list-inline">
-		<!-- <li id="disable-selection">{L_POSTING_PREFIXES}</li> -->
 			<!-- BEGIN prefix_option --><li class="click_area" id="prefix_{prefix_option.ID}" data-id="{prefix_option.ID}" title="{prefix_option.NAME}">{prefix_option.PREFIX}</li><!-- END prefix_option -->
 		    </ul>	
     </div>
 </div>
 <div class="input-group col-md-12 col-sm-12 col-xs-12">
 <span class="input-group-btn" data-toggle="toggle" data-target="#PrefixBtn">
- <button title="prefixes" type="button" class="btn btn-default" >
+ <button title="prefixes" type="button" class="btn btn-default">
     <i class="fa fa-tasks"></i>
 </button>
 </span>
 <div id="PrefixBtn" class="input-group-addon fade">
     <ul id="used_prefixes" class="prefixed_sortable list-unstyled">
-	  <!-- <li class="placeholder">{L_PREFIX_DROP_HERE}</li> -->
 		<!-- BEGIN prefix_used --><li class="click_area" id="prefix_{prefix_used.PREFIX_ID}" data-id="{prefix_used.PREFIX_ID}" title="{prefix_used.NAME}">{prefix_used.PREFIX}</li><!-- END prefix_used -->
 	</ul>
 </div>
 <!-- ENDIF -->
+<!-- // compatibility when BBemoji is installed -->
+{% if S_SUBJECT_EMOJI %}<span class="bbemoji_subject"></span>{% endif %}
