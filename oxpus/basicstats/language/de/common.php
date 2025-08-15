@@ -32,10 +32,10 @@ $lang = array_merge($lang, array(
    	'YEARLY'		=> 'Jahreswerte',
 
 	'ALL'					=> 'Alle',
-	'AS_ON'					=> 'Stand %s',	
-	'AVG_POSTS_DAY'			=> 'Durchschnittliche Beiträge pro Tag',	
-	'AVG_POSTS_MONTH'		=> 'Durchschnittliche Beiträge pro Monat',	
-	'AVG_POSTS_YEAR'		=> 'Durchschnittliche Beiträge pro Jahr',	
+	'AS_ON'					=> 'Stand %s',
+	'AVG_POSTS_DAY'			=> 'Durchschnittliche Beiträge pro Tag',
+	'AVG_POSTS_MONTH'		=> 'Durchschnittliche Beiträge pro Monat',
+	'AVG_POSTS_YEAR'		=> 'Durchschnittliche Beiträge pro Jahr',
 	'AVG_TOPICS_DAY'		=> 'Durchschnittliche Themen pro Tag',
 	'AVG_TOPICS_MONTH'		=> 'Durchschnittliche Themen pro Monat',
 	'AVG_TOPICS_YEAR'		=> 'Durchschnittliche Themen pro Jahr',
@@ -60,5 +60,4 @@ $lang = array_merge($lang, array(
 	'TOTAL_USER_REGS'		=> 'Gesamtanzahl Benutzerregistrierungen',
 	'USER_REGS'				=> 'Benutzerregistrierungen',
 	'Y_VIEW'				=> 'Jahresstatistiken',
-
 ));

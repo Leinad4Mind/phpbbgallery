@@ -69,6 +69,11 @@ class main
 		$s_month	= $this->request->variable('s_month', '');
 		$s_year		= trim($this->request->variable('s_year', ''));
 
+		if (!in_array($mode, array('d', 'm', 'y')))
+		{
+			$mode = 'm';
+		}
+
 		switch ($mode)
 		{
 			case 'd':
@@ -109,6 +114,7 @@ class main
 					$end_time = mktime(0, 0, 0, $s_month[0] + 1, 1, $s_month[1]);
 				}
 
+				$display_month = $this->_bs_date('F Y', $start_time);
 				$start_time	= getdate($start_time);
 				$end_time	= getdate($end_time);
 
@@ -249,7 +255,7 @@ class main
 					'AVG_TOPICS'				=> number_format($totals['topics'] / $counted_days, 2),
 					'AVG_POSTS'					=> number_format($totals['posts'] / $counted_days, 2),
 					'AVG_USER_REGS'				=> number_format($totals['user_reg'] / $counted_days, 2),
-					'STATS_MONTH_EXPLAIN'		=> $this->language->lang('STATS_MONTH_EXPLAIN', $start_time['month'] . ' ' . $start_time['year']),
+					'STATS_MONTH_EXPLAIN'		=> $this->language->lang('STATS_MONTH_EXPLAIN', $display_month),
 					'MONTH_SELECT_BOX'			=> $month_select_box,
 				));
 			break;
@@ -576,8 +582,6 @@ class main
 					'AVG_USER_REGS'				=> number_format($totals['user_reg'] / $counted_years, 2),
 				));
 			break;
-
-			default:
 		}
 
 		$this->template->assign_vars(array(
