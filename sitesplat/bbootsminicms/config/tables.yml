@@ -1,5 +1,5 @@
 parameters:
-    sitesplat.bbootsminicms.tables.bboots_style_menu: %core.table_prefix%bboots_style_menu
-    sitesplat.bbootsminicms.tables.bboots_style_config: %core.table_prefix%bboots_style_config
-    sitesplat.bbootsminicms.tables.bboots_style_links: %core.table_prefix%bboots_style_links
-    sitesplat.bbootsminicms.tables.bboots_style_social: %core.table_prefix%bboots_style_social
+    sitesplat.bbootsminicms.tables.bboots_style_menu: '%core.table_prefix%bboots_style_menu'
+    sitesplat.bbootsminicms.tables.bboots_style_config: '%core.table_prefix%bboots_style_config'
+    sitesplat.bbootsminicms.tables.bboots_style_links: '%core.table_prefix%bboots_style_links'
+    sitesplat.bbootsminicms.tables.bboots_style_social: '%core.table_prefix%bboots_style_social'

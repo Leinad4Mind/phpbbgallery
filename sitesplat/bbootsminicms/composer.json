@@ -2,29 +2,30 @@
 	"name": "sitesplat/bbootsminicms",
 	"type": "phpbb-extension",
 	"description": "This extension allows the administrator to easily customize the BBOOTS style via ACP. Much like WordPress system.",
-	"homepage": "http://www.sitesplat.com",
-	"version": "1.0.7",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.8",
 	"keywords": ["phpbb", "extension", "BBOOTS", "FLATBOOTS", "CMS"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://www.sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
-		"php": ">=5.3.3"
+		"php": ">=5.4"
 	},
 	"extra": {
 		"display-name": "BBOOTS Mini CMS",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.5"
+			"phpbb/phpbb": ">=3.2.0"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "bboots_minicms.json"
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bboots_minicms.json",
+			"ssl": true
 		}
 	}
 }

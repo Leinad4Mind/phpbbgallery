@@ -5,15 +5,15 @@ services:
     sitesplat.bbootsminicms.listener:
         class: sitesplat\bbootsminicms\event\listener
         arguments:
-            - @dbal.conn
-            - @config
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbootsminicms.tables.bboots_style_menu%
-            - %sitesplat.bbootsminicms.tables.bboots_style_config%
-            - %sitesplat.bbootsminicms.tables.bboots_style_links%
-            - %sitesplat.bbootsminicms.tables.bboots_style_social%
+            - '@dbal.conn'
+            - '@config'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbootsminicms.tables.bboots_style_menu%'
+            - '%sitesplat.bbootsminicms.tables.bboots_style_config%'
+            - '%sitesplat.bbootsminicms.tables.bboots_style_links%'
+            - '%sitesplat.bbootsminicms.tables.bboots_style_social%'
         tags:
             - { name: event.listener }

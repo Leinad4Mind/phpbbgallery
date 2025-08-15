@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'TRANSLATION_INFO'					=> 'Translated by <a href="http://wwww.sitesplat.com/">ThemeSplat</a>.',
+	'TRANSLATION_INFO'					=> 'Translated by <a href="https://sitesplat.com/">ThemeSplat</a>.',
 	
 	'ABOUT_US_TITLE'            		=> 'About us Title',
 	'ABOUT_US'            				=> 'About us Body',
@@ -83,7 +83,7 @@ $lang = array_merge($lang, array(
 	'MENU_BUTTON_DESC_EXPLAIN' 			=> 'Text below the Button Title',
 	'MENU_BUTTON_URL'		      	    => 'URL',
 	'MENU_BUTTON_ICON_EXPLAIN'		    => 'Only used if the button/link is part of a parent button',
-	'MENU_BUTTON_URL_EXPLAIN'	 		=> 'You can use URL adress including http:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
+	'MENU_BUTTON_URL_EXPLAIN'	 		=> 'You can use URL adress including https:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
 	'MENU_DISPLAY'			      	    => 'Display the Button',
 	'MENU_EXTERNAL'			       	    => 'Link will be opened in a new window',
 	'MENU_ONLY_REGISTERED'    		    => 'Display only for Registered Users',
@@ -120,7 +120,7 @@ $lang = array_merge($lang, array(
 	'MENU_LINK_NAME'	       			=> 'Link name',
 	'MENU_LINK_NAME_EXPLAIN' 			=> 'You can use plain text or language variable such as {L_PRIVATE_MESSAGES}',
 	'MENU_LINK_URL'		       			=> 'URL',
-	'MENU_LINK_URL_EXPLAIN'	 			=> 'You can use URL adress including http:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
+	'MENU_LINK_URL_EXPLAIN'	 			=> 'You can use URL adress including https:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
 	'MENU_LINK_DISPLAY'			        => 'Display the link',
 	'MENU_LINK_EXTERNAL'			    => 'Link will be opened in a new window',
 	'MENU_LINK_ONLY_REGISTERED'   		=> 'Display only to registered users',
@@ -137,7 +137,7 @@ $lang = array_merge($lang, array(
 	'MENU_SOCIAL_NAME'	       			=> 'Social Network Name',
 	'MENU_SOCIAL_NAME_EXPLAIN' 			=> 'You can use plain text or language variable such as {L_PRIVATE_MESSAGES}',
 	'MENU_SOCIAL_URL'		       		=> 'URL',
-	'MENU_SOCIAL_URL_EXPLAIN'	 		=> 'You can use URL adress including http:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
+	'MENU_SOCIAL_URL_EXPLAIN'	 		=> 'You can use URL adress including https:// protocol or template variable such as {U_PRIVATEMSGS}. You can find available template variables in includes/functions.php file around line 4545',
 	'MENU_SOCIAL_DISPLAY'			    => 'Display the social network',
 	'MENU_SOCIAL_ONLY_REGISTERED'   	=> 'Display only for Registered Users',
 	'MENU_SOCIAL_ONLY_GUEST'        	=> 'Display only for Guests',
