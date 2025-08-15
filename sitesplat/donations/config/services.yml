@@ -6,11 +6,13 @@ services:
     sitesplat_donations_donations:
         class: sitesplat\donations\event\listener
         arguments:
+            - '@dbal.conn'
             - '@config'
             - '@sitesplat.donations.manager'
             - '@controller.helper'
             - '@template'
             - '@user'
+            - '%sitesplat.donation.tables.donations%'
         tags:
             - { name: event.listener }
 

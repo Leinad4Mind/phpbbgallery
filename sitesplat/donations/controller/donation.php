@@ -259,7 +259,7 @@ class donation
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$this->template->assign_block_vars('donors', array(
-					'NAME'		=> $row['username'],
+					'NAME'		=> ($row['user_id'] == ANONYMOUS) ? $this->user->lang['GUEST'] : $row['username'],
 					'AVATAR'	=> (($row['user_avatar']) ? 
 									 str_replace(array('<img', './../../'), array('<img class="avatar"', './'), phpbb_get_user_avatar(
 										array('avatar'			=> $row['user_avatar'],
