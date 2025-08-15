@@ -1,0 +1,34 @@
+{
+	"name": "sitesplat/donations",
+	"type": "phpbb-extension",
+	"description": "A kick-ass donation extension for the phpBB board running SiteSplat Themes. Many modern and useful options included PayPal IPN and Bitcoin API.",
+	"homepage": "http://sitesplat.com",
+	"version": "1.0.3",
+	"keywords": ["sitesplat", "phpbb", "extension", "donations", "bitcoin", "paypal"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBDonations",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.6"
+		},
+		"version-check": {
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb31/ext",
+            "filename": "bbdonations.json"
+		}
+	}
+}

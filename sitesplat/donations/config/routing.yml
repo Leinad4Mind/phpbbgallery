@@ -1,0 +1,3 @@
+sitesplat_donations_controller:
+    path: /donation/{route}
+    defaults: { _controller: sitesplat.donations.controller:handle }

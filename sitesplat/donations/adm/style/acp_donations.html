@@ -1,0 +1,183 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/donations/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/donations/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/donations.css -->
+<!-- INCLUDECSS css/component.css -->
+
+<!-- INCLUDE overall_header.html -->
+<h1>{L_ACP_DONATIONS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_DONATIONS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_DONATIONS}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+<p>{L_ACP_DONATIONS_EXPLAIN}</p>
+
+<!-- IF not S_USER_SELECTED -->
+<form method="post" action="{U_ACTION}" name="postform">
+	<fieldset style="background: url('{EXT_PATH}adm/style/css/images/spacer.png') repeat;padding:20px 10px">
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_PAYPAL_EMAIL}{L_COLON}</label><br>{L_ACP_DONATIONS_PAYPAL_EXPLAIN}</dt>
+			<dd><input type="text" name="donations_paypal_email" value="{DONATIONS_PAYPAL_EMAIL}" class="text medium" placeholder="{L_ACP_DONATIONS_PAYPAL_EMAIL}"/></dd>
+		</dl>
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_BITCOIN}{L_COLON}</label><br>{L_ACP_DONATIONS_BITCOIN_EXPLAIN}</dt>
+			<dd>
+            	<input type="text" name="donations_bitcoin_key" value="{DONATIONS_BITCOIN_KEY}"  class="text medium" placeholder="{L_ACP_DONATIONS_BITCOIN_KEY}"/>
+				<input type="text" name="donations_bitcoin_secret" value="{DONATIONS_BITCOIN_SECRET}"  class="text medium" placeholder="{L_ACP_DONATIONS_BITCOIN_SECRET}"/>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_CURRENCY}{L_COLON}</label><br>{L_ACP_DONATIONS_CURRENCY_EXPLAIN}</dt>
+			<dd><select name="donations_country" id="donations_country1" style="font-family:FontAwesome;width:180px;font-size:1.2em;">{DONATIONS_CURRENCIES}</select></dd>
+		</dl>
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_AMOUNTS}{L_COLON}</label><br>{L_ACP_DONATIONS_AMOUNTS_EXPLAIN}</dt>
+            <dd>{L_ACP_DONATIONS_AMOUNT}<span style="margin-left:20px;">{L_ACP_DONATIONS_TEXT}</span><span style="margin-left:484px;">{L_ACP_DONATIONS_SYMBOL}</span></dd>
+            <!-- BEGIN amounts -->
+			<dd id="input{amounts.ID}" class="clonedInput">
+            	<input type="number" name="donations[{amounts.ID}][amount]" value="{amounts.VALUE}"  size="4" min="1" max="999" style="text-align:center;" />
+                <input type="text" name="donations[{amounts.ID}][text]" value="{amounts.TXT}"  class="text medium" />
+                <select name="donations[{amounts.ID}][symbol]" style="font-family:FontAwesome;width:140px;font-size:1.2em;">{amounts.OPTIONS}</select>
+            </dd>
+            <!-- END amounts -->
+			<dd>
+            	<input type="button" id="btnAdd" class="myButton" value="{L_ACP_DONATIONS_ADD_ROW}" /> 
+            	<input type="button" id="btnDel" class="myButton" value="{L_ACP_DONATIONS_DELL_ROW}" />
+            </dd>
+		</dl>
+		
+		
+		<dl style="margin-top:50px;">
+			<dt><label>{L_ACP_DONATIONS_GROUP}{L_COLON}</label><br />{L_ACP_DONATIONS_GROUP_EXPLAIN}</dt>
+			<dd>{L_ACP_DONATIONS_DAYS}<span style="margin-left:25px;">{L_ACP_DONATIONS_AMOUNT}</span><span style="margin-left:30px;">{L_ACP_DONATIONS_GROUPS}</span><span style="margin-left:136px;">{L_ACP_DONATIONS_GROUP_DEF}</span></dd>
+			<dd><input type="text" name="donations_group[time]" value="{DONATIONS_TIME}" size="4" title="Day to stay in this group" style="text-align:center;" /> <input type="number" name="donations_group[amount]" value="{DONATIONS_AMOUNT}" size="4" min="0" max="999" title="Max amount for this group" style="text-align:center;" /> <select name="donations_group[group]"><!-- BEGIN groups0 --><option value="{groups0.GROUP_ID}"{groups0.SELECTED}>{groups0.GROUP_NAME}</option><!-- END groups0 --></select>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="donations_group[default]" value="1"{DONATIONS_DEFAULT} /></dd>
+		</dl>
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_FALLBACK}{L_COLON}</label><br>{L_ACP_DONATIONS_FALLBACK_EXPLAIN}</dt>
+			<dd><select name="donations_fallbackgroup"><!-- BEGIN fallbackgroup --><option class="icon-menu" value="{fallbackgroup.GROUP_ID}"{fallbackgroup.SELECTED}>{fallbackgroup.GROUP_NAME}</option><!-- END fallbackgroup --></select></dd>
+		</dl>
+
+		<dl>
+			<dt><label>{L_ACP_DONATIONS_OPTIONS}{L_COLON}</label><br>{L_ACP_DONATIONS_OPTIONS_EXPLAIN}</dt>
+            <dd><div style="width:32%;float:left;text-align:center;font-size:100%;">
+            {L_ACP_DONATIONS_SANDBOX}<br />
+            <label><input type="radio" class="radio" name="donations_options[sandbox]" value="1" <!-- IF DONATIONS_SANDBOX -->checked="checked"<!-- ENDIF --> /> {L_YES}</label> &nbsp;
+            <label><input type="radio" class="radio" name="donations_options[sandbox]" value="0" <!-- IF not DONATIONS_SANDBOX -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></div>
+            <div style="width:32%;float:left;text-align:center;font-size:100%;">
+            {L_ACP_DONATIONS_MESSAGE}<br />
+            <label><input type="radio" class="radio" name="donations_options[message]" value="1" <!-- IF DONATIONS_MESSAGE -->checked="checked"<!-- ENDIF --> /> {L_YES}</label> &nbsp;
+            <label><input type="radio" class="radio" name="donations_options[message]" value="0" <!-- IF not DONATIONS_MESSAGE -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></div>
+            <div style="width:32%;float:left;text-align:center;font-size:100%;">
+            {L_ACP_DONATIONS_LIST}<br />
+            <label><input type="radio" class="radio" name="donations_options[list]" value="1" <!-- IF DONATIONS_LIST -->checked="checked"<!-- ENDIF --> /> {L_YES}</label> &nbsp;
+            <label><input type="radio" class="radio" name="donations_options[list]" value="0" <!-- IF not DONATIONS_LIST -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></div>
+			</dd>
+        </dl>
+
+
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+	</fieldset>
+</form>
+
+<fieldset style="background: url('{EXT_PATH}adm/style/css/images/spacer.png') repeat;padding:20px 10px">
+	<span class="legendspan">{L_ACP_DONATIONS_TRANSACTIONS}</span>
+	<span style="margin-top: -10px; float: right; display: block;">{L_G_REGISTERED}{L_COLON} <select name="donations_userid" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
+	<table cellpadding="1" cellspacing="1">
+	<thead>
+	<tr>
+		<th style="text-align:center;">#</th>
+		<th>{L_ACP_DONATIONS_USERNAME}</th>
+		<th>{L_EMAIL_ADDRESS}</th>
+		<th>{L_ACP_DONATIONS_TRANSACTION}</th>
+		<th>{L_ACP_DONATIONS_AMOUNT}</th>
+		<th>{L_ACP_DONATIONS_STATUS}</th>
+		<th>{L_ACP_DONATIONS_TIME}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN donations -->
+		<tr <!-- IF donations.S_ROW_COUNT is even -->style="background-color: #DCEBFE;"<!-- ENDIF -->>
+			<td style="text-align:center;"><i class="fa {donations.PAYMENT_TYPE}" aria-hidden="true"></i></td>
+			<td><a href="{donations.DONATIONURL}">{donations.USERNAME}</a></td>
+			<td><a href="mailto:{donations.EMAIL}?SUBJECT=Donation">{donations.EMAIL}</a></td>
+			<td>{donations.PP_TRANSACTION}</td>
+			<td>{DONATIONS_CURRENCY} {donations.AMOUNT}</td>
+			<td style="text-align:center;"><a href="#p{donations.ID}" id="status{donations.ID}" class="change_status" data-options="url={donations.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{donations.STATUS}</a></td>
+			<td>{donations.TIME}</td>
+		</tr>
+	<!-- END donations -->
+	</tbody>
+	</table>
+	<span style="float:left;display:block;">{L_ACP_DONATIONS_TOTAL}{L_COLON} {DONATIONS_CURRENCY} <span id="donationtotal">{DONATIONS_TOTAL}</span></span>
+	<!-- IF .pagination -->
+	<div class="pagination top-pagination">
+		<!-- INCLUDE pagination.html -->
+	</div>
+	<!-- ENDIF -->
+</fieldset>
+
+<!-- ELSE -->
+	<strong>{USER_PROFILE}'s {L_ACP_DONATIONS_TRANSACTIONS}</strong>
+
+	<fieldset style="background: url('{EXT_PATH}adm/style/css/images/spacer.png') repeat;padding:20px 10px">
+    	<dl>
+			<dt><label>{L_ACP_DONATIONS_TOTAL}</label></dt>
+			<dd>{DONATIONS_CURRENCY} <span id="donationtotal">{DONATIONS_TOTAL}</span></dd>
+		</dl>
+    	<dl>
+			<dt><label>{L_ACP_DONATIONS_ADDRESS}</label></dt>
+			<dd>{DONATIONS_ADDRESS}</dd>
+		</dl>
+	    <dl>
+			<dt><label>{L_ACP_DONATIONS_COUNTRY}</label></dt>
+			<dd>{DONATIONS_COUNTRY}</dd>
+		</dl>
+	</fieldset>
+
+	<table cellpadding="1" cellspacing="1">
+		<th style="text-align:center;">#</th>
+		<th>{L_ACP_DONATIONS_TRANSACTION}</th>
+		<th>{L_ACP_DONATIONS_AMOUNT}</th>
+		<th>{L_ACP_DONATIONS_STATUS}</th>
+		<th>{L_ACP_DONATIONS_TIME}</th>
+		<!-- BEGIN transactions -->
+		<tr <!-- IF transactions.S_ROW_COUNT is even -->style="background-color: #DCEBFE;"<!-- ENDIF -->>
+			<td style="text-align:center;"><i class="fa {transactions.PAYMENT_TYPE}" aria-hidden="true"></i></td>
+			<td>{transactions.PP_TRANSACTION}</td>
+			<td>{DONATIONS_CURRENCY} {transactions.AMOUNT}</td>
+			<td style="text-align:center;"><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>
+			<td>{transactions.TIME}</td>
+		</tr>
+		<!-- END transactions -->
+	</table>
+<!-- ENDIF -->
+
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/donations/vendor/bootstrap/js/bootstrap.min.js -->
+<!-- INCLUDEJS js/donations.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
+<!-- if you need to use straight JS with jQuery dependency you need to do it after the overall_footer tag otherwise it will not be loaded properly -->
