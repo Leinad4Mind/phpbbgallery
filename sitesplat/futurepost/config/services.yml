@@ -1,0 +1,27 @@
+services:
+    forumhulp.futurepost.listener:
+        class: forumhulp\futurepost\event\listener
+        arguments:
+            - '@auth'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+    forumhulp.futurepost.posts:
+        class: forumhulp\futurepost\cron\task\core\future_posts
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@config'
+            - '@dbal.conn'
+            - '@service_container'
+            - '@user'
+        calls:
+            - [set_name, [forumhulp.cron.future_posts]]
+        tags:
+            - { name: cron.task }

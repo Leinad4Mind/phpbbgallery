@@ -1,0 +1,33 @@
+{
+	"name": "forumhulp/futurepost",
+	"type": "phpbb-extension",
+	"description": "Mark posts as future post and hide them until it's date arives",
+	"homepage": "http://forumhulp.com",
+	"version": "3.1.1",
+	"keywords": ["phpbb", "extension", "posts", "pages"],
+	"license": "@license Proprietary",
+	"authors": [
+		{
+			"name": "John Peskens",
+			"role": "Extensions Development Team"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Future Posts",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.*@dev"
+		},
+		"version-check": {
+			"host": "forumhulp.com",
+			"directory": "/ext",
+			"filename": "index.php?id=109"
+		}
+	}
+}
