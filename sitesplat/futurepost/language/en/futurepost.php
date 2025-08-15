@@ -1,9 +1,8 @@
 <?php
 /**
 *
-* Future Posts
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+* BBpostdated
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */

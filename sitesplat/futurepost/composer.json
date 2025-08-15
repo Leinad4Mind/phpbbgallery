@@ -1,15 +1,16 @@
 {
-	"name": "forumhulp/futurepost",
+	"name": "sitesplat/futurepost",
 	"type": "phpbb-extension",
-	"description": "Mark posts as future post and hide them until it's date arives",
-	"homepage": "http://forumhulp.com",
-	"version": "3.1.1",
+	"description": "Allow to setup future posts and then post the content automatically once the date criteria is met.",
+	"homepage": "http://sitesplat.com",
+	"version": "1.0.1",
 	"keywords": ["phpbb", "extension", "posts", "pages"],
 	"license": "@license Proprietary",
 	"authors": [
 		{
-			"name": "John Peskens",
-			"role": "Extensions Development Team"
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
 		}
 	],
 	"require": {
@@ -20,14 +21,14 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "Future Posts",
+		"display-name": "BBPostDated",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.2.*@dev"
 		},
 		"version-check": {
-			"host": "forumhulp.com",
-			"directory": "/ext",
-			"filename": "index.php?id=109"
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbpostdated.json"
 		}
 	}
 }

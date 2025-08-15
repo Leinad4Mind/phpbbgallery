@@ -1,6 +1,6 @@
 services:
-    forumhulp.futurepost.listener:
-        class: forumhulp\futurepost\event\listener
+    sitesplat.futurepost.listener:
+        class: sitesplat\futurepost\event\listener
         arguments:
             - '@auth'
             - '@controller.helper'
@@ -12,8 +12,8 @@ services:
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
-    forumhulp.futurepost.posts:
-        class: forumhulp\futurepost\cron\task\core\future_posts
+    sitesplat.futurepost.posts:
+        class: sitesplat\futurepost\cron\task\core\future_posts
         arguments:
             - '%core.root_path%'
             - '%core.php_ext%'
@@ -22,6 +22,6 @@ services:
             - '@service_container'
             - '@user'
         calls:
-            - [set_name, [forumhulp.cron.future_posts]]
+            - [set_name, [sitesplat.cron.future_posts]]
         tags:
             - { name: cron.task }

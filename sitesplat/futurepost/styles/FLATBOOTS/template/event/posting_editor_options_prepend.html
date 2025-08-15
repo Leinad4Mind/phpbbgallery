@@ -1,0 +1,16 @@
+{% if not S_FUTURE_DATE_HIDDEN and not S_PRIVMSGS %}
+	{% INCLUDEJS '@sitesplat_futurepost/js/datepicker/js/lib/moment.min.js' %}
+	{% INCLUDEJS '@sitesplat_futurepost/js/datepicker/js/cuppa-calendar.js' %}
+	{% INCLUDEJS '@sitesplat_futurepost/js/datepicker.js' %}
+	{% INCLUDECSS '@sitesplat_futurepost/js/datepicker/css/cuppa-datepicker-styles.css' %}
+
+	<div class="futuredate-options">
+		<input type="checkbox" name="future_chk" id="future_chk"{{ S_FUTURE_DATE }} value="1" />
+		<label id="alternate" for="future_chk" class="check-control">&nbsp;{{ lang('FUTURE_DATE') }}</label>
+		<div id="datepicker"></div>
+	</div>
+
+	<script>
+		var WinkelCalendarFutureDate = '{{ D_FUTURE_DATE | e('js') }}';
+	</script>
+{% endif %}

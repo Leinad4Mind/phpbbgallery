@@ -1,14 +1,13 @@
 <?php
 /**
 *
-* Future Posts
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+* BBpostdated
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
 
-namespace forumhulp\futurepost\event;
+namespace sitesplat\futurepost\event;
 
 use phpbb\auth\auth;
 use phpbb\controller\helper;
@@ -47,7 +46,7 @@ class listener implements EventSubscriberInterface
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 
-		$this->user->add_lang_ext('forumhulp/futurepost', 'futurepost');
+		$this->user->add_lang_ext('sitesplat/futurepost', 'futurepost');
 	}
 
 	/**
@@ -64,7 +63,6 @@ class listener implements EventSubscriberInterface
 			'core.modify_submit_post_data'					=> 'save_future_time',
 			'core.submit_post_modify_sql_data'				=> 'sql_future_time',
 			'core.permissions'								=> 'add_permission',
-
 			'core.mcp_front_queue_unapproved_total_before'	=> 'mcp_list',
 			'core.mcp_front_queue_unapproved_posts_before'	=> 'mcp_posts',
 		);
@@ -89,6 +87,7 @@ class listener implements EventSubscriberInterface
 	{
 		$sql = $event['sql'];
 		$sql = str_replace('ORDER BY', ' AND post_time <=' . time() . ' ORDER BY', $sql);
+echo $sql;
 		$event['sql'] = $sql;
 	}
 
@@ -107,14 +106,13 @@ class listener implements EventSubscriberInterface
 				$template['S_FUTURE_DATE'] = ($event['post_data']['post_time'] > time()) ? ' checked="checked"' : '';
 				$template['T_FUTURE_DATE'] = ($event['post_data']['post_time'] > time()) ? date('m/d/Y', $event['post_data']['post_time']) : '';
 				$template['D_FUTURE_DATE'] = date('m/d/Y', ($event['post_data']['post_time']) ? $event['post_data']['post_time'] : time() + 86400);
-				$template['S_FUTURE_DATE_HIDDEN'] = true;
 			} else
 			{
-				$template['S_FUTURE_DATE_HIDDEN'] = false;
+				$template['S_FUTURE_DATE_HIDDEN'] = true;
 			}
 		} else
 		{
-			$template['S_FUTURE_DATE_HIDDEN'] = false;
+			$template['S_FUTURE_DATE_HIDDEN'] = true;
 		}
 		$event['page_data'] = $template;
 	}
@@ -162,7 +160,7 @@ class listener implements EventSubscriberInterface
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['u_futureposts'] = array('lang' => 'ACL_U_FUTUREPOSTS', 'cat' => 'misc');
+		$permissions['u_futurepost'] = array('lang' => 'ACL_U_FUTUREPOST', 'cat' => 'misc');
 		$event['permissions'] = $permissions;
 	}
 }

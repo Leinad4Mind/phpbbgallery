@@ -1,14 +1,13 @@
 <?php
 /**
 *
-* Future Posts
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+* BBpostdated
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
 
-namespace forumhulp\futurepost\migrations\v31x;
+namespace sitesplat\futurepost\migrations\v31x;
 
 /**
 * Migration stage 1: Initial permission
@@ -24,7 +23,7 @@ class m2_initial_permission extends \phpbb\db\migration\migration
 	*/
 	static public function depends_on()
 	{
-		return array('\forumhulp\futurepost\migrations\v31x\m1_config_data');
+		return array('\sitesplat\futurepost\migrations\v31x\m1_config_data');
 	}
 
 	/**
@@ -40,7 +39,7 @@ class m2_initial_permission extends \phpbb\db\migration\migration
 			array('permission.add', array('u_futureposts', true)),
 
 			// Set permissions
-			array('permission.permission_set', array('ROLE_MOD_FULL', 'm_futureposts')),
+			array('permission.permission_set', array('ROLE_MOD_FULL', 'u_futureposts')),
 		);
 	}
 }

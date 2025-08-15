@@ -1,14 +1,13 @@
 <?php
 /**
 *
-* Future Posts
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+* BBpostdated
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
 
-namespace forumhulp\futurepost;
+namespace sitesplat\futurepost;
 
 /**
  * This ext class is optional and can be omitted if left empty.
@@ -22,25 +21,25 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		if (!class_exists('forumhulp\helper\helper'))
+		if (!class_exists('sitesplat\BBCore\helper'))
 		{
-			$this->container->get('user')->add_lang_ext('forumhulp/futurepost', 'info_acp_futurepost');
-			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
+			$this->container->get('user')->add_lang_ext('sitesplat/futurepost', 'info_acp_futurepost');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);
 		}
 
-		if (!$this->container->get('ext.manager')->is_enabled('forumhulp/helper'))
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
 		{
-			$this->container->get('ext.manager')->enable('forumhulp/helper');
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
 		}
 
-		return class_exists('forumhulp\helper\helper');
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 	public function enable_step($old_state)
 	{
 		if (empty($old_state))
 		{
-			$this->container->get('user')->add_lang_ext('forumhulp/futurepost', 'info_acp_futurepost');
+			$this->container->get('user')->add_lang_ext('sitesplat/futurepost', 'info_acp_futurepost');
 			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
 				(isset($this->container->get('user')->lang['FUTUREPOSTS_NOTICE']) ?
 					$this->container->get('user')->lang['FUTUREPOSTS_NOTICE'] : ''));

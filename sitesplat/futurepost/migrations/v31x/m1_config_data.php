@@ -1,14 +1,13 @@
 <?php
 /**
 *
-* Future Posts
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+* BBpostdated
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
 
-namespace forumhulp\futurepost\migrations\v31x;
+namespace sitesplat\futurepost\migrations\v31x;
 
 /**
  * Migration stage 2: Config data
