@@ -18,5 +18,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'FUTURE_DATE'		=> 'Future date'
+	'FUTURE_DATE'		=> 'Future date',
+	'FUTURE_POST_ADDED'	=> 'The topic was successfully posted and will appear in the future.',
+	'TOPIC_PENDING'		=> 'This topic is pending for future date posting.',
+	'LOG_FUTURE_POST_APROVED'		=> 'Future post was successfully published',
 ));

@@ -8,6 +8,10 @@ services:
             - '@user'
             - '@config'
             - '@request'
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '%tables.topics%'
+            - '%tables.posts%'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:

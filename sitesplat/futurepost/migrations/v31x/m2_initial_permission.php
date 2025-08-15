@@ -36,10 +36,10 @@ class m2_initial_permission extends \phpbb\db\migration\migration
 	{
 		return array(
 			// Add permission
-			array('permission.add', array('u_futureposts', true)),
+			array('permission.add', array('u_futurepost', true)),
 
 			// Set permissions
-			array('permission.permission_set', array('ROLE_MOD_FULL', 'u_futureposts')),
+			array('permission.permission_set', array('ROLE_MOD_FULL', 'u_futurepost')),
 		);
 	}
 }
