@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Titles and Avatars
+* BBAvatars
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -65,6 +65,28 @@ class admin_listener implements EventSubscriberInterface
 					'function' => __NAMESPACE__.'\admin_listener::type_select',
 					'explain'	=> true
 				);
+			$add_config_var['titles_avatar_memberlist'] =
+				array(
+					'lang' 		=> 'TAT_SHOW_AVATARS_ML',
+					'validate'	=> 'bool',
+					'type'		=> 'radio:yes_no', 
+					'explain'	=> false
+				);
+			$add_config_var['titles_avatar_participants'] =
+				array(
+					'lang' 		=> 'TAT_SHOW_AVATARS_PP',
+					'validate'	=> 'bool',
+					'type'		=> 'radio:yes_no', 
+					'explain'	=> false
+				);
+			$add_config_var['titles_avatar_online'] =
+				array(
+					'lang' 		=> 'TAT_SHOW_AVATARS_OL',
+					'validate'	=> 'bool',
+					'type'		=> 'radio:yes_no', 
+					'explain'	=> false
+				);
+				
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_config_var, array('after' =>'allow_avatar'));
 			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
 		}

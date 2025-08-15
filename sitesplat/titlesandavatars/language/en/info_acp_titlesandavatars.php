@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Titles and Avatars
+* BBAvatars
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -19,11 +19,14 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'TAT'						=> 'Titles and Avatars',
-	'TAT_SHOW_AVATARS'			=> 'Show avatars',
-	'TAT_SHOW_AVATARS_EXPLAIN'	=> 'Display avatar from last-, first- or both poster',
+	'TAT'						=> 'BBAvatars',
+	'TAT_SHOW_AVATARS'			=> 'Show Avatars in Forumlist',
+	'TAT_SHOW_AVATARS_EXPLAIN'	=> 'Display Avatar from last-, first- or both poster',
+	'TAT_SHOW_AVATARS_ML'		=> 'Show Avatars in Memberlist',
+	'TAT_SHOW_AVATARS_PP'		=> 'Show Contributors Avatars in Topic',
+	'TAT_SHOW_AVATARS_OL'		=> 'Show Avatars in Online-list',
 
-	'TAT_BOTH'					=> 'Show both posters Avatars',
+	'TAT_BOTH'					=> 'Show both Avatars',
 	'TAT_FIRST'					=> 'Show only first poster Avatar',
 	'TAT_LAST'					=> 'Show only last poster Avatar',
 	

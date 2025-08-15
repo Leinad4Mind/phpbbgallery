@@ -4,6 +4,7 @@ services:
         arguments:
             - @config
             - @user
+            - @template
         tags:
             - { name: event.listener }
     sitesplat.titlesandavatars.admin_listener:
@@ -15,3 +16,14 @@ services:
             - @template
         tags:
             - { name: event.listener }
+    sitesplat.titlesandavatars.controller:
+        class: sitesplat\titlesandavatars\controller\main_controller
+        arguments:
+            - @config
+            - @user
+            - @request
+            - @dbal.conn
+            - @pagination
+            - @path_helper
+            - %core.root_path%
+            - %core.php_ext%

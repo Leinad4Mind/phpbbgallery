@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Titles and Avatars
+* BBAvatars
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -19,11 +19,13 @@ class listener implements EventSubscriberInterface
 {
 	protected $config;
 	protected $user;
+	protected $template;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\user $user)
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template)
 	{
 		$this->config = $config;
 		$this->user = $user;
+		$this->template = $template;
 	}
 
 	/**
@@ -36,14 +38,83 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewforum_get_topic_data' 			=> 'modify_sql_array',
-			'core.display_forums_modify_sql'			=> 'modify_display_sql_array',
-			'core.display_forums_modify_forum_rows'		=> 'forums_modify_forum_rows',
-			'core.display_forums_modify_template_vars'	=> 'forums_modify_template_vars',
-			'core.viewforum_modify_topicrow'			=> 'modify_topicrow',
+			'core.viewforum_get_topic_data' 				=> 'modify_sql_array',
+			'core.display_forums_modify_sql'				=> 'modify_display_sql_array',
+			'core.display_forums_modify_first_last_avatar'	=> 'forums_modify_forum_rows',
+			'core.display_forums_modify_template_vars'		=> 'forums_modify_template_vars',
+			'core.viewforum_modify_topicrow'				=> 'modify_topicrow',
+			
+			'core.memberlist_memberrow_before'				=> 'memberlist_avatar',
+			'core.viewtopic_modify_post_data'				=> 'participants_avatars',
+			'core.obtain_users_online_string_sql'			=> 'online_userlist_sql',
+			'core.obtain_users_online_string_modify'		=> 'online_userlist'
 		);
 	}
 
+	public function online_userlist_sql($event)
+	{
+		if ($this->config['titles_avatar_online'])
+		{
+			$sql_ary = $event['sql_ary'];
+			$sql_ary['SELECT'] .= ', u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height';
+			$event['sql_ary'] = $sql_ary;
+		}
+	}
+
+	public function online_userlist($event)
+	{
+		if ($this->config['titles_avatar_online'])
+		{
+			$online_userlist = $event['online_userlist'];
+			$user_online_link = $event['user_online_link'];
+			
+			$rows = $event['rowset']; 
+			$avatars = array();
+			foreach($rows as $row)
+			{
+				$avatars[] = '<a href="memberlist.php?mode=viewprofile&u=' . $row['user_id'] . '">' . (($row['user_avatar']) ? 
+								 str_replace(array('class="avatar"', 'alt='), array('class="online_img"', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title='), phpbb_get_user_avatar(
+									array('avatar'			=> $row['user_avatar'], 
+										  'avatar_type'		=> $row['user_avatar_type'], 
+										  'avatar_width'	=> $row['user_avatar_width'], 
+										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
+										  '<img class="avatar" alt="" title="' .  $row['username'] . '" src="' .
+										  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif">') . '</a>';
+			}
+			$event['online_userlist'] = str_replace($user_online_link, $avatars, $online_userlist);
+		}
+	}
+
+	public function participants_avatars($event)
+	{
+		$this->template->assign_vars(array(
+			'PARTICIPANTS_AVATAR'	=> $this->config['titles_avatar_participants'],
+			'PARTICIPANT_TOPIC_ID'	=> $event['topic_id']
+		));
+		if ($this->config['titles_avatar_participants'])
+		{
+			$this->user->add_lang_ext('sitesplat/titlesandavatars', 'titlesandavatars');
+			$row = $event['user_cache'];
+			shuffle($row);
+
+			for ($i = 0; $i < min(10, sizeof($row)); $i++)
+			{
+				$this->template->assign_block_vars('participants_avatars', array(
+					'TOPIC_AVATAR'	=> $row[$i]['avatar'],
+					'USERNAME'		=> $row[$i]['author_username'],
+					'URL'			=> $row[$i]['author_profile'],
+				));
+			}
+		}
+	}
+
+	public function memberlist_avatar($event)
+	{
+		$this->template->assign_vars(array(
+			'MEMBERLIST_AVATAR' => $this->config['titles_avatar_memberlist']
+		));
+	}
+	
 	public function modify_display_sql_array($event)
 	{
 		$sql_array = $event['sql_ary'];
@@ -71,7 +142,7 @@ class listener implements EventSubscriberInterface
 		$row = $event['row'];
 		$parent_id = $event['parent_id'];
 		$forum_rows = $event['forum_rows'];
-		
+
 		$forum_rows[$parent_id]['lpa']			= $row['lpa'];
 		$forum_rows[$parent_id]['lpa_type']		= $row['lpa_type'];
 		$forum_rows[$parent_id]['lpa_width']	= $row['lpa_width'];
@@ -83,7 +154,7 @@ class listener implements EventSubscriberInterface
 		$forum_rows[$parent_id]['fpa_width']	= $row['fpa_width'];
 		$forum_rows[$parent_id]['fpa_height']	= $row['fpa_height'];		
 		$forum_rows[$parent_id]['fpa_username']	= $row['fpa_username'];		
-
+			
 		$event['forum_rows'] = $forum_rows;
 	}
 
@@ -93,19 +164,20 @@ class listener implements EventSubscriberInterface
 		$row = $event['row'];
 		$template = $event['forum_row'];
 				
-		$template['FP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['fpa'], 
 									  'avatar_type'		=> $row['fpa_type'], 
 									  'avatar_width'	=> $row['fpa_width'], 
 									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
 
-		$template['LP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['lpa'], 
 									  'avatar_type'		=> $row['lpa_type'], 
 									  'avatar_width'	=> $row['lpa_width'], 
 									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
 
 		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
+		$template['FORUM_POSTS'] = $row['forum_posts'];
 		$event['forum_row'] = $template;
 	}
 		
@@ -114,16 +186,19 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
 		$row = $event['row'];
 		$template = $event['topic_row'];
-		$template['FP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+		
+		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['fpa'], 
 									  'avatar_type'		=> $row['fpa_type'], 
 									  'avatar_width'	=> $row['fpa_width'], 
 									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
-		$template['LP_AVATAR'] = str_replace('alt=', 'title=', phpbb_get_user_avatar(
+		
+		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
 								array('avatar'			=> $row['lpa'], 
 									  'avatar_type'		=> $row['lpa_type'], 
 									  'avatar_width'	=> $row['lpa_width'], 
 									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
+		
 		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
 		$event['topic_row'] = $template;
 	}

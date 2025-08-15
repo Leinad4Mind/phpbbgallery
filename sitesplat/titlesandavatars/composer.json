@@ -1,9 +1,9 @@
 {
 	"name": "sitesplat/titlesandavatars",
 	"type": "phpbb-extension",
-	"description": "Displays the first and last poster avatars on the index (forumlist) and viewforum pages. Allows enable/disable options for the poster avatars",
+	"description": "Enable the display of the user avatars in various forum locations like the forumlist, online list, memberslist and in topics as a contributors list. Allows enable/disable for each options.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.1.2",
+	"version": "1.2.4",
 	"keywords": ["phpbb", "extension", "avatar", "users", "BBOOTS", "FLATBOOTS", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -21,9 +21,9 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "Titles and Avatars",
+		"display-name": "BBAvatars",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.1.7,<3.2.*@dev"
 		},
 		"version-check": {
             "host": "www.sitesplat.com",

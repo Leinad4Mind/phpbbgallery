@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Titles and Avatars
+* BBAvatars
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -31,9 +31,13 @@ class ext extends \phpbb\extension\base
 	{
 		if (empty($old_state))
 		{
-			global $user;
-			$user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
-			$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['TAT_NOTICE']) ? sprintf($user->lang['TAT_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_BOARD_CONFIGURATION'], $user->lang['ACP_AVATAR_SETTINGS']) : '');
+			$this->container->get('user')->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
+			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
+				(isset($this->container->get('user')->lang['TAT_NOTICE']) ? 
+				sprintf($this->container->get('user')->lang['TAT_NOTICE'],
+					$this->container->get('user')->lang['ACP_CAT_GENERAL'],
+					$this->container->get('user')->lang['ACP_BOARD_CONFIGURATION'],
+					$this->container->get('user')->lang['ACP_AVATAR_SETTINGS']) : ''));
 		}
 		// Run parent enable step method
 		return parent::enable_step($old_state);

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Titles and Avatars
+* BBAvatars
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
@@ -24,13 +24,16 @@ class m1_initial_config extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\BBCore\migrations\v31x\m1_initial_file');
+		return  array('\sitesplat\BBCore\migrations\v31x\m1_initial_file');
 	}
 
 	public function update_data()
 	{
 		return array(
 			array('config.add', array('titles_avatar_setting', 0)),
+			array('config.add', array('titles_avatar_participants', 1)),
+			array('config.add', array('titles_avatar_memberlist', 1)),
+			array('config.add', array('titles_avatar_online', 1)),
 		);
 	}
 }
