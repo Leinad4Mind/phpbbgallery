@@ -103,7 +103,7 @@ class admin_listener implements EventSubscriberInterface
 			$type_options .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
 			
 		}
-		return '<select style="width:140px;" name="config[titles_avatar_setting]" id="titles_avatar_setting" title="Sort order">' . $type_options . '</select>';
+		return '<select style="width:140px;" name="config[titles_avatar_setting]" id="titles_avatar_setting">' . $type_options . '</select>';
 	}
 
 }

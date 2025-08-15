@@ -162,8 +162,9 @@
 
 
 .avatar-partecipants {
-padding: 5px 0 0 3px;
+   margin-bottom: 5px;
 }
+
 .avatar-partecipants img{
     border: 2px solid #dedede;
     border-radius: 4px;
@@ -179,6 +180,9 @@ padding: 5px 0 0 3px;
 
 .partecipants-time-stamp {
     margin-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #footerContent .recent-topic .avatar {

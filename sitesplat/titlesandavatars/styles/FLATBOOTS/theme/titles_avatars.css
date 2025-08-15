@@ -161,7 +161,7 @@
 }
 
 .avatar-partecipants {
-padding: 5px 0 0 3px;
+   margin-bottom: 5px;
 }
 .avatar-partecipants img{
     border: 4px solid #dedede;
@@ -178,6 +178,9 @@ padding: 5px 0 0 3px;
 
 .partecipants-time-stamp {
     margin-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 @media (max-width: 468px) {

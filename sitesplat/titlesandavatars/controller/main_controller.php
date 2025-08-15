@@ -92,23 +92,31 @@ class main_controller
 				  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 							  phpbb_get_user_avatar(
 								  array('avatar'			=> $row['user_avatar'], 
-								        'user_id'         => $row['user_id'],
+								        'user_id'           => $row['user_id'],
 										'avatar_type'		=> $row['user_avatar_type'], 
-										'avatar_width'	=> $row['user_avatar_width'], 
-										'avatar_height'	=> $row['user_avatar_height'])), $match) :
+										'avatar_width'		=> $row['user_avatar_width'], 
+										'avatar_height'		=> $row['user_avatar_height'])), $match) :
 										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
 
+
+
 					echo '<div class="avatar-partecipants col-md-2 col-sm-3 col-xs-4">
-						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar) . ' ">
-						  <div class="partecipants-time-stamp">
-						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['poster_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a></div></div>';
+						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . 
+		/*				  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) */
+						  
+						  ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar)
+						  
+						  . ' " style="float:left;width:70px;">
+						  <div class="partecipants-time-stamp" style="text-align:center;padding-left:5px;">
+						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a></div></div>';
 				}
 				echo '<br style="clear:both;"><div class="pagination-partecipants pull-right"><ul class="pagination pagination-sm">';
 				echo $this->generate_pagination($base_url, $total_posters, $per_page, $start, true);
 				echo '</ul></div>
 				<script>
 				$( document ).ready(function() {
-					$( "#profile-data .pull-right .pagination-sm > li a" ).addClass( "AvatarsPagination" );
+					$( "#profileBBavatar .pull-right .pagination-sm > li a" ).addClass( "AvatarsPagination" );
 				});
 				</script>'; 
 				exit();
@@ -147,18 +155,18 @@ class main_controller
 			$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
 			$end_cnt = max(min($total_pages, $on_page + 4), 6);
 	
-			$page_string .= ($start_cnt > 1) ? '<span class="page-dots"> ... </span>' : $seperator;
+			$page_string .= ($start_cnt > 1) ? '<li class="page-dots"><a>...</a></li>' : $seperator;
 	
 			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a></li>';
 				if ($i < $end_cnt - 1)
 				{
 					$page_string .= $seperator;
 				}
 			}
 	
-			$page_string .= ($end_cnt < $total_pages) ? '<span class="page-dots"> ... </span>' : $seperator;
+			$page_string .= ($end_cnt < $total_pages) ? '<li class="page-dots"><a>...</a></li>' : $seperator;
 		}
 		else
 		{
