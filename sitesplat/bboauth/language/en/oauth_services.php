@@ -3,7 +3,7 @@
 *
 * BBOAuth
 *
-* @copyright (c) 2016 SiteSplat All rights reserved
+* @copyright (c) 2018 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -20,6 +20,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'AUTH_PROVIDER_OAUTH_SERVICE_COINBASE'	=> 'Coinbase',
+	'AUTH_PROVIDER_OAUTH_SERVICE_DISCORD'	=> 'Discord',
 	'AUTH_PROVIDER_OAUTH_SERVICE_DROPBOX'	=> 'Dropbox',
 	'AUTH_PROVIDER_OAUTH_SERVICE_GITHUB'	=> 'Github',
 	'AUTH_PROVIDER_OAUTH_SERVICE_INSTAGRAM'	=> 'Instagram',

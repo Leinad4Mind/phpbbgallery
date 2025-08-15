@@ -1,4 +1,13 @@
 <?php
+/**
+*
+* BBOAuth
+*
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
 spl_autoload_register(function($class) {
 	$class = ltrim($class, '\\');
 	if (strpos($class, 'OAuth\\OAuth2\\Service') === 0 || strpos($class, 'OAuth\\OAuth1\\Service') === 0) {

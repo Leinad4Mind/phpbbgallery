@@ -3,7 +3,7 @@
 *
 * BBOAuth
 *
-* @copyright (c) 2016 SiteSplat All rights reserved
+* @copyright (c) 2018 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -21,6 +21,7 @@ use OAuth\Common\Http\Uri\UriInterface;
 class Slack extends AbstractService
 {
 	const SCOPE_IDENTITY_BASIC = 'identity.basic';
+	const SCOPE_IDENTITY_EMAIL = 'identity.email';
 
 	public function __construct(
 		Credentials $credentials,

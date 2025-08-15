@@ -1,8 +1,9 @@
 <?php
 /**
 *
-* @package BBoauth
-* @copyright (c) 2016 SiteSplat All rights reserved
+* BBOAuth
+*
+* @copyright (c) 2018 SiteSplat All rights reserved
 * @license Proprietary
 *
 */

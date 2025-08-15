@@ -3,7 +3,7 @@
 *
 * BBOAuth
 *
-* @copyright (c) 2016 SiteSplat All rights reserved
+* @copyright (c) 2018 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -20,6 +20,8 @@ use OAuth\Common\Http\Uri\UriInterface;
 
 class Coinbase extends AbstractService
 {
+    const SCOPE_WALLET_USER_EMAIL = 'wallet:user:email';
+
     public function __construct(
         CredentialsInterface $credentials,
         ClientInterface $httpClient,

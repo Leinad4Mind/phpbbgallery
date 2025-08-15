@@ -1,9 +1,9 @@
 {
 	"name": "sitesplat/bboauth",
 	"type": "phpbb-extension",
-	"description": "Allows you to login via Github, Slack, Dropbox or Instagram accounts.",
+	"description": "It extends the default phpBB oauth providers and allows you to login via Github, Slack, Dropbox, Instagram, Discord and more accounts. It also allows the user to autoregister with social medias YES you read that right :-) ) and comes with some handy autogroup options.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"keywords": ["phpbb", "extension", "OAuth", "Github", "Slack", "Dropbox", "Instagram"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -20,7 +20,7 @@
 	"extra": {
 		"display-name": "BBOAuth",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.2@dev"
+			"phpbb/phpbb": ">=3.2.4,<3.3@dev"
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
