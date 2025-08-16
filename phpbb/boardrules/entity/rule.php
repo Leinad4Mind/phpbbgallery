@@ -211,7 +211,7 @@ class rule implements rule_interface
 	* Save the current settings to the database
 	*
 	* This must be called before closing or any changes will not be saved!
-	* If adding a rule (saving for the first time), you must call insert() or an exeception will be thrown
+	* If adding a rule (saving for the first time), you must call insert() or an exception will be thrown
 	*
 	* @return rule_interface $this object for chaining calls; load()->set()->save()
 	* @access public
@@ -225,8 +225,13 @@ class rule implements rule_interface
 			throw new \phpbb\boardrules\exception\out_of_bounds('rule_id');
 		}
 
+		// Copy the data array, filtering out the rule_id identifier
+		// so we do not attempt to update the row's identity column.
+		$sql_array = array_diff_key($this->data, array('rule_id' => null));
+
+		// Update the page data in the database
 		$sql = 'UPDATE ' . $this->boardrules_table . '
-			SET ' . $this->db->sql_build_array('UPDATE', $this->data) . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_array) . '
 			WHERE rule_id = ' . $this->get_id();
 		$this->db->sql_query($sql);
 
@@ -487,7 +492,7 @@ class rule implements rule_interface
 			throw new \phpbb\boardrules\exception\unexpected_value(array('anchor', 'TOO_LONG'));
 		}
 
-		// Make sure rule anchors are unique
+		// Make sure rule anchors are unique for the current language
 		// Test if new page and anchor field has data or...
 		//    if existing page and anchor field has new data not equal to existing anchor data
 		if ((!$this->get_id() && $anchor !== '') || ($this->get_id() && $anchor !== '' && $this->get_anchor() !== $anchor))
@@ -495,7 +500,8 @@ class rule implements rule_interface
 			$sql = 'SELECT 1
 				FROM ' . $this->boardrules_table . "
 				WHERE rule_anchor = '" . $this->db->sql_escape($anchor) . "'
-					AND rule_id <> " . $this->get_id();
+					AND rule_id <> " . $this->get_id() .
+					($this->get_language() ? ' AND rule_language = ' . $this->get_language() : '');
 			$result = $this->db->sql_query_limit($sql, 1);
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
@@ -521,6 +527,23 @@ class rule implements rule_interface
 	public function get_language()
 	{
 		return (isset($this->data['rule_language'])) ? (int) $this->data['rule_language'] : 0;
+	}
+
+	/**
+	 * Set the language identifier
+	 *
+	 * @param int $language language identifier
+	 * @return rule_interface $this object for chaining calls; load()->set()->save()
+	 * @access public
+	 */
+	public function set_language($language)
+	{
+		if (!isset($this->data['rule_language']))
+		{
+			$this->data['rule_language'] = (int) $language;
+		}
+
+		return $this;
 	}
 
 	/**
@@ -561,7 +584,7 @@ class rule implements rule_interface
 	*
 	* @param int $option_value Value of the option
 	* @param bool $negate Negate (unset) option (Default: False)
-	* @param bool $reparse_message Reparse the message after setting option (Default: True)
+	* @param bool $reparse_message Re-parse the message after setting option (Default: True)
 	* @return null
 	* @access protected
 	*/
@@ -577,14 +600,14 @@ class rule implements rule_interface
 			$this->data['rule_message_bbcode_options'] += $option_value;
 		}
 
-		// If we're unsetting the option and the option is already set
+		// If we're un-setting the option and the option is already set
 		if ($negate && $this->data['rule_message_bbcode_options'] & $option_value)
 		{
 			// Subtract the option from the options
 			$this->data['rule_message_bbcode_options'] -= $option_value;
 		}
 
-		// Reparse the message
+		// Re-parse the message
 		if ($reparse_message && !empty($this->data['rule_message']))
 		{
 			$message = $this->data['rule_message'];
