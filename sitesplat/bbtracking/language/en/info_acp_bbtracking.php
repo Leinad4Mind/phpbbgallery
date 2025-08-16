@@ -3,9 +3,6 @@
 *
 * BBtracking
 *
-* @copyright (c) 2018 Ken F. Innes IV <https://www.absoluteanime.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
 * @copyright (c) 2017, Sitesplat
 * @license private
 */
@@ -57,7 +54,7 @@ $lang = array_merge($lang, array(
 	'TRACKING_TYPE_LOGOUT_LABEL'					=> 'Logout',
 	'TRACKING_TYPE_SEND_PM_LABEL'					=> 'PM send',
 
-	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBTRACKING_NOTICE'	            => '<div class="phpinfo"><p>The settings for this extension can be found under the "EXTENSIONS" tab.<br />Note: other extension options are under: ACP > Forums: "select your forum" and hit the green cog icon to enter edit mode. Then check out "Store post revisions" and "Auto-prune revisions". <br/>Also, don\'t forget to check the "Group forum permissions" under the "Actions" permission tab.<br /> Finally, the users (who have permissions) can use the post revision option in viewtopic, under the single post dropdown menu.</p></div>',
 	
 	'ACP_PRIMEPOSTREVISIONS_ENABLE'				=> 'Store post revisions',

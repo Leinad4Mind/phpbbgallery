@@ -3,9 +3,6 @@
 *
 * BBtracking
 *
-* @copyright (c) 2018 Ken F. Innes IV <https://www.absoluteanime.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
 * @copyright (c) 2017, Sitesplat
 * @license private
 */

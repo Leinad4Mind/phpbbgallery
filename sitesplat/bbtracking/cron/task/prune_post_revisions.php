@@ -67,7 +67,7 @@ class prune_post_revisions extends \phpbb\cron\task\base
 		$this->db->sql_freeresult($result);
 
 		// Log the auto-pruning result
-		$this->user->add_lang_ext('sitesplat/bbtracking', 'info_acp_postrev');
+		$this->user->add_lang_ext('sitesplat/bbtracking', 'info_acp_bbtracking');
 		$this->phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PRIMEPOSTREVISIONS_AUTOPRUNE', false, array($del_cnt));
 
 		// Update the cron task run time here if it hasn't
