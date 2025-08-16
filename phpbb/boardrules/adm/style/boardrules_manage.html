@@ -15,11 +15,11 @@
 	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
 
 	<!-- IF S_ADD_RULE -->
-		<h1>{L_ACP_BOARDRULES_CREATE_RULE} {L_COLON}{L_COLON} {RULE_TITLE}</h1>
+		<h1>{L_ACP_BOARDRULES_CREATE_RULE} :: {RULE_TITLE}</h1>
 
 		<p>{L_ACP_BOARDRULES_CREATE_RULE_EXPLAIN}</p>
 	<!-- ELSE -->
-		<h1>{L_ACP_BOARDRULES_EDIT_RULE} {L_COLON}{L_COLON} {RULE_TITLE}</h1>
+		<h1>{L_ACP_BOARDRULES_EDIT_RULE} :: {RULE_TITLE}</h1>
 
 		<p>{L_ACP_BOARDRULES_EDIT_RULE_EXPLAIN}</p>
 	<!-- ENDIF -->
@@ -102,24 +102,24 @@
 	<p>{L_ACP_BOARDRULES_MANAGE_EXPLAIN}</p>
 
 	<!-- IF .options -->
-	<form id="language_form" method="post" action="{U_ACTION}">
-		<fieldset>
-			<dl>
-				<dt>
-					<label for="language">{L_ACP_BOARDRULES_SELECT_LANGUAGE}{L_COLON}</label>
-				</dt>
-				<dd>
-					<select name="language" id="language">
-						<!-- BEGIN options -->
-							<option value="{options.LANG_ID}"<!-- IF options.S_LANG_DEFAULT --> selected="selected"<!-- ENDIF -->>{options.LANG_LOCAL_NAME}</option>
-						<!-- END options -->
-					</select>
-					<input type="submit" value="{L_GO}" class="button2">
-					{S_FORM_TOKEN}
-				</dd>
-			</dl>
-		</fieldset>
-	</form>
+		<form id="language_form" method="post" action="{U_ACTION}">
+			<fieldset>
+				<dl>
+					<dt>
+						<label for="language">{L_ACP_BOARDRULES_SELECT_LANGUAGE}{L_COLON}</label>
+					</dt>
+					<dd>
+						<select name="language" id="language">
+							<!-- BEGIN options -->
+								<option value="{options.LANG_ID}"<!-- IF options.S_LANG_DEFAULT --> selected="selected"<!-- ENDIF -->>{options.LANG_LOCAL_NAME}</option>
+							<!-- END options -->
+						</select>
+						<input type="submit" value="{L_GO}" class="button2">
+						{S_FORM_TOKEN}
+					</dd>
+				</dl>
+			</fieldset>
+		</form>
 	<!-- ELSE -->
 
 		<!-- IF .breadcrumb -->
@@ -135,7 +135,13 @@
 
 		<!-- IF .rules -->
 			<table class="table1 forums">
-				<col class="row1" /><col class="row1" /><col class="row2" />
+				<colgroup><col class="row1" /><col class="row1" /><col class="row2" /></colgroup>
+				<thead>
+					<tr>
+						<th colspan="2">{L_ACP_BOARDRULES}</th>
+						<th>{L_ACTION}</th>
+					</tr>
+				</thead>
 				<tbody>
 					<!-- BEGIN rules -->
 						<tr>

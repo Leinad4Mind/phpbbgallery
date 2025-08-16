@@ -46,7 +46,6 @@ class main_controller implements main_interface
 	* @param \phpbb\user                         $user               User object
 	* @param string                              $root_path          phpBB root path
 	* @param string                              $php_ext            phpEx
-	* @return \phpbb\boardrules\controller\main_controller
 	* @access public
 	*/
 	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\boardrules\operators\rule $rule_operator, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
@@ -85,6 +84,7 @@ class main_controller implements main_interface
 		// Grab all the rules in the current user's language
 		$entities = $this->rule_operator->get_rules($this->user->get_iso_lang_id());
 
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		foreach ($entities as $entity)
 		{
 			if ($entity->get_right_id() - $entity->get_left_id() > 1)
@@ -148,6 +148,7 @@ class main_controller implements main_interface
 
 		// Assign values to template vars for the rules page
 		$this->template->assign_vars(array(
+			'S_BOARD_RULES'			=> true,
 			'S_CATEGORIES'			=> ($cat_counter > 1) ? true : false,
 			'BOARDRULES_EXPLAIN'	=> $this->user->lang('BOARDRULES_EXPLAIN', $this->config['sitename']),
 		));

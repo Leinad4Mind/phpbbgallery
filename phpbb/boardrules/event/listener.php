@@ -40,7 +40,6 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\template\template    $template           Template object
 	* @param \phpbb\user                 $user               User object
 	* @param string                      $php_ext            phpEx
-	* @return \phpbb\boardrules\event\listener
 	* @access public
 	*/
 	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\template\template $template, \phpbb\user $user, $php_ext)
@@ -91,11 +90,10 @@ class listener implements EventSubscriberInterface
 	/**
 	* Create a URL to the board rules controller file for the header linklist
 	*
-	* @param object $event The event object
 	* @return null
 	* @access public
 	*/
-	public function add_page_header_link($event)
+	public function add_page_header_link()
 	{
 		$this->template->assign_vars(array(
 			'S_BOARDRULES_LINK_ENABLED' => (!empty($this->config['boardrules_enable']) && !empty($this->config['boardrules_header_link'])) ? true : false,

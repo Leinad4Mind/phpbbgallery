@@ -14,7 +14,7 @@ class boardrules_module
 {
 	public $u_action;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
 		global $phpbb_container, $request, $user;
 
@@ -34,7 +34,7 @@ class boardrules_module
 		$admin_controller->set_page_url($this->u_action);
 
 		// Load the "settings" or "manage" module modes
-		switch($mode)
+		switch ($mode)
 		{
 			case 'settings':
 				// Load a template from adm/style for our ACP page
@@ -62,7 +62,7 @@ class boardrules_module
 				$this->page_title = $user->lang('ACP_BOARDRULES_MANAGE');
 
 				// Perform any actions submitted by the user
-				switch($action)
+				switch ($action)
 				{
 					case 'add':
 						// Set the page title for our ACP page

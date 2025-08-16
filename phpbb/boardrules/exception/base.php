@@ -31,7 +31,6 @@ class base extends \Exception
 	* @param string|array $message
 	* @param int $code
 	* @param \Exception $previous
-	* @return \phpbb\boardrules\exception\base
 	* @access public
 	*/
 	public function __construct($message = null, $code = 0, \Exception $previous = null)
@@ -79,7 +78,7 @@ class base extends \Exception
 	* Goes through each element of the array and tries to translate them
 	*
 	* @param \phpbb\user $user
-	* @param array $message_portions The message portions to translate
+	* @param string|array $message_portions The message portions to translate
 	* @param string|null $parent_message Send a string to translate all of the
 	*     portions with the parent message (typically used to format a string
 	*     with the given message portions). Null to ignore. Default: Null

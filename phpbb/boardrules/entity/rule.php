@@ -50,7 +50,6 @@ class rule implements rule_interface
 	*
 	* @param \phpbb\db\driver\driver_interface    $db                 Database object
 	* @param string                               $boardrules_table   Name of the table used to store board rules data
-	* @return \phpbb\boardrules\entity\rule
 	* @access public
 	*/
 	public function __construct(\phpbb\db\driver\driver_interface $db, $boardrules_table)
@@ -490,7 +489,7 @@ class rule implements rule_interface
 
 		// Make sure rule anchors are unique
 		// Test if new page and anchor field has data or...
-		//    if existing page and anchor field has new data not equal to exisiting anchor data
+		//    if existing page and anchor field has new data not equal to existing anchor data
 		if ((!$this->get_id() && $anchor !== '') || ($this->get_id() && $anchor !== '' && $this->get_anchor() !== $anchor))
 		{
 			$sql = 'SELECT 1

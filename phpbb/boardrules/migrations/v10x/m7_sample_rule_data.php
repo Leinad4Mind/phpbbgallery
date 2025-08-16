@@ -10,10 +10,12 @@
 
 namespace phpbb\boardrules\migrations\v10x;
 
+use \phpbb\db\migration\container_aware_migration;
+
 /**
 * Migration stage 7: Install sample rule data
 */
-class m7_sample_rule_data extends \phpbb\db\migration\migration
+class m7_sample_rule_data extends container_aware_migration
 {
 	/**
 	* Check if the boardrules table contains any data
@@ -26,8 +28,9 @@ class m7_sample_rule_data extends \phpbb\db\migration\migration
 		$sql = 'SELECT * FROM ' . $this->table_prefix . 'boardrules';
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
-		return $row != false;
+		return $row !== false;
 	}
 
 	/**
@@ -63,7 +66,8 @@ class m7_sample_rule_data extends \phpbb\db\migration\migration
 	*/
 	public function insert_sample_rule_data()
 	{
-		global $user;
+		/** @var \phpbb\user $user */
+		$user = $this->container->get('user');
 
 		// Get the lang_id of the admin installing board rules
 		$lang_id = $user->get_iso_lang_id();

@@ -20,23 +20,29 @@ class admin_controller implements admin_interface
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var ContainerInterface */
+	protected $container;
+
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\log\log */
+	protected $log;
+
+	/** @var \phpbb\notification\manager */
+	protected $notification_manager;
+
 	/** @var \phpbb\request\request */
 	protected $request;
+
+	/** @var \phpbb\boardrules\operators\rule */
+	protected $rule_operator;
 
 	/** @var \phpbb\template\template */
 	protected $template;
 
 	/** @var \phpbb\user */
 	protected $user;
-
-	/** @var ContainerInterface */
-	protected $container;
-
-	/** @var \phpbb\boardrules\operators\rule */
-	protected $rule_operator;
 
 	/** @var string phpBB root path */
 	protected $root_path;
@@ -50,27 +56,30 @@ class admin_controller implements admin_interface
 	/**
 	* Constructor
 	*
-	* @param \phpbb\config\config                 $config          Config object
-	* @param \phpbb\db\driver\driver_interface    $db              Database object
-	* @param \phpbb\request\request               $request         Request object
-	* @param \phpbb\template\template             $template        Template object
-	* @param \phpbb\user                          $user            User object
-	* @param ContainerInterface                   $container       Service container interface
-	* @param \phpbb\boardrules\operators\rule     $rule_operator   Rule operator object
-	* @param string                               $root_path       phpBB root path
-	* @param string                               $php_ext         phpEx
-	* @return \phpbb\boardrules\controller\admin_controller
+	* @param \phpbb\config\config              $config               Config object
+	* @param ContainerInterface                $container            Service container interface
+	* @param \phpbb\db\driver\driver_interface $db                   Database object
+	* @param \phpbb\log\log                    $log                  Log object
+	* @param \phpbb\notification\manager       $notification_manager Notification manager
+	* @param \phpbb\request\request            $request              Request object
+	* @param \phpbb\boardrules\operators\rule  $rule_operator        Rule operator object
+	* @param \phpbb\template\template          $template             Template object
+	* @param \phpbb\user                       $user                 User object
+	* @param string                            $root_path            phpBB root path
+	* @param string                            $php_ext              phpEx
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, ContainerInterface $container, \phpbb\boardrules\operators\rule $rule_operator, $root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, \phpbb\log\log $log, \phpbb\notification\manager $notification_manager, \phpbb\request\request $request, \phpbb\boardrules\operators\rule $rule_operator, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		$this->config = $config;
+		$this->container = $container;
 		$this->db = $db;
+		$this->log = $log;
+		$this->notification_manager = $notification_manager;
 		$this->request = $request;
+		$this->rule_operator = $rule_operator;
 		$this->template = $template;
 		$this->user = $user;
-		$this->container = $container;
-		$this->rule_operator = $rule_operator;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -105,8 +114,7 @@ class admin_controller implements admin_interface
 				$this->set_options();
 
 				// Add option settings change action to the admin log
-				$phpbb_log = $this->container->get('log');
-				$phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BOARDRULES_SETTINGS_LOG');
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BOARDRULES_SETTINGS_LOG');
 
 				// Option settings have been updated and logged
 				// Confirm this to the user and provide link back to previous page
@@ -116,14 +124,14 @@ class admin_controller implements admin_interface
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
-			'S_ERROR'		=> (sizeof($errors)) ? true : false,
-			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'S_ERROR'	=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
-			'U_ACTION'		=> $this->u_action,
+			'U_ACTION'	=> $this->u_action,
 
-			'S_BOARDRULES_ENABLE'						=> $this->config['boardrules_enable'] ? true : false,
-			'S_BOARDRULES_HEADER_LINK'					=> $this->config['boardrules_header_link'] ? true : false,
-			'S_BOARDRULES_REQUIRE_AT_REGISTRATION'		=> $this->config['boardrules_require_at_registration'] ? true : false,
+			'S_BOARDRULES_ENABLE'					=> (bool) $this->config['boardrules_enable'],
+			'S_BOARDRULES_HEADER_LINK'				=> (bool) $this->config['boardrules_header_link'],
+			'S_BOARDRULES_REQUIRE_AT_REGISTRATION'	=> (bool) $this->config['boardrules_require_at_registration'],
 		));
 	}
 
@@ -165,7 +173,7 @@ class admin_controller implements admin_interface
 			foreach ($rows as $row)
 			{
 				$this->template->assign_block_vars('options', array(
-					'S_LANG_DEFAULT'	=> ($row['lang_iso'] == $this->config['default_lang']) ? true : false,
+					'S_LANG_DEFAULT'	=> $row['lang_iso'] == $this->config['default_lang'],
 
 					'LANG_ID'			=> $row['lang_id'],
 					'LANG_LOCAL_NAME'	=> $row['lang_local_name'],
@@ -201,6 +209,7 @@ class admin_controller implements admin_interface
 		$last_right_id = 0;
 
 		// Process each rule entity for display
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		foreach ($entities as $entity)
 		{
 			if ($entity->get_left_id() < $last_right_id)
@@ -210,15 +219,15 @@ class admin_controller implements admin_interface
 
 			// Set output block vars for display in the template
 			$this->template->assign_block_vars('rules', array(
-				'RULE_TITLE'		=> $entity->get_title(),
+				'RULE_TITLE'	=> $entity->get_title(),
 
-				'S_IS_CATEGORY'		=> ($entity->get_right_id() - $entity->get_left_id() > 1) ? true : false,
+				'S_IS_CATEGORY'	=> ($entity->get_right_id() - $entity->get_left_id() > 1) ? true : false,
 
-				'U_DELETE'			=> "{$this->u_action}&amp;action=delete&amp;rule_id=" . $entity->get_id(),
-				'U_EDIT'			=> "{$this->u_action}&amp;action=edit&amp;rule_id=" . $entity->get_id(),
-				'U_MOVE_DOWN'		=> "{$this->u_action}&amp;action=move_down&amp;rule_id=" . $entity->get_id() . '&amp;hash=' . generate_link_hash('down' . $entity->get_id()),
-				'U_MOVE_UP'			=> "{$this->u_action}&amp;action=move_up&amp;rule_id=" . $entity->get_id() . '&amp;hash=' . generate_link_hash('up' . $entity->get_id()),
-				'U_RULE'			=> "{$this->u_action}&amp;language={$language}&amp;parent_id=" . $entity->get_id(),
+				'U_DELETE'		=> "{$this->u_action}&amp;action=delete&amp;rule_id=" . $entity->get_id(),
+				'U_EDIT'		=> "{$this->u_action}&amp;action=edit&amp;rule_id=" . $entity->get_id(),
+				'U_MOVE_DOWN'	=> "{$this->u_action}&amp;action=move_down&amp;rule_id=" . $entity->get_id() . '&amp;hash=' . generate_link_hash('down' . $entity->get_id()),
+				'U_MOVE_UP'		=> "{$this->u_action}&amp;action=move_up&amp;rule_id=" . $entity->get_id() . '&amp;hash=' . generate_link_hash('up' . $entity->get_id()),
+				'U_RULE'		=> "{$this->u_action}&amp;language={$language}&amp;parent_id=" . $entity->get_id(),
 			));
 
 			// Store the current right_id value
@@ -235,7 +244,7 @@ class admin_controller implements admin_interface
 			$this->template->assign_block_vars('breadcrumb', array(
 				'RULE_TITLE'		=> $entity->get_title(),
 
-				'S_CURRENT_LEVEL'	=> ($entity->get_id() == $parent_id) ? true : false,
+				'S_CURRENT_LEVEL'	=> $entity->get_id() == $parent_id,
 
 				'U_RULE'			=> "{$this->u_action}&amp;language={$language}&amp;parent_id=" . $entity->get_id(),
 			));
@@ -266,7 +275,7 @@ class admin_controller implements admin_interface
 		$entity = $this->container->get('phpbb.boardrules.entity');
 
 		// Build rule parent pull down menu
-		$this->build_parent_select_menu($entity, $language, $parent_id, $mode = 'add');
+		$this->build_parent_select_menu($entity, $language, $parent_id, 'add');
 
 		// Collect the form data
 		$data = array(
@@ -305,6 +314,7 @@ class admin_controller implements admin_interface
 		add_form_key('add_edit_rule');
 
 		// Initiate and load the rule entity
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		$entity = $this->container->get('phpbb.boardrules.entity')->load($rule_id);
 
 		// Build rule parent pull down menu
@@ -326,11 +336,11 @@ class admin_controller implements admin_interface
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
-			'S_EDIT_RULE'		=> true,
-			'S_IS_CATEGORY'		=> ($entity->get_right_id() - $entity->get_left_id() > 1) ? true : false,
+			'S_EDIT_RULE'	=> true,
+			'S_IS_CATEGORY'	=> ($entity->get_right_id() - $entity->get_left_id() > 1) ? true : false,
 
-			'U_EDIT_ACTION'		=> "{$this->u_action}&amp;rule_id={$rule_id}&amp;action=edit",
-			'U_BACK'			=> "{$this->u_action}&amp;language={$entity->get_language()}&amp;parent_id={$entity->get_parent_id()}",
+			'U_EDIT_ACTION'	=> "{$this->u_action}&amp;rule_id={$rule_id}&amp;action=edit",
+			'U_BACK'		=> "{$this->u_action}&amp;language={$entity->get_language()}&amp;parent_id={$entity->get_parent_id()}",
 		));
 	}
 
@@ -414,10 +424,10 @@ class admin_controller implements admin_interface
 		{
 			// Set output vars for display in the template
 			$this->template->assign_vars(array(
-				'S_PREVIEW'					=> $preview,
+				'S_PREVIEW'				=> $preview,
 
-				'RULE_TITLE_PREVIEW'		=> $entity->get_title(),
-				'RULE_MESSAGE_PREVIEW'		=> $entity->get_message_for_display(),
+				'RULE_TITLE_PREVIEW'	=> $entity->get_title(),
+				'RULE_MESSAGE_PREVIEW'	=> $entity->get_message_for_display(),
 			));
 		}
 
@@ -490,6 +500,7 @@ class admin_controller implements admin_interface
 	public function delete_rule($rule_id)
 	{
 		// Initiate and load the rule entity
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		$entity = $this->container->get('phpbb.boardrules.entity')->load($rule_id);
 
 		// Use a confirmation box routine when deleting a rule
@@ -544,6 +555,7 @@ class admin_controller implements admin_interface
 		}
 
 		// Initiate and load the rule entity for no AJAX request
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		$entity = $this->container->get('phpbb.boardrules.entity')->load($rule_id);
 
 		// Use a redirect to reload the current page
@@ -572,12 +584,10 @@ class admin_controller implements admin_interface
 			);
 
 			// Create the notification
-			$phpbb_notifications = $this->container->get('notification_manager');
-			$phpbb_notifications->add_notifications('phpbb.boardrules.notification.type.boardrules', $notification_data);
+			$this->notification_manager->add_notifications('phpbb.boardrules.notification.type.boardrules', $notification_data);
 
 			// Log the notification
-			$phpbb_log = $this->container->get('log');
-			$phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BOARDRULES_NOTIFY_LOG');
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BOARDRULES_NOTIFY_LOG');
 		}
 		else
 		{
@@ -625,6 +635,7 @@ class admin_controller implements admin_interface
 		$right = 0;
 
 		// Process each rule menu item for pull-down
+		/* @var $rule_menu_item \phpbb\boardrules\entity\rule */
 		foreach ($rule_menu_items as $rule_menu_item)
 		{
 			if ($rule_menu_item->get_left_id() < $right)
@@ -645,7 +656,7 @@ class admin_controller implements admin_interface
 				'RULE_TITLE'		=> $padding . $rule_menu_item->get_title(),
 
 				'S_DISABLED'		=> ($mode == 'edit' && (($rule_menu_item->get_left_id() > $entity->get_left_id()) && ($rule_menu_item->get_right_id() < $entity->get_right_id()) || ($rule_menu_item->get_id() == $entity->get_id()))) ? true : false,
-				'S_RULE_PARENT'		=> ($rule_menu_item->get_id() == $parent_id) ? true : false,
+				'S_RULE_PARENT'		=> $rule_menu_item->get_id() == $parent_id,
 			));
 		}
 	}
