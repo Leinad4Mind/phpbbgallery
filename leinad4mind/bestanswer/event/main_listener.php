@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -154,7 +154,7 @@ class main_listener implements EventSubscriberInterface
 	public function acp_manage_forums_display_form($event)
 	{
 		$event->update_subarray('template_data', 'S_ENABLE_ANSWER', $event['forum_data']['enable_answer']);
-		$event->update_subarray('template_data', 'S_BBPOINTS_ANSWER', (int)$event['forum_data']['bbpoints_answer']);
+		$event->update_subarray('template_data', 'S_BBPOINTS_ANSWER', (int) $event['forum_data']['bbpoints_answer']);
 	}
 
 	public function acp_manage_forums_initialise_data($event)
@@ -184,13 +184,14 @@ class main_listener implements EventSubscriberInterface
 			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids) . '
 				AND answer_post_id <> 0';
 		$result = $this->db->sql_query($sql);
+
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			if (in_array($row['answer_post_id'], $post_ids))
 			{
 				$answer_post_ids[] = $row['answer_post_id'];
 				$answer_user_ids[] = $row['answer_user_id'];
-				$answer_bbpoints_ids[] = 'bestanswer-'.$row['answer_post_id'];
+				$answer_bbpoints_ids[] = 'bestanswer-' . $row['answer_post_id'];
 			}
 		}
 		$this->db->sql_freeresult($result);
@@ -200,9 +201,9 @@ class main_listener implements EventSubscriberInterface
 			'answer_user_id'	=> 0,
 		);
 
-		if ($answer_post_ids)
+		if (!empty($answer_post_ids))
 		{
-			// remove bbpoints
+			// Remove BBPoints
 			$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
 			' . $this->db->sql_in_set('to_id', $answer_user_ids) . ' AND '.$this->db->sql_in_set('reason', $answer_bbpoints_ids);
 			$this->db->sql_query($sql);
@@ -212,7 +213,7 @@ class main_listener implements EventSubscriberInterface
 			$this->db->sql_query($sql);
 		}
 
-		if ($answer_user_ids)
+		if (!empty($answer_user_ids))
 		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_answers = user_answers - 1
@@ -236,7 +237,7 @@ class main_listener implements EventSubscriberInterface
 		}
 		$this->db->sql_freeresult($result);
 
-		if ($answer_user_ids)
+		if (!empty($answer_user_ids))
 		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_answers = user_answers - 1
@@ -270,16 +271,16 @@ class main_listener implements EventSubscriberInterface
 	{
 		$sql_ary = $event['sql_ary'];
 
-		$sql_ary['SELECT'] .= ', a_t.answer_post_id';
+		$sql_ary['SELECT'] .= ', ba_t.answer_post_id';
 
 		$sql_ary['LEFT_JOIN'][] = array(
-			'FROM'	=> array(POSTS_TABLE => 'a_p'),
-			'ON'	=> 'f.forum_last_post_id = a_p.post_id',
+			'FROM'	=> array(POSTS_TABLE => 'ba_p'),
+			'ON'	=> 'f.forum_last_post_id = ba_p.post_id',
 		);
 
 		$sql_ary['LEFT_JOIN'][] = array(
-			'FROM'	=> array(TOPICS_TABLE => 'a_t'),
-			'ON'	=> 'a_t.topic_id = a_p.topic_id',
+			'FROM'	=> array(TOPICS_TABLE => 'ba_t'),
+			'ON'	=> 'ba_t.topic_id = ba_p.topic_id',
 		);
 
 		$event['sql_ary'] = $sql_ary;
@@ -373,7 +374,7 @@ class main_listener implements EventSubscriberInterface
 		$topic_info = $event['topic_info'];
 
 		// Does the topic have a best answer and is the post the first post in a topic
-		if ($this->answer && ($topic_info['topic_first_post_id'] == $row['post_id']))
+		if (!empty($this->answer) && ($topic_info['topic_first_post_id'] == $row['post_id']))
 		{
 			$post_row = array_merge($post_row, array(
 				'U_ANSWER'	=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . (int) $topic_info['answer_post_id'] . '#p' . (int) $topic_info['answer_post_id']),
@@ -415,7 +416,7 @@ class main_listener implements EventSubscriberInterface
 	public function modify_topicrow_tpl_ary($event)
 	{
 		$block = $event['topic_row'] ? 'topic_row' : 'tpl_ary';
-		$event[$block] = $this->modify_topicrow_tpl($event['row'], $event[$block]);
+		$event[$block] = $this->display_topic_answered($event['row'], $event[$block]);
 	}
 
 	public function permissions($event)
@@ -583,7 +584,7 @@ class main_listener implements EventSubscriberInterface
 		));
 
 		// Only add to post_row array if an answer_post_id is supplied and the post_id is the first post in a topic
-		if ($this->answer && ($topic_data['topic_first_post_id'] == $row['post_id']))
+		if (!empty($this->answer) && ($topic_data['topic_first_post_id'] == $row['post_id']))
 		{
 			$post_row = array_merge($post_row, array(
 				'ANSWER_POST_TEXT'		=> $this->answer['POST_TEXT'],
@@ -595,7 +596,7 @@ class main_listener implements EventSubscriberInterface
 		$event['post_row'] = $post_row;
 	}
 
-	private function modify_topicrow_tpl($row, $block)
+	private function display_topic_answered($row, $block)
 	{
 		$block = array_merge($block, array(
 			'S_ANSWERED'	=> $row['answer_post_id'] ? true : false,

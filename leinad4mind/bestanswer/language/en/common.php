@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -43,23 +43,24 @@ $lang = array_merge($lang, array(
 	'ANSWERED'		=> 'Answered',
 	
 	'BEST_ANSWER'	=> 'Best answer',
-	'BBPOINTS_ANSWER'			=> 'Amount of BBpoints for "Best Answer" post',
-	'BBPOINTS_ANSWER_EXPLAIN'	=> 'Set the number of BBpoints to be credited to post author when his post in this forum is marked as "Best Answer"',
+	'BBPOINTS_ANSWER'			=> 'Amount of BBPoints for "Best Answer" post',
+	'BBPOINTS_ANSWER_EXPLAIN'	=> 'Set the number of BBPoints to be credited to post author when his post in this forum is marked as "Best Answer"',
 
 	'ENABLE_ANSWER'			=> 'Enable best answer',
 	'ENABLE_ANSWER_EXPLAIN'	=> 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
-
-	'TO_POST'	=> '<i class="fa fa-eye"></i> View Post',
+	'EXTENSION_NOT_ENABLED'			=> 'The Best Answer extension is not enabled on this forum.',
 
 	'LOG_MARK_ANSWER'	=> '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER'	=> '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
 
-	'LOG_BBPOINTS_MARK_ANSWER'		=> '<strong>Added bbpoints to author for best answer</strong><br />» %1$s by %2$s',
-	'LOG_BBPOINTS_UNMARK_ANSWER'	=> '<strong>Removed bbpoints of author for best answer</strong><br />» %1$s by %2$s',
+	'LOG_BBPOINTS_MARK_ANSWER'		=> '<strong>Added BBPoints to author for best answer</strong><br />» %1$s by %2$s',
+	'LOG_BBPOINTS_UNMARK_ANSWER'	=> '<strong>Removed BBPoints of author for best answer</strong><br />» %1$s by %2$s',
 
 	'MARK_ANSWER'			=> 'Mark answer',
 	'MARK_ANSWER_CONFIRM'	=> 'Are you sure you want to mark this post as the best answer?',
 
+	'TO_POST'	=> '<i class="fa fa-eye"></i> View Post',
+	'TOPIC_FIRST_POST'	=> 'You cannot mark this post as the best answer as it is the first post of the topic.',
 	'TOTAL_ANSWERS'	=> 'Total answers',
 
 	'UNMARK_ANSWER'			=> 'Unmark answer',

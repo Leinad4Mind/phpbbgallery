@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -48,8 +48,7 @@ $lang = array_merge($lang, array(
 
 	'ENABLE_ANSWER'			=> 'Activar Melhor Resposta',
 	'ENABLE_ANSWER_EXPLAIN'	=> 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
-
-	'TO_POST'	=> '<i class="fa fa-eye"></i> Ver Mensagem',
+	'EXTENSION_NOT_ENABLED'			=> 'A extensão "Melhor Resposta" não está activada neste fórum.',
 
 	'LOG_MARK_ANSWER'	=> '<strong>Mensagem marcada como Melhor Resposta</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER'	=> '<strong>Mensagem deixou de ser a Melhor Resposta</strong><br />» %1$s by %2$s',
@@ -60,6 +59,8 @@ $lang = array_merge($lang, array(
 	'MARK_ANSWER'			=> 'Marcar Melhor Resposta',
 	'MARK_ANSWER_CONFIRM'	=> 'Tens a certeza de que queres marcar esta mensagem como sendo a melhor resposta?',
 
+	'TO_POST'	=> '<i class="fa fa-eye"></i> Ver Mensagem',
+	'TOPIC_FIRST_POST'	=> 'Não é possível marcar esta mensagem como a melhor resposta, pois é a primeira mensagem do tópico.',
 	'TOTAL_ANSWERS'	=> 'Respostas totais',
 
 	'UNMARK_ANSWER'			=> 'Remover Melhor Resposta',
