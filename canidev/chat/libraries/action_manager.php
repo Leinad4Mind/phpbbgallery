@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -20,6 +20,7 @@ class action_manager
 	private $user_key			= false;
 	private $cookie_user_key	= false;
 	private $user_data			= false;
+	private $status_ary;
 
 	private $actions = array(
 		'pmuser'		=> array('lang' => 'CHAT_SEND_PM',		'auth' => 'u_chat_sendpm',	'icon' => 'fa-comment',	'check' => 'chat_allow_pm'),
@@ -27,13 +28,6 @@ class action_manager
 		'banuser'		=> array('lang' => 'CHAT_BAN_USER',		'auth' => 'm_ban',			'icon' => 'fa-eye-slash'),
 		'unbanuser'		=> array('lang' => 'CHAT_UNBAN_USER',	'auth' => 'm_ban',			'icon' => 'fa-eye'),
 		'deluser'		=> array('lang' => 'CHAT_DELETE_USER',	'auth' => 'a_userdel',		'icon' => 'fa-remove'),
-	);
-	
-	private $status_ary = array(
-		CHAT_STATUS_AVAILABLE		=> 'available',
-		CHAT_STATUS_AWAY			=> 'away',
-		CHAT_STATUS_BUSY			=> 'busy',
-		CHAT_STATUS_HIDDEN			=> 'hidden',
 	);
 
 	protected $cache;
@@ -43,10 +37,10 @@ class action_manager
 	protected $core;
 	protected $db;
 	protected $dispatcher;
-	protected $helper;
 	protected $lang;
 	protected $log;
 	protected $request;
+	protected $routing;
 	protected $template;
 	protected $user;
 	
@@ -63,10 +57,10 @@ class action_manager
 	* @param ContainerInterface 					$container		Service container interface
 	* @param \phpbb\db\driver\driver_interface		$db				DB Object
 	* @param \phpbb\event\dispatcher_interface		$dispatcher		Event dispatcher
-	* @param \phpbb\controller\helper				$helper       	Controller helper object
 	* @param \phpbb\language\language 				$language		Language object
-	* @param \phpbb\log\log                       	$log			The phpBB log system
+	* @param \phpbb\log\log                       	$log			phpBB log system
 	* @param \phpbb\request\request 				$request		Request object
+	* @param \phpbb\routing\helper					$routing			Routing Helper
 	* @param \phpbb\template\template				$template     	Template object
 	* @param \phpbb\user							$user			User object
 	* @param string									$root_path		phpBB root path
@@ -82,10 +76,10 @@ class action_manager
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\controller\helper $helper,
 		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
+		\phpbb\routing\helper $routing,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
@@ -99,10 +93,10 @@ class action_manager
 		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
-		$this->helper		= $helper;
 		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
+		$this->routing 		= $routing;
 		$this->template		= $template;
 		$this->user			= $user;
 		
@@ -110,6 +104,18 @@ class action_manager
 		$this->php_ext		= $php_ext;
 		
 		$this->user_key = $this->cookie_user_key = $request->variable($config['cookie_name'] . '_chat_key', 0, false, \phpbb\request\request_interface::COOKIE);
+
+		if($this->user->data['is_registered'])
+		{
+			$this->user_key = $this->user->data['user_id'];
+		}
+
+		$this->status_ary = array(
+			CHAT_STATUS_AVAILABLE		=> 'available',
+			CHAT_STATUS_AWAY			=> 'away',
+			CHAT_STATUS_BUSY			=> 'busy',
+			CHAT_STATUS_HIDDEN			=> 'hidden',
+		);
 		
 		@define('PHPBB_USE_BOARD_URL_PATH', true);
 	}
@@ -139,6 +145,11 @@ class action_manager
 		}
 		
 		return false;
+	}
+
+	public function get_user_key()
+	{
+		return $this->user_key;
 	}
 	
 	public function run($force_action = '', $json = false)
@@ -303,12 +314,7 @@ class action_manager
 
 									if($this->config['chat_show_avatars'])
 									{
-										$row_avatar = phpbb_get_user_avatar(array(
-											'avatar'		=> $this->user->data['user_avatar'],
-											'avatar_type'	=> $this->user->data['user_avatar_type'],
-											'avatar_width'	=> $this->user->data['user_avatar_width'], 
-											'avatar_height'	=> $this->user->data['user_avatar_height'],
-										));
+										$row_avatar = phpbb_get_user_avatar($this->user->data);
 										
 										// Fix path error occurs in some cases
 										if($row_avatar && strpos($row_avatar, 'src=".') !== false)
@@ -327,7 +333,7 @@ class action_manager
 								break;
 								
 								case LOGIN_ERROR_ATTEMPTS:
-									$redirect = $this->helper->route('canidev_chat_controller');
+									$redirect = $this->routing->route('canidev_chat_controller');
 									$json['redirect'] = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login&amp;redirect=' . urlencode($redirect));
 								
 									$err = $this->lang->lang($result['error_msg']);
@@ -395,6 +401,7 @@ class action_manager
 							'user_status'			=> CHAT_STATUS_AVAILABLE,
 							'exclude_time'			=> 0,
 							'user_groups'			=> implode(',', $this->core->get_user_groups()),
+							'user_trace_time'		=> 0,
 						);
 						
 						$sql = 'INSERT INTO ' . CHAT_USERS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $this->user_data);
@@ -563,7 +570,7 @@ class action_manager
 					}
 					
 					$row_data[$room_key] = array();
-					
+
 					// Autopurge
 					if($action == 'connect' && $row['room_autopurge_time'])
 					{
@@ -905,6 +912,8 @@ class action_manager
 			break;
 			
 			case 'quote':
+				$json['text'] = '';
+
 				if($this->auth('post') && $this->config['chat_allow_bbcode'] && !in_array('quote', $this->chat->get_disallowed_bbcodes()))
 				{
 					$sql = 'SELECT m.poster_username, m.message_text, m.bbcode_uid, u.username
@@ -1321,6 +1330,8 @@ class action_manager
 			break;
 			
 			case 'history':
+				$this->get_current_user();
+
 				$room_key = $this->request->variable('room', 0);
 				$max_time = $last_update;
 
@@ -1604,12 +1615,10 @@ class action_manager
 	{
 		if(empty($this->user_data))
 		{
-			$user_key = ($this->user->data['is_registered']) ? $this->user->data['user_id'] : $this->user_key;
-			
 			$sql = 'SELECT *
 				FROM ' . CHAT_USERS_TABLE . '
 				WHERE (user_id = ' . $this->user->data['user_id'] . '
-					AND user_key = ' . $user_key . ')';
+					AND user_key = ' . $this->user_key . ')';
 
 			$result = $this->db->sql_query($sql);
 			$this->user_data = $this->db->sql_fetchrow($result);
@@ -1794,6 +1803,11 @@ class action_manager
 			// Get forums linked to public rooms
 			foreach($this->room_ary as $room_key => $row)
 			{
+				if(!isset($row_data[$room_key]))
+				{
+					continue;
+				}
+
 				foreach($row['room_data']['linked_forums'] as $forum_id)
 				{
 					if(!isset($linked_forums[$forum_id]))
@@ -2005,30 +2019,50 @@ class action_manager
 				{
 					$row += $user_cache[$row['poster_key']];
 				}
-				
-				if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
-				{
-					$row_avatar = phpbb_get_user_avatar(array(
-						'avatar'		=> $row['user_avatar'],
-						'avatar_type'	=> $row['user_avatar_type'],
-						'avatar_width'	=> $row['user_avatar_width'], 
-						'avatar_height'	=> $row['user_avatar_height'],
-					));
-
-					// Fix path error occurs in some cases
-					if($row_avatar && $this->chat->web_path != $this->root_path && strpos($row_avatar, 'src=".') !== false)
-					{
-						$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
-					}
-				}
 
 				$ary = array(
-					'S_AUTHOR_AVATAR'	=> $row_avatar,
+					'S_CLASS'			=> 'chat-row',
 					'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_key'], $row['username'], $row['user_colour']),
 					'S_DATE'			=> $this->chat->format_date($timestamp),
-					'S_SHOW_AVATAR'		=> (bool)$this->config['chat_show_avatars'],
 					'S_TIMESTAMP'		=> $timestamp,
 				);
+				
+				if($this->config['chat_show_avatars'])
+				{
+					if($row['poster_id'] != ANONYMOUS)
+					{
+						$row_avatar = phpbb_get_user_avatar($row);
+
+						// Fix path error occurs in some cases
+						if($row_avatar && $this->chat->web_path != $this->root_path && strpos($row_avatar, 'src=".') !== false)
+						{
+							$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
+						}
+					}
+
+					$ary += array(
+						'S_AUTHOR_AVATAR'	=> $row_avatar,
+						'S_SHOW_AVATAR' 	=> true,
+					);
+				}
+
+				switch($this->config['chat_row_align'])
+				{
+					case 'left':
+					case 'right':
+					case 'zigzag':
+						$ary['S_CLASS'] .= ' chat-align-' . $this->config['chat_row_align'];
+					break;
+
+					case 'meother':
+						$ary['S_CLASS'] .= ($row['poster_key'] == $this->user_key) ? ' chat-align-right' : ' chat-align-left';
+					break;
+				}
+
+				if($this->config['chat_row_format'] == 'bubble')
+				{
+					$ary['S_CLASS'] .= ' chat-format-bubble';
+				}
 
 				if(isset($row['post_id']))
 				{
@@ -2062,7 +2096,7 @@ class action_manager
 						'CAN_DELETE'		=> $this->auth('delete', $row),
 						'CAN_EDIT'			=> $this->auth('edit', $row),
 						'CAN_MOVE'			=> ($is_public_room && $total_rooms > 1 && $this->auth('-m_chat_edit')),
-						'CAN_QUOTE'			=> (!in_array('quote', $this->chat->get_disallowed_bbcodes()) && $this->auth('post')) ? true : false,
+						'CAN_QUOTE'			=> ($this->config['chat_allow_bbcode'] && !in_array('quote', $this->chat->get_disallowed_bbcodes()) && $this->auth('post')) ? true : false,
 						'CAN_VIEW_WHOIS'	=> $this->auth('-a_'),
 					);
 				}

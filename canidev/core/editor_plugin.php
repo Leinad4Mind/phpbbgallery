@@ -1,25 +1,26 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class editor_plugin
 {
-	protected $is_global = false;
+	protected $is_global 	= false;
+	protected $is_enabled 	= false;
 	
+	protected $container;
 	protected $wrapper;
 
-	public function __construct($wrapper)
+	public function __construct($wrapper, $container = null)
 	{
-		$this->wrapper = $wrapper;
+		$this->container 	= $container;
+		$this->wrapper 		= $wrapper;
 	}
 
 	public function get_filename()
@@ -35,6 +36,16 @@ class editor_plugin
 	public function get_name()
 	{
 		return '';
+	}
+
+	public function is_enabled($status = null)
+	{
+		if($status === null)
+		{
+			return $this->is_enabled;
+		}
+
+		$this->is_enabled = (bool)$status;
 	}
 
 	public function is_global($status = null)

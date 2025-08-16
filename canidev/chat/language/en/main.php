@@ -2,9 +2,9 @@
 /*
 * main.php [English [En]]
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -67,7 +67,6 @@ $lang = array_merge($lang, array(
 	'CHAT_USER_ALREADY_EXISTS'		=> 'The user is already in use.',
 	'CHAT_VIEW_HISTORY'				=> 'See previous messages',
 
-	'BATCH_ACTIONS'		=> 'Batch actions',
 	'CUSTOM_DATE'		=> 'Custom date',
 	'EDIT'				=> 'Edit',
 	'NEW_TOPIC'			=> 'New Topic',

@@ -18,7 +18,6 @@ services:
             - '@canidev.chat.chat'
             - '@config'
             - '@dbal.conn'
-            - '@canidev.chat.action_manager'
         calls:
             - [set_name, [cron.task.chat_prune]]
         tags:
@@ -33,9 +32,9 @@ services:
             - '@service_container'
             - '@dispatcher'
             - '@dbal.conn'
-            - '@controller.helper'
             - '@language'
             - '@request'
+            - '@routing.helper'
             - '@template'
             - '@user'
             - '%core.root_path%'
@@ -52,10 +51,10 @@ services:
             - '@service_container'
             - '@dbal.conn'
             - '@dispatcher'
-            - '@controller.helper'
             - '@language'
             - '@log'
             - '@request'
+            - '@routing.helper'
             - '@template'
             - '@user'
             - '%core.root_path%'

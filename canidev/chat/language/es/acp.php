@@ -2,9 +2,9 @@
 /*
 * acp.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -132,6 +132,16 @@ $lang = array_merge($lang, array(
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Admite variables de idioma.',
 	'CHAT_ROOM_USERS'			=> 'Usuarios autorizados',
 	'CHAT_ROOM_USERS_EXPLAIN'	=> 'Define los usuarios que podrán visualizar esta sala.<br />Establezca cada nombre de usuario en una línea.',
+	'CHAT_ROW_ALIGN'			=> 'Alineación de los mensajes',
+	'CHAT_ROW_ALIGN_EXPLAIN'	=> 'Define en que lado se mostrarán los mensajes en el chat.<br /><em>Esta configuración se ve afectada si el idioma usado es RTL.</em>',
+	'CHAT_ROW_BUBBLE'			=> 'Burbuja',
+	'CHAT_ROW_FORMAT'			=> 'Formato de los mensajes',
+	'CHAT_ROW_FORMAT_EXPLAIN'	=> 'Define el estilo visual de los mensajes.',
+	'CHAT_ROW_LEFT'				=> 'Mostrar a la izquierda',
+	'CHAT_ROW_MEOTHER'			=> 'Mostrar usuario actual a un lado y resto al otro',
+	'CHAT_ROW_NORMAL'			=> 'Normal',
+	'CHAT_ROW_RIGHT'			=> 'Mostrar a la derecha',
+	'CHAT_ROW_ZIGZAG'			=> 'Mostrar en ZigZag',
 	'CHAT_ROWS'					=> 'Mensajes en chat',
 	'CHAT_ROWS_EXPLAIN'			=> 'Número máximo de mensajes que se mostrarán en el cuadro de conversación del chat.',
 	'CHAT_RULES_ADD'			=> 'Añadir regla',

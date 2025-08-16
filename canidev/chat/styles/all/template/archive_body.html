@@ -1,69 +1,82 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
 <h2>{L_CHAT_ARCHIVE}</h2>
 
-<form method="post" action="{U_ACTION}">
+<form method="post" action="{{ U_ACTION }}">
 
 <div id="chat-body" class="chat-archive-container">
 
-<!-- IF .roomtab -->
+{% if roomtab|length %}
 	<div id="tabs" class="tabs">
 	<ul>
-	<!-- BEGIN roomtab -->
-		<li class="tab<!-- IF roomtab.S_ACTIVE --> activetab<!-- ENDIF -->"><a href="{roomtab.U_ACTION}"><span>{roomtab.S_TITLE}</span></a></li>
-	<!-- END roomtab -->
+	{% for roomtab in loops.roomtab %}
+		<li class="tab{% if roomtab.S_ACTIVE %} activetab{% endif %}"><a href="{{ roomtab.U_ACTION }}"><span>{{ roomtab.S_TITLE }}</span></a></li>
+	{% endfor %}
 	</ul>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 	
 	<div id="chat-content" class="panel bg3">
 		<div id="chat-conversation-container">
-		<!-- BEGIN message -->
-			<div id="chat-row-{message.S_ID}" class="chat-row" data-id="{message.S_ID}" data-time="{message.S_TIMESTAMP}">
-				<!-- IF message.S_SHOW_AVATAR -->
-					<div class="chat-row-avatar cbb-circular-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><span class="cbb-no-avatar"></span><!-- ENDIF --></div>
-				<!-- ENDIF -->
-				
-			<!-- IF S_BATCH_OPTIONS -->
-				<div class="ic-row-actions row-check-list">
-					<input id="row-id-list-{message.S_ID}" class="cbb-checkbox row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" />
-					<label for="row-id-list-{message.S_ID}"></label>
-				</div>
-			<!-- ENDIF -->
-				
-				<div class="ic-row-actions">
-					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash" aria-hidden="true"></i></a><!-- ENDIF -->
-				</div>
+		{% for message in loops.message %}
+			<div id="chat-row-{{ message.S_ID }}" class="{{ message.S_CLASS }}" data-id="{{ message.S_ID }}" data-time="{{ message.S_TIMESTAMP }}">
+				{% if message.S_SHOW_AVATAR %}
+					<div class="chat-row-avatar cbb-circular-avatar">{% if message.S_AUTHOR_AVATAR %}{{ message.S_AUTHOR_AVATAR }}{% else %}<span class="cbb-no-avatar"></span>{% endif %}</div>
+				{% endif %}
 
-				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
-				<div class="ic-row-text<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
-					{message.S_TEXT}
+			<div class="chat-row-content{% if message.S_SHOW_AVATAR %} avatar-margin{% endif %}">
+				{% if S_BATCH_OPTIONS %}
+					<div class="ic-row-actions row-check-list">
+						<input id="row-id-list-{{ message.S_ID }}" class="cbb-checkbox row-id-list" type="checkbox" name="row_id_list[]" value="{{ message.S_ID }}" />
+						<label for="row-id-list-{{ message.S_ID }}"></label>
+					</div>
+				{% endif %}
+					
+				{% if message.CAN_VIEW_WHOIS or message.CAN_MOVE or message.CAN_EDIT or message.CAN_DELETE %}
+					<div class="ic-row-actions">
+						<a href="#" class="ic-row-action-launcher"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+						<div class="cbb-helper-hidden">
+							<ul class="cbb-menu">
+								{% if message.CAN_VIEW_WHOIS %}<li><a href="#" data-action="whois"><i class="fa fa-signal" aria-hidden="true"></i>{L_WHOIS}</a></li>{% endif %}
+								{% if message.CAN_MOVE %}<li><a href="#" data-action="move"><i class="fa fa-share-square-o" aria-hidden="true"></i>{L_CHAT_MOVE}</a></li>{% endif %}
+								{% if message.CAN_EDIT %}<li><a href="#" data-action="edit"><i class="fa fa-edit" aria-hidden="true"></i>{L_EDIT}</a></li>{% endif %}
+								{% if message.CAN_DELETE %}<li><a href="#" data-action="delete"><i class="fa fa-trash" aria-hidden="true"></i>{L_DELETE}</a></li>{% endif %}
+							</ul>
+						</div>
+					</div>
+				{% endif %}
+
+					<div class="ic-row-title">
+						<span class="ic-row-username">{{ message.S_AUTHOR_FULL }}</span>
+						<span class="ic-row-date">{{ message.S_DATE }}</span>
+					</div>
+					
+					<div class="ic-row-text">
+						{{ message.S_TEXT }}
+					</div>
 				</div>
 			</div>
-		<!-- BEGINELSE -->
+		{% else %}
 			<div class="cbb-message">{L_NO_MESSAGES}</div>
-		<!-- END message -->
+		{% endfor %}
 		</div>
 	</div>
 </div>
 
-<!-- IF .message -->
+{% if message|length %}
 	
 	<div class="chat-archive-bar">
-	<!-- IF S_BATCH_OPTIONS -->
+	{% if S_BATCH_OPTIONS %}
 		<div class="cbb-group cbb-helper-inline">
 			<select class="cbb-inputbox" name="action">
 				<option value="">{L_BATCH_ACTIONS}</option>
-				{S_BATCH_OPTIONS}
+				{{ S_BATCH_OPTIONS }}
 			</select>
 			<input type="submit" name="submit" class="cbb-btn" value="{L_CHAT_APPLY}" />
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 		
-	<!-- IF S_SELECT_SORT_DAYS -->
+	{% if S_SELECT_SORT_DAYS %}
 		<div class="dropdown-container dropdown-button-control sort-tools cbb-helper-inline">
 			<span title="{L_SORT_OPTIONS}" class="cbb-btn dropdown-trigger dropdown-select">
 				<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>
@@ -72,40 +85,40 @@
 				<div class="pointer"><div class="pointer-inner"></div></div>
 				<div class="dropdown-contents">
 					<fieldset class="display-options">
-					<!-- IF not S_IS_BOT -->
-						<label>{L_DISPLAY}{L_COLON} {S_SELECT_SORT_DAYS}</label>
-						<label>{L_SORT_BY}{L_COLON} {S_SELECT_SORT_KEY}</label>
-						<label>{L_SORT_DIRECTION}{L_COLON} {S_SELECT_SORT_DIR}</label>
+					{% if not S_IS_BOT %}
+						<label>{L_DISPLAY}{L_COLON} {{ S_SELECT_SORT_DAYS }}</label>
+						<label>{L_SORT_BY}{L_COLON} {{ S_SELECT_SORT_KEY }}</label>
+						<label>{L_SORT_DIRECTION}{L_COLON} {{ S_SELECT_SORT_DIR }}</label>
 						<hr class="dashed" />
 						<input type="submit" name="sort" value="{L_GO}" class="cbb-btn" />
-					<!-- ENDIF -->
+					{% endif %}
 					</fieldset>
 				</div>
 			</div>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 	
-	<!-- IF S_BATCH_OPTIONS -->
+	{% if S_BATCH_OPTIONS %}
 		<fieldset class="ic-mark-options">
 			<a href="#" data-action="mark">{L_MARK_ALL}</a> ::
 			<a href="#" data-action="unmark">{L_UNMARK_ALL}</a>
 		</fieldset>
-	<!-- ENDIF -->
+	{% endif %}
 	</div>
 
 	<div class="pagination">
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			{PAGE_NUMBER}
-		<!-- ENDIF -->
+		{% if pagination|length %}
+			{% INCLUDE 'pagination.html' %}
+		{% else %}
+			{{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
 
 	<br class="clear" />
-<!-- ENDIF -->
+{% endif %}
 
 </form>
 
 <br />
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

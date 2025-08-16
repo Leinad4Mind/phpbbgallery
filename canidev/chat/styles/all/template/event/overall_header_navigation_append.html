@@ -1,7 +1,7 @@
-<!-- IF U_CHAT -->
+{% if U_CHAT %}
 	<li data-skip-responsive="true">
-		<a href="{U_CHAT}" rel="chat" title="{L_CHAT}" role="menuitem">
+		<a href="{{ U_CHAT }}" rel="chat" title="{L_CHAT}" role="menuitem">
 			<i class="icon fa-comments-o fa-fw" aria-hidden="true"></i><span>{L_CHAT}</span>
 		</a>
 	</li>
-<!-- ENDIF -->
+{% endif %}

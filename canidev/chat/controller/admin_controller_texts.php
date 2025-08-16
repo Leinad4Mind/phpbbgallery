@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -23,11 +23,12 @@ class admin_controller_texts extends admin_controller_base
 	* Constructor
 	*
 	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
+	* @param \canidev\chat\libraries\chat 				$chat				Chat Object
 	* @param \phpbb\config\config 						$config				Config Object
 	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
 	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
-	* @param \phpbb\language\language					$language			Blockgets language Object
+	* @param \phpbb\language\language					$language			Language Object
 	* @param \phpbb\log\log                       		$log				Log Object
 	* @param \phpbb\request\request 					$request			Request object
 	* @param \phpbb\user								$user				User object
@@ -129,6 +130,7 @@ class admin_controller_texts extends admin_controller_base
 				* @var	boolean	submit			Do we display the form or process the submission
 				* @since 1.2.0
 				*/
+				$submit = &$this->submit;
 				$vars = array('display_vars', 'submit');
 				extract($this->dispatcher->trigger_event('chat.acp_texts_vars', compact($vars)));
 				

@@ -1,15 +1,15 @@
 
-<!-- IF MESSAGE_TITLE -->
-<!-- INCLUDE overall_header.html -->
-<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
-	<div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+{% if MESSAGE_TITLE %}
+{% INCLUDE 'overall_header.html' %}
+<form id="confirm" action="{{ S_CONFIRM_ACTION }}" method="post">
+	<div class="side-segment"><h3>{{ MESSAGE_TITLE }}</h3></div>
 	
 	<div class="well">
-		<!-- IF S_EDIT -->
+		{% if S_EDIT %}
 		<div class="control-group"> 
 			<label class="control-label" for="banlength">{L_CHAT_BAN_PERIOD}{L_COLON}</label>
 			<div class="controls controls-row"> 
-				<select class="selectpicker" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
+				<select class="selectpicker" name="period" id="ban-period" data-width="auto">{{ S_PERIOD_OPTIONS }}</select>
 				<div id="ban-date" class="cbb-helper-hidden">
 					<label class="control-label">{L_CHAT_BAN_DATE_EXPLAIN}</label>
 					<input placeholder="" type="text" name="date" class="form-control" />
@@ -17,25 +17,25 @@
 			</div> 
 			<div class="space10"></div>
 		</div>
-		<!-- ENDIF -->
+		{% endif %}
 
-		<p>{MESSAGE_TEXT}</p>
+		<p>{{ MESSAGE_TEXT }}</p>
 		<fieldset>
-			{S_HIDDEN_FIELDS}
+			{{ S_HIDDEN_FIELDS }}
 			<button type="submit" name="confirm" value="{L_YES}" class="btn btn-default">{L_YES}</button>
 			<button type="submit" name="cancel" value="{L_NO}" class="btn btn-default">{L_NO}</button>
 		</fieldset>
 	</div>
 </form>
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}
 
-<!-- ELSE -->
+{% else %}
 
-<!-- INCLUDE mcp_header.html -->
+{% INCLUDE 'mcp_header.html' %}
 
 <div class="side-segment"><h3>{L_TITLE}</h3></div>
 
-<form method="post" id="mcp" action="{U_POST_ACTION}">
+<form method="post" id="mcp" action="{{ U_POST_ACTION }}">
 
 <div class="well">
 	<h3>{L_CHAT_BAN_LIST}</h3>
@@ -43,7 +43,7 @@
 	<div class="row">
 		<div class="col-md-4 col-sm-6">
 		 <div class="input-group input-group-sm"> 
-		   <input class="form-control" type="text" class="medium" size="" name="keywords" id="search_keywords" placeholder="{L_SEARCH_KEYWORDS}:">
+		   <input class="form-control" type="text" class="medium" size="" name="keywords" id="search_keywords" placeholder="{L_SEARCH_KEYWORDS}{L_COLON}">
 		  <span class="input-group-btn">
 		   <button type="submit" class="btn btn-default">{L_SEARCH}</button>
 		  </span>
@@ -52,11 +52,11 @@
 
 		<div class="col-md-8">
 			<ul class="pagination pagination-sm pull-right">
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li class="active"><a>{PAGE_NUMBER}</a></li>	
-			<!-- ENDIF -->
+			{% if pagination|length %}
+				{% INCLUDE 'pagination.html' %}
+			{% else %}
+				<li class="active"><a>{{ PAGE_NUMBER }}</a></li>	
+			{% endif %}
 		   </ul>	
 		</div>
 	</div>
@@ -72,37 +72,37 @@
 	</tr>
 	</thead>
 		<tbody>
-	<!-- IF .user -->
-		<!-- BEGIN user -->
-		<!-- IF user.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-			<td class="ic-mark-col"><input type="checkbox" name="mark[]" value="{user.ID}" /></td>
-			<td>{user.USERNAME}</td>
-			<td class="center">{user.IP}</td>
-			<td class="center">{user.EXCLUSION}</td>
+	{% if user|length %}
+		{% for user in loops.user %}
+		{% if user.S_ROW_COUNT is even %}<tr class="bg1">{% else %}<tr class="bg2">{% endif %}
+			<td class="ic-mark-col"><input type="checkbox" name="mark[]" value="{{ user.ID }}" /></td>
+			<td>{{ user.USERNAME }}</td>
+			<td class="center">{{ user.IP }}</td>
+			<td class="center">{{ user.EXCLUSION }}</td>
 			<td class="center">
-				<a href="{user.U_EDIT}">{L_EDIT}</a>&nbsp;
-				<a href="{user.U_UNBAN}">{L_CHAT_UNBAN_USER}</a>
+				<a href="{{ user.U_EDIT }}">{L_EDIT}</a>&nbsp;
+				<a href="{{ user.U_UNBAN }}">{L_CHAT_UNBAN_USER}</a>
 			</td>
 		</tr>
-		<!-- END user -->
-	<!-- ELSE -->
+		{% endfor %}
+	{% else %}
 		<tr>
 			<td colspan="5" align="center"><span class="gen">{L_NO_ENTRIES}</span></td>
 		</tr>
-	<!-- ENDIF -->
+	{% endif %}
 	</tbody>
 	</table>
 
-	<!-- IF .user -->
+	{% if user|length %}
 	<div class="space10"></div>
 	<div class="row">
 		<ul class="pagination pagination-sm pull-right">
 			<li class="hidden-xs"><a title="" data-original-title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li class="active"><a>{PAGE_NUMBER}</a></li>	
-			<!-- ENDIF -->
+			{% if pagination|length %}
+				{% INCLUDE 'pagination.html' %}
+			{% else %}
+				<li class="active"><a>{{ PAGE_NUMBER }}</a></li>	
+			{% endif %}
 		</ul>
 
 		<div class="col-md-4 col-sm-6">
@@ -135,7 +135,7 @@
 						<div class="col-md-4 col-sm-4"> 
 							<label for="bday_day">{L_SORT_BY} </label>
 							<div class="control-row">
-								{S_SELECT_SORT_KEY}
+								{{ S_SELECT_SORT_KEY }}
 							</div>
 						</div>
 												
@@ -143,7 +143,7 @@
 							<label for="bday_day">{L_SORT_BY}</label>
 							<div class="control-row">
 								<div class="input-group">
-									{S_SELECT_SORT_DIR}
+									{{ S_SELECT_SORT_DIR }}
 									<span class="input-group-btn">
 									<button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
 									</span>
@@ -156,7 +156,7 @@
 			</div>
 		</fieldset> 
 	</div>
-	<!-- ENDIF -->
+	{% endif %}
 
 </div>
 	
@@ -165,16 +165,16 @@
 	
 	<div class="control-group"> 
 	    <label class="control-label" for="ban">{L_CHAT_BAN_CELL}{L_COLON}</label>
-		<span class="help-block">{L_CHAT_BAN_CELL_EXPLAIN}<br /><br /><a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a></span>
+		<span class="help-block">{L_CHAT_BAN_CELL_EXPLAIN}<br /><br /><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a></span>
 		<div class="controls controls-row"> 
-			<textarea placeholder="" rows="2" name="ban" id="ban" class="form-control">{BAN_QUANTIFIER}</textarea>
+			<textarea placeholder="" rows="2" name="ban" id="ban" class="form-control">{{ BAN_QUANTIFIER }}</textarea>
 		</div> 
 	</div>
 	
 	<div class="control-group"> 
 	    <label class="control-label" for="banlength">{L_CHAT_BAN_PERIOD}{L_COLON}</label>
 		<div class="controls controls-row"> 
-			<select class="selectpicker" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
+			<select class="selectpicker" name="period" id="ban-period">{{ S_PERIOD_OPTIONS }}</select>
 			<div id="ban-date" class="cbb-helper-hidden">
 				<label class="control-label">{L_CHAT_BAN_DATE_EXPLAIN}</label>
 				<input placeholder="" type="text" name="date" class="form-control" />
@@ -186,15 +186,12 @@
 	<div class="space10"></div>
 	<fieldset class="form-actions">
 		<button type="submit" name="bansubmit" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+		{{ S_FORM_TOKEN }}
 	</fieldset>
-</div>
-
-<div>
-{S_FORM_TOKEN}
 </div>
 
 </form>
 
-<!-- INCLUDE mcp_footer.html -->
+{% INCLUDE 'mcp_footer.html' %}
 
-<!-- ENDIF -->
+{% endif %}

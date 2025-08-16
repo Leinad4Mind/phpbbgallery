@@ -1,9 +1,9 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -267,13 +267,9 @@ class template
 					'SRC'		=> ($is_single) ? $data[$file_key] : '',
 				);
 
-				if($this->prepend_assets)
-				{
-					array_unshift($this->assets[$namespace][$type], $new_asset);
-					break;
-				}
+				$function = ($this->prepend_assets) ? 'array_unshift' : 'array_push';
 
-				$this->assets[$namespace][$type][] = $new_asset;
+				$function($this->assets[$namespace][$type], $new_asset);
 
 				if($this->request->is_ajax())
 				{
@@ -329,12 +325,13 @@ class template
 	
 	public function get_var($name, $default = '')
 	{
-		return (isset($this->context_ary[$name]) ? $this->context_ary[$name] : $default);
+		return (isset($this->context_ary['.'][0][$name]) ? $this->context_ary['.'][0][$name] : $default);
 	}
 	
 	public function load_context($phpbb_container)
 	{
-		$this->context_ary = $phpbb_container->get('template_context')->get_root_ref();
+		$this->context_ary = $phpbb_container->get('template_context')->get_data_ref();
+		return $this->context_ary;
 	}
 	
 	public function render($id, $filename, $return = false)

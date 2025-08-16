@@ -1,9 +1,9 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -26,7 +26,7 @@ class editor
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	protected $resources_loaded = false;
+	public $resources_loaded 	= false;
 	protected $plugins 			= array();
 
 	private $bbcodes 			= null;
@@ -35,6 +35,13 @@ class editor
 
 	static $instance;
 
+	/**
+	* Constructor
+	*
+	* @param ContainerInterface 	$container		Service container interface
+	*
+	* @access public
+	*/
 	public function __construct(ContainerInterface $container)
 	{
 		$this->config 			= $container->get('config');
@@ -63,7 +70,7 @@ class editor
 			return false;
 		}
 
-		$plugin = new $class_name($this);
+		$plugin = new $class_name($this, $this->container);
 		$plugin->is_global($is_global);
 
 		$plugin_name = $plugin->get_name();
@@ -81,6 +88,9 @@ class editor
 			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 		}
 
+		// test
+		$this->dispatcher->trigger_event('canidev.core.editor_before_build');
+
 		$default_options = array(
 			'id'					=> gen_rand_string(4),
 			'name'					=> '',
@@ -91,14 +101,73 @@ class editor
 			'plugins' 				=> array(),	
 		);
 
-		$editor_options = array();
-
 		$options = array_merge($default_options, $options);
 
 		if(is_string($options['plugins']))
 		{
 			$options['plugins'] = explode(',', $options['plugins']);
 		}
+
+		// Load plugins
+		foreach($this->plugins as $plugin_name => $plugin)
+		{
+			if($plugin->is_global() || in_array($plugin_name, $options['plugins']))
+			{
+				$plugin->is_enabled(true);
+
+				$options['plugins'][] = $plugin_name;
+
+				if($plugin->get_lang())
+				{
+					$this->core->set_js_lang($plugin->get_lang());
+				}
+
+				$this->template->append_asset('js', $plugin->get_filename());
+			}
+		}
+
+		$options['plugins'] = array_unique($options['plugins']);
+
+		// Editor and template variables
+		if($options['type'] == 'advanced')
+		{
+			$options = array_merge($options, array(
+				'emoticons'		=> $this->generate_editor_emoticons(),
+				'stylesheets'	=> array(
+					$this->template->append_asset('css', '../theme/stylesheet.css', true),
+					$this->template->append_asset('css', (!empty($this->config['allow_cdn']) && !empty($this->config['load_font_awesome_url'])) ? $this->config['load_font_awesome_url'] : './assets/css/font-awesome.min.css', true),
+					$this->template->append_asset('css', '@canidev_core/../theme/editor.css', true),
+				)
+			));
+		}
+
+		// Sanitize options
+		$sanitize_keys = array('plugins', 'toolbar', 'toolbarExclude');
+
+		foreach($sanitize_keys as $key)
+		{
+			if(isset($options[$key]) && is_string($options[$key]))
+			{
+				$parts 	= preg_split('#(,|\|)#', $options[$key], 0, PREG_SPLIT_DELIM_CAPTURE);
+				$ary 	= array();
+
+				foreach($parts as $code)
+				{
+					if($code == ',')
+					{
+						continue;
+					}
+
+					$ary[] = $code;
+				}
+
+				$options[$key] = $ary;
+			}
+		}
+
+		// test
+		$vars = array('options');
+		extract($this->trigger_event('editor_after_config', compact($vars)));
 
 		// Load default resources
 		if(!$this->resources_loaded)
@@ -107,8 +176,10 @@ class editor
 
 			if($options['type'] == 'advanced')
 			{
+				$this->template->prepend_assets = true;
 				$this->template->append_asset('css', '@canidev_core/../theme/editor.css');
 				$this->template->append_asset('js', '@canidev_core/js/editor.min.js');
+				$this->template->prepend_assets = false;
 			}
 
 			$this->core->set_js_lang(array(
@@ -124,39 +195,6 @@ class editor
 				'URL',
 				'VIEW_SOURCE',
 			));
-
-			$this->resources_loaded = true;
-		}
-
-		// Load plugins
-		foreach($this->plugins as $plugin_name => $plugin)
-		{
-			if($plugin->is_global() || in_array($plugin_name, $options['plugins']))
-			{
-				$options['plugins'][] = $plugin_name;
-
-				if($plugin->get_lang())
-				{
-					$this->core->set_js_lang($plugin->get_lang());
-				}
-
-				$this->template->append_asset('js', $plugin->get_filename());
-			}
-		}
-
-		// Editor and template variables
-		$options['plugins'] = array_unique($options['plugins']);
-
-		if($options['type'] == 'advanced')
-		{
-			$editor_options = array(
-				'emoticons'	=> $this->generate_editor_emoticons(),
-				'style'		=> $this->template->append_asset('css', '@canidev_core/../theme/editor.css', true),
-				'additionalStyles'	=> array(
-					$this->template->append_asset('css', '../theme/stylesheet.css', true),
-					$this->template->append_asset('css', (!empty($this->config['allow_cdn']) && !empty($this->config['load_font_awesome_url'])) ? $this->config['load_font_awesome_url'] : './assets/css/font-awesome.min.css', true),
-				)
-			);
 		}
 
 		$this->template->assign_vars(array(
@@ -172,7 +210,9 @@ class editor
 
 		unset($options['value'], $options['name'], $options['rows']);
 
-		$this->template->assign_json_var('S_EDITOR_OPTIONS', array_merge($editor_options, $options));
+		$this->template->assign_json_var('S_EDITOR_OPTIONS', $options);
+
+		$this->resources_loaded = true;
 
 		if($return_data)
 		{
@@ -187,7 +227,7 @@ class editor
 		}
 	}
 
-	private function generate_smilies()
+	protected function generate_smilies()
 	{
 		if($this->smilies !== null)
 		{
@@ -199,6 +239,7 @@ class editor
 		$smiley_ary 	= array();
 
 		$this->smilies = array(
+			'path'		=> $root_path . $this->config['smilies_path'] . '/',
 			'items' 	=> array(),
 			'current' 	=> array(),
 			'start'		=> $this->request->variable('smiley_start', 0),
@@ -215,9 +256,7 @@ class editor
 		$result = $this->db->sql_query($sql, 3600);
 		while($row = $this->db->sql_fetchrow($result))
 		{
-			$row['smiley_full_url'] = $root_path . $this->config['smilies_path'] . '/' . $row['smiley_url'];
-			
-			if(!in_array($row['smiley_full_url'], $smiley_ary))
+			if(!in_array($row['smiley_url'], $smiley_ary))
 			{
 				$i++;
 
@@ -228,7 +267,7 @@ class editor
 
 				$this->smilies['items'][$i] = $row;
 
-				$smiley_ary[] = $row['smiley_full_url'];
+				$smiley_ary[] = $row['smiley_url'];
 			}
 		}
 		$this->db->sql_freeresult($result);
@@ -236,23 +275,24 @@ class editor
 		unset($smiley_ary);
 	}
 
-	private function generate_editor_emoticons()
+	protected function generate_editor_emoticons()
 	{
 		$this->generate_smilies();
 
 		$result = array(
-			'hidden' => array(),
+			'path'		=> $this->smilies['path'],
+			'hidden' 	=> array(),
 		);
 
 		foreach($this->smilies['items'] as $i => $row)
 		{
-			$result['hidden'][$row['code']] = $row['smiley_full_url'];
+			$result['hidden'][$row['code']] = $row['smiley_url'];
 		}
 
 		return $result;
 	}
 
-	public function bbcodes_to_template()
+	public function get_bbcodes()
 	{
 		if($this->bbcodes === null)
 		{
@@ -271,17 +311,25 @@ class editor
 			* @since 1.0.4
 			*/
 			$vars = array('sql_ary');
-			extract($this->dispatcher->trigger_event('canidev.core.editor_bbcodes_modify_sql', compact($vars)));
+			extract($this->trigger_event('editor_bbcodes_modify_sql', compact($vars)));
 
 			$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary));
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$this->bbcodes[] = $row;
+				$tag = str_replace('=', '', $row['bbcode_tag']);
+				$this->bbcodes[$tag] = $row;
 			}
 			$this->db->sql_freeresult($result);
 		}
 
-		foreach($this->bbcodes as $i => $row)
+		return $this->bbcodes;
+	}
+
+	public function bbcodes_to_template()
+	{
+		$this->get_bbcodes();
+
+		foreach($this->bbcodes as $tag => $row)
 		{
 			// If the helpline is defined within the language file, we will use the localised version, else just use the database entry...
 			if($this->language->is_set(strtoupper($row['bbcode_helpline'])))
@@ -289,20 +337,28 @@ class editor
 				$row['bbcode_helpline'] = $this->language->lang(strtoupper($row['bbcode_helpline']));
 			}
 
+			$prevent_default = false;
+
 			$custom_tag = array(
 				'BBCODE_CODE'		=> $row['bbcode_tag'],
-				'BBCODE_TAG'		=> str_replace('=', '', $row['bbcode_tag']),
+				'BBCODE_TAG'		=> $tag,
 				'BBCODE_HELPLINE'	=> $row['bbcode_helpline'],
 			);
 
 			/*
 			* @event canidev.core.editor_bbcodes_modify_row
-			* @var	array	custom_tag		Template data of the bbcode
-			* @var	array	row				The data of the bbcode
+			* @var	array	custom_tag			Template data of the bbcode
+			* @var	array	row					The data of the bbcode
+			* @var 	bool 	prevent_default 	Define if the default action is override
 			* @since 1.0.4
 			*/
-			$vars = array('custom_tag', 'row');
-			extract($this->dispatcher->trigger_event('canidev.core.editor_bbcodes_modify_row', compact($vars)));
+			$vars = array('custom_tag', 'row', 'prevent_default');
+			extract($this->trigger_event('editor_bbcodes_modify_row', compact($vars)));
+
+			if($prevent_default)
+			{
+				continue;
+			}
 
 			$this->template->assign_block_vars('editor_custom_tag', $custom_tag);
 		}
@@ -325,7 +381,7 @@ class editor
 			$this->template->assign_block_vars('smileyrow', array(
 				'SMILEY_CODE'	=> $row['code'],
 				'A_SMILEY_CODE'	=> addslashes($row['code']),
-				'SMILEY_IMG'	=> $row['smiley_full_url'],
+				'SMILEY_IMG'	=> $this->smilies['path'] . $row['smiley_url'],
 				'SMILEY_WIDTH'	=> $row['smiley_width'],
 				'SMILEY_HEIGHT'	=> $row['smiley_height'],
 				'SMILEY_DESC'	=> $row['emotion']
@@ -365,6 +421,23 @@ class editor
 				'htmlContent'	=> $this->template->assign_display('smiley')
 			));
 		}
+	}
+
+	protected function trigger_event($name, $event)
+	{
+		$plugin_method = 'event_' . $name;
+
+		foreach($this->plugins as $plugin_name => $plugin)
+		{
+			if($plugin->is_enabled() && method_exists($plugin, $plugin_method))
+			{
+				$event = call_user_func(array($plugin, $plugin_method), $event);
+			}
+		}
+
+		$event = $this->dispatcher->trigger_event('canidev.core.' . $name, $event);
+
+		return $event;
 	}
 
 	static public function get_instance($container)

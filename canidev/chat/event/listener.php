@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -52,20 +52,17 @@ class listener implements EventSubscriberInterface
 		
 		if(!defined('IN_INSTALL'))
 		{
-			if(!defined('IN_JSCRIPT'))
-			{
-				$events = array(
-					'core.user_setup'					=> 'load_language',
-					'core.user_setup_after'				=> 'on_setup_after',
-					'core.session_kill_after'			=> 'on_user_logout',
-					'core.page_footer'					=> 'on_footer',
-					'core.delete_user_after'			=> 'on_user_delete',
-					'core.group_add_user_after'			=> 'user_group_add',
-					'core.user_set_group_attributes'	=> 'user_group_change',
-					'core.group_delete_user_after'		=> 'user_group_del',
-					'core.permissions'					=> 'add_permissions',
-				);
-			}
+			$events = array(
+				'core.user_setup'					=> 'load_language',
+				'core.user_setup_after'				=> 'on_setup_after',
+				'core.session_kill_after'			=> 'on_user_logout',
+				'core.page_footer'					=> 'on_footer',
+				'core.delete_user_after'			=> 'on_user_delete',
+				'core.group_add_user_after'			=> 'user_group_add',
+				'core.user_set_group_attributes'	=> 'user_group_change',
+				'core.group_delete_user_after'		=> 'user_group_del',
+				'core.permissions'					=> 'add_permissions',
+			);
 		}
 
 		return $events;

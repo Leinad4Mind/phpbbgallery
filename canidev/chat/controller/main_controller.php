@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -275,33 +275,54 @@ class main_controller
 				$result = $this->db->sql_query_limit($sql, $messages_per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$row_avatar 	= '';
 					$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$message 		= generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
-					
-					if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
-					{
-						$row_avatar = phpbb_get_user_avatar(array(
-							'avatar'		=> $row['user_avatar'],
-							'avatar_type'	=> $row['user_avatar_type'],
-							'avatar_width'	=> $row['user_avatar_width'], 
-							'avatar_height'	=> $row['user_avatar_height'],
-						));
-					}
+					$row_avatar 	= '';
 
-					$this->template->assign_block_vars('message', array(
+					$message_row = array(
+						'S_CLASS'			=> 'chat-row',
 						'S_ID'				=> $row['message_id'],
-						'S_AUTHOR_AVATAR'	=> $row_avatar,
 						'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']),
-						'S_TEXT'			=> $message,
+						'S_TEXT'			=> generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
 						'S_DATE'			=> $this->chat->format_date($row['message_time']),
-						'S_SHOW_AVATAR'		=> (bool)$this->config['chat_show_avatars'],
 						
 						'CAN_DELETE'		=> $action_manager->auth('delete', $row),
 						'CAN_EDIT'			=> $action_manager->auth('edit', $row),
 						'CAN_MOVE'			=> (sizeof($room_ary) > 1 && $action_manager->auth('-m_chat_edit')),
 						'CAN_VIEW_WHOIS'	=> $this->auth->acl_get('a_'),
-					));
+					);
+					
+					if($this->config['chat_show_avatars'])
+					{
+						if($row['poster_id'] != ANONYMOUS)
+						{
+							$row_avatar = phpbb_get_user_avatar($row);
+						}
+
+						$message_row += array(
+							'S_AUTHOR_AVATAR'	=> $row_avatar,
+							'S_SHOW_AVATAR' 	=> true,
+						);
+					}
+
+					switch($this->config['chat_row_align'])
+					{
+						case 'left':
+						case 'right':
+						case 'zigzag':
+							$message_row['S_CLASS'] .= ' chat-align-' . $this->config['chat_row_align'];
+						break;
+
+						case 'meother':
+							$message_row['S_CLASS'] .= ($row['poster_key'] == $action_manager->get_user_key()) ? ' chat-align-right' : ' chat-align-left';
+						break;
+					}
+
+					if($this->config['chat_row_format'] == 'bubble')
+					{
+						$message_row['S_CLASS'] .= ' chat-format-bubble';
+					}
+
+					$this->template->assign_block_vars('message', $message_row);
 				}
 				$this->db->sql_freeresult($result);
 				

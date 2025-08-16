@@ -1,9 +1,13 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	FLATBOOTS
-	Copyright (c) 2020 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2021 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
+
+#chat-body {
+	margin-bottom: 30px !important;
+}
 
 #chat-body .table>tbody>tr>td {
 	padding: 0;
@@ -15,5 +19,6 @@
 }
 
 #chat-content {
+	font-size: 12px !important;
 	padding: 8px !important;
 }

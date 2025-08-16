@@ -1,9 +1,9 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -19,12 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class lib
 {
-	const VERSION		= '1.0.4';
+	const VERSION		= '1.0.9';
 	
-	private $items		= array();
-	private $langkeys	= array();
+	private $items				= array();
+	private $langkeys			= array();
+	private $in_acp_extensions 	= false;
 	
 	private $config;
+	private $container;
 	private $db;
 	private $dispatcher;
 	private $lang;
@@ -49,11 +51,12 @@ class lib
 		$plugins_path 	= 'canidev/core/plugins/';
 
 		$this->config			= $container->get('config');
+		$this->container 		= $container;
 		$this->db				= $container->get('dbal.conn');
 		$this->dispatcher 		= $container->get('dispatcher');
 		$this->lang				= $container->get('language');
 		$this->request 			= $container->get('request');
-		$this->template			= \canidev\core\template::get_instance($container);
+		$this->template			= template::get_instance($container);
 		$this->user				= $container->get('user');
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
 		$this->php_ext			= $container->getParameter('core.php_ext');
@@ -144,28 +147,21 @@ class lib
 		}
 	
 		// Custom events
-		$this->dispatcher->addListener('core.user_setup',			array($this, 'load_language'));
-		$this->dispatcher->addListener('core.user_setup_after', 	array($this, 'user_setup_after'),	99); // Make sure it is loaded first
-		$this->dispatcher->addListener('core.page_footer', 			array($this, 'page_footer'),		-10);
-		$this->dispatcher->addListener('core.adm_page_footer', 		array($this, 'page_footer'),		-10);
-		$this->dispatcher->addListener('core.append_sid',			array($this, 'fix_controller_urls'));
+		$this->dispatcher->addListener('core.user_setup_after', 				array($this, 'user_setup_after'),	99); // Make sure it is loaded first
+		$this->dispatcher->addListener('core.page_footer', 						array($this, 'page_footer'),		-10);
+		$this->dispatcher->addListener('core.adm_page_footer', 					array($this, 'adm_page_footer'),	-10);
+		$this->dispatcher->addListener('core.append_sid',						array($this, 'fix_controller_urls'));
+		$this->dispatcher->addListener('core.acp_extensions_run_action',		array($this, 'check_acp_extensions_module')); // for phpBB < 3.2.1
+		$this->dispatcher->addListener('core.acp_extensions_run_action_before',	array($this, 'check_acp_extensions_module')); // for phpBB >= 3.2.1
 		
 		$this->dispatcher->addListener('core.modify_text_for_display_after',	array($this, 'modify_text_for_display'));
 		$this->dispatcher->addListener('core.modify_format_display_text_after',	array($this, 'modify_text_for_display'));
 	}
-
-	public function load_language($event)
-	{
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'canidev/core',
-			'lang_set' => 'main',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
-	}
 	
 	public function user_setup_after()
 	{
+		$this->user->add_lang_ext('canidev/core', 'main');
+
 		// Set Core template directories
 		$this->template->add_custom_namespace('canidev_core', $this->phpbb_root_path . 'ext/canidev/core/', true);
 		$this->template->assign_var('CANIDEV_CORE_STARTED', true);
@@ -197,9 +193,7 @@ class lib
 			}
 		}
 		
-		$this->template->assign_vars(array(
-			'PHPBB_BRANCH'	=> str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x',
-		));
+		$this->template->assign_var('PHPBB_BRANCH', str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x');
 		
 		// Add core assets
 		$this->template->prepend_assets = true;
@@ -223,6 +217,61 @@ class lib
 
 		$this->template->assets_to_template();
 	}
+
+	public function check_acp_extensions_module()
+	{
+		$this->in_acp_extensions = true;
+	}
+
+	public function adm_page_footer()
+	{
+		$this->page_footer();
+
+		// Build links to extensions configurations
+		if($this->in_acp_extensions)
+		{
+			$template_ary = $this->template->load_context($this->container);
+
+			if(!isset($template_ary['enabled']))
+			{
+				return;
+			}
+
+			$module_ary = $this->container->get('cache')->get('_modules_acp');
+			$modules 	= array();
+
+			if($module_ary !== false)
+			{
+				foreach($module_ary['modules'] as $row)
+				{
+					if(preg_match('#^\\\(canidev\\\[a-z_\-0-9]+)\\\acp\\\([a-z_\-0-9]+)$#', $row['module_basename'], $match))
+					{
+						$ext_key = str_replace('\\', '/', $match[1]);
+
+						if(!isset($modules[$ext_key]))
+						{
+							$modules[$ext_key] = $match[2];
+						}
+					}
+				}
+			}
+
+			foreach($template_ary['enabled'] as $ext_key => $ext_data)
+			{
+				if(isset($modules[$ext_data['NAME']]))
+				{
+					$this->template->alter_block_array(
+						'enabled[' . $ext_key . '].actions',
+						array(
+							'ACTION_AJAX' 	=> 'false',
+							'L_ACTION'		=> $this->lang->lang('CONFIGURE'),
+		                    'U_ACTION'	 	=> append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, 'i=-' . str_replace('/', '-', $ext_data['NAME']) . '-acp-' . $modules[$ext_data['NAME']], true, $this->user->session_id),
+		                )
+					);
+				}
+			}
+		}
+	}
 	
 	public function fix_controller_urls($event)
 	{
@@ -237,15 +286,13 @@ class lib
 	{
 		if($this->dispatcher->hasListeners('canidev.core.modify_text_for_display'))
 		{
-			$dom	= new \DOMDocument('1.0', 'utf-8');
-			$text	= $event['text'];
-		
-			if(!$dom->loadXML('<div>' . $text . '</div>', LIBXML_NOCDATA | LIBXML_NOWARNING | LIBXML_NOERROR))
+			$text 	= $event['text'];
+			$finder = dom::string_to_xpath($text);
+
+			if($finder === false)
 			{
 				return $text;
 			}
-
-			$finder = new \DomXPath($dom);
 			
 			/*
 			* @event canidev.core.modify_text_for_display
@@ -255,8 +302,8 @@ class lib
 			*/
 			$vars = array('finder', 'text');
 			extract($this->dispatcher->trigger_event('canidev.core.modify_text_for_display', compact($vars)));
-			
-			$event['text'] = preg_replace('#(^<div>|</div>$)#', '', $dom->saveXML($dom->documentElement));
+
+			$event['text'] = dom::xpath_to_string($finder);
 		}
 	}
 	

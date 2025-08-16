@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -20,7 +20,6 @@ class prune extends \phpbb\cron\task\base
 	protected $chat;
 	protected $config;
 	protected $db;
-	protected $manager;
 
 	/**
 	 * Constructor
@@ -28,19 +27,16 @@ class prune extends \phpbb\cron\task\base
 	 * @param \canidev\chat\libraries\chat 				$chat		Chat Object
 	 * @param \phpbb\config\config						$config  	Config object
 	 * @param \phpbb\db\driver\driver_interface			$db			DB Object
-	 * @param \canidev\chat\libraries\action_manager	$manager	Action Manager Object
 	 * @access public
 	 */
 	public function __construct(
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
-		\phpbb\db\driver\driver_interface $db,
-		\canidev\chat\libraries\action_manager $manager)
+		\phpbb\db\driver\driver_interface $db)
 	{
 		$this->chat			= $chat;
 		$this->config		= $config;
 		$this->db			= $db;
-		$this->manager		= $manager;
 	}
 
 	/**
