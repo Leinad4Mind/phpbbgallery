@@ -87,6 +87,9 @@ class listener implements EventSubscriberInterface
 			'core.memberlist_view_profile'				=> 'memberlist_view_profile',
 			'core.search_get_posts_data'				=> 'search_get_posts_data',
 			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
+			'core.ucp_register_data_before'				=> 'user_gender_profile',
+			'core.ucp_register_data_after'				=> 'user_gender_profile_validate',
+			'core.ucp_register_user_row_after'			=> 'user_gender_registration_sql',
 		);
 	}
 
@@ -99,9 +102,17 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_gender_profile($event)
 	{
+		if (DEFINED('IN_ADMIN'))
+		{
+			$user_gender = $event['user_row']['user_gender'];
+		}
+		else
+		{
+			$user_gender = $this->user->data['user_gender'];
+		}
 		// Request the user option vars and add them to the data array
 		$event['data'] = array_merge($event['data'], array(
-			'user_gender'	=> $this->request->variable('gender', $this->user->data['user_gender']),
+			'user_gender'	=> $this->request->variable('gender', $user_gender),
 		));
 
 		$this->user->add_lang_ext('rmcgirr83/genders', 'genders');
@@ -177,7 +188,7 @@ class listener implements EventSubscriberInterface
 	public function viewtopic_cache_guest_data($event)
 	{
 		$array = $event['user_cache_data'];
-		$array['user_gender'] = 0;
+		$array['user_gender'] = '';
 		$event['user_cache_data'] = $array;
 	}
 
@@ -190,7 +201,11 @@ class listener implements EventSubscriberInterface
 	*/
 	public function viewtopic_modify_post_row($event)
 	{
-		$gender = $this->get_user_gender($event['user_poster_data']['user_gender']);
+		$gender = '';
+		if ($event['user_poster_data']['user_type'] != USER_IGNORE)
+		{
+			$gender = $this->get_user_gender($event['user_poster_data']['user_gender']);
+		}
 
 		$event['post_row'] = array_merge($event['post_row'],array(
 			'USER_GENDER' => $gender,
@@ -206,7 +221,11 @@ class listener implements EventSubscriberInterface
 	*/
 	public function memberlist_view_profile($event)
 	{
-		$gender = $this->get_user_gender($event['member']['user_gender']);
+		$gender = '';
+		if ($event['member']['user_type'] != USER_IGNORE)
+		{
+			$gender = $this->get_user_gender($event['member']['user_gender']);
+		}
 
 		$this->template->assign_vars(array(
 			'USER_GENDER'	=> $gender,
@@ -223,7 +242,7 @@ class listener implements EventSubscriberInterface
 	public function search_get_posts_data($event)
 	{
 		$array = $event['sql_array'];
-		$array['SELECT'] .= ', u.user_gender';
+		$array['SELECT'] .= ', u.user_gender, u.user_type';
 		$event['sql_array'] = $array;
 	}
 
@@ -242,7 +261,11 @@ class listener implements EventSubscriberInterface
 		}
 
 		$array = $event['tpl_ary'];
-		$gender = $this->get_user_gender($event['row']['user_gender']);
+		$gender = '';
+		if ($event['row']['user_type'] != USER_IGNORE)
+		{
+			$gender = $this->get_user_gender($event['row']['user_gender']);
+		}
 		$array = array_merge($array, array(
 			'USER_GENDER'	=> $gender,
 		));
@@ -276,8 +299,22 @@ class listener implements EventSubscriberInterface
 				$gender = 'gender_x';
 		}
 
-		$gender = '<img src="' . $this->root_path . $this->images_path . 'icon_' . $gender . '.gif" alt="' . $this->user->lang[strtoupper($gender)] . '" title="' . $this->user->lang[strtoupper($gender)] . '" style="vertical-align:middle;" />';
+		$gender = '<img src="' . $this->root_path . $this->images_path . 'icon_' . $gender . '.gif" alt="' . $this->user->lang[strtoupper($gender)] . '" title="' . $this->user->lang[strtoupper($gender)] . '" style="vertical-align:middle;" /> - ' . $this->user->lang[strtoupper($gender)];
 
 		return $gender;
+	}
+
+	/**
+	* Update registration data
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function user_gender_registration_sql($event)
+	{
+		$event['user_row'] = array_merge($event['user_row'], array(
+				'user_gender' => $this->request->variable('gender', 0),
+		));
 	}
 }
