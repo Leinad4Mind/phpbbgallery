@@ -101,10 +101,10 @@ class acp_listener implements EventSubscriberInterface
 	public function acp_manage_forums_validate_data(data $event)
 	{
 		$event['forum_data'] = array_merge($event['forum_data'], [
-			'forum_topic_limit'			=> $this->request->variable('forum_topic_limit', 0),
-			'forum_topic_time_limit'	=> $this->request->variable('forum_topic_time_limit', 0),
-			'forum_post_limit'			=> $this->request->variable('forum_post_limit', 0),
-			'forum_post_time_limit'		=> $this->request->variable('forum_post_time_limit', 0),
+			'forum_topic_limit'			=> $this->normalize_limit($this->request->variable('forum_topic_limit', 0)),
+			'forum_topic_time_limit'	=> $this->normalize_limit($this->request->variable('forum_topic_time_limit', 0)),
+			'forum_post_limit'			=> $this->normalize_limit($this->request->variable('forum_post_limit', 0)),
+			'forum_post_time_limit'		=> $this->normalize_limit($this->request->variable('forum_post_time_limit', 0)),
 		]);
 
 		if (!empty($forum_data['forum_post_limit']) && $event['forum_data']['forum_topic_limit'] > $event['forum_data']['forum_post_limit'])
@@ -120,10 +120,27 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function acp_manage_forums_update_data_after(data $event)
 	{
-		$topics = $this->request->variable('lfgt', [0]);
-		$topics_time_limit = $this->request->variable('lfgtt', [0]);
-		$posts = $this->request->variable('lfgp', [0]);
-		$posts_time_limit = $this->request->variable('lfgpt', [0]);
+		$topics = $this->normalize_limits($this->request->variable('lfgt', [0 => 0]));
+		$topics_time_limit = $this->normalize_limits($this->request->variable('lfgtt', [0 => 0]));
+		$posts = $this->normalize_limits($this->request->variable('lfgp', [0 => 0]));
+		$posts_time_limit = $this->normalize_limits($this->request->variable('lfgpt', [0 => 0]));
 		$this->manager->set_limits($event['forum_data']['forum_id'], $topics, $topics_time_limit, $posts, $posts_time_limit);
+	}
+
+	protected function normalize_limit($limit)
+	{
+		return max(0, $limit);
+	}
+
+	protected function normalize_limits($limits)
+	{
+		$new_limits = [];
+
+		foreach ($limits as $key => $limit)
+		{
+			$new_limits[$key] = $this->normalize_limit($limit);
+		}
+
+		return $new_limits;
 	}
 }

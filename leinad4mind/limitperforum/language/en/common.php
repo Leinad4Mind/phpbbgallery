@@ -62,5 +62,5 @@ $lang = array_merge($lang, [
 	'ERROR_POST_TOPIC_REST'		=> 'You have <strong class="error">%1$d</strong> free topic and <strong class="error">%2$d</strong> free post on this forum before being disallowed to post.',
 	'ERROR_POSTS_TOPIC_REST'	=> 'You have <strong class="error">%1$d</strong> free topic and <strong class="error">%2$d</strong> free posts on this forum before being disallowed to post.',
 	'ERROR_POST_TOPICS_REST'	=> 'You have <strong class="error">%1$d</strong> free topics and <strong class="error">%2$d</strong> free post on this forum before being disallowed to post.',
-	'ERROR_POSTS_TOPICS_REST'	=> 'You have <strong class="error">%s</strong> free topics and <strong class="error">%s</strong> free posts on this forum before being disallowed to post.',
+	'ERROR_POSTS_TOPICS_REST'	=> 'You have <strong class="error">%1$s</strong> free topics and <strong class="error">%2$s</strong> free posts on this forum before being disallowed to post.',
 ]);

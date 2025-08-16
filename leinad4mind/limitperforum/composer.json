@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "It allows you to limit the count of messages and/or topics of an user or group per forum",
     "homepage": "https://leinad4mind.top/forum",
-    "version": "1.2.1",
-    "time": "2020-06-09",
+    "version": "1.2.3",
+    "time": "2020-06-24",
     "license": "GPL-2.0-only",
     "authors": [
         {
