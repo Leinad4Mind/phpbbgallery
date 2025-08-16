@@ -1,0 +1,59 @@
+{
+	"name": "phpbb/pages",
+	"type": "phpbb-extension",
+	"description": "An extension which allows you to add static pages to your phpBB forum",
+	"homepage": "https://phpbb.com",
+	"version": "1.0.0",
+	"keywords": ["phpbb", "extension", "static", "pages"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Marc Alexander",
+			"email": "admin@m-a-styles.de",
+			"homepage": "http://www.m-a-styles.de",
+			"role": "Extensions Team Consultant"
+		},
+		{
+			"name": "Michael Cullum",
+			"email": "michael@phpbb.com",
+			"homepage": "http://michaelcullum.com",
+			"role": "Extensions Team Consultant"
+		},
+		{
+			"name": "Matt Friedman",
+			"homepage": "http://mattfriedman.me",
+			"role": "Extensions Development Team Lead"
+		},
+		{
+			"name": "Nathan Guse",
+			"email": "nathaniel.guse@gmail.com",
+			"role": "Former Extensions Development Team Lead"
+		},
+		{
+			"name": "Lukasz Kaczynski",
+			"role": "Extensions Development Team"
+		},
+		{
+			"name": "John Peskens",
+			"role": "Extensions Development Team"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Pages",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0-RC3,<3.2.*@dev"
+		},
+		"version-check": {
+			"host": "version.phpbb.com",
+			"directory": "/phpbb-extensions",
+			"filename": "pages_versions.json"
+		}
+	}
+}
