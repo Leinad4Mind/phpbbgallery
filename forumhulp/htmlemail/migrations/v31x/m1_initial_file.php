@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* HTML email.
+* HTML email extension for the phpBB Forum Software package.
 *
 * @copyright (c) 2015 ForumHulp.com <http://forumhulp.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -10,11 +10,25 @@
 
 namespace forumhulp\htmlemail\migrations\v31x;
 
+use phpbb\db\migration\container_aware_migration;
+
 /**
-* Migration stage 1: Initial data changes to the files
-*/
-class m1_initial_file extends \phpbb\db\migration\migration
+ * Migration stage 1: Initial schema
+ */
+class m1_initial_file extends container_aware_migration
 {
+	/**
+	 * Assign migration file dependencies for this migration
+	 *
+	 * @return array Array of migration files
+	 * @static
+	 * @access public
+	 */
+	static public function depends_on()
+	{
+		return array('\phpbb\db\migration\data\v310\gold');
+	}
+
 	/**
 	* Add core change to the files.
 	*
@@ -25,7 +39,7 @@ class m1_initial_file extends \phpbb\db\migration\migration
 	{
 		$this->revert = false;
 		return array(
-			array('custom', array(array($this, 'update_functions_messenger'))),
+			array('custom', array(array($this, 'update_files'))),
 		);
 	}
 
@@ -33,72 +47,37 @@ class m1_initial_file extends \phpbb\db\migration\migration
 	{
 		$this->revert = true;
 		return array(
-			array('custom', array(array($this, 'update_functions_messenger'))),
+			array('custom', array(array($this, 'update_files'))),
 		);
 	}
 
-	/**
-	* Update files on server
-	*
-	* @return null
-	* @access public
-	*/
-	public function update_functions_messenger()
+	public function update_files()
 	{
-		$this->replacements = $this->data();
-		$files = $this->replacements['files'];
-		$searches = ($this->revert) ? $this->replacements['replaces'] : $this->replacements['searches'];
-		$replace = ($this->revert) ? $this->replacements['searches'] : $this->replacements['replaces'];
-		$i = $j = 0;
-		$files_changed = array();
-		foreach($files as $key => $file)
+		if (class_exists('forumhulp\helper\helper'))
 		{
-			if (is_writable($this->phpbb_root_path . $file))
+			if (!$this->container->has('forumhulp.helper'))
 			{
-				$fp = @fopen($this->phpbb_root_path . $file , 'r' );
-				if ($fp === false) continue;
-				$content = fread( $fp, filesize($this->phpbb_root_path . $file) );
-				(!$this->revert) ? copy($this->phpbb_root_path . $file, $this->phpbb_root_path . $file . '.bak') : null;
-				fclose($fp); 
-				foreach($searches[$key] as $key2 => $search)
-				{
-					if ($this->revert || strpos($content, $replace[$key][$key2]) === false)
-					{
-						$content = str_replace($search, $replace[$key][$key2], $content);
-						($key2 == 0) ? $i++ : $i;
-					}
-				}
-				if ($i != $j)
-				{
-					$new_file = $files[$key];
-					$fp = @fopen($this->phpbb_root_path . $new_file , 'w' ); 	
-					if ($fp === false) continue;
-					$fwrite = fwrite($fp, $content);	
-					fclose($fp);
-					if ($fwrite !== false) 
-					{
-						$j = $i;
-						$files_changed[] = $new_file;
-					}
-				}
+				$forumhulp_helper = new \forumhulp\helper\helper(
+					$this->container->get('dbal.conn'),
+					$this->config,
+					$this->container->get('ext.manager'),
+					$this->container->get('template'),
+					$this->container->get('user'),
+					$this->container->get('request'),
+					$this->container->get('log'),
+					$this->container->get('cache'),
+					$this->phpbb_root_path			
+				);
+				$this->container->set('forumhulp.helper', $forumhulp_helper);
 			}
-		}
-		
-		global $phpbb_log, $user;
-		if (sizeof($files) == sizeof($files_changed))
-		{
-			$phpbb_log->add('admin', $user->data['user_id'], $user->ip, (($this->revert) ? 'LOG_CORE_DEINSTALLED' : 'LOG_CORE_INSTALLED'), time(), array());
-			
+			$this->container->get('forumhulp.helper')->update_files($this->data(), $this->revert);
 		} else
 		{
-			$not_updated = array_diff($files, $files_changed);
-			$phpbb_log->add('admin', $user->data['user_id'], $user->ip, (($this->revert) ? 'LOG_CORE_NOT_REPLACED' : 'LOG_CORE_NOT_UPDATED'), time(), array(implode('<br />', $not_updated)));
-			
-			$user->lang['EXTENSION_' . (($this->revert) ? 'DELETE_DATA' : 'ENABLE') . '_SUCCESS'] .= '<div style="width:80%;margin:20px auto;"><p style="text-align:left;">' .
-			(($this->revert) ? 'Not all files are replaced! Please replace by hand the file(s) mentioned in the admin-log' : 'Config setting of this extension are not nessecary.<br />However not all updates are done properly because of filepermissions or missing files. See admin log for a overview.<br /><br />Please update files by hand to enjoy all functions!') . '</p></div>';;
+			$this->container->get('user')->add_lang_ext('forumhulp/htmlemail', 'info_acp_htmlemail');
+			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);	
 		}
 	}
-	
+
 	public function data()
 	{
 		$replacements = array(

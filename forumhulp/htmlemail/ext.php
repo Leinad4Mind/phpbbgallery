@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* HTML email.
+* HTML email extension for the phpBB Forum Software package.
 *
 * @copyright (c) 2015 ForumHulp.com <http://forumhulp.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -20,13 +20,29 @@ namespace forumhulp\htmlemail;
  */
 class ext extends \phpbb\extension\base
 {
+	public function is_enableable()
+	{
+		if (!class_exists('forumhulp\helper\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('forumhulp/cronstatus', 'info_acp_cronstatus');
+			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
+		}
+
+		if (!$this->container->get('ext.manager')->is_enabled('forumhulp/helper'))
+		{
+			$this->container->get('ext.manager')->enable('forumhulp/helper');
+		}
+
+		return class_exists('forumhulp\helper\helper');
+	}
+
 	public function enable_step($old_state)
 	{
 		if (empty($old_state))
 		{
-			global $user;
-			$user->add_lang_ext('forumhulp/htmlemail', 'info_acp_htmlemail');
-			$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['HTML_EMAIL_NOTICE']) ? $user->lang['HTML_EMAIL_NOTICE'] : '');
+			$this->container->get('user')->add_lang_ext('forumhulp/htmlemail', 'info_acp_htmlemail');
+			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
+				(isset($this->container->get('user')->lang['HTML_EMAIL_NOTICE']) ? $this->container->get('user')->lang['HTML_EMAIL_NOTICE'] : ''));
 		}
 		// Run parent enable step method
 		return parent::enable_step($old_state);
