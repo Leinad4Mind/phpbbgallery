@@ -15,6 +15,17 @@ namespace sitesplat\flatbootsminicms\migrations\v10x;
 */
 class m3_initial_data extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		$sql = 'SELECT config_value
+			FROM ' . $this->table_prefix . "flatboots_style_config
+			WHERE config_name = 'about_us_title'";
+		$result = $this->db->sql_query($sql);
+		$value = (int) $this->db->sql_fetchfield('config_value');
+		$this->db->sql_freeresult($result);
+		return $value;
+	}
+
 	/**
 	 * Assign migration file dependencies for this migration
 	 *

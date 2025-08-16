@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'TRANSLATION_INFO'					=> 'Translated by <a href="http://wwww.sitesplat.com/">ThemeSplat</a>.',
+	'TRANSLATION_INFO'					=> 'Translated by <a href="https://sitesplat.com/">ThemeSplat</a>.',
 	
 	'ABOUT_US_TITLE'            		=> 'About us Title',
 	'ABOUT_US'            				=> 'About us Body',

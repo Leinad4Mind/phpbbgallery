@@ -15,6 +15,18 @@ namespace sitesplat\flatbootsminicms\migrations\v10x;
 */
 class m2_initial_modules extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		$sql = 'SELECT module_id
+			FROM ' . $this->table_prefix . "modules
+			WHERE module_class = 'acp'
+				AND module_langname = 'FLATBOOTS_STYLE_TITLE'";
+		$result = $this->db->sql_query($sql);
+		$module_id = (int) $this->db->sql_fetchfield('module_id');
+		$this->db->sql_freeresult($result);
+		return $module_id;
+	}
+
 	/**
 	 * Assign migration file dependencies for this migration
 	 *

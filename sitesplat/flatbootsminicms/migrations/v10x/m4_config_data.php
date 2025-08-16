@@ -15,6 +15,11 @@ namespace sitesplat\flatbootsminicms\migrations\v10x;
 */
 class m4_config_data extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		return $this->config->offsetExists('flatboots_avatar_effect');
+	}
+
 	/**
 	 * Assign migration file dependencies for this migration
 	 *
