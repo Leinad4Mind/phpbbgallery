@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -66,7 +66,7 @@ class move extends base
 			$topic_data = phpbb_get_topic_data($ids);
 			$leave_shadow = $this->request->is_set_post('move_leave_shadow');
 	
-			$forum_sync_data = array();
+			$forum_sync_data = [];
 	
 			$forum_sync_data[$forum_id] = current($topic_data);
 			$forum_sync_data[$to_forum_id] = $forum_data;
@@ -100,7 +100,7 @@ class move extends base
 			move_topics($ids, $to_forum_id, false);
 	
 			$shadow_topics = 0;
-			$forum_ids = array($to_forum_id);
+			$forum_ids = [$to_forum_id];
 			foreach($topic_data as $topic_id => $row)
 			{
 				// Get the list of forums to resync, add a log entry
@@ -108,14 +108,14 @@ class move extends base
 	
 				// We add the $to_forum_id twice, because 'forum_id' is updated
 				// when the topic is moved again later.
-				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MOVE', false, array(
+				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MOVE', false, [
 					'forum_id'		=> (int) $to_forum_id,
 					'topic_id'		=> (int) $topic_id,
 					$row['forum_name'],
 					$forum_data['forum_name'],
 					(int) $row['forum_id'],
 					(int) $forum_data['forum_id'],
-				));
+				]);
 	
 				// If we have moved a global announcement, we need to correct the topic type
 				if($row['topic_type'] == POST_GLOBAL)
@@ -129,7 +129,7 @@ class move extends base
 				// Leave a redirection if required and only if the topic is visible to users
 				if($leave_shadow && $row['topic_visibility'] == ITEM_APPROVED && $row['topic_type'] != POST_GLOBAL)
 				{
-					$shadow = array(
+					$shadow = [
 						'forum_id'				=>	(int) $row['forum_id'],
 						'icon_id'				=>	(int) $row['icon_id'],
 						'topic_attachment'		=>	(int) $row['topic_attachment'],
@@ -163,18 +163,16 @@ class move extends base
 						'poll_length'			=>	(int) $row['poll_length'],
 						'poll_max_options'		=>	(int) $row['poll_max_options'],
 						'poll_last_vote'		=>	(int) $row['poll_last_vote']
-					);
+					];
 					
 					/**
-					* Perform actions before shadow topic is created.
-					*
-					* @event core.mcp_main_modify_shadow_sql
-					* @var	array	shadow	SQL array to be used by $db->sql_build_array
-					* @since 3.1.11-RC1
-					*/
-					$vars = array(
-						'shadow',
-					);
+					 * Perform actions before shadow topic is created.
+					 *
+					 * @event core.mcp_main_modify_shadow_sql
+					 * @var	array	shadow	SQL array to be used by $db->sql_build_array
+					 * @since 3.1.11-RC1
+					 */
+					$vars = ['shadow'];
 					extract($this->dispatcher->trigger_event('core.mcp_main_modify_shadow_sql', compact($vars)));
 	
 					$this->db->sql_query('INSERT INTO ' . TOPICS_TABLE . $this->db->sql_build_array('INSERT', $shadow));
@@ -185,7 +183,7 @@ class move extends base
 			}
 			unset($topic_data);
 	
-			$sync_sql = array();
+			$sync_sql = [];
 			if ($posts_moved)
 			{
 				$sync_sql[$to_forum_id][] = 'forum_posts_approved = forum_posts_approved + ' . (int) $posts_moved;
@@ -231,30 +229,30 @@ class move extends base
 	
 			$this->db->sql_transaction('commit');
 	
-			sync('forum', 'forum_id', array($forum_id, $to_forum_id));
+			sync('forum', 'forum_id', [$forum_id, $to_forum_id]);
 
 			$this->response->add('message', $this->language->lang(((sizeof($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_MOVED_SUCCESS'));
 			return true;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DIALOG_CONTENT'		=> true,
 			'S_FORUM_REQUEST'	=> true,
 			'S_CAN_LEAVE'		=> ($forum_id) ? true : false,
 			'S_FORUM_SELECT'	=> make_forum_select(false, $forum_id, false, true, true, true),
-		));
+		]);
 
 		$this->core->modal_dialog(
 			false,
 			'MOVE_TOPIC',
-			array(
+			[
 				'action'		=> 'move',
 				'topic_id_list'	=> $ids,
-			),
+			],
 			'@canidev_quickmod/quickmod_ajax.html',
-			array(
+			[
 				'dialogWidth' => 500
-			)
+			]
 		);
 	}
 }

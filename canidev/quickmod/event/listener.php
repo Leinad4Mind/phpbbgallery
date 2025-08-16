@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\event;
 
@@ -16,12 +16,12 @@ class listener implements EventSubscriberInterface
 	protected $quickmod;
 	
 	/**
-	* Constructor
-	*
-	* @param \canidev\quickmod\libraries\quickmod 		$quickmod		QuickMod Main Class
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \canidev\quickmod\libraries\quickmod 		$quickmod		QuickMod Main Class
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\canidev\quickmod\libraries\quickmod $quickmod)
 	{
@@ -33,14 +33,14 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'					=> 'load_language',
 			'core.user_setup_after'				=> 'on_setup_after',
 			'core.page_footer'					=> 'on_footer',
 			'core.viewforum_modify_topics_data'	=> 'obtain_real_topic_ids',
 			'core.viewforum_modify_topicrow'	=> 'modify_topic_row',
 			'core.search_modify_tpl_ary'		=> 'modify_search_row',
-		);
+		];
 	}
 
 	/**
@@ -54,10 +54,10 @@ class listener implements EventSubscriberInterface
 		if(!defined('ADMIN_START'))
 		{
 			$lang_set_ext = $event['lang_set_ext'];
-			$lang_set_ext[] = array(
+			$lang_set_ext[] = [
 				'ext_name' => 'canidev/quickmod',
 				'lang_set' => 'main',
-			);
+			];
 			$event['lang_set_ext'] = $lang_set_ext;
 		}
 	}
@@ -65,8 +65,6 @@ class listener implements EventSubscriberInterface
 	/**
 	 * core.user_setup_after
 	 * Initialize extension
-	 * 
-	 * @param \phpbb\event\data 	$event
 	 */
 	public function on_setup_after()
 	{
@@ -76,8 +74,6 @@ class listener implements EventSubscriberInterface
 	/**
 	 * core.page_footer
 	 * Display extension
-	 * 
-	 * @param \phpbb\event\data 	$event
 	 */
 	public function on_footer()
 	{

@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.2 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -25,12 +25,12 @@ class tools
 	protected $php_ext;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container		Service container interface
+	 *
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->db 			= $container->get('dbal.conn');
@@ -39,20 +39,20 @@ class tools
 		$this->request 		= $container->get('request');
 
 		$this->phpbb_root_path 	= $container->getParameter('core.root_path');
-		$this->phpb_ext 		= $container->getParameter('core.php_ext');
+		$this->php_ext 			= $container->getParameter('core.php_ext');
 	}
 
 	/**
 	 * Build select input
 	 * 
-	 * @param array 		$options 		Pair of (value => title) data
-	 * @param string 		$key 			Id of the input
-	 * @param mixed 		$select_ids 	Options to ve marked as selected for default
-	 * @param int 			$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
-	 * @param string 		$classname 		Custom class name for the input
+	 * @param array 			$options 		Pair of (value => title) data
+	 * @param string|false 		$key 			Id of the input
+	 * @param mixed 			$select_ids 	Options to ve marked as selected for default
+	 * @param int 				$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
+	 * @param string 			$classname 		Custom class name for the input
 	 * 
 	 * @return string
-	*/
+	 */
 	public function make_select($options, $key, $select_ids = '', $flags = self::SELECT_PARSE_LANG, $classname = '')
 	{
 		$in_group		= false;
@@ -75,7 +75,7 @@ class tools
 		 * @return string
 		 * @since 1.0.17
 		 */
-		$vars = array('options', 'key', 'select_ids', 'flags', 'classname');
+		$vars = ['options', 'key', 'select_ids', 'flags', 'classname'];
 		extract($this->dispatcher->trigger_event('canidev.core.make_select', compact($vars)));
 
 		$classname = ($classname) ? ' class="' . $classname . '"' : '';
@@ -86,12 +86,22 @@ class tools
 		}
 		else if($key !== false)
 		{
-			$select_ids = array($select_ids[0]);
+			$select_ids = [$select_ids[0]];
 			$string = '<select' . $classname . ' id="' . $key . '" name="config[' . $key . ']">';
 		}
 
-		foreach($options as $value => $title)
+		foreach($options as $value => $option)
 		{
+			if(is_array($option))
+			{
+				$title 		= $option['title'];
+				$disabled 	= !empty($option['disabled']);
+			}
+			else
+			{
+				$title 		= $option;
+				$disabled 	= false;
+			}
 			$title	= ($flags & self::SELECT_PARSE_LANG) ? $this->language->lang($title) : $title;
 
 			if(strpos($value, 'legend') !== false)
@@ -103,7 +113,7 @@ class tools
 			}
 
 			$selected	= ($select_ids !== null && in_array($value, $select_ids) ? ' selected="selected"' : '');
-			$string .= '<option value="' . $value . '"' . $selected . '>' . $title . '</option>';
+			$string .= '<option value="' . $value . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $title . '</option>';
 		}
 		
 		if($in_group)
@@ -148,14 +158,14 @@ class tools
 	 * 
 	 * @param string 	$config_key 		Key for input
 	 * @param mixed 	$select_groups 		Selected group IDs
-	 * @param boll 		$include_all 		Define if "All" checkbox must be displayed
+	 * @param bool 		$include_all 		Define if "All" checkbox must be displayed
 	 * 
 	 * @return string
 	 */
 	public function groups_select($config_key, $select_groups, $include_all = true)
 	{
 		$output 	= '';
-		$group_ary 	= array();
+		$group_ary 	= [];
 
 		if(!empty($select_groups))
 		{
@@ -198,80 +208,12 @@ class tools
 	 * @param int		$limit			Maximum length of string
 	 * @param string	$append			String to be appended
 	 * @param bool		$count_all		Defines if count all or only plain text
+	 * 
+	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function html_truncate($input = '', $limit = 0, $append = '', $count_all = false)
 	{
-		$check_len = ($count_all) ? utf8_strlen($input) : utf8_strlen(strip_tags($input));
-
-		if(!$input || $limit <= 0 || $check_len <= $limit)
-		{
-			return $input;
-		}
-
-		$splits = preg_split('#(</?[^>]*/?>)#', $input, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-		$text		= '';
-		$open_tag	= false;
-		$open_tags 	= array();
-
-		foreach($splits as $split)
-		{
-			// Open new tag
-			if(preg_match('#^<([a-zA-Z]+).*>#', $split, $match))
-			{
-				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], array('img', 'br', 'hr', 'input')))
-				{
-					$open_tags[] = $match[1];
-				}
-			}
-			
-			// Close tag, if the current
-			if(sizeof($open_tags) && $split === "</" . end($open_tags) . ">")
-			{
-				array_splice($open_tags, -1, 1);
-			}
-
-			// Adjust the string
-			if(sizeof($open_tags) && $split[0] != '<')
-			{ 
-				$length = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
-
-				if(($length + utf8_strlen($split)) > $limit)
-				{
-					$split = utf8_substr($split, 0, $limit - $length);
-				}
-			}
-			
-			$text .= $split;
-
-			// If exceed the limit and no open tags finish here,
-			// and it is looking backwards to remove the tag open.
-			$check_len = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
-			if($check_len >= $limit)
-			{
-				// Try to cut the text before close the open tags
-				if($split[0] != '<' && $check_len > $limit)
-				{
-					$chars_to_remove = max(0, utf8_strlen($split) - $limit);
-					
-					if($chars_to_remove)
-					{
-						$text = utf8_substr($text, 0, utf8_strlen($text) - $chars_to_remove);
-					}
-				}
-
-				$tags_count = sizeof($open_tags);
-
-				for($i = $tags_count; $i > 0; $i--)
-				{
-					$text .= '</' . $open_tags[$i-1] . '>';
-				}
-		
-				break;
-			}
-		}
-
-		return $text . (($append) ? $append : '');
+		return TextParser::truncate($input, $limit, $append, $count_all);
 	}
 
 	/**
@@ -279,19 +221,12 @@ class tools
 	 * 
 	 * @param string $text 		Original text
 	 * @return string
+	 * 
+	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function fix_smilies_path($text)
 	{
-		if(defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH)
-		{
-			return $text;
-		}
-
-		$board_url	= generate_board_url();
-
-		return preg_replace_callback('#class\="smilies" src\="(.*?)(/images/.*?)"#', function($matches) use ($board_url) {
-			return 'class="smilies" src="' . $board_url . $matches[2] . '"';
-		}, $text);
+		return TextParser::fixSmiliesPath($text);
 	}
 
 	/**
@@ -299,29 +234,11 @@ class tools
 	 * 
 	 * @param array 	$attributes
 	 * @return string
+	 * @deprecated 		To be removed on v1.2.0
 	 */
 	public static function array_to_attr($attributes)
 	{
-		return implode(
-			' ',
-			array_map(
-				function($key) use ($attributes)
-				{
-					if($attributes[$key] === null)
-					{
-						return '';
-					}
-
-					if(is_bool($attributes[$key]))
-					{
-						return ($attributes[$key]) ? $key : '';
-					}
-
-					return $key . '="' . $attributes[$key] . '"';
-				},
-				array_keys($attributes)
-			)
-		);
+		return Dom::arrayToAttr($attributes);
 	}
 
 	
@@ -346,7 +263,7 @@ class tools
 		// Filter duplicate LEFT JOIN
 		if(isset($sql_ary['LEFT_JOIN']))
 		{
-			$left_join_keys = array();
+			$left_join_keys = [];
 
 			foreach($sql_ary['LEFT_JOIN'] as $i => $join)
 			{
@@ -355,7 +272,7 @@ class tools
 
 				if(!isset($left_join_keys[$forum_key]))
 				{
-					$left_join_keys[$forum_key] = array();
+					$left_join_keys[$forum_key] = [];
 				}
 
 				if(!in_array($forum_alias, $left_join_keys[$forum_key]))
@@ -400,20 +317,15 @@ class tools
 
 		if(!file_exists($path))
 		{
-			@mkdir($path);
+			@mkdir($path, 0777, true);
 		}
 
-		try {
-			$htaccess_str = vsprintf($htaccess_str, ($public_access) ? array('Allow', 'granted') : array('Deny', 'denied'));
-			$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
+		$htaccess_str = vsprintf($htaccess_str, ($public_access) ? ['Allow', 'granted'] : ['Deny', 'denied']);
+		$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
 
-			file_put_contents($path . '.htaccess', $htaccess_str);
-			file_put_contents($path . 'index.htm', '');
-		}
-		catch(\Exception $e) {
-			return false;
-		}
+		@file_put_contents($path . '.htaccess', $htaccess_str);
+		@file_put_contents($path . 'index.htm', '');
 
-		return true;
+		return file_exists($path . '.htaccess');
 	}
 }

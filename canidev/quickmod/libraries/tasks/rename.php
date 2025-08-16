@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -98,16 +98,16 @@ class rename extends base
 			}
 		}
 
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_POST_EDITED', false, array(
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_POST_EDITED', false, [
 			'forum_id'	=> $topic_data['forum_id'],
 			'topic_id'	=> $topic_data['topic_id'],
 			$new_title,
 			$topic_data['topic_first_poster_name'],
-		));
+		]);
 
-		$this->response->add(array(
+		$this->response->add([
 			'message' 	=> htmlspecialchars_decode($new_title),
 			'reload'	=> false,
-		));
+		]);
 	}
 }

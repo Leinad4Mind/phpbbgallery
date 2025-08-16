@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CAT_QUICKMOD'				=> 'QuickMod',
 	'ACP_QUICKMOD_CONFIG'			=> 'Configuración principal',
 	'ACP_QUICKMOD_CONFIG_EXPLAIN'	=> 'Desde aquí puede administrar las opciones generales de moderación.<br />Para ordenar los botones arrástrelos a la posición deseada de la lista de abajo. La visibilidad de estos botones en la lista de temas del foro dependerá de los permisos del usuario y del estado del tema.',
@@ -37,4 +37,4 @@ $lang = array_merge($lang, array(
 	'BUTTONS_SELECTED'		=> 'Botones seleccionados',
 
 	'LOG_QUICKMOD_CONFIG'	=> '<strong>cBB QuickMod:</strong> Modificada configuración',
-));
+]);

@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -51,7 +51,7 @@ class chgtime extends base
 				
 			$new_time = $time->getTimestamp();
 	
-			$post_ids = $updated_forums = $last_post_ids = array();
+			$post_ids = $updated_forums = $last_post_ids = [];
 			$last_topic_id = $timeadd = 0;
 			
 			// Get some neccessary data before continue
@@ -146,7 +146,7 @@ class chgtime extends base
 					AND ' . $this->db->sql_in_set('t.forum_id', $updated_forums);
 				$result = $this->db->sql_query($sql);
 				
-				$updated_forums = array();
+				$updated_forums = [];
 				
 				while($row = $this->db->sql_fetchrow($result))
 				{
@@ -159,14 +159,14 @@ class chgtime extends base
 				
 				foreach($updated_forums as $forum_id => $row)
 				{
-					$sql_ary = array(
+					$sql_ary = [
 						'forum_last_post_id'		=> $row['topic_last_post_id'],
 						'forum_last_poster_id'		=> $row['topic_last_poster_id'],
 						'forum_last_post_subject'	=> $row['topic_last_post_subject'],
 						'forum_last_post_time'		=> $row['topic_last_post_time'],
 						'forum_last_poster_name'	=> $row['topic_last_poster_name'],
 						'forum_last_poster_colour'	=> $row['topic_last_poster_colour'],
-					);
+					];
 					
 					$sql = 'UPDATE ' . FORUMS_TABLE . '
 						SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
@@ -180,7 +180,7 @@ class chgtime extends base
 			return true;
 		}
 
-		$month_names = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+		$month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 		$s_day_options = $s_month_options = $s_year_options = '';
 
@@ -194,7 +194,7 @@ class chgtime extends base
 			
 			if($i < 13)
 			{
-				$month_name = $this->language->lang(array('datetime', $month_names[$i-1]));
+				$month_name = $this->language->lang(['datetime', $month_names[$i-1]]);
 
 				$selected = ($i == $now['mon']) ? ' selected="selected"' : '';
 				$s_month_options .= "<option value=\"$i\"$selected>$month_name</option>";
@@ -207,22 +207,22 @@ class chgtime extends base
 			$s_year_options .= "<option value=\"$i\"$selected>$i</option>";
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DIALOG_CONTENT'	=> true,
 			'S_CHGTIME'			=> true,
 			'S_DAY_OPTIONS'		=> $s_day_options,
 			'S_MONTH_OPTIONS'	=> $s_month_options,
 			'S_YEAR_OPTIONS'	=> $s_year_options,
 			'S_HOUR'			=> sprintf('%02d:%02d', $now['hours'], $now['minutes']),
-		));
+		]);
 
 		$this->core->modal_dialog(
 			false,
 			'CHANGE_TIME_TOPIC',
-			array(
+			[
 				'action'		=> 'chgtime',
 				'topic_id_list'	=> $topic_ids,
-			),
+			],
 			'@canidev_quickmod/quickmod_ajax.html'
 		);
 	}

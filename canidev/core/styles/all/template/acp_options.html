@@ -1,15 +1,15 @@
-	{% for option in loops.options %}
-		{% if option.S_LEGEND %}
+	{% for option in options %}
+		{% if option.S_LEGEND or option.S_FIRST_ROW %}
 			{% if not option.S_FIRST_ROW %}</fieldset>{% endif %}
 			<fieldset>
-				<legend>{{ option.LEGEND }}</legend>
-		{% else %}
-
+				{% if option.LEGEND %}<legend>{{ option.LEGEND }}</legend>{% endif %}
+		{% endif %}
+		
+		{% if not option.S_LEGEND %}
 			<dl>
-				<dt><label for="{{ option.KEY }}">{{ option.TITLE }}{{ lang('COLON') }}</label>{% if option.S_EXPLAIN %}<br /><span>{{ option.S_EXPLAIN }}</span>{% endif %}</dt>
+				<dt><label for="{{ option.KEY }}">{{ option.TITLE ~ lang('COLON') }}</label>{% if option.S_EXPLAIN %}<br /><span>{{ option.S_EXPLAIN }}</span>{% endif %}</dt>
 				<dd>{{ option.CONTENT }}</dd>
 			</dl>
-
 		{% endif %}
 		
 		{% if option.S_LAST_ROW %}</fieldset>{% endif %}

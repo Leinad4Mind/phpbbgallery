@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -39,11 +39,11 @@ class lock extends base
 
 		$orig_ids = $ids;
 
-		if(!phpbb_check_ids($ids, TOPICS_TABLE, 'topic_id', array('m_lock')))
+		if(!phpbb_check_ids($ids, TOPICS_TABLE, 'topic_id', ['m_lock']))
 		{
 			$ids = $orig_ids;
 
-			if(!phpbb_check_ids($ids, TOPICS_TABLE, 'topic_id', array('f_user_lock')))
+			if(!phpbb_check_ids($ids, TOPICS_TABLE, 'topic_id', ['f_user_lock']))
 			{
 				return false;
 			}
@@ -62,11 +62,11 @@ class lock extends base
 		{
 			if(!$row['topic_moved_id'])
 			{
-				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_LOCK', false, array(
+				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_LOCK', false, [
 					'forum_id'	=> $row['forum_id'],
 					'topic_id'	=> $row['topic_id'],
 					$row['topic_title'],
-				));
+				]);
 			}
 		}
 		
@@ -79,11 +79,7 @@ class lock extends base
 		 * @var	array	data				Array containing topics data
 		 * @since 3.1.7-RC1
 		 */
-		$vars = array(
-			'action',
-			'ids',
-			'data',
-		);
+		$vars = ['action', 'ids', 'data'];
 		extract($this->dispatcher->trigger_event('core.mcp_lock_unlock_after', compact($vars)));
 
 		$this->response->add('message', $this->language->lang(((sizeof($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_LOCKED_SUCCESS'));

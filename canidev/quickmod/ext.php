@@ -1,18 +1,18 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod;
 
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.1.0';
+	const REQUIRED_CORE		= '1.1.2';
 	
 	/**
 	 * {@inheritDoc}

@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'APPROVE_TOPIC'			=> 'Aprobar',
 	'CHANGE_ICON'			=> 'Cambiar icono',
 	'CHANGE_ICON_TOPIC'		=> 'Cambiar icono',
@@ -42,7 +42,6 @@ $lang = array_merge($lang, array(
 	
 	'DELETE_TOPIC'				=> 'Eliminar',
 	'DELETE_PERMANENTLY_TOPIC'	=> 'Eliminar permanentemente',
-	'LOCK_TOPIC'				=> 'Cerrar',
 	'MAKE_ANNOUNCE_TOPIC'		=> 'Marcar como anuncio',
 	'MAKE_GLOBAL_TOPIC'			=> 'Marcar como anuncio global',
 	'MAKE_NORMAL_TOPIC'			=> 'Marcar como normal',
@@ -79,4 +78,4 @@ $lang = array_merge($lang, array(
 	
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
 		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
-));
+]);

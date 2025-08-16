@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -32,7 +32,7 @@ class chgposter extends base
 	{
 		if($this->core->modal_dialog(true))
 		{
-			$post_ids = array();
+			$post_ids = [];
 			$username = $this->request->variable('username', '', true);
 			
 			$sql = 'SELECT *
@@ -83,19 +83,19 @@ class chgposter extends base
 			return false;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DIALOG_CONTENT'	=> true,
 			'S_CHGPOSTER'		=> true,
 			'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=qm-dialog-form&amp;field=username&amp;select_single=true'),
-		));
+		]);
 
 		$this->core->modal_dialog(
 			false,
 			'CHANGE_POSTER',
-			array(
+			[
 				'action'		=> 'chgposter',
 				'topic_id_list'	=> $topic_ids,
-			),
+			],
 			'@canidev_quickmod/quickmod_ajax.html'
 		);
 	}
@@ -191,29 +191,29 @@ class chgposter extends base
 
 			if(!$error && method_exists($search, 'destroy_cache'))
 			{
-				$search->destroy_cache(array(), array($post_info['user_id'], $userdata['user_id']));
+				$search->destroy_cache([], [$post_info['user_id'], $userdata['user_id']]);
 			}
 		}
 		
 		/**
-		* This event allows you to perform additional tasks after changing a post's poster
-		*
-		* @event core.mcp_change_poster_after
-		* @var	array	userdata	Information on a post's new poster
-		* @var	array	post_info	Information on the affected post
-		* @since 3.1.6-RC1
-		* @changed 3.1.7-RC1		Change location to prevent post_info from being set to the new post information
-		*/
-		$vars = array('userdata', 'post_info');
+		 * This event allows you to perform additional tasks after changing a post's poster
+		 *
+		 * @event core.mcp_change_poster_after
+		 * @var	array	userdata	Information on a post's new poster
+		 * @var	array	post_info	Information on the affected post
+		 * @since 3.1.6-RC1
+		 * @changed 3.1.7-RC1		Change location to prevent post_info from being set to the new post information
+		 */
+		$vars = ['userdata', 'post_info'];
 		extract($this->dispatcher->trigger_event('core.mcp_change_poster_after', compact($vars)));
 
 		// Now add log entry
-		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MCP_CHANGE_POSTER', false, array(
+		$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MCP_CHANGE_POSTER', false, [
 			'forum_id'	=> $post_info['forum_id'],
 			'topic_id'	=> $post_info['topic_id'],
 			$post_info['topic_title'],
 			$post_info['username'],
 			$userdata['username'],
-		));	
+		]);	
 	}
 }

@@ -1,12 +1,12 @@
 <?php
 /**
-* [English [En]]
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [English [En]]
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CAT_QUICKMOD'				=> 'QuickMod',
 	'ACP_QUICKMOD_CONFIG'			=> 'Main Configuration',
 	'ACP_QUICKMOD_CONFIG_EXPLAIN'	=> 'From here, you can manage the main moderation options.<br />To arrange the buttons, drag it to the correct position in the bottom list. The visibility of the buttons in the viewforum page depends to the user permissions and the topic state.',
@@ -37,4 +37,4 @@ $lang = array_merge($lang, array(
 	'BUTTONS_SELECTED'		=> 'Selected buttons',
 
 	'LOG_QUICKMOD_CONFIG'	=> '<strong>cBB QuickMod:</strong> Configuration Changed',
-));
+]);
