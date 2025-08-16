@@ -1,0 +1,25 @@
+{% if INVITE_USER_NAME %}
+<li>
+ <span class="fa fa-ticket"></span>
+    <label>{{ lang('INVITE_INVITED') }}</label>
+<span>{{ INVITE_USER_NAME }}</span>
+</li>
+{% endif %}
+
+
+<li>
+ <span class="fa fa-user-plus"></span>
+    <label>{{ lang('INVITE_INVITES') }}</label>
+	{% if INVITE_USERS_LIST %}
+<span><a href="{{ INVITE_USERS_LIST }}">{{ INVITE_USER_DB }}</a></span>
+    {% else %}
+<span>{{ INVITE_USER_DB }}</span>
+	{% endif %}
+</li>
+
+
+
+
+
+
+

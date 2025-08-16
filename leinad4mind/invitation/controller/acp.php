@@ -684,8 +684,8 @@ class acp extends controller_base
 
 				$sort_by_sql = array(
 					'name'	=> 'u.username_clean',
-					'db'	=> 'h.db',
-					'date'	=> 'h.message_time',
+					'db'	=> 'i.db',
+					'date'	=> 'i.message_time',
 				);
 
 				$s_limit_days	= $s_sort_key = $s_sort_dir = $u_sort_param = '';

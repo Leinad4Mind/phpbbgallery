@@ -254,10 +254,10 @@ class functions_admin
 	 */
 	public function handling($mode, $marked, $admin)
 	{
-		$sql = 'SELECT h.*, u.user_id, u.username, u.user_colour, u.user_lang
-				FROM ' . $this->table_invite_claimed . ' k
-				LEFT JOIN ' . $this->table_users . ' u ON u.user_id = h.user_id
-				WHERE ' . $this->db->sql_in_set('h.user_id', $marked);
+		$sql = 'SELECT i*, u.user_id, u.username, u.user_colour, u.user_lang
+				FROM ' . $this->table_invite_claimed . ' i
+				LEFT JOIN ' . $this->table_users . ' u ON u.user_id = i.user_id
+				WHERE ' . $this->db->sql_in_set('i.user_id', $marked);
 
 		$result = $this->db->sql_query($sql);
 		while ($invite = $this->db->sql_fetchrow($result))
@@ -316,7 +316,7 @@ class functions_admin
 	 * @param int $limit_days
 	 * @param string $sort_by
 	 */
-	public function requesting(&$message, &$petition_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'h.message_time DESC')
+	public function requesting(&$message, &$petition_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'i.message_time DESC')
 	{
 		$sql = 'SELECT COUNT(user_id) AS message_count
 				FROM ' . $this->table_invite_claimed . ' ' . (($limit_days) ? ' WHERE message_time >= ' . (int) $limit_days : '');
@@ -329,9 +329,9 @@ class functions_admin
 			$offset = ($offset - $limit < 0) ? 0 : $offset - $limit;
 		}
 
-		$sql = 'SELECT h.*, u.user_id, u.username, u.username_clean, u.user_colour
-				FROM ' . $this->table_invite_claimed . ' k
-				LEFT JOIN ' . $this->table_users . ' u ON h.user_id = u.user_id ' . (($limit_days) ? ' WHERE h.message_time >= ' . (int) $limit_days : '') . "
+		$sql = 'SELECT i.*, u.user_id, u.username, u.username_clean, u.user_colour
+				FROM ' . $this->table_invite_claimed . ' i
+				LEFT JOIN ' . $this->table_users . ' u ON i.user_id = u.user_id ' . (($limit_days) ? ' WHERE i.message_time >= ' . (int) $limit_days : '') . "
 				ORDER BY $sort_by";
 		$result = $this->db->sql_query_limit($sql, $limit, $offset);
 		while ($row = $this->db->sql_fetchrow($result))

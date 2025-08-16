@@ -1,0 +1,102 @@
+{% if S_INVITE_USERS_LIST or UCP_INVITE_USER %}
+
+	{% if S_INVITE_USERS_LIST %}
+		{% INCLUDE 'overall_header.html' %}
+	
+
+<div class="side-segment"><h3>{{ lang('UCP_INVITE_USER') }}</h3></div>{% endif %}
+{% if UCP_INVITE_USER %}
+
+<fieldset class="framed-ucp">
+	 <legend>{{ lang('UCP_INVITE_USER') }}</legend>
+       <p>{{ lang('UCP_INVITE_USER') }}</p>
+	   {% endif %}
+<div class="clearfix">
+    <div class="pull-left">
+	 
+	</div>
+	<div class="pull-right">
+		<ul class="pagination pagination-sm">
+			<li><a>{{ TOTAL_COUNT }}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination_mobile.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul>
+    </div>
+	
+</div>
+
+	
+	<div class="panel panel-forum">
+	 <div class="panel-heading">
+		{L_USERS}
+	 </div>
+	<div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+	    <thead>
+		<tr>
+			<th data-class="expand">{% if UCP_INVITE_USER %}{{ lang('UCP_INVITE_USER_OK') }}{% else %}{{ lang('USERNAME') }}{% endif %}</th>
+			<th class="large110" data-hide="phone">{{ lang('POST') }}</th>
+			<th class="large21" data-hide="phone">{{ lang('JOINED') }}</th>
+			{% if S_VIEWONLINE %}
+			<th class="large21" data-hide="phone">{{ lang('UCP_INVITE_LAST_ACTIVE') }}</th>
+			{% endif %}
+			{% if UCP_INVITE_USER %}
+			{% if PM_IMG %}<th class="large21" data-hide="phone">{{ lang('PM') }}</th>{% endif %}
+			{% if EMAIL_IMG %}<th class="large21" data-hide="phone">{{ lang('EMAIL') }}</th>{% endif %}
+			{% endif %}
+		</tr>
+		</thead>		
+		 <tbody>
+               {% for users in loops.users %}
+						<tr class="{% if users.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
+							<td>{{ users.H_USERNAME }}</td>
+							<td>{% if users.U_POSTS %}<a href="{{ users.U_POSTS }}">{{ users.H_POSTS }}</a>{% else %}{{ users.H_POSTS }}{% endif %}</td>
+							<td>{{ users.H_REG_TIME }}</td>
+							{% if S_VIEWONLINE %}
+								<td>{{ users.H_U_AKTIV }}</td>
+							{% endif %}
+							{% if UCP_INVITE_USER %}
+								{% if PM_IMG %}<td class="invite_etd"><a href="{{ users.U_H_PM }}" title="{{ lang('PRIVATE_MESSAGE') }}"><span>{{ lang('PRIVATE_MESSAGE') }}</span></a></td>{% endif %}
+								{% if EMAIL_IMG %}<td class="invite_etd"><a href="{{ users.U_H_EMAIL }}" title="{{ lang('SEND_EMAIL') }}"><span>{{ lang('SEND_EMAIL') }}</span></a></td>{% endif %}
+							{% endif %}
+						</tr>
+					{% endfor %}
+		 </tbody>
+	    </table>
+	</div>
+	</div>
+	
+	<div class="clearfix">
+	{% if S_SORT_KEY and S_SORT_DIR %}
+	<div class="pull-left">
+		<fieldset class="display-options">
+			{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+			<noscript>
+				<p>&nbsp;&nbsp;<input type="submit" value="{{ lang('GO') }}" id="start" name="start" class="button2" /></p>
+			</noscript>
+		</fieldset>
+		</div>
+		{% endif %}
+		<div class="pull-right">
+			<ul class="pagination pagination-sm">
+			 <li><a>{{ TOTAL_COUNT }} </a></li>
+			   <!-- IF .pagination -->
+					<!-- INCLUDE pagination_mobile.html -->
+				<!-- ELSE -->
+					<li class="active"><a>{PAGE_NUMBER}</a></li>	
+				<!-- ENDIF -->
+			</ul>
+		</div>
+	</div>
+	{% if UCP_INVITE_USER %}
+	</fieldset>
+
+{% endif %}	
+	{% if S_INVITE_USERS_LIST %}
+		{% INCLUDE 'overall_footer.html' %}
+	{% endif %}
+
+{% endif %}
