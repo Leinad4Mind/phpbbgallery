@@ -1,0 +1,61 @@
+<div class="widget-body tab-pane <!-- IF IMGUR_DELETEHASH -->active<!-- ENDIF -->" id="posting-imgur-html">
+<p>{L_IMGUR_UPLOAD_MAIN}</p>
+<fieldset>
+	<div class="fileinput fileinput-new" data-provides="fileinput">
+		<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#imgurAnchor';"<!-- ENDIF --> autocomplete="off" data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
+		<span class="btn btn-default btn-file">
+			<span class="fileinput-new">{L_IMGUR_SELECT}</span>
+			<span class="fileinput-exists">{L_FILE_CHANGE}</span>
+			<input type="file" name="imgur" id="imgur" maxlength="{FILESIZE}" value="" />
+		</span>
+		<i class="fa fa-picture-o fileinput-exists"></i> <span class="fileinput-filename"></span>
+		<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none"><i class="fa fa-times"></i></a>
+	</div>
+  
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-link">{L_IMGUR_OUTPUT_LINK}{L_COLON}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-link" value="{IMGUR_DIRECT_LINK}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
+				<span class="input-group-btn">
+					<a class="btn btn-default" id="copy-button-link" data-clipboard-target="box-imgur-link" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+				</span>
+		 </div> 
+	</div> 
+</div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-img">{L_IMGUR_OUTPUT_IMAGE}{L_COLON}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-img" value="{IMGUR_DIRECT_IMG}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
+				<span class="input-group-btn">
+					<a class="btn btn-default" id="copy-button-img" data-clipboard-target="box-imgur-img" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-del">{L_IMGUR_OUTPUT_IMAGE_DELETE}{L_COLON}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-del" <!-- IF IMGUR_DELETEHASH -->value="http://imgur.com/delete/{IMGUR_DELETEHASH}"<!-- ENDIF --> placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
+				<span class="input-group-btn">
+					<a class="btn btn-default" id="copy-button-del" data-clipboard-target="box-imgur-del" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+</fieldset>
+<!-- INCLUDEJS vendors/juplod/jupload.min.js -->
+<!-- INCLUDEJS vendors/zeroclipboard/ZeroClipboard.min.js -->
+<script>
+	head.load("{T_THEME_PATH}/vendors/jupload.min.js");
+	head.ready(function () {
+		var imgurImgLink = new ZeroClipboard(document.getElementById("copy-button-link"));
+		var imgurImgTag = new ZeroClipboard(document.getElementById("copy-button-img"));
+		var imgurImgDel = new ZeroClipboard(document.getElementById("copy-button-del"));
+	});
+</script>
+</div>
