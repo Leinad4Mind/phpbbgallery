@@ -112,7 +112,7 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 			array('config.add', array('chat_allow_bbcode', 1)),
 			array('config.add', array('chat_allow_pm', 1)),
 			array('config.add', array('chat_auto_away', 0)),
-			array('config.add', array('chat_autoconnect', 0)),
+			array('config.add', array('chat_autoconnect', 1)),
 			array('config.add', array('chat_bbcode_format', 'button')),
 			array('config.add', array('chat_cron_lock', 0, 1)),
 			array('config.add', array('chat_direction', 'down')),
@@ -160,18 +160,18 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 			array('permission.add', array('u_chat_sendpm', true)),
 			array('permission.add', array('u_chat_view', true)),
 
-			array('permission.permission_set', array('ROLE_ADMIN_STANDARD', 'a_chat')),
+			array('permission.permission_set', array('ADMINISTRATORS', 'a_chat', 'group')),
 			array('permission.permission_set', array('ADMINISTRATORS', 'u_chat_archive', 'group')),
 			array('permission.permission_set', array('ADMINISTRATORS', 'u_chat_ignoreflood', 'group')),
 
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_chat_delete')),
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_chat_edit')),
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_chat_post')),
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_chat_sendpm')),
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_chat_view')),
-		
-			array('permission.permission_set', array('ROLE_MOD_FULL', 'm_chat_delete')),
-			array('permission.permission_set', array('ROLE_MOD_FULL', 'm_chat_edit')),
+			array('permission.permission_set', array('REGISTERED', 'u_chat_delete', 'group')),
+			array('permission.permission_set', array('REGISTERED', 'u_chat_edit', 'group')),
+			array('permission.permission_set', array('REGISTERED', 'u_chat_post', 'group')),
+			array('permission.permission_set', array('REGISTERED', 'u_chat_sendpm', 'group')),
+			array('permission.permission_set', array('REGISTERED', 'u_chat_view', 'group')),
+
+			array('permission.permission_set', array('GLOBAL_MODERATORS', 'm_chat_delete', 'group')),
+			array('permission.permission_set', array('GLOBAL_MODERATORS', 'm_chat_edit', 'group')),
 			
 			array('custom', array(array($this, 'add_table_data'))),
 		);

@@ -2,9 +2,9 @@
 /** 
 * info_acp_chat.php [English [En]]
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 

@@ -1,7 +1,7 @@
 /*
 * @name jchat-acp.js
 * @package cBB Chat
-* @version v1.1.0 02/02/2015 $
+* @version v1.1.1 01/07/2015 $
 *
 * @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License

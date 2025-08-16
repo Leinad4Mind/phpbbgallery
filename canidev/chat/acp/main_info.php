@@ -2,9 +2,9 @@
 /*
 * @name main_info.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -17,7 +17,7 @@ class main_info
 		return array(
 			'filename'	=> '\canidev\chat\acp\main_module',
 			'title'		=> 'ACP_CAT_CHAT',
-			'version'	=> '1.1.0',
+			'version'	=> '1.1.1',
 			'modes'		=> array(
 				'config'	=> array('title' => 'ACP_CHAT_CONFIG', 	'auth' => 'ext_canidev/chat && acl_a_chat', 'cat' => array('ACP_CAT_CHAT')),
 				'pages'		=> array('title' => 'ACP_CHAT_PAGES', 	'auth' => 'ext_canidev/chat && acl_a_chat', 'cat' => array('ACP_CAT_CHAT')),

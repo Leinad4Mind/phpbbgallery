@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	Common	
-	Copyright (c) 2014 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2015 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -138,12 +138,12 @@ a [class*="chat-icon"] { display: inline; }
 #chat-left-panel {
 	float: left;
 	margin-right: 0;
-	width: 85%;
+	width: 81%;
 }
 
 #chat-right-panel {
 	float: right;
-	width: 14.4%;
+	width: 18.4%;
 }
 
 #chat-conversation-container, #chat-right-panel {
@@ -214,7 +214,7 @@ a [class*="chat-icon"] { display: inline; }
 }
 
 .ic-row-text {
-	word-break: break-all;
+	word-break: break-word;
 }
 
 .ic-row-text.avatar-margin, .ic-row-title.avatar-margin {
@@ -235,6 +235,8 @@ a.chat-quickmention {
 	font-weight: bold;
 	text-decoration: none;
 }
+
+.chat-new-topic { font-weight: bold; }
 
 /* Tabs
 ------------------------------- */

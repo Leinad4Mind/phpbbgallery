@@ -2,9 +2,9 @@
 /** 
 * acp.php [English [En]]
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -42,7 +42,7 @@ $lang = array_merge($lang, array(
 	'CHAT_AUTO_AWAY_ERROR'		=> 'The time of status change should be less than disconnection time',
 	'CHAT_AVATARS'				=> 'Show avatars',
 	'CHAT_BBCODE_FORMAT'		=> 'Custom BBCode format',
-	'CHAT_BBCODE_FORMAT_EXPLAIN'	=> 'Set the look ofthe Custom BBcodes in the chat.',
+	'CHAT_BBCODE_FORMAT_EXPLAIN'	=> 'Set the look of the Custom BBcodes in the chat.',
 	'CHAT_BBCODE_INBUTTON'		=> 'Buttons',
 	'CHAT_BBCODE_INSELECT'		=> 'Selectable menu',
 	'CHAT_CHARS'				=> 'Messages characters',

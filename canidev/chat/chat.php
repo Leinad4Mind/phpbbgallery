@@ -2,9 +2,9 @@
 /*
 * @name chat.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -29,42 +29,49 @@ class chat
 	public $root_path		= '';
 	public $time_limit		= 0;
 	public $web_path		= '';
+	public $phpbb_root_path;
+	public $php_ext;
 	
 	protected $auth;
+	protected $cache;
 	protected $config;
 	protected $container;
+	protected $dispatcher;
 	protected $db;
 	protected $helper;
 	protected $request;
 	protected $template;
 	protected $user;
 	
-	protected $phpbb_root_path;
-	protected $php_ext;
+
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth 					$auth			Authentication object
-	* @param \phpbb\config\config 				$config			Config Object
-	* @param ContainerInterface 				$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface	$db				DB Object
-	* @param \phpbb\controller\helper			$helper       	Controller helper object
-	* @param \phpbb\request\request 			$request		Request object
-	* @param \phpbb\template\template			$template     	Template object
-	* @param \phpbb\user						$user			User object
-	* @param string								$root_path		phpBB root path
-	* @param string								$php_ext		phpEx
+	* @param \phpbb\auth\auth 						$auth				Authentication object
+	* @param \phpbb\cache\driver\driver_interface 	$cache 				Cache instance
+	* @param \phpbb\config\config 					$config				Config Object
+	* @param ContainerInterface 					$container			Service container interface
+	* @param \phpbb\event\dispatcher_interface		$phpbb_dispatcher	Event dispatcher
+	* @param \phpbb\db\driver\driver_interface		$db					DB Object
+	* @param \phpbb\controller\helper				$helper       		Controller helper object
+	* @param \phpbb\request\request 				$request			Request object
+	* @param \phpbb\template\template				$template     		Template object
+	* @param \phpbb\user							$user				User object
+	* @param string									$root_path			phpBB root path
+	* @param string									$php_ext			phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, ContainerInterface $container, $phpbb_dispatcher, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		global $table_prefix;
 		
 		$this->auth			= $auth;
+		$this->cache		= $cache;
 		$this->config 		= $config;
 		$this->container	= $container;
+		$this->dispatcher	= $phpbb_dispatcher;
 		$this->db			= $db;
 		$this->helper		= $helper;
 		$this->request		= $request;
@@ -73,14 +80,10 @@ class chat
 		
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
+		$this->time_limit		= (!empty($this->config['chat_timeout']) ? (time() - (intval($this->config['chat_timeout']) * 60)) : false);
 
 		$this->root_path	= $this->phpbb_root_path . $this->path;
-		$this->web_path 	= generate_board_url() . '/';
-		
-		// Fix problem in Windows Servers
-		$this->web_path = str_replace('\\/', '', $this->web_path);
-		
-		$this->time_limit	= (!empty($this->config['chat_timeout']) ? (time() - (intval($this->config['chat_timeout']) * 60)) : false);
+		$this->web_path		= $this->phpbb_root_path;
 		
 		if(!empty($this->config['chat_version']))
 		{
@@ -167,6 +170,9 @@ class chat
 				$this->template->assign_vars(array(
 					'S_CHAT_ENABLED'		=> true,
 					'S_CHAT_RULES'			=> (!empty($texts[CHAT_TEXT_RULE]) ? true : false),
+					
+					'A_CHAT_COOKIE_SETTINGS'	=> addslashes('; path=' . $this->config['cookie_path'] . ((!$this->config['cookie_domain'] || $this->config['cookie_domain'] == 'localhost' || $this->config['cookie_domain'] == '127.0.0.1') ? '' : '; domain=' . $this->config['cookie_domain']) . ((!$this->config['cookie_secure']) ? '' : '; secure')),
+					'S_CHAT_COOKIE_NAME'		=> $this->config['cookie_name'] . '_chat',
 
 					'S_CHAT_ALLOW_PM'			=> $this->config['chat_allow_pm'],
 					'S_CHAT_AUTOCONNECT'		=> $this->config['chat_autoconnect'],
@@ -198,6 +204,11 @@ class chat
 					'U_CHAT_ACTION'		=> $this->helper->get_current_url(),
 					'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->helper->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
 					'U_CHAT_PLAYER'		=> $this->web_path . $this->path . 'assets/player.swf?v=' . $this->config['chat_version'],
+					
+					'U_CHAT_JSCRIPT'	=> append_sid($this->web_path . $this->path . 'jchat_scripts.' . $this->php_ext, array(
+						'v'					=> $this->config['chat_version'],
+						'assets_version'	=> $this->config['assets_version']
+					))
 				));
 				
 				// Generate notices and tips
@@ -251,20 +262,56 @@ class chat
 		{
 			if(!in_array($row['bbcode_id'], $this->disallowed_bbcodes))
 			{
-				$this->template->assign_block_vars('chat_default_tags', array(
+				// Compatibility for events
+				$row['bbcode_tag']	= $bbcode_tag;
+				$bbcode_name		= $row['name'];
+				$template_key		= 'chat_default_tags';
+
+				$item_ary = array(
 					'S_HELP'	=> ($row['help']) ? $this->user->lang[$row['help']] : '',
-					'S_NAME'	=> $row['name'],
+					'S_NAME'	=> $bbcode_name,
 					'S_TAG'		=> $bbcode_tag,
-				));
+				);
+
+				/**
+				* Event to modify the bbcodes loaded in the chat
+				*
+				* @event chat.generate_bbcodes
+				* @var	string	bbcode_name		The name of the bbcode tag
+				* @var	string	template_key	Key assigned to the block template
+				* @var	array	row				Array with bbcode row
+				* @var	array	item_ary		Array with items to push on template
+				* @since 1.1.1
+				*/
+				$vars = array('bbcode_name', 'template_key', 'row', 'item_ary');
+				extract($this->dispatcher->trigger_event('chat.generate_bbcodes', compact($vars)));
+				
+				if(sizeof($item_ary))
+				{
+					$this->template->assign_block_vars($template_key, $item_ary);
+				}
 			}
 		}
 		
 		// Custom BBcodes
-		$sql = 'SELECT bbcode_id, bbcode_tag, bbcode_helpline
-			FROM ' . BBCODES_TABLE . '
-			WHERE display_on_posting = 1
-			ORDER BY bbcode_tag';
-		$result = $this->db->sql_query($sql, 3600);
+		$sql_ary = array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(BBCODES_TABLE => 'b'),
+			'WHERE'		=> 'b.display_on_posting = 1',
+			'ORDER_BY'	=> 'b.bbcode_tag',
+		);
+		
+		/**
+		* Event to modify the sql of custom chat bbcodes
+		*
+		* @event chat.custom_bbcodes_modify_sql
+		* @var	array	sql_ary		The SQL array to get the bbcode data
+		* @since 1.1.1
+		*/
+		$vars = array('sql_ary');
+		extract($this->dispatcher->trigger_event('chat.custom_bbcodes_modify_sql', compact($vars)));
+		
+		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary), 3600);
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			if(in_array($row['bbcode_id'], $this->disallowed_bbcodes))
@@ -280,13 +327,32 @@ class chat
 			
 			$bbcode_name	= trim(str_replace('=', '-', $row['bbcode_tag']), '-');
 			$imagename		= 'images/icons/bbcode-' . $bbcode_name . '.png';
-
-			$this->template->assign_block_vars('chat_custom_tags', array(
+			$template_key	= 'chat_custom_tags';
+			
+			$item_ary = array(
 				'S_HELP'	=> $row['bbcode_helpline'],
 				'S_IMAGE'	=> (file_exists($this->root_path . $imagename) ? $this->web_path . $this->path . $imagename : ''),
 				'S_NAME'	=> $bbcode_name,
 				'S_TAG'		=> $row['bbcode_tag'],
-			));
+			);
+			
+			/**
+			* Event to modify the bbcodes loaded in the chat
+			*
+			* @event chat.generate_bbcodes
+			* @var	string	bbcode_name		The name of the bbcode tag
+			* @var	string	template_key	Key assigned to the block template
+			* @var	array	row				Array with bbcode row
+			* @var	array	item_ary		Array with items to push on template
+			* @since 1.1.1
+			*/
+			$vars = array('bbcode_name', 'template_key', 'row', 'item_ary');
+			extract($this->dispatcher->trigger_event('chat.generate_bbcodes', compact($vars)));
+
+			if(sizeof($item_ary))
+			{
+				$this->template->assign_block_vars($template_key, $item_ary);
+			}
 		}
 		$this->db->sql_freeresult($result);
 	}
@@ -310,22 +376,33 @@ class chat
 
 		foreach($smilies as $row)
 		{
-			$this->template->assign_block_vars('chat_smiley', array(
+			$item_ary = array(
 				'S_CODE'	=> $row['code'],
 				'A_CODE'	=> addslashes($row['code']),
 				'S_IMG'		=> $this->web_path . $this->config['smilies_path'] . '/' . $row['smiley_url'],
 				'S_WIDTH'	=> $row['smiley_width'],
 				'S_HEIGHT'	=> $row['smiley_height'],
-				'S_DESC'	=> $row['emotion'])
+				'S_DESC'	=> $row['emotion']
 			);
+
+			/**
+			* Event to modify the smilies loaded in the chat
+			*
+			* @event chat.generate_smilies
+			* @var	array	row			Array with bbcode row
+			* @var	string	item_ary	Array with items to push on template
+			* @since 1.1.1
+			*/
+			$vars = array('row', 'item_ary');
+			extract($this->dispatcher->trigger_event('chat.generate_smilies', compact($vars)));
+
+			$this->template->assign_block_vars('chat_smiley', $item_ary);
 		}
 	}
 	
 	public function obtain_pages($current_page = false)
 	{
-		global $cache;
-		
-		if(($page_cache = $cache->get('_chat_pages')) === false)
+		if(($page_cache = $this->cache->get('_chat_pages')) === false)
 		{
 			$page_cache = array();
 
@@ -342,7 +419,7 @@ class chat
 			}
 			$this->db->sql_freeresult($result);
 			
-			$cache->put('_chat_pages', $page_cache);
+			$this->cache->put('_chat_pages', $page_cache);
 		}
 		
 		if($current_page)
@@ -355,9 +432,7 @@ class chat
 	
 	public function obtain_rooms()
 	{
-		global $cache;
-		
-		if(($room_cache = $cache->get('_chat_rooms')) === false)
+		if(($room_cache = $this->cache->get('_chat_rooms')) === false)
 		{
 			$room_cache = array();
 
@@ -383,7 +458,7 @@ class chat
 			}
 			$this->db->sql_freeresult($result);
 			
-			$cache->put('_chat_rooms', $room_cache);
+			$this->cache->put('_chat_rooms', $room_cache);
 		}
 
 		return $room_cache;
@@ -391,9 +466,7 @@ class chat
 	
 	public function obtain_texts($output_type = false, $translate = true)
 	{
-		global $cache;
-		
-		if(($text_cache = $cache->get('_chat_texts')) === false)
+		if(($text_cache = $this->cache->get('_chat_texts')) === false)
 		{
 			$text_cache = array();
 			$bbcode_bitfield = '';
@@ -450,7 +523,7 @@ class chat
 				}
 			}
 			
-			$cache->put('_chat_texts', $text_cache);
+			$this->cache->put('_chat_texts', $text_cache);
 		}
 		
 		foreach($text_cache as $text_type => $rows)

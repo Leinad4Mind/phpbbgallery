@@ -29,8 +29,10 @@ services:
         class: canidev\chat\chat
         arguments:
             - @auth
+            - @cache.driver
             - @config
             - @service_container
+            - @dispatcher
             - @dbal.conn
             - @controller.helper
             - @request
@@ -49,5 +51,14 @@ services:
             - @request
             - @template
             - @user
+            - %core.root_path%
+            - %core.php_ext%
+
+    canidev.chat.compatibility.manager:
+        class: canidev\chat\compatibility\manager
+        arguments:
+            - @cache.driver
+            - @dispatcher
+            - @ext.manager
             - %core.root_path%
             - %core.php_ext%

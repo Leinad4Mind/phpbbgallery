@@ -1,6 +1,9 @@
 <!-- DEFINE $CHAT_LOADED = 1 -->
 
 <!-- IF S_CHAT_ENABLED -->
+
+<!-- EVENT chat_body_before -->
+
 <div id="chat-body" style="display:none;"<!-- IF S_CHAT_NOTITLE --> class="notitle"<!-- ENDIF -->>
 	<div id="chat-title">{L_CHAT}</div>
 	
@@ -113,6 +116,8 @@
 					<!-- END chat_custom_tags -->
 					<!-- ENDIF -->
 				<!-- ENDIF -->
+				
+					<!-- EVENT chat_bbcodebox_after -->
 				</div>
 			</div>
 		<!-- ENDIF -->
@@ -123,6 +128,8 @@
 				<!-- BEGIN chat_smiley -->
 					<a href="#!smiley/{chat_smiley.A_CODE}"><img src="{chat_smiley.S_IMG}" width="{chat_smiley.S_WIDTH}" height="{chat_smiley.S_HEIGHT}" alt="{chat_smiley.S_CODE}" title="{chat_smiley.S_DESC}" /></a>
 				<!-- END chat_smiley -->
+				
+				<!-- EVENT chat_smileybox_after -->
 				</div>
 			</div>
 		<!-- ENDIF -->
@@ -148,5 +155,6 @@
 	</div>
 </div>
 
-<!-- INCLUDE chat_scripts.html -->
+<!-- EVENT chat_body_after -->
+
 <!-- ENDIF -->

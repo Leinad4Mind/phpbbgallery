@@ -2,9 +2,9 @@
 /*
 * @name chat_ajax.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -181,12 +181,12 @@ class chat_ajax
 			
 			case 'connect_on_post':
 				$update_ary = array();
-				$correct_connect = true;
 				
 				// Add a new session if no exists
 				if(!$this->user_data)
 				{
-					$username = '';
+					$username 			= '';
+					$correct_connect	= true;
 
 					if($this->user->data['user_id'] != ANONYMOUS)
 					{
@@ -195,6 +195,13 @@ class chat_ajax
 						{
 							break;
 						}
+						
+						// Delete previous guest sessions from the same user
+						$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+							WHERE user_id = ' . ANONYMOUS . '
+							AND user_key = ' . $this->user_key . "
+							AND user_ip = '" . $this->user->ip . "'";
+						$this->db->sql_query($sql);
 						
 						$this->user_key = $this->user->data['user_id'];
 					}
@@ -275,9 +282,9 @@ class chat_ajax
 										$row_avatar = get_user_avatar($this->user->data['user_avatar'], $this->user->data['user_avatar_type'], $this->user->data['user_avatar_width'], $this->user->data['user_avatar_height']);
 										
 										// Fix path error occurs in some cases
-										if($row_avatar)
+										if($row_avatar && $this->user->data['user_avatar_type'] != 'avatar.driver.gravatar')
 										{
-											$row_avatar = str_replace('src="' . $this->root_path, 'src="' . $this->chat->web_path, $row_avatar);
+											$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
 										}
 
 										if(!$row_avatar)
@@ -384,7 +391,7 @@ class chat_ajax
 						'user_lastjoin'			=> time(),
 					);
 					
-					if(!$this->config['chat_remember_status'])
+					if(!$this->config['chat_remember_status'] || ($this->user_data['user_status'] == CHAT_STATUS_AWAY && $this->request->variable('auto_away', false)))
 					{
 						$update_ary['user_status'] = CHAT_STATUS_AVAILABLE;
 					}
@@ -478,6 +485,8 @@ class chat_ajax
 				}
 				
 				// Get connected users
+				$auto_away_changed = false;
+
 				$sql = 'SELECT *
 					FROM ' . CHAT_USERS_TABLE . '
 					WHERE user_online = 1';
@@ -490,6 +499,9 @@ class chat_ajax
 						if($action == 'refresh' && $this->user_data['user_status'] == CHAT_STATUS_AVAILABLE && $this->config['chat_auto_away'] && $this->user_data['user_lastjoin'] < (time() - (intval($this->config['chat_auto_away']) * 60)))
 						{
 							$row['user_status'] = $this->user_data['user_status'] = CHAT_STATUS_AWAY;
+							$auto_away_changed = true;
+							
+							$json['auto_away'] = 1;
 						}
 					}
 					
@@ -497,6 +509,14 @@ class chat_ajax
 					$user_cache[$row['user_key']] 	= $row['user_key'];
 				}
 				$this->db->sql_freeresult($result);
+				
+				if($auto_away_changed)
+				{
+					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+						SET user_status = ' . CHAT_STATUS_AWAY . '
+						WHERE user_key = ' . $this->user_key;
+					$this->db->sql_query($sql);
+				}
 				
 				// Get new messages and rooms
 				
@@ -581,13 +601,15 @@ class chat_ajax
 					$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
 					while($row = $this->db->sql_fetchrow($result))
 					{
+						$message_row_key = $row['message_time'] . '-' . $row['message_id'];
+						
 						if($row['poster_key'] != $this->user_key && !isset($this->room_ary[$dest_key]))
 						{
-							$row_data[$row['poster_key']][$row['message_time']] = $row;
+							$row_data[$row['poster_key']][$message_row_key] = $row;
 						}
 						else
 						{
-							$row_data[$dest_key][$row['message_time']] = $row;
+							$row_data[$dest_key][$message_row_key] = $row;
 						}
 						
 						$user_cache[$row['poster_key']] = $row['poster_key'];
@@ -622,7 +644,7 @@ class chat_ajax
 						{
 							if(isset($row_data[CHAT_GUEST_ROOM][$row_time]))
 							{
-								$row_time++;
+								$row_time = $row_time . '-' . $row['topic_id'];
 							}
 							
 							$row_data[CHAT_GUEST_ROOM][$row_time] = $row;
@@ -678,7 +700,7 @@ class chat_ajax
 					'action'		=> 'update',
 					'last_time'		=> $max_time,
 					'msg_direction'	=> $this->config['chat_direction'],
-					'flood_time'	=> $this->config['chat_flood_time'] * 1000,
+					'flood_time'	=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
 				));
 				
 				// Compose
@@ -714,7 +736,7 @@ class chat_ajax
 					}
 					
 					// Messages
-					foreach($room_data as $row_time => $row)
+					foreach($room_data as $null => $row)
 					{
 						$row_avatar = '';
 						
@@ -758,11 +780,11 @@ class chat_ajax
 							if($row['poster_id'] != ANONYMOUS)
 							{
 								$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
-								
+
 								// Fix path error occurs in some cases
-								if($row_avatar && $this->chat->web_path != $this->root_path)
+								if($row_avatar && $this->chat->web_path != $this->root_path && $row['user_avatar_type'] != 'avatar.driver.gravatar')
 								{
-									$row_avatar = str_replace('src="' . $this->root_path, 'src="' . $this->chat->web_path, $row_avatar);
+									$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
 								}
 							}
 							
@@ -889,7 +911,7 @@ class chat_ajax
 						if($message)
 						{
 							$uid = $bitfield = $options = '';
-							generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+							$this->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 							
 							$sql_ary = array(
 								'message_text'		=> $message,
@@ -964,7 +986,7 @@ class chat_ajax
 				if($message)
 				{
 					$uid = $bitfield = $options = '';
-					generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+					$this->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 
 					$sql_ary = array(
 						'poster_key'		=> $this->user_data['user_key'],
@@ -982,8 +1004,18 @@ class chat_ajax
 					$this->db->sql_query($sql);
 
 					// Update the user activity
+					$sql_ary = array(
+						'user_lastjoin'	=> $sql_ary['message_time'],
+						'user_online'	=> 1
+					);
+					
+					if(request_var('auto_away', false))
+					{
+						$sql_ary['user_status'] = CHAT_STATUS_AVAILABLE;
+					}
+					
 					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
-						SET user_lastjoin = ' . $sql_ary['message_time'] . ', user_online = 1
+						SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 						WHERE user_key = ' . $this->user_key;
 					$this->db->sql_query($sql);
 
@@ -1289,6 +1321,26 @@ class chat_ajax
 		{
 			$this->template->assign_var('S_DIALOG', true);
 		}
+		
+		if (!defined('HEADER_INC'))
+		{
+			$http_headers = array(
+				'Content-type' 	=> 'text/html; charset=UTF-8',
+				'Cache-Control' => 'private, no-cache="set-cookie"',
+				'Expires' 		=> gmdate('D, d M Y H:i:s', time()) . ' GMT',
+			);
+
+			if(!empty($user->data['is_bot']))
+			{
+				// Let reverse proxies know we detected a bot.
+				$http_headers['X-PHPBB-IS-BOT'] = 'yes';
+			}
+
+			foreach($http_headers as $hname => $hval)
+			{
+				header((string) $hname . ': ' . (string) $hval);
+			}
+		}
 
 		$this->template->set_filenames(array(
 			'chat' => 'chat_ajax.html'
@@ -1556,5 +1608,76 @@ class chat_ajax
 		{
 			$message = preg_replace($bbcode_preg, '', $message);
 		}
+	}
+	
+	private function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false)
+	{
+		global $phpbb_root_path, $phpEx, $phpbb_dispatcher;
+
+		/**
+		* Use this event to modify the text before it is prepared for storage
+		*
+		* @event core.modify_text_for_storage_before
+		* @var string	text			The text to parse
+		* @var string	uid				The BBCode UID
+		* @var string	bitfield		The BBCode Bitfield
+		* @var int		flags			The BBCode Flags
+		* @var bool		allow_bbcode	Whether or not to parse BBCode
+		* @var bool		allow_urls		Whether or not to parse URLs
+		* @var bool		allow_smilies	Whether or not to parse Smilies
+		* @since 3.1.0-a1
+		*/
+		$vars = array(
+			'text',
+			'uid',
+			'bitfield',
+			'flags',
+			'allow_bbcode',
+			'allow_urls',
+			'allow_smilies',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_before', compact($vars)));
+
+		$uid = $bitfield = '';
+		$flags = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
+
+		if ($text === '')
+		{
+			return;
+		}
+
+		if(!class_exists('parse_message', false))
+		{
+			include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+		}
+
+		$message_parser = new \parse_message($text);
+		$message_parser->parse($allow_bbcode, $allow_urls, $allow_smilies, $allow_bbcode, $allow_bbcode, $allow_bbcode, $allow_urls, true, 'chat');
+
+		$text = $message_parser->message;
+		$uid = $message_parser->bbcode_uid;
+
+		// If the bbcode_bitfield is empty, there is no need for the uid to be stored.
+		if (!$message_parser->bbcode_bitfield)
+		{
+			$uid = '';
+		}
+
+		$bitfield = $message_parser->bbcode_bitfield;
+
+		/**
+		* Use this event to modify the text after it is prepared for storage
+		*
+		* @event core.modify_text_for_storage_after
+		* @var string	text			The text to parse
+		* @var string	uid				The BBCode UID
+		* @var string	bitfield		The BBCode Bitfield
+		* @var int		flags			The BBCode Flags
+		* @since 3.1.0-a1
+		*/
+		$vars = array('text', 'uid', 'bitfield', 'flags');
+		extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_after', compact($vars)));
+
+		return $message_parser->warn_msg;
 	}
 }

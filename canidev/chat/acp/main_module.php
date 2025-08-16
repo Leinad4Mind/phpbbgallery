@@ -2,9 +2,9 @@
 /*
 * @name main_module.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -24,24 +24,44 @@ class main_module
 	var $u_action;
 	var $new_config 	= array();
 	var $exclude_files 	= array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
+	
+	protected $cache;
+	protected $config;
+	protected $db;
+	protected $request;
+	protected $template;
+	protected $user;
+	
+	protected $phpbb_root_path;
+	protected $php_ext;
 
 	function main($id, $mode)
 	{
-		global $user, $template, $config, $request, $chat;
+		global $cache, $db, $user, $template, $config, $request, $chat, $phpbb_root_path, $phpEx;
+		
+		$this->cache	= $cache;
+		$this->config	= $config;
+		$this->db		= $db;
+		$this->request	= $request;
+		$this->template = $template;
+		$this->user 	= $user;
+		
+		$this->phpbb_root_path	= $phpbb_root_path;
+		$this->php_ext			= $phpEx;
 
-		$user->add_lang_ext('canidev/chat', array('acp', 'main'));
+		$this->user->add_lang_ext('canidev/chat', array('acp', 'main'));
 		
 		if(empty($chat->installed))
 		{
 			trigger_error('MOD_NOT_INSTALLED', E_USER_WARNING);
 		}
 
-		$action = $request->variable('action', '');
+		$action = $this->request->variable('action', '');
 		$error	= $notice = array();
-		$submit = ($request->is_set_post('submit')) ? true : false;
+		$submit = ($this->request->is_set_post('submit')) ? true : false;
 		
 		// Security check
-		if(in_array($action, array('delete', 'add_auth')) && !$request->is_set_post('icajx'))
+		if(in_array($action, array('delete', 'add_auth')) && !$this->request->is_set_post('icajx'))
 		{
 			exit_handler();
 		}
@@ -54,16 +74,16 @@ class main_module
 		call_user_func_array(array($this, "_mode_$mode"), array($action, $submit, &$error, &$notice));
 
 		$this->page_title 	= (empty($this->page_title) ? 'CHAT_' . strtoupper($mode) . '_TITLE' : $this->page_title);
-		$this->page_title	= $user->lang($this->page_title);
+		$this->page_title	= $this->user->lang($this->page_title);
 		$this->page_explain = (empty($this->page_explain) ? 'CHAT_' . strtoupper($mode) . '_EXPLAIN' : $this->page_explain);
 
-		$template->assign_vars(array(
+		$this->template->assign_vars(array(
 			'IN_CHAT_ADMIN'		=> true,
 			'L_TITLE'			=> $this->page_title,
-			'L_TITLE_EXPLAIN'	=> $user->lang($this->page_explain),
+			'L_TITLE_EXPLAIN'	=> $this->user->lang($this->page_explain),
 
 			'U_ACTION'			=> $this->u_action,
-			'U_HELP'			=> 'http://www.canidev.com/docs.php?i=cbb-chat-v' . $config['chat_version'],
+			'U_HELP'			=> 'http://www.canidev.com/docs.php?i=cbb-chat-v' . $this->config['chat_version'],
 		));
 		
 		if(sizeof($error) || sizeof($notice))
@@ -72,24 +92,24 @@ class main_module
 			
 			foreach($notice_rows as $id => $value)
 			{
-				if(isset($user->lang[$value]))
+				if(isset($this->user->lang[$value]))
 				{
-					$notice_rows[$id] = $user->lang[$value];
+					$notice_rows[$id] = $this->user->lang[$value];
 				}
 			}
 			
-			$template->assign_vars(array(
+			$this->template->assign_vars(array(
 				'NOTICE'		=> implode('<br />', $notice_rows),
 				'NOTICE_ERROR'	=> (sizeof($error) ? true : false),
 			));
 		}
 		
-		$this->page_title = $user->lang['CHAT'] . ' &bull; ' . $this->page_title;
+		$this->page_title = $this->user->lang['CHAT'] . ' &bull; ' . $this->page_title;
 	}
 	
 	function _mode_config($action, $submit, &$error, &$notice)
 	{
-		global $user, $config, $template, $request;
+		global $phpbb_dispatcher;
 		
 		$this->tpl_name = 'chat_config';
 
@@ -124,12 +144,23 @@ class main_module
 			'chat_max_pm'			=> array('lang' => 'CHAT_MAX_PM',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
 		);
 		
-		$cfg_array	= $config;
+		/**
+		* Event to add and/or modify configurations
+		*
+		* @event chat.acp_config_vars
+		* @var	array	display_vars	Array of config values to display and process
+		* @var	boolean	submit			Do we display the form or process the submission
+		* @since 1.1.1
+		*/
+		$vars = array('display_vars', 'submit');
+		extract($phpbb_dispatcher->trigger_event('chat.acp_config_vars', compact($vars)));
+		
+		$cfg_array	= $this->config;
 		
 		if(isset($_REQUEST['config']))
 		{
-			$cfg_array = utf8_normalize_nfc($request->variable('config', array('' => ''), true));
-			$cfg_array['chat_disallowed_bbcode'] = $request->variable('chat_disallowed_bbcode', array(0));
+			$cfg_array = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
+			$cfg_array['chat_disallowed_bbcode'] = $this->request->variable('chat_disallowed_bbcode', array(0));
 			
 			if(!empty($cfg_array['chat_disallowed_bbcode']))
 			{
@@ -186,15 +217,16 @@ class main_module
 		}
 		
 		$this->display_vars($display_vars);
+		
+		// Check version
+		$this->check_version_info();
 	}
 	
 	function _mode_pages($action, $submit, &$error, &$notice)
 	{
-		global $db, $template, $user, $cache, $request, $phpbb_root_path, $phpEx;
-
 		$this->tpl_name = 'chat_pages';
 		
-		$page_id = $request->variable('id', 0);
+		$page_id = $this->request->variable('id', 0);
 		
 		switch($action)
 		{
@@ -202,9 +234,9 @@ class main_module
 				$sql = 'SELECT *
 					FROM ' . CHAT_PAGES_TABLE . "
 					WHERE page_id = $page_id";
-				$result = $db->sql_query($sql);
-				$page_data = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
+				$result = $this->db->sql_query($sql);
+				$page_data = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
 				
 				if(!$page_data)
 				{
@@ -241,18 +273,18 @@ class main_module
 				
 				if($submit)
 				{
-					$this->new_config = utf8_normalize_nfc($request->variable('config', array('' => ''), true));
+					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
 					if($this->new_config['page_file'] == '-')
 					{
-						if(!preg_match("#^(?:\.\/|\/)?(.*\/)?([\w\d\-\_]+)(\.$phpEx)?$#", $this->new_config['custom_file'], $matches))
+						if(!preg_match('#^(?:\.\/|\/)?(.*\/)?([\w\d\-\_]+)(\.' . $this->php_ext . ')?$#', $this->new_config['custom_file'], $matches))
 						{
 							$error[] = 'INVALID_FILE';
 						}
 						
 						if(!sizeof($error))
 						{
-							$filename = $phpbb_root_path . $matches[1] . $matches[2] . $matches[3];
+							$filename = $this->phpbb_root_path . $matches[1] . $matches[2] . $matches[3];
 							
 							if(!$matches[1] && in_array($matches[2], $this->exclude_files))
 							{
@@ -271,13 +303,13 @@ class main_module
 					else
 					{
 						$this->new_config['page_alias']		= $this->new_config['page_file'];
-						$this->new_config['page_filename']	= $this->new_config['page_file'] . ".$phpEx";
+						$this->new_config['page_filename']	= $this->new_config['page_file'] . '.' . $this->php_ext;
 						$this->new_config['page_path']		= '';
 					}
 					
 					if(in_array($this->new_config['page_alias'], array('viewforum', 'viewtopic')))
 					{
-						$this->new_config['forum_ids'] = $request->variable('forum_ids', array(0));
+						$this->new_config['forum_ids'] = $this->request->variable('forum_ids', array(0));
 						
 						$this->new_config['page_data'] = array(
 							'forum_ids'		=> $this->new_config['forum_ids'],
@@ -289,12 +321,12 @@ class main_module
 					{
 						$sql = 'SELECT page_id
 							FROM ' . CHAT_PAGES_TABLE . "
-							WHERE page_filename = '" . $db->sql_escape($this->new_config['page_filename']) . "'
-							AND page_path = '" . $db->sql_escape($this->new_config['page_path']) . "'
+							WHERE page_filename = '" . $this->db->sql_escape($this->new_config['page_filename']) . "'
+							AND page_path = '" . $this->db->sql_escape($this->new_config['page_path']) . "'
 							AND page_id <> $page_id";
-						$result = $db->sql_query($sql);
-						$already_page_id = (int)$db->sql_fetchfield('page_id');
-						$db->sql_freeresult($result);
+						$result = $this->db->sql_query($sql);
+						$already_page_id = (int)$this->db->sql_fetchfield('page_id');
+						$this->db->sql_freeresult($result);
 						
 						if($already_page_id)
 						{
@@ -315,18 +347,18 @@ class main_module
 						
 						if($action == 'add')
 						{
-							$sql = 'INSERT INTO ' . CHAT_PAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+							$sql = 'INSERT INTO ' . CHAT_PAGES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 						}
 						else
 						{
 							$sql = 'UPDATE ' . CHAT_PAGES_TABLE . '
-								SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+								SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE page_id = $page_id";
 						}
 						
-						$db->sql_query($sql);
+						$this->db->sql_query($sql);
 						
-						$cache->destroy('_chat_pages');
+						$this->cache->destroy('_chat_pages');
 						
 						$action = '';
 						break;
@@ -357,7 +389,7 @@ class main_module
 				
 				$this->display_vars($display_vars);
 				
-				$template->assign_vars(array(
+				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
 					'U_BACK'	=> $this->u_action,
 					
@@ -371,9 +403,9 @@ class main_module
 			case 'delete':
 				$sql = 'DELETE FROM ' . CHAT_PAGES_TABLE . "
 					WHERE page_id = $page_id";
-				$db->sql_query($sql);
+				$this->db->sql_query($sql);
 				
-				$cache->destroy('_chat_pages');
+				$this->cache->destroy('_chat_pages');
 				
 				$this->set_json_display(array(
 					'action'	=> 'delete_row',
@@ -387,13 +419,13 @@ class main_module
 			$sql = 'SELECT *
 				FROM ' . CHAT_PAGES_TABLE . '
 				ORDER BY page_alias';
-			$result = $db->sql_query($sql);
-			while($row = $db->sql_fetchrow($result))
+			$result = $this->db->sql_query($sql);
+			while($row = $this->db->sql_fetchrow($result))
 			{
-				$title = ($row['page_alias']) ? $row['page_alias'] : str_replace(".$phpEx", '', $row['page_filename']);
-				$title = (isset($user->lang[strtoupper($title)]) ? $user->lang[strtoupper($title)] : ucfirst($title));
+				$title = ($row['page_alias']) ? $row['page_alias'] : str_replace('.' . $this->php_ext, '', $row['page_filename']);
+				$title = (isset($this->user->lang[strtoupper($title)]) ? $this->user->lang[strtoupper($title)] : ucfirst($title));
 		
-				$template->assign_block_vars('pagerow', array(
+				$this->template->assign_block_vars('pagerow', array(
 					'S_ID'		=> $row['page_id'],
 					'S_TITLE'	=> $title,
 					'S_URL'		=> generate_board_url() . '/' . $row['page_path'] . $row['page_filename'],
@@ -402,19 +434,17 @@ class main_module
 					'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;id=' . $row['page_id'],
 				));
 			}
-			$db->sql_freeresult($result);
+			$this->db->sql_freeresult($result);
 			
-			$template->assign_var('U_PAGE_ADD', $this->u_action . '&amp;action=add');
+			$this->template->assign_var('U_PAGE_ADD', $this->u_action . '&amp;action=add');
 		}
 	}
 	
 	function _mode_rooms($action, $submit, &$error, &$notice)
 	{
-		global $db, $template, $user, $cache, $request, $phpbb_root_path, $phpEx;
-
 		$this->tpl_name = 'chat_rooms';
 		
-		$room_id = $request->variable('id', 0);
+		$room_id = $this->request->variable('id', 0);
 		
 		switch($action)
 		{
@@ -427,26 +457,26 @@ class main_module
 						$sql = 'SELECT room_title, room_key
 							FROM ' . CHAT_ROOMS_TABLE . '
 							WHERE room_id = ' . $room_id;
-						$result = $db->sql_query($sql);
-						$data = $db->sql_fetchrow($result);
-						$db->sql_freeresult($result);
+						$result = $this->db->sql_query($sql);
+						$data = $this->db->sql_fetchrow($result);
+						$this->db->sql_freeresult($result);
 						
 						if($data)
 						{
-							$data['room_title'] = (isset($user->lang[$data['room_title']]) ? $user->lang[$data['room_title']] : $data['room_title']);
+							$data['room_title'] = (isset($this->user->lang[$data['room_title']]) ? $this->user->lang[$data['room_title']] : $data['room_title']);
 							
 							// Delete the room
 							$sql = 'DELETE FROM ' . CHAT_ROOMS_TABLE . '
 								WHERE room_id = ' . $room_id;
-							$db->sql_query($sql);
+							$this->db->sql_query($sql);
 							
 							// Delete the messages of the room
 							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
 								WHERE dest_key = ' . $data['room_key'];
-							$db->sql_query($sql);
+							$this->db->sql_query($sql);
 							
 							add_log('admin', 'LOG_CHAT_ROOM_REMOVED', $data['room_title']);
-							$cache->destroy('_chat_rooms');
+							$this->cache->destroy('_chat_rooms');
 				
 							$this->set_json_display(array(
 								'action'	=> 'delete_row',
@@ -461,11 +491,11 @@ class main_module
 						'action'	=> 'confirm'
 					));
 					
-					$template->assign_vars(array(
+					$this->template->assign_vars(array(
 						'S_CONFIRM_DIALOG'	=> true,
 					));
 
-					confirm_box(false, $user->lang['REMOVE_ROOM_CONFIRM'], '', 'chat_ajax.html');
+					confirm_box(false, $this->user->lang['REMOVE_ROOM_CONFIRM'], '', 'chat_ajax.html');
 				}
 			break;
 
@@ -473,9 +503,9 @@ class main_module
 				$sql = 'SELECT *
 					FROM ' . CHAT_ROOMS_TABLE . "
 					WHERE room_id = $room_id";
-				$result = $db->sql_query($sql);
-				$room_data = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
+				$result = $this->db->sql_query($sql);
+				$room_data = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
 				
 				if(!$room_data)
 				{
@@ -521,8 +551,8 @@ class main_module
 				
 				if($submit)
 				{
-					$this->new_config = utf8_normalize_nfc($request->variable('config', array('' => ''), true));
-					$this->new_config['room_groups'] = $request->variable('room_groups', array(0));
+					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
+					$this->new_config['room_groups'] = $this->request->variable('room_groups', array(0));
 					
 					// We validate the complete config if whished
 					validate_config_vars($display_vars, $this->new_config, $error);
@@ -558,13 +588,13 @@ class main_module
 
 									$sql = 'SELECT user_id, username
 										FROM ' . USERS_TABLE . '
-										WHERE ' . $db->sql_in_set('username_clean', $user_ary);
-									$result = $db->sql_query($sql);
-									while($row = $db->sql_fetchrow($result))
+										WHERE ' . $this->db->sql_in_set('username_clean', $user_ary);
+									$result = $this->db->sql_query($sql);
+									while($row = $this->db->sql_fetchrow($result))
 									{
 										$data['users'][$row['user_id']] = $row['username'];
 									}
-									$db->sql_freeresult($result);
+									$this->db->sql_freeresult($result);
 								}
 							}
 						}
@@ -580,27 +610,27 @@ class main_module
 							// Get max order
 							$sql = 'SELECT MAX(room_order) AS max_order
 								FROM ' . CHAT_ROOMS_TABLE;
-							$result = $db->sql_query($sql);
-							$sql_ary['room_order'] = (int)$db->sql_fetchfield('max_order') + 1;
-							$db->sql_freeresult($result);
+							$result = $this->db->sql_query($sql);
+							$sql_ary['room_order'] = (int)$this->db->sql_fetchfield('max_order') + 1;
+							$this->db->sql_freeresult($result);
 							
 							$sql_ary['room_key'] = time() - 1001;
 
-							$sql = 'INSERT INTO ' . CHAT_ROOMS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+							$sql = 'INSERT INTO ' . CHAT_ROOMS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 							$notice[] = 'CHAT_ROOM_ADDED';
 						}
 						else
 						{
 							$sql = 'UPDATE ' . CHAT_ROOMS_TABLE . '
-								SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+								SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE room_id = $room_id";
 								
 							$notice[] = 'CHAT_ROOM_UPDATED';
 						}
 						
-						$db->sql_query($sql);
+						$this->db->sql_query($sql);
 						
-						$cache->destroy('_chat_rooms');
+						$this->cache->destroy('_chat_rooms');
 					}
 
 					$action = '';
@@ -614,7 +644,7 @@ class main_module
 				
 				$this->display_vars($display_vars);
 				
-				$template->assign_vars(array(
+				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 						'action'	=> $action,
@@ -622,22 +652,22 @@ class main_module
 					)),
 					
 					'U_BACK'			=> $this->u_action,
-					'U_FIND_USERNAME'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=acp_chat_rooms&amp;field=room_users')
+					'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=acp_chat_rooms&amp;field=room_users')
 				));
 			break;
 			
 			case 'sort':
-				$rows = $request->variable('row', array(0 => 0));
+				$rows = $this->request->variable('row', array(0 => 0));
 				
 				foreach($rows as $position => $room_id)
 				{
 					$sql = 'UPDATE ' . CHAT_ROOMS_TABLE . '
 						SET room_order = ' . ((int)$position + 1) . "
 						WHERE room_id = $room_id";
-					$db->sql_query($sql);
+					$this->db->sql_query($sql);
 				}
 				
-				$cache->destroy('_chat_rooms');
+				$this->cache->destroy('_chat_rooms');
 				exit_handler();
 			break;
 		}
@@ -649,13 +679,13 @@ class main_module
 			$sql = 'SELECT *
 				FROM ' . CHAT_ROOMS_TABLE . '
 				ORDER BY room_order';
-			$result = $db->sql_query($sql);
-			while($row = $db->sql_fetchrow($result))
+			$result = $this->db->sql_query($sql);
+			while($row = $this->db->sql_fetchrow($result))
 			{
 				$title 		= $row['room_title'];
-				$title 		= (isset($user->lang[strtoupper($title)]) ? $user->lang[strtoupper($title)] : ucfirst($title));
+				$title 		= (isset($this->user->lang[strtoupper($title)]) ? $this->user->lang[strtoupper($title)] : ucfirst($title));
 
-				$template->assign_block_vars('roomrow', array(
+				$this->template->assign_block_vars('roomrow', array(
 					'S_ID'		=> $row['room_id'],
 					'S_TITLE'	=> $title,
 					
@@ -663,9 +693,9 @@ class main_module
 					'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;id=' . $row['room_id'],
 				));
 			}
-			$db->sql_freeresult($result);
+			$this->db->sql_freeresult($result);
 
-			$template->assign_vars(array(
+			$this->template->assign_vars(array(
 				'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 					'action'	=> 'sort'
 				)),
@@ -677,12 +707,10 @@ class main_module
 	
 	function _mode_texts($action, $submit, &$error, &$notice)
 	{
-		global $db, $user, $cache, $config, $template, $request, $phpbb_root_path, $phpEx;
-
 		$this->tpl_name = 'chat_texts';
 		
-		$text_id 	= $request->variable('id', 0);
-		$text_type	= $request->variable('type', 0);
+		$text_id 	= $this->request->variable('id', 0);
+		$text_type	= $this->request->variable('type', 0);
 		
 		$text_ary = array(
 			CHAT_TEXT_NOTICE	=> array('title' => 'CHAT_NOTICES',	'rows' => array()),
@@ -697,9 +725,9 @@ class main_module
 					FROM ' . CHAT_TEXTS_TABLE . "
 					WHERE text_id = $text_id
 					AND text_type = $text_type";
-				$result = $db->sql_query($sql);
-				$text_row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
+				$result = $this->db->sql_query($sql);
+				$text_row = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
 				
 				if(!$text_row)
 				{
@@ -733,7 +761,7 @@ class main_module
 				
 				if($submit)
 				{
-					$this->new_config = utf8_normalize_nfc($request->variable('config', array('' => ''), true));
+					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
 					// We validate the complete config if whished
 					validate_config_vars($display_vars, $this->new_config, $error);
@@ -744,31 +772,31 @@ class main_module
 						$message = $this->new_config['text_content'];
 
 						$this->new_config['bbcode_uid'] = $this->new_config['bbcode_bitfield'] = $options = '';
-						generate_text_for_storage($this->new_config['text_content'], $this->new_config['bbcode_uid'], $this->new_config['bbcode_bitfield'], $options, $config['allow_bbcode'], $config['allow_post_links'], $config['allow_smilies']);
+						generate_text_for_storage($this->new_config['text_content'], $this->new_config['bbcode_uid'], $this->new_config['bbcode_bitfield'], $options, $this->config['allow_bbcode'], $this->config['allow_post_links'], $this->config['allow_smilies']);
 						
 						if($action == 'add')
 						{
 							// Get last text position
 							$sql = 'SELECT MAX(text_order) AS last_position
 								FROM ' . CHAT_TEXTS_TABLE;
-							$result = $db->sql_query($sql);
-							$this->new_config['text_order'] = (int)$db->sql_fetchfield('last_position') + 1;
-							$db->sql_freeresult($result);
+							$result = $this->db->sql_query($sql);
+							$this->new_config['text_order'] = (int)$this->db->sql_fetchfield('last_position') + 1;
+							$this->db->sql_freeresult($result);
 							
 							$this->new_config['text_type'] = $text_type;
 
-							$sql = 'INSERT INTO ' . CHAT_TEXTS_TABLE . ' ' . $db->sql_build_array('INSERT', $this->new_config);
+							$sql = 'INSERT INTO ' . CHAT_TEXTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $this->new_config);
 						}
 						else
 						{
 							$sql = 'UPDATE ' . CHAT_TEXTS_TABLE . '
-								SET ' . $db->sql_build_array('UPDATE', $this->new_config) . "
+								SET ' . $this->db->sql_build_array('UPDATE', $this->new_config) . "
 								WHERE text_id = $text_id
 								AND text_type = $text_type";
 						}
-						$db->sql_query($sql);
+						$this->db->sql_query($sql);
 	
-						$cache->destroy('_chat_texts');
+						$this->cache->destroy('_chat_texts');
 						
 						$action = '';
 						break;
@@ -779,7 +807,7 @@ class main_module
 				
 				$this->page_title = $text_ary[$text_type]['title'] . '_' . strtoupper($action);
 				
-				$template->assign_vars(array(
+				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
 					'U_BACK'	=> $this->u_action,
 					
@@ -795,9 +823,9 @@ class main_module
 				$sql = 'DELETE FROM ' . CHAT_TEXTS_TABLE . "
 					WHERE text_id = $text_id
 					AND text_type = $text_type";
-				$db->sql_query($sql);
+				$this->db->sql_query($sql);
 
-				$cache->destroy('_chat_texts');
+				$this->cache->destroy('_chat_texts');
 				
 				$this->set_json_display(array(
 					'action'	=> 'delete_row',
@@ -806,17 +834,17 @@ class main_module
 			break;
 			
 			case 'sort':
-				$rows = $request->variable('row', array(0 => 0));
+				$rows = $this->request->variable('row', array(0 => 0));
 				
 				foreach($rows as $position => $text_id)
 				{
 					$sql = 'UPDATE ' . CHAT_TEXTS_TABLE . '
 						SET text_order = ' . ((int)$position + 1) . "
 						WHERE text_id = $text_id";
-					$db->sql_query($sql);
+					$this->db->sql_query($sql);
 				}
 				
-				$cache->destroy('_chat_texts');
+				$this->cache->destroy('_chat_texts');
 				exit_handler();
 			break;
 		}
@@ -828,8 +856,8 @@ class main_module
 			$sql = 'SELECT *
 				FROM ' . CHAT_TEXTS_TABLE . '
 				ORDER BY text_order';
-			$result = $db->sql_query($sql);
-			while($row = $db->sql_fetchrow($result))
+			$result = $this->db->sql_query($sql);
+			while($row = $this->db->sql_fetchrow($result))
 			{
 				$row_type = (int)$row['text_type'];
 
@@ -843,14 +871,14 @@ class main_module
 				// Define the global bbcode bitfield, will be used to load bbcodes
 				$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
 			}
-			$db->sql_freeresult($result);
+			$this->db->sql_freeresult($result);
 			
 			// Instantiate BBCode if needed
 			if($bbcode_bitfield !== '')
 			{
 				if(!class_exists('bbcode', false))
 				{
-					include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+					include($this->phpbb_root_path . 'includes/bbcode.' . $this->php_ext);
 				}
 					
 				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
@@ -860,11 +888,11 @@ class main_module
 			{
 				$s_title = $data_ary['title'];
 	
-				$template->assign_block_vars('textrow', array(
-					'S_LEGEND'			=> (isset($user->lang[$s_title . '_TITLE']) ? $user->lang[$s_title . '_TITLE'] : $s_title),
-					'S_EXPLAIN'			=> (isset($user->lang[$s_title . '_EXPLAIN']) ? $user->lang[$s_title . '_EXPLAIN'] : ''),
+				$this->template->assign_block_vars('textrow', array(
+					'S_LEGEND'			=> (isset($this->user->lang[$s_title . '_TITLE']) ? $this->user->lang[$s_title . '_TITLE'] : $s_title),
+					'S_EXPLAIN'			=> (isset($this->user->lang[$s_title . '_EXPLAIN']) ? $this->user->lang[$s_title . '_EXPLAIN'] : ''),
 					'S_IS_EMPTY'		=> (sizeof($data_ary['rows']) ? false : true),
-					'S_BUTTON_TITLE'	=> $user->lang($s_title . '_ADD'),
+					'S_BUTTON_TITLE'	=> $this->user->lang($s_title . '_ADD'),
 					'U_ADD'				=> $this->u_action . '&amp;action=add&amp;type=' . $text_type,
 				));
 				
@@ -880,11 +908,11 @@ class main_module
 						$row['text_content'] = htmlspecialchars_decode($row['text_content']);
 					}
 					
-					$row['text_content'] = preg_replace('#\{L_([A-Z0-9_\-]+)\}#e', "isset(\$user->lang['\$1']) ? \$user->lang['\$1'] : '\$1'", $row['text_content']);
+					$row['text_content'] = preg_replace('#\{L_([A-Z0-9_\-]+)\}#e', "isset(\$this->user->lang['\$1']) ? \$this->user->lang['\$1'] : '\$1'", $row['text_content']);
 					$row['text_content'] = bbcode_nl2br($row['text_content']);
 					$row['text_content'] = smiley_text($row['text_content']);
 					
-					$template->assign_block_vars('textrow.item', array(
+					$this->template->assign_block_vars('textrow.item', array(
 						'S_CONTENT'		=> $row['text_content'],
 						'S_ID'			=> $row['text_id'],
 						
@@ -894,7 +922,7 @@ class main_module
 				}
 			}
 			
-			$template->assign_vars(array(
+			$this->template->assign_vars(array(
 				'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 					'action'	=> 'sort'
 				))
@@ -904,8 +932,6 @@ class main_module
 	
 	function display_vars(&$display_vars)
 	{
-		global $user, $template;
-
 		foreach($display_vars as $config_key => $vars)
 		{
 			if(!is_array($vars) && strpos($config_key, 'legend') === false)
@@ -915,9 +941,9 @@ class main_module
 
 			if(strpos($config_key, 'legend') !== false)
 			{
-				$template->assign_block_vars('options', array(
+				$this->template->assign_block_vars('options', array(
 					'S_LEGEND'		=> true,
-					'LEGEND'		=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
+					'LEGEND'		=> (isset($this->user->lang[$vars])) ? $this->user->lang[$vars] : $vars)
 				);
 
 				continue;
@@ -931,10 +957,10 @@ class main_module
 				continue;
 			}
 
-			$template->assign_block_vars('options', array(
+			$this->template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
-				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-				'S_EXPLAIN'		=> (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '',
+				'TITLE'			=> (isset($this->user->lang[$vars['lang']])) ? $this->user->lang[$vars['lang']] : $vars['lang'],
+				'S_EXPLAIN'		=> (isset($this->user->lang[$vars['lang'] . '_EXPLAIN'])) ? $this->user->lang[$vars['lang'] . '_EXPLAIN'] : '',
 				'CONTENT'		=> $content,
 				'IS_HIDDEN'		=> (isset($vars['display']) ? !$vars['display'] : false),
 			));
@@ -945,8 +971,6 @@ class main_module
 	
 	function make_select($key, $select_ids = '', $size = 5, $extra = '')
 	{
-		global $user, $db, $phpbb_root_path, $phpEx;
-
 		$multiple 	= false;
 		$in_group	= false;
 		
@@ -989,12 +1013,12 @@ class main_module
 					FROM ' . BBCODES_TABLE . '
 					WHERE display_on_posting = 1
 					ORDER BY bbcode_tag';
-				$result = $db->sql_query($sql);
-				while($row = $db->sql_fetchrow($result))
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
 				{
 					$bbcodes['custom'][$row['bbcode_id']] = $row['bbcode_tag'];
 				}
-				$db->sql_freeresult($result);
+				$this->db->sql_freeresult($result);
 				
 				$ary = array('legend1' => 'DEFAULT_BBCODES');
 				
@@ -1068,22 +1092,22 @@ class main_module
 					$sql = 'SELECT page_alias
 						FROM ' . CHAT_PAGES_TABLE . "
 						WHERE page_path = ''";
-					$result = $db->sql_query($sql);
-					while($row = $db->sql_fetchrow($result))
+					$result = $this->db->sql_query($sql);
+					while($row = $this->db->sql_fetchrow($result))
 					{
 						$this->exclude_files[] = $row['page_alias'];
 					}
-					$db->sql_freeresult($result);
+					$this->db->sql_freeresult($result);
 				}
 				
 				// Read all the avaliable files in phpbb root path
-				if($dir = @opendir($phpbb_root_path))
+				if($dir = @opendir($this->phpbb_root_path))
 				{
 					$file_ary = array();
 
 					while(($file = @readdir($dir)) !== false)
 					{
-						if(($pos = strpos($file, ".$phpEx")) !== false)
+						if(($pos = strpos($file, '.' . $this->php_ext)) !== false)
 						{
 							$filename = substr($file, 0, $pos);
 						
@@ -1113,12 +1137,12 @@ class main_module
 				$sql = 'SELECT DISTINCT group_type, group_name, group_id
 					FROM ' . GROUPS_TABLE . '
 					ORDER BY group_type DESC, group_name ASC';
-				$result = $db->sql_query($sql);
-				while($row = $db->sql_fetchrow($result))
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
 				{
-					$ary[$row['group_id']] = (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']);
+					$ary[$row['group_id']] = (($row['group_type'] == GROUP_SPECIAL) ? $this->user->lang['G_' . $row['group_name']] : $row['group_name']);
 				}
-				$db->sql_freeresult($result);
+				$this->db->sql_freeresult($result);
 
 				$multiple = true;
 			break;
@@ -1145,7 +1169,7 @@ class main_module
 		
 		foreach($ary as $value => $lang)
 		{
-			$title	= (isset($user->lang[$lang]) ? $user->lang[$lang] : $lang);
+			$title	= (isset($this->user->lang[$lang]) ? $this->user->lang[$lang] : $lang);
 
 			if(strpos($value, 'legend') !== false)
 			{
@@ -1171,9 +1195,54 @@ class main_module
 	
 	function set_json_display($json)
 	{
-		global $template;
-
 		$this->tpl_name = 'chat_ajax';
-		$template->assign_var('S_JSON_DATA', json_encode($json));
+		$this->template->assign_var('S_JSON_DATA', json_encode($json));
+	}
+	
+	/**
+	 * Check the version information of cBB Chat
+	 */
+	function check_version_info()
+	{
+		global $phpbb_extension_manager;
+		
+		$md_manager 	= new \phpbb\extension\metadata_manager('canidev/chat', $this->config, $phpbb_extension_manager, $this->template, $this->user, $this->phpbb_root_path);
+		$force_update 	= $this->request->variable('versioncheck_force', false);
+		$cache_file 	= '_versioncheck_cbbchat';
+		
+		$meta = $md_manager->get_metadata('all');
+
+		if(!isset($meta['extra']['version-check']))
+		{
+			return false;
+		}
+
+		// Cache filename of version_helper is incorrect so, use own cache file to store the version info
+		if(($updates = $this->cache->get($cache_file)) === false || $force_update)
+		{
+			$version_check = $meta['extra']['version-check'];
+
+			$version_helper = new \phpbb\version_helper($this->cache, $this->config, new \phpbb\file_downloader(), $this->user);
+			$version_helper->set_current_version($meta['version']);
+			$version_helper->set_file_location($version_check['host'], $version_check['directory'], $version_check['filename']);
+
+			$updates = $version_helper->get_suggested_updates($force_update, false);
+			
+			$this->cache->put($cache_file, $updates, 86400); // 24 hours
+		}
+		
+		if(!empty($updates))
+		{
+			$update = array_shift($updates);
+	
+			$this->template->assign_vars(array(
+				'S_VERSION_NOT_UP_TO_DATE'	=> true,
+
+				'U_VERSIONCHECK_FORCE'	=> $this->u_action . '&amp;versioncheck_force=1',
+				'U_MORE_INFORMATION'	=> $update['announcement'],
+			));
+		}
+		
+		unset($md_manager, $meta, $version_helper, $updates);
 	}
 }

@@ -1,10 +1,10 @@
 <?php
 /*
-* @name chat.php
+* @name main_controller.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -247,6 +247,10 @@ class main_controller implements main_interface
 					'S_SELECT_SORT_DAYS'	=> str_replace('<select', '<select class="chat-inputbox"', $s_limit_days),
 				
 					'U_ACTION'			=> $u_archive,
+					'U_CHAT_JSCRIPT'	=> append_sid($chat->web_path . $chat->path . 'jchat_scripts.' . $this->php_ext, array(
+						'v'					=> $this->config['chat_version'],
+						'assets_version'	=> $this->config['assets_version']
+					))
 				));
 				
 				// Obtain room tabs

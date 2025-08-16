@@ -2,9 +2,9 @@
 /*
 * @name listener.php
 * @package cBB Chat
-* @version v1.1.0 16/12/2014
+* @version v1.1.1 01/07/2015
 *
-* @copyright (c) 2014 CaniDev
+* @copyright (c) 2015 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -54,8 +54,10 @@ class listener implements EventSubscriberInterface
 	{
 		$events = array();
 		
-		if(!defined('IN_INSTALL'))
+		if(!defined('IN_INSTALL') && !defined('IN_JSCRIPT'))
 		{
+			global $phpbb_container;
+
 			$events['core.common'] 				= 'initialize_chat';
 			$events['core.user_setup']			= 'on_setup';
 			$events['core.delete_user_after']	= 'on_user_delete';
@@ -65,8 +67,11 @@ class listener implements EventSubscriberInterface
 			{
 				$events['core.page_footer'] = 'on_footer';
 			}
+			
+			$compatibility = $phpbb_container->get('canidev.chat.compatibility.manager');
+			$compatibility->get_core_events();
 		}
-		
+
 		return $events;
 	}
 	
@@ -97,6 +102,11 @@ class listener implements EventSubscriberInterface
 		global $auth, $phpbb_root_path, $phpEx;
 		global $chat;
 		
+		$chat->web_path = generate_board_url() . '/';
+		
+		// Fix problem in Windows Servers
+		$chat->web_path = str_replace('\\/', '', $chat->web_path);
+		
 		if(empty($this->config['chat_version']))
 		{
 			return;
@@ -112,7 +122,7 @@ class listener implements EventSubscriberInterface
 			$this->template->assign_vars(array(
 				'S_CHAT_VERSION'	=> $this->config['chat_version'],
 				'T_CHAT_PATH'		=> $chat->web_path . $chat->path,
-				'U_CHAT'			=> ($chat->enabled) ? $this->helper->route('canidev_chat_controller') : '',
+				'U_CHAT'			=> ($chat->enabled && $this->config['chat_page_enabled']) ? $this->helper->route('canidev_chat_controller') : '',
 			));
 		}
 		
@@ -121,7 +131,12 @@ class listener implements EventSubscriberInterface
 			return false;
 		}
 
-		$this->user->add_lang_ext('canidev/chat', 'main');
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'canidev/chat',
+			'lang_set' => 'main',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 	
 	public function on_user_delete($event)
