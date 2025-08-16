@@ -2,6 +2,7 @@ services:
     rmcgirr83.genders.listener:
         class: rmcgirr83\genders\event\listener
         arguments:
+            - '@language'
             - '@request'
             - '@template'
             - '@user'
