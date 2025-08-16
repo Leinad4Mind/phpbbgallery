@@ -1,20 +1,32 @@
-<!-- IF not $CBBCORE_JS_LOADED -->
+{% if not definition.CBBCORE_JS_LOADED %}
 
-<!-- BEGIN core_script -->
-	<!-- IF core_script.TYPE eq 'text/javascript' -->
-	<script type="text/javascript">
-		<!-- IF core_script.IS_SINGLE -->
-			head.load('{core_script.SRC}');
-		<!-- ELSE -->
+{% set script_names = '' %}
+
+{% for script in core_script %}
+	{% if script.TYPE == 'text/javascript' %}
+		{% if script.IS_SINGLE %}
+			{% set script_names = script_names ~ '"' ~ script.SRC ~ '"' ~ ',' %}
+		{% else %}
+		<script>
 			head.ready('cbbcore.min.js', function () {
-				{core_script.DATA}
+				{{ script.DATA }}
 			});
-		<!-- ENDIF -->
-	</script>
-	<!-- ELSE -->
-		<script {core_script.PARAMS}>{core_script.DATA}</script>
-	<!-- ENDIF -->
-<!-- END core_script -->
+		</script>
+		{% endif %}
+	{% else %}
+		<script{{ script.PARAMS }}>{{ script.DATA }}</script>
+	{% endif %}
+{% endfor %}
 
-	<!-- DEFINE $CBBCORE_JS_LOADED = 1 -->
-<!-- ENDIF -->
+{% if script_names %}
+	<script>
+		window.coreAutoExecute = false;
+		
+		head.load({{ script_names|trim(',') }}, function() {
+			cbbCore.execute();
+		});
+	</script>
+{% endif %}
+
+	{% DEFINE CBBCORE_JS_LOADED = 1 %}
+{% endif %}

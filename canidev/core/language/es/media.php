@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * media.php [Spanish [Es]]
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,8 +22,10 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'COPY_TO_LIST'			=> 'Copiar a lista actual',
 	'CREATE_SERVER_COPY'	=> 'Crear copia en este servidor',
+	'DELETE_FROM_LIST'		=> 'Quitar de la lista',
 	'DELETE_ICON'			=> 'Quitar icono',
 	'DELETE_IMAGE'			=> 'Quitar imagen',
+	'DELETE_PERMANENTLY'	=> 'Eliminar permanentemente',
 	'ICON_PREVIEW'			=> 'Vista previa del icono',
 	'IMAGE_DESCRIPTION'		=> 'Descripción',
 	'IMAGE_DETAILS'			=> 'Detalles de imagen',
@@ -37,9 +39,10 @@ $lang = array_merge($lang, array(
 	'FILES_DROP'			=> 'Suelte los archivos para subirlos',
 	'FILES_REMOVE_CONFIRM'	=> 'Está a punto de eliminar permanentemente los archivos seleccionados<br />¿Desea continuar?',
 	'FORMAT_INVALID'		=> 'Formato no válido',
+	'MAX_IMAGESIZE'			=> 'Las imágenes se redimensionarán a %d x %d píxeles.',
 	'MAX_FILESIZE'			=> 'Tamaño máximo de archivo: %s.',
 	'MEDIA_UPDATED'			=> 'Cambios guardados',
-	'NO_ELEMENTS'			=> 'No hay elementos',
+	'OR'					=> 'o',
 	'PROCCESS'				=> 'Procesar',
 	'SELECT_ICON'			=> 'Seleccionar icono nuevo',
 	'SELECT_IMAGE'			=> 'Seleccionar imagen nueva',
@@ -56,18 +59,14 @@ $lang = array_merge($lang, array(
 	'ICONS'				=> 'Iconos',
 	'INSERT_URL'		=> 'Insertar desde URL',
 	'UPLOAD_IMAGE'		=> 'Subir Imagen',
-	
-	'ICON_ACCESSIBILITY'	=> 'Accesibilidad',
+
 	'ICON_BRAND'			=> 'Marcas',
-	'ICON_CHART'			=> 'Gráfico',
 	'ICON_DIRECTIONAL'		=> 'Direcional',
 	'ICON_FILE_TYPE'		=> 'Tipos de archivo',
-	'ICON_FORM_CONTROL'		=> 'Formulario',
 	'ICON_GENDER'			=> 'Género',
 	'ICON_HAND'				=> 'Mano',
 	'ICON_MEDICAL'			=> 'Médico',
 	'ICON_PAYMENT'			=> 'Pago y moneda',
-	'ICON_SPINNER'			=> 'Spinner',
 	'ICON_TEXT_EDITOR'		=> 'Editor de texto',
 	'ICON_TRANSPORTATION'	=> 'Transporte',
 	'ICON_VIDEO_PLAYER'		=> 'Reproductor de video',

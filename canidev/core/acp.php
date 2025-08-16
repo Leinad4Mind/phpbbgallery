@@ -1,10 +1,9 @@
 <?php
 /*
-* @name acp.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.9 29/03/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -28,7 +27,7 @@ class acp
 	{
 		$this->template->assign_vars(array(
 			'U_ACTION'			=> $this->u_action,
-			'U_HELP'			=> 'https://www.canidev.com/docs.php?i=' . $canidev_id . '-v' . $current_version,
+			'U_HELP'			=> 'https://www.canidev.com/store/' . $canidev_id . '?rq=documentation&v=' . $current_version,
 		));
 		
 		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
@@ -36,10 +35,10 @@ class acp
 		{
 			$this->config->set('cbb_asset_check', $this->config['assets_version']);
 			$this->cache->purge();
-		}		
+		}	
 	}
 
-	protected function display_vars($display_vars)
+	protected function display_vars($display_vars, $tpl_key = 'options')
 	{
 		foreach($display_vars as $config_key => $vars)
 		{
@@ -50,7 +49,7 @@ class acp
 
 			if(strpos($config_key, 'legend') !== false)
 			{
-				$this->template->assign_block_vars('options', array(
+				$this->template->assign_block_vars($tpl_key, array(
 					'S_LEGEND'		=> true,
 					'LEGEND'		=> $this->lang->lang($vars)
 				));
@@ -70,7 +69,7 @@ class acp
 				continue;
 			}
 
-			$this->template->assign_block_vars('options', array(
+			$this->template->assign_block_vars($tpl_key, array(
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->lang->lang($vars['lang']),
 				'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->lang($vars['lang'] . '_EXPLAIN') : ''),
@@ -87,30 +86,54 @@ class acp
 		return $this->tpl_name;
 	}
 	
-	public function get_title()
+	public function get_title($prefix = '')
 	{
+		if($prefix)
+		{
+			return $this->lang->lang($prefix) . ' &bull; ' . $this->lang->lang($this->page_title);
+		}
+
 		return $this->page_title;
 	}
 
 	/**
 	 * make_select
-	 * Build select input for blocks config
+	 * Build select input
 	*/
 	public function make_select($options, $key, $select_ids = '', $flags = self::SELECT_PARSE_LANG, $classname = '')
 	{
 		$in_group		= false;
-		$classname		= ($classname) ? ' class="' . $classname . '"' : '';
+		$string 		= '';
+		$flags 			= (int)$flags; // Make sure it is a number
+		$dispatcher 	= isset($this->dispatcher) ? $this->dispatcher : (isset($this->container) ? $this->container->get('dispatcher') : null);
 		
-		if(!is_array($select_ids))
+		if(!is_array($select_ids) && !is_null($select_ids))
 		{
 			$select_ids = explode(',', $select_ids);
 		}
+
+		if($dispatcher !== null)
+		{
+			/*
+			* @event core.acp_make_select
+			* @var array	options			Options to show in the select "value => title"
+			* @var string	key				Key (name) for the select
+			* @var array	select_ids		Selected values
+			* @var int 		flags 			Config for the select
+			* @var string 	classname 		Additional class name
+			* @since 1.0.8
+			*/
+			$vars = array('options', 'key', 'select_ids', 'flags', 'classname');
+			extract($dispatcher->trigger_event('canidev.core.acp_make_select', compact($vars)));
+		}
+
+		$classname = ($classname) ? ' class="' . $classname . '"' : '';
 		
 		if($flags & self::SELECT_MULTIPLE)
 		{
 			$string = '<select' . $classname . ' id="' . $key . '" name="' . $key . '[]" multiple="multiple" size="8">';
 		}
-		else
+		else if($key !== false)
 		{
 			$select_ids = array($select_ids[0]);
 			$string = '<select' . $classname . ' id="' . $key . '" name="config[' . $key . ']">';
@@ -128,7 +151,7 @@ class acp
 				continue;
 			}
 
-			$selected	= (in_array($value, $select_ids) ? ' selected="selected"' : '');
+			$selected	= ($select_ids !== null && in_array($value, $select_ids) ? ' selected="selected"' : '');
 			$string .= '<option value="' . $value . '"' . $selected . '>' . $title . '</option>';
 		}
 		
@@ -136,8 +159,13 @@ class acp
 		{
 			$string .= '</optgroup>';
 		}
+		
+		if($key !== false || $flags & self::SELECT_MULTIPLE)
+		{
+			$string .= '</select>';
+		}
 
-		return $string . '</select>';
+		return $string;
 	}
 	
 	/**
@@ -166,7 +194,7 @@ class acp
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$s_selected = (in_array($row['group_id'], $group_ary)) ? ' selected="selected"' : '';
-			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 

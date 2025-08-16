@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * info_acp_quickquote.php [Spanish [Es]]
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,8 +35,4 @@ $lang = array_merge($lang, array(
 	'QUICKQUOTE_REPLY_OVERWRITE'			=> 'Sobrescribir texto de respuesta',
 	'QUICKQUOTE_REPLY_OVERWRITE_EXPLAIN'	=> 'Decide si el texto escrito en la respuesta rápida será reemplazado al usar la función <em>responder</em>.<br />
 		Si se establece en "No" la cita se insertará al final del texto.',
-	
-	'ALL_GROUPS'				=> 'Todos los grupos',
-	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentación y Soporte',
-	'SAVE'						=> 'Guardar',
 ));

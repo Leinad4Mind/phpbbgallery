@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * info_acp_quickquote.php [English [En]]
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,8 +35,4 @@ $lang = array_merge($lang, array(
 	'QUICKQUOTE_REPLY_OVERWRITE'			=> 'Overwrite response text',
 	'QUICKQUOTE_REPLY_OVERWRITE_EXPLAIN'	=> 'Decide if the text written in the quick reply will be replaced by using the <em>Reply</em> function.<br />
 		If it is set to "No" the quote will be inserted at the end of the text.',
-	
-	'ALL_GROUPS'				=> 'All groups',
-	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
-	'SAVE'						=> 'Save',
 ));

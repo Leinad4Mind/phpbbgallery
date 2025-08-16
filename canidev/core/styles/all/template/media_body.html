@@ -1,27 +1,28 @@
 <div class="cbb-modal-dialog media">
-	<ul class="media-menu"></ul>
+	<ul class="cbb-dialog-menu"></ul>
 
-	<div class="media-frame-title">
+	<div class="cbb-dialog-header">
 		<h1></h1>
 		<a href="#" data-action="close" class="cbb-dialog-close">
 			<span class="fa fa-remove"></span>
 		</a>
 	</div>
 
-	<div class="media-frame-content">
-		<div class="media-sidebar"></div>
-		<div class="media-section-content js-section-content"></div>
+	<div class="cbb-dialog-content">
+		<div class="cbb-dialog-sidebar"></div>
+		<div class="cbb-section-content js-section-content"></div>
 	</div>
 		
-	<div class="media-frame-toolbar">
+	<div class="cbb-dialog-toolbar">
 		<div class="media-toolbar-secondary cbb-helper-hidden">
 			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="copy" title="{L_COPY_TO_LIST}"><span class="fa fa-copy"></span></button>
-			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="delete" title="{L_DELETE}"><span class="fa fa-trash"></span></button>
+			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="delete-soft" title="{L_DELETE_FROM_LIST}"><span class="fa fa-close"></span></button>
+			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="delete" title="{L_DELETE_PERMANENTLY}"><span class="fa fa-trash"></span></button>
 			<span class="count">{L_SELECTED_COUNT}</span>
 		</div>
 			
 		<div class="media-toolbar-primary">
-			<button type="button" class="cbb-btn" data-action="submit" disabled>{S_SUBMIT_LABEL}</button>
+			<button type="button" class="cbb-btn" data-action="submit" disabled>{{ S_SUBMIT_LABEL }}</button>
 		</div>
 	</div>
 
@@ -37,8 +38,8 @@
 				</div>
 			</div>
 
-			<button type="button" class="button-link check">
-				<span class="fa fa-check"></span>
+			<button type="button" class="button-link media-check">
+				<i class="fa fa-check" aria-hidden="true"></i>
 			</button>
 		</li>
 	</script>
@@ -47,18 +48,18 @@
 		<li role="checkbox" data-id="<%id%>" class="attachment iconic">
 			<div class="attachment-preview">
 				<div class="media-thumbnail">
-					<span class="fa <%code%>"></span>
+					<i class="fa <%code%>" aria-hidden="true"></i>
 				</div>
 			</div>
 
-			<button type="button" class="button-link check">
-				<span class="fa fa-check"></span>
+			<button type="button" class="button-link media-check">
+				<i class="fa fa-check" aria-hidden="true"></i>
 			</button>
 		</li>
 	</script>
 	
 	<script type="text/html" id="tpl-attachment-none">
-		<li class="cbb-message cbb-state-highlight">{L_NO_ELEMENTS}</li>
+		<li class="cbb-message cbb-state-highlight">{L_NO_ITEMS}</li>
 	</script>
 	
 	<script type="text/html" id="tpl-details-image-editable">
@@ -119,7 +120,7 @@
 			<h3>{L_ICON_PREVIEW}</h3>
 			<div class="attachment-info">
 				<div class="media-thumbnail">
-					<span class="fa <%code%>"></span>
+					<i class="fa <%code%>" aria-hidden="true"></i>
 				</div>
 			</div>
 		</div>
@@ -134,10 +135,11 @@
 					</button>
 					<input type="file" name="file[]" multiple />
 				</div>
-				<p>o</p>
+				<p>{L_OR}</p>
 				<h3>{L_FILES_DRAG}</h3>
 
-				<p class="max-upload-size">{S_MAX_FILESIZE}</p>
+				{% if S_MAX_FILESIZE %}<p class="max-upload-size">{{ S_MAX_FILESIZE }}</p>{% endif %}
+				{% if S_MAX_IMAGESIZE %}<p class="max-image-size">{{ S_MAX_IMAGESIZE }}</p>{% endif %}
 			</div>
 			<div class="upload-inline-status cbb-helper-hidden">
 				<p>{L_UPLOADING_FILES}</p>
@@ -145,7 +147,7 @@
 			</div>
 			<div class="upload-drop-label">
 				<p>{L_FILES_DROP}</p>
-				<span class="fa fa-arrow-circle-o-down"></span>
+				<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>
 			</div>
 		</div>
 	</script>
@@ -160,7 +162,7 @@
 					<input type="file" name="file" />
 				</div>
 
-				<p class="max-upload-size">{S_MAX_FILESIZE}</p>
+				{% if S_MAX_FILESIZE %}<p class="max-upload-size">{{ S_MAX_FILESIZE }}</p>{% endif %}
 			</div>
 			<div class="upload-inline-status cbb-helper-hidden"><div class="cbb-loading-big"></div></div>
 		</div>
@@ -174,12 +176,13 @@
 			</label>
 			
 			<div class="media-embed-submit cbb-helper-hidden">
-			<!-- IF CAN_INSERT_COPY -->
+			{% if CAN_INSERT_COPY %}
 				<label>
 					<input type="checkbox" name="copy" value="1" />
 					{L_CREATE_SERVER_COPY}
 				</label>
-			<!-- ENDIF -->
+				{% if S_MAX_IMAGESIZE %}<p class="max-image-size">{{ S_MAX_IMAGESIZE }}</p>{% endif %}
+			{% endif %}
 				<div class="cbb-browser-button">
 					<button type="button" class="cbb-btn">{L_PROCCESS}</button>
 				</div>

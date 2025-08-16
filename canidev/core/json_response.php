@@ -1,10 +1,9 @@
 <?php
 /*
-* @name json_response.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -25,6 +24,8 @@ class json_response
 	const JSON_STATUS_SUCCESS	= 2;
 
 	protected $cache;
+
+	static $instance;
 	
 	public function __construct()
 	{
@@ -33,8 +34,34 @@ class json_response
 	
 	public function add($data)
 	{
-		$this->cache = array_merge($this->cache, $data);
+		foreach($data as $key => $value)
+		{
+			if(is_array($value) && isset($this->cache[$key]) && is_array($this->cache[$key]))
+			{
+				$this->cache[$key] = array_merge($this->cache[$key], $value);
+				continue;
+			}
+
+			$this->cache[$key] = $value;
+		}
+
 		return $this;
+	}
+
+	public function add_component($type, $component)
+	{
+		if(!isset($this->cache['components'][$type]))
+		{
+			$this->cache['components'][$type] = array();
+		}
+
+		if($type == 'lang')
+		{
+			$this->cache['components'][$type] = array_merge($this->cache['components'][$type], $component);
+			return;
+		}
+
+		$this->cache['components'][$type][] = $component;
 	}
 	
 	public function add_html($html, $append = false)
@@ -44,19 +71,20 @@ class json_response
 			$this->cache['htmlContent'] = '';
 		}
 		
-		$this->cache['htmlContent'] .= $html;
+		$this->cache['htmlContent'] .= trim($html);
 		
 		return $this;
 	}
 	
 	public function is_requested()
 	{
-		return (sizeof($this->cache) > 1);
+		return (sizeof($this->cache) > 2);
 	}
 	
 	public function reset()
 	{
 		$this->cache = array(
+			'components'	=> array(),
 			'htmlContent'	=> '',
 		);
 	}
@@ -74,10 +102,25 @@ class json_response
 		{
 			unset($this->cache['htmlContent']);
 		}
+
+		if(!isset($this->cache['status']))
+		{
+			$this->cache['status'] = self::JSON_STATUS_SUCCESS;
+		}
 		
 		echo json_encode($this->cache);
 
 		garbage_collection();
 		exit_handler();
+	}
+
+	static public function get_instance()
+	{
+		if(!self::$instance)
+		{
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 }

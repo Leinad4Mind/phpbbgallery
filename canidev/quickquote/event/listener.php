@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -108,7 +108,7 @@ class listener implements EventSubscriberInterface
 			));
 			
 			$this->template->append_asset('css', '@canidev_quickquote/../theme/quickquote.css');
-			$this->template->append_asset('js', '@canidev_quickquote/quickquote.js');
+			$this->template->append_asset('js', '@canidev_quickquote/quickquote.min.js');
 		}
 	}
 	

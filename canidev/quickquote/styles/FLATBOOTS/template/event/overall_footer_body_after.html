@@ -1,4 +1,4 @@
-<!-- IF QQ_ENABLED -->
+{% if QQ_ENABLED %}
 	<script type="text/html" id="tpl-quickquote-tooltip">
 		<div class="quickquote-tooltip">
 			<a href="#" data-action="quote"><i class="fa fa-plus"></i> {L_QQ_SAVE_QUOTE}</a>
@@ -8,7 +8,7 @@
 	</script>
 
 	<script type="text/html" id="tpl-quickquote-floatbtn">
-	<a href="#" class="quickquote-floatbtn" data-text="{L_QUOTES}"></a>
+	<a href="#" class="quickquote-floatbtn btn btn-default" data-text="{L_QUOTES}"></a>
 	</script>
 
 	<script type="text/html" id="tpl-quickquote-inlinebtn">
@@ -46,14 +46,14 @@
 	<script>
 	head.ready('quickquote.js', function () {
 		cbbCore.initService('quickquote', {
-			btnTarget		: <!-- IF QQ_FLOAT_BTN -->'body'<!-- ELSE -->'#qr_postform .form-group:has(.btn), #postform .form-actions'<!-- ENDIF -->,
+			btnTarget		: {% if QQ_FLOAT_BTN %}'body'{% else %}'#qr_postform .form-group:has(.btn), #postform .form-actions'{% endif %},
 			target			: 'article .content, .pm .content',
 			editors			: {
 				phpbb: '#qr_postform textarea[name], #postform textarea[name]'
 			},
-			replyURL		: '{U_QQ_REPLY}',
-			replyOverwrite	: '{QQ_REPLY_OVERWRITE}'
+			replyURL		: '{{ U_QQ_REPLY }}',
+			replyOverwrite	: '{{ QQ_REPLY_OVERWRITE }}'
 		});
 	});
 	</script>
-<!-- ENDIF -->
+{% endif %}

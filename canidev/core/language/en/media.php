@@ -1,10 +1,10 @@
 <?php
-/**
-* media.php [Spanish [Es]]
+/*
+* media.php [English [En]]
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,8 +22,10 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'COPY_TO_LIST'			=> 'Copy to current list',
 	'CREATE_SERVER_COPY'	=> 'Create copy on this server',
+	'DELETE_FROM_LIST'		=> 'Quitar de la lista',
 	'DELETE_ICON'			=> 'Delete icon',
 	'DELETE_IMAGE'			=> 'Delete image',
+	'DELETE_PERMANENTLY'	=> 'Eliminar permanentemente',
 	'ICON_PREVIEW'			=> 'Icon preview',
 	'IMAGE_DESCRIPTION'		=> 'Description',
 	'IMAGE_DETAILS'			=> 'Image details',
@@ -37,9 +39,10 @@ $lang = array_merge($lang, array(
 	'FILES_DROP'			=> 'Drop files to upload',
 	'FILES_REMOVE_CONFIRM'	=> 'You are about to permanently delete the selected files<br />Do you want to continue?',
 	'FORMAT_INVALID'		=> 'Invalid format',
+	'MAX_IMAGESIZE'			=> 'Images will be resized to %d x %d pixels.',
 	'MAX_FILESIZE'			=> 'Maximum file size: %s.',
 	'MEDIA_UPDATED'			=> 'Changes saved',
-	'NO_ELEMENTS'			=> 'No elements',
+	'OR'					=> 'or',
 	'PROCCESS'				=> 'Process',
 	'SELECT_ICON'			=> 'Select new icon',
 	'SELECT_IMAGE'			=> 'Select new image',
@@ -57,17 +60,13 @@ $lang = array_merge($lang, array(
 	'INSERT_URL'		=> 'Insert from URL',
 	'UPLOAD_IMAGE'		=> 'Upload Image',
 	
-	'ICON_ACCESSIBILITY'	=> 'Accessibility',
 	'ICON_BRAND'			=> 'Brand',
-	'ICON_CHART'			=> 'Chart',
 	'ICON_DIRECTIONAL'		=> 'Directional',
 	'ICON_FILE_TYPE'		=> 'File Type',
-	'ICON_FORM_CONTROL'		=> 'Form Control',
 	'ICON_GENDER'			=> 'Gender',
 	'ICON_HAND'				=> 'Hand',
 	'ICON_MEDICAL'			=> 'Medical',
 	'ICON_PAYMENT'			=> 'Payment and Currency',
-	'ICON_SPINNER'			=> 'Spinner',
 	'ICON_TEXT_EDITOR'		=> 'Text Editor',
 	'ICON_TRANSPORTATION'	=> 'Transportation',
 	'ICON_VIDEO_PLAYER'		=> 'Video Player',

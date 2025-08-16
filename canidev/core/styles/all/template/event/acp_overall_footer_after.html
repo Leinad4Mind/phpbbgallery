@@ -1,7 +1,7 @@
-<!-- IF not $CBBCORE_JS_LOADED -->
-<!-- BEGIN core_script -->
-	<script {core_script.PARAMS}>{core_script.DATA}</script>
-<!-- END core_script -->
+{% if not definition.CBBCORE_JS_LOADED %}
+{% for script in loops.core_script %}
+	<script {{ script.PARAMS }}>{{ script.DATA }}</script>
+{% endfor %}
 	
-	<!-- DEFINE $CBBCORE_JS_LOADED = 1 -->
-<!-- ENDIF -->
+	{% DEFINE CBBCORE_JS_LOADED = 1 %}
+{% endif %}

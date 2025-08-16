@@ -1,10 +1,3 @@
-.cbb-modal-dialog.media,
-.cbb-modal-dialog.media * {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
 .cbb-icon-container {
 	font-size: 14px;
 	margin: 0 0 10px 5px;
@@ -15,113 +8,7 @@
 	max-width: 40%;
 }
 
-.cbb-modal-dialog .media-menu {
-	border-style: solid;
-	border-color: #ccc;
-	border-width: 0 1px 0 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-	overflow-y: auto;
-    width: 200px;
-    z-index: 2;
-	background: #f3f3f3;
-	list-style-type: none;
-	margin: 0;
-	padding: 10px 0 0 0;
-}
-
-.cbb-modal-dialog .media-menu a {
-    display: block;
-    position: relative;
-    padding: 8px 20px;
-    margin: 0;
-	text-decoration: none;
-    line-height: 18px;
-    font-size: 14px;
-}
-
-.cbb-modal-dialog .media-menu a .fa { display: none; }
-
-.cbb-modal-dialog .media-menu a.active {
-	background-color: #eaeaea;
-}
-
-.cbb-modal-dialog .media-menu .row-separator {
-	border: 1px solid #ddd;
-	border-width: 1px 0 0 0;
-    height: 0;
-    margin: 12px 20px;
-    padding: 0;
-}
-
-.cbb-modal-dialog .media-sidebar {
-    position: absolute;
-    width: 300px;
-    padding: 0 16px 24px;
-    z-index: 1;
-    border: 1px solid #ddd;
-	border-width: 0 0 0 1px;
-    overflow: auto;
-	top: 0;
-    bottom: 0;
-    right: 0;
-    background: #f3f3f3;
-}
-
-.cbb-modal-dialog .media-frame-title {
-    top: 0;
-    height: 50px;
-	right: 0;
-}
-
-.cbb-modal-dialog .media-frame-title h1 {
-    padding: 0 16px;
-    font-size: 22px;
-	font-weight: normal;
-    line-height: 50px;
-    margin: 5px 0 0;
-	color: #000;
-}
-
-.cbb-modal-dialog .media-frame-content {
-    top: 60px;
-    bottom: 61px;
-    height: auto;
-    width: auto;
-    margin: 0;
-    overflow: auto;
-    background: #fff;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-	right: 0;
-}
-
-.cbb-modal-dialog .media-frame-toolbar {
-    bottom: 0;
-    height: 60px;
-	right: 0;
-	padding: 0 16px;
-}
-
-.cbb-modal-dialog .media-frame-title,
-.cbb-modal-dialog .media-frame-content,
-.cbb-modal-dialog .media-frame-toolbar {
-	position: absolute;
-	left: 200px;
-	z-index: 1;
-}
-
-.cbb-modal-dialog .media-section-content {
-	bottom: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 300px;
-}
-
-.cbb-modal-dialog .attachments, .cbb-modal-dialog .upload-ui, .cbb-modal-dialog .media-embed {
+.cbb-modal-dialog .cbb-media-attachments, .cbb-modal-dialog .upload-ui, .cbb-modal-dialog .media-embed {
     position: absolute;
     top: 0;
     left: 0;
@@ -129,17 +16,20 @@
 	bottom: 0;
 }
 
-.cbb-modal-dialog .attachments {
+.cbb-modal-dialog .cbb-media-attachments {
 	left: 5px;
+    top: 5px;
+}
+
+.cbb-media-attachments {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-    top: 5px;
-    overflow: auto;
-    outline: 0;
+	overflow: auto;
+	outline: 0;
 }
 
-.cbb-modal-dialog .attachment {
+.cbb-media-attachments .attachment {
     position: relative;
     float: left;
     padding: 0;
@@ -148,15 +38,15 @@
     cursor: pointer;
     text-align: center;
     user-select: none;
-	width: 14%;
+	width: 8%;
 	outline: none;
 }
 
-.cbb-modal-dialog .attachment.iconic {
+.cbb-media-attachments .attachment.iconic {
 	width: 10%;
 }
 
-.cbb-modal-dialog .attachment-preview {
+.cbb-media-attachments .attachment-preview {
 	position: relative;
     background: #eee;
     cursor: pointer;
@@ -166,13 +56,13 @@
     box-shadow: inset 0 0 15px rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.05);
 }
 
-.cbb-modal-dialog .attachment-preview:before {
+.cbb-media-attachments .attachment-preview:before {
     content: '';
     display: block;
     padding-top: 100%;
 }
 
-.cbb-modal-dialog .attachment-preview .media-thumbnail {
+.cbb-media-attachments .attachment-preview .media-thumbnail {
 	position: absolute;
     top: 0;
     left: 0;
@@ -185,21 +75,19 @@
 	transform: translate(50%, 50%);
 }
 
-.cbb-modal-dialog .attachment-preview .media-thumbnail img {
+.cbb-media-attachments .attachment-preview .media-thumbnail img {
     max-height: 100%;
 	margin: 0;
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
 
     -webkit-transform: translate(-50%, -50%);
 	-moz-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
 
-.cbb-modal-dialog .iconic .attachment-preview .media-thumbnail span {
+.cbb-media-attachments .iconic .attachment-preview .media-thumbnail i {
     text-align: center;
     display: block;
     margin: auto;
@@ -209,11 +97,11 @@
 	transform: translate(-50%, -50%);
 }
 
-.cbb-modal-dialog .iconic .attachment-preview .media-thumbnail .fa {
+.cbb-media-attachments .iconic .attachment-preview .media-thumbnail .fa {
 	font-size: 1.3em;
 }
 
-.cbb-modal-dialog .attachment .check {
+.cbb-media-attachments .attachment .media-check {
 	color: #000;
     display: none;
     height: 26px;
@@ -234,24 +122,12 @@
 	border-radius: 50%;
 }
 
-.cbb-modal-dialog .attachment.selected .check {
+.cbb-media-attachments .attachment.selected .media-check {
 	display: block;  
 }
 
-.cbb-modal-dialog .attachment.active .check {
+.cbb-media-attachments .attachment.active .media-check {
 	background: #64ca3b;
-}
-
-.cbb-modal-dialog .media-toolbar-primary {
-    float: right;
-    height: 100%;
-	padding-top: 15px;
-}
-
-.cbb-modal-dialog .media-toolbar-secondary {
-    float: left;
-    height: 100%;
-	padding-top: 15px;
 }
 
 .cbb-modal-dialog .upload-ui.is-dragover {
@@ -304,7 +180,10 @@
 }
 
 .cbb-modal-dialog .upload-ui p 	{
-	margin-bottom: 0.6em;
+	margin: 0.6em;
+}
+
+.cbb-modal-dialog .upload-ui p.max-upload-size {
 	margin-top: 15px;
 }
 
@@ -315,36 +194,34 @@
 	text-transform: none;
 }
 
-.cbb-modal-dialog .upload-ui .max-upload-size {
+.cbb-modal-dialog .max-upload-size,
+.cbb-modal-dialog .max-image-size {
 	font-size: 0.9em;
 }
 
 .cbb-modal-dialog .upload-inline-status {
-	margin: 30% auto 0 auto;
+	left: 50%;
+	position: relative;
+	top: 50%;
 	width: 50%;
+
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 }
 
-.cbb-modal-dialog .media-sidebar h3 {
-    position: relative;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 12px;
-    color: #666;
-    margin: 14px 0 5px 0;
-}
-
-.cbb-modal-dialog .media-sidebar .media-thumbnail {
+.cbb-modal-dialog .cbb-dialog-sidebar .media-thumbnail {
 	max-width: 70%;
     margin: 10px auto;
     text-align: center;
 }
 
-.cbb-modal-dialog .media-sidebar .media-thumbnail img {
+.cbb-modal-dialog .cbb-dialog-sidebar .media-thumbnail img {
 	max-width: 100%;
 	height: auto;
 }
 
-.cbb-modal-dialog .media-sidebar .iconic .media-thumbnail span {
+.cbb-modal-dialog .cbb-dialog-sidebar .iconic .media-thumbnail i {
 	display: inline-block;
 	font-size: 50px;
 	margin-top: 25px;
@@ -404,7 +281,7 @@
 
 .cbb-modal-dialog .media-embed .embed-url input {
 	font-size: 12px;
-	padding: 10px 30px 10px 10px;
+	padding: 10px 35px 10px 10px;
 	width: 100%;
 }
 
@@ -412,7 +289,7 @@
 	margin: 0;
     position: absolute;
     top: 8px;
-    right: 15px;
+    right: 25px;
 }
 
 .cbb-modal-dialog .media-embed-submit {
@@ -424,51 +301,43 @@
     margin: 20px 0;
 }
 
+/* RTL Support
+----------------------------------*/
+.rtl .cbb-media-attachments .attachment {
+	float: right;
+}
+
+.rtl .cbb-media-attachments .attachment .media-check {
+	left: -8px;
+	right: unset;
+}
+
 /* Dark Themes
 ----------------------------------*/
-.dark-theme .cbb-modal-dialog .media-frame-title h1,
-.dark-theme .cbb-modal-dialog .media-menu a,
 .dark-theme .cbb-modal-dialog .attachment,
-.dark-theme .cbb-modal-dialog .media-sidebar h3,
 .dark-theme .cbb-modal-dialog .attachment-info,
-.dark-theme .cbb-modal-dialog a.cbb-dialog-close,
 .dark-theme .cbb-modal-dialog .attachment-details .setting .name {
 	color: #ccc;
-}
-
-.dark-theme .cbb-modal-dialog .media-menu,
-.dark-theme .cbb-modal-dialog .media-sidebar {
-	background-color: #404040;
-	border-color: #585858;
-}
-
-.dark-theme .cbb-modal-dialog .media-menu a.active {
-	background-color: #333;
-}
-
-.dark-theme .cbb-modal-dialog .media-frame-content {
-	background-color: #252525;
-	border-color: #585858;
 }
 
 .dark-theme .cbb-modal-dialog .attachment-preview {
 	background-color: #404040;
 }
 
-.dark-theme .cbb-modal-dialog .attachment .check {
+.dark-theme .cbb-modal-dialog .attachment .media-check {
 	border-color: #252525;
 }
 
-.dark-theme .cbb-modal-dialog .attachment.active .check {
+.dark-theme .cbb-modal-dialog .attachment.active .media-check {
     background: #2d9a31;
-}
-
-.dark-theme .cbb-modal-dialog .media-menu .row-separator {
-    border-color: #6d6d6d;
 }
 
 /* Responsive
 ----------------------------------*/
+@media only screen and (max-width: 1440px) {
+	.cbb-modal-dialog .attachment { width: 14%; }
+}
+
 @media only screen and (max-width: 1165px) {
 	.cbb-modal-dialog .attachment { width: 13.7%; }
 }
@@ -477,82 +346,17 @@
 	.cbb-modal-dialog .attachment { width: 13.3%; }
 }
 
-@media only screen and (max-width: 1024px) {
-	.cbb-modal-dialog.media .media-sidebar { display: none; }
-	.cbb-modal-dialog.media .media-section-content { right: 0; }
-}
-
-@media only screen and (max-width: 700px) {
-	.cbb-modal-dialog.media .media-menu { width: 60px; }
-	
-	.cbb-modal-dialog.media .media-frame-title,
-	.cbb-modal-dialog.media .media-frame-content,
-	.cbb-modal-dialog.media .media-frame-toolbar {
-		left: 60px;
-	}
-	
-	.cbb-modal-dialog .media-menu a .fa		{ display: block; }
-	.cbb-modal-dialog .media-menu a .item-title	{ display: none; }
-}
-
 @media only screen and (max-width: 480px) {
-	.cbb-modal-dialog.media .media-menu {
-		top: 60px;
-		bottom: initial;
-		height: 36px;
-		padding: 0;
-		right: 0;
-		width: auto;
-		border: none;
-		border-width: 1px 0 0 0;
-		text-align: center;
-		white-space: nowrap;
-		overflow-x: auto;
-	}
-	
-	.cbb-modal-dialog .media-menu li { display: inline-block; }
-	
-	.cbb-modal-dialog .media-menu a { padding: 12px 20px; }
-	
-	.cbb-modal-dialog.media .media-frame-content { top: 97px; }
-	
-	.cbb-modal-dialog.media .media-frame-title,
-	.cbb-modal-dialog.media .media-frame-content,
-	.cbb-modal-dialog.media .media-frame-toolbar {
-		left: 0;
-	}
-	
-	.cbb-modal-dialog .media-menu .row-separator {
-		width: 0;
-		padding: 0;
-		border-width: 0 1px 0 0;
-		height: 28px;
-		vertical-align: top;
-		margin: 5px 0 0 0;
-	}
-	
 	.cbb-modal-dialog .attachment { width: 12%; }
 }
 
 @media only screen and (max-width: 450px) {
-	.cbb-modal-dialog .attachment .check {
+	.cbb-modal-dialog .attachment .media-check {
 		font-size: 8px;
 		line-height: 16px;
 		height: 20px;
 		width: 20px;
 	}
-}
-
-@media only screen and (max-width: 400px) {
-	.cbb-modal-dialog .media-frame-title h1 {
-		font-size: 20px;
-		line-height: 40px;
-	}
-	
-	.cbb-modal-dialog.media .media-menu { top: 50px; }
-	.cbb-modal-dialog .media-menu a { padding: 12px; }
-
-	.cbb-modal-dialog.media .media-frame-content { top: 87px; }
 }
 
 @media only screen and (max-width: 350px) {

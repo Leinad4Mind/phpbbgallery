@@ -1,10 +1,9 @@
 <?php
 /*
-* @name tools.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -47,7 +46,7 @@ class tools
 			// Open new tag
 			if(preg_match('#^<([a-zA-Z]+).*>#', $split, $match))
 			{
-				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], array('img', 'br')))
+				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], array('img', 'br', 'hr', 'input')))
 				{
 					$open_tags[] = $match[1];
 				}
@@ -100,5 +99,82 @@ class tools
 		}
 
 		return $text . (($append) ? $append : '');
+	}
+
+	// Set Full URL to smilies
+	public static function fix_smilies_path($text)
+	{
+		if(defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH)
+		{
+			return $text;
+		}
+
+		$board_url	= generate_board_url();
+
+		return preg_replace_callback('#class\="smilies" src\="(.*?)(/images/.*?)"#', function($matches) use ($board_url) {
+			return 'class="smilies" src="' . $board_url . $matches[2] . '"';
+		}, $text);
+	}
+	
+	public static function array_to_attr($attributes)
+	{
+		return implode(
+			' ',
+			array_map(
+				function($key) use ($attributes)
+				{
+					if($attributes[$key] === null)
+					{
+						return '';
+					}
+
+					if(is_bool($attributes[$key]))
+					{
+						return ($attributes[$key]) ? $key : '';
+					}
+
+					return $key . '="' . $attributes[$key] . '"';
+				},
+				array_keys($attributes)
+			)
+		);
+	}
+
+	public static function mkdir($path, $public_access = false)
+	{
+		$htaccess_str = '<IfModule mod_access_compat.c>
+			<Files *>
+				Order Allow,Deny
+				%1$s from All
+			</Files>
+		</IfModule>
+		<IfModule mod_authz_host.c>
+			<Files *>
+				Require all %2$s
+			</Files>
+		</IfModule>';
+
+		if(substr($path, -1) != '/')
+		{
+			$path .= '/';
+		}
+
+		if(!file_exists($path))
+		{
+			@mkdir($path);
+		}
+
+		try {
+			$htaccess_str = vsprintf($htaccess_str, ($public_access) ? array('Allow', 'granted') : array('Deny', 'denied'));
+			$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
+
+			file_put_contents($path . '.htaccess', $htaccess_str);
+			file_put_contents($path . 'index.htm', '');
+		}
+		catch(\Exception $e) {
+			return false;
+		}
+
+		return true;
 	}
 }

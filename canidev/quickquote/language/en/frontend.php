@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * frontend.php [English [En]]
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -30,4 +30,7 @@ $lang = array_merge($lang, array(
 	'QQ_REPLY'				=> 'Reply',
 	'QQ_SAVE_QUOTE'			=> 'Save quote',
 	'QUOTES'				=> 'Quotes',
+
+	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
+		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
 ));

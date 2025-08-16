@@ -1,10 +1,9 @@
 <?php
 /*
-* @name template.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -16,6 +15,8 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 class template
 {
 	public $prepend_assets = false;
@@ -25,9 +26,11 @@ class template
 	protected $context_ary		= array();
 
 	protected $config;
+	protected $container;
 	protected $filesystem;
 	protected $path_helper;
 	protected $phpbb_template;
+	protected $request;
 	protected $twig;
 	
 	static $instance;
@@ -39,12 +42,14 @@ class template
 	*
 	* @access public
 	*/
-	public function __construct($container)
+	public function __construct(ContainerInterface $container)
 	{
 		$this->config			= $container->get('config');
+		$this->container 		= $container;
 		$this->filesystem 		= $container->get('filesystem');
 		$this->path_helper		= $container->get('path_helper');
 		$this->phpbb_template	= $container->get('template');
+		$this->request 			= $container->get('request');
 		$this->twig				= $container->get('template.twig.environment');
 	}
 	
@@ -87,6 +92,8 @@ class template
 					$path_ary[] = $style_theme_path;
 				}
 			}
+
+			$path_ary[] =  $path . 'plugins/';
 
 			if(sizeof($path_ary))
 			{
@@ -150,7 +157,9 @@ class template
 					
 					if(substr($asset_url, 0, 2) == './')
 					{
-						$data['content'] = $this->assets_cache[$asset_url] = $asset->get_url();
+						$root_path = $this->path_helper->get_phpbb_root_path();
+
+						$data['content'] = $this->assets_cache[$asset_url] = $root_path . substr($asset->get_url(), 2);
 					}
 					else if($asset->is_relative())
 					{
@@ -229,7 +238,7 @@ class template
 				
 				foreach($data as $key => $value)
 				{
-					if($key != 'content' && $value)
+					if($key != 'content' && $value && $value != 'text/javascript')
 					{
 						$params[] = $key . '="' . $value . '"';
 					}
@@ -258,13 +267,14 @@ class template
 					'SRC'		=> ($is_single) ? $data[$file_key] : '',
 				);
 
-				if($this->prepend_assets)
-				{
-					array_unshift($this->assets[$namespace][$type], $new_asset);
-					break;
-				}
+				$function = ($this->prepend_assets) ? 'array_unshift' : 'array_push';
 
-				$this->assets[$namespace][$type][] = $new_asset;
+				$function($this->assets[$namespace][$type], $new_asset);
+
+				if($this->request->is_ajax())
+				{
+					\canidev\core\json_response::get_instance()->add_component('asset', $new_asset);
+				}
 			break;
 			
 			default:
@@ -295,15 +305,33 @@ class template
 		$this->phpbb_template->assign_vars($vars);
 		$this->context_ary = array_merge($this->context_ary, $vars);
 	}
+
+	public function assign_json_var($key, $options)
+	{
+		$options = array_map(
+			function($item) {
+				if(is_string($item))
+				{
+					return htmlspecialchars_decode($item);
+				}
+
+				return $item;
+			},
+			$options
+		);
+
+		$this->assign_var($key, json_encode($options));
+	}
 	
 	public function get_var($name, $default = '')
 	{
-		return (isset($this->context_ary[$name]) ? $this->context_ary[$name] : $default);
+		return (isset($this->context_ary['.'][0][$name]) ? $this->context_ary['.'][0][$name] : $default);
 	}
 	
 	public function load_context($phpbb_container)
 	{
-		$this->context_ary = $phpbb_container->get('template_context')->get_root_ref();
+		$this->context_ary = $phpbb_container->get('template_context')->get_data_ref();
+		return $this->context_ary;
 	}
 	
 	public function render($id, $filename, $return = false)
