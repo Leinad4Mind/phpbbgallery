@@ -92,12 +92,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'Ubicación del enlace de la página',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'Seleccionar una o más ubicaciones donde puede aparecer el enlace a esta página. Use CTRL+CLICK (o CMD+CLICK en Mac) para seleccionar/anular selección de más de un artículo.',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Icono del enlace de página',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Introduzca el nombre de un icono <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> para usarlo con el enlace de la página. Deje este campo en blanco para utilizar los iconos de imagen tradicionales CSS/GIF de Páginas.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Introduzca el nombre de un icono <strong><a href="%s" target="_blank">Font Awesome</a></strong> para usarlo con el enlace de la página. Deje este campo en blanco para utilizar los iconos de imagen tradicionales CSS/GIF de Páginas.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'Mostrar página',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'Si se establece en no, la página no será accesible. (Nota: Los Administradores todavía serán capaces de acceder a la página, lo que les permite una vista previa de la página de forma privada mientras se desarrolla.)',
 	'ACP_PAGES_FORM_GUESTS'				=> 'Mostrar página a invitados',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'Si se establece en no, sólo los usuarios registrados podrán acceder a la página.',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'Enlace de la página',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'Reconocer HTML',
 
 	// Page link location names

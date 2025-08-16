@@ -92,12 +92,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'Paginalink-locaties',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'Selecteer één of meerdere locaties waar de link naar deze pagina kan voorkomen. Gebruik CTRL+KLIK (of CMD+KLIK bij Mac) om meer dan één item te selecteren/deselecteren.',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Page link icon',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <strong><a href="%s" target="_blank">Font Awesome</a></strong> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'Pagina weergeven',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'Wanneer dit ingesteld is op nee, dan zal de pagina niet toegankelijk zijn. (Notitie: Admins hebben nog steeds toegang tot de pagina, zodat ze de pagina kunnen bekijken tijdens de ontwikkeling ervan.)',
 	'ACP_PAGES_FORM_GUESTS'				=> 'Pagina weergeven aan gasten',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'Wanneer dit ingesteld is op nee, dan kunnen alleen geregistreerde gebruikers de pagina bezoeken.',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'Paginalink',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'Verwerk HTML',
 
 	// Page link location names

@@ -91,12 +91,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'Размещение ссылки на страницу',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'Выберите место для размещения ссылки на данную страницу. Используйте CTRL+CLICK (или CMD+CLICK в Mac) для выделения нескольких пунктов',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Значок ссылки страницы',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Введите имя значка <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> для отображения рядом со ссылкой на данную страницу. Оставьте поле пустым для использования в качестве значка обычных изображений CSS/GIF.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Введите имя значка <strong><a href="%s" target="_blank">Font Awesome</a></strong> для отображения рядом со ссылкой на данную страницу. Оставьте поле пустым для использования в качестве значка обычных изображений CSS/GIF.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'Показывать страницу',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'Если выберите Нет, то страница не будет показываться (Администраторы будут иметь доступ к этой странице.)',
 	'ACP_PAGES_FORM_GUESTS'				=> 'Показывать страницу гостям',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'Если выберите Нет, то страница будет показываться только зарегистрированным пользователям',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'Ссылка на страницу',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'Обрабатывать HTML',
 
 	// Page link location names

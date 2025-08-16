@@ -91,12 +91,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'Page link locations',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'Select one or more locations where the link to this page can appear. Use CTRL+CLICK (or CMD+CLICK on Mac) to select/deselect more than one item.',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Page link icon',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <strong><a href="%s" target="_blank">Font Awesome</a></strong> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'Display page',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'If set to no, the page will not be accessible. (Note: Admins will still be able to access the page, allowing them to privately preview the page while developing it.)',
 	'ACP_PAGES_FORM_GUESTS'				=> 'Display page to guests',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'If set to no, only registered users will be able to access the page.',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'Page link',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'Parse HTML',
 
 	// Page link location names

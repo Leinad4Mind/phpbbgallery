@@ -114,6 +114,7 @@ class admin_controller implements admin_interface
 
 				'S_PAGES_DISPLAY'		=> $entity->get_page_display(),
 				'S_PAGES_GUEST_DISPLAY'	=> $entity->get_page_display_to_guests(),
+				'S_PAGES_TITLE_SWITCH'	=> $entity->get_page_title_switch(),
 
 				'U_DELETE'			=> "{$this->u_action}&amp;action=delete&amp;page_id=" . $entity->get_id(),
 				'U_EDIT'			=> "{$this->u_action}&amp;action=edit&amp;page_id=" . $entity->get_id(),
@@ -129,11 +130,12 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	* Add a page
-	*
-	* @return void
-	* @access public
-	*/
+	 * Add a page
+	 *
+	 * @return void
+	 * @access public
+	 * @throws \phpbb\pages\exception\out_of_bounds
+	 */
 	public function add_page()
 	{
 		// Initiate a page entity
@@ -151,12 +153,13 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	* Edit a page
-	*
-	* @param int $page_id The page identifier to edit
-	* @return void
-	* @access public
-	*/
+	 * Edit a page
+	 *
+	 * @param int $page_id The page identifier to edit
+	 * @return void
+	 * @access public
+	 * @throws \phpbb\pages\exception\out_of_bounds
+	 */
 	public function edit_page($page_id)
 	{
 		// Initiate and load the page entity
@@ -175,12 +178,13 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	* Process page data to be added or edited
-	*
-	* @param \phpbb\pages\entity\page_interface $entity The page entity object
-	* @return void
-	* @access protected
-	*/
+	 * Process page data to be added or edited
+	 *
+	 * @param \phpbb\pages\entity\page_interface $entity The page entity object
+	 * @return void
+	 * @access protected
+	 * @throws \phpbb\pages\exception\out_of_bounds
+	 */
 	protected function add_edit_page_data($entity)
 	{
 		// Create an array to collect errors that will be output to the user
@@ -211,6 +215,7 @@ class admin_controller implements admin_interface
 			'page_icon_font'			=> $this->request->variable('page_icon_font', ''),
 			'page_display'				=> $this->request->variable('page_display', 0),
 			'page_display_to_guests'	=> $this->request->variable('page_guest_display', 0),
+			'page_title_switch'			=> $this->request->variable('page_title_switch', 0),
 		);
 
 		// Grab the form data's message parsing options (possible values: 1 or 0)
@@ -254,6 +259,7 @@ class admin_controller implements admin_interface
 				'set_icon_font'					=> $data['page_icon_font'],
 				'set_page_display'				=> $data['page_display'],
 				'set_page_display_to_guests'	=> $data['page_display_to_guests'],
+				'set_page_title_switch'			=> $data['page_title_switch'],
 
 			);
 
@@ -343,6 +349,7 @@ class admin_controller implements admin_interface
 
 			'S_PAGES_DISPLAY'			=> $entity->get_page_display(),
 			'S_PAGES_GUEST_DISPLAY'		=> $entity->get_page_display_to_guests(),
+			'S_PAGES_TITLE_SWITCH'		=> $entity->get_page_title_switch(),
 
 			'S_PARSE_BBCODE_CHECKED'	=> $entity->content_bbcode_enabled(),
 			'S_PARSE_SMILIES_CHECKED'	=> $entity->content_smilies_enabled(),
@@ -361,7 +368,8 @@ class admin_controller implements admin_interface
 			'S_BBCODE_FLASH'	=> true,
 			'S_LINKS_ALLOWED'	=> true,
 
-			'U_BACK'			=> $this->u_action,
+			'U_FONTAWESOME_ICONS'	=> 'https://fontawesome.com/' . (phpbb_version_compare(PHPBB_VERSION, '3.3.0', '>') ? 'icons?d=gallery&m=free' : 'v4.7.0/icons/'),
+			'U_BACK'				=> $this->u_action,
 		));
 
 		// Build custom bbcodes array

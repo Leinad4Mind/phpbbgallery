@@ -92,12 +92,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'Umístění odkazů na stránku',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'Vyberte jednu či více umístění, kde bude zobrazen odkaz na tuto stránkue. Pro označení/odznačení více položek použijte CTRL+CLICK (nebo CMD+CLICK na Macu).',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Page link icon',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <strong><a href="%s" target="_blank">Font Awesome</a></strong> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'Zobrazit stránku',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'Pokud je hodnota nastavena na Ne, stránka nebude dostupná. (Poznámka: Administrátoři budou mít ke stránce přístup i nadále, což umožňuje zobrazit soukromý náhled stránky během jejího vývoje.)',
 	'ACP_PAGES_FORM_GUESTS'				=> 'Zobrazovat stránku návštěvníkům',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'Pokud je hodnota nastavena na Ne, stránka bude dostupná pouze registrovaným členům.',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'Odkaz na stránku',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'Zpracovávat HTML',
 
 	// Page link location names

@@ -92,12 +92,14 @@ $lang = array_merge($lang, array(
 	'ACP_PAGES_FORM_LINKS'				=> 'أماكن ظهور الصفحة ',
 	'ACP_PAGES_FORM_LINKS_EXPLAIN'		=> 'تستطيع تحديد مكان واحد أو أكثر لعرض روابط الصفحات. استخدم النقر على زر الكنترول مع النقر بالماوس CTRL+CLICK ( أو CMD+CLICK في نظام الماك Mac ) لتحديد أو الغاء التحديد لأكثر من مكان.',
 	'ACP_PAGES_FORM_ICON_FONT'			=> 'Page link icon',
-	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font Awesome</a> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
+	'ACP_PAGES_FORM_ICON_FONT_EXPLAIN'	=> 'Enter the name of a <strong><a href="%s" target="_blank">Font Awesome</a></strong> icon to use with the page link. Leave this field blank to use Pages’ traditional CSS/GIF image icons.',
 	'ACP_PAGES_FORM_DISPLAY'			=> 'عرض الصفحة ',
 	'ACP_PAGES_FORM_DISPLAY_EXPLAIN'	=> 'اختيارك " لا " يعني عدم عرض هذه الصفحة للأعضاء. ( ملاحظة : يستطيع الإداريين فقط مشاهدة هذه الصفحة )',
 	'ACP_PAGES_FORM_GUESTS'				=> 'عرض الصفحة للزائرين ',
 	'ACP_PAGES_FORM_GUESTS_EXPLAIN'		=> 'اختيارك "لا" يعني اتاحة هذه الصفحة فقط للأعضاء المسجلين.',
 	'ACP_PAGES_FORM_VIEW_PAGE'			=> 'رابط الصفحة ',
+	'ACP_PAGES_TITLE_SWITCH'			=> 'Display page title first',
+	'ACP_PAGES_TITLE_SWITCH_EXPLAIN'	=> 'By default browsers will display this page’s title after the site name <samp style="white-space: nowrap">“Site Name - Page Title”</samp>. Enabling this option will display this page’s title before the site name <samp style="white-space: nowrap">“Page Title - Site Name”</samp>.',
 	'PARSE_HTML'						=> 'تفعيل الـHTML',
 
 	// Page link location names
