@@ -275,56 +275,49 @@ class ucp extends controller_base
 
 					if (!sizeof($error))
 					{
-						if ($this->ext_config['meghivo_email_db'] > 1)
+						$email_ary = explode(' ', $email);
+
+						$ed_count = 0;
+						$emvs = array();
+
+						foreach ($email_ary as $key => $email_address)
 						{
-							$email_ary = array_map('strtolower', explode(" ", $email));
-
-							$ed_count = 0;
-							$emvs = array();
-
-							foreach ($email_ary as $key => $email_address)
+							if (!$email_address)
 							{
-								if (!$email_address)
+								unset($email_ary[$key]);
+								continue;
+							}
+
+							$ed_count++;
+
+							$error = array_merge($error, $this->functions_ucp->email_verify($email_address));
+
+							if (!empty($emvs[$email_address]))
+							{
+								if ($this->config['allow_emailreuse'])
 								{
+									$emailreuse[$email_address] = !isset($emailreuse[$email_address]) ? 2 : $emailreuse[$email_address] + 1;
 									unset($email_ary[$key]);
-									continue;
 								}
-
-								$ed_count++;
-
-								$error = array_merge($error, $this->functions_ucp->email_verify($email_address));
-
-								if (!empty($emvs[$email_address]))
+								else
 								{
-									if ($this->config['allow_emailreuse'])
-									{
-										$emailreuse[$email_address] = !isset($emailreuse[$email_address]) ? 2 : $emailreuse[$email_address] + 1;
-										unset($email_ary[$key]);
-									}
-									else
-									{
-										$error[] = $this->language->lang('UCP_MEGHIVO_EDUP', $email_address);
-									}
+									$error[] = $this->language->lang('UCP_MEGHIVO_EDUP', $email_address);
 								}
-
-								$emvs[$email_address] = 1;
 							}
 
-							unset($emvs);
-
-							if ($ed_count > $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'] && $this->ext_config['meghivo_day_db'])
-							{
-								$error[] = $this->language->lang('UCP_MEGHIVO_FUG_LIMIT', $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'], $ed_count);
-							}
-
-							if ($ed_count > $this->ext_config['meghivo_email_db'])
-							{
-								$error[] = $this->language->lang('UCP_MEGHIVO_KULDES_EMAIL_MAX', $this->ext_config['meghivo_email_db'], $ed_count);
-							}
+							$emvs[$email_address] = 1;
 						}
-						else
+
+						unset($emvs);
+
+						if ($ed_count > $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'] && $this->ext_config['meghivo_day_db'])
 						{
-							$error = array_merge($error, $this->functions_ucp->email_verify($email));
+							$error[] = $this->language->lang('UCP_MEGHIVO_FUG_LIMIT', $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'], $ed_count);
+						}
+
+						if ($ed_count > $this->ext_config['meghivo_email_db'])
+						{
+							$error[] = $this->language->lang('UCP_MEGHIVO_KULDES_EMAIL_MAX', $this->ext_config['meghivo_email_db'], $ed_count);
 						}
 
 						if (!$subject)

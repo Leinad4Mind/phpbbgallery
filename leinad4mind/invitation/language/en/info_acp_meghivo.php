@@ -123,7 +123,7 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_MESSAGE_TIME'							=> 'Request time',
 	'ACP_MEGHIVO_MINUSZ'								=> 'You can’t set a minus value.',
 	'ACP_MEGHIVO_MOD'									=> 'phpBB Invite',
-	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'Add more consignees',
+	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'Set recipients limit',
 	'ACP_MEGHIVO_MORE_EMAIL_DB_EXPLAIN'					=> 'You can set the maximum number of invitations that can be sent at a time here.<br /><em>(1=disabled.)</em>',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED'			=> 'Ignore new members post limit',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED_EXPLAIN'	=> 'If set to yes, accepting an invitation will not get newly registered users into the “Newly registered users” group.',

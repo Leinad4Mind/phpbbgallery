@@ -123,7 +123,7 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_MESSAGE_TIME'							=> 'Verzoek tijd',
 	'ACP_MEGHIVO_MINUSZ'								=> 'Je kunt een negatieve waarde instellen!',
 	'ACP_MEGHIVO_MOD'									=> 'phpBB Uitnodiging',
-	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'Meer geadresseerden toevoegen',
+	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'Beperk aantal ontvangers',
 	'ACP_MEGHIVO_MORE_EMAIL_DB_EXPLAIN'					=> 'Je kunt het maximum aantal uitnodigingen dat tegelijk kan worden verzonden hier instellen.<br /><em>(1=uitgeschakeld.)</em>',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED'			=> 'Nieuwe leden bericht limiet negeren',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED_EXPLAIN'	=> 'Aanvaarden van een uitnodiging door een nieuwe geregistreerde gebruikers zal niet zorgen dat deze in de “Nieuw geregistreerde gebruikers” groep komen.',

@@ -4,8 +4,9 @@
 
 		// Default options
 		var defaults = {
-			checkDupEmail: true,
-			position: "top"
+			position: "top",
+			separator: " ",
+			checkDupEmail: true
 		};
 
 		var deleteIconHTML = '<a href="#" class="multiple_emails-close"><i class="icon fa-times fa-fw icon-black" aria-hidden="true"></i></a>';
@@ -122,7 +123,7 @@
 				var emails = [];
 				var container = $orig.siblings('.multiple_emails-container');
 				container.find('.multiple_emails-email span.email_name').each(function() { emails.push($(this).html()); });
-				$orig.val(emails.join(' ')).trigger('change');
+				$orig.val(emails.join(settings.separator)).trigger('change');
 			}
 
 			function isJsonString(str) {

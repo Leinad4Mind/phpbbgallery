@@ -123,7 +123,7 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_MESSAGE_TIME'							=> 'Igénylés ideje',
 	'ACP_MEGHIVO_MINUSZ'								=> 'Nem adhatsz meg mínusz értéket.',
 	'ACP_MEGHIVO_MOD'									=> 'phpBB Invite',
-	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'Több címzett megadása',
+	'ACP_MEGHIVO_MORE_EMAIL_DB'							=> 'A címzettek korlátozott száma',
 	'ACP_MEGHIVO_MORE_EMAIL_DB_EXPLAIN'					=> 'Megadhatod, hogy egy megírt meghívót maximum mennyi felhasználónak lehessen kézbesíteni egyszerre.<br /><em>(1=kikapcsolva.)</em>',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED'			=> 'Új tag hozzászólás határ figyelmen kívül hagyása',
 	'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED_EXPLAIN'	=> 'A meghívóval regisztrált felhasználók nem fognak bekerülni az “Újonnan regisztrált felhasználók” csoportba.',

@@ -2,7 +2,7 @@
 jQuery(function($) {
 	$('#email').multiple_emails({
 		position: 'top',
-		theme: 'basic',
+		separator: ' ',
 		checkDupEmail: true
 	});
 });

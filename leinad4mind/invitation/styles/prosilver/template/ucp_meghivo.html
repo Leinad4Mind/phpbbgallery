@@ -40,9 +40,11 @@
 
 {% if S_MEGHIVO_MAIL %}
 
-{% INCLUDECSS '@leinad4mind_invitation/multiple-emails.css' %}
-{% INCLUDEJS '@leinad4mind_invitation/js/multiple-emails.js' %}
-{% INCLUDEJS '@leinad4mind_invitation/js/email.js' %}
+{% if MORE_RECIPIENTS %}
+	{% INCLUDECSS '@leinad4mind_invitation/multiple-emails.css' %}
+	{% INCLUDEJS '@leinad4mind_invitation/js/multiple-emails.js' %}
+	{% INCLUDEJS '@leinad4mind_invitation/js/email.js' %}
+{% endif %}
 
 <h2>{{ lang('UCP_MEGHIVO_KULDES') }}</h2>
 <form id="meghivo_kuldes" method="post" action="{{ U_ACTION }}">
