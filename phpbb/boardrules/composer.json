@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "An extension which allows you to create a set of rules for your phpBB forum",
     "homepage": "https://www.phpbb.com",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "keywords": [
         "phpbb",
         "extension",
@@ -35,7 +35,7 @@
     "require": {
         "php": ">=5.4",
         "composer/installers": "~1.0",
-        "phpbb/phpbb": ">=3.2.0,<3.3"
+        "phpbb/phpbb": ">=3.2.0"
     },
     "require-dev": {
         "phing/phing": "2.4.*"
@@ -43,7 +43,7 @@
     "extra": {
         "display-name": "Board Rules",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2.0,<3.3"
+            "phpbb/phpbb": ">=3.2.0"
         },
         "version-check": {
             "host": "www.phpbb.com",

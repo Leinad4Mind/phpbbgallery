@@ -181,7 +181,7 @@ class admin_controller implements admin_interface
 	public function display_language_selection()
 	{
 		// Check if there are any available languages
-		$sql = 'SELECT lang_id, lang_iso, lang_local_name
+		$sql = 'SELECT lang_iso, lang_local_name
 			FROM ' . LANG_TABLE . '
 			ORDER BY lang_english_name';
 		$result = $this->db->sql_query($sql);
@@ -196,7 +196,7 @@ class admin_controller implements admin_interface
 				$this->template->assign_block_vars('options', array(
 					'S_LANG_DEFAULT'	=> $row['lang_iso'] == $this->config['default_lang'],
 
-					'LANG_ID'			=> $row['lang_id'],
+					'LANG_ISO'			=> $row['lang_iso'],
 					'LANG_LOCAL_NAME'	=> $row['lang_local_name'],
 				));
 			}
@@ -208,20 +208,20 @@ class admin_controller implements admin_interface
 		{
 			// If there is only one available language its index is 0
 			// and that language is the default board language.
-			// We do not need any loops here to get its id.
-			$this->display_rules($rows[0]['lang_id']);
+			// We do not need any loops here to get its iso code.
+			$this->display_rules($rows[0]['lang_iso']);
 		}
 	}
 
 	/**
 	* Display the rules
 	*
-	* @param int $language Language selection identifier; default: 0
+	* @param string $language Language selection iso
 	* @param int $parent_id Category to display rules from; default: 0
 	* @return void
 	* @access public
 	*/
-	public function display_rules($language = 0, $parent_id = 0)
+	public function display_rules($language, $parent_id = 0)
 	{
 		// Grab all the rules in the current user's language
 		$entities = $this->rule_operator->get_rules($language, $parent_id);
@@ -282,17 +282,18 @@ class admin_controller implements admin_interface
 	/**
 	* Add a rule
 	*
-	* @param int $language Language selection identifier; default: 0
+	* @param string $language Language selection iso
 	* @param int $parent_id Category to display rules from; default: 0
 	* @return void
 	* @access public
 	*/
-	public function add_rule($language = 0, $parent_id = 0)
+	public function add_rule($language, $parent_id = 0)
 	{
 		// Add form key
 		add_form_key('add_edit_rule');
 
 		// Initiate a rule entity
+		/* @var $entity \phpbb\boardrules\entity\rule */
 		$entity = $this->container->get('phpbb.boardrules.entity');
 
 		// Collect the form data
@@ -459,7 +460,7 @@ class admin_controller implements admin_interface
 				}
 				catch (\phpbb\boardrules\exception\out_of_bounds $e)
 				{
-					trigger_error($e->get_message($this->user) . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error($e->get_message($this->lang) . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
 				// Change rule parent
@@ -471,7 +472,7 @@ class admin_controller implements admin_interface
 					}
 					catch (\Exception $e)
 					{
-						trigger_error($this->user->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error($this->lang->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 				}
 
@@ -487,7 +488,7 @@ class admin_controller implements admin_interface
 				}
 				catch (\phpbb\boardrules\exception\out_of_bounds $e)
 				{
-					trigger_error($e->get_message($this->user) . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error($e->get_message($this->lang) . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
 				// Show user confirmation of the added rule and provide link back to the previous page
@@ -555,7 +556,7 @@ class admin_controller implements admin_interface
 			}
 			catch (\Exception $e)
 			{
-				trigger_error($this->user->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
+				trigger_error($this->lang->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			// Show user confirmation of the deleted rule and provide link back to the previous page
@@ -600,7 +601,7 @@ class admin_controller implements admin_interface
 		}
 		catch (\Exception $e)
 		{
-			trigger_error($this->user->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
+			trigger_error($this->lang->lang($e->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
 		// Send a JSON response if an AJAX request was used

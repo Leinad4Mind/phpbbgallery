@@ -18,20 +18,23 @@ class boardrules_module
 
 	public function main($id, $mode)
 	{
-		global $phpbb_container, $request;
+		global $phpbb_container;
 
 		/** @var \phpbb\language\language $lang */
 		$lang = $phpbb_container->get('language');
 
+		/** @var \phpbb\request\request $request */
+		$request = $phpbb_container->get('request');
+
+		/** @var \phpbb\boardrules\controller\admin_controller $admin_controller */
+		$admin_controller = $phpbb_container->get('phpbb.boardrules.admin.controller');
+
 		// Add the board rules ACP lang file
 		$lang->add_lang('boardrules_acp', 'phpbb/boardrules');
 
-		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('phpbb.boardrules.admin.controller');
-
 		// Requests
 		$action = $request->variable('action', '');
-		$language = $request->variable('language', 0);
+		$language = $request->variable('language', '');
 		$parent_id = $request->variable('parent_id', 0);
 		$rule_id = $request->variable('rule_id', 0);
 
