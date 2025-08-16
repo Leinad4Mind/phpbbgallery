@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -230,7 +230,9 @@ class acp extends controller_base
 					$display_vars['vars'] += array(
 						'meghivo_captcha_enable'		=> array('lang' => 'ACP_MEGHIVO_CAPTCHA'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
 						'email_address_change'			=> array('lang' => 'ACP_MEGHIVO_MAIL_FIX'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'meghivo_membership_days'		=> array('lang' => 'ACP_MEGHIVO_MEMBERSHIP_DAYS'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
 						'meghivo_db'					=> array('lang' => 'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX'			,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'meghivo_restore_invites'		=> array('lang' => 'ACP_MEGHIVO_RESTORE_INVITES'				,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
 						'meghivo_email_priority'		=> array('lang' => 'ACP_MEGHIVO_EMAIL_PRIORITY'					,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> false	, 'method' => 'meghivo_email_priority_select'),
 						'meghivo_ervenyessege'			=> array('lang' => 'ACP_MEGHIVO_ERVENY'							,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> true		, 'method' => 'meghivo_ervenyessege_select'),
 						'meghivo_oldal_list'			=> array('lang' => 'ACP_MEGHIVO_USER_LIST'						,'validate' => 'int:5:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
@@ -249,9 +251,11 @@ class acp extends controller_base
 						'legend3'						=> 'ACP_MEGHIVO_CONFIG_GIFT',
 						'meghivo_uj_reg'				=> array('lang' => 'ACP_MEGHIVO_NEW_REG'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
 						'meghivo_birthdays'				=> array('lang' => 'ACP_MEGHIVO_BIRTHDAYS'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
+						'meghivo_posts_gift_posts'		=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_POSTS'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
+						'meghivo_posts_gift_invites'	=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_INVITES'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
+						'meghivo_posts_gift_limit'		=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_LIMIT'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
 						'gift_invited_users'			=> array('lang' => 'ACP_MEGHIVO_GIFT_INVITED_USERS'				,'validate' => 'int:0:999'	, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_gift'),
 						'gift_invited_users_invitation'	=> false,
-
 						'legend4'						=> 'ACP_MEGHIVO_CONFIG_REQUEST',
 
 						'meghivo_req_max'				=> array('lang' => 'ACP_MEGHIVO_REQUEST_MAX'					,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),

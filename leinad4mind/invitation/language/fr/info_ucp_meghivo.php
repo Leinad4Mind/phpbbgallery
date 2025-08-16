@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -100,6 +100,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Dernière active',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Actuellement vous disposez d’invitations illimitées.',
 	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Nombre maximal de destinataires',
+	'UCP_MEGHIVO_MEMBERSHIP_DAYS'			=> 'Vous devez être membre depuis au moins %1$d jours avant de pouvoir envoyer des invitations. Vous pouvez envoyer des invitations à partir du %2$s.',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Ecrire quelques lignes pour expliquer pourquoi la personne pourrait nous rejoindre.',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'Il n’y a aucune invitation à supprimer !',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Fichier langue qui n’est pas présent: %s',

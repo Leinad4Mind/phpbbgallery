@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -100,6 +100,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Laast actief',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Momenteel heb je onbeperkt aantal uitnodigingen.',
 	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Maximum aantal ontvangers',
+	'UCP_MEGHIVO_MEMBERSHIP_DAYS'			=> 'U moet minimaal %1$d dagen lid zijn voordat u uitnodigingen kunt verzenden. U kunt uitnodigingen verzenden vanaf %2$s.',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Geef in een paar lijnen aan waarom men zou moeten deelnemen',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'Er zijn geen uitnodigingen om te verwijderen!',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Geen bestaand taal bestand: %s',

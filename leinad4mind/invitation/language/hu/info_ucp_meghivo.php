@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -100,6 +100,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Utoljára aktív',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Jelenleg korlátlan meghívóval rendelkezel így nincs szükséged az igénylésre.',
 	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Maximum megadható címzettek száma',
+	'UCP_MEGHIVO_MEMBERSHIP_DAYS'			=> 'A meghívók küldése előtt legalább %1$d napig tagnak kell lenned. Meghívókat küldhet %2$s kezdettel.',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Írj pár sort miért is csatlakozzon az illető.',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'Nincs törölhető meghívód.',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Nem létező nyelvi fájl: %s',

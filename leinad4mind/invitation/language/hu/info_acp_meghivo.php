@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -46,6 +46,8 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVOT_USERS_COUNT'							=> 'Összes felhasználó (%s)',
 	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX'					=> 'Korlátlan meghívó mindenkinek',
 	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX_EXPLAIN'			=> 'Ha engedélyezed akkor az összes felhasználó korlátlan meghívóval fog rendelkezni.',
+	'ACP_MEGHIVO_RESTORE_INVITES'						=> 'Lejárt és elutasított meghívók visszaállítása',
+	'ACP_MEGHIVO_RESTORE_INVITES_EXPLAIN'				=> 'Ha engedélyezve van, annak a felhasználónak visszatérítjük a meghívót, akinek meghívása lejár vagy elutasításra kerül.',
 	'ACP_MEGHIVO_BIRTHDAYS'								=> 'Születésnap',
 	'ACP_MEGHIVO_BIRTHDAYS_EXPLAIN'						=> 'Lehetővé teszi a szülinaposok számára, hogy ajándék meghívót kapjanak.<em>A beállítás érvényesüléséhez a születésnaposok funkciónak is bekapcsolva kell lennie.</em>',
 	'ACP_MEGHIVO_CAPTCHA'								=> 'Vizuális megerősítés',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> Az e-mail küldés jelenleg ki van kapcsolva!<br />Míg az e-mail küldés ki van kapcsolva addig a meghívás nem fog működni, ha szeretnéd bekapcsolni az e-mail küldést akkor %sITT%s megteheted.',
 	'ACP_MEGHIVO_EMAIL_DISABLED'						=> 'Az e-mail küldés kikapcsolva, kérlek kapcsold be az e-mail küldést. %sTovább az e-mail beállításhoz.%s',
 	'ACP_MEGHIVO_EMAIL_PRIORITY'						=> 'Meghívó email fontossága',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS'						=> 'Minimális tagsági napok',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Azon napok száma, amikor a felhasználót regisztrálni kell, mielőtt a meghívórendszert használhatják. Állítsa 0-ra az azonnali használat engedélyezéséhez.',
 	'ACP_MEGHIVO_ENABLE'								=> 'Meghívó mod bekapcsolása',
 	'ACP_MEGHIVO_ENABLE_EXPLAIN'						=> 'Ha bekapcsolod akkor használatba kerül a meghívó mod.',
 	'ACP_MEGHIVO_ERVENY'								=> 'Kiküldött meghívók lejárati ideje',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_GIFT_NUMBER_INVITES'					=> 'Ajándék meghívók száma',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS'					=> 'Meghívott felhasználók',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS_EXPLAIN'			=> 'A felhasználók ajándék meghívót kapnak a beállított meghívott felhasználók után.<br /><em>Ha “0” felhasználót állítasz be, akkor ez a funkció kikapcsol.</em>',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES'					=> 'Mérföldkő meghívók',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES_EXPLAIN'			=> 'A mérföldkő elérésekor a felhasználókat megjutalmazzák. A funkció letiltásához állítsa 0-ra.',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS'						=> 'Mérföldkő',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Bejegyzések intervalluma, amikor a felhasználót az alábbi meghívások száma jutalmazza. A funkció letiltásához állítsa 0-ra.',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT'						=> 'Korlátozza a mérföldköveket',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Az a maximális szám, amikor egy felhasználó jutalmazza a mérföldkő elérését. Például állítson be 30 posztot 3 mérföldkővel korlátozva. A meghívókat 30, 60, 90 bejegyzéssel jutalmazzák. A funkció letiltásához állítsa 0-ra.',
 	'ACP_MEGHIVO_GROUP'									=> 'Meghívott felhasználók csoportja',
 	'ACP_MEGHIVO_GROUP_ENABLED'							=> 'Csoport használat engedélyezése',
 	'ACP_MEGHIVO_GROUP_ENABLED_EXPLAIN'					=> 'Ha engedélyezed akkor a kiválasztott csoportba bekerülnek a meghívott felhasználók.',

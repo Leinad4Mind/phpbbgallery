@@ -295,9 +295,17 @@
 
 	{% if loops.users|length %}
 		<form id="acp_invite_users" method="post" action="{{ U_ACTION }}">
-		<div class="pagination">
-			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span>{% endif %}<br /><br />
-		</div>
+
+			{% if pagination or TOTAL_POSTS %}
+				<div class="pagination">
+					{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+					{% if pagination %}
+						{% include 'pagination.html' %}
+					{% else %}
+						&bull; {{ PAGE_NUMBER }}
+					{% endif %}
+				</div>
+			{% endif %}
 
 		<table cellspacing="1">
 			<thead>
@@ -324,6 +332,17 @@
 			{% endfor %}
 			</tbody>
 		</table>
+
+		{% if pagination or TOTAL_POSTS %}
+		<div class="pagination">
+			{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+			{% if pagination %}
+			{% include 'pagination.html' %}
+			{% else %}
+			&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+		{% endif %}
 
 		<fieldset class="display-options">
 			{{ lang('DISPLAY_LOG') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}

@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -45,7 +45,9 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVOT_PEND_COUNT'							=> 'All Invitations (%s)',
 	'ACP_MEGHIVOT_USERS_COUNT'							=> 'All users (%s)',
 	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX'					=> 'Unlimited invitation for everyone',
-	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX_EXPLAIN'			=> 'if selected, all users will have unlimited invitations.',
+	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX_EXPLAIN'			=> 'If selected, all users will have unlimited invitations.',
+	'ACP_MEGHIVO_RESTORE_INVITES'						=> 'Restore expired and declined invites',
+	'ACP_MEGHIVO_RESTORE_INVITES_EXPLAIN'				=> 'If enabled, a user whose invite expires or is declined is refunded the invite.',
 	'ACP_MEGHIVO_BIRTHDAYS'								=> 'Birthday',
 	'ACP_MEGHIVO_BIRTHDAYS_EXPLAIN'						=> 'You can set how many invitations a user will receive for their birthday. <em>To let this setting take effect the birthday feature needs to be enabled too.</em>',
 	'ACP_MEGHIVO_CAPTCHA'								=> 'Visual confirmation',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> The sending of e-mails is currently disabled!<br />While it is disabled, the invitations should not work. If you want turn it on, you can do it %sHERE%s.',
 	'ACP_MEGHIVO_EMAIL_DISABLED'						=> 'Sending of e-mails has been disabled, please turn it on. %sGo to the e-mail settings.%s',
 	'ACP_MEGHIVO_EMAIL_PRIORITY'						=> 'Invitation mail priority',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS'						=> 'Minimum membership days',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Number of days a user needs to be registered before the invite system is allowed to be used. Set to 0 to allow immediate use.',
 	'ACP_MEGHIVO_ENABLE'								=> 'Enable invitation extension',
 	'ACP_MEGHIVO_ENABLE_EXPLAIN'						=> 'If you turn it on, the invitation extension will be used.',
 	'ACP_MEGHIVO_ERVENY'								=> 'Sent out invitations expiration time',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_GIFT_NUMBER_INVITES'					=> 'Number of gifted invitations',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS'					=> 'Invited users',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS_EXPLAIN'			=> 'Users will receive a gift invitation after this number of invited users.<br /><em>If “0”, this function will be disabled.</em>',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES'					=> 'Posts milestone invites',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES_EXPLAIN'			=> 'Number of invites a user is rewarded when reaching a milestone. Set to 0 to disable this feature.',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS'						=> 'Posts milestone',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Interval of posts when a user is rewarded the below number of invites. Set to 0 to disable this feature.',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT'						=> 'Limit post milestones',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Maximum number of times a user is rewarded invites for reaching a milestone. For example, set to 30 posts limited by 3 milestones. Invites are rewarded at 30, 60, 90 posts. Set to 0 to disable this feature.',
 	'ACP_MEGHIVO_GROUP'									=> 'Invited users group',
 	'ACP_MEGHIVO_GROUP_ENABLED'							=> 'Enable use of group',
 	'ACP_MEGHIVO_GROUP_ENABLED_EXPLAIN'					=> 'If enabled, invited users will automatically be added to the selected group.',

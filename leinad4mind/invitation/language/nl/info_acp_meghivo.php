@@ -2,11 +2,11 @@
 
 /**
  *
- * Invite. An extension for the phpBB Forum Software package.
+ * Invitation. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -46,6 +46,8 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVOT_USERS_COUNT'							=> 'Alle gebruikers (%s)',
 	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX'					=> 'Onbeperkte uitnodigingen voor iedereen',
 	'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX_EXPLAIN'			=> 'Indien geselecteerd, zullen alle gebruikers onbeperkte uitnodigingen hebben.',
+	'ACP_MEGHIVO_RESTORE_INVITES'						=> 'Herstel verlopen en geweigerde uitnodigingen',
+	'ACP_MEGHIVO_RESTORE_INVITES_EXPLAIN'				=> 'Indien ingeschakeld, krijgt een gebruiker wiens uitnodiging verloopt of wordt geweigerd, de uitnodiging terugbetaald.',
 	'ACP_MEGHIVO_BIRTHDAYS'								=> 'Verjaardag',
 	'ACP_MEGHIVO_BIRTHDAYS_EXPLAIN'						=> 'Je kunt instellen hoeveel uitnodigingen een gebruiker voor hun verjaardag ontvangen. <em>Om deze instelling effect te laten hebben moet de optie verjaardagen ook ingeschakeld zijn.</em>',
 	'ACP_MEGHIVO_CAPTCHA'								=> 'Visuele bevestiging',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Uitnodiging:</strong> Het verzenden van e-mails is momenteel uitgeschakeld!<br />Als het is uitgeschakeld, werken de uitnodigingen niet, als je het wilt inschakelen, doe je dat %sHIER%s.',
 	'ACP_MEGHIVO_EMAIL_DISABLED'						=> 'Het verzenden van e-mails is uitgeschakeld, zet het aan. %sga naar de e-mail instellingen.%s',
 	'ACP_MEGHIVO_EMAIL_PRIORITY'						=> 'Prioriteit van uitnodiging mail',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS'						=> 'Minimale lidmaatschapsdagen',
+	'ACP_MEGHIVO_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Aantal dagen dat een gebruiker moet zijn geregistreerd voordat het uitnodigingssysteem mag worden gebruikt. Stel in op 0 om onmiddellijk gebruik mogelijk te maken.',
 	'ACP_MEGHIVO_ENABLE'								=> 'Inschakelen van uitnodiging-mod',
 	'ACP_MEGHIVO_ENABLE_EXPLAIN'						=> 'Als je het aanzet, kan de uitnodiging-mod gebruikt worden.',
 	'ACP_MEGHIVO_ERVENY'								=> 'Verlooptijd van uitnodigingen versturen',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_MEGHIVO_GIFT_NUMBER_INVITES'					=> 'Aantal gegeven uitnodigingen.',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS'					=> 'Uitgenodigde gebruikers',
 	'ACP_MEGHIVO_GIFT_INVITED_USERS_EXPLAIN'			=> 'Gebruikers krijgen een geschenk uitnodiging na het bereiken van dit aantal uitgenodigde gebruikers.<br /><em>If “0”, deze functie wordt uitgeschakeld.</em>',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES'					=> 'Berichten mijlpaal uitnodigingen',
+	'ACP_MEGHIVO_POSTS_GIFT_INVITES_EXPLAIN'			=> 'Aantal uitnodigingen dat een gebruiker wordt beloond bij het bereiken van een mijlpaal. Stel in op 0 om deze functie uit te schakelen.',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS'						=> 'Berichten mijlpaal',
+	'ACP_MEGHIVO_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Interval van berichten wanneer een gebruiker het onderstaande aantal uitnodigingen ontvangt. Stel in op 0 om deze functie uit te schakelen.',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT'						=> 'Beperk postmijlpalen',
+	'ACP_MEGHIVO_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Maximaal aantal keren dat een gebruiker uitnodigingen ontvangt voor het bereiken van een mijlpaal. Stel bijvoorbeeld in op 30 berichten, beperkt door 3 mijlpalen. Uitnodigingen worden beloond met 30, 60, 90 posts. Stel in op 0 om deze functie uit te schakelen.',
 	'ACP_MEGHIVO_GROUP'									=> 'Uitgenodigde gebruikers groep',
 	'ACP_MEGHIVO_GROUP_ENABLED'							=> 'Gebruik van groep inschakelen',
 	'ACP_MEGHIVO_GROUP_ENABLED_EXPLAIN'					=> 'Indien ingeschakeld, zullen uitgenodigde gebruikers automatisch worden toegevoegd aan de geselecteerde groep.',

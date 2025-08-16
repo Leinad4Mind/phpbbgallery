@@ -3,9 +3,9 @@
     "type": "phpbb-extension",
     "description": "This extension allows users to invite friends to your board. You can make your board private where registration is by invitation only.",
     "homepage": "http://leinad4mind.top/forum",
-    "version": "4.0.8",
-    "time": "2018-04-27",
-    "license": "GPL-2.0",
+    "version": "4.0.9",
+    "time": "2021-05-01",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Leinad4Mind",
