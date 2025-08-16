@@ -1,0 +1,5 @@
+parameters:
+    sitesplat.flatbootsminicms.tables.flatboots_style_menu: %core.table_prefix%flatboots_style_menu
+    sitesplat.flatbootsminicms.tables.flatboots_style_config: %core.table_prefix%flatboots_style_config
+    sitesplat.flatbootsminicms.tables.flatboots_style_links: %core.table_prefix%flatboots_style_links
+    sitesplat.flatbootsminicms.tables.flatboots_style_social: %core.table_prefix%flatboots_style_social

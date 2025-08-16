@@ -1,0 +1,9 @@
+1.0.1
+ - fixed Custom CSS feature in ACP
+ - fixed modules displayed after the extension has been disabled
+ - added ability to change Twitter screen name
+ - added ability to alter teaser texts
+ - fixed grammatical errors
+
+1.0.0
+ - initial release

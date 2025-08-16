@@ -1,0 +1,16 @@
+<!-- BEGIN menu -->
+		<li class="dropdown">
+			<!-- IF not .menu.sub -->
+			 <a href="{menu.URL}"<!-- IF menu.EXTERNAL --> target="_blank"<!-- ENDIF -->>{menu.NAME}</a>
+			 <!-- ELSE -->
+			 <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{menu.NAME}&nbsp;<b class="caret"></b></a>
+			 <!-- ENDIF -->
+			<!-- IF .menu.sub -->
+			<ul class="dropdown-menu">
+				<!-- BEGIN sub -->
+				<li><a href="{sub.URL}"<!-- IF sub.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{sub.ICON} icon-flip-horizontal"></i>&nbsp;{sub.NAME}</a></li>
+				<!-- END sub -->
+			</ul>
+			<!-- ENDIF -->
+		</li>
+<!-- END menu -->
