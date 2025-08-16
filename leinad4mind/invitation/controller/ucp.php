@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -77,21 +77,21 @@ class ucp extends controller_base
 	/**
 	 * ucp constructor.
 	 *
-	 * @param \phpbb\db\driver\driver_interface              $db
-	 * @param \phpbb\user                                    $user
-	 * @param \phpbb\language\language                       $language
-	 * @param \phpbb\request\request_interface               $request
-	 * @param \phpbb\auth\auth                               $auth
-	 * @param \phpbb\config\config                           $config
-	 * @param \leinad4mind\invitation\includes\config        $ext_config
-	 * @param \phpbb\captcha\factory                         $captcha_factory
-	 * @param \leinad4mind\invitation\includes\functions     $functions
-	 * @param \leinad4mind\invitation\includes\functions_ucp $functions_ucp
-	 * @param \phpbb\template\template                       $template
-	 * @param \phpbb\log\log_interface                       $log
-	 * @param string                                         $table_invite
-	 * @param string                                         $root_path
-	 * @param string                                         $php_ext
+	 * @param \phpbb\db\driver\driver_interface               $db
+	 * @param \phpbb\user                                     $user
+	 * @param \phpbb\language\language                        $language
+	 * @param \phpbb\request\request_interface                $request
+	 * @param \phpbb\auth\auth                                $auth
+	 * @param \phpbb\config\config                            $config
+	 * @param \leinad4mind\invitation\includes\config         $ext_config
+	 * @param \phpbb\captcha\factory                          $captcha_factory
+	 * @param \leinad4mind\invitation\includes\functions      $functions
+	 * @param \leinad4mind\invitation\includes\functions_ucp  $functions_ucp
+	 * @param \phpbb\template\template                        $template
+	 * @param \phpbb\log\log_interface                        $log
+	 * @param string                                          $table_invite
+	 * @param string                                          $root_path
+	 * @param string                                          $php_ext
 	 */
 	public function __construct(db_interface $db, user $user, language $language, request_interface $request, auth $auth, phpbb_config $config, ext_config $ext_config, factory $captcha_factory, functions $functions, functions_ucp $functions_ucp, template $template, log_interface $log, $table_invite, $root_path, $php_ext)
 	{
@@ -119,91 +119,83 @@ class ucp extends controller_base
 	 */
 	public function main($id, $mode, $u_action)
 	{
-		$this->tpl_name = 'ucp_meghivo';
+		$this->tpl_name = 'ucp_invite';
 
-		if (!$this->ext_config['meghivo_enable'])
+		if (!$this->ext_config['invite_enable'])
 		{
 			meta_refresh(3, append_sid("{$this->root_path}ucp.$this->php_ext"));
-			trigger_error($this->language->lang('UCP_MEGHIVO_DISABLED', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext") . '">', '</a>'));
+			trigger_error($this->language->lang('UCP_INVITE_DISABLED', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext") . '">', '</a>'));
 		}
 
-		$form_key = 'ucp_meghivo';
+		$form_key = 'ucp_invite';
 		add_form_key($form_key);
 
-		$aia	= append_sid("{$this->root_path}ucp.$this->php_ext", "i=" . ext::get_module_id('ucp') . "&amp;mode=adat");
-		$aback	= $this->language->lang('UCP_MEGHIVO_BACK' , '<a href="' . $aia . '">', '</a>');
-		$uback	= $this->language->lang('UCP_MEGHIVO_BACK' , '<a href="' . $u_action . '">', '</a>');
+		$aia	= append_sid("{$this->root_path}ucp.$this->php_ext", "i=" . ext::get_module_id('ucp') . "&amp;mode=data");
+		$aback	= $this->language->lang('UCP_INVITE_BACK' , '<a href="' . $aia . '">', '</a>');
+		$uback	= $this->language->lang('UCP_INVITE_BACK' , '<a href="' . $u_action . '">', '</a>');
 
 		$submit		= $this->request->is_set_post('submit');
 		$message	= $this->request->variable('message', '', true);
 		$error		= array();
-		$mmu		= $this->functions_ucp->meghivok($this->user->data['user_id']);
+		$mmu		= $this->functions_ucp->invitek($this->user->data['user_id']);
 		$cmt		= $this->functions_ucp->cmt($mmu, $this->user->data['user_id']);
 
 		switch ($mode)
 		{
-			case 'adat':
-				$this->page_title = 'UCP_MEGHIVO_ADAT';
+			case 'data':
+				$this->page_title = 'UCP_INVITE_DATA';
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_ADAT'				=> true,
+					'S_INVITE_DATA'				=> true,
 
-					'L_UCP_MEGHIVO_DB_USER'			=> $this->language->lang('UCP_MEGHIVO_DB_USER' . ($this->user->data['user_meghivo_member'] > 1 ? 'S' : '')),
-					'L_UCP_MEGHIVO_DB_USER_EXPLAIN'	=> $this->language->lang('UCP_MEGHIVO_DB_USER' . ($this->user->data['user_meghivo_member'] > 1 ? 'S' : '') . '_EXPLAIN'),
+					'L_UCP_INVITE_DB_USER'			=> $this->language->lang('UCP_INVITE_DB_USER' . ($this->user->data['user_invite_member'] > 1 ? 'S' : '')),
+					'L_UCP_INVITE_DB_USER_EXPLAIN'	=> $this->language->lang('UCP_INVITE_DB_USER' . ($this->user->data['user_invite_member'] > 1 ? 'S' : '') . '_EXPLAIN'),
 
-					'MEGHIVO_DB_USER'				=> $this->language->lang('UCP_MEGHIVO_DB', $this->user->data['user_meghivo_member']),
-					'MEGHIVO_DB_SZAM'				=> $this->ext_config['meghivo_db'] || $this->auth->acl_get('u_meghivo_max') ? $this->language->lang('UCP_MEGHIVO_DB_MAX') : $this->language->lang('UCP_MEGHIVO_DB', $this->user->data['user_meghivo']),
-					'MEGHIVO_DB_KULDES'				=> $this->ext_config['meghivo_day_db'] ? $this->language->lang('UCP_MEGHIVO_DB', $this->ext_config['meghivo_day_db']) : $this->language->lang('UCP_MEGHIVO_KULDES_MAX'),
-					'MEGHIVO_DAY_DB'				=> $this->language->lang('UCP_MEGHIVO_DB', $cmt['ma_kuld']),
-					'MEGHIVO_DB_PENDING'			=> $this->language->lang('UCP_MEGHIVO_DB', $cmt['fuggo']),
-					'MEGHIVO_TIME_END'				=> $this->ext_config['meghivo_ervenyessege'] / 86400,
-					'MEGHIVO_UTOLSO_USER'			=> $cmt['username'] ? $this->language->lang('UCP_MEGHIVO_UT_REG_INFO', $cmt['username'], $this->user->format_date($cmt['user_regdate'])) : $this->language->lang('UCP_MEGHIVO_NO_REG'),
+					'INVITE_DB_USER'				=> $this->language->lang('UCP_INVITE_DB', $this->user->data['user_invite_member']),
+					'INVITE_DB_NUMBER'				=> $this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max') ? $this->language->lang('UCP_INVITE_DB_MAX') : $this->language->lang('UCP_INVITE_DB', $this->user->data['user_invite']),
+					'INVITE_DB_SEND'				=> $this->ext_config['invite_day_db'] ? $this->language->lang('UCP_INVITE_DB', $this->ext_config['invite_day_db']) : $this->language->lang('UCP_INVITE_SEND_MAX'),
+					'INVITE_DAY_DB'					=> $this->language->lang('UCP_INVITE_DB', $cmt['ma_sending']),
+					'INVITE_DB_PENDING'				=> $this->language->lang('UCP_INVITE_DB', $cmt['dependent']),
+					'INVITE_TIME_END'				=> $this->ext_config['invite_validity'] / 86400,
+					'INVITE_LAST_USER'				=> $cmt['username'] ? $this->language->lang('UCP_INVITE_LU_REG_INFO', $cmt['username'], $this->user->format_date($cmt['user_regdate'])) : $this->language->lang('UCP_INVITE_NO_REG'),
 				));
 
 			break;
 
-			case 'kuldes':
-				$this->page_title = 'UCP_MEGHIVO_KULDES';
+			case 'send':
+				$this->page_title = 'UCP_INVITE_SEND';
 
 				if ($this->config['require_ac_invite'] == ext::ACC_INVITE_DISABLE || !$this->config['email_enable'])
 				{
 					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_SEND_OFF') . $aback);
+					trigger_error($this->language->lang('UCP_INVITE_SEND_OFF') . $aback);
 				}
 
-				if (!$this->auth->acl_get('u_meghivo_kuld'))
+				if (!$this->auth->acl_get('u_invite_sending'))
 				{
 					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_NO_PERM') . $aback);
+					trigger_error($this->language->lang('UCP_INVITE_NO_PERM') . $aback);
 				}
 
-				if ($this->ext_config['meghivo_membership_days'] && ((time() - $this->user->data['user_regdate']) / 86400) < $this->ext_config['meghivo_membership_days'])
-				{
-					$user_can_send_invite_start_time = $this->user->data['user_regdate'] + 86400 * $this->ext_config['meghivo_membership_days'];
-					$user_can_send_invite_start_date = $this->user->format_date($user_can_send_invite_start_time);
-					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_MEMBERSHIP_DAYS', $this->ext_config['meghivo_membership_days'], $user_can_send_invite_start_date) . $aback);
-				}
-
-				if ($this->user->data['user_posts'] < $this->ext_config['meghivo_post_limit'])
+				if ($this->user->data['user_posts'] < $this->ext_config['invite_post_limit'])
 				{
 					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_POST_LIMIT', $this->ext_config['meghivo_post_limit']) . $aback);
+					trigger_error($this->language->lang('UCP_INVITE_POST_LIMIT', $this->ext_config['invite_post_limit']) . $aback);
 				}
 
-				if ($cmt['ma_kuld'] >= $this->ext_config['meghivo_day_db'] && $this->ext_config['meghivo_day_db'])
+				if ($cmt['ma_sending'] >= $this->ext_config['invite_day_db'] && $this->ext_config['invite_day_db'])
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_DAY_OFF');
+					$error[] = $this->language->lang('UCP_INVITE_DAY_OFF');
 				}
 
 				if (!$this->auth->acl_get('u_sendemail'))
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_NO_PERM_EMAIL');
+					$error[] = $this->language->lang('UCP_INVITE_NO_PERM_EMAIL');
 				}
 
-				if (!$this->ext_config['meghivo_db'] && !$this->user->data['user_meghivo'] && !$this->auth->acl_get('u_meghivo_max'))
+				if (!$this->ext_config['invite_db'] && !$this->user->data['user_invite'] && !$this->auth->acl_get('u_invite_max'))
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_NULL');
+					$error[] = $this->language->lang('UCP_INVITE_NULL');
 				}
 
 				if (sizeof($error))
@@ -225,7 +217,7 @@ class ucp extends controller_base
 
 					if ($user_lang != $this->user->lang_name)
 					{
-						$lang = $this->functions->trans_lang('info_ucp_meghivo', $user_lang);
+						$lang = $this->functions->trans_lang('info_ucp_invite', $user_lang);
 					}
 				}
 
@@ -233,12 +225,12 @@ class ucp extends controller_base
 
 				if (!file_exists($email_lang_path . 'user_invite.txt'))
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_NOT_LANGUAGE', $email_lang_path . 'user_invite.txt');
+					$error[] = $this->language->lang('UCP_INVITE_NOT_LANGUAGE', $email_lang_path . 'user_invite.txt');
 				}
 
 				if (!file_exists($email_lang_path . 'user_invites.txt'))
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_NOT_LANGUAGE', $email_lang_path . 'user_invites.txt');
+					$error[] = $this->language->lang('UCP_INVITE_NOT_LANGUAGE', $email_lang_path . 'user_invites.txt');
 				}
 
 				$s_hidden_fields = array(
@@ -246,7 +238,7 @@ class ucp extends controller_base
 				);
 
 				$captcha = false;
-				if ($this->ext_config['meghivo_captcha_enable'])
+				if ($this->ext_config['invite_captcha_enable'])
 				{
 					$captcha = $this->captcha_factory->get_instance($this->config['captcha_plugin']);
 					$captcha->init(CONFIRM_POST);
@@ -271,12 +263,12 @@ class ucp extends controller_base
 
 					if (time() - $this->user->data['user_emailtime'] < $this->config['flood_interval'])
 					{
-						$error[] = $this->language->lang('UCP_MEGHIVO_FLOOD_LIMIT');
+						$error[] = $this->language->lang('UCP_INVITE_FLOOD_LIMIT');
 					}
 
 					if (!$email)
 					{
-						$error[] = $this->language->lang('UCP_MEGHIVO_NO_EMAIL');
+						$error[] = $this->language->lang('UCP_INVITE_NO_EMAIL');
 					}
 
 					$emailreuse = array();
@@ -309,7 +301,7 @@ class ucp extends controller_base
 								}
 								else
 								{
-									$error[] = $this->language->lang('UCP_MEGHIVO_EDUP', $email_address);
+									$error[] = $this->language->lang('UCP_INVITE_EDUP', $email_address);
 								}
 							}
 
@@ -318,15 +310,16 @@ class ucp extends controller_base
 
 						unset($emvs);
 
-						if ($ed_count > $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'] && $this->ext_config['meghivo_day_db'])
+						if ($ed_count > $this->ext_config['invite_day_db'] - $cmt['ma_sending'] && $this->ext_config['invite_day_db'])
 						{
-							$error[] = $this->language->lang('UCP_MEGHIVO_FUG_LIMIT', $this->ext_config['meghivo_day_db'] - $cmt['ma_kuld'], $ed_count);
+							$error[] = $this->language->lang('UCP_INVITE_DEP_LIMIT', $this->ext_config['invite_day_db'] - $cmt['ma_sending'], $ed_count);
 						}
 
-						if ($ed_count > $this->ext_config['meghivo_email_db'])
+						if ($ed_count > $this->ext_config['invite_email_db'])
 						{
-							$error[] = $this->language->lang('UCP_MEGHIVO_KULDES_EMAIL_MAX', $this->ext_config['meghivo_email_db'], $ed_count);
+							$error[] = $this->language->lang('UCP_INVITE_SEND_EMAIL_MAX', $this->ext_config['invite_email_db'], $ed_count);
 						}
+						
 
 						if (!$subject)
 						{
@@ -343,9 +336,9 @@ class ucp extends controller_base
 					{
 						$email_cim = array();
 						$user_lang = $this->functions_ucp->get_lang_for_email('user_invite', $user_lang);
-						$messenger = $this->functions_ucp->messenger('user_invite', $subject, $this->ext_config['meghivo_email_priority'], $user_lang);
+						$messenger = $this->functions_ucp->messenger('user_invite', $subject, $this->ext_config['invite_email_priority'], $user_lang);
 
-						if ($this->ext_config['meghivo_email_db'] > 1 && isset($email_ary))
+						if ($this->ext_config['invite_email_db'] > 1 && isset($email_ary))
 						{
 							$invite_count = 0;
 							foreach ($email_ary as $email)
@@ -368,7 +361,7 @@ class ucp extends controller_base
 						$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_SEND_INVITATION' . ($invite_count > 1 ? 'S' : ''), false, array('reportee_id' => $this->user->data['user_id'], implode(', ', $email_cim)));
 						$this->ext_config->set('total_pend', $this->ext_config['total_pend'] + $invite_count);
 						meta_refresh(3, $u_action);
-						trigger_error($this->language->lang('UCP_MEGHIVO_EMAIL' . ($invite_count == 1 ? '' : 'S') . '_SENT') . $uback);
+						trigger_error($this->language->lang('UCP_INVITE_EMAIL' . ($invite_count == 1 ? '' : 'S') . '_SENT') . $uback);
 					}
 				}
 
@@ -381,7 +374,7 @@ class ucp extends controller_base
 				}
 				$this->db->sql_freeresult($result);
 
-				if ($this->ext_config['meghivo_captcha_enable'])
+				if ($this->ext_config['invite_captcha_enable'])
 				{
 					$s_hidden_fields = array_merge($s_hidden_fields, $captcha->get_hidden_fields());
 
@@ -392,45 +385,45 @@ class ucp extends controller_base
 				}
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_MAIL'		=> true,
+					'S_INVITE_MAIL'		=> true,
 					'S_FRIEND'				=> $friend,
-					'S_INVITE_LANG_OPTIONS'	=> sizeof($lang_row) > 1 ? language_select($user_lang) : false,
+					'S_INVITE_LANG_OPTIONS'	=> sizeof($lang_row > 1) ? language_select($user_lang) : false,
 					'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
-					'MORE_RECIPIENTS'		=> $this->ext_config['meghivo_email_db'] > 1 ? $this->language->lang('UCP_MEGHIVO_DB', $this->ext_config['meghivo_email_db']) : false,
+					'MORE_RECIPIENTS'		=> $this->ext_config['invite_email_db'] > 1 ? $this->language->lang('UCP_INVITE_DB', $this->ext_config['invite_email_db']) : false,
 					'EMAIL_CIM'				=> $email,
-					'EMAIL_TEMA'			=> $lang ? $lang->lang('UCP_MEGHIVO') : $this->language->lang('UCP_MEGHIVO'),
+					'EMAIL_TEMA'			=> $lang ? $lang->lang('UCP_INVITE') : $this->language->lang('UCP_INVITE'),
 					'EMAIL_MESSAGE'			=> $message,
 				));
 
 				unset($lang_row);
 			break;
 
-			case 'keres':
-				$this->page_title = 'UCP_MEGHIVO_KERES';
+			case 'request':
+				$this->page_title = 'UCP_INVITE_REQUEST';
 
-				if ($this->ext_config['meghivo_db'] || $this->auth->acl_get('u_meghivo_max'))
+				if ($this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max'))
 				{
 					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_MAX_ERROR') . $aback);
+					trigger_error($this->language->lang('UCP_INVITE_MAX_ERROR') . $aback);
 				}
 
-				if (!$this->ext_config['meghivo_req_max'])
+				if (!$this->ext_config['invite_req_max'])
 				{
 					meta_refresh(5, $aia);
-					trigger_error($this->language->lang('UCP_MEGHIVO_KERES_DISABLED') . $aback);
+					trigger_error($this->language->lang('UCP_INVITE_REQUEST_DISABLED') . $aback);
 				}
 
-				$keres_enable = !$this->functions_ucp->keres($this->user->data['user_id']);
-				$igeny_db = $this->request->variable('igeny_db', 0);
+				$request_enable = !$this->functions_ucp->request($this->user->data['user_id']);
+				$claiming_db = $this->request->variable('claiming_db', 0);
 
-				$igeny_post = $this->request->variable('igeny_post' , 0);
+				$claiming_post = $this->request->variable('claiming_post' , 0);
 
-				if ($igeny_db > $this->ext_config['meghivo_req_max'])
+				if ($claiming_db > $this->ext_config['invite_req_max'])
 				{
-					$error[] = $this->language->lang('UCP_MEGHIVO_KERES_MAX', $this->ext_config['meghivo_req_max']);
+					$error[] = $this->language->lang('UCP_INVITE_REQUEST_MAX', $this->ext_config['invite_req_max']);
 				}
 
-				if ($submit && $this->ext_config['meghivo_req_cause'] && $igeny_db > $this->ext_config['meghivo_req_cause'] && !$message && !$igeny_post)
+				if ($submit && $this->ext_config['invite_req_cause'] && $claiming_db > $this->ext_config['invite_req_cause'] && !$message && !$claiming_post)
 				{
 					$submit = false;
 				}
@@ -442,46 +435,46 @@ class ucp extends controller_base
 						$error[] = $this->language->lang('FORM_INVALID');
 					}
 
-					if ($igeny_db < 1)
+					if ($claiming_db < 1)
 					{
-						$error[] = $this->language->lang('UCP_MEGHIVO_KERES_MIN');
+						$error[] = $this->language->lang('UCP_INVITE_REQUEST_MIN');
 					}
 
-					if ($igeny_db > $this->ext_config['meghivo_req_cause'] && !$message && $igeny_post)
+					if ($claiming_db > $this->ext_config['invite_req_cause'] && !$message && $claiming_post)
 					{
-						$error[] = $this->language->lang('UCP_MEGHIVO_KERES_NO_MES');
+						$error[] = $this->language->lang('UCP_INVITE_REQUEST_NO_MESSAGE');
 					}
 
-					if (!sizeof($error) && ($keres_enable === true))
+					if (!sizeof($error) && ($request_enable === true))
 					{
-						$this->functions_ucp->adm_send($this->user->data['user_id'], $igeny_db);
-						$this->functions_ucp->adm_message($message ?: $this->language->lang('UCP_MEGHIVO_KERES_MESSAGE_NO_DB'), $igeny_db);
+						$this->functions_ucp->adm_send($this->user->data['user_id'], $claiming_db);
+						$this->functions_ucp->adm_message($message ?: $this->language->lang('UCP_INVITE_REQUEST_MESSAGE_NO_DB'), $claiming_db);
 						meta_refresh(5, $u_action);
-						trigger_error($this->language->lang('UCP_MEGHIVO_KERES_SUCC' . ($igeny_db == 1 ? '' : 'S')) . $this->language->lang('UCP_MEGHIVO_BACK' , '<a href="' . $u_action . '">', '</a>'));
+						trigger_error($this->language->lang('UCP_INVITE_REQUEST_SUCC' . ($claiming_db == 1 ? '' : 'S')) . $this->language->lang('UCP_INVITE_BACK' , '<a href="' . $u_action . '">', '</a>'));
 					}
 				}
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_KERES'				=> true,
-					'S_IGENY_HSZ_KOTELES'			=> !$error && $this->ext_config['meghivo_req_cause'] && $igeny_db > $this->ext_config['meghivo_req_cause'],
-					'MEGHIVO_KERES_ON'				=> $keres_enable,
-					'UCP_MEGHIVO_KERES_SOK_EXPLAIN'	=> $this->language->lang('UCP_MEGHIVO_KERES_SOK_EXPLAIN', $this->ext_config['meghivo_req_cause']),
-					'MEGHIVO_KERES_DB_SELECT'		=> $igeny_db,
+					'S_INVITE_REQUEST'				=> true,
+					'S_SIZE_POSTS_REQUIRED'			=> !$error && $this->ext_config['invite_req_cause'] && $claiming_db > $this->ext_config['invite_req_cause'],
+					'INVITE_REQUEST_ON'				=> $request_enable,
+					'UCP_INVITE_REQUEST_MANY_EXPLAIN'	=> $this->language->lang('UCP_INVITE_REQUEST_MANY_EXPLAIN', $this->ext_config['invite_req_cause']),
+					'INVITE_REQUEST_DB_SELECT'		=> $claiming_db,
 					'MESSAGE'						=> $message,
-					'TITLE_MEGHIVO_KERES'			=> $this->language->lang('UCP_MEGHIVO_KERES'),
-					'SUBT_MEGHIVO_KERES'			=> $this->language->lang('UCP_MEGHIVO_KERES_TITLE'),
-					'SUBT_MEGHIVO_KERES_EXPLAIN'	=> $this->language->lang('UCP_MEGHIVO_KERES_TITLE_EXPLAIN', $this->ext_config['meghivo_req_max']),
-					'MEGHIVO_KERES_SUBMIT'			=> $this->language->lang('UCP_MEGHIVO_KERES_SUBMIT'),
+					'TITLE_INVITE_REQUEST'			=> $this->language->lang('UCP_INVITE_REQUEST'),
+					'SUBT_INVITE_REQUEST'			=> $this->language->lang('UCP_INVITE_REQUEST_TITLE'),
+					'SUBT_INVITE_REQUEST_EXPLAIN'	=> $this->language->lang('UCP_INVITE_REQUEST_TITLE_EXPLAIN', $this->ext_config['invite_req_max']),
+					'INVITE_REQUEST_SUBMIT'			=> $this->language->lang('UCP_INVITE_REQUEST_SUBMIT'),
 				));
 			break;
 
 			case 'user':
-				$this->page_title = 'UCP_MEGHIVO_USER';
+				$this->page_title = 'UCP_INVITE_USER';
 				$this->functions->members_list('ucp');
 			break;
 
 			case 'delete':
-				$this->page_title = 'UCP_MEGHIVO_DELETE';
+				$this->page_title = 'UCP_INVITE_DELETE';
 
 				$delete	= $this->request->variable('delete' , 0);
 				$email	= strtolower($this->request->variable('email', ''));
@@ -495,7 +488,7 @@ class ucp extends controller_base
 
 					if (!$delete)
 					{
-						$error[] = $this->language->lang('UCP_MEGHIVO_DELETE_NO_CONFIRM');
+						$error[] = $this->language->lang('UCP_INVITE_DELETE_NO_CONFIRM');
 					}
 
 					if (!sizeof($error))
@@ -503,7 +496,7 @@ class ucp extends controller_base
 						$invite_ids = array();
 						foreach ($mmu as $row)
 						{
-							if ($row['meghivo_email'] == $email)
+							if ($row['invite_email'] == $email)
 							{
 								$invite_ids[] = $row['id'];
 							}
@@ -511,37 +504,37 @@ class ucp extends controller_base
 
 						if (sizeof($invite_ids))
 						{
-							$this->functions->delete_key($invite_ids, false);
-							$this->functions->add_invite(sizeof($invite_ids));
+							$this->functions->delete_key($invite_ids);
+							$this->functions_ucp->add_invite(sizeof($invite_ids));
 
-							$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_DELETE', false, array('reportee_id' => $this->user->data['user_id'], $email));
+							$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_DELETE', false, array('reportee_id' => $this->user->data['user_id'], $email));
 
 							meta_refresh(3, $u_action);
-							trigger_error($this->language->lang('UCP_MEGHIVO_DELETE_SUCCES') . $this->language->lang('UCP_MEGHIVO_BACK', '<a href="' . $u_action . '">', '</a>'));
+							trigger_error($this->language->lang('UCP_INVITE_DELETE_SUCCESS') . $this->language->lang('UCP_INVITE_BACK', '<a href="' . $u_action . '">', '</a>'));
 						}
 					}
 				}
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_DELETE'				=> true,
-					'UCP_MEGHIVO_DELETE_EXPLAIN'	=> $this->language->lang('UCP_MEGHIVO_DELETE_EXPLAIN', $this->ext_config['meghivo_delet_time']),
+					'S_INVITE_DELETE'				=> true,
+					'UCP_INVITE_DELETE_EXPLAIN'	=> $this->language->lang('UCP_INVITE_DELETE_EXPLAIN', $this->ext_config['invite_delete_time']),
 				));
 
 				foreach ($mmu as $row)
 				{
 					$count = 0;
-					if (!empty($c_mail[$row['meghivo_email']]) || !$row['meghivo_email'] || (time() - $row['meghivo_time'] > ($this->ext_config['meghivo_delet_time'] * 60)))
+					if (!empty($c_mail[$row['invite_email']]) || !$row['invite_email'] || (time() - $row['invite_time'] > ($this->ext_config['invite_delete_time'] * 60)))
 					{
 						continue;
 					}
 
-					$c_mail[$row['meghivo_email']] = 1;
+					$c_mail[$row['invite_email']] = 1;
 
 					if ($this->config['allow_emailreuse'])
 					{
 						foreach ($mmu as $cc)
 						{
-							if ($row['meghivo_email'] == $cc['meghivo_email'])
+							if ($row['invite_email'] == $cc['invite_email'])
 							{
 								$count++;
 							}
@@ -550,7 +543,7 @@ class ucp extends controller_base
 
 					$this->template->assign_block_vars('email', array(
 						'COUNT' => $count,
-						'EMAIL' => $row['meghivo_email'],
+						'EMAIL' => $row['invite_email'],
 					));
 				}
 			break;

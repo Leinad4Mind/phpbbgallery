@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -140,7 +140,7 @@ class join extends base
 	 */
 	public function get_title()
 	{
-		return $this->language->lang('MEGHIVO_JOIN', $this->user_loader->get_username($this->get_data('join_user_id'), 'no_profile'));
+		return $this->language->lang('INVITE_JOIN', $this->user_loader->get_username($this->get_data('join_user_id'), 'no_profile'));
 	}
 
 	/**

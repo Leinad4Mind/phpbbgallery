@@ -1,13 +1,13 @@
-{% if MEGHIVO_USER_NAME %}
-	<dt>{{ lang('MEGHIVO_INVITED') }}{{ lang('COLON') }}</dt>
-	<dd>{{ MEGHIVO_USER_NAME }}</dd>
+{% if INVITE_USER_NAME %}
+	<dt>{{ lang('INVITE_INVITED') }}{{ lang('COLON') }}</dt>
+	<dd>{{ INVITE_USER_NAME }}</dd>
 {% endif %}
 
-<dt>{{ lang('MEGHIVO_INVITES') }}{{ lang('COLON') }}</dt>
+<dt>{{ lang('INVITE_INVITES') }}{{ lang('COLON') }}</dt>
 <dd>
-	{% if MEGHIVO_USERS_LIST %}
-		<a href="{{ MEGHIVO_USERS_LIST }}">{{ MEGHIVO_USER_DB }}</a>
+	{% if INVITE_USERS_LIST %}
+		<a href="{{ INVITE_USERS_LIST }}">{{ INVITE_USER_DB }}</a>
 	{% else %}
-		{{ MEGHIVO_USER_DB }}
+		{{ INVITE_USER_DB }}
 	{% endif %}
 </dd>

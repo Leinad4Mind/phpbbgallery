@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -53,15 +53,15 @@ class mcp extends controller_base
 	/**
 	 * mcp constructor.
 	 *
-	 * @param \phpbb\user                                      $user
-	 * @param \phpbb\language\language                         $language
-	 * @param \phpbb\request\request_interface                 $request
-	 * @param \phpbb\template\template                         $template
-	 * @param \phpbb\pagination                                $pagination
-	 * @param \leinad4mind\invitation\includes\config          $ext_config
-	 * @param \leinad4mind\invitation\includes\functions_admin $functions_admin
-	 * @param string                                           $root_path
-	 * @param string                                           $php_ext
+	 * @param \phpbb\user                                       $user
+	 * @param \phpbb\language\language                          $language
+	 * @param \phpbb\request\request_interface                  $request
+	 * @param \phpbb\template\template                          $template
+	 * @param \phpbb\pagination                                 $pagination
+	 * @param \leinad4mind\invitation\includes\config           $ext_config
+	 * @param \leinad4mind\invitation\includes\functions_admin  $functions_admin
+	 * @param string                                            $root_path
+	 * @param string                                            $php_ext
 	 */
 	public function __construct(user $user, language $language, request_interface $request, template $template, pagination $pagination, ext_config $ext_config, functions_admin $functions_admin, $root_path, $php_ext)
 	{
@@ -83,41 +83,41 @@ class mcp extends controller_base
 	 */
 	public function main($id, $mode, $u_action)
 	{
-		$this->language->add_lang('info_acp_meghivo', 'leinad4mind/invitation');
-		$this->tpl_name = 'mcp_meghivo';
-		$this->page_title = 'ACP_MEGHIVO_IGENY';
+		$this->language->add_lang('info_acp_invite', 'leinad4mind/invitation');
+		$this->tpl_name = 'mcp_invite';
+		$this->page_title = 'ACP_INVITE_CLAIMING';
 
-		if (!$this->ext_config['meghivo_enable'])
+		if (!$this->ext_config['invite_enable'])
 		{
 			meta_refresh(3, append_sid("{$this->root_path}mcp.$this->php_ext"));
-			trigger_error($this->language->lang('MCP_MEGHIVO_DISABLED', '<a href="' . append_sid("{$this->root_path}mcp.$this->php_ext") . '">', '</a>'));
+			trigger_error($this->language->lang('MCP_INVITE_DISABLED', '<a href="' . append_sid("{$this->root_path}mcp.$this->php_ext") . '">', '</a>'));
 		}
 
-		$action		= $this->request->is_set_post('kiutalas') ? 'kiutalas' : $this->request->is_set_post('elutasitas') ? 'elutasitas' : $this->request->variable('action', '');
+		$action		= $this->request->is_set_post('allocate') ? 'allocate' : $this->request->is_set_post('deny') ? 'deny' : $this->request->variable('action', '');
 		$marked		= $this->request->variable('mark'	, array(0));
 		$start		= $this->request->variable('start'	, 0);
 		$sort_days	= $this->request->variable('st'	, 0);
 		$sort_key	= $this->request->variable('sk'	,'date');
 		$sort_dir	= $this->request->variable('sd'	,'d');
 
-		$list_meghivo = $this->ext_config['meghivo_oldal_list'];
+		$list_invite = $this->ext_config['invite_page_list'];
 
-		if ($action == 'kiutalas' || $action == 'elutasitas')
+		if ($action == 'allocate' || $action == 'deny')
 		{
-			$back = $this->language->lang('MCP_MEGHIVO_BACK', '<a href="' . $u_action . '">', '</a>');
+			$back = $this->language->lang('MCP_INVITE_BACK', '<a href="' . $u_action . '">', '</a>');
 
 			if (confirm_box(true))
 			{
-				$this->functions_admin->kezeles($action, $marked, false);
+				$this->functions_admin->handling($action, $marked, false);
 				meta_refresh(5, $u_action);
-				trigger_error($this->language->lang('ACP_MEGHIVO_PETITION_' . ($action == 'kiutalas' ? 'Y' : 'N') . 'SUCCES' . (sizeof($marked) == 1 ? '' : 'S')) . $back);
+				trigger_error($this->language->lang('ACP_INVITE_PETITION_' . ($action == 'allocate' ? 'Y' : 'N') . 'SUCCESS' . (sizeof($marked) == 1 ? '' : 'S')) . $back);
 			}
 			else
 			{
 				if (!sizeof($marked))
 				{
 					meta_refresh(5, $u_action);
-					trigger_error($this->language->lang('ACP_MEGHIVO_NO_MARKED') . $back);
+					trigger_error($this->language->lang('ACP_INVITE_NO_MARKED') . $back);
 				}
 
 				confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
@@ -142,14 +142,14 @@ class mcp extends controller_base
 
 		$sort_by_text = array(
 			'name'	=> $this->language->lang('SORT_USERNAME'),
-			'db'	=> $this->language->lang('ACP_MEGHIVO_KULDES_DB_NUM'),
+			'db'	=> $this->language->lang('ACP_INVITE_SEND_DB_NUM'),
 			'date'	=> $this->language->lang('SORT_DATE'),
 		);
 
 		$sort_by_sql = array(
 			'name'	=> 'u.username_clean',
-			'db'	=> 'k.db',
-			'date'	=> 'k.message_time',
+			'db'	=> 'h.db',
+			'date'	=> 'h.message_time',
 		);
 
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
@@ -158,31 +158,31 @@ class mcp extends controller_base
 		$sql_where = ($sort_days) ? (time() - ($sort_days * 86400)) : 0;
 		$sql_sort  = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
-		$kerelem = array();
-		$kerelem_count = 0;
+		$petition = array();
+		$petition_count = 0;
 
-		$this->functions_admin->kerelmek($kerelem, $kerelem_count, $list_meghivo, $start, $sql_where, $sql_sort);
+		$this->functions_admin->requesting($petition, $petition_count, $list_invite, $start, $sql_where, $sql_sort);
 
-		$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $kerelem_count, $list_meghivo, $start, true);
+		$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $petition_count, $list_invite, $start, true);
 
 		$this->template->assign_vars(array(
-			'S_MEGHIVO_KERELEM'	=> true,
+			'S_INVITE_PETITION'	=> true,
 			'U_ACTION'			=> $u_action,
-			'S_ON_PAGE'			=> $this->pagination->on_page($kerelem_count, $list_meghivo, $start),
+			'S_ON_PAGE'			=> $this->pagination->on_page($petition_count, $list_invite, $start),
 			'S_LIMIT_DAYS'		=> str_replace('<select', '<select onchange="this.form.submit();"', $s_limit_days),
 			'S_SORT_KEY'		=> str_replace('<select', '<select onchange="this.form.submit();"', $s_sort_key),
 			'S_SORT_DIR'		=> str_replace('<select', '<select onchange="this.form.submit();"', $s_sort_dir),
-			'TOTAL_COUNT'		=> $this->language->lang('ACP_MEGHIVO_USERS_COUNT', $kerelem_count),
+			'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITE_USERS_COUNT', $petition_count),
 		));
 
-		foreach ($kerelem as $row)
+		foreach ($petition as $row)
 		{
-			$this->template->assign_block_vars('kerelem', array(
-				'K_USER_ID'			=> $row['user_id'],
-				'K_USERNAME'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				'K_DB'				=> $row['db'],
-				'K_MESSAGE'			=> $row['message'],
-				'K_MESSAGE_TIME'	=> $this->user->format_date($row['message_time']),
+			$this->template->assign_block_vars('petition', array(
+				'P_USER_ID'			=> $row['user_id'],
+				'P_USERNAME'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+				'P_DB'				=> $row['db'],
+				'P_MESSAGE'			=> $row['message'],
+				'P_MESSAGE_TIME'	=> $this->user->format_date($row['message_time']),
 			));
 		}
 	}

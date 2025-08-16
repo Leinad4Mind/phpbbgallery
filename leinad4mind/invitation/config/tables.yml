@@ -1,5 +1,5 @@
 parameters:
-    leinad4mind.invitation.table.invite: %core.table_prefix%invite
-    leinad4mind.invitation.table.invite_config: %core.table_prefix%invite_config
-    leinad4mind.invitation.table.invite_users: %core.table_prefix%invite_users
-    leinad4mind.invitation.table.invite_claimed: %core.table_prefix%invite_claimed
+    leinad4mind.invitation.table.invite: '%core.table_prefix%invite'
+    leinad4mind.invitation.table.invite_config: '%core.table_prefix%invite_config'
+    leinad4mind.invitation.table.invite_users: '%core.table_prefix%invite_users'
+    leinad4mind.invitation.table.invite_claimed: '%core.table_prefix%invite_claimed'

@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -141,7 +141,7 @@ class birthday extends base
 	 */
 	public function get_title()
 	{
-		return $this->language->lang('MEGHIVO_BIRTHDAY', $this->get_data('invitation_count'));
+		return $this->language->lang('INVITE_BIRTHDAY', $this->get_data('invitation_count'));
 	}
 
 	/**
@@ -151,7 +151,7 @@ class birthday extends base
 	 */
 	public function get_url()
 	{
-		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'adat'));
+		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'data'));
 	}
 
 	/**

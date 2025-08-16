@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -57,21 +57,21 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 
 	/** @var array */
-	protected $meghivo_user;
+	protected $invite_user;
 
 	/**
 	 * listener constructor.
 	 *
-	 * @param \phpbb\user                                $user
-	 * @param \phpbb\language\language                   $language
-	 * @param \phpbb\request\request_interface           $request
-	 * @param \phpbb\template\template                   $template
-	 * @param \phpbb\config\config                       $config
-	 * @param \leinad4mind\invitation\includes\config    $ext_config
-	 * @param \leinad4mind\invitation\includes\functions $functions
-	 * @param string                                     $root_path
-	 * @param string                                     $adm_relative_path
-	 * @param string                                     $php_ext
+	 * @param \phpbb\user                                 $user
+	 * @param \phpbb\language\language                    $language
+	 * @param \phpbb\request\request_interface            $request
+	 * @param \phpbb\template\template                    $template
+	 * @param \phpbb\config\config                        $config
+	 * @param \leinad4mind\invitation\includes\config     $ext_config
+	 * @param \leinad4mind\invitation\includes\functions  $functions
+	 * @param string                                      $root_path
+	 * @param string                                      $adm_relative_path
+	 * @param string                                      $php_ext
 	 */
 	public function __construct(user $user, language $language, request_interface $request, template $template, phpbb_config $config, ext_config $ext_config, functions $functions, $root_path, $adm_relative_path, $php_ext)
 	{
@@ -107,8 +107,6 @@ class listener implements EventSubscriberInterface
 			'core.ucp_register_modify_template_data'			=> 'ucp_register_modify_template_data',
 			'core.memberlist_modify_sql_query_data'				=> 'memberlist_modify_sql_query_data',
 			'core.memberlist_view_profile'						=> 'memberlist_view_profile',
-			'core.submit_post_end'								=> 'submit_post_end',
-			'core.approve_posts_after'							=> 'approve_posts_after',
 		);
 	}
 
@@ -181,33 +179,33 @@ class listener implements EventSubscriberInterface
 		$permissions = $event['permissions'];
 
 		$ext_permissions = array(
-			'u_meghivo_kuld',
-			'u_meghivo_keres',
-			'u_meghivo_delet',
-			'u_meghivo_max',
-			'u_meghivo_users',
-			'm_meghivo_igeny',
-			'a_meghivo',
-			'a_meghivo_config',
-			'a_meghivo_kuldes',
-			'a_meghivo_delete',
-			'a_meghivo_igeny',
-			'a_meghivo_users',
-			'a_meghivo_pend',
+			'u_invite_sending',
+			'u_invite_request',
+			'u_invite_delete',
+			'u_invite_max',
+			'u_invite_users',
+			'm_invite_claiming',
+			'a_invite',
+			'a_invite_config',
+			'a_invite_send',
+			'a_invite_delete',
+			'a_invite_claiming',
+			'a_invite_users',
+			'a_invite_pend',
 		);
 
 		foreach ($ext_permissions as $permission)
 		{
 			$permissions[$permission] = array(
 				'lang'	=> 'ACL_' . strtoupper($permission),
-				'cat'	=> 'meghivo',
+				'cat'	=> 'invite',
 			);
 		}
 
 		$event['permissions'] = $permissions;
 
 		$event['categories'] = array_merge($event['categories'], array(
-			'meghivo' => 'MEGHIVO',
+			'invite' => 'INVITE',
 		));
 	}
 
@@ -218,9 +216,9 @@ class listener implements EventSubscriberInterface
 	{
 		if ($event['mode'] === 'registration')
 		{
-			if ($event['submit'] && !$this->config['email_enable'] && $this->config['require_ac_invite'] != ext::ACC_INVITE_DISABLE && $this->ext_config['meghivo_enable'])
+			if ($event['submit'] && !$this->config['email_enable'] && $this->config['require_ac_invite'] != ext::ACC_INVITE_DISABLE && $this->ext_config['invite_enable'])
 			{
-				trigger_error($this->language->lang('ACP_MEGHIVO_EMAIL_BOARD_DISABLED', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=board&amp;mode=email") . '">', '</a>'));
+				trigger_error($this->language->lang('ACP_INVITE_EMAIL_BOARD_DISABLED', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=board&amp;mode=email") . '">', '</a>'));
 			}
 
 			$display_vars = $event['display_vars'];
@@ -234,17 +232,17 @@ class listener implements EventSubscriberInterface
 	 */
 	public function ucp_register_requests_after()
 	{
-		$this->language->add_lang('meghivo', 'leinad4mind/invitation');
+		$this->language->add_lang('invite', 'leinad4mind/invitation');
 
-		$this->meghivo_user = $this->functions->verify();
+		$this->invite_user = $this->functions->verify();
 
-		if (!$this->meghivo_user && $this->config['require_activation'] == USER_ACTIVATION_DISABLE)
+		if (!$this->invite_user && $this->config['require_activation'] == USER_ACTIVATION_DISABLE)
 		{
 			trigger_error('UCP_REGISTER_DISABLE');
 		}
 
-		$email_address			= $this->meghivo_user ? $this->meghivo_user['mmail'] : '';
-		$email_address_change	= !$this->meghivo_user || $this->ext_config['email_address_change'];
+		$email_address			= $this->invite_user ? $this->invite_user['mmail'] : '';
+		$email_address_change	= !$this->invite_user || $this->ext_config['email_address_change'];
 		$e_mail					= $email_address_change ? $this->request->variable('email', $email_address) : $email_address;
 
 		$this->request->overwrite('email', $e_mail);
@@ -264,14 +262,14 @@ class listener implements EventSubscriberInterface
 	 */
 	public function ucp_register_agreement_modify_template_data($event)
 	{
-		if ($this->meghivo_user)
+		if ($this->invite_user)
 		{
-			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->meghivo_user);
+			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->invite_user);
 
 			$coppa = $this->request->is_set('coppa') ? $this->request->variable('coppa', false) : false;
 			if (!$coppa && $this->config['coppa_enable'])
 			{
-				$invite_params = '&amp;muid=' . $this->meghivo_user['muid'] . '&amp;mkey=' . $this->meghivo_user['mkey'];
+				$invite_params = '&amp;muid=' . $this->invite_user['muid'] . '&amp;mkey=' . $this->invite_user['mkey'];
 
 				$event['template_vars'] = array_merge($event['template_vars'], array(
 					'U_COPPA_NO'	=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=register&amp;coppa=0' . $invite_params),
@@ -280,15 +278,17 @@ class listener implements EventSubscriberInterface
 			}
 		}
 	}
+	
+
 
 	/**
 	 * @param data $event
 	 */
 	public function ucp_register_modify_template_data(data $event)
 	{
-		if ($this->meghivo_user)
+		if ($this->invite_user)
 		{
-			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->meghivo_user);
+			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->invite_user);
 		}
 	}
 
@@ -297,16 +297,16 @@ class listener implements EventSubscriberInterface
 	 */
 	public function memberlist_modify_sql_query_data(data $event)
 	{
-		if ($this->request->variable('meghivo', '') === 'users_list')
+		if ($this->request->variable('invite', '') === 'users_list')
 		{
-			$this->language->add_lang('info_ucp_meghivo', 'leinad4mind/invitation');
+			$this->language->add_lang('info_ucp_invite', 'leinad4mind/invitation');
 
 			$this->functions->members_list('member', $this->request->variable('u', 0));
 
-			page_header($this->language->lang('UCP_MEGHIVO_USER'));
+			page_header($this->language->lang('UCP_INVITE_USER'));
 
 			$this->template->set_filenames(array(
-				'body' => '@leinad4mind_invitation/memberlist_meghivo.html',
+				'body' => '@leinad4mind_invitation/memberlist_invite.html',
 			));
 
 			make_jumpbox(append_sid("{$this->root_path}viewforum.$this->php_ext"));
@@ -320,31 +320,6 @@ class listener implements EventSubscriberInterface
 	 */
 	public function memberlist_view_profile(data $event)
 	{
-		$this->functions->ac_user($event['member']['user_id'], $event['member']['user_meghivo_member']);
-	}
-
-	/**
-	 * @param data $event
-	 */
-	public function submit_post_end(data $event)
-	{
-		if ($event['post_visibility'] == ITEM_APPROVED && in_array($event['mode'], ['post', 'reply', 'quote']))
-		{
-			$this->functions->posts_gift($event['data']['poster_id']);
-		}
-	}
-
-	/**
-	 * @param data $event
-	 */
-	public function approve_posts_after(data $event)
-	{
-		if ($event['action'] == 'approve')
-		{
-			foreach ($event['post_info'] as $post_id => $post_data)
-			{
-				$this->functions->posts_gift($post_data['poster_id']);
-			}
-		}
+		$this->functions->ac_user($event['member']['user_id'], $event['member']['user_invite_member']);
 	}
 }

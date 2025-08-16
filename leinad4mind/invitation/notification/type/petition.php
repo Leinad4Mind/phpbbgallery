@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -130,10 +130,10 @@ class petition extends base
 	public function get_title()
 	{
 		$mode = $this->get_data('petition_mode');
-		$darab = $this->get_data('petition_darab');
+		$piece = $this->get_data('petition_piece');
 
-		$title = $this->language->lang('MEGHIVO_PETITION_TITLE');
-		$message = $this->language->lang($mode == 'kiutalas' ? 'MEGHIVO_PETITION_YES' : ($darab == 1 ? 'MEGHIVO_PETITION_NO' : 'MEGHIVO_PETITIONS_NO'), $darab);
+		$title = $this->language->lang('INVITE_PETITION_TITLE');
+		$message = $this->language->lang($mode == 'allocate' ? 'INVITE_PETITION_YES' : ($piece == 1 ? 'INVITE_PETITION_NO' : 'INVITE_PETITIONS_NO'), $piece);
 
 		return $title . $this->language->lang('COLON') . ' ' . $message;
 	}
@@ -145,7 +145,7 @@ class petition extends base
 	 */
 	public function get_url()
 	{
-		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'adat'));
+		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'data'));
 	}
 
 	/**
@@ -182,7 +182,7 @@ class petition extends base
 		$this->set_data('petition_user_id', $data['petition_user_id']);
 		$this->set_data('petition_staff_user_id', $data['petition_staff_user_id']);
 		$this->set_data('petition_mode', $data['petition_mode']);
-		$this->set_data('petition_darab', $data['petition_darab']);
+		$this->set_data('petition_piece', $data['petition_piece']);
 
 		parent::create_insert_array($data, $pre_create_data);
 	}

@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -33,7 +33,7 @@ class m3_notification_user extends \phpbb\db\migration\migration
 
 		$insert_values = array(
 			array(
-				'config_name'	=> 'meghivo_notification_name',
+				'config_name'	=> 'invite_notification_name',
 				'config_value'	=> $user->data['username'],
 			),
 		);

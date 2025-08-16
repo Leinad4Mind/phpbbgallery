@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -80,22 +80,22 @@ class acp extends controller_base
 	/**
 	 * acp constructor.
 	 *
-	 * @param \phpbb\db\driver\driver_interface                $db
-	 * @param \phpbb\user                                      $user
-	 * @param \phpbb\language\language                         $language
-	 * @param \phpbb\request\request_interface                 $request
-	 * @param \phpbb\auth\auth                                 $auth
-	 * @param \phpbb\template\template                         $template
-	 * @param \phpbb\log\log_interface                         $log
-	 * @param \phpbb\pagination                                $pagination
-	 * @param \phpbb\config\config                             $config
-	 * @param \leinad4mind\invitation\includes\config          $ext_config
-	 * @param \leinad4mind\invitation\includes\functions       $functions
-	 * @param \leinad4mind\invitation\includes\functions_admin $functions_admin
-	 * @param string                                           $table_invite
-	 * @param string                                           $root_path
-	 * @param string                                           $adm_relative_path
-	 * @param string                                           $php_ext
+	 * @param \phpbb\db\driver\driver_interface                 $db
+	 * @param \phpbb\user                                       $user
+	 * @param \phpbb\language\language                          $language
+	 * @param \phpbb\request\request_interface                  $request
+	 * @param \phpbb\auth\auth                                  $auth
+	 * @param \phpbb\template\template                          $template
+	 * @param \phpbb\log\log_interface                          $log
+	 * @param \phpbb\pagination                                 $pagination
+	 * @param \phpbb\config\config                              $config
+	 * @param \leinad4mind\invitation\includes\config           $ext_config
+	 * @param \leinad4mind\invitation\includes\functions        $functions
+	 * @param \leinad4mind\invitation\includes\functions_admin  $functions_admin
+	 * @param string                                            $table_invite
+	 * @param string                                            $root_path
+	 * @param string                                            $adm_relative_path
+	 * @param string                                            $php_ext
 	 */
 	public function __construct(db_interface $db, user $user, language $language, request_interface $request, auth $auth, template $template,log_interface $log, pagination $pagination, phpbb_config $config, ext_config $ext_config, functions $functions, functions_admin $functions_admin, $table_invite, $root_path, $adm_relative_path, $php_ext)
 	{
@@ -124,8 +124,8 @@ class acp extends controller_base
 	 */
 	public function main($id, $mode, $u_action)
 	{
-		$this->page_title = 'ACP_MEGHIVO';
-		$this->tpl_name = 'acp_meghivo';
+		$this->page_title = 'ACP_INVITE';
+		$this->tpl_name = 'acp_invite';
 
 		$submit = $this->request->is_set_post('submit');
 		$action = $this->request->variable('action', '');
@@ -136,7 +136,7 @@ class acp extends controller_base
 			case 'main':
 				if ($action)
 				{
-					if (!$this->auth->acl_get('a_meghivo'))
+					if (!$this->auth->acl_get('a_invite'))
 					{
 						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($u_action), E_USER_WARNING);
 					}
@@ -148,7 +148,7 @@ class acp extends controller_base
 							case 'sync_users':
 							case 'sync_data':
 								$confirm = true;
-								$confirm_lang = 'ACP_MEGHIVO_' . strtoupper($action);
+								$confirm_lang = 'ACP_INVITE_' . strtoupper($action);
 							break;
 
 							default:
@@ -180,86 +180,82 @@ class acp extends controller_base
 							break;
 						}
 
-						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_' . strtoupper($action));
-						trigger_error($this->language->lang('ACP_MEGHIVO_' . strtoupper($action) . '_SUCCESS') . adm_back_link($u_action));
+						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_' . strtoupper($action));
+						trigger_error($this->language->lang('ACP_INVITE_' . strtoupper($action) . '_SUCCESSES') . adm_back_link($u_action));
 					}
 				}
 
-				if (!$this->ext_config['meghivo_enable'])
+				if (!$this->ext_config['invite_enable'])
 				{
-					$error[] = $this->language->lang('ACP_MEGHIVO_DISABLED');
+					$error[] = $this->language->lang('ACP_INVITE_DISABLED');
 				}
 				else if ($this->config['require_ac_invite'] == ext::ACC_INVITE_DISABLE)
 				{
-					$error[] = $this->language->lang('ACP_MEGHIVO_REQUIRE_AC_DISABLED');
+					$error[] = $this->language->lang('ACP_INVITE_REQUIRE_AC_DISABLED');
 				}
 
-				if ($this->ext_config['meghivo_enable'] && !$this->config['email_enable'])
+				if ($this->ext_config['invite_enable'] && !$this->config['email_enable'])
 				{
-					$error[] = $this->language->lang('ACP_MEGHIVO_EMAIL_DISABLED', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=board&amp;mode=email") . '">', '</a>');
+					$error[] = $this->language->lang('ACP_INVITE_EMAIL_DISABLED', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=board&amp;mode=email") . '">', '</a>');
 				}
 
-				$this->page_title = 'ACP_MEGHIVO_MAIN';
+				$this->page_title = 'ACP_INVITE_MAIN';
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_MAIN'			=> true,
-					'S_MEGHIVO_MANAGE'			=> $this->auth->acl_get('a_meghivo'),
+					'S_INVITE_MAIN'				=> true,
+					'S_INVITE_MANAGE'			=> $this->auth->acl_get('a_invite'),
 					'S_USER_FOUNDER'			=> $this->user->data['user_type'] == USER_FOUNDER,
-					'MEGHIVO_TOTAL_USERS_DAY'	=> $this->functions_admin->users_per_days(),
-					'MEGHIVO_PEND_DB'			=> $this->ext_config['total_pend'],
-					'MEGHIVO_TOTAL_USERS'		=> $this->ext_config['total_users'],
-					'MEGHIVO_INSTALL'			=> $this->user->format_date($this->ext_config['meghivo_install_time']),
+					'INVITE_TOTAL_USERS_DAY'	=> $this->functions_admin->users_per_days(),
+					'INVITE_PEND_DB'			=> $this->ext_config['total_pend'],
+					'INVITE_TOTAL_USERS'		=> $this->ext_config['total_users'],
+					'INVITE_INSTALL'			=> $this->user->format_date($this->ext_config['invite_install_time']),
 				));
 			break;
 
 			case 'config':
-				$form_key = 'acp_meghivo';
+				$form_key = 'acp_invite';
 				add_form_key($form_key);
 				$this->tpl_name = 'acp_board';
 				$this->language->add_lang('acp/email');
 
 				$display_vars = array(
-					'title'								=> 'ACP_MEGHIVO_CONFIG',
+					'title'								=> 'ACP_INVITE_CONFIG',
 					'vars'								=> array(
-					'legend1'							=> 'ACP_MEGHIVO_MAIN_CONFIG',
-					'meghivo_enable'					=> array('lang' => 'ACP_MEGHIVO_ENABLE'							,'validate' => 'bool'		, 'type' => 'radio:yes_no'	,'explain'	=> true))
+					'legend1'							=> 'ACP_INVITE_MAIN_CONFIG',
+					'invite_enable'						=> array('lang' => 'ACP_INVITE_ENABLE'							,'validate' => 'bool'		, 'type' => 'radio:yes_no'	,'explain'	=> true))
 				);
 
-				if ($this->ext_config['meghivo_enable'])
+				if ($this->ext_config['invite_enable'])
 				{
 					$display_vars['vars'] += array(
-						'meghivo_captcha_enable'		=> array('lang' => 'ACP_MEGHIVO_CAPTCHA'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'email_address_change'			=> array('lang' => 'ACP_MEGHIVO_MAIL_FIX'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'meghivo_membership_days'		=> array('lang' => 'ACP_MEGHIVO_MEMBERSHIP_DAYS'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
-						'meghivo_db'					=> array('lang' => 'ACP_MEGHIVO_ALL_USER_MEGHIVO_MAX'			,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'meghivo_restore_invites'		=> array('lang' => 'ACP_MEGHIVO_RESTORE_INVITES'				,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'meghivo_email_priority'		=> array('lang' => 'ACP_MEGHIVO_EMAIL_PRIORITY'					,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> false	, 'method' => 'meghivo_email_priority_select'),
-						'meghivo_ervenyessege'			=> array('lang' => 'ACP_MEGHIVO_ERVENY'							,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> true		, 'method' => 'meghivo_ervenyessege_select'),
-						'meghivo_oldal_list'			=> array('lang' => 'ACP_MEGHIVO_USER_LIST'						,'validate' => 'int:5:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_notification_name'		=> array('lang' => 'ACP_MEGHIVO_NOTIFICATION_USERNAME'			,'validate' => 'string'		, 'type' => 'text:20:100'	, 'explain'	=> true		, 'append' => ' [ <a href="' . append_sid($this->root_path . 'memberlist.' . $this->php_ext, array('mode' => 'searchuser', 'form' => 'acp_board', 'field' => 'meghivo_notification_name', 'select_single' => 'true')) . '" onclick="find_username(this.href); return false;">' . $this->language->lang('FIND_USERNAME') . '</a> ]'),
-						'meghivo_day_db'				=> array('lang' => 'ACP_MEGHIVO_KULDES_DAY_DB'					,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_email_db'				=> array('lang' => 'ACP_MEGHIVO_MORE_EMAIL_DB'					,'validate' => 'int:1:50'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_post_limit'			=> array('lang' => 'ACP_MEGHIVO_POST_LIMIT_DB'					,'validate' => 'int:0'		, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_delet_time'			=> array('lang' => 'ACP_MEGHIVO_DELETE_TIME'					,'validate' => 'int:1:60'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('MINUTES')),
+						'invite_captcha_enable'			=> array('lang' => 'ACP_INVITE_CAPTCHA'							,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'email_address_change'			=> array('lang' => 'ACP_INVITE_MAIL_FIX'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'invite_db'						=> array('lang' => 'ACP_INVITE_ALL_USER_INVITE_MAX'				,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'invite_email_priority'			=> array('lang' => 'ACP_INVITE_EMAIL_PRIORITY'					,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> false	, 'method' => 'invite_email_priority_select'),
+						'invite_validity'				=> array('lang' => 'ACP_INVITE_VALIDATION'						,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> true		, 'method' => 'invite_validity_select'),
+						'invite_page_list'				=> array('lang' => 'ACP_INVITE_USER_LIST'						,'validate' => 'int:5:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_notification_name'		=> array('lang' => 'ACP_INVITE_NOTIFICATION_USERNAME'			,'validate' => 'string'		, 'type' => 'text:20:100'	, 'explain'	=> true		, 'append' => ' [ <a href="' . append_sid($this->root_path . 'memberlist.' . $this->php_ext, array('mode' => 'searchuser', 'form' => 'acp_board', 'field' => 'invite_notification_name', 'select_single' => 'true')) . '" onclick="find_username(this.href); return false;">' . $this->language->lang('FIND_USERNAME') . '</a> ]'),
+						'invite_day_db'					=> array('lang' => 'ACP_INVITE_SEND_DAY_DB'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_email_db'				=> array('lang' => 'ACP_INVITE_MORE_EMAIL_DB'					,'validate' => 'int:1:50'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_post_limit'				=> array('lang' => 'ACP_INVITE_POST_LIMIT_DB'					,'validate' => 'int:0'		, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_delete_time'			=> array('lang' => 'ACP_INVITE_DELETE_TIME'						,'validate' => 'int:1:60'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('MINUTES')),
 
-						'legend2'						=> 'ACP_MEGHIVO_CONFIG_GROUP',
-						'invite_group_enabled'			=> array('lang' => 'ACP_MEGHIVO_GROUP_ENABLED'					,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'invite_group'					=> array('lang' => 'ACP_MEGHIVO_GROUP'							,'validate' => 'int'		, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_group_select'),
-						'default_group'					=> array('lang' => 'ACP_MEGHIVO_DEFAULT_GROUP'					,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
-						'new_member_post_limit_ignored'	=> array('lang' => 'ACP_MEGHIVO_NEW_MEMBER_POST_LIMIT_IGNORED'	,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'legend2'						=> 'ACP_INVITE_CONFIG_GROUP',
+						'invite_group_enabled'			=> array('lang' => 'ACP_INVITE_GROUP_ENABLED'					,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'invite_group'					=> array('lang' => 'ACP_INVITE_GROUP'							,'validate' => 'int'		, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_group_select'),
+						'default_group'					=> array('lang' => 'ACP_INVITE_DEFAULT_GROUP'					,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'new_member_post_limit_ignored'	=> array('lang' => 'ACP_INVITE_NEW_MEMBER_POST_LIMIT_IGNORED'	,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
 
-						'legend3'						=> 'ACP_MEGHIVO_CONFIG_GIFT',
-						'meghivo_uj_reg'				=> array('lang' => 'ACP_MEGHIVO_NEW_REG'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_birthdays'				=> array('lang' => 'ACP_MEGHIVO_BIRTHDAYS'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_posts_gift_posts'		=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_POSTS'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
-						'meghivo_posts_gift_invites'	=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_INVITES'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
-						'meghivo_posts_gift_limit'		=> array('lang' => 'ACP_MEGHIVO_POSTS_GIFT_LIMIT'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
-						'gift_invited_users'			=> array('lang' => 'ACP_MEGHIVO_GIFT_INVITED_USERS'				,'validate' => 'int:0:999'	, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_gift'),
+						'legend3'						=> 'ACP_INVITE_CONFIG_GIFT',
+						'invite_new_reg'				=> array('lang' => 'ACP_INVITE_NEW_REG'							,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_birthdays'				=> array('lang' => 'ACP_INVITE_BIRTHDAYS'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'gift_invited_users'			=> array('lang' => 'ACP_INVITE_GIFT_INVITED_USERS'				,'validate' => 'int:0:999'	, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_gift'),
 						'gift_invited_users_invitation'	=> false,
-						'legend4'						=> 'ACP_MEGHIVO_CONFIG_REQUEST',
 
-						'meghivo_req_max'				=> array('lang' => 'ACP_MEGHIVO_REQUEST_MAX'					,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB')),
-						'meghivo_req_cause'				=> array('lang' => 'ACP_MEGHIVO_REQUEST_CAUSE'					,'validate' => 'int:0'		, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_MEGHIVO_DB'))
+						'legend4'						=> 'ACP_INVITE_CONFIG_REQUEST',
+
+						'invite_req_max'				=> array('lang' => 'ACP_INVITE_REQUEST_MAX'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_req_cause'				=> array('lang' => 'ACP_INVITE_REQUEST_CAUSE'					,'validate' => 'int:0'		, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB'))
 					);
 				}
 
@@ -296,13 +292,13 @@ class acp extends controller_base
 
 					if ($submit)
 					{
-						if ($config_name == 'meghivo_notification_name')
+						if ($config_name == 'invite_notification_name')
 						{
-							$user_adat = $this->functions->user_adat($config_value);
+							$user_data = $this->functions->user_data($config_value);
 
-							if (empty($user_adat['user_id']))
+							if (empty($user_data['user_id']))
 							{
-								$error[] = $this->language->lang('ACP_MEGHIVO_NOTIFICATION_NO_USER');
+								$error[] = $this->language->lang('ACP_INVITE_NOTIFICATION_NO_USER');
 							}
 						}
 
@@ -312,7 +308,7 @@ class acp extends controller_base
 
 							if ($config_value < 0)
 							{
-								$error[] = $this->language->lang('SETTING_TOO_LOW', $this->language->lang('ACP_MEGHIVO_GIFT_INVITED_USERS') . ' - ' . $this->language->lang('ACP_MEGHIVO_GIFT_NUMBER_INVITES'), 0);
+								$error[] = $this->language->lang('SETTING_TOO_LOW', $this->language->lang('ACP_INVITE_GIFT_INVITED_USERS') . ' - ' . $this->language->lang('ACP_INVITE_GIFT_NUMBER_INVITES'), 0);
 							}
 						}
 
@@ -330,7 +326,7 @@ class acp extends controller_base
 
 				if ($submit)
 				{
-					$this->log->add('admin',$this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_' . strtoupper($mode));
+					$this->log->add('admin',$this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_' . strtoupper($mode));
 					trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($u_action));
 				}
 
@@ -392,9 +388,9 @@ class acp extends controller_base
 
 			break;
 
-			case 'kezeles':
-				$this->page_title = 'ACP_MEGHIVO_KEZELES';
-				$form_key = 'acp_meghivo_kezeles';
+			case 'handling':
+				$this->page_title = 'ACP_INVITE_HANDLING';
+				$form_key = 'acp_invite_handling';
 				add_form_key($form_key);
 				$trigger = false;
 
@@ -407,8 +403,8 @@ class acp extends controller_base
 				$invite				= $this->request->variable('invite', 0);
 				$uinvite			= $this->request->variable('uinvite', 0);
 				$ginvite			= $this->request->variable('ginvite', 0);
-				$msus				= $this->request->variable('meghivo_select_users', $this->auth->acl_get('a_meghivo_kuldes') ? 1 : 0);
-				$msgs				= $this->request->variable('meghivo_select_groups', $this->auth->acl_get('a_meghivo_kuldes') ? 1 : 0);
+				$msus				= $this->request->variable('invite_select_users', $this->auth->acl_get('a_invite_send') ? 1 : 0);
+				$msgs				= $this->request->variable('invite_select_groups', $this->auth->acl_get('a_invite_send') ? 1 : 0);
 				$group_all_users	= $this->request->variable('default_group', 1);
 
 				$no_check = $action == 'management_users' && !$msus || $action == 'management_groups' && !$msgs;
@@ -423,7 +419,7 @@ class acp extends controller_base
 				{
 					if ($invite < 0 || $uinvite < 0 || $ginvite < 0)
 					{
-						$error[] = $this->language->lang('ACP_MEGHIVO_MINUSZ');
+						$error[] = $this->language->lang('ACP_INVITE_MINUS');
 					}
 
 					switch ($action)
@@ -431,7 +427,7 @@ class acp extends controller_base
 						case 'management_user_invite':
 							if (!sizeof($error))
 							{
-								$this->functions_admin->set_meghivo('user', $invite, $trigger, $username);
+								$this->functions_admin->set_invite('user', $invite, $trigger, $username);
 							}
 						break;
 
@@ -442,23 +438,23 @@ class acp extends controller_base
 							}
 							else
 							{
-								$user_adat = $this->functions->user_adat($username);
+								$user_data = $this->functions->user_data($username);
 
-								if (!$user_adat)
+								if (!$user_data)
 								{
 									$error[] = $this->language->lang('NO_USER');
 								}
-								else if ($user_adat['user_id'] == ANONYMOUS)
+								else if ($user_data['user_id'] == ANONYMOUS)
 								{
-									$error[] = $this->language->lang('ACP_MEGHIVO_NO_ANONYMOUS');
+									$error[] = $this->language->lang('ACP_INVITE_NO_ANONYMOUS');
 								}
 							}
 
 							if (!sizeof($error) || $action == 'management_user_invite')
 							{
-								$invite						= isset($user_adat) ? $user_adat['user_meghivo'] : false;
-								$management_title			= 'ACP_MEGHIVO_USER_MANAGEMENT';
-								$management_title_explain	= 'ACP_MEGHIVO_USER_MANAGEMENT_EXPLAIN';
+								$invite						= isset($user_data) ? $user_data['user_invite'] : false;
+								$management_title			= 'ACP_INVITE_USER_MANAGEMENT';
+								$management_title_explain	= 'ACP_INVITE_USER_MANAGEMENT_EXPLAIN';
 
 								$hidden_fields = build_hidden_fields(array(
 									'username'	=> $username,
@@ -478,7 +474,7 @@ class acp extends controller_base
 
 							if (!$uinvite && $msus)
 							{
-								$error[] = $this->language->lang('ACP_MEGHIVO_NO_VALUE');
+								$error[] = $this->language->lang('ACP_INVITE_NO_VALUE');
 							}
 
 							if (!$usernames)
@@ -498,11 +494,11 @@ class acp extends controller_base
 							{
 								if (confirm_box(true) || $msus)
 								{
-									$this->functions_admin->set_meghivo('users', $uinvite, $trigger, $usernames, $msus);
+									$this->functions_admin->set_invite('users', $uinvite, $trigger, $usernames, $msus);
 								}
 								else
 								{
-									$confirm = (sizeof($users_size) == 1) ? 'ACP_MEGHIVO_DELETE_USER' : 'ACP_MEGHIVO_DELETE_USERS';
+									$confirm = (sizeof($users_size) == 1) ? 'ACP_INVITE_DELETE_USER' : 'ACP_INVITE_DELETE_USERS';
 
 									$s_hidden_fields = build_hidden_fields(array(
 										'i'						=> $id,
@@ -510,7 +506,7 @@ class acp extends controller_base
 										'submit'				=> $submit,
 										'action'				=> $action,
 										'usernames'				=> $usernames,
-										'meghivo_select_users'	=> $msus,
+										'invite_select_users'	=> $msus,
 									));
 
 									confirm_box(false, $confirm, $s_hidden_fields);
@@ -526,23 +522,23 @@ class acp extends controller_base
 						case 'management_groups':
 							if (!$ginvite && $msgs)
 							{
-								$error[] = $this->language->lang('ACP_MEGHIVO_NO_VALUE');
+								$error[] = $this->language->lang('ACP_INVITE_NO_VALUE');
 							}
 
 							if (!sizeof($group_ids))
 							{
-								$error[] = $this->language->lang('ACP_MEGHIVO_NO_GROUP_SPECIFIED');
+								$error[] = $this->language->lang('ACP_INVITE_NO_GROUP_SPECIFIED');
 							}
 
 							if (!sizeof($error))
 							{
 								if (confirm_box(true) || $msgs)
 								{
-									$error[] = $this->functions_admin->set_meghivo('groups', $ginvite, $trigger, $group_ids, $msgs, $group_all_users);
+									$error[] = $this->functions_admin->set_invite('groups', $ginvite, $trigger, $group_ids, $msgs, $group_all_users);
 								}
 								else
 								{
-									$confirm = (sizeof($group_ids) == 1) ? 'ACP_MEGHIVO_DELETE_GROUP' : 'ACP_MEGHIVO_DELETE_GROUPS';
+									$confirm = (sizeof($group_ids) == 1) ? 'ACP_INVITE_DELETE_GROUP' : 'ACP_INVITE_DELETE_GROUPS';
 
 									$s_hidden_fields = build_hidden_fields(array(
 										'i'						=> $id,
@@ -550,7 +546,7 @@ class acp extends controller_base
 										'submit'				=> $submit,
 										'action'				=> $action,
 										'group_ids'				=> $group_ids,
-										'meghivo_select_groups'	=> $msgs,
+										'invite_select_groups'	=> $msgs,
 										'default_group'			=> $group_all_users,
 									));
 
@@ -579,17 +575,17 @@ class acp extends controller_base
 				}
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_KEZELES'					=> true,
-					'S_ACTION_MEGHIVO_KULDES'			=> $this->auth->acl_get('a_meghivo_kuldes'),
-					'S_ACTION_MEGHIVO_TORLES'			=> $this->auth->acl_get('a_meghivo_delete'),
+					'S_INVITE_HANDLING'					=> true,
+					'S_ACTION_INVITE_SEND'				=> $this->auth->acl_get('a_invite_send'),
+					'S_ACTION_INVITE_TORLES'			=> $this->auth->acl_get('a_invite_delete'),
 					'S_TASK_USERS_CECHKED'				=> $msus,
 					'S_TASK_GROUPS_CECHKED'				=> $msgs,
 					'S_DEFAULT_GROUP'					=> $group_all_users,
 					'MANAGEMENT_USERNAME'				=> $username,
-					'U_FIND_USERNAME'					=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=kezeles_user&amp;field=username&amp;select_single=true'),
-					'U_FIND_USERNAMES'					=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=kezeles_select_users&amp;field=usernames&amp;select_single='),
-					'MEGHIVO_MANAGEMENT_TITLE'			=> $this->language->lang($management_title),
-					'MEGHIVO_MANAGEMENT_TITLE_EXPLAIN'	=> $this->language->lang($management_title_explain),
+					'U_FIND_USERNAME'					=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=handling_user&amp;field=username&amp;select_single=true'),
+					'U_FIND_USERNAMES'					=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=handling_select_users&amp;field=usernames&amp;select_single='),
+					'INVITE_MANAGEMENT_TITLE'			=> $this->language->lang($management_title),
+					'INVITE_MANAGEMENT_TITLE_EXPLAIN'	=> $this->language->lang($management_title_explain),
 					'INVITE_USER'						=> $invite,
 					'INVITE_USERS'						=> $uinvite,
 					'INVITE_GROUPS'						=> $ginvite,
@@ -597,8 +593,8 @@ class acp extends controller_base
 
 			break;
 
-			case 'igeny':
-				$this->page_title = 'ACP_MEGHIVO_IGENY';
+			case 'claiming':
+				$this->page_title = 'ACP_INVITE_CLAIMING';
 				$form_name = 'acp_invite_claim';
 				add_form_key($form_name);
 
@@ -607,7 +603,7 @@ class acp extends controller_base
 					trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($u_action), E_USER_WARNING);
 				}
 
-				$action		= $this->request->is_set_post('kiutalas') ? 'kiutalas' : ($this->request->is_set_post('elutasitas') ? 'elutasitas' : $action);
+				$action		= $this->request->is_set_post('allocate') ? 'allocate' : ($this->request->is_set_post('deny') ? 'deny' : $action);
 				$marked		= $this->request->variable('mark'	, array(0));
 				$start		= $this->request->variable('start'	, 0);
 				$sort_days	= $this->request->variable('st'	, 0);
@@ -638,22 +634,22 @@ class acp extends controller_base
 					));
 				}
 
-				$list_meghivo = $this->ext_config['meghivo_oldal_list'];
+				$list_invite = $this->ext_config['invite_page_list'];
 
-				if ($action == 'kiutalas' || $action == 'elutasitas')
+				if ($action == 'allocate' || $action == 'deny')
 				{
 					if (confirm_box(true))
 					{
-						$this->functions_admin->kezeles($action, $marked, true);
+						$this->functions_admin->handling($action, $marked, true);
 						$this->ext_config->set('total_petition', $this->ext_config['total_petition'] - sizeof($marked));
-						$message = $action == 'kiutalas' ? sizeof($marked) == 1 ? $this->language->lang('ACP_MEGHIVO_PETITION_YSUCCES') : $this->language->lang('ACP_MEGHIVO_PETITION_YSUCCESS') : (sizeof($marked) == 1 ? $this->language->lang('ACP_MEGHIVO_PETITION_NSUCCES') : $this->language->lang('ACP_MEGHIVO_PETITION_NSUCCESS'));
+						$message = $action == 'allocate' ? sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_YSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_YSUCCESSES') : (sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_NSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_NSUCCESSES'));
 						trigger_error($message . adm_back_link($u_action));
 					}
 					else
 					{
 						if (!sizeof($marked))
 						{
-							trigger_error($this->language->lang('ACP_MEGHIVO_NO_MARKED') . adm_back_link($u_action), E_USER_WARNING);
+							trigger_error($this->language->lang('ACP_INVITE_NO_MARKED') . adm_back_link($u_action), E_USER_WARNING);
 						}
 
 						confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
@@ -678,14 +674,14 @@ class acp extends controller_base
 
 				$sort_by_text = array(
 					'name'	=> $this->language->lang('SORT_USERNAME'),
-					'db'	=> $this->language->lang('ACP_MEGHIVO_KULDES_DB_NUM'),
+					'db'	=> $this->language->lang('ACP_INVITE_SEND_DB_NUM'),
 					'date'	=> $this->language->lang('SORT_DATE'),
 				);
 
 				$sort_by_sql = array(
 					'name'	=> 'u.username_clean',
-					'db'	=> 'k.db',
-					'date'	=> 'k.message_time',
+					'db'	=> 'h.db',
+					'date'	=> 'h.message_time',
 				);
 
 				$s_limit_days	= $s_sort_key = $s_sort_dir = $u_sort_param = '';
@@ -694,33 +690,33 @@ class acp extends controller_base
 				$sql_where	= $sort_days ? time() - $sort_days * 86400 : 0;
 				$sql_sort	= $sort_by_sql[$sort_key] . ' ' . ($sort_dir == 'd' ? 'DESC' : 'ASC');
 
-				$kerelem = array();
-				$kerelem_count = 0;
+				$petition = array();
+				$petition_count = 0;
 
-				$this->functions_admin->kerelmek($kerelem, $kerelem_count, $list_meghivo, $start, $sql_where, $sql_sort);
+				$this->functions_admin->requesting($petition, $petition_count, $list_invite, $start, $sql_where, $sql_sort);
 
-				$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $kerelem_count, $list_meghivo, $start, true);
+				$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $petition_count, $list_invite, $start, true);
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_KERELEM'	=> true,
-					'S_ON_PAGE'			=> $this->pagination->on_page($kerelem_count, $list_meghivo, $start),
+					'S_INVITE_PETITION'	=> true,
+					'S_ON_PAGE'			=> $this->pagination->on_page($petition_count, $list_invite, $start),
 					'S_LIMIT_DAYS'		=> $s_limit_days,
 					'S_SORT_KEY'		=> $s_sort_key,
 					'S_SORT_DIR'		=> $s_sort_dir,
-					'TOTAL_COUNT'		=> $this->language->lang('ACP_MEGHIVO_USERS_COUNT', $kerelem_count),
+					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITE_USERS_COUNT', $petition_count),
 				));
 
-				foreach ($kerelem as $row)
+				foreach ($petition as $row)
 				{
 					$message = preg_replace('/([^\s]{30})([^ ])/ui','$1 ', $row['message']);
 
-					$this->template->assign_block_vars('kerelem', array(
-						'K_USER_ID'			=> $row['user_id'],
-						'K_USERNAME'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-						'K_DB'				=> $row['db'],
-						'K_MESSAGE'			=> $message,
-						'K_MESSAGE_TIME'	=> $this->user->format_date($row['message_time']),
-						'K_USER_IP'			=> $ip == 'hostname' ? gethostbyaddr($row['ip']) : $row['ip'],
+					$this->template->assign_block_vars('petition', array(
+						'P_USER_ID'			=> $row['user_id'],
+						'P_USERNAME'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+						'P_DB'				=> $row['db'],
+						'P_MESSAGE'			=> $message,
+						'P_MESSAGE_TIME'	=> $this->user->format_date($row['message_time']),
+						'P_USER_IP'			=> $ip == 'hostname' ? gethostbyaddr($row['ip']) : $row['ip'],
 						'U_USER_IP'			=> $u_action . "&amp;ip=" . (($ip == 'ip') ? 'hostname' : 'ip'),
 						'U_WHOIS'			=> $u_action . "&amp;action=whois&amp;u_ip={$row['ip']}",
 						'U_USER_ADMIN'		=> append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['user_id']}")
@@ -730,7 +726,7 @@ class acp extends controller_base
 			break;
 
 			case 'users':
-				$this->page_title = 'ACP_MEGHIVO_USERS';
+				$this->page_title = 'ACP_INVITE_USERS';
 				$form_name = 'acp_invite_users';
 				add_form_key($form_name);
 
@@ -744,7 +740,7 @@ class acp extends controller_base
 				$sort_key	= $this->request->variable('sk'	, 't');
 				$sort_dir	= $this->request->variable('sd'	, 'd');
 
-				$list_users = $this->ext_config['meghivo_oldal_list'];
+				$list_users = $this->ext_config['invite_page_list'];
 
 				$limit_days = array(
 					0	=> $this->language->lang('ALL_ENTRIES'),
@@ -758,15 +754,15 @@ class acp extends controller_base
 				);
 
 				$sort_by_text = array(
-					'u' => $this->language->lang('ACP_MEGHIVO') . ' ' . $this->language->lang('ACP_MEGHIVO_USER_NAME'),
-					'd' => $this->language->lang('ACP_MEGHIVO_SORT_NAME'),
-					'm' => $this->language->lang('ACP_MEGHIVO_SORT_NAME') . ' ' . $this->language->lang('ACP_MEGHIVO_USER_NAME'),
+					'u' => $this->language->lang('ACP_INVITE') . ' ' . $this->language->lang('ACP_INVITE_USER_NAME'),
+					'd' => $this->language->lang('ACP_INVITE_SORT_NAME'),
+					'm' => $this->language->lang('ACP_INVITE_SORT_NAME') . ' ' . $this->language->lang('ACP_INVITE_USER_NAME'),
 					't' => $this->language->lang('JOINED'),
 				);
 
 				$sort_by_sql = array(
 					'u' => 'u.username_clean',
-					'd' => 'u.user_meghivo_member',
+					'd' => 'u.user_invite_member',
 					'm' => 'm.user_name',
 					't' => 'm.user_regdate',
 				);
@@ -784,31 +780,31 @@ class acp extends controller_base
 				$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $users_count, $list_users, $start, true);
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_USERS'	=> true,
+					'S_INVITE_USERS'	=> true,
 					'S_ON_PAGE'			=> $this->pagination->on_page($users_count, $list_users, $start),
 					'S_LIMIT_DAYS'		=> $s_limit_days,
 					'S_SORT_KEY'		=> $s_sort_key,
 					'S_SORT_DIR'		=> $s_sort_dir,
-					'TOTAL_COUNT'		=> $this->language->lang('ACP_MEGHIVOT_USERS_COUNT', $users_count),
+					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITET_USERS_COUNT', $users_count),
 				));
 
 				foreach ($users as $row)
 				{
 					$this->template->assign_block_vars('users', array(
-						'HIVO_USERNAME'		=> get_username_string('full', $row['hivo_id'], $row['username'], $row['hivo_color']),
-						'HIVO_MEGHIVO'		=> $this->language->lang('ACP_MEGHIVO_MEMBER', $row['user_meghivo_member']),
-						'HIVO_EMAIL'		=> $row['hivo_email'],
-						'HIVOTT_USERNAME'	=> get_username_string('full', $row['user_id'], $row['user_name'], $row['user_colour']),
-						'HIVOTT_EMAIL'		=> $row['user_reg_email'],
-						'HIVOTT_TIME_REG'	=> $this->user->format_date($row['user_regdate']),
-						'HIVO_USER_ADMIN'	=> $row['hivo_id'] ? append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['hivo_id']}") : false,
-						'HIVOTT_USER_ADMIN'	=> append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['user_id']}"),
+						'CALLER_USERNAME'		=> get_username_string('full', $row['caller_id'], $row['username'], $row['caller_color']),
+						'CALLER_INVITE'		=> $this->language->lang('ACP_INVITE_MEMBER', $row['user_invite_member']),
+						'CALLER_EMAIL'		=> $row['caller_email'],
+						'CALLED_USERNAME'	=> get_username_string('full', $row['user_id'], $row['user_name'], $row['user_colour']),
+						'CALLED_EMAIL'		=> $row['user_reg_email'],
+						'CALLED_TIME_REG'	=> $this->user->format_date($row['user_regdate']),
+						'CALLER_USER_ADMIN'	=> $row['caller_id'] ? append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['caller_id']}") : false,
+						'CALLED_USER_ADMIN'	=> append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['user_id']}"),
 					));
 				}
 			break;
 
 			case 'pend':
-				$this->page_title = 'ACP_MEGHIVO_PENDING';
+				$this->page_title = 'ACP_INVITE_PENDING';
 				$form_name = 'acp_invite_pending';
 				add_form_key($form_name);
 
@@ -831,8 +827,8 @@ class acp extends controller_base
 						{
 							$this->db->sql_query('DELETE FROM ' . $this->table_invite);
 							$this->ext_config->set('total_pend', 0);
-							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_PEND_ALL_DELETE');
-							trigger_error($this->language->lang('ACP_MEGHIVO_PEND_DELET_ALL_SUCCESS') . adm_back_link($u_action));
+							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_PEND_ALL_DELETE');
+							trigger_error($this->language->lang('ACP_INVITE_PEND_DELETE_ALL_SUCCESSES') . adm_back_link($u_action));
 						}
 						else
 						{
@@ -849,18 +845,18 @@ class acp extends controller_base
 
 							$this->db->sql_query('DELETE FROM ' . $this->table_invite . ' WHERE ' . $this->db->sql_in_set('id', $marked));
 							$this->ext_config->set('total_pend', ($this->ext_config['total_pend'] - sizeof($marked)));
-							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_PEND_MARKED_DELETE' . (sizeof($del_username) > 1 ? 'S' : ''), false, array(implode(', ', $del_username)));
-							trigger_error((sizeof($marked) == 1 ? $this->language->lang('ACP_MEGHIVO_PEND_DELET_MARK_SUCCESS') : $this->language->lang('ACP_MEGHIVO_PEND_DELET_MARKS_SUCCESS')) . adm_back_link($u_action));
+							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_PEND_MARKED_DELETE' . (sizeof($del_username) > 1 ? 'S' : ''), false, array(implode(', ', $del_username)));
+							trigger_error((sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PEND_DELETE_MARK_SUCCESSES') : $this->language->lang('ACP_INVITE_PEND_DELETE_MARKS_SUCCESSES')) . adm_back_link($u_action));
 						}
 					}
 					else
 					{
 						if  (!sizeof($marked) && $action == 'del_mark')
 						{
-							trigger_error($this->language->lang('ACP_MEGHIVO_NO_SELECT_INVITE') . adm_back_link($u_action), E_USER_WARNING);
+							trigger_error($this->language->lang('ACP_INVITE_NO_SELECT_INVITE') . adm_back_link($u_action), E_USER_WARNING);
 						}
 
-						$confirm_lang = $action == 'del_all' ? $this->language->lang('ACP_MEGHIVO_DELETE_ALL_PEND_CONFIRM') : sizeof($marked) == 1 ? $this->language->lang('ACP_MEGHIVO_DELETE_PEND_CONFIRM') : $this->language->lang('ACP_MEGHIVO_DELETES_PEND_CONFIRM');
+						$confirm_lang = $action == 'del_all' ? $this->language->lang('ACP_INVITE_DELETE_ALL_PEND_CONFIRM') : sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_DELETE_PEND_CONFIRM') : $this->language->lang('ACP_INVITE_DELETES_PEND_CONFIRM');
 
 						confirm_box(false, $confirm_lang, build_hidden_fields(array(
 							'i'			=> $id,
@@ -871,16 +867,16 @@ class acp extends controller_base
 					}
 				}
 
-				$list_invite = $this->ext_config['meghivo_oldal_list'];
+				$list_invite = $this->ext_config['invite_page_list'];
 
 				$sort_by_text = array(
-					'u' => $this->language->lang('ACP_MEGHIVO') . ' ' . $this->language->lang('ACP_MEGHIVO_USER_NAME'),
-					't' => $this->language->lang('ACP_MEGHIVO_PEND_DATE'),
+					'u' => $this->language->lang('ACP_INVITE') . ' ' . $this->language->lang('ACP_INVITE_USER_NAME'),
+					't' => $this->language->lang('ACP_INVITE_PEND_DATE'),
 				);
 
 				$sort_by_sql = array(
 					'u' => 'u.username_clean',
-					't' => 'i.meghivo_time',
+					't' => 'i.invite_time',
 				);
 
 				$sort_days = 0;
@@ -898,11 +894,11 @@ class acp extends controller_base
 				$this->pagination->generate_template_pagination($u_action . '&amp;' . $u_sort_param, 'pagination', 'start', $invites_count, $list_invite, $start, true);
 
 				$this->template->assign_vars(array(
-					'S_MEGHIVO_PEND'	=> true,
+					'S_INVITE_PEND'	=> true,
 					'S_ON_PAGE'			=> $this->pagination->on_page($invites_count, $list_invite, $start),
 					'S_SORT_KEY'		=> $s_sort_key,
 					'S_SORT_DIR'		=> $s_sort_dir,
-					'TOTAL_COUNT'		=> $this->language->lang('ACP_MEGHIVOT_PEND_COUNT', $invites_count),
+					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITET_PEND_COUNT', $invites_count),
 				));
 
 				foreach ($invites as $row)
@@ -910,9 +906,9 @@ class acp extends controller_base
 					$this->template->assign_block_vars('invite', array(
 						'ID'			=> $row['id'],
 						'USERNAME'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-						'TIME'			=> $this->user->format_date($row['meghivo_time']),
-						'END_TIME'		=> $this->user->format_date($row['meghivo_time_end']),
-						'EMAIL'			=> $row['meghivo_email'],
+						'TIME'			=> $this->user->format_date($row['invite_time']),
+						'END_TIME'		=> $this->user->format_date($row['invite_time_end']),
+						'EMAIL'			=> $row['invite_email'],
 						'USER_ADMIN'	=> append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=users&amp;mode=overview&amp;u={$row['user_id']}")
 					));
 				}
@@ -950,7 +946,7 @@ class acp extends controller_base
 		}
 		else
 		{
-			$s_groups_options = $this->language->lang('ACP_MEGHIVO_NO_GROUP', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=groups&amp;mode=manage") . '">', '</a>') . '<input name="config[' . $key . ']" id="' . $key . '" type="hidden" value="0" />';
+			$s_groups_options = $this->language->lang('ACP_INVITE_NO_GROUP', '<a href="' . append_sid($this->root_path . $this->adm_relative_path . 'index.' . $this->php_ext, "i=groups&amp;mode=manage") . '">', '</a>') . '<input name="config[' . $key . ']" id="' . $key . '" type="hidden" value="0" />';
 		}
 
 		return $s_groups_options;
@@ -958,13 +954,13 @@ class acp extends controller_base
 
 	public function invite_gift($value, $key)
 	{
-		$return  = '<input type="text" id="' . $key . '" name="config[' . $key . ']" maxlength="3" size="3" value="' . $value . '" /> - ' . $this->language->lang('ACP_MEGHIVO_NUMBER_INVITED_USERS') . '<br />';
-		$return .= '<input type="text" id="gift_invited_users_invitation" name="config[gift_invited_users_invitation]" maxlength="2" size="3" value="' . $this->ext_config['gift_invited_users_invitation'] . '" /> - ' . $this->language->lang('ACP_MEGHIVO_GIFT_NUMBER_INVITES');
+		$return  = '<input type="text" id="' . $key . '" name="config[' . $key . ']" maxlength="3" size="3" value="' . $value . '" /> - ' . $this->language->lang('ACP_INVITE_NUMBER_INVITED_USERS') . '<br />';
+		$return .= '<input type="text" id="gift_invited_users_invitation" name="config[gift_invited_users_invitation]" maxlength="2" size="3" value="' . $this->ext_config['gift_invited_users_invitation'] . '" /> - ' . $this->language->lang('ACP_INVITE_GIFT_NUMBER_INVITES');
 
 		return $return;
 	}
 
-	public function meghivo_email_priority_select($value, $key)
+	public function invite_email_priority_select($value, $key)
 	{
 		$s_priority_options  = '<option ' . (($value == MAIL_LOW_PRIORITY)		? ' selected="selected"' : '') . ' value="' . MAIL_LOW_PRIORITY		. '">' . $this->language->lang('MAIL_LOW_PRIORITY') . '</option>';
 		$s_priority_options .= '<option ' . (($value == MAIL_NORMAL_PRIORITY)	? ' selected="selected"' : '') . ' value="' . MAIL_NORMAL_PRIORITY	. '">' . $this->language->lang('MAIL_NORMAL_PRIORITY') . '</option>';
@@ -973,7 +969,7 @@ class acp extends controller_base
 		return $s_priority_options;
 	}
 
-	public function meghivo_ervenyessege_select($value, $key)
+	public function invite_validity_select($value, $key)
 	{
 		return '<option value="86400"' . (($value == 86400) ? ' selected="selected"' : '') . '>1 ' . $this->language->lang('DAY') . '</option><option value="172800"' . ($value == 172800 ? ' selected="selected"' : '') . '>2 ' . $this->language->lang('DAY') . '</option><option value="604800"' . (($value == 604800) ? ' selected="selected"' : '') . '>7 ' . $this->language->lang('DAY') . '</option><option value="1209600"' . (($value == 1209600) ? ' selected="selected"' : '') . '>14 ' . $this->language->lang('DAY') . '</option><option value="2592000"' . ($value == 2592000 ? ' selected="selected"' : '') . '>30 ' . $this->language->lang('DAY') . '</option>';
 	}

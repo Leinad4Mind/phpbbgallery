@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -62,19 +62,19 @@ class functions_ucp
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\user                                $user
-	 * @param \phpbb\language\language                   $language
-	 * @param \phpbb\auth\auth                           $auth
-	 * @param \phpbb\config\config                       $config
-	 * @param \leinad4mind\invitation\includes\config    $ext_config
-	 * @param \leinad4mind\invitation\includes\functions $functions
-	 * @param \phpbb\db\driver\driver_interface          $db
-	 * @param string                                     $table_users
-	 * @param string                                     $table_invite
-	 * @param string                                     $table_invite_users
-	 * @param string                                     $table_invite_claimed
-	 * @param string                                     $root_path
-	 * @param string                                     $php_ext
+	 * @param \phpbb\user                                 $user
+	 * @param \phpbb\language\language                    $language
+	 * @param \phpbb\auth\auth                            $auth
+	 * @param \phpbb\config\config                        $config
+	 * @param \leinad4mind\invitation\includes\config     $ext_config
+	 * @param \leinad4mind\invitation\includes\functions  $functions
+	 * @param \phpbb\db\driver\driver_interface           $db
+	 * @param string                                      $table_users
+	 * @param string                                      $table_invite
+	 * @param string                                      $table_invite_users
+	 * @param string                                      $table_invite_claimed
+	 * @param string                                      $root_path
+	 * @param string                                      $php_ext
 	 */
 	public function __construct(user $user, language $language, auth $auth, phpbb_config $config, ext_config $ext_config, functions $functions, db_interface $db, $table_users, $table_invite, $table_invite_users, $table_invite_claimed, $root_path, $php_ext)
 	{
@@ -97,9 +97,9 @@ class functions_ucp
 	 * @param int $user_id
 	 * @return array
 	 */
-	function meghivok($user_id)
+	function invitek($user_id)
 	{
-		$sql = 'SELECT id, meghivo_time, meghivo_email
+		$sql = 'SELECT id, invite_time, invite_email
 				FROM ' . $this->table_invite . '
 				WHERE user_id = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
@@ -113,7 +113,7 @@ class functions_ucp
 	{
 		$sql = 'SELECT *
 				FROM ' . $this->table_invite . "
-				WHERE meghivo_email = '" . $this->db->sql_escape(utf8_clean_string($email))  . "'";
+				WHERE invite_email = '" . $this->db->sql_escape(utf8_clean_string($email))  . "'";
 		$result = $this->db->sql_query($sql);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
@@ -189,7 +189,7 @@ class functions_ucp
 	function adm_send($requsting_user_id, $count)
 	{
 		$user_ids	= array();
-		$keys		= array('a_meghivo_igeny', 'm_meghivo_igeny');
+		$keys		= array('a_invite_claiming', 'm_invite_claiming');
 		$user_list	= $this->auth->acl_raw_data(false, $keys);
 
 		foreach ($keys as $key)
@@ -280,7 +280,7 @@ class functions_ucp
 			'BOARD_CONTACT'		=> $this->config['board_contact'],
 			'USERNAME'			=> htmlspecialchars_decode($this->user->data['username']),
 			'MESSAGE'			=> htmlspecialchars_decode($message),
-			'INVITE_TIME_END'	=> $this->user->format_date((time() + $this->ext_config['meghivo_ervenyessege']), 'Y.M.d. H:i')
+			'INVITE_TIME_END'	=> $this->user->format_date((time() + $this->ext_config['invite_validity']), 'Y.M.d. H:i')
 		));
 
 		$messenger->send(NOTIFY_EMAIL);
@@ -290,17 +290,17 @@ class functions_ucp
 	{
 		$sql_ary = array(
 			'user_id'			=> (int) $user_id,
-			'meghivo_kod'		=> $user_actkey,
-			'meghivo_time'		=> time(),
-			'meghivo_time_end'	=> time() + $this->ext_config['meghivo_ervenyessege'],
-			'meghivo_email'		=> $email,
+			'invite_code'		=> $user_actkey,
+			'invite_time'		=> time(),
+			'invite_time_end'	=> time() + $this->ext_config['invite_validity'],
+			'invite_email'		=> $email,
 			'friend'			=> $friend ? 1 : 0,
 		);
 
 		$this->db->sql_query('INSERT INTO ' . $this->table_invite . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 
 		$sql = 'UPDATE ' . USERS_TABLE . '
-				SET ' . ($this->ext_config['meghivo_db'] || $this->auth->acl_get('u_meghivo_max') ? 'user_emailtime = ' . time() : 'user_meghivo = user_meghivo - 1, user_emailtime = ' . time()) . '
+				SET ' . ($this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max') ? 'user_emailtime = ' . time() : 'user_invite = user_invite - 1, user_emailtime = ' . time()) . '
 				WHERE user_id = ' . (int) $user_id;
 		$this->db->sql_query($sql);
 	}
@@ -311,12 +311,12 @@ class functions_ucp
 
 		$cmt = array(
 			'username'	=> false,
-			'ma_kuld'	=> 0,
-			'fuggo'		=> 0
+			'ma_sending'	=> 0,
+			'dependent'		=> 0
 		);
 
 		$sql = 'SELECT * FROM ' . $this->table_invite_users . '
-				WHERE meghivo_uid = ' . (int) $user_id . '
+				WHERE invite_uid = ' . (int) $user_id . '
 				ORDER BY user_regdate ASC';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -334,16 +334,16 @@ class functions_ucp
 
 		foreach ($mmu as $row)
 		{
-			$cmt['ma_kuld'] = date('d', $row['meghivo_time']) == date('d') ? ($cmt['ma_kuld'] + 1) : $cmt['ma_kuld'];
-			$cmt['fuggo']++;
+			$cmt['ma_sending'] = date('d', $row['invite_time']) == date('d') ? ($cmt['ma_sending'] + 1) : $cmt['ma_sending'];
+			$cmt['dependent']++;
 		}
 
-		$cmt['ma_kuld'] = $cmt['ma_kuld'] + $i;
+		$cmt['ma_sending'] = $cmt['ma_sending'] + $i;
 
 		return $cmt;
 	}
 
-	function keres($user_id)
+	function request($user_id)
 	{
 		$sql = 'SELECT user_id FROM ' . $this->table_invite_claimed . '
 				WHERE user_id = ' . (int) $user_id;
@@ -362,7 +362,7 @@ class functions_ucp
 	{
 		if (@preg_match('/^' . get_preg_expression('email') . '$/i', $email) !== 1)
 		{
-			return array($this->language->lang('UCP_MEGHIVO_NO_EMAIL') . ' -> ' . $email);
+			return array($this->language->lang('UCP_INVITE_NO_EMAIL') . ' -> ' . $email);
 		}
 
 		$langs = array();
@@ -376,7 +376,7 @@ class functions_ucp
 
 			if ($this->find_invite_by_email($email))
 			{
-				$langs[] = $this->language->lang('UCP_MEGHIVO_DUP', $email);
+				$langs[] = $this->language->lang('UCP_INVITE_DUP', $email);
 			}
 		}
 
@@ -398,4 +398,8 @@ class functions_ucp
 		$this->ext_config->set('total_petition', ($this->ext_config['total_petition'] + 1));
 	}
 
+	function add_invite($piece)
+	{
+		$this->db->sql_query('UPDATE ' . $this->table_users . ' SET user_invite = user_invite + ' . (int) $piece . ' WHERE user_id = ' . (int) $this->user->data['user_id']);
+	}
 }

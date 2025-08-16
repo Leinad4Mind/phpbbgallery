@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -58,18 +58,18 @@ class functions_admin
 	protected $table_invite_claimed;
 
 	/**
-	 * @param \phpbb\user                                $user
-	 * @param \phpbb\language\language                   $language
-	 * @param \phpbb\db\driver\driver_interface          $db
-	 * @param \phpbb\log\log_interface                   $log
-	 * @param \leinad4mind\invitation\includes\functions $functions
-	 * @param \leinad4mind\invitation\includes\config    $ext_config
-	 * @param string                                     $table_users
-	 * @param string                                     $table_groups
-	 * @param string                                     $table_user_group
-	 * @param string                                     $table_invite
-	 * @param string                                     $table_invite_users
-	 * @param string                                     $table_invite_claimed
+	 * @param \phpbb\user                                 $user
+	 * @param \phpbb\language\language                    $language
+	 * @param \phpbb\db\driver\driver_interface           $db
+	 * @param \phpbb\log\log_interface                    $log
+	 * @param \leinad4mind\invitation\includes\functions  $functions
+	 * @param \leinad4mind\invitation\includes\config     $ext_config
+	 * @param string                                      $table_users
+	 * @param string                                      $table_groups
+	 * @param string                                      $table_user_group
+	 * @param string                                      $table_invite
+	 * @param string                                      $table_invite_users
+	 * @param string                                      $table_invite_claimed
 	 */
 	public function __construct(user $user, language $language, db_interface $db, log_interface $log, functions $functions,ext_config $ext_config, $table_users, $table_groups, $table_user_group, $table_invite, $table_invite_users, $table_invite_claimed)
 	{
@@ -92,7 +92,7 @@ class functions_admin
 	 */
 	public function users_per_days()
 	{
-		$days = (time() - $this->ext_config['meghivo_install_time']) / 86400;
+		$days = (time() - $this->ext_config['invite_install_time']) / 86400;
 
 		$data_per_day = sprintf('%.2f', $this->ext_config['total_users'] / $days);
 
@@ -105,7 +105,7 @@ class functions_admin
 	}
 
 	/**
-	 * @param string $usernames
+	 * @param array $usernames
 	 * @return string
 	 */
 	public function users_verify($usernames)
@@ -134,7 +134,7 @@ class functions_admin
 	 * @param bool $group_all_users
 	 * @return string
 	 */
-	public function set_meghivo($mode, $invite, &$trigger, $usg, $task = 5, $group_all_users = true)
+	public function set_invite($mode, $invite, &$trigger, $usg, $task = 5, $group_all_users = true)
 	{
 		$ss = ($invite == 1) ? '_I' : '_IS';
 
@@ -142,7 +142,7 @@ class functions_admin
 		{
 			case 'user':
 				$sql = 'UPDATE ' . $this->table_users . "
-						SET user_meghivo = " . (int) $invite . "
+						SET user_invite = " . (int) $invite . "
 						WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($usg)) . "'";
 				$this->db->sql_query($sql);
 				$ua = $usg;
@@ -153,17 +153,17 @@ class functions_admin
 
 				if ($task)
 				{
-					$set_invite = 'user_meghivo + ' . (int) $invite;
+					$set_invite = 'user_invite + ' . (int) $invite;
 					$ss .= (sizeof(explode("\n", $usg)) == 1) ? 'U' : 'US';
 				}
 				else
 				{
 					$set_invite = 0;
-					$ss = (sizeof(explode("\n", $usg)) == 1) ? '_DELET' :  '_DELETS';
+					$ss = (sizeof(explode("\n", $usg)) == 1) ? '_DELETE' :  '_DELETES';
 				}
 
 				$sql = 'UPDATE ' . $this->table_users . '
-						SET user_meghivo = ' . $set_invite . '
+						SET user_invite = ' . $set_invite . '
 						WHERE ' . $this->db->sql_in_set('username_clean', array_map('utf8_clean_string', explode("\n", $usg)));
 				$this->db->sql_query($sql);
 			break;
@@ -188,13 +188,13 @@ class functions_admin
 
 				if ($task)
 				{
-					$set_invite = 'user_meghivo + ' . (int) $invite;
+					$set_invite = 'user_invite + ' . (int) $invite;
 					$ss .= (sizeof($usg) == 1) ?  'G' :  'GS';
 				}
 				else
 				{
 					$set_invite = 0;
-					$ss = (sizeof($usg) == 1) ? '_DELET' :  '_DELETS';
+					$ss = (sizeof($usg) == 1) ? '_DELETE' :  '_DELETES';
 				}
 
 				if ($group_all_users)
@@ -226,14 +226,14 @@ class functions_admin
 
 					if (!sizeof($user_ids))
 					{
-						return $this->language->lang('ACP_MEGHIVO_USERS_NO_' . ((sizeof($usg) == 1) ? 'GROUP' : 'GROUPS'));
+						return $this->language->lang('ACP_INVITE_USERS_NO_' . ((sizeof($usg) == 1) ? 'GROUP' : 'GROUPS'));
 					}
 
-					$this->db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_meghivo = ' . $set_invite . ' WHERE ' . $this->db->sql_in_set('user_id', $user_ids));
+					$this->db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_invite = ' . $set_invite . ' WHERE ' . $this->db->sql_in_set('user_id', $user_ids));
 				}
 				else
 				{
-					$this->db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_meghivo = ' . $set_invite . ' WHERE ' . $this->db->sql_in_set('group_id', $usg));
+					$this->db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_invite = ' . $set_invite . ' WHERE ' . $this->db->sql_in_set('group_id', $usg));
 				}
 			break;
 
@@ -241,8 +241,8 @@ class functions_admin
 				return '';
 		}
 
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_KEZELES_' . strtoupper($mode) . $ss, false, array($ua, $invite));
-		$trigger = $this->language->lang('ACP_MEGHIVO_KEZELES_' . strtoupper($mode) . $ss, $ua, $invite);
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_HANDLING_' . strtoupper($mode) . $ss, false, array($ua, $invite));
+		$trigger = $this->language->lang('ACP_INVITE_HANDLING_' . strtoupper($mode) . $ss, $ua, $invite);
 
 		return '';
 	}
@@ -252,46 +252,46 @@ class functions_admin
 	 * @param array $marked
 	 * @param bool $admin
 	 */
-	public function kezeles($mode, $marked, $admin)
+	public function handling($mode, $marked, $admin)
 	{
-		$sql = 'SELECT k.*, u.user_id, u.username, u.user_colour, u.user_lang
+		$sql = 'SELECT h.*, u.user_id, u.username, u.user_colour, u.user_lang
 				FROM ' . $this->table_invite_claimed . ' k
-				LEFT JOIN ' . $this->table_users . ' u ON u.user_id = k.user_id
-				WHERE ' . $this->db->sql_in_set('k.user_id', $marked);
+				LEFT JOIN ' . $this->table_users . ' u ON u.user_id = h.user_id
+				WHERE ' . $this->db->sql_in_set('h.user_id', $marked);
 
 		$result = $this->db->sql_query($sql);
 		while ($invite = $this->db->sql_fetchrow($result))
 		{
 			$nev = get_username_string('full',$invite['user_id'], $invite['username'], $invite['user_colour']);
 
-			$darab = (int) $invite['db'];
+			$piece = (int) $invite['db'];
 
 			switch ($mode)
 			{
-				case 'kiutalas':
+				case 'allocate':
 					$sql = 'UPDATE ' . $this->table_users . '
-							SET user_meghivo = user_meghivo + ' . (int) $darab . '
+							SET user_invite = user_invite + ' . (int) $piece . '
 							WHERE user_id = ' . (int) $invite['user_id'];
 					$this->db->sql_query($sql);
 
 					if ($admin)
 					{
-						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_KIUTALAS', false, array($nev, $darab));
+						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_ALLOCATE', false, array($nev, $piece));
 					}
 					else
 					{
-						$this->log->add('mod',  $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_KIUTALAS', false, array($nev, $darab));
+						$this->log->add('mod',  $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_ALLOCATE', false, array($nev, $piece));
 					}
 				break;
 
-				case 'elutasitas':
+				case 'deny':
 					if ($admin)
 					{
-						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_IGENY_DELETE', false, array($nev));
+						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_SIZE_DELETE', false, array($nev));
 					}
 					else
 					{
-						$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MEGHIVO_IGENY_DELETE', false, array($nev));
+						$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_SIZE_DELETE', false, array($nev));
 					}
 				break;
 			}
@@ -300,7 +300,7 @@ class functions_admin
 				'petition_user_id'			=> $invite['user_id'],
 				'petition_staff_user_id'	=> $this->user->data['user_id'],
 				'petition_mode'				=> $mode,
-				'petition_darab'			=> $invite['db'],
+				'petition_piece'			=> $invite['db'],
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -310,28 +310,28 @@ class functions_admin
 
 	/**
 	 * @param array $message
-	 * @param int $kerelem_count
+	 * @param int $petition_count
 	 * @param int $limit
 	 * @param int $offset
 	 * @param int $limit_days
 	 * @param string $sort_by
 	 */
-	public function kerelmek(&$message, &$kerelem_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'k.message_time DESC')
+	public function requesting(&$message, &$petition_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'h.message_time DESC')
 	{
 		$sql = 'SELECT COUNT(user_id) AS message_count
 				FROM ' . $this->table_invite_claimed . ' ' . (($limit_days) ? ' WHERE message_time >= ' . (int) $limit_days : '');
 		$result = $this->db->sql_query($sql);
-		$kerelem_count = (int) $this->db->sql_fetchfield('message_count');
+		$petition_count = (int) $this->db->sql_fetchfield('message_count');
 		$this->db->sql_freeresult($result);
 
-		if ($offset >= $kerelem_count)
+		if ($offset >= $petition_count)
 		{
 			$offset = ($offset - $limit < 0) ? 0 : $offset - $limit;
 		}
 
-		$sql = 'SELECT k.*, u.user_id, u.username, u.username_clean, u.user_colour
+		$sql = 'SELECT h.*, u.user_id, u.username, u.username_clean, u.user_colour
 				FROM ' . $this->table_invite_claimed . ' k
-				LEFT JOIN ' . $this->table_users . ' u ON k.user_id = u.user_id ' . (($limit_days) ? ' WHERE k.message_time >= ' . (int) $limit_days : '') . "
+				LEFT JOIN ' . $this->table_users . ' u ON h.user_id = u.user_id ' . (($limit_days) ? ' WHERE h.message_time >= ' . (int) $limit_days : '') . "
 				ORDER BY $sort_by";
 		$result = $this->db->sql_query_limit($sql, $limit, $offset);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -362,9 +362,9 @@ class functions_admin
 			$offset = ($offset - $limit < 0) ? 0 : $offset - $limit;
 		}
 
-		$sql = 'SELECT m.*, u.user_id AS hivo_id, u.username, u.username_clean, u.user_colour AS hivo_color, u.user_email AS hivo_email, u.user_meghivo_member
+		$sql = 'SELECT m.*, u.user_id AS caller_id, u.username, u.username_clean, u.user_colour AS caller_color, u.user_email AS caller_email, u.user_invite_member
 				FROM ' . $this->table_invite_users . ' m
-				LEFT JOIN ' . $this->table_users . ' u ON m.meghivo_uid = u.user_id
+				LEFT JOIN ' . $this->table_users . ' u ON m.invite_uid = u.user_id
 				' . (($limit_days) ? ' WHERE m.user_regdate >= ' . (int) $limit_days : '') . '
 				ORDER BY ' . $sort_by;
 		$result = $this->db->sql_query_limit($sql, $limit, $offset);
@@ -384,7 +384,7 @@ class functions_admin
 	 * @param int $limit_days
 	 * @param string $sort_by
 	 */
-	public function pend(&$invites, &$invites_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'i.meghivo_time DESC')
+	public function pend(&$invites, &$invites_count, $limit = 20, $offset = 0, $limit_days = 0, $sort_by = 'i.invite_time DESC')
 	{
 		$sql = 'SELECT COUNT(id) AS invite_count
 				FROM ' . $this->table_invite;
@@ -419,23 +419,23 @@ class functions_admin
 			case 'sync_users':
 				$uid_ary = array();
 
-				$sql = 'SELECT m.user_id, u.user_id AS hivo_id
+				$sql = 'SELECT m.user_id, u.user_id AS caller_id
 						FROM ' . $this->table_invite_users . ' m
 						LEFT JOIN ' . $this->table_users . ' u ON m.user_id = u.user_id';
 				$result = $this->db->sql_query($sql);
-				while ($meghivott = $this->db->sql_fetchrow($result))
+				while ($invitett = $this->db->sql_fetchrow($result))
 				{
-					$uid_ary[$meghivott['user_id']] = $meghivott['hivo_id'] ? '' : $meghivott['user_id'];
+					$uid_ary[$invitett['user_id']] = $invitett['caller_id'] ? '' : $invitett['user_id'];
 				}
 				$this->db->sql_freeresult($result);
 
-				$sql = 'SELECT m.meghivo_uid, u.user_id AS hivo_id
+				$sql = 'SELECT m.invite_uid, u.user_id AS caller_id
 						FROM ' . $this->table_invite_users . ' m
-						LEFT JOIN ' . $this->table_users . ' u ON m.meghivo_uid = u.user_id';
+						LEFT JOIN ' . $this->table_users . ' u ON m.invite_uid = u.user_id';
 				$result = $this->db->sql_query($sql);
-				while ($meghivott = $this->db->sql_fetchrow($result))
+				while ($invitett = $this->db->sql_fetchrow($result))
 				{
-					$uid_ary[$meghivott['meghivo_uid']] = ($meghivott['hivo_id']) ? '' : $meghivott['meghivo_uid'];
+					$uid_ary[$invitett['invite_uid']] = ($invitett['caller_id']) ? '' : $invitett['invite_uid'];
 				}
 				$this->db->sql_freeresult($result);
 
@@ -443,24 +443,24 @@ class functions_admin
 				{
 					$sql = 'DELETE FROM ' . $this->table_invite_users . '
 							WHERE ' . $this->db->sql_in_set('user_id', $uid_ary) . '
-							OR ' . $this->db->sql_in_set('meghivo_uid', $uid_ary);
+							OR ' . $this->db->sql_in_set('invite_uid', $uid_ary);
 					$this->db->sql_query($sql);
 				}
 
-				$sql = 'SELECT COUNT(meghivo_uid) as total, meghivo_uid
+				$sql = 'SELECT COUNT(invite_uid) as total, invite_uid
 						FROM ' . $this->table_invite_users . '
-						GROUP BY meghivo_uid';
+						GROUP BY invite_uid';
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrowset($result);
 				$this->db->sql_freeresult($result);
 
-				$this->db->sql_query('UPDATE ' . $this->table_users . ' SET user_meghivo_member = 0');
+				$this->db->sql_query('UPDATE ' . $this->table_users . ' SET user_invite_member = 0');
 
-				foreach ($row as $meghivo)
+				foreach ($row as $invite)
 				{
 					$sql = 'UPDATE ' . $this->table_users . '
-							SET user_meghivo_member = ' . (int) $meghivo['total'] . '
-							WHERE user_id = ' . (int) $meghivo['meghivo_uid'];
+							SET user_invite_member = ' . (int) $invite['total'] . '
+							WHERE user_id = ' . (int) $invite['invite_uid'];
 					$this->db->sql_query($sql);
 				}
 			break;

@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -46,7 +46,7 @@ class config implements \ArrayAccess
 		$this->init();
 
 		// Load language files
-		$this->language->add_lang(array('info_ucp_meghivo', 'meghivo'), 'leinad4mind/invitation');
+		$this->language->add_lang(array('info_ucp_invite', 'invite'), 'leinad4mind/invitation');
 	}
 
 	/**
@@ -82,7 +82,7 @@ class config implements \ArrayAccess
 				WHERE config_name = '" . $this->db->sql_escape($config_name) . "'";
 		$this->db->sql_query($sql);
 
-		//if (!$this->db->sql_affectedrows() && !isset($this->meghivo_config[$config_name]))
+		//if (!$this->db->sql_affectedrows() && !isset($this->invite_config[$config_name]))
 		//{
 		//	$this->db->sql_query('INSERT INTO ' . $this->table_invite_config . ' ' . $this->db->sql_build_array('INSERT', array(
 		//		'config_name'  => $config_name,

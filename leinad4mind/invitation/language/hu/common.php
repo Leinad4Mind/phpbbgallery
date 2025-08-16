@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -35,17 +35,17 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
 $lang = array_merge($lang, array(
-	'MEGHIVO_BIRTHDAY'						=> 'Születésnapod alkalmából kiutaltunk ajándékba %s darab meghívót.<br /><br />Boldog szülinapot kívánunk.',
+	'INVITE_BIRTHDAY'						=> 'Születésnapod alkalmából kiutaltunk ajándékba %s piece meghívót.<br /><br />Boldog szülinapot kívánunk.',
 
-	'MEGHIVO_GIFT_INVITED_USERS_FIRST'		=> 'Szia, ezt az üzenetet azért kaptad, mert meghívtál %s felhasználót, a “%s” weboldalra, amiért nagyon hálásak vagyunk. Szeretnénk, ha továbbra is igénybe vennéd a meghívó rendszert, ezért ajándékba kiutaltunk számodra %s meghívót.<br /><br />További kellemes időtöltést kívánunk.',
-	'MEGHIVO_GIFT_INVITED_USERS_FURTHER'	=> 'Szia, ezt az üzenetet azért kaptad, mert meghívtál újabb %s felhasználót, a “%s” weboldalra, amiért nagyon hálásak vagyunk. Szeretnénk, ha továbbra is igénybe vennéd a meghívó rendszert, ezért ajándékba kiutaltunk számodra %s meghívót.<br /><br />További kellemes időtöltést kívánunk.',
+	'INVITE_GIFT_INVITED_USERS_FIRST'		=> 'Szia, ezt az üzenetet azért kaptad, mert meghívtál %s felhasználót, a “%s” webpagera, amiért nagyon hálásak vagyunk. Szeretnénk, ha továbbra is igénybe vennéd a meghívó rendszert, ezért ajándékba kiutaltunk számodra %s meghívót.<br /><br />További kellemes időtöltést kívánunk.',
+	'INVITE_GIFT_INVITED_USERS_FURTHER'		=> 'Szia, ezt az üzenetet azért kaptad, mert meghívtál újabb %s felhasználót, a “%s” webpagera, amiért nagyon hálásak vagyunk. Szeretnénk, ha továbbra is igénybe vennéd a meghívó rendszert, ezért ajándékba kiutaltunk számodra %s meghívót.<br /><br />További kellemes időtöltést kívánunk.',
 
-	'MEGHIVO_PETITION_TITLE'				=> 'Meghívó kérelem',
-	'MEGHIVO_PETITIONS_NO'					=> 'A kérelmedet elutasítottuk, így a meghívókat nem utaltuk ki számodra.',
-	'MEGHIVO_PETITION_NO'					=> 'A kérelmedet elutasítottuk, így a meghívót nem utaltuk ki számodra.',
-	'MEGHIVO_PETITION_YES'					=> 'A kérelmedet elfogadtuk, %s db meghívót jóváírtunk.',
+	'INVITE_PETITION_TITLE'					=> 'Meghívó kérelem',
+	'INVITE_PETITIONS_NO'					=> 'A kérelmedet elutasítottuk, így a meghívókat nem utaltuk ki számodra.',
+	'INVITE_PETITION_NO'					=> 'A kérelmedet elutasítottuk, így a meghívót nem utaltuk ki számodra.',
+	'INVITE_PETITION_YES'					=> 'A kérelmedet elfogadtuk, %s db meghívót jóváírtunk.',
 
-	'MEGHIVO_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
+	'INVITE_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
 
-	'MEGHIVO_JOIN'							=> 'Thank you for inviting the user %s',
+	'INVITE_JOIN'							=> 'Thank you for inviting the user %s',
 ));

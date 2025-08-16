@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -153,7 +153,7 @@ class gift extends base
 	 */
 	public function get_title()
 	{
-		$lang_key = $this->get_data('gift_count') > 1 ? 'MEGHIVO_GIFT_INVITED_USERS_FURTHER' : 'MEGHIVO_GIFT_INVITED_USERS_FIRST';
+		$lang_key = $this->get_data('gift_count') > 1 ? 'INVITE_GIFT_INVITED_USERS_FURTHER' : 'INVITE_GIFT_INVITED_USERS_FIRST';
 		return $this->language->lang($lang_key, $this->get_data('gift_invited_users'), $this->config['sitename'], $this->get_data('gift_invited_users_invitation'));
 	}
 
@@ -164,7 +164,7 @@ class gift extends base
 	 */
 	public function get_url()
 	{
-		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'adat'));
+		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, array('i' => ext::get_module_id('ucp'), 'mode' => 'data'));
 	}
 
 	/**

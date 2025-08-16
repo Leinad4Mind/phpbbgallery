@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -35,17 +35,17 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
 $lang = array_merge($lang, array(
-	'MEGHIVO_BIRTHDAY'						=> 'Félicitations! Vous avez reçu %s invitation(s) pour votre anniversaire.<br /><br />Nous vous souhaitons un joyeux anniversaire !',
+	'INVITE_BIRTHDAY'						=> 'Félicitations! Vous avez reçu %s invitation(s) pour votre anniversaire.<br /><br />Nous vous souhaitons un joyeux anniversaire !',
 
-	'MEGHIVO_GIFT_INVITED_USERS_FIRST'		=> 'Bonjour, vous recevez ce message car vous avez invité des utilisateurs, %s, sur le site “%s”, et nous vous en sommes reconnaissants. Nous souhaiterions continuer à utiliser le système d’Invitations aussi nous demandons %s invitations supplémentaires.<br /><br />Bien cordialement.',
-	'MEGHIVO_GIFT_INVITED_USERS_FURTHER'	=> 'Bonjour, vous recevez ce message car vous avez à nouveau invité des utilisateurs, %s, sur le site “%s”, et nous vous en sommes reconnaissants. Nous souhaiterions continuer à utiliser le système d’Invitations aussi nous demandons %s invitations supplémentaires.<br /><br />Bien cordialement.',
+	'INVITE_GIFT_INVITED_USERS_FIRST'		=> 'Bonjour, vous recevez ce message car vous avez invité des utilisateurs, %s, sur le site “%s”, et nous vous en sommes reconnaissants. Nous souhaiterions continuer à utiliser le système d’Invitations aussi nous demandons %s invitations supplémentaires.<br /><br />Bien cordialement.',
+	'INVITE_GIFT_INVITED_USERS_FURTHER'		=> 'Bonjour, vous recevez ce message car vous avez à nouveau invité des utilisateurs, %s, sur le site “%s”, et nous vous en sommes reconnaissants. Nous souhaiterions continuer à utiliser le système d’Invitations aussi nous demandons %s invitations supplémentaires.<br /><br />Bien cordialement.',
 
-	'MEGHIVO_PETITION_TITLE'				=> 'Demande d’Invitation',
-	'MEGHIVO_PETITIONS_NO'					=> 'Votre demande n’a pas été approuvée, aussi les invitations ne vous sont pas attribuées !',
-	'MEGHIVO_PETITION_NO'					=> 'Votre demande n’a pas été approuvée, aussi l’invitation ne vous est pas attribuée !',
-	'MEGHIVO_PETITION_YES'					=> 'Votre demande est approuvée, %s invitation(s) vous sont créditées !',
+	'INVITE_PETITION_TITLE'					=> 'Demande d’Invitation',
+	'INVITE_PETITIONS_NO'					=> 'Votre demande n’a pas été approuvée, aussi les invitations ne vous sont pas attribuées !',
+	'INVITE_PETITION_NO'					=> 'Votre demande n’a pas été approuvée, aussi l’invitation ne vous est pas attribuée !',
+	'INVITE_PETITION_YES'					=> 'Votre demande est approuvée, %s invitation(s) vous sont créditées !',
 
-	'MEGHIVO_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
+	'INVITE_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
 
-	'MEGHIVO_JOIN'							=> 'Thank you for inviting the user %s',
+	'INVITE_JOIN'							=> 'Thank you for inviting the user %s',
 ));

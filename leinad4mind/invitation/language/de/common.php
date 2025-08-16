@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -35,17 +35,17 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
 $lang = array_merge($lang, array(
-	'MEGHIVO_BIRTHDAY'						=> 'Glückwunsch! Du hast zum Geburtstag %s Einladung(en) erhalten.<br /><br />Alles Gute zum Geburtstag!',
+	'INVITE_BIRTHDAY'						=> 'Glückwunsch! Du hast zum Geburtstag %s Einladung(en) erhalten.<br /><br />Alles Gute zum Geburtstag!',
 
-	'MEGHIVO_GIFT_INVITED_USERS_FIRST'		=> 'Hallo, dies ist die automatische Nachricht, die du erhältst, weil du %s Benutzer auf die Seite %s eingeladen hast. Wir würden das Einladungssystem gern beibehalten, daher wurden dir weitere %s Einladungen zugeteilt.<br /><br />Wir wünschen dir eine angenehme Zeit.',
-	'MEGHIVO_GIFT_INVITED_USERS_FURTHER'	=> 'Hallo, dies ist die automatische Nachricht, die du erhältst, weil du weitere %s Benutzer auf die Seite %s eingeladen hast. Wir würden das Einladungssystem gern beibehalten, daher wurden dir weitere %s Einladungen zugeteilt.<br /><br />Wir wünschen dir eine angenehme Zeit.',
+	'INVITE_GIFT_INVITED_USERS_FIRST'		=> 'Hallo, dies ist die automatische Nachricht, die du erhältst, weil du %s Benutzer auf die Seite %s eingeladen hast. Wir würden das Einladungssystem gern beibehalten, daher wurden dir weitere %s Einladungen zugeteilt.<br /><br />Wir wünschen dir eine angenehme Zeit.',
+	'INVITE_GIFT_INVITED_USERS_FURTHER'		=> 'Hallo, dies ist die automatische Nachricht, die du erhältst, weil du weitere %s Benutzer auf die Seite %s eingeladen hast. Wir würden das Einladungssystem gern beibehalten, daher wurden dir weitere %s Einladungen zugeteilt.<br /><br />Wir wünschen dir eine angenehme Zeit.',
 
-	'MEGHIVO_PETITION_TITLE'				=> 'Einladungsanfrage',
-	'MEGHIVO_PETITIONS_NO'					=> 'Deine Anfrage wurde nicht genehmigt, daher wurden dir die Einladungen nicht zugeteilt!',
-	'MEGHIVO_PETITION_NO'					=> 'Deine Anfrage wurde nicht genehmigt, daher wurden dir die Einladung nicht zugeteilt!',
-	'MEGHIVO_PETITION_YES'					=> 'Deine Anfrage wurde genehmigt, %s Einladung(en) wurde(n) dir gutgeschrieben!',
+	'INVITE_PETITION_TITLE'					=> 'Einladungsanfrage',
+	'INVITE_PETITIONS_NO'					=> 'Deine Anfrage wurde nicht genehmigt, daher wurden dir die Einladungen nicht zugeteilt!',
+	'INVITE_PETITION_NO'					=> 'Deine Anfrage wurde nicht genehmigt, daher wurden dir die Einladung nicht zugeteilt!',
+	'INVITE_PETITION_YES'					=> 'Deine Anfrage wurde genehmigt, %s Einladung(en) wurde(n) dir gutgeschrieben!',
 
-	'MEGHIVO_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
+	'INVITE_PETITION_REQUEST'				=> 'The user %s is requesting %d invitations',
 
-	'MEGHIVO_JOIN'							=> 'Thank you for inviting the user %s',
+	'INVITE_JOIN'							=> 'Thank you for inviting the user %s',
 ));

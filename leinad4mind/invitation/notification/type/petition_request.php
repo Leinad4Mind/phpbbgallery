@@ -2,11 +2,11 @@
 
 /**
  *
- * Invitation. An extension for the phpBB Forum Software package.
+ * Invite. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -58,7 +58,7 @@ class petition_request extends base
 	 */
 	public function is_available()
 	{
-		return $this->auth->acl_get('a_meghivo_igeny') || $this->auth->acl_get('m_meghivo_igeny');
+		return $this->auth->acl_get('a_invite_claiming') || $this->auth->acl_get('m_invite_claiming');
 	}
 
 	/**
@@ -130,7 +130,7 @@ class petition_request extends base
 	public function get_title()
 	{
 		$username_full = $this->user_loader->get_username($this->get_data('petition_request_user_id'), 'no_profile');
-		return $this->language->lang('MEGHIVO_PETITION_REQUEST', $username_full, $this->get_data('petition_request_count'));
+		return $this->language->lang('INVITE_PETITION_REQUEST', $username_full, $this->get_data('petition_request_count'));
 	}
 
 	/**
@@ -140,13 +140,13 @@ class petition_request extends base
 	 */
 	public function get_url()
 	{
-		if ($this->auth->acl_get('a_meghivo_igeny'))
+		if ($this->auth->acl_get('a_invite_claiming'))
 		{
-			return append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, array('i' => ext::get_module_id('acp'), 'mode' => 'igeny'), true, $this->user->session_id);
+			return append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, array('i' => ext::get_module_id('acp'), 'mode' => 'claiming'), true, $this->user->session_id);
 		}
-		else if ($this->auth->acl_get('m_meghivo_igeny'))
+		else if ($this->auth->acl_get('m_invite_claiming'))
 		{
-			return append_sid($this->phpbb_root_path . 'mcp.' . $this->php_ext, array('i' => ext::get_module_id('mcp'), 'mode' => 'jovahagyas'), true, $this->user->session_id);
+			return append_sid($this->phpbb_root_path . 'mcp.' . $this->php_ext, array('i' => ext::get_module_id('mcp'), 'mode' => 'confirmation'), true, $this->user->session_id);
 		}
 
 		return '';
