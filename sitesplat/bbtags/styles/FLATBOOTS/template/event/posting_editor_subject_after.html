@@ -1,0 +1,24 @@
+<!-- IF BBTAGS_SHOW_FIELD -->
+<script>
+var maxTags = {BBTAGS_MAXTAGS};
+var maxLength = {BBTAGS_MAXLENGTH};
+</script>
+<!-- INCLUDEJS @sitesplat_bbtags/js/jquery.tag-editor.min.js -->
+<!-- INCLUDEJS @sitesplat_bbtags/js/jquery.caret.min.js -->
+<!-- INCLUDEJS @sitesplat_bbtags/js/jquery-ui.min.js -->
+<!-- INCLUDEJS @sitesplat_bbtags/js/bbtags.js -->
+<div class="control-group control-bbtags"> 
+	<label class="control-label" for="bbtags">{L_BBTAGS}{L_COLON}<span class="help-block">{L_BBTAGS_TAG_SPEC}</span></label>
+   <div class="row">	
+    <div class="col-xs-12 col-lg-8">
+	<div class="input-group">	
+	  <input type="text" name="bbtags" id="bbtags" value="{BBTAGS_TAGS}" size="45" class="form-control" autocomplete="off" />
+       <span class="input-group-btn">
+	      <a data-toggle="modal" href="#BBTPreviewDialog" class="open-bbtagsdialog btn" title="{L_BBTAGS_AUTO_SUGGEST}"><i class="fa fa-search-plus"></i></a>
+       </span>
+	</div>   
+	</div>
+   </div>	
+</div>	
+<!-- ENDIF -->
+

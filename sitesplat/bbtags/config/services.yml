@@ -1,0 +1,46 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.bbtags.manager:
+        class: sitesplat\bbtags\tags\manager
+        arguments:
+            - @dbal.conn.driver
+            - @config
+            - @auth
+            - %sitesplat.bbtags.tables.bbtags%
+            - %sitesplat.bbtags.tables.bbtags_topic%
+    sitesplat.bbtags.listener:
+        class: sitesplat\bbtags\event\listener
+        arguments:
+            - @auth
+            - @controller.helper
+            - @template
+            - @user
+            - @config
+            - @request
+            - @sitesplat.bbtags.manager
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
+    sitesplat.bbtags.controller:
+        class: sitesplat\bbtags\controller\main
+        arguments:
+            - @dbal.conn.driver
+            - @config
+            - @config_text
+            - @template
+            - @controller.helper
+            - @request
+            - @user
+            - @auth
+            - @cache
+            - @pagination
+            - @dispatcher
+            - @content.visibility
+            - %core.php_ext%
+            - %core.root_path%
+            - @sitesplat.bbtags.manager
+            - %sitesplat.bbtags.tables.bbtags%
+            - %sitesplat.bbtags.tables.bbtags_topic%

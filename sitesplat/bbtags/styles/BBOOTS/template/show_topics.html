@@ -1,0 +1,78 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{SEARCH_MATCHES}</h3></div>
+<!-- IF .topicrow -->
+<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{L_TOPICS}</th>
+			<th class="large110" data-hide="phone">{L_TOPICS_POSTS_STATISTICS}</th>
+			<th class="large21" data-hide="phone">{L_LAST_POST}</th>
+		</tr>
+	</thead>		
+	<tbody>
+   <!-- DEFINE $VAR -->{L_VIEW_TOPIC_LOCKED}<!-- ENDDEFINE -->
+    <!-- BEGIN topicrow -->
+        <!-- EVENT search_results_topic_before -->
+        <tr>
+			<td>
+			<!-- IF searchresults.TOPIC_ICON_IMG --><i class="topic-icon" style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{topicrow.TOPIC_ICON_IMG_ALT}"></i><!-- ENDIF -->
+			<span class="icon-wrapper">
+				<i class="row-icon-font icon-moon-default2<!-- IF topicrow.S_TOPIC_TYPE == 2 --> icon-moon-voice2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 3 --> icon-moon-podcast2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 1 --> icon-moon-pushpin2<!-- ELSEIF topicrow.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+			</span>
+				<i class="row-icon-font-mini<!-- IF topicrow.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{topicrow.TOPIC_ICON_IMG_ALT}"></i>
+			<span class="desc-wrapper">	
+			<!-- EVENT topiclist_row_prepend -->
+				<!-- IF topicrow.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{topicrow.U_NEWEST_POST}" title="{L_VIEW_FIRST_UNREAD}"><i class="fa fa-asterisk"></i></a><!-- ENDIF -->
+				<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a> <!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" rel="tooltip" data-placement="top" data-original-title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
+				<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPICS_ROW_NOT_APPROVED}"><i class="fa fa-question-circle"></i></a><!-- ENDIF -->
+				<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}" title="{L_TOPICS_ROW_REPORTED}"><i class="fa fa-exclamation-circle text-danger"></i></a><!-- ENDIF --><br />
+				<!-- IF .topicrow.pagination -->
+				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
+						<!-- BEGIN pagination -->
+						 <!-- IF topicrow.pagination.S_IS_PREV -->
+						 <!-- ELSEIF topicrow.pagination.S_IS_CURRENT --><li class="active">{topicrow.pagination.PAGE_NUMBER}</li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_ELLIPSIS --><li class="ellipsis"><a>{L_ELLIPSIS}</a></li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_NEXT -->
+						<!-- ELSE -->
+						 <li><a href="{topicrow.pagination.PAGE_URL}">{topicrow.pagination.PAGE_NUMBER}</a></li>
+						<!-- ENDIF -->
+						<!-- END pagination -->
+					</ul>		
+			    <!-- ENDIF -->
+				{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL}&nbsp;&#45;&nbsp;<small>{topicrow.FIRST_POST_TIME}</small>
+				<!-- IF not topicrow.S_TOPIC_GLOBAL --><i class="fa fa-comments"></i>&nbsp;{L_IN}&nbsp;<a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_TITLE}</a><!-- ELSE -->&nbsp;&#40;{L_GLOBAL}&#41;<!-- ENDIF -->
+			<!-- EVENT topiclist_row_append -->
+			</span>
+			</td>
+			<td class="stats-col"><span class="stats-wrapper">{topicrow.TOPIC_REPLIES}&nbsp;{L_REPLIES}<br />&nbsp;{topicrow.TOPIC_VIEWS}&nbsp;{L_VIEWS}</span></td>
+			<td class="center">{L_POST_BY_AUTHOR}&nbsp;{topicrow.LAST_POST_AUTHOR_FULL}
+			<!-- IF not S_IS_BOT --><a rel="tooltip" data-placement="right" data-original-title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="mobile-post fa fa-sign-out"></i></a><!-- ENDIF -->
+			<br /><small>{topicrow.LAST_POST_TIME}</small>
+			</td>
+		</tr>
+        <!-- EVENT search_results_topic_after -->
+    <!-- END topicrow -->
+    </tbody>
+	</table>
+	</div>
+<!-- IF .pagination or TOTAL_POSTS -->
+    <div class="visible-xs"> 
+     <ul class="pagination pagination-sm">
+	<!-- IF .pagination -->
+			<!-- INCLUDE pagination_mobile.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+	</ul>
+	</div>
+<!-- ENDIF -->
+<!-- EVENT viewforum_buttons_bottom_after -->
+<!-- ELSE -->
+    <div class="alert alert-info fade in">
+       <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+       <i class="fa fa-warning"></i><strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_SEARCH_RESULTS}
+    </div> 
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

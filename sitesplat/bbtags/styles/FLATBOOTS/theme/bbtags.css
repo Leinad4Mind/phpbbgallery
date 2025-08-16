@@ -1,0 +1,129 @@
+.bbtags {
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.bbtags li {
+  float: left;
+}
+
+.bbtag {
+  background: #eee;
+  border-radius: 3px 0 0 3px;
+  color: #999!important;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 20px 0 23px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  text-decoration: none;
+    transition: color 0.1s;
+  -webkit-transition: color 0.1s;
+}
+
+.bbtag::before {
+  background: #283E56;
+  border-radius: 10px;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+  content: '';
+  height: 6px;
+  left: 10px;
+  position: absolute;
+  width: 6px;
+  top: 10px;
+}
+
+.bbtag::after {
+  background: #283E56;
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid #eee;
+  border-top: 13px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.bbtag:hover {
+  background-color: #ee836e;
+  color: white!important;
+}
+
+.bbtag:hover::after {
+  border-left-color: #ee836e;
+}
+
+
+
+/* Index tag alternate style */
+/* <div class="bbtag-alt"><span>#</span>tag<a role="button" class="tag-i">&times;</a></div> */
+
+.bbtag-alternate .bbtag-alt {
+  background: #ee836e;
+  border-radius: 2px;
+  color: white;
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  padding: 4px 20px 4px 0;
+  margin: 5px 10px 0 0;
+}
+
+.bbtag-alternate .bbtag-alt span {
+  background: #d9534f;
+  border-radius: 2px 0 0 2px;
+  margin-right: 5px;
+  padding: 5px 10px 5px;
+}
+
+.bbtag-alternate .bbtag-alt .tag-i {
+  color: white;
+  cursor: pointer;
+  font-size: 1.3em;
+  height: 0;
+  line-height: 0.1em;
+  position: absolute;
+  right: 5px;
+  top: 0.7em;
+  text-align: center;
+  width: 10px;
+}
+
+.bbtag-alt .tag-i:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+
+
+
+/* Topic tags adjustemnts */
+
+.bbtags-topic .bbtag {
+  background: #fff;
+  color: #999!important;
+}
+
+.bbtags-topic .bbtag::before {
+  background: #ECF0F1;
+}
+
+.bbtags-topic .bbtag::after {
+  background: #ECF0F1;
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid #fff;
+  border-top: 13px solid transparent;
+}
+
+.bbtags-topic .bbtag:hover {
+  background-color: #ee836e;
+  color: white!important;
+}
+
+.bbtags-topic .bbtag:hover::after {
+  border-left-color: #ee836e;
+}
+
