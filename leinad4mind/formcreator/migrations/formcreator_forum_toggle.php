@@ -14,23 +14,23 @@ class formcreator_forum_toggle extends \phpbb\db\migration\migration
 {
 	public function update_schema()
 	{
-		return array(
-			'add_columns'	=> array(
-				$this->table_prefix . 'forums' => array(
-					'forum_show_form' => array('BOOL', '0'),
-				),
-			),
-		);
+		return [
+			'add_columns'	=> [
+				$this->table_prefix . 'forums' => [
+					'forum_show_form' => ['BOOL', '0'],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return array(
-			'drop_columns'	=> array(
-				$this->table_prefix . 'forums' => array(
+		return [
+			'drop_columns'	=> [
+				$this->table_prefix . 'forums' => [
 					'forum_show_form',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

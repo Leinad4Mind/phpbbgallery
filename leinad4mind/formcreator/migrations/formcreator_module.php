@@ -14,13 +14,13 @@ class formcreator_module extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
-		return array(
-			array('module.add', array('acp', 'ACP_CAT_DOT_MODS', 'ACP_FORM_CREATOR')),
-			array('module.add', array(
-			'acp', 'ACP_FORM_CREATOR', array(
-					'module_basename'	=> '\leinad4mind\formcreator\acp\formcreator_module', 'modes' => array('manage'),
-				),
-			)),
-		);
+		return [
+			['module.add', ['acp', 'ACP_CAT_DOT_MODS', 'ACP_FORM_CREATOR']],
+			['module.add', [
+				'acp', 'ACP_FORM_CREATOR', [
+					'module_basename'	=> '\leinad4mind\formcreator\acp\formcreator_module', 'modes' => ['manage'],
+				],
+			]],
+		];
 	}
 }

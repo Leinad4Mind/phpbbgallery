@@ -19,29 +19,29 @@ class formcreator_before_after extends \phpbb\db\migration\migration
 
 	public function update_schema()
 	{
-		return array(
-			'add_columns'	=> array(
-				$this->table_prefix . 'form_creator' => array(
-					'name_before' => array('VCHAR', ''),
-					'name_after' => array('VCHAR', ''),
-					'value_before' => array('VCHAR', ''),
-					'value_after' => array('VCHAR', ''),
-				),
-			),
-		);
+		return [
+			'add_columns'	=> [
+				$this->table_prefix . 'form_creator' => [
+					'name_before' => ['VCHAR', ''],
+					'name_after' => ['VCHAR', ''],
+					'value_before' => ['VCHAR', ''],
+					'value_after' => ['VCHAR', ''],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return array(
-			'drop_columns'	=> array(
-				$this->table_prefix . 'form_creator' => array(
+		return [
+			'drop_columns'	=> [
+				$this->table_prefix . 'form_creator' => [
 					'name_before',
 					'name_after',
 					'value_before',
 					'value_after',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'MODE'						=> 'Mode',
 	'ELEMENTS'					=> 'Elements',
 	'FORM_NAME'					=> 'Forum Name',
@@ -46,26 +46,31 @@ $lang = array_merge($lang, array(
 	'ACP_FORM_CREATOR'			=> 'Form Creator',
 	'ACP_FORM_CREATOR_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
 	'ACP_FORM_MOD_MORE_INFO'	=> 'Click Me for More Info.',
-	'ACP_FORM_MOD_NOTE'			=> '<br /><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
+	'ACP_FORM_MOD_NOTE'			=> '<br><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
 
-	'ACP_FORM_CREATOR_EXPLAIN_2' => 'How do I change the form?<br /> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br /><br />
-	How do I add a new form element?<br /> &nbsp; &bull; Use <strong><i>Add a new form element</i></strong>.<br /><br />
-	How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<br /><br />
-	<strong>&#8730;</strong> The checkmark character indicated an item is mandatory and cannot be empty.<br />',
+	'ACP_FORM_CREATOR_EXPLAIN_2' => 'How do I change the form?<br> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br><br>
+	How do I add a new form element?<br> &nbsp; &bull; Use <strong><i>Add a new form element</i></strong>.<br><br>
+	How do I delete a form?<br> &nbsp; &bull; Simply delete all form elements...<br><br>
+	<strong>&#8730;</strong> The checkmark character indicated an item is mandatory and cannot be empty.<br>',
 
 	'CURRENT_FORM'			 	=> 'Current Form',
 	'FORM_ADD_ITEM'				=> 'Add a new form element',
 	'FORM_CHECKBOX'				=> 'Check Box',
 	'FORM_DETAILS'			 	=> 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',
 	'FORM_ELEMENT'			 	=> 'Input Type',
-	'FORM_ELEMENT_TYPE'			=> 'Element type',
-	'FORM_ELEMENT_HINT'			=> 'Hint',
-	'FORM_ELEMENT_NAME'			=> 'Entry Name',
-	'FORM_ELEMENT_OPTIONS'		=> 'Options',
-	'FORM_ELEMENT_NAME_BEFORE'	=> 'Name before',
-	'FORM_ELEMENT_NAME_AFTER'	=> 'Name after',
-	'FORM_ELEMENT_VALUE_BEFORE'	=> 'Value before',
-	'FORM_ELEMENT_VALUE_AFTER'	=> 'Value after',
+	'FORM_ELEMENT_TYPE'					=> 'Element type',
+	'FORM_ELEMENT_HINT'					=> 'Hint',
+	'FORM_ELEMENT_OPTIONS_SEPARATOR'	=> 'Options separator',
+	'FORM_ELEMENT_NAME_VISIBLE'			=> 'Display/hide the element name on the final form.',
+	'FORM_ELEMENT_NAME'					=> 'Entry Name',
+	'FORM_ELEMENT_EXPLAIN'				=> 'Entry Explain',
+	'FORM_ELEMENT_NAME_EXPLAIN'			=> 'Entry Name/Explain',
+	'FORM_ELEMENT_OPTIONS'				=> 'Options',
+	'FORM_ELEMENT_MIN_MAX'				=> 'Min/Max',
+	'FORM_ELEMENT_MIN'					=> 'Min',
+	'FORM_ELEMENT_MAX'					=> 'Max',
+	'FORM_ELEMENT_NAME_BEFORE_AFTER'	=> 'Name before/after',
+	'FORM_ELEMENT_VALUE_BEFORE_AFTER'	=> 'Value before/after',
 	'FORM_EMAILBOX'				=> 'Email',
 	'FORM_INPUTBOX'				=> 'Text',
 	'FORM_CREATOR_ACP_DELETED'	=> 'Entry deleted',
@@ -76,18 +81,22 @@ $lang = array_merge($lang, array(
 	'FORM_MANAGE_EXPLAIN'		=> 'Here you can modify all of the current form elements, simply edit fields and press the <strong>Update</strong> button...',
 	'FORUM_NAME'				=> 'Forum Name',
 
-	'FORM_NEW_ITEM_EXPLAIN_2'	=> '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br />
-	<strong>Inputbox:</strong>		Up to 255 characters.<br />
-	<strong>Textbox:</strong>	 	Multiple lines of text arranged as 3 rows by 76 columns.<br />
-	<strong>Checkbox:</strong>		One or more options can be selected, if set to mandatory, each and every option in the checkbox group must be checked.<br />
-	<strong>Radiobutton:</strong> 		Only one option can be selected.<br />
-	<strong>Selectbox:</strong>		One option from a dropdown list.<br />
-	<strong>Email:</strong>			Valid email address.<br />
-	<strong>Password:</strong>		For test only...<br />
-	<strong>URL:</strong>			A valid URL must be entered.<br />
-	<strong>Attachment:</strong>		Add an image.<br /><br /></pre>',
+	'FORM_NEW_ITEM_EXPLAIN_2'	=> '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br>
+	<strong>Inputbox:</strong>		Up to 255 characters<br>
+	<strong>Textbox:</strong>	 	Multiple lines of text arranged as 3 rows by 76 columns.<br>
+	<strong>Checkbox:</strong>		One or more options can be selected, if set to mandatory, each and every option in the checkbox group must be checked.<br>
+	<strong>Radiobutton:</strong> 		Only one option can be selected.<br>
+	<strong>Selectbox:</strong>		One option from a dropdown list.<br>
+	<strong>Email:</strong>			Valid email address.<br>
+	<strong>Password:</strong>		For test only...<br>
+	<strong>URL:</strong>			A valid URL must be entered.<br>
+	<strong>Attachment:</strong>		Add an image.<br>
+	<strong>Number:</strong>			Only numbers 0-9 are allows.<br>
+	<strong>Date:</strong>			Opens a date picker.<br>
+	<strong>Time:</strong>			Opens a time picker.<br>
+	<br></pre>',
 
-	'FORM_NO_FORM'			 	=> 'There are no forms assigned to: <strong>%s</strong>...<br />To add a new form to this forum, simply add a form element below...',
+	'FORM_NO_FORM'			 	=> 'There are no forms assigned to: <strong>%s</strong>...<br>To add a new form to this forum, simply add a form element below...',
 	'FORM_RADIOBOX'				=> 'Radio Buttons',
 	'FORM_PASSWORDBOX'			=> 'Password',
 	'FORM_SELECTBOX'			=> 'Select Box',
@@ -96,8 +105,12 @@ $lang = array_merge($lang, array(
 	'FORM_TXTBOX'				=> 'Text Box',
 	'FORM_URLBOX'				=> 'URL',
 	'FORM_ATTACH'				=> 'Attachment',
+	'FORM_NUMBER'				=> 'Number',
+	'FORM_DATE'					=> 'Date',
+	'FORM_TIME'					=> 'Time',
 	'HIDE_FORM_INFO'			=> 'Hide info',
 	'HIDE_PREVIEW'			 	=> 'Hide Preview',
+	'HIDE_COPY'				 	=> 'Hide copy form',
 	'HOW_TO'					=> '<strong>Additional Help...</strong>',
 	'HOW_TO_MORE'				=> 'More info...',
 	'HOW_TO_HIDE'				=> '<strong>Hide</strong>',
@@ -106,14 +119,18 @@ $lang = array_merge($lang, array(
 	'NDX'						=> 'NDX',
 	'NDX_ORDER'					=> 'Index order (the order in which items appear on the form)',
 	'NO_FOURM'				 	=> 'No forum associated with this form',
-	'FORMS_MOD_SAMPLE'		 	=> 'Rendering the current form to assist visualisation only... not a working form.',
+	'FORMS_MOD_SAMPLE'		 	=> 'Rendering the current form to assist visualization only... not a working form.',
 	'SELECT_FORM_TO_MANAGE'		=> 'Please select a forum to associate with this form',
 	'SHOW_FORM_INFO'			=> 'More info on Element types',
 	'SHOW_PREVIEW'			 	=> 'Preview the form',
+	'SHOW_COPY'					=> 'Copy form',
+	'COPY_FORM'					=> 'Copy form to selected forums',
+	'COPY_FORM_EXPLAIN'			=> 'This will delete all existing form elements in the selected destination forums!',
+	'COPY_FORM_SUCCESS'			=> 'The form elements have been copied to all selected forums.',
 
 	'CHECKBOX_NOTE'				=> '<strong>Note:</strong>???',
 	'CHECKBOXE_NOTES'			=> 'Checkboxes!',
 	'CHKNOTE'					=> 'Checkboxes with multiple items are rarely set as mandatory as doing so, require the user checks each and every item.',
 	'SHOW_FORM_DEFAULT'			=> 'Show form by default',
 	'FORCE_FORM'				=> 'Force form',
-));
+]);

@@ -14,21 +14,21 @@ class formcreator_bbcode extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
-		return array(
-			array('custom', array(array($this, 'install_formcreators'))),
-		);
+		return [
+			['custom', [[$this, 'install_formcreators']]],
+		];
 	}
 
 	public function revert_data()
 	{
-		return array(
-			array('custom', array(array(&$this, 'formcreators_behind'))),
-		);
+		return [
+			['custom', [[$this, 'formcreators_behind']]],
+		];
 	}
 
 	public function formcreators_behind($bbcode_tags)
 	{
-		$bbcode_tags = array('att', 'fbox', 'form');
+		$bbcode_tags = ['att', 'fbox', 'form'];
 
 		$sql = 'UPDATE ' . BBCODES_TABLE . '
 			SET display_on_posting = 0
@@ -45,38 +45,38 @@ class formcreator_bbcode extends \phpbb\db\migration\migration
 
 		$bbcode_tool = new \acp_bbcodes();
 
-		$bbcode_data = array(
-			'att' => array(
+		$bbcode_data = [
+			'att' => [
 				'bbcode_match'		=> '[att]{TEXT}[/att]',
 				'bbcode_tpl'		=> '<div class="att">{TEXT}</div>',
 				'bbcode_helpline'	=> '[att]{TEXT}[/att]',
 				'display_on_posting'=> 0,
-			),
-			'fbox' => array(
+			],
+			'fbox' => [
 				'bbcode_match'		=> '[fbox]{TEXT}[/fbox]',
 				'bbcode_tpl'		=> '<div class="fbox">{TEXT}</div>',
 				'bbcode_helpline'	=> '[fbox]{TEXT}[/fbox]',
 				'display_on_posting'=> 0,
-			),
-			'form' => array(
+			],
+			'form' => [
 				'bbcode_match'		=> '[form]{TEXT}[/form]',
 				'bbcode_tpl'		=> '<pre>{TEXT}</pre>',
 				'bbcode_helpline'	=> '[form]{TEXT}[/form]',
 				'display_on_posting'=> 0,
-			),
-		);
+			],
+		];
 
 		foreach ($bbcode_data as $bbcode_name => $bbcode_array)
 		{
 			$data = $bbcode_tool->build_regexp($bbcode_array['bbcode_match'], $bbcode_array['bbcode_tpl'], $bbcode_array['bbcode_helpline']);
 
-			$bbcode_array += array(
+			$bbcode_array += [
 				'bbcode_tag'			=> $data['bbcode_tag'],
 				'first_pass_match'		=> $data['first_pass_match'],
 				'first_pass_replace'	=> $data['first_pass_replace'],
 				'second_pass_match'		=> $data['second_pass_match'],
 				'second_pass_replace'	=> $data['second_pass_replace']
-			);
+			];
 
 			$sql = 'SELECT bbcode_id
 				FROM ' . BBCODES_TABLE . "

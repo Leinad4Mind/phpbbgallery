@@ -14,14 +14,15 @@ class formcreator_data extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('form_creator_enabled', 1)),
+		return [
+			// Add config
+			['config.add', ['form_creator_enabled', 1]],
 
 			// Add permission
-			array('permission.add', array('a_form_creator', true)),
+			['permission.add', ['a_form_creator', true]],
 
 			// Set permission
-			array('permission.permission_set', array('ADMINISTRATORS', 'a_form_creator', 'group')),
-		);
+			['permission.permission_set', ['ADMINISTRATORS', 'a_form_creator', 'group']],
+		];
 	}
 }

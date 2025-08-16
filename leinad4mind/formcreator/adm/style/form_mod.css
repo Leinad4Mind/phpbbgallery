@@ -4,14 +4,14 @@
    width: 16px;
 }
 .checkbox {
-	cursor:pointer
+	cursor: pointer
 }
 .mandatory {
 	font-size: 10px;
 	margin-top: 1px;
 	margin-bottom: 10px;
 	margin-left: 14.5em;
-	text-align:left;
+	text-align: left;
 }
 .info1_p {
 	cursor: pointer;
@@ -19,7 +19,7 @@
 	margin-top: -35px;
 }
 .th_action {
-	width: 50px;
+	width: 60px;
 	text-align: center;
 }
 .th_current {
@@ -27,23 +27,26 @@
 	width: 100%;
 }
 .th_name {
-	width: 100px;
 	text-align: left;
 }
 .th_hint {
-	width: 7%;
+	width: 15%;
 	text-align: left;
 }
 .th_option {
-	width: 7%;
+	width: 15%;
+	text-align: left;
+}
+.th_minmax {
+	width: 5%;
 	text-align: left;
 }
 .th_before {
-	width: 12%;
+	width: 10%;
 	text-align: left;
 }
 .th_after {
-	width: 12%;
+	width: 10%;
 	text-align: left;
 }
 .th_ndx {
@@ -51,7 +54,7 @@
 	text-align: center;
 }
 .th_mand {
-	width: 2%;
+	width: 20px;
 	text-align: center;
 }
 .th_com {
@@ -59,24 +62,24 @@
 	text-align: left;
 }
 .th_type {
-	width: 80px;
+	width: 132px;
 	text-align: left;
 }
 .th_type2 {
-	width: 5%;
+	width: 15%;
 	text-align: left;
 }
 .th_type3 {
-	width:7%;
-	text-align:left
+	width: 15%;
+	text-align: left
 }
 .th_type4 {
-	width:7%;
-	text-align:left;
+	width: 15%;
+	text-align: left;
 }
 .th_type5 {
-	width:12%;
-	text-align:left;
+	width: 15%;
+	text-align: left;
 }
 .td_in {
 	padding-left: 0;
@@ -86,20 +89,20 @@
 .td_move {
 	width: 90px;
 	padding: 1px;
-	text-align:center;
+	text-align: center;
 }
 .td_pad {
 	padding-left: 0;
 	padding-right: 2px;
 }
 .td_0 {
-	padding-left:0;
+	padding-left: 0;
 	font-size: 12px;
 }
 .td_02 {
-	padding-left:0;
-	padding-right:2px;
-	overflow:hidden
+	padding-left: 0;
+	padding-right: 2px;
+	overflow: hidden
 }
 .td_12 {
 	padding-left: 0;
@@ -107,15 +110,19 @@
 }
 .td_20 {
 	width: 20px;
-	text-align:center;
+	text-align: center;
 }
 .td_80 {
-	width:80px;
-	text-align:center;
+	width: 80px;
+	text-align: center;
+}
+.td_132 {
+	width: 132px;
+	text-align: left;
 }
 .div_0 {
 	padding-top: 10px;
-	margin-bottom:-23px;
+	margin-bottom: -23px;
 }
 
 .dt10 {
@@ -135,7 +142,7 @@
 	margin-top: 1px;
 	margin-bottom: 10px;
 	margin-left: 14.5em;
-	text-align:left;
+	text-align: left;
  }
 .fields2 {
 	border-radius: 5px;

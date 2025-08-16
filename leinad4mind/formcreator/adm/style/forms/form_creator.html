@@ -6,7 +6,7 @@
 	{% for form_creator_template in loops.form_creator_template %}
 	<dl>
 		<dt class="dt10">
-			<label for="templatefield_{{ form_creator_template.CLEAN_NAME }}">{{ form_creator_template.NAME }}{{ lang('COLON') }}</label>{{ form_creator_template.MANDATORY }}
+			<label for="templatefield_{{ form_creator_template.ID }}">{{ form_creator_template.NAME }}{{ lang('COLON') }}</label>{{ form_creator_template.MANDATORY }}
 		</dt>
 		<dd class="dd10">{{ form_creator_template.TYPE }}</dd>
 	</dl>

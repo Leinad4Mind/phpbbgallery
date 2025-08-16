@@ -14,8 +14,13 @@
 		<fieldset class="fields2">
 			{% for form_creator_template in loops.form_creator_template %}
 			<dl>
-				<dt><label class="control-label" for="templatefield_{{ form_creator_template.NAME }}">{{ form_creator_template.NAME }}{{ lang('COLON') }}</label>{{ form_creator_template.MANDATORY }}</dt>
-				<dd>{{ form_creator_template.TYPE }}</dd>
+				<dt>
+					<label for="{{ form_creator_template.CLEAN_NAME }}">{{ form_creator_template.NAME_RICH }}{{ lang('COLON') }}</label>{{ form_creator_template.MANDATORY }}
+					{% if form_creator_template.EXPLAIN %}
+						<br><span class="small">{{ form_creator_template.EXPLAIN }}</span>
+					{% endif %}
+				</dt>
+				<dd>{{ form_creator_template.ENTRY }}</dd>
 			</dl>
 			{% endfor %}
 		</fieldset>
@@ -24,9 +29,9 @@
 		<div class="inner">
 			<fieldset class="submit-buttons form-buttons">
 				{{ S_FORM_TOKEN }}
-				<input type="reset" name="reset" value="{{ lang('RESET') }}" class="btn btn-default" />&nbsp;
-				<input type="submit" tabindex="5" name="preview" value="{{ lang('PREVIEW') }}" class="btn btn-default" onclick="enable_form_preview(); document.getElementById('postform').action += '#preview';" />&nbsp;
-				<input type="submit" accesskey="s" tabindex="6" name="post" value="{{ lang('SUBMIT') }}" class="btn btn-default default-submit-action" onclick="return postform_check.call(this);" />
+				<input type="reset" name="reset" value="{{ lang('RESET') }}" class="btn btn-default">&nbsp;
+				<input type="submit" tabindex="5" name="preview" value="{{ lang('PREVIEW') }}" class="btn btn-default" onclick="enable_form_preview(); document.getElementById('postform').action += '#preview';">&nbsp;
+				<input type="submit" accesskey="s" tabindex="6" name="post" value="{{ lang('SUBMIT') }}" class="btn btn-default default-submit-action" onclick="return postform_check.call(this);">
 			</fieldset>
 		</div>
 	</div>

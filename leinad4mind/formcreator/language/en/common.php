@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CLOSE_FORM'				=> 'Cancel',
 	'OPEN_FORM'					=> 'Form Mode',
 	'OPEN_POST'					=> 'Post Mode',
@@ -48,4 +48,6 @@ $lang = array_merge($lang, array(
 	'REQUIRED'				 	=> 'You have not entered all the required elements!',
 	'CHECKBOX_MSG'				=> 'Checkboxes marked as Mandatory, require all elements to be checked (HTML5 Form Validation).',
 	'MANDATORY'					=> 'Items marked with the asterisk are mandatory.',
-));
+
+	'ERROR_MIN_MAX_CHECKBOX'	=> 'You need select between %d and %d items for %s',
+]);

@@ -10,6 +10,10 @@
 
 namespace leinad4mind\formcreator\event;
 
+use leinad4mind\formcreator\ext;
+use phpbb\extension\exception;
+use phpbb\textformatter\parser_interface;
+use phpbb\textformatter\renderer_interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
@@ -97,28 +101,28 @@ class listener implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.permissions'						=> 'add_permission',
 			'core.posting_modify_message_text'		=> 'modify_message_text',
 			'core.posting_modify_template_vars'		=> 'posting_modify_template_vars',
-		);
+		];
 	}
 
 	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'leinad4mind/formcreator',
 			'lang_set' => 'common',
-		);
+		];
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['a_form_creator'] = array('lang' => 'ACL_A_FORM_CREATOR', 'cat' => 'misc');
+		$permissions['a_form_creator'] = ['lang' => 'ACL_A_FORM_CREATOR', 'cat' => 'misc'];
 		$event['permissions'] = $permissions;
 	}
 
@@ -138,13 +142,21 @@ class listener implements EventSubscriberInterface
 				$message_parser = $event['message_parser'];
 				$files 			= $this->request->get_super_global(\phpbb\request\request::FILES);
 
-				$message = $this->grab_form_data($forum_id);
-				foreach ($files as $key => $name)
+				try
 				{
-					$message_parser->parse_attachments($key, $mode, $forum_id, $submit, $preview, $refresh);
-				}
+					$message = $this->grab_form_data($forum_id);
 
-				$message_parser->message = $message;
+					foreach ($files as $key => $name)
+					{
+						$message_parser->parse_attachments($key, $mode, $forum_id, $submit, $preview, $refresh);
+					}
+
+					$message_parser->message = $message;
+				}
+				catch (exception $e)
+				{
+					$event['error'] = array_merge($event['error'], $e->get_parameters());
+				}
 			}
 		}
 	}
@@ -155,18 +167,17 @@ class listener implements EventSubscriberInterface
 		{
 			$forum_id = $event['forum_id'];
 
-			$this->build_form($forum_id);
+			$this->build_form($forum_id, $event['mode']);
 		}
 	}
 
-	private function build_form($forum_id)
+	private function build_form($forum_id, $mode)
 	{
-		global $mode;
+		global $phpbb_container;
 
-		$class = 'class="inputbox autowidth form-control input-sm"';
-		$entry = "";
+		$class = ' class="inputbox autowidth form-control input-sm"';
 
-		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id, forum_show_form, forum_force_form
+		$sql = 'SELECT m.*, f.forum_name, f.forum_id, f.forum_force_form, f.forum_show_form
 			FROM ' . $this->table_formcreator . ' m, ' . FORUMS_TABLE . ' f
 			WHERE m.form_id = ' . (int) $forum_id . '
 				AND m.form_id = f.forum_id
@@ -175,29 +186,18 @@ class listener implements EventSubscriberInterface
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			if ($row['mandatory'])
-			{
-				$mandatory = " required ";
-			}
-			else
-			{
-				$mandatory = "";
-			}
-
-			$clean_name = 'templatefield_' . str_replace(' ', '_', $row['name']);
-
-			// make things even easier to read //
-			$name = "name='{$clean_name}'";
-			$id = "id='{$clean_name}'";
-			$placeholder = "placeholder='" . htmlspecialchars($row['hint'], ENT_QUOTES) . "' ";
-			$tabindex = "tabindex='{$row['ndx_order']}' ";
-
-			$type = "type='{$row['type']}' ";
-
-			$size='size="40" ';
-			$maxlength = 'maxlength="255" ';
-			$cols='rows="3"';
-			$rows='cols="76"';
+			$entry = '';
+			$clean_name = 'templatefield_' . $row['id'];
+			$mandatory = $row['mandatory'] ? ' required ' : '';
+			$name = ' name="' . $clean_name . '"';
+			$id = ' id="' . $clean_name . '"';
+			$placeholder = ' placeholder="' . $row['hint'] . '"';
+			$tabindex = ' tabindex="' . $row['ndx_order'] . '"';
+			$type = ' type="' . $row['type'] . '"';
+			$size = ' size="40"';
+			$maxlength = ' maxlength="255"';
+			$cols = ' rows="3"';
+			$rows = 'cols="76"';
 
 			switch (strtolower($row['type']))
 			{
@@ -206,44 +206,49 @@ class listener implements EventSubscriberInterface
 				case 'url':
 				case 'text':
 				case 'file':
+				case 'date':
+				case 'time':
 					$value = $this->request->variable($clean_name, '', true);
-					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><input ' . $type . $name . $id . $placeholder . $mandatory . $size . $maxlength . $tabindex . $class . ' value="' . $value . '" /></div></div>';
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><input' . $type . $name . $id . $placeholder . $mandatory . $size . $maxlength . $tabindex . $class . ' value="' . $value . '"></div></div>';
+				break;
+
+				case 'number':
+					$value = $this->request->variable($clean_name, 0);
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><input' . $type . $name . $id . $placeholder . $mandatory . $size . $tabindex . $class . ' value="' . $value . '"></div></div>';
 				break;
 
 				case 'textbox':
 					$value = $this->request->variable($clean_name, '', true);
-					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $class . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">' . $value . '</textarea></div></div>';
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><textarea' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $class . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">' . $value . '</textarea></div></div>';
 				break;
 
 				case 'selectbox':
-					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><select ' . $type . $name . $id . $tabindex . $mandatory . $class . '>';
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><select'. $type . $name . $id . $tabindex . $mandatory . $class . '>';
 					$entry .= '<option value="">----------------</option>';
-					$select_option = explode(',', $row['options']);
+					$select_option = ext::explode([',', "\n"], $row['options']);
 					$selected = $this->request->variable($clean_name, false);
 					foreach ($select_option as $value)
 					{
-						 $entry .='<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>'. $value .'</option>';
+						 $entry .= '<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>'. $value .'</option>';
 					}
 					$entry .= '</select></div></div>';
 				break;
 
 				case 'radiobuttons':
-					$radio_option = explode(',', $row['options']);
-					$entry = '';
-					$checked = $this->request->variable($clean_name, false);
+					$radio_option = ext::explode([',', "\n"], $row['options']);
+					$checked = $this->request->variable($clean_name, '', false);
 					foreach ($radio_option as $value)
 					{
-						$entry .='<input type="radio" ' . $tabindex . $mandatory . $name . $id . '" value="' . $value . '"' . ($value == $checked ? ' checked' : '') . ' />&nbsp;'. $value . '&nbsp;&nbsp;';
+						$entry .= '<input type="radio"' . $tabindex . $mandatory . $name . $id . ' value="' . $value . '"' . ($value == $checked ? ' checked' : '') . '>&nbsp;'. $value . '&nbsp;&nbsp;';
 					}
 				break;
 
 				case 'checkbox':
-					$check_option = explode(',', $row['options']);
-					$entry = '';
+					$check_option = ext::explode([',', "\n"], $row['options']);
 					$checked = $this->request->variable($clean_name, ['']);
 					foreach ($check_option as $value)
 					{
-						$entry .='<input ' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . '" value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . ' />&nbsp;'. $value .'&nbsp;&nbsp;';
+						$entry .= '<input' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . ' value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . '>&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
 
@@ -251,29 +256,32 @@ class listener implements EventSubscriberInterface
 				break;
 			}
 
-			$mandatory = '';
+			/** @var renderer_interface $renderer */
+			$renderer = $phpbb_container->get('text_formatter.renderer');
 
-			if ($row['mandatory'])
-			{
-				$mandatory = '<span class="mandatory">*</span>';
-			}
+			/** @var parser_interface $parser */
+			$parser = $phpbb_container->get('text_formatter.parser');
 
-			$this->template->assign_block_vars('form_creator_template', array(
+			$this->template->assign_block_vars('form_creator_template', [
+				'ID'			=> $row['id'],
 				'NDX_ORDER' 	=> $row['ndx_order'],
 				'NAME'			=> $row['name'],
+				'NAME_RICH'		=> $renderer->render($parser->parse($row['name'])),
+				'NAME_VISIBLE'	=> $row['name_visible'],
+				'EXPLAIN'		=> $row['explanation'],
 				'CLEAN_NAME'	=> $clean_name,
 				'HINT'			=> $row['hint'],
 				'OPTIONS'		=> $row['options'],
-				'TYPE'			=> $entry,
-				'MANDATORY' 	=> $mandatory,
-			));
+				'ENTRY'			=> $entry,
+				'MANDATORY' 	=> $row['mandatory'] ? '<span class="mandatory">*</span>' : '',
+			]);
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'MODE'			=> $mode,
 				'S_FORM_CREATOR'	=> true,
 				'S_SHOW_FORM'	=> !$this->request->is_set_post('preview') && $row['forum_show_form'] || $this->request->is_set_post('form_creator_preview'),
 				'S_FORCE_FORM'	=> $row['forum_force_form'],
-			));
+			]);
 		}
 		$this->db->sql_freeresult($result);
 	}
@@ -282,7 +290,8 @@ class listener implements EventSubscriberInterface
 	{
 		$appform_post = '';
 		$file_count = 0;
-		$form_data = $names = array();
+		$form_data = $names = $files = [];
+		$errors = [];
 
 		$this->config['title_colour'] = (isset($this->config['title_colour'])) ? $this->config['title_colour'] : '#FF0000';
 
@@ -294,20 +303,7 @@ class listener implements EventSubscriberInterface
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$form_data[] = array(
-				'id'			=> $row['id'],
-				'form_id'		=> $row['form_id'],
-				'hint'			=> $row['hint'],
-				'options'		=> $row['options'],
-				'mandatory'		=> $row['mandatory'],
-				'name'			=> $row['name'],
-				'type'			=> $row['type'],
-				'ndx_order'		=> $row['ndx_order'],
-				'name_before'	=> $row['name_before'],
-				'name_after'	=> $row['name_after'],
-				'value_before'	=> $row['value_before'],
-				'value_after'	=> $row['value_after'],
-			);
+			$form_data[] = $row;
 
 			if ($row['type'] == 'file')
 			{
@@ -318,49 +314,24 @@ class listener implements EventSubscriberInterface
 
 		$fileupload = $this->files_factory->get('upload');
 
-		if (isset($files))
+		foreach ($files as $name)
 		{
-			foreach ($files as $name)
-			{
-				$temp = $fileupload->handle_upload('files.types.form', 'upload');
+			$temp = $fileupload->handle_upload('files.types.form', 'upload');
 
-				if ($temp->get('realname'))
-				{
-					$names[] = $temp->get('realname');
-				}
+			if ($temp->get('realname'))
+			{
+				$names[] = $temp->get('realname');
 			}
 		}
 
 		foreach ($form_data as $row)
 		{
-			$name = "templatefield_" . str_replace(' ', '_', $row['name']);
+			$name = 'templatefield_' . $row['id'];
 
 			if (isset($row['type']))
 			{
 				switch ($row['type'])
 				{
-					case 'checkbox':
-
-						$check_box_items = count($this->request->variable($name, array(0 => 0)));
-						$check_box_count = 0;
-						$appform_post .= ($row['name_before'] ?: '[form][b]') . $row['name'] . ($row['name_after'] ?: ':[/b][/form]') . ($row['value_before'] ?: '[fbox]');
-
-						$checkbox = $this->request->variable($name, array(0 => '') , true);
-
-						foreach ($checkbox as $value)
-						{
-							$appform_post .= $value;
-
-							if ($check_box_count < $check_box_items - 1)
-							{
-								$appform_post .= ', ';
-							}
-							$check_box_count++;
-						}
-						$appform_post .= ($row['value_after'] ?: '[/fbox]');
-
-					break;
-
 					case 'email':
 					case 'password':
 					case 'url':
@@ -368,24 +339,30 @@ class listener implements EventSubscriberInterface
 					case 'textbox':
 					case 'selectbox':
 					case 'radiobuttons':
-						$fieldcontents = $this->request->variable($name, ' ', true);
-						// only process if element has valid data //
-						if ($fieldcontents)
+					case 'date':
+					case 'time':
+						$value = $this->request->variable($name, '', true);
+						$appform_post .= $this->create_form_element($row, $value, $value);
+					break;
+
+					case 'checkbox':
+						$value = $this->request->variable($name, [0 => ''] , true);
+						if ($row['max_value'] && $row['min_value'] <= $row['max_value'] && (sizeof($value) < $row['min_value'] || sizeof($value) > $row['max_value']))
 						{
-							$appform_post .= ($row['name_before'] ?: '[form][b]') . $row['name'] . ($row['name_after'] ?: ':[/b][/form]');
-							$appform_post .= ($row['value_before'] ?: '[fbox]') . $fieldcontents . ($row['value_after'] ?: '[/fbox]');
+							$errors[] = $this->user->lang('ERROR_MIN_MAX_CHECKBOX', $row['min_value'], $row['max_value'], $this->get_clean_name($row['name']));
 						}
+						$appform_post .= $this->create_form_element($row, $value, implode($value, $row['options_separator']));
+					break;
+
+					case 'number':
+						$value = $this->request->variable($name, 0);
+						$appform_post .= $this->create_form_element($row, $value, $value);
 					break;
 
 					case 'file':
-						$fieldcontents = $this->request->variable($name, ' ', true);
-						// only process if element has valid data //
-						if ($fieldcontents)
-						{
-							$appform_post .= ($row['name_before'] ?: '[b]') . $row['name'] . ($row['name_after'] ?: ':[/b]');
-							$appform_post .= ($row['value_before'] ?: '[att]') . '[attachment=' . $file_count . ']' . $names[$file_count] . '[/attachment]' . $fieldcontents . ($row['value_after'] ?: '[/att]');
-							$file_count++;
-						}
+						$value = $this->request->variable($name, '', true);
+						$appform_post .= $this->create_form_element($row, $value, '[attachment=' . $file_count . ']' . $names[$file_count] . '[/attachment]' . $value, 'att');
+						$file_count++;
 					break;
 
 					default:
@@ -394,6 +371,37 @@ class listener implements EventSubscriberInterface
 			}
 		}
 
+		if ($errors)
+		{
+			throw new exception('', $errors);
+		}
+
 		return $appform_post;
 	}
+
+	private function create_form_element(array $element, $value, $value_rich, $container = 'fbox')
+	{
+		$content = '';
+
+		if ($value)
+		{
+			if ($element['name_visible'])
+			{
+				$content .= ($element['name_before'] ?: '[form][b]') . $this->get_clean_name($element['name']) . ($element['name_after'] ?: ':[/b][/form]');
+			}
+
+			$content .= $element['value_before'] ?: ('[' . $container . ']');
+			$content .= $value_rich;
+			$content .= $element['value_after'] ?: ('[/' . $container . ']');
+		}
+
+		return $content;
+	}
+
+	private function get_clean_name($name)
+	{
+		strip_bbcode($name, '?');
+		return trim($name);
+	}
+
 }

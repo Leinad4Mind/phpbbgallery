@@ -14,31 +14,31 @@ class formcreator_schema extends \phpbb\db\migration\migration
 {
 	public function update_schema()
 	{
-		return array(
-			'add_tables'	=> array(
-				$this->table_prefix . 'form_creator'	=> array(
-					'COLUMNS'	=> array(
-						'id'				=> array('UINT', null, 'auto_increment'),
-						'form_id'			=> array('UINT', '0'),
-						'ndx_order'			=> array('UINT', '0'),
-						'name'				=> array('VCHAR', ''),
-						'type'				=> array('VCHAR', ''),
-						'hint'				=> array('VCHAR', ''),
-						'options'			=> array('VCHAR', ''),
-						'mandatory'			=> array('BOOL', '0'),
-					),
+		return [
+			'add_tables'	=> [
+				$this->table_prefix . 'form_creator'	=> [
+					'COLUMNS'	=> [
+						'id'				=> ['UINT', null, 'auto_increment'],
+						'form_id'			=> ['UINT', '0'],
+						'ndx_order'			=> ['UINT', '0'],
+						'name'				=> ['VCHAR', ''],
+						'type'				=> ['VCHAR', ''],
+						'hint'				=> ['VCHAR', ''],
+						'options'			=> ['VCHAR', ''],
+						'mandatory'			=> ['BOOL', '0'],
+					],
 					'PRIMARY_KEY'	=> 'id',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return 	array(
-			'drop_tables' => array(
+		return 	[
+			'drop_tables' => [
 				$this->table_prefix . 'form_creator',
-			),
-		);
+			],
+		];
 	}
 }

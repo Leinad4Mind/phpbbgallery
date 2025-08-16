@@ -14,12 +14,16 @@ class formcreator_info
 {
 	function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\leinad4mind\formcreator\acp\formcreator_module',
 			'title'		=> 'ACP_FORM_CREATOR',
-			'modes'		=> array(
-				'manage' 	=> array('title' => 'ACP_FORM_CREATOR_CONFIG', 'auth'	=> 'ext_leinad4mind/formcreator && acl_a_form_creator', 'cat' => array('ACP_FORM_CREATOR')
-			)),
-		);
+			'modes'		=> [
+				'manage' 	=> [
+					'title' 	=> 'ACP_FORM_CREATOR_CONFIG',
+					'auth' 		=> 'ext_leinad4mind/formcreator && acl_a_form_creator',
+					'cat' 		=> ['ACP_FORM_CREATOR'],
+				],
+			],
+		];
 	}
 }

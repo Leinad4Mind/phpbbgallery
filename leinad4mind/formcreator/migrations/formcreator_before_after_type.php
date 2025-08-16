@@ -19,16 +19,16 @@ class formcreator_before_after_type extends \phpbb\db\migration\migration
 
 	public function update_schema()
 	{
-		return array(
-			'change_columns'	=> array(
-				$this->table_prefix . 'form_creator' => array(
-					'name_before'	=> array('STEXT', 0),
-					'name_after'	=> array('STEXT', 0),
-					'value_before'	=> array('STEXT', 0),
-					'value_after'	=> array('STEXT', 0),
-				),
-			),
-		);
+		return [
+			'change_columns'	=> [
+				$this->table_prefix . 'form_creator' => [
+					'name_before'	=> ['STEXT', 0],
+					'name_after'	=> ['STEXT', 0],
+					'value_before'	=> ['STEXT', 0],
+					'value_after'	=> ['STEXT', 0],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()

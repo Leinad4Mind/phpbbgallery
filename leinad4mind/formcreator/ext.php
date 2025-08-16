@@ -2,7 +2,8 @@
 /**
 *
 * @package phpBB Extension - Form Creator
-* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com\r2019 Leinad4Mind - https://leinad4mind.top/forum
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -24,5 +25,10 @@ class ext extends \phpbb\extension\base
 	{
 		$config = $this->container->get('config');
 		return version_compare($config['version'], '3.2.0-a1', '>=');
+	}
+
+	public static function explode(array $delimiters, $string)
+	{
+		return preg_split( '/[' . preg_quote(implode($delimiters)) . ']/', $string );
 	}
 }
