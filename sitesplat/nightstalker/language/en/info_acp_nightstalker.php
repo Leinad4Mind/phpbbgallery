@@ -1,8 +1,9 @@
 <?php
 /**
 *
-* @package BBembed
-* @copyright (c) 2016 SiteSplat All rights reserved
+* Nightstalker
+*
+* @copyright (c) 2015 sitesplat.com <https://sitesplat.com>
 * @license Proprietary
 *
 */
