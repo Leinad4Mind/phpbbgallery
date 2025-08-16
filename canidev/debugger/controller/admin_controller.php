@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Debugger
- * @version 1.0.1 20/09/2023
+ * @version 1.0.2 11/03/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -46,7 +46,7 @@ class admin_controller extends \canidev\core\controller\acp
 	 */
 	public function display()
 	{
-		$this->page_header('cbb-debugger', $this->config['debugger_version']);
+		$this->pageHeader('canidev/debugger');
 
 		$this->tpl_name		= 'acp_debugger';
 		$this->page_title	= 'ACP_DEBUGGER';

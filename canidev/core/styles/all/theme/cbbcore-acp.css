@@ -58,14 +58,23 @@
 
 .cbb-table-acp .column-icon {
 	color: #105289;
-	font-size: 1.2em;
-	text-align: center;
-	width: 30px;
+	font-size: 2em;
+	width: 40px;
+}
+
+.cbb-table-acp .column-main .explain {
+	font-size: 0.85em;
+	margin-top: 5px;
+}
+
+.cbb-table-acp .column-main .title {
+	font-weight: bold;
 }
 
 .cbb-table-acp .column-actions {
 	background-color: #f1f1f1;
 	font-size: 18px;
+	white-space: nowrap;
 }
 
 .cbb-table-acp .column-switch,
@@ -93,7 +102,9 @@
     background-color: #f3f3f3;
     border: 1px solid #d8d8d8;
     border-radius: 4px;
+	display: inline-block;
     font-size: 11px;
+	margin-bottom: 5px;
     padding: 4px;
     white-space: nowrap;
 }

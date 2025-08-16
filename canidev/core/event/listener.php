@@ -282,20 +282,31 @@ class listener implements EventSubscriberInterface
 		{
 			foreach($items as $id => $item)
 			{
-				$fullname	= constants::PLUGINS_PATH . $namespace . '/' . $item;
-				$filename	= $this->phpbb_root_path . 'ext/' . $fullname . '.' . $this->php_ext;
-				$class_name = '\\' . str_replace('/', '\\', $fullname);
+				$fullname		= constants::PLUGINS_PATH . $namespace . '/' . $item;
+				$filename		= $this->phpbb_root_path . 'ext/' . $fullname . '.' . $this->php_ext;
+				$class_name 	= '\\' . str_replace('/', '\\', $fullname);
+				$has_own_dir 	= strpos($item, '/') !== false;
 
 				if(!file_exists($filename) || !class_exists($class_name))
 				{
 					unset($this->items[$namespace][$id]);
 					continue;
 				}
-					
+
 				$this->items[$namespace][$id] = $item = new $class_name($this->container);
 				
 				if($item->is_runnable())
 				{
+					if($has_own_dir)
+					{
+						$base_path = dirname($filename) . '/';
+						
+						if(is_dir($base_path . 'styles'))
+						{
+							$this->template->add_custom_namespace('plugin_' . $namespace . '_' . basename($base_path), $base_path);
+						}
+					}
+
 					foreach($item->core_events() as $event_name => $params)
 					{
 						if(is_string($params))
@@ -361,7 +372,7 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Show empty 404 response for non-existent files inside "files" directory to prevent that phpBB shows default "Not found" page
-	 * form "media" files and saves the request as "session_page" in DB
+	 * for "media" files and saves the request as "session_page" in DB
 	 * 
 	 * @param GetResponseEvent 	$event
 	 */

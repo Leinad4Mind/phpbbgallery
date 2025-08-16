@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.4 26/01/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -195,11 +195,13 @@ class Report
 			],
 
 			'site'		=> [
-				'version'		=> PHPBB_VERSION,
-				'domain'		=> $this->request->server('HTTP_HOST'),
-				'contact'		=> $this->config['board_contact'],
-				'style'			=> $this->user->style['style_name'],
-				'extensions'	=> array_keys($this->extensions_manager->all_enabled()),
+				'version'			=> PHPBB_VERSION,
+				'domain'			=> $this->request->server('HTTP_HOST'),
+				'contact'			=> $this->config['board_contact'],
+				'style'				=> $this->user->style['style_name'],
+				'language_default'	=> $this->config['default_lang'],
+				'language_user'		=> $this->user->lang_name,
+				'extensions'		=> array_keys($this->extensions_manager->all_enabled()),
 			],
 
 			'server'	=> [

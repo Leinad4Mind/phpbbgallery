@@ -120,8 +120,6 @@ class template
 				}
 			}
 
-			$path_ary[] =  $path . 'plugins/';
-
 			$this->twig->getLoader()->setPaths($path_ary, $namespace);
 		}
 	}

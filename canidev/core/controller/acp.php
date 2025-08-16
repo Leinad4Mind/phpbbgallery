@@ -142,13 +142,22 @@ class acp
 				
 				continue;
 			}
+
+			if(isset($vars['builder']))
+			{
+				$this->template->assign_block_vars($tpl_key, [
+					'INCLUDE'		=> call_user_func($vars['builder'], $vars, $cfg_array),
+				]);
+
+				continue;
+			}
 			
 			if(!isset($cfg_array[$config_key]) && isset($vars['default']))
 			{
 				$cfg_array[$config_key] = $vars['default'];
 			}
 
-			if($vars['type'] == 'custom' && isset($vars['function']) && is_array($vars['function']))
+			if(isset($vars['function']) && is_array($vars['function']))
 			{
 				switch($vars['function'][0])
 				{
@@ -156,8 +165,11 @@ class acp
 						$vars['function'][0] = $this;
 					break;
 
-					case 'tools':
-						$vars['function'][0] = $this->tools;
+					default:
+						if(is_string($vars['function'][0]) && property_exists($this, $vars['function'][0]))
+						{
+							$vars['function'][0] = $this->{$vars['function'][0]};
+						}
 					break;
 				}
 			}

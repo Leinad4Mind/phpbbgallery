@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Debugger
- * @version 1.0.1 20/09/2023
+ * @version 1.0.2 11/03/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,7 +12,7 @@ namespace canidev\debugger;
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.1.1';
+	const REQUIRED_CORE		= '1.1.4';
 	
 	/**
 	 * {@inheritDoc}

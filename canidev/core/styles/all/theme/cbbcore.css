@@ -861,21 +861,27 @@ a.cbb-btn.default-btn {
     color: #FFF;
 }
 
-.cbb-btn:hover,
-a.cbb-btn:hover {
+.cbb-btn:not(:disabled):hover,
+a.cbb-btn:not(:disabled):hover {
 	background-color: #fff;
-    background-image: linear-gradient(top,#fff,#f8f8f8);
+    background-image: linear-gradient(to top,#fff,#f8f8f8);
 	border-color: #c6c6c6;
 	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 	text-decoration: none;
 }
 
-.cbb-btn.default-btn:hover,
-a.cbb-btn.default-btn:hover {
+.cbb-btn.default-btn:not(:disabled):hover,
+a.cbb-btn.default-btn:not(:disabled):hover {
     background: #2c56b1;
     border-color: #21448d;
 	color: #fff;
+}
+
+.cbb-btn:disabled,
+.cbb-btn:disabled:hover {
+	cursor: default;
+	opacity: .7;
 }
 
 .cbb-btn.dropdown-select {

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Debugger
- * @version 1.0.1 20/09/2023
+ * @version 1.0.2 11/03/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -16,8 +16,15 @@ if($allowed_ips = $config->get('allowed_ips'))
 {
 	$request 		= Request::createFromGlobals();
 	$allowed_ips 	= explode("\n", $allowed_ips);
+	$user_ip		= $request->getClientIp();
 
-	if(!in_array($request->getClientIp(), $allowed_ips))
+	// Cloudflare compatibility
+	if($request->server->get('HTTP_CF_CONNECTING_IP', '') != '')
+	{
+		$user_ip = $request->server->get('HTTP_CF_CONNECTING_IP', '');
+	}
+
+	if(!in_array($user_ip, $allowed_ips))
 	{
 		$config
 			->set('debug_enable', false)
