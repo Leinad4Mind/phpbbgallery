@@ -52,7 +52,6 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.acp_main_notice'	=> 'add_cf_clear_cache_btn',
-
 			'core.session_ip_after'	=> 'cloudflare_ip_support',
 		);
 	}
