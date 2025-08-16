@@ -1,0 +1,24 @@
+
+<!-- IF S_QUICKMOD_ENABLED -->
+	<script type="text/javascript">
+	// <![CDATA[
+		jQM(function($) {
+		<!-- IF S_QM_EVENTS -->
+			{S_QM_EVENTS}
+		<!-- ENDIF -->
+
+			$.quickmod({
+				lang: {
+					'error'	: '{LA_ERROR_OPERATION}'
+				},
+				core: {
+					row		: $('ul.topics li.row'),
+					pagination	: $('dt .pagination'),
+					position	: ['.forumbg:has(.topiclist):last', 'after'],
+					type	: '{S_QM_TYPE}'
+				}
+			});
+		});
+	// ]]>
+	</script>
+<!-- ENDIF -->

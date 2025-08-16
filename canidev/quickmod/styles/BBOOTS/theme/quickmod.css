@@ -1,0 +1,160 @@
+
+/*  cBB QuickMod StyleSheet
+    --------------------------------------------------------------
+	Style:	BBOOTS
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+.quick_mod_buttons {
+	background-color: #f9f9f9;
+}
+
+ul.topiclist div.row_mark, .qm_loading {
+	width: 25px;
+}
+
+div.row_mark { right: 8px; }
+
+ul.topiclist div.row_mark, #qm_dialog {
+	text-align: center;
+}
+
+a [class*="qm-icon"] {
+	color: #000;
+}
+
+.qm-dialog {
+	border: 4px solid #e8ecf3;
+	padding: 0;
+	
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.qm-dialog-header {
+	background: #f0f0f1;
+	padding: 6px 5px 8px 5px;
+}
+
+.qm-dialog-header, a.qm-dialog-close [class*="qm-icon"] {
+	color: #959c9d;
+}
+
+.qm-menu a [class*="qm-icon"] {
+	font-weight: normal;
+}
+
+.qm-menu li a[data-action="delete_permanently"], a[data-action="delete_permanently"] [class*="qm-icon"],
+#quick_mod_action option[value="delete_permanently"] {
+	color: red;
+}
+
+#quick_rename {
+	margin-bottom: -10px;
+}
+
+#qm_main, #qm_main select, .qm-menu li a, .qm-dialog-header, .qm-dialog, .qm-dialog select, .qm_inputbox {
+    font-size: 13px;
+}
+
+#qm_main {
+	margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+#qm_main_container { padding: 8px; }
+
+#qm_main select, .qm-dialog select, .qm_inputbox, .qm-menu {
+    padding: 3px;
+    vertical-align: middle;
+}
+
+.row_mark input[type="checkbox"], .qm-dialog input[type="checkbox"], .qm-dialog input[type="radio"] {
+	display: none;
+}
+
+.row_mark input[type="checkbox"]+label:before, .qm-dialog input[type="checkbox"]+label:before {
+	background: url('images/grey.png') 0 0 no-repeat;
+	content: "";
+	cursor: pointer;
+	display: inline-block;
+	height: 18px;
+	margin-top: -2px;
+	padding: 0;
+	vertical-align: middle;
+	width: 18px;
+}
+
+.row_mark [type="checkbox"]:checked+label:before, .qm-dialog [type="checkbox"]:checked+label:before {
+	background-position: -40px 0;
+}
+
+.qm-dialog input[type="radio"]+label {
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+.qm-dialog input[type="radio"]+label:before {
+	background: url('images/grey.png') -100px 0 no-repeat;
+	content: "";
+	display: inline-block;
+	height: 18px;
+	margin-top: -2px;
+	padding: 0;
+	vertical-align: middle;
+	width: 18px;
+}
+
+.qm-dialog input[type="radio"]:checked+label:before {
+	background-position: -140px 0;
+}
+
+.qm-button, a.qm-button {
+	background-color: #fff;
+    border-color: #ccc;
+}
+
+/* Mobile Layout
+------------------------------ */
+.qm-mobile-check {
+    background: green;
+	border: 2px solid #ddd;
+    color: #fff;
+	height: 20px;
+	left: 0;
+	top: 32px;
+	width: 20px;
+}
+
+.qm-mobile .table-primary td.qm-row-selected {
+	background-color: #ddd;
+}
+
+.qm-mobile div.row_mark {
+	left: 6px;
+	width: 30px;
+}
+
+/* Borders
+-------------------------*/
+#qm_main select, .qm-dialog select, .qm_inputbox,
+.qm-menu, .qm-button {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+#qm_main select, .qm-dialog select, .qm_inputbox,
+.qm-menu, .qm-button, .row_mark input {
+	border: 1px solid #CCC;
+}
+
+/* Style overwrite
+------------------------------- */
+.qm-row .footable-first-column, .qm-row .footable-last-column {
+	position: relative;
+}
+
+.qm-icon-make_announce:before	{ content: "\f08d"; }

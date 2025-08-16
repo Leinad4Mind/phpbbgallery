@@ -1,0 +1,78 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{L_TITLE}</h1>
+<p>{L_TITLE_EXPLAIN}</p>
+
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_quick_mod" method="post" action="{U_ACTION}">
+	
+<!-- BEGIN options -->
+	<!-- IF options.S_LEGEND -->
+		<!-- IF not options.S_FIRST_ROW -->
+			</fieldset>
+		<!-- ENDIF -->
+		<fieldset>
+			<legend>{options.LEGEND}</legend>
+	<!-- ELSE -->
+
+		<dl>
+			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dd>{options.CONTENT}</dd>
+		</dl>
+
+	<!-- ENDIF -->
+<!-- END options -->
+</fieldset>
+
+<fieldset>
+	<legend>{L_QM_BUTTON_MANAGE}</legend>
+
+<table id="quickmod_buttons" cellspacing="1">
+<col width="50%" /><col width="50%" />
+<tr>
+    <td class="row2" valign="top">
+    	<strong>{L_BUTTONS_AVALIABLE}</strong>
+		<hr />
+		<div id="available_buttons" class="qm_drag_row">
+<!-- BEGIN available_button -->
+			<div class="qm_draggable">
+				<div><span class="qm-icon-{available_button.S_ACTION}"></span>{available_button.S_TITLE}</div>
+				{available_button.S_HIDDEN_FIELDS}
+			</div>
+<!-- END available_button -->	
+		</div>	
+	</td>
+
+    <td class="row2" valign="top">
+    	<strong>{L_BUTTONS_SELECTED}</strong>
+		<hr />
+		<div id="selected_buttons" class="qm_drag_row">
+<!-- BEGIN selected_button -->
+			<div class="qm_draggable">
+				<div><span class="qm-icon-{selected_button.S_ACTION}"></span>{selected_button.S_TITLE}</div>
+				{selected_button.S_HIDDEN_FIELDS}
+			</div>
+<!-- END selected_button -->		
+		</div>
+	</td>
+  </tr>
+</table>
+
+</fieldset>
+
+<p class="submit-buttons">
+	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+	{S_FORM_TOKEN}
+</p>
+
+</form>
+
+<!-- INCLUDE overall_footer.html -->

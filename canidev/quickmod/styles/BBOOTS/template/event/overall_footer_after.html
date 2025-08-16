@@ -1,0 +1,50 @@
+
+<!-- IF S_QUICKMOD_ENABLED -->
+	<script type="text/javascript">
+	// <![CDATA[
+		head.load("{ROOT_PATH}ext/canidev/quickmod/styles/all/template/jquery.mobile.custom.min.js",
+			"{ROOT_PATH}ext/canidev/quickmod/styles/all/template/jquickmod.js");
+			
+	<!-- BEGIN qm_additional_source -->
+		<!-- IF qm_additional_source.IS_JS -->
+		head.load("{ROOT_PATH}ext/canidev/quickmod/styles/all/{qm_additional_source.FILENAME}");
+		<!-- ENDIF -->
+	<!-- END qm_additional_source -->
+
+		head.ready(function () {
+			jQM(function($) {
+				$.cbbEvent.addListener('quickmod.onInit', function() {
+					if(!$.isMobile())
+					{
+						$('.row_mark').each(function() {
+							var input	= $(this).children('input'),
+								id		= input.attr('value');
+							
+							input
+								.attr('id', 'qm-check-' + id)
+								.after('<label for="qm-check-' + id + '"></label>');
+						});
+					}
+				});
+
+			<!-- IF S_QM_EVENTS -->
+				{S_QM_EVENTS}
+			<!-- ENDIF -->
+
+				$.quickmod({
+					lang: {
+						'error'	: '{LA_ERROR_OPERATION}'
+					},
+					core: {
+						row		: $('table:has(".quick_mod_buttons") tbody tr'),
+						pagination	: $('dt .pagination'),
+						position	: ['.panel:has(.footable)', 'after'],
+						type	: '{S_QM_TYPE}',
+						titleTag	: 'data-original-title'
+					}
+				});
+			});
+		});
+	// ]]>
+	</script>
+<!-- ENDIF -->

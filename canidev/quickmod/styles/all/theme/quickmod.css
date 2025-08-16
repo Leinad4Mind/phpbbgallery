@@ -1,0 +1,98 @@
+
+/*  cBB Quick Mod StyleSheet
+    --------------------------------------------------------------
+	Style:	All
+	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+.quick_mod_buttons {
+	background-color: #F6F4D0;
+}
+
+div.row_mark, .qm_loading {
+	width: 25px;
+}
+
+div.row_mark, #qm_dialog {
+	text-align: center;
+}
+
+a [class*="qm-icon"] {
+	color: #000;
+}
+
+.qm-dialog-header, a.qm-dialog-close [class*="qm-icon"] {
+	color: white;
+}
+
+.qm-menu a [class*="qm-icon"] {
+	font-weight: normal;
+}
+
+.qm-menu li a[data-action="delete_permanently"], a[data-action="delete_permanently"] [class*="qm-icon"],
+#quick_mod_action option[value="delete_permanently"] {
+	color: red;
+}
+
+#quick_rename {
+	margin-bottom: -10px;
+}
+
+/* Buttons
+-------------------------*/
+.qm-button, a.qm-button {
+	border: 1px solid #CCC;
+	font: normal normal normal 11px/14px 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
+	font-weight: bold;
+	
+	background: -moz-linear-gradient(top, #FFFFFF, #E0E1E4);
+	background: -ms-linear-gradient(top, #FFFFFF, #E0E1E4);
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E1E4));
+	background: -o-linear-gradient(top, #FFFFFF, #E0E1E4);
+	background: linear-gradient(to bottom, #FFFFFF, #E0E1E4);
+	
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0); /*IE7-*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0)"; /*IE8+*/
+}
+
+.qm-button:hover, a.qm-button:hover {
+    background: #FAFAFA;
+    border-color: #CCC;
+}
+
+/* Mobile Layout
+------------------------------ */
+.qm-mobile-check {
+    background: green;
+	border: 2px solid #ddd;
+    color: #fff;
+}
+
+.qm-mobile li.row.qm-row-selected {
+	background-color: #ddd;
+}
+
+/* Borders
+-------------------------*/
+#qm_main select, .qm-dialog select, .qm_inputbox,
+.qm-menu, .qm-dialog, .qm-dialog-content, .qm-button {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+#qm_main select, .qm-dialog select, .qm_inputbox,
+.qm-menu, .qm-button, .row_mark input {
+	border: 1px solid #CCC;
+}
+
+/* Style overwrite
+------------------------------- */
+.qm-row, .qm-row .list-inner {
+	position: relative;
+}
+
+.qm-mobile .qm-row .list-inner, .qm-row dl {
+	position: static;
+}
