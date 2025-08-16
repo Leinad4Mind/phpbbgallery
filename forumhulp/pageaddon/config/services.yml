@@ -1,0 +1,10 @@
+services:
+    forumhulp.pageaddon.listener:
+        class: forumhulp\pageaddon\event\listener
+        arguments:
+            - @pagination
+            - @request
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }
