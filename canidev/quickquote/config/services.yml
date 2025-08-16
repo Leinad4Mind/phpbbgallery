@@ -1,0 +1,26 @@
+services:
+    canidev.quickquote.listener:
+        class: canidev\quickquote\event\listener
+        arguments:
+            - @auth
+            - @config
+            - @service_container
+            - @request
+            - @template
+            - %core.root_path%
+            - %core.php_ext%
+
+        tags:
+            - { name: event.listener }
+            
+    canidev.quickquote.admin.config:
+        class: canidev\quickquote\controller\admin_controller_config
+        arguments:
+            - @cache.driver
+            - @config
+            - @service_container
+            - @dbal.conn
+            - @dispatcher
+            - @request
+            - @template
+            - @user

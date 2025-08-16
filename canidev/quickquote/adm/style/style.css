@@ -1,0 +1,91 @@
+/*  cBB QuickQuote StyleSheet
+    --------------------------------------------------------------
+	Style:	acp
+	Copyright (c) 2018 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+.cbb-help-icon {
+	font-size: 28px;
+	position: absolute;
+	right: 10px;
+	top: 4px;
+}
+
+.groups-selector {
+	font-size: 11px;
+}
+
+.groups-selector select {
+	border-color: #bdbdbd;
+	padding: 4px;
+}
+
+.groups-selector label {
+	display: block;
+	padding: 5px;
+}
+
+.groups-selector input[type="checkbox"] {
+	display: none;
+}
+
+.groups-selector input[type="checkbox"]+label:before {
+	content: "\f096";
+	font-family: fontAwesome;
+	display: inline-block;
+	font-size: 16px;
+	height: 18px;
+	padding: 0;
+	vertical-align: middle;
+	width: 19px;
+}
+
+.groups-selector input[type="checkbox"]:checked+label:before {
+	content: "\f046";
+}
+
+div.cbb-btn, a.cbb-btn, input.cbb-btn, button.cbb-btn {
+	background: #E0E1E4;
+	background: -moz-linear-gradient(top, #FFFFFF, #E0E1E4);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#E0E1E4));
+    background: linear-gradient(to bottom, #fff, #E0E1E4);
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0)";
+
+	border: 1px solid #CCC;
+	color: #333;
+	cursor: pointer;
+	display: inline-block;
+	font: normal normal normal 11px/14px 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
+	font-weight: bold;
+	line-height: 25px;
+	margin: 0 2px;
+	overflow: hidden;
+	padding: 0 10px;
+	text-decoration: none;
+	vertical-align: middle;
+	
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.cbb-btn, a.cbb-btn.default-btn, input.cbb-btn.default-btn, button.cbb-btn.default-btn {
+    background: #427fed;
+    border-color: #427fed;
+    color: #FFF;
+}
+
+.cbb-btn.default-btn:hover {
+    background: #2c56b1;
+    border-color: #21448d;
+}
+
+.cbb-submit-buttons {
+	text-align: right;
+}
+
+.cbb-submit-buttons .cbb-btn {
+    padding: 2px 12px;
+}
