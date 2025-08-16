@@ -1,6 +1,5 @@
 <?php
-/*
-* @name v110.php
+/**
 * @package cBB QuickMod
 * @version 1.1.0 17/01/2017
 *
@@ -12,21 +11,17 @@ namespace canidev\quickmod\migrations;
 
 class v110 extends \phpbb\db\migration\migration
 {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function effectively_installed()
 	{
 		return isset($this->config['qm_version']) && version_compare($this->config['qm_version'], '1.1.0', '>=');
 	}
 
-	public function update_schema()
-	{
-		return array();
-	}
-
-	public function revert_schema()
-	{
-		return array();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public function update_data()
 	{
 		return array(

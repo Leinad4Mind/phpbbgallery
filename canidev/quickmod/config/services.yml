@@ -2,7 +2,6 @@ services:
     canidev.quickmod.listener:
         class: canidev\quickmod\event\listener
         arguments:
-            - '@service_container'
             - '@canidev.quickmod.core'
         tags:
             - { name: event.listener }
@@ -17,35 +16,17 @@ services:
             - '@dispatcher'
             - '@language'
             - '@request'
+            - '@canidev.core.template'
+            - '@canidev.core.tools'
             - '@user'
-            - '%core.root_path%'
-            - '%core.php_ext%'
-    
-    canidev.quickmod.functions:
-        class: canidev\quickmod\libraries\functions
-        arguments:
-            - '@auth'
-            - '@config'
-            - '@dbal.conn'
-            - '@dispatcher'
-            - '@language'
-            - '@log'
-            - '@notification_manager'
-            - '@request'
-            - '@template'
-            - '@user'
-            - '@content.visibility'
             - '%core.root_path%'
             - '%core.php_ext%'
 
     canidev.quickmod.admin.config:
         class: canidev\quickmod\controller\admin_controller_config
+        parent: canidev.core.controller.acp
         arguments:
-            - '@cache.driver'
-            - '@config'
-            - '@service_container'
             - '@dispatcher'
-            - '@language'
             - '@log'
             - '@canidev.quickmod.core'
             - '@request'

@@ -1,11 +1,11 @@
 <?php
-/*
-* main.php [Spanish [Es]]
+/**
+* [Spanish [Es]]
 * @package cBB QuickMod
-* @version v1.1.3 16/04/2021
+* @version 1.1.4 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 // DO NOT CHANGE
@@ -25,6 +25,7 @@ $lang = array_merge($lang, array(
 	'CHANGE_ICON_TOPIC'		=> 'Cambiar icono',
 	'CHANGE_POSTER_TOPIC'	=> 'Cambiar autor',
 	'CHANGE_TIME_TOPIC'		=> 'Cambiar fecha de publicación',
+	'DISAPPROVE_TOPIC'		=> 'Desaprobar',
 	
 	'CONFIRM_CHANGE_TOPIC'		=> '¿Está seguro de querer modificar el tema seleccionado?',
 	'CONFIRM_CHANGE_TOPICS'		=> '¿Está seguro de querer modificar los temas seleccionados?',
@@ -70,7 +71,6 @@ $lang = array_merge($lang, array(
 
 	'ICON'					=> 'Icono',
 	'NOTHING'				=> 'No se ha realizado ningún cambio',
-	'NOTIFY_POSTER'			=> 'Notificar aprobación al autor',
 	'SELECT_ACTION'			=> 'Seleccionar acción',
 	'WITH_SELECTED'			=> 'Con los seleccionados',
 

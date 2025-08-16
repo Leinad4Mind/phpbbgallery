@@ -1,19 +1,13 @@
 <?php
-/*
+/**
 * @package cBB QuickMod
-* @version v1.1.3 16/04/2021
+* @version 1.1.4 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\quickmod\acp;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 /**
 * @package acp
@@ -21,19 +15,24 @@ if(!defined('IN_PHPBB'))
 class main_module
 {
 	public $u_action;
-	
-	protected $controller;
 
+	/**
+	 * Loads module
+	 * 
+	 * @param string 	$id 		Module ID
+	 * @param string 	$mode 		Current Mode
+	 */
 	public function main($id, $mode)
 	{
 		global $phpbb_container;
 
-		$this->controller = $phpbb_container->get('canidev.quickmod.admin.config');
+		$controller = $phpbb_container->get('canidev.quickmod.admin.config');
 
-		$this->controller->u_action = $this->u_action;
-		$this->controller->display($mode);
+		$controller
+			->set_form_action($this->u_action)
+			->display($mode);
 		
-		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title('ACP_CAT_QUICKMOD');
+		$this->tpl_name		= $controller->get_template();
+		$this->page_title	= $controller->get_title('ACP_CAT_QUICKMOD');
 	}
 }

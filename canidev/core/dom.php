@@ -1,29 +1,29 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version 1.1.0 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class dom
 {
 	static $selfclosing_tags = 'img|br|hr|input|iframe';
 
+	/**
+	 * Load xml string
+	 * 
+	 * @param string 	$string 		Text to be load
+	 * @return \DomDocument
+	 */
 	public static function load_xml($string)
 	{
 		$dom 	= new \DOMDocument('1.0', 'utf-8');
 
-		$string = preg_replace('#(<(?:' . self::$selfclosing_tags . ')[^>]*)(?<!/)>#i', '$1/>', $string);
+		$string = preg_replace('#(<(' . self::$selfclosing_tags . ')[^>]*)(?<!/)>(</\\2>)?#i', '$1 />', $string);
 		$string = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $string);
 		$flags 	= \LIBXML_NOCDATA | \LIBXML_NOWARNING | \LIBXML_NOERROR;
 
@@ -40,6 +40,12 @@ class dom
 		return $dom;
 	}
 	
+	/**
+	 * Convert string into xPath variable
+	 * 
+	 * @param string 	$string 		Text to be load
+	 * @return \DomXPath
+	 */
 	public static function string_to_xpath($string)
 	{
 		if(($dom = self::load_xml($string)) === false)
@@ -50,12 +56,18 @@ class dom
 		return new \DomXPath($dom);
 	}
 
+	/**
+	 * Convert xPath variable into HTML string
+	 * 
+	 * @param \DomXPath 	$xpath
+	 * @return string
+	 */
 	public static function xpath_to_string($xpath)
 	{
 		return preg_replace(
 			array(
 				'#(^<div>|</div>$)#',
-				'#<((' . self::$selfclosing_tags . ').*?)></\\2>#',
+				'#<((' . str_replace('|iframe', '', self::$selfclosing_tags) . ').*?)></\\2>#',
 			),
 			array(
 				'',
@@ -65,6 +77,31 @@ class dom
 		);
 	}
 
+	/**
+	 * Load xml filename
+	 * 
+	 * @param string 	$filename
+	 * @return \SimpleXMLElement
+	 */
+	public static function simple_xml_file($filename)
+	{
+		$err_status = \libxml_use_internal_errors(true);
+
+		$xml = \simplexml_load_file($filename);
+
+		\libxml_clear_errors();
+		\libxml_use_internal_errors($err_status);
+
+		return $xml;
+	}
+
+	/**
+	 * Check if a node or their parents math with specific node name
+	 * 
+	 * @param \DomElement 	$node 		Node to be checked
+	 * @param string 		$node_name 	Match node name
+	 * @return bool
+	 */
 	public static function node_closest($node, $node_name)
 	{
 		if(!is_array($node_name))
@@ -85,10 +122,17 @@ class dom
 		return false;
 	}
 
+	/**
+	 * Remove all attributes of specific node
+	 * 
+	 * @param \DomElement 	$node			Node
+	 * @param array|false 	$ignore 		Array with attributes to preserve
+	 * 
+	 * @return \DomElement
+	 */
 	public static function remove_attributes($node, $ignore = false)
 	{
 		$ignore 	= ($ignore !== false && !is_array($ignore)) ? array($ignore) : $ignore;
-		$attributes = $node->attributes;
 		$attr_ary 	= array();
 		
 		foreach($node->attributes as $name => $attrNode)

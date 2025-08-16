@@ -5,10 +5,10 @@
 				<div id="qm_main_container">
 					<div class="qm-loading cbb-loading cbb-helper-hidden"><span></span></div>
 					<div class="qm-action-container cbb-helper-hidden">
-						{L_WITH_SELECTED} <span id="row_mark_count">(0)</span>{L_COLON}
+						{{ lang('WITH_SELECTED') }} <span id="row_mark_count">(0)</span>{{ lang('COLON') }}
 						<div class="cbb-group">
 							<select id="quick_mod_action" name="quick_mod_action" class="cbb-inputbox">{{ S_QUICK_OPTIONS }}</select>
-							<input type="button" name="quick_mod_button" value="{L_GO}" class="cbb-btn" />
+							<input type="button" name="quick_mod_button" value="{{ lang('GO') }}" class="cbb-btn" />
 						</div>
 					</div>
 					<div class="qm-select-container"><select name="qm_mark" class="cbb-inputbox">{{ S_QM_MARK_OPTIONS }}</select></div>
@@ -31,15 +31,11 @@
 	<script>
 	// <![CDATA[
 	head.ready(['cbbcore.min.js', 'jquickmod.min.js'], function () {
-		cbbCore.addListener('core.onready', function() {
-			$('.qm-row .topic_id_list').iCheck('destroy');
-
-			cbbCore.initService('quickmod', {
-				rowSelector	: 'tr:has(".quick_mod_buttons")',
-				position	: ['.panel:has(.footable):last', 'after'],
-				type		: '{{ S_QM_TYPE }}',
-				titleTag	: 'data-original-title title'
-			});
+		cbbCore.initService('quickmod', {
+			rowSelector	: 'tr:has(".quick_mod_buttons")',
+			position	: ['.panel:has(.footable):last', 'after'],
+			type		: '{{ S_QM_TYPE }}',
+			titleTag	: 'data-original-title title'
 		});
 	});
 	// ]]>

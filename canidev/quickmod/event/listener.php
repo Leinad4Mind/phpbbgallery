@@ -1,19 +1,13 @@
 <?php
-/*
+/**
 * @package cBB QuickMod
-* @version v1.1.3 16/04/2021
+* @version 1.1.4 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\quickmod\event;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -24,37 +18,37 @@ class listener implements EventSubscriberInterface
 	/**
 	* Constructor
 	*
-	* @param ContainerInterface 						$container		Service container interface
 	* @param \canidev\quickmod\libraries\quickmod 		$quickmod		QuickMod Main Class
 	*
 	* @access public
 	*/
 	public function __construct(
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\canidev\quickmod\libraries\quickmod $quickmod)
 	{
 		$this->quickmod	= $quickmod;
-		
-		\canidev\core\lib::get_instance($container);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	static public function getSubscribedEvents()
 	{
-		if(!defined('IN_INSTALL'))
-		{
-			return array(
-				'core.user_setup'					=> 'load_language',
-				'core.user_setup_after'				=> 'on_setup_after',
-				'core.page_footer'					=> 'on_footer',
-				'core.viewforum_modify_topics_data'	=> 'obtain_real_topic_ids',
-				'core.viewforum_modify_topicrow'	=> 'modify_topic_row',
-				'core.search_modify_tpl_ary'		=> 'modify_search_row',
-			);
-		}
-
-		return array();
+		return array(
+			'core.user_setup'					=> 'load_language',
+			'core.user_setup_after'				=> 'on_setup_after',
+			'core.page_footer'					=> 'on_footer',
+			'core.viewforum_modify_topics_data'	=> 'obtain_real_topic_ids',
+			'core.viewforum_modify_topicrow'	=> 'modify_topic_row',
+			'core.search_modify_tpl_ary'		=> 'modify_search_row',
+		);
 	}
 
+	/**
+	 * core.user_setup
+	 * Load extension language
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function load_language($event)
 	{
 		if(!defined('ADMIN_START'))
@@ -68,16 +62,34 @@ class listener implements EventSubscriberInterface
 		}
 	}
 	
+	/**
+	 * core.user_setup_after
+	 * Initialize extension
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function on_setup_after()
 	{
 		$this->quickmod->setup();
 	}
 	
+	/**
+	 * core.page_footer
+	 * Display extension
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function on_footer()
 	{
 		$this->quickmod->display();
 	}
 	
+	/**
+	 * core.viewforum_modify_topics_data
+	 * Obtain topic IDs
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function obtain_real_topic_ids($event)
 	{
 		$topic_list = $event['topic_list'];
@@ -91,6 +103,12 @@ class listener implements EventSubscriberInterface
 		$event['rowset'] = $rowset;
 	}
 	
+	/**
+	 * core.viewforum_modify_topicrow
+	 * Modify topic row on viewtopic
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function modify_topic_row($event)
 	{
 		$topic_row	= $event['topic_row'];
@@ -103,6 +121,12 @@ class listener implements EventSubscriberInterface
 		$event['topic_row'] = $topic_row;
 	}
 	
+	/**
+	 * core.search_modify_tpl_ary
+	 * Modify topic row on search
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function modify_search_row($event)
 	{
 		if($event['show_results'] == 'topics')

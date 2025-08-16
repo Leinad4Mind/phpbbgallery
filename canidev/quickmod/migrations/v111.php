@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * @package cBB QuickMod
 * @version v1.1.1 22/03/2019
 *
@@ -11,11 +11,17 @@ namespace canidev\quickmod\migrations;
 
 class v111 extends \phpbb\db\migration\migration
 {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function effectively_installed()
 	{
 		return isset($this->config['qm_version']) && version_compare($this->config['qm_version'], '1.1.1', '>=');
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	static public function depends_on()
 	{
 		return array(
@@ -23,6 +29,9 @@ class v111 extends \phpbb\db\migration\migration
 		);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function update_data()
 	{
 		return array(

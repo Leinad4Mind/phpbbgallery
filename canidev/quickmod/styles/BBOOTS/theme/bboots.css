@@ -1,3 +1,14 @@
+/*  cBB QuickMod StyleSheet
+    --------------------------------------------------------------
+	Style:	BBOOTS
+	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+#qm-main {
+	font-size: inherit !important;
+}
+
 .qm-row .footable-first-column,
 .qm-row .footable-last-column {
 	position: relative;
