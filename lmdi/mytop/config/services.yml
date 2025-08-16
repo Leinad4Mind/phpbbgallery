@@ -1,0 +1,12 @@
+services:
+    lmdi.mytop.listener:
+        class: lmdi\mytop\event\listener
+        arguments:
+            - '@user'
+            - '@config'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
