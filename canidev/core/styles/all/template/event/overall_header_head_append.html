@@ -1,6 +1,6 @@
 {% if not definition.CBBCORE_CSS_LOADED %}
 	{% for css in loops.core_css %}
-	<link{{ css.PARAMS }}/>
+	<link{{ css.PARAMS }}>
 	{% endfor %}
 
 	{% for style in loops.core_style %}

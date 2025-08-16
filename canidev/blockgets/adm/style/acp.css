@@ -185,6 +185,13 @@ dd input[type="checkbox"], dd input[type="radio"] {
 .sortable li { margin-bottom: 3px; }
 .sortable li:last-child { margin-bottom: 0; }
 
+.sortable li > label {
+	display: inline-block;
+	font-size: 0.8em;
+	line-height: 1.7em;
+	margin: 5px;
+}
+
 .sortable table {
 	background: none;
 	border: none;

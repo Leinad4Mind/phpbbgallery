@@ -1,6 +1,6 @@
 
-<!-- BEGIN blglink_bottom -->
+{% for link in loops.blglink_bottom %}
 	<li>
-		<a href="{blglink_bottom.HREF}"><!-- IF blglink_bottom.ICON --><i class="fa {blglink_bottom.ICON}" aria-hidden="true"></i> <!-- ENDIF -->{blglink_bottom.TITLE}</a>
+		<a href="{{ link.HREF }}">{{ link.ICON }} {{ link.TITLE }}</a>
 	</li>
-<!-- END blglink_bottom -->
+{% endfor %}

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -139,16 +139,20 @@ class login_block extends base
 		if($this->user->data['is_registered'])
 		{
 			$links = array(
-				'SEARCH_NEW'	=> 'U_SEARCH_NEW',
-				'SEARCH_SELF'	=> 'U_SEARCH_SELF',
-				'MY_BOOKMARKS'	=> $this->helper->url('ucp', 'i=main&amp;mode=bookmarks'),
-				'MY_SUBSCRIBED'	=> $this->helper->url('ucp', 'i=main&amp;mode=subscribed'),
+				'SEARCH_NEW'	=> array('url' => 'U_SEARCH_NEW', 	'icon' => 'fa-file-o icon-red'),
+				'SEARCH_SELF'	=> array('url' => 'U_SEARCH_SELF', 	'icon' => 'fa-file-o'),
+				'MY_BOOKMARKS'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=bookmarks'), 	'icon' => 'fa-star-o'),
+				'MY_SUBSCRIBED'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=subscribed'), 	'icon' => 'fa-bookmark-o'),
 			);
 			
 			if($this->config['allow_privmsg'] && ($this->auth->acl_get('u_readpm') || $this->auth->acl_get('u_sendpm')))
 			{
 				$pm_title = $this->lang->lang('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
-				$links[$pm_title] = 'U_PRIVATEMSGS';
+				
+				$links[$pm_title] = array(
+					'url' => 'U_PRIVATEMSGS',
+					'icon' => 'fa-inbox',
+				);
 			}
 
 			/*
@@ -163,8 +167,9 @@ class login_block extends base
 			foreach($links as $title => $link)
 			{
 				$this->template->assign_block_vars('userlink', array(
+					'ICON'		=> $link['icon'],
 					'TITLE'		=> $this->lang->lang($title),
-					'URL'		=> (strpos($link, 'U_') === 0) ? $this->template->get_var($link) : $link,
+					'URL'		=> (strpos($link['url'], 'U_') === 0) ? $this->template->get_var($link['url']) : $link['url'],
 				));
 			}
 			unset($links);

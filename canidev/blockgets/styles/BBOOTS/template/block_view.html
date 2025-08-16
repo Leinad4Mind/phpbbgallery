@@ -12,7 +12,7 @@
 			<thead>
 				<tr>
 					<th class="block-title">
-						{% if sub.BLOCK_ICON %}<i class="fa {{ sub.BLOCK_ICON }}"></i>{% endif %}
+						{{ sub.BLOCK_ICON }}
 						<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
 					</th>
 				</tr>
@@ -42,7 +42,7 @@
 		<thead>
 			<tr>
 				<th class="block-title">
-					{% if block.BLOCK_ICON %}<i class="fa {{ block.BLOCK_ICON }}"></i>{% endif %}
+					{{ block.BLOCK_ICON }}
 					<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
 				</th>
 			</tr>

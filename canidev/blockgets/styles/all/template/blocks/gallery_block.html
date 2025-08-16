@@ -1,12 +1,12 @@
-<!-- IF ACP_MANAGE_GALLERY -->
-<button class="cbb-btn" data-id="{S_BUTTON_ID}">{L_GALLERY_MANAGE}</button>
-{S_GALLERY_HIDDEN_FIELDS}
+{% if ACP_MANAGE_GALLERY %}
+<button class="cbb-btn" data-id="{{ S_BUTTON_ID }}">{L_GALLERY_MANAGE}</button>
+{{ S_GALLERY_HIDDEN_FIELDS }}
 
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('[data-id="{S_BUTTON_ID}"]').click(function(e) {
+		$('[data-id="{{ S_BUTTON_ID }}"]').click(function(e) {
 			e.preventDefault();
 			
 			var btn = $(this);
@@ -37,20 +37,20 @@
 // ]]>
 </script>
 
-<!-- ELSE -->
+{% else %}
 
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#block-{BLOCK_ID}').blgGallery({S_GALLERY_OPTIONS});
+		$('#block-{{ BLOCK_ID }}').blgGallery({{ S_GALLERY_OPTIONS }});
 	});
 // ]]>
 </script>
 
 <div class="gallery">
-<!-- BEGIN image -->
-	<a href="{image.ACTION}" title="{image.TITLE}" class="blank"><img src="{image.SRC}" alt="" /></a>
-<!-- END image -->
+{% for image in loops.image %}
+	<a href="{{ image.ACTION }}" title="{{ image.TITLE }}" class="blank"><img src="{{ image.SRC }}" alt="" /></a>
+{% endfor %}
 </div>
-<!-- ENDIF -->
+{% endif %}

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -32,7 +32,7 @@ class post_view_block extends base
 		{
 			return false;
 		}
-		
+
 		switch($config['mode'])
 		{
 			case 'forum':
@@ -125,13 +125,13 @@ class post_view_block extends base
 		$message = censor_text($post_data['post_text']);
 		$message = generate_text_for_display($message, $post_data['bbcode_uid'], $post_data['bbcode_bitfield'], $parse_flags, true);
 
-		if(!empty($attachments))
+		if(sizeof($attachments))
 		{
 			parse_attachments($post_data['forum_id'], $message, $attachments, $update_count);
 		}
 
 		$this->template->assign_vars(array(
-			'PV_HAS_ATTACHMENTS'	=> (!empty($attachments) ? true : false),
+			'PV_HAS_ATTACHMENTS'	=> sizeof($attachments) ? true : false,
 			'PV_CONTENT'			=> $message,
 		));
 		
@@ -139,14 +139,11 @@ class post_view_block extends base
 		$this->template->destroy_block_vars('pv_attachment');
 
 		// Display not already displayed Attachments for this post, we already parsed them. ;)
-		if(!empty($attachments))
+		foreach($attachments as $attachment)
 		{
-			foreach($attachments as $attachment)
-			{
-				$this->template->assign_block_vars('pv_attachment', array(
-					'DISPLAY_ATTACHMENT'	=> $attachment
-				));
-			}
+			$this->template->assign_block_vars('pv_attachment', array(
+				'DISPLAY_ATTACHMENT'	=> $attachment
+			));
 		}
 
 		unset($data, $post_data, $attachments);
@@ -203,7 +200,7 @@ class post_view_block extends base
 					);
 				}
 
-				if(preg_match('#^p([0-9]+)#', $url_parts['fragment'], $match))
+				if(isset($url_parts['fragment']) && preg_match('#^p([0-9]+)#', $url_parts['fragment'], $match))
 				{
 					return array(
 						'mode' 	=> 'post',

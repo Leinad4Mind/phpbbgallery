@@ -2,9 +2,9 @@
 /*
 * info_acp_blockgets.php [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 

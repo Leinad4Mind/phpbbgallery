@@ -1,6 +1,6 @@
 
-<!-- IF BLG_ENABLED -->
-<!-- IF .top_blockrow -->
+{% if BLG_ENABLED %}
+{% if top_blockrow|length %}
 <!-- [+] top block area -->
 <div class="blg-area">
 {% for block in loops.top_blockrow %}
@@ -8,14 +8,14 @@
 {% endfor %}
 </div>
 <!-- [-] top block area -->
-<!-- ENDIF -->
+{% endif %}
 
-<div class="blg-area {CENTER_COLUMN_CLASSES}">
+<div class="blg-area {{ CENTER_COLUMN_CLASSES }}">
 	<div class="blg-area-wrapper">
-		<div id="blg-column-center"<!-- IF BLG_ON_BOARD and not DISPLAY_FORUM_BLOCK --> class="blg-helper-content-hidden"<!-- ENDIF -->>
+		<div id="blg-column-center"{% if BLG_ON_BOARD and not DISPLAY_FORUM_BLOCK %} class="blg-helper-content-hidden"{% endif %}>
 	{% for block in loops.center_blockrow %}
 		{% if not block.AFTER_FORUM %}
 			{% include 'block_view.html' %}
 		{% endif %}
 	{% endfor %}
-<!-- ENDIF -->
+{% endif %}

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -27,20 +27,22 @@ class listener implements EventSubscriberInterface
 	protected $request;
 	protected $user;
 	protected $php_ext;
+	protected $table_prefix;
 	
 	protected $user_event = false;
 	
 	/**
 	* Constructor
 	*
-	* @param \canidev\blockgets\libraries\blockgets		$blockgets		Blockgets Object
-	* @param \phpbb\config\config 						$config			Config Object
-	* @param ContainerInterface 						$container		Service container interface
-	* @param \canidev\blockgets\libraries\helper		$helper			Blockgets helper Object
-	* @param \phpbb\language\language					$language		Language Object
-	* @param \phpbb\request\request 					$request		Request object
-	* @param \phpbb\user								$user			User object
-	* @param string										$phpEx			phpEx
+	* @param \canidev\blockgets\libraries\blockgets		$blockgets			Blockgets Object
+	* @param \phpbb\config\config 						$config				Config Object
+	* @param ContainerInterface 						$container			Service container interface
+	* @param \canidev\blockgets\libraries\helper		$helper				Blockgets helper Object
+	* @param \phpbb\language\language					$language			Language Object
+	* @param \phpbb\request\request 					$request			Request object
+	* @param \phpbb\user								$user				User object
+	* @param string										$phpEx				phpEx
+	* @param string										$table_prefix		Table Prefix
 	*
 	* @access public
 	*/
@@ -52,15 +54,17 @@ class listener implements EventSubscriberInterface
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
-		$phpEx)
+		$phpEx,
+		$table_prefix)
 	{
-		$this->blockgets	= $blockgets;
-		$this->config		= $config;
-		$this->helper		= $helper;
-		$this->lang			= $language;
-		$this->request		= $request;
-		$this->user			= $user;
-		$this->php_ext		= $phpEx;
+		$this->blockgets		= $blockgets;
+		$this->config			= $config;
+		$this->helper			= $helper;
+		$this->lang				= $language;
+		$this->request			= $request;
+		$this->user				= $user;
+		$this->php_ext			= $phpEx;
+		$this->table_prefix 	= $table_prefix;
 		
 		\canidev\core\lib::get_instance($container);
 	}
@@ -93,7 +97,7 @@ class listener implements EventSubscriberInterface
 	
 	public function on_init()
 	{
-		global $table_prefix;
+		$table_prefix = &$this->table_prefix;
 		
 		if((@include $this->helper->get_ext_path() . 'libraries/constants.' . $this->php_ext) == true)
 		{
@@ -149,6 +153,12 @@ class listener implements EventSubscriberInterface
 	
 	public function on_setup_after()
 	{
+		// Fix login redirect url
+		if($this->user->page['page_name'] == 'blockgets.' . $this->php_ext && $this->config['blg_home_type'] == TYPE_DOMAIN_HOME)
+		{
+			$this->user->page['page'] = str_replace('blockgets.' . $this->php_ext, '', $this->user->page['page']);
+		}
+
 		$this->blockgets->parse_ajax();
 	}
 	
@@ -237,9 +247,22 @@ class listener implements EventSubscriberInterface
 
 		if(method_exists($exception, 'getStatusCode') && $exception->getStatusCode() == 404 &&
 			!preg_match('#\.(js|css)$#', $this->user->page['page_name']) &&
-			($redirect = $this->get_redirect('404')))
+			($redirect = $this->get_redirect('404')) !== false)
 		{
-			redirect($redirect);
+			$http_kernel 	= $event->getKernel();
+			$request		= $event->getRequest();
+
+			$request->attributes->set('_controller', $redirect['controller']);
+
+			if($redirect['params'])
+			{
+				$request->attributes->add($redirect['params']);
+			}
+
+			$response = $http_kernel->handle($request);
+			$response->setStatusCode(404);
+			$response->send();
+			$http_kernel->terminate($request, $response);
 		}
 	}
 	
@@ -258,9 +281,9 @@ class listener implements EventSubscriberInterface
 	
 	public function on_redirect($event)
 	{
-		if($this->user_event && ($redirect = $this->get_redirect($this->user_event)))
+		if($this->user_event && ($redirect = $this->get_redirect($this->user_event)) !== false)
 		{
-			$event['url'] = $redirect;
+			$event['url'] = $redirect['url'];
 		}
 		
 		$this->user_event = false;
@@ -270,19 +293,27 @@ class listener implements EventSubscriberInterface
 	{
 		if(empty($this->config["blg_redirect_$type"]))
 		{
-			return '';
+			return false;
 		}
 
 		$page 		= $this->config["blg_redirect_$type"];
-		$u_redirect	= '';
+		$redirect	= false;
 		
 		if($page == '/')
 		{
-			$u_redirect = $this->helper->url('index');
+			$redirect = array(
+				'controller'	=> null,
+				'params'		=> null,
+				'url'			=> $this->helper->url('index'),
+			);
 		}
 		else if($page == 'home')
 		{
-			$u_redirect = $this->helper->route('canidev_blockgets_controller');
+			$redirect = array(
+				'controller'	=> 'canidev.blockgets.controller:display',
+				'params'		=> null,
+				'url'			=> $this->helper->route('canidev_blockgets_controller'),
+			);
 		}
 		else if(is_numeric($page))
 		{
@@ -295,15 +326,21 @@ class listener implements EventSubscriberInterface
 				
 				if($row['page_enabled'] && $this->helper->group_auth($row['page_groups']))
 				{
-					$u_redirect = $this->helper->route('canidev_blockgets_page_controller', array(
-						'page'	=> ($row['page_alias']) ? $row['page_alias'] : $row['page_id']
-					));
+					$params = array(
+						'page'	=> ($row['page_alias']) ? $row['page_alias'] : $row['page_id'],
+					);
+
+					$redirect = array(
+						'controller'	=> 'canidev.blockgets.controller:display',
+						'params'		=> $params,
+						'url'			=> $this->helper->route('canidev_blockgets_page_' . $row['page_id']),
+					);
 				}
 			}
 			
 			unset($page_ary);
 		}
 
-		return $u_redirect;
+		return $redirect;
 	}
 }

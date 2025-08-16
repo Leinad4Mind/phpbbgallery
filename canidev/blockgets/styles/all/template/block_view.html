@@ -8,7 +8,7 @@
 				<li class="header">
 					<dl>
 						<dt>
-							{% if sub.BLOCK_ICON %}<i class="fa {{ sub.BLOCK_ICON }} fa-lg"></i>{% endif %}
+							{{ sub.BLOCK_ICON }}
 							<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
 						</dt>
 						<dd></dd>
@@ -32,7 +32,7 @@
 			<li class="header">
 				<dl>
 					<dt>
-						{% if block.BLOCK_ICON %}<i class="fa {{ block.BLOCK_ICON }} fa-lg"></i>{% endif %}
+						{{ block.BLOCK_ICON }}
 						<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
 					</dt>
 					<dd></dd>

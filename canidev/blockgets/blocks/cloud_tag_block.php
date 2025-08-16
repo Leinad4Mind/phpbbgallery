@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -70,6 +70,7 @@ class cloud_tag_block extends base
 						)),
 					);
 				}
+				$this->db->sql_freeresult($result);
 			break;
 
 			case 'users':
@@ -88,31 +89,32 @@ class cloud_tag_block extends base
 						))
 					);
 				}
+				$this->db->sql_freeresult($result);
 			break;
 
 			default:
-				return false;
+				/*
+				* @event block.cloud_tag_custom_mode
+				* @var	array	tag_rows	Data to put in template
+				* @var	array	data		Block Configuration
+				* @since 2.0.2
+				*/
+				$vars = array('tag_rows', 'data');
+				extract($this->dispatcher->trigger_event('block.cloud_tag_custom_mode', compact($vars)));
+			break;
 		}
-		$this->db->sql_freeresult($result);
 		
 		foreach($tag_rows as $row)
 		{
-			$row['S_TAG_SIZE'] = ($data['animation']) ?  rand(10, 16) : rand(8, 22);
-
-			/*
-			* @event block.cloud_tag_row
-			* @var array	row		The output array
-			* @var	array	data	Block Configuration
-			* @since 2.0.0
-			*/
-			$vars = array('row', 'data');
-			extract($this->dispatcher->trigger_event('block.cloud_tag_row', compact($vars)));
+			if(!isset($row['S_TAG_SIZE']))
+			{
+				$row['S_TAG_SIZE'] = ($data['animation']) ?  rand(10, 16) : rand(8, 22);
+			}
 
 			$this->template->assign_block_vars('clouds', $row);
 		}
 
 		$this->template->assign_var('S_SHOW_ANIMATION', ($data['animation'] && sizeof($tag_rows)));
-
 		$this->template->append_asset('js', '@canidev_blockgets/js/tagcanvas.min.js');
 
 		unset($data, $tag_rows);

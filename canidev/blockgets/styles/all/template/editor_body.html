@@ -1,9 +1,9 @@
-<!-- IF S_EVENT_OUTPUT -->
-	<div {S_EVENT_ATTR}>{S_EVENT_TITLE}</div>
-<!-- ELSE -->
-<div class="cbb-modal-dialog editor<!-- IF S_EDITOR_TYPE eq 'event' --> is-event<!-- ENDIF -->">
+{% if S_EVENT_OUTPUT %}
+	<div {{ S_EVENT_ATTR }}>{{ S_EVENT_TITLE }}</div>
+{% else %}
+<div class="cbb-modal-dialog editor{% if S_EDITOR_TYPE == 'event' %} is-event{% endif %}">
 	<div class="cbb-dialog-header">
-		<h1>{S_EDITOR_TITLE}</h1>
+		<h1>{{ S_EDITOR_TITLE }}</h1>
 		<a href="#" data-action="close" class="cbb-dialog-close">
 			<i class="fa fa-remove" aria-hidden="true"></i>
 		</a>
@@ -16,44 +16,44 @@
 		<form id="editor-form" onsubmit="return false;">
 		<div class="cbb-dialog-sidebar">
 		
-		<!-- IF .smileyrow -->
+		{% if smileyrow|length %}
 		<div class="sidebar-box smileys">
 			<h3>{L_SMILIES}</h3>
 			<div class="box-content">
-				<!-- INCLUDE @canidev_core/smiley_box.html -->
+				{% INCLUDE '@canidev_core/smiley_box.html' %}
 			</div>
 		</div>
-		<!-- ENDIF -->
-		<!-- IF S_EDITOR_TYPE eq 'event' -->
+		{% endif %}
+		{% if S_EDITOR_TYPE == 'event' %}
 			<hr />
 			<div class="sidebar-box">
 				<h3>{L_EVENT_TIME}</h3>
 				<div class="box-content">
-					<select name="event_day" class="cbb-inputbox">{S_DAY_OPTIONS}</select>
-					<select name="event_month" class="cbb-inputbox">{S_MONTH_OPTIONS}</select>
-					<select name="event_year" class="cbb-inputbox">{S_YEAR_OPTIONS}</select>
+					<select name="event_day" class="cbb-inputbox">{{ S_DAY_OPTIONS }}</select>
+					<select name="event_month" class="cbb-inputbox">{{ S_MONTH_OPTIONS }}</select>
+					<select name="event_year" class="cbb-inputbox">{{ S_YEAR_OPTIONS }}</select>
 				</div>
 			</div>
 			<div class="sidebar-box">
 				<h3>{L_EVENT_GROUPS}</h3>
 				<div class="box-content">
-					{S_GROUPS_SELECT}
+					{{ S_GROUPS_SELECT }}
 				</div>
 			</div>
 			<div class="sidebar-box">
 				<h3>{L_EVENT_COLOR}</h3>
 				<div class="box-content">
-					{S_COLOR_SELECT}
+					{{ S_COLOR_SELECT }}
 				</div>
 			</div>
-		<!-- ENDIF -->
+		{% endif %}
 		</div>
 		<div class="cbb-section-content">
-		<!-- IF S_EDITOR_TYPE eq 'event' -->
-			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{S_TITLE}" placeholder="{L_EVENT_TITLE}" />
-		<!-- ENDIF -->
+		{% if S_EDITOR_TYPE == 'event' %}
+			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{{ S_TITLE }}" placeholder="{L_EVENT_TITLE}" />
+		{% endif %}
 
-			<!-- INCLUDE @canidev_core/editor_body.html -->
+			{% INCLUDE '@canidev_core/editor_body.html' %}
 		</div>
 		</form>
 	</div>
@@ -80,7 +80,7 @@
 			<style>
 				html { background: none; height: auto; }
 				
-				<!-- IF BLG_RSZ_WIDTH -->img { max-width: {BLG_RSZ_WIDTH}px; }<!-- ENDIF -->
+				{% if BLG_RSZ_WIDTH %}img { max-width: {{ BLG_RSZ_WIDTH }}px; }{% endif %}
 				
 				.ie * {min-height: auto !important}
 				.ie table td {height:15px}
@@ -94,4 +94,4 @@
 		</html>
 	</script>
 </div>
-<!-- ENDIF -->
+{% endif %}

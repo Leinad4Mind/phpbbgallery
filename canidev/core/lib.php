@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.4 26/01/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -16,23 +16,39 @@ class lib
 	/** @deprecated use constants::VERSION instead */
 	const VERSION	= constants::VERSION;
 	
+	/** @var \phpbb\config\db */
 	private $config;
+	
+	/** @var \phpbb\db\driver\driver_interface */
 	private $db;
+
+	/** @var \phpbb\event\dispatcher_interface */
 	private $dispatcher;
+
+	/** @var \phpbb\language\language */
 	private $language;
+
+	/** @var \phpbb\path_helper */
 	private $path_helper;
+
+	/** @var \phpbb\request\request_interface */
 	private $request;
+
+	/** @var \canidev\core\template */
 	private $template;
+
+	/** @var \phpbb\user */
 	private $user;
+
+	/** @var string */
 	private $phpbb_root_path;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container		Service container interface
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->config			= $container->get('config');
@@ -54,7 +70,7 @@ class lib
 	{
 		if(empty($this->user->data['group_ary']))
 		{
-			$this->user->data['group_ary'] = array();
+			$this->user->data['group_ary'] = [];
 
 			$sql = 'SELECT group_id
 				FROM ' . USER_GROUP_TABLE . '
@@ -76,16 +92,30 @@ class lib
 	 * 
 	 * @param array|string 			$valid_groups 		Valid Group's IDs
 	 * @param array|string|false 	$check_groups 		Group's IDs to check
+	 * @param int|null 				$default_group_id 	Default user group (user with $check_groups is defined)
 	 * 
 	 * @return bool
 	 */
-	public function group_auth($valid_groups, $check_groups = false)
+	public function group_auth($valid_groups, $check_groups = false, $default_group_id = null)
 	{
-		$check_groups	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
-		$check_groups	= (is_array($check_groups) ? $check_groups : explode(',', $check_groups));
-		$group_ary		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
+		if(is_string($check_groups))
+		{
+			$check_groups = explode(',', $check_groups);
+		}
+		
+		if(is_string($valid_groups))
+		{
+			if(strpos($valid_groups, 'default;') === 0)
+			{
+				$check_groups = ($check_groups === false) ? [$this->user->data['group_id']] : (($default_group_id) ? [$default_group_id] : $check_groups[0]);
+				$valid_groups = str_replace('default;', '', $valid_groups);
+			}
+		}
 
-		return ($valid_groups == 'all' || sizeof(array_intersect($group_ary, $check_groups)));
+		$check_groups 	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
+		$group_ary 		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
+
+		return ($valid_groups == 'all' || count(array_intersect($group_ary, $check_groups)));
 	}
 	
 	/**
@@ -131,7 +161,7 @@ class lib
 	 * 
 	 * @return bool|void
 	*/
-	public function modal_dialog($check, $title = '', $hidden = array(), $html_body = '@canidev_core/confirmbox.html', $json_data = null, $u_action = '')
+	public function modal_dialog($check, $title = '', $hidden = [], $html_body = '@canidev_core/confirmbox.html', $json_data = null, $u_action = '')
 	{
 		if(!$this->request->is_ajax())
 		{
@@ -153,11 +183,11 @@ class lib
 			return true;
 		}
 
-		$hidden = array_merge($hidden, array(
+		$hidden = array_merge($hidden, [
 			'confirm_uid'	=> $this->user->data['user_id'],
 			'sess'			=> $this->user->session_id,
 			'sid'			=> $this->user->session_id,
-		));
+		]);
 
 		$formatted_title = (!$this->language->is_set($title)) ? $this->language->lang('CONFIRM') : $this->language->lang($title);
 
@@ -174,7 +204,7 @@ class lib
 		$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $this->user->page['page']);
 		$u_action = reapply_sid($this->path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'MESSAGE_TITLE'		=> $formatted_title,
 			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
 
@@ -182,7 +212,7 @@ class lib
 			'S_CONFIRM_ACTION'	=> $u_action,
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
 			'S_AJAX_REQUEST'	=> true,
-		));
+		]);
 
 		/**
 		 * @event canidev.core.dialog
@@ -193,26 +223,21 @@ class lib
 		 * @var array 		json_data 	JSON Data
 		 * @since 1.1.0
 		 */
-		$vars = array(
-			'title',
-			'hidden',
-			'html_body',
-			'json_data',
-		);
+		$vars = ['title', 'hidden', 'html_body', 'json_data'];
 		extract($this->dispatcher->trigger_event('canidev.core.modal_dialog', compact($vars)));
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'body' => $html_body
-		));
+		]);
 
-		$response = \canidev\core\json_response::get_instance();
+		$response = \canidev\core\JsonResponse::getInstance();
 
 		if($json_data !== null)
 		{
 			$response->add($json_data);
 		}
 
-		$response->send(array(
+		$response->send([
 			'isModalDialog'		=> true,
 			
 			'MESSAGE_BODY'		=> $this->template->assign_display('body'),
@@ -222,19 +247,102 @@ class lib
 			'YES_VALUE'			=> $this->language->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
-		));
+		]);
+	}
+
+	/**
+	 * Perform a request to api
+	 * 
+	 * @param string 		$namespace
+	 * @param string 		$action
+	 * @param array 		$data
+	 * 
+	 * @return array|null
+	 */
+	public function apiRequest($namespace, $action, $data = [])
+	{
+		$api 	= $this->apiData($namespace, $action, 'array');
+		$client = new \GuzzleHttp\Client();
+		$key 	= phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
+
+		if($api !== null)
+		{
+			try
+			{
+				$host = $this->request->header('HOST');
+				$host = ($host) ? $host : $this->config['server_name']; // For CLI
+
+				$response = $client->post($api['url'], [
+					'exceptions' 	=> false,
+					'timeout' 		=> 10,
+					$key			=> $data,
+					'headers' => [
+						'User-Agent' 	=> $api['agent'],
+						'X-Api-Token'	=> $api['token'],
+						'X-Api-Host'	=> $host,
+					]
+				]);
+
+				$content_type = $response->getHeader('Content-Type');
+				$content_type = is_array($content_type) ? $content_type[0] : $content_type;
+
+				if($content_type == 'application/json')
+				{
+					return array_merge(
+						[
+							'code'	=> $response->getStatusCode(),
+						],
+						json_decode($response->getBody()->getContents(), true)
+					);
+				}
+			}
+			catch(\Throwable $th) {}
+		}
+
+		return null;
+	}
+
+	public function apiData($namespace, $action, $return_key = null, $data = null)
+	{
+		$config_file 	= __DIR__ . '/config/api.php';
+		$api_url 		= sprintf('https://api.canidev.com/%s/%s', $namespace, $action);
+		$data 			= ($data === null) ? [] : $data;
+
+		if(file_exists($config_file))
+		{
+			require($config_file);
+
+			switch($return_key)
+			{
+				case 'array':
+					return [
+						'agent'		=> 'canidev-request/1.0',
+						'token'		=> $api_token,
+						'url'		=> $api_url,
+					];
+				
+				case 'url':
+					$data['token'] = $api_token;
+					return $api_url . '?' . http_build_query($data, '', '&');
+			}
+		}
+
+		return null;
 	}
 
 	/**
 	 * 
 	 * @param ContainerInterface|null 	$container		Service container interface
+	 * @return static
 	 * @deprecated Use service instead
 	 */
 	static public function get_instance($container = null)
 	{
 		if($container === null)
 		{
-			return;
+			global $phpbb_container;
+
+			$container = $phpbb_container;
 		}
 
 		$request = $container->get('request');

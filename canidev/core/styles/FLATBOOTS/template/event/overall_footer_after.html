@@ -1,4 +1,4 @@
-<!-- IF not $CBBCORE_JS_LOADED -->
+{% if not definition.CBBCORE_JS_LOADED %}
 
 {% set script_names = '' %}
 
@@ -14,15 +14,19 @@
 		</script>
 		{% endif %}
 	{% else %}
-		<script {{ script.PARAMS }}>{{ script.DATA }}</script>
+		<script{{ script.PARAMS }}>{{ script.DATA }}</script>
 	{% endif %}
 {% endfor %}
 
 {% if script_names %}
 	<script>
-		head.load({{ script_names|trim(',') }});
+		window.coreAutoExecute = false;
+		
+		head.load({{ script_names|trim(',') }}, function() {
+			cbbCore.execute();
+		});
 	</script>
 {% endif %}
 
-	<!-- DEFINE $CBBCORE_JS_LOADED = 1 -->
-<!-- ENDIF -->
+	{% DEFINE CBBCORE_JS_LOADED = 1 %}
+{% endif %}

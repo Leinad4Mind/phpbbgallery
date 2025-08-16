@@ -1,7 +1,7 @@
 /*  cBB Core StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -26,6 +26,17 @@
 .cbb-modal-dialog .cbb-media-attachments {
 	left: 5px;
     top: 5px;
+}
+
+.cbb-modal-dialog .has-seekerbar .cbb-media-attachments {
+	top: 50px;
+}
+
+.cbb-media-seeker {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+	margin: 10px 10px 0 10px;
 }
 
 .cbb-media-attachments {
@@ -53,7 +64,7 @@
 	width: 10%;
 }
 
-.cbb-media-attachments .attachment-preview {
+.cbb-media-attachments .media-preview {
 	box-shadow: inset 0 0 15px rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.05);
 	position: relative;
     background: #eee;
@@ -61,13 +72,13 @@
 	overflow: hidden;
 }
 
-.cbb-media-attachments .attachment-preview:before {
+.cbb-media-attachments .media-preview:before {
     content: '';
     display: block;
     padding-top: 100%;
 }
 
-.cbb-media-attachments .attachment-preview .media-thumbnail {
+.cbb-media-attachments .media-preview .media-thumbnail {
 	position: absolute;
     top: 0;
     left: 0;
@@ -77,7 +88,7 @@
 	transform: translate(50%, 50%);
 }
 
-.cbb-media-attachments .attachment-preview .media-thumbnail img {
+.cbb-media-attachments .media-preview .media-thumbnail img {
     max-height: 100%;
 	margin: 0;
     position: absolute;
@@ -86,14 +97,14 @@
 	transform: translate(-50%, -50%);
 }
 
-.cbb-media-attachments .iconic .attachment-preview .media-thumbnail i {
+.cbb-media-attachments .iconic .media-preview .media-thumbnail i {
     text-align: center;
     display: block;
     margin: auto;
 	transform: translate(-50%, -50%);
 }
 
-.cbb-media-attachments .iconic .attachment-preview .media-thumbnail .fa {
+.cbb-media-attachments .iconic .media-preview .media-thumbnail .fa {
 	font-size: 1.3em;
 }
 
@@ -307,7 +318,7 @@
 	color: #ccc;
 }
 
-.dark-theme .cbb-modal-dialog .attachment-preview {
+.dark-theme .cbb-modal-dialog .media-preview {
 	background-color: #404040;
 }
 
@@ -331,6 +342,17 @@
 
 @media only screen and (max-width: 1124px) {
 	.cbb-modal-dialog .attachment { width: 13.3%; }
+}
+
+@media only screen and (max-width: 600px) {
+	.cbb-media-seeker {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.cbb-modal-dialog .has-seekerbar .cbb-media-attachments {
+		top: 90px;
+	}
 }
 
 @media only screen and (max-width: 480px) {

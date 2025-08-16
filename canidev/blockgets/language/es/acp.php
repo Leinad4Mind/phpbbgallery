@@ -2,9 +2,9 @@
 /*
 * acp.php [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -50,7 +50,6 @@ $lang = array_merge($lang, array(
 	'BLG_REDIRECT_LOGOUT'			=> 'Desconexión',
 	'BLG_REDIRECT_LOGOUT_EXPLAIN'	=> 'Establece la página a la que será llevado el usuario al desconectarse.',
 
-	'BATCH_ACTIONS'				=> 'Acciones en lote',
 	'DEFAULT'					=> 'Por defecto',
 	'LINKS'						=> 'Enlaces',
 	'OPEN_GALLERY'				=> 'Abrir galería',

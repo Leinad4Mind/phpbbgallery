@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -26,11 +26,11 @@ class player_controller implements main_interface
 	/**
 	* Constructor
 	*
+	* @param ContainerInterface 					$container		Service container interface
 	* @param \phpbb\db\driver\driver_interface		$db				DB Object
 	* @param \canidev\blockgets\libraries\helper	$helper			Blockgets helper Object
 	* @param \phpbb\language\language				$language		Language Object
 	* @param \phpbb\request\request 				$request		Request object
-	* @param \phpbb\template\template				$template     	Template object
 	*
 	* @access public
 	*/

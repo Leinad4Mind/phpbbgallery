@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -54,6 +54,11 @@ class leaders_block extends base
 		}
 		$this->db->sql_freeresult($result);
 
+		if(!sizeof($groups_ary))
+		{
+			return false;
+		}
+
 		// Get users
 		$sql_ary = array(
 			'SELECT'	=> 'u.username, u.user_id, u.group_id, u.user_colour,
@@ -62,6 +67,20 @@ class leaders_block extends base
 			'WHERE'		=> '',
 			'ORDER_BY'	=> 'u.username_clean ASC',
 		);
+
+		if($data['only_online'])
+		{
+			$time = (time() - (intval($this->config['load_online_time']) * 60));
+
+			$sql_ary['LEFT_JOIN'] = array(
+				array(
+					'FROM'	=> array(SESSIONS_TABLE => 's'),
+					'ON'	=> 's.session_user_id = u.user_id AND s.session_time >= ' . ($time - ((int) ($time % 30)))
+				)
+			);
+
+			$sql_ary['WHERE'] = 's.session_id IS NOT NULL AND ';
+		}
 
 		if($data['use_all_groups'])
 		{
@@ -81,11 +100,11 @@ class leaders_block extends base
 			}
 			$this->db->sql_freeresult($result);
 
-			$sql_ary['WHERE'] = $this->db->sql_in_set('u.user_id', $users_ary);
+			$sql_ary['WHERE'] .= $this->db->sql_in_set('u.user_id', $users_ary);
 		}
 		else
 		{
-			$sql_ary['WHERE'] = $this->db->sql_in_set('u.group_id', array_keys($groups_ary));
+			$sql_ary['WHERE'] .= $this->db->sql_in_set('u.group_id', array_keys($groups_ary));
 		}
 
 		/*
@@ -208,6 +227,7 @@ class leaders_block extends base
 			'mode'				=> array('lang' => 'LEADERS_MODE',			'type' => 'select', 		'method' => 'helper',	'params' => array('make_select', $options, false, '{CONFIG_VALUE}'),					'default' => 'simple'),
 			'use_all_groups'	=> array('lang' => 'LEADERS_ALL_GROUPS',	'type' => 'radio:yes_no',	'validate' => 'bool',	'default' => 0),
 			'groups'			=> array('lang' => 'LEADERS_GROUPS',		'type' => 'custom',			'method' => 'helper',	'params' => array('groups_select', 'groups', '{CONFIG_VALUE}', false, false),	'default' => array()),
+			'only_online'		=> array('lang' => 'LEADERS_ONLY_ONLINE',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 		);
 
 		return true;

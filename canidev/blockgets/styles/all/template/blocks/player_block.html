@@ -1,20 +1,19 @@
-<!-- IF S_IN_WINDOW -->
-	<!-- DEFINE $BLG_WINDOW = 1 -->
-	<!-- INCLUDE simple_header.html -->
-<!-- ENDIF -->
+{% if S_IN_WINDOW %}
+	{% INCLUDE 'simple_header.html' %}
+{% endif %}
 
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#player-{BLOCK_ID}').blgPlayer({PLAYER_OPTIONS});
+		$('#player-{{ BLOCK_ID }}').blgPlayer({{ PLAYER_OPTIONS }});
 	});
 // ]]>
 </script>
 
-<!-- IF S_IN_WINDOW --><div class="player-window panel"><!-- ENDIF -->
+{% if S_IN_WINDOW %}<div class="player-window panel">{% endif %}
 
-<div id="player-{BLOCK_ID}">
+<div id="player-{{ BLOCK_ID }}">
 	<div class="player-wrap">
 		<div class="player-buttons blg-corner-all">
 			<a class="js-play cbb-btn" href="#" data-action="play" title="{L_PLAY}"><i class="fa fa-play" aria-hidden="true"></i></a>
@@ -27,26 +26,26 @@
 
 	<div class="player-list-wrap blg-corner-all">
 		<ol class="player-playlist">
-	<!-- BEGIN track -->
-			<li><a href="{track.S_URL}">{track.S_TITLE}</a></li>
-	<!-- END track -->
+	{% for track in loops.track %}
+			<li><a href="{{ track.S_URL }}">{{ track.S_TITLE }}</a></li>
+	{% endfor %}
 		</ol>
 	</div>
 	
 	<div class="player-newwin-message">
 		<div>{L_WIN_OPEN_EXPLAIN}</div>
-		<div><a class="player-newwin" href="#" data-action="returnwin" title="{L_WIN_RETURN}"><i class="fa fa-sign-in" aria-hidden="true"></i></a></div>
+		<div><a class="player-newwin" href="#" data-action="returnwin" title="{L_WIN_RETURN}"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></a></div>
 		<br class="clear" />
 	</div>
 	
 	<div class="player-statusbar">
-		<a class="player-newwin" href="#" <!-- IF S_IN_WINDOW -->data-action="closewin" title="{L_WIN_CLOSE}"<!-- ELSE -->data-action="openwin" title="{L_WIN_OPEN}"<!-- ENDIF -->><i class="fa fa-external-link" aria-hidden="true"></i></a>
+		<a class="player-newwin" href="#" {% if S_IN_WINDOW %}data-action="closewin" title="{L_WIN_CLOSE}"{% else %}data-action="openwin" title="{L_WIN_OPEN}"{% endif %}><i class="fa fa-external-link" aria-hidden="true"></i></a>
 		<div class="player-statusbar-text"><div></div></div>
 	</div>
 </div>
 
-<!-- IF S_IN_WINDOW -->
+{% if S_IN_WINDOW %}
 	</div>
 
-	<!-- INCLUDE simple_footer.html -->
-<!-- ENDIF -->
+	{% INCLUDE 'simple_footer.html' %}
+{% endif %}

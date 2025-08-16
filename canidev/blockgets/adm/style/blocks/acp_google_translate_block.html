@@ -6,12 +6,12 @@
 		</dt>
 		<dd>
 			<div class="blg-option-selector google-translate">
-			<!-- BEGIN translate -->
-				<div title="{translate.S_LANG_EN}">
-					<input id="option-{translate.S_ISO}" type="checkbox" class="radio" name="langs[]" value="{translate.S_ISO}"<!-- IF translate.S_SELECTED --> checked="checked"<!-- ENDIF -->/>
-					<label for="option-{translate.S_ISO}"> {translate.S_LANG}</label>
+			{% for translate in loops.translate %}
+				<div title="{{ translate.S_LANG_EN }}">
+					<input id="option-{{ translate.S_ISO }}" type="checkbox" class="radio" name="langs[]" value="{{ translate.S_ISO }}"{% if translate.S_SELECTED %} checked="checked"{% endif %}/>
+					<label for="option-{{ translate.S_ISO }}"> {{ translate.S_LANG }}</label>
 				</div>
-			<!-- END translate -->
+			{% endfor %}
 			</div>
 
 			<br />

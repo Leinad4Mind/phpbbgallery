@@ -1,16 +1,16 @@
-<!-- IF not S_FRAME_HEIGHT --> 
+{% if not S_FRAME_HEIGHT %}
 	<script>
 	// <![CDATA[
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
-			$('#frame-{BLOCK_ID}').attr('height', $('#frame-{BLOCK_ID}').parent().width());
+			$('#frame-{{ BLOCK_ID }}').attr('height', $('#frame-{{ BLOCK_ID }}').parent().width());
 		});
 	// ]]>
 	</script>
-<!-- ENDIF -->
+{% endif %}
 
 <div class="blg-align-center">
-	<object id="frame-{BLOCK_ID}" class="blg-frame-object" type="{S_FRAME_MIMETYPE}"<!-- IF S_FRAME_WIDTH --> width="{S_FRAME_WIDTH}"<!-- ENDIF --> height="{S_FRAME_HEIGHT}" data="{U_FRAME_URL}">
-		<a href="{U_FRAME_URL}" onclick="window.open(this.href); return false;"></a>
+	<object id="frame-{{ BLOCK_ID }}" class="blg-frame-object" type="{{ S_FRAME_MIMETYPE }}"{% if S_FRAME_WIDTH %} width="{{ S_FRAME_WIDTH }}"{% endif %} height="{{ S_FRAME_HEIGHT }}" data="{{ U_FRAME_URL }}">
+		<a href="{{ U_FRAME_URL }}" onclick="window.open(this.href); return false;"></a>
 	</object>
 </div>

@@ -33,24 +33,23 @@
 	color: #808080 !important;
 }
 
-.block-title .fa {
-	vertical-align: middle;
-}
-
 .panel-forum > .block-title.panel-heading {
 	line-height: 36px;
-}
-
-.blg-table {
-    border-spacing: 8px !important;
+	padding: 0 10px;
 }
 
 .fb-lastpost-title {
 	width: 150px !important;
 }
 
-.blg-menu .fa {
+.blg-menu,
+.blg-menu .fa,
+.blg-message {
     font-size: 1em !important;
+}
+
+.block-title .fa {
+	vertical-align: middle !important;
 }
 
 .blg-admin-bar,
@@ -58,4 +57,8 @@ a.blg-admin-opener {
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
+}
+
+.contact-table {
+	border-spacing: 8px !important;
 }

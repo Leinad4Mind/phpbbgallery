@@ -2,7 +2,7 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#block-{BLOCK_ID} form').submit(function() {
+		$('#block-{{ BLOCK_ID }} form').submit(function() {
 			var searchUrls = {
 				google		: 'https://www.google.com/search?q=',
 				yahoo		: 'https://search.yahoo.com/search?p=',
@@ -11,30 +11,26 @@
 
 			var data = $(this).serializeObject();
 
-			if(!data.keywords || data.keywords == $(this).find('[name="keywords"]').attr('placeholder'))
+			if(data.keywords && data.keywords != $(this).find('[name="keywords"]').attr('placeholder'))
 			{
-				return false;
-			}
+				switch(data.engine)
+				{
+					case 'author':
+						$(this).find('[name="keywords"]').attr('name', 'author');
 
-			switch(data.engine)
-			{
-				case 'author':
-					$(this).find('[name="keywords"]').attr('name', 'author');
+					case 'site':
+						return true;
+					break;
+		
+					default:
+						var url = searchUrls[data.engine];
 
-				case 'site':
-					return true;
-				break;
-	
-				case 'google':
-				case 'yahoo':
-				case 'bing':
-					var url = searchUrls[data.engine];
-
-					if(url)
-					{
-						window.open(url + encodeURIComponent(data.keywords), '_' + data.engine, '');
-					}
-				break;
+						if(url)
+						{
+							window.open(url + encodeURIComponent(data.keywords), '_' + data.engine, '');
+						}
+					break;
+				}
 			}
 
 			return false;
@@ -43,17 +39,17 @@
 // ]]>
 </script>
 
-<form method="get" action="{U_SEARCH}">
+<form method="get" action="{{ U_SEARCH }}">
 	<ul class="blg-linear-list blg-align-center">
 		<li class="double-space"><input type="text" class="cbb-inputbox full-width" name="keywords" size="22" value="" placeholder="{L_SEARCH_MINI}" /></li>
 		<li class="double-space">
 			<select name="engine" class="cbb-inputbox">
-			<!-- IF S_DISPLAY_SEARCH -->
+			{% if S_DISPLAY_SEARCH %}
 				<optgroup label="{L_FORUMS}">
 					<option value="site">{L_MESSAGES}</option>
 					<option value="author">{L_AUTHOR}</option>
 				</optgroup>
-			<!-- ENDIF -->
+			{% endif %}
 				<optgroup label="{L_SH_ENGINE}">
 					<option value="google">Google</option>
 					<option value="yahoo">Yahoo</option>
@@ -63,10 +59,10 @@
 		</li>
 
 		<li class="double-space">
-			{S_BLOCK_HIDDEN_FIELDS}
-			<input class="button2" type="submit" value="{L_SEARCH}" />
+			{{ S_BLOCK_HIDDEN_FIELDS }}
+			<input class="cbb-btn" type="submit" value="{L_SEARCH}" />
 		</li>
 
-		<!-- IF S_DISPLAY_SEARCH --><li class="double-space top-bordered"><a href="{U_SEARCH}" title="{L_SEARCH_ADV_EXPLAIN}">{L_SEARCH_ADV}</a></li><!-- ENDIF -->
+		{% if S_DISPLAY_SEARCH %}<li class="double-space top-bordered"><a href="{{ U_SEARCH }}" title="{L_SEARCH_ADV_EXPLAIN}">{L_SEARCH_ADV}</a></li>{% endif %}
 	</ul>
 </form>

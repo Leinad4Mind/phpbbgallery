@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -34,6 +34,10 @@ define('BLOCK_STYLE_DEFAULT', 			1);
 define('BLOCK_STYLE_ALTERNATIVE', 		2);
 define('BLOCK_STYLE_CONTENT_FULL', 		3);
 define('BLOCK_STYLE_CONTENT_SIMPLE', 	4);
+
+define('BLOCK_COLLAPSE_NONE', 		0);
+define('BLOCK_COLLAPSE_VISIBLE', 	1);
+define('BLOCK_COLLAPSE_HIDDEN', 	2);
 
 // Scroll settings
 define('BLG_NO_SCROLL', 0);

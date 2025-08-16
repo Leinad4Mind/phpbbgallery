@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -53,10 +53,8 @@ class whos_online_block extends base
 					$online_userlist	= $user_online_strings['online_userlist'];
 					$total_online_users	= $online_users['total_online'];
 
-					$l_online_record = $this->lang->lang('RECORD_ONLINE_USERS', $this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
-
-					$l_online_time = ($this->config['load_online_time'] == 1) ? 'VIEW_ONLINE_TIME' : 'VIEW_ONLINE_TIMES';
-					$l_online_time = $this->lang->lang($l_online_time, $this->config['load_online_time']);
+					$l_online_record 	= $this->lang->lang('RECORD_ONLINE_USERS', (int)$this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
+					$l_online_time		= $this->lang->lang('VIEW_ONLINE_TIMES', (int) $this->config['load_online_time']);
 				}
 
 				$this->template->assign_vars(array(

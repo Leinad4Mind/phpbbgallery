@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -27,8 +27,6 @@ class topic_index_block extends base
 		{
 			return false;
 		}
-
-		$data['topics_per_page'] = 2;
 
 		if(empty($data['forums']))
 		{
@@ -62,7 +60,7 @@ class topic_index_block extends base
 		}
 		
 		$sql_ary = array(
-			'SELECT'	=> 't.*, f.enable_icons',
+			'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
 			'FROM'		=> array(TOPICS_TABLE => 't'),
 			'LEFT_JOIN' => array(
 				array('FROM' => array(FORUMS_TABLE => 'f'), 	'ON' => 'f.forum_id = t.forum_id')
@@ -71,10 +69,25 @@ class topic_index_block extends base
 				AND t.topic_visibility = ' . ITEM_APPROVED . '
 				AND ' . $this->db->sql_in_set('t.forum_id', $data['forums'])
 		);
+
+		if($this->config['load_db_lastread'])
+		{
+			$sql_ary['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
+
+			$sql_ary['LEFT_JOIN'][] = array(
+				'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
+				'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
+			);
+
+			$sql_ary['LEFT_JOIN'][] = array(
+				'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
+				'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
+			);
+		}
 		
 		switch($data['sort_mode'])
 		{
-			case 'topic_title';
+			case 'topic_title':
 				if($first_char)
 				{
 					$sql_ary['WHERE'] .= ' AND t.topic_title ' . $this->db->sql_like_expression(substr($first_char, 0, 1) . $this->db->get_any_char());
@@ -144,7 +157,8 @@ class topic_index_block extends base
 		$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
 		extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
-		$icons = $this->container->get('cache')->obtain_icons();
+		$icons 					= $this->container->get('cache')->obtain_icons();
+		$topic_tracking_info 	= $this->helper->get_rowset_tracking($rowset);
 
 		foreach($rowset as $topic_id => $row)
 		{
@@ -152,6 +166,11 @@ class topic_index_block extends base
 			$unread_topic 	= false;
 			$replies 		= (int)$row['topic_posts_approved'] - 1;
 			$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+
+			if($row['topic_status'] != ITEM_MOVED)
+			{
+				$unread_topic = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
+			}
 			
 			// Get folder img, topic status/type related information
 			$row['topic_posted'] = ($row['topic_poster'] == $this->user->data['user_id']);
@@ -160,6 +179,7 @@ class topic_index_block extends base
 			\topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
 			
 			$topic_row = array(
+				'FORUM_NAME'			=> $row['forum_name'],
 				'TOPIC_TITLE'			=> $topic_title,
 				'TITLE_TRUNCATED' 		=> \canidev\core\tools::html_truncate($topic_title, $data['title_limit'], '...'),
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
@@ -172,13 +192,16 @@ class topic_index_block extends base
 				'TOPIC_ICON_IMG'		=> ($row['enable_icons'] && !empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
 				'TOPIC_IMG_STYLE'		=> $folder_img,
 				'TOPIC_FOLDER_IMG_ALT'	=> $this->lang->lang($folder_alt),
+				'TOPIC_TYPE'			=> $topic_type,
 
 				'S_TOPIC_REPORTED'	=> (!empty($row['topic_reported']) && $this->auth->acl_get('m_report', $row['forum_id'])),
 				'S_POST_ANNOUNCE'	=> ($row['topic_type'] == POST_ANNOUNCE),
 				'S_POST_GLOBAL'		=> ($row['topic_type'] == POST_GLOBAL),
 				'S_POST_STICKY'		=> ($row['topic_type'] == POST_STICKY),
+				'S_UNREAD_TOPIC'	=> $unread_topic,
 
 				'U_LAST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
+				'U_VIEW_FORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id']),
 				'U_VIEW_TOPIC'		=> $this->helper->url('viewtopic', $view_topic_url_params),
 			);
 
@@ -224,6 +247,7 @@ class topic_index_block extends base
 		$this->template->assign_vars(array(
 			'S_CHAR_SELECT'			=> ($data['sort_mode'] == 'topic_title' && $data['char_select']) ? true : false,
 			'S_FIRST_CHAR'			=> $first_char,
+			'SHOW_TOPIC_PARENT'		=> $data['show_parent'],
 			'TOPIC_DESIGN' 			=> $data['topic_design'],
 			
 			'U_ACTION'				=> $this->helper->current_url(array(), false, array('start')),
@@ -252,10 +276,11 @@ class topic_index_block extends base
 		$this->display_vars = array(
 			'forums'			=> array('lang' => 'FORUMS',				'type' => 'custom',			'method' => 'helper',		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
 			'topics_per_page'	=> array('lang' => 'TINDEX_PER_PAGE',		'validate' => 'int:0:1000',	'type' => 'number:0:1000',	'default' => 25),
-			'sort_mode'			=> array('lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'custom',			'method' => 'helper',	'params' => array('make_select', $sort_options, '{CONFIG_VALUE}'),	'default' => 'topic_title'),
+			'sort_mode'			=> array('lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' => array('make_select', $sort_options, false, '{CONFIG_VALUE}'),	'default' => 'topic_title'),
 			'title_limit'		=> array('lang' => 'TITLE_LIMIT',			'validate' => 'int:0:255',	'type' => 'number:0:255',	'default' => 50),
 			'char_select'		=> array('lang' => 'TINDEX_CHAR_SELECT',	'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
 			'topic_design'		=> array('lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => array('block_design_select', '{CONFIG_VALUE}')),
+			'show_parent'		=> array('lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		);
 
 		return true;

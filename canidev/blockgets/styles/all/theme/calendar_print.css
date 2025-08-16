@@ -7,10 +7,6 @@
 html	{ height: 100%; }
 body	{ padding: 0; }
 
-#page-header, #page-footer {
-	display: none;
-}
-
 #wrap {
 	border: none;
     max-width: none;
@@ -20,7 +16,8 @@ body	{ padding: 0; }
 	border-radius: 0;
 }
 
-#page-body, .blg-area {
+#page-body,
+.blg-area {
     margin: 0;
 }
 
@@ -29,7 +26,11 @@ body	{ padding: 0; }
 	margin: 2em 0 0 0;
 }
 
-.blg-calendar-actionbar .cbb-group, .blg-calendar-actionbar .cbb-btn {
+#page-header,
+#page-footer,
+#wrap > .navbar,
+.blg-calendar-actionbar .cbb-group,
+.blg-calendar-actionbar .cbb-btn {
 	display: none;
 }
 
@@ -44,7 +45,11 @@ body	{ padding: 0; }
     margin-bottom: 20px;
 }
 
-.blg-calendar td.today { background: none; }
+body,
+#wrap,
+.blg-calendar td.today {
+	background: none;
+}
 
 .blg-calendar td.today .blg-calendar-day,
 .blg-calendar td.today .blg-calendar-content {

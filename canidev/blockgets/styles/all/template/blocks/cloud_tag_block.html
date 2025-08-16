@@ -1,21 +1,21 @@
 
-<!-- IF S_SHOW_ANIMATION -->
+{% if S_SHOW_ANIMATION %}
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#block-{BLOCK_ID}').blgCloudtag();
+		$('#block-{{ BLOCK_ID }}').blgCloudtag();
 	});
 // ]]>
 </script>
-<!-- ENDIF -->
+{% endif %}
 
 <div class="blg-tagcloud-container">
-	<div id="tags-{BLOCK_ID}" class="blg-align-center">
-	<!-- BEGIN clouds -->
-		<a href="{clouds.U_TAG_URL}" title="{clouds.S_TAG_NAME}" style="font-size: {clouds.S_TAG_SIZE}px;">{clouds.S_TAG_NAME}</a>
-	<!-- BEGINELSE -->
+	<div id="tags-{{ BLOCK_ID }}" class="blg-align-center">
+	{% for tag in clouds %}
+		<a href="{{ tag.U_TAG_URL }}" title="{{ tag.S_TAG_NAME }}" style="font-size: {{ tag.S_TAG_SIZE }}px;">{{ tag.S_TAG_NAME }}</a>
+	{% else %}
 		<div class="blg-message cbb-state-highlight">{L_NO_ITEMS}</div>
-	<!-- END clouds -->
+	{% endfor %}
 	</div>
 </div>

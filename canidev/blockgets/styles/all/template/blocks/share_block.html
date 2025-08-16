@@ -2,9 +2,9 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#share-{BLOCK_ID}').blgShare({S_SHARE_PARAMS});
+		$('#share-{{ BLOCK_ID }}').blgShare({{ S_SHARE_PARAMS }});
 	});
 // ]]>
 </script>
 
-<div id="share-{BLOCK_ID}" class="blg-align-center"></div>
+<div id="share-{{ BLOCK_ID }}" class="blg-align-center"></div>

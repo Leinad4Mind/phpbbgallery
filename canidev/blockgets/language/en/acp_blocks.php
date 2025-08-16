@@ -3,9 +3,9 @@
 * acp_blocks.php [English [En]]
 *
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -26,7 +26,7 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Allow collapse the block',
-	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Enable or disable the ability for each user to collapse/expand this block.',
+	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Enable or disable the ability for each user to collapse/expand this block and defines its initial state.',
 	'BLOCK_ENABLED'				=> 'Block enabled',
 	'BLOCK_ENABLED_EXPLAIN'		=> 'Defines whether this block display in the forum.',
  	'BLOCK_CURRENT_ICON'			=> 'Block icon',
@@ -41,6 +41,9 @@ $lang = array_merge($lang, array(
 
 	// Common tags
 	'ALL_FORUMS'				=> 'All forums',
+	'COLLAPSE_HIDDEN'			=> 'Allow (collapsed by default)',
+	'COLLAPSE_NONE'				=> 'Not Allow',
+	'COLLAPSE_VISIBLE'			=> 'Allow (displayed by default)',
 	'CONFIG'					=> 'Configuration',
 	'DESIGN_FULL'				=> 'Full',
 	'DESIGN_SIMPLE'				=> 'Simple',
@@ -58,6 +61,8 @@ $lang = array_merge($lang, array(
 	'TOPIC_DESIGN_EXPLAIN'		=> 'Determine how the topics will be displayed in the block.<br />
 		<em><strong>Full:</strong> Show all information whenever possible.</em><br />
 		<em><strong>Simple:</strong> Show only basic information.</em>',
+	'TOPIC_PARENT_SHOW'			=> 'Show parent forum',
+	'TOPIC_PARENT_SHOW_EXPLAIN'	=> 'If enabled, a link to the forum for each topic will be displayed.',
 	
 	// age_ranges_block
 	'AGE_START'					=> 'Minimum age',
@@ -216,14 +221,16 @@ $lang = array_merge($lang, array(
 	'MEMBERS_NUMBER_EXPLAIN'	=> 'Maximum number of users that will be shown in block.',
 	
 	// leaders_block
-	'LEADERS_ALL_GROUPS'		=> 'Show users in all their groups',
+	'LEADERS_ALL_GROUPS'			=> 'Show users in all their groups',
 	'LEADERS_ALL_GROUPS_EXPLAIN'	=> 'If enabled, users will be shown in all groups of which they are members.
 		Otherwise they will only be shown in their default group.',
-	'LEADERS_GROUPS'			=> 'Groups',
-	'LEADERS_GROUPS_EXPLAIN'	=> 'Groups that will be show in the block. If you don\'t select groups, the block will be show the Administrators and Moderators.',
-	'LEADERS_MODE'				=> 'Display mode',
-	'LEADERS_MODE_ACCORDION'	=> 'Accordion',
-	'LEADERS_MODE_SIMPLE'		=> 'Simple List',
+	'LEADERS_GROUPS'				=> 'Groups',
+	'LEADERS_GROUPS_EXPLAIN'		=> 'Groups that will be show in the block. If you don\'t select groups, the block will be show the Administrators and Moderators.',
+	'LEADERS_MODE'					=> 'Display mode',
+	'LEADERS_MODE_ACCORDION'		=> 'Accordion',
+	'LEADERS_MODE_SIMPLE'			=> 'Simple List',
+	'LEADERS_ONLY_ONLINE'			=> 'Online users only',
+	'LEADERS_ONLY_ONLINE_EXPLAIN'	=> 'If enabled, only users from selected groups who are logged in will be displayed.',
 
 	// link_us_block
 	'US_BANNER'					=> 'Mini banner link',
@@ -355,6 +362,8 @@ $lang = array_merge($lang, array(
 	// recent_topics_block
 	'RECENT_FORUMS'					=> 'Topic forums',
 	'RECENT_FORUMS_EXPLAIN'			=> 'Forums containing items to be displayed. If you do not select any, it will use all the forums. You can select as many as you like using the <em>Ctrl</em> key on your keyboard.',
+	'RECENT_SECTIONS'				=> 'Sections',
+	'RECENT_SECTIONS_EXPLAIN'		=> 'Define the sections to be displayed in the block and their order.',
 	'RECENT_TOPIC_LIMIT'			=> 'Topic limit',
 	'RECENT_TOPIC_LIMIT_EXPLAIN'	=> 'Maximum number of items to be displayed in each tab.',
 

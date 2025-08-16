@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -17,7 +17,17 @@ if(!defined('IN_PHPBB'))
 
 class recent_topics_block extends base
 {
+	const TAB_TOPICS 	= 1;
+	const TAB_ANN 		= 2;
+	const TAB_ACTIVITY	= 3;
+	
 	static $icon = 'fa-history';
+
+	public static $default_sections = array(
+		self::TAB_TOPICS	=> true,
+		self::TAB_ANN		=> true,
+		self::TAB_ACTIVITY	=> true,
+	);
 
 	public function init()
 	{
@@ -57,24 +67,27 @@ class recent_topics_block extends base
 		}
 
 		$tab_ary = array(
-			'BLG_RECENT_TOPICS' => array(
+			self::TAB_TOPICS => array(
+				'title'			=> 'BLG_RECENT_TOPICS',
 				'icon'			=> 'fa-comment',
 				'where'			=> '',
 				'order_by'		=> 't.topic_time DESC',
 			),
 
-			'BLG_RECENT_ANN' => array(
+			self::TAB_ANN => array(
+				'title'			=> 'BLG_RECENT_ANN',
 				'icon'			=> 'fa-newspaper-o',
 				'where'			=> 'AND t.topic_type = ' . POST_ANNOUNCE . ')
 					OR (t.forum_id = 0 AND t.topic_type = ' . POST_GLOBAL . ')',
 				'order_by'		=> 't.topic_time DESC',
 			),
 
-			'BLG_RECENT_ACTIVITY' => array(
+			self::TAB_ACTIVITY => array(
+				'title'			=> 'BLG_RECENT_ACTIVITY',
 				'icon'			=> 'fa-comments-o',
 				'where'			=> 'AND t.topic_posts_approved > 1)',
 				'order_by'		=> 't.topic_last_post_time DESC',
-			)
+			),
 		);
 
 		/*
@@ -89,12 +102,19 @@ class recent_topics_block extends base
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('recent_tab');
 
-		foreach($tab_ary as $tab_title => $tab_data)
+		foreach($data['sections'] as $tab_id => $tab_enabled)
 		{
-			$tab_ary[$tab_title]['topic_list'] = array();
+			if(!$tab_enabled)
+			{
+				continue;
+			}
+
+			$tab_data = $tab_ary[$tab_id];
+
+			$tab_ary[$tab_id]['topic_list'] = array();
 
 			$sql_ary = array(
-				'SELECT'	=> 't.*, f.enable_icons',
+				'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
 				'FROM'		=> array(TOPICS_TABLE => 't'),
 
 				'LEFT_JOIN' => array(
@@ -108,15 +128,30 @@ class recent_topics_block extends base
 				'ORDER_BY'	=> $tab_data['order_by'],
 			);
 
+			if($this->config['load_db_lastread'])
+			{
+				$sql_ary['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
+
+				$sql_ary['LEFT_JOIN'][] = array(
+					'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
+					'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
+				);
+
+				$sql_ary['LEFT_JOIN'][] = array(
+					'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
+					'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
+				);
+			}
+
 			/*
 			* @event block.recent_topics_tab_query
 			* @var array	sql_ary			The SQL data
-			* @var string	tab_title		Title of current Tab
+			* @var int		tab_id			ID of current Tab
 			* @var array	tab_data		Data of current Tab
 			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('sql_ary', 'tab_title', 'tab_data', 'data');
+			$vars = array('sql_ary', 'tab_id', 'tab_data', 'data');
 			extract($this->dispatcher->trigger_event('block.recent_topics_tab_query', compact($vars)));
 			
 			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -126,7 +161,7 @@ class recent_topics_block extends base
 				$topic_list[] = $row['topic_id'];
 				$rowset[$row['topic_id']] = $row;
 
-				$tab_ary[$tab_title]['topic_list'][] = $row['topic_id'];
+				$tab_ary[$tab_id]['topic_list'][] = $row['topic_id'];
 			}
 			$this->db->sql_freeresult($result);
 
@@ -154,12 +189,26 @@ class recent_topics_block extends base
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 		}
 
-		foreach($tab_ary as $tab_title => $tab_data)
+		$icons 		= $this->container->get('cache')->obtain_icons();
+		$tab_count 	= 0;
+
+		$topic_tracking_info = $this->helper->get_rowset_tracking($rowset);
+
+		foreach($data['sections'] as $tab_id => $tab_enabled)
 		{
+			if(!$tab_enabled)
+			{
+				continue;
+			}
+
+			$tab_data = $tab_ary[$tab_id];
+
+			$tab_count++;
+
 			$this->template->assign_block_vars('recent_tab', array(
-				'TITLE'		=> $this->lang->lang($tab_title),
+				'TITLE'		=> $this->lang->lang($tab_data['title']),
 				'IS_EMPTY'	=> empty($tab_data['topic_list']),
-				'ID'		=> strtolower($tab_title),
+				'ID'		=> strtolower($tab_data['title']),
 				'ICON'		=> $tab_data['icon'],
 			));
 			
@@ -168,16 +217,18 @@ class recent_topics_block extends base
 				continue;
 			}
 
-			$icons = $this->container->get('cache')->obtain_icons();
-
 			foreach($tab_data['topic_list'] as $topic_id)
 			{
 				$row = &$rowset[$topic_id];
 
-				$topic_title 	= censor_text($row['topic_title']);
 				$unread_topic 	= false;
 				$replies 		= (int)$row['topic_posts_approved'] - 1;
 				$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+
+				if($row['topic_status'] != ITEM_MOVED)
+				{
+					$unread_topic = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
+				}
 				
 				// Get folder img, topic status/type related information
 				$row['topic_posted'] = ($row['topic_poster'] == $this->user->data['user_id']);
@@ -186,7 +237,8 @@ class recent_topics_block extends base
 				\topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
 
 				$topic_row = array(
-					'TOPIC_TITLE'			=> \canidev\core\tools::html_truncate($topic_title, $data['title_limit'], '...'),
+					'FORUM_NAME'			=> $row['forum_name'],
+					'TOPIC_TITLE'			=> censor_text($row['topic_title']),
 					'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 					'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
@@ -197,13 +249,16 @@ class recent_topics_block extends base
 					'TOPIC_ICON_IMG'		=> ($row['enable_icons'] && !empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
 					'TOPIC_IMG_STYLE'		=> $folder_img,
 					'TOPIC_FOLDER_IMG_ALT'	=> $this->lang->lang($folder_alt),
+					'TOPIC_TYPE'			=> $topic_type,
 
 					'S_TOPIC_REPORTED'	=> (!empty($row['topic_reported']) && $this->auth->acl_get('m_report', $row['forum_id'])),
 					'S_POST_ANNOUNCE'	=> ($row['topic_type'] == POST_ANNOUNCE),
 					'S_POST_GLOBAL'		=> ($row['topic_type'] == POST_GLOBAL),
 					'S_POST_STICKY'		=> ($row['topic_type'] == POST_STICKY),
+					'S_UNREAD_TOPIC'	=> $unread_topic,
 
 					'U_LAST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
+					'U_VIEW_FORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id']),
 					'U_VIEW_TOPIC'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;view=unread#unread'),
 				);
 
@@ -221,7 +276,11 @@ class recent_topics_block extends base
 			}
 		}
 
-		$this->template->assign_var('TOPIC_DESIGN', $data['topic_design']);
+		$this->template->assign_vars(array(
+			'SHOW_TABS'			=> $tab_count > 1,
+			'SHOW_TOPIC_PARENT'	=> $data['show_parent'],
+			'TOPIC_DESIGN' 		=> $data['topic_design'],
+		));
 
 		unset($data, $tab_ary);
 		return true;
@@ -231,19 +290,51 @@ class recent_topics_block extends base
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['forums'] = $this->request->variable('forums', array(0));
+			$new['forums'] 		= $this->request->variable('forums', array(0));
+			$new['sections'] 	= array();
+
+			$sections 			= $this->request->variable('section', array(0));
+			$section_enabled 	= $this->request->variable('section_enabled', array(0));
+
+			foreach($sections as $tab_id)
+			{
+				$new['sections'][$tab_id] = in_array($tab_id, $section_enabled);
+			}
 		}
 	}
 
 	public function get_config()
 	{
 		$this->display_vars = array(
+			'sections'		=> array('lang' => 'RECENT_SECTIONS',		'type' => 'custom',			'function' => array($this, 'build_sections_selector'),	'params' => array('{CONFIG_VALUE}'),	'default' => self::$default_sections),
 			'topic_limit'	=> array('lang' => 'RECENT_TOPIC_LIMIT',	'validate' => 'int:1:100',	'type' => 'number:1:100',	'default' => 5),
-			'title_limit'	=> array('lang' => 'TITLE_LIMIT',			'validate' => 'int:0:255',	'type' => 'number:0:255',	'default' => 50),
 			'forums'		=> array('lang' => 'RECENT_FORUMS',			'type' => 'custom',			'method' => 'helper',		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
 			'topic_design'	=> array('lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => array('block_design_select', '{CONFIG_VALUE}')),
+			'show_parent'	=> array('lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		);
 
+		$this->tpl_name = 'acp_recent_topics_block';
+
 		return true;
+	}
+
+	public function build_sections_selector($sections_saved)
+	{
+		$sections = array(
+			self::TAB_TOPICS 	=> 'BLG_RECENT_TOPICS',
+			self::TAB_ANN 		=> 'BLG_RECENT_ANN',
+			self::TAB_ACTIVITY 	=> 'BLG_RECENT_ACTIVITY',
+		);
+
+		foreach($sections_saved as $tab_id => $tab_enabled)
+		{
+			$this->template->assign_block_vars('sections', array(
+				'CHECKED'	=> $tab_enabled,
+				'ID'		=> $tab_id,
+				'TITLE'		=> $this->lang->lang($sections[$tab_id]),
+			));
+		}
+
+		return false;
 	}
 }

@@ -1,16 +1,16 @@
-<!-- IF IN_EVENTLIST -->
-	<!-- BEGIN event -->
-		<div {event.S_ATTR}><!-- IF event.S_TYPE eq 'birthday' --><i class="fa fa-birthday-cake" aria-hidden="true"></i> <!-- ENDIF -->{event.S_TITLE}</div>
-	<!-- END event -->
+{% if IN_EVENTLIST %}
+	{% for event in loops.event %}
+		<div {{ event.S_ATTR }}>{% if event.S_TYPE == 'birthday' %}<i class="fa fa-birthday-cake" aria-hidden="true"></i> {% endif %}{{ event.S_TITLE }}</div>
+	{% endfor %}
 
-<!-- ELSE -->
+{% else %}
 
-	<!-- IF not IN_CALENDAR -->
+	{% if not IN_CALENDAR %}
 	<script>
 	// <![CDATA[
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
-			$('#calendar-{BLOCK_ID}').blgCalendar({S_OPTIONS});
+			$('#calendar-{{ BLOCK_ID }}').blgCalendar({{ S_OPTIONS }});
 		});
 	// ]]>
 	</script>
@@ -26,47 +26,46 @@
 				<div class="no-items blg-message cbb-state-highlight">{L_NO_EVENTS}</div>
 			</div>
 			
-		<!-- IF S_CAN_CREATE_EVENT -->
+		{% if S_CAN_CREATE_EVENT %}
 			<div class="blg-align-right floated">
 				<a href="#" class="cbb-btn" data-action="add">{L_ADD_EVENT}</a>
 			</div>
-		<!-- ENDIF -->
+		{% endif %}
 		</div>
 	</script>
 	
-	<div id="calendar-{BLOCK_ID}" class="calendar_container">
-	<!-- ENDIF -->
+	<div id="calendar-{{ BLOCK_ID }}" class="calendar_container">
+	{% endif %}
 
-	<!-- BEGIN calendar -->
+	{% for calendar in loops.calendar %}
 		<div class="calendar-month">
-		<form name="calendar-{BLOCK_ID}-{calendar.S_ROW_COUNT}" method="post">
-			<table class="calendar<!-- IF BLOCK_VIEW_SMALL --> autofit<!-- ENDIF -->">
+		<form name="calendar-{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" method="post">
+			<table class="calendar{% if BLOCK_VIEW_SMALL %} autofit{% endif %}">
 			<thead>
 			<tr>
-				<td class="blg-align-left"><!-- IF calendar.S_FIRST_ROW --><a href="#" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-action="prev"><i class="fa fa-arrow-circle-left fa-lg" aria-hidden="true"></i></a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-				<td colspan="5" class="month-title blg-align-center"><a href="{calendar.U_ACTION}">{calendar.S_MONTH}</a></td>
-				<td class="blg-align-right"><!-- IF calendar.S_LAST_ROW --><a href="#" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-action="next"><i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i></a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+				<td class="blg-align-left">{% if calendar.S_FIRST_ROW %}<a href="#" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-action="prev"><i class="fa fa-arrow-circle-left fa-lg" aria-hidden="true"></i></a>{% else %}&nbsp;{% endif %}</td>
+				<td colspan="5" class="month-title blg-align-center"><a href="{{ calendar.U_ACTION }}">{{ calendar.S_MONTH }}</a></td>
+				<td class="blg-align-right">{% if calendar.S_LAST_ROW %}<a href="#" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-action="next"><i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i></a>{% else %}&nbsp;{% endif %}</td>
 			</tr>
 			</thead>
 			<tbody>
 			<tr>
-		<!-- BEGIN days -->
+		{% for day in calendar.days %}
+			{% if day.NEW_LINE and not day.S_FIRST_ROW %}</tr><tr>{% endif %}
 
-			<!-- IF calendar.days.NEW_LINE and not calendar.days.S_FIRST_ROW --></tr><tr><!-- ENDIF -->
-
-			<!-- IF calendar.days.IS_HEADER -->
-				<td class="cal-header">{calendar.days.S_DAY_SHORT}</td>
-			<!-- ELSE -->
-				<td><!-- IF calendar.days.S_DAY --><a href="#" class="blg-calendar-day<!-- IF calendar.days.IS_TODAY --> today<!-- ENDIF -->" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-time="{calendar.days.S_DATA}" data-color="{calendar.days.S_COLOR}"<!-- IF S_SHOW_EVENTS --> data-event="{calendar.days.S_EVENT}"<!-- ENDIF -->>{calendar.days.S_DAY}</a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-			<!-- ENDIF -->
-		<!-- END days -->
+			{% if day.IS_HEADER %}
+				<td class="cal-header">{{ day.S_DAY_SHORT }}</td>
+			{% else %}
+				<td>{% if day.S_DAY %}<a href="#" class="blg-calendar-day{% if day.IS_TODAY %} today{% endif %}" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-time="{{ day.S_DATA }}" data-color="{{ day.S_COLOR }}"{% if S_SHOW_EVENTS %} data-event="{{ day.S_EVENT }}"{% endif %}>{{ day.S_DAY }}</a>{% else %}&nbsp;{% endif %}</td>
+			{% endif %}
+		{% endfor %}
 			</tr>
 			</tbody>
 			</table>
-			<div>{calendar.S_HIDDEN_FIELDS}</div>
+			<div>{{ calendar.S_HIDDEN_FIELDS }}</div>
 		</form>
 		</div>
-	<!-- END calendar -->
+	{% endfor %}
 	
-	<!-- IF not IN_CALENDAR --></div><!-- ENDIF -->
-<!-- ENDIF -->
+	{% if not IN_CALENDAR %}</div>{% endif %}
+{% endif %}

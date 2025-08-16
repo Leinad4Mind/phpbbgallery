@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -244,6 +244,9 @@ class gallery_block extends base
 					WHERE data_type = ' . BLG_DATA_ATTACHMENT . '
 					AND ' . $this->db->sql_in_set('data_id', $gallery_items);
 				$result = $this->db->sql_query($sql);
+				
+				$gallery_items = array();
+
 				while($row = $this->db->sql_fetchrow($result))
 				{
 					$gallery_items[$row['data_id']] = $row;

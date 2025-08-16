@@ -1,8 +1,8 @@
 
-<!-- BEGIN blglink_top -->
-	<li><a href="{blglink_top.HREF}"><!-- IF blglink_top.ICON --><i class="fa {blglink_top.ICON}" aria-hidden="true"></i><!-- ENDIF --> {blglink_top.TITLE}</a><span></span></li>
-<!-- END blglink_top -->
+{% for link in loops.blglink_top %}
+	<li><a href="{{ link.HREF }}">{{ link.ICON }} {{ link.TITLE }}</a><span></span></li>
+{% endfor %}
 
-<!-- BEGIN blglink_quick -->
-	<li><a href="{blglink_quick.HREF}"><!-- IF  blglink_quick.ICON --><i class="fa {blglink_quick.ICON}" aria-hidden="true"></i><!-- ENDIF --> {blglink_quick.TITLE}</a><span></span></li>
-<!-- END blglink_quick -->
+{% for link in loops.blglink_quick %}
+	<li><a href="{{ link.HREF }}">{{ link.ICON }} {{ link.TITLE }}</a><span></span></li>
+{% endfor %}

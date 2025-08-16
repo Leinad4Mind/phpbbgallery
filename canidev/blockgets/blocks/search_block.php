@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -25,8 +25,8 @@ class search_block extends base
 		$this->tpl_name = 'search_block';
 		
 		$this->template->assign_var('S_BLOCK_HIDDEN_FIELDS', build_hidden_fields(array(
-			'search_fields'		=> 'all',
-			'show_results'		=> 'topics',
+			'sf'	=> 'all',
+			'sr'	=> 'topics',
 		)));
 
 		return true;

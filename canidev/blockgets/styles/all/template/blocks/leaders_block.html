@@ -1,20 +1,20 @@
-<!-- IF S_VIEW eq 'simple' -->
+{% if S_VIEW == 'simple' %}
 	<ul class="blg-linear-list">
-	<!-- BEGIN group_row -->
-		<li class="menu-cat"><a href="{group_row.U_GROUP}">{group_row.GROUP_NAME}</a></li>
+	{% for group in group_row %}
+		<li class="menu-cat"><a href="{{ group.U_GROUP }}">{{ group.GROUP_NAME }}</a></li>
 		
-		<!-- BEGIN user -->
-			<li class="userrow"><strong>{group_row.user.USERNAME_FULL}</strong></li>
-		<!-- END user -->
-	<!-- END group_row -->
+		{% for user in group.user %}
+			<li class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></li>
+		{% endfor %}
+	{% endfor %}
 	</ul>
 
-<!-- ELSE IF S_VIEW eq 'accordion' -->
+{% elseif S_VIEW == 'accordion' %}
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#leader-groups-{BLOCK_ID}').blgAccordion({
+		$('#leader-groups-{{ BLOCK_ID }}').blgAccordion({
 			active		: 0,
 			collapsible : true
 		});
@@ -22,16 +22,16 @@
 // ]]>
 </script>
 
-<div id="leader-groups-{BLOCK_ID}">
-<!-- BEGIN group_row -->
-	<h5><a href="#">{group_row.GROUP_NAME}</a></h5>
+<div id="leader-groups-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+{% for group in group_row %}
+	<h5><a href="#">{{ group.GROUP_NAME }}</a></h5>
 	<div>
 		<table class="blg-table">
-		<!-- BEGIN user -->
-			<tr><td class="userrow"><strong>{group_row.user.USERNAME_FULL}</strong></td></tr>
-		<!-- END user -->
+		{% for user in group.user %}
+			<tr><td class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></td></tr>
+		{% endfor %}
 		</table>
 	</div>
-<!-- END group_row -->
+{% endfor %}
 </div>
-<!-- ENDIF -->
+{% endif %}

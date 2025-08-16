@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -50,8 +50,8 @@ class frame_block extends base
 		$this->display_vars = array(
 			'frame_mimetype' 	=> array('lang' => 'FRAME_MIMETYPE',	'validate' => 'string', 		'type' => 'select', 'method' => 'helper',	'params' => array('make_select', $mimetypes, false,'{CONFIG_VALUE}'),	'default' => 'text/html'),
 			'frame_url'  		=> array('lang' => 'FRAME_URL',			'validate' => 'string:1:255',  	'type' => 'text:50:255'),
-			'frame_width'  		=> array('lang' => 'FRAME_WIDTH',		'validate' => 'int',  			'type' => 'text:5:4'),
-			'frame_height'  	=> array('lang' => 'FRAME_HEIGHT',		'validate' => 'int',  			'type' => 'text:5:4'),
+			'frame_width'  		=> array('lang' => 'FRAME_WIDTH',		'validate' => 'int',  			'type' => 'number'),
+			'frame_height'  	=> array('lang' => 'FRAME_HEIGHT',		'validate' => 'int',  			'type' => 'number'),
 		);
 
 		return true;

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -37,6 +37,8 @@ class helper
 
 	protected $phpbb_root_path;
 	protected $php_ext;
+
+	protected $media = null;
 	
 	public $json;
 	
@@ -400,24 +402,72 @@ class helper
 		return false;
 	}
 
+	public function get_rowset_tracking($rowset)
+	{
+		if(!sizeof($rowset))
+		{
+			return array();
+		}
+
+		$topic_tracking_info 	= array();
+		$forums 				= array();
+
+		foreach($rowset as $topic_id => $row)
+		{
+			if(!isset($forums[$row['forum_id']]))
+			{
+				$forums[$row['forum_id']] = array(
+					'mark_time'		=> 0,
+					'topic_list'	=> array(),
+				);
+
+				if($this->user->data['is_registered'] && $this->config['load_db_lastread'] && isset($row['f_mark_time']))
+				{
+					$forums[$row['forum_id']]['mark_time'] = $row['f_mark_time'];
+				}
+			}
+			
+			$forums[$row['forum_id']]['topic_list'][] = $topic_id;
+		}
+
+		foreach($forums as $forum_id => $forum)
+		{
+			if($this->user->data['is_registered'] && $this->config['load_db_lastread'])
+			{
+				$topic_tracking_info += get_topic_tracking($forum_id, $forum['topic_list'], $rowset, array($forum_id => $forum['mark_time']));
+			}
+			else if($this->config['load_anon_lastread'] || $this->user->data['is_registered'])
+			{
+				$topic_tracking_info += get_complete_topic_tracking($forum_id, $forum['topic_list']);
+			}
+		}
+
+		unset($forums);
+
+		return $topic_tracking_info;
+	}
+
 	public function get_media($preload = true, $do_actions = false)
 	{
-		$media = \canidev\core\media::get_instance($this->container, 'blockgets');
-		
-		$media
-			->set_referer_ext('blockgets')
-			->set_upload_path('files/blockgets/');
+		if($this->media === null)
+		{
+			$this->media = \canidev\core\media::get_instance($this->container, 'blockgets');
+			
+			$this->media
+				->set_referer_ext('blockgets')
+				->set_upload_path('files/blockgets/');
+		}
 
 		if($preload)
 		{
-			$media->preload();
+			$this->media->preload();
 		}
 
 		if($do_actions)
 		{
-			$media->do_actions();
+			$this->media->do_actions();
 		}
 		
-		return $media;
+		return $this->media;
 	}
 }

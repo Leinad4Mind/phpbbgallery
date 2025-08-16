@@ -1,10 +1,10 @@
-<!-- IF S_IN_PLAYER and CANIDEV_CORE_STARTED -->
-	<!-- INCLUDE @canidev_core/event/overall_footer_after.html -->
+{% if S_IN_PLAYER and CANIDEV_CORE_STARTED %}
+	{% include '@canidev_core/event/overall_footer_after.html' %}
 	
 	<script>
 	// <![CDATA[
 	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function() {
-		cbbCore.initService('blockgets', $.extend({S_BLG_OPTIONS}, {
+		cbbCore.initService('blockgets', $.extend({{ S_BLG_OPTIONS }}, {
 			blockHeader: '.block-title',
 			avatarContainer: '.avatar-frame',
 			postContainer: '.postbody'
@@ -12,4 +12,4 @@
 	});
 	// ]]>
 	</script>
-<!-- ENDIF -->
+{% endif %}

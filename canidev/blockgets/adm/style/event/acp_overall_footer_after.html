@@ -1,14 +1,14 @@
-<!-- IF BLG_IN_ADMIN and CANIDEV_CORE_STARTED -->
+{% if BLG_IN_ADMIN and CANIDEV_CORE_STARTED %}
 
 <!-- Begin cBB Blockgets -->
-	<!-- INCLUDE @canidev_core/event/acp_overall_footer_after.html -->
+	{% include '@canidev_core/event/acp_overall_footer_after.html' %}
 	
 	<script>
 	// <![CDATA[
 	(function($) {
 		cbbCore.initService('blockgets', {
-			noticeTimeout: '{BLG_NOTICE_TIMEOUT}',
-			<!-- IF BLG_DEBUG -->debugmode: true,<!-- ENDIF -->
+			noticeTimeout: '{{ BLG_NOTICE_TIMEOUT }}',
+			{% if BLG_DEBUG %}debugmode: true,{% endif %}
 			mode: 'acp'
 		});
 	})(jQuery);
@@ -16,4 +16,4 @@
 	</script>
 <!-- End cBB Blockgets -->
 
-<!-- ENDIF -->
+{% endif %}

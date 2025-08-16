@@ -28,15 +28,13 @@
 	color: #808080 !important;
 }
 
-.blg-table {
-    border-spacing: 8px !important;
-}
-
 .fb-lastpost-title {
 	width: 150px !important;
 }
 
-.blg-menu .fa {
+.blg-menu,
+.blg-menu .fa,
+.blg-message {
     font-size: 1em !important;
 }
 
@@ -45,4 +43,8 @@ a.blg-admin-opener {
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
+}
+
+.contact-table {
+	border-spacing: 8px !important;
 }

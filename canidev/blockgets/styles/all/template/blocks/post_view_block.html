@@ -1,14 +1,14 @@
 
 <div class="block-postbody">
-	<div>{PV_CONTENT}</div>
+	<div>{{ PV_CONTENT }}</div>
 
-<!-- IF PV_HAS_ATTACHMENTS -->
+{% if PV_HAS_ATTACHMENTS %}
 	<dl class="attachbox">
 		<dt>{L_ATTACHMENTS}</dt>
-		<!-- BEGIN pv_attachment -->
-			<dd>{pv_attachment.DISPLAY_ATTACHMENT}</dd>
-		<!-- END pv_attachment -->
+		{% for attachment in pv_attachment %}
+			<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
+		{% endfor %}
 	</dl>
 	<div class="clear"></div>
-<!-- ENDIF -->
+{% endif %}
 </div>

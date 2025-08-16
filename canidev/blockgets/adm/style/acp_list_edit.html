@@ -1,55 +1,55 @@
-<!-- IF S_LIST or S_ITEM -->
+{% if S_LIST or S_ITEM %}
 
-<!-- IF not S_ITEM -->
-<div class="js-list-{S_LIST_ID}">
+{% if not S_ITEM %}
+<div class="js-list-{{ S_LIST_ID }}">
 
-	<table class="blg-table <!-- IF S_LIST_FORMAT eq 'minimal' -->acp-blg-list-minimal<!-- ELSE -->acp-blg-list2<!-- ENDIF --> not-responsive">
+	<table class="blg-table {% if S_LIST_FORMAT == 'minimal' %}acp-blg-list-minimal{% else %}acp-blg-list2{% endif %} not-responsive">
 	<tr class="js-no-over">
 		<td>
 			<ul class="sortable">
-<!-- ENDIF -->
-			<!-- BEGIN item -->
-				<li id="row-{item.ID}" class="move <!-- IF item.IS_DISABLED -->blg-state-active<!-- ELSE -->blg-state-default<!-- ENDIF -->">
+{% endif %}
+			{% for item in loops.item %}
+				<li id="row-{{ item.ID }}" class="move {% if item.IS_DISABLED %}blg-state-active{% else %}blg-state-default{% endif %}">
 					<table class="not-responsive"><tr>
-					<!-- IF S_LIST_FORMAT <> 'minimal' -->
+					{% if S_LIST_FORMAT <> 'minimal' %}
 						<td class="blg-align-center" style="width:1%;">
-							<input type="checkbox" class="js-check-field radio cbb-checkbox" id="item-{S_LIST_ID}-{item.ID}" name="item_list[]" value="{item.ID}" />
-							<label for="item-{S_LIST_ID}-{item.ID}"></label>
+							<input type="checkbox" class="js-check-field radio cbb-checkbox" id="item-{{ S_LIST_ID }}-{{ item.ID }}" name="item_list[]" value="{{ item.ID }}" />
+							<label for="item-{{ S_LIST_ID }}-{{ item.ID }}"></label>
 						</td>
-					<!-- ENDIF -->
-						<!-- IF item.IMG --><td class="icon">{item.IMG}</td><!-- ENDIF -->
-						<td>{item.TITLE}<br /><span class="row-subtitle small">{item.SUBTITLE}</span></td>
+					{% endif %}
+						{% if item.IMG %}<td class="icon">{{ item.IMG }}</td>{% endif %}
+						<td>{{ item.TITLE }}<br /><span class="row-subtitle small">{{ item.SUBTITLE }}</span></td>
 						<td class="column-actions">
 							<div class="row-actions">
-								<a href="{item.U_EDIT}" title="{L_EDIT}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
-								<a href="{item.U_DELETE}" title="{L_DELETE}"><i class="fa fa-remove fa-lg" aria-hidden="true"></i></a>
+								<a href="{{ item.U_EDIT }}" title="{L_EDIT}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+								<a href="{{ item.U_DELETE }}" title="{L_DELETE}"><i class="fa fa-remove fa-lg" aria-hidden="true"></i></a>
 							</div>
 						</td>
 					</tr></table>
-					{item.HIDDEN_FIELDS}
+					{{ item.HIDDEN_FIELDS }}
 				</li>
-			<!-- END item -->
-<!-- IF not S_ITEM -->
+			{% endfor %}
+{% if not S_ITEM %}
 			</ul>
 		</td>
 	</tr>
 	</table>
 
 	<div class="batch-actions blg-align-right">
-	<!-- IF S_LIST_FORMAT <> 'minimal' -->
+	{% if S_LIST_FORMAT <> 'minimal' %}
 		<div class="cbb-group blg-align-left floated">
 			<select class="cbb-inputbox" name="batch">
 				<option value="">{L_BATCH_ACTIONS}</option>
 				<option value="delete">{L_DELETE}</option>
 			</select>
-			<a href="{U_BATCH}" class="cbb-btn">{L_SUBMIT}</a>
+			<a href="{{ U_BATCH }}" class="cbb-btn">{L_SUBMIT}</a>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-		<a href="{U_ADD_ITEM}" class="cbb-btn">{S_ADD_ITEM}</a>
+		<a href="{{ U_ADD_ITEM }}" class="cbb-btn">{{ S_ADD_ITEM }}</a>
 	</div>
 	
-	{S_LIST_HIDDEN_FIELDS}
+	{{ S_LIST_HIDDEN_FIELDS }}
 	
 	<script type="text/html" id="tpl-list-no-items">
 		<li class="blg-message cbb-state-highlight no-items">{L_ACP_NO_ITEMS}</li>
@@ -59,39 +59,39 @@
 <script type="text/javascript">
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
-	window._jPostponed.push(['@blockgets/bindList', '{S_LIST_ID}']);
+	window._jPostponed.push(['@blockgets/bindList', '{{ S_LIST_ID }}']);
 // ]]>
 </script>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- ELSEIF S_CONFIRM_ACTION -->
+{% elseif S_CONFIRM_ACTION %}
 
-<div title="{MESSAGE_TITLE}" data-width="800">
-	<form action="{S_CONFIRM_ACTION}" onsubmit="return false;">
+<div title="{{ MESSAGE_TITLE }}" data-width="800">
+	<form action="{{ S_CONFIRM_ACTION }}" onsubmit="return false;">
 		<div class="cbb-dialog-content">
 			<fieldset>
-			<!-- BEGIN options -->
-				<!-- IF options.S_LEGEND -->
-					<!-- IF not options.S_FIRST_ROW -->
+			{% for options in loops.options %}
+				{% if options.S_LEGEND %}
+					{% if not options.S_FIRST_ROW %}
 						</fieldset>
-					<!-- ENDIF -->
-						<legend>{options.LEGEND}</legend>
-				<!-- ELSE -->
+					{% endif %}
+						<legend>{{ options.LEGEND }}</legend>
+				{% else %}
 					<dl>
-						<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
-						<dd>{options.CONTENT}</dd>
+						<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
+						<dd>{{ options.CONTENT }}</dd>
 					</dl>
-				<!-- ENDIF -->
-			<!-- END options -->
+				{% endif %}
+			{% endfor %}
 			</fieldset>
 		</div>
 		
 		<div class="cbb-dialog-buttons">
-			<button class="cbb-btn" value="submit" data-confirm="{YES_VALUE}">{L_ACCEPT}</button>
+			<button class="cbb-btn" value="submit" data-confirm="{{ YES_VALUE }}">{L_ACCEPT}</button>
 			<button class="cbb-btn" value="close">{L_CANCEL}</button>
-			{S_HIDDEN_FIELDS}
+			{{ S_HIDDEN_FIELDS }}
 		</div>
 	</form>
 </div>
 
-<!-- ENDIF -->
+{% endif %}

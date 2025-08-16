@@ -3,30 +3,30 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#paypal-{BLOCK_ID}').attr('target', '_blank');
+		$('#paypal-{{ BLOCK_ID }}').attr('target', '_blank');
 	});
 // ]]>
 </script>
 
-<form id="paypal-{BLOCK_ID}" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<form id="paypal-{{ BLOCK_ID }}" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <ul class="blg-linear-list blg-align-center block-postbody">
-	<!-- IF S_PAYPAL_MSG --><li class="double-space">{S_PAYPAL_MSG}</li><!-- ENDIF -->
+	{% if S_PAYPAL_MSG %}<li class="double-space">{{ S_PAYPAL_MSG }}</li>{% endif %}
 	
 	<li class="double-space">
 		{L_AMOUNT_MSG}{L_COLON}<br />
-		<select name="amount" class="cbb-inputbox">{S_PAYPAL_AMOUNTS}</select>
+		<select name="amount" class="cbb-inputbox">{{ S_PAYPAL_AMOUNTS }}</select>
 	</li>
 	
-<!-- IF S_PAYPAL_CURRENCY_OPTIONS -->
+{% if S_PAYPAL_CURRENCY_OPTIONS %}
 	<li class="double-space">
 		{L_CODE_MSG}{L_COLON}<br />
-		<select name="currency_code" class="cbb-inputbox">{S_PAYPAL_CURRENCY_OPTIONS}</select>
+		<select name="currency_code" class="cbb-inputbox">{{ S_PAYPAL_CURRENCY_OPTIONS }}</select>
 	</li>
-<!-- ENDIF -->
+{% endif %}
 
 	<li class="double-space">
-		<input type="image" name="submit" style="border:0;" title="{L_CLICK_MSG}" src="{S_PAYPAL_IMG}" alt="PayPal" />
-		{S_BLOCK_HIDDEN_FIELDS}
+		<input type="image" name="submit" style="border:0;" title="{L_CLICK_MSG}" src="{{ S_PAYPAL_IMG }}" alt="PayPal" />
+		{{ S_BLOCK_HIDDEN_FIELDS }}
 	</li>
 </ul>
 </form>

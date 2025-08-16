@@ -1,13 +1,13 @@
 
 <ul class="blg-linear-list blg-menu">
-<!-- BEGIN menu_row -->
-	<!-- IF menu_row.IS_CAT -->
-		<li class="menu-cat double-space">{menu_row.S_TEXT}</li>
-	<!-- ELSE -->
+{% for row in menu_row %}
+	{% if row.IS_CAT %}
+		<li class="menu-cat double-space">{{ row.S_TEXT }}</li>
+	{% else %}
 		<li class="double-space subchild">
-			<!-- IF menu_row.S_ICON --><div class="menu-icon">{menu_row.S_ICON}</div><!-- ENDIF -->
-			<a href="{menu_row.U_LINK}"<!-- IF menu_row.S_WINDOW == "1" --> class="blank"<!-- ENDIF --> title="{menu_row.S_TITLE}">{menu_row.S_TEXT}</a>
+			{% if row.S_ICON %}<div class="menu-icon">{{ row.S_ICON }}</div>{% endif %}
+			<a href="{{ row.U_LINK }}"{% if row.S_WINDOW %} class="blank"{% endif %} title="{{ row.S_TITLE }}">{{ row.S_TEXT }}</a>
 		</li>
-	<!-- ENDIF -->
-<!-- END menu_row -->
+	{% endif %}
+{% endfor %}
 </ul>

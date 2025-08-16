@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -65,7 +65,7 @@ class google_translate_block extends base
 			return;
 		}
 
-		$langs 		= $new['langs'];
+		$langs 		= isset($new['langs']) ? $new['langs'] : array();
 		$flags_path	= $this->helper->get_ext_path() . 'images/flags/';
 		$lang_ary 	= $this->helper->locale_lang('raw');
 

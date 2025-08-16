@@ -1,110 +1,110 @@
 
-<!-- IF BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM -->
+{% if BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
 <ul class="blg-linear-list">
 
-<!-- BEGIN forum_row -->
-	<!-- IF forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT -->
+{% for forum_row in loops.forum_row %}
+	{% if forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT %}
 	<li class="menu-cat">
-		<!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF -->
+		{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
 	</li>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF not forum_row.S_IS_CAT -->
+	{% if not forum_row.S_IS_CAT %}
 	<li class="subchild double-space">
-		<i class="fa {forum_row.FORUM_ICON} fa-lg"></i>
-		<a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a>
+		<i class="fa {{ forum_row.FORUM_ICON }} fa-lg"></i>
+		<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>
 	</li>
-	<!-- ENDIF -->
+	{% endif %}
 
-<!-- BEGINELSE -->
+{% else %}
 	<li><strong>{L_NO_FORUMS}</strong></li>
-<!-- END forum_row -->
+{% endfor %}
 
 </ul>
 
-<!-- ELSE -->
+{% else %}
 
-<div class="blg-forum-list<!-- IF BLOCK_VIEW_MEDIUM --> title-only<!-- ENDIF -->">
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
 
-<!-- BEGIN forum_row -->
-	<!-- IF (forum_row.S_IS_CAT and not forum_row.S_FIRST_ROW) or forum_row.S_NO_CAT -->
+{% for forum_row in loops.forum_row %}
+	{% if (forum_row.S_IS_CAT and not forum_row.S_FIRST_ROW) or forum_row.S_NO_CAT %}
 		</tbody>
 		</table>
 
-		<!-- IF BLOCK_STYLE eq 'content_simple' --></div><!-- ENDIF -->
-	<!-- ENDIF -->
+		{% if BLOCK_STYLE == 'content_simple' %}</div>{% endif %}
+	{% endif %}
 
-	<!-- IF forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT -->
-		<!-- IF BLOCK_STYLE eq 'content_simple' -->
+	{% if forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT %}
+		{% if BLOCK_STYLE == 'content_simple' %}
 		<div class="panel panel-default">
-		<!-- ELSE -->
+		{% else %}
 		<div class="blg-widget-header">
-			<!-- IF not BLOCK_VIEW_MEDIUM --><div class="fb-lastpost-title">{L_LAST_POST}</div><!-- ENDIF -->
-			<!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF -->
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
+			{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
 		</div>
-		<!-- ENDIF -->
+		{% endif %}
 
 		<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
-		<!-- IF BLOCK_STYLE eq 'content_simple' -->
+		{% if BLOCK_STYLE == 'content_simple' %}
 		<thead>
-			<tr><th colspan="3">{BLOCK_TITLE}</th></tr>
+			<tr><th colspan="3">{{ BLOCK_TITLE }}</th></tr>
 		</thead>
-		<!-- ENDIF -->
+		{% endif %}
 
 		<tbody>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF not forum_row.S_IS_CAT -->
+	{% if not forum_row.S_IS_CAT %}
 		<tr>
 			<td>
-				<!-- IF forum_row.FORUM_IMAGE --><span class="forum-image">{forum_row.FORUM_IMAGE}</span><!-- ENDIF -->
+				{% if forum_row.FORUM_IMAGE %}<span class="forum-image">{{ forum_row.FORUM_IMAGE }}</span>{% endif %}
 				<span class="icon-wrapper">
-					<i class="row-icon-font icon-moon-default<!-- IF forum_row.S_IS_LINK --> icon-moon-link2<!-- ENDIF --><!-- IF forum_row.S_UNREAD_FORUM --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->"></i>
+					<i class="row-icon-font icon-moon-default{% if forum_row.S_IS_LINK %} icon-moon-link2{% endif %}{% if forum_row.S_UNREAD_FORUM %} forum-unread{% else %} forum-read{% endif %}"></i>
 				</span>
 				<span class="desc-wrapper">
-					<a href="{forum_row.U_VIEWFORUM}" class="forumtitle">{forum_row.FORUM_NAME}</a><br />
-					{forum_row.FORUM_DESC}
-					<!-- IF forum_row.MODERATORS -->
-						<span class="forum-mods"><strong>{forum_row.L_MODERATOR_STR}{L_COLON}</strong>&nbsp;{forum_row.MODERATORS}</span>
-					<!-- ENDIF -->
-					<!-- IF forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS -->
+					<a href="{{ forum_row.U_VIEWFORUM }}" class="forumtitle">{{ forum_row.FORUM_NAME }}</a><br />
+					{{ forum_row.FORUM_DESC }}
+					{% if forum_row.MODERATORS %}
+						<span class="forum-mods"><strong>{{ forum_row.L_MODERATOR_STR }}{L_COLON}</strong>&nbsp;{{ forum_row.MODERATORS }}</span>
+					{% endif %}
+					{% if forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS %}
 					<br />
 					<span class="subforums">
-				 		 <strong>{forum_row.L_SUBFORUM_STR}</strong>
-				 		 {forum_row.SUBFORUMS}
+				 		 <strong>{{ forum_row.L_SUBFORUM_STR }}</strong>
+				 		 {{ forum_row.SUBFORUMS }}
 				 	</span>
-					<!-- ENDIF -->
+					{% endif %}
 
 				</span>
 			</td>
-		<!-- IF not BLOCK_VIEW_MEDIUM -->
-			<!-- IF forum_row.CLICKS -->
-				<td colspan="2"><span class="stats-wrapper">{L_REDIRECTS}{L_COLON} {forum_row.CLICKS}</td>
-			<!-- ELSEIF not forum_row.S_IS_LINK -->
-				<td class="fb-stats blg-align-center">{forum_row.TOPICS} {L_TOPICS}<br />{forum_row.POSTS} {L_POSTS}</dd>
+		{% if not BLOCK_VIEW_MEDIUM %}
+			{% if forum_row.CLICKS %}
+				<td colspan="2"><span class="stats-wrapper">{L_REDIRECTS}{L_COLON} {{ forum_row.CLICKS }}</td>
+			{% elseif not forum_row.S_IS_LINK %}
+				<td class="fb-stats blg-align-center">{{ forum_row.TOPICS }} {L_TOPICS}<br />{{ forum_row.POSTS }} {L_POSTS}</dd>
 				<td class="lastpost">
-				<!-- IF forum_row.LAST_POST_TIME -->
-					<a class="cbb-helper-text" href="{forum_row.U_LAST_POST}" title="{forum_row.LAST_POST_SUBJECT}">{forum_row.LAST_POST_SUBJECT}</a>
-					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {forum_row.LAST_POSTER_FULL}
-					<br /><span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;{forum_row.LAST_POST_TIME}</span>
-				<!-- ELSE -->
+				{% if forum_row.LAST_POST_TIME %}
+					<a class="cbb-helper-text" href="{{ forum_row.U_LAST_POST }}" title="{{ forum_row.LAST_POST_SUBJECT }}">{{ forum_row.LAST_POST_SUBJECT }}</a>
+					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ forum_row.LAST_POSTER_FULL }}
+					<br /><span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;{{ forum_row.LAST_POST_TIME }}</span>
+				{% else %}
 					{L_NO_POSTS}<br />&nbsp;
-				<!-- ENDIF -->
+				{% endif %}
 				</td>
-			<!-- ENDIF -->
-		<!-- ENDIF -->
+			{% endif %}
+		{% endif %}
 		</tr>
-	<!-- ENDIF -->
+	{% endif %}
 	
-	<!-- IF forum_row.S_LAST_ROW -->
+	{% if forum_row.S_LAST_ROW %}
 	</tbody>
 	</table>
 
-		<!-- IF BLOCK_STYLE eq 'content_simple' --></div><!-- ENDIF -->
-	<!-- ENDIF -->
-<!-- BEGINELSE -->
+		{% if BLOCK_STYLE == 'content_simple' %}</div>{% endif %}
+	{% endif %}
+{% else %}
 	<strong>{L_NO_FORUMS}</strong>
-<!-- END forum_row -->
+{% endfor %}
 
 </div>
-<!-- ENDIF -->
+{% endif %}

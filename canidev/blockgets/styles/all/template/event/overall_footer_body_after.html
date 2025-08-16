@@ -1,24 +1,24 @@
-<!-- IF BLG_ENABLED or BLG_ADMIN_BAR -->
+{% if BLG_ENABLED or BLG_ADMIN_BAR %}
 
-	<!-- IF BLG_ADMIN_BAR -->
+	{% if BLG_ADMIN_BAR %}
 		<div class="blg-admin-bar">
 			<ul class="blg-align-left floated">
-				<li><a href="{U_BLG_MANAGE_BLOCKS}" class="cbb-btn"><i class="fa fa-th-large" aria-hidden="true"></i> <span class="btn-title">{L_MANAGE_BLOCKS}</span></a></li>
-				<li><a href="{U_BLG_PAGE_EDIT}" class="cbb-btn"><i class="fa fa-cog" aria-hidden="true"></i> <span class="btn-title">{L_EDIT_CONFIGURATION}</span></a></li>
+				<li><a href="{{ U_BLG_MANAGE_BLOCKS }}" class="cbb-btn"><i class="fa fa-th-large" aria-hidden="true"></i> <span class="btn-title">{L_MANAGE_BLOCKS}</span></a></li>
+				<li><a href="{{ U_BLG_PAGE_EDIT }}" class="cbb-btn"><i class="fa fa-cog" aria-hidden="true"></i> <span class="btn-title">{L_EDIT_CONFIGURATION}</span></a></li>
 			</ul>
 			
 			<ul class="blg-align-right floated">
-				<li><a href="{U_BLG_PAGE_ADD}" class="cbb-btn"><i class="fa fa-plus-circle" aria-hidden="true"></i> <span class="btn-title">{L_ADD_PAGE}</span></a></li>
+				<li><a href="{{ U_BLG_PAGE_ADD }}" class="cbb-btn"><i class="fa fa-plus-circle" aria-hidden="true"></i> <span class="btn-title">{L_ADD_PAGE}</span></a></li>
 			</ul>
 
 			<a href="#" class="blg-admin-opener" title="{L_EDIT_THIS_PAGE}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
 	<script>
 	// <![CDATA[
 	(function($) {
-		cbbCore.initService('blockgets', $.extend({S_BLG_OPTIONS}, {
+		cbbCore.initService('blockgets', $.extend({{ S_BLG_OPTIONS }}, {
 			avatarContainer: '.avatar-container',
 			postContainer: '.post .postbody'
 		}));
@@ -26,4 +26,4 @@
 	// ]]>
 	</script>
 	
-<!-- ENDIF -->
+{% endif %}

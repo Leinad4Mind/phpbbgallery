@@ -1,15 +1,15 @@
 
-<!-- IF LATLNG_HELPER -->
-	<div class="cbb-group js-group-{HP_ID}">
-		<input type="text" class="cbb-inputbox autowidth" name="latitude" placeholder="{L_LATITUDE}" value="{HP_LAT}" size="12" />
-		<input type="text" class="cbb-inputbox autowidth" name="longitude" placeholder="{L_LONGITUDE}" value="{HP_LNG}" size="12" />
+{% if LATLNG_HELPER %}
+	<div class="cbb-group js-group-{{ HP_ID }}">
+		<input type="text" class="cbb-inputbox autowidth" name="latitude" placeholder="{L_LATITUDE}" value="{{ HP_LAT }}" size="12" />
+		<input type="text" class="cbb-inputbox autowidth" name="longitude" placeholder="{L_LONGITUDE}" value="{{ HP_LNG }}" size="12" />
 		<button class="js-map-launcher cbb-btn">{L_MAP}</button>
 	</div>
 	
 	<script>
 	// <![CDATA[
 		window._jPostponed = window._jPostponed || [];
-		window._jPostponed.push(['@blockgets/adminMap', '{HP_ID}']);
+		window._jPostponed.push(['@blockgets/adminMap', '{{ HP_ID }}']);
 	// ]]>
 	</script>
 	
@@ -25,15 +25,15 @@
 			</div>
 		</div>
 	</script>
-<!-- ELSE -->
+{% else %}
 	<script>
 	// <![CDATA[
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
-			$('#map-{BLOCK_ID}').blgMap({S_MAP_OPTIONS});
+			$('#map-{{ BLOCK_ID }}').blgMap({{ S_MAP_OPTIONS }});
 		});
 	// ]]>
 	</script>
 
-	<div id="map-{BLOCK_ID}">{S_GMAP_INFO}</div>
-<!-- ENDIF -->
+	<div id="map-{{ BLOCK_ID }}">{{ S_GMAP_INFO }}</div>
+{% endif %}

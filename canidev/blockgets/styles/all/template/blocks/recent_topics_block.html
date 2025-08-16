@@ -1,4 +1,5 @@
 
+{% if SHOW_TABS %}
 <script>
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
@@ -7,8 +8,9 @@
 	});
 // ]]>
 </script>
+{% endif %}
 
-<div id="recent-{BLOCK_ID}">
+<div id="recent-{{ BLOCK_ID }}"{% if SHOW_TABS %} class="cbb-helper-hidden"{% endif %}>
 
 {% if BLOCK_VIEW_SMALL %}
 	{% for tab in recent_tab %}
@@ -19,8 +21,8 @@
 			<ul class="blg-linear-list">
 			{% for topicrow in tab.rows %}
 				<li>
-					<!-- EVENT topiclist_row_prepend -->
-					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+					{% EVENT topiclist_row_prepend %}
+					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 				</li>
 			{% endfor %}
 			</ul>
@@ -29,11 +31,13 @@
 
 {% else %}
 
+{% if SHOW_TABS %}
     <ul>
 	{% for tab in recent_tab %}
-		<li><a href="#{{ tab.ID }}-{{ BLOCK_ID }}"><i class="fa {{ tab.ICON }} fa-lg"></i><!-- IF not BLOCK_VIEW_MEDIUM --> <span class="tab-title">{{ tab.TITLE }}</span><!-- ENDIF --></a></li>
+		<li><a href="#{{ tab.ID }}-{{ BLOCK_ID }}"><i class="fa {{ tab.ICON }} fa-lg"></i>{% if not BLOCK_VIEW_MEDIUM %} <span class="tab-title">{{ tab.TITLE }}</span>{% endif %}</a></li>
 	{% endfor %}
     </ul>
+{% endif %}
 
     {% if TOPIC_DESIGN == 'simple' %}
 		{% for tab in recent_tab %}
@@ -46,23 +50,23 @@
 				<tr>
 					<th class="blg-column-topic-title blg-widget-header">{L_TOPIC_TITLE}</th>
 					<th class="blg-column-posted-by blg-widget-header">{L_POSTED_BY}</th>
-				<!-- IF not BLOCK_VIEW_MEDIUM -->
+				{% if not BLOCK_VIEW_MEDIUM %}
 					<th class="blg-column-comments blg-widget-header">{L_COMMENTS}</th>
 					<th class="blg-column-topic-views blg-widget-header">{L_TOPIC_VIEWS}</th>
-				<!-- ENDIF -->
+				{% endif %}
 				</tr>
 
 				{% for topicrow in tab.rows %}
 				<tr>
 					<td class="blg-column-topic-title blg-align-left">
-						<!-- EVENT topiclist_row_prepend -->
-						<a href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+						{% EVENT topiclist_row_prepend %}
+						<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 					</td>
 					<td class="blg-column-posted-by">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
-				<!-- IF not BLOCK_VIEW_MEDIUM -->
+				{% if not BLOCK_VIEW_MEDIUM %}
 					<td class="blg-column-comments">{{ topicrow.REPLIES }}</td>
 					<td class="blg-column-topic-views">{{ topicrow.VIEWS }}</td>
-				<!-- ENDIF -->
+				{% endif %}
 				</tr>
 				{% endfor %}
 			{% endif %}
@@ -71,57 +75,57 @@
 		{% endfor %}
 	{% else %}
 		{% for tab in recent_tab %}
-			<div id="{{ tab.ID }}-{{ BLOCK_ID }}" class="blg-forum-list cbb-helper-hidden<!-- IF BLOCK_VIEW_MEDIUM --> title-only<!-- ENDIF -->">
+			<div id="{{ tab.ID }}-{{ BLOCK_ID }}" class="blg-forum-list{% if SHOW_TABS %} cbb-helper-hidden{% endif %}{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
 			{% if tab.IS_EMPTY %}
 				<div class="blg-message">{L_NO_ITEMS}</div>
 			{% else %}
 				<div class="blg-widget-header">
-					<!-- IF not BLOCK_VIEW_MEDIUM --><div class="fb-lastpost-title">{L_LAST_POST}</div><!-- ENDIF -->
+					{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
 					<span>{L_TOPIC}</span>
 				</div>
 				<ul class="topiclist topics">
 
 				{% for topicrow in tab.rows %}
-					<li class="row<!-- IF topicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_POST_GLOBAL --> global-announce<!-- ENDIF --><!-- IF topicrow.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
-						<!-- EVENT viewforum_body_topic_row_prepend -->
-						<dl class="row-item {topicrow.TOPIC_IMG_STYLE}">
-							<dt<!-- IF topicrow.TOPIC_ICON_IMG --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
-								<!-- IF topicrow.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{topicrow.U_NEWEST_POST}" class="row-item-link"></a><!-- ENDIF -->
+					<li class="row{% if topicrow.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}{% if topicrow.S_POST_GLOBAL %} global-announce{% endif %}{% if topicrow.S_POST_ANNOUNCE %} announce{% endif %}{% if topicrow.S_POST_STICKY %} sticky{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
+						{% EVENT viewforum_body_topic_row_prepend %}
+						<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
+							<dt{%if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 								<div class="list-inner">
-									<!-- EVENT topiclist_row_prepend -->
-									<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+									{% EVENT topiclist_row_prepend %}
+									<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 									<br />
-									<!-- EVENT topiclist_row_topic_title_after -->
+									{% EVENT topiclist_row_topic_title_after %}
 
-									<!-- IF not S_IS_BOT -->
+								{% if not S_IS_BOT %}
 									<div class="responsive-show" style="display: none;">
-										{L_LAST_POST} {L_POST_BY_AUTHOR} {topicrow.LAST_POST_AUTHOR_FULL} &laquo; <a href="{topicrow.U_LAST_POST}" title="{L_GOTO_LAST_POST}">{topicrow.LAST_POST_TIME}</a>
+										{L_LAST_POST} {L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">{{ topicrow.LAST_POST_TIME }}</a>
 									</div>
-									<!-- IF topicrow.REPLIES --><span class="responsive-show left-box" style="display: none;">{L_REPLIES}{L_COLON} <strong>{topicrow.REPLIES}</strong></span><!-- ENDIF -->
-									<!-- ENDIF -->
+									{% if topicrow.REPLIES %}<span class="responsive-show left-box" style="display: none;">{L_REPLIES}{L_COLON} <strong>{{ topicrow.REPLIES }}</strong></span>{% endif %}
+								{% endif %}
 
 									<div class="topic-poster responsive-hide">
-										{L_POST_BY_AUTHOR} {topicrow.TOPIC_AUTHOR_FULL} &raquo; {topicrow.FIRST_POST_TIME}
+										{L_POST_BY_AUTHOR} {{ topicrow.TOPIC_AUTHOR_FULL }} &raquo; {{ topicrow.FIRST_POST_TIME }}
+										{% if SHOW_TOPIC_PARENT %}<br />{L_IN} <a href="{{ topicrow.U_VIEW_FORUM }}">{{ topicrow.FORUM_NAME }}</a>{% endif %}
 									</div>
 
-									<!-- EVENT topiclist_row_append -->
+									{% EVENT topiclist_row_append %}
 								</div>
 							</dt>
-						<!-- IF not BLOCK_VIEW_MEDIUM -->
-							<dd class="fb-stats blg-align-center">{topicrow.VIEWS} {L_VIEWS}<br />{topicrow.REPLIES} {L_REPLIES}</dd>
+						{% if not BLOCK_VIEW_MEDIUM %}
+							<dd class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {L_VIEWS}<br />{{ topicrow.REPLIES }} {L_REPLIES}</dd>
 							<dd class="lastpost">
-								<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {topicrow.LAST_POST_AUTHOR_FULL}
-									<!-- IF not S_IS_BOT -->
-										<a href="{topicrow.U_LAST_POST}" title="{L_GOTO_LAST_POST}">
-											<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{VIEW_LATEST_POST}</span>
+								<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+									{% if not S_IS_BOT %}
+										<a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">
+											<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span>
 										</a>
-									<!-- ENDIF -->
-									<br />{topicrow.LAST_POST_TIME}
+									{% endif %}
+									<br />{{ topicrow.LAST_POST_TIME }}
 								</span>
 							</dd>
-						<!-- ENDIF -->
+						{% endif %}
 						</dl>
-						<!-- EVENT viewforum_body_topic_row_append -->
+						{% EVENT viewforum_body_topic_row_append %}
 					</li>
 				{% endfor %}
 

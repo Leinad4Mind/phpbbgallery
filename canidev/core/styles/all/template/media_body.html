@@ -26,13 +26,24 @@
 		</div>
 	</div>
 
+	<script type="text/html" id="tpl-seeker-bar">
+		<div class="cbb-media-seeker">
+			<div class="cbb-group">
+				<input type="text" class="cbb-inputbox" name="keywords" value="" />
+				<a href="#" class="cbb-btn" data-action="search">{{ lang('SEARCH') }}</a>
+			</div>
+
+			<div class="media-pagination cbb-group"></div>
+		</div>
+	</script>
+
 	<script type="text/html" id="tpl-menu-item">
 		<li><a href="#"><span class="fa <%icon%>"></span> <span class="item-title"><%title%></span></a></li>
 	</script>
 
 	<script type="text/html" id="tpl-attachment-row">
 		<li role="checkbox" data-id="<%id%>" class="attachment">
-			<div class="attachment-preview">
+			<div class="media-preview">
 				<div class="media-thumbnail">
 					<img src="<%filename%>" alt="" />
 				</div>
@@ -46,7 +57,7 @@
 	
 	<script type="text/html" id="tpl-icon-row">
 		<li role="checkbox" data-id="<%id%>" class="attachment iconic">
-			<div class="attachment-preview">
+			<div class="media-preview">
 				<div class="media-thumbnail">
 					<i class="fa <%code%>" aria-hidden="true"></i>
 				</div>
@@ -126,7 +137,7 @@
 		</div>
 	</script>
 	
-	<script type="text/html" id="tpl-section-upload-modern">
+	<script type="text/html" id="tpl-section-upload">
 		<div class="upload-ui">
 			<div class="uploader-inline">
 				<div class="cbb-browser-button">
@@ -149,22 +160,6 @@
 				<p>{{ lang('FILES_DROP') }}</p>
 				<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>
 			</div>
-		</div>
-	</script>
-	
-	<script type="text/html" id="tpl-section-upload-old">
-		<div class="upload-ui">
-			<div class="uploader-inline">
-				<div class="cbb-browser-button">
-					<button type="button" class="cbb-btn">
-						<span>{{ lang('SELECT_FILE') }}</span>
-					</button>
-					<input type="file" name="file" />
-				</div>
-
-				{% if S_MAX_FILESIZE %}<p class="max-upload-size">{{ S_MAX_FILESIZE }}</p>{% endif %}
-			</div>
-			<div class="upload-inline-status cbb-helper-hidden"><div class="cbb-loading-big"></div></div>
 		</div>
 	</script>
 	

@@ -1,7 +1,7 @@
-<!-- BEGIN blglink_quick -->
+{% for link in loops.blglink_quick %}
 	<li>
-		<a href="{blglink_quick.HREF}">
-			<!-- IF blglink_quick.ICON --><i class="icon fa-fw {blglink_quick.ICON}" aria-hidden="true"></i><!-- ENDIF --><span>{blglink_quick.TITLE}</span>
+		<a href="{{ link.HREF }}">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
 		</a>
 	</li>
-<!-- END blglink_quick -->
+{% endfor %}

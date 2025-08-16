@@ -1,29 +1,28 @@
 
 <div class="random-member-content">
-    
-<!-- BEGIN random_member -->
-	<div class="blg-align-center">{random_member.USERNAME}<hr /></div>
+
+{% for member in random_member %}
+	<div class="blg-align-center">{{ member.USERNAME }}<hr /></div>
 	<div class="blg-align-center">
-		<div class="cbb-circular-avatar"><!-- IF random_member.AVATAR -->{random_member.AVATAR}<!-- ELSE --><div class="cbb-no-avatar"></div><!-- ENDIF --></div>
+		<div class="cbb-circular-avatar">{% if member.AVATAR %}{{ member.AVATAR }}{% else %}<div class="cbb-no-avatar"></div>{% endif %}</div>
 	</div>
 	<br />
 	<div class="random-member-info blg-inline-list">
 		<dl>
 			<dt><strong>{L_USER}{L_COLON}</strong></dt>
-			<dd>{random_member.USER_FULL}</dd>
+			<dd>{{ member.USER_FULL }}</dd>
 		</dl>
 
 		<dl>
 			<dt><strong>{L_JOINED}{L_COLON}</strong></dt>
-			<dd>{random_member.REGDATE}</dd>
+			<dd>{{ member.REGDATE }}</dd>
 		</dl>
 
 		<dl>
 			<dt><strong>{L_POSTS}{L_COLON}</strong></dt>
-			<dd><!-- IF random_member.POSTS --><a href="{random_member.U_FIND_POSTS}">{random_member.POSTS}</a><!-- ELSE -->0<!-- ENDIF --></dd>
+			<dd>{% if member.POSTS %}<a href="{{ member.U_FIND_POSTS }}">{{ member.POSTS }}</a>{% else %}0{% endif %}</dd>
 		</dl>
 	</div>
-<!-- END random_member -->
+{% endfor %}
 
 </div>
-

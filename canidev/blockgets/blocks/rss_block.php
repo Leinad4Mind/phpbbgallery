@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -103,7 +103,7 @@ class rss_block extends base
 					break;
 					
 					case 'feed':
-						if(!$ignore_lang && $user->lang_name != $this->rss_data['language'])
+						if(!$ignore_lang && $this->user->lang_name != $this->rss_data['language'])
 						{
 							break;
 						}
@@ -188,25 +188,62 @@ class rss_block extends base
 	
 	private function _clear($text, $data)
 	{
-		$replaces = array(
-			'#<a.*?href="(.*?)".*?>(.*?)</a>#i'				=> '<a href="\\1">\\2</a>',
-			'#<object.*?data="(.*?)".*?>.*?</object>#is'	=> '\\1',
-			'#<iframe.*?\/?>#i'								=> '',
-			'#<blockquote>.*?</blockquote>#is'				=> '',
-			'#<script>.*?</script>#is'						=> '',
-			'#<div ([^>]+)>#'								=> '<div>',
-		);
-		
-		$text = preg_replace(array_keys($replaces), array_values($replaces), $text);
+		if(($xpath = \canidev\core\dom::string_to_xpath($text)) === false)
+		{
+			return $text;
+		}
 
-		// Delete line breaks and images
+		// Remove scripts
+		foreach($xpath->query("//script") as $node)
+		{
+			$node->parentNode->removeChild($node);
+		}
+
+		// Remove unnecessary attributes
+		foreach($xpath->query("//div|//a") as $node)
+		{
+			if($node->nodeName == 'a' && $node->getAttribute('href') == '#')
+			{
+				$node->parentNode->removeChild($node);
+				continue;
+			}
+
+			$node = \canidev\core\dom::remove_attributes($node, array('class', 'href'));
+		}
+
+		// Convert objects and iframes to links
+		foreach($xpath->query("//object|//iframe") as $node)
+		{
+			$attr 		= $node->getAttribute((($node->nodeName == 'object') ? 'data' : 'src'));
+			$new_node 	= $xpath->document->createElement('a');
+			
+			$new_node->setAttribute('href', $attr);
+			$new_node->nodeValue = $attr;
+			
+			$node->parentNode->replaceChild($new_node, $node);
+		}
+
+		// Delete line breaks and images and put all containers "inline"
 		if($data['direction'] == BLG_SCROLL_H)
 		{
-			$text = preg_replace('#<img .*?\/?>#', ' ', $text);
-			$text = str_replace(array("\r", "\n", '<br />'), ' ', $text);
+			foreach($xpath->query("//p|//div|//blockquote|//code|//pre") as $node)
+			{
+				$node->setAttribute('style', 'display:inline;');
+			}
+
+			foreach($xpath->query("//img") as $node)
+			{
+				$node->setAttribute('style', 'max-width:100px;');
+			}
+
+			foreach($xpath->query("//br|//hr") as $node)
+			{
+				$new_node = $xpath->document->createTextNode(' ');
+				$node->parentNode->replaceChild($new_node, $node);
+			}
 		}
-		
-		return $text;
+
+		return \canidev\core\dom::xpath_to_string($xpath);
 	}
 	
 	private function read($url)

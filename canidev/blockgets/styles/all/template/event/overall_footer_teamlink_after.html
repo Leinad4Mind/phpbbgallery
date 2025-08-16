@@ -1,7 +1,7 @@
-<!-- BEGIN blglink_bottom -->
+{% for link in loops.blglink_bottom %}
 	<li class="rightside" data-skip-responsive="true">
-		<a href="{blglink_bottom.HREF}" title="{blglink_bottom.TITLE}" role="menuitem">
-			<!-- IF blglink_bottom.ICON --><i class="icon {blglink_bottom.ICON} fa-fw" aria-hidden="true"></i><!-- ENDIF --><span>{blglink_bottom.TITLE}</span>
+		<a href="{{ link.HREF }}" title="{{ link.TITLE }}" role="menuitem">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
 		</a>
 	</li>
-<!-- END blglink_bottom -->
+{% endfor %}

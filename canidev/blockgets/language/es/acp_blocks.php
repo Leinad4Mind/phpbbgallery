@@ -2,9 +2,9 @@
 /*
 * acp_blocks.php [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -25,7 +25,7 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Permitir colapsar el bloque',
-	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Habilita/deshabilita la posibilidad de que cada usuario pueda colapsar/desplegar este bloque.',
+	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Habilita/deshabilita la posibilidad de que cada usuario pueda colapsar/desplegar este bloque y define su estado inicial.',
 	'BLOCK_ENABLED'				=> 'Bloque activado',
 	'BLOCK_ENABLED_EXPLAIN'		=> 'Define si este bloque se mostrará o no en el foro.',
 	'BLOCK_CURRENT_ICON'			=> 'Icono del bloque',
@@ -40,6 +40,9 @@ $lang = array_merge($lang, array(
 
 	// Common tags
 	'ALL_FORUMS'				=> 'Todos los foros',
+	'COLLAPSE_HIDDEN'			=> 'Permitir (colapsado por defecto)',
+	'COLLAPSE_NONE'				=> 'No permitir',
+	'COLLAPSE_VISIBLE'			=> 'Permitir (desplegado por defecto)',
 	'CONFIG'					=> 'Configuración',
 	'DESIGN_FULL'				=> 'Completo',
 	'DESIGN_SIMPLE'				=> 'Simple',
@@ -57,6 +60,8 @@ $lang = array_merge($lang, array(
 	'TOPIC_DESIGN_EXPLAIN'		=> 'Determina como se mostrarán los temas en el bloque.<br />
 		<em><strong>Completo:</strong> Muestra toda la información siempre que sea posible.</em><br />
 		<em><strong>Simple:</strong> Muestra solo información básica.</em>',
+	'TOPIC_PARENT_SHOW'			=> 'Mostrar foro padre',
+	'TOPIC_PARENT_SHOW_EXPLAIN'	=> 'Si se habilita, se mostrará un enlace al foro de cada tema.',
 
 	// age_ranges_block
 	'AGE_START'					=> 'Edad mínima',
@@ -213,14 +218,16 @@ $lang = array_merge($lang, array(
 	'MEMBERS_NUMBER_EXPLAIN'	=> 'Numero máximo de usuarios que se mostrarán en el bloque.',
 	
 	// leaders_block
-	'LEADERS_ALL_GROUPS'		=> 'Mostrar usuarios en todos sus grupos',
+	'LEADERS_ALL_GROUPS'			=> 'Mostrar usuarios en todos sus grupos',
 	'LEADERS_ALL_GROUPS_EXPLAIN'	=> 'Si se habilita, los usuarios se mostrarán en todos los grupos de los que sean miembros.
 		En caso contrario solo se mostrarán en su grupo por defecto.',
-	'LEADERS_GROUPS'			=> 'Grupos',
-	'LEADERS_GROUPS_EXPLAIN'	=> 'Grupos que se mostrarán en el bloque. Si no selecciona ninguno se mostrarán los grupos de Administradores y Moderadores.',
-	'LEADERS_MODE'				=> 'Modo de visualización',
-	'LEADERS_MODE_ACCORDION'	=> 'Acordeón',
-	'LEADERS_MODE_SIMPLE'		=> 'Lista Simple',
+	'LEADERS_GROUPS'				=> 'Grupos',
+	'LEADERS_GROUPS_EXPLAIN'		=> 'Grupos que se mostrarán en el bloque. Si no selecciona ninguno se mostrarán los grupos de Administradores y Moderadores.',
+	'LEADERS_MODE'					=> 'Modo de visualización',
+	'LEADERS_MODE_ACCORDION'		=> 'Acordeón',
+	'LEADERS_MODE_SIMPLE'			=> 'Lista Simple',
+	'LEADERS_ONLY_ONLINE'			=> 'Solo usuarios online',
+	'LEADERS_ONLY_ONLINE_EXPLAIN'	=> 'Si se habilita, solo se mostrarán los usuarios de los grupos seleccionados que estén conectados.',
 
 	// link_us_block
 	'US_BANNER'					=> 'Mini banner del enlace',
@@ -350,6 +357,8 @@ $lang = array_merge($lang, array(
 	// recent_topics_block
 	'RECENT_FORUMS'					=> 'Foros de temas',
 	'RECENT_FORUMS_EXPLAIN'			=> 'Foros que contienen los temas que se mostrarán. En caso de no seleccionar ninguno, se usarán todos los foros. Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.',
+	'RECENT_SECTIONS'				=> 'Secciones',
+	'RECENT_SECTIONS_EXPLAIN'		=> 'Define las secciones que se mostrarán en el bloque y su orden.',
 	'RECENT_TOPIC_LIMIT'			=> 'Límite de temas',
 	'RECENT_TOPIC_LIMIT_EXPLAIN'	=> 'Máximo número de temas que se mostrarán en cada pestaña.',
 

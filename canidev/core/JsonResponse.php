@@ -1,18 +1,18 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.4 26/01/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
 /**
-* JSON class
-*/
-class json_response
+ * JSON class
+ */
+class JsonResponse
 {
 	const JSON_STATUS_ERROR		= 1;
 	const JSON_STATUS_SUCCESS	= 2;
@@ -32,10 +32,10 @@ class json_response
 	/**
 	 * Add values to response
 	 * 
-	 * @param array|string 		$key 		Simple key or array with key => value
-	 * @param string|null 		$value 		Set a single value if key is a string
+	 * @param array|string 			$key 		Simple key or array with key => value
+	 * @param string|array|null 	$value 		Set a single value if key is a string
 	 * 
-	 * @return json_response
+	 * @return static
 	 */
 	public function add($key, $value = null)
 	{
@@ -67,11 +67,11 @@ class json_response
 	 * @param string 	$type
 	 * @param array 	$component
 	 */
-	public function add_component($type, $component)
+	public function addComponent($type, $component)
 	{
 		if(!isset($this->cache['components'][$type]))
 		{
-			$this->cache['components'][$type] = array();
+			$this->cache['components'][$type] = [];
 		}
 
 		if($type == 'lang')
@@ -89,9 +89,9 @@ class json_response
 	 * @param string 	$html
 	 * @param bool 		$append 		Set if defined html must be overwrite
 	 * 
-	 * @return json_response
+	 * @return static
 	 */
-	public function add_html($html, $append = false)
+	public function addHtml($html, $append = false)
 	{
 		if(!$append)
 		{
@@ -112,10 +112,10 @@ class json_response
 	{
 		$this
 			->reset()
-			->send(array(
+			->send([
 				'status'	=> self::JSON_STATUS_ERROR,
 				'message'	=> $message,
-			));
+			]);
 	}
 
 	/**
@@ -131,21 +131,21 @@ class json_response
 	 * Check if response is initialized
 	 * @return bool
 	 */
-	public function is_requested()
+	public function isRequested()
 	{
 		return (sizeof($this->cache) > 2 || !empty($this->cache['htmlContent']));
 	}
 	
 	/**
 	 * Reset all data
-	 * @return json_response
+	 * @return static
 	 */
 	public function reset()
 	{
-		$this->cache = array(
-			'components'	=> array(),
+		$this->cache = [
+			'components'	=> [],
 			'htmlContent'	=> '',
-		);
+		];
 
 		return $this;
 	}
@@ -184,10 +184,10 @@ class json_response
 	/**
 	 * Set response status
 	 * 
-	 * @param int 	$status 	json_response::JSON_STATUS_SUCCESS | json_response::JSON_STATUS_ERROR
-	 * @return json_response
+	 * @param int 	$status 	jsonResponse::JSON_STATUS_SUCCESS | JsonResponse::JSON_STATUS_ERROR
+	 * @return static
 	 */
-	public function set_status($status = self::JSON_STATUS_SUCCESS)
+	public function setStatus($status = self::JSON_STATUS_SUCCESS)
 	{
 		$this->cache['status'] = $status;
 		return $this;
@@ -195,15 +195,15 @@ class json_response
 
 	/**
 	 * Get class instance
-	 * @return json_response
+	 * @return static
 	 */
-	static public function get_instance()
+	static public function getInstance()
 	{
-		if(!self::$instance)
+		if(!static::$instance)
 		{
-			self::$instance = new self();
+			static::$instance = new static();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 }

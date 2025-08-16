@@ -1,40 +1,41 @@
-<!-- IF .attach -->
+{% if attach|length %}
 	<script>
 	// <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#attach-{BLOCK_ID}').blgAccordion();
+		$('#attach-{{ BLOCK_ID }}').blgAccordion();
 	});
 	// ]]>
 	</script>
 
-	<div id="attach-{BLOCK_ID}">
-	<!-- BEGIN attach -->
-		<h5><span class="cbb-helper-text">{attach.REAL_FILENAME}</span></h5>
+	<div id="attach-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+	{% for attach in loops.attach %}
+		<h5><span class="cbb-helper-text">{{ attach.REAL_FILENAME }}</span></h5>
 		<div class="cbb-helper-clear">
-			<div class="blg-align-center">{attach.S_IMG}</div><br />
+			<div class="blg-align-center">{{ attach.S_IMG }}</div><br />
 
 			<div class="blg-inline-list">
 				<dl>
 					<dt><strong>{L_ATTACH_DATE}{L_COLON}</strong></dt>
-					<dd>{attach.S_DATE}</dd>
+					<dd>{{ attach.S_DATE }}</dd>
 				</dl>
 				<dl>
 					<dt><strong>{L_ATTACH_SIZE}{L_COLON}</strong></dt>
-					<dd>{attach.S_FILESIZE}</dd>
+					<dd>{{ attach.S_FILESIZE }}</dd>
 				</dl>
 				<dl>
-					<dt><strong>{attach.S_DOWNLOAD_LABEL}{L_COLON}</strong></dt>
-					<dd>{attach.S_DOWNLOAD_COUNT}</dd>
+					<dt><strong>{{ attach.S_DOWNLOAD_LABEL }}{L_COLON}</strong></dt>
+					<dd>{{ attach.S_DOWNLOAD_COUNT }}</dd>
 				</dl>
 			</div>
 
 			<hr />
-			<a class="blank blg-align-left floated" href="{attach.U_FILELINK}"><strong>{L_VIEW_TOPIC}</strong></a>
-			<a class="blank blg-align-right floated" href="{attach.U_FILE}"><strong>{L_DOWNLOAD}</strong></a>
+			<a class="blank blg-align-left floated" href="{{ attach.U_FILELINK }}"><strong>{L_VIEW_TOPIC}</strong></a>
+			<a class="blank blg-align-right floated" href="{{ attach.U_FILE }}"><strong>{L_DOWNLOAD}</strong></a>
 		</div>
-	<!-- END attach -->
+	{% endfor %}
 	</div>
-<!-- ELSE -->
+{% else %}
 	<div class="blg-align-center">{L_NO_ATTACHMENTS}</div>
-<!-- ENDIF -->
+}
+{% endif %}

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -76,9 +76,7 @@ class admin_controller_pages extends admin_controller_base
 					break;
 						
 					case PAGE_CUSTOM:
-						$s_url = $this->helper->route('canidev_blockgets_page_controller', array(
-							'page'	=> ($row['page_alias']) ? $row['page_alias'] : $row['page_id']
-						), true, false, true);
+						$s_url = $this->helper->route('canidev_blockgets_page_' . $row['page_id'], array(), true, false, true);
 					break;
 					
 					case PAGE_FORUM:
@@ -372,9 +370,10 @@ class admin_controller_pages extends admin_controller_base
 				* @var array	display_vars		Variables to show
 				* @var array	page_data			Current page data
 				* @var string	action				Current action
+				* @var array 	serialize_ary 		Variable keys serialized as page_data
 				* @since 2.0.0
 				*/
-				$vars = array('display_vars', 'page_data', 'action');
+				$vars = array('display_vars', 'page_data', 'action', 'serialize_ary');
 				extract($this->dispatcher->trigger_event('blockgets.acp_page_vars', compact($vars)));
 
 				switch($page_data['page_type'])
@@ -528,8 +527,8 @@ class admin_controller_pages extends admin_controller_base
 						break;
 					}
 					
-					$this->cache->destroy('_blockgets_pages');
-					
+					$this->destroy_pages_cache();
+
 					$title = ($page_data['page_title']) ? $this->lang->lang($page_data['page_title']) : $page_data['page_alias'] . ".{$this->php_ext}";
 	
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "LOG_PAGE_$message", time(), array($title));
@@ -623,8 +622,8 @@ class admin_controller_pages extends admin_controller_base
 					$sql = 'DELETE FROM ' . BLG_PAGES_TABLE . '
 						WHERE ' . $this->db->sql_in_set('page_id', $page_ids);
 					$this->db->sql_query($sql);
-					
-					$this->cache->destroy('_blockgets_pages');
+
+					$this->destroy_pages_cache();
 
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PAGE_REMOVED', time(), array(implode(', ', $page_titles)));
 					
@@ -867,6 +866,12 @@ class admin_controller_pages extends admin_controller_base
 			BLOCK_STYLE_CONTENT_FULL	=> 'STYLE_CONTENT_FULL',
 			BLOCK_STYLE_CONTENT_SIMPLE	=> 'STYLE_CONTENT_SIMPLE',
 		);
+
+		$collapse_options = array(
+			BLOCK_COLLAPSE_NONE 		=> 'COLLAPSE_NONE',
+			BLOCK_COLLAPSE_VISIBLE 		=> 'COLLAPSE_VISIBLE',
+			BLOCK_COLLAPSE_HIDDEN 		=> 'COLLAPSE_HIDDEN',
+		);
 		
 		$display_vars = array(
 			'legend1'			=> 'BLOCK_SETTINGS',
@@ -874,9 +879,9 @@ class admin_controller_pages extends admin_controller_base
 
 			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', true),	'default' => ''),
 			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),	'default' => 'all'),
-			'block_enabled'		=> array('lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'allow_collapse'	=> array('lang' => 'BLOCK_COLLAPSE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'block_style'		=> array('lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($style_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => 1),
+			'block_enabled'		=> array('lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',								'default' => 1),
+			'allow_collapse'	=> array('lang' => 'BLOCK_COLLAPSE',		'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($collapse_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => BLOCK_COLLAPSE_VISIBLE),
+			'block_style'		=> array('lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($style_options, '{KEY}', '{CONFIG_VALUE}'),		'default' => 1),
 		);
 		
 		if(!$submit && !in_array($action, array('enable', 'disable', 'remove', 'move')))
@@ -936,7 +941,7 @@ class admin_controller_pages extends admin_controller_base
 						'block_content'		=> '',
 						'block_page'		=> $page_id,
 						'block_position'	=> 0,
-						'allow_collapse'	=> 1,
+						'allow_collapse'	=> BLOCK_COLLAPSE_VISIBLE,
 						'block_style'		=> BLOCK_STYLE_DEFAULT,
 						'bbcode_bitfield'	=> '',
 						'bbcode_uid'		=> '',
@@ -1226,7 +1231,7 @@ class admin_controller_pages extends admin_controller_base
 					'block_page'		=> $page_id,
 					'block_enabled'		=> 1,
 					'block_groups'		=> 'all',
-					'allow_collapse'	=> 0,
+					'allow_collapse'	=> BLOCK_COLLAPSE_NONE,
 					'block_style'		=> 0,
 					'bbcode_bitfield'	=> '',
 					'bbcode_uid'		=> '',
@@ -1774,7 +1779,7 @@ class admin_controller_pages extends admin_controller_base
 			'block_page'		=> $page_id,
 			'block_enabled'		=> 1,
 			'block_groups'		=> 'all',
-			'allow_collapse'	=> 0,
+			'allow_collapse'	=> BLOCK_COLLAPSE_NONE,
 			'bbcode_bitfield'	=> '',
 			'bbcode_uid'		=> '',
 		);
@@ -1887,5 +1892,18 @@ class admin_controller_pages extends admin_controller_base
 		}*/
 
 		return preg_replace(array_keys($replaces), array_values($replaces), $path);
+	}
+
+	protected function destroy_pages_cache()
+	{
+		$this->cache->destroy('_blockgets_pages');
+
+		// Remove route cache manually to prevent full cache purge
+		$cache_dir = $this->container->getParameter('core.cache_dir');
+		
+		@unlink($cache_dir . '/url_generator.' . $this->php_ext);
+		@unlink($cache_dir . '/url_generator.meta');
+		@unlink($cache_dir . '/url_matcher.' . $this->php_ext);
+		@unlink($cache_dir . '/url_matcher.meta');
 	}
 }

@@ -1,14 +1,14 @@
-<!-- IF S_IN_PLAYER and CANIDEV_CORE_STARTED -->
-	<!-- INCLUDE @canidev_core/event/overall_footer_after.html -->
+{% if S_IN_PLAYER and CANIDEV_CORE_STARTED %}
+	{% include '@canidev_core/event/overall_footer_after.html' %}
 	
 	<script>
 	// <![CDATA[
 	(function($) {
-		cbbCore.initService('blockgets', $.extend({S_BLG_OPTIONS}, {
+		cbbCore.initService('blockgets', $.extend({{ S_BLG_OPTIONS }}, {
 			avatarContainer: '.avatar-container',
 			postContainer: '.post .postbody'
 		}));
 	})(jQuery);
 	// ]]>
 	</script>
-<!-- ENDIF -->
+{% endif %}

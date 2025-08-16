@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -71,11 +71,11 @@ class scroll_message_block extends base
 	{
 		$this->display_vars = array(
 			'marquee_direction' 	=> array('lang' => 'MARQUEE_DIRECTION',		'validate' => 'string', 'type' => 'select', 	'method' => 'helper',	'params' => array('scroll_select', '{CONFIG_VALUE}', 'direction'),	'default' => 'left'),
-			'marquee_speed'  		=> array('lang' => 'MARQUEE_SPEED',			'validate' => 'int',  	'type' => 'text:3:2',	'default' => 2),
-			'marquee_scrolldelay'  	=> array('lang' => 'MARQUEE_SCROLLDELAY',	'validate' => 'int',  	'type' => 'text:3:2',	'default' => 50),
+			'marquee_speed'  		=> array('lang' => 'MARQUEE_SPEED',			'validate' => 'int',  	'type' => 'number',	'default' => 2),
+			'marquee_scrolldelay'  	=> array('lang' => 'MARQUEE_SCROLLDELAY',	'validate' => 'int',  	'type' => 'number',	'default' => 50),
 			'marquee_align'  		=> array('lang' => 'MARQUEE_ALIGN', 		'validate' => 'string', 'type' => 'select', 	'method' => 'helper',	'params' => array('scroll_select', '{CONFIG_VALUE}', 'align'),	'default' => 'center'),
 			'marquee_bgcolor'  		=> array('lang' => 'MARQUEE_BGCOLOR',		'validate' => 'string', 'type' => 'text:12:10',	'default' => ''),
-			'marquee_height'  		=> array('lang' => 'MARQUEE_HEIGHT',		'validate' => 'int', 	'type' => 'text:4:3',	'default' => 20),
+			'marquee_height'  		=> array('lang' => 'MARQUEE_HEIGHT',		'validate' => 'int', 	'type' => 'number',	'default' => 20),
 			'marquee_padding'  		=> array('lang' => 'MARQUEE_PADDING',		'validate' => 'string', 'type' => 'text:25:24',	'default' => '2px'),
 			'marquee_text'			=> array('lang' => 'MARQUEE_TEXT',			'type' => 'custom',		'method' => 'helper',	'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 15, 5),	'default' => ''),
 		);

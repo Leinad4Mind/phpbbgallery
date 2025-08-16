@@ -13,8 +13,16 @@ services:
             - '@request'
             - '@user'
             - '%core.php_ext%'
+            - '%core.table_prefix%'
         tags:
             - { name: event.listener }
+
+    canidev.blockgets.routing.loader:
+        class: canidev\blockgets\routing\page_loader
+        arguments:
+            - '@canidev.blockgets.core'
+        tags:
+            - { name: routing.loader }
 
     canidev.blockgets.core:
         class: canidev\blockgets\libraries\blockgets

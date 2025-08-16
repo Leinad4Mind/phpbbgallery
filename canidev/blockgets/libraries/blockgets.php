@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -141,7 +141,7 @@ class blockgets
 				{
 					$admin_base = $this->phpbb_root_path . 'adm/index.' . $this->php_ext . '?i=-canidev-blockgets-acp-main_module&amp;mode=pages';
 					$page_alias = (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . str_replace(".{$this->php_ext}", '', $this->user->page['page_name']);
-					$page_param	= ($this->active) ? 'p=' . $this->page['page_id'] : 'alias=' . $page_alias;
+					$page_param	= isset($this->page['page_id']) ? 'p=' . $this->page['page_id'] : 'alias=' . $page_alias;
 					
 					if(!in_array($page_alias, array('app/calendar', 'app/player')))
 					{
@@ -245,7 +245,7 @@ class blockgets
 	// load blocks and put into template
 	private function load_blocks()
 	{
-		if(!$this->enabled || !$this->active || empty($this->page) || defined('BLG_IN_AJAX'))
+		if(!$this->enabled || empty($this->page) || defined('BLG_IN_AJAX'))
 		{
 			return $this;
 		}
@@ -350,9 +350,14 @@ class blockgets
 			// Build all the block classes
 			$dom_classes = array('style-' . $block_style);
 			
-			if($this->config['blg_collapse_blocks'] && $block_row['allow_collapse'])
+			if($this->config['blg_collapse_blocks'] && $block_row['allow_collapse'] != BLOCK_COLLAPSE_NONE && $block_row['block_style'] != BLOCK_STYLE_CONTENT_SIMPLE)
 			{
 				$dom_classes[] = 'collapsable';
+
+				if($block_row['allow_collapse'] == BLOCK_COLLAPSE_HIDDEN)
+				{
+					$dom_classes[] = 'collapsed';
+				}
 			}
 			
 			if($block_class->view_is_small())
@@ -365,7 +370,7 @@ class blockgets
 				'BLOCK_ID'    		=> $block_row['block_id'],
 				'BLOCK_TITLE'		=> $this->lang->lang($block_row['block_title']),
 				'BLOCK_CONTENT'		=> $block_class->display(),
-				'BLOCK_ICON'		=> $block_row['block_icon'],
+				'BLOCK_ICON'		=> $this->helper->get_media(false, false)->build_icon_html($block_row['block_icon']),
 				'BLOCK_CLASSES'		=> implode(' ', $dom_classes),
 				'BLOCK_STYLE'		=> $block_style,
 				
@@ -384,7 +389,7 @@ class blockgets
 			
 			$this->template->assign_block_vars($tpl_var, $template_ary);
 			
-			if(($block_position == 'left' || $block_position == 'right') && (int)$this->page[$block_position . '_column_width'])
+			if($block_position == 'left' || $block_position == 'right')
 			{
 				$this->center_classes["has$block_position"] = true;
 			}
@@ -421,10 +426,8 @@ class blockgets
 				if($row['link_position'] && $row['page_enabled'] && $this->helper->group_auth($row['page_groups']))
 				{
 					$this->template->assign_block_vars('blglink_' . $row['link_position'], array(
-						'HREF'		=> $this->helper->route('canidev_blockgets_page_controller', array(
-							'page' => ($row['page_alias']) ? $row['page_alias'] : $row['page_id']
-						)),
-						'ICON'		=> $row['link_icon'],
+						'HREF'		=> $this->helper->route('canidev_blockgets_page_' . $row['page_id']),
+						'ICON'		=> $this->helper->get_media(false, false)->build_icon_html($row['link_icon']),
 						'TITLE'		=> $this->get_title($row),
 					));
 				}
@@ -436,7 +439,7 @@ class blockgets
 		{
 			$this->template->assign_block_vars('blglink_' . $this->config['blg_calendar_link'], array(
 				'HREF'		=> $this->helper->route('canidev_blockgets_calendar_controller'),
-				'ICON'		=> 'fa-calendar',
+				'ICON'		=> $this->helper->get_media(false, false)->build_icon_html('fa-calendar'),
 				'TITLE'		=> $this->lang->lang('CALENDAR'),
 			));
 		}
