@@ -1,6 +1,6 @@
 /**
  * cBB Blockgets (Clocks stylesheet)
- * Copyright (c) 2022, CaniDev
+ * Copyright (c) 2023, CaniDev
  * license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -940,7 +940,7 @@
 	height: 100%;
 	top: 0;
 	width: 100%;
-	z-index: 10;
+	z-index: 1;
 }
 
 .blg-clock.circle .dot-inner {
@@ -955,4 +955,8 @@
 
 .dark-theme .blg-clock.circle .circle {
 	outline-color: #252525;
+}
+
+.dark-theme .blg-clock.circle .circle-inner {
+	border-color: #262626;
 }

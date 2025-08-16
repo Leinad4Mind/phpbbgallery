@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -54,12 +54,12 @@ class dockmenu_block extends base
 
 			$row['title'] = $this->language->lang($row['title']);
 
-			$menu_row = array(
+			$menu_row = [
 				'S_TITLE'		=> $row['title'],
 				'S_ICON'		=> '<img src="' . $this->helper->build_image_filename($row['image']) . '" title="' . $row['title'] . '" alt="" />',
 				'S_WINDOW'		=> $row['window'],
 				'U_LINK'		=> $row['url'],
-			);
+			];
 
 			/**
 			 * @event block.dockmenu_row
@@ -68,7 +68,7 @@ class dockmenu_block extends base
 			 * @var	array	data			Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('menu_row', 'row', 'data');
+			$vars = ['menu_row', 'row', 'data'];
 			extract($this->dispatcher->trigger_event('block.dockmenu_row', compact($vars)));
 			
 			$this->template->assign_block_vars('menu_row', $menu_row);
@@ -81,11 +81,11 @@ class dockmenu_block extends base
 			return false;
 		}
 
-		$this->template->assign_json_var('S_DOCK_PARAMS', array(
+		$this->template->assign_json_var('S_DOCK_PARAMS', [
 			'maxWidth' 		=> round($data['item_width'] + (($data['item_width'] * 70) / 100)),
 			'orientation'	=> $this->view_is_small() ? 'v' : 'h',
 			'itemWidth' 	=> $data['item_width'],
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -100,13 +100,13 @@ class dockmenu_block extends base
 
 		$this->list
 			->set_type(constants::LIST_TYPE_IMAGE)
-			->set_events(array(
-				'edit.before'	=> array($this, 'list_edit_before'),
-			));
+			->set_events([
+				'edit.before'	=> [$this, 'list_edit_before'],
+			]);
 
-		$this->display_vars = array(
-			'item_width'	=> array('lang' => 'ICON_WIDTH',	'validate' => 'int:16:250',	'type' => 'number:16:250',	'default' => 40),
-		);
+		$this->display_vars = [
+			'item_width'	=> ['lang' => 'ICON_WIDTH',	'validate' => 'int:16:250',	'type' => 'number:16:250',	'default' => 40],
+		];
 
 		return true;
 	}

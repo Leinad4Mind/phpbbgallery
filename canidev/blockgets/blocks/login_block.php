@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -47,10 +47,10 @@ class login_block extends base
 			// Check form key on phpBB > 3.2.5
 			if($password && !check_form_key('login'))
 			{
-				$result = array(
+				$result = [
 					'status' 	=> false,
 					'error_msg'	=> 'FORM_INVALID',
-				);
+				];
 			}
 			else
 			{
@@ -61,25 +61,24 @@ class login_block extends base
 			switch($result['status'])
 			{
 				case LOGIN_SUCCESS:
-					$this->helper->json->add(array(
+					$this->helper->json->add([
 						'message'		=> $this->language->lang('LOGIN_REDIRECT'),
 						'return_url'	=> $this->helper->current_url(
-							array(
+							[
 								'sid' => $this->user->session_id
-							),
+							],
 							false
 						)
-					));
-					return true;
-				break;
-
-				case LOGIN_ERROR_ATTEMPTS:
-					$this->helper->json->add(array(
-						'redirect'	=> $this->helper->url('ucp', 'mode=login')
-					));
+					]);
 					
 					return true;
-				break;
+
+				case LOGIN_ERROR_ATTEMPTS:
+					$this->helper->json->add([
+						'redirect'	=> $this->helper->url('ucp', 'mode=login')
+					]);
+					
+					return true;
 
 				case LOGIN_ERROR_PASSWORD_CONVERT:
 					$err = $this->language->lang(
@@ -109,15 +108,15 @@ class login_block extends base
 			if($this->user->data['user_id'] != ANONYMOUS && $this->request->variable('sid', '') === $this->user->session_id)
 			{
 				$this->user->session_kill();
-				$this->helper->json->send(array(
+				$this->helper->json->send([
 					'redirect'	=> $this->helper->current_url(
-						array(
+						[
 							'sid' => $this->user->session_id
-						),
+						],
 						false,
-						array('jblgm', 'm')
+					 ['jblgm', 'm']
 					)
-				));
+				]);
 			}
 			else if($this->user->data['user_id'] != ANONYMOUS)
 			{
@@ -127,29 +126,29 @@ class login_block extends base
 		
 		if(isset($err))
 		{
-			$this->helper->json->send(array(
+			$this->helper->json->send([
 				'message'	=> $err,
-				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
-			));
+				'status'	=> \canidev\core\JsonResponse::JSON_STATUS_ERROR
+			]);
 		}
 	
 		if($this->user->data['is_registered'])
 		{
-			$links = array(
-				'SEARCH_NEW'	=> array('url' => 'U_SEARCH_NEW', 	'icon' => 'fa-file-o icon-red'),
-				'SEARCH_SELF'	=> array('url' => 'U_SEARCH_SELF', 	'icon' => 'fa-file-o'),
-				'MY_BOOKMARKS'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=bookmarks'), 	'icon' => 'fa-star-o'),
-				'MY_SUBSCRIBED'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=subscribed'), 	'icon' => 'fa-bookmark-o'),
-			);
+			$links = [
+				'SEARCH_NEW'	=> ['url' => 'U_SEARCH_NEW', 	'icon' => 'fa-file-o icon-red'],
+				'SEARCH_SELF'	=> ['url' => 'U_SEARCH_SELF', 	'icon' => 'fa-file-o'],
+				'MY_BOOKMARKS'	=> ['url' => $this->helper->url('ucp', 'i=main&amp;mode=bookmarks'), 	'icon' => 'fa-star-o'],
+				'MY_SUBSCRIBED'	=> ['url' => $this->helper->url('ucp', 'i=main&amp;mode=subscribed'), 	'icon' => 'fa-bookmark-o'],
+			];
 			
 			if($this->config['allow_privmsg'] && ($this->auth->acl_get('u_readpm') || $this->auth->acl_get('u_sendpm')))
 			{
 				$pm_title = $this->language->lang('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
 				
-				$links[$pm_title] = array(
+				$links[$pm_title] = [
 					'url' => 'U_PRIVATEMSGS',
 					'icon' => 'fa-inbox',
-				);
+				];
 			}
 
 			/**
@@ -158,16 +157,16 @@ class login_block extends base
 			 * @var	array	data		Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('links', 'data');
+			$vars = ['links', 'data'];
 			extract($this->dispatcher->trigger_event('block.login_links', compact($vars)));
 			
 			foreach($links as $title => $link)
 			{
-				$this->template->assign_block_vars('userlink', array(
+				$this->template->assign_block_vars('userlink', [
 					'ICON'		=> $link['icon'],
 					'TITLE'		=> $this->language->lang($title),
 					'URL'		=> (strpos($link['url'], 'U_') === 0) ? $this->template->get_var($link['url']) : $link['url'],
-				));
+				]);
 			}
 			unset($links);
 			
@@ -180,48 +179,41 @@ class login_block extends base
 			
 			$user_rank_data = phpbb_get_user_rank($this->user->data, $this->user->data['user_posts']);
 
-			$user_avatar = phpbb_get_user_avatar(array(
-				'avatar'		=> $this->user->data['user_avatar'],
-				'avatar_type'	=> $this->user->data['user_avatar_type'],
-				'avatar_width'	=> $this->user->data['user_avatar_width'], 
-				'avatar_height'	=> $this->user->data['user_avatar_height'],
-			));
-			
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_LAST_VISIT'		=> $this->language->lang('YOU_LAST_VISIT', $break . $this->user->format_date($this->user->data['session_last_visit'])),
 				'S_CURRENT_TIME'	=> $this->language->lang('CURRENT_TIME', $break . $this->user->format_date(time(), false, true)),
 		
-				'USER_AVATAR'		=> $user_avatar,
+				'USER_AVATAR'		=> phpbb_get_user_avatar($this->user->data),
 				'USERNAME_FULL'     => get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']),
 				'USER_RANK_TITLE'	=> $user_rank_data['title'],
 				'USER_RANK_IMG'		=> $user_rank_data['img'],
 				
-				'U_LOGOUT'		=> $this->helper->current_url(array(
+				'U_LOGOUT'		=> $this->helper->current_url([
 					'jblgm'	=> $this->data['block_id'],
 					'm'		=> 'logout',
 					'sid'	=> $this->user->session_id,
-				)),
-			));
+				]),
+			]);
 		}
 		else
 		{
 			add_form_key('login', '_BLG_LOGIN');
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_DISPLAY_FULL_LOGIN'		=> $data['full_login'],
 				'S_DISPLAY_REGISTER'		=> $data['show_register'],
 				'S_USERNAME'				=> $username,
 
-				'S_BLG_LOGIN_FIELDS'		=> build_hidden_fields(array(
+				'S_BLG_LOGIN_FIELDS'		=> build_hidden_fields([
 					'sid'		=> $this->user->session_id,
 					'jblgm'		=> $this->data['block_id'],
-				)),
+				]),
 				
 				'U_SEND_PASSWORD' 		=> ($this->config['email_enable']) ? $this->helper->url('ucp', 'mode=sendpassword') : '',
 				'U_RESEND_ACTIVATION'	=> ($this->config['require_activation'] == USER_ACTIVATION_SELF && $this->config['email_enable']) ? $this->helper->url('ucp', 'mode=resend_act') : '',
 				'U_TERMS_USE'			=> $this->helper->url('ucp', 'mode=terms'),
 				'U_PRIVACY'				=> $this->helper->url('ucp', 'mode=privacy'),
-			));
+			]);
 
 			if($data['alt_login'])
 			{
@@ -262,11 +254,11 @@ class login_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'alt_login'		=> array('lang' => 'ALT_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'full_login'	=> array('lang' => 'FULL_LOGIN',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'show_register'	=> array('lang' => 'SHOW_REGISTER',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-		);
+		$this->display_vars = [
+			'alt_login'		=> ['lang' => 'ALT_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+			'full_login'	=> ['lang' => 'FULL_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+			'show_register'	=> ['lang' => 'SHOW_REGISTER',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+		];
 
 		return true;
 	}

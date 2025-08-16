@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -27,26 +27,26 @@ class online_friends_block extends base
 		$users	= [];
 		$time	= (time() - (intval($this->config['load_online_time']) * 60));
 			
-		$sql_ary = array(
+		$sql_ary = [
 			'SELECT'	=> 'u.user_id, u.username, u.username_clean, u.user_colour,
 				s.session_time, s.session_viewonline',
 
-			'FROM'		=> array(ZEBRA_TABLE => 'z'),
+			'FROM'		=> [ZEBRA_TABLE => 'z'],
 			
-			'LEFT_JOIN'	=> array(
-				array('FROM' => array(USERS_TABLE => 'u'),		'ON' => 'u.user_id = z.zebra_id'),
-				array('FROM' => array(SESSIONS_TABLE => 's'),	'ON' => 's.session_user_id = z.zebra_id'),
-			),
+			'LEFT_JOIN'	=> [
+				['FROM' => [USERS_TABLE => 'u'],		'ON' => 'u.user_id = z.zebra_id'],
+				['FROM' => [SESSIONS_TABLE => 's'],	'ON' => 's.session_user_id = z.zebra_id'],
+			],
 			
 			'WHERE'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.friend = 1'
-		);
+		];
 
 		/**
 		 * @event block.online_friends_query
 		 * @var array	sql_ary		The SQL data
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_ary');
+		$vars = ['sql_ary'];
 		extract($this->dispatcher->trigger_event('block.online_friends_query', compact($vars)));
 		
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -69,9 +69,9 @@ class online_friends_block extends base
 		{
 			$switch = ($row['session_time'] >= ($time - ((int) ($time % 30))) && $row['session_viewonline']) ? 'online' : 'offline';
 
-			$user_row = array(
+			$user_row = [
 				'USERNAME_FULL'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'])
-			);
+			];
 
 			/**
 			 * @event block.online_friends_row
@@ -79,7 +79,7 @@ class online_friends_block extends base
 			 * @var array	row				The original data
 			 * @since 2.0.0
 			 */
-			$vars = array('user_row', 'row');
+			$vars = ['user_row', 'row'];
 			extract($this->dispatcher->trigger_event('block.online_friends_row', compact($vars)));
 	
 			$this->template->assign_block_vars("friends_$switch", $user_row);

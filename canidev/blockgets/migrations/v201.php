@@ -29,7 +29,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 		return array(
 			'change_columns' => array(
 				$this->table_prefix . 'blockgets_blocks'	=> array(
-					'block_groups'	=> array('VCHAR:255', 'all'),
+					'block_groups'	=> ['VCHAR:255', 'all'],
 				),
 			),
 		);
@@ -39,14 +39,14 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 	{
 		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db, $this->table_prefix);
 		
-		return array(
-			array('config.remove', 	array('blg_resize_enabled')),
-			array('config.add',		array('blg_calendar_birthdays', 1)),
+		return [
+			['config.remove', 	['blg_resize_enabled']],
+			['config.add',		['blg_calendar_birthdays', 1]],
 			
-			array('custom', array(array($this, 'update_events'))),
-			array('custom', array(array($this, 'update_icons'))),
-			array('custom', array(array($this, 'update_block_config'))),
-		);
+			['custom', [[$this, 'update_events']]],
+			['custom', [[$this, 'update_icons']]],
+			['custom', [[$this, 'update_block_config']]],
+		];
 	}
 
 	public function update_events()
@@ -150,10 +150,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 				'max_number' 		=> 50,
 				'gallery_source'	=> 1, // gallery_block::SOURCE_ALL
 			),
-			'leaders_block'			=> array('use_all_groups' 	=> 0),
-			'recent_topics_block'	=> array('topic_design' 	=> 'simple'),
-			'topic_index_block'		=> array('topic_design' 	=> 'simple'),
-			'top_topics_block'		=> array('topic_design' 	=> 'simple'),
+			'leaders_block'			=> ['use_all_groups' 	=> 0],
+			'recent_topics_block'	=> ['topic_design' 	=> 'simple'],
+			'topic_index_block'		=> ['topic_design' 	=> 'simple'],
+			'top_topics_block'		=> ['topic_design' 	=> 'simple'],
 		));
 
 		$block_ary = $this->block_manager->get();
@@ -181,11 +181,11 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 					switch($data['mode'])
 					{
 						case 'custom':
-							$params = array('topic', 'p', $data['item_id']);
+							$params = ['topic', 'p', $data['item_id']];
 						break;
 
 						case 'forum':
-							$params = array('forum', 'f', $data['item_id']);
+							$params = ['forum', 'f', $data['item_id']];
 						break;
 
 						case 'topic_first':
@@ -196,11 +196,11 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 							$post_id = (int)$this->db->sql_fetchfield('topic_first_post_id');
 							$this->db->sql_freeresult($result);
 
-							$params = array('topic', 'p', $post_id);
+							$params = ['topic', 'p', $post_id];
 						break;
 
 						case 'topic_last':
-							$params = array('topic', 't', $data['item_id']);
+							$params = ['topic', 't', $data['item_id']];
 						break;
 					}
 

@@ -1,7 +1,7 @@
 /*  cBB Core StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -244,6 +244,7 @@ button.cbb-dialog-close {
 	font-size: 1em;
 	overflow: auto;
 	margin: 10px;
+	max-height: 60vh;
 	min-height: 50px;
 	padding: .5em;
 	position: relative;
@@ -330,15 +331,26 @@ body > .cbb-dialog.fixed {
 	position: fixed;
 }
 
+.cbb-dialog fieldset {
+	background: none;
+	border: none;
+	margin: 0;
+	padding: 2px;
+}
+
+.cbb-dialog fieldset,
+.cbb-dialog fieldset dl,
+.cbb-dialog div,
+.cbb-dialog select,
+.cbb-dialog label,
+.cbb-dialog li {
+	font-size: 1em;
+}
+
 .cbb-dialog fieldset dl {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-}
-
-.cbb-dialog fieldset,
-.cbb-dialog fieldset dt {
-	font-size: 1em;
 }
 
 .cbb-dialog fieldset dt,
@@ -349,11 +361,16 @@ body > .cbb-dialog.fixed {
 }
 
 .cbb-dialog fieldset dt {
+	border-width: 0;
 	width: 40%;
 }
 
 .cbb-dialog fieldset dd {
 	width: 60%;;
+}
+
+.cbb-dialog dd input {
+	max-width: 95%;
 }
 
 .cbb-modal-dialog .cbb-dialog-menu {
@@ -588,9 +605,17 @@ body > .cbb-dialog.fixed {
 	top: 2px;
 }
 
+.cbb-bbcode-dropdown img {
+	height: auto;
+	margin-right: 5px;
+	max-width: 18px;
+	vertical-align: middle;
+}
+
 /* Menu
 ---------------------------------- */
-.cbb-menu {
+.cbb-menu,
+.rtl .cbb-menu {
 	list-style-type: none;
 	margin: 0;
 	overflow: auto;
@@ -657,6 +682,10 @@ body > .cbb-dialog.fixed {
     font-size: 14px;
     margin-top: -2px;
     vertical-align: middle;
+}
+
+.editor-wrapper-toolbar > .cbb-btn img {
+	vertical-align: middle;
 }
 
 .editor-wrapper-toolbar > .cbb-btn svg {
@@ -831,7 +860,8 @@ body > .cbb-dialog.fixed {
 ------------------------------------- */
 .cbb-btn,
 a.cbb-btn,
-.cbb-label {
+.cbb-label,
+.rtl .cbb-btn {
 	background-color: #f8f8f8;
 	border: 1px solid #e4e4e4;
 	border-radius: 2px;
@@ -847,6 +877,7 @@ a.cbb-btn,
 	padding: 0 10px;
 	text-decoration: none;
 	vertical-align: middle;
+	white-space: nowrap;
 }
 
 .cbb-btn,
@@ -907,20 +938,27 @@ a.cbb-btn.default-btn:not(:disabled):hover {
 }
 
 .cbb-submit-buttons {
-	text-align: right;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: flex-end;
+	margin: 10px 0;
 }
 
-.cbb-submit-buttons .cbb-btn {
+.cbb-submit-buttons > :last-child {
+	margin-left: auto;
+}
+
+.cbb-submit-buttons .cbb-btn,
+.cbb-submit-buttons .cbb-label {
 	line-height: 25px;
     padding: 2px 12px;
 }
 
 .cbb-inputbox,
 .cbb-inputbox-labelled input,
-.cbb-inputbox-labelled textarea,
-.rtl .cbb-inputbox {
+.cbb-inputbox-labelled textarea {
 	background: #fafafa;
-	border: 1px solid #e4e4e4;
 	border-radius: 4px;
 	cursor: text;
 	font-family: Verdana, Helvetica, Arial, sans-serif;
@@ -929,6 +967,22 @@ a.cbb-btn.default-btn:not(:disabled):hover {
 	padding: 5px;
 	vertical-align: middle;
 	max-width: 100%;
+}
+
+.cbb-inputbox,
+.cbb-inputbox-labelled input,
+.cbb-inputbox-labelled textarea,
+.rtl .cbb-inputbox {
+	border: 1px solid #e4e4e4;
+}
+
+.cbb-submit-buttons .cbb-inputbox {
+	padding: 7px;
+}
+
+.cbb-submit-buttons input.cbb-inputbox,
+.rtl .cbb-submit-buttons input.cbb-inputbox {
+	padding: 8px;
 }
 
 .cbb-inputbox:hover,
@@ -1034,6 +1088,12 @@ select.cbb-inputbox {
 	vertical-align: middle;
 }
 
+.cbb-group .cbb-group-wrapper {
+	align-items: center;
+	display: flex;
+	position: relative;
+}
+
 .cbb-group .cbb-inputbox,
 .cbb-group .cbb-btn,
 .cbb-group .cbb-label {
@@ -1042,7 +1102,8 @@ select.cbb-inputbox {
 
 .cbb-group .cbb-inputbox:not(:last-child),
 .cbb-group .cbb-btn:not(:last-child),
-.cbb-group .cbb-label:not(:last-child) {
+.cbb-group .cbb-label:not(:last-child),
+.cbb-group .cbb-group-wrapper:not(:last-child) {
 	margin-right: -1px;
 }
 
@@ -1061,7 +1122,8 @@ select.cbb-inputbox {
 	border-radius: 0;
 }
 
-.cbb-group > :first-child:not(:last-child) {
+.cbb-group > :first-child:not(:last-child),
+.cbb-group > .cbb-group-wrapper:first-child:not(:last-child) input {
 	border-radius: 2px 0 0 2px;
 }
 
@@ -1078,9 +1140,12 @@ select.cbb-inputbox {
 	padding: 4px;
 }
 
-.cbb-groups-selector label {
-	display: block;
-	padding: 5px;
+.cbb-selector-options {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1em;
+	gap: 10px;
+	margin-top: 5px;
 }
 
 .cbb-groups-selector input[type="checkbox"],
@@ -1114,6 +1179,11 @@ input.cbb-checkbox:checked + label:before {
 
 .group-special {
 	font-weight: bold;
+}
+
+.cbb-search-input .cbb-search-reset {
+	position: absolute;
+	right: 8px;
 }
 
 /* Buttons states
@@ -1185,6 +1255,11 @@ a.cbb-state-highlight,
 	margin-right: 0;
 }
 
+.rtl .cbb-bbcode-dropdown img {
+	margin-left: 5px;
+	margin-right: 0;
+}
+
 .rtl a.cbb-dialog-close,
 .rtl a.cbb-dialog-sidebarlauncher,
 .rtl button.cbb-dialog-close {
@@ -1210,7 +1285,8 @@ a.cbb-state-highlight,
 
 .rtl .cbb-group .cbb-inputbox:not(:last-child),
 .rtl .cbb-group .cbb-btn:not(:last-child),
-.rtl .cbb-group .cbb-label:not(:last-child) {
+.rtl .cbb-group .cbb-label:not(:last-child),
+.rtl .cbb-group .cbb-group-wrapper:not(:last-child) {
 	margin-left: -1px;
 	margin-right: 0;
 }
@@ -1376,10 +1452,12 @@ a.cbb-state-highlight,
 	color: #a9a9a9;
 }
 
-.dark-theme .cbb-btn:hover {
+.dark-theme .cbb-btn:not(:disabled):hover,
+.dark-theme a.cbb-btn:not(:disabled):hover {
 	background-color: #272727;
 	background-image: linear-gradient(to bottom, #333, #272727);
 	border-color: #565656;
+	color: #565656;
 }
 
 .dark-theme .cbb-progress-bar {

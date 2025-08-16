@@ -24,13 +24,16 @@
 
 <div id="leader-groups-{{ BLOCK_ID }}" class="cbb-helper-hidden">
 {% for group in group_row %}
-	<h5><a href="#">{{ group.GROUP_NAME }}</a></h5>
+	<h5>{{ group.GROUP_NAME }}</h5>
 	<div>
-		<table class="blg-table">
+		<ul class="blg-linear-list">
 		{% for user in group.user %}
-			<tr><td class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></td></tr>
+			<li class="userrow">
+				<div class="cbb-circular-avatar">{% if user.AVATAR %}{{ user.AVATAR }}{% else %}><div class="cbb-no-avatar"></div>{% endif %}</div>
+				<strong>{{ user.USERNAME_FULL }}</strong>
+			</li>
 		{% endfor %}
-		</table>
+		</ul>
 	</div>
 {% endfor %}
 </div>

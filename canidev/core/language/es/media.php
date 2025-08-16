@@ -19,7 +19,7 @@ if(empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'COPY_TO_LIST'			=> 'Copiar a lista actual',
 	'CREATE_SERVER_COPY'	=> 'Crear copia en este servidor',
 	'DELETE_FROM_LIST'		=> 'Quitar de la lista',
@@ -71,4 +71,4 @@ $lang = array_merge($lang, array(
 	'ICON_TRANSPORTATION'	=> 'Transporte',
 	'ICON_VIDEO_PLAYER'		=> 'Reproductor de video',
 	'ICON_WEB_APPLICATION'	=> 'Aplicación Web',
-));
+]);

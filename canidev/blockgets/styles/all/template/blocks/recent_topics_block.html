@@ -23,7 +23,6 @@
 				<li>
 					{% EVENT topiclist_row_prepend %}
 					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
-					{% EVENT topiclist_row_append %}
 				</li>
 			{% endfor %}
 			</ul>
@@ -43,36 +42,35 @@
     {% if TOPIC_DESIGN == 'simple' %}
 		{% for tab in recent_tab %}
 			<div class="blg-align-center recent-content block-postbody" id="{{ tab.ID }}-{{ BLOCK_ID }}">
-				<table class="blg-table">
 
-			{% if tab.IS_EMPTY %}
-				<tr><td class="blg-message">{{ lang('NO_ITEMS') }}</td></tr>
-			{% else %}
-				<tr>
-					<th class="blg-column-topic-title blg-widget-header">{{ lang('TOPIC_TITLE') }}</th>
-					<th class="blg-column-posted-by blg-widget-header">{{ lang('POSTED_BY') }}</th>
-				{% if not BLOCK_VIEW_MEDIUM %}
-					<th class="blg-column-comments blg-widget-header">{{ lang('COMMENTS') }}</th>
-					<th class="blg-column-topic-views blg-widget-header">{{ lang('TOPIC_VIEWS') }}</th>
+				<div class="blg-table">
+				{% if tab.IS_EMPTY %}
+					<div class="blg-align-center"><span>{{ lang('NO_ITEMS') }}</span></div>
+				{% else %}
+					<div>
+						<div class="blg-column-topic-title blg-widget-header">{{ lang('TOPIC_TITLE') }}</div>
+						<div class="blg-column-posted-by blg-widget-header">{{ lang('POSTED_BY') }}</div>
+					{% if not BLOCK_VIEW_MEDIUM %}
+						<div class="blg-column-comments blg-widget-header">{{ lang('COMMENTS') }}</div>
+						<div class="blg-column-topic-views blg-widget-header">{{ lang('TOPIC_VIEWS') }}</div>
+					{% endif %}
+					</div>
+					
+					{% for topicrow in tab.rows %}
+						<div>
+							<div class="blg-column-topic-title blg-align-left">
+								{% EVENT topiclist_row_prepend %}
+								<a href="{{ topicrow.U_VIEW_TOPIC }}" class="cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+							</div>
+							<div class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</div>
+						{% if not BLOCK_VIEW_MEDIUM %}
+							<div class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_COMMENTS') }}">{{ topicrow.REPLIES }}</a></div>
+							<div class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</div>
+						{% endif %}
+						</div>
+					{% endfor %}
 				{% endif %}
-				</tr>
-
-				{% for topicrow in tab.rows %}
-				<tr>
-					<td class="blg-column-topic-title blg-align-left">
-						{% EVENT topiclist_row_prepend %}
-						<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
-						{% EVENT topiclist_row_append %}
-					</td>
-					<td class="blg-column-posted-by">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
-				{% if not BLOCK_VIEW_MEDIUM %}
-					<td class="blg-column-comments">{{ topicrow.REPLIES }}</td>
-					<td class="blg-column-topic-views">{{ topicrow.VIEWS }}</td>
-				{% endif %}
-				</tr>
-				{% endfor %}
-			{% endif %}
-				</table>
+				</div>
 			</div>
 		{% endfor %}
 	{% else %}

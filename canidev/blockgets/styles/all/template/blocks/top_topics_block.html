@@ -7,7 +7,6 @@
 		<a class="cbb-helper-text cbb-inline half-size" href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
 		{% if not BLOCK_VIEW_SMALL %}<span>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }}</span>{% endif %}
 		<span> &raquo; <em>{{ topicrow.FIRST_POST_TIME }}</em></span>
-		{% EVENT topiclist_row_append %}
 	</div>
 {% else %}
 	<div class="blg-align-center">{{ lang('NO_UNREAD') }}</div>

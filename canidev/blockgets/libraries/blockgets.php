@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -383,7 +383,7 @@ class blockgets
 		}
 
 		// Initialize and load the block
-		$block_class = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->language, $this->request, $this->user, $block_row);
+		$block_class = new $class_name($this->container, $block_row);
 
 		if($block_class->init() !== false)
 		{
@@ -727,18 +727,18 @@ class blockgets
 					{
 						page_header('', false, 0, 'forum', false);
 
-						$block = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->language, $this->request, $this->user, $block_row);
+						$block = new $class_name($this->container, $block_row);
 						
 						if(!$block->init($method))
 						{
 							$this->helper->json->send([
 								'message'	=> $this->language->lang('BLOCK_LOAD_ERROR'),
-								'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
+								'status'	=> \canidev\core\JsonResponse::JSON_STATUS_ERROR
 							]);
 						}
 						
 						$this->helper->json
-							->add_html($block->display())
+							->addHtml($block->display())
 							->send();
 					}
 				}

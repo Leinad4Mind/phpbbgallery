@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -52,14 +52,14 @@ class menu_block extends base
 				$row['url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
 			}
 
-			$menu_row = array(
+			$menu_row = [
 				'IS_CAT'		=> ($row['type'] == constants::LIST_CAT) ? true : false,
 				'S_ICON'		=> $media->build_icon_html($row['image']),
 				'S_TEXT'		=> $this->language->lang($row['title']),
-				'S_TITLE'		=> str_replace(array('"', '&quot;'), "'", $this->language->lang($row['description'])),
+				'S_TITLE'		=> str_replace(['"', '&quot;'], "'", $this->language->lang($row['description'])),
 				'S_WINDOW'		=> $row['window'],
 				'U_LINK'		=> $row['url'],
-			);
+			];
 
 			/**
 			 * @event block.menu_row
@@ -68,7 +68,7 @@ class menu_block extends base
 			 * @var	array	data		Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('menu_row', 'row', 'data');
+			$vars = ['menu_row', 'row', 'data'];
 			extract($this->dispatcher->trigger_event('block.menu_row', compact($vars)));
 			
 			$this->template->assign_block_vars('menu_row', $menu_row);

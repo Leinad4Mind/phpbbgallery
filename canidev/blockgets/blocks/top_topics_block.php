@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -41,30 +41,30 @@ class top_topics_block extends base
 			return true;
 		}
 		
-		$sql_array = array(
-			'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
-			'FROM'		=> array(TOPICS_TABLE => 't'),
-			'LEFT_JOIN' => array(
-				array('FROM' => array(FORUMS_TABLE => 'f'), 	'ON' => 'f.forum_id = t.forum_id')
-			),
+		$sql_array = [
+			'SELECT'	=> 't.*, f.*',
+			'FROM'		=> [TOPICS_TABLE => 't'],
+			'LEFT_JOIN' => [
+				['FROM' => [FORUMS_TABLE => 'f'], 	'ON' => 'f.forum_id = t.forum_id']
+			],
 			'WHERE'		=> 't.topic_status <> ' . ITEM_MOVED . '
 				AND t.topic_visibility = ' . ITEM_APPROVED . '
 				AND ' . $this->db->sql_in_set('t.forum_id', $forum_ids)
-		);
+		];
 
 		if($this->config['load_db_lastread'])
 		{
 			$sql_array['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
 
-			$sql_array['LEFT_JOIN'][] = array(
-				'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
+			$sql_array['LEFT_JOIN'][] = [
+				'FROM'		=> [TOPICS_TRACK_TABLE => 'tt'],
 				'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
-			);
+			];
 
-			$sql_array['LEFT_JOIN'][] = array(
-				'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
+			$sql_array['LEFT_JOIN'][] = [
+				'FROM'		=> [FORUMS_TRACK_TABLE => 'ft'],
 				'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
-			);
+			];
 		}
 		
 		switch($data['mode'])
@@ -96,7 +96,7 @@ class top_topics_block extends base
 			break;
 		}
 
-		$forum_data 	= new \canidev\core\dummy_array();
+		$forum_data 	= new \canidev\core\DummyArray;
 		$sort_dir 		= 'd';
 
 		$sort_days = $sort_key = '';
@@ -115,7 +115,7 @@ class top_topics_block extends base
 		 *									Author, Post time, Replies, Subject, Views
 		 * @var	string	sort_dir			Either "a" for ascending or "d" for descending
 		 */
-		$vars = array(
+		$vars = [
 			'forum_data',
 			'sql_array',
 			'forum_id',
@@ -123,7 +123,7 @@ class top_topics_block extends base
 			'sort_days',
 			'sort_key',
 			'sort_dir',
-		);
+		];
 		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
 
 		/**
@@ -132,7 +132,7 @@ class top_topics_block extends base
 		 * @var	array	data			Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_array', 'data');
+		$vars = ['sql_array', 'data'];
 		extract($this->dispatcher->trigger_event('block.top_topics_query', compact($vars)));
 
 		$sql_array 	= \canidev\core\tools::filter_db_query($sql_array);
@@ -155,7 +155,7 @@ class top_topics_block extends base
 		 * @var	array	data				Block Configuration
 		 * @since 2.0.1
 		 */
-		$vars = array('topic_list', 'rowset', 'data');
+		$vars = ['topic_list', 'rowset', 'data'];
 		extract($this->dispatcher->trigger_event('block.top_topics_modify_data', compact($vars)));
 
 		/**
@@ -167,7 +167,7 @@ class top_topics_block extends base
 		 * @var	int		total_topic_count	Forum's total topic count
 		 * @var	int		forum_id			Forum identifier
 		 */
-		$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
+		$vars = ['topic_list', 'rowset', 'total_topic_count', 'forum_id'];
 		extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 		$icons 					= $this->container->get('cache')->obtain_icons();
@@ -191,7 +191,7 @@ class top_topics_block extends base
 			$folder_img = $folder_alt = $topic_type = '';
 			\topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
 
-			$topic_row = array(
+			$topic_row = [
 				'FORUM_NAME'			=> $row['forum_name'],
 				'TOPIC_ID'				=> $row['topic_id'],
 				'TOPIC_TITLE'			=> $topic_title,
@@ -217,7 +217,7 @@ class top_topics_block extends base
 				'U_LAST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
 				'U_VIEW_FORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id']),
 				'U_VIEW_TOPIC'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;view=unread#unread'),
-			);
+			];
 
 			/**
 			 * For compatibility with other extensions
@@ -226,17 +226,17 @@ class top_topics_block extends base
 			 * @var	array	row					Array with topic data
 			 * @var	array	topic_row			Template array with topic data
 			 */
-			$vars = array('row', 'topic_row');
+			$vars = ['row', 'topic_row'];
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 			$this->template->assign_block_vars('top_topic', $topic_row);
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'SHOW_TOPIC_PARENT'	=> $data['show_parent'],
 			'TOPIC_DESIGN' 		=> $data['topic_design'],
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -247,18 +247,18 @@ class top_topics_block extends base
 	 */
 	public function get_config()
 	{
-		$modes = array(
+		$modes = [
 			'unread'	=> 'TOPT_MODE_UNREAD',
 			'active'	=> 'TOPT_MODE_ACTIVE',
 			'viewed'	=> 'TOPT_MODE_VIEWED',
-		);
+		];
 
-		$this->display_vars = array(
-			'mode'			=> array('lang' => 'TOPT_MODE',				'type' => 'select',			'method' => 'helper',		'params' => array('make_select', $modes, false, '{CONFIG_VALUE}'),	'default' => 'unread'),
-			'topic_limit'	=> array('lang' => 'TOPT_LIMIT',			'validate' => 'int:1:50',	'type' => 'number:1:50',	'default' => 10),
-			'topic_design'	=> array('lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => array('block_design_select', '{CONFIG_VALUE}')),
-			'show_parent'	=> array('lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-		);
+		$this->display_vars = [
+			'mode'			=> ['lang' => 'TOPT_MODE',				'type' => 'select',			'method' => 'helper',		'params' => ['make_select', $modes, false, '{CONFIG_VALUE}'],	'default' => 'unread'],
+			'topic_limit'	=> ['lang' => 'TOPT_LIMIT',				'validate' => 'int:1:50',	'type' => 'number:1:50',	'default' => 10],
+			'topic_design'	=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => ['block_design_select', '{CONFIG_VALUE}']],
+			'show_parent'	=> ['lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'],
+		];
 
 		return true;
 	}

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -30,13 +30,13 @@ class share_block extends base
 			return false;
 		}
 		
-		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+		$this->template->assign_json_var('S_SHARE_PARAMS', [
 			'buttons'			=> $data['share_buttons'],
 			'inlineButtons'		=> ($this->view_is_small() && $data['show_names']) ? false : true,
 			'iconPath'			=> $this->helper->get_ext_path(true) . 'images/social/',
 			'showNames'			=> $data['show_names'],
 			'url'				=> !empty($data['share_url']) ? $data['share_url'] : $this->get_share_url(),
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -49,7 +49,7 @@ class share_block extends base
 	{
 		if($mode == 'submit')
 		{
-			$new['share_buttons'] = $this->request->variable('button', array(0 => ''));
+			$new['share_buttons'] = $this->request->variable('button', [0 => '']);
 		}
 	}
 
@@ -58,11 +58,11 @@ class share_block extends base
 	 */
 	function get_config()
 	{
-		$this->display_vars = array(
-			'show_names'	=> array('lang' => 'SHARE_SHOW_NAMES',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1),
-			'share_url'		=> array('lang' => 'SHARE_URL',			'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''),
-			'share_buttons'	=> array('lang' => 'SHARE_BUTTONS',		'type' => 'custom',				'function' => array($this, 'buttons_select'),	'params' => array('{CONFIG_VALUE}'),	'default' => []),
-		);
+		$this->display_vars = [
+			'show_names'	=> ['lang' => 'SHARE_SHOW_NAMES',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1],
+			'share_url'		=> ['lang' => 'SHARE_URL',			'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''],
+			'share_buttons'	=> ['lang' => 'SHARE_BUTTONS',		'type' => 'custom',				'function' => [$this, 'buttons_select'],	'params' => ['{CONFIG_VALUE}'],	'default' => []],
+		];
 
 		$this->tpl_name = 'acp_share_block';
 
@@ -83,13 +83,13 @@ class share_block extends base
 		* Tags to delete from url and conditionals to delete
 		* param => conditionals (Delete param if conditional1 or conditional2 or .... if present in the url)
 		*/
-		$strip_tags = array(
+		$strip_tags = [
 			'sid'	=> 1,
 			'style'	=> 1,
 			'start'	=> 1,
-			'f'		=> array('t', 'p'),
+			'f'		=> ['t', 'p'],
 			'p'		=> 't',
-		);
+		];
 
 		// Delete the anchor if its present
 		if(($anchor_pos = strpos($share_url, '#')) !== false)
@@ -127,7 +127,7 @@ class share_block extends base
 
 				if(!is_array($conditions))
 				{
-					$conditions = array($conditions);
+					$conditions = [$conditions];
 				}
 
 				foreach($conditions as $condition)
@@ -163,11 +163,11 @@ class share_block extends base
 			$select = [];
 		}
 
-		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+		$this->template->assign_json_var('S_SHARE_PARAMS', [
 			'mode'		=> 'admin',
 			'buttons'	=> $select,
 			'iconPath'	=> $this->helper->get_ext_path(true) . 'images/social/',
-		));
+		]);
 
 		return '<div class="blg-option-selector"></div>';
 	}

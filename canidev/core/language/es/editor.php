@@ -19,7 +19,7 @@ if(empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AUTHOR'					=> 'Autor:',
 	'CODE'						=> 'Código',
 	'DATE'						=> 'Fecha:',
@@ -31,4 +31,4 @@ $lang = array_merge($lang, array(
 	'UNLINK'					=> 'Quitar Vínculo',
 	'URL'						=> 'Url:',
 	'VIEW_SOURCE'				=> 'Ver Código',
-));
+]);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -163,7 +163,7 @@ class listener implements EventSubscriberInterface
 		{
 			if(!$this->parser)
 			{
-				$this->parser = new \canidev\blockgets\libraries\parser();
+				$this->parser = new \canidev\blockgets\libraries\parser;
 			}
 
 			$event['text'] = $this->parser->parse_bbcode($event['text']);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -77,10 +77,10 @@ class quote_of_day_block extends base
 			$this->db->sql_query($sql);
 		}
 	
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_QUOTE_TEXT'		=> $quote['text'],
 			'S_QUOTE_AUTHOR'	=> ($data['show_author']) ? $quote['author'] : '',
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -91,25 +91,25 @@ class quote_of_day_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'all_day'			=> array('lang' => 'QUOTES_ALL_DAY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
-			'rand'				=> array('lang' => 'QUOTES_RAND',			'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 0),
-			'show_author'		=> array('lang' => 'QUOTES_SHOW_AUTHOR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
+		$this->display_vars = [
+			'all_day'			=> ['lang' => 'QUOTES_ALL_DAY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
+			'rand'				=> ['lang' => 'QUOTES_RAND',			'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 0],
+			'show_author'		=> ['lang' => 'QUOTES_SHOW_AUTHOR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
 			'last_time'			=> false,
 			'last_id'			=> false,
-		);
+		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_options(array(
+			->set_options([
 				'title'	=> 'QUOTES_LIST',
 				'type'	=> constants::LIST_TYPE_NONE,
-				'mask'	=> array('title' => 'text',	'subtitle' => 'author')
-			))
-			->set_events(array(
-				'edit.before'	=> array($this, 'list_edit_before'),
-			));
+				'mask'	=> ['title' => 'text',	'subtitle' => 'author']
+			])
+			->set_events([
+				'edit.before'	=> [$this, 'list_edit_before'],
+			]);
 
 		return true;
 	}
@@ -120,10 +120,10 @@ class quote_of_day_block extends base
 	 */
 	public function list_edit_before($event)
 	{
-		$event['display_vars'] = array(
-			'text'			=> array('lang' => 'QUOTE_TEXT',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-			'author'		=> array('lang' => 'QUOTE_AUTHOR',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-		);
+		$event['display_vars'] = [
+			'text'			=> ['lang' => 'QUOTE_TEXT',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
+			'author'		=> ['lang' => 'QUOTE_AUTHOR',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
+		];
 	}
 	
 	/**

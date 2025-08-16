@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -70,7 +70,7 @@ class helper
 		$this->container		= $container;
 		$this->db				= $db;
 		$this->filesystem 		= $filesystem;
-		$this->json				= \canidev\core\json_response::get_instance();
+		$this->json				= \canidev\core\JsonResponse::getInstance();
 		$this->language			= $language;
 		$this->path				= $path_helper;
 		$this->request			= $request;

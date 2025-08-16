@@ -25,7 +25,7 @@ class v204 extends \canidev\blockgets\libraries\migration_base
 		return array(
 			'change_columns' => array(
 				$this->table_prefix . 'blockgets_pages'	=> array(
-					'page_groups'	=> array('VCHAR:255', 'all'),
+					'page_groups'	=> ['VCHAR:255', 'all'],
 				),
 			),
 		);

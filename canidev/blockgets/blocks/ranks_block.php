@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -28,18 +28,18 @@ class ranks_block extends base
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('rank');
 		
-		$sql_ary = array(
+		$sql_ary = [
 			'SELECT'	=> 'r.*',
-			'FROM'		=> array(RANKS_TABLE => 'r'),
+			'FROM'		=> [RANKS_TABLE => 'r'],
 			'WHERE'		=> '',
 			'ORDER_BY'	=> 'r.rank_special DESC, r.rank_title ASC',
-		);
+		];
 
 		if(!$data['show_orphan'])
 		{
-			$sql_ary['LEFT_JOIN'] = array(
-				array('FROM' => array(USERS_TABLE => 'u'),	'ON' => 'u.user_rank = r.rank_id'),
-			);
+			$sql_ary['LEFT_JOIN'] = [
+				['FROM' => [USERS_TABLE => 'u'],	'ON' => 'u.user_rank = r.rank_id'],
+			];
 
 			$sql_ary['WHERE'] = 'u.user_id IS NOT NULL';
 		}
@@ -55,19 +55,19 @@ class ranks_block extends base
 		 * @var	array	data		Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_ary', 'data');
+		$vars = ['sql_ary', 'data'];
 		extract($this->dispatcher->trigger_event('block.ranks_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
-			$rank_row = array(
+			$rank_row = [
 				'S_TITLE'		=> $row['rank_title'],
 				'S_IMG_SRC'		=> ($row['rank_image']) ? $this->helper->get_web_root_path() . $this->config['ranks_path'] . '/' . $row['rank_image'] : '',
 				'S_MIN_POSTS'	=> $row['rank_min'],
 				'IS_SPECIAL'	=> ($row['rank_special']) ? true : false,
-			);
+			];
 
 			/**
 			 * @event block.ranks_row
@@ -76,7 +76,7 @@ class ranks_block extends base
 			 * @var	array	data			Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('rank_row', 'row', 'data');
+			$vars = ['rank_row', 'row', 'data'];
 			extract($this->dispatcher->trigger_event('block.ranks_row', compact($vars)));
 			
 			$this->template->assign_block_vars('rank', $rank_row);
@@ -92,10 +92,10 @@ class ranks_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'show_orphan'	=> array('lang' => 'ORPHAN_RANKS',			'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'only_special'	=> array('lang' => 'ONLY_SPECIAL_RANKS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0),
-		);
+		$this->display_vars = [
+			'show_orphan'	=> ['lang' => 'ORPHAN_RANKS',			'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+			'only_special'	=> ['lang' => 'ONLY_SPECIAL_RANKS',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0],
+		];
 
 		return true;
 	}

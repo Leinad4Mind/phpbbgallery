@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -43,26 +43,26 @@ class paypal_block extends base
 		{
 			foreach($data['currencies'] as $value)
 			{
-				if($this->language->is_set(array('currencies', $value)))
+				if($this->language->is_set(['currencies', $value]))
 				{
 					$selected = ($value == $data['default_currency']) ? ' selected="selected"' : '';
-					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->language->lang(array('currencies', $value)) . '</option>';
+					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->language->lang(['currencies', $value]) . '</option>';
 				}
 			}
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_PAYPAL_MSG'				=> $this->generate_text_display($data['msg']),
 			'S_PAYPAL_IMG'				=> (!empty($data['button_img']) ? $data['button_img'] : $default_img),
 			'S_PAYPAL_AMOUNTS'			=> $amount_options,
 			'S_PAYPAL_CURRENCY_OPTIONS'	=> $s_currency_options,
 			
-			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'business'	=> $data['account'],
 				'cmd'		=> '_donations',
 				'item_name'	=> $data['item']
-			))
-		));
+			])
+		]);
 		
 		unset($data);
 		return true;
@@ -94,7 +94,7 @@ class paypal_block extends base
 				generate_text_for_storage($new['msg'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
 				$this->bbcode('set', $uid, $bitfield);
 				
-				$new['currencies'] 			= $this->request->variable('currency', array(0 => ''));
+				$new['currencies'] 			= $this->request->variable('currency', [0 => '']);
 				$new['default_currency']	= $this->request->variable('default_currency', '');
 			break;
 		}
@@ -105,15 +105,15 @@ class paypal_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'item'				=> array('lang' => 'PAYPAL_ITEM',		'validate' => 'string:5:100',	'type' => 'text:40:100',			'default' => 'paypal'),
-			'account'			=> array('lang' => 'PAYPAL_ACCOUNT',	'validate' => 'string:6:100',	'type' => 'text:30:100',			'default' => 'account@paypal.com'),
-			'msg'				=> array('lang' => 'PAYPAL_MSG',		'type' => 'custom',				'method' => 'helper',				'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5),	'default' => ''),
-			'button_img'		=> array('lang' => 'PAYPAL_IMG',		'validate' => 'string:0:255',	'type' => 'custom',		'method' => 'helper',	'params' => array('easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1),	'default' => ''),
-			'amounts'			=> array('lang' => 'PAYPAL_AMOUNTS',	'validate' => 'string:0:255',	'type' => 'text:50:255',			'default' => '5;10;15;20;25;30;40;50;75;100;200;300;400;500;750;1000'),
-			'currencies'		=> array('lang' => 'PAYPAL_CURRENCIES',	'type' => 'custom',	'function' => array($this, 'build_currency'),	'params' => array('{CONFIG_VALUE}'),	'default' => []),
+		$this->display_vars = [
+			'item'				=> ['lang' => 'PAYPAL_ITEM',		'validate' => 'string:5:100',	'type' => 'text:40:100',			'default' => 'paypal'],
+			'account'			=> ['lang' => 'PAYPAL_ACCOUNT',		'validate' => 'string:6:100',	'type' => 'text:30:100',			'default' => 'account@paypal.com'],
+			'msg'				=> ['lang' => 'PAYPAL_MSG',			'type' => 'custom',				'method' => 'helper',				'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
+			'button_img'		=> ['lang' => 'PAYPAL_IMG',			'validate' => 'string:0:255',	'type' => 'custom',					'method' => 'helper',	'params' => ['easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'amounts'			=> ['lang' => 'PAYPAL_AMOUNTS',		'validate' => 'string:0:255',	'type' => 'text:50:255',			'default' => '5;10;15;20;25;30;40;50;75;100;200;300;400;500;750;1000'],
+			'currencies'		=> ['lang' => 'PAYPAL_CURRENCIES',	'type' => 'custom',	'function' => [$this, 'build_currency'],		'params' => ['{CONFIG_VALUE}'],	'default' => []],
 			'default_currency'	=> false,
-		);
+		];
 
 		return true;
 	}

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -12,8 +12,8 @@ namespace canidev\blockgets\controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
-* Player controller
-*/
+ * Player controller
+ */
 class player_controller
 {
 	protected $db;
@@ -88,13 +88,13 @@ class player_controller
 		
 		page_header($this->language->lang('PLAYER'));
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'body'	=> '@canidev_blockgets/blocks/player_block.html',
-		));
+		]);
 
 		page_footer(true, false, false);
 
-		$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : [];
+		$headers = !empty($this->user->data['is_bot']) ? ['X-PHPBB-IS-BOT' => 'yes'] : [];
 
 		return new Response($this->template->assign_display('body'), 200, $headers);
 	}
@@ -110,12 +110,12 @@ class player_controller
 	{
 		$this->template->assign_var('S_IN_WINDOW', $in_window);
 
-		$this->template->assign_json_var('PLAYER_OPTIONS', array(
+		$this->template->assign_json_var('PLAYER_OPTIONS', [
 			'autoplay'		=> ($data['autoplay']) ? true : false,
 			'playlist'		=> $data['playlist'],
 			'in_window'		=> $in_window,
-			'player_url'	=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', array('id' => $block_id), false) : '',
-		));
+			'player_url'	=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', ['id' => $block_id], false) : '',
+		]);
 		
 		if($in_window)
 		{
@@ -126,7 +126,7 @@ class player_controller
 
 		if(!empty($data['list']))
 		{
-			$this->filter = array('mp3', 'wav');
+			$this->filter = ['mp3', 'wav'];
 			
 			$track_ary = [];
 
@@ -147,19 +147,19 @@ class player_controller
 			{
 				if($this->is_valid($track))
 				{
-					$this->template->assign_block_vars('track', array(
+					$this->template->assign_block_vars('track', [
 						'S_TITLE'	=> $track['title'],
 						'S_URL'		=> $track['url'],
-					));
+					]);
 				}
 			}
 		}
 
-		$this->template->set_js_lang(array(
+		$this->template->set_js_lang([
 			'PLAY_MSG',
 			'STOP_MSG',
 			'VOLUME_MSG',
-		));
+		]);
 	}
 	
 	/**
@@ -230,7 +230,7 @@ class player_controller
 		{
 			if(!is_array($this->filter))
 			{
-				$this->filter = array($this->filter);
+				$this->filter = [$this->filter];
 			}
 
 			if($track['ext'] && !in_array($track['ext'], $this->filter))
@@ -390,11 +390,11 @@ class player_controller
 				$url .= '/;';
 			}
 
-			return array(
+			return [
 				'title'		=> $title,
 				'url'		=> $url,
 				'ext'		=> $ext,
-			);
+			];
 		}
 		
 		return false;

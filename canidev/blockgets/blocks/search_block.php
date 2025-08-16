@@ -21,10 +21,10 @@ class search_block extends base
 	{
 		$this->tpl_name = 'search_block';
 		
-		$this->template->assign_var('S_BLOCK_HIDDEN_FIELDS', build_hidden_fields(array(
+		$this->template->assign_var('S_BLOCK_HIDDEN_FIELDS', build_hidden_fields([
 			'sf'	=> 'all',
 			'sr'	=> 'topics',
-		)));
+		]));
 
 		return true;
 	}

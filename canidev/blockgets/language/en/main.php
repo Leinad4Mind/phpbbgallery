@@ -1,12 +1,12 @@
 <?php
 /**
-* [English [En]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [English [En]]
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -19,7 +19,7 @@ if(empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'PORTAL'			=> 'Portal',
 	'READ_FULL'			=> 'Read full topic',
 	'BLG_OR'			=> 'or',
@@ -99,11 +99,11 @@ $lang = array_merge($lang, array(
 	'ATTACH_DOWNLOAD'		=> 'Downloaded',
 	'ATTACH_VIEW'			=> 'Viewed',
 
-	'ATTACH_COUNT'				=> array(
+	'ATTACH_COUNT'				=> [
 		0	=> 'Never',
 		1	=> '%d time',
 		2	=> '%d times',
-	),
+	],
 
 	'VIEW_TOPIC'				=> 'View Topic',
 	'DOWNLOAD'					=> 'Download',
@@ -133,7 +133,7 @@ $lang = array_merge($lang, array(
 	'CLICK_MSG'			=> 'Proceed to donation',
 	'CODE_MSG'			=> 'Currency',
 	
-	'currencies'	=> array(
+	'currencies'	=> [
 		'AUD'	=> 'Aussie',
 		'CAD' 	=> 'Canadian Dollar',
 		'CZK' 	=> 'Czech Koruna',
@@ -150,9 +150,9 @@ $lang = array_merge($lang, array(
 		'JPY' 	=> 'Japanese Yen',
 		'USD' 	=> 'Dollar',
 		'EUR' 	=> 'Euro',
-		'AUD' 	=> 'Mexican Peso',
+		'MXN' 	=> 'Mexican Peso',
 		'ILS' 	=> 'New Israeli Shekels'
-	),
+	],
 
 	// most_poster_block
 	'MEMBER_POSTS'		=> '%d (%.2f/day)',
@@ -258,12 +258,12 @@ $lang = array_merge($lang, array(
 	'CHAR_ALL'		=> 'All',
 	
 	// youtube block
-	'YT_EMPTY'		=> 'No videos to show',
+	'NO_VIDEOS'		=> 'No videos to show',
 	'YT_VIEWS'		=> '%d views',
-));
+]);
 
 // General messages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACTION_ERROR'		=> 'No action taken',
 	'BLOCK_LOAD_ERROR'	=> 'Failed to load block',
 	'FORMAT_INVALID'	=> 'The format is not valid',
@@ -271,4 +271,4 @@ $lang = array_merge($lang, array(
 	'NO_TRACKLIST'		=> 'No avaliable tracklist.',
 	'NO_PAGE'			=> 'This page no exists.',
 	'URL_INVALID'		=> 'The URL is not valid.',
-));
+]);

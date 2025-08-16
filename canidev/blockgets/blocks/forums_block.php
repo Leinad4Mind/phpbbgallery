@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -28,18 +28,16 @@ class forums_block extends base
 		$forum_rows = $forum_ids = [];
 		$parent_id = $visible_forums = 0;
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'	=> 'f.*',
-			'FROM'		=> array(
-				FORUMS_TABLE	=> 'f'
-			),
+			'FROM'		=> [FORUMS_TABLE => 'f'],
 			'LEFT_JOIN'	=> [],
 			'ORDER_BY'	=> 'f.left_id',
-		);
+		];
 
 		if($this->config['load_db_lastread'] && $this->user->data['is_registered'])
 		{
-			$sql_array['LEFT_JOIN'][] = array('FROM' => array(FORUMS_TRACK_TABLE => 'ft'), 'ON' => 'ft.user_id = ' . $this->user->data['user_id'] . ' AND ft.forum_id = f.forum_id');
+			$sql_array['LEFT_JOIN'][] = ['FROM' => [FORUMS_TRACK_TABLE => 'ft'], 'ON' => 'ft.user_id = ' . $this->user->data['user_id'] . ' AND ft.forum_id = f.forum_id'];
 			$sql_array['SELECT'] .= ', ft.mark_time';
 		}
 		else if($this->config['load_anon_lastread'] || $this->user->data['is_registered'])
@@ -59,7 +57,7 @@ class forums_block extends base
 		 * @var	array	data			Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_array', 'data');
+		$vars = ['sql_array', 'data'];
 		extract($this->dispatcher->trigger_event('block.forums_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -176,12 +174,12 @@ class forums_block extends base
 			// Empty category
 			if($row['parent_id'] == $data['forum_id'] && $row['forum_type'] == FORUM_CAT)
 			{
-				$forum_row = array(
+				$forum_row = [
 					'S_IS_CAT'			=> true,
 					'FORUM_ID'			=> $row['forum_id'],
 					'FORUM_NAME'		=> $row['forum_name'],
 					'U_VIEWFORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id'])
-				);
+				];
 
 				/**
 				 * @event block.forums_row_category
@@ -190,7 +188,7 @@ class forums_block extends base
 				 * @var	array	data			Block Configuration
 				 * @since 2.0.0
 				 */
-				$vars = array('forum_row', 'row', 'data');
+				$vars = ['forum_row', 'row', 'data'];
 				extract($this->dispatcher->trigger_event('block.forums_row_category', compact($vars)));
 				
 				$this->template->assign_block_vars('forum_row', $forum_row);
@@ -231,11 +229,11 @@ class forums_block extends base
 					
 					if($subforum_row['display'] && $subforum_row['name'])
 					{
-						$subforums_list[] = array(
+						$subforums_list[] = [
 							'link'		=> $this->helper->url('viewforum', 'f=' . $subforum_id),
 							'name'		=> $subforum_row['name'],
 							'unread'	=> $subforum_unread,
-						);
+						];
 					}
 					else
 					{
@@ -283,11 +281,11 @@ class forums_block extends base
 			{
 				$last_post_subject	= str_replace('Re: ', '', $row['forum_last_post_subject']);
 				$last_post_time		= $this->user->format_date($row['forum_last_post_time']);
-				$last_post_url		= $this->helper->url('viewtopic', array(
+				$last_post_url		= $this->helper->url('viewtopic', [
 					'f'	=> $row['forum_id_last_post'],
 					'p'	=> $row['forum_last_post_id'],
 					'#'	=> 'p' . $row['forum_last_post_id'],
-				));
+				]);
 			}
 			
 			$l_post_click_count	= ($row['forum_type'] == FORUM_LINK) ? 'CLICKS' : 'POSTS';
@@ -320,7 +318,7 @@ class forums_block extends base
 				}
 			}
 
-			$forum_row = array(
+			$forum_row = [
 				'S_IS_CAT'			=> false,
 				'S_NO_CAT'			=> $catless && !$last_catless,
 				'S_IS_LINK'			=> ($row['forum_type'] == FORUM_LINK) ? true : false,
@@ -343,7 +341,7 @@ class forums_block extends base
 				
 				'U_LAST_POST'		=> $last_post_url,
 				'U_VIEWFORUM'		=> $u_viewforum,
-			);
+			];
 
 			/**
 			 * @event block.forums_row_item
@@ -352,7 +350,7 @@ class forums_block extends base
 			 * @var	array	data			Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('forum_row', 'row', 'data');
+			$vars = ['forum_row', 'row', 'data'];
 			extract($this->dispatcher->trigger_event('block.forums_row_item', compact($vars)));
 			
 			$this->template->assign_block_vars('forum_row', $forum_row);
@@ -368,9 +366,9 @@ class forums_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'forum_id'	=> array('lang' => 'FORUMS_FORUM',	'validate' => 'int',	'type' => 'select',	'function' => array($this, 'make_forum_select'),	'params' => array('{CONFIG_VALUE}'),	'default' => 0),
-		);
+		$this->display_vars = [
+			'forum_id'	=> ['lang' => 'FORUMS_FORUM',	'validate' => 'int',	'type' => 'select',	'function' => [$this, 'make_forum_select'],	'params' => ['{CONFIG_VALUE}'],	'default' => 0],
+		];
 
 		return true;
 	}
@@ -385,15 +383,15 @@ class forums_block extends base
 	{
 		$result = '';
 		
-		$forum_ary = array(
-			array(
+		$forum_ary = [
+			[
 				'padding'		=> '',
-				'selected'		=> (empty($select_id) ? true : false),
+				'selected'		=> empty($select_id),
 				'forum_id'		=> 0,
 				'forum_name'	=> $this->language->lang('ALL_FORUMS'),
 				'forum_type'	=> 0,
-			)
-		);
+			]
+			];
 		
 		$forum_ary =  array_merge($forum_ary, make_forum_select($select_id, false, true, false, true, false, true));
 

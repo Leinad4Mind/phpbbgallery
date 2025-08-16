@@ -108,24 +108,16 @@ class Report
 		}
 
 		// Send report to CaniDev.com
-		try {
-			$key 	= phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
-			$client = new \GuzzleHttp\Client;
+		$rsp = $this->core->apiRequest('phpbb', 'report', [
+			'data'	=> $this->data
+		]);
 
-			$rsp = $client->post($this->report_url, [
-				$key	=> [
-					'report' => $this->data
-				]
-			]);
-
-			if($rsp->getStatusCode() == 200)
-			{
-				$response->send([
-					'message'	=> $this->language->lang('REPORT_SENDED'),
-				], true);
-			}
+		if($rsp !== null)
+		{
+			$response->send([
+				'message'	=> $this->language->lang('REPORT_SENDED'),
+			], true);
 		}
-		catch(\Exception $e) {}
 
 		$response->error($this->language->lang('ERROR_REPORT_SEND'));
 	}

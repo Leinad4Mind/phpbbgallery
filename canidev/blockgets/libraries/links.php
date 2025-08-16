@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,7 +9,7 @@
 
 namespace canidev\blockgets\libraries;
 
-use \canidev\core\json_response;
+use \canidev\core\JsonResponse;
 
 class links
 {
@@ -282,7 +282,7 @@ class links
 		{
 			$this->helper->json->send([
 				'message'	=> $this->language->lang('AJAX_ERROR_TEXT'),
-				'status'	=> json_response::JSON_STATUS_ERROR
+				'status'	=> JsonResponse::JSON_STATUS_ERROR
 			]);
 		}
 		
@@ -296,7 +296,7 @@ class links
 				{
 					$this->helper->json->send([
 						'message'	=> $this->language->lang('AJAX_ERROR_TEXT'),
-						'status'	=> json_response::JSON_STATUS_ERROR
+						'status'	=> JsonResponse::JSON_STATUS_ERROR
 					]);
 				}
 				
@@ -349,7 +349,7 @@ class links
 
 				if($this->core->modal_dialog(true))
 				{
-					$new_config = utf8_normalize_nfc($this->request->variable('config', ['' => ''], true));
+					$new_config = $this->request->variable('config', ['' => ''], true);
 					
 					// Always set the 'window' variable if url is present
 					if(isset($new_config['url']) && !isset($new_config['window']))
@@ -399,7 +399,7 @@ class links
 					{
 						$this->helper->json->send([
 							'message'	=> implode('<br />', $error),
-							'status'	=> json_response::JSON_STATUS_ERROR,
+							'status'	=> JsonResponse::JSON_STATUS_ERROR,
 						]);
 					}
 					
@@ -418,7 +418,7 @@ class links
 					]);
 					
 					$this->helper->json
-						->add_html($this->template->assign_display('list'))
+						->addHtml($this->template->assign_display('list'))
 						->send();
 				}
 				else

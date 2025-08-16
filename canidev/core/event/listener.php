@@ -278,8 +278,18 @@ class listener implements EventSubscriberInterface
 		}
 		
 		// Initialize items and parse core events
+
+		/** @var \phpbb\extension\manager */
+		$ext_manager = $this->container->get('ext.manager');
+
 		foreach($this->items as $namespace => $items)
 		{
+			if($namespace != 'all' && !$ext_manager->is_enabled('canidev/' . $namespace))
+			{
+				unset($this->items[$namespace]);
+				continue;
+			}
+
 			foreach($items as $id => $item)
 			{
 				$fullname		= constants::PLUGINS_PATH . $namespace . '/' . $item;

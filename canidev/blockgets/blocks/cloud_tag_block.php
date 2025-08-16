@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -58,14 +58,14 @@ class cloud_tag_block extends base
 				$result = $this->db->sql_query_limit($sql, $data['max_words']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$tag_rows[] = array(
+					$tag_rows[] = [
 						'S_TAG_NAME'	=> $row['search_keywords'],
-						'U_TAG_URL'		=> $this->helper->url('search', array(
+						'U_TAG_URL'		=> $this->helper->url('search', [
 							'i' 		=> 'search',
 							'mode'		=> 'search',
 							'keywords'	=> urlencode(htmlspecialchars_decode($row['search_keywords']))
-						)),
-					);
+						]),
+					];
 				}
 				$this->db->sql_freeresult($result);
 			break;
@@ -78,13 +78,13 @@ class cloud_tag_block extends base
 				$result = $this->db->sql_query_limit($sql, $data['max_words']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$tag_rows[] = array(
+					$tag_rows[] = [
 						'S_TAG_NAME'	=> $row['username'],
-						'U_TAG_URL'		=> $this->helper->url('memberlist', array(
+						'U_TAG_URL'		=> $this->helper->url('memberlist', [
 							'mode'	=> 'viewprofile',
 							'u'		=> $row['user_id']
-						))
-					);
+						])
+					];
 				}
 				$this->db->sql_freeresult($result);
 			break;
@@ -96,7 +96,7 @@ class cloud_tag_block extends base
 				 * @var	array	data		Block Configuration
 				 * @since 2.0.2
 				 */
-				$vars = array('tag_rows', 'data');
+				$vars = ['tag_rows', 'data'];
 				extract($this->dispatcher->trigger_event('block.cloud_tag_custom_mode', compact($vars)));
 			break;
 		}
@@ -123,13 +123,13 @@ class cloud_tag_block extends base
 	 */
 	public function get_config()
 	{
-		$modes = array('search' => 'MODE_SEARCH',	'users'	=> 'MODE_USERS');
+		$modes = ['search' => 'MODE_SEARCH',	'users'	=> 'MODE_USERS'];
 
-		$this->display_vars = array(
-			'animation'		=> array('lang' => 'CLOUD_ANIMATION',	'validate' => 'bool',		'type' => 'radio:yes_no', 	'default' => 1),
-			'max_words'		=> array('lang' => 'CLOUD_WORDS',		'validate' => 'int:1:50',	'type' => 'number:1:50', 	'default' => 25),
-			'list_mode'		=> array('lang' => 'CLOUD_MODE',		'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => array('make_select', $modes, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'search'),
-		);
+		$this->display_vars = [
+			'animation'		=> ['lang' => 'CLOUD_ANIMATION',	'validate' => 'bool',		'type' => 'radio:yes_no', 	'default' => 1],
+			'max_words'		=> ['lang' => 'CLOUD_WORDS',		'validate' => 'int:1:50',	'type' => 'number:1:50', 	'default' => 25],
+			'list_mode'		=> ['lang' => 'CLOUD_MODE',			'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $modes, '{KEY}', '{CONFIG_VALUE}'],  'default' => 'search'],
+		];
 
 		return true;
 	}

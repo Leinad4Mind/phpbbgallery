@@ -64,6 +64,10 @@ class asset extends \phpbb\template\asset
 					return '%1$sext/' . str_replace('_', '/', $match[1]) . '/%2$s/';
 				}, $path);
 		}
+		else if(strpos($path, './') === 0)
+		{
+			$uri = '%1$s' . substr($path, 2);
+		}
 		else
 		{
 			$uri = '%1$s%2$s/' . $path;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,19 +9,43 @@
 
 namespace canidev\blockgets\blocks;
 
+use \Symfony\Component\DependencyInjection\ContainerInterface;
 use canidev\blockgets\libraries\constants;
+use canidev\core\TextParser;
 
 abstract class base
 {
+	/** @var \phpbb\auth\auth */
 	protected $auth;
+
+	/** @var \phpbb\config\config */
 	protected $config;
+
+	/** @var ContainerInterface */
 	protected $container;
+
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
+
+	/** @var \phpbb\event\dispatcher_interface */
 	protected $dispatcher;
+
+	/** @var \canidev\blockgets\libraries\helper */
 	protected $helper;
+
+	/** @var \phpbb\language\language */
 	protected $language;
+
+	/** @var \phpbb\request\request */
 	protected $request;
+
+	/** @var \canidev\core\template */
 	protected $template;
+
+	/** @var \canidev\core\TextParser */
+	protected $text_parser;
+	
+	/** @var \phpbb\user */
 	protected $user;
 
 	protected $phpbb_root_path;
@@ -44,39 +68,26 @@ abstract class base
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config 					$config				Config Object
 	 * @param ContainerInterface 					$container			Service container interface
-	 * @param \phpbb\db\driver\driver_interface		$db					DB Object
-	 * @param \phpbb\event\dispatcher_interface		$phpbb_dispatcher	Event dispatcher
-	 * @param \canidev\blockgets\libraries\helper	$helper       		Blockgets helper object
-	 * @param \canidev\blockgets\libraries\lang		$language			Blockgets language object
-	 * @param \phpbb\request\request 				$request			Request object
-	 * @param \phpbb\user							$user				User object
 	 * @param array									$block_data			Data of block
 	 *
 	 * @access public
 	 */
 	public function __construct(
-		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
-		\canidev\blockgets\libraries\helper $helper,
-		\phpbb\language\language $language,
-		\phpbb\request\request $request,
-		\phpbb\user $user,
+		ContainerInterface $container,
 		$block_data = false)
 	{
 		$this->auth			= $container->get('auth');
-		$this->config		= $config;
+		$this->config		= $container->get('config');
 		$this->container	= $container;
-		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
-		$this->helper		= $helper;
-		$this->language		= $language;
-		$this->request		= $request;
+		$this->db			= $container->get('dbal.conn');
+		$this->dispatcher	= $container->get('dispatcher');
+		$this->helper		= $container->get('canidev.blockgets.helper');
+		$this->language		= $container->get('language');
+		$this->request		= $container->get('request');
 		$this->template		= $container->get('canidev.core.template');
-		$this->user			= $user;
+		$this->text_parser 	= $container->get('canidev.core.text_parser');
+		$this->user			= $container->get('user');
 		
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
 		$this->php_ext			= $container->getParameter('core.php_ext');
@@ -96,7 +107,7 @@ abstract class base
 				{
 					$this->data['size_view'] = ($block_data['sibling_count']) ? self::VIEW_SMALL : self::VIEW_MEDIUM;
 				}
-				else if(in_array($block_position, array('left', 'right')))
+				else if(in_array($block_position, ['left', 'right']))
 				{
 					$this->data['size_view'] = self::VIEW_SMALL;
 				}
@@ -151,22 +162,22 @@ abstract class base
 		 * @var string	tpl_name		Template file to be loaded
 		 * @since 2.0.0
 		 */
-		$vars = array('block_data', 'tpl_name');
+		$vars = ['block_data', 'tpl_name'];
 		extract($this->dispatcher->trigger_event('block.display', compact($vars)));
 		
 		$this->data = $block_data;
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'BLOCK_ID'			=> $this->data['block_id'],
 			'BLOCK_STYLE'		=> $this->get_block_style(),
 			'BLOCK_TITLE'		=> $this->language->lang($this->data['block_title']),
 			'BLOCK_VIEW_MEDIUM'	=> $this->view_is_medium(),
 			'BLOCK_VIEW_SMALL'	=> $this->view_is_small(),
-		));
+		]);
 		
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'blg_tpl' => '@canidev_blockgets/blocks/' . $tpl_name . '.html'
-		));
+		]);
 
 		return $this->template->assign_display('blg_tpl');
 	}
@@ -186,10 +197,10 @@ abstract class base
 		switch($mode)
 		{
 			case 'get':
-				return array(
+				return [
 					'uid'		=> (isset($this->data['bbcode_uid']) ? $this->data['bbcode_uid'] : ''),
 					'bitfield'	=> (isset($this->data['bbcode_bitfield']) ? $this->data['bbcode_bitfield'] : ''),
-				);
+				];
 			break;
 
 			case 'set':
@@ -302,28 +313,23 @@ abstract class base
 	{
 		$bbcode = $this->bbcode('get');
 
-		$text = censor_text($text);
+		// If current user is a guest, Show "Guest" and not "Anonymous" as username
+		if($this->user->data['user_id'] == ANONYMOUS)
+		{
+			$text = str_replace('{S_USERNAME}', '{L_GUEST}', $text);
+		}
 
-		$parse_flags = ($bbcode['bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES | constants::FLAG_HTML;
-		$text = generate_text_for_display($text, $bbcode['uid'], $bbcode['bitfield'], $parse_flags);
+		$text = $this->text_parser->generateForDisplay(
+			$text,
+			TextParser::FLAG_CENSOR_TEXT | TextParser::FLAG_PARSE_LANGUAGE,
+			$bbcode['uid'],
+			$bbcode['bitfield'],
+			constants::FLAG_HTML
+		);
 	
 		// Parse language and template vars
 		if(strpos($text, '{') !== false)
-		{
-			// If current user is a guest, Show "Guest" and not "Anonymous" as username
-			if($this->user->data['user_id'] == ANONYMOUS)
-			{
-				$text = str_replace('{S_USERNAME}', '{L_GUEST}', $text);
-			}
-			
-			$text = preg_replace_callback(
-				'#\{L_([A-Z0-9_\-]+)\}#',
-				function($matches) {
-					return $this->language->is_set($matches[1]) ? $this->language->lang($matches[1]) : '';
-				}, 
-				$text
-			);
-					
+		{	
 			$text = preg_replace_callback(
 				'#\{([A-Z0-9_-]+)\}#', 
 				function($matches) {
@@ -343,12 +349,12 @@ abstract class base
 	 */
 	public function get_block_style()
 	{
-		$styles = array(
+		$styles = [
 			constants::BLOCK_STYLE_DEFAULT			=> 'default',
 			constants::BLOCK_STYLE_ALTERNATIVE		=> 'alternative',
 			constants::BLOCK_STYLE_CONTENT_FULL	=> 'content_full',
 			constants::BLOCK_STYLE_CONTENT_SIMPLE	=> 'content_simple'
-		);
+		];
 		
 		$style = $this->data['block_style'];
 		

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -102,7 +102,7 @@ class editor
 		}
 
 		$this->helper->json->add([
-			'status'	=> \canidev\core\json_response::JSON_STATUS_SUCCESS,
+			'status'	=> \canidev\core\JsonResponse::JSON_STATUS_SUCCESS,
 			'action'	=> $this->params['action'],
 		]);
 
@@ -313,7 +313,7 @@ class editor
 					$this->db->sql_freeresult($result);
 
 					$formatted_event_text = generate_text_for_display($content, $uid, $bitfield, $options | constants::FLAG_HTML);
-					$formatted_event_text = \canidev\core\tools::fix_smilies_path($formatted_event_text);
+					$formatted_event_text = \canidev\core\TextParser::fixSmiliesPath($formatted_event_text);
 					
 					$this->helper->json->add([
 						'isUnique'		=> ($event_count == 1),
@@ -341,7 +341,7 @@ class editor
 		if(sizeof($error))
 		{
 			$this->helper->json->send([
-				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR,
+				'status'	=> \canidev\core\JsonResponse::JSON_STATUS_ERROR,
 				'message'	=> implode('<br />', $error)
 			]);
 		}

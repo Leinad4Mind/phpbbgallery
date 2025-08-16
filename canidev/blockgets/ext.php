@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,10 +9,12 @@
 
 namespace canidev\blockgets;
 
+use GuzzleHttp\Client;
+
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.1.1';
+	const REQUIRED_CORE		= '1.1.2';
 	
 	/**
 	 * {@inheritDoc}
@@ -44,36 +46,26 @@ class ext extends \phpbb\extension\base
 	 */
 	public function enable_step($old_state)
 	{
-		// Get real Rewrite status
-		$test_url = generate_board_url() . '/blockgets.test';
+		/** @var \phpbb\config\db */
+		$config = $this->container->get('config');
 		
-		if(function_exists('curl_init'))
+		$writable = (int)$config['enable_mod_rewrite'];
+
+		try
 		{
-			$ch = curl_init($test_url);
-
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-			$file = curl_exec($ch);
-
-			curl_close($ch);
-		}
-		else
-		{
-			$context = stream_context_create([
-				'http' => [
-					'ignore_errors'  => true,
-				]
+			$client = new \GuzzleHttp\Client();
+		
+			$response = $client->get(generate_board_url() . '/blockgets.test', [
+				'exceptions' 	=> false,
+				'timeout' 		=> 10,
 			]);
 
-			$file = @file_get_contents($test_url, false, $context);
+			// if return phpBB page, rewrite is available
+			$writable = preg_match('#\<body.*?id="phpbb"#', $response->getBody()->getContents()) ? 1 : $writable;
 		}
+		catch(\Exception $e) {}
 
-		// if return phpBB page, rewrite is available
-		$this->container->get('config')->set('blg_rewrite', (preg_match('#\<body.*?id="phpbb"#', $file) ? 1 : 0));
+		$config->set('blg_rewrite', $writable);
 
 		// Create upload folder
 		\canidev\core\tools::mkdir($this->container->getParameter('core.root_path') . 'files/blockgets/', true);

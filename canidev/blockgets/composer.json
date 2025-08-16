@@ -1,9 +1,9 @@
 {
 	"name": "canidev/blockgets",
 	"type": "phpbb-extension",
-	"description": "",
+	"description": "Complete extension for phpBB forums that allows to add multitude of functionalities. With this extension you can easily add a portal to your forum, add content to forum pages, manage a calendar with events and create new independent pages that you can configure through the widgets (blocks).",
 	"homepage": "https://www.canidev.com",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"keywords": ["phpbb", "extension", "canidev", "blockgets", "portal"],
 	"license": "CreativeCommons Attribution-NonCommercial v4.0",
 	"authors": [

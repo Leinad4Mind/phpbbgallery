@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -28,17 +28,17 @@ class attachments_block extends base
 		
 		$extensions = [];
 			
-		$sql_ary = array(
+		$sql_ary = [
 			'SELECT'	=> 'a.*, t.forum_id',
-			'FROM'		=> array(ATTACHMENTS_TABLE => 'a'),
+			'FROM'		=> [ATTACHMENTS_TABLE => 'a'],
 			
-			'LEFT_JOIN'	=> array(
-				array('FROM' => array(TOPICS_TABLE => 't'),	'ON' => 't.topic_id = a.topic_id')
-			),
+			'LEFT_JOIN'	=> [
+				['FROM' => [TOPICS_TABLE => 't'],	'ON' => 't.topic_id = a.topic_id']
+			],
 			
 			'WHERE'	=> 'a.is_orphan = 0
 				AND a.filesize > 0'
-		);
+		];
 
 		if($data['filename'])
 		{
@@ -79,7 +79,7 @@ class attachments_block extends base
 		 * @var	array	data		Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_ary', 'data');
+		$vars = ['sql_ary', 'data'];
 		extract($this->dispatcher->trigger_event('block.attachments_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -95,7 +95,7 @@ class attachments_block extends base
 
 				$l_downloaded_viewed	= 'DOWNLOAD';
 				$display_cat			= $extensions[$row['extension']]['display_cat'];
-				$download_link			= $this->helper->url('download/file', array('id' => $row['attach_id']));
+				$download_link			= $this->helper->url('download/file', ['id' => $row['attach_id']]);
 
 				switch($display_cat)
 				{
@@ -122,16 +122,16 @@ class attachments_block extends base
 					$attach_img_preview = $this->preview_path . 'no_extension.png';
 				}
 
-				$attach_row = array(
+				$attach_row = [
 					'S_DATE'			=> $this->helper->format_short_date($row['filetime']),
 					'S_FILESIZE'		=> get_formatted_filesize($row['filesize']),
 					'S_DOWNLOAD_LABEL'	=> $this->language->lang("ATTACH_$l_downloaded_viewed"),
 					'S_DOWNLOAD_COUNT'	=> $this->language->lang('ATTACH_COUNT', $row['download_count']),
 					'S_IMG'				=> '<img src="' . $this->helper->get_ext_path(true) . $attach_img_preview . '" width="60" alt="" />',
-					'REAL_FILENAME'		=> truncate_string(str_replace(array('_', '-', '.' . $row['extension']), ' ', $row['real_filename']), 20, 255, '...'),
+					'REAL_FILENAME'		=> truncate_string(str_replace(['_', '-', '.' . $row['extension']], ' ', $row['real_filename']), 20, 255, '...'),
 					'U_FILE'			=> $download_link,
-					'U_FILELINK'		=> $this->helper->url('viewtopic', array('f' => $row['forum_id'], 'p' => $row['post_msg_id'], '#' => 'p' . $row['post_msg_id'])),
-				);
+					'U_FILELINK'		=> $this->helper->url('viewtopic', ['f' => $row['forum_id'], 'p' => $row['post_msg_id'], '#' => 'p' . $row['post_msg_id']]),
+				];
 
 				/**
 				 * @event block.attachments_row
@@ -141,7 +141,7 @@ class attachments_block extends base
 				 * @var	array	data			Block Configuration
 				 * @since 2.0.0
 				 */
-				$vars = array('attach_row', 'row', 'display_cat', 'data');
+				$vars = ['attach_row', 'row', 'display_cat', 'data'];
 				extract($this->dispatcher->trigger_event('block.attachments_row', compact($vars)));
 				
 				$this->template->assign_block_vars('attach', $attach_row);
@@ -160,7 +160,7 @@ class attachments_block extends base
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['forums'] = $this->request->variable('forums', array(0));
+			$new['forums'] = $this->request->variable('forums', [0]);
 		}
 
 		return true;
@@ -171,12 +171,12 @@ class attachments_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'filename'		=> array('lang' => 'ATTACH_SPECIFIC',	'validate' => 'string',	'type' => 'text:50:255'),
-			'forums'		=> array('lang' => 'ATTACH_FORUM',		'type' => 'custom',		'method' => 'helper',		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => []),
-			'num'			=> array('lang' => 'ATTACH_NUM',		'validate' => 'int',	'type' => 'number:0:999',	'default' => 1),
-			'extension'		=> array('lang' => 'ATTACH_EXTENSION',	'validate' => 'string',	'type' => 'text:25:255'),
-		);
+		$this->display_vars = [
+			'filename'		=> ['lang' => 'ATTACH_SPECIFIC',	'validate' => 'string',	'type' => 'text:50:255'],
+			'forums'		=> ['lang' => 'ATTACH_FORUM',		'type' => 'custom',		'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'num'			=> ['lang' => 'ATTACH_NUM',			'validate' => 'int',	'type' => 'number:0:999',	'default' => 1],
+			'extension'		=> ['lang' => 'ATTACH_EXTENSION',	'validate' => 'string',	'type' => 'text:25:255'],
+		];
 
 		return true;
 	}

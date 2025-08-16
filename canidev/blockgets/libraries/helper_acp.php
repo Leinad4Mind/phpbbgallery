@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -108,7 +108,7 @@ class helper_acp
 			'HP_SIZE'			=> ($gallery_btn) ? 40 : 15,
 			'HP_VALUE'			=> $value,
 			
-			'IS_COLOR'			=> ($color_btn && preg_match('/^#[A-Z0-9]{3,6}/', $value)) ? true : false,
+			'IS_COLOR'			=> ($color_btn && preg_match('/^#[A-Z0-9]{3,6}/', $value)),
 			'COLOR_BTN'			=> $color_btn,
 			'GALLERY_BTN'		=> $gallery_btn,
 		]);

@@ -43,11 +43,10 @@
 			<div class="blg-column-topic-title blg-align-left">
 				{% EVENT topiclist_row_prepend %}
 				<a href="{{ topicrow.U_VIEW_TOPIC }}" class="cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
-				{% EVENT topiclist_row_append %}
 			</div>
 		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
 			<div class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</div>
-			<div class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_LAST_COMMENTS }}" title="{{ lang('VIEW_COMMENTS') }}">{{ topicrow.REPLIES }}</a></div>
+			<div class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_COMMENTS') }}">{{ topicrow.REPLIES }}</a></div>
 			<div class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</div>
 		{% endif %}
 		</div>

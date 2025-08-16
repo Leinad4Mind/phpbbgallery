@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -25,16 +25,16 @@ class latest_bots_block extends base
 			return false;
 		}
 			
-		$sql_ary = array(
+		$sql_ary = [
 			'SELECT'	=> 'u.username, u.user_colour, u.user_lastvisit',
-			'FROM'		=> array(USERS_TABLE => 'u'),
+			'FROM'		=> [USERS_TABLE => 'u'],
 
 			'WHERE'	=> 'u.user_type = ' . USER_IGNORE . '
 				AND u.user_id <> ' . ANONYMOUS . '
 				AND u.user_lastvisit > 0',
 				
 			'ORDER_BY'	=> 'u.user_lastvisit DESC',
-		);
+		];
 
 		/**
 		 * @event block.latest_bots_query
@@ -42,17 +42,17 @@ class latest_bots_block extends base
 		 * @var	array	data		Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_ary', 'data');
+		$vars = ['sql_ary', 'data'];
 		extract($this->dispatcher->trigger_event('block.latest_bots_query', compact($vars)));
 		
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query_limit($sql, $data['max_bots']);
 		while($row = $this->db->sql_fetchrow($result))
 		{
-			$bot_row = array(
+			$bot_row = [
 				'BOT_NAME'		=> get_username_string('no_profile', 0, $row['username'], $row['user_colour']),
 				'BOT_VISIT'		=> $this->user->format_date($row['user_lastvisit']),
-			);
+			];
 
 			/**
 			 * @event block.latest_bots_row
@@ -61,7 +61,7 @@ class latest_bots_block extends base
 			 * @var	array	data		Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('bot_row', 'row', 'data');
+			$vars = ['bot_row', 'row', 'data'];
 			extract($this->dispatcher->trigger_event('block.latest_bots_row', compact($vars)));
 			
 			$this->template->assign_block_vars('bots', $bot_row);
@@ -77,9 +77,9 @@ class latest_bots_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'max_bots'		=> array('lang' => 'BOTS_NUMBER',	'validate' => 'int:1:50',	'type' => 'number:1:50',	'default' => 5),
-		);
+		$this->display_vars = [
+			'max_bots'		=> ['lang' => 'BOTS_NUMBER',	'validate' => 'int:1:50',	'type' => 'number:1:50',	'default' => 5],
+		];
 
 		return true;
 	}

@@ -55,11 +55,16 @@
 }
 
 .blg-table > div {
-	display: table-row;
+	display: flex;
 }
 
 .blg-table > div > div {
-	display: table-cell;
+	flex: 1;
+}
+
+.blg-table > div > div.blg-column-topic-title {
+	width: 35%;
+	flex: auto;
 }
 
 /* Icons and Images
@@ -439,7 +444,8 @@ ul.blg-linear-list {
 .blg-block .block-title li.header dt {
 	display: block;
 	float: none;
-	margin-right: 0;
+	line-height: 1.5em;
+	margin: 0 2px 2px 2px;
 	padding-left: 0;
 	padding-right: 0;
 	text-align: left;
@@ -552,7 +558,13 @@ ul.blg-linear-list {
 
 .userrow {
 	line-height: 17px;
+	padding: 2px 0;
 	text-align: left;
+}
+
+.userrow .cbb-circular-avatar {
+	height: 24px;
+	width: 24px;
 }
 
 .blg-readmore-link {
@@ -1754,6 +1766,18 @@ label.blg-share-button {
 	color: #7b95f2;
 }
 
+.medium-dark-theme .blg-block,
+.medium-dark-theme .blg-block a {
+	color: #000;
+}
+
+.medium-dark-theme .blg-block.style-alternative li.header dt,
+.medium-dark-theme .blg-block.style-alternative li.header a,
+.medium-dark-theme .blg-block.style-content_full li.header dt,
+.medium-dark-theme .blg-block.style-content_full li.header a {
+	color: #ddd;
+}
+
 /* Responsive Layout
 ------------------------------- */
 .hastouch .blg-block a.b-side,
@@ -1863,11 +1887,6 @@ label.blg-share-button {
 }
 
 @media only screen and (max-width: 700px) {
-	.blg-area {
-		margin-left: -5px;
-		margin-right: -5px;
-	}
-
 	.hasleft:not(.hasright),
 	.hasright:not(.hasleft) {
 		grid-template-columns: 1fr !important;
@@ -1945,6 +1964,11 @@ label.blg-share-button {
 	.hasleft.hasright #blg-column-right {
 		grid-column: 1 / span 2;
 		grid-row: 3;
+	}
+
+	.blg-block {
+		margin-left: -5px;
+		margin-right: -5px;
 	}
 	
 	.calendar.autofit tbody a {

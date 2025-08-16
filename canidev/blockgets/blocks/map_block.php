@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -10,6 +10,7 @@
 namespace canidev\blockgets\blocks;
 
 use canidev\blockgets\libraries\constants;
+use canidev\core\TextParser;
 
 class map_block extends base
 {
@@ -28,10 +29,10 @@ class map_block extends base
 			return false;
 		}
 		
-		$options = array(
+		$options = [
 			'zoom'		=> (int)$data['zoom'],
 			'markers'	=> [],
-		);
+		];
 		
 		if($data['center'])
 		{
@@ -39,10 +40,10 @@ class map_block extends base
 			
 			if($lat && $lng)
 			{
-				$options += array(
+				$options += [
 					'latitude'	=> $lat,
 					'longitude'	=> $lng,
-				);
+				];
 			}
 		}
 		
@@ -59,16 +60,16 @@ class map_block extends base
 
 				if(!empty($marker['text']))
 				{
-					$content = generate_text_for_display($marker['text'], $marker['bbcode_uid'], $marker['bbcode_bitfield'], OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES | constants::FLAG_HTML);
+					$content = $this->text_parser->generateForDisplay($marker['text'], TextParser::FLAG_CENSOR_TEXT, $marker['bbcode_uid'], $marker['bbcode_bitfield'], constants::FLAG_HTML);
 				}
 
-				$options['markers'][] = array(
+				$options['markers'][] = [
 					'image'		=> $media->get_full_path($marker['image'], true),
 					'title'		=> $marker['title'],
 					'content'	=> $content,
 					'lat'		=> $lat,
 					'lng'		=> $lng,
-				);
+				];
 			}
 		}
 		
@@ -102,27 +103,27 @@ class map_block extends base
 	{
 		$this->template->append_asset('js', $this->google_api_url . base64_decode(constants::GOOGLE_KEY), false, 'admin');
 
-		$this->display_vars = array(
-			'center'		=> array('lang' => 'MAP_CENTER',		'type' => 'custom',		'function' => array($this, 'build_latlng_template'),	'params' => array('{CONFIG_VALUE}')),
-			'zoom'			=> array('lang' => 'MAP_ZOOM',			'validate' => 'int',	'type' => 'number',	'default' => 5),
-		);
+		$this->display_vars = [
+			'center'		=> ['lang' => 'MAP_CENTER',		'type' => 'custom',		'function' => [$this, 'build_latlng_template'],	'params' => ['{CONFIG_VALUE}']],
+			'zoom'			=> ['lang' => 'MAP_ZOOM',		'validate' => 'int',	'type' => 'number',	'default' => 5],
+		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_options(array(
+			->set_options([
 				'btn_title'	=> 'LOCATION_ADD',
 				'title'		=> 'MAP_LOCATIONS',
 				'type'		=> constants::LIST_TYPE_NONE,
-				'mask'		=> array(
+				'mask'		=> [
 					'title'		=> 'title',
 					'subtitle'	=> 'position',
-				)
-			))
-			->set_events(array(
-				'edit.before'	=> array($this, 'list_edit_before'),
-				'edit.after'	=> array($this, 'list_edit_after'),
-			));
+				]
+			])
+			->set_events([
+				'edit.before'	=> [$this, 'list_edit_before'],
+				'edit.after'	=> [$this, 'list_edit_after'],
+			]);
 
 		return true;
 	}
@@ -142,16 +143,16 @@ class map_block extends base
 			list($lat, $lng) = array_map('floatval', explode(',', $value));
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'LATLNG_HELPER'		=> true,
 			'HP_ID'				=> gen_rand_string(4),
 			'HP_LAT'			=> $lat,
 			'HP_LNG'			=> $lng,
-		));
+		]);
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'helper'	=> '@canidev_blockgets/blocks/map_block.html'
-		));
+		]);
 		
 		return $this->template->assign_display('helper');
 	}
@@ -198,12 +199,12 @@ class map_block extends base
 	{
 		$media = $this->helper->get_media();
 
-		$event['display_vars'] = array(
-			'title'		=> array('lang' => 'LOCATION_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-			'position'	=> array('lang' => 'LOCATION_POSITION',		'type' => 'custom',				'function' => array($this, 'build_latlng_template'),	'params' => array('{CONFIG_VALUE}')),
-			'image'		=> array('lang' => 'LOCATION_IMAGE',		'type' => 'custom',				'function' => array($media, 'build_selector'),			'params' => array('{KEY}', 'image', '{CONFIG_VALUE}', 1),	'default' => ''),
-			'text'		=> array('lang' => 'LOCATION_TEXT',			'type' => 'custom',				'method' => 'helper',									'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 15, 50), 'default' => ''),
-		);
+		$event['display_vars'] = [
+			'title'		=> ['lang' => 'LOCATION_TITLE',			'validate' => 'string:1:255',	'type' => 'text:40:255'],
+			'position'	=> ['lang' => 'LOCATION_POSITION',		'type' => 'custom',				'function' => [$this, 'build_latlng_template'],		'params' => ['{CONFIG_VALUE}']],
+			'image'		=> ['lang' => 'LOCATION_IMAGE',			'type' => 'custom',				'function' => [$media, 'build_selector'],			'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'text'		=> ['lang' => 'LOCATION_TEXT',			'type' => 'custom',				'method' => 'helper',								'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 15, 50], 'default' => ''],
+		];
 		
 		$event['dialog_title'] = ($event['action'] == 'edit') ? 'LOCATION_EDIT' : 'LOCATION_ADD';
 

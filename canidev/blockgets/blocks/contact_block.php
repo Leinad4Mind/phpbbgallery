@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,7 +9,7 @@
 
 namespace canidev\blockgets\blocks;
 
-use \canidev\core\json_response;
+use \canidev\core\JsonResponse;
 
 class contact_block extends base
 {
@@ -96,7 +96,7 @@ class contact_block extends base
 			 * @var	array	data		Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('error', 'data');
+			$vars = ['error', 'data'];
 			extract($this->dispatcher->trigger_event('block.contact_submit_check', compact($vars)));
 
 			if(!sizeof($error))
@@ -124,10 +124,10 @@ class contact_block extends base
 				$messenger->subject(htmlspecialchars_decode($subject));
 				$messenger->anti_abuse_headers($this->config, $this->user);
 
-				$messenger->assign_vars(array(
+				$messenger->assign_vars([
 					'FROM_USERNAME'	=> htmlspecialchars_decode($username),
-					'MESSAGE'		=> htmlspecialchars_decode($message))
-				);
+					'MESSAGE'		=> htmlspecialchars_decode($message)
+				]);
 
 				/**
 				 * @event block.contact_submit
@@ -135,7 +135,7 @@ class contact_block extends base
 				 * @var	array	data			Block Configuration
 				 * @since 2.0.0
 				 */
-				$vars = array('messenger', 'data');
+				$vars = ['messenger', 'data'];
 				extract($this->dispatcher->trigger_event('block.contact_submit', compact($vars)));
 
 				if($messenger->send(NOTIFY_EMAIL))
@@ -148,40 +148,40 @@ class contact_block extends base
 				}
 			}
 			
-			$this->helper->json->add(array(
+			$this->helper->json->add([
 				'message'		=> implode('<br />', (sizeof($error) ? $error : $notice)),
-				'status'		=> (sizeof($error) ? json_response::JSON_STATUS_ERROR : json_response::JSON_STATUS_SUCCESS),
-			));
+				'status'		=> (sizeof($error) ? JsonResponse::JSON_STATUS_ERROR : JsonResponse::JSON_STATUS_SUCCESS),
+			]);
 			
 			return true;
 		}
 		
-		$fields = array(
-			'username'	=> array('type' => 'text',		'title' => 'USERNAME',	'value' => $username),
-			'email'		=> array('type' => 'text',		'title' => 'EMAIL',		'value' => $user_email),
-			'subject'	=> array('type' => 'text',		'title' => 'SUBJECT',	'value' => $subject),
-			'message'	=> array('type' => 'textarea',	'title' => 'MESSAGE',	'value' => $message),
-		);
+		$fields = [
+			'username'	=> ['type' => 'text',		'title' => 'USERNAME',	'value' => $username],
+			'email'		=> ['type' => 'text',		'title' => 'EMAIL',		'value' => $user_email],
+			'subject'	=> ['type' => 'text',		'title' => 'SUBJECT',	'value' => $subject],
+			'message'	=> ['type' => 'textarea',	'title' => 'MESSAGE',	'value' => $message],
+		];
 
 		add_form_key('contact_block');
 		
-		$s_hidden_fields = array(
+		$s_hidden_fields = [
 			'jblgm'	=> $this->data['block_id']
-		);
+		];
 		
 		if($data['hide_user_fields'])
 		{
-			$s_hidden_fields = array_merge($s_hidden_fields, array(
+			$s_hidden_fields = array_merge($s_hidden_fields, [
 				'username'	=> $username,
 				'email'		=> $user_email,
-			));
+			]);
 			
 			unset($fields['username'], $fields['email']);
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
-		));
+		]);
 
 		/**
 		 * @event block.contact_fields
@@ -189,17 +189,17 @@ class contact_block extends base
 		 * @var	array	data		Block Configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('fields', 'data');
+		$vars = ['fields', 'data'];
 		extract($this->dispatcher->trigger_event('block.contact_fields', compact($vars)));
 		
 		foreach($fields as $key => $vars)
 		{
-			$this->template->assign_block_vars('fieldrow', array(
+			$this->template->assign_block_vars('fieldrow', [
 				'KEY'	=> $key,
 				'TITLE'	=> $this->language->lang($vars['title']),
 				'TYPE'	=> $vars['type'],
 				'VALUE'	=> $vars['value'],
-			));
+			]);
 		}
 
 		unset($data);
@@ -211,11 +211,11 @@ class contact_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'email'				=> array('lang' => 'CONTACT_EMAIL',			'validate' => 'string',	'type' => 'text:30:255',	'default' => $this->config['board_contact']),
-			'hide_user_fields'	=> array('lang' => 'CONTACT_HIDE_FIELDS',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-			'check_email'		=> array('lang' => 'CONTACT_CHECK_EMAIL',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-		);
+		$this->display_vars = [
+			'email'				=> ['lang' => 'CONTACT_EMAIL',			'validate' => 'string',	'type' => 'text:30:255',	'default' => $this->config['board_contact']],
+			'hide_user_fields'	=> ['lang' => 'CONTACT_HIDE_FIELDS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+			'check_email'		=> ['lang' => 'CONTACT_CHECK_EMAIL',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+		];
 
 		return true;
 	}

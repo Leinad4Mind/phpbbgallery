@@ -9,7 +9,8 @@
 			{% if option.INCLUDE %}
 				{% include option.INCLUDE %}
 			{% else %}
-			<dl>
+			<dl{{ option.ID is defined ? ' id="option-' ~ option.ID ~ '"' : ''}}
+				{{ option.DISPLAY is defined and not option.DISPLAY ? ' class="cbb-helper-hidden"' : ''}}>
 				<dt><label for="{{ option.KEY }}">{{ option.TITLE ~ lang('COLON') }}</label>{% if option.S_EXPLAIN %}<br /><span>{{ option.S_EXPLAIN }}</span>{% endif %}</dt>
 				<dd>{{ option.CONTENT }}</dd>
 			</dl>
@@ -21,8 +22,8 @@
 
 {% if not display_submit_save is defined or display_submit_save == true %}
 	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
 		{{ S_FORM_TOKEN }}
 		{{ S_HIDDEN_FIELDS }}
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
 	</div>
 {% endif %}

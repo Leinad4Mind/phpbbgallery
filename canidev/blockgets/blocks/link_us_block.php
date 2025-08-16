@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -38,11 +38,11 @@ class link_us_block extends base
 		$link_title = $this->config['sitename'] . (($this->config['sitename'] && $this->config['site_desc']) ? ' :: ' : '') . $this->config['site_desc'];
 		$link_text = '<a href="' . generate_board_url() . '" onclick="window.open(this.href); return false;" title="' . $link_title . '">' . $link_text . '</a>';
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'LINK_US_TXT'		=> $this->language->lang('LINK_US_TXT', $this->config['sitename']),
 			'U_LINK_US'			=> htmlentities($link_text, ENT_QUOTES, 'UTF-8'),
 			'U_LINK_US_BANNER'  => $link_text,
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -55,9 +55,9 @@ class link_us_block extends base
 	{
 		$media = $this->helper->get_media();
 
-		$this->display_vars = array(
-			'banner_url'	=> array('lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',	'function' => array($media, 'build_selector'),	'params' => array('{KEY}', 'image', '{CONFIG_VALUE}', 1),	'default' => ''),
-		);
+		$this->display_vars = [
+			'banner_url'	=> ['lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',	'function' => [$media, 'build_selector'],	'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
+		];
 
 		return true;
 	}

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -31,7 +31,7 @@ class leaders_block extends base
 		// Get Group's Information
 		if(empty($data['groups']))
 		{
-			$group_sql_where = $this->db->sql_in_set('group_name', array('ADMINISTRATORS', 'GLOBAL_MODERATORS'));
+			$group_sql_where = $this->db->sql_in_set('group_name', ['ADMINISTRATORS', 'GLOBAL_MODERATORS']);
 		}
 		else
 		{
@@ -57,24 +57,24 @@ class leaders_block extends base
 		}
 
 		// Get users
-		$sql_ary = array(
+		$sql_ary = [
 			'SELECT'	=> 'u.username, u.user_id, u.group_id, u.user_colour,
 				u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height',
-			'FROM'		=> array(USERS_TABLE => 'u'),
+			'FROM'		=> [USERS_TABLE => 'u'],
 			'WHERE'		=> '',
 			'ORDER_BY'	=> 'u.username_clean ASC',
-		);
+		];
 
 		if($data['only_online'])
 		{
 			$time = (time() - (intval($this->config['load_online_time']) * 60));
 
-			$sql_ary['LEFT_JOIN'] = array(
-				array(
-					'FROM'	=> array(SESSIONS_TABLE => 's'),
+			$sql_ary['LEFT_JOIN'] = [
+				[
+					'FROM'	=> [SESSIONS_TABLE => 's'],
 					'ON'	=> 's.session_user_id = u.user_id AND s.session_time >= ' . ($time - ((int) ($time % 30)))
-				)
-			);
+				]
+			];
 
 			$sql_ary['WHERE'] = 's.session_id IS NOT NULL AND ';
 		}
@@ -111,7 +111,7 @@ class leaders_block extends base
 		 * @var array	data			Block configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_ary', 'groups_ary', 'data');
+		$vars = ['sql_ary', 'groups_ary', 'data'];
 		extract($this->dispatcher->trigger_event('block.leaders_query', compact($vars)));
 
 		$users_ary = [];
@@ -149,14 +149,14 @@ class leaders_block extends base
 			else
 			{
 				$group_name	= ($group['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $group['group_name']) : $group['group_name'];
-				$u_group	= $this->helper->url('memberlist', array('mode' => 'group', 'g' => $group_id));
+				$u_group	= $this->helper->url('memberlist', ['mode' => 'group', 'g' => $group_id]);
 			}
 
-			$group_row = array(
+			$group_row = [
 				'GROUP_NAME'		=> $group_name,
 				'GROUP_COLOR'		=> $group['group_colour'],
 				'U_GROUP'			=> $u_group,
-			);
+			];
 
 			/**
 			 * @event block.leaders_group
@@ -164,7 +164,7 @@ class leaders_block extends base
 			 * @var array	group			The group data
 			 * @since 2.0.1
 			 */
-			$vars = array('group_row', 'group');
+			$vars = ['group_row', 'group'];
 			extract($this->dispatcher->trigger_event('block.leaders_group', compact($vars)));
 
 			$this->template->assign_block_vars('group_row', $group_row);
@@ -173,17 +173,10 @@ class leaders_block extends base
 			{
 				$row = &$users_ary[$user_id];
 
-				$user_avatar = phpbb_get_user_avatar(array(
-					'avatar'		=> $row['user_avatar'],
-					'avatar_type'	=> $row['user_avatar_type'],
-					'avatar_width'	=> $row['user_avatar_width'], 
-					'avatar_height'	=> $row['user_avatar_height'],
-				));
-
-				$user_row = array(
-					'AVATAR'			=> $user_avatar,
+				$user_row = [
+					'AVATAR'			=> phpbb_get_user_avatar($row),
 					'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				);
+				];
 
 				/**
 				 * @event block.leaders_user
@@ -191,7 +184,7 @@ class leaders_block extends base
 				 * @var array	row				The user data
 				 * @since 2.0.1
 				 */
-				$vars = array('user_row', 'row');
+				$vars = ['user_row', 'row'];
 				extract($this->dispatcher->trigger_event('block.leaders_group', compact($vars)));
 
 				$this->template->assign_block_vars('group_row.user', $user_row);
@@ -210,7 +203,7 @@ class leaders_block extends base
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['groups'] = $this->request->variable('groups', array(0));
+			$new['groups'] = $this->request->variable('groups', [0]);
 		}
 
 		return true;
@@ -221,17 +214,17 @@ class leaders_block extends base
 	 */
 	public function get_config()
 	{
-		$options = array(
+		$options = [
 			'simple'	=> 'LEADERS_MODE_SIMPLE',
 			'accordion'	=> 'LEADERS_MODE_ACCORDION',
-		);
+		];
 		
-		$this->display_vars = array(
-			'mode'				=> array('lang' => 'LEADERS_MODE',			'type' => 'select', 		'method' => 'helper',	'params' => array('make_select', $options, false, '{CONFIG_VALUE}'),					'default' => 'simple'),
-			'use_all_groups'	=> array('lang' => 'LEADERS_ALL_GROUPS',	'type' => 'radio:yes_no',	'validate' => 'bool',	'default' => 0),
-			'groups'			=> array('lang' => 'LEADERS_GROUPS',		'type' => 'custom',			'method' => 'helper',	'params' => array('groups_select', 'groups', '{CONFIG_VALUE}', false, false),	'default' => []),
-			'only_online'		=> array('lang' => 'LEADERS_ONLY_ONLINE',	'validate' => 'bool',		'type' => 'radio:yes_no'),
-		);
+		$this->display_vars = [
+			'mode'				=> ['lang' => 'LEADERS_MODE',			'type' => 'select', 		'method' => 'helper',	'params' => ['make_select', $options, false, '{CONFIG_VALUE}'],				'default' => 'simple'],
+			'use_all_groups'	=> ['lang' => 'LEADERS_ALL_GROUPS',		'type' => 'radio:yes_no',	'validate' => 'bool',	'default' => 0],
+			'groups'			=> ['lang' => 'LEADERS_GROUPS',			'type' => 'custom',			'method' => 'helper',	'params' => ['groups_select', 'groups', '{CONFIG_VALUE}', false, false],	'default' => []],
+			'only_online'		=> ['lang' => 'LEADERS_ONLY_ONLINE',	'validate' => 'bool',		'type' => 'radio:yes_no'],
+		];
 
 		return true;
 	}

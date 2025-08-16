@@ -39,7 +39,7 @@
 		{% if custom_tag.BBCODE_CUSTOM_TEMPLATE %}
 			{{ custom_tag.BBCODE_CUSTOM_TEMPLATE }}
 		{% else %}
-			<button type="button" data-code="{{ custom_tag.BBCODE_CODE }}" data-custom="1" title="{{ custom_tag.BBCODE_HELPLINE }}">{% if custom_tag.BBCODE_ICON %}{{ custom_tag.BBCODE_ICON }}{% else %}{{ custom_tag.BBCODE_TAG }}{% endif %}</button>
+			<button type="button" data-code="{{ custom_tag.BBCODE_CODE }}" data-tag="{{ custom_tag.BBCODE_TAG }}" data-custom="1" title="{{ custom_tag.BBCODE_HELPLINE }}">{{ custom_tag.BBCODE_ICON ? custom_tag.BBCODE_ICON : custom_tag.BBCODE_TAG }}</button>
 		{% endif %}
 	{% endfor %}
 

@@ -22,9 +22,9 @@ class v202 extends \canidev\blockgets\libraries\migration_base
 
 	public function _update_data()
 	{
-		return array(
-			array('custom', array(array($this, 'update_block_config'))),
-		);
+		return [
+			['custom', [[$this, 'update_block_config']]],
+		];
 	}
 
 	public function update_block_config()

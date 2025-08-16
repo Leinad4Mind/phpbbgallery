@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -54,33 +54,33 @@ class whos_online_block extends base
 					$l_online_time		= $this->language->lang('VIEW_ONLINE_TIMES', (int) $this->config['load_online_time']);
 				}
 
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'TOTAL_USERS_ONLINE'		=> $l_online_users,
 					'LOGGED_IN_USER_LIST'		=> $online_userlist,
 					'RECORD_USERS'				=> $l_online_record,
 					
 					'L_ONLINE_EXPLAIN'			=> $l_online_time,
-				));
+				]);
 			}
 			
 			// Grab group details for legend display
-			$sql_ary = array(
+			$sql_ary = [
 				'SELECT'	=> 'g.group_id, g.group_name, g.group_colour, g.group_type',
-				'FROM'		=> array(GROUPS_TABLE => 'g'),
+				'FROM'		=> [GROUPS_TABLE => 'g'],
 				'WHERE'		=> 'g.group_legend = 1',
 				'ORDER_BY'	=> 'g.group_name ASC',
-			);
+			];
 
 			if(!$this->auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 			{
-				$sql_ary['LEFT_JOIN'] = array(
-					array(
-						'FROM'	=> array(USER_GROUP_TABLE => 'ug'),
+				$sql_ary['LEFT_JOIN'] = [
+					[
+						'FROM'	=> [USER_GROUP_TABLE => 'ug'],
 						'ON'	=> 'g.group_id = ug.group_id
 							AND ug.user_id = ' . $this->user->data['user_id'] . '
 							AND ug.user_pending = 0'
-					)
-				);
+					]
+				];
 				
 				$sql_ary['WHERE'] .= ' AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $this->user->data['user_id'] . ')';
 			}
@@ -91,7 +91,7 @@ class whos_online_block extends base
 			 * @var	array	data		Block Configuration
 			 * @since 2.0.0
 			 */
-			$vars = array('sql_ary', 'data');
+			$vars = ['sql_ary', 'data'];
 			extract($this->dispatcher->trigger_event('block.whos_online_groups_query', compact($vars)));
 			
 			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -112,7 +112,7 @@ class whos_online_block extends base
 				 * @var string	u_group			The group url
 				 * @since 2.0.0
 				 */
-				$vars = array('row', 'colour_text', 'group_name', 'u_group');
+				$vars = ['row', 'colour_text', 'group_name', 'u_group'];
 				extract($this->dispatcher->trigger_event('block.whos_online_groups_row', compact($vars)));
 				
 				if($row['group_name'] == 'BOTS' || ($this->user->data['user_id'] != ANONYMOUS && !$this->auth->acl_get('u_viewprofile')))
@@ -126,17 +126,17 @@ class whos_online_block extends base
 			}
 			$this->db->sql_freeresult($result);
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_TOTAL_USERS_LASTVISIT'	=> $today_users['lastvisit_users'],
 				'S_LASTVISIT_USER_LIST'		=> $today_users['userlist'],
 				'S_LEGEND'					=> implode(', ', $legend),
-			));
+			]);
 		}
 		else
 		{
 			$online_users = obtain_users_online(0, 'forum');
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_TOTAL_ONLINE'	=> $online_users['total_online'],
 				'S_VISIBLE_ONLINE'	=> $online_users['visible_online'],
 				'S_HIDDEN_ONLINE'	=> $online_users['hidden_online'],
@@ -146,13 +146,13 @@ class whos_online_block extends base
 				'S_VISIBLE_LASTDAY'	=> $today_users['visible_today'],
 				'S_HIDDEN_LASTDAY'	=> $today_users['hidden_today'],
 				'S_GUEST_LASTDAY'	=> $today_users['guests_today'],
-			));
+			]);
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_ADVANCED_MODE'	=> $data['advanced'],
 			'S_WIO_USERS'		=> $data['usernames'],
-		));
+		]);
 
 		unset($data);
 		return true;
@@ -163,10 +163,10 @@ class whos_online_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'advanced'		=> array('lang' => 'WHOS_ADVANCED',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
-			'usernames'		=> array('lang' => 'WHOS_USERNAMES',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
-		);
+		$this->display_vars = [
+			'advanced'		=> ['lang' => 'WHOS_ADVANCED',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
+			'usernames'		=> ['lang' => 'WHOS_USERNAMES',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
+		];
 
 		return true;
 	}

@@ -1,12 +1,12 @@
 <?php
 /**
-* [English [En]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [English [En]]
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 // @acp_blockgets
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'BLG_CONFIG_TITLE'				=> 'General configuration',
 	'BLG_CONFIG_EXPLAIN'			=> 'Thank you for choosing cBB Blockgets as a complement for your forum!<br />From here you can set the main settings of the extension.<br />Lateral links allow you to access all the options to set comfortably the mod.',
 	'BLG_IMAGES_TITLE'				=> 'Available images',
@@ -65,7 +65,6 @@ $lang = array_merge($lang, array(
 	'AVATAR_RESIZE_WIDTH'			=> 'Size of avatars',
 	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size allowed (in pixels) for avatars.<br />
 		<em>Set 0 to disable avatar resizing</em>.',
-	'CALENDAR'						=> 'Calendar',
 	'CALENDAR_ENABLED'				=> 'Calendar enabled',
 	'CALENDAR_ENABLED_EXPLAIN'		=> 'Defines whether the calendar will be available in both the<em>/calendar path</em> and blocks.',
 	'CALENDAR_BIRTHDAYS'			=> 'Show Birthdays',
@@ -87,10 +86,10 @@ $lang = array_merge($lang, array(
 		<em>Set 0 to disable image resizing</em>.',
 
 	'INDEX_FILE_ERROR'				=> 'Failed to complete setup',
-));
+]);
 
 // @acp_blockgets_lists
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_ITEM'				=> 'Add item',
 	'CAT'					=> 'Category',
 
@@ -106,10 +105,10 @@ $lang = array_merge($lang, array(
 	'LINK_URL'					=> 'Link URL',
 	'LINK_URL_EXPLAIN'			=> 'The direction that opens when you click on the link. Limit 255 characters.',
 	'LINK_WINDOW'				=> 'Open in New Window',
-));
+]);
 
 // @acp_blockgets_pages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_BLOCK'					=> 'Add block',
 	'ADD_BLOCK_TIP'				=> 'Drag a block to the position you want to add it.',
 	'ADD_BLOCK_TITLE'			=> 'Add block :: %1$s',
@@ -218,10 +217,10 @@ $lang = array_merge($lang, array(
 	'SUBMIT_CHANGES'			=> 'Apply changes',
 	'TARGET_PAGE_EXPLAIN'		=> 'Select the target page for the selected blocks.<br /><em>The blocks will be placed in it respective column</em>',
 	'TOP_COLUMN'				=> 'Top column',
-));
+]);
 
 // @general messages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'BLOCK_ADDED'					=> 'Block added successfully',
 	'BLOCK_COPIED'					=> 'Block(s) copied successfully',
 	'BLOCK_NEED_REQUIREMENTS'		=> 'The selected block will need some minimum requirements to be used.<br />See the documentation for more information.',
@@ -243,22 +242,22 @@ $lang = array_merge($lang, array(
 
 	'PAGE_ADDED'				=> 'Page added successfully',
 
-	'PAGE_REMOVED'		=> array(
+	'PAGE_REMOVED'		=> [
 		1	=> 'The page has been successfully removed',
 		2	=> '%d pages deleted successfully',
-	),
+	],
 
 	'PAGE_UPDATED'				=> 'Page configuration updated successfully',
 	'BLG_CONFIG_UPDATED'		=> 'Configuration updated successfully',
 
 	'CONFIRM_PAGE_DELETE'		=> 'Are you sure you wish to delete this page and all blocks in this?',
-));
+]);
 
 /**
 * Blocks names and explains from block_alias
 */
-$lang = array_merge($lang, array(
-	'blocks'	=> array(
+$lang = array_merge($lang, [
+	'blocks'	=> [
 		'announcements_title'		=> 'Announcements',
 		'announcements_explain'		=> 'Displays a set number of posts (announcements) of established forums.',
 		'attachments_title'			=> 'Attachments',
@@ -355,5 +354,5 @@ $lang = array_merge($lang, array(
 		'whos_online_explain'		=> 'Displays the list of connected users (as is shown by default in the Index of the forum) and users who logged in last 24 hours.',
 		'youtube_title'				=> 'YouTube',
 		'youtube_explain'			=> 'Show videos or channels from youtube.',
-	)
-));
+	]
+]);

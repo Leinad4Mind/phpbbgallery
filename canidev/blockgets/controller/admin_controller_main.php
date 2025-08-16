@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -107,18 +107,18 @@ class admin_controller_main extends admin_controller_base
 					'title'	=> 'BLG_OPTIONAL',
 					'vars'	=> [
 						'legend1'		=> 'IMAGE_RESIZE',
-						'blg_image_max_width'	=> ['lang' => 'IMAGE_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'number'],
+						'blg_image_max_width'	=> ['lang' => 'IMAGE_RESIZE_WIDTH',		'validate' => 'int',	'type' => 'number'],
 						'blg_avatar_max_width'	=> ['lang' => 'AVATAR_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'number'],
 						'blg_resize_on_post'	=> ['lang' => 'IMAGE_RESIZE_POST',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					
 						'legend2'		=> 'CALENDAR',
 						'blg_calendar_enabled'		=> ['lang' => 'CALENDAR_ENABLED',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-						'blg_calendar_birthdays'	=> ['lang' => 'CALENDAR_BIRTHDAYS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
-						'blg_calendar_first_day'	=> ['lang' => 'CALENDAR_FIRST_DAY',	'validate' => 'int',	'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$calendar_options, '{KEY}', '{CONFIG_VALUE}'],	'default' => 0],
+						'blg_calendar_birthdays'	=> ['lang' => 'CALENDAR_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+						'blg_calendar_first_day'	=> ['lang' => 'CALENDAR_FIRST_DAY',		'validate' => 'int',	'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$calendar_options, '{KEY}', '{CONFIG_VALUE}'],	'default' => 0],
 						'blg_calendar_link'			=> ['lang' => 'CALENDAR_LINK',			'type' => 'custom',		'function' => [$this->helper_acp, 'pagelinks_select']],
 					
 						'legend3'		=> 'BLG_REDIRECTIONS',
-						'blg_redirect_login'	=> ['lang' => 'BLG_REDIRECT_LOGIN',	'type' => 'custom',	'function' => [$this, 'redirect_select']],
+						'blg_redirect_login'	=> ['lang' => 'BLG_REDIRECT_LOGIN',		'type' => 'custom',	'function' => [$this, 'redirect_select']],
 						'blg_redirect_logout'	=> ['lang' => 'BLG_REDIRECT_LOGOUT',	'type' => 'custom',	'function' => [$this, 'redirect_select']],
 						'blg_redirect_404'		=> ['lang' => 'BLG_REDIRECT_404',		'type' => 'custom',	'function' => [$this, 'redirect_select']],
 					]
@@ -137,7 +137,7 @@ class admin_controller_main extends admin_controller_base
 		
 		$this->page_title = $display_vars['title'] . '_TITLE';
 
-		$cfg_array 			= (isset($_REQUEST['config'])) ? $this->request->variable('config', ['' => '']) : $this->config;
+		$cfg_array 			= isset($_REQUEST['config']) ? $this->request->variable('config', ['' => '']) : $this->config;
 		$error 				= [];
 		$purge_cache		= false;
 
@@ -221,7 +221,7 @@ class admin_controller_main extends admin_controller_base
 		{
 			$this->helper->json->send([
 				'message'	=> implode('<br />', $error),
-				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
+				'status'	=> \canidev\core\JsonResponse::JSON_STATUS_ERROR
 			]);
 		}
 		

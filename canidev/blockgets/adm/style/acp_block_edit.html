@@ -22,14 +22,9 @@
 {% if HAS_CONFIG %}
 	<div id="block-config-tab">
 	{% if config|length %}
-		<fieldset>
-		{% for config in loops.config %}
-			<dl>
-				<dt><label for="{{ config.KEY }}">{{ config.TITLE ~ lang('COLON') }}</label>{% if config.S_EXPLAIN %}<br /><span>{{ config.S_EXPLAIN }}</span>{% endif %}</dt>
-				<dd>{{ config.CONTENT }}</dd>
-			</dl>
-		{% endfor %}
-		</fieldset>
+		{% set display_submit_save = false %}
+		{% set options = config %}
+		{% include '@canidev_core/acp_options.html' %}
 	{% endif %}
 
 	{% if CONFIG_TEMPLATE %}

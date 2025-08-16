@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -43,7 +43,7 @@ class empty_block extends base
 			case 'submit':
 				$this->language->add_lang('posting');
 
-				$new['block_content'] = \canidev\core\tools::html_truncate($new['block_content'], 8000, '', true);
+				$new['block_content'] = \canidev\core\TextParser::truncate($new['block_content'], 8000, '', true);
 
 				generate_text_for_storage($new['block_content'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
 
@@ -59,9 +59,9 @@ class empty_block extends base
 	{
 		$this->custom_config = true;
 
-		$this->display_vars = array(
-			'block_content'		=> array('lang' => 'BLOCK_CONTENT',	'type' => 'custom',	'method' => 'helper', 'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50)),
-		);
+		$this->display_vars = [
+			'block_content'		=> ['lang' => 'BLOCK_CONTENT',	'type' => 'custom',	'method' => 'helper', 'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50]],
+		];
 
 		return true;
 	}

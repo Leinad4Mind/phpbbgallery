@@ -1,13 +1,15 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\core\TextParser;
 
 class announcements_block extends base
 {
@@ -58,24 +60,24 @@ class announcements_block extends base
 			return true;
 		}
 			
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'	=> 't.*,
 				p.post_subject, p.post_attachment, p.post_reported, p.post_username, p.post_text, p.bbcode_uid, p.bbcode_bitfield, p.enable_smilies,
 				u.username, u.user_colour',
 
-			'FROM'		=> array(TOPICS_TABLE => 't'),
+			'FROM'		=> [TOPICS_TABLE => 't'],
 			
-			'LEFT_JOIN'	=> array(
-				array('FROM' => array(POSTS_TABLE => 'p'),	'ON' => 't.topic_first_post_id = p.post_id'),
-				array('FROM' => array(USERS_TABLE => 'u'),	'ON' => 'u.user_id = t.topic_poster'),
-			),
+			'LEFT_JOIN'	=> [
+				['FROM' => [POSTS_TABLE => 'p'],	'ON' => 't.topic_first_post_id = p.post_id'],
+				['FROM' => [USERS_TABLE => 'u'],	'ON' => 'u.user_id = t.topic_poster'],
+			],
 			
 			'WHERE'	=> 't.topic_status <> ' . ITEM_MOVED . '
 				AND t.topic_visibility = ' . ITEM_APPROVED . $sql_where,
 			'ORDER_BY'	=> 't.topic_time DESC',
-		);
+		];
 
-		$forum_data 	= new \canidev\core\dummy_array();
+		$forum_data 	= new \canidev\core\DummyArray;
 		$topics_count 	= 0;
 		$sort_dir 		= 'd';
 		$sort_days = $sort_key = '';
@@ -93,7 +95,7 @@ class announcements_block extends base
 		 *									Author, Post time, Replies, Subject, Views
 		 * @var	string	sort_dir			Either "a" for ascending or "d" for descending
 		 */
-		$vars = array(
+		$vars = [
 			'forum_data',
 			'sql_array',
 			'forum_id',
@@ -101,7 +103,7 @@ class announcements_block extends base
 			'sort_days',
 			'sort_key',
 			'sort_dir',
-		);
+		];
 		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
 
 		/**
@@ -110,7 +112,7 @@ class announcements_block extends base
 		 * @var array	data		The Block configuration
 		 * @since 2.0.0
 		 */
-		$vars = array('sql_array', 'data');
+		$vars = ['sql_array', 'data'];
 		extract($this->dispatcher->trigger_event('block.announcements_query', compact($vars)));
 
 		$sql_array 	= \canidev\core\tools::filter_db_query($sql_array);
@@ -157,7 +159,7 @@ class announcements_block extends base
 		 * @var	array	data				Block Configuration
 		 * @since 2.0.1
 		 */
-		$vars = array('topic_list', 'rowset', 'data');
+		$vars = ['topic_list', 'rowset', 'data'];
 		extract($this->dispatcher->trigger_event('block.announcements_modify_data', compact($vars)));
 
 		/**
@@ -169,7 +171,7 @@ class announcements_block extends base
 		 * @var	int		total_topic_count	Forum's total topic count
 		 * @var	int		forum_id			Forum identifier
 		 */
-		$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
+		$vars = ['topic_list', 'rowset', 'total_topic_count', 'forum_id'];
 		extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -182,29 +184,26 @@ class announcements_block extends base
 			
 			// Parse the message and subject
 			$topic_title 	= censor_text($row['post_subject']);
-			$message 		= censor_text($row['post_text']);
-
-			$u_view_topic 	= $this->helper->url('viewtopic', array('f' => $row_forum_id, 't' => $row_topic_id));
+			$u_view_topic 	= $this->helper->url('viewtopic', ['f' => $row_forum_id, 't' => $row_topic_id]);
 			$read_more 		= $this->language->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
-			$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-			$message 		= generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
-			$message 		= \canidev\core\tools::html_truncate($message, $data['max_size'], "... $read_more");
+			$message 		= $this->text_parser->generateForDisplay($row['post_text'], TextParser::FLAG_CENSOR_TEXT, $row['bbcode_uid'], $row['bbcode_bitfield']);
+			$message 		= TextParser::truncate($message, $data['max_size'], "... $read_more");
 
 			if(!empty($attachments[$row['topic_first_post_id']]))
 			{
 				parse_attachments($row_forum_id, $message, $attachments[$row['topic_first_post_id']], $update_count);
 			}
 
-			$topic_row = array(
+			$topic_row = [
 				'TOPIC_ID'				=> $row_topic_id,
 				'TOPIC_TITLE'			=> $topic_title,
 				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
-				'S_HAS_ATTACHMENTS'		=> (!empty($attachments[$row['topic_first_post_id']])) ? true : false,
+				'S_HAS_ATTACHMENTS'		=> !empty($attachments[$row['topic_first_post_id']]),
 				'TEXT'					=> $message,
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['username'], $row['user_colour'], $row['post_username']),
 				'U_VIEW_TOPIC'			=> $u_view_topic,
-			);
+			];
 
 			/**
 			 * Modify the topic data before it is assigned to the template
@@ -213,7 +212,7 @@ class announcements_block extends base
 			 * @var	array	row					Array with topic data
 			 * @var	array	topic_row			Template array with topic data
 			 */
-			$vars = array('row', 'topic_row');
+			$vars = ['row', 'topic_row'];
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 			$this->template->assign_block_vars('ann_row', $topic_row);
@@ -223,9 +222,9 @@ class announcements_block extends base
 			{
 				foreach($attachments[$row['topic_first_post_id']] as $attachment)
 				{
-					$this->template->assign_block_vars('ann_row.attachment', array(
+					$this->template->assign_block_vars('ann_row.attachment', [
 						'DISPLAY_ATTACHMENT'	=> $attachment
-					));
+					]);
 				}
 			}
 		}
@@ -243,7 +242,7 @@ class announcements_block extends base
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['forums'] = $this->request->variable('forums', array(0));
+			$new['forums'] = $this->request->variable('forums', [0]);
 		}
 
 		return true;
@@ -254,13 +253,13 @@ class announcements_block extends base
 	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'max_number'	=> array('lang' => 'ANN_MAX_NUMBER',	'validate' => 'int:1',	'type' => 'number:1:99',	'default' => 4),
-			'max_size'		=> array('lang' => 'ANN_MAX_SIZE',		'validate' => 'int:1',	'type' => 'number',			'default' => 255),
-			'forums'		=> array('lang' => 'FORUMS',			'type' => 'custom',		'method' => 'helper', 		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => []),
-			'show_globals'	=> array('lang' => 'ANN_SHOW_GLOBALS',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-			'collapse'		=> array('lang' => 'ANN_COLLAPSE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-		);
+		$this->display_vars = [
+			'max_number'	=> ['lang' => 'ANN_MAX_NUMBER',		'validate' => 'int:1',	'type' => 'number:1:99',	'default' => 4],
+			'max_size'		=> ['lang' => 'ANN_MAX_SIZE',		'validate' => 'int:1',	'type' => 'number',			'default' => 255],
+			'forums'		=> ['lang' => 'FORUMS',				'type' => 'custom',		'method' => 'helper', 		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'show_globals'	=> ['lang' => 'ANN_SHOW_GLOBALS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+			'collapse'		=> ['lang' => 'ANN_COLLAPSE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+		];
 
 		return true;
 	}

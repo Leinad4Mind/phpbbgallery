@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.6 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -140,21 +140,21 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
-				$sql_ary = array(
+				$sql_ary = [
 					'SELECT'	=> 'a.*, t.forum_id',
-					'FROM'		=> array(ATTACHMENTS_TABLE => 'a'),
+					'FROM'		=> [ATTACHMENTS_TABLE => 'a'],
 					
-					'LEFT_JOIN'	=> array(
-						array('FROM' => array(TOPICS_TABLE => 't'),	'ON' => 't.topic_id = a.topic_id')
-					),
+					'LEFT_JOIN'	=> [
+						['FROM' => [TOPICS_TABLE => 't'],	'ON' => 't.topic_id = a.topic_id']
+					],
 					
-					'WHERE'		=> $this->db->sql_in_set('a.extension', array('jpg', 'gif', 'png')) . '
+					'WHERE'		=> $this->db->sql_in_set('a.extension', ['jpg', 'gif', 'png']) . '
 						AND a.is_orphan = 0
 						AND a.filesize > 0
 						AND (' . implode(' OR ', $sql_where) . ')',
 						
 					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : $random_key,
-				);
+				];
 				
 				/**
 				 * @event block.gallery_attachments_query
@@ -162,21 +162,21 @@ class gallery_block extends base
 				 * @var array	data		Block Configuration
 				 * @since 2.0.0
 				 */
-				$vars = array('sql_ary', 'data');
+				$vars = ['sql_ary', 'data'];
 				extract($this->dispatcher->trigger_event('block.gallery_attachments_query', compact($vars)));
 				
 				$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$image = array(
-						'SRC'		=> $this->helper->url('download/file', array('mode' => 'view', 'id' => $row['attach_id'])),
-						'ACTION'	=> $this->helper->url('viewtopic', array(
+					$image = [
+						'SRC'		=> $this->helper->url('download/file', ['mode' => 'view', 'id' => $row['attach_id']]),
+						'ACTION'	=> $this->helper->url('viewtopic', [
 							'f'	=> $row['forum_id'],
 							'p'	=> $row['post_msg_id'],
 							'#'	=> 'p' . $row['post_msg_id']
-						))
-					);
+						])
+					];
 
 					/**
 					 * @event block.gallery_row
@@ -185,7 +185,7 @@ class gallery_block extends base
 					 * @var array 		$row		Row data
 					 * @since 2.0.3
 					 */
-					$vars = array('image', 'data', 'row');
+					$vars = ['image', 'data', 'row'];
 					extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
 					$images[] = $image;
@@ -217,14 +217,14 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
-				$sql_ary = array(
+				$sql_ary = [
 					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text',
-					'FROM'			=> array(POSTS_TABLE => 'p'),
+					'FROM'			=> [POSTS_TABLE => 'p'],
 					'WHERE'			=> '(' . implode(' OR ', $sql_where) . ")
 						AND p.bbcode_uid NOT LIKE ''
 						AND p.post_text " . $this->db->sql_like_expression($this->db->get_any_char() . '[img]' . $this->db->get_any_char()),
 					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : $random_key,
-				);
+				];
 
 				/**
 				 * @event block.gallery_posts_query
@@ -232,7 +232,7 @@ class gallery_block extends base
 				 * @var array	data		Block Configuration
 				 * @since 2.0.3
 				 */
-				$vars = array('sql_ary', 'data');
+				$vars = ['sql_ary', 'data'];
 				extract($this->dispatcher->trigger_event('block.gallery_posts_query', compact($vars)));
 
 				$sql 	= $this->db->sql_build_query('SELECT', $sql_ary);
@@ -245,11 +245,11 @@ class gallery_block extends base
 
 					foreach($matches as $match)
 					{
-						$row_images[] = array(
+						$row_images[] = [
 							'ACTION'	=> $match[1],
 							'SRC'		=> $match[1],
 							'TITLE'		=> '',
-						);
+						];
 					}
 
 					/**
@@ -259,7 +259,7 @@ class gallery_block extends base
 					 * @var array 		$row			Row data
 					 * @since 2.0.3
 					 */
-					$vars = array('row_images', 'data', 'row');
+					$vars = ['row_images', 'data', 'row'];
 					extract($this->dispatcher->trigger_event('block.gallery_posts_row', compact($vars)));
 
 					$images = array_merge($images, $row_images);
@@ -311,19 +311,19 @@ class gallery_block extends base
 					$source		= $gallery_items[$source];
 					$settings	= unserialize($source['data_settings']);
 					
-					$image = array(
+					$image = [
 						'ACTION'	=> $this->helper->build_image_filename($settings['filename']),
 						'SRC'		=> $this->helper->build_image_filename($settings['filename']),
 						'TITLE'		=> $source['data_title'],
-					);
+					];
 				}
 				else if(preg_match('#^([^&\'"<>]+)\.(?:gif|png|jpg|jpeg)$#i', $source, $match))
 				{
-					$image = array(
+					$image = [
 						'ACTION'	=> $this->helper->build_image_filename($source),
 						'SRC'		=> $this->helper->build_image_filename($source),
 						'TITLE'		=> '',
-					);
+					];
 				}
 				else
 				{
@@ -337,7 +337,7 @@ class gallery_block extends base
 				 * @var mixed		$source		Row data
 				 * @since 2.0.3
 				 */
-				$vars = array('image', 'data', 'source');
+				$vars = ['image', 'data', 'source'];
 				extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
 				$images[] = $image;
@@ -354,13 +354,13 @@ class gallery_block extends base
 			$this->template->assign_block_vars('image', $row);
 		}
 
-		$this->template->assign_json_var('S_GALLERY_OPTIONS', array(
+		$this->template->assign_json_var('S_GALLERY_OPTIONS', [
 			'height'		=> $data['gallery_height'],
 			'margin'		=> $data['image_margin'],
 			'fps'			=> $data['gallery_fps'],
 			'direction'		=> $data['gallery_dir'],
 			'zoom'			=> $data['image_zoom']
-		));
+		]);
 
 		unset($data, $images);
 		return true;
@@ -373,8 +373,8 @@ class gallery_block extends base
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['gallery_forums']	= $this->request->variable('forums', array(0));
-			$new['item_ids']		= $this->request->variable('item_ids', array(0 => ''));
+			$new['gallery_forums']	= $this->request->variable('forums', [0]);
+			$new['item_ids']		= $this->request->variable('item_ids', [0 => '']);
 		}
 	}
 
@@ -383,31 +383,31 @@ class gallery_block extends base
 	 */
 	public function get_config()
 	{
-		$gallery_order = array(
+		$gallery_order = [
 			'last'		=> 'GALLERY_ORDER_LAST',
 			'rand'		=> 'GALLERY_ORDER_RAND',
-		);
+		];
 
-		$gallery_sources = array(
+		$gallery_sources = [
 			self::SOURCE_ALL			=> 'GALLERY_SOURCE_ALL',
 			self::SOURCE_ATTACHMENTS	=> 'GALLERY_SOURCE_ATTACHMENTS',
 			self::SOURCE_IMAGES			=> 'GALLERY_SOURCE_IMAGES',
-		);
+		];
 
-		$this->display_vars = array(
-			'gallery_height'	=> array('lang' => 'GALLERY_HEIGHT',		'validate' => 'int',		'type' => 'number:1:999',	'default' => 100),
-			'gallery_fps'		=> array('lang' => 'GALLERY_FPS',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 4),
-			'gallery_dir'		=> array('lang' => 'GALLERY_DIRECTION',		'validate' => 'string',		'type' => 'select', 		'method' => 'helper',	'params' => array('scroll_select', '{CONFIG_VALUE}', 'direction_x'),  'default' => 'left'),
-			'image_margin'		=> array('lang' => 'GALLERY_MARGIN',		'validate' => 'int',		'type' => 'number:0:999',	'default' => 4),
-			'image_zoom'		=> array('lang' => 'GALLERY_ZOOM',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2),
-			'max_number'		=> array('lang' => 'GALLERY_MAX_NUMBER',	'validate' => 'int:1:500',	'type' => 'number:1:500',	'default' => 50),
-			'gallery_source'	=> array('lang' => 'GALLERY_SOURCE',		'validate' => 'string',		'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_sources, '{KEY}', '{CONFIG_VALUE}'),  'default' => self::SOURCE_ATTACHMENTS),
-			'gallery_forums'	=> array('lang' => 'GALLERY_FORUMS',		'type' => 'custom',			'method' => 'helper',	'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => []),
-			'gallery_topics'	=> array('lang' => 'GALLERY_TOPICS',		'validate' => 'string',		'type' => 'text:40:255'),
-			'gallery_posts'		=> array('lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'),
-			'image_order'		=> array('lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'rand'),
-			'item_ids'			=> array('lang' => 'GALLERY_CUSTOM',		'type' => 'custom', 		'function' => array($this, 'acp_build_image_browser'), 'params' => array('{KEY}', '{CONFIG_VALUE}')),
-		);
+		$this->display_vars = [
+			'gallery_height'	=> ['lang' => 'GALLERY_HEIGHT',			'validate' => 'int',		'type' => 'number:1:999',	'default' => 100],
+			'gallery_fps'		=> ['lang' => 'GALLERY_FPS',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 4],
+			'gallery_dir'		=> ['lang' => 'GALLERY_DIRECTION',		'validate' => 'string',		'type' => 'select', 		'method' => 'helper',	'params' => ['scroll_select', '{CONFIG_VALUE}', 'direction_x'],  'default' => 'left'],
+			'image_margin'		=> ['lang' => 'GALLERY_MARGIN',			'validate' => 'int',		'type' => 'number:0:999',	'default' => 4],
+			'image_zoom'		=> ['lang' => 'GALLERY_ZOOM',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2],
+			'max_number'		=> ['lang' => 'GALLERY_MAX_NUMBER',		'validate' => 'int:1:500',	'type' => 'number:1:500',	'default' => 50],
+			'gallery_source'	=> ['lang' => 'GALLERY_SOURCE',			'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $gallery_sources, '{KEY}', '{CONFIG_VALUE}'],  'default' => self::SOURCE_ATTACHMENTS],
+			'gallery_forums'	=> ['lang' => 'GALLERY_FORUMS',			'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'gallery_topics'	=> ['lang' => 'GALLERY_TOPICS',			'validate' => 'string',		'type' => 'text:40:255'],
+			'gallery_posts'		=> ['lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'],
+			'image_order'		=> ['lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'],  'default' => 'rand'],
+			'item_ids'			=> ['lang' => 'GALLERY_CUSTOM',			'type' => 'custom', 		'function' => [$this, 'acp_build_image_browser'], 	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+		];
 
 		return true;
 	}
@@ -430,15 +430,15 @@ class gallery_block extends base
 			$hidden_fields .= '<input type="hidden" name="item_ids[]" value="' . $id . '" />';
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ACP_MANAGE_GALLERY'		=> true,
 			'S_BUTTON_ID'				=> gen_rand_string(4),
 			'S_GALLERY_HIDDEN_FIELDS'	=> $hidden_fields,
-		));
+		]);
 		
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'gallery_body'	=> '@canidev_blockgets/blocks/gallery_block.html'
-		));
+		]);
 		
 		return $this->template->assign_display('gallery_body');
 	}
