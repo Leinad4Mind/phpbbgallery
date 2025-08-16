@@ -200,7 +200,6 @@ class notification_event_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$post_data['edit_user_name'] = $this->language->lang('UNKNOWN_USER');
 			$edit_name = $this->notification_service->query_user_name($post_data['edit_user_id']);
 			if ($edit_name != null)
 			{
@@ -352,25 +351,25 @@ class notification_event_listener implements EventSubscriberInterface
 		}
 
 		// Get the ID needed to access $event['data'], then extract all relevant data from the event that we need to generate the notification
-		$id = array_pop($event['ids']);
+		$id = array_slice($event['ids'], -1)[0];
 
 		$lock_data = array();
 		$lock_data['forum_id'] = $event['data'][$id]['forum_id'];
 		$lock_data['forum_name'] = $event['data'][$id]['forum_name'];
-		$lock_data['post_id'] = $event['data'][$id]['post_id'];
-		$lock_data['post_subject'] = $event['data'][$id]['post_subject'];
+		$lock_data['post_id'] = $event['data'][$id]['post_id'] ?? ''; // only used for post_[un]lock events
+		$lock_data['post_subject'] = $event['data'][$id]['post_subject'] ?? ''; // only used for post_[un]lock events
 		$lock_data['topic_id'] = $event['data'][$id]['topic_id'];
 		$lock_data['topic_title'] = $event['data'][$id]['topic_title'];
 		// Two sets of user data captured: one for the post (if applicable) and one for the user that started the topic
-		$lock_data['post_user_id'] = $event['data'][$id]['poster_id'];
-		$lock_data['post_user_name'] = $event['data'][$id]['username'];
+		$lock_data['post_user_id'] = $event['data'][$id]['poster_id'] ?? ''; // only used for post_[un]lock events
+		$lock_data['post_user_name'] = $event['data'][$id]['username'] ?? ''; // only used for post_[un]lock events
 		$lock_data['topic_user_id'] = $event['data'][$id]['topic_poster'];
 		$lock_data['topic_user_name'] = $event['data'][$id]['topic_first_poster_name'];
 
 		// If the forum the post was made in does not have notifications enabled or the topic/poar is not visible, do nothing more.
-		$topic_visibile = $event['data'][$id]['topic_visibility'] == 1 ? true : false;
+		$topic_visibile = $event['data'][$id]['topic_visibility'] == 1;
 		$webhook_url = $this->notification_service->get_forum_notification_url($lock_data['forum_id']);
-		if (!$webhook_url || $topic_visibile == false)
+		if (!$webhook_url || !$topic_visibile)
 		{
 			return;
 		}
@@ -486,7 +485,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_CREATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -520,7 +519,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UPDATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -532,7 +531,6 @@ class notification_event_listener implements EventSubscriberInterface
 		$forum_link = $this->generate_forum_link($data['forum_id'], $data['forum_name']);
 
 		// The notification is slightly different depending on whether the user edited their own post, or another user made the edit.
-		$message = '';
 		if ($data['user_id'] == $data['edit_user_id'])
 		{
 			$message = sprintf($this->language->lang('UPDATE_POST_SELF'),
@@ -571,7 +569,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_DELETE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -614,7 +612,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_LOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -645,7 +643,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UNLOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -676,7 +674,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_CREATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -762,7 +760,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UPDATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -773,7 +771,6 @@ class notification_event_listener implements EventSubscriberInterface
 		$forum_link = $this->generate_forum_link($data['forum_id'], $data['forum_name']);
 
 		// The notification is slightly different depending on whether the user edited their own topic, or another user made the edit
-		$message = '';
 		if ($data['user_id'] == $data['edit_user_id'])
 		{
 			$message = sprintf($this->language->lang('UPDATE_TOPIC_SELF'),
@@ -812,7 +809,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_DELETE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -843,7 +840,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_LOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -873,7 +870,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UNLOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -904,7 +901,7 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_USER;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
@@ -934,13 +931,12 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_USER;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		if (!$this->notification_service->is_notification_type_enabled($notification_type_config_name))
 		{
 			return;
 		}
 
 		// Construct the notification message using the argument data.
-		$message = '';
 		// The message format is slightly different depending on how many users were deleted.
 		if (count($data) == 1)
 		{
@@ -1012,13 +1008,8 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function reformat_link_text($text)
 	{
-		// It seems that escaping markdown links is no longer necessary:
+		// Escaping markdown links is no longer necessary:
 		// https://github.com/discord/discord-api-docs/issues/6138
-
-		//$text = strtr($text, [
-		//	'[' => '\\[',
-		//	']' => '\\]'
-		//]);
 		return html_entity_decode($text, ENT_COMPAT);
 	}
 
@@ -1034,8 +1025,7 @@ class notification_event_listener implements EventSubscriberInterface
 	private function remove_formatting($text)
 	{
 		strip_bbcode($text);
-		$text = html_entity_decode($text, ENT_COMPAT);
-		return $text;
+		return html_entity_decode($text, ENT_COMPAT);
 	}
 
 	/**
