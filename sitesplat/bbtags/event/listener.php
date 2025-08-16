@@ -56,6 +56,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.user_setup'								=> 'load_language_on_setup',
 			'core.index_modify_page_title'					=> 'viewtopic_assign_template_vars_before',
+			'core.viewforum_modify_topics_data'				=> 'viewtopic_assign_template_vars_before',
 			
 			'core.posting_modify_template_vars'				=> 'modify_template_vars',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',

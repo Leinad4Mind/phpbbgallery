@@ -28,7 +28,7 @@
 			<span class="desc-wrapper">	
 			<!-- EVENT topiclist_row_prepend -->
 				<!-- IF topicrow.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{topicrow.U_NEWEST_POST}" title="{L_VIEW_FIRST_UNREAD}"><i class="fa fa-asterisk"></i></a><!-- ENDIF -->
-				<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a> <!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" rel="tooltip" data-placement="top" data-original-title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
+				<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a> <!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
 				<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPICS_ROW_NOT_APPROVED}"><i class="fa fa-question-circle"></i></a><!-- ENDIF -->
 				<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}" title="{L_TOPICS_ROW_REPORTED}"><i class="fa fa-exclamation-circle text-danger"></i></a><!-- ENDIF --><br />
 				<!-- IF .topicrow.pagination -->
@@ -51,7 +51,7 @@
 			</td>
 			<td class="stats-col"><span class="stats-wrapper">{topicrow.TOPIC_REPLIES}&nbsp;{L_REPLIES}<br />&nbsp;{topicrow.TOPIC_VIEWS}&nbsp;{L_VIEWS}</span></td>
 			<td class="center">{L_POST_BY_AUTHOR}&nbsp;{topicrow.LAST_POST_AUTHOR_FULL}
-			<!-- IF not S_IS_BOT --><a rel="tooltip" data-placement="right" data-original-title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="mobile-post fa fa-sign-out"></i></a><!-- ENDIF -->
+			<!-- IF not S_IS_BOT --><a title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="mobile-post fa fa-sign-out"></i></a><!-- ENDIF -->
 			<br /><small>{topicrow.LAST_POST_TIME}</small>
 			</td>
 		</tr>

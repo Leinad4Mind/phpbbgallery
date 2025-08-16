@@ -36,6 +36,8 @@ $lang = array_merge($lang, array(
 	'PAGEBACK'							=> 'Previous page',
 	'PAGEFURTHER'						=> 'Next page',
 	'BBTAGS_NO_TAGS'					=> 'No BBtags found',
+	
+	'SS_HELPER_NOTY'	                => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBTAGS_NOTICE'						=> '<div class="phpinfo"><p>The extension settings are under <strong>%1$s » %2$s » %3$s</strong>.<br />Don\'t forget to review/adjust the <strong>User Permission Roles</strong> under <strong>Permissions &#187; Permission roles &#187; User Roles (Select the Role and hit edit) &#187; Misc (tab): "Can Manage BBtags"</strong>.</p></div>',
 
     'ACP_BBTAGS_MANAGE'					=> 'Manage Badge Award',
@@ -56,7 +58,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_BBTAGS_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBTAGS_VERSION'				=> '1.0.2',
+	'ACP_BBTAGS_VERSION'				=> '1.1.0',
 	'ACP_BBTAGS'						=> 'BBTags',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	

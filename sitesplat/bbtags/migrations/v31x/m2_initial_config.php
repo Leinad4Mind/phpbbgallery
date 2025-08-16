@@ -11,7 +11,7 @@
 namespace sitesplat\bbtags\migrations\v31x;
 
 /**
-* Migration stage 1: Initial data changes to the files
+* Migration stage 2: Initial data changes to the files
 */
 class m2_initial_config extends \phpbb\db\migration\migration
 {
@@ -24,7 +24,8 @@ class m2_initial_config extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('sitesplat\bbtags\migrations\v31x\m1_initial_schema');
+		return array('\phpbb\db\migration\data\v310\gold');
+//		return array('sitesplat\bbtags\migrations\v31x\m1_initial_schema');
 	}
 
 	/**
@@ -37,7 +38,7 @@ class m2_initial_config extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('bbtags_min_length', 5)),
-			array('config.add', array('bbtags_max_tags', 8)),
+			array('config.add', array('bbtags_max_tags', 5)),
 			array('config.add', array('bbtags_on_index', 1)),
 			array('config_text.add', array('bbtags_pre_tags', '{"0":"themesplat","1":"bboots","2":"flatboots","3":"sitesplat"}')),
 		);

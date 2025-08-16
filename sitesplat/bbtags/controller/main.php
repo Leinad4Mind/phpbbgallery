@@ -99,7 +99,6 @@ class main
 	
 	public function show_topic($tags)
 	{
-		$this->phpbb_dispatcher->trigger_event('sitesplat.bbtags.btpreview');
 		$this->user->add_lang('search');
 		
 		include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
@@ -163,7 +162,7 @@ class main
 				$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
 				$view_topic_url = append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", $view_topic_url_params);
 
-	$tpl_ary = array(
+				$topic_row = array(
 					'TOPIC_AUTHOR'				=> get_username_string('username', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'TOPIC_AUTHOR_COLOUR'		=> get_username_string('colour', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'TOPIC_AUTHOR_FULL'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
@@ -214,9 +213,13 @@ class main
 	
 					'U_VIEW_TOPIC'		=> append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
 					'U_VIEW_FORUM'		=> append_sid("{$this->phpbb_root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']),
-					'U_VIEW_POST'		=> (!empty($row['post_id'])) ? append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'] . '&amp;p=' . $row['post_id']) . '#p' . $row['post_id'] : ''
+					'U_VIEW_POST'		=> (!empty($row['post_id'])) ? append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'] . '&amp;p=' . $row['post_id']) . '#p' . $row['post_id'] : '',
 				);
-			$this->template->assign_block_vars('topicrow', $tpl_ary);
+
+			$vars = array('topic_row');
+			extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbtags.btpreview', compact($vars)));
+
+			$this->template->assign_block_vars('topicrow', $topic_row);
 			}
 		}
 		

@@ -34,7 +34,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'add_tables' => array(
 				$this->table_prefix . 'bbtags' => array(
 					'COLUMNS'		=> array(
-						'id'			=> array('UINT', null, 'auto_increment'),
+						'id'			=> array('UINT', NULL, 'auto_increment'),
 						'tag'			=> array('VCHAR:30', ''),
 						'route'			=> array('VCHAR:30', ''),
 						'count'			=> array('UINT', 0),
@@ -47,7 +47,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 				),
 				$this->table_prefix . 'bbtags_topic'	=> array(
 					'COLUMNS'		=> array(
-						'id'			=> array('UINT', null, 'auto_increment'),
+						'id'			=> array('UINT', NULL, 'auto_increment'),
 						'topic_id'		=> array('UINT', 0),
 						'tag_id'		=> array('UINT', 1),
 					),

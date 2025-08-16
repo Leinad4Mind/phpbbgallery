@@ -19,9 +19,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'BBTAGS'	            => 'Tags',
-	'BBTAGS_AUTO_SUGGEST'	=> 'Auto Suggest',
-	'BBTAGS_TAG_SPEC'	    => 'characters: [a-z 0-9 + # - .] Delimit tags by semicolon, comma or press enter',
+	'BBTAGS'	            		=> 'Tags',
+	'BBTAGS_AUTO_SUGGEST'			=> 'Auto Suggest',
+	'BBTAGS_TAG_SPEC'	    		=> 'characters: [a-z 0-9 + # - .] Delimit tags by semicolon, comma or press enter',
 	
-	'TOPICTIME'		        => 'Topic active time'
+	'BBTAGS_ENTER_TAGS_PLACEHOLDER'	=> 'Enter tags...',
+	'TOPICTIME'		        		=> 'Topic active time',
 ));
