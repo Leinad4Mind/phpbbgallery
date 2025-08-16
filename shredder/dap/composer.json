@@ -1,0 +1,31 @@
+{
+	"name": "shredder/dap",
+	"type": "phpbb-extension",
+	"description": "Double Account Preventer for phpBB 3.1/3.2/3.3",
+	"homepage": "http://www.phpbb-work.ru/",
+	"keywords": ["phpbb-work", "extension", "Double", "Account", "Preventer"],
+	"version": "1.0.3",
+	"time": "2015-01-09",
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Shredder",
+			"homepage": "http://www.phpbb-work.ru/",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"extra": {
+		"display-name": "Double Account Preventer",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.3"
+		},
+		"version-check": {
+			"host": "www.phpbb-work.ru",
+			"directory": "/mods",
+			"filename": "dap.json"
+		}
+	}
+}

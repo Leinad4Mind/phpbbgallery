@@ -1,0 +1,30 @@
+services:
+    shredder.dap.core:
+        class: shredder\dap\core
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - %core.root_path%
+            - %core.php_ext%
+    shredder.dap.listener:
+        class: shredder\dap\event\listener
+        arguments:
+            - '@shredder.dap.core'
+            - '@auth'
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
