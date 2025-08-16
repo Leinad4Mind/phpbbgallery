@@ -54,18 +54,16 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'								=> 'load_language_on_setup',
-			'core.index_modify_page_title'					=> 'viewtopic_assign_template_vars_before',
-			'core.viewforum_modify_topics_data'				=> 'viewtopic_assign_template_vars_before',
+			'core.user_setup'			=> 'load_lang',
+			'core.page_header_after'	=> 'load_tags',
 			
-			'core.posting_modify_template_vars'				=> 'modify_template_vars',
-			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
-			'core.submit_post_end'							=> 'save_tags',
-			'core.permissions'								=> 'add_permission',
+			'core.posting_modify_template_vars'	=> 'modify_template_vars',
+			'core.submit_post_end'				=> 'save_tags',
+			'core.permissions'					=> 'add_permission',
 		);
 	}
 
-	public function load_language_on_setup($event)
+	public function load_lang($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
@@ -75,20 +73,35 @@ class listener implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
-	public function viewtopic_assign_template_vars_before($event)
+	public function load_tags()
 	{
-		$data = $event->get_data();
-
-		if (!isset($data['page_title']) || ($this->config['bbtags_on_index'] && isset($data['page_title'])))    		        
+		if ($this->config['bbtags_on_index'] == 2
+			|| (
+				$this->config['bbtags_on_index'] == 1
+				&& substr($this->user->data['session_page'], 0, 6) == 'index.'
+			)
+		) 		        
 		{
-			$tags = $this->manager->get_tags((int) (isset($data['topic_id']) ? $data['topic_id'] : 0));
-			if (!empty($tags))
+			$tags = $this->manager->get_tags(0);
+			if ($tags != '')
 			{
-				$this->assign_tags_to_template('bbtags', explode(',', $tags));
+				if ($this->auth->acl_get('u_bbtags_read'))
+				{
+					$this->assign_tags_to_template('bbtags', explode(',', $tags));
+				}
 				$this->template->assign_vars(array(
-					'BBTAGS_SHOW'	=> $this->auth->acl_get('u_bbtags'),
-					'META'			=> '<meta name="keywords" content="' . $tags . '">',
+					'META'				=> '<meta name="keywords" content="' . $tags . '">',
 				));
+			}
+		}
+
+		$topic_id = $this->request->variable('t', 0);
+		if ($topic_id)
+		{
+			$tags = $this->manager->get_tags($topic_id);
+			if ($tags != '' && $this->auth->acl_get('u_bbtags_read'))
+			{
+				$this->assign_tags_to_template('bbtagstopic', explode(',', $tags));
 			}
 		}
 	}
@@ -175,6 +188,7 @@ class listener implements EventSubscriberInterface
 	{
 		$permissions = $event['permissions'];
 		$permissions['u_bbtags'] = array('lang' => 'ACL_U_BBTAGS', 'cat' => 'misc');
+		$permissions['u_bbtags_read'] = array('lang' => 'ACL_U_BBTAGS_READ', 'cat' => 'misc');
 		$event['permissions'] = $permissions;
 	}
 }

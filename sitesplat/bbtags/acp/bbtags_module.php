@@ -72,6 +72,7 @@ class bbtags_module
 				{
 					$this->config->set('bbtags_min_length', $this->request->variable('bbtags_min_length', 3));
 					$this->config->set('bbtags_max_tags', $this->request->variable('bbtags_max_tags', 5));
+					$this->config->set('bbtags_cloud_limit', $this->request->variable('bbtags_cloud_limit', 10));
 					$this->config->set('bbtags_on_index', $this->request->variable('bbtags_on_index', 0));
 					
 					$list = explode("\n", $this->request->variable('bbtags_pre_tags', '', true));
@@ -141,10 +142,11 @@ class bbtags_module
 			'U_ACTION'		=> $this->u_action,
 			'EXT_PATH'		=> $phpbb_path_helper->update_web_root_path($phpbb_extension_manager->get_extension_path('sitesplat/bbtags', true)),
 			
-			'BBTAGS_MIN_LENGTH'	=> $this->config['bbtags_min_length'],
-			'BBTAGS_MAX_TAGS'	=> $this->config['bbtags_max_tags'],
-			'BBTAGS_ON_INDEX'	=> $this->config['bbtags_on_index'],
-			'PRE_BBTAGS'		=> implode("\n", json_decode($this->config_text->get('bbtags_pre_tags'), true))
+			'BBTAGS_MIN_LENGTH'		=> $this->config['bbtags_min_length'],
+			'BBTAGS_MAX_TAGS'		=> $this->config['bbtags_max_tags'],
+			'BBTAGS_CLOUD_LIMIT'	=> $this->config['bbtags_cloud_limit'],
+			'BBTAGS_ON_INDEX'		=> $this->config['bbtags_on_index'],
+			'PRE_BBTAGS'			=> implode("\n", json_decode($this->config_text->get('bbtags_pre_tags'), true))
 			)
 		);
 	}

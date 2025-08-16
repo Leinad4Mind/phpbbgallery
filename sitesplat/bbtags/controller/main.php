@@ -125,9 +125,9 @@ class main
 		if ($topics_count > 0)
 		{
 			$folder_img = $folder_alt = $topic_type = '';
-			
+
 			$sql_array = array(
-				'SELECT'	=> 't.*, topics.*',
+				'SELECT'	=> 't.*, topics.*, ttt.mark_time',
 				'FROM'		=> array(
 					$this->table_bbtags_topic	=> 'tt'
 				),
@@ -141,6 +141,10 @@ class main
 						'FROM'	=> array(FORUMS_TABLE => 'topics'),
 						'ON'	=> 'topics.forum_id = t.forum_id',
 					),
+					array(
+						'FROM'	=> array(TOPICS_TRACK_TABLE => 'ttt'),
+						'ON'	=> 'ttt.topic_id = t.topic_id AND ttt.user_id = ' . $this->user->data['user_id'],
+					),
 				),				
 				'WHERE'			=> 'tt.tag_id = ' . $tag_id . $not_in_fid,
 				'ORDER_BY'		=> 't.topic_last_post_time DESC'
@@ -150,9 +154,9 @@ class main
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$replies = $this->content_visibility->get_count('topic_posts', $row, $row['forum_id']) - 1;
-				topic_status($row, $replies, (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$row['topic_id']]) ? true : false, $folder_img, $folder_alt, $topic_type);
+				topic_status($row, $replies, ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false, $folder_img, $folder_alt, $topic_type);
 				
-				$unread_topic = (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['forum_id']][$row['topic_id']]) ? true : false;
+				$unread_topic = ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false;
 				$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 				$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;

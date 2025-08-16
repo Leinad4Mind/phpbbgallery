@@ -40,7 +40,7 @@ class manager
 		$sql = 'SELECT t.tag FROM ' . $this->table_bbtags . ' AS t 
 				' . (($topic_id) ? ', '. $this->table_bbtags_topic . ' AS tt WHERE tt.topic_id = ' . (int) $topic_id . '	AND t.id = tt.tag_id ' : '') . '
 				ORDER BY t.count DESC';
-		$result = $this->db->sql_query_limit($sql, $this->config['bbtags_max_tags']);
+		$result = $this->db->sql_query_limit($sql, $topic_id ? $this->config['bbtags_max_tags'] : $this->config['bbtags_cloud_limit']);
 		$tag = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{

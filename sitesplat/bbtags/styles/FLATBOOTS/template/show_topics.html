@@ -20,7 +20,7 @@
         <!-- EVENT search_results_topic_before -->
         <tr>
 			<td>
-			<!-- IF searchresults.TOPIC_ICON_IMG --><i class="topic-icon" style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{topicrow.TOPIC_ICON_IMG_ALT}"></i><!-- ENDIF -->
+			<!-- IF topicrow.TOPIC_ICON_IMG --><i class="topic-icon" style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{topicrow.TOPIC_ICON_IMG_ALT}"></i><!-- ENDIF -->
 			<span class="icon-wrapper">
 				<i class="row-icon-font icon-moon-default2<!-- IF topicrow.S_TOPIC_TYPE == 2 --> icon-moon-voice2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 3 --> icon-moon-podcast2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 1 --> icon-moon-pushpin2<!-- ELSEIF topicrow.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
 			</span>
