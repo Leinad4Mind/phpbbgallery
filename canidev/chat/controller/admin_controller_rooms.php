@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.6 01/07/2024
+ * @version 1.2.7 07/03/2025
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -84,7 +84,7 @@ class admin_controller_rooms extends admin_controller_base
 				
 				$room_auth = @unserialize($room_data['room_data']);
 
-				$room_data['room_groups'] 	= $room_auth['groups'];
+				$room_data['room_groups'] 	= empty($room_auth['groups']) ? '' : $room_auth['groups'];
 				$room_data['room_users']	= (empty($room_auth['users']) ? '' : implode("\n", $room_auth['users']));
 				$room_data['linked_forums']	= (empty($room_auth['linked_forums']) ? [] : $room_auth['linked_forums']);
 				$room_data['linked_groups']	= (empty($room_auth['linked_groups']) ? [] : $room_auth['linked_groups']);

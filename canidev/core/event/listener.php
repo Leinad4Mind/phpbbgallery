@@ -431,6 +431,7 @@ class listener implements EventSubscriberInterface
 		// Add core assets
 		$this->template->prepend_assets = true;
 		$this->template->append_asset('css', '@canidev_core/cbbcore-acp.css', false, 'admin');
+		$this->template->append_asset('css', '@canidev_core/' . $this->user->style['style_path'] . '.css');
 		$this->template->append_asset('css', '@canidev_core/cbbcore.css');
 
 		$this->template->append_asset('script', [

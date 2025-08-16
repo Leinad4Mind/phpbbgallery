@@ -2,9 +2,9 @@
 /**
  * [Spanish [Es]]
  * @package cBB Chat
- * @version 1.2.6 01/07/2024
+ * @version 1.2.7 07/03/2025
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 

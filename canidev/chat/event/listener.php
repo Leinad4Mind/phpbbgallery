@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.6 01/07/2024
+ * @version 1.2.7 07/03/2025
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -47,7 +47,7 @@ class listener implements EventSubscriberInterface
 	{
 		return [
 			'core.user_setup'					=> 'load_language',
-			'core.user_setup_after'				=> 'on_setup_after',
+			'core.user_setup_after'				=> ['on_setup_after', -2],
 			'core.session_kill_after'			=> 'on_user_logout',
 			'core.page_footer'					=> 'on_footer',
 			'core.delete_user_after'			=> 'on_user_delete',

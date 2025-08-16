@@ -14,7 +14,7 @@ class v113 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.1.3', '>=');
+		return $this->config->offsetExists('chat_purge_mark');
 	}
 
 	static public function depends_on()

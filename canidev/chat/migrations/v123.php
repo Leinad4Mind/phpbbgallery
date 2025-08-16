@@ -16,7 +16,8 @@ class v123 extends \phpbb\db\migration\migration
 	 */
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.2.3', '>=');
+		// "chat_version" is deprecated, migration ignored
+		return true;
 	}
 
 	/**

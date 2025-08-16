@@ -1,9 +1,9 @@
 /**
  * @package cBB Chat
  * @style: All
- * @version 1.2.5 15/01/2023
+ * @version 1.2.7 07/03/2025
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
