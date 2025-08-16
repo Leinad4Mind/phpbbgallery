@@ -1,4 +1,4 @@
-{% INCLUDE 'overall_header.html' %}
+{% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
@@ -18,27 +18,7 @@
 
 {% if S_EDIT %}
 
-{% for options in loops.options %}
-	{% if options.S_LEGEND %}
-		{% if not options.S_FIRST_ROW %}</fieldset>{% endif %}
-		<fieldset>
-			<legend>{{ options.LEGEND }}</legend>
-	{% else %}
-
-		<dl{% if not options.DISPLAY %} class="cbb-helper-hidden"{% endif %}>
-			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{{ lang('COLON') }}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-			<dd>{{ options.CONTENT }}</dd>
-			{% if options.KEY == 'room_users' %}<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>{% endif %}
-		</dl>
-
-	{% endif %}
-	
-	{% if options.S_LAST_ROW %}</fieldset>{% endif %}
-{% endfor %}
-	
-	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
-	</div>
+	{% include '@canidev_core/acp_options.html' %}
 	
 {% else %}
 
@@ -74,13 +54,11 @@
 
 	<p class="quick">
 		<a class="cbb-btn" href="{{ U_ROOM_ADD }}">{{ lang('ADD_ROOM') }}</a>
+		{{ S_FORM_TOKEN }}
+		{{ S_HIDDEN_FIELDS }}
 	</p>
 {% endif %}
 
-<div>
-	{{ S_FORM_TOKEN }}
-	{{ S_HIDDEN_FIELDS }}
-</div>
 </form>
 
-{% INCLUDE 'overall_footer.html' %}
+{% include 'overall_footer.html' %}

@@ -1,9 +1,9 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version 1.1.0 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
+* @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
@@ -41,6 +41,10 @@ class bbcode_manager
 		$this->db				= $db;
 	}
 	
+	/**
+	 * Get installed bbcodes
+	 * @return array
+	 */
 	public function get_installed_bbcodes()
 	{
 		if($this->cache === null)
@@ -66,6 +70,13 @@ class bbcode_manager
 		return $this->cache;
 	}
 
+	/**
+	 * Insert BBcodes into DB
+	 * 
+	 * @param array 	$bbcode_ary 		Array with bbcode's data
+	 * @param bool 		$overwrite 			Defines if existing bbcodes will be overwritten
+	 * @param bool 		$backup 			Define if original bbcodes will be saved on backup file
+	 */
 	public function insert($bbcode_ary, $overwrite = false, $backup = false)
 	{
 		$insert_ary	= array();
@@ -131,6 +142,12 @@ class bbcode_manager
 		}
 	}
 	
+	/**
+	 * Update BBcode by it's tag name
+	 * 
+	 * @param string 	$bbcode_tag 		BBcode tag name
+	 * @param array 	$bbcode_data 		Array with new bbcode data
+	 */
 	public function update_by_tag($bbcode_tag, $bbcode_data)
 	{
 		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : array($bbcode_tag));

@@ -1,13 +1,15 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\libraries;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class action_manager
 {
@@ -43,33 +45,35 @@ class action_manager
 	protected $tables;
 	
 	/**
-	* Constructor
-	*
-	* @param \phpbb\auth\auth 						$auth			Authentication object
-	* @param \phpbb\cache\driver\driver_interface 	$cache 			Cache instance
-	* @param \canidev\chat\libraries\chat 			$chat			Chat Object
-	* @param \phpbb\config\config 					$config			Config Object
-	* @param ContainerInterface 					$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface		$db				DB Object
-	* @param \phpbb\event\dispatcher_interface		$dispatcher		Event dispatcher
-	* @param \phpbb\language\language 				$language		Language object
-	* @param \phpbb\log\log                       	$log			phpBB log system
-	* @param \phpbb\request\request 				$request		Request object
-	* @param \phpbb\routing\helper					$routing			Routing Helper
-	* @param \phpbb\template\template				$template     	Template object
-	* @param \phpbb\user							$user			User object
-	* @param string									$root_path		phpBB root path
-	* @param string									$php_ext		phpEx
-	* @param array 									$tables 		Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth 							$auth			Authentication object
+	 * @param \phpbb\cache\driver\driver_interface 		$cache 			Cache instance
+	 * @param \canidev\chat\libraries\chat 				$chat			Chat Object
+	 * @param \phpbb\config\config 						$config			Config Object
+	 * @param ContainerInterface 						$container		Service container interface
+	 * @param \canidev\core\lib 						$core 			Core Object
+	 * @param \phpbb\db\driver\driver_interface			$db				DB Object
+	 * @param \phpbb\event\dispatcher_interface			$dispatcher		Event dispatcher
+	 * @param \phpbb\language\language 					$language		Language object
+	 * @param \phpbb\log\log                       		$log			phpBB log system
+	 * @param \phpbb\request\request 					$request		Request object
+	 * @param \phpbb\routing\helper						$routing		Routing Helper
+	 * @param \phpbb\template\template					$template     	Template object
+	 * @param \phpbb\user								$user			User object
+	 * @param string									$root_path		phpBB root path
+	 * @param string									$php_ext		phpEx
+	 * @param array 									$tables 		Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\cache\driver\driver_interface $cache,
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		ContainerInterface $container,
+		\canidev\core\lib $core,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\language\language $language,
@@ -87,7 +91,7 @@ class action_manager
 		$this->chat 		= $chat;
 		$this->config		= $config;
 		$this->container 	= $container;
-		$this->core			= \canidev\core\lib::get_instance($container);
+		$this->core			= $core;
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
 		$this->language		= $language;
@@ -1525,12 +1529,12 @@ class action_manager
 			}
 			else
 			{
-				if($row['user_id'] == ANONYMOUS) // test falta opcion
+				if($row['user_id'] == ANONYMOUS)
 				{
 					$row_actions[] = array(
 						'S_ACTION'		=> 'set_name',
 						'S_ICON'		=> 'fa-pencil',
-						'S_TITLE'		=> $this->language->lang('CHAT_CHANGE_NAME'), // test
+						'S_TITLE'		=> $this->language->lang('CHAT_CHANGE_NAME'),
 						'S_USER_KEY'	=> $user_key,
 						'U_ACTION'		=> '#',
 					);

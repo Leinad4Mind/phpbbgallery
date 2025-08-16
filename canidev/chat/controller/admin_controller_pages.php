@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -53,12 +53,12 @@ class admin_controller_pages extends admin_controller_base
 
 				$display_vars = array(
 					'legend1'		=> 'CHAT_PAGE_CONFIG',
-					'page_file'			=> array('lang' => 'CHAT_PAGE_FILE',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($this->page_file_options(), '{KEY}', '{CONFIG_VALUE}')),
+					'page_file'			=> array('lang' => 'CHAT_PAGE_FILE',	'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($this->page_file_options(), '{KEY}', '{CONFIG_VALUE}')),
 					'custom_file'		=> array('lang' => 'CHAT_PAGE_CUSTOM',	'validate' => 'string',		'type' => 'text:40:255',	'display' => false),
 					'page_alias'		=> array('lang' => 'CHAT_PAGE_ALIAS',	'validate' => 'string',		'type' => 'text:40:50',		'display' => false),
-					'chat_position'		=> array('lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($position_options, '{KEY}', '{CONFIG_VALUE}')),
+					'chat_position'		=> array('lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($position_options, '{KEY}', '{CONFIG_VALUE}')),
 					'chat_height'		=> array('lang' => 'CHAT_HEIGHT_PAGE',	'validate' => 'int:0:800',	'type' => 'text:4:3'),
-					'forum_ids'			=> array('lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', self::SELECT_MULTIPLE),	'display' => false),
+					'forum_ids'			=> array('lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE),	'display' => false),
 				);
 				
 				if($this->action == 'add')
@@ -73,13 +73,13 @@ class admin_controller_pages extends admin_controller_base
 				
 				$page_data['forum_ids'] = (!empty($page_data['page_data']['forum_ids']) ? $page_data['page_data']['forum_ids'] : array());
 				
-				/*
-				* @event chat.acp_pages_vars
-				* @var	array	display_vars	Array of config values to display and process
-				* @var	array	page_data		Original data of page
-				* @var	boolean	submit			Do we display the form or process the submission
-				* @since 1.2.0
-				*/
+				/**
+				 * @event chat.acp_pages_vars
+				 * @var	array		display_vars	Array of config values to display and process
+				 * @var	array		page_data		Original data of page
+				 * @var	boolean		submit			Do we display the form or process the submission
+				 * @since 1.2.0
+				 */
 				$submit = &$this->submit;
 				$vars = array('display_vars', 'page_data', 'submit');
 				extract($this->dispatcher->trigger_event('chat.acp_pages_vars', compact($vars)));
@@ -178,7 +178,7 @@ class admin_controller_pages extends admin_controller_base
 						
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->form_action));
 					}
 				}
 				else
@@ -208,7 +208,7 @@ class admin_controller_pages extends admin_controller_base
 				
 				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
-					'U_BACK'	=> $this->u_action,
+					'U_BACK'	=> $this->get_form_action(),
 					
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 						'action'	=> $this->action,
@@ -245,13 +245,13 @@ class admin_controller_pages extends admin_controller_base
 						'S_TITLE'	=> $title,
 						'S_URL'		=> generate_board_url() . '/' . $row['page_path'] . $row['page_filename'],
 						
-						'U_DELETE'	=> $this->u_action . '&amp;action=delete&amp;id=' . $row['page_id'],
-						'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;id=' . $row['page_id'],
+						'U_DELETE'	=> $this->form_action . '&amp;action=delete&amp;id=' . $row['page_id'],
+						'U_EDIT'	=> $this->form_action . '&amp;action=edit&amp;id=' . $row['page_id'],
 					));
 				}
 				$this->db->sql_freeresult($result);
 				
-				$this->template->assign_var('U_PAGE_ADD', $this->u_action . '&amp;action=add');
+				$this->template->assign_var('U_PAGE_ADD', $this->form_action . '&amp;action=add');
 			break;
 		}
 		

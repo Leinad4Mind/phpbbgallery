@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -11,7 +11,7 @@ namespace canidev\chat\controller;
 
 use canidev\chat\libraries\constants;
 
-class mcp_controller_config extends \canidev\core\acp
+class mcp_controller_config extends \canidev\core\controller\acp
 {
 	protected $db;
 	protected $log;
@@ -25,27 +25,21 @@ class mcp_controller_config extends \canidev\core\acp
 	protected $tables;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\config\config 				$config			Config Object
-	* @param ContainerInterface 				$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface	$db				DB Object
-	* @param \phpbb\language\language 			$language		Language object
-	* @param \phpbb\log\log						$log			Log object
-	* @param \phpbb\pagination					$pagination		Pagination object
-	* @param \phpbb\request\request 			$request		Request object
-	* @param \phpbb\user						$user			User object
-	* @param string								$root_path		phpBB root path
-	* @param string								$php_ext		phpEx
-	* @param array 								$tables 		Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param \phpbb\log\log						$log			Log object
+	 * @param \phpbb\pagination						$pagination		Pagination object
+	 * @param \phpbb\request\request 				$request		Request object
+	 * @param \phpbb\user							$user			User object
+	 * @param string								$root_path		phpBB root path
+	 * @param string								$php_ext		phpEx
+	 * @param array 								$tables 		Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\pagination $pagination,
 		\phpbb\request\request $request,
@@ -63,8 +57,6 @@ class mcp_controller_config extends \canidev\core\acp
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $php_ext;
 		$this->tables 			= $tables;
-
-		parent::__construct(null, $config, $language, \canidev\core\template::get_instance($container));
 	}
 	
 	/**
@@ -104,7 +96,7 @@ class mcp_controller_config extends \canidev\core\acp
 		$keywords = $this->request->variable('keywords', '', true);
 		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
 		
-		$complete_u_action = $this->u_action . "&amp;$u_sort_param$keywords_param&amp;start=$start";
+		$complete_u_action = $this->form_action . "&amp;$u_sort_param$keywords_param&amp;start=$start";
 		
 		// Do actions
 		if($action == 'banusers')
@@ -287,13 +279,13 @@ class mcp_controller_config extends \canidev\core\acp
 				'IP'			=> $row['user_ip'],
 				'USERNAME'		=> $username,
 				
-				'U_EDIT'		=> $this->u_action . "&amp;$u_sort_param$keywords_param&amp;start=$start&amp;action=edit&amp;id=" . $row['user_key'],
-				'U_UNBAN'		=> $this->u_action . "&amp;$u_sort_param$keywords_param&amp;start=$start&amp;action=unban&amp;id=" . $row['user_key'],
+				'U_EDIT'		=> $this->form_action . "&amp;$u_sort_param$keywords_param&amp;start=$start&amp;action=edit&amp;id=" . $row['user_key'],
+				'U_UNBAN'		=> $this->form_action . "&amp;$u_sort_param$keywords_param&amp;start=$start&amp;action=unban&amp;id=" . $row['user_key'],
 			));
 		}
 		$this->db->sql_freeresult($result);
 		
-		$base_url = $this->u_action . "&amp;$u_sort_param$keywords_param";
+		$base_url = $this->form_action . "&amp;$u_sort_param$keywords_param";
 		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $total_count, $this->config['topics_per_page'], $start);
 		
 		$this->template->assign_vars(array(
@@ -351,7 +343,7 @@ class mcp_controller_config extends \canidev\core\acp
 			break;
 		}
 		
-		$u_action	= ($u_action) ? $u_action : $this->u_action;
+		$u_action	= ($u_action) ? $u_action : $this->form_action;
 		$back_link	= '<br /><br /><a href="' . $u_action . '">&laquo; ' . $this->language->lang('BACK_TO_PREV') . '</a>';
 		
 		if(sizeof($user_list) && $exclude_time)
@@ -438,6 +430,6 @@ class mcp_controller_config extends \canidev\core\acp
 			0			=> 'CUSTOM_DATE',
 		);
 		
-		$this->template->assign_var('S_PERIOD_OPTIONS', $this->make_select($option_ary, false, null));
+		$this->template->assign_var('S_PERIOD_OPTIONS', $this->tools->make_select($option_ary, false, null));
 	}
 }

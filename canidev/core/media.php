@@ -1,7 +1,7 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.15 28/03/2022
+* @version 1.1.0 01/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -22,7 +22,6 @@ class media
 		'type'			=> 'image', // image, icon, attachment
 	);
 	
-	private $max_imagesize 		= false;
 	private $upload_path		= '';
 	private $referer_ext		= '';
 	private $events_assigned	= false;
@@ -39,7 +38,6 @@ class media
 
 	protected $config;
 	protected $container;
-	protected $core;
 	protected $dispatcher;
 	protected $json;
 	protected $language;
@@ -56,25 +54,24 @@ class media
 	static $instances = array();
 	
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container			Service container interface
-	* @param string 				$instance_name 		Identifier of the instance
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container			Service container interface
+	 * @param string 				$instance_name 		Identifier of the instance
+	 *
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container, $instance_name)
 	{
 		$this->config			= $container->get('config');
 		$this->container		= $container;
-		$this->core				= lib::get_instance($container);
 		$this->dispatcher		= $container->get('dispatcher');
-		$this->json				= new json_response;
+		$this->json				= json_response::get_instance();
 		$this->language			= $container->get('language');
 		$this->path				= $container->get('path_helper');
 		$this->php_ini			= new \phpbb\php\ini;
 		$this->request			= $container->get('request');
-		$this->template			= template::get_instance($container);
+		$this->template			= $container->get('canidev.core.template');
 		$this->uploader 		= $container->get('files.upload');
 		$this->user				= $container->get('user');
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
@@ -198,6 +195,7 @@ class media
 	 * @param string 		$type 			Type of media selector
 	 * @param string|int 	$value 			Initial Value
 	 * @param int 			$use_config 	Define if use "config" array on input name
+	 * 
 	 * @return string
 	 */
 	public function build_selector($key, $type, $value, $use_config = 0)
@@ -234,13 +232,13 @@ class media
 		$rowset		= array();
 		$instance 	= $this;
 		
-		/*
-		* @event media.gallery.delete
-		* @var array		params		The input params
-		* @var array		rowset		Array with files to delete
-		* @var media 		instance 	This media instance
-		* @since 1.0.1
-		*/
+		/**
+		 * @event media.gallery.delete
+		 * @var array		params		The input params
+		 * @var array		rowset		Array with files to delete
+		 * @var media 		instance 	This media instance
+		 * @since 1.0.1
+		 */
 		$vars = array('params', 'rowset', 'instance');
 		extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.delete', compact($vars)));
 		
@@ -302,14 +300,14 @@ class media
 		$options 	= array(); // Deprecated, to be removed
 		$instance 	= $this;
 
-		/*
-		* @event media.gallery.before_action
-		* @var array 			params				Input params
-		* @var json_response 	json				JSON response object
-		* @var array 			options 			Common Options (Deprecated)
-		* @var media 			instance 			This media instance
-		* @since 1.0.7
-		*/
+		/**
+		 * @event media.gallery.before_action
+		 * @var array 			params				Input params
+		 * @var json_response 	json				JSON response object
+		 * @var array 			options 			Common Options (Deprecated)
+		 * @var media 			instance 			This media instance
+		 * @since 1.0.7
+		 */
 		$vars = array('params', 'json', 'options', 'instance');
 		extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.before_action', compact($vars)));
 		
@@ -331,15 +329,15 @@ class media
 					break;
 				}
 
-				/*
-				* @event media.gallery.create
-				* @var array 			params				Input params
-				* @var json_response 	json				JSON response object
-				* @var string			submit_label		Label for the submit button
-				* @var array 			options 			Common Options (Deprecated)
-				* @var media 			instance 			This media instance
-				* @since 1.0.7
-				*/
+				/**
+				 * @event media.gallery.create
+				 * @var array 			params				Input params
+				 * @var json_response 	json				JSON response object
+				 * @var string			submit_label		Label for the submit button
+				 * @var array 			options 			Common Options (Deprecated)
+				 * @var media 			instance 			This media instance
+				 * @since 1.0.7
+				 */
 				$vars = array('params', 'json', 'submit_label', 'options', 'instance');
 				extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.create', compact($vars)));
 
@@ -487,15 +485,15 @@ class media
 					'height'		=> isset($this->params['height']) ? (int)$this->params['height'] : 0,
 				);
 				
-				/*
-				* @event media.gallery.insert
-				* @var array		rowset		The output array
-				* @var array		params		The input params
-				* @var array		headers		Returned headers of image url
-				* @var string		filename	Complete route of the file
-				* @var media 		instance 	This media instance
-				* @since 1.0.1
-				*/
+				/**
+				 * @event media.gallery.insert
+				 * @var array		rowset		The output array
+				 * @var array		params		The input params
+				 * @var array		headers		Returned headers of image url
+				 * @var string		filename	Complete route of the file
+				 * @var media 		instance 	This media instance
+				 * @since 1.0.1
+				 */
 				$vars = array('rowset', 'params', 'headers', 'filename', 'instance');
 				extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.insert', compact($vars)));
 
@@ -507,12 +505,12 @@ class media
 			case 'update':
 				$params = &$this->params;
 
-				/*
-				* @event media.gallery.update
-				* @var array		params		Array with item variables
-				* @var media 		instance 	This media instance
-				* @since 1.0.1
-				*/
+				/**
+				 * @event media.gallery.update
+				 * @var array		params		Array with item variables
+				 * @var media 		instance 	This media instance
+				 * @since 1.0.1
+				 */
 				$vars = array('params', 'instance');
 				extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.update', compact($vars)));
 				
@@ -584,14 +582,14 @@ class media
 							'height'		=> (int)$height,
 						);
 						
-						/*
-						* @event media.gallery.upload
-						* @var array		rowset		The output array
-						* @var object		file		The uploaded file object
-						* @var string		filename	Complete route of the file
-						* @var media 		instance 	This media instance
-						* @since 1.0.1
-						*/
+						/**
+						 * @event media.gallery.upload
+						 * @var array		rowset		The output array
+						 * @var object		file		The uploaded file object
+						 * @var string		filename	Complete route of the file
+						 * @var media 		instance 	This media instance
+						 * @since 1.0.1
+						 */
 						$vars = array('rowset', 'file', 'filename', 'instance');
 						extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.upload', compact($vars)));
 						
@@ -635,7 +633,8 @@ class media
 
 		if($this->params['type'] == 'icon')
 		{
-			$json_ary = @json_decode($this->core->get_data('font-awesome.json'), true);
+			$core 		= $this->container->get('canidev.core.lib');
+			$json_ary 	= @json_decode($core->get_data('font-awesome.json'), true);
 				
 			if($json_ary !== null)
 			{
@@ -663,13 +662,13 @@ class media
 		}
 		else
 		{
-			/*
-			* @event media.sections.load
-			* @var array		sections	The output array
-			* @var string		type		Type of media required (image | attachment)
-			* @var media 		instance 	This media instance
-			* @since 1.0.1
-			*/
+			/**
+			 * @event media.sections.load
+			 * @var array		sections	The output array
+			 * @var string		type		Type of media required (image | attachment)
+			 * @var media 		instance 	This media instance
+			 * @since 1.0.1
+			 */
 			$vars = array('sections', 'type', 'instance');
 			extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'sections.load', compact($vars)));
 			
@@ -765,14 +764,14 @@ class media
 		$rowset 	= array();
 		$instance 	= $this;
 
-		/*
-		* @event media.gallery.load
-		* @var array		rowset		The output array
-		* @var array|bool	item_ary	The input array or false if no items
-		* @var int			start		Point to start (null to load all elements without pagination)
-		* @var media 		instance 	This media instance
-		* @since 1.0.1
-		*/
+		/**
+		 * @event media.gallery.load
+		 * @var array		rowset		The output array
+		 * @var array|bool	item_ary	The input array or false if no items
+		 * @var int			start		Point to start (null to load all elements without pagination)
+		 * @var media 		instance 	This media instance
+		 * @since 1.0.1
+		 */
 		$vars = array('rowset', 'item_ary', 'start', 'instance');
 		extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.load', compact($vars)));
 		

@@ -1,6 +1,6 @@
-{% INCLUDE 'overall_header.html' %}
+{% include 'overall_header.html' %}
 
-<h2>{L_CHAT_ARCHIVE}</h2>
+<h2>{{ lang('CHAT_ARCHIVE') }}</h2>
 
 <form method="post" action="{{ U_ACTION }}">
 
@@ -9,7 +9,7 @@
 	{% for roomtab in loops.roomtab %}
 		<li{% if roomtab.S_ACTIVE %} class="active"{% endif %}><a href="{{ roomtab.U_ACTION }}"><span>{{ roomtab.S_TITLE }}</span></a></li>
 	{% else %}
-		<li class="active"><a href=""><span>{L_CHAT_ARCHIVE}</span></a></li>
+		<li class="active"><a href=""><span>{{ lang('CHAT_ARCHIVE') }}</span></a></li>
 	{% endfor %}
 	</ul>
 	
@@ -34,10 +34,10 @@
 						<a href="#" class="ic-row-action-launcher"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
 						<div class="cbb-helper-hidden">
 							<ul class="cbb-menu">
-								{% if message.CAN_VIEW_WHOIS %}<li><a href="#" data-action="whois"><i class="fa fa-signal" aria-hidden="true"></i>{L_WHOIS}</a></li>{% endif %}
-								{% if message.CAN_MOVE %}<li><a href="#" data-action="move"><i class="fa fa-share-square-o" aria-hidden="true"></i>{L_CHAT_MOVE}</a></li>{% endif %}
-								{% if message.CAN_EDIT %}<li><a href="#" data-action="edit"><i class="fa fa-edit" aria-hidden="true"></i>{L_EDIT}</a></li>{% endif %}
-								{% if message.CAN_DELETE %}<li><a href="#" data-action="delete"><i class="fa fa-trash" aria-hidden="true"></i>{L_DELETE}</a></li>{% endif %}
+								{% if message.CAN_VIEW_WHOIS %}<li><a href="#" data-action="whois"><i class="fa fa-signal" aria-hidden="true"></i>{{ lang('WHOIS') }}</a></li>{% endif %}
+								{% if message.CAN_MOVE %}<li><a href="#" data-action="move"><i class="fa fa-share-square-o" aria-hidden="true"></i>{{ lang('CHAT_MOVE') }}</a></li>{% endif %}
+								{% if message.CAN_EDIT %}<li><a href="#" data-action="edit"><i class="fa fa-edit" aria-hidden="true"></i>{{ lang('EDIT') }}</a></li>{% endif %}
+								{% if message.CAN_DELETE %}<li><a href="#" data-action="delete"><i class="fa fa-trash" aria-hidden="true"></i>{{ lang('DELETE') }}</a></li>{% endif %}
 							</ul>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 		{% else %}
-			<div class="cbb-message">{L_NO_MESSAGES}</div>
+			<div class="cbb-message">{{ lang('NO_MESSAGES') }}</div>
 		{% endfor %}
 		</div>
 	</div>
@@ -67,11 +67,11 @@
 			<div class="pull-left">
 				<div class="chat-state-hidden js-delete-selected input-group input-group-sm">
 					<select class="form-control" name="action">
-						<option value="">{L_BATCH_ACTIONS}</option>
+						<option value="">{{ lang('BATCH_ACTIONS') }}</option>
 						{{ S_BATCH_OPTIONS }}
 					</select>
 					<div class="input-group-btn">
-						<button type="submit" name="submit" class="btn btn-default">{L_CHAT_APPLY}</button>
+						<button type="submit" name="submit" class="btn btn-default">{{ lang('CHAT_APPLY') }}</button>
 					</div>
 				</div>
 			</div>
@@ -82,7 +82,7 @@
 			<div class="pull-right">	 
 				<ul class="pagination pagination-sm hidden-xs">
 				{% if pagination|length %}
-					{% INCLUDE 'pagination.html' %}
+					{% include 'pagination.html' %}
 				{% else %}
 					<li class="active"><a>{{ PAGE_NUMBER }}</a></li>	
 				{% endif %}
@@ -98,24 +98,24 @@
 				<div class="panel-body">
                   <div class="row">
 						<div class="col-md-3 col-sm-3"> 
-                         <label for="st">{L_DISPLAY_MESSAGES}{L_COLON}</label>
+                         <label for="st">{{ lang('DISPLAY_MESSAGES') ~ lang('COLON') }}</label>
                             <div class="control-row">
                               {{ S_SELECT_SORT_DAYS }}
                             </div>
 						</div>
 	                    <div class="col-md-3 col-sm-3"> 
-                          <label for="sk">{L_SORT_BY}</label>
+                          <label for="sk">{{ lang('SORT_BY') }}</label>
                             <div class="control-row">
                               {{ S_SELECT_SORT_KEY }}
                             </div>
 						</div>
 						<div class="col-md-3 col-sm-3"> 
-                           <label for="sd">{L_SORT_BY}</label>
+                           <label for="sd">{{ lang('SORT_BY') }}</label>
                             <div class="control-row">
 							<div class="input-group">
                              {{ S_SELECT_SORT_DIR }}
 							 <span class="input-group-btn">
-                              <button class="cbb-btn" name="sort" type="submit">{L_GO}</button>
+                              <button class="cbb-btn" name="sort" type="submit">{{ lang('GO') }}</button>
 							</span>
 							</div>
 						    </div>   
@@ -133,4 +133,4 @@
 
 <br />
 
-{% INCLUDE 'overall_footer.html' %}
+{% include 'overall_footer.html' %}

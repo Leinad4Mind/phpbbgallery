@@ -1,26 +1,22 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.15 07/02/2022
+* @version 1.1.0 01/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
+*
+* @deprecated To be moved to controller/acp
 */
 
 namespace canidev\core;
 
-class acp
+class acp extends \canidev\core\controller\acp
 {
 	const SELECT_PARSE_LANG		= 1;
 	const SELECT_MULTIPLE		= 2;
-	
-	protected $page_title;
-	protected $tpl_name;
 
-	protected $cache;
-	protected $config;
 	protected $lang; // Backward compatibility
-	protected $language;
 
 	/**
 	* Constructor
@@ -45,81 +41,18 @@ class acp
 		$this->template 	= $template;
 	}
 
-	public function page_header($canidev_id, $current_version)
-	{
-		$this->template->assign_vars(array(
-			'U_ACTION'			=> $this->u_action,
-			'U_HELP'			=> 'https://www.canidev.com/store/' . $canidev_id . '?rq=documentation&v=' . $current_version,
-		));
-		
-		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
-		if($this->config['cbb_asset_check'] != $this->config['assets_version'])
-		{
-			$this->config->set('cbb_asset_check', $this->config['assets_version']);
-			$this->cache->purge();
-		}
-	}
-
 	protected function display_vars($display_vars, $tpl_key = 'options')
 	{
 		$this->backward_language_compatibility();
 
-		foreach($display_vars as $config_key => $vars)
-		{
-			if(!is_array($vars) && strpos($config_key, 'legend') === false)
-			{
-				continue;
-			}
-
-			if(strpos($config_key, 'legend') !== false)
-			{
-				$this->template->assign_block_vars($tpl_key, array(
-					'S_LEGEND'		=> true,
-					'LEGEND'		=> $this->language->lang($vars)
-				));
-				continue;
-			}
-			
-			if(!isset($this->new_config[$config_key]) && isset($vars['default']))
-			{
-				$this->new_config[$config_key] = $vars['default'];
-			}
-
-			$type = explode(':', $vars['type']);
-
-			$content = build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars);
-			if(empty($content))
-			{
-				continue;
-			}
-
-			$this->template->assign_block_vars($tpl_key, array(
-				'KEY'			=> $config_key,
-				'TITLE'			=> $this->language->lang($vars['lang']),
-				'S_EXPLAIN'		=> ($this->language->is_set($vars['lang'] . '_EXPLAIN') ? $this->language->lang($vars['lang'] . '_EXPLAIN') : ''),
-				'CONTENT'		=> $content,
-				'DISPLAY'		=> (isset($vars['display']) && !$vars['display']) ? false : true,
-			));
-
-			unset($display_vars[$config_key]);
-		}
+		return parent::display_vars($display_vars, $tpl_key);
 	}
 
-	public function get_template()
-	{
-		return $this->tpl_name;
-	}
-	
 	public function get_title($prefix = '')
 	{
 		$this->backward_language_compatibility();
 
-		if($prefix)
-		{
-			return $this->language->lang($prefix) . ' &bull; ' . $this->language->lang($this->page_title);
-		}
-
-		return $this->page_title;
+		return parent::get_title($prefix);
 	}
 
 	/**

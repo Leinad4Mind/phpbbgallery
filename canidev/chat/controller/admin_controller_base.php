@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,11 +9,9 @@
 
 namespace canidev\chat\controller;
 
-abstract class admin_controller_base extends \canidev\core\acp
+abstract class admin_controller_base extends \canidev\core\controller\acp
 {
 	const FORM_KEY = 'acp_chat';
-
-	public $u_action = '';
 
 	protected $db;
 	protected $dispatcher;
@@ -32,30 +30,22 @@ abstract class admin_controller_base extends \canidev\core\acp
 	protected $tpl_name;
 	
 	/**
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param ContainerInterface 						$container			Service container interface
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
-	* @param \phpbb\language\language					$language			Language Object
-	* @param \phpbb\log\log                       		$log				Log Object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\user								$user				User object
-	* @param string										$root_path			phpBB root path
-	* @param string										$php_ext			phpEx
-	* @param array 										$tables 			Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface			$db					DB Object
+	 * @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
+	 * @param \phpbb\log\log                       		$log				Log Object
+	 * @param \phpbb\request\request 					$request			Request object
+	 * @param \phpbb\user								$user				User object
+	 * @param string									$root_path			phpBB root path
+	 * @param string									$php_ext			phpEx
+	 * @param array 									$tables 			Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
@@ -73,8 +63,6 @@ abstract class admin_controller_base extends \canidev\core\acp
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
 		$this->tables 			= $tables;
-
-		parent::__construct($cache, $config, $language, \canidev\core\template::get_instance($container));
 	}
 	
 	/**

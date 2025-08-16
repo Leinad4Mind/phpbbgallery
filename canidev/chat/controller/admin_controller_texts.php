@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -16,32 +16,24 @@ class admin_controller_texts extends admin_controller_base
 	protected $chat;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 						$cache 				Cache instance
-	* @param \canidev\chat\libraries\chat 								$chat				Chat Object
-	* @param \phpbb\config\config 										$config				Config Object
-	* @param \Symfony\Component\DependencyInjection\ContainerInterface 	$container			Service container interface
-	* @param \phpbb\db\driver\driver_interface							$db					DB Object
-	* @param \phpbb\event\dispatcher_interface							$phpbb_dispatcher	Event dispatcher
-	* @param \phpbb\language\language									$language			Language Object
-	* @param \phpbb\log\log                       						$log				Log Object
-	* @param \phpbb\request\request 									$request			Request object
-	* @param \phpbb\user												$user				User object
-	* @param string														$root_path			phpBB root path
-	* @param string														$php_ext			phpEx
-	* @param array 														$tables 			Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \canidev\chat\libraries\chat 					$chat				Chat Object
+	 * @param \phpbb\db\driver\driver_interface				$db					DB Object
+	 * @param \phpbb\event\dispatcher_interface				$dispatcher			Event dispatcher
+	 * @param \phpbb\log\log                       			$log				Log Object
+	 * @param \phpbb\request\request 						$request			Request object
+	 * @param \phpbb\user									$user				User object
+	 * @param string										$root_path			phpBB root path
+	 * @param string										$php_ext			phpEx
+	 * @param array 										$tables 			Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
 		\canidev\chat\libraries\chat $chat,
-		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
@@ -52,12 +44,8 @@ class admin_controller_texts extends admin_controller_base
 		$this->chat = $chat;
 
 		parent::__construct(
-			$cache,
-			$config,
-			$container,
 			$db,
 			$dispatcher,
-			$language,
 			$log,
 			$request,
 			$user,
@@ -127,12 +115,12 @@ class admin_controller_texts extends admin_controller_base
 					$this->new_config['text_content'] = '';
 				}
 				
-				/*
-				* @event chat.acp_texts_vars
-				* @var	array	display_vars	Array of config values to display and process
-				* @var	boolean	submit			Do we display the form or process the submission
-				* @since 1.2.0
-				*/
+				/**
+				 * @event chat.acp_texts_vars
+				 * @var	array		display_vars	Array of config values to display and process
+				 * @var	boolean		submit			Do we display the form or process the submission
+				 * @since 1.2.0
+				 */
 				$submit = &$this->submit;
 				$vars = array('display_vars', 'submit');
 				extract($this->dispatcher->trigger_event('chat.acp_texts_vars', compact($vars)));
@@ -181,7 +169,7 @@ class admin_controller_texts extends admin_controller_base
 	
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->form_action));
 					}
 				}
 				
@@ -191,7 +179,7 @@ class admin_controller_texts extends admin_controller_base
 				
 				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
-					'U_BACK'	=> $this->u_action,
+					'U_BACK'	=> $this->form_action,
 					
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 						'action'	=> $this->action,
@@ -257,7 +245,7 @@ class admin_controller_texts extends admin_controller_base
 						'S_EXPLAIN'			=> ($this->language->is_set($s_title . '_EXPLAIN') ? $this->language->lang($s_title . '_EXPLAIN') : ''),
 						'S_IS_EMPTY'		=> (sizeof($data_ary['rows']) ? false : true),
 						'S_BUTTON_TITLE'	=> $this->language->lang($s_title . '_ADD'),
-						'U_ADD'				=> $this->u_action . '&amp;action=add&amp;type=' . $text_type,
+						'U_ADD'				=> $this->form_action . '&amp;action=add&amp;type=' . $text_type,
 					));
 					
 					foreach($data_ary['rows'] as $row)
@@ -265,7 +253,7 @@ class admin_controller_texts extends admin_controller_base
 						/*
 						 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
 						 * If no bbcode, we decode the text to allow HTML tags.
-						*/
+						 */
 						if(strpos($row['text_content'], '[/') !== false)
 						{
 							$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
@@ -273,7 +261,7 @@ class admin_controller_texts extends admin_controller_base
 						}
 						else
 						{
-							$row['text_content'] = htmlspecialchars_decode($row['text_content']);
+							$row['text_content'] = preg_replace('#(^<t>|</t>$)#', '', htmlspecialchars_decode($row['text_content']));
 							$row['text_content'] = smiley_text($row['text_content']);
 						}
 
@@ -283,8 +271,8 @@ class admin_controller_texts extends admin_controller_base
 							'S_CONTENT'		=> $row['text_content'],
 							'S_ID'			=> $row['text_id'],
 							
-							'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;type=' . $text_type . '&amp;id=' . $row['text_id'],
-							'U_EDIT'		=> $this->u_action . '&amp;action=edit&amp;type=' . $text_type . '&amp;id=' . $row['text_id'],
+							'U_DELETE'		=> $this->form_action . '&amp;action=delete&amp;type=' . $text_type . '&amp;id=' . $row['text_id'],
+							'U_EDIT'		=> $this->form_action . '&amp;action=edit&amp;type=' . $text_type . '&amp;id=' . $row['text_id'],
 						));
 					}
 				}

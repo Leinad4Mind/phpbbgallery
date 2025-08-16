@@ -1,6 +1,6 @@
-/*
+/**
 * @package cBB Core
-* @version v1.0.16 22/04/2022 $
+* @version 1.1.0 01/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/

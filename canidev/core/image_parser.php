@@ -1,7 +1,7 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.15 28/03/2022
+* @version 1.1.0 01/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -32,11 +32,21 @@ class image_parser
 
 	protected $data;
 	
+	/**
+	 * Constructor
+	 */
 	public function __construct()
 	{
 		$this->reset();
 	}
 
+	/**
+	 * Parse image
+	 * 
+	 * @param string 	$filename
+	 * @param string 	$type 		Image type (bmp | gif | jpeg | png | webp)
+	 * @param int 		$flags 		image_parser::RESIZE | image_parser::THUMBAIL | image_parser::WATERMARK
+	 */
 	public function parse($filename, $type, $flags = self::WATERMARK)
 	{
 		if(!file_exists($filename) || !isset($this->quality[$type]) || !$flags)
@@ -83,6 +93,10 @@ class image_parser
 		$this->reset();
 	}
 
+	/**
+	 * Set base path
+	 * @return image_parser
+	 */
 	public function set_path($path)
 	{
 		if(substr($path, -1) != '/')
@@ -95,6 +109,16 @@ class image_parser
 		return $this;
 	}
 
+	/**
+	 * Set resize dimensions
+	 * 
+	 * @param int|null 		$img_width
+	 * @param int|null 		$img_height
+	 * @param int|null 		$thumb_width
+	 * @param int|null 		$thumb_height
+	 * 
+	 * @return image_parser
+	 */
 	public function set_resize_limit($img_width = null, $img_height = null, $thumb_width = null, $thumb_height = null)
 	{
 		foreach($this->max_sizes as $key => $value)
@@ -108,6 +132,12 @@ class image_parser
 		return $this;
 	}
 
+	/**
+	 * Set watermark file
+	 * 
+	 * @param string 	$filename
+	 * @return image_parser
+	 */
 	public function set_watermark($filename)
 	{
 		$this->data['watermark_file'] = $filename;
@@ -115,6 +145,12 @@ class image_parser
 		return $this;
 	}
 
+	/**
+	 * Add watermark to image
+	 * 
+	 * @param int 		$alpha_level 		Watermark transparency
+	 * @param string 	$position 			Watermark position (left_top | left_center | left_bottom | right_top | right_center | right_bottom | center)
+	 */
 	protected function add_watermark($alpha_level = 100, $position = '')
 	{
 		if(!$this->data['watermark_file'] || !file_exists($this->data['watermark_file']))
@@ -218,6 +254,9 @@ class image_parser
 		imagecopyresampled($this->data['resource'], $water, $dest_x , $dest_y , 0, 0, $dest_w, $dest_h, $watermark_width, $watermark_height);
 	}
 
+	/**
+	 * Generate thumbnail file
+	 */
 	protected function generate_thumb()
 	{
 		$sizes = $this->validate_size('thumb');
@@ -229,6 +268,9 @@ class image_parser
 		imagedestroy($thumb);
 	}
 
+	/**
+	 * Resize image
+	 */
 	protected function resize()
 	{
 		$sizes = $this->validate_size('img');
@@ -244,6 +286,12 @@ class image_parser
 		}
 	}
 
+	/**
+	 * Save image to file
+	 * 
+	 * @param \resource 	$resource
+	 * @param string 		$filename
+	 */
 	protected function save($resource, $filename)
 	{
 		$fn = 'image' . $this->data['type'];
@@ -256,6 +304,9 @@ class image_parser
 		return $fn($resource, $this->data['path'] . $filename);
 	}
 
+	/**
+	 * Reset image
+	 */
 	protected function reset()
 	{
 		if($this->data['resource'] !== null)
@@ -274,6 +325,12 @@ class image_parser
 		];
 	}
 
+	/**
+	 * Validate image size
+	 * 
+	 * @param string 	$prefix 		(img | thumb)
+	 * @return array
+	 */
 	protected function validate_size($prefix = 'img')
 	{
 		$orig_width = $width = $this->data['width'];

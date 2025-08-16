@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -106,7 +106,7 @@ class admin_controller_rooms extends admin_controller_base
 					'legend1'		=> 'CHAT_ROOM_CONFIG',
 					'room_title'			=> array('lang' => 'CHAT_ROOM_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
 					'room_enabled'			=> array('lang' => 'CHAT_ROOM_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'),
-					'room_autopurge_time'	=> array('lang' => 'CHAT_ROOM_AUTOPURGE',	'validate' => 'int',			'type' => 'custom',				'function' => array($this, 'make_select'),	'params' => array($autopurge_options, '{KEY}', '{CONFIG_VALUE}')),
+					'room_autopurge_time'	=> array('lang' => 'CHAT_ROOM_AUTOPURGE',	'validate' => 'int',			'type' => 'custom',				'function' => array($this->tools, 'make_select'),	'params' => array($autopurge_options, '{KEY}', '{CONFIG_VALUE}')),
 					'room_msg_limit'		=> array('lang' => 'CHAT_ROOM_MSG_LIMIT',	'validate' => 'int:0:99999',	'type' => 'number:0:99999',		'default' => 0),
 				);
 				
@@ -114,15 +114,15 @@ class admin_controller_rooms extends admin_controller_base
 				{
 					$display_vars += array(
 						'legend2'		=> 'CHAT_ROOM_AUTH',
-						'room_groups'	=> array('lang' => 'CHAT_ROOM_GROUPS',	'type' => 'custom',	'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}')),
+						'room_groups'	=> array('lang' => 'CHAT_ROOM_GROUPS',	'type' => 'custom',	'function' => array($this->tools, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}')),
 						'room_users'	=> array('lang' => 'CHAT_ROOM_USERS',	'type' => 'textarea:5:5'),
 					);
 				}
 				
 				$display_vars += array(
 					'legend3'		=> 'CHAT_ROOM_CONNECTIONS',
-					'linked_forums'	=> array('lang' => 'CHAT_ROOM_LINKED_FORUMS',	'type' => 'custom',	'function' => array($this, 'make_select'),		'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', self::SELECT_MULTIPLE)),
-					'linked_groups'	=> array('lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}', false),	'display' => ($room_id != constants::GUEST_ROOM)),
+					'linked_forums'	=> array('lang' => 'CHAT_ROOM_LINKED_FORUMS',	'type' => 'custom',	'function' => array($this->tools, 'make_select'),		'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE)),
+					'linked_groups'	=> array('lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => array($this->tools, 'groups_select'),		'params' => array('{KEY}', '{CONFIG_VALUE}', false),	'display' => ($room_id != constants::GUEST_ROOM)),
 				);
 				
 				// Guest room have different use for forums
@@ -144,9 +144,9 @@ class admin_controller_rooms extends admin_controller_base
 				
 				/**
 				* @event chat.acp_rooms_vars
-				* @var	array	display_vars	Array of config values to display and process
-				* @var	array	room_data		Original data of room
-				* @var	boolean	submit			Do we display the form or process the submission
+				* @var	array		display_vars	Array of config values to display and process
+				* @var	array		room_data		Original data of room
+				* @var	boolean		submit			Do we display the form or process the submission
 				* @since 1.2.0
 				*/
 				$submit = &$this->submit;
@@ -267,7 +267,7 @@ class admin_controller_rooms extends admin_controller_base
 						
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->form_action));
 					}
 				}
 
@@ -285,7 +285,7 @@ class admin_controller_rooms extends admin_controller_base
 						'id'		=> $room_id
 					)),
 					
-					'U_BACK'			=> $this->u_action,
+					'U_BACK'			=> $this->form_action,
 					'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=acp_chat_rooms&amp;field=room_users')
 				));
 			break;
@@ -306,8 +306,6 @@ class admin_controller_rooms extends admin_controller_base
 			break;
 			
 			default:
-				$room_ary = array();
-
 				$sql = 'SELECT *
 					FROM ' . $this->tables['rooms'] . '
 					ORDER BY room_order';
@@ -322,8 +320,8 @@ class admin_controller_rooms extends admin_controller_base
 						'S_KEY'		=> $row['room_key'],
 						'S_TITLE'	=> $title,
 						
-						'U_DELETE'	=> ($row['room_id'] != constants::GUEST_ROOM) ? $this->u_action . '&amp;action=delete&amp;id=' . $row['room_id'] : '',
-						'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;id=' . $row['room_id'],
+						'U_DELETE'	=> ($row['room_id'] != constants::GUEST_ROOM) ? $this->form_action . '&amp;action=delete&amp;id=' . $row['room_id'] : '',
+						'U_EDIT'	=> $this->form_action . '&amp;action=edit&amp;id=' . $row['room_id'],
 					));
 				}
 				$this->db->sql_freeresult($result);
@@ -333,7 +331,7 @@ class admin_controller_rooms extends admin_controller_base
 						'action'	=> 'sort'
 					)),
 					
-					'U_ROOM_ADD'	=> $this->u_action . '&amp;action=add'
+					'U_ROOM_ADD'	=> $this->form_action . '&amp;action=add'
 				));
 			break;
 		}

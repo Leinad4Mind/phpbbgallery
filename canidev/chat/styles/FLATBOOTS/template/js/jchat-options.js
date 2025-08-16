@@ -1,11 +1,10 @@
-/*
-* @name jchat-options.js
+/**
 * @package cBB Chat
 * @style: FLATBOOTS
-* @version v1.2.1 01/02/2020
+* @version v1.2.4 17/06/2022
 *
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 var jchat_style_options = {

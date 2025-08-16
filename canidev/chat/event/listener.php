@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,20 +19,18 @@ class listener implements EventSubscriberInterface
 	protected $tables;
 	
 	/**
-	* Constructor
-	*
-	* @param \canidev\chat\libraries\chat 		$chat			Chat Object
-	* @param \phpbb\config\config 				$config			Config Object
-	* @param ContainerInterface 				$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface	$db				DB Object
-	* @param array 								$tables 		Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \canidev\chat\libraries\chat 			$chat			Chat Object
+	 * @param \phpbb\config\config 					$config			Config Object
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param array 								$tables 		Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		$tables)
 	{
@@ -40,8 +38,6 @@ class listener implements EventSubscriberInterface
 		$this->config		= $config;
 		$this->db			= $db;
 		$this->tables 		= $tables;
-		
-		\canidev\core\lib::get_instance($container);
 	}
 
 	/**
@@ -49,28 +45,23 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		$events = array();
-		
-		if(!defined('IN_INSTALL'))
-		{
-			$events = array(
-				'core.user_setup'					=> 'load_language',
-				'core.user_setup_after'				=> 'on_setup_after',
-				'core.session_kill_after'			=> 'on_user_logout',
-				'core.page_footer'					=> 'on_footer',
-				'core.delete_user_after'			=> 'on_user_delete',
-				'core.group_add_user_after'			=> 'user_group_add',
-				'core.user_set_group_attributes'	=> 'user_group_change',
-				'core.group_delete_user_after'		=> 'user_group_del',
-				'core.permissions'					=> 'add_permissions',
-			);
-		}
-
-		return $events;
+		return array(
+			'core.user_setup'					=> 'load_language',
+			'core.user_setup_after'				=> 'on_setup_after',
+			'core.session_kill_after'			=> 'on_user_logout',
+			'core.page_footer'					=> 'on_footer',
+			'core.delete_user_after'			=> 'on_user_delete',
+			'core.group_add_user_after'			=> 'user_group_add',
+			'core.user_set_group_attributes'	=> 'user_group_change',
+			'core.group_delete_user_after'		=> 'user_group_del',
+			'core.permissions'					=> 'add_permissions',
+		);
 	}
 	
 	/**
 	 * Load chat language
+	 * 
+	 * @param \phpbb\event\data 	$event
 	 */
 	public function load_language($event)
 	{

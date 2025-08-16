@@ -1,3 +1,9 @@
+/*  cBB Core StyleSheet
+    --------------------------------------------------------------
+	Style:	All
+	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
 
 .cbb-helper-inline 						{ display: inline-block; }
 .cbb-helper-hidden 						{ display: none!important; }
@@ -338,12 +344,30 @@ body > .cbb-dialog.fixed {
 	position: fixed;
 }
 
-.cbb-dialog fieldset {
+.cbb-dialog fieldset dl {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.cbb-dialog fieldset,
+.cbb-dialog fieldset dt {
 	font-size: 1em;
 }
 
+.cbb-dialog fieldset dt,
+.cbb-dialog fieldset dd {
+    flex: auto;
+	float: none;
+    margin: 0;
+}
+
 .cbb-dialog fieldset dt {
-	font-size: 1em;
+	width: 40%;
+}
+
+.cbb-dialog fieldset dd {
+	width: 60%;;
 }
 
 .cbb-modal-dialog .cbb-dialog-menu {
@@ -605,7 +629,8 @@ body > .cbb-dialog.fixed {
 
 .cbb-menu .fa {
 	font-size: 1.2em;
-	margin-right: 4px;
+	margin-right: 8px;
+	text-align: center;
 	width: 14px;
 }
 
@@ -950,20 +975,20 @@ select.cbb-inputbox {
 }
 
 .cbb-group {
-	display: inline-block;
+	align-items: center;
+	display: inline-flex;
+	flex-direction: row;
 	vertical-align: middle;
-}
-
-.cbb-group:after {
-    content: "";
-    clear: both;
-    display: block;
 }
 
 .cbb-group .cbb-inputbox,
 .cbb-group .cbb-btn {
-    float: left;
-    margin: 0 -1px 0 0;
+    margin: 0;
+}
+
+.cbb-group .cbb-inputbox:not(:last-child),
+.cbb-group .cbb-btn:not(:last-child) {
+	margin-right: -1px;
 }
 
 #acp dd .cbb-group .cbb-inputbox {
@@ -977,8 +1002,6 @@ select.cbb-inputbox {
 }
 
 .cbb-group > * {
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -1050,12 +1073,14 @@ a.cbb-state-highlight,
 
 .cbb-state-error,
 .cbb-inputbox.cbb-state-error {
-	background-color: #FEF1EC;
-	border-color: #CD0A0A;
-	color: #CD0A0A;
+	background-color: #fef1ec;
+	border-color: #cd0a0a;
+	color: #cd0a0a;
 }
 
-.cbb-state-error a { color: #000000; }
+.cbb-state-error a {
+	color: #000;
+}
 
 .cbb-state-ok,
 .cbb-inputbox.cbb-state-ok {
@@ -1068,7 +1093,6 @@ a.cbb-state-highlight,
 .cbb-inputbox.cbb-state-disabled {
 	background-image: none;
 	cursor: default !important;
-	filter: Alpha(Opacity=35);
 	opacity: .35;
 }
 
@@ -1127,9 +1151,10 @@ a.cbb-state-highlight,
 	text-align: left;
 }
 
-.rtl .cbb-group .cbb-inputbox,
-.rtl .cbb-group .cbb-btn {
-	float: right;
+.rtl .cbb-group .cbb-inputbox:not(:last-child),
+.rtl .cbb-group .cbb-btn:not(:last-child) {
+	margin-left: -1px;
+	margin-right: 0;
 }
 
 .rtl .cbb-group > :first-child:not(:last-child) {
@@ -1430,6 +1455,33 @@ a.cbb-state-highlight,
 		height: 28px;
 		vertical-align: top;
 		margin: 5px 0 0 0;
+	}
+
+	.cbb-dialog fieldset dl,
+	.cbb-dialog fieldset dt,
+	.cbb-dialog fieldset dd {
+		display: block;
+		width: auto;
+	}
+
+	.cbb-dialog fieldset dt {
+		margin-bottom: 2px;
+	}
+
+	.cbb-dialog fieldset dl {
+		margin-bottom: 5px;
+	}
+
+	.cbb-dialog fieldset .cbb-inputbox {
+		width: 100% !important;
+	}
+
+	.cbb-dialog .cbb-group {
+		display: flex;
+	}
+
+	.cbb-dialog .cbb-group .cbb-inputbox:first-child {
+		flex: auto;
 	}
 
 	.cbb-tabs-nav a .tab-title {

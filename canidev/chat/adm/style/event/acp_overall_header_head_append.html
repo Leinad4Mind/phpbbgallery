@@ -1,16 +1,3 @@
-{% if IN_CHAT_ADMIN %}
-	{% if CANIDEV_CORE_STARTED %}
-		{% INCLUDE '@canidev_core/event/overall_header_head_append.html' %}
-	{% endif %}
-
-	{% if U_HELP and not U_BACK and not MESSAGE_TEXT %}
-	<script>
-	// <![CDATA[
-		window.__helpIcon = {
-			title	: '{{ lang('DOCUMENTATION_AND_SUPPORT')|escape('js') }}',
-			url		: '{{ U_HELP }}'
-		};
-	// ]]>
-	</script>
-	{% endif %}
+{% if IN_CHAT_ADMIN and CANIDEV_CORE_STARTED %}
+	{% include '@canidev_core/event/overall_header_head_append.html' %}
 {% endif %}
