@@ -1,0 +1,940 @@
+/*****************************************************************
+* Custom CSS Stylesheet. You can add any custom CSS selectors here after the comment line. 
+* They will be given the highest priority on any elements on the forum
+* Personilize your forum color scheme in one click here: www.sitesplat.com/phpBB3/ 
+* **************************************************************
+*
+* BBOOTS(3.0.3) @SiteSplat.com - Custom CSS STYLESHEET - DARK Theme
+* 
+***************************************************************
+*****************************************************************/
+/* ===[ CSS HOOK TOP ]=== */
+ 
+html {
+    background-color: #333;
+}
+
+body {
+    color: #ddd;
+}
+
+h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: #9f9f9f;
+}
+
+h3 {
+    border-bottom: 1px solid #555;
+	color: #9f9f9f;
+}
+ 
+header {
+    background-color: rgb(36, 37, 38);
+}
+
+.subheader {
+    border-top: 4px solid #169fe6;
+}
+
+#content-forum {
+    background: none repeat scroll 0 0 rgb(45, 45, 45);
+	box-shadow: 0 0 14px #ddd;
+}
+
+blockquote {
+    border-left: 5px solid #777;
+}
+
+.text-info {
+    color: #169fe6;
+}
+
+.tabs-nav, .crumbs {
+    background: none repeat scroll 0 0 rgb(36, 37, 38);
+    border-bottom: 1px solid #222;
+}
+
+.top-menu > li:first-child {
+    border-left: 1px solid #333;
+}
+
+.top-menu > li {
+    border-right: 1px solid #333;
+}
+
+.sub-crumb, .sub-crumb li {
+    text-shadow: none;
+}
+
+.sub-breadcrumb {
+    background-color: rgba(0, 0, 0, 0.22);
+}
+
+
+.tabs-nav, .crumbs {
+    box-shadow: 0 1px 0 #444;
+}
+
+.search-box form input {
+    background-color: #444;
+    border-color: #777;
+}
+
+.search-box form input:focus {
+    border-color: #777;
+}
+
+.submenu {
+    background-color: rgba(45, 45, 45, 0.96);
+}
+
+.submenu li > span {
+    background-color: #444;
+}
+
+.dropdown-menu {
+    background-color: rgba(45, 45, 45, 0.96);
+    border: 1px solid #444;
+}
+
+.dropdown-menu li {
+    background: none repeat scroll 0 0 rgba(45, 45, 45, 0.96);
+    border-top: 1px solid #444;
+}
+
+.dropdown-menu > li > a {
+    color: #888;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    background: none repeat scroll 0 0 rgba(45, 45, 45, 0.96);
+	color: #ddd;
+}
+
+.dropdown-menu > li:hover {
+    background: none repeat scroll 0 0 rgba(45, 45, 45, 0.96);
+	color: #ddd;
+	text-shadow: none;
+}
+
+.dropdown-menu > li > a > i {
+    color: #888;
+}
+
+.top-menu > li > ul:after {
+    border-bottom: 5px solid #444;
+    top: -6px;
+}
+
+.well {
+    border-left: 2px solid #444;
+    border-right: 2px solid #444;
+    border-top: 2px solid #444;
+	border-bottom: 0 none;
+    box-shadow: 0 3px 0 0 #444;
+}
+
+.well {
+    background-color: rgb(50, 50, 50);
+}
+
+
+.phpbb_alert {
+    background-color: rgb(60, 60, 60);
+    border: 1px solid #999 !important;
+}
+
+.form-control {
+    background-color: rgb(41, 44, 46);
+    border: 1px solid #444;
+	color: #999;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #555;
+}
+
+.input-group-addon {
+    background-color: #333;
+    border: 1px solid #555;
+    color: #ccc;
+}
+
+.thumbnail {
+    background-color: #555;
+    border: 1px solid #777;
+}
+
+.control-group {
+    border-bottom: 1px dashed #888;
+}
+
+.table-primary thead th {
+    background-color: #444;
+    border-color: #444 !important;
+    color: #ddd;
+}
+
+.table-primary thead th a {
+    color: #ddd;
+}
+
+th i {
+    color: #ddd;
+}
+
+.table-bordered {
+    border-color: #444;
+    box-shadow: 0 3px 0 0 #444;
+}
+
+.table-white {
+    background: none repeat scroll 0 0 #444;
+}
+
+.table-primary tbody tr:nth-child(2n+1) td, .table-primary tbody tr:nth-child(2n+1) th {
+    background: none repeat scroll 0 0 rgb(41, 44, 46);
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #444;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) {
+    background-color: #444;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #888;
+}
+
+.table-primary tbody td {
+    background: none repeat scroll 0 0 #333;
+	color: #ddd;
+}
+
+.panel {
+    background-color: rgb(50, 50, 50);
+}
+
+.panel-default {
+    border-color: #444;
+	background-color: #444;
+}
+
+.panel-footer {
+    background-color: #444;
+    border-top: 1px solid #333;
+}
+
+.panel-default > .panel-heading {
+    background-color: #444;
+    border-color: #333;
+	color: #999;
+}
+
+.panel-default > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #777;
+}
+
+.panel-poll {
+    box-shadow: 0 3px 0 0 #444;
+}
+
+.framed-ucp {
+    border: 1px solid #888;
+}
+
+.form-actions {
+    background: #444;
+    border: 1px dashed #888;
+    box-shadow: 0 1px 1px #444 inset, 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.postbody .content {
+    color: #ddd;
+}
+
+.user-profile-row {
+    border-top: 1px dotted rgb(141, 141, 141);
+}
+
+.user-profile-tab {
+    border-left: 1px dashed rgb(141, 141, 141);
+}
+
+.avatar-frame img {
+    border: 6px solid #444;
+}
+
+.tagsinput span.tag {
+    background: none repeat scroll 0 0 #444;
+    border: 1px solid #777;
+}
+
+.progress {
+    background-color: ##404040;
+    background-image: none;
+}
+
+
+
+.pmboots > a {
+    color: #999;
+}
+
+.pmboots {
+    background: none repeat scroll 0 0 rgb(45, 45, 45);
+    text-shadow: none;
+}
+
+.btn {
+    color: #9f9f9f;
+}
+
+.btn-default {
+    background-color: rgb(41, 44, 46);
+    border-color: #444;
+}
+
+.btn-default.active.focus, .btn-default.active:focus, 
+.btn-default.active:hover, .btn-default.focus:active, 
+.btn-default:active:focus, .btn-default:active:hover, 
+.open > .dropdown-toggle.btn-default.focus, 
+.open > .dropdown-toggle.btn-default:focus, 
+.open > .dropdown-toggle.btn-default:hover {
+    background-color: rgb(60, 60, 60);
+    border-color: #444;
+    color: #ddd;
+}
+
+.btn-default:hover, .btn-default:focus,
+.btn-default.focus, .btn-default:active,
+.btn-default.active, .open > .dropdown-roggle.btn-default {
+    background-color:rgb(60, 60, 60);
+    border-color:#888;
+	color:#ddd;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+    background-color: rgb(60, 60, 60);
+    border-color: #888;
+    color: #ddd;
+}
+
+.btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled.focus, .btn-default.focus[disabled], fieldset[disabled] .btn-default.focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default.active[disabled], fieldset[disabled] .btn-default.active {
+    background-color: #444;
+    border-color: #ccc;
+}
+
+.pagination > li > a, .pagination > li > span {
+    background-color: rgb(41, 44, 46);
+    border: 1px solid #444;
+    color: #888;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: #333;
+    border-color: #444;
+    color: #888;
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+    background-color: rgb(41, 44, 46);
+    border-color: #444;
+    color: #999;
+}
+
+.pager li > a, .pager li > span {
+    background-color: rgb(41, 44, 46);
+    border: 1px solid #444;
+}
+
+.pager li > a:hover, .pager li > a:focus {
+    background-color: #333;
+}
+
+.pagination span a, li.pagination span a {
+    background-color: #444;
+}
+
+.pagination span a:hover, li.pagination span a:hover {
+    background-color: #555;
+}
+
+.pagination span a:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.widget-body {
+    background-color: rgb(41, 44, 46);
+    border-color: #444;
+}
+
+.tabbable-custom .nav-tabs > li.active {
+    border-top: 3px solid #444;
+}
+
+.section-ucp ul.nav-tabs li a, .section-mcp ul.nav-tabs li a, .section-posting ul.nav-tabs li a {
+    border-left: 1px solid #444;
+    border-right: 1px solid #444;
+    border-top: 1px solid #444;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background-color: #444;
+	color: #ddd;
+}
+
+.tabbable-custom .nav-tabs > li.active > a:hover {
+    background-color: rgb(41, 44, 46);
+}
+
+.section-ucp .nav > li > a:focus, .section-mcp .nav > li > a:focus, .section-posting .nav > li > a:focus, .section-ucp .nav > li > a:hover, .section-mcp .nav > li > a:hover, .section-posting .nav > li > a:hover {
+    background-color: rgb(41, 44, 46);
+    border-left: 1px solid #444;
+    border-right: 1px solid #444;
+    border-top: 1px solid #444;
+	border-bottom: 1px solid #444;
+}
+
+.ver-inline-menu li.active:after {
+    border-left: 6px solid #444;
+}
+
+.ver-inline-menu li.active a, .ver-inline-menu li.active i {
+    background: none repeat scroll 0 0 #444;
+    border-left: 1px solid #444;
+    color: #ddd;
+}
+
+.ver-inline-menu li.active i {
+    background: none repeat scroll 0 0 #444;
+}
+
+.ver-inline-menu li a {
+    background: none repeat scroll 0 0 #555;
+    border-left: 2px solid #444;
+    color: #ccc;
+}
+
+.ver-inline-menu li i {
+    background: none repeat scroll 0 0 #555;
+    color: #ccc;
+}
+
+.ver-inline-menu li:hover a, .ver-inline-menu li:hover i {
+    background: none repeat scroll 0 0 #555;
+	color: #ffffff;
+}
+.ver-inline-menu li:hover i {
+    background: none repeat scroll 0 0 #555;
+    color: #ffffff;
+}
+
+.alert {
+    border: 2px solid #444;
+}
+
+.separator i {
+    background: none repeat scroll 0 0 rgb(50, 50, 50);
+    color: rgb(141, 141, 141);
+}
+
+.separator:before {
+    background: none repeat scroll 0 0 rgb(141, 141, 141);
+}
+
+.codebox {
+    background-color: #444;
+    border: 1px solid #888;
+}
+
+.codebox code {
+    color: #888;
+}
+
+code {
+    background-color: #424242;
+    border-radius: 1px;
+}
+
+.attachbox {
+    background-color: #333;
+    border: 1px dashed #555;
+}
+
+.content blockquote {
+    background: none repeat scroll 0 0 #444;
+    border: 1px solid #777;
+}
+
+.user-profile-output {
+    color: #afafaf;
+}
+
+.topstyle i {
+    background-color: #777;
+    border: 3px solid #555;
+    color: #555;
+}
+
+.blogImage {
+    border: 1px solid #888;
+}
+
+.recent-topic a, .links a {
+    color: #ddd;
+}
+
+.recent-topic a:hover, .links a:hover {
+    color: #ccc;
+}
+
+.tweet {
+    color: #ddd;
+}
+
+footer .navList li a {
+    border-bottom: 1px dashed #555;
+}
+
+footer #footerContent {
+    background-color: rgb(36, 37, 38);
+}
+
+
+.achievement i {
+    background: none repeat scroll 0 0 rgb(41, 44, 46);
+    border: 5px solid #444;
+}
+
+.hr-double {
+    border-bottom: 1px solid #999;
+    border-top: 1px solid #999;
+}
+
+
+input[type="checkbox"]+label:before{
+  background:url("./images/radio-check_dark.png")left top no-repeat;
+}
+
+input[type="checkbox"]:checked+label:before{
+  background:url("./images/radio-check_dark.png")-19px top no-repeat;
+}
+
+input[type="radio"]+label:before{
+  background:url("./images/radio-check_dark.png")-38px top no-repeat;
+}
+
+input[type="radio"]:checked+label:before{
+  background:url("./images/radio-check_dark.png")-57px top no-repeat;
+}
+
+.well-schema {
+    background-image:url("./images/schema_dark.png");
+}
+
+.subheader {
+    background: url("./images/pattern_dark.png") repeat scroll center top #222;
+}
+
+.footable.breakpoint > tbody > tr > td > span.footable-toggle {
+    background: none repeat scroll 0 0 #444;
+}
+
+
+.postbody h3 > a {
+    color: #fff;
+}
+
+.postbody h3 > a:hover {
+    color: #ccc;
+}
+
+
+
+.ui-sortable {
+    background-color: #333 !important;
+}
+
+.ui-sortable li.ui-state-default {
+    background: #444 !important;
+}
+
+.ui-sortable-placeholder {  
+    border: 3px dashed #333 !important;   
+    background: #404040 !important;  
+}  
+
+
+@media (max-width: 468px) {
+
+.mobile-post {
+    background: none repeat scroll 0 0 #444;
+}
+
+}
+
+
+
+
+/* Contrast COLORS starts here */
+
+.side-segment h3:after, .side-segment h2:after {
+    background-color: #ffd700;
+}
+
+.logo span {
+    color: #ffd700;
+}
+
+.logo-transition a:after {
+    color: #ffd700;
+}
+
+.submenu {
+    border-bottom: 4px solid #ffd700;
+}
+
+a.forumtitle {
+  color: #ffd700;
+}
+
+a.topictitle {
+    color: #ffd700;
+}
+
+.subheader {
+    border-top: 4px solid #ffd700;
+}
+
+.submenu li:hover > a {
+    color: #ffd700;
+}
+
+.submenu li:hover > span {
+    background-color: #ffd700;
+}
+
+.nav-icon:hover [class*="has-sub"] {
+    color: #ffd700;
+}
+
+.twitter-layout:before {
+    color: #ffd700;
+}
+
+#footerContent blockquote p span {
+    color: #ffd700;
+}
+
+footer {
+    border-top: 3px solid #ffd700;
+}
+
+footer .bottomLinks small a {
+    color: #ffd700;
+}
+
+footer .interact a:hover {
+    color: #ffd700;
+}
+
+footer .bottomLinks a:hover {
+    border-bottom: 1px solid #ffd700;
+}
+
+.text-info {
+    color: #ffd700;
+}
+
+.user-menu > span:hover {
+    color: #FFD700;
+}
+
+.user-menu > span:hover  .caret {
+	border-top: 4px solid #FFD700;
+}
+
+.postlink:hover {
+    color: #FFD700 !important;
+}
+
+/* h3 header colors
+
+.side-segment h3 {
+    color: #FFD700;
+}
+
+.side-segment h3 a {
+    color: #FFD700;
+}
+h3 header colors */
+
+
+/* Contrast COLORS ends here */
+
+
+
+/* MCHAT style starts here */
+
+.widget-body-mchat {
+    background-color: #444;
+    border-color: #777;
+}
+
+.counter {
+    text-shadow: none !important;
+}
+
+.chats li.BG1 .message {
+    background: none repeat scroll 0 0 #555;
+    border-left: 3px solid #333;
+    box-shadow: 0 2px 0 0 #444;
+}
+
+.chats li.BG1 .message .arrow {
+    border-right: 8px solid #333;
+}
+
+.chats li.BG2 .message {
+    background: none repeat scroll 0 0 #333;
+    border-right: 3px solid #777;
+	box-shadow: 0 2px 0 0 #444;
+}
+
+.chats li.BG2 .message .arrow {
+    border-left: 8px solid #777;
+}
+
+.chats li .date-time {
+    color: #ddd;
+}
+
+.enter-message input {
+    background: none repeat scroll 0 0 #444;
+    border: 1px solid #777;
+    box-shadow: 0 1px 1px #444;
+    color: #ddd;
+}
+
+.mchat-link-sep {
+    background-color: #777;
+    border-right: 0 none;
+}
+
+/* MCHAT style ends here */
+
+.panel {
+    background-color: #444 !important;
+}
+
+.comment p {
+    text-shadow: none !important;
+}
+
+.comment_starter {
+    background-color: #333 !important;
+	color: #fff !important;
+}
+
+.comment footer {
+    background-color: #333 !important;
+}
+
+.modal-content {
+    background-color: #444;
+}
+
+.modal-header {
+    border-bottom: 1px solid #333;
+}
+
+.modal-footer {
+    border-top: 1px solid #333;
+}
+
+.likelist::before {
+    border-color: transparent;
+}
+
+.disliked-post-msg {
+    background-color: #2d2d2d;
+}
+
+.label-huskygray {
+    background-color: #444;
+}
+
+.ld-msg {
+    background-color: #444;
+	color: #ddd;
+}
+
+
+.share-button {
+    background-color: #333;
+    border: 1px solid #444;
+}
+
+.share-button > a:hover,
+.share-button > a:hover:after {
+	color: #ddd;
+	background-color: rgb(60,60,60);
+    border-color:888;
+}
+
+.icons-wrapper {
+    background-color: rgb(60, 60, 60);
+}
+
+.share-button .icons-wrapper ul li:last-child a {
+    background-color: #444;
+}
+
+.share-button .icons-wrapper ul li a:hover i {
+   color:#555;
+}
+
+.share-button a:hover,
+.share-button button:hover,
+.share-button a:focus,
+.share-button button:focus {
+    color: #ddd;
+}
+
+
+.sidebar .panel {
+    background-color: rgb(41, 44, 46) !important;
+}
+
+.sidebar .panel-info > .panel-heading {
+    background-color: #444;
+    border-color: transparent;
+}
+
+.sidebar .panel-body {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-color: #444 #444;
+    border-image: none;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+}
+
+.panel-primary > .panel-heading,
+.panel-info > .panel-heading,
+.panel-custom > .panel-heading,
+.panel-success > .panel-heading,
+.panel-warning > .panel-heading {
+    background-color: #444;
+    border-color: transparent;
+}
+
+.user-list .media-object {
+    border: 2px solid #444;
+}
+
+
+.list-announcement .panel-body ul > li small {
+    color: #fff;
+}
+
+.list-announcement .panel-body ul > li a {
+    color: #ffd700;
+}
+
+.sidebar .nav > li > a:focus,
+.sidebar .nav > li > a:hover {
+    background-color: #444;
+}
+
+
+.list-group-item {
+    background-color: #444;
+    border: 1px solid #555;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    background-color: #555;
+    border-color: #555;
+}
+
+a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover {
+    background-color: #626262;
+    color: #fafafa;
+}
+
+.panel-poll {
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    border-top: 2px solid transparent;
+}
+
+.mini-timeline::before {
+    background: #555;
+}
+
+.mini-timeline > li:last-child::before {
+    background: #555;
+}
+
+.mini-timeline > li .timeline-body {
+    background-color: #444;
+}
+
+#qr_postform .col-md-snappy {
+    background: #555;
+}
+
+.popup-box {
+    background: #555;
+}
+
+.prefix-popover {
+    background-color: #555;
+    border: 2px solid #444;
+}
+
+.prefix-popover::after {
+    border-top: 10px solid #444;
+}
+
+#available_prefixes {
+    background-color: #555 !important;
+}
+
+.progress {
+    background-color: #444;
+}
+
+.notification-content .icon-mark {
+    background-color: #444;
+    border: 1px solid #555;
+}
+
+.notification-content li {
+    border-bottom: 2px solid #555;
+}
+
+.notification-block img {
+    border: 3px solid #555;
+}
+
+.dropdown-menu li:hover {
+    text-shadow: none;
+}
+
+/* TO DO: add switch for night stalker switch rocket light blah blah */
+
+
+.btn-night-sw {
+    bottom: 6px;
+    position: absolute;
+    right: 5px;
+}
+
+.btn-night-sw .focus {
+    outline: none !important;
+}
+
+/* ===[ CSS HOOK BOOTTOM ]=== */
