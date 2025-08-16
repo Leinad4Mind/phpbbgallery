@@ -344,6 +344,7 @@ class admin_controller
 				'number',
 				'date',
 				'time',
+				'separator',
 			];
 
 			foreach ($type as $t_name => $t_value)
@@ -483,6 +484,9 @@ class admin_controller
 					{
 						$type .= '<input type="checkbox" name="templatefield_' . $row['id'] . '[]" value="' . $value .'">&nbsp;' . $value . '&nbsp;&nbsp;';
 					}
+				break;
+				case 'separator':
+					$type = $row['options'];
 				break;
 			}
 

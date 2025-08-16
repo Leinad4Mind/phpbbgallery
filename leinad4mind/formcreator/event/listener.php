@@ -178,8 +178,6 @@ class listener implements EventSubscriberInterface
 
 	private function build_form($forum_id, $mode)
 	{
-		global $phpbb_container;
-
 		$sql = 'SELECT m.*, f.forum_name, f.forum_id, f.forum_force_form, f.forum_show_form
 			FROM ' . $this->table_formcreator . ' m, ' . FORUMS_TABLE . ' f
 			WHERE m.form_id = ' . (int) $forum_id . '
@@ -274,22 +272,21 @@ class listener implements EventSubscriberInterface
 					$row['mandatory'] = (bool) $row['min_value'];
 				break;
 
+				case 'separator':
+					$entry = $this->render($this->translate($row['options']));
+				break;
+
 				default:
 				break;
 			}
 
-			/** @var renderer_interface $renderer */
-			$renderer = $phpbb_container->get('text_formatter.renderer');
-
-			/** @var parser_interface $parser */
-			$parser = $phpbb_container->get('text_formatter.parser');
-
 			$this->template->assign_block_vars('form_creator_template', [
 				'CLEAN_NAME'	=> $clean_name,
-				'NAME_RICH'		=> $renderer->render($parser->parse($this->translate($row['name']))),
-				'EXPLAIN'		=> $renderer->render($parser->parse($this->translate($row['explanation']))),
+				'NAME_RICH'		=> $this->render($this->translate($row['name'])),
+				'EXPLAIN'		=> $this->render($this->translate($row['explanation'])),
 				'ENTRY'			=> $entry,
 				'MANDATORY' 	=> $row['mandatory'] ? '<span class="mandatory">*</span>' : '',
+				'IS_SEPARATOR'	=> strtolower($row['type']) === 'separator',
 			]);
 
 			$this->template->assign_vars([
@@ -435,4 +432,18 @@ class listener implements EventSubscriberInterface
 	{
 		return $this->user->lang($text);
 	}
+
+	private function render($text)
+	{
+		global $phpbb_container;
+
+		/** @var renderer_interface $renderer */
+		$renderer = $phpbb_container->get('text_formatter.renderer');
+
+		/** @var parser_interface $parser */
+		$parser = $phpbb_container->get('text_formatter.parser');
+
+		return $renderer->render($parser->parse($text));
+	}
+
 }

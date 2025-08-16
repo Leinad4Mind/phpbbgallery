@@ -12,10 +12,10 @@
 	<p>{{ lang('HOW_TO') }}</p>
 	<hr>
 	<p style="cursor:pointer; float:right; margin-top: -35px;" onclick="ShowHide('info1');ShowHide('info2');">{{ lang('HOW_TO_HIDE') }}</p>
-	<p>{{ lang('ACP_FORM_CREATOR_EXPLAIN_2') }}</p>
+	<p>{{ lang('ACP_FORM_CREATOR_FAQ') }}</p>
 </fieldset>
 
-<p>{{ lang('ACP_FORM_MOD_NOTE') }}</p>
+<p>{{ lang('ACP_FORM_EXT_NOTE') }}</p>
 
 <form method="post" action="{{ F_ADD_CONFIG }}" id="acp_apply">
 
@@ -103,15 +103,15 @@
 				<td class="td_02">
 					<input style="width:97%" type="text" name="q_name[{{ form_template.ID }}]" value="{{ form_template.NAME }}" placeholder="{{ lang('FORM_ELEMENT_NAME') }}">
 					<textarea style="width:97%" name="q_explain[{{ form_template.ID }}]" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">{{ form_template.EXPLAIN }}</textarea>
-					<input style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
+					<input style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
 				</td>
 				<td class="td_02">
-					<textarea style="width:97%{% if !(definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'selectbox') %};display:none{% endif %}" name="q_options[{{ form_template.ID }}]" rows="3">{{ form_template.OPTIONS }}</textarea>
-					<input style="width:97%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="text" name="q_options_separator[{{ form_template.ID }}]" value="{{ form_template.OPTIONS_SEPARATOR }}" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
+					<textarea style="width:97%{% if !(definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'selectbox') %};display:none{% endif %}" name="q_options[{{ form_template.ID }}]" rows="3">{{ form_template.OPTIONS }}</textarea>
+					<input style="width:97%{% if definition.template_type_selected != 'checkbox' or definition.template_type_selected != 'separator' %};display:none{% endif %}" type="text" name="q_options_separator[{{ form_template.ID }}]" value="{{ form_template.OPTIONS_SEPARATOR }}" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
 				</td>
 				<td class="td_02">
-					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_mins[{{ form_template.ID }}]" value="{{ form_template.MIN }}" placeholder="{{ lang('FORM_ELEMENT_MIN') }}">
-					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' or definition.template_type_selected != 'separator' %};display:none{% endif %}" type="number" min="0" name="q_mins[{{ form_template.ID }}]" value="{{ form_template.MIN }}" placeholder="{{ lang('FORM_ELEMENT_MIN') }}">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' or definition.template_type_selected != 'separator' %};display:none{% endif %}" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
 				</td>
 				
 				<td class="td_02">
@@ -184,6 +184,7 @@
 						<option value="number">{{ lang('FORM_NUMBER') }}</option>
 						<option value="date">{{ lang('FORM_DATE') }}</option>
 						<option value="time">{{ lang('FORM_TIME') }}</option>
+						<option value="separator">{{ lang('FORM_SEPARATOR') }}</option>
 					</select>
 				</td>
 				<td class="td_20" title="{{ lang('MANDATORY') }}">
@@ -219,7 +220,7 @@
 	</table>
 
 	<div id="info0" style="padding-top: 10px; margin-bottom: -23px; display: none;">
-		<pre>{{ lang('FORM_NEW_ITEM_EXPLAIN_2') }}</pre>
+		<pre>{{ lang('FORM_NEW_ITEM_EXPLAIN') }}</pre>
 		<input style="font-size:10px;" onclick="ShowHide('info0');ShowHide('show0');" type="button" value="{{ lang('HIDE_FORM_INFO') }}" class="button1">
 	</div>
 	<div id="show0" style="display: inline;">
