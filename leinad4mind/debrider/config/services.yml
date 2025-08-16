@@ -1,0 +1,26 @@
+services:
+  leinad4mind.debrider.listener:
+    class: leinad4mind\debrider\event\listener
+    arguments:
+      - '@auth'
+      - '@controller.helper'
+      - '@language'
+      - '@template'
+      - '@user'
+      - '@config'
+      - '@request'
+      - '@dbal.conn'
+      - '%core.php_ext%'
+    tags:
+      - { name: event.listener }
+  leinad4mind.debrider.controller:
+    class: leinad4mind\debrider\controller\main
+    arguments:
+      - '@config'
+      - '@controller.helper'
+      - '@language'
+      - '@template'
+      - '@request'
+      - '@auth'
+      - '@user'
+      - '@cache.driver'
