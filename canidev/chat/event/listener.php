@@ -2,9 +2,9 @@
 /*
 * @name listener.php
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -54,18 +54,21 @@ class listener implements EventSubscriberInterface
 	{
 		$events = array();
 		
-		if(!defined('IN_INSTALL') && !defined('IN_JSCRIPT'))
+		if(!defined('IN_INSTALL'))
 		{
 			global $phpbb_container;
 
-			$events['core.common'] 				= 'initialize_chat';
-			$events['core.user_setup']			= 'on_setup';
-			$events['core.delete_user_after']	= 'on_user_delete';
-			$events['core.permissions']			= 'add_permissions';
-
-			if(!defined('ADMIN_START'))
+			if(!defined('IN_JSCRIPT'))
 			{
-				$events['core.page_footer'] = 'on_footer';
+				$events['core.common'] 				= 'initialize_chat';
+				$events['core.user_setup']			= 'on_setup';
+				$events['core.delete_user_after']	= 'on_user_delete';
+				$events['core.permissions']			= 'add_permissions';
+
+				if(!defined('ADMIN_START'))
+				{
+					$events['core.page_footer'] = 'on_footer';
+				}
 			}
 			
 			$compatibility = $phpbb_container->get('canidev.chat.compatibility.manager');
@@ -102,15 +105,15 @@ class listener implements EventSubscriberInterface
 		global $auth, $phpbb_root_path, $phpEx;
 		global $chat;
 		
-		$chat->web_path = generate_board_url() . '/';
-		
-		// Fix problem in Windows Servers
-		$chat->web_path = str_replace('\\/', '', $chat->web_path);
-		
 		if(empty($this->config['chat_version']))
 		{
 			return;
 		}
+		
+		$chat->web_path = generate_board_url() . '/';
+		
+		// Fix problem in Windows Servers
+		$chat->web_path = str_replace('\\/', '', $chat->web_path);
 		
 		if($this->user->data['is_bot'] || !$auth->acl_get('u_chat_view') || defined('ADMIN_START'))
 		{

@@ -1,18 +1,18 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
-	Style:	Common	
-	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+	Style:	Common (with Font Awesome - phpBB 3.1.x)
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
 /* FONT AWESOME CORE
  * -------------------------- */
 @font-face {
-	src: url('../font-awesome/fontawesome-webfont.eot?v=4.2.0');
-	src: url('../font-awesome/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'),
-		url('../font-awesome/fontawesome-webfont.woff?v=4.2.0') format('woff'),
-		url('../font-awesome/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
-		url('../font-awesome/fontawesome-webfont.svg#fontawesomeregular?v=4.2.0') format('svg');
+	src: url('font-awesome/fontawesome-webfont.eot?v=4.2.0');
+	src: url('font-awesome/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'),
+		url('font-awesome/fontawesome-webfont.woff?v=4.2.0') format('woff'),
+		url('font-awesome/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
+		url('font-awesome/fontawesome-webfont.svg#fontawesomeregular?v=4.2.0') format('svg');
 	font-family: 'FontAwesomeChat';
 	font-style: normal;
 	font-weight: normal;
@@ -61,6 +61,7 @@ a [class*="chat-icon"] { display: inline; }
 .chat-icon-unbanuser:before 		{ content: "\f06e"; }
 .chat-icon-edit:before 			{ content: "\f044"; }
 .chat-icon-quote:before 			{ content: "\f10e"; }
+.chat-icon-move:before			{ content: "\f045"; }
 .chat-icon-signal:before 		{ content: "\f012"; }
 .chat-icon-info-sign:before 		{ content: "\f05a"; }
 .chat-icon-menu:before			{ content: "\f0c9"; }
@@ -84,12 +85,28 @@ a [class*="chat-icon"] { display: inline; }
 }
 
 .chat-icon-loading {
-	background-image: url('../../images/loading.gif');
+	background-image: url('images/loading.gif');
 	background-repeat: no-repeat;
 	display: inline-block;
-	height: 20px;
+	height: 22px;
 	width: 20px;
 }
+
+.chat-user-status {
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 16px;
+	margin-right: 4px;
+	vertical-align: middle;
+	width: 16px;
+}
+
+.chat-user-status.available	{ background-image: url('images/status_available.png'); }
+.chat-user-status.away 		{ background-image: url('images/status_away.png'); }
+.chat-user-status.busy 		{ background-image: url('images/status_busy.png'); }
+.chat-user-status.hidden 	{ background-image: url('images/status_hidden.png'); }
+
 
 /* Borders
 ------------------------------- */
@@ -211,6 +228,13 @@ a [class*="chat-icon"] { display: inline; }
 .ic-row-avatar img {
 	height: 100%;
 	width: auto;
+}
+
+.chat-no-avatar {
+	background: url('images/no-avatar.gif') 0 0 no-repeat;
+	background-size: 100% 100%;
+	height: 100%;
+	width: 100%;
 }
 
 .ic-row-text {
@@ -616,7 +640,7 @@ a.chat-quickmention {
 /* Dialog
 ------------------------------- */
 .chat-dialog-loading {
-	background: transparent url('../../images/progress.gif') 50% 50% no-repeat;
+	background: transparent url('images/progress.gif') 50% 50% no-repeat;
 	display: none;
 	height: 32px;
 	position: absolute;
@@ -659,7 +683,7 @@ a.chat-quickmention {
 
 .chat-dialog-fieldset {
 	font-size: 1em;
-	width: 380px;
+	width: 350px;
 }
 
 .chat-dialog-fieldset dd {
@@ -703,7 +727,7 @@ input.chat-inputbox, textarea.chat-inputbox {
 /* Messages and States
 ------------------------------- */
 #chat-main-message {
-	background: transparent url('../../images/icon-info-32x32.png') 0 0 no-repeat;
+	background: transparent url('images/icon-info-32x32.png') 0 0 no-repeat;
 	color: #CCC;
 	display: none;
 	font-size: 12px;

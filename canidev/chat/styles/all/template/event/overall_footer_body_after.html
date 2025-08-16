@@ -1,15 +1,4 @@
-
-
 <!-- IF S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE -->
-
-	<!-- IF S_CHAT_EMBEDMODE --><link href="{T_CHAT_PATH}assets/css/embed.css?v={S_CHAT_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" /><!-- ENDIF -->
-	
-	<!--[if lt IE 8]>
-	<link href="{T_CHAT_PATH}assets/css/iefix.css?v={S_CHAT_VERSION}" rel="stylesheet" type="text/css" />
-	<![endif]-->
-
-	<script type="text/javascript" src="{T_CHAT_PATH}assets/js/jchat.js?v={S_CHAT_VERSION}"></script>
-	<script type="text/javascript" src="{U_CHAT_JSCRIPT}"></script>
 
 	<script type="text/javascript">
 	// <![CDATA[
@@ -54,4 +43,17 @@
 	});
 	// ]]>
 	</script>
+
+<!-- ELSEIF IN_CHAT_MCP -->
+
+	<script type="text/javascript">
+	// <![CDATA[
+	jQuery(function($) {
+		$('#ban-period').change(function() {
+			$('#ban-date').css('display', ((this.value == 0) ? 'block' : 'none'));
+		});
+	});
+	// ]]>
+	</script>
+
 <!-- ENDIF -->

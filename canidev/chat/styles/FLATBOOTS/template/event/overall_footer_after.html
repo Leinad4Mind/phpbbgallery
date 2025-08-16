@@ -1,19 +1,22 @@
-
-
 <!-- IF S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE -->
-
-	<!-- IF S_CHAT_EMBEDMODE --><link href="{T_CHAT_PATH}assets/css/embed.css?v={S_CHAT_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" /><!-- ENDIF -->
 	
-	<!--[if lt IE 8]>
-	<link href="{T_CHAT_PATH}assets/css/iefix.css?v={S_CHAT_VERSION}" rel="stylesheet" type="text/css" />
-	<![endif]-->
-
 	<script type="text/javascript">
 	// <![CDATA[
-	head.load("{T_CHAT_PATH}assets/js/jchat.js?v={S_CHAT_VERSION}", "{U_CHAT_JSCRIPT}");
+	head.load("{T_CHAT_PATH}styles/all/template/js/jchat.js?v={S_CHAT_VERSION}", "{U_CHAT_JSCRIPT}");
 
 	head.ready(function () {
 		jchat(function($) {
+			// Add compatibility to iCheck function
+			$.cbbEvent.addListener('chat.onBindRows', function() {
+				if($.chat.mode == 'archive')
+				{
+					$('.row-id-list').on('ifChecked ifUnchecked', function(e){
+						var new_state = ($('.row-id-list:checked').length > 0) ? true : false;
+						$('.js-delete-selected').display(new_state);
+					});
+				}
+			});
+		
 			$('#chat-body').chat({
 		<!-- IF S_CHAT_ENABLED -->
 				lang: {
@@ -55,4 +58,19 @@
 	});
 	// ]]>
 	</script>
+	
+<!-- ELSEIF IN_CHAT_MCP -->
+
+	<script type="text/javascript">
+	// <![CDATA[
+	head.ready(function () {
+		jQuery(function($) {
+			$('#ban-period').change(function() {
+				$('#ban-date').css('display', ((this.value == 0) ? 'block' : 'none'));
+			});
+		});
+	});
+	// ]]>
+	</script>
+
 <!-- ENDIF -->

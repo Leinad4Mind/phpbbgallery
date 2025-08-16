@@ -2,9 +2,9 @@
 /** 
 * main.php [English [En]]
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,9 +22,10 @@ if(empty($lang) || !is_array($lang))
 // Chat language
 $lang = array_merge($lang, array(
 	'CHAT'						=> 'Chat',
+	'CHAT_APPLY'				=> 'Apply',
 	'CHAT_ARCHIVE'				=> 'Chat archive',
 	'CHAT_BAN_DATE'				=> 'End of exclusion',
-	'CHAT_BAN_DATE_EXPLAIN'		=> 'The valid format is DD/MM/YY hh:mm:ss.',
+	'CHAT_BAN_DATE_EXPLAIN'		=> 'The valid format is DD/MM/YYYY hh:mm:ss.',
 	'CHAT_BAN_PERIOD'			=> 'Exclusion duration',
 	'CHAT_BAN_USER'				=> 'Exclude',
 	'CHAT_BBCODE'				=> 'BBcodes',
@@ -34,12 +35,15 @@ $lang = array_merge($lang, array(
 	'CHAT_COLOR'				=> 'Text colour',
 	'CHAT_CONNECT'				=> 'Connect/Disconnect',
 	'CHAT_CUSTOM_BBCODES'		=> 'Custom BBcodes',
-	'CHAT_DELETE_SELECTED'		=> 'Delete selected',
 	'CHAT_DELETE_USER'			=> 'Delete user',
+	'CHAT_DEST_ROOM'			=> 'Destination',
 	'CHAT_DISCONNECT_MESSAGE'	=> 'You are disconnected.',
 	'CHAT_FLOOD_WAIT'			=> 'Flood time is set. Please wait...',
+	'CHAT_GUEST'				=> 'Guest_%s',
 	'CHAT_GUEST_ROOM'			=> 'General',
 	'CHAT_MENTION'				=> 'Mention',
+	'CHAT_MOVE'					=> 'Move to other room',
+	'CHAT_MOVE_CONFIRM'			=> 'Are you sure you want to move the selected messages?',
 	'CHAT_NO_INFORMATION'		=> 'No available information.',
 	'CHAT_PM_EXCEED'			=> 'You can not open more private conversations because of a limit set by the administration.',
 	'CHAT_PURGE'				=> 'Purge messages',
@@ -63,14 +67,15 @@ $lang = array_merge($lang, array(
 	'CHAT_TIP'					=> 'Tip',
 	'CHAT_UNBAN_USER'			=> 'Remove exclusion',
 	'CHAT_USER_BANNED_PERIOD'		=> 'You are excluded from the chat until: %s',
-	'CHAT_USER_BANNED_PERMANENT'	=> 'You are excluded from the chat permantly.',
+	'CHAT_USER_BANNED_PERMANENT'	=> 'You are excluded from the chat permanently.',
 	'CHAT_USER_ALREADY_EXISTS'		=> 'The user is already in use.',
 
-	'CUSTOM_DATE'	=> 'Custom date',
-	'EDIT'			=> 'Edit',
-	'NEW_TOPIC'		=> 'New Topic',
-	'PERMANENT'		=> 'Permanent',
-	'QUOTE'			=> 'Quote',
+	'BATCH_ACTIONS'		=> 'Batch actions',
+	'CUSTOM_DATE'		=> 'Custom date',
+	'EDIT'				=> 'Edit',
+	'NEW_TOPIC'			=> 'New Topic',
+	'PERMANENT'			=> 'Permanent',
+	'QUOTE'				=> 'Quote',
 	
 	'HALF_AN_HOUR'	=> 'Half an hour',
 	'NO_LIMIT'		=> 'No limit',

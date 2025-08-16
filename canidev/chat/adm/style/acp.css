@@ -25,7 +25,7 @@ input.chat-inputbox:hover, textarea.chat-inputbox:hover {
 }
 
 .chat-help {
-	background: transparent url('../../images/icon-help-32x32.png') 50% 50% no-repeat;
+	background: transparent url('../images/icon-help-32x32.png') 50% 50% no-repeat;
 	height: 32px;
 	position: absolute;
 	right: 5px;

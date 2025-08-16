@@ -2,9 +2,9 @@
 /*
 * @name main_module.php
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -26,8 +26,10 @@ class main_module
 	var $exclude_files 	= array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
 	
 	protected $cache;
+	protected $chat;
 	protected $config;
 	protected $db;
+	protected $log;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -37,11 +39,13 @@ class main_module
 
 	function main($id, $mode)
 	{
-		global $cache, $db, $user, $template, $config, $request, $chat, $phpbb_root_path, $phpEx;
+		global $cache, $db, $user, $template, $config, $request, $phpbb_log, $chat, $phpbb_root_path, $phpEx;
 		
 		$this->cache	= $cache;
+		$this->chat		= $chat;
 		$this->config	= $config;
 		$this->db		= $db;
+		$this->log		= $phpbb_log;
 		$this->request	= $request;
 		$this->template = $template;
 		$this->user 	= $user;
@@ -50,15 +54,17 @@ class main_module
 		$this->php_ext			= $phpEx;
 
 		$this->user->add_lang_ext('canidev/chat', array('acp', 'main'));
-		
-		if(empty($chat->installed))
-		{
-			trigger_error('MOD_NOT_INSTALLED', E_USER_WARNING);
-		}
 
 		$action = $this->request->variable('action', '');
 		$error	= $notice = array();
 		$submit = ($this->request->is_set_post('submit')) ? true : false;
+		
+		// Delete the cache in the first call after the installation (prevent error to load chat template events without clear the cache manually)
+		if(strpos($this->config['chat_version'], 'p') !== false)
+		{
+			$this->config->set('chat_version', str_replace('p', '', $this->config['chat_version']));
+			$this->cache->purge();
+		}
 		
 		// Security check
 		if(in_array($action, array('delete', 'add_auth')) && !$this->request->is_set_post('icajx'))
@@ -115,14 +121,15 @@ class main_module
 
 		$display_vars = array(
 			'legend1'			=> 'CHAT_MAIN_CONFIG',
-			'chat_enabled'				=> array('lang' => 'CHAT_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_page_enabled'			=> array('lang' => 'CHAT_PAGE_ENABLED',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_forum_posts'			=> array('lang' => 'CHAT_FORUM_POSTS',		'type' => 'custom',			'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
-			'chat_autoconnect'			=> array('lang' => 'CHAT_AUTOCONNECT',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_sound'				=> array('lang' => 'CHAT_SOUND_ENABLED',	'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_flood_time'			=> array('lang' => 'CHAT_FLOOD',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
-			'chat_height'				=> array('lang' => 'CHAT_HEIGHT',			'validate' => 'int:50:800',	'type' => 'text:4:3'),
-			'chat_refresh'				=> array('lang' => 'CHAT_REFRESH_TIME',		'validate' => 'int:5:60',	'type' => 'text:3:2'),
+			'chat_enabled'				=> array('lang' => 'CHAT_ENABLED',				'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_page_enabled'			=> array('lang' => 'CHAT_PAGE_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_forum_posts'			=> array('lang' => 'CHAT_FORUM_POSTS',			'type' => 'custom',			'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
+			'chat_autoconnect'			=> array('lang' => 'CHAT_AUTOCONNECT',			'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_anonymous_allowed'	=> array('lang' => 'CHAT_ANONYMOUS_ALLOWED',	'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_sound'				=> array('lang' => 'CHAT_SOUND_ENABLED',		'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_flood_time'			=> array('lang' => 'CHAT_FLOOD',				'validate' => 'int:0:60',	'type' => 'text:3:2'),
+			'chat_height'				=> array('lang' => 'CHAT_HEIGHT',				'validate' => 'int:50:800',	'type' => 'text:4:3'),
+			'chat_refresh'				=> array('lang' => 'CHAT_REFRESH_TIME',			'validate' => 'int:5:60',	'type' => 'text:3:2'),
 
 			'legend2'			=> 'CHAT_USERS_CONFIG',
 			'chat_timeout'				=> array('lang' => 'CHAT_TIMEOUT',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
@@ -206,13 +213,21 @@ class main_module
 
 			if($submit)
 			{
+				// Delete the guest sessions is neccessary here
+				if($config_name == 'chat_anonymous_allowed' && $this->config['chat_anonymous_allowed'] != $config_value)
+				{
+					$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+						WHERE user_id = ' . ANONYMOUS;
+					$this->db->sql_query($sql);
+				}
+				
 				$this->config->set($config_name, $config_value);
 			}
 		}
 
 		if($submit)
 		{
-			add_log('admin', 'LOG_CHAT_CONFIG');
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CHAT_CONFIG');
 			$notice[] = 'CONFIG_UPDATED';
 		}
 		
@@ -471,8 +486,8 @@ class main_module
 							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
 								WHERE dest_key = ' . $data['room_key'];
 							$this->db->sql_query($sql);
-							
-							add_log('admin', 'LOG_CHAT_ROOM_REMOVED', $data['room_title']);
+
+							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CHAT_ROOM_REMOVED', time(), array($data['room_title']));
 							$this->cache->destroy('_chat_rooms');
 				
 							$this->set_json_display(array(
@@ -688,6 +703,7 @@ class main_module
 
 				$this->template->assign_block_vars('roomrow', array(
 					'S_ID'		=> $row['room_id'],
+					'S_KEY'		=> $row['room_key'],
 					'S_TITLE'	=> $title,
 					
 					'U_DELETE'	=> ($row['room_id'] != CHAT_GUEST_ROOM) ? $this->u_action . '&amp;action=delete&amp;id=' . $row['room_id'] : '',
@@ -773,7 +789,7 @@ class main_module
 						$message = $this->new_config['text_content'];
 
 						$this->new_config['bbcode_uid'] = $this->new_config['bbcode_bitfield'] = $options = '';
-						generate_text_for_storage($this->new_config['text_content'], $this->new_config['bbcode_uid'], $this->new_config['bbcode_bitfield'], $options, $this->config['allow_bbcode'], $this->config['allow_post_links'], $this->config['allow_smilies']);
+						$this->chat->generate_text_for_storage($this->new_config['text_content'], $this->new_config['bbcode_uid'], $this->new_config['bbcode_bitfield'], $options, $this->config['allow_bbcode'], $this->config['allow_post_links'], $this->config['allow_smilies']);
 						
 						if($action == 'add')
 						{
@@ -852,8 +868,6 @@ class main_module
 		
 		if(!$action)
 		{
-			$bbcode_bitfield = '';
-
 			$sql = 'SELECT *
 				FROM ' . CHAT_TEXTS_TABLE . '
 				ORDER BY text_order';
@@ -868,22 +882,8 @@ class main_module
 				}
 				
 				$text_ary[$row_type]['rows'][] = $row;
-				
-				// Define the global bbcode bitfield, will be used to load bbcodes
-				$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
 			}
 			$this->db->sql_freeresult($result);
-			
-			// Instantiate BBCode if needed
-			if($bbcode_bitfield !== '')
-			{
-				if(!class_exists('bbcode', false))
-				{
-					include($this->phpbb_root_path . 'includes/bbcode.' . $this->php_ext);
-				}
-					
-				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
-			}
 			
 			foreach($text_ary as $text_type => $data_ary)
 			{
@@ -899,17 +899,22 @@ class main_module
 				
 				foreach($data_ary['rows'] as $row)
 				{
-					// Second parse bbcode here
-					if($row['bbcode_bitfield'])
+					/*
+					 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
+					 * If no bbcode, we decode the text to allow HTML tags.
+					*/
+					if(strpos($row['text_content'], '[/') !== false)
 					{
-						$bbcode->bbcode_second_pass($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield']);
+						$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+						$row['text_content'] = generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 					}
 					else
 					{
 						$row['text_content'] = htmlspecialchars_decode($row['text_content']);
 					}
 					
-					$row['text_content'] = preg_replace('#\{L_([A-Z0-9_\-]+)\}#e', "isset(\$this->user->lang['\$1']) ? \$this->user->lang['\$1'] : '\$1'", $row['text_content']);
+					$this->chat->parse_lang_variables($row['text_content']);
+
 					$row['text_content'] = bbcode_nl2br($row['text_content']);
 					$row['text_content'] = smiley_text($row['text_content']);
 					

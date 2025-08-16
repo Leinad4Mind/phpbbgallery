@@ -3,10 +3,13 @@
 		<div class="js-conversation">
 		<!-- BEGIN message -->
 			<div id="chat-row-{message.S_ID}" class="chat-row" data-time="{message.S_TIMESTAMP}">
-				<!-- IF message.S_AUTHOR_AVATAR --><div class="ic-row-avatar">{message.S_AUTHOR_AVATAR}</div><!-- ENDIF -->
+				<!-- IF message.S_SHOW_AVATAR -->
+					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+				<!-- ENDIF -->
 
 				<div class="ic-row-actions">
 					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#!move/{message.S_ID}" title="{L_CHAT_MOVE}"><span class="chat-icon-move"></span></a>&nbsp;<!-- ENDIF -->
 					<!-- IF message.CAN_QUOTE --><a href="#!quote/{message.S_ID}" title="{L_QUOTE}"><span class="chat-icon-quote"></span></a>&nbsp;<!-- ENDIF -->
 					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
 					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
@@ -15,12 +18,12 @@
 					<!-- IF message.U_POST_EDIT --><a href="{message.U_POST_EDIT}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
 				</div>
 
-				<div class="ic-row-title<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
 					<a href="#!quickmention" class="chat-quickmention" title="{L_CHAT_MENTION}"><span class="chat-icon-mentionuser"></span></a>
 					<span class="ic-row-username">{message.S_AUTHOR_FULL}</span>
 					<span class="ic-row-date">{message.S_DATE}</span>
 				</div>
-				<div class="ic-row-text<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+				<div class="ic-row-text<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
 				<!-- IF message.IS_TOPIC -->
 					<span class="chat-new-topic">{L_NEW_TOPIC}:</span> <a href="{message.U_TOPIC}">{message.TOPIC_TITLE}</a>
 				<!-- ELSE -->
@@ -35,10 +38,10 @@
 		<div class="js-userlist">
 		<!-- BEGIN user -->
 			<li class="js-user-{user.S_KEY}">
-				{user.S_IMG} <a href="{user.U_ACTION}"<!-- IF user.IS_EXCLUDED --> class="chat-state-excluded"<!-- ENDIF -->>{user.S_USERNAME}</a>
+				<span class="chat-user-status {user.S_STATUS}"></span><a href="{user.U_ACTION}"<!-- IF user.IS_EXCLUDED --> class="chat-state-excluded"<!-- ENDIF -->>{user.S_USERNAME}</a>
 				<!-- IF user.S_HAS_SUBMENU -->
 					<ul class="chat-contextmenu">
-						<!-- BEGIN contextmenu --><li><a href="{contextmenu.U_ACTION}"><!-- IF not contextmenu.IS_STATUS --><span class="chat-icon-{contextmenu.S_ACTION}"></span> <!-- ENDIF -->{contextmenu.S_TITLE}</a></li><!-- END contextmenu -->
+						<!-- BEGIN contextmenu --><li><a href="{contextmenu.U_ACTION}"><!-- IF contextmenu.IS_STATUS --><span class="chat-user-status {contextmenu.S_STATUS}"></span><!-- ELSE --><span class="chat-icon-{contextmenu.S_ACTION}"></span> <!-- ENDIF -->{contextmenu.S_TITLE}</a></li><!-- END contextmenu -->
 					</ul>
 				<!-- ENDIF -->
 			</li>
@@ -87,6 +90,13 @@
 		<dl class="chat-state-hidden">
 			<dt><label for="ban-date">{L_CHAT_BAN_DATE}:</label><br />{L_CHAT_BAN_DATE_EXPLAIN}</dt>
 			<dd><input type="text" class="chat-inputbox" id="ban-date" name="date" size="25" value="" /></dd>
+		</dl>
+		</fieldset>
+	<!-- ELSEIF S_MOVE -->
+		<fieldset class="chat-dialog-fieldset">
+		<dl>
+			<dt><label for="to-room">{L_CHAT_DEST_ROOM}:</label></dt>
+			<dd><select class="chat-inputbox" id="to-room" name="to_room">{S_ROOM_OPTIONS}</select></dd>
 		</dl>
 		</fieldset>
 	<!-- ENDIF -->

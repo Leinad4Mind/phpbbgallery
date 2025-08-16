@@ -2,9 +2,9 @@
 /*
 * @name chat.php
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -20,7 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class chat
 {
-	public $installed			= false;
 	public $enabled				= false;
 	public $in_custom_page		= false;
 	public $disallowed_bbcodes	= array();
@@ -43,7 +42,7 @@ class chat
 	protected $template;
 	protected $user;
 	
-	protected $midnight;
+	protected $midnight = false;
 
 	/**
 	* Constructor
@@ -85,15 +84,9 @@ class chat
 		$this->root_path	= $this->phpbb_root_path . $this->path;
 		$this->web_path		= $this->phpbb_root_path;
 		
-		$this->midnight = $user->create_datetime('now');
-		$this->midnight->setTime(0, 0, 0);
-
-		$this->midnight = $this->midnight->getTimestamp();
-		
 		if(!empty($this->config['chat_version']))
 		{
-			$this->installed 	= true;
-			$this->enabled 		= (!empty($this->config['chat_enabled']) ? true : false);
+			$this->enabled = (!empty($this->config['chat_enabled']) ? true : false);
 			
 			if($this->config['chat_disallowed_bbcode'])
 			{
@@ -208,10 +201,11 @@ class chat
 
 					'U_CHAT_ACTION'		=> $this->helper->get_current_url(),
 					'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->helper->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
-					'U_CHAT_PLAYER'		=> $this->web_path . $this->path . 'assets/player.swf?v=' . $this->config['chat_version'],
+					'U_CHAT_PLAYER'		=> $this->web_path . $this->path . 'player.swf?v=' . $this->config['chat_version'],
 					
 					'U_CHAT_JSCRIPT'	=> append_sid($this->web_path . $this->path . 'jchat_scripts.' . $this->php_ext, array(
 						'v'					=> $this->config['chat_version'],
+						'id'				=> $this->user->style['style_id'],
 						'assets_version'	=> $this->config['assets_version']
 					))
 				));
@@ -331,7 +325,7 @@ class chat
 			}
 			
 			$bbcode_name	= trim(str_replace('=', '-', $row['bbcode_tag']), '-');
-			$imagename		= 'images/icons/bbcode-' . $bbcode_name . '.png';
+			$imagename		= 'icons/bbcode-' . $bbcode_name . '.png';
 			$template_key	= 'chat_custom_tags';
 			
 			$item_ary = array(
@@ -474,7 +468,6 @@ class chat
 		if(($text_cache = $this->cache->get('_chat_texts')) === false)
 		{
 			$text_cache = array();
-			$bbcode_bitfield = '';
 			
 			$sql = 'SELECT text_type, text_content, bbcode_uid, bbcode_bitfield
 				FROM ' . CHAT_TEXTS_TABLE . '
@@ -490,31 +483,21 @@ class chat
 				}
 				
 				$text_cache[$text_type][] = $row;
-				
-				// Define the global bbcode bitfield, will be used to load bbcodes
-				$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
 			}
 			$this->db->sql_freeresult($result);
-			
-			// Instantiate BBCode if needed
-			if($bbcode_bitfield !== '')
-			{
-				if(!class_exists('bbcode', false))
-				{
-					include($this->phpbb_root_path . 'includes/bbcode.' . $this->php_ext);
-				}
-
-				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
-			}
 				
 			foreach($text_cache as $text_type => $rows)
 			{
 				foreach($rows as $row_id => $row)
 				{
-					// Second parse bbcode here
-					if($row['bbcode_bitfield'])
+					/*
+					 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
+					 * If no bbcode, we decode the text to allow HTML tags.
+					*/
+					if(strpos($row['text_content'], '[/') !== false)
 					{
-						$bbcode->bbcode_second_pass($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield']);
+						$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+						$row['text_content'] = generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 					}
 					else
 					{
@@ -537,9 +520,9 @@ class chat
 			{
 				if($translate && strpos($text, '{') !== false)
 				{
-					$text = preg_replace('#\{L_([A-Z0-9_\-]+)\}#e', "isset(\$this->user->lang['\$1']) ? \$this->user->lang['\$1'] : '\$1'", $text);
+					$this->parse_lang_variables($text);
 				}
-				
+
 				$text = smiley_text($text);
 				
 				$text_cache[$text_type][$row_id] = $text;
@@ -556,6 +539,14 @@ class chat
 	
 	public function format_date($timestamp)
 	{
+		if(!$this->midnight)
+		{
+			$this->midnight = $this->user->create_datetime();
+			$this->midnight->setTime(0, 0, 0);
+
+			$this->midnight = $this->midnight->getTimestamp();
+		}
+	
 		if($timestamp <= $this->midnight + 2 * 86400)
 		{
 			$day = false;
@@ -580,5 +571,82 @@ class chat
 		}
 		
 		return $this->user->format_date($timestamp, $this->user->lang['default_dateformat']);
+	}
+	
+	public function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false)
+	{
+		/**
+		* Use this event to modify the text before it is prepared for storage
+		*
+		* @event core.modify_text_for_storage_before
+		* @var string	text			The text to parse
+		* @var string	uid				The BBCode UID
+		* @var string	bitfield		The BBCode Bitfield
+		* @var int		flags			The BBCode Flags
+		* @var bool		allow_bbcode	Whether or not to parse BBCode
+		* @var bool		allow_urls		Whether or not to parse URLs
+		* @var bool		allow_smilies	Whether or not to parse Smilies
+		* @since 3.1.0-a1
+		*/
+		$vars = array(
+			'text',
+			'uid',
+			'bitfield',
+			'flags',
+			'allow_bbcode',
+			'allow_urls',
+			'allow_smilies',
+		);
+		extract($this->dispatcher->trigger_event('core.modify_text_for_storage_before', compact($vars)));
+
+		$uid = $bitfield = '';
+		$flags = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
+
+		if($text === '')
+		{
+			return;
+		}
+
+		if(!class_exists('parse_message', false))
+		{
+			include($this->phpbb_root_path . 'includes/message_parser.' . $this->php_ext);
+		}
+
+		$message_parser = new \parse_message($text);
+		$message_parser->parse($allow_bbcode, $allow_urls, $allow_smilies, $allow_bbcode, $allow_bbcode, $allow_bbcode, $allow_urls, true, 'chat');
+
+		$text	= $message_parser->message;
+		$uid	= $message_parser->bbcode_uid;
+
+		// If the bbcode_bitfield is empty, there is no need for the uid to be stored.
+		if(!$message_parser->bbcode_bitfield)
+		{
+			$uid = '';
+		}
+
+		$bitfield = $message_parser->bbcode_bitfield;
+
+		/**
+		* Use this event to modify the text after it is prepared for storage
+		*
+		* @event core.modify_text_for_storage_after
+		* @var string	text			The text to parse
+		* @var string	uid				The BBCode UID
+		* @var string	bitfield		The BBCode Bitfield
+		* @var int		flags			The BBCode Flags
+		* @since 3.1.0-a1
+		*/
+		$vars = array('text', 'uid', 'bitfield', 'flags');
+		extract($this->dispatcher->trigger_event('core.modify_text_for_storage_after', compact($vars)));
+
+		return $message_parser->warn_msg;
+	}
+	
+	public function parse_lang_variables(&$text)
+	{
+		$text = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches)
+		{
+			return isset($this->user->lang[$matches[1]]) ? $this->user->lang[$matches[1]] : '';
+		}, $text);
 	}
 }

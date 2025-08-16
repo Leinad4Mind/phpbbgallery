@@ -2,9 +2,9 @@
 /*
 * @name jchat_scripts.php
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -24,11 +24,26 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 
-$paths = array_merge($template->get_user_style(), array('all'));
+$compatibility	= $phpbb_container->get('canidev.chat.compatibility.manager');
+$paths			= array_merge($template->get_user_style(), array('all'));
+$base_folder	= 'ext/canidev/chat/styles/';
+$js_filename	= 'jchat-options.js';
+
+/**
+* Event to modify the custom JavaScript file
+*
+* @event chat.before_load_js
+* @var	array	paths			Array with the style paths to search the file
+* @var	string	base_folder		Folder to the styles path
+* @var	string	filename		Filename of javascript file
+* @since 1.1.3
+*/
+$vars = array('paths', 'base_folder', 'js_filename');
+extract($phpbb_dispatcher->trigger_event('chat.before_load_js', compact($vars)));
 
 foreach($paths as $path_name)
 {
-	$filename = $phpbb_root_path . 'ext/canidev/chat/styles/' . $path_name . '/template/jchat-options.js';
+	$filename = $phpbb_root_path . $base_folder . $path_name . '/template/js/' . $js_filename;
 	
 	if(file_exists($filename))
 	{
@@ -37,10 +52,7 @@ foreach($paths as $path_name)
 	}
 }
 
-$compatibility	= $phpbb_container->get('canidev.chat.compatibility.manager');
-$js_events_code	= $compatibility->get_js_events();
-
-if(trim($js_events_code))
+if($js_events_code = $compatibility->get_js_events())
 {
 	echo "
 /*

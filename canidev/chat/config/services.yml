@@ -49,6 +49,7 @@ services:
             - @config
             - @dbal.conn
             - @controller.helper
+            - @log
             - @request
             - @template
             - @user

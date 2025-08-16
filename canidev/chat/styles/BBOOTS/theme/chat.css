@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	BBOOTS
-	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -116,6 +116,13 @@
 
 .chat-inputbox { font-size: 12px; }
 .chat-row:hover { background-color: #F5F5F5; }
+
+.chat-overlay	{ z-index: 5; }
+#chat-dialog	{ z-index: 6; }
+
+.chat-dialog-fieldset dt, .chat-dialog-fieldset dd {
+	text-align: center;
+}
 
 /* Boxes
 ------------------------------- */

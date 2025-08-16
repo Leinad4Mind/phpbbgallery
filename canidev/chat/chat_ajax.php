@@ -2,9 +2,9 @@
 /*
 * @name chat_ajax.php
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -18,8 +18,9 @@ if(!defined('IN_PHPBB'))
 
 class chat_ajax
 {
-	private $user_key	= false;
-	private $user_data	= false;
+	private $user_key			= false;
+	private $cookie_user_key	= false;
+	private $user_data			= false;
 
 	private $actions = array(
 		'pmuser'		=> array('lang' => 'CHAT_SEND_PM',		'auth' => 'u_chat_sendpm',	'check' => 'chat_allow_pm'),
@@ -40,6 +41,7 @@ class chat_ajax
 	protected $config;
 	protected $db;
 	protected $helper;
+	protected $log;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -55,6 +57,7 @@ class chat_ajax
 	* @param \phpbb\config\config 					$config			Config Object
 	* @param \phpbb\db\driver\driver_interface		$db				DB Object
 	* @param \phpbb\controller\helper				$helper       	Controller helper object
+	* @param \phpbb\log\log                       	$log			The phpBB log system
 	* @param \phpbb\request\request 				$request		Request object
 	* @param \phpbb\template\template				$template     	Template object
 	* @param \phpbb\user							$user			User object
@@ -63,7 +66,7 @@ class chat_ajax
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		global $chat;
 
@@ -73,6 +76,7 @@ class chat_ajax
 		$this->config	= $config;
 		$this->db		= $db;
 		$this->helper	= $helper;
+		$this->log		= $log;
 		$this->request	= $request;
 		$this->template	= $template;
 		$this->user		= $user;
@@ -80,7 +84,7 @@ class chat_ajax
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
 		
-		$this->user_key = $request->variable($config['cookie_name'] . '_chat_key', 0, false, \phpbb\request\request_interface::COOKIE);
+		$this->user_key = $this->cookie_user_key = $request->variable($config['cookie_name'] . '_chat_key', 0, false, \phpbb\request\request_interface::COOKIE);
 		
 		@define('PHPBB_USE_BOARD_URL_PATH', true);
 	}
@@ -134,7 +138,7 @@ class chat_ajax
 			'success'	=> true,
 		);
 		
-		if(in_array($action, array('delete', 'edit', 'quote', 'whois')))
+		if(in_array($action, array('delete', 'edit', 'quote', 'whois', 'move')))
 		{
 			$message_id = $this->request->variable('id', 0);
 		}
@@ -149,13 +153,8 @@ class chat_ajax
 			case 'disconnect_on_refresh':
 				$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
 					SET user_online = 0
-					WHERE user_id = ' . $this->user->data['user_id'];
-					
-				if($this->user->data['user_id'] == ANONYMOUS)
-				{
-					$sql .= ' AND (user_key = ' . $this->user_key . "
-						OR user_ip = '" . $this->user->ip . "')";
-				}
+					WHERE user_id = ' . $this->user->data['user_id'] . '
+					AND user_key = ' . $this->user_key;
 				
 				$this->db->sql_query($sql);
 				
@@ -184,6 +183,16 @@ class chat_ajax
 			case 'connect_on_post':
 				$update_ary = array();
 				
+				// Delete previous guest sessions from the same user
+				if($this->user->data['is_registered'])
+				{
+					$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+						WHERE user_id = ' . ANONYMOUS . '
+						AND user_key = ' . $this->cookie_user_key . "
+						AND user_ip = '" . $this->user->ip . "'";
+					$this->db->sql_query($sql);
+				}
+				
 				// Add a new session if no exists
 				if(!$this->user_data)
 				{
@@ -198,13 +207,6 @@ class chat_ajax
 							break;
 						}
 						
-						// Delete previous guest sessions from the same user
-						$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
-							WHERE user_id = ' . ANONYMOUS . '
-							AND user_key = ' . $this->user_key . "
-							AND user_ip = '" . $this->user->ip . "'";
-						$this->db->sql_query($sql);
-						
 						$this->user_key = $this->user->data['user_id'];
 					}
 					else
@@ -214,6 +216,12 @@ class chat_ajax
 						$password			= utf8_normalize_nfc($this->request->variable('password', '', true));
 						
 						$this->user_key	= time() - 1001;
+						
+						// If guests can enter without username, set it
+						if($this->config['chat_anonymous_allowed'] && $this->auth('view'))
+						{
+							$username = $this->user->lang('CHAT_GUEST', $this->user_key);
+						}
 						
 						// Login dialog
 						if(!$username && !$username_register)
@@ -231,28 +239,31 @@ class chat_ajax
 							break;
 						}
 						
-						if(!$username_register)
+						if($username)
 						{
-							// Check if username already exists
-							$sql = 'SELECT u.user_id, uc.user_id
-								FROM ' . USERS_TABLE . ' u,' . CHAT_USERS_TABLE . " uc
-								WHERE u.username_clean = '" . $this->db->sql_escape(utf8_clean_string($username)) . "'
-								OR LOWER(uc.username) = '" . $this->db->sql_escape(strtolower($username)) . "'";
-							$result = $this->db->sql_query($sql);
-							$user_row = $this->db->sql_fetchrow($result);
-							$this->db->sql_freeresult($result);
-							
-							if($user_row)
+							if(!$this->config['chat_anonymous_allowed'])
 							{
-								$submit = false;
-								$json['action'] = $action = 'login';
+								// Check if username already exists
+								$sql = 'SELECT u.user_id, uc.user_id, uc.user_ip
+									FROM ' . USERS_TABLE . ' u,' . CHAT_USERS_TABLE . " uc
+									WHERE u.username_clean = '" . $this->db->sql_escape(utf8_clean_string($username)) . "'
+									OR LOWER(uc.username) = '" . $this->db->sql_escape(strtolower($username)) . "'";
+								$result = $this->db->sql_query($sql);
+								$user_row = $this->db->sql_fetchrow($result);
+								$this->db->sql_freeresult($result);
 								
-								$this->template->assign_vars(array(
-									'S_LOGIN'	=> true,
-									'S_TITLE'	=> $this->user->lang['CHAT_USER_ALREADY_EXISTS']
-								));
-								
-								break;
+								if($user_row && $user_row['user_ip'] != $this->user->ip)
+								{
+									$submit = false;
+									$json['action'] = $action = 'login';
+									
+									$this->template->assign_vars(array(
+										'S_LOGIN'	=> true,
+										'S_TITLE'	=> $this->user->lang['CHAT_USER_ALREADY_EXISTS']
+									));
+									
+									break;
+								}
 							}
 						}
 						else
@@ -284,14 +295,9 @@ class chat_ajax
 										$row_avatar = get_user_avatar($this->user->data['user_avatar'], $this->user->data['user_avatar_type'], $this->user->data['user_avatar_width'], $this->user->data['user_avatar_height']);
 										
 										// Fix path error occurs in some cases
-										if($row_avatar && $this->user->data['user_avatar_type'] != 'avatar.driver.gravatar')
+										if($row_avatar && strpos($row_avatar, 'src=".') !== false)
 										{
 											$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
-										}
-
-										if(!$row_avatar)
-										{
-											$row_avatar = '<img src="' . $this->chat->web_path . $this->chat->path . 'images/no-avatar.gif" />';
 										}
 										
 										$json['user_avatar'] = $row_avatar;
@@ -378,7 +384,7 @@ class chat_ajax
 						$sql = 'INSERT INTO ' . CHAT_USERS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $this->user_data);
 						$this->db->sql_query($sql);
 						
-						$cookie_expire = ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->time_now + (($this->config['max_autologin_time']) ? 86400 * (int) $this->config['max_autologin_time'] : 31536000) : 0;
+						$cookie_expire = $this->user->time_now + (($this->user->data['user_id'] != ANONYMOUS) ? (($this->config['max_autologin_time']) ? 86400 * (int) $this->config['max_autologin_time'] : 31536000) : 86400);
 						$this->user->set_cookie('chat_key', $this->user_key, $cookie_expire);
 					}
 				}
@@ -395,6 +401,21 @@ class chat_ajax
 					{
 						$update_ary['user_status'] = CHAT_STATUS_AVAILABLE;
 					}
+				}
+				
+				// Update old sessions of the same user (when guests can access without name and user login, two users are online)
+				if($this->cookie_user_key && $this->user_key != $this->cookie_user_key)
+				{
+					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+						SET user_online = 0
+						WHERE user_key = ' . $this->cookie_user_key . '
+						AND user_ip = "' . $this->user->ip . '"';
+					$this->db->sql_query($sql);
+					
+					$cookie_expire = $this->user->time_now + (($this->user->data['user_id'] != ANONYMOUS) ? (($this->config['max_autologin_time']) ? 86400 * (int) $this->config['max_autologin_time'] : 31536000) : 86400);
+					$this->user->set_cookie('chat_key', $this->user_key, $cookie_expire);
+					
+					$this->cookie_user_key = $this->user_key;
 				}
 				
 				// Remove exclusion
@@ -428,27 +449,41 @@ class chat_ajax
 					$this->db->sql_query($sql);
 					
 					// Delete messages out of the limit
-					$del_ary = array();
-
-					$sql = 'SELECT COUNT(cm.message_id) AS message_count, cr.room_id, cr.room_msg_limit
-						FROM ' . CHAT_MESSAGES_TABLE . ' cm
-							LEFT JOIN ' . CHAT_ROOMS_TABLE . ' cr ON(cr.room_id = cm.dest_key)
-						WHERE cr.room_msg_limit > 0
-						AND cr.room_id IS NOT NULL
-						GROUP BY cm.dest_key';
+					$del_ary = $del_room_ary = array();
+					
+					$sql = 'SELECT cr.room_id, cr.room_msg_limit
+						FROM ' . CHAT_ROOMS_TABLE . ' cr
+						WHERE cr.room_msg_limit > 0';
 					$result = $this->db->sql_query($sql);
 					while($row = $this->db->sql_fetchrow($result))
 					{
-						if($row['message_count'] > $row['room_msg_limit'])
-						{
-							$del_ary[$row['room_id']] = $row['message_count'] - $row['room_msg_limit'];
-						}
+						$del_room_ary[$row['room_id']] = $row['room_msg_limit'];
 					}
 					$this->db->sql_freeresult($result);
 					
-					foreach($del_ary as $num)
+					if(sizeof($del_room_ary))
+					{
+						$sql = 'SELECT COUNT(cm.message_id) AS message_count, cm.dest_key
+							FROM ' . CHAT_MESSAGES_TABLE . ' cm
+							WHERE ' . $this->db->sql_in_set('cm.dest_key', array_keys($del_room_ary)) . '
+							GROUP BY cm.dest_key';
+						$result = $this->db->sql_query($sql);
+						while($row = $this->db->sql_fetchrow($result))
+						{
+							if($row['message_count'] > $del_room_ary[$row['dest_key']])
+							{
+								$del_ary[$row['dest_key']] = $row['message_count'] - $del_room_ary[$row['dest_key']];
+							}
+						}
+						$this->db->sql_freeresult($result);
+						
+						unset($del_room_ary);
+					}
+					
+					foreach($del_ary as $dest_key => $num)
 					{
 						$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+							WHERE dest_key = ' . $dest_key . '
 							ORDER BY message_time ASC';
 						$this->db->sql_query_limit($sql, $num);
 					}
@@ -466,6 +501,7 @@ class chat_ajax
 			case 'refresh':
 			case 'refresh_after_post':
 			case 'refresh_after_status':
+			case 'refresh_after_move':
 				$row_users = $row_data = $user_cache = array();
 				$max_time = $last_update;
 
@@ -490,22 +526,17 @@ class chat_ajax
 					break;
 				}
 
-				// Update user trace time and delete inactive users
-				if($action == 'connect' || $action == 'refresh')
+				// Delete inactive users (one time every 3 updates)
+				if($action == 'connect' || ($action == 'refresh' && $this->request->variable('trace', false)))
 				{
-					$sql_ary = array();
-					
-					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
-						SET user_trace_time = ' . time() . '
-						WHERE user_key = ' . $this->user_key;
-					$this->db->sql_query($sql);
-					
+					$sql_ary = array(
+						'user_trace_time < ' . (time() - ($this->config['chat_refresh'] * 3))
+					);
+
 					if($this->chat->time_limit !== false)
 					{
 						$sql_ary[] = 'user_lastjoin < ' . $this->chat->time_limit;
 					}
-					
-					$sql_ary[] = 'user_trace_time < ' . (time() - ($this->config['chat_refresh'] * 3));
 					
 					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
 						SET user_online = 0
@@ -514,8 +545,12 @@ class chat_ajax
 					$this->db->sql_query($sql);
 				}
 				
-				// Get connected users
-				$auto_away_changed = false;
+				/* 
+				 * Get connected users and update global variables of current user
+				 */
+				$user_update_ary = array(
+					'user_trace_time'	=> time()
+				);
 
 				$sql = 'SELECT *
 					FROM ' . CHAT_USERS_TABLE . '
@@ -528,9 +563,7 @@ class chat_ajax
 					{
 						if($action == 'refresh' && $this->user_data['user_status'] == CHAT_STATUS_AVAILABLE && $this->config['chat_auto_away'] && $this->user_data['user_lastjoin'] < (time() - (intval($this->config['chat_auto_away']) * 60)))
 						{
-							$row['user_status'] = $this->user_data['user_status'] = CHAT_STATUS_AWAY;
-							$auto_away_changed = true;
-							
+							$row['user_status'] = $user_update_ary['user_status'] = $this->user_data['user_status'] = CHAT_STATUS_AWAY;
 							$json['auto_away'] = 1;
 						}
 					}
@@ -539,21 +572,26 @@ class chat_ajax
 					$user_cache[$row['user_key']] 	= $row['user_key'];
 				}
 				$this->db->sql_freeresult($result);
-				
-				if($auto_away_changed)
+
+				// Update user trace time and status if required
+				if($action == 'connect' || $action == 'refresh')
 				{
 					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
-						SET user_status = ' . CHAT_STATUS_AWAY . '
+						SET ' . $this->db->sql_build_array('UPDATE', $user_update_ary) . '
 						WHERE user_key = ' . $this->user_key;
 					$this->db->sql_query($sql);
 				}
+				unset($user_update_ary);
 				
-				// Get new messages and rooms
+				/*
+				 * Get new messages and rooms
+				 */
 				
 				// Load "public" rooms
 				$this->room_ary = $this->chat->obtain_rooms();
+				$total_rooms	= 0;
 				
-				$midnight = $this->user->create_datetime('now');
+				$midnight = $this->user->create_datetime();
 				$midnight->setTime(0, 0, 0);
 
 				$midnight = $midnight->getTimestamp();
@@ -587,6 +625,8 @@ class chat_ajax
 							$room_update_ids[] = $room_key;
 						}
 					}
+					
+					$total_rooms++;
 				}
 				
 				// Do the autopurge
@@ -615,6 +655,8 @@ class chat_ajax
 					);
 
 					$row_data = array_merge(array(CHAT_GUEST_ROOM => array()), $row_data);
+					
+					$total_rooms++;
 				}
 
 				// Load "private" rooms
@@ -699,13 +741,15 @@ class chat_ajax
 				// Get the new topics of forums if allowed
 				if($this->config['chat_forum_posts'] != CHAT_SHOW_NONE)
 				{
+					$mark_time = max($last_update, (int)$this->config['chat_purge_mark']);
+					
 					switch($this->config['chat_forum_posts'])
 					{
 						case CHAT_SHOW_TOPICS:
 							$sql = 'SELECT topic_id, forum_id, topic_title, topic_time, topic_visibility, topic_first_post_id,
 								topic_poster AS poster_id, topic_first_poster_name AS poster_username
 								FROM ' . TOPICS_TABLE . "
-								WHERE topic_time > $last_update
+								WHERE topic_time > $mark_time
 								ORDER BY topic_time DESC";
 							$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
 							while($row = $this->db->sql_fetchrow($result))
@@ -732,7 +776,7 @@ class chat_ajax
 							$sql = 'SELECT post_id, topic_id, forum_id, post_subject, post_text, post_time, post_visibility,
 								poster_id, post_username AS poster_username, bbcode_uid, bbcode_bitfield
 								FROM ' . POSTS_TABLE . "
-								WHERE post_time > $last_update
+								WHERE post_time > $mark_time
 								ORDER BY post_time DESC";
 							$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
 							while($row = $this->db->sql_fetchrow($result))
@@ -755,6 +799,8 @@ class chat_ajax
 							$this->db->sql_freeresult($result);
 						break;
 					}
+					
+					unset($mark_time);
 					
 					krsort($row_data[CHAT_GUEST_ROOM]);
 					
@@ -872,22 +918,14 @@ class chat_ajax
 							$row += $user_cache[$row['poster_key']];
 						}
 						
-						if($this->config['chat_show_avatars'])
+						if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
 						{
-							if($row['poster_id'] != ANONYMOUS)
-							{
-								$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
+							$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
 
-								// Fix path error occurs in some cases
-								if($row_avatar && $this->chat->web_path != $this->root_path && $row['user_avatar_type'] != 'avatar.driver.gravatar')
-								{
-									$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
-								}
-							}
-							
-							if(!$row_avatar)
+							// Fix path error occurs in some cases
+							if($row_avatar && $this->chat->web_path != $this->root_path && strpos($row_avatar, 'src=".') !== false)
 							{
-								$row_avatar = '<img src="' . $this->chat->web_path . $this->chat->path . 'images/no-avatar.gif" />';
+								$row_avatar = preg_replace('#src\="(\.|\/)+#', 'src="' . $this->chat->web_path, $row_avatar);
 							}
 						}
 
@@ -895,6 +933,7 @@ class chat_ajax
 							'S_AUTHOR_AVATAR'	=> $row_avatar,
 							'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_key'], $row['username'], $row['user_colour']),
 							'S_DATE'			=> $this->chat->format_date($timestamp),
+							'S_SHOW_AVATAR'		=> (bool)$this->config['chat_show_avatars'],
 							'S_TIMESTAMP'		=> $timestamp,
 						);
 
@@ -929,6 +968,7 @@ class chat_ajax
 								
 								'CAN_DELETE'		=> $this->auth('delete', $row),
 								'CAN_EDIT'			=> $this->auth('edit', $row),
+								'CAN_MOVE'			=> ($is_public_room && $total_rooms > 1 && $this->auth('-m_chat_edit')),
 								'CAN_QUOTE'			=> (!in_array('quote', $this->chat->disallowed_bbcodes) && $this->auth('post')) ? true : false,
 								'CAN_VIEW_WHOIS'	=> $this->auth('-a_'),
 							);
@@ -957,6 +997,11 @@ class chat_ajax
 							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
 								WHERE dest_key = ' . $room_key;
 							$this->db->sql_query($sql);
+							
+							if($room_key == CHAT_GUEST_ROOM)
+							{
+								$this->config->set('chat_purge_mark', time());
+							}
 							
 							break;
 						}
@@ -1020,7 +1065,7 @@ class chat_ajax
 						if($message)
 						{
 							$uid = $bitfield = $options = '';
-							$this->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+							$this->chat->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 							
 							$sql_ary = array(
 								'message_text'		=> $message,
@@ -1095,7 +1140,7 @@ class chat_ajax
 				if($message)
 				{
 					$uid = $bitfield = $options = '';
-					$this->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+					$this->chat->generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 
 					$sql_ary = array(
 						'poster_key'		=> $this->user_data['user_key'],
@@ -1243,7 +1288,12 @@ class chat_ajax
 							case 0:
 								if(preg_match('#^(\w{2})\/(\w{2})\/(\d{4}) (\w{2})\:(\w{2})\:(\w{2})#', $period_date, $match))
 								{
-									if(($exclude_time = @strtotime(vsprintf('%4$s:%3$s:%2$s %5$s:%6$s:%7$s', $match))) <= time())
+									$exclude_time = $this->user->create_datetime()
+										->setDate((int)$match[3], (int)$match[2], (int)$match[1])
+										->setTime((int)$match[4], (int)$match[5], (int)$match[6])
+										->getTimestamp();
+									
+									if($exclude_time <= time())
 									{
 										$exclude_time = 0;
 									}
@@ -1293,6 +1343,17 @@ class chat_ajax
 							'action'	=> $action,
 							'user_key'	=> $user_key
 						));
+						
+						// Add log
+						$username = ($user_data['username']) ? $user_data['username'] : $user_data['member_name'];
+						
+						$this->log->add('mod',
+							$this->user->data['user_id'],
+							$this->user->ip,
+							'LOG_CHAT_EXCLUSION_' . (($action == 'banuser') ? 'ADDED' : 'REMOVED'),
+							time(),
+							array($username)
+						);
 					}
 					break;
 				}
@@ -1424,11 +1485,74 @@ class chat_ajax
 					OR (poster_key = ' . $room_key . ' AND dest_key = ' . $this->user_key . '))';
 				$this->db->sql_query($sql);
 			break;
+			
+			case 'move':
+				$sql = 'SELECT poster_key, dest_key
+					FROM ' . CHAT_MESSAGES_TABLE . "
+					WHERE message_id = $message_id";
+				$result = $this->db->sql_query($sql);
+				$message_row = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
+				
+				if(!$message_row)
+				{
+					break;
+				}
+
+				if($this->get_current_user() && $this->auth('-m_chat_edit'))
+				{
+					if($submit)
+					{
+						$to_room = $this->request->variable('to_room', 0);
+
+						if($to_room)
+						{
+							$sql = 'UPDATE ' . CHAT_MESSAGES_TABLE . '
+								SET dest_key = ' . (int)$to_room . '
+								WHERE message_id = ' . $message_id;
+							$this->db->sql_query($sql);
+						}
+
+						// Refresh the chat 
+						return $this->run('refresh_after_move');
+					}
+					
+					$this->room_ary = $this->chat->obtain_rooms();
+					$options_str	= '';
+					
+					if(!isset($this->room_ary[CHAT_GUEST_ROOM]))
+					{
+						$this->room_ary[CHAT_GUEST_ROOM] = array();
+					}
+					
+					foreach($this->room_ary as $room_key => $row)
+					{
+						if($room_key != CHAT_GUEST_ROOM &&
+							((!in_array($this->user->data['group_id'], $row['room_data']['groups']) && !isset($row['room_data']['users'][$this->user->data['user_id']]))
+							|| !$row['room_enabled'])
+							|| $room_key == $message_row['dest_key'])
+						{
+							continue;
+						}
+						
+						$room_title = $row['room_title'];
+						$room_title = (isset($this->user->lang[$room_title]) ? $this->user->lang[$room_title] : $room_title);
+						
+						$options_str .= '<option value="' . $room_key . '">' . $room_title . '</option>';
+					}
+
+					$this->template->assign_vars(array(
+						'S_MOVE'			=> true,
+						'S_ROOM_OPTIONS'	=> $options_str,
+						'S_TITLE'			=> $this->user->lang['CHAT_MOVE'],
+					));
+				}
+			break;
 		}
 
 		$this->template->assign_var('S_JSON', json_encode($json));
 		
-		if((in_array($action, array('login', 'edit', 'rules', 'whois', 'banuser')) || !empty($json['dialog'])) && !$submit)
+		if((in_array($action, array('login', 'edit', 'rules', 'whois', 'banuser', 'move')) || !empty($json['dialog'])) && !$submit)
 		{
 			$this->template->assign_var('S_DIALOG', true);
 		}
@@ -1601,14 +1725,12 @@ class chat_ajax
 					{
 						$title = '<strong>' . $title . '</strong>';
 					}
-					
-					$img = '<img src="' . $this->chat->web_path . $this->chat->path . 'images/status_' . $action . '.png" alt="' . $action . '" />';
 
 					$row_actions[] = array(
 						'S_ACTION'		=> 'set_' . $action,
 						'IS_STATUS'		=> true,
-						'S_IMG'			=> $img,
-						'S_TITLE'		=> $img . ' ' . $title,
+						'S_STATUS'		=> $action,
+						'S_TITLE'		=> $title,
 						'U_ACTION'		=> '#!set_' . $action . '/' . $user_key,
 					);
 				}
@@ -1651,7 +1773,7 @@ class chat_ajax
 			
 			$rows[$rkey] = array(
 				'S_KEY'			=> $user_key,
-				'S_IMG'			=> '<img src="' . $this->chat->web_path . $this->chat->path . 'images/status_' . $user_status . '.png" alt="' . $user_status . '" />',
+				'S_STATUS'		=> $user_status,
 				'S_USERNAME'	=> ($row['user_id'] == ANONYMOUS || $row['exclude_time']) ? $row['username'] : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['username']),
 				'IS_EXCLUDED'	=> ($row['exclude_time']) ? true : false,
 				'U_ACTION'		=> ($row['user_id'] == ANONYMOUS) ? '#!user' : get_username_string('profile', $row['user_id'], $row['username'], $row['user_colour'], $row['username']) . '#!user/' . $row['user_id'],
@@ -1676,16 +1798,12 @@ class chat_ajax
 	{
 		if(empty($this->user_data))
 		{
+			$user_key = ($this->user->data['is_registered']) ? $this->user->data['user_id'] : $this->user_key;
+			
 			$sql = 'SELECT *
 				FROM ' . CHAT_USERS_TABLE . '
 				WHERE (user_id = ' . $this->user->data['user_id'] . '
-					AND user_key = ' . $this->user_key . ')';
-				
-			if($this->user->data['user_id'] == ANONYMOUS)
-			{
-				$sql .= ' OR (user_id = ' . ANONYMOUS . "
-					AND user_ip = '" . $this->user->ip . "')";
-			}
+					AND user_key = ' . $user_key . ')';
 
 			$result = $this->db->sql_query($sql);
 			$this->user_data = $this->db->sql_fetchrow($result);
@@ -1752,77 +1870,6 @@ class chat_ajax
 		{
 			$message = preg_replace($bbcode_preg, '', $message);
 		}
-	}
-	
-	private function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false)
-	{
-		global $phpbb_root_path, $phpEx, $phpbb_dispatcher;
-
-		/**
-		* Use this event to modify the text before it is prepared for storage
-		*
-		* @event core.modify_text_for_storage_before
-		* @var string	text			The text to parse
-		* @var string	uid				The BBCode UID
-		* @var string	bitfield		The BBCode Bitfield
-		* @var int		flags			The BBCode Flags
-		* @var bool		allow_bbcode	Whether or not to parse BBCode
-		* @var bool		allow_urls		Whether or not to parse URLs
-		* @var bool		allow_smilies	Whether or not to parse Smilies
-		* @since 3.1.0-a1
-		*/
-		$vars = array(
-			'text',
-			'uid',
-			'bitfield',
-			'flags',
-			'allow_bbcode',
-			'allow_urls',
-			'allow_smilies',
-		);
-		extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_before', compact($vars)));
-
-		$uid = $bitfield = '';
-		$flags = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
-
-		if ($text === '')
-		{
-			return;
-		}
-
-		if(!class_exists('parse_message', false))
-		{
-			include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-		}
-
-		$message_parser = new \parse_message($text);
-		$message_parser->parse($allow_bbcode, $allow_urls, $allow_smilies, $allow_bbcode, $allow_bbcode, $allow_bbcode, $allow_urls, true, 'chat');
-
-		$text = $message_parser->message;
-		$uid = $message_parser->bbcode_uid;
-
-		// If the bbcode_bitfield is empty, there is no need for the uid to be stored.
-		if (!$message_parser->bbcode_bitfield)
-		{
-			$uid = '';
-		}
-
-		$bitfield = $message_parser->bbcode_bitfield;
-
-		/**
-		* Use this event to modify the text after it is prepared for storage
-		*
-		* @event core.modify_text_for_storage_after
-		* @var string	text			The text to parse
-		* @var string	uid				The BBCode UID
-		* @var string	bitfield		The BBCode Bitfield
-		* @var int		flags			The BBCode Flags
-		* @since 3.1.0-a1
-		*/
-		$vars = array('text', 'uid', 'bitfield', 'flags');
-		extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_after', compact($vars)));
-
-		return $message_parser->warn_msg;
 	}
 	
 	/**

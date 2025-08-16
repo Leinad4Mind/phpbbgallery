@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -181,6 +181,8 @@
 	#chat-toolbar li.ic-loading { margin-left: 0; }
 	.chat-responsive-refresh, .chat-responsive-hide { display: none; }
 	.chat-responsive-menu { display: inline-block; }
+	
+	#chat-notices [class*="chat-icon"] { display: none; }
 	
 	.ic-row-date { font-size: 0.9em; }
 	

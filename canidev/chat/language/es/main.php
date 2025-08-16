@@ -2,9 +2,9 @@
 /** 
 * main.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,9 +22,10 @@ if(empty($lang) || !is_array($lang))
 // Chat language
 $lang = array_merge($lang, array(
 	'CHAT'						=> 'Chat',
+	'CHAT_APPLY'				=> 'Aplicar',
 	'CHAT_ARCHIVE'				=> 'Archivo de Chat',
 	'CHAT_BAN_DATE'				=> 'Fin de la exclusión',
-	'CHAT_BAN_DATE_EXPLAIN'		=> 'El formato válido es DD/MM/YY hh:mm:ss.',
+	'CHAT_BAN_DATE_EXPLAIN'		=> 'El formato válido es DD/MM/YYYY hh:mm:ss.',
 	'CHAT_BAN_PERIOD'			=> 'Duración de la exclusión',
 	'CHAT_BAN_USER'				=> 'Excluir del chat',
 	'CHAT_BBCODE'				=> 'BBcodes',
@@ -34,12 +35,15 @@ $lang = array_merge($lang, array(
 	'CHAT_COLOR'				=> 'Color de texto',
 	'CHAT_CONNECT'				=> 'Conectar/Desconectar',
 	'CHAT_CUSTOM_BBCODES'		=> 'BBcodes personalizados',
-	'CHAT_DELETE_SELECTED'		=> 'Eliminar seleccionados',
 	'CHAT_DELETE_USER'			=> 'Borrar usuario',
+	'CHAT_DEST_ROOM'			=> 'Destino',
 	'CHAT_DISCONNECT_MESSAGE'	=> 'Está desconectado.',
 	'CHAT_FLOOD_WAIT'			=> 'Se ha establecido un límite de saturación. Por favor, espere...',
+	'CHAT_GUEST'				=> 'Invitado_%s',
 	'CHAT_GUEST_ROOM'			=> 'General',
 	'CHAT_MENTION'				=> 'Mencionar',
+	'CHAT_MOVE'					=> 'Mover a otra sala',
+	'CHAT_MOVE_CONFIRM'			=> '¿Está seguro de que desea mover los mensajes seleccionados?',
 	'CHAT_NO_INFORMATION'		=> 'No hay información disponible.',
 	'CHAT_PM_EXCEED'			=> 'No puede abrir más conversaciones privadas debido a un límite establecido por la administración.',
 	'CHAT_PURGE'				=> 'Purgar mensajes',
@@ -66,11 +70,12 @@ $lang = array_merge($lang, array(
 	'CHAT_USER_BANNED_PERMANENT'	=> 'Usted ha sido excluído del chat permanentemente.',
 	'CHAT_USER_ALREADY_EXISTS'		=> 'El usuario especificado ya está en uso.',
 
-	'CUSTOM_DATE'	=> 'Fecha personalizada',
-	'EDIT'			=> 'Editar',
-	'NEW_TOPIC'		=> 'Nuevo Tema',
-	'PERMANENT'		=> 'Permanente',
-	'QUOTE'			=> 'Citar',
+	'BATCH_ACTIONS'		=> 'Acciones en lote',
+	'CUSTOM_DATE'		=> 'Fecha personalizada',
+	'EDIT'				=> 'Editar',
+	'NEW_TOPIC'			=> 'Nuevo Tema',
+	'PERMANENT'			=> 'Permanente',
+	'QUOTE'				=> 'Citar',
 	
 	'HALF_AN_HOUR'	=> 'Media hora',
 	'NO_LIMIT'		=> 'Sin límite',

@@ -2,9 +2,9 @@
 /** 
 * acp.php [English [En]]
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,6 +35,9 @@ $lang = array_merge($lang, array(
 	'CHAT_ALLOW_BBCODE_EXPLAIN'	=> 'Defines whether users can use BBcode tags in the chat.',
 	'CHAT_ALLOW_PM'				=> 'Allow private messages',
 	'CHAT_ALLOW_PM_EXPLAIN'		=> 'Enable/Disable the private messages between users.',
+	'CHAT_ANONYMOUS_ALLOWED'	=> 'Allow unnamed guests',
+	'CHAT_ANONYMOUS_ALLOWED_EXPLAIN'	=> 'If enabled, guests will access the chat with a random name instead of having to decide their name.<br />
+		<em>This option is only valid if the guests group has permissions to view the chat. </em>',
 	'CHAT_AUTOCONNECT'			=> 'Autoconnect',
 	'CHAT_AUTOCONNECT_EXPLAIN'	=> 'Sets if the chat autoconnect on page load.',
 	'CHAT_AUTO_AWAY'			=> '<em>Available</em> status time',
@@ -61,7 +64,7 @@ $lang = array_merge($lang, array(
 	'CHAT_FLOOD_EXPLAIN'		=> 'Sets the time (in seconds) that the users must wait to write a new message.<br />
 		<em>Set 0 to disable this limit</em>.',
 	'CHAT_FORUM_POSTS'			=> 'Forum posts',
-	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Sets if the new topics or new messajes in the forum will be shown in the <em>General</em> room of the chat.',
+	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Sets if the new topics or new messages in the forum will be shown in the <em>General</em> room of the chat.',
 	'CHAT_GROUP_USERS'			=> 'Group users by groups',
 	'CHAT_GROUP_USERS_EXPLAIN'	=> 'If enabled, the users will be grouped in the chat by their default group.',
 	'CHAT_HEIGHT'				=> 'Chat height',
@@ -75,13 +78,13 @@ $lang = array_merge($lang, array(
 	'CHAT_MESSAGES_CONFIG'		=> 'Message configuration',
 	'CHAT_NOTICES_ADD'			=> 'Add announcement',
 	'CHAT_NOTICES_EDIT'			=> 'Edit announcement',
-	'CHAT_NOTICES_EXPLAIN'		=> 'This texts will be shown as announcements or alerts in the top of chat.',
+	'CHAT_NOTICES_EXPLAIN'		=> 'This texts will be shown as <em>announcements</em> or alerts in the top of chat.',
 	'CHAT_NOTICES_ITEM'			=> 'Announcement',
 	'CHAT_NOTICES_ITEM_EXPLAIN'	=> 'You can use language variables, for example <em>{L_CHAT}</em>.<br />
 		<em>BBcode or HTML is allowed.<br />
 		Smilies are allowed.</em>',
 	'CHAT_NOTICES_TITLE'		=> 'Announcements',
-	'CHAT_PAGE_ALIAS'			=> 'Page ID',
+	'CHAT_PAGE_ALIAS'			=> 'Page Alias',
 	'CHAT_PAGE_ALIAS_EXPLAIN'	=> 'Sets an unique id for the page that will be used in the configuration file.<br /><em>Only allowed letters and numbers</em>.',
 	'CHAT_PAGE_CONFIG'			=> 'Page configuration',
 	'CHAT_PAGE_CUSTOM'			=> 'Custom path',
@@ -135,7 +138,7 @@ $lang = array_merge($lang, array(
 	'CHAT_TIMEOUT_EXPLAIN'		=> 'Sets the time (in minutes) that the chat need to consider an user to "inactive" and disconnect the chat.<br /><em>Set to 0 to disable this function</em>.',
 	'CHAT_TIPS_ADD'				=> 'Add tip',
 	'CHAT_TIPS_EDIT'			=> 'Edit tip',
-	'CHAT_TIPS_EXPLAIN'			=> 'This texts will be shown as small tips over the chat input field.',
+	'CHAT_TIPS_EXPLAIN'			=> 'This texts will be shown as small <em>tips</em> over the chat input field.',
 	'CHAT_TIPS_ITEM'			=> 'Tip',
 	'CHAT_TIPS_ITEM_EXPLAIN'	=> 'You can use language variables, for example <em>{L_CHAT}</em>.<br />
 		<em>BBcode or HTML is allowed.<br />
@@ -162,10 +165,10 @@ $lang = array_merge($lang, array(
 	'PAGE_ALIAS'			=> 'Page Id',
 	'PAGE_URL'				=> 'Page url',
 	'ROOM_TITLE'			=> 'Room title',
-	'SELECT_PAGE'			=> 'Select page',
+	'SELECT_PAGE'			=> 'Select file',
 	
 	'INVALID_FILE'			=> 'The file not exists or has an invalid format.',
-	'NO_ALIAS'				=> 'The page ID is invalid.',
+	'NO_ALIAS'				=> 'The page Alias is invalid.',
 	'PAGE_ALREADY_EXISTS'	=> 'The page is already in use.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> 'Are you sure you want to delete this room and all messages?',

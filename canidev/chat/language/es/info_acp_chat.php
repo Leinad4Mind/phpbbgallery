@@ -2,9 +2,9 @@
 /** 
 * info_acp_chat.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -27,6 +27,8 @@ $lang = array_merge($lang, array(
 	'ACP_CHAT_ROOMS'		=> 'Administrar salas',
 	'ACP_CHAT_TEXTS'		=> 'Textos estáticos y Reglas',
 
-	'LOG_CHAT_CONFIG'			=> '<strong>cBB Chat:</strong> Modificada configuración principal',
-	'LOG_CHAT_ROOM_REMOVED'		=> '<strong>cBB Chat:</strong> Eliminada sala <em>%s</em> y todos sus mensajes',
+	'LOG_CHAT_CONFIG'				=> '<strong>cBB Chat:</strong> Modificada configuración principal',
+	'LOG_CHAT_EXCLUSION_ADDED'		=> '<strong>cBB Chat:</strong> Exclusiones añadidas <br />» %s',
+	'LOG_CHAT_EXCLUSION_REMOVED'	=> '<strong>cBB Chat:</strong> Exclusiones eliminadas <br />» %s',
+	'LOG_CHAT_ROOM_REMOVED'			=> '<strong>cBB Chat:</strong> Eliminada sala <em>%s</em> y todos sus mensajes',
 ));

@@ -2,9 +2,9 @@
 /** 
 * acp.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.1.2 20/08/2016
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2016 CaniDev
+* @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,6 +35,9 @@ $lang = array_merge($lang, array(
 	'CHAT_ALLOW_BBCODE_EXPLAIN'	=> 'Define si se permitirá usar etiquetas BBcode en el chat.',
 	'CHAT_ALLOW_PM'				=> 'Permitir mensajes privados',
 	'CHAT_ALLOW_PM_EXPLAIN'		=> 'Habilita/deshabilita los mensajes privados entre los usuarios.',
+	'CHAT_ANONYMOUS_ALLOWED'	=> 'Permitir invitados sin nombre',
+	'CHAT_ANONYMOUS_ALLOWED_EXPLAIN'	=> 'Si se habilita, los invitados accederán al chat con un nombre aleatorio en lugar de tener que decidir su nombre.<br />
+		<em>Esta opción sólo es válida si el grupo de Invitados posee permisos para ver el chat.</em>',
 	'CHAT_AUTOCONNECT'			=> 'Autoconectar',
 	'CHAT_AUTOCONNECT_EXPLAIN'	=> 'Define si el chat se conectará automáticamente al abrir la página.',
 	'CHAT_AUTO_AWAY'			=> 'Tiempo de estado <em>Disponible</em>',

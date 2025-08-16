@@ -1,29 +1,20 @@
 <!-- INCLUDE overall_header.html -->
 
+<!-- IF .message -->
+	<div class="pull-right">	 
+		<ul class="pagination pagination-sm hidden-xs">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+		</ul>
+	</div>
+<!-- ENDIF -->
+
 <h2>{L_CHAT_ARCHIVE}</h2>
 
 <form method="post" action="{U_ACTION}">
-<div class="row"> 
-<!-- IF .message -->
-	<div class="col-md-4 col-xs-7">
-		<div class="pull-left">
-			<input type="submit" name="delete_selected" class="chat-button ic-inline" value="{L_CHAT_DELETE_SELECTED}" />
-		</div>
-	</div>
-<!-- ENDIF -->
-  
-	<div class="col-md-8">
-		<div class="pull-right">	 
-			<ul class="pagination pagination-sm hidden-xs">
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li class="active"><a>{PAGE_NUMBER}</a></li>	
-			<!-- ENDIF -->
-			</ul>
-		</div>
-	</div>
-</div>
 
 <div class="panel has-nav-tabs panel-default">
 	<ul class="nav nav-tabs">
@@ -39,18 +30,21 @@
 		<div id="chat-conversation-container">
 		<!-- BEGIN message -->
 			<div id="chat-row-{message.S_ID}" class="chat-row">
-				<!-- IF message.S_AUTHOR_AVATAR --><div class="ic-row-avatar">{message.S_AUTHOR_AVATAR}</div><!-- ENDIF -->
+				<!-- IF message.S_SHOW_AVATAR -->
+					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+				<!-- ENDIF -->
 				
-				<!-- IF message.CAN_DELETE --><div class="ic-row-actions"><input class="row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" /></div><!-- ENDIF -->
+				<!-- IF S_BATCH_OPTIONS --><div class="ic-row-actions"><input class="row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" /></div><!-- ENDIF -->
 				
 				<div class="ic-row-actions">
 					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#!move/{message.S_ID}" title="{L_CHAT_MOVE}"><span class="chat-icon-move"></span></a>&nbsp;<!-- ENDIF -->
 					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
 					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
 				</div>
 
-				<div class="ic-row-title<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
-				<div class="ic-row-text<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
+				<div class="ic-row-text<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
 					{message.S_TEXT}
 				</div>
 			</div>
@@ -62,29 +56,38 @@
 	</div>
 </div>
 
-<div class="row">
 <!-- IF .message -->
-	<div class="col-md-4 col-xs-7">
-		<div class="pull-left">
-			<input type="submit" name="delete_selected" class="chat-button ic-inline" value="{L_CHAT_DELETE_SELECTED}" />
+	<div class="row">
+		<!-- IF S_BATCH_OPTIONS -->
+		<div class="col-md-4 col-xs-7">
+			<div class="pull-left">
+				<div class="chat-state-hidden js-delete-selected input-group input-group-sm">
+					<select class="form-control" name="action">
+						<option value="">{L_BATCH_ACTIONS}</option>
+						{S_BATCH_OPTIONS}
+					</select>
+					<div class="input-group-btn">
+						<button type="submit" name="submit" class="btn btn-default">{L_CHAT_APPLY}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ENDIF -->
+	  
+		<div class="col-md-8">
+			<div class="pull-right">	 
+				<ul class="pagination pagination-sm hidden-xs">
+				<!-- IF .pagination -->
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE -->
+					<li class="active"><a>{PAGE_NUMBER}</a></li>	
+				<!-- ENDIF -->
+				</ul>
+			</div>
 		</div>
 	</div>
-<!-- ENDIF -->
-  
-	<div class="col-md-8">
-		<div class="pull-right">	 
-			<ul class="pagination pagination-sm hidden-xs">
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li class="active"><a>{PAGE_NUMBER}</a></li>	
-			<!-- ENDIF -->
-			</ul>
-		</div>
-	</div>
-</div>
 
-<!-- IF S_SELECT_SORT_DAYS and not S_IS_BOT -->
+	<!-- IF S_SELECT_SORT_DAYS and not S_IS_BOT -->
 	<div class="controls-row">
        <div class="sorting">
 			<div class="panel panel-default">
@@ -118,6 +121,7 @@
 		    </div>
 		</div>
 	</div> 
+	<!-- ENDIF -->
 <!-- ENDIF -->
 
 </form>
