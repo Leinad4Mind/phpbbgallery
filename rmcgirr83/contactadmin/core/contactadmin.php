@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2016 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -9,27 +9,42 @@
 */
 namespace rmcgirr83\contactadmin\core;
 
+use phpbb\auth\auth;
+use phpbb\cache\service as cache_service;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\log\log;
+use phpbb\request\request;
+use phpbb\user;
 use phpbb\exception\http_exception;
-use rmcgirr83\contactadmin\core\contact_constants;
+use rmcgirr83\contactadmin\core\contact_constants as contact_constants;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class contactadmin
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
+	/** @var cache_service */
 	protected $cache;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\log\log */
+	/** @var language */
+	protected $language;
+
+	/** @var log */
 	protected $log;
 
-	/** @var \phpbb\user */
+	/** @var request */
+	protected $request;
+
+	/** @var user */
 	protected $user;
 
 	/** @var string phpBB root path */
@@ -39,12 +54,14 @@ class contactadmin
 	protected $php_ext;
 
 	public function __construct(
-			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
-			\phpbb\config\config $config,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\log\log $log,
-			\phpbb\user $user,
+			auth $auth,
+			cache_service $cache,
+			config $config,
+			driver_interface $db,
+			language $language,
+			log $log,
+			request $request,
+			user $user,
 			$root_path,
 			$php_ext)
 	{
@@ -52,15 +69,12 @@ class contactadmin
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
+		$this->language = $language;
 		$this->log = $log;
+		$this->request = $request;
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-
-		if (!class_exists('messenger'))
-		{
-			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
-		}
 	}
 
 	/**
@@ -79,9 +93,9 @@ class contactadmin
 			// for posting or PM'ing only
 			case 'replace':
 
-				$bkup_data = array(
+				$bkup_data = [
 					'user_backup'	=> $this->user->data,
-				);
+				];
 
 				// sql to get the bots info
 				$sql = 'SELECT *
@@ -145,30 +159,24 @@ class contactadmin
 				{
 
 					// send an email to the board default
-					$email_template = '@rmcgirr83_contactadmin/contact_error_forum';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_FORUM_MESSAGE'), $this->user->data['username'], $this->config['sitename'], $server_url);
+					$email_template = '@rmcgirr83_contactadmin/contact_error';
+					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('FORUM'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the error log
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), [$forum_id, $row]);
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
+					$message = $this->language->lang('CONTACT_ERROR') . '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
 				else if (!$row)
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the error log
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), [$forum_id, $row]);
 
-					$message = sprintf($this->user->lang['CONTACT_DISABLED'], '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -190,31 +198,25 @@ class contactadmin
 				if (!$row && $this->config['email_enable'])
 				{
 					// send an email to the board default
-					$email_template = '@rmcgirr83_contactadmin/contact_error_user';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_USER_MESSAGE'), $this->user->data['username'], $this->config['sitename'], $server_url);
+					$email_template = '@rmcgirr83_contactadmin/contact_error';
+					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('USER'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), array($bot_id, $row));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), [$bot_id, $row]);
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
+					$message = $this->language->lang('CONTACT_ERROR') . '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
 				else if (!$row)
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), array($bot_id, $row));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), [$bot_id, $row]);
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_DISABLED'), '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -226,43 +228,37 @@ class contactadmin
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
 				if ($method == contact_constants::CONTACT_METHOD_EMAIL)
 				{
-					$error = $this->user->lang('EMAIL');
+					$error = $this->language->lang('EMAIL');
 				}
 				else
 				{
-					$error = $this->user->lang('PRIVATE_MESSAGE');
+					$error = $this->language->lang('PRIVATE_MESSAGE');
 				}
 
 				// only send an email if the board allows it
 				if ($this->config['email_enable'])
 				{
 					// send an email to the board default
-					$email_template = '@rmcgirr83_contactadmin/contact_error_user';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_NONE'), $this->user->data['username'], $this->config['sitename'], $error, $server_url);
+					$email_template = '@rmcgirr83_contactadmin/contact_error';
+					$email_message = $this->language->lang('CONTACT_NONE', $this->user->data['username'], $this->config['sitename'], $error, $server_url);
 
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), [$error]);
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_BOT_ERROR'), '<br /><br />' . sprintf($this->user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>'));
+					$message = $this->language->lang('CONTACT_ERROR', '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>'));
 
 					throw new http_exception(503, $message);
 				}
 				else
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), [$error]);
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_DISABLED'), '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -282,6 +278,11 @@ class contactadmin
 		$dir_array = $this->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
 
 		$lang = (in_array($this->config['default_lang'], $dir_array)) ? $this->config['default_lang'] : 'en';
+
+		if (!class_exists('messenger'))
+		{
+			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+		}
 		// don't use the queue send the email immediately if not sooner
 		$messenger = new \messenger(false);
 
@@ -295,11 +296,11 @@ class contactadmin
 		$messenger->to($this->config['board_email']);
 		$messenger->from($this->config['server_name']);
 
-		$messenger->assign_vars(array(
-			'SUBJECT'		=> $this->user->lang('CONTACT_BOT_SUBJECT'),
+		$messenger->assign_vars([
+			'SUBJECT'		=> $this->language->lang('CONTACT_BOT_SUBJECT'),
 			'EMAIL_SIG'  	=> $this->config['board_email_sig'],
 			'MESSAGE'		=> $email_message,
-		));
+		]);
 
 		$messenger->send(NOTIFY_EMAIL);
 
@@ -311,7 +312,7 @@ class contactadmin
 	 *
 	 * @param array 	$input_ary	an array of contact reasons
 	 * @param string	$selected	the chosen reason
-	 * @return string Select html
+	 * @return string 				Select html
 	 * for drop down reasons in the contact page
 	 */
 	public function contact_make_select($input_ary, $selected)
@@ -322,19 +323,18 @@ class contactadmin
 			return false;
 		}
 
-		// If selected isn't in the array, use first entry
-		if (!in_array($selected, $input_ary))
-		{
-			$selected = $input_ary[0];
-		}
+		// add a default entry asking for user to choose a reason
+		$default_reason[] = $this->language->lang('REASON_EXPLAIN');
+
+		$input_ary = array_merge($default_reason, $input_ary);
 
 		$select = '';
 		foreach ($input_ary as $item)
 		{
-			//$item = htmlspecialchars($item);
 			$item_selected = ($item == $selected) ? ' selected="selected"' : '';
 			$select .= '<option value="' . $item . '"' . $item_selected . '>' . $item . '</option>';
 		}
+
 		return $select;
 	}
 
@@ -349,7 +349,7 @@ class contactadmin
 		$user_list = '';
 
 		// groups we ignore for the dropdown
-		$groups = array(USER_IGNORE, USER_INACTIVE);
+		$groups = [USER_IGNORE, USER_INACTIVE];
 
 		// do the main sql query
 		$sql = 'SELECT user_id, username
@@ -367,31 +367,47 @@ class contactadmin
 
 		return $user_list;
 	}
+
 	/**
 	 * Create the selection for the contact method
 	 */
 	public function method_select($value, $key = '')
 	{
-		$radio_ary = array(
-			contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
-			contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
-			contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
-		);
+		if ($this->config['email_enable'])
+		{
+			$radio_array = [
+				contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
+				contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
+				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
+				contact_constants::CONTACT_METHOD_BOARD_DEFAULT	=> 'CONTACT_METHOD_BOARD_DEFAULT',
+			];
+		}
+		else
+		{
+			$radio_array = [
+				contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
+				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
+			];
+		}
+
+		$radio_ary = $radio_array;
 		return h_radio('contact_method', $radio_ary, $value, $key);
 	}
+
 	/**
 	 * Create the selection for the post method
 	 */
 	public function poster_select($value, $key = '')
 	{
-		$radio_ary = array(
+		$radio_ary = [
 			contact_constants::CONTACT_POST_NEITHER	=> 'CONTACT_POST_NEITHER',
 			contact_constants::CONTACT_POST_GUEST	=> 'CONTACT_POST_GUEST',
 			contact_constants::CONTACT_POST_ALL		=> 'CONTACT_POST_ALL',
-		);
+		];
 
 		return h_radio('contact_bot_poster', $radio_ary, $value, $key);
 	}
+
 	/**
 	 * Create the selection for the bot forum
 	 */
@@ -399,6 +415,7 @@ class contactadmin
 	{
 		return '<select id="contact_forum" name="forum">' . make_forum_select($value, false, true, true) . '</select>';
 	}
+
 	/**
 	 * Create the selection for the bot
 	 */
@@ -413,7 +430,22 @@ class contactadmin
 	public function admin_array()
 	{
 		$sql_where = '';
-		$contact_users = array();
+		$contact_users = [];
+
+		// board default email
+		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_BOARD_DEFAULT)
+		{
+			$contact_users[] = [
+				'username'	=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
+				'user_email'	=> $this->config['board_contact'],
+				'user_jabber'	=> '',
+				'user_lang'		=> $this->config['default_lang'],
+				'user_notify_type'	=> 0,
+			];
+
+			return $contact_users;
+		}
+
 		// Only founders...maybe
 		if ($this->config['contactadmin_founder_only'])
 		{
@@ -423,7 +455,7 @@ class contactadmin
 		{
 			// Grab an array of user_id's with admin permissions
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
-			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : array();
+			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
 
 			if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL && count($admin_ary))
 			{
@@ -456,13 +488,56 @@ class contactadmin
 		return $contact_users;
 	}
 
+	/**
+	* bot_user_info					used in the ACP when choosing the "bot"
+	*
+	* @param user_id				user id
+	* @return array					array of user info or error if not found
+	* @access public
+	*/
+	public function bot_user_info($user_id)
+	{
+		$bot_user_info = [];
+
+		$sql = 'SELECT user_id, username
+			FROM ' . USERS_TABLE . "
+			WHERE user_id = " . (int) $user_id . ' AND user_type <> ' . USER_IGNORE;
+		$result = $this->db->sql_query($sql);
+		$bot_user_info = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if (!isset($bot_user_info['username']))
+		{
+			$bot_user_info['error'] = $this->language->lang('CONTACT_NO_BOT_USER');
+		}
+
+		if ($this->request->is_ajax())
+		{
+			if (!isset($bot_user_info['username']))
+			{
+				$json = new JsonResponse([
+					'error'     => true,
+				]);
+			}
+			else
+			{
+				$json = new JsonResponse([
+					'user_link'     => '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_user_info['user_id']) . '" target="_blank">' . $bot_user_info['username'] . '</a>',
+				]);
+			}
+			return $json;
+		}
+
+		return $bot_user_info;
+	}
+
 	/*
-     * Get an array that represents directory tree
-     */
+	* Get an array that represents directory tree
+	*/
 	public function dir_to_array($directory)
 	{
 		$directories = glob($directory . '/*' , GLOB_ONLYDIR);
-		$dir_array = array();
+		$dir_array = [];
 		foreach ($directories as $key => $value)
 		{
 			$dir_array[] = substr(strrchr($value, '/'), 1);

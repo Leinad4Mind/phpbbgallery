@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2016 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,10 +36,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CONTACT_CONFIG_SAVED'			=> 'Contact Board Administration configuration has been updated',
-	'CONTACT_ENABLE'				=> 'Enable Contact Board Administration Extension',
-	'CONTACT_ENABLE_EXPLAIN'		=> 'Enable or disable the extension globally',
+$lang = array_merge($lang, [
+	'ADMINS_NOT_EXIST_FOR_METHOD'	=> [
+		0 => 'There are no Administrators who allow emails.  You must choose a different method of contact.',
+		2 => 'There are no Administrators who allow private messages. You must choose a different method of contact.',
+	],
+	'CONTACT_CONFIG_SAVED'			=> 'Contact Admin configuration has been updated',
 	'CONTACT_ACP_CONFIRM'				=> 'Enable visual confirmation',
 	'CONTACT_ACP_CONFIRM_EXPLAIN'		=> 'If you enable this option, users will have to enter a visual confirmation to send the message.<br>This is to prevent spam messages. Note that this option is for the contact page only.  It does not affect other visual confirmation settings.',
 	'CONTACT_ATTACHMENTS'				=> 'Attachments allowed',
@@ -48,7 +50,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_CONFIRM_GUESTS_EXPLAIN'	=> 'If this option is enabled, the visual confirmation is only displayed to guests (if it’s enabled).',
 	'CONTACT_FOUNDER'					=> 'Contact via just the Board Founder',
 	'CONTACT_FOUNDER_EXPLAIN'			=> 'If set only the Founder of the Forum will get Email or PM notifications.',
-	'CONTACT_GENERAL_SETTINGS'			=> 'General contact page settings',
+
 	'CONTACT_MAX_ATTEMPTS'				=> 'Maximum confirmation attempts',
 	'CONTACT_MAX_ATTEMPTS_EXPLAIN'		=> 'How many times may a user attempt to enter the correct confirmation image?<br>Enter 0 for unlimited attempts.',
 	'CONTACT_METHOD'					=> 'Contact method',
@@ -62,18 +64,23 @@ $lang = array_merge($lang, array(
 	'CONTACT_BOT_POSTER_EXPLAIN'	=> 'If set PM’s and posts will seem to come from the contact bot user chosen above based on the settings here. If “Neither” is selected then the bot is not used as the poster.  Posts and PM’s will be posted based on the information entered in the contact form.',
 	'CONTACT_BOT_USER'				=> 'Contact bot user',
 	'CONTACT_BOT_USER_EXPLAIN'		=> 'Select the user that messages will be posted under if the contact method is set to “Private Message” or “Forum Post”.',
+	'CONTACT_NO_BOT_USER'			=> '<b>The contact bot user id chosen does not exist</b>',
 	'CONTACT_USERNAME_CHK'			=> 'Check Username',
-	'CONTACT_USERNAME_CHK_EXPLAIN'	=> 'If set yes, the users name that is entered will be checked against those in the database. If a similar name is found the user will be presented with an error and asked to input a different user name.',
+	'CONTACT_USERNAME_CHK_EXPLAIN'	=> 'If set yes, the user’s name that is entered will be checked against those in the database. If the name is found the user will be presented with an error and asked to input a different user name.',
 	'CONTACT_EMAIL_CHK'				=> 'Check Email',
-	'CONTACT_EMAIL_CHK_EXPLAIN'		=> 'If set yes, the users email will be checked against those in the database. If a similar email is found the user will be presented with an error and asked to input a different email address.',
+	'CONTACT_EMAIL_CHK_EXPLAIN'		=> 'If set yes, the user’s email address will be checked against those in the database. If the email address is found the user will be presented with an error and asked to input a different email address.',
 
 	// Contact methods
 	'CONTACT_METHOD_EMAIL'			=> 'Email',
 	'CONTACT_METHOD_PM'				=> 'Private message',
 	'CONTACT_METHOD_POST'			=> 'Forum post',
+	'CONTACT_METHOD_BOARD_DEFAULT'	=> 'Board Default Email',
 
 	// Contact posters...user bot
 	'CONTACT_POST_NEITHER'			=> 'Neither',
 	'CONTACT_POST_GUEST'			=> 'Guests only',
 	'CONTACT_POST_ALL'				=> 'Everyone',
-));
+
+	// Overwrite the default contact page lang
+	'CONTACT_EXTENSION_ACTIVE'	=> '<span style="color:red;">The settings here will not matter as you currently have the contact admin extension enabled. You will not be able to set this to enabled without first disabling the extension</span>',
+]);
