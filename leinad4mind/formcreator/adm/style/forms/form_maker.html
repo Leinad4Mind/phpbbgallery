@@ -1,0 +1,21 @@
+<fieldset class="fields2">
+	{{ lang('FORM_DETAILS') }}
+</fieldset>
+
+<fieldset class="fields2">
+	{% for form_apptemplate in loops.form_apptemplate %}
+	<dl>
+		<dt class="dt10">
+			<label for="templatefield_{{ form_apptemplate.NAME }}">{{ form_apptemplate.NAME }}{{ lang('COLON') }}</label>{{ form_apptemplate.MANDATORY }}
+		</dt>
+		<dd class="dd10">{{ form_apptemplate.TYPE }}</dd>
+	</dl>
+	{% endfor %}
+	<div class="div_1">* {{ lang('MANDATORY') }}</div>
+</fieldset>
+
+<fieldset class="submit-buttons">
+<p>
+	{{ lang('FORMS_MOD_SAMPLE') }}
+</p>
+</fieldset>
