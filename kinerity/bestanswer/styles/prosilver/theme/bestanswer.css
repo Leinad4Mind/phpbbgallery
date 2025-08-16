@@ -18,3 +18,9 @@
 .profile-answers a {
 	font-weight: normal;
 }
+
+@media (max-width: 700px) {
+	div.profile-answers {
+		display: none;
+	}
+}

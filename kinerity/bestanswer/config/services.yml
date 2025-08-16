@@ -8,6 +8,7 @@ services:
             - '@log'
             - '@request'
             - '@user'
+            - '@notification_manager'
             - '%core.root_path%'
             - '%core.php_ext%'
 
@@ -24,3 +25,23 @@ services:
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
+
+    kinerity.bestanswer.notification.type.markanswer:
+        class: kinerity\bestanswer\notification\type\markanswer
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_config, ['@config']]
+            - [set_user_loader, ['@user_loader']]
+        tags:
+            - { name: notification.type }
+
+    kinerity.bestanswer.notification.type.unmarkanswer:
+        class: kinerity\bestanswer\notification\type\unmarkanswer
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_config, ['@config']]
+            - [set_user_loader, ['@user_loader']]
+        tags:
+            - { name: notification.type }

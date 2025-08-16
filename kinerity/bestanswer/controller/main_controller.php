@@ -33,6 +33,9 @@ class main_controller
 	/* @var \phpbb\user */
 	protected $user;
 
+	/* @var \phpbb\notification\manager */
+	private $notification_manager;
+
 	/* @var string */
 	protected $root_path;
 
@@ -48,10 +51,11 @@ class main_controller
 	 * @param \phpbb\log\log                      $log
 	 * @param \phpbb\request\request              $request
 	 * @param \phpbb\user                         $user
+	 * @param \phpbb\notification\manager         $notification_manager
 	 * @param string                              $root_path
 	 * @param string                              $php_ext
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $lang, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $lang, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\user $user, \phpbb\notification\manager $notification_manager, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->db = $db;
@@ -59,6 +63,7 @@ class main_controller
 		$this->log = $log;
 		$this->request = $request;
 		$this->user = $user;
+		$this->notification_manager = $notification_manager;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -72,7 +77,7 @@ class main_controller
 
 		// Query necessary topic data
 		$sql_arr = array(
-			'SELECT'	=> 'f.forum_id, f.enable_answer, p.post_id, p.topic_id, p.poster_id, p.post_subject, t.topic_id, t.forum_id, t.topic_poster, t.topic_status, t.topic_first_post_id, t.answer_post_id, t.answer_user_id, u.user_id, u.username, u.user_colour',
+			'SELECT'	=> 'f.forum_id, f.enable_answer, p.post_id, p.topic_id, p.poster_id, p.post_subject, t.topic_id, t.forum_id, t.topic_title, t.topic_poster, t.topic_status, t.topic_first_post_id, t.answer_post_id, t.answer_user_id, u.user_id, u.username, u.user_colour',
 
 			'FROM'		=> array(
 				FORUMS_TABLE	=> 'f',
@@ -132,6 +137,22 @@ class main_controller
 
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+
+				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.unmarkanswer', $post_id, $post_id, $topic_data['user_id']);
+				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.unmarkanswer', [
+					'user_id'			=> $this->user->data['user_id'],
+					'user_ids'			=> array($topic_data['user_id']),
+					'username'			=> $this->user->data['username'],
+					'notification_id'	=> $post_id,
+					'poster_username'	=> $topic_data['username'],
+					'poster_id'			=> $topic_data['user_id'],
+					'post_id'			=> $post_id,
+					'topic_id'			=> $topic_data['topic_id'],
+					'topic_title'		=> $topic_data['topic_title'],
+				],
+				[
+					'user_ids'			=> array($topic_data['user_id']),
+				]);
 			}
 
 			if ($action == 'mark_answer')
@@ -172,6 +193,22 @@ class main_controller
 
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+
+				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.markanswer', $post_id, $post_id, $topic_data['user_id']);
+				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.markanswer', [
+					'user_id'			=> $this->user->data['user_id'],
+					'user_ids'			=> array($topic_data['user_id']),
+					'username'			=> $this->user->data['username'],
+					'notification_id'	=> $post_id,
+					'poster_username'	=> $topic_data['username'],
+					'poster_id'			=> $topic_data['user_id'],
+					'post_id'			=> $post_id,
+					'topic_id'			=> $topic_data['topic_id'],
+					'topic_title'		=> $topic_data['topic_title'],
+				],
+				[
+					'user_ids'			=> array($topic_data['user_id']),
+				]);
 			}
 		}
 		else
