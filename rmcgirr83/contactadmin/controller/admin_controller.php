@@ -162,7 +162,6 @@ class admin_controller
 		$contact_admin_info = $this->request->variable('contact_admin_info', $contact_admin_info, true);
 
 		$bot_max_id = (int) $this->bot_max_id();
-
 		$bot_info = $this->contactadmin->bot_user_info($this->request->variable('contact_bot_user', (int) $this->config['contactadmin_bot_user']));
 
 		if (isset($bot_info['error']))
@@ -262,7 +261,7 @@ class admin_controller
 			'CONTACT_EMAIL_CHK'				=> $this->config['contactadmin_email_chk'],
 			'CONTACT_GDPR'					=> $this->config['contactadmin_gdpr'],
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
-			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
+			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->request->variable('contact_method', $this->config['contactadmin_method'])),
 			'CONTACT_WHO'					=> $this->contactadmin->who_select($this->config['contactadmin_who']),
 			'CONTACT_METHOD_EMAIL'			=> json_encode($contact_method_email),
 			'CONTACT_METHOD_PM'				=> json_encode($contact_method_pm),
