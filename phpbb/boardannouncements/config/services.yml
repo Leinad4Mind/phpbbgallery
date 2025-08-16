@@ -2,6 +2,7 @@ services:
     phpbb.boardannouncements.listener:
         class: phpbb\boardannouncements\event\listener
         arguments:
+            - @cache.driver
             - @config
             - @config_text
             - @controller.helper
@@ -17,6 +18,5 @@ services:
             - @config
             - @config_text
             - @dbal.conn
-            - @controller.helper
             - @request
             - @user
