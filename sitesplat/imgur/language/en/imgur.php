@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'IMGUR_CLIENT_ID'			=> 'Imgur Client ID',
+	'IMGUR_CLIENT_ID'			=> 'IMGUR Client ID',
 	'IMGUR_CLIENT_ID_EXPLAIN'	=> 'You need to register an Imgur app to get the <strong>Client ID</strong>.<br /> For creating a new App go to <a href="https://api.imgur.com/oauth2/addclient">this page</a>. Then enter the Client ID here.',
 	
 	'IMGUR_UPLOAD_TITLE'		=> 'Upload an Image',
@@ -52,5 +52,6 @@ $lang = array_merge($lang, array(
 	'IMGUR_OUTPUT_IMAGE_DELETE'	=> 'Deletion Link',
 	'IMGUR_OUTPUT_PLACEHOLDER'	=> 'Waiting image upload...',
 
-	'IMGUR_NOTICE'				=> '<div style="width:80%%;margin:20px auto;"><p>Config setting of this extension are in %1$s » %2$s » %3$s.<br /><strong>Please note, You will need to register an Imgur app to get the Client ID needed for this extension to work. For creating a new App go to https://api.imgur.com/oauth2/addclient and register it following the instruction provided. Use the client ID under ACP > Postings > Attachment settings: Imgur Client ID</strong></p></div>',
+	'IMGUR_QUICKREPLY'	        => 'Allow IMGUR in Smart Snappy Reply',
+
 ));

@@ -18,7 +18,7 @@
 			<div class="input-group col-md-6">
 				<input type="text" class="form-control" id="box-imgur-link" value="{IMGUR_DIRECT_LINK}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
-					<a class="btn btn-default" id="copy-button-link" data-clipboard-target="box-imgur-link" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+					<a class="btn btn-default" id="copy-button-link" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
 				</span>
 		 </div> 
 	</div> 
@@ -30,7 +30,7 @@
 			<div class="input-group col-md-6">
 				<input type="text" class="form-control" id="box-imgur-img" value="{IMGUR_DIRECT_IMG}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
-					<a class="btn btn-default" id="copy-button-img" data-clipboard-target="box-imgur-img" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+					<a class="btn btn-default" id="copy-button-img" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
 				</span>
 			</div> 
 		</div> 
@@ -42,20 +42,10 @@
 			<div class="input-group col-md-6">
 				<input type="text" class="form-control" id="box-imgur-del" <!-- IF IMGUR_DELETEHASH -->value="http://imgur.com/delete/{IMGUR_DELETEHASH}"<!-- ENDIF --> placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
-					<a class="btn btn-default" id="copy-button-del" data-clipboard-target="box-imgur-del" title="Copy to ClipBoard"><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+					<a class="btn btn-default" id="copy-button-del" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
 				</span>
 			</div> 
 		</div> 
 	</div>
 </fieldset>
-<!-- INCLUDEJS vendors/juplod/jupload.min.js -->
-<!-- INCLUDEJS vendors/zeroclipboard/ZeroClipboard.min.js -->
-<script>
-	head.load("{T_THEME_PATH}/vendors/jupload.min.js");
-	head.ready(function () {
-		var imgurImgLink = new ZeroClipboard(document.getElementById("copy-button-link"));
-		var imgurImgTag = new ZeroClipboard(document.getElementById("copy-button-img"));
-		var imgurImgDel = new ZeroClipboard(document.getElementById("copy-button-del"));
-	});
-</script>
 </div>
