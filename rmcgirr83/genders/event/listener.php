@@ -82,7 +82,6 @@ class listener implements EventSubscriberInterface
 			'core.search_get_posts_data'				=> 'search_get_posts_data',
 			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
 			'core.ucp_register_data_before'				=> 'user_gender_profile',
-			'core.ucp_register_data_after'				=> 'user_gender_profile_validate',
 			'core.ucp_register_user_row_after'			=> 'user_gender_registration_sql',
 		);
 	}
