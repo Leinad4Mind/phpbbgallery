@@ -220,7 +220,7 @@ class main_module
 
 		$sql = 'SELECT group_id, group_name
 			FROM ' . $this->groups_table . '
-			WHERE ' . $this->db->sql_in_set('group_name', ['BOTS', 'GUESTS']);
+			WHERE ' . $this->db->sql_in_set('group_name', ['BOTS', 'GUESTS'], true);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
