@@ -73,19 +73,16 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function acp_manage_forums_validate_data(data $event)
 	{
-		if ($event['forum_data']['forum_type'] == FORUM_POST)
-		{
-			$event['forum_data'] = array_merge($event['forum_data'], [
-				'forum_topic_limit'	=> $this->request->variable('forum_topic_limit', 0),
-				'forum_post_limit'	=> $this->request->variable('forum_post_limit', 0),
-			]);
+		$event['forum_data'] = array_merge($event['forum_data'], [
+			'forum_topic_limit'	=> $this->request->variable('forum_topic_limit', 0),
+			'forum_post_limit'	=> $this->request->variable('forum_post_limit', 0),
+		]);
 
-			if (!empty($forum_data['forum_post_limit']) && $event['forum_data']['forum_topic_limit'] > $event['forum_data']['forum_post_limit'])
-			{
-				$event['errors'] = array_merge($event['errors'], [
-					$this->lang->lang('FORUM_MAX_TOPICS_ERROR')
-				]);
-			}
+		if (!empty($forum_data['forum_post_limit']) && $event['forum_data']['forum_topic_limit'] > $event['forum_data']['forum_post_limit'])
+		{
+			$event['errors'] = array_merge($event['errors'], [
+				$this->lang->lang('FORUM_MAX_TOPICS_ERROR')
+			]);
 		}
 	}
 }
