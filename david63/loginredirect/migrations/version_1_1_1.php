@@ -9,11 +9,14 @@
 
 namespace david63\loginredirect\migrations;
 
-class version_1_0_0 extends \phpbb\db\migration\migration
+class version_1_1_1 extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
 		return array(
+			array('config.add', array('redirect_announce_priority', 1)),
+			array('config.add', array('redirect_announce_topic_id', '')),
+			array('config.add', array('redirect_any_announce', '0')),
 			array('config.add', array('redirect_announce', '0')),
 			array('config.add', array('redirect_announce_refresh', '0')),
 			array('config.add', array('redirect_enabled', '0')),
@@ -25,7 +28,7 @@ class version_1_0_0 extends \phpbb\db\migration\migration
 			array('config.add', array('redirect_welcome', '0')),
 			array('config.add', array('redirect_welcome_refresh', '0')),
 			array('config.add', array('redirect_welcome_topic_id', '')),
-			array('config.add', array('version_loginredirect', '1.0.0')),
+			array('config.add', array('version_loginredirect', '1.1.1')),
 
 			// Add the ACP module
 			array('module.add', array('acp', 'ACP_CAT_DOT_MODS', 'REDIRECT')),

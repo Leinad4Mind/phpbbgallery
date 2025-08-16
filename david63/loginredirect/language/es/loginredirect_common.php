@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'		=> 'Ha iniciado sesión correctamente. Un anuncio ha sido publicado desde su última visita, ahora será redirigido a él.',
-	'REDIRECT_LOGIN_GROUP_TOPIC'		=> 'Ha iniciado sesión correctamente. Un nuevo mensaje del grupo ha sido publicado desde su última visita, ahora será redirigido a él.',
-	'REDIRECT_LOGIN_WELCOME_TOPIC'		=> 'Ha iniciado sesión correctamente. Como esta es su primera visita, ahora será redirigido a nuestro tema de bienvenida.',
+	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'	=> 'Usted inició sesión. Un anuncio nuevo fue posteado desde su última visita y será direccionado hacia ahí.',
+	'REDIRECT_LOGIN_GROUP_TOPIC'	=> 'Usted inició sesión. Un nuevo mensaje de grupo fue posteado desde su última visita y será direccionado hacia ahí.',
+	'REDIRECT_LOGIN_WELCOME_TOPIC'	=> 'Usted inició sesión. Como es su primera visita, será direccionado a la página de presentaciones.',
 
-	'REDIRECT_REFRESH_ANNOUNCE'			=> '%sIr all tema del anuncio%s',
-	'REDIRECT_REFRESH_GROUP' 			=> '%sIr al tema del grupo%s',
-	'REDIRECT_REFRESH_WELCOME'			=> '%sIr al tema de bienvenida%s',
+	'REDIRECT_REFRESH_ANNOUNCE'		=> '%sIr a anuncio nuevo%s',
+	'REDIRECT_REFRESH_GROUP'		=> '%sIr a mensaje de grupo%s',
+	'REDIRECT_REFRESH_WELCOME'		=> '%sIr a página de presentaciones%s',	
 ));

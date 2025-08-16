@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Redirects a user to a chosen topic/announcement when they log in",
     "homepage": "",
-    "version": "1.1.0",
-    "time": "2015-05-16",
+    "version": "1.1.1",
+    "time": "2017-01-30",
     "keywords": [
         "phpbb",
         "extension",
@@ -35,7 +35,7 @@
     "extra": {
         "display-name": "User login redirect",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.4,<3.2.*@dev"
+            "phpbb/phpbb": ">=3.1.4,<=3.2.*"
         },
         "version-check": {
             "host": "www.phpbb.com",
