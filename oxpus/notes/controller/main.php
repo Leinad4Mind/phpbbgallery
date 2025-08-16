@@ -235,31 +235,31 @@ class main
 			if ( $search_keywords != '' )
 			{
 				$split_search = array();
-				$sql_search_terms = '';
-				$split_search = split(' ', $search_keywords);
+				$sql_search_terms = array();
+				$split_search = explode(' ', $search_keywords);
+
+				$any_char = $this->db->get_any_char();
 
 				foreach($split_search as $search_word)
 				{
-					$search_word = utf8_encode($search_word);
-
-					$sql_search_terms .= ( $sql_search_terms != '' ) ? ' OR LOWER(' . $sql_search_in . ') LIKE (#%' . strtolower($search_word) . '%#) ' : ' LOWER(' . $sql_search_in . ') LIKE (#%' . strtolower($search_word) . '%#) ';
+					$sql_search_terms[] = ' LOWER(' . $sql_search_in . ') ' . $this->db->sql_like_expression($any_char . strtolower($search_word) . $any_char);
 				}
 
-				$sql_search = ' AND (' . $sql_search_terms . ')';
+				$sql_search = ' AND (' . implode(' OR ', $sql_search_terms) . ')';
 			}
 			else
 			{
 				$sql_search = '';
 			}
 
-			$sql_search .= ($sql_order_by == 'note_mem') ? ' AND note_mem <> 0 ' : '';
-			$sql_search .= ($note_mem_time) ? " AND note_mem <= $note_mem_time AND note_mem <> 0 AND note_memx = 1 " : '';
+			$sql_search .= ($sql_order_by == 'note_mem') ? ' AND (note_mem <> 0) ' : '';
+			$sql_search .= ($note_mem_time) ? " AND (note_mem <= $note_mem_time AND note_mem <> 0 AND note_memx = 1) " : '';
 
 			/*
 			* Go ahead and pull all data for the notes
 			*/
 			$sql = 'SELECT * FROM ' . $this->table_prefix . 'notes
-				WHERE note_user_id = ' . (int) $this->user->data['user_id'] . $this->db->sql_escape($sql_search) . '
+				WHERE note_user_id = ' . (int) $this->user->data['user_id'] . $sql_search . '
 				ORDER BY ' . $this->db->sql_escape($sql_order_by) . ' ' . $this->db->sql_escape($sql_order);
 			$sql = str_replace('#', "'", $sql);
 			$result = $this->db->sql_query($sql);
@@ -443,8 +443,7 @@ class main
 					$cur_time = time();
 				}
 
-				$s_check_yes = ($row['note_mem']) ? 'checked="checked"' : '';
-				$s_check_no = (!$row['note_mem']) ? 'checked="checked"' : '';
+				$s_check = ($row['note_mem']) ? 'checked="checked"' : '';
 
 				$text_ary = generate_text_for_edit($message, $uid, $flags);
 				$message = $text_ary['text'];
@@ -456,8 +455,7 @@ class main
 
 				$cur_time = time();
 
-				$s_check_yes = '';
-				$s_check_no = 'checked="checked"';
+				$s_check = '';
 			}
 
 			$sort_order = $sort_by = $search_in = '';
@@ -470,13 +468,12 @@ class main
 
 			// ... and now prepare the posting form for edit/post the note
 			$this->template->assign_vars(array(
-				'L_NOTE_MODE'		=> ($mode == 'new_note') ? $this->language->lang('NEW_POST') : $this->language->lang('EDIT_POST'),
+				'NOTE_MODE'			=> ($mode == 'new_note') ? $this->language->lang('NEW_POST') : $this->language->lang('EDIT_POST'),
 
 				'NOTES_SUBJECT'		=> $subject,
 				'NOTES_MESSAGE'		=> $message,
 
-				'MEM_CHECKED_YES'	=> $s_check_yes,
-				'MEM_CHECKED_NO'	=> $s_check_no,
+				'MEM_CHECKED'		=> $s_check,
 
 				'S_NOTE_MEM_HOUR'	=> $s_note_mem_hour,
 				'S_NOTE_MEM_MIN'	=> $s_note_mem_minute,
@@ -503,16 +500,13 @@ class main
 		* Send vars to template
 		*/
 		$this->template->assign_vars(array(
-			'L_NOTES_TOTAL'		=> $total_notes . ' / ' . $this->config['notes'],
-			'L_DELETE_NOTE'		=> $this->language->lang('DELETE'),
-			'L_EDIT_NOTE'		=> $this->language->lang('CHANGE'),
-			'L_SEARCH'			=> ($search_keywords == '') ? $this->language->lang('SEARCH') : $this->language->lang('SEARCH').'*',
+			'L_SEARCH'			=> ($search_keywords == '') ? $this->language->lang('SEARCH') : $this->language->lang('SEARCH') . '*',
 			'L_FILTER'			=> ($search_keywords != '' || $sql_order_by == 'note_mem') ? $this->language->lang('FILTER_NOTES') : '',
-			'L_SORT'			=> $this->language->lang('SORT_BY'),
 			'L_NO_NOTES'		=> ($total_notes) ? $this->language->lang('NO_SEARCH_RESULTS') : $this->language->lang('NO_NOTES'),
-			'L_ADD_NOTE'		=> $this->language->lang('NEW_POST'),
 
 			'L_CLOSE'			=> $this->language->lang('CLOSE_WINDOW'),
+
+			'NOTES_TOTAL'		=> $total_notes . ' / ' . $this->config['notes'],
 
 			'SORT_ORDER'		=> $sort_order,
 			'SORT_BY'			=> $sort_by,
@@ -552,8 +546,6 @@ class main
 							$message = preg_replace('#(?!<.*)(' . utf8_normalize_nfc($search_word) . ')(?![^<>]*>)#is', '<span class="posthilit">\1</span>', $message);
 						}
 					}
-
-					$message	= str_replace("\n", "\n<br />\n", $message);
 
 					$u_edit		= $this->helper->route('oxpus_notes_controller', array('mode' => 'edit_note', 'note_id' => $notes_data[$i]['note_id']));
 					$u_del		= $this->helper->route('oxpus_notes_controller', array('mode' => 'delete', 'note_id' => $notes_data[$i]['note_id']));
