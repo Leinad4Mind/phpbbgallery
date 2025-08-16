@@ -15,18 +15,18 @@ class forumicons_install extends \phpbb\db\migration\migration
 	{
 		return isset($this->config['forumicons_version']) && version_compare($this->config['forumicons_version'], '1.0.2', '>=');
 	}
-	
+
 	static public function depends_on()
 	{
 		return array('\phpbb\db\migration\data\v31x\v311');
 	}
-	
+
 	public function update_data()
 	{
 		return array(
 			// Add configs
 			array('config.add', array('forumicons_version', '1.0.2')),
-			
+
 			// Add upload directory
 			array('custom', array(array($this, 'upload_directory'))),
 		);
