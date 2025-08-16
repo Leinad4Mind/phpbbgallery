@@ -1,0 +1,12 @@
+services:
+    david63.loginredirect.listener:
+        class: david63\loginredirect\event\listener
+        arguments:
+            - @config
+            - @user
+            - @request
+            - @dbal.conn
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
