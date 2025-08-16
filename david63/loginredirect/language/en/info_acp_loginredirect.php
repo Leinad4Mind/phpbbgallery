@@ -37,8 +37,52 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'LOG_LOGIN_REDIRECT'	=> '<strong>Login redirect options updated</strong>',
+	'INVALID_ANNOUNCEMENT_TOPIC'			=> 'The announcement topic is invalid.',
+	'INVALID_GROUP_TOPIC'					=> 'The group topic is invalid.',
+	'INVALID_WELCOME_TOPIC'					=> 'The welcome topic is invalid.',
 
-	'REDIRECT'				=> 'Login redirect',
-	'REDIRECT_MANAGE'		=> 'Manage redirects',
+	'LATEST'								=> 'Latest',
+	'LOG_LOGIN_REDIRECT'					=> '<strong>Login redirect options updated</strong>',
+
+	'REDIRECT'								=> 'Login redirect',
+
+	'REDIRECT_ANNOUNCE'						=> 'Announcement redirect on login',
+	'REDIRECT_ANNOUNCE_EXPLAIN'				=> 'Redirect all users who have not logged in since the latest announcement was posted.',
+	'REDIRECT_ANNOUNCE_MESSAGE_EXPLAIN'		=> 'Display a message to say that the user is being redirected to the latest announcement.',
+	'REDIRECT_ANNOUNCE_OPTIONS'				=> 'Announcement options',
+	'REDIRECT_ANNOUNCE_PRIORITY'			=> 'Redirect announcement priority',
+	'REDIRECT_ANNOUNCE_PRIORITY_EXPLAIN'	=> 'Secify which announcement has priority',
+	'REDIRECT_ANNOUNCE_TOPIC_ID'			=> 'Announcement topic ID',
+	'REDIRECT_ANNOUNCE_TOPIC_ID_EXPLAIN'	=> 'Enter the ID of the announcement topic that you wish to redirect all users to.',
+	'REDIRECT_ANY_ANNOUNCE_EXPLAIN'			=> 'Redirect all users who have not logged in since the specified announcement was posted.',
+
+	'REDIRECT_ENABLED'						=> 'User login redirect enable',
+
+	'REDIRECT_GROUP'						=> 'Group topic redirect',
+	'REDIRECT_GROUP_ALL'					=> 'All groups members',
+	'REDIRECT_GROUP_ALL_EXPLAIN'			=> 'Setting this to Yes will override any individual group selected below.',
+	'REDIRECT_GROUP_EXPLAIN'				=> 'Redirect members of a group, or all groups, to a specific topic upon logging in.',
+	'REDIRECT_GROUP_ID'						=> 'Select group',
+	'REDIRECT_GROUP_MESSAGE_EXPLAIN'		=> 'Display a message to say that the user is being redirected to a secific topic.',
+	'REDIRECT_GROUP_OPTIONS'				=> 'Group options',
+	'REDIRECT_GROUP_TOPIC_ID'				=> 'Group topic ID',
+	'REDIRECT_GROUP_TOPIC_ID_EXPLAIN'		=> 'Enter the ID of the topic that you wish to redirect group members to.',
+
+	'REDIRECT_LATEST_ANNOUNCE'				=> 'Latest announcement redirect on login',
+
+	'REDIRECT_LOGIN'						=> 'Login redirect',
+	'REDIRECT_LOGIN_EXPLAIN'				=> 'Here you can choose to have a new user redirected to a welcome topic upon their first log in after registering, have all users redirected to the latest announcement if they have not already seen it and/or redirect either all members or those from a selected group to a new message upon logging in.',
+
+	'REDIRECT_MANAGE'						=> 'Manage redirects',
+
+	'REDIRECT_SHOW_MESSAGE'					=> 'Show a redirect message',
+
+	'REDIRECT_WELCOME'            			=> 'Welcome topic redirect',
+	'REDIRECT_WELCOME_EXPLAIN'				=> 'Redirect all new users to a welcome topic upon first login to the board.',
+	'REDIRECT_WELCOME_MESSAGE_EXPLAIN'		=> 'Display a message to say that the new user is being redirected to the welcome topic.',
+	'REDIRECT_WELCOME_OPTIONS'				=> 'Welcome options',
+	'REDIRECT_WELCOME_TOPIC_ID'				=> 'Welcome topic ID',
+	'REDIRECT_WELCOME_TOPIC_ID_EXPLAIN'		=> 'Enter the ID of the welcome topic that you wish to redirect all new users to.',
+
+	'SELECTED'								=> 'Selected',
 ));

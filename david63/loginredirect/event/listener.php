@@ -108,36 +108,34 @@ class listener implements EventSubscriberInterface
 		}
 
 		$redirect = $event['redirect'];
-		$refresh  = $proceed = $announce = false;
 
 		if ($this->config['redirect_enabled'])
 		{
+			$refresh = $proceed = $latest_announce = $select_announce = false;
+
 			// Redirect new member on first log in
 			if ($this->config['redirect_welcome'] && !empty($this->config['redirect_welcome_topic_id']) && $this->user->data['user_lastvisit'] == 0)
 			{
 				$sql = 'SELECT topic_id
 					FROM ' . TOPICS_TABLE . '
-						WHERE topic_id = ' . $this->config['redirect_welcome_topic_id'];
+						WHERE topic_id = ' . (int)$this->config['redirect_welcome_topic_id'];
 
 				$result	= $this->db->sql_query($sql);
 				$row	= $this->db->sql_fetchrow($result);
 
 				$this->db->sql_freeresult($result);
 
-				// Check that the topic exists
-				if ($row && $this->config['redirect_welcome_topic_id'] == $row['topic_id'])
-				{
-					$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-					$message	= $this->user->lang['REDIRECT_LOGIN_WELCOME_TOPIC'];
-					$l_redirect	= $this->user->lang['REDIRECT_REFRESH_WELCOME'];
-					$refresh	= $this->config['redirect_welcome_refresh'];
-				}
+				$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
+				$message	= $this->user->lang('REDIRECT_LOGIN_WELCOME_TOPIC');
+				$l_redirect	= $this->user->lang('REDIRECT_REFRESH_WELCOME');
+				$refresh	= $this->config['redirect_welcome_refresh'];
 			}
 			else if ($this->config['redirect_announce'] || $this->config['redirect_group'])
 			{
-				// Redirect to announcement
+				// Redirect to an announcement
 				if ($this->config['redirect_announce'])
 				{
+					// Redirect to latest announcement
 					$sql = 'SELECT topic_id, topic_time
 						FROM ' . TOPICS_TABLE . '
 							WHERE topic_type = ' . POST_ANNOUNCE . '
@@ -145,18 +143,52 @@ class listener implements EventSubscriberInterface
 
 					$result	= $this->db->sql_query_limit($sql, 1);
 					$row	= $this->db->sql_fetchrow($result);
-;
+
 					$this->db->sql_freeresult($result);
 
+					$announce_redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
 					// Check that the member has not visited since this announcement was posted
-					if ($this->user->data['user_lastvisit'] < $row['topic_time'])
+					$latest_announce	= ($this->user->data['user_lastvisit'] < $row['topic_time']) ? true : false;
+
+					// Redirect to selected announcement
+					if (!empty($this->config['redirect_announce_topic_id']))
 					{
-						$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-						$message	= $this->user->lang['REDIRECT_LOGIN_ANNOUNCE_TOPIC'];
-						$l_redirect	= $this->user->lang['REDIRECT_REFRESH_ANNOUNCE'];
+						$sql = 'SELECT topic_id, topic_time
+							FROM ' . TOPICS_TABLE . '
+								WHERE topic_id = ' . (int)$this->config['redirect_announce_topic_id'];
+
+						$result	= $this->db->sql_query($sql);
+						$row	= $this->db->sql_fetchrow($result);
+
+						$this->db->sql_freeresult($result);
+
+						$select_redirect = "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
+						// Check that the member has not visited since this announcement was posted
+						$select_announce = ($this->user->data['user_lastvisit'] < $row['topic_time']) ? true : false;
+					}
+
+					// Which do we use?
+					// Latest is priority and not visited
+					if ($this->config['redirect_announce_priority'] && $latest_announce)
+					{
+						$redirect = $announce_redirect;
+					}
+					// Selected is priority and not visited
+					else if (!$this->config['redirect_announce_priority'] && $select_announce)
+					{
+						$redirect = $select_redirect;
+					}
+					// Selected is priority and visited but latest has not been visited
+					else if (!$this->config['redirect_announce_priority'] && $latest_announce)
+					{
+						$redirect = $announce_redirect;
+					}
+
+					if ($latest_announce || $select_announce)
+					{
+						$message	= $this->user->lang('REDIRECT_LOGIN_ANNOUNCE_TOPIC');
+						$l_redirect	= $this->user->lang('REDIRECT_REFRESH_ANNOUNCE');
 						$refresh	= $this->config['redirect_announce_refresh'];
-						// Need to give announcement priority over a group message
-						$announce	= true;
 					}
 				}
 
@@ -192,19 +224,19 @@ class listener implements EventSubscriberInterface
 					{
 						$sql = 'SELECT topic_id, topic_time
 						FROM ' . TOPICS_TABLE . '
-							WHERE topic_id = ' . $this->config['redirect_group_topic_id'];
+							WHERE topic_id = ' . (int)$this->config['redirect_group_topic_id'];
 
 						$result	= $this->db->sql_query($sql);
 						$row	= $this->db->sql_fetchrow($result);
 
 						$this->db->sql_freeresult($result);
 
-						// Check that the topic exists and that the member has not visited since this topic was posted
-						if ($this->config['redirect_group_topic_id'] == $row['topic_id'] && $this->user->data['user_lastvisit'] < $row['topic_time'])
+						// Check that the member has not visited since this topic was posted
+						if ($this->user->data['user_lastvisit'] < $row['topic_time'])
 						{
 							$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-							$message	= $this->user->lang['REDIRECT_LOGIN_GROUP_TOPIC'];
-							$l_redirect	= $this->user->lang['REDIRECT_REFRESH_GROUP'];
+							$message	= $this->user->lang('REDIRECT_LOGIN_GROUP_TOPIC');
+							$l_redirect	= $this->user->lang('REDIRECT_REFRESH_GROUP');
 							$refresh	= $this->config['redirect_group_refresh'];
 						}
 					}

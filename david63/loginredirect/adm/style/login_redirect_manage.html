@@ -1,0 +1,110 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_REDIRECT_LOGIN}</h1>
+<p>{L_REDIRECT_LOGIN_EXPLAIN}</p>
+
+<form id="login_redirect" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<dl>
+			<dt><label for="redirect_enabled">{L_REDIRECT_ENABLED}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_enabled" value="1" id="redirect_enabled"<!-- IF REDIRECT_ENABLED --> checked="checked"<!-- ENDIF -->/> {L_ENABLED}</label>
+				<label><input type="radio" class="radio" name="redirect_enabled" value="0" <!-- IF not REDIRECT_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_DISABLED}</label></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_REDIRECT_ANNOUNCE_OPTIONS}</legend>
+
+		<dl>
+			<dt><label for="redirect_announce">{L_REDIRECT_LATEST_ANNOUNCE}{L_COLON}</label><br /><span>{L_REDIRECT_ANNOUNCE_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_announce" value="1" id="redirect_announce"<!-- IF REDIRECT_ANNOUNCE --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_announce" value="0" <!-- IF not REDIRECT_ANNOUNCE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+  			<dt><label for="redirect_any_announce">{L_REDIRECT_ANNOUNCE}{L_COLON}</label><br /><span>{L_REDIRECT_ANY_ANNOUNCE_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_any_announce" value="1" id="redirect_any_announce"<!-- IF REDIRECT_ANY_ANNOUNCE --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_any_announce" value="0" <!-- IF not REDIRECT_ANY_ANNOUNCE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_announce_topic_id">{L_REDIRECT_ANNOUNCE_TOPIC_ID}{L_COLON}</label><br /><span>{L_REDIRECT_ANNOUNCE_TOPIC_ID_EXPLAIN}</span></dt>
+			<dd><input type="text" id="redirect_announce_topic_id" name="redirect_announce_topic_id" size="8" value="{REDIRECT_ANNOUNCE_TOPIC_ID}" /></dd>
+		</dl>
+
+		<dl>
+  			<dt><label for="redirect_announce_priority">{L_REDIRECT_ANNOUNCE_PRIORITY}{L_COLON}</label><br /><span>{L_REDIRECT_ANNOUNCE_PRIORITY_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_announce_priority" value="1" id="redirect_announce_priority"<!-- IF REDIRECT_ANNOUNCE_PRIORITY --> checked="checked"<!-- ENDIF -->/> {L_LATEST}</label>
+				<label><input type="radio" class="radio" name="redirect_announce_priority" value="0" <!-- IF not REDIRECT_ANNOUNCE_PRIORITY --> checked="checked"<!-- ENDIF --> /> {L_SELECTED}</label>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_announce_refresh">{L_REDIRECT_SHOW_MESSAGE}{L_COLON}</label><br /><span>{L_REDIRECT_ANNOUNCE_MESSAGE_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_announce_refresh" value="1" id="redirect_announce_refresh"<!-- IF REDIRECT_ANNOUNCE_REFRESH --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_announce_refresh" value="0" <!-- IF not REDIRECT_ANNOUNCE_REFRESH --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_REDIRECT_WELCOME_OPTIONS}</legend>
+		<dl>
+  			<dt><label for="redirect_welcome">{L_REDIRECT_WELCOME}{L_COLON}</label><br /><span>{L_REDIRECT_WELCOME_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_welcome" value="1" id="redirect_welcome"<!-- IF REDIRECT_WELCOME --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_welcome" value="0" <!-- IF not REDIRECT_WELCOME --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_welcome_topic_id">{L_REDIRECT_WELCOME_TOPIC_ID}{L_COLON}</label><br /><span>{L_REDIRECT_WELCOME_TOPIC_ID_EXPLAIN}</span></dt>
+			<dd><input type="text" id="redirect_welcome_topic_id" name="redirect_welcome_topic_id" size="8" value="{REDIRECT_WELCOME_TOPIC_ID}" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_welcome_refresh">{L_REDIRECT_SHOW_MESSAGE}{L_COLON}</label><br /><span>{L_REDIRECT_WELCOME_MESSAGE_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_welcome_refresh" value="1" id="redirect_welcome_refresh"<!-- IF REDIRECT_WELCOME_REFRESH --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_welcome_refresh" value="0" <!-- IF not REDIRECT_WELCOME_REFRESH --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_REDIRECT_GROUP_OPTIONS}</legend>
+		<dl>
+			<dt><label for="redirect_group">{L_REDIRECT_GROUP}{L_COLON}</label><br /><span>{L_REDIRECT_GROUP_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_group" value="1" id="redirect_group"<!-- IF REDIRECT_GROUP --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_group" value="0" <!-- IF not REDIRECT_GROUP --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_group_all">{L_REDIRECT_GROUP_ALL}{L_COLON}</label><br /><span>{L_REDIRECT_GROUP_ALL_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_group_all" value="1" id="redirect_group_all"<!-- IF REDIRECT_GROUP_ALL --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_group_all" value="0" <!-- IF not REDIRECT_GROUP_ALL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_group_id">{L_REDIRECT_GROUP_ID}{L_COLON}</label></dt>
+			<dd><select name="redirect_group_id" id="redirect_group_id">{S_REDIRECT_GROUP_OPTIONS}</select></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_group_topic_id">{L_REDIRECT_GROUP_TOPIC_ID}{L_COLON}</label><br /><span>{L_REDIRECT_GROUP_TOPIC_ID_EXPLAIN}</span></dt>
+			<dd><input type="text" id="redirect_group_topic_id" name="redirect_group_topic_id" size="8" value="{REDIRECT_GROUP_TOPIC_ID}" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="redirect_group_refresh">{L_REDIRECT_SHOW_MESSAGE}{L_COLON}</label><br /><span>{L_REDIRECT_GROUP_MESSAGE_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="redirect_group_refresh" value="1" id="redirect_group_refresh"<!-- IF REDIRECT_GROUP_REFRESH --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="redirect_group_refresh" value="0" <!-- IF not REDIRECT_GROUP_REFRESH --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_SUBMIT_CHANGES}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
