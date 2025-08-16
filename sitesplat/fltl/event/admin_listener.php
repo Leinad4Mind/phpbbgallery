@@ -67,7 +67,7 @@ class admin_listener implements EventSubscriberInterface
 			$new_vars = array(
 				'fltl_limit'	=> array('lang' => 'FLTL_LIMIT',	'validate' => 'int:4:20',	'type' => 'number:0:9999', 'explain' => true),
 
-				'fltl_time'	=> array('lang' => 'FLTL_TIME',	'validate' => 'int:4:20',	'type' => 'number:0:9999', 'explain' => true),
+				'fltl_time'	=> array('lang' => 'FLTL_TIME',	'validate' => 'int:0:20',	'type' => 'number:0:9999', 'explain' => true),
 
 				'fltl_type'		=> array('lang' => 'FLTL_TYPE',	'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::type_select',  'explain' => true),
 				

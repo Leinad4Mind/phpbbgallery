@@ -23,7 +23,7 @@ $lang = array_merge($lang, array(
 	'FLTL_LIMIT_EXPLAIN'			=> 'Set the posts block per each row (4 default)',
 	
 	'FLTL_TIME'						=> 'Topic Fetch Limit',
-	'FLTL_TIME_EXPLAIN'				=> 'Set the amount in days for how far back to fetch topics from the database',
+	'FLTL_TIME_EXPLAIN'				=> 'Set the amount in days for how far back to fetch topics from the database. 0 disables the limit.',
 
 	'FLTL_TYPE'						=> 'Sort order',
 	'FLTL_TYPE_EXPLAIN'				=> 'Display first or last post from recent topics',

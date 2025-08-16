@@ -53,11 +53,12 @@ class main
 		$forums = (!empty($forum_excluded_aray)) ? array_unique(array_merge($forum_excluded_aray, $forums)) : $forums;
 
 		$sql_where = (!empty($forums)) ? 'WHERE ' . $this->db->sql_in_set('t.forum_id', $forums, true) . ' AND p.topic_id = t.topic_id ' : 'WHERE p.topic_id = t.topic_id ';
-	
+
+		$recent_topics_where = ($this->config['fltl_time']) ? 'AND t.topic_last_post_time > ' . (time() - ($this->config['fltl_time'] * 86400)) : '';
 		$sql = 'SELECT COUNT(p.post_id) AS total
                 FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u ' . $sql_where . '
                 AND p.post_visibility = 1
-                AND t.topic_last_post_time > ' . (time() - ($this->config['fltl_time'] * 86400)) . '
+                ' . $recent_topics_where . '
                 AND u.user_id = ' . $pid . '
 				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id';
 		$result = $this->db->sql_query($sql);
@@ -71,7 +72,7 @@ class main
 					t.topic_last_poster_name, t.topic_last_poster_colour
 				FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u ' . $sql_where . '
                 AND p.post_visibility = 1
-				AND t.topic_last_post_time > ' . (time() - ($this->config['fltl_time'] * 86400)) . '
+                ' . $recent_topics_where . '
 				AND u.user_id = ' . $pid . '
 				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id
 				ORDER BY t.topic_last_post_time DESC';
