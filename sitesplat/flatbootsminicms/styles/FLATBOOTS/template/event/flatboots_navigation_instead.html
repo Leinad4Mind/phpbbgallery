@@ -13,12 +13,14 @@
 				   <!-- IF S_NOTIFICATIONS_DISPLAY -->	
 					 <li><a title="" href="{U_VIEW_ALL_NOTIFICATIONS}"><i class="fa fa-bell"></i>&nbsp;{L_NOTIFICATIONS}&nbsp;&nbsp;<!-- IF not .notifications --><!-- ELSE --><span class="badge badge-info">{NOTIFICATIONS_COUNT}</span><!-- ENDIF --></a></li>
 				   <!-- ENDIF -->
+				   <!-- EVENT overall_header_mobile_navigation_append -->
 				   <li><a title="" href="{U_UCP_PROFILE_SETTINGS}"><i class="fa fa-cog"></i>&nbsp;{L_UCP_PROFILE_SETTINGS}</a></li>
 	               <!-- IF U_ACP --><li><a title="" href="{U_ACP}"><i class="fa fa-user-md"></i>&nbsp;{L_ADMIN_PANEL_GENERAL}</a></li><!-- ENDIF -->
 	               <!-- IF U_MCP --><li><a href="{U_MCP}"><i class="fa fa-legal"></i>&nbsp;{L_MODERATOR_PANEL_GENERAL}</a></li><!-- ENDIF -->
 				   <!-- IF S_REGISTERED_USER and not (U_ACP or U_MCP) --><li><a href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a></li><!-- ENDIF -->
 				   <!-- IF U_RESTORE_PERMISSIONS --><li><a href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i>&nbsp;{L_RESTORE_PERMISSIONS}</a></li><!-- ENDIF -->
 				  <li><a title="" href="{U_LOGIN_LOGOUT}"><i class="fa fa-power-off"></i>&nbsp;{L_LOGOUT}</a></li>
+				  <!-- EVENT overall_header_mobile_navigation_ending -->
 				</ul>
 			</li>
 		</ul>
@@ -114,6 +116,7 @@
 										</div>
                                     </div>
 							  </div>
+							  <!-- EVENT navbar_header_profile_list_after -->
 							  <div class="navbar-footer">
                                     <div class="navbar-footer-content">
                                         <div class="row">

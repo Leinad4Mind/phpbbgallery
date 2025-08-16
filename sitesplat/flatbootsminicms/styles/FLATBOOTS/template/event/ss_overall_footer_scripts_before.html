@@ -1,0 +1,43 @@
+<!-- IF ENABLE_POPUP_LOGIN -->
+		<div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="awe-remove-circle"></span></button>
+						<h3 class="modal-title">{SITENAME}&nbsp;{L_LOGIN}</h3>
+					</div>
+					<div class="modal-body">
+						<form method="post" action="{S_LOGIN_ACTION}">
+							<fieldset>
+								<label for="username" class="control-label">{L_USERNAME}{L_COLON}</label>
+								<div class="input-icon left">
+									<i class="fa fa-user"></i>
+									<input class="form-control" type="text" name="username" id="username" placeholder="{L_USERNAME}">
+								</div>
+
+								<label for="password" class="control-label">{L_PASSWORD}{L_COLON}</label>
+								<div class="input-icon left">
+									<i class="fa fa-key"></i>
+									<input class="form-control" type="password" name="password" id="password" placeholder="{L_PASSWORD}">
+								</div>
+								<!-- IF S_AUTOLOGIN_ENABLED -->
+									<div class="controls controls-row">
+										<div class="radio"><input type="checkbox" name="autologin" id="autologin-pop"><label for="autologin-pop">{L_LOG_ME_IN}</label></div>
+									</div>
+								<!-- ENDIF -->
+								<button type="submit" class="btn btn-default" id="load" name="login" value="{L_LOGIN}" data-loading-text="{L_LOADING_LOG_IN} <i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_LOGIN}</button>
+								{S_LOGIN_REDIRECT}
+							</fieldset>
+						</form> 
+						<!-- IF PROVIDER_TEMPLATE_FILE -->
+						<div class="panel-login panel-login-modal">
+                            <!-- INCLUDE {PROVIDER_TEMPLATE_FILE} -->
+						</div>	
+                        <!-- ENDIF -->
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+<!-- ENDIF -->
