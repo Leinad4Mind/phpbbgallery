@@ -1,0 +1,32 @@
+imports:
+    - { resource: parameters.yml }
+
+services:
+    leinad4mind.hideprofilefieldstogroups.profilefields_manager:
+        class: leinad4mind\hideprofilefieldstogroups\profilefields_manager
+        decorates: 'profilefields.manager'
+        arguments:
+            - '@auth'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@request'
+            - '@template'
+            - '@profilefields.type_collection'
+            - '@user'
+            - '%tables.profile_fields%'
+            - '%tables.profile_fields_language%'
+            - '%tables.profile_fields_data%'
+        calls:
+            - [set_group_helper, ['@group_helper']]
+            - [set_root_path, ['%core.root_path%']]
+            - [set_php_ext, ['%core.php_ext%']]
+            - [set_table_profilefieldgroups, ['%leinad4mind.hideprofilefieldstogroups.table.profilefieldgroups%']]
+
+    leinad4mind.hideprofilefieldstogroups.listener:
+        class: leinad4mind\hideprofilefieldstogroups\event\main
+        arguments:
+            - '@request'
+            - '@template'
+            - '@leinad4mind.hideprofilefieldstogroups.profilefields_manager'
+        tags:
+            - { name: event.listener }
