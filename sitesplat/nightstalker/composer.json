@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "It adds a on/off style switcher for the user for a comfortable forum night browsing or peace of mind for the avid night walkers obsessed with the dark style :-)",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"keywords": ["phpbb", "extension", "sitesplat", "premium", "themeswitcher", "cosmetic"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [

@@ -851,4 +851,108 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .mini-timeline > li .timeline-body {
     background-color: transparent;
 }
+
+
+
+
+
+
+.donation-actions {
+    background-color: #262626;
+    border: 3px solid #999;
+}
+.donation-actions p {
+    color: #8d9aa5;
+}
+.donation-premium > strong,
+#donationicons .amt-donation {
+    color: #ffa800;
+}
+#donationmessage, #submission {
+    background-color: #444;
+}
+.donation-actions h2, #donationmessage h3,
+#donationicons > span + p span {
+    color: #fafafa;
+}
+.donation-actions p a,
+#submission output {
+    color: #ffa800;
+}
+#donationicons > span.selected:before {
+    color: #7F7F7F;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+#donationicons > span:before {
+  color: rgba(21,23,25, 0.8);
+  /* this creates the "inset" text shadow */
+  text-shadow: 1px 2px 2px #222, 0 0 0 #000, 1px 2px 2px #222, 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+#donationicons > span:after {
+    border-bottom: 7px solid #444;
+}
+input:focus {
+    outline: none !important;
+    border-color: #CDCDCD;
+    box-shadow: 0 0 10px #CDCDCD;
+}
+input[type=range] {
+    background-color: #999;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    background-color: #444;
+}
+input[type=range]::-moz-range-track {
+    background-color: #444;
+}
+input[type="range"]::-ms-track {
+    background-color: #444;
+}
+input[type=range]::-webkit-slider-thumb {
+    background: -webkit-linear-gradient(left, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), -webkit-linear-gradient(left, #959595, #BBBBBB 40%, #BBBBBB 60%, #959595);
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #959595, #BBBBBB 40%, #BBBBBB 60%, #959595);
+    box-shadow: 0 -2px 0 #868686 inset, 0 2px 0 #BBBBBB inset, 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-webkit-slider-thumb:active {
+    background: -webkit-linear-gradient(left, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), -webkit-linear-gradient(left, #B4B4B4, #C8C8C8 35%, #C8C8C8 65%, #B4B4B4);
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #B4B4B4, #C8C8C8 35%, #C8C8C8 65%, #B4B4B4);
+}
+input[type=range]::-moz-range-thumb {
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #959595, #BBBBBB 40%, #BBBBBB 60%, #959595);
+    box-shadow: 0 -2px 0 #868686 inset, 0 2px 0 #BBBBBB inset, 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+input[type=range]::-moz-range-thumb:hover, input[type=range]::-moz-range-thumb:active {
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #B4B4B4, #C8C8C8 35%, #C8C8C8 65%, #B4B4B4);
+}
+input[type=range]::-ms-thumb {
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #959595, #BBBBBB 40%, #BBBBBB 60%, #959595);
+    box-shadow: 0 -2px 0 #868686 inset, 0 2px 0 #BBBBBB inset, 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
+    background: linear-gradient(to right, transparent, transparent 4px, #7C7C7C 4px, #7C7C7C 5px, transparent 5px, transparent 7px, #7C7C7C 7px, #7C7C7C 8px, transparent 8px, transparent 10px, #7C7C7C 10px, #7C7C7C 11px, transparent 11px, transparent 64px, #7C7C7C 64px, #7C7C7C 65px, transparent 65px, transparent 67px, #7C7C7C 67px, #7C7C7C 68px, transparent 68px, transparent 70px, #7C7C7C 70px, #7C7C7C 71px, transparent 71px), linear-gradient(to right, #B4B4B4, #C8C8C8 35%, #C8C8C8 65%, #B4B4B4);
+}
+#submission .btn-bbdonation {
+    background-color: #363636;
+    border: 0 none #444;
+}
+#submission .btn-bbdonation:hover,
+#submission .btn-bbdonation:focus,
+#submission .btn-bbdonation:active {
+    background-color: #7f7f7f;
+    border: 0 none #d6d9e0;
+}
+.member-info {
+  color: rgb(141, 154, 165);
+}
+.member-info a {
+    color: rgb(250, 250, 250);
+}
+#donationmessage h3 {
+    border-bottom: none !important;
+}
+
+.side-segment > h3 {
+    color: #fff;
+}
 /* ===[ CSS HOOK BOTTOM ]=== */
