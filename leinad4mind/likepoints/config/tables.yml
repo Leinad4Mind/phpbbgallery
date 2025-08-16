@@ -1,0 +1,3 @@
+parameters:
+    leinad4mind.config.table: '%core.table_prefix%config'
+    leinad4mind.users.table: '%core.table_prefix%users'

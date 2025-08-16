@@ -1,18 +1,32 @@
+imports:
+    - { resource: tables.yml }
+
 services:
-    oreolek.likepoints.listener:
-        class: 'oreolek\likepoints\event\listener'
+    leinad4mind.likepoints.listener:
+        class: 'leinad4mind\likepoints\event\listener'
         arguments:
             - '@request'
             - '@dbal.conn'
             - '@template'
             - '@language'
+            - '@log'
+            - '@user'
         tags:
             - { name: event.listener }
-    oreolek.likepoints.admin_listener:
-        class: 'oreolek\likepoints\event\admin_listener'
+    leinad4mind.likepoints.admin_listener:
+        class: 'leinad4mind\likepoints\event\admin_listener'
         arguments:
             - '@request'
             - '@dbal.conn'
             - '@template'
+            - '@language'
+            - '%leinad4mind.config.table%'
         tags:
             - { name: event.listener }
+    leinad4mind.likepoints.autosuggest:
+        class: leinad4mind\likepoints\controller\autosuggest
+        arguments:
+            - '@dbal.conn.driver'
+            - '@request'
+            - '@user'
+            - '%leinad4mind.users.table%'

@@ -1,22 +1,33 @@
 <?php
-namespace oreolek\likepoints\migrations;
 
 /**
-* Migration 1. Initial installation.
-*/
+ *
+ * LikePoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @license Proprietary
+ *
+ */
+
+namespace leinad4mind\likepoints\migrations;
+
+/**
+ * Migration 1. Initial installation.
+ */
 class m1_initial_install extends \phpbb\db\migration\migration
 {
-  public function update_schema() {
-    return array(
-      'add_columns'	=> array(
-        $this->table_prefix . 'forums'	=> array(
-          'likepoints_enabled'	=> array('BOOL', 1),
-          'likepoints_amount'	=> array('UINT:2', 10),
-        ),
-        $this->table_prefix . 'posts'	=> array(
-          'kudos'	=> array('VARCHAR:255', ''),
-        ),
-      )
-    );
-  }
+   public function update_schema()
+   {
+      return array(
+         'add_columns'   => array(
+            $this->table_prefix . 'forums'   => array(
+               'per_likes_enabled'   => array('BOOL', 1),
+               'per_likes_amount'   => array('UINT:2', 10),
+            ),
+            $this->table_prefix . 'posts'   => array(
+               'contributors'   => array('VCHAR:255', ''),
+            ),
+         )
+      );
+   }
 }
