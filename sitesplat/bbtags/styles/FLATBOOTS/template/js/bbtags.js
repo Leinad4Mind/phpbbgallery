@@ -25,7 +25,7 @@ $(document).on("click", ".open-bbtagsdialog", function () {
 $('#bbtags').tagEditor({ 
 	initialTags: [],
 	forceLowercase: true,
-	placeholder: 'Enter tags...',
+	placeholder: bbtagsLangPlaceholder,
 	maxTags: maxTags,
 	maxLength: 30,
 	 autocomplete: {
