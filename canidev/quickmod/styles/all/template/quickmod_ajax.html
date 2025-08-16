@@ -1,60 +1,60 @@
-<!-- IF S_USERLIST -->
+{% if S_USERLIST %}
 <div class="cbb-dropdown">
 	<ul class="cbb-menu qm-user-selector">
-		<!-- BEGIN user -->
+		{% for user in loops.user %}
 		<li>
-			<a href="#" data-username="{user.S_USERNAME}">
+			<a href="#" data-username="{{ user.S_USERNAME }}">
 				<div class="cbb-circular-avatar size-small">
-					<!-- IF user.S_AVATAR_IMG -->{user.S_AVATAR_IMG}<!-- ELSE --><div class="cbb-no-avatar"></div><!-- ENDIF -->
+					{% if user.S_AVATAR_IMG %}{{ user.S_AVATAR_IMG }}{% else %}<div class="cbb-no-avatar"></div>{% endif %}
 				</div>
-				<span>{user.S_USERNAME_FORMATTED}</span>
+				<span>{{ user.S_USERNAME_FORMATTED }}</span>
 			</a>
 		</li>
-		<!-- END user -->
+		{% endfor %}
 	</ul>
 </div>
-<!-- ELSEIF DIALOG_CONTENT -->
-<div class="qm-dialog" title="{MESSAGE_TITLE}">
+{% elseif DIALOG_CONTENT %}
+<div class="qm-dialog" title="{{ MESSAGE_TITLE }}">
 	<form id="qm-dialog-form" onsubmit="return false;">
 
 	<div class="cbb-dialog-content">
-	<!-- IF S_APPROVE -->
+	{% if S_APPROVE %}
 
 		<label><input type="checkbox" name="send_notify" value="1" /> {L_NOTIFY_POSTER}</label>
 		
-	<!-- ELSEIF S_DELETE -->
+	{% elseif S_DELETE %}
 	
 		<label>{L_REASON}: <input class="inputbox autowidth cbb-inputbox" type="text" name="delete_reason" value="" size="25" /></label>
 
-	<!-- ELSEIF S_FORUM_REQUEST -->
+	{% elseif S_FORUM_REQUEST %}
 
-		<label>{L_SELECT_DESTINATION_FORUM}:<br /><select name="to_forum_id" class="cbb-inputbox">{S_FORUM_SELECT}</select></label>
-		<!-- IF S_CAN_LEAVE --><br /><br /><label for="move_leave_shadow"><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" /> {L_LEAVE_SHADOW}</label><!-- ENDIF -->
+		<label>{L_SELECT_DESTINATION_FORUM}:<br /><select name="to_forum_id" class="cbb-inputbox">{{ S_FORUM_SELECT }}</select></label>
+		{% if S_CAN_LEAVE %}<br /><br /><label for="move_leave_shadow"><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" /> {L_LEAVE_SHADOW}</label>{% endif %}
 
-	<!-- ELSEIF S_CHGPOSTER -->
+	{% elseif S_CHGPOSTER %}
 
 		{L_CHANGE_POSTER}:
 		<div class="cbb-group">
 			<input class="inputbox autowidth cbb-inputbox" type="text" name="username" value="" size="25" />
-			<a href="{U_FIND_USERNAME}" class="cbb-btn" onclick="find_username(this.href); return false;"><i class="fa fa-search"></i></a>
+			<a href="{{ U_FIND_USERNAME }}" class="cbb-btn" onclick="find_username(this.href); return false;"><i class="fa fa-search"></i></a>
 		</div>
 
-	<!-- ELSEIF S_CHGICON -->
+	{% elseif S_CHGICON %}
 	
 		<label for="icon"><input type="radio" name="icon" id="icon" value="0" checked="checked" /> {L_NO_TOPIC_ICON}</label>
-		<!-- BEGIN topic_icon --><label for="icon-{topic_icon.ICON_ID}"><input type="radio" name="icon" id="icon-{topic_icon.ICON_ID}" value="{topic_icon.ICON_ID}" {topic_icon.S_ICON_CHECKED} /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="" title="" /></label> <!-- END topic_icon -->
+		{% for topic_icon in loops.topic_icon %}<label for="icon-{{ topic_icon.ICON_ID }}"><input type="radio" name="icon" id="icon-{{ topic_icon.ICON_ID }}" value="{{ topic_icon.ICON_ID }}" {{ topic_icon.S_ICON_CHECKED }} /> <img src="{{ topic_icon.ICON_IMG }}" width="{{ topic_icon.ICON_WIDTH }}" height="{{ topic_icon.ICON_HEIGHT }}" alt="" title="" /></label> {% endfor %}
 
-	<!-- ELSEIF S_CHGTIME -->
+	{% elseif S_CHGTIME %}
 	
-		<label for="day">{L_DAY}: <select name="day" id="day" class="cbb-inputbox">{S_DAY_OPTIONS}</select></label> 
-		<label for="month">{L_MONTH}: <select name="month" id="month" class="cbb-inputbox">{S_MONTH_OPTIONS}</select></label> 
-		<label for="year">{L_YEAR}: <select name="year" id="year" class="cbb-inputbox">{S_YEAR_OPTIONS}</select></label>
+		<label for="day">{L_DAY}: <select name="day" id="day" class="cbb-inputbox">{{ S_DAY_OPTIONS }}</select></label> 
+		<label for="month">{L_MONTH}: <select name="month" id="month" class="cbb-inputbox">{{ S_MONTH_OPTIONS }}</select></label> 
+		<label for="year">{L_YEAR}: <select name="year" id="year" class="cbb-inputbox">{{ S_YEAR_OPTIONS }}</select></label>
 		
-		<br /><br /><label for="hour">{L_TIME}: <input type="time" class="cbb-inputbox" name="hour" id="hour" value="{S_HOUR}" /></label>
+		<br /><br /><label for="hour">{L_TIME}: <input type="time" class="cbb-inputbox" name="hour" id="hour" value="{{ S_HOUR }}" /></label>
 	
-	<!-- ENDIF -->
+	{% endif %}
 
-		{S_QM_HIDDEN_FIELDS}
+		{{ S_QM_HIDDEN_FIELDS }}
 	</div>
 
 	</form>
@@ -64,4 +64,4 @@
 		<button class="cbb-btn" value="close">{L_CANCEL}</button>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}

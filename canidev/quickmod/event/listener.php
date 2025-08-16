@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickMod
-* @version v1.1.2 01/03/2020
+* @version v1.1.3 16/04/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -96,7 +96,7 @@ class listener implements EventSubscriberInterface
 		$topic_row	= $event['topic_row'];
 		$row		= $event['row'];
 		
-		$topic_forum_id	= ($row['forum_id']) ? (int) $row['forum_id'] : $this->forum_id;
+		$topic_forum_id	= ($row['forum_id']) ? (int) $row['forum_id'] : $this->quickmod->forum_id;
 		
 		$topic_row['QM_CONTENT'] = $this->quickmod->get_row_content($topic_forum_id, $row['orig_topic_id'], $row['topic_type'], $row['topic_status'], $row['topic_visibility']);
 		
@@ -110,7 +110,7 @@ class listener implements EventSubscriberInterface
 			$topic_row	= $event['tpl_ary'];
 			$row		= $event['row'];
 			
-			$topic_forum_id	= ($row['forum_id']) ? (int) $row['forum_id'] : $this->forum_id;
+			$topic_forum_id	= ($row['forum_id']) ? (int) $row['forum_id'] : $this->quickmod->forum_id;
 
 			$topic_row['QM_CONTENT'] = $this->quickmod->get_row_content($topic_forum_id, $row['topic_id'], $row['topic_type'], $row['topic_status'], $row['topic_visibility']);
 			

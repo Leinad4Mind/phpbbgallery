@@ -1,9 +1,9 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -28,10 +28,17 @@ class media
 		'type'			=> 'image', // image, icon, attachment
 	);
 	
+	private $max_imagesize 		= false;
 	private $max_filesize		= 0;
 	private $upload_path		= '';
 	private $referer_ext		= '';
 	private $events_assigned	= false;
+
+	private $options = array(
+		'imageMaxHeight'	=> 0,
+		'imageMaxWidth' 	=> 0,
+		'max_filesize'		=> 0,
+	);
 
 	protected $config;
 	protected $container;
@@ -62,14 +69,14 @@ class media
 	{
 		$this->config			= $container->get('config');
 		$this->container		= $container;
-		$this->core				= \canidev\core\lib::get_instance($container);
+		$this->core				= lib::get_instance($container);
 		$this->dispatcher		= $container->get('dispatcher');
 		$this->json				= new json_response;
 		$this->lang				= $container->get('language');
 		$this->path				= $container->get('path_helper');
 		$this->php_ini			= new \phpbb\php\ini;
 		$this->request			= $container->get('request');
-		$this->template			= \canidev\core\template::get_instance($container);
+		$this->template			= template::get_instance($container);
 		$this->uploader 		= $container->get('files.upload');
 		$this->user				= $container->get('user');
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
@@ -79,7 +86,7 @@ class media
 	public function preload()
 	{
 		$this->lang->add_lang('media', 'canidev/core');
-		
+
 		$this->template->append_asset('css', '@canidev_core/../theme/mediaManager.css');
 		$this->template->append_asset('js', '@canidev_core/js/jquery-ui.min.js');
 		$this->template->append_asset('js', '@canidev_core/js/mediaManager.js');
@@ -143,7 +150,7 @@ class media
 
 		if($this->is_icon($image))
 		{
-			return '<i class="fa ' . $image . '" aria-hidden="true"></i>';
+			return '<i class="icon cbb-fa-icon fa ' . $image . '" aria-hidden="true"></i>';
 		}
 		
 		return '<img src="' . $this->get_full_path($image) . '" alt="" class="cbb-media-icon" />';
@@ -210,7 +217,7 @@ class media
 			'action'	=> $this->params['action'],
 		));
 		
-		$this->max_filesize = $this->config['max_filesize'];
+		$this->options['max_filesize'] = $this->config['max_filesize'];
 		
 		if(function_exists('ini_get'))
 		{
@@ -222,21 +229,35 @@ class media
 			
 			if($server_max_filesize)
 			{
-				$this->max_filesize = ($this->max_filesize) ? min($this->max_filesize, $server_max_filesize) : $server_max_filesize;
+				$this->options['max_filesize'] = ($this->options['max_filesize']) ? min($this->options['max_filesize'], $server_max_filesize) : $server_max_filesize;
 			}
 		}
+
+		$params 	= &$this->params;
+		$json 		= &$this->json;
+		$options 	= &$this->options;
+
+		/*
+		* @event media.gallery.before_action
+		* @var array 			params				Input params
+		* @var json_response 	json				JSON response object
+		* @var array 			options 			Common Options
+		* @since 1.0.7
+		*/
+		$vars = array('params', 'json', 'options');
+		extract($this->dispatcher->trigger_event('media.gallery.before_action', compact($vars)));
 		
 		switch($this->params['action'])
 		{
 			case 'create':
-				switch($this->params['type'])
+				switch($params['type'])
 				{
 					case 'icon':
 						$submit_label = 'SET_ICON';
 					break;
 					
 					case 'image':
-						$submit_label = ($this->params['custom']) ? 'SAVE' : 'SET_IMAGE';
+						$submit_label = ($params['custom']) ? 'SAVE' : 'SET_IMAGE';
 					break;
 					
 					default:
@@ -244,11 +265,25 @@ class media
 					break;
 				}
 
+				/*
+				* @event media.gallery.create
+				* @var array 			params				Input params
+				* @var json_response 	json				JSON response object
+				* @var string			submit_label		Label for the submit button
+				* @var array 			options 			Common Options
+				* @since 1.0.7
+				*/
+				$vars = array('params', 'json', 'submit_label', 'options');
+				extract($this->dispatcher->trigger_event('media.gallery.create', compact($vars)));
+
 				$this->template->assign_vars(array(
 					'CAN_INSERT_COPY'	=> ($this->upload_path) ? true : false,
-					'S_MAX_FILESIZE'	=> ($this->max_filesize) ? $this->lang->lang('MAX_FILESIZE', get_formatted_filesize($this->max_filesize)) : '',
+					'S_MAX_IMAGESIZE'	=> ($this->options['imageMaxWidth'] && $this->options['imageMaxHeight']) ? $this->lang->lang('MAX_IMAGESIZE', $this->options['imageMaxWidth'], $this->options['imageMaxHeight']) : '',
+					'S_MAX_FILESIZE'	=> ($this->options['max_filesize']) ? $this->lang->lang('MAX_FILESIZE', get_formatted_filesize($this->options['max_filesize'])) : '',
 					'S_SUBMIT_LABEL'	=> $this->lang->lang($submit_label),
 				));
+
+				$this->json->add(array('options' => $this->options));
 			
 				$this
 					->load_sections()
@@ -298,15 +333,15 @@ class media
 				
 				if($this->params['copy'] && $this->upload_path)
 				{
-					$extension 			= $match[1];
-					$filename			= $this->user->data['user_id'] . '_' . md5(unique_id()) . '.' . $extension;
-					$filename_full		= $this->phpbb_root_path . $this->upload_path . $filename;
+					$extension 		= $match[1];
+					$basename		= $this->user->data['user_id'] . '_' . md5(unique_id()) . '.' . $extension;
+					$filename		= $this->get_full_path($basename, false, true);
 					
 					if($this->php_ini->get_bool('allow_url_fopen'))
 					{
 						$image_data = @file_get_contents($this->params['url']);
 						
-						if(!@file_put_contents($filename_full, $image_data))
+						if(!@file_put_contents($filename, $image_data))
 						{
 							$error[] = $this->lang->lang('IMAGE_SAVE_ERROR');
 							break;
@@ -320,7 +355,7 @@ class media
 							break;
 						}
 						
-						$fp = fopen($filename_full, 'wb');
+						$fp = fopen($filename, 'wb');
 						curl_setopt($ch, CURLOPT_FILE, $fp);
 						curl_setopt($ch, CURLOPT_HEADER, 0);
 						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -328,6 +363,25 @@ class media
 						curl_close($ch);
 						fclose($fp);
 					}
+
+					// Resize uploaded image
+					if($this->options['imageMaxWidth'] && $this->options['imageMaxHeight'])
+					{
+						$image_parser = new image_parser();
+
+						$image_parser
+							->set_resize_limit($this->options['imageMaxWidth'], $this->options['imageMaxHeight'])
+							->parse($filename, (($extension == 'jpg') ? 'jpeg' : $extension), image_parser::RESIZE);
+
+						list($this->params['width'], $this->params['height']) = @getimagesize($filename);
+					}
+
+					$filesize = @filesize($filename);
+				}
+				else
+				{
+					$basename = $filename;
+					$filesize = (int)$headers['Content-Length'];
 				}
 				
 				$rowset = array(
@@ -335,8 +389,8 @@ class media
 					'description'	=> isset($this->params['description']) ? $this->params['description'] : '',
 					'title'			=> isset($this->params['title']) ? $this->params['title'] : '',
 					'time'			=> time(),
-					'filename'		=> $filename,
-					'filesize'		=> isset($headers['Content-Length']) ? (int)$headers['Content-Length'] : '',
+					'filename'		=> $basename,
+					'filesize'		=> ($filesize) ? $filesize : '',
 					'width'			=> (int)$this->params['width'],
 					'height'		=> (int)$this->params['height'],
 				);
@@ -346,9 +400,10 @@ class media
 				* @var array		rowset		The output array
 				* @var array		params		The input params
 				* @var array		headers		Returned headers of image url
+				* @var string		filename	Complete route of the file
 				* @since 1.0.1
 				*/
-				$vars = array('rowset', 'params', 'headers');
+				$vars = array('rowset', 'params', 'headers', 'filename');
 				extract($this->dispatcher->trigger_event('media.gallery.insert', compact($vars)));
 
 				$this->json->send(array(
@@ -390,9 +445,9 @@ class media
 					$allowed_extensions = array('jpg', 'png', 'gif', 'mp4', 'mov');
 					$this->uploader->set_allowed_extensions($allowed_extensions);
 					
-					if($this->max_filesize)
+					if($this->options['max_filesize'])
 					{
-						$this->uploader->set_max_filesize($this->max_filesize);
+						$this->uploader->set_max_filesize($this->options['max_filesize']);
 					}
 
 					$file = $this->uploader->handle_upload('files.types.form', 'file');
@@ -417,11 +472,11 @@ class media
 					
 					if(!sizeof($error))
 					{
-						@chmod($this->phpbb_root_path . $this->upload_path . $file->get('realname'), 0644);
-						
 						$filename	= $this->get_full_path($file->get('realname'), false, true);
 						$rowset		= array();
 						
+						@chmod($filename, 0644);
+
 						list($width, $height) = @getimagesize($filename);
 						
 						$rowset = array(

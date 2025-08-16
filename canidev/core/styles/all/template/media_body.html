@@ -22,7 +22,7 @@
 		</div>
 			
 		<div class="media-toolbar-primary">
-			<button type="button" class="cbb-btn" data-action="submit" disabled>{S_SUBMIT_LABEL}</button>
+			<button type="button" class="cbb-btn" data-action="submit" disabled>{{ S_SUBMIT_LABEL }}</button>
 		</div>
 	</div>
 
@@ -135,10 +135,11 @@
 					</button>
 					<input type="file" name="file[]" multiple />
 				</div>
-				<p>o</p>
+				<p>{L_OR}</p>
 				<h3>{L_FILES_DRAG}</h3>
 
-				<!-- IF S_MAX_FILESIZE --><p class="max-upload-size">{S_MAX_FILESIZE}</p><!-- ENDIF -->
+				{% if S_MAX_FILESIZE %}<p class="max-upload-size">{{ S_MAX_FILESIZE }}</p>{% endif %}
+				{% if S_MAX_IMAGESIZE %}<p class="max-image-size">{{ S_MAX_IMAGESIZE }}</p>{% endif %}
 			</div>
 			<div class="upload-inline-status cbb-helper-hidden">
 				<p>{L_UPLOADING_FILES}</p>
@@ -161,7 +162,7 @@
 					<input type="file" name="file" />
 				</div>
 
-				<!-- IF S_MAX_FILESIZE --><p class="max-upload-size">{S_MAX_FILESIZE}</p><!-- ENDIF -->
+				{% if S_MAX_FILESIZE %}<p class="max-upload-size">{{ S_MAX_FILESIZE }}</p>{% endif %}
 			</div>
 			<div class="upload-inline-status cbb-helper-hidden"><div class="cbb-loading-big"></div></div>
 		</div>
@@ -175,12 +176,13 @@
 			</label>
 			
 			<div class="media-embed-submit cbb-helper-hidden">
-			<!-- IF CAN_INSERT_COPY -->
+			{% if CAN_INSERT_COPY %}
 				<label>
 					<input type="checkbox" name="copy" value="1" />
 					{L_CREATE_SERVER_COPY}
 				</label>
-			<!-- ENDIF -->
+				{% if S_MAX_IMAGESIZE %}<p class="max-image-size">{{ S_MAX_IMAGESIZE }}</p>{% endif %}
+			{% endif %}
 				<div class="cbb-browser-button">
 					<button type="button" class="cbb-btn">{L_PROCCESS}</button>
 				</div>

@@ -180,7 +180,10 @@
 }
 
 .cbb-modal-dialog .upload-ui p 	{
-	margin-bottom: 0.6em;
+	margin: 0.6em;
+}
+
+.cbb-modal-dialog .upload-ui p.max-upload-size {
 	margin-top: 15px;
 }
 
@@ -191,13 +194,20 @@
 	text-transform: none;
 }
 
-.cbb-modal-dialog .upload-ui .max-upload-size {
+.cbb-modal-dialog .max-upload-size,
+.cbb-modal-dialog .max-image-size {
 	font-size: 0.9em;
 }
 
 .cbb-modal-dialog .upload-inline-status {
-	margin: 30% auto 0 auto;
+	left: 50%;
+	position: relative;
+	top: 50%;
 	width: 50%;
+
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 }
 
 .cbb-modal-dialog .cbb-dialog-sidebar .media-thumbnail {

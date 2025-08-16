@@ -585,6 +585,7 @@ body > .cbb-dialog.fixed {
 .cbb-dropdown {
 	background: #fff;
 	border: 1px solid #ccc;
+	color: #272727;
 	position: absolute;
 	margin: 0;
 	min-height: 20px;
@@ -687,22 +688,35 @@ body > .cbb-dialog.fixed {
 }
 
 .editor-wrapper-toolbar > .cbb-btn .fa {
-	font-size: 13px;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: -2px;
+    vertical-align: middle;
 }
 
-.editor-wrapper-toolbar > .cbb-btn img {
+.editor-wrapper-toolbar > .cbb-btn svg {
+	vertical-align: middle;
+	width: 16px;
+}
+
+.editor-wrapper-toolbar > .cbb-btn img,
+.editor-wrapper-toolbar > .cbb-btn svg {
 	margin-top: -2px;
 	max-width: 20px;
 }
 
 .editor-dropdown {
-	padding: 6px;
+	padding: 10px;
 }
 
 .editor-dropdown label {
 	display: block;
     margin: 6px 0;
     font-weight: bold;
+}
+
+.editor-dropdown label + input {
+	width: 100%;
 }
 
 .editor-dropdown .submit-buttons {
@@ -748,6 +762,7 @@ body > .cbb-dialog.fixed {
 	color: #666;
 	cursor: pointer;
 	display: inline-block;
+	fill: currentColor;
 	font: normal normal normal 11px/14px 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
 	font-weight: bold;
 	line-height: 25px;
@@ -843,11 +858,11 @@ a.cbb-btn.default-btn:hover {
 .cbb-inputbox-labelled input:hover,
 .cbb-inputbox-labelled textarea:hover,
 .cbb-inputbox:focus,
-.cbb-inputbox-labelled input:focus,
-.cbb-inputbox-labelled textarea:focus {
+.cbb-inputbox-labelled .active {
 	background: #fafafa;
 	border-color: #a1a1a1;
 	color: initial;
+	outline: none;
 }
 
 input.cbb-inputbox,
@@ -868,55 +883,74 @@ select.cbb-inputbox {
 }
 
 .cbb-inputbox-labelled {
-	margin: 6px 0;
+	display: inline-block;
+	margin: 12px 0 5px 0;
 	position: relative;
 }
 
-.cbb-inputbox-labelled input {
-	background: none;
+.cbb-inputbox-labelled input,
+.cbb-inputbox-labelled textarea {
 	display: block;
+	margin: 0;
+	resize: none;
 	width: 100%;
+
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
 }
 
 .cbb-inputbox-labelled label {
 	font-size: 11px;
+	pointer-events: none;
 	position: absolute;
 	left: 5px;
 	width: 100%;
 	top: 6px;
 	color: #aaa;
-	z-index: -1;
-	transition: 0.3s;
 }
 
 .cbb-inputbox-labelled span {
-	position: absolute;
+	background-color: #000;
 	bottom: 0;
 	left: 50%;
 	width: 0;
 	height: 2px;
-	background-color: #000;
+	position: absolute;
+}
+
+.cbb-inputbox-labelled .animated ~ label,
+.cbb-inputbox-labelled .animated ~ span {
+	position: absolute;
+	-webkit-transition: 0.4s;
+	-moz-transition: 0.4s;
 	transition: 0.4s;
 }
 
-.cbb-inputbox-labelled input:focus,
-.cbb-inputbox-labelled input:valid {
-	border-width: 0;
+.cbb-inputbox-labelled .active,
+.cbb-inputbox-labelled .active:hover {
+	border-color: transparent;
 }
 
-.cbb-inputbox-labelled input:focus ~ label,
-.cbb-inputbox-labelled input:valid ~ label	{
+.cbb-inputbox-labelled .active ~ label	{
 	top: -10px;
-	font-size: 11px;
 	color: #828282;
-	transition: 0.3s;
 }
 
-.cbb-inputbox-labelled input:focus ~ span,
-.cbb-inputbox-labelled input:valid ~ span	{
+.cbb-inputbox-labelled .active ~ span {
 	width: 100%;
-	transition: 0.4s;
 	left: 0;
+}
+
+.cbb-inputbox-labelled.with-action input {
+	padding-right: 30px;
+}
+
+.cbb-inputbox-labelled.with-action a {
+	position: absolute;
+    top: 5px;
+    right: 8px;
+    color: #aaa;
 }
 
 .cbb-group {
@@ -981,6 +1015,11 @@ select.cbb-inputbox {
 .cbb-groups-selector input[type="checkbox"],
 input.cbb-checkbox {
 	display: none;
+}
+
+.cbb-groups-selector input[type="checkbox"] + label,
+input.cbb-checkbox + label {
+	padding: 0;
 }
 
 .cbb-groups-selector input[type="checkbox"] + label:before,
@@ -1053,6 +1092,13 @@ a.cbb-state-highlight,
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.dropdown-contents li .cbb-media-icon,
+.navbar .cbb-media-icon,
+.submenu li .cbb-media-icon {
+	height: auto;
+	width: 18px;
 }
 
 /* RTL Support
@@ -1146,8 +1192,8 @@ a.cbb-state-highlight,
 ----------------------------------*/
 .dark-theme .cbb-dialog,
 .dark-theme .cbb-modal-dialog {
-	background-color: #252525;
-    box-shadow: 0 0 15px #717171;
+	background-color: #191919;
+    box-shadow: 0 0 15px #000;
 }
 
 .dark-theme .cbb-color-palette a,
@@ -1163,13 +1209,14 @@ a.cbb-state-highlight,
 .dark-theme .cbb-modal-dialog .cbb-dialog-header h1,
 .dark-theme .cbb-modal-dialog .cbb-dialog-menu a,
 .dark-theme .cbb-modal-dialog .cbb-dialog-sidebar h3,
-.dark-theme .cbb-modal-dialog a.cbb-dialog-close {
+.dark-theme .cbb-modal-dialog a.cbb-dialog-close,
+.dark-theme .cbb-dropdown {
 	color: #ccc;
 }
 
 .dark-theme .cbb-modal-dialog .cbb-dialog-menu,
 .dark-theme .cbb-modal-dialog .cbb-dialog-sidebar {
-	background-color: #404040;
+	background-color: #313131;
 	border-color: #585858;
 }
 
@@ -1211,7 +1258,7 @@ a.cbb-state-highlight,
 
 .dark-theme .cbb-inputbox,
 .dark-theme .cbb-dialog input.cbb-inputbox {
-	border-color: #555;
+	border-color: #333;
 	color: #E0E0E0;
 	outline-color: #5a5a5a;
 }
@@ -1243,7 +1290,8 @@ a.cbb-state-highlight,
 
 .dark-theme #rsz-img,
 .dark-theme #rsz-img .rsz-close {
-	background-color: #444;
+	background-color: #252525;
+	border-color: #3c3c3c;
 }
 
 /* Dialog Animation
