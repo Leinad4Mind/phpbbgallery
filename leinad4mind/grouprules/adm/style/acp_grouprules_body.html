@@ -1,0 +1,58 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('ACP_GROUPRULES_TITLE') }}</h1>
+
+<p>{{ lang('ACP_GROUPRULES_EXPLAIN') }}</p>
+
+<form id="acp_grouprules" method="post" action="{{ U_ACTION }}">
+	<fieldset class="tabulated">
+		<legend>{{ lang('ACP_BBCODES') }}</legend>
+		<table class="table1 zebra-table" id="down">
+			<thead>
+				<tr>
+					<th>{{ lang('ACP_GROUPRULES_RULES') }}</th>
+					<th>{{ lang('ACTION') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for grouprules in loops.grouprules %}
+				<tr>
+					<td>
+						<label>{{ lang('ACP_GROUPRULES_ITEM', '<select name="when-action[]">' ~ grouprules.WHEN_ACTION_OPTIONS ~ '</select>', '<select name="when-group[]">' ~ grouprules.WHEN_GROUP_OPTIONS ~ '</select>', '<select name="then-action[]">' ~ grouprules.THEN_ACTION_OPTIONS ~ '</select>', '<select name="then-group[]">' ~ grouprules.THEN_GROUP_OPTIONS ~ '</select>') }}</label>&nbsp;<label class="then-default-label"><input type="checkbox" class="radio" name="then-default-{{ loop.index0 }}" value="1"{% if grouprules.THEN_DEFAULT %} checked="checked"{% endif %} />&nbsp;{{ lang('ACP_GROUPRULES_DEFAULT') }}</label>
+					</td>
+					<td class="actions"><a href="{{ grouprules.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a></td>
+				</tr>
+				{% else %}
+				<tr class="row3">
+					<td colspan="2" style="text-align: center;">{{ lang('ACP_NO_ITEMS') }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<p class="quick">
+			<input class="button2" type="submit" name="add" value="{{ lang('ACP_GROUPRULES_ADD_RULE') }}" />
+		</p>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+<script>
+	'use strict';
+
+	var selects = document.querySelectorAll('[name="then-action[]"]');
+
+	for (var i = 0, l = selects.length; i < l; i++) {
+		selects[i].parentElement.parentElement.querySelector('.then-default-label').classList.toggle('hidden', selects[i].value !== 'add');
+		selects[i].addEventListener('change', function(e) {
+			this.parentElement.parentElement.querySelector('.then-default-label').classList.toggle('hidden', e.target.value !== 'add');
+		});
+	}
+</script>
+
+{% INCLUDE 'overall_footer.html' %}
