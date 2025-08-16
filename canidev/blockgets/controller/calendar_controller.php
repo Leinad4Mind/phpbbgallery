@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -371,7 +371,7 @@ class calendar_controller
 	 * Get the calendar events and birthdays and put into template
 	 * 
 	 * @param int 	$timestamp
-	 * @return static
+	 * @return static|array
 	 */
 	public function get_events($timestamp = 0)
 	{
@@ -403,7 +403,7 @@ class calendar_controller
 				$settings 	= unserialize($row['data_settings']);
 				$c_time 	= $row['data_time'];
 
-				if(!$this->helper->group_auth($settings['groups']))
+				if(!$this->auth->acl_get('u_blockgets_events') && !$this->helper->group_auth($settings['groups']))
 				{
 					continue;
 				}
@@ -550,7 +550,7 @@ class calendar_controller
 	 * Get current month
 	 * 
 	 * @param string|int|null 		$input
-	 * @return array
+	 * @return array|null
 	 */
 	public function get_month($input = null)
 	{
@@ -584,6 +584,8 @@ class calendar_controller
 				'timestamp'		=> $time,
 			];
 		}
+
+		return null;
 	}
 
 	/**
@@ -627,7 +629,7 @@ class calendar_controller
 			}
 
 			$this->template->assign_block_vars($template_key, [
-				'S_ATTR'	=> \canidev\core\tools::array_to_attr($attr),
+				'S_ATTR'	=> \canidev\core\Dom::arrayToAttr($attr),
 				'S_TITLE'	=> $event['title'],
 				'S_TYPE'	=> $event['type'],
 				'S_CONTENT'	=> $event['content'],

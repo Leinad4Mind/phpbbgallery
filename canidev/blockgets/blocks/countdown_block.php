@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -120,8 +120,8 @@ class countdown_block extends base
 	{
 		$this->display_vars = [
 			'target'			=> ['lang' => 'COUNTDOWN_TARGET',			'type' => 'text:25:20', 		'validate' => 'regexp',		'regexp' => $this->date_regexp, 	'default' => ''],
-			'running_msg'		=> ['lang' => 'COUNTDOWN_RUNNING_MSG',		'type' => 'custom',				'method' => 'helper',		'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
-			'complete_msg'		=> ['lang' => 'COUNTDOWN_COMPLETE_MSG',		'type' => 'custom',				'method' => 'helper',		'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
+			'running_msg'		=> ['lang' => 'COUNTDOWN_RUNNING_MSG',		'type' => 'custom',				'function' => ['helper_acp', 'build_editor'],		'params' => ['{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
+			'complete_msg'		=> ['lang' => 'COUNTDOWN_COMPLETE_MSG',		'type' => 'custom',				'function' => ['helper_acp', 'build_editor'],		'params' => ['{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
 		];
 
 		return true;

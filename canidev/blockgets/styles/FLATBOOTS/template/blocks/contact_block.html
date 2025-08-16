@@ -3,9 +3,9 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#block-{{ BLOCK_ID }} form').ajaxify({
-			done: function() {
-				$(this).find('[name=subject], [name=message]').val('');
+		$('#block-{{ BLOCK_ID }} form').cbbAjaxify({
+			onSuccess: function() {
+				this.element.find('[name=subject], [name=message]').val('');
 			}
 		});
 	});
@@ -54,6 +54,6 @@
 	<div class="blg-align-center">
 		<input type="submit" class="btn btn-default" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
 		{{ BLOCK_HIDDEN_FIELDS }}
-		{{ S_FORM_TOKEN }}
+		{{ S_FORM_TOKEN_BLG_CONTACT }}
 	</div>
 </form>

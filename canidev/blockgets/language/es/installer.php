@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -20,7 +20,7 @@ if(empty($lang) || !is_array($lang))
 }
 
 // Local Variables
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'PORTAL'			=> 'Portal',
 	'DOCK_MENU'			=> 'Menú Dock',
 	'MAIN_MENU'			=> 'Menú Principal',
@@ -40,4 +40,4 @@ $lang = array_merge($lang, array(
 
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
 		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
-));
+]);

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -127,8 +127,8 @@ class attachments_block extends base
 					'S_FILESIZE'		=> get_formatted_filesize($row['filesize']),
 					'S_DOWNLOAD_LABEL'	=> $this->language->lang("ATTACH_$l_downloaded_viewed"),
 					'S_DOWNLOAD_COUNT'	=> $this->language->lang('ATTACH_COUNT', $row['download_count']),
-					'S_IMG'				=> '<img src="' . $this->helper->get_ext_path(true) . $attach_img_preview . '" width="60" alt="" />',
-					'REAL_FILENAME'		=> truncate_string(str_replace(['_', '-', '.' . $row['extension']], ' ', $row['real_filename']), 20, 255, '...'),
+					'S_IMG'				=> '<img src="' . $this->helper->get_ext_path(true) . $attach_img_preview . '" width="60" alt="' . $row['real_filename'] . '" />',
+					'REAL_FILENAME'		=> truncate_string(str_replace(['_', '-', '.' . $row['extension']], ' ', $row['real_filename']), 20, 255, false, '...'),
 					'U_FILE'			=> $download_link,
 					'U_FILELINK'		=> $this->helper->url('viewtopic', ['f' => $row['forum_id'], 'p' => $row['post_msg_id'], '#' => 'p' . $row['post_msg_id']]),
 				];
@@ -173,7 +173,7 @@ class attachments_block extends base
 	{
 		$this->display_vars = [
 			'filename'		=> ['lang' => 'ATTACH_SPECIFIC',	'validate' => 'string',	'type' => 'text:50:255'],
-			'forums'		=> ['lang' => 'ATTACH_FORUM',		'type' => 'custom',		'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'forums'		=> ['lang' => 'ATTACH_FORUM',		'type' => 'custom',		'function' => ['tools', 'forums_select'],		'params' => ['forums', '{CONFIG_VALUE}', 1],	'default' => []],
 			'num'			=> ['lang' => 'ATTACH_NUM',			'validate' => 'int',	'type' => 'number:0:999',	'default' => 1],
 			'extension'		=> ['lang' => 'ATTACH_EXTENSION',	'validate' => 'string',	'type' => 'text:25:255'],
 		];

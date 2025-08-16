@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -73,14 +73,14 @@ class scroll_message_block extends base
 	public function get_config()
 	{
 		$this->display_vars = [
-			'marquee_direction' 	=> ['lang' => 'MARQUEE_DIRECTION',		'validate' => 'string', 'type' => 'select', 		'method' => 'helper',	'params' => ['scroll_select', '{CONFIG_VALUE}', 'direction'],	'default' => 'left'],
+			'marquee_direction' 	=> ['lang' => 'MARQUEE_DIRECTION',		'validate' => 'string', 'type' => 'select', 		'function' => ['helper_acp', 'scroll_select'],	'params' => ['{CONFIG_VALUE}', 'direction'],	'default' => 'left'],
 			'marquee_speed'  		=> ['lang' => 'MARQUEE_SPEED',			'validate' => 'int',  	'type' => 'number',			'default' => 2],
 			'marquee_scrolldelay'  	=> ['lang' => 'MARQUEE_SCROLLDELAY',	'validate' => 'int',  	'type' => 'number',			'default' => 50],
-			'marquee_align'  		=> ['lang' => 'MARQUEE_ALIGN', 			'validate' => 'string', 'type' => 'select', 		'method' => 'helper',	'params' => ['scroll_select', '{CONFIG_VALUE}', 'align'],	'default' => 'center'],
+			'marquee_align'  		=> ['lang' => 'MARQUEE_ALIGN', 			'validate' => 'string', 'type' => 'select', 		'function' => ['helper_acp', 'scroll_select'],	'params' => ['{CONFIG_VALUE}', 'align'],	'default' => 'center'],
 			'marquee_bgcolor'  		=> ['lang' => 'MARQUEE_BGCOLOR',		'validate' => 'string', 'type' => 'text:12:10',		'default' => ''],
 			'marquee_height'  		=> ['lang' => 'MARQUEE_HEIGHT',			'validate' => 'int', 	'type' => 'number',			'default' => 20],
 			'marquee_padding'  		=> ['lang' => 'MARQUEE_PADDING',		'validate' => 'string', 'type' => 'text:25:24',		'default' => '2px'],
-			'marquee_text'			=> ['lang' => 'MARQUEE_TEXT',			'type' => 'custom',		'method' => 'helper',		'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 15, 5],	'default' => ''],
+			'marquee_text'			=> ['lang' => 'MARQUEE_TEXT',			'type' => 'custom',		'function' => ['helper_acp', 'build_editor'],	'params' => ['{CONFIG_VALUE}', '{KEY}', 15, 5],	'default' => ''],
 		];
 
 		return true;

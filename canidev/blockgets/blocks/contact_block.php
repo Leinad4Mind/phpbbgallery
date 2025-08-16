@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -53,7 +53,7 @@ class contact_block extends base
 			$subject	= $this->request->variable('subject', $subject, true);
 			$message	= $this->request->variable('message', $message, true);
 
-			if(!check_form_key('contact_block'))
+			if(!check_form_key('contact'))
 			{
 				$error[] = $this->language->lang('FORM_INVALID');
 			}
@@ -163,7 +163,7 @@ class contact_block extends base
 			'message'	=> ['type' => 'textarea',	'title' => 'MESSAGE',	'value' => $message],
 		];
 
-		add_form_key('contact_block');
+		add_form_key('contact', '_BLG_CONTACT');
 		
 		$s_hidden_fields = [
 			'jblgm'	=> $this->data['block_id']

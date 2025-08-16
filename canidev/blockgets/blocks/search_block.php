@@ -1,9 +1,9 @@
 <?php
 /**
 * @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
 *
 */

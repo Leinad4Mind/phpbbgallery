@@ -51,7 +51,7 @@
 
 <div class="gallery">
 {% for image in loops.image %}
-	<a href="{{ image.ACTION }}" title="{{ image.TITLE }}" class="blank"><img src="{{ image.SRC }}" alt="" /></a>
+	<a href="{{ image.ACTION }}" title="{{ image.TITLE }}" class="blank"><img src="{{ image.SRC }}" alt="{{ image.TITLE }}" /></a>
 {% endfor %}
 </div>
 {% endif %}

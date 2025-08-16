@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -44,7 +44,6 @@ $blg_lang_locale = [
 	'sk'		=> ['iso'	=> 'sk_SK',	'name'	=> 'Slovenčina',		'name_eng'	=> 'Slovak'],
 	'en'		=> ['iso'	=> 'en_GB',	'name'	=> 'English',			'name_eng'	=> 'English'],
 	'es'		=> ['iso'	=> 'es_ES',	'name'	=> 'Español',			'name_eng'	=> 'Spanish'],
-	'es_x_tu'	=> ['iso'	=> 'es_ES',	'name'	=> 'Español (Tú]',		'name_eng'	=> 'Spanish (Casual)'],
 	'sv'		=> ['iso'	=> 'sv_SE',	'name'	=> 'Svenska',			'name_eng'	=> 'Swedish'],
 	'th'		=> ['iso'	=> 'th_TW',	'name'	=> 'ภาษาไทย',			'name_eng'	=> 'Thai'],
 	'tr'		=> ['iso'	=> 'tr_TR',	'name'	=> 'Türkçe',			'name_eng'	=> 'Turkish'],

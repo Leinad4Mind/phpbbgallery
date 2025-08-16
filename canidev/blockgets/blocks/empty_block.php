@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -60,7 +60,7 @@ class empty_block extends base
 		$this->custom_config = true;
 
 		$this->display_vars = [
-			'block_content'		=> ['lang' => 'BLOCK_CONTENT',	'type' => 'custom',	'method' => 'helper', 'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50]],
+			'block_content'		=> ['lang' => 'BLOCK_CONTENT',	'type' => 'custom',	'function' => ['helper_acp', 'build_editor'], 'params' => ['{CONFIG_VALUE}', '{KEY}', 20, 50]],
 		];
 
 		return true;

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -95,8 +95,8 @@ class welcome_block extends base
 	public function get_config()
 	{
 		$this->display_vars = [
-			'guest_text'	=> ['lang' => 'WELCOME_GUEST',		'type' => 'custom',	'method' => 'helper',	'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
-			'member_text'	=> ['lang' => 'WELCOME_MEMBER',		'type' => 'custom',	'method' => 'helper',	'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
+			'guest_text'	=> ['lang' => 'WELCOME_GUEST',		'type' => 'custom',	'function' => ['helper_acp', 'build_editor'],	'params' => ['{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
+			'member_text'	=> ['lang' => 'WELCOME_MEMBER',		'type' => 'custom',	'function' => ['helper_acp', 'build_editor'],	'params' => ['{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
 		];
 
 		return true;

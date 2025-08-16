@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -213,7 +213,7 @@ class blockgets
 				
 				if($this->page['page_type'] != constants::PAGE_FORUM && !empty($this->page['description']))
 				{
-					$this->template->append_var('META', '<meta name="description" content="' . $this->page['description'] . "\"  />\n");
+					$this->template->append_var('META', '<meta name="description" content="' . $this->page['description'] . "\">\n");
 				}
 
 				$this->load_blocks();
@@ -227,6 +227,24 @@ class blockgets
 		}
 
 		$this->template->assign_json_var('S_BLG_OPTIONS', $service_params);
+
+		// Reassign UCP url
+		if($this->template->get_var('S_IN_UCP'))
+		{
+			global $module;
+
+			if($module instanceof \p_master && $module->p_name == 'ucp_prefs' && $module->p_mode == 'personal')
+			{
+				$u_action = $this->template->get_var('S_UCP_ACTION');
+				$u_action = preg_replace(
+					['#(\?|&(?:amp;)?)(cstyle|lng)=[a-z0-9\-_]+($|&(?:amp;)?)#i', '#(\?|&(?:amp;)?)$#'],
+					['$1', ''],
+					$u_action
+				);
+
+				$this->template->assign_var('S_UCP_ACTION', $u_action);
+			}
+		}
 
 		/**
 		 * @event blockgets.display
@@ -412,7 +430,7 @@ class blockgets
 				'BLOCK_ID'    		=> $block_row['block_id'],
 				'BLOCK_TITLE'		=> $this->language->lang($block_row['block_title']),
 				'BLOCK_CONTENT'		=> $block_class->display(),
-				'BLOCK_ICON'		=> $this->helper->get_media(false, false)->build_icon_html($block_row['block_icon']),
+				'BLOCK_ICON'		=> $this->helper->get_media(false, false)->buildIconHtml($block_row['block_icon']),
 				'BLOCK_CLASSES'		=> implode(' ', $dom_classes),
 				'BLOCK_STYLE'		=> $block_style,
 				'DOM_STYLE'			=> !empty($block_row['block_width']) ? sprintf('width:%1$s%%; flex:1 1 %1$s%%', $block_row['block_width']) : '',
@@ -476,7 +494,7 @@ class blockgets
 				{
 					$this->template->assign_block_vars('blglink_' . $row['link_position'], [
 						'HREF'		=> $this->helper->route('canidev_blockgets_page_' . $row['page_id']),
-						'ICON'		=> $this->helper->get_media(false, false)->build_icon_html($row['link_icon']),
+						'ICON'		=> $this->helper->get_media(false, false)->buildIconHtml($row['link_icon']),
 						'TITLE'		=> $this->get_title($row),
 					]);
 				}
@@ -488,7 +506,7 @@ class blockgets
 		{
 			$this->template->assign_block_vars('blglink_' . $this->config['blg_calendar_link'], [
 				'HREF'		=> $this->helper->route('canidev_blockgets_calendar_controller'),
-				'ICON'		=> $this->helper->get_media(false, false)->build_icon_html('fa-calendar'),
+				'ICON'		=> $this->helper->get_media(false, false)->buildIconHtml('fa-calendar'),
 				'TITLE'		=> $this->language->lang('CALENDAR'),
 			]);
 		}
@@ -538,17 +556,10 @@ class blockgets
 			else
 			{
 				$page_alias = (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . str_replace(".{$this->php_ext}", '', $this->user->page['page_name']);
-			
-				// If is a route of other extension, remove params from the page alias
-				$controller_params = $this->container->get('symfony_request')->attributes->all();
 
-				if(isset($controller_params['_route']))
-				{
-					foreach($controller_params['_route_params'] as $i => $val)
-					{
-						$page_alias = str_replace('/' . $val, '', $page_alias);
-					}
-				}
+				$page_alias = explode('/', $page_alias);
+				$page_alias = array_slice($page_alias, 0, 2);
+				$page_alias = implode('/', $page_alias);
 			}
 			
 			$page_type	= constants::PAGE_FORUM;

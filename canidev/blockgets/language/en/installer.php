@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 

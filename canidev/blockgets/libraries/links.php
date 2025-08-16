@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -35,6 +35,7 @@ class links
 	protected $db;
 	protected $dispatcher;
 	protected $helper;
+	protected $helper_acp;
 	protected $language;
 	protected $media;
 	protected $request;
@@ -64,6 +65,7 @@ class links
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
 		\canidev\blockgets\libraries\helper $helper,
+		\canidev\blockgets\libraries\helper_acp $helper_acp,
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
@@ -75,6 +77,7 @@ class links
 		$this->db				= $db;
 		$this->dispatcher		= $phpbb_dispatcher;
 		$this->helper			= $helper;
+		$this->helper_acp 		= $helper_acp;
 		$this->language			= $language;
 		$this->request			= $request;
 		$this->template			= $template;
@@ -96,7 +99,7 @@ class links
 	{
 		$item_ary = $this->load();
 
-		$this->media->do_actions();
+		$this->media->performActions();
 		
 		if(!$this->cache_id)
 		{
@@ -134,7 +137,7 @@ class links
 	
 	/**
 	 * Do actions on submit in ACP
-	 * @return array
+	 * @return array|false
 	 */
 	public function acp_submit()
 	{
@@ -205,8 +208,8 @@ class links
 	/**
 	 * Set data
 	 * 
-	 * @param array 	$data
-	 * @param int 		$source_id
+	 * @param array|string 	$data
+	 * @param int 			$source_id
 	 * 
 	 * @return links
 	 */
@@ -326,8 +329,8 @@ class links
 					'type'			=> ['lang' => 'LINK_TYPE',			'validate' => 'int',			'type' => 'select',			'function' => [$this->tools, 'make_select'],	'params' => [$f_ary, false, '{CONFIG_VALUE}'], 'default' => constants::LIST_LINK],
 					'title'			=> ['lang' => 'LINK_TITLE',			'validate' => 'string:1:180',	'type' => 'text:40:180'],
 					'description'	=> ['lang' => 'LINK_DESCRIPTION',	'validate' => 'string:0:255',	'type' => 'text:40:255'],
-					'url'			=> ['lang' => 'LINK_URL',			'validate' => 'string:0:255',	'type' => 'custom',			'method' => 'helper',			'params' => ['url_template', '{KEY}', $item_row, 40, 255, 'window']],
-					'image'			=> ['lang' => 'LINK_IMG',			'validate' => 'string', 		'type' => 'custom',			'function' => [$this->media, 'build_selector'],		'params' => ['{KEY}', $type, '{CONFIG_VALUE}', 1]],
+					'url'			=> ['lang' => 'LINK_URL',			'validate' => 'string:0:255',	'type' => 'custom',			'function' => [$this->helper_acp, 'url_template'],		'params' => ['{KEY}', $item_row, 40, 255, 'window']],
+					'image'			=> ['lang' => 'LINK_IMG',			'validate' => 'string', 		'type' => 'custom',			'function' => [$this->media, 'buildSelector'],			'params' => ['{KEY}', $type, '{CONFIG_VALUE}', 1]],
 					'groups'		=> ['lang' => 'LINK_GROUP',			'type' => 'custom',				'function' => [$this->tools, 'groups_select'],	'params' => ['groups', '{CONFIG_VALUE}'],	'default' => 'all'],
 				];
 				
@@ -358,36 +361,18 @@ class links
 					}
 					
 					$item_row = array_merge($item_row, $new_config);
+					$item_row['groups'] = $this->tools->groups_select_submit('groups');
 					
 					if(isset($item_row['type']) && $item_row['type'] == constants::LIST_CAT)
 					{
 						unset($display_vars['url']['validate']);
 					}
 					
-					foreach($display_vars as $config_name => $data)
-					{
-						if(strpos($config_name, 'legend') !== false)
-						{
-							continue;
-						}
-
-						if($config_name == 'groups')
-						{
-							$item_row[$config_name] = '';
-
-							if($this->request->is_set_post($config_name) || $this->request->is_set_post('all_groups_groups'))
-							{
-								$item_row[$config_name] = ($this->request->is_set_post('all_groups_groups') ? 'all' : $this->request->variable($config_name, [0]));
-								$item_row[$config_name] = (is_array($item_row[$config_name]) ? implode(',', $item_row[$config_name]) : $item_row[$config_name]);
-							}
-						}
-					}
-					
 					// We validate the complete config if whished
 					validate_config_vars($display_vars, $item_row, $error);
 					
 					/**
-					 * @event list.edit.before
+					 * @event list.edit.after
 					 * @var array	item_row		The current item
 					 * @var array	error			Array with error codes
 					 * @since 2.0.0
@@ -524,7 +509,7 @@ class links
 				
 				if(isset($row['image']))
 				{
-					$img = $this->media->build_icon_html($row['image']);
+					$img = $this->media->buildIconHtml($row['image']);
 				}
 			}
 

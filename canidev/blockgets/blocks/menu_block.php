@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -54,7 +54,7 @@ class menu_block extends base
 
 			$menu_row = [
 				'IS_CAT'		=> ($row['type'] == constants::LIST_CAT) ? true : false,
-				'S_ICON'		=> $media->build_icon_html($row['image']),
+				'S_ICON'		=> $media->buildIconHtml($row['image']),
 				'S_TEXT'		=> $this->language->lang($row['title']),
 				'S_TITLE'		=> str_replace(['"', '&quot;'], "'", $this->language->lang($row['description'])),
 				'S_WINDOW'		=> $row['window'],

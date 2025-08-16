@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -61,7 +61,7 @@ class leaders_block extends base
 			'SELECT'	=> 'u.username, u.user_id, u.group_id, u.user_colour,
 				u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height',
 			'FROM'		=> [USERS_TABLE => 'u'],
-			'WHERE'		=> '',
+			'WHERE'		=> $this->db->sql_in_set('u.user_type', [USER_NORMAL, USER_FOUNDER]),
 			'ORDER_BY'	=> 'u.username_clean ASC',
 		];
 
@@ -76,7 +76,7 @@ class leaders_block extends base
 				]
 			];
 
-			$sql_ary['WHERE'] = 's.session_id IS NOT NULL AND ';
+			$sql_ary['WHERE'] .= ' AND s.session_id IS NOT NULL';
 		}
 
 		if($data['use_all_groups'])
@@ -97,11 +97,11 @@ class leaders_block extends base
 			}
 			$this->db->sql_freeresult($result);
 
-			$sql_ary['WHERE'] .= $this->db->sql_in_set('u.user_id', $users_ary);
+			$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('u.user_id', $users_ary);
 		}
 		else
 		{
-			$sql_ary['WHERE'] .= $this->db->sql_in_set('u.group_id', array_keys($groups_ary));
+			$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('u.group_id', array_keys($groups_ary));
 		}
 
 		/**
@@ -171,6 +171,11 @@ class leaders_block extends base
 			
 			foreach($group['users'] as $user_id)
 			{
+				if(!isset($users_ary[$user_id]))
+				{
+					continue;
+				}
+				
 				$row = &$users_ary[$user_id];
 
 				$user_row = [
@@ -220,9 +225,9 @@ class leaders_block extends base
 		];
 		
 		$this->display_vars = [
-			'mode'				=> ['lang' => 'LEADERS_MODE',			'type' => 'select', 		'method' => 'helper',	'params' => ['make_select', $options, false, '{CONFIG_VALUE}'],				'default' => 'simple'],
+			'mode'				=> ['lang' => 'LEADERS_MODE',			'type' => 'custom', 		'function' => ['tools', 'make_select'],	'params' => [$options, '{KEY}', '{CONFIG_VALUE}'],				'default' => 'simple'],
 			'use_all_groups'	=> ['lang' => 'LEADERS_ALL_GROUPS',		'type' => 'radio:yes_no',	'validate' => 'bool',	'default' => 0],
-			'groups'			=> ['lang' => 'LEADERS_GROUPS',			'type' => 'custom',			'method' => 'helper',	'params' => ['groups_select', 'groups', '{CONFIG_VALUE}', false, false],	'default' => []],
+			'groups'			=> ['lang' => 'LEADERS_GROUPS',			'type' => 'custom',			'function' => ['tools', 'groups_select'],	'params' => ['groups', '{CONFIG_VALUE}', false, false],	'default' => []],
 			'only_online'		=> ['lang' => 'LEADERS_ONLY_ONLINE',	'validate' => 'bool',		'type' => 'radio:yes_no'],
 		];
 

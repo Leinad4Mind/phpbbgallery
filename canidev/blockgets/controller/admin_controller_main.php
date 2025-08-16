@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -231,7 +231,7 @@ class admin_controller_main extends admin_controller_base
 	/**
 	 * Build redirect selector
 	 * 
-	 * @param strin 	$value
+	 * @param string 	$value
 	 * @param string 	$key
 	 * 
 	 * @return string

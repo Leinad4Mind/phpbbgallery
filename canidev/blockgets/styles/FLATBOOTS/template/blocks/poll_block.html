@@ -3,9 +3,9 @@
 	// <![CDATA[
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
-			$('#poll-{{ BLOCK_ID }}').ajaxify({
-				done: function(json) {
-					this.replaceWith(json.htmlContent);
+			$('#poll-{{ BLOCK_ID }}').cbbAjaxify({
+				onSuccess: function(response) {
+					this.element.replaceWith(response.htmlContent);
 				}
 			});
 		});

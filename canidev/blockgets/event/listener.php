@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -35,7 +35,7 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\language\language					$language			Language Object
 	 * @param \phpbb\request\request 					$request			Request object
 	 * @param \phpbb\user								$user				User object
-	 * @param string									$phpEx				phpEx
+	 * @param string									$php_ext			phpEx
 	 *
 	 * @access public
 	 */
@@ -80,7 +80,7 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * core.user_setup
-	 * @param \phpbb\event\data 	$data
+	 * @param \phpbb\event\data 	$event
 	 */
 	public function on_setup($event)
 	{
@@ -153,7 +153,7 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * core.modify_text_for_display_after
-	 * @param \phpbb\event\data 	$data
+	 * @param \phpbb\event\data 	$event
 	 */
 	public function modify_text_for_display($event)
 	{
@@ -306,7 +306,7 @@ class listener implements EventSubscriberInterface
 	 * 
 	 * @param string 	$type
 	 * 
-	 * @return array
+	 * @return array|false
 	 * @access private
 	 */
 	private function get_redirect($type)

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -308,9 +308,9 @@ class news_block extends base
 		
 		$this->display_vars = [
 			'max'				=> ['lang' => 'NEWS_NUMBER',			'validate' => 'int:1:100',	'type' => 'number:1:100',	'default' => 4],
-			'display'			=> ['lang' => 'NEWS_DISPLAY',			'type' => 'select',			'method' => 'helper',		'params' => ['make_select', $display_options, false, '{CONFIG_VALUE}'],	'default' => constants::BLOCK_STYLE_CONTENT_FULL],
+			'display'			=> ['lang' => 'NEWS_DISPLAY',			'type' => 'select',			'function' => ['tools', 'make_select'],		'params' => [$display_options, false, '{CONFIG_VALUE}'],	'default' => constants::BLOCK_STYLE_CONTENT_FULL],
 			'size'				=> ['lang' => 'NEWS_SIZE',				'validate' => 'int:1:1000',	'type' => 'number:1:1000',	'default' => 255],
-			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'function' => ['tools', 'forums_select'],	'params' => ['forums', '{CONFIG_VALUE}', 1],	'default' => []],
 			'ignore_auth'		=> ['lang' => 'IGNORE_AUTH',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0],
 			'show_all'			=> ['lang' => 'NEWS_ALL',				'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0],
 			'collapse'			=> ['lang' => 'NEWS_COLLAPSE',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],

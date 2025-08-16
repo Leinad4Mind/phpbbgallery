@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -93,7 +93,6 @@ class top_topics_block extends base
 			
 			default:
 				return false;
-			break;
 		}
 
 		$forum_data 	= new \canidev\core\DummyArray;
@@ -254,9 +253,9 @@ class top_topics_block extends base
 		];
 
 		$this->display_vars = [
-			'mode'			=> ['lang' => 'TOPT_MODE',				'type' => 'select',			'method' => 'helper',		'params' => ['make_select', $modes, false, '{CONFIG_VALUE}'],	'default' => 'unread'],
+			'mode'			=> ['lang' => 'TOPT_MODE',				'type' => 'select',			'function' => ['tools', 'make_select'],					'params' => [$modes, false, '{CONFIG_VALUE}'],	'default' => 'unread'],
 			'topic_limit'	=> ['lang' => 'TOPT_LIMIT',				'validate' => 'int:1:50',	'type' => 'number:1:50',	'default' => 10],
-			'topic_design'	=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => ['block_design_select', '{CONFIG_VALUE}']],
+			'topic_design'	=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'function' => ['helper_acp', 'block_design_select'], 	'params' => ['{CONFIG_VALUE}']],
 			'show_parent'	=> ['lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'],
 		];
 

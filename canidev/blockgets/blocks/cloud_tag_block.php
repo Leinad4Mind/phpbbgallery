@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -128,7 +128,7 @@ class cloud_tag_block extends base
 		$this->display_vars = [
 			'animation'		=> ['lang' => 'CLOUD_ANIMATION',	'validate' => 'bool',		'type' => 'radio:yes_no', 	'default' => 1],
 			'max_words'		=> ['lang' => 'CLOUD_WORDS',		'validate' => 'int:1:50',	'type' => 'number:1:50', 	'default' => 25],
-			'list_mode'		=> ['lang' => 'CLOUD_MODE',			'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $modes, '{KEY}', '{CONFIG_VALUE}'],  'default' => 'search'],
+			'list_mode'		=> ['lang' => 'CLOUD_MODE',			'validate' => 'string',		'type' => 'custom', 		'function' => ['tools', 'make_select'],	'params' => [$modes, '{KEY}', '{CONFIG_VALUE}'],  'default' => 'search'],
 		];
 
 		return true;

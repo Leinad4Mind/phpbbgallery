@@ -24,7 +24,7 @@
 <div id="translate-{{ BLOCK_ID }}" class="blg-google-translate{% if GOOGLE_BUTTONS_INLINE %} inline-buttons{% endif %} blg-align-center">
 {% for lang in translate %}
 	<a href="#" class="cbb-btn cbb-helper-clear" data-iso="{{ lang.S_ISO }}" title="{{ lang.S_TITLE }}">
-		<img src="{{ lang.S_IMAGE_SRC }}" alt="" />{% if lang.S_NAME %}<span>{{ lang.S_NAME }}</span>{% endif %}
+		<img src="{{ lang.S_IMAGE_SRC }}" alt="{{ lang.S_ISO }}">{% if lang.S_NAME %}<span>{{ lang.S_NAME }}</span>{% endif %}
 	</a>
 {% endfor %}
 	<div class="blg-google-logo"></div>

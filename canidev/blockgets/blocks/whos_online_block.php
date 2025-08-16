@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -135,6 +135,14 @@ class whos_online_block extends base
 		else
 		{
 			$online_users = obtain_users_online(0, 'forum');
+
+			/**
+			 * @event block.whos_online_user_list
+			 * @var array	online_users		Array with users online
+			 * @since 2.0.7
+			 */
+			$vars = ['online_users'];
+			extract($this->dispatcher->trigger_event('block.whos_online_user_list', compact($vars)));
 
 			$this->template->assign_vars([
 				'S_TOTAL_ONLINE'	=> $online_users['total_online'],
