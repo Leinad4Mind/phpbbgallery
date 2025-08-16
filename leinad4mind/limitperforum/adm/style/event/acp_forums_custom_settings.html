@@ -42,15 +42,15 @@
 						<tr>
 							<td>{{ limit.group_name }}</td>
 							<td>
-								<input type="number" id="limit_forum_group_topic_{{ limit.group_id }}" name="lfgt[{{ limit.group_id }}]" value="{{ limit.topics | default(0) }} min="0"">
+								<input type="number" id="limit_forum_group_topic_{{ limit.group_id }}" name="lfgt[{{ limit.group_id }}]" value="{{ limit.topics | default(0) }}" min="0">
 								{{ lang('LIMIT_POSTS_PER_FORUM_TOPICS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
-								<input type="number" id="limit_forum_group_topic_time_{{ limit.group_id }}" name="lfgtt[{{ limit.group_id }}]" value="{{ limit.topic_time_limit | default(0) }} min="0"">
+								<input type="number" id="limit_forum_group_topic_time_{{ limit.group_id }}" name="lfgtt[{{ limit.group_id }}]" value="{{ limit.topic_time_limit | default(0) }}" min="0">
 								{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
 							</td>
 							<td>
-								<input type="number" id="limit_forum_group_post_{{ limit.group_id }}" name="lfgp[{{ limit.group_id }}]" value="{{ limit.posts | default(0) }} min="0"">
+								<input type="number" id="limit_forum_group_post_{{ limit.group_id }}" name="lfgp[{{ limit.group_id }}]" value="{{ limit.posts | default(0) }}" min="0">
 								{{ lang('LIMIT_POSTS_PER_FORUM_POSTS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
-								<input type="number" id="limit_forum_group_post_time_{{ limit.group_id }}" name="lfgpt[{{ limit.group_id }}]" value="{{ limit.post_time_limit | default(0) }} min="0"">
+								<input type="number" id="limit_forum_group_post_time_{{ limit.group_id }}" name="lfgpt[{{ limit.group_id }}]" value="{{ limit.post_time_limit | default(0) }}" min="0">
 								{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
 							</td>
 						</tr>

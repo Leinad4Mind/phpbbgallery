@@ -35,7 +35,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'LIMIT_POSTS_PER_FORUM'			=> 'Limit Posts per Forum',
+	'LIMIT_PER_FORUM'				=> 'Limit Posts per Forum',
 	'FORUM_MAX_POSTS'				=> 'Maximum count of posts per user',
 	'FORUM_MAX_POSTS_SHORT'			=> 'Post limit',
 	'FORUM_MAX_TOPICS'				=> 'Maximum count of topics per user',

@@ -86,12 +86,13 @@ class main_listener implements EventSubscriberInterface
 	{
 		if (in_array($event['mode'], ['post', 'reply', 'quote']))
 		{
-			$topic_limit = $event['post_data']['forum_topic_limit'];
-			$topic_time_limit = $event['post_data']['forum_topic_time_limit'];
-			$post_limit = $event['post_data']['forum_post_limit'];
-			$post_time_limit = $event['post_data']['forum_post_time_limit'];
-			$forum_ids = [$event['forum_id']];
+			$topic_limit = 0;
+			$topic_time_limit = 0;
+			$post_limit = 0;
+			$post_time_limit = 0;
 
+			$topic_forum_ids = [$event['forum_id']];
+			$post_forum_ids = [$event['forum_id']];
 			$forum_data = $event['post_data'];
 
 			if (!function_exists('phpbb_get_forum_data'))
@@ -109,53 +110,45 @@ class main_listener implements EventSubscriberInterface
 
 				if ($immediate_parent_data[$immediate_parent_forum_id]['forum_type'] == FORUM_CAT)
 				{
-					$forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
-
 					$group_limits = $this->manager->get_limits($immediate_parent_forum_id, $this->user->data['user_id']);
 
 					if ($group_limits)
 					{
-						$counts = array_column($group_limits, 'topics');
-						$key = array_keys($counts, max($counts))[0];
-						$topic_limit = $counts[$key];
-						$topic_time_limit = $group_limits[$key]['topic_time_limit'];
-
-						$counts = array_column($group_limits, 'posts');
-						$key = array_keys($counts, max($counts))[0];
-						$post_limit = $counts[$key];
-						$post_time_limit = $group_limits[$key]['post_time_limit'];
+						list($topic_limit, $topic_time_limit) = $this->extract_limits($group_limits, 'topics', 'topic_time_limit');
+						list($post_limit, $post_time_limit) = $this->extract_limits($group_limits, 'posts', 'post_time_limit');
 					}
 					else
 					{
 						if ($immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit'] > $topic_limit)
 						{
+							$topic_forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
 							$topic_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit'];
 							$topic_time_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_time_limit'];
 						}
 
 						if ($immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit'] > $post_limit)
 						{
+							$post_forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
 							$post_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit'];
 							$post_time_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_post_time_limit'];
 						}
 					}
 				}
-				else
+			}
+
+			if (!$topic_limit && !$post_limit)
+			{
+				$topic_limit = $event['post_data']['forum_topic_limit'];
+				$topic_time_limit = $event['post_data']['forum_topic_time_limit'];
+				$post_limit = $event['post_data']['forum_post_limit'];
+				$post_time_limit = $event['post_data']['forum_post_time_limit'];
+
+				$group_limits = $this->manager->get_limits($event['forum_id'], $this->user->data['user_id']);
+
+				if ($group_limits)
 				{
-					$group_limits = $this->manager->get_limits($event['forum_id'], $this->user->data['user_id']);
-
-					if ($group_limits)
-					{
-						$counts = array_column($group_limits, 'topics');
-						$key = array_keys($counts, max($counts))[0];
-						$topic_limit = $counts[$key];
-						$topic_time_limit = $group_limits[$key]['topic_time_limit'];
-
-						$counts = array_column($group_limits, 'posts');
-						$key = array_keys($counts, max($counts))[0];
-						$post_limit = $counts[$key];
-						$post_time_limit = $group_limits[$key]['post_time_limit'];
-					}
+					list($topic_limit, $topic_time_limit) = $this->extract_limits($group_limits, 'topics', 'topic_time_limit');
+					list($post_limit, $post_time_limit) = $this->extract_limits($group_limits, 'posts', 'post_time_limit');
 				}
 			}
 
@@ -174,7 +167,7 @@ class main_listener implements EventSubscriberInterface
 			$sql_ary = [
 				'SELECT'	=> 'COUNT(t.topic_id) AS topics_count',
 				'FROM'		=> [TOPICS_TABLE => 't'],
-				'WHERE'		=> 't.topic_poster = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('t.forum_id', $forum_ids),
+				'WHERE'		=> 't.topic_poster = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('t.forum_id', $topic_forum_ids),
 			];
 
 			if ($topic_time_limit)
@@ -182,9 +175,9 @@ class main_listener implements EventSubscriberInterface
 				$sql_ary['WHERE'] .= ' AND t.topic_time > ' . (time() - ($topic_time_limit * 60 * 60));
 			}
 
-			$topics_count = $is_topic_authed ? 0 : $this->query_field('topics_count', $sql_ary);
+			$topics_count = $this->query_field('topics_count', $sql_ary);
 
-			if ($topic_limit && $topics_count >= $topic_limit)
+			if (!$is_topic_authed && $topic_limit && $topics_count >= $topic_limit)
 			{
 				$event['error'] = array_merge($event['error'], [
 					$this->language->lang($topic_time_limit ? 'ERROR_TOPIC_COUNT_TIME' : 'ERROR_TOPIC_COUNT', (int) $topic_limit, $topic_time_limit),
@@ -196,7 +189,7 @@ class main_listener implements EventSubscriberInterface
 			$sql_ary = [
 				'SELECT'	=> 'COUNT(p.post_id) AS posts_count',
 				'FROM'		=> [POSTS_TABLE => 'p'],
-				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $forum_ids),
+				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $post_forum_ids),
 			];
 
 			if ($post_time_limit)
@@ -246,6 +239,21 @@ class main_listener implements EventSubscriberInterface
 
 			$event->update_subarray('page_data', 'ERROR', implode('<br>', $error));
 		}
+	}
+
+	/**
+	 * @param array $group_limits
+	 * @param string $limit_key
+	 * @param string $time_limit_key
+	 * @return array
+	 */
+	protected function extract_limits($group_limits, $limit_key, $time_limit_key)
+	{
+		$counts = array_column($group_limits, $limit_key);
+		$max_key = array_keys($counts, max($counts))[0];
+		$limit = $counts[$max_key];
+		$time_limit = $group_limits[$max_key][$time_limit_key];
+		return [$limit, $time_limit];
 	}
 
 	/**
