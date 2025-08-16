@@ -37,4 +37,11 @@ $lang = array_merge($lang, array(
 		'NO_DEA_EMAILS_INSTALL_ERROR'		=> '“No DEA Emails” no se puede instalar.<br><br>- Se requiere phpBB 3.2.4 o posterior.',
 		'NO_DEA_EMAILS_NO_CURL'				=> '“No DEA Emails” no se puede instalar.<br><br>- Se requiere la extension “curl“ de PHP habilitada.',
 		'NO_DEA_EMAILS_FOUND'				=> 'ERROR: El DOMINIO del Email ((%s)) no es válido.<br />Nuestro sitio Web NO admite cuentas de correo electrónico desechables o temporales <a href="https://bit.ly/2W2MrVO" target="_blank">(DED)</a>.<br />Si desea continuar con el registro en nuestra web, debe de utilizar una cuenta de correo electrónico NO desechable.',
+		'NO_DEA_EMAILS_TITLE_FORCE_CHANGE'	=> 'Cambio Requerido por la Extensión “No Dea Emails”',
+		'NO_DEA_EMAILS_FORCE_CHANGE'		=> 'Antes de continuar navegando por el sitio es necesario que cambie su “Correo Electrónico”.',
+		'NO_DEA_EMAILS_NOT_FORCE_CHANGE'	=> 'Antes de continuar navegando por el sitio es necesario que cambie su “Correo Electrónico”.<br>Usted no tiene permisos para realizar el cambio.<br>Es necesario que contacte con la Administración del Sitio y solicite su actualizacón.',
+		'LOG_NO_DEA_EMAILS'					=> 'No DEA Emails',
+		'LOG_NO_DEA_EMAILS_SETTINGS'		=> 'Gestión CRON & Dominios de Correo DED Externos',
+		'LOG_NO_DEA_EMAILS_LOCALS'			=> 'Gestión Local de Dominios de Correo DED',
+		'LOG_NO_DEA_EMAILS_USERS'			=> 'Usuarios con Cuentas de Correo DED',
 ));

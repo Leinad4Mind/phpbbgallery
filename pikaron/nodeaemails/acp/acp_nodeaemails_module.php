@@ -44,6 +44,7 @@ class acp_nodeaemails_module
 		$this->phpbb_root_path		 = $phpbb_container->getParameter('core.root_path');
 		$this->php_ext				 = $phpbb_container->getParameter('core.php_ext');
 		$this->functions_nodeaemails = $phpbb_container->get('pikaron.nodeaemails.core.functions.nodeaemails');
+		$this->pagination			 = $phpbb_container->get('pagination');
 	}
 
 	public function main($id, $mode)
@@ -64,7 +65,7 @@ class acp_nodeaemails_module
 		}
 	}
 
-
+	// Configuration
 	public function display_configuration($mode)
 	{
 		$submit = $this->request->is_set_post('submit');
@@ -152,10 +153,9 @@ class acp_nodeaemails_module
 				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '',
 			));
 		}
-
 	}
 
-
+	// Locals
 	public function display_locals($mode)
 	{
 		$this->tpl_name		= 'acp_dea_locals';
@@ -187,7 +187,6 @@ class acp_nodeaemails_module
 				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '',
 			));
 		}
-
 
 		/// Save Domain
 		$deadomain = $this->request->variable('deadomain', '');
@@ -238,49 +237,74 @@ class acp_nodeaemails_module
 		}
 	}
 
-
+	// Users
 	public function display_users($mode)
 	{
+		$this->language->add_lang('memberlist');
 		$this->tpl_name		= 'acp_dea_users';
 		$this->page_title	= $this->language->lang('ACP_NO_DEA_EMAILS') . ' - ' . $this->language->lang('ACP_NO_DEA_EMAILS_USERS');
 
-		// Seek Email DEA in ALL Users
-		$sql = "SELECT user_id, username, user_email, user_regdate, user_lastvisit, user_posts, user_colour
-				FROM " . USERS_TABLE ." WHERE user_email <> ''";
-		$result = $this->db->sql_query($sql);
+		/* @var $pagination \phpbb\pagination */
+		$pagination		= $this->pagination;
 
-		$dea_users = 0;
-		$MiArray = $this->functions_nodeaemails->load_total_deas();
+		$number			= $this->config['topics_per_page'];
+		$start			= $this->request->variable('start', 0);
+		$sort_key		= $this->request->variable('sk', 'c');
+		$sort_dir		= $this->request->variable('sd', 'a');
+
+		// Sorting
+		$sort_by_text	= array('a' => $this->language->lang('SORT_USERNAME'), 'e' => $this->language->lang('SORT_EMAIL'), 'c' => $this->language->lang('SORT_JOINED'), 'l' => $this->language->lang('SORT_LAST_ACTIVE'), 'd' => $this->language->lang('SORT_POST_COUNT'));
+		$sort_by_sql	= array('a' => 'username', 'e' => 'user_email', 'c' => 'user_regdate', 'l' => 'user_lastvisit', 'd' => 'user_posts');
+
+		$limit_days		= array();
+		$sort_days = $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
+		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+
+		// Get users with DEA email
+		$ids_dea_users = $this->functions_nodeaemails->get_users_dea();
+		$dea_users = count($ids_dea_users);
+		$sql_dea_users = ($dea_users != 0) ? implode(', ', $ids_dea_users) : '99999999';
+
+		// Make sure $start is set to the last page if it exceeds the users
+		$start = $this->pagination->validate_start($start, $number, $dea_users);
+
+		// Seek Email DEA in ALL Users
+		$sql = "SELECT user_id, username, user_email, user_regdate, user_lastvisit, user_posts, user_colour, user_chg_email_force
+				FROM " . USERS_TABLE ." WHERE user_id IN (" . $sql_dea_users . ") ORDER BY " . $sql_sort_order;
+		$result = $this->db->sql_query_limit($sql, $number, $start);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			// split on @ and return last value of array in $domain[1]
-			$domain = explode('@', $row['user_email']);
-
-			if (array_search($domain[1], $MiArray) !== false)
-			{
-				$this->template->assign_block_vars('usersex', array(
-					'S_NO_DEA_EMAILS_ATTACH_ID' => $row['user_id'],
-					'S_NO_DEA_EMAILS_USER'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-					'S_NO_DEA_EMAILS_EMAIL'		=> $row['user_email'],
-					'S_NO_DEA_EMAILS_REGISTER'	=> $this->user->format_date($row['user_regdate'], $this->config['default_dateformat']),
-					'S_NO_DEA_EMAILS_LAST'		=> $this->user->format_date($row['user_lastvisit'], $this->config['default_dateformat']),
-					'S_NO_DEA_EMAILS_POST'		=> $row['user_posts'],
-				));
-				$dea_users++;
-			}
+			$this->template->assign_block_vars('usersex', array(
+				'S_NO_DEA_EMAILS_ATTACH_ID' => $row['user_id'],
+				'S_NO_DEA_EMAILS_USER'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+				'S_NO_DEA_EMAILS_EMAIL'		=> $row['user_email'],
+				'S_NO_DEA_EMAILS_REGISTER'	=> $this->user->format_date($row['user_regdate'], $this->config['default_dateformat']),
+				'S_NO_DEA_EMAILS_LAST'		=> $this->user->format_date($row['user_lastvisit'], $this->config['default_dateformat']),
+				'S_NO_DEA_EMAILS_POST'		=> $row['user_posts'],
+				'S_NO_DEA_EMAILS_COLOR'		=> $row['user_chg_email_force'] ? ' style="background-color: #f0db10;" ' : null,
+				'S_NO_DEA_EMAILS_TITLE'		=> $row['user_chg_email_force'] ? ' title="' . $this->language->lang('LOG_FORCE_USER_CHG_EMAIL') . '" ' : null,
+			));
 		}
 		$this->db->sql_freeresult($result);
 
+		$base_url = $this->u_action . "&amp;$u_sort_param";
+		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $dea_users, $number, $start);
+
+		$total_users = $this->functions_nodeaemails->count_total_users();
+		$percentage = number_format(($dea_users * 100) / $total_users, 6, ',', '.');
+
 		$this->template->assign_vars(array(
-			'S_NO_DEA_EMAILS_TOT_USERS'	 => $this->functions_nodeaemails->count_users(),
-			'S_NO_DEA_EMAILS_DEA_USERS'	 => $dea_users,
+			'S_NO_DEA_EMAILS_TOT_USERS'	 => $total_users,
+			'S_NO_DEA_EMAILS_DEA_USERS'	 => $dea_users . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $this->language->lang('L_NO_DEA_EMAILS_PERCENTAGE', $percentage),
 			'S_NO_DEA_EMAILS_VERSION'	 => str_replace('-', '--', $this->config['nodeaemails_version']),
-			'U_ACTION'					 => $this->u_action,
+			'U_ACTION'					 => $this->u_action . "&amp;$u_sort_param&amp;start=$start",
+			'S_SORT_KEY'				 => $s_sort_key,
+			'S_SORT_DIR'				 => $s_sort_dir,
 		));
 
-
-		/// Delete Users
+		/// Manage Users
 		$continue = $this->request->is_set_post('continue');
 		$submit = $this->request->is_set_post('submit');
 		$delete_type = $this->request->variable('delete_type', '');
@@ -342,12 +366,32 @@ class acp_nodeaemails_module
 				{
 					redirect(append_sid($this->phpbb_root_path . "ucp." . $this->php_ext, 'i=ucp_pm&amp;mode=compose&amp;users_nodeaemail=' . substr($users, 0, -1)));
 				}
-				else
+				elseif ($delete_type == 'chgema')
+				{
+					$sql = "UPDATE " . USERS_TABLE . " SET user_chg_email_force = 1
+							WHERE " . $this->db->sql_in_set('user_id', $delete_users);
+					$result = $this->db->sql_query($sql);
+					$this->db->sql_freeresult($result);
+
+					$this->phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FORCE_CHG_EMAIL', false, array('<strong>' . $this->language->lang('LOG_FORCE_USERS_CHG_EMAIL') . '</strong><br>» ' . implode($this->language->lang('COMMA_SEPARATOR'), $user_affected)));
+					trigger_error($this->language->lang('LOG_FORCE_USERS_CHG_EMAIL') . '<br><br>' . implode($this->language->lang('COMMA_SEPARATOR'), $user_affected) . ' ' . adm_back_link($this->u_action . "&amp;$u_sort_param&amp;start=$start"));
+				}
+				elseif ($delete_type == 'chgemn')
+				{
+					$sql = "UPDATE " . USERS_TABLE . " SET user_chg_email_force = 0
+							WHERE " . $this->db->sql_in_set('user_id', $delete_users);
+					$result = $this->db->sql_query($sql);
+					$this->db->sql_freeresult($result);
+
+					$this->phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FORCE_CHG_EMAIL', false, array('<strong>' . $this->language->lang('LOG_FORCE_USERS_NO_CHG_EMAIL') . '</strong><br>» ' . implode($this->language->lang('COMMA_SEPARATOR'), $user_affected)));
+					trigger_error($this->language->lang('LOG_FORCE_USERS_NO_CHG_EMAIL') . '<br><br>' . implode($this->language->lang('COMMA_SEPARATOR'), $user_affected) . ' ' . adm_back_link($this->u_action . "&amp;$u_sort_param&amp;start=$start"));
+				}
+				elseif ($delete_type == 'retain' || $delete_type == 'remove')
 				{
 					if (!$this->auth->acl_get('a_userdel'))
 					{
 						send_status_line(403, 'Forbidden');
-						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action . "&amp;$u_sort_param&amp;start=$start"), E_USER_WARNING);
 					}
 
 					if (!function_exists('user_active_flip'))

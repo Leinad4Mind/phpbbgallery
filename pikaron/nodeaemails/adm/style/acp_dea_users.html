@@ -35,6 +35,8 @@
 			<dd>
 				<select id="delete_type" name="delete_type">
 					<option class="sep" value="">{{ lang('SELECT_OPTION') }}</option>
+					<option value="chgema">{{ lang('L_NO_DEA_EMAILS_FORCE_CHG_EMAIL') }}</option>
+					<option value="chgemn">{{ lang('L_NO_DEA_EMAILS_N_FORCE_CHG_EMAIL') }}</option>
 					<option value="sendpm">{{ lang('L_NO_DEA_EMAILS_SEND_PM') }}</option>
 					<option value="retain">{{ lang('L_NO_DEA_EMAILS_RETAIN_POSTS') }}</option>
 					<option value="remove">{{ lang('L_NO_DEA_EMAILS_REMOVE_POSTS') }}</option>
@@ -44,22 +46,27 @@
 
 	</fieldset>
 
+	<!-- IF .pagination -->
+	<div class="pagination">
+		<!-- INCLUDE pagination.html -->
+	</div>
+	<!-- ENDIF -->
 	<table class="table" style="padding: 5px;">
 		<thead>
 			<tr>
-				<th>{{ lang('L_NO_DEA_EMAILS_NAME_USER') }}</th>
-				<th>{{ lang('L_NO_DEA_EMAILS_EMAIL') }}</th>
-				<th>{{ lang('L_NO_DEA_EMAILS_JOINED') }}</th>
-				<th>{{ lang('L_NO_DEA_EMAILS_LAST_ACTIVE') }}</th>
-				<th class="death">{{ lang('L_NO_DEA_EMAILS_POST') }}</th>
-				<th class="death">{{ lang('L_NO_DEA_EMAILS_MARK') }}</th>
+				<th>{{ lang('SORT_USERNAME') }}</th>
+				<th>{{ lang('SORT_EMAIL') }}</th>
+				<th>{{ lang('SORT_JOINED') }}</th>
+				<th>{{ lang('SORT_LAST_ACTIVE') }}</th>
+				<th class="death">{{ lang('SORT_POST_COUNT') }}</th>
+				<th class="death deatd">{{ lang('MARK') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 		{% for userse in usersex %}
-			{% if loop.index is divisible by(2) %}<tr class="table-row2">{% else %}<tr class="table-row1">{% endif %}
+			{% if loop.index is divisible by(2) %}<tr class="table-row2 row-highlight">{% else %}<tr class="table-row1 row-highlight">{% endif %}
 				<td>{{ userse.S_NO_DEA_EMAILS_USER }}</td>
-				<td>{{ userse.S_NO_DEA_EMAILS_EMAIL }}</td>
+				<td{{ userse.S_NO_DEA_EMAILS_COLOR }}{{ userse.S_NO_DEA_EMAILS_TITLE }}>{{ userse.S_NO_DEA_EMAILS_EMAIL }}</td>
 				<td>{{ userse.S_NO_DEA_EMAILS_REGISTER }}</td>
 				<td>{{ userse.S_NO_DEA_EMAILS_LAST }}</td>
 				<td>{{ userse.S_NO_DEA_EMAILS_POST }}</td>
@@ -73,11 +80,22 @@
 		</tbody>
 	</table>
 
+	<!-- IF .pagination -->
+		<div class="pagination">
+			<!-- INCLUDE pagination.html -->
+		</div>
+	<!-- ENDIF -->
+
+	<fieldset>
+		{{ lang('SORT_BY') }}{{ lang('COLON') }} {S_SORT_KEY} {S_SORT_DIR}
+		<input class="adm-button button3" type="submit" value="{{ lang('GO') }}" name="sort" />
+	</fieldset>
+
 	<fieldset>
 		<legend>{{ lang('ACP_SUBMIT_DELETE') }}</legend>
 		<p class="submit-buttons">
-			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			<input class="adm-button" type="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="adm-button" type="reset" name="reset" value="{{ lang('RESET') }}" />
 		</p>
 	</fieldset>
 

@@ -30,11 +30,11 @@ class v100_rc4 extends \phpbb\db\migration\migration
 			array('module.add', array(
 				'acp',
 				'ACP_CAT_DOT_MODS',
-				'ACP_NO_DEA_EMAILS'
+				'LOG_NO_DEA_EMAILS'
 			)),
 			array('module.add', array(
 				'acp',
-				'ACP_NO_DEA_EMAILS',
+				'LOG_NO_DEA_EMAILS',
 				array(
 					'module_basename'	=> '\pikaron\nodeaemails\acp\acp_nodeaemails_module',
 					'modes'				=> array('configuration', 'locals', 'users'),
