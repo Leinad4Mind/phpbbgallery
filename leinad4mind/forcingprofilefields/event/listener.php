@@ -116,9 +116,9 @@ class listener implements EventSubscriberInterface
 		{
 			$this->is_first_user_setup = false;
 
-			if (!$this->ignore_request() && $this->get_profilefield_errors())
+			if (!$this->ignore_request() && $this->get_profilefield_errors(true))
 			{
-				$ucp_url = append_sid($this->root_path . 'ucp.' . $this->php_ext, ['i' => 'profile', 'mode' => 'profile_info', 'forceprofileupdate' => 1]);
+				$ucp_url = append_sid($this->root_path . 'ucp.' . $this->php_ext, ['i' => 'profile', 'mode' => 'profile_info', 'forcingprofilefields' => 1]);
 
 				if ($this->config['forcingprofilefields_skip_metarefresh'])
 				{
@@ -141,7 +141,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function page_footer()
 	{
-		if ($this->request->is_set('forceprofileupdate') && $errors = $this->get_profilefield_errors())
+		if ($this->request->is_set('forcingprofilefields') && $errors = $this->get_profilefield_errors(false))
 		{
 			if ($error = $this->template->retrieve_var('ERROR'))
 			{
@@ -176,9 +176,10 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * @param bool $lazy
 	 * @return array
 	 */
-	protected function get_profilefield_errors()
+	protected function get_profilefield_errors($lazy = false)
 	{
 		$errors = [];
 
@@ -197,9 +198,21 @@ class listener implements EventSubscriberInterface
 					if ($error = $profile_field->validate_profile_field($row['value'], $row['data']))
 					{
 						$errors[] = $error;
+
+						if ($lazy)
+						{
+							break;
+						}
 					}
 				}
 			}
+		}
+
+		// Compatibility with the National Flags extension by RMcGirr83
+		if ((!$lazy || !$errors) && $this->config['flags_required'] && !$this->user->data['user_flag'])
+		{
+			$this->lang->add_lang('common', 'rmcgirr83/nationalflags');
+			$errors[] = $this->lang->lang('MUST_CHOOSE_FLAG');
 		}
 
 		return $errors;
