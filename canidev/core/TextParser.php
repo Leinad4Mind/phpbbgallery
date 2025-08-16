@@ -127,7 +127,7 @@ class TextParser
 			}
 			
 			// Close tag, if the current
-			if(sizeof($open_tags) && $split === "</" . end($open_tags) . ">")
+			if(count($open_tags) && $split === "</" . end($open_tags) . ">")
 			{
 				array_splice($open_tags, -1, 1);
 
@@ -138,7 +138,7 @@ class TextParser
 			}
 
 			// Adjust the string
-			if(sizeof($open_tags) && $split[0] != '<')
+			if(count($open_tags) && $split[0] != '<')
 			{ 
 				$length = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
 
@@ -166,7 +166,7 @@ class TextParser
 					}
 				}
 
-				$tags_count = sizeof($open_tags);
+				$tags_count = count($open_tags);
 
 				for($i = $tags_count; $i > 0; $i--)
 				{

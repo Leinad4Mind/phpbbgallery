@@ -1,21 +1,21 @@
 {% if QQ_ENABLED %}
-	<script type="text/html" id="tpl-quickquote-tooltip">
+	<template id="quickquote-tooltip">
 		<div class="quickquote-tooltip">
 			<a href="#" data-action="quote"><i class="fa fa-plus"></i> {{ lang('QQ_SAVE_QUOTE') }}</a>
 			<span class="tooltip-sep">|</span>
 			<a href="#" data-action="reply"><i class="fa fa-reply"></i> {{ lang('QQ_REPLY') }}</a>
 		</div>
-	</script>
+	</template>
 
-	<script type="text/html" id="tpl-quickquote-floatbtn">
-	<a href="#" class="quickquote-floatbtn btn btn-default" data-text="{{ lang('QUOTES') }}"></a>
-	</script>
+	<template id="quickquote-floatbtn">
+		<a href="#" class="quickquote-floatbtn btn btn-default" data-text="{{ lang('QUOTES') }}"></a>
+	</template>
 
-	<script type="text/html" id="tpl-quickquote-inlinebtn">
+	<template id="quickquote-inlinebtn">
 		<button type="button" class="btn btn-default" value="1" data-text="{{ lang('QQ_INSERT_QUOTES') }}"></button>
-	</script>
+	</template>
 
-	<script type="text/html" id="tpl-quickquote-dialog">
+	<template id="quickquote-dialog">
 		<div class="qq-dialog" title="{{ lang('QUOTES') }}">
 			<div class="cbb-dialog-content dialog-content">
 				<ul class="js-quickquote-list">
@@ -41,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-	</script>
+	</template>
 
 	<script>
 	head.ready(['cbbcore.min.js', 'quickquote.min.js'], function() {

@@ -1,0 +1,66 @@
+:root {
+	--cbb-btn-border-radius: 6px;
+}
+
+.cbb-dialog {
+	font-size: .875rem;
+}
+
+.cbb-dropdown {
+	border-color: #e5e7eb;
+	border-radius: .5rem;
+}
+
+.cbb-dropdown .cbb-dropdown-pointer {
+	border-bottom-color: #e5e7eb;
+}
+
+.cbb-menu {
+	padding: .4rem;
+}
+
+.cbb-menu li a {
+	border-radius: .5rem;
+	font-size: .75rem;
+	padding: .5rem;
+}
+
+.cbb-menu li a:hover,
+.cbb-menu li a.active {
+	background-color: rgba(var(--color-primary), .08);
+	color: rgba(var(--color-text), 1);
+}
+
+.cbb-btn,
+a.cbb-btn,
+.cbb-label,
+.rtl .cbb-btn {
+	background-color: #f3f3f3;
+	border-radius: 6px;
+	line-height: 28px;
+}
+
+.cbb-btn:not(:disabled):hover,
+a.cbb-btn:not(:disabled):hover {
+	background: rgba(var(--color-primary), .08);
+	border-color: rgba(var(--color-primary), .08);
+    color: rgba(var(--color-text), 1) !important;
+}
+
+.cbb-inputbox,
+.cbb-dialog .cbb-inputbox {
+	font-size: 0.7rem;
+}
+
+.cbb-inputbox:focus {
+	box-shadow: none;
+}
+
+select.cbb-inputbox {
+	width: auto;
+}
+
+.chat.editor-counter > span {
+	font-size: 0.7em;
+}
+
