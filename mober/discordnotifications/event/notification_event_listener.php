@@ -438,7 +438,7 @@ class notification_event_listener implements EventSubscriberInterface
 		}
 		else if ($event['activated'] == 1)
 		{
-			$user_data['user_id'] = array_pop($event['user_id_ary']);
+			$user_data['user_id'] = array_slice($event['user_id_ary'], -1)[0];
 			$user_name = $this->notification_service->query_user_name($user_data['user_id']);
 			$user_data['user_name'] = ($user_name != null) ? $user_name : $this->language->lang('UNKNOWN_USER');
 		}
@@ -1012,10 +1012,13 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function reformat_link_text($text)
 	{
-		$text = strtr($text, [
-			'[' => '\\[',
-			']' => '\\]'
-		]);
+		// It seems that escaping markdown links is no longer necessary:
+		// https://github.com/discord/discord-api-docs/issues/6138
+
+		//$text = strtr($text, [
+		//	'[' => '\\[',
+		//	']' => '\\]'
+		//]);
 		return html_entity_decode($text, ENT_COMPAT);
 	}
 
