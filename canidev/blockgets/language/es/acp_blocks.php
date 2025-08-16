@@ -2,7 +2,7 @@
 /*
 * acp_blocks.php [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -187,6 +187,8 @@ $lang = array_merge($lang, array(
 	'GALLERY_MARGIN'				=> 'Margen entre imágenes',
 	'GALLERY_MAX_NUMBER'			=> 'Número máximo de imágenes',
 	'GALLERY_MAX_NUMBER_EXPLAIN'	=> 'Adjuntos máximos que se leerán de los foros/temas/mensajes',
+	'GALLERY_ORDER'					=> 'Orden de los temas/mensajes',
+	'GALLERY_ORDER_EXPLAIN'			=> 'Define el orden en el que se cargarán los temas o mensajes del foro.',
 	'GALLERY_POSTS'					=> 'Mensajes',
 	'GALLERY_POSTS_EXPLAIN'			=> 'IDs de los mensajes de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
 	'GALLERY_SOURCE'				=> 'Origen de las imágenes',
@@ -195,6 +197,9 @@ $lang = array_merge($lang, array(
 	'GALLERY_TOPICS_EXPLAIN'		=> 'IDs de los temas de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
 	'GALLERY_ZOOM'					=> 'Zoom',
 	'GALLERY_ZOOM_EXPLAIN'			=> 'Píxeles que se aumentarán al pasar el ratón por encima de la imagen.',
+
+	'GALLERY_ORDER_LAST'			=> 'Últimos primero',
+	'GALLERY_ORDER_RAND'			=> 'Aleatorio',
 	
 	'GALLERY_SOURCE_ALL'			=> 'Todas',
 	'GALLERY_SOURCE_ATTACHMENTS'	=> 'Solo adjuntos',
@@ -234,6 +239,8 @@ $lang = array_merge($lang, array(
 	'US_BANNER_EXPLAIN'			=> 'Mini banner que será la imagen en la que se tenga que hacer clic para acceder al foro desde el enlace.',
 
 	// Login Block
+	'ALT_LOGIN'					=> 'Mostrar métodos alternativos',
+	'ALT_LOGIN_EXPLAIN'			=> 'Activa/desactiva la visualización de los métodos alternativos de identificación.<br /><em>Ej: Oauth</em>',
 	'FULL_LOGIN'				=> 'Mostrar Login completo',
 	'FULL_LOGIN_EXPLAIN'		=> 'Activa/desactiva las opciones avanzadas en la identificación de los usuarios.',
 	'SHOW_REGISTER'				=> 'Mostrar Registro',
@@ -420,6 +427,10 @@ $lang = array_merge($lang, array(
 	// stats_block
 	'STATS_INLINE'			=> 'Mostrar datos en línea',
 	'USER_STATS'			=> 'Mostrar estadísticas de usuarios',
+
+	// steam_block
+	'STEAM_GROUP_URL'			=> 'Url del grupo',
+	'STEAM_GROUP_URL_EXPLAIN'	=> '<em>Ej: https://steamcommunity.com/groups/grupodeejemplo</em>',
 	
 	// top_topics_block
 	'TOPT_LIMIT'			=> 'Límite de temas',

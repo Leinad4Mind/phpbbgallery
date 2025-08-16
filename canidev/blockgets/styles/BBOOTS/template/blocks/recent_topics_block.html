@@ -4,7 +4,7 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.blgTabs();{% endif %}
+		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.cbbTabs();{% endif %}
 	});
 // ]]>
 </script>

@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class forums_block extends base
 {
@@ -62,7 +56,7 @@ class forums_block extends base
 		* @var	array	data			Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary', 'data');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.forums_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);

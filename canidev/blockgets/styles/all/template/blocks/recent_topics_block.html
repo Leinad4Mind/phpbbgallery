@@ -4,7 +4,7 @@
 // <![CDATA[
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
-		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.blgTabs();{% endif %}
+		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.cbbTabs();{% endif %}
 	});
 // ]]>
 </script>
@@ -22,7 +22,7 @@
 			{% for topicrow in tab.rows %}
 				<li>
 					{% EVENT topiclist_row_prepend %}
-					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 				</li>
 			{% endfor %}
 			</ul>
@@ -60,7 +60,7 @@
 				<tr>
 					<td class="blg-column-topic-title blg-align-left">
 						{% EVENT topiclist_row_prepend %}
-						<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+						<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 					</td>
 					<td class="blg-column-posted-by">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
 				{% if not BLOCK_VIEW_MEDIUM %}
@@ -92,7 +92,7 @@
 							<dt{%if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 								<div class="list-inner">
 									{% EVENT topiclist_row_prepend %}
-									<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+									<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
 									<br />
 									{% EVENT topiclist_row_topic_title_after %}
 

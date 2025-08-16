@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class topic_index_block extends base
 {
@@ -59,7 +53,7 @@ class topic_index_block extends base
 			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 		}
 		
-		$sql_ary = array(
+		$sql_array = array(
 			'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
 			'FROM'		=> array(TOPICS_TABLE => 't'),
 			'LEFT_JOIN' => array(
@@ -72,14 +66,14 @@ class topic_index_block extends base
 
 		if($this->config['load_db_lastread'])
 		{
-			$sql_ary['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
+			$sql_array['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
 
-			$sql_ary['LEFT_JOIN'][] = array(
+			$sql_array['LEFT_JOIN'][] = array(
 				'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
 				'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
 			);
 
-			$sql_ary['LEFT_JOIN'][] = array(
+			$sql_array['LEFT_JOIN'][] = array(
 				'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
 				'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
 			);
@@ -90,26 +84,58 @@ class topic_index_block extends base
 			case 'topic_title':
 				if($first_char)
 				{
-					$sql_ary['WHERE'] .= ' AND t.topic_title ' . $this->db->sql_like_expression(substr($first_char, 0, 1) . $this->db->get_any_char());
+					$sql_array['WHERE'] .= ' AND t.topic_title ' . $this->db->sql_like_expression(substr($first_char, 0, 1) . $this->db->get_any_char());
 				}
 
-				$sql_ary['ORDER_BY'] = 'LOWER(t.topic_title) ASC';
+				$sql_array['ORDER_BY'] = 'LOWER(t.topic_title) ASC';
 			break;
 			
 			case 'topic_time':
 			case 'topic_last_post_time':
-				$sql_ary['ORDER_BY'] = 't.' . $data['sort_mode'] . ' DESC';
+				$sql_array['ORDER_BY'] = 't.' . $data['sort_mode'] . ' DESC';
 			break;
 		}
 
 		/*
+		* Compatibility with other extensions
+		*
+		* @event core.viewforum_get_topic_data
+		* @var	array	forum_data			Array with forum data
+		* @var	array	sql_array			The SQL array to get the data of all topics
+		* @var	int		forum_id			The forum_id whose topics are being listed
+		* @var	int		topics_count		The total number of topics for display
+		* @var	int		sort_days			The oldest topic displayable in elapsed days
+		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		*									Author, Post time, Replies, Subject, Views
+		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		*/
+		$forum_data 	= array();
+		$sort_dir 		= 'd';
+
+		$sort_days = $sort_key = '';
+		$topics_count = $total_topic_count = $forum_id = 0;
+
+		$vars = array(
+			'forum_data',
+			'sql_array',
+			'forum_id',
+			'topics_count',
+			'sort_days',
+			'sort_key',
+			'sort_dir',
+		);
+		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
+
+		/*
 		* @event block.topic_index_query
-		* @var array	sql_ary		The SQL data
+		* @var array	sql_array	The SQL data
 		* @var array	data		The Block configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary', 'data');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.topic_index_query', compact($vars)));
+
+		$sql_array = $this->helper->filter_query($sql_array);
 		
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('topic');
@@ -118,15 +144,15 @@ class topic_index_block extends base
 		// Count total of topics
 		$sql = $this->db->sql_build_query('SELECT', array(
 			'SELECT'	=> 'COUNT(t.topic_id) AS topic_count',
-			'FROM'		=> $sql_ary['FROM'],
-			'WHERE'		=> $sql_ary['WHERE']
+			'FROM'		=> $sql_array['FROM'],
+			'WHERE'		=> $sql_array['WHERE']
 		));
 
 		$result = $this->db->sql_query($sql);
 		$total_topic_count = (int)$this->db->sql_fetchfield('topic_count');
 		$this->db->sql_freeresult($result);
 
-		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = ($data['topics_per_page']) ? $this->db->sql_query_limit($sql, (int)$data['topics_per_page'], $start) : $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -181,6 +207,7 @@ class topic_index_block extends base
 			$topic_row = array(
 				'FORUM_NAME'			=> $row['forum_name'],
 				'TOPIC_TITLE'			=> $topic_title,
+				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'TITLE_TRUNCATED' 		=> \canidev\core\tools::html_truncate($topic_title, $data['title_limit'], '...'),
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),

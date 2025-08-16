@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class announcements_block extends base
 {
@@ -61,7 +55,7 @@ class announcements_block extends base
 			return true;
 		}
 			
-		$sql_ary = array(
+		$sql_array = array(
 			'SELECT'	=> 't.*,
 				p.post_subject, p.post_attachment, p.post_reported, p.post_username, p.post_text, p.bbcode_uid, p.bbcode_bitfield, p.enable_smilies,
 				u.username, u.user_colour',
@@ -79,16 +73,47 @@ class announcements_block extends base
 		);
 
 		/*
+		* Compatibility with other extensions
+		*
+		* @event core.viewforum_get_topic_data
+		* @var	array	forum_data			Array with forum data
+		* @var	array	sql_array			The SQL array to get the data of all topics
+		* @var	int		forum_id			The forum_id whose topics are being listed
+		* @var	int		topics_count		The total number of topics for display
+		* @var	int		sort_days			The oldest topic displayable in elapsed days
+		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		*									Author, Post time, Replies, Subject, Views
+		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		*/
+		$forum_data 	= array();
+		$topics_count 	= 0;
+		$sort_dir 		= 'd';
+		$sort_days = $sort_key = '';
+
+		$vars = array(
+			'forum_data',
+			'sql_array',
+			'forum_id',
+			'topics_count',
+			'sort_days',
+			'sort_key',
+			'sort_dir',
+		);
+		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
+
+		/*
 		* @event block.announcements_query
-		* @var array	sql_ary		The SQL array to get the data
+		* @var array	sql_array	The SQL array to get the data
 		* @var array	data		The Block configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary', 'data');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.announcements_query', compact($vars)));
+
+		$sql_array 	= $this->helper->filter_query($sql_array);
+		$sql 		= $this->db->sql_build_query('SELECT', $sql_array);
+		$result 	= $this->db->sql_query_limit($sql, (int)$data['max_number']);
 		
-		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
-		$result = $this->db->sql_query_limit($sql, (int)$data['max_number']);
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			// Does post have an attachment? If so, add it to the list
@@ -149,29 +174,29 @@ class announcements_block extends base
 
 		foreach($rowset as $topic_id => $row)
 		{
-			$row_forum_id = (int)$row['forum_id'];
-			$row_topic_id = (int)$row['topic_id'];
+			$row_forum_id 	= (int)$row['forum_id'];
+			$row_topic_id 	= (int)$row['topic_id'];
 			
 			// Parse the message and subject
-			$message = censor_text($row['post_text']);
-			
-			// Parse the message
-			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-			$message = generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+			$topic_title 	= censor_text($row['post_subject']);
+			$message 		= censor_text($row['post_text']);
+
+			$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			$message 		= generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+			$message 		= \canidev\core\tools::html_truncate($message, $data['max_size'], "... $read_more");
 
 			if(!empty($attachments[$row['topic_first_post_id']]))
 			{
 				parse_attachments($row_forum_id, $message, $attachments[$row['topic_first_post_id']], $update_count);
 			}
 			
-			$u_view_topic = $this->helper->url('viewtopic', array('f' => $row_forum_id, 't' => $row_topic_id));
-
-			$read_more = $this->lang->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
-			$message = \canidev\core\tools::html_truncate($message, $data['max_size'], "... $read_more");
+			$u_view_topic 	= $this->helper->url('viewtopic', array('f' => $row_forum_id, 't' => $row_topic_id));
+			$read_more 		= $this->lang->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
 			
 			$topic_row = array(
 				'TOPIC_ID'				=> $row_topic_id,
-				'TOPIC_TITLE'			=> censor_text($row['post_subject']),
+				'TOPIC_TITLE'			=> $topic_title,
+				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 				'S_HAS_ATTACHMENTS'		=> (!empty($attachments[$row['topic_first_post_id']])) ? true : false,
 				'TEXT'					=> $message,

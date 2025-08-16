@@ -1,22 +1,19 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.1 01/02/2020
+* @version v2.0.1 26/07/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\migrations;
 
-class v201 extends \phpbb\db\migration\migration
+class v201 extends \canidev\blockgets\libraries\migration_base
 {
-	protected $block_ary = null;
+	protected $block_manager;
 
-	public function effectively_installed()
-	{
-		return isset($this->config['blg_version']) && version_compare($this->config['blg_version'], '2.0.1', '>=');
-	}
+	protected $version = '2.0.1';
 
 	static public function depends_on()
 	{
@@ -38,12 +35,11 @@ class v201 extends \phpbb\db\migration\migration
 		);
 	}
 
-	public function update_data()
+	public function _update_data()
 	{
-		$this->prepare();
-
+		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db);
+		
 		return array(
-			array('config.update',	array('blg_version', '2.0.1')),
 			array('config.remove', 	array('blg_resize_enabled')),
 			array('config.add',		array('blg_calendar_birthdays', 1)),
 			
@@ -51,52 +47,6 @@ class v201 extends \phpbb\db\migration\migration
 			array('custom', array(array($this, 'update_icons'))),
 			array('custom', array(array($this, 'update_block_config'))),
 		);
-	}
-	
-	public function prepare()
-	{
-		if(!defined('BLG_BLOCK_TABLE'))
-		{
-			$table_prefix = $this->table_prefix;
-			include($this->phpbb_root_path . 'ext/canidev/blockgets/libraries/constants.' . $this->php_ext);
-		}
-	}
-
-	protected function obtain_blocks($filter = '')
-	{
-		if($this->block_ary === null)
-		{
-			$this->block_ary = array();
-
-			$sql = 'SELECT *
-				FROM ' . BLG_BLOCK_TABLE;
-			$result = $this->db->sql_query($sql);
-			while($row = $this->db->sql_fetchrow($result))
-			{
-				$block_id = (int)$row['block_id'];
-				$this->block_ary[$block_id] = $row;
-			}
-			$this->db->sql_freeresult($result);
-		}
-
-		if($filter)
-		{
-			$result = array();
-
-			foreach($this->block_ary as $block_id => $row)
-			{
-				if($row['block_alias'] != $filter)
-				{
-					continue;
-				}
-
-				$result[$block_id] = $row;
-			}
-
-			return $result;
-		}
-
-		return $this->block_ary;
 	}
 
 	public function update_events()
@@ -131,9 +81,9 @@ class v201 extends \phpbb\db\migration\migration
 		// Update block's icons
 		$update_ary = array();
 
-		$this->obtain_blocks();
+		$block_ary = $this->block_manager->get();
 
-		foreach($this->block_ary as $block_id => $row)
+		foreach($block_ary as $block_id => $row)
 		{
 			$update_ary[$block_id] = array(
 				'block_icon'	=> str_replace('blg-icon-', 'fa-', $row['block_icon'])
@@ -153,15 +103,9 @@ class v201 extends \phpbb\db\migration\migration
 			}
 		}
 		
-		if(sizeof($update_ary))
+		foreach($update_ary as $block_id => $ary)
 		{
-			foreach($update_ary as $block_id => $ary)
-			{
-				$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
-					SET ' . $this->db->sql_build_array('UPDATE', $ary) . '
-					WHERE block_id = ' . $block_id;
-				$this->db->sql_query($sql);
-			}
+			$this->block_manager->update_block($block_id, $ary);
 		}
 		
 		// Update page's icons
@@ -200,25 +144,26 @@ class v201 extends \phpbb\db\migration\migration
 
 	public function update_block_config()
 	{
-		$block_ary 	= $this->obtain_blocks();
+		$this->block_manager->add_config(array(
+			'clock_block' 		=> 'simple',
+			'gallery_block' 	=> array(
+				'max_number' 		=> 50,
+				'gallery_source'	=> 1, // gallery_block::SOURCE_ALL
+			),
+			'leaders_block'			=> array('use_all_groups' 	=> 0),
+			'recent_topics_block'	=> array('topic_design' 	=> 'simple'),
+			'topic_index_block'		=> array('topic_design' 	=> 'simple'),
+			'top_topics_block'		=> array('topic_design' 	=> 'simple'),
+		));
 
-		foreach($this->block_ary as $block_id => $row)
+		$block_ary = $this->block_manager->get();
+
+		foreach($block_ary as $block_id => $row)
 		{
 			$data = null;
 
 			switch($row['block_alias'])
 			{
-				case 'clock_block':
-					$data = 'simple';
-				break;
-
-				case 'gallery_block':
-					$data = unserialize($row['block_content']);
-
-					$data['max_number'] 		= 50;
-					$data['gallery_source'] 	= 1; // gallery_block::SOURCE_ALL
-				break;
-
 				case 'google_translate_block':
 					// Remove en_us language
 					$row['block_content'] = preg_replace('#en_us,?#', '', $row['block_content']);
@@ -285,26 +230,19 @@ class v201 extends \phpbb\db\migration\migration
 						}
 					}
 
+					$data['share_buttons'] = array_values($data['share_buttons']);
+
 					unset($data['share_counter']);
 
 					$data['show_names'] = 1;
-				break;
-
-				case 'recent_topics_block':
-				case 'topic_index_block':
-				case 'top_topics_block':
-					$data = unserialize($row['block_content']);
-
-					$data['topic_design'] = 'simple';
 				break;
 			}
 
 			if($data !== null)
 			{
-				$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
-					SET block_content = '" . (is_array($data) ? serialize($data) : $data) . "'
-					WHERE block_id = $block_id";
-				$this->db->sql_query($sql);
+				$this->block_manager->update_block($block_id, array(
+					'block_content'		=> is_array($data) ? serialize($data) : $data
+				));
 			}
 		}
 	}

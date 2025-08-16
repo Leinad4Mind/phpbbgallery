@@ -1,12 +1,12 @@
 <?php
-/**
- * [English [En]]
- * @package Ext Common Core
- * @version 1.1.2 20/09/2023
- *
- * @copyright (c) 2023 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/*
+* media.php [English [En]]
+* @package Ext Common Core
+* @version v1.0.8 12/01/2021
+*
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,16 +16,16 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
 $lang = array_merge($lang, array(
 	'COPY_TO_LIST'			=> 'Copy to current list',
 	'CREATE_SERVER_COPY'	=> 'Create copy on this server',
-	'DELETE_FROM_LIST'		=> 'Remove from list',
+	'DELETE_FROM_LIST'		=> 'Quitar de la lista',
 	'DELETE_ICON'			=> 'Delete icon',
 	'DELETE_IMAGE'			=> 'Delete image',
-	'DELETE_PERMANENTLY'	=> 'Delete permanently',
+	'DELETE_PERMANENTLY'	=> 'Eliminar permanentemente',
 	'ICON_PREVIEW'			=> 'Icon preview',
 	'IMAGE_DESCRIPTION'		=> 'Description',
 	'IMAGE_DETAILS'			=> 'Image details',

@@ -219,7 +219,8 @@ dd input[type="checkbox"], dd input[type="radio"] {
 	font-weight: normal;
 }
 
-.cbb-dialog fieldset, .blg-tabs fieldset {
+.cbb-dialog fieldset,
+.cbb-tabs fieldset {
 	background: none;
 	border: none;
 	margin: 0;

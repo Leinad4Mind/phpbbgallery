@@ -84,6 +84,11 @@
 		{{ S_BLG_LOGIN_FIELDS }}
 		{{ S_FORM_TOKEN_BLG_LOGIN }}
 	</div>
+
+	{% if PROVIDER_TEMPLATE_FILE %}
+		<div class="blg-alt-login-legend"><span>{L_BLG_OR}</span></div>
+		{% INCLUDE PROVIDER_TEMPLATE_FILE %}
+	{% endif %}
 </form>
 
 	{% if S_REGISTER_ENABLED and S_DISPLAY_REGISTER %}

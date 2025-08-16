@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "",
 	"homepage": "https://www.canidev.com",
-	"version": "2.0.2",
-	"keywords": ["phpbb", "extension", "canidev", "blockgets"],
+	"version": "2.0.3",
+	"keywords": ["phpbb", "extension", "canidev", "blockgets", "portal"],
 	"license": "GPL-2.0",
 	"authors": [
 		{
@@ -33,8 +33,8 @@
 		},
 		"version-check": {
 			"host": "www.canidev.com",
-			"directory": "/app/info",
-			"filename": "ext-cbb-blockgets.json",
+			"directory": "/store/cbb-blockgets",
+			"filename": "version",
 			"ssl": true
 		}
 	}

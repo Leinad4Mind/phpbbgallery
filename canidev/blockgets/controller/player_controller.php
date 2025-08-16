@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -147,15 +147,19 @@ class player_controller implements main_interface
 	private function load_playlist($filename)
 	{
 		$content	= '';
-		$ext		= false;
+		$ext		= '';
 
 		if(preg_match('#.*\.([a-zA-Z0-9]+)$#', $filename, $match))
 		{
-			$ext		= $match[1];
-			$content	= @file_get_contents($filename);
+			$ext = $match[1];
 		}
 
-		if(!$content || !method_exists($this, "_read_$ext"))
+		if(!method_exists($this, "_read_$ext"))
+		{
+			return false;
+		}
+
+		if(!($content = @file_get_contents($filename)))
 		{
 			return false;
 		}

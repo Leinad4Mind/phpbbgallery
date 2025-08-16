@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -9,16 +9,9 @@
 
 namespace canidev\blockgets\libraries;
 
-use \canidev\core\json_response;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
+use \canidev\core\json_response;
 
 class helper
 {
@@ -469,5 +462,48 @@ class helper
 		}
 		
 		return $this->media;
+	}
+
+	/*
+	 * Events can produce unprecise sql queries because of other extensions.
+	 * This function is used to clear the queries before use it.
+	*/
+	public function filter_query($sql_ary)
+	{
+		// Filter duplicate SELECT
+		if(isset($sql_ary['SELECT']))
+		{
+			$select_keys = array_map('trim', explode(',', $sql_ary['SELECT']));
+			$select_keys = array_unique($select_keys);
+
+			$sql_ary['SELECT'] = implode(', ', $select_keys);
+		}
+
+		// Filter duplicate LEFT JOIN
+		if(isset($sql_ary['LEFT_JOIN']))
+		{
+			$left_join_keys = array();
+
+			foreach($sql_ary['LEFT_JOIN'] as $i => $join)
+			{
+				$forum_key 		= array_keys($join['FROM'])[0];
+				$forum_alias 	= array_values($join['FROM'])[0];
+
+				if(!isset($left_join_keys[$forum_key]))
+				{
+					$left_join_keys[$forum_key] = array();
+				}
+
+				if(!in_array($forum_alias, $left_join_keys[$forum_key]))
+				{
+					$left_join_keys[$forum_key][] = $forum_alias;
+					continue;
+				}
+
+				unset($sql_ary['LEFT_JOIN'][$i]);
+			}
+		}
+
+		return $sql_ary;
 	}
 }

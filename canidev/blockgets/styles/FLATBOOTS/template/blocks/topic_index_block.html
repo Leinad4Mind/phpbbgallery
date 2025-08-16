@@ -42,7 +42,7 @@
 		<tr>
 			<td class="blg-column-topic-title blg-align-left">
 				{% EVENT topiclist_row_prepend %}
-				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
+				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
 			</td>
 		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
 			<td class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
@@ -140,7 +140,7 @@
 			<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
 			{% elseif pagination.S_IS_ELLIPSIS %}
 			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
-			{% elseif _pagination.S_IS_NEXT %}
+			{% elseif pagination.S_IS_NEXT %}
 			<li class="next"><a href="{{ block_pagination.PAGE_URL }}" rel="next" role="button">{L_NEXT}</a></li>
 			{% else %}
 			<li><a href="{{ pagination.PAGE_URL }}" role="button">{{ pagination.PAGE_NUMBER }}</a></li>

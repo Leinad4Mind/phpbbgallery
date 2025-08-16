@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class recent_topics_block extends base
 {
@@ -63,7 +57,7 @@ class recent_topics_block extends base
 
 		if(!sizeof($forum_ids))
 		{
-			return true;
+			return false;
 		}
 
 		$tab_ary = array(
@@ -92,7 +86,7 @@ class recent_topics_block extends base
 
 		/*
 		* @event block.recent_topics_tabs
-		* @var array	sql_ary		Tabs info
+		* @var array	tab_ary		Tabs info
 		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
@@ -113,7 +107,7 @@ class recent_topics_block extends base
 
 			$tab_ary[$tab_id]['topic_list'] = array();
 
-			$sql_ary = array(
+			$sql_array = array(
 				'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
 				'FROM'		=> array(TOPICS_TABLE => 't'),
 
@@ -130,32 +124,64 @@ class recent_topics_block extends base
 
 			if($this->config['load_db_lastread'])
 			{
-				$sql_ary['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
+				$sql_array['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
 
-				$sql_ary['LEFT_JOIN'][] = array(
+				$sql_array['LEFT_JOIN'][] = array(
 					'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
 					'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
 				);
 
-				$sql_ary['LEFT_JOIN'][] = array(
+				$sql_array['LEFT_JOIN'][] = array(
 					'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
 					'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
 				);
 			}
 
 			/*
+			* Compatibility with other extensions
+			*
+			* @event core.viewforum_get_topic_data
+			* @var	array	forum_data			Array with forum data
+			* @var	array	sql_array			The SQL array to get the data of all topics
+			* @var	int		forum_id			The forum_id whose topics are being listed
+			* @var	int		topics_count		The total number of topics for display
+			* @var	int		sort_days			The oldest topic displayable in elapsed days
+			* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+			*									Author, Post time, Replies, Subject, Views
+			* @var	string	sort_dir			Either "a" for ascending or "d" for descending
+			*/
+			$forum_data 	= array();
+			$sort_dir 		= 'd';
+
+			$sort_days = $sort_key = '';
+			$topics_count = $total_topic_count = $forum_id = 0;
+
+			$vars = array(
+				'forum_data',
+				'sql_array',
+				'forum_id',
+				'topics_count',
+				'sort_days',
+				'sort_key',
+				'sort_dir',
+			);
+			extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
+
+			/*
 			* @event block.recent_topics_tab_query
-			* @var array	sql_ary			The SQL data
+			* @var array	sql_array		The SQL data
 			* @var int		tab_id			ID of current Tab
 			* @var array	tab_data		Data of current Tab
 			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('sql_ary', 'tab_id', 'tab_data', 'data');
+			$vars = array('sql_array', 'tab_id', 'tab_data', 'data');
 			extract($this->dispatcher->trigger_event('block.recent_topics_tab_query', compact($vars)));
+
+			$sql_array 	= $this->helper->filter_query($sql_array);
+			$sql 		= $this->db->sql_build_query('SELECT', $sql_array);
+			$result 	= $this->db->sql_query_limit($sql, (int)$data['topic_limit']);
 			
-			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
-			$result = $this->db->sql_query_limit($sql, (int)$data['topic_limit']);
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$topic_list[] = $row['topic_id'];
@@ -166,16 +192,6 @@ class recent_topics_block extends base
 			$this->db->sql_freeresult($result);
 
 			/*
-			* @event block.recent_topics_modify_data
-			* @var	array	topic_list			Array with current topic ids
-			* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
-			* @var	array	data				Block Configuration
-			* @since 2.0.1
-			*/
-			$vars = array('topic_list', 'rowset', 'data');
-			extract($this->dispatcher->trigger_event('block.recent_topics_modify_data', compact($vars)));
-
-			/*
 			* For compatibility with other extension
 			*
 			* @event core.viewforum_modify_topics_data
@@ -184,9 +200,18 @@ class recent_topics_block extends base
 			* @var	int		total_topic_count	Forum's total topic count
 			* @var	int		forum_id			Forum identifier
 			*/
-			$total_topic_count = $forum_id = 0;
 			$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
+
+			/*
+			* @event block.recent_topics_modify_data
+			* @var	array	topic_list			Array with current topic ids
+			* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
+			* @var	array	data				Block Configuration
+			* @since 2.0.1
+			*/
+			$vars = array('topic_list', 'rowset', 'data');
+			extract($this->dispatcher->trigger_event('block.recent_topics_modify_data', compact($vars)));
 		}
 
 		$icons 		= $this->container->get('cache')->obtain_icons();
@@ -221,9 +246,10 @@ class recent_topics_block extends base
 			{
 				$row = &$rowset[$topic_id];
 
-				$unread_topic 	= false;
-				$replies 		= (int)$row['topic_posts_approved'] - 1;
-				$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+				$unread_topic 			= false;
+				$replies 				= (int)$row['topic_posts_approved'] - 1;
+				$view_topic_url_params 	= 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+				$topic_title 			= censor_text($row['topic_title']);
 
 				if($row['topic_status'] != ITEM_MOVED)
 				{
@@ -238,7 +264,8 @@ class recent_topics_block extends base
 
 				$topic_row = array(
 					'FORUM_NAME'			=> $row['forum_name'],
-					'TOPIC_TITLE'			=> censor_text($row['topic_title']),
+					'TOPIC_TITLE'			=> $topic_title,
+					'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 					'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 					'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),

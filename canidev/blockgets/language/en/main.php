@@ -2,7 +2,7 @@
 /*
 * main.php [English [En]]
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -22,6 +22,7 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'PORTAL'			=> 'Portal',
 	'READ_FULL'			=> 'Read full topic',
+	'BLG_OR'			=> 'or',
 	'BLG_READ_MORE'		=> '%sRead more%s',
 
 	'ADD_PAGE'					=> 'Create page',
@@ -246,6 +247,11 @@ $lang = array_merge($lang, array(
 	
 	// rss block
 	'NO_RSS'		=> 'No Rss/Feed to show.',
+
+	// steam block
+	'STEAM_IN_GAME'		=> 'Playing',
+	'STEAM_ONLINE'		=> 'Online',
+	'STEAM_MEMBERS'		=> 'Members',
 
 	// topic index block
 	'CHAR_ALL'		=> 'All',

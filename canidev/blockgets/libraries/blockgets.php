@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\libraries;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class blockgets
 {
@@ -594,10 +588,18 @@ class blockgets
 	public function parse_ajax()
 	{
 		$module	= $this->request->variable('jblgm', '');
-	
+
 		if($module && ($this->request->is_ajax() || $this->request->variable('ajaxModule', '') == 'blockgets'))
 		{
 			$this->template->assign_var('BLG_IN_AJAX', true);
+
+			// Remove listeners to prevent infinite loop if $user->setup is called again
+			$listeners = $this->dispatcher->getListeners('core.user_setup_after');
+
+			foreach($listeners as $listener)
+			{
+				$this->dispatcher->removeListener('core.user_setup_after', $listener);
+			}
 
 			if(is_numeric($module))
 			{
@@ -656,7 +658,6 @@ class blockgets
 				if($this->container->has($module))
 				{
 					page_header('', false, 0, 'forum', false);
-
 					$this->container->get($module)->init();
 				}
 			}

@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class gallery_block extends base
 {
@@ -142,23 +136,23 @@ class gallery_block extends base
 						AND a.filesize > 0
 						AND (' . implode(' OR ', $sql_where) . ')',
 						
-					'ORDER_BY'	=> 'RAND()',
+					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : 'RAND()',
 				);
 				
 				/*
-				* @event block.gallery_query
+				* @event block.gallery_attachments_query
 				* @var array	sql_ary		The SQL data
-				* @var	array	data		Block Configuration
+				* @var array	data		Block Configuration
 				* @since 2.0.0
 				*/
 				$vars = array('sql_ary', 'data');
-				extract($this->dispatcher->trigger_event('block.gallery_query', compact($vars)));
+				extract($this->dispatcher->trigger_event('block.gallery_attachments_query', compact($vars)));
 				
 				$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$images[] = array(
+					$image = array(
 						'SRC'		=> $this->helper->url('download/file', array('mode' => 'view', 'id' => $row['attach_id'])),
 						'ACTION'	=> $this->helper->url('viewtopic', array(
 							'f'	=> $row['forum_id'],
@@ -166,6 +160,18 @@ class gallery_block extends base
 							'#'	=> 'p' . $row['post_msg_id']
 						))
 					);
+
+					/*
+					* @event block.gallery_row
+					* @var array		$image		The row array
+					* @var array		$data		Block Configuration
+					* @var array 		$row		Row data
+					* @since 2.0.3
+					*/
+					$vars = array('image', 'data', 'row');
+					extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
+
+					$images[] = $image;
 				}
 				$this->db->sql_freeresult($result);
 			}
@@ -194,25 +200,52 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
-				$sql = 'SELECT p.post_id, p.forum_id, p.topic_id, p.post_text
-					FROM ' . POSTS_TABLE . ' p
-					WHERE (' . implode(' OR ', $sql_where) . ")
-					AND bbcode_uid <> ''
-					AND post_text " . $this->db->sql_like_expression($this->db->get_any_char() . '[img]' . $this->db->get_any_char()) . '
-					ORDER BY RAND()';
+				$sql_ary = array(
+					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text',
+					'FROM'			=> array(POSTS_TABLE => 'p'),
+					'WHERE'			=> '(' . implode(' OR ', $sql_where) . ")
+						AND p.bbcode_uid <> ''
+						AND p.post_text " . $this->db->sql_like_expression($this->db->get_any_char() . '[img]' . $this->db->get_any_char()),
+					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : 'RAND()',
+				);
+
+				/*
+				* @event block.gallery_posts_query
+				* @var array	sql_ary		The SQL data
+				* @var array	data		Block Configuration
+				* @since 2.0.3
+				*/
+				$vars = array('sql_ary', 'data');
+				extract($this->dispatcher->trigger_event('block.gallery_posts_query', compact($vars)));
+
+				$sql 	= $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
+					$row_images = array();
+
 					preg_match_all('#<IMG src="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
-					
+
 					foreach($matches as $match)
 					{
-						$images[] = array(
+						$row_images[] = array(
 							'ACTION'	=> $match[1],
 							'SRC'		=> $match[1],
 							'TITLE'		=> '',
 						);
 					}
+
+					/*
+					* @event block.gallery_posts_row
+					* @var array		$row_images		The rows array
+					* @var array		$data			Block Configuration
+					* @var array 		$row			Row data
+					* @since 2.0.3
+					*/
+					$vars = array('row_images', 'data', 'row');
+					extract($this->dispatcher->trigger_event('block.gallery_posts_row', compact($vars)));
+
+					$images = array_merge($images, $row_images);
 				}
 				$this->db->sql_freeresult($result);
 			}
@@ -261,7 +294,7 @@ class gallery_block extends base
 					$source		= $gallery_items[$source];
 					$settings	= unserialize($source['data_settings']);
 					
-					$images[] = array(
+					$image = array(
 						'ACTION'	=> $this->helper->build_image_filename($settings['filename']),
 						'SRC'		=> $this->helper->build_image_filename($settings['filename']),
 						'TITLE'		=> $source['data_title'],
@@ -269,12 +302,28 @@ class gallery_block extends base
 				}
 				else if(preg_match('#^([^&\'"<>]+)\.(?:gif|png|jpg|jpeg)$#i', $source, $match))
 				{
-					$images[] = array(
+					$image = array(
 						'ACTION'	=> $this->helper->build_image_filename($source),
 						'SRC'		=> $this->helper->build_image_filename($source),
 						'TITLE'		=> '',
 					);
 				}
+				else
+				{
+					continue;
+				}
+
+				/*
+				* @event block.gallery_row
+				* @var array		$image		The row array
+				* @var array		$data		Block Configuration
+				* @var mixed		$source		Row data
+				* @since 2.0.3
+				*/
+				$vars = array('image', 'data', 'source');
+				extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
+
+				$images[] = $image;
 			}
 		}
 
@@ -282,15 +331,6 @@ class gallery_block extends base
 		{
 			return false;	
 		}
-		
-		/*
-		* @event block.gallery_row
-		* @var array	images		The output array
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
-		$vars = array('images', 'data');
-		extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
 		foreach($images as $row)
 		{
@@ -320,6 +360,11 @@ class gallery_block extends base
 
 	public function get_config()
 	{
+		$gallery_order = array(
+			'last'		=> 'GALLERY_ORDER_LAST',
+			'rand'		=> 'GALLERY_ORDER_RAND',
+		);
+
 		$gallery_sources = array(
 			self::SOURCE_ALL			=> 'GALLERY_SOURCE_ALL',
 			self::SOURCE_ATTACHMENTS	=> 'GALLERY_SOURCE_ATTACHMENTS',
@@ -337,6 +382,7 @@ class gallery_block extends base
 			'gallery_forums'	=> array('lang' => 'GALLERY_FORUMS',		'type' => 'custom',			'method' => 'helper',	'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
 			'gallery_topics'	=> array('lang' => 'GALLERY_TOPICS',		'validate' => 'string',		'type' => 'text:40:255'),
 			'gallery_posts'		=> array('lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'),
+			'image_order'		=> array('lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'rand'),
 			'item_ids'			=> array('lang' => 'GALLERY_CUSTOM',		'type' => 'custom', 		'function' => array($this, 'acp_build_image_browser'), 'params' => array('{KEY}', '{CONFIG_VALUE}')),
 		);
 

@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class login_block extends base
 {
@@ -211,11 +205,11 @@ class login_block extends base
 			add_form_key('login', '_BLG_LOGIN');
 
 			$this->template->assign_vars(array(
-				'S_DISPLAY_FULL_LOGIN'	=> $data['full_login'],
-				'S_DISPLAY_REGISTER'	=> $data['show_register'],
-				'S_USERNAME'			=> $username,
+				'S_DISPLAY_FULL_LOGIN'		=> $data['full_login'],
+				'S_DISPLAY_REGISTER'		=> $data['show_register'],
+				'S_USERNAME'				=> $username,
 
-				'S_BLG_LOGIN_FIELDS'	=> build_hidden_fields(array(
+				'S_BLG_LOGIN_FIELDS'		=> build_hidden_fields(array(
 					'sid'		=> $this->user->session_id,
 					'jblgm'		=> $this->data['block_id'],
 				)),
@@ -225,6 +219,35 @@ class login_block extends base
 				'U_TERMS_USE'			=> $this->helper->url('ucp', 'mode=terms'),
 				'U_PRIVACY'				=> $this->helper->url('ucp', 'mode=privacy'),
 			));
+
+			if($data['alt_login'])
+			{
+				/* @var $provider_collection \phpbb\auth\provider_collection */
+				$provider_collection 	= $this->container->get('auth.provider_collection');
+				$auth_provider 			= $provider_collection->get_provider();
+				$auth_provider_data 	= $auth_provider->get_login_data();
+				
+				if($auth_provider_data)
+				{
+					if(isset($auth_provider_data['VARS']))
+					{
+						$this->template->assign_vars($auth_provider_data['VARS']);
+					}
+
+					if(isset($auth_provider_data['BLOCK_VAR_NAME']))
+					{
+						// Delete the array in the template if exists, prevent errors between blocks
+						$this->template->destroy_block_vars($auth_provider_data['BLOCK_VAR_NAME']);
+
+						foreach($auth_provider_data['BLOCK_VARS'] as $block_vars)
+						{
+							$this->template->assign_block_vars($auth_provider_data['BLOCK_VAR_NAME'], $block_vars);
+						}
+					}
+
+					$this->template->assign_var('PROVIDER_TEMPLATE_FILE', $auth_provider_data['TEMPLATE_FILE']);
+				}
+			}
 		}
 
 		unset($data);
@@ -234,6 +257,7 @@ class login_block extends base
 	public function get_config()
 	{
 		$this->display_vars = array(
+			'alt_login'		=> array('lang' => 'ALT_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
 			'full_login'	=> array('lang' => 'FULL_LOGIN',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
 			'show_register'	=> array('lang' => 'SHOW_REGISTER',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
 		);

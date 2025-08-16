@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class news_block extends base
 {
@@ -62,7 +56,7 @@ class news_block extends base
 			$topic_where = array_merge($topic_where, array(POST_STICKY, POST_ANNOUNCE));
 		}
 		
-		$sql_ary = array(
+		$sql_array = array(
 			'SELECT'	=> 'f.forum_name, t.*,
 			p.post_subject, p.post_attachment, p.post_reported, p.post_username, p.post_text, p.bbcode_uid, p.bbcode_bitfield, p.enable_smilies,
 			u.username, u.user_colour',
@@ -84,21 +78,53 @@ class news_block extends base
 		);
 
 		/*
+		* Compatibility with other extensions
+		*
+		* @event core.viewforum_get_topic_data
+		* @var	array	forum_data			Array with forum data
+		* @var	array	sql_array			The SQL array to get the data of all topics
+		* @var	int		forum_id			The forum_id whose topics are being listed
+		* @var	int		topics_count		The total number of topics for display
+		* @var	int		sort_days			The oldest topic displayable in elapsed days
+		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		*									Author, Post time, Replies, Subject, Views
+		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		*/
+		$forum_data 	= array();
+		$sort_dir 		= 'd';
+		$topics_count 	= 0;
+
+		$sort_days = $sort_key = '';
+
+		$vars = array(
+			'forum_data',
+			'sql_array',
+			'forum_id',
+			'topics_count',
+			'sort_days',
+			'sort_key',
+			'sort_dir',
+		);
+		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
+
+		/*
 		* @event block.news_query
-		* @var array	sql_ary		The SQL data
+		* @var array	sql_array	The SQL data
 		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary', 'data');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.news_query', compact($vars)));
+
+		$sql_array = $this->helper->filter_query($sql_array);
 		
 		// Count total of topics
 		if($data['pagination'])
 		{
 			$sql = $this->db->sql_build_query('SELECT', array(
 				'SELECT'	=> 'COUNT(t.topic_id) AS topic_count',
-				'FROM'		=> $sql_ary['FROM'],
-				'WHERE'		=> $sql_ary['WHERE']
+				'FROM'		=> $sql_array['FROM'],
+				'WHERE'		=> $sql_array['WHERE']
 			));
 
 			$result = $this->db->sql_query($sql);
@@ -106,7 +132,7 @@ class news_block extends base
 			$this->db->sql_freeresult($result);
 		}
 
-		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, (int)$data['max'], $start);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -174,26 +200,28 @@ class news_block extends base
 			$row_topic_id 	= (int)$row['topic_id'];
 			$u_view_topic	= $this->helper->url('viewtopic', "f=$row_forum_id&amp;t=$row_topic_id&amp;view=unread#unread");
 			$message		= '';
+			$topic_title 	= censor_text($row['post_subject']);
 	
 			// Parse the message
 			if($data['display'] == BLOCK_STYLE_CONTENT_FULL)
 			{
-				$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-				$message = censor_text($row['post_text']);
-				$message = generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+				$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+				$message 		= censor_text($row['post_text']);
+				$message 		= generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 
 				if(!empty($attachments[$row['topic_first_post_id']]))
 				{
 					parse_attachments($row['forum_id'], $message, $attachments[$row['topic_first_post_id']], $update_count);
 				}
 
-				$read_more = $this->lang->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
-				$message = \canidev\core\tools::html_truncate($message, $data['size'], "... $read_more");
+				$read_more 	= $this->lang->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
+				$message 	= \canidev\core\tools::html_truncate($message, $data['size'], "... $read_more");
 			}
 			
 			$topic_row = array(
 				'TOPIC_ID'				=> $row_topic_id,
-				'TOPIC_TITLE'			=> censor_text($row['post_subject']),
+				'TOPIC_TITLE'			=> $topic_title,
+				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 				'S_HAS_ATTACHMENTS'		=> (!empty($attachments[$row['topic_first_post_id']])) ? true : false,
 				'FORUM_NAME'			=> $row['forum_name'],

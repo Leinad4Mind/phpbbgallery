@@ -1,11 +1,11 @@
 <?php
-/**
- * @package Ext Common Core
- * @version 1.1.4 26/01/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/*
+* @package Ext Common Core
+* @version v1.0.12 16/08/2021
+*
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 namespace canidev\core;
 
@@ -13,64 +13,300 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class lib
 {
-	/** @deprecated use constants::VERSION instead */
-	const VERSION	= constants::VERSION;
+	const VERSION		= '1.0.13';
 	
-	/** @var \phpbb\config\db */
+	private $items				= array();
+	private $langkeys			= array();
+	private $in_acp_extensions 	= false;
+	
 	private $config;
-	
-	/** @var \phpbb\db\driver\driver_interface */
+	private $container;
 	private $db;
-
-	/** @var \phpbb\event\dispatcher_interface */
 	private $dispatcher;
-
-	/** @var \phpbb\language\language */
-	private $language;
-
-	/** @var \phpbb\path_helper */
-	private $path_helper;
-
-	/** @var \phpbb\request\request_interface */
+	private $lang;
 	private $request;
-
-	/** @var \canidev\core\template */
 	private $template;
-
-	/** @var \phpbb\user */
 	private $user;
-
-	/** @var string */
 	private $phpbb_root_path;
+	private $php_ext;
+	
+	static $instance;
 
 	/**
-	 * Constructor
-	 *
-	 * @param ContainerInterface 	$container		Service container interface
-	 * @access public
-	 */
+	* Constructor
+	*
+	* @param ContainerInterface 	$container		Service container interface
+	*
+	* @access public
+	*/
 	public function __construct(ContainerInterface $container)
 	{
+		$cache 			= $container->get('cache.driver');
+		$plugins_path 	= 'canidev/core/plugins/';
+
 		$this->config			= $container->get('config');
+		$this->container 		= $container;
 		$this->db				= $container->get('dbal.conn');
 		$this->dispatcher 		= $container->get('dispatcher');
-		$this->language			= $container->get('language');
-		$this->path_helper 		= $container->get('path_helper');
+		$this->lang				= $container->get('language');
 		$this->request 			= $container->get('request');
-		$this->template			= $container->get('canidev.core.template');
+		$this->template			= template::get_instance($container);
 		$this->user				= $container->get('user');
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
+		$this->php_ext			= $container->getParameter('core.php_ext');
+
+		// Get additional addons for the extensions
+		if(($this->items = $cache->get('_cbbext_plugins')) === false)
+		{
+			$this->items = array();
+
+			$base_path	= $this->phpbb_root_path . 'ext/' . $plugins_path;
+			$directory	= new \RecursiveDirectoryIterator($base_path);
+			$iterator	= new \RecursiveIteratorIterator($directory);
+			$regex		= new \RegexIterator($iterator, '/([a-z0-9_\-]+)\.' . $this->php_ext . '$/i');
+
+			foreach($regex as $file)
+			{
+				$basename = $file->getBasename('.' . $this->php_ext);
+				
+				if($basename == 'base')
+				{
+					continue;
+				}
+
+				$path = str_replace(
+					array('\\', $base_path),
+					array('/', ''),
+					$file->getPathInfo()->getPathname()
+				);
+
+				if(strpos($path, '/') !== false)
+				{
+					$path_parts = explode('/', $path, 2);
+					
+					$path 		= $path_parts[0];
+					$basename	= $path_parts[1] . '/' . $basename;
+				}
+
+				if(!isset($this->items[$path]))
+				{
+					$this->items[$path] = array();
+				}
+				
+				$this->items[$path][] = $basename;
+			}
+
+			$cache->put('_cbbext_plugins', $this->items);
+		}
+		
+		// Initialize items and parse core events
+		foreach($this->items as $namespace => $items)
+		{
+			foreach($items as $id => $item)
+			{
+				$fullname	= $plugins_path . $namespace . '/' . $item;
+				$filename	= $this->phpbb_root_path . 'ext/' . $fullname . ".$this->php_ext";
+				$class_name = '\\' . str_replace('/', '\\', $fullname);
+
+				if(!file_exists($filename) || !class_exists($class_name))
+				{
+					unset($this->items[$namespace][$id]);
+					continue;
+				}
+					
+				$this->items[$namespace][$id] = $item = new $class_name($container);
+				
+				if($item->is_runnable())
+				{
+					foreach($item->core_events() as $event_name => $params)
+					{
+						if(is_string($params))
+						{
+							$this->dispatcher->addListener($event_name, array($item, $params), -1);
+						}
+						else if(is_string($params[0]))
+						{
+							$this->dispatcher->addListener($event_name, array($item, $params[0]), isset($params[1]) ? $params[1] : -1);
+						}
+						else
+						{
+							foreach($params as $listener)
+							{
+								$this->dispatcher->addListener($event_name, array($item, $listener[0]), isset($listener[1]) ? $listener[1] : -1);
+							}
+						}
+					}
+				}
+			}
+		}
+	
+		// Custom events
+		$this->dispatcher->addListener('core.user_setup_after', 				array($this, 'user_setup_after'),	99); // Make sure it is loaded first
+		$this->dispatcher->addListener('core.page_footer', 						array($this, 'page_footer'),		-10);
+		$this->dispatcher->addListener('core.adm_page_footer', 					array($this, 'adm_page_footer'),	-10);
+		$this->dispatcher->addListener('core.append_sid',						array($this, 'fix_controller_urls'));
+		$this->dispatcher->addListener('core.acp_extensions_run_action',		array($this, 'check_acp_extensions_module')); // for phpBB < 3.2.1
+		$this->dispatcher->addListener('core.acp_extensions_run_action_before',	array($this, 'check_acp_extensions_module')); // for phpBB >= 3.2.1
+		
+		$this->dispatcher->addListener('core.modify_text_for_display_after',	array($this, 'modify_text_for_display'));
+		$this->dispatcher->addListener('core.modify_format_display_text_after',	array($this, 'modify_text_for_display'));
 	}
 	
-	/** 
-	 * List all the groups for the current user
-	 * @return array 	Array with user group IDs
-	 */
+	public function user_setup_after()
+	{
+		$this->user->add_lang_ext('canidev/core', 'main');
+
+		// Set Core template directories
+		$this->template->add_custom_namespace('canidev_core', $this->phpbb_root_path . 'ext/canidev/core/', true);
+		$this->template->assign_var('CANIDEV_CORE_STARTED', true);
+	}
+	
+	public function page_footer()
+	{
+		$is_admin	= defined('IN_ADMIN');
+		$js_events 	= array();
+
+		// Execute ajax request
+		if($this->request->is_ajax())
+		{
+			$json_request = json_response::get_instance();
+
+			if($json_request->is_requested())
+			{
+				$json_request
+					->add_html($this->template->assign_display('body'))
+					->send();
+			}
+		}
+
+		foreach($this->items as $namespace => $null)
+		{
+			if($event_string = $this->get_js_events($namespace, $is_admin))
+			{
+				$js_events[] = $event_string;
+			}
+		}
+		
+		$this->template->assign_var('PHPBB_BRANCH', str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x');
+		
+		// Add core assets
+		$this->template->prepend_assets = true;
+		$this->template->append_asset('css', '@canidev_core/../theme/cbbcore.css');
+
+		$this->template->append_asset('script', array(
+			'type'		=> 'text/javascript',
+			'content'	=> implode("\n", $js_events),
+		));
+
+		$this->template->append_asset('js', '@canidev_core/js/cbbcore.min.js');
+
+		if(sizeof($this->langkeys))
+		{
+			$this->template->append_asset('script', array(
+				'id'		=> 'core-lang',
+				'type'		=> 'application/json',
+				'content'	=> json_encode($this->langkeys, JSON_PRETTY_PRINT),
+			));
+		}
+
+		$this->template->assets_to_template();
+	}
+
+	public function check_acp_extensions_module()
+	{
+		$this->in_acp_extensions = true;
+	}
+
+	public function adm_page_footer()
+	{
+		$this->page_footer();
+
+		// Build links to extensions configurations
+		if($this->in_acp_extensions)
+		{
+			$template_ary = $this->template->load_context($this->container);
+
+			if(!isset($template_ary['enabled']))
+			{
+				return;
+			}
+
+			$module_ary = $this->container->get('cache')->get('_modules_acp');
+			$modules 	= array();
+
+			if($module_ary !== false)
+			{
+				foreach($module_ary['modules'] as $row)
+				{
+					if(preg_match('#^\\\(canidev\\\[a-z_\-0-9]+)\\\acp\\\([a-z_\-0-9]+)$#', $row['module_basename'], $match))
+					{
+						$ext_key = str_replace('\\', '/', $match[1]);
+
+						if(!isset($modules[$ext_key]))
+						{
+							$modules[$ext_key] = $match[2];
+						}
+					}
+				}
+			}
+
+			foreach($template_ary['enabled'] as $ext_key => $ext_data)
+			{
+				if(isset($modules[$ext_data['NAME']]))
+				{
+					$this->template->alter_block_array(
+						'enabled[' . $ext_key . '].actions',
+						array(
+							'ACTION_AJAX' 	=> 'false',
+							'L_ACTION'		=> $this->lang->lang('CONFIGURE'),
+		                    'U_ACTION'	 	=> append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, 'i=-' . str_replace('/', '-', $ext_data['NAME']) . '-acp-' . $modules[$ext_data['NAME']], true, $this->user->session_id),
+		                )
+					);
+				}
+			}
+		}
+	}
+	
+	public function fix_controller_urls($event)
+	{
+		// In some strange cases, the url is not formed correctly, doubling "app.php" so, we fix it.
+		if(!$this->config['enable_mod_rewrite'] && substr_count($event['url'], 'app.') > 1)
+		{
+			$event['url'] = preg_replace('#(app\.' . $this->php_ext . '/){2,}#', '$1', $event['url']);
+		}
+	}
+	
+	public function modify_text_for_display($event)
+	{
+		if($this->dispatcher->hasListeners('canidev.core.modify_text_for_display'))
+		{
+			$text 	= $event['text'];
+			$finder = dom::string_to_xpath($text);
+
+			if($finder === false)
+			{
+				return $text;
+			}
+			
+			/*
+			* @event canidev.core.modify_text_for_display
+			* @var	DomXPath		$finder		XPath Object
+			* @var	string			$text		Original Post Text (Read Only)
+			* @since 1.0.4
+			*/
+			$vars = array('finder', 'text');
+			extract($this->dispatcher->trigger_event('canidev.core.modify_text_for_display', compact($vars)));
+
+			$event['text'] = dom::xpath_to_string($finder);
+		}
+	}
+	
+	/* List all the groups for the current user */
 	public function get_user_groups()
 	{
 		if(empty($this->user->data['group_ary']))
 		{
-			$this->user->data['group_ary'] = [];
+			$this->user->data['group_ary'] = array();
 
 			$sql = 'SELECT group_id
 				FROM ' . USER_GROUP_TABLE . '
@@ -87,45 +323,20 @@ class lib
 		return $this->user->data['group_ary'];
 	}
 	
-	/**
-	 * Check if user has permissions, based on groups
-	 * 
-	 * @param array|string 			$valid_groups 		Valid Group's IDs
-	 * @param array|string|false 	$check_groups 		Group's IDs to check
-	 * @param int|null 				$default_group_id 	Default user group (user with $check_groups is defined)
-	 * 
-	 * @return bool
-	 */
-	public function group_auth($valid_groups, $check_groups = false, $default_group_id = null)
+	public function group_auth($valid_groups, $check_groups = false)
 	{
-		if(is_string($check_groups))
+		$check_groups	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
+		$check_groups	= (is_array($check_groups) ? $check_groups : explode(',', $check_groups));
+		$group_ary		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
+
+		if($valid_groups == 'all' || sizeof(array_intersect($group_ary, $check_groups)))
 		{
-			$check_groups = explode(',', $check_groups);
+			return true;
 		}
 		
-		if(is_string($valid_groups))
-		{
-			if(strpos($valid_groups, 'default;') === 0)
-			{
-				$check_groups = ($check_groups === false) ? [$this->user->data['group_id']] : (($default_group_id) ? [$default_group_id] : $check_groups[0]);
-				$valid_groups = str_replace('default;', '', $valid_groups);
-			}
-		}
-
-		$check_groups 	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
-		$group_ary 		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
-
-		return ($valid_groups == 'all' || count(array_intersect($group_ary, $check_groups)));
+		return false;
 	}
 	
-	/**
-	 * Get data from core file
-	 * 
-	 * @param string 	$file
-	 * @param bool 		$process 	Define if language variables will be parsed
-	 * 
-	 * @return string
-	 */
 	public function get_data($file, $process = false)
 	{
 		$filename = $this->phpbb_root_path . 'ext/canidev/core/data/' . $file;
@@ -134,41 +345,75 @@ class lib
 		if($process)
 		{
 			$output = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches) {
-				return $this->language->is_set($matches[1]) ? $this->language->lang($matches[1]) : '';
+				return $this->lang->is_set($matches[1]) ? $this->lang->lang($matches[1]) : '';
 			}, $output);
 		}
 
 		return $output;
 	}
-
-	/**
-	 * @deprecated use template->set_js_lang instead
-	 */
-	public function set_js_lang($ary)
+	
+	private function get_js_events($namespace, $is_admin)
 	{
-		$this->template->set_js_lang($ary);
+		$js_code = array();
+
+		foreach($this->items[$namespace] as $item)
+		{
+			if($item->is_runnable())
+			{
+				$events = (!$is_admin) ? $item->frontend_js_events() : $item->admin_js_events();
+				
+				if(sizeof($events))
+				{
+					foreach($events as $event_name => $code)
+					{
+						$js_code[] = "cbbCore.addListener('$event_name'," . str_replace(array("\n", "\t", '{ ', ' }'), array('', '', '{', '}'), $code) . ');';
+					}
+				}
+			}
+		}
+		
+		if(sizeof($js_code))
+		{
+			array_unshift($js_code, "\n/* " . $namespace . ' */');
+		}
+		
+		return trim(implode("\n", $js_code));
 	}
 
-	/**
-	 * Show modal dialog (only for ajax request)
-	 * 
-	 * @param bool 			$check 				Set where dialog submit must be checked
-	 * @param string 		$title				Dialog title
-	 * @param array 		$hidden 			Custom hidden fields
-	 * @param string 		$html_body 			Template filename to be loaded
-	 * @param array|null 	$json_data 			Additional json data sended to response
-	 * @param string 		$u_action 			Action for dialog form
-	 * 
-	 * @return bool|void
+	public function set_js_lang($ary)
+	{
+		if(array_keys($ary) === range(0, count($ary) - 1))
+		{
+			$new_ary = array();
+
+			foreach($ary as $key)
+			{
+				$new_ary[$key] = $this->lang->lang($key);
+			}
+
+			return $this->set_js_lang($new_ary);
+		}
+
+		$this->langkeys = array_merge($this->langkeys, $ary);
+
+		if($this->request->is_ajax())
+		{
+			\canidev\core\json_response::get_instance()->add_component('lang', $this->langkeys);
+		}
+	}
+
+	/*
+	 * modal_dialog (only ajax)
 	*/
-	public function modal_dialog($check, $title = '', $hidden = [], $html_body = '@canidev_core/confirmbox.html', $json_data = null, $u_action = '')
+	public function modal_dialog($check, $title = '', $hidden = array(), $html_body = 'confirm_body.html', $u_action = '')
 	{
 		if(!$this->request->is_ajax())
 		{
 			return false;
 		}
 
-		$confirm = $this->request->variable('confirm', false, false, \phpbb\request\request_interface::POST);
+		$path_helper 	= $this->container->get('path_helper');
+		$confirm 		= $this->request->variable('confirm', false, false, \phpbb\request\request_interface::POST);
 
 		if($check)
 		{
@@ -183,183 +428,62 @@ class lib
 			return true;
 		}
 
-		$hidden = array_merge($hidden, [
+		$hidden = array_merge($hidden, array(
 			'confirm_uid'	=> $this->user->data['user_id'],
 			'sess'			=> $this->user->session_id,
 			'sid'			=> $this->user->session_id,
-		]);
+		));
 
-		$formatted_title = (!$this->language->is_set($title)) ? $this->language->lang('CONFIRM') : $this->language->lang($title);
+		$title = (!$this->lang->is_set($title)) ? $this->lang->lang('CONFIRM') : $this->lang->lang($title);
 
 		if(defined('IN_ADMIN') && isset($this->user->data['session_admin']) && $this->user->data['session_admin'])
 		{
-			adm_page_header($formatted_title);
+			adm_page_header($title);
 		}
 		else
 		{
-			page_header($formatted_title);
+			page_header($title);
 		}
+
+		$this->template->set_filenames(array(
+			'body' => $html_body
+		));
 
 		// re-add sid / transform & to &amp; for user->page (user->page is always using &)
 		$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $this->user->page['page']);
-		$u_action = reapply_sid($this->path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
+		$u_action = reapply_sid($path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
 
-		$this->template->assign_vars([
-			'MESSAGE_TITLE'		=> $formatted_title,
-			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
+		$this->template->assign_vars(array(
+			'MESSAGE_TITLE'		=> $title,
+			'MESSAGE_TEXT'		=> (!$this->lang->is_set($title . '_CONFIRM')) ? $title : $this->lang->lang($title . '_CONFIRM'),
 
-			'YES_VALUE'			=> $this->language->lang('YES'),
+			'YES_VALUE'			=> $this->lang->lang('YES'),
 			'S_CONFIRM_ACTION'	=> $u_action,
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
 			'S_AJAX_REQUEST'	=> true,
-		]);
+		));
 
-		/**
-		 * @event canidev.core.dialog
-		 * 
-		 * @var string 		title		Dialog title
-		 * @var array 		hidden 		Additional hidden fields
-		 * @var string 		html_body 	Template filename
-		 * @var array 		json_data 	JSON Data
-		 * @since 1.1.0
-		 */
-		$vars = ['title', 'hidden', 'html_body', 'json_data'];
-		extract($this->dispatcher->trigger_event('canidev.core.modal_dialog', compact($vars)));
-
-		$this->template->set_filenames([
-			'body' => $html_body
-		]);
-
-		$response = \canidev\core\JsonResponse::getInstance();
-
-		if($json_data !== null)
-		{
-			$response->add($json_data);
-		}
-
-		$response->send([
+		$response = \canidev\core\json_response::get_instance();
+		$response->send(array(
 			'isModalDialog'		=> true,
 			
 			'MESSAGE_BODY'		=> $this->template->assign_display('body'),
-			'MESSAGE_TITLE'		=> $formatted_title,
-			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
+			'MESSAGE_TITLE'		=> $title,
+			'MESSAGE_TEXT'		=> (!$this->lang->is_set($title . '_CONFIRM')) ? $title : $this->lang->lang($title . '_CONFIRM'),
 
-			'YES_VALUE'			=> $this->language->lang('YES'),
+			'YES_VALUE'			=> $this->lang->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
-		]);
+		));
 	}
-
-	/**
-	 * Perform a request to api
-	 * 
-	 * @param string 		$namespace
-	 * @param string 		$action
-	 * @param array 		$data
-	 * 
-	 * @return array|null
-	 */
-	public function apiRequest($namespace, $action, $data = [])
-	{
-		$api 	= $this->apiData($namespace, $action, 'array');
-		$client = new \GuzzleHttp\Client();
-		$key 	= phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
-
-		if($api !== null)
-		{
-			try
-			{
-				$host = $this->request->header('HOST');
-				$host = ($host) ? $host : $this->config['server_name']; // For CLI
-
-				$response = $client->post($api['url'], [
-					'exceptions' 	=> false,
-					'timeout' 		=> 10,
-					$key			=> $data,
-					'headers' => [
-						'User-Agent' 	=> $api['agent'],
-						'X-Api-Token'	=> $api['token'],
-						'X-Api-Host'	=> $host,
-					]
-				]);
-
-				$content_type = $response->getHeader('Content-Type');
-				$content_type = is_array($content_type) ? $content_type[0] : $content_type;
-
-				if($content_type == 'application/json')
-				{
-					return array_merge(
-						[
-							'code'	=> $response->getStatusCode(),
-						],
-						json_decode($response->getBody()->getContents(), true)
-					);
-				}
-			}
-			catch(\Throwable $th) {}
-		}
-
-		return null;
-	}
-
-	public function apiData($namespace, $action, $return_key = null, $data = null)
-	{
-		$config_file 	= __DIR__ . '/config/api.php';
-		$api_url 		= sprintf('https://api.canidev.com/%s/%s', $namespace, $action);
-		$data 			= ($data === null) ? [] : $data;
-
-		if(file_exists($config_file))
-		{
-			require($config_file);
-
-			switch($return_key)
-			{
-				case 'array':
-					return [
-						'agent'		=> 'canidev-request/1.0',
-						'token'		=> $api_token,
-						'url'		=> $api_url,
-					];
-				
-				case 'url':
-					$data['token'] = $api_token;
-					return $api_url . '?' . http_build_query($data, '', '&');
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param ContainerInterface|null 	$container		Service container interface
-	 * @return static
-	 * @deprecated Use service instead
-	 */
+	
 	static public function get_instance($container = null)
 	{
-		if($container === null)
+		if(!self::$instance && $container !== null)
 		{
-			global $phpbb_container;
-
-			$container = $phpbb_container;
+			self::$instance = new self($container);
 		}
 
-		$request = $container->get('request');
-
-		if(!$container->has('canidev.core.lib') && !$request->variable('refresh', false))
-		{
-			$protocol 	= $request->is_secure() ? 'https://' : 'http://';
-			$uri 		= $request->server('REQUEST_URI');
-
-			$container->get('cache.driver')->purge();
-
-			$uri .= ((strpos($uri, '?') === false) ? '?' : '&');
-			$uri .= 'refresh=1';
-
-			redirect($protocol . $request->server('HTTP_HOST') . $uri);
-		}
-		
-		return $container->get('canidev.core.lib');
+		return self::$instance;
 	}
 }

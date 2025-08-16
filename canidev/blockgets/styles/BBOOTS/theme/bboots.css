@@ -1,6 +1,6 @@
 /*
  * cBB Blockgets (BBOOTS stylesheet)
- * Copyright (c) 2020, CaniDev
+ * Copyright (c) 2021, CaniDev
  * license https://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -28,6 +28,11 @@
 	color: #808080 !important;
 }
 
+.blg-block.style-alternative .block-content {
+	border: none !important;
+	padding: 0 !important;
+}
+
 .fb-lastpost-title {
 	width: 150px !important;
 }
@@ -40,11 +45,19 @@
 
 .blg-admin-bar,
 a.blg-admin-opener {
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 }
 
 .contact-table {
 	border-spacing: 8px !important;
+}
+
+/* Login Block
+-------------------------- */
+.blg-block .oauth-content {
+	margin-top: 15px;
+}
+
+.blg-block .oauth-content h3 {
+	font-size: 18px;
 }

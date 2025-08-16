@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class top_topics_block extends base
 {
@@ -44,7 +38,7 @@ class top_topics_block extends base
 			return true;
 		}
 		
-		$sql_ary = array(
+		$sql_array = array(
 			'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
 			'FROM'		=> array(TOPICS_TABLE => 't'),
 			'LEFT_JOIN' => array(
@@ -57,14 +51,14 @@ class top_topics_block extends base
 
 		if($this->config['load_db_lastread'])
 		{
-			$sql_ary['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
+			$sql_array['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
 
-			$sql_ary['LEFT_JOIN'][] = array(
+			$sql_array['LEFT_JOIN'][] = array(
 				'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
 				'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
 			);
 
-			$sql_ary['LEFT_JOIN'][] = array(
+			$sql_array['LEFT_JOIN'][] = array(
 				'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
 				'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
 			);
@@ -73,8 +67,8 @@ class top_topics_block extends base
 		switch($data['mode'])
 		{
 			case 'active':
-				$sql_ary['WHERE'] .= ' AND t.topic_posts_approved > 1';
-				$sql_ary['ORDER_BY'] = 't.topic_last_post_time DESC, t.topic_posts_approved DESC';
+				$sql_array['WHERE'] .= ' AND t.topic_posts_approved > 1';
+				$sql_array['ORDER_BY'] = 't.topic_last_post_time DESC, t.topic_posts_approved DESC';
 			break;
 
 			case 'unread':
@@ -85,13 +79,13 @@ class top_topics_block extends base
 					return true;
 				}
 					
-				$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('t.topic_id', $topics);
-				$sql_ary['ORDER_BY'] = 't.topic_time DESC';
+				$sql_array['WHERE'] .= ' AND ' . $this->db->sql_in_set('t.topic_id', $topics);
+				$sql_array['ORDER_BY'] = 't.topic_time DESC';
 			break;
 			
 			case 'viewed':
-				$sql_ary['WHERE'] .= ' AND t.topic_views > 1';
-				$sql_ary['ORDER_BY'] = 't.topic_views DESC';
+				$sql_array['WHERE'] .= ' AND t.topic_views > 1';
+				$sql_array['ORDER_BY'] = 't.topic_views DESC';
 			break;
 			
 			default:
@@ -100,16 +94,48 @@ class top_topics_block extends base
 		}
 
 		/*
+		* Compatibility with other extensions
+		*
+		* @event core.viewforum_get_topic_data
+		* @var	array	forum_data			Array with forum data
+		* @var	array	sql_array			The SQL array to get the data of all topics
+		* @var	int		forum_id			The forum_id whose topics are being listed
+		* @var	int		topics_count		The total number of topics for display
+		* @var	int		sort_days			The oldest topic displayable in elapsed days
+		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		*									Author, Post time, Replies, Subject, Views
+		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		*/
+		$forum_data 	= array();
+		$sort_dir 		= 'd';
+
+		$sort_days = $sort_key = '';
+		$topics_count = $total_topic_count = $forum_id = 0;
+
+		$vars = array(
+			'forum_data',
+			'sql_array',
+			'forum_id',
+			'topics_count',
+			'sort_days',
+			'sort_key',
+			'sort_dir',
+		);
+		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
+
+		/*
 		* @event block.top_topics_query
-		* @var array	sql_ary		The SQL data
+		* @var array	sql_array		The SQL data
 		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary', 'data');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.top_topics_query', compact($vars)));
 
-		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
-		$result = $this->db->sql_query_limit($sql, (int)$data['topic_limit']);
+		$sql_array 	= $this->helper->filter_query($sql_array);
+		$sql 		= $this->db->sql_build_query('SELECT', $sql_array);
+		$result 	= $this->db->sql_query_limit($sql, (int)$data['topic_limit']);
+		
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$topic_list[] = $row['topic_id'];
@@ -146,9 +172,10 @@ class top_topics_block extends base
 
 		foreach($rowset as $topic_id => $row)
 		{
-			$unread_topic 	= false;
-			$replies 		= (int)$row['topic_posts_approved'] - 1;
-			$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+			$unread_topic 			= false;
+			$replies 				= (int)$row['topic_posts_approved'] - 1;
+			$view_topic_url_params 	= 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
+			$topic_title 			= censor_text($row['topic_title']);
 
 			if($row['topic_status'] != ITEM_MOVED)
 			{
@@ -163,7 +190,8 @@ class top_topics_block extends base
 
 			$topic_row = array(
 				'FORUM_NAME'			=> $row['forum_name'],
-				'TOPIC_TITLE'			=> censor_text($row['topic_title']),
+				'TOPIC_TITLE'			=> $topic_title,
+				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 				'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
