@@ -49,9 +49,11 @@ class main_module
 		if ($submit)
 		{
 			$notes_popup = $request->variable('notes_popup', 0);
+			$notes_slide = $request->variable('notes_slide', 0);
 
 			$sql = 'UPDATE ' . USERS_TABLE . ' set ' . $db->sql_build_array('UPDATE', [
 				'user_popup_notes'	=> $notes_popup,
+				'user_slide_notes'	=> $notes_slide,
 			]) . ' WHERE user_id = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
 
@@ -61,6 +63,7 @@ class main_module
 
 		$template->assign_vars([
 			'NOTES_POPUP'	=> ($user->data['user_popup_notes']) ? true : false,
+			'NOTES_SLIDE'	=> ($user->data['user_slide_notes']) ? true : false,
 			'U_FORM_ACTION'	=> $this->u_action,
 		]);
 	}
