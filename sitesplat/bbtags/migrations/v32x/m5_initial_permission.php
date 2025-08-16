@@ -11,7 +11,7 @@
 namespace sitesplat\bbtags\migrations\v32x;
 
 /**
-* Migration stage 3: Initial permission
+* Migration stage 5: Initial permission
 */
 class m5_initial_permission extends \phpbb\db\migration\migration
 {

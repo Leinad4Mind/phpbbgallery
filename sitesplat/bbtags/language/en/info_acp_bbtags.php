@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'BBTAGS_ON_INDEX_EXPLAIN'			=> 'Display a tag cloud',
 	'INDEX_ONLY'						=> 'Index only',
 	'PRE_BBTAGS'						=> 'Pre BBtags',
-	'PRE_BBTAGS_EXPLAIN'				=> 'Dispaly the tag auto-suggestion when the user starts typing',
+	'PRE_BBTAGS_EXPLAIN'				=> 'Display the tag auto-suggestion when the user starts typing',
 	'SAVE'								=> 'Save',
 	
 	'TAG'								=> 'Tag',
@@ -41,7 +41,7 @@ $lang = array_merge($lang, array(
 	'BBTAGS_NO_TAGS'					=> 'No BBtags found',
 	
 	'SS_HELPER_NOTY'	                => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-	'BBTAGS_NOTICE'						=> '<div class="phpinfo"><p>The extension settings are under <strong>%1$s » %2$s » %3$s</strong>.<br />Don\'t forget to review/adjust the <strong>User Permission Roles</strong> under <strong>Permissions &#187; Permission roles &#187; User Roles (Select the Role and hit edit) &#187; Misc (tab): "Can Manage BBtags"</strong>.</p></div>',
+	'BBTAGS_NOTICE'						=> '<div class="phpinfo"><p>The extension settings are under <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Don\'t forget to review/adjust the <strong>User Permission Roles</strong> under <strong>Permissions &#187; Permission roles &#187; User Roles (Select the Role and hit edit) &#187; Misc (tab): "Can Manage BBtags"</strong>.</p></div>',
 
     'ACP_BBTAGS_MANAGE'					=> 'Manage the current topic tags',
 	'ACP_BBTAGS_MANAGE_EXPLAIN'			=> 'Using this form you can add, edit, view and delete tags',
@@ -62,7 +62,6 @@ $lang = array_merge($lang, array(
 	'ACP_BBTAGS_NOTICE_CLOSE'			=> 'Close',
 	
 	'ACP_BBTAGS_VERSION'				=> '1.1.2',
-	'ACP_BBTAGS'						=> 'BBTags',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	
 ));

@@ -174,10 +174,10 @@ class main
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$replies = $this->content_visibility->get_count('topic_posts', $row, $row['forum_id']) - 1;
-				topic_status($row, $replies, ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false, $folder_img, $folder_alt, $topic_type);
+				topic_status($row, $replies, (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$row['topic_id']]) ? true : false, $folder_img, $folder_alt, $topic_type);
 				
-				$unread_topic = ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false;
-			        $topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $row['forum_id'])) ? true : false;
+				$unread_topic = (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['forum_id']][$row['topic_id']]) ? true : false;
+				$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $row['forum_id'])) ? true : false;
 				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 				$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') .  '&amp;t=' . $row['topic_id'], true, $this->user->session_id) : '';

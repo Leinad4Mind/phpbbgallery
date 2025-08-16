@@ -61,13 +61,12 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'			=> 'load_lang',
-			'core.page_header_after'	=> 'load_tags',
-			
-			'core.posting_modify_template_vars'	=> 'modify_template_vars',
-			'core.submit_post_end'				=> 'save_tags',
-                        'core.delete_topics_after_query'				=> 'delete_tags',
-			'core.permissions'					=> 'add_permission',
+			'core.user_setup'						=> 'load_lang',
+			'core.page_header_after'				=> 'load_tags',
+			'core.posting_modify_template_vars'		=> 'modify_template_vars',
+			'core.submit_post_end'					=> 'save_tags',
+            'core.delete_topics_after_query'		=> 'delete_tags',
+			'core.permissions'						=> 'add_permission',
 		);
 	}
 
@@ -165,7 +164,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->template->assign_block_vars($block_name, array (
 				'TAG'	=> $tag,
-				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->Slug($tag)))
+				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->Slug($tag, array('transliterate' => true))))
 			));
 		}
 	}

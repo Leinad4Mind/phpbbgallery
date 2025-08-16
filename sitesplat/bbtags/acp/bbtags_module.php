@@ -63,7 +63,7 @@ class bbtags_module
 			case 'gaUpdate':
 				$this->db->sql_return_on_error(true);
 				$sql = 'UPDATE ' . $this->table_bbtags . ' SET tag = "' . $this->manager->clean_tag(utf8_normalize_nfc($this->request->variable('tag', '', true))) . '", 
-						route = "' . $this->manager->Slug($this->manager->clean_tag(utf8_normalize_nfc($this->request->variable('tag', '', true)))) . '"
+						route = "' . $this->manager->Slug($this->manager->clean_tag(utf8_normalize_nfc($this->request->variable('tag', '', true))), array('transliterate' => true)) . '"
 						WHERE id = ' . $this->request->variable('id', '');
 				$this->db->sql_query($sql);
 
