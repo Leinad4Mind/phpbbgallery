@@ -10,7 +10,7 @@ head.ready(function () {
 			},
 			success: function (s, x) {
 		/* sucks, but a bug in phpBB 3.1 forces us to fix phpbb_root_path in get_user_avatar */
-				s = s.replace(/\.\.\/\.\.\/download/g, 'download'); 
+		//		s = s.replace(/\.\.\/\.\.\/download/g, 'download'); 
 				$("#fltl").html( s );
 			}
 		});

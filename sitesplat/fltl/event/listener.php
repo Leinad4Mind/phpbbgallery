@@ -24,10 +24,11 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $template;
 	protected $phpbb_container;
+	protected $dispatcher;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, Container $phpbb_container, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, Container $phpbb_container, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->auth = $auth;
@@ -35,6 +36,7 @@ class listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->template = $template;
 		$this->phpbb_container = $phpbb_container;
+		$this->dispatcher = $dispatcher;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -66,6 +68,18 @@ class listener implements EventSubscriberInterface
 			$row['post_text'] = (version_compare($this->config['version'], '3.2.*', '<')) ? censor_text($row['post_text']) : htmlentities(censor_text($row['post_text']));
 			$row['post_text'] = (utf8_strlen($row['post_text']) > 50) ? utf8_substr($row['post_text'], 0, 50) . '&#91;&hellip;&#93;' : $row['post_text'];
 	
+			/**
+			* Event to modify data before it is outputted
+			*
+			* @event sitesplat.fltl.controller_echo_before
+			* @var array	row	Array with current row data
+			* @since 2.1.13
+			*/
+			$vars = array(
+				'row',
+			);
+			extract($this->dispatcher->trigger_event('sitesplat.fltl.listener_echo_before', compact($vars)));
+
 			$this->template->assign_block_vars('fltl', array(
 				'U_TOPIC'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
 				'U_LAST_POST'		=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
