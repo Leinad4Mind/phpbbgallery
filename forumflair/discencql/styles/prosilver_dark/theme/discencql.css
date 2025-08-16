@@ -1,8 +1,6 @@
 /*	phpBB3 Style Sheet
 	--------------------------------------------------------------
 	phpBB Extension Name:	Discussion Encouragement With Quick Login
-	Extension Version:		1.0.0
-	Last Updated:			26/01/2022
 	Extension Developer:	ForumFlair (https://forumflair.co.uk)
 	Compatible Style:		Prosilver_Dark
 	--------------------------------------------------------------
@@ -26,7 +24,7 @@
 .discencql-fieldset { margin: 0 auto; max-width: 250px; }
 .discencql-fieldset label { font-size: 1.2em; padding: 0 }
 .discencql-fieldset .inputbox { border-radius: 4px; margin: 0 0 8px 0; padding: 8px 0; text-indent: 6px; width: 100%; }
-.discencql-autologin { display: block; margin: auto auto 8px auto; width: fit-content; }
+.discencql-autologin { display: block; margin: auto auto 8px auto; width: fit-content; width: -moz-fit-content; }
 .discencql-autologin input[type="checkbox"] { margin: 0 0 0 4px; vertical-align: bottom; }
 
 /* RTL Quick Login Form */
