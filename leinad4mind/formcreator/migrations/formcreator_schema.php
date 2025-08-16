@@ -1,13 +1,14 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace dmzx\formcreator\migrations;
+namespace leinad4mind\formcreator\migrations;
 
 class formcreator_schema extends \phpbb\db\migration\migration
 {
@@ -15,7 +16,7 @@ class formcreator_schema extends \phpbb\db\migration\migration
 	{
 		return array(
 			'add_tables'	=> array(
-				$this->table_prefix . 'form_maker'	=> array(
+				$this->table_prefix . 'form_creator'	=> array(
 					'COLUMNS'	=> array(
 						'id'				=> array('UINT', null, 'auto_increment'),
 						'form_id'			=> array('UINT', '0'),
@@ -36,7 +37,7 @@ class formcreator_schema extends \phpbb\db\migration\migration
 	{
 		return 	array(
 			'drop_tables' => array(
-				$this->table_prefix . 'form_maker',
+				$this->table_prefix . 'form_creator',
 			),
 		);
 	}

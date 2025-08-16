@@ -1,8 +1,9 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -39,15 +40,12 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'CLOSE_FORM'				=> 'Cancel',
 	'OPEN_FORM'					=> 'Form Mode',
-	'CLOSE_FORM_EXPLAIN'		=> 'Switch to Post Mode, copying Form data to the post',
-	'CLOSE_FORM_EXPLAIN'		=> 'Switch back to Post Mode (data will not be posted)',
-	'FORM_HELP_1'				=> 'Editing using <strong>Form Mode</strong> is not yet written...',
+	'OPEN_POST'					=> 'Post Mode',
 	'FORM_MOD_PREVIEW'		 	=> 'Switch to preview keeping the current form data...',
 	'FORM_MOD_SUBMIT'			=> 'Add the form data to message and post...',
 	'OPEN_FORM_EXPLAIN'			=> 'Switch to Form Mode...',
 	'REFRESHING_FORM'			=> 'The current selected Forum is',
 	'REQUIRED'				 	=> 'You have not entered all the required elements!',
-	'SUBJECT_REQUIRED'		 	=> 'Please enter a subject',
 	'CHECKBOX_MSG'				=> 'Checkboxes marked as Mandatory, require all elements to be checked (HTML5 Form Validation).',
 	'MANDATORY'					=> 'Items marked with the asterisk are mandatory.',
 ));

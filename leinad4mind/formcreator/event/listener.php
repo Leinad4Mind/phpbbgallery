@@ -1,13 +1,14 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace dmzx\formcreator\event;
+namespace leinad4mind\formcreator\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -108,7 +109,7 @@ class listener implements EventSubscriberInterface
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
-			'ext_name' => 'dmzx/formcreator',
+			'ext_name' => 'leinad4mind/formcreator',
 			'lang_set' => 'common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
@@ -117,52 +118,55 @@ class listener implements EventSubscriberInterface
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['a_form_maker'] = array('lang' => 'ACL_A_FORM_MAKER', 'cat' => 'misc');
+		$permissions['a_form_creator'] = array('lang' => 'ACL_A_FORM_CREATOR', 'cat' => 'misc');
 		$event['permissions'] = $permissions;
 	}
 
 	public function modify_message_text($event)
 	{
-		$post_data 		= $event['post_data'];
-		$mode 			= $event['mode'];
-		$forum_id 		= $event['forum_id'];
-		$submit 		= $event['submit'];
-		$preview 		= $event['preview'];
-		$refresh 		= $event['refresh'];
-		$message_parser = $event['message_parser'];
-		$files 			= $this->request->get_super_global(\phpbb\request\request::FILES);
-		$message 		= $this->request->variable('message', '', true);
-
-		if ($message === '')
+		if ($event['mode'] == 'post' || $event['mode'] == 'edit' && $event['post_id'] == $event['post_data']['topic_first_post_id'])
 		{
-			$message = $this->grab_form_data($forum_id);
-			foreach ($files as $key => $name)
+			$message = $this->request->variable('message', '', true);
+
+			if ($message === '' || $this->request->is_set_post('form_creator_preview'))
 			{
-				$message_parser->parse_attachments($key, $mode, $forum_id, $submit, $preview, $refresh);
+				$mode 			= $event['mode'];
+				$forum_id 		= $event['forum_id'];
+				$submit 		= $event['submit'];
+				$preview 		= $event['preview'];
+				$refresh 		= $event['refresh'];
+				$message_parser = $event['message_parser'];
+				$files 			= $this->request->get_super_global(\phpbb\request\request::FILES);
+
+				$message = $this->grab_form_data($forum_id);
+				foreach ($files as $key => $name)
+				{
+					$message_parser->parse_attachments($key, $mode, $forum_id, $submit, $preview, $refresh);
+				}
+
+				$message_parser->message = $message;
 			}
 		}
-
-		$message_parser->message = $message;
-
-		$post_data = $message_parser->message;
 	}
 
 	public function posting_modify_template_vars($event)
 	{
-		$forum_id = $event['forum_id'];
+		if ($event['mode'] == 'post' || $event['mode'] == 'edit' && $event['post_id'] == $event['post_data']['topic_first_post_id'])
+		{
+			$forum_id = $event['forum_id'];
 
-		$this->build_form($forum_id);
+			$this->build_form($forum_id);
+		}
 	}
 
 	private function build_form($forum_id)
 	{
 		global $mode;
 
-		$style = 'style="border-radius: 5px;"';
-		$style_ta = 'style="border-radius: 5px; max-width: 400px;"';
+		$class = 'class="inputbox autowidth form-control input-sm"';
 		$entry = "";
 
-		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
+		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id, forum_show_form, forum_force_form
 			FROM ' . $this->table_formcreator . ' m, ' . FORUMS_TABLE . ' f
 			WHERE m.form_id = ' . (int) $forum_id . '
 				AND m.form_id = f.forum_id
@@ -180,13 +184,11 @@ class listener implements EventSubscriberInterface
 				$mandatory = "";
 			}
 
-			$temp_name = $row['name'];
-
-			$row['name'] = str_replace(' ', '_', $row['name']);
+			$clean_name = 'templatefield_' . str_replace(' ', '_', $row['name']);
 
 			// make things even easier to read //
-			$name = "name='templatefield_{$row['name']}'";
-			$id = "id='templatefield_{$row['name']}'";
+			$name = "name='{$clean_name}'";
+			$id = "id='{$clean_name}'";
 			$placeholder = "placeholder='{$row['hint']}' ";
 			$tabindex = "tabindex='{$row['ndx_order']}' ";
 
@@ -204,20 +206,23 @@ class listener implements EventSubscriberInterface
 				case 'url':
 				case 'text':
 				case 'file':
-					$entry = '<input ' . $type . $name . $id . $placeholder . $mandatory . $size . $maxlength . $tabindex . $style . ' />';
+					$value = $this->request->variable($clean_name, '', true);
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><input ' . $type . $name . $id . $placeholder . $mandatory . $size . $maxlength . $tabindex . $class . ' value="' . $value . '" /></div></div>';
 				break;
 
 				case 'textbox':
-					$entry = '<textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $style_ta . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);"></textarea>';
+					$value = $this->request->variable($clean_name, '', true);
+					$entry = '<textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $class . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">' . $value . '</textarea>';
 				break;
 
 				case 'selectbox':
-					$entry = '<select ' . $type . $name . $id . $tabindex . $mandatory . $style . '>';
+					$entry = '<select ' . $type . $name . $id . $tabindex . $mandatory . $class . '>';
 					$entry .= '<option value="">----------------</option>';
 					$select_option = explode(',', $row['options']);
+					$selected = $this->request->variable($clean_name, false);
 					foreach ($select_option as $value)
 					{
-						 $entry .='<option value="'. $value .'">'. $value .'</option>';
+						 $entry .='<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>'. $value .'</option>';
 					}
 					$entry .= '</select>';
 				break;
@@ -225,18 +230,20 @@ class listener implements EventSubscriberInterface
 				case 'radiobuttons':
 					$radio_option = explode(',', $row['options']);
 					$entry = '';
+					$checked = $this->request->variable($clean_name, false);
 					foreach ($radio_option as $value)
 					{
-						$entry .='<input type="radio" ' . $tabindex . $mandatory . $name . $id . '" value="'. $value .'"/>&nbsp;'. $value . '&nbsp;&nbsp;';
+						$entry .='<input type="radio" ' . $tabindex . $mandatory . $name . $id . '" value="' . $value . '"' . ($value == $checked ? ' checked' : '') . ' />&nbsp;'. $value . '&nbsp;&nbsp;';
 					}
 				break;
 
 				case 'checkbox':
 					$check_option = explode(',', $row['options']);
 					$entry = '';
+					$checked = $this->request->variable($clean_name, false);
 					foreach ($check_option as $value)
 					{
-						$entry .='<input ' . $type . $tabindex . $mandatory . ' name="templatefield_' . $row['name'] .'[]"' . $id . '" value="'. $value .'" />&nbsp;'. $value .'&nbsp;&nbsp;';
+						$entry .='<input ' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . '" value="'. $value .'"' . ($value == $checked ? ' checked' : '') . ' />&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
 
@@ -251,19 +258,21 @@ class listener implements EventSubscriberInterface
 				$mandatory = '<span class="mandatory">*</span>';
 			}
 
-			$this->template->assign_block_vars('form_apptemplate', array(
-				'NDX_ORDER' => $row['ndx_order'],
-				'NAME'		=> $row['name'],
-				'LABEL'	 	=> $row['name'],
-				'HINT'		=> $row['hint'],
-				'OPTIONS'	=> $row['options'],
-				'TYPE'		=> $entry,
-				'MANDATORY' => $mandatory,
+			$this->template->assign_block_vars('form_creator_template', array(
+				'NDX_ORDER' 	=> $row['ndx_order'],
+				'NAME'			=> $row['name'],
+				'CLEAN_NAME'	=> $clean_name,
+				'HINT'			=> $row['hint'],
+				'OPTIONS'		=> $row['options'],
+				'TYPE'			=> $entry,
+				'MANDATORY' 	=> $mandatory,
 			));
 
 			$this->template->assign_vars(array(
-				'MODE'	=> $mode,
-				'S_FORM_MAKER'	=> true,
+				'MODE'			=> $mode,
+				'S_FORM_CREATOR'	=> true,
+				'S_SHOW_FORM'	=> !$this->request->is_set_post('preview') && $row['forum_show_form'] || $this->request->is_set_post('form_creator_preview'),
+				'S_FORCE_FORM'	=> $row['forum_force_form'],
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -271,8 +280,8 @@ class listener implements EventSubscriberInterface
 
 	private function grab_form_data($forum_id)
 	{
-		$ret = $appform_post = $last_checked = $temp = '';
-		$name_length_max = $file_count = 0;
+		$appform_post = '';
+		$file_count = 0;
 		$form_data = $names = array();
 
 		$this->config['title_colour'] = (isset($this->config['title_colour'])) ? $this->config['title_colour'] : '#FF0000';
@@ -286,14 +295,18 @@ class listener implements EventSubscriberInterface
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$form_data[] = array(
-				'id'		 => $row['id'],
-				'form_id'	=> $row['form_id'],
-				'hint'		=> $row['hint'],
-				'options'	=> $row['options'],
-				'mandatory'	=> $row['mandatory'],
-				'name'		=> $row['name'],
-				'type'		=> $row['type'],
-				'ndx_order'	=> $row['ndx_order'],
+				'id'			=> $row['id'],
+				'form_id'		=> $row['form_id'],
+				'hint'			=> $row['hint'],
+				'options'		=> $row['options'],
+				'mandatory'		=> $row['mandatory'],
+				'name'			=> $row['name'],
+				'type'			=> $row['type'],
+				'ndx_order'		=> $row['ndx_order'],
+				'name_before'	=> $row['name_before'],
+				'name_after'	=> $row['name_after'],
+				'value_before'	=> $row['value_before'],
+				'value_after'	=> $row['value_after'],
 			);
 
 			if ($row['type'] == 'file')
@@ -320,9 +333,7 @@ class listener implements EventSubscriberInterface
 
 		foreach ($form_data as $row)
 		{
-			$name = "";
-			$row['name'] = str_replace(' ', '_', $row['name']);
-			$name = "templatefield_" . $row['name'];
+			$name = "templatefield_" . str_replace(' ', '_', $row['name']);
 
 			if (isset($row['type']))
 			{
@@ -330,9 +341,9 @@ class listener implements EventSubscriberInterface
 				{
 					case 'checkbox':
 
-						$check_box_items = count($this->request->variable('templatefield_' . $row['name'], array(0 => 0)));
+						$check_box_items = count($this->request->variable($name, array(0 => 0)));
 						$check_box_count = 0;
-						$appform_post .= '[form][b]' . $row['name'] . ':[/b][/form][fbox]';
+						$appform_post .= ($row['name_before'] ?: '[form][b]') . $row['name'] . ($row['name_after'] ?: ':[/b][/form]') . ($row['value_before'] ?: '[fbox]');
 
 						$checkbox = $this->request->variable($name, array(0 => '') , true);
 
@@ -346,7 +357,7 @@ class listener implements EventSubscriberInterface
 							}
 							$check_box_count++;
 						}
-						$appform_post .= '[/fbox]';
+						$appform_post .= ($row['value_after'] ?: '[/fbox]');
 
 					break;
 
@@ -354,14 +365,15 @@ class listener implements EventSubscriberInterface
 					case 'password':
 					case 'url':
 					case 'text':
+					case 'textbox':
 					case 'selectbox':
 					case 'radiobuttons':
 						$fieldcontents = $this->request->variable($name, ' ', true);
 						// only process if element has valid data //
 						if ($fieldcontents)
 						{
-							$appform_post .= '[form][b]' . $row['name'] . ':[/b][/form][fbox]';
-							$appform_post .= $fieldcontents .= '[/fbox]';
+							$appform_post .= ($row['name_before'] ?: '[form][b]') . $row['name'] . ($row['name_after'] ?: ':[/b][/form]');
+							$appform_post .= ($row['value_before'] ?: '[fbox]') . $fieldcontents . ($row['value_after'] ?: '[/fbox]');
 						}
 					break;
 
@@ -370,20 +382,9 @@ class listener implements EventSubscriberInterface
 						// only process if element has valid data //
 						if ($fieldcontents)
 						{
-							$appform_post .= '[b]' . $row['name'] . ':[/b][att]';
-							$fieldcontents = '[attachment=' . $file_count . ']' . $names[$file_count] . '[/attachment]';
+							$appform_post .= ($row['name_before'] ?: '[b]') . $row['name'] . ($row['name_after'] ?: ':[/b]');
+							$appform_post .= ($row['value_before'] ?: '[att]') . '[attachment=' . $file_count . ']' . $names[$file_count] . '[/attachment]' . $fieldcontents . ($row['value_after'] ?: '[/att]');
 							$file_count++;
-							$appform_post .= $fieldcontents .= '[/att]';
-						}
-					break;
-
-					case 'textbox':
-						$fieldcontents = $this->request->variable($name, ' ', true);
-						// only process if element has valid data //
-						if ($fieldcontents)
-						{
-							$appform_post .= '[form][b]' . $row['name'] . ':[/b][/form][fbox]';
-							$appform_post .= $fieldcontents .= '[/fbox]';
 						}
 					break;
 
@@ -392,13 +393,7 @@ class listener implements EventSubscriberInterface
 				}
 			}
 		}
-		if ($fieldcontents == '')
-		{
-			return;
-		}
-		else
-		{
-			return $appform_post;
-		}
+
+		return $appform_post;
 	}
 }

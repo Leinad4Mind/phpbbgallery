@@ -1,13 +1,13 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com\r2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace dmzx\formcreator;
+namespace leinad4mind\formcreator;
 
 /**
 * Extension class for custom enable/disable/purge actions

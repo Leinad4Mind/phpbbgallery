@@ -1,185 +1,55 @@
-/******
-* This is a collection of scripts written for Form Mod (Form Creator)
-*****/
-
-// Show/Hide element with cookie option
-
 /***
+* This is a collection of scripts written for Form Mod (Form Creator)
+*
 *	takes three possible elements...
 *	switches the first element and set cookie
 *	switch second element visibility...
 *
 ***/
 
+// Show/Hide element with cookie option
+
 function Show(id)
 {
-	var element = null;
-	if (document.getElementById)
-	{
-		element = document.getElementById(id);
-	}
-	else if (document.all)
-	{
-		element = document.all[id];
-	}
-	else if (document.layers)
-	{
-		element = document.layers[id];
-	}
-	if (element.style.display == "none")
-	{
-		element.style.display = "inline";
-	}
-	else
-	{
-		element.style.display = "none";
-	}
+	$('#' + id).show();
 }
 
 function Hide(id)
 {
-	var element = null;
-	if (document.getElementById)
-	{
-		element = document.getElementById(id);
-	}
-	else if (document.all)
-	{
-		element = document.all[id];
-	}
-	else if (document.layers)
-	{
-		element = document.layers[id];
-	}
-	if (element.style.display == "inline")
-	{
-		element.style.display = "none";
-	}
-	else
-	{
-		element.style.display = "inline";
-	}
+	$('#' + id).hide();
 }
 
-function ShowHideSwap(id1, id2)
+function ShowHide(id1, id2)
 {
-	switch_visibility(id1);
-	switch_visibility(id2);
-}
-
-function ShowHide(id1, id2, id3)
-{
-	var onoff = switch_visibility(id1);
-	if (id2 != '')
+	$('#' + id1).toggle();
+	if (id2)
 	{
-		switch_visibility(id2);
-	}
-}
-
-function switch_visibility(id)
-{
-	var element = null;
-	if (document.getElementById)
-	{
-		element = document.getElementById(id);
-	}
-	else if (document.all)
-	{
-		element = document.all[id];
-	}
-	else if (document.layers)
-	{
-		element = document.layers[id];
-	}
-
-	if (element)
-	{
-		if (element.style)
-		{
-			if (element.style.display == "none")
-			{
-				element.style.display = "";
-				return 1;
-			}
-			else
-			{
-				element.style.display = "none";
-				return 2;
-			}
-		}
-		else
-		{
-			element.visibility = "show";
-			return 1;
-		}
+		$('#' + id2).toggle();
 	}
 }
 
 function is_hidden(id)
 {
-	var element = null;
-
-	if (document.getElementById)
-	{
-		element = document.getElementById(id);
-	}
-	else if (document.all)
-	{
-		element = document.all[id];
-	}
-	else if (document.layers)
-	{
-		element = document.layers[id];
-	}
-
-	if (element)
-	{
-		if (element.style)
-		{
-			if (element.style.display == "none")
-			{
-				return(1);
-			}
-			else
-			{
-				return(0);
-			}
-		}
-	}
+	return $('#' + id).is(':visible');
 }
 
-function toggle_validation_form_mod(main_form, secondary_form)
+function toggle_validation()
 {
-	// toggle validation based on secondary form visibility //
-
-	var $_hidden = 0;
-
-	$_hidden = is_hidden(secondary_form);
-
-	if ($_hidden == 0)
-	{
-		document.getElementById(main_form).noValidate=true;
-		//alert('Turned off validation');
-	}
-	else
-	{
-		document.getElementById(main_form).noValidate=false;
-		//alert('Turned on validation');
-	}
+	document.forms.postform.noValidate = !is_hidden('thisform');
 }
 
-function toggle_validation_form(thisform)
+function enable_form_preview()
 {
-	// toggle validation on a given form //
+	$('<input>').attr({
+		type	: 'hidden',
+		name	: 'form_creator_preview',
+		value	: '1'
+	}).appendTo('#thisform');
+}
 
-	if (document.getElementById(thisform).noValidate=false)
-	{
-		document.getElementById(thisform).noValidate=true;
-		//alert('Turned off validation');
-	}
-	else
-	{
-		document.getElementById(form).noValidate=false;
-		//alert('Turned on validation');
-	}
+function switch_mode(elem)
+{
+	var $thisform = $('#thisform').toggleClass('form-creator-hidden form-creator-visible');
+	var text = $thisform.data($thisform.hasClass('form-creator-hidden') ? 'form' : 'post');
+	$(elem).text(text).blur();
 }

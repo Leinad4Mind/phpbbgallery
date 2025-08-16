@@ -1,13 +1,14 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace dmzx\formcreator\controller;
+namespace leinad4mind\formcreator\controller;
 
 class admin_controller
 {
@@ -31,6 +32,8 @@ class admin_controller
 
 	/** @var string */
 	protected $table_formcreator;
+
+	protected $u_action;
 
 	/**
 	* Constructor
@@ -64,15 +67,14 @@ class admin_controller
 
 	public function display_options()
 	{
-		$this->user->add_lang_ext('dmzx/formcreator', 'formcreator_acp');
+		$this->user->add_lang_ext('leinad4mind/formcreator', 'formcreator_acp');
 
 		$first_forum_id = 0;
 
-		$form_key = md5(uniqid(rand(), true));
+		$form_key = 'leinad4mind/formcreator';
 		add_form_key($form_key);
 
 		$mode = $this->request->variable('mode', 'manage');
-		$fname = $link = '';
 		$elements = 0;
 
 		if ($first_forum_id == 0)
@@ -85,7 +87,7 @@ class admin_controller
 
 		$fname = $this->get_forums($form_id);
 
-		$link 		= '<br /><a href="' . append_sid("index.$this->php_ext", "i=form_maker&amp;mode=manage") . '">' . $this->user->lang['FORM_MAKER_ACP_RETURN'] . '</a>';
+		$link 		= '<br /><a href="' . append_sid("index.$this->php_ext", "i=form_creator&amp;mode=manage") . '">' . $this->user->lang['FORM_CREATOR_ACP_RETURN'] . '</a>';
 		$update 	= $this->request->is_set_post('update');
 		$addnew 	= $this->request->is_set_post('add');
 		$move_up 	= $this->request->variable('move_up', '');
@@ -139,6 +141,11 @@ class admin_controller
 
 		if ($delete)
 		{
+			if (!check_form_key($form_key))
+			{
+				trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action));
+			}
+
 			$sql = 'DELETE FROM ' . $this->table_formcreator . '
 				WHERE id = ' . $id;
 			$this->db->sql_query($sql);
@@ -149,10 +156,19 @@ class admin_controller
 		//user pressed update contents
 		if ($update)
 		{
+			if (!check_form_key($form_key))
+			{
+				trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action));
+			}
+
 			$q_types		= $this->request->variable('q_type', array(0 => ''), true);
 			$q_names		= $this->request->variable('q_name', array(0 => ''), true);
 			$q_hint			= $this->request->variable('q_hint', array(0 => ''), true);
 			$q_options		= $this->request->variable('q_options', array(0 => ''), true);
+			$q_name_before	= $this->request->variable('q_name_before', array(0 => ''), true);
+			$q_name_after	= $this->request->variable('q_name_after', array(0 => ''), true);
+			$q_value_before	= $this->request->variable('q_value_before', array(0 => ''), true);
+			$q_value_after	= $this->request->variable('q_value_after', array(0 => ''), true);
 			$form_id		= $this->request->variable('form_id', 1);
 			$q_ndx_order	= $this->request->variable('q_ndx_order', array(0 => ''), true);
 			$post 			= $this->request->get_super_global(\phpbb\request\request::POST);
@@ -168,11 +184,15 @@ class admin_controller
 
 				// updating contents //
 				$data = array(
-					'type'		=> $q_types[$key] ,
-					'name'		=> $q_names[$key] ,
-					'hint'		=> $q_hint[$key] ,
-					'options'	=> $q_options[$key],
-					'ndx_order' => $q_ndx_order[$key]
+					'type'			=> $q_types[$key] ,
+					'name'			=> $q_names[$key] ,
+					'hint'			=> $q_hint[$key] ,
+					'options'		=> $q_options[$key],
+					'name_before'	=> $q_name_before[$key],
+					'name_after'	=> $q_name_after[$key],
+					'value_before'	=> $q_value_before[$key],
+					'value_after'	=> $q_value_after[$key],
+					'ndx_order' 	=> $q_ndx_order[$key]
 				);
 
 				$sql = 'UPDATE ' . $this->table_formcreator . '
@@ -182,11 +202,33 @@ class admin_controller
 				$this->db->sql_query($sql);
 			}
 
-			$this->template->assign_var('L_FORM_NO_FORM', sprintf($this->user->lang['FORM_NO_FORM'], $fname));
+			$show_form = $this->request->variable('show_form', false);
+			$force_form = $this->request->variable('force_form', false);
+
+			$update_ary = [
+				'forum_show_form'	=> $show_form ? 1 : 0,
+				'forum_force_form'	=> $force_form ? 1 : 0,
+			];
+
+			$sql = 'UPDATE ' . FORUMS_TABLE . '
+				SET ' . $this->db->sql_build_array('UPDATE', $update_ary) . '
+				WHERE forum_id = ' . (int) $form_id;
+			$this->db->sql_query($sql);
+
+			$this->template->assign_vars([
+				'L_FORM_NO_FORM'	=> sprintf($this->user->lang['FORM_NO_FORM'], $fname),
+				'S_SHOW_FORM'		=> $show_form,
+				'S_FORCE_FORM'		=> $force_form,
+			]);
 		}
 
 		if ($addnew)
 		{
+			if (!check_form_key($form_key))
+			{
+				trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action));
+			}
+
 			$form_id = $this->request->variable('form_id', 0);
 
 			$sql = 'SELECT max(ndx_order) + 1 as maxorder
@@ -198,13 +240,17 @@ class admin_controller
 			$this->db->sql_freeresult($result);
 
 			$sql_ary = array(
-				'ndx_order' => ($max_order > 0) ? $max_order : 1, // we don't use index 0 //
-				'form_id'	=> $form_id,
-				'name'		=> $this->request->variable('name', ' ', true),
-				'hint'		=> $this->request->variable('hint', ' ', true),
-				'options'	=> $this->request->variable('options', ' ', true),
-				'type'		=> $this->request->variable('add_type', ' ', true),
-				'mandatory' => ($this->request->is_set_post('mandatory') ? '1' : '0')
+				'ndx_order' 	=> ($max_order > 0) ? $max_order : 1, // we don't use index 0 //
+				'form_id'		=> $form_id,
+				'name'			=> $this->request->variable('name', ' ', true),
+				'hint'			=> $this->request->variable('hint', ' ', true),
+				'options'		=> $this->request->variable('options', ' ', true),
+				'name_before'	=> $this->request->variable('name_before', ' ', true),
+				'name_after'	=> $this->request->variable('name_after', ' ', true),
+				'value_before'	=> $this->request->variable('value_before', ' ', true),
+				'value_after'	=> $this->request->variable('value_after', ' ', true),
+				'type'			=> $this->request->variable('add_type', ' ', true),
+				'mandatory' 	=> ($this->request->is_set_post('mandatory') ? '1' : '0')
 			);
 
 			// insert new contents
@@ -213,12 +259,12 @@ class admin_controller
 
 			if (!$result)
 			{
-				trigger_error($this->user->lang['FORM_MAKER_ACP_QUESTNOTADD'] . $link, E_USER_WARNING);
+				trigger_error($this->user->lang['FORM_CREATOR_ACP_QUESTNOTADD'] . $link, E_USER_WARNING);
 			}
 		}
 
 		// main sql //
-		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
+		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, name_before, name_after, value_before, value_after, forum_name, forum_id, forum_show_form, forum_force_form
 			FROM ' . $this->table_formcreator . ' m, ' . FORUMS_TABLE . " f
 			WHERE m.form_id = $form_id
 				AND m.form_id = f.forum_id
@@ -241,13 +287,18 @@ class admin_controller
 				'NAME'			=> $row['name'],
 				'TYPE'			=> $row['type'],
 				'HINT'			=> $row['hint'],
-				'MANDATORY'		=> $row['mandatory'] ,
-				'OPTIONS'		=> $row['options'] ,
-				'CHECKED'		=> $checked ,
-				'ID'			=> $row['id'] ,
-				'U_DELETE' 		=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-dmzx-formcreator-acp-formcreator_module&mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}"),
-				'U_MOVE_UP' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-dmzx-formcreator-acp-formcreator_module&mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
-				'U_MOVE_DOWN' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-dmzx-formcreator-acp-formcreator_module&mode=manage&amp;move_down=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}")));
+				'MANDATORY'		=> $row['mandatory'],
+				'OPTIONS'		=> $row['options'],
+				'NAME_BEFORE'	=> $row['name_before'],
+				'NAME_AFTER'	=> $row['name_after'],
+				'VALUE_BEFORE'	=> $row['value_before'],
+				'VALUE_AFTER'	=> $row['value_after'],
+				'CHECKED'		=> $checked,
+				'ID'			=> $row['id'],
+				'U_DELETE' 		=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}"),
+				'U_MOVE_UP' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
+				'U_MOVE_DOWN' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;move_down=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}"),
+			));
 
 			$type = array(
 				'text' ,
@@ -270,11 +321,21 @@ class admin_controller
 				));
 				$elements++;
 			}
+
+			if ($row['forum_show_form'])
+			{
+				$this->template->assign_var('S_SHOW_FORM', true);
+			}
+
+			if ($row['forum_force_form'])
+			{
+				$this->template->assign_var('S_FORCE_FORM', true);
+			}
 		}
 
 		$this->template->assign_vars(array(
-			'FID'			 => $form_id,
-			'ELEMENTS'		=> $elements,
+			'FID'			 	=> $form_id,
+			'ELEMENTS'			=> $elements,
 			'L_FORM_NO_FORM'	=> sprintf($this->user->lang['FORM_NO_FORM'], $fname),
 		));
 
@@ -282,7 +343,7 @@ class admin_controller
 
 		$this->template->assign_vars(array(
 			'REPORT'	=> $this->user->lang['MODE'] . ' = [' . $mode . '] | ' . $this->user->lang['ELEMENTS'] . ' = [' . $elements . '] | ' . $this->user->lang['FORUM_ID'] . ' = [' . $form_id . '] | ' . $this->user->lang['FORM_NAME'] . ' = [' . $fname . ']',
-			'LINK'	=> $link,
+			'LINK'		=> $link,
 		));
 
 		$this->build_preview($form_id);
@@ -397,7 +458,7 @@ class admin_controller
 			{
 				$mandatory = '<span class="mandatory">*</span>';
 			}
-			$this->template->assign_block_vars('form_apptemplate', array(
+			$this->template->assign_block_vars('form_creator_template', array(
 				'NDX_ORDER' => $row['ndx_order'],
 				'NAME'		=> $row['name'],
 				'HINT'		=> $row['hint'],

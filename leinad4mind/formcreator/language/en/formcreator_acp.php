@@ -1,8 +1,9 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -42,17 +43,12 @@ $lang = array_merge($lang, array(
 	'FORM_NAME'					=> 'Forum Name',
 	'FORUM_ID'					=> 'Forum ID',
 	'ACP_FORM_CURRENT'		 	=> 'Current Form',
-	'ACP_FORM_MAKER'			=> 'Form Maker',
-	'ACP_FORM_MAKER_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
-	'ACP_FORM_CURRENT'		 	=> 'Current Form',
-	'ACP_FORM_MAKER'			=> 'Form Maker',
-	'ACP_FORM_MAKER_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
-	'ACP_FORM_MOD_MORE_INFO'	=> 'Click Me for More Info.',
-	'ACP_FORM_MOD_NOTE'			=> '<br /><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
+	'ACP_FORM_CREATOR'			=> 'Form Creator',
+	'ACP_FORM_CREATOR_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
 	'ACP_FORM_MOD_MORE_INFO'	=> 'Click Me for More Info.',
 	'ACP_FORM_MOD_NOTE'			=> '<br /><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
 
-	'ACP_FORM_MAKER_EXPLAIN_2' => 'How do I change the form?<br /> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br /><br />
+	'ACP_FORM_CREATOR_EXPLAIN_2' => 'How do I change the form?<br /> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br /><br />
 	How do I add a new form element?<br /> &nbsp; &bull; Use <strong><i>Add a new form element</i></strong>.<br /><br />
 	How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<br /><br />
 	<strong>&#8730;</strong> The checkmark character indicated an item is mandatory and cannot be empty.<br />',
@@ -60,24 +56,28 @@ $lang = array_merge($lang, array(
 	'CURRENT_FORM'			 	=> 'Current Form',
 	'FORM_ADD_ITEM'				=> 'Add a new form element',
 	'FORM_CHECKBOX'				=> 'Check Box',
-	'FORM_DETAILS'			 	=> 'All forms use a generic template file: styles/prosilver/template/forms/form_maker.html',
+	'FORM_DETAILS'			 	=> 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',
 	'FORM_ELEMENT'			 	=> 'Input Type',
 	'FORM_ELEMENT_TYPE'			=> 'Element type',
 	'FORM_ELEMENT_HINT'			=> 'Hint',
 	'FORM_ELEMENT_NAME'			=> 'Entry Name',
 	'FORM_ELEMENT_OPTIONS'		=> 'Options',
+	'FORM_ELEMENT_NAME_BEFORE'	=> 'Name before',
+	'FORM_ELEMENT_NAME_AFTER'	=> 'Name after',
+	'FORM_ELEMENT_VALUE_BEFORE'	=> 'Value before',
+	'FORM_ELEMENT_VALUE_AFTER'	=> 'Value after',
 	'FORM_EMAILBOX'				=> 'Email',
 	'FORM_INPUTBOX'				=> 'Text',
-	'FORM_MAKER_ACP_DELETED'	=> 'Entry deleted',
-	'FORM_MAKER_ACP_ERROR'	 	=> 'Error updating form maker database',
-	'FORM_MAKER_ACP_MOVED'	 	=> 'Move completed...',
-	'FORM_MAKER_ACP_RETURN'		=> 'Back to manage forms',
+	'FORM_CREATOR_ACP_DELETED'	=> 'Entry deleted',
+	'FORM_CREATOR_ACP_ERROR'	=> 'Error updating form creator database',
+	'FORM_CREATOR_ACP_MOVED'	=> 'Move completed...',
+	'FORM_CREATOR_ACP_RETURN'	=> 'Back to manage forms',
 	'FORM_MANAGE'				=> 'Manage this form',
 	'FORM_MANAGE_EXPLAIN'		=> 'Here you can modify all of the current form elements, simply edit fields and press the <strong>Update</strong> button...',
 	'FORUM_NAME'				=> 'Forum Name',
 
-	'FORM_NEW_ITEM_EXPLAIN_2'	=> '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements supported by the Form Mod</u></strong><br />
-	<strong>Inputbox:</strong>		Up to 255 characters)<br />
+	'FORM_NEW_ITEM_EXPLAIN_2'	=> '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br />
+	<strong>Inputbox:</strong>		Up to 255 characters.<br />
 	<strong>Textbox:</strong>	 	Multiple lines of text arranged as 3 rows by 76 columns.<br />
 	<strong>Checkbox:</strong>		One or more options can be selected, if set to mandatory, each and every option in the checkbox group must be checked.<br />
 	<strong>Radiobutton:</strong> 		Only one option can be selected.<br />
@@ -114,4 +114,6 @@ $lang = array_merge($lang, array(
 	'CHECKBOX_NOTE'				=> '<strong>Note:</strong>???',
 	'CHECKBOXE_NOTES'			=> 'Checkboxes!',
 	'CHKNOTE'					=> 'Checkboxes with multiple items are rarely set as mandatory as doing so, require the user checks each and every item.',
+	'SHOW_FORM_DEFAULT'			=> 'Show form by default',
+	'FORCE_FORM'				=> 'Force form',
 ));

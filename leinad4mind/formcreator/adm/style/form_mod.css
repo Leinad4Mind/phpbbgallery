@@ -1,62 +1,25 @@
-
-/*
-#preview {
-	display: none;
-	width: 80%;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#info0 {
-	padding-top: 10px;
-	margin-bottom:-23px;
-	display:none;
-}
-#info1 {
-	display:none; 
-	border-radius: 5px; 
-	margin-top: 8px; 
-	width: 90%;
-}
-
-#show0 {
-	display:inline;
-}
-
-*/
-
-#info
-{
+#info {
    background: url("../images/more_info.gif") no-repeat center center;
    height: 16px;
    width: 16px;
 }
-.checkbox {cursor:pointer}
-#dvLoading
-{
-   background: transparent url("../images/loading-page.gif") no-repeat center center;
-   height: 100px;
-   width: 100px;
-   position: fixed;
-   z-index: 1000;
-   left: 50%;
-   top:13%;
+.checkbox {
+	cursor:pointer
 }
 .mandatory {
-	font-size: 10px; 
-	margin-top: 1px; 
-	margin-bottom: 10px; 
-	margin-left: 14.5em; 
+	font-size: 10px;
+	margin-top: 1px;
+	margin-bottom: 10px;
+	margin-left: 14.5em;
 	text-align:left;
 }
-.info1_p
-{
+.info1_p {
 	cursor: pointer;
 	float: right;
 	margin-top: -35px;
 }
 .th_action {
-	width: 90px;
+	width: 50px;
 	text-align: center;
 }
 .th_current {
@@ -64,15 +27,23 @@
 	width: 100%;
 }
 .th_name {
-	width: 140px;
+	width: 100px;
 	text-align: left;
 }
 .th_hint {
-	width: 18%;
+	width: 7%;
 	text-align: left;
 }
 .th_option {
-	width: 38%;
+	width: 7%;
+	text-align: left;
+}
+.th_before {
+	width: 12%;
+	text-align: left;
+}
+.th_after {
+	width: 12%;
 	text-align: left;
 }
 .th_ndx {
@@ -80,7 +51,7 @@
 	text-align: center;
 }
 .th_mand {
-	width: 20px;
+	width: 2%;
 	text-align: center;
 }
 .th_com {
@@ -88,24 +59,28 @@
 	text-align: left;
 }
 .th_type {
-	width: 132px;
+	width: 80px;
 	text-align: left;
 }
 .th_type2 {
-	width: 15%;
+	width: 5%;
 	text-align: left;
 }
 .th_type3 {
-	width:20%;
+	width:7%;
 	text-align:left
 }
 .th_type4 {
-	width:40%;
+	width:7%;
+	text-align:left;
+}
+.th_type5 {
+	width:12%;
 	text-align:left;
 }
 .td_in {
-	padding-left: 0px; 
-	padding-right: 2px; 
+	padding-left: 0;
+	padding-right: 2px;
 	overflow: hidden;
 }
 .td_move {
@@ -114,29 +89,29 @@
 	text-align:center;
 }
 .td_pad {
-	padding-left: 0px;
+	padding-left: 0;
 	padding-right: 2px;
 }
 .td_0 {
-	padding-left:0px;
+	padding-left:0;
 	font-size: 12px;
 }
 .td_02 {
-	padding-left:0px;
+	padding-left:0;
 	padding-right:2px;
 	overflow:hidden
 }
 .td_12 {
-	padding-left: 0px;
+	padding-left: 0;
 	font-size: 12px;
 }
 .td_20 {
 	width: 20px;
 	text-align:center;
 }
-.td_132 {
-	width:132px;
-	text-align:left;
+.td_80 {
+	width:80px;
+	text-align:center;
 }
 .div_0 {
 	padding-top: 10px;
@@ -144,7 +119,7 @@
 }
 
 .dt10 {
-	width: 12em; 
+	width: 12em;
 	border-right-width: 0;
 	font-size: 12px;
 }

@@ -1,8 +1,9 @@
 <?php
 /**
 *
-* @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
+* @package phpBB Extension - Form Creator
+* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -37,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_FORM_MAKER'				=> 'phpBB Form Creator',
-	'ACP_FORM_MAKER_CONFIG'	 		=> 'Configuration',
+	'ACP_FORM_CREATOR'				=> 'Form Creator',
+	'ACP_FORM_CREATOR_CONFIG'	 	=> 'Configuration',
 ));

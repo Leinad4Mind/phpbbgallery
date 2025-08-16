@@ -1,4 +1,3 @@
-
 .mandatory {
 	color: #FF0000;
 }
@@ -8,15 +7,15 @@
 	text-align:left;
 }
 .form_chk_msg {
-	margin-top: -2px; 
-	margin-bottom: 20px; 
-	margin-left: 17.5em; 
+	margin-top: -2px;
+	margin-bottom: 20px;
+	margin-left: 17.5em;
 	text-align:left;
 }
 
 pre {
 	font-family: Consolas, monospace;
-	font-size: 1em; 
+	font-size: 1em;
 	overflow: auto
 }
 
@@ -32,21 +31,20 @@ pre {
 	*/
 
 	padding: 3px 3px 3px 5px;
-	
+
 	width: 500px;
 	overflow:auto;
 	height: auto;
 
 	border: solid 1px #E3E5E5;
 	box-shadow: 1px 1px 1px 1px #BBB;
-	//box-shadow: 2px 2px 2px 2px #BBB;
+	/* box-shadow: 2px 2px 2px 2px #BBB; */
 	border-radius: 3px;
-	text-align: left;
 
-    white-space: pre-wrap;      /* CSS3 */   
-    white-space: -moz-pre-wrap; /* Firefox */    
-    white-space: -pre-wrap;     /* Opera <7 */   
-    white-space: -o-pre-wrap;   /* Opera 7 */    
+    white-space: pre-wrap;      /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -pre-wrap;     /* Opera <7 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
     word-wrap: break-word;      /* IE */
 }
 
@@ -62,7 +60,6 @@ pre {
 	border: solid 1px #E3E5E5;
 	box-shadow: 1px 1px 1px 1px #BBB;
 	border-radius: 3px;
-	text-align: left;
 }
 
 .form {
@@ -77,4 +74,21 @@ pre {
 	text-align:left;
 	overflow: auto;
 	*/
+}
+
+#thisform {
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#postingbox .form-creator-hidden {
+	display: none;
+}
+
+#postingbox .form-creator-visible ~ #format-buttons,
+#postingbox .form-creator-visible ~ #smiley-box,
+#postingbox .form-creator-visible ~ #message-box,
+#postingbox .form-creator-visible ~ #form_hide {
+	display: none;
 }

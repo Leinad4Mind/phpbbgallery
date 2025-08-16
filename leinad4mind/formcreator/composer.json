@@ -1,24 +1,25 @@
 {
-	"name": "dmzx/formcreator",
+	"name": "leinad4mind/formcreator",
 	"type": "phpbb-extension",
 	"description": "Create forms to collect data from you members in any forum (one form per forum)",
-	"homepage": "https://www.dmzx-web.net",
-	"version": "1.0.1",
+	"homepage": "https://www.leinad4mind.top/forum",
+	"version": "2.0.0",
 	"time": "2017-02-21",
 	"keywords": ["phpbb", "extension", "formcreator"],
 	"license": "GPL-2.0",
 	"authors": [
 		{
-			"name": "dmzx",
-			"homepage": "https://www.dmzx-web.net",
-			"email": "info@dmzx-web.net",
+			"name": "leinad4mind",
+			"homepage": "https://www.leinad4mind.top/forum",
 			"role": "Extension Developer"
 		},
 		{
+			"name": "dmzx",
+			"role": "Original Extension Port"
+		},
+		{
 			"name": "michaelo",
-			"homepage": "https://www.phpbbireland.com/",
-			"email": "o2l@eircom.net",
-			"role": "Original MOD author"
+			"role": "Original MOD Author"
 		}
 	],
 	"require": {
@@ -29,14 +30,15 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "Form Maker/Creator",
+		"display-name": "Form Creator",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.2.0,<3.3"
 		},
 		"version-check": {
-			"host": "www.dmzx-web.net",
-			"directory": "/versions",
-			"filename": "formcreator_32x_version.json"
-		}
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/formcreator",
+            "filename": "version_check.json",
+            "ssl": true
+        }
 	}
 }
