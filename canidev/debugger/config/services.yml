@@ -1,0 +1,23 @@
+services:
+    canidev.debugger.exception_subscriber:
+        class: canidev\debugger\event\exception_subscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    canidev.debugger.listener:
+        class: canidev\debugger\event\listener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: event.listener }
+
+    canidev.debugger.controller.admin:
+        class: canidev\debugger\controller\admin_controller
+        arguments:
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
