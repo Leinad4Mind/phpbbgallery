@@ -1,0 +1,16 @@
+ul.topiclist.two-columns dt {
+	margin-right:-240px !important;
+}
+.mark_delete {
+	width: 80px;
+    text-align: center;
+    line-height: 2.2em;
+    font-size: 1.2em;
+}
+.mark_unread {
+	width: 80px;
+    text-align: center;
+    line-height: 2.2em;
+    font-size: 1.2em;
+}
+.dont-style {opacity:1 !important;position:relative !important; float:left;margin-left:10px !important;outline: 1px solid #ccc;}
