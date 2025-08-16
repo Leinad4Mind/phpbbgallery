@@ -77,7 +77,7 @@ class notification_service
 		}
 
 		// Query the forum table where forum notification settings are stored
-		$sql = "SELECT discord_notifications_enabled FROM " . FORUMS_TABLE . " WHERE forum_id = $forum_id";
+		$sql = "SELECT discord_notifications_enabled FROM " . FORUMS_TABLE . " WHERE forum_id = " . (int)$forum_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$enabled = $data['discord_notifications_enabled'] == 1 ? true : false;
@@ -107,7 +107,7 @@ class notification_service
 			return null;
 		}
 
-		$sql = "SELECT forum_name from " . FORUMS_TABLE . " WHERE forum_id = $forum_id";
+		$sql = "SELECT forum_name from " . FORUMS_TABLE . " WHERE forum_id = " . (int)$forum_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$name = $data['forum_name'];
@@ -127,7 +127,7 @@ class notification_service
 			return null;
 		}
 
-		$sql = "SELECT post_subject from " . POSTS_TABLE . " WHERE post_id = $post_id";
+		$sql = "SELECT post_subject from " . POSTS_TABLE . " WHERE post_id = " (int)$post_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$subject = $data['post_subject'];
@@ -147,7 +147,7 @@ class notification_service
 			return null;
 		}
 
-		$sql = "SELECT topic_title from " . TOPICS_TABLE . " WHERE topic_id = $topic_id";
+		$sql = "SELECT topic_title from " . TOPICS_TABLE . " WHERE topic_id = " (int)$topic_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$title = $data['topic_title'];
@@ -176,7 +176,7 @@ class notification_service
 				FROM
 				$forum_table f, $topic_table t
 				WHERE
-				t.forum_id = f.forum_id and t.topic_id = $topic_id";
+				t.forum_id = f.forum_id and t.topic_id = ". (int)$topic_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -196,7 +196,7 @@ class notification_service
 			return null;
 		}
 
-		$sql = "SELECT username from " . USERS_TABLE . " WHERE user_id = $user_id";
+		$sql = "SELECT username from " . USERS_TABLE . " WHERE user_id = " . (int)$user_id;
 		$result = $this->db->sql_query($sql);
 		$data = $this->db->sql_fetchrow($result);
 		$name = $data['username'];
@@ -277,13 +277,15 @@ class notification_service
 		// Clean up the message and footer text before sending by trimming whitespace from the front and end of the message and footer strings.
 		$message = trim($message);
 		$message = str_replace('"', "'", $message); // Replace " characters that would break the JSON encoding that our message must be wrapped in.
+		$message = str_replace("\t"," ", $message); // Replace TAB characters with a space - TAB characters breaks JSON encoding also, apparently.
 		if (isset($footer))
 		{
 			$footer = trim($footer);
 			$footer = str_replace('"', "'", $footer);
 			// Discord does not appear to allow newline characters in the footer. In fact, the presence of them causes the message POST
 			// to fail. Hence why we replace all newlines with a space here.
-			$footer = str_replace(array("\r", "\n"), ' ', $footer);
+			// Discord does not allow tab characters either, so we add those to the array of characters to be removed.
+			$footer = str_replace(array("\r", "\n", "\t"), ' ', $footer);
 		}
 
 		// Abort if we find that either of our text fields are now empty strings
@@ -312,19 +314,24 @@ class notification_service
 
 		// Place the message inside the JSON structure that Discord expects to receive at the REST endpoint.
 		$post = '';
+		$json = array("embeds"=>array(
+			"color"=>$color,
+			"description"=>$message
+			)
+		);
+
 		if (isset($footer))
 		{
-			$post = sprintf('{"embeds": [{"color": "%d", "description" : "%s", "footer": {"text": "%s"}}]}', $color, $message, $footer);
-		}
-		else {
-			$post = sprintf('{"embeds": [{"color": "%d", "description" : "%s"}]}', $color, $message);
+			$json["embeds"]["footer"] = array("text"=>$footer);
 		}
 
 		// Use the CURL library to transmit the message via a POST operation to the webhook URL.
 		$h = curl_init();
+		curl_setopt($h, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
 		curl_setopt($h, CURLOPT_URL, $discord_webhook_url);
 		curl_setopt($h, CURLOPT_POST, 1);
-		curl_setopt($h, CURLOPT_POSTFIELDS, $post);
+		curl_setopt($h, CURLOPT_POSTFIELDS, json_encode($json));
+		curl_setopt($h, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($h);
 		curl_close($h);
 
