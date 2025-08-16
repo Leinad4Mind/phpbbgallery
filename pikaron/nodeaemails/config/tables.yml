@@ -1,0 +1,2 @@
+parameters:
+    pikaron.nodeaemails.table.nodeaemails: %core.table_prefix%nodeaemails
