@@ -1,0 +1,12 @@
+<!-- IF .topicrow -->
+<script>
+head.ready(function(){
+	var text = ['{L_TOPICS}', '{L_STICKY}', '{L_ANNOUNCEMENTS}', '{L_GLOBAL_ANNOUNCEMENTS}'];
+	var elem = $('[id^="cas_"]');
+	elem.each(function(){
+		var id = $(this).attr('id').replace('cas_', '');
+		$(this).parent().prev().find('th:eq(0)').html('<i class="fa fa-bullhorn"></i> ' + text[id]);
+	});
+});
+</script>
+<!-- ENDIF -->

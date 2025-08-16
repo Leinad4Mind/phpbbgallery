@@ -1,0 +1,8 @@
+services:
+    sitesplat.cas.listener:
+        class: sitesplat\cas\event\main_listener
+        arguments:
+            - '@user'
+            - '@template'
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,12 @@
+<!-- IF .topicrow -->
+<script>
+head.ready(function(){
+	var text = ['{L_TOPICS}', '{L_STICKY}', '{L_ANNOUNCEMENTS}', '{L_GLOBAL_ANNOUNCEMENTS}'];
+	var elem = $('[id^="cas_"]');
+	elem.each(function(){
+		var id = $(this).attr('id').replace('cas_', '');
+		$(this).parent().parent().parent().prev().text(text[id]);
+	});
+});
+</script>
+<!-- ENDIF -->
