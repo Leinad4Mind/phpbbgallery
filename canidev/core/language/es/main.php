@@ -1,11 +1,11 @@
 <?php
-/*
-* main.php [Spanish [Es]]
+/**
+* [Spanish [Es]]
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version 1.1.1 15/01/2023
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2023 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 // @ignore
@@ -16,7 +16,7 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -27,5 +27,14 @@ $lang = array_merge($lang, array(
 	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentación y Soporte',
 	'EDIT'						=> 'Editar',
 	'NO_ITEMS'					=> 'No hay elementos para mostrar',
+	'REPORT_EXPLAIN'			=> 'Detalle a continuación toda la información que pueda sobre el error.<br /><br />
+		Además de lo descrito aquí, se enviará información básica sobre el entorno de ejecución para la correcta revisión del problema.<br />
+		<a href="https://www.canidev.com/api/report/documentation" onclick="window.open(this.href); return false;">Ver detalles</a>',
+	'REPORT_SENDED'				=> 'Reporte enviado con éxito',
+	'REPORT_TITLE'				=> 'Reportar error',
 	'SAVE'						=> 'Guardar',
+	'SEND'						=> 'Enviar',
+
+	// Errors
+	'ERROR_REPORT_SEND'			=> 'No ha sido posible enviar su reporte',
 ));

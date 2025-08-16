@@ -1,10 +1,10 @@
 <?php
-/*
+/**
 * @package cBB QuickQuote
 * @version v1.0.1 10/02/2019
 *
 * @copyright (c) 2019 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\quickquote\migrations;

@@ -1,7 +1,7 @@
 /*  cBB QuickQuote StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2021 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -10,14 +10,22 @@
 .quickquote-tooltip {
 	background: rgba(0, 0, 0, 0.7);
 	border-radius: 4px;
-	font-size: 11px;
 	padding: 7px;
 	position: absolute;
 	z-index: 10;
 }
 
-.quickquote-tooltip, .quickquote-tooltip a {
+.quickquote-tooltip.min-font-size {
+	font-size: 11px;
+}
+
+.quickquote-tooltip,
+.quickquote-tooltip a {
 	color: #fff;
+}
+
+.quickquote-tooltip a {
+	display: inline-block;
 }
 
 .quickquote-tooltip .tooltip-sep {
@@ -28,14 +36,16 @@
 -------------------------- */
 .quickquote-floatbtn {
 	bottom: 30px;
-	font-size: 12px;
+	box-shadow: 0 0 2px #738fb3;
 	font-weight: bold;
 	padding: 10px 30px 10px 10px;
     position: fixed;
     right: 60px;
 	z-index: 10;
+}
 
-	box-shadow: 0 0 2px #738fb3;
+.quickquote-floatbtn.min-font-size {
+	font-size: 12px;
 }
 
 .quickquote-floatbtn:hover {
@@ -52,9 +62,8 @@
     top: 50%;
     right: 0;
 	text-align: center;
-    width: 20px;
-
 	transform: translate(0, -50%);
+    width: 20px;
 }
 
 .quickquote-inlinebtn,
@@ -82,7 +91,7 @@
 
 .qq-dialog .titlebar {
 	background-color: #ccdff7;
-    padding: 4px;
+    padding: 6px;
 }
 
 .qq-dialog .titlebar a {
@@ -109,14 +118,14 @@
 }
 
 .qq-dialog .content:after {
+	background: transparent;
+	background: linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
 	content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 60px;
-    background: transparent;
-	background: linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
 }
 
 .qq-dialog .content img {
@@ -127,7 +136,9 @@
 /* RTL
 ------------------------- */
 .rtl .quickquote-floatbtn {
+	left: 60px;
 	padding: 10px 10px 10px 30px;
+	right: unset;
 }
 
 .rtl .quickquote-floatbtn:after {
@@ -176,8 +187,8 @@
 ------------------------- */
 @media only screen and (max-width: 375px) {
 	.quickquote-floatbtn {
-		right: auto;
 		left: 50%;
+		right: auto;
 		transform: translateX(-50%);
 	}
 }

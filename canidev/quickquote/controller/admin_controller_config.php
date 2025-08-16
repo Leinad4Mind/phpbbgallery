@@ -1,55 +1,39 @@
 <?php
-/*
-* @package cBB QuickQuote
-* @version v1.0.2 21/04/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Quickquote
+ * @version 1.0.3 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickquote\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
+class admin_controller_config extends \canidev\core\controller\acp
 {
-	exit;
-}
+	protected $db;
+	protected $dispatcher;
 
-class admin_controller_config extends \canidev\core\acp
-{
 	/**
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
-	* @param \phpbb\language\language 					$language			Language object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\template\template					$template     		Template object
-	* @param \phpbb\user								$user				User object
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface			$db					DB Object
+	 * @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\config\config $config,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\language\language $language,
-		\phpbb\request\request $request,
-		\phpbb\template\template $template,
-		\phpbb\user $user)
+		\phpbb\event\dispatcher_interface $dispatcher)
 	{
-		$this->cache		= $cache;
-		$this->config		= $config;
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
-		$this->lang			= $language;
-		$this->request		= $request;
-		$this->template 	= $template;
 	}
 
+	/**
+	 * Display controller
+	 * @param string 	$mode
+	 */
 	public function display($mode)
 	{
 		$this->page_header('cbb-quickquote', $this->config['quickquote_version']);
@@ -59,50 +43,50 @@ class admin_controller_config extends \canidev\core\acp
 
 		$submit 	= $this->request->is_set_post('submit');
 		$form_key 	= 'acp_quickquote';
-		$error		= array();
+		$error		= [];
 		
 		add_form_key($form_key);
 		
-		$display_vars = array(
+		$display_vars = [
 			'legend1'			=> 'MAIN_OPTIONS',
-			'quickquote_floatbtn'			=> array('lang' => 'QUICKQUOTE_FLOATBTN',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-			'quickquote_groups'				=> array('lang' => 'QUICKQUOTE_GROUPS',				'type' => 'custom',		'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}', 1)),
-			'quickquote_reply_overwrite'	=> array('lang' => 'QUICKQUOTE_REPLY_OVERWRITE',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-		);
+			'quickquote_floatbtn'			=> ['lang' => 'QUICKQUOTE_FLOATBTN',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+			'quickquote_groups'				=> ['lang' => 'QUICKQUOTE_GROUPS',				'type' => 'custom',		'function' => [$this->tools, 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}', 1]],
+			'quickquote_reply_overwrite'	=> ['lang' => 'QUICKQUOTE_REPLY_OVERWRITE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+		];
 
 		/**
-		* @event quickquote.acp_config_vars
-		* @var array	display_vars		Variables to show
-		* @var string	mode				Current mode
-		* @since 1.0.0
-		*/
-		$vars = array('display_vars', 'mode');
+		 * @event quickquote.acp_config_vars
+		 * @var array	display_vars		Variables to show
+		 * @var string	mode				Current mode
+		 * @since 1.0.0
+		 */
+		$vars = ['display_vars', 'mode'];
 		extract($this->dispatcher->trigger_event('quickquote.acp_config_vars', compact($vars)));
 
 		$cfg_array 	= $this->config;
 		
 		if($submit)
 		{
-			$cfg_array = $this->request->variable('config', array('' => ''));
-			$cfg_array['quickquote_groups'] = ($this->request->is_set_post('all_groups_quickquote_groups')) ? 'all' : $this->request->variable('quickquote_groups', array(0));
+			$cfg_array = $this->request->variable('config', ['' => '']);
+			$cfg_array['quickquote_groups'] = ($this->request->is_set_post('all_groups_quickquote_groups')) ? 'all' : $this->request->variable('quickquote_groups', [0]);
 
 			// We validate the complete config if whished
 			validate_config_vars($display_vars, $cfg_array, $error);
 			
 			if(!check_form_key($form_key))
 			{
-				$error[] = $this->lang->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
 			}
 		}
 
 		/**
-		* @event quickquote.acp_config_check_vars
-		* @var array	cfg_array		Submitted data
-		* @var boll		submit			Submit status
-		* @var array	error			Array with error messages
-		* @since 1.0.0
-		*/
-		$vars = array('cfg_array', 'submit', 'error');
+		 * @event quickquote.acp_config_check_vars
+		 * @var array	cfg_array		Submitted data
+		 * @var bool	submit			Submit status
+		 * @var array	error			Array with error messages
+		 * @since 1.0.0
+		 */
+		$vars = ['cfg_array', 'submit', 'error'];
 		extract($this->dispatcher->trigger_event('quickquote.acp_config_check_vars', compact($vars)));
 		
 		$this->new_config = $cfg_array;
@@ -130,14 +114,14 @@ class admin_controller_config extends \canidev\core\acp
 
 		if($submit)
 		{
-			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->get_form_action()));
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'QUICKQUOTE_IN_ADMIN'	=> true,
 			'S_ERROR'				=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'				=> implode('<br />', $error),
-		));
+		]);
 
 		$this->display_vars($display_vars);
 	}

@@ -1,6 +1,5 @@
 <?php
-/*
-* @name v100.php
+/**
 * @package cBB QuickQuote
 * @version 1.0.0 01/03/2018
 *

@@ -1,11 +1,11 @@
 <?php
-/*
-* @package Ext Common Core
-* @version v1.0.8 12/01/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package Ext Common Core
+ * @version 1.1.1 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -15,7 +15,6 @@ class editor
 {
 	protected $config;
 	protected $container;
-	protected $core;
 	protected $db;
 	protected $dispatcher;
 	protected $language;
@@ -27,7 +26,7 @@ class editor
 	protected $php_ext;
 
 	public $resources_loaded 	= false;
-	protected $plugins 			= array();
+	protected $plugins 			= [];
 
 	private $bbcodes 			= null;
 	private $smilies 			= null;
@@ -36,23 +35,22 @@ class editor
 	static $instance;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container		Service container interface
+	 *
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->config 			= $container->get('config');
 		$this->container 		= $container;
-		$this->core 			= \canidev\core\lib::get_instance($container);
 		$this->db 				= $container->get('dbal.conn');
 		$this->dispatcher 		= $container->get('dispatcher');
 		$this->language 		= $container->get('language');
 		$this->path				= $container->get('path_helper');
 		$this->request 			= $container->get('request');
-		$this->template 		= \canidev\core\template::get_instance($container);
+		$this->template 		= $container->get('canidev.core.template');
 		$this->user 			= $container->get('user');
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
 		$this->php_ext			= $container->getParameter('core.php_ext');
@@ -61,6 +59,12 @@ class editor
 		$this->language->add_lang('editor', 'canidev/core');
 	}
 
+	/**
+	 * Add plugin by filename
+	 * 
+	 * @param string 	$plugin_filename
+	 * @param bool 		$is_global
+	 */
 	public function add_plugin($plugin_filename, $is_global = false)
 	{
 		$class_name	= str_replace('/', '\\', $plugin_filename);
@@ -81,6 +85,14 @@ class editor
 		}
 	}
 
+	/**
+	 * Build editor template
+	 * 
+	 * @param array 	$options 		Editor options
+	 * @param bool 		$return_data 	Define if editor template must be returned as variable
+	 * 
+	 * @return array|void
+	 */
 	public function build($options, $return_data = false)
 	{
 		if(!function_exists('display_custom_bbcodes'))
@@ -98,7 +110,7 @@ class editor
 			'type'					=> 'basic',
 			'rows'					=> '',
 			'showRemoveFormat' 		=> true,
-			'plugins' 				=> array(),	
+			'plugins' 				=> [],	
 		);
 
 		$options = array_merge($default_options, $options);
@@ -119,7 +131,7 @@ class editor
 
 				if($plugin->get_lang())
 				{
-					$this->core->set_js_lang($plugin->get_lang());
+					$this->template->set_js_lang($plugin->get_lang());
 				}
 
 				$this->template->append_asset('js', $plugin->get_filename());
@@ -142,14 +154,14 @@ class editor
 		}
 
 		// Sanitize options
-		$sanitize_keys = array('plugins', 'toolbar', 'toolbarExclude');
+		$sanitize_keys = ['plugins', 'toolbar', 'toolbarExclude'];
 
 		foreach($sanitize_keys as $key)
 		{
 			if(isset($options[$key]) && is_string($options[$key]))
 			{
 				$parts 	= preg_split('#(,|\|)#', $options[$key], 0, PREG_SPLIT_DELIM_CAPTURE);
-				$ary 	= array();
+				$ary 	= [];
 
 				foreach($parts as $code)
 				{
@@ -166,7 +178,7 @@ class editor
 		}
 
 		// test
-		$vars = array('options');
+		$vars = ['options'];
 		extract($this->trigger_event('editor_after_config', compact($vars)));
 
 		// Load default resources
@@ -182,7 +194,7 @@ class editor
 				$this->template->prepend_assets = false;
 			}
 
-			$this->core->set_js_lang(array(
+			$this->template->set_js_lang([
 				'AUTHOR',
 				'CODE',
 				'DATE',
@@ -194,7 +206,7 @@ class editor
 				'UNLINK',
 				'URL',
 				'VIEW_SOURCE',
-			));
+			]);
 		}
 
 		$this->template->assign_vars(array(
@@ -227,6 +239,9 @@ class editor
 		}
 	}
 
+	/**
+	 * Generate smilies for editor
+	 */
 	protected function generate_smilies()
 	{
 		if($this->smilies !== null)
@@ -236,12 +251,12 @@ class editor
 
 		$root_path		= (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $this->path->get_web_root_path();
 		$i 				= 0;
-		$smiley_ary 	= array();
+		$smiley_ary 	= [];
 
 		$this->smilies = array(
 			'path'		=> $root_path . $this->config['smilies_path'] . '/',
-			'items' 	=> array(),
-			'current' 	=> array(),
+			'items' 	=> [],
+			'current' 	=> [],
 			'start'		=> $this->request->variable('smiley_start', 0),
 		);
 
@@ -275,13 +290,17 @@ class editor
 		unset($smiley_ary);
 	}
 
+	/**
+	 * Generate emoticons
+	 * @return array
+	 */
 	protected function generate_editor_emoticons()
 	{
 		$this->generate_smilies();
 
 		$result = array(
 			'path'		=> $this->smilies['path'],
-			'hidden' 	=> array(),
+			'hidden' 	=> [],
 		);
 
 		foreach($this->smilies['items'] as $i => $row)
@@ -292,15 +311,19 @@ class editor
 		return $result;
 	}
 
+	/**
+	 * Get available bbcodes
+	 * @return array
+	 */
 	public function get_bbcodes()
 	{
 		if($this->bbcodes === null)
 		{
-			$this->bbcodes = array();
+			$this->bbcodes = [];
 
 			$sql_ary = array(
 				'SELECT'	=> 'b.bbcode_id, b.bbcode_tag, b.bbcode_helpline',
-				'FROM'		=> array(BBCODES_TABLE => 'b'),
+				'FROM'		=> [BBCODES_TABLE => 'b'],
 				'WHERE'		=> 'b.display_on_posting = 1',
 				'ORDER_BY'	=> 'b.bbcode_tag',
 			);
@@ -310,7 +333,7 @@ class editor
 			* @var	array	sql_ary		The SQL array to get the bbcode data
 			* @since 1.0.4
 			*/
-			$vars = array('sql_ary');
+			$vars = ['sql_ary'];
 			extract($this->trigger_event('editor_bbcodes_modify_sql', compact($vars)));
 
 			$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary));
@@ -325,6 +348,9 @@ class editor
 		return $this->bbcodes;
 	}
 
+	/**
+	 * Parse bbcodes and put on template
+	 */
 	public function bbcodes_to_template()
 	{
 		$this->get_bbcodes();
@@ -352,7 +378,7 @@ class editor
 			* @var 	bool 	prevent_default 	Define if the default action is override
 			* @since 1.0.4
 			*/
-			$vars = array('custom_tag', 'row', 'prevent_default');
+			$vars = ['custom_tag', 'row', 'prevent_default'];
 			extract($this->trigger_event('editor_bbcodes_modify_row', compact($vars)));
 
 			if($prevent_default)
@@ -364,6 +390,11 @@ class editor
 		}
 	}
 
+	/**
+	 * Parse smilies and put on template
+	 * 
+	 * @param bool 	$use_pagination
+	 */
 	public function smilies_to_template($use_pagination = true)
 	{
 		$this->generate_smilies();
@@ -402,6 +433,9 @@ class editor
 		}
 	}
 
+	/**
+	 * Do ajax actions
+	 */
 	public function do_actions()
 	{
 		if(!($this->request->variable('cbbModule', '') == 'editor') && ($this->request->is_ajax() || $this->request->variable('ajaxRequest', false)))
@@ -423,6 +457,15 @@ class editor
 		}
 	}
 
+	/**
+	 * Trigger plugins events
+	 * 
+	 * @param string 		$name 		Event name
+	 * @param array 		$event
+	 * 
+	 * @return array
+	 * 
+	 */
 	protected function trigger_event($name, $event)
 	{
 		$plugin_method = 'event_' . $name;
@@ -431,7 +474,7 @@ class editor
 		{
 			if($plugin->is_enabled() && method_exists($plugin, $plugin_method))
 			{
-				$event = call_user_func(array($plugin, $plugin_method), $event);
+				$event = call_user_func([$plugin, $plugin_method], $event);
 			}
 		}
 
@@ -440,6 +483,12 @@ class editor
 		return $event;
 	}
 
+	/**
+	 * Get editor instance
+	 * 
+	 * @param ContainerInterface 	$container		Service container interface
+	 * @return editor
+	 */
 	static public function get_instance($container)
 	{
 		if(!self::$instance)

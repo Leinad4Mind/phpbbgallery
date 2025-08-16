@@ -1,12 +1,12 @@
 <?php
-/*
-* info_acp_quickquote.php [English [En]]
-* @package cBB QuickQuote
-* @version v1.0.2 21/04/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [English [En]]
+ * @package cBB QuickQuote
+ * @version 1.0.3 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CAT_QUICKQUOTE'			=> 'QuickQuote',
 	'ACP_QUICKQUOTE_CONFIG'			=> 'Configuration',
 	'ACP_QUICKQUOTE_CONFIG_EXPLAIN'	=> 'From here you can manage the main options of the extension.',
@@ -35,4 +35,4 @@ $lang = array_merge($lang, array(
 	'QUICKQUOTE_REPLY_OVERWRITE'			=> 'Overwrite response text',
 	'QUICKQUOTE_REPLY_OVERWRITE_EXPLAIN'	=> 'Decide if the text written in the quick reply will be replaced by using the <em>Reply</em> function.<br />
 		If it is set to "No" the quote will be inserted at the end of the text.',
-));
+]);

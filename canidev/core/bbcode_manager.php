@@ -1,11 +1,11 @@
 <?php
-/*
-* @package Ext Common Core
-* @version v1.0.8 12/01/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package Ext Common Core
+ * @version 1.1.1 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -16,16 +16,17 @@ class bbcode_manager
 	
 	protected $bbcode_tool;
 	protected $db;
+	protected $phpbb_root_path;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\db\driver\driver_interface		$db				DB Object
-	* @param string									$root_path		phpBB root path
-	* @param string									$php_ext		phpEx
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param string								$root_path		phpBB root path
+	 * @param string								$php_ext		phpEx
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
 		$root_path,
@@ -39,13 +40,18 @@ class bbcode_manager
 
 		$this->bbcode_tool		= new \acp_bbcodes;
 		$this->db				= $db;
+		$this->phpbb_root_path 	= $root_path;
 	}
 	
+	/**
+	 * Get installed bbcodes
+	 * @return array
+	 */
 	public function get_installed_bbcodes()
 	{
 		if($this->cache === null)
 		{
-			$this->cache = array();
+			$this->cache = [];
 
 			$sql = 'SELECT bbcode_id, bbcode_tag, bbcode_match, bbcode_tpl
 				FROM ' . BBCODES_TABLE;
@@ -66,9 +72,16 @@ class bbcode_manager
 		return $this->cache;
 	}
 
+	/**
+	 * Insert BBcodes into DB
+	 * 
+	 * @param array 	$bbcode_ary 		Array with bbcode's data
+	 * @param bool 		$overwrite 			Defines if existing bbcodes will be overwritten
+	 * @param bool 		$backup 			Define if original bbcodes will be saved on backup file
+	 */
 	public function insert($bbcode_ary, $overwrite = false, $backup = false)
 	{
-		$insert_ary	= array();
+		$insert_ary	= [];
 		
 		$this->get_installed_bbcodes();
 
@@ -86,6 +99,7 @@ class bbcode_manager
 				'second_pass_match'		=> $data['second_pass_match'],
 				'second_pass_replace'	=> $data['second_pass_replace'],
 				'display_on_posting'	=> isset($bbcode_array['display_on_posting']) ? $bbcode_array['display_on_posting'] : 1,
+				'bbcode_helpline' 		=> isset($bbcode_array['bbcode_helpline']) ? $bbcode_array['bbcode_helpline'] : '',
 			));
 			
 			$bbcode_tag	= strtolower($bbcode_array['bbcode_tag']);
@@ -130,16 +144,22 @@ class bbcode_manager
 		}
 	}
 	
+	/**
+	 * Update BBcode by it's tag name
+	 * 
+	 * @param string 	$bbcode_tag 		BBcode tag name
+	 * @param array 	$bbcode_data 		Array with new bbcode data
+	 */
 	public function update_by_tag($bbcode_tag, $bbcode_data)
 	{
-		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : array($bbcode_tag));
+		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : [$bbcode_tag]);
 		
 		if(isset($bbcode_data['bbcode_match']) && !isset($bbcode_data['first_pass_match']))
 		{
 			// Build the BBCode data
 			$data = $this->bbcode_tool->build_regexp($bbcode_data['bbcode_match'], $bbcode_data['bbcode_tpl']);
 
-			$bbcode_data = array_merge($bbcode_data, array(
+			$bbcode_data = array_merge($bbcode_data, [
 				'bbcode_tag'			=> $data['bbcode_tag'],
 				'bbcode_match'			=> $bbcode_data['bbcode_match'],
 				'bbcode_tpl'			=> $bbcode_data['bbcode_tpl'],
@@ -147,7 +167,7 @@ class bbcode_manager
 				'first_pass_replace'	=> $data['first_pass_replace'],
 				'second_pass_match'		=> $data['second_pass_match'],
 				'second_pass_replace'	=> $data['second_pass_replace'],
-			));
+			]);
 		}
 		
 		$sql = 'UPDATE ' . BBCODES_TABLE . '
