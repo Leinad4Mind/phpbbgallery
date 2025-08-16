@@ -20,71 +20,39 @@ class main_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.permissions'	       => 'acl_perms_add',
 			'core.submit_pm_after'	       => 'pm_search_main',
 			'core.delete_pm_before'	=> 'pm_delete_index',
+			'core.memberlist_view_profile'	       => 'pm_search_with_user',
 		);
 	}
-	private $auth;
-
-	private $cache;
 
 	private $config;
 
 	private $db;
 
-	private $request;
-
 	private $template;
 
-	private $user;
-
-	private $helper;
-
 	private $search_helper;
-
-	private $root_path;
-
-	private $php_ext;
-
-	private $table_prefix;
 
 	/**
 	 * Constructor
 	 * NOTE: The parameters of this method must match in order and type with
 	 * the dependencies defined in the services.yml file for this service.
 	 *
-	 * @param \phpbb\auth|\phpbb\auth\auth                       $auth      Auth object
-	 * @param \phpbb\cache\service                               $cache     Cache object
 	 * @param \phpbb\config|\phpbb\config\config                 $config    Config object
 	 * @param \phpbb\db\driver|\phpbb\db\driver\driver_interface $db        Database object
-	 * @param \phpbb\request|\phpbb\request\request              $request   Request object
 	 * @param \phpbb\template|\phpbb\template\template           $template  Template object
-	 * @param \phpbb\user                                        $user      User object
-	 * @param \phpbb\controller\helper                           $helper    Controller helper object
-	 * @param \anavaro\pmsearch\helper                           $search_helper
-	 * @param string                                             $root_path phpBB root path
-	 * @param string                                             $php_ext   phpEx
-	 * @param                                                    $table_prefix
 	 * @internal param \phpbb\content_visibility $content_visibility Content visibility object
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config,
-		\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template,
-		\phpbb\user $user, \phpbb\controller\helper $helper,
-		\anavaro\pmsearch\helper $search_helper,
-		$root_path, $php_ext, $table_prefix)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db,
+		\phpbb\template\template $template,
+		\anavaro\pmsearch\helper $search_helper)
 	{
-		$this->auth = $auth;
-		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
-		$this->request = $request;
 		$this->template = $template;
-		$this->user = $user;
-		$this->helper = $helper;
 		$this->search_helper = $search_helper;
-		$this->root_path = $root_path;
-		$this->php_ext = $php_ext;
-		$this->table_prefix = $table_prefix;
 
 		$error = false;
 		$search_types = $this->search_helper->get_search_types();
@@ -92,6 +60,13 @@ class main_listener implements EventSubscriberInterface
 		{
 			trigger_error($error, E_USER_WARNING);
 		}
+	}
+
+	public function acl_perms_add($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_pmsearch'] = array('lang' => 'ACL_U_PMSEARCH', 'cat' => 'misc');
+		$event['permissions'] = $permissions;
 	}
 
 	public function	pm_search_main($event)
@@ -153,5 +128,15 @@ class main_listener implements EventSubscriberInterface
 				$this->fulltext_search->index_remove($delete_ids);
 			}
 		}
+	}
+
+	public function pm_search_with_user($event)
+	{
+		$target = $event['member']['user_id'];
+		$url = generate_board_url() . '/ucp.php?i=\anavaro\pmsearch\ucp\ucp_pmsearch_module&mode=search&terms=nick&keywords=' . $target;
+		$this->template->assign_vars(array(
+			'S_SEARCH_WITH_USER'	=> true,
+			'U_SEARCH_WITH_USER'	=> $url
+		));
 	}
 }

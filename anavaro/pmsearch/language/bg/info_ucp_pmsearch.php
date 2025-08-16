@@ -45,4 +45,9 @@ $lang = array_merge($lang, array(
 	'NO_RESULTS_FOUND'	=> 'Няма намерени резултати',
 	'SEARCH_PMS'	=> 'Търси в личните съощения',
 	'ACCESS_DENIED'	=> 'Нямате право да търсите в личните съобщения',
+
+	// Added in version 1.0.1
+	'SEARCH_FOR_NICK'	=> 'Търси за ник',
+	'SEARCH_WITH_USER'	=> 'Търси',
+	'SEARCH_WITH_USER_LANG'	=> 'Покажи кореспонденция с потребителя',
 ));
