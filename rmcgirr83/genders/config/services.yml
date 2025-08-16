@@ -1,15 +1,11 @@
-imports:
-    - { resource: genderspath.yml }
-
 services:
     rmcgirr83.genders.listener:
         class: rmcgirr83\genders\event\listener
         arguments:
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %rmcgirr83.genders.imagepath%
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
