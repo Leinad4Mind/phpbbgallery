@@ -7,7 +7,7 @@
 *
 */
 
-namespace phpbbmodders\editedposts_unread\event;
+namespace rmcgirr83\editedpostsunread\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -59,20 +59,20 @@ class listener implements EventSubscriberInterface
 
 			if ($ext_post_mode == 'edit_last_post' || $ext_post_mode == 'edit_topic')
 			{
-				$sql_update_posts = 'UPDATE ' . POSTS_TABLE . '
+				$sql = 'UPDATE ' . POSTS_TABLE . '
 					SET post_time = ' . time() . '
 					WHERE post_id = ' . $event['data']['post_id'] . '
 						AND topic_id = ' . $event['data']['topic_id'];
-				$this->db->sql_query($sql_update_posts);
+				$this->db->sql_query($sql);
 
-				$sql_update_topics = 'UPDATE ' . TOPICS_TABLE . '
+				$sql = 'UPDATE ' . TOPICS_TABLE . '
 					SET topic_last_post_time = ' . time() . '
 					WHERE topic_id = ' . $event['data']['topic_id'];
-				$this->db->sql_query($sql_update_topics);
+				$this->db->sql_query($sql);
 
-				if (!function_exists('markread'))
+				if (!function_exists('update_post_information'))
 				{
-					include ($this->phpbb_root_path . 'includes/functions_posting.' . $this->phpEx);
+					include ($this->root_path . 'includes/functions_posting.' . $this->php_ext);
 				}
 
 				update_post_information('forum', $event['data']['forum_id']);

@@ -1,6 +1,6 @@
 services:
-    phpbbmodders.editedposts_unread.listener:
-        class: phpbbmodders\editedposts_unread\event\listener
+    rmcgirr83.editedpostsunread.listener:
+        class: rmcgirr83\editedpostsunread\event\listener
         arguments:
             - @dbal.conn		
             - %core.root_path%
