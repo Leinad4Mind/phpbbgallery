@@ -100,7 +100,8 @@ pre {
 fieldset .form-creator-visible ~ #imgurAnchor,
 fieldset .form-creator-visible ~ .row .col-md-4,
 fieldset .form-creator-visible ~ .row .col-md-8,
-fieldset .form-creator-visible ~ #form_hide {
+fieldset .form-creator-visible ~ #form_hide,
+fieldset .form-creator-visible ~ .btn-toolbar-bbcodeorder {
 	display: none;
 }
 

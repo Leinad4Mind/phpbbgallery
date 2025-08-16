@@ -189,7 +189,7 @@ class listener implements EventSubscriberInterface
 			// make things even easier to read //
 			$name = "name='{$clean_name}'";
 			$id = "id='{$clean_name}'";
-			$placeholder = "placeholder='{$row['hint']}' ";
+			$placeholder = "placeholder='" . htmlspecialchars($row['hint'], ENT_QUOTES) . "' ";
 			$tabindex = "tabindex='{$row['ndx_order']}' ";
 
 			$type = "type='{$row['type']}' ";
@@ -212,11 +212,11 @@ class listener implements EventSubscriberInterface
 
 				case 'textbox':
 					$value = $this->request->variable($clean_name, '', true);
-					$entry = '<textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $class . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">' . $value . '</textarea>';
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $class . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">' . $value . '</textarea></div></div>';
 				break;
 
 				case 'selectbox':
-					$entry = '<select ' . $type . $name . $id . $tabindex . $mandatory . $class . '>';
+					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><select ' . $type . $name . $id . $tabindex . $mandatory . $class . '>';
 					$entry .= '<option value="">----------------</option>';
 					$select_option = explode(',', $row['options']);
 					$selected = $this->request->variable($clean_name, false);
@@ -224,7 +224,7 @@ class listener implements EventSubscriberInterface
 					{
 						 $entry .='<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>'. $value .'</option>';
 					}
-					$entry .= '</select>';
+					$entry .= '</select></div></div>';
 				break;
 
 				case 'radiobuttons':
@@ -240,10 +240,10 @@ class listener implements EventSubscriberInterface
 				case 'checkbox':
 					$check_option = explode(',', $row['options']);
 					$entry = '';
-					$checked = $this->request->variable($clean_name, false);
+					$checked = $this->request->variable($clean_name, ['']);
 					foreach ($check_option as $value)
 					{
-						$entry .='<input ' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . '" value="'. $value .'"' . ($value == $checked ? ' checked' : '') . ' />&nbsp;'. $value .'&nbsp;&nbsp;';
+						$entry .='<input ' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . '" value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . ' />&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
 

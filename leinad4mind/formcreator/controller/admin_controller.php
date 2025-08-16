@@ -141,7 +141,7 @@ class admin_controller
 
 		if ($delete)
 		{
-			if (!check_form_key($form_key))
+			if (!check_link_hash($this->request->variable('hash', ''), 'delete.' . $form_key))
 			{
 				trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action));
 			}
@@ -165,10 +165,10 @@ class admin_controller
 			$q_names		= $this->request->variable('q_name', array(0 => ''), true);
 			$q_hint			= $this->request->variable('q_hint', array(0 => ''), true);
 			$q_options		= $this->request->variable('q_options', array(0 => ''), true);
-			$q_name_before	= $this->request->variable('q_name_before', array(0 => ''), true);
-			$q_name_after	= $this->request->variable('q_name_after', array(0 => ''), true);
-			$q_value_before	= $this->request->variable('q_value_before', array(0 => ''), true);
-			$q_value_after	= $this->request->variable('q_value_after', array(0 => ''), true);
+			$q_name_before	= $this->request->untrimmed_variable('q_name_before', array(0 => ''), true);
+			$q_name_after	= $this->request->untrimmed_variable('q_name_after', array(0 => ''), true);
+			$q_value_before	= $this->request->untrimmed_variable('q_value_before', array(0 => ''), true);
+			$q_value_after	= $this->request->untrimmed_variable('q_value_after', array(0 => ''), true);
 			$form_id		= $this->request->variable('form_id', 1);
 			$q_ndx_order	= $this->request->variable('q_ndx_order', array(0 => ''), true);
 			$post 			= $this->request->get_super_global(\phpbb\request\request::POST);
@@ -295,7 +295,7 @@ class admin_controller
 				'VALUE_AFTER'	=> $row['value_after'],
 				'CHECKED'		=> $checked,
 				'ID'			=> $row['id'],
-				'U_DELETE' 		=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}"),
+				'U_DELETE' 		=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}&amp;hash=" . generate_link_hash('delete.' . $form_key)),
 				'U_MOVE_UP' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
 				'U_MOVE_DOWN' 	=> append_sid($this->root_path . 'adm/index.' . $this->php_ext . '?sid=' . $this->user->session_id, "i=-leinad4mind-formcreator-acp-formcreator_module&mode=manage&amp;move_down=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}"),
 			));
