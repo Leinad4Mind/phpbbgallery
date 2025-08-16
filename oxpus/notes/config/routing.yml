@@ -1,0 +1,3 @@
+notes_controller:
+    path: /notes/
+    defaults: { _controller: oxpus.notes.controller:handle }

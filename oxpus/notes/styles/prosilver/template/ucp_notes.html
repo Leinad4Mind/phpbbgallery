@@ -1,0 +1,32 @@
+<!-- INCLUDE ucp_header.html -->
+
+<h2>{L_UCP_NOTES}</h2>
+
+<form id="notes_config" method="post" action="{U_FORM_ACTION}" />
+
+<div class="panel">
+	<div class="inner">
+	
+	<fieldset>
+	
+		<dl>
+			<dt>{L_POPUP_NOTES}</dt>
+			<dd>
+				<input type="radio" name="notes_popup" class="radio" value="1" <!-- IF NOTES_POPUP -->checked="checked"<!-- ENDIF --> /> {L_YES}
+				<input type="radio" name="notes_popup" class="radio" value="0" <!-- IF not NOTES_POPUP -->checked="checked"<!-- ENDIF --> /> {L_NO}
+			</dd>
+		</dl>
+	
+	</fieldset>
+	
+	<fieldset class="quick">
+		<input class="button1" type="submit" name="submit" value="{L_SUBMIT}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+
+	</div>
+</div>
+
+</form>
+
+<!-- INCLUDE ucp_footer.html -->
