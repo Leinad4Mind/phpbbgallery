@@ -132,6 +132,10 @@ class main_listener implements EventSubscriberInterface
 			$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
 			$ext_path_web				= $this->phpbb_path_helper->update_web_root_path($ext_path);
 
+			$this->template->assign_vars([
+				'EXT_NOTES_WEB'		=> $ext_path_web,
+			]);
+
 			$ext_main_link = $this->helper->route('oxpus_notes_controller');
 
 			if ($this->user->data['user_popup_notes'])
