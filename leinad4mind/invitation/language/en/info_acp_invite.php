@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -59,7 +59,7 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_DEFAULT_GROUP'							=> 'Make group default',
 	'ACP_INVITE_DEFAULT_GROUP_EXPLAIN'					=> 'The selected group will also be the default group for invited users.<br /><em>Note that this setting overrides the “Set Newly Registered Users group to default” setting.</em>',
 	'ACP_INVITE_DEFAULT_GROUP_USERS'					=> 'All users in the group',
-	'ACP_INVITE_DEFAULT_GROUP_USERS_EXPLAIN'			=> 'You have to select a minimum of one group. You have to select yes or no to specify, if all users of this selected group are effected, or only that users are members of the default group.',
+	'ACP_INVITE_DEFAULT_GROUP_USERS_EXPLAIN'			=> 'You have to select a minimum of one group. If set to no, it will only apply to users whose selected group is the default group also.',
 	'ACP_INVITE_DELETES_PEND_CONFIRM'					=> 'Are you sure that you want to delete the selected invitations?<br /><em>Please note: If you confirm that, the invited persons will not be able to use your invitation anymore!</em>',
 	'ACP_INVITE_DELETE_ALL_PEND_CONFIRM'				=> 'Are you sure that you want to delete all the invitations?<br /><em>Please note: If you confirm that, the invited persons will not be able to use your invitation anymore!</em>',
 	'ACP_INVITE_DELETE_GROUPS_CONFIRM'					=> 'Are you sure that you want to delete the selected groups invitations?',
@@ -116,7 +116,7 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_HANDLING_USERS_IUS'						=> 'Successfully delivered the invitation to (<em><b>%s</b></em>) users.<br />Sent invitation: (<em><b>%s</b></em>).',
 	'ACP_INVITE_HANDLING_USER_I'						=> 'Number of invitation changed successfully for user (<em><b>%s</b></em>).<br />New quantity: (<em><b>%s</b></em>).',
 	'ACP_INVITE_HANDLING_USER_IS'						=> 'Number of invitations changed successfully for user (<em><b>%s</b></em>).<br />New quantity: (<em><b>%s</b></em>).',
-	'ACP_INVITE_ALLOCATE'								=> 'Allocation',
+	'ACP_INVITE_ALLOCATE'								=> 'Add',
 	'ACP_INVITE_SEND_DAY_DB'							=> 'Number of invitations to be sent per day',
 	'ACP_INVITE_SEND_DAY_DB_EXPLAIN'					=> 'You can set the maximum number of invites a user can send per day.<br /><em>(0=unlimited.)</em>',
 	'ACP_INVITE_SEND_DB_NUM'							=> 'number of pieces',

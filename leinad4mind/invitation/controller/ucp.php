@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -145,19 +145,21 @@ class ucp extends controller_base
 			case 'data':
 				$this->page_title = 'UCP_INVITE_DATA';
 
+				$exp_days = $this->ext_config['invite_validity'] / 86400;
+
 				$this->template->assign_vars(array(
 					'S_INVITE_DATA'				=> true,
 
-					'L_UCP_INVITE_DB_USER'			=> $this->language->lang('UCP_INVITE_DB_USER' . ($this->user->data['user_invite_member'] > 1 ? 'S' : '')),
+					'L_UCP_INVITE_DB_USER'				=> $this->language->lang('UCP_INVITE_DB_USER' . ($this->user->data['user_invite_member'] > 1 ? 'S' : '')),
 					'L_UCP_INVITE_DB_USER_EXPLAIN'	=> $this->language->lang('UCP_INVITE_DB_USER' . ($this->user->data['user_invite_member'] > 1 ? 'S' : '') . '_EXPLAIN'),
 
 					'INVITE_DB_USER'				=> $this->language->lang('UCP_INVITE_DB', $this->user->data['user_invite_member']),
-					'INVITE_DB_NUMBER'				=> $this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max') ? $this->language->lang('UCP_INVITE_DB_MAX') : $this->language->lang('UCP_INVITE_DB', $this->user->data['user_invite']),
+					'INVITE_DB_NUMBER'			=> $this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max') ? $this->language->lang('UCP_INVITE_DB_MAX') : $this->language->lang('UCP_INVITE_DB', $this->user->data['user_invite']),
 					'INVITE_DB_SEND'				=> $this->ext_config['invite_day_db'] ? $this->language->lang('UCP_INVITE_DB', $this->ext_config['invite_day_db']) : $this->language->lang('UCP_INVITE_SEND_MAX'),
-					'INVITE_DAY_DB'					=> $this->language->lang('UCP_INVITE_DB', $cmt['ma_sending']),
-					'INVITE_DB_PENDING'				=> $this->language->lang('UCP_INVITE_DB', $cmt['dependent']),
-					'INVITE_TIME_END'				=> $this->ext_config['invite_validity'] / 86400,
-					'INVITE_LAST_USER'				=> $cmt['username'] ? $this->language->lang('UCP_INVITE_LU_REG_INFO', $cmt['username'], $this->user->format_date($cmt['user_regdate'])) : $this->language->lang('UCP_INVITE_NO_REG'),
+					'INVITE_DAY_DB'				=> $this->language->lang('UCP_INVITE_DB', $cmt['ma_sending']),
+					'INVITE_DB_PENDING'			=> $this->language->lang('UCP_INVITE_DB', $cmt['dependent']),
+					'INVITE_TIME_END'				=> $exp_days . ' ' . $this->language->lang('DAY' . (($exp_days > 1) ? 'S' : '')),
+					'INVITE_LAST_USER'			=> $cmt['username'] ? $this->language->lang('UCP_INVITE_LU_REG_INFO', $cmt['username'], $this->user->format_date($cmt['user_regdate'])) : $this->language->lang('UCP_INVITE_NO_REG'),
 				));
 
 			break;
@@ -191,7 +193,7 @@ class ucp extends controller_base
 					trigger_error($this->language->lang('UCP_INVITE_POST_LIMIT', $this->ext_config['invite_post_limit']) . $aback);
 				}
 
-				if ($cmt['ma_sending'] >= $this->ext_config['invite_day_db'] && $this->ext_config['invite_day_db'])
+				if ($this->ext_config['invite_day_db'] && $cmt['ma_sending'] >= $this->ext_config['invite_day_db'])
 				{
 					$error[] = $this->language->lang('UCP_INVITE_DAY_OFF');
 				}
@@ -206,7 +208,7 @@ class ucp extends controller_base
 					$error[] = $this->language->lang('UCP_INVITE_NULL');
 				}
 
-				if (sizeof($error))
+				if (count($error))
 				{
 					meta_refresh(10, $aia);
 					trigger_error(implode('<br />', $error) . $aback);
@@ -215,9 +217,9 @@ class ucp extends controller_base
 				$previous_lang	= $this->request->variable('previous_lang', '');
 				$user_lang		= $this->request->variable('invite_lang', $this->user->lang_name);
 				$email			= strtolower($this->request->variable('email', ''));
-				$subject		= $this->request->variable('subject', '', true);
+				$subject			= $this->request->variable('subject', '', true);
 				$friend			= $this->request->variable('friend', false);
-				$lang			= false;
+				$lang				= false;
 
 				if ($user_lang != $previous_lang)
 				{
@@ -281,7 +283,7 @@ class ucp extends controller_base
 
 					$emailreuse = array();
 
-					if (!sizeof($error))
+					if (!count($error))
 					{
 						$email_ary = explode(' ', $email);
 
@@ -340,7 +342,7 @@ class ucp extends controller_base
 						}
 					}
 
-					if (!sizeof($error))
+					if (!count($error))
 					{
 						$email_cim = array();
 						$user_lang = $this->functions_ucp->get_lang_for_email('user_invite', $user_lang);
@@ -395,7 +397,7 @@ class ucp extends controller_base
 				$this->template->assign_vars(array(
 					'S_INVITE_MAIL'		=> true,
 					'S_FRIEND'				=> $friend,
-					'S_INVITE_LANG_OPTIONS'	=> sizeof($lang_row) > 1 ? language_select($user_lang) : false,
+					'S_INVITE_LANG_OPTIONS'	=> count($lang_row) > 1 ? language_select($user_lang) : false,
 					'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 					'MORE_RECIPIENTS'		=> $this->ext_config['invite_email_db'] > 1 ? $this->language->lang('UCP_INVITE_DB', $this->ext_config['invite_email_db']) : false,
 					'EMAIL_CIM'				=> $email,
@@ -453,7 +455,7 @@ class ucp extends controller_base
 						$error[] = $this->language->lang('UCP_INVITE_REQUEST_NO_MESSAGE');
 					}
 
-					if (!sizeof($error) && ($request_enable === true))
+					if (!count($error) && ($request_enable === true))
 					{
 						$this->functions_ucp->adm_send($this->user->data['user_id'], $claiming_db);
 						$this->functions_ucp->adm_message($message ?: $this->language->lang('UCP_INVITE_REQUEST_MESSAGE_NO_DB'), $claiming_db);
@@ -468,7 +470,7 @@ class ucp extends controller_base
 					'INVITE_REQUEST_ON'				=> $request_enable,
 					'UCP_INVITE_REQUEST_MANY_EXPLAIN'	=> $this->language->lang('UCP_INVITE_REQUEST_MANY_EXPLAIN', $this->ext_config['invite_req_cause']),
 					'INVITE_REQUEST_DB_SELECT'		=> $claiming_db,
-					'MESSAGE'						=> $message,
+					'MESSAGE'							=> $message,
 					'TITLE_INVITE_REQUEST'			=> $this->language->lang('UCP_INVITE_REQUEST'),
 					'SUBT_INVITE_REQUEST'			=> $this->language->lang('UCP_INVITE_REQUEST_TITLE'),
 					'SUBT_INVITE_REQUEST_EXPLAIN'	=> $this->language->lang('UCP_INVITE_REQUEST_TITLE_EXPLAIN', $this->ext_config['invite_req_max']),
@@ -499,7 +501,7 @@ class ucp extends controller_base
 						$error[] = $this->language->lang('UCP_INVITE_DELETE_NO_CONFIRM');
 					}
 
-					if (!sizeof($error))
+					if (!count($error))
 					{
 						$invite_ids = array();
 						foreach ($mmu as $row)
@@ -510,10 +512,10 @@ class ucp extends controller_base
 							}
 						}
 
-						if (sizeof($invite_ids))
+						if (count($invite_ids))
 						{
 							$this->functions->delete_key($invite_ids, false);
-							$this->functions->add_invite(sizeof($invite_ids));
+							$this->functions->add_invite(count($invite_ids));
 
 							$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_DELETE', false, array('reportee_id' => $this->user->data['user_id'], $email));
 
@@ -550,7 +552,7 @@ class ucp extends controller_base
 					}
 
 					$this->template->assign_block_vars('email', array(
-						'COUNT' => $count,
+						'COUNT' => $count > 1 ? $count : 0,
 						'EMAIL' => $row['invite_email'],
 					));
 				}
@@ -563,7 +565,7 @@ class ucp extends controller_base
 
 		$this->template->assign_vars(array(
 			'U_ACTION'			=> $u_action,
-			'ERROR_MESSAGE'		=> implode('<br />', $error),
+			'ERROR_MESSAGE'		=> (count($error)) ? implode('<br>', $error) : false
 		));
 	}
 }

@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

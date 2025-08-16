@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -280,7 +280,7 @@ class acp extends controller_base
 					$error[] = $this->language->lang('FORM_INVALID');
 				}
 
-				if (sizeof($error))
+				if (count($error))
 				{
 					$submit = false;
 				}
@@ -316,7 +316,7 @@ class acp extends controller_base
 							}
 						}
 
-						if (sizeof($error))
+						if (count($error))
 						{
 							$submit = false;
 						}
@@ -429,7 +429,7 @@ class acp extends controller_base
 					switch ($action)
 					{
 						case 'management_user_invite':
-							if (!sizeof($error))
+							if (!count($error))
 							{
 								$this->functions_admin->set_invite('user', $invite, $trigger, $username);
 							}
@@ -454,7 +454,7 @@ class acp extends controller_base
 								}
 							}
 
-							if (!sizeof($error) || $action == 'management_user_invite')
+							if (!count($error) || $action == 'management_user_invite')
 							{
 								$invite						= isset($user_data) ? $user_data['user_invite'] : false;
 								$management_title			= 'ACP_INVITE_USER_MANAGEMENT';
@@ -486,15 +486,15 @@ class acp extends controller_base
 								$error[] = $this->language->lang('NO_USER_SPECIFIED');
 							}
 
-							if (!sizeof($error))
+							if (!count($error))
 							{
 								if (!$usernames = $this->functions_admin->users_verify($usernames))
 								{
-									$error[] = $this->language->lang(sizeof($users_size) == 1 ? 'NO_USER' : 'NO_USERS');
+									$error[] = $this->language->lang(count($users_size) == 1 ? 'NO_USER' : 'NO_USERS');
 								}
 							}
 
-							if (!sizeof($error))
+							if (!count($error))
 							{
 								if (confirm_box(true) || $msus)
 								{
@@ -502,7 +502,7 @@ class acp extends controller_base
 								}
 								else
 								{
-									$confirm = (sizeof($users_size) == 1) ? 'ACP_INVITE_DELETE_USER' : 'ACP_INVITE_DELETE_USERS';
+									$confirm = (count($users_size) == 1) ? 'ACP_INVITE_DELETE_USER' : 'ACP_INVITE_DELETE_USERS';
 
 									$s_hidden_fields = build_hidden_fields(array(
 										'i'						=> $id,
@@ -529,12 +529,12 @@ class acp extends controller_base
 								$error[] = $this->language->lang('ACP_INVITE_NO_VALUE');
 							}
 
-							if (!sizeof($group_ids))
+							if (!count($group_ids))
 							{
 								$error[] = $this->language->lang('ACP_INVITE_NO_GROUP_SPECIFIED');
 							}
 
-							if (!sizeof($error))
+							if (!count($error))
 							{
 								if (confirm_box(true) || $msgs)
 								{
@@ -542,7 +542,7 @@ class acp extends controller_base
 								}
 								else
 								{
-									$confirm = (sizeof($group_ids) == 1) ? 'ACP_INVITE_DELETE_GROUP' : 'ACP_INVITE_DELETE_GROUPS';
+									$confirm = (count($group_ids) == 1) ? 'ACP_INVITE_DELETE_GROUP' : 'ACP_INVITE_DELETE_GROUPS';
 
 									$s_hidden_fields = build_hidden_fields(array(
 										'i'						=> $id,
@@ -645,13 +645,13 @@ class acp extends controller_base
 					if (confirm_box(true))
 					{
 						$this->functions_admin->handling($action, $marked, true);
-						$this->ext_config->set('total_petition', $this->ext_config['total_petition'] - sizeof($marked));
-						$message = $action == 'allocate' ? sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_YSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_YSUCCESSES') : (sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_NSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_NSUCCESSES'));
+						$this->ext_config->set('total_petition', $this->ext_config['total_petition'] - count($marked));
+						$message = $action == 'allocate' ? count($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_YSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_YSUCCESSES') : (count($marked) == 1 ? $this->language->lang('ACP_INVITE_PETITION_NSUCCESS') : $this->language->lang('ACP_INVITE_PETITION_NSUCCESSES'));
 						trigger_error($message . adm_back_link($u_action));
 					}
 					else
 					{
-						if (!sizeof($marked))
+						if (!count($marked))
 						{
 							trigger_error($this->language->lang('ACP_INVITE_NO_MARKED') . adm_back_link($u_action), E_USER_WARNING);
 						}
@@ -848,19 +848,19 @@ class acp extends controller_base
 							$this->db->sql_freeresult($result);
 
 							$this->db->sql_query('DELETE FROM ' . $this->table_invite . ' WHERE ' . $this->db->sql_in_set('id', $marked));
-							$this->ext_config->set('total_pend', ($this->ext_config['total_pend'] - sizeof($marked)));
-							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_PEND_MARKED_DELETE' . (sizeof($del_username) > 1 ? 'S' : ''), false, array(implode(', ', $del_username)));
-							trigger_error((sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_PEND_DELETE_MARK_SUCCESSES') : $this->language->lang('ACP_INVITE_PEND_DELETE_MARKS_SUCCESSES')) . adm_back_link($u_action));
+							$this->ext_config->set('total_pend', ($this->ext_config['total_pend'] - count($marked)));
+							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_PEND_MARKED_DELETE' . (count($del_username) > 1 ? 'S' : ''), false, array(implode(', ', $del_username)));
+							trigger_error((count($marked) == 1 ? $this->language->lang('ACP_INVITE_PEND_DELETE_MARK_SUCCESSES') : $this->language->lang('ACP_INVITE_PEND_DELETE_MARKS_SUCCESSES')) . adm_back_link($u_action));
 						}
 					}
 					else
 					{
-						if  (!sizeof($marked) && $action == 'del_mark')
+						if  (!count($marked) && $action == 'del_mark')
 						{
 							trigger_error($this->language->lang('ACP_INVITE_NO_SELECT_INVITE') . adm_back_link($u_action), E_USER_WARNING);
 						}
 
-						$confirm_lang = $action == 'del_all' ? $this->language->lang('ACP_INVITE_DELETE_ALL_PEND_CONFIRM') : sizeof($marked) == 1 ? $this->language->lang('ACP_INVITE_DELETE_PEND_CONFIRM') : $this->language->lang('ACP_INVITE_DELETES_PEND_CONFIRM');
+						$confirm_lang = $action == 'del_all' ? $this->language->lang('ACP_INVITE_DELETE_ALL_PEND_CONFIRM') : count($marked) == 1 ? $this->language->lang('ACP_INVITE_DELETE_PEND_CONFIRM') : $this->language->lang('ACP_INVITE_DELETES_PEND_CONFIRM');
 
 						confirm_box(false, $confirm_lang, build_hidden_fields(array(
 							'i'			=> $id,

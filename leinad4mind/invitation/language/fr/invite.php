@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -39,13 +39,13 @@ $lang = array_merge($lang, array(
 	'INVITE_DELETE_CONFIRM'					=> 'Si vous voulez supprimer l’invitation, cliquer %sici%s.',
 	'INVITE_DELETE_SUCCESS'					=> 'Votre invitation a été supprimée avec succès.',
 	'INVITE_DELETE_SUCCESSES'				=> 'Vos invitations ont été supprimées avec succès.',
-	'INVITE_DISABLED'						=> '<span class="meghivo_tred">Le système d’Invitations est actuellement désactivé !</span>',
+	'INVITE_DISABLED'						=> '<span class="invitation_tred">Le système d’Invitations est actuellement désactivé !</span>',
 	'INVITE_EMAIL_BLOCK'					=> 'Bloqué!',
 	'INVITE_INVITED'						=> 'Invité par',
 	'INVITE_INVITES'						=> 'Invité',
-	'INVITE_KEY_ERROR'						=> '<div class="meghivo_error">L’invitation n’est pas valide !</div>',
+	'INVITE_KEY_ERROR'						=> '<div class="invitation_error">L’invitation n’est pas valide !</div>',
 	'INVITE_PERSON'							=> '%s personne(s)',
 	'INVITE_POINTS_PRESENT'					=> 'Pour %s invitation(s), nous avons envoyé %s %s !',
-	'INVITE_REGISTRATION'					=> '<div class="meghivo_error">Actuellement, l’enregistrement n’est possible que sur invitation !</div>',
-	'INVITE_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018',
+	'INVITE_REGISTRATION'					=> '<div class="invitation_error">Actuellement, l’enregistrement n’est possible que sur invitation !</div>',
+	'INVITE_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
 ));

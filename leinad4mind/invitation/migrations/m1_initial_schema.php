@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -26,8 +26,8 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'add_tables' => array(
 				$this->table_prefix . 'invite' => array(
 					'COLUMNS'						=> array(
-						'id'							=> array('UINT', null, 'auto_increment'),
-						'user_id'						=> array('UINT', 0),
+						'id'							=> array('UINT', NULL, 'auto_increment'),
+						'user_id'						=> array('UINT', NULL),
 						'invite_code'					=> array('VCHAR:32', ''),
 						'invite_time'					=> array('TIMESTAMP', 0),
 						'invite_time_end'				=> array('TIMESTAMP', 0),
@@ -45,20 +45,20 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 				),
 				$this->table_prefix . 'invite_users' => array(
 					'COLUMNS'							=> array(
-						'user_id'						=> array('UINT', 0),
-						'user_name'						=> array('VCHAR', ''),
+						'user_id'						=> array('UINT', NULL),
+						'user_name'						=> array('VCHAR:255', ''),
 						'user_colour'					=> array('VCHAR:6', ''),
 						'user_reg_email'				=> array('VCHAR_UNI:100', ''),
 						'user_regdate'					=> array('TIMESTAMP', 0),
-						'invite_uid'					=> array('UINT', 0),
+						'invite_uid'					=> array('UINT', NULL),
 					),
 					'PRIMARY_KEY'					=> 'user_id',
 				),
 				$this->table_prefix . 'invite_claimed' => array(
-					'COLUMNS'							=> array(
-						'user_id'						=> array('UINT', 0),
-						'message'						=> array('STEXT', ''),
-						'message_time'					=> array('TIMESTAMP', 0),
+					'COLUMNS'						=> array(
+						'user_id'					=> array('UINT', NULL),
+						'message'					=> array('STEXT', ''),
+						'message_time'				=> array('TIMESTAMP', 0),
 						'ip'							=> array('VCHAR:40', ''),
 						'db'							=> array('UINT', 0),
 					),

@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -39,13 +39,13 @@ $lang = array_merge($lang, array(
 	'INVITE_DELETE_CONFIRM'					=> 'Ha szeretnéd törölni a meghívod akkor kattints %sIDE%s.',
 	'INVITE_DELETE_SUCCESS'					=> 'A meghívód törlése sirequest.',
 	'INVITE_DELETE_SUCCESSES'				=> 'A meghívók törlése sirequest.',
-	'INVITE_DISABLED'						=> '<span class="meghivo_tred">A meghívó rendszer jelenleg ki van kapcsolva!</span>',
+	'INVITE_DISABLED'						=> '<span class="invitation_tred">A meghívó rendszer jelenleg ki van kapcsolva!</span>',
 	'INVITE_EMAIL_BLOCK'					=> 'Blokkolva!',
 	'INVITE_INVITED'						=> 'Meghívta',
 	'INVITE_INVITES'						=> 'Meghívott',
-	'INVITE_KEY_ERROR'						=> '<div class="meghivo_error">A meghívód érvénytelen!</div>',
+	'INVITE_KEY_ERROR'						=> '<div class="invitation_error">A meghívód érvénytelen!</div>',
 	'INVITE_PERSON'							=> '%s személyt',
 	'INVITE_POINTS_PRESENT'					=> '%s meghívásáért jóváírtunk számodra %s %sot.',
-	'INVITE_REGISTRATION'					=> '<div class="meghivo_error">Jelenleg csak meghívóval lehet regisztrálni!</div>',
-	'INVITE_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018',
+	'INVITE_REGISTRATION'					=> '<div class="invitation_error">Jelenleg csak meghívóval lehet regisztrálni!</div>',
+	'INVITE_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
 ));

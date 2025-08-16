@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -154,12 +154,12 @@ class functions_admin
 				if ($task)
 				{
 					$set_invite = 'user_invite + ' . (int) $invite;
-					$ss .= (sizeof(explode("\n", $usg)) == 1) ? 'U' : 'US';
+					$ss .= (count(explode("\n", $usg)) == 1) ? 'U' : 'US';
 				}
 				else
 				{
 					$set_invite = 0;
-					$ss = (sizeof(explode("\n", $usg)) == 1) ? '_DELETE' :  '_DELETES';
+					$ss = (count(explode("\n", $usg)) == 1) ? '_DELETE' :  '_DELETES';
 				}
 
 				$sql = 'UPDATE ' . $this->table_users . '
@@ -175,7 +175,7 @@ class functions_admin
 						FROM ' . $this->table_user_group . ' ug
 						LEFT JOIN ' . $this->table_users . ' u ON u.user_id = ug.user_id
 						LEFT JOIN ' . $this->table_groups . ' g ON g.group_id = ug.group_id
-						WHERE ' . $this->db->sql_in_set('ug.group_id', $usg) . ($group_all_users ? '' : 'AND u.group_id = g.group_id') . '
+						WHERE ' . $this->db->sql_in_set('ug.group_id', $usg) . ($group_all_users ? '' : ' AND u.group_id = g.group_id') . '
 						GROUP BY g.group_id';
 
 				$result  = $this->db->sql_query($sql);
@@ -189,12 +189,12 @@ class functions_admin
 				if ($task)
 				{
 					$set_invite = 'user_invite + ' . (int) $invite;
-					$ss .= (sizeof($usg) == 1) ?  'G' :  'GS';
+					$ss .= (count($usg) == 1) ?  'G' :  'GS';
 				}
 				else
 				{
 					$set_invite = 0;
-					$ss = (sizeof($usg) == 1) ? '_DELETE' :  '_DELETES';
+					$ss = (count($usg) == 1) ? '_DELETE' :  '_DELETES';
 				}
 
 				if ($group_all_users)
@@ -224,9 +224,9 @@ class functions_admin
 
 					$user_ids = array_unique($user_ids);
 
-					if (!sizeof($user_ids))
+					if (!count($user_ids))
 					{
-						return $this->language->lang('ACP_INVITE_USERS_NO_' . ((sizeof($usg) == 1) ? 'GROUP' : 'GROUPS'));
+						return $this->language->lang('ACP_INVITE_USERS_NO_' . ((count($usg) == 1) ? 'GROUP' : 'GROUPS'));
 					}
 
 					$this->db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_invite = ' . $set_invite . ' WHERE ' . $this->db->sql_in_set('user_id', $user_ids));
@@ -254,7 +254,7 @@ class functions_admin
 	 */
 	public function handling($mode, $marked, $admin)
 	{
-		$sql = 'SELECT i*, u.user_id, u.username, u.user_colour, u.user_lang
+		$sql = 'SELECT i.*, u.user_id, u.username, u.user_colour, u.user_lang
 				FROM ' . $this->table_invite_claimed . ' i
 				LEFT JOIN ' . $this->table_users . ' u ON u.user_id = i.user_id
 				WHERE ' . $this->db->sql_in_set('i.user_id', $marked);
@@ -439,7 +439,7 @@ class functions_admin
 				}
 				$this->db->sql_freeresult($result);
 
-				if (sizeof($uid_ary))
+				if (count($uid_ary))
 				{
 					$sql = 'DELETE FROM ' . $this->table_invite_users . '
 							WHERE ' . $this->db->sql_in_set('user_id', $uid_ary) . '

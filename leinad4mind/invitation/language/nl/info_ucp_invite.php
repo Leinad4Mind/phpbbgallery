@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -47,7 +47,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_DB'							=> '<b>%s Uitnodiging(s).</b>',
 	'UCP_INVITE_DB_SEND'					=> 'Dagelijkes uitnodigings limiet',
 	'UCP_INVITE_DB_SEND_EXPLAIN'			=> 'Maximum aantal uitnodigingen die je per dag kunt verzenden.',
-	'UCP_INVITE_DB_MAX'						=> '<span class="meghivo_tred">Onbeperkt!</span>',
+	'UCP_INVITE_DB_MAX'						=> '<span class="invitation_tred">Onbeperkt!</span>',
 	'UCP_INVITE_DB_PENDING'					=> 'In behandeinge uitnodigingen',
 	'UCP_INVITE_DB_PENDING_EXPLAIN'			=> 'Het aantal door jou uitgenodigde gebruikers die zich nog niet hebben geregistreerd.',
 	'UCP_INVITE_DB_NUMBER'					=> 'Aantal uitnodigingen',
@@ -96,7 +96,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_REQUEST_TITLE_EXPLAIN'		=> 'Geef het aantal uitnodigingen aan die je wilt hebben. Er is een maximum van <b>(%s)</b> uitnodiging(en) beschikbaar.<br />Je neemt de volle verantwoordelijkheid voor je uitgenodigde gebruiker(s) als deze ongepast gedrag vertonen.',
 	'UCP_INVITE_SEND'						=> 'Zend verzoek',
 	'UCP_INVITE_SEND_EMAIL_MAX'				=> 'Maximaal %s e-mail adressen kunnen worden gebruikt. maar je vermeld er %s!',
-	'UCP_INVITE_SEND_MAX'					=> '<span class="meghivo_tred">er is momenteel geen limiet!</span>',
+	'UCP_INVITE_SEND_MAX'					=> '<span class="invitation_tred">er is momenteel geen limiet!</span>',
 	'UCP_INVITE_LAST_ACTIVE'				=> 'Laast actief',
 	'UCP_INVITE_MAX_ERROR'					=> 'Momenteel heb je onbeperkt aantal uitnodigingen.',
 	'UCP_INVITE_MAX_RECIPIENTS'				=> 'Type alle adressen op een nieuwe lijn!<br />Maximum aantal ontvangers',

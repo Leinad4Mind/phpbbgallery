@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -174,8 +174,8 @@ class functions
 			}
 
 			$template_vars = array_merge($template_vars, array(
-				'U_INVITE'	=> $this->auth->acl_get('u_invite_sending') ? append_sid("{$this->root_path}ucp.$this->php_ext", 'i=' . ext::get_module_id('ucp') . '&amp;mode=data#invite_data') : false,
-				'L_INVITE'	=> $this->language->lang('INVITE') . (($this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max')) ? '' : ' (' . $this->user->data['user_invite'] . ')'),
+				'U_INVITE'			=> $this->auth->acl_get('u_invite_sending') ? append_sid("{$this->root_path}ucp.$this->php_ext", 'i=' . ext::get_module_id('ucp') . '&amp;mode=data#invite_data') : false,
+				'L_INVITE_GLOBAL'	=> $this->language->lang('INVITE') . (($this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max')) ? '' : ' (' . $this->user->data['user_invite'] . ')'),
 			));
 		}
 
@@ -236,7 +236,7 @@ class functions
 				if ($delete_ids)
 				{
 					$this->delete_key($delete_ids, false);
-					trigger_error('INVITE_DELETE_SUCCESS' . (sizeof($delete_ids) > 1 ? 'S': ''));
+					trigger_error('INVITE_DELETE_SUCCESS' . (count($delete_ids) > 1 ? 'S': ''));
 				}
 			}
 
@@ -415,7 +415,7 @@ class functions
 
 		$this->template->assign_vars(array(
 			'INVITE_USER_DB'		=> $this->language->lang('INVITE_PERSON', '<b>' . $total_users . '</b>'),
-			'INVITE_USERS_LIST'	=> $total_users && $this->auth->acl_get('u_invite_users') ? append_sid("{$this->root_path}memberlist.$this->php_ext", "invite=users_list&amp;u={$user_id}") : false
+			'INVITE_USERS_LIST'	=> $total_users && $this->auth->acl_get('u_invite_users') ? append_sid("{$this->root_path}memberlist.$this->php_ext", "invite=users_list&amp;u={$user_id}") : false,
 		));
 
 		$sql = 'SELECT u.user_id, u.username, u.user_colour
@@ -427,12 +427,28 @@ class functions
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		if (!$row['user_id'])
-		{
-			return;
-		}
+		$sql2 = 'SELECT u.user_id, u.user_invite
+				FROM ' . $this->table_users . ' u
+				WHERE u.user_id = ' . (int) $user_id;
 
-		$this->template->assign_var('INVITE_USER_NAME', '<strong>' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) . '</strong>');
+		$result = $this->db->sql_query($sql2);
+		$row2 = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($row['user_id'])
+		{
+			$this->template->assign_vars(array(
+				'INVITE_USER_NAME'	=> '<strong>' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) . '</strong>',
+			));
+		}
+		
+		
+		if ($row2['user_id'])
+		{
+			$this->template->assign_vars(array(
+				'L_INVITE_MEMBER'	=> $this->language->lang('INVITE') . (($this->ext_config['invite_db'] || $this->auth->acl_get('u_invite_max')) ? '' : ' (' . $row2['user_invite'] . ')'),
+			));
+		}
 	}
 
 	/**
@@ -446,10 +462,11 @@ class functions
 			trigger_error('NOT_AUTHORISED');
 		}
 
+		$sort_days		= 0;
 		$start			= $this->request->variable('start', 0);
 		$sort_key		= $this->request->variable('sk','reg');
 		$sort_dir		= $this->request->variable('sd','d');
-		$list_invite	= $this->ext_config['invite_page_list'];
+		$list_invite	= (int) $this->ext_config['invite_page_list'];
 
 		$sort_by_text = array(
 			'name' => $this->language->lang('SORT_USERNAME'),
@@ -466,16 +483,14 @@ class functions
 		if ($this->auth->acl_get('u_viewonline'))
 		{
 			$sort_by_text['aktiv'] = $this->language->lang('UCP_INVITE_LAST_ACTIVE');
-			$sort_by_sql['aktiv'] = 'u.user_lastvisit';
+			$sort_by_sql['aktiv'] = 'CASE WHEN (COALESCE(s.session_time, 0) > COALESCE(u.user_lastvisit, 0)) THEN COALESCE(s.session_time, 0) ELSE COALESCE(u.user_lastvisit, 0) END';
 		}
 
 		$limit_days = array();
 		$s_sort_key = $s_sort_dir = $u_sort_param = $s_limit_days = '';
-		$sort_days = 0;
 
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
-
-		$sql_sort = $sort_by_sql[$sort_key] . ' ' . ($sort_dir == 'd' ? 'DESC' : 'ASC');
+		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$users_count = $this->get_users_count($user_id);
 		$data = $this->users($users_count, $list_invite, $start, $sql_sort, $user_id);
@@ -487,13 +502,13 @@ class functions
 		$this->template->assign_vars(array(
 			'S_INVITE_USERS_LIST'	=> $mode == 'member',
 			'UCP_INVITE_USER'		=> $mode == 'ucp',
-			'S_VIEWONLINE'			=> $this->auth->acl_get('u_viewonline')	? true : false,
+			'S_VIEWONLINE'			=> $this->auth->acl_get('u_viewonline') ? true : false,
 			'TOTAL_COUNT'			=> $users_count ? $this->language->lang('UCP_INVITE_USERS_COUNT', $users_count) : false,
-			'PM_IMG'				=> $this->auth->acl_get('u_sendpm') && $mode == 'ucp' ? $this->user->img('icon_contact_pm', $this->language->lang('SEND_PRIVATE_MESSAGE')) : false,
+			'PM_IMG'					=> $this->auth->acl_get('u_sendpm') && $mode == 'ucp' ? $this->user->img('icon_contact_pm', $this->language->lang('SEND_PRIVATE_MESSAGE')) : false,
 			'EMAIL_IMG'				=> $this->auth->acl_get('u_sendemail') && $mode == 'ucp' ? $this->user->img('icon_contact_email', $this->language->lang('EMAIL')) : false,
 			'S_ON_PAGE'				=> $this->pagination->on_page($users_count, $list_invite, $start),
-			'S_SORT_KEY'			=> str_replace('<select', '<select onchange="this.form.submit();"', $s_sort_key),
-			'S_SORT_DIR'			=> str_replace('<select', '<select onchange="this.form.submit();"', $s_sort_dir),
+			'S_SORT_KEY'			=> str_replace('<select name="sk" id="sk"', '<select name="sk" id="sk" onchange="this.form.submit();"', $s_sort_key),
+			'S_SORT_DIR'			=> str_replace('<select name="sd" id="sd"', '<select name="sd" id="sd" onchange="this.form.submit();"', $s_sort_dir),
 		));
 
 		foreach ($data as $row)
@@ -750,7 +765,7 @@ class functions
 			$this->db->sql_freeresult($result);
 		}
 
-		$this->ext_config->set('total_pend', $this->ext_config['total_pend'] - sizeof($key_ids));
+		$this->ext_config->set('total_pend', $this->ext_config['total_pend'] - count($key_ids));
 		$this->db->sql_query('DELETE FROM ' . $this->table_invite . ' WHERE ' . $this->db->sql_in_set('id', array_map('intval', $key_ids)));
 	}
 
@@ -774,7 +789,7 @@ class functions
 		}
 		$this->db->sql_freeresult($result);
 
-		if (sizeof($delete_ids) && isset($next_time))
+		if (count($delete_ids) && isset($next_time))
 		{
 			$this->delete_key($delete_ids, false);
 			$this->ext_config->set('verify_time', $next_time);

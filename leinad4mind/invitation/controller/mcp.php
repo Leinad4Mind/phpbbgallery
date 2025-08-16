@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -110,11 +110,11 @@ class mcp extends controller_base
 			{
 				$this->functions_admin->handling($action, $marked, false);
 				meta_refresh(5, $u_action);
-				trigger_error($this->language->lang('ACP_INVITE_PETITION_' . ($action == 'allocate' ? 'Y' : 'N') . 'SUCCESS' . (sizeof($marked) == 1 ? '' : 'S')) . $back);
+				trigger_error($this->language->lang('ACP_INVITE_PETITION_' . ($action == 'allocate' ? 'Y' : 'N') . 'SUCCESS' . (count($marked) == 1 ? '' : 'S')) . $back);
 			}
 			else
 			{
-				if (!sizeof($marked))
+				if (!count($marked))
 				{
 					meta_refresh(5, $u_action);
 					trigger_error($this->language->lang('ACP_INVITE_NO_MARKED') . $back);

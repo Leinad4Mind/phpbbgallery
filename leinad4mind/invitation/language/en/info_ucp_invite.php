@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -47,7 +47,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_DB'							=> '<b>%s invitation(s).</b>',
 	'UCP_INVITE_DB_SEND'					=> 'Daily invitation limit',
 	'UCP_INVITE_DB_SEND_EXPLAIN'			=> 'Maximum number of invitations per day you can send out.',
-	'UCP_INVITE_DB_MAX'						=> '<span class="meghivo_tred">Unlimited!</span>',
+	'UCP_INVITE_DB_MAX'						=> '<span class="invitation_tred">Unlimited!</span>',
 	'UCP_INVITE_DB_PENDING'					=> 'Pending invitations',
 	'UCP_INVITE_DB_PENDING_EXPLAIN'			=> 'The number of users you invited who have not yet registered.',
 	'UCP_INVITE_DB_NUMBER'					=> 'Number of invitations',
@@ -96,7 +96,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_REQUEST_TITLE_EXPLAIN'		=> 'Enter the number of invitations you want to request. There is a maximum of <b>(%s)</b> invitation(s) available.<br />You take full responsibility for your invited user(s) if they behave inappropriately.',
 	'UCP_INVITE_SEND'						=> 'Send invitation',
 	'UCP_INVITE_SEND_EMAIL_MAX'				=> 'Maximum %s e-mail addresses can be used. However you listed %s!',
-	'UCP_INVITE_SEND_MAX'					=> '<span class="meghivo_tred">Currently there is no limit!</span>',
+	'UCP_INVITE_SEND_MAX'					=> '<span class="invitation_tred">Currently there is no limit!</span>',
 	'UCP_INVITE_LAST_ACTIVE'				=> 'Last active',
 	'UCP_INVITE_MAX_ERROR'					=> 'Currently you have unlimited invitations.',
 	'UCP_INVITE_MAX_RECIPIENTS'				=> 'Type all addresses in a new line!<br />Maximum number of recipients',

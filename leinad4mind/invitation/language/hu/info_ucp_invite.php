@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -47,7 +47,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_DB'							=> '<b>%s piece.</b>',
 	'UCP_INVITE_DB_SEND'					=> 'Kiküldhető meghívó/nap',
 	'UCP_INVITE_DB_SEND_EXPLAIN'			=> 'Maximum ennyi meghívót küldhetsz ki naponta.',
-	'UCP_INVITE_DB_MAX'						=> '<span class="meghivo_tred">Korlátlan!</span>',
+	'UCP_INVITE_DB_MAX'						=> '<span class="invitation_tred">Korlátlan!</span>',
 	'UCP_INVITE_DB_PENDING'					=> 'Függőben lévő meghívó',
 	'UCP_INVITE_DB_PENDING_EXPLAIN'			=> 'Itt láthatód, hogy a kiküldött meghívóiddal még mennyien nem regisztráltak be.',
 	'UCP_INVITE_DB_NUMBER'					=> 'Meghívóid száma',
@@ -96,7 +96,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_REQUEST_TITLE_EXPLAIN'		=> 'Írd be az igényelni kívánt meghívók számát maximum <b>(%s)</b> piece meghívó igényelhető.<br />A meghívott személy ért a felelősséget te vállalod, amennyiben a meghívott személy rendbontást csinál.',
 	'UCP_INVITE_SEND'						=> 'Meghívó kiküldése',
 	'UCP_INVITE_SEND_EMAIL_MAX'				=> 'Maximum %s email címet lehet megadni, te viszont %s adtál meg.',
-	'UCP_INVITE_SEND_MAX'					=> '<span class="meghivo_tred">Jelenleg nincs korlátozva.</span>',
+	'UCP_INVITE_SEND_MAX'					=> '<span class="invitation_tred">Jelenleg nincs korlátozva.</span>',
 	'UCP_INVITE_LAST_ACTIVE'				=> 'Utoljára aktív',
 	'UCP_INVITE_MAX_ERROR'					=> 'Jelenleg korlátlan meghívóval rendelkezel így nincs szükséged az igénylésre.',
 	'UCP_INVITE_MAX_RECIPIENTS'				=> 'Minden címet új sorba írj.<br />Maximum megadható címzettek száma',
