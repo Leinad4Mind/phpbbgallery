@@ -228,8 +228,9 @@ class listener implements EventSubscriberInterface
 		{
 			// split on @ and return last value of array in $domain[1]
 			$domain = explode('@', $email);
+            $MiArray = array_flip($this->functions_nodeaemails->load_total_deas());
 
-			if (array_search($domain[1], $this->functions_nodeaemails->load_total_deas()) !== false)
+            if (isset($MiArray[$domain[1]]))
 			{
 				$error[] = $this->language->lang('NO_DEA_EMAILS_FOUND', $email);
 			}

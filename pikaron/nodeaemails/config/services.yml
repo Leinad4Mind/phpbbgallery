@@ -32,3 +32,5 @@ services:
             - [set_name, [pikaron.nodeaemails.cron.task.nodeaemails_cron]]
         tags:
             - { name: cron.task }
+    _defaults:
+        public: true
