@@ -1,7 +1,7 @@
 services:
     javiexin.nndeletepm.listener:
-        class: javiexin\nndeletepm\event\main_listener
+        class: javiexin\nndeletepm\event\listener
         arguments:
-            - '@dbal.conn'
+            - @dbal.conn
         tags:
             - { name: event.listener }
