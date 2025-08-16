@@ -90,12 +90,14 @@ class main_module
 		add_form_key($this->form_key);
 
 		$error = [];
+		$author_id = 0;
 		$usernames = $this->request->variable('usernames', '', true);
 		$usernames = (!empty($usernames)) ? explode("\n", $usernames) : [];
 		$group_id = $this->request->variable('g', 0);
 		$title = $this->request->variable('title', '', true);
 		$message = $this->request->variable('message', '', true);
 		$url = $this->request->variable('url', '', true);
+		$author = $this->request->variable('author', '', true);
 
 		if ($this->request->is_set_post('submit'))
 		{
@@ -112,16 +114,31 @@ class main_module
 				$error[] = $this->language->lang('NO_NOTIFICATION_MESSAGE');
 			}
 
+			if (!empty($author))
+			{
+				$sql = 'SELECT user_id
+					FROM ' . $this->users_table . "
+					WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($author)) . "'";
+				$result = $this->db->sql_query($sql);
+				$author_id = $this->db->sql_fetchfield('user_id');
+				$this->db->sql_freeresult($result);
+
+				if (!$author_id)
+				{
+					$error[] = $this->language->lang('NO_NOTIFICATION_AUTHOR');
+				}
+			}
+
 			if (empty($error))
 			{
 				if (!empty($usernames))
 				{
 					$sql_ary = [
-						'SELECT'	=> 'user_id',
+						'SELECT'	=> 'u.user_id',
 						'FROM'		=> [
-							$this->users_table	=> '',
+							$this->users_table	=> 'u',
 						],
-						'WHERE'		=> $this->db->sql_in_set('username_clean', array_map('utf8_clean_string', $usernames)),
+						'WHERE'		=> $this->db->sql_in_set('u.username_clean', array_map('utf8_clean_string', $usernames)),
 					];
 				}
 				else
@@ -142,9 +159,9 @@ class main_module
 					else
 					{
 						$sql_ary = [
-							'SELECT'	=> 'user_id',
+							'SELECT'	=> 'u.user_id',
 							'FROM'		=> [
-								$this->users_table	=> '',
+								$this->users_table	=> 'u',
 							],
 						];
 					}
@@ -167,9 +184,12 @@ class main_module
 				* @var	string	title		Title of the notification
 				* @var	string	message		Message of the notification
 				* @var	string	url			URL of the notification
+				* @var	string	author		Username of notification author
+				* @var	int		author_id	User ID of notification author
 				* @var	array	user_ids	Array of user IDs to send notification to
 				* @var	string	u_action	Current page URL
 				* @since 1.0.0
+				* @changed 1.0.3	Added author and author_id
 				*/
 				$vars = [
 					'usernames',
@@ -177,6 +197,8 @@ class main_module
 					'title',
 					'message',
 					'url',
+					'author',
+					'author_id',
 					'user_ids',
 					'u_action',
 				];
@@ -189,6 +211,7 @@ class main_module
 					'title'				=> $title,
 					'message'			=> $message,
 					'url'				=> $url,
+					'author_id'			=> $author_id,
 				]);
 
 				trigger_error($this->language->lang('NOTIFICATION_SEND') . adm_back_link($this->u_action));
@@ -196,8 +219,8 @@ class main_module
 		}
 
 		$sql = 'SELECT group_id, group_name
-			FROM ' . $this->groups_table . "
-			WHERE group_name NOT IN ('BOTS', 'GUESTS')";
+			FROM ' . $this->groups_table . '
+			WHERE ' . $this->db->sql_in_set('group_name', ['BOTS', 'GUESTS']);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -213,10 +236,12 @@ class main_module
 			'S_WARNING'			=> (!empty($error)) ? true : false,
 			'WARNING_MSG'		=> (!empty($error)) ? implode('<br />', $error) : '',
 			'USERNAMES'			=> implode("\n", $usernames),
-			'U_FIND_USERNAME'	=> append_sid("{$this->root_path}memberlist.{$this->php_ext}", 'mode=searchuser&amp;form=acp_email&amp;field=usernames'),
+			'U_FIND_USERNAME'	=> append_sid("{$this->root_path}memberlist.{$this->php_ext}", 'mode=searchuser&amp;form=acp_notification&amp;field=usernames'),
+			'U_FIND_AUTHOR'		=> append_sid("{$this->root_path}memberlist.{$this->php_ext}", 'mode=searchuser&amp;form=acp_notification&amp;field=author'),
 			'TITLE'				=> $title,
 			'MESSAGE'			=> $message,
 			'URL'				=> $url,
+			'AUTHOR'			=> $author,
 		]);
 	}
 }

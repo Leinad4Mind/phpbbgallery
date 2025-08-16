@@ -30,10 +30,12 @@ $lang = array_merge($lang, array(
 	'MESSAGE_EXPLAIN'		=> 'Постарайтесь описать короче, предпочтительно ниже 150 символов. Вы можете использовать HTML.',
 	'URL'					=> 'Перенаправление URL ',
 	'URL_EXPLAIN'			=> 'Введите URL на который пользователь будет перенаправлен после нажатия на уведомление.',
+	'AUTHOR_EXPLAIN'		=> 'Enter author of the notification. Leave blank for generic notification without author.',
 	'SEND_NOTIFICATION'		=> 'Отправить уведомление',
 
 	'NO_NOTIFICATION_TITLE'		=> 'Вы должны указать название уведомления.',
 	'NO_NOTIFICATION_MESSAGE'	=> 'Вы должны написать уведомление.',
+	'NO_NOTIFICATION_AUTHOR'	=> 'Author does not exist.',
 
 	'NOTIFICATION_SEND'	=> 'Ваше уведомление было отправлено.',
 ));

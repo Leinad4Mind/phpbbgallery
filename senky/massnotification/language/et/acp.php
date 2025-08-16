@@ -31,10 +31,12 @@ $lang = array_merge($lang, array(
 	'MESSAGE_EXPLAIN'		=> 'Hoidke see lühike, eelistatavalt alla 150 tähemärgi. Võite kasutada HTML.',
 	'URL'					=> 'Ümbersuunamise URL',
 	'URL_EXPLAIN'			=> 'Sisestage URL, millele kasutaja pärast teate klõpsamist suunatakse.',
+	'AUTHOR_EXPLAIN'		=> 'Enter author of the notification. Leave blank for generic notification without author.',
 	'SEND_NOTIFICATION'		=> 'Saada teatis',
 
 	'NO_NOTIFICATION_TITLE'		=> 'Peate määrama teate pealkirja.',
 	'NO_NOTIFICATION_MESSAGE'	=> 'Peate määrama teate sõnumi.',
+	'NO_NOTIFICATION_AUTHOR'	=> 'Author does not exist.',
 
 	'NOTIFICATION_SEND'	=> 'Teie teade on saadetud.',
 ));

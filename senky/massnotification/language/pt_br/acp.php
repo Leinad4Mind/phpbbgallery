@@ -5,7 +5,7 @@
  *
  * @copyright (c) 2019, Jakub Senko
  * @license GNU General Public License, version 2 (GPL-2.0)
- * Brazilian Portuguese translation by eunaumtenhoid (c) 2019 [ver 1.0.0] (https://github.com/phpBBTraducoes)
+ * Brazilian Portuguese translation by eunaumtenhoid [2019][ver 1.0.2] (https://github.com/phpBBTraducoes)
  */
 
 if (!defined('IN_PHPBB'))
@@ -30,10 +30,12 @@ $lang = array_merge($lang, array(
 	'MESSAGE_EXPLAIN'		=> 'Menssagem curta, de preferência abaixo de 150 caracteres. Você pode usar HTML.',
 	'URL'					=> 'URL de redirecionamento',
 	'URL_EXPLAIN'			=> 'Insira o URL para o qual o usuário será redirecionado depois de clicar na notificação.',
+	'AUTHOR_EXPLAIN'		=> 'Insira o autor da notificação. Deixe em branco para notificação genérica sem autor.',
 	'SEND_NOTIFICATION'		=> 'Enviar notificação',
 
 	'NO_NOTIFICATION_TITLE'		=> 'Você precisa especificar o título da notificação.',
 	'NO_NOTIFICATION_MESSAGE'	=> 'Você precisa especificar uma mensagem de notificação.',
+	'NO_NOTIFICATION_AUTHOR'	=> 'Autor não existe.',
 
 	'NOTIFICATION_SEND'	=> 'Sua notificação foi enviada.',
 ));

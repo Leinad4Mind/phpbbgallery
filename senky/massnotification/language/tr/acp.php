@@ -30,10 +30,12 @@ $lang = array_merge($lang, array(
 	'MESSAGE_EXPLAIN'		=> 'Tercihen 150 karakteri geçmeyecek şekilde kısa tutun. HTML kullanabilirsiniz.',
 	'URL'					=> 'URL yönlendir',
 	'URL_EXPLAIN'			=> 'Kullanıcılar bildirime tıkladığında yönlendirilecekleri URLyi girin.',
+	'AUTHOR_EXPLAIN'		=> 'Enter author of the notification. Leave blank for generic notification without author.',
 	'SEND_NOTIFICATION'		=> 'Bildirim gönder',
 
 	'NO_NOTIFICATION_TITLE'		=> 'Bildirim başlığı belirlemek zorundasınız.',
 	'NO_NOTIFICATION_MESSAGE'	=> 'Bildirim mesajı belirlemek zorundasınız.',
+	'NO_NOTIFICATION_AUTHOR'	=> 'Author does not exist.',
 
 	'NOTIFICATION_SEND'	=> 'Bildiriminiz gönderildi.',
 ));

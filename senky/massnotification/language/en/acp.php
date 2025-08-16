@@ -30,10 +30,12 @@ $lang = array_merge($lang, array(
 	'MESSAGE_EXPLAIN'		=> 'Keep it short, preferably below 150 characters. You may use HTML.',
 	'URL'					=> 'Redirect URL',
 	'URL_EXPLAIN'			=> 'Enter URL to which user will be redirected after clicking on the notification.',
+	'AUTHOR_EXPLAIN'		=> 'Enter author of the notification. Leave blank for generic notification without author.',
 	'SEND_NOTIFICATION'		=> 'Send notification',
 
 	'NO_NOTIFICATION_TITLE'		=> 'You have to specify notification title.',
 	'NO_NOTIFICATION_MESSAGE'	=> 'You have to specify notification message.',
+	'NO_NOTIFICATION_AUTHOR'	=> 'Author does not exist.',
 
 	'NOTIFICATION_SEND'	=> 'Your notification has been sent.',
 ));

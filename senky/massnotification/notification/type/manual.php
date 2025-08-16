@@ -27,6 +27,13 @@ class manual extends \phpbb\notification\type\base
 		$this->dispatcher = $dispatcher;
 	}
 
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+	public function set_user_loader(\phpbb\user_loader $user_loader)
+	{
+		$this->user_loader = $user_loader;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -87,7 +94,8 @@ class manual extends \phpbb\notification\type\base
 	 */
 	public function users_to_query()
 	{
-		return [];
+		$author_id = $this->get_data('author_id');
+		return $author_id ? [$author_id] : [];
 	}
 
 	/**
@@ -96,6 +104,14 @@ class manual extends \phpbb\notification\type\base
 	public function get_style_class()
 	{
 		return 'senky-massnotification';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_avatar()
+	{
+		return $this->user_loader->get_avatar($this->get_data('author_id'), false, true);
 	}
 
 	/**
@@ -125,14 +141,6 @@ class manual extends \phpbb\notification\type\base
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_redirect_url()
-	{
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function get_email_template()
 	{
 		return false;
@@ -154,6 +162,7 @@ class manual extends \phpbb\notification\type\base
 		$this->set_data('title', $data['title']);
 		$this->set_data('message', $data['message']);
 		$this->set_data('url', $data['url']);
+		$this->set_data('author_id', $data['author_id']);
 
 		parent::create_insert_array($data, $pre_create_data);
 	}

@@ -10,11 +10,11 @@
 	</div>
 {% endif %}
 
-<form id="acp_email" method="post" action="{{ U_ACTION }}">
+<form id="acp_notification" method="post" action="{{ U_ACTION }}">
 	<fieldset>
 		<legend>{{ lang('COMPOSE') }}</legend>
 		<dl>
-			<dt><label for="group">{L_SEND_TO_GROUP}{L_COLON}</label></dt>
+			<dt><label for="group">{{ lang('SEND_TO_GROUP') ~ lang('COLON') }}</label></dt>
 			<dd>
 				<select id="group" name="g">
 					<option value="0">{{ lang('ALL_USERS') }}</option>
@@ -46,6 +46,12 @@
 			<dd><input size="70" name="url" type="url" id="url" value="{{ URL }}" /></dd>
 		</dl>
 
+		<dl>
+			<dt><label for="author">{{ lang('AUTHOR') ~ lang('COLON') }}</label><br /><span>{{ lang('AUTHOR_EXPLAIN') }}</span></dt>
+			<dd><input size="40" name="author" type="author" id="author" value="{{ AUTHOR }}" /></dd>
+			<dd>[ <a href="{{ U_FIND_AUTHOR }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+		</dl>
+
 		{% EVENT senky_massnotification_adm_after %}
 
 		<p class="submit-buttons">
@@ -55,5 +61,7 @@
 		</p>
 	</fieldset>
 </form>
+
+{% INCLUDEJS '@senky_massnotification/massnotification.js' %}
 
 {% include 'overall_footer.html' %}
