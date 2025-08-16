@@ -1,0 +1,51 @@
+<?php
+
+/**
+ *
+ * Invite. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2010-2015, KillBill
+ * @copyright (c) 2017, kasimi
+ * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = array();
+}
+
+// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+// Some characters you may want to copy&paste: ’ « » „ “ ” …
+
+$lang = array_merge($lang, array(
+	'MEGHIVO'								=> 'Nodig uit',
+	'MEGHIVO_DELETE_CONFIRM'				=> 'Als je deze uitnodiging wilt verwijderen, klik %sHIER%s.',
+	'MEGHIVO_DELETE_SUCCES'					=> 'Je uitnodiging is succesvol verwijderd.',
+	'MEGHIVO_DELETE_SUCCESS'				=> 'Je uitnodigingen zijn succesvol verwijderd.',
+	'MEGHIVO_DISABLED'						=> '<span class="meghivo_tred">Het uitnodigings systeem is momenteel uitgezet!</span>',
+	'MEGHIVO_EMAIL_BLOCK'					=> 'Blocked!',
+	'MEGHIVO_INVITED'						=> 'Uitgenodigd door',
+	'MEGHIVO_INVITES'						=> 'Uitgenodigd',
+	'MEGHIVO_KEY_ERROR'						=> '<div class="meghivo_error">De uitnodiging is niet geldig!</div>',
+	'MEGHIVO_PERSON'						=> '%s gebruiker(s)',
+	'MEGHIVO_POINTS_PRESENT'				=> 'Voor %s uitnodiging(en), zenden we %s %s !',
+	'MEGHIVO_REGISTRATION'					=> '<div class="meghivo_error">Registratie is momenteel alleen op uitnodiging mogelijk!</div>',
+	'MEGHIVO_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2017-2018',
+));

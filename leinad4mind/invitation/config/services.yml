@@ -1,0 +1,186 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    leinad4mind.invitation.includes.config:
+        class: leinad4mind\invitation\includes\config
+        arguments:
+            - '@language'
+            - '@dbal.conn'
+            - '%leinad4mind.invitation.table.invite_config%'
+
+    leinad4mind.invitation.includes.functions:
+        class: leinad4mind\invitation\includes\functions
+        arguments:
+            - '@request'
+            - '@dbal.conn'
+            - '@config'
+            - '@leinad4mind.invitation.includes.config'
+            - '@user'
+            - '@language'
+            - '@language.loader'
+            - '@auth'
+            - '@template'
+            - '@pagination'
+            - '@log'
+            - '@notification_manager'
+            - '%tables.users%'
+            - '%tables.sessions%'
+            - '%tables.groups%'
+            - '%tables.banlist%'
+            - '%tables.zebra%'
+            - '%leinad4mind.invitation.table.invite%'
+            - '%leinad4mind.invitation.table.invite_users%'
+            - '%leinad4mind.invitation.table.invite_claimed%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.invitation.includes.functions_admin:
+        class: leinad4mind\invitation\includes\functions_admin
+        arguments:
+            - '@user'
+            - '@language'
+            - '@dbal.conn'
+            - '@log'
+            - '@leinad4mind.invitation.includes.functions'
+            - '@leinad4mind.invitation.includes.config'
+            - '%tables.users%'
+            - '%tables.groups%'
+            - '%tables.user_group%'
+            - '%leinad4mind.invitation.table.invite%'
+            - '%leinad4mind.invitation.table.invite_users%'
+            - '%leinad4mind.invitation.table.invite_claimed%'
+
+    leinad4mind.invitation.includes.functions_ucp:
+        class: leinad4mind\invitation\includes\functions_ucp
+        arguments:
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@config'
+            - '@leinad4mind.invitation.includes.config'
+            - '@leinad4mind.invitation.includes.functions'
+            - '@dbal.conn'
+            - '%tables.users%'
+            - '%leinad4mind.invitation.table.invite%'
+            - '%leinad4mind.invitation.table.invite_users%'
+            - '%leinad4mind.invitation.table.invite_claimed%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.invitation.controller.acp:
+        class: leinad4mind\invitation\controller\acp
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@auth'
+            - '@template'
+            - '@log'
+            - '@pagination'
+            - '@config'
+            - '@leinad4mind.invitation.includes.config'
+            - '@leinad4mind.invitation.includes.functions'
+            - '@leinad4mind.invitation.includes.functions_admin'
+            - '%leinad4mind.invitation.table.invite%'
+            - '%core.root_path%'
+            - '%core.adm_relative_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.invitation.controller.mcp:
+        class: leinad4mind\invitation\controller\mcp
+        arguments:
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@pagination'
+            - '@leinad4mind.invitation.includes.config'
+            - '@leinad4mind.invitation.includes.functions_admin'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.invitation.controller.ucp:
+        class: leinad4mind\invitation\controller\ucp
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@auth'
+            - '@config'
+            - '@leinad4mind.invitation.includes.config'
+            - '@captcha.factory'
+            - '@leinad4mind.invitation.includes.functions'
+            - '@leinad4mind.invitation.includes.functions_ucp'
+            - '@template'
+            - '@log'
+            - '%leinad4mind.invitation.table.invite%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.invitation.event.listener:
+        class: leinad4mind\invitation\event\listener
+        arguments:
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@config'
+            - '@leinad4mind.invitation.includes.config'
+            - '@leinad4mind.invitation.includes.functions'
+            - '%core.root_path%'
+            - '%core.adm_relative_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    leinad4mind.invitation.notification.type.birthday:
+        class: leinad4mind\invitation\notification\type\birthday
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_functions, ['@leinad4mind.invitation.includes.functions']]
+        tags:
+            - { name: notification.type }
+
+    leinad4mind.invitation.notification.type.gift:
+        class: leinad4mind\invitation\notification\type\gift
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_config, ['@config']]
+            - [set_user_loader, ['@user_loader']]
+            - [set_functions, ['@leinad4mind.invitation.includes.functions']]
+        tags:
+            - { name: notification.type }
+
+    leinad4mind.invitation.notification.type.petition_request:
+        class: leinad4mind\invitation\notification\type\petition_request
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+        tags:
+            - { name: notification.type }
+
+    leinad4mind.invitation.notification.type.petition:
+        class: leinad4mind\invitation\notification\type\petition
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+        tags:
+            - { name: notification.type }
+
+    leinad4mind.invitation.notification.type.join:
+        class: leinad4mind\invitation\notification\type\join
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_functions, ['@leinad4mind.invitation.includes.functions']]
+        tags:
+            - { name: notification.type }

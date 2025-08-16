@@ -1,0 +1,217 @@
+{% INCLUDE 'ucp_header.html' %}
+
+{% if S_MEGHIVO_ADAT %}
+<h2 id="meghivo_adat">{{ lang('UCP_MEGHIVO_ADAT') }}</h2>
+<div class="panel">
+	<div class="inner">
+		<fieldset>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_DB_SZAM') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_DB_SZAM_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_DB_SZAM }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_DB_USER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_DB_USER_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_DB_USER }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_DB_KULDES') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_DB_KULDES_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_DB_KULDES }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_DAYF') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_DAYF_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_DAY_DB }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_DB_PENDING') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_DB_PENDING_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_DB_PENDING }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_TIME_END') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_TIME_END_EXPLAIN') }}</span></dt>
+				<dd><label><b>{{ MEGHIVO_TIME_END }} {{ lang('DAY') }}</b></label></dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('UCP_MEGHIVO_UT_REG') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_UT_REG_EXPLAIN') }}</span></dt>
+				<dd><label>{{ MEGHIVO_UTOLSO_USER }}</label></dd>
+			</dl>
+		</fieldset>
+	</div>
+</div>
+{% endif %}
+
+{% if S_MEGHIVO_MAIL %}
+<h2>{{ lang('UCP_MEGHIVO_KULDES') }}</h2>
+<form id="meghivo_kuldes" method="post" action="{{ U_ACTION }}">
+	<div class="panel">
+		<div class="inner">
+			{% if ERROR_MESSAGE %}
+			<p class="error">{{ ERROR_MESSAGE }}</p>
+			{% endif %}
+
+			<fieldset class="fields2">
+				{% if S_INVITE_LANG_OPTIONS %}
+				<dl>
+					<dt><label for="invite_lang">{{ lang('UCP_MEGHIVO_EMAIL_LANG') }}{{ lang('COLON') }}</label></dt>
+					<dd><select name="invite_lang" id="invite_lang" onchange="document.forms['meghivo_kuldes'].submit.click(); return false;" tabindex="1" title="{{ lang('LANGUAGE') }}">{{ S_INVITE_LANG_OPTIONS }}</select></dd>
+				</dl>
+				{% endif %}
+				<dl>
+					<dt>{{ lang('UCP_MEGHIVO_FRIEND') }}{{ lang('COLON') }}<br /><span>{{ lang('UCP_MEGHIVO_FRIEND_EXPLAIN') }}</span></dt>
+					<dd>
+						<label for="friend1"><input type="radio" class="radio" name="friend" id="friend1" value="1"{% if S_FRIEND %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+						<label for="friend0"><input type="radio" class="radio" name="friend" id="friend0" value="0"{% if not S_FRIEND %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				<dl>
+					<dt><label for="email">{{ lang('EMAIL_ADDRESS') }}{{ lang('COLON') }}</label>{% if MORE_RECIPIENTS %}<br /><span>{{ lang('UCP_MEGHIVO_MAX_RECIPIENTS') }}{{ lang('COLON') }}{{ MORE_RECIPIENTS }}</span>{% endif %}</dt>
+					<dd>
+					{% if MORE_RECIPIENTS %}
+						<textarea class="inputbox" name="email" id="email" rows="5" cols="45" tabindex="2">{{ EMAIL_CIM }}</textarea>
+					{% else %}
+						<input class="inputbox autowidth" type="text" name="email" id="email" size="50" maxlength="100" tabindex="2" value="{{ EMAIL_CIM }}" />
+					{% endif %}
+					</dd>
+				</dl>
+				<dl>
+					<dt><label for="subject">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label></dt>
+					<dd><input class="inputbox autowidth" type="text" name="subject" id="subject" size="50" tabindex="3" value="{{ EMAIL_TEMA }}" /></dd>
+				</dl>
+				<dl>
+					<dt><label for="message">{{ lang('MESSAGE_BODY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN') }}</span></dt>
+					<dd><textarea class="inputbox" name="message" id="message" rows="15" cols="45" tabindex="4">{{ EMAIL_MESSAGE }}</textarea></dd>
+				</dl>
+			</fieldset>
+		</div>
+	</div>
+
+	{% if CAPTCHA_TEMPLATE %}
+	<div class="panel">
+		<div class="inner">
+			<fieldset class="fields2">
+			{% DEFINE CAPTCHA_TAB_INDEX = 5 %}
+			{% INCLUDE ''~ CAPTCHA_TEMPLATE ~'' %}
+			</fieldset>
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="panel">
+		<div class="inner">
+			<fieldset class="submit-buttons">
+				<input type="submit" name="submit" id="submit" value="{{ lang('UCP_MEGHIVO_SEND_SUBMIT') }}" class="button1" />
+				{{ S_HIDDEN_FIELDS }}
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+		</div>
+	</div>
+</form>
+{% endif %}
+
+{% if S_MEGHIVO_KERES %}
+	{% if MEGHIVO_KERES_ON %}
+	<h2>{{ TITLE_MEGHIVO_KERES }}</h2>
+	<form id="meghivo_igeny" method="post" action="{{ U_ACTION }}">
+		<div class="panel">
+			<div class="inner">
+				<fieldset>
+					{% if ERROR_MESSAGE %}
+					<p class="error">{{ ERROR_MESSAGE }}</p>
+					{% endif %}
+					<dl>
+						<dt><label for="igeny_db">{{ SUBT_MEGHIVO_KERES }}{{ lang('COLON') }}</label><br /><span>{{ SUBT_MEGHIVO_KERES_EXPLAIN }}</span></dt>
+						<dd><input class="inputbox autowidth" type="text" id="igeny_db" name="igeny_db" size="2" maxlength="2" value="{{ MEGHIVO_KERES_DB_SELECT }}" /> {{ lang('UCP_MEGHIVO_SDB') }}</dd>
+					</dl>
+					{% if S_IGENY_HSZ_KOTELES %}
+					<dl>
+						<dt class="meghivo_notice">{{ UCP_MEGHIVO_KERES_SOK_EXPLAIN }}</dt>
+					</dl>
+
+					<dl>
+						<dt><label for="message">{{ lang('MESSAGE_BODY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_EMAIL_KERES_EXPLAIN') }}</span></dt>
+						<dd><input class="inputbox autowidth" type="text" id="message" name="message" size="40" maxlength="70" value="{{ MESSAGE }}" /><input type="hidden" id="igeny_post" name="igeny_post" value="1" /></dd>
+					</dl>
+					{% endif %}
+				</fieldset>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="inner">
+				<fieldset class="submit-buttons">
+					<input type="submit" name="submit" id="submit" value="{{ MEGHIVO_KERES_SUBMIT }}" class="button1" />
+					{{ S_FORM_TOKEN }}
+				</fieldset>
+			</div>
+		</div>
+	</form>
+	{% else %}
+	<h2>{{ lang('INFORMATION') }}</h2>
+	<div class="panel">
+		<div class="inner">
+			<fieldset style="text-align:center;">
+				<span class="meghivo_tred">{{ lang('UCP_MEGHIVO_KERES_OFF') }}</span>
+			</fieldset>
+		</div>
+	</div>
+	{% endif %}
+{% endif %}
+
+{% if UCP_MEGHIVO_USER %}
+	{% if loops.users|length %}
+		{% INCLUDE 'memberlist_meghivo.html' %}
+	{% else %}
+		<h2>{{ lang('INFORMATION') }}</h2>
+		<div class="panel">
+			<div class="inner">
+				<fieldset style="text-align:center;">
+					<span class="meghivo_tred">{{ lang('UCP_MEGHIVO_NO_INVITE_USERS') }}</span>
+				</fieldset>
+			</div>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% if S_MEGHIVO_DELETE %}
+<h2>{{ lang('UCP_MEGHIVO_DELETE') }}</h2>
+<form id="meghivo_delete" method="post" action="{{ U_ACTION }}">
+	<div class="panel">
+		<div class="inner">
+			{% if ERROR_MESSAGE %}
+			<p class="error">{{ ERROR_MESSAGE }}</p>
+			{% endif %}
+			<fieldset>
+			<dl>
+				<dt>{{ UCP_MEGHIVO_DELETE_EXPLAIN }}</dt>
+			</dl>
+			<br />
+			<dl>
+				{% if loops.email|length %}
+				<dt><label for="email">{{ lang('UCP_MEGHIVO_EMAIL_SELECT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('UCP_MEGHIVO_EMAIL_SELECT_EXPLAIN') }}</span></dt>
+				<dd>
+					<select id="email" name="email">
+						{% for email in loops.email %}
+							<option class="bg1" value="{{ email.EMAIL }}">{% if email.COUNT %}({{ email.COUNT }} {{ lang('MEGHIVO') }}) - {% endif %}{{ email.EMAIL }}</option>
+						{% endfor %}
+					</select>
+					&nbsp;&nbsp;{{ lang('CONFIRM') }}&nbsp;&nbsp;<input type="checkbox" class="radio" id="delete" name="delete" value="1" />
+				</dd>
+				{% else %}
+				<dt style="width:100%"><span class="meghivo_tred">{{ lang('UCP_MEGHIVO_NOT_DELETED_INVITE') }}</span></dt>
+				{% endif %}
+			</dl>
+			</fieldset>
+		</div>
+	</div>
+{% if loops.email|length %}
+	<div class="panel">
+		<div class="inner">
+			<fieldset class="submit-buttons">
+				<input type="submit" name="submit" id="submit" value="{{ lang('DELETE') }}" class="button1" />
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+		</div>
+	</div>
+{% endif %}
+
+</form>
+{% endif %}
+
+{% INCLUDE 'ucp_footer.html' %}
