@@ -1,0 +1,109 @@
+<!-- BEGIN room -->
+	<div id="room-{room.ID}" title="{room.S_TITLE}" class="{room.S_CLASS}">
+		<div class="js-conversation">
+		<!-- BEGIN message -->
+			<div id="chat-row-{message.S_ID}" class="chat-row">
+				<!-- IF message.S_AUTHOR_AVATAR --><div class="ic-row-avatar">{message.S_AUTHOR_AVATAR}</div><!-- ENDIF -->
+
+				<div class="ic-row-actions">
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_QUOTE --><a href="#!quote/{message.S_ID}" title="{L_QUOTE}"><span class="chat-icon-quote"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
+				
+					<!-- IF message.U_TOPIC_EDIT --><a href="{message.U_TOPIC_EDIT}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
+				</div>
+
+				<div class="ic-row-title<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+					<a href="#!quickmention" class="chat-quickmention" title="{L_CHAT_MENTION}"><span class="chat-icon-mentionuser"></span></a>
+					<span class="ic-row-username">{message.S_AUTHOR_FULL}</span>
+					<span class="ic-row-date">{message.S_DATE}</span>
+				</div>
+				<div class="ic-row-text<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+				<!-- IF message.IS_TOPIC -->
+					<strong>{L_NEW_TOPIC}:</strong> <a href="{message.U_TOPIC}">{message.TOPIC_TITLE}</a>
+				<!-- ELSE -->
+					{message.S_TEXT}
+				<!-- ENDIF -->
+				</div>
+			</div>
+		<!-- END message -->
+		</div>
+
+		<div class="js-userlist">
+		<!-- BEGIN user -->
+			<li class="js-user-{user.S_KEY}">
+				{user.S_IMG} <a href="{user.U_ACTION}"<!-- IF user.IS_EXCLUDED --> class="chat-state-excluded"<!-- ENDIF -->>{user.S_USERNAME}</a>
+				<!-- IF user.S_HAS_SUBMENU -->
+					<ul class="chat-contextmenu">
+						<!-- BEGIN contextmenu --><li><a href="{contextmenu.U_ACTION}"><!-- IF not contextmenu.IS_STATUS --><span class="chat-icon-{contextmenu.S_ACTION}"></span> <!-- ENDIF -->{contextmenu.S_TITLE}</a></li><!-- END contextmenu -->
+					</ul>
+				<!-- ENDIF -->
+			</li>
+		<!-- END user -->
+		</div>
+	</div>
+<!-- END room -->
+
+<!-- IF S_DIALOG or S_CONFIRM_DIALOG -->
+<div id="chat-dialog">
+	<!-- IF S_TITLE --><div id="chat-dialog-title">{S_TITLE}</div><!-- ENDIF -->
+	
+	<form id="chat-dialog-form" onsubmit="return false;">
+
+	<div id="chat-dialog-content">
+	<!-- IF S_DIALOG_CONTENT -->
+		{S_DIALOG_CONTENT}
+	<!-- ELSEIF S_EDIT -->
+		<textarea name="ic_edit_message" class="ic-edit-textarea chat-inputbox">{S_MESSAGE}</textarea>
+		<!-- IF S_CHAT_MAX_CHARS --><div class="ic-chars-info"><span></span> {L_CHAT_REMAINING_CHARS}</div><!-- ENDIF -->
+	<!-- ELSEIF S_RULES -->
+		<ol class="chat-rulelist">
+		<!-- BEGIN rulerow -->
+			<li>{rulerow.S_TEXT}</li>
+		<!-- END rulerow -->
+		</ol>
+	<!-- ELSEIF S_LOGIN -->
+		<div style="text-align:center;">
+			<!-- IF S_ERROR --><div>{S_ERROR}</div><br /><!-- ENDIF -->
+
+		<!-- IF ALLOW_GUESTS -->
+			<strong>{L_CHAT_ENTER_AS_GUEST}:</strong><br /><br />
+			<input class="chat-inputbox" name="username" value="" size="25" placeholder="{L_USERNAME}" />
+			<br /><br /><strong>{L_CHAT_ENTER_AS_REGISTERED}:</strong><br /><br />
+		<!-- ENDIF -->
+			<input type="text" class="chat-inputbox" name="username_register" value="" size="25" placeholder="{L_USERNAME}" /><br /><br />
+			<input type="password" class="chat-inputbox" name="password" value="" size="25" placeholder="{L_PASSWORD}" /><br /><br />
+			<!-- IF U_REGISTER --><a href="{U_REGISTER}">{L_REGISTER}</a><br /><br /><!-- ENDIF -->
+		</div>
+	<!-- ELSEIF S_BAN -->
+		<fieldset class="chat-dialog-fieldset">
+		<dl>
+			<dt><label for="ban-period">{L_CHAT_BAN_PERIOD}:</label></dt>
+			<dd><select id="ban-period" name="period" class="chat-inputbox">{S_PERIOD_OPTIONS}</select></dd>
+		</dl>
+		<dl class="chat-state-hidden">
+			<dt><label for="ban-date">{L_CHAT_BAN_DATE}:</label><br />{L_CHAT_BAN_DATE_EXPLAIN}</dt>
+			<dd><input type="text" class="chat-inputbox" id="ban-date" name="date" size="25" value="" /></dd>
+		</dl>
+		</fieldset>
+	<!-- ENDIF -->
+	</div>
+	
+	</form>
+	
+	<div class="chat-dialog-buttons">
+	<!-- IF S_CONFIRM_DIALOG -->
+		<a href="#!submit" class="chat-button">{L_YES}</a>
+		<a href="#!close" class="chat-button">{L_NO}</a>
+	<!-- ELSE -->
+		<a href="#!submit" class="chat-button">{L_CHAT_SUBMIT}</a>
+		<!-- IF not S_DIALOG_CONTENT and not S_RULES -->&nbsp;<a href="#!close" class="chat-button">{L_CHAT_CANCEL}</a><!-- ENDIF -->
+	<!-- ENDIF -->
+	</div>
+	
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_JSON --><div id="ic-json-data">{S_JSON}</div><!-- ENDIF -->
+<!-- IF CUSTOM_PRINT -->{CUSTOM_PRINT}<!-- ENDIF -->

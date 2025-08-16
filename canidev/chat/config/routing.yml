@@ -1,0 +1,3 @@
+canidev_chat_controller:
+    pattern: /chat
+    defaults: { _controller: canidev.chat.controller:display }

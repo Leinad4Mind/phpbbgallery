@@ -1,0 +1,89 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_CHAT_ARCHIVE}</h2>
+
+<form method="post" action="{U_ACTION}">
+	<div class="chat-state-hidden js-delete-selected" style="float:left;">
+		<input type="submit" name="delete_selected" class="chat-button ic-inline" value="{L_CHAT_DELETE_SELECTED}" />
+	</div>
+		
+<!-- IF .pagination -->
+	<div class="pagination">
+		<!-- INCLUDE pagination.html -->
+	</div>
+<!-- ENDIF -->
+
+<br class="clear" />
+
+<div id="chat-body">
+<!-- IF .roomtab -->
+	<ul class="chat-archive-tabs">
+	<!-- BEGIN roomtab -->
+		<li><a class="chat-corner-top<!-- IF roomtab.S_ACTIVE --> active<!-- ENDIF -->" href="{roomtab.U_ACTION}">{roomtab.S_TITLE}</a></li>
+	<!-- END roomtab -->
+	</ul>
+<!-- ELSE -->
+	<div id="chat-title">{L_CHAT_ARCHIVE}</div>
+<!-- ENDIF -->
+	
+	<div id="chat-content" class="chat-corner-all">
+	<!-- IF .message -->
+		<div id="chat-conversation-container">
+		<!-- BEGIN message -->
+			<div id="chat-row-{message.S_ID}" class="chat-row">
+				<!-- IF message.S_AUTHOR_AVATAR --><div class="ic-row-avatar">{message.S_AUTHOR_AVATAR}</div><!-- ENDIF -->
+				
+				<!-- IF message.CAN_DELETE --><div class="ic-row-actions"><input class="row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" /></div><!-- ENDIF -->
+				
+				<div class="ic-row-actions">
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
+				</div>
+
+				<div class="ic-row-title<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
+				<div class="ic-row-text<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
+					{message.S_TEXT}
+				</div>
+			</div>
+		<!-- END message -->
+		</div>
+	<!-- ELSE -->
+		{L_NO_MESSAGES}
+	<!-- ENDIF -->
+	</div>
+</div>
+
+<!-- IF S_SELECT_SORT_DAYS -->
+	<fieldset class="display-options">
+		<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
+		<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
+	<!-- IF not S_IS_BOT -->
+		<label>{L_DISPLAY_MESSAGES}: {S_SELECT_SORT_DAYS}</label>
+		<label>{L_SORT_BY}: {S_SELECT_SORT_KEY}</label>
+		<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="chat-button ic-inline" /></label>
+	<!-- ENDIF -->
+	</fieldset>
+	<hr />
+<!-- ENDIF -->
+
+	<div class="chat-state-hidden js-delete-selected" style="float:left;">
+		<input type="submit" name="delete_selected" class="chat-button ic-inline" value="{L_CHAT_DELETE_SELECTED}" />
+	</div>
+	
+<!-- IF .pagination -->
+	<div class="pagination">
+		<!-- INCLUDE pagination.html -->
+	</div>
+<!-- ENDIF -->
+
+<br class="clear" />
+
+</form>
+
+<div id="ic-data-container" style="display:none;"></div>
+
+<br />
+
+<!-- INCLUDE chat_scripts.html -->
+<!-- INCLUDE overall_footer.html -->
