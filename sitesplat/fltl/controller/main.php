@@ -64,7 +64,7 @@ class main
 		$sql_ary = array(
 			'SELECT'	=> 'u.username, u.user_id, u.user_rank, u.user_posts, u.user_sig, u.user_avatar, u.user_avatar_type, u.user_avatar_width,
 							u.user_avatar_height, p.post_id, p.post_text, t.topic_id, t.forum_id, t.topic_title, t.topic_last_post_time,
-							t.topic_first_poster_colour, t.topic_last_post_id, t.topic_last_poster_name, t.topic_last_poster_colour',
+							t.topic_first_poster_colour, t.topic_last_post_id, t.topic_last_poster_name, t.topic_last_poster_colour, t.topic_posts_approved',
 			'FROM'		=> array(
 				TOPICS_TABLE	=> 't',
 				POSTS_TABLE		=> 'p',

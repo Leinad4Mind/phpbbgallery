@@ -2,29 +2,30 @@
 	"name": "sitesplat/fltl",
 	"type": "phpbb-extension",
 	"description": "Fancy Lazy Topics Loader - The Ajax way :-) ",
-	"version": "2.1.14",
+	"version": "2.1.15",
 	"keywords": ["phpbb", "extension", "ajax", "topic loader"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.4",
 		"composer/installers": "~1.0"
 	},
 	"extra": {
 		"display-name": "Fancy Lazy Topics Loader",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
 		},
 		"version-check": {
             "host": "sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "fancyloader.json"
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "fancyloader.json",
+			"ssl": true
 		}
 	}
 }

@@ -98,6 +98,7 @@ class listener implements EventSubscriberInterface
 				'TOPIC_MONTH_DIGIT' => $this->user->format_date($row['topic_last_post_time'], 'm', true),
 				'TOPIC_DAY_DIGIT'   => $this->user->format_date($row['topic_last_post_time'], 'd', true),
 				'TOPIC_TITLE'		=> censor_text($row['topic_title']),
+				'TOPIC_REPLIES'		=> $row['topic_posts_approved'],
 				'FP_EXCERPT'		=> $row['post_text'],
 			));
 		}
