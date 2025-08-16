@@ -19,6 +19,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+    'LIKEBB_NOTICE'				    => '<div style="width:80%%;margin:20px auto;"><p>the Setting for this extension are in <strong>%1$s » %2$s » %3$s.</strong><br /></p></div>',
 	'ACP_LIKEDD_TITLE'				=> 'phpBB Ajax likeBB',
 	'LIKEDD_DISLIKE_OFF'			=> 'Disable Dislike function',
     'LIKEDD_DISLIKE_OFF_EXPLAIN'	=> 'Turns on/off the dislike button in posts',

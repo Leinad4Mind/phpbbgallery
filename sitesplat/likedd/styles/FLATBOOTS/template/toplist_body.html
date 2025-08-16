@@ -41,7 +41,9 @@
 	</table>
 	<!-- ENDIF -->
 </div>
-<!-- INCLUDEJS js/highcharts.js -->
-<!-- INCLUDEJS js/statistics.js -->
-<!-- INCLUDEJS js/exporting.js -->
+<!-- IF not POLSTATS -->
+<!-- INCLUDEJS @sitesplat_likedd/js/highcharts.js -->
+<!-- ENDIF -->
+<!-- INCLUDEJS @sitesplat_likedd/js/statistics.js -->
+<!-- INCLUDEJS @sitesplat_likedd/js/exporting.js -->
 <!-- INCLUDE overall_footer.html -->

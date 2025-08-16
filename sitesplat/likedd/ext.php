@@ -41,9 +41,9 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 				global $user;
-				$info = '<div style="width:80%;margin:20px auto;"><p>Config setting of this extension are in <strong>General » Board configuration » Board settings tab phpBB Ajax likeBB</strong>.<br />Design you addon the way you like!</p></div>';
-				$user->lang['EXTENSION_ENABLE_SUCCESS'] =  $user->lang['EXTENSION_ENABLE_SUCCESS'] . $info;
-
+				$user->add_lang_ext('sitesplat/likedd', 'info_acp_likedd');
+				$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['LIKEBB_NOTICE']) ? sprintf($user->lang['LIKEBB_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_BOARD_SETTINGS'], $user->lang['ACP_LIKEDD_TITLE']) : '');
+				
 				// Enable Badge Award notifications
 				return $this->notification_handler('enable', array(
 					'sitesplat.likedd.notification.type.likedd_added',

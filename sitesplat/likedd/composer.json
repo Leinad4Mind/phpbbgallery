@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "An extension for like / dislike posts, Ajax driven(Real time).",
 	"homepage": "http://sitesplat.com",
-	"version": "2.1.7",
+	"version": "2.1.9",
 	"keywords": ["phpbb", "extension", "likeBB", "Ajax", "like", "dislike", "award"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -22,7 +22,7 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "phpBB Ajax LikeBB",
+		"display-name": "LikeBB",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
 		},

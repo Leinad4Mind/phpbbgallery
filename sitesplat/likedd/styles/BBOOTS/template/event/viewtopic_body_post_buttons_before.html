@@ -1,0 +1,12 @@
+<!-- IF postrow.U_LIKE -->
+<div class="btn-group btn-group-post" role="group">
+<a class="btn {LIKE_CLASS} btn-sm clickme" href="#p{postrow.POST_ID}" title="{L_LIKES_LIKE_IT}" data-options="l={postrow.POST_ID}"><i class="fa {LIKE_ICON}"></i><span class="hidden-xs">&nbsp;{L_LIKES_LIKE}</span><span id="l{postrow.POST_ID}"><!-- IF postrow.LIKES -->&nbsp;{postrow.LIKES}<!-- ENDIF --></span></a>
+</div>
+<!-- ENDIF -->
+
+<!-- IF postrow.U_DISLIKE -->
+<div class="btn-group btn-group-post" role="group">
+<a class="btn {DISLIKE_CLASS} btn-sm clickme" href="#p{postrow.POST_ID}" title="{L_LIKES_DISLIKE_IT}" data-options="d={postrow.POST_ID}"><i class="fa {DISLIKE_ICON}"></i><span id="d{postrow.POST_ID}"><!-- IF postrow.DISLIKES -->&nbsp;{postrow.DISLIKES}<!-- ENDIF --></span></a>
+</div>
+<!-- ENDIF -->
+

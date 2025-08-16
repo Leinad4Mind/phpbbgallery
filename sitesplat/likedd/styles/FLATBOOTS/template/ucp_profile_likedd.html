@@ -63,7 +63,9 @@
 	<!-- ENDIF -->
 </fieldset>	
 </div>
-<!-- INCLUDEJS js/highcharts.js -->
-<!-- INCLUDEJS js/ucp_statistics.js -->
-<!-- INCLUDEJS js/exporting.js -->
+<!-- IF not POLSTATS -->
+<!-- INCLUDEJS @sitesplat_likedd/js/highcharts.js -->
+<!-- ENDIF -->
+<!-- INCLUDEJS @sitesplat_likedd/js/ucp_statistics.js -->
+<!-- INCLUDEJS @sitesplat_likedd/js/exporting.js -->
 <!-- INCLUDE ucp_footer.html -->

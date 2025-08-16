@@ -1,0 +1,9 @@
+
+
+
+Use the below in event : viewtopic_body_postrow_post_notices_after
+
+to display the last liker.
+
+<!-- IF postrow.LAST_LIKER -->{postrow.LAST_LIKER}&nbsp;{L_LIKES_LIKED_LAST}<!-- ENDIF -->
+<div class="space1"></div>
