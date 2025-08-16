@@ -2,6 +2,11 @@ Cron Status - Changelog
 =======================
 This file contains the list of changes between different versions of Cron Status extension.
 
+# Version 3.1.3
+## Changes since 3.1.2
+### Bug fixes
+* [CODE] phpBB 3.2 is now fully supported.
+
 # Version 3.1.2
 ## Changes since 3.1.1
 ### New features
@@ -19,4 +24,4 @@ This file contains the list of changes between different versions of Cron Status
 # Version 3.1.1
 Initial stable release (changes can be found in the commits of our [repository on GitHub](https://github.com/BoardTools/cronstatus)).
 
-© 2014 - 2015 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
+© 2014 - 2018 Igor Lavrov and John Peskens
