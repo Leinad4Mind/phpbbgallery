@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'COLLAPSIBLE_CATEGORIES_TITLE'		=> 'عرض أو إخفاء منتديات هذا القسم',
+	'COLLAPSIBLE_CATEGORIES_TITLE'	=> 'عرض أو إخفاء منتديات هذا القسم',
 ));
