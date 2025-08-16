@@ -99,7 +99,12 @@ $lang = array_merge($lang, array(
 	'NO_SUBBUTTONS'            			=> 'There is no sub-button to Manage',
 	'BUTTON_UPDATED'           			=> 'Button has been updated Successfully',
 	'BUTTON_ADDED'             			=> 'New button has been added Successfully',
-
+	
+	'ENABLE_CUSTOM_LINKS'				=> 'Enable Menu Entry Default Extension',
+	'ENABLE_CUSTOM_LINKS_EXPLAIN'		=> 'This option will enable or disable the main menu extension button where all the default extension links are usually added via the phpBB event system.',
+	'CONFIGURATION_UPDATED'				=> 'Configuration successfully updated.',
+	
+	
 	'IMG_UPLOADED'              		=> 'Image has been uploaded Successfully',
 	'SELECT_IMAGE'              		=> 'Select Image',
 	'IMG_UPLOAD_EXPLAIN'        		=> 'Allowed extensions are png, jpg, jpeg and gif.',

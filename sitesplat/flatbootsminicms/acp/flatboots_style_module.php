@@ -402,9 +402,19 @@ class flatboots_style_module
 		
 				$template->assign_vars(array(
 					'S_FLATBOOTS_STYLE_MENU'	=> true,
-					'S_PARENT_ID'							=> $parent_id,
+					'S_PARENT_ID'				=> $parent_id,
+					'ENABLED_CUSTOM_LINKS'	    => $config['flatboots_enable_custom_links'],
 				));				
 
+				if ($request->is_set_post('set_config'))
+				{
+					// save enable/disable custom links option
+					$config->set('flatboots_enable_custom_links', $request->variable('enable_custom_links', 0));
+
+					trigger_error($user->lang('CONFIGURATION_UPDATED') . adm_back_link($this->u_action));
+				}	 
+				
+				
 				switch ($action)
 				{
 					case "delete":
@@ -587,17 +597,19 @@ class flatboots_style_module
 					case 'move_up':
 					case 'move_down':
 					
-						$sql = 'SELECT left_id, right_id
+						$sql = 'SELECT left_id, right_id, parent_id
 								FROM ' . $table_prefix . 'flatboots_style_menu
 								WHERE button_id = ' . $button_id;
 						$result = $db->sql_query($sql);
 						$row = $db->sql_fetchrow($result);
 
-						$this->acp_move_button($table_prefix . 'flatboots_style_menu', $row, $action);
+					//	$this->acp_move_button($table_prefix . 'flatboots_style_menu', $row, $action);
 						
-						redirect($this->u_action . '&amp;parent_id=' . $parent_id);
+						$this->move_menu_by($row, $action);
 						
-					break;
+					//	redirect($this->u_action . '&amp;parent_id=' . $parent_id);
+						
+					//break;
 		
 					default:
 
@@ -830,6 +842,83 @@ class flatboots_style_module
 
 			break;
 		}
+	}
+
+	/**
+	* Move menu position by $steps up/down, 3.1 compatabillity
+	*/
+	function move_menu_by($module_row, $action = 'move_up', $steps = 1)
+	{
+		global $db, $table_prefix;
+		/**
+		* Fetch all the siblings between the menu's current spot
+		* and where we want to move it to. If there are less than $steps
+		* siblings between the current spot and the target then the
+		* menu will move as far as possible
+		*/
+		$sql = 'SELECT button_id, left_id, right_id
+			FROM ' . $table_prefix . 'flatboots_style_menu' . "
+			WHERE  parent_id = " . (int) $module_row['parent_id'] . '
+				AND ' . (($action == 'move_up') ? 'right_id < ' . (int) $module_row['right_id'] . ' 
+				ORDER BY right_id DESC' : 'left_id > ' . (int) $module_row['left_id'] . ' ORDER BY left_id ASC');
+		$result = $db->sql_query_limit($sql, $steps);
+
+		$target = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$target = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (!sizeof($target))
+		{
+			// The menu is already on top or bottom
+			return false;
+		}
+
+		/**
+		* $left_id and $right_id define the scope of the nodes that are affected by the move.
+		* $diff_up and $diff_down are the values to substract or add to each node's left_id
+		* and right_id in order to move them up or down.
+		* $move_up_left and $move_up_right define the scope of the nodes that are moving
+		* up. Other nodes in the scope of ($left_id, $right_id) are considered to move down.
+		*/
+		if ($action == 'move_up')
+		{
+			$left_id = (int) $target['left_id'];
+			$right_id = (int) $module_row['right_id'];
+
+			$diff_up = (int) ($module_row['left_id'] - $target['left_id']);
+			$diff_down = (int) ($module_row['right_id'] + 1 - $module_row['left_id']);
+
+			$move_up_left = (int) $module_row['left_id'];
+			$move_up_right = (int) $module_row['right_id'];
+		}
+		else
+		{
+			$left_id = (int) $module_row['left_id'];
+			$right_id = (int) $target['right_id'];
+
+			$diff_up = (int) ($module_row['right_id'] + 1 - $module_row['left_id']);
+			$diff_down = (int) ($target['right_id'] - $module_row['right_id']);
+
+			$move_up_left = (int) ($module_row['right_id'] + 1);
+			$move_up_right = (int) $target['right_id'];
+		}
+
+		// Now do the dirty job
+		$sql = 'UPDATE ' . $table_prefix . 'flatboots_style_menu' . "
+			SET left_id = left_id + CASE
+				WHEN left_id BETWEEN {$move_up_left} AND {$move_up_right} THEN -{$diff_up}
+				ELSE {$diff_down}
+			END,
+			right_id = right_id + CASE
+				WHEN right_id BETWEEN {$move_up_left} AND {$move_up_right} THEN -{$diff_up}
+				ELSE {$diff_down}
+			END
+			WHERE left_id BETWEEN {$left_id} AND {$right_id}
+				AND right_id BETWEEN {$left_id} AND {$right_id}";
+		$db->sql_query($sql);
 	}
 
 	protected function acp_move_button($table, $button_row, $action = 'move_up')

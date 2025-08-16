@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Export emails and subscribers extension for the phpBB Forum Software package.
+* FLATBOOTS Mini CMS extension for the phpBB Forum Software package.
 *
 * @copyright (c) 2015 SiteSplat <http://www.sitesplat.com>
 * @license SiteSplat 2015 all rights reserved
@@ -75,6 +75,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.page_header_after'	=> 'add_common_template_variables',
+			'core.get_avatar_after'		=> 'set_avatar_effect',
 		);
 	}
 
@@ -324,7 +325,23 @@ class listener implements EventSubscriberInterface
 
 				// custom CSS
 				'S_ALLOW_CUSTOMCSS'				=> $this->config['flatboots_enable_custom_css'],
+				// custom links on off
+				'S_ALLOW_CUSTOMLINKS'			=> $this->config['flatboots_enable_custom_links'],
 			));
 		}
+	}
+
+	/**
+	 * Adds class to set avatar effect
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function set_avatar_effect($event)
+	{
+		$html = $event['html'];
+		$html = str_replace('class="', 'class="' . (( isset($this->config['flatboots_avatar_effect']) && $this->config['flatboots_avatar_effect'] != '' && $this->config['flatboots_avatar_effect'] != 'none') ? $this->config['flatboots_avatar_effect'] : '') . ' ', $html);
+		$event['html'] = $html;
 	}
 }

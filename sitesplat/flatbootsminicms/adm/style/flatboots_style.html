@@ -87,7 +87,6 @@
 					<label><input type="radio" class="radio" name="enable_popup_login" value="0"<!-- IF not ENABLE_POPUP_LOGIN --> id="enable_popup_login" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 				</dd>
 			</dl>
-			<!--
 			<dl>
   		  <dt><label for="flatboots_avatar_effect">{L_AVATAR_EFFECT}</label><br />{L_AVATAR_EFFECT_EXPLAIN}</dt>
     		<dd>  
@@ -99,7 +98,6 @@
     			</select>                              
   			</dd>
 			</dl>
-			-->
 			<dl>
   		  <dt><label for="mini_profile_position">{L_MINI_PROFILE_POSITION}</label><br />{L_MINI_PROFILE_POSITION_EXPLAIN}</dt>
     		<dd>  
@@ -188,7 +186,7 @@
     <!-- ELSE -->
       <div class="errorbox"><!-- IF not S_PARENT_ID -->{L_NO_BUTTONS}<!-- ELSE -->{L_NO_SUBBUTTONS}<!-- ENDIF --></div>
     <!-- ENDIF -->        
-    
+	
     <form method="post" action="">    
       <fieldset class="quick">
       	<input class="post" type="text" id="menu_button_name" name="button_name" value="" />
@@ -197,6 +195,24 @@
       </fieldset>
     </form>
     
+	<form method="post" action="">
+    <fieldset>
+      <dl>
+        <dt><label for="enable_custom_links">{L_ENABLE_CUSTOM_LINKS}:</label><br />{L_ENABLE_CUSTOM_LINKS_EXPLAIN}</dt>
+        <dd>
+          <label><input type="radio" class="radio" name="enable_custom_links" value="1"<!-- IF ENABLED_CUSTOM_LINKS --> id="enable_custom_links" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+          <label><input type="radio" class="radio" name="enable_custom_links" value="0"<!-- IF not ENABLED_CUSTOM_LINKS --> id="enable_custom_links" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+        </dd>
+	    <dd>
+		 <p style="margin-top:15px;font-size: inherit;">
+		  <input class="button1" type="submit" id="set_config" name="set_config" value="{L_SUBMIT}" />
+         </p>
+		</dd>
+      </dl>
+    </fieldset>
+    {S_FORM_TOKEN}
+  </form>
+	
   <!-- ELSEIF S_MENU_CREATE_BUTTON or S_MENU_EDIT_BUTTON -->
   
     <h1><!-- IF S_MENU_EDIT_BUTTON -->{L_ACP_MENU_EDIT_BUTTON}<!-- ELSE -->{L_FLATBOOTS_STYLE_ADD_BUTTON}<!-- ENDIF --></h1>
