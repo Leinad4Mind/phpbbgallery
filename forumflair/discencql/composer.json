@@ -1,0 +1,32 @@
+{
+    "name": "forumflair/discencql",
+    "type": "phpbb-extension",
+    "description": "This extension adds a discussion encouragement panel to the bottom of topics, the panel includes a register button and a quick login form.",
+    "version": "1.0.0",
+    "time": "2022-01-26",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "ForumFlair",
+            "homepage": "https://forumflair.co.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "phpbb/phpbb": ">=3.3.4",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "Discussion Encouragement With Quick Login",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.4"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/discencql",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

@@ -1,0 +1,75 @@
+/*	phpBB3 Style Sheet
+	--------------------------------------------------------------
+	phpBB Extension Name:	Discussion Encouragement With Quick Login
+	Extension Version:		1.0.0
+	Last Updated:			26/01/2022
+	Extension Developer:	ForumFlair (https://forumflair.co.uk)
+	Compatible Style:		Prosilver_Dark
+	--------------------------------------------------------------
+*/
+
+/* Main Panel */
+.discencql { border: 1px solid #FFFFFF0A; margin: 20px auto 16px auto; max-width: 80%; padding: 12px; text-align: center; }
+.discencql h2 { border: 0; color: #2A8FF7 !important; font-size: 2em; margin: 0 0 6px 0; padding: 0; }
+.discencql p { margin: 0 0 20px 0; }
+
+/* Grid & Columns */
+.discencql-grid { display: flex; }
+.discencql-column { display: flex; flex-direction: column; width: 100%; }
+
+/* Registration Info */
+.discencql-column p { line-height: 2em; }
+
+
+/* Quick Login Form */
+.discencql-column form { margin: auto auto 0 auto; width: 100%; }
+.discencql-fieldset { margin: 0 auto; max-width: 250px; }
+.discencql-fieldset label { font-size: 1.2em; padding: 0 }
+.discencql-fieldset .inputbox { border-radius: 4px; margin: 0 0 8px 0; padding: 8px 0; text-indent: 6px; width: 100%; }
+.discencql-autologin { display: block; margin: auto auto 8px auto; width: fit-content; }
+.discencql-autologin input[type="checkbox"] { margin: 0 0 0 4px; vertical-align: bottom; }
+
+/* RTL Quick Login Form */
+.rtl .discencql-autologin input[type="checkbox"] { margin: 0 4px 0 0; }
+
+/* Quick Login Forum Place Holders */
+.discencql-fieldset input::-webkit-input-placeholder { color: #CCCCCC; } /* Chrome/Opera/Safari */
+.discencql-fieldset input:-moz-placeholder { color: #CCCCCC; } /* Firefox 18- */
+.discencql-fieldset input::-moz-placeholder { color: #CCCCCC; } /* Firefox 19+ */
+.discencql-fieldset input:-ms-input-placeholder { color: #CCCCCC; } /* IE 10+ */
+
+/* Login/Register Buttons */
+.discencql-button { border: 0; border-radius: 4px; box-shadow: none; font-family: Arial; max-width: 200px; padding: 8px 0; width: 100%; }
+.discencql-button:focus, .discencql-button:hover { color: #FFFFFF; text-shadow: none; }
+.discencql-button .icon::before { padding: 0 4px 0 0; }
+.discencql-button .icon { color: #FFFFFF !important; width: auto; }
+.discencql-button:focus .icon, .discencql-button:hover .icon { color: #FFFFFF; }
+a.discencql-register-button { color: #FFFFFF !important; margin: auto auto 0 auto; text-decoration: none; }
+.discencql-register-button { background: #137CD2; }
+.discencql-register-button:focus, .discencql-register-button:hover { background: #1A8BE8; }
+.discencql-login-button { background: #636E75; color: #FFFFFF; }
+.discencql-login-button:focus, .discencql-login-button:hover { background: #71808A; }
+
+/* RTL Login/Register Buttons */
+.rtl .discencql-button .icon::before { padding: 0 0 0 4px; }
+
+/* Responsive Media Queries 800px */
+@media (max-width: 800px) {
+	/* Main Panel */
+	.discencql { max-width: 94%; }
+}
+
+/* Responsive Media Queries 700px */
+@media (max-width: 700px) {
+	/* Main Panel */
+	.discencql { max-width: 100%; }
+	.discencql p { margin: 0 0 14px 0; }
+
+	/* Grid & Columns */
+	.discencql-grid { display: block }
+	.discencql-column { display: block; margin: 0 0 14px 0; }
+}
+
+/* Prosilver RTL Bug Fix: fixes icon padding mistake found in prosilver bidi.css */
+.rtl .discencql-button .icon { padding: 0; }
+/* This can be removed when the mistake in the prosilver bidi.css file is fixed */

@@ -1,0 +1,47 @@
+<div class="discencql panel">
+	<div class="inner">
+		{% if S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) %}
+		<h2>{{ lang('DISC_ENC_QL_TTL') }}</h2>
+		{% else %}
+		<h2>{{ lang('DISC_ENC_QL_NO_SGNUP_TTL') }}</h2>
+		{% endif %}
+		<p>{{ lang('DISC_ENC_QL_INF') }}</p>
+		<div class="discencql-grid">
+			{% if S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) %}
+			<div class="discencql-column">
+				<h2>{{ lang('DISC_ENC_QL_SGN_UP_TTL') }}</h2>
+				<p>
+				{{ lang('DISC_ENC_QL_SGN_UP_INF') }}<br />
+				{{ lang('DISC_ENC_QL_SGN_UP_TPCS_INF') }}<br />
+				{{ lang('DISC_ENC_QL_SGN_UP_FREE_INF') }}
+				</p>
+				<a href="{U_REGISTER}" class="discencql-button discencql-register-button button" title="{L_REGISTER}">
+					<i class="icon fa-pencil-square-o fa-fw" aria-hidden="true"></i><span>{L_REGISTER}</span>
+				</a>
+			</div>
+			{% endif %}
+			<div class="discencql-column">
+				{% if S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) %}
+				<h2>{{ lang('DISC_ENC_QL_SGN_IN_TTL') }}</h2>
+				{% endif %}
+				<form method="post" action="{S_LOGIN_ACTION}">
+					<fieldset class="discencql-fieldset">
+						<label for="username-ql"><input type="text" tabindex="1" name="username" id="username-ql" placeholder="{L_USERNAME}" size="10" class="inputbox" title="{L_USERNAME}" /></label>
+						<label for="password-ql"><input type="password" tabindex="2" name="password" id="password-ql" placeholder="{L_PASSWORD}" size="10" class="inputbox" title="{L_PASSWORD}" autocomplete="off" /></label>
+						{% if U_SEND_PASSWORD %}
+							<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+						{% endif %}
+						{% if S_AUTOLOGIN_ENABLED %}
+							<label for="autologin-ql" class="discencql-autologin">{L_LOG_ME_IN}<input type="checkbox" tabindex="4" name="autologin" id="autologin-ql" /></label>
+						{% endif %}
+						<button class="discencql-button discencql-login-button button" type="submit" tabindex="5" name="login" value="{L_LOGIN}" title="{L_LOGIN_LOGOUT}">
+							<i class="icon fa-power-off fa-fw" aria-hidden="true"></i><span>{L_LOGIN_LOGOUT}</span>
+						</button>
+						{S_LOGIN_REDIRECT}
+						{S_FORM_TOKEN_LOGIN}
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
