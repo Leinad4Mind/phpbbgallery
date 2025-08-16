@@ -30,6 +30,7 @@ interface page_interface
 	*
 	* @param \phpbb\pages\entity\page_interface $entity Page entity with new data to insert
 	* @return page_interface Added page entity
+	* @throws \phpbb\pages\exception\out_of_bounds
 	* @access public
 	*/
 	public function add_page($entity);
@@ -53,13 +54,23 @@ interface page_interface
 	public function get_page_routes();
 
 	/**
-	* Get custom page link icons (pages_*.gif)
-	* Added by the user to the core style/theme/images directores
+	* Get all custom page link icons (pages_*.gif)
+	* Added by the user to the core style/theme/images directories
 	*
 	* @return array Array of icon image paths
 	* @access public
 	*/
 	public function get_page_icons();
+
+	/**
+	* Get a custom page link icon (pages_*.gif)
+	* Added by the user to the core style/theme/images directories
+	*
+	* @param string $name The page name (uses the route name)
+	* @return string The icon name
+	* @access public
+	*/
+	public function get_page_icon($name);
 
 	/**
 	* Get custom page templates (pages_*.html)

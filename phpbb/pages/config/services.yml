@@ -37,7 +37,6 @@ services:
             - '@phpbb.pages.operator'
             - '@template'
             - '@user'
-            - '%core.root_path%'
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
@@ -59,6 +58,7 @@ services:
             - '@service_container'
             - '@dbal.conn'
             - '@ext.manager'
+            - '@user'
             - '%phpbb.pages.tables.pages%'
             - '%phpbb.pages.tables.pages_links%'
             - '%phpbb.pages.tables.pages_pages_links%'
