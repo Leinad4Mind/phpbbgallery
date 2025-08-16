@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.likedd.tables.likes: %core.table_prefix%likes

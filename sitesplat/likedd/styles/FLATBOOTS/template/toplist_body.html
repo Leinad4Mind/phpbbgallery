@@ -1,0 +1,47 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{L_LIKES_TOP_LIST}</h3></div>
+<div class="panel panel-forum">
+	<div id="table_title" class="panel-heading">
+	{L_LIKES_TOP_LIST}
+	</div>
+	<!-- IF not VIEW_TABLE -->
+	<table class="graph_table" id="graph_table">
+	<thead>
+		<tr>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- IF STATS -->
+		<tr>
+		   <td>
+		   <table style="width:100%;">
+		   <tr>
+		    <td style="width:100%; text-align:center"><div id="chart" style="width: 90%; height: 230px; margin: auto;"></div></td>
+		   </tr>
+		   </table>
+		<!-- ENDIF -->
+			<script>
+			var stats = {STATS};
+			var dates = {DATES};
+			var title = '{L_LIKES_TOP_LIST}';
+			var ytitle = {HITSTITLE};
+			var btnena	= {BTNEN};
+			var labelenabled = {LABELENABLE};
+			</script>
+	<!-- IF not VIEW_TABLE -->
+			</td>
+		</tr>
+		<!-- ELSE -->
+		<tr>
+			<td>{L_ACP_NO_ITEMS}</td>
+		</tr>
+		<!-- ENDIF -->
+	</tbody>
+	</table>
+	<!-- ENDIF -->
+</div>
+<!-- INCLUDEJS js/highcharts.js -->
+<!-- INCLUDEJS js/statistics.js -->
+<!-- INCLUDEJS js/exporting.js -->
+<!-- INCLUDE overall_footer.html -->
