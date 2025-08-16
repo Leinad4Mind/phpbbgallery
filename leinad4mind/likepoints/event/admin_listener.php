@@ -16,6 +16,10 @@ use phpbb\request\request;
 use phpbb\db\driver\driver_interface;
 use phpbb\template\template;
 use phpbb\language\language;
+use phpbb\log\log;
+use phpbb\user;
+use phpbb\controller\helper;
+use phpbb\config\config;
 
 class admin_listener implements EventSubscriberInterface
 {
@@ -24,19 +28,36 @@ class admin_listener implements EventSubscriberInterface
    protected $template;
    protected $language;
    protected $config_table;
+   protected $log;
+   protected $user;
+   protected $config;
 
    /**
     * Constructor
     *
     * @access	public
     */
-   public function __construct(request $request, driver_interface $db, template $template, language $language, $config_table)
-   {
+   public function __construct(
+      request $request,
+      driver_interface $db,
+      template $template,
+      language $language,
+      log $log,
+      user $user,
+      helper $helper,
+      config $config,
+      $config_table
+   ) {
       $this->db = $db;
       $this->request = $request;
       $this->template = $template;
       $this->language = $language;
+      $this->log = $log;
+      $this->user = $user;
+      $this->helper   = $helper;
+      $this->config = $config;
       $this->config_table = $config_table;
+      $this->bbpoints_config = json_decode($this->config['bbpoints_settings'], true);
    }
 
    /**
@@ -52,7 +73,29 @@ class admin_listener implements EventSubscriberInterface
          'core.acp_manage_forums_initialise_data'   => 'acp_manage_forums_initialise_data',
          'core.acp_manage_forums_display_form'      => 'acp_manage_forums_display_form',
          'core.acp_manage_forums_update_data_after'   => 'acp_manage_forums_update_data_after',
+         'sitesplat.bbpoints.before_admin_controller_display' => 'acp_before_admin_controller_display',
+         'sitesplat.bbpoints.after_admin_controller_submit_config' => 'acp_after_admin_controller_submit_config',
       );
+   }
+
+   public function acp_before_admin_controller_display($event)
+   {
+      if (!isset($event['bbpoints_config']['per_likes'])) {
+         $this->template->assign_vars(array(
+            'PER_LIKES'   => 10,
+         ));
+      }
+
+      $this->template->assign_vars(array(
+         'SYNC_POINTS_URL'   => html_entity_decode($this->helper->route('leinad4mind_likepoints_admin_controller')),
+      ));
+   }
+
+   public function acp_after_admin_controller_submit_config($event)
+   {
+      $merged = $this->bbpoints_config;
+      $merged['per_likes'] = $this->request->variable('per_likes', 10);
+      $this->config->set('bbpoints_settings', json_encode($merged));
    }
 
    /**
@@ -65,10 +108,9 @@ class admin_listener implements EventSubscriberInterface
    public function acp_manage_forums_initialise_data($event)
    {
       if ($event['action'] === 'add') {
-         $event['forum_data'] = array_merge($event['forum_data'], array(
-            'per_likes_enabled' => true,
-            'per_likes_amount' => $this->get_default_likepoint_amount(),
-         ));
+         $event['forum_data']['per_likes_enabled'] = true;
+         $event['forum_data']['contributors_enabled'] = true;
+         $event['forum_data']['per_likes_amount'] = 0;
       }
    }
 
@@ -83,10 +125,17 @@ class admin_listener implements EventSubscriberInterface
    {
       //$this->user->add_lang_ext('leinad4mind/likepoints', 'info_acp_likepoints');
       $this->language->add_lang('info_acp_likepoints', 'leinad4mind/likepoints');
+      $row = null;
+      if ($event['action'] !== 'add') {
+         $sql = 'SELECT per_likes_amount FROM ' . FORUMS_TABLE . ' WHERE forum_id = ' . $event['forum_data']['forum_id'] . ' and per_likes_enabled = 1';
+         $result = $this->db->sql_query($sql);
+         $row = $this->db->sql_fetchrow($result);
+      }
 
       $this->template->assign_vars(array(
-         'S_ENABLE_LIKES'   => ($event['forum_data']['per_likes_enabled']) ? true : false,
-         'PERLIKES_AMOUNT'  => $event['forum_data']['per_likes_amount'],
+         'S_ENABLE_LIKES'   => $this->request->variable('per_likes_enabled', (isset($event['forum_data']['per_likes_enabled']) && $event['forum_data']['per_likes_enabled']) ? true : false),
+         'S_ENABLE_CONTRIBUTORS' => $this->request->variable('contributors_enabled', (isset($event['forum_data']['contributors_enabled']) && $event['forum_data']['contributors_enabled']) ? true : false),
+         'PERLIKES_AMOUNT'  => $this->request->variable('per_likes_amount', isset($row) && is_array($row) ? $row['per_likes_amount'] : 0),
       ));
    }
 
@@ -100,9 +149,11 @@ class admin_listener implements EventSubscriberInterface
    public function acp_manage_forums_update_data_after($event)
    {
       $per_likes_enabled = $this->request->variable('per_likes_enabled', 1);
+      $contributors_enabled = $this->request->variable('contributors_enabled', 0);
       $amount = $this->request->variable('per_likes_amount', $this->get_default_likepoint_amount());
       $sql = 'UPDATE ' . FORUMS_TABLE . '
 				SET per_likes_enabled = ' . $per_likes_enabled . ',
+            contributors_enabled = ' . $contributors_enabled . ',
 					per_likes_amount = ' . $amount . '
 				WHERE forum_id = ' . $event['forum_data']['forum_id'];
       $this->db->sql_query($sql);

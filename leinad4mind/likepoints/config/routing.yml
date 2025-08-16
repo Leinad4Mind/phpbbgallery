@@ -1,0 +1,9 @@
+leinad4mind_likepoints_suggest_controller:
+    path: /likepoints/auto_complete
+    defaults: { _controller: leinad4mind.likepoints.controller:auto_complete }
+    methods:  [GET]
+
+leinad4mind_likepoints_admin_controller:
+    path: /likepoints/admin/sync_like_points
+    defaults: { _controller: leinad4mind.likepoints.admin_controller:execute }
+    methods:  [GET]

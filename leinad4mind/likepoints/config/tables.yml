@@ -1,3 +1,6 @@
 parameters:
     leinad4mind.config.table: '%core.table_prefix%config'
     leinad4mind.users.table: '%core.table_prefix%users'
+    leinad4mind.posts.table: '%core.table_prefix%posts'
+    leinad4mind.likes.table: '%core.table_prefix%likes'
+    leinad4mind.bbpoints.table: '%core.table_prefix%bbpoints'

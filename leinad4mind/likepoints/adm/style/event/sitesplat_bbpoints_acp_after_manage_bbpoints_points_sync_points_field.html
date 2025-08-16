@@ -1,0 +1,31 @@
+<!-- INCLUDECSS css/likepoints.min.css -->
+<dl>
+  <dt>
+    <label for="sync_like_points-sync_points">{L_SYNC_LIKE_POINTS}{L_COLON}</label><br/>
+    <span>{L_SYNC_LIKE_POINTS_EXPLAIN}</span></dt>
+  <dd><input class="button2" type="submit" id="sync_like_points" name="sync_like_points" value="{L_RUN}"/>
+    <div id="progressbar">
+      <div id="progress">
+        <div id="pbaranim">
+          <span id="percent"></span></div>
+      </div>
+    </div>
+    <div id="sync_like_points-progressbar">
+      <div id="sync_like_points-progress">
+        <div id="sync_like_points-pbaranim">
+          <span id="sync_like_points-percent"></span></div>
+      </div>
+    </div>
+    <br/>
+    <div id="sync_like_points-processing" style="display: none;">Processing ...</div>
+    <br/>
+    <div id="sync_like_points-summary" style="display: none;">Total posts:
+      <span id="total-posts"></span></div>
+  </dd>
+</dl>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+  var leinad4mind_likepoints_sync_points_url = '{{ SYNC_POINTS_URL }}';
+</script>
+<!-- INCLUDEJS {ROOT_PATH}ext/leinad4mind/likepoints/adm/style/js/settings.min.js -->

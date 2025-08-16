@@ -12,6 +12,18 @@
 
 <dl>
   <dt>
+    <label for="contributors_enabled">{{ lang('CONTRIBUTORS_ENABLE') }}{{ lang('COLON') }}</label>
+  </dt>
+  <dd>
+    <label><input type="radio" class="radio" name="contributors_enabled" value="1" {% if S_ENABLE_CONTRIBUTORS %} id="contributors_enabled" checked="checked" {% endif %}/>
+      {{ lang('YES') }}</label>
+    <label><input type="radio" class="radio" name="contributors_enabled" value="0" {% if not S_ENABLE_CONTRIBUTORS %} id="contributors_enabled" checked="checked" {% endif %}/>
+      {{ lang('NO') }}</label>
+  </dd>
+</dl>
+
+<dl>
+  <dt>
     <label for="per_likes_amount">{{ lang('PER_LIKES_AMOUNT') }}{{ lang('COLON') }}</label>
   </dt>
   <dd>

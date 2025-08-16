@@ -22,10 +22,14 @@ class m1_initial_install extends \phpbb\db\migration\migration
          'add_columns'   => array(
             $this->table_prefix . 'forums'   => array(
                'per_likes_enabled'   => array('BOOL', 1),
+               'contributors_enabled'   => array('BOOL', 1),
                'per_likes_amount'   => array('UINT:2', 10),
             ),
             $this->table_prefix . 'posts'   => array(
                'contributors'   => array('VCHAR:255', ''),
+            ),
+            $this->table_prefix . 'bbpoints'      => array(
+               'post_id'   => array('INT:11', '0'),
             ),
          )
       );

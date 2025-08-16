@@ -50,9 +50,69 @@ class listener implements EventSubscriberInterface
    {
       return array(
          'core.submit_likedd_end' => 'award_points',
+         'core.submit_likedd_start' => 'check_points',
          'core.posting_modify_template_vars' => 'display_editor_contributors',
-         'core.posting_modify_submit_post_after' => 'update_contributors'
+         'core.posting_modify_submit_post_after' => 'update_contributors',
+         'core.viewtopic_modify_post_row'         => 'display_viewtopic_contributors',
       );
+   }
+
+   /**
+    * Fired before post render
+    *
+    * @param \phpbb\event\data $event The event object
+    */
+   public function check_points($event): void
+   {
+      global $phpbb_container;
+      $this->bbpoints_table = $phpbb_container->getParameter('sitesplat.bbpoints.table');
+      $current_user_id = $event['user_id'];
+      $amount = $this->get_amount($event['post_id']);
+      $user_points = $this->get_user_points($current_user_id);
+
+      if ($event['l'] && $user_points < $amount && empty($event['error']) && !$event['like_id']) {
+         $event['error'] = array_merge($event['error'], array(
+            $this->language->lang_array('NOT_ENOUGH_BALANCE_LIKE'),
+         ));
+      }
+   }
+
+   /**
+    * Fired before post render
+    *
+    * @param \phpbb\event\data $event The event object
+    */
+   public function display_viewtopic_contributors($event): void
+   {
+      $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = ' . $event['row']['forum_id'];
+      $this->db->sql_query($sql);
+      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      $event['post_row'] = array_merge($event['post_row'], array(
+         'S_ENABLE_CONTRIBUTORS' => true,
+      ));
+      if (!$contributors_enabled) {
+         return;
+      }
+
+      $contributors = $this->get_contributors($event['row']['post_id']);
+      if (!count($contributors)) {
+         $event['post_row'] = array_merge($event['post_row'], array(
+            'S_ENABLE_CONTRIBUTORS' => false,
+         ));
+      }
+
+      $contrs = '';
+      foreach ($contributors as $u) {
+         $user_id = (int) $u;
+         $sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $user_id . ' LIMIT 1';
+         $this->db->sql_query($sql);
+         $username = $this->db->sql_fetchfield('username');
+         $contrs .= '<a href="' . append_sid('memberlist.php?mode=viewprofile&u=' . $user_id) . '">' . $username . '</a>, ';
+      }
+
+      $event['post_row'] = array_merge($event['post_row'], array(
+         'CONTRIBUTOR_USERS' => rtrim($contrs, ', '),
+      ));
    }
 
    /**
@@ -77,28 +137,28 @@ class listener implements EventSubscriberInterface
 
       $current_user_id = $event['user_id'];
       $liked_post_id = $this->request->variable('l', 0);
-      //$disliked_post_id = $this->request->variable('d', 0);
-      $disliked_post_id = 0;
+      //$unliked_post_id = $this->request->variable('d', 0);
+      $unliked_post_id = 0;
       $post_id = $liked_post_id;
       if ($post_id === 0) {
-         $post_id = $disliked_post_id;
+         $post_id = $unliked_post_id;
       }
       $user_id = $this->get_author($post_id);
       $amount = $this->get_amount($post_id);
       $user_points = $this->get_user_points($current_user_id);
       $topic_id = $this->get_topic_id($post_id);
-      $is_dislike = ($this->is_dislike($post_id, $current_user_id));
-      if ($is_dislike) {
-         $disliked_post_id = $liked_post_id;
+      $is_unlike = ($this->is_unlike($post_id, $current_user_id));
+      if ($is_unlike) {
+         $unliked_post_id = $liked_post_id;
          $liked_post_id = 0;
       }
       $contributors = $this->get_contributors($post_id);
       if (in_array($current_user_id, $contributors)) {
-         // User who got kudos cannot add or subtract points by liking or disliking.
+         // User who got contributors cannot add or subtract points by liking or unliking.
          return;
       }
 
-      if ($disliked_post_id > 0) {
+      if ($unliked_post_id > 0) {
          if (count($contributors) > 0) {
             $contributor_amount = floor($amount / (count($contributors) + 1));
             if ($amount % $contributor_amount !== 0) {
@@ -108,14 +168,15 @@ class listener implements EventSubscriberInterface
             }
             // transfer for each additional user
             foreach ($contributors as $contributor_user_id) {
-               $reason = $this->language->lang_array('REASON_DISLIKE', [$contributor_amount, $current_user_id]);
-               $this->dislike($current_user_id, $contributor_user_id, $topic_id, $contributor_amount, $reason);
+               $reason = $this->language->lang_array('REASON_UNLIKE_CONTRIBUTOR', [$contributor_amount, $user_id]);
+               $this->unlike((int) $current_user_id, (int) $contributor_user_id, $topic_id, $unliked_post_id, $contributor_amount, $reason);
             }
          }
-         $reason = $this->language->lang_array('REASON_DISLIKE', [$amount, $current_user_id]);
-         $this->dislike($current_user_id, $user_id, $topic_id, $amount, $reason);
+         $reason = $this->language->lang_array('REASON_UNLIKE', [$amount, $current_user_id]);
+         $this->unlike($current_user_id, $user_id, $topic_id, $unliked_post_id, $amount, $reason);
          return;
       }
+
       if ($liked_post_id > 0 && $user_points <= $amount) {
          $message = $this->language->lang_array('LOG_TRANSFER_POINTS_NOT_ENOUGH', [
             $amount, $user_id
@@ -129,22 +190,22 @@ class listener implements EventSubscriberInterface
       }
       if (count($contributors) > 0) {
          $contributor_amount = floor($amount / (count($contributors) + 1));
-         if ($amount % $contributor_amount !== 0) {
+         if ($contributor_amount != 0 && $amount % $contributor_amount !== 0) {
             $amount = $contributor_amount + ($amount % $contributor_amount);
          } else {
             $amount = $contributor_amount;
          }
          // transfer for each additional user
          foreach ($contributors as $contributor_user_id) {
-            $reason = $this->language->lang_array('REASON_LIKE_KUDO', [$contributor_amount, $current_user_id]);
-            $this->transfer_points($current_user_id, $contributor_user_id, $topic_id, $contributor_amount, $reason);
+            $reason = $this->language->lang_array('REASON_LIKE_CONTRIBUTOR', [$contributor_amount, $current_user_id]);
+            $this->transfer_points($current_user_id, $contributor_user_id, $topic_id, $post_id, $contributor_amount, $reason);
          }
       }
 
       $reason = $this->language->lang_array('REASON_LIKE', [$amount, $current_user_id]);
 
       // transfer for the post author
-      $this->transfer_points($current_user_id, $user_id, $topic_id, $amount, $reason);
+      $this->transfer_points($current_user_id, $user_id, $topic_id, $post_id, $amount, $reason);
    }
 
    protected function get_user_points($user_id): int
@@ -164,7 +225,7 @@ class listener implements EventSubscriberInterface
       return (int) $user_points;
    }
 
-   protected function transfer_points($from_id, $to_id, $topic_id, $points = 0, $reason = ''): void
+   protected function transfer_points(int $from_id, int $to_id, int $topic_id, int $post_id, int $points = 0, string $reason = ''): void
    {
       if (empty($from_id) || empty($to_id) || empty($points)) {
          return;
@@ -176,8 +237,9 @@ class listener implements EventSubscriberInterface
          'from_id' => (int) $from_id,
          'to_id' => (int) $to_id,
          'topic_id' => (int) $topic_id,
+         'post_id' => (int) $post_id,
          'bbpoints' => (int) $points,
-         'reason' => $reason,
+         'reason' => '[LikePoints] ' . $reason,
          'timestamp' => time(),
       ];
       $sql = 'INSERT INTO ' . $this->bbpoints_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
@@ -194,7 +256,7 @@ class listener implements EventSubscriberInterface
       ]);
    }
 
-   protected function dislike(int $from_id, int $to_id, int $topic_id, int $points = 0, string $reason = '')
+   protected function unlike(int $from_id, int $to_id, int $topic_id, int $post_id, int $points = 0, string $reason = '')
    {
       if (empty($from_id) || empty($to_id) || empty($points)) {
          return;
@@ -207,28 +269,16 @@ class listener implements EventSubscriberInterface
          $sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $from_id . ' AND to_id = ' . $to_id . ' AND topic_id = ' . $topic_id . ' AND bbpoints = ' . $points . ' LIMIT 1';
          $this->db->sql_query($sql);
          $message = $this->language->lang_array('LOG_LIKE_TRANSFER_ABORTED', [
-            $points, $from_id, $to_id
+            $points, $to_id, $from_id
          ]);
          $this->log->add('user', $from_id, $this->user->ip, $message, time(), [
             'reportee_id' => $from_id,
          ]);
          return;
       } else {
-         $points = $this->get_user_points($to_id);
-         if ($points >= $points) {
-            $reason = $this->language->lang_array('REASON_DISLIKE', [$points, $from_id]);
-            $this->transfer_points($to_id, $from_id, $topic_id, $points, $reason);
-            return;
-         } else {
-            $message = $this->language->lang_array('LOG_DISLIKE_TRANSFER_POINTS_NOT_ENOUGH', [
-               $points, $from_id, $to_id
-            ]);
-            // Current user does not have enough points for transfer. Skip.
-            $this->log->add('user', $to_id, '', $message, time(), [
-               'reportee_id' => $to_id,
-            ]);
-            return;
-         }
+         $reason = $this->language->lang_array('REASON_UNLIKE', [$points, $from_id]);
+         $this->transfer_points($to_id, $from_id, $topic_id, $post_id, $points, $reason);
+         return;
       }
    }
 
@@ -248,7 +298,7 @@ class listener implements EventSubscriberInterface
       if (!$post_id) {
          return 0;
       }
-      $sql = 'SELECT per_likes_enabled, per_likes_amount FROM ' . FORUMS_TABLE . ' INNER JOIN ' . POSTS_TABLE . ' ON ' . POSTS_TABLE . '.forum_id = ' . FORUMS_TABLE . '.forum_id WHERE ' . POSTS_TABLE . '.post_id = ' . $post_id . ' LIMIT 1';
+      $sql = 'SELECT per_likes_enabled, contributors_enabled, per_likes_amount FROM ' . FORUMS_TABLE . ' INNER JOIN ' . POSTS_TABLE . ' ON ' . POSTS_TABLE . '.forum_id = ' . FORUMS_TABLE . '.forum_id WHERE ' . POSTS_TABLE . '.post_id = ' . $post_id . ' LIMIT 1';
       $this->db->sql_query($sql);
       $row = $this->db->sql_fetchrow();
       $enabled = (int) $row['per_likes_enabled'];
@@ -274,7 +324,16 @@ class listener implements EventSubscriberInterface
          return;
       }
       $contributors = $this->request->variable('contributors', '');
+      $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = (
+         SELECT forum_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ')';
+      $this->db->sql_query($sql);
+      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      if (!$contributors_enabled) {
+         return;
+      }
       if (empty($contributors)) {
+         $sql = 'UPDATE ' . POSTS_TABLE . ' SET contributors = \'\' WHERE post_id = ' . $post_id;
+         $this->db->sql_query($sql);
          return;
       }
       $usernames = explode(',', $contributors);
@@ -284,7 +343,7 @@ class listener implements EventSubscriberInterface
          if ($username === $event['post_author_name']) {
             continue;
          }
-         $sql = 'SELECT user_id FROM ' . USERS_TABLE . ' WHERE username = \'' . $this->db->sql_escape($username) . '\' LIMIT 1';
+         $sql = 'SELECT user_id FROM ' . USERS_TABLE . ' WHERE username_clean = \'' . $this->db->sql_escape(strtolower($username)) . '\' LIMIT 1';
          $this->db->sql_query($sql);
          $user_id = (int) $this->db->sql_fetchfield('user_id');
          if ($user_id > 0) {
@@ -300,6 +359,14 @@ class listener implements EventSubscriberInterface
 
    protected function get_contributors($post_id)
    {
+      $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' INNER JOIN ' . POSTS_TABLE . ' ON ' . POSTS_TABLE . '.forum_id = ' . FORUMS_TABLE . '.forum_id WHERE ' . POSTS_TABLE . '.post_id = ' . $post_id . ' LIMIT 1';
+      $this->db->sql_query($sql);
+      $row = $this->db->sql_fetchrow();
+      $enabled = isset($row['contributors_enabled']) ? $row['contributors_enabled'] : false;
+      if (!$enabled) {
+         return [];
+      }
+
       $sql = 'SELECT contributors FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ' LIMIT 1';
       $this->db->sql_query($sql);
       $contributors = $this->db->sql_fetchfield('contributors');
@@ -320,6 +387,19 @@ class listener implements EventSubscriberInterface
          return;
       }
       $post_id = (int) $event['post_id'];
+
+      $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = (
+         SELECT forum_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ')';
+      $this->db->sql_query($sql);
+      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      $this->template->assign_vars(array(
+         'S_ENABLE_CONTRIBUTORS' => $contributors_enabled ? true : false,
+      ));
+
+      if (!$contributors_enabled) {
+         return;
+      }
+
       $contributors = $this->get_contributors($post_id);
       $a = [];
       foreach ($contributors as $u) {
@@ -341,7 +421,7 @@ class listener implements EventSubscriberInterface
       return (int) $this->db->sql_fetchfield('topic_id');
    }
 
-   public function is_dislike($post_id, $user_id)
+   public function is_unlike($post_id, $user_id)
    {
       $sql = 'SELECT COUNT(*) AS count FROM ' . $this->bblikes_table . ' WHERE post_id = ' . $post_id . ' AND user_id = ' . $user_id;
       $this->db->sql_query($sql);

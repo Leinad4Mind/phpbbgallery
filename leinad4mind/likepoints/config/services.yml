@@ -20,13 +20,33 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@language'
+            - '@log'
+            - '@user'
+            - '@controller.helper'
+            - '@config'
             - '%leinad4mind.config.table%'
         tags:
             - { name: event.listener }
-    leinad4mind.likepoints.autosuggest:
-        class: leinad4mind\likepoints\controller\autosuggest
+
+    leinad4mind.likepoints.admin_controller:
+        class: 'leinad4mind\likepoints\controller\admin_controller'
+        arguments:
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@log'
+            - '@user'
+            - '%leinad4mind.likes.table%'
+            - '%leinad4mind.bbpoints.table%'
+            - '%leinad4mind.config.table%'
+
+    leinad4mind.likepoints.controller:
+        class: leinad4mind\likepoints\controller\main
         arguments:
             - '@dbal.conn.driver'
             - '@request'
             - '@user'
+            - '@user_loader'
             - '%leinad4mind.users.table%'
+            - '%leinad4mind.posts.table%'
