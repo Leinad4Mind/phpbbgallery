@@ -1,42 +1,19 @@
-{% INCLUDE 'overall_header.html' %}
+{% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<h1>{L_ACP_DEBUGGER}</h1>
-<p>{L_ACP_DEBUGGER_EXPLAIN}</p>
+<h1>{{ lang('ACP_DEBUGGER') }}</h1>
+<p>{{ lang('ACP_DEBUGGER_EXPLAIN') }}</p>
 
 {% if S_ERROR %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
+		<h3>{{ lang('WARNING') }}</h3>
 		<p>{{ ERROR_MSG }}</p>
 	</div>
 {% endif %}
 
 <form id="acp_debugger" method="post" action="{{ U_ACTION }}">
-	
-{% for options in loops.options %}
-	{% if options.S_LEGEND %}
-		{% if not options.S_FIRST_ROW %}
-			</fieldset>
-		{% endif %}
-		<fieldset>
-			<legend>{{ options.LEGEND }}</legend>
-	{% else %}
-
-		<dl>
-			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-			<dd>{{ options.CONTENT }}</dd>
-		</dl>
-
-	{% endif %}
-{% endfor %}
-</fieldset>
-
-	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
-		{{ S_FORM_TOKEN }}
-	</div>
-
+	{% include '@canidev_core/acp_options.html' %}
 </form>
 
-{% INCLUDE 'overall_footer.html' %}
+{% include 'overall_footer.html' %}
