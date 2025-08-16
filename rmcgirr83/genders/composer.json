@@ -2,8 +2,8 @@
     "name": "rmcgirr83/genders",
     "type": "phpbb-extension",
     "description": "This Extension will allow your members to specify their Gender using fontawesome gender icons.",
-    "version": "1.1.0",
-    "time": "2016-03-22",
+    "version": "1.1.1",
+    "time": "2017-01-09",
     "keywords": [
         "phpbb",
         "extension",
