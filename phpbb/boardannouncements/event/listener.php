@@ -10,6 +10,7 @@
 
 namespace phpbb\boardannouncements\event;
 
+use phpbb\boardannouncements\acp\board_announcements_module;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -78,13 +79,20 @@ class listener implements EventSubscriberInterface
 	/**
 	* Display board announcements
 	*
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function display_board_announcements()
 	{
 		// Do not continue if announcement has been disabled
 		if (!$this->config['board_announcements_enable'])
+		{
+			return;
+		}
+
+		// Do not continue if user is registered, but announcement is for guests only
+		// This is to prevent newly registered users from seeing guest only announcements
+		if ($this->user->data['user_id'] != ANONYMOUS && $this->config['board_announcements_users'] == board_announcements_module::GUESTS)
 		{
 			return;
 		}

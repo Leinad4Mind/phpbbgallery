@@ -35,7 +35,6 @@ class controller
 	* @param \phpbb\db\driver\driver_interface   $db             Database object
 	* @param \phpbb\request\request              $request        Request object
 	* @param \phpbb\user                         $user           User object
-	* @return \phpbb\boardannouncements\controller\controller
 	* @access public
 	*/
 	public function __construct(\phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\user $user)
@@ -57,7 +56,7 @@ class controller
 	public function close_announcement()
 	{
 		// Check the link hash to protect against CSRF/XSRF attacks
-		if (!check_link_hash($this->request->variable('hash', ''), 'close_boardannouncement') || !$this->config['board_announcements_dismiss'])
+		if (!$this->config['board_announcements_dismiss'] || !check_link_hash($this->request->variable('hash', ''), 'close_boardannouncement'))
 		{
 			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
 		}

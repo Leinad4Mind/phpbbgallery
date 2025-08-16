@@ -12,6 +12,10 @@ namespace phpbb\boardannouncements\acp;
 
 class board_announcements_module
 {
+	const ALL = 0;
+	const MEMBERS = 1;
+	const GUESTS = 2;
+
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
@@ -43,22 +47,28 @@ class board_announcements_module
 	protected $php_ext;
 
 	/** @var string */
+	public $page_title;
+
+	/** @var string */
+	public $tpl_name;
+
+	/** @var string */
 	public $u_action;
 
-	public function main($id, $mode)
+	public function main()
 	{
-		global $cache, $config, $db, $phpbb_log, $request, $template, $user, $phpbb_root_path, $phpEx, $phpbb_container;
+		global $phpbb_container;
 
-		$this->cache = $cache;
-		$this->config = $config;
+		$this->cache = $phpbb_container->get('cache.driver');
+		$this->config = $phpbb_container->get('config');
 		$this->config_text = $phpbb_container->get('config_text');
-		$this->db = $db;
-		$this->log = $phpbb_log;
-		$this->request = $request;
-		$this->template = $template;
-		$this->user = $user;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $phpEx;
+		$this->db = $phpbb_container->get('dbal.conn');
+		$this->log = $phpbb_container->get('log');
+		$this->request = $phpbb_container->get('request');
+		$this->template = $phpbb_container->get('template');
+		$this->user = $phpbb_container->get('user');
+		$this->phpbb_root_path = $phpbb_container->getParameter('core.root_path');
+		$this->php_ext = $phpbb_container->getParameter('core.php_ext');
 
 		// Add the posting lang file needed by BBCodes
 		$this->user->add_lang(array('posting'));
@@ -82,7 +92,7 @@ class board_announcements_module
 		// Include files needed for displaying BBCodes
 		if (!function_exists('display_custom_bbcodes'))
 		{
-			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+			include $this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext;
 		}
 
 		// Get all board announcement data from the config_text table in the database
@@ -109,7 +119,7 @@ class board_announcements_module
 
 			// Get config options from the form
 			$enable_announcements = $this->request->variable('board_announcements_enable', false);
-			$allow_guests = $this->request->variable('board_announcements_guests', false);
+			$allowed_users = $this->request->variable('board_announcements_users', self::ALL);
 			$dismiss_announcements = $this->request->variable('board_announcements_dismiss', false);
 
 			// Prepare announcement text for storage
@@ -128,7 +138,7 @@ class board_announcements_module
 			{
 				// Store the config enable/disable state
 				$this->config->set('board_announcements_enable', $enable_announcements);
-				$this->config->set('board_announcements_guests', $allow_guests);
+				$this->config->set('board_announcements_users', $allowed_users);
 				$this->config->set('board_announcements_dismiss', $dismiss_announcements);
 
 				// Store the announcement settings to the config_table in the database
@@ -141,11 +151,15 @@ class board_announcements_module
 					'announcement_timestamp'	=> time(),
 				));
 
-				// Set the board_announcements_status for all normal users
-				// to 1 when an announcement is created, or 0 when announcement is empty
-				$announcement_status = (!empty($data['announcement_text'])) ? 1 : 0;
+				$announcement_text = (!empty($data['announcement_text']));
+				$guests_only  = ($allowed_users === self::GUESTS);
+				$members_only = ($allowed_users === self::MEMBERS);
+
+				$this->db->sql_transaction('begin');
+
+				// Set the board_announcements_status for all registered users
 				$sql = 'UPDATE ' . USERS_TABLE . '
-					SET board_announcements_status = ' . $announcement_status . '
+					SET board_announcements_status = ' . ($announcement_text && !$guests_only ? 1 : 0) . '
 					WHERE user_type <> ' . USER_IGNORE;
 				$this->db->sql_query($sql);
 
@@ -153,9 +167,11 @@ class board_announcements_module
 				// We do this separately for guests to make sure it is always set to
 				// the correct value every time.
 				$sql = 'UPDATE ' . USERS_TABLE . '
-					SET board_announcements_status = ' . (($allow_guests && $announcement_status ) ? 1 : 0) . '
+					SET board_announcements_status = ' . ($announcement_text && !$members_only ? 1 : 0) . '
 					WHERE user_id = ' . ANONYMOUS;
 				$this->db->sql_query($sql);
+
+				$this->db->sql_transaction('commit');
 
 				// Log the announcement update
 				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'BOARD_ANNOUNCEMENTS_UPDATED_LOG');
@@ -181,12 +197,17 @@ class board_announcements_module
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'ERRORS'						=> $error,
-			'BOARD_ANNOUNCEMENTS_ENABLED'	=> (isset($enable_announcements)) ? $enable_announcements : $this->config['board_announcements_enable'],
-			'BOARD_ANNOUNCEMENTS_GUESTS'	=> (isset($allow_guests)) ? $allow_guests: $this->config['board_announcements_guests'],
-			'BOARD_ANNOUNCEMENTS_DISMISS'	=> (isset($dismiss_announcements)) ? $dismiss_announcements : $this->config['board_announcements_dismiss'],
+			'BOARD_ANNOUNCEMENTS_ENABLED'	=> isset($enable_announcements) ? $enable_announcements : $this->config['board_announcements_enable'],
+			'BOARD_ANNOUNCEMENTS_DISMISS'	=> isset($dismiss_announcements) ? $dismiss_announcements : $this->config['board_announcements_dismiss'],
 			'BOARD_ANNOUNCEMENTS_TEXT'		=> $announcement_text_edit['text'],
 			'BOARD_ANNOUNCEMENTS_PREVIEW'	=> $announcement_text_preview,
 			'BOARD_ANNOUNCEMENTS_BGCOLOR'	=> $data['announcement_bgcolor'],
+
+			'S_BOARD_ANNOUNCEMENTS_USERS'	=> build_select(array(
+				self::ALL		=> 'BOARD_ANNOUNCEMENTS_EVERYONE',
+				self::MEMBERS	=> 'G_REGISTERED',
+				self::GUESTS	=> 'G_GUESTS',
+			), isset($allowed_users) ? $allowed_users : $this->config['board_announcements_users']),
 
 			'S_BBCODE_DISABLE_CHECKED'		=> !$announcement_text_edit['allow_bbcode'],
 			'S_SMILIES_DISABLE_CHECKED'		=> !$announcement_text_edit['allow_smilies'],
