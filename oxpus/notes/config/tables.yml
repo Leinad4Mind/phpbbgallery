@@ -1,0 +1,2 @@
+parameters:
+    oxpus.notes.table: '%core.table_prefix%notes'

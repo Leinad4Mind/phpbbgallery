@@ -30,5 +30,4 @@ $lang = array_merge($lang, [
 	'ACP_NOTES'		=> 'Notes',
 
 	'ACL_A_NOTES'	=> 'Can configure personal notes',
-	'ACL_U_NOTES'	=> 'Can use personal notes',
 ]);

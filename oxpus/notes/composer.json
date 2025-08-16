@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Personal Notes",
 	"homepage": "https://phpbb3.oxpus.net",
-	"version": "3.1.9",
-	"time": "2021-01-16",
+	"version": "3.1.11",
+	"time": "2022-03-27",
 	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "Karsten Ude",

@@ -2,14 +2,14 @@
 
 /**
 *
-* @package phpBB Extension - Personal Notes
+* @package phpBB Extension - Personal notes
 * @copyright (c) 2014 OXPUS - www.oxpus.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/*
-* [ english ] language file
+/**
+* Language pack for Extension permissions [German]
 */
 
 /**
@@ -25,6 +25,8 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
+// Permissions
 $lang = array_merge($lang, [
-    'NOTES_NOTICE'				    => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
+	'ACP_NOTES'		=> 'Notizen',
+	'ACL_A_NOTES'	=> 'Kann die persönlichen Notizen einstellen',
 ]);
