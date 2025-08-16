@@ -1,11 +1,10 @@
 <?php
 /*
-* @name config_module.php
 * @package cBB QuickQuote
-* @version 1.0.0 01/03/2018
+* @version v1.0.1 10/02/2019
 *
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\quickquote\acp;
@@ -36,13 +35,5 @@ class config_module
 		
 		$this->tpl_name		= $this->controller->get_template();
 		$this->page_title	= $this->controller->get_title();
-	}
-
-	public function helper()
-	{
-		$args 	= func_get_args();
-		$method = array_shift($args);
-		
-		return call_user_func_array(array($this->controller, $method), $args);
 	}
 }

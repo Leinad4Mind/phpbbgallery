@@ -1,24 +1,9 @@
 /*  cBB QuickQuote StyleSheet
     --------------------------------------------------------------
 	Style:	Prosilver
-	Copyright (c) 2018 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2019 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
-
-/* cbbCore
--------------------------- */
-.cbbcore-helper-hidden {
-	display: none!important;
-}
-
-.cbb-scroll-measure {
-	position: absolute;
-	top: -1000px;
-	width: 100px;
-	height: 100px;
-	overflow: scroll;
-	visibility: hidden;
-}
 
 /* Tooltip
 -------------------------- */
@@ -27,7 +12,10 @@
 	font-size: 11px;
 	padding: 7px;
 	position: absolute;
+	z-index: 10;
 	
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 	border-radius: 4px;
 }
 
@@ -42,33 +30,36 @@
 /* Button
 -------------------------- */
 .quickquote-floatbtn {
+	bottom: 20px;
+	font-size: 12px;
+	padding: 10px 30px 10px 10px;
     position: fixed;
-    bottom: 20px;
     right: 60px;
-    padding: 10px 30px 10px 10px;
-    background: #0d84ff;
-    font-size: 12px;
-    color: #fff;
-    border-radius: 6px;
-    box-shadow: 2px 2px 4px #738fb3;
+	z-index: 10;
+	
+	-webkit-box-shadow: 2px 2px 4px #738fb3;
+	-moz-box-shadow: 2px 2px 4px #738fb3;
+	box-shadow: 2px 2px 4px #738fb3;
 }
 
 .quickquote-floatbtn:hover {
-	color: #8db5ce;
 	text-decoration: none;
 }
 
 .quickquote-floatbtn:after {
-    border-left: 1px solid #759fff;
+    border-left: 1px solid #ccc;
     content: '\f0d7';
 	font-family: FontAwesome;
 	line-height: 28px;
     position: absolute;
-    top: 4px;
+    top: 50%;
     right: 0;
-    bottom: 4px;
 	text-align: center;
     width: 20px;
+	
+	-webkit-transform: translate(0, -50%);
+	-moz-transform: translate(0, -50%);
+	transform: translate(0, -50%);
 }
 
 .quickquote-inlinebtn,
@@ -78,62 +69,14 @@
 
 /* Dialog
 ---------------------------- */
-.qq-dialog-overlay {
-	background: rgba(0,0,0,0.5);
-	position: fixed;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	z-index: 50;
-}
-
-.qq-dialog {
-	background: #fff;
-	font-size: 11px;
-	left: 23%;
-	left: -webkit-calc(50% - 350px);
-	left: -moz-calc(50% - 350px);
-	left: calc(50% - 350px);
-	position: fixed;
-	width: 700px;
-	height: 350px;
-	z-index: 51;
-	border-radius: 6px;
-	box-shadow: 0 0 15px #313030;
-	top: 15%;
-	
-	animation: qq-dialog 0.3s;
-	animation-fill-mode: forwards;
-}
-
-.qq-dialog .dialog-title {
-	font-size: 12px;
-	font-weight: bold;
-	padding: 10px 5px;
-	border-bottom: 1px solid #ccc;
-	margin: 0 5px;
-}
-
-.qq-dialog .dialog-title a {
-	float: right;
-	margin-right: 5px;
-	font-size: 1.2em;
-	margin-top: -2px;
-}
-
 .qq-dialog .dialog-content {
-	position: absolute;
-	left: 10px;
-	top: 45px;
-	right: 10px;
-	bottom: 40px;
 	overflow: auto;
 }
 
 .qq-dialog .dialog-content > ul {
 	list-style-type: none;
 	margin: 0 4px 0 0;
+	padding: 0;
 }
 
 .qq-dialog .dialog-content > ul > li {
@@ -173,8 +116,8 @@
     right: 0;
     height: 60px;
     background: transparent;
-    background: -webkit-linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
-	background: -moz-linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
+    background: -webkit-linear-gradient(top, #fefefe00 0%, #fefefe 90%);
+	background: -moz-linear-gradient(top, #fefefe00 0%, #fefefe 90%);
 	background: linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
 }
 
@@ -183,66 +126,14 @@
     height: auto;
 }
 
-.qq-dialog .dialog-buttons {
-	bottom: 0;
-	border-top: 1px solid #ccc;
-	height: 40px;
-	left: 0;
-	padding: 0 10px;
-	position: absolute;
-	right: 0;
-	text-align: right;
-}
-
-.qq-dialog .dialog-buttons a {
-	background-color: #E9E9E9;
-	background-image: -webkit-linear-gradient(to bottom, #fff, #E9E9E9);
-	background-image: -moz-linear-gradient(to bottom, #fff, #E9E9E9);
-	background-image: linear-gradient(to bottom, #fff, #E9E9E9);
-	border: 1px solid #d0cfcf;
-    display: inline-block;
-    padding: 5px 8px;
-    margin: 7px 4px;
-    border-radius: 4px;
-}
-
-.qq-dialog .dialog-buttons a:hover {
-	background-color: #fff;
-	background-image: -webkit-linear-gradient(to bottom, #E9E9E9, #fff);
-	background-image: -moz-linear-gradient(to bottom, #E9E9E9, #fff);
-	background-image: linear-gradient(to bottom, #E9E9E9, #fff);
-	text-decoration: none;
-}
-
-/* CheckBoxes Style
-------------------------- */
-.qq-dialog input[type="checkbox"] {
-	display: none;
-}
-
-.qq-dialog input[type="checkbox"]+label:before {
-	content: "\f096";
-	font-family: fontAwesome;
-	display: inline-block;
-	font-size: 16px;
-	height: 18px;
-	padding: 0;
-	vertical-align: middle;
-	width: 19px;
-}
-
-.qq-dialog input[type="checkbox"]:checked+label:before {
-	content: "\f046";
-}
-
 /* Dark Themes
 ------------------------- */
 .dark-theme .quickquote-tooltip {
-	background: rgba(86, 86, 86, 0.7);
+	background: rgba(62, 62, 62, 0.7);
 }
 
 .dark-theme .quickquote-floatbtn {
-	background-color: #212121;
+	background: #212121;
     box-shadow: 0px 0px 4px #616161;
 	color: #5d5d5d;
 }
@@ -255,97 +146,28 @@
 	color: #868686;
 }
 
-.dark-theme .qq-dialog {
-	background-color: #252525;
-    box-shadow: 0 0 15px #717171;
-}
-
 .dark-theme .qq-dialog .titlebar {
     background-color: #525252;
 }
 
 .dark-theme .qq-dialog .content:after {
-	background-image: -webkit-linear-gradient(to bottom, #25252500 0%, #252525 90%);
-    background-image: -moz-linear-gradient(to bottom, #25252500 0%, #252525 90%);
+	background-image: -webkit-linear-gradient(top, #25252500 0%, #252525 90%);
+    background-image: -moz-linear-gradient(top, #25252500 0%, #252525 90%);
     background-image: linear-gradient(to bottom, #25252500 0%, #252525 90%);
 }
 
-.dark-theme .qq-dialog .dialog-title,
-.dark-theme .qq-dialog .dialog-buttons,
-.dark-theme .qq-dialog .dialog-buttons a,
 .dark-theme .qq-dialog .dialog-content > ul > li {
     border-color: #717171;
 }
 
-.dark-theme .qq-dialog .dialog-buttons a {
-	background-image: -webkit-linear-gradient(to bottom, #737373, #3a3a3a);
-    background-image: -moz-linear-gradient(to bottom, #737373, #3a3a3a);
-    background-image: linear-gradient(to bottom, #737373, #3a3a3a);
-}
-
-.dark-theme .qq-dialog .dialog-buttons a:hover {
-	background-color: #3a3a3a;
-	background-image: -webkit-linear-gradient(to bottom, #3a3a3a, #737373);
-	background-image: -moz-linear-gradient(to bottom, #3a3a3a, #737373);
-	background-image: linear-gradient(to bottom, #3a3a3a, #737373);
-}
-
-/* Animations
-------------------------- */
-@keyframes qq-dialog {
-    0% {
-        visibility: visible;
-        top: 8%;
-    }
-
-    100% {
-        visibility: visible;
-        top: 10%;
-    }
-}
-
 /* Responsive
 ------------------------- */
-@media only screen and (max-width: 768px) {
-	.qq-dialog {
-		left: 5%;
-		width: 90%;
-	}
-}
-
-@media only screen and (max-width: 425px) {
-	.qq-dialog {
-		left: 2.5%;
-		width: 95%;
-	}
-
-	.qq-dialog .dialog-buttons {
-		text-align: center;
-	}
-}
-
 @media only screen and (max-width: 375px) {
 	.quickquote-floatbtn {
 		right: auto;
 		left: 50%;
 		-webkit-transform: translateX(-50%);
 		-moz-transform: translateX(-50%);
-		-ms-transform: translateX(-50%);
 		transform: translateX(-50%);
-	}
-}
-
-@media only screen and (max-width: 320px) {
-	.qq-dialog .dialog-content {
-		bottom: 75px;
-	}
-
-	.qq-dialog .dialog-buttons {
-		height: 75px;
-	}
-
-	.qq-dialog .dialog-buttons a {
-		display: block;
-		margin: 7px 4px 1px 4px;
 	}
 }

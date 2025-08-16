@@ -1,11 +1,10 @@
 <?php
 /*
-* @name listener.php
 * @package cBB QuickQuote
-* @version 1.0.0 01/03/2018
+* @version v1.0.1 10/02/2019
 *
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\quickquote\event;
@@ -17,7 +16,6 @@ if(!defined('IN_PHPBB'))
 }
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class listener implements EventSubscriberInterface
 {
@@ -36,22 +34,26 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\config\config 			$config			Config Object
 	* @param ContainerInterface 			$container		Service container interface
 	* @param \phpbb\request\request 		$request		Request object
-	* @param \phpbb\template\template		$template     	Template object
 	* @param string							$root_path		phpBB root path
 	* @param string							$php_ext		phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, ContainerInterface $container, \phpbb\request\request $request, \phpbb\template\template $template, $root_path, $php_ext)
+	public function __construct(
+		\phpbb\auth\auth $auth,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\request\request $request,
+		$root_path,
+		$php_ext)
 	{
 		$this->auth				= $auth;
 		$this->config			= $config;
+		$this->core 			= \canidev\core\lib::get_instance($container);
 		$this->request			= $request;
-		$this->template			= $template;
+		$this->template			= \canidev\core\template::get_instance($container);
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
-		
-		$this->core = \canidev\core\lib::get_instance($container);
 	}
 
 	static public function getSubscribedEvents()
@@ -62,6 +64,8 @@ class listener implements EventSubscriberInterface
 		{
 			$events = array(
 				'core.user_setup'								=> 'on_setup',
+				'core.page_footer'								=> 'on_footer',
+				
 				'core.viewforum_get_topic_data'					=> 'set_viewforum_reply',
 				'core.viewtopic_modify_post_row'				=> 'modify_post_row',
 				'core.viewtopic_assign_template_vars_before'	=> 'set_viewtopic_reply',
@@ -75,30 +79,37 @@ class listener implements EventSubscriberInterface
 	
 	public function on_setup($event)
 	{
-		$forum_id	= $this->request->variable('f', 0);
-
-		$enabled = (
-			$this->auth->acl_get('f_post', $forum_id) ||
-			$this->auth->acl_get('f_reply', $forum_id) ||
-			$this->auth->acl_get('u_sendpm')
-		);
-		
-		if($this->config['quickquote_groups'] && $this->config['quickquote_groups'] != 'all')
-		{
-			$enabled = ($enabled && $this->core->group_auth($this->config['quickquote_groups']));
-		}
-	
-		$this->template->assign_vars(array(
-			'QQ_ENABLED'	=> $enabled,
-			'QQ_FLOAT_BTN'	=> (bool)$this->config['quickquote_floatbtn'],
-		));
-
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'canidev/quickquote',
 			'lang_set' => 'frontend',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+	
+	public function on_footer()
+	{
+		$forum_id = $this->request->variable('f', 0);
+
+		$enabled = (
+			$this->auth->acl_get('f_post', $forum_id) ||
+			$this->auth->acl_get('f_reply', $forum_id) ||
+			$this->auth->acl_get('u_sendpm')
+		);
+
+		$enabled = ($enabled && $this->core->group_auth($this->config['quickquote_groups']));
+	
+		if($enabled)
+		{
+			$this->template->assign_vars(array(
+				'QQ_ENABLED'			=> true,
+				'QQ_FLOAT_BTN'			=> (bool)$this->config['quickquote_floatbtn'],
+				'QQ_REPLY_OVERWRITE'	=> (int)$this->config['quickquote_reply_overwrite'],
+			));
+			
+			$this->template->append_asset('css', '@canidev_quickquote/../theme/quickquote.css');
+			$this->template->append_asset('js', '@canidev_quickquote/quickquote.js');
+		}
 	}
 	
 	public function modify_post_row($event)

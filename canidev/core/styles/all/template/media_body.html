@@ -1,0 +1,189 @@
+<div class="cbb-modal-dialog media">
+	<ul class="media-menu"></ul>
+
+	<div class="media-frame-title">
+		<h1></h1>
+		<a href="#" data-action="close" class="cbb-dialog-close">
+			<span class="fa fa-remove"></span>
+		</a>
+	</div>
+
+	<div class="media-frame-content">
+		<div class="media-sidebar"></div>
+		<div class="media-section-content js-section-content"></div>
+	</div>
+		
+	<div class="media-frame-toolbar">
+		<div class="media-toolbar-secondary cbb-helper-hidden">
+			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="copy" title="{L_COPY_TO_LIST}"><span class="fa fa-copy"></span></button>
+			<button type="button" class="cbb-btn cbb-helper-hidden" data-action="delete" title="{L_DELETE}"><span class="fa fa-trash"></span></button>
+			<span class="count">{L_SELECTED_COUNT}</span>
+		</div>
+			
+		<div class="media-toolbar-primary">
+			<button type="button" class="cbb-btn" data-action="submit" disabled>{S_SUBMIT_LABEL}</button>
+		</div>
+	</div>
+
+	<script type="text/html" id="tpl-menu-item">
+		<li><a href="#"><span class="fa <%icon%>"></span> <span class="item-title"><%title%></span></a></li>
+	</script>
+
+	<script type="text/html" id="tpl-attachment-row">
+		<li role="checkbox" data-id="<%id%>" class="attachment">
+			<div class="attachment-preview">
+				<div class="media-thumbnail">
+					<img src="<%filename%>" alt="" />
+				</div>
+			</div>
+
+			<button type="button" class="button-link check">
+				<span class="fa fa-check"></span>
+			</button>
+		</li>
+	</script>
+	
+	<script type="text/html" id="tpl-icon-row">
+		<li role="checkbox" data-id="<%id%>" class="attachment iconic">
+			<div class="attachment-preview">
+				<div class="media-thumbnail">
+					<span class="fa <%code%>"></span>
+				</div>
+			</div>
+
+			<button type="button" class="button-link check">
+				<span class="fa fa-check"></span>
+			</button>
+		</li>
+	</script>
+	
+	<script type="text/html" id="tpl-attachment-none">
+		<li class="cbb-message cbb-state-highlight">{L_NO_ELEMENTS}</li>
+	</script>
+	
+	<script type="text/html" id="tpl-details-image-editable">
+		<div class="attachment-details">
+			<h3>{L_IMAGE_DETAILS}</h3>
+			<div class="attachment-info">
+				<div class="media-thumbnail">
+					<img src="<%filename%>" alt="" />
+				</div>
+				<div class="details">
+					<div class="uploaded"><%date%></div>
+					<div class="file-size"><%filesize%></div>
+					<div class="dimensions">{L_IMAGE_DIMENSIONS}</div>
+				</div>
+			</div>
+
+			<label class="setting">
+				<span class="name">{L_IMAGE_URL}</span>
+				<input type="text" value="<%url%>" class="cbb-inputbox" readonly />
+			</label>
+			
+			<label class="setting">
+				<span class="name">{L_IMAGE_TITLE}</span>
+				<input type="text" value="<%title%>" class="cbb-inputbox" data-setting="title" />
+			</label>
+			
+			<label class="setting">
+				<span class="name">{L_IMAGE_DESCRIPTION}</span>
+				<textarea data-setting="description" class="cbb-inputbox"><%description%></textarea>
+			</label>
+			
+			<button type="button" class="cbb-btn" data-action="update">{L_UPDATE}</button>
+		</div>
+	</script>
+	
+	<script type="text/html" id="tpl-details-image">
+		<div class="attachment-details">
+			<h3>{L_IMAGE_DETAILS}</h3>
+			<div class="attachment-info">
+				<div class="media-thumbnail">
+					<img src="<%filename%>" alt="" />
+				</div>
+				<div class="details">
+					<div class="file-size"><%filesize%></div>
+					<div class="dimensions">{L_IMAGE_DIMENSIONS}</div>
+				</div>
+			</div>
+
+			<label class="setting">
+				<span class="name">{L_IMAGE_URL}</span>
+				<input type="text" value="<%url%>" class="cbb-inputbox" readonly />
+			</label>
+		</div>
+	</script>
+	
+	<script type="text/html" id="tpl-details-icon">
+		<div class="attachment-details iconic">
+			<h3>{L_ICON_PREVIEW}</h3>
+			<div class="attachment-info">
+				<div class="media-thumbnail">
+					<span class="fa <%code%>"></span>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+	<script type="text/html" id="tpl-section-upload-modern">
+		<div class="upload-ui">
+			<div class="uploader-inline">
+				<div class="cbb-browser-button">
+					<button type="button" class="cbb-btn">
+						<span>{L_SELECT_FILES}</span>
+					</button>
+					<input type="file" name="file[]" multiple />
+				</div>
+				<p>o</p>
+				<h3>{L_FILES_DRAG}</h3>
+
+				<p class="max-upload-size">{S_MAX_FILESIZE}</p>
+			</div>
+			<div class="upload-inline-status cbb-helper-hidden">
+				<p>{L_UPLOADING_FILES}</p>
+				<div class="cbb-progress-bar"><div class="inner" role="progressbar"></div></div>
+			</div>
+			<div class="upload-drop-label">
+				<p>{L_FILES_DROP}</p>
+				<span class="fa fa-arrow-circle-o-down"></span>
+			</div>
+		</div>
+	</script>
+	
+	<script type="text/html" id="tpl-section-upload-old">
+		<div class="upload-ui">
+			<div class="uploader-inline">
+				<div class="cbb-browser-button">
+					<button type="button" class="cbb-btn">
+						<span>{L_SELECT_FILE}</span>
+					</button>
+					<input type="file" name="file" />
+				</div>
+
+				<p class="max-upload-size">{S_MAX_FILESIZE}</p>
+			</div>
+			<div class="upload-inline-status cbb-helper-hidden"><div class="cbb-loading-big"></div></div>
+		</div>
+	</script>
+	
+	<script type="text/html" id="tpl-section-insert">
+		<div class="media-embed">
+			<label class="embed-url">
+				<input type="url" class="cbb-inputbox" placeholder="https://" />
+				<span class="spinner cbb-loading cbb-helper-hidden"><span></span></span>
+			</label>
+			
+			<div class="media-embed-submit cbb-helper-hidden">
+			<!-- IF CAN_INSERT_COPY -->
+				<label>
+					<input type="checkbox" name="copy" value="1" />
+					{L_CREATE_SERVER_COPY}
+				</label>
+			<!-- ENDIF -->
+				<div class="cbb-browser-button">
+					<button type="button" class="cbb-btn">{L_PROCCESS}</button>
+				</div>
+			</div>
+		</div>
+	</script>
+</div>

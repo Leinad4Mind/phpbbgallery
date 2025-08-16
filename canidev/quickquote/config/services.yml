@@ -6,10 +6,8 @@ services:
             - @config
             - @service_container
             - @request
-            - @template
             - %core.root_path%
             - %core.php_ext%
-
         tags:
             - { name: event.listener }
             
@@ -18,9 +16,9 @@ services:
         arguments:
             - @cache.driver
             - @config
-            - @service_container
             - @dbal.conn
             - @dispatcher
+            - @language
             - @request
             - @template
             - @user

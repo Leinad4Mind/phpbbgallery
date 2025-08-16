@@ -1,14 +1,13 @@
 <!-- IF QUICKQUOTE_IN_ADMIN -->
-	<!-- IF PHPBB_BRANCH == "31x" --><!-- INCLUDECSS https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css --><!-- ENDIF -->
-	<!-- INCLUDECSS @canidev_quickquote/style.css -->
-	
-	<!-- INCLUDEJS {CBBCORE_JS_FILENAME} -->
-	
+	<!-- IF CANIDEV_CORE_STARTED -->
+		<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
+	<!-- ENDIF -->
+
 <!-- IF U_HELP and not U_BACK and not MESSAGE_TEXT -->
 	<script>
 	// <![CDATA[
 		window.__helpIcon = {
-			title	: '{LA_QUICKQUOTE_HELP}',
+			title	: '{LA_DOCUMENTATION_AND_SUPPORT}',
 			url		: '{U_HELP}'
 		};
 	// ]]>

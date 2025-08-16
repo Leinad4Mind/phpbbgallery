@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "",
 	"homepage": "https://www.canidev.com",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": ["phpbb", "extension", "canidev", "quotes"],
 	"license": "GPL-2.0",
 	"authors": [
@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.4",
 		"composer/installers": "~1.0"
 	},
 	"require-dev": {
@@ -24,7 +24,7 @@
 	"extra": {
 		"display-name": "cBB QuickQuote",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.8"
+			"phpbb/phpbb": ">=3.2.0"
 		},
 		"version-check": {
 			"host": "www.canidev.com",

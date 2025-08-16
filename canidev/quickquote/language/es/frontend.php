@@ -1,12 +1,11 @@
 <?php
 /**
 * frontend.php [Spanish [Es]]
+* @package cBB QuickQuote
+* @version v1.0.1 10/02/2019
 *
-* @package language cBB QuickQuote
-* @version 1.0.0 01/03/2018
-*
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE

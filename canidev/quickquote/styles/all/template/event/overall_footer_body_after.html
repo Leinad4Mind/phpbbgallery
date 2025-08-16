@@ -8,42 +8,36 @@
 	</script>
 
 	<script type="text/html" id="tpl-quickquote-floatbtn">
-	<a href="#" class="quickquote-floatbtn">{L_QUOTES} (<span class="cite-count">0</span>)</a>
+	<a href="#" class="quickquote-floatbtn cbb-btn" data-text="{L_QUOTES}"></a>
 	</script>
 
 	<script type="text/html" id="tpl-quickquote-inlinebtn">
-	<input type="button" class="button1 quickquote-inlinebtn" value="{L_QQ_INSERT_QUOTES}" />
+	<input type="button" class="cbb-btn quickquote-inlinebtn" data-text="{L_QQ_INSERT_QUOTES}" />
 	</script>
 
 	<script type="text/html" id="tpl-quickquote-dialog">
-		<div class="qq-dialog-overlay">
-			<div class="qq-dialog">
-				<div class="dialog-title">
-					<span>{L_QUOTES}</span>
-					<a href="#"><i class="fa fa-remove"></i></a>
+		<div class="qq-dialog" title="{L_QUOTES}">
+			<div class="cbb-dialog-content dialog-content">
+				<ul class="js-quickquote-list">
+					<li>
+						<div class="titlebar">
+							<input id="check-<%id%>" type="checkbox" class="cbb-checkbox" value="<%id%>" />
+							<label for="check-<%id%>"></label><span><%username%></span>
+							<a href="#" data-action="remove" title="{L_QQ_REMOVE}"><i class="fa fa-close"></i></a>
+							<a href="#" data-action="insert" title="{L_QQ_INSERT}"><i class="fa fa-download"></i></a>
+						</div>
+						<div class="content"><%text%></div>
+					</li>
+				</ul>
+			</div>
+			<div class="cbb-dialog-buttons">
+				<div class="js-btn-marked cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertSelected">{L_QQ_INSERT_SELECTED}</a>
+					<a href="#" class="cbb-btn" data-action="removeSelected">{L_QQ_REMOVE_SELECTED}</a>
 				</div>
-				<div class="dialog-content">
-					<ul class="js-quickquote-list">
-						<li>
-							<div class="titlebar">
-								<input id="check-%id%" type="checkbox" value="%id%" />
-								<label for="check-%id%"></label><span>%username%</span>
-								<a href="#" data-action="remove" title="{L_QQ_REMOVE}"><i class="fa fa-close"></i></a>
-								<a href="#" data-action="insert" title="{L_QQ_INSERT}"><i class="fa fa-download"></i></a>
-							</div>
-							<div class="content">%text%</div>
-						</li>
-					</ul>
-				</div>
-				<div class="dialog-buttons">
-					<div class="js-btn-marked cbbcore-helper-hidden">
-						<a href="#" data-action="insertSelected">{L_QQ_INSERT_SELECTED}</a>
-						<a href="#" data-action="removeSelected">{L_QQ_REMOVE_SELECTED}</a>
-					</div>
-					<div class="js-btn-all cbbcore-helper-hidden">
-						<a href="#" data-action="insertAll">{L_QQ_INSERT_ALL}</a>
-						<a href="#" data-action="removeAll">{L_QQ_REMOVE_ALL}</a>
-					</div>
+				<div class="js-btn-all cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertAll">{L_QQ_INSERT_ALL}</a>
+					<a href="#" class="cbb-btn" data-action="removeAll">{L_QQ_REMOVE_ALL}</a>
 				</div>
 			</div>
 		</div>
@@ -51,16 +45,14 @@
 
 	<script>
 	(function($) {
-		{QUICKQUOTE_JS_EVENTS}
-
 		cbbCore.initService('quickquote', {
-			advancedMode: <!-- IF PHPBB_BRANCH eq '31x' -->false<!-- ELSE -->true<!-- ENDIF -->,
-			btnTarget	: <!-- IF QQ_FLOAT_BTN -->'body'<!-- ELSE -->'#qr_postform .submit-buttons, #postform .submit-buttons'<!-- ENDIF -->,
-			target		: '.post .content',
-			editors		: {
-				phpbb: '#message-box textarea'
+			btnTarget		: <!-- IF QQ_FLOAT_BTN -->'body'<!-- ELSE -->'#qr_postform .submit-buttons, #postform .submit-buttons'<!-- ENDIF -->,
+			target			: '.post .content',
+			editors			: {
+				phpbb: '#message-box textarea[name]'
 			},
-			replyURL	: '{U_QQ_REPLY}'
+			replyURL		: '{U_QQ_REPLY}',
+			replyOverwrite	: '{QQ_REPLY_OVERWRITE}'
 		});
 	})(jQuery);
 	</script>

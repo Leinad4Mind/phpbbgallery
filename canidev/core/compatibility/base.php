@@ -2,10 +2,10 @@
 /*
 * @name base.php
 * @package Ext Common Core
-* @version v1.0.0 01/03/2018
+* @version v1.0.1 05/02/2019
 *
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core\compatibility;

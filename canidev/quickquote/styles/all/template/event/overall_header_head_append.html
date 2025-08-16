@@ -1,14 +1,3 @@
-<!-- IF QQ_ENABLED -->
-	<!-- IF PHPBB_BRANCH == "31x" and not $FONT_AWESOME_LOADED -->
-		<!-- INCLUDECSS https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css -->
-		<!-- DEFINE $FONT_AWESOME_LOADED = 1 -->
-	<!-- ENDIF -->
-
-	<!-- IF not $CBBCORE_LOADED -->
-		<!-- INCLUDEJS {CBBCORE_JS_FILENAME} -->
-		<!-- DEFINE $CBBCORE_LOADED = 1 -->
-	<!-- ENDIF -->
-
-	<!-- INCLUDECSS @canidev_quickquote/../theme/quickquote.css -->
-	<!-- INCLUDEJS @canidev_quickquote/quickquote.min.js -->
+<!-- IF QQ_ENABLED and CANIDEV_CORE_STARTED -->
+	<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
 <!-- ENDIF -->

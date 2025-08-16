@@ -1,11 +1,10 @@
 <?php
 /*
-* @name admin_controller_config.php
 * @package cBB QuickQuote
-* @version 1.0.0 01/03/2018
+* @version v1.0.1 10/02/2019
 *
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\quickquote\controller;
@@ -16,8 +15,6 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class admin_controller_config extends \canidev\core\acp
 {
 	/**
@@ -25,22 +22,30 @@ class admin_controller_config extends \canidev\core\acp
 	*
 	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
 	* @param \phpbb\config\config 						$config				Config Object
-	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
+	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
+	* @param \phpbb\language\language 					$language			Language object
 	* @param \phpbb\request\request 					$request			Request object
 	* @param \phpbb\template\template					$template     		Template object
 	* @param \phpbb\user								$user				User object
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(
+		\phpbb\cache\driver\driver_interface $cache,
+		\phpbb\config\config $config,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $dispatcher,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\template\template $template,
+		\phpbb\user $user)
 	{
 		$this->cache		= $cache;
 		$this->config		= $config;
 		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
-		$this->lang			= \canidev\core\language::get_instance($container, $user);
+		$this->dispatcher	= $dispatcher;
+		$this->lang			= $language;
 		$this->request		= $request;
 		$this->template 	= $template;
 	}
@@ -50,7 +55,7 @@ class admin_controller_config extends \canidev\core\acp
 		$this->page_header('cbb-quickquote', $this->config['quickquote_version']);
 
 		$this->tpl_name		= 'acp_quickquote_config';
-		$this->page_title	= $this->lang->get('ACP_CAT_QUICKQUOTE') . ' &bull; ' . $this->lang->get('ACP_QUICKQUOTE_CONFIG');
+		$this->page_title	= $this->lang->lang('ACP_CAT_QUICKQUOTE') . ' &bull; ' . $this->lang->lang('ACP_QUICKQUOTE_CONFIG');
 
 		$submit 	= $this->request->is_set_post('submit');
 		$form_key 	= 'acp_quickquote';
@@ -60,8 +65,9 @@ class admin_controller_config extends \canidev\core\acp
 		
 		$display_vars = array(
 			'legend1'			=> 'MAIN_OPTIONS',
-			'quickquote_floatbtn'		=> array('lang' => 'QUICKQUOTE_FLOATBTN',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-			'quickquote_groups'			=> array('lang' => 'QUICKQUOTE_GROUPS',		'type' => 'custom',		'method' => 'helper',	'params' => array('groups_select', '{KEY}', '{CONFIG_VALUE}', 1, 'groups-selector')),
+			'quickquote_floatbtn'			=> array('lang' => 'QUICKQUOTE_FLOATBTN',			'validate' => 'bool',	'type' => 'radio:yes_no'),
+			'quickquote_groups'				=> array('lang' => 'QUICKQUOTE_GROUPS',				'type' => 'custom',		'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}', 1)),
+			'quickquote_reply_overwrite'	=> array('lang' => 'QUICKQUOTE_REPLY_OVERWRITE',	'validate' => 'bool',	'type' => 'radio:yes_no'),
 		);
 
 		/**
@@ -85,7 +91,7 @@ class admin_controller_config extends \canidev\core\acp
 			
 			if(!check_form_key($form_key))
 			{
-				$error[] = $this->lang->get('FORM_INVALID');
+				$error[] = $this->lang->lang('FORM_INVALID');
 			}
 		}
 
@@ -124,13 +130,13 @@ class admin_controller_config extends \canidev\core\acp
 
 		if($submit)
 		{
-			trigger_error($this->lang->get('CONFIG_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 		
 		$this->template->assign_vars(array(
 			'QUICKQUOTE_IN_ADMIN'	=> true,
-			'L_TITLE'				=> $this->lang->get('ACP_QUICKQUOTE_CONFIG'),
-			'L_TITLE_EXPLAIN'		=> $this->lang->get('ACP_QUICKQUOTE_CONFIG_EXPLAIN'),
+			'L_TITLE'				=> $this->lang->lang('ACP_QUICKQUOTE_CONFIG'),
+			'L_TITLE_EXPLAIN'		=> $this->lang->lang('ACP_QUICKQUOTE_CONFIG_EXPLAIN'),
 			
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),

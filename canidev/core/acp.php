@@ -2,10 +2,10 @@
 /*
 * @name acp.php
 * @package Ext Common Core
-* @version v1.0.0 01/03/2018
+* @version v1.0.1 05/02/2019
 *
-* @copyright (c) 2018 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core;
@@ -52,7 +52,7 @@ class acp
 			{
 				$this->template->assign_block_vars('options', array(
 					'S_LEGEND'		=> true,
-					'LEGEND'		=> $this->lang->get($vars)
+					'LEGEND'		=> $this->lang->lang($vars)
 				));
 				continue;
 			}
@@ -72,9 +72,10 @@ class acp
 
 			$this->template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
-				'TITLE'			=> $this->lang->get($vars['lang']),
-				'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->get($vars['lang'] . '_EXPLAIN') : ''),
+				'TITLE'			=> $this->lang->lang($vars['lang']),
+				'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->lang($vars['lang'] . '_EXPLAIN') : ''),
 				'CONTENT'		=> $content,
+				'DISPLAY'		=> (isset($vars['display']) && !$vars['display']) ? false : true,
 			));
 
 			unset($display_vars[$config_key]);
@@ -107,7 +108,7 @@ class acp
 		
 		if($flags & self::SELECT_MULTIPLE)
 		{
-			$string = '<select' . $classname . ' id="' . $key . '" name="' . $key . '[]" multiple="multiple">';
+			$string = '<select' . $classname . ' id="' . $key . '" name="' . $key . '[]" multiple="multiple" size="8">';
 		}
 		else
 		{
@@ -117,7 +118,7 @@ class acp
 
 		foreach($options as $value => $lang)
 		{
-			$title	= ($flags & self::SELECT_PARSE_LANG) ? $this->lang->get($lang) : $lang;
+			$title	= ($flags & self::SELECT_PARSE_LANG) ? $this->lang->lang($lang) : $lang;
 
 			if(strpos($value, 'legend') !== false)
 			{
@@ -143,7 +144,7 @@ class acp
 	 * groups_select
 	 * Create a select with all groups
 	*/
-	public function groups_select($config_key, $select_groups, $include_all = true, $classname = '')
+	public function groups_select($config_key, $select_groups, $include_all = true)
 	{
 		$output = '';
 		$group_ary = array();
@@ -159,13 +160,13 @@ class acp
 			ORDER BY group_type DESC, group_name ASC';
 		$result = $this->db->sql_query($sql);
 
-		$output = '<div class="js-groups-select' . (($classname) ? ' ' . $classname: '') . '">
+		$output = '<div class="js-groups-select cbb-groups-selector">
 			<select name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
 
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$s_selected = (in_array($row['group_id'], $group_ary)) ? ' selected="selected"' : '';
-			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->get('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 
@@ -174,7 +175,7 @@ class acp
 		if($include_all)
 		{
 			$all_groups_key = 'all_groups_' . $config_key;
-			$output .= '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . (($select_groups == 'all' || $this->request->is_set_post($all_groups_key)) ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->lang->get('ALL_GROUPS') . '</label>';
+			$output .= '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . (($select_groups == 'all' || $this->request->is_set_post($all_groups_key)) ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->lang->lang('ALL_GROUPS') . '</label>';
 		}
 		
 		$output .= '</div>';
