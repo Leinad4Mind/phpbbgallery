@@ -83,7 +83,7 @@ class bbwatchlist
 		{
 			if ($row['search_type'] == type::SEARCH_TYPE_POST_CONTENT)
 			{
-				if (preg_match('/' . $row['keyword'] . '([^a-zA-Z0-9]+|$)/i', $this->post_content))
+				if (preg_match('/' . str_replace('*', '[^\s]*', $row['keyword']) . '([^a-zA-Z0-9]+|$)/iU', $this->post_content))
 				{
 					$this->notifications->add_notifications('sitesplat.bbwatchlist.notification.type.content_keyword', [
 						'user_ids'	=> [$row['user_id']],
@@ -95,7 +95,7 @@ class bbwatchlist
 				}
 			} elseif (!empty($this->topic_subject))
 			{
-				if (preg_match('/' . $row['keyword'] . '([^a-zA-Z0-9]+|$)/i', $this->topic_subject))
+				if (preg_match('/' . str_replace('*', '[^\s]*', $row['keyword']) . '([^a-zA-Z0-9]+|$)/iU', $this->topic_subject))
 				{
 					$this->notifications->add_notifications('sitesplat.bbwatchlist.notification.type.subject_keyword', [
 						'user_ids'	=> [$row['user_id']],
