@@ -169,18 +169,7 @@ class main_listener implements EventSubscriberInterface
 
 			$this->language->add_lang('common', 'leinad4mind/limitperforum');
 
-			$sql_ary = [
-				'SELECT'	=> 'COUNT(p.post_id) AS posts_count',
-				'FROM'		=> [POSTS_TABLE => 'p'],
-				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $forum_ids),
-			];
-
-			if ($post_time_limit)
-			{
-				$sql_ary['WHERE'] .= ' AND p.post_time > ' . (time() - ($post_time_limit * 60 * 60));
-			}
-
-			$posts_count = $is_post_authed ? 0 : $this->query_field('posts_count', $sql_ary);
+			// Topic count
 
 			$sql_ary = [
 				'SELECT'	=> 'COUNT(t.topic_id) AS topics_count',
@@ -201,6 +190,21 @@ class main_listener implements EventSubscriberInterface
 					$this->language->lang($topic_time_limit ? 'ERROR_TOPIC_COUNT_TIME' : 'ERROR_TOPIC_COUNT', (int) $topic_limit, $topic_time_limit),
 				]);
 			}
+
+			// Post count
+
+			$sql_ary = [
+				'SELECT'	=> 'COUNT(p.post_id) AS posts_count',
+				'FROM'		=> [POSTS_TABLE => 'p'],
+				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $forum_ids),
+			];
+
+			if ($post_time_limit)
+			{
+				$sql_ary['WHERE'] .= ' AND p.post_time > ' . (time() - ($post_time_limit * 60 * 60));
+			}
+
+			$posts_count = $is_post_authed ? 0 : ($this->query_field('posts_count', $sql_ary) - $topics_count);
 
 			if ($post_limit && $posts_count >= $post_limit)
 			{
