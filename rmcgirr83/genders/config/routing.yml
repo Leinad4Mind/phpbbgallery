@@ -1,0 +1,5 @@
+rmcgirr83_genders_core_get_gender:
+    path: gender_id/{gender_id}
+    defaults: { _controller: rmcgirr83.genders.core.genders:get_gender }
+    requirements:
+        gender_id: \d+

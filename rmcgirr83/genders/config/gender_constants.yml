@@ -1,0 +1,17 @@
+parameters:
+    gender_constants:
+        gender_none: 0
+        fa-mars: 1
+        fa-venus: 2
+        fa-intersex: 3
+        fa-mars-double: 4
+        fa-mars-stroke: 5
+        fa-mars-stroke-h: 6
+        fa-mars-stroke-v: 7
+        fa-mercury: 8
+        fa-neuter: 9
+        fa-transgender: 10
+        fa-transgender-alt: 11
+        fa-venus-double: 12
+        fa-venus-mars: 13
+        fa-genderless: 14
