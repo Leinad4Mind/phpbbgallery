@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "An extension which allows you to add static pages to your phpBB forum",
     "homepage": "https://www.phpbb.com",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "keywords": [
         "phpbb",
         "extension",
@@ -41,11 +41,17 @@
         {
             "name": "John Peskens",
             "role": "Extensions Development Team"
+        },
+        {
+            "name": "Ruslan Uzdenov",
+            "homepage": "http://www.phpbbguru.net",
+            "role": "Extensions Development Team"
         }
     ],
     "require": {
         "php": ">=5.3.3",
-        "composer/installers": "~1.0"
+        "composer/installers": "~1.0",
+        "phpbb/phpbb": ">=3.1.3,<3.3.0@dev"
     },
     "require-dev": {
         "phing/phing": "2.4.*",
@@ -54,7 +60,7 @@
     "extra": {
         "display-name": "Pages",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.3,<3.3.*@dev"
+            "phpbb/phpbb": ">=3.1.3,<3.3.0@dev"
         },
         "version-check": {
             "host": "www.phpbb.com",
