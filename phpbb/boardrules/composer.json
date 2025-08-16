@@ -3,13 +3,13 @@
     "type": "phpbb-extension",
     "description": "An extension which allows you to create a set of rules for your phpBB forum",
     "homepage": "https://www.phpbb.com",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "keywords": [
         "phpbb",
         "extension",
         "rules"
     ],
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Michael Cullum",
@@ -24,7 +24,7 @@
         },
         {
             "name": "Matt Friedman",
-            "homepage": "http://mattfriedman.me",
+            "homepage": "https://vsephpbb.github.io",
             "role": "Extensions Development Team Lead"
         },
         {
@@ -34,7 +34,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "composer/installers": "~1.0",
+        "composer/installers": "~1.0.0",
         "phpbb/phpbb": ">=3.2.0"
     },
     "require-dev": {
