@@ -111,7 +111,7 @@ class main_controller
 					echo '<div class="avatar-likers" style="float:left;width:33.333%;">
 						  <img src="' . 
 						  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif'))) . ' " style="float:left;width:70px;">
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) . ' " style="float:left;width:70px;">
 						  <div class="likers-time-stamp" style="float:left;display:block;text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a>
 						  <br /><i class="fa fa-thumbs-' . (($row['ld']) ? 'down' : 'up') . '"></i> ' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';

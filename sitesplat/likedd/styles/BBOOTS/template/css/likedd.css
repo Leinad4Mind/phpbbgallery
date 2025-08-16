@@ -75,3 +75,10 @@ padding: 5px 0 0 10px;
 .statistics_table td img, .graph_table td img {
 	margin-right:10px;
 }
+
+@media (max-width:499px){
+  .highcharts-subtitle {
+    visibility: hidden;
+   }
+  
+}

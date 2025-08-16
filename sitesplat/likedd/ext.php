@@ -22,13 +22,22 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/likedd', 'info_acp_likedd');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
 
-		return $manager->is_enabled('sitesplat/BBCore');
+		return class_exists('sitesplat\BBCore\helper');
 	}
 
 	/**
-	 * Overwrite enable_step to enable Badge Award notifications
+	 * Overwrite enable_step to enable like/dislike notifications
 	 * before any included migrations are installed.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -40,11 +49,15 @@ class ext extends \phpbb\extension\base
 		switch ($old_state)
 		{
 			case '': // Empty means nothing has run yet
-				global $user;
-				$user->add_lang_ext('sitesplat/likedd', 'info_acp_likedd');
-				$user->lang['EXTENSION_ENABLE_SUCCESS'] .= (isset($user->lang['LIKEBB_NOTICE']) ? sprintf($user->lang['LIKEBB_NOTICE'], $user->lang['ACP_CAT_GENERAL'], $user->lang['ACP_BOARD_SETTINGS'], $user->lang['ACP_LIKEDD_TITLE']) : '');
-				
-				// Enable Badge Award notifications
+				$this->container->get('user')->add_lang_ext('sitesplat/likedd', 'info_acp_likedd');
+				$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] . 
+					(isset($this->container->get('user')->lang['LIKEBB_NOTICE']) ?
+						sprintf($this->container->get('user')->lang['LIKEBB_NOTICE'],
+								$this->container->get('user')->lang['ACP_CAT_GENERAL'],
+								$this->container->get('user')->lang['ACP_BOARD_CONFIGURATION'],
+								$this->container->get('user')->lang['ACP_BOARD_SETTINGS']) : ''));
+								
+				// Enable like/dislike notifications
 				return $this->notification_handler('enable', array(
 					'sitesplat.likedd.notification.type.likedd_added',
 				));
@@ -61,7 +74,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Overwrite disable_step to disable Badge Award notifications
+	 * Overwrite disable_step to disable like/dislike notifications
 	 * before the extension is disabled.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -74,7 +87,7 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
-				// Disable Badge Award notifications
+				// Disable like/dislike notifications
 				return $this->notification_handler('disable', array(
 					'sitesplat.likedd.notification.type.likedd_added',
 				));
@@ -91,7 +104,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Overwrite purge_step to purge Badge Award notifications before
+	 * Overwrite purge_step to purge like/dislike notifications before
 	 * any included and installed migrations are reverted.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -104,7 +117,7 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
-				// Purge Badge Award notifications
+				// Purge like/dislike notifications
 				return $this->notification_handler('purge', array(
 					'sitesplat.likedd.notification.type.likedd_added',
 				));

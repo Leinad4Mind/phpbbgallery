@@ -28,6 +28,7 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_post_row'	=> 'viewtopic_handle_posts',
 			'core.delete_posts_after'			=> 'delete_like_dislike',
 			'core.memberlist_view_profile'		=> 'modify_profile',
+			'core.bbfront_before_display'		=> 'viewtopic_handle_posts',
 		);
 	}
 
@@ -68,7 +69,7 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
 		
 		$this->template->assign_vars(array(
-			'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_main_controller', array('route' => 'toplist.html'))
+			'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html'))
 		));
 	}
 	
@@ -89,8 +90,8 @@ class listener implements EventSubscriberInterface
 		{
 				$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
 				$post_row = $event['post_row'];
-				$post_row['U_LIKE'] = append_sid($this->helper->route('sitesplat_likedd_main_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']);
-				$post_row['U_DISLIKE'] = (!$this->config['dislike_off']) ? append_sid($this->helper->route('sitesplat_likedd_main_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
+				$post_row['U_LIKE'] = append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']);
+				$post_row['U_DISLIKE'] = (!$this->config['dislike_off']) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
 		
 				$sql = 'SELECT post_id, 
 						GROUP_CONCAT(case when l.ld = 0 then CONCAT("<a href=\"memberlist.php?mode=viewprofile&u=", l.user_id, "\">", u.username, "</a>") else NULL end, ", ") AS names_likes,

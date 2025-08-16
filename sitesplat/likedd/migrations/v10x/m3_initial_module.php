@@ -36,9 +36,8 @@ class m3_initial_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('module.add', array('ucp', 'UCP_PROFILE', 'UCP_LIKEDD_TITLE')),
 			array('module.add', array(
-				'ucp', 'UCP_LIKEDD_TITLE', array(
+				'ucp', 'UCP_PROFILE', array(
 					'module_basename'	=> '\sitesplat\likedd\ucp\likedd_module',
 					'auth'				=> 'ext_sitesplat/likedd',
 					'modes'				=> array('likedd'),
