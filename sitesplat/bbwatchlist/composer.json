@@ -1,0 +1,26 @@
+{
+    "name": "sitesplat/bbwatchlist",
+    "type": "phpbb-extension",
+    "description": "",
+    "homepage": "",
+    "version": "1.0.0",
+    "time": "2018-05-29",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "SiteSplat",
+            "email": "",
+            "homepage": "",
+            "role": ""
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "display-name": "BBwatchlist",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,"
+        }
+    }
+}

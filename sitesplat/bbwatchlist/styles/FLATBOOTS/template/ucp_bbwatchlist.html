@@ -1,0 +1,41 @@
+{% include 'ucp_header.html' %}
+
+{% INCLUDEJS '@sitesplat_bbwatchlist/bbwatchlist.js' %}
+
+<h2>{{ lang('UCP_SITESPLAT_BBWATCHLIST') }}</h2>
+
+<table id="bbwatchlist_keywords">
+	<tr>
+		<th>{{ lang('KEYWORD') }}</th>
+		<th>{{ lang('SEARCH_TYPE') }}</th>
+		<th>{{ lang('ACTIONS') }}</th>
+	</tr>
+	{% for keyword in keywords %}
+		<tr id="k{{ keyword.ID }}">
+			<td>{{ keyword.KEYWORD }}</td>
+			<td>{% if keyword.TYPE == constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_TOPIC_SUBJECT') %}{{ lang('SEARCH_TYPE_TOPIC_SUBJECT') }}{% else %}{{ lang('SEARCH_TYPE_POST_CONTENT') }}{% endif %}</td>
+			<td>
+				<a href="{{ keyword.U_DELETE }}" data-ajax="remove_keyword"><i class="fa fa-trash"></i></a>
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="3">{{ lang('NO_KEYWORDS') }}</td>
+		</tr>
+	{% endfor %}
+</table>
+
+<h3>{{ lang('ADD_NEW_KEYWORD') }}</h3>
+<form id="ucp" method="post" action="{S_UCP_ACTION}" data-ajax="add_keyword">
+	<input type="text" name="keyword">
+
+	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_TOPIC_SUBJECT') }}" checked> <span>{{ lang('SEARCH_TYPE_TOPIC_SUBJECT') }}</span>
+	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_POST_CONTENT') }}"> <span>{{ lang('SEARCH_TYPE_POST_CONTENT') }}</span>
+
+	<input type="hidden" name="action" value="add">
+	<input type="submit" value="{{ lang('SUBMIT') }}">
+	{S_HIDDEN_FIELDS}
+	{S_FORM_TOKEN}
+</form>
+
+{% include 'ucp_footer.html' %}

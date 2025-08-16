@@ -1,0 +1,8 @@
+Subject: Watched keyword found in a topic subject
+
+Hello,
+
+a keyword "{KEYWORD}" watched by you was found in a topic subject. Click here to see it:
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}
