@@ -1,0 +1,52 @@
+services:
+    rmcgirr83.contactadmin.admin.controller:
+        class: rmcgirr83\contactadmin\controller\admin_controller
+        arguments:
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@service_container'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@rmcgirr83.contactadmin.core'
+    rmcgirr83.contactadmin.main.controller:
+        class: rmcgirr83\contactadmin\controller\main_controller
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@dispatcher'
+            - '@request'
+            - '@service_container'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@rmcgirr83.contactadmin.core'
+            - '@captcha.factory'
+            - '@?rmcgirr83.topicdescription.listener'
+    rmcgirr83.contactadmin.listener:
+        class: rmcgirr83\contactadmin\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+    rmcgirr83.contactadmin.core:
+        class: rmcgirr83\contactadmin\core\contactadmin
+        arguments:
+            - '@auth'
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
