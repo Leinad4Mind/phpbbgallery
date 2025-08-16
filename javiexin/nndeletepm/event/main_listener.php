@@ -47,9 +47,9 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function delete_pm_before($event)
 	{
-		$user_id = $event['user_id'];
-		$msg_ids = $event['msg_ids'];
-		$folder_id = $event['folder_id'];
+		$user_id = (int) $event['user_id'];
+		$msg_ids = array_map('intval', $event['msg_ids']);
+		$folder_id = (int) $event['folder_id'];
 
 		// Only applies to messages deleted from the outbox
 		if ($folder_id !== PRIVMSGS_OUTBOX)
@@ -60,7 +60,7 @@ class main_listener implements EventSubscriberInterface
 		// Validate that the messages are still pending to be deleted
 		$sql = 'SELECT msg_id
 			FROM ' . PRIVMSGS_TO_TABLE . '
-			WHERE ' . $this->db->sql_in_set('msg_id', array_map('intval', $msg_ids)) . "
+			WHERE ' . $this->db->sql_in_set('msg_id', $msg_ids) . "
 				AND folder_id = $folder_id
 				AND user_id = $user_id";
 		$result = $this->db->sql_query($sql);
@@ -68,7 +68,7 @@ class main_listener implements EventSubscriberInterface
 		$delete_rows = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$delete_rows[$row['msg_id']] = 1;
+			$delete_rows[(int) $row['msg_id']] = 1;
 		}
 		$this->db->sql_freeresult($result);
 
@@ -81,7 +81,8 @@ class main_listener implements EventSubscriberInterface
 		$this->db->sql_transaction('begin');
 
 		// Delete the private message recipients that are pending, but not the sender
-		$sql = 'SELECT user_id FROM ' . PRIVMSGS_TO_TABLE . '
+		$sql = 'SELECT user_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
 			WHERE author_id = ' . $user_id . '
 			AND user_id <> ' . $user_id . '
 			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
@@ -92,7 +93,7 @@ class main_listener implements EventSubscriberInterface
 		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_new_privmsg = user_new_privmsg - 1, user_unread_privmsg = user_unread_privmsg - 1
-				WHERE user_id = ' . $row['user_id'];
+				WHERE user_id = ' . (int) $row['user_id'];
 			$this->db->sql_query($sql);
 		}
 
@@ -103,7 +104,5 @@ class main_listener implements EventSubscriberInterface
 		$this->db->sql_query($sql);
 
 		$this->db->sql_transaction('commit');
-
-		return;
 	}
 }
