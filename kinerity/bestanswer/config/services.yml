@@ -1,25 +1,26 @@
 services:
-    kinerity.bestanswer.listener:
-        class: kinerity\bestanswer\event\listener
-        arguments:
-            - @auth
-            - @dbal.conn
-            - @controller.helper
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-        tags:
-            - { name: event.listener }
-
-    kinerity.bestanswer.main.controller:
+    kinerity.bestanswer.controller:
         class: kinerity\bestanswer\controller\main_controller
         arguments:
-            - @auth
-            - @dbal.conn
-            - @log
-            - @request
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    kinerity.bestanswer.listener:
+        class: kinerity\bestanswer\event\main_listener
+        arguments:
+            - '@auth'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

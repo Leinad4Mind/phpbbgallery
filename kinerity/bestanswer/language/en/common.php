@@ -1,16 +1,16 @@
 <?php
 /**
-*
-* Extension - Best Answer
-*
-* @copyright (c) 2015 kinerity <http://www.acsyste.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Best Answer extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2018, kinerity, https://www.layer-3.org/
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,29 +38,21 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ANSWERED'	=> 'ANSWERED',
+	'ANSWERS'	=> 'Answers',
 
-	'BEST_ANSWER'	=> 'BEST ANSWER',
-	'BUTTON_MARK_ANSWER'	=> 'Mark Answer',
-	'BUTTON_UNMARK_ANSWER'	=> 'Unmark Answer',
+	'ENABLE_ANSWER'			=> 'Enable best answer',
+	'ENABLE_ANSWER_EXPLAIN'	=> 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
 
-	'ENABLE_BESTANSWER'			=> 'Enable "Best Answer" feature',
-	'ENABLE_BESTANSWER_EXPLAIN'	=> 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the "best answer".',
-	'EXTENSION_NOT_ENABLED'		=> 'The Best Answer extension is not enabled on this forum.',
-
-	'FULL_POST'	=> 'GO TO FULL POST',
-
-	'INVALID_FILTER'	=> 'The filter parameter is invalid. Please verify this variable is correct.',
+	'TO_POST'	=> 'Go to full post',
 
 	'LOG_MARK_ANSWER'	=> '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER'	=> '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
 
-	'MARK_ANSWER'			=> 'Mark post as best answer',
+	'MARK_ANSWER'			=> 'Mark answer',
 	'MARK_ANSWER_CONFIRM'	=> 'Are you sure you want to mark this post as the best answer?',
 
-	'TOPIC_FIRST_POST'	=> 'You cannot mark this post as the best answer as it is the first post of the topic.',
-	'TOPICS_ANSWERED'	=> 'Topics answered',
+	'TOTAL_ANSWERS'	=> 'Total answers',
 
-	'UNMARK_ANSWER'			=> 'Unmark post as best answer',
+	'UNMARK_ANSWER'			=> 'Unmark answer',
 	'UNMARK_ANSWER_CONFIRM'	=> 'Are you sure you want to unmark this post as the best answer?',
 ));

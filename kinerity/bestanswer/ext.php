@@ -1,39 +1,34 @@
 <?php
 /**
-*
-* Extension - Best Answer
-*
-* @copyright (c) 2015 kinerity <http://www.acsyste.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Best Answer extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2018, kinerity, https://www.layer-3.org/
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace kinerity\bestanswer;
 
 /**
-* This ext class is optional and can be omitted if left empty.
-* However you can add special (un)installation commands in the
-* methods enable_step(), disable_step() and purge_step(). As it is,
-* these methods are defined in \phpbb\extension\base, which this
-* class extends, but you can overwrite them to give special
-* instructions for those cases.
-*/
+ * Best Answer extension base
+ *
+ * It is recommended to remove this file from
+ * an extension if it is not going to be used.
+ */
 class ext extends \phpbb\extension\base
 {
-	/** @var string Require phpBB 3.1.7 due to the use of new events */
-	const PHPBB_MIN_VERSION = '3.1.7';
-
 	/**
-	* Check whether or not the extension can be enabled.
-	* The current phpBB version should meet or exceed
-	* the minimum version required by this extension:
-	*
-	* @return bool
-	* @access public
-	*/
+	 * Check whether or not the extension can be enabled.
+	 * The current phpBB version should meet or exceed
+	 * the minimum version required by this extension:
+	 *
+	 * Requires phpBB 3.2.0 and PHP 5.4.7
+	 */
 	public function is_enableable()
 	{
 		$config = $this->container->get('config');
-		return phpbb_version_compare($config['version'], self::PHPBB_MIN_VERSION, '>=');
+
+		return phpbb_version_compare($config['version'], '3.2.0', '>=') && version_compare(PHP_VERSION, '5.4.7', '>=');
 	}
 }

@@ -1,1 +1,7 @@
-<!-- IF postrow.TOPICS_ANSWERED --><dd class="profile-posts"><strong>{L_TOPICS_ANSWERED}{L_COLON}</strong> <a href="{postrow.U_TOPICS_ANSWERED}">{postrow.TOPICS_ANSWERED}</a></dd><!-- ENDIF -->
+{% if postrow.POSTER_ANSWERS != '' %}
+{% INCLUDEJS '@kinerity_bestanswer/jxtools.js' %}
+
+<dd id="list_inner_hidden_container_{{ postrow.POST_ID }}" jxdom-closest="dl.postprofile" jxdom-find="dd.profile-joined" jxdom-action="before" >
+<div class="profile-answers"><strong>{{ lang('ANSWERS') }}{{ lang('COLON') }}</strong> {{ postrow.POSTER_ANSWERS }}</div>
+</dd>
+{% endif %}
