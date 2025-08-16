@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.1 15/01/2023
+ * @version 1.1.3 20/10/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,7 +9,7 @@
 
 namespace canidev\core;
 
-class bbcode_manager
+class BBcodeManager
 {
 	private $cache 			= null;
 	private $max_bbcode_id	= 0;
@@ -47,7 +47,7 @@ class bbcode_manager
 	 * Get installed bbcodes
 	 * @return array
 	 */
-	public function get_installed_bbcodes()
+	public function getInstalledBBcodes()
 	{
 		if($this->cache === null)
 		{
@@ -83,14 +83,14 @@ class bbcode_manager
 	{
 		$insert_ary	= [];
 		
-		$this->get_installed_bbcodes();
+		$this->getInstalledBBcodes();
 
 		foreach($bbcode_ary as $bbcode_name => $bbcode_array)
 		{
 			// Build the BBCodes
 			$data = $this->bbcode_tool->build_regexp($bbcode_array['bbcode_match'], $bbcode_array['bbcode_tpl']);
 
-			$bbcode_array = array_merge($bbcode_array, array(
+			$bbcode_array = array_merge($bbcode_array, [
 				'bbcode_tag'			=> $data['bbcode_tag'],
 				'bbcode_match'			=> $bbcode_array['bbcode_match'],
 				'bbcode_tpl'			=> $bbcode_array['bbcode_tpl'],
@@ -100,7 +100,7 @@ class bbcode_manager
 				'second_pass_replace'	=> $data['second_pass_replace'],
 				'display_on_posting'	=> isset($bbcode_array['display_on_posting']) ? $bbcode_array['display_on_posting'] : 1,
 				'bbcode_helpline' 		=> isset($bbcode_array['bbcode_helpline']) ? $bbcode_array['bbcode_helpline'] : '',
-			));
+			]);
 			
 			$bbcode_tag	= strtolower($bbcode_array['bbcode_tag']);
 			$bbcode		= isset($this->cache[$bbcode_tag]) ? $this->cache[$bbcode_tag] : false;
@@ -119,7 +119,7 @@ class bbcode_manager
 				}
 
 				// Update existing BBCode
-				$this->update_by_tag($bbcode['bbcode_tag'], $bbcode_array);
+				$this->updateByTag($bbcode['bbcode_tag'], $bbcode_array);
 			}
 			else
 			{
@@ -147,10 +147,10 @@ class bbcode_manager
 	/**
 	 * Update BBcode by it's tag name
 	 * 
-	 * @param string 	$bbcode_tag 		BBcode tag name
-	 * @param array 	$bbcode_data 		Array with new bbcode data
+	 * @param string|array 	$bbcode_tag 		BBcode tag name
+	 * @param array 		$bbcode_data 		Array with new bbcode data
 	 */
-	public function update_by_tag($bbcode_tag, $bbcode_data)
+	public function updateByTag($bbcode_tag, $bbcode_data)
 	{
 		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : [$bbcode_tag]);
 		

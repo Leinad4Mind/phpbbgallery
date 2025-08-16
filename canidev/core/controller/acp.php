@@ -1,14 +1,15 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.1 15/01/2023
+ * @version 1.1.7 12/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\core\controller;
 
+use canidev\core\Dom;
 use \Symfony\Component\DependencyInjection\ContainerInterface;
 
 class acp
@@ -68,31 +69,42 @@ class acp
 	/**
 	 * Do basic actions on acp controller
 	 * 
-	 * @param string 	$canidev_id 		CaniDev ID for the extension
-	 * @param string 	$current_version 	Extension's version
+	 * @param string 	$ext_namespace 		CaniDev extension namespace
 	 */
-	public function page_header($canidev_id, $current_version)
+	public function pageHeader($ext_namespace)
 	{
-		$this->template->assign_vars([
-			'U_ACTION'		=> $this->form_action,
-			'U_HELP'		=> 'https://www.canidev.com/store/' . $canidev_id . '?rq=documentation&v=' . $current_version,
-		]);
+		$ext_info = $this->tools->getExtInfo($ext_namespace);
 
-		// Check is symfony_request is present to make sure old versions of extensions are compatible
-		if($this->symfony_request !== null)
+		if($ext_info !== false)
 		{
-			$this->template->assign_var('U_REPORT', $this->symfony_request->getUri());
-
-			if($this->request->is_ajax() && $this->request->is_set_post('send_report'))
+			// Check is symfony_request is present to make sure old versions of extensions are compatible
+			if($this->symfony_request !== null)
 			{
-				$report = new \canidev\core\report($this->container, $canidev_id, $current_version);
+				$this->template->assign_var('U_REPORT', $this->symfony_request->getUri());
 
-				if($report->request_data())
+				if($this->request->is_ajax() && $this->request->is_set_post('send_report'))
 				{
-					$report->send(true);
+					$report = new \canidev\core\Report(
+						$this->container,
+						str_replace('/store/', '', $ext_info->extra->{'version-check'}->directory),
+						$ext_info->version
+					);
+
+					if($report->requestData())
+					{
+						$report->send(true);
+					}
 				}
 			}
+
+			$this->template->assign_var('IN_EXT_' . strtoupper($ext_info->basename), true);
 		}
+
+		$this->template->assign_vars([
+			'LOAD_CORE_ACP'		=> true,
+			'U_ACTION'			=> $this->form_action,
+			'U_HELP'			=> ($ext_info !== false) ? 'https://www.canidev.com' . $ext_info->extra->{'version-check'}->directory . '?rq=documentation&v=' . $ext_info->version : '',
+		]);
 		
 		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
 		if($this->config['cbb_asset_check'] != $this->config['assets_version'])
@@ -133,10 +145,36 @@ class acp
 				
 				continue;
 			}
+
+			if(isset($vars['builder']))
+			{
+				$this->template->assign_block_vars($tpl_key, [
+					'INCLUDE'		=> call_user_func($vars['builder'], $vars, $cfg_array),
+				]);
+
+				continue;
+			}
 			
 			if(!isset($cfg_array[$config_key]) && isset($vars['default']))
 			{
 				$cfg_array[$config_key] = $vars['default'];
+			}
+
+			if(isset($vars['function']) && is_array($vars['function']))
+			{
+				switch($vars['function'][0])
+				{
+					case 'controller':
+						$vars['function'][0] = $this;
+					break;
+
+					default:
+						if(is_string($vars['function'][0]) && property_exists($this, $vars['function'][0]))
+						{
+							$vars['function'][0] = $this->{$vars['function'][0]};
+						}
+					break;
+				}
 			}
 
 			$type 		= explode(':', $vars['type']);
@@ -153,12 +191,26 @@ class acp
 				$content = preg_replace('#^<(input|select|textarea)#', '<$1 class="cbb-inputbox"', $content);
 			}
 
+			// Add custom attributes
+			if(isset($vars['attributes']))
+			{
+				$content = preg_replace_callback(
+					'#<(input|select|textarea)([^>]*?)(/)?>#', function($match) use ($vars) {
+						$attr = array_merge(Dom::attrToArray($match[2]), $vars['attributes']);
+						
+						return '<' . $match[1] . ' ' . Dom::arrayToAttr($attr) . ' ' . $match[3] . '>';
+					},
+					$content
+				);
+			}
+
 			if($individual_name)
 			{
 				$content = preg_replace('#name="config\[([a-z0-9\-_]+)\]"#i', 'name="$1"', $content);
 			}
 
 			$this->template->assign_block_vars($tpl_key, [
+				'ID'			=> str_replace('_', '-', $config_key),
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->language->lang($vars['lang']),
 				'S_EXPLAIN'		=> ($this->language->is_set($vars['lang'] . '_EXPLAIN') ? $this->language->lang($vars['lang'] . '_EXPLAIN') : ''),
@@ -214,5 +266,16 @@ class acp
 	{
 		$this->form_action = $u_action;
 		return $this;
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public function page_header()
+	{
+		$class = str_replace('\\', '/', get_called_class());
+		$parts = explode('/', $class);
+
+		return $this->pageHeader($parts[0] . '/' . $parts[1]);
 	}
 }

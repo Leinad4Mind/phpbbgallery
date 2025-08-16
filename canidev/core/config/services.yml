@@ -33,6 +33,11 @@ services:
       - '@symfony_request'
       - '@template'
       - '@template.twig.environment'
+    
+  canidev.core.text_parser:
+    class: canidev\core\TextParser
+    arguments:
+      - '@service_container'
 
   canidev.core.tools:
     class: canidev\core\tools

@@ -44,10 +44,10 @@
 	</script>
 
 	<script>
-	head.ready(['cbbcore.min.js', 'quickquote.min.js'], function () {
+	head.ready(['cbbcore.min.js', 'quickquote.min.js'], function() {
 		cbbCore.initService('quickquote', {
 			btnTarget		: {% if QQ_FLOAT_BTN %}'body'{% else %}'#qr_postform .form-group:has(.btn), #postform .form-actions'{% endif %},
-			target			: 'article .content, .pm .content',
+			target			: 'article .content, .pm .content, .block-postbody',
 			editors			: {
 				phpbb: '#qr_postform textarea[name], #postform textarea[name]'
 			},

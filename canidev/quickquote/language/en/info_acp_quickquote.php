@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB QuickQuote
- * @version 1.0.3 15/01/2023
+ * @version 1.0.4 01/06/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 

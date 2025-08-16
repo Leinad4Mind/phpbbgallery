@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.1 15/01/2023
+ * @version 1.1.4 26/01/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -11,7 +11,7 @@ namespace canidev\core;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class report
+class Report
 {
 	/** @var \phpbb\config\db */
 	protected $config;
@@ -71,7 +71,7 @@ class report
 	 * 
 	 * @return bool
 	 */
-	public function request_data($title = 'REPORT_TITLE', $tpl_name = '@canidev_core/report_body.html')
+	public function requestData($title = 'REPORT_TITLE', $tpl_name = '@canidev_core/report_body.html')
 	{
 		if($this->core->modal_dialog(true))
 		{
@@ -95,7 +95,7 @@ class report
 	 */
 	public function send($collect_data = false)
 	{
-		$response = new \canidev\core\json_response;
+		$response = new \canidev\core\JsonResponse;
 
 		if(empty($this->data['extension_id']) || empty($this->data['version']))
 		{
@@ -104,29 +104,20 @@ class report
 
 		if($collect_data)
 		{
-			$this->data += $this->collect_data();
+			$this->data += $this->collectData();
 		}
 
 		// Send report to CaniDev.com
-		$client = new \GuzzleHttp\Client();
+		$rsp = $this->core->apiRequest('phpbb', 'report', [
+			'data'	=> $this->data
+		]);
 
-		try {
-			$key = phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
-
-			$rsp = $client->post($this->report_url, [
-				$key	=> [
-					'report' => $this->data
-				]
-			]);
-
-			if($rsp->getStatusCode() == 200)
-			{
-				$response->send([
-					'message'	=> $this->language->lang('REPORT_SENDED'),
-				], true);
-			}
+		if($rsp !== null)
+		{
+			$response->send([
+				'message'	=> $this->language->lang('REPORT_SENDED'),
+			], true);
 		}
-		catch(\Exception $e) {}
 
 		$response->error($this->language->lang('ERROR_REPORT_SEND'));
 	}
@@ -147,11 +138,11 @@ class report
 			{
 				$this->set($k, $v);
 			}
-
-			return;
 		}
-
-		$this->data[$key] = $value;
+		else
+		{
+			$this->data[$key] = $value;
+		}
 
 		return $this;
 	}
@@ -162,7 +153,7 @@ class report
 	 * @return array
 	 * @access private
 	 */
-	protected function collect_data()
+	protected function collectData()
 	{
 		$user_agent = $this->request->header('User-Agent');
 		$agents 	= ['firefox', 'msie', 'opera', 'chrome', 'safari', 'mozilla', 'seamonkey', 'konqueror', 'netscape', 'gecko', 'navigator', 'mosaic', 'lynx', 'amaya', 'omniweb', 'avant', 'camino', 'flock', 'aol'];
@@ -196,11 +187,13 @@ class report
 			],
 
 			'site'		=> [
-				'version'		=> PHPBB_VERSION,
-				'domain'		=> $this->request->server('HTTP_HOST'),
-				'contact'		=> $this->config['board_contact'],
-				'style'			=> $this->user->style['style_name'],
-				'extensions'	=> array_keys($this->extensions_manager->all_enabled()),
+				'version'			=> PHPBB_VERSION,
+				'domain'			=> $this->request->server('HTTP_HOST'),
+				'contact'			=> $this->config['board_contact'],
+				'style'				=> $this->user->style['style_name'],
+				'language_default'	=> $this->config['default_lang'],
+				'language_user'		=> $this->user->lang_name,
+				'extensions'		=> array_keys($this->extensions_manager->all_enabled()),
 			],
 
 			'server'	=> [

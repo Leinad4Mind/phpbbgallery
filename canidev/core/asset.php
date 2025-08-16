@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.1 15/01/2023
+ * @version 1.1.2 20/09/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -64,6 +64,10 @@ class asset extends \phpbb\template\asset
 					return '%1$sext/' . str_replace('_', '/', $match[1]) . '/%2$s/';
 				}, $path);
 		}
+		else if(strpos($path, './') === 0)
+		{
+			$uri = '%1$s' . substr($path, 2);
+		}
 		else
 		{
 			$uri = '%1$s%2$s/' . $path;
@@ -104,7 +108,7 @@ class asset extends \phpbb\template\asset
 
 		if(substr($url, 0, 2) == './')
 		{
-			$url = /*$this->request->getSchemeAndHttpHost()*/ $this->request->getBasePath() . '/' . $url;
+			$url = $this->request->getBasePath() . '/' . $url;
 		}
 
 		return $this->filesystem->clean_path($url);

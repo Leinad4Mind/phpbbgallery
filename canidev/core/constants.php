@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.1 15/01/2023
+ * @version 1.1.7 12/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -11,7 +11,7 @@ namespace canidev\core;
 
 class constants
 {
-	const VERSION		= '1.1.1';
+	const VERSION		= '1.1.7';
 
 	const PLUGINS_PATH 	= 'canidev/core/plugins/';
 }

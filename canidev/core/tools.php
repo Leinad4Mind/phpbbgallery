@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.1 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.7 12/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -45,14 +45,14 @@ class tools
 	/**
 	 * Build select input
 	 * 
-	 * @param array 		$options 		Pair of (value => title) data
-	 * @param string 		$key 			Id of the input
-	 * @param mixed 		$select_ids 	Options to ve marked as selected for default
-	 * @param int 			$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
-	 * @param string 		$classname 		Custom class name for the input
+	 * @param array 			$options 		Pair of (value => title) data
+	 * @param string|false 		$key 			Id of the input
+	 * @param mixed 			$select_ids 	Options to ve marked as selected for default
+	 * @param int 				$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
+	 * @param string 			$classname 		Custom class name for the input
 	 * 
 	 * @return string
-	*/
+	 */
 	public function make_select($options, $key, $select_ids = '', $flags = self::SELECT_PARSE_LANG, $classname = '')
 	{
 		$in_group		= false;
@@ -86,7 +86,7 @@ class tools
 		}
 		else if($key !== false)
 		{
-			$select_ids = array($select_ids[0]);
+			$select_ids = [$select_ids[0]];
 			$string = '<select' . $classname . ' id="' . $key . '" name="config[' . $key . ']">';
 		}
 
@@ -146,6 +146,11 @@ class tools
 			include($this->phpbb_root_path . 'includes/functions_admin.' . $this->php_ext);
 		}
 
+		if(!empty($select_ids))
+		{
+			$select_ids = is_array($select_ids) ? $select_ids : explode(',', $select_ids);
+		}
+
 		$output = '<select ' . (($classname) ? 'class="' . $classname . '" ' : '') . 'name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
 		$output .= (($ignore_cats) ? make_forum_select($select_ids, false, true, true, true, true) : make_forum_select($select_ids, false, true));
 		$output .= '</select>';
@@ -154,18 +159,49 @@ class tools
 	}
 
 	/**
+	 * Get information from composer file of extension
+	 */
+	public function getExtInfo($ext_namespace)
+	{
+		$composer_filename = $this->phpbb_root_path . 'ext/' . $ext_namespace . '/composer.json';
+
+		$data = @json_decode(@file_get_contents($composer_filename));
+
+		if($data)
+		{
+			$data->basename = substr($data->name, strpos($data->name, '/') + 1);
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Create a select with all groups
 	 * 
 	 * @param string 	$config_key 		Key for input
 	 * @param mixed 	$select_groups 		Selected group IDs
-	 * @param boll 		$include_all 		Define if "All" checkbox must be displayed
+	 * @param bool 		$include_options 	Define if checkboxes must be displayed
 	 * 
 	 * @return string
 	 */
-	public function groups_select($config_key, $select_groups, $include_all = true)
+	public function groups_select($config_key, $select_groups, $include_options = true)
 	{
-		$output 	= '';
-		$group_ary 	= [];
+		$id 					= gen_rand_string(4);
+		$output 				= [];
+		$group_ary 				= [];
+		$all_groups_key 		= 'all_groups_' . $config_key;
+		$only_default_key		= 'default_groups_' . $config_key;
+		$all_groups 			= ($select_groups == 'all' || $this->request->is_set_post($all_groups_key));
+		$only_default_groups 	= false;
+
+		if(is_string($select_groups) && strpos($select_groups, 'default;') === 0)
+		{
+			$only_default_groups 	= true;
+			$select_groups 			= str_replace('default;', '', $select_groups);
+		}
+
+		$only_default_groups 	= $only_default_groups || $this->request->is_set_post($only_default_key);
+		$only_default_groups 	= ($all_groups) ? false : $only_default_groups;
 
 		if(!empty($select_groups))
 		{
@@ -178,25 +214,51 @@ class tools
 			ORDER BY group_type DESC, group_name ASC';
 		$result = $this->db->sql_query($sql);
 
-		$output = '<div class="js-groups-select cbb-groups-selector">
-			<select name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
+		$output[] = '<div id="groups-select-' . $id . '" class="cbb-groups-selector">';
+		$output[] = '<select name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
 
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$s_selected = (in_array($row['group_id'], $group_ary)) ? ' selected="selected"' : '';
-			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$output[] = '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 
-		$output .= '</select>';
+		$output[] = '</select>';
 
-		if($include_all)
+		if($include_options)
 		{
-			$all_groups_key = 'all_groups_' . $config_key;
-			$output .= '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . (($select_groups == 'all' || $this->request->is_set_post($all_groups_key)) ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->language->lang('ALL_GROUPS') . '</label>';
+			$output[] = '<div class="cbb-selector-options">';
+			$output[] = '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . ($all_groups ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->language->lang('ALL_GROUPS') . '</label>';
+			$output[] = '<input type="checkbox" class="radio cbb-helper-hidden" id="default-groups-' . $config_key . '" name="' . $only_default_key . '" value="1"' . ($only_default_groups ? ' checked="checked"' : '') . '/><label for="default-groups-' . $config_key . '">' . $this->language->lang('ONLY_DEFAULT_GROUPS') . '</label>';
+			$output[] = '</div>';
 		}
-		
-		$output .= '</div>';
+
+		$output[] = '</div>';
+
+		if($include_options)
+		{
+			$output[] = '<script>window._jPostponed = window._jPostponed || []; window._jPostponed.push([\'@core/bindGroupSelector\', \'#groups-select-' . $id . '\']);</script>';
+		}
+
+		return implode("\n", $output);
+	}
+
+	public function groups_select_submit($config_key)
+	{
+		if($this->request->is_set_post('all_groups_' . $config_key))
+		{
+			return 'all';
+		}
+
+		$output = '';
+
+		if($this->request->is_set_post('default_groups_' . $config_key))
+		{
+			$output .= 'default;';
+		}
+
+		$output .= implode(',', $this->request->variable($config_key, [0]));
 
 		return $output;
 	}
@@ -208,80 +270,12 @@ class tools
 	 * @param int		$limit			Maximum length of string
 	 * @param string	$append			String to be appended
 	 * @param bool		$count_all		Defines if count all or only plain text
+	 * 
+	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function html_truncate($input = '', $limit = 0, $append = '', $count_all = false)
 	{
-		$check_len = ($count_all) ? utf8_strlen($input) : utf8_strlen(strip_tags($input));
-
-		if(!$input || $limit <= 0 || $check_len <= $limit)
-		{
-			return $input;
-		}
-
-		$splits = preg_split('#(</?[^>]*/?>)#', $input, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-		$text		= '';
-		$open_tag	= false;
-		$open_tags 	= [];
-
-		foreach($splits as $split)
-		{
-			// Open new tag
-			if(preg_match('#^<([a-zA-Z0-9]+).*>#', $split, $match))
-			{
-				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], ['img', 'br', 'hr', 'input']))
-				{
-					$open_tags[] = $match[1];
-				}
-			}
-			
-			// Close tag, if the current
-			if(sizeof($open_tags) && $split === "</" . end($open_tags) . ">")
-			{
-				array_splice($open_tags, -1, 1);
-			}
-
-			// Adjust the string
-			if(sizeof($open_tags) && $split[0] != '<')
-			{ 
-				$length = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
-
-				if(($length + utf8_strlen($split)) > $limit)
-				{
-					$split = utf8_substr($split, 0, $limit - $length);
-				}
-			}
-			
-			$text .= $split;
-
-			// If exceed the limit and no open tags finish here,
-			// and it is looking backwards to remove the tag open.
-			$check_len = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
-			if($check_len >= $limit)
-			{
-				// Try to cut the text before close the open tags
-				if($split[0] != '<' && $check_len > $limit)
-				{
-					$chars_to_remove = max(0, utf8_strlen($split) - $limit);
-					
-					if($chars_to_remove)
-					{
-						$text = utf8_substr($text, 0, utf8_strlen($text) - $chars_to_remove);
-					}
-				}
-
-				$tags_count = sizeof($open_tags);
-
-				for($i = $tags_count; $i > 0; $i--)
-				{
-					$text .= '</' . $open_tags[$i-1] . '>';
-				}
-		
-				break;
-			}
-		}
-
-		return $text . (($append) ? $append : '');
+		return TextParser::truncate($input, $limit, $append, $count_all);
 	}
 
 	/**
@@ -289,19 +283,12 @@ class tools
 	 * 
 	 * @param string $text 		Original text
 	 * @return string
+	 * 
+	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function fix_smilies_path($text)
 	{
-		if(defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH)
-		{
-			return $text;
-		}
-
-		$board_url	= generate_board_url();
-
-		return preg_replace_callback('#class\="smilies" src\="(.*?)(/images/.*?)"#', function($matches) use ($board_url) {
-			return 'class="smilies" src="' . $board_url . $matches[2] . '"';
-		}, $text);
+		return TextParser::fixSmiliesPath($text);
 	}
 
 	/**
@@ -309,29 +296,11 @@ class tools
 	 * 
 	 * @param array 	$attributes
 	 * @return string
+	 * @deprecated 		To be removed on v1.2.0
 	 */
 	public static function array_to_attr($attributes)
 	{
-		return implode(
-			' ',
-			array_map(
-				function($key) use ($attributes)
-				{
-					if($attributes[$key] === null)
-					{
-						return '';
-					}
-
-					if(is_bool($attributes[$key]))
-					{
-						return ($attributes[$key]) ? $key : '';
-					}
-
-					return $key . '="' . $attributes[$key] . '"';
-				},
-				array_keys($attributes)
-			)
-		);
+		return Dom::arrayToAttr($attributes);
 	}
 
 	
@@ -410,20 +379,15 @@ class tools
 
 		if(!file_exists($path))
 		{
-			@mkdir($path);
+			@mkdir($path, 0777, true);
 		}
 
-		try {
-			$htaccess_str = vsprintf($htaccess_str, ($public_access) ? ['Allow', 'granted'] : ['Deny', 'denied']);
-			$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
+		$htaccess_str = vsprintf($htaccess_str, ($public_access) ? ['Allow', 'granted'] : ['Deny', 'denied']);
+		$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
 
-			file_put_contents($path . '.htaccess', $htaccess_str);
-			file_put_contents($path . 'index.htm', '');
-		}
-		catch(\Exception $e) {
-			return false;
-		}
+		@file_put_contents($path . '.htaccess', $htaccess_str);
+		@file_put_contents($path . 'index.htm', '');
 
-		return true;
+		return file_exists($path . '.htaccess');
 	}
 }
