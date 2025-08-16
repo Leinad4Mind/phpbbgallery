@@ -1,6 +1,3 @@
-imports:
-    - { resource: phpbb_tables.yml }
-
 services:
     david63.loginredirect.listener:
         class: david63\loginredirect\event\listener
@@ -40,3 +37,6 @@ services:
         class: david63\loginredirect\core\functions
         arguments:
             - '@ext.manager'
+
+    _defaults:
+        public: true

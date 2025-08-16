@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -42,9 +42,6 @@ $lang = array_merge($lang, array(
 	'INVALID_WELCOME_TOPIC'					=> 'The welcome topic is invalid.',
 
 	'LATEST'								=> 'Latest',
-
-	'NEW_VERSION'							=> 'New Version',
-	'NEW_VERSION_EXPLAIN'					=> 'There is a newer version of this extension available.',
 
 	'REDIRECT_ALWAYS'						=> 'Always redirect',
 	'REDIRECT_ALWAYS_EXPLAIN'				=> 'Always redirect the user to the specified topic.',
@@ -88,16 +85,4 @@ $lang = array_merge($lang, array(
 	'REDIRECT_WELCOME_TOPIC_ID_EXPLAIN'		=> 'Enter the ID of the welcome topic that you wish to redirect all new users to.',
 
 	'SELECTED'								=> 'Selected',
-
-	'VERSION'								=> 'Version',
-));
-
-// Donate
-$lang = array_merge($lang, array(
-	'DONATE'					=> 'Donate',
-	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
-	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
-
-	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
-	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));

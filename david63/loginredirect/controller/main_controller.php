@@ -119,7 +119,7 @@ class main_controller implements main_interface
 				// Redirect to an announcement
 				if ($this->config['redirect_announce'])
 				{
-					$announce_type = ($this->config['redirect_global']) ? 'POST_GLOBAL' : 'POST_ANNOUNCE';
+					$announce_type = ($this->config['redirect_global']) ? POST_GLOBAL : POST_ANNOUNCE;
 
 					// Redirect to latest announcement
 					$sql = 'SELECT topic_id, topic_time
@@ -228,6 +228,7 @@ class main_controller implements main_interface
 					}
 				}
 			}
+
 		}
 
 		// append/replace SID (may change during the session for AOL users)
@@ -243,5 +244,7 @@ class main_controller implements main_interface
 		{
 			redirect($redirect);
 		}
+
+		return $event;
 	}
 }
