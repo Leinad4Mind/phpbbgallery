@@ -4,7 +4,7 @@
  *
  * Limit Posts and Topics per Forum. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -36,19 +36,27 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ERROR_POST_COUNT'			=> [
-		1 => 'You cannot post a new post here, because you have reached your limit of %d allowed post in this forum.',
+		1 => 'You cannot post a new post here, because you have reached your limit of 1 allowed post in this forum.',
 		2 => 'You cannot post a new post here, because you have reached your limit of %d allowed posts in this forum.',
 	],
+	'ERROR_POST_COUNT_TIME'	=> [
+		1 => 'You cannot post a new post here, because you have reached your limit of 1 allowed post every %d hour(s) in this forum.',
+		2 => 'You cannot post a new post here, because you have reached your limit of %1$d allowed posts every %1$d hour(s) in this forum.',
+	],
 	'ERROR_TOPIC_COUNT'			=> [
-		1 => 'You cannot post a new topic here, because you have reached your limit of %d allowed topic in this forum.',
+		1 => 'You cannot post a new topic here, because you have reached your limit of 1 allowed topic in this forum.',
 		2 => 'You cannot post a new topic here, because you have reached your limit of %d allowed topics in this forum.',
 	],
+	'ERROR_TOPIC_COUNT_TIME'	=> [
+		1 => 'You cannot post a new topic here, because you have reached your limit of 1 allowed topic every %d hour(s) in this forum.',
+		2 => 'You cannot post a new topic here, because you have reached your limit of %d allowed topics every %d hour(s) in this forum.',
+	],
 	'ERROR_POST_REST'			=> [
-		1 => 'You have <strong class="error">%d</strong> free post on this forum before being disallowed to post new posts.',
+		1 => 'You have <strong class="error">1</strong> free post on this forum before being disallowed to post new posts.',
 		2 => 'You have <strong class="error">%d</strong> free posts on this forum before being disallowed to post new posts.',
 	],
 	'ERROR_TOPIC_REST'			=> [
-		1 => 'You have <strong class="error">%d</strong> free topic on this forum before being disallowed to post new topics.',
+		1 => 'You have <strong class="error">1</strong> free topic on this forum before being disallowed to post new topics.',
 		2 => 'You have <strong class="error">%d</strong> free topics on this forum before being disallowed to post new topics.',
 	],
 	'ERROR_POST_TOPIC_REST'		=> 'You have <strong class="error">%d</strong> free topic and <strong class="error">%d</strong> free post on this forum before being disallowed to post. (Please note that a new topic is considered also as a new post!)',

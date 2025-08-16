@@ -4,7 +4,7 @@
  *
  * Limit Posts and Topics per Forum. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -35,14 +35,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'LIMIT_PER_FORUM'			=> 'Limit Posts and Topics per Forum',
-	'FORUM_MAX_POSTS'			=> 'Maximum count of posts per user',
-	'FORUM_MAX_POSTS_SHORT'		=> 'Post limit',
-	'FORUM_MAX_TOPICS'			=> 'Maximum count of topics per user',
-	'FORUM_MAX_TOPICS_SHORT'	=> 'Topic limit',
-	'FORUM_MAX_GROUPS'			=> 'Group limits',
-	'FORUM_MAX_GROUPS_EXPLAIN'	=> 'Group limits override the limits above.',
-	'FORUM_MAX_TOPICS_EXPLAIN'	=> 'Should be lower than the maximum post count unless if it is set to 0',
-	'FORUM_MAX_TOPICS_ERROR'	=> 'The maximum of topic per forums should be lower than the maximum of post per forums',
-	'FORUM_MAX_TP_EXPLAIN'		=> 'Set 0 to disable',
+	'LIMIT_POSTS_PER_FORUM'			=> 'Limit Posts per Forum',
+	'FORUM_MAX_POSTS'				=> 'Maximum count of posts per user',
+	'FORUM_MAX_POSTS_SHORT'			=> 'Post limit',
+	'FORUM_MAX_TOPICS'				=> 'Maximum count of topics per user',
+	'FORUM_MAX_TOPICS_SHORT'		=> 'Topic limit',
+	'FORUM_MAX_GROUPS'				=> 'Group limits',
+	'FORUM_MAX_GROUPS_EXPLAIN'		=> 'Group limits override the limits above. Set hours to 0 to disable time limit.',
+	'FORUM_MAX_TOPICS_EXPLAIN'		=> 'Should be lower than the maximum post count unless if it is set to 0',
+	'FORUM_MAX_TOPICS_ERROR'		=> 'The maximum of topic per forums should be lower than the maximum of post per forums',
+	'FORUM_MAX_TP_EXPLAIN'			=> 'Set 0 to disable. Set hours to 0 to disable time limit.',
+	'LIMIT_POSTS_PER_FORUM_TOPICS'	=> 'topics',
+	'LIMIT_POSTS_PER_FORUM_POSTS'	=> 'posts',
+	'LIMIT_POSTS_PER_FORUM_EVERY'	=> 'every',
+	'LIMIT_POSTS_PER_FORUM_HOURS'	=> 'hours',
 ]);

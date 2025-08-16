@@ -4,7 +4,7 @@
  *
  * Limit Posts and Topics per Forum. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -49,7 +49,7 @@ class forum_groups_manager
 	public function get_limits($forum_id, $user_id = 0)
 	{
 		$sql_ary = [
-			'SELECT'	=> 'g.group_id, g.group_name, lpfg.forum_id, lpfg.topics, lpfg.posts',
+			'SELECT'	=> 'g.group_id, g.group_name, lpfg.forum_id, lpfg.topics, lpfg.topic_time_limit, lpfg.posts, lpfg.post_time_limit',
 			'FROM'		=> [GROUPS_TABLE => 'g'],
 			'LEFT_JOIN'	=> [
 				[
@@ -87,7 +87,7 @@ class forum_groups_manager
 	 * @param array $topics
 	 * @param array $posts
 	 */
-	public function set_limits($forum_id, $topics, $posts)
+	public function set_limits($forum_id, $topics, $topics_time_limit, $posts, $posts_time_limit)
 	{
 		$this->delete_limits($forum_id);
 
@@ -98,10 +98,12 @@ class forum_groups_manager
 			if ($topics[$group_id] || $posts[$group_id])
 			{
 				$rows[] = [
-					'forum_id'	=> $forum_id,
-					'group_id'	=> $group_id,
-					'topics'	=> $topics[$group_id],
-					'posts'		=> $posts[$group_id],
+					'forum_id'			=> $forum_id,
+					'group_id'			=> $group_id,
+					'topics'			=> $topics[$group_id],
+					'topic_time_limit'	=> $topics_time_limit[$group_id],
+					'posts'				=> $posts[$group_id],
+					'post_time_limit'	=> $posts_time_limit[$group_id],
 				];
 			}
 		}
