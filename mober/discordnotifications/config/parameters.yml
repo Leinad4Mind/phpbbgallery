@@ -1,0 +1,2 @@
+parameters:
+    roots.discordnotifications.tables.notifications: '%core.table_prefix%notifications'
