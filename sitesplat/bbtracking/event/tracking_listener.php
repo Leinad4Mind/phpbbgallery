@@ -51,7 +51,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_account_settings($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_ACCOUNT_SETTINGS'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_ACCOUNT_SETTINGS'],
 			'tracking_data'	=> json_encode(array(
 				'username'			=> $event['sql_ary']['username'],
 				'email'				=> $event['sql_ary']['user_email'],
@@ -66,7 +66,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_viewforum($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_VIEWFORUM'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_VIEWFORUM'],
 			'tracking_data'	=> json_encode(array(
 				'forum_id'	=> $event['forum_id'],
 				'start'		=> $this->request->variable('start', 0),
@@ -78,7 +78,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_viewtopic($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_VIEWTOPIC'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_VIEWTOPIC'],
 			'tracking_data'	=> json_encode(array(
 				'forum_id'	=> $event['forum_id'],
 				'topic_id'	=> $event['topic_data']['topic_id'],
@@ -91,7 +91,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_memberlist_viewprofile($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_MEMBERLIST_VIEWPROFILE'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_MEMBERLIST_VIEWPROFILE'],
 			'tracking_data'	=> json_encode(array(
 				'member_id'	=> $event['member']['user_id'],
 			)),
@@ -104,7 +104,7 @@ class tracking_listener implements EventSubscriberInterface
 		if ($event['mode'] == 'edit')
 		{
 			$sql_ary = array(
-				'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_EDIT_POST'],
+				'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_EDIT_POST'],
 				'tracking_data'	=> json_encode(array(
 					'post_id'	=> $event['post_id'],
 				)),
@@ -118,7 +118,7 @@ class tracking_listener implements EventSubscriberInterface
 		if ($event['login']['status'] == LOGIN_SUCCESS && !$event['admin'])
 		{
 			$sql_ary = array(
-				'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_LOGIN'],
+				'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_LOGIN'],
 				'tracking_user'	=> $event['login']['user_row']['user_id'],
 				'tracking_data'	=> '',
 			);
@@ -129,7 +129,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_logout($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_LOGOUT'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_LOGOUT'],
 			'tracking_data'	=> '',
 		);
 		$this->add_tracking_log($sql_ary);
@@ -138,7 +138,7 @@ class tracking_listener implements EventSubscriberInterface
 	public function track_send_pm($event)
 	{
 		$sql_ary = array(
-			'tracking_type'	=> tracking_types::TYPE['TRACKING_TYPE_SEND_PM'],
+			'tracking_type'	=> tracking_types::$type['TRACKING_TYPE_SEND_PM'],
 			'tracking_data'	=> json_encode(array(
 				'recipients'	=> $event['pm_data']['recipients'],
 			)),
