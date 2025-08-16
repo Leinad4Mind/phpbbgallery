@@ -9,6 +9,9 @@
 
 namespace rmcgirr83\editedpostsunread\event;
 
+/**
+* @ignore
+*/
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,16 +23,19 @@ class listener implements EventSubscriberInterface
 	protected $db;
 
 	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	protected $root_path;
 
-	/** @var string PHP extension */
+	/** @var string phpEx */
 	protected $php_ext;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
+	public function __construct(
+		\phpbb\db\driver\driver_interface $db,
+		$root_path,
+		$php_ext)
 	{
-		$this->db = $db;
-		$this->root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
+		$this->db		= $db;
+		$this->root_path	= $root_path;
+		$this->php_ext		= $php_ext;
 	}
 
 	static public function getSubscribedEvents()
