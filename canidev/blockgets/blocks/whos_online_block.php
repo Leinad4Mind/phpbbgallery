@@ -1,11 +1,10 @@
 <?php
 /*
-* @name whos_online_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class whos_online_block extends base
 {
-	static $icon = 'blg-icon-power-off';
+	static $icon = 'fa-power-off';
 
 	public function init()
 	{
@@ -33,7 +32,7 @@ class whos_online_block extends base
 		$today_users = $this->helper->obtain_today_visits();
 		
 		// Force simple view
-		if($this->data['autofit'])
+		if($this->view_is_small())
 		{
 			$data['advanced'] = false;
 		}
@@ -54,10 +53,10 @@ class whos_online_block extends base
 					$online_userlist	= $user_online_strings['online_userlist'];
 					$total_online_users	= $online_users['total_online'];
 
-					$l_online_record = $this->lang->get('RECORD_ONLINE_USERS', $this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
+					$l_online_record = $this->lang->lang('RECORD_ONLINE_USERS', $this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
 
 					$l_online_time = ($this->config['load_online_time'] == 1) ? 'VIEW_ONLINE_TIME' : 'VIEW_ONLINE_TIMES';
-					$l_online_time = $this->lang->get($l_online_time, $this->config['load_online_time']);
+					$l_online_time = $this->lang->lang($l_online_time, $this->config['load_online_time']);
 				}
 
 				$this->template->assign_vars(array(
@@ -91,12 +90,13 @@ class whos_online_block extends base
 				$sql_ary['WHERE'] .= ' AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $this->user->data['user_id'] . ')';
 			}
 
-			/**
+			/*
 			* @event block.whos_online_groups_query
 			* @var array	sql_ary		The SQL data
+			* @var	array	data		Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('sql_ary');
+			$vars = array('sql_ary', 'data');
 			extract($this->dispatcher->trigger_event('block.whos_online_groups_query', compact($vars)));
 			
 			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -106,10 +106,10 @@ class whos_online_block extends base
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$colour_text	= ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
-				$group_name		= ($row['group_type'] == GROUP_SPECIAL) ? $this->lang->get('G_' . $row['group_name']) : $row['group_name'];
+				$group_name		= ($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name'];
 				$u_group		= $this->helper->url('memberlist', 'mode=group&amp;g=' . $row['group_id']);
 
-				/**
+				/*
 				* @event block.whos_online_groups_row
 				* @var array	row				The original data
 				* @var string	colour_text		The color of the user

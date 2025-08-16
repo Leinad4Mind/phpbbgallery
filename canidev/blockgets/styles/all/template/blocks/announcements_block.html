@@ -1,10 +1,8 @@
-
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#announcements-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#announcements-{BLOCK_ID}').blgAccordion({
 			collapsable: '{S_ANNS_COLLAPSE}'
 		});
 	});
@@ -14,35 +12,39 @@
 <!-- IF .ann_row -->
 <div id="announcements-{BLOCK_ID}">
     
-<!-- BEGIN ann_row -->
-
-	<!-- IF S_SHORT_MODE -->
-    <h5><a href="#{ann_row.ID}">{ann_row.TITLE}</a></h5>
+{% for topicrow in ann_row %}
+	<!-- IF BLOCK_VIEW_SMALL -->
+    <h5><span class="cbb-helper-text">{topicrow.TOPIC_TITLE}</span></h5>
 	<div class="block-postbody">
-		<div style="margin: 5px;">{ann_row.TEXT}</div>
-		<div class="small">{ann_row.TIME}</div>
+		<div class="blg-panel">{topicrow.TEXT}</div>
+		<div class="small">{topicrow.FIRST_POST_TIME}</div>
 		
 		<div>
 			<hr />
-			<a style="float: {S_CONTENT_FLOW_END};" href="{ann_row.U_VIEW_TOPIC}" title="{L_READ_FULL}"><span class="blg-icon blg-icon-eye"></span></a>
-			<strong>{ann_row.POST_AUTHOR_FULL}</strong>
+			<a class="blg-align-right floated" href="{topicrow.U_VIEW_TOPIC}" title="{L_READ_FULL}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a>
+			<strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>
 		</div>
 	
 	<!-- ELSE -->
 	
-    <h5><span class="small" style="float:{S_CONTENT_FLOW_END};">{ann_row.TIME}</span><a href="#{ann_row.ID}">{ann_row.TITLE}</a></h5>
+    <h5>
+    	<span class="blg-announcement-time small">{topicrow.FIRST_POST_TIME}</span>
+
+    	<!-- EVENT topiclist_row_prepend -->
+    	<span class="cbb-helper-text cbb-inline half-size">{topicrow.TOPIC_TITLE}</span>
+   	</h5>
 	<div>
 		<table class="blg-table">
 		<tr>
-			<td colspan="2" class="blg-align-{S_CONTENT_FLOW_BEGIN}">
-				<div class="block-postbody news-content">{ann_row.TEXT}</div>
+			<td colspan="2" class="blg-align-left">
+				<div class="block-postbody news-content">{topicrow.TEXT}</div>
 	              
-			<!-- IF ann_row.S_HAS_ATTACHMENTS -->
+			<!-- IF topicrow.S_HAS_ATTACHMENTS -->
 				<dl class="attachbox">
 					<dt>{L_ATTACHMENTS}</dt>
-					<!-- BEGIN attachment -->
-						<dd>{ann_row.attachment.DISPLAY_ATTACHMENT}</dd>
-					<!-- END attachment -->
+					{% for attachment in topicrow.attachment %}
+						<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
+					{% endfor %}
 				</dl>
 			<!-- ENDIF -->
 	
@@ -50,15 +52,14 @@
 		</tr>
 		<tr><td colspan="2"><hr /></td></tr>
 		<tr>
-			<td class="blg-align-{S_CONTENT_FLOW_BEGIN}">{L_POSTED_BY}: <strong>{ann_row.POST_AUTHOR_FULL}</strong></td>
-			<td class="blg-align-{S_CONTENT_FLOW_END}"><a href="{ann_row.U_VIEW_TOPIC}" title="{L_READ_FULL}"><span class="blg-icon blg-icon-eye"></span></a></td>
+			<td class="blg-align-left">{L_POSTED_BY}{L_COLON} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong></td>
+			<td class="blg-align-right"><a href="{topicrow.U_VIEW_TOPIC}" title="{L_READ_FULL}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></td>
 		</tr>
 		</table>
 	<!-- ENDIF -->
 	</div>
-<!-- END ann_row -->
+{% endfor %}
 </div>
 <!-- ELSE -->
 <div class="blg-align-center">{L_NO_ANNOUNCEMENTS}</div>
 <!-- ENDIF -->
-

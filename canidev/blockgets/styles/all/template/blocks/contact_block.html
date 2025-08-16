@@ -1,9 +1,8 @@
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
 		$('#block-{BLOCK_ID} form').ajaxify({
 			done: function() {
 				$(this).find('[name=subject], [name=message]').val('');
@@ -14,42 +13,28 @@
 </script>
 
 <form method="post" action="{U_BLG_ACTION}">
-	<table class="blg-table contact-table<!-- IF not S_SHORT_MODE --> full-table<!-- ENDIF -->">
-<!-- IF S_SHORT_MODE -->
+
+	<fieldset class="contact-fields<!-- IF BLOCK_VIEW_SMALL --> short-view<!-- ENDIF -->">
 	<!-- BEGIN fieldrow -->
-	<tr>
-		<td>
-			<strong>{fieldrow.TITLE}:</strong><br />
-		<!-- IF fieldrow.TYPE eq 'text' -->
-			<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="blg-inputbox" />
-		<!-- ELSEIF fieldrow.TYPE eq 'textarea' -->
-			<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="6" class="blg-inputbox">{fieldrow.VALUE}</textarea>
-		<!-- ELSEIF fieldrow.TYPE eq 'custom' -->
-			{fieldrow.TEMPLATE}
-		<!-- ENDIF -->
-		</td>
-	</tr>
-	<!-- END fieldrow -->
-<!-- ELSE -->
-		<col width="35%" /><col width="65%" />
-	<!-- BEGIN fieldrow -->
-		<tr>
-			<td class="blg-align-right"<!-- IF fieldrow.TYPE eq 'textarea' --> valign="top"<!-- ENDIF -->>
-				<label for="{fieldrow.KEY}"><strong>{fieldrow.TITLE}:</strong></label>
-			</td>
-			<td>
+		<dl>
+			<dt><strong>{fieldrow.TITLE}{L_COLON}</strong></dt>
+			<dd>
 			<!-- IF fieldrow.TYPE eq 'text' -->
-				<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="blg-inputbox autowidth" />
+				<input type="text" name="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="cbb-inputbox autowidth" />
 			<!-- ELSEIF fieldrow.TYPE eq 'textarea' -->
-				<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="8" class="blg-inputbox">{fieldrow.VALUE}</textarea>
+				<textarea name="{fieldrow.KEY}" cols="30" rows="8" class="cbb-inputbox">{fieldrow.VALUE}</textarea>
 			<!-- ELSEIF fieldrow.TYPE eq 'custom' -->
 				{fieldrow.TEMPLATE}
 			<!-- ENDIF -->
-			</td>
-		</tr>
+			</dd>
+		</dl>
 	<!-- END fieldrow -->
-<!-- ENDIF -->
-	</table>
+
+	<!-- IF CAPTCHA_TEMPLATE -->
+	<!-- DEFINE $CAPTCHA_TAB_INDEX = 4 -->
+		<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+	<!-- ENDIF -->
+	</fieldset>
 
 	<br />
 	<div class="blg-align-center">

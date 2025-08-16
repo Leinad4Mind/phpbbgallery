@@ -1,11 +1,10 @@
 <?php
 /*
-* @name login_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class login_block extends base
 {
-	static $icon = 'blg-icon-user';
+	static $icon = 'fa-user';
 
 	public function init($method = '')
 	{
@@ -41,38 +40,53 @@ class login_block extends base
 				return true;
 			}
 			
-			$this->lang->add('ucp');
+			$this->lang->add_lang('ucp');
 
 			$username	= $this->request->variable('username', '', true);
 			$password	= $this->request->untrimmed_variable('password', '', true);
 			$autologin	= $this->request->variable('autologin', false);
 			$viewonline = !$this->request->is_set_post('viewonline');
-
-			$result = $this->auth->login($username, $password, $autologin, $viewonline);
+			
+			// Check form key on phpBB > 3.2.5
+			if($password && !check_form_key('login'))
+			{
+				$result = array(
+					'status' 	=> false,
+					'error_msg'	=> 'FORM_INVALID',
+				);
+			}
+			else
+			{
+				// If authentication is successful we redirect user to previous page
+				$result = $this->auth->login($username, $password, $autologin, $viewonline);
+			}
 
 			switch($result['status'])
 			{
 				case LOGIN_SUCCESS:
-					$this->helper->trigger_error(array(
-						'message'	=> 'LOGIN_REDIRECT'
-					), false);
+					$this->helper->json->add(array(
+						'message'		=> $this->lang->lang('LOGIN_REDIRECT'),
+						'return_url'	=> $this->helper->current_url(
+							array(
+								'sid' => $this->user->session_id
+							),
+							false
+						)
+					));
 					return true;
 				break;
 
-				case LOGIN_BREAK:
-					$err = $result['error_msg'];
-				break;
-				
 				case LOGIN_ERROR_ATTEMPTS:
-					$this->helper->trigger_error(array(
+					$this->helper->json->add(array(
 						'redirect'	=> $this->helper->url('ucp', 'mode=login')
-					), false);
+					));
+					
 					return true;
 				break;
 
 				case LOGIN_ERROR_PASSWORD_CONVERT:
-					$err = sprintf(
-						$this->lang->get($result['error_msg']),
+					$err = $this->lang->lang(
+						$result['error_msg'],
 						($config['email_enable']) ? '<a href="' . $this->helper->url('ucp', 'mode=sendpassword') . '">' : '',
 						($config['email_enable']) ? '</a>' : '',
 						'<a href="' . phpbb_get_board_contact_link($this->config, $this->phpbb_root_path, $this->php_ext) . '">',
@@ -81,13 +95,14 @@ class login_block extends base
 				break;
 
 				// Username, password, etc...
+				case LOGIN_BREAK:
 				default:
-					$err = $result['error_msg'];
+					$err = $this->lang->lang($result['error_msg']);
 
 					// Assign admin contact to some error messages
 					if ($result['error_msg'] == 'LOGIN_ERROR_USERNAME' || $result['error_msg'] == 'LOGIN_ERROR_PASSWORD')
 					{
-						$err = $this->lang->get($result['error_msg'], '<a href="' . $this->helper->url('memberlist', 'mode=contactadmin') . '">', '</a>');
+						$err = $this->lang->lang($result['error_msg'], '<a href="' . $this->helper->url('memberlist', 'mode=contactadmin') . '">', '</a>');
 					}
 				break;
 			}
@@ -97,19 +112,27 @@ class login_block extends base
 			if($this->user->data['user_id'] != ANONYMOUS && $this->request->variable('sid', '') === $this->user->session_id)
 			{
 				$this->user->session_kill();
-				$this->helper->trigger_error();
+				$this->helper->json->send(array(
+					'redirect'	=> $this->helper->current_url(
+						array(
+							'sid' => $this->user->session_id
+						),
+						false,
+						array('jblgm', 'm')
+					)
+				));
 			}
 			else if($this->user->data['user_id'] != ANONYMOUS)
 			{
-				$err = 'LOGOUT_FAILED';
+				$err = $this->lang->lang('LOGOUT_FAILED');
 			}
 		}
 		
 		if(isset($err))
 		{
-			$this->helper->trigger_error(array(
+			$this->helper->json->send(array(
 				'message'	=> $err,
-				'status'	=> BLG_JSON_ERROR
+				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
 			));
 		}
 	
@@ -124,28 +147,29 @@ class login_block extends base
 			
 			if($this->config['allow_privmsg'] && ($this->auth->acl_get('u_readpm') || $this->auth->acl_get('u_sendpm')))
 			{
-				$pm_title = $this->lang->get('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
+				$pm_title = $this->lang->lang('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
 				$links[$pm_title] = 'U_PRIVATEMSGS';
 			}
 
-			/**
+			/*
 			* @event block.login_links
 			* @var array	links		Array with visible links
+			* @var	array	data		Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('links');
+			$vars = array('links', 'data');
 			extract($this->dispatcher->trigger_event('block.login_links', compact($vars)));
 			
 			foreach($links as $title => $link)
 			{
 				$this->template->assign_block_vars('userlink', array(
-					'TITLE'		=> $this->lang->get($title),
+					'TITLE'		=> $this->lang->lang($title),
 					'URL'		=> (strpos($link, 'U_') === 0) ? $this->template->get_var($link) : $link,
 				));
 			}
 			unset($links);
 			
-			$break	= ($this->data['autofit']) ? '<br />' : '';
+			$break	= ($this->view_is_small()) ? '<br />' : '';
 
 			if(!function_exists('phpbb_get_user_rank'))
 			{
@@ -162,8 +186,8 @@ class login_block extends base
 			));
 			
 			$this->template->assign_vars(array(
-				'S_LAST_VISIT'		=> $this->lang->get('YOU_LAST_VISIT', $break . $this->user->format_date($this->user->data['session_last_visit'])),
-				'S_CURRENT_TIME'	=> $this->lang->get('CURRENT_TIME', $break . $this->user->format_date(time(), false, true)),
+				'S_LAST_VISIT'		=> $this->lang->lang('YOU_LAST_VISIT', $break . $this->user->format_date($this->user->data['session_last_visit'])),
+				'S_CURRENT_TIME'	=> $this->lang->lang('CURRENT_TIME', $break . $this->user->format_date(time(), false, true)),
 		
 				'USER_AVATAR'		=> $user_avatar,
 				'USERNAME_FULL'     => get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']),
@@ -179,6 +203,8 @@ class login_block extends base
 		}
 		else
 		{
+			add_form_key('login', '_BLG_LOGIN');
+
 			$this->template->assign_vars(array(
 				'S_DISPLAY_FULL_LOGIN'	=> $data['full_login'],
 				'S_DISPLAY_REGISTER'	=> $data['show_register'],

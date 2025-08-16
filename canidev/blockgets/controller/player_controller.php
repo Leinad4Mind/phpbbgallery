@@ -1,11 +1,10 @@
 <?php
 /*
-* @name player_controller.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;
@@ -17,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 */
 class player_controller implements main_interface
 {
+	protected $container;
 	protected $db;
 	protected $helper;
 	protected $lang;
@@ -28,19 +28,25 @@ class player_controller implements main_interface
 	*
 	* @param \phpbb\db\driver\driver_interface		$db				DB Object
 	* @param \canidev\blockgets\libraries\helper	$helper			Blockgets helper Object
-	* @param \canidev\blockgets\libraries\language	$language		Blockgets language Object
+	* @param \phpbb\language\language				$language		Language Object
 	* @param \phpbb\request\request 				$request		Request object
 	* @param \phpbb\template\template				$template     	Template object
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\language $language, \phpbb\request\request $request, \phpbb\template\template $template)
+	public function __construct(
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\canidev\blockgets\libraries\helper $helper,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request)
 	{
+		$this->container 	= $container;
 		$this->db			= $db;
 		$this->helper 		= $helper;
 		$this->lang			= $language;
 		$this->request		= $request;
-		$this->template		= $template;
+		$this->template		= \canidev\core\template::get_instance($container);
 	}
 
 	/**
@@ -67,10 +73,12 @@ class player_controller implements main_interface
 		
 		$this->create($data, $block_id, true);
 		
-		page_header('PLAYER');
+		$this->template->assign_var('S_IN_PLAYER', true);
+		
+		page_header($this->lang->lang('PLAYER'));
 
 		$this->template->set_filenames(array(
-			'body'	=> 'blocks/player_block.html',
+			'body'	=> '@canidev_blockgets/blocks/player_block.html',
 		));
 
 		page_footer(true, false, false);
@@ -82,13 +90,13 @@ class player_controller implements main_interface
 	
 	public function create($data, $block_id, $in_window = false)
 	{
-		$this->template->assign_vars(array(
-			'S_IN_WINDOW'	=> $in_window,
-			'S_AUTOPLAY'	=> ($data['autoplay']) ? true : false,
-			'S_PLAYLIST'	=> $data['playlist'],
-			
-			'U_FLASHPLAYER_URL'	=> $this->helper->get_ext_path(true) . 'swf/player.swf',
-			'U_PLAYER_URL'		=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', array('id' => $block_id), false) : '',
+		$this->template->assign_var('S_IN_WINDOW', $in_window);
+
+		$this->template->assign_json_var('PLAYER_OPTIONS', array(
+			'autoplay'		=> ($data['autoplay']) ? true : false,
+			'playlist'		=> $data['playlist'],
+			'in_window'		=> $in_window,
+			'player_url'	=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', array('id' => $block_id), false) : '',
 		));
 		
 		if($in_window)
@@ -128,6 +136,12 @@ class player_controller implements main_interface
 				}
 			}
 		}
+
+		\canidev\core\lib::get_instance($this->container)->set_js_lang(array(
+			'PLAY_MSG',
+			'STOP_MSG',
+			'VOLUME_MSG',
+		));
 	}
 	
 	private function load_playlist($filename)

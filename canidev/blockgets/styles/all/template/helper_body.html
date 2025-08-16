@@ -1,0 +1,37 @@
+<!-- IF HELPER_NAME eq 'editor' -->
+
+	<!-- INCLUDE @canidev_core/editor_body.html -->
+
+	<p class="quick"><a href="#" class="cbb-btn js-dialog-{S_EDITOR_ID}">{L_BLG_FULL_EDITOR}</a></p>
+	
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(['@blockgets/bindEditorTemplate', '{S_EDITOR_ID}']);
+	// ]]>
+	</script>
+	
+<!-- ELSEIF HELPER_NAME eq 'size_formatter' -->
+
+	<div class="cbb-group js-group-{HP_ID}">
+		<input id="{HP_KEY}" type="text" class="cbb-inputbox autowidth" size="5" maxlength="4" name="{HP_NAME}" value="{HP_VALUE}" />
+		<select name="config[{HP_KEY}_type]" class="cbb-inputbox">{HP_OPTIONS}</select>
+	</div>
+
+<!-- ELSEIF HELPER_NAME eq 'easy_input' -->
+
+	<div class="cbb-group js-group-{HP_ID}">
+		<input id="{HP_KEY}" type="text" class="cbb-inputbox" size="{HP_SIZE}" maxlength="255" name="{HP_NAME}" value="{HP_VALUE}" />
+		
+		<!-- IF COLOR_BTN --><button class="js-color cbb-btn" title="{L_SELECT_COLOUR}"<!-- IF IS_COLOR --> value="{HP_VALUE}"<!-- ENDIF --->><span class="color-preview"></span></button><!-- ENDIF -->
+		<!-- IF GALLERY_BTN --><button class="js-gallery cbb-btn" title="{L_OPEN_GALLERY}">{L_GALLERY}</button><!-- ENDIF -->
+	</div>
+	
+	<script type="text/javascript">
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(['@blockgets/bindEasyInput', '{HP_ID}']);
+	// ]]>
+	</script>
+
+<!-- ENDIF -->

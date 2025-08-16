@@ -1,11 +1,10 @@
 <?php
 /*
-* @name birthdays_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class birthdays_block extends base
 {
-	static $icon = 'blg-icon-birthday-cake';
+	static $icon = 'fa-birthday-cake';
 
 	public function init()
 	{
@@ -63,12 +62,13 @@ class birthdays_block extends base
 			'ORDER_BY'	=> 'u.username_clean ASC'
 		);
 
-		/**
+		/*
 		* @event block.birthdays_query
 		* @var array	sql_ary		The SQL data
+		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary');
+		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.birthdays_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -82,81 +82,87 @@ class birthdays_block extends base
 				$byear = $now['year'];
 			}
 
-			$ttime = "{$bday}_$bmonth";
+			$ttime 		= "{$bday}_$bmonth";
+			$age_str 	= '';
+
 			if(!isset($birthday_ary[$ttime]))
 			{
-				$birthday_ary[$ttime] = array();
+				$birthday_ary[$ttime] = array(
+					'day'		=> $bday,
+					'month'		=> $bmonth,
+					'year'		=> $byear,
+					'users'		=> array(),
+				);
 			}
-
-			$btext = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+			
 			if(($age = ($now['year'] - (int)$byear)))
 			{
-				$btext .= " ($age)";
+				$age_str = "($age)";
 			}
 
-			$birthday_ary[$ttime][] = array_merge($row, array(
-				'bday'		=> $bday,
-				'bmonth'	=> $bmonth,
-				'byear'		=> $byear,
+			$birthday_ary[$ttime]['users'][] = array_merge($row, array(
+				'age'			=> $age_str,
+				'username_full'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'])
 			));
 		}
 		$this->db->sql_freeresult($result);
 
 		asort($birthday_ary);
 
-		foreach($birthday_ary as $btime => $users_row)
+		foreach($birthday_ary as $btime => $row)
 		{
-			$users = array();
-			list($bday, $bmon) = explode('_', $btime);
+			$users = $user_str = array();
 
 			$btitle = 'BIRTHDAYS_FOR';
 
-			if($bday == $now['mday'] && $bmon == $now['mon'])
+			if($row['day'] == $now['mday'] && $row['month'] == $now['mon'])
 			{
 				$btitle = 'TODAY_BIRTHDAYS';
 			}
 			
-			if($bday == $tomorrow['mday'] && $bmon == $tomorrow['mon'])
+			if($row['day'] == $tomorrow['mday'] && $row['month'] == $tomorrow['mon'])
 			{
 				$btitle = 'TOMORROW_BIRTHDAYS';
 			}
 
-			list($bday, $bmon) = explode('-', strtr(date('d-F', strtotime("$bmon/$bday")), array_filter($this->lang->get_raw('datetime'), 'is_string')));
+			list($bday, $bmon) = explode('-', strtr(date('d-F', strtotime($row['month'] . '/' . $row['day'])), array_filter($this->lang->lang_raw('datetime'), 'is_string')));
 
-			foreach($users_row as $row)
+			foreach($row['users'] as $user)
 			{
-				$text = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-				if(($age = ($now['year'] - (int)$row['byear'])))
-				{
-					$text .= " ($age)";
-				}
+				$user_ary = array(
+					'AGE'				=> $user['age'],
+					'USERNAME_FULL'		=> $user['username_full'],
+				);
 
-				/**
+				/*
 				* @event block.birthdays_user_row
-				* @var string	text		The output text
-				* @var array	row			The original data
+				* @var array	user_ary		The output data
+				* @var array	user			The original data
 				* @since 2.0.0
 				*/
-				$vars = array('text', 'row');
+				$vars = array('user_ary', 'user');
 				extract($this->dispatcher->trigger_event('block.birthdays_user_row', compact($vars)));
 
-				$users[] = $text;
+				$users[] = $user_ary;
+				$user_str[] = $user_ary['USERNAME_FULL'] . ' ' . $user_ary['AGE'];
 			}
 			
 			$this->template->assign_block_vars('birthday', array(
-				'S_TITLE'	=> $this->lang->get($btitle, $bday, $bmon),
-				'S_USERS'	=> implode(', ', $users),
+				'S_TITLE'		=> $this->lang->lang($btitle, $bday, $bmon),
+				'S_USERS_STR'	=> implode(', ', $user_str),
 			));
+
+			$this->template->assign_block_vars_array('birthday.user', $users);
 		}
 
-		unset($data, $birthday_ary, $users);
+		unset($data, $birthday_ary, $user_ary);
 		return true;
 	}
 
 	public function get_config()
 	{
 		$this->display_vars = array(
-			'next_days'		=> array('lang' => 'NEXT_BIRTHDAYS',	'validate' => 'int:0:30',	'type' => 'text:3:2',	'default' => 0),
+			'next_days'		=> array('lang' => 'NEXT_BIRTHDAYS',	'validate' => 'int:0:30',	'type' => 'number:0:30',	'default' => 0),
 		);
 
 		return true;

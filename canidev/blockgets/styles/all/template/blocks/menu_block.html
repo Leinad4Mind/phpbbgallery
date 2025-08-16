@@ -1,11 +1,11 @@
 
-<ul class="blg-linear-list">
+<ul class="blg-linear-list blg-menu">
 <!-- BEGIN menu_row -->
 	<!-- IF menu_row.IS_CAT -->
 		<li class="menu-cat double-space">{menu_row.S_TEXT}</li>
 	<!-- ELSE -->
 		<li class="double-space subchild">
-			<!-- IF menu_row.S_ICON --><span class="blg-icon {menu_row.S_ICON}"></span><!-- ENDIF -->
+			<!-- IF menu_row.S_ICON --><div class="menu-icon">{menu_row.S_ICON}</div><!-- ENDIF -->
 			<a href="{menu_row.U_LINK}"<!-- IF menu_row.S_WINDOW == "1" --> class="blank"<!-- ENDIF --> title="{menu_row.S_TITLE}">{menu_row.S_TEXT}</a>
 		</li>
 	<!-- ENDIF -->

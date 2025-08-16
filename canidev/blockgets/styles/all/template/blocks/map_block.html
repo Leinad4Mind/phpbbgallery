@@ -1,21 +1,15 @@
 
 <!-- IF LATLNG_HELPER -->
-	<div class="blg-group js-group-{HP_ID}">
-		<input type="text" class="blg-inputbox autowidth" name="latitude" placeholder="{L_LATITUDE}" value="{HP_LAT}" size="12" />
-		<input type="text" class="blg-inputbox autowidth" name="longitude" placeholder="{L_LONGITUDE}" value="{HP_LNG}" size="12" />
-		<button class="js-map-launcher blg-button">{L_MAP}</button>
+	<div class="cbb-group js-group-{HP_ID}">
+		<input type="text" class="cbb-inputbox autowidth" name="latitude" placeholder="{L_LATITUDE}" value="{HP_LAT}" size="12" />
+		<input type="text" class="cbb-inputbox autowidth" name="longitude" placeholder="{L_LONGITUDE}" value="{HP_LNG}" size="12" />
+		<button class="js-map-launcher cbb-btn">{L_MAP}</button>
 	</div>
 	
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-	<!-- IF IS_BLG_AJAX -->
-		jblockgets(function($) {
-	<!-- ELSE -->
-		window._jBlg = window._jBlg || [];
-		window._jBlg.push(function() {
-	<!-- ENDIF -->
-			$.jblockgets.adminMap('{HP_ID}');
-		});
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(['@blockgets/adminMap', '{HP_ID}']);
 	// ]]>
 	</script>
 	
@@ -25,18 +19,18 @@
 			
 			<br />
 			
-			<div class="blg-group">
-				<input type="text" class="blg-inputbox" name="address" placeholder="{L_SEARCH_ADDRESS}" value="" size="40" />
-				<button class="js-map-search blg-button">{L_SEARCH}</button>
+			<div class="cbb-group">
+				<input type="text" class="cbb-inputbox" name="address" placeholder="{L_SEARCH_ADDRESS}" value="" size="40" />
+				<button class="js-map-search cbb-btn">{L_SEARCH}</button>
 			</div>
 		</div>
 	</script>
 <!-- ELSE -->
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-		window._jBlg = window._jBlg || [];
-		window._jBlg.push(function() {
-			$('#map-{BLOCK_ID}').gmap({S_MAP_OPTIONS});
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#map-{BLOCK_ID}').blgMap({S_MAP_OPTIONS});
 		});
 	// ]]>
 	</script>

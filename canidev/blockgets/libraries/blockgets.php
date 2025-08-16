@@ -1,11 +1,10 @@
 <?php
 /*
-* @name blockgets.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\libraries;
@@ -15,8 +14,6 @@ if(!defined('IN_PHPBB'))
 {
 	exit;
 }
-
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class blockgets
 {
@@ -37,7 +34,6 @@ class blockgets
 	protected $dispatcher;
 	protected $db;
 	protected $helper;
-	protected $json;
 	protected $lang;
 	protected $request;
 	protected $template;
@@ -53,17 +49,27 @@ class blockgets
 	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
 	* @param \canidev\blockgets\libraries\helper		$helper				Blockgets helper Object
-	* @param \canidev\blockgets\libraries\json_response	$json_response		Blockgets Json Object
-	* @param \canidev\blockgets\libraries\language		$language			Blockgets language Object
+	* @param \phpbb\language\language					$language			Language Object
 	* @param \phpbb\request\request 					$request			Request object
-	* @param \canidev\blockgets\libraries\template		$template     		Template object
 	* @param \phpbb\user								$user				User object
 	* @param string										$root_path			phpBB root path
 	* @param string										$php_ext			phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, ContainerInterface $container, $phpbb_dispatcher, \phpbb\db\driver\driver_interface $db, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\json_response $json_response, \canidev\blockgets\libraries\language $language, \phpbb\request\request $request, \canidev\blockgets\libraries\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(
+		\phpbb\auth\auth $auth,
+		\phpbb\cache\driver\driver_interface $cache,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\phpbb\db\driver\driver_interface $db,
+		\canidev\blockgets\libraries\helper $helper,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$root_path,
+		$php_ext)
 	{
 		$this->auth				= $auth;
 		$this->cache			= $cache;
@@ -72,10 +78,9 @@ class blockgets
 		$this->dispatcher		= $phpbb_dispatcher;
 		$this->db				= $db;
 		$this->helper			= $helper;
-		$this->json				= $json_response;
 		$this->lang				= $language;
 		$this->request			= $request;
-		$this->template			= $template;
+		$this->template			= \canidev\core\template::get_instance($container);
 		$this->user				= $user;
 
 		$this->phpbb_root_path	= $root_path;
@@ -102,17 +107,10 @@ class blockgets
 		
 		if($this->enabled)
 		{
-			// Set default headers
-			include($this->helper->get_ext_path() . 'libraries/default_headers.' . $this->php_ext);
-			
-			$overall_headers = array_reverse($overall_headers);
-			
-			$this->template->prepend_assets = true;
-			foreach($overall_headers as $header)
-			{
-				call_user_func_array(array($this->template, 'append_asset'), $header);
-			}
-			$this->template->prepend_assets = false;
+			$service_params = array(
+				'debugmode'			=> defined('DEBUG'),
+				'notice_timeout'	=> BLG_NOTICE_TIMEOUT,
+			);
 
 			// Set global data in template
 			if(!defined('IN_ADMIN'))
@@ -127,12 +125,15 @@ class blockgets
 					redirect(append_sid("{$board_url}index.{$this->php_ext}"));
 				}
 
+				$this->load_assets();
+
+				$service_params += array(
+					'avatarsMaxWidth'	=> (int)$this->config['blg_avatar_max_width'],
+					'imagesMaxWidth'	=> (int)$this->config['blg_image_max_width'],
+					'resizeOnPosts'		=> (bool)$this->config['blg_resize_on_post'],
+				);
+
 				$this->template->assign_vars(array(
-					'BLG_VARIANT'		=> str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x',
-					'S_COOKIE_NAME'		=> $this->config['cookie_name'],
-					'S_COOKIE_SETTINGS'	=> addslashes('; path=' . $this->config['cookie_path'] . ((!$this->config['cookie_domain'] || $this->config['cookie_domain'] == 'localhost' || $this->config['cookie_domain'] == '127.0.0.1') ? '' : '; domain=' . $this->config['cookie_domain']) . ((!$this->config['cookie_secure']) ? '' : '; secure')),
-					'T_BLOCKGETS_PATH'	=> $this->helper->get_ext_path(true),
-					
 					'U_BLG_ACTION'		=> $this->helper->current_url(),
 				));
 				
@@ -150,25 +151,23 @@ class blockgets
 							'U_BLG_PAGE_ADD'		=> append_sid($admin_base . '&amp;action=add&amp;page_file=custom', false, true, $this->user->session_id),
 							'U_BLG_PAGE_EDIT'		=> append_sid($admin_base . '&amp;action=edit&amp;' . $page_param, false, true, $this->user->session_id),
 						));
+
+						$service_params['showAdminBar'] = true;
 					}
 				}
 
 				if($this->active)
 				{
+					$service_params += array(
+						'background'	=> ($this->page['page_theme'] == 'background') ? $this->page['background'] : '',
+						'page_id'		=> $this->page['page_id'],
+					);
+
 					$this->template->assign_vars(array(
-						'BLG_DEBUG'				=> (defined('DEBUG') ? true : false),
 						'BLG_ENABLED'			=> true,
-						'BLG_ON_BOARD'			=> ($this->config['blg_on_board'] && !defined('BLG_HOME_PAGE')),
-						'BLG_ALLOW_COLLAPSE'	=> (int)$this->config['blg_collapse_blocks'],
-						'BLG_BACKGROUND'		=> ($this->page['page_theme'] == 'background') ? $this->page['background'] : '',
+						'BLG_ON_BOARD'			=> ($this->config['blg_on_board'] != BOARD_BLOCK_NONE && !defined('BLG_HOME_PAGE')),
 						'BLG_BLOCK_SPACE'		=> $this->page['block_space'],
 						'BLG_LOGO'				=> $this->page['logo'],
-						'BLG_NOTICE_TIMEOUT'	=> (int)BLG_NOTICE_TIMEOUT,
-						'BLG_RSZ_GO'			=> (int)$this->config['blg_resize_enabled'],
-						'BLG_RSZ_ON_POST'		=> (int)$this->config['blg_resize_on_post'],
-						'BLG_RSZ_WIDTH'			=> (int)$this->config['blg_image_max_width'],
-						'BLG_RSZ_AVATAR_WIDTH'	=> ($this->config['blg_avatar_max_width']) ? $this->config['blg_avatar_max_width'] : $this->config['blg_image_max_width'],
-						'BLG_PAGE_ID'			=> $this->page['page_id'],
 
 						'LEFT_COLUMN_WIDTH'		=> $this->page['left_column_width'],
 						'RIGHT_COLUMN_WIDTH'	=> $this->page['right_column_width'],
@@ -204,38 +203,43 @@ class blockgets
 					$body_class .= (!$this->page['footer']) ? ' blg-nofooter' : '';
 
 					$this->template->append_var('BODY_CLASS', $body_class);
-					
+
 					$this->load_blocks();
 				}
-				
+
+				\canidev\core\lib::get_instance($this->container)->set_js_lang(array(
+					'EXPAND_CONTRACT',
+				));
+
 				$this->load_page_links();
 			}
+
+			$this->template->assign_json_var('S_BLG_OPTIONS', $service_params);
 		}
 
-		/**
+		/*
 		* @event blockgets.display
 		* @since 2.0.0
 		*/
 		$this->dispatcher->trigger_event('blockgets.display');
-
-		if($this->enabled || defined('IN_ADMIN'))
-		{
-			$this->template->assets_to_template();
-		}
-		
-		if($this->json->is_requested())
-		{
-			$this->json
-				->add_html($this->template->assign_display('body'))
-				->send();
-		}
 	}
 	
 	public function get_title($page = false)
 	{
 		$page_title = ($page !== false) ? $page['page_title'] : $this->page['page_title'];
 
-		return ($page_title) ? $this->lang->get($page_title) : '';
+		return ($page_title) ? $this->lang->lang($page_title) : '';
+	}
+
+	// Set default headers
+	public function load_assets()
+	{
+		include($this->helper->get_ext_path() . 'libraries/default_headers.' . $this->php_ext);
+		
+		foreach($overall_headers as $header)
+		{
+			call_user_func_array(array($this->template, 'append_asset'), $header);
+		}
 	}
 	
 	// load blocks and put into template
@@ -248,35 +252,6 @@ class blockgets
 
 		$this->forum_block_order	= 0;
 		$this->center_classes		= array('hasleft' => false, 'hasright' => false);
-		
-		if(!defined('BLG_HOME_PAGE'))
-		{
-			$template_dirs = array('ext/canidev/blockgets/styles', 'styles');
-
-			// If is controller of other extension, we need to merge the extension style with the blockgets style, and load all
-			if(strpos($this->page['page_alias'], 'app/') === 0)
-			{
-				$controller = $this->container->get('symfony_request')->attributes->get('_controller');
-				list($service, $method) = explode(':', $controller);
-				
-				$controller_object	= $this->container->get($service);
-				$controller_dir		= explode('\\', get_class($controller_object));
-
-				if(isset($controller_dir[1]))
-				{
-					$controller_style_dir = 'ext/' . $controller_dir[0] . '/' . $controller_dir[1] . '/styles';
-
-					if(is_dir($this->phpbb_root_path . $controller_style_dir))
-					{
-						array_unshift($template_dirs, $controller_style_dir);
-					}
-				}
-				
-				unset($controller_object, $controller_dir);
-			}
-			
-			$this->template->set_style($template_dirs);
-		}
 
 		// Load the blocks
 		$block_rows = array(0 => array());
@@ -324,12 +299,14 @@ class blockgets
 
 					foreach($block_rows[$row['block_id']] as $subrow)
 					{
+						$subrow['sibling_count'] = $item_count - 1;
 						$this->block_to_template($subrow, "{$block_position}_blockrow.blocks");
 					}
 				}
 			}
 			else
 			{
+				$row['sibling_count'] = 0;
 				$this->block_to_template($row, "{$block_position}_blockrow");
 			}
 		}
@@ -364,19 +341,21 @@ class blockgets
 		}
 
 		// Initialize and load the block
-		$block_class = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->template, $this->user, $block_row);
+		$block_class = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->user, $block_row);
 
 		if($block_class->init() !== false)
 		{
+			$block_style = $block_class->get_block_style();
+			
 			// Build all the block classes
-			$dom_classes = array('style-' . $block_class->get_block_style());
+			$dom_classes = array('style-' . $block_style);
 			
 			if($this->config['blg_collapse_blocks'] && $block_row['allow_collapse'])
 			{
 				$dom_classes[] = 'collapsable';
 			}
 			
-			if($block_class->data['autofit'])
+			if($block_class->view_is_small())
 			{
 				$dom_classes[] = 'shorted';
 			}
@@ -384,15 +363,16 @@ class blockgets
 			// Put block into general template to display
 			$template_ary = array(
 				'BLOCK_ID'    		=> $block_row['block_id'],
-				'BLOCK_TITLE'		=> $this->lang->get($block_row['block_title']),
+				'BLOCK_TITLE'		=> $this->lang->lang($block_row['block_title']),
 				'BLOCK_CONTENT'		=> $block_class->display(),
-				'BLOCK_ICON'		=> ($block_row['block_icon']) ? '<span class="blg-icon ' . $block_row['block_icon'] . '"></span>' : '',
+				'BLOCK_ICON'		=> $block_row['block_icon'],
 				'BLOCK_CLASSES'		=> implode(' ', $dom_classes),
+				'BLOCK_STYLE'		=> $block_style,
 				
 				'AFTER_FORUM'		=> (defined('BLG_HOME_PAGE') || ($this->forum_block_order != 0 && $block_row['block_order'] > $this->forum_block_order)) ? true : false,
 			);
 
-			/**
+			/*
 			* @event blockgets.block_row
 			* @var array	template_ary	The output array
 			* @var array	block_row		The original data
@@ -456,8 +436,8 @@ class blockgets
 		{
 			$this->template->assign_block_vars('blglink_' . $this->config['blg_calendar_link'], array(
 				'HREF'		=> $this->helper->route('canidev_blockgets_calendar_controller'),
-				'ICON'		=> 'blg-icon-calendar',
-				'TITLE'		=> $this->lang->get('CALENDAR'),
+				'ICON'		=> 'fa-calendar',
+				'TITLE'		=> $this->lang->lang('CALENDAR'),
 			));
 		}
 		
@@ -468,7 +448,7 @@ class blockgets
 	// Select the page to show if available
 	public function load_page($rtn_result = false)
 	{
-		// Ok, page alreade loaded, return
+		// Ok, page already loaded, return
 		if(is_array($this->page) || $this->page === false)
 		{
 			return ($rtn_result) ? $this->page : false;
@@ -494,7 +474,15 @@ class blockgets
 		}
 		else
 		{
-			$page_alias = (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . str_replace(".{$this->php_ext}", '', $this->user->page['page_name']);
+			if($this->config['blg_on_board'] == BOARD_BLOCK_SAME)
+			{
+				$page_alias = 'index';
+			}
+			else
+			{
+				$page_alias = (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . str_replace(".{$this->php_ext}", '', $this->user->page['page_name']);
+			}
+			
 			$page_type	= PAGE_FORUM;
 			$page_id	= (isset($page_cache['alias'][$page_alias]) ? $page_cache['alias'][$page_alias] : 0);
 		}
@@ -553,7 +541,7 @@ class blockgets
 
 		if(empty($this->page) ||
 			!$this->page['page_enabled'] ||
-			($page_type == PAGE_FORUM && (!$this->config['blg_on_board'] || $this->user->page['page_dir'])) ||
+			($page_type == PAGE_FORUM && ($this->config['blg_on_board'] == BOARD_BLOCK_NONE || $this->user->page['page_dir'])) ||
 			!$this->helper->group_auth($this->page['page_groups']))
 		{
 			$this->active = false;
@@ -604,9 +592,8 @@ class blockgets
 	{
 		$module	= $this->request->variable('jblgm', '');
 	
-		if($module && ($this->request->is_ajax() || $this->request->variable('jblg_ajax', false)))
+		if($module && ($this->request->is_ajax() || $this->request->variable('ajaxModule', '') == 'blockgets'))
 		{
-			$this->template->set_style(array('ext/canidev/blockgets/styles', 'styles'));
 			$this->template->assign_var('BLG_IN_AJAX', true);
 
 			if(is_numeric($module))
@@ -620,6 +607,20 @@ class blockgets
 				$result = $this->db->sql_query($sql);
 				$block_row = $this->db->sql_fetchrow($result);
 				$this->db->sql_freeresult($result);
+
+				// Get number of siblings to correct display
+				$block_row['sibling_count'] = 0;
+
+				if($block_row['parent_id'])
+				{
+					$sql = 'SELECT COUNT(block_id) AS item_count
+						FROM ' . BLG_BLOCK_TABLE . '
+						WHERE parent_id = ' . $block_row['parent_id'] . '
+						AND block_id <> ' . $block_row['block_id'];
+					$result = $this->db->sql_query($sql);
+					$block_row['sibling_count'] = (int)$this->db->sql_fetchfield('item_count');
+					$this->db->sql_freeresult($result);
+				}
 				
 				if($block_row)
 				{
@@ -627,19 +628,19 @@ class blockgets
 
 					if(class_exists($class_name))
 					{
-						page_header('');
+						page_header('', false, 0, 'forum', false);
 
-						$block = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->template, $this->user, $block_row);
+						$block = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->user, $block_row);
 						
 						if(!$block->init($method))
 						{
-							$this->json->send(array(
-								'message'	=> 'BLOCK_LOAD_ERROR',
-								'status'	=> BLG_JSON_ERROR
+							$this->helper->json->send(array(
+								'message'	=> $this->lang->lang('BLOCK_LOAD_ERROR'),
+								'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
 							));
 						}
 						
-						$this->json
+						$this->helper->json
 							->add_html($block->display())
 							->send();
 					}
@@ -651,6 +652,8 @@ class blockgets
 
 				if($this->container->has($module))
 				{
+					page_header('', false, 0, 'forum', false);
+
 					$this->container->get($module)->init();
 				}
 			}

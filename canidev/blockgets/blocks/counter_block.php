@@ -1,11 +1,10 @@
 <?php
 /*
-* @name counter_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class counter_block extends base
 {
-	static $icon = 'blg-icon-line-chart';
+	static $icon = 'fa-line-chart';
 
 	public function init()
 	{
@@ -74,12 +73,13 @@ class counter_block extends base
 			'YEAR'		=> min(($counter_visits / $counter_years), $counter_visits),
 		);
 
-		/**
+		/*
 		* @event block.counter_hits
 		* @var array	hits	The output array
+		* @var	array	data	Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('hits');
+		$vars = array('hits', 'data');
 		extract($this->dispatcher->trigger_event('block.counter_hits', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -88,15 +88,15 @@ class counter_block extends base
 		foreach($hits as $lang => $value)
 		{
 			$this->template->assign_block_vars('counter_hit', array(
-				'S_TITLE'	=> $this->lang->get('HITS_PER_' . $lang),
+				'S_TITLE'	=> $this->lang->lang('HITS_PER_' . $lang),
 				'S_VALUE'	=> sprintf('%.2f', $value),
 			));	
 		}
 
 		$this->template->assign_vars(array(
-			'L_COUNTER'				=> ($data['local_count']) ? $this->lang->get('COUNTER_LOCAL') : $this->lang->get('COUNTER_TOTAL'),
+			'L_COUNTER'				=> ($data['local_count']) ? $this->lang->lang('COUNTER_LOCAL') : $this->lang->lang('COUNTER_TOTAL'),
 			'S_COUNTER'				=> preg_replace('#([0-9])#', '<span class="digit-\\1"></span>', sprintf("%08d", $counter_visits)),
-			'COUNTER_STARTDATE'		=> $this->lang->get('COUNTER_STARTDATE', $this->user->format_date($count_startdate)),
+			'COUNTER_STARTDATE'		=> $this->lang->lang('COUNTER_STARTDATE', $this->user->format_date($count_startdate)),
 		));
 
 		unset($data);
@@ -105,10 +105,18 @@ class counter_block extends base
 
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
-		if($mode == 'submit' && $this->request->is_set_post('counter_reset'))
+		if($this->request->is_set_post('counter_reset'))
 		{
-			$new['start_date']	= time();
-			$new['visit_count']	= 0;
+			if($mode == 'validate')
+			{
+				$submit = true;
+			}
+
+			if($mode == 'submit')
+			{
+				$new['start_date']	= time();
+				$new['visit_count']	= 0;
+			}
 		}
 
 		return true;
@@ -118,7 +126,7 @@ class counter_block extends base
 	{
 		$this->display_vars = array(
 			'local_count'		=> array('lang' => 'COUNTER_LOCAL',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'reset'				=> array('lang' => 'COUNTER_RESET',		'type' => 'custom', 		'method' => 'helper',	'params' => array('counter_rst', 'acp_block_form')),
+			'reset'				=> array('lang' => 'COUNTER_RESET',		'type' => 'custom', 		'method' => 'helper',	'params' => array('counter_rst')),
 			'start_date'		=> false,
 			'visit_count'		=> false,
 		);

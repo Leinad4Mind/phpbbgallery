@@ -1,0 +1,930 @@
+/*
+ * cBB Blockgets (Clocks stylesheet)
+ * Copyright (c) 2020, CaniDev
+ * license https://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+.blg-clock-wrap {
+	max-width: 300px;
+    margin: 5px auto;
+}
+
+.blg-clock,
+.blg-clock * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* Analog clocks
+------------------------------- */
+.blg-clock.analog {
+	padding-top: 100%;
+	position: relative;
+	width: 100%;
+	
+	-webkit-border-radius: 100%;
+	-moz-border-radius: 100%;
+	border-radius: 100%;
+}
+
+.blg-clock.analog .clock-minute,
+.blg-clock.analog .clock-hour,
+.blg-clock.analog .clock-second {
+	bottom: 50%;
+	position: absolute;
+	transform-origin: bottom center;
+	transform: rotate(0deg);
+	z-index: 1;
+}
+
+.blg-clock.analog .clock-second {
+	width: 2px;
+	left: calc(50% - 1px);
+}
+
+.blg-clock.analog .clock-dot {
+	position: absolute;
+	border-radius: 50%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+}
+
+/* Clock: Simple
+------------------------------- */
+.blg-clock.simple {
+	background: #fff;
+	border: 4px solid white;
+	padding-top: calc(100% - 8px);
+	box-shadow: inset 2px 3px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.blg-clock.simple .clock-minute,
+.blg-clock.simple .clock-hour {
+	height: 30%;
+	width: 6px;
+	left: calc(50% - 2px);
+	background: black;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+.blg-clock.simple .clock-minute {
+	height: 40%;
+	width: 4px;
+}
+
+.blg-clock.simple .clock-second {
+	height: 30%;
+	border-radius: 4px;
+	background: #FF4B3E;
+}
+
+.blg-clock.simple .clock-dot {
+	width: 14px;
+	height: 14px;
+	background: white;
+	border: 2px solid #1b1b1b;
+}
+
+/* Clock: Minimalist
+------------------------------- */
+.blg-clock.minimalist .clock-minute,
+.blg-clock.minimalist .clock-hour {
+	height: 30%;
+	width: 2px;
+	left: calc(50% - 1px);
+	background: black;
+	border-radius: 1px;
+}
+
+.blg-clock.minimalist .clock-minute {
+	height: 40%;
+	width: 2px;
+}
+
+.blg-clock.minimalist .clock-second {
+	height: 45%;
+	border-radius: 1px;
+	background: #4b9aaa;
+}
+
+.blg-clock.minimalist .clock-indicator {
+	position: absolute;
+	left: calc(50% - 1px);
+	width: 2px;
+	transform-origin: bottom center;
+	border-radius: 1px;
+	height: 50%;
+	top: 0;
+	border-top: 2px solid #4b9aaa;
+}
+
+.blg-clock.minimalist .clock-indicator:nth-of-type(5n) {
+	border-top: 7px solid #000;
+	width: 3px;
+}
+
+.blg-clock.minimalist .clock-dot {
+	background: #4b9aaa;
+	width: 5px;
+	height: 5px;
+}
+
+/* Clock: Orange
+------------------------------- */
+.blg-clock.orange {
+	margin-top: 20px;
+}
+
+.blg-clock.orange:before {
+	content: '';
+	position: absolute;
+	margin: auto;
+	width: 3%;
+	height: 12%;
+	background: #70bd63;
+	left: 0;
+	right: 0;
+	top: -10%;
+	transform: rotate(10deg);
+}
+
+.blg-clock.orange:after {
+	content: '';
+	position: absolute;
+	margin: auto;
+	width: 8%;
+	height: 16%;
+	background: #70bd63;
+	left: 0;
+	right: 15%;
+	top: -10%;
+	transform: rotate(-40deg);
+	border-radius: 100% 30% 50% 0;
+}
+
+.blg-clock.orange .clock-background {
+	background: #f68657;
+	top: 0;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	
+	border-radius: 50%;
+}
+
+.blg-clock.orange .clock-minute,
+.blg-clock.orange .clock-hour {
+	height: 40%;
+	width: 2px;
+	left: calc(50% - 2px);
+	background: #ab3909;
+	z-index: 2;
+}
+
+.blg-clock.orange .clock-minute {
+	background: #db490c;
+}
+
+.blg-clock.orange .clock-second {
+	height: 45%;
+	border-radius: 4px;
+	background: #f9a987;
+	z-index: 2;
+}
+
+.blg-clock.orange .clock-dot {
+	width: 14px;
+	height: 14px;
+	background: #f46a30;
+	z-index: 3;
+}
+
+/* Clock: Seiko
+------------------------------- */
+.blg-clock.seiko {
+	background: #fff;
+    border: 7px solid #000;
+	padding-top: calc(100% - 10px);
+    box-shadow: inset 40px 40px 90px rgba(0,0,0,.2),
+		inset 10px 10px 30px rgba(0,0,0,.5),
+		20px 20px 30px rgba(0,0,0,.4),
+		40px 40px 60px rgba(0,0,0,.4);
+}
+
+.blg-clock.seiko:before {
+    content: '';
+    left: 0;
+	bottom: 0;
+    border-radius: 50%;
+    position: absolute;
+	right: 0;
+	top: 0;
+    background: #0000;
+    border: 4px solid #fff;
+}
+
+.blg-clock.seiko:after {
+    content: '';
+    border-radius: 50%;
+    background: #0000;
+    position: absolute;
+	bottom: -4px;
+	right: -4px;
+    top: -4px;
+    left: -4px;
+    box-shadow: -3px -3px 9px rgba(255,255,255,.8);
+}
+
+.blg-clock.seiko .clock-minute,
+.blg-clock.seiko .clock-hour {
+	height: 30%;
+	width: 4px;
+	left: calc(50% - 2px);
+	background: #000;
+	z-index: 2;
+}
+
+.blg-clock.seiko .clock-minute {
+	left: calc(50% - 1px);
+	width: 2px;
+}
+
+.blg-clock.seiko .clock-second {
+	width: 1px;
+	height: 42%;
+	border-radius: 4px;
+	background: #000;
+}
+
+.blg-clock.seiko .clock-dot {
+	width: 10px;
+	height: 10px;
+	background: #000;
+}
+
+.blg-clock.seiko .clock-indicator {
+	position: absolute;
+	left: calc(50% - 1px);
+	width: 2px;
+	transform-origin: center center;
+	border-radius: 1px;
+	height: 80%;
+	top: 10%;
+	border-top: 12px solid #000;
+	border-bottom: 12px solid #000;
+}
+
+.blg-clock.seiko .clock-label {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 45px;
+    font-size: 8px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+/* Clock: Numeric
+------------------------------- */
+.blg-clock.numeric {
+	background-color: #faebd7;
+	border: 12px solid #fff8dc;
+	padding-top: calc(100% - 24px);
+}
+
+.blg-clock.numeric .clock-minute,
+.blg-clock.numeric .clock-hour {
+	height: 25%;
+	width: 6px;
+	left: calc(50% - 3px);
+	background: #000;
+	z-index: 2;
+	
+	border-radius: 4px;
+}
+
+.blg-clock.numeric .clock-minute {
+	height: 35%;
+	left: calc(50% - 2px);
+	width: 3px;
+}
+
+.blg-clock.numeric .clock-second {
+	width: 2px;
+	height: 35%;
+	border-radius: 4px;
+	background: #f00;
+	z-index: 2;
+	
+	transition: all 0.06s;
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+}
+
+.blg-clock.numeric .clock-dot {
+	width: 12px;
+	height: 12px;
+	background: #000;
+	z-index: 3;
+}
+
+.blg-clock.numeric ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 3%;
+	left: 3%;
+	height: 94%;
+	width: 94%;
+}
+
+.blg-clock.numeric li {
+	color: #f00;
+	font-size: 10px;
+	position: absolute;
+	left: 50%;
+	margin: 0;
+	width: 20px;
+	height: 100%;
+	transform-origin: center center;
+}
+
+.blg-clock.numeric li:nth-of-type(3n) {
+	color: #000;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.blg-clock.numeric li > div {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+}
+
+.blg-clock.numeric li .bottom-digit {
+	bottom: 0;
+}
+
+/* Clock: Basic
+------------------------------- */
+.blg-clock.basic {
+	background: #fefefc;
+	border: 7px solid #545271;
+	padding-top: calc(100% - 8px);
+	box-shadow: inset 0px 0px 7px 1px rgba(62,47,63,0.45);
+}
+
+.blg-clock.basic .clock-hour {
+	background: #61afff;
+	height: 25%;
+	left: calc(50% - 3px);
+	width: 6px;
+	border-radius: 6px;
+}
+
+
+.blg-clock.basic .clock-minute {
+	height: 35%;
+	width: 4px;
+	left: calc(50% - 2px);
+	background: #61afff;
+}
+
+.blg-clock.basic .clock-second {
+	height: 40%;
+	border-radius: 4px;
+	background: #FF4B3E;
+	width: 4px;
+	left: calc(50% - 2px);
+}
+
+.blg-clock.basic .clock-dot {
+	width: 14px;
+	height: 14px;
+	background: #4d4b63;
+}
+
+.blg-clock.basic .clock-indicator {
+	position: absolute;
+	left: calc(50% - 1px);
+	width: 2px;
+	transform-origin: center center;
+	border-radius: 1px;
+	height: 95%;
+	top: 2%;
+	border-top: 15px solid #bdbdcb;
+	border-bottom: 15px solid #bdbdcb;
+}
+
+.blg-clock.basic .clock-indicator:first-child,
+.blg-clock.basic .clock-indicator:nth-of-type(4n) {
+	width: 4px;
+}
+
+/* Clock: Futurist
+------------------------------- */
+.blg-clock.futurist {
+	background: linear-gradient(to bottom, #673AB7, #9865ed);
+	border: 6px solid #fff;
+	padding-top: calc(100% - 8px);
+	box-shadow: 0 0 20px 0px #5a2ea5;
+}
+
+.blg-clock.futurist .clock-hour,
+.blg-clock.futurist .clock-minute,
+.blg-clock.futurist .clock-second {
+	background: #fff;
+	border-radius: 100% 100% 0 0;
+}
+
+.blg-clock.futurist .clock-hour {
+	height: 27%;
+	opacity: .75;
+	left: calc(50% - 2px);
+	width: 4px;
+}
+
+.blg-clock.futurist .clock-minute {
+	height: 35%;
+	opacity: .5;
+	width: 4px;
+	left: calc(50% - 2px);
+}
+
+.blg-clock.futurist .clock-second {
+	height: 45%;
+	opacity: .25;
+	width: 4px;
+	left: calc(50% - 2px);
+}
+
+.blg-clock.futurist .clock-dot {
+	background: #fff;
+	width: 14px;
+	height: 14px;
+}
+
+/* Clock: Vintage
+------------------------------- */
+.blg-clock.vintage {
+	background: #ececec;
+	border: 12px solid #333;
+	padding-top: calc(100% - 24px);
+}
+
+.blg-clock.vintage .clock-hour,
+.blg-clock.vintage .clock-minute,
+.blg-clock.vintage .clock-second {
+	border-radius: 100% 100% 0 0;
+}
+
+.blg-clock.vintage .clock-minute,
+.blg-clock.vintage .clock-hour {
+	height: 30%;
+	width: 2px;
+	left: calc(50% - 1px);
+	background: #333;
+}
+
+.blg-clock.vintage .clock-minute {
+	background: #666;
+	height: 40%;
+}
+
+.blg-clock.vintage .clock-second {
+	height: 45%;
+	background: #ffd700;
+}
+
+
+.blg-clock.vintage .clock-indicator {
+	position: absolute;
+	left: calc(50% - 1px);
+	width: 2px;
+	transform-origin: center center;
+	border-radius: 1px;
+	height: 99%;
+	top: 1%;
+	border-top: 12px solid #bdbdcb;
+	border-bottom: 12px solid #bdbdcb;
+}
+
+.blg-clock.vintage .clock-indicator:nth-of-type(5n + 1) {
+	border-width: 16px;
+	left: calc(50% - 2px);
+	width: 4px;
+}
+
+.blg-clock.vintage .clock-dot {
+	background: #4b9aaa;
+	width: 5px;
+	height: 5px;
+}
+
+.blg-clock.vintage ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 3%;
+	left: 3%;
+	height: 94%;
+	width: 94%;
+}
+
+.blg-clock.vintage li {
+	color: #333;
+	font-family: 'Poiret One';
+	font-size: 13px;
+	font-weight: 700;
+	position: absolute;
+	left: 50%;
+	margin: 0;
+	width: 20px;
+	height: 80%;
+	top: 50%;
+	transform-origin: center center;
+}
+
+.blg-clock.vintage li > div {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+}
+
+.blg-clock.vintage li .bottom-digit {
+	bottom: 0;
+}
+
+/* Clock: Typographic
+------------------------------- */
+.blg-clock.typographic {
+	position: relative;
+    width: 100%;
+    padding-top: 30%;
+}
+
+.blg-clock.typographic .clock-container {
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	display: flex;
+    flex-flow: column wrap;
+}
+
+.blg-clock.typographic .clock-digit {
+  width: calc(100% / 15);
+  height: 20%;
+  opacity: .3;
+  transition: 0.4s;
+}
+
+.blg-clock.typographic .clock-digit:not(:nth-child(n + 16)):nth-child(n + 11),
+.blg-clock.typographic .clock-digit:not(:nth-child(n + 46)):nth-child(n + 41) {
+  margin-right: 8px;
+}
+
+.blg-clock.typographic .clock-digit:not(:nth-child(n + 31)):nth-child(n + 26) {
+  margin-right: 15px;
+}
+
+.blg-clock.typographic .clock-digit:before {
+  content: attr(data-num);
+  position: relative;
+  display: block;
+  font-size: 8px;
+  width: 100%;
+  height: 100%;
+  line-height: 15px;
+  text-align: center;
+}
+
+.blg-clock.typographic .clock-digit:nth-child(-n + 10):before {
+  content: "0" attr(data-num);
+}
+
+.blg-clock.typographic .clock-digit.active {
+	font-weight: bold;
+	opacity: 1;
+}
+
+.blg-clock.typographic .clock-digit.second {
+	opacity: 1;
+	color: #FF8300;
+}
+
+.blg-clock.typographic .clock-divider {
+	position: absolute;
+	width: 2px;
+	height: 40%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+/* Clock: Cascade
+------------------------------- */
+.blg-clock.cascade {
+	font-family: 'Old Standard TT', serif;
+	font-size: 16px;
+	line-height: 1.8em;
+}
+
+.blg-clock.cascade .digit-group,
+.blg-clock.cascade .digit {
+	display: inline-block;
+    vertical-align: bottom;
+}
+
+.blg-clock.cascade .digit-group {
+	margin-right: 10%;
+	position: relative;
+	width: 26%;
+}
+
+.blg-clock.cascade .digit-group:last-child {
+	margin-right: 0;
+}
+
+.blg-clock.cascade .digit-group:not(:last-child):after {
+    content: ':';
+    font-size: 2.5em;
+    position: absolute;
+    bottom: 0;
+    right: -15px;
+}
+
+.blg-clock.cascade .digit {
+	text-align: center;
+	width: 50%;
+}
+
+.blg-clock.cascade .digit div {
+	opacity: .5;
+	transform: rotate(-90deg);
+	transition: font-size 200ms, transform 350ms, color 150ms;
+}
+
+.blg-clock.cascade .digit div.active {
+	opacity: 1;
+	font-size: 2.5em;
+	transform: rotate(0deg);
+}
+
+/* Clock: Cube
+------------------------------- */
+@font-face {
+  font-family: 'Digital-7';
+  src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/184191/Digital-7.eot?#iefix') format('embedded-opentype'),
+  	url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/184191/Digital-7.woff') format('woff'),
+  	url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/184191/Digital-7.ttf') format('truetype'),
+  	url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/184191/Digital-7.svg#Digital-7') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.blg-clock.cube {
+	padding-top: 100%;
+	position: relative;
+}
+
+.blg-clock.cube .clock-container {
+	width: 55%;
+    height: 55%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+   	-webkit-transform: translate(-50%, -50%) rotateX(-35deg) rotateY(45deg);
+    transform: translate(-50%, -50%) rotateX(-35deg) rotateY(45deg);
+    transition: 2s;
+}
+
+.blg-clock.cube .clock-face {
+	margin: 0;
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    background: #000;
+    text-align: center;
+}
+
+.blg-clock.cube .clock-face.top {
+    background: #222;
+}
+
+.blg-clock.cube .clock-face.front {
+    background: #111;
+}
+
+.blg-clock.cube .clock-face.left {
+    background: #151515;
+}
+
+.blg-clock.cube .clock-face span {
+	font-size: 80px;
+    font-family: 'Digital-7';
+    color: #2982FF;
+    text-shadow: 0px 0px 5px #000;
+    -webkit-animation: cube-color 10s infinite;
+    animation: cube-color 10s infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes cube-color {
+	0%{
+		color: #2982ff;
+		text-shadow: 0px 0px 5px #000;
+	}
+	50%{
+		color: #cc4343;
+		text-shadow:0px 0px 5px #ff0000;
+	}
+}
+@-webkit-keyframes cube-color{
+	0%{
+		color: #2982ff;
+		text-shadow: 0px 0px 5px #000;}
+	50%{
+		color: #cc4343;
+		text-shadow: 0px 0px 5px #ff0000;
+	}
+}
+
+/* Clock: Flip
+------------------------------- */
+.blg-clock.flip {
+	text-align: center;
+	-webkit-perspective: 400px;
+	perspective: 400px;
+}
+
+.blg-clock.flip .clock-digit {
+	display: inline-block;
+	margin: 0 5px;
+	width: 25%;
+}
+
+.blg-clock.flip .clock-card {
+	display: block;
+	font-size: 20px;
+	line-height: 0.95;
+	padding-bottom: 0.92em;
+	position: relative; 
+}
+
+.blg-clock.flip .clock-card-top,
+.blg-clock.flip .clock-card-bottom,
+.blg-clock.flip .clock-card-back::before,
+.blg-clock.flip .clock-card-back::after {
+	background: #222;
+	color: #ccc;
+	display: block;
+	height: 0.92em;
+	padding: 0.45em 0.25em;
+	
+	-webkit-backface-visiblity: hidden;
+	backface-visiblity: hidden;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+
+	-webkit-border-radius: 0.15em 0.15em 0 0;
+	border-radius: 0.15em 0.15em 0 0;
+}
+
+.blg-clock.flip .clock-card-top {
+	height: 0.93em;
+}
+
+.blg-clock.flip .clock-card-bottom {
+	background: #393939;
+	color: #fff;
+	left: 0;
+	overflow: hidden;
+	pointer-events: none;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+
+	-webkit-border-radius: 0 0 0.15em 0.15em; 
+	border-radius: 0 0 0.15em 0.15em; 
+}
+
+.blg-clock.flip .clock-card-bottom::after {
+	display: block;
+	margin-top: -0.92em;
+}
+
+.blg-clock.flip .clock-card-back::before,
+.blg-clock.flip .clock-card-bottom::after {
+	content: attr(data-value);
+}
+
+.blg-clock.flip .clock-card-back {
+	height: 100%;
+	left: 0%;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.blg-clock.flip .clock-card-back::before {
+	position: relative;
+	height: 0.49em;
+	overflow: hidden;
+	padding-bottom: 0;
+	z-index: -1;
+}
+
+.blg-clock.flip .flip-move .clock-card-back::before {
+	-webkit-animation: flip-top 0.3s cubic-bezier(.37,.01,.94,.35);
+	animation: flip-top 0.3s cubic-bezier(.37,.01,.94,.35);
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	transform-origin: center bottom;
+}
+
+.blg-clock.flip .flip-move .clock-card-back .clock-card-bottom {
+	transform-origin: center top;
+	-webkit-animation: flip-bottom 0.6s cubic-bezier(.15,.45,.28,1);
+	animation: flip-bottom 0.6s cubic-bezier(.15,.45,.28,1);
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+@keyframes flip-top {
+	0% {
+		transform: rotateX(0deg);
+		z-index: 2;
+	}
+	0%, 99% {
+		opacity: 0.99;
+	}
+	100% {
+		transform: rotateX(-90deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flip-bottom {
+	0%, 50% {
+		z-index: -1;
+		transform: rotateX(90deg);
+		opacity: 0;
+	}
+	51% {
+		opacity: 0.99;
+	}
+	100% {
+		opacity: 0.99;
+		transform: rotateX(0deg);
+		z-index: 5;
+	}
+}
+
+@-webkit-keyframes flip-top {
+	0% {
+		transform: rotateX(0deg);
+		z-index: 2;
+	}
+	0%, 99% {
+		opacity: 0.99;
+	}
+	100% {
+		transform: rotateX(-90deg);
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes flip-bottom {
+	0%, 50% {
+		z-index: -1;
+		transform: rotateX(90deg);
+		opacity: 0;
+	}
+	51% {
+		opacity: 0.99;
+	}
+	100% {
+		opacity: 0.99;
+		transform: rotateX(0deg);
+		z-index: 5;
+	}
+}

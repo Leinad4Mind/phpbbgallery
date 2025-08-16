@@ -1,11 +1,10 @@
 <?php
 /*
-* @name welcome_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class welcome_block extends base
 {
-	static $icon = 'blg-icon-heart';
+	static $icon = 'fa-heart';
 
 	public function init()
 	{
@@ -44,14 +43,12 @@ class welcome_block extends base
 		switch($mode)
 		{
 			case 'validate':
-				$parser = $this->container->get('canidev.blockgets.parser');
-
-				$parser->decode_message($new['guest_text'], $bbcode['uid']);
-				$parser->decode_message($new['member_text'], $bbcode['uid']);
+				decode_message($new['guest_text'], $bbcode['uid']);
+				decode_message($new['member_text'], $bbcode['uid']);
 			break;
 
 			case 'submit':
-				$this->lang->add('posting');
+				$this->lang->add_lang('posting');
 
 				$bbcode_bitfield = '';
 				
@@ -70,7 +67,7 @@ class welcome_block extends base
 				// Parse guest message
 				if($new['guest_text'])
 				{
-					$message_parser->message = $this->helper->html_truncate($new['guest_text'], 2000, '', true);
+					$message_parser->message = \canidev\core\tools::html_truncate($new['guest_text'], 4000, '', true);
 					$message_parser->parse(true, true, true);
 					$bbcode_bitfield = $bbcode_bitfield | $message_parser->bbcode_bitfield;
 					
@@ -80,7 +77,7 @@ class welcome_block extends base
 				// Parse member message
 				if($new['member_text'])
 				{
-					$message_parser->message = $this->helper->html_truncate($new['member_text'], 2000, '', true);
+					$message_parser->message = \canidev\core\tools::html_truncate($new['member_text'], 4000, '', true);
 					$message_parser->parse(true, true, true);
 					$bbcode_bitfield = $bbcode_bitfield | $message_parser->bbcode_bitfield;
 					

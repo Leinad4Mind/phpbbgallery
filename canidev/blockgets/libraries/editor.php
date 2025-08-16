@@ -1,11 +1,10 @@
 <?php
 /*
-* @name json_response.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\libraries;
@@ -24,12 +23,12 @@ class editor
 
 	protected $auth;
 	protected $config;
+	protected $container;
 	protected $db;
 	protected $helper;
 	protected $helper_acp;
 	protected $lang;
-	protected $json;
-	protected $parser;
+	protected $media;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -42,32 +41,40 @@ class editor
 	*
 	* @param \phpbb\auth\auth 							$auth				Authentication object
 	* @param \phpbb\config\config 						$config				Config Object
+	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
 	* @param \canidev\blockgets\libraries\helper		$helper				Blockgets helper Object
 	* @param \canidev\blockgets\libraries\helper_acp	$helper_acp			Blockgets ACP helper Object
-	* @param \canidev\blockgets\libraries\json_response	$json_response		Blockgets Json Object
-	* @param \canidev\blockgets\libraries\language		$language			Blockgets language Object
-	* @param \canidev\blockgets\libraries\parser		$parser				Blockgets TextParser Object
+	* @param \phpbb\language\language					$language			Language Object
 	* @param \phpbb\request\request 					$request			Request object
-	* @param \canidev\blockgets\libraries\template		$template     		Template object
 	* @param \phpbb\user								$user				User object
 	* @param string										$root_path			phpBB root path
 	* @param string										$php_ext			phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\helper_acp $helper_acp, \canidev\blockgets\libraries\json_response $json_response, \canidev\blockgets\libraries\language $language, \canidev\blockgets\libraries\parser $parser, \phpbb\request\request $request, \canidev\blockgets\libraries\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(
+		\phpbb\auth\auth $auth,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\canidev\blockgets\libraries\helper $helper,
+		\canidev\blockgets\libraries\helper_acp $helper_acp,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$root_path,
+		$php_ext)
 	{
 		$this->auth			= $auth;
 		$this->config		= $config;
+		$this->container 	= $container;
 		$this->db			= $db;
 		$this->helper		= $helper;
 		$this->helper_acp	= $helper_acp;
-		$this->json			= $json_response;
 		$this->lang			= $language;
-		$this->parser		= $parser;
 		$this->request		= $request;
-		$this->template		= $template;
+		$this->template		= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 
 		$this->phpbb_root_path	= $root_path;
@@ -78,41 +85,44 @@ class editor
 	{
 		$error 	= array();
 		$post 	= $this->request->get_super_global(\phpbb\request\request_interface::POST);
+		$editor = \canidev\core\editor::get_instance($this->container);
 		
 		if(isset($post['editor']))
 		{
 			$this->params = array_merge($this->params, $post['editor']);
 		}
 
-		$this->json->add(array(
-			'status'	=> BLG_JSON_SUCCESS,
+		$this->helper->json->add(array(
+			'status'	=> \canidev\core\json_response::JSON_STATUS_SUCCESS,
 			'action'	=> $this->params['action'],
 		));
+
+		$editor->do_actions();
+
+		$this->helper->get_media(true, true);
 		
 		switch($this->params['action'])
 		{
 			case 'create':
-				$this->lang->add('editor', true);
+				$page_title = $this->lang->lang('EDITOR');
 
-				$corrected_path	= $this->helper->get_web_root_path();
-				$web_path		= (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $corrected_path;
-				$page_title 	= $this->lang->get('EDITOR');
+				$editor->add_plugin('/canidev/blockgets/libraries/editor_plugin_html', true);
 
-				$this->template->assign_vars(array(
-					'S_EDITOR_TYPE'			=> $this->params['type'],
-					'T_STYLESHEET_LINK'		=> "{$web_path}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/stylesheet.css?assets_version=' . $this->config['assets_version'],
-				
-					'BLG_RSZ_GO'		=> (int)$this->config['blg_resize_enabled'],
-					'BLG_RSZ_WIDTH'		=> (int)$this->config['blg_image_max_width'],
+				$editor->build(array(
+					'name'					=> 'content',
+					'emoticonContainer'		=> '.smileys .box-content',
+					'type'					=> 'advanced',
+					'toolbarExclude'		=> 'maximize',
+					'requestData'			=> array(
+						'jblgm' 	=> 'editor'
+					)
 				));
 
-				$this->json->add(array(
-					'SCEditorFilename'	=> $this->template->append_asset('js', '@canidev_blockgets/js/jquery.sceditor.min.js', 'common', true),
-					'editor'	=> array(
-						'locale'	=> ($this->lang->is_set('sceditor') ? $this->lang->get_raw('sceditor') : false),
-						'emoticons'	=> $this->generate_smilies(true),
-						'style'		=> $this->template->append_asset('css', '@canidev_blockgets/../theme/square.css', 'common', true),
-					)
+				$editor->smilies_to_template();
+
+				$this->template->assign_vars(array(
+					'S_EDITOR_TYPE'		=> $this->params['type'],
+					'BLG_RSZ_WIDTH'		=> (int)$this->config['blg_image_max_width'],
 				));
 				
 				// load the event content
@@ -124,7 +134,7 @@ class editor
 					
 					if(!$this->auth->acl_get('u_blockgets_events'))
 					{
-						$error[] = $this->lang->get('NOT_AUTHORISED');
+						$error[] = $this->lang->lang('NOT_AUTHORISED');
 						break;
 					}
 
@@ -140,26 +150,31 @@ class editor
 						
 						if(!$post_row)
 						{
-							$error[] = $this->lang->get('EVENT_ERROR');
+							$error[] = $this->lang->lang('EVENT_ERROR');
 							break;
 						}
 
+						$post_row['data_settings'] = unserialize($post_row['data_settings']);
+
 						list($eyear, $emonth, $eday) = explode('-', date('Y-m-d', $post_row['data_time']));
 
-						$this->parser->decode_message($post_row['data_content'], $post_row['bbcode_uid']);
-						
+						decode_message($post_row['data_content'], $post_row['bbcode_uid']);
+
 						$this->template->assign_vars(array(
-							'S_TITLE'	=> $post_row['data_title'],
-							'S_CONTENT'	=> $post_row['data_content'],
+							'S_TITLE'			=> $post_row['data_title'],
+							'S_EDITOR_CONTENT'	=> $post_row['data_content'],
 						));
 						
-						$page_title = $this->lang->get('EDIT_EVENT');
+						$page_title = $this->lang->lang('EDIT_EVENT');
 					}
 					else
 					{
 						// Default data for new events
 						$post_row = array(
-							'data_settings'	=> 'all'
+							'data_settings'	=> array(
+								'groups' 	=> 'all',
+								'color'		=> '',
+							)
 						);
 						
 						if($time)
@@ -173,7 +188,7 @@ class editor
 							$eday	= $now['mday'];
 						}
 						
-						$page_title = $this->lang->get('ADD_EVENT');
+						$page_title = $this->lang->lang('ADD_EVENT');
 					}
 					
 					// Generate date select
@@ -190,7 +205,7 @@ class editor
 					for($i = 1; $i < 13; $i++)
 					{
 						$selected = ($i == $emonth) ? ' selected="selected"' : '';
-						$s_month_options .= "<option value=\"$i\"$selected>" . $this->lang->get(array('datetime', $months[$i - 1])) . '</option>';
+						$s_month_options .= "<option value=\"$i\"$selected>" . $this->lang->lang(array('datetime', $months[$i - 1])) . '</option>';
 					}
 
 					for($i = min($eyear, $now['year']); $i <= $now['year'] + 20; $i++)
@@ -201,11 +216,11 @@ class editor
 
 					$this->template->assign_vars(array(
 						'S_DAY_OPTIONS'			=> $s_day_options,
-						'S_GROUPS_SELECT'		=> $this->helper_acp->groups_select('event_groups', $post_row['data_settings']),
+						'S_COLOR_SELECT'		=> $this->helper_acp->easy_input_template('event_color', $post_row['data_settings']['color'], false, true),
+						'S_GROUPS_SELECT'		=> $this->helper_acp->groups_select('event_groups', $post_row['data_settings']['groups']),
 						'S_MONTH_OPTIONS'		=> $s_month_options,
 						'S_YEAR_OPTIONS'		=> $s_year_options,
 					));
-
 				}
 				
 				$this->template->assign_vars(array(
@@ -218,33 +233,40 @@ class editor
 			case 'save':
 				if($this->params['type'] != 'event')
 				{
-					$error[] = $this->lang->get('ACTION_ERROR');
+					$error[] = $this->lang->lang('ACTION_ERROR');
 					break;
 				}
 
 				$eday		= $this->request->variable('event_day', 0);
 				$emonth		= $this->request->variable('event_month', 0);
 				$eyear		= $this->request->variable('event_year', 0);
-				$title		= utf8_normalize_nfc($this->request->variable('event_title', '', true));
-				$content	= utf8_normalize_nfc($this->request->variable('event_content', '', true));
-				$groups		= ($this->request->is_set_post('all_groups')) ? array('all') : $this->request->variable('event_groups', array(0));
+				$title		= $this->request->variable('event_title', '', true);
+				$content	= $this->request->variable('event_content', '', true);
+				$groups 	= ($this->request->is_set_post('all_groups_event_groups')) ? array('all') : $this->request->variable('event_groups', array(0));
+				$color 		= $this->request->variable('event_color', '');
 				
 				// Check title
 				if(utf8_clean_string($title) === '')
 				{
-					$error[] = $this->lang->get('EMPTY_EVENT_TITLE');
+					$error[] = $this->lang->lang('EMPTY_EVENT_TITLE');
 				}
 				
 				if(!sizeof($error))
 				{
 					$uid = $bitfield = $options = '';
-					$this->parser->generate_text_for_storage($content, $uid, $bitfield, $options, true, true, true);
+
+					$event_time = mktime(0, 0, 0, $emonth, $eday, $eyear);
+
+					generate_text_for_storage($content, $uid, $bitfield, $options, true, false, true, true, false, true, true, 'blockgets');
 
 					$sql_ary = array(
 						'data_title'		=> $title,
 						'data_content'		=> $content,
-						'data_settings'		=> implode(',', $groups),
-						'data_time'			=> mktime(0, 0, 0, $emonth, $eday, $eyear),
+						'data_settings'		=> serialize(array(
+							'groups'	=> implode(',', $groups),
+							'color'		=> $color,
+						)),
+						'data_time'			=> $event_time,
 						'bbcode_uid'		=> $uid,
 						'bbcode_bitfield'	=> $bitfield,
 					);
@@ -271,17 +293,35 @@ class editor
 							AND data_type = ' . BLG_DATA_EVENT;
 						$this->db->sql_query($sql);
 					}
+
+					// Check if are other events in the same day
+					$sql = 'SELECT COUNT(data_id) AS event_num
+						FROM ' . BLG_DATA_TABLE . '
+						WHERE data_type = ' . BLG_DATA_EVENT . '
+						AND data_time = ' . $event_time;
+					$result = $this->db->sql_query($sql);
+					$event_count = (int)$this->db->sql_fetchfield('event_num');
+					$this->db->sql_freeresult($result);
+
+					$formatted_event_text = generate_text_for_display($content, $uid, $bitfield, $options | BLG_FLAG_HTML);
+					$formatted_event_text = \canidev\core\tools::fix_smilies_path($formatted_event_text);
 					
-					$this->json->add(array(
-						'timestamp'		=> $sql_ary['data_time'],
+					$this->helper->json->add(array(
+						'isUnique'		=> ($event_count == 1),
+						'timestamp'		=> $event_time,
 						'eventTitle'	=> $sql_ary['data_title'],
-						'eventContent'	=> $this->parser->generate_text_for_display($content, $uid, $bitfield, $options),
+						'eventColor'	=> $color,
+						'eventContent'	=> $formatted_event_text,
 					));
 					
 					$this->template->assign_vars(array(
-						'S_EVENT_ID'		=> $this->params['id'],
 						'S_EVENT_OUTPUT'	=> true,
 						'S_EVENT_TITLE'		=> $title,
+						'S_EVENT_ATTR'		=> \canidev\core\tools::array_to_attr(array(
+							'class'			=> 'blg-calendar-event',
+							'data-color'	=> $color,
+							'data-event' 	=> $this->params['id'],
+						)),
 					));
 					
 					$this->display();
@@ -291,65 +331,20 @@ class editor
 		
 		if(sizeof($error))
 		{
-			$this->json->send(array(
-				'status'	=> BLG_JSON_ERROR,
+			$this->helper->json->send(array(
+				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR,
 				'message'	=> implode('<br />', $error)
 			));
 		}
 	}
 
-	private function generate_smilies($to_template = false)
-	{
-		$smilies 	= array();
-		$root_path	= (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $this->helper->get_web_root_path();
-
-		$sql = 'SELECT *
-			FROM ' . SMILIES_TABLE . '
-			ORDER BY smiley_order';
-		$result = $this->db->sql_query($sql, 3600);
-		while($row = $this->db->sql_fetchrow($result))
-		{
-			if(empty($smilies[$row['smiley_url']]))
-			{
-				$row['smiley_full_url'] = $root_path . $this->config['smilies_path'] . '/' . $row['smiley_url'];
-				$smilies[$row['smiley_url']] = $row;
-			}
-		}
-		$this->db->sql_freeresult($result);
-
-		// Put the smilies in the template if neccessary
-		if(sizeof($smilies) && $to_template)
-		{
-			foreach($smilies as $row)
-			{
-				$this->template->assign_block_vars('smiley', array(
-					'SMILEY_CODE'	=> $row['code'],
-					'A_SMILEY_CODE'	=> addslashes($row['code']),
-					'SMILEY_IMG'	=> $row['smiley_full_url'],
-					'SMILEY_WIDTH'	=> $row['smiley_width'],
-					'SMILEY_HEIGHT'	=> $row['smiley_height'],
-					'SMILEY_DESC'	=> $row['emotion']
-				));
-			}
-		}
-		
-		// Build the object to parse to the editor
-		$result = array();
-		foreach($smilies as $row)
-		{
-			$result[$row['code']] = $row['smiley_full_url'];
-		}
-		
-		return array('hidden' => $result);
-	}
-
 	private function display()
 	{
 		$this->template->set_filenames(array(
-			'body'	=> 'editor_body.html'
+			'body'	=> '@canidev_blockgets/editor_body.html'
 		));
 		
-		$this->json->send(array(
+		$this->helper->json->send(array(
 			'htmlContent'	=> $this->template->assign_display('body'),
 		));
 	}

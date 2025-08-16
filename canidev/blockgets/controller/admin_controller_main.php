@@ -1,11 +1,10 @@
 <?php
 /*
-* @name admin_controller_main.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;
@@ -29,18 +28,23 @@ class admin_controller_main extends admin_controller_base
 		switch($action)
 		{
 			case 'counter_reset':
-				if($this->helper->confirm_box(true))
+				if(confirm_box(true))
 				{
 					$this->config->set('blg_counter_visit_count', 0);
 					$this->config->set('blg_counter_start_date', time());
 					
-					$this->helper->trigger_error(array('message' => 'BLG_CONFIG_UPDATED'));
+					$this->helper->json->send(array('message' => $this->lang->lang('BLG_CONFIG_UPDATED')));
 				}
 				else
 				{
-					$this->helper->confirm_box(false, $this->lang->get('CONFIRM_OPERATION'), array(
-						'action'	=> $action,
-					));
+					confirm_box(
+						false,
+						$this->lang->lang('CONFIRM_OPERATION'),
+						build_hidden_fields(array(
+							'action'	=> $action,
+						)),
+						'@canidev_core/confirmbox.html'
+					);
 				}
 			break;
 		}
@@ -48,12 +52,30 @@ class admin_controller_main extends admin_controller_base
 		switch($mode)
 		{
 			case 'main':
+				$home_type_options = array(
+					TYPE_DOMAIN_HOME		=> 'TYPE_DOMAIN_HOME',
+					TYPE_FORUM_HOME			=> 'TYPE_FORUM_HOME',
+					TYPE_FORUM_SECONDARY	=> 'TYPE_FORUM_SECONDARY',
+				);
+
+				$board_block_options = array(
+					BOARD_BLOCK_NONE		=> 'BOARD_BLOCK_NONE',
+					BOARD_BLOCK_INDIVIDUAL	=> 'BOARD_BLOCK_INDIVIDUAL',
+					BOARD_BLOCK_SAME		=> 'BOARD_BLOCK_SAME',
+				);
+				
+				// If the domain root is the forum root or rewrite is not available, the domain_home option is not valid
+				if($this->user->page['root_script_path'] == '/' || !$this->config['blg_rewrite'])
+				{
+					unset($home_type_options[TYPE_DOMAIN_HOME]);
+				}
+			
 				$display_vars = array(
 					'title'	=> 'BLG_CONFIG',
 					'vars'	=> array(
 						'legend1'					=> 'BLG_CONFIG_TITLE',
-						'blg_on_board'				=> array('lang' => 'BLG_ON_BOARD',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-						'blg_home_type'				=> array('lang' => 'HOME_TYPE_DISPLAY',		'validate' => 'int',	'type' => 'select',		'function' => array($this, 'home_type_select'),	'params' => array('{CONFIG_VALUE}')),
+						'blg_on_board'				=> array('lang' => 'BLG_ON_BOARD',			'validate' => 'int',	'type' => 'select',		'function' => array($this, 'make_select'),	'params' => array($board_block_options, false, '{CONFIG_VALUE}')),
+						'blg_home_type'				=> array('lang' => 'HOME_TYPE_DISPLAY',		'validate' => 'int',	'type' => 'select',		'function' => array($this, 'make_select'),	'params' => array($home_type_options, false, '{CONFIG_VALUE}')),
 						'blg_collapse_blocks'		=> array('lang' => 'BLG_COLLAPSE',			'validate' => 'bool',	'type' => 'radio:yes_no'),
 						'blg_block_autofit'			=> array('lang' => 'BLG_BLOCK_AUTOFIT',		'validate' => 'bool',	'type' => 'radio:yes_no'),
 						'blg_admin_bar'				=> array('lang' => 'BLG_ADMIN_BAR',			'validate' => 'bool',	'type' => 'radio:yes_no'),
@@ -79,33 +101,33 @@ class admin_controller_main extends admin_controller_base
 			
 			case 'optional':
 				$calendar_options = 'Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday';
-				$calendar_options = strtr($calendar_options, array_filter($this->lang->get_raw('datetime'), 'is_string'));
+				$calendar_options = strtr($calendar_options, array_filter($this->lang->lang_raw('datetime'), 'is_string'));
 				$calendar_options = explode(', ', $calendar_options);
 	
 				$display_vars = array(
 					'title'	=> 'BLG_OPTIONAL',
 					'vars'	=> array(
 						'legend1'		=> 'IMAGE_RESIZE',
-						'blg_resize_enabled'	=> array('lang' => 'IMAGE_RESIZE_ENABLED',	'validate' => 'bool',	'type' => 'radio:yes_no'),
+						'blg_image_max_width'	=> array('lang' => 'IMAGE_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'number'),
+						'blg_avatar_max_width'	=> array('lang' => 'AVATAR_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'number'),
 						'blg_resize_on_post'	=> array('lang' => 'IMAGE_RESIZE_POST',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-						'blg_image_max_width'	=> array('lang' => 'IMAGE_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'text:3:4'),
-						'blg_avatar_max_width'	=> array('lang' => 'AVATAR_RESIZE_WIDTH',	'validate' => 'int',	'type' => 'text:3:4'),
 					
 						'legend2'		=> 'CALENDAR',
 						'blg_calendar_enabled'		=> array('lang' => 'CALENDAR_ENABLED',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-						'blg_calendar_first_day'	=> array('lang' => 'CALENDAR_FIRST_DAY',	'validate' => 'int',	'type' => 'select',	'method' => 'helper',	'params' => array('make_select', $calendar_options, '{CONFIG_VALUE}', false),	'default' => 0),
-						'blg_calendar_link'			=> array('lang' => 'CALENDAR_LINK',			'type' => 'select',		'method' => 'helper',	'params' => array('pagelinks_select', '{CONFIG_VALUE}')),
+						'blg_calendar_birthdays'	=> array('lang' => 'CALENDAR_BIRTHDAYS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
+						'blg_calendar_first_day'	=> array('lang' => 'CALENDAR_FIRST_DAY',	'validate' => 'int',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($calendar_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => 0),
+						'blg_calendar_link'			=> array('lang' => 'CALENDAR_LINK',			'type' => 'custom',		'function' => array($this->helper_acp, 'pagelinks_select')),
 					
 						'legend3'		=> 'BLG_REDIRECTIONS',
-						'blg_redirect_login'	=> array('lang' => 'BLG_REDIRECT_LOGIN',	'type' => 'select',	'function' => array($this, 'redirect_select')),
-						'blg_redirect_logout'	=> array('lang' => 'BLG_REDIRECT_LOGOUT',	'type' => 'select',	'function' => array($this, 'redirect_select')),
-						'blg_redirect_404'		=> array('lang' => 'BLG_REDIRECT_404',		'type' => 'select',	'function' => array($this, 'redirect_select')),
+						'blg_redirect_login'	=> array('lang' => 'BLG_REDIRECT_LOGIN',	'type' => 'custom',	'function' => array($this, 'redirect_select')),
+						'blg_redirect_logout'	=> array('lang' => 'BLG_REDIRECT_LOGOUT',	'type' => 'custom',	'function' => array($this, 'redirect_select')),
+						'blg_redirect_404'		=> array('lang' => 'BLG_REDIRECT_404',		'type' => 'custom',	'function' => array($this, 'redirect_select')),
 					)
 				);
 			break;
 		}
 
-		/**
+		/*
 		* @event blockgets.acp_config_vars
 		* @var array	display_vars		Variables to show
 		* @var string	mode				Current mode
@@ -123,7 +145,7 @@ class admin_controller_main extends admin_controller_base
 		// We validate the complete config if whished
 		validate_config_vars($display_vars['vars'], $cfg_array, $error);
 
-		/**
+		/*
 		* @event blockgets.acp_config_check_vars
 		* @var array	cfg_array		Submitted data
 		* @var array	error			Array with error messages
@@ -162,7 +184,7 @@ class admin_controller_main extends admin_controller_base
 					
 					if(!$this->manage_index_file())
 					{
-						$error[] = $this->lang->get('INDEX_FILE_ERROR');
+						$error[] = $this->lang->lang('INDEX_FILE_ERROR');
 						$this->new_config[$config_name] = $this->config[$config_name];
 					}
 				}
@@ -187,88 +209,27 @@ class admin_controller_main extends admin_controller_base
 		
 			if(!sizeof($error))
 			{
-				$this->helper->trigger_error(array('message' => 'BLG_CONFIG_UPDATED'));
+				$this->helper->json->send(array('message' => $this->lang->lang('BLG_CONFIG_UPDATED')));
 			}
 		}
 		
 		$this->template->assign_vars(array(
-			'L_TITLE'			=> $this->lang->get($this->page_title),
-			'L_TITLE_EXPLAIN'	=> $this->lang->get($display_vars['title'] . '_EXPLAIN'),
+			'L_TITLE'			=> $this->lang->lang($this->page_title),
+			'L_TITLE_EXPLAIN'	=> $this->lang->lang($display_vars['title'] . '_EXPLAIN'),
 		));
 
 		if(sizeof($error))
 		{
-			$this->helper->trigger_error(array(
+			$this->helper->json->send(array(
 				'message'	=> implode('<br />', $error),
-				'status'	=> BLG_JSON_ERROR
+				'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
 			));
 		}
 		
 		$this->display_vars($display_vars['vars']);
 	}
-	
-	function display_vars($display_vars)
-	{
-		global $template, $user;
 
-		foreach($display_vars as $config_key => $vars)
-		{
-			if(!is_array($vars) && strpos($config_key, 'legend') === false)
-			{
-				continue;
-			}
-
-			if(strpos($config_key, 'legend') !== false)
-			{
-				$this->template->assign_block_vars('options', array(
-					'S_LEGEND'		=> true,
-					'LEGEND'		=> $this->lang->get($vars)
-				));
-				continue;
-			}
-			
-			if(!isset($this->new_config[$config_key]) && isset($vars['default']))
-			{
-				$this->new_config[$config_key] = $vars['default'];
-			}
-
-			$type = explode(':', $vars['type']);
-
-			$content = build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars);
-			if(empty($content))
-			{
-				continue;
-			}
-
-			$this->template->assign_block_vars('options', array(
-				'KEY'			=> $config_key,
-				'TITLE'			=> $this->lang->get($vars['lang']),
-				'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->get($vars['lang'] . '_EXPLAIN') : ''),
-				'CONTENT'		=> $content,
-			));
-
-			unset($display_vars[$config_key]);
-		}
-	}
-	
-	public function home_type_select($value)
-	{
-		$options = array(
-			TYPE_DOMAIN_HOME		=> 'TYPE_DOMAIN_HOME',
-			TYPE_FORUM_HOME			=> 'TYPE_FORUM_HOME',
-			TYPE_FORUM_SECONDARY	=> 'TYPE_FORUM_SECONDARY',
-		);
-		
-		// If the domain root is the forum root or rewrite is not available, the domain_home option is not valid
-		if($this->user->page['root_script_path'] == '/' || !$this->config['blg_rewrite'])
-		{
-			unset($options[TYPE_DOMAIN_HOME]);
-		}
-		
-		return $this->helper_acp->make_select($options, $value);
-	}
-	
-	public function redirect_select($value)
+	public function redirect_select($value, $key)
 	{
 		static $redirect_options;
 		
@@ -287,15 +248,14 @@ class admin_controller_main extends admin_controller_base
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
 			{
-				$key	= ($row['page_type'] == PAGE_HOME) ? 'home' : $row['page_id'];
-				$title	= $row['page_title']; 
+				$option_key = ($row['page_type'] == PAGE_HOME) ? 'home' : $row['page_id'];
 
-				$redirect_options[$key] = $this->lang->get($title);
+				$redirect_options[$option_key] = $this->lang->lang($row['page_title']);
 			}
 			$this->db->sql_freeresult($result);
 		}
 		
-		return $this->helper_acp->make_select($redirect_options, $value);
+		return $this->helper_acp->make_select($redirect_options, $key, $value);
 	}
 	
 	private function manage_index_file()

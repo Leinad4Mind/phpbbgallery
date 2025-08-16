@@ -1,11 +1,10 @@
 <?php
 /*
-* @name scroll_message_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class scroll_message_block extends base
 {
-	static $icon = 'blg-icon-film';
+	static $icon = 'fa-film';
 
 	public function init()
 	{
@@ -29,18 +28,16 @@ class scroll_message_block extends base
 			return false;
 		}
 
-		// Delete the array in the template if exists, prevent errors between blocks
-		$this->template->destroy_block_vars('message');
+		$this->template->assign_var('S_MARQUEE_TEXT', $this->generate_text_display($data['marquee_text']));
 
-		$this->template->assign_block_vars('message', array(
-			'DIRECTION' 	=> $data['marquee_direction'],
-			'SPEED' 	    => $data['marquee_speed'],
-			'SCROLLDELAY' 	=> $data['marquee_scrolldelay'], 
-			'ALIGN' 		=> $data['marquee_align'],        
-			'BGCOLOR' 		=> $data['marquee_bgcolor'],  
-			'HEIGHT' 		=> (($data['marquee_direction'] == 'left' || $data['marquee_direction'] == 'right') ? 'auto' : $data['marquee_height']),
-			'PADDING'		=> $data['marquee_padding'],
-			'TEXT'			=> $this->generate_text_display($data['marquee_text']),
+		$this->template->assign_json_var('S_MARQUEE_OPTIONS', array(
+			'direction' 	=> $data['marquee_direction'],
+			'align' 		=> $data['marquee_align'],
+			'height' 		=> (($data['marquee_direction'] == 'left' || $data['marquee_direction'] == 'right') ? 'auto' : $data['marquee_height']),
+			'delay' 		=> $data['marquee_scrolldelay'],
+			'fps' 			=> $data['marquee_speed'],
+			'background' 	=> $data['marquee_bgcolor'],
+			'padding' 		=> $data['marquee_padding']
 		));
 
 		unset($data);
@@ -49,24 +46,22 @@ class scroll_message_block extends base
 
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
-		$parser = $this->container->get('canidev.blockgets.parser');
-
 		switch($mode)
 		{
 			case 'validate':
 				if(!empty($new['marquee_text']))
 				{
 					$bbcode = $this->bbcode('get');
-					$parser->decode_message($new['marquee_text'], $bbcode['uid']);
+					decode_message($new['marquee_text'], $bbcode['uid']);
 				}
 			break;
 
 			case 'submit':
-				$this->lang->add('posting');
+				$this->lang->add_lang('posting');
 
-				$new['marquee_text'] = $this->helper->html_truncate($new['marquee_text'], 2000);
+				$new['marquee_text'] = \canidev\core\tools::html_truncate($new['marquee_text'], 2000);
 
-				$parser->generate_text_for_storage($new['marquee_text'], $uid, $bitfield, $flags);
+				generate_text_for_storage($new['marquee_text'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
 				$this->bbcode('set', $uid, $bitfield);
 			break;
 		}

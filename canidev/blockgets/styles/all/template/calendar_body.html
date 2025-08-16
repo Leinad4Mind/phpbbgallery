@@ -1,18 +1,34 @@
-<!-- IF S_IN_EVENT -->
+<!-- IF IN_EVENT -->
 
 <div title="{S_EVENT_TITLE}">
 	<form>
-	<div class="dialog-text">{S_EVENT_CONTENT}</div>
+	<div class="cbb-dialog-content">{S_EVENT_CONTENT}</div>
 
 <!-- IF CAN_MANAGE_EVENT -->
-	<div class="blg-dialog-buttons">
-		<button class="blg-button" value="submit" data-action="edit">{L_EDIT}</button>
-		<button class="blg-button" value="submit" data-action="delete">{L_DELETE}</button>
+	<div class="cbb-dialog-buttons">
+		<button class="cbb-btn" value="submit" data-action="edit">{L_EDIT}</button>
+		<button class="cbb-btn" value="submit" data-action="delete">{L_DELETE}</button>
 		
 		{S_HIDDEN_FIELDS}
 	</div>
 <!-- ENDIF -->
 	</form>
+</div>
+
+<!-- ELSEIF IN_BIRTHDAY_LIST -->
+
+<div title="{L_BIRTHDAYS}">
+	<div class="cbb-dialog-content">
+		<ul class="blg-linear-list blg-birthday-list">
+		<!-- BEGIN user -->
+			<li class="double-space">
+				<div class="cbb-circular-avatar size-small"><!-- IF user.AVATAR -->{user.AVATAR}<!-- ELSE --><span class="cbb-no-avatar"></span><!-- ENDIF --></div>
+				{user.USERNAME_FULL}
+				<span>({user.AGE})</span>
+			</li>
+		<!-- END user -->
+		</ul>
+	</div>
 </div>
 
 <!-- ELSE -->
@@ -24,14 +40,14 @@
 <!-- BEGIN calendar -->
 	<div class="blg-calendar-actionbar">
 		<div class="calendar-printer blg-align-right floated">
-			<a href="#" onclick="window.print(); return false;" class="blg-button"><span class="blg-icon blg-icon-print"></span> <span>{L_PRINT}</span></a>
+			<a href="#" onclick="window.print(); return false;" class="cbb-btn"><i class="fa fa-print" aria-hidden="true"></i> <span>{L_PRINT}</span></a>
 		</div>
 
-		<a href="{U_TODAY}" class="blg-button">{L_TODAY}</a>
+		<a href="{U_TODAY}" class="cbb-btn">{L_TODAY}</a>
 
-		<div class="blg-group">
-			<a href="{U_PREV}" class="blg-button"><span class="blg-icon blg-icon-chevron-left"></span></a>
-			<a href="{U_NEXT}" class="blg-button"><span class="blg-icon blg-icon-chevron-right"></span></a>
+		<div class="cbb-group">
+			<a href="{U_PREV}" class="cbb-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+			<a href="{U_NEXT}" class="cbb-btn"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
 		</div>
 
 		<div class="blg-calendar-title">{calendar.S_MONTH}</div>
@@ -46,15 +62,18 @@
 		<!-- IF calendar.days.IS_HEADER -->
 			<th><span class="short-day">{calendar.days.S_DAY_SHORT}</span><span class="full-day">{calendar.days.S_DAY}</span></th>
 		<!-- ELSEIF calendar.days.S_DAY -->
-			<td id="day-{calendar.days.S_DATA}"<!-- IF calendar.days.IS_TODAY --> class="today"<!-- ENDIF -->>
-				<div class="blg-calendar-day">
-					<!-- IF S_CAN_CREATE_EVENT --><a href="#" class="blg-event-add blg-align-right floated" title="{L_ADD_EVENT}" data-time="{calendar.days.S_DATA}"><span class="blg-icon blg-icon-plus-circle"></span></a><!-- ENDIF -->
+			<td id="day-{calendar.days.S_DATA}" data-time="{calendar.days.S_DATA}" class="blg-calendar-day<!-- IF calendar.days.IS_TODAY --> today<!-- ENDIF -->">
+				<div class="blg-day-title">
+					<!-- IF S_CAN_CREATE_EVENT --><a href="#" class="blg-event-add blg-align-right floated" title="{L_ADD_EVENT}" data-time="{calendar.days.S_DATA}"><i class="fa fa-plus-circle" aria-hidden="true"></i></a><!-- ENDIF -->
 					<span>{calendar.days.S_DAY}</span>
 				</div>
 			
-				<div class="blg-calendar-content">
+				<div class="blg-day-content">
 				<!-- BEGIN event -->
-					<!-- IF calendar.days.event.S_TYPE eq 'birthday' --><div class="blg-calendar-event blg-event-birthday"><span class="blg-icon blg-icon-birthday-cake"></span> <!-- ELSE --><div data-event="{calendar.days.event.S_ID}" class="blg-calendar-event"><!-- ENDIF -->{calendar.days.event.S_TITLE}</div>
+					<div {calendar.days.event.S_ATTR}>
+						<!-- IF calendar.days.event.S_TYPE eq 'birthday' --><i class="fa fa-birthday-cake" aria-hidden="true"></i> <!-- ENDIF -->
+						{calendar.days.event.S_TITLE}
+					</div>
 				<!-- END event -->
 				</div>
 			</td>
@@ -65,6 +84,15 @@
 	</tr>
 	</table>
 <!-- END calendar -->
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('.blg-calendar').blgCalendar();
+	});
+// ]]>
+</script>
 
 <!-- INCLUDE overall_footer.html -->
 

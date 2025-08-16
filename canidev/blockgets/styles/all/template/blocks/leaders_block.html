@@ -1,22 +1,20 @@
-
 <!-- IF S_VIEW eq 'simple' -->
 	<ul class="blg-linear-list">
 	<!-- BEGIN group_row -->
-		<!-- IF group_row.LEGEND -->
-		<!-- IF not group_row.S_FIRST_ROW --><li>&nbsp;</li><!-- ENDIF -->
-		<li class="menu-cat"><a href="{group_row.U_GROUP}" style="color: #{group_row.GROUP_COLOR};">{group_row.GROUP_NAME}</a></li>
-		<!-- ENDIF -->
-		<li class="userrow"><strong>{group_row.USERNAME_FULL}</strong></li>
+		<li class="menu-cat"><a href="{group_row.U_GROUP}">{group_row.GROUP_NAME}</a></li>
+		
+		<!-- BEGIN user -->
+			<li class="userrow"><strong>{group_row.user.USERNAME_FULL}</strong></li>
+		<!-- END user -->
 	<!-- END group_row -->
 	</ul>
 
 <!-- ELSE IF S_VIEW eq 'accordion' -->
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#leader-groups-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#leader-groups-{BLOCK_ID}').blgAccordion({
 			active		: 0,
 			collapsible : true
 		});
@@ -26,21 +24,14 @@
 
 <div id="leader-groups-{BLOCK_ID}">
 <!-- BEGIN group_row -->
-	<!-- IF group_row.LEGEND -->
-	<!-- IF not group_row.S_FIRST_ROW -->
-		</table>
-	</div>
-	<!-- ENDIF -->
 	<h5><a href="#">{group_row.GROUP_NAME}</a></h5>
 	<div>
-		<table cellspacing="1" width="100%">
-	<!-- ELSE -->
-			<tr><td class="userrow"><strong>{group_row.USERNAME_FULL}</strong></td></tr>
-	<!-- ENDIF -->
-	<!-- IF group_row.S_LAST_ROW -->
+		<table class="blg-table">
+		<!-- BEGIN user -->
+			<tr><td class="userrow"><strong>{group_row.user.USERNAME_FULL}</strong></td></tr>
+		<!-- END user -->
 		</table>
 	</div>
-	<!-- ENDIF -->
 <!-- END group_row -->
 </div>
 <!-- ENDIF -->

@@ -1,5 +1,5 @@
 
-<!-- IF S_SHORT_MODE -->
+<!-- IF BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM -->
 <ul class="blg-linear-list">
 
 <!-- BEGIN forum_row -->
@@ -11,7 +11,7 @@
 
 	<!-- IF not forum_row.S_IS_CAT -->
 	<li class="subchild double-space">
-		<span class="blg-icon {forum_row.FORUM_ICON}"></span>
+		<i class="fa {forum_row.FORUM_ICON} fa-lg"></i>
 		<a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a>
 	</li>
 	<!-- ENDIF -->
@@ -24,7 +24,7 @@
 
 <!-- ELSE -->
 
-<div class="fb-forum-list">
+<div class="blg-forum-list<!-- IF BLOCK_VIEW_MEDIUM --> title-only<!-- ENDIF -->">
 
 <!-- BEGIN forum_row -->
 	<!-- IF (forum_row.S_IS_CAT and not forum_row.S_FIRST_ROW) or forum_row.S_NO_CAT -->
@@ -42,17 +42,19 @@
 			<div class="inner">
 			<ul class="topiclist">
 				<li class="header">
-					<dl class="icon">
+					<dl class="row-item">
 						<dt><!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF --></dt>
+					<!-- IF not BLOCK_VIEW_MEDIUM -->
 						<dd class="fb-stats">&nbsp;</dd>
 						<dd class="fb-lastpost-title lastpost"><span>{L_LAST_POST}</span></dd>
+					<!-- ENDIF -->
 					</dl>
 				</li>
 			</ul>
 			<ul class="topiclist forums">
 		<!-- ELSE -->
 		<div class="blg-widget-header">
-			<div class="fb-lastpost-title">{L_LAST_POST}</div>
+			<!-- IF not BLOCK_VIEW_MEDIUM --><div class="fb-lastpost-title">{L_LAST_POST}</div><!-- ENDIF -->
 			<!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF -->
 		</div>
 		<ul class="topiclist forums">
@@ -61,14 +63,14 @@
 
 	<!-- IF not forum_row.S_IS_CAT -->
 		<li class="row">
-			<dl class="row-item icon {forum_row.FORUM_IMG_STYLE}">
+			<dl class="row-item {forum_row.FORUM_IMG_STYLE}">
 				<dt>
 					<div class="list-inner">
 						<!-- IF forum_row.FORUM_IMAGE --><span class="forum-image">{forum_row.FORUM_IMAGE}</span><!-- ENDIF -->
 						<a href="{forum_row.U_VIEWFORUM}" class="forumtitle">{forum_row.FORUM_NAME}</a><br />
 						{forum_row.FORUM_DESC}
 						<!-- IF forum_row.MODERATORS -->
-							<br /><strong>{forum_row.L_MODERATOR_STR}:</strong> {forum_row.MODERATORS}
+							<br /><strong>{forum_row.L_MODERATOR_STR}{L_COLON}</strong> {forum_row.MODERATORS}
 						<!-- ENDIF -->
 						<!-- IF forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS --><br /><strong>{forum_row.L_SUBFORUM_STR}</strong> {forum_row.SUBFORUMS}<!-- ENDIF -->
 					
@@ -83,14 +85,15 @@
 						<!-- ENDIF -->
 					</div>
 				</dt>
+			<!-- IF not BLOCK_VIEW_MEDIUM -->
 				<!-- IF forum_row.CLICKS -->
-					<dd class="redirect"><span>{L_REDIRECTS}: {forum_row.CLICKS}</span></dd>
+					<dd class="redirect"><span>{L_REDIRECTS}{L_COLON} {forum_row.CLICKS}</span></dd>
 				<!-- ELSEIF not forum_row.S_IS_LINK -->
 					<dd class="fb-stats blg-align-center">{forum_row.TOPICS} {L_TOPICS}<br />{forum_row.POSTS} {L_POSTS}</dd>
 					<dd class="lastpost">
 					<span>
 					<!-- IF forum_row.LAST_POST_TIME -->
-						<a class="blg-text-overflowed" href="{forum_row.U_LAST_POST}" title="{forum_row.LAST_POST_SUBJECT}">{forum_row.LAST_POST_SUBJECT}</a>
+						<a class="cbb-helper-text" href="{forum_row.U_LAST_POST}" title="{forum_row.LAST_POST_SUBJECT}">{forum_row.LAST_POST_SUBJECT}</a>
 						{L_POST_BY_AUTHOR} {forum_row.LAST_POSTER_FULL}
 						<br />{forum_row.LAST_POST_TIME}
 					<!-- ELSE -->
@@ -99,6 +102,7 @@
 					</span>
 					</dd>
 				<!-- ENDIF -->
+			<!-- ENDIF -->
 			</dl>
 		</li>
 	<!-- ENDIF -->

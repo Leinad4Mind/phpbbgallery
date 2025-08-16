@@ -4,15 +4,16 @@
 
 	<!-- IF S_SCROLL_V -->
 
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-		jblockgets(function($) {
-			$('#rss-accordion-{BLOCK_ID}').accordion({
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#rss-accordion-{BLOCK_ID}').blgAccordion({
 				collapsable: '{S_RSS_COLLAPSE}'
 			});
 			
 		<!-- IF not S_RSS_COLLAPSE -->
-			$('#block-{BLOCK_ID}').marquee({
+			$('#block-{BLOCK_ID}').blgMarquee({
 				direction: 'up',
 				height: '{S_BLOCK_HEIGHT}',
 				container: '#rss-accordion-{BLOCK_ID}',
@@ -20,7 +21,7 @@
 			});
 		<!-- ENDIF -->
 		
-			$('#block-{BLOCK_ID} .marquee').adjustImages({ maxwidth: 150 });
+			$('#block-{BLOCK_ID} .marquee').cbbImageGallery({ maxwidth: 150 });
 		});
 	// ]]>
 	</script>
@@ -28,8 +29,8 @@
 	<!-- IF not S_RSS_COLLAPSE --><div class="marquee" style="padding:2px;"><!-- ENDIF -->
 		<div id="rss-accordion-{BLOCK_ID}">
 		<!-- BEGIN rss -->
-			<h5>{rss.S_TITLE}</h5>
-			<div>
+			<h5><span class="cbb-helper-text">{rss.S_TITLE}</span></h5>
+			<div class="block-postbody content">
 			<!-- BEGIN item -->
 				<!-- IF not item.S_FIRST_ROW --><hr /><!-- ENDIF -->
 				<h4><!-- IF rss.item.U_LINK --><a class="blank" href="{rss.item.U_LINK}">{rss.item.S_TITLE}</a><!-- ELSE -->{rss.item.S_TITLE}<!-- ENDIF --></h4>
@@ -42,10 +43,11 @@
 
 	<!-- ELSE -->
 	
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-		jblockgets(function($) {
-			$('#block-{BLOCK_ID}').marquee({
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#block-{BLOCK_ID}').blgMarquee({
 				direction: 'left',
 				fps: 1
 			});
@@ -69,19 +71,14 @@
 <!-- ENDIF -->
 
 <!-- ELSE -->
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-		window._jBlg = window._jBlg || [];
-	
-		window._jBlg.push(function() {
-			$('#rss-block-{BLOCK_ID}').rssloader({
-				action	: '{U_BLG_ACTION}',
-				jblgm	: '{BLOCK_ID}',
-				m		: 'load'
-			});
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#rss-block-{BLOCK_ID}').cbbLoader({S_OPTIONS});
 		});
 	// ]]>
 	</script>
 
-	<div id="rss-block-{BLOCK_ID}"><div class="blg-loading"></div></div>
+	<div id="rss-block-{BLOCK_ID}"></div>
 <!-- ENDIF -->

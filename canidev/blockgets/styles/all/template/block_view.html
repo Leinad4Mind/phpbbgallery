@@ -3,22 +3,48 @@
 	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
 	{% for sub in block.blocks %}
 		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block forabg {{ sub.BLOCK_CLASSES }}">
-			<div class="block_title">
-				{{ sub.BLOCK_ICON }}<span>{{ sub.BLOCK_TITLE }}</span>
-			</div>
-			<div class="block-content">
+		<div class="inner">
+			<ul class="block-title topiclist">
+				<li class="header">
+					<dl>
+						<dt>
+							{% if sub.BLOCK_ICON %}<i class="fa {{ sub.BLOCK_ICON }} fa-lg"></i>{% endif %}
+							<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
+						</dt>
+						<dd></dd>
+					</dl>
+				</li>
+			</ul>
+
+			<ul class="block-content forums">
+			<li>
 				{{ sub.BLOCK_CONTENT }}
-			</div>
+			</li>
+			</ul>
+		</div>
 		</div>
 	{% endfor %}
 	</div>
 {% else %}
 	<div id="block-{{ block.BLOCK_ID }}" class="blg-block forabg {{ block.BLOCK_CLASSES }}">
-		<div class="block_title">
-			{{ block.BLOCK_ICON }}<span>{{ block.BLOCK_TITLE }}</span>
-		</div>
-		<div class="block-content">
+	<div class="inner">
+		<ul class="block-title topiclist">
+			<li class="header">
+				<dl>
+					<dt>
+						{% if block.BLOCK_ICON %}<i class="fa {{ block.BLOCK_ICON }} fa-lg"></i>{% endif %}
+						<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
+					</dt>
+					<dd></dd>
+				</dl>
+			</li>
+		</ul>
+
+		<ul class="block-content forums">
+		<li>
 			{{ block.BLOCK_CONTENT }}
-		</div>
+		</li>
+		</ul>
+	</div>
     </div>
 {% endif %}

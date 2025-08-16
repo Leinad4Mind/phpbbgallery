@@ -1,11 +1,10 @@
 <?php
 /*
-* @name style_select_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class style_select_block extends base
 {
-	static $icon = 'blg-icon-eye';
+	static $icon = 'fa-eye';
 
 	public function init($method = '')
 	{
@@ -33,19 +32,18 @@ class style_select_block extends base
 				// Update user style
 				$sql = 'UPDATE ' . USERS_TABLE . "
 					SET user_style = $style
-					WHERE user_id = " . $this->user->data['user_id'];
+					WHERE user_id = " . (int)$this->user->data['user_id'];
 				$this->db->sql_query($sql);
 			}
 
-			$this->helper->trigger_error(array(
+			$this->helper->json->add(array(
 				'redirect'		=> $this->helper->current_url(array('cstyle' => $style), false)
-			), false);
+			));
 
 			return true;
 		}
 		
-		$style_select	= '<option selected="selected" disabled="disabled">' . $this->lang->get('STYLE_SELECT') . '</option>';
-		$num_styles		= 0;
+		$style_select = '<option disabled>' . $this->lang->lang('STYLE_SELECT') . '</option>';
 
 		$sql = 'SELECT style_id, style_name
 			FROM ' . STYLES_TABLE . '
@@ -54,16 +52,13 @@ class style_select_block extends base
 		$result = $this->db->sql_query($sql, 3600);
 		while($row = $this->db->sql_fetchrow($result))
 		{
-			$selected = ($this->user->style['style_id'] == $row['style_id']) ? ' selected="selected"' : '';
+			$selected = ($this->user->style['style_id'] == $row['style_id']) ? ' selected' : '';
 			$style_select .= '<option value="' . $row['style_id'] . '"' . $selected . '>&nbsp;' . $row['style_name'] . '&nbsp;</option>';
-
-			$num_styles++;
 		}
 		$this->db->sql_freeresult($result);
 
 		$this->template->assign_vars(array(
 			'STYLE_SELECT' 		=> $style_select,
-			'S_TOTAL_STYLES'	=> $num_styles,
 			'CAN_SAVE_STYLE'	=> ($this->user->data['is_registered'] && !$this->config['override_user_style']) ? true : false,
 
 			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields(array(

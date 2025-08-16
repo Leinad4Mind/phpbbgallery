@@ -1,11 +1,10 @@
 <?php
 /*
-* @name cloud_tag_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class cloud_tag_block extends base
 {
-	static $icon = 'blg-icon-tags';
+	static $icon = 'fa-tags';
 
 	public function init()
 	{
@@ -34,18 +33,40 @@ class cloud_tag_block extends base
 		switch($data['list_mode'])
 		{
 			case 'search':
-				$sql = 'SELECT word_text
-					FROM ' . SEARCH_WORDLIST_TABLE . '
-					ORDER BY word_count DESC';
+				// Handle large objects differently for Oracle and MSSQL
+				switch ($this->db->get_sql_layer())
+				{
+					case 'oracle':
+						$sql = 'SELECT search_time, search_keywords
+							FROM ' . SEARCH_RESULTS_TABLE . '
+							WHERE dbms_lob.getlength(search_keywords) > 0
+							ORDER BY search_time DESC';
+					break;
+
+					case 'mssql_odbc':
+					case 'mssqlnative':
+						$sql = 'SELECT search_time, search_keywords
+							FROM ' . SEARCH_RESULTS_TABLE . '
+							WHERE DATALENGTH(search_keywords) > 0
+							ORDER BY search_time DESC';
+					break;
+
+					default:
+						$sql = 'SELECT search_time, search_keywords
+							FROM ' . SEARCH_RESULTS_TABLE . '
+							WHERE search_keywords <> \'\'
+							ORDER BY search_time DESC';
+					break;
+				}
 				$result = $this->db->sql_query_limit($sql, $data['max_words']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
 					$tag_rows[] = array(
-						'S_TAG_NAME'	=> $row['word_text'],
+						'S_TAG_NAME'	=> $row['search_keywords'],
 						'U_TAG_URL'		=> $this->helper->url('search', array(
 							'i' 		=> 'search',
 							'mode'		=> 'search',
-							'keywords'	=> urlencode($row['word_text'])
+							'keywords'	=> urlencode(htmlspecialchars_decode($row['search_keywords']))
 						)),
 					);
 				}
@@ -71,7 +92,6 @@ class cloud_tag_block extends base
 
 			default:
 				return false;
-			break;
 		}
 		$this->db->sql_freeresult($result);
 		
@@ -79,18 +99,21 @@ class cloud_tag_block extends base
 		{
 			$row['S_TAG_SIZE'] = ($data['animation']) ?  rand(10, 16) : rand(8, 22);
 
-			/**
+			/*
 			* @event block.cloud_tag_row
 			* @var array	row		The output array
+			* @var	array	data	Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('row');
+			$vars = array('row', 'data');
 			extract($this->dispatcher->trigger_event('block.cloud_tag_row', compact($vars)));
 
 			$this->template->assign_block_vars('clouds', $row);
 		}
 
-		$this->template->assign_var('S_SHOW_ANIMATION', $data['animation']);
+		$this->template->assign_var('S_SHOW_ANIMATION', ($data['animation'] && sizeof($tag_rows)));
+
+		$this->template->append_asset('js', '@canidev_blockgets/js/tagcanvas.min.js');
 
 		unset($data, $tag_rows);
 		return true;
@@ -102,8 +125,8 @@ class cloud_tag_block extends base
 
 		$this->display_vars = array(
 			'animation'		=> array('lang' => 'CLOUD_ANIMATION',	'validate' => 'bool',		'type' => 'radio:yes_no', 	'default' => 1),
-			'max_words'		=> array('lang' => 'CLOUD_WORDS',		'validate' => 'int:1:50',	'type' => 'text:4:3', 		'default' => 25),
-			'list_mode'		=> array('lang' => 'CLOUD_MODE',		'validate' => 'string',		'type' => 'select', 		'method' => 'helper',	'params' => array('make_select', $modes, '{CONFIG_VALUE}'),  'default' => 'search'),
+			'max_words'		=> array('lang' => 'CLOUD_WORDS',		'validate' => 'int:1:50',	'type' => 'number:1:50', 	'default' => 25),
+			'list_mode'		=> array('lang' => 'CLOUD_MODE',		'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => array('make_select', $modes, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'search'),
 		);
 
 		return true;

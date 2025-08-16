@@ -1,11 +1,10 @@
 <?php
 /*
-* @name lang_locale.php
-* @package phpBB3 cBB Blockgets
-* @version $Id: lang_locale.php, v1.0.4 10/01/2014 $
+* @package cBB Blockgets
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2014 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -15,40 +14,39 @@ if(!defined('IN_PHPBB'))
 }
 
 $blg_lang_locale = array(
-	'ar'	=> array('iso'	=> 'en_US',	'name'	=> 'العربي * Arabic'),
-	'eu'	=> array('iso'	=> 'es_ES',	'name'	=> 'Euskara * Basque'),
-	'be'	=> array('iso'	=> 'en_US',	'name'	=> 'Беларуская * Belarusian'),
-	'bg'	=> array('iso'	=> 'bg_BG',	'name'	=> 'български език * Bulgarian'),
-	'ca'	=> array('iso'	=> 'es_ES',	'name'	=> 'Catalá * Catalan'),
-	'cs'	=> array('iso'	=> 'en_GB',	'name'	=> 'česky * Czech'),
-	'da'	=> array('iso'	=> 'en_GB',	'name'	=> 'Dansk * Danish'),
-	'nl'	=> array('iso'	=> 'en_GB',	'name'	=> 'Nederlands * Dutch'),
-	'et'	=> array('iso'	=> 'en_GB',	'name'	=> 'Eesti keel * Estonian'),
-	'fi'	=> array('iso'	=> 'fi_FI',	'name'	=> 'Suomi * Finnish'),
-	'fr'	=> array('iso'	=> 'fr_FR',	'name'	=> 'Français * French'),
-	'gl'	=> array('iso'	=> 'es_ES',	'name'	=> 'Galego * Galician'),
-	'de'	=> array('iso'	=> 'de_DE',	'name'	=> 'Deutsch * German'),
-	'el'	=> array('iso'	=> 'el_GR',	'name'	=> 'Ελληνικά * Greek'),
-	'iw'	=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית * Hebrew'),
-	'hu'	=> array('iso'	=> 'hu_HU',	'name'	=> 'Magyar * Hungarian'),
-	'id'	=> array('iso'	=> 'id_ID',	'name'	=> 'Bahasa Indonesia * Indonesian'),
-	'it'	=> array('iso'	=> 'it_IT',	'name'	=> 'Italiano * Italian'),
-	'ja'	=> array('iso'	=> 'ja_JP',	'name'	=> '日本語 * Japanese'),
-	'lt'	=> array('iso'	=> 'lt_LT',	'name'	=> 'Lietuvių * Lithuanian'),
-	'zh-TW'	=> array('iso'	=> 'zh_CN',	'name'	=> '正體中文 * Chinese traditional'),
-	'fa'	=> array('iso'	=> 'fa_FA',	'name'	=> 'فارسی * Persian'),
-	'pl'	=> array('iso'	=> 'pl_PL',	'name'	=> 'polski * Polish'),
-	'pt'	=> array('iso'	=> 'pt_PT',	'name'	=> 'Português * Portuguese'),
-	'ro'	=> array('iso'	=> 'ro_RO',	'name'	=> 'română * Romanian'),
-	'ru'	=> array('iso'	=> 'ru_RU',	'name'	=> 'русский язык * Russian'),
-	'sr'	=> array('iso'	=> 'sr_RS',	'name'	=> 'Српска ћирилица * Serbian'),
-	'sk'	=> array('iso'	=> 'sk_SK',	'name'	=> 'Slovenčina * Slovak'),
-	'en'	=> array('iso'	=> 'en_GB',	'name'	=> 'English'),
-	'en_us'	=> array('iso'	=> 'en_US',	'name'	=> 'English US'),
-	'es'	=> array('iso'	=> 'es_ES',	'name'	=> 'Español * Spanish'),
-	'sv'	=> array('iso'	=> 'sv_SE',	'name'	=> 'Svenska * Swedish'),
-	'th'	=> array('iso'	=> 'th_TW',	'name'	=>  'ภาษาไทย * Thai'),
-	'tr'	=> array('iso'	=> 'tr_TR',	'name'	=> 'Türkçe * Turkish'),
-	'uk'	=> array('iso'	=> 'uk_UA',	'name'	=> 'Українська * Ukrainian'),
-	'vi'	=> array('iso'	=> 'vi_VN',	'name'	=> 'Tiếng Việt * Vietnamese'),
+	'ar'	=> array('iso'	=> 'en_US',	'name'	=> 'العربي ',			'name_eng'	=> 'Arabic'),
+	'eu'	=> array('iso'	=> 'es_ES',	'name'	=> 'Euskara',			'name_eng'	=> 'Basque'),
+	'be'	=> array('iso'	=> 'en_US',	'name'	=> 'Беларуская',		'name_eng'	=> 'Belarusian'),
+	'bg'	=> array('iso'	=> 'bg_BG',	'name'	=> 'български език',	'name_eng'	=> 'Bulgarian'),
+	'ca'	=> array('iso'	=> 'es_ES',	'name'	=> 'Catalá',			'name_eng'	=> 'Catalan'),
+	'cs'	=> array('iso'	=> 'en_GB',	'name'	=> 'česky',				'name_eng'	=> 'Czech'),
+	'da'	=> array('iso'	=> 'en_GB',	'name'	=> 'Dansk',				'name_eng'	=> 'Danish'),
+	'nl'	=> array('iso'	=> 'en_GB',	'name'	=> 'Nederlands',		'name_eng'	=> 'Dutch'),
+	'et'	=> array('iso'	=> 'en_GB',	'name'	=> 'Eesti keel',		'name_eng'	=> 'Estonian'),
+	'fi'	=> array('iso'	=> 'fi_FI',	'name'	=> 'Suomi',				'name_eng'	=> 'Finnish'),
+	'fr'	=> array('iso'	=> 'fr_FR',	'name'	=> 'Français',			'name_eng'	=> 'French'),
+	'gl'	=> array('iso'	=> 'es_ES',	'name'	=> 'Galego',			'name_eng'	=> 'Galician'),
+	'de'	=> array('iso'	=> 'de_DE',	'name'	=> 'Deutsch',			'name_eng'	=> 'German'),
+	'el'	=> array('iso'	=> 'el_GR',	'name'	=> 'Ελληνικά',			'name_eng'	=> 'Greek'),
+	'iw'	=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית ',			'name_eng'	=> 'Hebrew'),
+	'hu'	=> array('iso'	=> 'hu_HU',	'name'	=> 'Magyar',			'name_eng'	=> 'Hungarian'),
+	'id'	=> array('iso'	=> 'id_ID',	'name'	=> 'Bahasa Indonesia',	'name_eng'	=> 'Indonesian'),
+	'it'	=> array('iso'	=> 'it_IT',	'name'	=> 'Italiano',			'name_eng'	=> 'Italian'),
+	'ja'	=> array('iso'	=> 'ja_JP',	'name'	=> '日本語',				'name_eng'	=> 'Japanese'),
+	'lt'	=> array('iso'	=> 'lt_LT',	'name'	=> 'Lietuvių',			'name_eng'	=> 'Lithuanian'),
+	'zh-CN'	=> array('iso'	=> 'zh_CN',	'name'	=> '正體中文',			'name_eng'	=> 'Chinese traditional'),
+	'fa'	=> array('iso'	=> 'fa_FA',	'name'	=> 'فارسی ',			'name_eng'	=> 'Persian'),
+	'pl'	=> array('iso'	=> 'pl_PL',	'name'	=> 'polski',			'name_eng'	=> 'Polish'),
+	'pt'	=> array('iso'	=> 'pt_PT',	'name'	=> 'Português',			'name_eng'	=> 'Portuguese'),
+	'ro'	=> array('iso'	=> 'ro_RO',	'name'	=> 'română',			'name_eng'	=> 'Romanian'),
+	'ru'	=> array('iso'	=> 'ru_RU',	'name'	=> 'русский язык',		'name_eng'	=> 'Russian'),
+	'sr'	=> array('iso'	=> 'sr_RS',	'name'	=> 'Српска ћирилица',	'name_eng'	=> 'Serbian'),
+	'sk'	=> array('iso'	=> 'sk_SK',	'name'	=> 'Slovenčina',		'name_eng'	=> 'Slovak'),
+	'en'	=> array('iso'	=> 'en_GB',	'name'	=> 'English',			'name_eng'	=> 'English'),
+	'es'	=> array('iso'	=> 'es_ES',	'name'	=> 'Español',			'name_eng'	=> 'Spanish'),
+	'sv'	=> array('iso'	=> 'sv_SE',	'name'	=> 'Svenska',			'name_eng'	=> 'Swedish'),
+	'th'	=> array('iso'	=> 'th_TW',	'name'	=> 'ภาษาไทย',			'name_eng'	=> 'Thai'),
+	'tr'	=> array('iso'	=> 'tr_TR',	'name'	=> 'Türkçe',			'name_eng'	=> 'Turkish'),
+	'uk'	=> array('iso'	=> 'uk_UA',	'name'	=> 'Українська',		'name_eng'	=> 'Ukrainian'),
+	'vi'	=> array('iso'	=> 'vi_VN',	'name'	=> 'Tiếng Việt',		'name_eng'	=> 'Vietnamese'),
 );

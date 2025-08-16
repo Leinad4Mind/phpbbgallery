@@ -1,11 +1,10 @@
 <?php
 /*
-* @name listener.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\event;
@@ -24,6 +23,7 @@ class listener implements EventSubscriberInterface
 	protected $config;
 	protected $helper;
 	protected $lang;
+	protected $parser;
 	protected $request;
 	protected $user;
 	protected $php_ext;
@@ -35,15 +35,24 @@ class listener implements EventSubscriberInterface
 	*
 	* @param \canidev\blockgets\libraries\blockgets		$blockgets		Blockgets Object
 	* @param \phpbb\config\config 						$config			Config Object
+	* @param ContainerInterface 						$container		Service container interface
 	* @param \canidev\blockgets\libraries\helper		$helper			Blockgets helper Object
-	* @param \canidev\blockgets\libraries\language		$language		Blockgets language Object
+	* @param \phpbb\language\language					$language		Language Object
 	* @param \phpbb\request\request 					$request		Request object
 	* @param \phpbb\user								$user			User object
-	* @param string										$php_ext		phpEx
+	* @param string										$phpEx			phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\canidev\blockgets\libraries\blockgets $blockgets, \phpbb\config\config $config, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\language $language, \phpbb\request\request $request, \phpbb\user $user, $phpEx)
+	public function __construct(
+		\canidev\blockgets\libraries\blockgets $blockgets,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\canidev\blockgets\libraries\helper $helper,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$phpEx)
 	{
 		$this->blockgets	= $blockgets;
 		$this->config		= $config;
@@ -52,31 +61,31 @@ class listener implements EventSubscriberInterface
 		$this->request		= $request;
 		$this->user			= $user;
 		$this->php_ext		= $phpEx;
+		
+		\canidev\core\lib::get_instance($container);
 	}
 
 	static public function getSubscribedEvents()
 	{
-		global $phpbb_container;
-
 		$events = array();
 		
 		if(!defined('IN_INSTALL'))
 		{
 			$events = array(
-				'core.common'					=> 'on_init',
-				'core.page_footer'				=> 'on_footer',
-				'core.adm_page_footer'			=> 'on_footer',
-				'core.user_setup'				=> 'on_setup',
-				'core.permissions'				=> 'add_permissions',
-				'core.validate_config_variable'	=> 'validate_config_variable',
+				'core.common'							=> 'on_init',
+				'core.page_footer'						=> 'on_footer',
+				'core.adm_page_footer'					=> 'on_footer',
+				'core.user_setup'						=> 'on_setup',
+				'core.user_setup_after'					=> array('on_setup_after', 1), // Make sure it's load before other extensions, like cBB Chat
+				'core.permissions'						=> 'add_permissions',
+				'core.validate_config_variable'			=> 'validate_config_variable',
+				'core.modify_text_for_display_after'	=> 'modify_text_for_display',
 				
 				'kernel.exception'				=> 'on_kernel_exception',
 				'core.login_box_redirect'		=> 'on_login',
 				'core.session_kill_after' 		=> 'on_session_kill',
 				'core.functions.redirect' 		=> 'on_redirect',
 			);
-			
-			$phpbb_container->get('canidev.blockgets.compatibility.manager')->get_core_events();
 		}
 
 		return $events;
@@ -84,14 +93,12 @@ class listener implements EventSubscriberInterface
 	
 	public function on_init()
 	{
-		global $phpbb_hook, $table_prefix;
+		global $table_prefix;
 		
 		if((@include $this->helper->get_ext_path() . 'libraries/constants.' . $this->php_ext) == true)
 		{
 			$this->blockgets->enabled = $this->blockgets->active = true;
 		}
-		
-		$phpbb_hook->register('phpbb_user_session_handler', array($this->blockgets, 'parse_ajax'));
 	}
 	
 	public function on_setup($event)
@@ -112,15 +119,23 @@ class listener implements EventSubscriberInterface
 			{
 				$this->config->increment('blg_counter_visit_count', 1, false);
 			}
+
+			global $SID, $_EXTRA_URL;
 			
-			// Do style request for the style_select_block
+			// Do request for the style_select_block
 			if($style = $this->request->variable('cstyle', 0))
 			{
-				global $SID, $_EXTRA_URL;
-
 				$event['style_id'] = $style;
 				$SID .= '&amp;cstyle=' . $style;
 				$_EXTRA_URL = array('cstyle=' . $style);
+			}
+
+			// Do request for the language_select_block
+			if($lang = $this->request->variable('lng', ''))
+			{
+				$event['user_lang_name'] = $lang;
+				$SID .= '&amp;lng=' . $lang;
+				$_EXTRA_URL = array('lng=' . $lang);
 			}
 		}
 
@@ -132,9 +147,29 @@ class listener implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 	
+	public function on_setup_after()
+	{
+		$this->blockgets->parse_ajax();
+	}
+	
 	public function on_footer()
 	{
 		$this->blockgets->display_page();
+	}
+
+	public function modify_text_for_display($event)
+	{
+		$flags = $event['flags'];
+
+		if($flags && ($flags & BLG_FLAG_HTML))
+		{
+			if(!$this->parser)
+			{
+				$this->parser = new \canidev\blockgets\libraries\parser();
+			}
+
+			$event['text'] = $this->parser->parse_bbcode($event['text']);
+		}
 	}
 
 	/**
@@ -162,7 +197,7 @@ class listener implements EventSubscriberInterface
 			case 'url':
 				if(!preg_match('#\b(?:(?:https?|ftp):\/\/)[-a-z0-9+&@\/%?=~_|!:,.;]*[-a-z0-9+&@\/%=~_|]#i', $event['cfg_array'][$config_name]))
 				{
-					$err = $this->lang->get('URL_INVALID');
+					$err = $this->lang->lang('URL_INVALID');
 				}
 			break;
 
@@ -182,7 +217,7 @@ class listener implements EventSubscriberInterface
 				
 				if(!$valid)
 				{
-					$err = $this->lang->get('URL_INVALID');
+					$err = $this->lang->lang('FORMAT_INVALID');
 				}
 			break;
 		}
@@ -191,7 +226,7 @@ class listener implements EventSubscriberInterface
 		if($err)
 		{
 			$error = $event['error'];
-			$error[] = $this->lang->get($event['config_definition']['lang']) . ': ' . $err;
+			$error[] = $this->lang->lang($event['config_definition']['lang']) . ': ' . $err;
 			$event['error'] = $error;
 		}
 	}
@@ -200,7 +235,9 @@ class listener implements EventSubscriberInterface
 	{
 		$exception = $event->getException();
 
-		if(method_exists($exception, 'getStatusCode') && $exception->getStatusCode() == 404 && ($redirect = $this->get_redirect('404')))
+		if(method_exists($exception, 'getStatusCode') && $exception->getStatusCode() == 404 &&
+			!preg_match('#\.(js|css)$#', $this->user->page['page_name']) &&
+			($redirect = $this->get_redirect('404')))
 		{
 			redirect($redirect);
 		}

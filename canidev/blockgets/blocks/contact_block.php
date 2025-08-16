@@ -1,14 +1,15 @@
 <?php
 /*
-* @name contact_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
+
+use \canidev\core\json_response;
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -18,7 +19,7 @@ if(!defined('IN_PHPBB'))
 
 class contact_block extends base
 {
-	static $icon = 'blg-icon-envelope-o';
+	static $icon = 'fa-envelope-o';
 
 	public function init($method = '')
 	{
@@ -46,23 +47,23 @@ class contact_block extends base
 		
 		if($method == 'submit')
 		{
-			$this->lang->add('memberlist');
+			$this->lang->add_lang('memberlist');
 
 			$error = $notice = array();
 
-			$username	= utf8_normalize_nfc($this->request->variable('username', $username, true));
+			$username	= $this->request->variable('username', $username, true);
 			$user_email = $this->request->variable('email', $user_email);
-			$subject	= utf8_normalize_nfc($this->request->variable('subject', $subject, true));
-			$message	= utf8_normalize_nfc($this->request->variable('message', $message, true));
+			$subject	= $this->request->variable('subject', $subject, true);
+			$message	= $this->request->variable('message', $message, true);
 
 			if(!check_form_key('contact_block'))
 			{
-				$error[] = $this->lang->get('FORM_INVALID');
+				$error[] = $this->lang->lang('FORM_INVALID');
 			}
 			
 			if(!$username)
 			{
-				$error[] = $this->lang->get('EMPTY_NAME_EMAIL');
+				$error[] = $this->lang->lang('EMPTY_NAME_EMAIL');
 			}
 			
 			if(preg_match('/^' . get_preg_expression('email') . '$/i', $user_email))
@@ -73,31 +74,32 @@ class contact_block extends base
 
 					if(phpbb_checkdnsrr($domain, 'A') === false && phpbb_checkdnsrr($domain, 'MX') === false)
 					{
-						$error[] = $this->lang->get('EMAIL_INVALID');
+						$error[] = $this->lang->lang('EMAIL_INVALID');
 					}
 				}
 			}
 			else
 			{
-				$error[] = $this->lang->get('EMAIL_EMPTY');
+				$error[] = $this->lang->lang('EMAIL_EMPTY');
 			}
 			
 			if(!$subject)
 			{
-				$error[] = $this->lang->get('EMPTY_SUBJECT_EMAIL');
+				$error[] = $this->lang->lang('EMPTY_SUBJECT_EMAIL');
 			}
 
 			if(!$message)
 			{
-				$error[] = $this->lang->get('EMPTY_MESSAGE_EMAIL');
+				$error[] = $this->lang->lang('EMPTY_MESSAGE_EMAIL');
 			}
 
-			/**
+			/*
 			* @event block.contact_submit_check
 			* @var array	error		Array with error codes
+			* @var	array	data		Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('error');
+			$vars = array('error', 'data');
 			extract($this->dispatcher->trigger_event('block.contact_submit_check', compact($vars)));
 
 			if(!sizeof($error))
@@ -108,47 +110,51 @@ class contact_block extends base
 				}
 				
 				$email_lang = ($this->user->data['is_registered']) ? $this->user->data['user_lang'] : $this->config['default_lang'];
+				$email_path = $this->helper->get_ext_path() . "language/$email_lang/email";
+				
+				// If the path no exists, use English (default)
+				if(!file_exists($email_path))
+				{
+					$email_path = $this->helper->get_ext_path() . "language/en/email";
+				}
 
 				$messenger = new \messenger(false);
 
-				$messenger->template('contact_block', $email_lang, $this->helper->get_ext_path() . "language/$email_lang/email");
+				$messenger->template('contact_block', $email_lang, $email_path);
 				$messenger->from($user_email);
 				$messenger->replyto($user_email);
 				$messenger->to($data['email'], $this->config['sitename']);
 				$messenger->subject(htmlspecialchars_decode($subject));
-
-				$messenger->headers('X-AntiAbuse: Board servername - ' . $this->config['server_name']);
-				$messenger->headers('X-AntiAbuse: User_id - ' . $this->user->data['user_id']);
-				$messenger->headers('X-AntiAbuse: Username - ' . $username);
-				$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
+				$messenger->anti_abuse_headers($this->config, $this->user);
 
 				$messenger->assign_vars(array(
 					'FROM_USERNAME'	=> htmlspecialchars_decode($username),
 					'MESSAGE'		=> htmlspecialchars_decode($message))
 				);
 
-				/**
+				/*
 				* @event block.contact_submit
 				* @var object	messenger		Messenger Class
+				* @var	array	data			Block Configuration
 				* @since 2.0.0
 				*/
-				$vars = array('messenger');
+				$vars = array('messenger', 'data');
 				extract($this->dispatcher->trigger_event('block.contact_submit', compact($vars)));
 
 				if($messenger->send(NOTIFY_EMAIL))
 				{
-					$notice[] = $this->lang->get('EMAIL_SENT');
+					$notice[] = $this->lang->lang('EMAIL_SENT');
 				}
 				else
 				{
-					$error[] = $this->lang->get('CONTACT_ERROR');
+					$error[] = $this->lang->lang('AJAX_ERROR_TEXT');
 				}
 			}
 			
-			$this->helper->trigger_error(array(
+			$this->helper->json->add(array(
 				'message'		=> implode('<br />', (sizeof($error) ? $error : $notice)),
-				'status'		=> (sizeof($error) ? BLG_JSON_ERROR : BLG_JSON_SUCCESS),
-			), false);
+				'status'		=> (sizeof($error) ? json_response::JSON_STATUS_ERROR : json_response::JSON_STATUS_SUCCESS),
+			));
 			
 			return true;
 		}
@@ -180,10 +186,10 @@ class contact_block extends base
 			'BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
 		));
 
-		/**
+		/*
 		* @event block.contact_fields
 		* @var array	fields		The fields to display
-		* @var array	data		The block data
+		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
 		$vars = array('fields', 'data');
@@ -193,7 +199,7 @@ class contact_block extends base
 		{
 			$this->template->assign_block_vars('fieldrow', array(
 				'KEY'	=> $key,
-				'TITLE'	=> $this->lang->get($vars['title']),
+				'TITLE'	=> $this->lang->lang($vars['title']),
 				'TYPE'	=> $vars['type'],
 				'VALUE'	=> $vars['value'],
 			));

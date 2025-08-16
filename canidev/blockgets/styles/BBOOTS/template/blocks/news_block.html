@@ -1,27 +1,25 @@
 
-<!-- IF not BLG_IN_AJAX --><div id="news-{BLOCK_ID}"><!-- ENDIF -->
+<div id="news-{BLOCK_ID}">
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-<!-- IF not BLG_IN_AJAX -->
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-<!-- ELSE -->
-	jblockgets(function($) {
-<!-- ENDIF -->
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+
 	<!-- IF S_NEWS_FULL_CONTENT or S_NEWS_COLLAPSE -->
-		$('#news-{BLOCK_ID}').accordion({
+		$('#news-{BLOCK_ID}').blgAccordion({
 			collapsable: '{S_NEWS_COLLAPSE}'
 		});
 	<!-- ENDIF -->
-		
-		var options = {
-			id		: '{BLOCK_ID}',
-			action	: '{U_ACTION}'
-		};
 
-		$('#news-{BLOCK_ID}').blg_pagination(options);
+		$('#news-{BLOCK_ID}').cbbLoader({
+			replace: true,
+			requestData: {
+				jblgm: '{BLOCK_ID}',
+			}
+		});
+
+		this.call('@blockgets/resizeImages', '#news-{BLOCK_ID} .news-content');
 	});
 // ]]>
 </script>
@@ -31,60 +29,72 @@
 <!-- IF not S_NEWS_FULL_CONTENT and not S_NEWS_COLLAPSE -->
 
 	<ul class="blg-linear-list">
-	<!-- BEGIN news_row -->
+	{% for topicrow in news_row %}
 		<li class="double-space">
-			<span class="blg-icon icon-small blg-icon-bullhorn"></span> <a href="{news_row.U_VIEW_TOPIC}"><strong>{news_row.TITLE}</strong></a><br />
-			<span class="blg-icon icon-small blg-icon-sign-out"></span> {L_POSTED_BY}: <strong>{news_row.POST_AUTHOR_FULL}</strong> <!-- IF S_SHORT_MODE --><br /><!-- ELSE -->&bull;<!-- ENDIF --> {news_row.TIME}
+			<div>
+				<i class="fa fa-bullhorn fa-lg" aria-hidden="true"></i>
+				<!-- EVENT topiclist_row_prepend -->
+				<a href="{topicrow.U_VIEW_TOPIC}"><strong>{topicrow.TOPIC_TITLE}</strong></a>
+			</div>
+			<div>
+				{L_POSTED_BY}{L_COLON}
+				<strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>
+				<!-- IF BLOCK_VIEW_SMALL --><br /><!-- ELSE -->&bull;<!-- ENDIF --> {topicrow.FIRST_POST_TIME}
+			</div>
 		</li>
-	<!-- END news_row -->
+	{% endfor %}
 	</ul>
 
 <!-- ELSE -->
     
 	<!-- BEGIN news_row -->
-		<h5>{news_row.TITLE}</h5>
+	{% for topicrow in news_row %}
+		<h5>
+			<!-- EVENT topiclist_row_prepend -->
+			<span>{topicrow.TOPIC_TITLE}</span>
+		</h5>
 		<div>
-		<!-- IF S_SHORT_MODE -->
-			<div>{news_row.TIME}</div>
-			<div>{L_POSTED_BY}: <strong>{news_row.POST_AUTHOR_FULL}</strong></div>
-			<!-- IF news_row.FORUM_NAME and S_NEWS_FULL_CONTENT --><div>{L_FORUM}: <strong><a href="{news_row.U_VIEWFORUM}">{news_row.FORUM_NAME}</a></strong></div><!-- ENDIF -->
+		<!-- IF BLOCK_VIEW_SMALL -->
+			<div>{topicrow.FIRST_POST_TIME}</div>
+			<div>{L_POSTED_BY}{L_COLON} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong></div>
+			<!-- IF topicrow.FORUM_NAME and S_NEWS_FULL_CONTENT --><div>{L_FORUM}{L_COLON} <strong><a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_NAME}</a></strong></div><!-- ENDIF -->
 		
 			<!-- IF S_NEWS_FULL_CONTENT -->
-			<div class="news-content">{news_row.TEXT}</div>
+			<div class="news-content">{topicrow.TEXT}</div>
 			
 			<div>
 				<hr />
-				<a href="{news_row.U_VIEW_COMMENTS}" title="{L_VIEW_COMMENTS}">{L_COMMENTS}: {news_row.REPLIES}</a> <br />
-				<a href="{news_row.U_VIEW_TOPIC}" title="{L_READ_FULL}">{L_TOPIC_VIEWS}: {news_row.TOPIC_VIEWS}</a>
+				<a href="{topicrow.U_VIEW_COMMENTS}" title="{L_VIEW_COMMENTS}">{L_COMMENTS}{L_COLON} {topicrow.REPLIES}</a> <br />
+				<a href="{topicrow.U_VIEW_TOPIC}" title="{L_READ_FULL}">{L_TOPIC_VIEWS}{L_COLON} {topicrow.VIEWS}</a>
 			</div>
 			<!-- ENDIF -->
 		
 		<!-- ELSE -->
-			<table cellspacing="1" width="100%">
+			<table class="blg-table">
 			<tr>
-				<td class="blg-align-{S_CONTENT_FLOW_BEGIN}"><!-- IF news_row.S_HAS_ATTACHMENTS --><span class="blg-icon blg-icon-paperclip"></span> <!-- ENDIF --><!-- IF news_row.S_POLL --><strong>{L_POLL}: </strong><!-- ENDIF --><a href="{news_row.U_VIEW_TOPIC}"><strong>{news_row.TITLE}</strong></a></td>
-				<td class="blg-align-{S_CONTENT_FLOW_END}">{news_row.TIME}</td>
+				<td class="blg-align-left"><!-- IF topicrow.S_HAS_ATTACHMENTS --><i class="fa fa-paperclip fa-lg" aria-hidden="true"></i> <!-- ENDIF --><!-- IF topicrow.S_HAS_POLL --><strong>{L_POLL}{L_COLON} </strong><!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}"><strong>{topicrow.TOPIC_TITLE}</strong></a></td>
+				<td class="blg-align-right">{topicrow.FIRST_POST_TIME}</td>
 			</tr>
 		
 			<tr>
-				<td colspan="2">{L_POSTED_BY}: <strong>{news_row.POST_AUTHOR_FULL}</strong></td>
+				<td colspan="2">{L_POSTED_BY}{L_COLON} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong></td>
 			</tr>
 		
 		<!-- IF S_NEWS_FULL_CONTENT -->
 		
-			<!-- IF news_row.FORUM_NAME --><tr><td colspan="2">{L_FORUM}: <strong><a href="{news_row.U_VIEWFORUM}">{news_row.FORUM_NAME}</a></strong></td></tr><!-- ENDIF -->
+			<!-- IF topicrow.FORUM_NAME --><tr><td colspan="2">{L_FORUM}{L_COLON} <strong><a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_NAME}</a></strong></td></tr><!-- ENDIF -->
 		
 			<tr>
 				<td colspan="2" class="blg-align-{S_CONTENT_FLOW_BEGIN}">
 		
-					<div class="news-content">{news_row.TEXT}</div>
+					<div class="news-content">{topicrow.TEXT}</div>
 					  
-				<!-- IF news_row.S_HAS_ATTACHMENTS -->
+				<!-- IF topicrow.S_HAS_ATTACHMENTS -->
 					<dl class="attachbox">
 						<dt>{L_ATTACHMENTS}</dt>
-						<!-- BEGIN attachment -->
-							<dd>{news_row.attachment.DISPLAY_ATTACHMENT}</dd>
-						<!-- END attachment -->
+						{% for attachment in topicrow.attachment %}
+							<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
+						{% endfor %}
 					</dl>
 				<!-- ENDIF -->
 		
@@ -92,45 +102,43 @@
 			</tr>
 		
 			<tr>
-				<td colspan="2" class="blg-align-{S_CONTENT_FLOW_BEGIN}">
-					<a href="{news_row.U_VIEW_COMMENTS}" title="{L_VIEW_COMMENTS}">{L_COMMENTS}: {news_row.REPLIES}</a> &bull;
-					<a href="{news_row.U_POST_REPLY}" title="{L_POST_REPLY}">{L_POST_REPLY}</a> &bull;
-					<a href="{news_row.U_VIEW_TOPIC}" title="{L_READ_FULL}">{L_TOPIC_VIEWS}: {news_row.TOPIC_VIEWS}</a>
+				<td colspan="2" class="blg-align-left">
+					<span>{L_COMMENTS}{L_COLON} {topicrow.REPLIES}</span> &bull;
+					<a href="{topicrow.U_POST_REPLY}" title="{L_POST_REPLY}">{L_POST_REPLY}</a> &bull;
+					<a href="{topicrow.U_VIEW_TOPIC}" title="{L_READ_FULL}">{L_TOPIC_VIEWS}{L_COLON} {topicrow.VIEWS}</a>
 				</td>
 			</tr>
 		<!-- ENDIF -->
 			</table>
 		<!-- ENDIF -->
 		</div>
-	<!-- END news_row -->
+	{% endfor %}
 
 <!-- ENDIF -->
 
 <!-- IF .block_pagination -->
-<div class="clearfix">
-	<div class="pull-right">
-		<br />
-		<ul class="pagination pagination-sm hidden-xs">
+	<div class="pull-right">	 
+		<ul class="pagination pagination-forum <!-- IF BLOCK_VIEW_SMALL -->pagination-xs<!-- ELSE -->pagination-sm<!-- ENDIF --> hidden-xs">
 		<!-- BEGIN block_pagination -->
 			<!-- IF block_pagination.S_IS_PREV -->
-			<li><a href="{block_pagination.PAGE_URL}" rel="prev" role="button">{L_PREVIOUS}</a></li>
+			<li class="previous"><a href="{block_pagination.PAGE_URL}" rel="prev" role="button">{L_PREVIOUS}</a></li>
 			<!-- ELSEIF block_pagination.S_IS_CURRENT -->
-			<li class="active"><a>{block_pagination.PAGE_NUMBER}</a></li>
+			<li class="active"><span>{block_pagination.PAGE_NUMBER}</span></li>
 			<!-- ELSEIF block_pagination.S_IS_ELLIPSIS -->
-			<li class="ellipsis" role="separator"><a>{L_ELLIPSIS}</a></li>
+			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
 			<!-- ELSEIF block_pagination.S_IS_NEXT -->
-			<li><a href="{block_pagination.PAGE_URL}" rel="next" role="button">{L_NEXT}</a></li>
+			<li class="next"><a href="{block_pagination.PAGE_URL}" rel="next" role="button">{L_NEXT}</a></li>
 			<!-- ELSE -->
 			<li><a href="{block_pagination.PAGE_URL}" role="button">{block_pagination.PAGE_NUMBER}</a></li>
 			<!-- ENDIF -->
 		<!-- END block_pagination -->
 		</ul>
 	</div>
-</div>
+	<div class="cbb-helper-clear"></div>
 <!-- ENDIF -->
 
 <!-- ELSE -->
 <div class="blg-align-center">{L_NO_NEWS}</div>
 <!-- ENDIF -->
 
-<!-- IF not BLG_IN_AJAX --></div><!-- ENDIF -->
+</div>

@@ -1,11 +1,10 @@
 <?php
 /*
-* @name banners_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class banners_block extends base
 {
-	static $icon = 'blg-icon-th';
+	static $icon = 'fa-th';
 
 	public function init()
 	{
@@ -64,13 +63,14 @@ class banners_block extends base
 				'U_URL' 			=> $row['url'],		
 			);
 
-			/**
+			/*
 			* @event block.banners_row
 			* @var array	banner_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('banner_row', 'row');
+			$vars = array('banner_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.banners_row', compact($vars)));
 			
 			$this->template->assign_block_vars('banners', $banner_row);
@@ -93,10 +93,10 @@ class banners_block extends base
 		$this->display_vars = array(
 			'show_title'	=> array('lang' => 'BANNERS_TITLE',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'random_order'	=> array('lang' => 'BANNERS_RANDOM',	'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'list_type'		=> array('lang' => 'BANNERS_LS_TYPE',	'validate' => 'int',		'type' => 'select', 	'function' => array($this, 'listtype_select'),	'params' => array('{CONFIG_VALUE}')),
-			'banner_number'	=> array('lang' => 'BANNERS_NUMBER',	'validate' => 'int',		'type' => 'text:4:3',	'default' => 0),
-			'block_height'	=> array('lang' => 'BANNERS_B_HEIGHT',	'validate' => 'int',		'type' => 'text:4:3',	'default' => 50),
-			'scroll_fps'	=> array('lang' => 'MARQUEE_SPEED',		'validate' => 'int:1:10',	'type' => 'text:3:2',	'default' => 2),
+			'list_type'		=> array('lang' => 'BANNERS_LS_TYPE',	'validate' => 'int',		'type' => 'custom', 		'function' => array($this, 'listtype_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}')),
+			'banner_number'	=> array('lang' => 'BANNERS_NUMBER',	'validate' => 'int',		'type' => 'number',			'default' => 0),
+			'block_height'	=> array('lang' => 'BANNERS_B_HEIGHT',	'validate' => 'int',		'type' => 'number',			'default' => 50),
+			'scroll_fps'	=> array('lang' => 'MARQUEE_SPEED',		'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2),
 		);
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
@@ -117,11 +117,11 @@ class banners_block extends base
 		$event['display_vars'] = $display_vars;
 	}
 
-	/**
+	/*
 	 * listtype_select
 	 * Make select with banner types
 	*/
-	public function listtype_select($select_id = -1)
+	public function listtype_select($key, $select_id = -1)
 	{
 		$types = array(
 			BLG_NO_SCROLL 	=> 'LIST_NO_SCROLL',
@@ -129,6 +129,6 @@ class banners_block extends base
 			BLG_SCROLL_V	=> 'LIST_SCROLL_V',
 		);
 
-		return $this->manager->helper_acp->make_select($types, $select_id);
+		return $this->manager->helper_acp->make_select($types, $key, $select_id);
 	}
 }

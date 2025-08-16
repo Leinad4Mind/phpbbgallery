@@ -1,11 +1,10 @@
 <?php
 /*
-* @name search_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
@@ -19,7 +18,7 @@ if(!defined('IN_PHPBB'))
 
 class search_block extends base
 {
-	static $icon = 'blg-icon-search';
+	static $icon = 'fa-search';
 
 	public function init()
 	{

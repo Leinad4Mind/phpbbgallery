@@ -1,18 +1,17 @@
 <?php
 /*
-* @name v200.php
 * @package cBB Blockgets
 * @version v2.0.0 30/05/2017
 *
 * @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\migrations;
 
 class v200 extends \phpbb\db\migration\migration
 {
-	protected $lang;
+	protected $language;
 	
 	public function effectively_installed()
 	{
@@ -141,7 +140,7 @@ class v200 extends \phpbb\db\migration\migration
 	
 	public function prepare()
 	{
-		global $user, $phpbb_container;
+		global $phpbb_container;
 
 		if(!defined('BLG_BLOCK_TABLE'))
 		{
@@ -149,10 +148,10 @@ class v200 extends \phpbb\db\migration\migration
 			include($this->phpbb_root_path . 'ext/canidev/blockgets/libraries/constants.' . $this->php_ext);
 		}
 
-		if(!$this->lang)
+		if(!$this->language)
 		{
-			$this->lang = new \canidev\blockgets\libraries\language($phpbb_container, $user);
-			$this->lang->add(array('installer', 'acp', 'info_acp_blockgets'), true);
+			$this->language = $phpbb_container->get('language');
+			$this->language->add_lang(array('installer', 'acp', 'info_acp_blockgets'), 'canidev/blockgets');
 		}
 	}
 	
@@ -179,7 +178,7 @@ class v200 extends \phpbb\db\migration\migration
 				array(
 					'page_type'			=> PAGE_HOME,
 					'page_alias'		=> 'home',
-					'page_title'		=> $this->lang->get('PORTAL'),
+					'page_title'		=> $this->language->lang('PORTAL'),
 					'page_data'			=> $default_page_data,
 					'page_groups'		=> 'all',
 				),
@@ -194,11 +193,11 @@ class v200 extends \phpbb\db\migration\migration
 
 			BLG_BLOCK_TABLE	=> array(
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'menu_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'menu_title')),
 					'block_content'		=> serialize(array(
 						'list'	=> array(
 							array(
-								'title'			=> $this->lang->get('P_MAIN'),
+								'title'			=> $this->language->lang('P_MAIN'),
 								'description'	=> '',
 								'url'			=> '',
 								'image'			=> '',
@@ -207,43 +206,43 @@ class v200 extends \phpbb\db\migration\migration
 								'type'			=> LIST_CAT,
 							),
 							array(
-								'title'			=> $this->lang->get('PORTAL'),
+								'title'			=> $this->language->lang('PORTAL'),
 								'description'	=> '',
 								'url'			=> 'portal',
-								'image'			=> 'blg-icon-home',
+								'image'			=> 'fa-home',
 								'window'		=> 0,
 								'groups'		=> 'all',
 								'type'			=> LIST_LINK,
 							),
 							array(
-								'title'			=> $this->lang->get('INDEX'),
+								'title'			=> $this->language->lang('INDEX'),
 								'description'	=> '',
 								'url'			=> 'index.php',
-								'image'			=> 'blg-icon-comments-o',
+								'image'			=> 'fa-comments-o',
 								'window'		=> 0,
 								'groups'		=> 'all',
 								'type'			=> LIST_LINK,
 							),
 							array(
-								'title'			=> $this->lang->get('FAQ'),
+								'title'			=> $this->language->lang('FAQ'),
 								'description'	=> '',
 								'url'			=> 'faq.php',
-								'image'			=> 'blg-icon-question-circle',
+								'image'			=> 'fa-question-circle',
 								'window'		=> 0,
 								'groups'		=> 'all',
 								'type'			=> LIST_LINK,
 							),
 							array(
-								'title'			=> $this->lang->get('SEARCH'),
+								'title'			=> $this->language->lang('SEARCH'),
 								'description'	=> '',
 								'url'			=> 'search.php',
-								'image'			=> 'blg-icon-search',
+								'image'			=> 'fa-search',
 								'window'		=> 0,
 								'groups'		=> '2,4,5,7',
 								'type'			=> LIST_LINK,
 							),
 							array(
-								'title'			=> $this->lang->get('P_ADMIN'),
+								'title'			=> $this->language->lang('P_ADMIN'),
 								'description'	=> '',
 								'url'			=> '',
 								'image'			=> '',
@@ -252,19 +251,19 @@ class v200 extends \phpbb\db\migration\migration
 								'type'			=> LIST_CAT,
 							),
 							array(
-								'title'			=> $this->lang->get('P_MCP'),
+								'title'			=> $this->language->lang('P_MCP'),
 								'description'	=> '',
 								'url'			=> 'mcp.php',
-								'image'			=> 'blg-icon-legal',
+								'image'			=> 'fa-legal',
 								'window'		=> 0,
 								'groups'		=> '4,5',
 								'type'			=> LIST_LINK,
 							),
 							array(
-								'title'			=> $this->lang->get('P_ACP'),
+								'title'			=> $this->language->lang('P_ACP'),
 								'description'	=> '',
 								'url'			=> 'adm/index.php',
-								'image'			=> 'blg-icon-cogs',
+								'image'			=> 'fa-cogs',
 								'window'		=> 0,
 								'groups'		=> '5',
 								'type'			=> LIST_LINK,
@@ -272,7 +271,7 @@ class v200 extends \phpbb\db\migration\migration
 						)
 					)),
 					'block_alias'		=> 'menu_block',
-					'block_icon'			=> 'blg-icon-home',
+					'block_icon'		=> 'fa-home',
 					'block_order'		=> 1,
 					'block_position'	=> 1,
 					'block_page'		=> 1,
@@ -282,10 +281,10 @@ class v200 extends \phpbb\db\migration\migration
 				),
 
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'clock_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'clock_title')),
 					'block_content'		=> 'tri_amber.swf',
 					'block_alias'		=> 'clock_block',
-					'block_icon'			=> 'blg-icon-clock-o',
+					'block_icon'		=> 'fa-clock-o',
 					'block_order'		=> 2,
 					'block_position'	=> 1,
 					'block_page'		=> 1,
@@ -294,10 +293,10 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'link_us_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'link_us_title')),
 					'block_content'		=> serialize(array('banner_url' => './banners/canidev-banner.png')),
 					'block_alias'		=> 'link_us_block',
-					'block_icon'			=> 'blg-icon-link',
+					'block_icon'		=> 'fa-link',
 					'block_order'		=> 3,
 					'block_position'	=> 1,
 					'block_page'		=> 1,
@@ -306,13 +305,13 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'welcome_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'welcome_title')),
 					'block_content'		=> serialize(array(
-						'guest_text'	=> htmlspecialchars($this->lang->get('WELCOME_GUEST'), ENT_COMPAT, 'UTF-8'),
-						'member_text'	=> htmlspecialchars($this->lang->get('WELCOME_MEMBER'), ENT_COMPAT, 'UTF-8'),
+						'guest_text'	=> htmlspecialchars($this->language->lang('WELCOME_GUEST'), ENT_COMPAT, 'UTF-8'),
+						'member_text'	=> htmlspecialchars($this->language->lang('WELCOME_MEMBER'), ENT_COMPAT, 'UTF-8'),
 					)),
 					'block_alias'		=> 'welcome_block',
-					'block_icon'			=> 'blg-icon-flag',
+					'block_icon'		=> 'fa-flag',
 					'block_order'		=> 1,
 					'block_position'	=> 2,
 					'block_page'		=> 1,
@@ -321,33 +320,33 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'dockmenu_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'dockmenu_title')),
 					'block_content'		=> serialize(array(
 						'item_width'	=> 40,
 						'list' => array(
 							array(
-								'title'			=> $this->lang->get('PORTAL'),
+								'title'			=> $this->language->lang('PORTAL'),
 								'url'			=> 'portal',
 								'image'			=> './icons/home.png',
 								'window'		=> 0,
 								'groups'		=> 'all',
 							),
 							array(
-								'title'			=> $this->lang->get('INDEX'),
+								'title'			=> $this->language->lang('INDEX'),
 								'url'			=> 'index.php',
 								'image'			=> './icons/documents.png',
 								'window'		=> 0,
 								'groups'		=> 'all',
 							),
 							array(
-								'title'			=> $this->lang->get('FAQ'),
+								'title'			=> $this->language->lang('FAQ'),
 								'url'			=> 'faq.php',
 								'image'			=> './icons/float.png',
 								'window'		=> 0,
 								'groups'		=> 'all',
 							),
 							array(
-								'title'			=> $this->lang->get('SEARCH'),
+								'title'			=> $this->language->lang('SEARCH'),
 								'url'			=> 'search.php',
 								'image'			=> './icons/box.png',
 								'window'		=> 0,
@@ -356,7 +355,7 @@ class v200 extends \phpbb\db\migration\migration
 						)
 					)),
 					'block_alias'		=> 'dockmenu_block',
-					'block_icon'			=> 'blg-icon-globe',
+					'block_icon'		=> 'fa-globe',
 					'block_order'		=> 2,
 					'block_position'	=> 2,
 					'block_page'		=> 1,
@@ -365,14 +364,14 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'recent_topics_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'recent_topics_title')),
 					'block_content'		=> serialize(array(
 						'topic_limit' 	=> 5,
 						'title_limit' 	=> 50,
 						'forums'		=> array()
 					)),
 					'block_alias'		=> 'recent_topics_block',
-					'block_icon'			=> 'blg-icon-comment',
+					'block_icon'		=> 'fa-comment',
 					'block_order'		=> 3,
 					'block_position'	=> 2,
 					'block_page'		=> 1,
@@ -381,10 +380,10 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'whos_online_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'whos_online_title')),
 					'block_content'		=> serialize(array('advanced' => 1, 'usernames' => 1)),
 					'block_alias'		=> 'whos_online_block',
-					'block_icon'			=> 'blg-icon-user',
+					'block_icon'		=> 'fa-user',
 					'block_order'		=> 4,
 					'block_position'	=> 2,
 					'block_page'		=> 1,
@@ -393,10 +392,10 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'login_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'login_title')),
 					'block_content'		=> serialize(array('full_login' => 1, 'show_register' => 1)),
 					'block_alias'		=> 'login_block',
-					'block_icon'			=> 'blg-icon-user',
+					'block_icon'		=> 'fa-user',
 					'block_order'		=> 1,
 					'block_position'	=> 3,
 					'block_page'		=> 1,
@@ -405,10 +404,10 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'stats_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'stats_title')),
 					'block_content'		=> serialize(array('stats_inline' => 0, 'user_stats' => 1)),
 					'block_alias'		=> 'stats_block',
-					'block_icon'			=> 'blg-icon-bar-chart',
+					'block_icon'		=> 'fa-bar-chart',
 					'block_order'		=> 2,
 					'block_position'	=> 3,
 					'block_page'		=> 1,
@@ -420,7 +419,7 @@ class v200 extends \phpbb\db\migration\migration
 					'block_title'		=> 'FORUM',
 					'block_content'		=> '',
 					'block_alias'		=> 'forum_content',
-					'block_icon'			=> '',
+					'block_icon'		=> '',
 					'block_order'		=> 1,
 					'block_position'	=> 2,
 					'block_page'		=> 2,
@@ -429,10 +428,10 @@ class v200 extends \phpbb\db\migration\migration
 					'bbcode_uid'		=> '',
 				),
 				array(
-					'block_title'		=> $this->lang->get(array('blocks', 'most_poster_title')),
+					'block_title'		=> $this->language->lang(array('blocks', 'most_poster_title')),
 					'block_content'		=> serialize(array('poster_limit' => 5, 'poster_range' => 'none')),
 					'block_alias'		=> 'most_poster_block',
-					'block_icon'			=> 'blg-icon-edit',
+					'block_icon'		=> 'fa-edit',
 					'block_order'		=> 1,
 					'block_position'	=> 3,
 					'block_page'		=> 2,

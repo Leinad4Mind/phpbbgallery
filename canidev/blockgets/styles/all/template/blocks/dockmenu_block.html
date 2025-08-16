@@ -1,28 +1,17 @@
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#dock-{BLOCK_ID}').dockmenu({
-			maxsize	: {DOCK_ITEM_MAXWIDTH},
-			height	: {DOCK_HEIGHT},
-			size	: {DOCK_ITEM_WIDTH}
-		});
-		
-	<!-- IF BLOCK_STYLE eq 'content_simple' -->
-		$('#dock-{BLOCK_ID}').css('margin-top', ({DOCK_ITEM_MAXWIDTH} - {DOCK_ITEM_WIDTH}) + 5);
-	<!-- ENDIF -->
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#dock-{BLOCK_ID}').blgDock({S_DOCK_PARAMS});
 	});
 // ]]>
 </script>
 
-<div id="dock-{BLOCK_ID}" class="dock">
-<div class="dock-container">
-
-<!-- BEGIN menu_row -->
-	<a href="{menu_row.U_LINK}"<!-- IF menu_row.S_WINDOW --> class="blank"<!-- ENDIF -->>{menu_row.S_ICON}</a><!-- IF S_SHORT_MODE --><br /><!-- ENDIF -->
-<!-- END menu_row -->
-
-</div>
+<div id="dock-{BLOCK_ID}" class="dock cbb-helper-hidden">
+	<div class="dock-container">
+	<!-- BEGIN menu_row -->
+		<a href="{menu_row.U_LINK}"<!-- IF menu_row.S_WINDOW --> class="blank"<!-- ENDIF -->>{menu_row.S_ICON}</a>
+	<!-- END menu_row -->
+	</div>
 </div>

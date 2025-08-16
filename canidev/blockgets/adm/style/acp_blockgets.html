@@ -2,17 +2,10 @@
 
 <a name="maincontent"></a>
 
-<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}" class="blg-button">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}">&laquo; {L_BACK}</a></div><!-- ENDIF -->
 
 <h1>{L_TITLE}</h1>
 <p>{L_TITLE_EXPLAIN}</p>
-
-<!-- IF S_VERSION_NOT_UP_TO_DATE -->
-	<div class="blg-message blg-state-error">
-		<p>{L_BLG_VERSION_NOT_UP_TO_DATE}</p>
-		<p><a href="{U_VERSIONCHECK_FORCE}">{L_VERSIONCHECK_FORCE_UPDATE}</a> &middot; <a href="{U_MORE_INFORMATION}">{L_MORE_INFORMATION}</a></p>
-	</div>
-<!-- ENDIF -->
 
 <form id="acp_blockgets" method="post" action="{U_ACTION}">
 <!-- BEGIN options -->
@@ -25,7 +18,7 @@
 	<!-- ELSE -->
 
 		<dl>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
 			<dd>{options.CONTENT}</dd>
 		</dl>
 
@@ -34,8 +27,8 @@
 
 </fieldset>
 
-	<div class="blg-submit-buttons">
-		<input class="blg-button default-action" type="submit" name="submit" value="{L_SAVE}" />
+	<div class="cbb-submit-buttons">
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
 		{S_FORM_TOKEN}
 		{S_HIDDEN_FIELDS}
 	</div>

@@ -1,9 +1,8 @@
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
 		$('#block-{BLOCK_ID} form').ajaxify({
 			done: function() {
 				$(this).find('[name=subject], [name=message]').val('');
@@ -14,16 +13,16 @@
 </script>
 
 <form method="post" action="{U_BLG_ACTION}">
-	<table class="blg-table contact-table<!-- IF not S_SHORT_MODE --> full-table<!-- ENDIF -->">
-<!-- IF S_SHORT_MODE -->
+	<table class="blg-table contact-table<!-- IF not BLOCK_VIEW_SMALL --> full-table<!-- ENDIF -->">
+<!-- IF BLOCK_VIEW_SMALL -->
 	<!-- BEGIN fieldrow -->
 	<tr>
 		<td>
-			<strong>{fieldrow.TITLE}:</strong><br />
+			<strong>{fieldrow.TITLE}{L_COLON}</strong><br />
 		<!-- IF fieldrow.TYPE eq 'text' -->
-			<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="blg-inputbox" />
+			<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="cbb-inputbox" />
 		<!-- ELSEIF fieldrow.TYPE eq 'textarea' -->
-			<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="6" class="blg-inputbox">{fieldrow.VALUE}</textarea>
+			<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="6" class="cbb-inputbox">{fieldrow.VALUE}</textarea>
 		<!-- ELSEIF fieldrow.TYPE eq 'custom' -->
 			{fieldrow.TEMPLATE}
 		<!-- ENDIF -->
@@ -35,13 +34,13 @@
 	<!-- BEGIN fieldrow -->
 		<tr>
 			<td class="blg-align-right"<!-- IF fieldrow.TYPE eq 'textarea' --> valign="top"<!-- ENDIF -->>
-				<label for="{fieldrow.KEY}"><strong>{fieldrow.TITLE}:</strong></label>
+				<label for="{fieldrow.KEY}"><strong>{fieldrow.TITLE}{L_COLON}</strong></label>
 			</td>
 			<td>
 			<!-- IF fieldrow.TYPE eq 'text' -->
-				<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="blg-inputbox autowidth" />
+				<input type="text" name="{fieldrow.KEY}" id="{fieldrow.KEY}" size="35" value="{fieldrow.VALUE}" class="cbb-inputbox autowidth" />
 			<!-- ELSEIF fieldrow.TYPE eq 'textarea' -->
-				<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="8" class="blg-inputbox">{fieldrow.VALUE}</textarea>
+				<textarea name="{fieldrow.KEY}" id="{fieldrow.KEY}" cols="30" rows="8" class="cbb-inputbox">{fieldrow.VALUE}</textarea>
 			<!-- ELSEIF fieldrow.TYPE eq 'custom' -->
 				{fieldrow.TEMPLATE}
 			<!-- ENDIF -->

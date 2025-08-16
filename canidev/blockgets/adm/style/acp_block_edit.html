@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}" class="blg-button">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}">&laquo; {L_BACK}</a></div><!-- ENDIF -->
 
 <h1>{L_TITLE}</h1>
 <p>{L_TITLE_EXPLAIN}</p>
@@ -17,7 +17,7 @@
 	<!-- ELSE -->
 
 		<dl>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
 			<dd>{options.CONTENT}</dd>
 		</dl>
 
@@ -27,7 +27,7 @@
 </fieldset>
 
 <!-- IF not HAS_CONFIG and not HAS_LINKS -->
-	<div class="blg-message blg-state-ok">{L_BLOCK_NO_CONFIG}</div>
+	<div class="blg-message cbb-state-ok">{L_BLOCK_NO_CONFIG}</div>
 <!-- ELSE -->
 <div class="block-config-tabs">
 	<ul>
@@ -37,17 +37,19 @@
 	
 <!-- IF HAS_CONFIG -->
 	<div id="block-config-tab">
-	<!-- IF CONFIG_TEMPLATE -->
-		<!-- INCLUDE {CONFIG_TEMPLATE} -->
-	<!-- ELSE -->
+	<!-- IF .config -->
 		<fieldset>
 		<!-- BEGIN config -->
 			<dl>
-				<dt><label for="{options.KEY}">{config.TITLE}:</label><!-- IF config.S_EXPLAIN --><br /><span>{config.S_EXPLAIN}</span><!-- ENDIF --></dt>
+				<dt><label for="{options.KEY}">{config.TITLE}{L_COLON}</label><!-- IF config.S_EXPLAIN --><br /><span>{config.S_EXPLAIN}</span><!-- ENDIF --></dt>
 				<dd>{config.CONTENT}</dd>
 			</dl>
 		<!-- END config -->
 		</fieldset>
+	<!-- ENDIF -->
+
+	<!-- IF CONFIG_TEMPLATE -->
+		<!-- INCLUDE {CONFIG_TEMPLATE} -->
 	<!-- ENDIF -->
 	</div>
 <!-- ENDIF -->
@@ -61,9 +63,9 @@
 </div>
 <!-- ENDIF -->
 
-	<div class="blg-submit-buttons">
-		<!-- IF S_ADD_MODE -->&nbsp;<input class="blg-button" type="submit" name="submitmore" value="{L_SAVE_AND_ADD}" /><!-- ENDIF -->
-		<input class="blg-button default-action" type="submit" name="submit" value="{L_SAVE}" />
+	<div class="cbb-submit-buttons">
+		<!-- IF S_ADD_MODE -->&nbsp;<input class="cbb-btn" type="submit" name="submitmore" value="{L_SAVE_AND_ADD}" /><!-- ENDIF -->
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
 		{S_HIDDEN_FIELDS}
 	</div>
 </form>

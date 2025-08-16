@@ -1,7 +1,7 @@
-
 <!-- BEGIN blglink_bottom -->
-	<li class="no-bulletin rightside">
-		<!-- IF blglink_bottom.ICON --><span class="blg-icon {blglink_bottom.ICON}"></span> <!-- ENDIF -->
-		<a href="{blglink_bottom.HREF}" title="{blglink_bottom.TITLE}" role="menuitem">{blglink_bottom.TITLE}</a>
+	<li class="rightside" data-skip-responsive="true">
+		<a href="{blglink_bottom.HREF}" title="{blglink_bottom.TITLE}" role="menuitem">
+			<!-- IF blglink_bottom.ICON --><i class="icon {blglink_bottom.ICON} fa-fw" aria-hidden="true"></i><!-- ENDIF --><span>{blglink_bottom.TITLE}</span>
+		</a>
 	</li>
 <!-- END blglink_bottom -->

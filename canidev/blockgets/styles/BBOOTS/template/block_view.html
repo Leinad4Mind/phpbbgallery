@@ -3,9 +3,19 @@
 	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
 	{% for sub in block.blocks %}
 		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block {{ sub.BLOCK_CLASSES }}">
+		{% if sub.BLOCK_STYLE == 'content_simple' %}
+			<div class="block-content">
+				{{ sub.BLOCK_CONTENT }}
+			</div>
+		{% else %}
 			<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
 			<thead>
-				<tr><th class="block_title">{{ sub.BLOCK_ICON }}<span> {{ sub.BLOCK_TITLE }}</span></th></tr>
+				<tr>
+					<th class="block-title">
+						{% if sub.BLOCK_ICON %}<i class="fa {{ sub.BLOCK_ICON }}"></i>{% endif %}
+						<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
+					</th>
+				</tr>
 			</thead>
 			<tbody>
 			<tr>
@@ -17,14 +27,25 @@
 			</tr>
 			</tbody>
 			</table>
+		{% endif %}
 		</div>
 	{% endfor %}
 	</div>
 {% else %}
 	<div id="block-{{ block.BLOCK_ID }}" class="blg-block {{ block.BLOCK_CLASSES }}">
+	{% if block.BLOCK_STYLE == 'content_simple' %}
+		<div class="block-content">
+			{{ block.BLOCK_CONTENT }}
+		</div>
+	{% else %}
 		<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
 		<thead>
-			<tr><th class="block_title">{{ block.BLOCK_ICON }}<span> {{ block.BLOCK_TITLE }}</span></th></tr>
+			<tr>
+				<th class="block-title">
+					{% if block.BLOCK_ICON %}<i class="fa {{ block.BLOCK_ICON }}"></i>{% endif %}
+					<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
+				</th>
+			</tr>
 		</thead>
 		<tbody>
 		<tr>
@@ -36,5 +57,6 @@
 		</tr>
 		</tbody>
 		</table>
+	{% endif %}
     </div>
 {% endif %}

@@ -1,11 +1,10 @@
 <?php
 /*
-* @name ext.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets;
@@ -18,6 +17,33 @@ if(!defined('IN_PHPBB'))
 
 class ext extends \phpbb\extension\base
 {
+	const REQUIRED_PHPBB	= '3.2.0';
+	const REQUIRED_CORE		= '1.0.4';
+	
+	public function is_enableable()
+	{
+		$config		= $this->container->get('config');
+		$language	= $this->container->get('language');
+		
+		$language->add_lang('installer', 'canidev/blockgets');
+		
+		// Check phpBB version
+		if(phpbb_version_compare($config['version'], self::REQUIRED_PHPBB, '<'))
+		{
+			return false;
+		}
+
+		// Check Core version
+		$core_lib_filename = $this->container->getParameter('core.root_path') . 'ext/canidev/core/lib.' . $this->container->getParameter('core.php_ext');
+		
+		if(!file_exists($core_lib_filename) || phpbb_version_compare(\canidev\core\lib::VERSION, self::REQUIRED_CORE, '<'))
+		{
+			trigger_error($language->lang('CORE_INSTALL_ERROR'), E_USER_WARNING);
+		}
+		
+		return true;
+	}
+
 	function enable_step($old_state)
 	{
 		if(empty($old_state))
@@ -32,8 +58,10 @@ class ext extends \phpbb\extension\base
 				curl_setopt($ch, CURLOPT_HEADER, 0);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
-				$file= curl_exec($ch);
+				$file = curl_exec($ch);
 
 				curl_close($ch);
 			}

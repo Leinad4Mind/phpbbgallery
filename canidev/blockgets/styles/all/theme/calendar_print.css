@@ -1,10 +1,10 @@
 /*
  * cBB Blockgets (Calendar Print stylesheet)
- * Copyright (c) 2017, CaniDev
- * license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * Copyright (c) 2020, CaniDev
+ * license https://opensource.org/licenses/gpl-license.php GNU Public License
  */
  
-html		{ height: 100%; }
+html	{ height: 100%; }
 body	{ padding: 0; }
 
 #page-header, #page-footer {
@@ -29,7 +29,7 @@ body	{ padding: 0; }
 	margin: 2em 0 0 0;
 }
 
-.blg-calendar-actionbar .blg-group, .blg-calendar-actionbar .blg-button {
+.blg-calendar-actionbar .cbb-group, .blg-calendar-actionbar .cbb-btn {
 	display: none;
 }
 

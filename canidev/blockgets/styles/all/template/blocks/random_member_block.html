@@ -3,13 +3,25 @@
     
 <!-- BEGIN random_member -->
 	<div class="blg-align-center">{random_member.USERNAME}<hr /></div>
-	<div style="margin-top:5px;">
-		<div class="blg-user-avatar adjusted blg-align-center"><!-- IF random_member.AVATAR -->{random_member.AVATAR}<!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></div><br />
-		<div class="blg-widget-content blg-corner-all random-member-info">
-			{L_USER}: {random_member.USER_FULL}<br />
-			{L_JOINED}: {random_member.REGDATE}<br />
-			{L_POSTS}: <!-- IF random_member.POSTS --><a href="{random_member.U_FIND_POSTS}">{random_member.POSTS}</a><!-- ELSE -->0<!-- ENDIF --><br />
-		</div>
+	<div class="blg-align-center">
+		<div class="cbb-circular-avatar"><!-- IF random_member.AVATAR -->{random_member.AVATAR}<!-- ELSE --><div class="cbb-no-avatar"></div><!-- ENDIF --></div>
+	</div>
+	<br />
+	<div class="random-member-info blg-inline-list">
+		<dl>
+			<dt><strong>{L_USER}{L_COLON}</strong></dt>
+			<dd>{random_member.USER_FULL}</dd>
+		</dl>
+
+		<dl>
+			<dt><strong>{L_JOINED}{L_COLON}</strong></dt>
+			<dd>{random_member.REGDATE}</dd>
+		</dl>
+
+		<dl>
+			<dt><strong>{L_POSTS}{L_COLON}</strong></dt>
+			<dd><!-- IF random_member.POSTS --><a href="{random_member.U_FIND_POSTS}">{random_member.POSTS}</a><!-- ELSE -->0<!-- ENDIF --></dd>
+		</dl>
 	</div>
 <!-- END random_member -->
 

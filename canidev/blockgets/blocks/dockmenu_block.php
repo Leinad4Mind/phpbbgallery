@@ -1,11 +1,10 @@
 <?php
 /*
-* @name dockmenu_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class dockmenu_block extends base
 {
-	static $icon = 'blg-icon-th-large';
+	static $icon = 'fa-th-large';
 
 	public function init()
 	{
@@ -38,14 +37,6 @@ class dockmenu_block extends base
 		{
 			return false;
 		}
-
-		/**
-		* @event block.dockmenu_query
-		* @var array	sql_ary		The SQL data
-		* @since 2.0.0
-		*/
-		$vars = array('sql_ary');
-		extract($this->dispatcher->trigger_event('block.dockmenu_query', compact($vars)));
 	
 		// Get de menu links
 		foreach($data['list'] as $row)
@@ -62,7 +53,7 @@ class dockmenu_block extends base
 				$row['url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
 			}
 
-			$row['title'] = $this->lang->get($row['title']);
+			$row['title'] = $this->lang->lang($row['title']);
 
 			$menu_row = array(
 				'S_TITLE'		=> $row['title'],
@@ -71,13 +62,14 @@ class dockmenu_block extends base
 				'U_LINK'		=> $row['url'],
 			);
 
-			/**
+			/*
 			* @event block.dockmenu_row
 			* @var array	menu_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('menu_row', 'row');
+			$vars = array('menu_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.dockmenu_row', compact($vars)));
 			
 			$this->template->assign_block_vars('menu_row', $menu_row);
@@ -90,10 +82,10 @@ class dockmenu_block extends base
 			return false;
 		}
 
-		$this->template->assign_vars(array(
-			'DOCK_HEIGHT'			=> ($data['item_width'] + 5) * (($this->data['autofit']) ? $icon_count : 1),
-			'DOCK_ITEM_WIDTH'		=> $data['item_width'],
-			'DOCK_ITEM_MAXWIDTH'	=> round($data['item_width'] + (($data['item_width'] * 60) / 100)),
+		$this->template->assign_json_var('S_DOCK_PARAMS', array(
+			'maxWidth' 		=> round($data['item_width'] + (($data['item_width'] * 70) / 100)),
+			'orientation'	=> $this->view_is_small() ? 'v' : 'h',
+			'itemWidth' 	=> $data['item_width'],
 		));
 
 		unset($data);
@@ -111,7 +103,7 @@ class dockmenu_block extends base
 			));
 
 		$this->display_vars = array(
-			'item_width'	=> array('lang' => 'ICON_WIDTH',	'validate' => 'int:16:250',	'type' => 'text:4:3',	'default' => 40),
+			'item_width'	=> array('lang' => 'ICON_WIDTH',	'validate' => 'int:16:250',	'type' => 'number:16:250',	'default' => 40),
 		);
 
 		return true;

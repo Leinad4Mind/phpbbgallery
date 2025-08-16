@@ -1,36 +1,37 @@
 <!-- IF S_EVENT_OUTPUT -->
-	<div class="blg-calendar-event" data-event="{S_EVENT_ID}">{S_EVENT_TITLE}</div>
+	<div {S_EVENT_ATTR}>{S_EVENT_TITLE}</div>
 <!-- ELSE -->
-<div class="blg-modal-dialog editor">
-	<div class="media-frame-title">
+<div class="cbb-modal-dialog editor<!-- IF S_EDITOR_TYPE eq 'event' --> is-event<!-- ENDIF -->">
+	<div class="cbb-dialog-header">
 		<h1>{S_EDITOR_TITLE}</h1>
-		<a href="#" data-action="close" class="blg-dialog-close">
-			<span class="blg-icon blg-icon-remove"></span>
+		<a href="#" data-action="close" class="cbb-dialog-close">
+			<i class="fa fa-remove" aria-hidden="true"></i>
+		</a>
+		<a href="#" data-action="sidebarChange" class="cbb-dialog-sidebarlauncher">
+			<i class="fa fa-bars" aria-hidden="true"></i>
 		</a>
 	</div>
 
-	<div class="media-frame-content">
+	<div class="cbb-dialog-content">
 		<form id="editor-form" onsubmit="return false;">
-		<div class="media-sidebar">
+		<div class="cbb-dialog-sidebar">
 		
-		<!-- IF .smiley -->
-			<div class="sidebar-box smileys">
-				<h3>{L_SMILIES}</h3>
-				<div class="box-content">
-				<!-- BEGIN smiley -->
-					<a href="#" data-code="{smiley.SMILEY_CODE}"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
-				<!-- END smiley -->
-				</div>
+		<!-- IF .smileyrow -->
+		<div class="sidebar-box smileys">
+			<h3>{L_SMILIES}</h3>
+			<div class="box-content">
+				<!-- INCLUDE @canidev_core/smiley_box.html -->
 			</div>
+		</div>
 		<!-- ENDIF -->
 		<!-- IF S_EDITOR_TYPE eq 'event' -->
 			<hr />
 			<div class="sidebar-box">
 				<h3>{L_EVENT_TIME}</h3>
 				<div class="box-content">
-					<select name="event_day" class="blg-inputbox">{S_DAY_OPTIONS}</select>
-					<select name="event_month" class="blg-inputbox">{S_MONTH_OPTIONS}</select>
-					<select name="event_year" class="blg-inputbox">{S_YEAR_OPTIONS}</select>
+					<select name="event_day" class="cbb-inputbox">{S_DAY_OPTIONS}</select>
+					<select name="event_month" class="cbb-inputbox">{S_MONTH_OPTIONS}</select>
+					<select name="event_year" class="cbb-inputbox">{S_YEAR_OPTIONS}</select>
 				</div>
 			</div>
 			<div class="sidebar-box">
@@ -39,43 +40,47 @@
 					{S_GROUPS_SELECT}
 				</div>
 			</div>
+			<div class="sidebar-box">
+				<h3>{L_EVENT_COLOR}</h3>
+				<div class="box-content">
+					{S_COLOR_SELECT}
+				</div>
+			</div>
 		<!-- ENDIF -->
 		</div>
-		<div class="media-section-content">
+		<div class="cbb-section-content">
 		<!-- IF S_EDITOR_TYPE eq 'event' -->
-			<input name="event_title" type="text" class="blg-inputbox editor-title" value="{S_TITLE}" placeholder="{L_EVENT_TITLE}" />
-			<div class="editor-container"><textarea id="content" name="content">{S_CONTENT}</textarea></div>
-		<!-- ELSE -->
-			<textarea id="content" name="content">{S_CONTENT}</textarea>
+			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{S_TITLE}" placeholder="{L_EVENT_TITLE}" />
 		<!-- ENDIF -->
+
+			<!-- INCLUDE @canidev_core/editor_body.html -->
 		</div>
 		</form>
 	</div>
 		
-	<div class="media-frame-toolbar">
+	<div class="cbb-dialog-toolbar">
 		<div class="media-toolbar-secondary">
-			<button class="blg-button" data-action="gallery">
-				<span class="blg-icon blg-icon-camera"></span>&nbsp;
+			<button class="cbb-btn" data-action="gallery">
+				<i class="fa fa-camera" aria-hidden="true"></i>&nbsp;
 				<span>{L_GALLERY}</span>
 			</button>
 		</div>
 		<div class="media-toolbar-primary">
-			<button type="button" class="blg-button" data-action="submit">{L_SAVE}</button>
+			<button type="button" class="cbb-btn" data-action="submit">{L_SAVE}</button>
 		</div>
 	</div>
 	
-	<script type="text/html" id="tpl-sceditor-html">
+	<script type="text/html" id="tpl-editor-html">
 		<!DOCTYPE html>
-		<html{attrs}>
+		<html<%attrs%>>
 		<head>
-			<meta http-equiv="Content-Type" content="text/html;charset=<#charset#>" />
-			<link href="{T_STYLESHEET_LINK}" rel="stylesheet" />
-			<link rel="stylesheet" type="text/css" href="<#style#>" />
+			<meta http-equiv="Content-Type" content="text/html;charset=<%charset%>" />
+			<link rel="stylesheet" type="text/css" href="<%style%>" />
 			
 			<style>
-				html { height: auto; }
+				html { background: none; height: auto; }
 				
-				<!-- IF BLG_RSZ_GO -->img { max-width: {BLG_RSZ_WIDTH}px; }<!-- ENDIF -->
+				<!-- IF BLG_RSZ_WIDTH -->img { max-width: {BLG_RSZ_WIDTH}px; }<!-- ENDIF -->
 				
 				.ie * {min-height: auto !important}
 				.ie table td {height:15px}
@@ -85,7 +90,7 @@
 				}
 			</style>
 		</head>
-		<body class="sceditor-body content" contenteditable="true" <#spellcheck#>><p></p></body>
+		<body class="sceditor-body content" contenteditable="true" <%spellcheck%>><p></p></body>
 		</html>
 	</script>
 </div>

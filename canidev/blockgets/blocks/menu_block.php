@@ -1,11 +1,10 @@
 <?php
 /*
-* @name menu_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class menu_block extends base
 {
-	static $icon = 'blg-icon-th-list';
+	static $icon = 'fa-th-list';
 
 	public function init()
 	{
@@ -36,6 +35,8 @@ class menu_block extends base
 		{
 			return false;
 		}
+
+		$media = $this->helper->get_media(false);
 		
 		// Get de menu links
 		foreach($data['list'] as $row)
@@ -54,20 +55,21 @@ class menu_block extends base
 
 			$menu_row = array(
 				'IS_CAT'		=> ($row['type'] == LIST_CAT) ? true : false,
-				'S_ICON'		=> $row['image'],
-				'S_TEXT'		=> $this->lang->get($row['title']),
-				'S_TITLE'		=> str_replace(array('"', '&quot;'), "'", $row['description']),
+				'S_ICON'		=> $media->build_icon_html($row['image']),
+				'S_TEXT'		=> $this->lang->lang($row['title']),
+				'S_TITLE'		=> str_replace(array('"', '&quot;'), "'", $this->lang->lang($row['description'])),
 				'S_WINDOW'		=> $row['window'],
 				'U_LINK'		=> $row['url'],
 			);
 
-			/**
+			/*
 			* @event block.menu_row
 			* @var array	menu_row	The output array
 			* @var array	row			The original data
+			* @var	array	data		Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('menu_row', 'row');
+			$vars = array('menu_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.menu_row', compact($vars)));
 			
 			$this->template->assign_block_vars('menu_row', $menu_row);

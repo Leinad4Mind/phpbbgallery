@@ -1,0 +1,85 @@
+
+<!-- IF BLOCK_VIEW_SMALL or TOPIC_DESIGN eq 'simple' -->
+{% for topicrow in top_topic %}
+	<!-- IF not topicrow.S_FIRST_ROW --><hr /><!-- ENDIF -->
+	<div class="lunread-row">
+		<!-- EVENT topiclist_row_prepend -->
+		<a class="cbb-helper-text cbb-inline half-size" href="{topicrow.U_VIEW_TOPIC}"><strong>{topicrow.TOPIC_TITLE}</strong></a>
+		<!-- IF not BLOCK_VIEW_SMALL --><span>&nbsp;{L_POST_BY_AUTHOR} {topicrow.TOPIC_AUTHOR_FULL}</span><!-- ENDIF -->
+		<span> &raquo; <em>{topicrow.FIRST_POST_TIME}</em></span>
+	</div>
+{% else %}
+	<div class="blg-align-center">{L_NO_UNREAD}</div>
+{% endfor %}
+
+<!-- ELSE -->
+
+<div class="blg-forum-list<!-- IF BLOCK_VIEW_MEDIUM --> title-only<!-- ENDIF -->">
+
+	<!-- IF BLOCK_STYLE eq 'content_simple' -->
+	<div class="panel panel-default">
+	<!-- ELSE -->
+		<div class="blg-widget-header">
+			<!-- IF not BLOCK_VIEW_MEDIUM --><div class="fb-lastpost-title">{L_LAST_POST}</div><!-- ENDIF -->
+			<span>{L_TOPIC}</span>
+		</div>
+
+	<!-- ENDIF -->
+
+		<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
+	<!-- IF BLOCK_STYLE eq 'content_simple' -->
+		<thead>
+			<tr><th colspan="3">{BLOCK_TITLE}</th></tr>
+		</thead>
+	<!-- ENDIF -->
+		<tbody>
+
+		{% for topicrow in top_topic %}
+			<!-- EVENT viewforum_body_topicrow_row_before -->
+			<tr>
+				<td>
+					<!-- IF topicrow.TOPIC_ICON_IMG -->
+					<i class="topic-icon" style="background-image: url(<!-- IF not S_BBEMOJI -->{T_ICONS_PATH}<!-- ENDIF -->{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+					<!-- ENDIF -->
+
+					<span class="icon-wrapper">
+				    	<i class="row-icon-font icon-moon-default2<!-- IF topicrow.S_POST_ANNOUNCE --> icon-moon-voice2<!-- ENDIF --><!-- IF topicrow.S_POST_GLOBAL --> icon-moon-podcast2<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> icon-moon-pushpin2<!-- ENDIF --><!-- IF topicrow.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF topicrow.S_TOPIC_MOVED --> icon-moon-moved<!-- ENDIF --><!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+					</span>
+
+					<i class="row-icon-font-mini<!-- IF topicrow.S_TOPIC_LOCKED --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+					
+					<div class="desc-wrapper">
+			  			<!-- EVENT topiclist_row_prepend -->
+						<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" title="{L_VIEW_FIRST_UNREAD}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;<!-- ENDIF --><!-- IF topicrow.U_VIEW_TOPIC --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a><!-- ELSE -->{topicrow.TOPIC_TITLE}<!-- ENDIF -->
+
+						<br />{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL} 
+						<small>&nbsp;&#45;&nbsp;{topicrow.FIRST_POST_TIME}</small>
+			 		 	<!-- EVENT topiclist_row_append -->	
+					</div>
+				</td>
+
+			<!-- IF not BLOCK_VIEW_MEDIUM -->
+				<td class="fb-stats blg-align-center">{topicrow.VIEWS} {L_VIEWS}<br />{topicrow.REPLIES} {L_REPLIES}</td>
+				<td class="lastpost">
+					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {topicrow.LAST_POST_AUTHOR_FULL}
+					<!-- IF not S_IS_BOT -->
+						<a href="{topicrow.U_LAST_POST}" title="{L_GOTO_LAST_POST}">
+							<i class="mobile-post fa fa-sign-out" aria-hidden="true"></i>
+						</a>
+					<!-- ENDIF -->
+					<br /><i class="fa fa-clock-o"></i>&nbsp;<small>{topicrow.LAST_POST_TIME}</small>
+				</td>
+			<!-- ENDIF -->
+			</tr>
+			<!-- EVENT viewforum_body_topicrow_row_after -->
+		{% endfor %}
+		</tbody>
+		</table>
+
+	<!-- IF BLOCK_STYLE eq 'content_simple' -->
+	</div>
+	<!-- ENDIF -->
+
+</div>
+
+<!-- ENDIF -->

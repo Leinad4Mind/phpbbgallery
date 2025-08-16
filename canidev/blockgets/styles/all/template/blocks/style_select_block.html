@@ -1,17 +1,16 @@
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	window._jBlg.push(function() {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
 		$('#block-{BLOCK_ID} form').ajaxify();
 	});
 // ]]>
 </script>
 
-<form id="style_select" method="post" action="{U_BLG_ACTION}">
+<form method="post" action="{U_BLG_ACTION}">
 	<ul class="blg-linear-list blg-align-center">
-		<li>{L_TOTAL_STYLES}: {S_TOTAL_STYLES}<li>
-		<li class="double-space"><select name="style" class="blg-inputbox">{STYLE_SELECT}</select></li>
+		<li class="double-space"><select name="style" class="cbb-inputbox">{STYLE_SELECT}</select></li>
 		<!-- IF CAN_SAVE_STYLE --><li class="doubl-space"><label><input type="checkbox" name="default" value="1" /> {L_STYLE_SET_MINE}</label></li><!-- ENDIF -->
 		<li class="double-space">
 			<input type="submit" name="submit" class="button2" value="{L_STYLE_CHANGE}" />

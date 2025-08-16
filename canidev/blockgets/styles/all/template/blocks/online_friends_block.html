@@ -1,11 +1,9 @@
-
 <!-- IF S_ZEBRA -->
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#friends-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#friends-{BLOCK_ID}').blgAccordion({
 			collapsible : true
 		});
 	});
@@ -13,7 +11,7 @@
 </script>
 
 <div id="friends-{BLOCK_ID}">
-	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_ONLINE}</a></h5>
+	<h5><span class="cbb-helper-text">{L_FRIENDS_ONLINE}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
 		<!-- BEGIN friends_online -->
@@ -24,7 +22,7 @@
 		</ul>
 	</div>
 	
-	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_OFFLINE}</a></h5>
+	<h5><span class="cbb-helper-text">{L_FRIENDS_OFFLINE}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
 		<!-- BEGIN friends_offline -->

@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_module.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\acp;
@@ -37,9 +36,12 @@ class main_module
 		$this->controller->display($mode);
 		
 		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title();
+		$this->page_title	= $this->controller->get_title('ACP_BLOCKGETS');
 	}
 
+	/*
+	 * Helper for blocks
+	*/
 	public function helper()
 	{
 		$args 	= func_get_args();

@@ -1,9 +1,8 @@
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function (){
-		$('#most-poster-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function (){
+		$('#most-poster-{BLOCK_ID}').blgAccordion({
 			collapsible : true
 		});
 	});
@@ -16,10 +15,26 @@
 <!-- BEGIN most_poster -->
 	<h5><a href="#">{most_poster.USERNAME}</a></h5>
 	<div>
-		<div class="blg-user-avatar adjusted blg-align-center"><!-- IF most_poster.AVATAR -->{most_poster.AVATAR}<!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></div><br />
-		{L_USER}: {most_poster.USER_FULL}<br />
-		{L_JOINED}: {most_poster.REGDATE}<br />
-		{L_POSTS}: <a href="{most_poster.U_FIND_POSTS}">{most_poster.POSTS}</a>
+		<div class="blg-align-center">
+			<div class="cbb-circular-avatar"><!-- IF most_poster.AVATAR -->{most_poster.AVATAR}<!-- ELSE --><div class="cbb-no-avatar"></div><!-- ENDIF --></div>
+		</div>
+
+		<br />
+		
+		<div class="blg-inline-list">
+			<dl>
+				<dt><strong>{L_USER}{L_COLON}</strong></dt>
+				<dd>{most_poster.USER_FULL}</dd>
+			</dl>
+			<dl>
+				<dt><strong>{L_JOINED}{L_COLON}</strong></dt>
+				<dd>{most_poster.REGDATE}</dd>
+			</dl>
+			<dl>
+				<dt><strong>{L_POSTS}{L_COLON}</strong></dt>
+				<dd><a href="{most_poster.U_FIND_POSTS}">{most_poster.POSTS}</a></dd>
+			</dl>
+		</div>
 	</div>
 <!-- END most_poster -->
 

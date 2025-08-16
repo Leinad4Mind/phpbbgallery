@@ -1,11 +1,10 @@
 <?php
 /*
-* @name quote_of_day_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class quote_of_day_block extends base
 {
-	static $icon = 'blg-icon-quote-right';
+	static $icon = 'fa-quote-right';
 
 	public function init()
 	{
@@ -74,7 +73,7 @@ class quote_of_day_block extends base
 			$this->display_vars = $data;
 
 			$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
-				SET block_content = '" . $this->serialize($data) . "'
+				SET block_content = '" . $this->db->sql_escape($this->serialize($data)) . "'
 				WHERE block_id = " . $this->data['block_id'];
 			$this->db->sql_query($sql);
 		}
@@ -123,9 +122,9 @@ class quote_of_day_block extends base
 	
 	private function find_quote($data, &$new_id)
 	{
-		if($data['rand'])
+		if($data['rand'] && sizeof($data['list']) > 1)
 		{
-			$new_id = mt_rand(0, (count($data['quotes'])-1));
+			$new_id = mt_rand(0, (count($data['list'])-1));
 		}
 		
 		if(!isset($data['list'][$new_id]))

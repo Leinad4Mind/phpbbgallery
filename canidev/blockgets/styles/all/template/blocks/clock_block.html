@@ -1,22 +1,15 @@
 
-<!-- IF S_CLOCK_URL -->
-<script type="text/javascript">
+<!-- IF S_CLOCK -->
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#block-{BLOCK_ID}').flash({
-			id		: 'flash-{BLOCK_ID}',
-			parent	: '#clock-{BLOCK_ID}',
-			url		: '{S_CLOCK_URL}',
-			autoadjust: 8,
-			params: {
-				wmode: 'transparent'
-			}
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#clock-{BLOCK_ID}').blgClock({
+			clockID: '{S_CLOCK}'
 		});
 	});
 // ]]>
 </script>
 
-<div id="clock-{BLOCK_ID}" class="blg-align-center"></div>
+<div id="clock-{BLOCK_ID}" class="blg-clock-wrap"></div>
 <!-- ENDIF -->

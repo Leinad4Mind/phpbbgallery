@@ -1,12 +1,11 @@
 <?php
-/** 
-* acp_blockgets.php [English [En]]
+/*
+* acp.php [English [En]]
+* @package cBB Blockgets
+* @version v2.0.1 01/02/2020
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -35,9 +34,13 @@ $lang = array_merge($lang, array(
 	'BLG_COLLAPSE'					=> 'Allow collapse blocks',
 	'BLG_COLLAPSE_EXPLAIN'			=> 'Enable/disable globally the possibility that each user can collapse/expand blocks individually. This option overwrite the individual block\'s configuration.',
 	'BLG_FULL_EDITOR'				=> 'Full editor',
-	'BLG_HELP'						=> 'Documentation and Support',
 	'BLG_ON_BOARD'					=> 'Blocks within the forum',
-	'BLG_ON_BOARD_EXPLAIN'			=> 'Sets whether to display the blocks into the forum pages. This option overwrite the invidual page\'s configuration.',
+	'BLG_ON_BOARD_EXPLAIN'			=> 'Sets whether to display the blocks into the forum pages. This option overwrite the invidual page\'s configuration.<br /><br />
+		<em>
+			&nbsp;&nbsp;<strong>Not show:</strong> It does not show blocks on any page.<br />
+			&nbsp;&nbsp;<strong>Individual pages:</strong> It shows the blocks on the pages configured for it.<br />
+			&nbsp;&nbsp;<strong>Equal pages:</strong> The "General Index" blocks are shown on all pages.
+		</em>',
 	'BLG_REDIRECTIONS'				=> 'Redirections',
 	'BLG_REDIRECT_404'				=> 'Page not found',
 	'BLG_REDIRECT_404_EXPLAIN'		=> 'Sets the page to which the user will be taken when trying to access a location that does not exist.<br />
@@ -46,24 +49,28 @@ $lang = array_merge($lang, array(
 	'BLG_REDIRECT_LOGIN_EXPLAIN'	=> 'Sets the page to which the user will be taken after login to the forum.',
 	'BLG_REDIRECT_LOGOUT'			=> 'Logout',
 	'BLG_REDIRECT_LOGOUT_EXPLAIN'	=> 'Sets the page to which the user will be taken when disconnecting.',
-	
-	'ACCEPT'					=> 'Accept',
+
 	'BATCH_ACTIONS'				=> 'Batch actions',
 	'DEFAULT'					=> 'By default',
 	'LINKS'						=> 'Links',
 	'OPEN_GALLERY'				=> 'Open gallery',
 	'SAVE_AND_ADD'				=> 'Save and add more',
-	'SELECT_COLOUR'				=> 'Select color',
 	'TYPE_DOMAIN_HOME'			=> 'Domain\'s main page',
 	'TYPE_FORUM_HOME'			=> 'Forum\'s main page',
 	'TYPE_FORUM_SECONDARY'		=> 'Forum\'s secondary page',
-	'UPLOAD_IMAGE'				=> 'Upload image',
+
+	'BOARD_BLOCK_INDIVIDUAL'	=> 'Individual pages',
+	'BOARD_BLOCK_NONE'			=> 'Not show',
+	'BOARD_BLOCK_SAME'			=> 'Equal pages',
 
 	'AVATAR_RESIZE_WIDTH'			=> 'Size of avatars',
-	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Maximun size (in pixels) for avatars. Set 0 to use the size of images.',
+	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size allowed (in pixels) for avatars.<br />
+		<em>Set 0 to disable avatar resizing</em>.',
 	'CALENDAR'						=> 'Calendar',
 	'CALENDAR_ENABLED'				=> 'Calendar enabled',
 	'CALENDAR_ENABLED_EXPLAIN'		=> 'Defines whether the calendar will be available in both the<em>/calendar path</em> and blocks.',
+	'CALENDAR_BIRTHDAYS'			=> 'Show Birthdays',
+	'CALENDAR_BIRTHDAYS_EXPLAIN'	=> 'If enabled, user\'s birthdays will be marked and displayed on the calendar, as if they were events.',
 	'CALENDAR_LINK'					=> 'Link',
 	'CALENDAR_LINK_EXPLAIN'			=> 'Define in which part of the forum a link to the calendar will appear.',
 	'CALENDAR_FIRST_DAY'			=> 'First day of the week',
@@ -74,12 +81,11 @@ $lang = array_merge($lang, array(
 	'HOME_TYPE_DISPLAY'				=> 'Behavior of the home page',
 	'HOME_TYPE_DISPLAY_EXPLAIN'		=> 'Sets how the home page will work, if it is enabled.',
 	'IMAGE_RESIZE'					=> 'Resize images',
-	'IMAGE_RESIZE_ENABLED'			=> 'Resize enabled',
-	'IMAGE_RESIZE_ENABLED_EXPLAIN'	=> 'If enabled, the images of "img" bbcode, the attachments and the avatars are resized to fit the maximum size. Only resized if the blocks are enabled.<br />Useful to avoid the block of square.',
 	'IMAGE_RESIZE_POST'				=> 'Resize images in posts',
 	'IMAGE_RESIZE_POST_EXPLAIN'		=> 'Enable/Disable the resize in the images inside the forum posts.',
 	'IMAGE_RESIZE_WIDTH'			=> 'Images max size',
-	'IMAGE_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size (in pixels) for images. The default is 450.',
+	'IMAGE_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size (in pixels) for images. The default is 450.<br />
+		<em>Set 0 to disable image resizing</em>.',
 
 	'INDEX_FILE_ERROR'				=> 'Failed to complete setup',
 ));
@@ -88,8 +94,6 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ADD_ITEM'				=> 'Add item',
 	'CAT'					=> 'Category',
-	'DELETE_ICON'			=> 'Delete icon',
-	'DELETE_IMAGE'			=> 'Delete image',
 
 	'LINK'						=> 'Link',
 	'LINK_DESCRIPTION'			=> 'Description',
@@ -103,9 +107,6 @@ $lang = array_merge($lang, array(
 	'LINK_URL'					=> 'Link URL',
 	'LINK_URL_EXPLAIN'			=> 'The direction that opens when you click on the link. Limit 255 characters.',
 	'LINK_WINDOW'				=> 'Open in New Window',
-
-	'SELECT_ICON'			=> 'Select new icon',
-	'SELECT_IMAGE'			=> 'Select new image',
 ));
 
 // @acp_blockgets_pages
@@ -117,7 +118,6 @@ $lang = array_merge($lang, array(
 	'ADD_GROUP'					=> 'Add group',
 	'ADD_GROUP_EXPLAIN'			=> 'Drag this button to the desired position to add a group',
 	'ADVANCED_OPTIONS'			=> 'Advanced options',
-	'ALL_GROUPS'				=> 'All groups',
 
 	'BLOCK_SETTINGS'			=> 'General options for the block',
 	'BLOCK_SPACE'				=> 'Space between blocks',
@@ -140,6 +140,7 @@ $lang = array_merge($lang, array(
 	'LEFT_COLUMN'				=> 'Left column',
 	'LEFT_COLUMN_EXPLAIN'		=> 'Width of the left column in pixels or percentage.<br />Set 0 to disable the column.',
 	'LINK_BOTTOM'				=> 'Bottom',
+	'LINK_QUICK'				=> 'Quick links',
 	'LINK_NONE'					=> 'No link',
 	'LINK_TOP'					=> 'Top',
 	'MANAGE_PAGE'				=> 'Manage page',
@@ -178,15 +179,15 @@ $lang = array_merge($lang, array(
 	'PAGE_LINK_POSITION_EXPLAIN'	=> 'Define in which part of the forum a link to this page will appear.',
 	'PAGE_LOGO'					=> 'Logo',
 	'PAGE_LOGO_EXPLAIN'			=> 'Sets the url of the image to be used as logo.<br />Leave blank to use the default logo.',
+	'PAGE_STYLE'				=> 'Style',
+	'PAGE_STYLE_EXPLAIN'		=> 'Defines the style to be used on the page.<br /><em>This option will not be applied to the original pages of the forum.</em>',
+	'PAGE_STYLESHEET'			=> 'Custom theme',
+	'PAGE_STYLESHEET_EXPLAIN'	=> 'You can set the path to one or more files *.css (one per line) or directly set the variables of the theme that will be used.',
 	'PAGE_THEME'				=> 'Theme',
 	'PAGE_THEME_BACKGROUND'		=> 'Set background',
 	'PAGE_THEME_DEFAULT'		=> 'Use default configuration',
 	'PAGE_THEME_STYLE'			=> 'Set style',
 	'PAGE_THEME_STYLESHEET'		=> 'Use custom theme',
-	'PAGE_STYLE'				=> 'Style',
-	'PAGE_STYLE_EXPLAIN'		=> 'Defines the style to be used on the page.<br /><em>This option will not be applied to the original pages of the forum.</em>',
-	'PAGE_STYLESHEET'			=> 'Custom theme',
-	'PAGE_STYLESHEET_EXPLAIN'	=> 'You can set the path to one or more files *.css (one per line) or directly set the variables of the theme that will be used.',
 	'PAGE_TITLE'				=> 'Page title',
 	'PAGE_TITLE_EXPLAIN'		=> 'Title will be displayed in the browser.',
 	'PAGE_URL'					=> 'Page url',
@@ -240,8 +241,12 @@ $lang = array_merge($lang, array(
 	'ITEM_NOT_UPDATED'			=> 'Error updating the element',
 
 	'PAGE_ADDED'				=> 'Page added successfully',
-	'PAGE_REMOVED_ONE'			=> 'The page has been successfully removed',
-	'PAGE_REMOVED'				=> 'Page(s) deleted successfully',
+
+	'PAGE_REMOVED'		=> array(
+		1	=> 'The page has been successfully removed',
+		2	=> '%d pages deleted successfully',
+	),
+
 	'PAGE_UPDATED'				=> 'Page configuration updated successfully',
 	'BLG_CONFIG_UPDATED'		=> 'Configuration updated successfully',
 
@@ -263,14 +268,16 @@ $lang = array_merge($lang, array(
 		'birthdays_explain'			=> 'Displays the list of birthdays for today and the next few days (optional).',
 		'empty_title'				=> 'Custom',
 		'empty_explain'				=> 'Totally blank block which can also include any text HTML, CSS, JavaScript, etc...',
-		'calendar_title'			=> 'Calendar with events',
-		'calendar_explain'			=> 'Simple calendar where you can add events that will be featured.',
+		'calendar_title'			=> 'Calendar',
+		'calendar_explain'			=> 'Calendar in which you can add custom events and show birthdays.',
 		'clock_title'				=> 'Clock',
 		'clock_explain'				=> 'Displays a clock in flash format (you can choose several models and add your own clock).',
 		'cloud_tag_title'			=> 'CloudTag',
 		'cloud_tag_explain'			=> 'Sample labels in a balloon in flash format. You can display the latest searched words or the users with more messages.',
 		'contact_title'				=> 'Contact',
-		'contact_explain'			=> 'Displays a standard contact form.',		
+		'contact_explain'			=> 'Displays a standard contact form.',
+		'countdown_title'			=> 'CountDown',
+		'countdown_explain'			=> 'Show a countdown to the indicated date.',	
 		'counter_title'				=> 'Hit counter',
 		'counter_explain'			=> 'Displays a hit counter with statistics of visits, visits per day, visits per hour, weekly visits, visits per month and visits per year.',
 		'dockmenu_title'			=> 'Dock menu',
@@ -283,6 +290,8 @@ $lang = array_merge($lang, array(
 		'gallery_explain'			=> 'Photo Gallery customizable with forum images (attachments) or external images. The images move and link the fate of each.',
 		'google_translate_title'	=> 'Google translator',
 		'google_translate_explain'	=> 'Block that allows you to translate the page on which it is installed, opening a new window and translating it through Google technology.',
+		'language_select_title'		=> 'Language select',
+		'language_select_explain'	=> 'It allows the user to view the forum with any language that is installed in the forum and set it as their default language.',
 		'latest_bots_title'			=> 'Bot\'s visits',
 		'latest_bots_explain'		=> 'Simple list of last bots who entered the forum and the date of their last visit.',
 		'latest_members_title'		=> 'Newest members',

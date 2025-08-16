@@ -1,34 +1,16 @@
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	window._jBlg.push(function() {
-		$('#clock_url')
-			.change(function() {
-				$('#clock_preview').flash({
-					id			: 'clock',
-					url			: '{S_CLOCK_PATH}' + $(this).val(),
-					width		: 120,
-					height		: 120,
-					overwrite	: true,
-					params: {
-						wmode: 'transparent'
-					}
-				});
-			})
-			.change();
-	});
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(['@blockgets/buildClockSelector', '.acp-clock-container', '{S_CLOCK_SELECT}']);
 // ]]>
 </script>
 
-<fieldset>
-	<dl>
-		<dt><label for="clock_url">{L_DISPLAY_CLOCK}:</label><br /><span>{L_DISPLAY_CLOCK_EXPLAIN}</span></dt>
-		<dd><select name="clock_url" id="clock_url">{S_CLOCK_SELECT}</select></dd>
-	</dl>
+<ul class="acp-clock-container"></ul>
 
-	<dl>
-		<dt><label>{L_PREVIEW_CLOCK}:</label><br /><span>{L_PREVIEW_CLOCK_EXPLAIN}</span></dt>
-		<dd id="clock_preview"></dd>
-	</dl>
-</fieldset>
+<script type="text/html" id="tpl-clock-item">
+<li>
+	<div class="clock-preview"></div>
+	<input type="radio" name="clock" value="<%clockID%>" />
+</li>
+</script>

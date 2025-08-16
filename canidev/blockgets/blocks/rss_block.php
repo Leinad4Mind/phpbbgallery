@@ -1,11 +1,10 @@
 <?php
 /*
-* @name rss_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
@@ -18,7 +17,7 @@ if(!defined('IN_PHPBB'))
 
 class rss_block extends base
 {
-	static $icon = 'blg-icon-rss';
+	static $icon = 'fa-rss';
 
 	private $default_rss_data = array(
 		'encoding'	=> 'UTF-8',
@@ -83,7 +82,7 @@ class rss_block extends base
 					case 'rss':
 						if(!$ignore_lang && $this->user->lang_name != $this->get(false, 'language'))
 						{
-							continue;
+							break;
 						}
 				
 						$this->template->assign_block_vars('rss', array(
@@ -106,7 +105,7 @@ class rss_block extends base
 					case 'feed':
 						if(!$ignore_lang && $user->lang_name != $this->rss_data['language'])
 						{
-							continue;
+							break;
 						}
 				
 						$this->template->assign_block_vars('rss', array(
@@ -129,6 +128,14 @@ class rss_block extends base
 			}
 		}
 
+		$this->template->assign_json_var('S_OPTIONS', array(
+			'loadOnInit' 	=> true,
+			'requestData' 	=> array(
+				'jblgm' => $this->data['block_id'],
+				'm' 	=> 'load'
+			)
+		));
+
 		unset($data);
 		return true;
 	}
@@ -149,12 +156,12 @@ class rss_block extends base
 		);
 		
 		$this->display_vars = array(
-			'limit'			=> array('lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'text:6:5',		'default' => 5),
-			'ignore_lang'	=> array('lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'direction'		=> array('lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',			'method' => 'helper',	'params' => array('make_select', $dir_options, '{CONFIG_VALUE}'),	'default' => BLG_SCROLL_V),
-			'collapsable'	=> array('lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'height'  		=> array('lang' => 'RSS_HEIGHT',		'validate' => 'int', 	'type' => 'text:4:3',		'default' => 150),
-			'ttl'  			=> array('lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',			'method' => 'helper',	'params' => array('make_select', $ttl_options, '{CONFIG_VALUE}'),	'default' => 86400),
+			'limit'			=> array('lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'number:1:999',		'default' => 5),
+			'ignore_lang'	=> array('lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
+			'direction'		=> array('lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $dir_options, false, '{CONFIG_VALUE}'),	'default' => BLG_SCROLL_V),
+			'collapsable'	=> array('lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
+			'height'  		=> array('lang' => 'RSS_HEIGHT',		'validate' => 'int', 	'type' => 'number:0:999',		'default' => 150),
+			'ttl'  			=> array('lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $ttl_options, false, '{CONFIG_VALUE}'),	'default' => 86400),
 		);
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
@@ -267,30 +274,41 @@ class rss_block extends base
 	private function _read($url)
 	{
 		$url = str_replace('&amp;', '&', $url);
+		$user_agent = 'Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0';
 		
 		$this->plain_text = '';
-		
-		if(($this->plain_text = @file_get_contents($url)) === false)
+
+		if(function_exists('curl_init'))
 		{
-			if($f = @fopen($url, 'r'))
+			$ch = curl_init($url);
+
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+			$this->plain_text = curl_exec($ch);
+
+			curl_close($ch);
+		}
+		else 
+		{
+			$context  = stream_context_create(array(
+				'http' => array('user_agent' => $user_agent)
+			));
+			
+			if(($this->plain_text = @file_get_contents($url, false, $context)) === false)
 			{
-				while(!feof($f))
+				if($f = @fopen($url, 'r'))
 				{
-					$this->plain_text .= fgets($f, 4096);
+					while(!feof($f))
+					{
+						$this->plain_text .= fgets($f, 4096);
+					}
+					fclose($f);
 				}
-				fclose($f);
-			}
-			else if(function_exists('curl_init'))
-			{
-				$ch = curl_init($url);
-				
-				curl_setopt($ch, CURLOPT_HEADER, 0);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-
-				$this->plain_text = curl_exec($ch);
-
-				curl_close($ch);
 			}
 		}
 		
@@ -368,7 +386,7 @@ class rss_block extends base
 		
 		if($text && $this->rss_data['encoding'] != $this->default_rss_data['encoding'])
 		{
-			$text = iconv($this->rss_data['encoding'], $this->default_rss_data['encoding'] . '//TRANSLIT', $text);
+			$text = mb_convert_encoding($text, $this->rss_data['encoding'], $this->default_rss_data['encoding']);
 		}
 
 		return $text;	
