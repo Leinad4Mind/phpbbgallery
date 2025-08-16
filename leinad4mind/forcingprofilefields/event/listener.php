@@ -184,18 +184,20 @@ class listener implements EventSubscriberInterface
 
 		$profile_field_rows = $this->manager->grab_profile_fields_data($this->user->data['user_id']);
 
-		foreach ($profile_field_rows[$this->user->data['user_id']] as $row)
-		{
-			/** @var type_base $profile_field */
-			$profile_field = $this->type_collection[$row['data']['field_type']];
-
-			$is_default_value = $row['value'] === null && ($row['data']['field_default_value'] || $row['data']['lang_default_value']);
-
-			if (!$is_default_value)
+		if (!empty($profile_field_rows)) {
+			foreach ($profile_field_rows[$this->user->data['user_id']] as $row)
 			{
-				if ($error = $profile_field->validate_profile_field($row['value'], $row['data']))
+				/** @var type_base $profile_field */
+				$profile_field = $this->type_collection[$row['data']['field_type']];
+
+				$is_default_value = $row['value'] === null && ($row['data']['field_default_value'] || $row['data']['lang_default_value']);
+
+				if (!$is_default_value)
 				{
-					$errors[] = $error;
+					if ($error = $profile_field->validate_profile_field($row['value'], $row['data']))
+					{
+						$errors[] = $error;
+					}
 				}
 			}
 		}
