@@ -1,6 +1,14 @@
 ## Changelog
 
-### 1.0.4 - 2010-01-10
+### 1.0.5 - 2017-10-15
+
+- Gallery mode can now be enabled for the whole page or per post
+- Added compatibility with mChat extension
+- Added German translation
+- Added Turkish translation
+- Added Vietnamese translation
+
+### 1.0.4 - 2017-01-10
 
 - Minor informational update for phpBB 3.2.x
 
