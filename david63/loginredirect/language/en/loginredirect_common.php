@@ -3,7 +3,7 @@
 *
 * @package User Login Redirect
 * @copyright (c) 2014 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'		=> 'You have been successfully logged in. A new announcement has been posted since your last visit which you will now be redirected to.',
-	'REDIRECT_LOGIN_GROUP_TOPIC'		=> 'You have been successfully logged in. A new group message has been posted since your last visit which you will now be redirected to.',
-	'REDIRECT_LOGIN_WELCOME_TOPIC'		=> 'You have been successfully logged in. As this is your first visit you will now be redirected to our welcome topic.',
+	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'	=> 'You have been successfully logged in. A new announcement has been posted since your last visit which you will now be redirected to.',
+	'REDIRECT_LOGIN_GROUP_TOPIC'	=> 'You have been successfully logged in. A new group message has been posted since your last visit which you will now be redirected to.',
+	'REDIRECT_LOGIN_WELCOME_TOPIC'	=> 'You have been successfully logged in. As this is your first visit you will now be redirected to our welcome topic.',
 
-	'REDIRECT_REFRESH_ANNOUNCE'			=> '%sProceed to announcement topic%s',
-	'REDIRECT_REFRESH_GROUP' 			=> '%sProceed to group topic%s',
-	'REDIRECT_REFRESH_WELCOME'			=> '%sProceed to welcome topic%s',
+	'REDIRECT_REFRESH_ANNOUNCE'		=> '%sProceed to announcement topic%s',
+	'REDIRECT_REFRESH_GROUP' 		=> '%sProceed to group topic%s',
+	'REDIRECT_REFRESH_WELCOME'		=> '%sProceed to welcome topic%s',
 ));

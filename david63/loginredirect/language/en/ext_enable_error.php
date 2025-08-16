@@ -2,8 +2,8 @@
 /**
 *
 * @package User Login Redirect
-* @copyright (c) 2014 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @copyright (c) 2016 david63
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
-// DEVELOPERS PLEASE NOTE
+/// DEVELOPERS PLEASE NOTE
 //
 // All language files should use UTF-8 as their encoding and the files must not contain a BOM.
 //
@@ -36,12 +36,16 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'		=> 'Você se logou. Um novo anúncio foi postado desde sua última visita e você será direcionado para lá.',
-	'REDIRECT_LOGIN_GROUP_TOPIC'		=> 'Você se logou. Uma nova mensagem de grupo foi postada desde sua última visita e você será direcionado para lá.',
-	'REDIRECT_LOGIN_WELCOME_TOPIC'		=> 'Você se logou. Como é sua primeira visita, você será direcionado à página de apresentações.',
+$lang = array_merge($lang, [
+	'EXT_ENABLE_ERROR' => 'This extension requires phpBB 3.2.0 (or greater).',
+]);
 
-	'REDIRECT_REFRESH_ANNOUNCE'			=> '%sIr ao novo anúncio%s',
-	'REDIRECT_REFRESH_GROUP' 			=> '%sIr à mensagem de grupo%s',
-	'REDIRECT_REFRESH_WELCOME'			=> '%sIr à página de apresentações%s',
+/**
+* Translators ignore this.
+*
+* Overwrite core error message keys with a more specific message.
+*/
+$lang = array_merge($lang, array(
+	'EXTENSION_NOT_ENABLEABLE' 		=> isset($lang['EXTENSION_NOT_ENABLEABLE']) ? $lang['EXTENSION_NOT_ENABLEABLE'] . '<br><br><strong>' . $lang['EXT_ENABLE_ERROR'] . '</strong>' : null,
+	'CLI_EXTENSION_ENABLE_FAILURE' 	=> isset($lang['CLI_EXTENSION_ENABLE_FAILURE']) ? $lang['CLI_EXTENSION_ENABLE_FAILURE'] . ' : ' . $lang['EXT_ENABLE_ERROR'] : null,
 ));

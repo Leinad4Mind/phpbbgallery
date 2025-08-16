@@ -3,7 +3,7 @@
 *
 * @package User Login Redirect
 * @copyright (c) 2014 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -15,13 +15,16 @@ class loginredirect_module
 
 	function main($id, $mode)
 	{
-		global $phpbb_container, $user;
+		global $phpbb_container;
 
 		$this->tpl_name		= 'login_redirect_manage';
-		$this->page_title	= $user->lang('REDIRECT');
+		$this->page_title	= $phpbb_container->get('language')->lang('REDIRECT');
 
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('david63.loginredirect.admin.controller');
+
+		// Make the $u_action url available in the admin controller
+		$admin_controller->set_page_url($this->u_action);
 
 		$admin_controller->display_options();
 	}
