@@ -1,9 +1,9 @@
 {
 	"name": "sitesplat/likedd",
 	"type": "phpbb-extension",
-	"description": "An extension for like / dislike posts, Ajax driven(Real time).",
+	"description": "An extension for like / dislike posts, Ajax driven(real time user interaction).",
 	"homepage": "http://sitesplat.com",
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"keywords": ["phpbb", "extension", "likeBB", "Ajax", "like", "dislike", "award"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [

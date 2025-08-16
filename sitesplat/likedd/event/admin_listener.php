@@ -67,14 +67,13 @@ class admin_listener implements EventSubscriberInterface
 			$submit_legend_number = substr($submit_key, 6);
 			$display_vars['vars']['legend'.$submit_legend_number] = 'ACP_LIKEDD_TITLE';
 			$new_vars = array(
-				'dislike_off'	=> array('lang' => 'LIKEDD_DISLIKE_OFF',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-
-				'like_icon'		=> array('lang' => 'LIKEDD_LIKE_ICON',		'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_icon',  'explain' => true),
-				'like_style'	=> array('lang' => 'LIKEDD_LIKE_STYLE',	'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_select', 'explain' => true),
-				'like_list'		=> array('lang' => 'LIKEDD_LIKE_LIST',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-				'max_dislikes'	=> array('lang' => 'LIKEDD_MAX_DISLIKES',	'validate' => 'int:0',  'type' => 'text:4:10', 'method' => false, 'explain' => true),
-				'like_locked'		=> array('lang' => 'LIKEDD_LIKE_LOCKED',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-				'like_global'		=> array('lang' => 'LIKEDD_LIKE_GLOBAL',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+				'like_icon'		    => array('lang' => 'LIKEDD_LIKE_ICON',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_icon',  'explain' => true),
+				'like_style'	    => array('lang' => 'LIKEDD_LIKE_STYLE',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_select', 'explain' => true),
+				'like_list'		    => array('lang' => 'LIKEDD_LIKE_LIST',	  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'dislike_off'	    => array('lang' => 'LIKEDD_DISLIKE_OFF',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'max_dislikes'	    => array('lang' => 'LIKEDD_MAX_DISLIKES', 'validate' => 'int:0',  'type' => 'text:4:10', 'method' => false, 'explain' => true),
+				'like_locked'		=> array('lang' => 'LIKEDD_LIKE_LOCKED',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'like_global'		=> array('lang' => 'LIKEDD_LIKE_GLOBAL',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
 				'legend'.($submit_legend_number + 1)	=> 'ACP_SUBMIT_CHANGES',
 			);
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $new_vars, array('after' => $submit_key));
@@ -105,7 +104,7 @@ class admin_listener implements EventSubscriberInterface
 			}
 		}
 		
-		return '<select style="font-family:FontAwesome;width:140px;font-size:1.2em;" name="config[like_icon]" id="like_icon" title="Like-icon" onchange="document.getElementById(\'LikeIcon\').className = \'fa \' + this.value ">' . $like_options . '</select>' . ((!$config['dislike_off']) ? ' <select style="font-family:FontAwesome;width:140px;font-size:1.2em;" name="dislike_icon" id="dislike_icon" title="DisLike-icon" onchange="document.getElementById(\'DisLikeIcon\').className = \'fa \' + this.value ">' . $dislike_options . '</select>' : '');
+		return '<select style="font-family:FontAwesome;width:140px;font-size:1.2em;" name="config[like_icon]" id="like_icon" onchange="document.getElementById(\'LikeIcon\').className = \'fa \' + this.value ">' . $like_options . '</select>' . ((!$config['dislike_off']) ? ' <select style="font-family:FontAwesome;width:140px;font-size:1.2em;" name="dislike_icon" id="dislike_icon" onchange="document.getElementById(\'DisLikeIcon\').className = \'fa \' + this.value ">' . $dislike_options . '</select>' : '');
 	}
 
 	static function like_select($value, $key)
@@ -129,7 +128,7 @@ class admin_listener implements EventSubscriberInterface
 				$dislike_default = ((isset($config['dislike_style'])) ? $config['dislike_style'] : 'btn-info');
 			}
 		}
-		return '<select style="width:140px;" name="config[like_style]" id="like_style" title="Like-style" onchange="document.getElementById(\'LikeElement\').className = \'btn \' + this.value + \' btn-sm\';">' . $like_options . '</select>' . ((!$config['dislike_off']) ? ' <select style="width:140px;" name="dislike_style" id="dislike_style" title="Dislike-style" onchange="document.getElementById(\'DisLikeElement\').className = \'btn \' + this.value + \' btn-sm\';">' . $dislike_options . '</select>' :'') . '<br /><div style="float:left;width:140px;text-align:center;"><a id="LikeElement" class="btn ' . $like_default . ' btn-sm"><i id="LikeIcon" class="fa ' . ((isset($config['like_icon'])) ? $config['like_icon'] : 'fa-thumbs-up') . '"></i> Like <span></span></a></div>' . ((!$config['dislike_off']) ? '<div style="float:left;width:140px;text-align:center;"><a id="DisLikeElement" class="btn ' . $dislike_default . ' btn-sm"><i id="DisLikeIcon" class="fa ' . ((isset($config['dislike_icon'])) ? $config['dislike_icon'] : 'fa-thumbs-down') . '"></i> DisLike <span></span></a></div>' : '') . '<br style="clear:both;" />';
+		return '<select style="width:140px;margin-bottom:10px;" name="config[like_style]" id="like_style" onchange="document.getElementById(\'LikeElement\').className = \'btn \' + this.value + \' btn-sm\';">' . $like_options . '</select>' . ((!$config['dislike_off']) ? ' <select style="width:140px;margin-bottom:10px;" name="dislike_style" id="dislike_style" onchange="document.getElementById(\'DisLikeElement\').className = \'btn \' + this.value + \' btn-sm\';">' . $dislike_options . '</select>' :'') . '<br /><div style="float:left;width:140px;text-align:center;"><a id="LikeElement" class="btn ' . $like_default . ' btn-sm"><i id="LikeIcon" class="fa ' . ((isset($config['like_icon'])) ? $config['like_icon'] : 'fa-thumbs-up') . '"></i> Like <span></span></a></div>' . ((!$config['dislike_off']) ? '<div style="float:left;width:140px;text-align:center;"><a id="DisLikeElement" class="btn ' . $dislike_default . ' btn-sm"><i id="DisLikeIcon" class="fa ' . ((isset($config['dislike_icon'])) ? $config['dislike_icon'] : 'fa-thumbs-down') . '"></i> DisLike <span></span></a></div>' : '') . '<br style="clear:both;" />';
 
 	}
 

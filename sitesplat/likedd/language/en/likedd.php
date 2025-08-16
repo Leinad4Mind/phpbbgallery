@@ -49,7 +49,7 @@ $lang = array_merge($lang, array(
 	'LIKES_AND'       	     				    => 'and',
 	'LIKES_LIKED_LAST'       	     		    => 'liked last!',
 	'LIKES_LINK_OTHER_TOOLTIP'       	        => 'See who liked this',
-	'LIKES_TOP_LIST'       	                    => 'Top 10 Like / Dislike list',
+	'LIKES_TOP_LIST'       	                    => 'Top 10 Like / Dislike',
 	
 	'LIKE_ACTIVITY_UCP_EMPTY'				    => 'There is no activity yet. What are you waiting for? :-)',
 	
@@ -66,7 +66,10 @@ $lang = array_merge($lang, array(
 	'LIKES_SORT_DATE'       	     		    => 'Sort by date',
 	'LIKES_SORT_POSTS_AMT'       	     		=> 'Sort by post',
 	
+	'NO_LIKES'									=> 'No likes found!',
 	
+	'UCP_LD_GIVEN'                  			=> 'Given',   
+    'UCP_LD_RECEIVED'   	        			=> 'Received',
 	'LIKES_GIVEN'                  				=> 'Like Given',   
     'LIKES_RECEIVED'   	        				=> 'Like Received',   
     'DISLIKES_GIVEN'       	     				=> 'Dislike Given',
@@ -84,6 +87,11 @@ $lang = array_merge($lang, array(
 	'AND'										=> 'and',
 	'OTHERS'									=> 'others',
 	'LIKED_THIS'								=> 'liked this',
+	
+	'LIKES_FORUM_OVERVIEW'						=> 'Forum overview',
+	'LIKES_TOPIC_OVERVIEW'						=> 'Topic overview',
+	'LIKES_POSTS_OVERVIEW'						=> 'Message overview',
+	'LIKES_USER_OVERVIEW'						=> 'User overview',
 	
 	'UCP_LIKEDD_TITLE'							=> 'Like / Dislike overview',
 	'UCP_LIKEDD_EXPLAIN'						=> 'Overview of all likes and dislikes you give or recieved'

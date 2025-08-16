@@ -37,7 +37,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Overwrite enable_step to enable like/dislike notifications
+	 * Overwrite enable_step to enable like/dislike addon notifications
 	 * before any included migrations are installed.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -56,11 +56,11 @@ class ext extends \phpbb\extension\base
 								$this->container->get('user')->lang['ACP_CAT_GENERAL'],
 								$this->container->get('user')->lang['ACP_BOARD_CONFIGURATION'],
 								$this->container->get('user')->lang['ACP_BOARD_SETTINGS']) : ''));
-								
-				// Enable like/dislike notifications
-				return $this->notification_handler('enable', array(
-					'sitesplat.likedd.notification.type.likedd_added',
-				));
+
+				// Enable like/dislike addon notifications
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->enable_notifications('sitesplat.likedd.notification.type.likedd_added');
+				return 'notifications';
 
 			break;
 
@@ -74,7 +74,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Overwrite disable_step to disable like/dislike notifications
+	 * Overwrite disable_step to disable like/dislike addon notifications
 	 * before the extension is disabled.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -87,10 +87,10 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
-				// Disable like/dislike notifications
-				return $this->notification_handler('disable', array(
-					'sitesplat.likedd.notification.type.likedd_added',
-				));
+				// Disable like/dislike addon notifications
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->disable_notifications('sitesplat.likedd.notification.type.likedd_added');
+				return 'notifications';
 
 			break;
 
@@ -104,7 +104,7 @@ class ext extends \phpbb\extension\base
 	}
 
 	/**
-	 * Overwrite purge_step to purge like/dislike notifications before
+	 * Overwrite purge_step to purge like/dislike addon notifications before
 	 * any included and installed migrations are reverted.
 	 *
 	 * @param mixed $old_state State returned by previous call of this method
@@ -117,10 +117,10 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
-				// Purge like/dislike notifications
-				return $this->notification_handler('purge', array(
-					'sitesplat.likedd.notification.type.likedd_added',
-				));
+				// Purge like/dislike addon notifications
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->purge_notifications('sitesplat.likedd.notification.type.likedd_added');
+				return 'notifications';
 
 			break;
 
@@ -131,25 +131,5 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
-	}
-
-	/**
-	 * Notification handler to call notification enable/disable/purge steps
-	 *
-	 * @param string $step               The step (enable, disable, purge)
-	 * @param array  $notification_types The notification type names
-	 * @return string Return notifications as temporary state
-	 * @access protected
-	 */
-	protected function notification_handler($step, $notification_types)
-	{
-		$phpbb_notifications = $this->container->get('notification_manager');
-
-		foreach ($notification_types as $notification_type)
-		{
-			call_user_func(array($phpbb_notifications, $step . '_notifications'), $notification_type);
-		}
-
-		return 'notifications';
 	}
 }

@@ -21,7 +21,7 @@ class likedd_info
 			'modes'     => array(
 				'likedd'	=> array(
 						'title'	=> 'UCP_LIKEDD_TITLE',
-						'auth'	=> 'ext_sitesplat/likedd',
+						'auth'	=> 'ext_sitesplat/likedd && acl_u_likedd',
 						'cat'	=> array('UCP_PROFILE')
 				),
 			),

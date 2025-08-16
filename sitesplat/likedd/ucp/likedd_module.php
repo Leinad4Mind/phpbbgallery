@@ -110,7 +110,7 @@ class likedd_module
 						'SUBJECT'			=> $row['post_subject'],
 						'SUBJECTURL'		=> append_sid($url),
 						'ICON'				=> (!$row['ld']) ? $config['like_icon'] : $config['dislike_icon'],
-						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? 'Given' : 'Recieved',
+						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? $user->lang['UCP_LD_GIVEN'] : $user->lang['UCP_LD_RECEIVED'],
 						'LIKE_TIME'			=> $user->format_date($row['like_time']),
 						'USERNAME'			=> $row['username']
 						)

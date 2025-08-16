@@ -10,9 +10,13 @@
 
 namespace sitesplat\likedd\event;
 
-/**
-* @ignore
-*/
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\user;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\controller\helper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -23,6 +27,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.permissions'					=> 'add_permissions',
 			'core.user_setup'					=> 'add_page_header_link',
 			'core.viewtopic_modify_page_title'	=> 'assign_buttons',
 			'core.viewtopic_modify_post_row'	=> 'viewtopic_handle_posts',
@@ -50,11 +55,15 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
 	/** @var string The database table the likes are stored in */
 	protected $likes_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, $likes_table)
+	public function __construct(auth $auth, config $config, driver_interface $db, user $user, request $request, template $template, helper $helper, $likes_table)
 	{
+		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
@@ -62,6 +71,14 @@ class listener implements EventSubscriberInterface
 		$this->template = $template;
 		$this->helper = $helper;
 		$this->likes_table = $likes_table;
+	}
+
+	public function add_permissions($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_likebb_like'] = array('lang' => 'ACL_U_LIKEBB_LIKE', 'cat' => 'post');
+		$permissions['u_likebb_dislike'] = array('lang' => 'ACL_U_LIKEBB_DISLIKE', 'cat' => 'post');
+		$event['permissions'] = $permissions;
 	}
 
 	public function add_page_header_link($event)
@@ -90,8 +107,8 @@ class listener implements EventSubscriberInterface
 		{
 				$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
 				$post_row = $event['post_row'];
-				$post_row['U_LIKE'] = append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']);
-				$post_row['U_DISLIKE'] = (!$this->config['dislike_off']) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
+				$post_row['U_LIKE'] = ($this->auth->acl_get('u_likebb_like')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']) : false;
+				$post_row['U_DISLIKE'] = (!$this->config['dislike_off'] && $this->auth->acl_get('u_likebb_dislike')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
 		
 				$sql = 'SELECT post_id, 
 						GROUP_CONCAT(case when l.ld = 0 then CONCAT("<a href=\"memberlist.php?mode=viewprofile&u=", l.user_id, "\">", u.username, "</a>") else NULL end, ", ") AS names_likes,

@@ -102,26 +102,42 @@ class main_controller
 				$start = $this->pagination->validate_start($start, $per_page, $total_likes);
 				$base_url = append_sid('app.' . $this->php_ext . '/likedd/likers.html?p=' . $this->request->variable('p', 0));
 
-				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, l.ld, l.like_time FROM ' . $this->likes_table . ' l 
+				$sql = 'SELECT l.user_id, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, l.ld, l.like_time FROM ' . $this->likes_table . ' l 
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.user_id
 						WHERE l.post_id = ' . $this->request->variable('p', 0) . ' ORDER BY l.like_time DESC';
 				$result = $this->db->sql_query_limit($sql, $per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
+				  $match = array();
+				  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							  phpbb_get_user_avatar(
+								  array('avatar'			=> $row['user_avatar'], 
+								        'user_id'           => $row['user_id'],
+										'avatar_type'		=> $row['user_avatar_type'], 
+										'avatar_width'		=> $row['user_avatar_width'], 
+										'avatar_height'		=> $row['user_avatar_height'])), $match) :
+										generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+
+
+
 					echo '<div class="avatar-likers" style="float:left;width:33.333%;">
-						  <img src="' . 
-						  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
-						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) . ' " style="float:left;width:70px;">
-						  <div class="likers-time-stamp" style="float:left;display:block;text-align:center;padding-left:5px;">
+						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . 
+		/*				  ((!phpbb_validate_email($row['user_avatar']) ? '//secure.gravatar.com/avatar/' . md5(strtolower(trim($row['user_avatar']))) . '?d=identicon&amp;s=70':
+						  (($row['user_avatar']) ? ((strpos($row['user_avatar'], 'http') === false) ? generate_board_url() . '/download/file.php?avatar=' . $row['user_avatar'] : $row['user_avatar']) : generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif'))) */
+						  
+						  ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar)
+						  
+						  . ' " style="float:left;width:70px;">
+						  <div class="likers-time-stamp" style="text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a>
 						  <br /><i class="fa fa-thumbs-' . (($row['ld']) ? 'down' : 'up') . '"></i> ' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';
 				}
-				echo '<br style="clear:both;"><div class="pagination-likes pull-right"><ul class="pagination pagination-sm">';
+				echo '<br><div class="pagination-likes pull-right"><ul class="pagination pagination-sm">';
 				echo $this->generate_pagination($base_url, $total_likes, $per_page, $start, true);
 				echo '</ul></div>
 				<script>
 				$( document ).ready(function() {
-					$( "#profile-data .pull-right .pagination-sm > li a" ).addClass( "LikersPagination" );
+					$("#likedd-profile-data .pull-right .pagination-sm > li a").addClass("LikersPagination");
 				});
 				</script>'; 
 				exit();
@@ -130,6 +146,7 @@ class main_controller
 			case 'toplist':
 				$type = $this->request->variable('t', 0);
 
+				$exclude_forums = array_keys($this->auth->acl_getf('!f_read', true));
 				$sql = 'SELECT COUNT(case when l.ld = 0 then 1 else null end) AS num_likes, COUNT(case when l.ld = 1 then 1 else null end) AS num_dislikes,  
 						' . (($type == 1) ? 'p.topic_id,  p.forum_id, t.topic_title' : 
 						(($type == 2) ? 'p.topic_id, p.post_id, p.forum_id, p.post_subject' : 
@@ -140,13 +157,14 @@ class main_controller
 						' . (($type == 1) ? 'LEFT JOIN ' . TOPICS_TABLE . ' t ON t.topic_id = p.topic_id' : 
 						(($type == 2) ? '' : 
 						(($type == 3) ? '' : 'LEFT JOIN ' . FORUMS_TABLE . ' f ON f.forum_id = p.forum_id'))) . '
+						' . (($type != 3) ? 'WHERE ' . $this->db->sql_in_set('p.forum_id', $exclude_forums, true, true) : '') . '
 						GROUP BY ' . (($type == 1) ? 't.topic_id' : 
 						(($type == 2) ? 'p.post_id' : 
 						(($type == 3) ? 'l.user_id' : 'p.forum_id'))) . '
 						ORDER BY num_likes DESC';
 				$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0);
-				$likes['name'] = 'Likes';
-				$dislikes['name'] = 'DisLikes';
+				$likes['name'] = $this->user->lang['LIKES_SORT_LIKES'];
+				$dislikes['name'] = $this->user->lang['LIKES_SORT_DISIKES'];
 				$categories['data'] = $likes['data'] = $dislikes['data'] = array();
 				while($row = $this->db->sql_fetchrow($result)) 
 				{
@@ -157,15 +175,20 @@ class main_controller
 					$likes['data'][] = array('y' => $row['num_likes'], 'url' => $url);
 					$dislikes['data'][] = array('y' => $row['num_dislikes'], 'url' => $url);
 					
-					$categories['data'][] = $row['catname'];
+					$categories['data'][] = htmlspecialchars_decode($row['catname']);
 				}
 				
 				$likes_dislikes = '[' . str_replace(array('"name"', '"data"', '"y"', '"url"'), array('name', 'data', 'y', 'url'), json_encode($likes, JSON_NUMERIC_CHECK)) . 
 								  ', ' . str_replace(array('"name"', '"data"', '"y"', '"url"'), array('name', 'data', 'y', 'url'), json_encode($dislikes, JSON_NUMERIC_CHECK)) . ']';
-
-				$title_type = array('Forum overview', 'Topic overview', 'Message overview', 'User overview');
+				
+				$title_type = array(
+					$this->user->lang['LIKES_FORUM_OVERVIEW'],
+					$this->user->lang['LIKES_TOPIC_OVERVIEW'],
+					$this->user->lang['LIKES_POSTS_OVERVIEW'],
+					$this->user->lang['LIKES_USER_OVERVIEW']
+				);
 				$title['title'][] = $title_type[$type];
-				$title['descr'][] = 'Toplist like Dislike' . ': ';
+				$title['descr'][] = $this->user->lang['UCP_LIKEDD_TITLE'] . ': ';
 
 				if ($this->request->variable('table', false))
 				{
@@ -207,6 +230,15 @@ class main_controller
 				$row = $this->db->sql_fetchrow($result);
 
 				$error = array();
+				if ($this->request->is_set_post('l') && !$this->auth->acl_get('u_likebb_like'))
+				{
+					$error[] = $this->user->lang['LIKE_POST_NO_AUTH'];
+				}
+				if (!$this->request->is_set_post('l') && !$this->auth->acl_get('u_likebb_dislike'))
+				{
+					$error[] = $this->user->lang['LIKE_POST_NO_AUTH'];
+				}
+
 				if ($row)
 				{
 					if ($row['poster_id'] == $this->user->data['user_id']) $error[] = $this->user->lang['LIKE_OWN_POST_ERROR'];
@@ -339,18 +371,18 @@ class main_controller
 			$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
 			$end_cnt = max(min($total_pages, $on_page + 4), 6);
 	
-			$page_string .= ($start_cnt > 1) ? '<span class="page-dots"> ... </span>' : $seperator;
+			$page_string .= ($start_cnt > 1) ? '<li class="page-dots"><a>...</a></li>' : $seperator;
 	
 			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+				$page_string .= ($i == $on_page) ? '<li><a>' . $i . '</a></li>' : '<li><a href="' . $base_url . "{$url_delim}start=" . (($i - 1) * $per_page) . '">' . $i . '</a></li>';
 				if ($i < $end_cnt - 1)
 				{
 					$page_string .= $seperator;
 				}
 			}
 	
-			$page_string .= ($end_cnt < $total_pages) ? '<span class="page-dots"> ... </span>' : $seperator;
+			$page_string .= ($end_cnt < $total_pages) ? '<li class="page-dots"><a>...</a></li>' : $seperator;
 		}
 		else
 		{

@@ -6,40 +6,41 @@ services:
     sitesplat.likedd.admin_listener:
         class: sitesplat\likedd\event\admin_listener
         arguments:
-            - @config
-            - @request
-            - @controller.helper
-            - @template
+            - '@config'
+            - '@request'
+            - '@controller.helper'
+            - '@template'
         tags:
             - { name: event.listener }
 
     sitesplat.likedd.listener:
         class: sitesplat\likedd\event\listener
         arguments:
-            - @config
-            - @dbal.conn
-            - @user
-            - @request
-            - @template
-            - @controller.helper
-            - %sitesplat.likedd.tables.likes%
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@controller.helper'
+            - '%sitesplat.likedd.tables.likes%'
         tags:
             - { name: event.listener }
 
     sitesplat.likedd.controller:
         class: sitesplat\likedd\controller\main_controller
         arguments:
-            - @config
-            - @controller.helper
-            - @template
-            - @user
-            - @auth
-            - @request
-            - @dbal.conn
-            - @pagination
-            - @path_helper
-            - @dispatcher
-            - @notification_manager
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.likedd.tables.likes%
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@request'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@path_helper'
+            - '@dispatcher'
+            - '@notification_manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.likedd.tables.likes%'

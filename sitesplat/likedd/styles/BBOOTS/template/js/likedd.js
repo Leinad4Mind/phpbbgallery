@@ -1,5 +1,5 @@
 head.ready(function () {
-$(document).on("click", ".clickme", function (e) {
+$(document).on("click", ".btn-likedd-trigger", function (e) {
 	e.preventDefault();
 	var val = $(this).data("options");
 	$.ajax({ type: "POST", 
@@ -24,11 +24,11 @@ $(document).on("click", ".open-LikersDialog", function () {
 
 	$.ajax({
 		url: 'app.php/likedd/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("likedd-profile-data"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #likedd-profile-data").html( s );
 		}
 	});
 });
@@ -43,11 +43,11 @@ $(document).on("click", ".LikersPagination", function (e) {
 
 	$.ajax({
 		url: 'app.php/likedd/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
-		context: document.getElementById("profile-data"),
+		context: document.getElementById("likedd-profile-data"),
 		error: function (e, text, ee) {
 		},
 		success: function (s, x) {
-			$(".modal-body #profile-data").html( s );
+			$(".modal-body #likedd-profile-data").html( s );
 		}
 	});
 });
