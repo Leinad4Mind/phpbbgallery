@@ -1,0 +1,23 @@
+<!-- IF BLG_ENABLED or BLG_LOAD_HEADER -->
+
+<!-- IF BLG_ENABLED -->
+	<style>
+	#blg-column-left	{ width:{LEFT_COLUMN_WIDTH}; }
+	#blg-column-right	{ width:{RIGHT_COLUMN_WIDTH}; }
+	.hasleft #blg-column-center		{ margin-left: {LEFT_COLUMN_WIDTH}; padding-left: {BLG_BLOCK_SPACE}; }
+	.hasright #blg-column-center	{ margin-right: {RIGHT_COLUMN_WIDTH}; padding-right: {BLG_BLOCK_SPACE}; }
+	.blg-block, .blg-block.panel-forum { margin-bottom: {BLG_BLOCK_SPACE};}
+
+	<!-- IF BLG_LOGO -->.site_logo, .imageset.site_logo { background-image: url('{BLG_LOGO}'); }<!-- ENDIF -->
+	</style>
+<!-- ENDIF -->
+
+<!-- BEGIN asset_css -->
+	<link href="{asset_css.DATA}" rel="stylesheet"{asset_css.PARAMS} />
+<!-- END asset_css -->
+
+<!-- BEGIN asset_style -->
+	<style type="text/css"{asset_style.PARAMS}>{asset_style.DATA}</style>
+<!-- END asset_style -->
+
+<!-- ENDIF -->

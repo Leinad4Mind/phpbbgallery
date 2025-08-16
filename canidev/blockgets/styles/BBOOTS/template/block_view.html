@@ -1,0 +1,40 @@
+	
+{% if block.IS_GROUP %}
+	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
+	{% for sub in block.blocks %}
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block {{ sub.BLOCK_CLASSES }}">
+			<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
+			<thead>
+				<tr><th class="block_title">{{ sub.BLOCK_ICON }}<span> {{ sub.BLOCK_TITLE }}</span></th></tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>
+					<div class="block-content">
+						{{ sub.BLOCK_CONTENT }}
+					</div>
+				</td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+	{% endfor %}
+	</div>
+{% else %}
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-block {{ block.BLOCK_CLASSES }}">
+		<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
+		<thead>
+			<tr><th class="block_title">{{ block.BLOCK_ICON }}<span> {{ block.BLOCK_TITLE }}</span></th></tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>
+				<div class="block-content">
+					{{ block.BLOCK_CONTENT }}
+				</div>
+			</td>
+		</tr>
+		</tbody>
+		</table>
+    </div>
+{% endif %}

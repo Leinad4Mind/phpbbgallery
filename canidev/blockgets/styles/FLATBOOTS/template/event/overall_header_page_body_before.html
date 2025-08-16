@@ -1,0 +1,33 @@
+
+</div>
+
+	<div class="breadcrumb-line clearfix">
+		<ul class="breadcrumb">
+		<!-- https://developers.google.com/structured-data/testing-tool/ -->
+		<!-- DEFINE $MICRODATA = ' itemtype="http://data-vocabulary.org/Breadcrumb" itemscope=""' -->
+
+		<!-- IF U_SITE_HOME -->
+		   <li><a href="{U_SITE_HOME}"><span class="icon fa fa-home"></span></a></li>
+		<!-- ELSE -->
+		   <li><a href="{U_INDEX}"><span class="icon fa fa-home"></span></a></li>
+		<!-- ENDIF -->
+		   
+		<!-- EVENT overall_header_breadcrumbs_before -->
+		<li {$MICRODATA}><a href="{U_INDEX}" data-navbar-reference="index" itemprop="url"><span itemprop="title">{L_INDEX}</span></a></li>
+		<!-- EVENT overall_header_breadcrumbs_after --> 
+
+		<!-- BEGIN navlinks -->
+			<li {$MICRODATA}><a itemprop="url" href="{navlinks.U_VIEW_FORUM}"<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><span itemprop="title">{navlinks.FORUM_NAME}</span></a></li>		 
+		<!-- END navlinks --> 
+		</ul>
+		<!-- IF S_USER_LOGGED_IN and (SCRIPT_NAME == "viewforum" or SCRIPT_NAME == "viewtopic") -->
+		<ul class="breadcrumb-buttons visible-xxs">
+		    <li>
+			  <a href="#" title="" data-toggle="modal" data-target="#BreadcrumbMap">
+			   <i class="icon fa fa-sitemap"></i>
+			  </a>
+		   </li>
+		</ul>
+		<!-- ENDIF -->
+		<!-- EVENT overall_header_breadcrumbs_buttons -->  
+	</div>
