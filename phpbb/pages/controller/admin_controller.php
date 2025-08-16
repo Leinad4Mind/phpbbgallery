@@ -63,7 +63,6 @@ class admin_controller implements admin_interface
 	* @param \phpbb\event\dispatcher_interface    $phpbb_dispatcher Event dispatcher
 	* @param string                               $root_path        phpBB root path
 	* @param string                               $php_ext          phpEx
-	* @return \phpbb\pages\controller\admin_controller
 	* @access public
 	*/
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\log\log $log, \phpbb\pages\operators\page $page_operator, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, ContainerInterface $phpbb_container, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $root_path, $php_ext)
@@ -226,7 +225,8 @@ class admin_controller implements admin_interface
 		if ($submit)
 		{
 			// Test if the form is valid
-			if (!check_form_key('add_edit_page'))
+			// Use -1 to allow unlimited time to submit form
+			if (!check_form_key('add_edit_page', -1))
 			{
 				$errors[] = $this->user->lang('FORM_INVALID');
 			}
@@ -429,7 +429,7 @@ class admin_controller implements admin_interface
 		{
 			$this->template->assign_block_vars('page_template_options', array(
 				'VALUE'			=> $page_template,
-				'S_SELECTED'	=> ($page_template == $current) ? true : false,
+				'S_SELECTED'	=> $page_template == $current,
 			));
 		}
 	}
@@ -464,7 +464,7 @@ class admin_controller implements admin_interface
 			$this->template->assign_block_vars('page_link_options', array(
 				'VALUE'			=> $link['page_link_id'],
 				'LABEL'			=> $this->user->lang($link['page_link_location']),
-				'S_SELECTED'	=> (in_array($link['page_link_id'], $current)) ? true : false,
+				'S_SELECTED'	=> in_array($link['page_link_id'], $current),
 			));
 		}
 	}

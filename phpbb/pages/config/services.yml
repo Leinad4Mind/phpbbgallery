@@ -43,8 +43,10 @@ services:
         scope: prototype # scope MUST be prototype for this to work!
         arguments:
             - @dbal.conn
+            - @config
             - @dispatcher
             - %phpbb.pages.tables.pages%
+            - @?text_formatter.utils # optional to allow bc with phpBB 3.1
 
     phpbb.pages.operator:
         class: phpbb\pages\operators\page
