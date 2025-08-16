@@ -6,8 +6,6 @@
  * @author Javier Lopez (javiexin)
  */
 
-var jxtools = {};
-
 (function($) { // Avoid conflicts with other libraries
 
 'use strict';

@@ -1,0 +1,10 @@
+Subject: Votre message est la réponse la plus pertinente de son sujet
+
+Bonjour,
+
+votre message du sujet « {{ TOPIC_TITLE }} » sur le forum « {{ SITENAME }} » a été mis en avant par « {{ USERNAME }} » comme étant la réponse la plus pertinente de son sujet.
+
+Pour consulter votre message, cliquez sur le lien suivant :
+{{ U_LINK_TO_TOPIC }}
+
+{{ EMAIL_SIG }}

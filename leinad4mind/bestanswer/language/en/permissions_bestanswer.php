@@ -1,18 +1,17 @@
 <?php
-
 /**
  *
- * Best Answer. An extension for the phpBB Forum Software package.
+ * Best Answer extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2017, kinerity, https://www.layer-3.org
- * @copyright (c) 2017, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2018, kinerity, https://www.layer-3.org/
+ * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,6 +39,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_F_MARK_ANSWER'	=> 'Can mark a topic reply as the "best answer"',
-	'ACL_M_MARK_ANSWER'	=> 'Can mark a topic reply as the "best answer"',
+	'ACL_F_MARK_ANSWER' => 'Can mark a topic reply as the best answer',
+	'ACL_M_MARK_ANSWER' => 'Can mark a topic reply as the best answer',
 ));

@@ -1,6 +1,6 @@
-<!-- IF postrow.S_FIRST_POST and postrow.ANSWER_POST_ID -->
+{% if postrow.S_FIRST_POST and postrow.ANSWER_POST_ID %}
 <br />
-<div class="postbody post_answer<!-- IF S_NIGHTSTAKLER_ENABLED -->-dark<!-- ENDIF -->"><span class="btn btn-answer">{L_BEST_ANSWER}</span> <span class="author">{L_POST_BY_AUTHOR} {postrow.ANSWER_USERNAME_FULL} &raquo; {postrow.ANSWER_POST_TIME}</span><hr />
-<div class="content">{postrow.ANSWER_POST_TEXT}</div>
-<hr /><a href="{postrow.U_ANSWER}" class="btn btn-default btn-load">{L_FULL_POST} &#10137;</a></div>
-<!-- ENDIF -->
+<div class="postbody post_answer{% if S_NIGHTSTAKLER_ENABLED %}-dark{% endif %}"><span class="answered-icon-color" title="{{ lang('ANSWERED') }}"><i class="fa fa-check"></i></span> {{ lang('BEST_ANSWER') }} <span class="author">{{ lang('POST_BY_AUTHOR') }} {{ postrow.ANSWER_USERNAME_FULL }} &raquo; {{ postrow.ANSWER_POST_TIME }}</span><hr />
+<div class="content">{{ postrow.ANSWER_POST_TEXT }}</div>
+<hr /><a href="{{ postrow.U_ANSWER }}" class="btn btn-success">{{ lang('TO_POST') }}</a></div>
+{% endif %}

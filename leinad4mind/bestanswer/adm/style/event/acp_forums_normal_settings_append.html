@@ -1,12 +1,12 @@
 <dl>
-	<dt><label for="enable_answer">{L_ENABLE_BEST_ANSWER}{L_COLON}</label><br /><span>{L_ENABLE_BEST_ANSWER_EXPLAIN}</span></dt>
-	<dd><label><input type="radio" class="radio" name="enable_answer" value="1"<!-- IF S_BEST_ANSWER --> id="enable_answer" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-		<label><input type="radio" class="radio" name="enable_answer" value="0"<!-- IF not S_BEST_ANSWER --> id="enable_answer" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+	<dt><label for="enable_answer">{{ lang('ENABLE_ANSWER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ENABLE_ANSWER_EXPLAIN') }}</span></dt>
+	<dd><label><input type="radio" class="radio" name="enable_answer" value="1"{% if S_ENABLE_ANSWER %} id="enable_answer" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="enable_answer" value="0"{% if not S_ENABLE_ANSWER %} id="enable_answer" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 </dl>
 
 <dl>
-	<dt><label for="bbpoints_answer">{L_BBPOINTS_BEST_ANSWER}{L_COLON}</label><br /><span>{L_BBPOINTS_BEST_ANSWER_EXPLAIN}</span></dt>
+	<dt><label for="bbpoints_answer">{{ lang('BBPOINTS_ANSWER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BBPOINTS_ANSWER_EXPLAIN') }}</span></dt>
 	<dd>
-		<label><input type="text" name="bbpoints_answer" value="{S_BBPOINTS_BEST_ANSWER}"/></label>
+		<label><input type="number" name="bbpoints_answer" value="{S_BBPOINTS_ANSWER}"/></label>
 	</dd>
 </dl>

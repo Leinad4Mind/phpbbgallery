@@ -1,4 +1,8 @@
-<!-- IF TOTAL_ANSWERES -->
-<dt>{L_TOTAL_ANSWERES}{L_COLON}</dt>
-<dd>{TOTAL_ANSWERES} <!-- IF S_DISPLAY_SEARCH -->| <strong><a href="{U_SEARCH_USER_ANSWERS}">{L_SEARCH_USER_ANSWERS}</a></strong><!-- ENDIF --></dd>
-<!-- ENDIF -->
+{% if ANSWERS %}
+{% INCLUDEJS '@leinad4mind_bestanswer/jxtools.js' %}
+
+<div id="list_inner_hidden_container_1" jxdom-closest="div.column2" jxdom-find="dd:nth-of-type({%if S_WARNINGS %}4{% else %}3{% endif %})" jxdom-action="after" >
+<dt>{{ lang('TOTAL_ANSWERS') }}{{ lang('COLON') }}</dt>
+<dd>{{ ANSWERS }}</dd>
+</div>
+{% endif %}

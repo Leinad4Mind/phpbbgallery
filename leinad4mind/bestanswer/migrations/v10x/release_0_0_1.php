@@ -1,38 +1,28 @@
 <?php
-
 /**
  *
- * Best Answer. An extension for the phpBB Forum Software package.
+ * Best Answer extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2017, kinerity, https://www.layer-3.org
- * @copyright (c) 2017, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2018, kinerity, https://www.layer-3.org/
+ * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace leinad4mind\bestanswer\migrations\v10x;
 
-use \phpbb\db\migration\container_aware_migration;
-
 class release_0_0_1 extends \phpbb\db\migration\container_aware_migration
 {
-	/**
-	 * Assign migration file dependencies for this migration
-	 *
-	 * @return void
-	 * @access public
-	 */
+	public function effectively_installed()
+	{
+		return $this->db_tools->sql_column_exists($this->table_prefix . 'forums', 'enable_answer');
+	}
+
 	static public function depends_on()
 	{
 		return array('\phpbb\db\migration\data\v320\v320');
 	}
 
-	/**
-	 * Add or update schema in the database
-	 *
-	 * @return array Array of table schema
-	 * @access public
-	 */
 	public function update_schema()
 	{
 		return array(
@@ -40,23 +30,19 @@ class release_0_0_1 extends \phpbb\db\migration\container_aware_migration
 				$this->table_prefix . 'forums'			=> array(
 					'enable_answer'				=> array('BOOL', 0),
 				),
+
 				$this->table_prefix . 'topics'			=> array(
-					'answer_post_id'					=> array('UINT', 0),
+					'answer_post_id'			=> array('UINT', 0),
 					'answer_user_id'			=> array('UINT', 0),
 				),
+
 				$this->table_prefix . 'users'			=> array(
-					'user_answers'					=> array('UINT', 0),
+					'user_answers'				=> array('UINT', 0),
 				),
 			),
 		);
 	}
 
-	/**
-	 * Add or update data in the database
-	 *
-	 * @return array Array of table data
-	 * @access public
-	 */
 	public function update_data()
 	{
 		$data = array(
@@ -88,12 +74,6 @@ class release_0_0_1 extends \phpbb\db\migration\container_aware_migration
 		return $data;
 	}
 
-	/**
-	 * Drop schema in the database
-	 *
-	 * @return array Array of table schema
-	 * @access public
-	 */
 	public function revert_schema()
 	{
 		return array(
@@ -101,10 +81,12 @@ class release_0_0_1 extends \phpbb\db\migration\container_aware_migration
 				$this->table_prefix . 'forums'			=> array(
 					'enable_answer',
 				),
+
 				$this->table_prefix . 'topics'			=> array(
 					'answer_post_id',
 					'answer_user_id',
 				),
+
 				$this->table_prefix . 'users'			=> array(
 					'user_answers',
 				),
@@ -114,9 +96,6 @@ class release_0_0_1 extends \phpbb\db\migration\container_aware_migration
 
 	/**
 	 * Custom function query permission roles
-	 *
-	 * @return void
-	 * @access public
 	 */
 	private function role_exists($role)
 	{

@@ -1,1 +1,1 @@
-<!-- IF searchresults.S_ANSWERED or topicrow.S_ANSWERED --><span class="btn btn-answer">&#10003; {L_ANSWERED}</span><!-- ENDIF -->
+{% if searchresults.S_ANSWERED or topicrow.S_ANSWERED %}<span class="answered-icon-color" title="{{ lang('ANSWERED') }}"><i class="fa fa-check"></i></span>{% endif %}

@@ -1,11 +1,9 @@
 <?php
-
 /**
  *
- * Best Answer. An extension for the phpBB Forum Software package.
+ * Best Answer extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2017, kinerity, https://www.layer-3.org
- * @copyright (c) 2017, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

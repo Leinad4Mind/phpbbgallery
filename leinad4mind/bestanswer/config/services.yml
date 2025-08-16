@@ -5,10 +5,10 @@ services:
             - '@auth'
             - '@dbal.conn'
             - '@language'
-            - '@notification_manager'
             - '@log'
             - '@request'
             - '@user'
+            - '@notification_manager'
             - '%sitesplat.bbpoints.table%'
             - '%core.root_path%'
             - '%core.php_ext%'
@@ -31,8 +31,8 @@ services:
         tags:
             - { name: event.listener }
 
-    leinad4mind.bestanswer.notification.type.bestanswer:
-        class: leinad4mind\bestanswer\notification\type\bestanswer
+    leinad4mind.bestanswer.notification.type.markanswer:
+        class: leinad4mind\bestanswer\notification\type\markanswer
         shared: false
         parent: notification.type.base
         calls:
@@ -41,8 +41,8 @@ services:
         tags:
             - { name: notification.type }
 
-    leinad4mind.bestanswer.notification.type.notbestanswer:
-        class: leinad4mind\bestanswer\notification\type\notbestanswer
+    leinad4mind.bestanswer.notification.type.unmarkanswer:
+        class: leinad4mind\bestanswer\notification\type\unmarkanswer
         shared: false
         parent: notification.type.base
         calls:

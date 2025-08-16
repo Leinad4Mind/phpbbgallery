@@ -1,7 +1,6 @@
-<!-- IF postrow.TOPICS_ANSWERED -->
-<!-- INCLUDEJS @leinad4mind_bestanswer/jxtools.js -->
-
-<dd id="list_inner_hidden_container_{postrow.POST_ID}" jxdom-closest="dl.postprofile" jxdom-find="dd.profile-joined" jxdom-action="before" >
-<div class="profile-answers"><strong>{L_TOPICS_ANSWERED}{L_COLON}</strong> <!-- IF postrow.U_TOPICS_ANSWERED --><a href="{postrow.U_TOPICS_ANSWERED}"><!-- ENDIF -->{postrow.TOPICS_ANSWERED}<!-- IF postrow.U_TOPICS_ANSWERED --></a><!-- ENDIF --></div>
-</dd>
-<!-- ENDIF -->
+{% if postrow.POSTER_ANSWERS != '' %}
+<li>
+	<i class="fa fa-check"></i> {{ lang('ANSWERS') ~ lang('COLON') }} 
+	{{ postrow.POSTER_ANSWERS }}
+</li>
+{% endif %}

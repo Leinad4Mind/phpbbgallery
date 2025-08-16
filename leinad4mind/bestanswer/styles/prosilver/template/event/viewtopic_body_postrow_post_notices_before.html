@@ -1,6 +1,5 @@
-<!-- IF postrow.S_FIRST_POST and postrow.ANSWER_POST_ID -->
-<br />
-<div class="postbody post_answer"><span class="topic_answered"><i class="icon fa-check fa-fw" aria-hidden="true"></i></span>{L_BEST_ANSWER} <span class="author">{L_POST_BY_AUTHOR} {postrow.ANSWER_USERNAME_FULL} &raquo; {postrow.ANSWER_POST_TIME}</span><hr />
-<div class="content">{postrow.ANSWER_POST_TEXT}</div>
-<hr /><a href="{postrow.U_ANSWER}" class="full_post">{L_FULL_POST} &#10137;</a></div>
-<!-- ENDIF -->
+{% if postrow.S_FIRST_POST and postrow.ANSWER_POST_ID %}
+<div class="postbody post_answer"><i class="icon fa-check fa-fw icon-green" aria-hidden="true"></i><span class="author">{{ lang('POST_BY_AUTHOR') }} {{ postrow.ANSWER_USERNAME_FULL }} &raquo; {{ postrow.ANSWER_POST_TIME }}</span>
+<div class="content">{{ postrow.ANSWER_POST_TEXT }}</div>
+<a href="{{ postrow.U_ANSWER }}">{{ lang('TO_POST') }}</a></div>
+{% endif %}
