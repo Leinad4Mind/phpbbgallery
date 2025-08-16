@@ -20,6 +20,6 @@ if (empty($lang) || !is_array($lang))
 
 // User Permissions
 $lang = array_merge($lang, array(
-	'ACL_U_LIKEBB_LIKE'	    => 'Can like posts',
-	'ACL_U_LIKEBB_DISLIKE'	=> 'Can dislike posts',
+	'ACL_U_LIKEBB_LIKE'	    => 'Can like posts via LikeBB',
+	'ACL_U_LIKEBB_DISLIKE'	=> 'Can dislike posts via LikeBB',
 ));

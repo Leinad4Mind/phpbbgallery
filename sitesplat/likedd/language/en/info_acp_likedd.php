@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-    'LIKEBB_NOTICE'				    => '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s.</strong><br />Make sure to check the Group permission and adjust it as needed. By default the Registered user group can like and can dislike posts.</p></div>',
+    'LIKEBB_NOTICE'				    => '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group permission and adjust it as needed. By default the Registered user group can like and can dislike posts.</p></div>',
 	'ACP_LIKEDD_TITLE'				=> 'phpBB Ajax likeBB',
 	'LIKEDD_DISLIKE_OFF'			=> 'Disable Dislike function',
     'LIKEDD_DISLIKE_OFF_EXPLAIN'	=> 'Turns on/off the entire dislike system. <br />NOTE: Granular permission is possible with the "Group Permission" as you can set the like /dislike permission for each Groups.<br /> ACP > Users and Groups > Group Permission "select Group" then choose "Can like posts" and "Can dislike posts".',
@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'LIKEDD_LIKE_GLOBAL'			=> 'Global Announcements like / dislike ',
 	'LIKEDD_LIKE_GLOBAL_EXPLAIN'	=> 'Turns on/off like / dislike in Global Announcements',
 	'LIKEDD_LIKE_LOCKED'			=> 'Locked topics like / dislike ',
-	'ACL_U_LIKEDD'					=> 'Can use like/dislike system',
 	'LIKEDD_LIKE_LOCKED_EXPLAIN'	=> 'Turns on/off like / dislike in Locked topics',
+	'ACL_U_LIKEDD'					=> 'Can use LikeBB UCP module and LikeBB Top 10 page',
 	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 ));

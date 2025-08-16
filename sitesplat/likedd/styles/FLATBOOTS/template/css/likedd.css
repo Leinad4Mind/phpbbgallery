@@ -15,8 +15,10 @@ padding: 5px 0 0 10px;
 .avatar-likers img{
     border: 4px solid #dedede;
     border-radius: 50%;
-	max-height: 70px;
-    max-width: 70px;
+	height: 70px;
+    max-width: 100%;
+    width: 70px;
+    object-fit: cover;
 }
 .likers-time-stamp {
     line-height: 1.5;

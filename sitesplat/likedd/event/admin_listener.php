@@ -24,6 +24,7 @@ class admin_listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.acp_board_config_edit_add' => 'add_config',
+			'core.permissions'				=> 'add_permission',
 		);
 	}
 
@@ -81,6 +82,16 @@ class admin_listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	* Add permissions to page
+	* @access public
+	*/
+	public function add_permission($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_likedd'] = array('lang' => 'ACL_U_LIKEDD', 'cat' => 'post');
+		$event['permissions'] = $permissions;
+	}
 
 	static function like_icon()
 	{
