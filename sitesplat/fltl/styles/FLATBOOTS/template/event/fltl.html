@@ -13,7 +13,7 @@
 				 <header class="entry-header">
 				  <h6 class="inverse-font"><a title="" href="{fltl.U_TOPIC}">{fltl.TOPIC_TITLE}</a></h6>
 					<div class="entry-meta">
-					 <span class="jp-views"><!-- IF fltl.AVATAR -->{fltl.AVATAR}<!-- ENDIF -->&nbsp;&#45;&nbsp;{L_BY}&nbsp;{fltl.TOPIC_AUTHOR}</span>
+					 <span class="jp-views"><!-- IF fltl.AVATAR -->{fltl.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->&nbsp;&#45;&nbsp;{L_BY}&nbsp;{fltl.TOPIC_AUTHOR}</span>
 					</div>
 				 </header>
 				</div>
@@ -26,9 +26,6 @@
 			</div>
 		</div>
 	<!-- END fltl -->	
-<script>
-var start = {START};
-</script>
 </div>
 
 <div id="rtbtnrow" class="row text-center">
@@ -36,5 +33,4 @@ var start = {START};
 	  <a class="rtbutton btn btn-default btn-block btn-lazy" href="javascript:void(0)">{L_VIEW_MORE_TOPICS}</a>
 	</div>
 </div>
-<!-- INCLUDEJS js/fltl.js -->
 <!-- ENDIF -->

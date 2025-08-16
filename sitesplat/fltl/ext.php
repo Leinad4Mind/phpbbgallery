@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* FLTL
+* Fancy Lazy Topics Loader
 *
-* @copyright (c) 2015 ForumHulp.com <http://forumhulp.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
 *
 */
 
@@ -32,7 +32,7 @@ class ext extends \phpbb\extension\base
 		if (empty($old_state))
 		{
 			global $user;
-			$info = '<div style="width:80%;margin:20px auto;"><p style="">The Setting for this extension can be found in <strong>General » Board configuration » Board Settings Tab Fancy Lazy Topics loader</strong>.<br />Please note there is a min of 4 posts per page! Enjoy!</p></div>';
+			$info = '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension can be found in <strong>General » Board configuration » Board Settings Tab Fancy Lazy Topics loader</strong>.<br />Please note there is a min of 4 posts per page! Enjoy!</p></div>';
 			$user->lang['EXTENSION_ENABLE_SUCCESS'] =  $user->lang['EXTENSION_ENABLE_SUCCESS'] . $info;
 		}
 		// Run parent enable step method

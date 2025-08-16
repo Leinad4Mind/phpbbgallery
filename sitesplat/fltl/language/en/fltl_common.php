@@ -18,7 +18,7 @@ if (empty($lang) || !is_array($lang)) {
 $lang = array_merge($lang, array(
 	'FLTL'							=> 'Fancy Lazy Topics loader',
 	'FLTL_EXPLAIN'					=> 'Scroll down for more topics',
-	
+	'FLTL_BY'					    => '&nbsp;&#45;&nbsp;By&nbsp;',
 	'FLTL_LIMIT'					=> 'Posts to display',
 	'FLTL_LIMIT_EXPLAIN'			=> 'Set the posts block per each row (4 default)',
 	

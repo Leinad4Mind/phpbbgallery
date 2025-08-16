@@ -88,9 +88,9 @@ class main
 				echo '<div class="col-md-3 col-sm-6">
 					<div class="panel panel-post">
 						<div class="blog-meta">
-						 <time class="entry-date" datetime="' . $this->user->format_date($row['topic_last_post_time'], 'Y-m-d') . '">
-							<span class="day">' . $this->user->format_date($row['topic_last_post_time'], 'd') . '</span>
-							<span class="month">' . $this->user->format_date($row['topic_last_post_time'], 'M') . '</span>
+						 <time class="entry-date" datetime="' . $this->user->format_date($row['topic_last_post_time'], 'Y-m-d', true) . '">
+							<span class="day">' . $this->user->format_date($row['topic_last_post_time'], 'd', true) . '</span>
+							<span class="month">' . $this->user->format_date($row['topic_last_post_time'], 'M', true) . '</span>
 						 </time>
 						</div>
 						<div class="title">
@@ -101,7 +101,8 @@ class main
 											array('avatar' => $row['user_avatar'], 
 												  'avatar_type' => $row['user_avatar_type'],
 												  'avatar_width' => $row['user_avatar_width'], 
-												  'avatar_height' => $row['user_avatar_height'])): '') . '&nbsp;-&nbsp;By&nbsp;' . (($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? ('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') : $row['username']) . '</span>
+												  'avatar_height' => $row['user_avatar_height'])): '<img class="avatar_ftl" title="' .  $row['username'] . '" src="' .
+										  generate_board_url() . '/styles/FLATBOOTS/theme/images/user4.png">') . $this->user->lang['FLTL_BY'] . (($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? ('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') : $row['username']) . '</span>
 							</div>
 						 </header>
 						</div>
