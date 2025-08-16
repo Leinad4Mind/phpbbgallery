@@ -1,18 +1,20 @@
 
 <!-- IF S_CHAT_EMBEDMODE -->
 <!DOCTYPE html>
-<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" class="embedmode">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="author" content="CaniDev" />
 
 	<title>{SITENAME} &bull; {PAGE_TITLE}</title>
 
-	<link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
+	<link href="{T_FONT_AWESOME_LINK}" rel="stylesheet" />
+	<link href="{T_STYLESHEET_LINK}" rel="stylesheet" />
 
 <!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
-	<link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" />
+	<link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" />
 <!-- ENDIF -->
 
 <!-- INCLUDE @canidev_chat/event/overall_header_head_append.html -->
@@ -30,7 +32,7 @@
 </div>
 
 <script type="text/javascript" src="{T_JQUERY_LINK}"></script>
-<!-- IF S_ALLOW_CDN --><script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript src="{T_ASSETS_PATH}/javascript/jquery.min.js?assets_version={T_ASSETS_VERSION}" type="text/javascript"%3E%3C/script%3E'));</script><!-- ENDIF -->
+<!-- IF S_ALLOW_CDN --><script type="text/javascript">window.jQuery || document.write('\x3Cscript src="{T_ASSETS_PATH}/javascript/jquery.min.js?assets_version={T_ASSETS_VERSION}">\x3C/script>');</script><!-- ENDIF -->
 
 <!-- EVENT overall_footer_after -->
 

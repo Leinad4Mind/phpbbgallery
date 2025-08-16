@@ -1,11 +1,10 @@
 /*
-* @name jchat-options.js
 * @package cBB Chat
 * @style: All
-* @version v1.1.3 10/03/2017 $
+* @version v1.2.0 02/03/2019 $
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 var jchat_style_options = {

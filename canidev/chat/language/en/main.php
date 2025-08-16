@@ -2,10 +2,10 @@
 /** 
 * main.php [English [En]]
 * @package cBB Chat
-* @version v1.1.3 10/03/2017
+* @version v1.2.0 02/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -63,12 +63,14 @@ $lang = array_merge($lang, array(
 	'CHAT_STATUS_BUSY'			=> 'Busy',
 	'CHAT_STATUS_HIDDEN'		=> 'Hidden',
 	
+	'CHAT_LOAD_MORE'			=> 'Load more',
 	'CHAT_SUBMIT'				=> 'Accept',
 	'CHAT_TIP'					=> 'Tip',
 	'CHAT_UNBAN_USER'			=> 'Remove exclusion',
 	'CHAT_USER_BANNED_PERIOD'		=> 'You are excluded from the chat until: %s',
 	'CHAT_USER_BANNED_PERMANENT'	=> 'You are excluded from the chat permanently.',
 	'CHAT_USER_ALREADY_EXISTS'		=> 'The user is already in use.',
+	'CHAT_VIEW_HISTORY'				=> 'See previous messages',
 
 	'BATCH_ACTIONS'		=> 'Batch actions',
 	'CUSTOM_DATE'		=> 'Custom date',

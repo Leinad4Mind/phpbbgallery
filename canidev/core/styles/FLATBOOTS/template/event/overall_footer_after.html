@@ -1,0 +1,20 @@
+<!-- IF not $CBBCORE_JS_LOADED -->
+
+<!-- BEGIN core_script -->
+	<!-- IF core_script.TYPE eq 'text/javascript' -->
+	<script type="text/javascript">
+		<!-- IF core_script.IS_SINGLE -->
+			head.load('{core_script.SRC}');
+		<!-- ELSE -->
+			head.ready('cbbcore.min.js', function () {
+				{core_script.DATA}
+			});
+		<!-- ENDIF -->
+	</script>
+	<!-- ELSE -->
+		<script {core_script.PARAMS}>{core_script.DATA}</script>
+	<!-- ENDIF -->
+<!-- END core_script -->
+
+	<!-- DEFINE $CBBCORE_JS_LOADED = 1 -->
+<!-- ENDIF -->

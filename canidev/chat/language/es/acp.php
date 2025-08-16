@@ -2,10 +2,10 @@
 /** 
 * acp.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.1.3 10/03/2017
+* @version v1.2.0 02/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -20,15 +20,11 @@ if(empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'CHAT_CONFIG_TITLE'		=> 'Configurar Chat',
-	'CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
+	'ACP_CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
 		Desde esta página puede modificar las principales características del chat.',
-	'CHAT_PAGES_TITLE'		=> 'Administrar páginas',
-	'CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
-	'CHAT_ROOMS_TITLE'		=> 'Administrar salas',
-	'CHAT_ROOMS_EXPLAIN'	=> 'Desde aquí puede administrar las salas especiales que se mostrarán en el chat.<br />Puede ordenar las salas arrastrándolas a su posición correcta.',
-	'CHAT_TEXTS_TITLE'		=> 'Administrar textos y reglas',
-	'CHAT_TEXTS_EXPLAIN'	=> 'Desde aquí puede administrar las noticias, consejos y reglas del chat.<br />
+	'ACP_CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
+	'ACP_CHAT_ROOMS_EXPLAIN'	=> 'Desde aquí puede administrar las salas especiales que se mostrarán en el chat.<br />Puede ordenar las salas arrastrándolas a su posición correcta.',
+	'ACP_CHAT_TEXTS_EXPLAIN'	=> 'Desde aquí puede administrar las noticias, consejos y reglas del chat.<br />
 		Para escoger el orden en el que aparecerán en el chat sólo tiene que arrastrarlos a su posición correcta.',
 	
 	'CHAT_ALLOW_BBCODE'			=> 'Permitir BBcode',
@@ -58,13 +54,11 @@ $lang = array_merge($lang, array(
 	'CHAT_DISALLOWED_BBCODE'	=> 'Etiquetas BBcode no permitidas',
 	'CHAT_DISALLOWED_BBCODE_EXPLAIN'	=> 'Define las etiquetas BBcode que <strong>no</strong> estarán permitidas en el chat.<br />
 		Puede seleccionar tantas como quiera usando la tecla <em>Ctrl</em> de su teclado.',
-	'CHAT_ENABLED'				=> 'Chat activado',
-	'CHAT_ENABLED_EXPLAIN'		=> 'Habilita/deshabilita todas las funciones del chat.',
 	'CHAT_FLOOD'				=> 'Límite de saturación',
 	'CHAT_FLOOD_EXPLAIN'		=> 'Especifica el tiempo (en segundos) que debe esperar un usuario para escribir un nuevo mensaje.<br />
 		<em>Defina 0 para deshabilitar este límite</em>.',
 	'CHAT_FORUM_POSTS'			=> 'Mensajes del foro',
-	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Define si se mostrarán los nuevos mensajes o temas del foro en la sala <em>General</em> del chat.',
+	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Define si se mostrarán los nuevos mensajes o temas del foro en las salas del chat.',
 	'CHAT_GROUP_USERS'			=> 'Agrupar usuarios por grupos',
 	'CHAT_GROUP_USERS_EXPLAIN'	=> 'Si se habilita, los usuarios serán agrupados en el chat según su grupo por defecto.',
 	'CHAT_HEIGHT'				=> 'Alto del chat',
@@ -73,8 +67,6 @@ $lang = array_merge($lang, array(
 	'CHAT_HEIGHT_PAGE_EXPLAIN'	=> 'Define el alto (en píxeles) del cuadro de conversación del chat en esta página.<br /><em>Establezca 0 para usar el valor por defecto.</em>',
 	'CHAT_HELP'					=> 'Documentación y Soporte',
 	'CHAT_MAIN_CONFIG'			=> 'Configuración principal',
-	'CHAT_MAX_PM'				=> 'Límite de mensajes privados',
-	'CHAT_MAX_PM_EXPLAIN'		=> 'Establece el número máximo de mensajes privados que un usuario podrá abrir simultáneamente.<br /><em>Establezca 0 para deshabilitar este límite</em>.',
 	'CHAT_MESSAGES_CONFIG'		=> 'Configuración de mensajes',
 	'CHAT_NOTICES_ADD'			=> 'Añadir noticia',
 	'CHAT_NOTICES_EDIT'			=> 'Editar noticia',
@@ -83,7 +75,7 @@ $lang = array_merge($lang, array(
 	'CHAT_NOTICES_ITEM_EXPLAIN'	=> 'Puede usar variables de idioma igual que en los estilos, por ejemplo <em>{L_CHAT}</em>.<br />
 		<em>BBcode o HTML está permitido.<br />
 		Emoticonos están permitidos.</em>',
-	'CHAT_NOTICES_TITLE'		=> 'Noticias',
+	'CHAT_NOTICES'				=> 'Noticias',
 	'CHAT_PAGE_ALIAS'			=> 'Identificador de la página',
 	'CHAT_PAGE_ALIAS_EXPLAIN'	=> 'Especifica un identificador único para la página que se usará en el archivo de configuración si se establece.<br /><em>Sólo se permiten letras y números</em>.',
 	'CHAT_PAGE_CONFIG'			=> 'Configuración de la página',
@@ -96,6 +88,14 @@ $lang = array_merge($lang, array(
 	'CHAT_PAGE_FORUMS'			=> 'Foros',
 	'CHAT_PAGE_FORUMS_EXPLAIN'	=> 'Define los foros en los que se mostrará el chat.<br />Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.<br /><em>Si no selecciona ningún foro el chat se mostrará en todos.</em>',
 	'CHAT_PM_CONFIG'			=> 'Configuración de mensajes privados',
+	'CHAT_PM_IGNORE_FLOOD'		=> 'Ignorar límite de saturación',
+	'CHAT_PM_IGNORE_FLOOD_EXPLAIN'	=> 'Si se habilita, el límite de saturación establecido no se aplicará al escribir mensajes privados entre usuarios.',
+	'CHAT_PM_MAX'				=> 'Límite de salas privadas',
+	'CHAT_PM_MAX_EXPLAIN'		=> 'Establece el número máximo de salas privadas que un usuario podrá abrir simultáneamente.<br /><em>Establezca 0 para deshabilitar este límite</em>.',
+	'CHAT_PM_MAXAGE'			=> 'Tiempo de guardado',
+	'CHAT_PM_MAXAGE_EXPLAIN'	=> 'Establece el tiempo (en días) que se guardarán los mensajes privados.
+		<br />Los mensajes que sobrepasen esta antigüedad serán eliminados.
+		<br /><br /><em>Valor mínimo 1, valor máximo 365</em>.',
 	'CHAT_POSITION'				=> 'Posición del chat',
 	'CHAT_POSITION_EXPLAIN'		=> 'Posición en la que aparecerá el chat dentro de la página.',
 	'CHAT_POSITION_BOTTOM'		=> 'Parte inferior',
@@ -108,12 +108,23 @@ $lang = array_merge($lang, array(
 	'CHAT_ROOM_AUTOPURGE'		=> 'Autopurga',
 	'CHAT_ROOM_AUTOPURGE_EXPLAIN'	=> 'Define cada cuanto tiempo se eliminarán todos los mensajes de esta sala.',
 	'CHAT_ROOM_CONFIG'			=> 'Configuración de la sala',
+	'CHAT_ROOM_CONNECTIONS'		=> 'Conexiones',
 	'CHAT_ROOM_ENABLED'			=> 'Sala activada',
 	'CHAT_ROOM_GROUPS'			=> 'Grupos autorizados',
 	'CHAT_ROOM_GROUPS_EXPLAIN'	=> 'Define los grupos de usuarios que podrán visualizar esta sala.<br />Puede seleccionar varios grupos usando la tecla <em>Ctrl</em> de su teclado.',
-	'CHAT_ROOM_ADDED'			=> 'La sala se ha creado con éxito.',
-	'CHAT_ROOM_UPDATED'			=> 'La configuración de la sala se ha modificado con éxito.',
-	'CHAT_ROOM_MSG_LIMIT'		=> 'Límite de mensajes',
+	'CHAT_ROOM_GUEST_FORUMS'			=> 'Foros enlazados a esta sala',
+	'CHAT_ROOM_GUEST_FORUMS_EXPLAIN'	=> 'Aquí puede seleccionar los foros de los cuales se leerán los temas y mensajes que se mostrarán en la sala principal del chat.<br />
+		Si no selecciona ninguno, se usarán todos (excepto los asignados a otras salas).<br />
+		Puede seleccionar tantos como desee utilizando la tecla <em>Ctrl</em> de su teclado.',
+	'CHAT_ROOM_LINKED_FORUMS'			=> 'Foros enlazados a esta sala',
+	'CHAT_ROOM_LINKED_FORUMS_EXPLAIN'	=> 'Esta sala será la sala por defecto para los foros aquí seleccionados además, los temas y posts de estos foros se mostrarán en esta sala en lugar de en la sala General.<br />
+		Puede seleccionar tantos como desee utilizando la tecla <em>Ctrl</em> de su teclado.',
+	'CHAT_ROOM_LINKED_GROUPS'			=> 'Grupos enlazados a esta sala',
+	'CHAT_ROOM_LINKED_GROUPS_EXPLAIN'	=> 'Esta sala se abrirá por defecto para los grupos aquí seleccionados.<br />
+		Puede seleccionar tantos como desee utilizando la tecla <em>Ctrl</em> de su teclado.',
+	'CHAT_ROOM_ADDED'				=> 'La sala se ha creado con éxito.',
+	'CHAT_ROOM_UPDATED'				=> 'La configuración de la sala se ha modificado con éxito.',
+	'CHAT_ROOM_MSG_LIMIT'			=> 'Límite de mensajes',
 	'CHAT_ROOM_MSG_LIMIT_EXPLAIN'	=> 'Establece el número máximo de mensajes que se guardarán en esta sala. Si se supera este límite, los mensajes más antiguos se eliminarán periódicamente.
 		<br /><em>Establezca 0 para deshabilitar este límite.</em>',
 	'CHAT_ROOM_TITLE'			=> 'Título de la sala',
@@ -129,7 +140,7 @@ $lang = array_merge($lang, array(
 	'CHAT_RULES_ITEM_EXPLAIN'	=> 'Puede usar variables de idioma igual que en los estilos, por ejemplo <em>{L_CHAT}</em>.<br />
 		<em>BBcode o HTML está permitido.<br />
 		Emoticonos están permitidos.</em>',
-	'CHAT_RULES_TITLE'			=> 'Reglas',
+	'CHAT_RULES'				=> 'Reglas',
 	'CHAT_SOUND_ENABLED'		=> 'Sonido activado',
 	'CHAT_SHOW_NONE'			=> 'No mostrar',
 	'CHAT_SHOW_POSTS'			=> 'Todos los mensajes nuevos',
@@ -143,7 +154,7 @@ $lang = array_merge($lang, array(
 	'CHAT_TIPS_ITEM_EXPLAIN'	=> 'Puede usar variables de idioma igual que en los estilos, por ejemplo <em>{L_CHAT}</em>.<br />
 		<em>BBcode o HTML está permitido.<br />
 		Emoticonos están permitidos.</em>',
-	'CHAT_TIPS_TITLE'			=> 'Consejos',
+	'CHAT_TIPS'					=> 'Consejos',
 	'CHAT_USERS_CONFIG'			=> 'Configuración de usuarios',
 	
 	'EACH_DAY'		=> 'Cada día',
@@ -151,28 +162,28 @@ $lang = array_merge($lang, array(
 	'EACH_MONTH'	=> 'Cada mes',
 	'EACH_YEAR'		=> 'Cada año',
 
-	'ADD_ROOM'				=> 'Añadir sala',
-	'CONTENT'				=> 'Contenido',
-	'CUSTOM_BBCODES'		=> 'BBcodes personalizados',
-	'CUSTOM_FILE'			=> 'Archivo personalizado',
-	'CUSTOM_FILES'			=> 'Archivos personalizados',
-	'DEFAULT_BBCODES'		=> 'BBcodes predeterminados',
-	'FORUM_FILES'			=> 'Archivos del foro',
-	'MOD_NOT_INSTALLED'		=> 'Mod no instalado correctamente',
-	'NO_PAGES'				=> 'No hay páginas para mostrar',
-	'NO_TEXTS'				=> 'No hay textos para mostrar',
-	'PAGE_ADD'				=> 'Añadir página',
-	'PAGE_ALIAS'			=> 'Identificación',
-	'PAGE_URL'				=> 'Url de la página',
-	'ROOM_TITLE'			=> 'Título de la sala',
-	'SELECT_PAGE'			=> 'Seleccionar página',
-	
-	'INVALID_FILE'			=> 'El archivo especificado no existe o tiene un formato no válido.',
-	'NO_ALIAS'				=> 'No ha especificado un Identificador de página válido.',
-	'PAGE_ALREADY_EXISTS'	=> 'La página especificada ya está en uso.',
+	'ADD_ROOM'					=> 'Añadir sala',
+	'ALL_GROUPS'				=> 'Todos los grupos',
+	'CONTENT'					=> 'Contenido',
+	'CUSTOM_BBCODES'			=> 'BBcodes personalizados',
+	'CUSTOM_FILE'				=> 'Archivo personalizado',
+	'CUSTOM_FILES'				=> 'Archivos personalizados',
+	'DEFAULT_BBCODES'			=> 'BBcodes predeterminados',
+	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentación y Soporte',
+	'FORUM_FILES'				=> 'Archivos del foro',
+	'NO_PAGES'					=> 'No hay páginas para mostrar',
+	'NO_ROOM'					=> 'La sala seleccionada no existe',
+	'NO_TEXTS'					=> 'No hay textos para mostrar',
+	'PAGE_ADD'					=> 'Añadir página',
+	'PAGE_ALIAS'				=> 'Identificación',
+	'PAGE_URL'					=> 'Url de la página',
+	'ROOM_TITLE'				=> 'Título de la sala',
+	'SAVE'						=> 'Guardar',
+	'SELECT_PAGE'				=> 'Seleccionar página',
+
+	'INVALID_FILE'				=> 'El archivo especificado no existe o tiene un formato no válido.',
+	'NO_ALIAS'					=> 'No ha especificado un Identificador de página válido.',
+	'PAGE_ALREADY_EXISTS'		=> 'La página especificada ya está en uso.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> '¿Está seguro de que desea eliminar esta sala y todos sus mensajes?',
-			
-	'CHAT_VERSION_NOT_UP_TO_DATE'	=> 'Existe una versión más reciente de cBB Chat.<br />
-		Debajo encontrará un enlace al anuncio de publicación de la última versión así como también instrucciones de cómo realizar la actualización.',
 ));

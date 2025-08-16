@@ -1,36 +1,24 @@
 /*
  * cBB Chat StyleSheet
  * Style: Admin
- * Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+ * Copyright (c) 2019 CaniDev ( https://www.canidev.com )
  --------------------------------------------------------------
 */
 
-input.chat-inputbox, textarea.chat-inputbox {
-	background-color: #FAFAFA;
-}
-
-input.chat-inputbox:hover, textarea.chat-inputbox:hover {
-	background-color: #FAFAFA;
-	border-color: #666666;
-}
-
 .pagerow-input {
-	color: #CCC;
+	color: #929292;
 	font-style: italic;
-	width: 98%;
+	width: 100%;
 }
 
-.chat-submit-buttons {
+td.actions-col {
+	width: 80px;
 	text-align: center;
 }
 
-.chat-help {
-	background: transparent url('../images/icon-help-32x32.png') 50% 50% no-repeat;
-	height: 32px;
-	position: absolute;
-	right: 5px;
-	top: 4px;
-	width: 32px;
+td.actions-col-2 {
+	width: 40px;
+	text-align: right;
 }
 
 .sortable-text {
@@ -65,9 +53,3 @@ input.chat-inputbox:hover, textarea.chat-inputbox:hover {
 }
 
 .ui-sortable-placeholder * { visibility: hidden; }
-
-.chat-message.state-success {
-	background: #d9fdbe;
-	border-color: #72b42d;
-	color: green;
-}

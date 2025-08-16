@@ -2,10 +2,10 @@
 /** 
 * info_acp_chat.php [English [En]]
 * @package cBB Chat
-* @version v1.1.3 10/03/2017
+* @version v1.2.0 02/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -30,5 +30,15 @@ $lang = array_merge($lang, array(
 	'LOG_CHAT_CONFIG'				=> '<strong>cBB Chat:</strong> Changed main configuration',
 	'LOG_CHAT_EXCLUSION_ADDED'		=> '<strong>cBB Chat:</strong> Exclusions added<br />» %s',
  	'LOG_CHAT_EXCLUSION_REMOVED'	=> '<strong>cBB Chat:</strong> Exclusions removed<br />» %s',
+	'LOG_CHAT_MESSAGE_MOVED'		=> '<strong>cBB Chat:</strong> Message moved from <em>%1$s</em> to <em>%2$s</em><br />» %3$s',
+	'LOG_CHAT_MESSAGES_MOVED'		=> array(
+		1 => '<strong>cBB Chat:</strong> 1 message moved from <em>%1$s</em> to <em>%2$s</em>',
+		2 => '<strong>cBB Chat:</strong> %3$d messages moved from <em>%1$s</em> to <em>%2$s</em>',
+	),
+	'LOG_CHAT_MESSAGE_REMOVED'		=> '<strong>cBB Chat:</strong> Message deleted <br />» <em>%s</em>',
+	'LOG_CHAT_MESSAGES_REMOVED'		=> array(
+		1 => '<strong>cBB Chat:</strong> 1 message deleted from <em>%1$s</em>',
+		2 => '<strong>cBB Chat:</strong> %2$d messages deleted from <em>%1$s</em>',
+	),
 	'LOG_CHAT_ROOM_REMOVED'			=> '<strong>cBB Chat:</strong> Deleted room <em>%s</em> and their messages',
 ));
