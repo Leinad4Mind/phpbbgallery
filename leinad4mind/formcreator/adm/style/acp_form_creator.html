@@ -27,7 +27,7 @@
 	<table cellspacing="1">
 		<thead>
 			<tr>
-				<th class="th_current"> {{ lang('CURRENT_FORM') }}{{ lang('COLON') }} &nbsp; &nbsp;
+				<th class="th_current"> {{ lang('CURRENT_FORUM') }}{{ lang('COLON') }} &nbsp; &nbsp;
 					<select name="form_id" class="input" style="font-size: 11px" onchange="this.form.submit();">
 					{% for forms in loops.forms %}
 						<option	name="form_id" {{ forms.SELECT }} value="{{ forms.FORUM_ID }}">({{ forms.FORUM_ID }}) {{ forms.FORUM_NAME }}</option>
@@ -45,11 +45,10 @@
 				<th class="th_type">{{ lang('FORM_ELEMENT_TYPE') }}</th>
 				<th class="th_mand" title="{{ lang('MANDATORY') }}">&#8730;</th>
 				<th class="th_mand" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}"><i class="fa fa-eye" aria-hidden="true"></i></th>
-				<th class="th_name">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}</th>
-				<th class="th_hint">{{ lang('FORM_ELEMENT_HINT') }}</th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
+				<th class="th_name">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}/{{ lang('FORM_ELEMENT_HINT') }}</th>
 				<th class="th_option">{{ lang('FORM_ELEMENT_OPTIONS') }}</th>
 				<th class="th_minmax">{{ lang('FORM_ELEMENT_MIN_MAX') }}</th>
-				<th class="th_before">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
 				<th class="th_before">{{ lang('FORM_ELEMENT_VALUE_BEFORE_AFTER') }}</th>
 			</tr>
 		</thead>
@@ -85,38 +84,39 @@
 					<select name="q_type[{{ form_template.ID }}]" class="input" style="font-size: 11px">
 						{% for template_type in form_template.template_type %}
 							<option	value="{{ template_type.TYPE }}"{{ template_type.SELECTED }}>{{ template_type.TYPE }}</option>
+							{% if template_type.SELECTED !== '' %}
+								{% DEFINE template_type_selected = template_type.TYPE %}
+							{% endif %}
 						{% endfor %}
 					</select>
 				</td>
 				<td class="td_20" title="{{ lang('MANDATORY') }}">
-					<input style="cursor:pointer" type="checkbox" name="q_mandatory[{{ form_template.ID }}]" value="1"{{ form_template.MANDATORY ? ' checked'}}>
+					<input style="cursor:pointer{% if definition.template_type_selected == 'checkbox' %};display:none{% endif %}" type="checkbox" name="q_mandatory[{{ form_template.ID }}]" value="1"{{ form_template.MANDATORY ? ' checked'}}>
 				</td>
 				<td class="td_20" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}">
 					<input style="cursor:pointer" type="checkbox" name="q_name_visible[{{ form_template.ID }}]" value="1"{{ form_template.NAME_VISIBLE ? ' checked'}}>
 				</td>
 				<td class="td_02">
+					<textarea style="width:97%" name="q_name_before[{{ form_template.ID }}]" rows="3">{{ form_template.NAME_BEFORE }}</textarea><br>
+					<textarea style="width:97%" name="q_name_after[{{ form_template.ID }}]" rows="3">{{ form_template.NAME_AFTER }}</textarea>
+				</td>
+				<td class="td_02">
 					<input style="width:97%" type="text" name="q_name[{{ form_template.ID }}]" value="{{ form_template.NAME }}" placeholder="{{ lang('FORM_ELEMENT_NAME') }}">
 					<input style="width:97%" type="text" name="q_explain[{{ form_template.ID }}]" value="{{ form_template.EXPLAIN }}" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">
+					<input style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
 				</td>
 				<td class="td_02">
-					<input style="width:97%" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
+					<textarea style="width:97%{% if !(definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'selectbox') %};display:none{% endif %}" name="q_options[{{ form_template.ID }}]" rows="3">{{ form_template.OPTIONS }}</textarea>
+					<input style="width:97%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="text" name="q_options_separator[{{ form_template.ID }}]" value="{{ form_template.OPTIONS_SEPARATOR }}" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
 				</td>
 				<td class="td_02">
-					<textarea style="width:97%" name="q_options[{{ form_template.ID }}]">{{ form_template.OPTIONS }}</textarea>
-					<input style="width:97%" type="text" name="q_options_separator[{{ form_template.ID }}]" value="{{ form_template.OPTIONS_SEPARATOR }}" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_mins[{{ form_template.ID }}]" value="{{ form_template.MIN }}" placeholder="{{ lang('FORM_ELEMENT_MIN') }}">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
 				</td>
+				
 				<td class="td_02">
-					<input style="width:97%" type="number" min="0" name="q_mins[{{ form_template.ID }}]" value="{{ form_template.MIN }}" placeholder="{{ lang('FORM_ELEMENT_MIN') }}">
-					<input style="width:97%" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
-				</td>
-				<td class="td_02">
-					<textarea style="width:97%" name="q_name_before[{{ form_template.ID }}]">{{ form_template.NAME_BEFORE }}</textarea><br>
-					<textarea style="width:97%" name="q_name_after[{{ form_template.ID }}]">{{ form_template.NAME_AFTER }}</textarea>
-				</td>
-				<td class="td_02">
-					<textarea style="width:97%" name="q_value_before[{{ form_template.ID }}]">{{ form_template.VALUE_BEFORE }}</textarea><br>
-					<textarea style="width:97%" name="q_value_after[{{ form_template.ID }}]">{{ form_template.VALUE_AFTER }}</textarea>
-					
+					<textarea style="width:97%" name="q_value_before[{{ form_template.ID }}]" rows="3">{{ form_template.VALUE_BEFORE }}</textarea><br>
+					<textarea style="width:97%" name="q_value_after[{{ form_template.ID }}]" rows="3">{{ form_template.VALUE_AFTER }}</textarea>
 				</td>
 			</tr>
 			{% endfor %}
@@ -158,15 +158,14 @@
 	<table cellspacing="1">
 		<thead>
 			<tr>
-				<th class="th_type2">{{ lang('FORM_ELEMENT_TYPE') }}</th>
+				<th class="th_type">{{ lang('FORM_ELEMENT_TYPE') }}</th>
 				<th class="th_mand" title="{{ lang('MANDATORY') }}">&#8730;</th>
 				<th class="th_mand" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}"><i class="fa fa-eye" aria-hidden="true"></i></th>
-				<th class="th_type3">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}</th>
-				<th class="th_type3">{{ lang('FORM_ELEMENT_HINT') }}</th>
-				<th class="th_type4">{{ lang('FORM_ELEMENT_OPTIONS') }}</th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
+				<th class="th_name">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}/{{ lang('FORM_ELEMENT_HINT') }}</th>
+				<th class="th_option">{{ lang('FORM_ELEMENT_OPTIONS') }}</th>
 				<th class="th_minmax">{{ lang('FORM_ELEMENT_MIN_MAX') }}</th>
-				<th class="th_type5">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
-				<th class="th_type5">{{ lang('FORM_ELEMENT_VALUE_BEFORE_AFTER') }}</th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_VALUE_BEFORE_AFTER') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -194,10 +193,12 @@
 					<input style="cursor: pointer;" type="checkbox" name="name_visible" value="1" checked>
 				</td>
 				<td class="td_pad">
-					<input style="width:97%" type="text" name="name" value="" placeholder="{{ lang('FORM_ELEMENT_NAME') }}"><br>
-					<input style="width:97%" type="text" name="explanation" value="" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">
+					<textarea style="width:97%" name="name_before" rows="3"></textarea><br>
+					<textarea style="width:97%" name="name_after" rows="3"></textarea>
 				</td>
 				<td class="td_pad">
+					<input style="width:97%" type="text" name="name" value="" placeholder="{{ lang('FORM_ELEMENT_NAME') }}"><br>
+					<input style="width:97%" type="text" name="explanation" value="" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">
 					<input style="width:97%" type="text" name="hint" value="" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
 				</td>
 				<td class="td_pad">
@@ -205,16 +206,13 @@
 					<input style="width:97%" type="text" name="options_separator" value="" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
 				</td>
 				<td class="td_pad">
-					<input style="width:97%" type="number" name="min_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MIN') }}"><br>
-					<input style="width:97%" type="number" name="max_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
+					<input style="width:90%" type="number" name="min_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MIN') }}"><br>
+					<input style="width:90%" type="number" name="max_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
 				</td>
+				
 				<td class="td_pad">
-					<input style="width:97%" type="text" name="name_before" value=""><br>
-					<input style="width:97%" type="text" name="name_after" value="">
-				</td>
-				<td class="td_pad">
-					<input style="width:97%" type="text" name="value_before" value=""><br>
-					<input style="width:97%" type="text" name="value_after" value="">
+					<textarea style="width:97%" name="value_before" rows="3"></textarea><br>
+					<textarea style="width:97%" name="value_after" rows="3"></textarea>
 				</td>
 			</tr>
 		</tbody>
@@ -234,6 +232,6 @@
 
 </form>
 
-{{ REPORT }}
+<!-- {{ REPORT }} -->
 
 {% INCLUDE 'overall_footer.html' %}

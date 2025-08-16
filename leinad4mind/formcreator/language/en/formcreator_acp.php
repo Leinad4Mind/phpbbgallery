@@ -42,18 +42,71 @@ $lang = array_merge($lang, [
 	'ELEMENTS'					=> 'Elements',
 	'FORM_NAME'					=> 'Forum Name',
 	'FORUM_ID'					=> 'Forum ID',
-	'ACP_FORM_CURRENT'		 	=> 'Current Form',
+	'ACP_FORM_CURRENT'		 	=> 'Update Current Form',
 	'ACP_FORM_CREATOR'			=> 'Form Creator',
 	'ACP_FORM_CREATOR_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
 	'ACP_FORM_MOD_MORE_INFO'	=> 'Click Me for More Info.',
 	'ACP_FORM_MOD_NOTE'			=> '<br><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
 
-	'ACP_FORM_CREATOR_EXPLAIN_2' => 'How do I change the form?<br> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br><br>
-	How do I add a new form element?<br> &nbsp; &bull; Use <strong><i>Add a new form element</i></strong>.<br><br>
-	How do I delete a form?<br> &nbsp; &bull; Simply delete all form elements...<br><br>
-	<strong>&#8730;</strong> The checkmark character indicated an item is mandatory and cannot be empty.<br>',
+	'ACP_FORM_CREATOR_EXPLAIN_2' => '<strong>How to begin?</strong><br>
+									&nbsp; &bull; You just need to first select the forum where you will want to create the form.<br>
+									<br>
+									<strong>How can I do that?</strong><br>
+									&nbsp; &bull; Just select a new forum from the <strong><i>Current Forum</i></strong> dropdown box...<br>
+									<br>
+									<strong>And now what?</strong><br>
+									&nbsp; &bull; Next step would be to add new forms elements<br>
+									<br>
+									<strong>How do I add a new form element?</strong><br> 
+									&nbsp; &bull; Use <strong><i>Add a new form element</i></strong> at the bottom.<br>
+									<br>
+									<strong>After adding all the forms elements I want, does it saves automatically?</strong><br>
+									&nbsp; &bull; Yes, when you add the form element it saves automatically on the current form, but if you make changes on the form elements on the <strong><i>Update Current Form</i></strong> then you\'ll need to click update so it can save the changes!<br>
+									<br>
+									<strong>Some fields doesn\'t make sense to my element type, will something bad happen if I fill those fields?</strong><br>
+									&nbsp; &bull; Nothing bad will happen... you\'ll just put trash on the database. All that info will be discarded. That\'s why it\'s recommended to add an empty new form element and just then update it.<br>
+									<br>
+									<strong>How do I delete a form?</strong><br>
+									&nbsp; &bull; Simply delete all form elements...<br>
+									<br>
+									<br>
+									<strong>What is Name Before/After?</strong><br>
+									&nbsp; &bull; Those fields accepts BBCode, and whatever you right there will appear before and after the Entry Name on the final post. So you can costumize the Entry Name.<br>
+									<br>
+									<strong>Can I see an example for Name Before/After fields?</strong><br>
+									&nbsp; &bull; Sure. You could add <i>[b]</i> on the Before field and <i>[/b]</i> on the After field. And if the Entry Name is <i>Title</i> then the post will be parsed into: <i>[b]Title[/b]</i><br>
+									<br>
+									<strong>What is Entry Name?</strong><br>
+									&nbsp; &bull; Really? This his the question on the form. The text before the input field. And that text can or not be imported to the final post.<br>
+									<br>
+									<strong>What is Entry Explain?</strong><br>
+									&nbsp; &bull; This is an optional field, if you fill it, it will appear below the Entry Name on the form, so you can insert a little explanation text.<br>
+									<br>
+									<strong>What is Hint?</strong><br>
+									&nbsp; &bull; Hint is optional and is what appears inside the input fields, so you can provide an idea of what should be filled on the input box. Its good idea to use in some cases to avoid abusing the Entry Explain.<br>
+									<br>
+									<strong>What is Options?</strong><br>
+									&nbsp; &bull; It only works on some element types: selectbox, radiobuttons and checkbox. With that said its a field where you\'ll insert the options for those element types.<br>
+									<br>
+									<strong>Can I see an example for Options fields? I am still confuse.</strong><br>
+									&nbsp; &bull; Sure. You would add for example genres as: <i>Action, Adventure, Horror, Romance, Sci-Fi</i>. And the user will be able to just select the options, instead of writing.<br>
+									<br>
+									<strong>Great! And do I need to always use a Comma to separate the words?</strong><br>
+									&nbsp; &bull; You can use a comma or a line break.<br>
+									<br>
+									<strong>What is Min/Max?</strong><br>
+									&nbsp; &bull; It only works on Checkboxes since its the only element type where you can select multiple items, and with those fields you can require the user to choose between those min and max values, so if you put Min: 1 and Max: 3, the user will need to choose at least one and less then 3 options.<br>
+									<br>
+									<strong>What is Value Before/After?</strong><br>
+									&nbsp; &bull; Its similar to the <i>Name Before/After</i>. It accepts too BBCode and this is to appear before and after the value the user inserted on that item.<br>
+									<br>
+									<strong>Can I still see an example for Value Before/After fields?</strong><br>
+									&nbsp; &bull; Why not? You could add <i>[color=#ff0000]</i> on the Before field and <i>[/color]</i> on the After field. And let say the Entry Name is <i>Movie Title</i> so the user would insert on the form something as <i>Titanic</i> and when he submits the post will be parsed into: <i>[color=#ff0000]Titanic[/color]</i><br>
+									<br>
+									<strong>&#8730;</strong> The checkmark character indicates that the item is mandatory and cannot be empty, so it will force the user to fill it.<br>
+									<strong><i class="fa fa-eye" aria-hidden="true"></i></strong> The eye character indicates that the entry name of that item will not be imported to the post submited.<br>',
 
-	'CURRENT_FORM'			 	=> 'Current Form',
+	'CURRENT_FORUM'			 	=> 'Current Forum',
 	'FORM_ADD_ITEM'				=> 'Add a new form element',
 	'FORM_CHECKBOX'				=> 'Check Box',
 	'FORM_DETAILS'			 	=> 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',

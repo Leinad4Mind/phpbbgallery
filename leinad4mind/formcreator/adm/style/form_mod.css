@@ -3,6 +3,7 @@
    height: 16px;
    width: 16px;
 }
+
 .checkbox {
 	cursor: pointer
 }
@@ -42,11 +43,7 @@
 	text-align: left;
 }
 .th_before {
-	width: 10%;
-	text-align: left;
-}
-.th_after {
-	width: 10%;
+	width: 20%;
 	text-align: left;
 }
 .th_ndx {
@@ -63,22 +60,6 @@
 }
 .th_type {
 	width: 132px;
-	text-align: left;
-}
-.th_type2 {
-	width: 15%;
-	text-align: left;
-}
-.th_type3 {
-	width: 15%;
-	text-align: left
-}
-.th_type4 {
-	width: 15%;
-	text-align: left;
-}
-.th_type5 {
-	width: 15%;
 	text-align: left;
 }
 .td_in {
