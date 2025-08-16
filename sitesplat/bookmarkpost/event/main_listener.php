@@ -85,7 +85,7 @@ class main_listener implements EventSubscriberInterface
 	public function add_bookmark_post_rowset($event)
 	{
 		$rowset_data = $event['rowset_data'];
-		$rowset_data['post_bookmark'] = $event['row']['post_bookmark'];
+		$rowset_data['post_bookmark'] = $event['row']['post_bookmark'] ?? 0;
 		$event['rowset_data'] = $rowset_data;
 	}
 
@@ -141,19 +141,19 @@ class main_listener implements EventSubscriberInterface
 	public function bookmarked_post_index_subforums($event)
 	{
 		$forum_rows = $event['forum_rows'];
-
 		if ($event['row']['forum_id'] != $forum_rows[$event['parent_id']]['forum_id'])
 		{
-			$forum_rows[$event['parent_id']]['bookmarked_posts'] += $event['row']['bookmarked_posts'];
+			$pid_bmp = $forum_rows[$event['parent_id']]['bookmarked_posts'] ?? 0;
+			$pid_bmp += $event['row']['bookmarked_posts'] ?? 0;
+			$forum_rows[$event['parent_id']]['bookmarked_posts'] = $pid_bmp;
+			$event['forum_rows'] = $forum_rows;
 		}
-
-		$event['forum_rows'] = $forum_rows;
 	}
 
 	public function bookmarked_post_index_template($event)
 	{
 		$forum_row = $event['forum_row'];
-		$forum_row['BOOKMARKED_POSTS'] = $event['row']['bookmarked_posts'];
+		$forum_row['BOOKMARKED_POSTS'] = $event['row']['bookmarked_posts'] ?? 0;
 		$event['forum_row'] = $forum_row;
 	}
 
@@ -178,9 +178,7 @@ class main_listener implements EventSubscriberInterface
 	public function bookmarked_post_viewforum_template($event)
 	{
 		$topic_row = $event['topic_row'];
-
-		$topic_row['TOPIC_BOOKMARKED_POSTS'] = $event['row']['bookmarked_posts'];
-
+		$topic_row['TOPIC_BOOKMARKED_POSTS'] = $event['row']['bookmarked_posts'] ?? 0;
 		$event['topic_row'] = $topic_row;
 	}
 
@@ -188,7 +186,6 @@ class main_listener implements EventSubscriberInterface
 	{
 		if (!empty($event['user_ids'])) {
 			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
-
 			$this->db->sql_query("DELETE FROM {$this->post_bookmarks_table } WHERE user_id $user_id_in");
 		}
 	}
