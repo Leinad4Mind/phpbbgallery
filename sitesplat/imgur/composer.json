@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Imgur - forum images uploader allows the upload of forum images via the image host service IMGUR - Please note, You will need to register an Imgur app to get the Client ID needed for this extension to work. For creating a new App go to https://api.imgur.com/oauth2/addclient and register it following the instruction provided. Use the client ID under ACP > Postings > Attachment settings: Imgur Client ID",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"keywords": ["phpbb", "extension", "bbcode", "upload", "images", "sitesplat", "FLATBOOTS"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -28,7 +28,7 @@
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "imgur.json"
 		}
 

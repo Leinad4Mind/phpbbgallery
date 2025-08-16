@@ -2,7 +2,6 @@
 /**
 *
 * Imgur - forum images uploader
-*
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -44,6 +43,8 @@ class listener implements EventSubscriberInterface
 			'core.posting_modify_message_text'		=> 'posting_modify_message_text',
 			'core.posting_modify_template_vars'		=> 'load_language_on_posting',
 			'core.acp_attachments_config_edit_add'	=> 'load_config_on_setup',
+			'core.ucp_profile_modify_signature'		=> 'ucp_profile_modify_signature',
+			'core.acp_board_config_edit_add'		=> 'load_signature_config',
 		);
 	}
 
@@ -130,6 +131,38 @@ class listener implements EventSubscriberInterface
 			);
 
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_clientid_var, array('after' =>'upload_path'));
+			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
+		}
+	}
+
+	public function ucp_profile_modify_signature($event)
+	{
+		$this->user->add_lang_ext('sitesplat/imgur', 'imgur');
+		$this->template->assign_vars(array(
+			'IN_IMGUR'			=> ($this->config['imgur_clientid'] && $this->config['imgur_signature']) ? true : false,
+			'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
+		));
+
+		$this->posting_modify_message_text($event);
+	}
+
+	public function load_signature_config($event)
+	{
+		if ($event['mode'] == 'signature')
+		{
+			$this->user->add_lang_ext('sitesplat/imgur', 'imgur');
+			$display_vars = $event['display_vars'];
+
+			$add_signature_var = array(
+				'imgur_signature' =>
+					array(
+						'lang'		=> 'IMGUR_SIGNATURE',
+						'validate'	=> 'bool',
+						'type'		=> 'radio:yes_no',
+						'explain'	=> false),
+			);
+
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_signature_var, array('after' =>'allow_sig_links'));
 			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
 		}
 	}

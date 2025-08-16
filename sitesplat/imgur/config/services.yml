@@ -8,3 +8,17 @@ services:
             - '@request'
         tags:
             - { name: event.listener }
+
+    avatar.driver.imgur:
+        class: sitesplat\imgur\avatar\driver\imgur
+        arguments:
+            - '@config'
+            - '@upload_imagesize'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@path_helper'
+            - '@cache.driver'
+        calls:
+            - [set_name, [avatar.driver.imgur]]
+        tags:
+            - { name: avatar.driver }

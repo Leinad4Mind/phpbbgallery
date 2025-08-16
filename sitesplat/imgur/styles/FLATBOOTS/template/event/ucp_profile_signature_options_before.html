@@ -1,0 +1,54 @@
+{% if IN_IMGUR %}
+<div class="space10"></div>
+
+<fieldset class="framed-ucp">
+<legend>{{ lang('IMGUR_UPLOAD_TITLE') }}</legend>
+
+	<div class="fileinput fileinput-new" data-provides="fileinput">
+		<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#imgurAnchor';"<!-- ENDIF --> autocomplete="off" data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{{ lang('IMGUR_UPLOAD') }}</button>
+		<span class="btn btn-default btn-file">
+			<span class="fileinput-new">{{ lang('IMGUR_SELECT') }}</span>
+			<span class="fileinput-exists">{{ lang('FILE_CHANGE') }}</span>
+			<input type="file" name="imgur" id="imgur" maxlength="{{ FILESIZE }}" value="" />
+		</span>
+		<i class="fa fa-picture-o fileinput-exists"></i> <span class="fileinput-filename"></span>
+		<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none"><i class="fa fa-times"></i></a>
+	</div>
+  
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-link">{{ lang('IMGUR_OUTPUT_LINK') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-link" value="{{ IMGUR_DIRECT_LINK }}" placeholder="{{ lang('IMGUR_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default " id="copy-button-link" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('IMGUR_COPY') }}</a>
+				</span>
+		    </div> 
+	    </div> 
+    </div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-img">{{ lang('IMGUR_OUTPUT_IMAGE') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-img" value="{{ IMGUR_DIRECT_IMG }}" placeholder="{{ lang('IMGUR_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default btn-imgur-copy" id="copy-button-img" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('IMGUR_COPY') }}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-del">{{ lang('IMGUR_OUTPUT_IMAGE_DELETE') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-imgur-del" <!-- IF IMGUR_DELETEHASH -->value="http://imgur.com/delete/{{ IMGUR_DELETEHASH }}"<!-- ENDIF --> placeholder="{{ lang('IMGUR_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default btn-imgur-copy" id="copy-button-del" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('IMGUR_COPY') }}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+</fieldset>
+{% endif %}

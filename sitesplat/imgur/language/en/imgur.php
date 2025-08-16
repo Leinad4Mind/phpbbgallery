@@ -52,6 +52,13 @@ $lang = array_merge($lang, array(
 	'IMGUR_OUTPUT_IMAGE_DELETE'	=> 'Deletion Link',
 	'IMGUR_OUTPUT_PLACEHOLDER'	=> 'Waiting image upload...',
 
-	'IMGUR_QUICKREPLY'	        => 'Allow IMGUR in Smart Snappy Reply',
+	'IMGUR_SIGNATURE'	=> 'Allow use of IMGUR image upload in user signatures',
+
+	'ALLOW_IMGUR'					=> 'Allow IMGUR avatars',
+	'AVATAR_DRIVER_IMGUR_TITLE'		=> 'IMGUR avatar',
+	'AVATAR_DRIVER_IMGUR_EXPLAIN'	=> '',
+	'IMGUR_AVATAR'					=> 'IMGUR avatar',
+
+	'IMGUR_QUICKREPLY'	=> 'Allow IMGUR in Snappy Smart Reply',
 
 ));
