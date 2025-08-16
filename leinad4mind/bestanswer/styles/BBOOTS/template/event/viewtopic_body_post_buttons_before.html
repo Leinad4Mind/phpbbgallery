@@ -1,0 +1,13 @@
+<!-- IF not postrow.S_FIRST_POST and postrow.S_AUTH and postrow.S_BEST_ANSWER -->
+<div class="btn-group btn-group-post btn-group-sm" role="group">
+	<!-- IF postrow.POST_ID == postrow.ANSWER_POST_ID -->
+	<a href="{postrow.U_UNMARK_ANSWER}" title="{L_UNMARK_ANSWER}" class="btn btn-danger btn-sm">
+		<i class="fa fa-times"></i>
+	</a>
+	<!-- ELSE -->
+	<a href="{postrow.U_MARK_ANSWER}" title="{L_MARK_ANSWER}" class="btn btn-success btn-sm">
+		<i class="fa fa-check"></i>
+	</a>
+	<!-- ENDIF -->
+</div>
+<!-- ENDIF -->

@@ -1,0 +1,13 @@
+<!-- IF not postrow.S_FIRST_POST and postrow.S_AUTH and postrow.S_ANSWER -->
+<li>
+	<!-- IF postrow.POST_ID == postrow.ANSWER_POST_ID -->
+	<a href="{postrow.U_UNMARK_ANSWER}" title="{L_UNMARK_ANSWER}" class="button button-icon-only">
+		<i class="icon fa-minus fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_UNMARK}</span>
+	</a>
+	<!-- ELSE -->
+	<a href="{postrow.U_MARK_ANSWER}" title="{L_MARK_ANSWER}" class="button button-icon-only">
+		<i class="icon fa-check fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_MARK}</span>
+	</a>
+	<!-- ENDIF -->
+</li>
+<!-- ENDIF -->

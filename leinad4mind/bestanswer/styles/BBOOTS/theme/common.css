@@ -1,0 +1,49 @@
+.answer + .post,
+.answer + a#unread + .post {
+	background-color: #EAF8E2;
+}
+
+.post_answer, .post_answer-dark {
+	background-color: #EAF8E2 !important;
+	padding: 10px;
+	border-radius: 7px;
+	width: 97.5%;
+	margin-bottom: 17px;
+}
+
+.profile-answers {
+	margin-left: 8px;
+}
+
+.profile-answers a {
+	font-weight: normal;
+}
+
+.answer-post .panel {
+	background-color: #eff9e9 !important;
+}
+
+.answer-post-dark .panel {
+	background-color: #1a3509 !important;
+}
+
+.btn, .btn:hover {
+	border-radius: 4px;
+	color: #ffffff;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.btn-post {
+	background-color: #b3b3b3;
+}
+
+.btn-answer {
+	background-color: #74a100;
+	margin-bottom: 4px;
+}
+
+.answered-icon-color {
+	color: #00AA00;
+	font-weight: bold;
+}
