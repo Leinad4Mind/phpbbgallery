@@ -1,0 +1,18 @@
+services:
+    oreolek.likepoints.listener:
+        class: 'oreolek\likepoints\event\listener'
+        arguments:
+            - '@request'
+            - '@dbal.conn'
+            - '@template'
+            - '@language'
+        tags:
+            - { name: event.listener }
+    oreolek.likepoints.admin_listener:
+        class: 'oreolek\likepoints\event\admin_listener'
+        arguments:
+            - '@request'
+            - '@dbal.conn'
+            - '@template'
+        tags:
+            - { name: event.listener }
