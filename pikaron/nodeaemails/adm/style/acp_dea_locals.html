@@ -6,7 +6,7 @@
 <div class="head-panel">
 	<div class="head-title"><i class="icon fa-envelope fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;{{ lang('ACP_NO_DEA_EMAILS') }}</div>
 	<div class="head-description">{{ lang('ACP_NO_DEA_EMAILS_EXPLAIN') }}</div>
-	<p><img src="https://img.shields.io/badge/{{ lang('L_NO_DEA_EMAILS_VERSION') }}-{{ S_NO_DEA_EMAILS_VERSION }}-green.svg?style=plastic"></p>
+	<p><img src="https://img.shields.io/badge/{{ lang('L_NO_DEA_EMAILS_VERSION') }}-{{ S_NO_DEA_EMAILS_VERSION }}-green.svg?style=plastic" alt="{{ lang('L_NO_DEA_EMAILS_VERSION') }}{{ S_NO_DEA_EMAILS_VERSION }}"></p>
 </div>
 
 <div class="successbox successboxdea">{{ lang('ACP_NO_DEA_EMAILS_WARNING_LOCAL') }}</div>
@@ -39,8 +39,8 @@
 	<fieldset>
 		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
 		<p class="submit-buttons">
-			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 		</p>
 	</fieldset>
 	{{ S_FORM_TOKEN }}

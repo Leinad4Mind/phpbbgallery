@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * No DEA Emails extension for the phpBB Forum Software package.
+ * No DEA Emails. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019 Picaron
+ * @copyright (c) 2020, Picaron, https://github.com/picaronin/
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -35,6 +35,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 		'NO_DEA_EMAILS_INSTALL_ERROR'		=> '“No DEA Emails” can not be installed.<br><br>- PhpBB 3.2.4 or later is required.',
+		'NO_DEA_EMAILS_PHP_ERROR'			=> '“No DEA Emails” can not be installed.<br><br>- php 5.6.0 or later is required.',
 		'NO_DEA_EMAILS_NO_CURL'				=> '“No DEA Emails” can not be installed.<br><br>- Is required extension “curl” of PHP loaded.',
 		'NO_DEA_EMAILS_FOUND'				=> 'ERROR: The ((%s)) Email DOMAIN is not valid.<br>Our website does NOT support disposable or temporary email accounts <a href="https://bit.ly/2LBsbqe" target="_blank">(DEA)</a>.<br>If you wish to continue registering on our website, you must use a non-disposable email account.',
 		'NO_DEA_EMAILS_TITLE_FORCE_CHANGE'	=> 'Change Required by Extension “No Dea Emails”',

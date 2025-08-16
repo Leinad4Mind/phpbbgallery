@@ -3,7 +3,7 @@
  *
  * No DEA Emails. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Picaron, https://github.com/picaronin/
+ * @copyright (c) 2020, Picaron, https://github.com/picaronin/
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

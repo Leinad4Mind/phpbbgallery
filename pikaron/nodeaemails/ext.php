@@ -3,7 +3,7 @@
  *
  * No DEA Emails. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Picaron, https://github.com/picaronin/
+ * @copyright (c) 2020, Picaron, https://github.com/picaronin/
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -27,11 +27,17 @@ class ext extends \phpbb\extension\base
 	*/
 	public function is_enableable()
 	{
-		// Requires phpBB 3.2.4 or newer.
 		$config = $this->container->get('config');
 		$lang = $this->container->get('language');
 		$lang->add_lang('nodeaemails', 'pikaron/nodeaemails');
 
+		/**
+		 * Check phpBB requirements
+		 *
+		 * Requires phpBB 3.2.4 or greater
+		 *
+		 * @return bool
+		 */
 		// Display a custom warning message if requirement fails.
 		if (!phpbb_version_compare($config['version'], '3.2.4', '>='))
 		{
@@ -39,6 +45,27 @@ class ext extends \phpbb\extension\base
 			@trigger_error($lang->lang('NO_DEA_EMAILS_INSTALL_ERROR'), E_USER_WARNING);
 		}
 
+		/**
+		 * Check PHP requirements
+		 *
+		 * Requires PHP 5.6.0 or greater
+		 *
+		 * @return bool
+		 */
+		// Display a custom warning message if requirement fails.
+		if (!phpbb_version_compare(PHP_VERSION, '5.6.0', '>='))
+		{
+			// Suppress the error in case of CLI usage
+			@trigger_error($lang->lang('NO_DEA_EMAILS_PHP_ERROR'), E_USER_WARNING);
+		}
+
+		/**
+		 * Check PHP curl requirements
+		 *
+		 * Requires PHP curl extension
+		 *
+		 * @return bool
+		 */
 		// Display a custom warning message if not extension 'curl' loaded.
 		if (!extension_loaded('curl'))
 		{
