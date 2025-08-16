@@ -23,13 +23,13 @@ class main_listener implements EventSubscriberInterface
 {
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_links',
 			'core.viewonline_overwrite_location'	=> 'add_viewonline',
 			'core.delete_user_after'				=> 'delete_user',
-			'core.permissions'						=> 'add_permission_cat',
-		);
+			'core.permissions'						=> 'add_permission',
+		];
 	}
 
 	/* @var string phpbb_root_path */
@@ -107,17 +107,17 @@ class main_listener implements EventSubscriberInterface
 	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'oxpus/notes',
 			'lang_set' => 'common',
-		);
+		];
 
 		if (defined('ADMIN_START'))
 		{
-			$lang_set_ext[] = array(
+			$lang_set_ext[] = [
 				'ext_name' => 'oxpus/notes',
 				'lang_set' => 'permissions_notes',
-			);
+			];
 		}
 
 		$event['lang_set_ext'] = $lang_set_ext;
@@ -126,7 +126,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function add_page_header_links($event)
 	{
-		if ($this->user->data['is_registered'])
+		if ($this->auth->acl_get('u_notes'))
 		{
 			$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
 			$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
@@ -137,11 +137,13 @@ class main_listener implements EventSubscriberInterface
 			if ($this->user->data['user_popup_notes'])
 			{
 				$u_notes_path	= "javascript:notes()";
+				$u_notes_home	= $ext_main_link;
 				$u_notes_popup	= $ext_main_link;
 			}
 			else
 			{
 				$u_notes_path	= $ext_main_link;
+				$u_notes_home	= $ext_main_link;
 				$u_notes_popup	= '';
 			}
 
@@ -160,19 +162,21 @@ class main_listener implements EventSubscriberInterface
 
 			if ($total_note_mems)
 			{
-				$u_notes_path = (!$this->user->data['user_popup_notes']) ? $this->helper->route('oxpus_notes_controller', array('mem_drop' => 1, 'mem_time' => $cur_time)) : $u_notes_path;
-				$u_notes_popup = ($this->user->data['user_popup_notes']) ? $this->helper->route('oxpus_notes_controller', array('mem_drop' => 1, 'mem_time' => $cur_time)) : '';
+				$u_notes_path = (!$this->user->data['user_popup_notes']) ? $this->helper->route('oxpus_notes_controller', ['mem_drop' => 1, 'mem_time' => $cur_time]) : $u_notes_path;
+				$u_notes_home = ($this->user->data['user_popup_notes']) ? $this->helper->route('oxpus_notes_controller', ['mem_drop' => 1, 'mem_time' => $cur_time]) : $u_notes_home;
+				$u_notes_popup = ($this->user->data['user_popup_notes']) ? $this->helper->route('oxpus_notes_controller', ['mem_drop' => 1, 'mem_time' => $cur_time]) : '';
 
 				$this->template->assign_var('S_NOTES_MEM', true);
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'NOTES_MEM'		=> $this->language->lang('NOTES_MEMTEXT', '<a href="' . $u_notes_path . '">', '</a>'),
-				));
+				]);
 			}
 
-			$this->template->assign_vars(array(
-				'U_NOTES_PATH'	=> $u_notes_path,
-				'U_NOTES_POPUP'	=> ($this->user->data['user_popup_notes']) ? str_replace('&amp;', '&', $u_notes_popup) : $u_notes_popup,
-			));
+			$this->template->assign_vars([
+				'U_NOTES_PATH'			=> $u_notes_path,
+				'U_NOTES_HOME'	=> $u_notes_home,
+				'U_NOTES_POPUP'			=> ($this->user->data['user_popup_notes']) ? str_replace('&amp;', '&', $u_notes_popup) : $u_notes_popup,
+			]);
 		}
 	}
 
@@ -194,14 +198,15 @@ class main_listener implements EventSubscriberInterface
 		$this->db->sql_query($sql);
 	}
 
-	public function add_permission_cat($event)
+	public function add_permission($event)
 	{
 		$perm_cat = $event['categories'];
 		$perm_cat['notes'] = 'ACP_NOTES';
 		$event['categories'] = $perm_cat;
 
 		$permission = $event['permissions'];
-		$permission['a_notes'] = array('lang' => 'ACL_A_NOTES', 'cat' => 'notes');
+		$permission['a_notes'] = ['lang' => 'ACL_A_NOTES', 'cat' => 'notes'];
+		$permission['u_notes'] = ['lang' => 'ACL_U_NOTES', 'cat' => 'misc'];
 		$event['permissions'] = $permission;
 	}
 }
