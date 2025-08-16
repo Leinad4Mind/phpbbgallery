@@ -83,7 +83,8 @@ class listener implements EventSubscriberInterface
 		$root_path,
 		$php_ext,
 		$table_formcreator,
-		\phpbb\files\factory $files_factory = null)
+		\phpbb\files\factory $files_factory
+	)
 	{
 		$this->user					= $user;
 		$this->template				= $template;
@@ -121,14 +122,20 @@ class listener implements EventSubscriberInterface
 
 	public function add_permission($event)
 	{
-		$permissions = $event['permissions'];
-		$permissions['a_form_creator'] = ['lang' => 'ACL_A_FORM_CREATOR', 'cat' => 'misc'];
-		$event['permissions'] = $permissions;
+		$event['permissions'] = array_merge($event['permissions'], [
+			'a_form_creator'	=> ['lang' => 'ACL_A_FORM_CREATOR', 'cat' => 'misc'],
+			'f_form_creator'	=> ['lang' => 'ACL_F_FORM_CREATOR', 'cat' => 'misc'],
+		]);
+	}
+
+	private function can_use_form($event)
+	{
+		return $this->auth->acl_get('f_form_creator', $event['forum_id']) && ($event['mode'] == 'post' || $event['mode'] == 'edit' && $event['post_id'] == $event['post_data']['topic_first_post_id']);
 	}
 
 	public function modify_message_text($event)
 	{
-		if ($event['mode'] == 'post' || $event['mode'] == 'edit' && $event['post_id'] == $event['post_data']['topic_first_post_id'])
+		if ($this->can_use_form($event))
 		{
 			$message = $this->request->variable('message', '', true);
 
@@ -163,19 +170,15 @@ class listener implements EventSubscriberInterface
 
 	public function posting_modify_template_vars($event)
 	{
-		if ($event['mode'] == 'post' || $event['mode'] == 'edit' && $event['post_id'] == $event['post_data']['topic_first_post_id'])
+		if ($this->can_use_form($event))
 		{
-			$forum_id = $event['forum_id'];
-
-			$this->build_form($forum_id, $event['mode']);
+			$this->build_form($event['forum_id'], $event['mode']);
 		}
 	}
 
 	private function build_form($forum_id, $mode)
 	{
 		global $phpbb_container;
-
-		$class = ' class="inputbox autowidth form-control input-sm"';
 
 		$sql = 'SELECT m.*, f.forum_name, f.forum_id, f.forum_force_form, f.forum_show_form
 			FROM ' . $this->table_formcreator . ' m, ' . FORUMS_TABLE . ' f
@@ -186,18 +189,21 @@ class listener implements EventSubscriberInterface
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$entry = '';
-			$clean_name = 'templatefield_' . $row['id'];
-			$mandatory = $row['mandatory'] ? ' required ' : '';
-			$name = ' name="' . $clean_name . '"';
-			$id = ' id="' . $clean_name . '"';
-			$placeholder = ' placeholder="' . $row['hint'] . '"';
-			$tabindex = ' tabindex="' . $row['ndx_order'] . '"';
-			$type = ' type="' . $row['type'] . '"';
-			$size = ' size="40"';
-			$maxlength = ' maxlength="255"';
-			$cols = ' rows="3"';
-			$rows = 'cols="76"';
+			$entry 			= '';
+			$clean_name 	= 'templatefield_' . $row['id'];
+
+			$mandatory		= $row['mandatory'] ? ' required' : '';
+			$class 			= ' class="inputbox autowidth form-control"';
+			$name			= ' name="' . $clean_name . '"';
+			$name_array		= ' name="' . $clean_name . '[]"';
+			$id				= ' id="' . $clean_name . '"';
+			$placeholder	= ' placeholder="' . $row['hint'] . '"';
+			$tabindex		= ' tabindex="' . ($row['ndx_order'] + 10) . '"';
+			$type			= ' type="' . $row['type'] . '"';
+			$size			= ' size="40"';
+			$maxlength		= ' maxlength="255"';
+			$cols			= ' rows="3"';
+			$rows			= ' cols="76"';
 
 			switch (strtolower($row['type']))
 			{
@@ -226,29 +232,32 @@ class listener implements EventSubscriberInterface
 					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><select'. $type . $name . $id . $tabindex . $mandatory . $class . '>';
 					$entry .= '<option value="">----------------</option>';
 					$select_option = ext::explode([',', "\n"], $row['options']);
-					$selected = $this->request->variable($clean_name, false);
+					$select_option = array_map('trim', $select_option);
+					$selected = $this->request->variable($clean_name, '');
 					foreach ($select_option as $value)
 					{
-						 $entry .= '<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>'. $value .'</option>';
+						 $entry .= '<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>' . $value . '</option>';
 					}
 					$entry .= '</select></div></div>';
 				break;
 
 				case 'radiobuttons':
 					$radio_option = ext::explode([',', "\n"], $row['options']);
-					$checked = $this->request->variable($clean_name, '', false);
+					$radio_option = array_map('trim', $radio_option);
+					$checked = $this->request->variable($clean_name, '');
 					foreach ($radio_option as $value)
 					{
-						$entry .= '<input type="radio"' . $tabindex . $mandatory . $name . $id . ' value="' . $value . '"' . ($value == $checked ? ' checked' : '') . '>&nbsp;'. $value . '&nbsp;&nbsp;';
+						$entry .= '<label><input type="radio"' . $tabindex . $mandatory . $name . $id . ' value="' . $value . '"' . ($value == $checked ? ' checked' : '') . '>&nbsp;' . $value . '&nbsp;&nbsp;</label>';
 					}
 				break;
 
 				case 'checkbox':
 					$check_option = ext::explode([',', "\n"], $row['options']);
-					$checked = $this->request->variable($clean_name, ['']);
+					$check_option = array_map('trim', $check_option);
+					$checked = $this->request->variable($clean_name, [0 => '']);
 					foreach ($check_option as $value)
 					{
-						$entry .= '<input' . $type . $tabindex . $mandatory . ' name="' . $clean_name .'[]"' . $id . ' value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . '>&nbsp;'. $value .'&nbsp;&nbsp;';
+						$entry .= '<label><input' . $type . $tabindex . $name_array . $id . ' value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . '>&nbsp;' . $value . '&nbsp;&nbsp;</label>';
 					}
 				break;
 
@@ -387,12 +396,12 @@ class listener implements EventSubscriberInterface
 		{
 			if ($element['name_visible'])
 			{
-				$content .= ($element['name_before'] ?: '[form][b]') . $this->get_clean_name($element['name']) . ($element['name_after'] ?: ':[/b][/form]');
+				$content .= (ext::trim_once($element['name_before']) ?: '[form][b]') . $this->get_clean_name($element['name']) . (ext::trim_once($element['name_after']) ?: ':[/b][/form]');
 			}
 
-			$content .= $element['value_before'] ?: ('[' . $container . ']');
+			$content .= ext::trim_once($element['value_before']) ?: ('[' . $container . ']');
 			$content .= $value_rich;
-			$content .= $element['value_after'] ?: ('[/' . $container . ']');
+			$content .= ext::trim_once($element['value_after']) ?: ('[/' . $container . ']');
 		}
 
 		return $content;

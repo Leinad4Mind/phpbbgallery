@@ -110,12 +110,13 @@
 					<input style="width:97%" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
 				</td>
 				<td class="td_02">
-					<input style="width:97%" type="text" name="q_name_before[{{ form_template.ID }}]" value="{{ form_template.NAME_BEFORE }}"><br>
-					<input style="width:97%" type="text" name="q_name_after[{{ form_template.ID }}]" value="{{ form_template.NAME_AFTER }}">
+					<textarea style="width:97%" name="q_name_before[{{ form_template.ID }}]">{{ form_template.NAME_BEFORE }}</textarea><br>
+					<textarea style="width:97%" name="q_name_after[{{ form_template.ID }}]">{{ form_template.NAME_AFTER }}</textarea>
 				</td>
 				<td class="td_02">
-					<input style="width:97%" type="text" name="q_value_after[{{ form_template.ID }}]" value="{{ form_template.VALUE_AFTER }}"><br>
-					<input style="width:97%" type="text" name="q_value_before[{{ form_template.ID }}]" value="{{ form_template.VALUE_BEFORE }}">
+					<textarea style="width:97%" name="q_value_before[{{ form_template.ID }}]">{{ form_template.VALUE_BEFORE }}</textarea><br>
+					<textarea style="width:97%" name="q_value_after[{{ form_template.ID }}]">{{ form_template.VALUE_AFTER }}</textarea>
+					
 				</td>
 			</tr>
 			{% endfor %}
@@ -137,7 +138,7 @@
 
 	{% if ELEMENTS != '0' %}
 		<div id="preview" style="display:none; width:80%; margin-left: auto; margin-right:auto;">
-			{% include '@leinad4mind_formcreator/forms/form_maker.html' %}
+			{% include '@leinad4mind_formcreator/forms/form_creator.html' %}
 		</div>
 		<div id="copy" style="display:none; width:80%; margin-left: auto; margin-right:auto;">
 			{% include '@leinad4mind_formcreator/forms/copy.html' %}

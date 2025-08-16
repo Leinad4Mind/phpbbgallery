@@ -22,10 +22,6 @@ function Hide(id)
 function ShowHide(id1, id2)
 {
 	$('#' + id1).toggle();
-	if (id2)
-	{
-		$('#' + id2).toggle();
-	}
 }
 
 function is_hidden(id)

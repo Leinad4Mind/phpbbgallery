@@ -25,6 +25,6 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%leinad4mind.formcreator.table.formcreator%'
-            - '@?files.factory'
+            - '@files.factory'
         tags:
-            - { name: event.listener }       
+            - { name: event.listener }

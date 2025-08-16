@@ -246,7 +246,7 @@ class admin_controller
 			$this->db->sql_query($sql);
 
 			$this->template->assign_vars([
-				'L_FORM_NO_FORM'	=> sprintf($this->user->lang['FORM_NO_FORM'], $fname),
+				'L_FORM_NO_FORM'	=> $this->user->lang('FORM_NO_FORM', $fname),
 				'S_SHOW_FORM'		=> $show_form,
 				'S_FORCE_FORM'		=> $force_form,
 			]);
@@ -261,7 +261,7 @@ class admin_controller
 
 			$form_id = $this->request->variable('form_id', 0);
 
-			$sql = 'SELECT max(ndx_order) + 1 as maxorder
+			$sql = 'SELECT MAX(ndx_order) + 1 AS maxorder
 				FROM ' . $this->table_formcreator . '
 				WHERE form_id = ' . $form_id;
 			$result = $this->db->sql_query($sql);
@@ -277,13 +277,13 @@ class admin_controller
 				'explanation'		=> $this->request->variable('explanation', '', true),
 				'hint'				=> $this->request->variable('hint', '', true),
 				'options'			=> $this->request->variable('options', '', true),
-				'options_separator'	=> $this->request->variable('options_separator', '', true),
+				'options_separator'	=> $this->request->untrimmed_variable('options_separator', '', true),
 				'min_value'			=> $this->request->variable('min_value', 0),
 				'max_value'			=> $this->request->variable('max_value', 0),
-				'name_before'		=> $this->request->variable('name_before', '', true),
-				'name_after'		=> $this->request->variable('name_after', '', true),
-				'value_before'		=> $this->request->variable('value_before', '', true),
-				'value_after'		=> $this->request->variable('value_after', '', true),
+				'name_before'		=> $this->request->untrimmed_variable('name_before', '', true),
+				'name_after'		=> $this->request->untrimmed_variable('name_after', '', true),
+				'value_before'		=> $this->request->untrimmed_variable('value_before', '', true),
+				'value_after'		=> $this->request->untrimmed_variable('value_after', '', true),
 				'type'				=> $this->request->variable('add_type', '', true),
 				'mandatory' 		=> $this->request->is_set_post('mandatory') ? 1 : 0,
 			];
@@ -350,7 +350,7 @@ class admin_controller
 			{
 				$this->template->assign_block_vars('form_template.template_type', [
 					'TYPE'		=> $t_value,
-					'SELECTED'	=> ($t_value == $row['type']) ? ' selected="selected"' : '',
+					'SELECTED'	=> $t_value == $row['type'] ? ' selected="selected"' : '',
 				]);
 				$elements++;
 			}

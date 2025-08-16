@@ -29,6 +29,21 @@ class ext extends \phpbb\extension\base
 
 	public static function explode(array $delimiters, $string)
 	{
-		return preg_split( '/[' . preg_quote(implode($delimiters)) . ']/', $string );
+		return preg_split('/[' . preg_quote(implode($delimiters)) . ']/', $string);
+	}
+
+	public static function trim_once($str)
+	{
+		if (utf8_strlen($str) < 2)
+		{
+			return $str;
+		}
+
+		if ($str === '  ')
+		{
+			return ' ';
+		}
+
+		return trim(utf8_substr($str, 0, 1)) . utf8_substr($str, 1, -1) . trim(utf8_substr($str, -1, 1));
 	}
 }

@@ -37,5 +37,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'ACL_A_FORM_CREATOR'			=> 'Can manage Form Creator',
+	'ACL_A_FORM_CREATOR'		=> 'Can manage Form Creator',
+	'ACL_F_FORM_CREATOR'		=> 'Can use Form Creator',
 ]);
