@@ -35,6 +35,8 @@ class listener implements EventSubscriberInterface
 			'core.memberlist_view_profile'				=> 'modify_profile',
 			'core.bbfront_before_display'				=> 'viewtopic_handle_posts',
 			'core.delete_forum_content_before_query'	=> 'delete_like_dislike_forum',
+			'core.delete_posts_in_transaction_before'	=> 'delete_like_dislike_topic',
+			'core.delete_user_before'					=> 'delete_like_dislike_user',
 		);
 	}
 
@@ -186,16 +188,35 @@ class listener implements EventSubscriberInterface
 
 	public function delete_like_dislike_forum($event)
 	{
-		$forum_id = $event['forum_id'];
 		$sql = 'DELETE FROM ' . $this->likes_table . '
-		WHERE post_id IN (
-			SELECT p.post_id
-			FROM ' . $this->topics_table . ' t
-			LEFT JOIN ' . $this->posts_table . ' p
-				ON (t.topic_id = p.topic_id)
-			WHERE t.forum_id = ' . (int) $forum_id . '
-		)';
+			WHERE post_id IN (
+				SELECT post_id FROM ' . POSTS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('topic_id', $event['topic_ids']) . '
+			)';
+
 		$this->db->sql_query($sql);
+	}
+
+	public function delete_like_dislike_topic($event)
+	{
+		$tables = $event['table_ary'];
+		$tables[] = $this->likes_table;
+		$event['table_ary'] = $tables;
+	}
+
+	public function delete_like_dislike_user($event)
+	{
+		$this->db->sql_query('DELETE FROM ' . $this->likes_table . ' WHERE ' . $this->db->sql_in_set('user_id', $event['user_ids']));
+		if ($event['mode'] != 'retain') {
+			$sql = 'DELETE FROM ' . $this->likes_table . '
+				WHERE post_id IN (
+					SELECT post_id FROM ' . POSTS_TABLE . '
+					WHERE ' . $this->db->sql_in_set('poster_id', $event['user_ids']) . '
+				)';
+
+			$this->db->sql_query($sql);
+		}
+
 	}
 
 	protected function truncateByOccurence ($haystack, $needle, $limit)

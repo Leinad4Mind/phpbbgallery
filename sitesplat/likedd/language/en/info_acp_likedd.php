@@ -36,5 +36,5 @@ $lang = array_merge($lang, array(
 	'LIKEDD_LIKE_LOCKED'			=> 'Locked topics like / dislike ',
 	'LIKEDD_LIKE_LOCKED_EXPLAIN'	=> 'Turns on/off like / dislike in Locked topics',
 	'ACL_U_LIKEDD'					=> 'Can use LikeBB UCP module and LikeBB Top 10 page',
-	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 ));
