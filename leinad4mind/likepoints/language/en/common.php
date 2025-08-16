@@ -32,5 +32,6 @@ $lang = array_merge($lang, [
    'REASON_UNLIKE_CONTRIBUTOR' => 'CONTRIBUTOR UNLIKE: Taken %d points for removing a like from %d as contributors from the poster.',
    'ENTER_TAGS_PLACEHOLDER' => 'Enter usernames',
    'CONTRIBUTED' => 'contributed',
-   'NOT_ENOUGH_BALANCE_LIKE' => 'You don\'t have enough BBPoints to like',
+   'CONTRIBUTEDS' => 'contributed',
+   'NOT_ENOUGH_BALANCE_LIKE' => 'You don\'t have enough Points to like',
 ]);

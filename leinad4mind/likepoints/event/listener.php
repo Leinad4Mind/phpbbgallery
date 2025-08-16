@@ -112,6 +112,7 @@ class listener implements EventSubscriberInterface
 
       $event['post_row'] = array_merge($event['post_row'], array(
          'CONTRIBUTOR_USERS' => rtrim($contrs, ', '),
+         'CONTRIBUTOR_PLURAL' => count($contributors) > 1,
       ));
    }
 
