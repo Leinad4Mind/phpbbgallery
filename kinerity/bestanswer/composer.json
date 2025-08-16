@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "An extension for phpBB that allows users to mark a post as the best answer.",
     "homepage": "https://www.project-w.org/",
-    "version": "1.0.1",
-    "time": "2019-05-08",
+    "version": "1.0.2",
+    "time": "2019-10-14",
     "license": "GPL-2.0-only",
     "authors": [
         {

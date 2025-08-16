@@ -218,6 +218,7 @@ class main_controller
 
 		// Redirect back to the post
 		$url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . (int) $post_id . '#p' . (int) $post_id);
-		redirect($url);
+		$response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302);
+		$response->send();
 	}
 }

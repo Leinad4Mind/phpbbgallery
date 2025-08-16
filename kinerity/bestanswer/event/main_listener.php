@@ -156,7 +156,10 @@ class main_listener implements EventSubscriberInterface
 		{
 			$sql = 'UPDATE ' . TOPICS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE ' . $this->db->sql_in_set('answer_post_id', $answer_post_ids);
 			$this->db->sql_query($sql);
+		}
 
+		if ($answer_user_ids)
+		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_answers = user_answers - 1
 				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
@@ -179,10 +182,13 @@ class main_listener implements EventSubscriberInterface
 		}
 		$this->db->sql_freeresult($result);
 
-		$sql = 'UPDATE ' . USERS_TABLE . '
-			SET user_answers = user_answers - 1
-			WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
-		$this->db->sql_query($sql);
+		if ($answer_user_ids)
+		{
+			$sql = 'UPDATE ' . USERS_TABLE . '
+				SET user_answers = user_answers - 1
+				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
+			$this->db->sql_query($sql);
+		}
 	}
 
 	public function display_forums_modify_forum_rows($event)
@@ -197,7 +203,7 @@ class main_listener implements EventSubscriberInterface
 			$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
 
 			// Is the extension enabled on the forum and related answer_post_id not null?
-			if ($row['enable_answer'] && !($forum_rows[$parent_id]['answer_post_id'] === false))
+			if ($row['enable_answer'] && $forum_rows[$parent_id]['answer_post_id'] !== false)
 			{
 				$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
 			}
