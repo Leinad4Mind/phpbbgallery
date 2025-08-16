@@ -1,0 +1,17 @@
+sitesplat_bbtracking_view:
+    path: /revisions/view/{post_id}
+    defaults: { _controller: sitesplat.bbtracking.postrev_controller:view }
+    requirements:
+        post_id: \d+
+
+sitesplat_bbtracking_delete:
+    path: /revisions/delete/{revision_id}
+    defaults: { _controller: sitesplat.bbtracking.postrev_controller:delete }
+    requirements:
+        revision_id: \d+
+
+sitesplat_bbtracking_restore:
+    path: /revisions/restore/{revision_id}
+    defaults: { _controller: sitesplat.bbtracking.postrev_controller:restore }
+    requirements:
+        revision_id: \d+

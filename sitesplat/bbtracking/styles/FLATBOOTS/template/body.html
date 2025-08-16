@@ -1,0 +1,79 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{L_PRIMEPOSTREVISIONS_TITLE}</h3></div>
+<p>{L_PRIMEPOSTREVISIONS_VIEWING_EXPLAIN}{% if U_POST %} <strong><em><a href="{U_POST}">{L_VIEW_LATEST_POST}</a></em></strong>{% endif %}</p>
+
+<form id="revisions_form" name="revisions_form" method="post" action="{S_FORM_ACTION}">
+<!-- BEGIN postrow -->
+<article>
+    <div class="panel forum-answer post">
+        <div class="panel-heading">
+            <div class="clearfix">
+                <div id="p{postrow.REVISION_ID}">
+                    <div class="avatar-over pull-left">
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#{postrow.REVISION_ID}" title="">{postrow.POSTER_AVATAR}</a>
+					</div>
+                </div>
+                <div class="side-segment">
+                    <h3 style="border-bottom: 4px solid #e5e5e5;"><a href="#p{postrow.REVISION_ID}" title="">{postrow.POST_SUBJECT}</a><span class="pull-right post-id badge badge-primary">{postrow.EDIT_COUNT_STR}</span></h3>
+                </div>
+                <div class="clearfix">
+                    <div class="text-muted  pull-left">
+                        <!-- IF postrow.EDIT_COUNT > 0 -->{L_PRIMEPOSTREVISIONS_EDIT_BY}<!-- ELSE -->{L_POST_BY_AUTHOR}<!-- ENDIF -->{L_COLON}&nbsp;<a href="{postrow.U_POST_AUTHOR}" class="username-coloured" title="">{postrow.POST_AUTHOR_FULL}</a><span class="hidden-xs">&nbsp;-&nbsp;<i class="fa fa-clock-o"></i>&nbsp;{postrow.POST_DATE}</span>
+                    </div>
+                    <div class="pull-right">
+                        <div role="toolbar" class="btn-toolbar post-buttons">
+					<!-- IF postrow.U_RESTORE -->
+						<a href="{postrow.U_RESTORE}" title="{L_PRIMEPOSTREVISIONS_RESTORE}" class="btn btn-default btn-sm"><i class="fa fa-history fa-fw"><span class="sr-only">{L_PRIMEPOSTREVISIONS_RESTORE}</span></i></a>
+					<!-- ENDIF -->
+					
+					<!-- IF postrow.U_DELETE -->
+						<a href="{postrow.U_DELETE}" title="{L_PRIMEPOSTREVISIONS_DELETE}" class="btn btn-default btn-sm"><i class="fa fa-trash fa-fw"><span class="sr-only">{L_PRIMEPOSTREVISIONS_DELETE}</span></i></a>
+					{% if DELETABLE_CNT > 1 %}
+						<label class="button button-icon-only" style="padding-left:0.5em;padding-right:0.5em;"><input type="checkbox" id="revision_list_select_{postrow.REVISION_ID}" name="revision_list[]" value="{postrow.REVISION_ID}"<!-- IF postrow.S_CHECKED --> checked="checked"<!-- ENDIF --> /></label>
+					{% endif %}
+					<!-- ENDIF -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="clearfix">
+                <div class="postbody">
+                    <div id="post_{postrow.REVISION_ID}">
+                        <span class="post-date pull-left visible-xs">-&nbsp;<i class="fa fa-clock-o"></i>&nbsp;{postrow.POST_DATE}</span>
+                        <span class="post-id pull-right visible-xs"><a href="#p{postrow.REVISION_ID}" title="" >#{postrow.REVISION_ID}</a></span>
+                        <div class="content">{postrow.POST_TEXT}</div>
+                       <!-- IF postrow.EDIT_REASON --> 
+						<div class="notice text-muted">
+						   <small><strong>{L_REASON}{L_COLON}</strong> <em>{postrow.EDIT_REASON}</em></small>
+                        </div>
+					  <!-- ENDIF -->	
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</article>
+<!-- END postrow -->
+
+{% if DELETABLE_CNT > 1 %}
+<fieldset class="display-actions">
+	
+<div class="btn-group">
+    <input class="btn btn-default" type="submit" name="delete_revisions_submit" value="{L_PRIMEPOSTREVISIONS_DELETES}" />
+	
+	<a href="javascript:;" onclick="marklist('revisions_form', 'revision', true); return false;" class="btn btn-default" title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
+	<a href="javascript:;" onclick="marklist('revisions_form', 'revision', false); return false;" class="btn btn-default" title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+</div>
+{S_HIDDEN_FIELDS}
+{S_FORM_TOKEN}
+</fieldset>
+{% endif %}
+</form>
+
+<!-- INCLUDE overall_footer.html -->

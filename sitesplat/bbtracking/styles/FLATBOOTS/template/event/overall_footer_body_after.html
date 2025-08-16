@@ -1,0 +1,35 @@
+{% if S_IN_POSTREV %}
+	{% INCLUDEJS '@sitesplat_bbtracking/js/htmldiff.js' %}
+	<script id="ppr-cmpout-tpl" type="text/x-jsrender">
+	<div class="post comparison" id="<<:cmpId>>" style="display:none;">
+	   <div class="pull-right"><i class="fa fa-hand-pointer-o fa-2x" title="{L_POSTREVISIONS_ICON_HELP}"></i></div>
+		<div class="inner panel panel-warning panel-body">
+			<<:cmpHtml>>
+		</div>
+	</div>
+	</script>
+	<script id="ppr-cmpbtn-tpl" type="text/x-jsrender">
+		<a class="btn btn-default btn-sm compare compare-btn" title="{L_PRIMEPOSTREVISIONS_COMPARE}" data-cmp="<<:cmpId>>">
+			<i class="fa fa-balance-scale fa-fw"><span class="sr-only">{L_PRIMEPOSTREVISIONS_COMPARE}</span></i>
+		</a>
+	</script>
+	<script>
+	head.ready(function () {
+	$postList = $('#revisions_form .post');
+	for (var i = 0, len = $postList.length; i < len - 1; i++) {
+		var $postA	= $postList.eq(i);
+		var $postB	= $postList.eq(i + 1);
+		var cmpHtml = htmldiff($('.content', $postB).html(), $('.content', $postA).html());
+		var cmpId	= 'cmp-' + i + '-' + (i + 1);
+		var cmpBtn	= $('#ppr-cmpbtn-tpl').html().replace(/<<:cmpId>>/g, cmpId);
+		var cmpOut	= $('#ppr-cmpout-tpl').html().replace(/<<:cmpId>>/g, cmpId).replace(/<<:cmpHtml>>/g, cmpHtml);
+		$postA.after(cmpOut);
+		$postB.find('.post-buttons').prepend(cmpBtn);
+	}
+	$('.post').on('click', '.compare-btn', function() {
+		var cmpId = $(this).data('cmp');
+		$('#' + cmpId).slideToggle();
+	});
+	});
+	</script>
+{% endif %}

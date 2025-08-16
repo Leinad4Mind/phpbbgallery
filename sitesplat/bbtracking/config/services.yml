@@ -1,0 +1,48 @@
+imports:
+    - { resource: cron.yml }
+
+parameters:
+    sitesplat.bbtracking.tables.tracking: '%core.table_prefix%tracking'
+    sitesplat.bbtracking.tables.postrev: '%core.table_prefix%primepostrev'
+
+services:
+    sitesplat.bbtracking.postrev_controller:
+        class: sitesplat\bbtracking\controller\postrev
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%sitesplat.bbtracking.tables.postrev%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.bbtracking.tracking_listener:
+        class: sitesplat\bbtracking\event\tracking_listener
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '@request'
+            - '%sitesplat.bbtracking.tables.tracking%'
+            - '%tables.users%'
+            - '%tables.groups%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbtracking.postrev_listener:
+        class: sitesplat\bbtracking\event\postrev_listener
+        arguments:
+            - '@auth'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%sitesplat.bbtracking.tables.postrev%'
+        tags:
+            - { name: event.listener }
