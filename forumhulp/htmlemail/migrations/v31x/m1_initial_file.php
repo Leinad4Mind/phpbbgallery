@@ -91,7 +91,8 @@ class m1_initial_file extends container_aware_migration
 					2 => '		$this->mail_priority = $priority;',
 					3 => '$headers[] = \'Content-Type: text/plain; charset=UTF-8\';',
 					4 => '\'EMAIL_SIG\'	=> str_replace(\'<br />\', "\n", "-- \n" . htmlspecialchars_decode($config[\'board_email_sig\'])),',
-					5 => '\'SITENAME\'	=> htmlspecialchars_decode($config[\'sitename\']),',					)
+					5 => '\'SITENAME\'	=> htmlspecialchars_decode($config[\'sitename\']),',
+					),
 				),
 			'replaces' => array(
 				0 => array(
@@ -111,7 +112,7 @@ class m1_initial_file extends container_aware_migration
 					3 => '$headers[] = \'Content-Type: \' . (($this->use_html) ? \'text/html;\' : \'text/plain;\')  . \' charset=UTF-8\';',
 					4 => '\'EMAIL_SIG\'	=> "-- \n" . $config[\'board_email_sig\'],',
 					5 => '\'SITENAME\'	=> $config[\'sitename\'],',
-					)
+					),
 				)
 			);
 		return $replacements;
