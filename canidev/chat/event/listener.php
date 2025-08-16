@@ -2,9 +2,9 @@
 /*
 * @name listener.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -121,6 +121,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->template->assign_vars(array(
 				'S_CHAT_VERSION'	=> $this->config['chat_version'],
+				'S_CHAT_VARIANT'	=> str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x',
 				'T_CHAT_PATH'		=> $chat->web_path . $chat->path,
 				'U_CHAT'			=> ($chat->enabled && $this->config['chat_page_enabled']) ? $this->helper->route('canidev_chat_controller') : '',
 			));

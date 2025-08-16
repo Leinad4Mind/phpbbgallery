@@ -2,7 +2,7 @@
 	<div id="room-{room.ID}" title="{room.S_TITLE}" class="{room.S_CLASS}">
 		<div class="js-conversation">
 		<!-- BEGIN message -->
-			<div id="chat-row-{message.S_ID}" class="chat-row">
+			<div id="chat-row-{message.S_ID}" class="chat-row" data-time="{message.S_TIMESTAMP}">
 				<!-- IF message.S_AUTHOR_AVATAR --><div class="ic-row-avatar">{message.S_AUTHOR_AVATAR}</div><!-- ENDIF -->
 
 				<div class="ic-row-actions">
@@ -12,6 +12,7 @@
 					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
 				
 					<!-- IF message.U_TOPIC_EDIT --><a href="{message.U_TOPIC_EDIT}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.U_POST_EDIT --><a href="{message.U_POST_EDIT}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
 				</div>
 
 				<div class="ic-row-title<!-- IF message.S_AUTHOR_AVATAR --> avatar-margin<!-- ENDIF -->">
@@ -23,6 +24,7 @@
 				<!-- IF message.IS_TOPIC -->
 					<span class="chat-new-topic">{L_NEW_TOPIC}:</span> <a href="{message.U_TOPIC}">{message.TOPIC_TITLE}</a>
 				<!-- ELSE -->
+					<!-- IF message.IS_POST --><span class="chat-new-topic">{L_NEW_POST}:</span> <a href="{message.U_POST}">{message.POST_SUBJECT}</a><br /><br /><!-- ENDIF -->
 					{message.S_TEXT}
 				<!-- ENDIF -->
 				</div>

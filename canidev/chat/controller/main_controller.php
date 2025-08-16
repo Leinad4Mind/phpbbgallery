@@ -2,9 +2,9 @@
 /*
 * @name main_controller.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -133,15 +133,8 @@ class main_controller implements main_interface
 				{
 					include($this->root_path. 'includes/functions_display.' . $this->php_ext);
 				}
-				
-				if(!class_exists('bbcode', false))
-				{
-					include($this->root_path . 'includes/bbcode.' . $this->php_ext);
-				}
 
-				$bbcode 	= new \bbcode();
 				$chat_ajax 	= $this->container->get('canidev.chat.chat_ajax');
-				
 				$limit_days = array(0 => $this->user->lang['ALL_MESSAGES'], 1 => $this->user->lang['1_DAY'], 7 => $this->user->lang['7_DAYS'], 14 => $this->user->lang['2_WEEKS'], 30 => $this->user->lang['1_MONTH'], 90 => $this->user->lang['3_MONTHS'], 180 => $this->user->lang['6_MONTHS'], 365 => $this->user->lang['1_YEAR']);
 
 				$sort_by_text	= array('t' => $this->user->lang['POST_TIME']);
@@ -174,16 +167,9 @@ class main_controller implements main_interface
 				while($row = $this->db->sql_fetchrow($result))
 				{
 					$row_avatar = '';
-					$message 	= censor_text($row['message_text']);
 					
-					// Second parse bbcode here
-					if($row['bbcode_bitfield'])
-					{
-						$bbcode->bbcode_second_pass($message, $row['bbcode_uid'], $row['bbcode_bitfield']);
-					}
-
-					$message = bbcode_nl2br($message);
-					$message = smiley_text($message);
+					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$message = generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 					
 					if($this->config['chat_show_avatars'])
 					{
@@ -203,7 +189,7 @@ class main_controller implements main_interface
 						'S_AUTHOR_AVATAR'	=> $row_avatar,
 						'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']),
 						'S_TEXT'			=> $message,
-						'S_DATE'			=> $this->user->format_date($row['message_time']),
+						'S_DATE'			=> $chat->format_date($row['message_time']),
 						
 						'CAN_DELETE'		=> $chat_ajax->auth('delete', $row),
 						'CAN_EDIT'			=> $chat_ajax->auth('edit', $row),

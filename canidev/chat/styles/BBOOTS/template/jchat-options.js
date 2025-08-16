@@ -2,7 +2,7 @@
 * @name jchat-options.js
 * @package cBB Chat
 * @style: BBOOTS
-* @version v1.1.1 29/01/2016 $
+* @version v1.1.2 20/08/2016 $
 *
 * @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -10,7 +10,7 @@
 
 var jchat_style_options = {
 	positions: {
-		chat: ['main', 'append'],
+		chat: ['main', 'prepend'],
 
 		faq: {
 			top		: ['h3:first', 'after'],

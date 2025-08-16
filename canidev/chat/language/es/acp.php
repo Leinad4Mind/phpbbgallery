@@ -2,9 +2,9 @@
 /** 
 * acp.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -60,6 +60,10 @@ $lang = array_merge($lang, array(
 	'CHAT_FLOOD'				=> 'Límite de saturación',
 	'CHAT_FLOOD_EXPLAIN'		=> 'Especifica el tiempo (en segundos) que debe esperar un usuario para escribir un nuevo mensaje.<br />
 		<em>Defina 0 para deshabilitar este límite</em>.',
+	'CHAT_FORUM_POSTS'			=> 'Mensajes del foro',
+	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Define si se mostrarán los nuevos mensajes o temas del foro en la sala <em>General</em> del chat.',
+	'CHAT_GROUP_USERS'			=> 'Agrupar usuarios por grupos',
+	'CHAT_GROUP_USERS_EXPLAIN'	=> 'Si se habilita, los usuarios serán agrupados en el chat según su grupo por defecto.',
 	'CHAT_HEIGHT'				=> 'Alto del chat',
 	'CHAT_HEIGHT_EXPLAIN'		=> 'Define el alto (en píxeles) del cuadro de conversación del chat.',
 	'CHAT_HEIGHT_PAGE'			=> 'Alto del chat',
@@ -98,12 +102,17 @@ $lang = array_merge($lang, array(
 	'CHAT_REMEMBER_STATUS'		=> 'Recordar estado de los usuarios',
 	'CHAT_REMEMBER_STATUS_EXPLAIN'	=> 'Si se habilita, el chat recordará el estado de los usuarios en nuevas conexiones, por el contrario, los usuarios tendrán el estado <em><strong>Disponible</strong></em> cuando se conecten.',
 	'CHAT_ROOM_AUTH'			=> 'Permisos de visualización',
+	'CHAT_ROOM_AUTOPURGE'		=> 'Autopurga',
+	'CHAT_ROOM_AUTOPURGE_EXPLAIN'	=> 'Define cada cuanto tiempo se eliminarán todos los mensajes de esta sala.',
 	'CHAT_ROOM_CONFIG'			=> 'Configuración de la sala',
 	'CHAT_ROOM_ENABLED'			=> 'Sala activada',
 	'CHAT_ROOM_GROUPS'			=> 'Grupos autorizados',
 	'CHAT_ROOM_GROUPS_EXPLAIN'	=> 'Define los grupos de usuarios que podrán visualizar esta sala.<br />Puede seleccionar varios grupos usando la tecla <em>Ctrl</em> de su teclado.',
 	'CHAT_ROOM_ADDED'			=> 'La sala se ha creado con éxito.',
 	'CHAT_ROOM_UPDATED'			=> 'La configuración de la sala se ha modificado con éxito.',
+	'CHAT_ROOM_MSG_LIMIT'		=> 'Límite de mensajes',
+	'CHAT_ROOM_MSG_LIMIT_EXPLAIN'	=> 'Establece el número máximo de mensajes que se guardarán en esta sala. Si se supera este límite, los mensajes más antiguos se eliminarán periódicamente.
+		<br /><em>Establezca 0 para deshabilitar este límite.</em>',
 	'CHAT_ROOM_TITLE'			=> 'Título de la sala',
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Admite variables de idioma.',
 	'CHAT_ROOM_USERS'			=> 'Usuarios autorizados',
@@ -119,11 +128,9 @@ $lang = array_merge($lang, array(
 		Emoticonos están permitidos.</em>',
 	'CHAT_RULES_TITLE'			=> 'Reglas',
 	'CHAT_SOUND_ENABLED'		=> 'Sonido activado',
-	'CHAT_SHOW_TOPICS'			=> 'Mostrar temas nuevos',
-	'CHAT_SHOW_TOPICS_EXPLAIN'	=> 'Establece si el chat mostrará los nuevos temas del foro en la sala General.',
-	'CHAT_STORE'				=> 'Tiempo de almacenamiento',
-	'CHAT_STORE_EXPLAIN'		=> 'Define el tiempo que permanecerán los mensajes guardados en la base de datos.<br />
-		<em>Los mensajes que se encuentren fuera del límite serán eliminados</em>.',
+	'CHAT_SHOW_NONE'			=> 'No mostrar',
+	'CHAT_SHOW_POSTS'			=> 'Todos los mensajes nuevos',
+	'CHAT_SHOW_TOPICS'			=> 'Solo temas nuevos',
 	'CHAT_TIMEOUT'				=> 'Tiempo de desconexión',
 	'CHAT_TIMEOUT_EXPLAIN'		=> 'Define el tiempo (en minutos) que necesita el chat para considerar a un usuario "inactivo" y desconectarlo del chat.<br /><em>Defina 0 para deshabilitar esta función</em>.',
 	'CHAT_TIPS_ADD'				=> 'Añadir consejo',
@@ -135,6 +142,11 @@ $lang = array_merge($lang, array(
 		Emoticonos están permitidos.</em>',
 	'CHAT_TIPS_TITLE'			=> 'Consejos',
 	'CHAT_USERS_CONFIG'			=> 'Configuración de usuarios',
+	
+	'EACH_DAY'		=> 'Cada día',
+	'EACH_WEEK'		=> 'Cada semana',
+	'EACH_MONTH'	=> 'Cada mes',
+	'EACH_YEAR'		=> 'Cada año',
 
 	'ADD_ROOM'				=> 'Añadir sala',
 	'CONTENT'				=> 'Contenido',

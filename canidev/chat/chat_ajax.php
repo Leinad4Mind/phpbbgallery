@@ -2,9 +2,9 @@
 /*
 * @name chat_ajax.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -50,23 +50,25 @@ class chat_ajax
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth 					$auth			Authentication object
-	* @param \phpbb\config\config 				$config			Config Object
-	* @param \phpbb\db\driver\driver_interface	$db				DB Object
-	* @param \phpbb\controller\helper			$helper       	Controller helper object
-	* @param \phpbb\request\request 			$request		Request object
-	* @param \phpbb\template\template			$template     	Template object
-	* @param \phpbb\user						$user			User object
-	* @param string								$root_path		phpBB root path
-	* @param string								$php_ext		phpEx
+	* @param \phpbb\auth\auth 						$auth			Authentication object
+	* @param \phpbb\cache\driver\driver_interface 	$cache 			Cache instance
+	* @param \phpbb\config\config 					$config			Config Object
+	* @param \phpbb\db\driver\driver_interface		$db				DB Object
+	* @param \phpbb\controller\helper				$helper       	Controller helper object
+	* @param \phpbb\request\request 				$request		Request object
+	* @param \phpbb\template\template				$template     	Template object
+	* @param \phpbb\user							$user			User object
+	* @param string									$root_path		phpBB root path
+	* @param string									$php_ext		phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		global $chat;
 
 		$this->auth		= $auth;
+		$this->cache	= $cache;
 		$this->chat 	= &$chat;
 		$this->config	= $config;
 		$this->db		= $db;
@@ -294,8 +296,6 @@ class chat_ajax
 										
 										$json['user_avatar'] = $row_avatar;
 									}
-									
-								//	$user->setup();
 
 									$this->user_key = $this->user->data['user_id'];
 								break;
@@ -427,15 +427,33 @@ class chat_ajax
 						AND exclude_time = 0';
 					$this->db->sql_query($sql);
 					
-					// Delete messages out of store time
-					if($this->config['chat_store_time'])
+					// Delete messages out of the limit
+					$del_ary = array();
+
+					$sql = 'SELECT COUNT(cm.message_id) AS message_count, cr.room_id, cr.room_msg_limit
+						FROM ' . CHAT_MESSAGES_TABLE . ' cm
+							LEFT JOIN ' . CHAT_ROOMS_TABLE . ' cr ON(cr.room_id = cm.dest_key)
+						WHERE cr.room_msg_limit > 0
+						AND cr.room_id IS NOT NULL
+						GROUP BY cm.dest_key';
+					$result = $this->db->sql_query($sql);
+					while($row = $this->db->sql_fetchrow($result))
+					{
+						if($row['message_count'] > $row['room_msg_limit'])
+						{
+							$del_ary[$row['room_id']] = $row['message_count'] - $row['room_msg_limit'];
+						}
+					}
+					$this->db->sql_freeresult($result);
+					
+					foreach($del_ary as $num)
 					{
 						$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
-							WHERE message_time < ' . (time() - (int)$this->config['chat_store_time']);
-						$this->db->sql_query($sql);
+							ORDER BY message_time ASC';
+						$this->db->sql_query_limit($sql, $num);
 					}
 
-					set_config('chat_cron_lock', time());
+					$this->config->set('chat_cron_lock', time());
 				}
 				
 				if($action == 'connect_on_post')
@@ -450,8 +468,6 @@ class chat_ajax
 			case 'refresh_after_status':
 				$row_users = $row_data = $user_cache = array();
 				$max_time = $last_update;
-
-				$bbcode_bitfield = '';
 
 				// Get the user session if no exists
 				$this->get_current_user(true);
@@ -474,14 +490,28 @@ class chat_ajax
 					break;
 				}
 
-				// Delete inactive users
-				if($this->chat->time_limit !== false && ($action == 'connect' || $action == 'refresh'))
+				// Update user trace time and delete inactive users
+				if($action == 'connect' || $action == 'refresh')
 				{
+					$sql_ary = array();
+					
+					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+						SET user_trace_time = ' . time() . '
+						WHERE user_key = ' . $this->user_key;
+					$this->db->sql_query($sql);
+					
+					if($this->chat->time_limit !== false)
+					{
+						$sql_ary[] = 'user_lastjoin < ' . $this->chat->time_limit;
+					}
+					
+					$sql_ary[] = 'user_trace_time < ' . (time() - ($this->config['chat_refresh'] * 3));
+					
 					$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
 						SET user_online = 0
-						WHERE user_lastjoin < ' . $this->chat->time_limit . '
+						WHERE ( ' . implode(' OR ', $sql_ary) . ')
 						AND user_key <> ' . $this->user_key;
-					$result = $this->db->sql_query($sql);
+					$this->db->sql_query($sql);
 				}
 				
 				// Get connected users
@@ -522,6 +552,13 @@ class chat_ajax
 				
 				// Load "public" rooms
 				$this->room_ary = $this->chat->obtain_rooms();
+				
+				$midnight = $this->user->create_datetime('now');
+				$midnight->setTime(0, 0, 0);
+
+				$midnight = $midnight->getTimestamp();
+				
+				$room_autopurge_ids = $room_update_ids = array();
 
 				foreach($this->room_ary as $room_key => $row)
 				{
@@ -533,6 +570,41 @@ class chat_ajax
 					}
 					
 					$row_data[$room_key] = array();
+					
+					// Autopurge
+					if($action == 'connect' && $row['room_autopurge_time'])
+					{
+						// First day, don't delete messages, only update the purge check to this midnight
+						if(!$row['room_autopurge_check'])
+						{
+							$row['room_autopurge_check'] = $midnight;
+							$room_update_ids[] = $room_key;
+						}
+						
+						if(($midnight - (int)$row['room_autopurge_time']) >= (int)$row['room_autopurge_check'])
+						{
+							$room_autopurge_ids[] = $room_key;
+							$room_update_ids[] = $room_key;
+						}
+					}
+				}
+				
+				// Do the autopurge
+				if(sizeof($room_autopurge_ids))
+				{
+					$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+						WHERE ' . $this->db->sql_in_set('dest_key', $room_autopurge_ids);
+					$this->db->sql_query($sql);
+				}
+				
+				if(sizeof($room_update_ids))
+				{
+					$sql = 'UPDATE ' . CHAT_ROOMS_TABLE . '
+						SET room_autopurge_check = ' . $midnight . '
+						WHERE ' . $this->db->sql_in_set('room_key', $room_update_ids);
+					$this->db->sql_query($sql);
+					
+					$this->cache->destroy('_chat_rooms');
 				}
 
 				// Always set the guest room
@@ -619,41 +691,70 @@ class chat_ajax
 							$user_cache[$dest_key] = $dest_key;
 						}
 						
-						// Define the global bbcode bitfield, will be used to load bbcodes
-						$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
-						
 						$max_time = max($max_time, $row['message_time']);
 					}
 					$this->db->sql_freeresult($result);
 				}
 				
 				// Get the new topics of forums if allowed
-				if($this->config['chat_show_topics'])
+				if($this->config['chat_forum_posts'] != CHAT_SHOW_NONE)
 				{
-					$sql = 'SELECT topic_id, forum_id, topic_title, topic_time, topic_visibility, topic_first_post_id,
-						topic_poster AS poster_id, topic_first_poster_name AS poster_username
-						FROM ' . TOPICS_TABLE . "
-						WHERE topic_time > $last_update
-						ORDER BY topic_time DESC";
-					$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
-					while($row = $this->db->sql_fetchrow($result))
+					switch($this->config['chat_forum_posts'])
 					{
-						$row_time = $row['topic_time'];
-						
-						if(($this->auth->acl_get('m_approve', $row['forum_id']) || $row['topic_visibility'] == ITEM_APPROVED) && $this->auth->acl_get('f_read', $row['forum_id']))
-						{
-							if(isset($row_data[CHAT_GUEST_ROOM][$row_time]))
+						case CHAT_SHOW_TOPICS:
+							$sql = 'SELECT topic_id, forum_id, topic_title, topic_time, topic_visibility, topic_first_post_id,
+								topic_poster AS poster_id, topic_first_poster_name AS poster_username
+								FROM ' . TOPICS_TABLE . "
+								WHERE topic_time > $last_update
+								ORDER BY topic_time DESC";
+							$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
+							while($row = $this->db->sql_fetchrow($result))
 							{
-								$row_time = $row_time . '-' . $row['topic_id'];
+								$row_time = $row['topic_time'];
+								
+								if(($this->auth->acl_get('m_approve', $row['forum_id']) || $row['topic_visibility'] == ITEM_APPROVED) && $this->auth->acl_get('f_read', $row['forum_id']))
+								{
+									if(isset($row_data[CHAT_GUEST_ROOM][$row_time]))
+									{
+										$row_time = $row_time . '-' . $row['topic_id'];
+									}
+									
+									$row_data[CHAT_GUEST_ROOM][$row_time] = $row;
+									$user_cache[$row['poster_id']] = $row['poster_id'];
+									
+									$max_time = max($max_time, $row['topic_time']);
+								}
 							}
-							
-							$row_data[CHAT_GUEST_ROOM][$row_time] = $row;
-							$user_cache[$row['poster_id']] = $row['poster_id'];
-							
-							$max_time = max($max_time, $row['topic_time']);
-						}
+							$this->db->sql_freeresult($result);
+						break;
+						
+						case CHAT_SHOW_POSTS:
+							$sql = 'SELECT post_id, topic_id, forum_id, post_subject, post_text, post_time, post_visibility,
+								poster_id, post_username AS poster_username, bbcode_uid, bbcode_bitfield
+								FROM ' . POSTS_TABLE . "
+								WHERE post_time > $last_update
+								ORDER BY post_time DESC";
+							$result = $this->db->sql_query_limit($sql, $this->config['chat_max_rows']);
+							while($row = $this->db->sql_fetchrow($result))
+							{
+								$row_time = $row['post_time'];
+								
+								if(($this->auth->acl_get('m_approve', $row['forum_id']) || $row['post_visibility'] == ITEM_APPROVED) && $this->auth->acl_get('f_read', $row['forum_id']))
+								{
+									if(isset($row_data[CHAT_GUEST_ROOM][$row_time]))
+									{
+										$row_time = $row_time . '-' . $row['topic_id'] . '.' . $row['post_id'];
+									}
+									
+									$row_data[CHAT_GUEST_ROOM][$row_time] = $row;
+									$user_cache[$row['poster_id']] = $row['poster_id'];
+									
+									$max_time = max($max_time, $row['post_time']);
+								}
+							}
+							$this->db->sql_freeresult($result);
+						break;
 					}
-					$this->db->sql_freeresult($result);
 					
 					krsort($row_data[CHAT_GUEST_ROOM]);
 					
@@ -666,11 +767,12 @@ class chat_ajax
 				// Get the users data
 				if(!empty($user_cache))
 				{
-					$sql = 'SELECT user_id, group_id, user_type, username, user_colour,
-						user_avatar, user_avatar_type, user_avatar_width, user_avatar_height
-						FROM ' . USERS_TABLE . '
-						WHERE (user_id = ' . ANONYMOUS . '
-							OR ' . $this->db->sql_in_set('user_id', array_keys($user_cache)) . ')';
+					$sql = 'SELECT u.user_id, u.group_id, u.user_type, u.username, u.user_colour,
+						u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, g.group_name
+						FROM ' . USERS_TABLE . ' u
+							LEFT JOIN ' . GROUPS_TABLE . ' g ON(g.group_id = u.group_id)
+						WHERE (u.user_id = ' . ANONYMOUS . '
+							OR ' . $this->db->sql_in_set('u.user_id', array_keys($user_cache)) . ')';
 					$result = $this->db->sql_query($sql);
 					while($row = $this->db->sql_fetchrow($result))
 					{
@@ -682,17 +784,6 @@ class chat_ajax
 				if($this->config['chat_show_avatars'] && !function_exists('get_user_avatar'))
 				{
 					include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-				}
-				
-				// Instantiate BBCode if needed
-				if($bbcode_bitfield !== '')
-				{
-					if(!class_exists('bbcode', false))
-					{
-						include($this->root_path . 'includes/bbcode.' . $this->php_ext);
-					}
-
-					$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
 				}
 
 				// Update the values in javascript
@@ -738,15 +829,27 @@ class chat_ajax
 					// Messages
 					foreach($room_data as $null => $row)
 					{
-						$row_avatar = '';
+						$row_avatar = $message = '';
+						$timestamp = 0;
+						$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 						
-						if(isset($row['topic_id']))
+						if(isset($row['post_id']))
 						{
-							if(is_array($user_cache[$row['poster_id']]))
-							{
-								$row += $user_cache[$row['poster_id']];
-							}
+							$edit_allowed = ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $row['forum_id']) || (
+								$this->user->data['user_id'] == $row['poster_id'] &&
+								$this->auth->acl_get('f_edit', $row['forum_id']) &&
+								($row['post_time'] > time() - ($this->config['edit_time'] * 60) || !$this->config['edit_time'])
+							)));
 							
+							$row['poster_key'] = $row['poster_id'];
+							
+							// Parse the message
+							$message = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+							
+							$timestamp = $row['post_time'];
+						}
+						else if(isset($row['topic_id']))
+						{
 							$edit_allowed = ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $row['forum_id']) || (
 								$this->user->data['user_id'] == $row['poster_id'] &&
 								$this->auth->acl_get('f_edit', $row['forum_id']) &&
@@ -754,25 +857,19 @@ class chat_ajax
 							)));
 							
 							$row['poster_key'] = $row['poster_id'];
+							$timestamp = $row['topic_time'];
 						}
 						else
 						{
-							if(is_array($user_cache[$row['poster_key']]))
-							{
-								$row += $user_cache[$row['poster_key']];
-							}
-		
-							// Parse the message and subject
-							$message = censor_text($row['message_text']);
+							// Parse the message
+							$message = generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 							
-							// Second parse bbcode here
-							if($row['bbcode_bitfield'])
-							{
-								$bbcode->bbcode_second_pass($message, $row['bbcode_uid'], $row['bbcode_bitfield']);
-							}
-
-							$message = bbcode_nl2br($message);
-							$message = smiley_text($message);
+							$timestamp = $row['message_time'];
+						}
+						
+						if(is_array($user_cache[$row['poster_key']]))
+						{
+							$row += $user_cache[$row['poster_key']];
 						}
 						
 						if($this->config['chat_show_avatars'])
@@ -797,14 +894,28 @@ class chat_ajax
 						$ary = array(
 							'S_AUTHOR_AVATAR'	=> $row_avatar,
 							'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_key'], $row['username'], $row['user_colour']),
+							'S_DATE'			=> $this->chat->format_date($timestamp),
+							'S_TIMESTAMP'		=> $timestamp,
 						);
 
-						if(isset($row['topic_id']))
+						if(isset($row['post_id']))
 						{
 							$ary += array(
+								'S_ID'				=> 'p' . $row['topic_id'],
+								'IS_POST'			=> true,
+								'POST_SUBJECT'		=> censor_text($row['post_subject']),
+								'S_TEXT'			=> $this->html_truncate($message, $this->config['chat_max_chars'], '...'),
+								
+								'U_POST'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']),
+								'U_POST_EDIT'		=> ($edit_allowed) ? append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=edit&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['post_id']) : '',
+							);
+						}
+						else if(isset($row['topic_id']))
+						{
+							$ary += array(
+								'S_ID'				=> 't' . $row['topic_id'],
 								'IS_TOPIC'			=> true,
 								'TOPIC_TITLE'		=> censor_text($row['topic_title']),
-								'S_DATE'			=> $this->user->format_date($row['topic_time']),
 								
 								'U_TOPIC'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
 								'U_TOPIC_EDIT'		=> ($edit_allowed) ? append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=edit&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['topic_first_post_id']) : '',
@@ -814,9 +925,7 @@ class chat_ajax
 						{
 							$ary += array(
 								'S_ID'				=> $row['message_id'],
-
 								'S_TEXT'			=> $message,
-								'S_DATE'			=> $this->user->format_date($row['message_time']),
 								
 								'CAN_DELETE'		=> $this->auth('delete', $row),
 								'CAN_EDIT'			=> $this->auth('edit', $row),
@@ -1113,9 +1222,10 @@ class chat_ajax
 					$exclude_time	= 0;
 					$row_users 		= array();
 
-					$sql = 'SELECT cu.*, u.username AS member_name, u.user_type, u.user_colour
+					$sql = 'SELECT cu.*, u.username AS member_name, u.user_type, u.user_colour, g.group_name
 						FROM ' . CHAT_USERS_TABLE . ' cu
-							LEFT JOIN ' . USERS_TABLE . " u ON(u.user_id = cu.user_id)
+							LEFT JOIN ' . USERS_TABLE . ' u ON(u.user_id = cu.user_id)
+							LEFT JOIN ' . GROUPS_TABLE . " g ON(g.group_id = u.group_id)
 						WHERE cu.user_key = $user_key";
 					$result = $this->db->sql_query($sql);
 					$user_data = $this->db->sql_fetchrow($result);
@@ -1250,9 +1360,10 @@ class chat_ajax
 				$row_users	= array();
 				$user_key	= $this->request->variable('uk', 0);
 				
-				$sql = 'SELECT cu.*, u.username AS member_name, u.user_type, u.user_colour
+				$sql = 'SELECT cu.*, u.username AS member_name, u.user_type, u.user_colour, g.group_name
 					FROM ' . CHAT_USERS_TABLE . ' cu
 						LEFT JOIN ' . USERS_TABLE . ' u ON(u.user_id = cu.user_id AND u.user_id <> ' . ANONYMOUS . ')
+						LEFT JOIN ' . GROUPS_TABLE . ' g ON(g.group_id = u.group_id)
 					WHERE ' . $this->db->sql_in_set('cu.user_key', array($user_key, $this->user_key));
 				$result = $this->db->sql_query($sql);
 				while($row = $this->db->sql_fetchrow($result))
@@ -1503,9 +1614,42 @@ class chat_ajax
 				}
 			}
 			
-			$user_status = $this->status_ary[$row['user_status']];
+			$user_status	= $this->status_ary[$row['user_status']];
+			$rkey			= 0;
 			
-			$rows[strtolower($row['username'])] = array(
+			if($this->config['chat_group_users'])
+			{
+				switch($row['group_name'])
+				{
+					case 'ADMINISTRATORS':
+						$rkey = 1;
+					break;
+					
+					case 'GLOBAL_MODERATORS':
+						$rkey = 2;
+					break;
+					
+					case 'REGISTERED':
+						$rkey = 3;
+					break;
+					
+					case 'NEWLY_REGISTERED':
+						$rkey = 4;
+					break;
+					
+					case 'GUESTS':
+						$rkey = 'zzz';
+					break;
+					
+					default:
+						$rkey = strtolower($row['group_name']);
+					break;
+				}
+			}
+			
+			$rkey = $rkey . '.' . strtolower($row['username']);
+			
+			$rows[$rkey] = array(
 				'S_KEY'			=> $user_key,
 				'S_IMG'			=> '<img src="' . $this->chat->web_path . $this->chat->path . 'images/status_' . $user_status . '.png" alt="' . $user_status . '" />',
 				'S_USERNAME'	=> ($row['user_id'] == ANONYMOUS || $row['exclude_time']) ? $row['username'] : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['username']),
@@ -1679,5 +1823,80 @@ class chat_ajax
 		extract($phpbb_dispatcher->trigger_event('core.modify_text_for_storage_after', compact($vars)));
 
 		return $message_parser->warn_msg;
+	}
+	
+	/**
+	 * html_truncate
+	 * Truncates string while retaining special characters if going over the max length
+	 *
+	 * @param string	$input . The text to truncate to the given length.
+	 * @param int		$limit . Maximum length of string
+	 * @param string	$append . String to be appended
+	 * @param bool		$count_all . Defines if count all or only plain text
+	*/
+	private function html_truncate($input = '', $limit = 0, $append = '', $count_all = false)
+	{
+		$check_len = ($count_all) ? utf8_strlen($input) : utf8_strlen(strip_tags($input));
+		if(!$input || $limit <= 0 || $check_len <= $limit)
+		{
+			return $input;
+		}
+
+		$splits = preg_split('#(</?[^>]*/?>)#', $input, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+		$text = '';
+		$open_tag = false;
+		foreach($splits as $split)
+		{
+			// If no open tag, open it if necessary
+			if($open_tag === false)
+			{
+				if(preg_match('#^<([a-zA-Z]+).*>#', $split, $match))
+				{
+					if(utf8_substr($match[0], -2) !== '/>')
+					{
+						$open_tag = $match[1];
+					}
+				}
+			}
+
+			// Close tag, if the current
+			if($open_tag !== false)
+			{
+				if($split === "</$open_tag>")
+				{
+					$open_tag = false;
+				}
+			}
+
+			// Adjust the string
+			if($open_tag === false && $split[0] != '<')
+			{ 
+				$length = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
+
+				if(($length + utf8_strlen($split)) > $limit)
+				{
+					$split = utf8_substr($split, 0, $limit - $length);
+				}
+			}
+
+			$text .= $split;
+
+			// If exceed the limit and no open tags finish here,
+			// and it is looking backwards to remove the tag open.
+			$check_len = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
+			if($check_len >= $limit)
+			{
+				if($open_tag !== false)
+				{
+					$tag = '<' . $open_tag; 
+					$text = utf8_substr($text, 0, utf8_strrpos($text, $tag));
+					break;
+				}
+				break;
+			}
+		}
+
+		return $text . (($append) ? $append : '');
 	}
 }

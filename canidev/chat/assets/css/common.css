@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	Common	
-	Copyright (c) 2015 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -221,6 +221,11 @@ a [class*="chat-icon"] { display: inline; }
 	margin-left: 48px;
 }
 
+.ic-row-text .postimage {
+	height: auto;
+	max-width: 20%;
+}
+
 .ic-row-title {
 	margin-bottom: 5px;
 }
@@ -259,7 +264,8 @@ a.chat-quickmention {
 	line-height: 18px;
 }
 
-#chat-tabs li.before-active {
+/* Tabs LTR support */
+.ltr #chat-tabs li.before-active {
 	border-right-width: 0;
 	
 	-moz-border-radius-bottomright: 0;
@@ -268,13 +274,32 @@ a.chat-quickmention {
 	border-bottom-right-radius: 0;
 }
 
-#chat-tabs li.after-active {
+.ltr #chat-tabs li.after-active {
 	border-left-width: 0;
 	
 	-moz-border-radius-bottomleft: 0;
 	-webkit-border-bottom-left-radius: 0;
 	-khtml-border-bottom-left-radius: 0;
 	border-bottom-left-radius: 0;
+}
+
+/* Tabs RTL support */
+.rtl #chat-tabs li.before-active {
+	border-left-width: 0;
+	
+	-moz-border-radius-bottomleft: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-khtml-border-bottom-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.rtl #chat-tabs li.after-active {
+	border-right-width: 0;
+
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-right-radius: 0;
+	-khtml-border-bottom-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 #chat-tabs li.new-msg {
@@ -492,30 +517,34 @@ a.chat-quickmention {
 	z-index: 3;
 }
 
-.color-box, .smiley-box {
+.ic-box .color-box, .ic-box .smiley-box {
 	max-height: 150px;
 	max-width: 200px;
 	overflow: auto;
 	text-align: center;
 }
 
-.color-box .colour, .smiley-box a {
+.ic-box .color-box, .ic-box .smiley-box {
+	width: 100%;
+}
+
+.ic-box .color-box .colour, .ic-box .smiley-box a {
 	display: inline-block;
 	margin: 0;
 	padding: 2px;
 }
 
-.color-box .colour span {
+.ic-box .color-box .colour span {
 	display: block;
 	height: 12px;
 	width: 12px;
 }
 
-.smiley-box img {
+.ic-box .smiley-box img {
 	display: block;
 }
 
-.bbcode-box .chat-button {
+.ic-box .bbcode-box .chat-button {
 	border: 1px solid #CCC;
 	margin: 2px 1px;
 	padding: 2px 4px 1px 4px;
@@ -526,7 +555,7 @@ a.chat-quickmention {
 	border-radius: 5px;
 }
 
-.sound-box {
+.ic-box .sound-box {
 	padding: 2px 5px;
 	width: 120px;
 }
@@ -728,4 +757,34 @@ input.chat-inputbox, textarea.chat-inputbox {
 	color: #CCC;
 	font-style: italic;
 	text-decoration: line-through;
+}
+
+/* RTL global support */
+.rtl .ic-row-avatar, .rtl #chat-tabs li, .rtl #chat-toolbar li, .rtl #chat-left-panel {
+	float: right;
+}
+
+.rtl #chat-right-panel, .rtl .ic-row-actions {
+	float: left;
+}
+
+.rtl .ic-row-text.avatar-margin, .rtl .ic-row-title.avatar-margin {
+	margin-left: 0;
+	margin-right: 48px;
+}
+
+.rtl #chat-tabs {
+	margin-right: 5px;
+}
+
+.rtl .chat-message.state-notice {
+	text-align: right;
+}
+
+.rtl #chat-toolbar {
+	padding-right: 5px;
+}
+
+.rtl .chat-archive-tabs {
+	margin-right: 10px;
 }

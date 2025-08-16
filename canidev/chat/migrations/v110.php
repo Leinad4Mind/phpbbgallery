@@ -1,6 +1,6 @@
 <?php
 /*
-* @name release_1_1_0.php
+* @name v110.php
 * @package cBB Chat
 * @version v1.1.0 16/12/2014
 *
@@ -10,7 +10,7 @@
 
 namespace canidev\chat\migrations;
 
-class release_1_1_0 extends \phpbb\db\migration\migration
+class v110 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{

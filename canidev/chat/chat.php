@@ -2,9 +2,9 @@
 /*
 * @name chat.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -43,7 +43,7 @@ class chat
 	protected $template;
 	protected $user;
 	
-
+	protected $midnight;
 
 	/**
 	* Constructor
@@ -84,6 +84,11 @@ class chat
 
 		$this->root_path	= $this->phpbb_root_path . $this->path;
 		$this->web_path		= $this->phpbb_root_path;
+		
+		$this->midnight = $user->create_datetime('now');
+		$this->midnight->setTime(0, 0, 0);
+
+		$this->midnight = $this->midnight->getTimestamp();
 		
 		if(!empty($this->config['chat_version']))
 		{
@@ -547,5 +552,33 @@ class chat
 		}
 
 		return $text_cache;
+	}
+	
+	public function format_date($timestamp)
+	{
+		if($timestamp <= $this->midnight + 2 * 86400)
+		{
+			$day = false;
+
+			if($timestamp > $this->midnight + 86400)
+			{
+				$day = 'TOMORROW';
+			}
+			else if($timestamp > $this->midnight)
+			{
+				$day = 'TODAY';
+			}
+			else if($timestamp > $this->midnight - 86400)
+			{
+				$day = 'YESTERDAY';
+			}
+
+			if($day !== false)
+			{
+				return $this->user->lang['datetime'][$day] . ', ' . $this->user->format_date($timestamp, 'H:i');
+			}
+		}
+		
+		return $this->user->format_date($timestamp, $this->user->lang['default_dateformat']);
 	}
 }

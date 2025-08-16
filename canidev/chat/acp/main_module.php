@@ -2,9 +2,9 @@
 /*
 * @name main_module.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -117,7 +117,7 @@ class main_module
 			'legend1'			=> 'CHAT_MAIN_CONFIG',
 			'chat_enabled'				=> array('lang' => 'CHAT_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_page_enabled'			=> array('lang' => 'CHAT_PAGE_ENABLED',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_show_topics'			=> array('lang' => 'CHAT_SHOW_TOPICS',		'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_forum_posts'			=> array('lang' => 'CHAT_FORUM_POSTS',		'type' => 'custom',			'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
 			'chat_autoconnect'			=> array('lang' => 'CHAT_AUTOCONNECT',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_sound'				=> array('lang' => 'CHAT_SOUND_ENABLED',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_flood_time'			=> array('lang' => 'CHAT_FLOOD',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
@@ -128,6 +128,7 @@ class main_module
 			'chat_timeout'				=> array('lang' => 'CHAT_TIMEOUT',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
 			'chat_auto_away'			=> array('lang' => 'CHAT_AUTO_AWAY',		'validate' => 'int:0:60',	'type' => 'text:3:2'),
 			'chat_remember_status'		=> array('lang' => 'CHAT_REMEMBER_STATUS',	'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_group_users'			=> array('lang' => 'CHAT_GROUP_USERS',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		
 			'legend3'			=> 'CHAT_MESSAGES_CONFIG',
 			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',		'validate' => 'string',		'type' => 'custom',	'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
@@ -137,7 +138,6 @@ class main_module
 			'chat_allow_bbcode'			=> array('lang' => 'CHAT_ALLOW_BBCODE',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',		'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}', 8)),
 			'chat_bbcode_format'		=> array('lang' => 'CHAT_BBCODE_FORMAT',	'type' => 'custom',			'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
-			'chat_store_time'			=> array('lang' => 'CHAT_STORE',			'validate' => 'int',		'type' => 'custom',		'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
 		
 			'legend4'		=> 'CHAT_PM_CONFIG',
 			'chat_allow_pm'			=> array('lang' => 'CHAT_ALLOW_PM',			'validate' => 'bool',		'type' => 'radio:yes_no'),
@@ -206,7 +206,7 @@ class main_module
 
 			if($submit)
 			{
-				set_config($config_name, $config_value);
+				$this->config->set($config_name, $config_value);
 			}
 		}
 
@@ -217,9 +217,6 @@ class main_module
 		}
 		
 		$this->display_vars($display_vars);
-		
-		// Check version
-		$this->check_version_info();
 	}
 	
 	function _mode_pages($action, $submit, &$error, &$notice)
@@ -523,8 +520,10 @@ class main_module
 			case 'add':
 				$display_vars = array(
 					'legend1'		=> 'CHAT_ROOM_CONFIG',
-					'room_title'		=> array('lang' => 'CHAT_ROOM_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-					'room_enabled'		=> array('lang' => 'CHAT_ROOM_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'),
+					'room_title'			=> array('lang' => 'CHAT_ROOM_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
+					'room_enabled'			=> array('lang' => 'CHAT_ROOM_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'),
+					'room_autopurge_time'	=> array('lang' => 'CHAT_ROOM_AUTOPURGE',	'validate' => 'int',			'type' => 'custom',	'method' => 'make_select',	'params' => array('{KEY}', '{CONFIG_VALUE}')),
+					'room_msg_limit'		=> array('lang' => 'CHAT_ROOM_MSG_LIMIT',	'validate' => 'int:0:99999',	'type' => 'number:0:99999'),
 				);
 				
 				if($room_id != CHAT_GUEST_ROOM)
@@ -600,9 +599,11 @@ class main_module
 						}
 
 						$sql_ary = array(
-							'room_title'	=> $this->new_config['room_title'],
-							'room_enabled'	=> ($room_id == CHAT_GUEST_ROOM) ? 1 : $this->new_config['room_enabled'],
-							'room_data'		=> (sizeof($data) ? serialize($data) : ''),
+							'room_title'			=> $this->new_config['room_title'],
+							'room_enabled'			=> ($room_id == CHAT_GUEST_ROOM) ? 1 : $this->new_config['room_enabled'],
+							'room_autopurge_time'	=> $this->new_config['room_autopurge_time'],
+							'room_msg_limit'		=> $this->new_config['room_msg_limit'],
+							'room_data'				=> (sizeof($data) ? serialize($data) : ''),
 						);
 						
 						if($action == 'add')
@@ -1043,21 +1044,18 @@ class main_module
 				$multiple = true;
 			break;
 			
+			case 'chat_forum_posts':
+				$ary = array(
+					CHAT_SHOW_NONE		=> 'CHAT_SHOW_NONE',
+					CHAT_SHOW_TOPICS	=> 'CHAT_SHOW_TOPICS',
+					CHAT_SHOW_POSTS		=> 'CHAT_SHOW_POSTS',
+				);
+			break;
+			
 			case 'chat_position':
 				$ary = array(
 					'top'		=> 'CHAT_POSITION_TOP',
 					'bottom'	=> 'CHAT_POSITION_BOTTOM',
-				);
-			break;
-			
-			case 'chat_store_time':
-				$ary = array(
-					0			=> 'NO_LIMIT',
-					86400		=> 'ONE_DAY',
-					604800		=> 'ONE_WEEK',
-					2592000		=> 'ONE_MONTH',
-					31104000	=> 'ONE_YEAR',
-					62208000	=> 'TWO_YEARS',
 				);
 			break;
 			
@@ -1147,6 +1145,16 @@ class main_module
 				$multiple = true;
 			break;
 			
+			case 'room_autopurge_time':
+				$ary = array(
+					0			=> 'DISABLED',
+					86400		=> 'EACH_DAY',
+					604800		=> 'EACH_WEEK',
+					2592000		=> 'EACH_MONTH',
+					31104000	=> 'EACH_YEAR',
+				);
+			break;
+			
 			default:
 				return '';
 			break;
@@ -1197,52 +1205,5 @@ class main_module
 	{
 		$this->tpl_name = 'chat_ajax';
 		$this->template->assign_var('S_JSON_DATA', json_encode($json));
-	}
-	
-	/**
-	 * Check the version information of cBB Chat
-	 */
-	function check_version_info()
-	{
-		global $phpbb_extension_manager;
-		
-		$md_manager 	= new \phpbb\extension\metadata_manager('canidev/chat', $this->config, $phpbb_extension_manager, $this->template, $this->user, $this->phpbb_root_path);
-		$force_update 	= $this->request->variable('versioncheck_force', false);
-		$cache_file 	= '_versioncheck_cbbchat';
-		
-		$meta = $md_manager->get_metadata('all');
-
-		if(!isset($meta['extra']['version-check']))
-		{
-			return false;
-		}
-
-		// Cache filename of version_helper is incorrect so, use own cache file to store the version info
-		if(($updates = $this->cache->get($cache_file)) === false || $force_update)
-		{
-			$version_check = $meta['extra']['version-check'];
-
-			$version_helper = new \phpbb\version_helper($this->cache, $this->config, new \phpbb\file_downloader(), $this->user);
-			$version_helper->set_current_version($meta['version']);
-			$version_helper->set_file_location($version_check['host'], $version_check['directory'], $version_check['filename']);
-
-			$updates = $version_helper->get_suggested_updates($force_update, false);
-			
-			$this->cache->put($cache_file, $updates, 86400); // 24 hours
-		}
-		
-		if(!empty($updates))
-		{
-			$update = array_shift($updates);
-	
-			$this->template->assign_vars(array(
-				'S_VERSION_NOT_UP_TO_DATE'	=> true,
-
-				'U_VERSIONCHECK_FORCE'	=> $this->u_action . '&amp;versioncheck_force=1',
-				'U_MORE_INFORMATION'	=> $update['announcement'],
-			));
-		}
-		
-		unset($md_manager, $meta, $version_helper, $updates);
 	}
 }

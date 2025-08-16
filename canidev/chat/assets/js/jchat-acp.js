@@ -1,9 +1,9 @@
 /*
 * @name jchat-acp.js
 * @package cBB Chat
-* @version v1.1.1 01/07/2015 $
+* @version v1.1.2 20/08/2016 $
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 jchat(function(e){e.fn.help_icon=function(t,n){var r=e("<a></a>");r.attr("href",n).attr("title",t).css("opacity",.4).addClass("chat-help").click(function(e){window.open(this.href);e.preventDefault()}).hover(function(){e(this).css("opacity",1)},function(){e(this).css("opacity",.4)});e(this).append(r)};e.fn.autohide=function(t,n){var r=e(this).filter(":not(.fixed)");if(!n){n=1500}if(t){setTimeout(function(){t.find(r).fadeOut()},n)}else{e(window).load(function(){setTimeout(function(){e(r).fadeOut()},n)})}};e.fn.display=function(t){var n=t?"removeClass":"addClass",r=e(this);r[n].apply(r,["chat-state-hidden"])}});

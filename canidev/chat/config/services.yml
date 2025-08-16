@@ -45,6 +45,7 @@ services:
         class: canidev\chat\chat_ajax
         arguments:
             - @auth
+            - @cache.driver
             - @config
             - @dbal.conn
             - @controller.helper

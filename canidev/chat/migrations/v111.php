@@ -1,6 +1,6 @@
 <?php
 /*
-* @name release_1_1_1.php
+* @name v111.php
 * @package cBB Chat
 * @version v1.1.1 01/07/2015
 *
@@ -10,7 +10,7 @@
 
 namespace canidev\chat\migrations;
 
-class release_1_1_1 extends \phpbb\db\migration\migration
+class v111 extends \phpbb\db\migration\migration
 {
 	/**
 	 * {@inheritdoc}
@@ -26,7 +26,7 @@ class release_1_1_1 extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\canidev\chat\migrations\release_1_1_0',
+			'\canidev\chat\migrations\v110',
 		);
 	}
 

@@ -2,9 +2,9 @@
 /*
 * @name constants.php
 * @package cBB Chat
-* @version v1.1.1 01/07/2015
+* @version v1.1.2 20/08/2016
 *
-* @copyright (c) 2015 CaniDev
+* @copyright (c) 2016 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -24,6 +24,10 @@ define('CHAT_STATUS_AVAILABLE',	1);
 define('CHAT_STATUS_AWAY',		2);
 define('CHAT_STATUS_BUSY',		3);
 define('CHAT_STATUS_HIDDEN',	4);
+
+define('CHAT_SHOW_NONE',	0);
+define('CHAT_SHOW_TOPICS',	1);
+define('CHAT_SHOW_POSTS',	2);
 
 define('CHAT_MESSAGES_TABLE', 		$table_prefix . 'chat_messages');
 define('CHAT_PAGES_TABLE', 			$table_prefix . 'chat_pages');

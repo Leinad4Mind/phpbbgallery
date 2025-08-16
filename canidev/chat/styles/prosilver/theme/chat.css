@@ -1,17 +1,17 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	proSilver	
-	Copyright (c) 2015 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
     --------------------------------------------------------------
 */
 
-#chat-body {
+/*#chat-body {
 	background: #0076B1;
 	background: linear-gradient(to bottom, #12A3EB, #0076B1 40px);
 	background: -moz-linear-gradient(top, #12A3EB, #0076B1 40px);
 	background: -webkit-linear-gradient(#12A3EB, #0076B1 40px);
 	background: -o-linear-gradient(top, #12A3EB, #0076B1 40px);
-}
+}*/
 
 #chat-title {
 	color: #FFFFFF;
