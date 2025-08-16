@@ -19,16 +19,20 @@
 		}
 	});
 
-	$(function() {
-		var $targetImage = $('.postimage'),
-			galleryName = 'post-gallery',
-			mobileWidth = 900;
+	function isResizable() {
+		var mobileWidth = 900; // disable on screens < 900px
+		return (vseLightbox.resizeWidth > 0 && $(window).width() > mobileWidth);
+	}
+
+	function lightboxResizer(elements) {
+		var $targetImage = elements.find('.postimage'),
+			galleryName = 'post-gallery';
 		if (!vseLightbox.lightboxSig) {
 			$targetImage = $targetImage.not(function() {
 				return $(this).closest('.signature').length > 0;
 			});
 		}
-		if (vseLightbox.resizeWidth > 0 && $(window).width() > mobileWidth) {
+		if (isResizable()) {
 			$targetImage.css('max-width', vseLightbox.resizeWidth + 'px');
 		} else {
 			return;
@@ -37,17 +41,22 @@
 		// images not being ready and causing $(this).width() to return 0.
 		setTimeout(function() {
 			$targetImage.one('load', function() {
-				if ($(this).closest('.postlink').length > 0) return;
-				var imgIndex = (vseLightbox.lightboxGal) ? '' : $targetImage.index(this);
+				if ($(this).closest('.postlink').length > 0) {
+					return;
+				}
+				var imgIndex = (vseLightbox.lightboxGal) ? '' : $targetImage.index(this),
+					imgWidth = $(this).outerWidth();
+				// attached images (check their width and height)
 				if ($(this).parent('a').length > 0) {
-					if ($(this).outerWidth() >= vseLightbox.resizeWidth) {
+					if (imgWidth >= vseLightbox.resizeWidth || $(this).height() >= vseLightbox.resizeWidth) {
 						$(this).parent('a').attr({
 							'data-lightbox': galleryName + imgIndex,
 							'data-title': (vseLightbox.imageTitles) ? $(this).attr('alt') : ''
 						}).end().borderHover();
 					}
 				}
-				else if ($(this).outerWidth() >= vseLightbox.resizeWidth) {
+				// regular images
+				else if (imgWidth >= vseLightbox.resizeWidth) {
 					$(this).wrap(function() {
 						var url = $(this).attr('src');
 						return $('<a/>').attr({
@@ -58,9 +67,23 @@
 					}).borderHover();
 				}
 			}).each(function() {
-				if (this.complete) $(this).load();
+				if (this.complete) {
+					$(this).load();
+				}
 			});
 		}, 0);
+	}
+
+	$(function() {
+		lightboxResizer($(document));
+	});
+
+	// Compatibility with QuickReply Reloaded extension
+	$('#qr_posts').on('qr_loaded', function(e, elements) {
+		lightboxResizer(elements);
+	});
+	$('#qr_postform').on('ajax_submit_preview', function() {
+		lightboxResizer($('#preview'));
 	});
 
 })(jQuery);

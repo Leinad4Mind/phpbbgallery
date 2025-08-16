@@ -1,9 +1,9 @@
 {
     "name": "vse/lightbox",
     "type": "phpbb-extension",
-    "description": "Lightbox for phpBB 3.1 will resize posted images to a maximum set width and display them fullscreen in an elegant Lightbox overlay effect.",
+    "description": "Lightbox for phpBB will resize posted images to a maximum set width and display them fullscreen in an elegant Lightbox overlay effect.",
     "homepage": "https://github.com/VSEphpbb/lightbox",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "keywords": [
         "phpbb",
         "extension",
@@ -23,9 +23,6 @@
         "php": ">=5.3.3",
         "composer/installers": "~1.0",
         "phpbb/phpbb": ">=3.1.0"
-    },
-    "require-dev": {
-        "phpbb/epv": "dev-master"
     },
     "extra": {
         "display-name": "Lightbox",
