@@ -3,7 +3,7 @@
 *
 * Nightstalker
 *
-* @copyright (c) 2015 sitesplat.com <http://sitesplat.com>
+* @copyright (c) 2015 sitesplat.com <https://sitesplat.com>
 * @license Proprietary
 *
 */

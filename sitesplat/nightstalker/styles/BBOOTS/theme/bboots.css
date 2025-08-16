@@ -1038,5 +1038,191 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 .side-segment > h3 {
     color: #fff;
 }
+@media (max-width: 768px) {
+    #donationicons > span:after {
+        border-bottom: medium none;
+    }
+}
 
-/* ===[ CSS HOOK BOOTTOM ]=== */
+.flatpickr-input {
+    background:transparent;
+}
+
+.flatpickr-calendar {
+    background: #2b2a2a;
+}
+
+.flatpickr-current-month {
+    color: #fff;
+}
+
+
+span.flatpickr-weekday {
+    color:rgba(255, 255, 255, 0.54);
+}
+
+.flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
+    color: #d94444;
+}
+
+.flatpickr-day {
+    color:#fff;
+}
+
+.flatpickr-day.inRange, .flatpickr-day.prevMonthDay.inRange, .flatpickr-day.nextMonthDay.inRange, .flatpickr-day.today.inRange, .flatpickr-day.prevMonthDay.today.inRange, .flatpickr-day.nextMonthDay.today.inRange, .flatpickr-day:hover, .flatpickr-day.prevMonthDay:hover, .flatpickr-day.nextMonthDay:hover, .flatpickr-day:focus, .flatpickr-day.prevMonthDay:focus, .flatpickr-day.nextMonthDay:focus {
+    background: #714b4b;
+}
+
+flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover, .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay, .flatpickr-day.notAllowed, .flatpickr-day.notAllowed.prevMonthDay, .flatpickr-day.notAllowed.nextMonthDay {
+    color: rgba(155, 88, 88, 0.3);
+}
+
+.flatpickr-time input {
+    color:#fffbfb;
+}
+
+.flatpickr-time .flatpickr-time-separator, .flatpickr-time .flatpickr-am-pm {
+    color: #fff;
+}
+.flatpickr-time input:hover, .flatpickr-time .flatpickr-am-pm:hover, .flatpickr-time input:focus, .flatpickr-time .flatpickr-am-pm:focus {
+    background: #45a1ce;
+}
+
+/* ===[ BBDOWNLOADS START ]=== */
+.widget, .post {
+    box-shadow: none;
+}
+.post .details {
+    background: rgba(0, 0, 0, 0.9);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.09)), to(transparent));
+    color: #ccc;
+}
+.widget .header.header-item {
+    background: rgba(40, 40, 40, 0.9) url(../../../../bbdownloads/styles/FLATBOOTS/theme/images/item-header-pattern.png) repeat scroll 0 0;
+}
+.container.with_sidebar .et_pb_column_sidebar {
+    background: rgba(38, 38, 38, 0.9);
+}
+.btn.btn-primary.changelog {
+    background: #a1d36e;
+}
+.btn.btn-primary.changelog:hover {
+    background: #94cd5a !important;
+}
+.btn.btn-secondary {
+    background: #6ad1dd !important;
+}
+.container-downloads .btn {
+    background: #777;
+}
+/* ===[ BBDOWNLOADS END ]=== */
+
+/* ===[ BBMEMBERSHIP START ]=== */
+.npt-format-1 .npt-item {
+    background: rgba(0, 0, 0, 0.9);
+}
+.npt-plan-name {
+    border-bottom: 0 none !important;
+}
+.npt-plan-bottom .avn-btn {
+    background: #181818 none repeat scroll 0 0;
+}
+.npt-plan-bottom .avn-btn:hover {
+    background: #3a3a3a none repeat scroll 0 0;
+}
+.thumbnail, .bg-group-info, .btn-primary {
+    background-color: #262626;
+}
+.btn-primary:hover {
+    background-color: #3a3a3a !important;
+}
+.text-muted {
+    color: #fff;
+}
+/* ===[ BBMEMBERSHIP END ]=== */
+
+/* ===[ BBCHAT START ]=== */
+.rooms li {
+    border-bottom: .6em dotted #777;
+}
+
+.person:before,
+.person:hover span {
+    background: #333;
+}
+
+.bbchat .left .people a:link,
+.bbchat .left .people a:hover,
+.bbchat .left .people a:visited {
+    color: #8c8c8c;
+}
+
+.bbchat,
+.bbchat .left,
+.bbchat .right {
+    background-color: #262626;
+    border-color: #999;
+}
+
+.delete-message:before, .layout-list .delete-message:before {
+    border: 3px dashed #181818;
+}
+
+.bbchat .right .top span .name,
+.me .bubble {
+    color: #fff;
+}
+
+.bbchat .right .top:after {
+    background: -webkit-linear-gradient(bottom,rgba(38,38,38,0) 10%,#262626 100%);
+    background: linear-gradient(to top,rgba(38,38,38,0) 10%,#262626 100%);
+}
+
+.bbchat .right .top,
+.me .bubble:before,
+.me .bubble,
+.write input,
+.ps:hover.ps--in-scrolling.ps--y>.ps__scrollbar-y-rail,
+.ps:hover>.ps__scrollbar-y-rail:hover {
+    background-color: #333 !important;
+}
+
+.bbchat .right .write:before {
+    background: -webkit-linear-gradient(top,rgba(38,38,38,0) 20%,#262626 100%);
+    background: linear-gradient(to bottom,rgba(38,38,38,0) 20%,#262626 100%);
+}
+
+.write {
+    background-color: #333;
+    border-color: #999;
+}
+
+.giphy>input {
+    border: 1px solid #999 !important;
+}
+
+#chatbox-input,
+.write input {
+    color: #8c8c8c;
+}
+
+.giphy,
+.emoji-picker {
+    background-color: #181818;
+}
+
+.bbchat-attachments-input {
+    background: #333;
+    box-shadow: 0 1px 15px 1px rgba(51,51,51,.12);
+}
+
+.bbchat-attachments-input>.button-upld {
+    background: #222 url(images/highlight_reallyfaint.png) repeat-x scroll 0 0;
+}
+
+.bbchat-attachments-input:hover>.button-upld {
+    background: #777;
+}
+/* ===[ BBCHAT END ]=== */
+
+/* ===[ CSS HOOK BOTTOM ]=== */
