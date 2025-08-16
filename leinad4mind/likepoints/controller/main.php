@@ -4,7 +4,7 @@
  *
  * LikePoints extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @copyright (c) 2022-2025 Leinad4Mind All rights reserved
  * @license Proprietary
  *
  */
@@ -56,15 +56,15 @@ class main
             return;
          }
          $mode = $this->request->variable('mode', 'post');
-         $post_id = $this->request->variable('p', '');
-         $topic_id = $this->request->variable('topic_id', '');
+         $post_id = (int) $this->request->variable('p', '');
+         $topic_id = (int) $this->request->variable('topic_id', '');
 
          $predicate = ' AND u.username_clean ' . $this->db->sql_like_expression($term . $this->db->get_any_char());
          if (($mode == 'edit' || $mode == 'reply') && empty($topic_id)) {
             $sql = 'SELECT topic_id FROM ' . $this->posts_table . ' WHERE post_id = ' . $post_id;
             $result = $this->db->sql_query($sql);
             $row = $this->db->sql_fetchrow($result);
-            $topic_id = $row['topic_id'];
+            $topic_id = $row['topic_id'] ?? 0;
          }
          if (!empty($topic_id)) {
             $sql = 'SELECT poster_id FROM ' . $this->posts_table . ' WHERE topic_id = ' . $topic_id;
@@ -73,7 +73,9 @@ class main
             while ($row = $this->db->sql_fetchrow($result)) {
                $poster_ids[] = $row['poster_id'];
             }
-            $predicate .= ' AND u.user_id NOT IN(' . implode(',', $poster_ids) . ')';
+            if (!empty($poster_ids)) {
+               $predicate .= ' AND u.user_id NOT IN(' . implode(',', array_map('intval', $poster_ids)) . ')';
+            }
          }
 
          $sql = 'SELECT DISTINCT(u.username), u.user_id, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height
@@ -82,6 +84,7 @@ class main
 				ORDER BY u.user_posts DESC';
          $result = $this->db->sql_query_limit($sql, 10);
          $usernames = [];
+         $style_path = $this->user->style['style_path'] ?? 'prosilver';
          while ($row = $this->db->sql_fetchrow($result)) {
             $usernames[] = [
                $row['username'],
@@ -95,7 +98,7 @@ class main
                   )
                ) . ' ' . $row['username'] . '</div>' :
                   '<div class="nemtion"><img src="' .
-                  generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png'
+                  generate_board_url() . '/styles/' . $style_path . '/theme/images/no-avatar.png'
                   . '"> ' . $row['username'] . '</div>',
             ];
          }

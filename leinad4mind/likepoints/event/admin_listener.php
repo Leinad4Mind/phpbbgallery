@@ -4,7 +4,7 @@
  *
  * LikePoints extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @copyright (c) 2022-2025 Leinad4Mind All rights reserved
  * @license Proprietary
  *
  */
@@ -57,7 +57,7 @@ class admin_listener implements EventSubscriberInterface
       $this->helper   = $helper;
       $this->config = $config;
       $this->config_table = $config_table;
-      $this->bbpoints_config = json_decode($this->config['bbpoints_settings'], true);
+      $this->bbpoints_config = !empty($this->config['bbpoints_settings']) ? json_decode($this->config['bbpoints_settings'], true) : [];
    }
 
    /**
@@ -123,13 +123,13 @@ class admin_listener implements EventSubscriberInterface
     */
    public function acp_manage_forums_display_form($event)
    {
-      //$this->user->add_lang_ext('leinad4mind/likepoints', 'info_acp_likepoints');
       $this->language->add_lang('info_acp_likepoints', 'leinad4mind/likepoints');
       $row = null;
       if ($event['action'] !== 'add') {
-         $sql = 'SELECT per_likes_amount FROM ' . FORUMS_TABLE . ' WHERE forum_id = ' . $event['forum_data']['forum_id'] . ' and per_likes_enabled = 1';
+         $sql = 'SELECT per_likes_amount FROM ' . FORUMS_TABLE . ' WHERE forum_id = ' . (int) $event['forum_data']['forum_id'] . ' and per_likes_enabled = 1';
          $result = $this->db->sql_query($sql);
          $row = $this->db->sql_fetchrow($result);
+         $this->db->sql_freeresult($result);
       }
 
       $this->template->assign_vars(array(
@@ -152,19 +152,20 @@ class admin_listener implements EventSubscriberInterface
       $contributors_enabled = $this->request->variable('contributors_enabled', 0);
       $amount = $this->request->variable('per_likes_amount', $this->get_default_likepoint_amount());
       $sql = 'UPDATE ' . FORUMS_TABLE . '
-				SET per_likes_enabled = ' . $per_likes_enabled . ',
-            contributors_enabled = ' . $contributors_enabled . ',
-					per_likes_amount = ' . $amount . '
-				WHERE forum_id = ' . $event['forum_data']['forum_id'];
+            SET per_likes_enabled = ' . (int) $per_likes_enabled . ',
+                contributors_enabled = ' . (int) $contributors_enabled . ',
+                per_likes_amount = ' . (int) $amount . '
+            WHERE forum_id = ' . (int) $event['forum_data']['forum_id'];
       $this->db->sql_query($sql);
    }
 
    public function get_default_likepoint_amount()
    {
       $sql = "SELECT config_value FROM $this->config_table WHERE config_name = 'bbpoints_settings' LIMIT 1";
-      $this->db->sql_query($sql);
-      $config  = $this->db->sql_fetchfield('config_value');
+      $result = $this->db->sql_query($sql);
+      $config = $this->db->sql_fetchfield('config_value', false, $result);
+      $this->db->sql_freeresult($result);
       $config = json_decode($config, true);
-      return (int) ($config['per_likes'] ?? 10);
+      return isset($config['per_likes']) ? (int) $config['per_likes'] : 10;
    }
 }

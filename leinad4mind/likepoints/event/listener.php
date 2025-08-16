@@ -4,7 +4,7 @@
  *
  * LikePoints extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @copyright (c) 2022-2025 Leinad4Mind All rights reserved
  * @license Proprietary
  *
  */
@@ -84,12 +84,16 @@ class listener implements EventSubscriberInterface
     */
    public function display_viewtopic_contributors($event): void
    {
+      
       $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = ' . $event['row']['forum_id'];
-      $this->db->sql_query($sql);
-      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      $result = $this->db->sql_query($sql);
+      $contributors_enabled = (bool) $this->db->sql_fetchfield('contributors_enabled', $result);
+      $this->db->sql_freeresult($result);
+
       $event['post_row'] = array_merge($event['post_row'], array(
          'S_ENABLE_CONTRIBUTORS' => true,
       ));
+
       if (!$contributors_enabled) {
          return;
       }
@@ -99,14 +103,16 @@ class listener implements EventSubscriberInterface
          $event['post_row'] = array_merge($event['post_row'], array(
             'S_ENABLE_CONTRIBUTORS' => false,
          ));
+         return;
       }
 
       $contrs = '';
       foreach ($contributors as $u) {
          $user_id = (int) $u;
          $sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $user_id . ' LIMIT 1';
-         $this->db->sql_query($sql);
-         $username = $this->db->sql_fetchfield('username');
+         $result = $this->db->sql_query($sql);
+         $username = $this->db->sql_fetchfield('username', $result);
+         $this->db->sql_freeresult($result); 
          $contrs .= '<a href="' . append_sid('memberlist.php?mode=viewprofile&u=' . $user_id) . '">' . $username . '</a>, ';
       }
 
@@ -213,17 +219,19 @@ class listener implements EventSubscriberInterface
    {
       // Get the current user's points, calculated only from public posts
       $sql = 'SELECT user_id, SUM(points) as total FROM (
-      SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' GROUP BY poster_id
+      SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . (int) $user_id . ' GROUP BY poster_id
       UNION ALL
-      SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . ' GROUP BY topic_poster
+      SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . (int) $user_id . ' GROUP BY topic_poster
       UNION ALL
-      SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
+      SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . (int) $user_id . ' GROUP BY to_id
       UNION ALL
-      SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
+      SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . (int) $user_id . ' GROUP BY from_id
             ) t1 GROUP BY user_id';
-      $this->db->sql_query($sql);
-      $user_points  = $this->db->sql_fetchfield('total');
-      return (int) $user_points;
+      $result = $this->db->sql_query($sql);
+      $user_points = (int) $this->db->sql_fetchfield('total', $result);
+      $this->db->sql_freeresult($result);
+
+      return $user_points;
    }
 
    protected function transfer_points(int $from_id, int $to_id, int $topic_id, int $post_id, int $points = 0, string $reason = ''): void
@@ -263,8 +271,9 @@ class listener implements EventSubscriberInterface
          return;
       }
       $sql = 'SELECT bbpoints FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $from_id . ' AND to_id = ' . $to_id . ' AND topic_id = ' . $topic_id . ' LIMIT 1';
-      $this->db->sql_query($sql);
-      $likepoints = (int) $this->db->sql_fetchfield('bbpoints');
+      $result = $this->db->sql_query($sql);
+      $likepoints = (int) $this->db->sql_fetchfield('bbpoints', $result);
+      $this->db->sql_freeresult($result);
       if ($likepoints === $points) {
          // We can undo the operation instead of transferring the points back and forth.
          $sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $from_id . ' AND to_id = ' . $to_id . ' AND topic_id = ' . $topic_id . ' AND bbpoints = ' . $points . ' LIMIT 1';
@@ -288,9 +297,13 @@ class listener implements EventSubscriberInterface
       if (!$post_id) {
          return 0;
       }
+
       $sql = 'SELECT poster_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ' LIMIT 1';
-      $this->db->sql_query($sql);
-      return (int) $this->db->sql_fetchfield('poster_id');
+      $result = $this->db->sql_query($sql);
+      $poster_id = (int) $this->db->sql_fetchfield('poster_id', $result);
+      $this->db->sql_freeresult($result);
+
+      return $poster_id;
    }
 
    protected function get_amount(int $post_id): int
@@ -327,8 +340,9 @@ class listener implements EventSubscriberInterface
       $contributors = $this->request->variable('contributors', '');
       $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = (
          SELECT forum_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ')';
-      $this->db->sql_query($sql);
-      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      $result = $this->db->sql_query($sql);
+      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled', $result);
+      $this->db->sql_freeresult($result);
       if (!$contributors_enabled) {
          return;
       }
@@ -345,8 +359,9 @@ class listener implements EventSubscriberInterface
             continue;
          }
          $sql = 'SELECT user_id FROM ' . USERS_TABLE . ' WHERE username_clean = \'' . $this->db->sql_escape(strtolower($username)) . '\' LIMIT 1';
-         $this->db->sql_query($sql);
-         $user_id = (int) $this->db->sql_fetchfield('user_id');
+         $result = $this->db->sql_query($sql);
+         $user_id = (int) $this->db->sql_fetchfield('user_id', $result);
+         $this->db->sql_freeresult($result);
          if ($user_id > 0) {
             $value[] = $user_id;
          }
@@ -361,16 +376,18 @@ class listener implements EventSubscriberInterface
    protected function get_contributors($post_id)
    {
       $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' INNER JOIN ' . POSTS_TABLE . ' ON ' . POSTS_TABLE . '.forum_id = ' . FORUMS_TABLE . '.forum_id WHERE ' . POSTS_TABLE . '.post_id = ' . $post_id . ' LIMIT 1';
-      $this->db->sql_query($sql);
-      $row = $this->db->sql_fetchrow();
+      $result = $this->db->sql_query($sql);
+      $row = $this->db->sql_fetchrow($result);
+      $this->db->sql_freeresult($result);
       $enabled = isset($row['contributors_enabled']) ? $row['contributors_enabled'] : false;
       if (!$enabled) {
          return [];
       }
 
       $sql = 'SELECT contributors FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ' LIMIT 1';
-      $this->db->sql_query($sql);
-      $contributors = $this->db->sql_fetchfield('contributors');
+      $result = $this->db->sql_query($sql);
+      $contributors = $this->db->sql_fetchfield('contributors', $result);
+      $this->db->sql_freeresult($result);
       if ($contributors === '') {
          return [];
       }
@@ -391,8 +408,9 @@ class listener implements EventSubscriberInterface
 
       $sql = 'SELECT contributors_enabled FROM ' . FORUMS_TABLE . ' WHERE forum_id = (
          SELECT forum_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ')';
-      $this->db->sql_query($sql);
-      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled');
+      $result = $this->db->sql_query($sql);
+      $contributors_enabled  = $this->db->sql_fetchfield('contributors_enabled', $result);
+      $this->db->sql_freeresult($result);
       $this->template->assign_vars(array(
          'S_ENABLE_CONTRIBUTORS' => $contributors_enabled ? true : false,
       ));
@@ -406,8 +424,9 @@ class listener implements EventSubscriberInterface
       foreach ($contributors as $u) {
          $user_id = (int) $u;
          $sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $user_id . ' LIMIT 1';
-         $this->db->sql_query($sql);
-         $username = $this->db->sql_fetchfield('username');
+         $result = $this->db->sql_query($sql);
+         $username = $this->db->sql_fetchfield('username', $result);
+         $this->db->sql_freeresult($result);
          $a[] = $username;
       }
       $this->template->assign_vars(array(
@@ -418,15 +437,19 @@ class listener implements EventSubscriberInterface
    public function get_topic_id($post_id)
    {
       $sql = 'SELECT topic_id FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ' LIMIT 1';
-      $this->db->sql_query($sql);
-      return (int) $this->db->sql_fetchfield('topic_id');
+      $result = $this->db->sql_query($sql);
+      $topic_id = (int) $this->db->sql_fetchfield('topic_id', $result);
+      $this->db->sql_freeresult($result);
+      return $topic_id;
    }
 
    public function is_unlike($post_id, $user_id)
    {
       $sql = 'SELECT COUNT(*) AS count FROM ' . $this->bblikes_table . ' WHERE post_id = ' . $post_id . ' AND user_id = ' . $user_id;
-      $this->db->sql_query($sql);
-      $count = (int) $this->db->sql_fetchfield('count');
+      $result = $this->db->sql_query($sql);
+      $count = (int) $this->db->sql_fetchfield('count', $result);
+      $this->db->sql_freeresult($result);
+
       // As we're running this on 'core.submit_likedd_end' event, the existence of a like
       // means it was a new like and non-existence means the like was removed.
       return ($count === 0);

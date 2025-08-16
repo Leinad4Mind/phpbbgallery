@@ -4,7 +4,7 @@
  *
  * LikePoints extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @copyright (c) 2022-2025 Leinad4Mind All rights reserved
  * @license Proprietary
  *
  */

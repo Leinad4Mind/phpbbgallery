@@ -2,12 +2,14 @@
     "name": "leinad4mind/likepoints",
     "type": "phpbb-extension",
     "description": "Bridge between the BBPoints and LikeDD extensions",
-    "version": "2.0.0",
-    "time": "2022-05-25",
+    "homepage": "https://leinad4mind.top/forum/",
+    "version": "2.1.0",
+    "time": "2025-08-16",
     "license": "Proprietary",
     "authors": [
         {
             "name": "Leinad4Mind",
+            "homepage": "https://leinad4mind.top/forum",
             "role": "Developer"
         }
     ],
@@ -19,6 +21,12 @@
         "display-name": "Bridge BBPoints and LikeDD",
         "soft-require": {
             "phpbb/phpbb": ">=3.3.4"
+        },
+        "version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/likepoints",
+            "filename": "version_check.json",
+            "ssl": true
         }
     }
 }

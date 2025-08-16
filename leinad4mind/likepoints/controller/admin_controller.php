@@ -4,7 +4,7 @@
  *
  * LikePoints extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2022 Leinad4Mind All rights reserved
+ * @copyright (c) 2022-2025 Leinad4Mind All rights reserved
  * @license Proprietary
  *
  */
@@ -54,8 +54,9 @@ class admin_controller
   public function get_default_likepoint_amount()
   {
     $sql = "SELECT config_value FROM $this->config_table WHERE config_name = 'bbpoints_settings' LIMIT 1";
-    $this->db->sql_query($sql);
-    $config  = $this->db->sql_fetchfield('config_value');
+    $result = $this->db->sql_query($sql);
+    $config = $this->db->sql_fetchfield('config_value', $result);
+    $this->db->sql_freeresult($result);
     $config = json_decode($config, true);
     return (int) ($config['per_likes'] ?? 10);
   }
@@ -186,7 +187,7 @@ class admin_controller
 
   protected function get_contributors($post_id)
   {
-    $sql = 'SELECT contributors FROM ' . POSTS_TABLE . ' WHERE post_id = ' . $post_id . ' LIMIT 1';
+    $sql = 'SELECT contributors FROM ' . POSTS_TABLE . ' WHERE post_id = ' . (int) $post_id . ' LIMIT 1';
     $this->db->sql_query($sql);
     $contributors = $this->db->sql_fetchfield('contributors');
     if ($contributors === '') {
