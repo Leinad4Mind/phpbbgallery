@@ -94,7 +94,12 @@ class listener implements EventSubscriberInterface
 
 	public function add_page_header_link($event)
 	{
-		$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'sitesplat/likedd',
+			'lang_set' => 'likedd',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 		
 		$this->template->assign_vars(array(
 		//	'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html'))

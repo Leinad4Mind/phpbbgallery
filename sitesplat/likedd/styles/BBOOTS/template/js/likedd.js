@@ -3,7 +3,7 @@ $(document).on("click", ".btn-likedd-trigger", function (e) {
 	e.preventDefault();
 	var val = $(this).data("options");
 	$.ajax({ type: "POST", 
-    url: "app.php/likedd/index.html", 
+    url: sitesplat_board_url + "app.php/likedd/index.html", 
     data: $(this).data("options"), 
     dataType: "json", 
     success: function (result) {
@@ -23,7 +23,7 @@ $(document).on("click", ".open-LikersDialog", function () {
 	var hack = new Date();
 
 	$.ajax({
-		url: 'app.php/likedd/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
+		url: sitesplat_board_url + 'app.php/likedd/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
 		context: document.getElementById("likedd-profile-data"),
 		error: function (e, text, ee) {
 		},
@@ -42,7 +42,7 @@ $(document).on("click", ".LikersPagination", function (e) {
 	var hack = new Date();
 
 	$.ajax({
-		url: 'app.php/likedd/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
+		url: sitesplat_board_url + 'app.php/likedd/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
 		context: document.getElementById("likedd-profile-data"),
 		error: function (e, text, ee) {
 		},
