@@ -6,7 +6,7 @@
  * @license GNU General Public License, version 2 (GPL-2.0)
  */
 
-namespace roots\discordnotifications\migrations;
+namespace mober\discordnotifications\migrations;
 
 /**
  * These migrations handle all database changes necessary for installation or removal of
@@ -17,7 +17,7 @@ class extension_installation extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v31x\v314');
+		return array('\phpbb\db\migration\data\v330\v330');
 	}
 
 	/**
@@ -83,7 +83,6 @@ class extension_installation extends \phpbb\db\migration\migration
 			array('config.add', array('discord_notifications_connect_timeout', 2)),
 			array('config.add', array('discord_notifications_exec_timeout', 2)),
 
-
 			// These configurations represent the various types of notifications that can be sent, which can be individually enabled or disabled.
 			// Upon installation, every notification type is enabled by default.
 
@@ -120,7 +119,7 @@ class extension_installation extends \phpbb\db\migration\migration
 				'acp',
 				'ACP_DISCORD_NOTIFICATIONS',
 				array(
-					'module_basename'	=> '\roots\discordnotifications\acp\discord_notifications_module',
+					'module_basename'	=> '\mober\discordnotifications\acp\discord_notifications_module',
 					'modes'				=> array('settings'),
 				),
 			)),

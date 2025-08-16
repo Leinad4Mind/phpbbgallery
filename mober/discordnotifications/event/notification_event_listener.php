@@ -6,7 +6,7 @@
  * @license GNU General Public License, version 2 (GPL-2.0)
  */
 
-namespace roots\discordnotifications\event;
+namespace mober\discordnotifications\event;
 
 /**
  * @ignore
@@ -40,23 +40,31 @@ class notification_event_listener implements EventSubscriberInterface
 	/** @var \phpbb\language\language */
 	protected $language;
 
-	/** @var \roots\discordnotifications\notification_service */
+	/** @var \mober\discordnotifications\notification_service */
 	protected $notification_service;
+
+	/** @var string php file extension  */
+	protected $php_ext;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\language\language                         $language
-	 * @param \roots\discordnotifications\notification_service $notification_service
+	 * @param \mober\discordnotifications\notification_service $notification_service
+	 * @param string                                           $php_ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\language\language $language, \roots\discordnotifications\notification_service $notification_service)
-	{
+	public function __construct(
+		\phpbb\language\language $language,
+		\mober\discordnotifications\notification_service $notification_service,
+		$php_ext
+	) {
 		$this->language = $language;
 		$this->notification_service = $notification_service;
+		$this->php_ext = $php_ext;
 
 		// Add notifications text from the langauge file
-		$this->language->add_lang('discord_notification_messages', 'roots/discordnotifications');
+		$this->language->add_lang('discord_notification_messages', 'mober/discordnotifications');
 	}
 
 	/**
@@ -204,11 +212,11 @@ class notification_event_listener implements EventSubscriberInterface
 		{
 			$this->notify_topic_created($post_data, $webhook_url);
 		}
-		elseif ($event['mode'] == 'reply' || $event['mode'] == 'quote') // New post
+		else if ($event['mode'] == 'reply' || $event['mode'] == 'quote') // New post
 		{
 			$this->notify_post_created($post_data, $webhook_url);
 		}
-		elseif ($event['mode'] == 'edit' || $event['mode'] == 'edit_topic' || $event['mode'] == 'edit_first_post' || $event['mode'] == 'edit_last_post') // Edit existing post
+		else if ($event['mode'] == 'edit' || $event['mode'] == 'edit_topic' || $event['mode'] == 'edit_first_post' || $event['mode'] == 'edit_last_post') // Edit existing post
 		{
 			// If the post that was edited is the first one in the topic, we consider this a topic update event.
 			if ($event['data']['post_id'] == $event['data']['topic_first_post_id'])
@@ -259,17 +267,17 @@ class notification_event_listener implements EventSubscriberInterface
 
 		// Fetch the forum name, topic title, and user name using the respective IDs.
 		$forum_name = $this->notification_service->query_forum_name($post_data['forum_id']);
-		if ($forum_name != null)
+		if ($forum_name)
 		{
 			$post_data['forum_name'] = $forum_name;
 		}
 		$topic_title = $this->notification_service->query_topic_title($post_data['topic_id']);
-		if ($topic_title != null)
+		if ($topic_title)
 		{
 			$post_data['topic_title'] = $topic_title;
 		}
 		$user_name = $this->notification_service->query_user_name($post_data['user_id']);
-		if ($user_name != null)
+		if ($user_name)
 		{
 			$post_data['user_name'] = $user_name;
 		}
@@ -294,7 +302,7 @@ class notification_event_listener implements EventSubscriberInterface
 		// Unfortunately the only useful data we get from this event is the topic ID. We have to run a custom query to retrieve the
 		// rest of the data that we are interested in.
 		$topics_ids = $event['topic_ids'];
-		$topic_id = (int)array_pop($topics_ids);
+		$topic_id = (int) array_pop($topics_ids);
 		$query_data = $this->notification_service->query_topic_details($topic_id);
 
 		// Check for visibility of the topic. We don't send notifications for content that is hidden from normal users.
@@ -427,7 +435,7 @@ class notification_event_listener implements EventSubscriberInterface
 			$user_data['user_id'] = $event['user_id'];
 			$user_data['user_name'] = $event['user_row']['username'];
 		}
-		elseif ($event['activated'] == 1)
+		else if ($event['activated'] == 1)
 		{
 			$user_data['user_id'] = array_pop($event['user_id_ary']);
 			$user_name = $this->notification_service->query_user_name($user_data['user_id']);
@@ -477,7 +485,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_CREATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -510,7 +519,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UPDATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -560,7 +570,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_DELETE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -602,7 +613,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_LOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -632,7 +644,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UNLOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -662,7 +675,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_CREATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -747,7 +761,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UPDATE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -796,7 +811,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_DELETE;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -826,7 +842,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_LOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -855,7 +872,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_UNLOCK;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -885,7 +903,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_USER;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -914,7 +933,8 @@ class notification_event_listener implements EventSubscriberInterface
 		$emoji = self::EMOJI_USER;
 
 		// Verify that this notification type is enabled. If not, we have nothing further to do.
-		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false) {
+		if ($this->notification_service->is_notification_type_enabled($notification_type_config_name) == false)
+		{
 			return;
 		}
 
@@ -928,7 +948,8 @@ class notification_event_listener implements EventSubscriberInterface
 				$emoji, $user_name
 			);
 		}
-		else {
+		else
+		{
 			$deleted_users_text = '';
 			$and = $this->language->lang('AND');
 			$comma = $this->language->lang('CONJ');
@@ -936,12 +957,12 @@ class notification_event_listener implements EventSubscriberInterface
 			{
 				$deleted_users_text = array_pop($data) . " $and " . array_pop($data);
 			}
-			elseif (count($data) == 3)
+			else if (count($data) == 3)
 			{
 				$deleted_users_text = array_pop($data) . "$comma " . array_pop($data) . "$comma $and " . array_pop($data);
 			}
 			// If more than three users were deleted, we display three user names and then the number of additional deletions
-			elseif (count($data) > 3)
+			else if (count($data) > 3)
 			{
 				$deleted_users_text = array_pop($data) . "$comma " . array_pop($data) . "$comma " . array_pop($data) . "$comma $and " . count($data);
 				// Singular vs plural case check
@@ -1021,7 +1042,7 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function generate_forum_link($forum_id, $text)
 	{
-		$url = generate_board_url() . '/viewforum.php?f=' . $forum_id;
+		$url = generate_board_url() . '/viewforum.' . $this->php_ext . '?f=' . $forum_id;
 		$url = $this->reformat_link_url($url);
 		$text = $this->reformat_link_text($text);
 		return sprintf('[%s](%s)', $text, $url);
@@ -1037,7 +1058,7 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function generate_post_link($topic_id, $post_id, $text)
 	{
-		$url = generate_board_url() . '/viewtopic.php?t=' . $topic_id . '&p=' . $post_id . '#p' . $post_id;
+		$url = generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id . '&p=' . $post_id . '#p' . $post_id;
 		$url = $this->reformat_link_url($url);
 		$text = $this->reformat_link_text($text);
 		return sprintf('[%s](%s)', $text, $url);
@@ -1052,7 +1073,7 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function generate_topic_link($topic_id, $text)
 	{
-		$url = generate_board_url() . '/viewtopic.php?t=' . $topic_id;
+		$url = generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id;
 		$url = $this->reformat_link_url($url);
 		$text = $this->reformat_link_text($text);
 		return sprintf('[%s](%s)', $text, $url);
@@ -1067,7 +1088,7 @@ class notification_event_listener implements EventSubscriberInterface
 	 */
 	private function generate_user_link($user_id, $text)
 	{
-		$url = generate_board_url() . '/memberlist.php?mode=viewprofile&u=' . $user_id;
+		$url = generate_board_url() . '/memberlist.' . $this->php_ext . '?mode=viewprofile&u=' . $user_id;
 		$url = $this->reformat_link_url($url);
 		$text = $this->reformat_link_text($text);
 		return sprintf('[%s](%s)', $text, $url);

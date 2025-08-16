@@ -6,7 +6,7 @@
  * @license GNU General Public License, version 2 (GPL-2.0)
  */
 
-namespace roots\discordnotifications\acp;
+namespace mober\discordnotifications\acp;
 
 /**
  * Discord Notifications ACP module.
@@ -23,7 +23,7 @@ class discord_notifications_module
 	const MAX_POST_PREVIEW_LENGTH = 2000;
 
 	// The name for the form used for this page
-	const PAGE_FORM_NAME = 'acp_roots_discord_notifications';
+	const PAGE_FORM_NAME = 'acp_mober_discord_notifications';
 
 	/** @var string */
 	public $page_title;
@@ -49,7 +49,7 @@ class discord_notifications_module
 	/** @var \phpbb\log\log */
 	protected $log;
 
-	/** @var \roots\discordnotifications\notification_service */
+	/** @var \mober\discordnotifications\notification_service */
 	protected $notification_service;
 
 	/** @var \phpbb\request\request */
@@ -73,9 +73,9 @@ class discord_notifications_module
 		$this->template = $phpbb_container->get('template');
 		$this->user = $phpbb_container->get('user');
 		// Used for sending test messages to Discord
-		$this->notification_service = $phpbb_container->get('roots.discordnotifications.notification_service');
+		$this->notification_service = $phpbb_container->get('mober.discordnotifications.notification_service');
 
-		$this->language->add_lang('acp_discord_notifications', 'roots/discordnotifications');
+		$this->language->add_lang('acp_discord_notifications', 'mober/discordnotifications');
 		$this->tpl_name = 'acp_discord_notifications';
 		$this->page_title = $this->language->lang('ACP_DISCORD_NOTIFICATIONS_TITLE');
 
@@ -86,7 +86,7 @@ class discord_notifications_module
 		{
 			$this->process_send_test_message();
 		}
-		elseif ($this->request->is_set_post('submit'))
+		else if ($this->request->is_set_post('submit'))
 		{
 			$this->process_form_submit();
 		}
@@ -137,11 +137,13 @@ class discord_notifications_module
 	private function validate_url($url)
 	{
 		$info = parse_url($url);
-		if ($info === false || !isset($info['scheme'], $info['host'], $info['path'])) {
+		if ($info === false || !isset($info['scheme'], $info['host'], $info['path']))
+		{
 			return false;
 		}
 		$scheme = strtolower($info['scheme']);
-		if ($scheme !== 'http' && $scheme !== 'https') {
+		if ($scheme !== 'http' && $scheme !== 'https')
+		{
 			return false;
 		}
 		return true;
@@ -205,7 +207,7 @@ class discord_notifications_module
 		{
 			trigger_error($this->language->lang('DN_POST_PREVIEW_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
-		$preview_length = (int)$preview_length;
+		$preview_length = (int) $preview_length;
 		if ($preview_length != 0 && ($preview_length < self::MIN_POST_PREVIEW_LENGTH || $preview_length > self::MAX_POST_PREVIEW_LENGTH))
 		{
 			trigger_error($this->language->lang('DN_POST_PREVIEW_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
@@ -237,7 +239,8 @@ class discord_notifications_module
 				$this->db->sql_query($sql);
 			} else
 			{
-				if (!$this->validate_url($url)) {
+				if (!$this->validate_url($url))
+				{
 					trigger_error($this->language->lang('DN_WEBHOOK_URL_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 				$sql = "UPDATE {$table_prefix}discord_webhooks SET url = '" . $this->db->sql_escape($url) . "' WHERE alias = '" . $this->db->sql_escape($alias) . "'";
@@ -250,20 +253,23 @@ class discord_notifications_module
 		foreach ($forum_configuration as $id => $value)
 		{
 			// Don't update deleted entries
-			if ($value === '' || $webhook_configuration[$value] !== '') {
+			if ($value === '' || $webhook_configuration[$value] !== '')
+			{
 				$sql = "UPDATE " . FORUMS_TABLE . " SET discord_notifications = '" . $this->db->sql_escape($value) .
-					"' WHERE forum_id = " . $this->db->sql_escape($id);
+					"' WHERE forum_id = " . (int) $id;
 				$this->db->sql_query($sql);
 			}
 		}
 
 		$connect_timeout = (int) $this->request->variable('dn_connect_to', 0);
-		if ($connect_timeout < 1) {
+		if ($connect_timeout < 1)
+		{
 			$connect_timeout = 1;
 		}
 
 		$exec_timeout = (int) $this->request->variable('dn_exec_to', 0);
-		if ($exec_timeout < 1) {
+		if ($exec_timeout < 1)
+		{
 			$exec_timeout = 1;
 		}
 
@@ -294,7 +300,7 @@ class discord_notifications_module
 		// Log the settings change
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE');
 		// Destroy any cached discord notification data
-		$this->cache->destroy('roots_discord_notifications');
+		$this->cache->destroy('mober_discord_notifications');
 
 		trigger_error($this->language->lang('DN_SETTINGS_SAVED') . adm_back_link($this->u_action));
 	}
