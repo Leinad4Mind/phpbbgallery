@@ -1,8 +1,9 @@
 <?php
 /**
  *
- * Change Post Time [Spanish]
+ * CF Change Post Time
  *
+ * @copyright (c) 2024 chris1278
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -29,19 +30,13 @@ if (empty($lang) || !is_array($lang))
 // You do not need this where single placeholders are used, e.g. 'Message %d' is fine
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
 
-/**
-*	EXTENSION-DEVELOPERS PLEASE NOTE
-*
-*	You are able to put your permission sets into your extension.
-*	The permissions logic should be added via the 'core.permissions' event.
-*	You can easily add new permission categories, types and permissions, by
-*	simply merging them into the respective arrays.
-*	The respective language strings should be added into a language file, that
-*	start with 'permissions_', so they are automatically loaded within the ACP.
-*/
-
-// User Permissions
-$lang = array_merge($lang, array(
-	'ACL_M_CHGPOSTTIME'			=> 'Puede cambiar fecha/hora en mensajes',
-));
+$lang = array_merge($lang, [
+	'CF_CHANGE_POST_TIME'				=> 'Change post time',
+	'LOG_MCP_CF_CHANGE_POSTTIME'		=> '<strong>Changed post #%4$s time in topic “%1$s”</strong><br>» from %2$s to %3$s',
+	'CF_ERROR_DATE'						=> '<b>Attention</b><br><br>You tried to enter a date that lies in the future. For technical reasons, however, it is only permitted to enter a date that is in the past but corresponds at most to the current date. Please just try again.',
+]);

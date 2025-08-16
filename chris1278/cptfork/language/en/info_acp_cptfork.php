@@ -1,12 +1,14 @@
 <?php
 /**
  *
- * Change Post Time [Italian]
+ * CF Change Post Time
  *
+ * @copyright (c) 2024 chris1278
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
  */
+
 
 if (!defined('IN_PHPBB'))
 {
@@ -15,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,10 +36,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'JX_CHANGE_POST_TIME'				=> 'Cambia data messaggio',
-	'JX_CHANGE_POST_TIME_DATE'			=> 'AAAA-MM-GG',
-	'JX_CHANGE_POST_TIME_TIME'			=> 'HH:MM',
-
-	'LOG_MCP_JX_CHANGE_POSTTIME'		=> '<strong>Data messaggio #%4$s cambiata nel topic “%1$s”</strong><br />»da %2$s a %3$s',
-));
+$lang = array_merge($lang, [
+	'LOG_MCP_CF_CHANGE_POSTTIME'		=> '<strong>Changed post #%4$s time in topic “%1$s”</strong><br>» from %2$s to %3$s',
+]);

@@ -1,14 +1,14 @@
 <?php
 /**
  *
- * Change Post Time [Arabic]
+ * CF Change Post Time
  *
+ * @copyright (c) 2024 chris1278
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
- *
- * Translated By : Bassel Taha Alhitary - www.alhitary.net
  */
+
 
 if (!defined('IN_PHPBB'))
 {
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -31,19 +31,13 @@ if (empty($lang) || !is_array($lang))
 // You do not need this where single placeholders are used, e.g. 'Message %d' is fine
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
 
-/**
-*	EXTENSION-DEVELOPERS PLEASE NOTE
-*
-*	You are able to put your permission sets into your extension.
-*	The permissions logic should be added via the 'core.permissions' event.
-*	You can easily add new permission categories, types and permissions, by
-*	simply merging them into the respective arrays.
-*	The respective language strings should be added into a language file, that
-*	start with 'permissions_', so they are automatically loaded within the ACP.
-*/
-
-// User Permissions
-$lang = array_merge($lang, array(
-	'ACL_M_CHGPOSTTIME'			=> 'يستطيع تعديل توقيت / تاريخ المشاركة',
-));
+$lang = array_merge($lang, [
+	'CF_CHANGE_POST_TIME'				=> 'Ändere Beitragszeit',
+	'LOG_MCP_CF_CHANGE_POSTTIME'		=> '<strong>Beitrag Nr. #%4$s im Thema “%1$s”</strong><br>» von %2$s zu %3$s',
+	'CF_ERROR_DATE'						=> '<b>Achtung</b><br><br>Sie haben versucht ein Datum einzugeben was in der Zukunft liegt. Aus technichen Grünen ist es jedoch nur erlaubt ein Datum einzutragen welches in der Vergangenheit liegt jedoch maximal dem aktuellem Datum entspricht. Bitte versuchen Sie es einfach nochmal.',
+]);

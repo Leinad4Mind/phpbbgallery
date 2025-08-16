@@ -1,14 +1,14 @@
 <?php
 /**
  *
- * Change Post Time [Arabic]
+ * CF Change Post Time
  *
+ * @copyright (c) 2024 chris1278
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
- *
- * Translated By : Bassel Taha Alhitary - www.alhitary.net
  */
+
 
 if (!defined('IN_PHPBB'))
 {
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,6 +36,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'LOG_MCP_JX_CHANGE_POSTTIME'		=> '<strong>تعديل توقيت المشاركة #%4$s في الموضوع “%1$s”</strong><br />» من %2$s إلى %3$s',
-));
+$lang = array_merge($lang, [
+	'LOG_MCP_CF_CHANGE_POSTTIME'		=> '<strong>Beitragszeit von Beitrag Nr. #%4$s im Thema geändert “%1$s”</strong><br>» von %2$s zu %3$s',
+]);
