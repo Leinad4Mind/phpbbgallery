@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "WYSIWYG tinyMCE addon voor official pages extension",
     "homepage": "http://forumhulp.com",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "keywords": ["style", "forumhulp", "phpbb", "extension", "pages", "tinymce", "wysiwyg"],
     "license": "GPL-2.0",
     "authors": [
@@ -27,9 +27,9 @@
 			"phpbb/phpbb": ">=3.1.0-RC3,<3.2.*@dev"
         },
         "version-check": {
-			"host": "www.phpbb.com",
-			"directory": "/customise/db/extension/pageaddon",
-			"filename": "version_check"
-		}
+            "host": "forumhulp.com",
+            "directory": "/ext",
+            "filename": "index.php?id=39"
+        }
     }
 }
