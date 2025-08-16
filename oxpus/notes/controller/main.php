@@ -23,15 +23,6 @@ class main
 	/* @var string table_prefix */
 	protected $table_prefix;
 
-	/* @var Container */
-	protected $phpbb_container;
-
-	/* @var \phpbb\extension\manager */
-	protected $phpbb_extension_manager;
-
-	/* @var \phpbb\path_helper */
-	protected $phpbb_path_helper;
-
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
@@ -65,9 +56,6 @@ class main
 	* @param string									$root_path
 	* @param string									$php_ext
 	* @param string									$table_prefix
-	* @param Container 								$phpbb_container
-	* @param \phpbb\extension\manager				$phpbb_extension_manager
-	* @param \phpbb\path_helper						$phpbb_path_helper
 	* @param \phpbb\db\driver\driver_interfacer		$db
 	* @param \phpbb\config\config					$config
 	* @param \phpbb\log\log_interface 				$log
@@ -77,14 +65,11 @@ class main
 	* @param \phpbb\template\template				$template
 	* @param \phpbb\user							$user
 	*/
-	public function __construct($root_path, $php_ext, $table_prefix, Container $phpbb_container, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\log\log_interface $log, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
+	public function __construct($root_path, $php_ext, $table_prefix, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\log\log_interface $log, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
 	{
 		$this->root_path				= $root_path;
 		$this->php_ext 					= $php_ext;
 		$this->table_prefix 			= $table_prefix;
-		$this->phpbb_container 			= $phpbb_container;
-		$this->phpbb_extension_manager 	= $phpbb_extension_manager;
-		$this->phpbb_path_helper		= $phpbb_path_helper;
 		$this->db 						= $db;
 		$this->config 					= $config;
 		$this->phpbb_log 				= $log;
@@ -109,11 +94,6 @@ class main
 		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		include_once($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		include_once($this->root_path . 'includes/bbcode.' . $this->php_ext);
-
-		// Define the ext path
-		$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-		$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
-		$ext_path_web				= $this->phpbb_path_helper->update_web_root_path($ext_path);
 
 		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'	=> $this->helper->route('oxpus_notes_controller'),
@@ -277,10 +257,6 @@ class main
 			$this->db->sql_freeresult($result);
 		}
 
-		$this->template->set_filenames([
-			'body' => $body,
-		]);
-
 		if ($mode == 'save' && $allow_new_note)
 		{
 			// check form
@@ -300,7 +276,9 @@ class main
 
 			if ($note_mem_yesno)
 			{
-				$note_mem = mktime($note_mem_hour, $note_mem_minute, 0, $note_mem_month, $note_mem_day, $note_mem_year);
+				$note_mem = gmmktime($note_mem_hour, $note_mem_minute, 0, $note_mem_month, $note_mem_day, $note_mem_year);
+				$user_time_offset = $this->user->create_datetime()->getOffset();
+				$note_mem = $note_mem - $user_time_offset;
 			}
 			else
 			{
@@ -346,10 +324,10 @@ class main
 			redirect($this->helper->route('oxpus_notes_controller'));
 		}
 
-		page_header($this->language->lang('NOTES'));
-
 		if (($mode == 'new_note' && $allow_new_note) || $mode == 'edit_note')
 		{
+			$tpl_filename = '@oxpus_notes/note_edit_body.html';
+
 			// First secure the form ...
 			add_form_key('posting');
 
@@ -386,14 +364,15 @@ class main
 			$s_note_mem_day .= '</select>';
 
 			$s_note_mem_month = '<select name="mem_month" class="selectpicker" data-width="auto">';
-			for ($i = 1; $i <= 13; $i++)
+			for ($i = 1; $i < 13; $i++)
 			{
 				$s_note_mem_month .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_month .= '</select>';
 
 			$s_note_mem_year = '<select name="mem_year" class="selectpicker" data-width="auto">';
-			for ($i = intval(date('Y')); $i <= intval(date('Y')) + 9; $i++)
+			$current_year = intval($this->user->format_date(time(), 'Y'));
+			for ($i = $current_year; $i <= $current_year + 9; $i++)
 			{
 				$s_note_mem_year .= '<option value="' . $i . '">' . $i . '</option>';
 			}
@@ -460,13 +439,21 @@ class main
 				$s_check = '';
 			}
 
-			$sort_order = $sort_by = $search_in = '';
+			$sort_order = '';
+			$sort_by = '';
+			$search_in = '';
 
-			$s_note_mem_day		= str_replace('value="' . date('j', $cur_time) . '">', 'value="' . date('j', $cur_time) . '" selected="selected">', $s_note_mem_day);
-			$s_note_mem_month	= str_replace('value="' . date('n', $cur_time) . '">', 'value="' . date('n', $cur_time) . '" selected="selected">', $s_note_mem_month);
-			$s_note_mem_year	= str_replace('value="' . date('Y', $cur_time) . '">', 'value="' . date('Y', $cur_time) . '" selected="selected">', $s_note_mem_year);
-			$s_note_mem_hour	= str_replace('value="' . date('G', $cur_time) . '">', 'value="' . date('G', $cur_time) . '" selected="selected">', $s_note_mem_hour);
-			$s_note_mem_minute	= str_replace('value="' . date('i', $cur_time) . '">', 'value="' . date('i', $cur_time) . '" selected="selected">', $s_note_mem_minute);
+			$date_j = $this->user->format_date($cur_time, 'j', true);
+			$date_n = $this->user->format_date($cur_time, 'n', true);
+			$date_Y = $this->user->format_date($cur_time, 'Y', true);
+			$date_g = $this->user->format_date($cur_time, 'G', true);
+			$date_i = $this->user->format_date($cur_time, 'i', true);
+
+			$s_note_mem_day		= str_replace('value="' . $date_j . '">', 'value="' . $date_j . '" selected="selected">', $s_note_mem_day);
+			$s_note_mem_month	= str_replace('value="' . $date_n . '">', 'value="' . $date_n . '" selected="selected">', $s_note_mem_month);
+			$s_note_mem_year	= str_replace('value="' . $date_Y . '">', 'value="' . $date_Y . '" selected="selected">', $s_note_mem_year);
+			$s_note_mem_hour	= str_replace('value="' . $date_g . '">', 'value="' . $date_g . '" selected="selected">', $s_note_mem_hour);
+			$s_note_mem_minute	= str_replace('value="' . $date_i . '">', 'value="' . $date_i . '" selected="selected">', $s_note_mem_minute);
 
 			// ... and now prepare the posting form for edit/post the note
 			$this->template->assign_vars([
@@ -537,11 +524,13 @@ class main
 		*/
 		if ($mode == '' || !$allow_new_note)
 		{
+			$tpl_filename = '@oxpus_notes/note_list_body.html';
+
 			if ($display_notes)
 			{
 				for($i = 0; $i < $display_notes; $i++)
 				{
-					$note_date	= $this->notes_format_date($notes_data[$i]['note_time']);
+					$note_date	= $this->user->format_date($notes_data[$i]['note_time']);
 					$note_id	= $notes_data[$i]['note_id'];
 					$subject	= $notes_data[$i]['note_subject'];
 					$message	= $notes_data[$i]['note_text'];
@@ -568,7 +557,7 @@ class main
 
 					if ($notes_data[$i]['note_mem'])
 					{
-						$notes_mem = $this->notes_format_date($notes_data[$i]['note_mem']);
+						$notes_mem = $this->user->format_date($notes_data[$i]['note_mem'], false, true);
 					}
 					else
 					{
@@ -601,74 +590,6 @@ class main
 			}
 		}
 
-		/*
-		* include the phpBB footer
-		*/
-		page_footer();
-	}
-
-	protected function notes_format_date($gmepoch)
-	{
-		static $midnight;
-		static $date_cache;
-
-		$format = $this->user->data['user_dateformat'];
-		$now = time();
-		$delta = $now - $gmepoch;
-
-		$date_cache[$format] = [
-			'is_short'		=> strpos($format, '|'),
-			'format_short'	=> substr($format, 0, strpos($format, '|')) . '||' . substr(strrchr($format, '|'), 1),
-			'format_long'	=> str_replace('|', '', $format),
-			'lang'			=> $this->user->lang['datetime'],
-		];
-
-		// Short representation of month in format? Some languages use different terms for the long and short format of May
-		if ((strpos($format, '\M') === false && strpos($format, 'M') !== false) || (strpos($format, '\r') === false && strpos($format, 'r') !== false))
-		{
-			$date_cache[$format]['lang']['May'] = $this->user->lang['datetime']['May_short'];
-		}
-
-		// Show date <= 1 hour ago as 'xx min ago'
-		// A small tolerence is given for times in the future and times in the future but in the same minute are displayed as '< than a minute ago'
-		if ($delta <= 3600 && ($delta >= -5 || (($now / 60) % 60) == (($gmepoch / 60) % 60)) && $date_cache[$format]['is_short'] !== false && isset($this->user->lang['datetime']['AGO']))
-		{
-			return $this->user->lang(['datetime', 'AGO'], max(0, (int) floor($delta / 60)));
-		}
-
-		if (!$midnight)
-		{
-			list($d, $m, $y) = explode(' ', date('j n Y', time()));
-			$midnight = mktime(0, 0, 0, $m, $d, $y);
-		}
-
-		if ($date_cache[$format]['is_short'] !== false)
-		{
-			$day = false;
-
-			if ($gmepoch > $midnight + 2 * 86400)
-			{
-				$day = false;
-			}
-			else if($gmepoch > $midnight + 86400)
-			{
-				$day = 'TOMORROW';
-			}
-			else if ($gmepoch > $midnight)
-			{
-				$day = 'TODAY';
-			}
-			else if ($gmepoch > $midnight - 86400)
-			{
-				$day = 'YESTERDAY';
-			}
-
-			if ($day !== false)
-			{
-				return str_replace('||', $this->user->lang['datetime'][$day], @strtr(@date($date_cache[$format]['format_short'], $gmepoch), $date_cache[$format]['lang']));
-			}
-		}
-
-		return @strtr(@date($date_cache[$format]['format_long'], $gmepoch), $date_cache[$format]['lang']);
+		return $this->helper->render($tpl_filename, $this->language->lang('NOTES'));
 	}
 }
