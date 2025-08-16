@@ -59,6 +59,11 @@ class imgur extends \phpbb\avatar\driver\driver
 	{
         $client_id = $this->config['imgur_clientid'];
         $upload = $request->file('imgur');
+        if (empty($upload['tmp_name']))
+        {
+            return false;
+        }
+
         $filename = $upload['tmp_name'];
         $handle = fopen($filename, 'r');
         $data = fread($handle, filesize($filename));
