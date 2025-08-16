@@ -20,7 +20,7 @@ class main_module
 		global $table_prefix, $phpbb_root_path, $phpEx;
 
 		$this->tpl_name = 'ucp_post_bookmarks';
-		$this->page_title = $user->lang('UCP_BOOKMARK_TITLE');
+		$this->page_title = $user->lang('UCP_POST_BOOKMARKS_TITLE');
 		add_form_key('sitesplat/bookmarkpost');
 
 		$user->add_lang('viewtopic');
@@ -65,9 +65,10 @@ class main_module
 		$phpbb_content_visibility = $phpbb_container->get('content.visibility');
 		$pagination = $phpbb_container->get('pagination');
 
-		$sql = 'SELECT COUNT(post_id) AS num_posts
-				FROM ' . $table_prefix . 'post_bookmarks
+		$sql = 'SELECT COUNT(pb.post_id) AS num_posts
+				FROM ' . $table_prefix . 'post_bookmarks pb, ' . POSTS_TABLE . ' p
 				WHERE user_id = ' . $user->data['user_id'] . '
+					AND pb.post_id = p.post_id
 					AND ' . $phpbb_content_visibility->get_visibility_sql('post', 0);
 		$result = $db->sql_query($sql);
 		$total_posts = (int) $db->sql_fetchfield('num_posts');

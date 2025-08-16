@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Allows user to bookmark a single post. Comes with a handy UCP module to review single bookmarks as well.",
     "homepage": "http://www.sitesplat.com",
-    "version": "1.0.1",
+    "version": "1.0.2",
     	"keywords": ["phpbb", "extension", "ucp", "bookmark", "cosmetic", "sitesplat"],
 	"license": "@license Proprietary",
     "authors": [
@@ -23,7 +23,7 @@
         },
 		"version-check": {
 			"host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "bookmark.json"
 		}
     }
