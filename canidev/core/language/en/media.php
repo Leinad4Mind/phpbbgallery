@@ -22,10 +22,10 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'COPY_TO_LIST'			=> 'Copy to current list',
 	'CREATE_SERVER_COPY'	=> 'Create copy on this server',
-	'DELETE_FROM_LIST'		=> 'Quitar de la lista',
+	'DELETE_FROM_LIST'		=> 'Remove from list',
 	'DELETE_ICON'			=> 'Delete icon',
 	'DELETE_IMAGE'			=> 'Delete image',
-	'DELETE_PERMANENTLY'	=> 'Eliminar permanentemente',
+	'DELETE_PERMANENTLY'	=> 'Delete permanently',
 	'ICON_PREVIEW'			=> 'Icon preview',
 	'IMAGE_DESCRIPTION'		=> 'Description',
 	'IMAGE_DETAILS'			=> 'Image details',

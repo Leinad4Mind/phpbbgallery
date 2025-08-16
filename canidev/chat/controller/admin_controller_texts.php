@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -198,8 +198,8 @@ class admin_controller_texts extends admin_controller_base
 				$this->cache->destroy('_chat_options');
 
 				$this->json->send([
-					'action'	=> 'deleteRow',
-					'rowId'		=> $text_id,
+					'action'	=> 'delete',
+					'id'		=> $text_id,
 				]);
 			break;
 			

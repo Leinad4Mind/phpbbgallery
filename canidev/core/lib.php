@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.4 26/01/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -92,16 +92,30 @@ class lib
 	 * 
 	 * @param array|string 			$valid_groups 		Valid Group's IDs
 	 * @param array|string|false 	$check_groups 		Group's IDs to check
+	 * @param int|null 				$default_group_id 	Default user group (user with $check_groups is defined)
 	 * 
 	 * @return bool
 	 */
-	public function group_auth($valid_groups, $check_groups = false)
+	public function group_auth($valid_groups, $check_groups = false, $default_group_id = null)
 	{
-		$check_groups	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
-		$check_groups	= (is_array($check_groups) ? $check_groups : explode(',', $check_groups));
-		$group_ary		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
+		if(is_string($check_groups))
+		{
+			$check_groups = explode(',', $check_groups);
+		}
+		
+		if(is_string($valid_groups))
+		{
+			if(strpos($valid_groups, 'default;') === 0)
+			{
+				$check_groups = ($check_groups === false) ? [$this->user->data['group_id']] : (($default_group_id) ? [$default_group_id] : $check_groups[0]);
+				$valid_groups = str_replace('default;', '', $valid_groups);
+			}
+		}
 
-		return ($valid_groups == 'all' || sizeof(array_intersect($group_ary, $check_groups)));
+		$check_groups 	= ($check_groups === false) ? $this->get_user_groups() : $check_groups;
+		$group_ary 		= (is_array($valid_groups) ? $valid_groups : explode(',', $valid_groups));
+
+		return ($valid_groups == 'all' || count(array_intersect($group_ary, $check_groups)));
 	}
 	
 	/**
@@ -234,6 +248,86 @@ class lib
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
 		]);
+	}
+
+	/**
+	 * Perform a request to api
+	 * 
+	 * @param string 		$namespace
+	 * @param string 		$action
+	 * @param array 		$data
+	 * 
+	 * @return array|null
+	 */
+	public function apiRequest($namespace, $action, $data = [])
+	{
+		$api 	= $this->apiData($namespace, $action, 'array');
+		$client = new \GuzzleHttp\Client();
+		$key 	= phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
+
+		if($api !== null)
+		{
+			try
+			{
+				$host = $this->request->header('HOST');
+				$host = ($host) ? $host : $this->config['server_name']; // For CLI
+
+				$response = $client->post($api['url'], [
+					'exceptions' 	=> false,
+					'timeout' 		=> 10,
+					$key			=> $data,
+					'headers' => [
+						'User-Agent' 	=> $api['agent'],
+						'X-Api-Token'	=> $api['token'],
+						'X-Api-Host'	=> $host,
+					]
+				]);
+
+				$content_type = $response->getHeader('Content-Type');
+				$content_type = is_array($content_type) ? $content_type[0] : $content_type;
+
+				if($content_type == 'application/json')
+				{
+					return array_merge(
+						[
+							'code'	=> $response->getStatusCode(),
+						],
+						json_decode($response->getBody()->getContents(), true)
+					);
+				}
+			}
+			catch(\Throwable $th) {}
+		}
+
+		return null;
+	}
+
+	public function apiData($namespace, $action, $return_key = null, $data = null)
+	{
+		$config_file 	= __DIR__ . '/config/api.php';
+		$api_url 		= sprintf('https://api.canidev.com/%s/%s', $namespace, $action);
+		$data 			= ($data === null) ? [] : $data;
+
+		if(file_exists($config_file))
+		{
+			require($config_file);
+
+			switch($return_key)
+			{
+				case 'array':
+					return [
+						'agent'		=> 'canidev-request/1.0',
+						'token'		=> $api_token,
+						'url'		=> $api_url,
+					];
+				
+				case 'url':
+					$data['token'] = $api_token;
+					return $api_url . '?' . http_build_query($data, '', '&');
+			}
+		}
+
+		return null;
 	}
 
 	/**

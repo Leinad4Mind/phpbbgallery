@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -25,13 +25,13 @@ class mcp_controller_config extends \canidev\core\controller\acp
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
-	 * @param \phpbb\log\log						$log			Log object
-	 * @param \phpbb\pagination						$pagination		Pagination object
-	 * @param \phpbb\user							$user			User object
-	 * @param string								$root_path		phpBB root path
-	 * @param string								$php_ext		phpEx
-	 * @param array 								$tables 		Chat DB Tables
+	 * @param \phpbb\db\driver\driver_interface		$db					DB Object
+	 * @param \phpbb\log\log						$log				Log object
+	 * @param \phpbb\pagination						$pagination			Pagination object
+	 * @param \phpbb\user							$user				User object
+	 * @param string								$phpbb_root_path	phpBB root path
+	 * @param string								$php_ext			phpEx
+	 * @param array 								$tables 			Chat DB Tables
 	 *
 	 * @access public
 	 */
@@ -301,7 +301,7 @@ class mcp_controller_config extends \canidev\core\controller\acp
 	/**
 	 * Exclude user
 	 * 
-	 * @param array 	$userlist
+	 * @param array 	$user_list
 	 * @param array 	$usernames
 	 * @param string 	$u_action
 	 * 

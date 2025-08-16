@@ -35,6 +35,11 @@ class base
 	 */
 	public function is_runnable()
 	{
+		if($this->name)
+		{
+			return $this->container->get('ext.manager')->is_enabled($this->name);
+		}
+		
 		return true;
 	}
 	

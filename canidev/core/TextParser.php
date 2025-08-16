@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package Ext Common Core
+ * @version 1.1.4 26/01/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -99,17 +106,23 @@ class TextParser
 		$splits = preg_split('#(</?[^>]*/?>)#', $input, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
 		$text		= '';
-		$open_tag	= false;
 		$open_tags 	= [];
+		$ignore_count = 0;
 
 		foreach($splits as $split)
 		{
 			// Open new tag
 			if(preg_match('#^<([a-zA-Z0-9]+).*>#', $split, $match))
 			{
-				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], ['img', 'br', 'hr', 'input']))
+				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], ['img', 'br', 'hr', 'input', 'source']))
 				{
 					$open_tags[] = $match[1];
+
+					// Don't cut inline attachment
+					if($ignore_count || strpos($split, 'inline-attachment') !== false)
+					{
+						$ignore_count++;
+					}
 				}
 			}
 			
@@ -117,6 +130,11 @@ class TextParser
 			if(sizeof($open_tags) && $split === "</" . end($open_tags) . ">")
 			{
 				array_splice($open_tags, -1, 1);
+
+				if($ignore_count)
+				{
+					$ignore_count--;
+				}
 			}
 
 			// Adjust the string
@@ -135,7 +153,7 @@ class TextParser
 			// If exceed the limit and no open tags finish here,
 			// and it is looking backwards to remove the tag open.
 			$check_len = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
-			if($check_len >= $limit)
+			if($check_len >= $limit && !$ignore_count)
 			{
 				// Try to cut the text before close the open tags
 				if($split[0] != '<' && $check_len > $limit)

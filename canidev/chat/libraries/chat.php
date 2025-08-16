@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -478,8 +478,8 @@ class chat
 	/**
 	 * Obtain texts and put into cache
 	 * 
-	 * @param string 	$output_type
-	 * @param bool 		$translate 		Define if language vars must be parsed
+	 * @param string|false 	$output_type
+	 * @param bool 			$translate 		Define if language vars must be parsed
 	 * 
 	 * @return array
 	 */

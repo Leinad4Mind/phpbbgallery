@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -56,7 +56,7 @@ class admin_controller_config extends admin_controller_base
 		$display_vars = [
 			'legend1'			=> 'CHAT_MAIN_CONFIG',
 			'chat_page_enabled'			=> ['lang' => 'CHAT_PAGE_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'],
-			'chat_forum_posts'			=> ['lang' => 'CHAT_FORUM_POSTS',			'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$options['forum_posts'], '{KEY}', '{CONFIG_VALUE}']],
+			'chat_forum_posts'			=> ['lang' => 'CHAT_FORUM_POSTS',			'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$options['forum_posts'], '{KEY}', '{CONFIG_VALUE}']],
 			'chat_autoconnect'			=> ['lang' => 'CHAT_AUTOCONNECT',			'validate' => 'bool',		'type' => 'radio:yes_no'],
 			'chat_anonymous_allowed'	=> ['lang' => 'CHAT_ANONYMOUS_ALLOWED',		'validate' => 'bool',		'type' => 'radio:yes_no'],
 			'chat_sound'				=> ['lang' => 'CHAT_SOUND_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'],
@@ -72,15 +72,15 @@ class admin_controller_config extends admin_controller_base
 			'chat_group_users'			=> ['lang' => 'CHAT_GROUP_USERS',			'validate' => 'bool',		'type' => 'radio:yes_no'],
 		
 			'legend3'			=> 'CHAT_MESSAGES_CONFIG',
-			'chat_direction'			=> ['lang' => 'CHAT_DIRECTION',				'validate' => 'string',		'type' => 'custom',	'function' => [$this->tools, 'make_select'],	'params' => [$options['direction'], '{KEY}', '{CONFIG_VALUE}']],
+			'chat_direction'			=> ['lang' => 'CHAT_DIRECTION',				'validate' => 'string',		'type' => 'custom',	'function' => ['tools', 'make_select'],	'params' => [$options['direction'], '{KEY}', '{CONFIG_VALUE}']],
 			'chat_max_rows'				=> ['lang' => 'CHAT_ROWS',					'validate' => 'int:1:100',	'type' => 'number:1:100'],
 			'chat_max_chars'			=> ['lang' => 'CHAT_CHARS',					'validate' => 'int',		'type' => 'number'],
-			'chat_row_align'			=> ['lang' => 'CHAT_ROW_ALIGN',				'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$options['row_align'], '{KEY}', '{CONFIG_VALUE}']],
-			'chat_row_format'			=> ['lang' => 'CHAT_ROW_FORMAT',			'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$options['row_format'], '{KEY}', '{CONFIG_VALUE}']],
+			'chat_row_align'			=> ['lang' => 'CHAT_ROW_ALIGN',				'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$options['row_align'], '{KEY}', '{CONFIG_VALUE}']],
+			'chat_row_format'			=> ['lang' => 'CHAT_ROW_FORMAT',			'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$options['row_format'], '{KEY}', '{CONFIG_VALUE}']],
 			'chat_show_avatars'			=> ['lang' => 'CHAT_AVATARS',				'validate' => 'bool',		'type' => 'radio:yes_no'],
 			'chat_allow_bbcode'			=> ['lang' => 'CHAT_ALLOW_BBCODE',			'validate' => 'bool',		'type' => 'radio:yes_no'],
-			'chat_disallowed_bbcode'	=> ['lang' => 'CHAT_DISALLOWED_BBCODE',		'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', tools::SELECT_PARSE_LANG | tools::SELECT_MULTIPLE]],
-			'chat_bbcode_format'		=> ['lang' => 'CHAT_BBCODE_FORMAT',			'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}']],
+			'chat_disallowed_bbcode'	=> ['lang' => 'CHAT_DISALLOWED_BBCODE',		'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', tools::SELECT_PARSE_LANG | tools::SELECT_MULTIPLE]],
+			'chat_bbcode_format'		=> ['lang' => 'CHAT_BBCODE_FORMAT',			'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}']],
 		
 			'legend4'		=> 'CHAT_PM_CONFIG',
 			'chat_allow_pm'			=> ['lang' => 'CHAT_ALLOW_PM',			'validate' => 'bool',			'type' => 'radio:yes_no'],

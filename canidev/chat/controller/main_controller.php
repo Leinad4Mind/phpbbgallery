@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -413,7 +413,6 @@ class main_controller
 				]);	
 				
 				return $this->helper->render('archive_body.html', $this->language->lang('CHAT_ARCHIVE'));
-			break;
 			
 			case 'chat':
 			default:
@@ -433,7 +432,6 @@ class main_controller
 				]);
 
 				return $this->helper->render('chat_body.html', $this->language->lang('CHAT'));
-			break;
 		}
 	}
 }

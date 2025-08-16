@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -129,8 +129,8 @@ class action_manager
 	/**
 	 * Check user auth
 	 * 
-	 * @param string 	$auth_option 	Auth option name
-	 * @param array 	$data 			Object data
+	 * @param string 		$auth_option 	Auth option name
+	 * @param array|false 	$data 			Object data
 	 * 
 	 * @return bool
 	 */
@@ -482,6 +482,10 @@ class action_manager
 					
 					$this->user_data = array_merge($this->user_data, $update_ary);
 				}
+
+				$this->add_to_queue([
+					'action'	=> 'connect',
+				]);
 
 				if($action == 'connect_on_post')
 				{
@@ -1315,7 +1319,7 @@ class action_manager
 						]);
 						
 						// Add log
-						$parse_flags	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+						$parse_flags	= ($message_row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 						$message 		= generate_text_for_display($message_row['message_text'], $message_row['bbcode_uid'], $message_row['bbcode_bitfield'], $parse_flags, true);
 					
 						$this->log->add(
@@ -1413,9 +1417,9 @@ class action_manager
 	/**
 	 * Generate chat userlist
 	 * 
-	 * @param array 		$row_users
-	 * @param array			$user_cache
-	 * @param int|false 	$room_key
+	 * @param array 			$row_users
+	 * @param array|false		$user_cache
+	 * @param int|false 		$room_key
 	 */
 	private function generate_userlist($row_users, $user_cache = false, $room_key = false)
 	{
@@ -1454,7 +1458,7 @@ class action_manager
 			
 			// If is public room, only show the users can see the room
 			if($room_key != constants::GUEST_ROOM && isset($row['user_groups']) && isset($this->room_ary[$room_key]) &&
-				(!$this->core->group_auth($this->room_ary[$room_key]['room_data']['groups'], $row['user_groups']) && !isset($this->room_ary[$room_key]['room_data']['users'][$row['user_id']])))
+				(!$this->core->group_auth($this->room_ary[$room_key]['room_data']['groups'], $row['user_groups'], $row['group_id']) && !isset($this->room_ary[$room_key]['room_data']['users'][$row['user_id']])))
 			{
 				continue;
 			}
@@ -2180,7 +2184,7 @@ class action_manager
 						'U_TOPIC_EDIT'		=> ($edit_allowed) ? append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=edit&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['topic_first_post_id']) : '',
 					];
 
-					$topic_row 	= new DummyArray($ary);
+					$topic_row 	= DummyArray::fill($ary, DummyArray::TOPICROW_KEYS);
 					$row 		= new DummyArray($row);
 					$s_type_switch = $s_type_switch_test = 0;
 
@@ -2188,15 +2192,15 @@ class action_manager
 					 * Compatibility with other extensions
 					 *
 					 * @event core.viewforum_modify_topicrow
-					 * @var	array			row						Array with topic data
-					 * @var	DummyArray		topic_row				Template array with topic data
+					 * @var	DummyArray		row						Array with topic data
+					 * @var	array			topic_row				Template array with topic data
 					 * @var	bool			s_type_switch			Flag indicating if the topic type is [global] announcement
 					 * @var	bool			s_type_switch_test		Flag indicating if the test topic type is [global] announcement
 					 */
 					$vars = ['row', 'topic_row', 's_type_switch', 's_type_switch_test'];
 					extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
-					$ary = is_array($topic_row) ? $topic_row : $topic_row->getArrayCopy();
+					$ary = $topic_row;
 				}
 				else
 				{

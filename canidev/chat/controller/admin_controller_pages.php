@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -11,7 +11,7 @@ namespace canidev\chat\controller;
 
 class admin_controller_pages extends admin_controller_base
 {
-	protected $exclude_files = ['app', 'chat', 'common', 'config', 'cron', 'feed', 'report'];
+	protected $exclude_files = ['app', 'chat', 'common', 'config', 'cron', 'faq', 'feed', 'report'];
 
 	/**
 	 * {@inheritDoc}
@@ -53,12 +53,12 @@ class admin_controller_pages extends admin_controller_base
 
 				$display_vars = [
 					'legend1'		=> 'CHAT_PAGE_CONFIG',
-					'page_file'			=> ['lang' => 'CHAT_PAGE_FILE',		'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$this->page_file_options(), '{KEY}', '{CONFIG_VALUE}']],
+					'page_file'			=> ['lang' => 'CHAT_PAGE_FILE',		'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$this->page_file_options(), '{KEY}', '{CONFIG_VALUE}']],
 					'custom_file'		=> ['lang' => 'CHAT_PAGE_CUSTOM',	'validate' => 'string',		'type' => 'text:40:255',	'display' => false],
 					'page_alias'		=> ['lang' => 'CHAT_PAGE_ALIAS',	'validate' => 'string',		'type' => 'text:40:50',		'display' => false],
-					'chat_position'		=> ['lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$position_options, '{KEY}', '{CONFIG_VALUE}']],
+					'chat_position'		=> ['lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$position_options, '{KEY}', '{CONFIG_VALUE}']],
 					'chat_height'		=> ['lang' => 'CHAT_HEIGHT_PAGE',	'validate' => 'int:0:800',	'type' => 'text:4:3'],
-					'forum_ids'			=> ['lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE],	'display' => false],
+					'forum_ids'			=> ['lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE],	'display' => false],
 				];
 				
 				if($this->action == 'add')
@@ -225,8 +225,8 @@ class admin_controller_pages extends admin_controller_base
 				$this->cache->destroy('_chat_options');
 
 				$this->json->send([
-					'action'	=> 'deleteRow',
-					'rowId'		=> $page_id,
+					'action'	=> 'delete',
+					'id'		=> $page_id,
 				]);
 			break;
 			
@@ -305,13 +305,13 @@ class admin_controller_pages extends admin_controller_base
 			if(sizeof($file_ary))
 			{
 				asort($file_ary);
-				$ary = array_merge($ary, ['legend1' => 'FORUM_FILES'], $file_ary);
+				$ary = array_merge($ary, ['legend1' => 'FORUM_ROUTES'], $file_ary);
 			}
 		}
 		
 		$ary = array_merge($ary, [
-			'legend2'	=> 'CUSTOM_FILES',
-			'-'			=> 'CUSTOM_FILE',
+			'legend2'	=> 'CUSTOM_ROUTES',
+			'-'			=> 'CUSTOM_ROUTE',
 		]);
 		
 		return $ary;

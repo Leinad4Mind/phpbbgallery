@@ -24,14 +24,14 @@
 
 {% else %}
 
-{% for textrow in loops.textrow %}
-	<h1>{{ textrow.S_LEGEND }}</h1>
-	<p>{{ textrow.S_EXPLAIN }}</p>
+{% for text in textrow %}
+	<h1>{{ text.S_LEGEND }}</h1>
+	<p>{{ text.S_EXPLAIN }}</p>
 			
 	<table cellspacing="1">
-		<tr><th>{{ textrow.S_LEGEND }}</th></tr>
+		<tr><th>{{ text.S_LEGEND }}</th></tr>
 			
-	{% if textrow.S_IS_EMPTY %}
+	{% if text.S_IS_EMPTY %}
 		<tr>
 			<td class="row3">{{ lang('NO_TEXTS') }}</td>
 		</tr>
@@ -40,13 +40,13 @@
 			<td class="sortable-text">
 			<ul>
 				
-			{% for item in textrow.item %}
-				<li id="row{{ item.S_ID }}">
+			{% for item in text.item %}
+				<li data-row-id="{{ item.S_ID }}">
 					<table><tr>
 						<td>{{ item.S_CONTENT }}</td>
 						<td class="actions-col-2">
 							<a href="{{ item.U_EDIT }}">{{ ICON_EDIT }}</a>
-							<a href="{{ item.U_DELETE }}" class="js-chat-action">{{ ICON_DELETE }}</a>
+							<a href="{{ item.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>
 						</td>
 					</tr></table>
 					<input type="hidden" name="row[]" value="{{ item.S_ID }}" />
@@ -58,7 +58,7 @@
 		</tr>
 	{% endif %}
 	</table>
-	{% if textrow.S_BUTTON_TITLE %}<p class="quick"><a class="cbb-btn" href="{{ textrow.U_ADD }}">{{ textrow.S_BUTTON_TITLE }}</a></p>{% endif %}
+	{% if text.S_BUTTON_TITLE %}<p class="quick"><a class="cbb-btn" href="{{ text.U_ADD }}">{{ text.S_BUTTON_TITLE }}</a></p>{% endif %}
 	<br />
 {% endfor %}
 

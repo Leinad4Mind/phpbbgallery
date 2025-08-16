@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -71,11 +71,7 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 	{
 		$this->language->add_lang(['acp', 'main'], 'canidev/chat');
 		
-		$this->page_header('cbb-chat', $this->config['chat_version']);
-		
-		$this->template->assign_vars([
-			'IN_CHAT_ADMIN'		=> true,
-		]);
+		$this->pageHeader('canidev/chat');
 
 		// Load assets
 		$this->template->append_asset('css', '@canidev_chat/acp.css', false, 'admin');

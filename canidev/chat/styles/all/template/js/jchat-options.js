@@ -9,10 +9,6 @@
 
 var jchat_style_options = {
 	positions: {
-		faq: {
-			top		: ['#faqlinks', 'before'],
-			bottom	: ['.panel:last', 'after']
-		},
 		index: {
 			top		: ['.action-bar:first', 'after'],
 			bottom	: ['.forabg:has(.forumtitle):last', 'after']

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.4 26/01/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -11,7 +11,7 @@ namespace canidev\core;
 
 class Dom
 {
-	static $selfclosing_tags = 'img|br|hr|input|iframe';
+	static $selfclosing_tags = 'img|br|hr|input|iframe|source';
 
 	/**
 	 * Convert array in string with html attributes
@@ -44,6 +44,26 @@ class Dom
 	}
 
 	/**
+	 * Convert string with html attributes into array
+	 * 
+	 * @param string 	$string
+	 * @return array
+	 */
+	public static function attrToArray($string)
+	{
+		$attributes = [];
+
+		preg_match_all('#([\w\d\-]+)(="([^"]*)")?#', $string, $matches, PREG_SET_ORDER);
+
+		foreach($matches as $match)
+		{
+			$attributes[$match[1]] = ($match[2]) ? $match[3] : true;
+		}
+
+		return $attributes;
+	}
+
+	/**
 	 * Load xml string
 	 * 
 	 * @param string 	$string 		Text to be load
@@ -52,9 +72,6 @@ class Dom
 	public static function loadXML($string)
 	{
 		$dom 	= new \DOMDocument('1.0', 'utf-8');
-
-		$string = preg_replace('#(<(' . self::$selfclosing_tags . ')[^>]*)(?<!/)>(</\\2>)?#i', '$1 />', $string);
-		$string = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $string);
 		$flags 	= \LIBXML_NOCDATA | \LIBXML_NOWARNING | \LIBXML_NOERROR;
 
 		if(LIBXML_VERSION >= 20700)
@@ -62,12 +79,37 @@ class Dom
 			$flags |= \LIBXML_PARSEHUGE;
 		}
 	
-		if(!$dom->loadXML('<div>' . $string . '</div>', $flags))
+		if(!$dom->loadXML('<div>' . self::prepareXML($string) . '</div>', $flags))
 		{
 			return false;
 		}
 
 		return $dom;
+	}
+
+	/**
+	 * Prepare raw XML to be processed by PHP Dom classes
+	 * 
+	 * @param string 		$string 		Raw XML
+	 * @return string
+	 */
+	public static function prepareXML($string)
+	{
+		$string = preg_replace('#(<(' . self::$selfclosing_tags . ')[^>]*)(?<!/)>(</\\2>)?#i', '$1 />', $string);
+		$string = preg_replace('/(<(?:audio|video)[^>]+controls) /', '$1="true" ', $string);
+
+		$string = preg_replace_callback(
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
+			function($m)
+			{
+				return html_entity_decode($m[0], \ENT_HTML5 | \ENT_NOQUOTES, 'UTF-8');
+			},
+			str_replace('&AMP;', '&amp;', $string)
+		);
+
+		$string = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $string);
+
+		return $string;
 	}
 	
 	/**
@@ -128,25 +170,43 @@ class Dom
 	/**
 	 * Check if a node or their parents math with specific node name
 	 * 
-	 * @param \DomNode 			$node 		Node to be checked
-	 * @param array|string 		$node_name 	Match node name
+	 * @param \DomElement 		$node 		Node to be checked
+	 * @param array|string 		$selector 	Match node name or class
 	 * @return bool
 	 */
-	public static function nodeClosest($node, $node_name)
+	public static function nodeClosest($node, $selector)
 	{
-		if(!is_array($node_name))
+		if(!is_array($selector))
 		{
-			$node_name = [$node_name];
+			$selector = [$selector];
 		}
 
-		if(in_array($node->nodeName, $node_name))
+		if($node->nodeType == XML_ELEMENT_NODE)
 		{
-			return true;
+			foreach($selector as $s)
+			{
+				// Class selector
+				if(substr($s, 0, 1) == '.')
+				{
+					if(strpos($node->getAttribute('class'), substr($s, 1)) !== false)
+					{
+						return true;
+					}
+					
+					continue;
+				}
+
+				// Name selector
+				if($node->nodeName == $s)
+				{
+					return true;
+				}
+			}
 		}
 		
 		if($node->parentNode !== null)
 		{
-			return self::nodeClosest($node->parentNode, $node_name);
+			return self::nodeClosest($node->parentNode, $selector);
 		}
 		
 		return false;
@@ -186,7 +246,7 @@ class Dom
 	 */
 	public static function load_xml($string)
 	{
-		static::loadXML($string);
+		return static::loadXML($string);
 	}
 
 	/**

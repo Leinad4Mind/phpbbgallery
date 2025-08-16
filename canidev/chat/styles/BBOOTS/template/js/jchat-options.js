@@ -9,10 +9,6 @@
 
 var jchat_style_options = {
 	positions: {
-		faq: {
-			top		: ['h3:first', 'after'],
-			bottom	: ['main > .row:last', 'before']
-		},
 		index: {
 			top		: ['.panel:first', 'before'],
 			bottom	: ['.panel:not(#chat-body):last', 'after']

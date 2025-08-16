@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -57,8 +57,8 @@ class admin_controller_rooms extends admin_controller_base
 							$this->cache->destroy('_chat_options');
 				
 							$this->json->send([
-								'action'	=> 'deleteRow',
-								'rowId'		=> $room_id,
+								'action'	=> 'delete',
+								'id'		=> $room_id,
 							]);
 						}
 					}
@@ -83,8 +83,8 @@ class admin_controller_rooms extends admin_controller_base
 				}
 				
 				$room_auth = @unserialize($room_data['room_data']);
-				
-				$room_data['room_groups']	= (empty($room_auth['groups']) ? [] : $room_auth['groups']);
+
+				$room_data['room_groups'] 	= $room_auth['groups'];
 				$room_data['room_users']	= (empty($room_auth['users']) ? '' : implode("\n", $room_auth['users']));
 				$room_data['linked_forums']	= (empty($room_auth['linked_forums']) ? [] : $room_auth['linked_forums']);
 				$room_data['linked_groups']	= (empty($room_auth['linked_groups']) ? [] : $room_auth['linked_groups']);
@@ -106,7 +106,7 @@ class admin_controller_rooms extends admin_controller_base
 					'legend1'		=> 'CHAT_ROOM_CONFIG',
 					'room_title'			=> ['lang' => 'CHAT_ROOM_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
 					'room_enabled'			=> ['lang' => 'CHAT_ROOM_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'],
-					'room_autopurge_time'	=> ['lang' => 'CHAT_ROOM_AUTOPURGE',	'validate' => 'int',			'type' => 'custom',				'function' => [$this->tools, 'make_select'],	'params' => [$autopurge_options, '{KEY}', '{CONFIG_VALUE}']],
+					'room_autopurge_time'	=> ['lang' => 'CHAT_ROOM_AUTOPURGE',	'validate' => 'int',			'type' => 'custom',				'function' => ['tools', 'make_select'],	'params' => [$autopurge_options, '{KEY}', '{CONFIG_VALUE}']],
 					'room_msg_limit'		=> ['lang' => 'CHAT_ROOM_MSG_LIMIT',	'validate' => 'int:0:99999',	'type' => 'number:0:99999',		'default' => 0],
 				];
 				
@@ -114,15 +114,15 @@ class admin_controller_rooms extends admin_controller_base
 				{
 					$display_vars += [
 						'legend2'		=> 'CHAT_ROOM_AUTH',
-						'room_groups'	=> ['lang' => 'CHAT_ROOM_GROUPS',	'type' => 'custom',	'function' => [$this->tools, 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+						'room_groups'	=> ['lang' => 'CHAT_ROOM_GROUPS',	'type' => 'custom',	'function' => ['tools', 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}']],
 						'room_users'	=> ['lang' => 'CHAT_ROOM_USERS',	'type' => 'textarea:5:5'],
 					];
 				}
 				
 				$display_vars += [
 					'legend3'		=> 'CHAT_ROOM_CONNECTIONS',
-					'linked_forums'	=> ['lang' => 'CHAT_ROOM_LINKED_FORUMS',	'type' => 'custom',	'function' => [$this->tools, 'make_select'],		'params' => [$this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE]],
-					'linked_groups'	=> ['lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => [$this->tools, 'groups_select'],		'params' => ['{KEY}', '{CONFIG_VALUE}', false],	'display' => ($room_id != constants::GUEST_ROOM)],
+					'linked_forums'	=> ['lang' => 'CHAT_ROOM_LINKED_FORUMS',	'type' => 'custom',	'function' => ['tools', 'make_select'],		'params' => [$this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE]],
+					'linked_groups'	=> ['lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => ['tools', 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}', false],	'display' => ($room_id != constants::GUEST_ROOM)],
 				];
 				
 				// Guest room have different use for forums
@@ -158,7 +158,7 @@ class admin_controller_rooms extends admin_controller_base
 				if($this->submit)
 				{
 					$this->new_config = $this->request->variable('config', ['' => ''], true);
-					$this->new_config['room_groups']	= ($this->request->is_set_post('all_groups_room_groups')) ? 'all' : $this->request->variable('room_groups', [0]);
+					$this->new_config['room_groups'] 	= $this->tools->groups_select_submit('room_groups');
 					$this->new_config['linked_forums']	= $this->request->variable('linked_forums', [0]);
 					$this->new_config['linked_groups']	= $this->request->variable('linked_groups', [0]);
 					
@@ -337,7 +337,6 @@ class admin_controller_rooms extends admin_controller_base
 		}
 		
 		$this->template->assign_vars([
-			'IN_CHAT_ADMIN'		=> true,
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
 		]);

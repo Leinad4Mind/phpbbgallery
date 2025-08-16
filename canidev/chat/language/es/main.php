@@ -2,9 +2,9 @@
 /**
  * [Spanish [Es]]
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -69,18 +69,10 @@ $lang = array_merge($lang, [
 
 	'CUSTOM_DATE'		=> 'Fecha personalizada',
 	'EDIT'				=> 'Editar',
+	'HALF_AN_HOUR'		=> 'Media hora',
 	'NEW_TOPIC'			=> 'Nuevo Tema',
 	'PERMANENT'			=> 'Permanente',
 	'QUOTE'				=> 'Citar',
-	
-	'HALF_AN_HOUR'	=> 'Media hora',
-	'NO_LIMIT'		=> 'Sin límite',
-	'ONE_DAY'		=> 'Un día',
-	'ONE_HOUR'		=> 'Una hora',
-	'ONE_WEEK'		=> 'Una semana',
-	'ONE_MONTH'		=> 'Un mes',
-	'ONE_YEAR'		=> 'Un año',
-	'TWO_YEARS'		=> 'Dos años',
 
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
 		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',

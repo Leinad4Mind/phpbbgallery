@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -405,6 +405,7 @@ a.chat-quickmention {
 
 #chat-toolbar li {
 	margin: 3px 1px 0 8px;
+	padding: 0;
 	overflow: hidden;
 }
 

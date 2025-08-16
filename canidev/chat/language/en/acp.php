@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB Chat
- * @version 1.2.5 20/09/2023
+ * @version 1.2.6 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -176,10 +176,10 @@ $lang = array_merge($lang, [
 	'ADD_ROOM'					=> 'Add room',
 	'CONTENT'					=> 'Content',
 	'CUSTOM_BBCODES'			=> 'Custom BBcodes',
-	'CUSTOM_FILE'				=> 'Custom file',
-	'CUSTOM_FILES'				=> 'Custom files',
+	'CUSTOM_ROUTE'				=> 'Custom route',
+	'CUSTOM_ROUTES'				=> 'Custom routes',
 	'DEFAULT_BBCODES'			=> 'Default BBcodes',
-	'FORUM_FILES'				=> 'Forum files',
+	'FORUM_ROUTES'				=> 'Forum routes',
 	'NO_PAGES'					=> 'No available pages',
 	'NO_ROOM'					=> 'The selected room no exists',
 	'NO_TEXTS'					=> 'No available texts',

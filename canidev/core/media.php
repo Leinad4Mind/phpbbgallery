@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.3 20/10/2023
+ * @version 1.1.4 26/01/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -386,11 +386,11 @@ class Media
 					// Resize uploaded image
 					if($this->options['imageMaxWidth'] && $this->options['imageMaxHeight'] && in_array($extension, ['jpg', 'png', 'gif', 'webp']))
 					{
-						$image_parser = new ImageParser;
+						$image = new Image($filename);
 
-						$image_parser
-							->setResizeLimit($this->options['imageMaxWidth'], $this->options['imageMaxHeight'])
-							->parse($filename, (($extension == 'jpg') ? 'jpeg' : $extension), ImageParser::RESIZE);
+						$image
+							->resize($this->options['imageMaxWidth'], $this->options['imageMaxHeight'])
+							->save();
 					}
 
 					list($this->params['width'], $this->params['height']) = $this->getImagesize($filename, $extension);
