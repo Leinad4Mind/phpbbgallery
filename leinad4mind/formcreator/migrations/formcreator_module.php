@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Form Maker/Creator
-* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbreland.com
+* @copyright (c) 2017 dmzx - https://www.dmzx-web.net & michaelo - https://www.phpbbireland.com
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
