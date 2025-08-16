@@ -46,4 +46,23 @@ class ext extends \phpbb\extension\base
 
 		return trim(utf8_substr($str, 0, 1)) . utf8_substr($str, 1, -1) . trim(utf8_substr($str, -1, 1));
 	}
+
+	public static function split($value, $token = '=>')
+	{
+		$token = htmlspecialchars($token, ENT_COMPAT);
+
+		$pos = utf8_strpos($value, $token);
+
+		if ($pos === false)
+		{
+			return [$value, $value];
+		}
+
+		$token_length = utf8_strlen($token);
+
+		return [
+			utf8_substr($value, 0, $pos),
+			utf8_substr($value, $pos + $token_length),
+		];
+	}
 }

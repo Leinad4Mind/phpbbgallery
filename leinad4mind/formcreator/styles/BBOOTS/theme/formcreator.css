@@ -10,7 +10,8 @@
 pre {
 	font-family: Consolas, monospace;
 	font-size: 1em;
-	overflow: auto
+	overflow: auto;
+	min-height: 18px;
 }
 
 .fbox {

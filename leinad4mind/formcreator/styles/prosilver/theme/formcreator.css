@@ -6,17 +6,12 @@
 	margin-left: 17.5em;
 	text-align:left;
 }
-.form_chk_msg {
-	margin-top: -2px;
-	margin-bottom: 20px;
-	margin-left: 17.5em;
-	text-align:left;
-}
 
 pre {
 	font-family: Consolas, monospace;
 	font-size: 1em;
-	overflow: auto
+	overflow: auto;
+	min-height: 18px;
 }
 
 .fbox {

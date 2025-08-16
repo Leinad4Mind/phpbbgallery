@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Create forms to collect data from you members in any forum (one form per forum)",
 	"homepage": "https://www.leinad4mind.top/forum",
-	"version": "2.2.1",
-	"time": "2019-06-30",
+	"version": "2.2.3",
+	"time": "2019-07-01",
 	"keywords": ["phpbb", "extension", "formcreator"],
 	"license": "GPL-2.0",
 	"authors": [

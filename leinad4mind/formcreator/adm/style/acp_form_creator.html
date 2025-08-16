@@ -102,7 +102,7 @@
 				</td>
 				<td class="td_02">
 					<input style="width:97%" type="text" name="q_name[{{ form_template.ID }}]" value="{{ form_template.NAME }}" placeholder="{{ lang('FORM_ELEMENT_NAME') }}">
-					<input style="width:97%" type="text" name="q_explain[{{ form_template.ID }}]" value="{{ form_template.EXPLAIN }}" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">
+					<textarea style="width:97%" name="q_explain[{{ form_template.ID }}]" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">{{ form_template.EXPLAIN }}</textarea>
 					<input style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
 				</td>
 				<td class="td_02">
@@ -198,7 +198,7 @@
 				</td>
 				<td class="td_pad">
 					<input style="width:97%" type="text" name="name" value="" placeholder="{{ lang('FORM_ELEMENT_NAME') }}"><br>
-					<input style="width:97%" type="text" name="explanation" value="" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">
+					<textarea style="width:97%" name="explanation" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}"></textarea>
 					<input style="width:97%" type="text" name="hint" value="" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
 				</td>
 				<td class="td_pad">

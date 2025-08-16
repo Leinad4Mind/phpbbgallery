@@ -46,8 +46,8 @@ $lang = array_merge($lang, [
 	'OPEN_FORM_EXPLAIN'			=> 'Switch to Form Mode...',
 	'REFRESHING_FORM'			=> 'The current selected Forum is',
 	'REQUIRED'				 	=> 'You have not entered all the required elements!',
-	'CHECKBOX_MSG'				=> 'Checkboxes marked as Mandatory, require all elements to be checked (HTML5 Form Validation).',
 	'MANDATORY'					=> 'Items marked with the asterisk are mandatory.',
 
-	'ERROR_MIN_MAX_CHECKBOX'	=> 'You need select between %d and %d items for %s',
+	'ERROR_MANDATORY'			=> 'The field %s is mandatory.',
+	'ERROR_MIN_MAX_CHECKBOX'	=> 'You need to select between %d and %d items for %s.',
 ]);

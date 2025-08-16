@@ -197,7 +197,7 @@ class listener implements EventSubscriberInterface
 			$name			= ' name="' . $clean_name . '"';
 			$name_array		= ' name="' . $clean_name . '[]"';
 			$id				= ' id="' . $clean_name . '"';
-			$placeholder	= ' placeholder="' . $row['hint'] . '"';
+			$placeholder	= ' placeholder="' . $this->translate($row['hint']) . '"';
 			$tabindex		= ' tabindex="' . ($row['ndx_order'] + 10) . '"';
 			$type			= ' type="' . $row['type'] . '"';
 			$size			= ' size="40"';
@@ -230,13 +230,21 @@ class listener implements EventSubscriberInterface
 
 				case 'selectbox':
 					$entry = '<div class="row"><div class="col-xs-12 col-lg-8"><select'. $type . $name . $id . $tabindex . $mandatory . $class . '>';
-					$entry .= '<option value="">----------------</option>';
+					if(empty($row['hint'])) {
+						$entry .= '<option value="">----------------</option>';
+					}
+					else {
+						$entry .= '<option value="">' . $row['hint'] . '</option>' ;
+					}
 					$select_option = ext::explode([',', "\n"], $row['options']);
 					$select_option = array_map('trim', $select_option);
 					$selected = $this->request->variable($clean_name, '');
 					foreach ($select_option as $value)
 					{
-						 $entry .= '<option value="' . $value . '"' . ($value == $selected ? ' selected' : '') . '>' . $value . '</option>';
+						list($form_value, $output_value) = ext::split($value);
+						$form_value = $this->translate($form_value);
+						$output_value = $this->translate($output_value);
+					 	$entry .= '<option value="' . $output_value . '"' . ($output_value == $selected ? ' selected' : '') . '>' . $form_value . '</option>';
 					}
 					$entry .= '</select></div></div>';
 				break;
@@ -247,7 +255,10 @@ class listener implements EventSubscriberInterface
 					$checked = $this->request->variable($clean_name, '');
 					foreach ($radio_option as $value)
 					{
-						$entry .= '<label><input type="radio"' . $tabindex . $mandatory . $name . $id . ' value="' . $value . '"' . ($value == $checked ? ' checked' : '') . '>&nbsp;' . $value . '&nbsp;&nbsp;</label>';
+						list($form_value, $output_value) = ext::split($value);
+						$form_value = $this->translate($form_value);
+						$output_value = $this->translate($output_value);
+						$entry .= '<label><input type="radio"' . $tabindex . $mandatory . $name . $id . ' value="' . $output_value . '"' . ($output_value == $checked ? ' checked' : '') . '>&nbsp;' . $form_value . '&nbsp;&nbsp;</label>';
 					}
 				break;
 
@@ -257,8 +268,10 @@ class listener implements EventSubscriberInterface
 					$checked = $this->request->variable($clean_name, [0 => '']);
 					foreach ($check_option as $value)
 					{
-						$entry .= '<label><input' . $type . $tabindex . $name_array . $id . ' value="'. $value .'"' . (in_array($value, $checked) ? ' checked' : '') . '>&nbsp;' . $value . '&nbsp;&nbsp;</label>';
+						list($form_value, $output_value) = ext::split($value);
+						$entry .= '<label><input' . $type . $tabindex . $name_array . $id . ' value="' . $output_value . '"' . (in_array($output_value, $checked) ? ' checked' : '') . '>&nbsp;' . $form_value . '&nbsp;&nbsp;</label>';
 					}
+					$row['mandatory'] = (bool) $row['min_value'];
 				break;
 
 				default:
@@ -272,24 +285,18 @@ class listener implements EventSubscriberInterface
 			$parser = $phpbb_container->get('text_formatter.parser');
 
 			$this->template->assign_block_vars('form_creator_template', [
-				'ID'			=> $row['id'],
-				'NDX_ORDER' 	=> $row['ndx_order'],
-				'NAME'			=> $row['name'],
-				'NAME_RICH'		=> $renderer->render($parser->parse($row['name'])),
-				'NAME_VISIBLE'	=> $row['name_visible'],
-				'EXPLAIN'		=> $row['explanation'],
 				'CLEAN_NAME'	=> $clean_name,
-				'HINT'			=> $row['hint'],
-				'OPTIONS'		=> $row['options'],
+				'NAME_RICH'		=> $renderer->render($parser->parse($this->translate($row['name']))),
+				'EXPLAIN'		=> $renderer->render($parser->parse($this->translate($row['explanation']))),
 				'ENTRY'			=> $entry,
 				'MANDATORY' 	=> $row['mandatory'] ? '<span class="mandatory">*</span>' : '',
 			]);
 
 			$this->template->assign_vars([
-				'MODE'			=> $mode,
+				'MODE'				=> $mode,
 				'S_FORM_CREATOR'	=> true,
-				'S_SHOW_FORM'	=> !$this->request->is_set_post('preview') && $row['forum_show_form'] || $this->request->is_set_post('form_creator_preview'),
-				'S_FORCE_FORM'	=> $row['forum_force_form'],
+				'S_SHOW_FORM'		=> !$this->request->is_set_post('preview') && $row['forum_show_form'] || $this->request->is_set_post('form_creator_preview'),
+				'S_FORCE_FORM'		=> $row['forum_force_form'],
 			]);
 		}
 		$this->db->sql_freeresult($result);
@@ -346,11 +353,19 @@ class listener implements EventSubscriberInterface
 					case 'url':
 					case 'text':
 					case 'textbox':
-					case 'selectbox':
-					case 'radiobuttons':
 					case 'date':
 					case 'time':
 						$value = $this->request->variable($name, '', true);
+						$appform_post .= $this->create_form_element($row, $value, $value);
+					break;
+
+					case 'selectbox':
+					case 'radiobuttons':
+						$value = $this->request->variable($name, '', true);
+						if ($value === '')
+						{
+							$errors[] = $this->user->lang('ERROR_MANDATORY', $this->get_clean_name($row['name']));
+						}
 						$appform_post .= $this->create_form_element($row, $value, $value);
 					break;
 
@@ -396,7 +411,10 @@ class listener implements EventSubscriberInterface
 		{
 			if ($element['name_visible'])
 			{
-				$content .= (ext::trim_once($element['name_before']) ?: '[form][b]') . $this->get_clean_name($element['name']) . (ext::trim_once($element['name_after']) ?: ':[/b][/form]');
+				if(!empty($element['name']))
+					$content .= (ext::trim_once($element['name_before']) ?: '[form][b]') . $this->translate($this->get_clean_name($element['name'])) . (ext::trim_once($element['name_after']) ?: ':[/b][/form]');
+				else
+					$content .= (ext::trim_once($element['name_before']) ?: '[form][b]') . $this->translate($this->get_clean_name($element['name'])) . (ext::trim_once($element['name_after']) ?: '[/b][/form]');
 			}
 
 			$content .= ext::trim_once($element['value_before']) ?: ('[' . $container . ']');
@@ -413,4 +431,8 @@ class listener implements EventSubscriberInterface
 		return trim($name);
 	}
 
+	private function translate($text)
+	{
+		return $this->user->lang($text);
+	}
 }

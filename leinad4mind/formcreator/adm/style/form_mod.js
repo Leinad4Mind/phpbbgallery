@@ -19,7 +19,7 @@ function Hide(id)
 	$('#' + id).hide();
 }
 
-function ShowHide(id1, id2)
+function ShowHide(id1)
 {
 	$('#' + id1).toggle();
 }

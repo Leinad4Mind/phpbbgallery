@@ -80,10 +80,10 @@ $lang = array_merge($lang, [
 									&nbsp; &bull; Really? This his the question on the form. The text before the input field. And that text can or not be imported to the final post.<br>
 									<br>
 									<strong>What is Entry Explain?</strong><br>
-									&nbsp; &bull; This is an optional field, if you fill it, it will appear below the Entry Name on the form, so you can insert a little explanation text.<br>
+									&nbsp; &bull; This is an optional field, if you fill it, it will appear below the Entry Name on the form, so you can insert a little explanation text. It supports BBCode and line break too.<br>
 									<br>
 									<strong>What is Hint?</strong><br>
-									&nbsp; &bull; Hint is optional and is what appears inside the input fields, so you can provide an idea of what should be filled on the input box. Its good idea to use in some cases to avoid abusing the Entry Explain.<br>
+									&nbsp; &bull; Hint is optional and is what appears inside the input fields, so you can provide an idea of what should be filled on the input box. Its good idea to use in some cases to avoid abusing the Entry Explain. For selectbox the hint will be the default first element.<br>
 									<br>
 									<strong>What is Options?</strong><br>
 									&nbsp; &bull; It only works on some element types: selectbox, radiobuttons and checkbox. With that said its a field where you\'ll insert the options for those element types.<br>
@@ -92,7 +92,7 @@ $lang = array_merge($lang, [
 									&nbsp; &bull; Sure. You would add for example genres as: <i>Action, Adventure, Horror, Romance, Sci-Fi</i>. And the user will be able to just select the options, instead of writing.<br>
 									<br>
 									<strong>Great! And do I need to always use a Comma to separate the words?</strong><br>
-									&nbsp; &bull; You can use a comma or a line break.<br>
+									&nbsp; &bull; You can use a comma or a line break. And there is an hidden feature too. If you use "Administrator => Adm, Moderator => Mod, User => U", where the former one will appear on the form and the latter one on the post.<br>
 									<br>
 									<strong>What is Min/Max?</strong><br>
 									&nbsp; &bull; It only works on Checkboxes since its the only element type where you can select multiple items, and with those fields you can require the user to choose between those min and max values, so if you put Min: 1 and Max: 3, the user will need to choose at least one and less then 3 options.<br>
@@ -102,6 +102,12 @@ $lang = array_merge($lang, [
 									<br>
 									<strong>Can I still see an example for Value Before/After fields?</strong><br>
 									&nbsp; &bull; Why not? You could add <i>[color=#ff0000]</i> on the Before field and <i>[/color]</i> on the After field. And let say the Entry Name is <i>Movie Title</i> so the user would insert on the form something as <i>Titanic</i> and when he submits the post will be parsed into: <i>[color=#ff0000]Titanic[/color]</i><br>
+									<br>
+									<strong>Is there anything else that I should know?</strong><br>
+									&nbsp; &bull; I\'m glad you asked! Some fields as Entry Name, Explain, Hint and Options are translatable. This means you can insert language variables {L_LANGUAGE_VARIABLE} so the form will be multilingual.<br>
+									<br>
+									<strong>WOW! Awesome! But where can I add the Language Variables?</strong><br>
+									&nbsp; &bull; Just edit the root/ext/leinad4mind/formcreator/language/COUNTRY/common.php file, and add new variables so you can use at ACP afterwards.<br>
 									<br>
 									<strong>&#8730;</strong> The checkmark character indicates that the item is mandatory and cannot be empty, so it will force the user to fill it.<br>
 									<strong><i class="fa fa-eye" aria-hidden="true"></i></strong> The eye character indicates that the entry name of that item will not be imported to the post submited.<br>',
