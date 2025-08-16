@@ -1,0 +1,92 @@
+services:
+    canidev.chat.controller:
+        class: canidev\chat\controller\main_controller
+        arguments:
+            - '@auth'
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    canidev.chat.controller.admin.config:
+        class: canidev\chat\controller\admin_controller_config
+        arguments:
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    canidev.chat.controller.admin.pages:
+        class: canidev\chat\controller\admin_controller_pages
+        arguments:
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+    
+    canidev.chat.controller.admin.rooms:
+        class: canidev\chat\controller\admin_controller_rooms
+        arguments:
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            
+    canidev.chat.controller.admin.texts:
+        class: canidev\chat\controller\admin_controller_texts
+        arguments:
+            - '@cache.driver'
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            
+    canidev.chat.controller.mcp.config:
+        class: canidev\chat\controller\mcp_controller_config
+        arguments:
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@pagination'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'

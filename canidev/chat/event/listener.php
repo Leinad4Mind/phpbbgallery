@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 

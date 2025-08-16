@@ -3,29 +3,29 @@
 		<div class="js-conversation">
 		<!-- IF S_CHAT_DIRECTION eq 'down' and room.SHOW_HISTORY -->
 			<div class="history-row">
-				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history"></i> {L_CHAT_VIEW_HISTORY}</a>
+				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history" aria-hidden="true"></i> {L_CHAT_VIEW_HISTORY}</a>
 			</div>
 		<!-- ENDIF -->
 
 		<!-- BEGIN message -->
 			<div id="chat-row-{message.S_ID}" class="chat-row" data-id="{message.S_ID}" data-time="{message.S_TIMESTAMP}">
 				<!-- IF message.S_SHOW_AVATAR -->
-					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+					<div class="chat-row-avatar cbb-circular-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><span class="cbb-no-avatar"></span><!-- ENDIF --></div>
 				<!-- ENDIF -->
 					
 				<div class="ic-row-actions">
-					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_QUOTE --><a href="#" data-action="quote" title="{L_QUOTE}"><i class="fa fa-quote-right"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash"></i></a><!-- ENDIF -->
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_QUOTE --><a href="#" data-action="quote" title="{L_QUOTE}"><i class="fa fa-quote-right" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash" aria-hidden="true"></i></a><!-- ENDIF -->
 				
-					<!-- IF message.U_TOPIC_EDIT --><a href="{message.U_TOPIC_EDIT}" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.U_POST_EDIT --><a href="{message.U_POST_EDIT}" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.U_TOPIC_EDIT --><a href="{message.U_TOPIC_EDIT}" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.U_POST_EDIT --><a href="{message.U_POST_EDIT}" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
 				</div>
 
 				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
-					<a href="#" data-action="quickmention" class="chat-quickmention" title="{L_CHAT_MENTION}"><i class="fa fa-user"></i></a>
+					<a href="#" data-action="quickmention" class="chat-quickmention" title="{L_CHAT_MENTION}"><i class="fa fa-user" aria-hidden="true"></i></a>
 					<span class="ic-row-username">{message.S_AUTHOR_FULL}</span>
 					<span class="ic-row-date">{message.S_DATE}</span>
 				</div>
@@ -42,7 +42,7 @@
 		
 		<!-- IF S_CHAT_DIRECTION eq 'up' and room.SHOW_HISTORY -->
 			<div class="history-row">
-				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history"></i> {L_CHAT_VIEW_HISTORY}</a>
+				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history" aria-hidden="true"></i> {L_CHAT_VIEW_HISTORY}</a>
 			</div>
 		<!-- ENDIF -->
 		</div>
@@ -52,9 +52,18 @@
 			<li class="js-user-{user.S_KEY}">
 				<span class="chat-user-status {user.S_STATUS}"></span><a href="{user.U_ACTION}" data-action="user"<!-- IF user.IS_EXCLUDED --> class="chat-state-excluded"<!-- ENDIF -->>{user.S_USERNAME}</a>
 				<!-- IF user.S_HAS_SUBMENU -->
-					<ul class="chat-contextmenu">
-						<!-- BEGIN contextmenu --><li><a href="{contextmenu.U_ACTION}" data-action="{contextmenu.S_ACTION}" data-user-key="{contextmenu.S_USER_KEY}"><!-- IF contextmenu.IS_STATUS --><span class="chat-user-status {contextmenu.S_STATUS}"></span><!-- ELSE --><i class="fa {contextmenu.S_ICON}"></i><!-- ENDIF -->{contextmenu.S_TITLE}</a></li><!-- END contextmenu -->
-					</ul>
+					<div class="cbb-helper-hidden">
+						<ul class="cbb-menu">
+							<!-- BEGIN contextmenu -->
+							<li>
+								<a href="{contextmenu.U_ACTION}" data-action="{contextmenu.S_ACTION}" data-user-key="{contextmenu.S_USER_KEY}">
+									<!-- IF contextmenu.IS_STATUS --><span class="chat-user-status {contextmenu.S_STATUS}"></span><!-- ELSE --><i class="fa {contextmenu.S_ICON}" aria-hidden="true"></i><!-- ENDIF -->
+									{contextmenu.S_TITLE}
+								</a>
+							</li>
+							<!-- END contextmenu -->
+						</ul>
+					</div>
 				<!-- ENDIF -->
 			</li>
 		<!-- END user -->
@@ -70,8 +79,10 @@
 	<!-- IF S_DIALOG_CONTENT -->
 		{S_DIALOG_CONTENT}
 	<!-- ELSEIF S_EDIT -->
-		<textarea name="ic_edit_message" class="ic-edit-textarea cbb-inputbox">{S_MESSAGE}</textarea>
-		<!-- IF S_CHAT_MAX_CHARS --><div class="ic-chars-info"><span></span> {L_CHAT_REMAINING_CHARS}</div><!-- ENDIF -->
+		<div class="ic-edit-toolbar"></div>
+		<div class="ic-edit-container cbb-inputbox">
+			<!-- INCLUDE @canidev_core/editor_body.html -->
+		</div>
 	<!-- ELSEIF S_RULES -->
 		<ol class="chat-rulelist">
 		<!-- BEGIN rulerow -->
@@ -79,7 +90,7 @@
 		<!-- END rulerow -->
 		</ol>
 	<!-- ELSEIF S_LOGIN -->
-		<div style="text-align:center;">
+		<div class="chat-options-container">
 			<!-- IF S_ERROR --><div>{S_ERROR}</div><br /><!-- ENDIF -->
 
 		<!-- IF ALLOW_GUESTS -->
@@ -109,14 +120,18 @@
 			<dd><select class="cbb-inputbox" id="to-room" name="to_room">{S_ROOM_OPTIONS}</select></dd>
 		</dl>
 		</fieldset>
+	<!-- ELSEIF S_SET_NAME -->
+		<div class="chat-options-container">
+			<input class="cbb-inputbox" name="username" value="{S_CURRENT_USERNAME}" size="25" placeholder="{L_USERNAME}" />
+		</div>
 	<!-- ENDIF -->
 	</div>
 	
 	</form>
 	
 	<div class="cbb-dialog-buttons">
-		<button class="cbb-btn" value="submit">{L_CHAT_SUBMIT}</button>
-		<!-- IF not S_DIALOG_CONTENT and not S_RULES -->&nbsp;<button class="cbb-btn" value="close">{L_CHAT_CANCEL}</button><!-- ENDIF -->
+		<button class="cbb-btn" value="submit">{L_ACCEPT}</button>
+		<!-- IF not S_DIALOG_CONTENT and not S_RULES -->&nbsp;<button class="cbb-btn" value="close">{L_CANCEL}</button><!-- ENDIF -->
 	</div>
 </div>
 <!-- ENDIF -->

@@ -1,5 +1,5 @@
 canidev_chat_controller:
-    pattern: /chat{tslash}
+    path: /chat{tslash}
     defaults:
         _controller: canidev.chat.controller:display
         tslash: ""

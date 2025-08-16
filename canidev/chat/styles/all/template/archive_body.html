@@ -5,22 +5,23 @@
 <form method="post" action="{U_ACTION}">
 
 <div id="chat-body" class="chat-archive-container">
+
 <!-- IF .roomtab -->
-	<ul class="chat-archive-tabs">
+	<div id="tabs" class="tabs">
+	<ul>
 	<!-- BEGIN roomtab -->
-		<li><a class="chat-corner-top<!-- IF roomtab.S_ACTIVE --> active<!-- ENDIF -->" href="{roomtab.U_ACTION}">{roomtab.S_TITLE}</a></li>
+		<li class="tab<!-- IF roomtab.S_ACTIVE --> activetab<!-- ENDIF -->"><a href="{roomtab.U_ACTION}"><span>{roomtab.S_TITLE}</span></a></li>
 	<!-- END roomtab -->
 	</ul>
-<!-- ELSE -->
-	<div id="chat-title">{L_CHAT_ARCHIVE}</div>
+	</div>
 <!-- ENDIF -->
 	
-	<div id="chat-content">
+	<div id="chat-content" class="panel bg3">
 		<div id="chat-conversation-container">
 		<!-- BEGIN message -->
 			<div id="chat-row-{message.S_ID}" class="chat-row" data-id="{message.S_ID}" data-time="{message.S_TIMESTAMP}">
 				<!-- IF message.S_SHOW_AVATAR -->
-					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+					<div class="chat-row-avatar cbb-circular-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><span class="cbb-no-avatar"></span><!-- ENDIF --></div>
 				<!-- ENDIF -->
 				
 			<!-- IF S_BATCH_OPTIONS -->
@@ -31,10 +32,10 @@
 			<!-- ENDIF -->
 				
 				<div class="ic-row-actions">
-					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash"></i></a><!-- ENDIF -->
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash" aria-hidden="true"></i></a><!-- ENDIF -->
 				</div>
 
 				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
@@ -65,7 +66,7 @@
 	<!-- IF S_SELECT_SORT_DAYS -->
 		<div class="dropdown-container dropdown-button-control sort-tools cbb-helper-inline">
 			<span title="{L_SORT_OPTIONS}" class="cbb-btn dropdown-trigger dropdown-select">
-				<i class="fa fa-sort-amount-asc"></i>
+				<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>
 			</span>
 			<div class="dropdown hidden">
 				<div class="pointer"><div class="pointer-inner"></div></div>
@@ -85,8 +86,7 @@
 	<!-- ENDIF -->
 	
 	<!-- IF S_BATCH_OPTIONS -->
-		<fieldset>
-			<br />
+		<fieldset class="ic-mark-options">
 			<a href="#" data-action="mark">{L_MARK_ALL}</a> ::
 			<a href="#" data-action="unmark">{L_UNMARK_ALL}</a>
 		</fieldset>

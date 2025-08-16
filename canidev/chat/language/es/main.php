@@ -1,10 +1,10 @@
 <?php
-/** 
+/*
 * main.php [Spanish [Es]]
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -29,9 +29,7 @@ $lang = array_merge($lang, array(
 	'CHAT_BAN_PERIOD'			=> 'Duración de la exclusión',
 	'CHAT_BAN_USER'				=> 'Excluir del chat',
 	'CHAT_BBCODE'				=> 'BBcodes',
-	'CHAT_CANCEL'				=> 'Cancelar',
-	'CHAT_CLEAR_BBCODE'			=> 'Eliminar BBcode',
-	'CHAT_CLEAR_INPUT'			=> 'Eliminar Todo',
+	'CHAT_CHANGE_NAME'			=> 'Cambiar nombre',
 	'CHAT_COLOR'				=> 'Color de texto',
 	'CHAT_CONNECT'				=> 'Conectar/Desconectar',
 	'CHAT_CUSTOM_BBCODES'		=> 'BBcodes personalizados',
@@ -49,7 +47,6 @@ $lang = array_merge($lang, array(
 	'CHAT_PURGE'				=> 'Purgar mensajes',
 	'CHAT_PURGE_CONFIRM'		=> '¿Está seguro de que desea eliminar todos los mensajes de la sala <strong><em>%s</em></strong>?',
 	'CHAT_REFRESH'				=> 'Actualizar',
-	'CHAT_REMAINING_CHARS'		=> 'caracteres restantes.',
 	'CHAT_RULES'				=> 'Reglas del chat',
 	'CHAT_SEND_PM'				=> 'Mensaje Privado',
 	'CHAT_SMILIES'				=> 'Emoticonos',
@@ -62,9 +59,7 @@ $lang = array_merge($lang, array(
 	'CHAT_STATUS_AWAY'			=> 'Ausente',
 	'CHAT_STATUS_BUSY'			=> 'Ocupado',
 	'CHAT_STATUS_HIDDEN'		=> 'Invisible',
-	
-	'CHAT_LOAD_MORE'			=> 'Cargar más',
-	'CHAT_SUBMIT'				=> 'Aceptar',
+
 	'CHAT_TIP'					=> 'Consejo',
 	'CHAT_UNBAN_USER'			=> 'Quitar exclusión',
 	'CHAT_USER_BANNED_PERIOD'		=> 'Usted ha sido excluído del chat. No podrá acceder a él hasta: %s',
@@ -87,6 +82,9 @@ $lang = array_merge($lang, array(
 	'ONE_MONTH'		=> 'Un mes',
 	'ONE_YEAR'		=> 'Un año',
 	'TWO_YEARS'		=> 'Dos años',
+
+	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
+		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
 ));
 
 // Text language

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -15,81 +15,19 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-class acp_controller_pages extends \canidev\core\acp
+class admin_controller_pages extends admin_controller_base
 {
-	protected $cache;
-	protected $config;
-	protected $db;
-	protected $dispatcher;
-	protected $json;
-	protected $lang;
-	protected $log;
-	protected $request;
-	protected $template;
-	
-	protected $phpbb_root_path;
-	protected $php_ext;
-	
-	protected $exclude_files	= array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
+	protected $exclude_files = array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
 
-	
-	/**
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
-	* @param \phpbb\language\language 					$language			Language object
-	* @param \phpbb\log\log								$log				Log object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\template\template					$template     		Template object
-	* @param string										$phpbb_root_path	phpBB Root Path
-	* @param string										$php_ext			phpEx
-	*
-	* @access public
-	*/
-	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\config\config $config,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\language\language $language,
-		\phpbb\log\log $log,
-		\phpbb\request\request $request,
-		\phpbb\template\template $template,
-		$phpbb_root_path,
-		$php_ext)
+	public function _display($mode)
 	{
-		$this->cache		= $cache;
-		$this->config		= $config;
-		$this->db			= $db;
-		$this->dispatcher	= $dispatcher;
-		$this->json			= new \canidev\core\json_response;
-		$this->lang			= $language;
-		$this->log			= $log;
-		$this->request		= $request;
-		$this->template 	= $template;
-		
-		$this->phpbb_root_path	= $phpbb_root_path;
-		$this->php_ext			= $php_ext;
-	}
-	
-	public function display($mode)
-	{
-		$this->page_header('cbb-chat', $this->config['chat_version']);
-		$this->lang->add_lang(array('acp', 'main'), 'canidev/chat');
-
 		$this->tpl_name		= 'acp_chat_pages';
 		$this->page_title	= 'ACP_CHAT_PAGES';
-		
-		$action 	= $this->request->variable('action', '');
-		$submit 	= $this->request->is_set_post('submit');
+
 		$page_id	= $this->request->variable('id', 0);
 		$error		= array();
-		$form_key 	= 'acp_chat';
 		
-		switch($action)
+		switch($this->action)
 		{
 			case 'edit':
 				$sql = 'SELECT *
@@ -109,7 +47,7 @@ class acp_controller_pages extends \canidev\core\acp
 			// no break
 
 			case 'add':
-				add_form_key($form_key);
+				add_form_key(self::FORM_KEY);
 		
 				$position_options = array(
 					'top'		=> 'CHAT_POSITION_TOP',
@@ -118,7 +56,7 @@ class acp_controller_pages extends \canidev\core\acp
 
 				$display_vars = array(
 					'legend1'		=> 'CHAT_PAGE_CONFIG',
-					'page_file'			=> array('lang' => 'CHAT_PAGE_FILE',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($this->page_file_options($action), '{KEY}', '{CONFIG_VALUE}')),
+					'page_file'			=> array('lang' => 'CHAT_PAGE_FILE',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($this->page_file_options(), '{KEY}', '{CONFIG_VALUE}')),
 					'custom_file'		=> array('lang' => 'CHAT_PAGE_CUSTOM',	'validate' => 'string',		'type' => 'text:40:255',	'display' => false),
 					'page_alias'		=> array('lang' => 'CHAT_PAGE_ALIAS',	'validate' => 'string',		'type' => 'text:40:50',		'display' => false),
 					'chat_position'		=> array('lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($position_options, '{KEY}', '{CONFIG_VALUE}')),
@@ -126,7 +64,7 @@ class acp_controller_pages extends \canidev\core\acp
 					'forum_ids'			=> array('lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', self::SELECT_MULTIPLE),	'display' => false),
 				);
 				
-				if($action == 'add')
+				if($this->action == 'add')
 				{
 					$page_data = array(
 						'page_alias'	=> '',
@@ -138,7 +76,7 @@ class acp_controller_pages extends \canidev\core\acp
 				
 				$page_data['forum_ids'] = (!empty($page_data['page_data']['forum_ids']) ? $page_data['page_data']['forum_ids'] : array());
 				
-				/**
+				/*
 				* @event chat.acp_pages_vars
 				* @var	array	display_vars	Array of config values to display and process
 				* @var	array	page_data		Original data of page
@@ -148,11 +86,11 @@ class acp_controller_pages extends \canidev\core\acp
 				$vars = array('display_vars', 'page_data', 'submit');
 				extract($this->dispatcher->trigger_event('chat.acp_pages_vars', compact($vars)));
 
-				if($submit)
+				if($this->submit)
 				{
 					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
-					if(!check_form_key($form_key))
+					if(!check_form_key(self::FORM_KEY))
 					{
 						$error[] = $this->lang->lang('FORM_INVALID');
 					}
@@ -227,7 +165,7 @@ class acp_controller_pages extends \canidev\core\acp
 							'chat_height'	=> (int)$this->new_config['chat_height'],
 						);
 						
-						if($action == 'add')
+						if($this->action == 'add')
 						{
 							$sql = 'INSERT INTO ' . CHAT_PAGES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 						}
@@ -275,7 +213,7 @@ class acp_controller_pages extends \canidev\core\acp
 					'U_BACK'	=> $this->u_action,
 					
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
-						'action'	=> $action,
+						'action'	=> $this->action,
 						'id'		=> $page_id
 					)),
 				));
@@ -320,17 +258,16 @@ class acp_controller_pages extends \canidev\core\acp
 		}
 		
 		$this->template->assign_vars(array(
-			'IN_CHAT_ADMIN'		=> true,
-			'S_ERROR'			=> (sizeof($error)) ? true : false,
-			'ERROR_MSG'			=> implode('<br />', $error),
+			'S_ERROR'		=> (sizeof($error)) ? true : false,
+			'ERROR_MSG'		=> implode('<br />', $error),
 		));
 	}
 	
-	protected function page_file_options($action)
+	protected function page_file_options()
 	{
 		$ary = array(''	=> 'SELECT_PAGE');
 		
-		if($action == 'add')
+		if($this->action == 'add')
 		{
 			// Exclude files already in use
 			$sql = 'SELECT page_alias

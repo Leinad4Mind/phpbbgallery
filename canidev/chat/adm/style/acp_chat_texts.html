@@ -2,7 +2,7 @@
 
 <a name="maincontent"></a>
 
-<!-- IF U_BACK --><div><a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+<!-- IF U_BACK --><div><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a></div><!-- ENDIF -->
 
 <h1>{L_ACP_CHAT_TEXTS}</h1>
 <p>{L_ACP_CHAT_TEXTS_EXPLAIN}</p>
@@ -63,7 +63,7 @@
 				<li id="row{textrow.item.S_ID}">
 					<table><tr>
 						<td>{textrow.item.S_CONTENT}</td>
-						<td style="width:40px;">
+						<td class="actions-col-2">
 							<a href="{textrow.item.U_EDIT}">{ICON_EDIT}</a>
 							<a href="{textrow.item.U_DELETE}" class="js-chat-action">{ICON_DELETE}</a>
 						</td>

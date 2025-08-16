@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "",
 	"homepage": "https://www.canidev.com",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"keywords": ["phpbb", "extension", "canidev", "chat"],
 	"license": "GPL-2.0",
 	"authors": [

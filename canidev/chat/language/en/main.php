@@ -1,10 +1,10 @@
 <?php
-/** 
+/*
 * main.php [English [En]]
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -29,9 +29,7 @@ $lang = array_merge($lang, array(
 	'CHAT_BAN_PERIOD'			=> 'Exclusion duration',
 	'CHAT_BAN_USER'				=> 'Exclude',
 	'CHAT_BBCODE'				=> 'BBcodes',
-	'CHAT_CANCEL'				=> 'Cancel',
-	'CHAT_CLEAR_BBCODE'			=> 'Delete BBcode',
-	'CHAT_CLEAR_INPUT'			=> 'Delete all',
+	'CHAT_CHANGE_NAME'			=> 'Change username',
 	'CHAT_COLOR'				=> 'Text colour',
 	'CHAT_CONNECT'				=> 'Connect/Disconnect',
 	'CHAT_CUSTOM_BBCODES'		=> 'Custom BBcodes',
@@ -49,7 +47,6 @@ $lang = array_merge($lang, array(
 	'CHAT_PURGE'				=> 'Purge messages',
 	'CHAT_PURGE_CONFIRM'		=> 'Are you sure that you want to delete all messages from the <strong><em>%s</em></strong> room?',
 	'CHAT_REFRESH'				=> 'Refresh',
-	'CHAT_REMAINING_CHARS'		=> 'characters left.',
 	'CHAT_RULES'				=> 'Chat rules',
 	'CHAT_SEND_PM'				=> 'Private message',
 	'CHAT_SMILIES'				=> 'Smilies',
@@ -62,9 +59,7 @@ $lang = array_merge($lang, array(
 	'CHAT_STATUS_AWAY'			=> 'Away',
 	'CHAT_STATUS_BUSY'			=> 'Busy',
 	'CHAT_STATUS_HIDDEN'		=> 'Hidden',
-	
-	'CHAT_LOAD_MORE'			=> 'Load more',
-	'CHAT_SUBMIT'				=> 'Accept',
+
 	'CHAT_TIP'					=> 'Tip',
 	'CHAT_UNBAN_USER'			=> 'Remove exclusion',
 	'CHAT_USER_BANNED_PERIOD'		=> 'You are excluded from the chat until: %s',
@@ -87,6 +82,9 @@ $lang = array_merge($lang, array(
 	'ONE_MONTH'		=> 'One month',
 	'ONE_YEAR'		=> 'One year',
 	'TWO_YEARS'		=> 'Two years',
+
+	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
+		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
 ));
 
 // Text language

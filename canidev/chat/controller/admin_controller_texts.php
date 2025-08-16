@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -15,31 +15,24 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-class acp_controller_texts extends \canidev\core\acp
+class admin_controller_texts extends admin_controller_base
 {
-	protected $cache;
 	protected $chat;
-	protected $config;
-	protected $db;
-	protected $dispatcher;
-	protected $json;
-	protected $lang;
-	protected $log;
-	protected $request;
-	protected $template;
 
 	/**
 	* Constructor
 	*
 	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \canidev\chat\libraries\chat 				$chat				Chat Object
 	* @param \phpbb\config\config 						$config				Config Object
+	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
-	* @param \phpbb\language\language 					$language			Language object
-	* @param \phpbb\log\log								$log				Log object
+	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
+	* @param \phpbb\language\language					$language			Blockgets language Object
+	* @param \phpbb\log\log                       		$log				Log Object
 	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\template\template					$template     		Template object
+	* @param \phpbb\user								$user				User object
+	* @param string										$root_path			phpBB root path
+	* @param string										$php_ext			phpEx
 	*
 	* @access public
 	*/
@@ -47,39 +40,40 @@ class acp_controller_texts extends \canidev\core\acp
 		\phpbb\cache\driver\driver_interface $cache,
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $dispatcher,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
 		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
-		\phpbb\template\template $template)
+		\phpbb\user $user,
+		$root_path,
+		$php_ext)
 	{
 		$this->cache		= $cache;
-		$this->chat			= $chat;
+		$this->chat 		= $chat;
 		$this->config		= $config;
 		$this->db			= $db;
-		$this->dispatcher	= $dispatcher;
-		$this->json			= new \canidev\core\json_response;
+		$this->dispatcher	= $phpbb_dispatcher;
+		$this->json			= \canidev\core\json_response::get_instance();
 		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
-		$this->template 	= $template;
+		$this->template 	= \canidev\core\template::get_instance($container);
+		$this->user			= $user;
+		
+		$this->phpbb_root_path	= $root_path;
+		$this->php_ext			= $php_ext;
 	}
-	
-	public function display($mode)
-	{
-		$this->page_header('cbb-chat', $this->config['chat_version']);
-		$this->lang->add_lang(array('acp', 'main'), 'canidev/chat');
 
+	public function _display($mode)
+	{
 		$this->tpl_name		= 'acp_chat_texts';
 		$this->page_title	= 'ACP_CHAT_TEXTS';
-		
-		$action 	= $this->request->variable('action', '');
-		$submit 	= $this->request->is_set_post('submit');
+
 		$text_id 	= $this->request->variable('id', 0);
 		$text_type	= $this->request->variable('type', 0);
 		$error		= array();
-		$form_key 	= 'acp_chat';
 		
 		$text_ary = array(
 			CHAT_TEXT_NOTICE	=> array('title' => 'CHAT_NOTICES',	'rows' => array()),
@@ -87,7 +81,7 @@ class acp_controller_texts extends \canidev\core\acp
 			CHAT_TEXT_RULE		=> array('title' => 'CHAT_RULES',	'rows' => array()),
 		);
 		
-		switch($action)
+		switch($this->action)
 		{
 			case 'edit':
 				$sql = 'SELECT text_content, bbcode_uid
@@ -100,7 +94,7 @@ class acp_controller_texts extends \canidev\core\acp
 				
 				if(!$text_row)
 				{
-					$action = '';
+					$this->action = '';
 					break;
 				}
 				
@@ -112,7 +106,7 @@ class acp_controller_texts extends \canidev\core\acp
 			// no break
 
 			case 'add':
-				add_form_key($form_key);
+				add_form_key(self::FORM_KEY);
 
 				if(!isset($text_ary[$text_type]['title']))
 				{
@@ -124,12 +118,12 @@ class acp_controller_texts extends \canidev\core\acp
 					'text_content'	=> array('lang' => $text_ary[$text_type]['title'] . '_ITEM',	'validate'	=> 'string:1',	'type' => 'textarea:5:40'),
 				);
 				
-				if($action == 'add')
+				if($this->action == 'add')
 				{
 					$this->new_config['text_content'] = '';
 				}
 				
-				/**
+				/*
 				* @event chat.acp_texts_vars
 				* @var	array	display_vars	Array of config values to display and process
 				* @var	boolean	submit			Do we display the form or process the submission
@@ -138,11 +132,11 @@ class acp_controller_texts extends \canidev\core\acp
 				$vars = array('display_vars', 'submit');
 				extract($this->dispatcher->trigger_event('chat.acp_texts_vars', compact($vars)));
 				
-				if($submit)
+				if($this->submit)
 				{
 					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
-					if(!check_form_key($form_key))
+					if(!check_form_key(self::FORM_KEY))
 					{
 						$error[] = $this->lang->lang('FORM_INVALID');
 					}
@@ -158,7 +152,7 @@ class acp_controller_texts extends \canidev\core\acp
 						$this->new_config['bbcode_uid'] = $this->new_config['bbcode_bitfield'] = $options = '';
 						generate_text_for_storage($this->new_config['text_content'], $this->new_config['bbcode_uid'], $this->new_config['bbcode_bitfield'], $options, $this->config['allow_bbcode'], $this->config['allow_post_links'], $this->config['allow_smilies'], $this->config['allow_bbcode'], $this->config['allow_bbcode'], $this->config['allow_bbcode'], $this->config['allow_post_links'], 'chat');
 						
-						if($action == 'add')
+						if($this->action == 'add')
 						{
 							// Get last text position
 							$sql = 'SELECT MAX(text_order) AS last_position
@@ -188,14 +182,14 @@ class acp_controller_texts extends \canidev\core\acp
 				
 				$this->display_vars($display_vars);
 				
-				$this->page_title = $text_ary[$text_type]['title'] . '_' . strtoupper($action);
+				$this->page_title = $text_ary[$text_type]['title'] . '_' . strtoupper($this->action);
 				
 				$this->template->assign_vars(array(
 					'S_EDIT'	=> true,
 					'U_BACK'	=> $this->u_action,
 					
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
-						'action'	=> $action,
+						'action'	=> $this->action,
 						'type'		=> $text_type,
 						'id'		=> $text_id,
 					)),
@@ -277,7 +271,7 @@ class acp_controller_texts extends \canidev\core\acp
 							$row['text_content'] = htmlspecialchars_decode($row['text_content']);
 							$row['text_content'] = smiley_text($row['text_content']);
 						}
-						
+
 						$this->chat->parse_lang_variables($row['text_content']);
 
 						$this->template->assign_block_vars('textrow.item', array(
@@ -299,9 +293,8 @@ class acp_controller_texts extends \canidev\core\acp
 		}
 
 		$this->template->assign_vars(array(
-			'IN_CHAT_ADMIN'		=> true,
-			'S_ERROR'			=> (sizeof($error)) ? true : false,
-			'ERROR_MSG'			=> implode('<br />', $error),
+			'S_ERROR'		=> (sizeof($error)) ? true : false,
+			'ERROR_MSG'		=> implode('<br />', $error),
 		));
 	}
 }

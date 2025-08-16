@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -15,65 +15,16 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-class acp_controller_config extends \canidev\core\acp
+class admin_controller_config extends admin_controller_base
 {
-	protected $cache;
-	protected $config;
-	protected $db;
-	protected $dispatcher;
-	protected $lang;
-	protected $log;
-	protected $request;
-	protected $template;
-
-	/**
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
-	* @param \phpbb\language\language 					$language			Language object
-	* @param \phpbb\log\log								$log				Log object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\template\template					$template     		Template object
-	*
-	* @access public
-	*/
-	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\config\config $config,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\language\language $language,
-		\phpbb\log\log $log,
-		\phpbb\request\request $request,
-		\phpbb\template\template $template)
+	public function _display($mode)
 	{
-		$this->cache		= $cache;
-		$this->config		= $config;
-		$this->db			= $db;
-		$this->dispatcher	= $dispatcher;
-		$this->lang			= $language;
-		$this->log			= $log;
-		$this->request		= $request;
-		$this->template 	= $template;
-	}
-	
-	public function display($mode)
-	{
-		$this->page_header('cbb-chat', $this->config['chat_version']);
-		$this->lang->add_lang(array('acp', 'main'), 'canidev/chat');
-
 		$this->tpl_name		= 'acp_chat_config';
 		$this->page_title	= 'ACP_CHAT_CONFIG';
 		
-		$action 	= $this->request->variable('action', '');
-		$error		= array();
-		$submit 	= $this->request->is_set_post('submit');
-		$form_key 	= 'acp_chat';
+		$error = array();
 		
-		add_form_key($form_key);
+		add_form_key(self::FORM_KEY);
 		
 		$options = array(
 			'bbcode_format'	=> array(
@@ -99,20 +50,21 @@ class acp_controller_config extends \canidev\core\acp
 			'chat_autoconnect'			=> array('lang' => 'CHAT_AUTOCONNECT',			'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_anonymous_allowed'	=> array('lang' => 'CHAT_ANONYMOUS_ALLOWED',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_sound'				=> array('lang' => 'CHAT_SOUND_ENABLED',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_flood_time'			=> array('lang' => 'CHAT_FLOOD',				'validate' => 'int:0:60',	'type' => 'text:3:2'),
-			'chat_height'				=> array('lang' => 'CHAT_HEIGHT',				'validate' => 'int:50:800',	'type' => 'text:4:3'),
-			'chat_refresh'				=> array('lang' => 'CHAT_REFRESH_TIME',			'validate' => 'int:5:60',	'type' => 'text:3:2'),
+			'chat_flood_time'			=> array('lang' => 'CHAT_FLOOD',				'validate' => 'int:0:60',	'type' => 'number:0:60'),
+			'chat_height'				=> array('lang' => 'CHAT_HEIGHT',				'validate' => 'int:50:800',	'type' => 'number:50:800'),
+			'chat_refresh'				=> array('lang' => 'CHAT_REFRESH_TIME',			'validate' => 'int:5:60',	'type' => 'number:5:60'),
+			'chat_hide_popup'			=> array('lang' => 'CHAT_HIDE_POPUP',			'validate' => 'bool',		'type' => 'radio:yes_no'),
 
 			'legend2'			=> 'CHAT_USERS_CONFIG',
-			'chat_timeout'				=> array('lang' => 'CHAT_TIMEOUT',			'validate' => 'int:0:60',	'type' => 'text:3:2'),
-			'chat_auto_away'			=> array('lang' => 'CHAT_AUTO_AWAY',		'validate' => 'int:0:60',	'type' => 'text:3:2'),
+			'chat_timeout'				=> array('lang' => 'CHAT_TIMEOUT',			'validate' => 'int:0:60',	'type' => 'number:0:60'),
+			'chat_auto_away'			=> array('lang' => 'CHAT_AUTO_AWAY',		'validate' => 'int:0:60',	'type' => 'number:0:60'),
 			'chat_remember_status'		=> array('lang' => 'CHAT_REMEMBER_STATUS',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_group_users'			=> array('lang' => 'CHAT_GROUP_USERS',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		
 			'legend3'			=> 'CHAT_MESSAGES_CONFIG',
 			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',		'validate' => 'string',		'type' => 'custom',	'function' => array($this, 'make_select'),	'params' => array($options['direction'], '{KEY}', '{CONFIG_VALUE}')),
-			'chat_max_rows'				=> array('lang' => 'CHAT_ROWS',				'validate' => 'int:1:100',	'type' => 'text:4:3'),
-			'chat_max_chars'			=> array('lang' => 'CHAT_CHARS',			'validate' => 'int',		'type' => 'text:4:4'),
+			'chat_max_rows'				=> array('lang' => 'CHAT_ROWS',				'validate' => 'int:1:100',	'type' => 'number:1:100'),
+			'chat_max_chars'			=> array('lang' => 'CHAT_CHARS',			'validate' => 'int',		'type' => 'number'),
 			'chat_show_avatars'			=> array('lang' => 'CHAT_AVATARS',			'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_allow_bbcode'			=> array('lang' => 'CHAT_ALLOW_BBCODE',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',		'function' => array($this, 'make_select'),	'params' => array($options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', self::SELECT_PARSE_LANG | self::SELECT_MULTIPLE)),
@@ -120,12 +72,12 @@ class acp_controller_config extends \canidev\core\acp
 		
 			'legend4'		=> 'CHAT_PM_CONFIG',
 			'chat_allow_pm'			=> array('lang' => 'CHAT_ALLOW_PM',			'validate' => 'bool',			'type' => 'radio:yes_no'),
-			'chat_max_pm'			=> array('lang' => 'CHAT_PM_MAX',			'validate' => 'int:0:60',		'type' => 'text:3:2'),
+			'chat_max_pm'			=> array('lang' => 'CHAT_PM_MAX',			'validate' => 'int:0:60',		'type' => 'number:0:60'),
 			'chat_pm_maxage'		=> array('lang' => 'CHAT_PM_MAXAGE',		'validate' => 'int:1:365',		'type' => 'number:1:365'),
 			'chat_pm_ignore_flood'	=> array('lang' => 'CHAT_PM_IGNORE_FLOOD',	'validate' => 'bool',			'type' => 'radio:yes_no'),
 		);
 		
-		/**
+		/*
 		* @event chat.acp_config_vars
 		* @var	array	display_vars	Array of config values to display and process
 		* @var	boolean	submit			Do we display the form or process the submission
@@ -136,7 +88,7 @@ class acp_controller_config extends \canidev\core\acp
 		
 		$cfg_array	= $this->config;
 		
-		if($submit)
+		if($this->submit)
 		{
 			$cfg_array = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 			$cfg_array['chat_disallowed_bbcode'] = $this->request->variable('chat_disallowed_bbcode', array(0));
@@ -157,7 +109,7 @@ class acp_controller_config extends \canidev\core\acp
 				$cfg_array['chat_disallowed_bbcode'] = '';
 			}
 			
-			if(!check_form_key($form_key))
+			if(!check_form_key(self::FORM_KEY))
 			{
 				$error[] = $this->lang->lang('FORM_INVALID');
 			}
@@ -175,7 +127,7 @@ class acp_controller_config extends \canidev\core\acp
 		// Do not write values if there is an error
 		if(sizeof($error))
 		{
-			$submit = false;
+			$this->submit = false;
 		}
 		
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
@@ -188,7 +140,7 @@ class acp_controller_config extends \canidev\core\acp
 
 			$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
 
-			if($submit)
+			if($this->submit)
 			{
 				// Delete the guest sessions is neccessary here
 				if($config_name == 'chat_anonymous_allowed' && $this->config['chat_anonymous_allowed'] != $config_value)
@@ -202,8 +154,10 @@ class acp_controller_config extends \canidev\core\acp
 			}
 		}
 
-		if($submit)
+		if($this->submit)
 		{
+			$this->cache->destroy('_chat_options');
+	
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CHAT_CONFIG');
 			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
@@ -213,9 +167,8 @@ class acp_controller_config extends \canidev\core\acp
 		$this->new_config['chat_disallowed_bbcode'] = $bitfield->get_all_set();
 		
 		$this->template->assign_vars(array(
-			'IN_CHAT_ADMIN'		=> true,
-			'S_ERROR'			=> (sizeof($error)) ? true : false,
-			'ERROR_MSG'			=> implode('<br />', $error),
+			'S_ERROR'		=> (sizeof($error)) ? true : false,
+			'ERROR_MSG'		=> implode('<br />', $error),
 		));
 		
 		$this->display_vars($display_vars);
@@ -230,7 +183,6 @@ class acp_controller_config extends \canidev\core\acp
 				BBCODE_ID_U		=> 'u',
 				BBCODE_ID_CODE	=> 'code',
 				BBCODE_ID_COLOR	=> 'color',
-				BBCODE_ID_FLASH	=> 'flash',
 				BBCODE_ID_IMG	=> 'img',
 				BBCODE_ID_LIST	=> 'list',
 				BBCODE_ID_QUOTE	=> 'quote',

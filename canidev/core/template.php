@@ -1,10 +1,9 @@
 <?php
 /*
-* @name template.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.4 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -16,6 +15,8 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 class template
 {
 	public $prepend_assets = false;
@@ -25,9 +26,11 @@ class template
 	protected $context_ary		= array();
 
 	protected $config;
+	protected $container;
 	protected $filesystem;
 	protected $path_helper;
 	protected $phpbb_template;
+	protected $request;
 	protected $twig;
 	
 	static $instance;
@@ -39,12 +42,14 @@ class template
 	*
 	* @access public
 	*/
-	public function __construct($container)
+	public function __construct(ContainerInterface $container)
 	{
 		$this->config			= $container->get('config');
+		$this->container 		= $container;
 		$this->filesystem 		= $container->get('filesystem');
 		$this->path_helper		= $container->get('path_helper');
 		$this->phpbb_template	= $container->get('template');
+		$this->request 			= $container->get('request');
 		$this->twig				= $container->get('template.twig.environment');
 	}
 	
@@ -88,6 +93,8 @@ class template
 				}
 			}
 
+			$path_ary[] =  $path . 'plugins/';
+
 			if(sizeof($path_ary))
 			{
 				$this->twig->getLoader()->setPaths($path_ary, $namespace);
@@ -123,11 +130,16 @@ class template
 		
 		if(!is_array($data))
 		{
-			$data = array(
-				'id'		=> '',
-				'content'	=> $data
-			);
+			$data = array('content' => $data);
 		}
+		
+		$data = array_merge(
+			array(
+				'id'		=> '',
+				'type'		=> '',
+			),
+			$data
+		);
 
 		switch($type)
 		{
@@ -145,7 +157,9 @@ class template
 					
 					if(substr($asset_url, 0, 2) == './')
 					{
-						$data['content'] = $this->assets_cache[$asset_url] = $asset->get_url();
+						$root_path = $this->path_helper->get_phpbb_root_path();
+
+						$data['content'] = $this->assets_cache[$asset_url] = $root_path . substr($asset->get_url(), 2);
 					}
 					else if($asset->is_relative())
 					{
@@ -224,7 +238,7 @@ class template
 				
 				foreach($data as $key => $value)
 				{
-					if($key != 'content' && $value)
+					if($key != 'content' && $value && $value != 'text/javascript')
 					{
 						$params[] = $key . '="' . $value . '"';
 					}
@@ -260,6 +274,11 @@ class template
 				}
 
 				$this->assets[$namespace][$type][] = $new_asset;
+
+				if($this->request->is_ajax())
+				{
+					\canidev\core\json_response::get_instance()->add_component('asset', $new_asset);
+				}
 			break;
 			
 			default:
@@ -290,6 +309,23 @@ class template
 		$this->phpbb_template->assign_vars($vars);
 		$this->context_ary = array_merge($this->context_ary, $vars);
 	}
+
+	public function assign_json_var($key, $options)
+	{
+		$options = array_map(
+			function($item) {
+				if(is_string($item))
+				{
+					return htmlspecialchars_decode($item);
+				}
+
+				return $item;
+			},
+			$options
+		);
+
+		$this->assign_var($key, json_encode($options));
+	}
 	
 	public function get_var($name, $default = '')
 	{
@@ -317,6 +353,8 @@ class template
 	
 	private function find_asset($path, $is_admin = false)
 	{
+		$paths = array();
+
 		if(strpos($path, '@') === 0)
 		{
 			$uri = preg_replace_callback('#^@([A-Za-z\_0-9]+)/#', function($match) {
@@ -337,8 +375,13 @@ class template
 				return $filename;
 			}
 		}
-		
-		$paths = array_merge($this->phpbb_template->get_user_style(), array('all'));
+
+		if(!defined('IN_ADMIN'))
+		{
+			$paths = $this->phpbb_template->get_user_style();
+		}
+
+		$paths[] = 'all';
 			
 		foreach($paths as $style_path)
 		{

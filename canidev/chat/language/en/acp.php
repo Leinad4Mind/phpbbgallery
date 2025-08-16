@@ -1,10 +1,10 @@
 <?php
-/** 
+/*
 * acp.php [English [En]]
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -65,7 +65,8 @@ $lang = array_merge($lang, array(
 	'CHAT_HEIGHT_EXPLAIN'		=> 'Sets the height (in pixels) of the conversation container.',
 	'CHAT_HEIGHT_PAGE'			=> 'Chat height',
 	'CHAT_HEIGHT_PAGE_EXPLAIN'	=> 'Set the height (in pixels) of the conversation container in this page.<br /><em>Set 0 to use the default value.</em>',
-	'CHAT_HELP'					=> 'Documentation and Support',
+	'CHAT_HIDE_POPUP'			=> 'Hide menus automatically',
+	'CHAT_HIDE_POPUP_EXPLAIN'	=> 'If enabled, the BBcode, color and emoticon menus will close automatically when you perform the action.',
 	'CHAT_MAIN_CONFIG'			=> 'Main configuration',
 	'CHAT_MESSAGES_CONFIG'		=> 'Message configuration',
 	'CHAT_NOTICES_ADD'			=> 'Add announcement',
@@ -163,13 +164,11 @@ $lang = array_merge($lang, array(
 	'EACH_YEAR'		=> 'Each year',
 	
 	'ADD_ROOM'					=> 'Add room',
-	'ALL_GROUPS'				=> 'All groups',
 	'CONTENT'					=> 'Content',
 	'CUSTOM_BBCODES'			=> 'Custom BBcodes',
 	'CUSTOM_FILE'				=> 'Custom file',
 	'CUSTOM_FILES'				=> 'Custom files',
 	'DEFAULT_BBCODES'			=> 'Default BBcodes',
-	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
 	'FORUM_FILES'				=> 'Forum files',
 	'NO_PAGES'					=> 'No available pages',
 	'NO_ROOM'					=> 'The selected room no exists',
@@ -178,7 +177,6 @@ $lang = array_merge($lang, array(
 	'PAGE_ALIAS'				=> 'Page Id',
 	'PAGE_URL'					=> 'Page url',
 	'ROOM_TITLE'				=> 'Room title',
-	'SAVE'						=> 'Save',
 	'SELECT_PAGE'				=> 'Select file',
 	
 	'INVALID_FILE'			=> 'The file not exists or has an invalid format.',

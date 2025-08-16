@@ -11,38 +11,36 @@
 	<title>{SITENAME} &bull; {PAGE_TITLE}</title>
 	
 	<!-- Google free font here -->
-	<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
-	<link href='//fonts.googleapis.com/css?family=Asap:700' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet'>
+	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet'>
 
-	<link href="{T_FONT_AWESOME_LINK}" rel="stylesheet" />
-	<link href="{T_STYLESHEET_LINK}" rel="stylesheet" />
+	<!-- CSS files start here -->
+	<link href="{T_THEME_PATH}/stylesheet.css" rel="stylesheet">
 
-<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
-	<link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" />
-<!-- ENDIF -->
+	<!-- INCLUDE @canidev_chat/event/overall_header_head_append.html -->
 
-<!-- INCLUDE @canidev_chat/event/overall_header_head_append.html -->
+	{$STYLESHEETS}
 
-{$STYLESHEETS}
+	<!-- IF S_ALLOW_CUSTOMCSS -->
+		<link href="{T_THEME_PATH}/custom.css" rel="stylesheet">
+	<!-- ENDIF -->
 
-<link href="{T_THEME_PATH}/basics.min.css" rel="stylesheet">
-
-<!-- Scripts start here after the headjs -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
-<script>
-// this loads jquery asyncrounously & in parallel
-head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js", "{T_THEME_PATH}/vendors/bootstrap/js/bootstrap.js", "{T_THEME_PATH}/vendors/core.min.js?assets_version={T_ASSETS_VERSION}", "{T_THEME_PATH}/vendors/forum_fn.min.js", "{T_THEME_PATH}/vendors/ajax.min.js");
-</script>
-
+	<!-- Scripts start here after the headjs -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
 </head>
 
 <body id="phpbb" class="nojs notouch section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
 
-<div>
+<div id="chat-container">
 
 	<!-- INCLUDE @canidev_chat/event/overall_footer_content_after.html -->
 
 </div>
+
+<script>
+	// this loads jquery asyncrounously & in parallel
+	head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js");
+</script>
 
 <!-- EVENT overall_footer_after -->
 
@@ -55,6 +53,9 @@ head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js", "{T_TH
 <!-- ELSE -->
 
 	<!-- INCLUDE overall_header.html -->
+
+	<div id="chat-container"></div>
+	
 	<!-- INCLUDE overall_footer.html -->
 
 <!-- ENDIF -->

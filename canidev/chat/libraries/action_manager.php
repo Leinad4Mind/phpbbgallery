@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -39,6 +39,7 @@ class action_manager
 	protected $cache;
 	protected $chat;
 	protected $config;
+	protected $container;
 	protected $core;
 	protected $db;
 	protected $dispatcher;
@@ -59,6 +60,7 @@ class action_manager
 	* @param \phpbb\cache\driver\driver_interface 	$cache 			Cache instance
 	* @param \canidev\chat\libraries\chat 			$chat			Chat Object
 	* @param \phpbb\config\config 					$config			Config Object
+	* @param ContainerInterface 					$container		Service container interface
 	* @param \phpbb\db\driver\driver_interface		$db				DB Object
 	* @param \phpbb\event\dispatcher_interface		$dispatcher		Event dispatcher
 	* @param \phpbb\controller\helper				$helper       	Controller helper object
@@ -77,6 +79,7 @@ class action_manager
 		\phpbb\cache\driver\driver_interface $cache,
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\controller\helper $helper,
@@ -92,6 +95,7 @@ class action_manager
 		$this->cache		= $cache;
 		$this->chat 		= $chat;
 		$this->config		= $config;
+		$this->container 	= $container;
 		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
@@ -299,12 +303,12 @@ class action_manager
 
 									if($this->config['chat_show_avatars'])
 									{
-										if(!function_exists('get_user_avatar'))
-										{
-											include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-										}
-									
-										$row_avatar = get_user_avatar($this->user->data['user_avatar'], $this->user->data['user_avatar_type'], $this->user->data['user_avatar_width'], $this->user->data['user_avatar_height']);
+										$row_avatar = phpbb_get_user_avatar(array(
+											'avatar'		=> $this->user->data['user_avatar'],
+											'avatar_type'	=> $this->user->data['user_avatar_type'],
+											'avatar_width'	=> $this->user->data['user_avatar_width'], 
+											'avatar_height'	=> $this->user->data['user_avatar_height'],
+										));
 										
 										// Fix path error occurs in some cases
 										if($row_avatar && strpos($row_avatar, 'src=".') !== false)
@@ -457,6 +461,7 @@ class action_manager
 			case 'refresh_after_post':
 			case 'refresh_after_status':
 			case 'refresh_after_move':
+			case 'refresh_after_name':
 				$row_users = $row_data = $user_cache = array();
 				$max_time 		= $last_update;
 
@@ -592,7 +597,7 @@ class action_manager
 						WHERE ' . $this->db->sql_in_set('room_key', $room_update_ids);
 					$this->db->sql_query($sql);
 					
-					$this->cache->destroy('_chat_rooms');
+					$this->cache->destroy('_chat_options');
 				}
 
 				// Always set the guest room
@@ -736,7 +741,7 @@ class action_manager
 						$this->user->ip,
 						'LOG_CHAT_MESSAGE_REMOVED',
 						time(),
-						array($message)
+						($method == 'user') ? array('reportee_id' => 0, $message) : array($message)
 					);
 				}
 			break;
@@ -748,7 +753,7 @@ class action_manager
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
 				$this->db->sql_freeresult($result);
-				
+
 				if(!$row)
 				{
 					break;
@@ -759,7 +764,7 @@ class action_manager
 					if($submit)
 					{
 						// Parse and insert the new message
-						$message = utf8_normalize_nfc($this->request->variable('ic_edit_message', '', true));
+						$message = $this->request->variable('ic_edit_message', '', true);
 
 						// BBcode control
 						$this->strip_bbcode($message);
@@ -794,11 +799,21 @@ class action_manager
 
 					decode_message($row['message_text'], $row['bbcode_uid']);
 
+					$editor = \canidev\core\editor::get_instance($this->container);
+
+					$editor->build(array(
+						'name'				=> 'ic_edit_message',
+						'plugins'			=> 'chat',
+						'rows'				=> 3,
+						'type'				=> 'basic',
+						'value'				=> $row['message_text'],
+						'toolbarContainer'	=> '.ic-edit-toolbar',
+						'toolbar'			=> array('b', 'i', 'u', 'quote', 'code', 'list', 'list=1', '*', 'img', 'url', 'color', 'size'),
+						'toolbarExclude'	=> $this->chat->get_disallowed_bbcodes(),
+					));
+
 					$this->template->assign_vars(array(
-						'S_EDIT'			=> true,
-						'S_CHAT_MAX_CHARS'	=> $this->config['chat_max_chars'],
-						
-						'S_MESSAGE'	=> $row['message_text'],
+						'S_EDIT'	=> true,
 						'S_TITLE'	=> $this->lang->lang('EDIT'),
 					));
 				}
@@ -890,7 +905,7 @@ class action_manager
 			break;
 			
 			case 'quote':
-				if($this->auth('post') && $this->config['chat_allow_bbcode'] && !in_array('quote', $this->chat->disallowed_bbcodes))
+				if($this->auth('post') && $this->config['chat_allow_bbcode'] && !in_array('quote', $this->chat->get_disallowed_bbcodes()))
 				{
 					$sql = 'SELECT m.poster_username, m.message_text, m.bbcode_uid, u.username
 						FROM ' . CHAT_MESSAGES_TABLE . ' m
@@ -1194,6 +1209,34 @@ class action_manager
 				// Refresh the chat 
 				return $this->run('refresh_after_status');
 			break;
+
+			case 'set_name':
+				$user_key = $this->request->variable('uk', 0);
+
+				if(!$this->get_current_user() || $user_key != $this->user_key || $this->user_data['user_id'] != ANONYMOUS)
+				{
+					break;
+				}
+
+				if($submit)
+				{
+					$username = $this->request->variable('username', '', true);
+
+					$sql = 'UPDATE ' . CHAT_USERS_TABLE . "
+						SET username = '" . $this->db->sql_escape($username) . "'
+						WHERE user_key = " . $this->user_key;
+					$this->db->sql_query($sql);
+
+					// Refresh the chat 
+					return $this->run('refresh_after_name');
+				}
+
+				$this->template->assign_vars(array(
+					'S_SET_NAME'			=> true,
+					'S_CURRENT_USERNAME'	=> $this->user_data['username'],
+					'S_TITLE'				=> $this->lang->lang('CHAT_CHANGE_NAME'),
+				));
+			break;
 			
 			case 'move':
 				$sql = 'SELECT *
@@ -1279,6 +1322,7 @@ class action_manager
 			
 			case 'history':
 				$room_key = $this->request->variable('room', 0);
+				$max_time = $last_update;
 
 				if(!$room_key)
 				{
@@ -1311,7 +1355,7 @@ class action_manager
 		$vars = array('action', 'template_filename', 'json');
 		extract($this->dispatcher->trigger_event('chat.after_action_run', compact($vars)));
 		
-		if((in_array($action, array('login', 'edit', 'rules', 'whois', 'banuser', 'move')) || !empty($json['dialog'])) && !$submit)
+		if((in_array($action, array('login', 'edit', 'rules', 'whois', 'banuser', 'move', 'set_name')) || !empty($json['dialog'])) && !$submit)
 		{
 			$this->template->assign_var('S_DIALOG', true);
 		}
@@ -1320,8 +1364,8 @@ class action_manager
 			'chat' => $template_filename
 		));
 		
-		$response = new \canidev\core\json_response;
-		
+		$response = \canidev\core\json_response::get_instance();
+
 		$response
 			->add($json)
 			->add_html($this->template->assign_display('chat'))
@@ -1452,6 +1496,17 @@ class action_manager
 			}
 			else
 			{
+				if($row['user_id'] == ANONYMOUS) // test falta opcion
+				{
+					$row_actions[] = array(
+						'S_ACTION'		=> 'set_name',
+						'S_ICON'		=> 'fa-pencil',
+						'S_TITLE'		=> $this->lang->lang('CHAT_CHANGE_NAME'), // test
+						'S_USER_KEY'	=> $user_key,
+						'U_ACTION'		=> '#',
+					);
+				}
+
 				foreach($this->status_ary as $status_id => $action)
 				{
 					if($status_id == CHAT_STATUS_HIDDEN && !$this->auth('-u_hideonline'))
@@ -1612,9 +1667,14 @@ class action_manager
 		{
 			$bbcode_preg = '#\[\/?([a-z0-9\*\+\-]+).*?\]#i';
 		}
-		else if(sizeof($this->chat->disallowed_bbcodes))
+		else
 		{
-			$bbcode_preg = '#\[\/?(' . implode('|', array_map('preg_quote', $this->chat->disallowed_bbcodes)) . ').*?\]#i';
+			$disallowed_ary = $this->chat->get_disallowed_bbcodes();
+
+			if(sizeof($disallowed_ary))
+			{
+				$bbcode_preg = '#\[\/?(' . implode('|', array_map('preg_quote', $disallowed_ary)) . ').*?\]#i';
+			}
 		}
 		
 		if($bbcode_preg)
@@ -1867,11 +1927,6 @@ class action_manager
 			$this->db->sql_freeresult($result);
 		}
 		
-		if($this->config['chat_show_avatars'] && !function_exists('get_user_avatar'))
-		{
-			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-		}
-		
 		// Compose
 		foreach($row_data as $room_key => $room_data)
 		{
@@ -1910,7 +1965,7 @@ class action_manager
 			{
 				$row_avatar = $message = '';
 				$timestamp 		= 0;
-				$parse_flags	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+				$parse_flags	= (!empty($row['bbcode_bitfield']) ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 				
 				if(isset($row['post_id']))
 				{
@@ -1953,7 +2008,12 @@ class action_manager
 				
 				if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
 				{
-					$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
+					$row_avatar = phpbb_get_user_avatar(array(
+						'avatar'		=> $row['user_avatar'],
+						'avatar_type'	=> $row['user_avatar_type'],
+						'avatar_width'	=> $row['user_avatar_width'], 
+						'avatar_height'	=> $row['user_avatar_height'],
+					));
 
 					// Fix path error occurs in some cases
 					if($row_avatar && $this->chat->web_path != $this->root_path && strpos($row_avatar, 'src=".') !== false)
@@ -2002,7 +2062,7 @@ class action_manager
 						'CAN_DELETE'		=> $this->auth('delete', $row),
 						'CAN_EDIT'			=> $this->auth('edit', $row),
 						'CAN_MOVE'			=> ($is_public_room && $total_rooms > 1 && $this->auth('-m_chat_edit')),
-						'CAN_QUOTE'			=> (!in_array('quote', $this->chat->disallowed_bbcodes) && $this->auth('post')) ? true : false,
+						'CAN_QUOTE'			=> (!in_array('quote', $this->chat->get_disallowed_bbcodes()) && $this->auth('post')) ? true : false,
 						'CAN_VIEW_WHOIS'	=> $this->auth('-a_'),
 					);
 				}

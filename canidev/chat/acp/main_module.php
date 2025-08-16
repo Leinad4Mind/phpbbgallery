@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -28,12 +28,12 @@ class main_module
 	{
 		global $phpbb_container;
 
-		$this->controller = $phpbb_container->get('canidev.chat.acp.' . $mode);
+		$this->controller = $phpbb_container->get('canidev.chat.controller.admin.' . $mode);
 
 		$this->controller->u_action = $this->u_action;
 		$this->controller->display($mode);
 		
 		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title();
+		$this->page_title	= $this->controller->get_title('ACP_CAT_CHAT');
 	}
 }

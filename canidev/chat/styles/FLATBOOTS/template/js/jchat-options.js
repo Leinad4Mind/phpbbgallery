@@ -2,10 +2,10 @@
 * @name jchat-options.js
 * @package cBB Chat
 * @style: FLATBOOTS
-* @version v1.1.3 10/03/2017
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 var jchat_style_options = {
@@ -48,6 +48,7 @@ var jchat_style_options = {
 			top		: ['h3:first', 'after'],
 			bottom	: ['main > .row:last', 'before']
 		},
+		chat: ['#chat-container', 'append'],
 		undefined: {
 			top		: ['main', 'prepend'],
 			bottom	: ['main', 'append']

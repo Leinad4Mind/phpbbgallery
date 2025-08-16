@@ -1,21 +1,24 @@
+imports:
+    - { resource: controllers.yml }
+
 services:
     canidev.chat.listener:
         class: canidev\chat\event\listener
         arguments:
-            - @canidev.chat.chat
-            - @config
-            - @service_container
-            - @dbal.conn
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
         tags:
             - { name: event.listener }
             
     canidev.chat.cron.prune:
         class: canidev\chat\cron\prune
         arguments:
-            - @canidev.chat.chat
-            - @config
-            - @dbal.conn
-            - @canidev.chat.action_manager
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@dbal.conn'
+            - '@canidev.chat.action_manager'
         calls:
             - [set_name, [cron.task.chat_prune]]
         tags:
@@ -24,120 +27,36 @@ services:
     canidev.chat.chat:
         class: canidev\chat\libraries\chat
         arguments:
-            - @auth
-            - @cache.driver
-            - @config
-            - @service_container
-            - @dispatcher
-            - @dbal.conn
-            - @controller.helper
-            - @language
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %core.table_prefix%
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dispatcher'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
 
     canidev.chat.action_manager:
         class: canidev\chat\libraries\action_manager
         arguments:
-            - @auth
-            - @cache.driver
-            - @canidev.chat.chat
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @controller.helper
-            - @language
-            - @log
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            
-    canidev.chat.controller:
-        class: canidev\chat\controller\main_controller
-        arguments:
-            - @auth
-            - @canidev.chat.chat
-            - @config
-            - @service_container
-            - @dbal.conn
-            - @controller.helper
-            - @language
-            - @log
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-
-    canidev.chat.acp.config:
-        class: canidev\chat\controller\acp_controller_config
-        arguments:
-            - @cache.driver
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @log
-            - @request
-            - @template
-
-    canidev.chat.acp.pages:
-        class: canidev\chat\controller\acp_controller_pages
-        arguments:
-            - @cache.driver
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @log
-            - @request
-            - @template
-            - %core.root_path%
-            - %core.php_ext%
-    
-    canidev.chat.acp.rooms:
-        class: canidev\chat\controller\acp_controller_rooms
-        arguments:
-            - @cache.driver
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @log
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            
-    canidev.chat.acp.texts:
-        class: canidev\chat\controller\acp_controller_texts
-        arguments:
-            - @cache.driver
-            - @canidev.chat.chat
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @log
-            - @request
-            - @template
-            
-    canidev.chat.mcp.config:
-        class: canidev\chat\controller\mcp_controller_config
-        arguments:
-            - @config
-            - @dbal.conn
-            - @language
-            - @log
-            - @pagination
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@cache.driver'
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'

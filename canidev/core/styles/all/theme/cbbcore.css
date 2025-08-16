@@ -1,5 +1,14 @@
 
-.cbb-helper-hidden { display: none!important; }
+.cbb-helper-inline 						{ display: inline-block; }
+.cbb-helper-hidden 						{ display: none!important; }
+.cbb-helper-hidden-soft					{ visibility: hidden; }
+.cbb-helper-wait, .cbb-helper-wait * 	{ cursor: progress!important; }
+
+.cbb-helper-clear:after {
+	content: "";
+	clear: both;
+	display: block;
+}
 
 .cbb-helper-overflow {
 	overflow: hidden;
@@ -11,13 +20,16 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	width: 98%;
+	max-width: 98%;
 }
 
-.cbb-helper-wait, .cbb-helper-wait *		{ cursor: progress!important; }
+.cbb-helper-text.half-size {
+	max-width: 60%;
+}
 
-.cbb-helper-inline {
+.cbb-helper-text.cbb-inline {
 	display: inline-block;
+	vertical-align: middle;
 }
 
 .cbb-scroll-measure {
@@ -39,7 +51,7 @@
 }
 
 .cbb-float-message {
-	font-size: 1.1em;
+	font-size: 13px;
 	left: 50%;
 	padding: 10px 16px;
 	position: fixed;
@@ -67,7 +79,10 @@
 .cbb-loading {
 	position: relative;
 	height: 20px;
-	width: 20px;
+}
+
+span.cbb-loading {
+	display: inline-block;
 }
 
 .cbb-loading > span {
@@ -95,7 +110,59 @@
 	animation: cbb-loading .6s linear infinite;
 }
 
-/* Color palette
+/* User avatar
+--------------------------- */
+.cbb-circular-avatar {
+	display: inline-block;
+	height: 90px;
+	overflow: hidden;
+	position: relative;
+	vertical-align: middle;
+	width: 90px;
+	
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.cbb-circular-avatar.size-small {
+	height: 20px;
+	width: 20px;
+}
+
+.cbb-circular-avatar.size-big {
+	height: 120px;
+	width: 120px;
+}
+
+.cbb-circular-avatar.size-x2 {
+	height: 180px;
+	width: 180px;
+}
+
+.cbb-circular-avatar img,
+.cbb-circular-avatar .cbb-no-avatar {
+	height: 100%;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+
+	-webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.cbb-circular-avatar img {
+	width: auto;
+}
+
+.cbb-no-avatar {
+	background: url('images/no-avatar.svg') 0 0 no-repeat;
+	background-size: 100% 100%;
+	width: 100%;
+}
+
+/* Color palette (obsolete)
 --------------------------- */
 .cbb-color-palette {
 	min-width: 150px;
@@ -117,13 +184,48 @@
 	border-color: #222;
 }
 
+/* Color Picker
+--------------------------- */
+.cbb-color-picker {
+	line-height: 1px;
+	padding: 2px;
+}
+
+.cbb-color-picker canvas {
+	cursor: crosshair;
+}
+
+.cbb-color-picker .color-picker-form {
+	margin: 5px 0 2px;
+    text-align: right;
+}
+
+.cbb-color-picker .presets {
+	float: left;
+	margin: 5px 0 0 4px;
+}
+
+.cbb-color-picker .presets > a {
+	display: inline-block;
+    height: 14px;
+    margin-right: 7px;
+    width: 14px;
+    outline: 1px solid #ccc;
+    outline-offset: 1px;
+}
+
 /* ACP
 ---------------------------------- */
 .cbb-help-icon {
 	font-size: 28px;
+	opacity: .4;
 	position: absolute;
 	right: 10px;
 	top: 4px;
+}
+
+.cbb-help-icon:hover {
+	opacity: 1;
 }
 
 /* Dialogs
@@ -144,7 +246,7 @@
 	font-size: 11px;
 	overflow: hidden;
 	width: 300px;
-	z-index: 9995;
+	z-index: 9991;
 
 	-webkit-box-shadow: 0 0 15px #313030;
 	-moz-box-shadow: 0 0 15px #313030;
@@ -168,11 +270,16 @@
 }
 
 a.cbb-dialog-close,
+a.cbb-dialog-sidebarlauncher,
 button.cbb-dialog-close {
 	float: right;
     margin-right: 5px;
     font-size: 1.2em;
     margin-top: -2px;
+}
+
+.cbb-dialog-sidebarlauncher {
+	display: none;
 }
 
 .cbb-dialog .cbb-dialog-content {
@@ -198,7 +305,6 @@ button.cbb-dialog-close {
 
 .cbb-dialog .cbb-dialog-buttons .cbb-btn {
 	margin: 6px 2px;
-	min-width: 45px;
 }
 
 .cbb-dialog-mask {
@@ -212,7 +318,7 @@ button.cbb-dialog-close {
 }
 
 .cbb-modal-dialog {
-	z-index: 9998;
+	z-index: 9992;
     top: 20px;
     left: 20px;
     right: 20px;
@@ -228,10 +334,11 @@ button.cbb-dialog-close {
 }
 
 .cbb-modal-dialog a.cbb-dialog-close,
+.cbb-modal-dialog a.cbb-dialog-sidebarlauncher,
 .cbb-modal-dialog button.cbb-dialog-close {
 	font-size: 1.3em;
 	margin-right: 1.2em;
-    margin-top: -36px;
+    margin-top: 20px;
 }
 
 .cbb-dialog,
@@ -243,7 +350,7 @@ button.cbb-dialog-close {
 	left: 50%;
 	max-width: 95%;
 	position: absolute;
-	top: 20%;
+	top: 15%;
 	
 	-webkit-transform: translate(-50%);
 	-moz-transform: translate(-50%);
@@ -275,8 +382,345 @@ body > .cbb-dialog.fixed {
 	font-size: 1em;
 }
 
+.cbb-modal-dialog .cbb-dialog-menu {
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0 1px 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+	overflow-y: auto;
+    width: 200px;
+    z-index: 2;
+	background: #f3f3f3;
+	list-style-type: none;
+	margin: 0;
+	padding: 10px 0 0 0;
+}
+
+.cbb-modal-dialog .cbb-dialog-menu a {
+    display: block;
+    position: relative;
+    padding: 8px 20px;
+    margin: 0;
+	text-decoration: none;
+    line-height: 18px;
+    font-size: 14px;
+}
+
+.cbb-modal-dialog .cbb-dialog-menu a .fa { display: none; }
+
+.cbb-modal-dialog .cbb-dialog-menu a.active {
+	background-color: #eaeaea;
+}
+
+.cbb-modal-dialog .cbb-dialog-menu .row-separator {
+	border: 1px solid #ddd;
+	border-width: 1px 0 0 0;
+    height: 0;
+    margin: 12px 20px;
+    padding: 0;
+}
+
+.cbb-modal-dialog .cbb-dialog-sidebar {
+    position: absolute;
+    width: 300px;
+    padding: 0 16px 24px;
+    z-index: 1;
+    border: 1px solid #ddd;
+	border-width: 0 0 0 1px;
+    overflow: auto;
+	top: 0;
+    bottom: 0;
+    right: 0;
+    background: #f3f3f3;
+}
+
+.cbb-modal-dialog .cbb-dialog-sidebar h3 {
+    position: relative;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #666;
+    margin: 14px 0 5px 0;
+}
+
+.cbb-modal-dialog .cbb-dialog-header {
+    top: 0;
+    height: 50px;
+	right: 0;
+}
+
+.cbb-modal-dialog .cbb-dialog-header h1 {
+    padding: 0 16px;
+    float: left;
+    font-size: 22px;
+	font-weight: normal;
+    line-height: 50px;
+    margin: 5px 0 0;
+	color: #000;
+}
+
+.cbb-modal-dialog .cbb-dialog-content {
+    top: 60px;
+    bottom: 61px;
+    height: auto;
+    width: auto;
+    margin: 0;
+    overflow: hidden;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+	right: 0;
+}
+
+.cbb-modal-dialog .cbb-dialog-toolbar {
+    bottom: 0;
+    height: 60px;
+	right: 0;
+	padding: 0 16px;
+}
+
+.cbb-modal-dialog .media-toolbar-primary {
+    float: right;
+    height: 100%;
+	padding-top: 15px;
+}
+
+.cbb-modal-dialog .media-toolbar-secondary {
+    float: left;
+    height: 100%;
+	padding-top: 15px;
+}
+
+.cbb-modal-dialog .cbb-dialog-header,
+.cbb-modal-dialog .cbb-dialog-content,
+.cbb-modal-dialog .cbb-dialog-toolbar {
+	position: absolute;
+	left: 200px;
+	z-index: 1;
+}
+
+.cbb-modal-dialog .cbb-section-content {
+	bottom: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 300px;
+}
+
+/* Image Gallery
+---------------------------------- */
+.rsz-container {
+	display: inline-block;
+	position: relative;
+}
+
+.rsz-container .rsz-link {
+	bottom: 5px;
+	position: absolute;
+	right: 5px;
+}
+
+#rsz-img {
+	padding: 5px;
+	z-index: 9998;
+}
+
+#rsz-img .rsz-close {
+	display: none;
+	font-size: 16px;
+	height: 32px;
+	line-height: 28px;
+	right: -12px;
+	text-align: center;
+	top: -12px;
+	width: 32px;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+
+#rsz-img,
+#rsz-img .rsz-close {
+	background: #fff;
+	border: 2px solid #5a5a5a;
+	position: absolute;
+}
+
+#rsz-img img {
+	display: none;
+	height: 100%;
+	width:100%; 
+}
+
+#rsz-img img.rsz-image-centered {
+	left: 50%;
+	position: absolute;
+    top: 50%;
+    
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#rsz-img .rsz-arrows {
+	position: absolute;
+    bottom: -30px;
+    right: 0;
+}
+
+.rsz-cursor-zoom {
+	cursor: zoom-in;
+}
+
+/* Dropdown
+---------------------------------- */
+.cbb-dropdown {
+	background: #fff;
+	border: 1px solid #ccc;
+	position: absolute;
+	margin: 0;
+	min-height: 20px;
+	min-width: 50px;
+	padding: 2px;
+	z-index: 8000;
+	
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.cbb-dropdown .cbb-dropdown-pointer,
+.cbb-dropdown .cbb-dropdown-pointer:before {
+	position: absolute;
+    width: 0;
+    height: 0;
+    left: 50%;
+    margin-left: -8px;
+    border: 8px solid #0000;
+    border-top-width: 0;
+}
+
+.cbb-dropdown .cbb-dropdown-pointer {
+	top: -8px;
+	border-bottom-color: #ccc;
+}
+
+.cbb-dropdown.intop .cbb-dropdown-pointer {
+	bottom: -8px;
+	top: unset;
+    
+    -webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.cbb-dropdown .cbb-dropdown-pointer:before {
+	border-bottom-color: #fff;
+	content: "";
+	top: 2px;
+}
+
+/* Menu
+---------------------------------- */
+.cbb-menu {
+	list-style-type: none;
+	margin: 0;
+	overflow: auto;
+	padding: 0;
+}
+
+.cbb-menu li a {
+	color: #000;
+	display: block !important;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 11px;
+	padding: 8px 12px !important;
+	white-space: nowrap;
+}
+
+.cbb-menu li a:hover,
+.cbb-menu li a.active {
+	background: #EFEFEF;
+	text-decoration: none;
+}
+
+.cbb-menu .fa {
+	font-size: 1.2em;
+	margin-right: 4px;
+	width: 14px;
+}
+
+/* Editor
+------------------------------------- */
+.editor-wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.editor-wrapper > textarea {
+	font-size: 12px;
+	width: 100%;
+	flex: 1 1 0%;
+}
+
+.editor-wrapper-toolbar {
+	margin-bottom: 5px;
+}
+
+.editor-wrapper-toolbar > .cbb-btn,
+.editor-wrapper-toolbar > .cbb-inputbox {
+	line-height: 26px;
+	margin: 2px;
+}
+
+.editor-wrapper-toolbar > .cbb-inputbox {
+	padding: 5.5px;
+}
+
+.editor-wrapper-toolbar > .cbb-btn .fa {
+	font-size: 13px;
+}
+
+.editor-wrapper-toolbar > .cbb-btn img {
+	margin-top: -2px;
+	max-width: 20px;
+}
+
+.editor-dropdown {
+	padding: 6px;
+}
+
+.editor-dropdown label {
+	display: block;
+    margin: 6px 0;
+    font-weight: bold;
+}
+
+.editor-dropdown .submit-buttons {
+	margin-top: 8px;
+	text-align: right;
+}
+
+.cbb-smiley-container {
+	margin-bottom: 5px;
+    overflow: auto;
+}
+
+.cbb-smiley-container a {
+	display: inline-block;
+	margin: 5px;
+}
+
 /* ProgressBar
-----------------------------------*/
+---------------------------------- */
 .cbb-progress-bar {
 	background: #e8e8e8;
     width: 100%;
@@ -328,7 +772,8 @@ a.cbb-btn.default-btn {
     color: #FFF;
 }
 
-.cbb-btn:hover {
+.cbb-btn:hover,
+a.cbb-btn:hover {
 	background-color: #fff;
     background-image: -webkit-linear-gradient(top,#fff,#f8f8f8);
     background-image: -moz-linear-gradient(top,#fff,#f8f8f8);
@@ -341,14 +786,11 @@ a.cbb-btn.default-btn {
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
-.cbb-btn.default-btn:hover {
+.cbb-btn.default-btn:hover,
+a.cbb-btn.default-btn:hover {
     background: #2c56b1;
     border-color: #21448d;
 	color: #fff;
-}
-
-.cbb-btn .fa {
-	vertical-align: middle;
 }
 
 .cbb-btn.dropdown-select {
@@ -378,7 +820,10 @@ a.cbb-btn.default-btn {
     padding: 2px 12px;
 }
 
-.cbb-inputbox {
+.cbb-inputbox,
+.cbb-inputbox-labelled input,
+.cbb-inputbox-labelled textarea {
+	background: #fafafa;
 	border: 1px solid #d0cfcf;
 	cursor: text;
 	font-family: Verdana, Helvetica, Arial, sans-serif;
@@ -393,22 +838,117 @@ a.cbb-btn.default-btn {
 	border-radius: 4px;
 }
 
+.cbb-inputbox:hover,
+.cbb-inputbox-labelled input:hover,
+.cbb-inputbox-labelled textarea:hover,
+.cbb-inputbox:focus,
+.cbb-inputbox-labelled input:focus,
+.cbb-inputbox-labelled textarea:focus {
+	background: #fafafa;
+	border-color: #a1a1a1;
+	color: initial;
+}
+
+input.cbb-inputbox,
+.cbb-inputbox-labelled input {
+	padding: 6px;
+}
+
 select.cbb-inputbox {
 	cursor: default;
+}
+
+.cbb-inputbox.full-width {
+	width: 100%;
 }
 
 .cbb-inputbox optgroup {
 	border: none;
 }
 
+.cbb-inputbox-labelled {
+	margin: 6px 0;
+	position: relative;
+}
+
+.cbb-inputbox-labelled input {
+	background: none;
+	display: block;
+	width: 100%;
+}
+
+.cbb-inputbox-labelled label {
+	font-size: 11px;
+	position: absolute;
+	left: 5px;
+	width: 100%;
+	top: 6px;
+	color: #aaa;
+	z-index: -1;
+	transition: 0.3s;
+}
+
+.cbb-inputbox-labelled span {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 2px;
+	background-color: #000;
+	transition: 0.4s;
+}
+
+.cbb-inputbox-labelled input:focus,
+.cbb-inputbox-labelled input:valid {
+	border-width: 0;
+}
+
+.cbb-inputbox-labelled input:focus ~ label,
+.cbb-inputbox-labelled input:valid ~ label	{
+	top: -10px;
+	font-size: 11px;
+	color: #828282;
+	transition: 0.3s;
+}
+
+.cbb-inputbox-labelled input:focus ~ span,
+.cbb-inputbox-labelled input:valid ~ span	{
+	width: 100%;
+	transition: 0.4s;
+	left: 0;
+}
+
 .cbb-group {
+	display: inline-block;
 	vertical-align: middle;
+}
+
+.cbb-group:after {
+    content: "";
+    clear: both;
+    display: block;
 }
 
 .cbb-group .cbb-inputbox,
 .cbb-group .cbb-btn {
     float: left;
     margin: 0 -1px 0 0;
+}
+
+#acp dd .cbb-group .cbb-inputbox {
+	max-width: 50%;
+}
+
+.cbb-group .cbb-inputbox,
+.cbb-group .cbb-inputbox:hover,
+.cbb-group .cbb-inputbox:focus {
+	outline: none;
+}
+
+.cbb-group > * {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
 }
 
 .cbb-group > :first-child:not(:last-child) {
@@ -448,6 +988,7 @@ input.cbb-checkbox + label:before {
 	font-family: fontAwesome;
 	display: inline-block;
 	font-size: 16px;
+	font-weight: normal;
 	height: 17px;
 	padding: 0;
 	vertical-align: middle;
@@ -459,9 +1000,14 @@ input.cbb-checkbox:checked + label:before {
 	content: "\f046";
 }
 
+.group-special {
+	font-weight: bold;
+}
+
 /* Buttons states
 ------------------------------ */
 .cbb-state-highlight,
+a.cbb-state-highlight,
 .cbb-inputbox.cbb-state-highlight {
 	background: #fbec88;
 	border: 1px solid #fad42e;
@@ -497,11 +1043,97 @@ input.cbb-checkbox:checked + label:before {
 /* Fix sizes
 ---------------------------------- */
 .cbb-dialog,
+.cbb-modal-dialog,
+.cbb-modal-dialog *,
 .cbb-inputbox,
-.cbb-progress-bar .inner {
+.cbb-inputbox-labelled *,
+.cbb-progress-bar .inner,
+#rsz-img {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+/* RTL Support
+----------------------------------*/
+.rtl a.cbb-dialog-close,
+.rtl a.cbb-dialog-sidebarlauncher,
+.rtl button.cbb-dialog-close {
+	float: left;
+}
+
+.rtl .cbb-modal-dialog .cbb-dialog-header h1 {
+	float: right;
+}
+
+.rtl .cbb-modal-dialog a.cbb-dialog-close,
+.rtl .cbb-modal-dialog a.cbb-dialog-sidebarlauncher,
+.rtl .cbb-modal-dialog button.cbb-dialog-close {
+	margin-left: 1.2em;
+	margin-right: 0;
+}
+
+.rtl .cbb-dialog .cbb-dialog-buttons,
+.rtl .cbb-submit-buttons,
+.rtl .editor-dropdown .submit-buttons {
+	text-align: left;
+}
+
+.rtl .cbb-group .cbb-inputbox,
+.rtl .cbb-group .cbb-btn {
+	float: right;
+}
+
+.rtl .cbb-group > :first-child:not(:last-child) {
+	-moz-border-radius: 0 2px 2px 0;
+    -webkit-border-radius: 0 2px 2px 0;
+    border-radius: 0 2px 2px 0;
+}
+
+.rtl .cbb-group > :last-child:not(:first-child) {
+	-moz-border-radius: 2px 0 0 2px;
+    -webkit-border-radius: 2px 0 0 2px;
+    border-radius: 2px 0 0 2px;
+}
+
+.rtl .cbb-modal-dialog .cbb-dialog-menu {
+	left: unset;
+	right: 0;
+}
+
+.rtl .cbb-modal-dialog .cbb-dialog-header,
+.rtl .cbb-modal-dialog .cbb-dialog-content,
+.rtl .cbb-modal-dialog .cbb-dialog-toolbar {
+	left: 0;
+	right: 200px;
+}
+
+.rtl .cbb-modal-dialog .cbb-section-content {
+	left: 300px;
+	right: 0;
+}
+
+.rtl .cbb-modal-dialog .cbb-dialog-sidebar {
+	left: 0;
+	right: unset;
+}
+
+.rtl .cbb-modal-dialog .media-toolbar-primary {
+	float: left;
+}
+
+.rtl .cbb-modal-dialog .media-toolbar-secondary {
+	float: right;
+}
+
+.rtl .cbb-help-icon {
+	left: 10px;
+	right: unset;
+}
+
+.rtl #rsz-img .rsz-close {
+	left: -12px;
+	right: unset;
 }
 
 /* Dark Themes
@@ -517,13 +1149,64 @@ input.cbb-checkbox:checked + label:before {
 .dark-theme .cbb-dialog .cbb-dialog-buttons,
 .dark-theme .cbb-btn,
 .dark-theme a.cbb-btn,
-.dark-theme .cbb-btn.dropdown-select:after {
+.dark-theme .cbb-btn.dropdown-select:after,
+.dark-theme .cbb-dropdown {
 	border-color: #444;
 }
 
-.dark-theme .cbb-inputbox {
+.dark-theme .cbb-modal-dialog .cbb-dialog-header h1,
+.dark-theme .cbb-modal-dialog .cbb-dialog-menu a,
+.dark-theme .cbb-modal-dialog .cbb-dialog-sidebar h3,
+.dark-theme .cbb-modal-dialog a.cbb-dialog-close {
+	color: #ccc;
+}
+
+.dark-theme .cbb-modal-dialog .cbb-dialog-menu,
+.dark-theme .cbb-modal-dialog .cbb-dialog-sidebar {
+	background-color: #404040;
+	border-color: #585858;
+}
+
+.dark-theme .cbb-modal-dialog .cbb-dialog-menu a.active {
+	background-color: #333;
+}
+
+.dark-theme .cbb-modal-dialog .cbb-dialog-content {
+	background-color: #252525;
+	border-color: #585858;
+}
+
+.dark-theme .cbb-modal-dialog .cbb-dialog-menu .row-separator {
+    border-color: #6d6d6d;
+}
+
+.dark-theme .cbb-dropdown .cbb-dropdown-pointer {
+	border-bottom-color: #444;
+}
+
+.dark-theme .cbb-dropdown .cbb-dropdown-pointer:before {
+	border-bottom-color: #1f1f1f;
+}
+
+.dark-theme .cbb-menu li a {
+	color: #8c8c8c;
+}
+
+.dark-theme .cbb-menu li a:hover,
+.dark-theme .cbb-menu li a.active {
+	background-color: #2b2b2b;
+}
+
+.dark-theme .cbb-inputbox,
+.dark-theme .cbb-dropdown,
+.dark-theme .cbb-dialog input.cbb-inputbox {
 	background-color: #1f1f1f;
+}
+
+.dark-theme .cbb-inputbox,
+.dark-theme .cbb-dialog input.cbb-inputbox {
 	border-color: #555;
+	color: #E0E0E0;
 	outline-color: #5a5a5a;
 }
 
@@ -550,6 +1233,11 @@ input.cbb-checkbox:checked + label:before {
 	background-color: #a07e72;
     border-color: #900808;
     color: #9c0808;
+}
+
+.dark-theme #rsz-img,
+.dark-theme #rsz-img .rsz-close {
+	background-color: #444;
 }
 
 /* Dialog Animation
@@ -609,6 +1297,12 @@ input.cbb-checkbox:checked + label:before {
 
 /* Responsive
 ------------------------- */
+@media only screen and (max-width: 1024px) {
+	.cbb-modal-dialog.media .cbb-dialog-sidebar { display: none; }
+	.cbb-modal-dialog.media .cbb-section-content { right: 0; }
+	.rtl .cbb-modal-dialog .cbb-section-content { left: 0; }
+}
+
 @media only screen and (max-width: 780px) {
 	.cbb-modal-dialog {
 		top: 0;
@@ -623,10 +1317,99 @@ input.cbb-checkbox:checked + label:before {
 		text-align: center;
 		margin-right: 0;
 	}
+
+	.cbb-dialog-sidebarlauncher {
+		display: block;
+	}
+
+	.cbb-modal-dialog .cbb-dialog-sidebar {
+		z-index: 3;
+
+		-webkit-transition: transform 1.2s ease;
+		-moz-transition: transform 1.2s ease;
+    	transition: transform 1.2s ease;
+
+		-webkit-transform: translate(100%, 0);
+		-moz-transform: translate(100%, 0);
+		transform: translate(100%, 0);
+	}
+
+	.rtl .cbb-modal-dialog .cbb-dialog-sidebar {
+		-webkit-transform: translate(-100%, 0);
+		-moz-transform: translate(-100%, 0);
+		transform: translate(-100%, 0);
+	}
+
+	.cbb-modal-dialog .cbb-dialog-sidebar.active {
+		-webkit-transform: translate(0, 0);
+		-moz-transform: translate(0, 0);
+		transform: translate(0, 0);
+	}
+
+	.cbb-modal-dialog .cbb-section-content {
+		right: 10px !important;
+	}
 }
 
-@media only screen and (max-width: 425px) {
-	#acp dd input.cbb-inputbox {
-		width: 90%;
+@media only screen and (max-width: 700px) {
+	.cbb-modal-dialog.media .cbb-dialog-menu { width: 60px; }
+	
+	.cbb-modal-dialog.media .cbb-dialog-header,
+	.cbb-modal-dialog.media .cbb-dialog-content,
+	.cbb-modal-dialog.media .cbb-dialog-toolbar {
+		left: 60px;
 	}
+	
+	.cbb-modal-dialog .cbb-dialog-menu a .fa		{ display: block; }
+	.cbb-modal-dialog .cbb-dialog-menu a .item-title	{ display: none; }
+}
+
+@media only screen and (max-width: 480px) {
+	.cbb-modal-dialog.media .cbb-dialog-menu {
+		left: 0;
+		top: 60px;
+		bottom: initial;
+		height: 36px;
+		padding: 0;
+		right: 0;
+		width: auto;
+		border: none;
+		border-width: 1px 0 0 0;
+		text-align: center;
+		white-space: nowrap;
+		overflow-x: auto;
+	}
+	
+	.cbb-modal-dialog .cbb-dialog-menu li { display: inline-block; }
+	
+	.cbb-modal-dialog .cbb-dialog-menu a { padding: 12px 20px; }
+	
+	.cbb-modal-dialog.media .cbb-dialog-content { top: 97px; }
+	
+	.cbb-modal-dialog.media .cbb-dialog-header,
+	.cbb-modal-dialog.media .cbb-dialog-content,
+	.cbb-modal-dialog.media .cbb-dialog-toolbar {
+		left: 0;
+		right: 0;
+	}
+	
+	.cbb-modal-dialog .cbb-dialog-menu .row-separator {
+		width: 0;
+		padding: 0;
+		border-width: 0 1px 0 0;
+		height: 28px;
+		vertical-align: top;
+		margin: 5px 0 0 0;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.cbb-modal-dialog .cbb-dialog-header h1 {
+		font-size: 20px;
+	}
+	
+	.cbb-modal-dialog.media .cbb-dialog-menu { top: 50px; }
+	.cbb-modal-dialog .cbb-dialog-menu a { padding: 12px; }
+
+	.cbb-modal-dialog.media .cbb-dialog-content { top: 87px; }
 }
