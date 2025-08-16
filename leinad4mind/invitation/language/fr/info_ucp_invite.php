@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -108,6 +108,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_NO_LOGIN'					=> 'Il/Elle n’est pas enregistré(e) sur ce site.',
 	'UCP_INVITE_NO_PERM'					=> 'Vous n’êtes pas autorisé à envoyer des invitations!',
 	'UCP_INVITE_NO_PERM_EMAIL'				=> 'Vous n’êtes pas autorisé à envoyer des e-mails!',
+	'UCP_INVITE_MEMBERSHIP_DAYS'			=> 'Vous devez être membre depuis au moins %1$d jours avant de pouvoir envoyer des invitations. Vous pouvez envoyer des invitations à partir du %2$s.',
 	'UCP_INVITE_NO_REG'						=> 'Vous n’avez encore invité personne.',
 	'UCP_INVITE_NULL'						=> 'Vous n’avez aucune invitation! <em>Pourquoi pas en acheter ?</em>',
 	'UCP_INVITE_POINTS_AMOUNT'				=> 'Cadeau',

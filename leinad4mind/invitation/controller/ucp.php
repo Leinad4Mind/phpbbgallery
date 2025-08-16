@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -175,6 +175,14 @@ class ucp extends controller_base
 				{
 					meta_refresh(5, $aia);
 					trigger_error($this->language->lang('UCP_INVITE_NO_PERM') . $aback);
+				}
+
+				if ($this->ext_config['invite_membership_days'] && ((time() - $this->user->data['user_regdate']) / 86400) < $this->ext_config['invite_membership_days'])
+				{
+					$user_can_send_invite_start_time = $this->user->data['user_regdate'] + 86400 * $this->ext_config['invite_membership_days'];
+					$user_can_send_invite_start_date = $this->user->format_date($user_can_send_invite_start_time);
+					meta_refresh(5, $aia);
+					trigger_error($this->language->lang('UCP_INVITE_MEMBERSHIP_DAYS', $this->ext_config['invite_membership_days'], $user_can_send_invite_start_date) . $aback);
 				}
 
 				if ($this->user->data['user_posts'] < $this->ext_config['invite_post_limit'])
@@ -387,7 +395,7 @@ class ucp extends controller_base
 				$this->template->assign_vars(array(
 					'S_INVITE_MAIL'		=> true,
 					'S_FRIEND'				=> $friend,
-					'S_INVITE_LANG_OPTIONS'	=> sizeof($lang_row > 1) ? language_select($user_lang) : false,
+					'S_INVITE_LANG_OPTIONS'	=> sizeof($lang_row) > 1 ? language_select($user_lang) : false,
 					'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 					'MORE_RECIPIENTS'		=> $this->ext_config['invite_email_db'] > 1 ? $this->language->lang('UCP_INVITE_DB', $this->ext_config['invite_email_db']) : false,
 					'EMAIL_CIM'				=> $email,
@@ -504,8 +512,8 @@ class ucp extends controller_base
 
 						if (sizeof($invite_ids))
 						{
-							$this->functions->delete_key($invite_ids);
-							$this->functions_ucp->add_invite(sizeof($invite_ids));
+							$this->functions->delete_key($invite_ids, false);
+							$this->functions->add_invite(sizeof($invite_ids));
 
 							$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_INVITE_DELETE', false, array('reportee_id' => $this->user->data['user_id'], $email));
 

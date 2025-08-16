@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -230,7 +230,9 @@ class acp extends controller_base
 					$display_vars['vars'] += array(
 						'invite_captcha_enable'			=> array('lang' => 'ACP_INVITE_CAPTCHA'							,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
 						'email_address_change'			=> array('lang' => 'ACP_INVITE_MAIL_FIX'						,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'invite_membership_days'		=> array('lang' => 'ACP_INVITE_MEMBERSHIP_DAYS'					,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
 						'invite_db'						=> array('lang' => 'ACP_INVITE_ALL_USER_INVITE_MAX'				,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
+						'invite_restore_invites'		=> array('lang' => 'ACP_INVITE_RESTORE_INVITES'					,'validate' => 'bool'		, 'type' => 'radio:yes_no'	, 'explain'	=> true),
 						'invite_email_priority'			=> array('lang' => 'ACP_INVITE_EMAIL_PRIORITY'					,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> false	, 'method' => 'invite_email_priority_select'),
 						'invite_validity'				=> array('lang' => 'ACP_INVITE_VALIDATION'						,'validate' => 'int'		, 'type' => 'select'		, 'explain'	=> true		, 'method' => 'invite_validity_select'),
 						'invite_page_list'				=> array('lang' => 'ACP_INVITE_USER_LIST'						,'validate' => 'int:5:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
@@ -249,9 +251,11 @@ class acp extends controller_base
 						'legend3'						=> 'ACP_INVITE_CONFIG_GIFT',
 						'invite_new_reg'				=> array('lang' => 'ACP_INVITE_NEW_REG'							,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
 						'invite_birthdays'				=> array('lang' => 'ACP_INVITE_BIRTHDAYS'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
+						'invite_posts_gift_posts'		=> array('lang' => 'ACP_INVITE_POSTS_GIFT_POSTS'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
+						'invite_posts_gift_invites'		=> array('lang' => 'ACP_INVITE_POSTS_GIFT_INVITES'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
+						'invite_posts_gift_limit'		=> array('lang' => 'ACP_INVITE_POSTS_GIFT_LIMIT'				,'validate' => 'int:0:9999'	, 'type' => 'text:20:100'	, 'explain'	=> true),
 						'gift_invited_users'			=> array('lang' => 'ACP_INVITE_GIFT_INVITED_USERS'				,'validate' => 'int:0:999'	, 'type' => 'custom'		, 'explain'	=> true		, 'method' => 'invite_gift'),
 						'gift_invited_users_invitation'	=> false,
-
 						'legend4'						=> 'ACP_INVITE_CONFIG_REQUEST',
 
 						'invite_req_max'				=> array('lang' => 'ACP_INVITE_REQUEST_MAX'						,'validate' => 'int:0:99'	, 'type' => 'text:1:2'		, 'explain'	=> true		, 'append' => ' ' . $this->language->lang('ACP_INVITE_DB')),
@@ -785,7 +789,7 @@ class acp extends controller_base
 					'S_LIMIT_DAYS'		=> $s_limit_days,
 					'S_SORT_KEY'		=> $s_sort_key,
 					'S_SORT_DIR'		=> $s_sort_dir,
-					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITET_USERS_COUNT', $users_count),
+					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITED_USERS_COUNT', $users_count),
 				));
 
 				foreach ($users as $row)
@@ -898,7 +902,7 @@ class acp extends controller_base
 					'S_ON_PAGE'			=> $this->pagination->on_page($invites_count, $list_invite, $start),
 					'S_SORT_KEY'		=> $s_sort_key,
 					'S_SORT_DIR'		=> $s_sort_dir,
-					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITET_PEND_COUNT', $invites_count),
+					'TOTAL_COUNT'		=> $this->language->lang('ACP_INVITED_PEND_COUNT', $invites_count),
 				));
 
 				foreach ($invites as $row)

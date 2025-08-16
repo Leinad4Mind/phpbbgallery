@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -42,10 +42,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_REGISTER'								=> 'Création d’un ID par invitation',
 	'ACP_INVITE_REGISTER_EXPLAIN'						=> 'Choisir entre les options.<br />A noter que désactiver l’inscription dans Activation de compte écrase toutes les options.',
 	'ACP_INVITE'										=> 'Invitation',
-	'ACP_INVITET_PEND_COUNT'							=> 'Toutes les invitations (%s)',
-	'ACP_INVITET_USERS_COUNT'							=> 'Tous les utilisateurs (%s)',
+	'ACP_INVITED_PEND_COUNT'							=> 'Toutes les invitations (%s)',
+	'ACP_INVITED_USERS_COUNT'							=> 'Tous les utilisateurs (%s)',
 	'ACP_INVITE_ALL_USER_INVITE_MAX'					=> 'Invitations illimitées pour tout le monde',
 	'ACP_INVITE_ALL_USER_INVITE_MAX_EXPLAIN'			=> 'Si sélectionné, tous les utilisateurs auront un nombre illimité d’invitations.',
+	'ACP_INVITE_RESTORE_INVITES'						=> 'Restaurer les invitations expirées et refusées',
+	'ACP_INVITE_RESTORE_INVITES_EXPLAIN'				=> 'Si cette option est activée, un utilisateur dont l\'invitation expire ou est refusée se voit rembourser l\'invitation.',
 	'ACP_INVITE_BIRTHDAYS'								=> 'Anniversaire',
 	'ACP_INVITE_BIRTHDAYS_EXPLAIN'						=> 'Vous pouvez définir combien d’invitations un utilisateur recevra pour son anniversaire. <em>Pour que ce réglage prenne effet il faut que la fonctionnalité Anniversaire soit activée sur le forum.</em>',
 	'ACP_INVITE_CAPTCHA'								=> 'Confirmation visuelle',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> L’envoi d’e-mails est actuellement désactivé !<br />Pendant que c’est désactivé, les invitations ne peuvent fonctionner. Pour le réactiver, vous pouvez aller %sICI%s.',
 	'ACP_INVITE_EMAIL_DISABLED'							=> 'L’envoi d’e-mails a été désactivé, veuillez le réactiver. %sAller aux paramètres des e-mail%s',
 	'ACP_INVITE_EMAIL_PRIORITY'							=> 'Priorité des courriers Invitation',
+	'ACP_INVITE_MEMBERSHIP_DAYS'						=> 'Jours d\'adhésion minimum',
+	'ACP_INVITE_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Nombre de jours pendant lesquels un utilisateur doit être enregistré avant que le système d\'invitation soit autorisé à être utilisé. Réglez sur 0 pour permettre une utilisation immédiate.',
 	'ACP_INVITE_ENABLE'									=> 'Activer le MOD Invitation',
 	'ACP_INVITE_ENABLE_EXPLAIN'							=> 'Si oui, on pourra utiliser le MOD Invitation',
 	'ACP_INVITE_VALIDATION'								=> 'Temps d’expiration des invitations',
@@ -82,13 +86,19 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_GIFT_NUMBER_INVITES'					=> 'Nombre d’invitations offertes',
 	'ACP_INVITE_GIFT_INVITED_USERS'						=> 'Bonus membres invités',
 	'ACP_INVITE_GIFT_INVITED_USERS_EXPLAIN'				=> 'Les utilisateurs reçoivent une ou plusieurs invitations gratuites en cadeau quand cette quantité de membres invités est atteinte.<br /><em>Si “0”, la fonction est désactivée.</em>',
+	'ACP_INVITE_POSTS_GIFT_INVITES'						=> 'Publie des invitations à des jalons',
+	'ACP_INVITE_POSTS_GIFT_INVITES_EXPLAIN'				=> 'Nombre d\'invitations qu\'un utilisateur est récompensé lorsqu\'il atteint un jalon. Réglez sur 0 pour désactiver cette fonction.',
+	'ACP_INVITE_POSTS_GIFT_POSTS'						=> 'Jalon des publications',
+	'ACP_INVITE_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Intervalle de publications lorsqu\'un utilisateur reçoit le nombre d\'invitations ci-dessous. Réglez sur 0 pour désactiver cette fonction.',
+	'ACP_INVITE_POSTS_GIFT_LIMIT'						=> 'Limiter les jalons postérieurs',
+	'ACP_INVITE_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Nombre maximum de fois qu\'un utilisateur reçoit des invitations pour avoir atteint un jalon. Par exemple, défini sur 30 publications limitées par 3 jalons. Les invitations sont récompensées à 30, 60, 90 messages. Réglez sur 0 pour désactiver cette fonction.',
 	'ACP_INVITE_GROUP'									=> 'Groupe des Utilisateurs Invités',
 	'ACP_INVITE_GROUP_ENABLED'							=> 'Activer l’usage du groupe',
 	'ACP_INVITE_GROUP_ENABLED_EXPLAIN'					=> 'Si oui, les utilisateurs invités seront automatiquement ajoutés au groupe sélectionné.<br /><em>Attention à ne pas confondre les invités du forum (les anonymes non-enregistrés) avec les utilisateurs invités (c’est-à-dire ceux qui ont reçu une invitation par le MOD). C’est le même terme en français et cela peut prêter à confusion !</em>',
 	'ACP_INVITE_GROUP_EXPLAIN'							=> 'Les Utilisateurs Invités seront ajoutés au groupe sélectionné.<br /><em>Noter que les groupes spéciaux ne sont pas dans la liste.</em>',
 	'ACP_INVITE_GROUPS_MANAGEMENT'						=> 'Gérer les Groupes',
-	'ACP_INVITE_CLAIMING'									=> 'Demandes d’invitation',
-	'ACP_INVITE_CLAIMING_EXPLAIN'							=> 'Voir et prendre une décision sur les demandes d’invitations des utilisateurs.',
+	'ACP_INVITE_CLAIMING'								=> 'Demandes d’invitation',
+	'ACP_INVITE_CLAIMING_EXPLAIN'						=> 'Voir et prendre une décision sur les demandes d’invitations des utilisateurs.',
 	'ACP_INVITE_INDEX_TITLE'							=> 'Bienvenue dans phpBB Invite !',
 	'ACP_INVITE_INDEX_TITLE_EXPLAIN'					=> 'Merci d’avoir choisi le MOD phpBB Invite. Sur cette page vous avez un aperçu des différentes données statistiques du système d’invitation. Grâce aux liens sur le côté gauche, vous pouvez paramétrer chaque partie en détail selon votre gré. Sur toutes les pages vous trouvererez une description des réglages pour vous aider.',
 	'ACP_INVITE_INSTALL'								=> 'Date d’installation',

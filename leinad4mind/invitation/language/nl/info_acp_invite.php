@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -42,10 +42,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_REGISTER'								=> 'ID maken door uitnodiging',
 	'ACP_INVITE_REGISTER_EXPLAIN'						=> 'Set registratie opties, kan worden gebruikt als een enkele functie indien nodig.<br />Registratie uitschakelen overschrijft alle opties!',
 	'ACP_INVITE'										=> 'Uitnodigen',
-	'ACP_INVITET_PEND_COUNT'							=> 'Alle uitnodigen (%s)',
-	'ACP_INVITET_USERS_COUNT'							=> 'Alle gebruikers (%s)',
+	'ACP_INVITED_PEND_COUNT'							=> 'Alle uitnodigen (%s)',
+	'ACP_INVITED_USERS_COUNT'							=> 'Alle gebruikers (%s)',
 	'ACP_INVITE_ALL_USER_INVITE_MAX'					=> 'Onbeperkte uitnodigingen voor iedereen',
 	'ACP_INVITE_ALL_USER_INVITE_MAX_EXPLAIN'			=> 'Indien geselecteerd, zullen alle gebruikers onbeperkte uitnodigingen hebben.',
+	'ACP_INVITE_RESTORE_INVITES'						=> 'Herstel verlopen en geweigerde uitnodigingen',
+	'ACP_INVITE_RESTORE_INVITES_EXPLAIN'				=> 'Indien ingeschakeld, krijgt een gebruiker wiens uitnodiging verloopt of wordt geweigerd, de uitnodiging terugbetaald.',
 	'ACP_INVITE_BIRTHDAYS'								=> 'Verjaardag',
 	'ACP_INVITE_BIRTHDAYS_EXPLAIN'						=> 'Je kunt instellen hoeveel uitnodigingen een gebruiker voor hun verjaardag ontvangen. <em>Om deze instelling effect te laten hebben moet de optie verjaardagen ook ingeschakeld zijn.</em>',
 	'ACP_INVITE_CAPTCHA'								=> 'Visuele bevestiging',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Uitnodiging:</strong> Het verzenden van e-mails is momenteel uitgeschakeld!<br />Als het is uitgeschakeld, werken de uitnodigingen niet, als je het wilt inschakelen, doe je dat %sHIER%s.',
 	'ACP_INVITE_EMAIL_DISABLED'							=> 'Het verzenden van e-mails is uitgeschakeld, zet het aan. %sga naar de e-mail instellingen.%s',
 	'ACP_INVITE_EMAIL_PRIORITY'							=> 'Prioriteit van uitnodiging mail',
+	'ACP_INVITE_MEMBERSHIP_DAYS'						=> 'Minimale lidmaatschapsdagen',
+	'ACP_INVITE_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Aantal dagen dat een gebruiker moet zijn geregistreerd voordat het uitnodigingssysteem mag worden gebruikt. Stel in op 0 om onmiddellijk gebruik mogelijk te maken.',
 	'ACP_INVITE_ENABLE'									=> 'Inschakelen van uitnodiging-mod',
 	'ACP_INVITE_ENABLE_EXPLAIN'							=> 'Als je het aanzet, kan de uitnodiging-mod gebruikt worden.',
 	'ACP_INVITE_VALIDATION'								=> 'Verlooptijd van uitnodigingen versturen',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_GIFT_NUMBER_INVITES'					=> 'Aantal gegeven uitnodigingen.',
 	'ACP_INVITE_GIFT_INVITED_USERS'						=> 'Uitgenodigde gebruikers',
 	'ACP_INVITE_GIFT_INVITED_USERS_EXPLAIN'				=> 'Gebruikers krijgen een geschenk uitnodiging na het bereiken van dit aantal uitgenodigde gebruikers.<br /><em>If “0”, deze functie wordt uitgeschakeld.</em>',
+	'ACP_INVITE_POSTS_GIFT_INVITES'						=> 'Berichten mijlpaal uitnodigingen',
+	'ACP_INVITE_POSTS_GIFT_INVITES_EXPLAIN'				=> 'Aantal uitnodigingen dat een gebruiker wordt beloond bij het bereiken van een mijlpaal. Stel in op 0 om deze functie uit te schakelen.',
+	'ACP_INVITE_POSTS_GIFT_POSTS'						=> 'Berichten mijlpaal',
+	'ACP_INVITE_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Interval van berichten wanneer een gebruiker het onderstaande aantal uitnodigingen ontvangt. Stel in op 0 om deze functie uit te schakelen.',
+	'ACP_INVITE_POSTS_GIFT_LIMIT'						=> 'Beperk postmijlpalen',
+	'ACP_INVITE_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Maximaal aantal keren dat een gebruiker uitnodigingen ontvangt voor het bereiken van een mijlpaal. Stel bijvoorbeeld in op 30 berichten, beperkt door 3 mijlpalen. Uitnodigingen worden beloond met 30, 60, 90 posts. Stel in op 0 om deze functie uit te schakelen.',
 	'ACP_INVITE_GROUP'									=> 'Uitgenodigde gebruikers groep',
 	'ACP_INVITE_GROUP_ENABLED'							=> 'Gebruik van groep inschakelen',
 	'ACP_INVITE_GROUP_ENABLED_EXPLAIN'					=> 'Indien ingeschakeld, zullen uitgenodigde gebruikers automatisch worden toegevoegd aan de geselecteerde groep.',

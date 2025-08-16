@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -42,8 +42,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_REGISTER'								=> 'Creating ID by invitation',
 	'ACP_INVITE_REGISTER_EXPLAIN'						=> 'set registration options, can be used as a single feature if required.<br />Disabling registration overrides all options!',
 	'ACP_INVITE'										=> 'Invite',
-	'ACP_INVITET_PEND_COUNT'							=> 'All Invitations (%s)',
-	'ACP_INVITET_USERS_COUNT'							=> 'All users (%s)',
+	'ACP_INVITED_PEND_COUNT'							=> 'All Invitations (%s)',
+	'ACP_INVITED_USERS_COUNT'							=> 'All users (%s)',
 	'ACP_INVITE_ALL_USER_INVITE_MAX'					=> 'Unlimited invitation for everyone',
 	'ACP_INVITE_ALL_USER_INVITE_MAX_EXPLAIN'			=> 'if selected, all users will have unlimited invitations.',
 	'ACP_INVITE_BIRTHDAYS'								=> 'Birthday',
@@ -74,6 +74,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> The sending of e-mails is currently disabled!<br />While it is disabled, the invitations should not work. If you want turn it on, you can do it %sHERE%s.',
 	'ACP_INVITE_EMAIL_DISABLED'							=> 'Sending of e-mails has been disabled, please turn it on. %sGo to the e-mail settings.%s',
 	'ACP_INVITE_EMAIL_PRIORITY'							=> 'Invitation mail priority',
+	'ACP_INVITE_MEMBERSHIP_DAYS'						=> 'Minimum membership days',
+	'ACP_INVITE_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Number of days a user needs to be registered before the invite system is allowed to be used. Set to 0 to allow immediate use.',
 	'ACP_INVITE_ENABLE'									=> 'Enable invitation extension',
 	'ACP_INVITE_ENABLE_EXPLAIN'							=> 'If you turn it on, the invitation extension will be used.',
 	'ACP_INVITE_VALIDATION'								=> 'Sent out invitations expiration time',
@@ -82,13 +84,19 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_GIFT_NUMBER_INVITES'					=> 'Number of gifted invitations',
 	'ACP_INVITE_GIFT_INVITED_USERS'						=> 'Invited users',
 	'ACP_INVITE_GIFT_INVITED_USERS_EXPLAIN'				=> 'Users will receive a gift invitation after this number of invited users.<br /><em>If “0”, this function will be disabled.</em>',
+	'ACP_INVITE_POSTS_GIFT_INVITES'						=> 'Posts milestone invites',
+	'ACP_INVITE_POSTS_GIFT_INVITES_EXPLAIN'				=> 'Number of invites a user is rewarded when reaching a milestone. Set to 0 to disable this feature.',
+	'ACP_INVITE_POSTS_GIFT_POSTS'						=> 'Posts milestone',
+	'ACP_INVITE_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Interval of posts when a user is rewarded the below number of invites. Set to 0 to disable this feature.',
+	'ACP_INVITE_POSTS_GIFT_LIMIT'						=> 'Limit post milestones',
+	'ACP_INVITE_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Maximum number of times a user is rewarded invites for reaching a milestone. For example, set to 30 posts limited by 3 milestones. Invites are rewarded at 30, 60, 90 posts. Set to 0 to disable this feature.',
 	'ACP_INVITE_GROUP'									=> 'Invited users group',
 	'ACP_INVITE_GROUP_ENABLED'							=> 'Enable use of group',
 	'ACP_INVITE_GROUP_ENABLED_EXPLAIN'					=> 'If enabled, invited users will automatically be added to the selected group.',
 	'ACP_INVITE_GROUP_EXPLAIN'							=> 'The invited users will be added to the selected group.<br /><em>Note that the pre-defined system groups are not on the list.</em>',
 	'ACP_INVITE_GROUPS_MANAGEMENT'						=> 'Manage Group',
-	'ACP_INVITE_CLAIMING'									=> 'Invitation requests',
-	'ACP_INVITE_CLAIMING_EXPLAIN'							=> 'View / decide about users invitation requests.',
+	'ACP_INVITE_CLAIMING'								=> 'Invitation requests',
+	'ACP_INVITE_CLAIMING_EXPLAIN'						=> 'View / decide about users invitation requests.',
 	'ACP_INVITE_INDEX_TITLE'							=> 'Welcome to phpBB Invite!',
 	'ACP_INVITE_INDEX_TITLE_EXPLAIN'					=> 'Thank you for choosing phpBB Invite. On this page you can see an overview of various statistical data of the invite system. On top of the page and via the links on the left side of the invite you can change every part in detail. On every page you will find a description of the current settings.',
 	'ACP_INVITE_INSTALL'								=> 'Installation date',

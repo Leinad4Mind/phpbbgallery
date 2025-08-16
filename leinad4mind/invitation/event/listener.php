@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -107,6 +107,8 @@ class listener implements EventSubscriberInterface
 			'core.ucp_register_modify_template_data'			=> 'ucp_register_modify_template_data',
 			'core.memberlist_modify_sql_query_data'				=> 'memberlist_modify_sql_query_data',
 			'core.memberlist_view_profile'						=> 'memberlist_view_profile',
+			'core.submit_post_end'								=> 'submit_post_end',
+			'core.approve_posts_after'							=> 'approve_posts_after',
 		);
 	}
 
@@ -321,5 +323,30 @@ class listener implements EventSubscriberInterface
 	public function memberlist_view_profile(data $event)
 	{
 		$this->functions->ac_user($event['member']['user_id'], $event['member']['user_invite_member']);
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function submit_post_end(data $event)
+	{
+		if ($event['post_visibility'] == ITEM_APPROVED && in_array($event['mode'], ['post', 'reply', 'quote']))
+		{
+			$this->functions->posts_gift($event['data']['poster_id']);
+		}
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function approve_posts_after(data $event)
+	{
+		if ($event['action'] == 'approve')
+		{
+			foreach ($event['post_info'] as $post_id => $post_data)
+			{
+				$this->functions->posts_gift($post_data['poster_id']);
+			}
+		}
 	}
 }

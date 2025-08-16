@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -108,6 +108,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_NO_LOGIN'					=> 'Még nem lépet be.',
 	'UCP_INVITE_NO_PERM'					=> 'Nincs jogosultságod meghívót kiküldeni.',
 	'UCP_INVITE_NO_PERM_EMAIL'				=> 'Nincs jogosultságod emailt küldeni.',
+	'UCP_INVITE_MEMBERSHIP_DAYS'			=> 'A meghívók küldése előtt legalább %1$d napig tagnak kell lenned. Meghívókat küldhet %2$s kezdettel.',
 	'UCP_INVITE_NO_REG'						=> 'Még nem hívtál meg senkit.',
 	'UCP_INVITE_NULL'						=> 'Nincs rendelkezésedre álló meghívó.',
 	'UCP_INVITE_POINTS_AMOUNT'				=> 'Ajándék',

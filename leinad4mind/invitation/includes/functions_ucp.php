@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -398,8 +398,4 @@ class functions_ucp
 		$this->ext_config->set('total_petition', ($this->ext_config['total_petition'] + 1));
 	}
 
-	function add_invite($piece)
-	{
-		$this->db->sql_query('UPDATE ' . $this->table_users . ' SET user_invite = user_invite + ' . (int) $piece . ' WHERE user_id = ' . (int) $this->user->data['user_id']);
-	}
 }

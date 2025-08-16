@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -108,6 +108,7 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_NO_LOGIN'					=> 'Hij/Zij hebben zich nog niet geregistreerd op deze site.',
 	'UCP_INVITE_NO_PERM'					=> 'Je bent niet gemachtigd om uitnodigingen te verzenden!',
 	'UCP_INVITE_NO_PERM_EMAIL'				=> 'Je bent niet gemachtigd om een e-mail te verzenden!',
+	'UCP_INVITE_MEMBERSHIP_DAYS'			=> 'U moet minimaal %1$d dagen lid zijn voordat u uitnodigingen kunt verzenden. U kunt uitnodigingen verzenden vanaf %2$s.',
 	'UCP_INVITE_NO_REG'						=> 'Niemand werd uitgenodigd door jou.',
 	'UCP_INVITE_NULL'						=> 'Je hebt geen uitnodigingen! <em>Waarom koop je er niet een paar?</em>',
 	'UCP_INVITE_POINTS_AMOUNT'				=> 'Geschenk',

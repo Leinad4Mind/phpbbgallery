@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -42,10 +42,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_REGISTER'								=> 'Azonosító létrehozása meghívóval',
 	'ACP_INVITE_REGISTER_EXPLAIN'						=> 'Itt lehetőséged nyílik a regisztrációt meghívó által is működtetni vagy akár a két opciót együtt használni.<br />A <em>(Regisztráció kikapcsolása)</em> felülbírálja az összes opciót.',
 	'ACP_INVITE'										=> 'Meghívó',
-	'ACP_INVITET_PEND_COUNT'							=> 'Összes meghívó (%s)',
-	'ACP_INVITET_USERS_COUNT'							=> 'Összes felhasználó (%s)',
+	'ACP_INVITED_PEND_COUNT'							=> 'Összes meghívó (%s)',
+	'ACP_INVITED_USERS_COUNT'							=> 'Összes felhasználó (%s)',
 	'ACP_INVITE_ALL_USER_INVITE_MAX'					=> 'Korlátlan meghívó mindenkinek',
 	'ACP_INVITE_ALL_USER_INVITE_MAX_EXPLAIN'			=> 'Ha engedélyezed akkor az összes felhasználó korlátlan meghívóval fog rendelkezni.',
+	'ACP_INVITE_RESTORE_INVITES'						=> 'Lejárt és elutasított meghívók visszaállítása',
+	'ACP_INVITE_RESTORE_INVITES_EXPLAIN'				=> 'Ha engedélyezve van, annak a felhasználónak visszatérítjük a meghívót, akinek meghívása lejár vagy elutasításra kerül.',
 	'ACP_INVITE_BIRTHDAYS'								=> 'Születésnap',
 	'ACP_INVITE_BIRTHDAYS_EXPLAIN'						=> 'Lehetővé teszi a szülinaposok számára, hogy ajándék meghívót kapjanak.<em>A beállítás érvényesüléséhez a születésnaposok funkciónak is bekapcsolva kell lennie.</em>',
 	'ACP_INVITE_CAPTCHA'								=> 'Vizuális megerősítés',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> Az e-mail küldés jelenleg ki van kapcsolva!<br />Míg az e-mail küldés ki van kapcsolva addig a meghívás nem fog működni, ha szeretnéd bekapcsolni az e-mail küldést akkor %sITT%s megteheted.',
 	'ACP_INVITE_EMAIL_DISABLED'							=> 'Az e-mail küldés kikapcsolva, kérlek kapcsold be az e-mail küldést. %sTovább az e-mail beállításhoz.%s',
 	'ACP_INVITE_EMAIL_PRIORITY'							=> 'Meghívó email fontossága',
+	'ACP_INVITE_MEMBERSHIP_DAYS'						=> 'Minimális tagsági napok',
+	'ACP_INVITE_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Azon napok száma, amikor a felhasználót regisztrálni kell, mielőtt a meghívórendszert használhatják. Állítsa 0-ra az azonnali használat engedélyezéséhez.',
 	'ACP_INVITE_ENABLE'									=> 'Meghívó mod bekapcsolása',
 	'ACP_INVITE_ENABLE_EXPLAIN'							=> 'Ha bekapcsolod akkor használatba kerül a meghívó mod.',
 	'ACP_INVITE_VALIDATION'								=> 'Kiküldött meghívók lejárati ideje',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_GIFT_NUMBER_INVITES'					=> 'Ajándék meghívók száma',
 	'ACP_INVITE_GIFT_INVITED_USERS'						=> 'Meghívott felhasználók',
 	'ACP_INVITE_GIFT_INVITED_USERS_EXPLAIN'				=> 'A felhasználók ajándék meghívót kapnak a beállított meghívott felhasználók után.<br /><em>Ha “0” felhasználót állítasz be, akkor ez a funkció kikapcsol.</em>',
+	'ACP_INVITE_POSTS_GIFT_INVITES'					=> 'Mérföldkő meghívók',
+	'ACP_INVITE_POSTS_GIFT_INVITES_EXPLAIN'			=> 'A mérföldkő elérésekor a felhasználókat megjutalmazzák. A funkció letiltásához állítsa 0-ra.',
+	'ACP_INVITE_POSTS_GIFT_POSTS'						=> 'Mérföldkő',
+	'ACP_INVITE_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Bejegyzések intervalluma, amikor a felhasználót az alábbi meghívások száma jutalmazza. A funkció letiltásához állítsa 0-ra.',
+	'ACP_INVITE_POSTS_GIFT_LIMIT'						=> 'Korlátozza a mérföldköveket',
+	'ACP_INVITE_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Az a maximális szám, amikor egy felhasználó jutalmazza a mérföldkő elérését. Például állítson be 30 posztot 3 mérföldkővel korlátozva. A meghívókat 30, 60, 90 bejegyzéssel jutalmazzák. A funkció letiltásához állítsa 0-ra.',
 	'ACP_INVITE_GROUP'									=> 'Meghívott felhasználók csoportja',
 	'ACP_INVITE_GROUP_ENABLED'							=> 'Csoport használat engedélyezése',
 	'ACP_INVITE_GROUP_ENABLED_EXPLAIN'					=> 'Ha engedélyezed akkor a kiválasztott csoportba bekerülnek a meghívott felhasználók.',

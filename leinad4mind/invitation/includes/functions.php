@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -235,7 +235,7 @@ class functions
 
 				if ($delete_ids)
 				{
-					$this->delete_key($delete_ids);
+					$this->delete_key($delete_ids, false);
 					trigger_error('INVITE_DELETE_SUCCESS' . (sizeof($delete_ids) > 1 ? 'S': ''));
 				}
 			}
@@ -334,7 +334,7 @@ class functions
 			'join_notify_user_id'	=> (int) $row['user_id'],
 		));
 
-		$this->delete_key($this->invite_user['mid']);
+		$this->delete_key($this->invite_user['mid'], true);
 		$this->ext_config->set('total_users', $this->ext_config['total_users'] + 1);
 	}
 
@@ -727,12 +727,27 @@ class functions
 
 	/**
 	 * @param array $key_ids
+	 * @param bool $redeemed
 	 */
-	public function delete_key($key_ids)
+	public function delete_key($key_ids, $redeemed)
 	{
 		if (!is_array($key_ids))
 		{
 			$key_ids = array((int) $key_ids);
+		}
+
+		if (!$redeemed && $this->ext_config['invite_restore_invites'])
+		{
+			$sql = 'SELECT user_id
+				FROM ' . $this->table_invite . '
+				WHERE ' . $this->db->sql_in_set('id', $key_ids);
+
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$this->add_invite(1, $row['user_id']);
+			}
+			$this->db->sql_freeresult($result);
 		}
 
 		$this->ext_config->set('total_pend', $this->ext_config['total_pend'] - sizeof($key_ids));
@@ -761,7 +776,7 @@ class functions
 
 		if (sizeof($delete_ids) && isset($next_time))
 		{
-			$this->delete_key($delete_ids);
+			$this->delete_key($delete_ids, false);
 			$this->ext_config->set('verify_time', $next_time);
 		}
 		else
@@ -817,6 +832,33 @@ class functions
 		{
 			$this->ext_config->set('invite_notification_name', $new_name);
 		}
+	}
+
+	public function posts_gift($user_id)
+	{
+		if (!$this->ext_config['invite_posts_gift_posts'] || !$this->ext_config['invite_posts_gift_invites'])
+		{
+			return;
+		}
+
+		$sql = 'SELECT user_posts
+			FROM ' . $this->table_users . '
+			WHERE user_id = ' . (int) $user_id;
+
+		$result = $this->db->sql_query_limit($sql, 1);
+		$user_posts = (int) $this->db->sql_fetchfield('user_posts');
+		$this->db->sql_freeresult($result);
+
+		if ($user_posts % $this->ext_config['invite_posts_gift_posts'] == 0 && $this->ext_config['invite_posts_gift_limit'] * $this->ext_config['invite_posts_gift_posts'] <= $user_posts)
+		{
+			$this->add_invite($this->ext_config['invite_posts_gift_invites'], $user_id);
+		}
+	}
+
+	function add_invite($piece, $user_id = 0)
+	{
+		$user_id = $user_id ?: $this->user->data['user_id'];
+		$this->db->sql_query('UPDATE ' . $this->table_users . ' SET user_invite = user_invite + ' . (int) $piece . ' WHERE user_id = ' . (int) $user_id);
 	}
 
 	/**

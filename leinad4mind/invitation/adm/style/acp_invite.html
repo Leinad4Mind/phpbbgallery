@@ -295,46 +295,65 @@
 
 	{% if loops.users|length %}
 		<form id="acp_invite_users" method="post" action="{{ U_ACTION }}">
-		<div class="pagination">
-			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span>{% endif %}<br /><br />
-		</div>
+	
+			{% if pagination or TOTAL_POSTS %}
+				<div class="pagination">
+				{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+				{% if pagination %}
+					{% include 'pagination.html' %}
+				{% else %}
+					&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+				</div>
+			{% endif %}
 
-		<table cellspacing="1">
-			<thead>
-			<tr>
-				<th>{{ lang('ACP_INVITE') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
-				<th>{{ lang('ACP_INVITE_SORT_NAME') }}</th>
-				<th>{{ lang('EMAIL') }}</th>
-				<th>{{ lang('ACP_INVITE_SORT_NAME') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
-				<th>{{ lang('ACP_INVITE_REG_EMAIL') }}</th>
-				<th>{{ lang('JOINED') }}</th>
-			</tr>
-			</thead>
-
-			<tbody>
-			{% for users in loops.users %}
-				<tr class="{% if users.S_ROW_COUNT is even %}row1{% else %}row2{% endif %}">
-				<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLER_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLER_USERNAME }}</td>
-				<td>{{ users.CALLER_INVITE }}</td>
-				<td>{{ users.CALLER_EMAIL }}</td>
-				<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLED_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLED_USERNAME }}</td>
-				<td>{{ users.CALLED_EMAIL }}</td>
-				<td>{{ users.CALLED_TIME_REG }}</td>
+			<table cellspacing="1">
+				<thead>
+				<tr>
+					<th>{{ lang('ACP_INVITE') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
+					<th>{{ lang('ACP_INVITE_SORT_NAME') }}</th>
+					<th>{{ lang('EMAIL') }}</th>
+					<th>{{ lang('ACP_INVITE_SORT_NAME') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
+					<th>{{ lang('ACP_INVITE_REG_EMAIL') }}</th>
+					<th>{{ lang('JOINED') }}</th>
 				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
+				</thead>
 
-		<fieldset class="display-options">
-			{{ lang('DISPLAY_LOG') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
-			<input class="button2" type="submit" value="{{ lang('GO') }}" name="submit" />
-			{{ S_FORM_TOKEN }}
-		</fieldset>
+				<tbody>
+				{% for users in loops.users %}
+					<tr class="{% if users.S_ROW_COUNT is even %}row1{% else %}row2{% endif %}">
+					<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLER_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLER_USERNAME }}</td>
+					<td>{{ users.CALLER_INVITE }}</td>
+					<td>{{ users.CALLER_EMAIL }}</td>
+					<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLED_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLED_USERNAME }}</td>
+					<td>{{ users.CALLED_EMAIL }}</td>
+					<td>{{ users.CALLED_TIME_REG }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
 
-		<hr />
-		<div class="pagination">
-			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span><br /><br />{% endif %}
-		</div>
+			{% if pagination or TOTAL_POSTS %}
+			<div class="pagination">
+				{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+				{% if pagination %}
+				{% include 'pagination.html' %}
+				{% else %}
+				&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+			{% endif %}
+
+			<fieldset class="display-options">
+				{{ lang('DISPLAY_LOG') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+				<input class="button2" type="submit" value="{{ lang('GO') }}" name="submit" />
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+
+			<hr />
+			<div class="pagination">
+				{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span><br /><br />{% endif %}
+			</div>
 		</form>
 
 	{% else %}

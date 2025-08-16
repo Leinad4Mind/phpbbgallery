@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
- * @copyright (c) 2017-2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2017-2021, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -42,10 +42,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_REGISTER'								=> 'Erstelle ID nach Einladung',
 	'ACP_INVITE_REGISTER_EXPLAIN'						=> 'Registrierungsoptionen setzen, kann als separate Funktion verwendet werden, falls nötig.<br />Das Deaktivieren der Registrierung überschreibt alle Optionen!',
 	'ACP_INVITE'										=> 'Einladung',
-	'ACP_INVITET_PEND_COUNT'							=> 'Alle Einladungen (%s)',
-	'ACP_INVITET_USERS_COUNT'							=> 'Alle Benutzer (%s)',
+	'ACP_INVITED_PEND_COUNT'							=> 'Alle Einladungen (%s)',
+	'ACP_INVITED_USERS_COUNT'							=> 'Alle Benutzer (%s)',
 	'ACP_INVITE_ALL_USER_INVITE_MAX'					=> 'Unbegrenzte Einladung für alle',
 	'ACP_INVITE_ALL_USER_INVITE_MAX_EXPLAIN'			=> 'falls ausgewählt, werden alle Benutzer unbegrenzte Einladungen erhalten.',
+	'ACP_INVITE_RESTORE_INVITES'						=> 'Wiederherstellung abgelaufen und abgelehnte Einladungen',
+	'ACP_INVITE_RESTORE_INVITES_EXPLAIN'				=> 'Wenn diese Option aktiviert ist, wird einem Benutzer, dessen Einladung abläuft oder abgelehnt wird, die Einladung zurückerstattet.',
 	'ACP_INVITE_BIRTHDAYS'								=> 'Geburtstag',
 	'ACP_INVITE_BIRTHDAYS_EXPLAIN'						=> 'Sie können festlegen, wie viele Einladungen ein Benutzer zu seinem Geburtstag erhält. <em>Um diese Einstellung zu verwenden, muss auch die Geburtstagsfunktion aktiviert sein.</em>',
 	'ACP_INVITE_CAPTCHA'								=> 'Visuelle Bestätigung',
@@ -74,6 +76,8 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_EMAIL_BOARD_DISABLED'					=> '<strong>phpBB Invite:</strong> Das Versenden von Emails ist zurzeit deaktiviert!<br />So lange es deaktiviert ist, sollten Einladungen nicht funktionieren; wenn Sie es aktivieren möchten, können Sie dies %sHIER%s tun.',
 	'ACP_INVITE_EMAIL_DISABLED'							=> 'Das Versenden von Emails wurde deaktiviert, bitte aktivieren Sie es. %sGehe zu den Email-Einstellungen.%s',
 	'ACP_INVITE_EMAIL_PRIORITY'							=> 'Einladungsmailpriorität',
+	'ACP_INVITE_MEMBERSHIP_DAYS'						=> 'Mindestmitgliedschaftstage',
+	'ACP_INVITE_MEMBERSHIP_DAYS_EXPLAIN'				=> 'Anzahl der Tage, an denen ein Benutzer registriert werden muss, bevor das Einladungssystem verwendet werden darf. Auf 0 setzen, um die sofortige Verwendung zu ermöglichen.',
 	'ACP_INVITE_ENABLE'									=> 'Einladungs-Mod aktivieren',
 	'ACP_INVITE_ENABLE_EXPLAIN'							=> 'Bei Aktivierung wird die Einladungs-Mod verwendet',
 	'ACP_INVITE_VALIDATION'								=> 'Ablaufzeit versendeter Einladungen.',
@@ -82,6 +86,12 @@ $lang = array_merge($lang, array(
 	'ACP_INVITE_GIFT_NUMBER_INVITES'					=> 'Anzahl verschenkter Einladungen',
 	'ACP_INVITE_GIFT_INVITED_USERS'						=> 'Eingeladene Benutzer',
 	'ACP_INVITE_GIFT_INVITED_USERS_EXPLAIN'				=> 'Benutzer werden nach dieser Anzahl an eingeladenen Benutzern eine Einladung geschenkt bekommen.<br /><em>"0" deaktiviert diese Funktion.</em>',
+	'ACP_INVITE_POSTS_GIFT_INVITES'					=> 'Beiträge Meilenstein lädt ein',
+	'ACP_INVITE_POSTS_GIFT_INVITES_EXPLAIN'			=> 'Die Anzahl der Einladungen, die ein Benutzer erhält, wird beim Erreichen eines Meilensteins belohnt. Auf 0 setzen, um diese Funktion zu deaktivieren.',
+	'ACP_INVITE_POSTS_GIFT_POSTS'						=> 'Beiträge Meilenstein',
+	'ACP_INVITE_POSTS_GIFT_POSTS_EXPLAIN'				=> 'Intervall der Beiträge, in denen ein Benutzer mit der folgenden Anzahl von Einladungen belohnt wird. Auf 0 setzen, um diese Funktion zu deaktivieren.',
+	'ACP_INVITE_POSTS_GIFT_LIMIT'						=> 'Begrenzen Sie die Meilensteine nach dem Start',
+	'ACP_INVITE_POSTS_GIFT_LIMIT_EXPLAIN'				=> 'Die maximale Häufigkeit, mit der ein Benutzer belohnt wird, lädt zum Erreichen eines Meilensteins ein. Stellen Sie beispielsweise 30 Beiträge ein, die auf 3 Meilensteine begrenzt sind. Einladungen werden mit 30, 60, 90 Beiträgen belohnt. Auf 0 setzen, um diese Funktion zu deaktivieren.',
 	'ACP_INVITE_GROUP'									=> 'Gruppe für eingeladene Benutzer',
 	'ACP_INVITE_GROUP_ENABLED'							=> 'Benutzung der Gruppe aktivieren',
 	'ACP_INVITE_GROUP_ENABLED_EXPLAIN'					=> 'Wenn aktiviert, werden eingeladene Benutzer automatisch der ausgewählten Gruppe hinzugefügt.',
