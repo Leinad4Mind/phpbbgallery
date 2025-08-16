@@ -1,21 +1,22 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\libraries;
 
+use canidev\core\TextParser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class chat
 {
 	public $enabled				= false;
 	public $custom_page			= null;
-	public $disallowed_bbcodes	= array();
+	public $disallowed_bbcodes	= [];
 	
 	public $path			= 'ext/canidev/chat/';
 	public $root_path		= '';
@@ -35,6 +36,7 @@ class chat
 	protected $request;
 	protected $routing;
 	protected $template;
+	protected $text_parser;
 	protected $user;
 	protected $tables;
 	
@@ -54,6 +56,7 @@ class chat
 	 * @param \phpbb\request\request 							$request			Request object
 	 * @param \phpbb\routing\helper								$routing			Routing Helper
 	 * @param \canidev\core\template 							$template 			Core Template Object
+	 * @param \canidev\core\TextParser 							$text_parser 		Core Text Parser Object
 	 * @param \phpbb\user										$user				User object
 	 * @param string											$root_path			phpBB root path
 	 * @param string											$php_ext			phpEx
@@ -73,6 +76,7 @@ class chat
 		\phpbb\request\request $request,
 		\phpbb\routing\helper $routing,
 		\canidev\core\template $template,
+		\canidev\core\TextParser $text_parser,
 		\phpbb\user $user,
 		$root_path,
 		$php_ext,
@@ -89,12 +93,13 @@ class chat
 		$this->request		= $request;
 		$this->routing 		= $routing;
 		$this->template		= $template;
+		$this->text_parser 	= $text_parser;
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
 		$this->tables 			= $tables;
-		$this->time_limit		= (!empty($this->config['chat_timeout']) ? (time() - (intval($this->config['chat_timeout']) * 60)) : false);
+		$this->time_limit		= !empty($this->config['chat_timeout']) ? (time() - (intval($this->config['chat_timeout']) * 60)) : false;
 
 		$this->root_path	= $this->phpbb_root_path . $this->path;
 		$this->web_path		= $this->phpbb_root_path;
@@ -120,9 +125,9 @@ class chat
 
 		if($this->enabled && $this->config['chat_page_enabled'])
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'U_CHAT'	=> $this->routing->route('canidev_chat_controller'),
-			));
+			]);
 		}
 		
 		if(!$this->enabled && !$this->request->is_ajax())
@@ -169,10 +174,10 @@ class chat
 		// Update session of user when navigate into forum with chat connected
 		$time_limit = time() - ((int)$this->config['chat_refresh'] * 2);
 
-		$service_options = array(
+		$service_options = [
 			'maxChars' 	=> (int)$this->config['chat_max_chars'],
 			'mode' 		=> $this->custom_page,
-		);
+		];
 
 		if($this->custom_page === null && $user_key && $lastcheck && $time_limit < $lastcheck)
 		{
@@ -229,7 +234,7 @@ class chat
 			$bbcode_status	= ($this->config['allow_bbcode'] && $this->config['chat_allow_bbcode']) ? true : false;
 			$smilies_status	= ($this->config['allow_smilies']) ? true : false;
 
-			$service_options += array(
+			$service_options += [
 				'autoconnect'	=> (bool)$this->config['chat_autoconnect'],
 				'defaultRoom' 	=> $default_room,
 				'direction' 	=> $this->config['chat_direction'],
@@ -242,7 +247,7 @@ class chat
 				'position' 		=> ($this->custom_page !== null) ? '' : $page_data['chat_position'],
 				'refresh' 		=> $this->config['chat_refresh'] * 1000,
 				'soundPath' 	=> $this->web_path . $this->path . 'sounds/',
-			);
+			];
 
 			if($this->auth->acl_get('u_chat_post'))
 			{
@@ -251,7 +256,7 @@ class chat
 				$editor->do_actions();
 
 				$editor_ary = $editor->build(
-					array(
+					[
 						'bbcodeMenu'			=> ($this->config['chat_bbcode_format'] == 'select'),
 						'name'					=> 'ic_message',
 						'emoticonContainer'		=> '.chat-smiley-box > div',
@@ -259,24 +264,24 @@ class chat
 						'rows'					=> 3,
 						'type'					=> 'basic',
 						'toolbarContainer' 		=> '.chat-bbcode-box',
-						'toolbarExclude' 		=> array_merge($this->get_disallowed_bbcodes(), array(
+						'toolbarExclude' 		=> array_merge($this->get_disallowed_bbcodes(), [
 							'color' // Don't put color inside bbcode toolbar
-						)),
-					),
+						]),
+					],
 					true
 				);
 
 				$editor->smilies_to_template();
 
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_CHAT_CAN_POST' 	=> true,
 					'S_CHAT_EDITOR'		=> $editor_ary['template'],
-				));
+				]);
 			}
 
-			$this->template->assign_vars(array(
-				'S_CHAT_ENABLED'		=> true,
-				'S_CHAT_RULES'			=> (!empty($texts[constants::TEXT_RULE]) ? true : false),
+			$this->template->assign_vars([
+				'S_CHAT_ENABLED'			=> true,
+				'S_CHAT_RULES'				=> !empty($texts[constants::TEXT_RULE]),
 
 				'S_CHAT_ALLOW_PM'			=> $this->config['chat_allow_pm'],
 				'S_CHAT_CAN_CLEAR'			=> $this->auth->acl_get('m_chat_delete'),
@@ -288,16 +293,16 @@ class chat
 				'S_CHAT_SMILIES_ALLOWED'	=> $smilies_status,
 				'S_CHAT_SOUND_ENABLED'		=> $this->config['chat_sound'],
 
-				'S_CHAT_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+				'S_CHAT_HIDDEN_FIELDS'	=> build_hidden_fields([
 					'last_update'	=> 0,
 					'time_mark'		=> 0,
-				)),
+				]),
 
-				'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->routing->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
-			));
+				'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->routing->route('canidev_chat_controller', ['mode' => 'archive']) : ''),
+			]);
 			
 			// Generate notices and tips
-			foreach(array(constants::TEXT_NOTICE => 'notice', constants::TEXT_TIP => 'tip') as $type => $id)
+			foreach([constants::TEXT_NOTICE => 'notice', constants::TEXT_TIP => 'tip'] as $type => $id)
 			{
 				if(!empty($texts[$type]))
 				{
@@ -305,7 +310,7 @@ class chat
 
 					foreach($texts[$type] as $text)
 					{
-						$this->template->assign_block_vars("chat_$id", array($tpl_id => $text));
+						$this->template->assign_block_vars("chat_$id", [$tpl_id => $text]);
 					}
 				}
 			}
@@ -313,19 +318,19 @@ class chat
 		
 		if($this->enabled || $this->custom_page !== null)
 		{
-			$this->template->assign_json_var('S_CHAT_OPTIONS', $service_options);
-
-			$this->template->set_js_lang(array(
-				'CHAT_FLOOD_WAIT'
-			));
+			$this->template
+				->assign_json_var('S_CHAT_OPTIONS', $service_options)
+				->set_js_lang([
+					'CHAT_FLOOD_WAIT'
+				]);
 
 			// Assets
-			$this->template->append_asset('css', '@canidev_chat/../theme/chat.css');
+			$this->template->append_asset('css', '@canidev_chat/chat.css');
 			
-			$this->template->append_asset('js', array(
+			$this->template->append_asset('js', [
 				'@canidev_chat/js/jchat-options.js',
 				'@canidev_chat/js/jchat.min.js'
-			));
+			]);
 		}
 	}
 
@@ -341,11 +346,11 @@ class chat
 		
 			if($data_cache === false || !isset($data_cache['disallowed_bbcodes']))
 			{
-				$data_cache = ($data_cache === false) ? array() : $data_cache;
-				$data_cache['disallowed_bbcodes'] = array();
+				$data_cache = ($data_cache === false) ? [] : $data_cache;
+				$data_cache['disallowed_bbcodes'] = [];
 				
 				// Default BBcodes
-				$bbcode_ary = array(
+				$bbcode_ary = [
 					'b'			=> BBCODE_ID_B,
 					'i'			=> BBCODE_ID_I,
 					'u'			=> BBCODE_ID_U,
@@ -357,7 +362,7 @@ class chat
 					'img'		=> BBCODE_ID_IMG,
 					'url'		=> BBCODE_ID_URL,
 					'size'		=> BBCODE_ID_SIZE,
-				);
+				];
 
 				// Custom BBcodes
 				$sql = 'SELECT bbcode_id, bbcode_tag
@@ -389,7 +394,7 @@ class chat
 			return $data_cache['disallowed_bbcodes'];
 		}
 
-		return array();
+		return [];
 	}
 	
 	/**
@@ -402,8 +407,8 @@ class chat
 		
 		if($data_cache === false || !isset($data_cache['pages']))
 		{
-			$data_cache = ($data_cache === false) ? array() : $data_cache;
-			$data_cache['pages'] = array();
+			$data_cache = ($data_cache === false) ? [] : $data_cache;
+			$data_cache['pages'] = [];
 
 			$sql = 'SELECT *
 				FROM ' . $this->tables['pages'];
@@ -412,7 +417,7 @@ class chat
 			{
 				$row_id = $row['page_path'] . $row['page_filename'];
 				
-				$row['page_data'] = ($row['page_data']) ? @unserialize($row['page_data']) : array();
+				$row['page_data'] = ($row['page_data']) ? @unserialize($row['page_data']) : [];
 				
 				$data_cache['pages'][$row_id] = $row;
 			}
@@ -423,7 +428,7 @@ class chat
 		
 		if($current_page)
 		{
-			return (isset($data_cache['pages'][$current_page]) ? $data_cache['pages'][$current_page] : array());
+			return (isset($data_cache['pages'][$current_page]) ? $data_cache['pages'][$current_page] : []);
 		}
 		
 		return $data_cache['pages'];
@@ -439,10 +444,10 @@ class chat
 		
 		if($data_cache === false || !isset($data_cache['rooms']))
 		{
-			$data_cache = ($data_cache === false) ? array() : $data_cache;
-			$data_cache['rooms'] = array();
+			$data_cache = ($data_cache === false) ? [] : $data_cache;
+			$data_cache['rooms'] = [];
 
-			$data_keys	= array('groups', 'users', 'linked_forums');
+			$data_keys	= ['groups', 'users', 'linked_forums'];
 
 			$sql = 'SELECT *
 				FROM ' . $this->tables['rooms'] . '
@@ -456,7 +461,7 @@ class chat
 				{
 					if(!isset($row['room_data'][$key]))
 					{
-						$row['room_data'][$key] = array();
+						$row['room_data'][$key] = [];
 					}
 				}
 				
@@ -484,8 +489,8 @@ class chat
 
 		if($data_cache === false || !isset($data_cache['texts']))
 		{
-			$data_cache = ($data_cache === false) ? array() : $data_cache;
-			$data_cache['texts'] = array();
+			$data_cache = ($data_cache === false) ? [] : $data_cache;
+			$data_cache['texts'] = [];
 			
 			$sql = 'SELECT text_type, text_content, bbcode_uid, bbcode_bitfield
 				FROM ' . $this->tables['texts'] . '
@@ -497,7 +502,7 @@ class chat
 				
 				if(!isset($data_cache['texts'][$text_type]))
 				{
-					$data_cache['texts'][$text_type] = array();
+					$data_cache['texts'][$text_type] = [];
 				}
 				
 				$data_cache['texts'][$text_type][] = $row;
@@ -511,33 +516,20 @@ class chat
 		{
 			foreach($rows as $row_id => $row)
 			{
-				/*
-				* bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
-				* If no bbcode, we decode the text to allow HTML tags.
-				*/
-				if(strpos($row['text_content'], '[/') !== false)
-				{
-					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$text =  generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
-				}
-				else
-				{
-					$text = preg_replace('#(^<t>|</t>$)#', '', htmlspecialchars_decode($row['text_content']));
-					$text = smiley_text($text);
-				}
+				$flags = TextParser::FLAG_ALLOW_HTML;
 
-				if($translate && strpos($text, '{') !== false)
+				if($translate)
 				{
-					$this->parse_lang_variables($text);
+					$flags |= TextParser::FLAG_PARSE_LANGUAGE;
 				}
 				
-				$data_cache['texts'][$text_type][$row_id] = $text;
+				$data_cache['texts'][$text_type][$row_id] = $this->text_parser->generateForDisplay($row['text_content'], $flags, $row['bbcode_uid'], $row['bbcode_bitfield']);
 			}
 		}
 		
 		if($output_type)
 		{
-			return (isset($data_cache['texts'][$output_type]) ? $data_cache['texts'][$output_type] : array());
+			return (isset($data_cache['texts'][$output_type]) ? $data_cache['texts'][$output_type] : []);
 		}
 
 		return $data_cache['texts'];
@@ -578,23 +570,11 @@ class chat
 
 			if($day !== false)
 			{
-				return $this->language->lang(array('datetime', $day)) . ', ' . $this->user->format_date($timestamp, 'H:i');
+				return $this->language->lang(['datetime', $day]) . ', ' . $this->user->format_date($timestamp, 'H:i');
 			}
 		}
 		
 		return $this->user->format_date($timestamp, false, true);
-	}
-	
-	/**
-	 * Parse language variables inside text
-	 * 
-	 * @param string 	$text 		Text to parse
-	 */
-	public function parse_lang_variables(&$text)
-	{
-		$text = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches) {
-			return $this->language->is_set($matches[1]) ? $this->language->lang($matches[1]) : '';
-		}, $text);
 	}
 	
 	/**
@@ -604,8 +584,8 @@ class chat
 	 */
 	public function update_groups($user_id_ary)
 	{
-		$user_id_ary 	= is_array($user_id_ary) ? $user_id_ary : array($user_id_ary);
-		$users_ary		= array();
+		$user_id_ary 	= is_array($user_id_ary) ? $user_id_ary : [$user_id_ary];
+		$users_ary		= [];
 		
 		$sql = 'SELECT user_id, group_id
 			FROM ' . USER_GROUP_TABLE . '
@@ -618,7 +598,7 @@ class chat
 			
 			if(!isset($users_ary[$user_id]))
 			{
-				$users_ary[$user_id] = array();
+				$users_ary[$user_id] = [];
 			}
 			
 			$users_ary[$user_id][] = (int)$row['group_id'];

@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\cron;
 
@@ -54,7 +54,7 @@ class prune extends \phpbb\cron\task\base
 		$this->db->sql_query($sql);
 		
 		// Delete messages out of the limit
-		$del_ary = $del_room_ary = array();
+		$del_ary = $del_room_ary = [];
 		
 		foreach($room_ary as $row)
 		{

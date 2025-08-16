@@ -1,17 +1,17 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\controller;
 
 class admin_controller_pages extends admin_controller_base
 {
-	protected $exclude_files = array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
+	protected $exclude_files = ['app', 'chat', 'common', 'config', 'cron', 'feed', 'report'];
 
 	/**
 	 * {@inheritDoc}
@@ -22,7 +22,7 @@ class admin_controller_pages extends admin_controller_base
 		$this->page_title	= 'ACP_CHAT_PAGES';
 
 		$page_id	= $this->request->variable('id', 0);
-		$error		= array();
+		$error		= [];
 		
 		switch($this->action)
 		{
@@ -39,39 +39,39 @@ class admin_controller_pages extends admin_controller_base
 					trigger_error('NO_PAGES', E_USER_WARNING);
 				}
 
-				$page_data['page_data'] = ($page_data['page_data']) ? @unserialize($page_data['page_data']) : array();
+				$page_data['page_data'] = ($page_data['page_data']) ? @unserialize($page_data['page_data']) : [];
 				
 			// no break
 
 			case 'add':
 				add_form_key(self::FORM_KEY);
 		
-				$position_options = array(
+				$position_options = [
 					'top'		=> 'CHAT_POSITION_TOP',
 					'bottom'	=> 'CHAT_POSITION_BOTTOM',
-				);
+				];
 
-				$display_vars = array(
+				$display_vars = [
 					'legend1'		=> 'CHAT_PAGE_CONFIG',
-					'page_file'			=> array('lang' => 'CHAT_PAGE_FILE',	'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($this->page_file_options(), '{KEY}', '{CONFIG_VALUE}')),
-					'custom_file'		=> array('lang' => 'CHAT_PAGE_CUSTOM',	'validate' => 'string',		'type' => 'text:40:255',	'display' => false),
-					'page_alias'		=> array('lang' => 'CHAT_PAGE_ALIAS',	'validate' => 'string',		'type' => 'text:40:50',		'display' => false),
-					'chat_position'		=> array('lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($position_options, '{KEY}', '{CONFIG_VALUE}')),
-					'chat_height'		=> array('lang' => 'CHAT_HEIGHT_PAGE',	'validate' => 'int:0:800',	'type' => 'text:4:3'),
-					'forum_ids'			=> array('lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE),	'display' => false),
-				);
+					'page_file'			=> ['lang' => 'CHAT_PAGE_FILE',		'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$this->page_file_options(), '{KEY}', '{CONFIG_VALUE}']],
+					'custom_file'		=> ['lang' => 'CHAT_PAGE_CUSTOM',	'validate' => 'string',		'type' => 'text:40:255',	'display' => false],
+					'page_alias'		=> ['lang' => 'CHAT_PAGE_ALIAS',	'validate' => 'string',		'type' => 'text:40:50',		'display' => false],
+					'chat_position'		=> ['lang' => 'CHAT_POSITION',		'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$position_options, '{KEY}', '{CONFIG_VALUE}']],
+					'chat_height'		=> ['lang' => 'CHAT_HEIGHT_PAGE',	'validate' => 'int:0:800',	'type' => 'text:4:3'],
+					'forum_ids'			=> ['lang' => 'CHAT_PAGE_FORUMS',	'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', \canidev\core\tools::SELECT_MULTIPLE],	'display' => false],
+				];
 				
 				if($this->action == 'add')
 				{
-					$page_data = array(
+					$page_data = [
 						'page_alias'	=> '',
 						'page_filename'	=> '',
 						'page_path'		=> '',
-						'page_data'		=> array(),
-					);
+						'page_data'		=> [],
+					];
 				}
 				
-				$page_data['forum_ids'] = (!empty($page_data['page_data']['forum_ids']) ? $page_data['page_data']['forum_ids'] : array());
+				$page_data['forum_ids'] = (!empty($page_data['page_data']['forum_ids']) ? $page_data['page_data']['forum_ids'] : []);
 				
 				/**
 				 * @event chat.acp_pages_vars
@@ -81,12 +81,12 @@ class admin_controller_pages extends admin_controller_base
 				 * @since 1.2.0
 				 */
 				$submit = &$this->submit;
-				$vars = array('display_vars', 'page_data', 'submit');
+				$vars = ['display_vars', 'page_data', 'submit'];
 				extract($this->dispatcher->trigger_event('chat.acp_pages_vars', compact($vars)));
 
 				if($this->submit)
 				{
-					$this->new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
+					$this->new_config = $this->request->variable('config', ['' => ''], true);
 					
 					if(!check_form_key(self::FORM_KEY))
 					{
@@ -125,13 +125,13 @@ class admin_controller_pages extends admin_controller_base
 						$this->new_config['page_path']		= '';
 					}
 					
-					if(in_array($this->new_config['page_alias'], array('viewforum', 'viewtopic')))
+					if(in_array($this->new_config['page_alias'], ['viewforum', 'viewtopic']))
 					{
-						$this->new_config['forum_ids'] = $this->request->variable('forum_ids', array(0));
+						$this->new_config['forum_ids'] = $this->request->variable('forum_ids', [0]);
 						
-						$this->new_config['page_data'] = array(
+						$this->new_config['page_data'] = [
 							'forum_ids'		=> $this->new_config['forum_ids'],
-						);
+						];
 					}
 					
 					// Check if page already exists
@@ -154,14 +154,14 @@ class admin_controller_pages extends admin_controller_base
 					
 					if(!sizeof($error))
 					{
-						$sql_ary = array(
+						$sql_ary = [
 							'page_alias'	=> str_replace(' ', '_', $this->new_config['page_alias']),
 							'page_filename'	=> $this->new_config['page_filename'],
 							'page_path'		=> $this->new_config['page_path'],
 							'page_data'		=> (!empty($this->new_config['page_data']) ? @serialize($this->new_config['page_data']) : ''),
 							'chat_position'	=> $this->new_config['chat_position'],
 							'chat_height'	=> (int)$this->new_config['chat_height'],
-						);
+						];
 						
 						if($this->action == 'add')
 						{
@@ -187,10 +187,10 @@ class admin_controller_pages extends admin_controller_base
 					
 					if($page_data['page_path'])
 					{
-						$this->new_config = array_merge($this->new_config, array(
+						$this->new_config = array_merge($this->new_config, [
 							'page_file'		=> '-',
 							'custom_file'	=> $page_data['page_path'] . $page_data['page_filename'],
-						));
+						]);
 					}
 					else
 					{
@@ -199,22 +199,22 @@ class admin_controller_pages extends admin_controller_base
 					}
 				}
 				
-				if(in_array($this->new_config['page_file'], array('viewforum', 'viewtopic')))
+				if(in_array($this->new_config['page_file'], ['viewforum', 'viewtopic']))
 				{
 					$display_vars['forum_ids']['display'] = true;
 				}
 				
 				$this->display_vars($display_vars);
 				
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_EDIT'	=> true,
 					'U_BACK'	=> $this->get_form_action(),
 					
-					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+					'S_HIDDEN_FIELDS'	=> build_hidden_fields([
 						'action'	=> $this->action,
 						'id'		=> $page_id
-					)),
-				));
+					]),
+				]);
 			break;
 			
 			case 'delete':
@@ -224,10 +224,10 @@ class admin_controller_pages extends admin_controller_base
 				
 				$this->cache->destroy('_chat_options');
 
-				$this->json->send(array(
+				$this->json->send([
 					'action'	=> 'deleteRow',
 					'rowId'		=> $page_id,
-				));
+				]);
 			break;
 			
 			default:
@@ -240,14 +240,14 @@ class admin_controller_pages extends admin_controller_base
 					$title = ($row['page_alias']) ? $row['page_alias'] : str_replace('.' . $this->php_ext, '', $row['page_filename']);
 					$title = ($this->language->is_set(strtoupper($title)) ? $this->language->lang(strtoupper($title)) : ucfirst($title));
 			
-					$this->template->assign_block_vars('pagerow', array(
+					$this->template->assign_block_vars('pagerow', [
 						'S_ID'		=> $row['page_id'],
 						'S_TITLE'	=> $title,
 						'S_URL'		=> generate_board_url() . '/' . $row['page_path'] . $row['page_filename'],
 						
 						'U_DELETE'	=> $this->form_action . '&amp;action=delete&amp;id=' . $row['page_id'],
 						'U_EDIT'	=> $this->form_action . '&amp;action=edit&amp;id=' . $row['page_id'],
-					));
+					]);
 				}
 				$this->db->sql_freeresult($result);
 				
@@ -255,10 +255,10 @@ class admin_controller_pages extends admin_controller_base
 			break;
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_ERROR'		=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'		=> implode('<br />', $error),
-		));
+		]);
 	}
 	
 	/**
@@ -267,7 +267,7 @@ class admin_controller_pages extends admin_controller_base
 	 */
 	protected function page_file_options()
 	{
-		$ary = array(''	=> 'SELECT_PAGE');
+		$ary = [''	=> 'SELECT_PAGE'];
 		
 		if($this->action == 'add')
 		{
@@ -286,7 +286,7 @@ class admin_controller_pages extends admin_controller_base
 		// Read all the avaliable files in phpbb root path
 		if($dir = @opendir($this->phpbb_root_path))
 		{
-			$file_ary = array();
+			$file_ary = [];
 
 			while(($file = @readdir($dir)) !== false)
 			{
@@ -305,14 +305,14 @@ class admin_controller_pages extends admin_controller_base
 			if(sizeof($file_ary))
 			{
 				asort($file_ary);
-				$ary = array_merge($ary, array('legend1' => 'FORUM_FILES'), $file_ary);
+				$ary = array_merge($ary, ['legend1' => 'FORUM_FILES'], $file_ary);
 			}
 		}
 		
-		$ary = array_merge($ary, array(
+		$ary = array_merge($ary, [
 			'legend2'	=> 'CUSTOM_FILES',
 			'-'			=> 'CUSTOM_FILE',
-		));
+		]);
 		
 		return $ary;
 	}
@@ -323,10 +323,9 @@ class admin_controller_pages extends admin_controller_base
 	 */
 	protected function forum_ids_options()
 	{
-		$forum_ary = make_forum_select(false, false, true, false, true, false, true);
-		$ary = array();
-
-		$legend_id = 1;
+		$forum_ary 	= make_forum_select(false, false, true, false, true, false, true);
+		$ary 		= [];
+		$legend_id 	= 1;
 		
 		foreach($forum_ary as $forum_id => $row)
 		{

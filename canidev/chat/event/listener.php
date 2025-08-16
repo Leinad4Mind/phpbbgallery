@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\event;
 
@@ -45,7 +45,7 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'					=> 'load_language',
 			'core.user_setup_after'				=> 'on_setup_after',
 			'core.session_kill_after'			=> 'on_user_logout',
@@ -55,7 +55,7 @@ class listener implements EventSubscriberInterface
 			'core.user_set_group_attributes'	=> 'user_group_change',
 			'core.group_delete_user_after'		=> 'user_group_del',
 			'core.permissions'					=> 'add_permissions',
-		);
+		];
 	}
 	
 	/**
@@ -66,10 +66,10 @@ class listener implements EventSubscriberInterface
 	public function load_language($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'canidev/chat',
 			'lang_set' => 'main',
-		);
+		];
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 	
@@ -166,23 +166,23 @@ class listener implements EventSubscriberInterface
 	*/
 	public function add_permissions($event)
 	{
-		$event['categories'] = array_merge($event['categories'], array(
+		$event['categories'] = array_merge($event['categories'], [
 			'chat'	=> 'ACL_CAT_CHAT',
-		));
+		]);
 
-		$event['permissions'] = array_merge($event['permissions'], array(
-			'a_chat'				=> array('lang'	=> 'ACL_A_CHAT',				'cat'	=> 'misc'),
+		$event['permissions'] = array_merge($event['permissions'], [
+			'a_chat'				=> ['lang'	=> 'ACL_A_CHAT',				'cat'	=> 'misc'],
 
-			'm_chat_delete'			=> array('lang'	=> 'ACL_M_CHAT_DELETE',			'cat'	=> 'chat'),
-			'm_chat_edit'			=> array('lang'	=> 'ACL_M_CHAT_EDIT',			'cat'	=> 'chat'),
+			'm_chat_delete'			=> ['lang'	=> 'ACL_M_CHAT_DELETE',			'cat'	=> 'chat'],
+			'm_chat_edit'			=> ['lang'	=> 'ACL_M_CHAT_EDIT',			'cat'	=> 'chat'],
 
-			'u_chat_archive'		=> array('lang'	=> 'ACL_U_CHAT_ARCHIVE',		'cat'	=> 'chat'),
-			'u_chat_delete'			=> array('lang'	=> 'ACL_U_CHAT_DELETE',			'cat'	=> 'chat'),
-			'u_chat_edit'			=> array('lang'	=> 'ACL_U_CHAT_EDIT',			'cat'	=> 'chat'),
-			'u_chat_ignoreflood'	=> array('lang'	=> 'ACL_U_CHAT_IGNOREFLOOD',	'cat'	=> 'chat'),
-			'u_chat_post'			=> array('lang'	=> 'ACL_U_CHAT_POST',			'cat'	=> 'chat'),
-			'u_chat_sendpm'			=> array('lang'	=> 'ACL_U_CHAT_SENDPM',			'cat'	=> 'chat'),
-			'u_chat_view'			=> array('lang'	=> 'ACL_U_CHAT_VIEW',			'cat'	=> 'chat'),
-		));
+			'u_chat_archive'		=> ['lang'	=> 'ACL_U_CHAT_ARCHIVE',		'cat'	=> 'chat'],
+			'u_chat_delete'			=> ['lang'	=> 'ACL_U_CHAT_DELETE',			'cat'	=> 'chat'],
+			'u_chat_edit'			=> ['lang'	=> 'ACL_U_CHAT_EDIT',			'cat'	=> 'chat'],
+			'u_chat_ignoreflood'	=> ['lang'	=> 'ACL_U_CHAT_IGNOREFLOOD',	'cat'	=> 'chat'],
+			'u_chat_post'			=> ['lang'	=> 'ACL_U_CHAT_POST',			'cat'	=> 'chat'],
+			'u_chat_sendpm'			=> ['lang'	=> 'ACL_U_CHAT_SENDPM',			'cat'	=> 'chat'],
+			'u_chat_view'			=> ['lang'	=> 'ACL_U_CHAT_VIEW',			'cat'	=> 'chat'],
+		]);
 	}
 }

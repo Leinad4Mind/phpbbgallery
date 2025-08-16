@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -87,9 +87,13 @@
 #chat-content {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: 11px;
-	padding: 5px 5px 10px 5px;
-	position: relative;
 	overflow: hidden;
+	position: relative;
+}
+
+div#chat-content,
+ul#chat-content > li {
+	padding: 8px 8px 10px 8px;
 }
 
 #chat-left-panel {
@@ -580,6 +584,14 @@ ul.ic-userlist > li {
 
 /* Boxes
 ------------------------------- */
+.chat-bbcode-box {
+	padding: 5px;
+}
+
+.chat-bbcode-box .editor-wrapper-toolbar {
+	margin-bottom: 0;
+}
+
 .chat-smiley-box {
 	width: 200px;
 }
@@ -954,6 +966,11 @@ html.embedmode { height: auto; }
 .dark-theme .chat-scroll-button {
 	background-color: #1a1a1a;
 	box-shadow: 0 0 4px 0px #2e2e2e;
+}
+
+.medium-dark-theme #chat-content,
+.medium-dark-theme #chat-content a {
+	color: #000;
 }
 
 /* Responsive Layout

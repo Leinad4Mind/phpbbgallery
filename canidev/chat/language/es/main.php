@@ -1,12 +1,12 @@
 <?php
-/*
-* [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,11 +16,11 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Chat language
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CHAT'						=> 'Chat',
 	'CHAT_APPLY'				=> 'Aplicar',
 	'CHAT_ARCHIVE'				=> 'Archivo de Chat',
@@ -84,7 +84,7 @@ $lang = array_merge($lang, array(
 
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
 		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
-));
+]);
 
 // Text language
-$lang = array_merge($lang, array());
+$lang = array_merge($lang, []);

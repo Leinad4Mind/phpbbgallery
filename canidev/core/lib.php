@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.2 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -16,23 +16,39 @@ class lib
 	/** @deprecated use constants::VERSION instead */
 	const VERSION	= constants::VERSION;
 	
+	/** @var \phpbb\config\db */
 	private $config;
+	
+	/** @var \phpbb\db\driver\driver_interface */
 	private $db;
+
+	/** @var \phpbb\event\dispatcher_interface */
 	private $dispatcher;
+
+	/** @var \phpbb\language\language */
 	private $language;
+
+	/** @var \phpbb\path_helper */
 	private $path_helper;
+
+	/** @var \phpbb\request\request_interface */
 	private $request;
+
+	/** @var \canidev\core\template */
 	private $template;
+
+	/** @var \phpbb\user */
 	private $user;
+
+	/** @var string */
 	private $phpbb_root_path;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container		Service container interface
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->config			= $container->get('config');
@@ -54,7 +70,7 @@ class lib
 	{
 		if(empty($this->user->data['group_ary']))
 		{
-			$this->user->data['group_ary'] = array();
+			$this->user->data['group_ary'] = [];
 
 			$sql = 'SELECT group_id
 				FROM ' . USER_GROUP_TABLE . '
@@ -131,7 +147,7 @@ class lib
 	 * 
 	 * @return bool|void
 	*/
-	public function modal_dialog($check, $title = '', $hidden = array(), $html_body = '@canidev_core/confirmbox.html', $json_data = null, $u_action = '')
+	public function modal_dialog($check, $title = '', $hidden = [], $html_body = '@canidev_core/confirmbox.html', $json_data = null, $u_action = '')
 	{
 		if(!$this->request->is_ajax())
 		{
@@ -153,11 +169,11 @@ class lib
 			return true;
 		}
 
-		$hidden = array_merge($hidden, array(
+		$hidden = array_merge($hidden, [
 			'confirm_uid'	=> $this->user->data['user_id'],
 			'sess'			=> $this->user->session_id,
 			'sid'			=> $this->user->session_id,
-		));
+		]);
 
 		$formatted_title = (!$this->language->is_set($title)) ? $this->language->lang('CONFIRM') : $this->language->lang($title);
 
@@ -174,7 +190,7 @@ class lib
 		$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $this->user->page['page']);
 		$u_action = reapply_sid($this->path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'MESSAGE_TITLE'		=> $formatted_title,
 			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
 
@@ -182,7 +198,7 @@ class lib
 			'S_CONFIRM_ACTION'	=> $u_action,
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
 			'S_AJAX_REQUEST'	=> true,
-		));
+		]);
 
 		/**
 		 * @event canidev.core.dialog
@@ -193,26 +209,21 @@ class lib
 		 * @var array 		json_data 	JSON Data
 		 * @since 1.1.0
 		 */
-		$vars = array(
-			'title',
-			'hidden',
-			'html_body',
-			'json_data',
-		);
+		$vars = ['title', 'hidden', 'html_body', 'json_data'];
 		extract($this->dispatcher->trigger_event('canidev.core.modal_dialog', compact($vars)));
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'body' => $html_body
-		));
+		]);
 
-		$response = \canidev\core\json_response::get_instance();
+		$response = \canidev\core\JsonResponse::getInstance();
 
 		if($json_data !== null)
 		{
 			$response->add($json_data);
 		}
 
-		$response->send(array(
+		$response->send([
 			'isModalDialog'		=> true,
 			
 			'MESSAGE_BODY'		=> $this->template->assign_display('body'),
@@ -222,19 +233,22 @@ class lib
 			'YES_VALUE'			=> $this->language->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
-		));
+		]);
 	}
 
 	/**
 	 * 
 	 * @param ContainerInterface|null 	$container		Service container interface
+	 * @return static
 	 * @deprecated Use service instead
 	 */
 	static public function get_instance($container = null)
 	{
 		if($container === null)
 		{
-			return;
+			global $phpbb_container;
+
+			$container = $phpbb_container;
 		}
 
 		$request = $container->get('request');

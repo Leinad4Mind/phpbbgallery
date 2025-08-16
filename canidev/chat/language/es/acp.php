@@ -1,12 +1,12 @@
 <?php
-/*
-* [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
 		Desde esta página puede modificar las principales características del chat.',
 	'ACP_CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
@@ -194,4 +194,4 @@ $lang = array_merge($lang, array(
 	'PAGE_ALREADY_EXISTS'		=> 'La página especificada ya está en uso.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> '¿Está seguro de que desea eliminar esta sala y todos sus mensajes?',
-));
+]);

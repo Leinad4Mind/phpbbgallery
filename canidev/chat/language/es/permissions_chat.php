@@ -1,12 +1,12 @@
 <?php
-/*
-* [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACL_CAT_CHAT'				=> 'Chat',
 	'ACL_A_CHAT'				=> 'Puede administrar el chat',
 
@@ -33,4 +33,4 @@ $lang = array_merge($lang, array(
 	'ACL_U_CHAT_POST'			=> 'Puede publicar mensajes',
 	'ACL_U_CHAT_SENDPM'			=> 'Puede enviar mensajes privados',
 	'ACL_U_CHAT_VIEW'			=> 'Puede ver el chat',
-));
+]);

@@ -1,8 +1,8 @@
 /**
-* @package cBB Chat
-* @version 1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
-(function(e,t){"use_strict";var n={init:function(){var n=this;e("#page_file").change(function(){var t=e(this).val(),n=t=="viewforum"||t=="viewtopic"?true:false,r=t=="-"?true:false;e("dl:has(#forum_ids)").objView(n);e("dl:has(#custom_file), dl:has(#page_alias)").objView(r)}).change();e(".pagerow-input").click(function(){this.focus();this.select()});e(".js-chat-action").click(function(e){n.triggerAction(this.href);e.preventDefault()});var r=e("form:first"),i=false;e(".sortable-text ul").sortable({update:function(e,n){if(!i){i=true;t.request({url:r.attr("action"),data:r.serialize(),onComplete:function(){i=false}})}}}).disableSelection()},triggerAction:function(n,r){t.request({url:n,data:r,onSuccess:function(t){if(t.action=="deleteRow"){e("#row"+t.rowId).fadeOut()}}})}};n.init()})(jQuery,cbbCore);
+ * @package cBB Chat
+ * @version 1.2.5 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
+!function(o,n){"use strict";({init:function(){var i=this,t=(o("#page_file").change(function(){var t=o(this).val(),i="viewforum"==t||"viewtopic"==t,t="-"==t;o("dl:has(#forum_ids)").objView(i),o("dl:has(#custom_file), dl:has(#page_alias)").objView(t)}).change(),o(".pagerow-input").click(function(){this.focus(),this.select()}),o(".js-chat-action").click(function(t){i.triggerAction(this.href),t.preventDefault()}),o("form:first")),e=!1;o(".sortable-text ul").sortable({update:function(){e||(e=!0,n.request({url:t.attr("action"),data:t.serialize(),onComplete:function(){e=!1}}))}}).disableSelection()},triggerAction:function(t,i){n.request({url:t,data:i,onSuccess:function(t){"deleteRow"==t.action&&o("#row"+t.rowId).fadeOut()}})}}).init()}(jQuery,cbbCore);

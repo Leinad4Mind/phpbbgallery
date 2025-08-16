@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.2 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -21,10 +21,11 @@ class template
 	protected $request;
 	protected $twig;
 
-	protected $assets 			= array();
-	protected $assets_cache		= array();
-	protected $context_ary		= array();
-	protected $js_lang_keys 	= array();
+	protected $assets 			= [];
+	protected $assets_cache		= [];
+	protected $context_ary		= [];
+	protected $js_lang_keys 	= [];
+	protected $in_ajax_request 	= false;
 
 	public $prepend_assets = false;
 
@@ -35,7 +36,7 @@ class template
 	 * @param \phpbb\filesystem\filesystem 				$filesystem 		The filesystem object
 	 * @param \phpbb\language\language 					$language 			Language Object
 	 * @param \phpbb\path_helper						$path_helper		Path Helper Object
-	 * @param \phpbb\request\request 					$request			Request object
+	 * @param \phpbb\symfony_request					$request			Symfony Request object
 	 * @param \phpbb\template\template					$template     		Template object
 	 * @param \phpbb\template\twig\environment 			$twig_environment
 	 *
@@ -46,7 +47,7 @@ class template
 		\phpbb\filesystem\filesystem $filesystem,
 		\phpbb\language\language $language,
 		\phpbb\path_helper $path_helper,
-		\phpbb\request\request $request,
+		$request,
 		\phpbb\template\template $template,
 		\phpbb\template\twig\environment $twig_environment
 	)
@@ -58,6 +59,12 @@ class template
 		$this->phpbb_template	= $template;
 		$this->request 			= $request;
 		$this->twig				= $twig_environment;
+
+		if((($this->request instanceof \phpbb\symfony_request) && $this->request->isXmlHttpRequest()) ||
+			(($this->request instanceof \phpbb\request\request_interface) && $this->request->is_ajax()))
+		{
+			$this->in_ajax_request = true;
+		}
 	}
 	
 	/**
@@ -70,7 +77,7 @@ class template
 	{
 		if(method_exists($this->phpbb_template, $name))
 		{
-			return call_user_func_array(array($this->phpbb_template, $name), $args);
+			return call_user_func_array([$this->phpbb_template, $name], $args);
 		}
 		
 		return false;
@@ -94,8 +101,8 @@ class template
 
 		if($add_style_paths)
 		{
-			$style_ary	= array_merge($this->phpbb_template->get_user_style(), array('all'));
-			$path_ary	= array();
+			$style_ary	= array_merge($this->phpbb_template->get_user_style(), ['all']);
+			$path_ary	= [];
 
 			foreach($style_ary as $style_path)
 			{
@@ -115,20 +122,17 @@ class template
 
 			$path_ary[] =  $path . 'plugins/';
 
-			if(sizeof($path_ary))
-			{
-				$this->twig->getLoader()->setPaths($path_ary, $namespace);
-			}
+			$this->twig->getLoader()->setPaths($path_ary, $namespace);
 		}
 	}
 
 	/**
 	 * Append asset
 	 * 
-	 * @param string 	$type 				(js | css | javascript | script | style)
-	 * @param array 	$data 				Asset data
-	 * @param bool 		$return_filename 	Set if asset filename must be returned
-	 * @param string 	$space 				(admin | frontend)
+	 * @param string 		$type 				(js | css | javascript | script | style)
+	 * @param array|string 	$data 				Asset data
+	 * @param bool 			$return_filename 	Set if asset filename must be returned
+	 * @param string 		$space 				(common | admin | frontend)
 	 * 
 	 * @return string|bool
 	 */
@@ -161,14 +165,14 @@ class template
 		
 		if(!is_array($data))
 		{
-			$data = array('content' => $data);
+			$data = ['content' => $data];
 		}
 		
 		$data = array_merge(
-			array(
+			[
 				'id'		=> '',
 				'type'		=> '',
-			),
+			],
 			$data
 		);
 
@@ -184,30 +188,47 @@ class template
 
 				if(!isset($this->assets_cache[$asset_url]))
 				{
-					$asset = new \phpbb\template\asset($asset_url, $this->path_helper, $this->filesystem);
-					
-					if(substr($asset_url, 0, 2) == './')
+					if($this->request instanceof \phpbb\symfony_request)
 					{
-						$root_path = $this->path_helper->get_phpbb_root_path();
+						$asset = new asset($asset_url, $this->path_helper, $this->filesystem, $this->phpbb_template, $this->request);
 
-						$data['content'] = $this->assets_cache[$asset_url] = $root_path . substr($asset->get_url(), 2);
-					}
-					else if($asset->is_relative())
-					{
-						$asset_path = $asset->get_path();
-						$local_file = $this->path_helper->get_phpbb_root_path() . $asset_path;
-
-						if(!file_exists($local_file))
+						if(!$asset->allocate())
 						{
-							if(!($local_file = $this->find_asset($asset_path, ($space == 'admin'))))
-							{
-								return false;
-							}
-							
-							$asset->set_path($local_file, true);
-							$asset->add_assets_version($this->config['assets_version']);
+							return false;
+						}
 
-							$data['content'] = $this->assets_cache[$asset_url] = $asset->get_url();
+						$asset->add_assets_version($this->config['assets_version']);
+
+						$data['content'] = $this->assets_cache[$asset_url] = $asset->get_url();
+					}
+					else
+					{
+						/** @deprecated To be removed in v1.2.0 */
+						$asset = new \phpbb\template\asset($asset_url, $this->path_helper, $this->filesystem);
+					
+						if(substr($asset_url, 0, 2) == './')
+						{
+							$root_path = $this->path_helper->get_phpbb_root_path();
+	
+							$data['content'] = $this->assets_cache[$asset_url] = $root_path . substr($asset->get_url(), 2);
+						}
+						else if($asset->is_relative())
+						{
+							$asset_path = $asset->get_path();
+							$local_file = $this->path_helper->get_phpbb_root_path() . $asset_path;
+	
+							if(!file_exists($local_file))
+							{
+								if(!($local_file = $this->find_asset($asset_path, ($space == 'admin'))))
+								{
+									return false;
+								}
+								
+								$asset->set_path($local_file, true);
+								$asset->add_assets_version($this->config['assets_version']);
+	
+								$data['content'] = $this->assets_cache[$asset_url] = $asset->get_url();
+							}
 						}
 					}
 					
@@ -247,10 +268,10 @@ class template
 				{
 					if(!isset($this->assets[$namespace]))
 					{
-						$this->assets[$namespace] = array();
+						$this->assets[$namespace] = [];
 					}
 
-					$this->assets[$namespace][$type] = array();
+					$this->assets[$namespace][$type] = [];
 				}
 				else if($data['id'] || $is_single)
 				{
@@ -265,7 +286,7 @@ class template
 					}
 				}
 				
-				$params = array();
+				$params = [];
 				
 				foreach($data as $key => $value)
 				{
@@ -289,22 +310,22 @@ class template
 					break;
 				}
 				
-				$new_asset = array(
+				$new_asset = [
 					'ID'		=> $data['id'],
 					'DATA'		=> $data['content'] ,
 					'PARAMS'	=> sizeof($params) ? ' ' . implode(' ', $params) : '',
 					'IS_SINGLE'	=> $is_single,
 					'TYPE'		=> $data['type'],
 					'SRC'		=> ($is_single) ? $data[$file_key] : '',
-				);
+				];
 
 				$function = ($this->prepend_assets) ? 'array_unshift' : 'array_push';
 
 				$function($this->assets[$namespace][$type], $new_asset);
 
-				if($this->request->is_ajax())
+				if($this->in_ajax_request)
 				{
-					\canidev\core\json_response::get_instance()->add_component('asset', $new_asset);
+					\canidev\core\JsonResponse::getInstance()->addComponent('asset', $new_asset);
 				}
 			break;
 			
@@ -322,11 +343,11 @@ class template
 	{
 		if(sizeof($this->js_lang_keys))
 		{
-			$this->append_asset('script', array(
+			$this->append_asset('script', [
 				'id'		=> 'core-lang',
 				'type'		=> 'application/json',
 				'content'	=> json_encode($this->js_lang_keys, JSON_PRETTY_PRINT),
-			));
+			]);
 		}
 
 		if(!isset($this->assets[$namespace]))
@@ -361,6 +382,8 @@ class template
 	 * 
 	 * @param string 	$key
 	 * @param array 	$options
+	 * 
+	 * @return static
 	 */
 	public function assign_json_var($key, $options)
 	{
@@ -377,6 +400,8 @@ class template
 		);
 
 		$this->assign_var($key, json_encode($options));
+
+		return $this;
 	}
 	
 	/**
@@ -413,9 +438,9 @@ class template
 	 */
 	public function render($id, $filename, $return = false)
 	{
-		$this->phpbb_template->set_filenames(array(
+		$this->phpbb_template->set_filenames([
 			$id		=> $filename
-		));
+		]);
 		
 		if($return)
 		{
@@ -430,12 +455,14 @@ class template
 	 * 
 	 * @param array 	$ary 			Language keys
 	 * @param bool 		$convert_keys 	Convert phpBB keys into javascript keys
+	 * 
+	 * @return static
 	 */
 	public function set_js_lang($ary, $convert_keys = false)
 	{
 		if(array_keys($ary) === range(0, count($ary) - 1))
 		{
-			$new_ary = array();
+			$new_ary = [];
 
 			foreach($ary as $key)
 			{
@@ -464,10 +491,12 @@ class template
 
 		$this->js_lang_keys = array_merge($this->js_lang_keys, $ary);
 
-		if($this->request->is_ajax())
+		if($this->in_ajax_request)
 		{
-			\canidev\core\json_response::get_instance()->add_component('lang', $this->js_lang_keys);
+			\canidev\core\JsonResponse::getInstance()->addComponent('lang', $this->js_lang_keys);
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -478,10 +507,11 @@ class template
 	 * 
 	 * @return string|false
 	 * @access private
+	 * @deprecated 		To be removed in v1.2.0
 	 */
 	private function find_asset($path, $is_admin = false)
 	{
-		$paths = array();
+		$paths = [];
 
 		if(strpos($path, '@') === 0)
 		{
@@ -529,7 +559,7 @@ class template
 	 * 
 	 * @param ContainerInterface  $container 	Service container
 	 * @return template
-	 * @deprecated Use services instead
+	 * @deprecated 								To be removed in v 1.2.0. Use services instead
 	 */
 	static public function get_instance(ContainerInterface $container)
 	{
