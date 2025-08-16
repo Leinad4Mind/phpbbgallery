@@ -3,20 +3,19 @@
     "type": "phpbb-extension",
     "description": "Displays the number of new notifications in the favicon",
     "homepage": "https://github.com/kasimi",
-    "version": "1.0.0",
-    "time": "2016-08-23",
-    "license": "GPL-2.0",
+    "version": "1.0.1",
+    "time": "2020-02-19",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "kasimi",
-            "email": "",
-            "homepage": "https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1330603",
-            "role": "Lead Developer"
+            "email": "mail@kasimi.net",
+            "homepage": "https://kasimi.net",
+            "role": "Extension Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "phpbb/phpbb": ">=3.1.0@dev"
+        "php": ">=5.3.3"
     },
     "extra": {
         "display-name": "Favicon Notifications",
