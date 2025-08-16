@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Discord Notifications. An extension for the phpBB Forum Software package.
- * French translation by Galixte (http://www.galixte.com)
+ * Discord Notifications extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018 Tyler Olsen <https://github.com/rootslinux>
- * @license GNU General Public License, version 2 (GPL-2.0-only)
+ * @copyright (c) 2018, Tyler Olsen, https://github.com/rootslinux
+ * @copyright (c) 2022, French translation by Fred Rimbert https://forums.caforum.fr
+ * @license GNU General Public License, version 2 (GPL-2.0)
  *
  * This file contains the language strings for the ACP settings page for this extension.
  */
@@ -42,36 +42,35 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// ACP Extension Settings Page
 	'DN_ACP_DESCRIPTION'			=> 'Depuis cette page il est possible de définir les paramètres permettant à différents évènements du forum d’être envoyés comme notification sur un serveur Discord.',
+	'DN_MISSING_CURL'				=> 'Pour que cette extension fonctionne, tu dois installer le module <a href="https://www.php.net/manual/fr/curl.installation.php">ext-curl pour PHP</a>.',
 
 	'DN_MAIN_SETTINGS'				=> 'Paramètres généraux',
 	'DN_MASTER_ENABLE'				=> 'Activer les notifications Discord',
-	'DN_WEBHOOK_URL'				=> 'URL Webhook de Discord',
-	'DN_WEBHOOK_DESCRIPTION'		=> 'Permet de saisir l’adresse URL Webhook du serveur Discord généré par le serveur Discord. Voir <a href="https://support.discordapp.com/hc/fr/articles/228383668-Intro-to-Webhooks">cet article</a> pour apprendre comment créer un nouveau Webhook.',
 	'DN_POST_PREVIEW_LENGTH'		=> 'Longueur de l’aperçu des messages',
-	'DN_POST_PREVIEW_DESCRIPTION'	=> 'Permet de saisir le nombre de caractères à afficher dans l’aperçu des messages (10 - 2000). Définir sur la valeur 0 pour désactiver l’aperçu des messages.',
+	'DN_POST_PREVIEW_DESCRIPTION'	=> 'Permet de saisir le nombre de caractères à afficher dans l’aperçu des messages (%1$d-%2$d). Définir sur la valeur 0 pour désactiver l’aperçu des messages.',
 	'DN_TEST_MESSAGE'				=> 'Message',
 	'DN_TEST_MESSAGE_TEXT'			=> 'Texte du message de test : Hello Discord!',
 	'DN_TEST_DESCRIPTION'			=> 'Permet d’envoyer un message sur le serveur Discord afin de vérifier que la connexion avec phpBB est fonctionnelle.',
 	'DN_SEND_TEST'					=> 'Envoyer un message de test',
 	'DN_SEND_TEST_DESCRIPTION'		=> 'Permet d’envoyer le contenu du message de test au Webhook du serveur Discord. À utiliser pour vérifier que le Webhook est fonctionnel.',
-	'DN_CONNECT_TIMEOUT'			=> 'Connect timeout',
-	'DN_CONNECT_TO_DESCRIPTION'		=> 'Timeout in seconds to establish a connection to the Webhook endpoint.',
-	'DN_EXEC_TIMEOUT'				=> 'Transfer timeout',
-	'DN_EXEC_TO_DESCRIPTION'		=> 'Timeout in seconds for data transfer.',
-	'DN_TEST_SETTINGS'				=> 'Test Settings',
+	'DN_CONNECT_TIMEOUT'			=> 'Délai de connexion',
+	'DN_CONNECT_TO_DESCRIPTION'		=> 'Délai d‘attente en secondes pour établir une connexion au point de terminaison Webhook.',
+	'DN_EXEC_TIMEOUT'				=> 'Délai de transfert',
+	'DN_EXEC_TO_DESCRIPTION'		=> 'Délai d‘attente en secondes pour le transfert de données.',
+	'DN_TEST_SETTINGS'				=> 'Paramètres d‘essai',
 
-	'DN_WEBHOOK_SETTINGS'			=> 'Edit entries',
-	'DN_WEBHOOK_SETTINGS_DESCRIPTION' => 'Edit or delete existing entries.',
-	'DN_WEBHOOK_NEW'				=> 'Create new entry',
-	'DN_WEBHOOK_NEW_DESCRIPTION'	=> 'Create a new entry. To get the Webhook-URL, right click on a Discord channel, chose "Edit Channel", then go to "Integrations" to create a Webhook.',
-	'DN_WEBHOOK_NEW_ALIAS'			=> 'New Alias',
+	'DN_WEBHOOK_SETTINGS'			=> 'Modifier les entrées',
+	'DN_WEBHOOK_SETTINGS_DESCRIPTION' => 'Modifier les entrées existantes. Une entrée est supprimée si le champ URL est vide.',
+	'DN_WEBHOOK_NEW'				=> 'Créer une nouvelle entrée',
+	'DN_WEBHOOK_NEW_DESCRIPTION'	=> 'Créez une nouvelle entrée. Une URL complète est requise, commençant par "http" ou "https".',
+	'DN_WEBHOOK_NEW_ALIAS'			=> 'Nouvel alias',
 	'DN_WEBHOOK_NEW_ALIAS_DESCRIPTION' => 'Can be freely chosen, for example something that describes the target channel of the webhook (like "public" or "marketplace").',
-	'DN_WEBHOOK_NEW_URL'			=> 'New URL',
-	'DN_WEBHOOK_NEW_URL_DESCRIPTION' => 'Webhook-URL, must start with http/https, e.g. <samp>https://discord.com/api/webhooks/1063...</samp>',
-	'DN_WEBHOOK_SELECT'				=> 'Select Webhook',
-	'DN_WEBHOOK_DEFAULT'			=> 'Global Events',
-	'DN_WEBHOOK_DEFAULT_DESCRIPTION' => 'Webhook for global events not related to a specific forum, e.g. user creation/deletion',
-	'DN_NO_WEBHOOKS'				=> 'No entries exist.',
+	'DN_WEBHOOK_NEW_URL'			=> 'URL Webhook de Discord',
+	'DN_WEBHOOK_NEW_URL_DESCRIPTION'=> 'Permet de saisir l’adresse URL Webhook du serveur Discord généré par le serveur Discord. Voir <a href="https://support.discordapp.com/hc/fr/articles/228383668-Intro-to-Webhooks">cet article</a> pour apprendre comment créer un nouveau Webhook.',
+	'DN_WEBHOOK_SELECT'				=> 'Sélectionnez Webhook',
+	'DN_WEBHOOK_DEFAULT'			=> 'Événements mondiaux',
+	'DN_WEBHOOK_DEFAULT_DESCRIPTION' => 'Webhook pour les événements mondiaux non liés à un forum spécifique, par ex. création/suppression d‘utilisateur',
+	'DN_NO_WEBHOOKS'				=> 'Aucune entrée n‘existe.',
 
 	'DN_TYPE_SETTINGS'				=> 'Types de notification',
 	'DN_TYPE_DESCRIPTION'			=> 'Permet de sélectionner quels types de notification devraient être générés sous forme de messages envoyés sur le serveur Discord.',
@@ -101,7 +100,6 @@ $lang = array_merge($lang, array(
 
 	// Success/Failure messages that can be generated once the user saves
 	'DN_SETTINGS_SAVED'				=> 'Les paramètres de notification Discord ont été modifiés avec succès !',
-	'DN_MASTER_WEBHOOK_REQUIRED'	=> 'Une adresse URL Webhook du serveur Discord est requise pour activer les notifications.',
 	'DN_WEBHOOK_URL_INVALID'		=> 'L’adresse URL Webhook du serveur Discord doit être complète et correspondre à une adresse URL valide.',
-	'DN_POST_PREVIEW_INVALID'		=> 'La longueur de l’aperçu des messages doit être comprise entre 10 et 2000 ou définie sur 0 pour la désactivation de l’aperçu.',
+	'DN_POST_PREVIEW_INVALID'		=> 'La longueur de l’aperçu des messages doit être comprise entre %1$d et %2$d ou définie sur 0 pour la désactivation de l’aperçu.',
 ));

@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Publishes forum event notifications to a Discord server channel",
     "homepage": "https://github.com/m-ober/phpbb-discord-notifications",
-    "version": "3.0.7",
+    "version": "3.0.8",
     "keywords": [
         "phpbb",
         "extension",
@@ -24,15 +24,15 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "ext-curl": "*",
         "composer/installers": "~1.0.0",
-        "phpbb/phpbb": ">=3.3.0"
+        "phpbb/phpbb": ">=3.3.11"
     },
     "extra": {
         "display-name": "Discord Notifications",
         "soft-require": {
-            "phpbb/phpbb": ">=3.3.0"
+            "phpbb/phpbb": ">=3.3.11"
         },
         "version-check": {
             "host": "www.phpbb.com",
