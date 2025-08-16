@@ -80,10 +80,15 @@ class listener implements EventSubscriberInterface
 			$pms = json_decode($json_returned, true);
 			if (!empty($pms['data']['link'])) 
 			{
+				// lets force https seeing as imgur supports it
+				$ssl = str_replace('http:', 'https:', $pms['data']['link']);
 				$this->template->assign_vars(array(
-					'IMGUR_IMAGE'		=>  "\n[img]{$pms['data']['link']}[/img]",
-					'IMGUR_DIRECT_IMG'	=>  "\n[img]{$pms['data']['link']}[/img]",
-					'IMGUR_DIRECT_LINK'	=>  "\n{$pms['data']['link']}",
+				//	'IMGUR_IMAGE'		=>  "\n[img]{$pms['data']['link']}[/img]",
+				    'IMGUR_IMAGE'       =>  "\n[img]{$ssl}[/img]",
+				//	'IMGUR_DIRECT_IMG'	=>  "\n[img]{$pms['data']['link']}[/img]",
+					'IMGUR_DIRECT_IMG'	=>  "\n[img]{$ssl}[/img]",
+				//	'IMGUR_DIRECT_LINK'	=>  "\n{$pms['data']['link']}",
+				    'IMGUR_DIRECT_LINK'	=>  "\n{$ssl}",
 					'IMGUR_DELETEHASH'	=>  $pms['data']['deletehash'],
 				));
 			}
