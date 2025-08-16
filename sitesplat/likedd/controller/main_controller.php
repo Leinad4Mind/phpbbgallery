@@ -174,7 +174,8 @@ class main_controller
 					
 					$likes['data'][] = array('y' => $row['num_likes'], 'url' => $url);
 					$dislikes['data'][] = array('y' => $row['num_dislikes'], 'url' => $url);
-					
+				
+				//	$categories['data'][] = (isset($row['forum_id']) && $this->auth->acl_get('f_read', $row['forum_id']) || $type == 3) ? $row['catname'] : $this->user->lang['LIKE_NO_AUTH'];
 					$categories['data'][] = htmlspecialchars_decode($row['catname']);
 				}
 				

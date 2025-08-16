@@ -67,6 +67,7 @@ $lang = array_merge($lang, array(
 	'LIKES_SORT_POSTS_AMT'       	     		=> 'Sort by post',
 	
 	'NO_LIKES'									=> 'No likes found!',
+	'NOTIFICATION_TYPE_LIKEDD_ADD'				=> 'Someone likes or dislikes any of your posts',
 	
 	'UCP_LD_GIVEN'                  			=> 'Given',   
     'UCP_LD_RECEIVED'   	        			=> 'Received',
