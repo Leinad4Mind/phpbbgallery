@@ -75,7 +75,7 @@ class main
                 ' . $recent_topics_where . '
 				AND u.user_id = ' . $pid . '
 				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id',
-			'ORDER'		=> 't.topic_last_post_time DESC',
+			'ORDER_BY'		=> 't.topic_last_post_time DESC',
 		);
 
 		/**
