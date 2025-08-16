@@ -1,0 +1,92 @@
+<!-- IF S_EVENT_OUTPUT -->
+	<div class="blg-calendar-event" data-event="{S_EVENT_ID}">{S_EVENT_TITLE}</div>
+<!-- ELSE -->
+<div class="blg-modal-dialog editor">
+	<div class="media-frame-title">
+		<h1>{S_EDITOR_TITLE}</h1>
+		<a href="#" data-action="close" class="blg-dialog-close">
+			<span class="blg-icon blg-icon-remove"></span>
+		</a>
+	</div>
+
+	<div class="media-frame-content">
+		<form id="editor-form" onsubmit="return false;">
+		<div class="media-sidebar">
+		
+		<!-- IF .smiley -->
+			<div class="sidebar-box smileys">
+				<h3>{L_SMILIES}</h3>
+				<div class="box-content">
+				<!-- BEGIN smiley -->
+					<a href="#" data-code="{smiley.SMILEY_CODE}"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
+				<!-- END smiley -->
+				</div>
+			</div>
+		<!-- ENDIF -->
+		<!-- IF S_EDITOR_TYPE eq 'event' -->
+			<hr />
+			<div class="sidebar-box">
+				<h3>{L_EVENT_TIME}</h3>
+				<div class="box-content">
+					<select name="event_day" class="blg-inputbox">{S_DAY_OPTIONS}</select>
+					<select name="event_month" class="blg-inputbox">{S_MONTH_OPTIONS}</select>
+					<select name="event_year" class="blg-inputbox">{S_YEAR_OPTIONS}</select>
+				</div>
+			</div>
+			<div class="sidebar-box">
+				<h3>{L_EVENT_GROUPS}</h3>
+				<div class="box-content">
+					{S_GROUPS_SELECT}
+				</div>
+			</div>
+		<!-- ENDIF -->
+		</div>
+		<div class="media-section-content">
+		<!-- IF S_EDITOR_TYPE eq 'event' -->
+			<input name="event_title" type="text" class="blg-inputbox editor-title" value="{S_TITLE}" placeholder="{L_EVENT_TITLE}" />
+			<div class="editor-container"><textarea id="content" name="content">{S_CONTENT}</textarea></div>
+		<!-- ELSE -->
+			<textarea id="content" name="content">{S_CONTENT}</textarea>
+		<!-- ENDIF -->
+		</div>
+		</form>
+	</div>
+		
+	<div class="media-frame-toolbar">
+		<div class="media-toolbar-secondary">
+			<button class="blg-button" data-action="gallery">
+				<span class="blg-icon blg-icon-camera"></span>&nbsp;
+				<span>{L_GALLERY}</span>
+			</button>
+		</div>
+		<div class="media-toolbar-primary">
+			<button type="button" class="blg-button" data-action="submit">{L_SAVE}</button>
+		</div>
+	</div>
+	
+	<script type="text/html" id="tpl-sceditor-html">
+		<!DOCTYPE html>
+		<html{attrs}>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html;charset=<#charset#>" />
+			<link href="{T_STYLESHEET_LINK}" rel="stylesheet" />
+			<link rel="stylesheet" type="text/css" href="<#style#>" />
+			
+			<style>
+				html { height: auto; }
+				
+				<!-- IF BLG_RSZ_GO -->img { max-width: {BLG_RSZ_WIDTH}px; }<!-- ENDIF -->
+				
+				.ie * {min-height: auto !important}
+				.ie table td {height:15px}
+				/* Target Edge (fixes edge issues) */
+				@supports (-ms-ime-align:auto) {
+					* { min-height: auto !important; }
+				}
+			</style>
+		</head>
+		<body class="sceditor-body content" contenteditable="true" <#spellcheck#>><p></p></body>
+		</html>
+	</script>
+</div>
+<!-- ENDIF -->

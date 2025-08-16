@@ -1,0 +1,68 @@
+services:
+    canidev.blockgets.controller:
+        class: canidev\blockgets\controller\main_controller
+        arguments:
+            - @canidev.blockgets.core
+            - @dbal.conn
+            - @template
+            - @user
+            
+    canidev.blockgets.controller.admin.main:
+        class: canidev\blockgets\controller\admin_controller_main
+        arguments:
+            - @cache.driver
+            - @config
+            - @service_container
+            - @dbal.conn
+            - @dispatcher
+            - @canidev.blockgets.helper
+            - @canidev.blockgets.helper.admin
+            - @canidev.blockgets.language
+            - @log
+            - @request
+            - @canidev.blockgets.template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+            
+    canidev.blockgets.controller.admin.pages:
+        class: canidev\blockgets\controller\admin_controller_pages
+        arguments:
+            - @cache.driver
+            - @config
+            - @service_container
+            - @dbal.conn
+            - @dispatcher
+            - @canidev.blockgets.helper
+            - @canidev.blockgets.helper.admin
+            - @canidev.blockgets.language
+            - @log
+            - @request
+            - @canidev.blockgets.template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+
+    canidev.blockgets.controller.calendar:
+        class: canidev\blockgets\controller\calendar_controller
+        arguments:
+            - @auth
+            - @config
+            - @dbal.conn
+            - @dispatcher
+            - @canidev.blockgets.helper
+            - @canidev.blockgets.language
+            - @log
+            - @canidev.blockgets.parser
+            - @request
+            - @canidev.blockgets.template
+            - @user
+            
+    canidev.blockgets.controller.player:
+        class: canidev\blockgets\controller\player_controller
+        arguments:
+            - @dbal.conn
+            - @canidev.blockgets.helper
+            - @canidev.blockgets.language
+            - @request
+            - @template

@@ -1,0 +1,33 @@
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#paypal-{BLOCK_ID}').attr('target', '_blank');
+	});
+// ]]>
+</script>
+
+<form id="paypal-{BLOCK_ID}" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<ul class="blg-linear-list blg-align-center">
+	<!-- IF S_PAYPAL_MSG --><li class="double-space">{S_PAYPAL_MSG}</li><!-- ENDIF -->
+	
+	<li class="double-space">
+		{L_AMOUNT_MSG}:<br />
+		<select name="amount" class="blg-inputbox">{S_PAYPAL_AMOUNTS}</select>
+	</li>
+	
+<!-- IF S_PAYPAL_CURRENCY_OPTIONS -->
+	<li class="double-space">
+		{L_CODE_MSG}:<br />
+		<select name="currency_code" class="blg-inputbox">{S_PAYPAL_CURRENCY_OPTIONS}</select>
+	</li>
+<!-- ENDIF -->
+
+	<li class="double-space">
+		<input type="image" name="submit" style="border:0;" title="{L_CLICK_MSG}" src="{S_PAYPAL_IMG}" alt="PayPal" />
+		{S_BLOCK_HIDDEN_FIELDS}
+	</li>
+</ul>
+</form>

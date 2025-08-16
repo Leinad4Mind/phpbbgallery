@@ -1,0 +1,63 @@
+<?php
+/*
+* @name link_us_block.php
+* @package cBB Blockgets
+* @version v2.0.0 30/05/2017
+*
+* @copyright (c) 2017 CaniDev
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
+namespace canidev\blockgets\blocks;
+
+// @ignore
+if(!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+class link_us_block extends base
+{
+	static $icon = 'blg-icon-link';
+
+	public function init()
+	{
+		$this->tpl_name = 'link_us_block';
+
+		if(($data = $this->unserialize()) === false)
+		{
+			return false;
+		}
+
+		if($data['banner_url'])
+		{
+			$data['banner_url'] = $this->helper->build_image_filename($data['banner_url'], true);
+			$link_text = '<img src="' . $data['banner_url'] . '" style="border:0;" alt="' . $this->config['sitename'] . '" />';
+		}
+		else
+		{
+			$link_text = $this->config['sitename'];
+		}
+
+		$link_title = $this->config['sitename'] . (($this->config['sitename'] && $this->config['site_desc']) ? ' :: ' : '') . $this->config['site_desc'];
+		$link_text = '<a href="' . generate_board_url() . '" onclick="window.open(this.href); return false;" title="' . $link_title . '">' . $link_text . '</a>';
+
+		$this->template->assign_vars(array(
+			'LINK_US_TXT'		=> $this->lang->get('LINK_US_TXT', $this->config['sitename']),
+			'U_LINK_US'			=> htmlentities($link_text, ENT_QUOTES, 'UTF-8'),
+			'U_LINK_US_BANNER'  => $link_text,
+		));
+
+		unset($data);
+		return true;
+	}
+
+	public function get_config()
+	{
+		$this->display_vars = array(
+			'banner_url'	=> array('lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',			'method' => 'helper',	'params' => array('icon_template', '{KEY}', '{CONFIG_VALUE}', 'image')),
+		);
+
+		return true;
+	}
+}

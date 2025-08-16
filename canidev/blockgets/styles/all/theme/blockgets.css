@@ -1,0 +1,114 @@
+/*  cBB Blockgets StyleSheet
+    --------------------------------------------------------------
+	Style:	proSilver	
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+.blg-widget input, .blg-widget select, .blg-widget textarea, .blg-widget button {
+	font-family: "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+	font-size: 1em; 
+}
+
+.blg-widget-content {
+	border: 1px solid #a6c9e2;
+	background: #fcfdfd;
+	color: #222222;
+}
+
+.blg-widget-header a { color: #ffffff; }
+
+.blg-block { padding: 5px; }
+
+.blg-block .block_title img {
+	vertical-align: top;
+}
+
+.blg-block.style-alternative {
+	background: #CADCEB;
+}
+
+.blg-block .block_title { min-height: 16px; }
+
+.blg-block.style-default .block-content {
+	background: #EEF5F9 url('../images/gradient.gif') 0 0 repeat-x;
+	padding: 5px;
+}
+
+.blg-block.style-alternative .block-content {
+	background: none;
+}
+
+.blg-block.style-default .block_title {
+	padding: 2px 0 3px 0;
+	color: #FFFFFF;
+}
+
+.blg-block.style-alternative .block_title {
+	border-bottom: 1px solid #CCC;
+	margin-bottom: 5px;
+	padding: 2px 0 4px 0;
+	color: #000000;
+}
+
+#blg-area-wrapper.responsive-layout #blg-column-left,
+#blg-area-wrapper.responsive-layout #blg-column-right {
+	background: #FFFFFF;
+	
+	-webkit-box-shadow: 0 0 10px #000000;
+	-moz-box-shadow: 0 0 10px #000000;
+	box-shadow: 0 0 10px #000000;
+}
+
+.blg-panel {
+	padding: 4px 6px;
+}
+
+.blg-block, .blg-block .blg-widget-header, .blg-block .blg-widget-content,
+#blg-container select, #blg-container input {
+	font-size: 11px;
+}
+
+.blg-block, .blg-panel, .corners-fixed .headerbar, .corners-fixed .navbar, .corners-fixed  .panel,
+.corners-fixed .forabg, .corners-fixed .forumbg {
+	overflow: hidden;
+
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-khtml-border-radius: 6px;
+	border-radius: 6px;
+}
+
+/* Style Override for Blocks
+----------------------------------*/
+.blg-block ul.topiclist dt, .blg-block dd.lastpost, .blg-block dd.redirect { font-size: 1em; }
+
+.blg-block li.header dt, .blg-block li.header dd {
+	font-size: 0.9em;
+	font-weight: normal;
+}
+
+dd.fb-stats { width: 15%; }
+.fb-lastpost-title { float:right; width:25%; }
+
+/* Google translate block
+----------------------------------*/
+.google-translate a:hover {
+	border-color: #79b7e7;
+	background-color: #d0e5f5;
+}
+
+/* Image Resize
+----------------------------------*/
+.resized { border: 1px dotted blue; }
+
+/* Player block
+----------------------------------*/
+.player-statusbar, .player-list-wrap, .player-buttons {
+	border: 1px solid #a6c9e2;
+}
+
+.player-playlist a:hover {
+	background: #d0e5f5;
+	color: #000000;
+}

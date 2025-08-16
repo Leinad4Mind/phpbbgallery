@@ -1,0 +1,40 @@
+
+<!-- IF S_ZEBRA -->
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#friends-{BLOCK_ID}').accordion({
+			collapsible : true
+		});
+	});
+// ]]>
+</script>
+
+<div id="friends-{BLOCK_ID}">
+	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_ONLINE}</a></h5>
+	<div>
+		<ul class="blg-linear-list">
+		<!-- BEGIN friends_online -->
+			<li class="userrow">{friends_online.USERNAME_FULL}</li>
+		<!-- BEGINELSE -->
+			<li class="blg-align-center">{L_NO_FRIENDS_ONLINE}</li>
+		<!-- END friends_online -->
+		</ul>
+	</div>
+	
+	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_OFFLINE}</a></h5>
+	<div>
+		<ul class="blg-linear-list">
+		<!-- BEGIN friends_offline -->
+			<li class="userrow">{friends_offline.USERNAME_FULL}</li>
+		<!-- BEGINELSE -->
+			<li class="blg-align-center">{L_NO_FRIENDS_OFFLINE}</li>
+		<!-- END friends_offline -->
+		</ul>
+	</div>
+</div>
+<!-- ELSE -->
+<div class="blg-align-center">{L_NO_FRIENDS}</div>
+<!-- ENDIF -->

@@ -1,0 +1,231 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}" class="blg-button">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+
+<!-- IF L_TITLE -->
+	<h1>{L_TITLE}</h1>
+	<p>{L_TITLE_EXPLAIN}</p>
+<!-- ENDIF -->
+
+<!-- IF S_PAGE_LIST --><hr /><!-- ENDIF -->
+
+<!-- IF S_PAGE_LIST -->
+<form id="acp_blockgets_pages" method="post" action="{U_ACTION}">
+
+<!-- BEGIN pagerow -->
+	<!-- IF pagerow.S_LEGEND -->
+		<!-- IF not pagerow.S_FIRST_ROW -->
+		</tbody>
+		</table>
+		<br />
+		<!-- ENDIF -->
+			
+		<h1>{pagerow.S_LEGEND}</h1>
+		<p>{pagerow.S_EXPLAIN}</p>
+			
+		<table class="acp-blg-list not-responsive" cellspacing="0">
+		<thead>
+			<tr>
+				<th class="blg-align-center"><input type="checkbox" class="switch-select radio" /></th>
+				<th class="primary-column">{L_PAGE}</th>
+				<th class="secondary-column">{L_INFORMATION}</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		<!-- IF pagerow.S_LAST_ROW -->
+			<tr><td colspan="3" class="row3">{L_NO_PAGES_CREATED}</td></tr>
+		<!-- ENDIF -->
+	<!-- ELSE -->
+			<tr id="row-{pagerow.S_ID}"<!-- IF pagerow.S_STATE --> class="{pagerow.S_STATE}"<!-- ENDIF -->>
+				<td class="check-field blg-align-center"><input type="checkbox" class="radio" name="page_ids[]" value="{pagerow.S_ID}" /></td>
+				<td class="primary-column">
+					<div class="primary-text">{pagerow.S_TITLE}</div>
+					<div class="row-actions">{pagerow.S_ACTIONS}</div>
+				</td>
+				<td class="secondary-column">
+					<div class="row-description">
+						<strong>{L_PAGE_URL}:</strong><br /><a href="{pagerow.S_URL}">{pagerow.S_URL}</a>
+						<!-- IF pagerow.S_SHOW_FILTERS --><br /><br /><strong>{L_PAGE_FILTERS}:</strong> <!-- IF pagerow.S_FILTERS --><br />{pagerow.S_FILTERS}<!-- ELSE -->{L_NO_PAGE_FILTERS}<!-- ENDIF --><!-- ENDIF -->
+					</div>
+				</td>
+			</tr>
+	<!-- ENDIF -->
+		
+	<!-- IF pagerow.S_LAST_ROW -->
+		</tbody>
+		</table>
+	<!-- ENDIF -->
+<!-- END pagerow -->
+
+<!-- ELSEIF S_BLOCK_LIST -->
+<form id="acp_blockgets_blocks" method="post" action="{U_ACTION}">
+
+	<br />
+	<div class="blg-block-actions"></div>
+
+<table id="blg-blocks" cellspacing="1">
+<tr>
+    <td colspan="3" class="row2" valign="top">
+    	<strong>{L_TOP_COLUMN}</strong>
+		<hr />
+		<div id="top_block" class="column">
+		{% for block in loops.top_block %}
+			{% include 'block_view.html' %}
+		{% endfor %}
+		</div>
+	</td>
+  </tr>
+  <tr>
+    <td width="25%" class="row2" valign="top">
+    	<strong>{L_LEFT_COLUMN}</strong>
+		<hr />
+		<div id="left_block" class="column">
+		{% for block in loops.left_block %}
+			{% include 'block_view.html' %}
+		{% endfor %}
+		</div>	
+	</td>
+
+    <td width="50%" class="row2" valign="top">
+    	<strong>{L_CENTER_COLUMN}</strong>
+		<hr />
+		<div id="center_block" class="column">
+		{% for block in loops.center_block %}
+			{% include 'block_view.html' %}
+		{% endfor %}	
+		</div>		
+	</td>
+
+    <td width="25%" class="row2" valign="top">
+    	<strong>{L_RIGHT_COLUMN}</strong>
+		<hr />
+		<div id="right_block" class="column">
+		{% for block in loops.right_block %}
+			{% include 'block_view.html' %}
+		{% endfor %}	
+		</div>			
+	</td>
+  </tr>
+  <tr>
+    <td colspan="3" class="row2" valign="top">
+    	<strong>{L_BOTTOM_COLUMN}</strong>
+		<hr />
+		<div id="bottom_block" class="column">
+		{% for block in loops.bottom_block %}
+			{% include 'block_view.html' %}
+		{% endfor %}	
+		</div>
+	</td>
+  </tr>
+</table>
+
+	<div class="blg-block-actions"></div>
+	
+	<div id="block-list">
+		<ul>
+		<!-- BEGIN block_alias -->
+			<li<!-- IF block_alias.S_EXPLAIN --> data-title="{block_alias.S_EXPLAIN}"<!-- ENDIF --> data-action="{block_alias.U_ACTION}">
+				<span class="blg-icon {block_alias.S_ICON}"></span>
+				<span class="block-title">{block_alias.S_TITLE}</span>
+			</li>
+		<!-- END block_alias -->
+		</ul>
+		
+		<div class="tip" data-original-tip="{L_ADD_BLOCK_TIP}"></div>
+		<a href="#" class="close-btn">
+			<span class="blg-icon blg-icon-remove"></span>
+		</a>
+	</div>
+	
+<div id="js-block-actions" style="display:none;">
+	<div class="block-mark">
+		<button class="small" data-action="mark" title="{L_MARK_ALL}"><span class="blg-icon blg-icon-check-square-o"></span></button>
+		<button class="small" data-action="unmark" title="{L_UNMARK_ALL}"><span class="blg-icon blg-icon-square-o"></span></button>
+	</div>
+
+	<div class="block-actions">
+		<button type="submit" name="subaction" value="copy" title="{L_COPY_BLOCK}"><span class="blg-icon blg-icon-copy"></span></button>
+		<button type="submit" name="subaction" value="move" title="{L_MOVE_BLOCK}"><span class="blg-icon blg-icon-share-square-o"></span></button>
+		<button type="submit" name="subaction" value="chg_groups" title="{L_CHG_GROUPS_BLOCK}"><span class="blg-icon blg-icon-shield"></span></button>
+		<button type="submit" name="subaction" value="enable" title="{L_ENABLE_BLOCK}"><span class="blg-icon blg-icon-plus"></span></button>
+		<button type="submit" name="subaction" value="disable" title="{L_DISABLE_BLOCK}"><span class="blg-icon blg-icon-minus"></span></button>
+		<button type="submit" name="subaction" value="delete" title="{L_DELETE}"><span class="blg-icon blg-icon-remove"></span></button>
+		&nbsp;
+	</div>
+
+	<button data-action="add_block">{L_ADD_BLOCK}</button>
+	<div class="js-group-add blg-button" title="{L_ADD_GROUP_EXPLAIN}">{L_ADD_GROUP}</div>
+</div>
+
+<script type="text/html" id="tpl-block-helper">
+	<div class="portlet blg-widget blg-widget-content blg-corner-all portlet-helper">
+		<span class="blg-icon <#icon#>"></span>
+	</div>
+</script>
+
+<script type="text/html" id="tpl-block-group-helper">
+	<div class="portlet-group portlet-helper blg-corner-all">
+		<div class="portlet-group-header">
+			<a href="#" title="{L_REMOVE}"><span class="blg-icon blg-icon-remove"></span></a>
+			<span>{L_GROUP}</span>
+		</div>
+		<div class="subcolumn"></div>
+	</div>
+</script>
+
+<!-- ELSEIF .options -->
+<form id="acp_blockgets_page_options" method="post" action="{U_ACTION}">
+
+<!-- BEGIN options -->
+	<!-- IF options.S_LEGEND -->
+		<!-- IF not options.S_FIRST_ROW -->
+			</fieldset>
+		<!-- ENDIF -->
+		<fieldset>
+			<legend>{options.LEGEND}</legend>
+	<!-- ELSE -->
+
+		<dl<!-- IF options.HIDDEN --> style="display:none;"<!-- ENDIF -->>
+			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dd>{options.CONTENT}</dd>
+		</dl>
+
+	<!-- ENDIF -->
+<!-- END options -->
+
+</fieldset>
+
+	<div class="blg-submit-buttons">
+		<input class="blg-button default-action" type="submit" name="submit" value="{L_SAVE}" />
+	</div>
+<!-- ENDIF -->
+
+<!-- IF S_PAGE_LIST -->
+	<div class="batch-actions">
+		<div class="blg-group blg-align-right floated">
+			<select name="page_file" class="blg-inputbox">{S_FILE_OPTIONS}</select>
+			<button type="submit" class="blg-button" name="add" value="1">{L_PAGE_ADD}</button>
+		</div>
+		
+		<div class="blg-group">
+			<select name="action" class="blg-inputbox">
+				<option value="">{L_BATCH_ACTIONS}</option>
+				<option value="enable">{L_ENABLE}</option>
+				<option value="disable">{L_DISABLE}</option>
+				<option value="delete">{L_DELETE}</option>
+			</select>
+			<input type="submit" class="blg-button" name="submit" value="{L_SUBMIT}" />
+		</div>
+	</div>
+<!-- ENDIF -->
+
+<div>
+	{S_FORM_TOKEN}
+	{S_HIDDEN_FIELDS}
+</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

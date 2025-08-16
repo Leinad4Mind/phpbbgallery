@@ -1,0 +1,11 @@
+
+<!-- BEGIN topic_row -->
+<!-- IF not topic_row.S_FIRST_ROW --><hr /><!-- ENDIF -->
+<div class="lunread-row">
+	<span<!-- IF S_SHORT_MODE --> class="blg-helper-text"<!-- ENDIF -->><strong><a href="{topic_row.U_VIEWTOPIC}">{topic_row.S_TITLE}</a></strong></span>
+	<!-- IF not S_SHORT_MODE --><span>&nbsp;{L_POST_BY_AUTHOR} {topic_row.S_AUTHOR_FULL}</span><!-- ENDIF -->
+	<span> &raquo; <em>{topic_row.S_DATE}</em></span>
+</div>
+<!-- BEGINELSE -->
+<div class="blg-align-center">{L_NO_UNREAD}</div>
+<!-- END topic_row -->

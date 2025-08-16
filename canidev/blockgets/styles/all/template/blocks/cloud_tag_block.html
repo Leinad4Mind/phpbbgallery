@@ -1,0 +1,35 @@
+
+<!-- IF S_SHOW_ANIMATION -->
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID}').flash({
+			id		: 'tagcloud-{BLOCK_ID}',
+			parent	: '#tags-{BLOCK_ID}',
+			url		: '{T_BLOCKGETS_PATH}swf/tagcloud.swf',
+			autoadjust	: true,
+			overwrite	: true,
+			params: {
+				wmode: 'transparent'
+			},
+			flashvars: {
+				tcolor	: '0x4b73d4',
+				hicolor	: 'ff0000',
+				tspeed	: 100,
+				distr	: 'true',
+				mode	: 'tags',
+				tagcloud: '<tags>' + $('#tags-{BLOCK_ID}').html() + '</tags>'
+			}
+		});
+	});
+// ]]>
+</script>
+<!-- ENDIF -->
+
+<div id="tags-{BLOCK_ID}" class="cumulus blg-align-center">
+<!-- BEGIN clouds -->
+	<a href="{clouds.U_TAG_URL}" title="{clouds.S_TAG_NAME}" style="font-size: {clouds.S_TAG_SIZE}px;">{clouds.S_TAG_NAME}</a>
+<!-- END clouds -->
+</div>

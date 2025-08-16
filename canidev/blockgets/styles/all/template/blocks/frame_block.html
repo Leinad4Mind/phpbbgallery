@@ -1,0 +1,20 @@
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#frame-{BLOCK_ID}').attr('height', <!-- IF S_FRAME_HEIGHT -->{S_FRAME_HEIGHT}<!-- ELSE -->$('#frame-{BLOCK_ID}').parent().width()<!-- ENDIF -->);
+	});
+// ]]>
+</script>
+
+<div class="blg-align-center">
+	<object id="frame-{BLOCK_ID}" type="{S_FRAME_MIMETYPE}" width="<!-- IF S_FRAME_WIDTH -->{S_FRAME_WIDTH}<!-- ELSE -->100%<!-- ENDIF -->" height="100" data="{U_FRAME_URL}">
+	<!-- IF S_FRAME_MIMETYPE eq 'application/x-shockwave-flash' -->
+		<param name="wmode" value="transparent" />
+		<param name="movie" value="{U_FRAME_URL}" />
+	<!-- ELSE -->
+		<a href="{U_FRAME_URL}" onclick="window.open(this.href); return false;"></a>
+	<!-- ENDIF -->
+	</object>
+</div>

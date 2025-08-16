@@ -1,0 +1,29 @@
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function (){
+		$('#most-poster-{BLOCK_ID}').accordion({
+			collapsible : true
+		});
+	});
+// ]]>
+</script>
+
+<!-- IF .most_poster -->
+<div id="most-poster-{BLOCK_ID}">
+    
+<!-- BEGIN most_poster -->
+	<h5><a href="#">{most_poster.USERNAME}</a></h5>
+	<div>
+		<div class="blg-user-avatar adjusted blg-align-center"><!-- IF most_poster.AVATAR -->{most_poster.AVATAR}<!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></div><br />
+		{L_USER}: {most_poster.USER_FULL}<br />
+		{L_JOINED}: {most_poster.REGDATE}<br />
+		{L_POSTS}: <a href="{most_poster.U_FIND_POSTS}">{most_poster.POSTS}</a>
+	</div>
+<!-- END most_poster -->
+
+</div>
+<!-- ELSE -->
+	<div class="blg-align-center">{L_NO_MOST_POSTER}</div>
+<!-- ENDIF -->

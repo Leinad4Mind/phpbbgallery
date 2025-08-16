@@ -1,0 +1,11 @@
+## BEGIN CBB BLOCKGETS ##
+## Do not edit this lines ##
+
+<IfModule mod_rewrite.c>
+RewriteEngine on
+
+RewriteCond %{REQUEST_URI}  "^/$"
+RewriteRule ^(.*) blockgets.php
+</IfModule>
+
+## END CBB BLOCKGETS ##

@@ -1,0 +1,31 @@
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		var translate_url = 'https://translate.google.com/translate';
+		var translate_params = {
+			u	: '{GOOGLE_TRANSLATE_URL}',
+			hl	: '{GOOGLE_USER_LANG}',
+			sl	: '{GOOGLE_USER_LANG}',
+			ie	: 'UTF8'
+		};
+
+		$('#translate-{BLOCK_ID} a').click(function(e) {
+			translate_params.tl = $(this).attr('data-iso');
+
+			window.open(translate_url + '?' + $.jblockgets.serializeVars(translate_params, '&', true));
+			e.preventDefault();
+		});
+	});
+// ]]>
+</script>
+
+<div id="translate-{BLOCK_ID}" class="google-translate blg-align-center">
+<!-- BEGIN translate -->
+	<a style="background-image: url('{T_BLOCKGETS_PATH}images/flags/{translate.S_ISO}.png');" href="#" data-iso="{translate.S_ISO}" title="{translate.S_LANG}"></a>
+<!-- END translate -->
+</div>
+
+<img class="google-logo clear" src="{S_GOOGLE_LOGO}" alt="Google" /><br />

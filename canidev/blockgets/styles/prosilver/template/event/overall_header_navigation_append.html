@@ -1,0 +1,15 @@
+
+<!-- BEGIN blglink_top -->
+	<!-- IF BLG_VARIANT eq '31x' -->
+		<li class="no-bulletin">
+			<!-- IF blglink_top.ICON --><span class="blg-icon {blglink_top.ICON}"></span> <!-- ENDIF -->
+			<a href="{blglink_top.HREF}" title="{blglink_top.TITLE}" role="menuitem">{blglink_top.TITLE}</a>
+		</li>
+	<!-- ELSEIF BLG_VARIANT eq '32x' -->
+		<li data-last-responsive="true">
+			<a href="{blglink_top.HREF}" title="{blglink_top.TITLE}" role="menuitem">
+				<!-- IF blglink_top.ICON --><i class="icon {blglink_top.ICON} fa-fw"></i><!-- ENDIF --><span>{blglink_top.TITLE}</span>
+			</a>
+		</li>
+	<!-- ENDIF -->
+<!-- END blglink_top -->

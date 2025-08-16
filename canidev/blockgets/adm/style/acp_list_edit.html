@@ -1,0 +1,94 @@
+<!-- IF S_LIST or S_ITEM -->
+
+<!-- IF not S_ITEM -->
+<div class="js-list-{S_LIST_ID}">
+
+	<table class="<!-- IF S_LIST_FORMAT eq 'minimal' -->acp-blg-list-minimal<!-- ELSE -->acp-blg-list2<!-- ENDIF --> not-responsive" cellspacing="1">
+	<tr class="js-no-over">
+		<td>
+			<ul class="sortable">
+<!-- ENDIF -->
+			<!-- BEGIN item -->
+				<li id="row-{item.ID}" class="move <!-- IF item.IS_DISABLED -->blg-state-active<!-- ELSE -->blg-state-default<!-- ENDIF -->">
+					<table class="not-responsive"><tr>
+						<!-- IF S_LIST_FORMAT <> 'minimal' --><td class="blg-align-center" style="width:1%;"><input type="checkbox" class="js-check-field radio" name="item_list[]" value="{item.ID}" /></td><!-- ENDIF -->
+						<!-- IF item.IMG --><td class="icon">{item.IMG}</td><!-- ENDIF -->
+						<td>{item.TITLE}<br /><span class="row-subtitle small">{item.SUBTITLE}</span></td>
+						<td class="column-actions">
+							<div class="row-actions">
+								<a href="{item.U_EDIT}" title="{L_EDIT}"><span class="blg-icon blg-icon-pencil"></span></a>
+								<a href="{item.U_DELETE}" title="{L_DELETE}"><span class="blg-icon blg-icon-remove"></span></a>
+							</div>
+						</td>
+					</tr></table>
+					{item.HIDDEN_FIELDS}
+				</li>
+			<!-- END item -->
+<!-- IF not S_ITEM -->
+			</ul>
+		</td>
+	</tr>
+	</table>
+
+	<div class="batch-actions blg-align-right">
+	<!-- IF S_LIST_FORMAT <> 'minimal' -->
+		<div class="blg-group blg-align-left floated">
+			<select class="blg-inputbox" name="batch">
+				<option value="">{L_BATCH_ACTIONS}</option>
+				<option value="delete">{L_DELETE}</option>
+			</select>
+			<a href="{U_BATCH}" class="blg-button">{L_SUBMIT}</a>
+		</div>
+	<!-- ENDIF -->
+
+		<a href="{U_ADD_ITEM}" class="blg-button">{S_ADD_ITEM}</a>
+	</div>
+	
+	{S_LIST_HIDDEN_FIELDS}
+	
+	<script type="text/html" id="tpl-list-no-items">
+		<li class="blg-message blg-state-highlight no-items">{L_ACP_NO_ITEMS}</li>
+	</script>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$.jblockgets.bindList('{S_LIST_ID}');
+	});
+// ]]>
+</script>
+<!-- ENDIF -->
+
+<!-- ELSEIF S_CONFIRM_BOX -->
+
+<div id="confirm-box" title="{MESSAGE_TITLE}" data-width="600">
+	<form action="{S_CONFIRM_ACTION}">
+		<div class="dialog-text">
+			<fieldset>
+			<!-- BEGIN options -->
+				<!-- IF options.S_LEGEND -->
+					<!-- IF not options.S_FIRST_ROW -->
+						</fieldset>
+					<!-- ENDIF -->
+						<legend>{options.LEGEND}</legend>
+				<!-- ELSE -->
+					<dl>
+						<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+						<dd>{options.CONTENT}</dd>
+					</dl>
+				<!-- ENDIF -->
+			<!-- END options -->
+			</fieldset>
+		</div>
+
+		<div class="blg-dialog-buttons">
+			<button class="blg-button" value="submit" data-confirm="{YES_VALUE}">{L_ACCEPT}</button>
+			<button class="blg-button" value="close" data-confirm="{NO}">{L_CANCEL}</button>
+			{S_HIDDEN_FIELDS}
+		</div>
+	</form>
+</div>
+
+<!-- ENDIF -->

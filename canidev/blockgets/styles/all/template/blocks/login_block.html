@@ -1,0 +1,86 @@
+
+<!-- IF S_USER_LOGGED_IN -->
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID} #blg-logout').ajaxify({
+			done: function() { window.location.reload(); }
+		});
+	});
+// ]]>
+</script>
+
+<ul class="blg-linear-list blg-align-center">
+	<li class="menu-cat">{USERNAME_FULL}</li>
+	<li class="blg-user-avatar adjusted double-space"><a href="{U_PROFILE}"><!-- IF USER_AVATAR -->{USER_AVATAR} <!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></a></li>
+
+	<!-- IF USER_RANK_IMG --><li>{USER_RANK_TITLE}<br />{USER_RANK_IMG}</li><!-- ENDIF -->
+	<!-- IF S_LAST_VISIT --><li class="double-space">{S_LAST_VISIT}</li><!-- ENDIF -->
+	<!-- IF S_CURRENT_TIME --><li class="double-space">{S_CURRENT_TIME}</li><!-- ENDIF -->
+	
+	{S_BLG_LOGIN_FIELDS}
+</ul>
+
+<br />
+
+<ul class="blg-linear-list">
+<!-- BEGIN userlink -->
+	<li>&bull; <a href="{userlink.URL}">{userlink.TITLE}</a></li>
+<!-- END userlink -->
+
+	<li class="blg-align-center double-space top-bordered"><a id="blg-logout" href="{U_LOGOUT}">{L_LOGIN_LOGOUT}</a></li>
+</ul>
+
+<!-- ELSE -->
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID} form').ajaxify({
+			done	: function() { window.location.reload(); }
+		});
+	});
+// ]]>
+</script>
+
+<form action="{U_BLG_ACTION}" method="post">
+	<ul class="blg-linear-list blg-align-center">
+		<li class="double-space bottom-bordered"><strong>{L_LOGIN}</strong></li>
+
+		<li class="blg-align-left"><strong>{L_USERNAME}:</strong></li>
+		<li><input class="blg-inputbox autowidth" type="text" name="username" value="{S_USERNAME}" /></li>
+		
+		<li class="blg-align-left"><strong>{L_PASSWORD}:</strong></li>
+		<li><input class="blg-inputbox autowidth" type="password" name="password" value="" /></li>
+		<!-- IF U_SEND_PASSWORD --><li class="blg-align-left"><a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a></li><!-- ENDIF -->
+		<!-- IF U_RESEND_ACTIVATION --><li class="blg-align-left"><a href="{U_RESEND_ACTIVATION}">{L_RESEND_ACTIVATION}</a></li><!-- ENDIF -->
+	</ul>
+	
+	<!-- IF S_DISPLAY_FULL_LOGIN -->
+	<br />
+	<ul class="blg-linear-list">
+		<!-- IF S_AUTOLOGIN_ENABLED --><li><label><input type="checkbox" class="radio" name="autologin" /> {L_REMEMBER_ME}</label></li><!-- ENDIF -->
+		<li><label><input type="checkbox" class="radio" name="viewonline" /> {L_HIDE_ME_NOW}</label></li>
+	</ul>
+	<!-- ENDIF -->
+
+	<div class="blg-align-center">
+		<br />
+		<input type="submit" name="login" class="button2" value="{L_LOGIN}" />
+		{S_BLG_LOGIN_FIELDS}
+	</div>
+</form>
+
+	<!-- IF S_REGISTER_ENABLED and S_DISPLAY_REGISTER -->
+	<br />
+	<ul class="blg-linear-list">
+		<li class="double-space bottom-bordered blg-align-center"><strong>{L_REGISTER}</strong></li>
+		<li>&bull; <a href="{U_TERMS_USE}">{L_TERMS_USE}</a></li>
+		<li>&bull; <a href="{U_PRIVACY}">{L_PRIVACY}</a></li>
+	
+		<li class="double-space blg-align-center"><a href="{U_REGISTER}"><input type="button" class="button2" value="{L_REGISTER}" /></a></li>
+	</ul>
+	<!-- ENDIF -->
+
+<!-- ENDIF -->

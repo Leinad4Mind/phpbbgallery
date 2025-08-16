@@ -1,0 +1,17 @@
+
+<div class="random-member-content">
+    
+<!-- BEGIN random_member -->
+	<div class="blg-align-center">{random_member.USERNAME}<hr /></div>
+	<div style="margin-top:5px;">
+		<div class="blg-user-avatar adjusted blg-align-center"><!-- IF random_member.AVATAR -->{random_member.AVATAR}<!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></div><br />
+		<div class="blg-widget-content blg-corner-all random-member-info">
+			{L_USER}: {random_member.USER_FULL}<br />
+			{L_JOINED}: {random_member.REGDATE}<br />
+			{L_POSTS}: <!-- IF random_member.POSTS --><a href="{random_member.U_FIND_POSTS}">{random_member.POSTS}</a><!-- ELSE -->0<!-- ENDIF --><br />
+		</div>
+	</div>
+<!-- END random_member -->
+
+</div>
+

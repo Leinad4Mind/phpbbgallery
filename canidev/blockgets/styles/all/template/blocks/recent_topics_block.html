@@ -1,0 +1,77 @@
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#recent-{BLOCK_ID}')<!-- IF S_SHORT_MODE -->.accordion();<!-- ELSE -->.tabs();<!-- ENDIF -->
+	});
+// ]]>
+</script>
+
+<!-- IF S_SHORT_MODE -->
+
+<div id="recent-{BLOCK_ID}">
+
+<!-- BEGIN recent -->
+		<!-- IF not recent.S_FIRST_ROW --></div><!-- ENDIF -->
+	
+		<h5><a href="#">{recent.S_LEGEND}</a></h5>
+		<div class="no-wrap">
+			<!-- IF recent.S_LEGEND_EMPTY -->{recent.S_LEGEND_EMPTY}<!-- ENDIF -->
+
+		<!-- BEGIN td -->
+			<!-- IF recent.td.S_COLUMN_COUNT == 0 -->{recent.MINI_POST_IMG} {recent.td.S_ITEM}<br /><!-- ENDIF -->
+		<!-- END td -->
+	
+		<!-- IF recent.S_LAST_ROW --></div><!-- ENDIF -->
+<!-- END recent -->
+</div>
+
+<!-- ELSE -->
+
+<div id="recent-{BLOCK_ID}" class="recent-block">
+    <ul>
+	<!-- BEGIN recent -->
+		<!-- IF recent.S_LEGEND --><li><a href="#{recent.S_TAB_ID}-{BLOCK_ID}"><span class="blg-icon {recent.S_TAB_ICON}"></span> <span class="tab-title">{recent.S_LEGEND}</span></a></li><!-- ENDIF -->
+	<!-- END recent -->
+    </ul>    
+
+<!-- BEGIN recent -->
+
+	<!-- IF not recent.S_FIRST_ROW -->
+		</table>
+	</div>
+	<!-- ENDIF -->
+
+	<div class="blg-align-center recent-content" id="{recent.S_TAB_ID}-{BLOCK_ID}">
+		<table class="blg-table">
+
+		<!-- IF recent.S_LEGEND_EMPTY -->
+		<tr><td class="blg-message">{recent.S_LEGEND_EMPTY}</td></tr>
+		<!-- ELSE -->
+		
+		<tr>
+			<!-- BEGIN th --><th class="{recent.th.S_ID} blg-widget-header">{recent.th.S_LEGEND}</th><!-- END th -->
+		</tr>
+
+	<!-- BEGIN td -->
+		<!-- IF recent.td.S_BREAK -->
+			<!-- IF not recent.td.S_FIRST_ROW --></tr><!-- ENDIF -->
+			<!-- IF not recent.td.S_LAST_ROW --><tr><!-- ENDIF -->
+		<!-- ELSE -->
+			<!-- IF recent.td.S_FIRST_ROW --><tr><!-- ENDIF -->
+				<!-- IF recent.td.S_COLUMN_COUNT == 0 --><td class="{recent.td.S_ID} blg-align-left">{recent.MINI_POST_IMG} <!-- ELSE --><td class="{recent.td.S_ID}"><!-- ENDIF -->{recent.td.S_ITEM}</td>
+			<!-- IF recent.td.S_LAST_ROW --></tr><!-- ENDIF -->
+		<!-- ENDIF -->
+	<!-- END td -->
+		<!-- ENDIF -->
+
+	<!-- IF recent.S_LAST_ROW -->
+		</table>
+	</div>
+	<!-- ENDIF -->
+<!-- END recent -->
+</div>
+
+<!-- ENDIF -->

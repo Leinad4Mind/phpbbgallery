@@ -1,0 +1,28 @@
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID}').marquee({
+			direction: '{S_MARQUEE_DIRECTION}',
+			align: '{S_MARQUEE_ALIGN}',
+			height: '{S_BLOCK_HEIGHT}',
+			type: '{S_MARQUEE_TYPE}',
+			fps: '{S_MARQUEE_SPEED}'
+		});
+	});
+// ]]>
+</script>
+
+<div class="marquee">
+	<div class="marquee-container<!-- IF S_MARQUEE_DIRECTION == 'left' --> no-wrap<!-- ENDIF -->">
+	<!-- BEGIN banners -->
+		<div class="mini-banner {S_MARQUEE_DIRECTION}">
+			<a<!-- IF banners.S_WINDOW --> class="blank"<!-- ENDIF --> href="{banners.U_URL}" title="{banners.S_TITLE}">{banners.S_IMG}</a>
+			<!-- IF banners.S_SHOW_TITLE --><br />{banners.S_TITLE}<!-- ENDIF -->
+		</div>
+	<!-- END banners -->
+		<br class="clear" />
+	</div>
+</div>

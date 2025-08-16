@@ -1,0 +1,80 @@
+
+<!-- IF IN_EVENTLIST -->
+
+<!-- BEGIN event -->
+	<!-- IF event.S_TYPE eq 'birthday' --><div class="blg-calendar-event blg-event-birthday"><span class="blg-icon blg-icon-birthday-cake"></span> <!-- ELSE --><div data-event="{event.S_ID}" class="blg-calendar-event"><!-- ENDIF -->{event.S_TITLE}</div>
+<!-- END event -->
+
+<!-- ELSE -->
+
+	<!-- IF not IN_CALENDAR -->
+	<script type="text/javascript">
+	// <![CDATA[
+		window._jBlg = window._jBlg || [];
+		
+		window._jBlg.push(function() {
+			$('#calendar-{BLOCK_ID}').calendar({
+				url		: '{U_CALENDAR}',
+				vars	: '{S_EXTRA}'
+			});
+		});
+	// ]]>
+	</script>
+
+	<script type="text/html" id="tpl-calendar-info">
+		<div class="blg-calendar-info">
+			<div class="info-header">
+				<span>{L_EVENTS} <#date#></span>
+				<a href="#" data-action="close"><span class="blg-icon blg-icon-remove"></span></a>
+			</div>
+			
+			<div class="info-content">
+				<div class="no-items blg-message blg-state-highlight">{L_NO_EVENTS}</div>
+			</div>
+			
+		<!-- IF S_CAN_CREATE_EVENT -->
+			<div class="blg-align-right floated">
+				<a href="#" class="blg-button" data-action="add">{L_ADD_EVENT}</a>
+			</div>
+		<!-- ENDIF -->
+		
+			<div class="prong"><div class="prong-dk"></div><div class="prong-lt"></div></div>
+		</div>
+	</script>
+	
+	<div id="calendar-{BLOCK_ID}" class="calendar_container">
+	<!-- ENDIF -->
+
+	<!-- BEGIN calendar -->
+		<div class="calendar-month blg-widget blg-widget-content blg-corner-all">
+		<form name="calendar-{BLOCK_ID}-{calendar.S_ROW_COUNT}" method="post">
+			<table class="calendar<!-- IF S_SHORT_MODE --> autofit<!-- ENDIF -->">
+			<thead>
+			<tr>
+				<td class="blg-align-left"><!-- IF calendar.S_FIRST_ROW --><a href="#" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-action="prev"><span class="blg-icon blg-icon-arrow-circle-left"></span></a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+				<td colspan="5" class="month-title blg-align-center"><a href="{calendar.U_ACTION}">{calendar.S_MONTH}</a></td>
+				<td class="blg-align-right"><!-- IF calendar.S_LAST_ROW --><a href="#" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-action="next"><span class="blg-icon blg-icon-arrow-circle-right"></span></a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+		<!-- BEGIN days -->
+
+			<!-- IF calendar.days.NEW_LINE and not calendar.days.S_FIRST_ROW --></tr><tr><!-- ENDIF -->
+
+			<!-- IF calendar.days.IS_HEADER -->
+				<td class="cal-header">{calendar.days.S_DAY_SHORT}</td>
+			<!-- ELSE -->
+				<td><!-- IF calendar.days.S_DAY --><a href="#" class="blg-state-default<!-- IF calendar.days.IS_TODAY --> today<!-- ENDIF -->" data-calendar="{BLOCK_ID}-{calendar.S_ROW_COUNT}" data-time="{calendar.days.S_DATA}"<!-- IF S_SHOW_EVENTS --> data-event="{calendar.days.S_EVENT}"<!-- ENDIF -->>{calendar.days.S_DAY}</a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+			<!-- ENDIF -->
+		<!-- END days -->
+			</tr>
+			</tbody>
+			</table>
+			<div>{calendar.S_HIDDEN_FIELDS}</div>
+		</form>
+		</div>
+	<!-- END calendar -->
+	
+	<!-- IF not IN_CALENDAR --></div><!-- ENDIF -->
+<!-- ENDIF -->
