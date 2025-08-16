@@ -48,7 +48,7 @@ class listener implements EventSubscriberInterface
 	 * @static
 	 * @access public
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.page_header'					=> 'set_lightbox_tpl_data',
@@ -59,7 +59,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Set Lightbox template data
 	 *
-	 * @return null
+	 * @return void
 	 * @access public
 	 */
 	public function set_lightbox_tpl_data()
@@ -75,13 +75,13 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Add Lightbox settings to the ACP
 	 *
-	 * @param object $event The event object
-	 * @return null
+	 * @param \phpbb\event\data $event The event object
+	 * @return void
 	 * @access public
 	 */
 	public function add_lightbox_acp_config($event)
 	{
-		if ($event['mode'] == 'post' && isset($event['display_vars']['vars']['legend3']))
+		if ($event['mode'] === 'post' && array_key_exists('legend3', $event['display_vars']['vars']))
 		{
 			$this->user->add_lang_ext('vse/lightbox', 'lightbox');
 			$display_vars = $event['display_vars'];
@@ -115,6 +115,6 @@ class listener implements EventSubscriberInterface
 		$args = func_get_args();
 		$args = array_diff(array_map('intval', $args), array(0));
 
-		return (count($args)) ? min($args) : false;
+		return sizeof($args) ? min($args) : false;
 	}
 }
