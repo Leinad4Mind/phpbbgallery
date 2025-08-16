@@ -1,0 +1,9 @@
+services:
+    sitesplat.imgur.listener:
+        class: sitesplat\imgur\event\listener
+        arguments:
+            - @config
+            - @user
+            - @template
+        tags:
+            - { name: event.listener }
