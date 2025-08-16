@@ -3,8 +3,8 @@
  *
  * BBwatchlist. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
+ * @copyright (c) 2018 SiteSplat All rights reserved
+ * @license Proprietary
  *
  */
 
@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'SUBJECT_KEYWORD_NOTIFICATION_TITLE'	=> 'Watched keyword found in a topic subject',
-	'SUBJECT_KEYWORD_NOTIFICATION_CONTENT'	=> 'A keyword "%s" is a part of a new topic subject.',
-	'CONTENT_KEYWORD_NOTIFICATION_TITLE'	=> 'Watched keyword found in the post content',
-	'CONTENT_KEYWORD_NOTIFICATION_CONTENT'	=> 'A keyword "%s" is a part of a new post content.',
+	'SUBJECT_KEYWORD_NOTIFICATION_CONTENT'	=> 'A keyword "%s" is part of a new topic subject.',
+	'CONTENT_KEYWORD_NOTIFICATION_TITLE'	=> 'Watched keyword found in a post content',
+	'CONTENT_KEYWORD_NOTIFICATION_CONTENT'	=> 'A keyword "%s" is part of a new post content.',
 ));

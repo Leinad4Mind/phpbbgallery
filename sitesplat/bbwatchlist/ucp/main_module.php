@@ -3,8 +3,8 @@
  *
  * BBwatchlist. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
+ * @copyright (c) 2018 SiteSplat All rights reserved
+ * @license Proprietary
  *
  */
 
@@ -50,6 +50,11 @@ class main_module
 
 				$keyword = $this->request->variable('keyword', '', true);
 				$search_type = $this->request->variable('search_type', false);
+
+				if (empty($keyword))
+				{
+					trigger_error('KEYWORD_EMPTY');
+				}
 
 				if (strlen($keyword) > 255)
 				{

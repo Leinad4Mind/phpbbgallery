@@ -1,16 +1,46 @@
 {% include 'ucp_header.html' %}
-
 {% INCLUDEJS '@sitesplat_bbwatchlist/bbwatchlist.js' %}
 
-<h2>{{ lang('UCP_SITESPLAT_BBWATCHLIST') }}</h2>
+<div class="tab-pane active">
+<fieldset class="framed-ucp">
+  <legend>{{ lang('UCP_SITESPLAT_BBWATCHLIST') }}</legend>
+	<p>{{ lang('UCP_SITESPLAT_BBWATCHLIST_EXPLAIN') }}</p>
 
-<table id="bbwatchlist_keywords">
-	<tr>
-		<th>{{ lang('KEYWORD') }}</th>
-		<th>{{ lang('SEARCH_TYPE') }}</th>
-		<th>{{ lang('ACTIONS') }}</th>
-	</tr>
-	{% for keyword in keywords %}
+	<div id="success_msg" class="alert alert-success" style="display:none"><h4 style="margin:0">{{ lang('KEYWORD_ADDED') }}</h4></div>
+
+<div class="side-segment"><h3>{{ lang('ADD_NEW_KEYWORD') }}</h3></div>
+
+<form id="ucp" method="post" action="{S_UCP_ACTION}" data-ajax="add_keyword">
+	<div class="input-group">
+		<input id="keyword" class="form-control" type="text" name="keyword" pattern=".{3,50}" required title="{{ lang('KEYWORD_PATTERN') }}">
+		<span class="input-group-btn">
+			<input class="btn btn-default" type="submit" value="{{ lang('SUBMIT') }}">
+		</span>
+	</div>
+	<input type="hidden" name="action" value="add">
+		{S_HIDDEN_FIELDS}
+		{S_FORM_TOKEN}
+	<div class="space10"></div>
+	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_TOPIC_SUBJECT') }}" checked> <span>{{ lang('SEARCH_TYPE_TOPIC_SUBJECT') }}</span>
+	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_POST_CONTENT') }}"> <span>{{ lang('SEARCH_TYPE_POST_CONTENT') }}</span>
+    <div class="space10"></div>
+</form>
+
+<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-font"></i>&nbsp;{{ lang('KEYWORDS') }}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover" id="bbwatchlist_keywords">
+	<thead>
+		<tr>
+			<th data-class="expand">{{ lang('KEYWORD') }}</th>
+			<th data-hide="phone">{{ lang('SEARCH_TYPE') }}</th>
+			<th class="large26" data-hide="phone">{{ lang('ACTIONS') }}</th>
+		</tr> 
+	</thead>
+	 <tbody>
+		{% for keyword in keywords %}
 		<tr id="k{{ keyword.ID }}">
 			<td>{{ keyword.KEYWORD }}</td>
 			<td>{% if keyword.TYPE == constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_TOPIC_SUBJECT') %}{{ lang('SEARCH_TYPE_TOPIC_SUBJECT') }}{% else %}{{ lang('SEARCH_TYPE_POST_CONTENT') }}{% endif %}</td>
@@ -18,24 +48,16 @@
 				<a href="{{ keyword.U_DELETE }}" data-ajax="remove_keyword"><i class="fa fa-trash"></i></a>
 			</td>
 		</tr>
-	{% else %}
-		<tr>
-			<td colspan="3">{{ lang('NO_KEYWORDS') }}</td>
-		</tr>
-	{% endfor %}
-</table>
+		{% else %}
+			<tr id="no_keywords">
+				<td colspan="3">{{ lang('NO_UCP_KEYWORDS') }}</td>
+			</tr>
+		{% endfor %}
+	 </tbody>
+	</table>
+	</div>
+ </div>
 
-<h3>{{ lang('ADD_NEW_KEYWORD') }}</h3>
-<form id="ucp" method="post" action="{S_UCP_ACTION}" data-ajax="add_keyword">
-	<input type="text" name="keyword">
-
-	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_TOPIC_SUBJECT') }}" checked> <span>{{ lang('SEARCH_TYPE_TOPIC_SUBJECT') }}</span>
-	<input type="radio" name="search_type" value="{{ constant('sitesplat\\bbwatchlist\\ext::SEARCH_TYPE_POST_CONTENT') }}"> <span>{{ lang('SEARCH_TYPE_POST_CONTENT') }}</span>
-
-	<input type="hidden" name="action" value="add">
-	<input type="submit" value="{{ lang('SUBMIT') }}">
-	{S_HIDDEN_FIELDS}
-	{S_FORM_TOKEN}
-</form>
-
+</fieldset>
+</div>
 {% include 'ucp_footer.html' %}
