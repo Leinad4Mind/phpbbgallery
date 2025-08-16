@@ -56,10 +56,12 @@ class main
 		$sql = 'SELECT COUNT(p.post_id) AS total
                 FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p
 				WHERE ' . $forums_where . $recent_topics_where . '
+				AND p.forum_id = t.forum_id
                 AND p.post_visibility = 1
 				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id';
 		$result = $this->db->sql_query($sql);
 		$total = $this->db->sql_fetchfield('total');
+		$this->db->sql_freeresult($result);	
 
 		$sql_ary = array(
 			'SELECT'	=> 'u.username, u.user_id, u.user_rank, u.user_posts, u.user_sig, u.user_avatar, u.user_avatar_type, u.user_avatar_width,
@@ -72,6 +74,7 @@ class main
 			),
 			'WHERE'		=> $forums_where . $recent_topics_where . '
                 AND p.post_visibility = 1
+				AND p.forum_id = t.forum_id
 				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id
                 AND u.user_id = ' . $pid,
 			'ORDER_BY'	=> 't.topic_last_post_time DESC',
@@ -92,6 +95,7 @@ class main
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query_limit($sql, $this->config['fltl_limit'], $start);
 		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		/**
 		* Event to modify result of SQL query
@@ -142,17 +146,17 @@ class main
 						</div>
 						<div class="title">
 						 <header class="entry-header">
-						  <h6 class="inverse-font"><a title="" href="' . append_sid($url . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']) . '" data-original-title="">' . censor_text($row['topic_title']) . '</a></h6>
+						  <h6 class="inverse-font"><a title="" href="' . append_sid($url . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']) . '">' . censor_text($row['topic_title']) . '</a></h6>
 							<div class="entry-meta">
 							<span class="jp-views">' . (($row['user_avatar']) ? 
-								   str_replace(array('class="avatar"', 'alt=', './../../'), array('class="avatar_ftl"', 'alt=', $url),
+								   str_replace(array('class="avatar"', 'alt=', './../../'), array('class="avatar_ftl" loading="lazy"', 'alt=', $url),
 								   phpbb_get_user_avatar(
 									array('avatar'			=> $row['user_avatar'], 
 									      'user_id'         => $row['user_id'],
 										  'avatar_type'		=> $row['user_avatar_type'], 
 										  'avatar_width'	=> $row['user_avatar_width'], 
 										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-										  '<img class="avatar_ftl" src="' . generate_board_url() . '/styles/FLATBOOTS/theme/images/user4.png" alt="' .  $row['username'] . '">') . $this->user->lang['FLTL_BY'] . (($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? ('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') : $row['username']) . '</span>
+										  '<img class="avatar_ftl" loading="lazy" src="' . generate_board_url() . '/styles/FLATBOOTS/theme/images/user4.png" alt="' .  $row['username'] . '">') . $this->user->lang['FLTL_BY'] . (($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? ('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') : $row['username']) . '</span>
 							</div>
 						 </header>
 						</div>
@@ -160,7 +164,7 @@ class main
 						  <p>' . $row['post_text'] . '</p>  
 						</div>
 						<div class="panel-bottom">
-						 <a title="" class="btn btn-xs btn-block" href="' . append_sid($url . 'viewtopic.'. $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'] . '" data-original-title="">' . $this->user->lang['FLTL_READ_MORE'] . '</a>
+						 <a title="" class="btn btn-xs btn-block" href="' . append_sid($url . 'viewtopic.'. $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'] . '">' . $this->user->lang['FLTL_READ_MORE'] . '</a>
 						</div>               
 					</div>
 					</div>';
@@ -169,7 +173,6 @@ class main
 					var start = ' . (($start + $this->config['fltl_limit'] >= $total) ? 0 : $start + $this->config['fltl_limit']) . ';
 					$(\'.rtbutton\').text(\'' . (($start + $this->config['fltl_limit'] >= $total) ? $this->user->lang['FLTL_BACK_TO_START'] : $this->user->lang['FLTL_VIEW_MORE_TOPICS']) . '\');
 					</script>';
-			$this->db->sql_freeresult($result);	
 			exit();	
 		}
 	}

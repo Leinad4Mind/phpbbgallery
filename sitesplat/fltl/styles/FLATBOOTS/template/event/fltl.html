@@ -1,4 +1,4 @@
-<!-- IF .fltl -->
+<!-- IF .fltl and not DISABLE_FLTL -->
 <div class="row text-center" id="fltl">
 	<!-- BEGIN fltl -->
 		<div class="col-md-3 col-sm-6">
@@ -13,7 +13,7 @@
 				 <header class="entry-header">
 				  <h6 class="inverse-font"><a title="" href="{fltl.U_TOPIC}">{fltl.TOPIC_TITLE}</a></h6>
 					<div class="entry-meta">
-					 <span class="jp-views"><!-- IF fltl.AVATAR -->{fltl.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->{L_FLTL_BY}{fltl.TOPIC_AUTHOR}</span>
+					 <span class="jp-views"><!-- IF fltl.AVATAR -->{fltl.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar" loading="lazy" width="25" height="25"><!-- ENDIF -->{L_FLTL_BY}{fltl.TOPIC_AUTHOR}</span>
 					</div>
 				 </header>
 				</div>

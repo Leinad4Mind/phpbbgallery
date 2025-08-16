@@ -58,6 +58,13 @@ class listener implements EventSubscriberInterface
 
 	public function fltl($event)
 	{
+		if (defined('IN_ERROR_HANDLER')) {
+			// disable FLTL when in trigger_error()
+			$this->template->assign_block_vars('fltl', []);
+			$this->template->assign_var('DISABLE_FLTL', true);
+			return;
+		}
+
 		$display = $this->phpbb_container->get('sitesplat.fltl.main');
 		$rows = $display->handle('index.html');
 

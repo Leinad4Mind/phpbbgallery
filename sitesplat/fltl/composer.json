@@ -2,7 +2,7 @@
 	"name": "sitesplat/fltl",
 	"type": "phpbb-extension",
 	"description": "Fancy Lazy Topics Loader - The Ajax way :-) ",
-	"version": "2.1.15",
+	"version": "2.1.17",
 	"keywords": ["phpbb", "extension", "ajax", "topic loader"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
