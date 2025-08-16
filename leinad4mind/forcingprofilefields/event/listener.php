@@ -19,6 +19,7 @@ use phpbb\language\language;
 use phpbb\profilefields\manager;
 use phpbb\profilefields\type\type_base;
 use phpbb\request\request_interface;
+use phpbb\template\template;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,6 +39,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var request_interface */
 	protected $request;
+
+	/** @var template */
+	protected $template;
 
 	/** @var manager */
 	protected $manager;
@@ -60,6 +64,7 @@ class listener implements EventSubscriberInterface
 	 * @param auth					$auth
 	 * @param config				$config
 	 * @param request_interface		$request
+	 * @param template				$template
 	 * @param manager				$manager
 	 * @param service_collection	$type_collection
 	 * @param string				$root_path
@@ -71,6 +76,7 @@ class listener implements EventSubscriberInterface
 		auth $auth,
 		config $config,
 		request_interface $request,
+		template $template,
 		manager $manager,
 		service_collection $type_collection,
 		$root_path,
@@ -82,6 +88,7 @@ class listener implements EventSubscriberInterface
 		$this->auth				= $auth;
 		$this->config			= $config;
 		$this->request			= $request;
+		$this->template			= $template;
 		$this->manager			= $manager;
 		$this->type_collection	= $type_collection;
 		$this->root_path		= $root_path;
@@ -93,9 +100,10 @@ class listener implements EventSubscriberInterface
 	 */
 	public static function getSubscribedEvents()
 	{
-		return[
+		return [
 			'core.user_setup'					=> 'user_setup',
 			'core.acp_board_config_edit_add'	=> 'acp_board_config_edit_add',
+			'core.page_footer'					=> 'page_footer',
 		];
 	}
 
@@ -108,9 +116,9 @@ class listener implements EventSubscriberInterface
 		{
 			$this->is_first_user_setup = false;
 
-			if (!$this->ignore_request() && $this->profile_needs_updating())
+			if (!$this->ignore_request() && $this->get_profilefield_errors())
 			{
-				$ucp_url = append_sid($this->root_path . 'ucp.' . $this->php_ext, ['i' => 'profile', 'mode' => 'profile_info']);
+				$ucp_url = append_sid($this->root_path . 'ucp.' . $this->php_ext, ['i' => 'profile', 'mode' => 'profile_info', 'forceprofileupdate' => 1]);
 
 				if ($this->config['forcingprofilefields_skip_metarefresh'])
 				{
@@ -125,6 +133,22 @@ class listener implements EventSubscriberInterface
 					trigger_error($this->lang->lang('UCP_PROFILE_UPDATE') . '<br><br>' . $this->lang->lang('RETURN_UCP', '<a href="' . $ucp_url . '">', '</a>'), E_USER_WARNING);
 				}
 			}
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function page_footer()
+	{
+		if ($this->request->is_set('forceprofileupdate') && $errors = $this->get_profilefield_errors())
+		{
+			if ($error = $this->template->retrieve_var('ERROR'))
+			{
+				array_unshift($errors, $error);
+			}
+
+			$this->template->assign_var('ERROR',  implode('<br>', $errors));
 		}
 	}
 
@@ -152,10 +176,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * @return bool
+	 * @return array
 	 */
-	protected function profile_needs_updating()
+	protected function get_profilefield_errors()
 	{
+		$errors = [];
+
 		$profile_field_rows = $this->manager->grab_profile_fields_data($this->user->data['user_id']);
 
 		foreach ($profile_field_rows[$this->user->data['user_id']] as $row)
@@ -165,13 +191,16 @@ class listener implements EventSubscriberInterface
 
 			$is_default_value = $row['value'] === null && ($row['data']['field_default_value'] || $row['data']['lang_default_value']);
 
-			if (!$is_default_value && $profile_field->validate_profile_field($row['value'], $row['data']) !== false)
+			if (!$is_default_value)
 			{
-				return true;
+				if ($error = $profile_field->validate_profile_field($row['value'], $row['data']))
+				{
+					$errors[] = $error;
+				}
 			}
 		}
 
-		return false;
+		return $errors;
 	}
 
 	/**
