@@ -20,10 +20,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class listener implements EventSubscriberInterface
 {
 
+	/* @var \phpbb\template\template */
+	protected $template;
+
+	public function __construct(\phpbb\template\template $template)
+	{
+		$this->template = $template;
+	}
+
 	static public function getSubscribedEvents ()
 	{
 	return array(
-		'core.posting_modify_template_vars'	=>	'delete_re',
+		'core.posting_modify_template_vars' => 'delete_re',
+		'core.viewtopic_modify_page_title' => 'delete_re_2',
 	);
 	}
 
@@ -35,5 +44,12 @@ class listener implements EventSubscriberInterface
 		$page_data['SUBJECT'] = $titre;
 		$event['page_data'] = $page_data;
 	}
+
+	public function delete_re_2 ($event)
+	{
+		$topic_data = $event['topic_data'];
+		$this->template->assign_var ('SUBJECT', censor_text($topic_data['topic_title']));
+	}
+
 
 }
