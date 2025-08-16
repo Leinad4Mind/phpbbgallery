@@ -11,6 +11,7 @@
 
 namespace leinad4mind\limitperforum\event;
 
+use leinad4mind\limitperforum\manager\forum_groups_manager;
 use phpbb\auth\auth;
 use phpbb\db\driver\driver_interface;
 use phpbb\event\data;
@@ -36,22 +37,27 @@ class main_listener implements EventSubscriberInterface
 	/** @var path_helper */
 	protected $path_helper;
 
+	/** @var forum_groups_manager */
+	protected $manager;
+
 	/** @var string */
 	protected $post_topic_rest = '';
 
 	/**
-	 * @param user				$user
-	 * @param auth				$auth
-	 * @param language			$language
-	 * @param driver_interface	$db
-	 * @param path_helper		$path_helper
+	 * @param user					$user
+	 * @param auth					$auth
+	 * @param language				$language
+	 * @param driver_interface		$db
+	 * @param path_helper			$path_helper
+	 * @param forum_groups_manager	$manager
 	 */
 	public function __construct(
 		user $user,
 		auth $auth,
 		language $language,
 		driver_interface $db,
-		path_helper $path_helper
+		path_helper $path_helper,
+		forum_groups_manager $manager
 	)
 	{
 		$this->user			= $user;
@@ -59,6 +65,7 @@ class main_listener implements EventSubscriberInterface
 		$this->language		= $language;
 		$this->db			= $db;
 		$this->path_helper	= $path_helper;
+		$this->manager		= $manager;
 	}
 
 	/**
@@ -100,9 +107,30 @@ class main_listener implements EventSubscriberInterface
 
 				if ($immediate_parent_data[$immediate_parent_forum_id]['forum_type'] == FORUM_CAT)
 				{
-					$topic_limit = max($topic_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit']);
-					$post_limit = max($post_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit']);
 					$forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
+
+					$group_limits = $this->manager->get_limits($immediate_parent_forum_id, $this->user->data['user_id']);
+
+					if ($group_limits)
+					{
+						$topic_limit = max(array_column($group_limits, 'topics'));
+						$post_limit = max(array_column($group_limits, 'posts'));
+					}
+					else
+					{
+						$topic_limit = max($topic_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit']);
+						$post_limit = max($post_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit']);
+					}
+				}
+				else
+				{
+					$group_limits = $this->manager->get_limits($event['forum_id'], $this->user->data['user_id']);
+
+					if ($group_limits)
+					{
+						$topic_limit = max(array_column($group_limits, 'topics'));
+						$post_limit = max(array_column($group_limits, 'posts'));
+					}
 				}
 			}
 
