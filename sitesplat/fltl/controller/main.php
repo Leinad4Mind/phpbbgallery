@@ -19,24 +19,20 @@ class main
 	protected $config;
 	protected $user;
 	protected $request;
-	protected $extension_manager;
+	protected $dispatcher;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	protected $private_post_ext_enabled;
-
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\extension\manager $extension_manager, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->user = $user;
 		$this->request = $request;
-		$this->extension_manager = $extension_manager;
+		$this->dispatcher = $dispatcher;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-
-		$this->private_post_ext_enabled = $this->extension_manager->is_enabled('sitesplat/privatepost');
 	}
 
 	/**
@@ -52,11 +48,12 @@ class main
 		$forums = array_keys($this->auth->acl_getf('!f_read', true));
 		$forums = (!empty($forum_excluded_aray)) ? array_unique(array_merge($forum_excluded_aray, $forums)) : $forums;
 
-		$sql_where = (!empty($forums)) ? 'WHERE ' . $this->db->sql_in_set('t.forum_id', $forums, true) . ' AND p.topic_id = t.topic_id ' : 'WHERE p.topic_id = t.topic_id ';
+		$sql_where = (!empty($forums)) ? $this->db->sql_in_set('t.forum_id', $forums, true) . ' AND p.topic_id = t.topic_id ' : 'p.topic_id = t.topic_id ';
 
 		$recent_topics_where = ($this->config['fltl_time']) ? 'AND t.topic_last_post_time > ' . (time() - ($this->config['fltl_time'] * 86400)) : '';
 		$sql = 'SELECT COUNT(p.post_id) AS total
-                FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u ' . $sql_where . '
+                FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
+				WHERE ' . $sql_where . '
                 AND p.post_visibility = 1
                 ' . $recent_topics_where . '
                 AND u.user_id = ' . $pid . '
@@ -64,32 +61,50 @@ class main
 		$result = $this->db->sql_query($sql);
 		$total = $this->db->sql_fetchfield('total');
 
-		$post_private = ($this->private_post_ext_enabled) ? 'p.poster_id, p.post_private,' : '';
-		$sql = 'SELECT 
-					u.username, u.user_id, user_rank, user_posts, u.user_sig, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, 
-					p.post_id, p.post_text, ' . $post_private . '
-					t.topic_id, t.forum_id, t.topic_title, t.topic_last_post_time, t.topic_first_poster_colour, t.topic_last_post_id, 
-					t.topic_last_poster_name, t.topic_last_poster_colour
-				FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u ' . $sql_where . '
+		$sql_ary = array(
+			'SELECT'	=> 'u.username, u.user_id, user_rank, user_posts, u.user_sig, user_avatar, user_avatar_type, user_avatar_width,
+							user_avatar_height, p.post_id, p.post_text, t.topic_id, t.forum_id, t.topic_title, t.topic_last_post_time,
+							t.topic_first_poster_colour, t.topic_last_post_id, t.topic_last_poster_name, t.topic_last_poster_colour',
+			'FROM'		=> array(
+				TOPICS_TABLE	=> 't',
+				POSTS_TABLE		=> 'p',
+				USERS_TABLE		=> 'u',
+			),
+			'WHERE'		=> $sql_where . '
                 AND p.post_visibility = 1
                 ' . $recent_topics_where . '
 				AND u.user_id = ' . $pid . '
-				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id
-				ORDER BY t.topic_last_post_time DESC';
-				
+				AND p.post_id = t.topic_' . $this->config['fltl_type'] . '_post_id',
+			'ORDER'		=> 't.topic_last_post_time DESC',
+		);
+
+		/**
+		* Event to modify SQL query before it is fired
+		*
+		* @event sitesplat.fltl.controller_sql
+		* @var array	sql_ary	Array with SQL query
+		* @since 2.1.13
+		*/
+		$vars = array(
+			'sql_ary',
+		);
+		extract($this->dispatcher->trigger_event('sitesplat.fltl.controller_sql', compact($vars)));
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query_limit($sql, $this->config['fltl_limit'], $start);
 		$rows = $this->db->sql_fetchrowset($result);
 
-		if ($this->private_post_ext_enabled)
-		{
-			foreach ($rows as &$row)
-			{
-				if ($row['post_private'] == '1' && $row['poster_id'] != $this->user->data['user_id'] && !$this->auth->acl_get('f_seeprivateposts', $row['forum_id']))
-				{
-					$row['post_text'] = $this->user->lang('FLTL_PRIVATE');
-				}
-			}
-		}
+		/**
+		* Event to modify result of SQL query
+		*
+		* @event sitesplat.fltl.controller_sql_after
+		* @var array	rows	Array with SQL query results
+		* @since 2.1.13
+		*/
+		$vars = array(
+			'rows',
+		);
+		extract($this->dispatcher->trigger_event('sitesplat.fltl.controller_sql_after', compact($vars)));
 
 		if ($route == 'index.html')
 		{
