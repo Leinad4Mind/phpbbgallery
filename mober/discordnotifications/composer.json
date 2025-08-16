@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Publishes forum event notifications to a Discord server channel",
     "homepage": "https://github.com/rootslinux/phpbb-discord-notifications",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "keywords": ["phpbb", "extension", "discord"],
     "time": "2018-10-14",
     "license": "GPL-2.0-only",
@@ -12,16 +12,22 @@
             "name": "Tyler Olsen",
             "homepage": "https://github.com/rootslinux",
             "role": "Lead Developer"
-        }
+        },
+		{
+			"name": "Micha Ober",
+			"homepage": "https://github.com/m-ober",
+			"role": "Developer"
+		}
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=7.1",
+        "ext-curl": "*",
         "composer/installers": "~1.0"
     },
     "extra": {
         "display-name": "Discord Notifications",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.4,<3.2.0@dev"
+            "phpbb/phpbb": ">=3.3.0"
         }
     },
     "require-dev": {
