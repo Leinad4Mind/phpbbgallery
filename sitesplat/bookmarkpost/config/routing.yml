@@ -1,0 +1,11 @@
+sitesplat_bookmarkpost_controller_bookmark:
+    path: /bookmarkpost/bookmark/{post_id}
+    defaults: { _controller: sitesplat.bookmarkpost.controller:bookmark, post_id: 0 }
+    requirements:
+        post_id: '\d+'
+
+sitesplat_bookmarkpost_controller_unbookmark:
+    path: /bookmarkpost/unbookmark/{post_id}
+    defaults: { _controller: sitesplat.bookmarkpost.controller:unbookmark, post_id: 0 }
+    requirements:
+        post_id: '\d+'

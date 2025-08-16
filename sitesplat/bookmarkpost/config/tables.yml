@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.bookmarkpost.tables.post_bookmarks: '%core.table_prefix%post_bookmarks'

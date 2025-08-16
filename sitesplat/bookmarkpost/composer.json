@@ -1,0 +1,30 @@
+{
+    "name": "sitesplat/bookmarkpost",
+    "type": "phpbb-extension",
+    "description": "Allows user to bookmark a single post. Comes with a handy UCP module to review single bookmarks as well.",
+    "homepage": "http://www.sitesplat.com",
+    "version": "1.0.0",
+    	"keywords": ["phpbb", "extension", "ucp", "bookmark", "cosmetic", "sitesplat"],
+	"license": "@license Proprietary",
+    "authors": [
+        {
+            "name": "SiteSplat",
+            "email": "info@sitesplat.com",
+            "homepage": "http://sitesplat.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "extra": {
+        "display-name": "BookmarkPost",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.3,<3.3.0@dev"
+        },
+		"version-check": {
+			"host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb31/ext",
+            "filename": "bookmark.json"
+		}
+    }
+}
