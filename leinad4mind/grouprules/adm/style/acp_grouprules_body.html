@@ -1,5 +1,8 @@
 {% INCLUDE 'overall_header.html' %}
 
+{% INCLUDECSS '@leinad4mind_grouprules/css/grouprules.css' %}
+{% INCLUDEJS '@leinad4mind_grouprules/js/grouprules.js' %}
+
 <a id="maincontent"></a>
 
 <h1>{{ lang('ACP_GROUPRULES_TITLE') }}</h1>
@@ -8,8 +11,7 @@
 
 <form id="acp_grouprules" method="post" action="{{ U_ACTION }}">
 	<fieldset class="tabulated">
-		<legend>{{ lang('ACP_BBCODES') }}</legend>
-		<table class="table1 zebra-table" id="down">
+		<table class="table1 zebra-table">
 			<thead>
 				<tr>
 					<th>{{ lang('ACP_GROUPRULES_RULES') }}</th>
@@ -17,42 +19,51 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for grouprules in loops.grouprules %}
-				<tr>
-					<td>
-						<label>{{ lang('ACP_GROUPRULES_ITEM', '<select name="when-action[]">' ~ grouprules.WHEN_ACTION_OPTIONS ~ '</select>', '<select name="when-group[]">' ~ grouprules.WHEN_GROUP_OPTIONS ~ '</select>', '<select name="then-action[]">' ~ grouprules.THEN_ACTION_OPTIONS ~ '</select>', '<select name="then-group[]">' ~ grouprules.THEN_GROUP_OPTIONS ~ '</select>') }}</label>&nbsp;<label class="then-default-label"><input type="checkbox" class="radio" name="then-default-{{ loop.index0 }}" value="1"{% if grouprules.THEN_DEFAULT %} checked="checked"{% endif %} />&nbsp;{{ lang('ACP_GROUPRULES_DEFAULT') }}</label>
+				{% for rule in grouprules %}
+				<tr class="grouprules-row move-container">
+					<td class="grouprules-rule">
+						<div class="grouprules-when">
+							<label>{{ lang('ACP_GROUPRULES_RULE_WHEN', '<select name="when-action[]">' ~ rule.WHEN_ACTION_OPTIONS ~ '</select>', '<select name="when-group[]">' ~ rule.WHEN_GROUP_OPTIONS ~ '</select>') }}</label>
+						</div>
+						<div class="grouprules-then">
+							{% for then in rule.then %}
+								<div class="grouprules-then-action move-container">
+									<label>{{ lang('ACP_GROUPRULES_RULE_THEN', '<select name="then-action-' ~ loop.parent.loop.index0 ~ '[]">' ~ then.THEN_ACTION_OPTIONS ~ '</select>', '<select name="then-group-' ~ loop.parent.loop.index0 ~ '[]">' ~ then.THEN_GROUP_OPTIONS ~ '</select>') }}</label>
+									<label><input type="checkbox" class="radio grouprules-then-stop" name="then-stop-{{ loop.parent.loop.index0 }}[]" value="{{ loop.index0 }}"{% if then.THEN_STOP %} checked="checked"{% endif %}>&nbsp;{{ lang('ACP_GROUPRULES_STOP') }}</label>
+									<span class="actions grouprules-then-actions">
+										<a href="#" class="move-up">{{ ICON_MOVE_UP }}</a>
+										<a href="#" class="move-down">{{ ICON_MOVE_DOWN }}</a>
+										<a href="#" class="grouprules-then-action-delete">{{ ICON_DELETE }}</a>
+									</span>
+								</div>
+							{% endfor %}
+							<p>
+								<a href="#" class="grouprules-then-action-add"><img src="{{ ADMIN_ROOT_PATH }}/images/file_new.gif" alt="{{ lang('ACP_GROUPRULES_ADD_ACTION') }}" title="{{ lang('ACP_GROUPRULES_ADD_ACTION') }}"></a>
+							</p>
+						</div>
 					</td>
-					<td class="actions"><a href="{{ grouprules.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a></td>
+					<td class="actions grouprules-row-actions">
+						<a href="#" class="move-up">{{ ICON_MOVE_UP }}</a>
+						<a href="#" class="move-down">{{ ICON_MOVE_DOWN }}</a>
+						<a href="{{ rule.U_RULE_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+					</td>
 				</tr>
 				{% else %}
 				<tr class="row3">
-					<td colspan="2" style="text-align: center;">{{ lang('ACP_NO_ITEMS') }}</td>
+					<td colspan="2">{{ lang('ACP_NO_ITEMS') }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 		<p class="quick">
-			<input class="button2" type="submit" name="add" value="{{ lang('ACP_GROUPRULES_ADD_RULE') }}" />
+			<input class="button2" type="submit" name="rule_add" value="{{ lang('ACP_GROUPRULES_ADD_RULE') }}">
 		</p>
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 		</p>
 		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
-
-<script>
-	'use strict';
-
-	var selects = document.querySelectorAll('[name="then-action[]"]');
-
-	for (var i = 0, l = selects.length; i < l; i++) {
-		selects[i].parentElement.parentElement.querySelector('.then-default-label').classList.toggle('hidden', selects[i].value !== 'add');
-		selects[i].addEventListener('change', function(e) {
-			this.parentElement.parentElement.querySelector('.then-default-label').classList.toggle('hidden', e.target.value !== 'add');
-		});
-	}
-</script>
 
 {% INCLUDE 'overall_footer.html' %}

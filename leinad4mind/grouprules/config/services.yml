@@ -4,6 +4,7 @@ services:
         class: leinad4mind\grouprules\event\listener
         arguments:
             - '@config_text'
+            - '@request'
         tags:
             - { name: event.listener }
 

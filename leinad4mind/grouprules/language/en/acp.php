@@ -34,20 +34,32 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'ACP_GROUPRULES_EXPLAIN'		=> 'This form lets you define which groups should be monitored for adding or removing and what action to take for each of them. Make sure you don’t define loops.',
+	'ACP_GROUPRULES_EXPLAIN'		=> 'This form lets you define which groups should be monitored for certain events and what actions to take for them. Note that making a group default, promoting and demoting only have an effect if the user is already in the specified group. Make sure you don’t define loops.',
+
+	'ACP_GROUPRULES_RULES'			=> 'Rules',
 
 	'ACP_GROUPRULES_ADD_RULE'		=> 'Add rule',
-	'ACP_GROUPRULES_RULES'			=> 'Rules',
-	'ACP_GROUPRULES_ITEM'			=> 'When a user %1$s the group %2$s, then %3$s the group %4$s',
+	'ACP_GROUPRULES_ADD_ACTION'		=> 'Add action',
+	'ACP_GROUPRULES_RULE_REMOVED'	=> '<strong>Group Rules</strong> rule removed.',
+	'ACP_GROUPRULES_ACTION_REMOVED'	=> '<strong>Group Rules</strong> action removed.',
+
+	'ACP_GROUPRULES_RULE_WHEN'		=> 'When a user %1$s group %2$s, then',
+	'ACP_GROUPRULES_RULE_THEN'		=> '%1$s group %2$s',
 
 	'ACP_GROUPRULES_WHEN_ADD'		=> 'is added to',
-	'ACP_GROUPRULES_THEN_ADD'		=> 'add the user to',
-
 	'ACP_GROUPRULES_WHEN_DEL'		=> 'is removed from',
-	'ACP_GROUPRULES_THEN_DEL'		=> 'remove the user from',
+	'ACP_GROUPRULES_WHEN_DEFAULT'	=> 'is made default in',
+	'ACP_GROUPRULES_WHEN_PROMOTE'	=> 'is promoted in',
+	'ACP_GROUPRULES_WHEN_DEMOTE'	=> 'is demoted in',
 
-	'ACP_GROUPRULES_DEFAULT'		=> 'and make it the default group',
+	'ACP_GROUPRULES_THEN_ADD'		=> 'add user to',
+	'ACP_GROUPRULES_THEN_DEL'		=> 'remove user from',
+	'ACP_GROUPRULES_THEN_DEFAULT'	=> 'make user default in',
+	'ACP_GROUPRULES_THEN_PROMOTE'	=> 'promote user in',
+	'ACP_GROUPRULES_THEN_DEMOTE'	=> 'demote user in',
 
-	'ACP_GROUPRULES_RULE_REMOVED'	=> 'Group Rules rule removed.',
-	'ACP_GROUPRULES_SETTINGS_SAVED'	=> 'Group Rules settings saved.',
+	'ACP_GROUPRULES_STOP'			=> 'don’t trigger other rules',
+
+	'ACP_GROUPRULES_SETTINGS_SAVED'	=> '<strong>Group Rules</strong> settings saved.',
 ]);
+

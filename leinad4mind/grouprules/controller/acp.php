@@ -81,13 +81,14 @@ class acp extends base
 
 		$group_actions = json_decode($this->config_text->get('grouprules_group_actions'), true);
 
-		$id = $this->request->variable('id', -1);
+		$action = $this->request->variable('action', '');
+		$rule_id = $this->request->variable('rule_id', -1);
 
-		if ($this->request->variable('action', '') == 'delete' && isset($group_actions[$id]))
+		if ($action == 'rule_delete' && isset($group_actions[$rule_id]))
 		{
 			if (confirm_box(true))
 			{
-				unset($group_actions[$id]);
+				unset($group_actions[$rule_id]);
 				$this->config_text->set('grouprules_group_actions', json_encode($group_actions));
 
 				if ($this->request->is_ajax())
@@ -95,22 +96,20 @@ class acp extends base
 					(new json_response())->send([
 						'MESSAGE_TITLE'	=> $this->lang->lang('INFORMATION'),
 						'MESSAGE_TEXT'	=> $this->lang->lang('ACP_GROUPRULES_RULE_REMOVED'),
-						'REFRESH_DATA'	=> [
-							'time'	=> 3,
-						]
+						'REFRESH_DATA'	=> ['time' => 3],
 					]);
 				}
 			}
 			else
 			{
 				confirm_box(false, $this->lang->lang('CONFIRM_OPERATION'), build_hidden_fields([
-					'id'		=> $id,
-					'action'	=> 'delete',
+					'rule_id'	=> $rule_id,
+					'action'	=> 'rule_delete',
 				]));
 			}
 		}
 
-		if ($this->request->is_set_post('add') || $this->request->is_set_post('submit'))
+		if ($this->request->is_set_post('rule_add') || $this->request->is_set_post('submit'))
 		{
 			if (!check_form_key($ext_name))
 			{
@@ -121,31 +120,43 @@ class acp extends base
 
 			$when_action	= $this->request->variable('when-action', ['' => '']);
 			$when_group		= $this->request->variable('when-group', ['' => 0]);
-			$then_action	= $this->request->variable('then-action', ['' => '']);
-			$then_group		= $this->request->variable('then-group', ['' => 0]);
 
 			for ($i = 0; $i < count($when_action); $i++)
 			{
-				if (in_array($when_action[$i], ['add', 'del']) && $when_group[$i] && in_array($then_action[$i], ['add', 'del']) && $then_group[$i])
+				$group_action = [
+					'when'	=> [
+						'action'	=> $when_action[$i],
+						'group'		=> $when_group[$i],
+					],
+					'then'	=> [],
+				];
+
+				$then_action	= $this->request->variable('then-action-' . $i, ['' => '']);
+				$then_group		= $this->request->variable('then-group-' . $i, ['' => 0]);
+				$then_stop		= $this->request->variable('then-stop-' . $i, [0]);
+
+				for ($j = 0; $j < count($then_action); $j++)
 				{
-					$group_actions[] = [
-						'when'	=> [
-							'action'	=> $when_action[$i],
-							'group'		=> $when_group[$i],
-						],
-						'then'	=> [
-							'action'	=> $then_action[$i],
-							'group'		=> $then_group[$i],
-							'default'	=> $this->request->variable('then-default-' . $i, 0),
-						],
-					];
+					if ($then_action[$j] && $then_group[$j])
+					{
+						$group_action['then'][] = [
+							'action'	=> $then_action[$j],
+							'group'		=> $then_group[$j],
+							'stop'		=> in_array($j, $then_stop),
+						];
+					}
+				}
+
+				if ($group_action['when']['action'] && $group_action['when']['group'] && $group_action['then'])
+				{
+					$group_actions[] = $group_action;
 				}
 			}
 
 			$this->config_text->set('grouprules_group_actions', json_encode($group_actions));
 		}
 
-		if ($this->request->is_set_post('add'))
+		if ($this->request->is_set_post('rule_add'))
 		{
 			$group_actions[] = [];
 		}
@@ -165,28 +176,50 @@ class acp extends base
 						'group'		=> 0,
 					],
 					'then'	=> [
-						'action'	=> '',
-						'group'		=> 0,
-						'default'	=> false,
+						[
+							'action'	=> '',
+							'group'		=> 0,
+							'stop'		=> 0,
+						],
 					],
 				];
 			}
 
-			$block_vars = [
-				'WHEN_ACTION_OPTIONS'	=> $this->build_option('', '', !$group_action['when']['action']) . $this->build_option($this->lang->lang('ACP_GROUPRULES_WHEN_ADD'), 'add', $group_action['when']['action'] == 'add') . $this->build_option($this->lang->lang('ACP_GROUPRULES_WHEN_DEL'), 'del', $group_action['when']['action'] == 'del'),
+			$this->template->assign_block_vars('grouprules', [
+				'WHEN_ACTION_OPTIONS'	=> $this->build_option('', '', !$group_action['when']['action']) . $this->action_select_options('ACP_GROUPRULES_WHEN_', $group_action['when']['action'], ['add', 'del', 'default', 'promote', 'demote']),
 				'WHEN_GROUP_OPTIONS'	=> $this->build_option('', 0, !$group_action['when']['group']) . group_select_options($group_action['when']['group']),
-				'THEN_ACTION_OPTIONS'	=> $this->build_option('', '', !$group_action['then']['action']) . $this->build_option($this->lang->lang('ACP_GROUPRULES_THEN_ADD'), 'add', $group_action['then']['action'] == 'add') . $this->build_option($this->lang->lang('ACP_GROUPRULES_THEN_DEL'), 'del', $group_action['then']['action'] == 'del'),
-				'THEN_GROUP_OPTIONS'	=> $this->build_option('', 0, !$group_action['then']['group']) . group_select_options($group_action['then']['group']),
-				'THEN_DEFAULT'			=> $group_action['then']['default'],
-				'U_DELETE'				=> $u_action . '&amp;action=delete&amp;id=' . $i,
-			];
+				'U_RULE_DELETE'			=> $u_action . '&amp;action=rule_delete&amp;rule_id=' . $i,
+			]);
 
-			$this->template->assign_block_vars('grouprules', $block_vars);
+			foreach ($group_action['then'] as $then_action)
+			{
+				$this->template->assign_block_vars('grouprules.then', [
+					'THEN_ACTION_OPTIONS'	=> $this->build_option('', '', !$then_action['action']) . $this->action_select_options('ACP_GROUPRULES_THEN_', $then_action['action'], ['add', 'del', 'default', 'promote', 'demote']),
+					'THEN_GROUP_OPTIONS'	=> $this->build_option('', 0, !$then_action['group']) . group_select_options($then_action['group']),
+					'THEN_STOP'				=> $then_action['stop'],
+				]);
+			}
 		}
 
-		$this->template->assign_vars([
-			'U_ACTION'	=> $u_action,
-		]);
+		$this->template->assign_var('U_ACTION', $u_action);
+	}
+
+	/**
+	 * @param string $lang_prefix
+	 * @param mixed $selected
+	 * @param array $actions
+	 * @return string
+	 */
+	protected function action_select_options($lang_prefix, $selected, array $actions)
+	{
+		$action_options = [];
+
+		foreach ($actions as $action)
+		{
+			$action_options[] = $this->build_option($this->lang->lang($lang_prefix . strtoupper($action)), $action, $action == $selected);
+		}
+
+		return implode('', $action_options);
 	}
 
 	/**
@@ -197,6 +230,6 @@ class acp extends base
 	 */
 	protected function build_option($text, $value, $selected)
 	{
-		return '<option class="sep" value="' . $value . '" ' . ($selected ? 'selected' : '') . '>' . $text . '</option>';
+		return '<option class="sep" value="' . $value . '"' . ($selected ? ' selected' : '') . '>' . $text . '</option>';
 	}
 }
