@@ -13,7 +13,7 @@ namespace rmcgirr83\contactadmin\controller;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\config\db_text;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\controller\helper;
 use phpbb\language\language;
 use phpbb\log\log;
@@ -21,7 +21,6 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\contactadmin\core\contactadmin as contactadmin;
-use rmcgirr83\contactadmin\core\contact_constants;
 
 class admin_controller
 {
@@ -32,12 +31,12 @@ class admin_controller
 	protected $config;
 
 	/** @var db_text */
-	protected $config_text;
+	protected $db_text;
 
-	/** @var driver_interface */
+	/** @var db */
 	protected $db;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper */
 	protected $helper;
 
 	/** @var language */
@@ -58,11 +57,14 @@ class admin_controller
 	/* @var contactadmin */
 	protected $contactadmin;
 
-	/** @var string phpBB root path */
+	/** @var string root_path */
 	protected $root_path;
 
-	/** @var string phpEx */
+	/** @var string php_ext */
 	protected $php_ext;
+
+	/** @var array contact_constants */
+	protected $contact_constants;
 
 	/** @var string Custom form action */
 	protected $u_action;
@@ -72,8 +74,8 @@ class admin_controller
 	*
 	* @param auth						$auth				Auth object
 	* @param config						$config				Config object
-	* @param db_text 					$config_text		Config text object
-	* @param driver_interface			$db					Database object
+	* @param db_text 					$db_text			Config text object
+	* @param db							$db					Database object
 	* @param helper						$helper				Controller helper object
 	* @param language					$language			Language object
 	* @param log						$log				Log object
@@ -83,13 +85,14 @@ class admin_controller
 	* @param contactadmin				$contactadmin		Methods for the extension
 	* @param string						$root_path			phpBB root path
 	* @param string						$php_ext			phpEx
+	* @param array						$contact_constants	constants for the extension
 	* @access public
 	*/
 	public function __construct(
 			auth $auth,
 			config $config,
-			db_text $config_text,
-			driver_interface $db,
+			db_text $db_text,
+			db $db,
 			helper $helper,
 			language $language,
 			log $log,
@@ -97,12 +100,13 @@ class admin_controller
 			template $template,
 			user $user,
 			contactadmin $contactadmin,
-			$root_path,
-			$php_ext)
+			string $root_path,
+			string $php_ext,
+			array $contact_constants)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
-		$this->config_text = $config_text;
+		$this->db_text = $db_text;
 		$this->db = $db;
 		$this->helper = $helper;
 		$this->language = $language;
@@ -113,6 +117,7 @@ class admin_controller
 		$this->contactadmin = $contactadmin;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->contact_constants = $contact_constants;
 	}
 
 	public function display_options()
@@ -123,7 +128,7 @@ class admin_controller
 		// Create a form key for preventing CSRF attacks
 		add_form_key('contactadmin_settings');
 
-		$contact_admin_data		= $this->config_text->get_array([
+		$contact_admin_data		= $this->db_text->get_array([
 			'contactadmin_reasons',
 			'contact_admin_info',
 			'contact_admin_info_uid',
@@ -160,7 +165,12 @@ class admin_controller
 				$error[] = $this->language->lang('FORM_INVALID');
 			}
 
-			if (in_array($this->request->variable('contact_method', 0), [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_PM]))
+			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]) && !$this->config['email_enable'])
+			{
+				$error[] = $this->language->lang('EMAIL_NOT_CONFIGURED');
+			}
+
+			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]))
 			{
 				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
 
@@ -189,7 +199,7 @@ class admin_controller
 
 			if (empty($error) && $this->request->is_set_post('submit'))
 			{
-				$this->config_text->set_array([
+				$this->db_text->set_array([
 					'contactadmin_reasons'			=> $contact_admin_reasons,
 					'contact_admin_info'			=> $contact_admin_info,
 					'contact_admin_info_uid'		=> $contact_admin_info_uid,
@@ -233,7 +243,7 @@ class admin_controller
 			'CONTACT_FOUNDER'				=> $this->config['contactadmin_founder_only'],
 			'CONTACT_USERNAME_CHK'			=> $this->config['contactadmin_username_chk'],
 			'CONTACT_EMAIL_CHK'				=> $this->config['contactadmin_email_chk'],
-
+			'CONTACT_GDPR'					=> $this->config['contactadmin_gdpr'],
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
@@ -290,6 +300,7 @@ class admin_controller
 		$this->config->set('contactadmin_bot_user', $this->request->variable('contact_bot_user', 0));
 		$this->config->set('contactadmin_bot_poster', $this->request->variable('contact_bot_poster', 0));
 		$this->config->set('contactadmin_forum', $this->request->variable('forum', 0));
+		$this->config->set('contactadmin_gdpr', $this->request->variable('gdpr', 0));
 	}
 
 	/**
@@ -327,11 +338,11 @@ class admin_controller
 
 		$sql_where = '';
 		$admins = [];
-		if ($method == contact_constants::CONTACT_METHOD_EMAIL && count($admin_ary))
+		if ($method == $this->contact_constants['CONTACT_METHOD_EMAIL'] && count($admin_ary))
 		{
 			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
 		}
-		else if ($method == contact_constants::CONTACT_METHOD_PM && count($admin_ary))
+		else if ($method == $this->contact_constants['CONTACT_METHOD_PM'] && count($admin_ary))
 		{
 			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
 		}
