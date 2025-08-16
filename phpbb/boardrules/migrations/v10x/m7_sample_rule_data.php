@@ -61,7 +61,7 @@ class m7_sample_rule_data extends container_aware_migration
 	/**
 	* Custom function to install sample rule data to the boardrules table in the database
 	*
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function insert_sample_rule_data()
@@ -78,24 +78,24 @@ class m7_sample_rule_data extends container_aware_migration
 		// Define sample rule data
 		$sample_rule_data = array(
 			array(
-				'rule_title' => $user->lang('BOARDRULES_SAMPLE_CATEGORY_TITLE'),
-				'rule_message' => $user->lang('BOARDRULES_SAMPLE_CATEGORY_MESSAGE'),
-				'rule_anchor' => $user->lang('BOARDRULES_SAMPLE_CATEGORY_ANCHOR'),
-				'rule_left_id' => 1,
-				'rule_right_id' => 4,
+				'rule_title'     => $user->lang('BOARDRULES_SAMPLE_CATEGORY_TITLE'),
+				'rule_message'   => $user->lang('BOARDRULES_SAMPLE_CATEGORY_MESSAGE'),
+				'rule_anchor'    => $user->lang('BOARDRULES_SAMPLE_CATEGORY_ANCHOR'),
+				'rule_left_id'   => 1,
+				'rule_right_id'  => 4,
 				'rule_parent_id' => 0,
-				'rule_language' => $lang_id,
-				'rule_parents' => '',
+				'rule_language'  => $lang_id,
+				'rule_parents'   => '',
 			),
 			array(
-				'rule_title' => $user->lang('BOARDRULES_SAMPLE_RULE_TITLE'),
-				'rule_message' => $user->lang('BOARDRULES_SAMPLE_RULE_MESSAGE'),
-				'rule_anchor' => $user->lang('BOARDRULES_SAMPLE_RULE_ANCHOR'),
-				'rule_left_id' => 2,
-				'rule_right_id' => 3,
+				'rule_title'     => $user->lang('BOARDRULES_SAMPLE_RULE_TITLE'),
+				'rule_message'   => $user->lang('BOARDRULES_SAMPLE_RULE_MESSAGE'),
+				'rule_anchor'    => $user->lang('BOARDRULES_SAMPLE_RULE_ANCHOR'),
+				'rule_left_id'   => 2,
+				'rule_right_id'  => 3,
 				'rule_parent_id' => 1,
-				'rule_language' => $lang_id,
-				'rule_parents' => '',
+				'rule_language'  => $lang_id,
+				'rule_parents'   => '',
 			),
 		);
 

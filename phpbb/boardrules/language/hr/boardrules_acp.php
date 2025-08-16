@@ -78,4 +78,10 @@ $lang = array_merge($lang, array(
 	'ACP_RULE_DELETED'						=> 'Pravilo je izbrisano.',
 	'ACP_RULE_EDITED'						=> 'Pravilo je uređeno.',
 	'ACP_RULE_TITLE_EMPTY'					=> 'Moraš upisati naslov pravila.',
+
+	// Nested set exception messages (only appears in PHP error logging)
+	// Translators: Feel free to not translate these language strings
+	'RULES_NESTEDSET_LOCK_FAILED_ACQUIRE'	=> 'Forumska pravila nisu uspjela postići zaključavanje tablice. Moguće je da isto ometa neki drugi proces. Zaključavanja se prisilno izvršavaju po isteku vremena od jednog sata.',
+	'RULES_NESTEDSET_INVALID_ITEM'			=> 'Zatraženo pravilo ne postoji.',
+	'RULES_NESTEDSET_INVALID_PARENT'		=> 'Zatraženo pravilo nema krovno pravilo.',
 ));
