@@ -1,18 +1,23 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class player_block extends base
 {
 	static $icon = 'fa-music';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'player_block';
@@ -22,13 +27,18 @@ class player_block extends base
 			return false;
 		}
 
+		/** @var \canidev\blockgets\controller\player_controller */
 		$player = $this->container->get('canidev.blockgets.controller.player');
+		
 		$player->create($data, $this->data['block_id']);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -41,7 +51,7 @@ class player_block extends base
 		$this->list
 			->set_options(array(
 				'title'	=> 'PLAYER_TRACKLIST',
-				'type'	=> LIST_TYPE_NONE,
+				'type'	=> constants::LIST_TYPE_NONE,
 			))
 			->set_events(array(
 				'edit.before'	=> array($this, 'list_edit_before'),
@@ -50,6 +60,10 @@ class player_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$event['display_vars'] = array(

@@ -1,69 +1,61 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
-// @ignore
-if(!defined('IN_PHPBB'))
+namespace canidev\blockgets\libraries;
+
+class constants
 {
-	exit;
+	// Lists settings
+	const LIST_CAT 		= 0;
+	const LIST_LINK 	= 1;
+
+	const LIST_TYPE_NONE 	= 0;
+	const LIST_TYPE_ICON 	= 1;
+	const LIST_TYPE_IMAGE 	= 2;
+
+	// Page settings
+	const PAGE_HOME 	= 0;
+	const PAGE_FORUM 	= 1;
+	const PAGE_CUSTOM 	= 2;
+
+	// Block settings
+	const BOARD_BLOCK_NONE 			= 0;
+	const BOARD_BLOCK_INDIVIDUAL 	= 1;
+	const BOARD_BLOCK_SAME 			= 2;
+
+	const BLOCK_COLLAPSE_NONE 		= 0;
+	const BLOCK_COLLAPSE_VISIBLE 	= 1;
+	const BLOCK_COLLAPSE_HIDDEN 	= 2;
+
+	// Block styles
+	const BLOCK_STYLE_DEFAULT 			= 1;
+	const BLOCK_STYLE_ALTERNATIVE 		= 2;
+	const BLOCK_STYLE_CONTENT_FULL 		= 3;
+	const BLOCK_STYLE_CONTENT_SIMPLE 	= 4;
+
+	// Scroll settings
+	const SCROLL_NONE 	= 0;
+	const SCROLL_H 		= 1;
+	const SCROLL_V 		= 2;
+
+	// Data Types
+	const DATA_ATTACHMENT 	= 1;
+	const DATA_EVENT 		= 2;
+
+	// Portal display types
+	const TYPE_DOMAIN_HOME 		= 1;
+	const TYPE_FORUM_HOME 		= 2;
+	const TYPE_FORUM_SECONDARY 	= 3;
+
+	// Message Parser
+	const FLAG_HTML 	= 8;
+
+	// Google API Key
+	const GOOGLE_KEY 	= 'QUl6YVN5Qmx3MkFfWXBxNjlHTGFWa0VHMFJ1clppRFRLemstZS1r';
 }
-
-// Lists settings
-define('LIST_CAT', 	0);
-define('LIST_LINK', 1);
-
-define('LIST_TYPE_NONE', 	0);
-define('LIST_TYPE_ICON', 	1);
-define('LIST_TYPE_IMAGE', 	2);
-
-// Page settings
-define('PAGE_HOME', 	0);
-define('PAGE_FORUM', 	1);
-define('PAGE_CUSTOM', 	2);
-
-define('BOARD_BLOCK_NONE',			0);
-define('BOARD_BLOCK_INDIVIDUAL',	1);
-define('BOARD_BLOCK_SAME',			2);
-
-define('BLOCK_STYLE_DEFAULT', 			1);
-define('BLOCK_STYLE_ALTERNATIVE', 		2);
-define('BLOCK_STYLE_CONTENT_FULL', 		3);
-define('BLOCK_STYLE_CONTENT_SIMPLE', 	4);
-
-define('BLOCK_COLLAPSE_NONE', 		0);
-define('BLOCK_COLLAPSE_VISIBLE', 	1);
-define('BLOCK_COLLAPSE_HIDDEN', 	2);
-
-// Scroll settings
-define('BLG_NO_SCROLL', 0);
-define('BLG_SCROLL_H', 	1);
-define('BLG_SCROLL_V', 	2);
-
-// Other Settings
-define('BLG_NOTICE_TIMEOUT',	2000);
-define('BLG_RETURN_TIMEOUT',	900);
-
-// Data Types
-define('BLG_DATA_ATTACHMENT',	1);
-define('BLG_DATA_EVENT',		2);
-
-// Portal display types
-define('TYPE_DOMAIN_HOME',			1);
-define('TYPE_FORUM_HOME',			2);
-define('TYPE_FORUM_SECONDARY',		3);
-
-// Message Parser
-define('BLG_FLAG_HTML', 8);
-
-// Google API Key
-define('BLG_GOOGLE_KEY', 'QUl6YVN5Qmx3MkFfWXBxNjlHTGFWa0VHMFJ1clppRFRLemstZS1r');
-
-// Table names
-define('BLG_BLOCK_TABLE',		$table_prefix . 'blockgets_blocks');
-define('BLG_DATA_TABLE',		$table_prefix . 'blockgets_data');
-define('BLG_PAGES_TABLE',		$table_prefix . 'blockgets_pages');

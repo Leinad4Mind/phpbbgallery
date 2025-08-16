@@ -1,25 +1,55 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.4 26/01/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
-class dom
+class Dom
 {
 	static $selfclosing_tags = 'img|br|hr|input|iframe';
+
+	/**
+	 * Convert array in string with html attributes
+	 * 
+	 * @param array 	$attributes
+	 * @return string
+	 */
+	public static function arrayToAttr($attributes)
+	{
+		return implode(
+			' ',
+			array_map(
+				function($key) use ($attributes)
+				{
+					if($attributes[$key] === null)
+					{
+						return '';
+					}
+
+					if(is_bool($attributes[$key]))
+					{
+						return ($attributes[$key]) ? $key : '';
+					}
+
+					return $key . '="' . $attributes[$key] . '"';
+				},
+				array_keys($attributes)
+			)
+		);
+	}
 
 	/**
 	 * Load xml string
 	 * 
 	 * @param string 	$string 		Text to be load
-	 * @return \DomDocument
+	 * @return \DomDocument|false
 	 */
-	public static function load_xml($string)
+	public static function loadXML($string)
 	{
 		$dom 	= new \DOMDocument('1.0', 'utf-8');
 
@@ -44,11 +74,11 @@ class dom
 	 * Convert string into xPath variable
 	 * 
 	 * @param string 	$string 		Text to be load
-	 * @return \DomXPath
+	 * @return \DomXPath|false
 	 */
-	public static function string_to_xpath($string)
+	public static function stringToXpath($string)
 	{
-		if(($dom = self::load_xml($string)) === false)
+		if(($dom = self::loadXML($string)) === false)
 		{
 			return false;
 		}
@@ -62,17 +92,17 @@ class dom
 	 * @param \DomXPath 	$xpath
 	 * @return string
 	 */
-	public static function xpath_to_string($xpath)
+	public static function xpathToString($xpath)
 	{
 		return preg_replace(
-			array(
+			[
 				'#(^<div>|</div>$)#',
 				'#<((' . str_replace('|iframe', '', self::$selfclosing_tags) . ').*?)></\\2>#',
-			),
-			array(
+			],
+			[
 				'',
 				'<$1 />',
-			),
+			],
 			$xpath->document->saveXML($xpath->document->documentElement, \LIBXML_NOEMPTYTAG)
 		);
 	}
@@ -83,7 +113,7 @@ class dom
 	 * @param string 	$filename
 	 * @return \SimpleXMLElement
 	 */
-	public static function simple_xml_file($filename)
+	public static function simpleXmlFile($filename)
 	{
 		$err_status = \libxml_use_internal_errors(true);
 
@@ -98,15 +128,15 @@ class dom
 	/**
 	 * Check if a node or their parents math with specific node name
 	 * 
-	 * @param \DomElement 	$node 		Node to be checked
-	 * @param string 		$node_name 	Match node name
+	 * @param \DomNode 			$node 		Node to be checked
+	 * @param array|string 		$node_name 	Match node name
 	 * @return bool
 	 */
-	public static function node_closest($node, $node_name)
+	public static function nodeClosest($node, $node_name)
 	{
 		if(!is_array($node_name))
 		{
-			$node_name = array($node_name);
+			$node_name = [$node_name];
 		}
 
 		if(in_array($node->nodeName, $node_name))
@@ -116,7 +146,7 @@ class dom
 		
 		if($node->parentNode !== null)
 		{
-			return self::node_closest($node->parentNode, $node_name);
+			return self::nodeClosest($node->parentNode, $node_name);
 		}
 		
 		return false;
@@ -125,15 +155,15 @@ class dom
 	/**
 	 * Remove all attributes of specific node
 	 * 
-	 * @param \DomElement 	$node			Node
-	 * @param array|false 	$ignore 		Array with attributes to preserve
+	 * @param \DomElement 			$node		Node
+	 * @param string|array|false 	$ignore 	Array with attributes to preserve
 	 * 
 	 * @return \DomElement
 	 */
-	public static function remove_attributes($node, $ignore = false)
+	public static function removeAttributes($node, $ignore = false)
 	{
-		$ignore 	= ($ignore !== false && !is_array($ignore)) ? array($ignore) : $ignore;
-		$attr_ary 	= array();
+		$ignore 	= ($ignore !== false && !is_array($ignore)) ? [$ignore] : $ignore;
+		$attr_ary 	= [];
 		
 		foreach($node->attributes as $name => $attrNode)
 		{
@@ -149,5 +179,53 @@ class dom
 		}
 
 		return $node;
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function load_xml($string)
+	{
+		static::loadXML($string);
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function string_to_xpath($string)
+	{
+		return static::stringToXpath($string);
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function xpath_to_string($xpath)
+	{
+		return static::xpathToString($xpath);
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function simple_xml_file($filename)
+	{
+		return static::simpleXmlFile($filename);
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function node_closest($node, $node_name)
+	{
+		return static::nodeClosest($node, $node_name);
+	}
+
+	/**
+	 * @deprecated 		To be removed in v1.2.0
+	 */
+	public static function remove_attributes($node, $ignore = false)
+	{
+		return static::removeAttributes($node, $ignore);
 	}
 }

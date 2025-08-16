@@ -1,8 +1,8 @@
 	
 {% if block.IS_GROUP %}
-	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-grid">
 	{% for sub in block.blocks %}
-		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block {{ sub.BLOCK_CLASSES }}">
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block {{ sub.BLOCK_CLASSES }}"{% if sub.DOM_STYLE %} style="{{ sub.DOM_STYLE}} "{% endif %}>
 		{% if sub.BLOCK_STYLE == 'content_simple' %}
 			<div class="block-content">
 				{{ sub.BLOCK_CONTENT }}

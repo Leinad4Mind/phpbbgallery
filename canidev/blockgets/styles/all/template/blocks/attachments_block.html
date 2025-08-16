@@ -16,25 +16,25 @@
 
 			<div class="blg-inline-list">
 				<dl>
-					<dt><strong>{L_ATTACH_DATE}{L_COLON}</strong></dt>
+					<dt><strong>{{ lang('ATTACH_DATE') ~ lang('COLON') }}</strong></dt>
 					<dd>{{ attach.S_DATE }}</dd>
 				</dl>
 				<dl>
-					<dt><strong>{L_ATTACH_SIZE}{L_COLON}</strong></dt>
+					<dt><strong>{{ lang('ATTACH_SIZE') ~ lang('COLON') }}</strong></dt>
 					<dd>{{ attach.S_FILESIZE }}</dd>
 				</dl>
 				<dl>
-					<dt><strong>{{ attach.S_DOWNLOAD_LABEL }}{L_COLON}</strong></dt>
+					<dt><strong>{{ attach.S_DOWNLOAD_LABEL ~ lang('COLON') }}</strong></dt>
 					<dd>{{ attach.S_DOWNLOAD_COUNT }}</dd>
 				</dl>
 			</div>
 
 			<hr />
-			<a class="blank blg-align-left floated" href="{{ attach.U_FILELINK }}"><strong>{L_VIEW_TOPIC}</strong></a>
-			<a class="blank blg-align-right floated" href="{{ attach.U_FILE }}"><strong>{L_DOWNLOAD}</strong></a>
+			<a class="blank blg-align-left floated" href="{{ attach.U_FILELINK }}"><strong>{{ lang('VIEW_TOPIC') }}</strong></a>
+			<a class="blank blg-align-right floated" href="{{ attach.U_FILE }}"><strong>{{ lang('DOWNLOAD') }}</strong></a>
 		</div>
 	{% endfor %}
 	</div>
 {% else %}
-	<div class="blg-align-center">{L_NO_ATTACHMENTS}</div>
+	<div class="blg-align-center">{{ lang('NO_ATTACHMENTS') }}</div>
 {% endif %}

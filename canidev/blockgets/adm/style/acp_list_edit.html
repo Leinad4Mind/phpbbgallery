@@ -21,8 +21,8 @@
 						<td>{{ item.TITLE }}<br /><span class="row-subtitle small">{{ item.SUBTITLE }}</span></td>
 						<td class="column-actions">
 							<div class="row-actions">
-								<a href="{{ item.U_EDIT }}" title="{L_EDIT}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
-								<a href="{{ item.U_DELETE }}" title="{L_DELETE}"><i class="fa fa-remove fa-lg" aria-hidden="true"></i></a>
+								<a href="{{ item.U_EDIT }}" title="{{ lang('EDIT') }}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+								<a href="{{ item.U_DELETE }}" title="{{ lang('DELETE') }}"><i class="fa fa-remove fa-lg" aria-hidden="true"></i></a>
 							</div>
 						</td>
 					</tr></table>
@@ -39,10 +39,10 @@
 	{% if S_LIST_FORMAT <> 'minimal' %}
 		<div class="cbb-group blg-align-left floated">
 			<select class="cbb-inputbox" name="batch">
-				<option value="">{L_BATCH_ACTIONS}</option>
-				<option value="delete">{L_DELETE}</option>
+				<option value="">{{ lang('BATCH_ACTIONS') }}</option>
+				<option value="delete">{{ lang('DELETE') }}</option>
 			</select>
-			<a href="{{ U_BATCH }}" class="cbb-btn">{L_SUBMIT}</a>
+			<a href="{{ U_BATCH }}" class="cbb-btn">{{ lang('SUBMIT') }}</a>
 		</div>
 	{% endif %}
 
@@ -52,7 +52,7 @@
 	{{ S_LIST_HIDDEN_FIELDS }}
 	
 	<script type="text/html" id="tpl-list-no-items">
-		<li class="blg-message cbb-state-highlight no-items">{L_ACP_NO_ITEMS}</li>
+		<li class="blg-message cbb-state-highlight no-items">{{ lang('ACP_NO_ITEMS') }}</li>
 	</script>
 </div>
 
@@ -69,26 +69,13 @@
 <div title="{{ MESSAGE_TITLE }}" data-width="800">
 	<form action="{{ S_CONFIRM_ACTION }}" onsubmit="return false;">
 		<div class="cbb-dialog-content">
-			<fieldset>
-			{% for options in loops.options %}
-				{% if options.S_LEGEND %}
-					{% if not options.S_FIRST_ROW %}
-						</fieldset>
-					{% endif %}
-						<legend>{{ options.LEGEND }}</legend>
-				{% else %}
-					<dl>
-						<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-						<dd>{{ options.CONTENT }}</dd>
-					</dl>
-				{% endif %}
-			{% endfor %}
-			</fieldset>
+			{% set display_submit_save = false %}
+			{% include '@canidev_core/acp_options.html' %}
 		</div>
 		
 		<div class="cbb-dialog-buttons">
-			<button class="cbb-btn" value="submit" data-confirm="{{ YES_VALUE }}">{L_ACCEPT}</button>
-			<button class="cbb-btn" value="close">{L_CANCEL}</button>
+			<button class="cbb-btn" value="submit" data-confirm="{{ YES_VALUE }}">{{ lang('ACCEPT') }}</button>
+			<button class="cbb-btn" value="close">{{ lang('CANCEL') }}</button>
 			{{ S_HIDDEN_FIELDS }}
 		</div>
 	</form>

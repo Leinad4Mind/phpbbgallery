@@ -4,10 +4,12 @@
 * @version v2.0.1 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\blockgets\migrations;
+
+use canidev\blockgets\libraries\constants;
 
 class v201 extends \canidev\blockgets\libraries\migration_base
 {
@@ -24,11 +26,9 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 	
 	public function update_schema()
 	{
-		$this->prepare();
-
 		return array(
 			'change_columns' => array(
-				BLG_BLOCK_TABLE	=> array(
+				$this->table_prefix . 'blockgets_blocks'	=> array(
 					'block_groups'	=> array('VCHAR:255', 'all'),
 				),
 			),
@@ -37,7 +37,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 	public function _update_data()
 	{
-		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db);
+		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db, $this->table_prefix);
 		
 		return array(
 			array('config.remove', 	array('blg_resize_enabled')),
@@ -51,11 +51,11 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 	public function update_events()
 	{
-		$events = array();
+		$events = [];
 
 		$sql = 'SELECT data_id, data_settings
-			FROM ' . BLG_DATA_TABLE . '
-			WHERE data_type = ' . BLG_DATA_EVENT;
+			FROM ' . $this->table_prefix . 'blockgets_data
+			WHERE data_type = ' . constants::DATA_EVENT;
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -68,10 +68,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 		foreach($events as $id => $settings)
 		{
-			$sql = 'UPDATE ' . BLG_DATA_TABLE . "
+			$sql = 'UPDATE ' . $this->table_prefix . "blockgets_data
 				SET data_settings = '" . serialize($settings) . "'
 				WHERE data_id = $id
-				AND data_type = " . BLG_DATA_EVENT;
+				AND data_type = " . constants::DATA_EVENT;
 			$this->db->sql_query($sql);
 		}
 	}
@@ -79,7 +79,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 	public function update_icons()
 	{
 		// Update block's icons
-		$update_ary = array();
+		$update_ary = [];
 
 		$block_ary = $this->block_manager->get();
 
@@ -109,10 +109,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 		}
 		
 		// Update page's icons
-		$update_ary = array();
+		$update_ary = [];
 
 		$sql = 'SELECT page_id, page_data
-			FROM ' . BLG_PAGES_TABLE;
+			FROM ' . $this->table_prefix . 'blockgets_pages';
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -134,7 +134,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 		{
 			foreach($update_ary as $page_id => $page_data)
 			{
-				$sql = 'UPDATE ' . BLG_PAGES_TABLE . "
+				$sql = 'UPDATE ' . $this->table_prefix . "blockgets_pages
 					SET page_data = '" . $page_data . "'
 					WHERE page_id = $page_id";
 				$this->db->sql_query($sql);
@@ -176,7 +176,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 				case 'post_view_block':
 					$data 		= unserialize($row['block_content']);
-					$params		= array();
+					$params		= [];
 
 					switch($data['mode'])
 					{

@@ -16,11 +16,11 @@
 <div id="player-{{ BLOCK_ID }}">
 	<div class="player-wrap">
 		<div class="player-buttons blg-corner-all">
-			<a class="js-play cbb-btn" href="#" data-action="play" title="{L_PLAY}"><i class="fa fa-play" aria-hidden="true"></i></a>
-			<a class="js-stop cbb-btn" href="#" data-action="stop" title="{L_STOP}"><i class="fa fa-stop" aria-hidden="true"></i></a>
-			<a class="js-mute cbb-btn" href="#" data-action="mute" title="{L_MUTE}"><i class="fa fa-volume-off" aria-hidden="true"></i></a>
+			<a class="js-play cbb-btn" href="#" data-action="play" title="{{ lang('PLAY') }}"><i class="fa fa-play" aria-hidden="true"></i></a>
+			<a class="js-stop cbb-btn" href="#" data-action="stop" title="{{ lang('STOP') }}"><i class="fa fa-stop" aria-hidden="true"></i></a>
+			<a class="js-mute cbb-btn" href="#" data-action="mute" title="{{ lang('MUTE') }}"><i class="fa fa-volume-off" aria-hidden="true"></i></a>
 
-			<div class="blg-player-volume" title="{L_VOLUME}"></div>
+			<div class="blg-player-volume" title="{{ lang('VOLUME') }}"></div>
 		</div>
 	</div>
 
@@ -33,13 +33,13 @@
 	</div>
 	
 	<div class="player-newwin-message">
-		<div>{L_WIN_OPEN_EXPLAIN}</div>
-		<div><a class="player-newwin" href="#" data-action="returnwin" title="{L_WIN_RETURN}"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></a></div>
+		<div>{{ lang('WIN_OPEN_EXPLAIN') }}</div>
+		<div><a class="player-newwin" href="#" data-action="returnwin" title="{{ lang('WIN_RETURN') }}"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></a></div>
 		<br class="clear" />
 	</div>
 	
 	<div class="player-statusbar">
-		<a class="player-newwin" href="#" {% if S_IN_WINDOW %}data-action="closewin" title="{L_WIN_CLOSE}"{% else %}data-action="openwin" title="{L_WIN_OPEN}"{% endif %}><i class="fa fa-external-link" aria-hidden="true"></i></a>
+		<a class="player-newwin" href="#" {% if S_IN_WINDOW %}data-action="closewin" title="{{ lang('WIN_CLOSE') }}"{% else %}data-action="openwin" title="{{ lang('WIN_OPEN') }}"{% endif %}><i class="fa fa-external-link" aria-hidden="true"></i></a>
 		<div class="player-statusbar-text"><div></div></div>
 	</div>
 </div>

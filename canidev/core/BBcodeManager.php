@@ -1,31 +1,32 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.3 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
-class bbcode_manager
+class BBcodeManager
 {
 	private $cache 			= null;
 	private $max_bbcode_id	= 0;
 	
 	protected $bbcode_tool;
 	protected $db;
+	protected $phpbb_root_path;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\db\driver\driver_interface		$db				DB Object
-	* @param string									$root_path		phpBB root path
-	* @param string									$php_ext		phpEx
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param string								$root_path		phpBB root path
+	 * @param string								$php_ext		phpEx
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
 		$root_path,
@@ -39,17 +40,18 @@ class bbcode_manager
 
 		$this->bbcode_tool		= new \acp_bbcodes;
 		$this->db				= $db;
+		$this->phpbb_root_path 	= $root_path;
 	}
 	
 	/**
 	 * Get installed bbcodes
 	 * @return array
 	 */
-	public function get_installed_bbcodes()
+	public function getInstalledBBcodes()
 	{
 		if($this->cache === null)
 		{
-			$this->cache = array();
+			$this->cache = [];
 
 			$sql = 'SELECT bbcode_id, bbcode_tag, bbcode_match, bbcode_tpl
 				FROM ' . BBCODES_TABLE;
@@ -79,16 +81,16 @@ class bbcode_manager
 	 */
 	public function insert($bbcode_ary, $overwrite = false, $backup = false)
 	{
-		$insert_ary	= array();
+		$insert_ary	= [];
 		
-		$this->get_installed_bbcodes();
+		$this->getInstalledBBcodes();
 
 		foreach($bbcode_ary as $bbcode_name => $bbcode_array)
 		{
 			// Build the BBCodes
 			$data = $this->bbcode_tool->build_regexp($bbcode_array['bbcode_match'], $bbcode_array['bbcode_tpl']);
 
-			$bbcode_array = array_merge($bbcode_array, array(
+			$bbcode_array = array_merge($bbcode_array, [
 				'bbcode_tag'			=> $data['bbcode_tag'],
 				'bbcode_match'			=> $bbcode_array['bbcode_match'],
 				'bbcode_tpl'			=> $bbcode_array['bbcode_tpl'],
@@ -98,7 +100,7 @@ class bbcode_manager
 				'second_pass_replace'	=> $data['second_pass_replace'],
 				'display_on_posting'	=> isset($bbcode_array['display_on_posting']) ? $bbcode_array['display_on_posting'] : 1,
 				'bbcode_helpline' 		=> isset($bbcode_array['bbcode_helpline']) ? $bbcode_array['bbcode_helpline'] : '',
-			));
+			]);
 			
 			$bbcode_tag	= strtolower($bbcode_array['bbcode_tag']);
 			$bbcode		= isset($this->cache[$bbcode_tag]) ? $this->cache[$bbcode_tag] : false;
@@ -117,7 +119,7 @@ class bbcode_manager
 				}
 
 				// Update existing BBCode
-				$this->update_by_tag($bbcode['bbcode_tag'], $bbcode_array);
+				$this->updateByTag($bbcode['bbcode_tag'], $bbcode_array);
 			}
 			else
 			{
@@ -145,19 +147,19 @@ class bbcode_manager
 	/**
 	 * Update BBcode by it's tag name
 	 * 
-	 * @param string 	$bbcode_tag 		BBcode tag name
-	 * @param array 	$bbcode_data 		Array with new bbcode data
+	 * @param string|array 	$bbcode_tag 		BBcode tag name
+	 * @param array 		$bbcode_data 		Array with new bbcode data
 	 */
-	public function update_by_tag($bbcode_tag, $bbcode_data)
+	public function updateByTag($bbcode_tag, $bbcode_data)
 	{
-		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : array($bbcode_tag));
+		$bbcode_tag = (is_array($bbcode_tag) ? $bbcode_tag : [$bbcode_tag]);
 		
 		if(isset($bbcode_data['bbcode_match']) && !isset($bbcode_data['first_pass_match']))
 		{
 			// Build the BBCode data
 			$data = $this->bbcode_tool->build_regexp($bbcode_data['bbcode_match'], $bbcode_data['bbcode_tpl']);
 
-			$bbcode_data = array_merge($bbcode_data, array(
+			$bbcode_data = array_merge($bbcode_data, [
 				'bbcode_tag'			=> $data['bbcode_tag'],
 				'bbcode_match'			=> $bbcode_data['bbcode_match'],
 				'bbcode_tpl'			=> $bbcode_data['bbcode_tpl'],
@@ -165,7 +167,7 @@ class bbcode_manager
 				'first_pass_replace'	=> $data['first_pass_replace'],
 				'second_pass_match'		=> $data['second_pass_match'],
 				'second_pass_replace'	=> $data['second_pass_replace'],
-			));
+			]);
 		}
 		
 		$sql = 'UPDATE ' . BBCODES_TABLE . '

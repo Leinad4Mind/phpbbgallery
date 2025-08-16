@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,16 +13,22 @@ class clock_block extends base
 {
 	static $icon = 'fa-clock-o';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'clock_block';
 
 		$this->template->assign_var('S_CLOCK', $this->data['block_content']);
-		$this->template->append_asset('css', '@canidev_blockgets/../theme/clocks.css');
+		$this->template->append_asset('css', '@canidev_blockgets/clocks.css');
 
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		$clock = $this->request->variable('clock', $block_row['block_content']);
@@ -34,11 +40,14 @@ class clock_block extends base
 		}
 
 		$this->template->assign_var('S_CLOCK_SELECT', $clock);
-		$this->template->append_asset('css', '@canidev_blockgets/../theme/clocks.css');
+		$this->template->append_asset('css', '@canidev_blockgets/clocks.css');
 
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->custom_config	= true;

@@ -1,18 +1,23 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class dockmenu_block extends base
 {
 	static $icon = 'fa-th-large';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'dockmenu_block';
@@ -47,7 +52,7 @@ class dockmenu_block extends base
 				$row['url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
 			}
 
-			$row['title'] = $this->lang->lang($row['title']);
+			$row['title'] = $this->language->lang($row['title']);
 
 			$menu_row = array(
 				'S_TITLE'		=> $row['title'],
@@ -56,13 +61,13 @@ class dockmenu_block extends base
 				'U_LINK'		=> $row['url'],
 			);
 
-			/*
-			* @event block.dockmenu_row
-			* @var array	menu_row		The output array
-			* @var array	row				The original data
-			* @var	array	data			Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.dockmenu_row
+			 * @var array	menu_row		The output array
+			 * @var array	row				The original data
+			 * @var	array	data			Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('menu_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.dockmenu_row', compact($vars)));
 			
@@ -86,12 +91,15 @@ class dockmenu_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 
 		$this->list
-			->set_type(LIST_TYPE_IMAGE)
+			->set_type(constants::LIST_TYPE_IMAGE)
 			->set_events(array(
 				'edit.before'	=> array($this, 'list_edit_before'),
 			));
@@ -103,6 +111,10 @@ class dockmenu_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$display_vars = $event['display_vars'];

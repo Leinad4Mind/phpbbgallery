@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class whos_online_block extends base
 {
 	static $icon = 'fa-power-off';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'whos_online_block';
@@ -47,8 +50,8 @@ class whos_online_block extends base
 					$online_userlist	= $user_online_strings['online_userlist'];
 					$total_online_users	= $online_users['total_online'];
 
-					$l_online_record 	= $this->lang->lang('RECORD_ONLINE_USERS', (int)$this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
-					$l_online_time		= $this->lang->lang('VIEW_ONLINE_TIMES', (int) $this->config['load_online_time']);
+					$l_online_record 	= $this->language->lang('RECORD_ONLINE_USERS', (int)$this->config['record_online_users'], $this->user->format_date($this->config['record_online_date'], false, true));
+					$l_online_time		= $this->language->lang('VIEW_ONLINE_TIMES', (int) $this->config['load_online_time']);
 				}
 
 				$this->template->assign_vars(array(
@@ -82,33 +85,33 @@ class whos_online_block extends base
 				$sql_ary['WHERE'] .= ' AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $this->user->data['user_id'] . ')';
 			}
 
-			/*
-			* @event block.whos_online_groups_query
-			* @var array	sql_ary		The SQL data
-			* @var	array	data		Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.whos_online_groups_query
+			 * @var array	sql_ary		The SQL data
+			 * @var	array	data		Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('sql_ary', 'data');
 			extract($this->dispatcher->trigger_event('block.whos_online_groups_query', compact($vars)));
 			
 			$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 			$result = $this->db->sql_query($sql);
 
-			$legend = array();
+			$legend = [];
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$colour_text	= ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
-				$group_name		= ($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name'];
+				$group_name		= ($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name'];
 				$u_group		= $this->helper->url('memberlist', 'mode=group&amp;g=' . $row['group_id']);
 
-				/*
-				* @event block.whos_online_groups_row
-				* @var array	row				The original data
-				* @var string	colour_text		The color of the user
-				* @var string	group_name		The name of the group
-				* @var string	u_group			The group url
-				* @since 2.0.0
-				*/
+				/**
+				 * @event block.whos_online_groups_row
+				 * @var array	row				The original data
+				 * @var string	colour_text		The color of the user
+				 * @var string	group_name		The name of the group
+				 * @var string	u_group			The group url
+				 * @since 2.0.0
+				 */
 				$vars = array('row', 'colour_text', 'group_name', 'u_group');
 				extract($this->dispatcher->trigger_event('block.whos_online_groups_row', compact($vars)));
 				
@@ -155,6 +158,9 @@ class whos_online_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

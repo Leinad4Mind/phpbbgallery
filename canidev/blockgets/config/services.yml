@@ -1,5 +1,6 @@
 imports:
     - { resource: controllers.yml }
+    - { resource: tables.yml }
 
 services:
     canidev.blockgets.listener:
@@ -7,13 +8,11 @@ services:
         arguments:
             - '@canidev.blockgets.core'
             - '@config'
-            - '@service_container'
             - '@canidev.blockgets.helper'
             - '@language'
             - '@request'
             - '@user'
             - '%core.php_ext%'
-            - '%core.table_prefix%'
         tags:
             - { name: event.listener }
 
@@ -23,6 +22,7 @@ services:
             - '@dbal.conn'
             - '@language'
             - '@user'
+            - '%tables.canidev.blockgets%'
 
     canidev.blockgets.routing.loader:
         class: canidev\blockgets\routing\page_loader
@@ -43,9 +43,11 @@ services:
             - '@canidev.blockgets.helper'
             - '@language'
             - '@request'
+            - '@canidev.core.template'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.blockgets%'
         
     canidev.blockgets.editor:
         class: canidev\blockgets\libraries\editor
@@ -58,21 +60,25 @@ services:
             - '@canidev.blockgets.helper.admin'
             - '@language'
             - '@request'
+            - '@canidev.core.template'
+            - '@canidev.core.tools'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.blockgets%'
         
     canidev.blockgets.admin.links:
         class: canidev\blockgets\libraries\links
         arguments:
             - '@cache.driver'
+            - '@canidev.core.lib'
             - '@dbal.conn'
             - '@dispatcher'
             - '@canidev.blockgets.helper'
-            - '@canidev.blockgets.helper.admin'
             - '@language'
             - '@request'
             - '@template'
+            - '@canidev.core.tools'
             - '@user'
             
     canidev.blockgets.helper:
@@ -99,5 +105,6 @@ services:
             - '@language'
             - '@request'
             - '@template'
+            - '@canidev.core.tools'
             - '@user'
 

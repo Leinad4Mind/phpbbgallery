@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class link_us_block extends base
 {
 	static $icon = 'fa-link';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'link_us_block';
@@ -36,7 +39,7 @@ class link_us_block extends base
 		$link_text = '<a href="' . generate_board_url() . '" onclick="window.open(this.href); return false;" title="' . $link_title . '">' . $link_text . '</a>';
 
 		$this->template->assign_vars(array(
-			'LINK_US_TXT'		=> $this->lang->lang('LINK_US_TXT', $this->config['sitename']),
+			'LINK_US_TXT'		=> $this->language->lang('LINK_US_TXT', $this->config['sitename']),
 			'U_LINK_US'			=> htmlentities($link_text, ENT_QUOTES, 'UTF-8'),
 			'U_LINK_US_BANNER'  => $link_text,
 		));
@@ -45,6 +48,9 @@ class link_us_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$media = $this->helper->get_media();

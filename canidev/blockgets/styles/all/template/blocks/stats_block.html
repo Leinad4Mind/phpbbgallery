@@ -19,7 +19,7 @@
 	<div{% if S_INLINE %} class="st-inline"{% endif %}>
 		{% if stat.S_LEGEND %}<p><strong>{{ stat.S_LEGEND }}</strong></p>{% endif %}
 	{% else %}
-		<p>{{ stat.S_NAME }}: <strong>{{ stat.S_VALUE }}</strong></p>
+		<p>{{ stat.S_NAME ~ lang('COLON') }} <strong>{{ stat.S_VALUE }}</strong></p>
 	{% endif %}
 	{% if stat.S_LAST_ROW %}</div>{% endif %}
 {% endfor %}
@@ -30,6 +30,6 @@
 	<div>
 		<p>{{ S_TOTAL_USERS_LASTVISIT }}</p><br />
 		{% if S_LASTVISIT_USER_LIST %}<p>{{ S_LASTVISIT_USER_LIST }}</p><br />{% endif %}
-		<p>{L_ST_NEWEST_USER}{L_COLON} {{ S_NEWEST_USER }}</p>
+		<p>{{ lang('ST_NEWEST_USER') ~ lang('COLON') }} {{ S_NEWEST_USER }}</p>
 	</div>
 {% endif %}

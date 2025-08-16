@@ -1,11 +1,11 @@
 <?php
-/*
+/**
 * [English [En]]
 * @package cBB Blockgets
-* @version v2.0.4 30/08/2021
+* @version 2.0.5 15/01/2023
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2023 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 // @ignore
@@ -16,7 +16,7 @@ if(!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // @acp_blockgets
@@ -157,6 +157,8 @@ $lang = array_merge($lang, array(
 	'PAGE_CUSTOM'				=> 'Custom Pages',
 	'PAGE_CUSTOM_EXPLAIN'		=> 'These are pages created by you or another administrator of this site. You can add, edit and manage as many pages as you wish.',
 	'PAGE_CUSTOM_ONE'			=> 'Custom Page',
+	'PAGE_DESCRIPTION'			=> 'SEO Description',
+	'PAGE_DESCRIPTION_EXPLAIN'	=> 'Defines a description visible to search engines.<br /><em>Google, bing, etc...</em>',
 	'PAGE_ENABLED'				=> 'Page enabled',
 	'PAGE_ENABLED_EXPLAIN'		=> 'Enable or disable the page functions completely. This option overrides all others.',
 	'PAGE_FILTERS'				=> 'Filters',

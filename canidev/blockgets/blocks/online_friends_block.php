@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class online_friends_block extends base
 {
 	static $icon = 'fa-group';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'online_friends_block';
@@ -21,7 +24,7 @@ class online_friends_block extends base
 		$this->template->destroy_block_vars('friends_online');
 		$this->template->destroy_block_vars('friends_offline');
 
-		$users	= array();
+		$users	= [];
 		$time	= (time() - (intval($this->config['load_online_time']) * 60));
 			
 		$sql_ary = array(
@@ -38,11 +41,11 @@ class online_friends_block extends base
 			'WHERE'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.friend = 1'
 		);
 
-		/*
-		* @event block.online_friends_query
-		* @var array	sql_ary		The SQL data
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.online_friends_query
+		 * @var array	sql_ary		The SQL data
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary');
 		extract($this->dispatcher->trigger_event('block.online_friends_query', compact($vars)));
 		
@@ -70,12 +73,12 @@ class online_friends_block extends base
 				'USERNAME_FULL'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'])
 			);
 
-			/*
-			* @event block.online_friends_row
-			* @var array	user_row		The output array
-			* @var array	row				The original data
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.online_friends_row
+			 * @var array	user_row		The output array
+			 * @var array	row				The original data
+			 * @since 2.0.0
+			 */
 			$vars = array('user_row', 'row');
 			extract($this->dispatcher->trigger_event('block.online_friends_row', compact($vars)));
 	

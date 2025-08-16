@@ -4,10 +4,12 @@
 * @version v2.0.0 30/05/2017
 *
 * @copyright (c) 2017 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\blockgets\migrations;
+
+use canidev\blockgets\libraries\constants;
 
 class v200 extends \phpbb\db\migration\migration
 {
@@ -24,7 +26,7 @@ class v200 extends \phpbb\db\migration\migration
 
 		return array(
 			'add_tables' => array(
-				BLG_BLOCK_TABLE => array(
+				$this->table_prefix . 'blockgets_blocks' => array(
 					'COLUMNS' => array(
 						'block_id'			=> array('UINT:3', NULL, 'auto_increment'),
 						'parent_id'			=> array('UINT:3', 0),
@@ -37,7 +39,7 @@ class v200 extends \phpbb\db\migration\migration
 						'block_page'		=> array('UINT:3', 0),
 						'block_enabled' 	=> array('BOOL', 1),
 						'block_groups'		=> array('VCHAR:50', 'all'),
-						'block_style'		=> array('UINT:2', BLOCK_STYLE_DEFAULT),
+						'block_style'		=> array('UINT:2', constants::BLOCK_STYLE_DEFAULT),
 						'allow_collapse'	=> array('BOOL', 1),
 						'bbcode_bitfield'	=> array('VCHAR', ''),
 						'bbcode_uid'		=> array('VCHAR:8', ''),
@@ -45,7 +47,7 @@ class v200 extends \phpbb\db\migration\migration
 					'PRIMARY_KEY'	=> 'block_id',
 				),
 
-				BLG_DATA_TABLE => array(
+				$this->table_prefix . 'blockgets_data' => array(
 					'COLUMNS' => array(
 						'data_id'			=> array('UINT:8', NULL, 'auto_increment'),
 						'user_id'			=> array('UINT:8', 0),
@@ -60,7 +62,7 @@ class v200 extends \phpbb\db\migration\migration
 					'PRIMARY_KEY'	=> 'data_id',
 				),
 
-				BLG_PAGES_TABLE => array(
+				$this->table_prefix . 'blockgets_pages' => array(
 					'COLUMNS' => array(
 						'page_id'				=> array('UINT:3', NULL, 'auto_increment'),
 						'page_type'				=> array('BOOL', 2),
@@ -82,9 +84,9 @@ class v200 extends \phpbb\db\migration\migration
 
 		return array(
 			'drop_tables'	=> array(
-				BLG_BLOCK_TABLE,
-				BLG_DATA_TABLE,
-				BLG_PAGES_TABLE,
+				$this->table_prefix . 'blockgets_blocks',
+				$this->table_prefix . 'blockgets_data',
+				$this->table_prefix . 'blockgets_pages',
 			),
 		);
 	}
@@ -95,7 +97,7 @@ class v200 extends \phpbb\db\migration\migration
 
 		return array(
 			array('config.add', array('blg_on_board', 1)),
-			array('config.add', array('blg_home_type', TYPE_FORUM_HOME)),
+			array('config.add', array('blg_home_type', constants::TYPE_FORUM_HOME)),
 			array('config.add', array('blg_collapse_blocks', 1)),
 			array('config.add', array('blg_block_autofit', 1)),
 			array('config.add', array('blg_resize_enabled', 1)),
@@ -142,12 +144,6 @@ class v200 extends \phpbb\db\migration\migration
 	{
 		global $phpbb_container;
 
-		if(!defined('BLG_BLOCK_TABLE'))
-		{
-			$table_prefix = $this->table_prefix;
-			include($this->phpbb_root_path . 'ext/canidev/blockgets/libraries/constants.' . $this->php_ext);
-		}
-
 		if(!$this->language)
 		{
 			$this->language = $phpbb_container->get('language');
@@ -158,7 +154,7 @@ class v200 extends \phpbb\db\migration\migration
 	public function add_table_data()
 	{
 		$default_page_data = serialize(array(
-			'filters'			=> array(),
+			'filters'			=> [],
 			'header'			=> 1,
 			'footer'			=> 1,
 			'page_theme'		=> 'default',
@@ -174,16 +170,16 @@ class v200 extends \phpbb\db\migration\migration
 		));
 
 		$sql_ary = array(
-			BLG_PAGES_TABLE => array(
+			$this->table_prefix . 'blockgets_pages' => array(
 				array(
-					'page_type'			=> PAGE_HOME,
+					'page_type'			=> constants::PAGE_HOME,
 					'page_alias'		=> 'home',
 					'page_title'		=> $this->language->lang('PORTAL'),
 					'page_data'			=> $default_page_data,
 					'page_groups'		=> 'all',
 				),
 				array(
-					'page_type'			=> PAGE_FORUM,
+					'page_type'			=> constants::PAGE_FORUM,
 					'page_alias'		=> 'index',
 					'page_title'		=> '',
 					'page_data'			=> $default_page_data,
@@ -191,7 +187,7 @@ class v200 extends \phpbb\db\migration\migration
 				),
 			),
 
-			BLG_BLOCK_TABLE	=> array(
+			$this->table_prefix . 'blockgets_blocks'	=> array(
 				array(
 					'block_title'		=> $this->language->lang(array('blocks', 'menu_title')),
 					'block_content'		=> serialize(array(
@@ -203,7 +199,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> '',
 								'window'		=> 0,
 								'groups'		=> 'all',
-								'type'			=> LIST_CAT,
+								'type'			=> constants::LIST_CAT,
 							),
 							array(
 								'title'			=> $this->language->lang('PORTAL'),
@@ -212,7 +208,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-home',
 								'window'		=> 0,
 								'groups'		=> 'all',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							),
 							array(
 								'title'			=> $this->language->lang('INDEX'),
@@ -221,7 +217,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-comments-o',
 								'window'		=> 0,
 								'groups'		=> 'all',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							),
 							array(
 								'title'			=> $this->language->lang('FAQ'),
@@ -230,7 +226,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-question-circle',
 								'window'		=> 0,
 								'groups'		=> 'all',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							),
 							array(
 								'title'			=> $this->language->lang('SEARCH'),
@@ -239,7 +235,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-search',
 								'window'		=> 0,
 								'groups'		=> '2,4,5,7',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							),
 							array(
 								'title'			=> $this->language->lang('P_ADMIN'),
@@ -248,7 +244,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> '',
 								'window'		=> 0,
 								'groups'		=> '4,5',
-								'type'			=> LIST_CAT,
+								'type'			=> constants::LIST_CAT,
 							),
 							array(
 								'title'			=> $this->language->lang('P_MCP'),
@@ -257,7 +253,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-legal',
 								'window'		=> 0,
 								'groups'		=> '4,5',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							),
 							array(
 								'title'			=> $this->language->lang('P_ACP'),
@@ -266,7 +262,7 @@ class v200 extends \phpbb\db\migration\migration
 								'image'			=> 'fa-cogs',
 								'window'		=> 0,
 								'groups'		=> '5',
-								'type'			=> LIST_LINK,
+								'type'			=> constants::LIST_LINK,
 							)
 						)
 					)),
@@ -368,7 +364,7 @@ class v200 extends \phpbb\db\migration\migration
 					'block_content'		=> serialize(array(
 						'topic_limit' 	=> 5,
 						'title_limit' 	=> 50,
-						'forums'		=> array()
+						'forums'		=> []
 					)),
 					'block_alias'		=> 'recent_topics_block',
 					'block_icon'		=> 'fa-comment',

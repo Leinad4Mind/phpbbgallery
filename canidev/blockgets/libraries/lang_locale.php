@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -28,11 +28,11 @@ $blg_lang_locale = array(
 	'gl'		=> array('iso'	=> 'es_ES',	'name'	=> 'Galego',			'name_eng'	=> 'Galician'),
 	'de'		=> array('iso'	=> 'de_DE',	'name'	=> 'Deutsch',			'name_eng'	=> 'German'),
 	'el'		=> array('iso'	=> 'el_GR',	'name'	=> 'Ελληνικά',			'name_eng'	=> 'Greek'),
-	'iw'		=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית ',				'name_eng'	=> 'Hebrew'),
+	'iw'		=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית ',			'name_eng'	=> 'Hebrew'),
 	'hu'		=> array('iso'	=> 'hu_HU',	'name'	=> 'Magyar',			'name_eng'	=> 'Hungarian'),
 	'id'		=> array('iso'	=> 'id_ID',	'name'	=> 'Bahasa Indonesia',	'name_eng'	=> 'Indonesian'),
 	'it'		=> array('iso'	=> 'it_IT',	'name'	=> 'Italiano',			'name_eng'	=> 'Italian'),
-	'ja'		=> array('iso'	=> 'ja_JP',	'name'	=> '日本語',				'name_eng'	=> 'Japanese'),
+	'ja'		=> array('iso'	=> 'ja_JP',	'name'	=> '日本語',			'name_eng'	=> 'Japanese'),
 	'lt'		=> array('iso'	=> 'lt_LT',	'name'	=> 'Lietuvių',			'name_eng'	=> 'Lithuanian'),
 	'zh-CN'		=> array('iso'	=> 'zh_CN',	'name'	=> '正體中文',			'name_eng'	=> 'Chinese traditional'),
 	'fa'		=> array('iso'	=> 'fa_FA',	'name'	=> 'فارسی ',			'name_eng'	=> 'Persian'),

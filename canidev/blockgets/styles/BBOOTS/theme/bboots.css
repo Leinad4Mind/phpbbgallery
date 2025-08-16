@@ -1,7 +1,7 @@
-/*
+/**
  * cBB Blockgets (BBOOTS stylesheet)
- * Copyright (c) 2021, CaniDev
- * license https://opensource.org/licenses/gpl-license.php GNU Public License
+ * Copyright (c) 2023, CaniDev
+ * license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
  .blg-block.style-alternative .block-title,
@@ -48,8 +48,14 @@ a.blg-admin-opener {
 	box-sizing: content-box;
 }
 
+/* Contact Block
+-------------------------- */
 .contact-table {
 	border-spacing: 8px !important;
+}
+
+.contact-table.short-view .cbb-inputbox {
+	max-width: 180px;
 }
 
 /* Login Block

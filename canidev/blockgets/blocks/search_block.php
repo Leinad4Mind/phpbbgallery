@@ -1,10 +1,10 @@
 <?php
-/*
+/**
 * @package cBB Blockgets
-* @version v2.0.4 30/08/2021
+* @version 2.0.5 15/01/2023
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2023 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 *
 */
 
@@ -14,6 +14,9 @@ class search_block extends base
 {
 	static $icon = 'fa-search';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'search_block';

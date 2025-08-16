@@ -1,11 +1,11 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.2 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core;
 
@@ -26,7 +26,7 @@ class editor
 	protected $php_ext;
 
 	public $resources_loaded 	= false;
-	protected $plugins 			= array();
+	protected $plugins 			= [];
 
 	private $bbcodes 			= null;
 	private $smilies 			= null;
@@ -35,12 +35,12 @@ class editor
 	static $instance;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 	$container		Service container interface
+	 *
+	 * @access public
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->config 			= $container->get('config');
@@ -110,7 +110,7 @@ class editor
 			'type'					=> 'basic',
 			'rows'					=> '',
 			'showRemoveFormat' 		=> true,
-			'plugins' 				=> array(),	
+			'plugins' 				=> [],	
 		);
 
 		$options = array_merge($default_options, $options);
@@ -146,22 +146,22 @@ class editor
 			$options = array_merge($options, array(
 				'emoticons'		=> $this->generate_editor_emoticons(),
 				'stylesheets'	=> array(
-					$this->template->append_asset('css', '../theme/stylesheet.css', true),
+					$this->template->append_asset('css', 'stylesheet.css', true),
 					$this->template->append_asset('css', (!empty($this->config['allow_cdn']) && !empty($this->config['load_font_awesome_url'])) ? $this->config['load_font_awesome_url'] : './assets/css/font-awesome.min.css', true),
-					$this->template->append_asset('css', '@canidev_core/../theme/editor.css', true),
+					$this->template->append_asset('css', '@canidev_core/editor.css', true),
 				)
 			));
 		}
 
 		// Sanitize options
-		$sanitize_keys = array('plugins', 'toolbar', 'toolbarExclude');
+		$sanitize_keys = ['plugins', 'toolbar', 'toolbarExclude'];
 
 		foreach($sanitize_keys as $key)
 		{
 			if(isset($options[$key]) && is_string($options[$key]))
 			{
 				$parts 	= preg_split('#(,|\|)#', $options[$key], 0, PREG_SPLIT_DELIM_CAPTURE);
-				$ary 	= array();
+				$ary 	= [];
 
 				foreach($parts as $code)
 				{
@@ -178,7 +178,7 @@ class editor
 		}
 
 		// test
-		$vars = array('options');
+		$vars = ['options'];
 		extract($this->trigger_event('editor_after_config', compact($vars)));
 
 		// Load default resources
@@ -189,12 +189,12 @@ class editor
 			if($options['type'] == 'advanced')
 			{
 				$this->template->prepend_assets = true;
-				$this->template->append_asset('css', '@canidev_core/../theme/editor.css');
+				$this->template->append_asset('css', '@canidev_core/editor.css');
 				$this->template->append_asset('js', '@canidev_core/js/editor.min.js');
 				$this->template->prepend_assets = false;
 			}
 
-			$this->template->set_js_lang(array(
+			$this->template->set_js_lang([
 				'AUTHOR',
 				'CODE',
 				'DATE',
@@ -206,7 +206,7 @@ class editor
 				'UNLINK',
 				'URL',
 				'VIEW_SOURCE',
-			));
+			]);
 		}
 
 		$this->template->assign_vars(array(
@@ -251,12 +251,12 @@ class editor
 
 		$root_path		= (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $this->path->get_web_root_path();
 		$i 				= 0;
-		$smiley_ary 	= array();
+		$smiley_ary 	= [];
 
 		$this->smilies = array(
 			'path'		=> $root_path . $this->config['smilies_path'] . '/',
-			'items' 	=> array(),
-			'current' 	=> array(),
+			'items' 	=> [],
+			'current' 	=> [],
 			'start'		=> $this->request->variable('smiley_start', 0),
 		);
 
@@ -300,7 +300,7 @@ class editor
 
 		$result = array(
 			'path'		=> $this->smilies['path'],
-			'hidden' 	=> array(),
+			'hidden' 	=> [],
 		);
 
 		foreach($this->smilies['items'] as $i => $row)
@@ -319,21 +319,21 @@ class editor
 	{
 		if($this->bbcodes === null)
 		{
-			$this->bbcodes = array();
+			$this->bbcodes = [];
 
 			$sql_ary = array(
 				'SELECT'	=> 'b.bbcode_id, b.bbcode_tag, b.bbcode_helpline',
-				'FROM'		=> array(BBCODES_TABLE => 'b'),
+				'FROM'		=> [BBCODES_TABLE => 'b'],
 				'WHERE'		=> 'b.display_on_posting = 1',
 				'ORDER_BY'	=> 'b.bbcode_tag',
 			);
 
-			/*
-			* @event canidev.core.editor_bbcodes_modify_sql
-			* @var	array	sql_ary		The SQL array to get the bbcode data
-			* @since 1.0.4
-			*/
-			$vars = array('sql_ary');
+			/**
+			 * @event canidev.core.editor_bbcodes_modify_sql
+			 * @var	array	sql_ary		The SQL array to get the bbcode data
+			 * @since 1.0.4
+			 */
+			$vars = ['sql_ary'];
 			extract($this->trigger_event('editor_bbcodes_modify_sql', compact($vars)));
 
 			$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary));
@@ -371,14 +371,14 @@ class editor
 				'BBCODE_HELPLINE'	=> $row['bbcode_helpline'],
 			);
 
-			/*
-			* @event canidev.core.editor_bbcodes_modify_row
-			* @var	array	custom_tag			Template data of the bbcode
-			* @var	array	row					The data of the bbcode
-			* @var 	bool 	prevent_default 	Define if the default action is override
-			* @since 1.0.4
-			*/
-			$vars = array('custom_tag', 'row', 'prevent_default');
+			/**
+			 * @event canidev.core.editor_bbcodes_modify_row
+			 * @var	array	custom_tag			Template data of the bbcode
+			 * @var	array	row					The data of the bbcode
+			 * @var 	bool 	prevent_default 	Define if the default action is override
+			 * @since 1.0.4
+			 */
+			$vars = ['custom_tag', 'row', 'prevent_default'];
 			extract($this->trigger_event('editor_bbcodes_modify_row', compact($vars)));
 
 			if($prevent_default)
@@ -447,13 +447,13 @@ class editor
 		{
 			$this->smilies_to_template();
 
-			$this->template->set_filenames(array(
+			$this->template->set_filenames([
 				'smiley'	=> '@canidev_core/smiley_box.html'
-			));
+			]);
 
-			\canidev\core\json_response::get_instance()->send(array(
+			\canidev\core\JsonResponse::getInstance()->send([
 				'htmlContent'	=> $this->template->assign_display('smiley')
-			));
+			]);
 		}
 	}
 
@@ -474,7 +474,7 @@ class editor
 		{
 			if($plugin->is_enabled() && method_exists($plugin, $plugin_method))
 			{
-				$event = call_user_func(array($plugin, $plugin_method), $event);
+				$event = call_user_func([$plugin, $plugin_method], $event);
 			}
 		}
 

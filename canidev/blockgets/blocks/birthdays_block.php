@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class birthdays_block extends base
 {
 	static $icon = 'fa-birthday-cake';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'birthdays_block';
@@ -28,7 +31,7 @@ class birthdays_block extends base
 			return false;
 		}
 
-		$birthday_ary = array();
+		$birthday_ary = [];
 
 		$time		= $this->user->create_datetime();
 		$time_now	= $time->getTimestamp() + $time->getOffset();
@@ -56,12 +59,12 @@ class birthdays_block extends base
 			'ORDER_BY'	=> 'u.username_clean ASC'
 		);
 
-		/*
-		* @event block.birthdays_query
-		* @var array	sql_ary		The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.birthdays_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.birthdays_query', compact($vars)));
 
@@ -85,7 +88,7 @@ class birthdays_block extends base
 					'day'		=> $bday,
 					'month'		=> $bmonth,
 					'year'		=> $byear,
-					'users'		=> array(),
+					'users'		=> [],
 				);
 			}
 			
@@ -105,7 +108,7 @@ class birthdays_block extends base
 
 		foreach($birthday_ary as $btime => $row)
 		{
-			$users = $user_str = array();
+			$users = $user_str = [];
 
 			$btitle = 'BIRTHDAYS_FOR';
 
@@ -119,7 +122,7 @@ class birthdays_block extends base
 				$btitle = 'TOMORROW_BIRTHDAYS';
 			}
 
-			list($bday, $bmon) = explode('-', strtr(date('d-F', strtotime($row['month'] . '/' . $row['day'])), array_filter($this->lang->lang_raw('datetime'), 'is_string')));
+			list($bday, $bmon) = explode('-', strtr(date('d-F', strtotime($row['month'] . '/' . $row['day'])), array_filter($this->language->lang_raw('datetime'), 'is_string')));
 
 			foreach($row['users'] as $user)
 			{
@@ -128,12 +131,12 @@ class birthdays_block extends base
 					'USERNAME_FULL'		=> $user['username_full'],
 				);
 
-				/*
-				* @event block.birthdays_user_row
-				* @var array	user_ary		The output data
-				* @var array	user			The original data
-				* @since 2.0.0
-				*/
+				/**
+				 * @event block.birthdays_user_row
+				 * @var array	user_ary		The output data
+				 * @var array	user			The original data
+				 * @since 2.0.0
+				 */
 				$vars = array('user_ary', 'user');
 				extract($this->dispatcher->trigger_event('block.birthdays_user_row', compact($vars)));
 
@@ -142,7 +145,7 @@ class birthdays_block extends base
 			}
 			
 			$this->template->assign_block_vars('birthday', array(
-				'S_TITLE'		=> $this->lang->lang($btitle, $bday, $bmon),
+				'S_TITLE'		=> $this->language->lang($btitle, $bday, $bmon),
 				'S_USERS_STR'	=> implode(', ', $user_str),
 			));
 
@@ -153,6 +156,9 @@ class birthdays_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

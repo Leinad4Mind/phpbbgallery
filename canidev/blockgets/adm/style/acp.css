@@ -1,7 +1,7 @@
-/*
+/**
  * cBB Blockgets (acp stylesheet)
- * Copyright (c) 2021, CaniDev
- * license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * Copyright (c) 2023, CaniDev
+ * license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 /* Component containers
@@ -41,6 +41,10 @@
 
 /* Interaction Cues
 ----------------------------------*/
+body.grid-resizing {
+	cursor: e-resize;
+}
+
 .blg-state-default {
 	background: #dfeffc;
 	border: 1px solid #c5dbec;
@@ -90,12 +94,56 @@ dd input[type="radio"] {
 }
 
 #blg-blocks {
-    position: relative;
+	display: grid;
+	gap: 5px;
+	grid-template-areas:
+		'top top top'
+		'left center right'
+		'bottom bottom bottom';
+	grid-template-columns: 25% auto 25%;
+	position: relative;
 	z-index: 10;
 }
- 
-#blg-blocks td {
+
+#blg-blocks > div {
+	background-color: #f8f8f8;
+	border: 1px solid #d8d8d8;
+	border-radius: 4px;
+	min-height: 100px;
+	padding: 10px;
+}
+
+#blg-blocks > [data-legend]:before {
+	content: attr(data-legend);
+	border-bottom: 1px solid #dedede;
+	color: #000;
+	display: block;
+	font-size: 0.7em;
+	font-weight: bold;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
 	text-align: center;
+	text-transform: uppercase;
+}
+
+#blg-blocks .area-top {
+	grid-area: top;
+}
+
+#blg-blocks .area-left {
+	grid-area: left;
+}
+
+#blg-blocks .area-center {
+	grid-area: center;
+}
+
+#blg-blocks .area-right {
+	grid-area: right;
+}
+
+#blg-blocks .area-bottom {
+	grid-area: bottom;
 }
 
 .column {
@@ -104,6 +152,7 @@ dd input[type="radio"] {
 
 .portlet {
 	margin: 5px 0;
+	min-width: 100px;
 	text-align: center;
 }
 
@@ -140,48 +189,45 @@ dd input[type="radio"] {
 }
 
 .portlet-group {
-    border: 1px dashed #000;
-    padding: 0 4px;
-    outline-offset: 4px;
-    margin: 15px 5px;
+	border: 1px dashed #999;
+	border-radius: 4px;
+	margin: 15px 5px;
+	outline-offset: 4px;
+	padding: 0 4px;
 }
 
 .portlet-group-header {
 	font-size: 11px;
     text-align: left;
-    border-bottom: 1px dashed #000;
+    border-bottom: 1px dashed #999;
 }
 
 .portlet-group-header a {
 	float: right;
+	font-size: 1.2em;
+	margin-right: 2px;
+    margin-top: 4px;
 	text-decoration: none;
 }
 
-.portlet-group-header span { line-height: 22px; }
-
-.portlet-group .subcolumn {
-	min-height: 50px;
-	padding: 10px 0;
-	text-align: left;
+.portlet-group-header span {
+	line-height: 22px;
 }
 
-.portlet-group .subcolumn:after {
-	content: "";
-	clear: both;
-	display: block;
+.portlet-group .subcolumn {
+	box-sizing: border-box;
+	display: flex;
+	gap: 2px;
+	min-height: 50px;
+	padding: 10px 0;
 }
 
 .portlet-group .portlet {
-	float: left;
-	margin: 4px 0.2%;
-	vertical-align: top;
-	width: 100%;
-	
 	box-sizing: border-box;
+	flex: 1 1 0;
+	margin: 0;
+	width: 0;
 }
-
-.grid-col-2 .portlet { width: 49.5%; }
-.grid-col-3 .portlet { width: 32.8%; }
 
 .portlet-group .portlet-group.ui-sortable-placeholder {
 	display: none;
@@ -200,6 +246,23 @@ dd input[type="radio"] {
 	display: block;
 	font-size: 24px;
 	margin: 18px auto;
+}
+
+.resize-handler {
+	cursor: e-resize;
+	display: flex;
+	flex: 0 0 auto;
+	justify-content: center;
+    margin: 10px 0;
+	width: 9px;
+}
+
+.resize-handler:before {
+	background-color: #bdbdbd;
+	content: "";
+	display: block;
+	height: 100%;
+	width: 3px;
 }
 
 .sortable {
@@ -414,9 +477,8 @@ div.dialog-content p {
 	color: inherit;
 	border: 1px solid transparent;
 	display: block;
+	margin: 5px;
 	padding: 4px;
-    margin: 5px 5px;
-    vertical-align: middle;
 }
 
 .blg-option-selector input:checked + label {
@@ -575,6 +637,17 @@ div.dialog-content p {
 @media only screen and (max-width: 1024px) {
 	.acp-clock-container li {
 		width: 26%;
+	}
+
+	#blg-blocks {
+		grid-template-areas:
+			'top'
+			'left'
+			'center'
+			'right'
+			'bottom';
+
+		grid-template-columns: auto;
 	}
 }
 

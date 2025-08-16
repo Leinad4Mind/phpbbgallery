@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,17 +13,20 @@ class leaders_block extends base
 {
 	static $icon = 'fa-star';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'leaders_block';
-		$this->lang->add_lang('groups');
+		$this->language->add_lang('groups');
 		
 		if(($data = $this->unserialize()) === false)
 		{
 			return false;
 		}
 
-		$groups_ary	= $users_ary = array();
+		$groups_ary	= $users_ary = [];
 		
 		// Get Group's Information
 		if(empty($data['groups']))
@@ -44,7 +47,7 @@ class leaders_block extends base
 		{
 			$group_id = (int)$row['group_id'];
 			$groups_ary[$group_id] = $row;
-			$groups_ary[$group_id]['users'] = array();
+			$groups_ary[$group_id]['users'] = [];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -78,7 +81,7 @@ class leaders_block extends base
 
 		if($data['use_all_groups'])
 		{
-			$users_ary = array();
+			$users_ary = [];
 
 			$sql = 'SELECT group_id, user_id 
 				FROM ' . USER_GROUP_TABLE . '
@@ -101,17 +104,17 @@ class leaders_block extends base
 			$sql_ary['WHERE'] .= $this->db->sql_in_set('u.group_id', array_keys($groups_ary));
 		}
 
-		/*
-		* @event block.leaders_query
-		* @var array	sql_ary			The SQL data
-		* @var array	groups_ary		Groups Information
-		* @var array	data			Block configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.leaders_query
+		 * @var array	sql_ary			The SQL data
+		 * @var array	groups_ary		Groups Information
+		 * @var array	data			Block configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'groups_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.leaders_query', compact($vars)));
 
-		$users_ary = array();
+		$users_ary = [];
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 		$result = $this->db->sql_query($sql);
@@ -140,12 +143,12 @@ class leaders_block extends base
 				!$this->auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel') &&
 				!in_array($this->user->data['user_id'], $group['users']))
 			{
-				$group_name	= $this->lang->lang('GROUP_UNDISCLOSED');
+				$group_name	= $this->language->lang('GROUP_UNDISCLOSED');
 				$u_group	= '';
 			}
 			else
 			{
-				$group_name	= ($group['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $group['group_name']) : $group['group_name'];
+				$group_name	= ($group['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $group['group_name']) : $group['group_name'];
 				$u_group	= $this->helper->url('memberlist', array('mode' => 'group', 'g' => $group_id));
 			}
 
@@ -155,12 +158,12 @@ class leaders_block extends base
 				'U_GROUP'			=> $u_group,
 			);
 
-			/*
-			* @event block.leaders_group
-			* @var array	group_row		The output array
-			* @var array	group			The group data
-			* @since 2.0.1
-			*/
+			/**
+			 * @event block.leaders_group
+			 * @var array	group_row		The output array
+			 * @var array	group			The group data
+			 * @since 2.0.1
+			 */
 			$vars = array('group_row', 'group');
 			extract($this->dispatcher->trigger_event('block.leaders_group', compact($vars)));
 
@@ -182,12 +185,12 @@ class leaders_block extends base
 					'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				);
 
-				/*
-				* @event block.leaders_user
-				* @var array	user_row		The output array
-				* @var array	row				The user data
-				* @since 2.0.1
-				*/
+				/**
+				 * @event block.leaders_user
+				 * @var array	user_row		The output array
+				 * @var array	row				The user data
+				 * @since 2.0.1
+				 */
 				$vars = array('user_row', 'row');
 				extract($this->dispatcher->trigger_event('block.leaders_group', compact($vars)));
 
@@ -200,6 +203,9 @@ class leaders_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
@@ -210,6 +216,9 @@ class leaders_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$options = array(
@@ -220,7 +229,7 @@ class leaders_block extends base
 		$this->display_vars = array(
 			'mode'				=> array('lang' => 'LEADERS_MODE',			'type' => 'select', 		'method' => 'helper',	'params' => array('make_select', $options, false, '{CONFIG_VALUE}'),					'default' => 'simple'),
 			'use_all_groups'	=> array('lang' => 'LEADERS_ALL_GROUPS',	'type' => 'radio:yes_no',	'validate' => 'bool',	'default' => 0),
-			'groups'			=> array('lang' => 'LEADERS_GROUPS',		'type' => 'custom',			'method' => 'helper',	'params' => array('groups_select', 'groups', '{CONFIG_VALUE}', false, false),	'default' => array()),
+			'groups'			=> array('lang' => 'LEADERS_GROUPS',		'type' => 'custom',			'method' => 'helper',	'params' => array('groups_select', 'groups', '{CONFIG_VALUE}', false, false),	'default' => []),
 			'only_online'		=> array('lang' => 'LEADERS_ONLY_ONLINE',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 		);
 

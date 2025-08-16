@@ -1,25 +1,14 @@
 {% if BLG_ENABLED %}
-		{% if DISPLAY_FORUM_BLOCK %}<div style="height:{{ BLG_BLOCK_SPACE }};"></div>{% endif %}
-		{% for block in loops.center_blockrow %}
-			{% if block.AFTER_FORUM %}
-				{% include 'block_view.html' %}
-			{% endif %}
-		{% else %}
-			&nbsp;
-		{% endfor %}
-		</div>
-	</div>
-<!-- [-] center block area -->
-
-{% if SHOW_LEFT_COLUMN and left_blockrow|length %}
-<!-- [+] left block area -->
-	<div id="blg-column-left">
-	{% for block in loops.left_blockrow %}
-		{% include 'block_view.html' %}
+	{% if DISPLAY_FORUM_BLOCK %}<div style="height:{{ BLG_BLOCK_SPACE }};"></div>{% endif %}
+	{% for block in loops.center_blockrow %}
+		{% if block.AFTER_FORUM %}
+			{% include 'block_view.html' %}
+		{% endif %}
+	{% else %}
+		&nbsp;
 	{% endfor %}
 	</div>
-<!-- [-] left block area -->
-{% endif %}
+<!-- [-] center block area -->
 
 {% if SHOW_RIGHT_COLUMN and right_blockrow|length %}
 <!-- [+] right block area -->

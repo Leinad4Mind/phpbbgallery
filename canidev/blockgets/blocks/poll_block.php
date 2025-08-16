@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,11 +13,14 @@ class poll_block extends base
 {
 	static $icon = 'fa-pie-chart';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'poll_block';
 
-		$this->lang->add_lang('viewtopic');
+		$this->language->add_lang('viewtopic');
 
 		if(($data = $this->unserialize()) === false)
 		{
@@ -49,12 +52,12 @@ class poll_block extends base
 				AND t.poll_start > 0'
 		);
 
-		/*
-		* @event block.poll_topic_query
-		* @var array	sql_ary		The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.poll_topic_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.poll_topic_query', compact($vars)));
 		
@@ -69,7 +72,7 @@ class poll_block extends base
 		}
 
 		$forum_id 	= (int)$topic_data['forum_id'];
-		$poll_info	= $cur_voted_id = array();
+		$poll_info	= $cur_voted_id = [];
 		
 		$poll_total		= 0;
 		$poll_bbcode	= false;
@@ -117,7 +120,7 @@ class poll_block extends base
 			if(!sizeof($voted_id) || sizeof($voted_id) > $topic_data['poll_max_options'])
 			{
 				$this->helper->json->send(array(
-					'message'	=> $this->lang->lang((!sizeof($voted_id)) ? 'NO_VOTE_OPTION' : 'TOO_MANY_VOTE_OPTIONS'),
+					'message'	=> $this->language->lang((!sizeof($voted_id)) ? 'NO_VOTE_OPTION' : 'TOO_MANY_VOTE_OPTIONS'),
 					'status'	=> \canidev\core\json_response::JSON_STATUS_ERROR
 				));
 			}
@@ -189,7 +192,7 @@ class poll_block extends base
 			$this->db->sql_query($sql);
 
 			$this->helper->json->add(array(
-				'message'	=> $this->lang->lang('VOTE_SUBMITTED'),
+				'message'	=> $this->language->lang('VOTE_SUBMITTED'),
 			));
 		}
 		
@@ -205,12 +208,12 @@ class poll_block extends base
 			'ORDER_BY'	=> 'o.poll_option_id'
 		);
 
-		/*
-		* @event block.poll_options_query
-		* @var array	sql_ary		The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.poll_options_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.poll_options_query', compact($vars)));
 		
@@ -240,8 +243,8 @@ class poll_block extends base
 		$poll_row = array(
 			'S_POLL_QUESTION'		=> $topic_data['poll_title'],
 			'S_TOTAL_VOTES' 		=> $poll_total,
-			'S_MAX_VOTES'			=> $this->lang->lang('MAX_OPTIONS_SELECT', (int)$topic_data['poll_max_options']),
-			'S_POLL_LENGTH'			=> ($topic_data['poll_length']) ? $this->lang->lang(($poll_end > time()) ? 'POLL_RUN_TILL' : 'POLL_ENDED_AT', $this->user->format_date($poll_end)) : '',
+			'S_MAX_VOTES'			=> $this->language->lang('MAX_OPTIONS_SELECT', (int)$topic_data['poll_max_options']),
+			'S_POLL_LENGTH'			=> ($topic_data['poll_length']) ? $this->language->lang(($poll_end > time()) ? 'POLL_RUN_TILL' : 'POLL_ENDED_AT', $this->user->format_date($poll_end)) : '',
 			'S_CAN_VOTE'			=> $s_can_vote,
 			'S_DISPLAY_RESULTS'		=> ($data['display_results'] && $s_display_results) ? true : false,
 			'S_IS_MULTI_CHOICE'		=> ($topic_data['poll_max_options'] > 1) ? true : false,
@@ -252,13 +255,13 @@ class poll_block extends base
 			)),
 		);
 
-		/*
-		* @event block.poll_topic_row
-		* @var array	poll_row		The output array
-		* @var array	topic_data		The original data
-		* @var	array	data			Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.poll_topic_row
+		 * @var array	poll_row		The output array
+		 * @var array	topic_data		The original data
+		 * @var	array	data			Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('poll_row', 'topic_data', 'data');
 		extract($this->dispatcher->trigger_event('block.poll_topic_row', compact($vars)));
 
@@ -278,12 +281,12 @@ class poll_block extends base
 				'POLL_OPTION_VOTED'		=> (in_array($poll_option['poll_option_id'], $cur_voted_id)) ? true : false
 			);
 
-			/*
-			* @event block.poll_options_row
-			* @var array	row				The output array
-			* @var array	poll_option		The original data
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.poll_options_row
+			 * @var array	row				The output array
+			 * @var array	poll_option		The original data
+			 * @since 2.0.0
+			 */
 			$vars = array('row', 'poll_option');
 			extract($this->dispatcher->trigger_event('block.poll_options_row', compact($vars)));
 			
@@ -295,9 +298,12 @@ class poll_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$options = array();
+		$options = [];
 
 		$sql = 'SELECT topic_id, topic_title
 			FROM ' . TOPICS_TABLE . '
@@ -317,7 +323,7 @@ class poll_block extends base
 
 		if(!sizeof($options))
 		{
-			$options[''] = $this->lang->lang('NO_POLLS');
+			$options[''] = $this->language->lang('NO_POLLS');
 		}
 	
 		$this->display_vars = array(

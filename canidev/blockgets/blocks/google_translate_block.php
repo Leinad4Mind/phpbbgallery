@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class google_translate_block extends base
 {
 	static $icon = 'fa-google';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'google_translate_block';
@@ -51,6 +54,9 @@ class google_translate_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'submit')
@@ -59,7 +65,7 @@ class google_translate_block extends base
 			return;
 		}
 
-		$langs 		= isset($new['langs']) ? $new['langs'] : array();
+		$langs 		= isset($new['langs']) ? $new['langs'] : [];
 		$flags_path	= $this->helper->get_ext_path() . 'images/flags/';
 		$lang_ary 	= $this->helper->locale_lang('raw');
 
@@ -76,6 +82,9 @@ class google_translate_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	function get_config()
 	{
 		$this->display_vars = array(

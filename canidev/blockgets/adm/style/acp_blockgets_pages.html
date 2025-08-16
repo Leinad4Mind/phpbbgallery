@@ -2,12 +2,10 @@
 
 <a name="maincontent"></a>
 
-{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {L_BACK}</a></div>{% endif %}
+{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-{% if L_TITLE %}
-	<h1>{L_TITLE}</h1>
-	<p>{L_TITLE_EXPLAIN}</p>
-{% endif %}
+<h1>{{ S_TITLE }}</h1>
+<p>{{ S_TITLE_EXPLAIN }}</p>
 
 {% if S_PAGE_LIST %}<hr />{% endif %}
 
@@ -29,14 +27,14 @@
 		<thead>
 			<tr>
 				<th class="blg-align-center"><input type="checkbox" class="switch-select radio" /></th>
-				<th class="primary-column">{L_PAGE}</th>
-				<th class="secondary-column">{L_INFORMATION}</th>
+				<th class="primary-column">{{ lang('PAGE') }}</th>
+				<th class="secondary-column">{{ lang('INFORMATION') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			
 		{% if pagerow.S_LAST_ROW %}
-			<tr><td colspan="3" class="row3">{L_NO_PAGES_CREATED}</td></tr>
+			<tr><td colspan="3" class="row3">{{ lang('NO_PAGES_CREATED') }}</td></tr>
 		{% endif %}
 	{% else %}
 			<tr id="row-{{ pagerow.S_ID }}"{% if pagerow.S_STATE %} class="{{ pagerow.S_STATE }}"{% endif %}>
@@ -50,8 +48,8 @@
 				</td>
 				<td class="secondary-column">
 					<div class="row-description">
-						<strong>{L_PAGE_URL}{L_COLON}</strong><br /><a href="{{ pagerow.S_URL }}">{{ pagerow.S_URL }}</a>
-						{% if pagerow.S_SHOW_FILTERS %}<br /><br /><strong>{L_PAGE_FILTERS}{L_COLON}</strong> {% if pagerow.S_FILTERS %}<br />{{ pagerow.S_FILTERS }}{% else %}{L_NO_PAGE_FILTERS}{% endif %}{% endif %}
+						<strong>{{ lang('PAGE_URL') ~ lang('COLON') }}</strong><br /><a href="{{ pagerow.S_URL }}">{{ pagerow.S_URL }}</a>
+						{% if pagerow.S_SHOW_FILTERS %}<br /><br /><strong>{{ lang('PAGE_FILTERS') ~ lang('COLON') }}</strong> {% if pagerow.S_FILTERS %}<br />{{ pagerow.S_FILTERS }}{% else %}{{ lang('NO_PAGE_FILTERS') }}{% endif %}{% endif %}
 					</div>
 				</td>
 			</tr>
@@ -69,61 +67,37 @@
 	<br />
 	<div class="blg-block-actions"></div>
 
-<table id="blg-blocks" class="blg-table">
-<tr>
-    <td colspan="3" class="row2" valign="top">
-    	<strong>{L_TOP_COLUMN}</strong>
-		<hr />
-		<div id="top_block" class="column">
-		{% for block in loops.top_block %}
-			{% include 'block_view.html' %}
-		{% endfor %}
-		</div>
-	</td>
-  </tr>
-  <tr>
-    <td width="25%" class="row2" valign="top">
-    	<strong>{L_LEFT_COLUMN}</strong>
-		<hr />
-		<div id="left_block" class="column">
-		{% for block in loops.left_block %}
-			{% include 'block_view.html' %}
-		{% endfor %}
-		</div>	
-	</td>
+<div id="blg-blocks">
+	<div id="top_block" class="column area-top" data-legend="{{ lang('TOP_COLUMN') }}">
+	{% for block in loops.top_block %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
 
-    <td width="50%" class="row2" valign="top">
-    	<strong>{L_CENTER_COLUMN}</strong>
-		<hr />
-		<div id="center_block" class="column">
-		{% for block in loops.center_block %}
-			{% include 'block_view.html' %}
-		{% endfor %}	
-		</div>		
-	</td>
+	<div id="left_block" class="column area-left" data-legend="{{ lang('LEFT_COLUMN') }}">
+	{% for block in loops.left_block %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
 
-    <td width="25%" class="row2" valign="top">
-    	<strong>{L_RIGHT_COLUMN}</strong>
-		<hr />
-		<div id="right_block" class="column">
-		{% for block in loops.right_block %}
-			{% include 'block_view.html' %}
-		{% endfor %}	
-		</div>			
-	</td>
-  </tr>
-  <tr>
-    <td colspan="3" class="row2" valign="top">
-    	<strong>{L_BOTTOM_COLUMN}</strong>
-		<hr />
-		<div id="bottom_block" class="column">
-		{% for block in loops.bottom_block %}
-			{% include 'block_view.html' %}
-		{% endfor %}	
-		</div>
-	</td>
-  </tr>
-</table>
+	<div id="center_block" class="column area-center" data-legend="{{ lang('CENTER_COLUMN') }}">
+	{% for block in loops.center_block %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+
+	<div id="right_block" class="column area-right" data-legend="{{ lang('RIGHT_COLUMN') }}">
+	{% for block in loops.right_block %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+
+	<div id="bottom_block" class="column area-bottom" data-legend="{{ lang('BOTTOM_COLUMN') }}">
+	{% for block in loops.bottom_block %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+</div>
 
 	<div class="blg-block-actions"></div>
 	
@@ -137,7 +111,7 @@
 		{% endfor %}
 		</ul>
 		
-		<div class="tip" data-original-tip="{L_ADD_BLOCK_TIP}"></div>
+		<div class="tip" data-original-tip="{{ lang('ADD_BLOCK_TIP') }}"></div>
 		<a href="#" class="close-btn">
 			<i class="fa fa-remove" aria-hidden="true"></i>
 		</a>
@@ -145,22 +119,22 @@
 	
 <script type="text/html" id="tpl-block-actions">
 	<div class="block-mark">
-		<button data-action="mark" title="{L_MARK_ALL}"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
-		<button data-action="unmark" title="{L_UNMARK_ALL}"><i class="fa fa-square-o" aria-hidden="true"></i></button>
+		<button data-action="mark" title="{{ lang('MARK_ALL') }}"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
+		<button data-action="unmark" title="{{ lang('UNMARK_ALL') }}"><i class="fa fa-square-o" aria-hidden="true"></i></button>
 	</div>
 
 	<div class="block-actions cbb-helper-hidden">
-		<button type="submit" name="subaction" value="copy" title="{L_COPY_BLOCK}"><i class="fa fa-copy" aria-hidden="true"></i></button>
-		<button type="submit" name="subaction" value="move" title="{L_MOVE_BLOCK}"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>
-		<button type="submit" name="subaction" value="chg_groups" title="{L_CHG_GROUPS_BLOCK}"><i class="fa fa-shield" aria-hidden="true"></i></button>
-		<button type="submit" name="subaction" value="enable" title="{L_ENABLE_BLOCK}"><i class="fa fa-eye" aria-hidden="true"></i></button>
-		<button type="submit" name="subaction" value="disable" title="{L_DISABLE_BLOCK}"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-		<button type="submit" name="subaction" value="delete" title="{L_DELETE}"><i class="fa fa-remove" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="copy" title="{{ lang('COPY_BLOCK') }}"><i class="fa fa-copy" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="move" title="{{ lang('MOVE_BLOCK') }}"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="chg_groups" title="{{ lang('CHG_GROUPS_BLOCK') }}"><i class="fa fa-shield" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="enable" title="{{ lang('ENABLE_BLOCK') }}"><i class="fa fa-eye" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="disable" title="{{ lang('DISABLE_BLOCK') }}"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+		<button type="submit" name="subaction" value="delete" title="{{ lang('DELETE') }}"><i class="fa fa-remove" aria-hidden="true"></i></button>
 		&nbsp;
 	</div>
 
-	<button data-action="add_block">{L_ADD_BLOCK}</button>
-	<div class="js-group-add cbb-btn" title="{L_ADD_GROUP_EXPLAIN}">{L_ADD_GROUP}</div>
+	<button data-action="add_block">{{ lang('ADD_BLOCK') }}</button>
+	<div class="js-group-add cbb-btn" title="{{ lang('ADD_GROUP_EXPLAIN') }}">{{ lang('ADD_GROUP') }}</div>
 </script>
 
 <script type="text/html" id="tpl-block-helper">
@@ -172,63 +146,43 @@
 <script type="text/html" id="tpl-block-group-helper">
 	<div class="portlet-group portlet-helper blg-corner-all">
 		<div class="portlet-group-header">
-			<a href="#" title="{L_REMOVE}"><i class="fa fa-remove" aria-hidden="true"></i></a>
-			<span>{L_GROUP}</span>
+			<a href="#" title="{{ lang('REMOVE') }}"><i class="fa fa-remove" aria-hidden="true"></i></a>
+			<span>{{ lang('GROUP') }}</span>
 		</div>
 		<div class="subcolumn"></div>
 	</div>
 </script>
 
+<div>
+	{{ S_FORM_TOKEN }}
+	{{ S_HIDDEN_FIELDS }}
+</div>
+
 {% elseif options|length %}
 <form id="acp_blockgets_page_options" method="post" action="{{ U_ACTION }}">
 
-{% for options in loops.options %}
-	{% if options.S_LEGEND %}
-		{% if not options.S_FIRST_ROW %}
-			</fieldset>
-		{% endif %}
-		<fieldset>
-			<legend>{{ options.LEGEND }}</legend>
-	{% else %}
+	{% include '@canidev_core/acp_options.html' %}
 
-		<dl{% if options.HIDDEN %} style="display:none;"{% endif %}>
-			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-			<dd>{{ options.CONTENT }}</dd>
-		</dl>
-
-	{% endif %}
-{% endfor %}
-
-</fieldset>
-
-	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
-	</div>
 {% endif %}
 
 {% if S_PAGE_LIST %}
 	<div class="batch-actions">
 		<div class="cbb-group blg-align-right floated">
 			<select name="page_file" class="cbb-inputbox">{{ S_FILE_OPTIONS }}</select>
-			<button type="submit" class="cbb-btn" name="add" value="1">{L_PAGE_ADD}</button>
+			<button type="submit" class="cbb-btn" name="add" value="1">{{ lang('PAGE_ADD') }}</button>
 		</div>
 		
 		<div class="cbb-group">
 			<select name="action" class="cbb-inputbox">
-				<option value="">{L_BATCH_ACTIONS}</option>
-				<option value="enable">{L_ENABLE}</option>
-				<option value="disable">{L_DISABLE}</option>
-				<option value="delete">{L_DELETE}</option>
+				<option value="">{{ lang('BATCH_ACTIONS') }}</option>
+				<option value="enable">{{ lang('ENABLE') }}</option>
+				<option value="disable">{{ lang('DISABLE') }}</option>
+				<option value="delete">{{ lang('DELETE') }}</option>
 			</select>
-			<input type="submit" class="cbb-btn" name="submit" value="{L_SUBMIT}" />
+			<input type="submit" class="cbb-btn" name="submit" value="{{ lang('SUBMIT') }}" />
 		</div>
 	</div>
 {% endif %}
-
-<div>
-	{{ S_FORM_TOKEN }}
-	{{ S_HIDDEN_FIELDS }}
-</div>
 </form>
 
 {% include 'overall_footer.html' %}

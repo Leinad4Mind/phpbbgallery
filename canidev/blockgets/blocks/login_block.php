@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class login_block extends base
 {
 	static $icon = 'fa-user';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'login_block';
@@ -34,7 +37,7 @@ class login_block extends base
 				return true;
 			}
 			
-			$this->lang->add_lang('ucp');
+			$this->language->add_lang('ucp');
 
 			$username	= $this->request->variable('username', '', true);
 			$password	= $this->request->untrimmed_variable('password', '', true);
@@ -59,7 +62,7 @@ class login_block extends base
 			{
 				case LOGIN_SUCCESS:
 					$this->helper->json->add(array(
-						'message'		=> $this->lang->lang('LOGIN_REDIRECT'),
+						'message'		=> $this->language->lang('LOGIN_REDIRECT'),
 						'return_url'	=> $this->helper->current_url(
 							array(
 								'sid' => $this->user->session_id
@@ -79,10 +82,10 @@ class login_block extends base
 				break;
 
 				case LOGIN_ERROR_PASSWORD_CONVERT:
-					$err = $this->lang->lang(
+					$err = $this->language->lang(
 						$result['error_msg'],
-						($config['email_enable']) ? '<a href="' . $this->helper->url('ucp', 'mode=sendpassword') . '">' : '',
-						($config['email_enable']) ? '</a>' : '',
+						($this->config['email_enable']) ? '<a href="' . $this->helper->url('ucp', 'mode=sendpassword') . '">' : '',
+						($this->config['email_enable']) ? '</a>' : '',
 						'<a href="' . phpbb_get_board_contact_link($this->config, $this->phpbb_root_path, $this->php_ext) . '">',
 						'</a>'
 					);
@@ -91,12 +94,12 @@ class login_block extends base
 				// Username, password, etc...
 				case LOGIN_BREAK:
 				default:
-					$err = $this->lang->lang($result['error_msg']);
+					$err = $this->language->lang($result['error_msg']);
 
 					// Assign admin contact to some error messages
 					if ($result['error_msg'] == 'LOGIN_ERROR_USERNAME' || $result['error_msg'] == 'LOGIN_ERROR_PASSWORD')
 					{
-						$err = $this->lang->lang($result['error_msg'], '<a href="' . $this->helper->url('memberlist', 'mode=contactadmin') . '">', '</a>');
+						$err = $this->language->lang($result['error_msg'], '<a href="' . $this->helper->url('memberlist', 'mode=contactadmin') . '">', '</a>');
 					}
 				break;
 			}
@@ -118,7 +121,7 @@ class login_block extends base
 			}
 			else if($this->user->data['user_id'] != ANONYMOUS)
 			{
-				$err = $this->lang->lang('LOGOUT_FAILED');
+				$err = $this->language->lang('LOGOUT_FAILED');
 			}
 		}
 		
@@ -141,7 +144,7 @@ class login_block extends base
 			
 			if($this->config['allow_privmsg'] && ($this->auth->acl_get('u_readpm') || $this->auth->acl_get('u_sendpm')))
 			{
-				$pm_title = $this->lang->lang('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
+				$pm_title = $this->language->lang('PRIVATE_MESSAGES') . (($this->user->data['user_unread_privmsg']) ? ' (' . $this->user->data['user_unread_privmsg'] . ')' : '');
 				
 				$links[$pm_title] = array(
 					'url' => 'U_PRIVATEMSGS',
@@ -149,12 +152,12 @@ class login_block extends base
 				);
 			}
 
-			/*
-			* @event block.login_links
-			* @var array	links		Array with visible links
-			* @var	array	data		Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.login_links
+			 * @var array	links		Array with visible links
+			 * @var	array	data		Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('links', 'data');
 			extract($this->dispatcher->trigger_event('block.login_links', compact($vars)));
 			
@@ -162,7 +165,7 @@ class login_block extends base
 			{
 				$this->template->assign_block_vars('userlink', array(
 					'ICON'		=> $link['icon'],
-					'TITLE'		=> $this->lang->lang($title),
+					'TITLE'		=> $this->language->lang($title),
 					'URL'		=> (strpos($link['url'], 'U_') === 0) ? $this->template->get_var($link['url']) : $link['url'],
 				));
 			}
@@ -185,8 +188,8 @@ class login_block extends base
 			));
 			
 			$this->template->assign_vars(array(
-				'S_LAST_VISIT'		=> $this->lang->lang('YOU_LAST_VISIT', $break . $this->user->format_date($this->user->data['session_last_visit'])),
-				'S_CURRENT_TIME'	=> $this->lang->lang('CURRENT_TIME', $break . $this->user->format_date(time(), false, true)),
+				'S_LAST_VISIT'		=> $this->language->lang('YOU_LAST_VISIT', $break . $this->user->format_date($this->user->data['session_last_visit'])),
+				'S_CURRENT_TIME'	=> $this->language->lang('CURRENT_TIME', $break . $this->user->format_date(time(), false, true)),
 		
 				'USER_AVATAR'		=> $user_avatar,
 				'USERNAME_FULL'     => get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']),
@@ -222,7 +225,7 @@ class login_block extends base
 
 			if($data['alt_login'])
 			{
-				/* @var $provider_collection \phpbb\auth\provider_collection */
+				/** @var \phpbb\auth\provider_collection $provider_collection  */
 				$provider_collection 	= $this->container->get('auth.provider_collection');
 				$auth_provider 			= $provider_collection->get_provider();
 				$auth_provider_data 	= $auth_provider->get_login_data();
@@ -254,6 +257,9 @@ class login_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

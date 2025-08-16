@@ -1,10 +1,10 @@
 <?php
-/*
+/**
 * @package cBB Blockgets
 * @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\blockgets\migrations;
@@ -22,11 +22,9 @@ class v204 extends \canidev\blockgets\libraries\migration_base
 
 	public function update_schema()
 	{
-		$this->prepare();
-
 		return array(
 			'change_columns' => array(
-				BLG_PAGES_TABLE	=> array(
+				$this->table_prefix . 'blockgets_pages'	=> array(
 					'page_groups'	=> array('VCHAR:255', 'all'),
 				),
 			),

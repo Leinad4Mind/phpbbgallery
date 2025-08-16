@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class calendar_block extends base
 {
 	static $icon = 'fa-calendar';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = false)
 	{
 		$this->tpl_name = 'calendar_block';
@@ -26,7 +29,7 @@ class calendar_block extends base
 		
 		$calendar->set_options(array(
 			'events'	=> (bool)$data['show_events'],
-			'birthdays'	=> (bool)$data['show_birthdays'],
+			'birthdays'	=> (bool)$data['show_birthdays'] && $this->auth->acl_get('u_blockgets_birthdays'),
 			'months'	=> (int)$data['months_number'],
 		));
 
@@ -74,6 +77,9 @@ class calendar_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

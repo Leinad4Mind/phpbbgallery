@@ -1,43 +1,44 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\libraries;
 
-class migration_base extends \phpbb\db\migration\migration
+abstract class migration_base extends \phpbb\db\migration\migration
 {
+	protected $version = '';
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function effectively_installed()
 	{
 		return isset($this->config['blg_version']) && version_compare($this->config['blg_version'], $this->version, '>=');
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function update_data()
 	{
-		$this->prepare();
+		$actions = [
+			['config.update',	['blg_version', $this->version]],
+		];
 
-		$actions = array(
-			array('config.update',	array('blg_version', $this->version)),
-		);
-
-		if(method_exists($this, '_update_data'))
-		{
-			$actions = array_merge($actions, $this->_update_data());
-		}
-
-		return $actions;
+		return array_merge($actions, $this->_update_data());
 	}
 
-	public function prepare()
+	/**
+	 * Add extra steps for update
+	 * @return array
+	 */
+	public function _update_data()
 	{
-		if(!defined('BLG_BLOCK_TABLE'))
-		{
-			$table_prefix = $this->table_prefix;
-			include($this->phpbb_root_path . 'ext/canidev/blockgets/libraries/constants.' . $this->php_ext);
-		}
+		return [];
 	}
 }

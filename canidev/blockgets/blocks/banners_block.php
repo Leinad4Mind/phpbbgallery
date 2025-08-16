@@ -1,18 +1,23 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class banners_block extends base
 {
 	static $icon = 'fa-th';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'banners_block';
@@ -45,7 +50,7 @@ class banners_block extends base
 			// If is internal link, append root path and user sid
 			if($row['url'] && strpos($row['url'], 'http') !== 0)
 			{
-				$user_sid = (strpos($row['url'], 'adm/') !== false) ? $user->session_id : false;
+				$user_sid = (strpos($row['url'], 'adm/') !== false) ? $this->user->session_id : false;
 				$row['_url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
 			}
 
@@ -57,13 +62,13 @@ class banners_block extends base
 				'U_URL' 			=> $row['url'],		
 			);
 
-			/*
-			* @event block.banners_row
-			* @var array	banner_row		The output array
-			* @var array	row				The original data
-			* @var	array	data			Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.banners_row
+			 * @var array	banner_row		The output array
+			 * @var array	row				The original data
+			 * @var	array	data			Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('banner_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.banners_row', compact($vars)));
 			
@@ -71,10 +76,10 @@ class banners_block extends base
 		}
 
 		$this->template->assign_vars(array(
-			'S_BLOCK_HEIGHT'		=> (($data['list_type'] == BLG_SCROLL_V) ? $data['block_height'] : 'auto'),
-			'S_MARQUEE_DIRECTION'	=> (($data['list_type'] == BLG_NO_SCROLL || $data['list_type'] == BLG_SCROLL_H) ? 'left' : 'up'),
-			'S_MARQUEE_ALIGN'		=> (($data['list_type'] == BLG_SCROLL_H) ? 'left' : 'center'),
-			'S_MARQUEE_TYPE'		=> (($data['list_type'] == BLG_NO_SCROLL) ? 'static' : 'scroll'),
+			'S_BLOCK_HEIGHT'		=> (($data['list_type'] == constants::SCROLL_V) ? $data['block_height'] : 'auto'),
+			'S_MARQUEE_DIRECTION'	=> (($data['list_type'] == constants::SCROLL_NONE || $data['list_type'] == constants::SCROLL_H) ? 'left' : 'up'),
+			'S_MARQUEE_ALIGN'		=> (($data['list_type'] == constants::SCROLL_H) ? 'left' : 'center'),
+			'S_MARQUEE_TYPE'		=> (($data['list_type'] == constants::SCROLL_NONE) ? 'static' : 'scroll'),
 			'S_MARQUEE_SPEED'		=> $data['scroll_fps'],
 		));
 
@@ -82,6 +87,9 @@ class banners_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -96,7 +104,7 @@ class banners_block extends base
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_type(LIST_TYPE_IMAGE)
+			->set_type(constants::LIST_TYPE_IMAGE)
 			->set_events(array(
 				'edit.before'	=> array($this, 'list_edit_before'),
 			));
@@ -104,6 +112,10 @@ class banners_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data $event
+	 */
 	public function list_edit_before($event)
 	{
 		$display_vars = $event['display_vars'];
@@ -111,16 +123,20 @@ class banners_block extends base
 		$event['display_vars'] = $display_vars;
 	}
 
-	/*
-	 * listtype_select
+	/**
 	 * Make select with banner types
+	 * 
+	 * @param string 	$key
+	 * @param mixed 	$select_id
+	 * 
+	 * @return string
 	*/
 	public function listtype_select($key, $select_id = -1)
 	{
 		$types = array(
-			BLG_NO_SCROLL 	=> 'LIST_NO_SCROLL',
-			BLG_SCROLL_H	=> 'LIST_SCROLL_H',
-			BLG_SCROLL_V	=> 'LIST_SCROLL_V',
+			constants::SCROLL_NONE 	=> 'LIST_NO_SCROLL',
+			constants::SCROLL_H		=> 'LIST_SCROLL_H',
+			constants::SCROLL_V		=> 'LIST_SCROLL_V',
 		);
 
 		return $this->manager->helper_acp->make_select($types, $key, $select_id);

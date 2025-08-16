@@ -1,18 +1,23 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class quote_of_day_block extends base
 {
 	static $icon = 'fa-quote-right';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'quote_of_day_block';
@@ -66,7 +71,7 @@ class quote_of_day_block extends base
 			
 			$this->display_vars = $data;
 
-			$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
+			$sql = 'UPDATE ' . $this->tables['blocks'] . "
 				SET block_content = '" . $this->db->sql_escape($this->serialize($data)) . "'
 				WHERE block_id = " . $this->data['block_id'];
 			$this->db->sql_query($sql);
@@ -81,6 +86,9 @@ class quote_of_day_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -96,7 +104,7 @@ class quote_of_day_block extends base
 		$this->list
 			->set_options(array(
 				'title'	=> 'QUOTES_LIST',
-				'type'	=> LIST_TYPE_NONE,
+				'type'	=> constants::LIST_TYPE_NONE,
 				'mask'	=> array('title' => 'text',	'subtitle' => 'author')
 			))
 			->set_events(array(
@@ -106,6 +114,10 @@ class quote_of_day_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$event['display_vars'] = array(
@@ -114,6 +126,15 @@ class quote_of_day_block extends base
 		);
 	}
 	
+	/**
+	 * Find quote to show
+	 * 
+	 * @param array 	$data
+	 * @param int 		$new_id
+	 * 
+	 * @return int
+	 * @access private
+	 */
 	private function find_quote($data, &$new_id)
 	{
 		if($data['rand'] && sizeof($data['list']) > 1)

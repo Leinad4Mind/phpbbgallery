@@ -1,19 +1,24 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class map_block extends base
 {
 	static $icon = 'fa-globe';
-	protected $google_api_url = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=';
+	protected $google_api_url = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=nothing&key=';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'map_block';
@@ -25,7 +30,7 @@ class map_block extends base
 		
 		$options = array(
 			'zoom'		=> (int)$data['zoom'],
-			'markers'	=> array(),
+			'markers'	=> [],
 		);
 		
 		if($data['center'])
@@ -54,7 +59,7 @@ class map_block extends base
 
 				if(!empty($marker['text']))
 				{
-					$content = generate_text_for_display($marker['text'], $marker['bbcode_uid'], $marker['bbcode_bitfield'], OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES | BLG_FLAG_HTML);
+					$content = generate_text_for_display($marker['text'], $marker['bbcode_uid'], $marker['bbcode_bitfield'], OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES | constants::FLAG_HTML);
 				}
 
 				$options['markers'][] = array(
@@ -69,11 +74,14 @@ class map_block extends base
 		
 		$this->template->assign_json_var('S_MAP_OPTIONS', $options);
 
-		$this->template->append_asset('js', $this->google_api_url . base64_decode(BLG_GOOGLE_KEY), false, 'frontend');
+		$this->template->append_asset('js', $this->google_api_url . base64_decode(constants::GOOGLE_KEY), false, 'frontend');
 
 		return true;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
@@ -87,9 +95,12 @@ class map_block extends base
 		return true;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->template->append_asset('js', $this->google_api_url . base64_decode(BLG_GOOGLE_KEY), false, 'admin');
+		$this->template->append_asset('js', $this->google_api_url . base64_decode(constants::GOOGLE_KEY), false, 'admin');
 
 		$this->display_vars = array(
 			'center'		=> array('lang' => 'MAP_CENTER',		'type' => 'custom',		'function' => array($this, 'build_latlng_template'),	'params' => array('{CONFIG_VALUE}')),
@@ -102,7 +113,7 @@ class map_block extends base
 			->set_options(array(
 				'btn_title'	=> 'LOCATION_ADD',
 				'title'		=> 'MAP_LOCATIONS',
-				'type'		=> LIST_TYPE_NONE,
+				'type'		=> constants::LIST_TYPE_NONE,
 				'mask'		=> array(
 					'title'		=> 'title',
 					'subtitle'	=> 'position',
@@ -116,6 +127,12 @@ class map_block extends base
 		return true;
 	}
 	
+	/**
+	 * Build template for lat/lng
+	 * 
+	 * @param string $value
+	 * @return string
+	 */
 	public function build_latlng_template($value)
 	{
 		$lat = $lng = '';
@@ -139,6 +156,10 @@ class map_block extends base
 		return $this->template->assign_display('helper');
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_after($event)
 	{
 		$lat = floatval($this->request->variable('latitude', ''));
@@ -164,11 +185,15 @@ class map_block extends base
 		else
 		{
 			$error = $event['error'];
-			$error[] = $this->lang->lang('LOCATION_INCORRECT');
+			$error[] = $this->language->lang('LOCATION_INCORRECT');
 			$event['error'] = $error;
 		}
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$media = $this->helper->get_media();

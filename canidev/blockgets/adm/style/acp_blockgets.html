@@ -2,36 +2,13 @@
 
 <a name="maincontent"></a>
 
-{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {L_BACK}</a></div>{% endif %}
+{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-<h1>{L_TITLE}</h1>
-<p>{L_TITLE_EXPLAIN}</p>
+<h1>{{ S_TITLE }}</h1>
+<p>{{ S_TITLE_EXPLAIN }}</p>
 
 <form id="acp_blockgets" method="post" action="{{ U_ACTION }}">
-{% for options in loops.options %}
-	{% if options.S_LEGEND %}
-		{% if not options.S_FIRST_ROW %}
-			</fieldset>
-		{% endif %}
-		<fieldset>
-			<legend>{{ options.LEGEND }}</legend>
-	{% else %}
-
-		<dl>
-			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-			<dd>{{ options.CONTENT }}</dd>
-		</dl>
-
-	{% endif %}
-{% endfor %}
-
-</fieldset>
-
-	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
-		{{ S_FORM_TOKEN }}
-		{{ S_HIDDEN_FIELDS }}
-	</div>
+	{% include '@canidev_core/acp_options.html' %}
 </form>
 
 {% include 'overall_footer.html' %}

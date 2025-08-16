@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class post_view_block extends base
 {
 	static $icon = 'fa-file-text-o';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'post_view_block';
@@ -76,12 +79,12 @@ class post_view_block extends base
 			break;
 		}
 
-		/*
-		* @event block.post_view_query
-		* @var array	sql_ary		The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.post_view_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.post_view_query', compact($vars)));
 		
@@ -95,7 +98,7 @@ class post_view_block extends base
 			return false;
 		}
 		
-		$attachments = $update_count = array();
+		$attachments = $update_count = [];
 		
 		// Does post have an attachment? If so, add it to the list
 		if($post_data['post_attachment'] && $this->config['allow_attachments'] && $this->auth->acl_get('u_download') && 
@@ -103,7 +106,7 @@ class post_view_block extends base
 		{
 			$sql = 'SELECT *
 				FROM ' . ATTACHMENTS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('post_msg_id', $post_data['post_id']) . '
+				WHERE post_msg_id = ' . $post_data['post_id'] . '
 					AND in_message = 0
 				ORDER BY filetime DESC, post_msg_id ASC';
 			$result = $this->db->sql_query($sql);
@@ -144,6 +147,9 @@ class post_view_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -154,6 +160,14 @@ class post_view_block extends base
 		return true;
 	}
 
+	/**
+	 * Get fragments from url
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return array|false
+	 * @access private
+	 */
 	protected function get_config_from_url($url)
 	{
 		if(($url_parts = @parse_url($url)) === false)
@@ -169,7 +183,7 @@ class post_view_block extends base
 		}
 
 		$filename 	= basename($url_parts['path'], '.' . $this->php_ext);
-		$params 	= array();
+		$params 	= [];
 
 		parse_str(str_replace('&amp;', '&', $url_parts['query']), $params);
 

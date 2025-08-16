@@ -1,13 +1,15 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class youtube_block extends base
 {
@@ -21,6 +23,9 @@ class youtube_block extends base
 		'playlist'	=> '#^https?:\/\/[a-z]+\.youtube.com\/playlist\?[^list\=]?list\=([a-zA-Z0-9\-_]+).*$#',
 	);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'youtube_block';
@@ -45,7 +50,7 @@ class youtube_block extends base
 			list($v_width, $v_height) = explode('x', $data['video_size'], 2);
 
 			$mode		= ($this->view_is_small() && $data['display_mode'] == 'full') ? 'simple' : $data['display_mode'];
-			$url_ary	= array();
+			$url_ary	= [];
 
 			foreach($data['list'] as $row)
 			{
@@ -87,7 +92,7 @@ class youtube_block extends base
 					'S_TITLE'			=> $row['snippet']['title'],
 					'S_THUMBNAIL'		=> 'https://i.ytimg.com/vi/' . $row['id'] . '/default.jpg',
 					'S_TIME'			=> $time,
-					'S_VIEWS'			=> $this->lang->lang('YT_VIEWS', $row['statistics']['viewCount']),
+					'S_VIEWS'			=> $this->language->lang('YT_VIEWS', $row['statistics']['viewCount']),
 					'S_DESCRIPTION'		=> \canidev\core\tools::html_truncate($row['snippet']['description'], $data['text_limit'], '...'),
 					'S_WIDTH'			=> $v_width,
 					'S_HEIGHT'			=> $v_height,
@@ -95,13 +100,13 @@ class youtube_block extends base
 					'S_MOVIE'			=> 'https://www.youtube.com/embed/' . $row['id'] . (($i == 0 && $data['video_autoplay']) ? '?autoplay=1' : ''),
 				);
 				
-				/*
-				* @event block.youtube_row
-				* @var array	yt_item		The output array
-				* @var array	row			The original data
-				* @var	array	data		Block Configuration
-				* @since 2.0.0
-				*/
+				/**
+				 * @event block.youtube_row
+				 * @var array	yt_item		The output array
+				 * @var array	row			The original data
+				 * @var	array	data		Block Configuration
+				 * @since 2.0.0
+				 */
 				$vars = array('yt_item', 'row', 'data');
 				extract($this->dispatcher->trigger_event('block.youtube_row', compact($vars)));
 				
@@ -127,6 +132,9 @@ class youtube_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'submit')
@@ -135,6 +143,9 @@ class youtube_block extends base
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$display_modes = array(
@@ -164,7 +175,7 @@ class youtube_block extends base
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_type(LIST_TYPE_IMAGE)
+			->set_type(constants::LIST_TYPE_IMAGE)
 			->set_events(array(
 				'edit.before'	=> array($this, 'list_edit_before'),
 				'edit.after'	=> array($this, 'list_edit_after'),
@@ -173,6 +184,10 @@ class youtube_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$event['display_vars'] = array(
@@ -181,6 +196,10 @@ class youtube_block extends base
 		);
 	}
 
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_after($event)
 	{
 		$row = $event['item_row'];
@@ -206,7 +225,7 @@ class youtube_block extends base
 		else
 		{
 			$error = $event['error'];
-			$error[] = $this->lang->lang('URL_INVALID');
+			$error[] = $this->language->lang('URL_INVALID');
 			$event['error'] = $error;
 		}
 		
@@ -218,6 +237,14 @@ class youtube_block extends base
 		$event['item_row'] = $row;
 	}
 	
+	/**
+	 * Obtain video data
+	 * 
+	 * @param array 	$url_ary
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function obtain_video_data($url_ary)
 	{
 		$cache		= $this->container->get('cache.driver');
@@ -225,7 +252,7 @@ class youtube_block extends base
 
 		if(($result = $cache->get($cache_id)) === false)
 		{
-			$result = array();
+			$result = [];
 			
 			foreach($url_ary as $url)
 			{
@@ -252,19 +279,27 @@ class youtube_block extends base
 		return $result;
 	}
 	
+	/**
+	 * Get videos
+	 * 
+	 * @param array 	$video_ids
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_videos($video_ids)
 	{
 		$video_ids = (is_array($video_ids) ? $video_ids : array($video_ids));
 		
 		if(!sizeof($video_ids))
 		{
-			return array();
+			return [];
 		}
 		
 		// For display only the video player we don't need to get the video data from youtube
 		if($this->data['display_mode'] == 'video')
 		{
-			$result = array();
+			$result = [];
 	
 			foreach($video_ids as $video_id)
 			{
@@ -295,9 +330,18 @@ class youtube_block extends base
 		
 		$data = $this->get('videos', $params);
 
-		return (isset($data['items']) ? $data['items'] : array());
+		return (isset($data['items']) ? $data['items'] : []);
 	}
 	
+	/**
+	 * Get channel data
+	 * 
+	 * @param string 	$channel
+	 * @param string 	$type
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_channel_data($channel, $type)
 	{
 		$key = ($type == 'user') ? 'forUsername' : 'id';
@@ -310,14 +354,23 @@ class youtube_block extends base
 
 		$data = $this->get('channels', $params);
 		
-		return (isset($data['items'][0]) ? $data['items'][0] : array());
+		return (isset($data['items'][0]) ? $data['items'][0] : []);
 	}
 	
+	/**
+	 * Get channel videos
+	 * 
+	 * @param int 		$channel_id
+	 * @param int 		$limit
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_channel_videos($channel_id, $limit)
 	{
 		if($channel_id === false)
 		{
-			return array();
+			return [];
 		}
 
 		$params = array(
@@ -329,7 +382,7 @@ class youtube_block extends base
 		);
 		
 		$data		= $this->get('search', $params);
-		$video_ary	= array();
+		$video_ary	= [];
 		
 		foreach($data['items'] as $row)
 		{
@@ -339,6 +392,14 @@ class youtube_block extends base
 		return $video_ary;
 	}
 	
+	/**
+	 * Get channel by user
+	 * 
+	 * @param string 	$user
+	 * 
+	 * @return int
+	 * @access private
+	 */
 	private function get_channel_by_user($user)
 	{
 		$params = array(
@@ -352,6 +413,15 @@ class youtube_block extends base
 		return (isset($data['items'][0]) ? $data['items'][0]['id'] : false);
 	}
 
+	/**
+	 * Get playlist videos
+	 * 
+	 * @param int 	$playlist_id
+	 * @param int 	$limit
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_playlist_videos($playlist_id, $limit)
 	{
 		$params = array(
@@ -361,7 +431,7 @@ class youtube_block extends base
 		);
 
 		$retries 	= 0;
-		$video_ary 	= array();
+		$video_ary 	= [];
 		$data 		= $this->get('playlistItems', $params);
 
 		while(!empty($data['nextPageToken']) && $retries < 5)
@@ -391,9 +461,18 @@ class youtube_block extends base
 		return $video_ary;
 	}
 	
+	/**
+	 * Perform request
+	 * 
+	 * @param string 	$mode
+	 * @param array 	$params
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get($mode, $params)
 	{
-		$params['key'] = base64_decode(BLG_GOOGLE_KEY);
+		$params['key'] = base64_decode(constants::GOOGLE_KEY);
 		
 		$data	= '';
 		$url	= $this->api_url . $mode . '?' . http_build_query($params, '', '&');
@@ -414,6 +493,6 @@ class youtube_block extends base
 			unset($content);
 		}
 		
-		return (is_array($data) ? $data : array());
+		return (is_array($data) ? $data : []);
 	}
 }

@@ -1,13 +1,15 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class rss_block extends base
 {
@@ -29,6 +31,9 @@ class rss_block extends base
 		'feed'	=> array('name'	=> 'feed', 		'tags'	=> 'entry'),
 	);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'rss_block';
@@ -51,14 +56,14 @@ class rss_block extends base
 			// Force vertical direction
 			if($data['collapsable'])
 			{
-				$data['direction'] = BLG_SCROLL_V;
+				$data['direction'] = constants::SCROLL_V;
 			}
 			
 			$this->template->assign_vars(array(
 				'S_RSS_COLLAPSE'	=> (int)$data['collapsable'],
 				'S_BLOCK_HEIGHT'	=> $data['height'],
-				'S_SCROLL_V'		=> ($data['direction'] == BLG_SCROLL_V) ? true : false,
-				'S_SCROLL_H'		=> ($data['direction'] == BLG_SCROLL_H) ? true : false,
+				'S_SCROLL_V'		=> ($data['direction'] == constants::SCROLL_V) ? true : false,
+				'S_SCROLL_H'		=> ($data['direction'] == constants::SCROLL_H) ? true : false,
 			));
 
 			// Delete the array in the template if exists, prevent errors between blocks
@@ -134,11 +139,14 @@ class rss_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$dir_options = array(
-			BLG_SCROLL_H	=> 'LIST_SCROLL_H',
-			BLG_SCROLL_V	=> 'LIST_SCROLL_V',
+			constants::SCROLL_H		=> 'LIST_SCROLL_H',
+			constants::SCROLL_V		=> 'LIST_SCROLL_V',
 		);
 
 		$ttl_options = array(
@@ -152,7 +160,7 @@ class rss_block extends base
 		$this->display_vars = array(
 			'limit'			=> array('lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'number:1:999',		'default' => 5),
 			'ignore_lang'	=> array('lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
-			'direction'		=> array('lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $dir_options, false, '{CONFIG_VALUE}'),	'default' => BLG_SCROLL_V),
+			'direction'		=> array('lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $dir_options, false, '{CONFIG_VALUE}'),	'default' => constants::SCROLL_V),
 			'collapsable'	=> array('lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
 			'height'  		=> array('lang' => 'RSS_HEIGHT',		'validate' => 'int', 	'type' => 'number:0:999',		'default' => 150),
 			'ttl'  			=> array('lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $ttl_options, false, '{CONFIG_VALUE}'),	'default' => 86400),
@@ -163,7 +171,7 @@ class rss_block extends base
 		$this->list
 			->set_options(array(
 				'title'	=> 'RSS_SOURCES',
-				'type'	=> LIST_TYPE_NONE,
+				'type'	=> constants::LIST_TYPE_NONE,
 			))
 			->set_events(array(
 				'edit.before'	=> array($this, 'list_edit_before'),
@@ -172,6 +180,10 @@ class rss_block extends base
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
 		$event['display_vars'] = array(
@@ -180,6 +192,15 @@ class rss_block extends base
 		);
 	}
 	
+	/**
+	 * Clear text
+	 * 
+	 * @param string 	$text 	Original text
+	 * @param array 	$data 	Block data
+	 * 
+	 * @return string
+	 * @access private
+	 */
 	private function _clear($text, $data)
 	{
 		if(($xpath = \canidev\core\dom::string_to_xpath($text)) === false)
@@ -218,7 +239,7 @@ class rss_block extends base
 		}
 
 		// Delete line breaks and images and put all containers "inline"
-		if($data['direction'] == BLG_SCROLL_H)
+		if($data['direction'] == constants::SCROLL_H)
 		{
 			foreach($xpath->query("//p|//div|//blockquote|//code|//pre") as $node)
 			{
@@ -240,6 +261,14 @@ class rss_block extends base
 		return \canidev\core\dom::xpath_to_string($xpath);
 	}
 	
+	/**
+	 * Read Rss from url
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return bool
+	 * @access private
+	 */
 	private function read($url)
 	{
 		if(!$url)
@@ -302,6 +331,14 @@ class rss_block extends base
 		return true;
 	}
 	
+	/**
+	 * Helper for read method
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return bool
+	 * @access private
+	 */
 	private function _read($url)
 	{
 		$url = str_replace('&amp;', '&', $url);
@@ -346,6 +383,16 @@ class rss_block extends base
 		return (!$this->plain_text) ? false : true;
 	}
 	
+	/**
+	 * Get item from the rss part
+	 * 
+	 * @param mixed 		$id
+	 * @param string 		$name
+	 * @param array|false 	$ary
+	 * 
+	 * @return mixed
+	 * @access private
+	 */
 	private function get($id, $name = '', $ary = false)
 	{
 		if($name)
@@ -371,9 +418,13 @@ class rss_block extends base
 			return $this->rss_data[$id];
 		}
 		
-		return array();
+		return [];
 	}
 	
+	/**
+	 * Obtain RSS data
+	 * @access private
+	 */
 	private function _get()
 	{
 		$channel_name	= $this->tags[$this->rss_type]['name'];
@@ -394,7 +445,7 @@ class rss_block extends base
 		{
 			if(!isset($this->rss_data[$out[1]]))
 			{
-				$this->rss_data[$out[1]] = array();
+				$this->rss_data[$out[1]] = [];
 			}
 			
 			$this->rss_data[$out[1]][] = $this->_compose($out[2]);
@@ -408,6 +459,12 @@ class rss_block extends base
 		unset($file_text);
 	}
 
+	/**
+	 * Normalize text
+	 * 
+	 * @param string 	$text
+	 * @return string
+	 */
 	private function adjust($text)
 	{
 		$text = str_replace(array('<![CDATA[', ']]>'), '', $text);
@@ -423,9 +480,15 @@ class rss_block extends base
 		return $text;	
 	}
 
+	/**
+	 * Compose and normalize text
+	 * 
+	 * @param string $text
+	 * @return array
+	 */
 	private function _compose($text)
 	{
-		$ary = array();
+		$ary = [];
 		
 		preg_match_all('#<([\w\:]+)[^>]*>(.*?)<\/\\1>#si', $text, $out, PREG_SET_ORDER);
 

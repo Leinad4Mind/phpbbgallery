@@ -1,15 +1,15 @@
 canidev_blockgets_controller:
     path: /portal
     defaults: { _controller: canidev.blockgets.controller:display }
-    
+
 canidev_blockgets_calendar_controller:
     path: /calendar
     defaults: { _controller: canidev.blockgets.controller.calendar:display }
-    
+
 canidev_blockgets_player_controller:
     path: /player
     defaults: { _controller: canidev.blockgets.controller.player:display }
 
 canidev_blockgets_page_controller:
-    resource: canidev.blockgets.page # can be any name, it is not used, but must be present
+    resource: canidev.blockgets.page
     type: canidev_blockgets_route

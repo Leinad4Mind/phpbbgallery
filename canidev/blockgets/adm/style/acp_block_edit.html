@@ -1,37 +1,21 @@
 {% include 'overall_header.html' %}
 
-{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {L_BACK}</a></div>{% endif %}
+{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-<h1>{L_TITLE}</h1>
-<p>{L_TITLE_EXPLAIN}</p>
+<h1>{{ S_TITLE }}</h1>
+<p>{{ S_TITLE_EXPLAIN }}</p>
 
 <form id="acp_block_form" name="acp_block_form" method="post" action="{{ U_ACTION }}">
 
-{% for options in loops.options %}
-	{% if options.S_LEGEND %}
-		{% if not options.S_FIRST_ROW %}
-			</fieldset>
-		{% endif %}
-		<fieldset>
-			<legend>{{ options.LEGEND }}</legend>
-	{% else %}
-
-		<dl>
-			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
-			<dd>{{ options.CONTENT }}</dd>
-		</dl>
-
-	{% endif %}
-{% endfor %}
-
-</fieldset>
+	{% set display_submit_save = false %}
+	{% include '@canidev_core/acp_options.html' %}
 
 {% if not HAS_CONFIG and not HAS_LINKS %}
-	<div class="blg-message cbb-state-ok">{L_BLOCK_NO_CONFIG}</div>
+	<div class="blg-message cbb-state-ok">{{ lang('BLOCK_NO_CONFIG') }}</div>
 {% else %}
 <div class="block-config-tabs">
 	<ul>
-		{% if HAS_CONFIG %}<li><a href="#block-config-tab">{L_CONFIG}</a></li>{% endif %}
+		{% if HAS_CONFIG %}<li><a href="#block-config-tab">{{ lang('CONFIG') }}</a></li>{% endif %}
 		{% if HAS_LINKS %}<li><a href="#block-links-tab">{{ S_LINKS_TITLE }}</a></li>{% endif %}
 	</ul>
 	
@@ -41,7 +25,7 @@
 		<fieldset>
 		{% for config in loops.config %}
 			<dl>
-				<dt><label for="{{ config.KEY }}">{{ config.TITLE }}{L_COLON}</label>{% if config.S_EXPLAIN %}<br /><span>{{ config.S_EXPLAIN }}</span>{% endif %}</dt>
+				<dt><label for="{{ config.KEY }}">{{ config.TITLE ~ lang('COLON') }}</label>{% if config.S_EXPLAIN %}<br /><span>{{ config.S_EXPLAIN }}</span>{% endif %}</dt>
 				<dd>{{ config.CONTENT }}</dd>
 			</dl>
 		{% endfor %}
@@ -64,8 +48,8 @@
 {% endif %}
 
 	<div class="cbb-submit-buttons">
-		{% if S_ADD_MODE %}&nbsp;<input class="cbb-btn" type="submit" name="submitmore" value="{L_SAVE_AND_ADD}" />{% endif %}
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
+		{% if S_ADD_MODE %}&nbsp;<input class="cbb-btn" type="submit" name="submitmore" value="{{ lang('SAVE_AND_ADD') }}" />{% endif %}
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
 		{{ S_HIDDEN_FIELDS }}
 	</div>
 </form>

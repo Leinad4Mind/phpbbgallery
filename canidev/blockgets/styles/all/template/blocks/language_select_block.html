@@ -11,11 +11,11 @@
 <form method="post" action="{{ U_BLG_ACTION }}">
 	<ul class="blg-linear-list blg-align-center">
 		<li class="double-space"><select name="lng" class="cbb-inputbox">{{ LANGUAGE_SELECT }}</select></li>
-		{% if CAN_SAVE_LANGUAGE %}<li class="doubl-space"><label><input type="checkbox" name="default" value="1" /> {L_LANGUAGE_SET_MINE}</label></li>{% endif %}
+		{% if CAN_SAVE_LANGUAGE %}<li class="doubl-space"><label><input type="checkbox" name="default" value="1" /> {{ lang('LANGUAGE_SET_MINE') }}</label></li>{% endif %}
 		<li class="double-space">
-			<input type="submit" name="submit" class="cbb-btn" value="{L_LANGUAGE_CHANGE}" />
+			<input type="submit" name="submit" class="cbb-btn" value="{{ lang('LANGUAGE_CHANGE') }}" />
 			{{ S_BLOCK_HIDDEN_FIELDS }}
 		</li>
-		{% if U_LANGUAGE_DEFAULT %}<li class="double-space"><a href="{{ U_LANGUAGE_DEFAULT }}">{L_LANGUAGE_DEFAULT}</a></li>{% endif %}
+		{% if U_LANGUAGE_DEFAULT %}<li class="double-space"><a href="{{ U_LANGUAGE_DEFAULT }}">{{ lang('LANGUAGE_DEFAULT') }}</a></li>{% endif %}
 	</ul>
 </form>

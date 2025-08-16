@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class scroll_message_block extends base
 {
 	static $icon = 'fa-film';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'scroll_message_block';
@@ -38,6 +41,9 @@ class scroll_message_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		switch($mode)
@@ -51,7 +57,7 @@ class scroll_message_block extends base
 			break;
 
 			case 'submit':
-				$this->lang->add_lang('posting');
+				$this->language->add_lang('posting');
 
 				$new['marquee_text'] = \canidev\core\tools::html_truncate($new['marquee_text'], 2000);
 
@@ -61,6 +67,9 @@ class scroll_message_block extends base
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

@@ -1,8 +1,8 @@
 	
 {% if block.IS_GROUP %}
-	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-grid">
 	{% for sub in block.blocks %}
-		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block panel panel-forum {{ sub.BLOCK_CLASSES }}">
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block panel panel-forum {{ sub.BLOCK_CLASSES }}"{% if sub.DOM_STYLE %} style="{{ sub.DOM_STYLE}} "{% endif %}>
 			<div class="block-title panel-heading">
 				{{ sub.BLOCK_ICON }}
 				<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>

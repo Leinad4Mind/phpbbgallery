@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -15,6 +15,9 @@ class contact_block extends base
 {
 	static $icon = 'fa-envelope-o';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'contact_block';
@@ -41,9 +44,9 @@ class contact_block extends base
 		
 		if($method == 'submit')
 		{
-			$this->lang->add_lang('memberlist');
+			$this->language->add_lang('memberlist');
 
-			$error = $notice = array();
+			$error = $notice = [];
 
 			$username	= $this->request->variable('username', $username, true);
 			$user_email = $this->request->variable('email', $user_email);
@@ -52,12 +55,12 @@ class contact_block extends base
 
 			if(!check_form_key('contact_block'))
 			{
-				$error[] = $this->lang->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
 			}
 			
 			if(!$username)
 			{
-				$error[] = $this->lang->lang('EMPTY_NAME_EMAIL');
+				$error[] = $this->language->lang('EMPTY_NAME_EMAIL');
 			}
 			
 			if(preg_match('/^' . get_preg_expression('email') . '$/i', $user_email))
@@ -68,31 +71,31 @@ class contact_block extends base
 
 					if(phpbb_checkdnsrr($domain, 'A') === false && phpbb_checkdnsrr($domain, 'MX') === false)
 					{
-						$error[] = $this->lang->lang('EMAIL_INVALID');
+						$error[] = $this->language->lang('EMAIL_INVALID');
 					}
 				}
 			}
 			else
 			{
-				$error[] = $this->lang->lang('EMAIL_EMPTY');
+				$error[] = $this->language->lang('EMAIL_EMPTY');
 			}
 			
 			if(!$subject)
 			{
-				$error[] = $this->lang->lang('EMPTY_SUBJECT_EMAIL');
+				$error[] = $this->language->lang('EMPTY_SUBJECT_EMAIL');
 			}
 
 			if(!$message)
 			{
-				$error[] = $this->lang->lang('EMPTY_MESSAGE_EMAIL');
+				$error[] = $this->language->lang('EMPTY_MESSAGE_EMAIL');
 			}
 
-			/*
-			* @event block.contact_submit_check
-			* @var array	error		Array with error codes
-			* @var	array	data		Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.contact_submit_check
+			 * @var array	error		Array with error codes
+			 * @var	array	data		Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('error', 'data');
 			extract($this->dispatcher->trigger_event('block.contact_submit_check', compact($vars)));
 
@@ -126,22 +129,22 @@ class contact_block extends base
 					'MESSAGE'		=> htmlspecialchars_decode($message))
 				);
 
-				/*
-				* @event block.contact_submit
-				* @var object	messenger		Messenger Class
-				* @var	array	data			Block Configuration
-				* @since 2.0.0
-				*/
+				/**
+				 * @event block.contact_submit
+				 * @var object	messenger		Messenger Class
+				 * @var	array	data			Block Configuration
+				 * @since 2.0.0
+				 */
 				$vars = array('messenger', 'data');
 				extract($this->dispatcher->trigger_event('block.contact_submit', compact($vars)));
 
 				if($messenger->send(NOTIFY_EMAIL))
 				{
-					$notice[] = $this->lang->lang('EMAIL_SENT');
+					$notice[] = $this->language->lang('EMAIL_SENT');
 				}
 				else
 				{
-					$error[] = $this->lang->lang('AJAX_ERROR_TEXT');
+					$error[] = $this->language->lang('AJAX_ERROR_TEXT');
 				}
 			}
 			
@@ -180,12 +183,12 @@ class contact_block extends base
 			'BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
 		));
 
-		/*
-		* @event block.contact_fields
-		* @var array	fields		The fields to display
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.contact_fields
+		 * @var array	fields		The fields to display
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('fields', 'data');
 		extract($this->dispatcher->trigger_event('block.contact_fields', compact($vars)));
 		
@@ -193,7 +196,7 @@ class contact_block extends base
 		{
 			$this->template->assign_block_vars('fieldrow', array(
 				'KEY'	=> $key,
-				'TITLE'	=> $this->lang->lang($vars['title']),
+				'TITLE'	=> $this->language->lang($vars['title']),
 				'TYPE'	=> $vars['type'],
 				'VALUE'	=> $vars['value'],
 			));
@@ -203,6 +206,9 @@ class contact_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

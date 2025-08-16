@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class style_select_block extends base
 {
 	static $icon = 'fa-eye';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'style_select_block';
@@ -37,7 +40,7 @@ class style_select_block extends base
 			return true;
 		}
 		
-		$style_select = '<option disabled>' . $this->lang->lang('STYLE_SELECT') . '</option>';
+		$style_select = '<option disabled>' . $this->language->lang('STYLE_SELECT') . '</option>';
 
 		$sql = 'SELECT style_id, style_name
 			FROM ' . STYLES_TABLE . '

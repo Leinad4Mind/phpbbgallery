@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -15,6 +15,9 @@ class steam_block extends base
 
 	public $regexp = '#^https?:\/\/(?:www\.)?steamcommunity\.com/groups/([^/]+).*$#';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'steam_block';
@@ -51,6 +54,9 @@ class steam_block extends base
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -59,30 +65,4 @@ class steam_block extends base
 	
 		return true;
 	}
-	
-	/*private function get($mode, $params)
-	{
-		$params['key'] = base64_decode(BLG_GOOGLE_KEY);
-		
-		$data	= '';
-		$url	= $this->api_url . $mode . '?' . http_build_query($params, '', '&');
-
-		if(function_exists('curl_init'))
-		{
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$data = json_decode(curl_exec($curl), true);
-			curl_close($curl);
-		}
-		else if($content = @file_get_contents($url))
-		{
-			$data = json_decode($content, true);
-			unset($content);
-		}
-		
-		return (is_array($data) ? $data : array());
-	}*/
 }

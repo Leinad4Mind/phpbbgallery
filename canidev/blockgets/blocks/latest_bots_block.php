@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class latest_bots_block extends base
 {
 	static $icon = 'fa-bug';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'latest_bots_block';
@@ -33,12 +36,12 @@ class latest_bots_block extends base
 			'ORDER_BY'	=> 'u.user_lastvisit DESC',
 		);
 
-		/*
-		* @event block.latest_bots_query
-		* @var array	sql_ary		The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.latest_bots_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.latest_bots_query', compact($vars)));
 		
@@ -51,13 +54,13 @@ class latest_bots_block extends base
 				'BOT_VISIT'		=> $this->user->format_date($row['user_lastvisit']),
 			);
 
-			/*
-			* @event block.latest_bots_row
-			* @var array	bot_row		The output array
-			* @var array	row			The original data
-			* @var	array	data		Block Configuration
-			* @since 2.0.0
-			*/
+			/**
+			 * @event block.latest_bots_row
+			 * @var array	bot_row		The output array
+			 * @var array	row			The original data
+			 * @var	array	data		Block Configuration
+			 * @since 2.0.0
+			 */
 			$vars = array('bot_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.latest_bots_row', compact($vars)));
 			
@@ -69,6 +72,9 @@ class latest_bots_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(

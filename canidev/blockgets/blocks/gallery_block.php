@@ -1,13 +1,15 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class gallery_block extends base
 {
@@ -17,6 +19,9 @@ class gallery_block extends base
 	const SOURCE_ATTACHMENTS	= 2;
 	const SOURCE_IMAGES			= 3;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'gallery_block';
@@ -25,11 +30,23 @@ class gallery_block extends base
 		{
 			return false;
 		}
+
+		switch($this->db->get_sql_layer())
+		{
+			case 'postgres':
+			case 'sqlite3':
+				$random_key = 'RANDOM()';
+			break;
+
+			default:
+				$random_key = 'RAND()';
+			break;
+		}
 		
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('image');
 		
-		$topic_ids = $post_ids = $images = array();
+		$topic_ids = $post_ids = $images = [];
 		
 		/* Do some checks
 		---------------------------------------- */
@@ -104,7 +121,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if($data['gallery_source'] != self::SOURCE_IMAGES)
 		{
-			$sql_where = array();
+			$sql_where = [];
 
 			if(!empty($data['gallery_forums']))
 			{
@@ -136,15 +153,15 @@ class gallery_block extends base
 						AND a.filesize > 0
 						AND (' . implode(' OR ', $sql_where) . ')',
 						
-					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : 'RAND()',
+					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : $random_key,
 				);
 				
-				/*
-				* @event block.gallery_attachments_query
-				* @var array	sql_ary		The SQL data
-				* @var array	data		Block Configuration
-				* @since 2.0.0
-				*/
+				/**
+				 * @event block.gallery_attachments_query
+				 * @var array	sql_ary		The SQL data
+				 * @var array	data		Block Configuration
+				 * @since 2.0.0
+				 */
 				$vars = array('sql_ary', 'data');
 				extract($this->dispatcher->trigger_event('block.gallery_attachments_query', compact($vars)));
 				
@@ -161,13 +178,13 @@ class gallery_block extends base
 						))
 					);
 
-					/*
-					* @event block.gallery_row
-					* @var array		$image		The row array
-					* @var array		$data		Block Configuration
-					* @var array 		$row		Row data
-					* @since 2.0.3
-					*/
+					/**
+					 * @event block.gallery_row
+					 * @var array		$image		The row array
+					 * @var array		$data		Block Configuration
+					 * @var array 		$row		Row data
+					 * @since 2.0.3
+					 */
 					$vars = array('image', 'data', 'row');
 					extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
@@ -181,7 +198,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if($data['gallery_source'] != self::SOURCE_ATTACHMENTS)
 		{
-			$sql_where = array();
+			$sql_where = [];
 
 			if(!empty($data['gallery_forums']))
 			{
@@ -204,17 +221,17 @@ class gallery_block extends base
 					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text',
 					'FROM'			=> array(POSTS_TABLE => 'p'),
 					'WHERE'			=> '(' . implode(' OR ', $sql_where) . ")
-						AND p.bbcode_uid <> ''
+						AND p.bbcode_uid NOT LIKE ''
 						AND p.post_text " . $this->db->sql_like_expression($this->db->get_any_char() . '[img]' . $this->db->get_any_char()),
-					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : 'RAND()',
+					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : $random_key,
 				);
 
-				/*
-				* @event block.gallery_posts_query
-				* @var array	sql_ary		The SQL data
-				* @var array	data		Block Configuration
-				* @since 2.0.3
-				*/
+				/**
+				 * @event block.gallery_posts_query
+				 * @var array	sql_ary		The SQL data
+				 * @var array	data		Block Configuration
+				 * @since 2.0.3
+				 */
 				$vars = array('sql_ary', 'data');
 				extract($this->dispatcher->trigger_event('block.gallery_posts_query', compact($vars)));
 
@@ -222,7 +239,7 @@ class gallery_block extends base
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$row_images = array();
+					$row_images = [];
 
 					preg_match_all('#<IMG src="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
 
@@ -235,13 +252,13 @@ class gallery_block extends base
 						);
 					}
 
-					/*
-					* @event block.gallery_posts_row
-					* @var array		$row_images		The rows array
-					* @var array		$data			Block Configuration
-					* @var array 		$row			Row data
-					* @since 2.0.3
-					*/
+					/**
+					 * @event block.gallery_posts_row
+					 * @var array		$row_images		The rows array
+					 * @var array		$data			Block Configuration
+					 * @var array 		$row			Row data
+					 * @since 2.0.3
+					 */
 					$vars = array('row_images', 'data', 'row');
 					extract($this->dispatcher->trigger_event('block.gallery_posts_row', compact($vars)));
 
@@ -257,7 +274,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if(sizeof($data['item_ids']))
 		{
-			$items = $gallery_items = array();
+			$items = $gallery_items = [];
 			
 			foreach($data['item_ids'] as $source)
 			{
@@ -273,12 +290,12 @@ class gallery_block extends base
 			if(sizeof($gallery_items))
 			{
 				$sql = 'SELECT data_id, data_title, data_settings
-					FROM ' . BLG_DATA_TABLE . '
-					WHERE data_type = ' . BLG_DATA_ATTACHMENT . '
+					FROM ' . $this->tables['data'] . '
+					WHERE data_type = ' . constants::DATA_ATTACHMENT . '
 					AND ' . $this->db->sql_in_set('data_id', $gallery_items);
 				$result = $this->db->sql_query($sql);
 				
-				$gallery_items = array();
+				$gallery_items = [];
 
 				while($row = $this->db->sql_fetchrow($result))
 				{
@@ -313,13 +330,13 @@ class gallery_block extends base
 					continue;
 				}
 
-				/*
-				* @event block.gallery_row
-				* @var array		$image		The row array
-				* @var array		$data		Block Configuration
-				* @var mixed		$source		Row data
-				* @since 2.0.3
-				*/
+				/**
+				 * @event block.gallery_row
+				 * @var array		$image		The row array
+				 * @var array		$data		Block Configuration
+				 * @var mixed		$source		Row data
+				 * @since 2.0.3
+				 */
 				$vars = array('image', 'data', 'source');
 				extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
@@ -349,6 +366,9 @@ class gallery_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
@@ -358,6 +378,9 @@ class gallery_block extends base
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$gallery_order = array(
@@ -379,7 +402,7 @@ class gallery_block extends base
 			'image_zoom'		=> array('lang' => 'GALLERY_ZOOM',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2),
 			'max_number'		=> array('lang' => 'GALLERY_MAX_NUMBER',	'validate' => 'int:1:500',	'type' => 'number:1:500',	'default' => 50),
 			'gallery_source'	=> array('lang' => 'GALLERY_SOURCE',		'validate' => 'string',		'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_sources, '{KEY}', '{CONFIG_VALUE}'),  'default' => self::SOURCE_ATTACHMENTS),
-			'gallery_forums'	=> array('lang' => 'GALLERY_FORUMS',		'type' => 'custom',			'method' => 'helper',	'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
+			'gallery_forums'	=> array('lang' => 'GALLERY_FORUMS',		'type' => 'custom',			'method' => 'helper',	'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => []),
 			'gallery_topics'	=> array('lang' => 'GALLERY_TOPICS',		'validate' => 'string',		'type' => 'text:40:255'),
 			'gallery_posts'		=> array('lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'),
 			'image_order'		=> array('lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'rand'),
@@ -389,9 +412,17 @@ class gallery_block extends base
 		return true;
 	}
 	
+	/**
+	 * Build image browser
+	 * 
+	 * @param string 	$key
+	 * @param array 	$ary
+	 * 
+	 * @return string
+	 */
 	public function acp_build_image_browser($key, $ary)
 	{
-		$ary = (empty($ary) || !is_array($ary)) ? array() : $ary;
+		$ary = (empty($ary) || !is_array($ary)) ? [] : $ary;
 		$hidden_fields = '';
 		
 		foreach($ary as $id)

@@ -4,7 +4,7 @@
 
 {% if PV_HAS_ATTACHMENTS %}
 	<dl class="attachbox">
-		<dt>{L_ATTACHMENTS}</dt>
+		<dt>{{ lang('ATTACHMENTS') }}</dt>
 		{% for attachment in pv_attachment %}
 			<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
 		{% endfor %}

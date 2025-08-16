@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class stats_block extends base
 {
 	static $icon = 'fa-bar-chart';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'stats_block';
@@ -28,7 +31,7 @@ class stats_block extends base
 		$total_users	= $this->config['num_users'];
 		$board_days		= ceil((time() - $this->config['board_startdate']) / 86400);
 
-		$stats 		= array();
+		$stats 		= [];
 		$stat_data	= $this->get_stats();
 
 		if($this->user->data['user_id'] != ANONYMOUS)
@@ -76,12 +79,12 @@ class stats_block extends base
 			'TOTAL_USERS'		=> $total_users,
 		);
 
-		/*
-		* @event block.stats_rows
-		* @var array	stats	The output data
-		* @var	array	data	Block Configuration
-		* @since 2.0.0
-		*/
+		/**
+		 * @event block.stats_rows
+		 * @var array	stats	The output data
+		 * @var	array	data	Block Configuration
+		 * @since 2.0.0
+		 */
 		$vars = array('stats', 'data');
 		extract($this->dispatcher->trigger_event('block.stats_rows', compact($vars)));
 
@@ -94,7 +97,7 @@ class stats_block extends base
 			$this->template->assign_block_vars('stat', array(
 				'IS_CAT'	=> true,
 				'S_SEP'		=> $stat['sep'],
-				'S_LEGEND'	=> (isset($stat['legend']) ? $this->lang->lang($stat['legend']) : ''),
+				'S_LEGEND'	=> (isset($stat['legend']) ? $this->language->lang($stat['legend']) : ''),
 			));
 
 			foreach($stat as $lang => $value)
@@ -107,7 +110,7 @@ class stats_block extends base
 				$this->template->assign_block_vars('stat', array(
 					'IS_CAT'	=> false,
 
-					'S_NAME'	=> $this->lang->lang("ST_$lang"),
+					'S_NAME'	=> $this->language->lang("ST_$lang"),
 					'S_VALUE'	=> $value,
 				));
 			}
@@ -132,6 +135,9 @@ class stats_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
 		$this->display_vars = array(
@@ -142,6 +148,12 @@ class stats_block extends base
 		return true;
 	}
 	
+	/**
+	 * Get stats
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_stats()
 	{
 		$cache		= $this->container->get('cache.driver');
@@ -189,7 +201,7 @@ class stats_block extends base
 					WHERE user_posts > 0',
 			);
 			
-			$result = array();
+			$result = [];
 			
 			foreach($modes as $mode => $sql)
 			{
