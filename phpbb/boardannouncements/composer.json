@@ -2,8 +2,8 @@
     "name": "phpbb/boardannouncements",
     "type": "phpbb-extension",
     "description": "An extension which allows you to create board-wide announcements for your phpBB forum",
-    "homepage": "https://www.phpbb.com",
-    "version": "1.1.0",
+    "homepage": "https://www.phpbb.com/customise/db/extension/boardannouncements/",
+    "version": "1.1.1",
     "keywords": [
         "phpbb",
         "extension",
@@ -25,7 +25,7 @@
         },
         {
             "name": "Matt Friedman",
-            "homepage": "http://vsephpbb.github.io",
+            "homepage": "https://imattpro.github.io",
             "role": "Extensions Development Team Lead"
         },
         {
@@ -54,7 +54,8 @@
         "version-check": {
             "host": "www.phpbb.com",
             "directory": "/customise/db/extension/boardannouncements",
-            "filename": "version_check"
+            "filename": "version_check",
+            "ssl": true
         }
     }
 }
