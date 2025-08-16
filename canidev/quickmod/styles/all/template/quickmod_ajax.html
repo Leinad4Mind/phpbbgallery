@@ -1,16 +1,18 @@
 <!-- IF S_USERLIST -->
-<ul class="qm-menu user-selector">
-	<!-- BEGIN user -->
-	<li>
-		<a href="#" data-username="{user.S_USERNAME}">
-			<div class="user-avatar">
-				<!-- IF user.S_AVATAR_IMG -->{user.S_AVATAR_IMG}<!-- ELSE --><div class="qm-default-avatar"></div><!-- ENDIF -->
-			</div>
-			<span>{user.S_USERNAME_FORMATTED}</span>
-		</a>
-	</li>
-	<!-- END user -->
-</ul>
+<div class="cbb-dropdown">
+	<ul class="cbb-menu qm-user-selector">
+		<!-- BEGIN user -->
+		<li>
+			<a href="#" data-username="{user.S_USERNAME}">
+				<div class="cbb-circular-avatar size-small">
+					<!-- IF user.S_AVATAR_IMG -->{user.S_AVATAR_IMG}<!-- ELSE --><div class="cbb-no-avatar"></div><!-- ENDIF -->
+				</div>
+				<span>{user.S_USERNAME_FORMATTED}</span>
+			</a>
+		</li>
+		<!-- END user -->
+	</ul>
+</div>
 <!-- ELSEIF DIALOG_CONTENT -->
 <div class="qm-dialog" title="{MESSAGE_TITLE}">
 	<form id="qm-dialog-form" onsubmit="return false;">
@@ -58,8 +60,8 @@
 	</form>
 	
 	<div class="cbb-dialog-buttons">
-		<button class="cbb-btn" value="submit">{L_QM_ACCEPT}</button>
-		<button class="cbb-btn" value="close">{L_QM_CANCEL}</button>
+		<button class="cbb-btn" value="submit">{L_ACCEPT}</button>
+		<button class="cbb-btn" value="close">{L_CANCEL}</button>
 	</div>
 </div>
 <!-- ENDIF -->

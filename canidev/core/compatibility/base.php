@@ -1,56 +1,18 @@
 <?php
 /*
-* @name base.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.4 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
+/*
+* Compatibility is obsoleted, this file is for avoid problems on extension updates
 */
 
 namespace canidev\core\compatibility;
 
-// @ignore
-if(!defined('IN_PHPBB'))
+class base extends \canidev\core\plugins\base
 {
-	exit;
-}
-
-class base
-{
-	public $name = '';
-
-	protected $container;
-
-	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
-	public function __construct($container)
-	{
-		$this->container = $container;
-	}
-	
-	public function is_runnable()
-	{
-		return true;
-	}
-	
-	public function core_events()
-	{
-		return array();
-	}
-
-	public function frontend_js_events()
-	{
-		return array();
-	}
-	
-	public function admin_js_events()
-	{
-		return array();
-	}
 }

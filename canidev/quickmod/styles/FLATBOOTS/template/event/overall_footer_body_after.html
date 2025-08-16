@@ -30,15 +30,15 @@
 
 	<script>
 	// <![CDATA[
-	head.ready('jquickmod.min.js', function () {
+	head.ready(['cbbcore.min.js', 'jquickmod.min.js'], function () {
 		cbbCore.addListener('core.onready', function() {
 			$('.qm-row .topic_id_list').iCheck('destroy');
 
 			cbbCore.initService('quickmod', {
 				rowSelector	: 'table:has(".quick_mod_buttons") tbody tr',
-				position	: ['.panel-forum', 'after'],
+				position	: ['.panel:has(.footable):last', 'after'],
 				type		: '{S_QM_TYPE}',
-				titleTag	: 'data-original-title'
+				titleTag	: 'data-original-title title'
 			});
 		});
 	});

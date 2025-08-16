@@ -2,50 +2,51 @@ services:
     canidev.quickmod.listener:
         class: canidev\quickmod\event\listener
         arguments:
-            - @service_container
-            - @canidev.quickmod.core
+            - '@service_container'
+            - '@canidev.quickmod.core'
         tags:
             - { name: event.listener }
 
     canidev.quickmod.core:
         class: canidev\quickmod\libraries\quickmod
         arguments:
-            - @auth
-            - @config
-            - @service_container
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @request
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
     
     canidev.quickmod.functions:
         class: canidev\quickmod\libraries\functions
         arguments:
-            - @auth
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @log
-            - @notification_manager
-            - @request
-            - @template
-            - @user
-            - @content.visibility
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@notification_manager'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@content.visibility'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     canidev.quickmod.admin.config:
         class: canidev\quickmod\controller\admin_controller_config
         arguments:
-            - @cache.driver
-            - @config
-            - @service_container
-            - @dispatcher
-            - @language
-            - @canidev.quickmod.core
-            - @request
-            - @user
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@canidev.quickmod.core'
+            - '@request'
+            - '@user'

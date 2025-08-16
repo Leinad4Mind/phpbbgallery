@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickMod
-* @version v1.1.1 22/03/2019
+* @version v1.1.2 01/03/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -12,7 +12,7 @@ namespace canidev\quickmod;
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.0.2';
+	const REQUIRED_CORE		= '1.0.5';
 	
 	public function is_enableable()
 	{

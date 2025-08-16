@@ -1,0 +1,25 @@
+
+	<div class="cbb-smiley-container">
+	<!-- BEGIN smileyrow -->
+		<a href="#" data-code="{smileyrow.SMILEY_CODE}">
+			<img src="{smileyrow.SMILEY_IMG}" width="{smileyrow.SMILEY_WIDTH}" height="{smileyrow.SMILEY_HEIGHT}" alt="{smileyrow.SMILEY_CODE}" title="{smileyrow.SMILEY_DESC}" />
+		</a>
+	<!-- END smileyrow -->
+	</div>
+
+<!-- IF .smiley_pagination -->
+	<div class="pagination">
+		<ul>
+		<!-- BEGIN smiley_pagination -->
+			<!-- IF smiley_pagination.S_IS_CURRENT -->
+			<li class="active"><span>{smiley_pagination.PAGE_NUMBER}</span></li>
+			<!-- ELSEIF smiley_pagination.S_IS_ELLIPSIS -->
+			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
+			<!-- ELSEIF not smiley_pagination.S_IS_NEXT and not smiley_pagination.S_IS_PREV -->
+			<li><a href="{smiley_pagination.PAGE_URL}" role="button">{smiley_pagination.PAGE_NUMBER}</a></li>
+			<!-- ENDIF -->
+		<!-- END smiley_pagination -->
+		</ul>
+	</div>
+	<div class="clear"></div>
+<!-- ENDIF -->

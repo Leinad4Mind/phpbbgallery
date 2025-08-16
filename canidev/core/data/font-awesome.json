@@ -257,15 +257,29 @@
             "fa-volume-off",
             "fa-volume-up",
             "fa-wifi",
-            "fa-wrench"
-        ]
-    },
-    "ICON_ACCESSIBILITY": {
-        "icon": "fa-wheelchair",
-        "items": [
-            "fa-cc",
+            "fa-wrench",
+			"fa-cc",
             "fa-tty",
-            "fa-wheelchair"
+            "fa-wheelchair",
+			"fa-circle-o-notch",
+            "fa-cog",
+            "fa-refresh",
+            "fa-spinner",
+			"fa-area-chart",
+            "fa-bar-chart",
+            "fa-line-chart",
+            "fa-pie-chart",
+			"fa-check-square",
+            "fa-check-square-o",
+            "fa-circle",
+            "fa-circle-o",
+            "fa-dot-circle-o",
+            "fa-minus-square",
+            "fa-minus-square-o",
+            "fa-plus-square",
+            "fa-plus-square-o",
+            "fa-square",
+            "fa-square-o"
         ]
     },
     "ICON_HAND": {
@@ -343,31 +357,6 @@
             "fa-file-word-o"
         ]
     },
-    "ICON_SPINNER": {
-        "icon": "fa-spinner",
-        "items": [
-            "fa-circle-o-notch",
-            "fa-cog",
-            "fa-refresh",
-            "fa-spinner"
-        ]
-    },
-    "ICON_FORM_CONTROL": {
-        "icon": "fa-check-square-o",
-        "items": [
-            "fa-check-square",
-            "fa-check-square-o",
-            "fa-circle",
-            "fa-circle-o",
-            "fa-dot-circle-o",
-            "fa-minus-square",
-            "fa-minus-square-o",
-            "fa-plus-square",
-            "fa-plus-square-o",
-            "fa-square",
-            "fa-square-o"
-        ]
-    },
     "ICON_PAYMENT": {
         "icon": "fa-usd",
         "items": [
@@ -395,15 +384,6 @@
             "fa-rub",
             "fa-try",
             "fa-usd"
-        ]
-    },
-    "ICON_CHART": {
-        "icon": "fa-pie-chart",
-        "items": [
-            "fa-area-chart",
-            "fa-bar-chart",
-            "fa-line-chart",
-            "fa-pie-chart"
         ]
     },
     "ICON_TEXT_EDITOR": {

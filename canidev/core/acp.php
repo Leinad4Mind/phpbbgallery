@@ -1,10 +1,9 @@
 <?php
 /*
-* @name acp.php
 * @package Ext Common Core
-* @version v1.0.1 05/02/2019
+* @version v1.0.4 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -39,7 +38,7 @@ class acp
 		}	
 	}
 
-	protected function display_vars($display_vars)
+	protected function display_vars($display_vars, $tpl_key = 'options')
 	{
 		foreach($display_vars as $config_key => $vars)
 		{
@@ -50,7 +49,7 @@ class acp
 
 			if(strpos($config_key, 'legend') !== false)
 			{
-				$this->template->assign_block_vars('options', array(
+				$this->template->assign_block_vars($tpl_key, array(
 					'S_LEGEND'		=> true,
 					'LEGEND'		=> $this->lang->lang($vars)
 				));
@@ -70,7 +69,7 @@ class acp
 				continue;
 			}
 
-			$this->template->assign_block_vars('options', array(
+			$this->template->assign_block_vars($tpl_key, array(
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->lang->lang($vars['lang']),
 				'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->lang($vars['lang'] . '_EXPLAIN') : ''),
@@ -105,8 +104,10 @@ class acp
 	{
 		$in_group		= false;
 		$classname		= ($classname) ? ' class="' . $classname . '"' : '';
+		$string 		= '';
+		$flags 			= (int)$flags; // Make sure it is a number
 		
-		if(!is_array($select_ids))
+		if(!is_array($select_ids) && !is_null($select_ids))
 		{
 			$select_ids = explode(',', $select_ids);
 		}
@@ -115,7 +116,7 @@ class acp
 		{
 			$string = '<select' . $classname . ' id="' . $key . '" name="' . $key . '[]" multiple="multiple" size="8">';
 		}
-		else
+		else if($key !== false)
 		{
 			$select_ids = array($select_ids[0]);
 			$string = '<select' . $classname . ' id="' . $key . '" name="config[' . $key . ']">';
@@ -133,7 +134,7 @@ class acp
 				continue;
 			}
 
-			$selected	= (in_array($value, $select_ids) ? ' selected="selected"' : '');
+			$selected	= ($select_ids !== null && in_array($value, $select_ids) ? ' selected="selected"' : '');
 			$string .= '<option value="' . $value . '"' . $selected . '>' . $title . '</option>';
 		}
 		
@@ -141,8 +142,13 @@ class acp
 		{
 			$string .= '</optgroup>';
 		}
+		
+		if($key !== false)
+		{
+			$string .= '</select>';
+		}
 
-		return $string . '</select>';
+		return $string;
 	}
 	
 	/**
@@ -171,7 +177,7 @@ class acp
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$s_selected = (in_array($row['group_id'], $group_ary)) ? ' selected="selected"' : '';
-			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->lang->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 

@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickMod
-* @version v1.1.1 22/03/2019
+* @version v1.1.2 01/03/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -108,7 +108,7 @@ class quickmod
 		$this->forum_id = $this->request->variable('f', 0);
 		
 		$active			= false;
-		$mod_pages		= array('viewforum.' . $this->php_ext, 'search.' . $this->php_ext);
+		$mod_pages		= array('viewforum', 'search', 'viewforum.' . $this->php_ext, 'search.' . $this->php_ext);
 
 		if($this->phpbb_root_path == './' && in_array($this->user->page['page_name'], $mod_pages))
 		{
@@ -143,10 +143,7 @@ class quickmod
 		}
 
 		$this->template->append_asset('css', '@canidev_quickmod/../theme/quickmod.css');
-		$this->template->append_asset('js', array(
-			'@canidev_quickmod/js/jquery.mobile.custom.min.js',
-			'@canidev_quickmod/js/jquickmod.min.js'
-		));
+		$this->template->append_asset('js', '@canidev_quickmod/js/jquickmod.min.js');
 	}
 	
 	public function display()
@@ -506,24 +503,54 @@ class quickmod
 			case 'finduser':
 				$query			= $this->request->variable('query', '', true);
 				$username_clean = utf8_clean_string($query);
-				$result_count	= 0;
+				$user_ary 		= array();
+				$limit 			= 100;
+
+				// Base query
+				$sql_ary = array(
+					'SELECT'	=> 'u.user_id, u.username, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height',
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'ORDER_BY'	=> 'u.username_clean ASC'
+				);
 				
-				$sql = 'SELECT username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height
-					FROM ' . USERS_TABLE . '
-					WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
-					AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $username_clean . $this->db->get_any_char());
-				$result = $this->db->sql_query_limit($sql, 100);
+				// First, find user that start with search query
+				$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+					AND username_clean ' . $this->db->sql_like_expression($username_clean . $this->db->get_any_char());
+				$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_ary), $limit);
 				while($row = $this->db->sql_fetchrow($result))
+				{
+					$user_id = (int)$row['user_id'];
+					$user_ary[$user_id] = $row;
+				}
+				$this->db->sql_freeresult($result);
+
+				// Second, find users that contains search query
+				$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+					AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $username_clean . $this->db->get_any_char());
+				
+				if(sizeof($user_ary))
+				{
+					$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('u.user_id', array_keys($user_ary), true);
+				}
+
+				$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_ary), $limit);
+				while($row = $this->db->sql_fetchrow($result))
+				{
+					$user_id = (int)$row['user_id'];
+					$user_ary[$user_id] = $row;
+				}
+				$this->db->sql_freeresult($result);
+
+				$user_ary = array_slice($user_ary, 0, $limit, true);
+
+				foreach($user_ary as $row)
 				{
 					$this->template->assign_block_vars('user', array(
 						'S_AVATAR_IMG'			=> phpbb_get_user_avatar($row),
 						'S_USERNAME'			=> $row['username'],
 						'S_USERNAME_FORMATTED'	=> preg_replace('#(' . preg_quote($query) . ')#i', '<strong>$1</strong>', $row['username'])
 					));
-
-					$result_count++;
 				}
-				$this->db->sql_freeresult($result);
 				
 				$this->template->assign_vars(array(
 					'S_USERLIST'	=> true
@@ -532,7 +559,7 @@ class quickmod
 				$message = array(
 					array(
 						'query'		=> $query,
-						'results'	=> $result_count
+						'results'	=> sizeof($user_ary)
 					)
 				);
 			break;
@@ -546,9 +573,10 @@ class quickmod
 		* @var	string	action		The current request action
 		* @var	array	topic_ids	List of selected topics
 		* @var	string	message		The output message
+		* @var	string	new_data	New value (for topic rename)
 		* @since 1.1.0
 		*/
-		$vars = array('action', 'topic_ids', 'message');
+		$vars = array('action', 'topic_ids', 'message', 'new_data');
 		extract($this->dispatcher->trigger_event('quickmod.after_ajax_action', compact($vars)));
 
 		$message = (is_array($message)) ? $message : array($message, false, $new_data);
