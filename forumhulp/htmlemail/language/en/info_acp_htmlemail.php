@@ -39,8 +39,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'FH_HELPER_NOTICE'		=> 'Forumhulp helper application does not exist!<br />Download <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> and copy the helper folder to your forumhulp extension folder.',
-	'HTML_EMAIL_NOTICE'			=> '<div class="phpinfo"><p class="entry">Config setting of this extension are not necessary.<br />You can use it for email on birthday extension by switching on "use html in email" in Boardfeatures. Do you want to use html in other mails you have to let know messenger it should send html emails by configure messenger with $messenger->set_mail_html(true). Update your mail-templates to whatever you like.</p></div>',
-	'DELETE_DATA_NOTICE'		=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;">Not all files are replaced ! Please replace by hand the file(s) mentioned in the Admin log</p></div>',
-	'ENABLE_DATA_NOTICE'		=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;"><br />However not all updates are done properly because of file permissions or missing files. See admin log for a overview.<br /><br />Please update files by hand to enjoy all functions !</p></div>'
+	'HTML_EMAIL_NOTICE'		=> '<div class="phpinfo"><p class="entry">Config setting of this extension are not necessary.<br />You can use it for email on birthday extension by switching on "use html in email" in Board features. Do you want to use html in other mails you have to let know messenger it should send html emails by configure messenger with $messenger->set_mail_html(true). Update your mail-templates to whatever you like.</p></div>',
+	'DELETE_DATA_NOTICE'	=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;">Not all files are replaced ! Please replace by hand the file(s) mentioned in the Admin log</p></div>',
+	'ENABLE_DATA_NOTICE'	=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;"><br />However not all updates are done properly because of file permissions or missing files. See admin log for a overview.<br /><br />Please update files by hand to enjoy all functions !</p></div>'
 ));
 
