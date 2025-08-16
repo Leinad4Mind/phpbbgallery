@@ -43,6 +43,7 @@ $lang = array_merge($lang, array(
 	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Verwaltung der Board-Ankündigung, die auf jeder Seite im Board angezeigt werden wird.',
 
 	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Diese Board-Ankündigung anzeigen',
+	'BOARD_ANNOUNCEMENTS_INDEX_ONLY'		=> 'Nur auf der Index-Seite im Board anzeigen',
 	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Wer kann diese Board-Ankündigung sehen',
 	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Nutzern erlauben, die Board-Ankündigung zu schließen',
 
@@ -54,7 +55,7 @@ $lang = array_merge($lang, array(
 	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Ablaufdatum der Board-Ankündigung einstellen',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN'	=> 'Setzen Sie das Datum, an dem die Ansage abläuft und deaktiviert wird. Lassen Sie dieses Feld leer, wenn Sie nicht möchten, dass die Ankündigung abläuft.',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID'	=> 'Das Verfallsdatum war ungültig oder ist bereits abgelaufen.',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_FORMAT'		=> 'YYYY-MM-DD HH:MM',
+	'BOARD_ANNOUNCEMENTS_EXPIRY_FORMAT'		=> 'JJJJ-MM-TT HH:MM',
 
 	'BOARD_ANNOUNCEMENTS_TEXT'				=> 'Text der Board-Ankündigung',
 	'BOARD_ANNOUNCEMENTS_PREVIEW'			=> 'Vorschau der Board-Ankündigung',
