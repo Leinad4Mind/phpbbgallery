@@ -1,39 +1,30 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class admin_controller_base extends \canidev\core\acp
+abstract class admin_controller_base extends \canidev\core\acp
 {
 	const FORM_KEY = 'acp_chat';
 
 	public $u_action = '';
 
-	protected $cache;
-	protected $config;
 	protected $db;
 	protected $dispatcher;
 	protected $json;
-	protected $lang;
 	protected $log;
 	protected $request;
-	protected $template;
 	protected $user;
 
 	protected $phpbb_root_path;
 	protected $php_ext;
+	protected $tables;
 	
 	protected $action;
 	protected $page_title;
@@ -54,6 +45,7 @@ class admin_controller_base extends \canidev\core\acp
 	* @param \phpbb\user								$user				User object
 	* @param string										$root_path			phpBB root path
 	* @param string										$php_ext			phpEx
+	* @param array 										$tables 			Chat DB Tables
 	*
 	* @access public
 	*/
@@ -62,32 +54,37 @@ class admin_controller_base extends \canidev\core\acp
 		\phpbb\config\config $config,
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
 		$root_path,
-		$php_ext)
+		$php_ext,
+		$tables)
 	{
-		$this->cache		= $cache;
-		$this->config		= $config;
 		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
+		$this->dispatcher	= $dispatcher;
 		$this->json			= \canidev\core\json_response::get_instance();
-		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
-		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
+		$this->tables 			= $tables;
+
+		parent::__construct($cache, $config, $language, \canidev\core\template::get_instance($container));
 	}
 	
+	/**
+	 * Display the page
+	 * 
+	 * @param string 	$mode 		Current mode
+	 */
 	public function display($mode)
 	{
-		$this->lang->add_lang(array('acp', 'main'), 'canidev/chat');
+		$this->language->add_lang(array('acp', 'main'), 'canidev/chat');
 		
 		$this->page_header('cbb-chat', $this->config['chat_version']);
 		
@@ -115,4 +112,11 @@ class admin_controller_base extends \canidev\core\acp
 
 		return $this->_display($mode);
 	}
+
+	/**
+	 * Function to execute custom code on display
+	 * 
+	 * @param string 	$mode 		Current mode
+	 */
+	abstract protected function _display($mode);
 }

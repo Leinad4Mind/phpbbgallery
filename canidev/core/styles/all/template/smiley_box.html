@@ -14,7 +14,7 @@
 			{% if pagination.S_IS_CURRENT %}
 			<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
 			{% elseif pagination.S_IS_ELLIPSIS %}
-			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
+			<li class="ellipsis" role="separator"><span>{{ lang('ELLIPSIS') }}</span></li>
 			{% elseif not pagination.S_IS_NEXT and not pagination.S_IS_PREV %}
 			<li><a href="{{ pagination.PAGE_URL }}" role="button">{{ pagination.PAGE_NUMBER }}</a></li>
 			{% endif %}

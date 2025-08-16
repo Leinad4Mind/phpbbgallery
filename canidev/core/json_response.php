@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.15 28/03/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 /**
 * JSON class

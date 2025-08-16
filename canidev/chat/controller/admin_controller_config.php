@@ -1,22 +1,21 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
+use canidev\chat\libraries\constants;
 
 class admin_controller_config extends admin_controller_base
 {
+	/**
+	 * {@inheritDoc}
+	*/
 	public function _display($mode)
 	{
 		$this->tpl_name		= 'acp_chat_config';
@@ -47,9 +46,9 @@ class admin_controller_config extends admin_controller_base
 			),
 			'disallowed_bbcode'	=> $this->get_bbcode_options(),
 			'forum_posts'	=> array(
-				CHAT_SHOW_NONE		=> 'CHAT_SHOW_NONE',
-				CHAT_SHOW_TOPICS	=> 'CHAT_SHOW_TOPICS',
-				CHAT_SHOW_POSTS		=> 'CHAT_SHOW_POSTS',
+				constants::SHOW_NONE	=> 'CHAT_SHOW_NONE',
+				constants::SHOW_TOPICS	=> 'CHAT_SHOW_TOPICS',
+				constants::SHOW_POSTS	=> 'CHAT_SHOW_POSTS',
 			),
 		);
 
@@ -124,7 +123,7 @@ class admin_controller_config extends admin_controller_base
 			
 			if(!check_form_key(self::FORM_KEY))
 			{
-				$error[] = $this->lang->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
 			}
 		}
 
@@ -134,7 +133,7 @@ class admin_controller_config extends admin_controller_base
 		// Validate the timeouts
 		if($cfg_array['chat_timeout'] && $cfg_array['chat_auto_away'] && $cfg_array['chat_timeout'] <= $cfg_array['chat_auto_away'])
 		{
-			$error[] = $this->lang->lang('CHAT_AUTO_AWAY_ERROR');
+			$error[] = $this->language->lang('CHAT_AUTO_AWAY_ERROR');
 		}
 		
 		// Do not write values if there is an error
@@ -158,7 +157,7 @@ class admin_controller_config extends admin_controller_base
 				// Delete the guest sessions is neccessary here
 				if($config_name == 'chat_anonymous_allowed' && $this->config['chat_anonymous_allowed'] != $config_value)
 				{
-					$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+					$sql = 'DELETE FROM ' . $this->tables['users'] . '
 						WHERE user_id = ' . ANONYMOUS;
 					$this->db->sql_query($sql);
 				}
@@ -172,7 +171,7 @@ class admin_controller_config extends admin_controller_base
 			$this->cache->destroy('_chat_options');
 	
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CHAT_CONFIG');
-			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 		
 		// Decode disallowed bbcode's bitfield
@@ -187,6 +186,10 @@ class admin_controller_config extends admin_controller_base
 		$this->display_vars($display_vars);
 	}
 	
+	/**
+	 * Get phpBB BBcodes
+	 * @return array
+	 */
 	protected function get_bbcode_options()
 	{
 		$bbcodes = array(

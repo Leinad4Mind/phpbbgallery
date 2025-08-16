@@ -1,0 +1,7 @@
+parameters:
+    tables.canidev.chat:
+        messages: '%core.table_prefix%chat_messages'
+        pages: '%core.table_prefix%chat_pages'
+        rooms: '%core.table_prefix%chat_rooms'
+        texts: '%core.table_prefix%chat_texts'
+        users: '%core.table_prefix%chat_users'

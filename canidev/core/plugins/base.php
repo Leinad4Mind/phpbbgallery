@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.16 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core\plugins;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,21 +29,37 @@ class base
 		$this->container = $container;
 	}
 	
+	/**
+	 * Define if plugin can be loaded
+	 * @return bool
+	 */
 	public function is_runnable()
 	{
 		return true;
 	}
 	
+	/**
+	 * Obtain php events of the plugin
+	 * @return array
+	 */
 	public function core_events()
 	{
 		return array();
 	}
 
+	/**
+	 * Obtain main javascript events of the plugin
+	 * @return array
+	 */
 	public function frontend_js_events()
 	{
 		return array();
 	}
 	
+	/**
+	 * Obtain admin javascript events of the plugin
+	 * @return array
+	 */
 	public function admin_js_events()
 	{
 		return array();

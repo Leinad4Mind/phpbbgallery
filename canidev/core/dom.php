@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.15 28/03/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class dom
 {
@@ -23,7 +17,7 @@ class dom
 	{
 		$dom 	= new \DOMDocument('1.0', 'utf-8');
 
-		$string = preg_replace('#(<(?:' . self::$selfclosing_tags . ')[^>]*)(?<!/)>#i', '$1/>', $string);
+		$string = preg_replace('#(<(' . self::$selfclosing_tags . ')[^>]*)(?<!/)>(</\\2>)?#i', '$1 />', $string);
 		$string = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $string);
 		$flags 	= \LIBXML_NOCDATA | \LIBXML_NOWARNING | \LIBXML_NOERROR;
 
@@ -55,7 +49,7 @@ class dom
 		return preg_replace(
 			array(
 				'#(^<div>|</div>$)#',
-				'#<((' . self::$selfclosing_tags . ').*?)></\\2>#',
+				'#<((' . str_replace('|iframe', '', self::$selfclosing_tags) . ').*?)></\\2>#',
 			),
 			array(
 				'',
@@ -63,6 +57,18 @@ class dom
 			),
 			$xpath->document->saveXML($xpath->document->documentElement, \LIBXML_NOEMPTYTAG)
 		);
+	}
+
+	public static function simple_xml_file($filename)
+	{
+		$err_status = \libxml_use_internal_errors(true);
+
+		$xml = \simplexml_load_file($filename);
+
+		\libxml_clear_errors();
+		\libxml_use_internal_errors($err_status);
+
+		return $xml;
 	}
 
 	public static function node_closest($node, $node_name)

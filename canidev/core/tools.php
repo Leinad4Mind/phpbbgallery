@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.15 28/03/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class tools
 {
@@ -138,6 +132,53 @@ class tools
 				array_keys($attributes)
 			)
 		);
+	}
+
+	
+	/**
+	 * Events can produce unprecise sql queries because of other extensions,
+	 * this function is used to clear the queries before use it.
+	 * 
+	 * @param array 	$sql_ary 		Array with query elements
+	 * @return array 					Filtered query elements
+	 */
+	public static function filter_db_query($sql_ary)
+	{
+		// Filter duplicate SELECT
+		if(isset($sql_ary['SELECT']))
+		{
+			$select_keys = array_map('trim', explode(',', $sql_ary['SELECT']));
+			$select_keys = array_unique($select_keys);
+
+			$sql_ary['SELECT'] = implode(', ', $select_keys);
+		}
+
+		// Filter duplicate LEFT JOIN
+		if(isset($sql_ary['LEFT_JOIN']))
+		{
+			$left_join_keys = array();
+
+			foreach($sql_ary['LEFT_JOIN'] as $i => $join)
+			{
+				$forum_key 		= array_keys($join['FROM'])[0];
+				$forum_alias 	= array_values($join['FROM'])[0];
+
+				if(!isset($left_join_keys[$forum_key]))
+				{
+					$left_join_keys[$forum_key] = array();
+				}
+
+				if(!in_array($forum_alias, $left_join_keys[$forum_key]))
+				{
+					$left_join_keys[$forum_key][] = $forum_alias;
+					continue;
+				}
+
+				unset($sql_ary['LEFT_JOIN'][$i]);
+			}
+		}
+
+		return $sql_ary;
 	}
 
 	public static function mkdir($path, $public_access = false)

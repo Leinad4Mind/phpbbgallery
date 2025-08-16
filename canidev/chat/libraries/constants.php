@@ -1,35 +1,28 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
-// @ignore
-if(!defined('IN_PHPBB'))
+namespace canidev\chat\libraries;
+
+class constants
 {
-	exit;
+	const GUEST_ROOM		= 1;
+
+	const TEXT_NOTICE		= 1;
+	const TEXT_TIP			= 2;
+	const TEXT_RULE			= 3;
+	
+	const STATUS_AVAILABLE	= 1;
+	const STATUS_AWAY		= 2;
+	const STATUS_BUSY		= 3;
+	const STATUS_HIDDEN		= 4;
+	
+	const SHOW_NONE			= 0;
+	const SHOW_TOPICS		= 1;
+	const SHOW_POSTS		= 2;
 }
-
-define('CHAT_GUEST_ROOM',	1);
-
-define('CHAT_TEXT_NOTICE', 	1);
-define('CHAT_TEXT_TIP', 	2);
-define('CHAT_TEXT_RULE', 	3);
-
-define('CHAT_STATUS_AVAILABLE',	1);
-define('CHAT_STATUS_AWAY',		2);
-define('CHAT_STATUS_BUSY',		3);
-define('CHAT_STATUS_HIDDEN',	4);
-
-define('CHAT_SHOW_NONE',	0);
-define('CHAT_SHOW_TOPICS',	1);
-define('CHAT_SHOW_POSTS',	2);
-
-define('CHAT_MESSAGES_TABLE', 		$table_prefix . 'chat_messages');
-define('CHAT_PAGES_TABLE', 			$table_prefix . 'chat_pages');
-define('CHAT_ROOMS_TABLE',			$table_prefix . 'chat_rooms');
-define('CHAT_TEXTS_TABLE', 			$table_prefix . 'chat_texts');
-define('CHAT_USERS_TABLE', 			$table_prefix . 'chat_users');

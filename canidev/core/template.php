@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.15 28/03/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -261,7 +255,7 @@ class template
 				$new_asset = array(
 					'ID'		=> $data['id'],
 					'DATA'		=> $data['content'] ,
-					'PARAMS'	=> implode(' ', $params),
+					'PARAMS'	=> sizeof($params) ? ' ' . implode(' ', $params) : '',
 					'IS_SINGLE'	=> $is_single,
 					'TYPE'		=> $data['type'],
 					'SRC'		=> ($is_single) ? $data[$file_key] : '',

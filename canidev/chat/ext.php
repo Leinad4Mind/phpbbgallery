@@ -1,10 +1,10 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat;
@@ -12,8 +12,11 @@ namespace canidev\chat;
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.0.8';
+	const REQUIRED_CORE		= '1.0.16';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function is_enableable()
 	{
 		$config 	= $this->container->get('config');

@@ -1,22 +1,21 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
+use canidev\chat\libraries\constants;
 
 class admin_controller_rooms extends admin_controller_base
 {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function _display($mode)
 	{
 		$this->tpl_name		= 'acp_chat_rooms';
@@ -30,11 +29,11 @@ class admin_controller_rooms extends admin_controller_base
 			case 'delete':
 				if(confirm_box(true))
 				{
-					if($room_id != CHAT_GUEST_ROOM)
+					if($room_id != constants::GUEST_ROOM)
 					{
 						// Get the title and key of the room before remove
 						$sql = 'SELECT room_title, room_key
-							FROM ' . CHAT_ROOMS_TABLE . '
+							FROM ' . $this->tables['rooms'] . '
 							WHERE room_id = ' . $room_id;
 						$result = $this->db->sql_query($sql);
 						$data = $this->db->sql_fetchrow($result);
@@ -42,15 +41,15 @@ class admin_controller_rooms extends admin_controller_base
 						
 						if($data)
 						{
-							$data['room_title'] = $this->lang->lang($data['room_title']);
+							$data['room_title'] = $this->language->lang($data['room_title']);
 							
 							// Delete the room
-							$sql = 'DELETE FROM ' . CHAT_ROOMS_TABLE . '
+							$sql = 'DELETE FROM ' . $this->tables['rooms'] . '
 								WHERE room_id = ' . $room_id;
 							$this->db->sql_query($sql);
 							
 							// Delete the messages of the room
-							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+							$sql = 'DELETE FROM ' . $this->tables['messages'] . '
 								WHERE dest_key = ' . $data['room_key'];
 							$this->db->sql_query($sql);
 
@@ -66,13 +65,13 @@ class admin_controller_rooms extends admin_controller_base
 				}
 				else
 				{
-					confirm_box(false, $this->lang->lang('REMOVE_ROOM_CONFIRM'), '', '@canidev_core/confirmbox.html');
+					confirm_box(false, $this->language->lang('REMOVE_ROOM_CONFIRM'), '', '@canidev_core/confirmbox.html');
 				}
 			break;
 
 			case 'edit':
 				$sql = 'SELECT *
-					FROM ' . CHAT_ROOMS_TABLE . "
+					FROM ' . $this->tables['rooms'] . "
 					WHERE room_id = $room_id";
 				$result = $this->db->sql_query($sql);
 				$room_data = $this->db->sql_fetchrow($result);
@@ -111,7 +110,7 @@ class admin_controller_rooms extends admin_controller_base
 					'room_msg_limit'		=> array('lang' => 'CHAT_ROOM_MSG_LIMIT',	'validate' => 'int:0:99999',	'type' => 'number:0:99999',		'default' => 0),
 				);
 				
-				if($room_id != CHAT_GUEST_ROOM)
+				if($room_id != constants::GUEST_ROOM)
 				{
 					$display_vars += array(
 						'legend2'		=> 'CHAT_ROOM_AUTH',
@@ -123,11 +122,11 @@ class admin_controller_rooms extends admin_controller_base
 				$display_vars += array(
 					'legend3'		=> 'CHAT_ROOM_CONNECTIONS',
 					'linked_forums'	=> array('lang' => 'CHAT_ROOM_LINKED_FORUMS',	'type' => 'custom',	'function' => array($this, 'make_select'),		'params' => array($this->forum_ids_options(), '{KEY}', '{CONFIG_VALUE}', self::SELECT_MULTIPLE)),
-					'linked_groups'	=> array('lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}', false),	'display' => ($room_id != CHAT_GUEST_ROOM)),
+					'linked_groups'	=> array('lang' => 'CHAT_ROOM_LINKED_GROUPS',	'type' => 'custom',	'function' => array($this, 'groups_select'),	'params' => array('{KEY}', '{CONFIG_VALUE}', false),	'display' => ($room_id != constants::GUEST_ROOM)),
 				);
 				
 				// Guest room have different use for forums
-				if($room_id == CHAT_GUEST_ROOM)
+				if($room_id == constants::GUEST_ROOM)
 				{
 					$display_vars['linked_forums']['lang'] = 'CHAT_ROOM_GUEST_FORUMS';
 				}
@@ -165,7 +164,7 @@ class admin_controller_rooms extends admin_controller_base
 					
 					if(!check_form_key(self::FORM_KEY))
 					{
-						$error[] = $this->lang->lang('FORM_INVALID');
+						$error[] = $this->language->lang('FORM_INVALID');
 					}
 					
 					// We validate the complete config if whished
@@ -175,7 +174,7 @@ class admin_controller_rooms extends admin_controller_base
 					
 					if(!sizeof($error))
 					{
-						if($room_id != CHAT_GUEST_ROOM)
+						if($room_id != constants::GUEST_ROOM)
 						{
 							if(!empty($this->new_config['room_groups']))
 							{
@@ -225,7 +224,7 @@ class admin_controller_rooms extends admin_controller_base
 
 						$sql_ary = array(
 							'room_title'			=> $this->new_config['room_title'],
-							'room_enabled'			=> ($room_id == CHAT_GUEST_ROOM) ? 1 : $this->new_config['room_enabled'],
+							'room_enabled'			=> ($room_id == constants::GUEST_ROOM) ? 1 : $this->new_config['room_enabled'],
 							'room_autopurge_time'	=> $this->new_config['room_autopurge_time'],
 							'room_msg_limit'		=> $this->new_config['room_msg_limit'],
 							'room_data'				=> $data,
@@ -245,19 +244,19 @@ class admin_controller_rooms extends admin_controller_base
 						{
 							// Get max order
 							$sql = 'SELECT MAX(room_order) AS max_order
-								FROM ' . CHAT_ROOMS_TABLE;
+								FROM ' . $this->tables['rooms'];
 							$result = $this->db->sql_query($sql);
 							$sql_ary['room_order'] = (int)$this->db->sql_fetchfield('max_order') + 1;
 							$this->db->sql_freeresult($result);
 							
 							$sql_ary['room_key'] = time() - 1001;
 
-							$sql = 'INSERT INTO ' . CHAT_ROOMS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+							$sql = 'INSERT INTO ' . $this->tables['rooms'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 							$notice[] = 'CHAT_ROOM_ADDED';
 						}
 						else
 						{
-							$sql = 'UPDATE ' . CHAT_ROOMS_TABLE . '
+							$sql = 'UPDATE ' . $this->tables['rooms'] . '
 								SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE room_id = $room_id";
 								
@@ -268,11 +267,11 @@ class admin_controller_rooms extends admin_controller_base
 						
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 					}
 				}
 
-				if($room_id == CHAT_GUEST_ROOM)
+				if($room_id == constants::GUEST_ROOM)
 				{
 					$display_vars['room_enabled']['display'] = false;
 				}
@@ -296,7 +295,7 @@ class admin_controller_rooms extends admin_controller_base
 				
 				foreach($rows as $position => $room_id)
 				{
-					$sql = 'UPDATE ' . CHAT_ROOMS_TABLE . '
+					$sql = 'UPDATE ' . $this->tables['rooms'] . '
 						SET room_order = ' . ((int)$position + 1) . "
 						WHERE room_id = $room_id";
 					$this->db->sql_query($sql);
@@ -310,20 +309,20 @@ class admin_controller_rooms extends admin_controller_base
 				$room_ary = array();
 
 				$sql = 'SELECT *
-					FROM ' . CHAT_ROOMS_TABLE . '
+					FROM ' . $this->tables['rooms'] . '
 					ORDER BY room_order';
 				$result = $this->db->sql_query($sql);
 				while($row = $this->db->sql_fetchrow($result))
 				{
 					$title 		= $row['room_title'];
-					$title 		= $this->lang->is_set(strtoupper($title)) ? $this->lang->lang(strtoupper($title)) : ucfirst($title);
+					$title 		= $this->language->is_set(strtoupper($title)) ? $this->language->lang(strtoupper($title)) : ucfirst($title);
 
 					$this->template->assign_block_vars('roomrow', array(
 						'S_ID'		=> $row['room_id'],
 						'S_KEY'		=> $row['room_key'],
 						'S_TITLE'	=> $title,
 						
-						'U_DELETE'	=> ($row['room_id'] != CHAT_GUEST_ROOM) ? $this->u_action . '&amp;action=delete&amp;id=' . $row['room_id'] : '',
+						'U_DELETE'	=> ($row['room_id'] != constants::GUEST_ROOM) ? $this->u_action . '&amp;action=delete&amp;id=' . $row['room_id'] : '',
 						'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;id=' . $row['room_id'],
 					));
 				}
@@ -346,6 +345,10 @@ class admin_controller_rooms extends admin_controller_base
 		));
 	}
 	
+	/**
+	 * Forums selector options
+	 * @return array
+	 */
 	protected function forum_ids_options()
 	{
 		$forum_ary = make_forum_select(false, false, true, false, true, false, true);

@@ -1,19 +1,15 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
+use canidev\chat\libraries\constants;
 
 class admin_controller_texts extends admin_controller_base
 {
@@ -22,18 +18,19 @@ class admin_controller_texts extends admin_controller_base
 	/**
 	* Constructor
 	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \canidev\chat\libraries\chat 				$chat				Chat Object
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param ContainerInterface 						$container			Service container interface
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
-	* @param \phpbb\language\language					$language			Language Object
-	* @param \phpbb\log\log                       		$log				Log Object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\user								$user				User object
-	* @param string										$root_path			phpBB root path
-	* @param string										$php_ext			phpEx
+	* @param \phpbb\cache\driver\driver_interface 						$cache 				Cache instance
+	* @param \canidev\chat\libraries\chat 								$chat				Chat Object
+	* @param \phpbb\config\config 										$config				Config Object
+	* @param \Symfony\Component\DependencyInjection\ContainerInterface 	$container			Service container interface
+	* @param \phpbb\db\driver\driver_interface							$db					DB Object
+	* @param \phpbb\event\dispatcher_interface							$phpbb_dispatcher	Event dispatcher
+	* @param \phpbb\language\language									$language			Language Object
+	* @param \phpbb\log\log                       						$log				Log Object
+	* @param \phpbb\request\request 									$request			Request object
+	* @param \phpbb\user												$user				User object
+	* @param string														$root_path			phpBB root path
+	* @param string														$php_ext			phpEx
+	* @param array 														$tables 			Chat DB Tables
 	*
 	* @access public
 	*/
@@ -43,30 +40,36 @@ class admin_controller_texts extends admin_controller_base
 		\phpbb\config\config $config,
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
 		$root_path,
-		$php_ext)
+		$php_ext,
+		$tables)
 	{
-		$this->cache		= $cache;
-		$this->chat 		= $chat;
-		$this->config		= $config;
-		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
-		$this->json			= \canidev\core\json_response::get_instance();
-		$this->lang			= $language;
-		$this->log			= $log;
-		$this->request		= $request;
-		$this->template 	= \canidev\core\template::get_instance($container);
-		$this->user			= $user;
-		
-		$this->phpbb_root_path	= $root_path;
-		$this->php_ext			= $php_ext;
+		$this->chat = $chat;
+
+		parent::__construct(
+			$cache,
+			$config,
+			$container,
+			$db,
+			$dispatcher,
+			$language,
+			$log,
+			$request,
+			$user,
+			$root_path,
+			$php_ext,
+			$tables
+		);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function _display($mode)
 	{
 		$this->tpl_name		= 'acp_chat_texts';
@@ -77,16 +80,16 @@ class admin_controller_texts extends admin_controller_base
 		$error		= array();
 		
 		$text_ary = array(
-			CHAT_TEXT_NOTICE	=> array('title' => 'CHAT_NOTICES',	'rows' => array()),
-			CHAT_TEXT_TIP		=> array('title' => 'CHAT_TIPS',	'rows' => array()),
-			CHAT_TEXT_RULE		=> array('title' => 'CHAT_RULES',	'rows' => array()),
+			constants::TEXT_NOTICE	=> array('title' => 'CHAT_NOTICES',	'rows' => array()),
+			constants::TEXT_TIP		=> array('title' => 'CHAT_TIPS',	'rows' => array()),
+			constants::TEXT_RULE	=> array('title' => 'CHAT_RULES',	'rows' => array()),
 		);
 		
 		switch($this->action)
 		{
 			case 'edit':
 				$sql = 'SELECT text_content, bbcode_uid
-					FROM ' . CHAT_TEXTS_TABLE . "
+					FROM ' . $this->tables['texts'] . "
 					WHERE text_id = $text_id
 					AND text_type = $text_type";
 				$result = $this->db->sql_query($sql);
@@ -140,7 +143,7 @@ class admin_controller_texts extends admin_controller_base
 					
 					if(!check_form_key(self::FORM_KEY))
 					{
-						$error[] = $this->lang->lang('FORM_INVALID');
+						$error[] = $this->language->lang('FORM_INVALID');
 					}
 					
 					// We validate the complete config if whished
@@ -158,18 +161,18 @@ class admin_controller_texts extends admin_controller_base
 						{
 							// Get last text position
 							$sql = 'SELECT MAX(text_order) AS last_position
-								FROM ' . CHAT_TEXTS_TABLE;
+								FROM ' . $this->tables['texts'];
 							$result = $this->db->sql_query($sql);
 							$this->new_config['text_order'] = (int)$this->db->sql_fetchfield('last_position') + 1;
 							$this->db->sql_freeresult($result);
 							
 							$this->new_config['text_type'] = $text_type;
 
-							$sql = 'INSERT INTO ' . CHAT_TEXTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $this->new_config);
+							$sql = 'INSERT INTO ' . $this->tables['texts'] . ' ' . $this->db->sql_build_array('INSERT', $this->new_config);
 						}
 						else
 						{
-							$sql = 'UPDATE ' . CHAT_TEXTS_TABLE . '
+							$sql = 'UPDATE ' . $this->tables['texts'] . '
 								SET ' . $this->db->sql_build_array('UPDATE', $this->new_config) . "
 								WHERE text_id = $text_id
 								AND text_type = $text_type";
@@ -178,7 +181,7 @@ class admin_controller_texts extends admin_controller_base
 	
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 					}
 				}
 				
@@ -199,7 +202,7 @@ class admin_controller_texts extends admin_controller_base
 			break;
 			
 			case 'delete':
-				$sql = 'DELETE FROM ' . CHAT_TEXTS_TABLE . "
+				$sql = 'DELETE FROM ' . $this->tables['texts'] . "
 					WHERE text_id = $text_id
 					AND text_type = $text_type";
 				$this->db->sql_query($sql);
@@ -217,7 +220,7 @@ class admin_controller_texts extends admin_controller_base
 				
 				foreach($rows as $position => $text_id)
 				{
-					$sql = 'UPDATE ' . CHAT_TEXTS_TABLE . '
+					$sql = 'UPDATE ' . $this->tables['texts'] . '
 						SET text_order = ' . ((int)$position + 1) . "
 						WHERE text_id = $text_id";
 					$this->db->sql_query($sql);
@@ -229,7 +232,7 @@ class admin_controller_texts extends admin_controller_base
 			
 			default:
 				$sql = 'SELECT *
-					FROM ' . CHAT_TEXTS_TABLE . '
+					FROM ' . $this->tables['texts'] . '
 					ORDER BY text_order';
 				$result = $this->db->sql_query($sql);
 				while($row = $this->db->sql_fetchrow($result))
@@ -250,10 +253,10 @@ class admin_controller_texts extends admin_controller_base
 					$s_title = $data_ary['title'];
 		
 					$this->template->assign_block_vars('textrow', array(
-						'S_LEGEND'			=> $this->lang->lang($s_title),
-						'S_EXPLAIN'			=> ($this->lang->is_set($s_title . '_EXPLAIN') ? $this->lang->lang($s_title . '_EXPLAIN') : ''),
+						'S_LEGEND'			=> $this->language->lang($s_title),
+						'S_EXPLAIN'			=> ($this->language->is_set($s_title . '_EXPLAIN') ? $this->language->lang($s_title . '_EXPLAIN') : ''),
 						'S_IS_EMPTY'		=> (sizeof($data_ary['rows']) ? false : true),
-						'S_BUTTON_TITLE'	=> $this->lang->lang($s_title . '_ADD'),
+						'S_BUTTON_TITLE'	=> $this->language->lang($s_title . '_ADD'),
 						'U_ADD'				=> $this->u_action . '&amp;action=add&amp;type=' . $text_type,
 					));
 					

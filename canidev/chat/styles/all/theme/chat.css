@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2021 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -308,6 +308,7 @@ a.chat-quickmention {
 
 #chat-tabs li {
 	border: 1px solid #ccc;
+	border-radius: 0 0 2px 2px;
 	cursor: pointer;
 	line-height: 20px;
 	margin: 0;
@@ -338,10 +339,9 @@ a.chat-quickmention {
 
 #chat-tabs li a.tab-close {
 	display: none;
-	height: 10px;
-	margin-left: 2px;
+	font-size: 1.3em;
+	margin: -2px -2px -2px 4px;
 	text-decoration: none;
-	width: 10px;
 }
 
 #chat-tabs li .tab-close.active {
@@ -396,16 +396,16 @@ a.chat-quickmention {
 	cursor: default;
 }
 
-#chat-toolbar a:hover {
+.notouch #chat-toolbar a:hover {
 	background: #fafafa;
 	border-color: #ccc;
 }
 
-#chat-toolbar a.disabled:hover {
+.notouch #chat-toolbar a.disabled:hover {
 	background: none;
 }
 
-#chat-toolbar a:not(.disabled):hover {
+.notouch #chat-toolbar a:not(.disabled):hover {
 	color: #D31141;
 }
 
@@ -453,6 +453,7 @@ a.chat-quickmention {
 	border: none;
     padding: 0px;
     outline: none;
+    overflow-x: hidden;
 	resize: none;
 	width: 100%;
 }
@@ -572,6 +573,24 @@ ol.chat-rulelist li {
 
 .cbb-dialog .chat-options-container {
 	text-align: center;
+}
+
+.chat-dialog-fieldset dl {
+	display: flex;
+	flex-direction: row;
+    align-items: center;
+}
+
+.chat-dialog-fieldset dt,
+.chat-dialog-fieldset dd {
+    flex: auto;
+	float: none !important;
+    margin: 0 !important;
+    width: 50% !important;
+}
+
+ul.topiclist .chat-dialog-fieldset dd {
+	border: none;
 }
 
 /* Messages and States
@@ -801,6 +820,14 @@ html.embedmode { height: auto; }
 	padding-right: 5px;
 }
 
+.rtl .chat-rulelist {
+	text-align: right;
+	margin-left: 0;
+    margin-right: 5px;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
 /* Dark Theme
 ------------------------------- */
 .dark-theme #chat-body,
@@ -930,12 +957,10 @@ html.embedmode { height: auto; }
 	#chat-message { width: 90%; }
 	#chat-message textarea { font-size: 12px; }
 
+	.chat-dialog-fieldset dl,
 	.chat-dialog-fieldset dt,
-	.chat-dialog-fieldset dd {
-		display: block !important;
-	    float: none !important;
-	    margin: 5px 0;
-	    text-align: center;
+	ul.topiclist .chat-dialog-fieldset dd {
+		display: block;
 	}
 }
 

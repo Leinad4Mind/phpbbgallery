@@ -4,7 +4,7 @@
 * @version v1.0.8 12/01/2021
 *
 * @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
@@ -86,6 +86,7 @@ class bbcode_manager
 				'second_pass_match'		=> $data['second_pass_match'],
 				'second_pass_replace'	=> $data['second_pass_replace'],
 				'display_on_posting'	=> isset($bbcode_array['display_on_posting']) ? $bbcode_array['display_on_posting'] : 1,
+				'bbcode_helpline' 		=> isset($bbcode_array['bbcode_helpline']) ? $bbcode_array['bbcode_helpline'] : '',
 			));
 			
 			$bbcode_tag	= strtolower($bbcode_array['bbcode_tag']);

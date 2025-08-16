@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\event;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,6 +16,7 @@ class listener implements EventSubscriberInterface
 	protected $chat;
 	protected $config;
 	protected $db;
+	protected $tables;
 	
 	/**
 	* Constructor
@@ -30,6 +25,7 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\config\config 				$config			Config Object
 	* @param ContainerInterface 				$container		Service container interface
 	* @param \phpbb\db\driver\driver_interface	$db				DB Object
+	* @param array 								$tables 		Chat DB Tables
 	*
 	* @access public
 	*/
@@ -37,15 +33,20 @@ class listener implements EventSubscriberInterface
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
-		\phpbb\db\driver\driver_interface $db)
+		\phpbb\db\driver\driver_interface $db,
+		$tables)
 	{
 		$this->chat			= $chat;
 		$this->config		= $config;
 		$this->db			= $db;
+		$this->tables 		= $tables;
 		
 		\canidev\core\lib::get_instance($container);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	static public function getSubscribedEvents()
 	{
 		$events = array();
@@ -68,6 +69,9 @@ class listener implements EventSubscriberInterface
 		return $events;
 	}
 	
+	/**
+	 * Load chat language
+	 */
 	public function load_language($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
@@ -78,24 +82,40 @@ class listener implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 	
+	/**
+	 * Load chat
+	 */
 	public function on_setup_after()
 	{
 		$this->chat->load();
 	}
 	
+	/**
+	 * Actions on user logout
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function on_user_logout($event)
 	{
-		$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+		$sql = 'UPDATE ' . $this->tables['users'] . '
 			SET user_online = 0
 			WHERE user_key = ' . (int)$event['user_id'];
 		$this->db->sql_query($sql);
 	}
 	
+	/**
+	 * Display chat
+	 */
 	public function on_footer()
 	{
 		$this->chat->display();
 	}
 	
+	/**
+	 * Actions on add user to group
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function user_group_add($event)
 	{
 		if(!$event['pending'])
@@ -104,11 +124,21 @@ class listener implements EventSubscriberInterface
 		}
 	}
 	
+	/**
+	 * Actions on delete user fron group
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function user_group_del($event)
 	{
 		$this->chat->update_groups($event['user_id_ary']);
 	}
 	
+	/**
+	 * Actions on change user group
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function user_group_change($event)
 	{
 		if($event['action'] == 'approve')
@@ -117,27 +147,31 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	 * Actions on user delete
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function on_user_delete($event)
 	{
 		foreach($event['user_ids'] as $user_id)
 		{
 			// Delete from chat users
-			$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+			$sql = 'DELETE FROM ' . $this->tables['users'] . '
 				WHERE ' . $this->db->sql_in_set('user_id', $event['user_ids']);
 			$this->db->sql_query($sql);
 			
 			// Delete private messages
-			$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+			$sql = 'DELETE FROM ' . $this->tables['messages'] . '
 				WHERE ' . $this->db->sql_in_set('poster_id', $event['user_ids']);
 			$this->db->sql_query($sql);
 		}
 	}
 	
 	/**
-	* Add administrative permissions to manage Chat
-	*
-	* @param object $event The event object
-	* @access public
+	 * Add administrative permissions to manage Chat
+	 *
+	 * @param \phpbb\event\data 	$event
 	*/
 	public function add_permissions($event)
 	{

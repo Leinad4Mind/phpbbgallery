@@ -1,25 +1,19 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version v1.0.16 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class lib
 {
-	const VERSION		= '1.0.9';
+	const VERSION		= '1.0.16';
 	
 	private $items				= array();
 	private $langkeys			= array();
@@ -29,7 +23,7 @@ class lib
 	private $container;
 	private $db;
 	private $dispatcher;
-	private $lang;
+	private $language;
 	private $request;
 	private $template;
 	private $user;
@@ -54,7 +48,7 @@ class lib
 		$this->container 		= $container;
 		$this->db				= $container->get('dbal.conn');
 		$this->dispatcher 		= $container->get('dispatcher');
-		$this->lang				= $container->get('language');
+		$this->language			= $container->get('language');
 		$this->request 			= $container->get('request');
 		$this->template			= template::get_instance($container);
 		$this->user				= $container->get('user');
@@ -264,7 +258,7 @@ class lib
 						'enabled[' . $ext_key . '].actions',
 						array(
 							'ACTION_AJAX' 	=> 'false',
-							'L_ACTION'		=> $this->lang->lang('CONFIGURE'),
+							'L_ACTION'		=> $this->language->lang('CONFIGURE'),
 		                    'U_ACTION'	 	=> append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, 'i=-' . str_replace('/', '-', $ext_data['NAME']) . '-acp-' . $modules[$ext_data['NAME']], true, $this->user->session_id),
 		                )
 					);
@@ -287,6 +281,7 @@ class lib
 		if($this->dispatcher->hasListeners('canidev.core.modify_text_for_display'))
 		{
 			$text 	= $event['text'];
+			$flags 	= $event['flags'];
 			$finder = dom::string_to_xpath($text);
 
 			if($finder === false)
@@ -296,11 +291,12 @@ class lib
 			
 			/*
 			* @event canidev.core.modify_text_for_display
-			* @var	DomXPath		$finder		XPath Object
-			* @var	string			$text		Original Post Text (Read Only)
+			* @var	DomXPath		finder		XPath Object
+			* @var	string			text		Original Post Text (Read Only)
+			* @var 	int				flags		The BBCode Flags
 			* @since 1.0.4
 			*/
-			$vars = array('finder', 'text');
+			$vars = array('finder', 'text', 'flags');
 			extract($this->dispatcher->trigger_event('canidev.core.modify_text_for_display', compact($vars)));
 
 			$event['text'] = dom::xpath_to_string($finder);
@@ -351,7 +347,7 @@ class lib
 		if($process)
 		{
 			$output = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches) {
-				return $this->lang->is_set($matches[1]) ? $this->lang->lang($matches[1]) : '';
+				return $this->language->is_set($matches[1]) ? $this->language->lang($matches[1]) : '';
 			}, $output);
 		}
 
@@ -394,7 +390,7 @@ class lib
 
 			foreach($ary as $key)
 			{
-				$new_ary[$key] = $this->lang->lang($key);
+				$new_ary[$key] = $this->language->lang($key);
 			}
 
 			return $this->set_js_lang($new_ary);
@@ -407,10 +403,85 @@ class lib
 			\canidev\core\json_response::get_instance()->add_component('lang', $this->langkeys);
 		}
 	}
-	
-	static public function get_instance($container)
+
+	/*
+	 * modal_dialog (only ajax)
+	*/
+	public function modal_dialog($check, $title = '', $hidden = array(), $html_body = 'confirm_body.html', $u_action = '')
 	{
-		if(!self::$instance)
+		if(!$this->request->is_ajax())
+		{
+			return false;
+		}
+
+		$path_helper 	= $this->container->get('path_helper');
+		$confirm 		= $this->request->variable('confirm', false, false, \phpbb\request\request_interface::POST);
+
+		if($check)
+		{
+			$user_id 		= $this->request->variable('confirm_uid', 0);
+			$session_id 	= $this->request->variable('sess', '');
+
+			if(!$confirm || $user_id != $this->user->data['user_id'] || $session_id != $this->user->session_id)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		$hidden = array_merge($hidden, array(
+			'confirm_uid'	=> $this->user->data['user_id'],
+			'sess'			=> $this->user->session_id,
+			'sid'			=> $this->user->session_id,
+		));
+
+		$title = (!$this->language->is_set($title)) ? $this->language->lang('CONFIRM') : $this->language->lang($title);
+
+		if(defined('IN_ADMIN') && isset($this->user->data['session_admin']) && $this->user->data['session_admin'])
+		{
+			adm_page_header($title);
+		}
+		else
+		{
+			page_header($title);
+		}
+
+		$this->template->set_filenames(array(
+			'body' => $html_body
+		));
+
+		// re-add sid / transform & to &amp; for user->page (user->page is always using &)
+		$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $this->user->page['page']);
+		$u_action = reapply_sid($path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
+
+		$this->template->assign_vars(array(
+			'MESSAGE_TITLE'		=> $title,
+			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
+
+			'YES_VALUE'			=> $this->language->lang('YES'),
+			'S_CONFIRM_ACTION'	=> $u_action,
+			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
+			'S_AJAX_REQUEST'	=> true,
+		));
+
+		$response = \canidev\core\json_response::get_instance();
+		$response->send(array(
+			'isModalDialog'		=> true,
+			
+			'MESSAGE_BODY'		=> $this->template->assign_display('body'),
+			'MESSAGE_TITLE'		=> $title,
+			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
+
+			'YES_VALUE'			=> $this->language->lang('YES'),
+			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
+			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
+		));
+	}
+	
+	static public function get_instance($container = null)
+	{
+		if(!self::$instance && $container !== null)
 		{
 			self::$instance = new self($container);
 		}

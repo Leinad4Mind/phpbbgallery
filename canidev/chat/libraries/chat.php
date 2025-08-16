@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\libraries;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class chat
 {
@@ -35,31 +29,31 @@ class chat
 	protected $core;
 	protected $dispatcher;
 	protected $db;
-	protected $lang;
+	protected $language;
 	protected $request;
 	protected $routing;
 	protected $template;
 	protected $user;
+	protected $tables;
 	
 	protected $midnight = false;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth 						$auth				Authentication object
-	* @param \phpbb\cache\driver\driver_interface 	$cache 				Cache instance
-	* @param \phpbb\config\config 					$config				Config Object
-	* @param ContainerInterface 					$container			Service container interface
-	* @param \phpbb\event\dispatcher_interface		$dispatcher			Event dispatcher
-	* @param \phpbb\db\driver\driver_interface		$db					DB Object
-	* @param \phpbb\language\language 				$language			Language Object
-	* @param \phpbb\request\request 				$request			Request object
-	* @param \phpbb\routing\helper					$routing			Routing Helper
-	* @param \phpbb\template\template				$template     		Template object
-	* @param \phpbb\user							$user				User object
-	* @param string									$root_path			phpBB root path
-	* @param string									$php_ext			phpEx
-	* @param string									$table_prefix		DB Table Prefix
+	* @param \phpbb\auth\auth 												$auth				Authentication object
+	* @param \phpbb\cache\driver\driver_interface 							$cache 				Cache instance
+	* @param \phpbb\config\config 											$config				Config Object
+	* @param \Symfony\Component\DependencyInjection\ContainerInterface 		$container			Service container interface
+	* @param \phpbb\event\dispatcher_interface								$dispatcher			Event dispatcher
+	* @param \phpbb\db\driver\driver_interface								$db					DB Object
+	* @param \phpbb\language\language 										$language			Language Object
+	* @param \phpbb\request\request 										$request			Request object
+	* @param \phpbb\routing\helper											$routing			Routing Helper
+	* @param \phpbb\user													$user				User object
+	* @param string															$root_path			phpBB root path
+	* @param string															$php_ext			phpEx
+	* @param array 															$tables 			Chat DB Tables
 	*
 	* @access public
 	*/
@@ -73,11 +67,10 @@ class chat
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\routing\helper $routing,
-		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
 		$php_ext,
-		$table_prefix)
+		$tables)
 	{
 		$this->auth			= $auth;
 		$this->cache		= $cache;
@@ -86,7 +79,7 @@ class chat
 		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->dispatcher	= $dispatcher;
 		$this->db			= $db;
-		$this->lang			= $language;
+		$this->language		= $language;
 		$this->request		= $request;
 		$this->routing 		= $routing;
 		$this->template		= \canidev\core\template::get_instance($container);
@@ -94,16 +87,19 @@ class chat
 		
 		$this->phpbb_root_path	= $root_path;
 		$this->php_ext			= $php_ext;
+		$this->tables 			= $tables;
 		$this->time_limit		= (!empty($this->config['chat_timeout']) ? (time() - (intval($this->config['chat_timeout']) * 60)) : false);
 
 		$this->root_path	= $this->phpbb_root_path . $this->path;
 		$this->web_path		= $this->phpbb_root_path;
 
 		$this->enabled = true;
-		
-		include($this->root_path . 'libraries/constants.' . $this->php_ext);
 	}
 	
+	/**
+	 * Main load
+	 * @return void|false
+	 */
 	public function load()
 	{
 		$this->web_path = generate_board_url() . '/';
@@ -136,11 +132,19 @@ class chat
 		}
 	}
 
+	/**
+	 * Define custom page ID
+	 * 
+	 * @param int 	$id 		Page ID
+	 */
 	public function set_custom_page($id)
 	{
 		$this->custom_page = $id;
 	}
 	
+	/**
+	 * Display the chat
+	 */
 	public function display()
 	{
 		if(defined('IN_ERROR_HANDLER') || defined('IN_CHAT_AJAX'))
@@ -166,7 +170,7 @@ class chat
 
 		if($this->custom_page === null && $user_key && $lastcheck && $time_limit < $lastcheck)
 		{
-			$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+			$sql = 'UPDATE ' . $this->tables['users'] . '
 				SET user_lastjoin = ' . time() . '
 				WHERE user_id = ' . $this->user->data['user_id'] . '
 				AND user_key = ' . $user_key . '
@@ -196,7 +200,7 @@ class chat
 		if($this->enabled && $this->custom_page != 'archive')
 		{
 			// Get default room
-			$default_room	= CHAT_GUEST_ROOM;
+			$default_room	= constants::GUEST_ROOM;
 			$room_ary 		= $this->obtain_rooms();
 			
 			foreach($room_ary as $room_key => $row)
@@ -209,7 +213,7 @@ class chat
 				}
 				
 				// Check for linked group and allow to continue search for linked forum
-				if(isset($row['room_data']['linked_groups']) && $default_room == CHAT_GUEST_ROOM && $this->core->group_auth($row['room_data']['linked_groups']))
+				if(isset($row['room_data']['linked_groups']) && $default_room == constants::GUEST_ROOM && $this->core->group_auth($row['room_data']['linked_groups']))
 				{
 					$default_room = $room_key;
 				}
@@ -223,7 +227,7 @@ class chat
 				'autoconnect'	=> (bool)$this->config['chat_autoconnect'],
 				'defaultRoom' 	=> $default_room,
 				'direction' 	=> $this->config['chat_direction'],
-				'guestRoom' 	=> CHAT_GUEST_ROOM,
+				'guestRoom' 	=> constants::GUEST_ROOM,
 				'floodTime' 	=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
 				'height' 		=> ($this->custom_page === null && $page_data['chat_height']) ? (int)$page_data['chat_height'] : (int)$this->config['chat_height'],
 				'hidePopup'		=> (bool)$this->config['chat_hide_popup'],
@@ -266,7 +270,7 @@ class chat
 
 			$this->template->assign_vars(array(
 				'S_CHAT_ENABLED'		=> true,
-				'S_CHAT_RULES'			=> (!empty($texts[CHAT_TEXT_RULE]) ? true : false),
+				'S_CHAT_RULES'			=> (!empty($texts[constants::TEXT_RULE]) ? true : false),
 
 				'S_CHAT_ALLOW_PM'			=> $this->config['chat_allow_pm'],
 				'S_CHAT_CAN_CLEAR'			=> $this->auth->acl_get('m_chat_delete'),
@@ -287,7 +291,7 @@ class chat
 			));
 			
 			// Generate notices and tips
-			foreach(array(CHAT_TEXT_NOTICE => 'notice',	CHAT_TEXT_TIP => 'tip') as $type => $id)
+			foreach(array(constants::TEXT_NOTICE => 'notice', constants::TEXT_TIP => 'tip') as $type => $id)
 			{
 				if(!empty($texts[$type]))
 				{
@@ -319,6 +323,10 @@ class chat
 		}
 	}
 
+	/**
+	 * Get disallowed bbcodes and put into cache
+	 * @return array
+	 */
 	public function get_disallowed_bbcodes()
 	{
 		if($this->config['chat_disallowed_bbcode'])
@@ -378,6 +386,10 @@ class chat
 		return array();
 	}
 	
+	/**
+	 * Obtain pages where display the chat and put into cache
+	 * @return array
+	 */
 	public function obtain_pages($current_page = false)
 	{
 		$data_cache = $this->cache->get('_chat_options');
@@ -388,7 +400,7 @@ class chat
 			$data_cache['pages'] = array();
 
 			$sql = 'SELECT *
-				FROM ' . CHAT_PAGES_TABLE;
+				FROM ' . $this->tables['pages'];
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
 			{
@@ -411,6 +423,10 @@ class chat
 		return $data_cache['pages'];
 	}
 	
+	/**
+	 * Obtain rooms and put into cache
+	 * @return array
+	 */
 	public function obtain_rooms()
 	{
 		$data_cache = $this->cache->get('_chat_options');
@@ -423,7 +439,7 @@ class chat
 			$data_keys	= array('groups', 'users', 'linked_forums');
 
 			$sql = 'SELECT *
-				FROM ' . CHAT_ROOMS_TABLE . '
+				FROM ' . $this->tables['rooms'] . '
 				ORDER BY room_order';
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
@@ -448,6 +464,14 @@ class chat
 		return $data_cache['rooms'];
 	}
 	
+	/**
+	 * Obtain texts and put into cache
+	 * 
+	 * @param string 	$output_type
+	 * @param bool 		$translate 		Define if language vars must be parsed
+	 * 
+	 * @return array
+	 */
 	public function obtain_texts($output_type = false, $translate = true)
 	{
 		$data_cache = $this->cache->get('_chat_options');
@@ -458,7 +482,7 @@ class chat
 			$data_cache['texts'] = array();
 			
 			$sql = 'SELECT text_type, text_content, bbcode_uid, bbcode_bitfield
-				FROM ' . CHAT_TEXTS_TABLE . '
+				FROM ' . $this->tables['texts'] . '
 				ORDER BY text_order ASC';
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
@@ -473,44 +497,33 @@ class chat
 				$data_cache['texts'][$text_type][] = $row;
 			}
 			$this->db->sql_freeresult($result);
-				
-			foreach($data_cache['texts'] as $text_type => $rows)
-			{
-				foreach($rows as $row_id => $row)
-				{
-					/*
-					 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
-					 * If no bbcode, we decode the text to allow HTML tags.
-					*/
-					if(strpos($row['text_content'], '[/') !== false)
-					{
-						$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-						$row['text_content'] = generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
-					}
-					else
-					{
-						$row['text_content'] = htmlspecialchars_decode($row['text_content']);
-						$row['text_content'] = censor_text($row['text_content']);
-					}
-					
-					// Return and save simple html output
-					$data_cache['texts'][$text_type][$row_id] = $row['text_content'];
-				}
-			}
 			
 			$this->cache->put('_chat_options', $data_cache);
 		}
 		
 		foreach($data_cache['texts'] as $text_type => $rows)
 		{
-			foreach($rows as $row_id => $text)
+			foreach($rows as $row_id => $row)
 			{
+				/*
+				 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
+				 * If no bbcode, we decode the text to allow HTML tags.
+				*/
+				if(strpos($row['text_content'], '[/') !== false)
+				{
+					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$text = generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+				}
+				else
+				{
+					$text = htmlspecialchars_decode($row['text_content']);
+					$text = censor_text($row['text_content']);
+				}
+
 				if($translate && strpos($text, '{') !== false)
 				{
 					$this->parse_lang_variables($text);
 				}
-
-				//$text = smiley_text($text);
 				
 				$data_cache['texts'][$text_type][$row_id] = $text;
 			}
@@ -524,6 +537,12 @@ class chat
 		return $data_cache['texts'];
 	}
 	
+	/**
+	 * Format date correctly for chat
+	 * 
+	 * @param int 		$timestamp 		Timestamp date
+	 * @return string
+	 */
 	public function format_date($timestamp)
 	{
 		if(!$this->midnight)
@@ -553,20 +572,30 @@ class chat
 
 			if($day !== false)
 			{
-				return $this->lang->lang(array('datetime', $day)) . ', ' . $this->user->format_date($timestamp, 'H:i');
+				return $this->language->lang(array('datetime', $day)) . ', ' . $this->user->format_date($timestamp, 'H:i');
 			}
 		}
 		
 		return $this->user->format_date($timestamp, false, true);
 	}
 	
+	/**
+	 * Parse language variables inside text
+	 * 
+	 * @param string 	$text 		Text to parse
+	 */
 	public function parse_lang_variables(&$text)
 	{
 		$text = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches) {
-			return $this->lang->is_set($matches[1]) ? $this->lang->lang($matches[1]) : '';
+			return $this->language->is_set($matches[1]) ? $this->language->lang($matches[1]) : '';
 		}, $text);
 	}
 	
+	/**
+	 * Sync user groups
+	 * 
+	 * @param array 	$user_id_ary 		Array with user's IDs
+	 */
 	public function update_groups($user_id_ary)
 	{
 		$user_id_ary 	= is_array($user_id_ary) ? $user_id_ary : array($user_id_ary);
@@ -592,7 +621,7 @@ class chat
 		
 		foreach($users_ary as $user_id => $group_ids_ary)
 		{
-			$sql = 'UPDATE ' . CHAT_USERS_TABLE . "
+			$sql = 'UPDATE ' . $this->tables['users'] . "
 				SET user_groups = '" . implode(',', $group_ids_ary) . "'
 				WHERE user_id = $user_id";
 			$this->db->sql_query($sql);
