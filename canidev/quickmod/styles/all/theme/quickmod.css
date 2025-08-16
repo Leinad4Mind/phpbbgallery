@@ -1,90 +1,261 @@
-
-/*  cBB Quick Mod StyleSheet
+/*  cBB QuickMod StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2016 CaniDev ( http://www.canidev.com )
+	Copyright (c) 2019 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
+/* General
+-------------------------*/
+.qm-action-container,
+.qm-select-container {
+	display: inline-block;
+}
+
+.qm-action-container {
+	border-right: 1px solid #ccc;
+    padding-right: 8px;
+    margin-right: 7px;
+}
+
 .quick_mod_buttons {
-	background-color: #F6F4D0;
+	margin: 0;
+	padding-left: 5px;
+	position: absolute;
+	right: 4px;
+	z-index: 2;
 }
 
-div.row_mark, .qm_loading {
-	width: 25px;
+.quick_mod_buttons a {
+	font-size: 16px;
+	margin-right: 10px;
+	opacity: 0.4;
+	text-decoration: none;
 }
 
-div.row_mark, #qm_dialog {
-	text-align: center;
+.quick_mod_buttons a:hover {
+	opacity: 1;
 }
 
-a [class*="qm-icon"] {
-	color: #000;
+.qm-loading {
+	float: left;
 }
 
-.qm-dialog-header, a.qm-dialog-close [class*="qm-icon"] {
-	color: white;
-}
-
-.qm-menu a [class*="qm-icon"] {
-	font-weight: normal;
-}
-
-.qm-menu li a[data-action="delete_permanently"], a[data-action="delete_permanently"] [class*="qm-icon"],
-#quick_mod_action option[value="delete_permanently"] {
-	color: red;
+#qm-main {
+	margin-bottom: 10px;
+	padding: 5px 0;
+	text-align: right;
 }
 
 #quick_rename {
-	margin-bottom: -10px;
+	display: block;
+	margin-bottom: -12px;
 }
 
-/* Buttons
+#quick_rename .cbb-inputbox {
+	outline: none;
+	padding: 4px;
+}
+
+#quick_rename .cbb-btn {
+	line-height: 21px;
+}
+
+div.row_mark {
+	position: absolute;
+    right: 0;
+    z-index: 2;
+	text-align: center;
+    top: 20%;
+	width: 25px;
+} 
+
+a.qm-overflow,
+dl.row-item dt a.qm-overflow {
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-bottom: -2px;
+}
+
+.qm-dialog .cbb-dialog-content {
+	text-align: center;
+}
+
+.qm-dialog label[for="icon"] {
+	display: block;
+	margin: 4px;
+}
+
+.qm-dialog label[for^="icon-"] {
+	display: inline-block;
+    margin: 4px;
+}
+
+/* Context Menu
 -------------------------*/
-.qm-button, a.qm-button {
-	border: 1px solid #CCC;
-	font: normal normal normal 11px/14px 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
-	font-weight: bold;
+.qm-menu {
+	background: #fff;
+	list-style-type: none;
+	position: absolute;
+	overflow-x: hidden;
+	margin: 0;
+	padding: 2px;
+	z-index: 3;
 	
-	background: -moz-linear-gradient(top, #FFFFFF, #E0E1E4);
-	background: -ms-linear-gradient(top, #FFFFFF, #E0E1E4);
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E1E4));
-	background: -o-linear-gradient(top, #FFFFFF, #E0E1E4);
-	background: linear-gradient(to bottom, #FFFFFF, #E0E1E4);
-	
-	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0); /*IE7-*/
-	-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#E0E1E4', GradientType=0)"; /*IE8+*/
+	-webkit-box-shadow: 2px 2px 4px;
+	-moz-box-shadow: 2px 2px 4px;
+	box-shadow: 2px 2px 4px;
 }
 
-.qm-button:hover, a.qm-button:hover {
-    background: #FAFAFA;
-    border-color: #CCC;
+.qm-menu li a {
+	color: #000;
+	display: block;
+	padding: 5px;
+	white-space: nowrap;
+}
+
+.qm-menu li a:hover {
+	background: #EFEFEF;
+	text-decoration: none;
+}
+
+.qm-menu .fa {
+	font-size: 1.2em;
+	margin-right: 4px;
+	width: 14px;
+}
+
+.qm-menu li a[data-action="delete_permanently"],
+#quick_mod_action option[value="delete_permanently"] {
+	color: red !important;
+}
+
+.qm-menu.user-selector {
+	display: block;
+	max-height: 200px;
+	overflow: auto;
+	z-index: 9999;
+}
+
+.qm-menu.user-selector li a {
+	padding-right: 10px;
+}
+
+.qm-menu .user-avatar {
+	display: inline-block;
+    height: 20px;
+	margin-right: 2px;
+    overflow: hidden;
+    position: relative;
+    width: 20px;
+
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.qm-menu .user-avatar,
+.qm-menu.user-selector li a > span {
+	vertical-align: middle;
+}
+
+.qm-menu .user-avatar img {
+    height: 100%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.qm-default-avatar {
+	background: url(images/no-avatar.svg) 0 0 no-repeat;
+    background-size: 100% 100%;
+    height: 100%;
+    width: 100%;
 }
 
 /* Mobile Layout
 ------------------------------ */
-.qm-mobile-check {
-    background: green;
+.qm-mobile div.row_mark {
+	bottom: 0;
+	display: block;
+    left: 0;
+	right: initial;
+    top: 0;
+	margin-top: -1px;
+	width: 40px;
+}
+
+.qm-mobile .topic_id_list,
+.qm-mobile input[name="quick_mod_button"] {
+	display: none;
+}
+
+
+.qm-mobile .row_mark .topic_id_list + label {
+	background: green;
 	border: 2px solid #ddd;
     color: #fff;
+	font-size: 8px;
+	line-height: 15px;
+	position: absolute;
+	opacity: 0;
+	padding: 0;
+	left: 4px;
+    width: 17px;
+    height: 17px;
+    z-index: 1;
+	text-align: center;
+    font-weight: normal;
+	top: 50%;
+	
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	-webkit-transition: opacity .25s ease-in-out;
+    transition: opacity .25s ease-in-out;
+}
+
+.qm-mobile .row_mark .topic_id_list:checked + label {
+	opacity: 1;
+}
+
+.qm-mobile .row_mark .topic_id_list + label:before,
+.qm-mobile .row_mark .topic_id_list:checked + label:before {
+	content: "\f00c";
+	font-size: inherit;
+	width: auto;
 }
 
 .qm-mobile li.row.qm-row-selected {
 	background-color: #ddd;
 }
 
-/* Borders
+/* Font Size
 -------------------------*/
-#qm_main select, .qm-dialog select, .qm_inputbox,
-.qm-menu, .qm-dialog, .qm-dialog-content, .qm-button {
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
+#qm-main,
+.qm-menu li a {
+	font-size: 11px;
 }
 
-#qm_main select, .qm-dialog select, .qm_inputbox,
-.qm-menu, .qm-button, .row_mark input {
-	border: 1px solid #CCC;
+.qm-mobile .qm-menu li a {
+	font-size: 12px;
+}
+
+/* Borders
+-------------------------*/
+.qm-menu, .row_mark input {
+	border: 1px solid #ccc;
 }
 
 /* Style overwrite
@@ -95,4 +266,107 @@ a [class*="qm-icon"] {
 
 .qm-mobile .qm-row .list-inner, .qm-row dl {
 	position: static;
+}
+
+.qm-row a.unread {
+	vertical-align: top;
+    display: inline-block;
+}
+
+/* RTL Support
+------------------------------- */
+.rtl .qm-menu .fa {
+	margin-left: 4px;
+	margin-right: 0;
+}
+
+.rtl div.row_mark {
+    right: inherit;
+    left: 0;
+}
+
+.qm-mobile.rtl div.row_mark {
+	left: inherit;
+	right: 2px;
+}
+
+.rtl .quick_mod_buttons {
+    right: inherit;
+    left: 4px;
+}
+
+.rtl .qm-action-container {
+    border-right: none;
+	border-left: 1px solid #ccc;
+    padding-left: 8px;
+    margin-left: 7px;
+}
+
+/* ACP
+------------------------------- */
+.qm_draggable {
+	display: block;
+	border: 1px solid #ccc;
+	padding: 8px;
+	margin: 4px 0;
+	background: #fff;
+	cursor: move;
+	
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+
+.qm_drag_row {
+	min-height: 50px;
+}
+
+.qm_drag_row .fa {
+	margin-right: 10px;
+}
+
+.ui-sortable-placeholder {
+	border: 1px dotted gray;
+	background: white;
+	visibility: visible !important;
+}
+
+.ui-sortable-placeholder * { visibility: hidden; }
+
+/* Dark Theme
+------------------------------- */
+.dark-theme .qm-menu {
+	background-color: #1f1f1f;
+	border-color: #444;
+	
+    -webkit-box-shadow: 2px 2px 4px #333;
+    -moz-box-shadow: 2px 2px 4px #333;
+    box-shadow: 2px 2px 4px #333;
+}
+
+.dark-theme .qm-menu li a {
+	color: #8c8c8c;
+}
+
+.dark-theme .qm-menu li a:hover {
+    background-color: #2b2b2b;
+}
+
+.dark-theme .qm-mobile li.row.qm-row-selected {
+	background-color: #383838;
+}
+
+/* Responsive
+------------------------------- */
+@media only screen and (max-width: 700px) {
+	.qm-action-container, .qm-select-container {
+		border: none;
+		display: block;
+		margin: 8px 50px;
+		text-align: center;
+	}
+	
+	.quick_mod_buttons {
+		right: 20px;
+	}
 }

@@ -1,12 +1,11 @@
 <?php
 /**
 * main.php [Spanish [Es]]
+* @package cBB QuickMod
+* @version v1.1.1 22/03/2019
 *
-* @package language cBB QuickMod
-* @version 1.1.0 17/01/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -48,17 +47,17 @@ $lang = array_merge($lang, array(
 	'MAKE_NORMAL_TOPIC'			=> 'Marcar como normal',
 	'MAKE_STICKY_TOPIC'			=> 'Marcar como fijo',
 	
-	'MARK_ANNOUNCE'		=> 'Marcar anuncios',
-	'MARK_BY_STATUS'	=> 'Marcar por estado',
-	'MARK_BY_TYPE'		=> 'Marcar por tipo',
-	'MARK_GENERAL'		=> 'General',
-	'MARK_GLOBAL'		=> 'Marcar anuncios globales',
-	'MARK_LOCKED'		=> 'Marcar temas cerrados',
-	'MARK_MOVED'		=> 'Marcar temas movidos',
-	'MARK_NORMAL'		=> 'Marcar temas normales',
-	'MARK_STICKY'		=> 'Marcar fijos',
-	'MARK_TOPICS'		=> 'Marcar temas',
-	'MARK_UNLOCKED'		=> 'Marcar temas abiertos',
+	'MARK_ANNOUNCE'			=> 'Marcar anuncios',
+	'MARK_BY_STATUS'		=> 'Marcar por estado',
+	'MARK_BY_TYPE'			=> 'Marcar por tipo',
+	'MARK_GENERAL'			=> 'General',
+	'MARK_GLOBAL'			=> 'Marcar anuncios globales',
+	'MARK_LOCKED'			=> 'Marcar temas cerrados',
+	'MARK_MOVED'			=> 'Marcar temas movidos',
+	'MARK_NORMAL'			=> 'Marcar temas normales',
+	'MARK_STICKY'			=> 'Marcar fijos',
+	'MARK_TOPICS'			=> 'Marcar temas',
+	'MARK_UNLOCKED'			=> 'Marcar temas abiertos',
 	
 	'MOVE_TOPIC'			=> 'Mover',
 	'NO_TOPIC_SELECTED'		=> 'No ha seleccionado ningún tema',
@@ -79,5 +78,7 @@ $lang = array_merge($lang, array(
 
 	'AUTHOR_CHANGE_SUCCESS'	=> 'El autor de los temas ha sido modificado correctamente.',
 	'TOPIC_RENAMED_SUCCESS'	=> 'El tema ha sido renombrado correctamente.',
-	'ERROR_OPERATION'		=> 'Se ha producido un error al enviar su petición al servidor. La página solicitada no existe o ha devuelto un error.',
+	
+	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
+		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
 ));

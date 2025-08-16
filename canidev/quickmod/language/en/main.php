@@ -1,12 +1,11 @@
 <?php
 /**
 * main.php [English [En]]
+* @package cBB QuickMod
+* @version v1.1.1 22/03/2019
 *
-* @package language cBB QuickMod
-* @version 1.1.0 17/01/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -79,5 +78,7 @@ $lang = array_merge($lang, array(
 
 	'AUTHOR_CHANGE_SUCCESS'	=> 'The author of topics has been changed correctly.',
 	'TOPIC_RENAMED_SUCCESS'	=> 'The topic has been renamed correctly.',
-	'ERROR_OPERATION'		=> 'There was an error sending your request to the server. The page you requested does not exist or has returned an error.',
+	
+	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
+		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
 ));

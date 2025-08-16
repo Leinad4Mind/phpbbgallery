@@ -1,12 +1,11 @@
 <?php
 /**
 * info_acp_quickmod.php [English [En]]
+* @package cBB QuickMod
+* @version v1.1.1 22/03/2019
 *
-* @package language cBB QuickMod
-* @version 1.1.0 17/01/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -21,12 +20,9 @@ if(empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_CAT_QUICKMOD'		=> 'QuickMod',
-	'ACP_QUICKMOD_CONFIG'	=> 'Main Configuration',
-	
-	'QM_CONFIG_TITLE'		=> 'Configure QuickMod',
-	'QM_CONFIG_EXPLAIN'		=> 'From here, you can manage the main moderation options.<br />To arrange the buttons, drag it to the correct position in the bottom list. The visibility of the buttons in the viewforum page depends to the user permissions and the topic state.',
-	'QM_HELP'				=> 'Documentation and Support',
+	'ACP_CAT_QUICKMOD'				=> 'QuickMod',
+	'ACP_QUICKMOD_CONFIG'			=> 'Main Configuration',
+	'ACP_QUICKMOD_CONFIG_EXPLAIN'	=> 'From here, you can manage the main moderation options.<br />To arrange the buttons, drag it to the correct position in the bottom list. The visibility of the buttons in the viewforum page depends to the user permissions and the topic state.',
 	'QM_MAIN_CONFIG'		=> 'Main Configuration',
 	'QM_CONFIRM'			=> 'Confirm dialog',
 	'QM_CONFIRM_EXPLAIN'	=> 'Enable/Disable the confirm dialog in the quick actions.',
@@ -37,8 +33,10 @@ $lang = array_merge($lang, array(
 	'QM_TYPE_ICON'			=> 'Icons',
 	'QM_TYPE_MENU'			=> 'Context menu',
 	
-	'BUTTONS_AVALIABLE'		=> 'Available buttons',
-	'BUTTONS_SELECTED'		=> 'Selected buttons',
+	'BUTTONS_AVALIABLE'			=> 'Available buttons',
+	'BUTTONS_SELECTED'			=> 'Selected buttons',
+	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
+	'SAVE'						=> 'Save',
 
 	'LOG_QUICKMOD_CONFIG'	=> '<strong>cBB QuickMod:</strong> Configuration Changed',
 ));
