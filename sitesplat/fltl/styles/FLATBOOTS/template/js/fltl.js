@@ -1,9 +1,9 @@
 head.ready(function () {
 	$(document).on("click", ".rtbutton", function () {
 		var hack = new Date();
-	
+	    
 		$.ajax({
-			url: 'app.php/fltl/fltl.html?fltl_start=' + start + '&time=' + String(hack.getTime()),
+			url: boardurl + 'app.php/fltl/fltl.html?fltl_start=' + start + '&time=' + String(hack.getTime()),
 			
 			context: document.getElementById("fltl"),
 			error: function (e, text, ee) {

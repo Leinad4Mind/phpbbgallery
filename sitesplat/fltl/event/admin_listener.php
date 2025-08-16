@@ -57,7 +57,7 @@ class admin_listener implements EventSubscriberInterface
 		{
 			if ($this->request->is_set_post('submit'))
 			{
-				set_config('fltl_excluded_forums', json_encode($this->request->variable('fltl_excluded_forums', array(0))));
+				$this->config->set('fltl_excluded_forums', json_encode($this->request->variable('fltl_excluded_forums', array(0))));
 			}
 
 			$display_vars = $event['display_vars'];

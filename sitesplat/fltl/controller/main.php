@@ -19,18 +19,24 @@ class main
 	protected $config;
 	protected $user;
 	protected $request;
+	protected $extension_manager;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, $phpbb_root_path, $php_ext)
+	protected $private_post_ext_enabled;
+
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\extension\manager $extension_manager, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->user = $user;
 		$this->request = $request;
+		$this->extension_manager = $extension_manager;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+
+		$this->private_post_ext_enabled = $this->extension_manager->is_enabled('sitesplat/privatepost');
 	}
 
 	/**
@@ -57,9 +63,10 @@ class main
 		$result = $this->db->sql_query($sql);
 		$total = $this->db->sql_fetchfield('total');
 
+		$post_private = ($this->private_post_ext_enabled) ? 'p.poster_id, p.post_private,' : '';
 		$sql = 'SELECT 
 					u.username, u.user_id, user_rank, user_posts, u.user_sig, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, 
-					p.post_id, p.post_text, 
+					p.post_id, p.post_text, ' . $post_private . '
 					t.topic_id, t.forum_id, t.topic_title, t.topic_last_post_time, t.topic_first_poster_colour, t.topic_last_post_id, 
 					t.topic_last_poster_name, t.topic_last_poster_colour
 				FROM ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . ' p, ' . USERS_TABLE . ' u ' . $sql_where . '
@@ -71,7 +78,18 @@ class main
 				
 		$result = $this->db->sql_query_limit($sql, $this->config['fltl_limit'], $start);
 		$rows = $this->db->sql_fetchrowset($result);
-		
+
+		if ($this->private_post_ext_enabled)
+		{
+			foreach ($rows as &$row)
+			{
+				if ($row['post_private'] == '1' && $row['poster_id'] != $this->user->data['user_id'] && !$this->auth->acl_get('f_seeprivateposts', $row['forum_id']))
+				{
+					$row['post_text'] = $this->user->lang('FLTL_PRIVATE');
+				}
+			}
+		}
+
 		if ($route == 'index.html')
 		{
 			$rows['rows'] = $rows;
@@ -97,11 +115,12 @@ class main
 						 <header class="entry-header">
 						  <h6 class="inverse-font"><a title="" href="' . append_sid($url . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']) . '" data-original-title="">' . censor_text($row['topic_title']) . '</a></h6>
 							<div class="entry-meta">
-							 <span class="jp-views">' . (($row['user_avatar']) ? phpbb_get_user_avatar(
+							<span class="jp-views">' . (($row['user_avatar']) ? str_replace('../', '', phpbb_get_user_avatar(
 											array('avatar' => $row['user_avatar'], 
+											      'id' => $row['user_id'],
 												  'avatar_type' => $row['user_avatar_type'],
 												  'avatar_width' => $row['user_avatar_width'], 
-												  'avatar_height' => $row['user_avatar_height'])): '<img class="avatar_ftl" title="' .  $row['username'] . '" src="' .
+												  'avatar_height' => $row['user_avatar_height']))) : '<img class="avatar_ftl" title="' .  $row['username'] . '" src="' .
 										  generate_board_url() . '/styles/FLATBOOTS/theme/images/user4.png">') . $this->user->lang['FLTL_BY'] . (($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? ('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') : $row['username']) . '</span>
 							</div>
 						 </header>
@@ -110,14 +129,14 @@ class main
 						  <p>' . $row['post_text'] . '</p>  
 						</div>
 						<div class="panel-bottom">
-						 <a title="" class="btn btn-xs btn-block" href="' . append_sid($url . 'viewtopic.'. $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'] . '" data-original-title="">' . $this->user->lang['READ_MORE'] . '</a>
+						 <a title="" class="btn btn-xs btn-block" href="' . append_sid($url . 'viewtopic.'. $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'] . '" data-original-title="">' . $this->user->lang['FLTL_READ_MORE'] . '</a>
 						</div>               
 					</div>
 					</div>';
 				}
 				echo '<script>
 					var start = ' . (($start + $this->config['fltl_limit'] >= $total) ? 0 : $start + $this->config['fltl_limit']) . ';
-					$(\'.rtbutton\').text(\'' . (($start + $this->config['fltl_limit'] >= $total) ? $this->user->lang['BACK_TO_START'] : $this->user->lang['VIEW_MORE_TOPICS']) . '\');
+					$(\'.rtbutton\').text(\'' . (($start + $this->config['fltl_limit'] >= $total) ? $this->user->lang['FLTL_BACK_TO_START'] : $this->user->lang['FLTL_VIEW_MORE_TOPICS']) . '\');
 					</script>';
 			$this->db->sql_freeresult($result);	
 			exit();	

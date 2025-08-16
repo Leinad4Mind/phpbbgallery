@@ -24,7 +24,8 @@ class m1_initial_config extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\BBCore\migrations\v31x\m1_initial_file');
+	  //return array('\sitesplat\BBCore\migrations\v31x\m1_initial_file');
+		return array('\phpbb\db\migration\data\v310\gold');
 	}
 
 	/**
@@ -37,7 +38,7 @@ class m1_initial_config extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('fltl_limit', 4)),
-			array('config.add', array('fltl_time', 7)),
+			array('config.add', array('fltl_time', 20)),
 			array('config.add', array('fltl_type', 'last')),
 			array('config.add', array('fltl_excluded_forums', '[]')),
 		);

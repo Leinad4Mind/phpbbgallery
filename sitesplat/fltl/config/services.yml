@@ -21,6 +21,7 @@ services:
             - @config
             - @user
             - @request
+            - @ext.manager
             - %core.root_path%
             - %core.php_ext%
 

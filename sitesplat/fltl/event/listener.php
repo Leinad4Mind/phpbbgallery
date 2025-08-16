@@ -73,6 +73,7 @@ class listener implements EventSubscriberInterface
 										$row['username'],
 				'AVATAR'			=> ($row['user_avatar']) ? phpbb_get_user_avatar(
 											array('avatar' => $row['user_avatar'], 
+											      'id' => $row['user_id'],
 												  'avatar_type' => $row['user_avatar_type'],
 												  'avatar_width' => $row['user_avatar_width'], 
 												  'avatar_height' => $row['user_avatar_height'])): '',
@@ -86,7 +87,7 @@ class listener implements EventSubscriberInterface
 			));
 		}
 		$this->template->assign_vars(array(
-			'START'		=> $rows['start'],
+			'FLTL_START'		=> $rows['start'],
 		));
 	}
 

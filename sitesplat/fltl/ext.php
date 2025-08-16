@@ -22,20 +22,47 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		$manager = $this->container->get('ext.manager');
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
+			$this->container->get('user')->add_lang_ext('sitesplat/fltl', 'info_acp_fltl');
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
+		}
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
+			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
+		}
 
-		return $manager->is_enabled('sitesplat/BBCore');
+		return class_exists('sitesplat\BBCore\helper');
 	}
 	
-	public function enable_step($old_state)
+	function enable_step($old_state)
 	{
-		if (empty($old_state))
+		switch ($old_state)
 		{
-			global $user;
-			$info = '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension can be found in <strong>General » Board configuration » Board Settings Tab Fancy Lazy Topics loader</strong>.<br />Please note there is a min of 4 posts per page! Enjoy!</p></div>';
-			$user->lang['EXTENSION_ENABLE_SUCCESS'] =  $user->lang['EXTENSION_ENABLE_SUCCESS'] . $info;
+			case '': // Empty means nothing has run yet
+				if (empty($old_state))
+				{
+					$this->container->get('user')->add_lang_ext('sitesplat/fltl', 'info_acp_fltl');
+					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] . 
+						(isset($this->container->get('user')->lang['FLTL_NOTICE']) ?
+							sprintf($this->container->get('user')->lang['FLTL_NOTICE'],
+									$this->container->get('user')->lang['ACP_CAT_GENERAL'],
+									$this->container->get('user')->lang['ACP_BOARD_SETTINGS'],
+									$this->container->get('user')->lang['ACP_FANCY_TITLE']) : ''));
+				}
+
+				// Run parent enable step method
+				return parent::enable_step($old_state);
+			
+			break;
+			
+			default:
+			
+				// Run parent enable step method
+				return parent::enable_step($old_state);
+				
+			break;
 		}
-		// Run parent enable step method
-		return parent::enable_step($old_state);
 	}
 }
