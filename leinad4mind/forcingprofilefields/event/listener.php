@@ -15,8 +15,9 @@ use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\di\service_collection;
 use phpbb\event\data;
+use phpbb\extension\manager as ext_manager;
 use phpbb\language\language;
-use phpbb\profilefields\manager;
+use phpbb\profilefields\manager as pf_manager;
 use phpbb\profilefields\type\type_base;
 use phpbb\request\request_interface;
 use phpbb\template\template;
@@ -43,8 +44,11 @@ class listener implements EventSubscriberInterface
 	/** @var template */
 	protected $template;
 
-	/** @var manager */
-	protected $manager;
+	/** @var pf_manager */
+	protected $pf_manager;
+
+	/** @var ext_manager */
+	protected $ext_manager;
 
 	/** @var service_collection */
 	protected $type_collection;
@@ -65,7 +69,8 @@ class listener implements EventSubscriberInterface
 	 * @param config				$config
 	 * @param request_interface		$request
 	 * @param template				$template
-	 * @param manager				$manager
+	 * @param pf_manager			$pf_manager
+	 * @param ext_manager			$ext_manager
 	 * @param service_collection	$type_collection
 	 * @param string				$root_path
 	 * @param string				$php_ext
@@ -77,7 +82,8 @@ class listener implements EventSubscriberInterface
 		config $config,
 		request_interface $request,
 		template $template,
-		manager $manager,
+		pf_manager $pf_manager,
+		ext_manager $ext_manager,
 		service_collection $type_collection,
 		$root_path,
 		$php_ext
@@ -89,7 +95,8 @@ class listener implements EventSubscriberInterface
 		$this->config			= $config;
 		$this->request			= $request;
 		$this->template			= $template;
-		$this->manager			= $manager;
+		$this->pf_manager		= $pf_manager;
+		$this->ext_manager		= $ext_manager;
 		$this->type_collection	= $type_collection;
 		$this->root_path		= $root_path;
 		$this->php_ext			= $php_ext;
@@ -166,9 +173,9 @@ class listener implements EventSubscriberInterface
 		}
 
 		return
-			!$this->user->data['is_registered'] ||
+			empty($this->user->data['is_registered']) ||
 			!$this->auth->acl_get('u_chgprofileinfo') ||
-			$this->user->data['is_bot'] ||
+			!empty($this->user->data['is_bot']) ||
 			$this->request->is_ajax() ||
 			$page == 'adm/index.' . $this->php_ext ||
 			($page == 'ucp.' . $this->php_ext && in_array($this->request->variable('mode', ''), ['login', 'logout', 'profile_info']))
@@ -183,7 +190,7 @@ class listener implements EventSubscriberInterface
 	{
 		$errors = [];
 
-		$profile_field_rows = $this->manager->grab_profile_fields_data($this->user->data['user_id']);
+		$profile_field_rows = $this->pf_manager->grab_profile_fields_data($this->user->data['user_id']);
 
 		if (!empty($profile_field_rows)) {
 			foreach ($profile_field_rows[$this->user->data['user_id']] as $row)
@@ -209,10 +216,31 @@ class listener implements EventSubscriberInterface
 		}
 
 		// Compatibility with the National Flags extension by RMcGirr83
-		if ((!$lazy || !$errors) && $this->config['flags_required'] && !$this->user->data['user_flag'])
+		if ((!$lazy || !$errors) && $this->ext_manager->is_enabled('rmcgirr83/nationalflags') && $this->config['flags_required'] && !$this->user->data['user_flag'])
 		{
 			$this->lang->add_lang('common', 'rmcgirr83/nationalflags');
 			$errors[] = $this->lang->lang('MUST_CHOOSE_FLAG');
+		}
+
+		// Compatibility with the Genders extension by RMcGirr83
+		if ((!$lazy || !$errors) && $this->ext_manager->is_enabled('rmcgirr83/genders') && $this->config['gender_required'] && !$this->user->data['user_gender'])
+		{
+			$this->lang->add_lang('genders', 'rmcgirr83/genders');
+			$errors[] = $this->lang->lang('MUST_CHOOSE_GENDER');
+		}
+		
+		// Compatibility with the Registration Age extension by david63 if and only if "registration_age_required" field is added to it and "REGISTRATION_AGE_REQUIRED" language variable added to the "ucp_registrationage" lang file.
+		if ((!$lazy || !$errors) && $this->ext_manager->is_enabled('david63/registrationage') && $this->config['registration_age_required'] && !$this->is_valid_birthday($this->user->data['user_birthday']))
+		{
+			$this->lang->add_lang('ucp_registrationage', 'david63/registrationage');
+			$errors[] = $this->lang->lang('REGISTRATION_AGE_REQUIRED');
+		}
+
+		// Compatibility with the Special Birthday extension by leinad4mind
+		if ((!$lazy || !$errors) && $this->ext_manager->is_enabled('leinad4mind/specialbirthday') && $this->config['registration_age_required'] && !$this->is_valid_birthday($this->user->data['user_birthday']))
+		{
+			$this->lang->add_lang('ucp_specialbirthday', 'leinad4mind/specialbirthday');
+			$errors[] = $this->lang->lang('REGISTRATION_AGE_REQUIRED');
 		}
 
 		return $errors;
@@ -238,5 +266,21 @@ class listener implements EventSubscriberInterface
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $config, ['after' => 'display_last_subject']);
 			$event['display_vars'] = $display_vars;
 		}
+	}
+
+	/**
+	 * @param string $birthday
+	 * @return bool
+	 */
+	protected function is_valid_birthday($birthday)
+	{
+		if (!$birthday)
+		{
+			return true;
+		}
+
+		list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $birthday));
+
+		return $bday_day && $bday_month && $bday_year;
 	}
 }
