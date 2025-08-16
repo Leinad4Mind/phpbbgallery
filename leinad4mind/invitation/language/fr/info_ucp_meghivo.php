@@ -99,7 +99,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_KULDES_MAX'				=> '<span class="meghivo_tred">Il n’y a actuellement aucune limite!</span>',
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Dernière active',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Actuellement vous disposez d’invitations illimitées.',
-	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Saisir toutes les adresses sur une nouvelle ligne!<br />Nombre maximal de destinataires',
+	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Nombre maximal de destinataires',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Ecrire quelques lignes pour expliquer pourquoi la personne pourrait nous rejoindre.',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'Il n’y a aucune invitation à supprimer !',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Fichier langue qui n’est pas présent: %s',

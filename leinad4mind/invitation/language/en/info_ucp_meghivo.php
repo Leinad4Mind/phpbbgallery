@@ -99,7 +99,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_KULDES_MAX'				=> '<span class="meghivo_tred">Currently there is no limit!</span>',
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Last active',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Currently you have unlimited invitations.',
-	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Type all addresses in a new line!<br />Maximum number of recipients',
+	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Maximum number of recipients',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Write a few lines telling them why they should join.',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'There is no invitation to delete!',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Non-existent language file: %s',

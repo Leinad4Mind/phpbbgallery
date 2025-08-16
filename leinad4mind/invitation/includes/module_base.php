@@ -30,8 +30,9 @@ abstract class module_base
 	abstract protected function get_controller_service_id();
 
 	/**
-	 * @param string $id
-	 * @param string $mode
+	 * @param $id
+	 * @param $mode
+	 * @throws \Exception
 	 */
 	public function main($id, $mode)
 	{

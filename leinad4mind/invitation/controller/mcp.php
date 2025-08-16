@@ -53,15 +53,15 @@ class mcp extends controller_base
 	/**
 	 * mcp constructor.
 	 *
-	 * @param \phpbb\user                               $user
-	 * @param \phpbb\language\language                  $language
-	 * @param \phpbb\request\request_interface          $request
-	 * @param \phpbb\template\template                  $template
-	 * @param \phpbb\pagination                         $pagination
+	 * @param \phpbb\user                                      $user
+	 * @param \phpbb\language\language                         $language
+	 * @param \phpbb\request\request_interface                 $request
+	 * @param \phpbb\template\template                         $template
+	 * @param \phpbb\pagination                                $pagination
 	 * @param \leinad4mind\invitation\includes\config          $ext_config
 	 * @param \leinad4mind\invitation\includes\functions_admin $functions_admin
-	 * @param string                                    $root_path
-	 * @param string                                    $php_ext
+	 * @param string                                           $root_path
+	 * @param string                                           $php_ext
 	 */
 	public function __construct(user $user, language $language, request_interface $request, template $template, pagination $pagination, ext_config $ext_config, functions_admin $functions_admin, $root_path, $php_ext)
 	{

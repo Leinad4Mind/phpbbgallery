@@ -58,18 +58,18 @@ class functions_admin
 	protected $table_invite_claimed;
 
 	/**
-	 * @param \phpbb\user                         $user
-	 * @param \phpbb\language\language            $language
-	 * @param \phpbb\db\driver\driver_interface   $db
-	 * @param \phpbb\log\log_interface            $log
+	 * @param \phpbb\user                                $user
+	 * @param \phpbb\language\language                   $language
+	 * @param \phpbb\db\driver\driver_interface          $db
+	 * @param \phpbb\log\log_interface                   $log
 	 * @param \leinad4mind\invitation\includes\functions $functions
 	 * @param \leinad4mind\invitation\includes\config    $ext_config
-	 * @param string                              $table_users
-	 * @param string                              $table_groups
-	 * @param string                              $table_user_group
-	 * @param string                              $table_invite
-	 * @param string                              $table_invite_users
-	 * @param string                              $table_invite_claimed
+	 * @param string                                     $table_users
+	 * @param string                                     $table_groups
+	 * @param string                                     $table_user_group
+	 * @param string                                     $table_invite
+	 * @param string                                     $table_invite_users
+	 * @param string                                     $table_invite_claimed
 	 */
 	public function __construct(user $user, language $language, db_interface $db, log_interface $log, functions $functions,ext_config $ext_config, $table_users, $table_groups, $table_user_group, $table_invite, $table_invite_users, $table_invite_claimed)
 	{

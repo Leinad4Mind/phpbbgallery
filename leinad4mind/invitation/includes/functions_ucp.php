@@ -15,7 +15,7 @@ namespace leinad4mind\invitation\includes;
 
 use leinad4mind\invitation\includes\config as ext_config;
 use phpbb\auth\auth;
-use phpbb\config\config;
+use phpbb\config\config as phpbb_config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\language\language;
 use phpbb\user;
@@ -31,7 +31,7 @@ class functions_ucp
 	/** @var auth */
 	protected $auth;
 
-	/** @var config */
+	/** @var phpbb_config */
 	protected $config;
 
 	/** @var ext_config */
@@ -62,21 +62,21 @@ class functions_ucp
 	protected $php_ext;
 
 	/**
-	 * @param \phpbb\user                         $user
-	 * @param \phpbb\language\language            $language
-	 * @param \phpbb\auth\auth                    $auth
-	 * @param \phpbb\config\config                $config
+	 * @param \phpbb\user                                $user
+	 * @param \phpbb\language\language                   $language
+	 * @param \phpbb\auth\auth                           $auth
+	 * @param \phpbb\config\config                       $config
 	 * @param \leinad4mind\invitation\includes\config    $ext_config
 	 * @param \leinad4mind\invitation\includes\functions $functions
-	 * @param \phpbb\db\driver\driver_interface   $db
-	 * @param string                              $table_users
-	 * @param string                              $table_invite
-	 * @param string                              $table_invite_users
-	 * @param string                              $table_invite_claimed
-	 * @param string                              $root_path
-	 * @param string                              $php_ext
+	 * @param \phpbb\db\driver\driver_interface          $db
+	 * @param string                                     $table_users
+	 * @param string                                     $table_invite
+	 * @param string                                     $table_invite_users
+	 * @param string                                     $table_invite_claimed
+	 * @param string                                     $root_path
+	 * @param string                                     $php_ext
 	 */
-	public function __construct(user $user, language $language, auth $auth, config $config, ext_config $ext_config, functions $functions, db_interface $db, $table_users, $table_invite, $table_invite_users, $table_invite_claimed, $root_path, $php_ext)
+	public function __construct(user $user, language $language, auth $auth, phpbb_config $config, ext_config $ext_config, functions $functions, db_interface $db, $table_users, $table_invite, $table_invite_users, $table_invite_claimed, $root_path, $php_ext)
 	{
 		$this->user = $user;
 		$this->language = $language;

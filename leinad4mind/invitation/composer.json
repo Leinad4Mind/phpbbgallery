@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "This extension allows users to invite friends to your board. You can make your board private where registration is by invitation only.",
     "homepage": "http://leinad4mind.top/forum",
-    "version": "4.0.6",
-    "time": "2017-12-05",
+    "version": "4.0.7",
+    "time": "2018-01-08",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -33,12 +33,12 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.7"
     },
     "extra": {
         "display-name": "Invitation",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2.0"
+            "phpbb/phpbb": ">=3.2.2"
         },
         "version-check": {
             "host": "leinad4mind.top",

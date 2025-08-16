@@ -19,7 +19,7 @@ use leinad4mind\invitation\includes\functions;
 use leinad4mind\invitation\includes\functions_ucp;
 use phpbb\auth\auth;
 use phpbb\captcha\factory;
-use phpbb\config\config;
+use phpbb\config\config as phpbb_config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\language\language;
 use phpbb\log\log_interface;
@@ -44,7 +44,7 @@ class ucp extends controller_base
 	/** @var auth */
 	protected $auth;
 
-	/** @var config */
+	/** @var phpbb_config */
 	protected $config;
 
 	/** @var ext_config */
@@ -77,23 +77,23 @@ class ucp extends controller_base
 	/**
 	 * ucp constructor.
 	 *
-	 * @param \phpbb\db\driver\driver_interface       $db
-	 * @param \phpbb\user                             $user
-	 * @param \phpbb\language\language                $language
-	 * @param \phpbb\request\request_interface        $request
-	 * @param \phpbb\auth\auth                        $auth
-	 * @param \phpbb\config\config                    $config
+	 * @param \phpbb\db\driver\driver_interface              $db
+	 * @param \phpbb\user                                    $user
+	 * @param \phpbb\language\language                       $language
+	 * @param \phpbb\request\request_interface               $request
+	 * @param \phpbb\auth\auth                               $auth
+	 * @param \phpbb\config\config                           $config
 	 * @param \leinad4mind\invitation\includes\config        $ext_config
-	 * @param \phpbb\captcha\factory                  $captcha_factory
+	 * @param \phpbb\captcha\factory                         $captcha_factory
 	 * @param \leinad4mind\invitation\includes\functions     $functions
 	 * @param \leinad4mind\invitation\includes\functions_ucp $functions_ucp
-	 * @param \phpbb\template\template                $template
-	 * @param \phpbb\log\log_interface                $log
-	 * @param string                                  $table_invite
-	 * @param string                                  $root_path
-	 * @param string                                  $php_ext
+	 * @param \phpbb\template\template                       $template
+	 * @param \phpbb\log\log_interface                       $log
+	 * @param string                                         $table_invite
+	 * @param string                                         $root_path
+	 * @param string                                         $php_ext
 	 */
-	public function __construct(db_interface $db, user $user, language $language, request_interface $request, auth $auth, config $config, ext_config $ext_config, factory $captcha_factory, functions $functions, functions_ucp $functions_ucp, template $template, log_interface $log, $table_invite, $root_path, $php_ext)
+	public function __construct(db_interface $db, user $user, language $language, request_interface $request, auth $auth, phpbb_config $config, ext_config $ext_config, factory $captcha_factory, functions $functions, functions_ucp $functions_ucp, template $template, log_interface $log, $table_invite, $root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -277,7 +277,7 @@ class ucp extends controller_base
 					{
 						if ($this->ext_config['meghivo_email_db'] > 1)
 						{
-							$email_ary = array_map('strtolower', explode("\n", $email));
+							$email_ary = array_map('strtolower', explode(" ", $email));
 
 							$ed_count = 0;
 							$emvs = array();

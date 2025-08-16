@@ -16,7 +16,7 @@ namespace leinad4mind\invitation\includes;
 use leinad4mind\invitation\ext;
 use leinad4mind\invitation\includes\config as ext_config;
 use phpbb\auth\auth;
-use phpbb\config\config;
+use phpbb\config\config as phpbb_config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\language\language;
 use phpbb\language\language_file_loader;
@@ -35,7 +35,7 @@ class functions
 	/** @var db_interface */
 	protected $db;
 
-	/** @var config */
+	/** @var phpbb_config */
 	protected $config;
 
 	/** @var ext_config */
@@ -99,30 +99,30 @@ class functions
 	protected $meghivo_user;
 
 	/**
-	 * @param \phpbb\request\request_interface      $request
-	 * @param \phpbb\db\driver\driver_interface     $db
-	 * @param \phpbb\config\config                  $config
-	 * @param \leinad4mind\invitation\includes\config      $ext_config
-	 * @param \phpbb\user                           $user
-	 * @param \phpbb\language\language              $language
-	 * @param \phpbb\language\language_file_loader  $language_file_loader
-	 * @param \phpbb\auth\auth                      $auth
-	 * @param \phpbb\template\template              $template
-	 * @param \phpbb\pagination                     $pagination
-	 * @param \phpbb\log\log_interface              $log
-	 * @param \phpbb\notification\manager			$notification_manager
-	 * @param string                                $table_users
-	 * @param string                                $table_sessions
-	 * @param string                                $table_groups
-	 * @param string                                $table_banlist
-	 * @param string                                $table_zebra
-	 * @param string                                $table_invite
-	 * @param string                                $table_invite_users
-	 * @param string                                $table_invite_claimed
-	 * @param string                                $root_path
-	 * @param string                                $php_ext
+	 * @param \phpbb\request\request_interface        $request
+	 * @param \phpbb\db\driver\driver_interface       $db
+	 * @param \phpbb\config\config                    $config
+	 * @param \leinad4mind\invitation\includes\config $ext_config
+	 * @param \phpbb\user                             $user
+	 * @param \phpbb\language\language                $language
+	 * @param \phpbb\language\language_file_loader    $language_file_loader
+	 * @param \phpbb\auth\auth                        $auth
+	 * @param \phpbb\template\template                $template
+	 * @param \phpbb\pagination                       $pagination
+	 * @param \phpbb\log\log_interface                $log
+	 * @param \phpbb\notification\manager             $notification_manager
+	 * @param string                                  $table_users
+	 * @param string                                  $table_sessions
+	 * @param string                                  $table_groups
+	 * @param string                                  $table_banlist
+	 * @param string                                  $table_zebra
+	 * @param string                                  $table_invite
+	 * @param string                                  $table_invite_users
+	 * @param string                                  $table_invite_claimed
+	 * @param string                                  $root_path
+	 * @param string                                  $php_ext
 	 */
-	public function __construct(request_interface $request, db_interface $db, config $config, ext_config $ext_config, user $user, language $language, language_file_loader $language_file_loader, auth $auth, template $template, pagination $pagination, log_interface $log, manager $notification_manager, $table_users, $table_sessions, $table_groups, $table_banlist, $table_zebra, $table_invite, $table_invite_users, $table_invite_claimed, $root_path, $php_ext)
+	public function __construct(request_interface $request, db_interface $db, phpbb_config $config, ext_config $ext_config, user $user, language $language, language_file_loader $language_file_loader, auth $auth, template $template, pagination $pagination, log_interface $log, manager $notification_manager, $table_users, $table_sessions, $table_groups, $table_banlist, $table_zebra, $table_invite, $table_invite_users, $table_invite_claimed, $root_path, $php_ext)
 	{
 		$this->request = $request;
 		$this->db = $db;

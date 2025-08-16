@@ -15,13 +15,13 @@ namespace leinad4mind\invitation\notification\type;
 
 use leinad4mind\invitation\ext;
 use leinad4mind\invitation\includes\functions;
-use phpbb\config\config;
+use phpbb\config\config as phpbb_config;
 use phpbb\notification\type\base;
 use phpbb\user_loader;
 
 class gift extends base
 {
-	/** @var config */
+	/** @var phpbb_config */
 	protected $config;
 
 	/** @var user_loader */
@@ -31,9 +31,9 @@ class gift extends base
 	protected $functions;
 
 	/**
-	 * @param config $config
+	 * @param phpbb_config $config
 	 */
-	public function set_config(config $config)
+	public function set_config(phpbb_config $config)
 	{
 		$this->config = $config;
 	}

@@ -99,7 +99,7 @@ $lang = array_merge($lang, array(
 	'UCP_MEGHIVO_KULDES_MAX'				=> '<span class="meghivo_tred">Jelenleg nincs korlátozva.</span>',
 	'UCP_MEGHIVO_LAST_ACTIVE'				=> 'Utoljára aktív',
 	'UCP_MEGHIVO_MAX_ERROR'					=> 'Jelenleg korlátlan meghívóval rendelkezel így nincs szükséged az igénylésre.',
-	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Minden címet új sorba írj.<br />Maximum megadható címzettek száma',
+	'UCP_MEGHIVO_MAX_RECIPIENTS'			=> 'Maximum megadható címzettek száma',
 	'UCP_MEGHIVO_MESSAGE_BODY_EXPLAIN'		=> 'Írj pár sort miért is csatlakozzon az illető.',
 	'UCP_MEGHIVO_NOT_DELETED_INVITE'		=> 'Nincs törölhető meghívód.',
 	'UCP_MEGHIVO_NOT_LANGUAGE'				=> 'Nem létező nyelvi fájl: %s',

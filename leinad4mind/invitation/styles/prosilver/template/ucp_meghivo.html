@@ -39,6 +39,11 @@
 {% endif %}
 
 {% if S_MEGHIVO_MAIL %}
+
+{% INCLUDECSS '@leinad4mind_invitation/multiple-emails.css' %}
+{% INCLUDEJS '@leinad4mind_invitation/js/multiple-emails.js' %}
+{% INCLUDEJS '@leinad4mind_invitation/js/email.js' %}
+
 <h2>{{ lang('UCP_MEGHIVO_KULDES') }}</h2>
 <form id="meghivo_kuldes" method="post" action="{{ U_ACTION }}">
 	<div class="panel">
@@ -63,13 +68,7 @@
 				</dl>
 				<dl>
 					<dt><label for="email">{{ lang('EMAIL_ADDRESS') }}{{ lang('COLON') }}</label>{% if MORE_RECIPIENTS %}<br /><span>{{ lang('UCP_MEGHIVO_MAX_RECIPIENTS') }}{{ lang('COLON') }}{{ MORE_RECIPIENTS }}</span>{% endif %}</dt>
-					<dd>
-					{% if MORE_RECIPIENTS %}
-						<textarea class="inputbox" name="email" id="email" rows="5" cols="45" tabindex="2">{{ EMAIL_CIM }}</textarea>
-					{% else %}
-						<input class="inputbox autowidth" type="text" name="email" id="email" size="50" maxlength="100" tabindex="2" value="{{ EMAIL_CIM }}" />
-					{% endif %}
-					</dd>
+					<dd><input class="inputbox autowidth" type="text" name="email" id="email" size="50" maxlength="100" tabindex="2" value="{{ EMAIL_CIM }}" /></dd>
 				</dl>
 				<dl>
 					<dt><label for="subject">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label></dt>

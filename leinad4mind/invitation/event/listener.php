@@ -16,7 +16,7 @@ namespace leinad4mind\invitation\event;
 use leinad4mind\invitation\ext;
 use leinad4mind\invitation\includes\config as ext_config;
 use leinad4mind\invitation\includes\functions;
-use phpbb\config\config;
+use phpbb\config\config as phpbb_config;
 use phpbb\event\data;
 use phpbb\language\language;
 use phpbb\request\request_interface;
@@ -38,7 +38,7 @@ class listener implements EventSubscriberInterface
 	/** @var template */
 	protected $template;
 
-	/** @var config */
+	/** @var phpbb_config */
 	protected $config;
 
 	/** @var ext_config */
@@ -62,18 +62,18 @@ class listener implements EventSubscriberInterface
 	/**
 	 * listener constructor.
 	 *
-	 * @param \phpbb\user                         $user
-	 * @param \phpbb\language\language            $language
-	 * @param \phpbb\request\request_interface    $request
-	 * @param \phpbb\template\template            $template
-	 * @param \phpbb\config\config                $config
+	 * @param \phpbb\user                                $user
+	 * @param \phpbb\language\language                   $language
+	 * @param \phpbb\request\request_interface           $request
+	 * @param \phpbb\template\template                   $template
+	 * @param \phpbb\config\config                       $config
 	 * @param \leinad4mind\invitation\includes\config    $ext_config
 	 * @param \leinad4mind\invitation\includes\functions $functions
-	 * @param string                              $root_path
-	 * @param string                              $adm_relative_path
-	 * @param string                              $php_ext
+	 * @param string                                     $root_path
+	 * @param string                                     $adm_relative_path
+	 * @param string                                     $php_ext
 	 */
-	public function __construct(user $user, language $language, request_interface $request, template $template, config $config, ext_config $ext_config, functions $functions, $root_path, $adm_relative_path, $php_ext)
+	public function __construct(user $user, language $language, request_interface $request, template $template, phpbb_config $config, ext_config $ext_config, functions $functions, $root_path, $adm_relative_path, $php_ext)
 	{
 		$this->user = $user;
 		$this->language = $language;
@@ -93,20 +93,20 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'							=> 'user_setup',
-			'core.page_header_after'					=> 'page_header_after',
-			'core.update_username'						=> 'update_username',
-			'core.user_add_modify_data'					=> 'user_add_modify_data',
-			'core.delete_user_before'					=> 'delete_user_before',
-			'core.user_set_default_group'				=> 'user_set_default_group',
-			'core.permissions'							=> 'permissions',
-			'core.acp_board_config_edit_add'			=> 'acp_board_config_edit_add',
-			'core.ucp_register_requests_after'			=> 'ucp_register_requests_after',
-			'core.user_add_after'						=> 'user_add_after',
-			'core.ucp_register_agreement'				=> 'ucp_register_agreement',
-			'core.ucp_register_modify_template_data'	=> 'ucp_register_modify_template_data',
-			'core.memberlist_modify_sql_query_data'		=> 'memberlist_modify_sql_query_data',
-			'core.memberlist_view_profile'				=> 'memberlist_view_profile',
+			'core.user_setup'									=> 'user_setup',
+			'core.page_header_after'							=> 'page_header_after',
+			'core.update_username'								=> 'update_username',
+			'core.user_add_modify_data'							=> 'user_add_modify_data',
+			'core.delete_user_before'							=> 'delete_user_before',
+			'core.user_set_default_group'						=> 'user_set_default_group',
+			'core.permissions'									=> 'permissions',
+			'core.acp_board_config_edit_add'					=> 'acp_board_config_edit_add',
+			'core.ucp_register_requests_after'					=> 'ucp_register_requests_after',
+			'core.user_add_after'								=> 'user_add_after',
+			'core.ucp_register_agreement_modify_template_data'	=> 'ucp_register_agreement_modify_template_data',
+			'core.ucp_register_modify_template_data'			=> 'ucp_register_modify_template_data',
+			'core.memberlist_modify_sql_query_data'				=> 'memberlist_modify_sql_query_data',
+			'core.memberlist_view_profile'						=> 'memberlist_view_profile',
 		);
 	}
 
@@ -163,7 +163,12 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_set_default_group(data $event)
 	{
-		$this->functions->update_default_group($event['user_id_ary'], $event['sql_ary']['user_colour']);
+		$sql_ary = $event['sql_ary'];
+
+		if (isset($sql_ary['user_colour']))
+		{
+			$this->functions->update_default_group($event['user_id_ary'], $sql_ary['user_colour']);
+		}
 	}
 
 	/**
@@ -255,19 +260,18 @@ class listener implements EventSubscriberInterface
 	/**
 	 * @param data $event
 	 */
-	public function ucp_register_agreement(data $event)
+	public function ucp_register_agreement_modify_template_data($event)
 	{
 		if ($this->meghivo_user)
 		{
 			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->meghivo_user);
-			$this->template->assign_var('S_HIDDEN_FIELDS', build_hidden_fields($event['s_hidden_fields']));
 
-			$coppa = $this->request->is_set('coppa') ? (int) $this->request->variable('coppa', false) : false;
-			if ($coppa === false && $this->config['coppa_enable'])
+			$coppa = $this->request->is_set('coppa') ? $this->request->variable('coppa', false) : false;
+			if (!$coppa && $this->config['coppa_enable'])
 			{
 				$invite_params = '&amp;muid=' . $this->meghivo_user['muid'] . '&amp;mkey=' . $this->meghivo_user['mkey'];
 
-				$this->template->assign_vars(array(
+				$event['template_vars'] = array_merge($event['template_vars'], array(
 					'U_COPPA_NO'	=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=register&amp;coppa=0' . $invite_params),
 					'U_COPPA_YES'	=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=register&amp;coppa=1' . $invite_params),
 				));
@@ -282,10 +286,7 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->meghivo_user)
 		{
-			$event['s_hidden_fields'] = $event['s_hidden_fields'] . build_hidden_fields($this->meghivo_user);
-			$event['template_vars'] = array_merge($event['template_vars'], array(
-				'S_HIDDEN_FIELDS' => $event['s_hidden_fields'],
-			));
+			$event['s_hidden_fields'] = array_merge($event['s_hidden_fields'], $this->meghivo_user);
 		}
 	}
 
