@@ -10,6 +10,10 @@
 
 namespace sitesplat\bbtags\tags;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\config\config;
+use phpbb\auth\auth;
+
 /**
  * @ignore
  */
@@ -26,7 +30,7 @@ class manager
 	private $table_bbtags;
 	private $table_bbtags_topic;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_topic)
 	{
 		$this->db					= $db;
 		$this->config				= $config;

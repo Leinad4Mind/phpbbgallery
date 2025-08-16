@@ -8,12 +8,12 @@
 *
 */
 
-namespace sitesplat\bbtags\migrations\v31x;
+namespace sitesplat\bbtags\migrations\v32x;
 
 /**
 * Migration stage 3: Initial permission
 */
-class m5_read_permission extends \phpbb\db\migration\migration
+class m5_initial_permission extends \phpbb\db\migration\migration
 {
 	/**
 	* Assign migration file dependencies for this migration
@@ -24,6 +24,7 @@ class m5_read_permission extends \phpbb\db\migration\migration
 	*/
 	static public function depends_on()
 	{
+//		return array('\phpbb\db\migration\data\v310\gold');
 		return array('\sitesplat\bbtags\migrations\v31x\m4_initial_module');
 	}
 

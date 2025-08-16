@@ -61,7 +61,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_BBTAGS_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBTAGS_VERSION'				=> '1.1.0',
+	'ACP_BBTAGS_VERSION'				=> '1.1.2',
 	'ACP_BBTAGS'						=> 'BBTags',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	
