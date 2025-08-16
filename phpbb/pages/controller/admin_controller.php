@@ -36,10 +36,10 @@ class admin_controller implements admin_interface
 	protected $user;
 
 	/** @var ContainerInterface */
-	protected $phpbb_container;
+	protected $container;
 
 	/** @var \phpbb\event\dispatcher_interface */
-	protected $phpbb_dispatcher;
+	protected $dispatcher;
 
 	/** @var string phpBB root path */
 	protected $root_path;
@@ -82,7 +82,7 @@ class admin_controller implements admin_interface
 	/**
 	* Display the pages
 	*
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function display_pages()
@@ -121,7 +121,7 @@ class admin_controller implements admin_interface
 	/**
 	* Add a page
 	*
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function add_page()
@@ -143,7 +143,7 @@ class admin_controller implements admin_interface
 	* Edit a page
 	*
 	* @param int $page_id The page identifier to edit
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function edit_page($page_id)
@@ -166,8 +166,8 @@ class admin_controller implements admin_interface
 	/**
 	* Process page data to be added or edited
 	*
-	* @param object $entity The page entity object
-	* @return null
+	* @param \phpbb\pages\entity\page_interface $entity The page entity object
+	* @return void
 	* @access protected
 	*/
 	protected function add_edit_page_data($entity)
@@ -206,16 +206,16 @@ class admin_controller implements admin_interface
 		// If page edit use data stored in the entity
 		// If page add use default values
 		$content_parse_options = array(
-			'bbcode'	=> ($submit) ? $data['bbcode'] : (($entity->get_id()) ? $entity->content_bbcode_enabled() : 1),
-			'magic_url'	=> ($submit) ? $data['magic_url'] : (($entity->get_id()) ? $entity->content_magic_url_enabled() : 1),
-			'smilies'	=> ($submit) ? $data['smilies'] : (($entity->get_id()) ? $entity->content_smilies_enabled() : 1),
-			'html'		=> ($submit) ? $data['html'] : (($entity->get_id()) ? $entity->content_html_enabled() : 0),
+			'bbcode'	=> $submit ? $data['bbcode'] : ($entity->get_id() ? $entity->content_bbcode_enabled() : 1),
+			'magic_url'	=> $submit ? $data['magic_url'] : ($entity->get_id() ? $entity->content_magic_url_enabled() : 1),
+			'smilies'	=> $submit ? $data['smilies'] : ($entity->get_id() ? $entity->content_smilies_enabled() : 1),
+			'html'		=> $submit ? $data['html'] : ($entity->get_id() ? $entity->content_html_enabled() : 0),
 		);
 
 		// Set the content parse options in the entity
 		foreach ($content_parse_options as $function => $enabled)
 		{
-			call_user_func(array($entity, ($enabled ? 'content_enable_' : 'content_disable_') . $function));
+			$entity->{($enabled ? 'content_enable_' : 'content_disable_') . $function}();
 		}
 
 		// Purge temporary variable
@@ -250,7 +250,7 @@ class admin_controller implements admin_interface
 				try
 				{
 					// Calling the $entity_function on the entity and passing it $page_data
-					call_user_func_array(array($entity, $entity_function), array($page_data));
+					$entity->$entity_function($page_data);
 				}
 				catch (\phpbb\pages\exception\base $e)
 				{
@@ -282,7 +282,6 @@ class admin_controller implements admin_interface
 				else
 				{
 					// Add the new page entity to the database
-					/* @var $entity \phpbb\pages\entity\page */
 					$entity = $this->page_operator->add_page($entity);
 
 					// Save the page link location data (now that we can access the new id)
@@ -313,8 +312,8 @@ class admin_controller implements admin_interface
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
-			'S_ERROR'			=> (sizeof($errors)) ? true : false,
-			'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'S_ERROR'			=> (bool) count($errors),
+			'ERROR_MSG'			=> count($errors) ? implode('<br />', $errors) : '',
 
 			'PAGES_TITLE'		=> $entity->get_title(),
 			'PAGES_ROUTE'		=> $entity->get_route(),
@@ -346,7 +345,7 @@ class admin_controller implements admin_interface
 		));
 
 		// Build custom bbcodes array
-		include_once($this->root_path . 'includes/functions_display.' . $this->php_ext);
+		include_once $this->root_path . 'includes/functions_display.' . $this->php_ext;
 
 		display_custom_bbcodes();
 	}
@@ -355,7 +354,7 @@ class admin_controller implements admin_interface
 	* Delete a page
 	*
 	* @param int $page_id The page identifier to delete
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function delete_page($page_id)
@@ -396,7 +395,7 @@ class admin_controller implements admin_interface
 	* Set page url
 	*
 	* @param string $u_action Custom form action
-	* @return null
+	* @return void
 	* @access public
 	*/
 	public function set_page_url($u_action)
@@ -408,7 +407,7 @@ class admin_controller implements admin_interface
 	* Set template var options for page template select menus
 	*
 	* @param string	$current Name of the template currently stored in the database
-	* @return null
+	* @return void
 	* @access protected
 	*/
 	protected function create_page_template_options($current)
@@ -439,7 +438,7 @@ class admin_controller implements admin_interface
 	*
 	* @param int $page_id Page identifier
 	* @param array $current Currently selected link locations (from the form data)
-	* @return null
+	* @return void
 	* @access protected
 	*/
 	protected function create_page_link_options($page_id = 0, $current = array())
