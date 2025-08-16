@@ -19,14 +19,17 @@ class main_module
 
 	function main($id, $mode)
 	{
-		global $db, $config, $user, $template, $request, $auth, $cache, $dl_cache;
+		global $db, $user, $auth, $cache;
 		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix;
 		global $phpbb_container, $phpbb_extension_manager, $phpbb_log, $phpbb_path_helper;
 
-		// Define the ext path
-		$ext_path					= $phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-		$this->phpbb_path_helper	= $phpbb_container->get('path_helper');
-		$ext_path_web				= $phpbb_path_helper->update_web_root_path($ext_path);
+		$config			= $phpbb_container->get('config');
+		$language		= $phpbb_container->get('language');
+		$request		= $phpbb_container->get('request');
+		$template		= $phpbb_container->get('template');
+
+		$ext_path		= $phpbb_extension_manager->get_extension_path('oxpus/notes', true);
+		$ext_path_web	= $phpbb_path_helper->update_web_root_path($ext_path);
 
 		$this->tpl_name = 'ucp_notes';
 		$this->page_title = 'UCP_NOTES';
@@ -52,7 +55,7 @@ class main_module
 			)) . ' WHERE user_id = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
 
-			$message = sprintf($user->lang['NOTES_CONFIG_SUCCESSFULL'], '<a href="' . $this->u_action . '" />', '</a>');
+			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL', '<a href="' . $this->u_action . '" />', '</a>');
 			trigger_error($message);
 		}
 

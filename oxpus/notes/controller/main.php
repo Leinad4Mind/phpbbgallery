@@ -56,6 +56,9 @@ class main
 	/* @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\language\language $language Language object */
+	protected $language;
+
 	/**
 	* Constructor
 	*
@@ -74,7 +77,7 @@ class main
 	* @param \phpbb\template\template				$template
 	* @param \phpbb\user							$user
 	*/
-	public function __construct($root_path, $php_ext, $table_prefix, Container $phpbb_container, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\log\log_interface $log, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct($root_path, $php_ext, $table_prefix, Container $phpbb_container, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\log\log_interface $log, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
 	{
 		$this->root_path				= $root_path;
 		$this->php_ext 					= $php_ext;
@@ -90,6 +93,7 @@ class main
 		$this->request					= $request;
 		$this->template 				= $template;
 		$this->user 					= $user;
+		$this->language					= $language;
 	}
 
 	public function handle($view = '')
@@ -116,8 +120,8 @@ class main
 		));
 
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'	=> $this->helper->route('notes_controller'),
-			'FORUM_NAME'	=> $this->user->lang['NOTES'],
+			'U_VIEW_FORUM'	=> $this->helper->route('oxpus_notes_controller'),
+			'FORUM_NAME'	=> $this->language->lang('NOTES'),
 		));
 
 		/*
@@ -141,27 +145,27 @@ class main
 		$note_mem_yesno		= $this->request->variable('mem_yesno', 0);
 		$note_mem_drop		= $this->request->variable('mem_drop', 0);
 		$note_mem_time		= $this->request->variable('mem_time', 0);
-		
+
 		if ($cancel)
 		{
 			$mode = '';
 		}
-		
+
 		$notes_data = array();
 		$display_notes = 0;
-		
+
 		if ($mode == 'delete')
 		{
-			$sql = 'DELETE FROM ' . $this->table_prefix . 'notes 
+			$sql = 'DELETE FROM ' . $this->table_prefix . 'notes
 					WHERE ' . $this->db->sql_build_array('SELECT', array(
 						'note_id' => $note_id,
 						'note_user_id' => $this->user->data['user_id'],
 					));
 			$this->db->sql_query($sql);
-		
+
 			$mode = '';
 		}
-		
+
 		/*
 		* Output page header
 		*/
@@ -169,16 +173,16 @@ class main
 		{
 			$this->template->assign_var('S_NOTES_POPUP', true);
 		}
-		
+
 		/*
 		* Check the number of notes for this user
 		*/
-		$sql = 'SELECT count(note_id) AS total FROM ' . $this->table_prefix . 'notes 
+		$sql = 'SELECT count(note_id) AS total FROM ' . $this->table_prefix . 'notes
 			WHERE note_user_id = ' . (int)$this->user->data['user_id'];
 		$result = $this->db->sql_query($sql);
 		$total_notes = intval($this->db->sql_fetchfield('total'));
 		$this->db->sql_freeresult($result);
-		
+
 		if ($total_notes < $this->config['notes'])
 		{
 			$this->template->assign_var('S_NEW_NOTE', true);
@@ -188,7 +192,7 @@ class main
 		{
 			$allow_new_note = false;
 		}
-		
+
 		/*
 		* Load needed template
 		*/
@@ -199,32 +203,32 @@ class main
 		else
 		{
 			$body = 'note_list_body.html';
-		
+
 			/*
-			* Prepare sort, search and filter 
+			* Prepare sort, search and filter
 			*/
 			$sort_order = '<select name="sort_order" class="selectbox">';
-			$sort_order .= '<option value="ASC">'.$this->user->lang['ASCENDING'].'</option>';
-			$sort_order .= '<option value="DESC">'.$this->user->lang['DESCENDING'].'</option>';
+			$sort_order .= '<option value="ASC">'.$this->language->lang('ASCENDING').'</option>';
+			$sort_order .= '<option value="DESC">'.$this->language->lang('DESCENDING').'</option>';
 			$sort_order .= '</select>';
 			$sort_order = str_replace('value="'.$sql_order.'">', 'value="'.$sql_order.'" selected="selected">', $sort_order);
-			
+
 			$sort_by = '<select name="sort_by" class="selectbox">';
-			$sort_by .= '<option value="note_subject">'.$this->user->lang['SUBJECT'].'</option>';
-			$sort_by .= '<option value="note_time">'.$this->user->lang['TIME'].'</option>';
-			$sort_by .= '<option value="note_mem">'.$this->user->lang['NOTES_MEM'].'</option>';
+			$sort_by .= '<option value="note_subject">'.$this->language->lang('SUBJECT').'</option>';
+			$sort_by .= '<option value="note_time">'.$this->language->lang('TIME').'</option>';
+			$sort_by .= '<option value="note_mem">'.$this->language->lang('NOTES_MEM').'</option>';
 			$sort_by .= '</select>';
 			$sort_by = str_replace('value="'.$sql_order_by.'">', 'value="'.$sql_order_by.'" selected="selected">', $sort_by);
-			
+
 			$search_in = '<select name="search_in" class="selectbox">';
-			$search_in .= '<option value="note_subject">'.$this->user->lang['SUBJECT'].'</option>';
-			$search_in .= '<option value="note_text">'.$this->user->lang['POST'].'</option>';
+			$search_in .= '<option value="note_subject">'.$this->language->lang('SUBJECT').'</option>';
+			$search_in .= '<option value="note_text">'.$this->language->lang('POST').'</option>';
 			$search_in .= '</select>';
-			
+
 			$search_in = str_replace('value="'.$sql_search_in.'">', 'value="'.$sql_search_in.'" selected="selected">', $search_in);
-			
+
 			$sql_search = '';
-			
+
 			/*
 			* Prepare search terms
 			*/
@@ -233,64 +237,64 @@ class main
 				$split_search = array();
 				$sql_search_terms = '';
 				$split_search = split(' ', $search_keywords);
-			
+
 				foreach($split_search as $search_word)
 				{
 					$search_word = utf8_encode($search_word);
-		
+
 					$sql_search_terms .= ( $sql_search_terms != '' ) ? ' OR LOWER(' . $sql_search_in . ') LIKE (#%' . strtolower($search_word) . '%#) ' : ' LOWER(' . $sql_search_in . ') LIKE (#%' . strtolower($search_word) . '%#) ';
 				}
-			
+
 				$sql_search = ' AND (' . $sql_search_terms . ')';
 			}
 			else
 			{
 				$sql_search = '';
 			}
-		
+
 			$sql_search .= ($sql_order_by == 'note_mem') ? ' AND note_mem <> 0 ' : '';
 			$sql_search .= ($note_mem_time) ? " AND note_mem <= $note_mem_time AND note_mem <> 0 AND note_memx = 1 " : '';
-		 
+
 			/*
 			* Go ahead and pull all data for the notes
 			*/
-			$sql = 'SELECT * FROM ' . $this->table_prefix . 'notes 
-				WHERE note_user_id = ' . (int) $this->user->data['user_id'] . $this->db->sql_escape($sql_search) . ' 
+			$sql = 'SELECT * FROM ' . $this->table_prefix . 'notes
+				WHERE note_user_id = ' . (int) $this->user->data['user_id'] . $this->db->sql_escape($sql_search) . '
 				ORDER BY ' . $this->db->sql_escape($sql_order_by) . ' ' . $this->db->sql_escape($sql_order);
 			$sql = str_replace('#', "'", $sql);
 			$result = $this->db->sql_query($sql);
-		
+
 			$display_notes = $this->db->sql_affectedrows($result);
-			
+
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$notes_data[] = $row;
 			}
-		
+
 			$this->db->sql_freeresult($result);
 		}
-		
+
 		$this->template->set_filenames(array(
 			'body' => $body)
 		);
-		
+
 		if ($mode == 'save' && $allow_new_note)
 		{
 			// check form
 			if (!check_form_key('posting'))
 			{
-				trigger_error($this->user->lang['FORM_INVALID'], E_USER_WARNING);
+				trigger_error($this->language->lang('FORM_INVALID'), E_USER_WARNING);
 			}
-		
+
 			// prepare note before save
 			$allow_bbcode	= ($this->config['allow_bbcode']) ? true : false;
 			$allow_urls		= true;
 			$allow_smilies	= ($this->config['allow_smilies']) ? true : false;
 			$uid = $bitfield = '';
 			$flags = 0;
-		
+
 			generate_text_for_storage($note_message, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
-		
+
 			if ($note_mem_yesno)
 			{
 				$note_mem = mktime($note_mem_hour, $note_mem_minute, 0, $note_mem_month, $note_mem_day, $note_mem_year);
@@ -310,7 +314,7 @@ class main
 					'note_bitfield' => $bitfield,
 					'note_flags' => $flags,
 					'note_mem' => $note_mem,
-					'note_memx' => (($note_mem) ? 1 : 0))) . 
+					'note_memx' => (($note_mem) ? 1 : 0))) .
 					' WHERE note_id = ' . (int) $note_id;
 			}
 			else
@@ -319,7 +323,7 @@ class main
 				$result = $this->db->sql_query($sql);
 				$note_id = $this->db->sql_fetchfield('max_id') + 1;
 				$this->db->sql_freeresult($result);
-		
+
 				$sql = 'INSERT INTO ' . $this->table_prefix . 'notes ' . $this->db->sql_build_array('INSERT', array(
 					'note_id' => $note_id,
 					'note_user_id' => $this->user->data['user_id'],
@@ -330,22 +334,22 @@ class main
 					'note_bitfield' => $bitfield,
 					'note_flags' => (int) $flags,
 					'note_mem' => $note_mem,
-					'note_memx' => (($note_mem) ? 1 : 0) 
+					'note_memx' => (($note_mem) ? 1 : 0)
 					));
 			}
-		
+
 			$this->db->sql_query($sql);
-		
-			redirect($this->helper->route('notes_controller'));
+
+			redirect($this->helper->route('oxpus_notes_controller'));
 		}
-		
-		page_header($this->user->lang['NOTES']);
-		
+
+		page_header($this->language->lang('NOTES'));
+
 		if (($mode == 'new_note' && $allow_new_note) || $mode == 'edit_note')
 		{
 			// First secure the form ...
 			add_form_key('posting');
-		
+
 			// Status for HTML, BBCode, Smilies, Images and Flash,
 			$bbcode_status	= ($this->config['allow_bbcode']) ? true : false;
 			$smilies_status	= ($bbcode_status && $this->config['allow_smilies']) ? true : false;
@@ -353,51 +357,51 @@ class main
 			$url_status		= ($this->config['allow_post_links']) ? true : false;
 			$flash_status	= false;
 			$quote_status	= true;
-			
+
 			// Smilies Block,
 			if (!function_exists('generate_smilies'))
 			{
 				include_once($this->root_path . 'includes/functions_posting.' . $this->php_ext);
 			}
 			generate_smilies('inline', 0);
-		
+
 			// BBCode-Block,
-			$this->user->add_lang('posting');
+			$this->language->add_lang('posting');
 			display_custom_bbcodes();
-		
+
 			// Hidden Fields,
 			$s_hidden_fields = array(
 				'mode' => 'save',
 			);
-		
+
 			$s_note_mem_day = '<select name="mem_day">';
 			for ($i = 1; $i <= 31; $i++)
 			{
 				$s_note_mem_day .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_day .= '</select>';
-		
+
 			$s_note_mem_month = '<select name="mem_month">';
 			for ($i = 1; $i <= 13; $i++)
 			{
 				$s_note_mem_month .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_month .= '</select>';
-			
+
 			$s_note_mem_year = '<select name="mem_year">';
 			for ($i = intval(date('Y')); $i <= intval(date('Y')) + 9; $i++)
 			{
 				$s_note_mem_year .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_year .= '</select>';
-			
+
 			$s_note_mem_hour = '<select name="mem_hour">';
 			for ($i = 0; $i <= 23; $i++)
 			{
 				$s_note_mem_hour .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_hour .= '</select>';
-		
+
 			$s_note_mem_minute = '<select name="mem_minute">';
 			for ($i = 0; $i <= 59; $i++)
 			{
@@ -408,28 +412,28 @@ class main
 				else
 				{
 					$s_note_mem_minute .= '<option value="' . $i . '">' . $i . '</option>';
-				}				
+				}
 			}
 			$s_note_mem_minute .= '</select>';
-		
+
 			if ($mode == 'edit_note')
 			{
 				$s_hidden_fields = array_merge($s_hidden_fields, array(
 					'note_id' => $note_id,
 				));
-		
+
 				// At least get the post content for note to edit, if wanted...
-				$sql = 'SELECT * FROM ' . $this->table_prefix . 'notes 
+				$sql = 'SELECT * FROM ' . $this->table_prefix . 'notes
 					WHERE note_id = ' . (int) $note_id;
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
 				$this->db->sql_freeresult($result);
-		
+
 				$subject	= $row['note_subject'];
 				$message	= $row['note_text'];
 				$uid		= $row['note_uid'];
 				$flags		= $row['note_flags'];
-		
+
 				if ($row['note_mem'])
 				{
 					$cur_time = $row['note_mem'];
@@ -438,87 +442,87 @@ class main
 				{
 					$cur_time = time();
 				}
-		
+
 				$s_check_yes = ($row['note_mem']) ? 'checked="checked"' : '';
 				$s_check_no = (!$row['note_mem']) ? 'checked="checked"' : '';
-		
+
 				$text_ary = generate_text_for_edit($message, $uid, $flags);
-				$message = $text_ary['text'];		
+				$message = $text_ary['text'];
 			}
 			else
 			{
 				$subject = '';
 				$message = '';
-		
+
 				$cur_time = time();
-		
+
 				$s_check_yes = '';
 				$s_check_no = 'checked="checked"';
 			}
-		
+
 			$sort_order = $sort_by = $search_in = '';
-		
+
 			$s_note_mem_day		= str_replace('value="' . date('j', $cur_time) . '">', 'value="' . date('j', $cur_time) . '" selected="selected">', $s_note_mem_day);
 			$s_note_mem_month	= str_replace('value="' . date('n', $cur_time) . '">', 'value="' . date('n', $cur_time) . '" selected="selected">', $s_note_mem_month);
 			$s_note_mem_year	= str_replace('value="' . date('Y', $cur_time) . '">', 'value="' . date('Y', $cur_time) . '" selected="selected">', $s_note_mem_year);
 			$s_note_mem_hour	= str_replace('value="' . date('G', $cur_time) . '">', 'value="' . date('G', $cur_time) . '" selected="selected">', $s_note_mem_hour);
 			$s_note_mem_minute	= str_replace('value="' . date('i', $cur_time) . '">', 'value="' . date('i', $cur_time) . '" selected="selected">', $s_note_mem_minute);
-		
+
 			// ... and now prepare the posting form for edit/post the note
 			$this->template->assign_vars(array(
-				'L_NOTE_MODE'		=> ($mode == 'new_note') ? $this->user->lang['NEW_POST'] : $this->user->lang['EDIT_POST'],
-		
+				'L_NOTE_MODE'		=> ($mode == 'new_note') ? $this->language->lang('NEW_POST') : $this->language->lang('EDIT_POST'),
+
 				'NOTES_SUBJECT'		=> $subject,
 				'NOTES_MESSAGE'		=> $message,
-		
+
 				'MEM_CHECKED_YES'	=> $s_check_yes,
 				'MEM_CHECKED_NO'	=> $s_check_no,
-		
+
 				'S_NOTE_MEM_HOUR'	=> $s_note_mem_hour,
 				'S_NOTE_MEM_MIN'	=> $s_note_mem_minute,
 				'S_NOTE_MEM_DAY'	=> $s_note_mem_day,
 				'S_NOTE_MEM_MONTH'	=> $s_note_mem_month,
 				'S_NOTE_MEM_YEAR'	=> $s_note_mem_year,
-		
+
 				'S_BBCODE_ALLOWED'	=> $bbcode_status,
 				'S_BBCODE_IMG'		=> $img_status,
 				'S_BBCODE_URL'		=> $url_status,
 				'S_BBCODE_FLASH'	=> $flash_status,
 				'S_BBCODE_QUOTE'	=> $quote_status,
-		
-				'S_FORM_ACTION'		=> $this->helper->route('notes_controller'),
+
+				'S_FORM_ACTION'		=> $this->helper->route('oxpus_notes_controller'),
 				'S_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
-		
+
 				'U_MORE_SMILIES'	=> append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=smilies'),
 			));
 		}
-		
-		$this->user->add_lang('search');
-		
+
+		$this->language->add_lang('search');
+
 		/*
 		* Send vars to template
 		*/
 		$this->template->assign_vars(array(
 			'L_NOTES_TOTAL'		=> $total_notes . ' / ' . $this->config['notes'],
-			'L_DELETE_NOTE'		=> $this->user->lang['DELETE'],
-			'L_EDIT_NOTE'		=> $this->user->lang['CHANGE'],
-			'L_SEARCH'			=> ($search_keywords == '') ? $this->user->lang['SEARCH'] : $this->user->lang['SEARCH'].'*',
-			'L_FILTER'			=> ($search_keywords != '' || $sql_order_by == 'note_mem') ? $this->user->lang['FILTER_NOTES'] : '',
-			'L_SORT'			=> $this->user->lang['SORT_BY'],
-			'L_NO_NOTES'		=> ($total_notes) ? $this->user->lang['NO_SEARCH_RESULTS'] : $this->user->lang['NO_NOTES'],
-			'L_ADD_NOTE'		=> $this->user->lang['NEW_POST'],
-		
-			'L_CLOSE'			=> $this->user->lang['CLOSE_WINDOW'],
-		
+			'L_DELETE_NOTE'		=> $this->language->lang('DELETE'),
+			'L_EDIT_NOTE'		=> $this->language->lang('CHANGE'),
+			'L_SEARCH'			=> ($search_keywords == '') ? $this->language->lang('SEARCH') : $this->language->lang('SEARCH').'*',
+			'L_FILTER'			=> ($search_keywords != '' || $sql_order_by == 'note_mem') ? $this->language->lang('FILTER_NOTES') : '',
+			'L_SORT'			=> $this->language->lang('SORT_BY'),
+			'L_NO_NOTES'		=> ($total_notes) ? $this->language->lang('NO_SEARCH_RESULTS') : $this->language->lang('NO_NOTES'),
+			'L_ADD_NOTE'		=> $this->language->lang('NEW_POST'),
+
+			'L_CLOSE'			=> $this->language->lang('CLOSE_WINDOW'),
+
 			'SORT_ORDER'		=> $sort_order,
 			'SORT_BY'			=> $sort_by,
 			'SEARCH_IN'			=> $search_in,
-		
-			'S_FORM_ACTION'		=> $this->helper->route('notes_controller'),
-		
-			'U_NEW_NOTE'		=> $this->helper->route('notes_controller', array('mode' => 'new_note')),
+
+			'S_FORM_ACTION'		=> $this->helper->route('oxpus_notes_controller'),
+
+			'U_NEW_NOTE'		=> $this->helper->route('oxpus_notes_controller', array('mode' => 'new_note')),
 		));
-		
+
 		/*
 		* And now put the notes out ... Yeah let the notes out ... bump bump bump ...
 		*/
@@ -531,16 +535,16 @@ class main
 					$note_date	= $this->notes_format_date($notes_data[$i]['note_time']);
 					$subject	= $notes_data[$i]['note_subject'];
 					$message	= $notes_data[$i]['note_text'];
-			
+
 					$uid		= $notes_data[$i]['note_uid'];
 					$bitfield	= $notes_data[$i]['note_bitfield'];
 					$flags		= $notes_data[$i]['note_flags'];
-			
+
 					$message	= censor_text($message);
 					$subject	= censor_text($subject);
-			
+
 					$message	= generate_text_for_display($message, $uid, $bitfield, $flags);
-			
+
 					if ($search_keywords != '')
 					{
 						foreach($split_search as $search_word)
@@ -548,12 +552,12 @@ class main
 							$message = preg_replace('#(?!<.*)(' . utf8_normalize_nfc($search_word) . ')(?![^<>]*>)#is', '<span class="posthilit">\1</span>', $message);
 						}
 					}
-			
+
 					$message	= str_replace("\n", "\n<br />\n", $message);
-			
-					$u_edit		= $this->helper->route('notes_controller', array('mode' => 'edit_note', 'note_id' => $notes_data[$i]['note_id']));
-					$u_del		= $this->helper->route('notes_controller', array('mode' => 'delete', 'note_id' => $notes_data[$i]['note_id']));
-		
+
+					$u_edit		= $this->helper->route('oxpus_notes_controller', array('mode' => 'edit_note', 'note_id' => $notes_data[$i]['note_id']));
+					$u_del		= $this->helper->route('oxpus_notes_controller', array('mode' => 'delete', 'note_id' => $notes_data[$i]['note_id']));
+
 					if ($notes_data[$i]['note_mem'])
 					{
 						$notes_mem = $this->notes_format_date($notes_data[$i]['note_mem']);
@@ -562,7 +566,7 @@ class main
 					{
 						$notes_mem = '';
 					}
-			
+
 					$this->template->assign_block_vars('notes_row', array(
 						'NOTE_DATE' 	=> $note_date,
 						'NOTE_SUBJECT'	=> $subject,
@@ -577,11 +581,11 @@ class main
 			{
 				$this->template->assign_var('S_NO_NOTES', true);
 			}
-		
+
 			if ($note_mem_drop)
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . 'notes SET ' . $this->db->sql_build_array('UPDATE', array(
-					'note_memx' => 0)) . 
+					'note_memx' => 0)) .
 					' WHERE note_mem <= ' . (int) $note_mem_time . ' AND note_user_id = ' . (int) $this->user->data['user_id'];
 				$this->db->sql_query($sql);
 			}
@@ -601,37 +605,37 @@ class main
 		$format = $this->user->data['user_dateformat'];
 		$now = time();
 		$delta = $now - $gmepoch;
-	
+
 		$date_cache[$format] = array(
 			'is_short'		=> strpos($format, '|'),
 			'format_short'	=> substr($format, 0, strpos($format, '|')) . '||' . substr(strrchr($format, '|'), 1),
 			'format_long'	=> str_replace('|', '', $format),
 			'lang'			=> $this->user->lang['datetime'],
 		);
-	
+
 		// Short representation of month in format? Some languages use different terms for the long and short format of May
 		if ((strpos($format, '\M') === false && strpos($format, 'M') !== false) || (strpos($format, '\r') === false && strpos($format, 'r') !== false))
 		{
 			$date_cache[$format]['lang']['May'] = $this->user->lang['datetime']['May_short'];
 		}
-	
+
 		// Show date <= 1 hour ago as 'xx min ago'
 		// A small tolerence is given for times in the future and times in the future but in the same minute are displayed as '< than a minute ago'
 		if ($delta <= 3600 && ($delta >= -5 || (($now / 60) % 60) == (($gmepoch / 60) % 60)) && $date_cache[$format]['is_short'] !== false && isset($this->user->lang['datetime']['AGO']))
 		{
 			return $this->user->lang(array('datetime', 'AGO'), max(0, (int) floor($delta / 60)));
 		}
-	
+
 		if (!$midnight)
 		{
 			list($d, $m, $y) = explode(' ', date('j n Y', time()));
 			$midnight = mktime(0, 0, 0, $m, $d, $y);
 		}
-	
+
 		if ($date_cache[$format]['is_short'] !== false)
 		{
 			$day = false;
-	
+
 			if ($gmepoch > $midnight + 2 * 86400)
 			{
 				$day = false;
@@ -648,13 +652,13 @@ class main
 			{
 				$day = 'YESTERDAY';
 			}
-	
+
 			if ($day !== false)
 			{
 				return str_replace('||', $this->user->lang['datetime'][$day], @strtr(@date($date_cache[$format]['format_short'], $gmepoch), $date_cache[$format]['lang']));
 			}
 		}
-	
+
 		return @strtr(@date($date_cache[$format]['format_long'], $gmepoch), $date_cache[$format]['lang']);
 	}
 }

@@ -3,9 +3,9 @@
 	"type": "phpbb-extension",
 	"description": "Personal Notes",
 	"homepage": "https://phpbb3.oxpus.net",
-	"version": "3.0.6",
+	"version": "3.1.1",
 	"time": "2015-02-14",
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "Karsten Ude",
 			"username": "oxpus",
@@ -19,11 +19,11 @@
 	"extra": {
 		"display-name": "Personal Notes",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1"
+			"phpbb/phpbb": ">=3.2"
 		},
 		"version-check": {
 			"host": "www.oxpus.net",
-			"directory": "/mods_check",
+			"directory": "/ext_check",
 			"filename": "notes-version.json"
 		}
 	}

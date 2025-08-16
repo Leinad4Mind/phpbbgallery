@@ -62,14 +62,27 @@
 				<br />
 	
 				<ul class="post-buttons">
-					<li><a href="{notes_row.U_EDIT_NOTE}" class="button icon-button edit-icon" title="{L_EDIT_POST}"><span>{L_EDIT_NOTE}</span></a></li>
-					<li><a href="{notes_row.U_DELETE_NOTE}" class="button icon-button delete-icon" title="{L_DELETE_POST}"><span>{L_DELETE_NOTE}</span></a></li>
+					<li>
+						<a href="{notes_row.U_EDIT_NOTE}" title="{L_EDIT_POST}" class="button button-icon-only">
+							<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_EDIT}</span>
+						</a>
+					</li>
+					<li>
+						<a href="{notes_row.U_DELETE_NOTE}" title="{L_DELETE_POST}" class="button button-icon-only">
+							<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_POST}</span>
+						</a>
+					</li>
 				</ul>
 		
 			</dt>
 		</dl>
-	
-		<div class="back2top"><a href="#wrap" class="top" title="{L_BACK_TO_TOP}">{L_BACK_TO_TOP}</a></div>
+
+		<div class="back2top">	
+			<a href="#wrap" class="top" title="{L_BACK_TO_TOP}">
+				<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
+				<span class="sr-only">{L_BACK_TO_TOP}</span>
+			</a>
+		</div>
 	
 		</div>
 	</div>

@@ -21,20 +21,14 @@ class main_module
 
 	function main($id, $mode)
 	{
-		global $db, $config, $user, $template, $request, $auth, $cache;
-		global $phpbb_root_path, $phpbb_admin_path, $phpEx;
-		global $phpbb_extension_manager, $table_prefix, $phpbb_container, $phpbb_path_helper;
+		global $db, $user, $auth, $cache, $phpbb_log, $phpbb_container;
 
-		$provider			= new \phpbb\controller\ provider();
-		$symphony_request	= new \phpbb\ symfony_request($request);
-		$filesystem			= new \phpbb\ filesystem();
-		$helper				= new \phpbb\controller\ helper($template, $user, $config, $provider, $phpbb_extension_manager, $symphony_request, $request, $filesystem, $phpbb_root_path, $phpEx);
+		$config			= $phpbb_container->get('config');
+		$language		= $phpbb_container->get('language');
+		$request		= $phpbb_container->get('request');
+		$template		= $phpbb_container->get('template');
 
-		$submit				= $request->variable('submit', '');
-
-		// Define the ext path
-		$ext_path					= $phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-		$phpbb_path_helper			= $phpbb_container->get('path_helper');
+		$submit			= $request->variable('submit', '');
 
 		$auth->acl($user->data);
 		if (!$auth->acl_get('a_'))
@@ -59,12 +53,12 @@ class main_module
 		{
 			$notes_per_user = $request->variable('notes', 0);
 
-			set_config('notes', $notes_per_user);
+			$config->set('notes', $notes_per_user);
 
-			add_log('admin', 'NOTES_LOG_CONFIG');
+			$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'NOTES_LOG_CONFIG');
 			$cache->destroy('config');
 
-			$message = sprintf($user->lang['NOTES_CONFIG_SUCCESSFULL'], '<a href="' . $this->u_action . '">', '</a>') . adm_back_link($this->u_action);
+			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL', '<a href="' . $this->u_action . '">', '</a>') . adm_back_link($this->u_action);
 			trigger_error($message);
 		}
 
