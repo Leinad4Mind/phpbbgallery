@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "This extension will separate the topics in viewforum into Global Announcements, Announcements, Stickies and Normal Topics.",
     "homepage": "http://www.sitesplat.com",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
@@ -23,7 +23,7 @@
         },
 		"version-check": {
             "host": "sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
+            "directory": "/updatecheck/phpbb32/ext",
             "filename": "cas.json"
 		}
     }
