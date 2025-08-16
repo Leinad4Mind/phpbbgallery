@@ -35,22 +35,21 @@
 
 {% INCLUDE 'overall_header.html' %}
 
-<h2 >{L_CALENDAR}</h2>
+<h2>{L_CALENDAR}</h2>
 
 {% for calendar in loops.calendar %}
 	<div class="blg-calendar-actionbar">
 		<div class="calendar-printer blg-align-right floated">
-			<a href="#" onclick="window.print(); return false;" class="cbb-btn"><i class="fa fa-print" aria-hidden="true"></i> <span>{L_PRINT}</span></a>
+			<a href="#" data-action="print" class="cbb-btn"><i class="fa fa-print" aria-hidden="true"></i> <span>{L_PRINT}</span></a>
 		</div>
 
-		<a href="{{ U_TODAY }}" class="cbb-btn">{L_TODAY}</a>
+		<a href="{{ U_TODAY }}" class="cbb-btn" data-rel="today">{L_TODAY}</a>
 
 		<div class="cbb-group">
 			<a href="{{ U_PREV }}" class="cbb-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+			<a href="#" class="cbb-btn" data-action="month-select">{{ calendar.S_MONTH }}</a>
 			<a href="{{ U_NEXT }}" class="cbb-btn"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
 		</div>
-
-		<div class="blg-calendar-title">{{ calendar.S_MONTH }}</div>
 	</div>
 
 	<table class="blg-calendar">
@@ -84,6 +83,20 @@
 	</tr>
 	</table>
 {% endfor %}
+
+<div id="month-selector" class="cbb-helper-hidden" title="{L_CALENDAR_SELECT_DATE}">
+	<form>
+		<div class="cbb-dialog-content blg-align-center">
+			<div class="cbb-group">
+				<select class="cbb-inputbox" name="month">{{ S_MONTH_OPTIONS }}</select>
+				<input type="text" class="cbb-inputbox" name="year" value="" size="10" />
+			</div>
+		</div>
+		<div class="cbb-dialog-buttons">
+			<button class="cbb-btn" value="submit">{L_GO}</button>
+		</div>
+	</form>
+</div>
 
 <script>
 // <![CDATA[

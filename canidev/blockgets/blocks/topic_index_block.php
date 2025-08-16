@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -206,6 +206,7 @@ class topic_index_block extends base
 			
 			$topic_row = array(
 				'FORUM_NAME'			=> $row['forum_name'],
+				'TOPIC_ID'				=> $row['topic_id'],
 				'TOPIC_TITLE'			=> $topic_title,
 				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'TITLE_TRUNCATED' 		=> \canidev\core\tools::html_truncate($topic_title, $data['title_limit'], '...'),

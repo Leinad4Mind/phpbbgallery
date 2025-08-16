@@ -1,8 +1,8 @@
 <?php
 /*
-* main.php [Spanish [Es]]
+* [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -29,6 +29,7 @@ $lang = array_merge($lang, array(
 	'BANNERS'					=> 'Banners',
 	'CALENDAR'					=> 'Calendario',
 	'CALENDAR_BIRTHDAY_TITLE'	=> '%1$s y <strong>%2$d más</strong>.',
+	'CALENDAR_SELECT_DATE'		=> 'Seleccionar fecha',
 	'EDIT_CONFIGURATION'		=> 'Editar configuración',
 	'EDIT_THIS_PAGE'			=> 'Editar esta página',
 	'EDITOR'					=> 'Editor',

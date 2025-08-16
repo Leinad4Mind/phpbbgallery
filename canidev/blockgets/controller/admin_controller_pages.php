@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -10,12 +10,6 @@
 namespace canidev\blockgets\controller;
 
 use \canidev\core\json_response;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class admin_controller_pages extends admin_controller_base
 {
@@ -877,8 +871,8 @@ class admin_controller_pages extends admin_controller_base
 			'legend1'			=> 'BLOCK_SETTINGS',
 			'block_title'		=> array('lang' => 'BLOCK_TITLE',			'validate' => 'string:1:100',	'type' => 'text:30:100'),
 
-			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', true),	'default' => ''),
-			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),	'default' => 'all'),
+			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', 1),	'default' => ''),
+			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),		'default' => 'all'),
 			'block_enabled'		=> array('lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',								'default' => 1),
 			'allow_collapse'	=> array('lang' => 'BLOCK_COLLAPSE',		'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($collapse_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => BLOCK_COLLAPSE_VISIBLE),
 			'block_style'		=> array('lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($style_options, '{KEY}', '{CONFIG_VALUE}'),		'default' => 1),

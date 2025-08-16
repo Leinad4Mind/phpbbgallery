@@ -17,6 +17,13 @@ services:
         tags:
             - { name: event.listener }
 
+    canidev.blockgets.media_events:
+        class: canidev\blockgets\event\media
+        arguments:
+            - '@dbal.conn'
+            - '@language'
+            - '@user'
+
     canidev.blockgets.routing.loader:
         class: canidev\blockgets\routing\page_loader
         arguments:
@@ -94,9 +101,3 @@ services:
             - '@template'
             - '@user'
 
-    canidev.blockgets.media_events:
-        class: canidev\blockgets\libraries\media_events
-        arguments:
-            - '@dbal.conn'
-            - '@language'
-            - '@user'

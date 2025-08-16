@@ -1,6 +1,6 @@
 /*
  * cBB Blockgets (All stylesheet)
- * Copyright (c) 2020, CaniDev
+ * Copyright (c) 2021, CaniDev
  * license https://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -28,7 +28,9 @@
 	text-align: center;
 }
 
-.blg-message p { font-size: 1em; }
+.blg-message p {
+	font-size: 1em;
+}
 
 .blg-float-message {
 	left: 10px;
@@ -675,8 +677,15 @@ dd.fb-stats {
 
 /* Calendar
 ----------------------------------*/
-.style-default .calendar_container, .style-alternative .calendar_container { margin: -3px; }
-.calendar_container, .calendar tbody td { text-align: center; }
+.style-default .calendar_container,
+.style-alternative .calendar_container {
+	margin: -3px;
+}
+
+.calendar_container,
+.calendar tbody td {
+	text-align: center;
+}
 
 .blg-calendar-day {
 	background: #f3f3f3;
@@ -762,9 +771,12 @@ table.calendar {
     padding: 4px;
     font-size: 1.1em;
 	font-weight: bold;
+	text-align: center;
 }
 
-.blg-calendar th .short-day { display: none; }
+.blg-calendar th .short-day {
+	display: none;
+}
 
 .blg-calendar .blg-calendar-day {
 	background: none;
@@ -775,6 +787,10 @@ table.calendar {
 	width: 14%;
 }
 
+.blg-calendar .blg-calendar-day:hover .blg-event-add {
+	display: block;
+}
+
 .blg-calendar-actionbar {
     margin: 20px;
 }
@@ -782,13 +798,6 @@ table.calendar {
 .blg-calendar-actionbar .cbb-group {
 	display: inline-block;
     vertical-align: top;
-}
-
-.blg-calendar-title {
-    font-size: 14px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 5px;
 }
 
 .blg-day-title,

@@ -43,6 +43,7 @@
 			<td class="blg-column-topic-title blg-align-left">
 				{% EVENT topiclist_row_prepend %}
 				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
+				{% EVENT topiclist_row_append %}
 			</td>
 		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
 			<td class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>

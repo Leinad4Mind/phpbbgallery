@@ -25,11 +25,10 @@ footer,
 
 #wrap {
 	border: none;
+	border-radius: 0;
     max-width: none;
     min-width: 0;
 	padding: 0 15px;
-	
-	border-radius: 0;
 }
 
 #page-body, .blg-area {
@@ -41,7 +40,8 @@ footer,
 	margin: 2em 0 0 0;
 }
 
-.blg-calendar-actionbar .cbb-group, .blg-calendar-actionbar .cbb-btn {
+.blg-calendar-actionbar .btn-group,
+.blg-calendar-actionbar .btn {
 	display: none;
 }
 
@@ -56,7 +56,9 @@ footer,
     margin-bottom: 20px;
 }
 
-.blg-calendar td.today { background: none; }
+.blg-calendar td.today {
+	background: none;
+}
 
 .blg-calendar td.today .blg-calendar-day,
 .blg-calendar td.today .blg-calendar-content {

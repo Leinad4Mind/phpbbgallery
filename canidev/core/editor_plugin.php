@@ -1,10 +1,10 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.8 12/01/2021
+* @version 1.1.0 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
@@ -17,27 +17,51 @@ class editor_plugin
 	protected $container;
 	protected $wrapper;
 
-	public function __construct($wrapper, $container = null)
+	/**
+	 * Constructor
+	 * 
+	 * @param \canidev\core\editor 											$wrapper 		Editor class
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface 	$container 		Service container interface
+	 */
+	public function __construct(
+		\canidev\core\editor $wrapper,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container)
 	{
 		$this->container 	= $container;
 		$this->wrapper 		= $wrapper;
 	}
 
+	/**
+	 * Get javascript filename
+	 * @return string
+	 */
 	public function get_filename()
 	{
 		return '';
 	}
 
+	/**
+	 * Get language variables
+	 * @return array|false
+	 */
 	public function get_lang()
 	{
 		return false;
 	}
 
+	/**
+	 * Get unique plugin name
+	 * @return string
+	 */
 	public function get_name()
 	{
 		return '';
 	}
 
+	/**
+	 * Get if plugin is enabled
+	 * @return bool
+	 */
 	public function is_enabled($status = null)
 	{
 		if($status === null)
@@ -48,6 +72,10 @@ class editor_plugin
 		$this->is_enabled = (bool)$status;
 	}
 
+	/**
+	 * Get if plugin is global
+	 * @return bool
+	 */
 	public function is_global($status = null)
 	{
 		if($status === null)

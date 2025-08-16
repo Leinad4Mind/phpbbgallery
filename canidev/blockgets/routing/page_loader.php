@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -54,7 +54,7 @@ class page_loader extends Loader
 				array(
 					'_controller' 	=> 'canidev.blockgets.controller:display',
 					'page'			=> $page_alias,
-					'prefix'		=> '',
+					'prefix'		=> ($row['page_alias']) ? '' : 'page/',
 				),
 				array(
 					'prefix'	=> "(|page/)",

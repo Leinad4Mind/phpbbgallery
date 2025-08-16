@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -194,14 +194,7 @@ class helper
 	
 	public function build_image_filename($image, $full_url = false)
 	{
-		static $media;
-
-		if(!$media)
-		{
-			$media = $this->get_media(false);
-		}
-		
-		return $media->get_full_path($image, $full_url);
+		return $this->get_media(false)->get_full_path($image, $full_url);
 	}
 	
 	/**

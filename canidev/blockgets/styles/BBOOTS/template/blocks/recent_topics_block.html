@@ -23,6 +23,7 @@
 				<li>
 					{% EVENT topiclist_row_prepend %}
 					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+					{% EVENT topiclist_row_append %}
 				</li>
 			{% endfor %}
 			</ul>
@@ -61,6 +62,7 @@
 					<td class="blg-column-topic-title blg-align-left">
 						{% EVENT topiclist_row_prepend %}
 						<a href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+						{% EVENT topiclist_row_append %}
 					</td>
 					<td class="blg-column-posted-by">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
 				{% if not BLOCK_VIEW_MEDIUM %}
