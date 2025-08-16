@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.7 12/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -146,6 +146,11 @@ class tools
 			include($this->phpbb_root_path . 'includes/functions_admin.' . $this->php_ext);
 		}
 
+		if(!empty($select_ids))
+		{
+			$select_ids = is_array($select_ids) ? $select_ids : explode(',', $select_ids);
+		}
+
 		$output = '<select ' . (($classname) ? 'class="' . $classname . '" ' : '') . 'name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
 		$output .= (($ignore_cats) ? make_forum_select($select_ids, false, true, true, true, true) : make_forum_select($select_ids, false, true));
 		$output .= '</select>';
@@ -154,18 +159,49 @@ class tools
 	}
 
 	/**
+	 * Get information from composer file of extension
+	 */
+	public function getExtInfo($ext_namespace)
+	{
+		$composer_filename = $this->phpbb_root_path . 'ext/' . $ext_namespace . '/composer.json';
+
+		$data = @json_decode(@file_get_contents($composer_filename));
+
+		if($data)
+		{
+			$data->basename = substr($data->name, strpos($data->name, '/') + 1);
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Create a select with all groups
 	 * 
 	 * @param string 	$config_key 		Key for input
 	 * @param mixed 	$select_groups 		Selected group IDs
-	 * @param bool 		$include_all 		Define if "All" checkbox must be displayed
+	 * @param bool 		$include_options 	Define if checkboxes must be displayed
 	 * 
 	 * @return string
 	 */
-	public function groups_select($config_key, $select_groups, $include_all = true)
+	public function groups_select($config_key, $select_groups, $include_options = true)
 	{
-		$output 	= '';
-		$group_ary 	= [];
+		$id 					= gen_rand_string(4);
+		$output 				= [];
+		$group_ary 				= [];
+		$all_groups_key 		= 'all_groups_' . $config_key;
+		$only_default_key		= 'default_groups_' . $config_key;
+		$all_groups 			= ($select_groups == 'all' || $this->request->is_set_post($all_groups_key));
+		$only_default_groups 	= false;
+
+		if(is_string($select_groups) && strpos($select_groups, 'default;') === 0)
+		{
+			$only_default_groups 	= true;
+			$select_groups 			= str_replace('default;', '', $select_groups);
+		}
+
+		$only_default_groups 	= $only_default_groups || $this->request->is_set_post($only_default_key);
+		$only_default_groups 	= ($all_groups) ? false : $only_default_groups;
 
 		if(!empty($select_groups))
 		{
@@ -178,25 +214,51 @@ class tools
 			ORDER BY group_type DESC, group_name ASC';
 		$result = $this->db->sql_query($sql);
 
-		$output = '<div class="js-groups-select cbb-groups-selector">
-			<select name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
+		$output[] = '<div id="groups-select-' . $id . '" class="cbb-groups-selector">';
+		$output[] = '<select name="' . $config_key . '[]" id="' . $config_key . '" multiple="multiple" size="5">';
 
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			$s_selected = (in_array($row['group_id'], $group_ary)) ? ' selected="selected"' : '';
-			$output .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$output[] = '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="group-special"' : '') . ' value="' . $row['group_id'] . '"' . $s_selected . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 
-		$output .= '</select>';
+		$output[] = '</select>';
 
-		if($include_all)
+		if($include_options)
 		{
-			$all_groups_key = 'all_groups_' . $config_key;
-			$output .= '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . (($select_groups == 'all' || $this->request->is_set_post($all_groups_key)) ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->language->lang('ALL_GROUPS') . '</label>';
+			$output[] = '<div class="cbb-selector-options">';
+			$output[] = '<input type="checkbox" class="radio" id="all-groups-' . $config_key . '" name="' . $all_groups_key . '" value="1"' . ($all_groups ? ' checked="checked"' : '') . '/><label for="all-groups-' . $config_key . '">' . $this->language->lang('ALL_GROUPS') . '</label>';
+			$output[] = '<input type="checkbox" class="radio cbb-helper-hidden" id="default-groups-' . $config_key . '" name="' . $only_default_key . '" value="1"' . ($only_default_groups ? ' checked="checked"' : '') . '/><label for="default-groups-' . $config_key . '">' . $this->language->lang('ONLY_DEFAULT_GROUPS') . '</label>';
+			$output[] = '</div>';
 		}
-		
-		$output .= '</div>';
+
+		$output[] = '</div>';
+
+		if($include_options)
+		{
+			$output[] = '<script>window._jPostponed = window._jPostponed || []; window._jPostponed.push([\'@core/bindGroupSelector\', \'#groups-select-' . $id . '\']);</script>';
+		}
+
+		return implode("\n", $output);
+	}
+
+	public function groups_select_submit($config_key)
+	{
+		if($this->request->is_set_post('all_groups_' . $config_key))
+		{
+			return 'all';
+		}
+
+		$output = '';
+
+		if($this->request->is_set_post('default_groups_' . $config_key))
+		{
+			$output .= 'default;';
+		}
+
+		$output .= implode(',', $this->request->variable($config_key, [0]));
 
 		return $output;
 	}

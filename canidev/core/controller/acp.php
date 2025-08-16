@@ -1,14 +1,15 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.3 20/10/2023
+ * @version 1.1.7 12/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\core\controller;
 
+use canidev\core\Dom;
 use \Symfony\Component\DependencyInjection\ContainerInterface;
 
 class acp
@@ -72,16 +73,10 @@ class acp
 	 */
 	public function pageHeader($ext_namespace)
 	{
-		$ext_info = $this->getExtInfo($ext_namespace);
-		
-		$this->template->assign_var('U_ACTION', $this->form_action);
+		$ext_info = $this->tools->getExtInfo($ext_namespace);
 
 		if($ext_info !== false)
 		{
-			$this->template->assign_vars([
-				'U_HELP'		=> 'https://www.canidev.com' . $ext_info->extra->{'version-check'}->directory . '?rq=documentation&v=' . $ext_info->version,
-			]);
-
 			// Check is symfony_request is present to make sure old versions of extensions are compatible
 			if($this->symfony_request !== null)
 			{
@@ -101,7 +96,15 @@ class acp
 					}
 				}
 			}
+
+			$this->template->assign_var('IN_EXT_' . strtoupper($ext_info->basename), true);
 		}
+
+		$this->template->assign_vars([
+			'LOAD_CORE_ACP'		=> true,
+			'U_ACTION'			=> $this->form_action,
+			'U_HELP'			=> ($ext_info !== false) ? 'https://www.canidev.com' . $ext_info->extra->{'version-check'}->directory . '?rq=documentation&v=' . $ext_info->version : '',
+		]);
 		
 		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
 		if($this->config['cbb_asset_check'] != $this->config['assets_version'])
@@ -142,13 +145,22 @@ class acp
 				
 				continue;
 			}
+
+			if(isset($vars['builder']))
+			{
+				$this->template->assign_block_vars($tpl_key, [
+					'INCLUDE'		=> call_user_func($vars['builder'], $vars, $cfg_array),
+				]);
+
+				continue;
+			}
 			
 			if(!isset($cfg_array[$config_key]) && isset($vars['default']))
 			{
 				$cfg_array[$config_key] = $vars['default'];
 			}
 
-			if($vars['type'] == 'custom' && isset($vars['function']) && is_array($vars['function']))
+			if(isset($vars['function']) && is_array($vars['function']))
 			{
 				switch($vars['function'][0])
 				{
@@ -156,8 +168,11 @@ class acp
 						$vars['function'][0] = $this;
 					break;
 
-					case 'tools':
-						$vars['function'][0] = $this->tools;
+					default:
+						if(is_string($vars['function'][0]) && property_exists($this, $vars['function'][0]))
+						{
+							$vars['function'][0] = $this->{$vars['function'][0]};
+						}
 					break;
 				}
 			}
@@ -176,12 +191,26 @@ class acp
 				$content = preg_replace('#^<(input|select|textarea)#', '<$1 class="cbb-inputbox"', $content);
 			}
 
+			// Add custom attributes
+			if(isset($vars['attributes']))
+			{
+				$content = preg_replace_callback(
+					'#<(input|select|textarea)([^>]*?)(/)?>#', function($match) use ($vars) {
+						$attr = array_merge(Dom::attrToArray($match[2]), $vars['attributes']);
+						
+						return '<' . $match[1] . ' ' . Dom::arrayToAttr($attr) . ' ' . $match[3] . '>';
+					},
+					$content
+				);
+			}
+
 			if($individual_name)
 			{
 				$content = preg_replace('#name="config\[([a-z0-9\-_]+)\]"#i', 'name="$1"', $content);
 			}
 
 			$this->template->assign_block_vars($tpl_key, [
+				'ID'			=> str_replace('_', '-', $config_key),
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->language->lang($vars['lang']),
 				'S_EXPLAIN'		=> ($this->language->is_set($vars['lang'] . '_EXPLAIN') ? $this->language->lang($vars['lang'] . '_EXPLAIN') : ''),
@@ -237,13 +266,6 @@ class acp
 	{
 		$this->form_action = $u_action;
 		return $this;
-	}
-
-	protected function getExtInfo($ext_namespace)
-	{
-		$composer_filename = $this->container->getParameter('core.root_path') . 'ext/' . $ext_namespace . '/composer.json';
-
-		return @json_decode(@file_get_contents($composer_filename));
 	}
 
 	/**

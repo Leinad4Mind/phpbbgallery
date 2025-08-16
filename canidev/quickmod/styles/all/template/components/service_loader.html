@@ -1,0 +1,15 @@
+	<script>
+	// <![CDATA[
+	(function($) {
+		cbbCore.initService('quickmod', {
+			rowSelector	: 'ul.topics li.row',
+			position	: {
+				default	: ['.action-bar.bar-bottom, .action-bar.bottom', 'before'],
+				fixed	: ['.action-bar.bar-bottom .pagination, .action-bar.bottom .pagination', 'before']
+			},
+			layout 		: '{{ S_QM_LAYOUT }}',
+			type		: '{{ S_QM_TYPE }}'
+		});
+	})(jQuery);
+	// ]]>
+	</script>

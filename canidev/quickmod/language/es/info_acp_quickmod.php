@@ -2,9 +2,9 @@
 /**
  * [Spanish [Es]]
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -27,7 +27,10 @@ $lang = array_merge($lang, [
 	'QM_CONFIRM'			=> 'Pedir confirmación',
 	'QM_CONFIRM_EXPLAIN'	=> 'Habilita/Deshabilita el diálogo de confirmación al realizar las acciones rápidas.',
 	'QM_BUTTON_MANAGE'		=> 'Administrar botones',
-	
+	'QM_LAYOUT'				=> 'Visualización del cuadro de acciones',
+	'QM_LAYOUT_EXPLAIN'		=> 'Define como se visualizará el cuadro para realizar acciones en lote.',
+	'QM_LAYOUT_DEFAULT'		=> 'Predeterminado',
+	'QM_LAYOUT_FIXED'		=> 'Flotante',
 	'QM_TYPE'				=> 'Visualización de iconos',
 	'QM_TYPE_EXPLAIN'		=> 'Define como se mostrarán las funciones rápidas en el foro.',
 	'QM_TYPE_ICON'			=> 'Iconos',

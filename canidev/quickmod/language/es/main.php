@@ -2,9 +2,9 @@
 /**
  * [Spanish [Es]]
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -39,9 +39,10 @@ $lang = array_merge($lang, [
 	'CONFIRM_RESTORE_TOPICS'	=> '¿Está seguro de querer restaurar los temas seleccionados?',
 	'CONFIRM_UNLOCK_TOPIC'		=> '¿Está seguro de querer desbloquear el tema seleccionado?',
 	'CONFIRM_UNLOCK_TOPICS'		=> '¿Está seguro de querer desbloquear los temas seleccionados?',
-	
+
 	'DELETE_TOPIC'				=> 'Eliminar',
 	'DELETE_PERMANENTLY_TOPIC'	=> 'Eliminar permanentemente',
+	'FORK_TOPIC'				=> 'Copiar',
 	'MAKE_ANNOUNCE_TOPIC'		=> 'Marcar como anuncio',
 	'MAKE_GLOBAL_TOPIC'			=> 'Marcar como anuncio global',
 	'MAKE_NORMAL_TOPIC'			=> 'Marcar como normal',
@@ -61,10 +62,13 @@ $lang = array_merge($lang, [
 	
 	'MOVE_TOPIC'			=> 'Mover',
 	'NO_TOPIC_SELECTED'		=> 'No ha seleccionado ningún tema',
-	'OPTIONS_BASIC'			=> 'Opciones Básicas',
-	'OPTIONS_ADVANCED'		=> 'Opciones Avanzadas',
+	'OPTIONS_APPROVE'		=> 'Opciones aprobación',
+	'OPTIONS_LOCK'			=> 'Opciones cierre',
+	'OPTIONS_REMOVE'		=> 'Opciones eliminación',
+	'OPTIONS_TOOLS'			=> 'Herramientas',
 	'RENAME_TOPIC'			=> 'Renombrar',
 	'RESTORE_TOPIC'			=> 'Restaurar',
+	'RESYNC_TOPIC'			=> 'Sincronizar',
 	'TOPIC_TYPE'			=> 'Tipo de tema',
 	'UNLOCK_TOPIC'			=> 'Desbloquear',
 
@@ -74,6 +78,8 @@ $lang = array_merge($lang, [
 	'WITH_SELECTED'			=> 'Con los seleccionados',
 
 	'AUTHOR_CHANGE_SUCCESS'	=> 'El autor de los temas ha sido modificado correctamente.',
+	'ICON_CHANGE_SUCCESS'	=> 'El icono ha sido modificado correctamente.',
+	'TIME_CHANGE_SUCCESS'	=> 'La fecha ha sido modificada correctamente.',
 	'TOPIC_RENAMED_SUCCESS'	=> 'El tema ha sido renombrado correctamente.',
 	
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />

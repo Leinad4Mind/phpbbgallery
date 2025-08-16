@@ -1,12 +1,25 @@
 /*  cBB QuickMod StyleSheet
     --------------------------------------------------------------
 	Style:	FLATBOOTS
-	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
 #qm-main {
 	font-size: inherit !important;
+}
+
+.qm-layout-default #qm-main {
+	padding: 5px 10px;
+}
+
+.qm-layout-fixed #qm-main {
+	margin-left: 5px;
+	margin-top: 3px;
+}
+
+.qm-layout-default .qm-main-container {
+	min-height: 38px !important;
 }
 
 .qm-row .footable-first-column,
@@ -16,6 +29,10 @@
 
 .qm-row .desc-wrapper > a {
     vertical-align: top;
+}
+
+body div.row_mark {
+	right: 5px;
 }
 
 .qm-mobile div.row_mark {

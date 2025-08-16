@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -14,7 +14,7 @@ class make_sticky extends base
 	public $permissions = 'f_sticky';
 	public $category 	= 'TOPIC_TYPE';
 	public $icon 		= 'fa-thumb-tack';
-	public $order 		= 2;
+	public $order 		= 20;
 	public $title 		= 'MAKE_STICKY_TOPIC';
 
 	/**
@@ -60,7 +60,7 @@ class make_sticky extends base
 			return;
 		}
 
-		if(!$this->confirm(sizeof($topic_ids), 'CHANGE_TOPIC'))
+		if(!$this->confirm(count($topic_ids), 'CHANGE_TOPIC'))
 		{
 			return null;
 		}
@@ -98,6 +98,6 @@ class make_sticky extends base
 			]);
 		}
 
-		$this->response->add('message', $this->language->lang((sizeof($topic_ids) == 1) ? 'TOPIC_TYPE_CHANGED' : 'TOPICS_TYPE_CHANGED'));
+		$this->response->add('message', $this->language->lang((count($topic_ids) == 1) ? 'TOPIC_TYPE_CHANGED' : 'TOPICS_TYPE_CHANGED'));
 	}
 }

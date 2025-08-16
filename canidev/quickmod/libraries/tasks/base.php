@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -15,15 +15,21 @@ abstract class base
 {
 	protected $auth;
 	protected $config;
-	protected $core;
 	protected $db;
 	protected $dispatcher;
 	protected $language;
-	protected $log;
 	protected $request;
-	protected $response;
 	protected $template;
 	protected $user;
+
+	/** @var \canidev\core\lib */
+	protected $core;
+
+	/** @var \phpbb\log\log_interface */
+	protected $log;
+
+	/** @var \canidev\core\JsonResponse */
+	protected $response;
 
 	protected $phpbb_root_path;
 	protected $php_ext;

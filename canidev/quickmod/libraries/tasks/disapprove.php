@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class disapprove extends base
 {
 	public $permissions = 'm_approve';
-	public $category 	= 'OPTIONS_BASIC';
+	public $category 	= 'OPTIONS_APPROVE';
 	public $icon 		= 'fa-ban';
-	public $order 		= 2;
+	public $order 		= 20;
 	public $title 		= 'DISAPPROVE_TOPIC';
 
 	protected $container;
@@ -109,7 +109,7 @@ class disapprove extends base
 				]);
 			}
 
-			if(sizeof($delete_ary))
+			if(count($delete_ary))
 			{
 				delete_topics('topic_id', $delete_ary);
 			}
@@ -139,7 +139,7 @@ class disapprove extends base
 				}
 			}
 			
-			$success_msg = ((sizeof($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_DISAPPROVED_SUCCESS';
+			$success_msg = ((count($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_DISAPPROVED_SUCCESS';
 
 			$this->response->add('message', $this->language->lang($success_msg));
 			return true;

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class chgposter extends base
 {
 	public $permissions = 'm_chgposter';
-	public $category 	= 'OPTIONS_ADVANCED';
+	public $category 	= 'OPTIONS_TOOLS';
 	public $icon 		= 'fa-user';
-	public $order 		= 1;
+	public $order 		= 10;
 	public $title 		= 'CHANGE_POSTER_TOPIC';
 
 	/**
@@ -61,7 +61,7 @@ class chgposter extends base
 			// Get posts data
 			$posts_info = phpbb_get_post_data($post_ids, $this->permissions, true);
 	
-			if(sizeof($posts_info))
+			if(count($posts_info))
 			{
 				// Update all posts
 				$sql = 'UPDATE ' . POSTS_TABLE . '

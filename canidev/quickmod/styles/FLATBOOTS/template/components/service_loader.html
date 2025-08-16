@@ -1,0 +1,16 @@
+	<script>
+	// <![CDATA[
+	head.ready(['cbbcore.min.js', 'jquickmod.min.js'], function () {
+		cbbCore.initService('quickmod', {
+			rowSelector	: 'tr:has(".quick_mod_buttons")',
+			position	: {
+				default	: ['.panel:has(.footable):last', 'after'],
+				fixed	: ['.panel:has(.footable):last + div > .pull-left', 'after']
+			},
+			layout 		: '{{ S_QM_LAYOUT }}',
+			titleTag	: 'data-original-title title',
+			type		: '{{ S_QM_TYPE }}'
+		});
+	});
+	// ]]>
+	</script>
