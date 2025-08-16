@@ -1,0 +1,77 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('CF_CPT_TITLE') }}</h1>
+<p>{{lang('CF_CPT_TITLE_EXPLAIN') }}</p>
+
+{% if CF_CPT_S_ERROR %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ CF_CPT_ERROR_MSG }}</p>
+	</div>
+{% endif %}
+
+<div class="infobox">
+<h1 class="info_title">{{ lang('CF_CPT_INFO_TITLE') }}</h1>
+	<div class="tablerow">
+		<div class="t_row">
+			<div class="table_left">{{ lang('CF_CPT_OPTION_1') }}</div>
+			<div class="table_right">{{ lang('CF_CPT_OPTION_1_EXPLAIN') }}</div>
+		</div>
+	</div>
+	<div class="tablerow">
+		<div class="t_row">
+			<div class="table_left">{{ lang('CF_CPT_OPTION_2') }}</div>
+			<div class="table_right">{{ lang('CF_CPT_OPTION_2_EXPLAIN') }}</div>
+		</div>
+	</div>
+	<div class="tablerow">
+		<div class="t_row">
+			<div class="table_left">{{ lang('CF_CPT_OPTION_3') }}</div>
+			<div class="table_right">{{ lang('CF_CPT_OPTION_3_EXPLAIN') }}</div>
+		</div>
+	</div>
+	<div class="tablerow">
+		<div class="t_row">
+			<div class="table_left">{{ lang('CF_CPT_OPTION_4') }}</div>
+			<div class="table_right">{{ lang('CF_CPT_OPTION_4_EXPLAIN') }}</div>
+		</div>
+	</div>
+	<div class="tablerow">
+		<div class="t_row">
+			<div class="table_left">{{ lang('CF_CPT_OPTION_5') }}</div>
+			<div class="table_right">{{ lang('CF_CPT_OPTION_5_EXPLAIN') }}</div>
+		</div>
+	</div>
+</div>
+
+<form id="Cptfork_general" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('CF_CPT_NAME') }}</legend>
+		<dl>
+			<dt>
+				<label>{{ lang('CF_CPT_OPTION') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('CF_CPT_OPTION_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<select name="cf_cpt_option">
+					<option {{ CF_CPT_OPTION  == 'opt_1' ?  'selected'}} value="opt_1">{{ lang('CF_CPT_OPTION_1') }}</option>
+					<option {{ CF_CPT_OPTION  == 'opt_2' ?  'selected'}} value="opt_2">{{ lang('CF_CPT_OPTION_2') }}</option>
+					<option {{ CF_CPT_OPTION  == 'opt_3' ?  'selected'}} value="opt_3">{{ lang('CF_CPT_OPTION_3') }}</option>
+					<option {{ CF_CPT_OPTION  == 'opt_4' ?  'selected'}} value="opt_4">{{ lang('CF_CPT_OPTION_4') }}</option>
+					<option {{ CF_CPT_OPTION  == 'opt_5' ?  'selected'}} value="opt_5">{{ lang('CF_CPT_OPTION_5') }}</option>
+				</select>
+
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+	</fieldset>
+{{ S_FORM_TOKEN }}
+</form>
+{% include 'overall_footer.html' %}
+{% INCLUDECSS '@chris1278_cptfork/css/acp_cptfork.css' %}
+

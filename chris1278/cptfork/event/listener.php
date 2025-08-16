@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
+	protected $config;
 	protected $db;
 	protected $user;
 	protected $auth;
@@ -24,6 +25,7 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 
 	public function __construct(
+		\phpbb\config\config $config,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\user $user,
 		\phpbb\auth\auth $auth,
@@ -33,6 +35,7 @@ class listener implements EventSubscriberInterface
 		$php_ext
 	)
 	{
+		$this->config		= $config;
 		$this->db			= $db;
 		$this->user			= $user;
 		$this->auth			= $auth;
@@ -90,6 +93,33 @@ class listener implements EventSubscriberInterface
 			trigger_error('NOT_AUTHORISED');
 		}
 
+		if ($this->config['cf_cpt_option'] == 'opt_1')
+		{
+			$php_check_date	= date('Y-m-d');
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_2')
+		{
+			date_default_timezone_set($this->user->data['user_timezone']);
+			$timestamp = time();
+			$format = 'Y-m-d';
+			$php_check_date	= date($format, $timestamp);
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_3')
+		{
+			date_default_timezone_set($this->config['board_timezone']);
+			$timestamp = time();
+			$format = 'Y-m-d';
+			$php_check_date	= date($format, $timestamp);
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_4')
+		{
+			$year			= date('Y');
+			$month			= date('m');
+			$day			= date('d') +1;
+
+			$php_check_date	= $year . '-' . $month . '-' . $day;
+		}
+
 		// Get the original time, and format it according to the user timezone
 		$oldtime 		= $this->user->create_datetime()->setTimestamp($post_info['post_time']);
 		$from_oldtime	= $oldtime->format();
@@ -113,9 +143,12 @@ class listener implements EventSubscriberInterface
 		* date is greater than the current date, the entry is canceled and an error message is output.
 		* This is a security measure in case someone wants to bypass the HTML query "max".
 		*/
-		if ($year . '-' . $month . '-' . $day > date('Y-m-d'))
+		if ($this->config['cf_cpt_option'] != 'opt_5')
 		{
-			trigger_error('CF_ERROR_DATE');
+			if ($year . '-' . $month . '-' . $day > $php_check_date)
+			{
+				trigger_error('CF_ERROR_DATE');
+			}
 		}
 
 		// Update post_time in database
@@ -174,9 +207,42 @@ class listener implements EventSubscriberInterface
 		$hour	= ((int) $oldtime->format('G') >= 0 && (int) $oldtime->format('G') < 10) ? '0' . (int) $oldtime->format('G') : (int) $oldtime->format('G');
 		$minute = ((int) $oldtime->format('i') >= 0 && (int) $oldtime->format('i') < 10) ? ':0' . (int) $oldtime->format('i') : ':' . (int) $oldtime->format('i');
 
+		//Funktion für normal date php ohne irgendwelche prüfung
+		if ($this->config['cf_cpt_option'] == 'opt_1')
+		{
+			$date_rule	= date('Y-m-d');
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_2')
+		{
+			date_default_timezone_set($this->user->data['user_timezone']);
+			$timestamp = time();
+			$format = 'Y-m-d';
+			$date_rule	= date($format, $timestamp);
+
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_3')
+		{
+			date_default_timezone_set($this->config['board_timezone']);
+			$timestamp = time();
+			$format = 'Y-m-d';
+			$date_rule	= date($format, $timestamp);
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_4')
+		{
+			$year1			= date('Y');
+			$month1			= date('m');
+			$day1			= date('d') +1;
+
+			$date_rule	= $year1 . '-' . $month1 . '-' . $day1;
+		}
+		else if ($this->config['cf_cpt_option'] == 'opt_5')
+		{
+			$date_rule	= '';
+		}
+
 		$mcp_post_template_data = array_merge($mcp_post_template_data, [
 			'S_CF_CAN_CHGPOSTTIME'		=> $this->auth->acl_get('m_cf_chgposttime', $post_info['forum_id']),
-			'CF_DATE_RULE'				=> date('Y-m-d'),
+			'CF_DATE_RULE'				=> $date_rule,
 			'CF_DATE'					=> $year . $month . $day,
 			'CF_TIME'					=> $hour . $minute,
 		]);

@@ -37,5 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
+	'CF_CPT_TITLE'						=> 'CF Change Post Time (fork)',
+	'CF_CPT_SETTING'					=> 'Setting',
 	'LOG_MCP_CF_CHANGE_POSTTIME'		=> '<strong>Changed post #%4$s time in topic “%1$s”</strong><br>» from %2$s to %3$s',
 ]);

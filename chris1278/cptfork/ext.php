@@ -22,7 +22,7 @@ class ext extends \phpbb\extension\base
 			$phpbb_extension_manager->disable('javiexin/chgposttime');
 		}
 
-		$valid_phpbb = phpbb_version_compare(PHPBB_VERSION, '3.3.0', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.4.0-dev', '<');
+		$valid_phpbb = phpbb_version_compare(PHPBB_VERSION, '3.3.0', '>=') && phpbb_version_compare(PHPBB_VERSION, '4.0-dev', '<');
 		$valid_php = phpbb_version_compare(PHP_VERSION, '7.0.0', '>=') && phpbb_version_compare(PHP_VERSION, '8.3.0-dev', '<');
 
 		return $valid_phpbb && $valid_php;
