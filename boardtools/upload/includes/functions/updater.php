@@ -2,7 +2,7 @@
 /**
 *
 * @package Upload Extensions
-* @copyright (c) 2014 - 2015 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+* @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -14,24 +14,38 @@ use \boardtools\upload\includes\objects;
 class updater
 {
 	/**
-	* The function that gets extension metadata manager for Upload Extensions.
+	* Gets and validates extension metadata manager for Upload Extensions.
 	*/
 	public static function get_manager()
 	{
-		objects::$md_manager = new \phpbb\extension\metadata_manager(objects::$upload_ext_name, objects::$config, objects::$phpbb_extension_manager, objects::$template, objects::$user, objects::$phpbb_root_path);
+		// If we have already created the metadata manager, do not do it twice.
+		if (isset(objects::$md_manager))
+		{
+			return;
+		}
+
+		objects::$md_manager = objects::$compatibility->create_metadata_manager(objects::$upload_ext_name);
 		try
 		{
-			$metadata = objects::$md_manager->get_metadata('all');
+			// Validate extension's metadata
+			objects::$md_manager->get_metadata('all');
 		}
 		catch (\phpbb\extension\exception $e)
 		{
-			files::catch_errors($e);
+			$message = objects::$compatibility->get_exception_message($e);
+			files::catch_errors($message);
 		}
+	}
 
+	/**
+	* Checks the availability of an update for Upload Extensions.
+	*/
+	public static function check_updates()
+	{
 		$upload_extensions_download = false;
 		try
 		{
-			$updates_available = extensions::version_check(objects::$md_manager, objects::$request->variable('versioncheck_force', false));
+			$updates_available = objects::$compatibility->version_check(objects::$md_manager, objects::$request->variable('versioncheck_force', false), false, objects::$config['extension_force_unstable'] ? 'unstable' : null);
 
 			objects::$template->assign_vars(array(
 				'UPLOAD_EXT_NEW_UPDATE'	=> !empty($updates_available),
@@ -40,10 +54,11 @@ class updater
 				'UPLOAD_UP_TO_DATE_MSG'	=> objects::$user->lang(empty($updates_available) ? 'UP_TO_DATE' : 'NOT_UP_TO_DATE', objects::$md_manager->get_metadata('display-name')),
 			));
 
-			foreach ($updates_available as $branch => $version_data)
+			objects::$template->assign_block_vars('upload_updates_available', $updates_available);
+
+			if (isset($updates_available['download']))
 			{
-				objects::$template->assign_block_vars('upload_updates_available', $version_data);
-				$upload_extensions_download = $version_data['download'];
+				$upload_extensions_download = $updates_available['download'];
 			}
 		}
 		catch (\RuntimeException $e)
@@ -57,7 +72,8 @@ class updater
 	}
 
 	/**
-	* The function that generates the link to Upload Extensions Updater.
+	* Generates the link to Upload Extensions Updater.
+	*
 	* @return string Download link.
 	*/
 	public static function get_update_link()
@@ -67,7 +83,7 @@ class updater
 	}
 
 	/**
-	* The function that sets the link to Upload Extensions Updater.
+	* Sets the link to Upload Extensions Updater.
 	*/
 	public static function set_update_link()
 	{

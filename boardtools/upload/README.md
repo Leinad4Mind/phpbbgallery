@@ -6,7 +6,7 @@ With this extension you can install/update/delete extensions without using FTP. 
 [![Build Status](https://travis-ci.org/BoardTools/upload.svg?branch=master)](https://travis-ci.org/BoardTools/upload)
 
 ## Requirements
-* phpBB 3.1.0 or higher
+* phpBB 3.1.0 or higher (phpBB 3.2 is also supported)
 * PHP 5.3.3 or higher
 
 ## Sources
@@ -24,8 +24,8 @@ http://boardtools.github.io/upload/
 ## Installation, update, uninstallation
 The information about the installation/update/uninstallation process can be found in FAQ and Wiki:
 
-* For the packages uploaded from phpbb.com: https://www.phpbb.com/customise/db/extension/upload/faq.
-* For the packages uploaded from github.com: https://github.com/BoardTools/upload/wiki.
+* For the packages uploaded from phpbb.com: https://www.phpbb.com/customise/db/extension/upload/faq
+* For the packages uploaded from github.com: https://github.com/BoardTools/upload/wiki
 
 ## Language packages
 Available language packages and the information about translations can be found here:
@@ -121,4 +121,4 @@ If you have uploaded different zip files with the same name, they will be rename
 ## License
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
-© 2014 - 2015 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+© 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
