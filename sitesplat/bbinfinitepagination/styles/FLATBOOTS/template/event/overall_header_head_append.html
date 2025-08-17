@@ -1,11 +1,9 @@
 {% if (FORUM_NAME and SITESPLAT_BBINFINITEPAGINATION_VIEWFORUM) or (TOPIC_TITLE and SITESPLAT_BBINFINITEPAGINATION_VIEWTOPIC) or (S_VIEWONLINE and SITESPLAT_BBINFINITEPAGINATION_VIEWONLINE) or (memberrow and SITESPLAT_BBINFINITEPAGINATION_MEMBERLIST) or (searchresults and SITESPLAT_BBINFINITEPAGINATION_SEARCH) %}
-	<script>
-		var sitesplat_bbinfinitepagination_page = '{% if postrow %}viewtopic{% elseif memberrow %}memberlist{% elseif S_VIEWONLINE %}viewonline{% elseif searchresults %}search_{% if S_SHOW_TOPICS %}topics{% else %}posts{% endif %}{% else %}viewforum{% endif %}',
-			sitesplat_bbinfinitepagination_fx_effect = '{{ SITESPLAT_BBINFINITEPAGINATION_FX }}';
-	</script>
-	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinite-scroll.pkgd.min.js' %}
-	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/anime.min.js' %}
-	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/loader_fx.js' %}
-	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinitescroll.min.js' %}
-	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinitescroll_options.min.js' %}
+<script>
+var sitesplat_bbinfinitepagination_page = '{% if postrow %}viewtopic{% elseif memberrow %}memberlist{% elseif S_VIEWONLINE %}viewonline{% elseif searchresults %}search_{% if S_SHOW_TOPICS %}topics{% else %}posts{% endif %}{% else %}viewforum{% endif %}';
+var sitesplat_bbinfinitepagination_fx_effect = '{{ SITESPLAT_BBINFINITEPAGINATION_FX }}';
+var sitesplat_bbreaction_loaded = false;
+var sitesplat_bblazy_blazy = false;
+var sitesplat_bbmention_loaded = false;
+</script>
 {% endif %}
