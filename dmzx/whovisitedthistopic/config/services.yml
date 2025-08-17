@@ -1,16 +1,18 @@
 imports:
-    - { resource: tables.yml }
+    - { resource: 'tables.yml' }
 services:
     dmzx.whovisitedthistopic.admin.controller:
-        class: dmzx\whovisitedthistopic\controller\admin_controller
+        class: 'dmzx\whovisitedthistopic\controller\admin_controller'
         arguments:
             - '@config'
             - '@template'
             - '@log'
             - '@user'
             - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
     dmzx.whovisitedthistopic.listener:
-        class: dmzx\whovisitedthistopic\event\listener
+        class: 'dmzx\whovisitedthistopic\event\listener'
         arguments:
             - '@config'
             - '@template'
@@ -25,4 +27,4 @@ services:
             - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
             - '@auth'
         tags:
-            - { name: event.listener } 
+            - { name: 'event.listener' }
