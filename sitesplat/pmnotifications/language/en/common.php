@@ -18,5 +18,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'FROM_AUTHOR_PM_LIST'	=> 'Previous PM\'s from this user',
+	'FROM_AUTHOR_PM_LIST'		=> 'Previous PM\'s from this user',
+	'PM_UNREAD_COUNT'	=> array(
+		0	=> 'No unread PMs. Great!',
+		1	=> '1 unread PM',
+		2	=> '%d unread PMs',
+	),
 ));

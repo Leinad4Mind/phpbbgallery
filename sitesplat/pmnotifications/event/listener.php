@@ -27,6 +27,9 @@ class listener implements EventSubscriberInterface
 			'core.ucp_pm_view_folder_get_pm_from_template'	=> 'ucp_pm_view_folder_get_pm_from_template',
 			'core.ucp_pm_view_folder_get_pm_from_sql'		=> 'ucp_pm_view_folder_get_pm_from_sql',
 			'core.ucp_pm_view_messsage'						=> 'ucp_pm_view_messsage',
+
+			// No notice delete unread PMs
+			'core.delete_pm_before'	=> 'delete_pm_before',
 		);
 	}
 
@@ -92,6 +95,13 @@ class listener implements EventSubscriberInterface
 
 	public function page_header_after()
 	{
+		if (!$this->config['allow_privmsg'])
+		{
+			return;
+		}
+
+		$this->user->add_lang_ext('sitesplat/pmnotifications', 'common');
+
 		// only produce extra load when necessary
 		if ($this->config['load_notifications'] && $this->user->data['user_id'] != ANONYMOUS && $this->user->data['user_type'] != USER_IGNORE)
 		{
@@ -278,10 +288,69 @@ class listener implements EventSubscriberInterface
 
 	public function ucp_pm_view_messsage($event)
 	{
-		$this->user->add_lang_ext('sitesplat/pmnotifications', 'common');
-
 		$msg_data = $event['msg_data'];
 		$msg_data['U_FROM_AUTHOR_PM_LIST'] = append_sid("{$this->root_path}ucp.{$this->php_ext}", "i=pm&amp;folder={$event['folder_id']}&amp;from_author={$event['message_row']['author_id']}");
 		$event['msg_data'] = $msg_data;
+	}
+
+	public function delete_pm_before($event)
+	{
+		$user_id = (int) $event['user_id'];
+		$msg_ids = array_map('intval', $event['msg_ids']);
+		$folder_id = (int) $event['folder_id'];
+
+		// Only applies to messages deleted from the outbox
+		if ($folder_id !== PRIVMSGS_OUTBOX)
+		{
+			return;
+		}
+
+		// Validate that the messages are still pending to be deleted
+		$sql = 'SELECT msg_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE ' . $this->db->sql_in_set('msg_id', $msg_ids) . "
+				AND folder_id = $folder_id
+				AND user_id = $user_id";
+		$result = $this->db->sql_query($sql);
+
+		$delete_rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$delete_rows[(int) $row['msg_id']] = 1;
+		}
+		$this->db->sql_freeresult($result);
+
+		// Nothing left to do, so exit
+		if (!sizeof($delete_rows))
+		{
+			return;
+		}
+
+		$this->db->sql_transaction('begin');
+
+		// Delete the private message recipients that are pending, but not the sender
+		$sql = 'SELECT user_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE author_id = ' . $user_id . '
+			AND user_id <> ' . $user_id . '
+			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
+		$result = $this->db->sql_query($sql);
+
+		// The new messages counter is set back one and no notice will be shown
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$sql = 'UPDATE ' . USERS_TABLE . '
+				SET user_new_privmsg = user_new_privmsg - 1, user_unread_privmsg = user_unread_privmsg - 1
+				WHERE user_id = ' . (int) $row['user_id'];
+			$this->db->sql_query($sql);
+		}
+
+		$sql = 'DELETE FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE author_id = ' . $user_id . '
+			AND user_id <> ' . $user_id . '
+			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
+		$this->db->sql_query($sql);
+
+		$this->db->sql_transaction('commit');
 	}
 }

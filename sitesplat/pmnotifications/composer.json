@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Separate Private Messages from the internal phpBB notification system. It also adds a useful filter feature to the PM view allowing to retrieve all the private Messages from X user.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"keywords": ["phpbb", "extension", "BBOOTS", "FLATBOOTS", "sitesplat", "UCP", "notifications"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -20,7 +20,7 @@
 	"extra": {
 		"display-name": "PM Notifications",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.2@dev"
+			"phpbb/phpbb": ">=3.2.0"
 		},
 		"version-check": {
             "host": "sitesplat.com",
