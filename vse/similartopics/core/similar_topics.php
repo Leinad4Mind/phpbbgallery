@@ -216,19 +216,33 @@ class similar_topics
 		$vars = array('sql_array');
 		extract($this->dispatcher->trigger_event('vse.similartopics.get_topic_data', compact($vars)));
 
+		$rowset = array();
+
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $this->config['similar_topics_limit'], 0, $this->config['similar_topics_cache']);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rowset[(int) $row['topic_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
 
 		// Grab icons
 		$icons = $this->cache->obtain_icons();
 
-		$rowset = array();
+		/**
+		 * Modify the rowset data for similar topics
+		 *
+		 * @event vse.similartopics.modify_rowset
+		 * @var	array rowset Array with the search results data
+		 * @since 1.4.2
+		 */
+		$vars = array('rowset');
+		extract($this->dispatcher->trigger_event('vse.similartopics.modify_rowset', compact($vars)));
 
-		while ($row = $this->db->sql_fetchrow($result))
+		foreach ($rowset as $row)
 		{
 			$similar_forum_id = (int) $row['forum_id'];
 			$similar_topic_id = (int) $row['topic_id'];
-			$rowset[$similar_topic_id] = $row;
 
 			if ($this->auth->acl_get('f_read', $similar_forum_id))
 			{
@@ -316,8 +330,6 @@ class similar_topics
 			}
 		}
 
-		$this->db->sql_freeresult($result);
-
 		$this->user->add_lang_ext('vse/similartopics', 'similar_topics');
 
 		$this->template->assign_vars(array(
@@ -366,11 +378,8 @@ class similar_topics
 		// in either the core or the extension (deprecated from core)
 		if (!$this->english_lang())
 		{
-			if (file_exists($search_ignore_words = "{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}"))
-			{
-				include($search_ignore_words);
-			}
-			else if (file_exists($search_ignore_words = "{$this->root_path}ext/vse/similartopics/language/{$this->user->lang_name}/search_ignore_words.{$this->php_ext}"))
+			if (file_exists($search_ignore_words = "{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}") ||
+				file_exists($search_ignore_words = "{$this->root_path}ext/vse/similartopics/language/{$this->user->lang_name}/search_ignore_words.{$this->php_ext}"))
 			{
 				include($search_ignore_words);
 			}
