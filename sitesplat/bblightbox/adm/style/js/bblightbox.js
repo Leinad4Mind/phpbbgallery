@@ -18,6 +18,7 @@
 				break;
 	
 				case 'fancybox':
+					$('#captions_options').show();
 					$('#fancybox_options').show();
 				break;
 	

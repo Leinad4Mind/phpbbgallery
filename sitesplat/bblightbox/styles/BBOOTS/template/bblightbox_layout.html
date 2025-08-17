@@ -1,0 +1,62 @@
+<div class="attachbox-wrapper">	 
+	{% if BBLIGHTBOX_COLUMN_LAYOUT %}
+		{% set S_IMG_ATTACHMENTS = false %}
+		{% set S_FILE_ATTACHMENTS = false %}
+		{% for attach in postrow.attachment %}
+			{% if attach.DISPLAY_ATTACHMENT matches '/<img/' %}
+				{% set S_IMG_ATTACHMENTS = true %}
+			{% endif %}
+		{% endfor %}
+		{% for attach in postrow.attachment %}
+			{% if not (attach.DISPLAY_ATTACHMENT matches '/<img/') %}
+				{% set S_FILE_ATTACHMENTS = true %}
+			{% endif %}
+		{% endfor %}
+
+		{% if S_IMG_ATTACHMENTS %}
+			<div class="attachbox clearfix attach-imgs">
+				<h5>{L_ATTACHMENTS}{L_COLON}</h5>	   
+				{% if BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}
+					<div class="masonary-row row"> 
+				{% endif %}
+
+				{% for attach in postrow.attachment %}
+					{% if attach.DISPLAY_ATTACHMENT matches '/<img/' %}
+						{{ attach.DISPLAY_ATTACHMENT }}
+					{% endif %}
+				{% endfor %}
+
+				{% if BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+
+		{% if S_FILE_ATTACHMENTS %}
+			<div class="attachbox clearfix attach-files">
+				<h5>{L_ATTACHMENTS}{L_COLON}</h5>
+					{% if BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}
+						<div class="masonary-row row"> 
+					{% endif %}	
+
+					{% for attach in postrow.attachment %}
+						{% if not (attach.DISPLAY_ATTACHMENT matches '/<img/') %}
+							{{ attach.DISPLAY_ATTACHMENT }}
+						{% endif %}
+					{% endfor %}
+
+					{% if BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}
+						</div>
+					{% endif %}
+			</div>
+		{% endif %}
+	{% else %}	
+	 <!-- // no special layout therefore all normal move along nothing to see here -->
+	 <div class="attachbox clearfix attach-files">
+	     <h5>{L_ATTACHMENTS}{L_COLON}</h5>
+	    {% for attach in postrow.attachment %}
+		     {{ attach.DISPLAY_ATTACHMENT }}			
+		{% endfor %}
+	 </div>	
+	{% endif %}
+</div>

@@ -17,11 +17,10 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewtopic_post_rowset_data'				=> 'set_bblightbox',
-			'core.posting_modify_template_vars'				=> 'set_bblightbox',
+			'core.posting_modify_template_vars'				=> [['set_bblightbox'], ['s_load_bblightbox']],
 			'core.ucp_pm_view_messsage'						=> 'set_bblightbox',
 			'core.viewtopic_modify_post_row'				=> 's_load_bblightbox_viewtopic',
 			'core.modify_mcp_modules_display_option'		=> 's_load_bblightbox',
-			'core.posting_modify_template_vars'				=> 's_load_bblightbox',
 			'core.ucp_display_module_before'				=> 's_load_bblightbox_ucp',
 			'core.text_formatter_s9e_configure_after' 		=> 'modify_img_template',
 			'core.parse_attachments_modify_template_data'	=> 'set_bblightbox'
@@ -100,9 +99,7 @@ class listener implements EventSubscriberInterface
 		$xpath = new \DOMXPath($dom);
 		foreach ($xpath->query('//img[@src]') as $img)
 		{
-			// quick and dirty Add class needed for the img bbcodes so it can be manipulated in front-end with the lightbox
 			$img->setAttribute('class', 'img-responsive img-post img-bbcodes');
-
 		}
 		$dom->saveChanges();
 	}
