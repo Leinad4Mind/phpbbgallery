@@ -200,6 +200,7 @@ class auth
 
 		$this->db->sql_return_on_error(true);
 		$result = $this->db->sql_query($sql);
+
 		if ($this->db->get_sql_error_triggered())
 		{
 			trigger_error('DATABASE_NOT_UPTODATE');
@@ -560,7 +561,7 @@ class auth
 
 			$sql = 'UPDATE ' . $this->table_users . "
 				SET user_permissions = '" . $sql_set . "',
-					user_permissions_changed = " . time() . '
+					user_permissions_changed = " . (int) time() . '
 				' . $sql_where;
 			$this->db->sql_query($sql);
 	}

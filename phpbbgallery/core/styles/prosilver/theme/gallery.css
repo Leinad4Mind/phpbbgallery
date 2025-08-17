@@ -26,6 +26,7 @@ fieldset.gallery dd.simulate-dt label {
 	text-align:		left;
 	color:			#425067;
 }
+
 .rtl fieldset.gallery dd.simulate-dt label {
 	text-align:		right;
 }
@@ -103,13 +104,22 @@ input.autowidth-gallery {
 
 .polaroid img {
 	max-height: 120px;
-	max-width: 230px;
+	min-height: 120px;
+	max-width: 220px;
 }
 
 .polaroid
 {
 	width: 242px;
-	background: #FFFFFF;
+/*
+---------------------------------------------------------------------------
+-You can add a white (#FFFFFF) or black (#000000) background for Polaroid-
+-Remove the slashes and asterisks in the line for the background you want-
+-For a different background also change the color code-
+---------------------------------------------------------------------------
+*/
+/*	background: #FFFFFF; */
+/*	background: #000000; */
 	display: block;
 	float: left;
 	margin: 9px;
@@ -151,26 +161,26 @@ input.autowidth-gallery {
 	float: right;
 }
 
-
-
 .image_prev_image
 {
 	float: left; 
 	text-align: left; 
-	width: 48%;
+	max-width: 48%;
 	clip-path: url(#left_arrow);
 }
+
 .image_next_image
 {
 	float: right; 
 	text-align: right; 
-	width: 48%;
+	max-width: 48%;
 	clip-path: url(#right_arrow);
 }
 
 .postbody_album {
 	text-align:center;
 }
+
 .postbody_album img.postimage {
 	margin: 10px auto 10px auto;
 	max-width: 100%;
@@ -205,7 +215,6 @@ input.autowidth-gallery {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-shadow: 1px 1px 1px #b7b7b7;
-
 }
 
 .trophy-text
@@ -217,10 +226,12 @@ input.autowidth-gallery {
 {
 	color: #FFD700;
 }
+
 .trophy-color-2
 {
 	color: silver;
 }
+
 .trophy-color-3
 {
 	color: #CD7f32;

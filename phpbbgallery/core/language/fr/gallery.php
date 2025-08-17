@@ -144,9 +144,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
+	'FILETYPES_WEBP'				=> 'webp',
 	'FILETYPES_ZIP'					=> 'zip',
 
-	'FULL_EDITOR'					=> 'Éditeur complet',
+	'FULL_EDITOR_GALLERY'					=> 'Éditeur complet',
 
 	'GALLERY_IMAGE'					=> 'Image',
 	'GALLERY_IMAGES'				=> 'Images',
@@ -377,8 +378,8 @@ $lang = array_merge($lang, array(
 
 	'QUICK_MOD'	=> 'Sélectionner l’action du modérateur',
 	'WRONG_FILESIZE'	=> 'L’image est plus lourde que la limite de poids autorisée.',
-    'UNREAD_IMAGES'		=> 'Unviewed images',
-    'NO_UNREAD_IMAGES'	=> 'No unviewed images',
+	'UNREAD_IMAGES'		=> 'Unviewed images',
+	'NO_UNREAD_IMAGES'	=> 'No unviewed images',
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP'		=> 'Déposez vos images ici',
