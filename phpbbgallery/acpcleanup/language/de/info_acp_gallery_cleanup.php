@@ -1,12 +1,15 @@
 <?php
 /**
-*
-* @package Gallery - ACP CleanUp Extension [German]
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-* German translation by franki (http://dieahnen.de/ahnenforum/)
-*/
+ * phpBB Gallery - ACP CleanUp Extension [German Translation]
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum>
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,10 +21,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_CLEANUP'			=> 'Galerie bereinigen',
 
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Hier kannst Du einige Reste löschen.',
@@ -75,5 +78,8 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_IMPORT'			=> 'Verschieben von Bildern ins Import Verzeichnis',
 	'MOVE_TO_USER'				=> 'Wechseln zu Benutzer',
 	'MOVE_TO_USER_EXP'			=> 'Bilder und Kommentare werden als diejenigen des Benutzers verschoben werden, die Du definiert hast. Wenn Keine ausgewählt wird - wird Gast verwendet.',
-	'CLEAN_USER_NOT_FOUND'			=> 'The user you selected does not exists!',
-));
+	'CLEAN_USER_NOT_FOUND'		=> 'Der von Ihnen ausgewählte Benutzer existiert nicht!',
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'Die phpBB Gallery Core-Erweiterung muss zuerst installiert und aktiviert werden.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'Die Erweiterung wurde erfolgreich aktiviert.',
+]);

@@ -1,12 +1,15 @@
 <?php
 /**
-*
-* @package Gallery - ACP CleanUp Extension [French]
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* @translator fr (c) pokyto aka le.poke http://www.lestontonsfraggers.com inspired by darky - http://www.foruminfopc.fr/ and Team http://www.phpbb-fr.com/
-*
-*/
+ * phpBB Gallery - ACP CleanUp Extension [French Translation]
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator pokyto (aka le.poke) <https://www.lestontonsfraggers.com>, inspired by darky <https://www.foruminfopc.fr/> and the phpBB-fr.com Team
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,10 +21,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_CLEANUP'				=> 'Nettoyage de la galerie',
 
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Ici vous pouvez nettoyer la Galerie.',
@@ -34,7 +37,7 @@ $lang = array_merge($lang, array(
 	'CLEAN_GALLERY_ABORT'			=> 'Nettoyage interrompu!',
 	'CLEAN_NO_ACTION'				=> 'Aucune action terminée. Quelque chose a échoué!',
 	'CLEAN_PERSONALS_DONE'			=> 'Albums personnels sans propriétaire valide supprimés.',
-	'CLEAN_PERSONALS_BAD_DONE'		=> 'Albums personnels des utilisateurs séléctionnés effacés.',
+	'CLEAN_PERSONALS_BAD_DONE'		=> 'Albums personnels des utilisateurs sélectionnés effacés.',
 	'CLEAN_PRUNE_DONE'				=> 'Images délestées avec succès.',
 	'CLEAN_PRUNE_NO_PATTERN'		=> 'Aucun critère de recherche.',
 	'CLEAN_SOURCES_DONE'			=> 'Images sans fichier supprimées.',
@@ -76,4 +79,7 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_USER'		=> 'Attribuer à l’utilisateur',
 	'MOVE_TO_USER_EXP'	=> 'Les images et les commentaires seront attribués à l’utilisateur que vous avez défini. Si aucun n’est sélectionné - “Anonyme“ sera utilisé.',
 	'CLEAN_USER_NOT_FOUND'	=> 'L’utilisateur sélectionné n’existe pas!',
-));
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'L’extension phpBB Gallery Core doit d’abord être installée et activée.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'L’extension a été activée avec succès.',
+]);

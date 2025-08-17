@@ -1,29 +1,40 @@
 <?php
 /**
-*
-* @package Gallery - ACP CleanUp Extension
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP CleanUp Extension
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\acpcleanup\acp;
 
+/**
+ * ACP Module Info class
+ */
 class main_info
 {
-	function module()
+	/**
+	 * Returns module information
+	 *
+	 * @return array Module information
+	 */
+	public function module(): array
 	{
-		return array(
-			'filename'	=> 'main_module',
-			'title'		=> 'PHPBB_GALLERY',
-			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'cleanup'			=> array(
-					'title' => 'ACP_GALLERY_CLEANUP',
-					'auth' => 'acl_a_gallery_cleanup && ext_phpbbgallery/acpcleanup',
-					'cat' => array('PHPBB_GALLERY')
-				),
-			),
-		);
+		return [
+				'filename' => '\phpbbgallery\acpcleanup\acp\main_module',
+				'title'    => 'PHPBB_GALLERY',
+				'version' => '1.0.0',
+				'modes'    => [
+					'cleanup' => [
+						'title' => 'ACP_GALLERY_CLEANUP',
+						'auth'  => 'acl_a_gallery_cleanup && ext_phpbbgallery/acpcleanup',
+						'cat'   => ['PHPBB_GALLERY'],
+					],
+				],
+		];
 	}
 }
