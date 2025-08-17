@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Welcome PM for registration and activation",
     "homepage": "https://leinad4mind.top/forum/",
-    "version": "1.0.3",
-    "time": "2019-12-11",
+    "version": "1.0.4",
+    "time": "2019-12-12",
     "keywords": [ "phpbb", "extension", "welcome", "pm", "registration" ],
     "license": "GPL-2.0",
     "authors": [

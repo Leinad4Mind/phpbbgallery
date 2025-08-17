@@ -102,7 +102,10 @@ class pmwelcome_module
 					}
 				}
 
-				$config->set($config_name, $config_value);
+				if ($submit)
+				{
+					$config->set($config_name, $config_value);
+				}
 			}
 		}
 
@@ -115,25 +118,28 @@ class pmwelcome_module
 
 		/* Config text Welcome Preview */
 		$preview_text = '';
+		$subject_text = '';
 		if ($preview && !$error)
 		{
 			$flags = 3;
 			$uid = $bitfield = '';
-			$preview_text = $request->variable('pmwelcome_post_text', '', true);
-			$user_row = $this->pm_welcome_user_row($config['pmwelcome_user']);
-			$user_name = $user_row['username'] ?? '';
-			$user_email = $user_row['user_email'] ?? '';
 
-			$preview_text = str_replace('{USERNAME}', 		$user_name,					$preview_text);
-			$preview_text = str_replace('{USER_EMAIL}',		$user_email,				$preview_text);
-			$preview_text = str_replace('{SITE_NAME}',		$config['sitename'],		$preview_text);
-			$preview_text = str_replace('{SITE_DESC}',		$config['site_desc'],		$preview_text);
-			$preview_text = str_replace('{BOARD_CONTACT}',	$config['board_contact'],	$preview_text);
-			$preview_text = str_replace('{BOARD_EMAIL}',		$config['board_email'],		$preview_text);
-			$preview_text = str_replace('{BOARD_SIG}',		$config['board_email_sig'],	$preview_text);
+			$tokens = [
+				'{USER_ID}'			=> $user->data['user_id'],
+				'{USERNAME}'		=> $user->data['username'],
+				'{USER_EMAIL}'		=> $user->data['user_email'],
+				'{SITE_NAME}'		=> $config['sitename'],
+				'{SITE_DESC}'		=> $config['site_desc'],
+				'{BOARD_CONTACT}'	=> $config['board_contact'],
+				'{BOARD_EMAIL}'		=> $config['board_email'],
+				'{BOARD_SIG}'		=> $config['board_email_sig'],
+			];
 
+			$preview_text = $this->replace_tokens($request->variable('pmwelcome_post_text', '', true), $tokens);
 			generate_text_for_storage($preview_text, $uid, $bitfield, $flags, true, true, true);
 			$preview_text = generate_text_for_display($preview_text, $uid, $bitfield, $flags);
+
+			$subject_text = $this->replace_tokens($cfg_array['pmwelcome_subject'], $tokens);
 		}
 
 		$this->page_title = $display_vars['title'];
@@ -145,6 +151,7 @@ class pmwelcome_module
 			'ERROR_MSG'			=> implode('<br />', $error),
 			'POST_TEXT'			=> $preview ? $request->variable('pmwelcome_post_text', '', true) : $config_text->get('pmwelcome_post_text'),
 			'PREVIEW_TEXT'		=> $preview_text,
+			'SUBJECT_PREVIEW'	=> $subject_text,
 			'U_ACTION'			=> $this->u_action,
 		));
 
@@ -209,6 +216,16 @@ class pmwelcome_module
 
 			unset($display_vars['vars'][$config_key]);
 		}
+	}
+
+	function replace_tokens(string $str, array $tokens): string
+	{
+		foreach ($tokens as $token => $value)
+		{
+			$str = str_replace($token, $value, $str);
+		}
+
+		return $str;
 	}
 
 	function pm_welcome_user_row($user_id)
