@@ -12,24 +12,61 @@ namespace phpbbgallery\core;
 
 class log
 {
+	/** @var \phpbb\db\driver\driver_interface  */
+	protected $db;
+
+	/** @var \phpbb\user  */
+	protected $user;
+
+	/** @var \phpbb\language\language  */
+	protected $language;
+
+	/** @var \phpbb\user_loader  */
+	protected $user_loader;
+
+	/** @var \phpbb\template\template  */
+	protected $template;
+
+	/** @var \phpbb\controller\helper  */
+	protected $helper;
+
+	/** @var \phpbb\pagination  */
+	protected $pagination;
+
+	/** @var \phpbbgallery\core\auth\auth  */
+	protected $gallery_auth;
+
+	/** @var \phpbbgallery\core\config  */
+	protected $gallery_config;
+
+	/** @var   */
+	protected $log_table;
+
+	/** @var   */
+	protected $images_table;
+
 	/**
 	 * log constructor.
+	 *
 	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param \phpbb\user $user
-	 * @param \phpbb\user_loader $user_loader
-	 * @param \phpbb\template\template $template
-	 * @param \phpbb\controller\helper $helper
-	 * @param \phpbb\pagination $pagination
-	 * @param auth\auth $gallery_auth
-	 * @param config $gallery_config
-	 * @param $log_table
+	 * @param \phpbb\user                       $user
+	 * @param \phpbb\user_loader                $user_loader
+	 * @param \phpbb\template\template          $template
+	 * @param \phpbb\controller\helper          $helper
+	 * @param \phpbb\pagination                 $pagination
+	 * @param auth\auth                         $gallery_auth
+	 * @param config                            $gallery_config
+	 * @param                                   $log_table
+	 * @param                                   $images_table
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\user_loader $user_loader, \phpbb\template\template $template,
-								\phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\config $gallery_config,
-								$log_table, $images_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
+		\phpbb\user_loader $user_loader, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\pagination $pagination,
+		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\config $gallery_config,
+		$log_table, $images_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
+		$this->language = $language;
 		$this->user_loader = $user_loader;
 		$this->template = $template;
 		$this->helper = $helper;
@@ -96,7 +133,7 @@ class log
 		{
 			$limit = $this->gallery_config->get('items_per_page');
 		}
-		$this->user->add_lang_ext('phpbbgallery/core', array('info_acp_gallery_logs'));
+		$this->language->add_lang(array('info_acp_gallery_logs'), 'phpbbgallery/core');
 
 		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
 		$sql_array = array(
@@ -106,15 +143,16 @@ class log
 			),
 		);
 		$sql_where = array();
+		$sql_where[] = 'l.image = i.image_id';
 		if ($type != 'all')
 		{
-			$sql_where[] = 'l.log_type = \'' . $this->db->sql_escape($type) . '\'';
+			$sql_where[] = 'log_type = \'' . $this->db->sql_escape($type) . '\'';
 		}
+		// If album is -1 we are calling it from ACP so ... prority!
+		// If album is 0 we are calling it from moderator log, so we need album we can access
 		$mod_array = $this->gallery_auth->acl_album_ids('m_status');
 		// Patch for missing album
 		$mod_array[] = 0;
-		// If album is -1 we are calling it from ACP so ... prority!
-		// If album is 0 we are calling it from moderator log, so we need album we can access
 		if ($album === 0)
 		{
 			// If no albums we can approve - quit building queue
@@ -127,15 +165,15 @@ class log
 		}
 		if ($album > 0)
 		{
-			if (!$this->gallery_auth->acl_check('i_view', (int) $album))
+			if (!$this->gallery_auth->acl_check('i_view', $album))
 			{
 				return;
 			}
-			$sql_where[] = 'l.album = ' . (int) $album;
+			$sql_where[] = 'l.album = ' . $album;
 		}
 		if ($image > 0)
 		{
-			$sql_where[] = 'l.image = ' . (int) $image;
+			$sql_where[] = 'l.image = ' . $image;
 			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $mod_array);
 		}
 		if (isset($additional['sort_days']))
@@ -151,22 +189,22 @@ class log
 			{
 				case 'u':
 					$sql_array['ORDER_BY'] = 'l.log_user ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id';
+					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id, i.image_id';
 				break;
 				case 'i':
 					$sql_array['ORDER_BY'] = 'l.log_ip ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id';
+					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id, i.image_id';
 				break;
 				case 'o':
 					$sql_array['ORDER_BY'] = 'l.description ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.description, l.log_id';
+					$sql_array['GROUP_BY'] = 'l.description, l.log_id, i.image_id';
 				break;
 			}
 		}
 		else
 		{
 			$sql_array['ORDER_BY'] = 'l.log_time ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id';
+			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id, i.image_id';
 		}
 		// So we need count - so define SELECT
 		$sql_array['SELECT'] = 'count(l.log_id) as count';
@@ -213,14 +251,14 @@ class log
 					'U_ALBUM_LINK'	=> $var['album'] != 0 ? $this->helper->route('phpbbgallery_core_album', array('album_id'	=> $var['album'])) : false,
 					'U_IMAGE_LINK'	=> $var['image'] != 0 ? $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $var['image'])) : false,
 					//'U_LOG_ACTION'	=> $description,
-					'U_LOG_ACTION'	=> $description = $this->user->lang($var['description'][0], isset($var['description'][1]) ? $var['description'][1] : false, isset($var['description'][2]) ? $var['description'][2] : false, isset($var['description'][3]) ? $var['description'][3] : false),
+					'U_LOG_ACTION'	=> $description = $this->language->lang($var['description'][0], isset($var['description'][1]) ? $var['description'][1] : false, isset($var['description'][2]) ? $var['description'][2] : false, isset($var['description'][3]) ? $var['description'][3] : false),
 					'U_TIME'		=> $this->user->format_date($var['time']),
 				));
 			}
 		}
 		$this->template->assign_vars(array(
 			'S_HAS_LOGS' => $count > 0 ? true : false,
-			'TOTAL_PAGES'	=> $this->user->lang('PAGE_TITLE_NUMBER', $page),
+			'TOTAL_PAGES'	=> $this->language->lang('PAGE_TITLE_NUMBER', $page),
 		));
 		// Here we do some routes magic
 		if ($album == 0)
@@ -264,7 +302,7 @@ class log
 					'phpbbgallery_core_moderate_action_log_album_page',
 				),
 				'params' => array(
-					'album_id'	=> (int) $album,
+					'album_id'	=> $album,
 				),
 			), 'pagination', 'page', $count, $limit, ($page-1) * $limit);
 		}

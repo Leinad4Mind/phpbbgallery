@@ -51,23 +51,27 @@ class rating
 
 	/**
 	 * Constructor
+	 *
 	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param \phpbb\template\template $template
-	 * @param \phpbb\user $user
-	 * @param \phpbb\request\request $request
-	 * @param config $gallery_config
-	 * @param auth\auth $gallery_auth
-	 * @param $images_table
-	 * @param $albums_table
-	 * @param $rates_table
+	 * @param \phpbb\template\template          $template
+	 * @param \phpbb\user                       $user
+	 * @param \phpbb\language\language          $language
+	 * @param \phpbb\request\request            $request
+	 * @param config                            $gallery_config
+	 * @param auth\auth                         $gallery_auth
+	 * @param                                   $images_table
+	 * @param                                   $albums_table
+	 * @param                                   $rates_table
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \phpbb\request\request $request,
-	\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\auth\auth $gallery_auth,
-	$images_table, $albums_table, $rates_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
+		\phpbb\language\language $language, \phpbb\request\request $request, \phpbbgallery\core\config $gallery_config,
+		\phpbbgallery\core\auth\auth $gallery_auth,
+		$images_table, $albums_table, $rates_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
+		$this->language = $language;
 		$this->request = $request;
 		$this->gallery_config = $gallery_config;
 		$this->gallery_auth = $gallery_auth;
@@ -209,17 +213,17 @@ class rating
 				{
 					if (!$display_contest_end)
 					{
-						return $this->user->lang['CONTEST_RATING_HIDDEN'];
+						return $this->language->lang('CONTEST_RATING_HIDDEN');
 					}
-					return $this->user->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
+					return $this->language->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
 				}
 				else
 				{
 					if ($user_rating)
 					{
-						return $this->user->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
+						return $this->language->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
 					}
-					return $this->user->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
+					return $this->language->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
 				}
 			break;
 		}
@@ -278,7 +282,6 @@ class rating
 	*/
 	public function get_user_rating($user_id)
 	{
-		$user_id = (int) $user_id;
 		if (isset($this->user_rating[$user_id]))
 		{
 			return $this->user_rating[$user_id];
@@ -291,7 +294,7 @@ class rating
 		$sql = 'SELECT rate_point
 			FROM ' . $this->rates_table . '
 			WHERE rate_image_id = ' . (int) $this->image_id . '
-				AND rate_user_id = ' . $user_id;
+				AND rate_user_id = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
 		$rating = $this->db->sql_fetchfield('rate_point');
 		$this->db->sql_freeresult($result);
@@ -376,10 +379,10 @@ class rating
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$sql = 'UPDATE ' . $this->images_table . '
-				SET image_rates = ' . $row['image_rates'] . ',
-					image_rate_points = ' . $row['image_rate_points'] . ',
+				SET image_rates = ' . (int) $row['image_rates'] . ',
+					image_rate_points = ' . (int) $row['image_rate_points'] . ',
 					image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-				WHERE image_id = ' . $row['rate_image_id'];
+				WHERE image_id = ' . (int) $row['rate_image_id'];
 			$this->db->sql_query($sql);
 		}
 		$this->db->sql_freeresult($result);

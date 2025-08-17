@@ -2,24 +2,79 @@
 
 /**
 *
-* @package NV Newspage Extension
-* @copyright (c) 2014 nickvergessen
+* @package PhpBB Gallery
+* @copyright (c) 2017 satanasov
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace phpbbgallery\core\album;
 
+use phpbb\language\language;
+
 class album
 {
+    /** @var \phpbb\db\driver\driver_interface  */
+    protected $db;
+
+    /** @var \phpbb\user  */
+    protected $user;
+
+    /** @var language  */
+    protected $language;
+
+    /** @var \phpbb\profilefields\manager  */
+    protected $user_cpf;
+
+    /** @var \phpbbgallery\core\auth\auth  */
+    protected $gallery_auth;
+
+    /** @var \phpbbgallery\core\cache  */
+    protected $gallery_cache;
+
+    /** @var \phpbbgallery\core\block  */
+    protected $block;
+
+    /** @var \phpbbgallery\core\config  */
+    protected $gallery_config;
+
+    /** @var  */
+    protected $images_table;
+
+    /** @var  */
+    protected $watch_table;
+
+    /** @var  */
+    protected $contest_table;
+
+    /** @var  */
 	protected $albums_table;
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user,
-	\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\block $block,
-	\phpbbgallery\core\config $gallery_config,
-	$albums_table, $images_table, $watch_table, $contest_table)
+
+	/**
+	 * album constructor.
+	 *
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\user                       $user
+	 * @param language                          $language
+	 * @param \phpbb\profilefields\manager      $user_cpf
+	 * @param \phpbbgallery\core\auth\auth      $gallery_auth
+	 * @param \phpbbgallery\core\cache          $gallery_cache
+	 * @param \phpbbgallery\core\block          $block
+	 * @param \phpbbgallery\core\config         $gallery_config
+	 * @param                                   $albums_table
+	 * @param                                   $images_table
+	 * @param                                   $watch_table
+	 * @param                                   $contest_table
+	 */
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbb\profilefields\manager $user_cpf,
+		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\block $block,
+		\phpbbgallery\core\config $gallery_config,
+		$albums_table, $images_table, $watch_table, $contest_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
+		$this->language = $language;
+		$this->user_cpf = $user_cpf;
 		$this->gallery_auth = $gallery_auth;
 		$this->gallery_cache = $gallery_cache;
 		$this->block = $block;
@@ -98,15 +153,11 @@ class album
 		{
 			$user_id = (int) $this->user->data['user_id'];
 		}
-		else
-		{
-			$user_id = (int) $user_id;
-		}
 
 		$sql = 'SELECT album_id
 			FROM ' . $this->albums_table . '
 			WHERE album_id = ' . (int) $album_id . '
-				AND album_user_id = ' . $user_id;
+				AND album_user_id = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -159,7 +210,7 @@ class album
 			{
 				if (!$last_a_u_id && $this->gallery_auth->acl_check('a_list', $this->gallery_auth->get_personal_album()) && !$ignore_personals)
 				{
-					$album_list .= '<option disabled="disabled" class="disabled-option">' . $this->user->lang['PERSONAL_ALBUMS'] . '</option>';
+					$album_list .= '<option disabled="disabled" class="disabled-option">' . $this->language->lang('PERSONAL_ALBUMS') . '</option>';
 				}
 				$padding = '';
 				$padding_store[$row['parent_id']] = '';
@@ -297,8 +348,8 @@ class album
 		// Number of not unapproved images
 		$sql = 'SELECT COUNT(image_id) images
 			FROM ' . $this->images_table .' 
-			WHERE image_status <> ' . $this->block->get_image_status_unapproved() . '
-				AND image_status <> ' . $this->block->get_image_status_orphan() . '
+			WHERE image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
+				AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 				AND image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$images = $this->db->sql_fetchfield('images');
@@ -307,7 +358,7 @@ class album
 		// Number of total images
 		$sql = 'SELECT COUNT(image_id) images_real
 			FROM ' . $this->images_table .'
-			WHERE image_status <> ' . $this->block->get_image_status_orphan() . '
+			WHERE image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 				AND image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$images_real = $this->db->sql_fetchfield('images_real');
@@ -316,8 +367,8 @@ class album
 		// Data of the last not unapproved image
 		$sql = 'SELECT image_id, image_time, image_name, image_username, image_user_colour, image_user_id
 			FROM ' . $this->images_table .'
-			WHERE image_status <> ' . $this->block->get_image_status_unapproved() . '
-				AND image_status <> ' . $this->block->get_image_status_orphan() . '
+			WHERE image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
+				AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 				AND image_album_id = ' . (int) $album_id . '
 			ORDER BY image_time DESC';
 		$result = $this->db->sql_query($sql);
@@ -372,7 +423,7 @@ class album
 	public function generate_personal_album($album_name, $user_id, $user_colour, $gallery_user)
 	{
 		$album_data = array(
-			'album_name'					=> $album_name,
+			'album_name'					=> $this->db->sql_escape($album_name),
 			'parent_id'						=> 0,
 			//left_id and right_id default by db
 			'album_desc_options'			=> 7,
@@ -380,7 +431,7 @@ class album
 			'album_parents'					=> '',
 			'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
 			'album_status'					=> \phpbbgallery\core\block::ALBUM_OPEN,
-			'album_user_id'					=> $user_id,
+			'album_user_id'					=> (int) $user_id,
 			'album_last_username'			=> '',
 			'album_last_user_colour'		=> $user_colour,
 		);
@@ -390,6 +441,12 @@ class album
 		$gallery_user->update_data(array(
 				'personal_album_id'	=> $personal_album_id,
 		));
+
+		// Fill album CPF.
+		$cpf_vars = array(
+			'pf_gallery_palbum'	=> (int) $personal_album_id
+		);
+		$this->user_cpf->update_profile_field_data((int) $user_id, $cpf_vars);
 
 		$this->gallery_config->inc('num_pegas', 1);
 

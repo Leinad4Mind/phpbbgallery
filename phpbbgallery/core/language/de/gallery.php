@@ -72,7 +72,6 @@ $lang = array_merge($lang, array(
 
 	'CHANGE_AUTHOR'					=> 'Benutzer ändern',
 	'CHANGE_IMAGE_STATUS'			=> 'Bildstatus ändern',
-	'CHARACTERS'					=> 'Buchstaben',
 	'CLICK_RETURN_ALBUM'			=> 'Klicke %shier%s um zum Album zurückzukehren',
 	'CLICK_RETURN_IMAGE'			=> 'Klicke %shier%s um zum Bild zurückzukehren',
 	'CLICK_RETURN_INDEX'			=> 'Klicke %shier%s um zum Index zurückzukehren',
@@ -122,8 +121,8 @@ $lang = array_merge($lang, array(
 
 	'EDIT_COMMENT'					=> 'Kommentar ändern',
 	'EDIT_IMAGE'					=> 'Bearbeiten',
-	'EDITED_TIME_TOTAL'				=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
-	'EDITED_TIMES_TOTAL'			=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
+	'IMAGE_EDITED_TIME_TOTAL'				=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
+	'IMAGE_EDITED_TIMES_TOTAL'			=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
 
 	'FILE'							=> 'Datei',
 	'FILE_SIZE'						=> 'Dateigröße',
@@ -196,7 +195,6 @@ $lang = array_merge($lang, array(
 	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
 	'NOT_ALLOWED_FILE_TYPE'			=> 'Dieser Datei Typ ist nicht erlaubt',
 	'NOT_RATED'						=> 'Nicht bewertet',
-	'NO_SEARCH_RESULTS'				=> 'Keine Alben gefunden',
 
 	'NO_WRITE_ACCESS'				=> 'Das Upload-Verzeichnis fehlt oder PhpBB hat keinen Schreibzugriff darauf.<br>Bitte kontaktiere die Board-Administration!',
 
@@ -207,7 +205,6 @@ $lang = array_merge($lang, array(
 
 	'PERCENT'						=> '%',
 	'PERSONAL_ALBUMS'				=> 'Persönliche Alben',
-	'PIXELS'						=> 'Pixel',
 	'PLUGIN_CLASS_MISSING'			=> 'Gallery Plugin Fehler: Die Klasse „%s“ konnte nicht gefunden werden!',
 	'POST_COMMENT'					=> 'Kommentar schreiben',
 	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
@@ -364,6 +361,9 @@ $lang = array_merge($lang, array(
 		2	=> 	'%s Bilder verschoben',
 	),
 	'WRONG_FILESIZE'	=> 'Das Bild ist größer als das Limit!',
+
+    'UNREAD_IMAGES'		=> 'Unviewed images',
+    'NO_UNREAD_IMAGES'	=> 'No unviewed images',
 
 	// Versions 1.2.1 addiotions
 	'GALLERY_DROP'		=> 'Lege Dein Bild hier rein',
