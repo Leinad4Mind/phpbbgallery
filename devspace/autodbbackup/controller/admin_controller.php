@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Auto db Backup (3.2)
+* @package Auto db Backup
 * @copyright (c) 2015 david63
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -82,14 +82,40 @@ class admin_controller implements admin_interface
 	*/
 	public function display_options()
 	{
-		// Add the language file
-		$this->language->add_lang('acp_autobackup', $this->functions->get_ext_namespace());
+		// Add the language files
+		$this->language->add_lang(array('acp_autobackup', 'acp_common'), $this->functions->get_ext_namespace());
+
+		// Need to do some timezone checking before we go any further
+		// Does the user have a timezone set?
+		if (!$this->user->data['user_timezone'])
+		{
+			trigger_error($this->language->lang('NO_TIMEZONE_SET'), E_USER_WARNING);
+		}
+
+		// Is the user's timezone valid?
+		// This should never happen!
+		if (!in_array($this->user->data['user_timezone'], timezone_identifiers_list()))
+		{
+			trigger_error($this->language->lang('INVALID_USER_TIMEZONE'), E_USER_WARNING);
+		}
+
+		// Is there a valid timezone in php.ini?
+		if (!in_array(ini_get('date.timezone'), timezone_identifiers_list()))
+		{
+			trigger_error($this->language->lang('INVALID_PHP_TIMEZONE'), E_USER_WARNING);
+		}
 
 		// Create a form key for preventing CSRF attacks
 		$form_key = 'auto_db_backup';
 		add_form_key($form_key);
 
 		$back = false;
+
+		// Let's do some timezone manipulation
+		$utc_offset 	= $this->functions->get_utc_offset();
+		$user_dtz		= new \DateTimeZone($this->user->data['user_timezone']);
+		$user_offset	= $user_dtz->getOffset(new \DateTime);
+		$user_offset	= ($user_offset > 0) ? $user_offset : 0;
 
 		// Submit
 		if ($this->request->is_set_post('submit'))
@@ -106,12 +132,13 @@ class admin_controller implements admin_interface
 				trigger_error($this->language->lang('DATE_FORMAT_ERROR') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			if ($this->request->variable('auto_db_backup_enable', 0) && ($this->backup_date <= time()))
+			if ($this->request->variable('auto_db_backup_enable', 0) && (($this->backup_date - $user_offset) <= (time() - $utc_offset)))
 			{
 				trigger_error($this->language->lang('AUTO_DB_BACKUP_TIME_ERROR') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			// Set the options the user has configured
+			$this->backup_date = ($this->backup_date - $user_offset + $utc_offset);
 			$this->set_options();
 
 			// Add option settings change action to the admin log
@@ -120,21 +147,23 @@ class admin_controller implements admin_interface
 		}
 
 		// Template vars for header panel
+		$version_data	= $this->functions->version_check();
+
 		$this->template->assign_vars(array(
+			'DOWNLOAD'			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
+
 			'HEAD_TITLE'		=> $this->language->lang('AUTO_DB_BACKUP_SETTINGS'),
 			'HEAD_DESCRIPTION'	=> $this->language->lang('AUTO_DB_BACKUP_SETTINGS_EXPLAIN'),
 
 			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
 
 			'S_BACK'			=> $back,
-			'S_VERSION_CHECK'	=> $this->functions->version_check(),
+			'S_VERSION_CHECK'	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
 
-			'VERSION_NUMBER'	=> $this->functions->get_this_version(),
+			'VERSION_NUMBER'	=> $this->functions->get_meta('version'),
 		));
 
 		// Output the page
-		$timezone	= new \DateTimeZone($this->user->data['user_timezone']);
-		$tz_offset	= $timezone->getOffset(new \DateTime);
 		$this->get_filetypes();
 
 		$this->template->assign_vars(array(
@@ -142,9 +171,7 @@ class admin_controller implements admin_interface
 			'AUTO_DB_BACKUP_GC'				=> $this->config['auto_db_backup_gc'],
 			'AUTO_DB_BACKUP_MAINTAIN_FREQ'	=> $this->config['auto_db_backup_maintain_freq'],
 
-			'NEXT_BACKUP_TIME'				=> date('d-m-Y H:i', $this->config['auto_db_backup_next_gc'] + $tz_offset),
-
-			'TIMEZONE'						=> $tz_offset / 60, // In minutes
+			'NEXT_BACKUP_TIME'				=> date('d-m-Y H:i', $this->config['auto_db_backup_next_gc'] + $user_offset - $utc_offset),
 
 			'RTL_LANGUAGE'					=> ($this->language->lang('DIRECTION') == 'rtl') ? true : false,
 
@@ -167,7 +194,7 @@ class admin_controller implements admin_interface
 		$this->config->set('auto_db_backup_enable', $this->request->variable('auto_db_backup_enable', 0));
 		$this->config->set('auto_db_backup_filetype', $this->request->variable('auto_db_backup_filetype', 'text'));
 		$this->config->set('auto_db_backup_gc', $this->request->variable('auto_db_backup_gc', 0));
-		$this->config->set('auto_db_backup_next_gc', $this->backup_date);
+		$this->config->set('auto_db_backup_next_gc', $this->backup_date, 0);
 		$this->config->set('auto_db_backup_maintain_freq', $this->request->variable('auto_db_backup_maintain_freq', 0));
 		$this->config->set('auto_db_backup_optimize', $this->request->variable('auto_db_backup_optimize', 0));
 	}
@@ -180,7 +207,7 @@ class admin_controller implements admin_interface
 	*/
 	protected function get_filetypes()
 	{
-		$filetypes = array();
+		$filetypes = [];
 
 		if (@extension_loaded('zlib'))
 		{

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Auto db Backup (3.2)
+* @package Auto db Backup
 * @copyright (c) 2015 david63
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTO_DB_BACKUP'			=> 'Auto Database Backup',
 	'ACP_AUTO_DB_BACKUP_SETTINGS'	=> 'Auto backup settings',
 
-	'LOG_AUTO_DB_BACKUP'			=> '<strong>Auto database backup complete</strong>',
+	'LOG_AUTO_DB_BACKUP'			=> '<strong>Auto database backup complete<br>»»</strong>%1$s (%2$s)',
 	'LOG_AUTO_DB_BACKUP_SETTINGS'	=> '<strong>Altered Auto Database Backup settings</strong>',
+	'LOG_AUTO_DB_BACKUP_TIMEZONE'	=> 'The Auto Database Backup failed due to invalid timezone setting',
 ));

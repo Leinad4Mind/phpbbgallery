@@ -1,5 +1,5 @@
 {% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
-{% INCLUDECSS '@' ~ NAMESPACE ~ '/jquery-ui.css' %}
+{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/jquery-ui.css' %}
 
 <form id="acp_auto_db_backup" method="post" action="{{ U_ACTION }}">
 	<fieldset>
@@ -78,10 +78,7 @@
 			<dd>
 				<input type="text" class="textbox" name="auto_db_time" id="auto_db_time" value="{{ NEXT_BACKUP_TIME }}"/><br>{{ lang('CLICK_SELECT') }}
 			</dd>
-
-
 		</dl>
-
 	</fieldset>
 
 	<fieldset>
@@ -95,19 +92,18 @@
 </form>
 
 <script>
-	var closeText 		= '{{ lang('CLOSE_TEXT') | escape('js') }}';
 	var currentTextDate = '{{ lang('CURRENT_TEXT_DATE') | escape('js') }}';
 	var dayNamesMin 	= '{{ lang('DAY_NAMES_MIN') | escape('js') }}';
 	var hourText 		= '{{ lang('HOUR_TEXT') | escape('js') }}';
 	var isRTL 			= '{{ RTL_LANGUAGE | escape('js') }}';
 	var minuteText 		= '{{ lang('MINUTE_TEXT') | escape('js') }}';
 	var monthNames 		= '{{ lang('MONTH_NAMES') | escape('js') }}';
-	var nextText 		= '{{ lang('NEXT_TEXT') | escape('js') }}';
+	var nextTxt 		= '{{ lang('NEXT_TEXT') | escape('js') }}';
 	var prevText 		= '{{ lang('PREV_TEXT') | escape('js') }}';
 	var timeText 		= '{{ lang('TIME_TEXT') | escape('js') }}';
-	var timezone 		= '{{ TIMEZONE | escape('js') }}';
 </script>
 
-{% INCLUDEJS '@' ~ NAMESPACE ~ '/jquery-ui.js' %}
-{% INCLUDEJS '@' ~ NAMESPACE ~ '/jquery-timepicker.js' %}
+{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-ui.js' %}
+{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-timepicker.js' %}
+{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-slideraccess.js' %}
 {% include '@' ~ NAMESPACE ~ '/donate.html' %}

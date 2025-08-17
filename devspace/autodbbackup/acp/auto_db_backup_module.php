@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Auto db Backup (3.2)
+* @package Auto db Backup
 * @copyright (c) 2015 david63
 * @license GNU General Public License, version 2 (GPL-2.0)
 *

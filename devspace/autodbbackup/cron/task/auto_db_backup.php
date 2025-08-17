@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Auto db Backup (3.2)
+* @package Auto db Backup
 * @copyright (c) 2015 david63
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -12,11 +12,14 @@ namespace david63\autodbbackup\cron\task;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use phpbb\cron\task\base;
 use phpbb\config\config;
+use phpbb\language\language;
 use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
 use phpbb\user;
 use phpbb\event\dispatcher_interface;
 use phpbb\db\tools\tools_interface;
+use david63\autodbbackup\core\functions;
+use phpbb\filesystem\filesystem;
 
 class auto_db_backup extends base
 {
@@ -31,6 +34,9 @@ class auto_db_backup extends base
 
 	/** @var config */
 	protected $config;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -50,34 +56,46 @@ class auto_db_backup extends base
 	/** @var \phpbb\db\tools\tools_interface */
 	protected $db_tools;
 
+	/** @var \david63\autodbbackup\core\functions */
+	protected $functions;
+
+	/** @var \phpbb\filesystem\filesystem */
+	protected $filesystem;
+
 	/**
 	* Constructor for cron auto_db_backup
 	*
-	* @param string 				            $phpbb_root_path	phpBB root path
-	* @param string								$php_ext			phpBB file extension
-	* @param string								$phpbb_table_prefix	phpBB table prefix
-	* @param config								$config				Config object
-	* @param \phpbb\db\driver\driver_interface	$db					Database objecy
-	* @param \phpbb\log\log						$log    			phpBB log
-	* @param \phpbb\user						$user   			User object
-	* @param ContainerInterface					$phpbb_container	phpBBcontainer
-	* @param dispatcher_interface				$dispatcher			phpBB dispatcher
-	* @param tools_interface              		$db_tools			phpBB db tools
+	* @param string 				            	$phpbb_root_path		phpBB root path
+	* @param string									$php_ext				phpBB file extension
+	* @param string									$phpbb_table_prefix		phpBB table prefix
+	* @param config									$config					Config object
+	* @param \phpbb\language\language				$language				Language object
+	* @param \phpbb\db\driver\driver_interface		$db						Database object
+	* @param \phpbb\log\log							$log    				phpBB log
+	* @param \phpbb\user							$user   				User object
+	* @param ContainerInterface						$phpbb_container		phpBBcontainer
+	* @param dispatcher_interface					$dispatcher				phpBB dispatcher
+	* @param tools_interface              			$db_tools				phpBB db tools
+	* @param \david63\autodbbackup\core\functions	functions				Functions for the extension
+	* @param \phpbb\filesystem\filesystem			$filesystem    			phpBB filesystem
 	*
 	* @access   public
 	*/
-	public function __construct($phpbb_root_path, $php_ext, $phpbb_table_prefix, config $config, driver_interface $db, log $log, user $user, ContainerInterface $phpbb_container, dispatcher_interface $dispatcher, tools_interface $db_tools)
+	public function __construct($phpbb_root_path, $php_ext, $phpbb_table_prefix, config $config, language $language, driver_interface $db, log $log, user $user, ContainerInterface $phpbb_container, dispatcher_interface $dispatcher, tools_interface $db_tools, functions $functions, filesystem $filesystem)
 	{
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $php_ext;
 		$this->table_prefix		= $phpbb_table_prefix;
 		$this->config			= $config;
+		$this->language			= $language;
 		$this->db  				= $db;
 		$this->log				= $log;
 		$this->user				= $user;
 		$this->container		= $phpbb_container;
 		$this->dispatcher		= $dispatcher;
 		$this->db_tools			= $db_tools;
+		$this->functions		= $functions;
+		$this->filesystem 		= $filesystem;
 	}
 
 	/**
@@ -87,40 +105,47 @@ class auto_db_backup extends base
 	*/
 	public function run()
 	{
-		$time = time();
+		$time				= time();
+		$additional_data	= [];
+
+		// Add the language file
+		$this->language->add_lang('acp_autobackup', $this->functions->get_ext_namespace());
 
 		// Update the next backup time.
-		$next_backup = $time + ($this->config['auto_db_backup_gc'] * 3600); // Convert hours to seconds
+		$next_cron_backup = $time + ($this->config['auto_db_backup_gc'] * 3600); // Convert hours to seconds
 
 		// Do we want to maintain the time?
 		if ($this->config['auto_db_backup_maintain_freq'])
 		{
-			$next_backup = $this->config['auto_db_backup_next_gc'];
+			$next_cron_backup = $this->config['auto_db_backup_next_gc'];
 
-			while ($next_backup < $time)
+			while ($next_cron_backup < $time)
 			{
-				$next_backup += $this->config['auto_db_backup_gc'] * 3600;
+				$next_cron_backup += $this->config['auto_db_backup_gc'] * 3600;
 			}
 		}
 
 		// We do this here to prevent the Auto Backup running twice
-		$this->config->set('auto_db_backup_next_gc', $next_backup, true);
+		$this->config->set('auto_db_backup_next_gc', $next_cron_backup, true);
 
 		// Need to include this file for the get_usable_memory() function
 		if (!function_exists('get_usable_memory'))
 		{
-			include_once($this->phpbb_root_path . 'includes/acp/acp_database.' . $this->php_ext);
+			// Need to use "real path" as using dots in the path could fail
+			$file_name = $this->filesystem->realpath($this->phpbb_root_path) . '\includes\acp\acp_database.' . $this->php_ext;
+			$file_name = str_replace('\\', '/', $file_name);
+			include_once($file_name);
 		}
 
 		@set_time_limit(1200);
 		@set_time_limit(0);
 
-		$tables			= $this->db_tools->sql_list_tables();
-		$filename		= 'backup_' . $time . '_' . unique_id();
-		$file_type		= $this->config['auto_db_backup_filetype'];
-		$location		= $this->phpbb_root_path . '/store/';
-		$extractor		= $this->container->get('dbal.extractor');
-		$extension 		= $this->get_extension($file_type);
+		$tables		= $this->db_tools->sql_list_tables();
+		$filename	= 'backup_' . $time . '_' . unique_id();
+		$file_type	= $this->config['auto_db_backup_filetype'];
+		$location	= $this->phpbb_root_path . '/store/';
+		$extractor	= $this->container->get('dbal.extractor');
+		$extension 	= $this->get_extension($file_type);
 
 		$extractor->init_extractor($file_type, $filename, $time, false, true);
 		$extractor->write_start($this->table_prefix);
@@ -180,7 +205,7 @@ class auto_db_backup extends base
 		if ($this->config['auto_db_backup_copies'] > 0)
 		{
 			$dir	= opendir($location);
-			$files	= array();
+			$files	= [];
 
 			while (($file = readdir($dir)) !== false)
 			{
@@ -209,7 +234,9 @@ class auto_db_backup extends base
 		}
 
 		// Write the log entry
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP');
+		$additional_data[] = $filename . $extension;
+		$additional_data[] = $this->readable_filesize($location, $filename, $extension);
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP', time(), $additional_data);
 	}
 
 	/**
@@ -240,6 +267,21 @@ class auto_db_backup extends base
 	}
 
 	/**
+	* Format the file size into a human readable format.
+	*
+	* @param $file_type
+	*
+	* @return string
+	*/
+	protected function readable_filesize($location, $filename, $extension)
+	{
+		$bytes	= filesize($location . $filename . $extension);
+		$i		= floor(log($bytes, 1024));
+
+		return round($bytes / pow(1024, $i), [0, 0, 2, 2, 3][$i]) . $this->language->lang(['FILE_SIZE', $i]);
+	}
+
+	/**
 	* Returns whether this cron task can run, given current board configuration.
 	*
 	* @return bool
@@ -257,6 +299,15 @@ class auto_db_backup extends base
 	*/
 	public function should_run()
 	{
-		return $this->config['auto_db_backup_next_gc'] < time();
+		if (!in_array(ini_get('date.timezone'), timezone_identifiers_list()))
+		{
+			// Report this in the log
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP_TIMEZONE');
+			return false;
+		}
+		else
+		{
+			return $this->config['auto_db_backup_next_gc'] < time();
+		}
 	}
 }

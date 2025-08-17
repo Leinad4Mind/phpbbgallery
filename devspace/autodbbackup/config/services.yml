@@ -22,12 +22,15 @@ services:
             - '%core.php_ext%'
             - '%core.table_prefix%'
             - '@config'
+            - '@language'			
             - '@dbal.conn'
             - '@log'
             - '@user'
             - '@service_container'
             - '@dispatcher'
-            - '@dbal.tools'					
+            - '@dbal.tools'
+            - '@david63.autodbbackup.core.functions'
+            - '@filesystem'
         calls:
             - [set_name, [cron.task.auto_db_backup]]
         tags:

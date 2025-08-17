@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Auto db Backup (3.2)
+* @package Auto db Backup
 * @copyright (c) 2015 david63
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -60,22 +60,28 @@ $lang = array_merge($lang, array(
 
 	'DATE_FORMAT_ERROR'						=> 'The next backup date/time format is invalid.',
 
-	'NEW_VERSION'							=> 'New Version',
-	'NEW_VERSION_EXPLAIN'					=> 'There is a newer version of this extension available.',
+	'INVALID_PHP_TIMEZONE'					=> 'The default timzone in your php.ini file is invalid.',
+	'INVALID_USER_TIMEZONE'					=> 'There is a problem with your timezone setting in the UCP.',
 
-	'VERSION'								=> 'Version',
+	'NO_TIMEZONE_SET'						=> 'You do not have a timezone set in your UCP - please set this before you can continue.',
 
 	'FILETYPE'	=> array(
 		'gzip'	=> 'gzip',
 		'bzip2'	=> 'bzip2',
 		'text'	=> 'text',
 	),
+
+	'FILE_SIZE'	=> array(
+		1 => 'bytes',
+		2 => 'KB',
+		3 => 'MB',
+		4 => 'GB',
+		5 => 'TB',
+	),
 ));
 
 // Date/time picker
 $lang = array_merge($lang, array(
-	'CLOSE_TEXT'			=> 'Done',
-	'CURRENT_TEXT_DATE'		=> 'Now',
 	'HOUR_TEXT'				=> 'Hour',
 	'MINUTE_TEXT'			=> 'Minute',
 	'NEXT_TEXT'				=> 'Next »',
@@ -85,14 +91,4 @@ $lang = array_merge($lang, array(
 	// Translators note: retain the format of [" "] as they are creating JSON compatible arrays
 	'DAY_NAMES_MIN'			=> '["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]',
 	'MONTH_NAMES' 			=> '["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]',
-));
-
-// Donate
-$lang = array_merge($lang, array(
-	'DONATE'					=> 'Donate',
-	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
-	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
-
-	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
-	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));
