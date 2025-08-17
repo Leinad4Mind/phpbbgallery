@@ -1,0 +1,51 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{{ lang('ACP_CASTLE_TITLE') }}</h1>
+<p>{{ lang('ACP_CASTLE_TITLE_EXPLAIN') }}</p>
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_CASTLE_TITLE') }}</legend>
+		<dl>
+			<dt>
+				<label for="castle_app_id">{{ lang('CASTLE_APP_ID') ~ lang('COLON') }}</label><br><span>{{ lang('CASTLE_APP_ID_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="text" id="castle_app_id" name="castle_app_id" value="{{ CASTLE_APP_ID }}" size="15" />
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="castle_api_secret">{{ lang('CASTLE_API_SECRET') ~ lang('COLON') }}</label><br><span>{{ lang('CASTLE_API_SECRET_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="text" id="castle_api_secret" name="castle_api_secret" value="{{ CASTLE_API_SECRET }}" size="32" />
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="castle_hook_configured">{{ lang('CASTLE_HOOK_CONFIGURED') ~ lang('COLON') }}</label><br><span>{{ lang('CASTLE_HOOK_CONFIGURED_EXPLAIN', U_CASTLE_HOOK_ENPOINT) }}</span>
+			</dt>
+			<dd>
+				<input type="checkbox" id="castle_hook_configured" name="castle_hook_configured"{% if CASTLE_HOOK_CONFIGURED %} checked{% endif %} /> {{ lang('YES') }}
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="castle_feedback_redirect_configured">{{ lang('CASTLE_FEEDBACK_REDIRECT_CONFIGURED') ~ lang('COLON') }}</label><br><span>{{ lang('CASTLE_FEEDBACK_REDIRECT_CONFIGURED_EXPLAIN', U_CASTLE_FEEDBACK_ENPOINT) }}</span>
+			</dt>
+			<dd>
+				<input type="checkbox" id="castle_feedback_redirect_configured" name="castle_feedback_redirect_configured"{% if CASTLE_FEEDBACK_REDIRECT_CONFIGURED %} checked{% endif %} /> {{ lang('YES') }}
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	{S_FORM_TOKEN}
+</form>
+
+<!-- INCLUDE overall_footer.html -->
