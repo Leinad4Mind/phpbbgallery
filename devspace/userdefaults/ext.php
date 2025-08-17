@@ -9,7 +9,7 @@
 
 namespace david63\userdefaults;
 
-use \phpbb\extension\base;
+use phpbb\extension\base;
 
 class ext extends base
 {
@@ -21,8 +21,8 @@ class ext extends base
 	* @return bool
 	* @access public
 	*/
-public function is_enableable()
- 	{
+	public function is_enableable()
+	{
 		// Requires phpBB 3.2.0 or newer.
 		$is_enableable = phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=');
 
@@ -41,5 +41,5 @@ public function is_enableable()
 		}
 
 		return $is_enableable;
- 	}
+	}
 }

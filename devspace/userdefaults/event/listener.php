@@ -8,13 +8,13 @@
 */
 
 namespace david63\userdefaults\event;
-use \phpbb\config\config;
 
 /**
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use \david63\userdefaults\core\constants;
+
+use phpbb\config\config;
 
 /**
 * Event listener
@@ -24,15 +24,21 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var string custom constants */
+	protected $udconstants;
+
 	/**
 	* Constructor for listener
 	*
-	* @param \phpbb\config\config	$config	phpBB config
+	* @param \phpbb\config\config	$config	phpBB 	config
+	* @param array					$constants		Constants
+	*
 	* @access public
 	*/
-	public function __construct(config $config)
+	public function __construct(config $config, $udconstants)
 	{
-		$this->config = $config;
+		$this->config 		= $config;
+		$this->constants	= $udconstants;
 	}
 
 	/**
@@ -61,47 +67,47 @@ class listener implements EventSubscriberInterface
 		// Set the required notifications
 		$notifications_data = array();
 
-		if ($this->config['ud_moderation_queue'] != constants::NOTIFICATION)
+		if ($this->config['ud_moderation_queue'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'moderation_queue', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_bookmark'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_bookmark'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.bookmark', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_group'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_group'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.group_request', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_needs_approval'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_needs_approval'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.needs_approval', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_pm'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_pm'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.pm', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_post'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_post'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.post', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_quote'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_quote'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.quote', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_report'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_report'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.report', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type_topic'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_topic'] != $this->constants['notification'])
 		{
 			$notifications_data[] = array('item_type' => 'notification.type.topic', 'method' => 'notification.method.email');
 		}

@@ -67,6 +67,8 @@ $lang = array_merge($lang, array(
 	'MODERATOR_NOTIFICATIONS'	=> 'Moderation Notifications',
 	'MODERATOR_REPORT'			=> 'Someone reports a post',
 
+	'NEW_VERSION'				=> 'New Version',
+	'NEW_VERSION_EXPLAIN'		=> 'There is a newer version of this extension available.',
 	'NOTIFICATION'				=> 'Notification',
 
 	'POSTING_NOTIFICATIONS'		=> 'Posting notifications',
@@ -83,7 +85,7 @@ $lang = array_merge($lang, array(
 	'USER_ALLOW_PM'				=> 'Allow users to be sent private messages',
 	'USER_ALLOW_MASSEMAIL'		=> 'Administrators can email information to the user',
 	'USER_ALLOW_VIEWEMAIL'		=> 'The user can be contacted by email',
-	'USER_DEFAULTS_EXPLAIN'		=> 'Set here the values that you want as the default values for <strong>new</strong> users.<br />Any changes made via this form will <strong>not</strong> affect existing users.',
+	'USER_DEFAULTS_EXPLAIN'		=> 'Set here the values that you want as the default values for <strong>new</strong> users.<br>Any changes made via this form will <strong>not</strong> affect existing users.',
 	'USER_NOTIFY'				=> 'Notify the user upon replies by default',
 	'USER_NOTIFY_PM'			=> 'User notify PM',
 
@@ -99,4 +101,14 @@ $lang = array_merge($lang, array(
 	'VIEW_TOPICS_DAYS' 			=> 'Display topics from previous days',
 	'VIEW_TOPICS_DIR' 			=> 'Display topic order direction',
 	'VIEW_TOPICS_KEY' 			=> 'Display topics ordering by',
+));
+
+// Donate
+$lang = array_merge($lang, array(
+	'DONATE'					=> 'Donate',
+	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
+	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
+
+	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
+	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));

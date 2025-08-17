@@ -9,14 +9,14 @@
 
 namespace david63\userdefaults\controller;
 
-use \phpbb\config\config;
-use \phpbb\request\request;
-use \phpbb\template\template;
-use \phpbb\user;
-use \phpbb\log\log;
-use \phpbb\language\language;
-use \phpbb\db\driver\driver_interface;
-use \david63\userdefaults\core\constants;
+use phpbb\config\config;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\log\log;
+use phpbb\language\language;
+use phpbb\db\driver\driver_interface;
+use david63\userdefaults\core\functions;
 
 /**
 * Admin controller
@@ -44,31 +44,45 @@ class admin_controller implements admin_interface
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \david63\userdefaults\core\functions */
+	protected $functions;
+
+	/** @var string phpBB tables */
+	protected $tables;
+
+	/** @var string custom constants */
+	protected $udconstants;
+
 	/** @var string Custom form action */
 	protected $u_action;
 
 	/**
 	* Constructor for admin controller
 	*
-	* @param \phpbb\config\config				$config		Config object
-	* @param \phpbb\request\request				$request	Request object
-	* @param \phpbb\template\template			$template	Template object
-	* @param \phpbb\user						$user		User object
-	* @param \phpbb\log\log						$log		phpBB log
-	* @param phpbb\language\language			$language	Language object
-	* @param \phpbb\db\driver\driver_interface	$db
+	* @param \phpbb\config\config					$config			Config object
+	* @param \phpbb\request\request					$request		Request object
+	* @param \phpbb\template\template				$template		Template object
+	* @param \phpbb\user							$user			User object
+	* @param \phpbb\log\log							$log			phpBB log
+	* @param \phpbb\language\language				$language		Language object
+	* @param \phpbb\db\driver\driver_interface		$db				The db connection
+	* @param \david63\userdefaults\core\functions	$functions		Functions for the extension
+	* @param array									$tables			phpBB db tables
 	*
 	* @access public
 	*/
-	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, driver_interface $db)
+	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, driver_interface $db, functions $functions, $tables, $udconstants)
 	{
-		$this->config	= $config;
-		$this->request	= $request;
-		$this->template	= $template;
-		$this->user		= $user;
-		$this->log		= $log;
-		$this->language	= $language;
-		$this->db  		= $db;
+		$this->config		= $config;
+		$this->request		= $request;
+		$this->template		= $template;
+		$this->user			= $user;
+		$this->log			= $log;
+		$this->language		= $language;
+		$this->db  			= $db;
+		$this->functions	= $functions;
+		$this->tables		= $tables;
+		$this->constants	= $udconstants;
 	}
 
 	/**
@@ -80,14 +94,15 @@ class admin_controller implements admin_interface
 	public function display_options()
 	{
 		// Add the language file
-		$this->language->add_lang('acp_userdefaults', 'david63/userdefaults');
+		$this->language->add_lang('acp_userdefaults', $this->functions->get_ext_namespace());
 
-		$form_key = 'user_defaults';
-		add_form_key($form_key);
+		add_form_key($this->constants['form_key']);
+
+		$back = false;
 
 		if ($this->request->is_set_post('submit'))
 		{
-			if (!check_form_key($form_key))
+			if (!check_form_key($this->constants['form_key']))
 			{
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
@@ -114,7 +129,7 @@ class admin_controller implements admin_interface
 		$dateformat_options .= '</select>';
 
 		// Create the topic & post display options
-	   	$sort_dir_text = array('a' => $this->language->lang('ASCENDING'), 'd' => $this->language->lang('DESCENDING'));
+		$sort_dir_text = array('a' => $this->language->lang('ASCENDING'), 'd' => $this->language->lang('DESCENDING'));
 
 		// Topic ordering options
 		$limit_topic_days = array(0 => $this->language->lang('ALL_TOPICS'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR'));
@@ -156,11 +171,24 @@ class admin_controller implements admin_interface
 
 		// Get the default date format from the users table
 		$sql = 'SELECT DEFAULT(user_dateformat) AS default_dateformat
-			 FROM ' . USERS_TABLE;
+			 FROM ' . $this->tables['users'];
 		$result = $this->db->sql_query($sql);
 
 		$default_dateformat = $this->db->sql_fetchfield('default_dateformat');
 		$this->db->sql_freeresult($result);
+
+		// Template vars for header panel
+		$this->template->assign_vars(array(
+			'HEAD_TITLE'		=> $this->language->lang('USER_DEFAULTS'),
+			'HEAD_DESCRIPTION'	=> $this->language->lang('USER_DEFAULTS_EXPLAIN'),
+
+			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
+
+			'S_BACK'			=> $back,
+			'S_VERSION_CHECK'	=> $this->functions->version_check(),
+
+			'VERSION_NUMBER'	=> $this->functions->get_this_version(),
+		));
 
 		$this->template->assign_vars(array(
 			'DEFAULT_DATE_FORMAT' 		=> $this->language->lang('DEFAULT_DATE_FORMAT', date($default_dateformat, time())),
@@ -174,15 +202,15 @@ class admin_controller implements admin_interface
 			'NOTIFY_SUBSCRIBED'			=> isset($this->config['ud_type_post']) ? $this->config['ud_type_post'] : 1,
 			'NOTIFY_TOPIC'				=> isset($this->config['ud_type_topic']) ? $this->config['ud_type_topic'] : 1,
 
-			'S_AVATARS'					=> phpbb_optionget(constants::VIEWAVATARS, $this->config['ud_options']),
-			'S_BBCODE'					=> phpbb_optionget(constants::BBCODE, $this->config['ud_options']),
-			'S_DISABLE_CENSORS'			=> phpbb_optionget(constants::VIEWCENSORS, $this->config['ud_options']),
-			'S_FLASH'					=> phpbb_optionget(constants::VIEWFLASH, $this->config['ud_options']),
-			'S_IMAGES'					=> phpbb_optionget(constants::VIEWIMG, $this->config['ud_options']),
-			'S_SMILIES'					=> phpbb_optionget(constants::SMILIES, $this->config['ud_options']),
-			'S_SIG'						=> phpbb_optionget(constants::ATTACHSIG, $this->config['ud_options']),
-			'S_SIGS'					=> phpbb_optionget(constants::VIEWSIGS, $this->config['ud_options']),
-			'S_VSMILIES'				=> phpbb_optionget(constants::VIEWSMILIES, $this->config['ud_options']),
+			'S_AVATARS'					=> phpbb_optionget($this->constants['viewavatars'], $this->config['ud_options']),
+			'S_BBCODE'					=> phpbb_optionget($this->constants['bbcode'], $this->config['ud_options']),
+			'S_DISABLE_CENSORS'			=> phpbb_optionget($this->constants['viewcensors'], $this->config['ud_options']),
+			'S_FLASH'					=> phpbb_optionget($this->constants['viewflash'], $this->config['ud_options']),
+			'S_IMAGES'					=> phpbb_optionget($this->constants['viewimg'], $this->config['ud_options']),
+			'S_SMILIES'					=> phpbb_optionget($this->constants['smilies'], $this->config['ud_options']),
+			'S_SIG'						=> phpbb_optionget($this->constants['attachsig'], $this->config['ud_options']),
+			'S_SIGS'					=> phpbb_optionget($this->constants['viewsigs'], $this->config['ud_options']),
+			'S_VSMILIES'				=> phpbb_optionget($this->constants['viewsmilies'], $this->config['ud_options']),
 
 			'S_POST_SORT_DAYS'			=> $s_limit_post_days,
 			'S_POST_SORT_DIR'			=> $s_sort_post_dir,
@@ -195,7 +223,6 @@ class admin_controller implements admin_interface
 			'USER_ALLOW_PM'				=> isset($this->config['ud_allow_pm']) ? $this->config['ud_allow_pm'] : 1,
 			'USER_ALLOW_VIEWEMAIL'		=> isset($this->config['ud_allow_viewemail']) ? $this->config['ud_allow_viewemail'] : 1,
 			'USER_DATE_FORMAT'			=> $dateformat_options,
-			'USER_DEFAULTS_VERSION'		=> constants::USER_DEFAULTS_VERSION,
 			'USER_NOTIFY'				=> isset($this->config['ud_notify']) ? $this->config['ud_notify'] : 0,
 			'USER_NOTIFY_PM'			=> isset($this->config['ud_notify_pm']) ? $this->config['ud_notify_pm'] : 1,
 
@@ -216,7 +243,7 @@ class admin_controller implements admin_interface
 		$this->config->set('ud_allow_viewemail', $this->request->variable('ud_allow_viewemail', 0));
 		$this->config->set('ud_date_format', $this->request->variable('ud_date_format', ''));
 		$this->config->set('ud_moderation_queue', $this->request->variable('ud_moderation_queue', 0));
-	   	$this->config->set('ud_notify', $this->request->variable('ud_notify', ''));
+		$this->config->set('ud_notify', $this->request->variable('ud_notify', ''));
 		$this->config->set('ud_notify_pm', $this->request->variable('ud_notify_pm', ''));
 		$this->config->set('ud_options', phpbb_optionset(constants::ATTACHSIG, $this->request->variable('ud_sig', 0), $this->config['ud_options']));
 		$this->config->set('ud_options', phpbb_optionset(constants::BBCODE, $this->request->variable('ud_bbcode', 0), $this->config['ud_options']));
