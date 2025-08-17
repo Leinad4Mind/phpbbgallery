@@ -1,19 +1,21 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
-
-namespace robertheim\activitystats;
 
 /**
-* @ignore
-*/
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace leinad4mind\specialactivitystats;
+
+/**
+ * @ignore
+ */
 
 abstract class prefixes
 {
-	const CONFIG = 'robertheim_activitystats';
+	const CONFIG = 'wwh';
 }

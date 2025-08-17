@@ -1,21 +1,23 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
-
-namespace robertheim\activitystats\acp;
 
 /**
-* @ignore
-*/
-use robertheim\activitystats\modes;
-use robertheim\activitystats\prefixes;
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-class activitystats_module
+namespace leinad4mind\specialactivitystats\acp;
+
+/**
+ * @ignore
+ */
+use leinad4mind\specialactivitystats\modes;
+use leinad4mind\specialactivitystats\prefixes;
+
+class specialactivitystats_module
 {
 
 	/** @var string */
@@ -31,14 +33,14 @@ class activitystats_module
 		// common language file for DATEFORMAT_EXPLANATION
 		$user->add_lang('acp/board');
 
-		// Add the activitystats ACP lang file
-		$user->add_lang_ext('robertheim/activitystats', 'activitystats_acp');
+		// Add the specialactivitystats ACP lang file
+		$user->add_lang_ext('leinad4mind/specialactivitystats', 'specialactivitystats_acp');
 
 		// Load a template from adm/style for our ACP page
-		$this->tpl_name = 'activitystats';
+		$this->tpl_name = 'specialactivitystats';
 
 		// Set the page title for our ACP page
-		$this->page_title = 'ACP_ACTIVITY_STATS_SETTINGS';
+		$this->page_title = 'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS';
 
 		// Define the name of the form for use as a form key
 		$form_name = 'activity/stats';
@@ -76,37 +78,37 @@ class activitystats_module
 				$config->set($conf_prefix.'_record_count', 1);
 				$config->set($conf_prefix.'_record_time', $reset_time);
 				$config->set($conf_prefix.'_reset_time', $reset_time);
-				$sessions_manager = $phpbb_container->get('robertheim.activitystats.sessions_manager');
+				$sessions_manager = $phpbb_container->get('leinad4mind.specialactivitystats.sessions_manager');
 				$sessions_manager->prune($reset_time);
 			}
 			// clear cache
-			$cache->destroy('_robertheim_activitystats');
+			$cache->destroy('_leinad4mind_specialactivitystats');
 
-			trigger_error($user->lang('ACTIVITY_STATS_SETTINGS_SAVED') . adm_back_link($this->u_action));
+			trigger_error($user->lang('SPECIAL_ACTIVITY_STATS_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
 
 		$template->assign_vars(array(
-			'ACTIVITY_STATS_MOD_VERSION'		=> $user->lang('ACTIVITY_STATS_INSTALLED', $config[$conf_prefix.'_version']),
-			'ACTIVITY_STATS_DISP_NEW_TOPICS'	=> $config[$conf_prefix.'_disp_new_topics'],
-			'ACTIVITY_STATS_DISP_NEW_POSTS'		=> $config[$conf_prefix.'_disp_new_posts'],
-			'ACTIVITY_STATS_DISP_NEW_USERS'		=> $config[$conf_prefix.'_disp_new_users'],
-			'ACTIVITY_STATS_DISP_BOTS'			=> $config[$conf_prefix.'_disp_bots'],
-			'ACTIVITY_STATS_DISP_GUESTS'		=> $config[$conf_prefix.'_disp_guests'],
-			'ACTIVITY_STATS_DISP_HIDDEN'		=> $config[$conf_prefix.'_disp_hidden'],
-			'ACTIVITY_STATS_DISP_TIME'			=> $config[$conf_prefix.'_disp_time'],
-			'ACTIVITY_STATS_DISP_TIME_FORMAT'	=> $config[$conf_prefix.'_disp_time_format'],
-			'ACTIVITY_STATS_DISP_IP'			=> $config[$conf_prefix.'_disp_ip'],
-			'ACTIVITY_STATS_MODE'				=> $config[$conf_prefix.'_mode'],
-			'ACTIVITY_STATS_DEL_TIME_D'			=> $config[$conf_prefix.'_del_time_d'],
-			'ACTIVITY_STATS_DEL_TIME_H'			=> $config[$conf_prefix.'_del_time_h'],
-			'ACTIVITY_STATS_DEL_TIME_M'			=> $config[$conf_prefix.'_del_time_m'],
-			'ACTIVITY_STATS_DEL_TIME_S'			=> $config[$conf_prefix.'_del_time_s'],
-			'ACTIVITY_STATS_SORT_BY'			=> $config[$conf_prefix.'_sort_by'],
-			'ACTIVITY_STATS_CACHE_TIME'			=> $config[$conf_prefix.'_cache_time'],
-			'ACTIVITY_STATS_CHECK_PERMISSIONS'	=> $config[$conf_prefix.'_check_permissions'],
-			'ACTIVITY_STATS_RECORD'				=> $config[$conf_prefix.'_record'],
-			'ACTIVITY_STATS_RECORD_TIMEFORMAT'	=> $config[$conf_prefix.'_record_timeformat'],
-			'U_ACTION'							=> $this->u_action,
+			'SPECIAL_ACTIVITY_STATS_MOD_VERSION'		=> $user->lang('SPECIAL_ACTIVITY_STATS_INSTALLED', $config[$conf_prefix.'_version']),
+			'SPECIAL_ACTIVITY_STATS_DISP_NEW_TOPICS'	=> $config[$conf_prefix.'_disp_new_topics'],
+			'SPECIAL_ACTIVITY_STATS_DISP_NEW_POSTS'		=> $config[$conf_prefix.'_disp_new_posts'],
+			'SPECIAL_ACTIVITY_STATS_DISP_NEW_USERS'		=> $config[$conf_prefix.'_disp_new_users'],
+			'SPECIAL_ACTIVITY_STATS_DISP_BOTS'			=> $config[$conf_prefix.'_disp_bots'],
+			'SPECIAL_ACTIVITY_STATS_DISP_GUESTS'		=> $config[$conf_prefix.'_disp_guests'],
+			'SPECIAL_ACTIVITY_STATS_DISP_HIDDEN'		=> $config[$conf_prefix.'_disp_hidden'],
+			'SPECIAL_ACTIVITY_STATS_DISP_TIME'			=> $config[$conf_prefix.'_disp_time'],
+			'SPECIAL_ACTIVITY_STATS_DISP_TIME_FORMAT'	=> $config[$conf_prefix.'_disp_time_format'],
+			'SPECIAL_ACTIVITY_STATS_DISP_IP'			=> $config[$conf_prefix.'_disp_ip'],
+			'SPECIAL_ACTIVITY_STATS_MODE'				=> $config[$conf_prefix.'_mode'],
+			'SPECIAL_ACTIVITY_STATS_DEL_TIME_D'			=> $config[$conf_prefix.'_del_time_d'],
+			'SPECIAL_ACTIVITY_STATS_DEL_TIME_H'			=> $config[$conf_prefix.'_del_time_h'],
+			'SPECIAL_ACTIVITY_STATS_DEL_TIME_M'			=> $config[$conf_prefix.'_del_time_m'],
+			'SPECIAL_ACTIVITY_STATS_DEL_TIME_S'			=> $config[$conf_prefix.'_del_time_s'],
+			'SPECIAL_ACTIVITY_STATS_SORT_BY'			=> $config[$conf_prefix.'_sort_by'],
+			'SPECIAL_ACTIVITY_STATS_CACHE_TIME'			=> $config[$conf_prefix.'_cache_time'],
+			'SPECIAL_ACTIVITY_STATS_CHECK_PERMISSIONS'	=> $config[$conf_prefix.'_check_permissions'],
+			'SPECIAL_ACTIVITY_STATS_RECORD'				=> $config[$conf_prefix.'_record'],
+			'SPECIAL_ACTIVITY_STATS_RECORD_TIMEFORMAT'	=> $config[$conf_prefix.'_record_timeformat'],
+			'U_ACTION'									=> $this->u_action,
 		));
 
 	}

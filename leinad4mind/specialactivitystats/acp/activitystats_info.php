@@ -1,26 +1,28 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-namespace robertheim\activitystats\acp;
+namespace leinad4mind\specialactivitystats\acp;
 
-class activitystats_info
+class specialactivitystats_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> '\robertheim\activitystats\acp\activitystats_module',
-			'title'		=> 'ACP_ACTIVITY_STATS_TITLE',
+			'filename'	=> '\leinad4mind\specialactivitystats\acp\specialactivitystats_module',
+			'title'		=> 'ACP_SPECIAL_ACTIVITY_STATS_TITLE',
 			'modes'		=> array(
 				'settings'	=> array(
-					'title' => 'ACP_ACTIVITY_STATS_SETTINGS',
-					'auth' => 'ext_robertheim/activitystats && acl_a_board',
-					'cat' => array('ACP_ACTIVITY_STATS_TITLE')
+					'title' => 'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS',
+					'auth' => 'ext_leinad4mind/specialactivitystats && acl_a_board',
+					'cat' => array('ACP_SPECIAL_ACTIVITY_STATS_TITLE')
 				),
 			),
 		);

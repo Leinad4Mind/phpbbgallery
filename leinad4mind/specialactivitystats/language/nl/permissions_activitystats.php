@@ -1,16 +1,18 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-* Dutch translation by Rembert Oldenboom (http://www.floating-point.nl/ - v.1.0.0 - 2015-06-14
-*/
 
 /**
-* DO NOT CHANGE
-*/
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @translation (c) 2015 Rembert Oldenboom
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,8 +39,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-use robertheim\activitystats\permissions;
+use leinad4mind\specialactivitystats\permissions;
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACL_'.utf8_strtoupper(permissions::SEE_STATS)	=> 'Kan activiteitenstatistieken zien',
-));
+]);

@@ -1,19 +1,21 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
-
-namespace robertheim\activitystats\migrations;
 
 /**
-* @ignore
-*/
-use robertheim\activitystats\prefixes;
-use robertheim\activitystats\tables;
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace leinad4mind\specialactivitystats\migrations;
+
+/**
+ * @ignore
+ */
+use leinad4mind\specialactivitystats\prefixes;
+use leinad4mind\specialactivitystats\tables;
 
 class release_1_1_0 extends \phpbb\db\migration\migration
 {
@@ -36,7 +38,7 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 			'add_tables' => array(
 				$this->table_prefix . tables::SESSIONS	=> array(
 					'COLUMNS'		=> array(
-						'id'				=> array('UINT', null, 'auto_increment'),
+						'wwh_id'			=> array('UINT', null, 'auto_increment'),
 						'user_id'			=> array('UINT', 0),
 						'username'			=> array('VCHAR', ''),
 						'username_clean'	=> array('VCHAR', ''),
@@ -44,9 +46,9 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 						'user_ip'			=> array('VCHAR:40', '127.0.0.1'),
 						'user_type'			=> array('UINT:2', 1),
 						'viewonline'		=> array('UINT:1', 1),
-						'lastpage'			=> array('TIMESTAMP', 0),
+						'wwh_lastpage'		=> array('TIMESTAMP', 0),
 					),
-					'PRIMARY_KEY'	=> 'id',
+					'PRIMARY_KEY'	=> 'wwh_id',
 					'KEYS'			=> array(
 						'u_id_ip'	=> array('INDEX', array('user_id', 'user_ip')),
 					),
@@ -92,13 +94,13 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 			array('module.add', array(
 				'acp',
 				'ACP_CAT_DOT_MODS',
-				'ACP_ACTIVITY_STATS_TITLE'
+				'ACP_SPECIAL_ACTIVITY_STATS_TITLE'
 			)),
 
 			array('module.add', array(
-				'acp', 'ACP_ACTIVITY_STATS_TITLE', array(
-					'module_basename'	=> '\robertheim\activitystats\acp\activitystats_module',
-					'auth'		=> 'ext_robertheim/activitystats && acl_a_board',
+				'acp', 'ACP_SPECIAL_ACTIVITY_STATS_TITLE', array(
+					'module_basename'	=> '\leinad4mind\specialactivitystats\acp\specialactivitystats_module',
+					'auth'		=> 'ext_leinad4mind/specialactivitystats && acl_a_board',
 					'modes'		=> array('settings'),
 				),
 			)),

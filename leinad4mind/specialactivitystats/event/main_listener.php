@@ -1,25 +1,27 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
-
-namespace robertheim\activitystats\event;
 
 /**
-* @ignore
-*/
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace leinad4mind\specialactivitystats\event;
+
+/**
+ * @ignore
+ */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use robertheim\activitystats\modes;
-use robertheim\activitystats\permissions;
-use robertheim\activitystats\prefixes;
+use leinad4mind\specialactivitystats\modes;
+use leinad4mind\specialactivitystats\permissions;
+use leinad4mind\specialactivitystats\prefixes;
 
 /**
-* Event listener
-*/
+ * Event listener
+ */
 class main_listener implements EventSubscriberInterface
 {
 
@@ -43,7 +45,7 @@ class main_listener implements EventSubscriberInterface
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		\phpbb\db\driver\driver_interface $db,
-		\robertheim\activitystats\service\sessions_manager $sessions_manager,
+		\leinad4mind\specialactivitystats\service\sessions_manager $sessions_manager,
 		$table_prefix)
 	{
 		$this->config = $config;
@@ -60,7 +62,7 @@ class main_listener implements EventSubscriberInterface
 		$this->sessions_manager->update_session(time());
 		if (!$this->config[prefixes::CONFIG.'_check_permissions'] || $this->auth->acl_get(permissions::SEE_STATS))
 		{
-			$this->user->add_lang_ext('robertheim/activitystats', 'activitystats');
+			$this->user->add_lang_ext('leinad4mind/specialactivitystats', 'specialactivitystats');
 
 			// find timeperiod: today (mode=1) or other configured time period (mode=2)
 			$timestamp = 0;
@@ -104,30 +106,30 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Fetches the user-list and putting the stuff into the template.
-	*
-	* @param array $activity activity data based on the boards configuration
-	*/
+	 * Fetches the user-list and putting the stuff into the template.
+	 *
+	 * @param array $activity activity data based on the boards configuration
+	 */
 	private function display(array $activity)
 	{
 		if ($this->config[prefixes::CONFIG . '_disp_new_topics'])
 		{
 			$this->template->assign_vars(array(
-				'ACTIVITY_STATS_NEW_TOPICS'	=> $this->user->lang('ACTIVITY_STATS_NEW_TOPICS', $activity['new_topics']),
+				'SPECIAL_ACTIVITY_STATS_NEW_TOPICS'	=> $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_TOPICS', $activity['new_topics']),
 			));
 		}
 
 		if ($this->config[prefixes::CONFIG . '_disp_new_posts'])
 		{
 			$this->template->assign_vars(array(
-				'ACTIVITY_STATS_NEW_POSTS'	=> $this->user->lang('ACTIVITY_STATS_NEW_POSTS', $activity['new_posts']),
+				'SPECIAL_ACTIVITY_STATS_NEW_POSTS'	=> $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_POSTS', $activity['new_posts']),
 			));
 		}
 
 		if ($this->config[prefixes::CONFIG . '_disp_new_users'])
 		{
 			$this->template->assign_vars(array(
-				'ACTIVITY_STATS_NEW_USERS'	=> $this->user->lang('ACTIVITY_STATS_NEW_USERS', $activity['new_users']),
+				'SPECIAL_ACTIVITY_STATS_NEW_USERS'	=> $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_USERS', $activity['new_users']),
 			));
 		}
 
@@ -150,11 +152,11 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$this->template->assign_vars(array(
-			'ACTIVITY_STATS_TOTAL_NEWS' => $this->get_total_news_string($activity),
-			'ACTIVITY_STATS_LIST'		=> $this->user->lang['REGISTERED_USERS'] . ' ' . $users_str,
-			'ACTIVITY_STATS_TOTAL'		=> $this->get_total_users_string($activity),
-			'ACTIVITY_STATS_EXP'		=> $this->get_explanation_string(),
-			'ACTIVITY_STATS_RECORD'		=> $record_string,
+			'SPECIAL_ACTIVITY_STATS_TOTAL_NEWS' => $this->get_total_news_string($activity),
+			'SPECIAL_ACTIVITY_STATS_LIST'		=> $this->user->lang['REGISTERED_USERS'] . ' ' . $users_str,
+			'SPECIAL_ACTIVITY_STATS_TOTAL'		=> $this->get_total_users_string($activity),
+			'SPECIAL_ACTIVITY_STATS_EXP'		=> $this->get_explanation_string(),
+			'SPECIAL_ACTIVITY_STATS_RECORD'		=> $record_string,
 		));
 	}
 
@@ -169,10 +171,10 @@ class main_listener implements EventSubscriberInterface
 		$users_list = array();
 		foreach ($activity['users_list'] as $key => $row)
 		{
-			$hover_time = (($this->config[prefixes::CONFIG . '_disp_time'] == '2') ? $this->user->lang['ACTIVITY_STATS_LATEST1'] . '&nbsp;' . $this->user->format_date($row['lastpage'], $this->config[prefixes::CONFIG . '_disp_time_format']) . $this->user->lang['ACTIVITY_STATS_LATEST2'] : '' );
+			$hover_time = (($this->config[prefixes::CONFIG . '_disp_time'] == '2') ? $this->user->lang['SPECIAL_ACTIVITY_STATS_LATEST1'] . '&nbsp;' . $this->user->format_date($row['wwh_lastpage'], $this->config[prefixes::CONFIG . '_disp_time_format']) . $this->user->lang['SPECIAL_ACTIVITY_STATS_LATEST2'] : '' );
 			$hover_ip = ($this->auth->acl_get('a_') && $this->config[prefixes::CONFIG . '_disp_ip']) ? $this->user->lang['IP'] . ':&nbsp;' . $row['user_ip'] : '';
 			$hover_info = (($hover_time || $hover_ip) ? ' title="' . $hover_time . (($hover_time && $hover_ip) ? ' | ' : '') . $hover_ip . '"' : '');
-			$disp_time = (($this->config[prefixes::CONFIG . '_disp_time'] == '1') ? '&nbsp;(' . $this->user->lang['ACTIVITY_STATS_LATEST1'] . '&nbsp;' . $this->user->format_date($row['lastpage'], $this->config[prefixes::CONFIG . '_disp_time_format']) . $this->user->lang['ACTIVITY_STATS_LATEST2'] . (($hover_ip) ? ' | ' . $hover_ip : '' ) . ')' : '' );
+			$disp_time = (($this->config[prefixes::CONFIG . '_disp_time'] == '1') ? '&nbsp;(' . $this->user->lang['SPECIAL_ACTIVITY_STATS_LATEST1'] . '&nbsp;' . $this->user->format_date($row['wwh_lastpage'], $this->config[prefixes::CONFIG . '_disp_time_format']) . $this->user->lang['SPECIAL_ACTIVITY_STATS_LATEST2'] . (($hover_ip) ? ' | ' . $hover_ip : '' ) . ')' : '' );
 
 			// if not hidden user
 			if ($row['viewonline'] || ($row['user_type'] == USER_IGNORE))
@@ -191,16 +193,16 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Returns the Explanation string for the online list:
-	* Demo:	based on users active today
-	*		based on users active over the past 30 minutes
-	*/
+	 * Returns the Explanation string for the online list:
+	 * Demo:	based on users active today
+	 *		based on users active over the past 30 minutes
+	 */
 	private function get_explanation_string()
 	{
 		$mode = $this->config[prefixes::CONFIG . '_mode'];
 		if ($mode)
 		{
-			return $this->user->lang['ACTIVITY_STATS_EXP'];
+			return $this->user->lang['SPECIAL_ACTIVITY_STATS_EXP'];
 		}
 		else
 		{
@@ -222,18 +224,18 @@ class main_listener implements EventSubscriberInterface
 					}
 				}
 			}
-			$explanation = $this->user->lang('ACTIVITY_STATS_EXP_TIME', $plural);
-			$explanation .= $this->user->lang('ACTIVITY_STATS_DAYS', $d);
-			$explanation .= $this->user->lang('ACTIVITY_STATS_HOURS', $h);
-			$explanation .= $this->user->lang('ACTIVITY_STATS_MINUTES', $m);
-			$explanation .= $this->user->lang('ACTIVITY_STATS_SECONDS', $s);
+			$explanation = $this->user->lang('SPECIAL_ACTIVITY_STATS_EXP_TIME', $plural);
+			$explanation .= $this->user->lang('SPECIAL_ACTIVITY_STATS_DAYS', $d);
+			$explanation .= $this->user->lang('SPECIAL_ACTIVITY_STATS_HOURS', $h);
+			$explanation .= $this->user->lang('SPECIAL_ACTIVITY_STATS_MINUTES', $m);
+			$explanation .= $this->user->lang('SPECIAL_ACTIVITY_STATS_SECONDS', $s);
 
 			switch (substr_count($explanation, '%s'))
 			{
 				case 3:
-					return sprintf($explanation, '', $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['ACTIVITY_STATS_WORD']);
+					return sprintf($explanation, '', $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['SPECIAL_ACTIVITY_STATS_WORD']);
 				case 2:
-					return sprintf($explanation, '', $this->user->lang['ACTIVITY_STATS_WORD']);
+					return sprintf($explanation, '', $this->user->lang['SPECIAL_ACTIVITY_STATS_WORD']);
 				default:
 					return sprintf($explanation, '');
 			}
@@ -241,10 +243,10 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Returns the Record string for the online list:
-	* Demo:	Most users ever online was 1 on Mon 7. Sep 2009 (GMT+1)
-	*		Most users ever online was 1 between Mon 7. Sep 2009 and Tue 8. Sep 2009
-	*/
+	 * Returns the Record string for the online list:
+	 * Demo:	Most users ever online was 1 on Mon 7. Sep 2009 (GMT+1)
+	 *		Most users ever online was 1 between Mon 7. Sep 2009 and Tue 8. Sep 2009
+	 */
 	private function get_record_string()
 	{
 		$format = $this->config[prefixes::CONFIG . '_record_timeformat'];
@@ -269,7 +271,7 @@ class main_listener implements EventSubscriberInterface
 			$offset = $board_timezone->getOffset( $datetime ) / 3600;
 			$gmt_offset = 'GMT' . ($offset < 0 ? $offset : '+' . $offset);
 
-			return sprintf($this->user->lang['ACTIVITY_STATS_RECORD_DAY'],
+			return sprintf($this->user->lang['SPECIAL_ACTIVITY_STATS_RECORD_DAY'],
 				$this->config[prefixes::CONFIG . '_record_count'],
 				$datetime->format($format)) . ' (' . $gmt_offset . ')' . '<br />';
 		}
@@ -280,7 +282,7 @@ class main_listener implements EventSubscriberInterface
 			$period_start -= ( 3600 * $this->config[prefixes::CONFIG . '_del_time_h']);
 			$period_start -= (   60 * $this->config[prefixes::CONFIG . '_del_time_m']);
 			$period_start -=          $this->config[prefixes::CONFIG . '_del_time_s'];
-			return sprintf($this->user->lang['ACTIVITY_STATS_RECORD_PERIOD'],
+			return sprintf($this->user->lang['SPECIAL_ACTIVITY_STATS_RECORD_PERIOD'],
 				$this->config[prefixes::CONFIG . '_record_count'],
 				$this->user->format_date($period_start, $format),
 				$this->user->format_date($this->config[prefixes::CONFIG . '_record_time'], $format)) . '<br />';
@@ -288,56 +290,56 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Returns the Total string for the "new x" list:
-	* Demo:	New topics 1, New posts 2, New users 1
-	*/
+	 * Returns the Total string for the "new x" list:
+	 * Demo:	New topics 1, New posts 2, New users 1
+	 */
 	private function get_total_news_string($activity)
 	{
 		$total_news_string = array();
 		if ($this->config[prefixes::CONFIG . '_disp_new_topics'])
 		{
-			$total_news_string[] = $this->user->lang('ACTIVITY_STATS_NEW_TOPICS', $activity['new_topics']);
+			$total_news_string[] = $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_TOPICS', $activity['new_topics']);
 		}
 		if ($this->config[prefixes::CONFIG . '_disp_new_posts'])
 		{
-			$total_news_string[] = $this->user->lang('ACTIVITY_STATS_NEW_POSTS', $activity['new_posts']);
+			$total_news_string[] = $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_POSTS', $activity['new_posts']);
 		}
 		if ($this->config[prefixes::CONFIG . '_disp_new_users'])
 		{
-			$total_news_string[] = $this->user->lang('ACTIVITY_STATS_NEW_USERS', $activity['new_users']);
+			$total_news_string[] = $this->user->lang('SPECIAL_ACTIVITY_STATS_NEW_USERS', $activity['new_users']);
 		}
 		return join(" &bull; ", $total_news_string);
 	}
 
 	/**
-	* Returns the Total string for the online list:
-	* Demo:	In total there was 1 user online :: 1 registered, 0 hidden, 0 bots and 0 guests
-	*/
+	 * Returns the Total string for the online list:
+	 * Demo:	In total there was 1 user online :: 1 registered, 0 hidden, 0 bots and 0 guests
+	 */
 	private function get_total_users_string($activity)
 	{
-		$total_users_string = $this->user->lang('ACTIVITY_STATS_TOTAL', $activity['count_total']);
-		$total_users_string .= $this->user->lang('ACTIVITY_STATS_REG_USERS', $activity['count_reg']);
+		$total_users_string = $this->user->lang('SPECIAL_ACTIVITY_STATS_TOTAL', $activity['count_total']);
+		$total_users_string .= $this->user->lang('SPECIAL_ACTIVITY_STATS_REG_USERS', $activity['count_reg']);
 		if ($this->config[prefixes::CONFIG . '_disp_hidden'])
 		{
-			$total_users_string .= '%s ' . $this->user->lang('ACTIVITY_STATS_HIDDEN', $activity['count_hidden']);
+			$total_users_string .= '%s ' . $this->user->lang('SPECIAL_ACTIVITY_STATS_HIDDEN', $activity['count_hidden']);
 		}
 		if ($this->config[prefixes::CONFIG . '_disp_bots'])
 		{
-			$total_users_string .= '%s ' . $this->user->lang('ACTIVITY_STATS_BOTS', $activity['count_bot']);
+			$total_users_string .= '%s ' . $this->user->lang('SPECIAL_ACTIVITY_STATS_BOTS', $activity['count_bot']);
 		}
 		if ($this->config[prefixes::CONFIG . '_disp_guests'])
 		{
-			$total_users_string .= '%s ' . $this->user->lang('ACTIVITY_STATS_GUESTS', $activity['count_guests']);
+			$total_users_string .= '%s ' . $this->user->lang('SPECIAL_ACTIVITY_STATS_GUESTS', $activity['count_guests']);
 		}
 
 		switch (substr_count($total_users_string, '%s'))
 		{
 			case 3:
-				return sprintf($total_users_string, $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['ACTIVITY_STATS_WORD']);
+				return sprintf($total_users_string, $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['SPECIAL_ACTIVITY_STATS_WORD']);
 			case 2:
-				return sprintf($total_users_string, $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['ACTIVITY_STATS_WORD']);
+				return sprintf($total_users_string, $this->user->lang['COMMA_SEPARATOR'], $this->user->lang['SPECIAL_ACTIVITY_STATS_WORD']);
 			case 1:
-				return sprintf($total_users_string, $this->user->lang['ACTIVITY_STATS_WORD']);
+				return sprintf($total_users_string, $this->user->lang['SPECIAL_ACTIVITY_STATS_WORD']);
 			default:
 				return $total_users_string;
 		}

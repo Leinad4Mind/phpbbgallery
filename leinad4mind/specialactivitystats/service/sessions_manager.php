@@ -1,24 +1,26 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
 
-namespace robertheim\activitystats\service;
+ /**
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace leinad4mind\specialactivitystats\service;
 
 /**
  * @ignore
  */
-use robertheim\activitystats\prefixes;
-use robertheim\activitystats\tables;
-use robertheim\activitystats\modes;
+use leinad4mind\specialactivitystats\prefixes;
+use leinad4mind\specialactivitystats\tables;
+use leinad4mind\specialactivitystats\modes;
 
 /**
-* Handles all functionallity regarding the session table of activity stats.
-*/
+ * Handles all functionallity regarding the session table of activity stats.
+ */
 class sessions_manager
 {
 	protected $db;
@@ -49,9 +51,9 @@ class sessions_manager
 	}
 
 	/**
-	* Update the users session in the table.
-	* @param int $timestamp the timestamp on that the update happens.
-	*/
+	 * Update the users session in the table.
+	 * @param int $timestamp the timestamp on that the update happens.
+	 */
 	public function update_session($timestamp)
 	{
 		$data = array(
@@ -62,43 +64,43 @@ class sessions_manager
 			'user_colour'		=> $this->user->data['user_colour'],
 			'user_type'			=> $this->user->data['user_type'],
 			'viewonline'		=> 1,
-			'lastpage'			=> $timestamp,
+			'wwh_lastpage'		=> $timestamp,
 		);
 		if ($data['user_id'] != ANONYMOUS)
 		{
 			// current user is logged in
 			$data['viewonline'] = $this->user->data['session_viewonline'];
 
-			$sql = 'SELECT id
+			$sql = 'SELECT wwh_id
 					FROM ' . $this->table_prefix . tables::SESSIONS . '
 					WHERE user_id = ' . (int) $this->user->data['user_id'];
 			$result = $this->db->sql_query($sql);
-			$session_id = (int) $this->db->sql_fetchfield('id');
+			$session_id = (int) $this->db->sql_fetchfield('wwh_id');
 			$this->db->sql_freeresult($result);
 			if ($session_id > 0)
 			{
 				// update session
 				$sql = 'UPDATE ' . $this->table_prefix . tables::SESSIONS  . '
 					SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-					WHERE id  = ' . $session_id;
+					WHERE wwh_id  = ' . $session_id;
 				$this->db->sql_query($sql);
 			}
 			else
 			{
 				// user is not yet registered as logged in user
 				// check if he has a session as anonymous
-				$sql = 'SELECT id
-						FROM ' . $this->table_prefix . tables::SESSIONS . '
-						WHERE (user_ip = \'' . $this->db->sql_escape($this->user->ip) . '\'
-								AND user_id = ' . ANONYMOUS . ')';
+				$sql = 'SELECT wwh_id
+						FROM ' . $this->table_prefix . tables::SESSIONS . "
+						WHERE (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
+								AND user_id = " . ANONYMOUS . ')';
 				$result = $this->db->sql_query($sql);
-				$session_id = (int) $this->db->sql_fetchfield('id');
+				$session_id = (int) $this->db->sql_fetchfield('wwh_id');
 				$this->db->sql_freeresult($result);
 				if ($session_id > 0)
 				{
 					// delete it
 					$sql = 'DELETE FROM ' . $this->table_prefix . tables::SESSIONS . '
-						WHERE id = ' . $session_id;
+						WHERE wwh_id = ' . $session_id;
 					$this->db->sql_query($sql);
 				}
 
@@ -109,20 +111,20 @@ class sessions_manager
 		else
 		{
 			// current user is anonymous
-			$sql = 'SELECT id
+			$sql = 'SELECT wwh_id
 				FROM ' . $this->table_prefix . tables::SESSIONS . "
 				WHERE (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
 						AND user_id = " . ANONYMOUS . ')';
 			$result = $this->db->sql_query_limit($sql, 1);
 
-			$session_id = (int) $this->db->sql_fetchfield('id');
+			$session_id = (int) $this->db->sql_fetchfield('wwh_id');
 			$this->db->sql_freeresult($result);
 			if ($session_id > 0)
 			{
 				// update session
 				$sql = 'UPDATE ' . $this->table_prefix . tables::SESSIONS  . '
 					SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-					WHERE id  = ' . $session_id;
+					WHERE wwh_id  = ' . $session_id;
 				$this->db->sql_query($sql);
 			}
 			else
@@ -142,7 +144,7 @@ class sessions_manager
 		if ($this->config[prefixes::CONFIG . '_last_clean'] != $timestamp)
 		{
 			$sql = 'DELETE FROM ' . $this->table_prefix . tables::SESSIONS . '
-				WHERE lastpage < ' . $timestamp;
+				WHERE wwh_lastpage < ' . $timestamp;
 			$this->db->sql_query($sql);
 
 			$this->config->set(prefixes::CONFIG . '_last_clean', $timestamp);
@@ -160,7 +162,7 @@ class sessions_manager
 	 */
 	public function obtain_data($timestamp, $cachetime)
 	{
-		if (0 == $cachetime || ($activity = $this->cache->get('_robertheim_activitystats')) === false)
+		if (0 == $cachetime || ($activity = $this->cache->get('_leinad4mind_specialactivitystats')) === false)
 		{
 			$activity = array();
 
@@ -210,7 +212,7 @@ class sessions_manager
 				case self::SORT_LASTPAGE_ASC:
 				case self::SORT_LASTPAGE_DESC:
 				default:
-					$sql_order_by = 'lastpage';
+					$sql_order_by = 'wwh_lastpage';
 				break;
 			}
 			$sql_ordering = (($this->config[prefixes::CONFIG . '_sort_by'] % 2) == self::SORT_ASC) ? 'ASC' : 'DESC';
@@ -226,9 +228,9 @@ class sessions_manager
 			// this array is used to prevent counting users (or bots etc) twice (while ANONYMOUS is counted several times)
 			$ids_user = array();
 
-			$sql = 'SELECT user_id, username, username_clean, user_colour, user_type, viewonline, lastpage, user_ip
+			$sql = 'SELECT user_id, username, username_clean, user_colour, user_type, viewonline, wwh_lastpage, user_ip
 				FROM  ' . $this->table_prefix . tables::SESSIONS . "
-				WHERE lastpage >= " . ((int) $timestamp) . "
+				WHERE wwh_lastpage >= " . ((int) $timestamp) . "
 				ORDER BY $sql_order_by $sql_ordering";
 			$result = $this->db->sql_query($sql);
 
@@ -299,7 +301,7 @@ class sessions_manager
 
 			if ($cachetime > 0)
 			{
-				$this->cache->put('_robertheim_activitystats', $activity, $cachetime);
+				$this->cache->put('_leinad4mind_specialactivitystats', $activity, $cachetime);
 			}
 		}
 
@@ -331,8 +333,8 @@ class sessions_manager
 	}
 
 	/**
-	* Checks if a new record is reached and if so stores the new record.
-	*/
+	 * Checks if a new record is reached and if so stores the new record.
+	 */
 	public function check_record()
 	{
 		$where = '';
@@ -346,11 +348,11 @@ class sessions_manager
 			// sense to calculate it in another timezone than it is displayed.
 
 			// fetch count of users that have been online today (board timezone)
-			// where lastpage >= midnight;
+			// where wwh_lastpage >= midnight;
 			$now = new \phpbb\datetime($this->user, 'now', $this->get_board_timezone());
 			$midnight = clone $now;
 			$midnight->setTime(0,0,0);
-			$where = ' WHERE lastpage >= ' . $midnight->getTimestamp();
+			$where = ' WHERE wwh_lastpage >= ' . $midnight->getTimestamp();
 		}
 		$sql = 'SELECT DISTINCT COUNT(user_id) AS count_total
 			FROM  ' . $this->table_prefix . tables::SESSIONS

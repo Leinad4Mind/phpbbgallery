@@ -1,17 +1,18 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-* Translated by Basil Taha Alhitary - www.alhitary.net
-*/
-
 
 /**
-* DO NOT CHANGE
-*/
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @translation (c) 2015 Basil Taha Alhitary
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +39,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_ACTIVITY_STATS_TITLE'			=> 'إحصائيات اليوم',
-	'ACP_ACTIVITY_STATS_SETTINGS'		=> 'الإعدادات',
-));
+	'ACP_SPECIAL_ACTIVITY_STATS_TITLE'			=> 'إحصائيات اليوم',
+	'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS'		=> 'الإعدادات',
+]);

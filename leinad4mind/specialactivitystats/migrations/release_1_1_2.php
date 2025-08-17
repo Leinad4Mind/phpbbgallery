@@ -1,19 +1,21 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
-
-namespace robertheim\activitystats\migrations;
 
 /**
-* @ignore
-*/
-use robertheim\activitystats\modes;
-use robertheim\activitystats\prefixes;
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace leinad4mind\specialactivitystats\migrations;
+
+/**
+ * @ignore
+ */
+use leinad4mind\specialactivitystats\modes;
+use leinad4mind\specialactivitystats\prefixes;
 
 class release_1_1_2 extends \phpbb\db\migration\migration
 {
@@ -27,7 +29,7 @@ class release_1_1_2 extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\robertheim\activitystats\migrations\release_1_1_0',
+			'\leinad4mind\specialactivitystats\migrations\release_1_1_0',
 		);
 	}
 

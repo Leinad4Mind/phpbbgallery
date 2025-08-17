@@ -1,13 +1,18 @@
 <?php
-/**
-*
-* @package phpBB Extension - Activity Stats
-* @copyright (c) 2014 Robet Heim
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-* Translated by Basil Taha Alhitary - www.alhitary.net
-*/
 
+/**
+ *
+ * Special Activity Stats. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @translation (c) 2015 Basil Taha Alhitary
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -15,72 +20,88 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-// for the normal sites
-	'ACTIVITY_STATS'					=> 'إحصائيات اليوم',
-	'ACTIVITY_STATS_LATEST1'			=> 'في',
-	'ACTIVITY_STATS_LATEST2'			=> '',//used for parts like o'clock in the timedisplay (last at vw:xy "o'clock")
+// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
 
-	'ACTIVITY_STATS_NEW_TOPICS'			=> 'المواضيع الجديدة <strong>%d</strong>',
-	'ACTIVITY_STATS_NEW_POSTS'			=> 'المشاركات الجديدة <strong>%d</strong>',
-	'ACTIVITY_STATS_NEW_USERS'			=> 'الأعضاء الجُدد <strong>%d</strong>',
+$lang = array_merge($lang, [
+	// for the normal sites
+	'SPECIAL_ACTIVITY_STATS'					=> 'إحصائيات اليوم',
+	'SPECIAL_ACTIVITY_STATS_LATEST1'			=> 'في',
+	'SPECIAL_ACTIVITY_STATS_LATEST2'			=> '',//used for parts like o'clock in the timedisplay (last at vw:xy "o'clock")
 
-	'ACTIVITY_STATS_TOTAL'				=> array(
+	'SPECIAL_ACTIVITY_STATS_NEW_TOPICS'			=> 'المواضيع الجديدة <strong>%d</strong>',
+	'SPECIAL_ACTIVITY_STATS_NEW_POSTS'			=> 'المشاركات الجديدة <strong>%d</strong>',
+	'SPECIAL_ACTIVITY_STATS_NEW_USERS'			=> 'الأعضاء الجُدد <strong>%d</strong>',
+
+	'SPECIAL_ACTIVITY_STATS_TOTAL'				=> array(
 		0		=> 'إجمالي الأعضاء المتصلين كان <strong>0</strong> عضو :: ',
 		1		=> 'إجمالي الأعضاء المتصلين كان <strong>%d</strong> عضو :: ',
 		2		=> 'إجمالي الأعضاء المتصلين كان <strong>%d</strong> أعضاء :: ',
 	),
-	'ACTIVITY_STATS_REG_USERS'			=> array(
+	'SPECIAL_ACTIVITY_STATS_REG_USERS'			=> array(
 		0		=> '0 مسجلين',
 		1		=> '%d مسجل',
 		2		=> '%d مسجلين',
 	),
-	'ACTIVITY_STATS_HIDDEN'				=> array(
+	'SPECIAL_ACTIVITY_STATS_HIDDEN'				=> array(
 		0		=> '0 مخفي',
 		1		=> '%d مخفي',
 		2		=> '%d مخفيين',
 	),
-	'ACTIVITY_STATS_BOTS'				=> array(
+	'SPECIAL_ACTIVITY_STATS_BOTS'				=> array(
 		0		=> '0 محرك بحث',
 		1		=> '%d محرك بحث',
 		2		=> '%d محركات بحث',
 	),
-	'ACTIVITY_STATS_GUESTS'				=> array(
+	'SPECIAL_ACTIVITY_STATS_GUESTS'				=> array(
 		0		=> '0 زائر',
 		1		=> '%d زائر',
 		2		=> '%d زائرين',
 	),
 
-	'ACTIVITY_STATS_WORD'				=> ' و',
-	'ACTIVITY_STATS_EXP'				=> 'المعلومات التالية تعتمد على نشاط الأعضاء خلال الـ24 ساعة',
-	'ACTIVITY_STATS_EXP_TIME'			=> array(
+	'SPECIAL_ACTIVITY_STATS_WORD'				=> ' و',
+	'SPECIAL_ACTIVITY_STATS_EXP'				=> 'المعلومات التالية تعتمد على نشاط الأعضاء خلال الـ24 ساعة',
+	'SPECIAL_ACTIVITY_STATS_EXP_TIME'			=> array(
 		0		=> 'المعلومات التالية تعتمد على نشاط الأعضاء في هذه اللحظة.', // h=m=s=0
 		1		=> 'المعلومات التالية تعتمد على نشاط الأعضاء خلال الفترة الماضية ', // first non zero value is 1
 		2		=> 'المعلومات التالية تعتمد على نشاط الأعضاء خلال الفترة الماضية ', // first non zero value is >1
 	),
-	'ACTIVITY_STATS_DAYS'				=> array(
+	'SPECIAL_ACTIVITY_STATS_DAYS'				=> array(
 		0		=> '',
 		1		=> '%%s %1$s يوم',
 		2		=> '%%s %1$s أيام',
 	),
-	'ACTIVITY_STATS_HOURS'				=> array(
+	'SPECIAL_ACTIVITY_STATS_HOURS'				=> array(
 		0		=> '',
 		1		=> '%%s %1$s ساعة',
 		2		=> '%%s %1$s ساعات',
 	),
-	'ACTIVITY_STATS_MINUTES'			=> array(
+	'SPECIAL_ACTIVITY_STATS_MINUTES'			=> array(
 		0		=> '',
 		1		=> '%%s %1$s دقيقة',
 		2		=> '%%s %1$s دقائق',
 	),
-	'ACTIVITY_STATS_SECONDS'			=> array(
+	'SPECIAL_ACTIVITY_STATS_SECONDS'			=> array(
 		0		=> '',
 		1		=> '%%s %1$s ثانية',
 		2		=> '%%s %1$s ثواني',
 	),
-	'ACTIVITY_STATS_RECORD_DAY'			=> 'أكبر عدد للأعضاء المتصلين كان <strong>%1$s</strong> في %2$s',
-	'ACTIVITY_STATS_RECORD_PERIOD'		=> 'أكبر عدد للأعضاء المتصلين كان <strong>%1$s</strong> بين %2$s و %3$s',
-));
+	'SPECIAL_ACTIVITY_STATS_RECORD_DAY'			=> 'أكبر عدد للأعضاء المتصلين كان <strong>%1$s</strong> في %2$s',
+	'SPECIAL_ACTIVITY_STATS_RECORD_PERIOD'		=> 'أكبر عدد للأعضاء المتصلين كان <strong>%1$s</strong> بين %2$s و %3$s',
+]);
