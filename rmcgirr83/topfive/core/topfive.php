@@ -23,37 +23,37 @@ use phpbb\user;
 
 class topfive
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\cache\driver\driver_interface */
+	/** @var cache */
 	protected $cache;
 
-	/** @var \phpbb\content_visibility */
+	/** @var content_visibility */
 	protected $content_visibility;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var db */
 	protected $db;
 
-	/** @var \phpbb\event\dispatcher_interface */
+	/** @var dispatcher */
 	protected $dispatcher;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var string phpBB root path */
+	/** @var string phpbb_root_path */
 	protected $phpbb_root_path;
 
-	/** @var string PHP extension */
+	/** @var string php_ext */
 	protected $php_ext;
 
 	public function __construct(
@@ -66,8 +66,8 @@ class topfive
 		language $language,
 		template $template,
 		user $user,
-		$phpbb_root_path,
-		$php_ext,
+		string $phpbb_root_path,
+		string $php_ext,
 		\senky\relativedates\event\listener $relativedates = null)
 	{
 		$this->auth = $auth;
@@ -85,7 +85,7 @@ class topfive
 	}
 
 	/**
-	* Display activity on the index page
+	* Display activity
 	*
 	* @param	string	$tpl_loopname	Name of the html file
 	* @return 	null

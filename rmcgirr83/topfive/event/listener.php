@@ -16,6 +16,7 @@ use rmcgirr83\topfive\core\topfive;
 use phpbb\config\config;
 use phpbb\language\language;
 use phpbb\template\template;
+use phpbb\user;
 use phpbb\controller\helper;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -25,44 +26,60 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
-	/* @var \rmcgirr83\topfive\core\topfive */
+	/* @var topfive */
 	protected $topfive;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\controller\helper */
+	/** @var user */
+	protected $user;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var string php_ext */
+	protected $php_ext;
+
+	/* @var array topfive_constants */
+	protected $topfive_constants;
 
 	public function __construct(
 		topfive $topfive,
 		config $config,
 		language $language,
 		template $template,
+		user $user,
 		helper $helper,
+		string $php_ext,
+		array $topfive_constants,
 		\phpbb\collapsiblecategories\operator\operator $operator = null)
 	{
 		$this->topfive = $topfive;
 		$this->config = $config;
 		$this->language = $language;
 		$this->template = $template;
+		$this->user = $user;
 		$this->helper = $helper;
+		$this->php_ext = $php_ext;
+		$this->topfive_constants = $topfive_constants;
 		$this->operator = $operator;
 	}
 
 	static public function getSubscribedEvents()
 	{
 
-		return array(
+		return [
 			'core.acp_extensions_run_action_after'	=> 'acp_extensions_run_action_after',
-			'core.index_modify_page_title'	=> 'main',
-		);
+			'core.index_modify_page_title'	=> 'index_page',
+			'core.page_header' => 'entire_forum',
+		];
 	}
 
 	/* Display additional metdate in extension details
@@ -86,9 +103,11 @@ class listener implements EventSubscriberInterface
 	* @param return null
 	* @access public
 	*/
-	public function main($event)
+	public function index_page($event)
 	{
-		if (!$this->config['top_five_active'])
+		$should_display = in_array((int) $this->config['top_five_location'], [$this->topfive_constants['top_of_index'], $this->topfive_constants['bottom_of_index']]) ? true : false;
+
+		if (!$this->config['top_five_active'] || !$should_display)
 		{
 			return;
 		}
@@ -109,8 +128,53 @@ class listener implements EventSubscriberInterface
 			]);
 		}
 		$this->template->assign_vars([
-			'S_TOPFIVE'	=>	$this->config['top_five_active'],
+			'S_TOPFIVE'	=>	true,
 			'S_TOPFIVE_LOCATION'	=> $this->config['top_five_location'],
+		]);
+	}
+
+	/* Display top five on every page
+	*
+	* @param $event			event object
+	* @param return null
+	* @access public
+	*/
+	public function entire_forum($event)
+	{
+		$should_display = (in_array((int) $this->config['top_five_location'], [$this->topfive_constants['top_of_entire_forum'], $this->topfive_constants['bottom_of_entire_forum']]) && !$this->is_non_content_page($this->user->page['page_name'])) ? true : false;
+
+		if (!$this->config['top_five_active'] || !$should_display)
+		{
+			return;
+		}
+
+		// add lang file
+		$this->language->add_lang('topfive', 'rmcgirr83/topfive');
+
+		$this->topfive->topposters();
+		$this->topfive->newusers();
+		$this->topfive->toptopics();
+
+		$this->template->assign_vars([
+			'S_TOPFIVE' => true,
+			'S_TOPFIVE_LOCATION'	=> $this->config['top_five_location']
+		]);
+	}
+
+	/**
+	 * Check if the given page name is designated as a non-content page.
+	 *
+	 * @param string $page_name
+	 * @return bool True or false
+	 */
+	private function is_non_content_page($page_name)
+	{
+		return in_array($page_name, [
+			'memberlist.' . $this->php_ext,
+			'posting.' . $this->php_ext,
+			'viewonline.' . $this->php_ext,
+			'ucp.' . $this->php_ext,
+			'mcp.' . $this->php_ext,
 		]);
 	}
 }

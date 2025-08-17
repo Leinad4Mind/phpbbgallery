@@ -1,4 +1,19 @@
+imports:
+    - { resource: topfive_constants.yml }
+
 services:
+    rmcgirr83.topfive.admin.controller:
+        class: rmcgirr83\topfive\controller\admin_controller
+        arguments:
+            - '@cache'
+            - '@config'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%topfive_constants%'
+
     rmcgirr83.topfive.topfive:
         class: rmcgirr83\topfive\core\topfive
         arguments:
@@ -22,7 +37,10 @@ services:
             - '@config'
             - '@language'
             - '@template'
+            - '@user'
             - '@controller.helper'
+            - '%core.php_ext%'
+            - '%topfive_constants%'
             - '@?phpbb.collapsiblecategories.operator'
         tags:
             - { name: event.listener }
