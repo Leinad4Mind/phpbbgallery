@@ -90,24 +90,24 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 * @param object $event The event object
 	 */
 	public function popup_pm($event)
 	{
 		if (
-				!empty($this->user->data['is_registered']) 
+				!empty($this->user->data['is_registered'])
 				&& ($this->user->data['user_new_privmsg'] == 1)
 				&& (
-						!$this->user->data['user_last_privmsg'] 
+						!$this->user->data['user_last_privmsg']
 						|| $this->user->data['user_last_privmsg'] > $this->user->data['session_last_visit']
 					)
 			)
 		{
 			$pm_user_id           = 'u_' . $this->user->data['user_id'];
-			$pm_user_last_privmsg = $this->user->data['user_last_privmsg'];	
-				
+			$pm_user_last_privmsg = $this->user->data['user_last_privmsg'];
+
 			$sql = "SELECT p.msg_id, p.author_id, p.message_subject, p.message_time, u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, pt.folder_id
 				FROM " . PRIVMSGS_TABLE . " AS p
 				
@@ -137,7 +137,7 @@ class listener implements EventSubscriberInterface
 				{
 					$row['folder_id'] = PRIVMSGS_INBOX;
 				}
-				
+
 				// Assign specific vars
 				$this->template->assign_vars(array(
 					'POPUPPM_INFO'			=> true,
@@ -179,10 +179,10 @@ class listener implements EventSubscriberInterface
 		// Output the data vars to the template
 		$this->user->add_lang_ext('tatiana5/popuppm', 'info_acp_popuppm');
 		$this->template->assign_vars(array(
-			'POPUPPM_ENABLE_POPUP'		=> ($this->config['popuppm_enable_popup']) ? true : false,
+			'POPUPPM_UCP_ENABLE_POPUP'		=> ($this->config['popuppm_enable_popup']) ? true : false,
 			'S_PM_ENABLE_POPUP'         => $data['popuppm_user_popup'],
-			
-			'POPUPPM_ENABLE_BLINK'		=> ($this->config['popuppm_enable_blink']) ? true : false,
+
+			'POPUPPM_UCP_ENABLE_BLINK'		=> ($this->config['popuppm_enable_blink']) ? true : false,
 			'S_PM_ENABLE_BLINK'         => $data['popuppm_user_blink'],
 		));
 
