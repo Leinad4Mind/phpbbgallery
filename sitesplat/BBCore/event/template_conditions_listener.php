@@ -32,46 +32,52 @@ class template_conditions_listener implements \Symfony\Component\EventDispatcher
 		);
 	}
 
+// you can also do things like:	
+// {% if not BB_LOAD_IN_INDEX %}
+// {% if not BB_LOAD_IN_MCP and not BB_LOAD_IN_UCP %}
+
+// <!-- IF BB_LOAD_IN_INDEX -->
 	public function in_index()
 	{
 		$this->template->assign_var('BB_LOAD_IN_INDEX', true);
 	}
 
+// <!-- IF BB_LOAD_IN_MCP -->
 	public function in_mcp()
 	{
 		$this->template->assign_var('BB_LOAD_IN_MCP', true);
 	}
-
+// <!-- IF BB_LOAD_IN_MEMBERLIST -->
 	public function in_memberlist()
 	{
 		$this->template->assign_var('BB_LOAD_IN_MEMBERLIST', true);
 	}
-
+// <!-- IF BB_LOAD_IN_POSTING -->
 	public function in_posting()
 	{
 		$this->template->assign_var('BB_LOAD_IN_POSTING', true);
 	}
-
+// <!-- IF BB_LOAD_IN_SEARCH -->
 	public function in_search()
 	{
 		$this->template->assign_var('BB_LOAD_IN_SEARCH', true);
 	}
-
+// <!-- IF BB_LOAD_IN_UCP -->
 	public function in_ucp()
 	{
 		$this->template->assign_var('BB_LOAD_IN_UCP', true);
 	}
-
+// <!-- IF BB_LOAD_IN_VIEWFORUM -->
 	public function in_viewforum()
 	{
 		$this->template->assign_var('BB_LOAD_IN_VIEWFORUM', true);
 	}
-
+// <!-- IF BB_LOAD_IN_VIEWONLINE -->
 	public function in_viewonline()
 	{
 		$this->template->assign_var('BB_LOAD_IN_VIEWONLINE', true);
 	}
-
+// <!-- IF BB_LOAD_IN_VIEWTOPIC -->
 	public function in_viewtopic()
 	{
 		$this->template->assign_var('BB_LOAD_IN_VIEWTOPIC', true);

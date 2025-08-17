@@ -142,9 +142,13 @@ class admin_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function version_check($event)
+	public function version_check($event, $eventName)
 	{
-		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+		// this is incompatible with phpBB 3.3!!!
+//		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+
+		// this is compatible...
+		$event_number = array_search($eventName, array_keys($this->getSubscribedEvents()));
 
 		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
 		$result = $this->db->sql_query($sql);
