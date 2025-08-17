@@ -17,48 +17,48 @@ class popuppm_0_0_1 extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v310\dev');
+		return ['\phpbb\db\migration\data\v310\dev'];
 	}
 
 	public function update_schema()
 	{
-		return array(
-			'add_columns' => array(
-				$this->table_prefix . 'users' => array(
-					'popuppm_user_popup'    => array('BOOL', 1),
-					'popuppm_user_blink'    => array('BOOL', 1),
-				),
-			),
-		);
+		return [
+			'add_columns' => [
+				$this->table_prefix . 'users' => [
+					'popuppm_user_popup'    => ['BOOL', 1],
+					'popuppm_user_blink'    => ['BOOL', 1],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return array(
-			'drop_columns'    => array(
-				$this->table_prefix . 'users' => array('popuppm_user_popup'),
-				$this->table_prefix . 'users' => array('popuppm_user_blink'),
-			),
-		);
+		return [
+			'drop_columns'    => [
+				$this->table_prefix . 'users' => ['popuppm_user_popup'],
+				$this->table_prefix . 'users' => ['popuppm_user_blink'],
+			],
+		];
 	}
 
 	public function update_data()
 	{
-		return array(
+		return [
 			// Current version
-			array('config.add', array('popuppm_version', '0.0.1')),
+			['config.add', ['popuppm_version', '0.0.1']],
 
-			array('config.add', array('popuppm_enable_popup', 1)),
-			array('config.add', array('popuppm_enable_blink', 1)),
+			['config.add', ['popuppm_enable_popup', 1]],
+			['config.add', ['popuppm_enable_blink', 1]],
 
 			// Add ACP modules
-			array('module.add', array('acp', 'ACP_CAT_DOT_MODS', 'ACP_POPUPPM')),
-			array('module.add', array('acp', 'ACP_POPUPPM', array(
+			['module.add', ['acp', 'ACP_CAT_DOT_MODS', 'ACP_POPUPPM']],
+			['module.add', ['acp', 'ACP_POPUPPM', [
 					'module_basename'	=> '\tatiana5\popuppm\acp\popuppm_module',
 					'module_langname'	=> 'ACP_POPUPPM_EXPLAIN',
 					'module_mode'		=> 'config_popuppm',
 					'module_auth'		=> 'ext_tatiana5/popuppm && acl_a_board',
-			))),
-		);
+			]]],
+		];
 	}
 }

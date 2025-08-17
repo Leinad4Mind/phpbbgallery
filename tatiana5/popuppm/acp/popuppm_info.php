@@ -13,13 +13,13 @@ class popuppm_info
 {
 	public function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\tatiana5\popuppm\acp\popuppm_module',
 			'title'		=> 'ACP_POPUPPM',
 			'version'	=> '0.0.1',
-			'modes'		=> array(
-				'config_popuppm'		=> array('title' => 'ACP_POPUPPM_EXPLAIN', 'auth' => 'ext_tatiana5/popuppm  && acl_a_board', 'cat' => array('ACP_POPUPPM_EXPLAIN')),
-			),
-		);
+			'modes'		=> [
+				'config_popuppm'		=> ['title' => 'ACP_POPUPPM_EXPLAIN', 'auth' => 'ext_tatiana5/popuppm  && acl_a_board', 'cat' => ['ACP_POPUPPM_EXPLAIN']],
+			],
+		];
 	}
 }

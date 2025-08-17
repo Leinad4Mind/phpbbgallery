@@ -17,14 +17,14 @@ class popuppm_0_0_2 extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\tatiana5\popuppm\migrations\popuppm_0_0_1');
+		return ['\tatiana5\popuppm\migrations\popuppm_0_0_1'];
 	}
 
 	public function update_data()
 	{
-		return array(
+		return [
 			// Current version
-			array('config.update', array('popuppm_version', '0.0.2')),
-		);
+			['config.update', ['popuppm_version', '0.0.2']],
+		];
 	}
 }

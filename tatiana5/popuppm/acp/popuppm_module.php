@@ -29,15 +29,15 @@ class popuppm_module extends acp_module_helper
 	 */
 	protected function generate_display_vars()
 	{
-		$this->display_vars = array(
+		$this->display_vars = [
 			'title' => 'ACP_POPUPPM_TITLE',
-			'vars'  => array(
+			'vars'  => [
 				'legend1'                    => '',
-				'popuppm_enable_popup'       => array('lang' => 'ACP_POPUPPM_ENABLE_POPUP', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false),
-				'popuppm_enable_blink'       => array('lang' => 'ACP_POPUPPM_ENABLE_BLINK', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false),
+				'popuppm_enable_popup'       => ['lang' => 'ACP_POPUPPM_ENABLE_POPUP', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false],
+				'popuppm_enable_blink'       => ['lang' => 'ACP_POPUPPM_ENABLE_BLINK', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false],
 				//
 				'legend2'                    => 'ACP_SUBMIT_CHANGES',
-			),
-		);
+			],
+		];
 	}
 }

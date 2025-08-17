@@ -17,16 +17,16 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'POPUPPM_YOU_NEW_PM_BLINK'		=> array(
+$lang = array_merge($lang, [
+	'POPUPPM_YOU_NEW_PM_BLINK'		=> [
 		1 => '<<<! Вам пришло новое личное сообщение !>>>',
 		2 => '<<<! Вам пришло %s новых личных сообщений !>>>',
-	),
-	'POPUPPM_YOU_NEW_PM'			=> array(
+	],
+	'POPUPPM_YOU_NEW_PM'			=> [
 		1 => 'Вам пришло новое личное сообщение',
 		2 => 'Вам пришло %s новых личных сообщений',
-	),
-));
+	],
+]);

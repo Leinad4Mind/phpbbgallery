@@ -66,12 +66,12 @@ class listener implements EventSubscriberInterface
 	*/
 	public static function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'					=> 'load_language_on_setup',
 			'core.page_header'					=> 'popup_pm',
 			'core.ucp_prefs_view_data'          => 'ucp_prefs_get_data',
 			'core.ucp_prefs_view_update_data'   => 'ucp_prefs_set_data',
-		);
+		];
 	}
 
 	/**
@@ -82,10 +82,10 @@ class listener implements EventSubscriberInterface
 	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'tatiana5/popuppm',
 			'lang_set' => 'popuppm',
-		);
+		];
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
@@ -124,7 +124,7 @@ class listener implements EventSubscriberInterface
 			$result = $this->db->sql_query($sql);
 
 			$row = $this->db->sql_fetchrow($result);
-			if ($row['msg_id'] != '')
+			if (is_array($row) && !empty($row['msg_id']))
 			{
 				if ($row['user_avatar'])
 				{
@@ -139,26 +139,26 @@ class listener implements EventSubscriberInterface
 				}
 
 				// Assign specific vars
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'POPUPPM_INFO'			=> true,
 					'POPUPPM_SENDER'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 					'POPUPPM_SUBJECT'		=> $row['message_subject'],
 					'POPUPPM_SUBJECT_URL'	=> append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", "i=pm&amp;mode=view&amp;f=" . $row['folder_id'] . "&amp;p=" . $row['msg_id']),
 					'POPUPPM_DATE'			=> $this->user->format_date($row['message_time'], $format = 'd.m.Y, H:i'),
 					'POPUPPM_AVATAR'		=> ($row['user_avatar']) ? phpbb_get_user_avatar($row) : '',
-					)
+					]
 				);
 			}
 			$this->db->sql_freeresult($result);
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'POPUPPM_ENABLE_POPUP'		=> ($this->config['popuppm_enable_popup'] && $this->user->data['popuppm_user_popup']) ? true : false,
 			'POPUPPM_YOU_NEW_PM'		=> $this->user->lang('POPUPPM_YOU_NEW_PM', (int) $this->user->data['user_new_privmsg']),
 
 			'POPUPPM_ENABLE_BLINK'		=> ($this->config['popuppm_enable_blink'] && $this->user->data['popuppm_user_blink']) ? true : false,
 			'POPUPPM_YOU_NEW_PM_BLINK'	=> $this->user->lang('POPUPPM_YOU_NEW_PM_BLINK', (int) $this->user->data['user_unread_privmsg']),
-		));
+		]);
 	}
 
 	/**
@@ -171,20 +171,20 @@ class listener implements EventSubscriberInterface
 		$data = $event['data'];
 
 		// Request the user option vars and add them to the data array
-		$data = array_merge($data, array(
+		$data = array_merge($data, [
 			'popuppm_user_popup'    => $this->request->variable('popuppm_user_popup', (int) $this->user->data['popuppm_user_popup']),
 			'popuppm_user_blink'    => $this->request->variable('popuppm_user_blink', (int) $this->user->data['popuppm_user_blink']),
-		));
+		]);
 
 		// Output the data vars to the template
 		$this->user->add_lang_ext('tatiana5/popuppm', 'info_acp_popuppm');
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'POPUPPM_UCP_ENABLE_POPUP'		=> ($this->config['popuppm_enable_popup']) ? true : false,
 			'S_PM_ENABLE_POPUP'         => $data['popuppm_user_popup'],
 
 			'POPUPPM_UCP_ENABLE_BLINK'		=> ($this->config['popuppm_enable_blink']) ? true : false,
 			'S_PM_ENABLE_BLINK'         => $data['popuppm_user_blink'],
-		));
+		]);
 
 		$event['data'] = $data;
 	}
@@ -196,9 +196,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function ucp_prefs_set_data($event)
 	{
-		$event['sql_ary'] = array_merge($event['sql_ary'], array(
+		$event['sql_ary'] = array_merge($event['sql_ary'], [
 			'popuppm_user_popup'     => $event['data']['popuppm_user_popup'],
 			'popuppm_user_blink'     => $event['data']['popuppm_user_blink'],
-		));
+		]);
 	}
 }
