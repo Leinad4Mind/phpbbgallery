@@ -1022,20 +1022,20 @@ class manage
 		}
 
 		// Now do the dirty job
-		$sql = 'UPDATE ' . $this->albums_table . " 
+		$sql = 'UPDATE ' . $this->albums_table . ' 
 			SET left_id = left_id + CASE
-				WHEN left_id BETWEEN {$move_up_left} AND {$move_up_right} THEN -{$diff_up}
-				ELSE {$diff_down}
+				WHEN left_id BETWEEN ' . (int) $move_up_left . ' AND ' . (int) $move_up_right . ' THEN -' .(int) $diff_up . '
+				ELSE ' .(int) $diff_down . '
 			END,
 			right_id = right_id + CASE
-				WHEN right_id BETWEEN {$move_up_left} AND {$move_up_right} THEN -{$diff_up}
-				ELSE {$diff_down}
+				WHEN right_id BETWEEN ' . (int) $move_up_left . ' AND ' . (int) $move_up_right . ' THEN -' . (int) $diff_up . '
+				ELSE ' . (int) $diff_down . '
 			END,
-			album_parents = ''
+			album_parents = \'\'
 			WHERE
-				left_id BETWEEN {$left_id} AND {$right_id}
-				AND right_id BETWEEN {$left_id} AND {$right_id}
-				AND album_user_id = " . (int) $this->user_id;
+				left_id BETWEEN ' . (int) $left_id . ' AND ' . (int) $right_id . '
+				AND right_id BETWEEN ' . (int) $left_id . ' AND ' . (int) $right_id . '
+				AND album_user_id = ' . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
 		return $target['album_name'];
