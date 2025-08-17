@@ -1,0 +1,9 @@
+<dl>
+	<dt>
+		<label for="forum_subject_check">{{ lang('SUBJECT_CHECK_FORUM') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SUBJECT_CHECK_FORUM_EXPLAIN') }}</span>
+	</dt>
+	<dd>
+		<label><input type="radio" class="radio" name="forum_subject_check" value="1"<!-- IF S_FORUM_SUBJECT_CHECK --> id="forum_subject_check" checked="checked"<!-- ENDIF --> /> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="forum_subject_check" value="0"<!-- IF not S_FORUM_SUBJECT_CHECK --> id="forum_subject_check" checked="checked"<!-- ENDIF --> /> {{ lang('NO') }}</label>
+	</dd>
+</dl>

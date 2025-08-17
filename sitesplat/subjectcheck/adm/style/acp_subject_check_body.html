@@ -1,0 +1,35 @@
+{% include('overall_header.html') %}
+
+<h1>{{ lang('SETTINGS') }}</h1>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_SUBJECT_CHECK_TITLE') }}</legend>
+
+		{% for option in loops.options %}
+			<dl>
+				<dt><label for="{{ option.NAME }}">{{ lang(option.NAME|upper) }}</label><br /><span>{{ lang(option.NAME|upper ~ '_EXPLAIN') }}</span></dt>
+				<dd>
+					{% if option.NAME in ['subject_check_limit', 'subject_check_active', 'subject_check_count'] %}
+						<input type="number" name="{{ option.NAME }}" id="{{ option.NAME }}" value="{{ option.VALUE }}" class="inputbox" />{% if option.NAME == 'subject_check_active' %} {{ lang('DAYS') }}{% endif %}
+					{% else %}
+						<input type="radio" class="radio" name="{{ option.NAME }}" value="1" {% if option.VALUE %}checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+						<input type="radio" class="radio" name="{{ option.NAME }}" value="0" {% if not option.VALUE %}checked="checked"{% endif %} /> {{ lang('NO') }}
+						{% if option.NAME == 'subject_check_bypass' %}
+							 &nbsp;<input type="radio" class="radio" name="{{ option.NAME }}" value="2" {% if option.VALUE eq 2 %}checked="checked"{% endif %} /> {{ lang('SUBJECT_CHECK_BYPASS_EXACT') }}
+						{% endif %}
+					{% endif %}
+				</dd>
+			</dl>
+		{% endfor %}
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		</p>
+
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include('overall_footer.html') %}

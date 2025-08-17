@@ -1,0 +1,3 @@
+sitesplat_subjectcheck_controller:
+    path: /subjectcheck/{forum_id}
+    defaults: { _controller: sitesplat.subjectcheck.controller:handle, forum_id: 0 }
