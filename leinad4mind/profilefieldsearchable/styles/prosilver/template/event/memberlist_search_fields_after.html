@@ -1,0 +1,20 @@
+{% for text_field in text_fields %}
+<dl>
+	<dt><label for="{{ text_field.CPF_NAME }}">{{ text_field.CPF_LANG_NAME ~ lang('COLON') }}</label></dt>
+	<dd><input type="text" name="{{ text_field.CPF_NAME }}" id="{{ text_field.CPF_NAME }}" value="" class="inputbox" /></dd>
+</dl>
+{% endfor %}
+
+{% for option_field in option_fields %}
+<dl>
+	<dt><label for="{{ option_field.FIELD_ID }}">{{ option_field.LANG_NAME ~ lang('COLON') }}</label></dt>
+	<dd>
+		<select id="{{ option_field.FIELD_ID }}" name="{{ option_field.FIELD_ID}}">
+			<option selected="selected" value="x">&nbsp;</option>
+			{% for lang_value in option_field.lang_values %}
+				<option value="{{ lang_value.OPTION_ID }}">{{ lang_value.LANG_VALUE }}</option>
+			{% endfor %}
+		</select>
+	</dd>
+</dl>
+{% endfor %}
