@@ -1,0 +1,25 @@
+imports:
+    - { resource: tables.yml }
+services:
+    bruninoit.wvtt.controller:
+        class: bruninoit\wvtt\controller\main
+        arguments:
+            - @template
+            - @dbal.conn
+            - %bruninoit.wvtt.tables.wvtt%
+            - @auth
+            - @user
+            - @controller.helper
+    bruninoit.wvtt.listener:
+        class: bruninoit\wvtt\event\main_listener
+        arguments:
+            - @controller.helper
+            - @template
+            - @dbal.conn
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+            - %bruninoit.wvtt.tables.wvtt%
+            - @auth
+        tags:
+            - { name: event.listener }

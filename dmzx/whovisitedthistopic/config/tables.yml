@@ -1,0 +1,2 @@
+parameters:
+    bruninoit.wvtt.tables.wvtt: %core.table_prefix%wvtt
