@@ -1,0 +1,34 @@
+{
+    "name": "vse/topicimagepreview",
+    "type": "phpbb-extension",
+    "description": "Display thumbnail previews of images in a topic when hovering the mouse over the topic.",
+    "homepage": "https://github.com/VSEphpbb/TopicImagePreview",
+    "version": "1.0.0-RC1",
+	"license": "GPL-2.0-only",
+    "authors": [
+        {
+			"name": "Matt Friedman",
+			"homepage": "http://vsephpbb.github.io",
+			"role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+		"composer/installers": "~1.0",
+		"ext-dom": "*"
+	},
+	"require-dev": {
+		"phing/phing": "2.4.*"
+	},
+    "extra": {
+        "display-name": "Topic Image Preview",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.1"
+		},
+		"version-check": {
+			"host": "vsephpbb.github.io",
+			"directory": "/version",
+			"filename": "TopicImagePreview.json"
+        }
+    }
+}
