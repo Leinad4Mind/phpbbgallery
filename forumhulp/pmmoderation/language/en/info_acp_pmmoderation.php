@@ -21,17 +21,19 @@ $lang = array_merge($lang, array(
 	'ACP_PM_MODERATION'			=> 'PM Moderation',
 	'AUTHOR_IP'				=> 'Author IP',
 	'DATE'					=> 'Date',
+	'LAST_ONLINE'			=> 'Last date online:',
 	'DELETE_PMS'			=> 'Delete PM’s',
 	'NO_PM_SELECTED'		=> 'No PM’s selected',
 	'NO_PM_DATA'			=> 'NO PM’s data',
 	'PM_BOX'				=> 'PM box',
 	'PM_MODERATION_READ'			=> 'Private Message Moderation',
-	'PM_MODERATION_READ_EXPLAIN'	=> 'Here is a list of all private messages from your board.',
+	'PM_MODERATION_READ_EXPLAIN'	=> 'Here is a list of all private messages in your board.',
+	'READ_MESSAGE'			=> 'Click to read this message',
 	'TO'					=> 'To',
 	'TOTAL_USERS'			=> 'Total users',
 	'PM_COUNT'				=> 'PM count',
 
-	'PM_HOLDBOX'			=> 'Held',	
+	'PM_HOLDBOX'			=> 'Held',
 	'PM_INBOX'				=> 'Inbox',
 	'PM_NOBOX'				=> 'No box',
 	'PM_OUTBOX'				=> 'Outbox',
@@ -42,11 +44,11 @@ $lang = array_merge($lang, array(
 	'SORT_TO'				=> 'To',
 	'SORT_BCC'				=> 'BCC',
 	'SORT_PM_BOX'			=> 'PM box',
-	
+
 	'LOG_PM_MODERATION'			=> '<strong>PM’s deleted by PM Moderation</strong><br />',
 
 	'FH_HELPER_NOTICE'		=> 'Forumhulp helper application does not exist!<br />Download <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> and copy the helper folder to your forumhulp extension folder.',
-	'PMMODERATION_NOTICE'	=> '<div class="phpinfo"><p class="entry">This extension resides in %1$s » %2$s » %3$s.</p></div>',
+	'PMMODERATION_NOTICE'			=> '<div class="phpinfo"><p class="entry">This extension resides in %1$s » %2$s » %3$s.</p></div>',
 ));
 
 // Description of extension
