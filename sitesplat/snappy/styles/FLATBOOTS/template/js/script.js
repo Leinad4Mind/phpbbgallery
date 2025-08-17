@@ -41,7 +41,14 @@ head.ready(function () {
 	});
 	
 	$('#qr_postform').submit(function() {
-    localStorage.clear();
+        localStorage.clear();
+    });
+	
+	//lets clear empty local storage and textarea if needed
+	$(".btn-clr").click(function(e) {
+        e.preventDefault();
+        $(".ccount").val('');
+		localStorage.clear();
     });
 	
 //	$('.panel-qr > .qr-textarea > textarea').on('keyup', function(event) {

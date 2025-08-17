@@ -1,0 +1,36 @@
+/*icon moon fix*/
+.icon-moon-fx {
+    display: inline-block;
+    vertical-align: middle;
+	margin-bottom: 2px;
+}
+/*icon moon fix*/
+
+.btn-snappy {
+	-webkit-transition: opacity 0.2s ease-in-out 0s;
+	        transition: opacity 0.2s ease-in-out 0s;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+
+article:hover .btn-snappy {
+    display: inline-block;
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+.counter_right {
+    margin-right: 30px !important;
+}
+
+.btn-clr {
+     border: 0 none;
+    margin-right: 15px;
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+}
+.counter {
+    color: #999;
+}
+/*snappy reply */
