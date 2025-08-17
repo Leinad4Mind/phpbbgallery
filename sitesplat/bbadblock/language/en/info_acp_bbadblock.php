@@ -30,7 +30,7 @@ $lang = array_merge($lang, array(
     
 	'BBADBLOCK_NOTICE'						=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
 	'BBADBLOCK_CLASSNAME'					=> 'Classname',
-	'BBADBLOCK_CLASSNAME_EXPLAIN'			=> 'Name of the div class where your ads reside. <br /> This should not change unless you know what you are doing. <br /> Wrap your ads inside DIV blocks with the class entered here. <br />By default the ads test are in: <strong class="small">forum_root/ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/overall_footer_content_after.html</strong>',
+	'BBADBLOCK_CLASSNAME_EXPLAIN'			=> 'Name of the div class where your ads reside. <br /> This should not change unless you know what you are doing. <br /> Wrap your ads inside DIV blocks with the class entered here. <br />By default the ads test are in: <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/overall_footer_content_after.html</strong> <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/viewtopic_body_postrow_post_after.html</strong>',
 	'BBADBLOCK_REDIRECT'					=> 'Redirection Page',
 	'BBADBLOCK_REDIRECTE_EXPLAIN'			=> 'Redirection URL where the user will be forced to when any adblocker plugin is enabled. Check your server setting rewrite rules if something is not working or "too many redirections" error shown to the user. <br />For Example: <strong>/forum/memberships.php</strong>',
 	'BBADBLOCK_MESSAGE'						=> 'Ajax Modal Message',
@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_BBADBLOCK_NOTICE_CLOSE'		    => 'Close',
 	
-	'ACP_BBADBLOCK_VERSION'					=> '1.0.3',
+	'ACP_BBADBLOCK_VERSION'					=> '1.0.5',
 	'ACP_BBADBLOCK'							=> 'BBadblock',
     'ACP_LOADING'			    			=> 'Hold On. Loading...'
 ));

@@ -41,7 +41,7 @@
 	<form id="acp_bbadblock_main" method="post" action="{U_ACTION}" data-ajax="true">
 	<fieldset>
   		<legend>{L_ACP_BBADBLOCK_INDEX_TITLE}</legend> 	
-		<div style="float:left;width:59%;">
+		<div>
         <!-- IF not BBADBLOCK_S_CLASSNAME -->
             <dl>
                 <dt><label for="bbadblock_classname">{L_BBADBLOCK_CLASSNAME}{L_COLON}</label><br />{L_BBADBLOCK_CLASSNAME_EXPLAIN}</dt>
@@ -86,14 +86,14 @@
 			
         </div>
 
-		<div style="float:left;width:39%;padding-left:10px;">
+		<div>
             <dl>
                 <dt><label for="bbadblock_hide_forums">{L_BBADBLOCK_EXCLUDE_HIDE_FORUMS}:</label><br />{L_BBADBLOCK_EXCLUDE_HIDE_FORUMS_EXPLAIN}</dt>
                 <dd><select id="bbadblock_hide_forums" name="bbadblock_hide_forums[]" size="15" multiple>{BBADBLOCK_HIDE_FORUMS}</select></dd>
             </dl>
 		</div>
  
-        <div style="clear:both;width:59%;">
+        <div>
             <dl>
                 <dt><label for="set_config">{L_SUBMIT}{L_COLON}</label></dt>
                 <dd><input class="button1" type="submit" id="set_config" name="set_config" value="{L_SUBMIT}" />{S_FORM_TOKEN}</dd>
@@ -119,7 +119,7 @@
         <td style="width:70px;">{L_BBADBLOCK_HITS}
 			<a href="{U_ACTION}&amp;sk=hits&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'hits' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a> <a href="{U_ACTION}&amp;sk=hits&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'hits' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </td>
-        <td style="width:70px;">{L_CHANGE}</td>
+        <td style="width:70px;">{L_DELETE}</td>
     </tr>
     
     <!-- BEGIN records -->

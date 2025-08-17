@@ -64,7 +64,7 @@ class listener implements EventSubscriberInterface
 
 	public function modify_post_data($event)
 	{
-		if ($this->user->data['group_id'] == $this->config['bbadblock_group'] || $this->user->data['user_type'] == USER_FOUNDER)
+		if ($this->user->data['group_id'] == $this->config['bbadblock_group'] || $this->user->data['is_bot'] == 1 || $this->user->data['user_type'] == USER_FOUNDER)
 		{
 			return;			
 		}
@@ -94,7 +94,7 @@ class listener implements EventSubscriberInterface
 	
 	public function add_usersetup($event)
 	{
-		if ($this->user->data['group_id'] == $this->config['bbadblock_group'] || $this->user->data['user_type'] == USER_FOUNDER)
+		if ($this->user->data['group_id'] == $this->config['bbadblock_group'] || $this->user->data['is_bot'] == 1 || $this->user->data['user_type'] == USER_FOUNDER)
 		{
 			return;			
 		}

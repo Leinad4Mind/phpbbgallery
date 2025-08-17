@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Adblocks are annoying for forum Admins and make loose revenue. BBadblock will counter the adblock users and disrupt the forum experience to make the user hopefully whitelist your forum. Smart options available like modal messages, hide posts etc...",
 	"homepage": "http://sitesplat.com",
-	"version": "1.0.3",
+	"version": "1.0.5",
 	"keywords": ["sitesplat", "phpbb", "extension", "adblock"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
