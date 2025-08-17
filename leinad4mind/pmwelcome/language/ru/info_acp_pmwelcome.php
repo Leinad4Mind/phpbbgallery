@@ -1,24 +1,22 @@
 <?php
 
 /**
-*
-* @package PM Welcome [Russian]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package PM Welcome [Russian]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +36,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'Приветственное сообщение',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'Вы можете указать текст личного сообщения который будет отправлен пользователю после регистрации.',
-	'ACP_PMWELCOME_SETTINGS'		=> 'Настройки приветственного сообщения.',
-	'ACP_PMWELCOME_USER'			=> 'Отправитель',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'id пользователя форума, от имени которого будет отправлено личное сообщение.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'Заголовок сообщения',
-	'ACP_PMWELCOME_TEXT'			=> 'Текст приветственного сообщения',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Вы можете использовать bbcode и смайлы, а также лексему "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} и {BOARD_SIG}".',
+   'ACP_PMWELCOME'               => 'Приветственное сообщение',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Вы можете указать текст личного сообщения который будет отправлен пользователю после регистрации.',
+   'ACP_PMWELCOME_SETTINGS'      => 'Настройки приветственного сообщения.',
+   'ACP_PMWELCOME_USER'         => 'Отправитель',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'id пользователя форума, от имени которого будет отправлено личное сообщение.',
+   'ACP_PMWELCOME_SUBJECT'         => 'Заголовок сообщения',
+   'ACP_PMWELCOME_TEXT'         => 'Текст приветственного сообщения',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'Вы можете использовать bbcode и смайлы, а также лексему "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} и {BOARD_SIG}".',
 ]);

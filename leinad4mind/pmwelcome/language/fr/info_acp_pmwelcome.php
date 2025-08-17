@@ -1,25 +1,23 @@
 <?php
 
 /**
-*
-* @package PM Welcome [French]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* Translated to French by zouloufr & Galixte (http://www.galixte.com)
-*
-*/
+ *
+ * @package PM Welcome [French]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Translated to French by zouloufr & Galixte (http://www.galixte.com)
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'Paramètres du message privé de bienvenue',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'Sur cette page il est possible de configurer l’expéditeur, le sujet et le texte du message privé de bienvenue qui sera envoyé aux nouveaux utilisateurs enregistrés.',
-	'ACP_PMWELCOME_SETTINGS'		=> 'Paramètres',
-	'ACP_PMWELCOME_USER'			=> 'Expéditeur',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'Saisir l’ID d’un utilisateur du forum, à partir duquel le message privé de bienvenue sera envoyé.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'Sujet',
-	'ACP_PMWELCOME_TEXT'			=> 'Texte',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Permet de saisir le texte du message privé de bienvenue.<br />Les BBCodes et les smileys sont autorisés.<br />Les clés : « {USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} et {BOARD_SIG} » aussi.',
+   'ACP_PMWELCOME'               => 'Paramètres du message privé de bienvenue',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Sur cette page il est possible de configurer l’expéditeur, le sujet et le texte du message privé de bienvenue qui sera envoyé aux nouveaux utilisateurs enregistrés.',
+   'ACP_PMWELCOME_SETTINGS'      => 'Paramètres',
+   'ACP_PMWELCOME_USER'         => 'Expéditeur',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'Saisir l’ID d’un utilisateur du forum, à partir duquel le message privé de bienvenue sera envoyé.',
+   'ACP_PMWELCOME_SUBJECT'         => 'Sujet',
+   'ACP_PMWELCOME_TEXT'         => 'Texte',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'Permet de saisir le texte du message privé de bienvenue.<br />Les BBCodes et les smileys sont autorisés.<br />Les clés : « {USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} et {BOARD_SIG} » aussi.',
 ]);

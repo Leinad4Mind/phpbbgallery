@@ -1,25 +1,23 @@
 <?php
 
 /**
-*
-* @package PM Welcome [Estonian]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* Translated to Estonian by phpBBeesti.net - Mikk; <et.translations@phpbbeesti.net>
-*
-*/
+ *
+ * @package PM Welcome [Estonian]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Translated to Estonian by phpBBeesti.net - Mikk; <et.translations@phpbbeesti.net>
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'Tere tulemast sõnum',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'Siin saad ära määrata personaalse sõnumi, mis saadetakse kasutajale peale registreerumist.',
-	'ACP_PMWELCOME_SETTINGS'		=> '“Tere tulemast sõnumi” seaded.',
-	'ACP_PMWELCOME_USER'			=> 'Saatja ID',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'Foorumi kasutaja ID, kelle alt saadetakse antud privaatsõnum.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'Postituse pealkiri',
-	'ACP_PMWELCOME_TEXT'			=> 'Siia kirjuta oma tervitustekst',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Sa võid kasutada BBkoode, emotikone ja samuti märki "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} ja {BOARD_SIG}".',
+   'ACP_PMWELCOME'               => 'Tere tulemast sõnum',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Siin saad ära määrata personaalse sõnumi, mis saadetakse kasutajale peale registreerumist.',
+   'ACP_PMWELCOME_SETTINGS'      => '“Tere tulemast sõnumi” seaded.',
+   'ACP_PMWELCOME_USER'         => 'Saatja ID',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'Foorumi kasutaja ID, kelle alt saadetakse antud privaatsõnum.',
+   'ACP_PMWELCOME_SUBJECT'         => 'Postituse pealkiri',
+   'ACP_PMWELCOME_TEXT'         => 'Siia kirjuta oma tervitustekst',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'Sa võid kasutada BBkoode, emotikone ja samuti märki "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} ja {BOARD_SIG}".',
 ]);

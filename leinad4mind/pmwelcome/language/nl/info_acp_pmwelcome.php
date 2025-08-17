@@ -1,25 +1,23 @@
 <?php
 
 /**
-*
-* @package PM Welcome [Dutch]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* Translated to Dutch by "Dutch Translators" (https://github.com/dutch-translators)
-*
-*/
+ *
+ * @package PM Welcome [Dutch]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Translated to Dutch by "Dutch Translators" (https://github.com/dutch-translators)
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'Welkoms Bericht',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'Je kan een persoonlijkbericht samenstellen die wordt verzonden naar een nieuwe gebruiker als hij/zij voor het eerst inlogd na zijn/haar registratie.',
-	'ACP_PMWELCOME_SETTINGS'		=> 'Instellingen Welkoms Bericht.',
-	'ACP_PMWELCOME_USER'			=> 'Afzender',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'ID gebruiker, namens wie het welkoms bericht wordt verstuurd.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'Onderwerp',
-	'ACP_PMWELCOME_TEXT'			=> 'Tekst voor het welkoms bericht',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Je kan BBcodes en smilies gebruiken, maar ook de variabel "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} en {BOARD_SIG}".',
+   'ACP_PMWELCOME'               => 'Welkoms Bericht',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Je kan een persoonlijkbericht samenstellen die wordt verzonden naar een nieuwe gebruiker als hij/zij voor het eerst inlogd na zijn/haar registratie.',
+   'ACP_PMWELCOME_SETTINGS'      => 'Instellingen Welkoms Bericht.',
+   'ACP_PMWELCOME_USER'         => 'Afzender',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'ID gebruiker, namens wie het welkoms bericht wordt verstuurd.',
+   'ACP_PMWELCOME_SUBJECT'         => 'Onderwerp',
+   'ACP_PMWELCOME_TEXT'         => 'Tekst voor het welkoms bericht',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'Je kan BBcodes en smilies gebruiken, maar ook de variabel "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} en {BOARD_SIG}".',
 ]);

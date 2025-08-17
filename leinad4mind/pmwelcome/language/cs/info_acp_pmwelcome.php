@@ -1,25 +1,23 @@
 <?php
 
 /**
-*
-* @package PM Welcome [Czech]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* Translated to Czech by překlad R3gi
-*
-*/
+ *
+ * @package PM Welcome [Czech]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Translated to Czech by překlad R3gi
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'Uvítací zpráva',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'Umožňuje nastavit text soukromé zprávy, která bude zaslána novému uživateli po registraci.',
-	'ACP_PMWELCOME_SETTINGS'		=> 'Nastavení uvítací zprávy.',
-	'ACP_PMWELCOME_USER'			=> 'Odesílatel',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'ID uživatele fóra, jehož jménem bude soukromá zpráva zaslána.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'Předmět',
-	'ACP_PMWELCOME_TEXT'			=> 'Text uvítací zprávy',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Můžete používat BBCode, smajlíky a proměnnou "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} a {BOARD_SIG}".',
+   'ACP_PMWELCOME'               => 'Uvítací zpráva',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Umožňuje nastavit text soukromé zprávy, která bude zaslána novému uživateli po registraci.',
+   'ACP_PMWELCOME_SETTINGS'      => 'Nastavení uvítací zprávy.',
+   'ACP_PMWELCOME_USER'         => 'Odesílatel',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'ID uživatele fóra, jehož jménem bude soukromá zpráva zaslána.',
+   'ACP_PMWELCOME_SUBJECT'         => 'Předmět',
+   'ACP_PMWELCOME_TEXT'         => 'Text uvítací zprávy',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'Můžete používat BBCode, smajlíky a proměnnou "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} a {BOARD_SIG}".',
 ]);

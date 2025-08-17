@@ -1,25 +1,23 @@
 <?php
 
 /**
-*
-* @package PM Welcome [Arabic]
-* @copyright (c) 2019 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-* Translated to Arabic by Bassel Taha Alhitary (http://www.alhitary.net)
-*
-*/
+ *
+ * @package PM Welcome [Arabic]
+ * @copyright (c) 2019-2022 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * Translated to Arabic by Bassel Taha Alhitary (http://www.alhitary.net)
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PMWELCOME'					=> 'رسالة الترحيب',
-	'ACP_PMWELCOME_EXPLAIN'			=> 'من هنا تستطيع تحديد نص رسالة الترحيب التي سيتم إرسالها إلى العضو عند تسجيل أول دخول له للمنتدى.',
-	'ACP_PMWELCOME_SETTINGS'		=> 'الإعدادات.',
-	'ACP_PMWELCOME_USER'			=> 'المرسل ',
-	'ACP_PMWELCOME_USER_EXPLAIN'	=> 'اكتب رقم العضوية للعضو الذي تريد أن يكون مُرسل رسالة الترحيب.',
-	'ACP_PMWELCOME_SUBJECT'			=> 'عنوان الموضوع ',
-	'ACP_PMWELCOME_TEXT'			=> 'نص رسالة الترحيب',
-	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'تستطيع استخدام أكواد البي بي bbcode والإبتسامات , وكذلك تستطيع استخدام الرمز "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} و {BOARD_SIG}".',
+   'ACP_PMWELCOME'               => 'رسالة الترحيب',
+   'ACP_PMWELCOME_EXPLAIN'         => 'من هنا تستطيع تحديد نص رسالة الترحيب التي سيتم إرسالها إلى العضو عند تسجيل أول دخول له للمنتدى.',
+   'ACP_PMWELCOME_SETTINGS'      => 'الإعدادات.',
+   'ACP_PMWELCOME_USER'         => 'المرسل ',
+   'ACP_PMWELCOME_USER_EXPLAIN'   => 'اكتب رقم العضوية للعضو الذي تريد أن يكون مُرسل رسالة الترحيب.',
+   'ACP_PMWELCOME_SUBJECT'         => 'عنوان الموضوع ',
+   'ACP_PMWELCOME_TEXT'         => 'نص رسالة الترحيب',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'   => 'تستطيع استخدام أكواد البي بي bbcode والإبتسامات , وكذلك تستطيع استخدام الرمز "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} و {BOARD_SIG}".',
 ]);
