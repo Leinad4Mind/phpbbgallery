@@ -59,4 +59,20 @@ article:hover .btn-snappy {
     padding: 9px 11px;
 }
 }
+
+
+.fa-imgur::before {
+    background: #85bf25;
+    border-radius: 50%;
+    color: #85bf25;
+    content: "";
+    display: inline-block;
+    height: 16px;
+    vertical-align: top;
+    width: 16px;
+}
+
+.fileinput-exists .fa-picture-o {
+    vertical-align: text-bottom;
+}
 /*snappy reply */

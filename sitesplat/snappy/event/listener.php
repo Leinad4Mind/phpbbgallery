@@ -25,8 +25,9 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 	protected $cache;
 	protected $request;
+	protected $ext_manager;
 
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, $phpbb_root_path, $php_ext, \phpbb\plupload\plupload $plupload, \phpbb\cache\service $cache, \phpbb\request\request $request)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, $phpbb_root_path, $php_ext, \phpbb\plupload\plupload $plupload, \phpbb\cache\service $cache, \phpbb\request\request $request, \phpbb\extension\manager $ext_manager)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -37,6 +38,7 @@ class listener implements EventSubscriberInterface
 		$this->plupload = $plupload;
 		$this->cache = $cache;
 		$this->request = $request;
+		$this->ext_manager = $ext_manager;
 	}
 
 	/**
@@ -49,8 +51,9 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_modify_page_title' 	=> 'snappy',
-			'core.viewtopic_modify_post_row'    => 'decoded_post_add',
+			'core.viewtopic_modify_page_title' 		=> 'snappy',
+			'core.viewtopic_modify_post_row'    	=> 'decoded_post_add',
+			'core.acp_attachments_config_edit_add'	=> 'load_config_on_setup',
 		);
 	}
 
@@ -145,6 +148,14 @@ class listener implements EventSubscriberInterface
 			'T_ASSETS_PATH'			=> $this->root_path . 'assets',
 			'S_SNAPPY'				=> true,
 			));
+		
+		if ($this->ext_manager->is_enabled('sitesplat/imgur'))
+		{
+			$this->user->add_lang_ext('sitesplat/imgur', 'imgur');
+			$this->template->assign_vars(array(
+				'IN_IMGUR'	=> ($this->config['imgur_clientid'] && $this->config['imgur_quickreply']) ? true : false,
+			));
+		}
 	}
 	
 	// Lets make a copy of the posts and be parsed to the original BBcodes so we can quote this son of a R2 D2 
@@ -154,4 +165,25 @@ class listener implements EventSubscriberInterface
     decode_message($decoded_message, $event['row']['bbcode_uid']);
     $event['post_row'] += array('DECODED_MESSAGE' => bbcode_nl2br($decoded_message));
     }
+
+	public function load_config_on_setup($event)
+	{
+		if ($event['mode'] == 'attach' && $this->ext_manager->is_enabled('sitesplat/imgur'))
+		{
+			$this->user->add_lang_ext('sitesplat/imgur', 'imgur');
+			$display_vars = $event['display_vars'];
+
+			$add_imgur_var = array(
+				'imgur_quickreply' =>
+					array(
+						'lang'		=> 'IMGUR_QUICKREPLY',
+						'validate'	=> 'bool',
+						'type' 		=> 'radio:yes_no',
+						'explain' => false),
+			);
+
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_imgur_var, array('before' =>'display_order'));
+			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
+		}
+	}
 }

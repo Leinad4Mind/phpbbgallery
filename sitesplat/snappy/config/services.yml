@@ -11,5 +11,6 @@ services:
             - @plupload
             - @cache
             - @request
+            - '@ext.manager'
         tags:
             - { name: event.listener }
