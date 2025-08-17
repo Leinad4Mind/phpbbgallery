@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Ability to use phpBB 3.2 user search interface to search by custom profile fields.",
     "homepage": "https://leinad4mind.top/forum",
-    "version": "1.0.2",
-    "time": "2018-02-04",
+    "version": "1.0.3",
+    "time": "2018-02-18",
     "license": "GPL-2.0",
     "authors": [
         {

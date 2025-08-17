@@ -130,7 +130,7 @@ class main implements EventSubscriberInterface
 		{
 			$row_field_nom[] = $row['field_name'];
 			$text_fields[] = [
-				'CPF_LANG_NAME' => $row['lang_name'],
+				'CPF_LANG_NAME' => $this->lang->lang($row['lang_name']),
 				'CPF_NAME'      => $row['field_name']
 			];
 		}
@@ -149,7 +149,7 @@ class main implements EventSubscriberInterface
 					AND f.lang_id = l.lang_id
 					AND l.lang_id = a.lang_id
 					AND l.lang_iso = '" . $this->db->sql_escape($this->config['default_lang']) . "'	
-					GROUP BY lang_name
+					GROUP BY lang_name, field_name, field_ident, field_order
 				ORDER BY field_order, option_id DESC";
 
 		$result = $this->db->sql_query($sql);
@@ -201,16 +201,18 @@ class main implements EventSubscriberInterface
 		{
 			$sql_where = $event['sql_where'];
 
+			$any = $this->db->get_any_char();
+
 			foreach ($row_field_nom as $row_field)
 			{
-				$$row_field = $this->request->variable($row_field, '', true);
-				$sql_where .= $$row_field ? " AND fd.pf_$row_field " . $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $$row_field)) . ' ' : '';
+				$value = $this->request->variable($row_field, '', true);
+				$sql_where .= $value ? " AND LOWER(fd.pf_$row_field) " . $this->db->sql_like_expression($any . str_replace('*', $any, strtolower($value)) . $any) . ' ' : '';
 			}
 
-			foreach ($row_field_nom2 as $row_field2)
+			foreach ($row_field_nom2 as $row_field)
 			{
-				$$row_field2 = $this->request->variable($row_field2, 0);
-				$sql_where .= $$row_field2 && $$row_field2 !== 'x' ? " AND fd.pf_$row_field2 " . $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $$row_field2)) . ' ' : '';
+				$value = $this->request->variable($row_field, 0);
+				$sql_where .= $value && $value !== 'x' ? " AND LOWER(fd.pf_$row_field) " . $this->db->sql_like_expression($any . str_replace('*', $any, strtolower($value)) . $any) . ' ' : '';
 			}
 
 			$event['sql_where'] = $sql_where;
