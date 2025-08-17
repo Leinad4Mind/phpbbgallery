@@ -1,13 +1,13 @@
 <?php
 /**
-*
-* @package Active Sessions Extension
-* @copyright (c) 2015 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Active Sessions Extension
+ * @copyright (c) 2022 devspace
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-namespace david63\activesessions;
+namespace devspace\activesessions;
 
 use phpbb\extension\base;
 
@@ -29,11 +29,11 @@ class ext extends base
 	protected $phpbb_version = '3.3.0';
 
 	/**
-	* Enable extension if requirements are met
-	*
-	* @return bool True if can be enabled, False if not, or an error message in phpBB 3.3.
-	* @access public
-	*/
+	 * Enable extension if requirements are met
+	 *
+	 * @return bool True if can be enabled, False if not, or an error message in phpBB 3.3.
+	 * @access public
+	 */
 	public function is_enableable()
 	{
 		// Check for PHP version
@@ -42,7 +42,7 @@ class ext extends base
 			if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_version, '>='))
 			{
 				$language = $this->container->get('language');
-				$language->add_lang('ext_enable_error', 'david63/'. $this->ext_name);
+				$language->add_lang('ext_enable_error', 'devspace/' . $this->ext_name);
 
 				return $language->lang('EXT_PHP_ERROR', $this->php_version, PHP_VERSION);
 			}
@@ -57,9 +57,9 @@ class ext extends base
 		{
 			if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_version, '>='))
 			{
-				$config		= $this->container->get('config');
-				$language	= $this->container->get('language');
-				$language->add_lang('ext_enable_error', 'david63/'. $this->ext_name);
+				$config   = $this->container->get('config');
+				$language = $this->container->get('language');
+				$language->add_lang('ext_enable_error', 'devspace/' . $this->ext_name);
 
 				return $language->lang('EXT_ENABLE_ERROR', $this->min_version, $this->max_version, $config['version']);
 			}

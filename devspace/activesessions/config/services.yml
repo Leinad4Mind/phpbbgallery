@@ -8,11 +8,11 @@ services:
             $root_path: '%core.root_path%'
             $php_ext: '%core.php_ext%'
             $tables: '%tables%'
-            $ext_images_path: '%core.root_path%ext/david63/activesessions/adm/style/images'
+            $ext_images_path: '%core.root_path%ext/devspace/activesessions/adm/style/images'
         public: true			
 
-    david63.activesessions.admin.controller:
-        class: david63\activesessions\controller\admin_controller
+    devspace.activesessions.admin.controller:
+        class: devspace\activesessions\controller\admin_controller
 
-    david63.activesessions.core.functions:
-        class: david63\activesessions\core\functions
+    devspace.activesessions.core.functions:
+        class: devspace\activesessions\core\functions

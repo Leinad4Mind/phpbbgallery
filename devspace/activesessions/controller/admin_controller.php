@@ -2,12 +2,12 @@
 /**
  *
  * @package Active Sessions Extension
- * @copyright (c) 2015 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\activesessions\controller;
+namespace devspace\activesessions\controller;
 
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
@@ -16,7 +16,7 @@ use phpbb\template\template;
 use phpbb\pagination;
 use phpbb\user;
 use phpbb\language\language;
-use david63\activesessions\core\functions;
+use devspace\activesessions\core\functions;
 
 /**
  * Admin controller
@@ -78,7 +78,7 @@ class admin_controller
 	 * @param array				$tables             phpBB db tables
 	 * @param string			$ext_images_path    Path to this extension's images
 	 *
-	 * @return \david63\activesessions\controller\admin_controller
+	 * @return \devspace\activesessions\controller\admin_controller
 	 * @access public
 	 */
 	public function __construct(config $config, driver_interface $db, request $request, template $template, pagination $pagination, user $user, language $language, string $root_path, string $php_ext, functions $functions, array $tables, string $ext_images_path)

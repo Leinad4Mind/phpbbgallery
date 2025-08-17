@@ -65,7 +65,7 @@ select, #sk, #sd, #fc, #fb {
 	font-size: 12px;
 	font-weight: bold;
 	margin: 0.25em;
-	overflow: hidden;
+	overflow: scroll;
 	padding: 0.25em 10px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -554,12 +554,20 @@ Tables
 	background-color: #DCEBFE;
 }
 
+.table-row11 {
+	width: auto !important;
+	min-width: inherit;
+	background-color: #F9F9F9;
+	display: table-row;
+	position: relative;
+}
+
 .table-row-span {
 	display: none;
 	width: 700px;
 }
 
-.table-body-cell, .table-body-cell-bold, .table-body-cell-select, .table-body-cell-span, .table-body-cell-narrow, .table-body-cell-wide, .table-body-cell-centre, .table-body-cell-right {
+.table-body-cell, .table-body-cell-bold, .table-body-cell-select, .table-body-cell-span, .table-body-cell-medium, .table-body-cell-narrow, .table-body-cell-wide, .table-body-cell-centre, .table-body-cell-right {
 	display: table-cell;
 	text-align: left;
 	vertical-align: middle;
@@ -582,6 +590,11 @@ Tables
 .table-body-cell-span {
 	width: auto !important;
     margin: auto;
+}
+
+.table-body-cell-medium {
+	width: 200px;
+	vertical-align: top;
 }
 
 .table-body-cell-narrow {

@@ -2,12 +2,12 @@
 /**
  *
  * @package Active Sessions Extension
- * @copyright (c) 2015 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\activesessions\core;
+namespace devspace\activesessions\core;
 
 use phpbb\extension\manager;
 use phpbb\exception\version_check_exception;

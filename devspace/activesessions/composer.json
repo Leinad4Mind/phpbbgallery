@@ -1,9 +1,9 @@
 {
-	"name": "david63/activesessions",
+	"name": "devspace/activesessions",
 	"type": "phpbb-extension",
 	"description": "Adds an Admin option to display the current active user sessions.",
-	"version": "3.1.1",
-	"time": "2020-01-17",
+	"version": "3.3.0",
+	"time": "2022-10-17",
 	"keywords": [
 		"phpbb",
 		"extension",
@@ -12,7 +12,11 @@
 	],
 	"license": "GPL-2.0-only",
 	"authors": [{
-		"name": "David Wood",
+		"name": "devspace",
+		"role": "Maintainer"
+    },
+	{
+		"name": "David Wood (david63)",
 		"role": "Developer"
 	}],
 	"require": {
@@ -20,15 +24,15 @@
         "composer/installers": "~1.0"
     },
 	"extra": {
-		"display-name": "[d63] Active sessions",
+		"display-name": "[devspace] Active sessions",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
       	},
 		"version-check": {
         	"host": "version.phpbbdev.space",
-        	"directory": "/versions",
+        	"directory": "/versions/devspace",
         	"filename": "active_sessions_version_file.json",
-			"ssl": false
+			"ssl": true
     	}
 	}
 }
