@@ -34,7 +34,8 @@
 
 <!-- IF S_BBCODE_ALLOWED -->
 <div class="space10"></div>
-<div class="text-center" role="toolbar">
+<!-- IF not S_BBCODEORDER -->
+<div id="sitesplat_snappy_quickreply" class="text-center" role="toolbar">
     <div class="btn-group">
          <a href="#" class="btn btn-default" accesskey="b" name="addbbcode0" onclick="bbstyle(0); return false;"  title="{L_BBCODE_B_HELP}"><i class="fa fa-bold"></i></a>
          <a href="#" class="btn btn-default" accesskey="i" name="addbbcode2" onclick="bbstyle(2); return false;" title="{L_BBCODE_I_HELP}"><i class="fa fa-italic"></i></a>
@@ -96,4 +97,6 @@
 	<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
     <!-- ENDIF -->
 </div>
+<!-- ENDIF -->
+<!-- EVENT sitesplat_snappy_quickreply_buttons_after -->
 <!-- ENDIF -->
