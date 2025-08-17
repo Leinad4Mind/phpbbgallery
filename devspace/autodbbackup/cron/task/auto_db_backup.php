@@ -35,49 +35,49 @@ class auto_db_backup extends base
 	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
 	/** @var ContainerInterface */
 	protected $container;
 
-	/** @var \phpbb\event\dispatcher_interface */
+	/** @var dispatcher_interface */
 	protected $dispatcher;
 
-	/** @var \phpbb\db\tools\tools_interface */
+	/** @var tools_interface */
 	protected $db_tools;
 
-	/** @var \david63\autodbbackup\core\functions */
+	/** @var functions */
 	protected $functions;
 
-	/** @var \phpbb\filesystem\filesystem */
+	/** @var filesystem */
 	protected $filesystem;
 
 	/**
 	* Constructor for cron auto_db_backup
 	*
-	* @param string 				            	$root_path			phpBB root path
-	* @param string									$php_ext			phpBB file extension
-	* @param string									$table_prefix		phpBB table prefix
-	* @param config									$config				Config object
-	* @param \phpbb\language\language				$language			Language object
-	* @param \phpbb\db\driver\driver_interface		$db					Database object
-	* @param \phpbb\log\log							$log    			phpBB log
-	* @param \phpbb\user							$user   			User object
-	* @param ContainerInterface						$phpbb_container	phpBBcontainer
-	* @param dispatcher_interface					$dispatcher			phpBB dispatcher
-	* @param tools_interface              			$db_tools			phpBB db tools
-	* @param \david63\autodbbackup\core\functions	functions			Functions for the extension
-	* @param \phpbb\filesystem\filesystem			$filesystem    		phpBB filesystem
+	* @param string					$root_path			phpBB root path
+	* @param string					$php_ext			phpBB file extension
+	* @param string					$table_prefix		phpBB table prefix
+	* @param config					$config				Config object
+	* @param language				$language			Language object
+	* @param driver_interface		$db					Database object
+	* @param log					$log    			phpBB log
+	* @param user					$user   			User object
+	* @param ContainerInterface		$phpbb_container	phpBBcontainer
+	* @param dispatcher_interface	$dispatcher			phpBB dispatcher
+	* @param tools_interface		$db_tools			phpBB db tools
+	* @param functions				$functions			Functions for the extension
+	* @param filesystem				$filesystem    		phpBB filesystem
 	*
 	* @access   public
 	*/
