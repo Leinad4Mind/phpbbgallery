@@ -30,7 +30,7 @@ class auto_db_backup extends base
 	protected $php_ext;
 
 	/** @var string phpBB table prefix */
-	protected $phpbb_table_prefix;
+	protected $table_prefix;
 
 	/** @var config */
 	protected $config;
@@ -65,27 +65,27 @@ class auto_db_backup extends base
 	/**
 	* Constructor for cron auto_db_backup
 	*
-	* @param string 				            	$phpbb_root_path		phpBB root path
-	* @param string									$php_ext				phpBB file extension
-	* @param string									$phpbb_table_prefix		phpBB table prefix
-	* @param config									$config					Config object
-	* @param \phpbb\language\language				$language				Language object
-	* @param \phpbb\db\driver\driver_interface		$db						Database object
-	* @param \phpbb\log\log							$log    				phpBB log
-	* @param \phpbb\user							$user   				User object
-	* @param ContainerInterface						$phpbb_container		phpBBcontainer
-	* @param dispatcher_interface					$dispatcher				phpBB dispatcher
-	* @param tools_interface              			$db_tools				phpBB db tools
-	* @param \david63\autodbbackup\core\functions	functions				Functions for the extension
-	* @param \phpbb\filesystem\filesystem			$filesystem    			phpBB filesystem
+	* @param string 				            	$root_path			phpBB root path
+	* @param string									$php_ext			phpBB file extension
+	* @param string									$table_prefix		phpBB table prefix
+	* @param config									$config				Config object
+	* @param \phpbb\language\language				$language			Language object
+	* @param \phpbb\db\driver\driver_interface		$db					Database object
+	* @param \phpbb\log\log							$log    			phpBB log
+	* @param \phpbb\user							$user   			User object
+	* @param ContainerInterface						$phpbb_container	phpBBcontainer
+	* @param dispatcher_interface					$dispatcher			phpBB dispatcher
+	* @param tools_interface              			$db_tools			phpBB db tools
+	* @param \david63\autodbbackup\core\functions	functions			Functions for the extension
+	* @param \phpbb\filesystem\filesystem			$filesystem    		phpBB filesystem
 	*
 	* @access   public
 	*/
-	public function __construct($phpbb_root_path, $php_ext, $phpbb_table_prefix, config $config, language $language, driver_interface $db, log $log, user $user, ContainerInterface $phpbb_container, dispatcher_interface $dispatcher, tools_interface $db_tools, functions $functions, filesystem $filesystem)
+	public function __construct(string $root_path, string $php_ext, string $table_prefix, config $config, language $language, driver_interface $db, log $log, user $user, ContainerInterface $phpbb_container, dispatcher_interface $dispatcher, tools_interface $db_tools, functions $functions, filesystem $filesystem)
 	{
-		$this->phpbb_root_path	= $phpbb_root_path;
+		$this->root_path		= $root_path;
 		$this->php_ext			= $php_ext;
-		$this->table_prefix		= $phpbb_table_prefix;
+		$this->table_prefix		= $table_prefix;
 		$this->config			= $config;
 		$this->language			= $language;
 		$this->db  				= $db;
@@ -132,7 +132,7 @@ class auto_db_backup extends base
 		if (!function_exists('get_usable_memory'))
 		{
 			// Need to use "real path" as using dots in the path could fail
-			$file_name = $this->filesystem->realpath($this->phpbb_root_path) . '\includes\acp\acp_database.' . $this->php_ext;
+			$file_name = $this->filesystem->realpath($this->root_path) . '\includes\acp\acp_database.' . $this->php_ext;
 			$file_name = str_replace('\\', '/', $file_name);
 			include_once($file_name);
 		}

@@ -1,109 +1,112 @@
 {% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
-{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/jquery-ui.css' %}
 
-<form id="acp_auto_db_backup" method="post" action="{{ U_ACTION }}">
-	<fieldset>
-		<legend>{{ lang('SETTINGS') }}</legend>
+{% if PHP_VALID and PHPBB_VALID %}
+	{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/jquery-ui.css' %}
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_enable">{{ lang('AUTO_DB_BACKUP_ENABLE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_ENABLE_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input type="radio" id="auto_db_backup_enable1" name="auto_db_backup_enable" value="1"{% if S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
-				<label class="set" for="auto_db_backup_enable1">{{ lang('ENABLED') }}</label>
-				<input type="radio" id="auto_db_backup_enable0" name="auto_db_backup_enable" value="0"{% if not S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
-				<label class="unset" for="auto_db_backup_enable0">{{ lang('DISABLED') }}</label>
-			</dd>
-		</dl>
+	<form id="acp_auto_db_backup" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('SETTINGS') }}</legend>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_filetype">{{ lang('AUTO_DB_BACKUP_FILETYPE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_FILETYPE_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				{% for types in filetypes %}
-					<input type="radio" id="auto_db_backup_filetype_{{ types.FILETYPE }}" name="auto_db_backup_filetype" value="{{ types.FILETYPE }}"{% if types.S_CHECKED %} checked="checked"{% endif %} />
-					<label class="set" for="auto_db_backup_filetype_{{ types.FILETYPE }}">{{ types.VALUE }}</label>
-				{% endfor %}
-			</dd>
-		</dl>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_enable">{{ lang('AUTO_DB_BACKUP_ENABLE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_ENABLE_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<input type="radio" id="auto_db_backup_enable1" name="auto_db_backup_enable" value="1"{% if S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
+					<label class="set" for="auto_db_backup_enable1">{{ lang('ENABLED') }}</label>
+					<input type="radio" id="auto_db_backup_enable0" name="auto_db_backup_enable" value="0"{% if not S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
+					<label class="unset" for="auto_db_backup_enable0">{{ lang('DISABLED') }}</label>
+				</dd>
+			</dl>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_gc">{{ lang('AUTO_DB_BACKUP_FREQ') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_FREQ_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input class="textbox" id="auto_db_backup_gc" type="number" maxlength="3" name="auto_db_backup_gc" value="{{ AUTO_DB_BACKUP_GC }}" min="1" max="350" /><span> {{ lang('HOURS') }}</span>
- 			</dd>
-		</dl>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_filetype">{{ lang('AUTO_DB_BACKUP_FILETYPE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_FILETYPE_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					{% for types in filetypes %}
+						<input type="radio" id="auto_db_backup_filetype_{{ types.FILETYPE }}" name="auto_db_backup_filetype" value="{{ types.FILETYPE }}"{% if types.S_CHECKED %} checked="checked"{% endif %} />
+						<label class="set" for="auto_db_backup_filetype_{{ types.FILETYPE }}">{{ types.VALUE }}</label>
+					{% endfor %}
+				</dd>
+			</dl>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_enable">{{ lang('AUTO_DB_BACKUP_MAINTAIN_FREQ') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input type="radio" id="auto_db_backup_maintain_freq1" name="auto_db_backup_maintain_freq" value="1"{% if AUTO_DB_BACKUP_MAINTAIN_FREQ %} checked="checked"{% endif %} />
-				<label class="set" for="auto_db_backup_maintain_freq1">{{ lang('YES') }}</label>
-				<input type="radio" id="auto_db_backup_maintain_freq0" name="auto_db_backup_maintain_freq" value="0"{% if not AUTO_DB_BACKUP_MAINTAIN_FREQ %} checked="checked"{% endif %} />
-				<label class="unset" for="auto_db_backup_maintain_freq0">{{ lang('NO') }}</label>
-			</dd>
-		</dl>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_gc">{{ lang('AUTO_DB_BACKUP_FREQ') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_FREQ_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<input class="textbox" id="auto_db_backup_gc" type="number" maxlength="3" name="auto_db_backup_gc" value="{{ AUTO_DB_BACKUP_GC }}" min="1" max="350" /><span> {{ lang('HOURS') }}</span>
+ 				</dd>
+			</dl>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_copies">{{ lang('AUTO_DB_BACKUP_COPIES') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_COPIES_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input class="textbox" id="auto_db_backup_copies" type="number" maxlength="2" name="auto_db_backup_copies" value="{{ AUTO_DB_BACKUP_COPIES }}" min="0" max="99" />
-			</dd>
-		</dl>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_enable">{{ lang('AUTO_DB_BACKUP_MAINTAIN_FREQ') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<input type="radio" id="auto_db_backup_maintain_freq1" name="auto_db_backup_maintain_freq" value="1"{% if AUTO_DB_BACKUP_MAINTAIN_FREQ %} checked="checked"{% endif %} />
+					<label class="set" for="auto_db_backup_maintain_freq1">{{ lang('YES') }}</label>
+					<input type="radio" id="auto_db_backup_maintain_freq0" name="auto_db_backup_maintain_freq" value="0"{% if not AUTO_DB_BACKUP_MAINTAIN_FREQ %} checked="checked"{% endif %} />
+					<label class="unset" for="auto_db_backup_maintain_freq0">{{ lang('NO') }}</label>
+				</dd>
+			</dl>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_optimize">{{ lang('AUTO_DB_BACKUP_OPTIMIZE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input type="radio" id="auto_db_backup_optimize1" name="auto_db_backup_optimize" value="1"{% if S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
- 				<label class="set" for="auto_db_backup_optimize1">{{ lang('ENABLED') }}</label>
-				<input type="radio" id="auto_db_backup_optimize0" name="auto_db_backup_optimize" value="0"{% if not S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
-				<label class="unset" for="auto_db_backup_optimize0">{{ lang('DISABLED') }}</label>
-			</dd>
-		</dl>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_copies">{{ lang('AUTO_DB_BACKUP_COPIES') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_COPIES_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<input class="textbox" id="auto_db_backup_copies" type="number" maxlength="2" name="auto_db_backup_copies" value="{{ AUTO_DB_BACKUP_COPIES }}" min="0" max="99" />
+				</dd>
+			</dl>
 
-		<dl>
-			<dt>
-				<label for="auto_db_backup_dt">{{ lang('AUTO_DB_BACKUP_TIME') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_TIME_EXPLAIN') }}</span>
-			</dt>
-			<dd>
-				<input type="text" class="textbox" name="auto_db_time" id="auto_db_time" value="{{ NEXT_BACKUP_TIME }}"/><br>{{ lang('CLICK_SELECT') }}
-			</dd>
-		</dl>
-	</fieldset>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_optimize">{{ lang('AUTO_DB_BACKUP_OPTIMIZE') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<input type="radio" id="auto_db_backup_optimize1" name="auto_db_backup_optimize" value="1"{% if S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
+ 					<label class="set" for="auto_db_backup_optimize1">{{ lang('ENABLED') }}</label>
+					<input type="radio" id="auto_db_backup_optimize0" name="auto_db_backup_optimize" value="0"{% if not S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
+					<label class="unset" for="auto_db_backup_optimize0">{{ lang('DISABLED') }}</label>
+				</dd>
+			</dl>
 
-	<fieldset>
-		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
-		<p class="submit-buttons">
-			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
-			{{ S_FORM_TOKEN }}
-		</p>
-	</fieldset>
-</form>
+			<dl>
+				<dt>
+					<label for="auto_db_backup_dt">{{ lang('AUTO_DB_BACKUP_TIME') }}{{ lang('COLON') }}</label><br><span>{{ lang('AUTO_DB_BACKUP_TIME_EXPLAIN') }}</span>
+		   		</dt>
+				<dd>
+					<input type="text" class="textbox" name="auto_db_time" id="auto_db_time" value="{{ NEXT_BACKUP_TIME }}"/><br>{{ lang('CLICK_SELECT') }}
+				</dd>
+			</dl>
+		</fieldset>
 
-<script>
-	var currentTextDate = '{{ lang('CURRENT_TEXT_DATE') | escape('js') }}';
-	var dayNamesMin 	= '{{ lang('DAY_NAMES_MIN') | escape('js') }}';
-	var hourText 		= '{{ lang('HOUR_TEXT') | escape('js') }}';
-	var isRTL 			= '{{ RTL_LANGUAGE | escape('js') }}';
-	var minuteText 		= '{{ lang('MINUTE_TEXT') | escape('js') }}';
-	var monthNames 		= '{{ lang('MONTH_NAMES') | escape('js') }}';
-	var nextTxt 		= '{{ lang('NEXT_TEXT') | escape('js') }}';
-	var prevText 		= '{{ lang('PREV_TEXT') | escape('js') }}';
-	var timeText 		= '{{ lang('TIME_TEXT') | escape('js') }}';
-</script>
+		<fieldset>
+			<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+			<p class="submit-buttons">
+				<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+				<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+				{{ S_FORM_TOKEN }}
+			</p>
+		</fieldset>
+	</form>
 
-{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-ui.js' %}
-{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-timepicker.js' %}
-{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-slideraccess.js' %}
-{% include '@' ~ NAMESPACE ~ '/donate.html' %}
+	<script>
+		var currentTextDate = '{{ lang('CURRENT_TEXT_DATE') | escape('js') }}';
+		var dayNamesMin 	= '{{ lang('DAY_NAMES_MIN') | escape('js') }}';
+		var hourText 		= '{{ lang('HOUR_TEXT') | escape('js') }}';
+		var isRTL 			= '{{ RTL_LANGUAGE | escape('js') }}';
+		var minuteText 		= '{{ lang('MINUTE_TEXT') | escape('js') }}';
+		var monthNames 		= '{{ lang('MONTH_NAMES') | escape('js') }}';
+		var nextTxt 		= '{{ lang('NEXT_TEXT') | escape('js') }}';
+		var prevText 		= '{{ lang('PREV_TEXT') | escape('js') }}';
+		var timeText 		= '{{ lang('TIME_TEXT') | escape('js') }}';
+	</script>
+
+	{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-ui.js' %}
+	{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-timepicker.js' %}
+	{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/jquery-slideraccess.js' %}
+	{% include '@' ~ NAMESPACE ~ '/donate.html' %}
+{% endif %}

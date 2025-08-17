@@ -17,6 +17,7 @@
 		<delete dir="${dir}/travis" />
 		<delete dir="${dir}/vendor" />
 
+		<delete file="${dir}/.editorconfig" />
 		<delete file="${dir}/.gitignore" />
 		<delete file="${dir}/.gitattributes" />
 		<delete file="${dir}/.travis.yml" />
@@ -25,6 +26,9 @@
 		<delete file="${dir}/composer.phar" />
 		<delete file="${dir}/phpunit.xml.dist" />
 		<delete file="${dir}/README.md" />
+		<delete file="${dir}/package.json" />
+		<delete file="${dir}/package-lock.json" />
+		<delete file="${dir}/gulpfile.js" />
 	</target>
 
 	<!--
@@ -108,4 +112,19 @@
 		<echo msg="Creating archives (${vendor-name}/${extension-name} ${version})" />
 		<zip basedir="${build-directory}/package/" destfile="${destination-filename}.zip" />
 	</target>
+
+	<!--
+	npm installation
+	-->
+	<target name="npm-install" description="npm-install target: install node modules">
+		<exec command="npm install" dir="${package-directory}" passthru="true" checkreturn="true" />
+	</target>
+
+	<!--
+	Run gulp task
+	-->
+	<target name="gulp-task" depends="npm-install">
+		<exec command="gulp build" dir="${package-directory}" passthru="true" checkreturn="true" />
+	</target>
+
 </project>
