@@ -1,0 +1,10 @@
+services:
+    david63.acpversioncheck.listener:
+        class: david63\acpversioncheck\event\listener
+        arguments:
+            - '@config'
+            - '@template'
+            - '%core.root_path%'
+            - '@language'
+        tags:
+            - { name: event.listener }

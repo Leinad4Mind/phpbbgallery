@@ -1,0 +1,56 @@
+{% INCLUDECSS '@david63_acpversioncheck/acpversioncheck.css' %}
+
+{% if S_ACP_VERSIONCHECK %}
+	<div class="successbox notice">
+		<p>{{ lang('VERSIONS_CORRECT') }}</p>
+	</div>
+{% else %}
+	<div class="errorbox">
+		<p>{{ lang('VERSIONS_INCORRECT') }}</p>
+	</div>
+	<div class="toggle">
+		<table class="table1 two-columns no-header" data-no-responsive-header="true">
+			<thead>
+				<tr>
+					<th>{{ lang('VERSION_NAME') }}</th>
+					<th>{{ lang('VERSION') }}<img style="float: {{ S_CONTENT_FLOW_END }};" src="https://img.shields.io/badge/{{ lang('VERSION') }}-{{ ACPVERSIONCHECK_VERSION }}-orange.svg?style=plastic" /></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>{{ lang('DATABASE_VERSION') }}</td>
+					<td><strong>{{ DB_VERSION }}</strong></td>
+				</tr>
+
+				<tr>
+					<td>{{ lang('CONSTANT_VERSION') }}</td>
+					<td><strong>{{ CONSTANT_VERSION }}</strong></td>
+				</tr>
+			</tbody>
+
+			<thead>
+				<tr>
+					<th>{{ lang('STYLE_NAME') }}</th>
+					<th>{{ lang('STYLE_VERSION') }}</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for styles in style_versions %}
+					<tr>
+						<td>{{ styles.STYLE_NAME }}</td>
+						<td><strong>{{ styles.STYLE_VERSION }}</strong></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endif %}
+
+<script>
+	var showText = '{{ lang('VIEW') | escape('js') }}';
+	var hideText = '{{ lang('HIDE') | escape('js') }}';
+</script>
+
+{% INCLUDEJS '@david63_acpversioncheck/acpversioncheck_fn.js' %}
