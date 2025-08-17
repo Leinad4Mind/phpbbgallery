@@ -1,13 +1,14 @@
 <?php
+
 /**
 *
 * @package PM Welcome
-* @copyright BB3.MOBi (c) 2015 Anvar http://apwa.ru
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace apwa\pmwelcome\acp;
+namespace leinad4mind\pmwelcome\acp;
 
 class pmwelcome_module
 {
@@ -19,11 +20,10 @@ class pmwelcome_module
 		global $config, $user, $template, $request, $phpbb_container;
 		global $phpbb_root_path, $phpEx;
 
-		$this->user = $user;
 		$this->tpl_name = 'acp_pmwelcome';
 		$this->page_title = 'ACP_PMWELCOME_SETTINGS';
 
-		$this->user->add_lang(array('acp/board', 'posting'));
+		$user->add_lang(array('acp/board', 'posting'));
 
 		$submit = $request->is_set_post('submit');
 		$preview = $request->is_set_post('preview');
@@ -34,17 +34,17 @@ class pmwelcome_module
 		$user_name = '';
 		if (!$submit)
 		{
-			$user_info = $this->pm_welcome_user_name($config['pmwelcome_user']);
-			$user_name = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u=' . $user_info['user_id']) . '">' . $user_info['username'] . '</a>';
+			$user_info = $this->pm_welcome_user_row($config['pmwelcome_user']);
+			$user_name = get_username_string('full', $user_info['user_id'] ?? ANONYMOUS, $user_info['username'] ?? $user->lang('GUEST'), $user_info['user_colour'] ?? '');
 		}
 
 		$display_vars = array(
 			'title'	=> 'ACP_PMWELCOME',
 			'vars'	=> array(
 				'legend1'	=> 'ACP_PMWELCOME_SETTINGS',
-				'pmwelcome_user'		=> array('lang' => 'ACP_PMWELCOME_USER',	'validate' => 'int:2:255',	'type' => 'number:2:255', 'explain' => true, 'append' => ' ' . $user_name),
-				'pmwelcome_subject'		=> array('lang' => 'ACP_PMWELCOME_SUBJECT',	'validate' => 'string',		'type' => 'text:50:250', 'explain' => false),
-				'pmwelcome_post_text'	=> array('lang' => 'ACP_PMWELCOME_TEXT',	'validate' => '',			'type' => 'textarea:15:30', 'explain' => true),
+				'pmwelcome_user'		=> array('lang' => 'ACP_PMWELCOME_USER',	'validate' => 'int:2:999999',	'type' => 'number:2:999999', 'explain' => true, 'append' => ' ' . $user_name),
+				'pmwelcome_subject'		=> array('lang' => 'ACP_PMWELCOME_SUBJECT',	'validate' => 'string',		'type' => 'text:20:250', 'explain' => false),
+				'pmwelcome_post_text'	=> array('lang' => 'ACP_PMWELCOME_TEXT',	'validate' => '',			'type' => 'textarea:5:30', 'explain' => true),
 
 				'legend2'	=> 'ACP_SUBMIT_CHANGES',
 			),
@@ -57,7 +57,7 @@ class pmwelcome_module
 
 		$this->new_config = $config;
 
-		$cfg_array = ($request->is_set('config')) ? utf8_normalize_nfc($request->variable('config', array('' => ''), true)) : $this->new_config;
+		$cfg_array = ($request->is_set('config')) ? $request->variable('config', array('' => ''), true) : $this->new_config;
 		$error = array();
 
 		// We validate the complete config if wished
@@ -76,7 +76,6 @@ class pmwelcome_module
 
 		/* Config text Welcome */
 		$config_text = $phpbb_container->get('config_text');
-		$pmwelcome_post_text = $config_text->get('pmwelcome_post_text');
 		$text_ary = array('pmwelcome_post_text');
 
 		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
@@ -89,50 +88,50 @@ class pmwelcome_module
 
 			$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
 
-			if ($submit)
+			if ($submit || $preview)
 			{
 				/* Find user */
 				if ($config_name == 'pmwelcome_user')
 				{
-					$inder_fo = $this->pm_welcome_user_name($config_value);
-					if (isset($inder_fo['error']) && $inder_fo['error'])
+					$user_info = $this->pm_welcome_user_row($config_value);
+					if (isset($user_info['error']) && $user_info['error'])
 					{
-						$error[] = $inder_fo['error'];
+						$error[] = $user_info['error'];
 						$submit = false;
 						continue;
 					}
 				}
 
-				/* Add config text Welcome Add */
-				if (in_array($config_name, $text_ary))
-				{
-					$config_text->set($config_name, $config_value);
-				}
-				else
-				{
-					$config->set($config_name, $config_value);
-				}
-			}
-
-			/* Config text Welcome Preview*/
-			if (in_array($config_name, $text_ary) && $preview)
-			{
-				$pmwelcome_post_text = $config_value;
+				$config->set($config_name, $config_value);
 			}
 		}
 
-		if ($submit)
+		if ($submit && !$error)
 		{
+			$config_text->set('pmwelcome_post_text', $request->variable('pmwelcome_post_text', '', true));
+
 			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
 
 		/* Config text Welcome Preview */
 		$preview_text = '';
-		if (!empty($pmwelcome_post_text))
+		if ($preview && !$error)
 		{
 			$flags = 3;
 			$uid = $bitfield = '';
-			$preview_text = $pmwelcome_post_text;
+			$preview_text = $request->variable('pmwelcome_post_text', '', true);
+			$user_row = $this->pm_welcome_user_row($config['pmwelcome_user']);
+			$user_name = $user_row['username'] ?? '';
+			$user_email = $user_row['user_email'] ?? '';
+
+			$preview_text = str_replace('{USERNAME}', 		$user_name,					$preview_text);
+			$preview_text = str_replace('{USER_EMAIL}',		$user_email,				$preview_text);
+			$preview_text = str_replace('{SITE_NAME}',		$config['sitename'],		$preview_text);
+			$preview_text = str_replace('{SITE_DESC}',		$config['site_desc'],		$preview_text);
+			$preview_text = str_replace('{BOARD_CONTACT}',	$config['board_contact'],	$preview_text);
+			$preview_text = str_replace('{BOARD_EMAIL}',		$config['board_email'],		$preview_text);
+			$preview_text = str_replace('{BOARD_SIG}',		$config['board_email_sig'],	$preview_text);
+
 			generate_text_for_storage($preview_text, $uid, $bitfield, $flags, true, true, true);
 			$preview_text = generate_text_for_display($preview_text, $uid, $bitfield, $flags);
 		}
@@ -144,10 +143,17 @@ class pmwelcome_module
 			'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
-			'POST_TEXT'			=> $pmwelcome_post_text,
+			'POST_TEXT'			=> $preview ? $request->variable('pmwelcome_post_text', '', true) : $config_text->get('pmwelcome_post_text'),
 			'PREVIEW_TEXT'		=> $preview_text,
-			'U_ACTION'			=> $this->u_action)
-		);
+			'U_ACTION'			=> $this->u_action,
+		));
+
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+		}
+
+		display_custom_bbcodes();
 
 		// Output relevant page
 		foreach ($display_vars['vars'] as $config_key => $vars)
@@ -205,24 +211,22 @@ class pmwelcome_module
 		}
 	}
 
-	function pm_welcome_user_name($user_id)
+	function pm_welcome_user_row($user_id)
 	{
-		global $db;
+		global $db, $user;
 
-		$inder_fo = array();
-
-		$sql = 'SELECT user_id, username
-			FROM ' . USERS_TABLE . "
-			WHERE user_id = " . (int) $user_id;
+		$sql = 'SELECT u.*
+			FROM ' . USERS_TABLE . ' u
+			WHERE user_id = ' . (int) $user_id;
 		$result = $db->sql_query($sql);
-		$inder_fo = $db->sql_fetchrow($result);
+		$user_row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (!$inder_fo['username'])
+		if (!$user_row || !isset($user_row['username']))
 		{
-			$inder_fo['error'] = $this->user->lang['NO_USER'];
+			$user_row = ['error' => $user->lang['NO_USER']];
 		}
 
-		return $inder_fo;
+		return $user_row;
 	}
 }

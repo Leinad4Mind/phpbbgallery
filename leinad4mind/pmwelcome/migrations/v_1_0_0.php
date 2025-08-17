@@ -1,13 +1,14 @@
 <?php
+
 /**
 *
-* @package PM WELCOME
-* @copyright BB3.MOBi (c) 2015 Anvar http://apwa.ru
+* @package PM Welcome
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-namespace apwa\pmwelcome\migrations;
+namespace leinad4mind\pmwelcome\migrations;
 
 class v_1_0_0 extends \phpbb\db\migration\migration
 {
@@ -26,7 +27,7 @@ class v_1_0_0 extends \phpbb\db\migration\migration
 		return array(
 			// Add configs
 			array('config.add', array('pmwelcome_user', 2)),
-			array('config.add', array('pmwelcome_subject', 'Welcome to apwa.ru!')),
+			array('config.add', array('pmwelcome_subject', 'Welcome to “{SITE_NAME}”!')),
 
 			// Add config text
 			array('config_text.add', array('pmwelcome_post_text', '')),
@@ -36,10 +37,10 @@ class v_1_0_0 extends \phpbb\db\migration\migration
 
 			// Add ACP modules
 			array('module.add', array('acp', 'ACP_BOARD_CONFIGURATION', array(
-				'module_basename'	=> '\apwa\pmwelcome\acp\pmwelcome_module',
+				'module_basename'	=> '\leinad4mind\pmwelcome\acp\pmwelcome_module',
 				'module_langname'	=> 'ACP_PMWELCOME',
 				'module_mode'		=> 'settings',
-				'module_auth'		=> 'ext_apwa/pmwelcome && acl_a_board',
+				'module_auth'		=> 'ext_leinad4mind/pmwelcome && acl_a_board',
 			))),
 		);
 	}

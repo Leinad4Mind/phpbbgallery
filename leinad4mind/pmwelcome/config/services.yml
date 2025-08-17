@@ -1,11 +1,12 @@
 services:
-    apwa.pmwelcome.listener:
-        class: apwa\pmwelcome\event\listener
+    leinad4mind.pmwelcome.listener:
+        class: leinad4mind\pmwelcome\event\listener
         arguments:
-            - @user
-            - @config
-            - @config_text
-            - %core.root_path%
-            - %core.php_ext%
+            - '@user'
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
