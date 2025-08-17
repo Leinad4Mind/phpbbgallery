@@ -17,8 +17,14 @@ h2.invade-linklist {
 .icon-gallery {
 	background-position: 0 50%;
 	background-repeat: no-repeat;
-	padding: 1px 0 0 17px;
-	background-image: url("./images/icon_gallery.gif");
+	padding: 1px 0 0 1px;
+	background-image: url("./images/icon_gallery.png");
+}
+.phpbb_gallery-icon {
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	padding: 1px 0 0 1px;
+	background-image: url("./images/icon_gallery.png");
 }
 
 .rtl .icon-gallery {
@@ -119,11 +125,69 @@ input.autowidth-gallery {
 	background: #FFFFFF;
 	display: block;
 	float: left;
-	margin: 15px;
+	margin: 9px;
 	padding: 10px;
 	text-align: center;
 	text-decoration: none;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
 	transition: all .15s linear;
 	border: 1px solid #EFEFEF;
+}
+
+.image_unapproved
+{
+	display: inline-block !important;
+	background: transparent none 0 0 no-repeat;
+	margin: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	background-image: url("./images/icon_topic_unapproved.png");
+	padding-left: 16px;
+	padding-top: 14px;
+	float: right;
+}
+
+.image_locked
+{
+	display: inline-block !important;
+	background: transparent none 0 0 no-repeat;
+	margin: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	background-image: url("./images/lock.png");
+	padding-left: 16px;
+	padding-top: 14px;
+	float: right;
+}
+
+
+
+.image_prev_image
+{
+	float: left; 
+	text-align: left; 
+	width: 48%;
+	clip-path: url(#left_arrow);
+}
+.image_next_image
+{
+	float: right; 
+	text-align: right; 
+	width: 48%;
+	clip-path: url(#right_arrow);
+}
+
+.postbody_album {
+	text-align:center;
+}
+.postbody_album img.postimage {
+	margin: 10px auto 10px auto;
+	max-width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }

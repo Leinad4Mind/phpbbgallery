@@ -1,6 +1,5 @@
 <!-- INCLUDE gallery/gallery_header.html -->
 
-<!-- IF not S_IN_GALLERY_POPUP and U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <!-- IF not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP -->
@@ -10,7 +9,7 @@
 	<!-- IF ALBUM_CONTEST_START --><span>{ALBUM_CONTEST_START}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_RATING --><span>{ALBUM_CONTEST_RATING}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_END --><span>{ALBUM_CONTEST_END}<br /><br /></span><!-- ENDIF -->
-	<!-- IF MODERATORS --><strong>{L_MODERATORS}:</strong> {MODERATORS}<br /><!-- ENDIF -->
+	<!-- IF MODERATORS --><strong>{L_MODERATORS}{L_COLON}</strong> {MODERATORS}<br /><!-- ENDIF -->
 	<!-- IF U_EDIT_ALBUM --><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><!-- ENDIF -->
 	<!-- IF U_CREATE_ALBUM --><br /><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><!-- ENDIF -->
 </div>
@@ -28,9 +27,10 @@
 <!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
 	<div class="topic-actions" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->>
 
-	<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE -->
+	<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT -->
 		<div class="buttons">
-			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
+			<a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->" class="button icon-button <!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->post-icon<!-- ENDIF -->"><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a>
+			<!-- IF S_REGISTERED_USER --><div class="<!-- IF S_IS_WATCHED -->unwatch-icon<!-- ELSE -->watch-icon<!-- ENDIF -->"><a href="{U_WATCH_TOGLE}" title="<!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF -->"><!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF --></a></div><!-- ENDIF -->
 		</div>
 	<!-- ENDIF -->
 
@@ -72,10 +72,8 @@
 	<!-- ENDIF -->
 <!-- ELSE -->
 	<!-- IF S_IS_POSTABLE -->
-	<div class="panel">
-		<div class="inner"><span class="corners-top"><span></span></span>
+	<div class="panel" style="margin-top: 20px;">
 		<strong>{L_NO_IMAGES_LONG}</strong>
-		<span class="corners-bottom"><span></span></span></div>
 	</div>
 	<!-- ENDIF -->
 <!-- ENDIF -->
@@ -96,9 +94,9 @@
 	<!-- ENDIF -->
 	<!-- IF .imageblock -->
 	<div class="topic-actions">
-		<!-- IF U_UPLOAD_IMAGE -->
+		<!-- IF U_UPLOAD_IMAGE and not S_IS_BOT -->
 			<div class="buttons">
-				<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
+				<a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->" class="button icon-button <!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->post-icon<!-- ENDIF -->"><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a>
 			</div>
 		<!-- ENDIF -->
 
@@ -114,6 +112,7 @@
 		<!-- ENDIF -->
 	</div>
 	<br />
+	<br />
 	<!-- ENDIF -->
 <!-- ENDIF -->
 
@@ -121,7 +120,7 @@
 <!-- IF ALBUM_JUMPBOX -->
 	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">
-			<label for="album_id" accesskey="album_id">{L_JUMP_TO}:</label>
+			<label for="album_id" accesskey="album_id">{L_JUMP_TO}{L_COLON}</label>
 			<select name="album_id" id="album_id" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
 				{ALBUM_JUMPBOX}
 			</select>

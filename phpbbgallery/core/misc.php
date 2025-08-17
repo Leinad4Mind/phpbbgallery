@@ -8,18 +8,41 @@
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core;
 
-if (!defined('IN_PHPBB'))
+class misc
 {
-	exit;
-}
+	/**
+	 * misc constructor.
+	 *
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\user                       $user
+	 * @param \phpbb\config\config              $config
+	 * @param \phpbbgallery\core\config         $gallery_config
+	 * @param \phpbbgallery\core\user			$gallery_user
+	 * @param \phpbbgallery\core\url			$url
+	 * @param                                   $track_table
+	 */
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\config\config $config,
+								   \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user, \phpbbgallery\core\url $url,
+								   $track_table)
+	{
+		$this->db = $db;
+		$this->user = $user;
+		$this->config = $config;
+		$this->gallery_config = $gallery_config;
+		$this->gallery_user = $gallery_user;
+		$this->url = $url;
+		$this->track_table = $track_table;
+	}
 
-class phpbb_ext_gallery_core_misc
-{
-	static public function display_captcha($mode)
+	/**
+	 * Display captcha when needed
+	 *
+	 * @param $mode
+	 * @return mixed
+	 */
+	public function display_captcha($mode)
 	{
 		static $gallery_display_captcha;
 
@@ -28,22 +51,25 @@ class phpbb_ext_gallery_core_misc
 			return $gallery_display_captcha[$mode];
 		}
 
-		global $config, $user;
-
-		$gallery_display_captcha[$mode] = ($user->data['user_id'] == ANONYMOUS) && phpbb_gallery_config::get('captcha_' . $mode) && (version_compare($config['version'], '3.0.5', '>'));
+		$gallery_display_captcha[$mode] = ($this->user->data['user_id'] == ANONYMOUS) && $this->gallery_config->get('captcha_' . $mode);
 
 		return $gallery_display_captcha[$mode];
 	}
 
-	static public function not_authorised($backlink, $loginlink = '', $login_explain = '')
+	/**
+	 * Create not authorized dialog
+	 *
+	 * @param $backlink
+	 * @param string $loginlink
+	 * @param string $login_explain
+	 */
+	public function not_authorised($backlink, $loginlink = '', $login_explain = '')
 	{
-		global $user;
-
-		if (!$user->data['is_registered'] && $loginlink)
+		if (!$this->user->data['is_registered'] && $loginlink)
 		{
-			if ($login_explain && isset($user->lang[$login_explain]))
+			if ($login_explain && isset($this->user->lang[$login_explain]))
 			{
-				$login_explain = $user->lang[$login_explain];
+				$login_explain = $this->user->lang[$login_explain];
 			}
 			else
 			{
@@ -53,24 +79,27 @@ class phpbb_ext_gallery_core_misc
 		}
 		else
 		{
-			meta_refresh(3, $backlink);
+			$this->url->meta_refresh(3, $backlink);
 			trigger_error('NOT_AUTHORISED');
 		}
 	}
 
 	/**
-	* Marks a album as read
-	*
-	* borrowed from phpBB3
-	* @author: phpBB Group
-	* @function: markread
-	*/
-	static public function markread($mode, $album_id = false)
+	 * Marks a album as read
+	 *
+	 * borrowed from phpBB3
+	 *
+	 * @author  : phpBB Group
+	 * @function: markread
+	 * @param      $mode
+	 * @param bool $album_id
+	 */
+	public function markread($mode, $album_id = false)
 	{
-		global $db, $user;
+		$this->gallery_user->set_user_id($this->user->data['user_id']);
 
 		// Sorry, no guest support!
-		if ($user->data['user_id'] == ANONYMOUS)
+		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
 			return;
 		}
@@ -80,11 +109,11 @@ class phpbb_ext_gallery_core_misc
 			if ($album_id === false || !sizeof($album_id))
 			{
 				// Mark all albums read (index page)
-				$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
-					WHERE user_id = ' . $user->data['user_id'];
-				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . $this->track_table . '
+					WHERE user_id = ' . (int) $this->user->data['user_id'];
+				$this->db->sql_query($sql);
 
-				phpbb_gallery::$user->update_data(array(
+				$this->gallery_user->update_data(array(
 						'user_lastmark'		=> time(),
 				));
 			}
@@ -100,25 +129,25 @@ class phpbb_ext_gallery_core_misc
 			}
 
 			$sql = 'SELECT album_id
-				FROM ' . GALLERY_ATRACK_TABLE . "
-				WHERE user_id = {$user->data['user_id']}
-					AND " . $db->sql_in_set('album_id', $album_id);
-			$result = $db->sql_query($sql);
+				FROM ' . $this->track_table . '
+				WHERE user_id = ' . (int) $this->user->data['user_id'] .'
+					AND ' . $this->db->sql_in_set('album_id', $album_id);
+			$result = $this->db->sql_query($sql);
 
 			$sql_update = array();
-			while ($row = $db->sql_fetchrow($result))
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$sql_update[] = $row['album_id'];
 			}
-			$db->sql_freeresult($result);
+			$this->db->sql_freeresult($result);
 
 			if (sizeof($sql_update))
 			{
-				$sql = 'UPDATE ' . GALLERY_ATRACK_TABLE . '
-					SET mark_time = ' . time() . "
-					WHERE user_id = {$user->data['user_id']}
-						AND " . $db->sql_in_set('album_id', $sql_update);
-				$db->sql_query($sql);
+				$sql = 'UPDATE ' . $this->track_table . '
+					SET mark_time = ' . time() . '
+					WHERE user_id = '. (int) $this->user->data['user_id'] .'
+						AND ' . $this->db->sql_in_set('album_id', $sql_update);
+				$this->db->sql_query($sql);
 			}
 
 			if ($sql_insert = array_diff($album_id, $sql_update))
@@ -127,13 +156,13 @@ class phpbb_ext_gallery_core_misc
 				foreach ($sql_insert as $a_id)
 				{
 					$sql_ary[] = array(
-						'user_id'	=> (int) $user->data['user_id'],
+						'user_id'	=> (int) $this->user->data['user_id'],
 						'album_id'	=> (int) $a_id,
 						'mark_time'	=> time()
 					);
 				}
 
-				$db->sql_multi_insert(GALLERY_ATRACK_TABLE, $sql_ary);
+				$this->db->sql_multi_insert($this->track_table, $sql_ary);
 			}
 
 			return;
@@ -145,25 +174,25 @@ class phpbb_ext_gallery_core_misc
 				return;
 			}
 
-			$sql = 'UPDATE ' . GALLERY_ATRACK_TABLE . '
-				SET mark_time = ' . time() . "
-				WHERE user_id = {$user->data['user_id']}
-					AND album_id = $album_id";
-			$db->sql_query($sql);
+			$sql = 'UPDATE ' . $this->track_table . '
+				SET mark_time = ' . time() . '
+				WHERE user_id = ' . (int) $this->user->data['user_id'] .'
+					AND album_id = ' . (int) $album_id;
+			$this->db->sql_query($sql);
 
-			if (!$db->sql_affectedrows())
+			if (!$this->db->sql_affectedrows())
 			{
-				$db->sql_return_on_error(true);
+				$this->db->sql_return_on_error(true);
 
 				$sql_ary = array(
-					'user_id'		=> (int) $user->data['user_id'],
+					'user_id'		=> (int) $this->user->data['user_id'],
 					'album_id'		=> (int) $album_id,
 					'mark_time'		=> time(),
 				);
 
-				$db->sql_query('INSERT INTO ' . GALLERY_ATRACK_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				$this->db->sql_query('INSERT INTO ' . $this->track_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 
-				$db->sql_return_on_error(false);
+				$this->db->sql_return_on_error(false);
 			}
 
 			return;

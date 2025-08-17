@@ -8,16 +8,9 @@
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core_rating
+class rating
 {
 	/**
 	* The image ID we want to rate
@@ -57,13 +50,40 @@ class phpbb_ext_gallery_core_rating
 	*/
 
 	/**
-	* Constructor
-	*
-	* @param	int		$image_id
-	* @param	array	$image_data		Array with values from the image-table of the image
-	* @param	array	$album_data		Array with values from the album-table of the image's album
-	*/
-	public function __construct($image_id, $image_data = false, $album_data = false)
+	 * Constructor
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\template\template $template
+	 * @param \phpbb\user $user
+	 * @param \phpbb\request\request $request
+	 * @param config $gallery_config
+	 * @param auth\auth $gallery_auth
+	 * @param $images_table
+	 * @param $albums_table
+	 * @param $rates_table
+	 */
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \phpbb\request\request $request,
+	\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\auth\auth $gallery_auth,
+	$images_table, $albums_table, $rates_table)
+	{
+		$this->db = $db;
+		$this->template = $template;
+		$this->user = $user;
+		$this->request = $request;
+		$this->gallery_config = $gallery_config;
+		$this->gallery_auth = $gallery_auth;
+		$this->images_table = $images_table;
+		$this->albums_table = $albums_table;
+		$this->rates_table = $rates_table;
+	}
+
+	/**
+	 * Load data for the class to work with
+	 *
+	 * @param    int $image_id
+	 * @param array|bool $image_data Array with values from the image-table of the image
+	 * @param array|bool $album_data Array with values from the album-table of the image's album
+	 */
+	public function loader($image_id, $image_data = false, $album_data = false)
 	{
 		$this->image_id = (int) $image_id;
 		if ($image_data)
@@ -77,21 +97,21 @@ class phpbb_ext_gallery_core_rating
 	}
 
 	/**
-	* Returns the value of image_data key.
-	* If the value is missing, it is queried from the database.
-	*/
+	 * Returns the value of image_data key.
+	 * If the value is missing, it is queried from the database.
+	 * @param $key
+	 * @return
+	 */
 	private function image_data($key)
 	{
 		if ($this->image_data == null)
 		{
-			global $db;
-
 			$sql = 'SELECT *
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_id = ' . $this->image_id;
-			$result = $db->sql_query($sql);
-			$this->image_data = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
+				FROM ' . $this->images_table . '
+				WHERE image_id = ' . (int) $this->image_id;
+			$result = $this->db->sql_query($sql);
+			$this->image_data = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
 
 			if ($this->image_data == false)
 			{
@@ -103,23 +123,22 @@ class phpbb_ext_gallery_core_rating
 	}
 
 	/**
-	* Returns the value of album_data key.
-	* If the value is missing, it is queried from the database.
-	*
-	* @param	$key	string	The value of the album data, if true it returns the hole array.
-	*/
+	 * Returns the value of album_data key.
+	 * If the value is missing, it is queried from the database.
+	 *
+	 * @param    $key    string    The value of the album data, if true it returns the hole array.
+	 * @return mixed|null
+	 */
 	private function album_data($key)
 	{
 		if ($this->album_data == null)
 		{
-			global $db;
-
 			$sql = 'SELECT *
-				FROM ' . GALLERY_ALBUMS_TABLE . '
+				FROM ' . $this->albums_table . '
 				WHERE album_id = ' . (int) $this->image_data('album_id');
-			$result = $db->sql_query($sql);
-			$this->album_data = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
+			$result = $this->db->sql_query($sql);
+			$this->album_data = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
 
 			if ($this->album_data == false)
 			{
@@ -135,9 +154,7 @@ class phpbb_ext_gallery_core_rating
 	*/
 	public function display_box()
 	{
-		global $template, $user;
-
-		$template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
+		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
 
 		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
 		{
@@ -145,7 +162,8 @@ class phpbb_ext_gallery_core_rating
 			//@todo: self::MODE_STARS:
 			case self::MODE_SELECT:
 			default:
-				if ($this->album_data('contest_id'))
+				// @TODO We do not have contests for now
+				/*if ($this->album_data('contest_id'))
 				{
 					if (time() < ($this->album_data('contest_start') + $this->album_data('contest_rating')))
 					{
@@ -157,10 +175,10 @@ class phpbb_ext_gallery_core_rating
 						$template->assign_var('GALLERY_NO_RATING_MESSAGE', $user->lang('CONTEST_RATING_ENDED', $user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true)));
 						return;
 					}
-				}
-				for ($i = 1; $i <= phpbb_ext_gallery_core_config::get('max_rating'); $i++)
+				}*/
+				for ($i = 1; $i <= $this->gallery_config->get('max_rating'); $i++)
 				{
-					$template->assign_block_vars('rate_scale', array(
+					$this->template->assign_block_vars('rate_scale', array(
 						'RATE_POINT'	=> $i,
 					));
 				}
@@ -171,16 +189,15 @@ class phpbb_ext_gallery_core_rating
 	}
 
 	/**
-	* Get rating for a image
-	*
-	* @param	$user_rating			Personal rating of the user is displayed in most cases.
-	* @param	$display_contest_end	Shall we display the end-time of the contest? This requires the album-data to be filled.
-	* @return	string					Returns a string containing the information how the image was rated in average and how often.
-	*/
+	 * Get rating for a image
+	 *
+	 * @param bool|Personal $user_rating Personal rating of the user is displayed in most cases.
+	 * @param bool|Shall $display_contest_end Shall we display the end-time of the contest? This requires the album-data to be filled.
+	 * @return string Returns a string containing the information how the image was rated in average and how often.
+	 */
 	public function get_image_rating($user_rating = false, $display_contest_end = true)
 	{
-		global $template;
-		$template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
+		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
 
 		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
 		{
@@ -188,22 +205,21 @@ class phpbb_ext_gallery_core_rating
 			//@todo: self::MODE_STARS:
 			case self::MODE_SELECT:
 			default:
-				global $user;
 				if ($this->image_data('image_contest'))
 				{
 					if (!$display_contest_end)
 					{
-						return $user->lang['CONTEST_RATING_HIDDEN'];
+						return $this->user->lang['CONTEST_RATING_HIDDEN'];
 					}
-					return $user->lang('CONTEST_RESULT_HIDDEN', $user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
+					return $this->user->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
 				}
 				else
 				{
 					if ($user_rating)
 					{
-						return $user->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
+						return $this->user->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
 					}
-					return $user->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
+					return $this->user->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
 				}
 			break;
 		}
@@ -214,14 +230,14 @@ class phpbb_ext_gallery_core_rating
 	*/
 	private function get_image_rating_value()
 	{
-		if (phpbb_ext_gallery_core_contest::$mode == phpbb_ext_gallery_core_contest::MODE_SUM)
+		/*if (phpbb_ext_gallery_core_contest::$mode == phpbb_ext_gallery_core_contest::MODE_SUM)
 		{
 			return $this->image_data('image_rate_points');
 		}
 		else
-		{
+		{*/
 			return ($this->image_data('image_rate_avg') / 100);
-		}
+		//}
 	}
 
 	/**
@@ -235,10 +251,9 @@ class phpbb_ext_gallery_core_rating
 	*/
 	public function is_allowed()
 	{
-		global $user, $phpbb_ext_gallery;
-		return $phpbb_ext_gallery->auth->acl_check('i_rate', $this->album_data('album_id'), $this->album_data('album_user_id')) &&
-			($user->data['user_id'] != $this->image_data('image_user_id')) && ($user->data['user_id'] != ANONYMOUS) &&
-			($this->album_data('album_status') != phpbb_ext_gallery_core_album::STATUS_LOCKED) && ($this->image_data('image_status') == phpbb_ext_gallery_core_image::STATUS_APPROVED);
+		return $this->gallery_auth->acl_check('i_rate', $this->album_data('album_id'), $this->album_data('album_user_id')) &&
+			($this->user->data['user_id'] != $this->image_data('image_user_id')) && ($this->user->data['user_id'] != ANONYMOUS) &&
+			($this->album_data('album_status') != \phpbbgallery\core\block::ALBUM_LOCKED) && ($this->image_data('image_status') == \phpbbgallery\core\block::STATUS_APPROVED);
 	}
 
 	/**
@@ -251,8 +266,7 @@ class phpbb_ext_gallery_core_rating
 	*/
 	public function is_able()
 	{
-		global $user;
-		return $this->is_allowed() && phpbb_ext_gallery_core_contest::is_step('rate', $this->album_data(true));
+		return $this->is_allowed(); //&& phpbb_ext_gallery_core_contest::is_step('rate', $this->album_data(true));
 	}
 
 	/**
@@ -274,27 +288,26 @@ class phpbb_ext_gallery_core_rating
 			return false;
 		}
 
-		global $db;
-
 		$sql = 'SELECT rate_point
-			FROM ' . GALLERY_RATES_TABLE . '
-			WHERE rate_image_id = ' . $this->image_id . '
+			FROM ' . $this->rates_table . '
+			WHERE rate_image_id = ' . (int) $this->image_id . '
 				AND rate_user_id = ' . $user_id;
-		$result = $db->sql_query($sql);
-		$rating = $db->sql_fetchfield('rate_point');
-		$db->sql_freeresult($result);
+		$result = $this->db->sql_query($sql);
+		$rating = $this->db->sql_fetchfield('rate_point');
+		$this->db->sql_freeresult($result);
 
 		$this->user_rating[$user_id] = (is_bool($rating)) ? $rating : (int) $rating;
 		return $this->user_rating[$user_id];
 	}
 
 	/**
-	* Submit rating for an image.
-	*
-	* @param	int		$user_id
-	* @param	int		$points
-	* @param	string	$user_ip	Can be empty, function falls back to $user->ip
-	*/
+	 * Submit rating for an image.
+	 *
+	 * @param bool|int $user_id
+	 * @param bool|int $points
+	 * @param bool|string $user_ip Can be empty, function falls back to $user->ip
+	 * @return bool
+	 */
 	public function submit_rating($user_id = false, $points = false, $user_ip = false)
 	{
 		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
@@ -303,11 +316,9 @@ class phpbb_ext_gallery_core_rating
 			//@todo: self::MODE_STARS:
 			case self::MODE_SELECT:
 			default:
-				global $user;
-
-				$user_id = ($user_id) ? $user_id : $user->data['user_id'];
-				$points = ($points) ? $points : request_var('rating', 0);
-				$points = max(1, min($points, phpbb_ext_gallery_core_config::get('max_rating')));
+				$user_id = ($user_id) ? $user_id : $this->user->data['user_id'];
+				$points = ($points) ? $points : $this->request->variable('rating', 0);
+				$points = max(1, min($points, $this->gallery_config->get('max_rating')));
 			break;
 		}
 
@@ -323,23 +334,21 @@ class phpbb_ext_gallery_core_rating
 	}
 
 	/**
-	* Insert the rating into the database.
-	*
-	* @param	int		$user_id
-	* @param	int		$points
-	* @param	string	$user_ip	Can be empty, function falls back to $user->ip
-	*/
+	 * Insert the rating into the database.
+	 *
+	 * @param    int $user_id
+	 * @param    int $points
+	 * @param bool|string $user_ip Can be empty, function falls back to $user->ip
+	 */
 	private function insert_rating($user_id, $points, $user_ip = false)
 	{
-		global $db, $user;
-
 		$sql_ary = array(
 			'rate_image_id'	=> $this->image_id,
 			'rate_user_id'	=> $user_id,
-			'rate_user_ip'	=> ($user_ip) ? $user_ip : $user->ip,
+			'rate_user_ip'	=> ($user_ip) ? $user_ip : $this->user->ip,
 			'rate_point'	=> $points,
 		);
-		$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+		$this->db->sql_query('INSERT INTO ' . $this->rates_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 	}
 
 	/**
@@ -347,10 +356,8 @@ class phpbb_ext_gallery_core_rating
 	*
 	* @param	mixed	$image_ids	Array or integer with image_id where we recalculate the rating.
 	*/
-	static public function recalc_image_rating($image_ids)
+	public function recalc_image_rating($image_ids)
 	{
-		global $db;
-
 		if (is_array($image_ids))
 		{
 			$image_ids = array_map('intval', $image_ids);
@@ -361,21 +368,21 @@ class phpbb_ext_gallery_core_rating
 		}
 
 		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
-			FROM ' . GALLERY_RATES_TABLE . '
-			WHERE ' . $db->sql_in_set('rate_image_id', $image_ids, false, true) . '
+			FROM ' . $this->rates_table . '
+			WHERE ' . $this->db->sql_in_set('rate_image_id', $image_ids, false, true) . '
 			GROUP BY rate_image_id';
-		$result = $db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 
-		while ($row = $db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			$sql = 'UPDATE ' . $this->images_table . '
 				SET image_rates = ' . $row['image_rates'] . ',
 					image_rate_points = ' . $row['image_rate_points'] . ',
 					image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
 				WHERE image_id = ' . $row['rate_image_id'];
-			$db->sql_query($sql);
+			$this->db->sql_query($sql);
 		}
-		$db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 	}
 
 	/**
@@ -384,10 +391,8 @@ class phpbb_ext_gallery_core_rating
 	* @param	mixed	$image_ids		Array or integer with image_id where we delete the rating.
 	* @param	bool	$reset_average	Shall we also reset the average? We can save that query, when the images are deleted anyway.
 	*/
-	static public function delete_ratings($image_ids, $reset_average = false)
+	public function delete_ratings($image_ids, $reset_average = false)
 	{
-		global $db;
-
 		if (is_array($image_ids))
 		{
 			$image_ids = array_map('intval', $image_ids);
@@ -397,18 +402,18 @@ class phpbb_ext_gallery_core_rating
 			$image_ids = (int) $image_ids;
 		}
 
-		$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-			WHERE ' . $db->sql_in_set('rate_image_id', $image_ids, false, true);
-		$result = $db->sql_query($sql);
+		$sql = 'DELETE FROM ' . $this->rates_table . '
+			WHERE ' . $this->db->sql_in_set('rate_image_id', $image_ids, false, true);
+		$result = $this->db->sql_query($sql);
 
 		if ($reset_average)
 		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			$sql = 'UPDATE ' . $this->images_table . '
 				SET image_rates = 0,
 					image_rate_points = 0,
 					image_rate_avg = 0
-				WHERE ' . $db->sql_in_set('image_id', $image_ids);
-			$db->sql_query($sql);
+				WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+			$this->db->sql_query($sql);
 		}
 	}
 }

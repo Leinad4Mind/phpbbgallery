@@ -262,6 +262,14 @@ $lang = array_merge($lang, array(
 	'PEGA_CREATED'					=> 'Created personal gallery for %s.',
 	'PEGA_ALREADY_EXISTS'			=> '%s already has a personal gallery.',
 	'PGALLERIES_PER_PAGE'			=> 'Number of personal galleries per page',
+	'ITEMS_PER_PAGE'				=> 'Items per page',
+	'ITEMS_PER_PAGE_EXP'			=> 'How many images/albums per page',
+	'RANDOM_ON_INDEX'				=> 'Show random images on index',
+	'RANDOM_ON_INDEX_EXP'			=> 'Should there be random images on gallery index page.',
+	'RANDOM_ON_INDEX_COUNT'			=> 'Random image count',
+	'RECENT_ON_INDEX'				=> 'Show recent images',
+	'RECENT_ON_INDEX_EXP'			=> 'Should recent images be displayed on index',
+	'RECENT_ON_INDEX_COUNT'			=> 'Recent images count',
 	'PHPBB_INTEGRATION'				=> 'phpBB integration',
 	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 	'PURGED_CACHE'					=> 'Purged the cache',
@@ -315,6 +323,7 @@ $lang = array_merge($lang, array(
 	'RRC_PROFILE_MODE'				=> 'Mode of “Recent- &amp; Random-Images“-Feature in the profile',
 	'RRC_PROFILE_MODE_EXP'			=> '“Random images“ may take some time to load, on large databases!',
 	'RRC_PROFILE_ROWS'				=> 'Rows',
+	'RRC_PROFILE_ITEMS'				=> 'Items in user profile',
 
 	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',
 	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',
@@ -330,8 +339,6 @@ $lang = array_merge($lang, array(
 	'SELECTED_GROUPS'				=> 'Selected groups',
 	'SELECTED_PERM_SYS'				=> 'Selected permission-system',
 	'SET_PERMISSIONS'				=> '<br />Set <a href="%s">permissions</a> now.',
-	'SHORTED_IMAGENAMES'			=> 'Shorten Imagenames',
-	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn’t include spaces, the layout maybe destroyed.',
 	'SORRY_NO_STATISTIC'			=> 'Sorry, this statistic-value is not yet available.',
 	'SYNC_IN_PROGRESS'				=> 'Synchronizing album',
 	'SYNC_IN_PROGRESS_EXPLAIN'		=> 'Currently resyncing image range %1$d/%2$d.',
@@ -382,6 +389,10 @@ $lang = array_merge($lang, array(
 	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum width of the image here. If the image is smaller, the watermark will not be viewed.',
 
 	'ZIP_ALLOWED'					=> 'Allowed to upload ZIP archives',
+
+	'NO_WRITE_ACCESS'				=> 'No write access',
+	'WRITE_ACCESS'					=> 'OK',
+	'DIR_CREATED'					=> 'Directory created',
 ));
 
 /**
@@ -398,5 +409,3 @@ $lang = array_merge($lang, array(
 	'UP_TO_DATE'			=> '%s is up to date',
 	'VERSION_CHECK'			=> 'MOD Version Check',
 ));
-
-?>

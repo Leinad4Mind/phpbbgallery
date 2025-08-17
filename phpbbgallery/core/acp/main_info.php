@@ -8,26 +8,22 @@
 *
 */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\acp;
 
-/**
-* @package module_install
-*/
-class phpbb_ext_gallery_core_acp_main_info
+class main_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> 'acp_gallery',
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'overview'			=> array('title' => 'ACP_GALLERY_OVERVIEW',				'auth' => 'acl_a_gallery_manage',	'cat' => array('PHPBB_GALLERY')),
+				'overview'			=> array(
+					'title' => 'ACP_GALLERY_OVERVIEW',
+					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_manage',
+					'cat' => array('PHPBB_GALLERY')
+				),
 			),
 		);
 	}
 }
-?>

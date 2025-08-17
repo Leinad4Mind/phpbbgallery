@@ -1,5 +1,29 @@
 <!-- INCLUDE gallery/gallery_header.html -->
+<script type="text/javascript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
 
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
 <p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
 <!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
 
@@ -7,7 +31,7 @@
 <ul class="linklist">
 	<li class="rightside">
 		<div class="dropdown-container dropdown-button-control topic-tools dropdown-right dropdown-down">
-			<span title="{L_NEWS_FILTER_BY_CATEGORY}" class="dropdown-trigger dropdown-select dropdown-select-icon tools-icon dropdown-toggle"></span>
+			<span title="{L_QUICK_LINKS}" class="dropdown-trigger button dropdown-select dropdown-toggle"></span>
 			<div class="dropdown hidden">
 				<div class="pointer"><div class="pointer-inner"></div></div>
 				<ul class="dropdown-contents">
@@ -15,7 +39,12 @@
 						<li><a href="{U_MARK_ALBUMS}" accesskey="m">{L_MARK_ALBUMS_READ}</a></li>
 					<!-- ENDIF -->
 					<li><a href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></li>
+					<!-- IF U_G_SEARCH_RECENT -->
 					<li><a href="{U_G_SEARCH_RECENT}">{L_VIEW_SEARCH_RECENT}</a></li>
+					<!-- ENDIF -->
+					<!-- IF U_G_SEARCH_RANDOM -->
+					<li><a href="{U_G_SEARCH_RANDOM}">{L_VIEW_SEARCH_RANDOM}</a></li>
+					<!-- ENDIF -->
 					<!-- IF U_G_SEARCH_COMMENTED -->
 						<li><a href="{U_G_SEARCH_COMMENTED}">{L_VIEW_SEARCH_COMMENTED}</a></li>
 					<!-- ENDIF -->
@@ -77,7 +106,30 @@
 	</div>
 <!-- ENDIF -->
 
+<!-- IF .pagination or TOTAL_ALBUMS -->
+	<div class="pagination">
+		{TOTAL_ALBUMS}
+		<!-- IF .pagination -->
+			 &bull; <!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			 &bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
 <!-- INCLUDE gallery/albumlist_polaroid.html -->
+
+
+<!-- IF .pagination or TOTAL_ALBUMS -->
+	<div class="pagination">
+		{TOTAL_ALBUMS}
+		<!-- IF .pagination -->
+			 &bull; <!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			 &bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
 
 <!-- IF S_PERSONAL_GALLERY -->
 	<div class="topic-actions">
@@ -85,16 +137,107 @@
 	</div>
 <!-- ENDIF -->
 
-<!-- IF S_USERS_PERSONAL_GALLERIES --><h4><!-- IF S_PERSONAL_GALLERY --><a href="{U_GALLERY_MOD}">{L_GALLERY}</a>&nbsp;&lsaquo;&nbsp;{L_USERS_PERSONAL_ALBUMS}<!-- ELSE -->{L_GALLERY}&nbsp;&lsaquo;&nbsp;<a href="{U_USERS_PERSONAL_GALLERIES}">{L_USERS_PERSONAL_ALBUMS}</a><!-- ENDIF --><!-- IF U_YOUR_PERSONAL_GALLERY -->&nbsp;&raquo;&nbsp;<a href="{U_YOUR_PERSONAL_GALLERY}">{L_YOUR_PERSONAL_ALBUM}</a><!-- ENDIF --></h4><br /><!-- ENDIF -->
+<!-- IF S_USERS_PERSONAL_GALLERIES -->
+		<div class="forabg">
+		<div class="inner">
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dt>
+							<div class="list-inner">
+								{L_GALLERY}
+							</div>
+						</dt>
+						<dd class="topics">{L_GALLERY_IMAGES}</dd>
+						<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+				<li class="row">
+					<dl class="icon forum_unread">
+						<dt>
+							<a href="{U_USERS_PERSONAL_GALLERIES}" class="icon-link"></a>
+							<div class="list-inner">
+								<a class="forumtitle" href="{U_USERS_PERSONAL_GALLERIES}">{L_USERS_PERSONAL_ALBUMS}</a>
+								<!-- IF S_PERSONAL_ALBUM -->
+									<br />
+									{L_YOUR_PERSONAL_ALBUM}{L_COLON} <a href="{U_PERSONAL_ALBUM}" <!-- IF !U_PERSONAL_ALBUM_COLOR -->class="username"<!-- ELSE -->class="username-coloured" style="color: #{U_PERSONAL_ALBUM_COLOR};"<!-- ENDIF -->>{U_PERSONAL_ALBUM_USER}</a>
+								<!-- ENDIF -->
+								<div class="responsive-show" style="display: none;">
+									{L_GALLERY_IMAGE}{L_COLON} <strong>{U_PERSONAL_GALLERIES_IMAGES}</strong>
+								</div>
+							</div>
+						</dt>
+						<dd class="topics">
+							{U_PERSONAL_GALLERIES_IMAGES}
+							<dfn>{L_GALLERY_IMAGES}</dfn>
+						</dd>
+						<dd class="lastpost">
+							<div>
+								<span style="float: left; margin-right: 15px;"	>
+									<dfn>{L_LAST_IMAGES}</dfn>
+									<a href="{U_IMAGE_ACTION}"><img src="{U_PERSONAL_GALLERIES_LAST_IMAGE}" style="max-width: 50px; max-height: 50px;"></a>
+								</span>
+								<span style="width: 150px;">
+									<!-- IF U_IMAGENAME --><a href="{U_IMAGENAME_ACTION}"><p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; margin-bottom: 2px;">{U_IMAGENAME}</p></a>
+									{U_TIME} <br>
+									{U_UPLOADER}<!-- ENDIF -->
+								</span>
+							</div>
+						</dd>
+					<dl>
+				</li>
+			</ul>
+		</div>
+	</div>
+<!-- ENDIF -->
 
-<!-- INCLUDE gallery/recent_body.html -->
+<!-- IF U_RECENT or U_RANDOM-->
+	<!-- INCLUDE gallery/imageblock_polaroid.html -->
+<!-- ENDIF -->
+<!-- IF U_RECENT_COMMENTS -->
+	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{L_SEARCH_RECENT_COMMENTS}</a> </h2>
+	<!-- IF ERROR --><h2>{ERROR}</h2>
+	<!-- ELSE -->
+	<div id="recent-comments" <!-- IF COMMENTS_EXPAND --><!-- ELSE -->style="display: none;"<!-- ENDIF -->>
+		<!-- BEGIN commentrow -->
+		<a id="{commentrow.COMMENT_ID}"></a>
+		<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+			<div class="inner">
+				<span class="corners-top"><span></span></span>
+				<div class="postbody">
+						<ul class="post-buttons">
+							<!-- IF commentrow.U_EDIT --><li><a href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}" class="button icon-button edit-icon"><span>{L_EDIT_COMMENT}</span></a></li><!-- ENDIF -->
+							<!-- IF commentrow.U_DELETE --><li><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}" class="button icon-button delete-icon"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
+							<!-- IF commentrow.U_QUOTE --><li><a href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}" class="button icon-button quote-icon"><span>{L_QUOTE_COMMENT}</span></a></li><!-- ENDIF -->
+						</ul>
+						<p class="author"><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a>&nbsp;{L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> &raquo; {commentrow.TIME} </p>
+					<div class="content">{commentrow.TEXT}</div>
+				</div>
+				<dl class="postprofile" id="profile{commentrow.COMMENT_ID}">
+					<dd>{L_COMMENT_ON}{L_COLON}</dd>
+					<dd>{commentrow.UC_IMAGE_NAME}</dd>
+					<dt>{commentrow.UC_THUMBNAIL}</dt><br />
+
+					<dd>{L_UPLOADED_BY_USER} {commentrow.IMAGE_AUTHOR}</dd>
+					<dd>{commentrow.IMAGE_TIME}</dd>
+				</dl>
+				<span class="corners-bottom"><span></span></span>
+			</div>
+		</div>
+		<!-- END commentrow -->
+	</div>
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
 
 <!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_DISP_LOGIN -->
 	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
 	<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><!-- IF S_REGISTER_ENABLED -->&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --></h3>
 		<fieldset class="quick-login">
-			<label for="username">{L_USERNAME}:</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />
-			<label for="password">{L_PASSWORD}:</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" />
+			<label for="username">{L_USERNAME}{L_COLON}</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />
+			<label for="password">{L_PASSWORD}{L_COLON}</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" />
 			<!-- IF S_AUTOLOGIN_ENABLED -->
 				| <label for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" /></label>
 			<!-- ENDIF -->

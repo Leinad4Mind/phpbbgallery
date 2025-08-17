@@ -24,6 +24,16 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ACP_LOG_GALLERY_MOD'						=> 'Moderator log',
+	'ACP_LOG_GALLERY_MOD_EXP'						=> 'Moderator log',
+	'ACP_LOG_GALLERY_ADM'						=> 'Administrator log',
+	'ACP_LOG_GALLERY_ADM_EXP'						=> 'Administrator log',
+	'ACP_LOG_GALLERY_SYSTEM'						=> 'System log',
+	'ACP_LOG_GALLERY_SYSTEM_EXP'						=> 'System log',
+	'LOG_GALLERY_SHOW_LOGS'						=> 'Show only',
+
+	'SORT_USER_ID'							=> 'User ID',
+
 	'LOG_ALBUM_ADD'							=> '<strong>Created new album</strong><br />» %s',
 	'LOG_ALBUM_DEL_ALBUM'					=> '<strong>Deleted album</strong><br />» %s',
 	'LOG_ALBUM_DEL_ALBUMS'					=> '<strong>Deleted album and its subalbums</strong><br />» %s',
@@ -52,9 +62,8 @@ $lang = array_merge($lang, array(
 	'LOG_GALLERY_REPORT_DELETED'		=> '<strong>Deleted report</strong><br />» %s',
 	'LOG_GALLERY_REPORT_OPENED'			=> '<strong>Reopened report</strong><br />» %s',
 	'LOG_GALLERY_UNAPPROVED'			=> '<strong>Unapproved image</strong><br />» %s',
+	'LOG_GALLERY_DISAPPROVED'			=> '<strong>Disapproved image</strong><br />» %s',
 
 	'LOGVIEW_VIEWALBUM'					=> 'View album',
 	'LOGVIEW_VIEWIMAGE'					=> 'View image',
 ));
-
-?>

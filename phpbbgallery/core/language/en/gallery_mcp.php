@@ -38,13 +38,14 @@ $lang = array_merge($lang, array(
 	'GALLERY_MCP_APPROVED'			=> 'Approved images',
 	'GALLERY_MCP_LOCKED'			=> 'Locked images',
 	'GALLERY_MCP_VIEWALBUM'			=> 'View album',
+	'GALLERY_MCP_ALBUM_OVERVIEW'	=> 'Moderate album',
 
 	'IMAGE_REPORTED'				=> 'The image was reported.',
 	'IMAGE_UNAPPROVED'				=> 'The image is awaiting for approval.',
 
 	'MODERATE_ALBUM'				=> 'Moderate album',
 
-	'LATEST_IMAGES_REPORTED'		=> 'Latest 5 reports',
+	'LATEST_IMAGES_REPORTED'		=> 'Latest 5 images reported',
 	'LATEST_IMAGES_UNAPPROVED'		=> 'Latest 5 images awaiting approval',
 
 	'QUEUE_A_APPROVE'				=> 'Approve image',
@@ -78,6 +79,7 @@ $lang = array_merge($lang, array(
 	'QUEUES_A_UNAPPROVE'			=> 'Unapprove images',
 	'QUEUES_A_UNAPPROVE2'			=> 'Unapprove images?',
 	'QUEUES_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove these images?',
+	'QUEUES_A_DISAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove these images?',
 
 	'REPORT_A_CLOSE'				=> 'Close report',
 	'REPORT_A_CLOSE2'				=> 'Close report?',
@@ -113,6 +115,11 @@ $lang = array_merge($lang, array(
 		1			=> 'In total there is <span style="font-weight: bold;">1</span> image approved.',
 		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
 	),
+	'WAITING_DISPPROVED_IMAGE'		=> array(
+		0			=> 'No images disapproved.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> image disapproved.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images disapproved.',
+	),
 	'WAITING_LOCKED_IMAGE'			=> array(
 		0			=> 'No images locked.',
 		1			=> 'In total there is <span style="font-weight: bold;">1</span> image locked.',
@@ -133,6 +140,15 @@ $lang = array_merge($lang, array(
 		1			=> 'In total there is <span style="font-weight: bold;">1</span> image waiting for approval.',
 		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images waiting for approval.',
 	),
+	'DELETED_IMAGES'		=> array(
+		0			=> 'No images deleted.',
+		1			=> 'In total there was <span style="font-weight: bold;">1</span> image deleted.',
+		2			=> 'In total there was <span style="font-weight: bold;">%s</span> images deleted.',
+	),
+	'MOVED_IMAGES'		=> array(
+		0			=> 'No images were moved.',
+		1			=> 'In total there was <span style="font-weight: bold;">1</span> image moved.',
+		2			=> 'In total there was <span style="font-weight: bold;">%s</span> images moved.',
+	),
+	'NO_WAITING_UNAPPROVED_IMAGE'	=> 'No images waiting for approval.',
 ));
-
-?>

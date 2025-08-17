@@ -12,12 +12,9 @@
 * @ignore
 */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core;
 
-class phpbb_ext_gallery_core_constants
+class constants
 {
 	// GD library
 	const GDLIB1 = 1;

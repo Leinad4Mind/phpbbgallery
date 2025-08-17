@@ -46,6 +46,7 @@ $lang = array_merge($lang, array(
 	),
 	'ALLOWED_FILETYPES'				=> 'Allowed filetypes',
 	'APPROVE'						=> 'Approve',
+	'DISAPPROVE'					=> 'Dissaprove',
 	'APPROVE_IMAGE'					=> 'Approve image',
 
 	//@todo
@@ -115,6 +116,7 @@ $lang = array_merge($lang, array(
 	'DESC_TOO_LONG'					=> 'Your description is too long',
 	'DESCRIPTION_LENGTH'			=> 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DETAILS'						=> 'Details',
+	'DISALLOWED_EXTENSION'			=> 'This image extension is not allowed',
 	'DONT_RATE_IMAGE'				=> 'Don’t rate image',
 
 	'EDIT_COMMENT'					=> 'Edit comment',
@@ -130,7 +132,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_PNG'					=> 'png',
 	'FILETYPES_ZIP'					=> 'zip',
 
+	'FULL_EDITOR'					=> 'Full editor',
+
 	'GALLERY_IMAGE'					=> 'Image',
+	'GALLERY_IMAGES'					=> 'Images',
 	'GALLERY_VIEWS'					=> 'Views',
 
 	'IGNORE_NOTUPTODATE_MESSAGE'		=> 'Remind me in 7 days',
@@ -147,14 +152,19 @@ $lang = array_merge($lang, array(
 	'IMAGE_PCT'							=> '%.2f%% of all images',
 	'IMAGE_STATUS'						=> 'Status',
 	'IMAGE_URL'							=> 'Image-URL',
+	'IMAGE_VIEWS'							=> 'Views',
 	'IMAGE_WIDTH'						=> 'Image width',
 	'IMAGES_REPORTED_SUCCESSFULLY'		=> 'The image was successful reported',
 	'IMAGES_UPDATED_SUCCESSFULLY'		=> 'Your image information has been updated successfully',
 	'INSERT_IMAGE_POST'					=> 'Insert image into post',
 	'INVALID_USERNAME'					=> 'Your Username is invalid',
+	'INVALID_IMAGE'					=> 'Invalid Image',
+	'FILE_DISALLOWED_EXTENSION'		=> 'File extension is not allowed',
+	'FILE_WRONG_FILESIZE'			=> 'Wrong file size',
 
 	'LAST_COMMENT'					=> 'Last Comment',
 	'LAST_IMAGE'					=> 'Last Image',
+	'LAST_IMAGE_BY'					=> 'Last Image by',
 	'LOGIN_EXPLAIN_UPLOAD'			=> 'You must registered and logged in to upload images into this gallery.',
 
 	'MARK_ALBUMS_READ'				=> 'Mark albums read',
@@ -185,6 +195,8 @@ $lang = array_merge($lang, array(
 	'NO_IMAGES_LONG'				=> 'There are no images in this album.',
 	'NOT_ALLOWED_FILE_TYPE'			=> 'This file type is not allowed',
 	'NOT_RATED'						=> 'not rated',
+
+	'NO_WRITE_ACCESS'				=> 'The upload directory is missing or phpBB has no write access to it.<br>Please contact the board admin!',
 
 	'ORDER'							=> 'Order',
 	'ORIG_FILENAME'					=> 'Take filename as imagename (the insert-field has no function)',
@@ -226,6 +238,7 @@ $lang = array_merge($lang, array(
 	'ROTATE_NONE'					=> 'none',
 	'ROTATE_RIGHT'					=> '90° right',
 	'ROTATE_UPSIDEDOWN'				=> '180° upside-down',
+	'RETURN_TO_GALLERY'				=> 'Return to Gallery',
 
 	'SEARCH_ALBUM'					=> 'Search this album…',
 	'SEARCH_ALBUMS'					=> 'Search in albums',
@@ -236,8 +249,11 @@ $lang = array_merge($lang, array(
 	'SEARCH_IMAGE_VALUES'			=> 'Imagenames and descriptions only',
 	'SEARCH_IMAGENAME'				=> 'Imagenames only',
 	'SEARCH_RANDOM'					=> 'Random images',
+	'NO_SEARCH_RESULTS_RANDOM'		=> 'There are no images or you do not have access to see them!',
 	'SEARCH_RECENT'					=> 'Recent images',
+	'NO_SEARCH_RESULTS_RECENT'		=> 'There are no images or you do not have access to see them!',
 	'SEARCH_RECENT_COMMENTS'		=> 'Recent comments',
+	'NO_SEARCH_RESULTS_RECENT_COMMENTS'	=> 'There are no recent comments or you do not have access!',
 	'SEARCH_SUBALBUMS'				=> 'Search subalbums',
 	'SEARCH_TOPRATED'				=> 'Top rated images',
 	'SEARCH_USER_IMAGES'			=> 'Search user’s images',
@@ -262,6 +278,11 @@ $lang = array_merge($lang, array(
 		2	=> 'Total comments <strong>%d</strong>',
 	),
 	'TOTAL_IMAGES'					=> 'Total images',
+	'TOTAL_IMAGES_SPRINTF'			=> array(
+		0	=> 'No images',
+		1	=> '%d image',
+		2	=> '%d images',
+	),
 	'TOTAL_PEGAS_SHORT_SPRINTF'		=> array(
 		0	=> '0 personal galleries',
 		1	=> '%d personal gallery',
@@ -287,7 +308,7 @@ $lang = array_merge($lang, array(
 	'UPLOAD_IMAGE_SIZE_TOO_BIG'		=> 'Your image dimension size is too large',
 	'UPLOAD_NO_FILE'				=> 'You must enter your path and filename',
 	'UPLOADED_BY_USER'				=> 'Uploaded by',
-	'UPLOADED_ON_DATE'				=> 'Uploaded',
+	'UPLOADED_ON_DATE'				=> 'Uploaded on',
 	'USE_SAME_NAME'					=> 'Use the same image name and description for all images.',
 	'USE_NUM'						=> 'Add {NUM} for numbers. Start counting at:',
 	'USER_REACHED_QUOTA'			=> array(
@@ -302,6 +323,8 @@ $lang = array_merge($lang, array(
 	),
 	'USERNAME_BEGINS_WITH'			=> 'Username begins with',
 	'USERS_PERSONAL_ALBUMS'			=> 'Users Personal Albums',
+
+	'VISIT_GALLERY'					=> 'Visit user gallery',
 
 	'VIEW_ALBUM'					=> 'View album',
 	'VIEW_ALBUM_IMAGES'				=> array(
@@ -333,6 +356,15 @@ $lang = array_merge($lang, array(
 	'YOUR_COMMENT'					=> 'Your comment',
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
 	'YOUR_RATING'					=> 'Your rating',
-));
 
-?>
+	'IMAGES_MOVED'					=> array(
+		1	=>	'Image moved',
+		2	=> 	'%s images moved',
+	),
+
+	'QUICK_MOD'	=> 'Select moderator action',
+	'WRONG_FILESIZE'	=> 'Image is bigger then the limit!',
+
+	// Versions 1.2.1 addiotions
+	'GALLERY_DROP'		=> 'Drop your images here',
+));

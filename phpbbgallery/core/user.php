@@ -49,15 +49,27 @@ class user
 	/**
 	 * Constructor
 	 *
-	 * @param	\phpbb\db\driver\driver	$db			Database object
-	 * @param	\phpbb\event\dispatcher	$dispatcher	Event dispatcher object
-	 * @param	string					$table_name	Gallery users table
+	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db Database object
+	 * @param    \phpbb\event\dispatcher $dispatcher Event dispatcher object
+	 * @param \phpbb\user $user
+	 * @param \phpbb\config\config $config
+	 * @param \phpbb\auth\auth $auth
+	 * @param    string $table_name Gallery users table
+	 * @param $root_path
+	 * @param $php_ext
 	 */
-	public function __construct(\phpbb\db\driver\driver $db, \phpbb\event\dispatcher $dispatcher, $table_name)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher $dispatcher, \phpbb\user $user, \phpbb\config\config $config,
+	\phpbb\auth\auth $auth,
+								$table_name, $root_path, $php_ext)
 	{
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
+		$this->user = $user;
+		$this->config = $config;
+		$this->auth = $auth;
 		$this->table_name	= $table_name;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -95,7 +107,7 @@ class user
 		$sql = 'SELECT *
 			FROM ' . $this->table_name . '
 			WHERE user_id = ' . $this->user_id;
-		$result = $this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql, 30);
 		if ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->data			= $this->validate_data($row);
@@ -106,8 +118,9 @@ class user
 	}
 
 	/**
-	* Load the users data from the database and cast it...
-	*/
+	 * Load the users data from the database and cast it...
+	 * @param $time
+	 */
 	public function set_permissions_changed($time)
 	{
 		if ($this->data)
@@ -150,9 +163,11 @@ class user
 	}
 
 	/**
-	* Updates/Inserts the data, depending on whether the user already exists or not.
-	*	Example: 'SET key = x'
-	*/
+	 * Updates/Inserts the data, depending on whether the user already exists or not.
+	 *    Example: 'SET key = x'
+	 * @param $data
+	 * @return bool
+	 */
 	public function update_data($data)
 	{
 		$this->force_load();
@@ -172,9 +187,11 @@ class user
 	}
 
 	/**
-	* Increase/Inserts the data, depending on whether the user already exists or not.
-	*	Example: 'SET key = key + x'
-	*/
+	 * Increase/Inserts the data, depending on whether the user already exists or not.
+	 *    Example: 'SET key = key + x'
+	 * @param $num
+	 * @return bool
+	 */
 	public function update_images($num)
 	{
 		$suc = false;
@@ -263,7 +280,7 @@ class user
 		$sql = 'INSERT INTO ' . $this->table_name . '
 			' . $this->db->sql_build_array('INSERT', $sql_ary);
 		$this->db->sql_query($sql);
-		$error = $this->db->sql_error_triggered;
+		$error = $this->db->get_sql_error_triggered();
 
 		$this->db->sql_return_on_error(false);
 
@@ -334,7 +351,7 @@ class user
 		{
 			$sql_where = 'WHERE ' . $this->db->sql_in_set('user_id', array_map('intval', $user_ids));
 		}
-		elseif ($user_ids == 'all')
+		else if ($user_ids == 'all')
 		{
 			$sql_where = '';
 		}
@@ -389,8 +406,17 @@ class user
 				default:
 					$is_validated = false;
 
+					/**
+					* Event user validat data
+					*
+					* @event phpbbgallery.core.user.validate_data
+					* @var	bool	is_validated	is value validated
+					* @var	string	name			value name
+					* @var	mixed	value			value of the value
+					* @since 1.2.0
+					*/
 					$vars = array('is_validated', 'name', 'value');
-					extract($this->dispatcher->trigger_event('gallery.core.user.validate_data', compact($vars)));
+					extract($this->dispatcher->trigger_event('phpbbgallery.core.user.validate_data', compact($vars)));
 
 					if ($is_validated)
 					{
@@ -425,8 +451,15 @@ class user
 
 		$default_values = self::$default_values;
 
+		/**
+		* Event user validat data
+		*
+		* @event phpbbgallery.core.user.get_default_values
+		* @var	array	default_values	the default values array
+		* @since 1.2.0
+		*/
 		$vars = array('default_values');
-		extract($this->dispatcher->trigger_event('gallery.core.user.get_default_values', compact($vars)));
+		extract($this->dispatcher->trigger_event('phpbbgallery.core.user.get_default_values', compact($vars)));
 
 		return $default_values;
 	}
@@ -454,17 +487,15 @@ class user
 	);
 
 	/**
-	*
-	*/
-	static public function add_user_to_cache(&$user_cache, $row)
+	 * @param $user_cache
+	 * @param $row
+	 */
+	public function add_user_to_cache(&$user_cache, $row)
 	{
-		global $auth, $config, $user;
-		global $phpbb_root_path, $phpEx;
-
 		$user_id = $row['user_id'];
 		if (!function_exists('phpbb_get_user_avatar'))
 		{
-			include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
 		}
 
 		if ($user_id == ANONYMOUS)
@@ -482,7 +513,7 @@ class user
 				'sig_bbcode_bitfield'	=> '',
 
 				'online'			=> false,
-				'avatar'			=> ($user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
+				'avatar'			=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 				'rank_title'		=> '',
 				'rank_image'		=> '',
 				'rank_image_src'	=> '',
@@ -504,7 +535,7 @@ class user
 		else
 		{
 			$user_sig = '';
-			if ($row['user_sig'] && $config['allow_sig'] && $user->optionget('viewsigs'))
+			if ($row['user_sig'] && $this->config['allow_sig'] && $this->user->optionget('viewsigs'))
 			{
 				$user_sig = $row['user_sig'];
 			}
@@ -512,7 +543,7 @@ class user
 			$id_cache[] = $user_id;
 
 			$user_cache[$user_id] = array(
-				'joined'		=> $user->format_date($row['user_regdate']),
+				'joined'		=> $this->user->format_date($row['user_regdate']),
 				'posts'			=> $row['user_posts'],
 				'warnings'		=> (isset($row['user_warnings'])) ? $row['user_warnings'] : 0,
 				'viewonline'	=> $row['user_allow_viewonline'],
@@ -522,8 +553,7 @@ class user
 				'sig_bbcode_uid'		=> (!empty($row['user_sig_bbcode_uid'])) ? $row['user_sig_bbcode_uid'] : '',
 				'sig_bbcode_bitfield'	=> (!empty($row['user_sig_bbcode_bitfield'])) ? $row['user_sig_bbcode_bitfield'] : '',
 
-
-				'avatar'		=> ($user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
+				'avatar'		=> ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 				'age'			=> '',
 
 				'rank_title'		=> '',
@@ -535,33 +565,34 @@ class user
 				'user_colour'		=> $row['user_colour'],
 
 				'online'		=> false,
-				'profile'		=> append_sid($phpbb_root_path . 'memberlist.' . $phpEx, "mode=viewprofile&amp;u=$user_id"),
-				'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid($phpbb_root_path . 'memberlist.' . $phpEx, "mode=contact&amp;action=jabber&amp;u=$user_id") : '',
-				'search'		=> ($auth->acl_get('u_search')) ? append_sid($phpbb_root_path . 'search.' . $phpEx, "author_id=$user_id&amp;sr=posts") : '',
+				'profile'		=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, "mode=viewprofile&amp;u=$user_id"),
+				'jabber'		=> ($row['user_jabber'] && $this->auth->acl_get('u_sendim')) ? append_sid($this->root_path . 'memberlist.' . $this->php_ext, "mode=contact&amp;action=jabber&amp;u=$user_id") : '',
+				'search'		=> ($this->auth->acl_get('u_search')) ? append_sid($this->root_path . 'search.' . $this->php_ext, "author_id=$user_id&amp;sr=posts") : '',
 
 				'gallery_album'		=> '',//($row['personal_album_id'] && $config['phpbb_gallery_viewtopic_icon']) ? $phpbb_ext_gallery->url->append_sid('album', "album_id=" . $row['personal_album_id']) : '',
-				'gallery_images'	=> ($config['phpbb_gallery_viewtopic_images']) ? $row['user_images'] : 0,
+				'gallery_images'	=> ($this->config['phpbb_gallery_viewtopic_images']) ? $row['user_images'] : 0,
 				'gallery_search'	=> '',//($config['phpbb_gallery_viewtopic_images'] && $config['phpbb_gallery_viewtopic_images'] && $row['user_images']) ? $phpbb_ext_gallery->url->append_sid('search', "user_id=$user_id") : '',
 			);
 
 			get_user_rank($row['user_rank'], $row['user_posts'], $user_cache[$user_id]['rank_title'], $user_cache[$user_id]['rank_image'], $user_cache[$user_id]['rank_image_src']);
 
-			if (!empty($row['user_allow_viewemail']) || $auth->acl_get('a_email'))
+			if (!empty($row['user_allow_viewemail']) || $this->auth->acl_get('a_email'))
 			{
-				$user_cache[$user_id]['email'] = ($config['board_email_form'] && $config['email_enable']) ? append_sid($phpbb_root_path . 'memberlist.' . $phpEx, "mode=email&amp;u=$user_id") : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
+				$user_cache[$user_id]['email'] = ($this->config['board_email_form'] && $this->config['email_enable']) ? append_sid($this->root_path . 'memberlist.' . $this->php_ext, "mode=email&amp;u=$user_id") : (($this->config['board_hide_emails'] && !$this->auth->acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
 			}
 			else
 			{
 				$user_cache[$user_id]['email'] = '';
 			}
 
-			if ($config['allow_birthdays'] && !empty($row['user_birthday']))
+			if ($this->config['allow_birthdays'] && !empty($row['user_birthday']))
 			{
 				list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $row['user_birthday']));
-
+				$age = 0;
 				if ($bday_year)
 				{
-					$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+					$now = $this->user->create_datetime();
+					$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 
 					$diff = $now['mon'] - $bday_month;
 					if ($diff == 0)
@@ -572,10 +603,34 @@ class user
 					{
 						$diff = ($diff < 0) ? 1 : 0;
 					}
-
-					$user_cache[$user_id]['age'] = (int) ($now['year'] - $bday_year - $diff);
+					$age = max(0, (int) ($now['year'] - $bday_year - $diff));
 				}
+
+				$user_cache[$user_id]['age'] = $age;
 			}
 		}
+	}
+
+	/**
+	* Get user personal album
+	* Checks and returns users personal album
+	* returns (int) $album_id or 0
+	*/
+	public function get_own_root_album()
+	{
+		$sql = 'SELECT personal_album_id FROM ' . $this->table_name . ' WHERE user_id = ' . $this->user_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		return (int) $row['personal_album_id'];
+	}
+
+	/**
+	* Destroy user data and set this class to empty
+	*/
+	public function destroy()
+	{
+		$this->user_id = null;
+		$this->entry_exists = null;
+		$this->data = array();
 	}
 }

@@ -37,9 +37,14 @@
 
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
-
-<div class="panel" id="postingbox">
+<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" data-url="{S_ALBUM_ACTION}">
+<div class="panel" id="postingbox" style="position: relative;">
+<div id="covverall" data-url="{S_ALBUM_ACTION}">
+	<div class="dropzone">
+		<span>{L_GALLERY_DROP}</span>
+	</div>
+</div>
+<div>
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{L_UPLOAD_IMAGE}</h3>
 		<fieldset class="fields1">
@@ -73,10 +78,14 @@
 				<dd>{S_ALLOWED_FILETYPES}</dd>
 			</dl>
 			<hr />
+			<dl id="upload_field">
+				<dt><label for="image_file">{L_IMAGES}:</label></dt>
+				<dd><input class="inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,application/zip"/></dd>
+			</dl>
 			<!-- BEGIN upload_image -->
 				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
 					<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
-					<dd><input class="inputbox autowidth" type="file" onchange="javascript: add_field();" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
+					<dd><input class="inputbox autowidth" type="file" onchange="add_field();" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
 					<!-- IF S_ALLOW_ROTATE -->
 						<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_0" value="0" checked="checked" /> <label for="rotate_{upload_image.S_ROW_COUNT}_0">{L_ROTATE_NONE}</label> &nbsp;
 							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_270" value="270" /> <label for="rotate_{upload_image.S_ROW_COUNT}_270">{L_ROTATE_RIGHT}</label> &nbsp;
@@ -85,20 +94,6 @@
 					<!-- ENDIF -->
 				</dl>
 			<!-- END upload_image -->
-
-			<a id="add_field_link" style="display: none;" href="javascript: add_field();">{L_ADD_UPLOAD_FIELD}</a>
-			<script type="text/javascript">
-			//<![CDATA[
-				for (i = 1; i < limit_fields; i++)
-				{
-					dE('upload_field_' + i);
-				}
-				if (limit_fields > 1)
-				{
-					dE('add_field_link');
-				}
-			//]]>
-			</script>
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
@@ -107,13 +102,27 @@
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset class="submit-buttons">
 			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
+			<input type="hidden" id="mode" name="mode" value="upload">
 			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
 			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_CONTINUE}" class="button1" />&nbsp;
 		</fieldset>
 		{S_FORM_TOKEN}
 	<span class="corners-bottom"><span></span></span></div>
 </div>
+</div>
 </form>
+<div id="outputTarget" class="panel bg2 hidden">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+			<div class="meter">
+				<span style="width: 0"><p>0%</p></span>
+			</div>
+			<div class="containuploads">
+			</div>
+		<span class="corners-bottom"><span></span></span>
+		</div>
+</div>
+
 <!-- ELSE -->
 
 <!-- INCLUDE gallery/posting_javascript.html -->
@@ -216,6 +225,7 @@
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset class="submit-buttons">
 			{S_HIDDEN_FIELDS}
+			<input type="hidden" id="mode" name="mode" value="upload_edit">
 			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
 			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
 		</fieldset>

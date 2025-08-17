@@ -8,89 +8,113 @@
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core_comment
+class comment
 {
 	/**
-	* Is the user allowed to comment?
-	* Following statements must be true:
-	*	- User must have permissions.
-	*	- User is neither owner of the image nor guest.
-	*	- Album and image are not locked.
-	*
-	* @return	bool
-	*/
-	static public function is_allowed($album_data, $image_data)
-	{
-		global $user, $phpbb_ext_gallery;
+	 * Constructor
+	 *
+	 * @param \phpbb\user                       $user
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbbgallery\core\config         $config
+	 * @param \phpbbgallery\core\auth\auth      $auth
+	 * @param block                             $block
+	 * @param                                   $comments_table
+	 * @param                                   $images_table
+	 * @internal param image\image $image
+	 * @internal param album\album $album
+	 */
 
-		return $phpbb_ext_gallery->config->get('allow_comments') && (!$phpbb_ext_gallery->config->get('comment_user_control') || $image_data['image_allow_comments']) &&
-			($phpbb_ext_gallery->auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']) ||
-			 (($image_data['image_status'] == phpbb_gallery_image::STATUS_APPROVED) && ($album_data['album_status'] != phpbb_ext_gallery_core_album::STATUS_LOCKED)));
+	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db,
+								\phpbbgallery\core\config $config, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\block $block,
+								$comments_table, $images_table)
+	{
+		$this->user = $user;
+		$this->db = $db;
+		$this->config = $config;
+		$this->auth = $auth;
+		$this->block = $block;
+		$this->comments_table = $comments_table;
+		$this->images_table = $images_table;
 	}
 
 	/**
-	* Is the user able to comment?
-	* Following statements must be true:
-	*	- User must be allowed to rate
-	*	- If the image is in a contest, it must be finished
-	*
-	* @return	bool
-	*/
-	static public function is_able($album_data, $image_data)
+	 * Is the user allowed to comment?
+	 * Following statements must be true:
+	 *    - User must have permissions.
+	 *    - User is neither owner of the image nor guest.
+	 *    - Album and image are not locked.
+	 *
+	 * @param $album_data
+	 * @param $image_data
+	 * @return bool
+	 */
+	public function is_allowed($album_data, $image_data)
 	{
-		global $user;
-		return self::is_allowed($album_data, $image_data) && phpbb_ext_gallery_core_contest::is_step('comment', $album_data);
+		return $this->config->get('allow_comments') && (!$this->config->get('comment_user_control') || $image_data['image_allow_comments']) &&
+			($this->auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']) ||
+			(($image_data['image_status'] == $this->block->get_image_status_approved()) && ($album_data['album_status'] != $this->block->get_album_status_locked())));
 	}
 
 	/**
-	* Add a comment
-	*/
-	static public function add($data, $comment_username = '')
+	 * Is the user able to comment?
+	 * Following statements must be true:
+	 *    - User must be allowed to rate
+	 *    - If the image is in a contest, it must be finished
+	 *
+	 * @param $album_data
+	 * @param $image_data
+	 * @return bool
+	 */
+	public function is_able($album_data, $image_data)
 	{
-		global $db, $user, $phpbb_ext_gallery;
+		return $this->is_allowed($album_data, $image_data); //&& phpbb_ext_gallery_core_contest::is_step('comment', $album_data);
+	}
 
+	/**
+	 * Add a comment
+	 *
+	 * @param        $data
+	 * @param string $comment_username
+	 * @return int|void
+	 */
+	public function add($data, $comment_username = '')
+	{
 		if (!isset($data['comment_image_id']) || !isset($data['comment']))
 		{
 			return;
 		}
 
 		$data = $data + array(
-			'comment_user_id'		=> $user->data['user_id'],
-			'comment_username'		=> ($user->data['user_id'] != ANONYMOUS) ? $user->data['username'] : $comment_username,
-			'comment_user_colour'	=> $user->data['user_colour'],
-			'comment_user_ip'		=> $user->ip,
+			'comment_user_id'		=> $this->user->data['user_id'],
+			'comment_username'		=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['username'] : $comment_username,
+			'comment_user_colour'	=> $this->user->data['user_colour'],
+			'comment_user_ip'		=> $this->user->ip,
 			'comment_time'			=> time(),
 		);
 
-		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $data));
-		$newest_comment_id = (int) $db->sql_nextid();
-		$phpbb_ext_gallery->config->inc('num_comments', 1);
+		$this->db->sql_query('INSERT INTO ' .$this->comments_table .' ' . $this->db->sql_build_array('INSERT', $data));
+		$newest_comment_id = (int) $this->db->sql_nextid();
+		$this->config->inc('num_comments', 1);
 
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+		$sql = 'UPDATE ' . $this->images_table . ' 
 			SET image_comments = image_comments + 1,
-				image_last_comment = $newest_comment_id
-			WHERE image_id = " . (int) $data['comment_image_id'];
-		$db->sql_query($sql);
+				image_last_comment = ' . (int) $newest_comment_id . '
+			WHERE image_id = ' . (int) $data['comment_image_id'];
+		$this->db->sql_query($sql);
 
 		return $newest_comment_id;
 	}
 
 	/**
-	* Edit comment
-	*/
-	static public function edit($comment_id, $data)
+	 * Edit comment
+	 * @param $comment_id
+	 * @param $data
+	 * @return bool|void
+	 */
+	public function edit($comment_id, $data)
 	{
-		global $db, $user;
-
 		if (!isset($data['comment']))
 		{
 			return;
@@ -98,63 +122,62 @@ class phpbb_ext_gallery_core_comment
 
 		$data = $data + array(
 			'comment_edit_time'		=> time(),
-			'comment_edit_user_id'	=> $user->data['user_id'],
+			'comment_edit_user_id'	=> $this->user->data['user_id'],
 		);
 
-		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $data) . '
+		$sql = 'UPDATE ' . $this->comments_table . '
+			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
 			WHERE comment_id = ' . (int) $comment_id;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		return true;
 	}
 
 	/**
-	* Sync last comment information
-	*/
-	static public function sync_image_comments($image_ids = false)
+	 * Sync last comment information
+	 * @param bool $image_ids
+	 */
+	public function sync_image_comments($image_ids = false)
 	{
-		global $db;
-
 		$sql_where = $sql_where_image = '';
 		$resync = array();
 		if ($image_ids != false)
 		{
 			$image_ids = self::cast_mixed_int2array($image_ids);
-			$sql_where = 'WHERE ' . $db->sql_in_set('comment_image_id', $image_ids);
-			$sql_where_image = 'WHERE ' . $db->sql_in_set('image_id', $image_ids);
+			$sql_where = 'WHERE ' . $this->db->sql_in_set('comment_image_id', $image_ids);
+			$sql_where_image = 'WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
 		}
 
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments, MAX(comment_id) AS last_comment
-			FROM ' . GALLERY_COMMENTS_TABLE . "
-			$sql_where
-			GROUP BY comment_image_id
-			ORDER BY comment_id DESC";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
+			FROM ' . $this->comments_table . ' 
+			' . $sql_where . '
+			GROUP BY comment_image_id, comment_id
+			ORDER BY comment_id DESC';
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$resync[$row['comment_image_id']] = array(
 				'last_comment'	=> $row['last_comment'],
 				'num_comments'	=> $row['num_comments'],
 			);
 		}
-		$db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		$sql = 'UPDATE ' . $this->images_table . ' 
 			SET image_last_comment = 0,
 				image_comments = 0
 			' . $sql_where_image;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		if (!empty($resync))
 		{
 			foreach ($resync as $image_id => $data)
 			{
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_last_comment = ' . $data['last_comment'] . ',
-						image_comments = ' . $data['num_comments'] . '
-					WHERE image_id = ' . $image_id;
-				$db->sql_query($sql);
+				$sql = 'UPDATE ' . $this->images_table . ' 
+					SET image_last_comment = ' . (int) $data['last_comment'] . ',
+						image_comments = ' . (int) $data['num_comments'] . '
+					WHERE image_id = ' . (int) $image_id;
+				$this->db->sql_query($sql);
 			}
 		}
 	}
@@ -164,34 +187,32 @@ class phpbb_ext_gallery_core_comment
 	*
 	* @param	mixed	$comment_ids	Array or integer with comment_id we delete.
 	*/
-	static public function delete_comments($comment_ids)
+	public function delete_comments($comment_ids)
 	{
-		global $db;
-
-		$comment_ids = self::cast_mixed_int2array($comment_ids);
+		$comment_ids = $this->cast_mixed_int2array($comment_ids);
 
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments
-			FROM ' . GALLERY_COMMENTS_TABLE . '
-			WHERE ' . $db->sql_in_set('comment_id', $comment_ids) . '
+			FROM ' . $this->comments_table . '
+			WHERE ' . $this->db->sql_in_set('comment_id', $comment_ids) . '
 			GROUP BY comment_image_id';
-		$result = $db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 
 		$image_ids = array();
 		$total_comments = 0;
-		while ($row = $db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$image_ids[] = (int) $row['comment_image_id'];
 			$total_comments += $row['num_comments'];
 		}
-		$db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 
-		$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-			WHERE ' . $db->sql_in_set('comment_id', $comment_ids);
-		$db->sql_query($sql);
+		$sql = 'DELETE FROM ' . $this->comments_table . '
+			WHERE ' . $this->db->sql_in_set('comment_id', $comment_ids);
+		$this->db->sql_query($sql);
 
-		self::sync_image_comments($image_ids);
+		$this->sync_image_comments($image_ids);
 
-		$phpbb_ext_gallery->config->dec('num_comments', $total_comments);
+		$this->config->dec('num_comments', $total_comments);
 	}
 
 	/**
@@ -200,27 +221,25 @@ class phpbb_ext_gallery_core_comment
 	* @param	mixed	$image_ids		Array or integer with image_id where we delete the comments.
 	* @param	bool	$reset_stats	Shall we also reset the statistics? We can save that query, when the images are deleted anyway.
 	*/
-	static public function delete_images($image_ids, $reset_stats = false)
+	public function delete_images($image_ids, $reset_stats = false)
 	{
-		global $db;
+		$image_ids = $this->cast_mixed_int2array($image_ids);
 
-		$image_ids = self::cast_mixed_int2array($image_ids);
-
-		$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-			WHERE ' . $db->sql_in_set('comment_image_id', $image_ids);
-		$db->sql_query($sql);
+		$sql = 'DELETE FROM ' . $this->comments_table . '
+			WHERE ' . $this->db->sql_in_set('comment_image_id', $image_ids);
+		$this->db->sql_query($sql);
 
 		if ($reset_stats)
 		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			$sql = 'UPDATE ' . $this->images_table . '
 				SET image_comments = 0
 					image_last_comment = 0
-				WHERE ' . $db->sql_in_set('image_id', $image_ids);
-			$db->sql_query($sql);
+				WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+			$this->db->sql_query($sql);
 		}
 	}
 
-	static public function cast_mixed_int2array($ids)
+	public function cast_mixed_int2array($ids)
 	{
 		if (is_array($ids))
 		{

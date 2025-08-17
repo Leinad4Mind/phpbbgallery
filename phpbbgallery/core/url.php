@@ -23,33 +23,42 @@ class url
 	private $phpbb_admin_path = 'adm/';
 
 	/**
+	* Path from the phpbb root, into gallery's file root
+	*/
+	private $phpbb_gallery_file_path = 'files/phpbbgallery/';
+
+	/**
 	* Path from the phpbb root, into gallery's root
 	*/
 	private $phpbb_gallery_path = 'gallery/';
 
-	/**
-	* php-file extension
-	*/
-	private $phpEx = '.php';
-
-
 	const IMAGE_PATH = 'images/';
-	const UPLOAD_PATH = 'upload/';
-	const THUMBNAIL_PATH = 'cache/';
-	const MEDIUM_PATH = 'medium/';
+	const UPLOAD_PATH = 'core/source/';
+	const THUMBNAIL_PATH = 'core/mini/';
+	const MEDIUM_PATH = 'core/medium/';
 	const IMPORT_PATH = 'import/';
 
 	private $phpbb_gallery_relative = '';
 	private $phpbb_gallery_full_path = '';
 
 	/**
-	* Constructor
-	*/
-	public function __construct($phpbb_root_path, $phpEx, $phpbb_admin_path = 'adm/')
+	 * Constructor
+	 *
+	 * @param \phpbb\template\template $template
+	 * @param \phpbb\request\request   $request
+	 * @param \phpbb\config\config     $config
+	 * @param                          $phpbb_root_path
+	 * @param                          $php_ext
+	 * @param string                   $phpbb_admin_path
+	 */
+	public function __construct(\phpbb\template\template $template, \phpbb\request\request $request, \phpbb\config\config $config, $phpbb_root_path, $php_ext, $phpbb_admin_path = 'adm/')
 	{
+		$this->template = $template;
+		$this->request = $request;
+		$this->config = $config;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->phpbb_admin_path = $this->phpbb_root_path . $phpbb_admin_path;
-		$this->phpEx = '.' . $phpEx;
+		$this->php_ext = '.' . $php_ext;
 
 		$this->phpbb_gallery_relative = self::beautiful_path($this->phpbb_root_path . $this->phpbb_gallery_path);
 		$this->phpbb_gallery_full_path = self::beautiful_path(generate_board_url() . '/' . $this->phpbb_gallery_path, true);
@@ -62,7 +71,7 @@ class url
 			case 'gallery':
 				return $this->phpbb_gallery_relative;
 			case 'ext':
-				return $this->phpbb_root_path . 'ext/gallery/core/';
+				return $this->phpbb_root_path . 'ext/phpbbgallery/core/';
 			case 'phpbb':
 				return $this->phpbb_root_path;
 			case 'admin':
@@ -75,25 +84,25 @@ class url
 				return generate_board_url() . '/';
 
 			case 'images':
-				return $this->phpbb_gallery_relative . self::IMAGE_PATH;
+				return $this->phpbb_root_path . 'ext/phpbbgallery/core/' . self::IMAGE_PATH;
 			case 'upload':
-				return $this->phpbb_gallery_relative . self::IMAGE_PATH . self::UPLOAD_PATH;
+				return $this->phpbb_root_path . $this->phpbb_gallery_file_path . self::UPLOAD_PATH;
 			case 'thumbnail':
-				return $this->phpbb_gallery_relative . self::IMAGE_PATH . self::THUMBNAIL_PATH;
+				return $this->phpbb_root_path . $this->phpbb_gallery_file_path . self::THUMBNAIL_PATH;
 			case 'medium':
-				return $this->phpbb_gallery_relative . self::IMAGE_PATH . self::MEDIUM_PATH;
+				return $this->phpbb_root_path . $this->phpbb_gallery_file_path . self::MEDIUM_PATH;
 			case 'import':
-				return $this->phpbb_gallery_relative . self::IMAGE_PATH . self::IMPORT_PATH;
+				return $this->phpbb_root_path . $this->phpbb_gallery_file_path . self::IMPORT_PATH;
 
 				// stupid phpbb-upload class prepends the rootpath itself.
 			case 'upload_noroot':
-				return $this->phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;
+				return $this->phpbb_gallery_file_path . self::UPLOAD_PATH;
 			case 'thumbnail_noroot':
-				return $this->phpbb_gallery_path . self::IMAGE_PATH . self::THUMBNAIL_PATH;
+				return $this->phpbb_gallery_file_path . self::THUMBNAIL_PATH;
 			case 'medium_noroot':
-				return $this->phpbb_gallery_path . self::IMAGE_PATH . self::MEDIUM_PATH;
+				return $this->phpbb_gallery_file_path . self::MEDIUM_PATH;
 			case 'import_noroot':
-				return $this->phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
+				return $this->phpbb_gallery_file_path . self::IMPORT_PATH;
 		}
 
 		return false;
@@ -133,9 +142,24 @@ class url
 		return append_sid($params[0], $params[1], $params[2], $params[3]);
 	}
 
+	public function show_image($image_id, $size = 'medium')
+	{
+		return $this->phpbb_gallery_full_path . 'image/' . $image_id . '/' . $size;
+	}
+
+	public function show_album($album_id)
+	{
+		return $this->phpbb_gallery_full_path . 'album/' . $album_id;
+	}
+
 	/**
-	* Removes the sid and replaces &amp; with normal &
-	*/
+	 * Removes the sid and replaces &amp; with normal &
+	 * @param $path
+	 * @param $file
+	 * @param bool $params
+	 * @param bool $is_amp
+	 * @return string
+	 */
 	public function create_link($path, $file, $params = false, $is_amp = true)
 	{
 		if ($is_amp && !is_array($params))
@@ -165,7 +189,7 @@ class url
 			$file = 'viewimage';
 		}*/
 
-		return $file . $this->phpEx;
+		return $file . $this->php_ext;
 	}
 
 	public function _include($file, $path = 'gallery', $sub_directory = 'includes/')
@@ -247,5 +271,51 @@ class url
 		}
 
 		return implode('/', $bits);
+	}
+
+	/**
+	* Custom meta_refresh implementation
+	* @param	int		$time	Time in seconds.
+	* @param	string	$route	Route generated by $helper->route
+	*/
+	public function meta_refresh($time, $route)
+	{
+		// For XHTML compatibility we change back & to &amp;
+		$route = str_replace('&', '&amp;', $route);
+		$this->template->assign_vars(array(
+			'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $route . '" />')
+		);
+	}
+
+	/**
+	 * Get URI (prepend domain name to route)
+	 *
+	 * @param    string $route Route generated by $helper->route
+	 *                         return string URI
+	 * @return string
+	 */
+	public function get_uri($route)
+	{
+		$url = $this->config['server_name'];
+		if ($this->config['force_server_vars'] == 1)
+		{
+			$url = $this->config['server_protocol'] . $url;
+		}
+		else
+		{
+			$is_secure = $this->request->server('HTTPS', '');
+			if ($is_secure == 'on')
+			{
+				$url = 'https://' . $url;
+			}
+			else
+			{
+				$url = 'http://' . $url;
+			}
+		}
+		$split = parse_url($url);
+
+		$uri = $split['scheme'] . '://' . $split['host'] . $route;
+		return $uri;
 	}
 }

@@ -85,8 +85,15 @@ class settings_module
 			);
 			$additional_settings = array();
 
+			/**
+			* Event set personal settings
+			*
+			* @event phpbbgallery.core.ucp.set_settings_submit
+			* @var	array	additional_settings		array of additional settings
+			* @since 1.2.0
+			*/
 			$vars = array('additional_settings');
-			extract($this->dispatcher->trigger_event('gallery.core.ucp.set_settings_submit', compact($vars)));
+			extract($this->dispatcher->trigger_event('phpbbgallery.core.ucp.set_settings_submit', compact($vars)));
 
 			$gallery_settings = array_merge($gallery_settings, $additional_settings);
 
@@ -94,14 +101,20 @@ class settings_module
 			{
 				unset($gallery_settings['user_allow_comments']);
 			}
-
+			$this->gallery_user->set_user_id($this->user->data['user_id']);
 			$this->gallery_user->update_data($gallery_settings);
 
 			meta_refresh(3, $this->u_action);
 			trigger_error($this->user->lang['WATCH_CHANGED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>'));
 		}
 
-		$this->dispatcher->trigger_event('gallery.core.ucp.set_settings_nosubmit');
+		/**
+		* Event no submit personal settings
+		*
+		* @event phpbbgallery.core.ucp.set_settings_nosubmit
+		* @since 1.2.0
+		*/
+		$this->dispatcher->dispatch('phpbbgallery.core.ucp.set_settings_nosubmit');
 
 		$this->template->assign_vars(array(
 			'S_PERSONAL_SETTINGS'	=> true,

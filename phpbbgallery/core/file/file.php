@@ -11,17 +11,20 @@
 namespace phpbbgallery\core\file;
 
 /**
-* A little class for all the actions that the gallery does on images.
+ * A little class for all the actions that the gallery does on images.
 *
-* resize, rotate, watermark, create thumbnail, write to hdd, send to browser
-*/
+* resize, rotate, watermark, crete thumbnail, write to hdd, send to browser
+ *
+ * @property \phpbbgallery\core\url url
+ * @property \phpbb\request\request request
+ */
 class file
 {
 	const THUMBNAIL_INFO_HEIGHT = 16;
 	const GDLIB1 = 1;
 	const GDLIB2 = 2;
 
-	public $chmod = 0777;
+	public $chmod = 0644;
 
 	public $errors = array();
 	private $browser_cache = true;
@@ -53,14 +56,19 @@ class file
 	public $watermarked = false;
 
 	/**
-	* Constructor - init some basic stuff
-	*/
-	public function __constructor($gd_version = 0)
+	 * Constructor - init some basic stuff
+	 *
+	 * @param \phpbb\request\request $request
+	 * @param \phpbbgallery\core\url $url
+	 * @param \phpbbgallery\core\config $gallery_config
+	 * @param int $gd_version
+	 */
+	public function __construct(\phpbb\request\request $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, $gd_version)
 	{
-		if ($gd_version)
-		{
-			$this->gd_version = $gd_version;
-		}
+		$this->request = $request;
+		$this->url = $url;
+		$this->gallery_config = $gallery_config;
+		$this->gd_version = $gd_version;
 	}
 
 	public function set_image_options($max_file_size, $max_height, $max_width)
@@ -94,10 +102,12 @@ class file
 	}
 
 	/**
-	* Get image mimetype by filename
-	*
-	* Only use this, if the image is secure. As we created all these images, they should be...
-	*/
+	 * Get image mimetype by filename
+	 *
+	 * Only use this, if the image is secure. As we created all these images, they should be...
+	 * @param $filename
+	 * @return string
+	 */
 	static public function mimetype_by_filename($filename)
 	{
 		switch (utf8_substr(strtolower($filename), -4))
@@ -118,8 +128,10 @@ class file
 	}
 
 	/**
-	* Read image
-	*/
+	 * Read image
+	 * @param bool $force_filesize
+	 * @return bool
+	 */
 	public function read_image($force_filesize = false)
 	{
 		if (!file_exists($this->image_source))
@@ -165,20 +177,27 @@ class file
 	}
 
 	/**
-	* Write image to disk
-	*/
-	public function write_image($destination, $quality = 100, $destroy_image = false)
+	 * Write image to disk
+	 * @param $destination
+	 * @param int $quality
+	 * @param bool $destroy_image
+	 */
+	public function write_image($destination, $quality = -1, $destroy_image = false)
 	{
+		if ($quality == -1)
+		{
+			$quality = $this->gallery_config->get('jpg_quality');
+		}
 		switch ($this->image_type)
 		{
 			case 'jpeg':
-				@imagejpeg($this->image, $destination, $quality);
+				imagejpeg($this->image, $destination, $quality);
 			break;
 			case 'png':
-				@imagepng($this->image, $destination);
+				imagepng($this->image, $destination);
 			break;
 			case 'gif':
-				@imagegif($this->image, $destination);
+				imagegif($this->image, $destination);
 			break;
 		}
 		@chmod($destination, $this->chmod);
@@ -190,13 +209,15 @@ class file
 	}
 
 	/**
-	* Get a browser friendly UTF-8 encoded filename
-	*/
+	 * Get a browser friendly UTF-8 encoded filename
+	 *
+	 * @param $file
+	 * @return string
+	 */
 	public function header_filename($file)
 	{
-		global $request;
-
-		$user_agent = htmlspecialchars($request->server('HTTP_USER_AGENT'));
+		$raw = $this->request->server('HTTP_USER_AGENT');
+		$user_agent = htmlspecialchars($raw);
 
 		// There be dragons here.
 		// Not many follows the RFC...
@@ -219,112 +240,18 @@ class file
 	}
 
 	/**
-	* Collect the last timestamp where something changed.
-	* This must contain:
-	*	- Last change of the file
-	*	- Last change of user's permissions
-	*	- Last change of user's groups
-	*	- Last change of watermark config
-	*	- Last change of watermark file
-	*/
+	 * Collect the last timestamp where something changed.
+	 * This must contain:
+	 *    - Last change of the file
+	 *    - Last change of user's permissions
+	 *    - Last change of user's groups
+	 *    - Last change of watermark config
+	 *    - Last change of watermark file
+	 * @param $timestamp
+	 */
 	public function set_last_modified($timestamp)
 	{
 		$this->last_modified = max($timestamp, $this->last_modified);
-	}
-
-	/**
-	* Sending the image to the browser.
-	* Mostly copied from phpBB::download/file.php
-	*/
-	public function send_image_to_browser($content_length = 0)
-	{
-		global $db, $user;
-
-		if (!$this->image_content_type)
-		{
-			// We don't have the image, so we guess the mime_type by filename
-			$this->image_content_type = $this->mimetype_by_filename($this->image_source);
-			if (!$this->image_content_type)
-			{
-				trigger_error('NO_MIMETYPE_MATCHED');
-			}
-		}
-
-		header('Pragma: public');
-		header('Content-Type: ' . $this->image_content_type);
-
-		if (self::is_ie_greater7($user->browser))
-		{
-			header('X-Content-Type-Options: nosniff');
-		}
-
-		if (empty($user->browser) || (!self::is_ie_greater7($user->browser) && (strpos(strtolower($user->browser), 'msie') !== false)))
-		{
-			header('Content-Disposition: attachment; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
-			if (empty($user->browser) || (strpos(strtolower($user->browser), 'msie 6.0') !== false))
-			{
-				header('expires: -1');
-			}
-		}
-		else
-		{
-			header('Content-Disposition: inline; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
-			if (self::is_ie_greater7($user->browser))
-			{
-				header('X-Download-Options: noopen');
-			}
-		}
-
-		if ($content_length)
-		{
-			header('Content-Length: ' . $content_length);
-		}
-
-		garbage_collection();
-
-		$cached = false;
-		if ($this->browser_cache)
-		{
-			$this->set_last_modified(@filemtime($this->image_source));
-			if (!function_exists('\set_modified_headers'))
-			{
-				global $phpbb_root_path, $phpEx;
-				include($phpbb_root_path . 'includes/functions_download.' . $phpEx);
-			}
-			$cached = \set_modified_headers($this->last_modified, $user->browser);
-		}
-
-		if ($cached)
-		{
-			return;
-		}
-		elseif ($this->image)
-		{
-			$image_function = 'image' . $this->image_type;
-			$image_function($this->image);
-		}
-		else
-		{
-			// Try to deliver in chunks
-			@set_time_limit(0);
-
-			$fp = @fopen($this->image_source, 'rb');
-
-			if ($fp !== false)
-			{
-				while (!feof($fp))
-				{
-					echo fread($fp, 8192);
-				}
-				fclose($fp);
-			}
-			else
-			{
-				@readfile($this->image_source);
-			}
-
-			flush();
-		}
 	}
 
 	static public function is_ie_greater7($browser)
@@ -399,9 +326,12 @@ class file
 	}
 
 	/**
-	* Rotate the image
-	* Usage optimized for 0�, 90�, 180� and 270� because of the height and width
-	*/
+	 * Rotate the image
+	 * Usage optimized for 0�, 90�, 180� and 270� because of the height and width
+	 *
+	 * @param $angle
+	 * @param $ignore_dimensions
+	 */
 	public function rotate_image($angle, $ignore_dimensions)
 	{
 		if (!function_exists('imagerotate'))
@@ -409,7 +339,6 @@ class file
 			$this->errors[] = array('ROTATE_IMAGE_FUNCTION', $angle);
 			return;
 		}
-
 		if (($angle <= 0) || (($angle % 90) != 0))
 		{
 			$this->errors[] = array('ROTATE_IMAGE_ANGLE', $angle);
@@ -420,7 +349,6 @@ class file
 		{
 			$this->read_image();
 		}
-
 		if ((($angle / 90) % 2) == 1)
 		{
 			// Left or Right, we need to switch the height and width
@@ -441,17 +369,19 @@ class file
 			$this->image_size['height'] = $this->image_size['width'];
 			$this->image_size['width'] = $new_width;
 		}
-
 		$this->image = imagerotate($this->image, $angle, 0);
 
 		$this->rotated = true;
 	}
 
 	/**
-	* Watermark the image:
-	*
-	* @param int $watermark_position summary of the parameters for vertical and horizontal adjustment
-	*/
+	 * Watermark the image:
+	 *
+	 * @param $watermark_source
+	 * @param int $watermark_position summary of the parameters for vertical and horizontal adjustment
+	 * @param int $min_height
+	 * @param int $min_width
+	 */
 	public function watermark_image($watermark_source, $watermark_position = 20, $min_height = 0, $min_width = 0)
 	{
 		$this->watermark_source = $watermark_source;
@@ -471,49 +401,61 @@ class file
 			return;
 			//$this->errors[] = array('WATERMARK_IMAGE_DIMENSION');
 		}
+		$get_dot = strrpos($this->image_source, '.');
+		$get_wm_name = substr_replace($this->image_source, '_wm', $get_dot, 0);
+		if (file_exists($get_wm_name))
+		{
+			$this->image_source = $get_wm_name;
+			$this->read_image();
+		}
+		else
+		{
+			$this->watermark_size = getimagesize($this->watermark_source);
+			switch ($this->watermark_size['mime'])
+			{
+				case 'image/png':
+					$imagecreate = 'imagecreatefrompng';
+					break;
+				case 'image/gif':
+					$imagecreate = 'imagecreatefromgif';
+					break;
+				default:
+					$imagecreate = 'imagecreatefromjpeg';
+					break;
+			}
 
-		$this->watermark_size = getimagesize($this->watermark_source);
-		switch ($this->watermark_size['mime'])
-		{
-			case 'image/png':
-				$imagecreate = 'imagecreatefrompng';
-			break;
-			case 'image/gif':
-				$imagecreate = 'imagecreatefromgif';
-			break;
-			default:
-				$imagecreate = 'imagecreatefromjpeg';
-			break;
-		}
+			// Get the watermark as resource.
+			if (($this->watermark = $imagecreate($this->watermark_source)) === false)
+			{
+				$this->errors[] = array('WATERMARK_IMAGE_IMAGECREATE');
+			}
 
-		// Get the watermark as resource.
-		if (($this->watermark = $imagecreate($this->watermark_source)) === false)
-		{
-			$this->errors[] = array('WATERMARK_IMAGE_IMAGECREATE');
+			$phpbb_gallery_constants = new \phpbbgallery\core\constants();
+			// Where do we display the watermark? up-left, down-right, ...?
+			$dst_x = (($this->image_size['width'] * 0.5) - ($this->watermark_size[0] * 0.5));
+			$dst_y = ($this->image_size['height'] - $this->watermark_size[1] - 5);
+			if ($watermark_position & $phpbb_gallery_constants::WATERMARK_LEFT)
+			{
+				$dst_x = 5;
+			}
+			else if ($watermark_position & $phpbb_gallery_constants::WATERMARK_RIGHT)
+			{
+				$dst_x = ($this->image_size['width'] - $this->watermark_size[0] - 5);
+			}
+			if ($watermark_position & $phpbb_gallery_constants::WATERMARK_TOP)
+			{
+				$dst_y = 5;
+			}
+			else if ($watermark_position & $phpbb_gallery_constants::WATERMARK_MIDDLE)
+			{
+				$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));
+			}
+			imagecopy($this->image, $this->watermark, $dst_x, $dst_y, 0, 0, $this->watermark_size[0], $this->watermark_size[1]);
+			imagedestroy($this->watermark);
+			$this->write_image($get_wm_name);
+			$this->image_source = $get_wm_name;
+			$this->read_image();
 		}
-
-		// Where do we display the watermark? up-left, down-right, ...?
-		$dst_x = (($this->image_size['width'] * 0.5) - ($this->watermark_size[0] * 0.5));
-		$dst_y = ($this->image_size['height'] - $this->watermark_size[1] - 5);
-		if ($watermark_position & phpbb_gallery_constants::WATERMARK_LEFT)
-		{
-			$dst_x = 5;
-		}
-		elseif ($watermark_position & phpbb_gallery_constants::WATERMARK_RIGHT)
-		{
-			$dst_x = ($this->image_size['width'] - $this->watermark_size[0] - 5);
-		}
-		if ($watermark_position & phpbb_gallery_constants::WATERMARK_TOP)
-		{
-			$dst_y = 5;
-		}
-		elseif ($watermark_position & phpbb_gallery_constants::WATERMARK_MIDDLE)
-		{
-			$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));
-		}
-		imagecopy($this->image, $this->watermark, $dst_x, $dst_y, 0, 0, $this->watermark_size[0], $this->watermark_size[1]);
-		imagedestroy($this->watermark);
-
 		$this->watermarked = true;
 	}
 
@@ -524,21 +466,61 @@ class file
 	*									Array-Format: $image_id => $filename
 	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
 	*/
-	static public function delete($files, $locations = array('thumbnail', 'medium', 'upload'))
+	public function delete($files, $locations = array('thumbnail', 'medium', 'upload'))
 	{
 		if (!is_array($files))
 		{
 			$files = array(1 => $files);
 		}
-
+		// Let's delete watermarked
+		$this->delete_wm($files);
 		foreach ($files as $image_id => $file)
 		{
 			foreach ($locations as $location)
 			{
-				@unlink(phpbb_gallery_url::path($location) . $file);
+				@unlink($this->url->path($location) . $file);
+			}
+		}
+	}
+
+	/**
+	 * @param $files
+	 * @param array $locations
+	 */
+	public function delete_cache($files, $locations = array('thumbnail', 'medium'))
+	{
+		if (!is_array($files))
+		{
+			$files = array(1 => $files);
+		}
+		$this->delete_wm($files);
+		foreach ($files as $image_id => $file)
+		{
+			foreach ($locations as $location)
+			{
+				@unlink($this->url->path($location) . $file);
+			}
+		}
+	}
+
+	/**
+	 * @param $files
+	 */
+	public function delete_wm($files)
+	{
+		$locations = array('upload', 'medium');
+		if (!is_array($files))
+		{
+			$files = array(1 => $files);
+		}
+		foreach ($files as $image_id => $file)
+		{
+			$get_dot = strrpos($file, '.');
+			$get_wm_name = substr_replace($file, '_wm', $get_dot, 0);
+			foreach ($locations as $location)
+			{
+				@unlink($this->url->path($location) . $get_wm_name);
 			}
 		}
 	}
 }
-
-?>

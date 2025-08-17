@@ -8,35 +8,26 @@
 *
 */
 
-/**
-* @ignore
-*/
-
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\acp;
 
 /**
 * @package acp
 */
-class phpbb_ext_gallery_core_acp_main_module
+class main_module
 {
 	var $u_action;
 
 	function main($id, $mode)
 	{
-		global $auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery;
+		global $user;
+		global $request, $phpbb_container, $gallery_url;
 
+		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 
-		$phpbb_ext_gallery = new phpbb_ext_gallery_core($auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path);
-		$phpbb_ext_gallery->init();
-		$phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
-
-		$user->add_lang_ext('gallery/core', array('gallery_acp', 'gallery'));
+		$user->add_lang_ext('phpbbgallery/core', array('gallery_acp', 'gallery'));
 		$this->tpl_name = 'gallery_main';
 		add_form_key('acp_gallery');
-		$submode = request_var('submode', '');
+		$submode = $request->variable('submode', '');
 
 		switch ($mode)
 		{
@@ -55,12 +46,148 @@ class phpbb_ext_gallery_core_acp_main_module
 
 	function overview()
 	{
-		global $auth, $config, $db, $template, $user, $phpbb_ext_gallery;
+		global $auth, $config, $db, $template, $user, $table_prefix, $phpbb_root_path;
+		global $phpbb_container, $request, $gallery_url;
 
-		$action = request_var('action', '');
-		$id = request_var('i', '');
+		$phpbbgallery_core_file = $phpbb_root_path . 'files/phpbbgallery/core';
+		$phpbbgallery_core_file_medium = $phpbb_root_path . 'files/phpbbgallery/core/medium';
+		$phpbbgallery_core_file_mini = $phpbb_root_path . 'files/phpbbgallery/core/mini';
+		$phpbbgallery_core_file_source = $phpbb_root_path . 'files/phpbbgallery/core/source';
+
+		$albums_table = $table_prefix . 'gallery_albums';
+		$roles_table = $table_prefix . 'gallery_roles';
+		$permissions_table = $table_prefix . 'gallery_permissions';
+		$modscache_table = $table_prefix . 'gallery_modscache';
+		$contests_table = $table_prefix . 'gallery_contests';
+		$users_table = $table_prefix . 'gallery_users';
+		$images_table = $table_prefix . 'gallery_images';
+		// Init album
+		$phpbb_ext_gallery_core_album = $phpbb_container->get('phpbbgallery.core.album');
+
+		// init users
+		$phpbb_gallery_user = $phpbb_container->get('phpbbgallery.core.user');
+
+		// init image
+		$phpbb_gallery_image = $phpbb_container->get('phpbbgallery.core.image');
+
+		// init config
+		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
+
+		$action = $request->variable('action', '');
+		$id = $request->variable('i', '');
 		$mode = 'overview';
 
+		// before we start let's check if directory structure is OK
+		if (!is_writable($phpbb_root_path . 'files'))
+		{
+			$template->assign_vars(array(
+				'U_FILE_DIR_STATE'	=> $user->lang['NO_WRITE_ACCESS'],
+				'U_FILE_DIR_STATE_ERROR'	=> 1,
+				'U_CORE_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+				'U_CORE_DIR_STATE_ERROR'	=> 1,
+				'U_MEDIUM_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+				'U_MEDIUM_DIR_STATE_ERROR'	=> 1,
+				'U_MINI_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+				'U_MINI_DIR_STATE_ERROR'	=> 1,
+				'U_SOURCE_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+				'U_SOURCE_DIR_STATE_ERROR'	=> 1,
+			));
+		}
+		else
+		{
+			$template->assign_vars(array(
+				'U_FILE_DIR_STATE'	=>  $user->lang['WRITE_ACCESS'],
+				'U_FILE_DIR_STATE_ERROR'	=> 0,
+			));
+			if (!file_exists($phpbbgallery_core_file))
+			{
+				mkdir($phpbbgallery_core_file, 0755, true);
+				$template->assign_vars(array(
+					'U_CORE_DIR_STATE'	=>  $user->lang['DIR_CREATED'],
+					'U_CORE_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else if (is_writable($phpbbgallery_core_file))
+			{
+				$template->assign_vars(array(
+					'U_CORE_DIR_STATE'	=>  $user->lang['WRITE_ACCESS'],
+					'U_CORE_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else
+			{
+				$template->assign_vars(array(
+					'U_CORE_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+					'U_CORE_DIR_STATE_ERROR'	=> 1,
+				));
+			}
+			if (!file_exists($phpbbgallery_core_file_medium))
+			{
+				mkdir($phpbbgallery_core_file_medium, 0755, true);
+				$template->assign_vars(array(
+					'U_MEDIUM_DIR_STATE'	=>  $user->lang['DIR_CREATED'],
+					'U_MEDIUM_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else if (is_writable($phpbbgallery_core_file_medium))
+			{
+				$template->assign_vars(array(
+					'U_MEDIUM_DIR_STATE'	=>  $user->lang['WRITE_ACCESS'],
+					'U_MEDIUM_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else
+			{
+				$template->assign_vars(array(
+					'U_MEDIUM_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+					'U_MEDIUM_DIR_STATE_ERROR'	=> 1,
+				));
+			}
+			if (!file_exists($phpbbgallery_core_file_mini))
+			{
+				mkdir($phpbbgallery_core_file_mini, 0755, true);
+				$template->assign_vars(array(
+					'U_MINI_DIR_STATE'	=>  $user->lang['DIR_CREATED'],
+					'U_MINI_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else if (is_writable($phpbbgallery_core_file_mini))
+			{
+				$template->assign_vars(array(
+					'U_MINI_DIR_STATE'	=>  $user->lang['WRITE_ACCESS'],
+					'U_MINI_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else
+			{
+				$template->assign_vars(array(
+					'U_MINI_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+					'U_MINI_DIR_STATE_ERROR'	=> 1,
+				));
+			}
+			if (!file_exists($phpbbgallery_core_file_source))
+			{
+				mkdir($phpbbgallery_core_file_source, 0755, true);
+				$template->assign_vars(array(
+					'U_SOURCE_DIR_STATE'	=>  $user->lang['DIR_CREATED'],
+					'U_SOURCE_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else if (is_writable($phpbbgallery_core_file_source))
+			{
+				$template->assign_vars(array(
+					'U_SOURCE_DIR_STATE'	=>  $user->lang['WRITE_ACCESS'],
+					'U_SOURCE_DIR_STATE_ERROR'	=> 0,
+				));
+			}
+			else
+			{
+				$template->assign_vars(array(
+					'U_SOURCE_DIR_STATE'	=>  $user->lang['NO_WRITE_ACCESS'],
+					'U_SOURCE_DIR_STATE_ERROR'	=> 1,
+				));
+			}
+		}
 		if (!confirm_box(true))
 		{
 			$confirm = false;
@@ -84,8 +211,8 @@ class phpbb_ext_gallery_core_acp_main_module
 					$confirm_lang = 'CONFIRM_OPERATION';
 				break;
 				case 'reset_rating':
-					$album_id = request_var('reset_album_id', 0);
-					$album_data = phpbb_ext_gallery_core_album::get_info($album_id);
+					$album_id = $request->variable('reset_album_id', 0);
+					$album_data = $phpbb_ext_gallery_core_album->get_info($album_id);
 					$confirm = true;
 					$confirm_lang = sprintf($user->lang['RESET_RATING_CONFIRM'], $album_data['album_name']);
 				break;
@@ -100,13 +227,13 @@ class phpbb_ext_gallery_core_acp_main_module
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$username = request_var('username', '', true);
+					$username = $request->variable('username', '', true);
 					$user_id = 0;
 					if ($username)
 					{
 						if (!function_exists('user_get_id_name'))
 						{
-							$phpbb_ext_gallery->url->_include('functions_user', 'phpbb');
+							$gallery_url->_include('functions_user', 'phpbb');
 						}
 						user_get_id_name($user_id, $username);
 					}
@@ -126,13 +253,14 @@ class phpbb_ext_gallery_core_acp_main_module
 						trigger_error($user->lang['NO_USER'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$image_user = new phpbb_gallery_user($db, $user_row['user_id']);
-					$album_id = $image_user->get_data('personal_album_id');
+					$image_user = $phpbb_gallery_user->set_user_id($user_row['user_id']);
+					$album_id = $phpbb_gallery_user->get_data('personal_album_id');
+
 					if ($album_id)
 					{
 						trigger_error($user->lang('PEGA_ALREADY_EXISTS', $user_row['username']) . adm_back_link($this->u_action), E_USER_WARNING);
 					}
-					phpbb_ext_gallery_core_album::generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
+					$phpbb_ext_gallery_core_album->generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $phpbb_gallery_user);
 
 					trigger_error($user->lang('PEGA_CREATED', $user_row['username']) . adm_back_link($this->u_action));
 				break;
@@ -159,12 +287,12 @@ class phpbb_ext_gallery_core_acp_main_module
 					}
 
 					$total_images = $total_comments = 0;
-					phpbb_gallery_user::update_users('all', array('user_images' => 0));
+					$phpbb_gallery_user->update_users('all', array('user_images' => 0));
 
 					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
-						FROM ' . GALLERY_IMAGES_TABLE . '
-						WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
-							AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						FROM ' . $images_table . '
+						WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+							AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
 						GROUP BY image_user_id';
 					$result = $db->sql_query($sql);
 
@@ -173,15 +301,16 @@ class phpbb_ext_gallery_core_acp_main_module
 						$total_images += $row['num_images'];
 						$total_comments += $row['num_comments'];
 
-						$image_user = new phpbb_gallery_user($db, $row['user_id'], false);
+						$image_user = $phpbb_container->get('phpbbgallery.core.user');
+						$image_user->set_user_id($row['user_id'], false);
 						$image_user->update_data(array(
 							'user_images'		=> $row['num_images'],
 						));
 					}
 					$db->sql_freeresult($result);
 
-					$phpbb_ext_gallery->config->set('num_images', $total_images);
-					$phpbb_ext_gallery->config->set('num_comments', $total_comments);
+					$phpbb_ext_gallery_config->set('num_images', $total_images);
+					$phpbb_ext_gallery_config->set('num_comments', $total_comments);
 					trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
 				break;
 
@@ -191,11 +320,11 @@ class phpbb_ext_gallery_core_acp_main_module
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					phpbb_gallery_user::update_users('all', array('personal_album_id' => 0));
+					$phpbb_gallery_user->update_users('all', array('personal_album_id' => 0));
 
 					$sql = 'SELECT album_id, album_user_id
-						FROM ' . GALLERY_ALBUMS_TABLE . '
-						WHERE album_user_id <> ' . phpbb_ext_gallery_core_album::PUBLIC_ALBUM . '
+						FROM ' . $albums_table . '
+						WHERE album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . '
 							AND parent_id = 0
 						GROUP BY album_user_id, album_id';
 					$result = $db->sql_query($sql);
@@ -203,19 +332,19 @@ class phpbb_ext_gallery_core_acp_main_module
 					$number_of_personals = 0;
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$image_user = new phpbb_gallery_user($db, $row['album_user_id'], false);
-						$image_user->update_data(array(
+						$image_user = $phpbb_gallery_user->set_user_id($row['album_user_id'], false);
+						$phpbb_gallery_user->update_data(array(
 							'personal_album_id'		=> $row['album_id'],
 						));
 						$number_of_personals++;
 					}
 					$db->sql_freeresult($result);
-					$phpbb_ext_gallery->config->set('num_pegas', $number_of_personals);
+					$phpbb_ext_gallery_config->set('num_pegas', $number_of_personals);
 
 					// Update the config for the statistic on the index
 					$sql_array = array(
 						'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
-						'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+						'FROM'			=> array($albums_table => 'a'),
 
 						'LEFT_JOIN'		=> array(
 							array(
@@ -224,7 +353,7 @@ class phpbb_ext_gallery_core_acp_main_module
 							),
 						),
 
-						'WHERE'			=> 'a.album_user_id <> ' . phpbb_ext_gallery_core_album::PUBLIC_ALBUM . ' AND a.parent_id = 0',
+						'WHERE'			=> 'a.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 						'ORDER_BY'		=> 'a.album_id DESC',
 					);
 					$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -233,10 +362,10 @@ class phpbb_ext_gallery_core_acp_main_module
 					$newest_pgallery = $db->sql_fetchrow($result);
 					$db->sql_freeresult($result);
 
-					$phpbb_ext_gallery->config->set('newest_pega_user_id', $newest_pgallery['user_id']);
-					$phpbb_ext_gallery->config->set('newest_pega_username', $newest_pgallery['username']);
-					$phpbb_ext_gallery->config->set('newest_pega_user_colour', $newest_pgallery['user_colour']);
-					$phpbb_ext_gallery->config->set('newest_pega_album_id', $newest_pgallery['album_id']);
+					$phpbb_ext_gallery_config->set('newest_pega_user_id', $newest_pgallery['user_id']);
+					$phpbb_ext_gallery_config->set('newest_pega_username', $newest_pgallery['username']);
+					$phpbb_ext_gallery_config->set('newest_pega_user_colour', $newest_pgallery['user_colour']);
+					$phpbb_ext_gallery_config->set('newest_pega_album_id', $newest_pgallery['album_id']);
 
 					trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 				break;
@@ -249,17 +378,17 @@ class phpbb_ext_gallery_core_acp_main_module
 
 					// Hopefully this won't take to long! >> I think we must make it batchwise
 					$sql = 'SELECT image_id, image_filename
-						FROM ' . GALLERY_IMAGES_TABLE . '
+						FROM ' . $images_table . '
 						WHERE filesize_upload = 0';
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$sql_ary = array(
-							'filesize_upload'		=> @filesize($phpbb_ext_gallery->url->path('upload') . $row['image_filename']),
-							'filesize_medium'		=> @filesize($phpbb_ext_gallery->url->path('medium') . $row['image_filename']),
-							'filesize_cache'		=> @filesize($phpbb_ext_gallery->url->path('thumbnail') . $row['image_filename']),
+							'filesize_upload'		=> @filesize($gallery_url->path('upload') . $row['image_filename']),
+							'filesize_medium'		=> @filesize($gallery_url->path('medium') . $row['image_filename']),
+							'filesize_cache'		=> @filesize($gallery_url->path('thumbnail') . $row['image_filename']),
 						);
-						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						$sql = 'UPDATE ' . $images_table . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 							WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
 						$db->sql_query($sql);
@@ -271,23 +400,24 @@ class phpbb_ext_gallery_core_acp_main_module
 
 				case 'last_images':
 					$sql = 'SELECT album_id
-						FROM ' . GALLERY_ALBUMS_TABLE;
+						FROM ' . $albums_table;
 					$result = $db->sql_query($sql);
+
 					while ($row = $db->sql_fetchrow($result))
 					{
 						// 5 sql's per album, but you don't run this daily ;)
-						phpbb_ext_gallery_core_album::update_info($row['album_id']);
+						$phpbb_ext_gallery_core_album->update_info($row['album_id']);
 					}
 					$db->sql_freeresult($result);
 					trigger_error($user->lang['RESYNCED_LAST_IMAGES'] . adm_back_link($this->u_action));
 				break;
 
 				case 'reset_rating':
-					$album_id = request_var('reset_album_id', 0);
+					$album_id = $request->variable('reset_album_id', 0);
 
 					$image_ids = array();
 					$sql = 'SELECT image_id
-						FROM ' . GALLERY_IMAGES_TABLE . '
+						FROM ' . $images_table . '
 						WHERE image_album_id = ' . $album_id;
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
@@ -310,54 +440,72 @@ class phpbb_ext_gallery_core_acp_main_module
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$cache_dir = @opendir($phpbb_ext_gallery->url->path('thumbnail'));
+					$cache_dir = @opendir($gallery_url->path('thumbnail'));
 					while ($cache_file = @readdir($cache_dir))
 					{
 						if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 						{
-							@unlink($phpbb_ext_gallery->url->path('thumbnail') . $cache_file);
+							@unlink($gallery_url->path('thumbnail') . $cache_file);
 						}
 					}
 					@closedir($cache_dir);
 
-					$medium_dir = @opendir($phpbb_ext_gallery->url->path('medium'));
+					$medium_dir = @opendir($gallery_url->path('medium'));
 					while ($medium_file = @readdir($medium_dir))
 					{
 						if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
 						{
-							@unlink($phpbb_ext_gallery->url->path('medium') . $medium_file);
+							@unlink($gallery_url->path('medium') . $medium_file);
 						}
 					}
 					@closedir($medium_dir);
-
-					for ($i = 1; $i <= $phpbb_ext_gallery->config->get('current_upload_dir'); $i++)
+					$upload_dir = @opendir($gallery_url->path('upload'));
+					while ($upload_file = @readdir($upload_dir))
 					{
-						$cache_dir = @opendir($phpbb_ext_gallery->url->path('thumbnail') . $i . '/');
+						if (preg_match('/(\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
+						{
+							@unlink($gallery_url->path('upload') . $upload_file);
+						}
+					}
+					@closedir($upload_dir);
+
+					for ($i = 1; $i <= $phpbb_ext_gallery_config->get('current_upload_dir'); $i++)
+					{
+						$cache_dir = @opendir($gallery_url->path('thumbnail') . $i . '/');
 						while ($cache_file = @readdir($cache_dir))
 						{
 							if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 							{
-								@unlink($phpbb_ext_gallery->url->path('thumbnail') . $i . '/' . $cache_file);
+								@unlink($gallery_url->path('thumbnail') . $i . '/' . $cache_file);
 							}
 						}
 						@closedir($cache_dir);
 
-						$medium_dir = @opendir($phpbb_ext_gallery->url->path('medium') . $i . '/');
+						$medium_dir = @opendir($gallery_url->path('medium') . $i . '/');
 						while ($medium_file = @readdir($medium_dir))
 						{
 							if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
 							{
-								@unlink($phpbb_ext_gallery->url->path('medium') . $i . '/' . $medium_file);
+								@unlink($gallery_url->path('medium') . $i . '/' . $medium_file);
 							}
 						}
 						@closedir($medium_dir);
+						$upload_dir = @opendir($gallery_url->path('upload') . $i . '/');
+						while ($upload_file = @readdir($upload_dir))
+						{
+							if (preg_match('/(\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
+							{
+								@unlink($gallery_url->path('upload') . $upload_file);
+							}
+						}
+						@closedir($upload_dir);
 					}
 
 					$sql_ary = array(
 						'filesize_medium'		=> 0,
 						'filesize_cache'		=> 0,
 					);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					$sql = 'UPDATE ' . $images_table . '
 						SET ' . $db->sql_build_array('UPDATE', $sql_ary);
 					$db->sql_query($sql);
 
@@ -369,17 +517,17 @@ class phpbb_ext_gallery_core_acp_main_module
 		//@todo: phpbb_gallery_modversioncheck::check();
 
 		$boarddays = (time() - $config['board_startdate']) / 86400;
-		$images_per_day = sprintf('%.2f', $phpbb_ext_gallery->config->get('num_images') / $boarddays);
+		$images_per_day = sprintf('%.2f', $config['num_images'] / $boarddays);
 
 		$sql = 'SELECT COUNT(album_user_id) AS num_albums
-			FROM ' . GALLERY_ALBUMS_TABLE . '
+			FROM ' . $albums_table . '
 			WHERE album_user_id = 0';
 		$result = $db->sql_query($sql);
 		$num_albums = (int) $db->sql_fetchfield('num_albums');
 		$db->sql_freeresult($result);
 
 		$sql = 'SELECT SUM(filesize_upload) AS stat, SUM(filesize_medium) AS stat_medium, SUM(filesize_cache) AS stat_cache
-			FROM ' . GALLERY_IMAGES_TABLE;
+			FROM ' . $images_table;
 		$result = $db->sql_query($sql);
 		$dir_sizes = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -389,16 +537,16 @@ class phpbb_ext_gallery_core_acp_main_module
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_OVERVIEW'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_OVERVIEW_EXPLAIN'],
 
-			'TOTAL_IMAGES'			=> $phpbb_ext_gallery->config->get('num_images'),
+			'TOTAL_IMAGES'			=> $config['phpbb_gallery_num_images'],
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
-			'TOTAL_PERSONALS'		=> $phpbb_ext_gallery->config->get('num_pegas'),
+			'TOTAL_PERSONALS'		=> $config['phpbb_gallery_num_pegas'],
 			'GUPLOAD_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat']),
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
-			'GALLERY_VERSION'		=> $phpbb_ext_gallery->config->get('version'),
-			'U_FIND_USERNAME'		=> $phpbb_ext_gallery->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega_form&amp;field=username&amp;select_single=true'),
-			'S_SELECT_ALBUM'		=> phpbb_ext_gallery_core_album::get_albumbox(false, 'reset_album_id', false, false, false, phpbb_ext_gallery_core_album::PUBLIC_ALBUM, phpbb_ext_gallery_core_album::TYPE_UPLOAD),
+			'GALLERY_VERSION'		=> $config['phpbb_gallery_version'],
+			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega_form&amp;field=username&amp;select_single=true'),
+			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, \phpbbgallery\core\block::PUBLIC_ALBUM, \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'U_ACTION'				=> $this->u_action,

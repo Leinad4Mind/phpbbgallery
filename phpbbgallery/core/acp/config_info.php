@@ -7,15 +7,9 @@
 *
 */
 
-/**
-* @ignore
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\acp;
 
-class phpbb_ext_gallery_core_acp_config_info
+class config_info
 {
 	function module()
 	{
@@ -25,7 +19,7 @@ class phpbb_ext_gallery_core_acp_config_info
 			'modes'		=> array(
 				'config_sample'	=> array(
 					'title'		=> 'ACP_GALLERY_CONFIGURE_GALLERY',
-					'auth'		=> 'acl_a_gallery_manage',
+					'auth'		=> 'ext_phpbbgallery/core && acl_a_gallery_manage',
 					'cat'		=> array('PHPBB_GALLERY'),
 				),
 			),
