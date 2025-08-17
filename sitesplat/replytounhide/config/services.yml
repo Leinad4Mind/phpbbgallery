@@ -17,6 +17,7 @@ services:
             - '@sitesplat.replytounhide.bbcodes_parser'
             - '@controller.helper'
             - '@template'
+            - '@auth'
             - '@user'
             - '@dbal.conn'
             - ext/sitesplat/replytounhide/
