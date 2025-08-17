@@ -14,7 +14,6 @@ use phpbb\filesystem\filesystem;
 use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\config\config;
-use phpbb\textformatter\s9e\parser;
 use phpbb\textformatter\s9e\utils;
 
 class helper
@@ -34,9 +33,6 @@ class helper
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\textformatter\s9e\parser */
-	protected $parser;
-
 	/** @var \phpbb\textformatter\s9e\utils */
 	protected $utils;
 
@@ -49,6 +45,9 @@ class helper
 	/** @var \acp_bbcodes */
 	protected $acp_bbcodes;
 
+	/** @var array */
+	protected $tables;
+
 	/**
 	 * Constructor of the helper class.
 	 *
@@ -57,31 +56,31 @@ class helper
 	 * @param \phpbb\language\language			$language
 	 * @param \phpbb\template\template			$template
 	 * @param \phpbb\config\config				$config
-	 * @param \phpbb\textformatter\s9e\parser	$parser
 	 * @param \phpbb\textformatter\s9e\utils	$utils
 	 * @param string							$root_path
 	 * @param string							$php_ext
+	 * @param string							$bbcodes_table
 	 *
 	 * @return void
 	 */
-	public function __construct(database $db, filesystem $filesystem, language $language, template $template, config $config, parser $parser, utils $utils, $root_path, $php_ext)
+	public function __construct(database $db, filesystem $filesystem, language $language, template $template, config $config, utils $utils, $root_path, $php_ext, $bbcodes_table)
 	{
 		$this->db = $db;
 		$this->filesystem = $filesystem;
 		$this->language = $language;
 		$this->template = $template;
 		$this->config = $config;
-		$this->parser = $parser;
 		$this->utils = $utils;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 
-		if (!class_exists('acp_bbcodes'))
+		// Assign tables
+		if (empty($this->tables))
 		{
-			include($this->root_path . 'includes/acp/acp_bbcodes.' . $this->php_ext);
+			$this->tables = [
+				'bbcodes' => $bbcodes_table
+			];
 		}
-
-		$this->acp_bbcodes = new \acp_bbcodes;
 	}
 
 	/**
@@ -96,6 +95,17 @@ class helper
 		if (empty($data))
 		{
 			return;
+		}
+
+		// Lazy load BBCodes helper
+		if (!isset($this->acp_bbcodes))
+		{
+			if (!class_exists('acp_bbcodes'))
+			{
+				include($this->root_path . 'includes/acp/acp_bbcodes.' . $this->php_ext);
+			}
+
+			$this->acp_bbcodes = new \acp_bbcodes;
 		}
 
 		// Remove conflicting BBCode
@@ -156,7 +166,7 @@ class helper
 		}
 
 		$sql = 'SELECT bbcode_id
-			FROM ' . BBCODES_TABLE . '
+			FROM ' . $this->tables['bbcodes'] . '
 			WHERE ' . $this->db->sql_build_array('SELECT', ['bbcode_tag' => $bbcode_tag]);
 		$result = $this->db->sql_query($sql);
 		$bbcode_id = (int) $this->db->sql_fetchfield('bbcode_id');
@@ -177,7 +187,7 @@ class helper
 	public function bbcode_id()
 	{
 		$sql = 'SELECT MAX(bbcode_id) as last_id
-			FROM ' . BBCODES_TABLE;
+			FROM ' . $this->tables['bbcodes'];
 		$result = $this->db->sql_query($sql);
 		$bbcode_id = (int) $this->db->sql_fetchfield('last_id');
 		$this->db->sql_freeresult($result);
@@ -207,7 +217,7 @@ class helper
 			return;
 		}
 
-		$sql = 'INSERT INTO ' . BBCODES_TABLE . '
+		$sql = 'INSERT INTO ' . $this->tables['bbcodes'] . '
 			' . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 
@@ -232,7 +242,7 @@ class helper
 		// Remove only if exists
 		if ($bbcode_id > NUM_CORE_BBCODES)
 		{
-			$sql = 'DELETE FROM ' . BBCODES_TABLE . '
+			$sql = 'DELETE FROM ' . $this->tables['bbcodes'] . '
 				WHERE bbcode_id = ' . $bbcode_id;
 			$this->db->sql_query($sql);
 		}
@@ -257,7 +267,7 @@ class helper
 
 		unset($data['bbcode_id']);
 
-		$sql = 'UPDATE ' . BBCODES_TABLE . '
+		$sql = 'UPDATE ' . $this->tables['bbcodes'] . '
 			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
 			WHERE bbcode_id = ' . $bbcode_id;
 		$this->db->sql_query($sql);
@@ -360,30 +370,31 @@ class helper
 	/**
 	 * Remove nested spoilers at given depth.
 	 *
-	 * @param string $message
+	 * @param string $xml
 	 *
 	 * @return string
 	 */
-	public function remove_nested_spoilers($message = '')
+	public function remove_nested_spoilers($xml = '')
 	{
-		if (empty($message))
+		if (empty($xml))
 		{
 			return '';
 		}
 
 		$max_depth = (int) $this->config['max_spoiler_depth'];
-		$data = $this->bbcode_data();
 
 		if ($max_depth <= 0)
 		{
-			return $message;
+			return $xml;
 		}
 
-		return $this->utils->unparse($this->utils->remove_bbcode(
-			$this->parser->parse($message),
+		$data = $this->bbcode_data();
+
+		return $this->utils->remove_bbcode(
+			$xml,
 			$data['bbcode_tag'],
 			$max_depth
-		));
+		);
 	}
 
 	/**
@@ -447,9 +458,7 @@ class helper
 		return [
 			'bbcode_tag'	=> 'spoiler',
 			'bbcode_match'	=> '[spoiler title={TEXT2;optional}]{TEXT1}[/spoiler]',
-			'bbcode_tpl'	=> $template,
-			'bbcode_helpline'	=> 'SPOILER_HELPLINE',
-			'display_on_posting'	=> 1
+			'bbcode_tpl'	=> $template
 		];
 	}
 }
