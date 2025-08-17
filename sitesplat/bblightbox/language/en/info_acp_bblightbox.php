@@ -87,7 +87,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_BBLIGHTBOX_NOTICE_CLOSE'		=> 'Close',
 	
-	'ACP_BBLIGHTBOX_VERSION'			=> '1.0.4',
+	'ACP_BBLIGHTBOX_VERSION'			=> '1.0.6',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	
 	// Error/success messages
