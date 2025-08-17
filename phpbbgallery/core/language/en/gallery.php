@@ -1,14 +1,13 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension
  *
- * gallery [English]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
  * DO NOT CHANGE
@@ -20,12 +19,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'                 => 'Add more upload fields',
 	'ALBUM'                            => 'Album',
+	'ALBUM_DESC'                       => 'Album description',
 	'ALBUM_IS_CATEGORY'                => 'The album you cheated to, is a category-album.<br />You can’t upload to categories.',
 	'ALBUM_LOCKED'                     => 'Locked',
 	'ALBUM_NAME'                       => 'Album name',
@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	),
 	'ALLOWED_FILETYPES'                => 'Allowed filetypes',
 	'APPROVE'                          => 'Approve',
-	'DISAPPROVE'                       => 'Dissaprove',
+	'DISAPPROVE'                       => 'Disapprove',
 	'APPROVE_IMAGE'                    => 'Approve image',
 
 	//@todo
@@ -116,7 +116,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'This image extension is not allowed',
-	'DONT_RATE_IMAGE'         => 'Don’t rate image',
+	'DO_NOT_RATE_IMAGE'         => 'Don’t rate image',
 
 	'EDIT_COMMENT'             => 'Edit comment',
 	'EDIT_IMAGE'               => 'Edit',
@@ -149,6 +149,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Sorry, this image is locked. You cannot post comments for this image anymore.',
 	'IMAGE_NAME'                   => 'Imagename',
 	'IMAGE_NOT_EXIST'              => 'This image does not exist.',
+	'IMAGE_NOT_APPROVED'           => 'For approval',
 	'IMAGE_PCT'                    => '%.2f%% of all images',
 	'IMAGE_STATUS'                 => 'Status',
 	'IMAGE_URL'                    => 'Image-URL',
@@ -186,10 +187,11 @@ $lang = array_merge($lang, array(
 
 	'NEW_COMMENT'           => 'New Comment',
 	'NEW_IMAGES'            => 'New images',
-	'NEWEST_PGALLERY'       => 'Our newest personal gallery %s',
-	'NO_ALBUMS'             => 'There are no albums in this gallery.',
+	'NEWEST_PGALLERY'       => 'Our newest personal gallery: %s',
+	'NO_ALBUMS'             => 'There are no shared/public albums in this gallery.',
 	'NO_COMMENTS'           => 'No comments yet',
 	'NO_IMAGES'             => 'No images',
+	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'       => 'No images found.',
 	'NO_NEW_IMAGES'         => 'No new images',
 	'NO_IMAGES_LONG'        => 'There are no images in this album.',
@@ -272,9 +274,9 @@ $lang = array_merge($lang, array(
 
 	'THUMBNAIL_SIZE'            => 'Thumbnail size (pixels)',
 	'TOTAL_COMMENTS_SPRINTF'    => array(
-		0 => 'Total comments <strong>0</strong>',
-		1 => 'Total comments <strong>%d</strong>',
-		2 => 'Total comments <strong>%d</strong>',
+		0 => 'Total comments: <strong>0</strong>',
+		1 => 'Total comments: <strong>%d</strong>',
+		2 => 'Total comments: <strong>%d</strong>',
 	),
 	'TOTAL_IMAGES'              => 'Total images',
 	'TOTAL_IMAGES_SPRINTF'      => array(
@@ -288,9 +290,9 @@ $lang = array_merge($lang, array(
 		2 => '%d personal galleries',
 	),
 	'TOTAL_PEGAS_SPRINTF'       => array(
-		0 => 'Total personal galleries <strong>0</strong>',
-		1 => 'Total personal galleries <strong>%d</strong>',
-		2 => 'Total personal galleries <strong>%d</strong>',
+		0 => 'Total personal galleries: <strong>0</strong>',
+		1 => 'Total personal galleries: <strong>%d</strong>',
+		2 => 'Total personal galleries: <strong>%d</strong>',
 	),
 
 	'UNLOCK_IMAGE'              => 'Unlock image',

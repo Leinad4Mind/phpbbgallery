@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* gallery_ucp [Deutsch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* Übersetzt von franki (http://dieahnen.de/ahnenforum/)
-**/
+ * phpBB Gallery - ACP Core Extension [German Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
-/**
-* DO NOT CHANGE
-*/
+ /**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -33,7 +32,7 @@ $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Alben',
 	'ALBUM_ACCESS'					=> 'Zugriff erlauben für',
 	'ALBUM_ACCESS_EXPLAIN'			=> 'Du kannst deine %1$sListen der Freunde und ignorierten Mitglieder%2$s benutzen, um den Zugriff einzuschränken. <strong>Moderatoren</strong> können jedoch <strong>immer</strong> auf das Album zugreifen.',
-	'ALBUM_DESC'					=> 'Beschreibung',
+	'ALBUM_DESC'					=> 'Albumbeschreibung',
 	'ALBUM_NAME'					=> 'Name',
 	'ALBUM_PARENT'					=> 'Übergeordnetes Album',
 	'ATTACHED_SUBALBUMS'			=> 'Verknüpfte Subalben',
@@ -66,6 +65,7 @@ $lang = array_merge($lang, array(
 	'NO_PERSONAL_ALBUM'				=> 'Dein persönliches Album existiert noch nicht. Du kannst Dir hier ein privates Album und weitere Subalben erstellen.<br />Nur der Album Besitzer kann in diese persönlichen Alben Bilder hochladen.',
 	'NO_SUBALBUMS'					=> 'Keine Subalben',
 	'NO_SUBSCRIPTIONS'				=> 'Du beobachtest keine Bilder.',
+	'NO_SUBSCRIPTIONS_ALBUM'		=> 'Du beobachtest keine Alben.',
 
 	'PARSE_BBCODE'					=> 'BBCodes erkennen',
 	'PARSE_SMILIES'					=> 'Smilies erkennen',

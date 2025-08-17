@@ -1,17 +1,28 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
 class url
 {
+	/** @var \phpbb\template\template */
+	private $template;
+
+	/** @var \phpbb\request\request */
+	private $request;
+
+	/** @var \phpbb\config\config */
+	private $config;
+
 	/**
 	* Path from the gallery root, back to phpbb's root
 	*/
@@ -31,6 +42,11 @@ class url
 	* Path from the phpbb root, into gallery's root
 	*/
 	private $phpbb_gallery_path = 'gallery/';
+
+	/**
+	* PHP file extension (e.g. .php)
+	*/
+	private $php_ext;
 
 	const IMAGE_PATH = 'images/';
 	const UPLOAD_PATH = 'core/source/';

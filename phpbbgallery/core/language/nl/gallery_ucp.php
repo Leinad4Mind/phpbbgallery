@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* gallery_ucp [Dutch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* [Dutch] translated by Dutch Translators (https://github.com/dutch-translators)
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Dutch Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Dutch Translators <https://github.com/dutch-translators>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -66,6 +65,7 @@ $lang = array_merge($lang, array(
 	'NO_PERSONAL_ALBUM'				=> 'Je hebt nog geen persoonlijk album. Hier kan je persoonlijke albums creëren, met een aantal subalbums.<br />In persoonlijke albums kan alleen de eigenaar afbeeldingen uploaden.',
 	'NO_SUBALBUMS'					=> 'Geen albums toegevoegd',
 	'NO_SUBSCRIPTIONS'				=> 'Je bent niet geabonneerd op een afbeelding.',
+	'NO_SUBSCRIPTIONS_ALBUM'		=> 'You are not subscribed to an album.',
 
 	'PARSE_BBCODE'					=> 'BBCode gebruiken',
 	'PARSE_SMILIES'					=> 'Smilies gebruiken',

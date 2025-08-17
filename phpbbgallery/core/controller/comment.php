@@ -1,12 +1,13 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 Lucifer
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
 
@@ -180,7 +181,7 @@ class comment
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
 		$album_loginlink = append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext . '?mode=login');
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id']))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -444,7 +445,7 @@ class comment
 		{
 			$this->misc->not_authorised($image_backlink, $image_loginlink);
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) /*&& $mode == 'add'*/)
 		{
 			if (!$this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']))
@@ -658,7 +659,7 @@ class comment
 		{
 			$this->misc->not_authorised($image_backlink, $image_loginlink);
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) /*&& $mode == 'add'*/)
 		{
 			if (!$this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']))
@@ -696,7 +697,9 @@ class comment
 		// Build smilies array
 		generate_smilies('inline', 0);
 
-		$s_hide_comment_input = (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false;
+		$contest_start = $album_data['contest_start'] ?? 0;
+		$contest_end = $album_data['contest_end'] ?? 0;
+		$s_hide_comment_input = (time() < ($contest_start + $contest_end)) ? true : false;
 
 		$this->template->assign_vars(array(
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
@@ -792,7 +795,7 @@ class comment
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
 		$image_loginlink = $this->url->append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$rating = $this->gallery_rating;
 		$rating->loader($image_id, $image_data, $album_data);
 		if (!($this->gallery_config->get('allow_rates') && $rating->is_able()))

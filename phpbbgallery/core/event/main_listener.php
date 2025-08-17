@@ -1,11 +1,15 @@
 <?php
 /**
+ * phpBB Gallery - Core Extension
  *
- * @package phpBB Gallery
- * @copyright (c) 2014 nickvergessen
- * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
  */
+
 namespace phpbbgallery\core\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,7 +25,7 @@ class main_listener implements EventSubscriberInterface
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_link',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
-			//'core.generate_profile_fields_template_data_before'	       => 'profile_fileds',
+			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
 			'core.grab_profile_fields_data'	       => 'get_user_ids',
 			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
 		);
@@ -43,6 +47,12 @@ class main_listener implements EventSubscriberInterface
 	protected $gallery_config;
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected $db;
+
+	/** @var string */
+	protected $albums_table;
+
+	/** @var string */
+	protected $users_table;
 
 	/* @var string phpEx */
 	protected $php_ext;

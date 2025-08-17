@@ -1,17 +1,89 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2011 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
 class upload
 {
+	/**
+	* @var \phpbb\user
+	*/
+	protected $user;
+
+	/**
+	* @var \phpbb\language\language
+	*/
+	protected $language;
+
+	/**
+	* @var \phpbb\db\driver\driver_interface
+	*/
+	protected $db;
+
+	/**
+	* @var \phpbb\event\dispatcher_interface
+	*/
+	protected $phpbb_dispatcher;
+
+	/**
+	* @var \phpbb\request\request
+	*/
+	protected $request;
+
+	/**
+	* @var \phpbb\files\upload
+	*/
+	protected $file_upload;
+
+	/**
+	* @var \phpbbgallery\core\image\image
+	*/
+	protected $gallery_image;
+
+	/**
+	* @var \phpbbgallery\core\config
+	*/
+	protected $gallery_config;
+
+	/**
+	* @var \phpbbgallery\core\url
+	*/
+	protected $gallery_url;
+
+	/**
+	* @var \phpbbgallery\core\block
+	*/
+	protected $block;
+
+	/**
+	* @var \phpbbgallery\core\file\file
+	*/
+	protected $tools;
+
+	/**
+	* @var string
+	*/
+	protected $images_table;
+
+	/**
+	* @var string
+	*/
+	protected $root_path;
+
+	/**
+	* @var string
+	*/
+	protected $php_ext;
+
 	/**
 	* Number of Files per Directory
 	*
@@ -130,7 +202,7 @@ class upload
 		$this->file_count = (int) $file_count;
 
 		//$this->files = $this->form_upload('files');
-		$files = $this->file_upload->handle_upload('phpbbgallery.core.files.type.multiform', 'files');
+		$files = $this->file_upload->handle_upload('phpbbgallery.core.files.types.multiform', 'files');
 
 		foreach ($files as $var)
 		{
@@ -266,7 +338,7 @@ class upload
 	 */
 	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
-		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
+		if ($this->file_limit && ($this->uploaded_files > $this->file_limit))
 		{
 			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->image_data[$image_id]['image_name'], $this->language->lang('QUOTA_REACHED')));
 			return false;
@@ -338,8 +410,6 @@ class upload
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE image_id = ' . (int) $image_id;
 		$this->db->sql_query($sql);
-
-		$this->uploaded_files++;
 
 		return true;
 	}
@@ -543,7 +613,7 @@ class upload
 			return 0;
 		}
 
-		// This code is never invoced. It's left here for future implementation.
+		// This code is never invoked. It's left here for future implementation.
 		$this->gallery_config->inc('current_upload_dir_size', 1);
 		if ($this->gallery_config->get('current_upload_dir_size') >= self::NUM_FILES_PER_DIR)
 		{
@@ -734,7 +804,7 @@ class upload
 	}
 
 	/**
-	* Generate some kind of check so users only complete the uplaod for their images
+	* Generate some kind of check so users only complete the upload for their images
 	*/
 	public function generate_hidden_fields()
 	{

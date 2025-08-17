@@ -1,12 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
 * @ignore
@@ -16,6 +18,26 @@ namespace phpbbgallery\core;
 
 class contest
 {
+	/**
+	 * @var \phpbb\db\driver\driver_interface
+	 */
+	private $db;
+
+	/**
+	 * @var \phpbbgallery\core\config
+	 */
+	private $gallery_config;
+
+	/**
+	 * @var string
+	 */
+	private $images_table;
+
+	/**
+	 * @var string
+	 */
+	private $contest_table;
+
 	/**
 	 * I will have to see where is contest used except here and make it work
 	 * but for the time being - redefine contest constants here as private

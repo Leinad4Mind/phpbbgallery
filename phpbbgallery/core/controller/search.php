@@ -1,12 +1,13 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 Luifer
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
 
@@ -133,7 +134,7 @@ class search
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/search
+	 *    Route: gallery/search/{page}
 	 *
 	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -148,7 +149,7 @@ class search
 		$keywords		= utf8_normalize_nfc($this->request->variable('keywords', '', true));
 		$add_keywords	= utf8_normalize_nfc($this->request->variable('add_keywords', '', true));
 		$username		= $this->request->variable('username', '', true);
-		$user_id		= $this->request->variable('user_id', array(0));
+		$user_id			= $this->request->variable('user_id', array(0));
 		$search_terms	= $this->request->variable('terms', 'all');
 		$search_album	= $this->request->variable('aid', array(0));
 		$search_child	= $this->request->variable('sc', true);
@@ -156,9 +157,10 @@ class search
 		$sort_days		= $this->request->variable('st', 0);
 		$sort_key		= $this->request->variable('sk', 't');
 		$sort_dir		= $this->request->variable('sd', 'd');
+		$filtered		= $this->request->variable('filtered', false);
 
 		$start 			= ($page - 1) * $this->gallery_config->get('items_per_page');
-		if ($keywords != '' && $add_keywords ='' )
+		if ($filtered)
 		{
 			$submit = true;
 		}
@@ -185,13 +187,13 @@ class search
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
-		// We will build SQL array and then build query (easely change count with rq)
+		// We will build SQL array and then build query (easily change count with rq)
 		$sql_array = $sql_where = array();
 		$sql_array['FROM'] = array(
 			$this->images_table => 'i',
@@ -212,11 +214,13 @@ class search
 					AND user_type IN (' . USER_NORMAL . ', ' . USER_FOUNDER . ')';
 				$result = $this->db->sql_query_limit($sql, 100);
 
+				$user_id_ary = [];
 				while ($row = $this->db->sql_fetchrow($result))
 				{
 					$user_id_ary[] = (int) $row['user_id'];
 				}
 				$this->db->sql_freeresult($result);
+
 				$user_id_ary[] = (int) ANONYMOUS;
 				$user_id = $user_id_ary;
 			}
@@ -329,12 +333,13 @@ class search
 					'username'	=> $username,
 					'user_id'	=> $user_id,
 					'terms'		=> $search_terms,
-					'aid'		=> $search_album,
-					'sc'		=> $search_child,
-					'sf'		=> $search_fields,
-					'st'		=> $sort_days,
-					'sk'		=> $sort_key,
-					'sd'		=> $sort_dir
+					'aid'			=> $search_album,
+					'sc'			=> $search_child,
+					'sf'			=> $search_fields,
+					'st'			=> $sort_days,
+					'sk'			=> $sort_key,
+					'sd'			=> $sort_dir,
+					'filtered'	=> true
 				),
 			), 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $current_page - 1);
 
@@ -385,7 +390,7 @@ class search
 			$this->template->assign_var('S_NO_SEARCH', true);
 			trigger_error('NO_SEARCH');
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
@@ -423,7 +428,7 @@ class search
 			trigger_error('NO_SEARCH');
 		}
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
@@ -438,7 +443,7 @@ class search
 		));
 
 		$limit = $this->gallery_config->get('items_per_page');
-		$start = ($page - 1) * $this->gallery_config->get('items_per_page');
+		$start = ($page - 1) * $limit;
 		$image_counter = $this->gallery_search->recent_count();
 
 		$this->gallery_search->recent($limit, $start);
@@ -448,7 +453,7 @@ class search
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/search/recent/{page}
+	 *    Route: gallery/search/commented/{page}
 	 *
 	 * @param $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -465,7 +470,7 @@ class search
 			trigger_error('NO_SEARCH');
 		}
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
@@ -480,7 +485,7 @@ class search
 		));
 
 		$limit = $this->gallery_config->get('items_per_page');
-		$start = ($page - 1) * $this->gallery_config->get('items_per_page');
+		$start = ($page - 1) * $limit;
 
 		$this->gallery_search->recent_comments($limit, $start);
 
@@ -506,7 +511,7 @@ class search
 			trigger_error('NO_SEARCH');
 		}
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
@@ -521,7 +526,7 @@ class search
 		));
 
 		$limit = $this->gallery_config->get('items_per_page');
-		$start = ($page - 1) * $this->gallery_config->get('items_per_page');
+		$start = ($page - 1) * $limit;
 
 		$this->gallery_search->recent($limit, $start, $this->user->data['user_id']);
 
@@ -547,7 +552,7 @@ class search
 			trigger_error('NO_SEARCH');
 		}
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
@@ -562,7 +567,7 @@ class search
 		));
 
 		$limit = $this->gallery_config->get('items_per_page');
-		$start = ($page - 1) * $this->gallery_config->get('items_per_page');
+		$start = ($page - 1) * $limit;
 
 		$this->gallery_search->rating($limit, $start);
 

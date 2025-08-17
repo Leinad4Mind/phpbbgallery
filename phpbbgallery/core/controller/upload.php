@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
 
@@ -73,6 +75,9 @@ class upload
 
 	/** @var \phpbbgallery\core\block  */
 	protected $block;
+
+	/** @var \phpbbgallery\core\contest */
+	protected $contest;
 
 	/** @var   */
 	protected $images_table;
@@ -150,13 +155,13 @@ class upload
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id'	=> $album_id));
 		$album_loginlink = 'ucp.php?mode=login';
 		$error = '';
-		//Let's get authorization
-		$this->auth->load_user_premissions($this->user->data['user_id']);
+		//Let's get authorisation
+		$this->auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->auth->acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == $this->block->get_album_status_locked()))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
-		if ($album_data['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
+		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 		{
 			$contest = array();
 			$contest = $this->contest->get_contest($album_id, 'album');
@@ -175,7 +180,7 @@ class upload
 		$submit = $this->request->variable('submit', false);
 		$mode = $this->request->variable('mode', 'upload');
 		// So let's see if we have AJAX and use jQuery shit.
-		// We are going to use ajax uplaod only for registered users.
+		// We are going to use ajax upload only for registered users.
 		// Anons should suffer.
 		if ($this->request->is_ajax() && $this->user->data['is_registered'])
 		{
@@ -205,6 +210,7 @@ class upload
 					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
 				}
 			}
+
 			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
 			$process = $this->gallery_upload;
 			$process->set_up($album_id, $upload_files_limit);

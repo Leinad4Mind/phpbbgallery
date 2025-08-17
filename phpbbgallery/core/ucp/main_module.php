@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\ucp;
 
@@ -16,6 +18,9 @@ namespace phpbbgallery\core\ucp;
 class main_module
 {
 	var $u_action;
+	protected $language;
+	public $tpl_name;
+	public $page_title;
 
 	function main($id, $mode)
 	{
@@ -60,7 +65,7 @@ class main_module
 		$mode = $request->variable('mode', 'manage_albums');
 		$action = $request->variable('action', '');
 		$cancel = (isset($_POST['cancel'])) ? true : false;
-		$phpbb_ext_gallery_core_auth->load_user_premissions($user->data['user_id']);
+		$phpbb_ext_gallery_core_auth->load_user_permissions($user->data['user_id']);
 		if ($cancel)
 		{
 			$action = '';
@@ -134,7 +139,7 @@ class main_module
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
 		if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
 		{
-			// User will probally go to initialise_album()
+			// User will probably go to initialise_album()
 			$template->assign_vars(array(
 				'S_INFO_CREATE'				=> true,
 				'S_UCP_ACTION'		=> $this->u_action . '&amp;action=initialise',
@@ -154,7 +159,7 @@ class main_module
 		global $cache, $db,  $user, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_config, $albums_table, $phpbb_ext_gallery_user;
 		global $request, $users_table, $phpbb_container;
 
-		// we will have to initialse $phpbb_ext_gallery_user
+		// we will have to initialise $phpbb_ext_gallery_user
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
 		if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
 		{
@@ -171,8 +176,8 @@ class main_module
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
-				'album_status'					=> \phpbbgallery\core\block::ALBUM_OPEN,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_status'					=> (int) \phpbbgallery\core\block::ALBUM_OPEN,
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
 				'album_last_user_colour'		=> $user->data['user_colour'],
@@ -370,8 +375,8 @@ class main_module
 				'album_name'					=> $request->variable('album_name', '', true),
 				'parent_id'						=> $request->variable('parent_id', 0),
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
-				'album_status'					=> \phpbbgallery\core\block::ALBUM_OPEN,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_status'					=> (int) \phpbbgallery\core\block::ALBUM_OPEN,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
@@ -520,7 +525,7 @@ class main_module
 				'parent_id'						=> $request->variable('parent_id', (($album_id == $phpbb_ext_gallery_user->get_data('personal_album_id')) ? 0 : $phpbb_ext_gallery_user->get_data('personal_album_id'))),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_auth_access'				=> ($phpbb_ext_gallery_core_auth->acl_check('a_restrict', $phpbb_ext_gallery_core_auth::OWN_ALBUM)) ? $request->variable('album_auth_access', 0) : 0,
@@ -528,6 +533,7 @@ class main_module
 
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], $request->variable('desc_parse_bbcode', false), $request->variable('desc_parse_urls', false), $request->variable('desc_parse_smilies', false));
 			$row = $phpbb_ext_gallery_core_album->get_info($album_id);
+			$parent_id = (int) $album_data['parent_id'];
 			if (!$row['parent_id'])
 			{
 				// do not allow to restrict access on the base-album
@@ -540,18 +546,18 @@ class main_module
 			{
 				$exclude_albums[] = (int) $loop['album_id'];
 			}
-			if (in_array($album_data['parent_id'], $exclude_albums))
+			if (in_array($parent_id, $exclude_albums))
 			{
-				$album_data['parent_id'] = (int) $row['parent_id'];
+				$parent_id = (int) $row['parent_id'];
 			}
 
 			// If the parent is different, the left_id and right_id have changed.
-			if ($row['parent_id'] != $album_data['parent_id'])
+			if ($row['parent_id'] != $parent_id)
 			{
-				if ($album_data['parent_id'])
+				if ($parent_id > 0)
 				{
 					// Get the parent album now, so it throws an error when it does not exist, before we change the database.
-					$parent = $phpbb_ext_gallery_core_album->get_info($album_data['parent_id']);
+					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
 				}
 
 				// How many do we have to move and how far.
@@ -578,7 +584,7 @@ class main_module
 				$new['right_id'] = $row['right_id'] + $moving_distance;
 
 				// Close the gap, we produced through moving.
-				if ($album_data['parent_id'] == 0)
+				if ($parent_id == 0)
 				{
 					$sql = 'UPDATE ' . $albums_table . '
 						SET left_id = left_id - ' . $moving_ids . '
@@ -608,6 +614,9 @@ class main_module
 							AND right_id <= ' . (int) $stop_updating;
 					$db->sql_query($sql);
 
+					// We should get new parent again for the case if it has been changed
+					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
+
 					$sql = 'UPDATE ' . $albums_table . '
 						SET left_id = left_id + ' . $moving_ids . '
 						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
@@ -622,8 +631,10 @@ class main_module
 							AND right_id <= ' . (int) $stop_updating;
 					$db->sql_query($sql);
 
+					// We should get new parent again for the case if it has been changed
+					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
+
 					// Move the albums to the suggested gap.
-					$parent['right_id'] = $parent['right_id'] + $moving_ids;
 					$move_back = ($new['right_id'] - $parent['right_id']) + 1;
 					$sql = 'UPDATE ' . $albums_table . '
 						SET left_id = left_id - ' . $move_back . ',
@@ -750,14 +761,14 @@ class main_module
 			// Make sure the overall image & comment count is correct...
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . $images_table . '
-				WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-					AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+				WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
 			$phpbb_ext_gallery_config->set('num_images', $row['num_images']);
-			$phpbb_ext_gallery_config->set('num_comments', $row['num_comments']);
+			$phpbb_ext_gallery_config->set('num_comments', (int) $row['num_comments']);
 
 			$num_images = sizeof($deleted_images);
 			if ($num_images)
@@ -792,7 +803,7 @@ class main_module
 								),
 							),
 
-							'WHERE'			=> 'a.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
+							'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 							'ORDER_BY'		=> 'a.album_id DESC',
 						);
 						$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -1003,7 +1014,7 @@ class main_module
 
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UPLOADER'			=> (($row['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST) && ($row['contest_marked'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'UPLOADER'			=> (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && ($row['contest_marked'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
 				'U_IMAGE'			=> $phpbb_gallery_url->show_image($row['image_id']),
@@ -1053,8 +1064,8 @@ class main_module
 				'UPLOADER'			=> ($row['image_contest'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['image_album_id'])) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
 				'COMMENT'			=> $row['image_comments'],
-				//'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
-				//'IMAGE_TIME'		=> $user->format_date($row['image_time']),
+				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
+				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'ALBUM_NAME'		=> $row['album_name'],

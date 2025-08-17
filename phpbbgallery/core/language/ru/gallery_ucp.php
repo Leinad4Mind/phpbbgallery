@@ -1,24 +1,25 @@
 <?php
 /**
-*
-* gallery_ucp [Russian]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Russian Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
+
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 $lang = array_merge($lang, array(
 	'ACCESS_CONTROL_ALL'			=> 'Все',
@@ -56,6 +57,8 @@ $lang = array_merge($lang, array(
 	'NO_PERSONAL_ALBUM'				=> 'У вас пока нет личного фотоальбома. Здесь можно создать его, а также вложенные альбомы.',
 	'NO_SUBALBUMS'					=> 'Нет вложенных альбомов',
 	'NO_SUBSCRIPTIONS'				=> 'Вы не подписаны ни на одно фото.',
+	'NO_SUBSCRIPTIONS_ALBUM'		=> 'You are not subscribed to an album.',
+
 	'PARSE_BBCODE'					=> 'Разрешить BBCode',
 	'PARSE_SMILIES'					=> 'Разрешить смайлики',
 	'PARSE_URLS'					=> 'Разрешить ссылки',

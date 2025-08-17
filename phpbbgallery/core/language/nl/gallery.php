@@ -1,15 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [Dutch Translation]
  *
- * gallery [Dutch]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- * [Dutch] translated by Dutch Translators (https://github.com/dutch-translators)
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Dutch Translators <https://github.com/dutch-translators>
+ */
 
 /**
  * DO NOT CHANGE
@@ -21,12 +20,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'                 => 'Voeg meer upload velden toe',
 	'ALBUM'                            => 'Album',
+	'ALBUM_DESC'                       => 'Albumbeschrijving',
 	'ALBUM_IS_CATEGORY'                => 'Het album waar je heen gegaan bent is een categoriealbum..<br />Je kan niet uploaden naar categorieën.',
 	'ALBUM_LOCKED'                     => 'Gesloten',
 	'ALBUM_NAME'                       => 'Albumnaam',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Je kan hier een omschrijving invoeren, deze mag niet meer dan <strong>%d</strong> karakters bevatten.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'De afbeeldingsextensie is niet toegestaan',
-	'DONT_RATE_IMAGE'         => 'Beoordeel afbeeldingen niet',
+	'DO_NOT_RATE_IMAGE'         => 'Beoordeel afbeeldingen niet',
 
 	'EDIT_COMMENT'             => 'Wijzig reactie',
 	'EDIT_IMAGE'               => 'Wijzig',
@@ -150,6 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Sorry, deze afbeelding is gesloten. Je kan geen reacties meer plaatsen op deze afbeelding.',
 	'IMAGE_NAME'                   => 'Afbeeldingsnaam',
 	'IMAGE_NOT_EXIST'              => 'Deze afbeelding bestaat niet.',
+	'IMAGE_NOT_APPROVED'           => 'Ter goedkeuring',
 	'IMAGE_PCT'                    => '%.2f%% van alle afbeeldingen',
 	'IMAGE_STATUS'                 => 'Status',
 	'IMAGE_URL'                    => 'Afbeeldingslink',
@@ -191,6 +192,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'             => 'Er zijn geen albums in deze galerij.',
 	'NO_COMMENTS'           => 'Nog geen reacties',
 	'NO_IMAGES'             => 'Geen afbeeldingen',
+	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'       => 'Geen afbeldingen gevonden.',
 	'NO_NEW_IMAGES'         => 'Geen nieuwe afbeeldingen',
 	'NO_IMAGES_LONG'        => 'Er zijn geen afbeeldingen in dit album.',
@@ -368,6 +370,6 @@ $lang = array_merge($lang, array(
 	'UNREAD_IMAGES'    => 'Unviewed images',
 	'NO_UNREAD_IMAGES' => 'No unviewed images',
 
-	// Versions 1.2.1 addiotions
+	// Versions 1.2.1 additions
 	'GALLERY_DROP'     => 'Plaats je afbeeldingen hier',
 ));

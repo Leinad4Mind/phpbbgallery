@@ -1,15 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [German Translation]
  *
- * gallery [Deutsch]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- * Übersetzt von franki (http://dieahnen.de/ahnenforum/)
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
  * DO NOT CHANGE
@@ -21,12 +20,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'                 => 'Weitere Felder zum Hochladen hinzufügen',
 	'ALBUM'                            => 'Album',
+	'ALBUM_DESC'                       => 'Albumbeschreibung',
 	'ALBUM_IS_CATEGORY'                => 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALBUM_LOCKED'                     => 'Gesperrt',
 	'ALBUM_NAME'                       => 'Name des Albums',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'Diese Bilderweiterung ist nicht erlaubt',
-	'DONT_RATE_IMAGE'         => 'Bild nicht bewerten',
+	'DO_NOT_RATE_IMAGE'         => 'Bild nicht bewerten',
 
 	'EDIT_COMMENT'             => 'Kommentar ändern',
 	'EDIT_IMAGE'               => 'Bearbeiten',
@@ -150,6 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NAME'                   => 'Bildname',
 	'IMAGE_NOT_EXIST'              => 'Dieses Bild existiert nicht',
+	'IMAGE_NOT_APPROVED'           => 'Wartet auf Freigabe',
 	'IMAGE_PCT'                    => '%.2f%% aller Bilder',
 	'IMAGE_STATUS'                 => 'Status',
 	'IMAGE_URL'                    => 'Bildlink',
@@ -188,9 +189,10 @@ $lang = array_merge($lang, array(
 	'NEW_COMMENT'           => 'Neuer Kommentar',
 	'NEW_IMAGES'            => 'Neue Bilder',
 	'NEWEST_PGALLERY'       => 'Unsere neueste persönliche Galerie: %s',
-	'NO_ALBUMS'             => 'In dieser Galerie gibt es keine Alben',
+	'NO_ALBUMS'             => 'In dieser Galerie gibt es keine gemeinsamen/öffentlichen Alben.',
 	'NO_COMMENTS'           => 'Noch keine Kommentare',
 	'NO_IMAGES'             => 'keine Bilder',
+	'NO_COMMENTS_NO_IMAGES' => 'Noch keine Kommentare oder eigene Bilder',
 	'NO_IMAGES_FOUND'       => 'Es wurden keine Bilder gefunden.',
 	'NO_NEW_IMAGES'         => 'Keine neue Bilder',
 	'NO_IMAGES_LONG'        => 'In diesem Album gibt es keine Bilder.',
@@ -366,6 +368,6 @@ $lang = array_merge($lang, array(
 	'UNREAD_IMAGES'    => 'Unbewertete Bilder',
 	'NO_UNREAD_IMAGES' => 'Es gibt keine ungeprüften Bilder',
 
-	// Versions 1.2.1 addiotions
+	// Versions 1.2.1 additions
 	'GALLERY_DROP'     => 'Lege Dein Bild hier rein',
 ));

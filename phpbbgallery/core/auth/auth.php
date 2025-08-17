@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\auth;
 
@@ -59,6 +61,18 @@ class auth
 	protected $user;
 
 	/**
+	* phpBB user object
+	* @var \phpbb\user
+	*/
+	protected $phpbb_user;
+
+	/**
+	* phpBB auth object
+	* @var \phpbb\auth\auth
+	*/
+	protected $auth;
+
+	/**
 	* Gallery permissions table
 	* @var string
 	*/
@@ -75,6 +89,12 @@ class auth
 	* @var string
 	*/
 	protected $table_users;
+
+	/**
+	* Gallery albums table
+	* @var string
+	*/
+	protected $table_albums;
 
 	/**
 	 * Construct
@@ -123,7 +143,7 @@ class auth
 		return self::OWN_ALBUM;
 	}
 
-	public function load_user_premissions($user_id, $album_id = false)
+	public function load_user_permissions($user_id, $album_id = false)
 	{
 		$cached_permissions = $this->user->get_data('user_permissions');
 		if (($user_id == $this->user->user_id) && !empty($cached_permissions))
@@ -477,7 +497,7 @@ class auth
 	public function get_zebra_state($zebra_array, $album_author, $album_id)
 	{
 		$state = 0;
-		// if we check for ourselves or user is mod or admin - make bigest possible step
+		// if we check for ourselves or user is mod or admin - make biggest possible step
 		if ($this->phpbb_user->data['user_id'] == $album_author || $this->acl_check('m_', $album_author, $album_id) || $this->auth->acl_get('a_user'))
 		{
 			$state = 5;
@@ -773,7 +793,7 @@ class auth
 		}
 		$this->db->sql_freeresult($result);
 
-		// Now we will select the roles that have the setted ACL
+		// Now we will select the roles that have the set ACL
 		$sql = 'SELECT role_id FROM ' . $this->table_roles . ' WHERE ' . $acl . ' = 1 and ' . $this->db->sql_in_set('role_id', $roles_id['roles'], false, true);
 		$result = $this->db->sql_query($sql);
 		$roles = array();

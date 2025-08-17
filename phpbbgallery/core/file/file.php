@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\file;
 
@@ -31,6 +33,9 @@ class file
 	private $last_modified = 0;
 
 	public $gd_version = 0;
+
+	/** @var \phpbbgallery\core\config */
+	public $gallery_config;
 
 	public $image;
 	public $image_content_type;
@@ -130,6 +135,28 @@ class file
 		return '';
 	}
 
+	static public function extension_by_filename($filename)
+	{
+		switch (utf8_substr(strtolower($filename), -4))
+		{
+			case '.png':
+				return 'png';
+			break;
+			case '.gif':
+				return 'gif';
+			break;
+			case 'jpeg':
+			case '.jpg':
+				return 'jpg';
+			break;
+			case '.webp':
+				return 'webp';
+			break;
+		}
+
+		return '';
+	}
+
 	/**
 	 * Read image
 	 * @param bool $force_filesize
@@ -145,22 +172,22 @@ class file
 		switch (utf8_substr(strtolower($this->image_source), -4))
 		{
 			case '.png':
-				$this->image = imagecreatefrompng($this->image_source);
-				imagealphablending($this->image, true); // Set alpha blending on ...
-				imagesavealpha($this->image, true); // ... and save alphablending!
 				$this->image_type = 'png';
+				$this->image = @imagecreatefrompng($this->image_source);
+				imagealphablending($this->image, true); // Set alpha blending on ...
+				imagesavealpha($this->image, true); // ... and save alpha blending!
 			break;
 			case '.webp':
-				$this->image = imagecreatefromwebp($this->image_source);
 				$this->image_type = 'webp';
+				$this->image = imagecreatefromwebp($this->image_source);
 			break;
 			case '.gif':
-				$this->image = imagecreatefromgif($this->image_source);
 				$this->image_type = 'gif';
+				$this->image = imagecreatefromgif($this->image_source);
 			break;
 			default:
-				$this->image = imagecreatefromjpeg($this->image_source);
 				$this->image_type = 'jpeg';
+				$this->image = imagecreatefromjpeg($this->image_source);
 			break;
 		}
 
@@ -337,7 +364,7 @@ class file
 
 	/**
 	 * Rotate the image
-	 * Usage optimized for 0�, 90�, 180� and 270� because of the height and width
+	 * Usage optimized for 0º, 90º, 180º and 270º because of the height and width
 	 *
 	 * @param $angle
 	 * @param $ignore_dimensions

@@ -1,17 +1,18 @@
 <?php
 /**
-*
-* phpBB Gallery. An extension for the phpBB Forum Software package.
-* French translation by pokyto aka le.poke http://www.lestontonsfraggers.com (inspired by darky http://www.foruminfopc.fr/ and http://www.phpbb-fr.com/) & Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2012 nickvergessen <http://www.flying-bits.org/> - 2018 Stanislav Atanasov <http://www.anavaro.com>
-* @license GNU General Public License, version 2 (GPL-2.0-only)
-*
-*/
+ * phpBB Gallery - ACP Core Extension [French Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator pokyto (aka le.poke) <https://www.lestontonsfraggers.com>, inspired by darky <https://www.foruminfopc.fr/> and the phpBB-fr.com Team
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -46,7 +47,7 @@ $lang = array_merge($lang, array(
 	'ACP_FILES_DIR_STATE'           => 'État du répertoire : <strong>./files/</strong>',
 	'ACP_CORE_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/</strong>',
 	'ACP_SOURCE_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/source/</strong>',
-	'ACP_MEDIUM_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/meduim/</strong>',
+	'ACP_MEDIUM_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/medium/</strong>',
 	'ACP_MINI_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/mini/</strong>',
 
 	'ADD_ALBUM_ON_TOP'				=> 'Ajouter l’album en haut',
@@ -155,8 +156,8 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_IMAGES'			=> 'Afficher le compteur d’images dans viewtopic.php',
 	'DISP_VIEWTOPIC_LINK'			=> 'Lien dans le compteur d’images de l’utilisateur',
 	'DISP_WHOISONLINE'				=> 'Afficher « Qui est en ligne ? »',
-	'DISPLAY_IN_RRC'				=> 'Afficher les images de cet album dans les « Dernières Images/Images aléatoires »',
-	'DONT_COPY_PERMISSIONS'			=> 'Ne pas copier les permissions',
+	'DISPLAY_IN_RRC'					=> 'Afficher les images de cet album dans les « Dernières Images/Images aléatoires »',
+	'DO_NOT_COPY_PERMISSIONS'		=> 'Ne pas copier les permissions',
 
 	'EDIT_ALBUM'					=> 'Modifier l’album',
 
@@ -170,7 +171,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'					=> 'Index-Galerie',
 	'GALLERY_PURGE_CACHE_EXPLAIN'	=> 'Si vous utilisez la fonction de Cache des Miniatures, vous devez vider le cache des miniatures après avoir modifié les paramètres des miniatures dans la « Configuration de la Galerie ».',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'	=> 'Resynchroniser les albums personnels en champs de profils personnalisés',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'	=> 'Permet de resynchroniser tous les albums personnels principaux en tant que contacts basés sur les champs de profils personnalisés.<br>Information : Si un trop grand nombre d’albums personnels principaux sont présents cette opération peut mettre un certain temps avant d’aboutir !',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'	=> 'Permet de resynchroniser tous les albums personnels principaux en tant que contacts basés sur les champs de profils personnalisés.<br>Information : Si un trop grand nombre d’albums personnels principaux sont présents cette opération peut mettre un certain temps avant d’aboutir !',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM'	=> 'Confirmer la resynchronisation de tous les albums personnels principaux comme contacts basés sur les champs de profils personnalisés ?',
 	'GALLERY_STATS'					=> 'Statistiques de la Galerie',
 	'GALLERY_VERSION'				=> 'Version de la Galerie phpBB',
@@ -183,7 +184,7 @@ $lang = array_merge($lang, array(
 	'HANDLE_IMAGES'					=> 'Que faire avec les images ?',
 	'HANDLE_SUBS'					=> 'Que faire avec les sous-albums ?',
 	'HOTLINK_ALLOWED'				=> 'Liste blanche des liens',
-	'HOTLINK_ALLOWED_EXP'			=> 'Les liens vers des images provenants de ces domaines sont toujours autorisés. Les domaines doivent être séparés par des virgules (sans espaces). Exemple : « lestontonsfraggers.com,phpbb.com »',
+	'HOTLINK_ALLOWED_EXP'			=> 'Les liens vers des images provenant de ces domaines sont toujours autorisés. Les domaines doivent être séparés par des virgules (sans espaces). Exemple : « lestontonsfraggers.com,phpbb.com »',
 	'HOTLINK_PREVENT'				=> 'Autoriser les liens vers des images de tous les sites',
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Longueur maximale de la description',

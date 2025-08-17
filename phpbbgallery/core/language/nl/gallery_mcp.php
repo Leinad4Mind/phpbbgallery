@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* gallery_mcp [Dutch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* [Dutch] translated by Dutch Translators (https://github.com/dutch-translators)
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Dutch Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Dutch Translators <https://github.com/dutch-translators>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -55,9 +54,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Afbeelding verwijderen',
 	'QUEUE_A_DELETE2'				=> 'Afbeelding verwijderen?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Weet je zeker dat je deze afbeelding wilt verwijderen?',
-	'QUEUE_A_LOCK'					=> 'Afbeelding sluiten',
-	'QUEUE_A_LOCK2'					=> 'Afbeelding sluiten?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Weet je zeker dat je deze afbeelding wilt sluiten?',
+	'QUEUE_A_LOCK'					=> 'Afbeeldingscommentaar vergrendelen',
+	'QUEUE_A_LOCK2'					=> 'Afbeeldingscommentaar goedkeuren en vergrendelen?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Weet je zeker dat je het commentaar op deze afbeelding wilt goedkeuren en blokkeren?',
 	'QUEUE_A_MOVE'					=> 'Verplaats afbeelding',
 	'QUEUE_A_UNAPPROVE'				=> 'Afbeelding afkeuren',
 	'QUEUE_A_UNAPPROVE2'			=> 'Afbeelding afkeuren?',
@@ -117,7 +116,7 @@ $lang = array_merge($lang, array(
 		1			=> 'In totaal is er <span style="font-weight: bold;">1</span> afbeelding goedgekeurd.',
 		2			=> 'In totaal zijn er <span style="font-weight: bold;">%s</span> afbeeldingen goedgekeurd.',
 	),
-	'WAITING_DISPPROVED_IMAGE'		=> array(
+	'WAITING_DISAPPROVED_IMAGE'		=> array(
 		0			=> 'Geen afgekeurde afbeeldingen.',
 		1			=> 'In totaal is er <span style="font-weight: bold;">1</span> afbeelding afgekleurd.',
 		2			=> 'In totaal zijn er <span style="font-weight: bold;">%s</span> afbeeldingen afgekeurd.',

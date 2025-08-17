@@ -1,11 +1,13 @@
 <?php
-
 /**
+ * phpBB Gallery - Core Extension
  *
- * @package       phpBB Gallery Core
- * @copyright (c) 2014 nickvergessen
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
  */
 
 namespace phpbbgallery\core\controller;
@@ -258,8 +260,19 @@ class image
 
 		$album_id = (int) $this->data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
-		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access']);
+		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access'], $this->data);
 		$this->display->generate_navigation($album_data);
+
+		if ($this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']))
+		{
+			$image_status_check = '';
+		}
+		else
+		{
+			$user_id = (int) $this->user->data['user_id'];
+			$image_status_check = ' AND (image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = ' . $user_id . ')';
+		}
+
 		if (!$this->user->data['is_bot'] && isset($this->user->data['session_page']) && (strpos($this->user->data['session_page'], '&image_id=' . $image_id) === false || isset($this->user->data['session_created'])))
 		{
 			$sql = 'UPDATE ' . $this->table_images . '
@@ -297,9 +310,9 @@ class image
 
 				'S_IMAGE_REPORTED'    => $this->data['image_reported'] ? true : false,
 				'U_IMAGE_REPORTED'    => ($this->data['image_reported']) ? $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => (int) $image_id)) : '',
-				'S_STATUS_APPROVED'   => ($this->data['image_status'] == \phpbbgallery\core\block::STATUS_APPROVED),
-				'S_STATUS_UNAPPROVED' => ($this->data['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED),
-				'S_STATUS_LOCKED'     => ($this->data['image_status'] == \phpbbgallery\core\block::STATUS_LOCKED),
+				'S_STATUS_APPROVED'   => ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED),
+				'S_STATUS_UNAPPROVED' => ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED),
+				'S_STATUS_LOCKED'     => ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED),
 			));
 		}
 		$image_desc = generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
@@ -349,14 +362,15 @@ class image
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		$sql_sort_order .= $sql_help_sort;
 
-		// Let's see if there is prieveus image
+		// Let's see if there is previous image
 		$sql = 'SELECT *
 			FROM ' . $this->table_images . '
-			WHERE image_album_id = ' . (int) $album_id . "
-				AND image_status <> 3
-			ORDER BY $sql_sort_order" . $sql_help_sort;
+			WHERE image_album_id = ' . (int) $album_id . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				' . $image_status_check . '
+			ORDER BY ' . $sql_sort_order . $sql_help_sort;
 		$result = $this->db->sql_query($sql);
-		$images_array = array();
+		$images_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$images_array[] = $row;
@@ -387,8 +401,8 @@ class image
 		$this->db->sql_freeresult($result);
 
 		$this->template->assign_vars(array(
-			'UC_NEXT_IMAGE' => ($next ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $next['image_id'])) . '"><img style="max-width: 70px; max-height: 70px;" src="' . $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $next['image_id'])) . '" alt="' . htmlspecialchars_decode($next['image_name'], ENT_COMPAT) . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $next['image_id'])) . '">' . htmlspecialchars_decode($next['image_name'], ENT_COMPAT) . ' &raquo;&raquo; </a>') : ''),
-			'UC_PREV_IMAGE' => ($prev ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $prev['image_id'])) . '"><img style="max-width: 70px; max-height: 70px;" src="' . $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $prev['image_id'])) . '" alt="' . htmlspecialchars_decode($prev['image_name'], ENT_COMPAT) . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $prev['image_id'])) . '">&laquo;&laquo; ' . htmlspecialchars_decode($prev['image_name'], ENT_COMPAT) . '</a>') : ''),
+			'UC_NEXT_IMAGE' => ($next ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $next['image_id'])) . '"><img style="max-width: 70px; max-height: 70px;" src="' . $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $next['image_id'])) . '" alt="' . htmlspecialchars_decode($next['image_name'], ENT_COMPAT) . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $next['image_id'])) . '">' . htmlspecialchars_decode($next['image_name'], ENT_COMPAT) . '&nbsp;&raquo;&raquo;</a>') : ''),
+			'UC_PREV_IMAGE' => ($prev ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $prev['image_id'])) . '"><img style="max-width: 70px; max-height: 70px;" src="' . $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $prev['image_id'])) . '" alt="' . htmlspecialchars_decode($prev['image_name'], ENT_COMPAT) . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $prev['image_id'])) . '">&laquo;&laquo;&nbsp;' . htmlspecialchars_decode($prev['image_name'], ENT_COMPAT) . '</a>') : ''),
 			'U_VIEW_ALBUM'  => $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id)),
 			'UC_IMAGE'      => $this->helper->route('phpbbgallery_core_image_file_medium', array('image_id' => (int) $image_id)),
 			//'UC_IMAGE_ACTION'	=> $this->gallery_config->get('link_imagepage') == 'none' ? '' : $this->gallery_config->get('link_imagepage') == 'image' ? $this->helper->route('phpbbgallery_core_image_file_source', array('image_id' => $image_id)) : $next && $this->gallery_config->get('link_imagepage') == 'next' ? $this->helper->route('phpbbgallery_core_image', array('image_id' => $next['image_id'])) : '',
@@ -451,35 +465,37 @@ class image
 
 		$this->load_users_data();
 
-		$this->users_data_array[$this->data['image_user_id']]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
+		$user_id = $this->data['image_user_id'];
+		$this->users_data_array[$user_id]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
+		$user_data = $this->users_data_array[$user_id] ?? [];
 		$this->template->assign_vars(array(
-			'POSTER_FULL'     => get_username_string('full', $this->data['image_user_id'], $this->users_data_array[$this->data['image_user_id']]['username'], $this->users_data_array[$this->data['image_user_id']]['user_colour']),
-			'POSTER_COLOUR'   => get_username_string('colour', $this->data['image_user_id'], $this->users_data_array[$this->data['image_user_id']]['username'], $this->users_data_array[$this->data['image_user_id']]['user_colour']),
-			'POSTER_USERNAME' => get_username_string('username', $this->data['image_user_id'], $this->users_data_array[$this->data['image_user_id']]['username'], $this->users_data_array[$this->data['image_user_id']]['user_colour']),
-			'U_POSTER'        => get_username_string('profile', $this->data['image_user_id'], $this->users_data_array[$this->data['image_user_id']]['username'], $this->users_data_array[$this->data['image_user_id']]['user_colour']),
+			'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+			'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+			'POSTER_USERNAME' => get_username_string('username', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+			'U_POSTER'        => get_username_string('profile', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 
-			'POSTER_SIGNATURE'    => $this->users_data_array[$this->data['image_user_id']]['sig'],
-			'POSTER_RANK_TITLE'   => $this->users_data_array[$this->data['image_user_id']]['rank_title'],
-			'POSTER_RANK_IMG'     => $this->users_data_array[$this->data['image_user_id']]['rank_image'],
-			'POSTER_RANK_IMG_SRC' => $this->users_data_array[$this->data['image_user_id']]['rank_image_src'],
-			'POSTER_JOINED'       => $this->users_data_array[$this->data['image_user_id']]['joined'],
-			'POSTER_POSTS'        => $this->users_data_array[$this->data['image_user_id']]['posts'],
-			'POSTER_AVATAR'       => $this->users_data_array[$this->data['image_user_id']]['avatar'],
-			'POSTER_WARNINGS'     => $this->users_data_array[$this->data['image_user_id']]['warnings'],
-			'POSTER_AGE'          => $this->users_data_array[$this->data['image_user_id']]['age'],
+			'POSTER_SIGNATURE'    => $user_data['sig'] ?? '',
+			'POSTER_RANK_TITLE'   => $user_data['rank_title'] ?? '',
+			'POSTER_RANK_IMG'     => $user_data['rank_image'] ?? '',
+			'POSTER_RANK_IMG_SRC' => $user_data['rank_image_src'] ?? '',
+			'POSTER_JOINED'       => $user_data['joined'] ?? '',
+			'POSTER_POSTS'        => $user_data['posts'] ?? 0,
+			'POSTER_AVATAR'       => $user_data['avatar'] ?? '',
+			'POSTER_WARNINGS'     => $user_data['warnings'] ?? 0,
+			'POSTER_AGE'          => $user_data['age'] ?? '',
 
-			'POSTER_ONLINE_IMG' => ($this->data['image_user_id'] == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : (($this->users_data_array[$this->data['image_user_id']]['online']) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
-			'S_POSTER_ONLINE'   => ($this->data['image_user_id'] == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : (($this->users_data_array[$this->data['image_user_id']]['online']) ? true : false),
+			'POSTER_ONLINE_IMG' => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : ($user_data['online'] ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
+			'S_POSTER_ONLINE'   => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : $user_data['online'],
 
-			//'U_POSTER_PROFILE'		=> $this->users_data_array[$this->data['image_user_id']]['profile'],
-			'U_POSTER_SEARCH'   => $this->users_data_array[$this->data['image_user_id']]['search'],
-			'U_POSTER_PM'       => ($this->data['image_user_id'] != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && ($this->users_data_array[$this->data['image_user_id']]['allow_pm'] || $this->auth->acl_gets('a_', 'm_'))) ? append_sid('./ucp.php', 'i=pm&amp;mode=compose&amp;u=' . $this->data['image_user_id']) : '',
-			'U_POSTER_EMAIL'    => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? $this->users_data_array[$this->data['image_user_id']]['email'] : false,
-			'U_POSTER_JABBER'   => $this->users_data_array[$this->data['image_user_id']]['jabber'],
+			//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
+			'U_POSTER_SEARCH'   => $user_data['search'] ?? '',
+			'U_POSTER_PM'       => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? append_sid('./ucp.php', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
+			'U_POSTER_EMAIL'    => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? ($user_data['email'] ?? false) : false,
+			'U_POSTER_JABBER'   => $user_data['jabber'] ?? '',
 
-			//'U_POSTER_GALLERY'			=> $this->users_data_array[$this->data['image_user_id']]['gallery_album'],
-			//'POSTER_GALLERY_IMAGES'		=> $this->users_data_array[$this->data['image_user_id']]['gallery_images'],
-			//'U_POSTER_GALLERY_SEARCH'	=> $this->users_data_array[$this->data['image_user_id']]['gallery_search'],
+			//'U_POSTER_GALLERY'			=> $user_data['gallery_album'] ?? '',
+			//'POSTER_GALLERY_IMAGES'		=> $user_data['gallery_images'] ?? '',
+			//'U_POSTER_GALLERY_SEARCH'		=> $user_data['gallery_search'] ?? '',
 		));
 
 		// Add ratings
@@ -578,7 +594,7 @@ class image
 
 			}
 
-			// Different link, when we rate and dont comment
+			// Different link, when we rate and don't comment
 			if (!$s_hide_comment_input)
 			{
 				//$this->template->assign_var('S_COMMENT_ACTION', append_sid($this->url->path('full') . 'comment/' . $image_id . '/add/0'));
@@ -597,6 +613,7 @@ class image
 		{
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
+
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
 	}
 
@@ -638,41 +655,24 @@ class image
 
 			$this->load_users_data();
 
-			if ($this->config['load_onlinetrack'] && sizeof($this->users_id_array))
-			{
-				// Load online-information
-				$sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
-					FROM ' . SESSIONS_TABLE . '
-					WHERE ' . $this->db->sql_in_set('session_user_id', $this->users_id_array) . '
-					GROUP BY session_user_id';
-				$result = $this->db->sql_query($sql);
-
-				$update_time = $this->config['load_online_time'] * 60;
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$this->users_data_array[$row['session_user_id']]['online'] = (time() - $update_time < $row['online_time'] && (($row['viewonline']) || $this->auth->acl_get('u_viewonline'))) ? true : false;
-				}
-				$this->db->sql_freeresult($result);
-			}
-
 			foreach ($comments as $row)
 			{
 				$edit_info = '';
 
-				// Let's deply new profile
+				// Let's deploy new profile
 				$poster_id = $row['comment_user_id'];
-
+				$user_data = $this->users_data_array[$poster_id] ?? [];
 				if ($row['comment_edit_count'] > 0)
 				{
 					$edit_info = ($row['comment_edit_count'] == 1) ? $this->language->lang('IMAGE_EDITED_TIME_TOTAL') : $this->language->lang('IMAGE_EDITED_TIMES_TOTAL');
 					$edit_info = sprintf($edit_info, get_username_string('full', $row['comment_edit_user_id'], $this->users_data_array[$row['comment_edit_user_id']]['username'], $this->users_data_array[$row['comment_edit_user_id']]['user_colour']), $this->user->format_date($row['comment_edit_time'], false, true), $row['comment_edit_count']);
 				}
-				$user_deleted = (isset($this->users_data_array[$poster_id]) ? false : true);
+				$user_deleted = (isset($user_data) ? false : true);
 				// End signature parsing, only if needed
-				if ($this->users_data_array[$poster_id]['sig'] && empty($this->users_data_array[$poster_id]['sig_parsed']))
+				if ($user_data['sig'] && empty($user_data['sig_parsed']))
 				{
-					$parse_flags = ($this->users_data_array[$poster_id]['sig_bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$user_cache[$poster_id]['sig'] = generate_text_for_display($this->users_data_array[$poster_id]['sig'], $this->users_data_array[$poster_id]['sig_bbcode_uid'], $this->users_data_array[$poster_id]['sig_bbcode_bitfield'], $parse_flags, true);
+					$parse_flags = ($user_data['sig_bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$user_cache[$poster_id]['sig'] = generate_text_for_display($user_data['sig'], $user_data['sig_bbcode_uid'], $user_data['sig_bbcode_bitfield'], $parse_flags, true);
 					$user_cache[$poster_id]['sig_parsed'] = true;
 				}
 
@@ -684,13 +684,13 @@ class image
 				}
 				$can_receive_pm = (
 					// They must be a "normal" user
-					$this->users_data_array[$poster_id]['user_type'] != USER_IGNORE &&
+					$user_data['user_type'] != USER_IGNORE &&
 					// They must not be deactivated by the administrator
-					($this->users_data_array[$poster_id]['user_type'] != USER_INACTIVE || $this->users_data_array[$poster_id]['user_inactive_reason'] != INACTIVE_MANUAL) &&
+					($user_data['user_type'] != USER_INACTIVE || $user_data['user_inactive_reason'] != INACTIVE_MANUAL) &&
 					// They must be able to read PMs
 					in_array($poster_id, $this->can_receive_pm_list) &&
 					// They must allow users to contact via PM
-					(($this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) || $this->users_data_array[$poster_id]['allow_pm'])
+					(($this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) || $user_data['allow_pm'])
 				);
 				$u_pm = '';
 				if ($this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && $can_receive_pm)
@@ -698,6 +698,7 @@ class image
 					$u_pm = append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", 'i=pm&amp;mode=compose');
 				}
 
+				$user_data = $this->users_data_array[$poster_id] ?? [];
 				$comment_row = array(
 					'U_COMMENT'  => $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id)) . '#comment_' . $row['comment_id'],
 					'COMMENT_ID' => $row['comment_id'],
@@ -707,31 +708,34 @@ class image
 					'U_DELETE'   => ($this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']) || ($this->gallery_auth->acl_check('c_delete', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_delete', array('image_id' => $image_id, 'comment_id' => $row['comment_id'])) : '',
 					'U_QUOTE'    => ($this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id'])) ? $this->helper->route('phpbbgallery_core_comment_add', array('image_id' => $image_id, 'comment_id' => $row['comment_id'])) : '',
 					'U_EDIT'     => ($this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']) || ($this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_edit', array('image_id' => $image_id, 'comment_id' => $row['comment_id'])) : '',
-					'U_INFO'     => ($this->auth->acl_get('a_')) ? $this->url->append_sid('mcp', 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
+					// TODO Whois link
+					// 'U_WHOIS'     => ($this->auth->acl_get('a_')) ? $this->url->append_sid('mcp', 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
 
-					'POSTER_FULL'     => get_username_string('full', $poster_id, $this->users_data_array[$poster_id]['username'], $this->users_data_array[$poster_id]['user_colour']),
-					'POSTER_COLOUR'   => get_username_string('colour', $poster_id, $this->users_data_array[$poster_id]['username'], $this->users_data_array[$poster_id]['user_colour']),
-					'POSTER_USERNAME' => get_username_string('username', $poster_id, $this->users_data_array[$poster_id]['username'], $this->users_data_array[$poster_id]['user_colour']),
-					'U_POSTER'        => get_username_string('profile', $poster_id, $this->users_data_array[$poster_id]['username'], $this->users_data_array[$poster_id]['user_colour']),
+					'POSTER_FULL'     => get_username_string('full', $poster_id, $user_data['username'], $user_data['user_colour']),
+					'POSTER_COLOUR'   => get_username_string('colour', $poster_id, $user_data['username'], $user_data['user_colour']),
+					'POSTER_USERNAME' => get_username_string('username', $poster_id, $user_data['username'], $user_data['user_colour']),
+					'U_POSTER'        => get_username_string('profile', $poster_id, $user_data['username'], $user_data['user_colour']),
+					'POSTER_IP'       => ($this->auth->acl_get('a_')) ? $row['comment_user_ip'] : '',
 
-					'SIGNATURE'       => ($row['comment_signature'] && !$user_deleted) ? generate_text_for_display($this->users_data_array[$poster_id]['sig'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
-					'RANK_TITLE'      => $user_deleted ? '' : $this->users_data_array[$poster_id]['rank_title'],
-					'RANK_IMG'        => $user_deleted ? '' : $this->users_data_array[$poster_id]['rank_image'],
-					'RANK_IMG_SRC'    => $user_deleted ? '' : $this->users_data_array[$poster_id]['rank_image_src'],
-					'POSTER_JOINED'   => $user_deleted ? '' : $this->users_data_array[$poster_id]['joined'],
-					'POSTER_POSTS'    => $user_deleted ? '' : $this->users_data_array[$poster_id]['posts'],
-					'POSTER_FROM'     => isset($this->users_data_array[$poster_id]['from']) ? $this->users_data_array[$poster_id]['from'] : '',
-					'POSTER_AVATAR'   => $user_deleted ? '' : $this->users_data_array[$poster_id]['avatar'],
-					'POSTER_WARNINGS' => $user_deleted ? '' : $this->users_data_array[$poster_id]['warnings'],
-					'POSTER_AGE'      => $user_deleted ? '' : $this->users_data_array[$poster_id]['age'],
+					'POSTER_SIGNATURE'       => ($row['comment_signature'] && !$user_deleted) ? generate_text_for_display($user_data['sig'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
+					'POSTER_RANK_TITLE'      => $user_deleted ? '' : $user_data['rank_title'],
+					'POSTER_RANK_IMG'        => $user_deleted ? '' : $user_data['rank_image'],
+					'POSTER_RANK_IMG_SRC'    => $user_deleted ? '' : $user_data['rank_image_src'],
+					'POSTER_JOINED'   => $user_deleted ? '' : $user_data['joined'],
+					'POSTER_POSTS'    => $user_deleted ? '' : $user_data['posts'],
+					'POSTER_FROM'     => isset($user_data['from']) ? $user_data['from'] : '',
+					'POSTER_AVATAR'   => $user_deleted ? '' : $user_data['avatar'],
+					'POSTER_WARNINGS' => $user_deleted ? '' : $user_data['warnings'],
+					'POSTER_AGE'      => $user_deleted ? '' : $user_data['age'],
 
-					'MINI_POST_IMG'  => $this->user->img('icon_post_target', 'POST'),
-					'ICQ_STATUS_IMG' => isset($this->users_data_array[$poster_id]['icq_status_img']) ? $this->users_data_array[$poster_id]['icq_status_img'] : '',
-					'ONLINE_IMG'     => ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : ($user_deleted ? '' : (($this->users_data_array[$poster_id]['online']) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE'))),
-					'S_ONLINE'       => ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : ($user_deleted ? '' : (($this->users_data_array[$poster_id]['online']) ? true : false)),
+					// 'MINI_POST_IMG'  => $this->user->img('icon_post_target', 'POST'),
+					// 'ICQ_STATUS_IMG' => isset($user_data['icq_status_img']) ? $user_data['icq_status_img'] : '',
+					'POSTER_ONLINE_IMG' => ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : ($user_deleted ? '' : ($user_data['online'] ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE'))),
+					'S_POSTER_ONLINE'   => ($poster_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : ($user_deleted ? '' : $user_data['online']),
 
 					'S_CUSTOM_FIELDS' => (isset($cp_row['row']) && count($cp_row['row'])) ? true : false,
 				);
+
 				if (isset($cp_row['row']) && count($cp_row['row']))
 				{
 					$comment_row = array_merge($comment_row, $cp_row['row']);
@@ -747,12 +751,12 @@ class image
 					array(
 						'ID'        => 'email',
 						'NAME'      => $this->language->lang('SEND_EMAIL'),
-						'U_CONTACT' => $this->users_data_array[$poster_id]['email'],
+						'U_CONTACT' => $user_data['email'],
 					),
 					array(
 						'ID'        => 'jabber',
 						'NAME'      => $this->language->lang('JABBER'),
-						'U_CONTACT' => $this->users_data_array[$poster_id]['jabber'],
+						'U_CONTACT' => $user_data['jabber'],
 					),
 				);
 
@@ -820,8 +824,8 @@ class image
 		$disp_image_data = $image_data;
 		$owner_id = $image_data['image_user_id'];
 		$album_loginlink = './ucp.php?mode=login';
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_ORPHAN))
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+		if (!$this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
 		{
 			if (!$this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']))
 			{
@@ -1062,8 +1066,8 @@ class image
 		$album_loginlink = './ucp.php?mode=login';
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $image_data['image_album_id']));
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_ORPHAN))
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+		if (!$this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
 		{
 			if (!$this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']))
 			{
@@ -1120,7 +1124,7 @@ class image
 		$album_loginlink = './ucp.php?mode=login';
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $image_data['image_album_id']));
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $this->user->data['user_id']))
 		{
 			$this->misc->not_authorised($image_backlink, '');
@@ -1171,6 +1175,7 @@ class image
 		$this->template->assign_vars(array(
 			'ERROR'            => $error,
 			'U_IMAGE'          => ($image_id) ? $this->helper->route('phpbbgallery_core_image_file_medium', array('image_id' => $image_id)) : '',
+			'IMAGE_NAME'       => $image_data['image_name'],
 			'U_VIEW_IMAGE'     => ($image_id) ? $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id)) : '',
 			'IMAGE_RSZ_WIDTH'  => $this->gallery_config->get('medium_width'),
 			'IMAGE_RSZ_HEIGHT' => $this->gallery_config->get('medium_height'),
@@ -1191,11 +1196,11 @@ class image
 	 * @param     $album_auth_level
 	 * @internal param array $album_data
 	 */
-	protected function check_permissions($album_id, $owner_id, $image_status, $album_auth_level)
+	protected function check_permissions($album_id, $owner_id, $image_status, $album_auth_level, $user_data)
 	{
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id) || ($image_status == \phpbbgallery\core\block::STATUS_ORPHAN) || $this->gallery_auth->get_zebra_state($zebra_array, (int) $owner_id, (int) $album_id) < (int) $album_auth_level)
+		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id) || ($image_status == (int) \phpbbgallery\core\block::STATUS_ORPHAN) || $this->gallery_auth->get_zebra_state($zebra_array, (int) $owner_id, (int) $album_id) < (int) $album_auth_level)
 		{
 			if ($this->user->data['is_bot'])
 			{
@@ -1212,13 +1217,13 @@ class image
 			else
 			{
 				//return $this->error('NOT_AUTHORISED', 403);
-				redirect('/gallery/album/' . $album_id);
+				redirect('gallery/album/' . $album_id);
 			}
 		}
-		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && ($image_status == \phpbbgallery\core\block::STATUS_UNAPPROVED))
+		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && $user_data['image_user_id'] != $this->user->data['user_id'] && ($image_status == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED))
 		{
 			//return $this->error('NOT_AUTHORISED', 403);
-			redirect('/gallery/album/' . $album_id);
+			redirect('gallery/album/' . $album_id);
 		}
 	}
 
@@ -1262,8 +1267,28 @@ class image
 		unset($profile_fields_tmp);
 
 		// Get the list of users who can receive private messages
-		$this->can_receive_pm_list = $this->auth->acl_get_list(array_keys($this->users_data_array), 'u_readpm');
+		$this->can_receive_pm_list = [];
+		if (is_array($this->users_data_array))
+		{
+			$this->can_receive_pm_list = $this->auth->acl_get_list(array_keys($this->users_data_array), 'u_readpm');
+		}
 		$this->can_receive_pm_list = (empty($this->can_receive_pm_list) || !isset($this->can_receive_pm_list[0]['u_readpm'])) ? array() : $this->can_receive_pm_list[0]['u_readpm'];
 
+		// Load online-information
+		if ($this->config['load_onlinetrack'] && sizeof($this->users_id_array))
+		{
+			$sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
+				FROM ' . SESSIONS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('session_user_id', $this->users_id_array) . '
+				GROUP BY session_user_id';
+			$result = $this->db->sql_query($sql);
+
+			$update_time = $this->config['load_online_time'] * 60;
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$this->users_data_array[$row['session_user_id']]['online'] = (time() - $update_time < $row['online_time'] && (($row['viewonline']) || $this->auth->acl_get('u_viewonline'))) ? true : false;
+			}
+			$this->db->sql_freeresult($result);
+		}
 	}
 }

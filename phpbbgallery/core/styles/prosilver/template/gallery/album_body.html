@@ -4,8 +4,7 @@
 
 <!-- IF not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP -->
 <div>
-	<!-- NOTE: remove the style="display: none !important;" when you want to have the album description on the album body -->
-	<!-- IF ALBUM_DESC --><div style="display: none !important;">{ALBUM_DESC}<br /></div><!-- ENDIF -->
+ 	<!-- IF ALBUM_DESC --><div id="description" class="panel" style="font-size: 1.2em;"><h3>{L_ALBUM_DESC}</h3>{ALBUM_DESC}<br /></div><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_START --><span>{ALBUM_CONTEST_START}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_RATING --><span>{ALBUM_CONTEST_RATING}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_END --><span>{ALBUM_CONTEST_END}<br /><br /></span><!-- ENDIF -->
@@ -29,7 +28,7 @@
 
 	<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT -->
 		<a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->" class="button"><!-- IF S_IS_LOCKED --><i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{L_ALBUM_LOCKED}</span><!-- ELSE --><i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{L_UPLOAD_IMAGE}</span><!-- ENDIF --></a>
-			<!-- IF S_REGISTERED_USER --><a href="{U_WATCH_TOGLE}" title="<!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF -->" class="button"><i class="icon <!-- IF S_IS_WATCHED -->fa-square-o<!-- ELSE -->fa-check-square-o<!-- ENDIF --> fa-fw" aria-hidden="true"></i> <!-- IF S_IS_WATCHED --><span>{L_UNWATCH_ALBUM}</span><!-- ELSE --><span>{L_WATCH_ALBUM}</span><!-- ENDIF --></a><!-- ENDIF -->
+			<!-- IF S_REGISTERED_USER --><a href="{U_WATCH_TOGGLE}" title="<!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF -->" class="button"><i class="icon <!-- IF S_IS_WATCHED -->fa-square-o<!-- ELSE -->fa-check-square-o<!-- ENDIF --> fa-fw" aria-hidden="true"></i> <!-- IF S_IS_WATCHED --><span>{L_UNWATCH_ALBUM}</span><!-- ELSE --><span>{L_WATCH_ALBUM}</span><!-- ENDIF --></a><!-- ENDIF -->
 	<!-- ENDIF -->
 
 	<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX -->
@@ -48,7 +47,7 @@
 		<div class="pagination">
 			{TOTAL_IMAGES}
 			<!-- IF .pagination -->
-				 &bull; <!-- INCLUDE pagination.html -->
+				<!-- INCLUDE pagination.html -->
 			<!-- ELSE -->
 				 &bull; {PAGE_NUMBER}
 			<!-- ENDIF -->
@@ -100,19 +99,18 @@
 		<div class="pagination">
 			{TOTAL_IMAGES}
 			<!-- IF .pagination -->
-				 &bull; <!-- INCLUDE pagination.html -->
+				 <!-- INCLUDE pagination.html -->
 			<!-- ELSE -->
 				 &bull; {PAGE_NUMBER}
 			<!-- ENDIF -->
 		</div>
 		<!-- ENDIF -->
 	</div>
-	<br />
-	<br />
 	<!-- ENDIF -->
 <!-- ENDIF -->
 
-<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_LINK}</a></p>
+<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r"><i class="icon fa-angle-left fa-fw icon-black" aria-hidden="true"></i>{L_RETURN_LINK}</a></p>
+
 <!-- IF ALBUM_JUMPBOX -->
 	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">

@@ -1,14 +1,13 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension
  *
- * gallery_acp [English]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
  * DO NOT CHANGE
@@ -20,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -31,7 +30,7 @@ $lang = array_merge($lang, array(
 	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
 	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
 	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/meduim/</strong> state',
+	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
 	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Add album at the top',
@@ -141,7 +140,7 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_LINK'          => 'Link image-counter to user´s images',
 	'DISP_WHOISONLINE'             => 'Show “Who is online“',
 	'DISPLAY_IN_RRC'               => 'Display images of this album in “Recent-Random“-images',
-	'DONT_COPY_PERMISSIONS'        => 'Do not copy permissions',
+	'DO_NOT_COPY_PERMISSIONS'      => 'Do not copy permissions',
 
 	'EDIT_ALBUM' => 'Edit album',
 
@@ -155,7 +154,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Gallery-Index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'If you use the Thumbnail Cache feature you must clear your thumbnail cache after changing your thumbnail settings in “Gallery configuration“ to make them regenerated.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Resync personal albums to profile fields',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'                        => 'Gallery statistics',
 	'GALLERY_VERSION'                      => 'Gallery version',
@@ -168,7 +167,7 @@ $lang = array_merge($lang, array(
 	'HANDLE_IMAGES'       => 'What to do with the images',
 	'HANDLE_SUBS'         => 'What to do with the subalbums',
 	'HOTLINK_ALLOWED'     => 'Link whitelist',
-	'HOTLINK_ALLOWED_EXP' => 'Links to images from this domains are always allowed. The domains must be seperated by comma only (no space). Exp: “flying-bits.org,phpbb.com“',
+	'HOTLINK_ALLOWED_EXP' => 'Links to images from this domains are always allowed. The domains must be separated by comma only (no space). Exp: “flying-bits.org,phpbb.com“',
 	'HOTLINK_PREVENT'     => 'Allow links to images from all sites',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Maximum length for descriptions',
@@ -232,58 +231,36 @@ $lang = array_merge($lang, array(
 	'PERMISSION_YES'     => 'Yes',
 
 	'PERMISSION_A_COUNT'          => 'Number of possible personal subalbums',
-	'PERMISSION_A_COUNT_EXPLAIN'	=> ' ',
 	'PERMISSION_A_LIST'           => 'Can see album',
-	'PERMISSION_A_LIST_EXPLAIN'		=> ' ',
 	'PERMISSION_A_RESTRICT'       => 'Can restrict access',
-	'PERMISSION_A_RESTRICT_EXPLAIN'	=> ' ',
 	'PERMISSION_A_UNLIMITED'      => 'Unlimited number of personal subalbums',
-	'PERMISSION_A_UNLIMITED_EXPLAIN'=> ' ',
 	'PERMISSION_C'                => 'Comments',
 	'PERMISSION_C_DELETE'         => 'Can delete own comments',
-	'PERMISSION_C_DELETE_EXPLAIN'	=> ' ',
 	'PERMISSION_C_EDIT'           => 'Can edit own comments',
-	'PERMISSION_C_EDIT_EXPLAIN'		=> ' ',
 	'PERMISSION_C_POST'           => 'Can comment on image',
-	'PERMISSION_C_POST_EXPLAIN'		=> ' ',
 	'PERMISSION_C_READ'           => 'Can read comments',
-	'PERMISSION_C_READ_EXPLAIN'		=> ' ',
 	'PERMISSION_I'                => 'Images',
 	'PERMISSION_I_APPROVE'        => 'Can upload without approval',
-	'PERMISSION_I_APPROVE_EXPLAIN'	=> ' ',
 	'PERMISSION_I_COUNT'          => 'Number of uploadable images',
-	'PERMISSION_I_COUNT_EXPLAIN'	=> ' ',
 	'PERMISSION_I_DELETE'         => 'Can delete own images',
-	'PERMISSION_I_DELETE_EXPLAIN'	=> ' ',
 	'PERMISSION_I_EDIT'           => 'Can edit own images',
-	'PERMISSION_I_EDIT_EXPLAIN'		=> ' ',
 	'PERMISSION_I_LOCK'           => 'Can lock images',
 	'PERMISSION_I_RATE'           => 'Can rate images',
 	'PERMISSION_I_RATE_EXPLAIN'   => 'Guests and the image-uploader can <samp>NEVER</samp> rate images.',
 	'PERMISSION_I_REPORT'         => 'Can report images',
-	'PERMISSION_I_REPORT_EXPLAIN'	=> ' ',
 	'PERMISSION_I_UNLIMITED'      => 'Can upload unlimited images',
-	'PERMISSION_I_UNLIMITED_EXPLAIN'=> ' ',
 	'PERMISSION_I_UPLOAD'         => 'Can upload images',
 	'PERMISSION_I_UPLOAD_EXPLAIN' => 'This permission is also used, to determinate whether the user can move images to the album, when having moderator permissions in other forums.',
 	'PERMISSION_I_VIEW'           => 'Can view images',
-	'PERMISSION_I_VIEW_EXPLAIN'		=> ' ',
 	'PERMISSION_I_WATERMARK'      => 'Can view images without watermark',
-	'PERMISSION_I_WATERMARK_EXPLAIN'=> ' ',
 	'PERMISSION_M'                => 'Moderation',
 	'PERMISSION_MISC'             => 'Misc', //Miscellaneous
 	'PERMISSION_M_COMMENTS'       => 'Can moderate comments',
-	'PERMISSION_M_COMMENTS_EXPLAIN'	=> ' ',
 	'PERMISSION_M_DELETE'         => 'Can delete images',
-	'PERMISSION_M_DELETE_EXPLAIN'	=> ' ',
 	'PERMISSION_M_EDIT'           => 'Can edit images',
-	'PERMISSION_M_EDIT_EXPLAIN'		=> ' ',
 	'PERMISSION_M_MOVE'           => 'Can move images',
-	'PERMISSION_M_MOVE_EXPLAIN'		=> ' ',
 	'PERMISSION_M_REPORT'         => 'Can manage reports',
-	'PERMISSION_M_REPORT_EXPLAIN'	=> ' ',
 	'PERMISSION_M_STATUS'         => 'Can approve and lock images',
-	'PERMISSION_M_STATUS_EXPLAIN'	=> ' ',
 
 	'PERMISSION_EMPTY'         => 'You didn’t set all permissions.',
 	'PERMISSIONS'              => 'Permissions',
@@ -292,12 +269,12 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_EXPLAIN'      => 'Here you can alter which users and groups can access which albums.',
 	'PERMISSIONS_STORED'       => 'Permissions were stored successful.',
 	'PERSONAL_ALBUM_INDEX'     => 'View personal albums as album on the index',
-	'PERSONAL_ALBUM_INDEX_EXP' => 'If choosen “No“, there will be the link, right beneath.',
+	'PERSONAL_ALBUM_INDEX_EXP' => 'If chosen “No“, there will be the link, right beneath.',
 	'PEGA_CREATED'             => 'Created personal gallery for %s.',
 	'PEGA_ALREADY_EXISTS'      => '%s already has a personal gallery.',
 	'PGALLERIES_PER_PAGE'      => 'Number of personal galleries per page',
 	'ITEMS_PER_PAGE'           => 'Items per page',
-	'ITEMS_PER_PAGE_EXP'       => 'How many images/albums per page',
+	'ITEMS_PER_PAGE_EXP'       => 'How many images/albums/comments per page',
 	'RANDOM_ON_INDEX'          => 'Show random images on index',
 	'RANDOM_ON_INDEX_EXP'      => 'Should there be random images on gallery index page.',
 	'RANDOM_ON_INDEX_COUNT'    => 'Random image count',
@@ -440,7 +417,7 @@ $lang = array_merge($lang, array(
 	'LATEST_VERSION'       => 'Latest Version',
 	'NO_INFO'              => 'Version server could not be contacted',
 	'NOT_UP_TO_DATE'       => '%s is not up to date',
-	'RELEASE_ANNOUNCEMENT' => 'Annoucement Topic',
+	'RELEASE_ANNOUNCEMENT' => 'Announcement Topic',
 	'UP_TO_DATE'           => '%s is up to date',
 	'VERSION_CHECK'        => 'MOD Version Check',
 ));

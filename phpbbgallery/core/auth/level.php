@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\auth;
 
@@ -76,7 +78,7 @@ class level
 	public function display($album_id, $album_status, $album_user_id = -1)
 	{
 		$locked = ($album_status == ITEM_LOCKED && !$this->auth->acl_check('m_', $album_id, $album_user_id)) ? true : false;
-		$this->auth->load_user_premissions($this->user->data['user_id']);
+		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$rules = array(
 			($this->auth->acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_VIEW_CAN') : $this->lang->lang('ALBUM_VIEW_CANNOT'),
 			($this->auth->acl_check('i_upload', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_UPLOAD_CAN') : $this->lang->lang('ALBUM_UPLOAD_CANNOT'),

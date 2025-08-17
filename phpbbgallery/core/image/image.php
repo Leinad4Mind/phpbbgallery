@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\image;
 
@@ -158,7 +160,7 @@ class image
 	}
 
 	/**
-	 * Delete an image completly.
+	 * Delete an image completely.
 	 *
 	 * @param    array $images Array with the image_id(s)
 	 * @param    array $filenames Array with filenames for the image_ids. If a filename is missing it's queried from the database.
@@ -212,7 +214,7 @@ class image
 				$resync_contests[] = (int) $row['image_album_id'];
 			}
 			$resync_album_ids[] = (int) $row['image_album_id'];
-			if ($row['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED)
+			if ($row['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)
 			{
 				$targets[$row['image_album_id']][$row['image_id']] = $row['image_user_id'];
 			}
@@ -286,7 +288,7 @@ class image
 	 * Generate link to image
 	 *
 	 * @param    string $content what's in the link: image_name, thumbnail, fake_thumbnail, medium or lastimage_icon
-	 * @param    string $mode where does the link leed to: highslide, lytebox, lytebox_slide_show, image_page, image, none
+	 * @param    string $mode where does the link lead to: highslide, lytebox, lytebox_slide_show, image_page, image, none
 	 * @param    int $image_id
 	 * @param    string $image_name
 	 * @param    int $album_id
@@ -326,7 +328,7 @@ class image
 			case 'medium':
 				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" class="postimage" />';
 				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}'), array($medium_url, $image_name), $content);
-				//cheat for animated/transparent gifs
+				//cheat for animated/transparent gif
 				if ($is_gif)
 				{
 					$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {MEDIUM_WIDTH_SIZE}px; max-height: {MEDIUM_HEIGHT_SIZE}px;" />';
@@ -379,7 +381,7 @@ class image
 				*
 				* @event phpbbgallery.core.image.generate_link
 				* @var	string	mode	type of link
-				* @var	string	tpl		html to be outputed
+				* @var	string	tpl		html to be outputted
 				* @since 1.2.0
 				*/
 				$vars = array('mode', 'tpl');
@@ -407,7 +409,7 @@ class image
 		$num_images = $num_comments = 0;
 		$sql = 'SELECT SUM(image_comments) as comments
 			FROM ' . $this->table_images .'
-			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
 			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
@@ -416,7 +418,7 @@ class image
 
 		$sql = 'SELECT COUNT(image_id) images, image_user_id
 			FROM ' . $this->table_images .' 
-			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
 			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
@@ -500,8 +502,8 @@ class image
 		$this->handle_counter($image_id_ary, true, true);
 
 		$sql = 'UPDATE ' . $this->table_images . '
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_APPROVED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 	}
@@ -516,14 +518,14 @@ class image
 		self::handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images .' 
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name
 			FROM ' . $this->table_images .' 
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -535,7 +537,7 @@ class image
 
 	/**
 	 * Move image
-	 * @oaram (int)    $image_id    The image that we want to move_uploaded_file
+	 * @param (int)    $image_id    The image that we want to move_uploaded_file
 	 * @param $image_id_ary
 	 * @param $album_id
 	 * @internal param $ (int)    $album_id    The album we want to move image to
@@ -572,14 +574,14 @@ class image
 		self::handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images . ' 
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_LOCKED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_LOCKED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name
 			FROM ' . $this->table_images . ' 
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -595,15 +597,24 @@ class image
 	**/
 	public function get_last_image()
 	{
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$public = $this->album->get_public_albums();
 		$sql_order = 'image_id DESC';
 		$sql_limit = 1;
 		$sql = 'SELECT * 
 			FROM ' . $this->table_images . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
-				AND ((' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
-					OR ' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('m_status'), false, true) . ') AND ' . $this->db->sql_in_set('image_album_id', $public, true, true) . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND (
+					(
+						' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . '
+						AND (
+							image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+							OR image_user_id = ' . (int) $this->user->data['user_id'] . '
+						)
+					)
+					OR ' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('m_status'), false, true) . '
+				)
+				AND ' . $this->db->sql_in_set('image_album_id', $public, true, true) . '
 			ORDER BY ' . $sql_order;
 		$result = $this->db->sql_query_limit($sql, $sql_limit);
 
@@ -613,50 +624,19 @@ class image
 
 		return $row;
 	}
-	public function assign_block($image_block_name, $image_data, $display_option = 0, $thumbanil_link = 'image_page', $imagename_link = 'image_page')
+	public function assign_block($image_block_name, $image_data, $display_option = 0, $thumbnail_link = 'image_page', $imagename_link = 'image_page')
 	{
 		// Now let's get display options
-		$show_ip = $show_ratings = $show_username = $show_views = $show_time = $show_imagename = $show_comments = $show_album = false;
-		if ($display_option >= self::IMAGE_SHOW_IP)
-		{
-			$show_ip = true;
-			$display_option = $display_option - self::IMAGE_SHOW_IP;
-		}
-		if ($display_option >= self::IMAGE_SHOW_RATINGS)
-		{
-			$show_ratings = true;
-			$display_option = $display_option - self::IMAGE_SHOW_RATINGS;
-		}
-		if ($display_option >= self::IMAGE_SHOW_USERNAME)
-		{
-			$show_username = true;
-			$display_option = $display_option - self::IMAGE_SHOW_USERNAME;
-		}
-		if ($display_option >= self::IMAGE_SHOW_VIEWS)
-		{
-			$show_views = true;
-			$display_option = $display_option - self::IMAGE_SHOW_VIEWS;
-		}
-		if ($display_option >= self::IMAGE_SHOW_TIME)
-		{
-			$show_time = true;
-			$display_option = $display_option - self::IMAGE_SHOW_TIME;
-		}
-		if ($display_option >= self::IMAGE_SHOW_IMAGENAME)
-		{
-			$show_imagename = true;
-			$display_option = $display_option - self::IMAGE_SHOW_IMAGENAME;
-		}
-		if ($display_option >= self::IMAGE_SHOW_COMMENTS)
-		{
-			$show_comments = true;
-			$display_option = $display_option - self::IMAGE_SHOW_COMMENTS;
-		}
-		if ($display_option == self::IMAGE_SHOW_ALBUM)
-		{
-			$show_album = true;
-		}
-		switch ($thumbanil_link)
+		$show_ip         = ($display_option & self::IMAGE_SHOW_IP) !== 0;
+		$show_ratings    = ($display_option & self::IMAGE_SHOW_RATINGS) !== 0;
+		$show_username   = ($display_option & self::IMAGE_SHOW_USERNAME) !== 0;
+		$show_views      = ($display_option & self::IMAGE_SHOW_VIEWS) !== 0;
+		$show_time       = ($display_option & self::IMAGE_SHOW_TIME) !== 0;
+		$show_imagename  = ($display_option & self::IMAGE_SHOW_IMAGENAME) !== 0;
+		$show_comments   = ($display_option & self::IMAGE_SHOW_COMMENTS) !== 0;
+		$show_album      = ($display_option & self::IMAGE_SHOW_ALBUM) !== 0;
+
+		switch ($thumbnail_link)
 		{
 			case 'image_page':
 				$action = $this->helper->route('phpbbgallery_core_image', array('image_id' => (int) $image_data['image_id']));
@@ -668,6 +648,7 @@ class image
 				$action = false;
 				break;
 		}
+
 		switch ($imagename_link)
 		{
 			case 'image_page':
@@ -680,6 +661,7 @@ class image
 				$action_image = false;
 				break;
 		}
+
 		$this->template->assign_block_vars($image_block_name, array(
 			'IMAGE_ID'		=> $image_data['image_id'],
 			'U_IMAGE'		=> $show_imagename ? $action_image : false,
@@ -690,8 +672,8 @@ class image
 			//'UC_THUMBNAIL'	=> 'self::generate_link('thumbnail', $phpbb_ext_gallery->config->get('link_thumbnail'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 			'UC_THUMBNAIL'		=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => (int) $image_data['image_id'])),
 			'UC_THUMBNAIL_ACTION'	=> $action,
-			'S_UNAPPROVED'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
-			'S_LOCKED'		=> ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
+			'S_UNAPPROVED'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
+			'S_LOCKED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 			'S_REPORTED'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? true : false,
 			'POSTER'		=> $show_username ? get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour']) : false,
 			'TIME'			=> $show_time ? $this->user->format_date($image_data['image_time']) : false,
@@ -705,14 +687,14 @@ class image
 
 			'S_IMAGE_REPORTED'		=> $image_data['image_reported'],
 			'U_IMAGE_REPORTED'		=> '',//($image_data['image_reported']) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported']) : '',
-			'S_STATUS_APPROVED'		=> ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_APPROVED),
-			'S_STATUS_UNAPPROVED'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
-			'S_STATUS_UNAPPROVED_ACTION'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', array('image_id' => (int) $image_data['image_id'])) : '',
-			'S_STATUS_LOCKED'		=> ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_LOCKED),
+			'S_STATUS_APPROVED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,
+			'S_STATUS_UNAPPROVED'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
+			'S_STATUS_UNAPPROVED_ACTION'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', array('image_id' => (int) $image_data['image_id'])) : '',
+			'S_STATUS_LOCKED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 
 			'U_REPORT'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? '123'/*$this->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported'])*/ : '',
 			'U_STATUS'	=> '',//($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=queue_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_id']) : '',
-			'L_STATUS'	=> ($image_data['image_status'] == \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
+			'L_STATUS'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 		));
 	}
 }

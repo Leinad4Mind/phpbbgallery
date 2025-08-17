@@ -1,11 +1,14 @@
 <?php
 /**
-*
-* @package Gallery - Config ACP Module
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\acp;
 
@@ -212,10 +215,15 @@ class config_module
 
 			if (strpos($config_key, 'legend') !== false)
 			{
-				$template->assign_block_vars('options', array(
-					'S_LEGEND'		=> true,
-					'LEGEND'		=> ($this->language->is_set($vars)) ? $this->language->lang($vars) : $vars)
-				);
+				$legend_text = ($this->language->is_set($vars)) ? $this->language->lang($vars) : $vars;
+
+				if (!empty($legend_text))
+				{
+					$template->assign_block_vars('options', array(
+						'S_LEGEND' => true,
+						'LEGEND'   => $legend_text
+					));
+				}
 
 				continue;
 			}

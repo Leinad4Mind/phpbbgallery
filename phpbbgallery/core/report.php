@@ -1,12 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
 * @ignore
@@ -20,6 +22,48 @@ class report
 	const UNREPORTED = 0;
 	const OPEN = 1;
 	const LOCKED = 2;
+
+	/** @var \phpbbgallery\core\log */
+	protected $gallery_log;
+
+	/** @var \phpbbgallery\core\auth\auth */
+	protected $gallery_auth;
+
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbb\language\language */
+	protected $language;
+
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \phpbb\user_loader */
+	protected $user_loader;
+
+	/** @var \phpbbgallery\core\album\album */
+	protected $album;
+
+	/** @var \phpbb\template\template */
+	protected $template;
+
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
+	/** @var \phpbbgallery\core\config */
+	protected $gallery_config;
+
+	/** @var \phpbb\pagination */
+	protected $pagination;
+
+	/** @var \phpbbgallery\core\notification\helper */
+	protected $notification_helper;
+
+	/** @var string */
+	protected $images_table;
+
+	/** @var string */
+	protected $reports_table;
 
 	public function __construct(\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\auth\auth $gallery_auth, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\db\driver\driver_interface $db,	\phpbb\user_loader $user_loader,
@@ -214,7 +258,7 @@ class report
 		$this->db->sql_freeresult($result);
 		if (!empty($reports))
 		{
-			$reports = self::cast_mixed_int2array($repors);
+			$reports = self::cast_mixed_int2array($reports);
 			$this->notification_helper->delete_notifications('report', $reports);
 		}
 
@@ -238,7 +282,7 @@ class report
 			$per_page = $this->gallery_config->get('items_per_page');
 		}
 		// Let's get albums that user can moderate
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Get albums we can approve in
 		$mod_array = array();

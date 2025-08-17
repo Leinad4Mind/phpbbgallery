@@ -1,20 +1,18 @@
 <?php
 /**
-*
-* Gallery Notifications [German]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 Lucifer Lucifer@anavaro.com http://www.anavaro.com
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*
-* Übersetzt von franki (http://dieahnen.de/ahnenforum/)
-**/
+ * phpBB Gallery - ACP Core Extension [German Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -22,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -33,7 +31,7 @@ $lang = array_merge($lang, array(
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_APPROVED'		=> 'Bilder im <strong>%1$s</strong> Album wurden freigegeben',
 
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_NOT_APPROVED'	=> 'Nicht genehmigte Bilder',
-	'NOTIFICATION_PHPBBGALLERY_IMAGE_NOT_APPROVED'		=> 'Images in album <strong>%1$s</strong> were not approved',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_NOT_APPROVED'		=> 'Bilder im Album <strong>%1$s</strong> wurden nicht genehmigt',
 
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_IMAGE'	=> 'Neue Bilder',
 	'NOTIFICATION_PHPBBGALLERY_NEW_IMAGE'		=> 'Neue Bilder wurden ins <strong>%1$s</strong> Album hochgeladen',

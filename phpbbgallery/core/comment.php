@@ -1,17 +1,40 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
 class comment
 {
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \phpbbgallery\core\config */
+	protected $config;
+
+	/** @var \phpbbgallery\core\auth\auth */
+	protected $auth;
+
+	/** @var \phpbbgallery\core\block */
+	protected $block;
+
+	/** @var string */
+	protected $comments_table;
+
+	/** @var string */
+	protected $images_table;
+
 	/**
 	 * Constructor
 	 *
@@ -151,9 +174,10 @@ class comment
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments, MAX(comment_id) AS last_comment
 			FROM ' . $this->comments_table . ' 
 			' . $sql_where . '
-			GROUP BY comment_image_id, comment_id
-			ORDER BY comment_id DESC';
+			GROUP BY comment_image_id
+			ORDER BY last_comment DESC';
 		$result = $this->db->sql_query($sql);
+
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$resync[$row['comment_image_id']] = array(

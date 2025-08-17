@@ -1,12 +1,13 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 Lucifer
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
@@ -81,9 +82,9 @@ class log
 	 * Add item to log
 	 *
 	 * @param   string			$log_type    type of action (user/mod/admin/system) max 16 chars
-	 * @param   string			$log_action  action we are loging (add/remove/approve/unaprove/delete) max 32 chars
+	 * @param   string			$log_action  action we are logging (add/remove/approve/unapprove/delete) max 32 chars
 	 * @param 	int				$album
-	 * @param   int				$image       Image we are loging for (can be 0)
+	 * @param   int				$image       Image we are logging for (can be 0)
 	 * @param	array|string 	$description Description string
 	 */
 	public function add_log($log_type, $log_action, $album = 0, $image = 0, $description = array())
@@ -127,15 +128,20 @@ class log
 	 * @param		array		$additional
 	 * @internal	param int	$start start count used to build paging
 	 */
-	public function build_list($type, $limit = 0, $page = 1, $album = 0, $image = 0, $additional = array())
+	public function build_list($type, $limit = 0, $page = 1, $album = 0, $image = 0, $additional = [])
 	{
 		if ($limit == 0)
 		{
 			$limit = $this->gallery_config->get('items_per_page');
+			// If its called from ACP album is -1, if from MCP then is not
+			if ($album == -1)
+			{
+				$page = (int) ($page / $limit) + 1;
+			}
 		}
-		$this->language->add_lang(array('info_acp_gallery_logs'), 'phpbbgallery/core');
+		$this->language->add_lang(['info_acp_gallery_logs'], 'phpbbgallery/core');
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_array = array(
 			'FROM'	=> array(
 				$this->log_table	=> 'l'
@@ -147,12 +153,12 @@ class log
 				)
 			)
 		);
-		$sql_where = array();
+		$sql_where = [];
 		if ($type != 'all')
 		{
 			$sql_where[] = "l.log_type = '" . $this->db->sql_escape($type) . "'";
 		}
-		// If album is -1 we are calling it from ACP so ... prority!
+		// If album is -1 we are calling it from ACP so ... priority!
 		// If album is 0 we are calling it from moderator log, so we need album we can access
 		$mod_array = $this->gallery_auth->acl_album_ids('m_status');
 		// Patch for missing album
@@ -193,37 +199,50 @@ class log
 			{
 				case 'u':
 					$sql_array['ORDER_BY'] = 'l.log_user ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id, i.image_id';
+					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'i':
 					$sql_array['ORDER_BY'] = 'l.log_ip ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id, i.image_id';
+					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'o':
 					$sql_array['ORDER_BY'] = 'l.description ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-					$sql_array['GROUP_BY'] = 'l.description, l.log_id, i.image_id';
+					$sql_array['GROUP_BY'] = 'l.description, l.log_id, i.image_id, i.image_album_id';
 				break;
 			}
 		}
 		else
 		{
 			$sql_array['ORDER_BY'] = 'l.log_time ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
-			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id, i.image_id';
+			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id, i.image_id, i.image_album_id';
 		}
 		// So we need count - so define SELECT
-		$sql_array['SELECT'] = 'SUM(l.log_id) as count';
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$count_sql_array = $sql_array;
+
+		// Remove SELECT for correct count
+		$count_sql_array['SELECT'] = 'COUNT(DISTINCT l.log_id) as count';
+		unset($count_sql_array['GROUP_BY']);
+		unset($count_sql_array['ORDER_BY']);
+		$filtering_on_image_album = false;
+		foreach ($sql_where as $where_clause)
+		{
+			if (strpos($where_clause, 'i.image_album_id') !== false)
+			{
+				$filtering_on_image_album = true;
+				break;
+			}
+		}
+		if (!$filtering_on_image_album)
+		{
+			unset($count_sql_array['LEFT_JOIN']);
+		}
+
+		$sql = $this->db->sql_build_query('SELECT', $count_sql_array);
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		if ($row)
-		{
-			$count = $row['count'];
-		}
-		else
-		{
-			$count = 0;
-		}
+
+		$count = $row ? $row['count'] : 0;
 
 		$sql_array['SELECT'] = '*';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -248,6 +267,7 @@ class log
 		$this->db->sql_freeresult($result);
 
 		$this->user_loader->load_users(array_keys($users_array));
+
 		// Let's build template vars
 		if (!empty($logoutput))
 		{
@@ -260,8 +280,7 @@ class log
 					'U_LOG_IP'		=> $var['ip'],
 					'U_ALBUM_LINK'	=> $var['album'] != 0 ? $this->helper->route('phpbbgallery_core_album', array('album_id'	=> $var['album'])) : false,
 					'U_IMAGE_LINK'	=> $var['image'] != 0 ? $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $var['image'])) : false,
-					//'U_LOG_ACTION'	=> $description,
-					'U_LOG_ACTION'	=> $this->language->lang($var['description'][0], isset($var['description'][1]) ? $var['description'][1] : false, isset($var['description'][2]) ? $var['description'][2] : false, isset($var['description'][3]) ? $var['description'][3] : false),
+					'U_LOG_ACTION' => isset($var['description']) && is_array($var['description']) ? $this->language->lang($var['description'][0], $var['description'][1] ?? false, $var['description'][2] ?? false, $var['description'][3] ?? false) : '',
 					'U_TIME'		=> $this->user->format_date($var['time']),
 				));
 			}
@@ -287,6 +306,7 @@ class log
 			$url_array = array(
 				'i' => '-phpbbgallery-core-acp-gallery_logs_module',
 				'mode' => 'main',
+				'lf' => $type
 			);
 			if (isset($additional['sort_days']))
 			{

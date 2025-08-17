@@ -1,12 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
 * @ignore
@@ -139,7 +141,7 @@ class permissions_module
 		// Init album
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 
-		// Send contants to the template
+		// Send constants to the template
 		$template->assign_vars(array(
 			'C_OWN_PERSONAL_ALBUMS'	=> $gallery_auth::OWN_ALBUM,
 			'C_PERSONAL_ALBUMS'		=> $gallery_auth::PERSONAL_ALBUM,
@@ -591,9 +593,11 @@ class permissions_module
 						));
 						foreach ($permission_values as $permission)
 						{
+							$key = 'PERMISSION_' . strtoupper($permission);
+							$key_explain = $key . '_EXPLAIN';
 							$template->assign_block_vars('c_mask.v_mask.category.mask', array(
-								'PERMISSION'			=> $this->language->lang('PERMISSION_' . strtoupper($permission)),
-								'PERMISSION_EXPLAIN'	=> ($this->language->lang_raw('PERMISSION_' . strtoupper($permission) . '_EXPLAIN') != 'PERMISSION_' . strtoupper($permission) . '_EXPLAIN') ? $this->language->lang('PERMISSION_' . strtoupper($permission) . '_EXPLAIN') : '',
+								'PERMISSION'			=> $this->language->lang($key),
+								'PERMISSION_EXPLAIN' => ($this->language->lang_raw($key_explain) !== $key_explain) ? $this->language->lang($key_explain) : '',
 								'S_FIELD_NAME'			=> 'setting[' . $album_row['album_id'] . '][' . $victim_row['victim_id'] . '][' . $permission . ']',
 								'S_NO'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_NO)) ? true : false),
 								'S_YES'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_YES)) ? true : false),
@@ -629,9 +633,11 @@ class permissions_module
 					));
 					foreach ($permission_values as $permission)
 					{
+						$key = 'PERMISSION_' . strtoupper($permission);
+						$key_explain = $key . '_EXPLAIN';
 						$template->assign_block_vars('c_mask.v_mask.category.mask', array(
-							'PERMISSION'			=> $this->language->lang('PERMISSION_' . strtoupper($permission)),
-							'PERMISSION_EXPLAIN'	=> ($this->language->lang('PERMISSION_' . strtoupper($permission) . '_EXPLAIN')) ? $this->language->lang('PERMISSION_' . strtoupper($permission) . '_EXPLAIN') : '',
+							'PERMISSION'			=> $this->language->lang($key),
+							'PERMISSION_EXPLAIN' => ($this->language->lang_raw($key_explain) !== $key_explain) ? $this->language->lang($key_explain) : '',
 							'S_FIELD_NAME'			=> 'setting[' . $p_system . '][' . $victim_row['victim_id'] . '][' . $permission . ']',
 							'S_NO'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_NO)) ? true : false),
 							'S_YES'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_YES)) ? true : false),
@@ -672,7 +678,7 @@ class permissions_module
 		$gallery_user = $phpbb_container->get('phpbbgallery.core.user');
 		$phpbb_ext_gallery_core_auth = $phpbb_container->get('phpbbgallery.core.auth');
 
-		// Send contants to the template
+		// Send constants to the template
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$album_id = $request->variable('album_id', array(0));
 		$group_id = $request->variable('group_id', array(0));
@@ -791,7 +797,7 @@ class permissions_module
 							}
 							else
 							{
-								// The choosen option was disabled: Hacking attempt?!
+								// The chosen option was disabled: Hacking attempt?!
 								trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
 							}
 						}
@@ -820,7 +826,7 @@ class permissions_module
 							}
 							else
 							{
-								// The choosen option was disabled: Hacking attempt?!
+								// The chosen option was disabled: Hacking attempt?!
 								trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
 							}
 						}
@@ -917,7 +923,7 @@ class permissions_module
 				{
 					$sql_where .= (($sql_where) ? ' AND ' : '') . $p_mask . ' = ' . $value;
 				}
-				// Check back, so we dont give more permissions than the admin wants to
+				// Check back, so we don't give more permissions than the admin wants to
 				$check_permissions_to_default = array_diff($permissions->p_masks_anti[$p_system], $p_set['p_mask']);
 				foreach ($check_permissions_to_default as $p_mask)
 				{
@@ -1116,7 +1122,7 @@ class permissions_module
 
 	/**
 	 * Create the drop-down-options to inherit the c_masks
-	 * or check, whether the choosen option is valid
+	 * or check, whether the chosen option is valid
 	 * @param $cache_obtain_album_list
 	 * @param $allowed_albums
 	 * @param $album_id
@@ -1169,7 +1175,7 @@ class permissions_module
 
 	/**
 	 * Create the drop-down-options to inherit the v_masks
-	 * or check, whether the choosen option is valid
+	 * or check, whether the chosen option is valid
 	 * @param $cache_obtain_album_list
 	 * @param $allowed_albums
 	 * @param $allowed_victims
@@ -1242,7 +1248,7 @@ class permissions_module
 
 	/**
 	 * Create the drop-down-options to inherit the v_masks
-	 * or check, whether the choosen option is valid
+	 * or check, whether the chosen option is valid
 	 * @param $p_system
 	 * @param $allowed_victims
 	 * @param $victim_id

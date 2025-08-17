@@ -1,18 +1,21 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* mostly borrowed from phpBB3
-* @author: phpBB Group
-* @location: includes/acp/acp_forums.php
-*
-* Note: There are several code parts commented out, for example the album/forum_password.
-*       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ *
+ * mostly borrowed from phpBB3
+ * @author: phpBB Group
+ * @location: includes/acp/acp_forums.php
+ *
+ * Note: There are several code parts commented out, for example the album/forum_password.
+ *       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
+ */
 
 /**
 * @ignore
@@ -27,6 +30,72 @@ class manage
 	public $parent_id = 0;
 
 	private $u_action = '';
+
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbb\language\language */
+	protected $language;
+
+	/** @var \phpbb\request\request */
+	protected $request;
+
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \phpbb\event\dispatcher */
+	protected $dispatcher;
+
+	/** @var \phpbbgallery\core\auth\auth */
+	protected $gallery_auth;
+
+	/** @var \phpbbgallery\core\album\album */
+	protected $gallery_album;
+
+	/** @var \phpbbgallery\core\album\display */
+	protected $gallery_display;
+
+	/** @var \phpbbgallery\core\image\image */
+	protected $gallery_image;
+
+	/** @var \phpbbgallery\core\cache */
+	protected $gallery_cache;
+
+	/** @var \phpbbgallery\core\user */
+	protected $gallery_user;
+
+	/** @var \phpbbgallery\core\config */
+	protected $gallery_config;
+
+	/** @var \phpbbgallery\core\contest */
+	protected $gallery_contest;
+
+	/** @var \phpbbgallery\core\report */
+	protected $gallery_report;
+
+	/** @var \phpbbgallery\core\log */
+	protected $gallery_log;
+
+	/** @var \phpbbgallery\core\notification */
+	protected $gallery_notification;
+
+	/** @var string */
+	protected $albums_table;
+
+	/** @var string */
+	protected $images_table;
+
+	/** @var string */
+	protected $comments_table;
+
+	/** @var string */
+	protected $permissions_table;
+
+	/** @var string */
+	protected $moderators_table;
+
+	/** @var string */
+	protected $contests_table;
 
 	/**
 	 * manage constructor.
@@ -145,7 +214,7 @@ class manage
 			}
 		}*/
 		// Validate the contest timestamps:
-		if ($album_data['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
+		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 		{
 			if ($this->user->data['user_timezone'] == '')
 			{
@@ -209,7 +278,7 @@ class manage
 		unset($album_data_sql['album_password_confirm']);
 		*/
 
-		// What are we going to do tonight Brain? The same thing we do everynight,
+		// What are we going to do tonight Brain? The same thing we do every night,
 		// try to take over the world ... or decide whether to continue update
 		// and if so, whether it's a new album/cat/contest or an existing one
 		if (sizeof($errors))
@@ -320,11 +389,11 @@ class manage
 			$album_data['album_id'] = (int) $this->db->sql_nextid();
 
 			// Type is contest, so create it...
-			if ($album_data['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
+			if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				$contest_data_sql = $contest_data;
 				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
-				$contest_data_sql['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+				$contest_data_sql['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 
 				$sql = 'INSERT INTO ' . $this->contests_table . ' ' . $this->db->sql_build_array('INSERT', $contest_data_sql);
 				$this->db->sql_query($sql);
@@ -342,28 +411,28 @@ class manage
 			$row = $this->gallery_album->get_info($album_data_sql['album_id']);
 			$reset_marked_images = false;
 
-			if ($row['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] != \phpbbgallery\core\block::TYPE_CONTEST)
+			if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				// Changing a contest to album? No!
 				// Changing a contest to category? No!
 				$errors[] = $this->language->lang('ALBUM_WITH_CONTEST_NO_TYPE_CHANGE');
 				return $errors;
 			}
-			else if ($row['album_type'] != \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
+			else if ($row['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				// Changing a album to contest? No!
 				// Changing a category to contest? No!
 				$errors[] = $this->language->lang('ALBUM_NO_TYPE_CHANGE_TO_CONTEST');
 				return $errors;
 			}
-			else if ($row['album_type'] == \phpbbgallery\core\block::TYPE_CAT && $album_data_sql['album_type'] == \phpbbgallery\core\block::TYPE_UPLOAD)
+			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD)
 			{
 				// Changing a category to a album? Yes!
 				// Reset the data (you couldn't upload directly in a cat, you must use a album)
 				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
 				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
 			}
-			else if ($row['album_type'] == \phpbbgallery\core\block::TYPE_UPLOAD && $album_data_sql['album_type'] == \phpbbgallery\core\block::TYPE_CAT)
+			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT)
 			{
 				// Changing a album to a category? Yes!
 				// we're turning a uploadable album into a non-uploadable album
@@ -389,19 +458,19 @@ class manage
 					return array($this->language->lang('NO_ALBUM_ACTION'));
 				}
 			}
-			else if ($row['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
+			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				// Changing a contest to contest? Yes!
 				// We need to check for the contest_data
 				$row_contest = $this->gallery_contest->get_contest($album_data['album_id'], 'album');
 				$contest_data['contest_id'] = $row_contest['contest_id'];
-				if ($row_contest['contest_marked'] == \phpbbgallery\core\block::NO_CONTEST)
+				if ($row_contest['contest_marked'] == (int) \phpbbgallery\core\block::NO_CONTEST)
 				{
 					// If the old contest is finished, but the new one isn't, we need to remark the images!
 					// If we change it the other way round, the album.php will do the end on the first visit!
 					if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())
 					{
-						$contest_data['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+						$contest_data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 						$reset_marked_images = true;
 					}
 				}
@@ -454,14 +523,14 @@ class manage
 				$contest_id = $contest_data['contest_id'];
 				unset($contest_data['contest_id']);
 
-				$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
+				$sql = 'UPDATE ' . $this->contests_table . '
 					SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
 					WHERE contest_id = ' . (int) $contest_id;
 				$db->sql_query($sql);
 				if ($reset_marked_images)
 				{
 					// If the old contest is finished, but the new one isn't, we need to remark the images!
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					$sql = 'UPDATE ' . $this->images_table . '
 						SET image_contest_rank = 0,
 							image_contest_end = 0,
 							image_contest = ' . phpbb_ext_gallery_core_image::IN_CONTEST . '
@@ -527,7 +596,7 @@ class manage
 				AND right_id > " . (int) $from_data['right_id'];
 		$this->db->sql_query($sql);
 
-		// Resync righthand side of tree
+		// Resync right-hand side of tree
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET left_id = left_id - $diff, right_id = right_id - $diff, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
@@ -547,7 +616,7 @@ class manage
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
 			$this->db->sql_query($sql);
 
-			// Resync the righthand side of the tree
+			// Resync the right-hand side of the tree
 			$sql = 'UPDATE ' . $this->albums_table . ' 
 				SET left_id = left_id + ' . (int) $diff . ', right_id = right_id + ' . (int) $diff . ', album_parents = \'\'
 				WHERE album_user_id = ' . (int) $this->user_id . '
@@ -821,7 +890,7 @@ class manage
 			SET image_album_id = ' . (int) $to_id . ',
 				image_contest_rank = 0,
 				image_contest_end = 0,
-				image_contest = ' . \phpbbgallery\core\block::NO_CONTEST . '
+				image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST . '
 			WHERE image_album_id = ' . (int) $from_id;
 		$this->db->sql_query($sql);
 
@@ -879,8 +948,8 @@ class manage
 		$sql = 'SELECT image_user_id
 			FROM ' . $this->images_table . ' 
 			WHERE image_album_id = ' . (int) $album_id . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 
 		$image_counts = array();
@@ -931,24 +1000,24 @@ class manage
 		// Adjust users image counts
 		if (!empty($image_counts))
 		{
-			foreach ($image_counts as $image_user_id => $substract)
+			foreach ($image_counts as $image_user_id => $subtract)
 			{
 				$this->gallery_user->set_user_id($image_user_id);
-				$this->gallery_user->update_images((0 - $substract));
+				$this->gallery_user->update_images((0 - $subtract));
 			}
 		}
 
 		// Make sure the overall image & comment count is correct...
 		$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 			FROM ' . $this->images_table . '  
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
 		$this->gallery_config->set('num_images', $row['num_images']);
-		$this->gallery_config->set('num_comments', $row['num_comments']);
+		$this->gallery_config->set('num_comments', (int) $row['num_comments']);
 
 		/**
 		* Event delete album content
@@ -1006,7 +1075,7 @@ class manage
 
 		/**
 		* $left_id and $right_id define the scope of the nodes that are affected by the move.
-		* $diff_up and $diff_down are the values to substract or add to each node's left_id
+		* $diff_up and $diff_down are the values to subtract or add to each node's left_id
 		* and right_id in order to move them up or down.
 		* $move_up_left and $move_up_right define the scope of the nodes that are moving
 		* up. Other nodes in the scope of ($left_id, $right_id) are considered to move down.

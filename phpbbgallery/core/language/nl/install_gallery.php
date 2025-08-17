@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* install_gallery [Dutch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* [Dutch] translated by Dutch Translators (https://github.com/dutch-translators)
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Dutch Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Dutch Translators <https://github.com/dutch-translators>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -131,5 +130,10 @@ $lang = array_merge($lang, array(
 
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Hier kan je de phpBB galerij updaten.',
 
-	'VERSION_NOT_SUPPORTED'		=> 'Sorry, maar updates van voor versie 1.0.6 worden door deze installatie niet ondersteund.',
+	'VERSION_NOT_SUPPORTED'			=> 'Sorry, maar updates van voor versie 1.0.6 worden door deze installatie niet ondersteund.',
+
+	'GALLERY_SUB_EXT_UNINSTALL' => array(
+		1 => 'U moet de extensie: <br /><strong>%s</strong><br /> verwijderen voordat u de kern-extensie verwijdert.',
+		2 => 'U moet de extensies: <br /><strong>%s</strong><br /> verwijderen voordat u de kern-extensie verwijdert.',
+	),
 ));

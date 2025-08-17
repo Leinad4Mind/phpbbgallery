@@ -1,13 +1,14 @@
 <?php
-
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
@@ -164,7 +165,7 @@ class cache
 
 	/**
 	* Destroy album cache
-	* Basicly some tests fail due album cache not destroyed ...
+	* Basically some tests fail due album cache not destroyed ...
 	* So lets try it now?
 	*/
 	public function destroy_albums()
