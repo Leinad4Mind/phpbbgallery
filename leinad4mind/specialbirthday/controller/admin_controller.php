@@ -165,7 +165,7 @@ class admin_controller implements admin_interface
 		$this->config->set('registration_age_reg_display', $this->request->variable('registration_age_reg_display', 0));
 		$this->config->set('registration_age_admin', $this->request->variable('registration_age_admin', 0));
 		$this->config->set('registration_age_ban_length', $this->request->variable('registration_age_ban_length', 0));
-		$this->config->set('registration_age_ban_reason', $this->request->variable('registration_age_ban_reason', ''));
+		$this->config->set('registration_age_ban_reason', $this->request->variable('registration_age_ban_reason', '', true));
 		$this->config->set('registration_age_memberlist', $this->request->variable('registration_age_memberlist', false));
 		$this->config->set('registration_age_viewtopic', $this->request->variable('registration_age_viewtopic', false));
 		$this->config->set('registration_age_search', $this->request->variable('registration_age_search', false));

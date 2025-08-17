@@ -1,32 +1,32 @@
 {
-	"name": "leinad4mind/specialbirthday",
-	"type": "phpbb-extension",
-	"description": "Give you the ability to make the birth date a required field, adds an option to enter a birthdate upon registration, checks if the date is equal or greater than a minimum age and much much more...",
-	"version": "1.0.0",
-	"time": "2019-08-28",
+    "name": "leinad4mind/specialbirthday",
+    "type": "phpbb-extension",
+    "description": "Give you the ability to make the birth date a required field, adds an option to enter a birthdate upon registration, checks if the date is equal or greater than a minimum age and much much more...",
+    "version": "1.0.1",
+    "time": "2020-02-29",
     "keywords": [ "phpbb", "extension", "age", "special", "birthdate", "registration"],
-	"license": "GPL-2.0",
-	"authors": [
-		{
-			"name": "leinad4mind",
-			"homepage": "https://leinad4mind.top/forum",
-			"role": "Extension Developer"
-		}
-	],
-	"require": {
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "leinad4mind",
+            "homepage": "https://leinad4mind.top/forum",
+            "role": "Extension Developer"
+        }
+    ],
+    "require": {
         "php": ">=5.4.0",
         "composer/installers": "~1.0"
     },
-	"extra": {
-		"display-name": "Special Birthday",
-		"soft-require": {
-			"phpbb/phpbb": ">=3.2.0"
-    	},
+    "extra": {
+        "display-name": "Special Birthday",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0"
+        },
         "version-check": {
             "host": "leinad4mind.top",
             "directory": "/phpbb/specialbirthday",
             "filename": "version_check.json",
             "ssl": true
         }
-	}
+    }
 }
