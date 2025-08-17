@@ -13,6 +13,8 @@ services:
             - @controller.helper
             - @template
             - @service_container
+            - %core.root_path%
+            - %core.php_ext%
         tags:
             - { name: event.listener }
     sitesplat.BBCore.admin_listener:

@@ -29,8 +29,10 @@ class listener implements EventSubscriberInterface
 	protected $helper;
 	protected $template;
 	protected $phpbb_container;
+	protected $phpbb_root_path;
+	protected $php_ext;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\controller\helper $helper, \phpbb\template\template $template, Container $phpbb_container)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\controller\helper $helper, \phpbb\template\template $template, Container $phpbb_container, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -39,23 +41,30 @@ class listener implements EventSubscriberInterface
 		$this->helper = $helper;
 		$this->template = $template;
 		$this->phpbb_container = $phpbb_container;
+		$this->root_path = $phpbb_root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'					=> 'add_lang',
-			'core.page_footer_after'			=> 'disabled_board',
-			'core.index_modify_page_title'		=> 'statistics',
-			'core.ucp_display_module_before'	=> 'rewrite_zebra',
-			'core.ucp_register_user_row_after'	=> 'gravatar_add',
+			'core.user_setup'								=> 'add_lang',
+			'core.page_header_after'						=> 'add_template_variables',
+			'core.page_footer_after'						=> 'disabled_board',
+			'core.index_modify_page_title'					=> 'statistics',
+			'core.ucp_display_module_before'				=> 'rewrite_zebra',
+			'core.ucp_register_user_row_after'				=> 'gravatar_add',
+			'core.get_gravatar_url_after'					=> 'gravatar_url',
+			'core.viewtopic_assign_template_vars_before'	=> 'add_viewtopic_template_variables',
+			'core.memberlist_memberrow_before'				=> 'toggle_use_contact_fields',
 		);
 	}
 
 	public function disabled_board($event)
 	{
 		$style_id = ((!$this->config['override_user_style']) ? $this->user->data['user_style'] : $this->config['default_style']);
-		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . ' WHERE style_copyright LIKE "© SiteSplat.com%"';
+	//	$sql = 'SELECT style_id FROM ' . STYLES_TABLE . ' WHERE style_copyright LIKE "© SiteSplat.com%"';
+		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . " WHERE style_copyright LIKE '© SiteSplat.com%'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$in_sitesplat = in_array($style_id, $row);
@@ -127,6 +136,24 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/BBCore', 'BBCore');
 	}
 
+	public function add_template_variables()
+	{
+		$this->template->assign_vars(array(
+			'USER_EMAIL_MENU'			=> $this->user->data['user_email'],
+			'BOARD_EMAIL'				=> $this->config['board_contact'],
+			'SITESPLAT_SEARCH_WEEK'		=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=active_topics&amp;tp=7&amp;st=7'),
+			'SITESPLAT_SEARCH_LAST_DAY'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=active_topics&amp;tp=1&amp;st=1'),
+			'U_UCP_PREFERENCE'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=prefs'),
+			'U_UCP_PREFERENCE_SETTINGS'	=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=prefs&amp;mode=personal'),
+			'U_UCP_PROFILE_SETTINGS'	=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=profile&amp;mode=reg_details'),
+			'U_UCP_PROFILE_AVATAR'		=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=profile&amp;mode=avatar'),
+			'U_UCP_ZEBRA_FRIENDS'		=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=zebra&amp;mode=friends'),
+			'U_UCP_PM_INBOX'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=pm&amp;folder=inbox'),
+			'U_UCP_PM_OUTBOX'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=pm&amp;folder=outbox'),
+			'U_UCP_PM_SENTBOX'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=pm&amp;folder=sentbox'),
+		));
+	}
+
 	public function statistics($event)
 	{
 		$online_users = obtain_users_online(0, 'forum');
@@ -186,6 +213,21 @@ class listener implements EventSubscriberInterface
 				'user_avatar_width'		=> $asize,
 			);
 		}
+	}
+
+	public function gravatar_url($event) {
+		$event['url'] .= '&amp;d=identicon';
+	}
+
+	public function add_viewtopic_template_variables($event)
+	{
+		$this->template->assign_vars(array(
+			'BOOKMARK_CLASS'	=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks'] && $event['topic_data']['bookmarked']) ? 'fa fa-star' : 'fa fa-star-o',
+		));
+	}
+
+	public function toggle_use_contact_fields($event) {
+		$event['use_contact_fields'] = true;
 	}
 	
 }

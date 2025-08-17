@@ -38,11 +38,11 @@ class admin_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.acp_style_before_table' => 'version_info',
+			'core.acp_styles_action_before' => 'version_info',
 		);
 	}
 
-	public function version_info($event)
+	public function version_info()
 	{
 		$sitesplat_themes = array('bboots', 'flatboots');
 

@@ -282,7 +282,7 @@ $lang = array_merge($lang, array(
   'SITESPLAT_USERS_ONLINE'		 => 'Users Online',
   'SITESPLAT_MOST_USERS_ONLINE'	 => 'Most Users Online',
   
-  'BOOTSTRAP_VERSION'	         => '3.3.5',
+  'BOOTSTRAP_VERSION'	         => '3.3.6',
   'FLATBOOTS'	                 => 'FLATBOOTS',
   'CHANGE_AVATAR'	             => 'Change Avatar',
   'CHANGE_PASSWORD'	             => 'Change Password',
@@ -336,6 +336,7 @@ $lang = array_merge($lang, array(
   'TERMS'	                     => 'Terms',
   'ADVERTISE'	                 => 'Advertise',
   'SITESPLAT'	                 => 'SiteSplat',
+  'SITESPLAT_URL'	             => '<a href="http://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
   'JOIN_US_TWITTER'	             => 'Join us on Twitter',
   'TWEET_EXAMPLE'	             => 'BBOOTS reaches 1000 sales! Thank-you all for supporting this amzing project and contribuiting to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
   
