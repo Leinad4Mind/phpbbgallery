@@ -2,8 +2,8 @@
     "name": "leinad4mind/staffnotifications",
     "type": "phpbb-extension",
     "description": "Notify selected groups from bans, warnings, deleting content, and much more...",
-    "version": "1.0.0",
-    "time": "2019-07-28",
+    "version": "1.0.2",
+    "time": "2020-06-10",
     "keywords": [ "phpbb", "extension", "staffnotifications" ],
     "license": "GPL-2.0-only",
     "authors": [
@@ -18,7 +18,7 @@
     "extra": {
         "display-name": "Staff Notifications",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2.5"
+            "phpbb/phpbb": ">=3.2.8"
         },
 		"version-check": {
             "host": "leinad4mind.top",

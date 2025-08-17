@@ -4,7 +4,7 @@
  *
  * Staff Notifications. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind
+ * @copyright (c) 2019-2020, Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -20,8 +20,7 @@ class ext extends base
 	 */
 	public function is_enableable()
 	{
-		$config = $this->container->get('config');
-		return version_compare($config['version'], '3.1.2', '>=');
+		return version_compare(PHPBB_VERSION, '3.2.8', '>=');
 	}
 
 	public function enable_step($old_state)

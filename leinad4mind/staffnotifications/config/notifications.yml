@@ -36,6 +36,20 @@ services:
         tags:
             - { name: 'notification.type' }
 
+    leinad4mind.staffnotifications.notification.type.merge_posts:
+        class: 'leinad4mind\staffnotifications\notification\type\merge_posts'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
+    leinad4mind.staffnotifications.notification.type.merge_topics:
+        class: 'leinad4mind\staffnotifications\notification\type\merge_topics'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
     leinad4mind.staffnotifications.notification.type.ban_user:
         class: 'leinad4mind\staffnotifications\notification\type\ban_user'
         parent: 'leinad4mind.staffnotifications.notification.type.base'
