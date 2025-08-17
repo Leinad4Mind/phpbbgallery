@@ -3,6 +3,7 @@
 /**
  *
  * @package PM Welcome
+ * @copyright (c) 2015 Anvar
  * @copyright (c) 2019-2022 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *

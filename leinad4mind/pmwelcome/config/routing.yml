@@ -1,0 +1,5 @@
+leinad4mind_pmwelcome_senderinfo:
+    path: /sender_info/{user_id}
+    defaults: { _controller: leinad4mind.pmwelcome.core:sender_info }
+    requirements:
+        user_id: \d+

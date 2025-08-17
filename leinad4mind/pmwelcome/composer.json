@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Welcome PM for registration and activation",
     "homepage": "https://leinad4mind.top/forum/",
-    "version": "1.0.5",
+    "version": "1.2.2",
     "time": "2022-08-02",
     "keywords": [ "phpbb", "extension", "welcome", "pm", "registration" ],
     "license": "GPL-2.0",
@@ -14,13 +14,17 @@
             "role": "Developer"
         },
         {
+            "name": "RMcGirr83",
+            "role": "Previous Developer"
+        },
+        {
             "name": "Anvar",
-            "role": "Original Author"
+            "role": "Original Developer"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-		"phpbb/phpbb": ">=3.2",
+        "php": ">=7.1",
+        "phpbb/phpbb": ">=3.2",
         "composer/installers": "~1.0"
     },
     "extra": {
