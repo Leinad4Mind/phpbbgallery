@@ -7,7 +7,7 @@ ul.profile-icons li.gallery-icon {
 }
 
 .gallery-icon, .gallery-icon a {
-	background-image: url("images/icon_contact_gallery.gif");
+	background-image: url("./images/icon_contact_gallery.gif");
 }
 
 h2.invade-linklist {
@@ -18,7 +18,7 @@ h2.invade-linklist {
 	background-position: 0 50%;
 	background-repeat: no-repeat;
 	padding: 1px 0 0 17px;
-	background-image: url("images/icon_gallery.gif");
+	background-image: url("./images/icon_gallery.gif");
 }
 
 .rtl .icon-gallery {
@@ -92,15 +92,15 @@ span.reported-images-number {
 }
 
 .g_unapproved {
-	background: 100% 0 no-repeat url("images/icon_gallery_unapproved.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_unapproved.gif");
 }
 
 .g_locked {
-	background: 100% 0 no-repeat url("images/icon_gallery_locked.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_locked.gif");
 }
 
 .g_reported {
-	background: 100% 0 no-repeat url("images/icon_gallery_reported.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_reported.gif");
 }
 
 input.autowidth-gallery {

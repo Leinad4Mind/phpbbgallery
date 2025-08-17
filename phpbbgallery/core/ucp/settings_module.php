@@ -28,7 +28,7 @@ class settings_module
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver */
 	protected $db;
 
 	/** @var \phpbb\event\dispatcher */

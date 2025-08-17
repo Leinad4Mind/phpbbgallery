@@ -21,7 +21,7 @@ class image
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/* @var \phpbb\db\driver\driver */
 	protected $db;
 
 	/* @var \phpbb\event\dispatcher */
@@ -66,7 +66,7 @@ class image
 	* @param \phpbb\auth\auth			$auth		Auth object
 	* @param \phpbb\config\config		$config		Config object
 	* @param \phpbb\controller\helper	$helper		Controller helper object
-	* @param \phpbb\db\driver\driver_interface	$db	Database object
+	* @param \phpbb\db\driver\driver	$db			Database object
 	* @param \phpbb\event\dispatcher	$dispatcher	Event dispatcher object
 	* @param \phpbb\pagination			$pagination	Pagination object
 	* @param \phpbb\template\template	$template	Template object
@@ -79,7 +79,7 @@ class image
 	* @param string						$albums_table	Gallery albums table
 	* @param string						$users_table	Gallery users table
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher $dispatcher, \phpbb\pagination $pagination, \phpbb\template\template $template, \phpbb\user $user, \phpbbgallery\core\album\display $display, \phpbbgallery\core\album\loader $loader, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\auth\level $auth_level, $albums_table, $images_table, $users_table)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\db\driver\driver $db, \phpbb\event\dispatcher $dispatcher, \phpbb\pagination $pagination, \phpbb\template\template $template, \phpbb\user $user, \phpbbgallery\core\album\display $display, \phpbbgallery\core\album\loader $loader, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\auth\level $auth_level, $albums_table, $images_table, $users_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -154,7 +154,7 @@ class image
 		$s_allowed_delete = $s_allowed_edit = $s_allowed_status = false;
 		if (($this->gallery_auth->acl_check('m_', $album_id, $album_data['album_user_id']) || ($this->data['image_user_id'] == $this->user->data['user_id'])) && ($this->user->data['user_id'] != ANONYMOUS))
 		{
-			$s_user_allowed = (($this->data['image_user_id'] == $this->user->data['user_id']) && ($album_data['album_status'] != \phpbbgallery\core\album\album::STATUS_LOCKED));
+			$s_user_allowed = (($this->data['image_user_id'] == $this->user->data['user_id']) && ($album_data['album_status'] != phpbb_ext_gallery_core_album::STATUS_LOCKED));
 
 			$s_allowed_delete = (($this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']));
 			$s_allowed_edit = (($this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']));
@@ -172,9 +172,9 @@ class image
 
 				'S_IMAGE_REPORTED'		=> $this->data['image_reported'],
 				'U_IMAGE_REPORTED'		=> ($this->data['image_reported']) ? $this->helper->route('phpbbgallery_moderate_image', array('image_id' => $image_id)) : '',
-				'S_STATUS_APPROVED'		=> ($this->data['image_status'] == \phpbbgallery\core\image\utility::STATUS_APPROVED),
-				'S_STATUS_UNAPPROVED'	=> ($this->data['image_status'] == \phpbbgallery\core\image\utility::STATUS_UNAPPROVED),
-				'S_STATUS_LOCKED'		=> ($this->data['image_status'] == \phpbbgallery\core\image\utility::STATUS_LOCKED),
+				'S_STATUS_APPROVED'		=> ($this->data['image_status'] == \phpbbgallery\core\image\image::STATUS_APPROVED),
+				'S_STATUS_UNAPPROVED'	=> ($this->data['image_status'] == \phpbbgallery\core\image\image::STATUS_UNAPPROVED),
+				'S_STATUS_LOCKED'		=> ($this->data['image_status'] == \phpbbgallery\core\image\image::STATUS_LOCKED),
 			));
 		}
 
@@ -287,7 +287,7 @@ class image
 	 */
 	protected function check_permissions($album_id, $owner_id, $image_status)
 	{
-		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id) || ($image_status == \phpbbgallery\core\image\utility::STATUS_ORPHAN))
+		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id) || ($image_status == \phpbbgallery\core\image\image::STATUS_ORPHAN))
 		{
 			if ($this->user->data['is_bot'])
 			{
@@ -306,7 +306,7 @@ class image
 				return $this->error('NOT_AUTHORISED', 403);
 			}
 		}
-		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && ($image_status == \phpbbgallery\core\image\utility::STATUS_UNAPPROVED))
+		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && ($image_status == \phpbbgallery\core\image\image::STATUS_UNAPPROVED))
 		{
 			return $this->error('NOT_AUTHORISED', 403);
 		}

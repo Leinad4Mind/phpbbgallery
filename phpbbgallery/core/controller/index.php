@@ -18,7 +18,7 @@ class index
 	/* @var \phpbb\config\config */
 	protected $config;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/* @var \phpbb\db\driver\driver */
 	protected $db;
 
 	/* @var \phpbb\request\request */
@@ -47,7 +47,7 @@ class index
 	*
 	* @param \phpbb\auth\auth			$auth		Auth object
 	* @param \phpbb\config\config		$config		Config object
-	* @param \phpbb\db\driver\driver_interface	$db	Database object
+	* @param \phpbb\db\driver\driver	$db			Database object
 	* @param \phpbb\request\request		$request	Request object
 	* @param \phpbb\template\template	$template	Template object
 	* @param \phpbb\user				$user		User object
@@ -56,7 +56,7 @@ class index
 	* @param string						$root_path	Root path
 	* @param string						$php_ext	php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -144,6 +144,13 @@ class index
 			//'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_mcp', array('mode' => 'overview')) : '',
 			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, array('hash' => generate_link_hash('global'), 'mark' => 'albums')) : '',
 			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
+
+			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_search'),
+			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] ? $this->helper->route('phpbbgallery_search_commented') : '',
+			'U_G_SEARCH_CONTESTS'			=> $this->config['phpbb_gallery_allow_rates'] && $this->config['phpbb_gallery_contests_ended'] ? $this->helper->route('phpbbgallery_search_contests') : '',
+			'U_G_SEARCH_RECENT'				=> $this->helper->route('phpbbgallery_search_recent'),
+			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_search_egosearch'),
+			'U_G_SEARCH_TOPRATED'			=> $this->config['phpbb_gallery_allow_rates'] ? $this->helper->route('phpbbgallery_search_toprated') : '',
 		));
 	}
 

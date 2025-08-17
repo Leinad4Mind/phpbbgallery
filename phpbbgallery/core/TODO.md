@@ -1,5 +1,5 @@
 #TODO
 
-* **Remove Auth ACL Hack**
+* Remove Auth ACL Hack
+* Notifications
 * PeGas on Index
-* PLupload

@@ -20,7 +20,7 @@ class user
 
 	/**
 	 * Database object
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\driver\driver
 	 */
 	protected $db;
 
@@ -49,11 +49,11 @@ class user
 	/**
 	 * Constructor
 	 *
-	 * @param	\phpbb\db\driver\driver_interface	$db			Database object
+	 * @param	\phpbb\db\driver\driver	$db			Database object
 	 * @param	\phpbb\event\dispatcher	$dispatcher	Event dispatcher object
 	 * @param	string					$table_name	Gallery users table
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher $dispatcher, $table_name)
+	public function __construct(\phpbb\db\driver\driver $db, \phpbb\event\dispatcher $dispatcher, $table_name)
 	{
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
@@ -557,12 +557,12 @@ class user
 
 			if ($config['allow_birthdays'] && !empty($row['user_birthday']))
 			{
-				$now = $user->create_datetime();
-				$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 				list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $row['user_birthday']));
 
 				if ($bday_year)
 				{
+					$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+
 					$diff = $now['mon'] - $bday_month;
 					if ($diff == 0)
 					{
