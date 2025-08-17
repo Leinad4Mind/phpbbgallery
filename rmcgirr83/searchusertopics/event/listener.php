@@ -74,7 +74,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Display zodiac on viewing user profile
+	* Display number of topics on viewing user profile
 	*
 	* @param object $event The event object
 	* @return null
@@ -89,13 +89,16 @@ class listener implements EventSubscriberInterface
 		$sql = 'SELECT t.*, p.post_visibility
 			FROM ' . TOPICS_TABLE . ' t
 			LEFT JOIN ' . POSTS_TABLE . ' p ON t.topic_first_post_id = p.post_id
-			WHERE t.topic_poster = ' . $user_id . '
-			ORDER BY t.topic_time ASC';
+			WHERE t.topic_poster = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
 
 		$topics_num = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			if ($row['topic_status'] == ITEM_MOVED)
+			{
+				continue;
+			}
 			if (!$this->auth->acl_get('f_read', $row['forum_id']))
 			{
 				continue;

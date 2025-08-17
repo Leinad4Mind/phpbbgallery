@@ -1,9 +1,9 @@
 {
     "name": "rmcgirr83/searchusertopics",
     "type": "phpbb-extension",
-    "description": "This Extension displays number of topics started by  auser when visiting that users profile",
-    "version": "1.0.1",
-    "time": "2017-01-09",
+    "description": "This Extension displays number of topics started by a user when visiting that users profile",
+    "version": "1.0.2",
+    "time": "2017-03-16",
     "keywords": [
         "phpbb",
         "extension",
