@@ -1,0 +1,66 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{L_ACP_CAT_OINDEX}</h1>
+
+<p><img src="https://img.shields.io/badge/{{ lang('Version') }}-{{ TOPICINDEX_VERSION }}-green.svg?style=plastic" /></p>
+
+<!-- IF ERROR -->
+<div class="errorbox">
+	<p>{ERROR}</p>
+</div>
+<!-- ENDIF -->
+
+<form id="acp_topicindex" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_OINDEX_CFG_SETUP}</legend>
+		<dl>
+			<dt><label for="overflow">{L_OVERFLOW_IN_TOPIC}{L_COLON}</label></dt>
+			<dd><input type="checkbox" class="radio" id="overflow" name="overflow" value="1"{S_OVERFLOW} /> <span style="float: right;"><input type="submit" name="setcfg" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;</span></dd>
+		</dl>
+	</fieldset>
+	<hr />
+	<fieldset>
+		<legend>{L_ADD_NEW_TOPICS_LIST}</legend>
+		<p>{L_OTINDEX_LIST_ALONE_DSC}</p>
+		<dl>
+			<dt><label for="list_name">{L_LIST_NAME}{L_COLON}</label></dt>
+			<dd><input class="text medium" type="text" id="list_name" name="list_name" maxlength="250" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="forum">{L_OINDEX_SELECT_FORUM}{L_COLON}</label></dt>
+			<dd><select id="forum" name="forum_id[]"<!-- IF S_FORUM_MULTIPLE --> multiple="multiple"<!-- ENDIF --> size="10">{S_FORUM_OPTIONS}</select></dd>
+		</dl>
+		<fieldset class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>
+	</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- IF S_LIST -->
+<fieldset>
+	<table cellspacing="1">
+		<thead>
+		<tr>
+			<th style="text-align:center;">{L_LIST_NAME}</th>
+			<th style="text-align:center;">{L_OINDEX_FORUMS}</th>
+			<th>&nbsp;</th>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN list -->
+			<tr class="row4">
+				<td><strong>{list.LIST_NAME}</strong></td>
+				<td style="text-align:center;">{list.LIST_FORUMS}</td>
+				<td style="text-align:center;"><a href="{list.U_REMOVE}" title="{L_DELETE}">{L_DELETE}</a></td>
+			</tr>
+		<!-- END list -->
+		</tbody>
+	</table>
+</fieldset>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

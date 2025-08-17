@@ -1,0 +1,16 @@
+<!-- IF U_MCP && postrow.U_ININDEXLIST -->
+<!-- IF not PHPBB_IS_32 -->
+<li class="{postrow.IINDEX_ICON}">
+	<a href="{postrow.U_ININDEXLIST}" title="{postrow.IINEDX_LANG}">
+		<span>{postrow.IINEDX_LANG}</span>
+	</a>
+</li>
+<!-- ELSE -->
+<li>
+	<a href="{postrow.U_ININDEXLIST}" title="{postrow.IINEDX_LANG}" class="button button-icon-only">
+		<i class="icon {postrow.IINDEX_ICON}" aria-hidden="true"></i>
+		<span class="sr-only">{postrow.IINEDX_LANG}</span>
+	</a>
+</li>
+<!-- ENDIF -->
+<!-- ENDIF -->

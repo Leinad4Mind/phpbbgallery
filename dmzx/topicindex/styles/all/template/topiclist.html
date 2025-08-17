@@ -1,0 +1,83 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_OIINDEX_HEADER}</h2>
+
+<form action="{U_ACTION}" method="post">
+	<div class="panel bg3">
+		<div class="inner">
+			<fieldset>
+				<p>{L_SELECT_A_LIST}{L_COLON} <select id="listslc" name="list" onchange="this.form.submit();"><option value="0" selected="selected">-------</option>{S_LIST_OPTIONS}</select></p>
+			</fieldset>
+		</div>
+	</div>
+{S_FORM_TOKEN}
+</form>
+
+<!-- IF S_SHOWLIST -->
+<div class="panel bg1">
+	<div class="inner">
+		<p class="filtrino icenter">
+			<!-- BEGIN block_nofiltrino -->
+				<span><a href="{block_nofiltrino.U_TUTTI}" class="i_all">{L_ALL}</a></span>
+				<!-- IF block_nofiltrino.S_09 --><span><a href="{block_nofiltrino.U_09}" class="i_all">{L_09}</a></span><!-- ELSE --><span class="i_nourl">{L_09}</span><!-- ENDIF -->
+				<!-- IF block_nofiltrino.S_SYMB --><span><a href="{block_nofiltrino.U_SYMB}" class="i_all">{L_SYMB}</a></span><!-- ELSE --><span class="i_nourl">{L_SYMB}</span><!-- ENDIF -->
+			<!-- END block_nofiltrino -->
+			<!-- BEGIN block_filtrino -->
+				<!-- IF block_filtrino.S_ISWITH -->
+					<span><a href="{block_filtrino.U_FILTER}" class="i_abcdz">{block_filtrino.FILTRINO}</a></span>
+				<!-- ELSE -->
+					<span class="i_nourl">{block_filtrino.FILTRINO}</span>
+				<!-- ENDIF -->
+			<!-- END block_filtrino -->
+		</p>
+	</div>
+</div>
+<!-- IF .block_list -->
+<!-- BEGIN block_list -->
+<!-- IF block_list.S_ISWITH2 -->
+<h3>{block_list.FILTRINO}</h3>
+
+<div class="forabg">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt>
+						<div class="list-inner">{L_TOPIC_TITLE}</div>
+					</dt>
+					<dd class="topics">{L_POSTER}</dd>
+					<dd class="posts">{L_REPLIES}</dd>
+					<!-- IF U_MCP --><dd class="lastpost"><span>{L_REMOVE_FROM_LIST}</span></dd><!-- ENDIF -->
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist forums">
+		<!-- BEGIN block_topic_index -->
+			<li class="row <!-- IF block_topic_index.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+				<dl>
+					<dt class="topicindex">
+						<div class="list-inner">
+							<a href="{block_topic_index.ITOPIC_URL}"><strong>{block_topic_index.ITOPIC_TITLE}</strong></a>
+						</div>
+					</dt>
+					<dd class="topics">{block_topic_index.ITOPIC_POSTER}</dd>
+					<dd class="posts">{block_topic_index.ITOPIC_TOTREP}</dd>
+					<!-- IF U_MCP --><dd class="lastpost"><span class="topicindexremove">[<a href="{block_topic_index.U_REMOVE_FROM}">{L_REMOVE_FROM_LIST}</a>]</span></dd><!-- ENDIF -->
+				</dl>
+			</li>
+		<!-- END block_topic_index -->
+		</ul>
+	</div>
+</div>
+
+<!-- ENDIF -->
+<!-- END block_list -->
+<!-- ELSE -->
+<fieldset>
+	<p class="ianytopuc">{L_ANY_TOPIC_IN_LIST}</p>
+</fieldset>
+<!-- ENDIF -->
+
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->
