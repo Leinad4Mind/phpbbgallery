@@ -141,6 +141,9 @@ class similar_topics
 			return;
 		}
 
+		// Get stored sensitivity value and divide by 10. In query it should be a number between 0.0 to 1.0.
+		$sensitivity = $this->config->offsetExists('similar_topics_sense') ? $this->config['similar_topics_sense'] / 10 : '0.5';
+
 		// Similar Topics query
 		$sql_array = array(
 			'SELECT'	=> "f.forum_id, f.forum_name, t.*,
@@ -155,13 +158,11 @@ class similar_topics
 					'ON'	=> 'f.forum_id = t.forum_id',
 				),
 			),
-			'WHERE'		=> "MATCH (t.topic_title) AGAINST ('" . $this->db->sql_escape($topic_title) . "') >= 0.5
-				AND t.topic_status <> " . ITEM_MOVED . '
+			'WHERE'		=> "MATCH (t.topic_title) AGAINST ('" . $this->db->sql_escape($topic_title) . "') >= " . (float) $sensitivity . '
+				AND t.topic_status <> ' . ITEM_MOVED . '
 				AND t.topic_visibility = ' . ITEM_APPROVED . '
 				AND t.topic_time > (UNIX_TIMESTAMP() - ' . $this->config['similar_topics_time'] . ')
 				AND t.topic_id <> ' . (int) $topic_data['topic_id'],
-			//'GROUP_BY'	=> 't.topic_id',
-			//'ORDER_BY'	=> 'score DESC', // this is done automatically by MySQL when not using IN BOOLEAN MODE
 		);
 
 		// Add topic tracking data to the query (only if query caching is off)
@@ -271,9 +272,7 @@ class similar_topics
 
 				$topic_unapproved = $row['topic_visibility'] == ITEM_UNAPPROVED && $this->auth->acl_get('m_approve', $similar_forum_id);
 				$posts_unapproved = $row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $similar_forum_id);
-				//$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . ($topic_unapproved ? 'approve_details' : 'unapproved_posts') . "&amp;t=$similar_topic_id", true, $this->user->session_id) : '';
-				//$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "i=queue&amp;mode=deleted_topics&amp;t=$similar_topic_id", true, $this->user->session_id) : $u_mcp_queue;
 
 				$base_url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id);
 
@@ -302,7 +301,6 @@ class similar_topics
 					'S_TOPIC_REPORTED'		=> !empty($row['topic_reported']) && $this->auth->acl_get('m_report', $similar_forum_id),
 					'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 					'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
-					//'S_TOPIC_DELETED'		=> $topic_deleted,
 					'S_HAS_POLL'			=> (bool) $row['poll_start'],
 
 					'U_NEWEST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;view=unread') . '#unread',
@@ -337,7 +335,6 @@ class similar_topics
 			'NEWEST_POST_IMG'	=> $this->user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 			'LAST_POST_IMG'		=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
 			'REPORTED_IMG'		=> $this->user->img('icon_topic_reported', 'TOPIC_REPORTED'),
-			//'DELETED_IMG'		=> $this->user->img('icon_topic_deleted', 'TOPIC_DELETED'),
 			'POLL_IMG'			=> $this->user->img('icon_topic_poll', 'TOPIC_POLL'),
 			'S_PST_BRANCH'		=> phpbb_version_compare(max($this->config['phpbb_version'], PHPBB_VERSION), '3.2.0-dev', '<') ? '31x' : '32x',
 		));
