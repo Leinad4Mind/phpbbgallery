@@ -63,6 +63,6 @@ $lang = array_merge(
 		'IMAGE_RESIZE_ERROR'	    => 'No app or file to send!',
 		'IMAGERESIZE_NOTICE'	    => '<div class="phpinfo"><p>There is no specific configuration for this extension. After the user uploaded the avatar via UCP Avatar upload, the crop option will be available.<br /> Check the ACP &#62; Avatar settings: "Maximum avatar file size" to be 0 or 2mb or more for a smooth user experience.</p></div>',
 		'ERROR_IMAGERESIZE_DISABLE'	=> 'You cannot disable BBAvatarResize because of other active SiteSplat\'s extensions<br /><div>» %s</div>',
-	    'SS_HELPER_NOTY'	    	=> 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	    'SS_HELPER_NOTY'	    	=> 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	)
 );

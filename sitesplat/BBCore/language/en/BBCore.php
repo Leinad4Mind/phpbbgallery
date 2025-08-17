@@ -257,7 +257,7 @@ $lang = array_merge($lang, array(
   'DISABLE_TEXT_TRY'             => 'Test it for yourself!',
   'DISABLE_TEXT_TYPE'            => 'type anything and hit return...',
   
-  'GRAVATAR_EXPLAIN'          	 => 'If a <a href="//en.gravatar.com/" target="_blank" title="">GRAVATAR</a> is associated to your email address, it will be set as default.',
+  'GRAVATAR_EXPLAIN'          	 => 'If a <a href="//en.gravatar.com/" target="_blank">GRAVATAR</a> is associated to your email address, it will be set as default.',
   'GRAVATAR_EXPLAIN_CONFIRM'     => 'Please confirm your email address here',
   
   'DELETE_POLL'       			 => 'Delete poll',
@@ -297,7 +297,7 @@ $lang = array_merge($lang, array(
   'BOOTS'                		 => 'BOOTS',
   'BBOOTS'       		         => 'BBOOTS',
   
-  'BBOOTS_VERSION'    			 => '<a href="https://sitesplat.com/phpBB3/" title="">BBOOTS</a>',
+  'BBOOTS_VERSION'    			 => '<a href="http://www.sitesplat.com/phpBB3/">BBOOTS</a>',
   'U_LOGOUT'          			 => 'Logout',
 
   'SITESPLAT_STATISTICS'		 => 'Statistics',
@@ -368,11 +368,8 @@ $lang = array_merge($lang, array(
   'TERMS'	                     => 'Terms',
   'ADVERTISE'	                 => 'Advertise',
   'SITESPLAT'	                 => 'SiteSplat',
-  'SITESPLAT_URL'	             => '<a href="https://sitesplat.com" class="btn btn-default" target="blank" rel="noopener">SiteSplat.com</a>',
-  'SS_URL'	                     => '<a href="https://sitesplat.com/" title="SiteSplat Premium Themes" target="_blank" rel="noopener">SiteSplat</a>',
-  'PHPBB_CREDIT'	             => 'Powered By <a href="https://www.phpbb.com/" title="Forum Software &copy; phpBB&reg; Group" target="_blank" rel="noopener">phpBB</a> and ',
-  'SS_HANDCRAFTED'	             => '<a href="https://sitesplat.com/" title="SiteSplat Premium Themes and Extensions" target="_blank" rel="noopener">SiteSplat</a>, handcrafted with <i class="fa fa-heart text-flatboots-red"></i> and <i class="fa fa-coffee"></i>',
+  'SITESPLAT_URL'	             => '<a href="http://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
   'JOIN_US_TWITTER'	             => 'Join us on Twitter',
-  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amazing project and contributing to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">https://bit.ly/000fefs</a>',
+  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amazing project and contributing to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
   
 ));

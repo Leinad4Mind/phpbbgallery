@@ -48,7 +48,7 @@ class listener implements EventSubscriberInterface
 	
 	static public function getSubscribedEvents()
 	{
-		$listeners = array(
+		return array(
 			'core.user_setup'	                            => 'load_language_on_setup',
 			'core.page_header_after'						=> 'add_template_variables',
 			'core.page_footer_after'						=> 'disabled_board',
@@ -59,59 +59,12 @@ class listener implements EventSubscriberInterface
 			'core.gen_sort_selects_after'					=> 'enhance_sort_selects',
 			'core.ucp_prefs_view_after'						=> 'enhance_ucp_prefs_selects',
 		);
-
-		// revert [ticket/16153]
-		if (version_compare(PHPBB_VERSION, '3.2.8', '>')) {
-			$listeners += array(
-				'core.posting_modify_submission_errors'		=> 'revert_emojis',
-				'core.acp_board_config_edit_add'			=> 'add_emoji_config',
-			);
-		}
-
-		return $listeners;
-	}
-
-    // revert [ticket/16153]
-	public function revert_emojis($event) {
-		if ($this->config['sitesplat_bbcore_emoji_revert']) {
-			$post_data = $event['post_data'];
-			$error = $event['error'];
-
-			$post_data['post_subject'] = utf8_decode_ncr($post_data['post_subject']);
-			if (preg_match_all('/[\x{10000}-\x{10FFFF}]/u', $post_data['post_subject'], $matches)) {
-				$character_list = implode('<br />', $matches[0]);
-				$error[] = $this->user->lang('UNSUPPORTED_CHARACTERS_SUBJECT', $character_list);
-
-				$event['post_data'] = $post_data;
-				$event['error'] = $error;
-			}
-		}
-	}
-
-	public function add_emoji_config($event)
-	{
-		if ($event['mode'] == 'post')
-		{
-			$display_vars = $event['display_vars'];
-
-			$emoji_var = array(
-				'sitesplat_bbcore_emoji_revert' => array(
-					'lang'		=> 'SS_DEFAULT_EMOJI',
-					'validate'	=> 'bool',
-					'type'		=> 'radio:enabled_disabled',
-					'explain'	=> true,
-				),
-			);
-
-			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $emoji_var, array('before' =>'bump_type'));
-			$event['display_vars'] = $display_vars;
-		}
 	}
 
 	public function disabled_board($event)
 	{
 		$style_id = ((!$this->config['override_user_style']) ? $this->user->data['user_style'] : $this->config['default_style']);
-		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
+		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . " WHERE style_copyright LIKE '© SiteSplat.com%'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$in_sitesplat = ($row) ?  in_array($style_id, $row) : false;

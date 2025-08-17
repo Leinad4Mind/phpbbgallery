@@ -41,19 +41,17 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-    
 	'ACP_SITESPLAT_UPDATE_MANAGER'  => 'SiteSplat Update Manager',
     'VERSION_INSTALLED'  			=> 'Installed Version',
 	'NEW_BOOTS_VERSION'				=> 'New %s version available',
 	'VERSIONNUMBERS'				=> 'Installed Version: %s, download the new version from the server: <a style="color:#fff;" href="%s" title="Download" target="_blank">%s</a>',
 	'SS_RAPID_DISABLE'				=> 'SS Rapid Disable',
 	'SS_RAPID_DISABLE_TLT'		    => 'Disables (all) extensions at once. Make a backup first!!!',
-	'UPD_MANAGER_MSG'		        => 'Save yourself ton of time and Download the new BBCore Auto-Update to get your themes updated in one-click!<br /><a href="https://sitesplat.com" target="_blank">BBCore Auto-Update</a> (Make sure you are logged in)',
 	
 	'DOWNLOAD_MSG'					=> 'The current version <span class="label label-success">%s</span> can be downloaded from Themeforest: <a href="%s" title="Download" target="_blank">%s - phpBB3</a>',
 	'CHANGE_LOG_MSG'				=> 'The Changelog is located here: <a href="%s" target="_blank">%s (phpBB3.1) Changelog</a>',
-	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">https://sitesplat.com</a>',
-	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="https://sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
+	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">http://www.sitesplat.com</a>',
+	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="http://www.sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
 	'NO_VERSIONINFO'				=> 'No version info available at the moment, try again in a few minutes!',
 
     'LOG_FILES_CHANGED'			    => '<strong>BBcore changed the following %s files for you:</strong><br />» %s',
@@ -77,9 +75,24 @@ $lang = array_merge($lang, array(
 	// minification
 	'SITESPLAT_BBCORE_MINIFY_HTML'			=> 'Minify HTML',
 	'SITESPLAT_BBCORE_MINIFY_HTML_EXPLAIN'	=> 'This is a BBCore option. Generated content will be minified prior to sending it to the user. This will reduce network traffic but will also increase CPU and memory usage on server side.',
-	
-	// Emoji stuff
-	'SS_DEFAULT_EMOJI'				=> 'Default topic titles emoji behavior',
-	'SS_DEFAULT_EMOJI_EXPLAIN'		=> 'Enable or disable the default phpBB topic title emoji behavior. Sadly starting with phpBB 3.2.9 users can freely "spam" emojis in topic titles. The phpBB team decided to blindly allow this and offer no way for admins to control it (not cool!). Luckily, you are using the SiteSplat\'s BBCore for added functionality to phpBB :-). It is strongly recommended to leave this option enabled to avoid users spamming titles.<br>Use then: <strong><a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=29" target="_blank">BBemoji</a></strong> (a premium extension) instead if you wish to take this a step further and have total control via proper forum permission basis for this behavior. This way you can designate a specific forum to allow emojis being posted in topic titles.',
 
+	// autoupdate
+	'AUTOUPDATE_CONFIRM'			=> 'Confirm',
+	'AUTOUPDATE_CONFIRM_CONFIRM'	=> 'Are you sure you wish to update the theme with the auto-update?<br /><br /><strong>NOTE:</strong> The board will be disabled and the board cache will be automatically cleared for you after the update.<br /> A log of the changes is also saved under the ACP Admin log. <br /> A backup of your style (time stamped) will be stored for your convenience under the phpBB root/store/ folder on your server. <br />Make sure to clear your browser cache after the update and if you use CloudFlare make sure to clear the cache there as well plus clear again the forum cache via ACP.',
+        'UPDATE_IN_PROGRESS'			=> 'Update in progress. Do not close this tab.',
+	'STYLE_NOT_DEFINED'				=> 'You did not define a style to update.',
+	'ALREADY_UP_TO_DATE'			=> 'Your style is already up to date.',
+	'NO_DIRECT_DOWNLOAD'			=> 'We are unable to automatically update your style because the style author did not provide the necessary files.',
+	'PROBLEM_DOWNLOADING_UPDATE'	=> 'We are unable to download the update files. Please, try again later.',
+	'DOWNLOADED_FILE_CORRUPTED'		=> 'The update file is corrupted.',
+	'MERGE_CONFLICTS'				=> 'Oh No! 💔😱 ¯\_(ツ)_/¯ We were unable to automatically update your premium theme. The reason is because your theme contains custom changes you or your web developer made and therefore we are unable to automatically solve this. To see the conflicting files and/or conflicts they contain, take a look at saved files in:<br /><br /><strong>%s</strong>.',
+	'REQUIRED_FILE_MISSING'			=> 'A required file is missing from your style: %s',
+	'NEW_FILE_ALREADY_EXISTS'		=> 'A file to be added already exists: %s',
+	'UPDATE_SUCCESS'				=> 'Yeehaw!💯 Your Premium Theme has Been Updated Successfully. Enjoy!<br />Also, don\'t forget to check for any updates of your SiteSplat Premium Extensions.<br /><br /> Oh, if you are really in a fantastic mood now that I made your life easier and faster 😜 how about a digital high 5? like for example a 5 stars ⭐⭐⭐⭐⭐ rating on Themeforest about this Premium Theme with super PRO functions? <br /><br />Pretty Please? 😚 Here is the link for ya: <a href="http://themeforest.net/downloads" target="_blank">http://themeforest.net/downloads</a>',
+        'CURRENT_FILE'					=> 'Current file',
+	'DIFF_SEP_EXPLAIN'				=> 'Conflict',
+	'NEW_FILE'						=> 'New file',
+
+	// log
+	'LOG_STYLE_UPDATED'	=> '<strong>Auto-updated %s style</strong><br />Edited:<br />&emsp;%s<br /><br />Added:<br />&emsp;%s<br /><br />Deleted:<br />&emsp;%s',
 ));

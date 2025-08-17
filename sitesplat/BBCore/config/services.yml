@@ -1,3 +1,6 @@
+imports:
+    - { resource: updater.yml }
+
 services:
     sitesplat.BBCore.helper:
         class: sitesplat\BBCore\helper
@@ -31,14 +34,22 @@ services:
     sitesplat.BBCore.admin_listener:
         class: sitesplat\BBCore\event\admin_listener
         arguments:
-            - '@config'
             - '@dbal.conn'
             - '@user'
             - '@template'
             - '@ext.manager'
             - '@cache'
             - '@file_downloader'
+            - '@request'
+            - '@config'
+            - '@config_text'
+            - '@auth'
+            - '@sitesplat.bbcore.updater.next_step_resolver'
+            - '@text_formatter.cache'
             - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbcore.updater.host%'
+            - '%sitesplat.bbcore.updater.versioncheck_path%'
         tags:
             - { name: event.listener }
 
