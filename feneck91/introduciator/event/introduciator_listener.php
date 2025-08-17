@@ -12,7 +12,6 @@ namespace feneck91\introduciator\event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use feneck91\introduciator\helper\introduciator_helper;
 use phpbb\language\language;
-use phpbb\template\template;
 
 class introduciator_listener implements EventSubscriberInterface
 {
@@ -32,7 +31,7 @@ class introduciator_listener implements EventSubscriberInterface
 	private $language;
 
 	/**
-	 * @var Introduciator helper. The important code is into this helper.
+	 * @var introduciator helper. The important code is into this helper.
 	 */
 	private $helper;
 
@@ -81,8 +80,8 @@ class introduciator_listener implements EventSubscriberInterface
 			//=============================================
 			// From here, this is events for template html
 			//=============================================
-			'core.viewtopic_modify_post_data'									=> 'on_viewtopic_modify_post_data',				// Prepare data to be displayed in viewtopic
-			'core.memberlist_prepare_profile_data'								=> 'on_display_profile_data',					// Prepare data to be displayed in several pages
+			'core.viewtopic_modify_post_data'							=> 'on_viewtopic_modify_post_data',				// Prepare data to be displayed in viewtopic
+			'core.memberlist_prepare_profile_data'						=> 'on_display_profile_data',					// Prepare data to be displayed in several pages
 		);
 	}
 
@@ -97,10 +96,10 @@ class introduciator_listener implements EventSubscriberInterface
 	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'feneck91/introduciator',
 			'lang_set' => 'introduciator',
-		);
+		];
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
@@ -114,7 +113,7 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_before_quickreply_displayed($event)
 	{
-		if ($event['tpl_ary']['S_QUICK_REPLY'] === true && false === $this->helper->introduciator_verify_posting('reply', $event['forum_id'], 0, null, false))
+		if ($event['tpl_ary']['S_QUICK_REPLY'] === true && false === $this->helper->user_can_post('reply', $event['forum_id'], 0, null, false))
 		{	// Quick Reply should be show and is not allowed, hide it !
 			$tpl_ary = $event['tpl_ary'];
 			$tpl_ary['S_QUICK_REPLY'] = false;
@@ -132,7 +131,7 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_displaying_posting_screen($event)
 	{
-		$this->helper->introduciator_verify_posting($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true);
+		$this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true);
 	}
 
 	/**
@@ -147,14 +146,14 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_submit_post_before($event)
 	{
-		if ($this->helper->introduciator_verify_posting($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true))
+		if ($this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true))
 		{	// Posting is allowed
-			$introduciator_posting_must_be_approved = $this->helper->introduciator_is_posting_must_be_approved($event['mode'], $event['data']['forum_id']);
+			$introduciator_posting_must_be_approved = $this->helper->post_need_approval($event['mode'], $event['data']['forum_id']);
 			if ($introduciator_posting_must_be_approved)
 			{	// If posting should not be approved, let $data['force_approved_state'] unchanged (in case of another extension has modified it)
 				$data = $event['data'];
 				$data['force_visibility'] = ITEM_UNAPPROVED;    // Force approval
-				$data['introduciator_force_unapproved'] = $this->helper->introduciator_get_posting_approval_level($event['mode'], $event['data']['forum_id']); // Force approval
+				$data['introduciator_force_unapproved'] = $this->helper->get_post_approval_level($event['mode'], $event['data']['forum_id']); // Force approval
 				$event['data'] = $data;
 			}
 		}
@@ -175,16 +174,13 @@ class introduciator_listener implements EventSubscriberInterface
 		$data = $event['data'];
 		if (isset($data['introduciator_force_unapproved']))
 		{
-			meta_refresh(20, $event['redirect_url']); // More time to read
-
-
-			$message = $this->language->lang['POST_STORED_MOD'] . ' '. $this->language->lang['POST_APPROVAL_NOTIFY'];
-			if ($data['introduciator_force_unapproved'] == introduciator_helper::INTRODUCIATOR_POSTING_APPROVAL_LEVEL_APPROVAL_WITH_EDIT)
+			meta_refresh(30, $event['redirect_url']); // More time to read before page change
+			$message = $this->language->lang('POST_STORED_MOD') . ' '. $this->language->lang('POST_APPROVAL_NOTIFY');
+			if ($data['introduciator_force_unapproved'] == introduciator_helper::APPROVAL_LEVEL_APPROVAL_WITH_EDIT)
 			{	// Add more explanation: the user can modify his introduce
-				$this->helper->load_language_if_needed();
-				$message .= $this->helper->get_language()->lang('INTRODUCIATOR_EXT_POST_APPROVAL_NOTIFY');
+				$message .= $this->language->lang('INTRODUCIATOR_EXT_POST_APPROVAL_NOTIFY');
 			}
-			$message .= '<br /><br />' . sprintf($this->language->lang['RETURN_FORUM'], '<a href="' . append_sid("{$this->root_path}viewforum.{$this->php_ext}", 'f=' . $data['forum_id']) . '">', '</a>');
+			$message .= '<br /><br />' . sprintf($this->language->lang('RETURN_FORUM'), '<a href="' . append_sid("{$this->root_path}viewforum.{$this->php_ext}", 'f=' . $data['forum_id']) . '">', '</a>');
 			trigger_error($message);
 		}
 	}
@@ -214,7 +210,7 @@ class introduciator_listener implements EventSubscriberInterface
 					$url = "{$this->root_path}viewtopic.{$this->php_ext}";
 					$event['url'] = append_sid($url, 'f=' . $event['data']['forum_id'] . $params) . $add_anchor;
 				}
-			break;
+				break;
 		}
 	}
 
@@ -240,7 +236,7 @@ class introduciator_listener implements EventSubscriberInterface
 	/**
 	 * Allow displaying '?' into the topic list when the user see its own introduce.
 	 *
-	 * Only in the INTRODUCIATOR_POSTING_APPROVAL_LEVEL_APPROVAL_WITH_EDIT mode.
+	 * Only in the APPROVAL_LEVEL_APPROVAL_WITH_EDIT mode.
 	 *
 	 * @param \phpbb\event\data $event Event.
 	*/
@@ -310,25 +306,25 @@ class introduciator_listener implements EventSubscriberInterface
 
 			// Prepare data to display link to user's introduce
 			$data_introduciator = $event['user_poster_data']['datas_introduciator'];
-			$event['post_row'] += array(
+			$event['post_row'] += [
 				'S_INTRODUCIATOR_DISPLAY'	=> $data_introduciator['display'],
 				'U_INTRODUCIATOR_URL'		=> $data_introduciator['url'],
 				'T_INTRODUCIATOR_TEXT'		=> $data_introduciator['text'],
 				'T_INTRODUCIATOR_CLASS'		=> $data_introduciator['class'],
-			);
+			];
 		}
 	}
 
 	/**
 	 * Called when a user wants to post, before write the message or when he choose to begin posting a new subject.
 	 *
-	 * Only in the INTRODUCIATOR_POSTING_APPROVAL_LEVEL_APPROVAL_WITH_EDIT mode, allow the moderator to post a reply into an unapproved message.
+	 * Only in the APPROVAL_LEVEL_APPROVAL_WITH_EDIT mode, allow the moderator to post a reply into an unapproved message.
 	 *
 	 * @param \phpbb\event\data $event Event.
 	*/
 	public function on_user_want_post($event)
 	{
-		if ($this->helper->introduciator_let_user_posting_or_editing($event['mode'], $event['forum_id'], $event['post_data']))
+		if ($this->helper->user_can_post_or_edit($event['mode'], $event['forum_id'], $event['post_data']))
 		{
 			$data = $event['post_data'];
 			$data['topic_visibility'] = ITEM_APPROVED; // Force approval
@@ -368,7 +364,7 @@ class introduciator_listener implements EventSubscriberInterface
 	 * Prepare data to be displayed in several pages  like memberlist.
 	 *
 	 * @param \phpbb\event\data	$event The event data
-	 * @return Event datas that contains informations to display into the profile.
+	 * @return \phpbb\event\data Event datas that contains informations to display into the profile.
 	 */
 	public function on_display_profile_data($event)
 	{
@@ -377,13 +373,13 @@ class introduciator_listener implements EventSubscriberInterface
 			$data = $event['data'];
 			$data_introduciator = $this->helper->introduciator_get_user_infos($data['user_id'], $data['username']);
 
-			$event['template_data'] += array(
+			$event['template_data'] += [
 				'S_INTRODUCIATOR_DISPLAY'	=> $data_introduciator['display'],
 				'S_INTRODUCIATOR_PENDING'	=> $data_introduciator['pending'],
 				'U_INTRODUCIATOR_URL'		=> $data_introduciator['url'],
 				'T_INTRODUCIATOR_TEXT'		=> $data_introduciator['text'],
 				'T_INTRODUCIATOR_CLASS'		=> $data_introduciator['class'],
-			);
+			];
 		}
 
 		return $event;

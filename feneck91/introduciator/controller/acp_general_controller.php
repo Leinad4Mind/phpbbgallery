@@ -9,10 +9,10 @@
 
 namespace feneck91\introduciator\controller;
 
-use \feneck91\introduciator\helper\extension_manager_helper;
-use \phpbb\template\template;
-use \phpbb\user;
-use \phpbb\config\db;
+use feneck91\introduciator\helper\extension_manager_helper;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\config\db;
 
 /**
  * Class used to manage general acp page.
@@ -21,9 +21,6 @@ use \phpbb\config\db;
  */
 class acp_general_controller
 {
-	/**
-	 * @var string The phpBB admin path.
-	 */
 	/**
 	 * @var \feneck91\introduciator\helper\extension_manager_helper Extension manager object
 	 */
@@ -78,13 +75,13 @@ class acp_general_controller
 		//Load metadata for this extension
 		$ext_meta = $this->ext_manager_helper->get_ext_meta();
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			// Display general page content into ACP Extensions tab
 			'S_INTRODUCIATOR_GENERAL_PAGES'			=> true,
 			// Current version of this extension
 			'INTRODUCIATOR_VERSION'					=> $ext_meta['version'],
 			// Install date of this extension
 			'INTRODUCIATOR_INSTALL_DATE'			=> $this->user->format_date($this->dbconfig['introduciator_install_date']),
-		));
+		]);
 	}
 }
