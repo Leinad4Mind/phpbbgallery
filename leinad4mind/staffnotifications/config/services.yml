@@ -1,15 +1,34 @@
 imports:
-    - { resource: notifications.yml }
-    
+    - { resource: 'notifications.yml' }
+
 services:
-    leinad4mind.staff_notifier.listener:
-        class: leinad4mind\staff_notifier\event\listener
+    leinad4mind.staffnotifications.acp_listener:
+        class: 'leinad4mind\staffnotifications\event\acp_listener'
         arguments:
-            - '@config'
-            - '@template'
+            - '@request'
+            - '@language'
+            - '@group_helper'
+            - '@leinad4mind.staffnotifications.settings'
+            - '@leinad4mind.staffnotifications.helper'
+        tags:
+            - { name: 'event.listener' }
+
+    leinad4mind.staffnotifications.actions_listener:
+        class: 'leinad4mind\staffnotifications\event\actions_listener'
+        arguments:
+            - '@request'
+            - '@leinad4mind.staffnotifications.helper'
+        tags:
+            - { name: 'event.listener' }
+
+    leinad4mind.staffnotifications.helper:
+        class: 'leinad4mind\staffnotifications\helper'
+        arguments:
             - '@user'
             - '@dbal.conn'
-            - '@controller.helper'
             - '@notification_manager'
-        tags:
-            - { name: event.listener }
+
+    leinad4mind.staffnotifications.settings:
+        class: 'leinad4mind\staffnotifications\settings'
+        arguments:
+            - '@config'
