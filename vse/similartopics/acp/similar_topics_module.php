@@ -15,10 +15,6 @@ namespace vse\similartopics\acp;
 */
 class similar_topics_module
 {
-	const ONE_DAY = 86400;
-	const ONE_WEEK = 604800;
-	const ONE_YEAR = 31536000;
-
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -46,6 +42,9 @@ class similar_topics_module
 	/** @var string */
 	protected $php_ext;
 
+	/** @var array */
+	protected $times;
+
 	/** @var string */
 	public $page_title;
 
@@ -62,23 +61,23 @@ class similar_topics_module
 	*/
 	public function __construct()
 	{
-		global $config, $db, $request, $template, $user, $phpbb_log, $phpbb_root_path, $phpEx;
+		global $phpbb_container;
 
-		$this->config = $config;
-		$this->db = $db;
-		$this->request = $request;
-		$this->template = $template;
-		$this->user = $user;
-		$this->log = $phpbb_log;
-		$this->root_path = $phpbb_root_path;
-		$this->php_ext = $phpEx;
-		$this->fulltext = new \vse\similartopics\core\fulltext_support($this->db);
-
-		$this->user->add_lang('acp/common');
-		$this->user->add_lang_ext('vse/similartopics', 'acp_similar_topics');
-
-		$this->tpl_name = 'acp_similar_topics';
-		$this->page_title = $this->user->lang('PST_TITLE_ACP');
+		$this->config    = $phpbb_container->get('config');
+		$this->db        = $phpbb_container->get('dbal.conn');
+		$this->fulltext  = $phpbb_container->get('vse.similartopics.fulltext_support');
+		$this->log       = $phpbb_container->get('log');
+		$this->request   = $phpbb_container->get('request');
+		$this->template  = $phpbb_container->get('template');
+		$this->user      = $phpbb_container->get('user');
+		$this->root_path = $phpbb_container->getParameter('core.root_path');
+		$this->php_ext   = $phpbb_container->getParameter('core.php_ext');
+		$this->times     = array(
+			'd' => 86400, // one day
+			'w' => 604800, // one week
+			'm' => 2626560, // one month
+			'y' => 31536000, // one year
+		);
 	}
 
 	/**
@@ -90,6 +89,12 @@ class similar_topics_module
 	*/
 	public function main($id, $mode)
 	{
+		$this->user->add_lang('acp/common');
+		$this->user->add_lang_ext('vse/similartopics', 'acp_similar_topics');
+
+		$this->tpl_name = 'acp_similar_topics';
+		$this->page_title = $this->user->lang('PST_TITLE_ACP');
+
 		$form_key = 'acp_similar_topics';
 		add_form_key($form_key);
 
@@ -114,7 +119,7 @@ class similar_topics_module
 
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'PST_LOG_MSG');
 
-					trigger_error($this->user->lang('PST_SAVED') . adm_back_link($this->u_action));
+					$this->end('PST_SAVED');
 				}
 
 				$forum_name = '';
@@ -169,7 +174,7 @@ class similar_topics_module
 
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'PST_LOG_MSG');
 
-					trigger_error($this->user->lang('PST_SAVED') . adm_back_link($this->u_action));
+					$this->end('PST_SAVED');
 				}
 
 				// Allow option to update the database to enable FULLTEXT support
@@ -188,11 +193,11 @@ class similar_topics_module
 
 							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'PST_LOG_FULLTEXT', time(), array(TOPICS_TABLE));
 
-							trigger_error($this->user->lang('PST_SAVE_FULLTEXT') . adm_back_link($this->u_action));
+							$this->end('PST_SAVE_FULLTEXT');
 						}
 						else
 						{
-							trigger_error($this->user->lang('PST_ERR_FULLTEXT') . adm_back_link($this->u_action), E_USER_WARNING);
+							$this->end('PST_ERR_FULLTEXT', E_USER_WARNING);
 						}
 					}
 					else
@@ -263,7 +268,7 @@ class similar_topics_module
 		{
 			if (strlen($arg) > 255)
 			{
-				trigger_error($this->user->lang('PST_ERR_CONFIG') . adm_back_link($this->u_action), E_USER_WARNING);
+				$this->end('PST_ERR_CONFIG', E_USER_WARNING);
 			}
 		}
 	}
@@ -279,7 +284,7 @@ class similar_topics_module
 	{
 		if (!check_form_key($form_key))
 		{
-			trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			$this->end('FORM_INVALID', E_USER_WARNING);
 		}
 	}
 
@@ -303,70 +308,31 @@ class similar_topics_module
 	}
 
 	/**
-	* Calculate the $pst_time based on user input
+	* Calculate the time in seconds based on requested time period length
 	*
 	* @param int $length user entered value
-	* @param string $type years, months, weeks, days
+	* @param string $type years, months, weeks, days (y|m|w|d)
 	* @return int time in seconds
 	* @access protected
 	*/
-	protected function set_pst_time($length, $type)
+	protected function set_pst_time($length, $type = 'y')
 	{
-		switch ($type)
-		{
-			case 'd':
-				$time = $length * self::ONE_DAY;
-			break;
+		$type = isset($this->times[$type]) ? $type : 'y';
 
-			case 'w':
-				$time = $length * self::ONE_WEEK;
-			break;
-
-			case 'm':
-				$time = round($length * 30.4) * self::ONE_DAY;
-			break;
-
-			case 'y':
-			default:
-				$time = $length * self::ONE_YEAR;
-			break;
-		}
-		return (int) $time;
+		return (int) ($length * $this->times[$type]);
 	}
 
 	/**
-	* Get the correct time $length value for the form
+	* Get the correct time period length value for the form
 	*
 	* @param int $time as a timestamp
-	* @param string $type years, months, weeks, days
+	* @param string $type years, months, weeks, days (y|m|w|d)
 	* @return int time converted to the given $type
 	* @access protected
 	*/
-	protected function get_pst_time($time, $type)
+	protected function get_pst_time($time, $type = '')
 	{
-		switch ($type)
-		{
-			case 'y':
-				$length = $time / self::ONE_YEAR;
-			break;
-
-			case 'm':
-				$length = round($time / 30.4 / self::ONE_DAY);
-			break;
-
-			case 'w':
-				$length = $time / self::ONE_WEEK;
-			break;
-
-			case 'd':
-				$length = $time / self::ONE_DAY;
-			break;
-
-			default:
-				$length = 0;
-			break;
-		}
-		return (int) $length;
+		return isset($this->times[$type]) ? (int) round($time / $this->times[$type]) : 0;
 	}
 
 	/**
@@ -395,7 +361,7 @@ class similar_topics_module
 	{
 		if (!$this->fulltext->is_mysql())
 		{
-			trigger_error($this->user->lang('PST_NO_MYSQL') . adm_back_link($this->u_action), E_USER_WARNING);
+			$this->end('PST_NO_MYSQL', E_USER_WARNING);
 		}
 
 		// Alter the storage engine
@@ -423,5 +389,18 @@ class similar_topics_module
 	protected function isset_or_default($var, $default)
 	{
 		return (isset($var)) ? $var : $default;
+	}
+
+	/**
+	 * End script execution with a trigger_error message
+	 *
+	 * @param string $message Language key string
+	 * @param int    $code    E_USER_NOTICE|E_USER_WARNING
+	 * @return null
+	 * @access protected
+	 */
+	protected function end($message, $code = E_USER_NOTICE)
+	{
+		trigger_error($this->user->lang($message) . adm_back_link($this->u_action), $code);
 	}
 }

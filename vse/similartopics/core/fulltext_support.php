@@ -72,17 +72,16 @@ class fulltext_support
 
 		if ($this->is_mysql())
 		{
-			$result = $this->db->sql_query('SHOW TABLE STATUS LIKE \'' . TOPICS_TABLE . '\'');
-			$info = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
+			$info = $this->get_table_info();
 
-			if (isset($info['Engine']))
+			// Modern MySQL uses 'Engine', but older may still use 'Type'
+			foreach (array('Engine', 'Type') as $name)
 			{
-				$this->engine = strtolower($info['Engine']);
-			}
-			else if (isset($info['Type']))
-			{
-				$this->engine = strtolower($info['Type']);
+				if (isset($info[$name]))
+				{
+					$this->engine = strtolower($info[$name]);
+					break;
+				}
 			}
 		}
 
@@ -115,5 +114,19 @@ class fulltext_support
 		$this->db->sql_freeresult($result);
 
 		return false;
+	}
+
+	/**
+	 * Get topics table information
+	 *
+	 * @return mixed Array with the table info, false if the table does not exist
+	 */
+	protected function get_table_info()
+	{
+		$result = $this->db->sql_query('SHOW TABLE STATUS LIKE \'' . TOPICS_TABLE . '\'');
+		$info = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $info;
 	}
 }
