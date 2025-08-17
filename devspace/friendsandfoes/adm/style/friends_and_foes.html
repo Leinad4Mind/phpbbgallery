@@ -1,0 +1,57 @@
+{% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
+
+<form id="list" method="post" action="{{ U_ACTION }}">
+
+	<div class="head-panel">
+		<div class="pagination">
+			{% if pagination or TOTAL_USERS %}
+   				{{ TOTAL_USERS }}
+				{% if pagination %}
+					&bull; {% include 'pagination.html' %}
+				{% else %}
+					&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			{% endif %}
+		</div>
+
+		<div class="select-buttons">
+			<strong>{{ lang('SORT_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_SORT_KEY }}&nbsp;&nbsp;{{ S_SORT_DIR }}
+			&nbsp;&bull;&nbsp;
+			<strong>{{ lang('FILTER_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_FILTER_BY }}&nbsp;{{ S_FILTER_CHAR }}
+			<br><br>
+			<input class="adm-button" type="submit" value="{{ lang('GO') }}" name="sort" />
+			&nbsp;&nbsp;&nbsp;
+			<input class="adm-button" type="submit" value="{{ lang('FF_CLEAR_FILTER') }}" name="clear_filters" />
+		</div>
+	</div>
+
+	<div class="table">
+		<div class="table-header">
+			<div class="table-header-cell-left">{{ lang('USERNAME') }}</div>
+			<div class="table-header-cell">{{ lang('FRIEND') }}</div>
+			<div class="table-header-cell-right">{{ lang('FOE') }}</div>
+		</div>
+
+		<div class="table-body">
+			{% for friends in friends_foes %}
+				{% if friends.S_ROW_COUNT is even %}<div class="table-row1">{% else %}<div class="table-row2">{% endif %}
+					<div class="table-body-cell">{{ friends.USERNAME }}</div>
+					<div class="table-body-cell">{{ friends.FRIEND }}</div>
+					<div class="table-body-cell">{{ friends.FOE }}</div>
+				</div>
+			{% endfor %}
+	</div>
+
+	</div>
+
+	<div class="pagination">
+		{% if pagination %}
+			&bull; {% include 'pagination.html' %}
+		{% else %}
+			&bull; {{ PAGE_NUMBER }}
+		{% endif %}
+	</div>
+
+</form>
+
+{% include '@' ~ NAMESPACE ~ '/donate.html' %}
