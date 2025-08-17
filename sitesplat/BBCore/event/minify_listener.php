@@ -11,18 +11,21 @@ namespace sitesplat\BBCore\event;
 
 class minify_listener implements \Symfony\Component\EventDispatcher\EventSubscriberInterface 
 {
+	protected $config;
+	protected $is_email_template = false;
+
+	public function __construct(\phpbb\config\config $config)
+	{
+		$this->config = $config;
+	}
+
 	static public function getSubscribedEvents()
 	{
 		return array(
 			'core.acp_board_config_edit_add'				=> 'minify_option',
+			'core.modify_notification_template'				=> 'email_template',
 			'core.twig_environment_render_template_after'	=> 'minify_html',
 		);
-	}
-
-	protected $config;
-	public function __construct(\phpbb\config\config $config)
-	{
-		$this->config = $config;
 	}
 
 	public function minify_option($event)
@@ -48,9 +51,15 @@ class minify_listener implements \Symfony\Component\EventDispatcher\EventSubscri
 		$event['display_vars'] = $display_vars;
 	}
 
+	public function email_template($event)
+	{
+		$this->is_email_template = true;
+		return;
+	}
+
 	public function minify_html($event)
 	{
-		if (!$this->config['sitesplat_bbcore_minify_html'])
+		if (!$this->config['sitesplat_bbcore_minify_html'] || $this->is_email_template)
 		{
 			return;
 		}

@@ -22,7 +22,7 @@ class template_conditions_listener implements \Symfony\Component\EventDispatcher
 		return array(
 			'core.index_modify_page_title'				=> 'in_index',
 			'core.modify_mcp_modules_display_option'	=> 'in_mcp',
-			'core.memberlist_modify_template_vars'	    => 'in_memberlist',
+			'core.memberlist_prepare_profile_data'		=> 'in_memberlist',
 			'core.memberlist_view_profile'			    => 'in_member_profile',
 			'core.posting_modify_template_vars'			=> 'in_posting',
 			'core.search_modify_forum_select_list'		=> 'in_search',
@@ -51,7 +51,12 @@ class template_conditions_listener implements \Symfony\Component\EventDispatcher
 // <!-- IF BB_LOAD_IN_MEMBERLIST -->
 	public function in_memberlist()
 	{
-		$this->template->assign_var('BB_LOAD_IN_MEMBERLIST', true);
+		static $has_been_called;
+
+		if (empty($has_been_called)) {
+			$this->template->assign_var('BB_LOAD_IN_MEMBERLIST', true);
+			$has_been_called = true;
+		}
 	}
 // <!-- IF BB_LOAD_IN_MEMBER_PROFILE -->
 	public function in_member_profile()
