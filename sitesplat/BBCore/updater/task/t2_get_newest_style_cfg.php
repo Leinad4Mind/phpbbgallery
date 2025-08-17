@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* @package sitesplat BBcore
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * @package sitesplat BBcore
+ * @copyright (c) 2021 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\BBCore\updater\task;
 
@@ -20,12 +21,10 @@ class t2_get_newest_style_cfg
 		$this->host = $host;
 		$this->versioncheck_path = $versioncheck_path;
 	}
-
 	public function run($style_name, $updater_config)
 	{
 		$info = $this->file_downloader->get($this->host, $this->versioncheck_path, $style_name, 443);
 		$updater_config['style_data'] = json_decode($info, true);
-
 		$updater_config['last_step'] = 't2_get_newest_style_cfg';
 		return $updater_config;
 	}

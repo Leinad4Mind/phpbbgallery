@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* @package sitesplat BBcore
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * @package sitesplat BBcore
+ * @copyright (c) 2021 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\BBCore\updater\task;
 
@@ -24,12 +25,10 @@ class t4_download_newest_version
 		$this->download_path = $download_path;
 		$this->root_path = $root_path;
 	}
-
 	public function run($style_name, $updater_config, $root_path)
 	{
 		$this->root_path = $root_path;
-
-        $ch = curl_init();
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "https://{$this->host}/{$this->download_path}{$updater_config['style_data']['direct_download_dir']}/{$updater_config['cfg_data']['style_version']}_to_{$updater_config['style_data']['version']}.zip");
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -37,24 +36,21 @@ class t4_download_newest_version
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, "");
-        $zip = curl_exec($ch);
-        if (curl_errno($ch)) {
-            throw new \Exception(curl_error($ch));
-        }
-		$http = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
-        curl_close($ch);
+		$zip = curl_exec($ch);
+		if (curl_errno($ch)) {
+			throw new \Exception(curl_error($ch));
+		}
+		$http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
 		if ($http != 200 || empty($zip)) {
 			throw new \Exception('PROBLEM_DOWNLOADING_UPDATE');
 		}
-
 		$tmp_path = $this->root_path . 'store/';
 		$tmp_file = $tmp_path . 'bbcore_autoupdate_' . $updater_config['style_data']['direct_download_dir'] . '.zip';
-		if (file_exists($tmp_file))
-		{
+		if (file_exists($tmp_file)) {
 			$this->filesystem->remove($tmp_file);
 		}
 		file_put_contents($tmp_file, $zip);
-
 		$updater_config['last_step'] = 't4_download_newest_version';
 		return $updater_config;
 	}

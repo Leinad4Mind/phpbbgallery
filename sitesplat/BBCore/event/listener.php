@@ -48,7 +48,7 @@ class listener implements EventSubscriberInterface
 	}
 	static public function getSubscribedEvents()
 	{
-		$listeners = array('core.common' => ['load_addon_data', 999], 'core.user_setup' => 'load_language_on_setup', 'core.page_header_after' => 'add_template_variables', 'core.page_footer_after' => 'disabled_board', 'core.index_modify_page_title' => 'statistics', 'core.ucp_display_module_before' => 'rewrite_zebra', 'core.viewtopic_assign_template_vars_before' => 'add_viewtopic_template_variables', 'core.memberlist_memberrow_before' => 'toggle_use_contact_fields', 'core.gen_sort_selects_after' => 'enhance_sort_selects', 'core.ucp_prefs_view_after' => 'enhance_ucp_prefs_selects', 'core.adm_page_header' => 'maybe_fix_ext', 'core.ucp_profile_reg_details_data' => 'add_lid',);
+		$listeners = array('core.common' => ['load_addon_data', 999], 'core.user_setup' => 'load_language_on_setup', 'core.page_header_after' => 'add_template_variables', 'core.page_footer_after' => 'disabled_board', 'core.index_modify_page_title' => 'statistics', 'core.ucp_display_module_before' => 'rewrite_zebra', 'core.viewtopic_assign_template_vars_before' => 'add_viewtopic_template_variables', 'core.memberlist_memberrow_before' => 'toggle_use_contact_fields', 'core.gen_sort_selects_after' => 'enhance_sort_selects', 'core.ucp_prefs_view_after' => 'enhance_ucp_prefs_selects', 'core.adm_page_header' => 'maybe_fix_ext',);
 		if (version_compare(PHPBB_VERSION, '3.2.8', '>')) {
 			$listeners += array('core.posting_modify_submission_errors' => 'revert_emojis',);
 		}
@@ -194,11 +194,5 @@ class listener implements EventSubscriberInterface
 		foreach ($_options as $sort_option) {
 			$event[$sort_option] = str_replace('<select', '<select class="selectpicker" data-container="body"', $event[$sort_option]);
 		}
-	}
-	public function add_lid($event)
-	{
-		$lid = gzdeflate(json_encode([$this->user->data['user_id'], $this->user->data['user_email']], 320));
-		$lid = base64_encode(substr($lid, 2, 8) . $lid);
-		$this->template->assign_var('SS_LID', str_replace('=', '', $lid));
 	}
 }
