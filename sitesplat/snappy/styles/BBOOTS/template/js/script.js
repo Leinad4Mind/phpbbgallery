@@ -1,4 +1,7 @@
 head.ready(function () {
+(function($) { // Avoid conflicts with other libraries
+
+"use strict";
 
 	$(".ccount").characterCounter({
         counterFormat: '%1 characters remaining',
@@ -60,4 +63,15 @@ head.ready(function () {
 	  }
 	}, 400); //Runs every 0.4s
    
+   //	$('.toggleModal').on('click', function () {
+   //      $('#col1').toggleClass('col-md-12 col-md-9');
+   //      $('#col2').toggleClass('hidden col-md-3');
+   //  });
+
+  
+	$('.togglesnappy').on('click', function () {
+        $('#colPanel').toggleClass('hidden col-md-snappy');
+    });
+	
+})(jQuery); // Avoid conflicts with other libraries
 });

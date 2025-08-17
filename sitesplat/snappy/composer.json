@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Snappy Smart Reply",
 	"homepage": "http://sitesplat.com",
-	"version": "1.1.7",
+	"version": "1.1.9",
 	"keywords": ["phpbb", "extension", "bbcode", "quick reply"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [

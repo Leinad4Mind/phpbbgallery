@@ -7,7 +7,7 @@
      <fieldset> 
 	 <div id="target-col" class="widget-content collapse">
 		<div class="row">			
-			<div class="col-md-9">
+			<div class="col-md-12">
 				<div class="text-center">
 				  <!-- EVENT quickreply_editor_panel_before -->
 				</div>
@@ -34,13 +34,14 @@
 				    <div class="text-left">
 					  {S_FORM_TOKEN}
 		              {QR_HIDDEN_FIELDS}
-		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
-		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_FULL_EDITOR}</button>
+		              <a role="button" class="btn btn-default togglesnappy"><i class="fa fa-cog"></i></a>
+					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>	
 				    </div>
 			    </div>
             </div>
-			<div class="col-md-3">
-			  <div class="panel-body snappy_options text-left">
+			<div id="colPanel" class="hidden">
+			   <div class="panel-body snappy_options text-left">
 				<!-- IF S_BBCODE_ALLOWED --><div><input type="checkbox" name="disable_bbcode" id="disable_bbcode"{S_BBCODE_CHECKED}><label class="icheck-control" for="disable_bbcode">{L_DISABLE_BBCODE}</label></div><!-- ENDIF -->
 				<!-- IF S_SMILIES_ALLOWED --><div><input type="checkbox" name="disable_smilies" id="disable_smilies"{S_SMILIES_CHECKED}><label class="icheck-control" for="disable_smilies">{L_DISABLE_SMILIES}</label></div><!-- ENDIF -->
 				<!-- IF S_LINKS_ALLOWED --><div><input type="checkbox" name="disable_magic_url" id="disable_magic_url"><label class="icheck-control" for="disable_magic_url">{L_DISABLE_MAGIC_URL}</label></div><!-- ENDIF -->
@@ -48,7 +49,8 @@
 				<!-- IF S_NOTIFY_ALLOWED --><div><input type="checkbox" name="notify" id="notify"{S_NOTIFY_CHECKED}><label class="icheck-control" for="notify">{L_NOTIFY_REPLY}</label></div><!-- ENDIF -->
 				<!-- IF S_LOCK_TOPIC_ALLOWED --><div><input type="checkbox" name="lock_topic" id="lock_topic"{S_LOCK_TOPIC_CHECKED}><label class="icheck-control" for="lock_topic">{L_LOCK_TOPIC}</label></div><!-- ENDIF -->
 				<!-- IF S_LOCK_POST_ALLOWED --><div><input type="checkbox" name="lock_post" id="lock_post"><label class="icheck-control" for="lock_post">{L_LOCK_POST}[{L_LOCK_POST_EXPLAIN}]</label></div><!-- ENDIF -->
-	     	   <!-- EVENT quickreply_editor_message_after -->
+	     	    <!-- EVENT quickreply_editor_message_after -->
+			    <a role="button" class="btn-link visible-xs pull-right togglesnappy"><i class="fa fa-times"></i></a>
 			   </div>
 			</div>
 		</div>

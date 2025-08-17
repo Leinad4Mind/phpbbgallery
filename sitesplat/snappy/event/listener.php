@@ -89,7 +89,7 @@ class listener implements EventSubscriberInterface
 		$s_action .= (isset($event['topic_data']['post_id'])) ? '&amp;p=' . $event['topic_data']['post_id'] : '';
 		$this->plupload->configure($this->cache, $this->template, $s_action, 0, 10);
 
-		$max_filesize = @ini_get("upload_max_filesize");
+		$max_filesize = min($this->config['max_filesize'], @ini_get("upload_max_filesize"));
 		if (!empty($max_filesize))
 		{
 			$unit = strtolower(substr($max_filesize, -1, 1));
@@ -121,7 +121,7 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 			'S_BBCODE_ALLOWED'		=> $bbcode_status,
 			'S_BBCODE_CHECKED'		=> ($this->config['allow_bbcode'] && !$this->user->optionget('bbcode')) ? 'checked="checked"' : '',
-
+            'S_SHOW_ATTACH_BTN'		=> ($this->config['allow_attachments']) ? true : false,
 			'S_SMILIES_ALLOWED'		=> $smilies_status,
 			'S_SMILIES_CHECKED'		=> ($this->config['allow_smilies'] && !$this->user->optionget('smilies')) ? ' checked="checked"': '',
 			
