@@ -14,7 +14,7 @@ class release_1_1_0_data extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['similar_topics_version']) && version_compare($this->config['similar_topics_version'], '1.1.0', '>=');
+		return isset($this->config['similar_topics']);
 	}
 
 	static public function depends_on()
@@ -32,6 +32,7 @@ class release_1_1_0_data extends \phpbb\db\migration\migration
 			array('config.add', array('similar_topics_ignore', '')),
 			array('config.add', array('similar_topics_type', 'y')),
 			array('config.add', array('similar_topics_time', '365')),
+			array('config.add', array('similar_topics_version', '1.1.0')),
 
 			// Add ACP module
 			array('module.add', array(
@@ -50,9 +51,6 @@ class release_1_1_0_data extends \phpbb\db\migration\migration
 
 			// Custom functions
 			array('custom', array(array($this, 'add_topic_title_fulltext'))),
-
-			// Keep track of version in the database
-			array('config.add', array('similar_topics_version', '1.1.0')),
 		);
 	}
 
@@ -69,22 +67,14 @@ class release_1_1_0_data extends \phpbb\db\migration\migration
 	*/
 	public function add_topic_title_fulltext()
 	{
-		$fulltext = new \vse\similartopics\core\fulltext_support($this->db);
+		$fulltext = $this->get_fulltext();
 
-		// FULLTEXT is not supported
-		if (!$fulltext->engine()->supported())
+		// FULLTEXT is supported and topic_title IS NOT an index
+		if ($fulltext->is_supported() && !$fulltext->index('topic_title'))
 		{
-			return;
+			$sql = 'ALTER TABLE ' . TOPICS_TABLE . ' ADD FULLTEXT (topic_title)';
+			$this->db->sql_query($sql);
 		}
-
-		// Prevent adding extra indeces
-		if ($fulltext->index('topic_title'))
-		{
-			return;
-		}
-
-		$sql = 'ALTER TABLE ' . TOPICS_TABLE . ' ADD FULLTEXT (topic_title)';
-		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -92,21 +82,23 @@ class release_1_1_0_data extends \phpbb\db\migration\migration
 	*/
 	public function drop_topic_title_fulltext()
 	{
-		$fulltext = new \vse\similartopics\core\fulltext_support($this->db);
+		$fulltext = $this->get_fulltext();
 
-		// FULLTEXT is not supported
-		if (!$fulltext->engine()->supported())
+		// FULLTEXT is supported and topic_title IS an index
+		if ($fulltext->is_supported() && $fulltext->index('topic_title'))
 		{
-			return;
+			$sql = 'ALTER TABLE ' . TOPICS_TABLE . ' DROP INDEX topic_title';
+			$this->db->sql_query($sql);
 		}
+	}
 
-		// Return if there is no FULLTEXT index to drop
-		if (!$fulltext->index('topic_title'))
-		{
-			return;
-		}
-
-		$sql = 'ALTER TABLE ' . TOPICS_TABLE . ' DROP INDEX topic_title';
-		$this->db->sql_query($sql);
+	/**
+	* Get an instance of the fulltext class
+	*
+	* @return \vse\similartopics\core\fulltext_support
+	*/
+	public function get_fulltext()
+	{
+		return new \vse\similartopics\core\fulltext_support($this->db);
 	}
 }

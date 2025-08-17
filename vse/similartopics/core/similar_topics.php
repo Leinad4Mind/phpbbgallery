@@ -63,7 +63,6 @@ class similar_topics
 	* @param \phpbb\content_visibility $content_visibility
 	* @param string $root_path
 	* @param string $php_ext
-	* @return \vse\similartopics\core\similar_topics
 	* @access public
 	*/
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\pagination $pagination, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\content_visibility $content_visibility, $root_path, $php_ext)
@@ -83,6 +82,34 @@ class similar_topics
 	}
 
 	/**
+	* Is similar topics available?
+	*
+	* @return bool True if available, false otherwise
+	* @access public
+	*/
+	public function is_available()
+	{
+		return !empty($this->config['similar_topics']) && // is enabled
+			!empty($this->config['similar_topics_limit']) && // num of topics to display > 0
+			!empty($this->user->data['user_similar_topics']) && // user view similar topics enabled
+			$this->auth->acl_get('u_similar_topics') && // user authorized to view similar topics
+			$this->is_mysql() // database is MySQL
+		;
+	}
+
+	/**
+	* Is the forum available for displaying similar topics
+	*
+	* @param int $forum_id A forum identifier
+	* @return bool True if available, false otherwise
+	* @access public
+	*/
+	public function forum_available($forum_id)
+	{
+		return !in_array($forum_id, explode(',', $this->config['similar_topics_hide']));
+	}
+
+	/**
 	* Get similar topics by matching topic titles
 	*
 	* NOTE: Currently requires MySQL due to the use of FULLTEXT indexes
@@ -91,21 +118,14 @@ class similar_topics
 	* languages. We also remove any admin-defined special ignore words.
 	*
 	* @param	array	$topic_data	Array with topic data
-	* @param	int		$forum_id	Forum ID of the topic
 	* @return 	null
 	* @access	public
 	*/
-	public function get_similar_topics($topic_data, $forum_id)
+	public function display_similar_topics($topic_data)
 	{
-		// Potential reasons to stop execution
-		if (!$this->config['similar_topics_limit'] || in_array($forum_id, explode(',', $this->config['similar_topics_hide'])) || !$this->is_mysql())
-		{
-			return;
-		}
+		$topic_title = $this->clean_topic_title($topic_data['topic_title']);
 
-		$topic_title = $this->strip_topic_title($topic_data['topic_title']);
-
-		// If the stripped down topic_title is empty, no need to continue
+		// If the cleaned up topic_title is empty, no need to continue
 		if (empty($topic_title))
 		{
 			return;
@@ -230,7 +250,7 @@ class similar_topics
 				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $similar_forum_id)) ? true : false;
 				//$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$similar_topic_id", true, $this->user->session_id) : '';
-				//$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "i=queue&amp;mode=deleted_topics&amp;t=$similar_topic_id", true, $this->user->session_id) : '';
+				//$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "i=queue&amp;mode=deleted_topics&amp;t=$similar_topic_id", true, $this->user->session_id) : $u_mcp_queue;
 
 				$base_url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id);
 
@@ -306,19 +326,16 @@ class similar_topics
 	*
 	* @param	string	$text	The topic title
 	* @return	string	The topic title
-	* @access	protected
+	* @access	public
 	*/
-	protected function strip_topic_title($text)
+	public function clean_topic_title($text)
 	{
 		// Strip quotes, ampersands
 		$text = str_replace(array('&quot;', '&amp;'), '', $text);
 
-		$english_lang = ($this->user->lang_name == 'en' || $this->user->lang_name == 'en_us') ? true : false;
-		$ignore_words = !empty($this->config['similar_topics_words']) ? true : false;
-
-		if (!$english_lang || $ignore_words)
+		if (!$this->english_lang() || $this->has_ignore_words())
 		{
-			$text = $this->strip_stop_words($text, $english_lang, $ignore_words);
+			$text = $this->strip_stop_words($text);
 		}
 
 		return $text;
@@ -328,22 +345,21 @@ class similar_topics
 	* Remove any non-english and/or custom defined ignore-words
 	*
 	* @param	string	$text			The topic title
-	* @param	bool	$english_lang	False means use phpBB's ignore words
-	* @param	bool	$ignore_words	True means strip custom ignore words
 	* @return	string	The topic title
 	* @access	protected
 	*/
-	protected function strip_stop_words($text, $english_lang, $ignore_words)
+	protected function strip_stop_words($text)
 	{
 		$words = array();
 
-		if (!$english_lang && file_exists("{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}"))
+		// Retrieve a language dependent list of words to be ignored (method copied from search.php)
+		$search_ignore_words = "{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}";
+		if (!$this->english_lang() && file_exists($search_ignore_words))
 		{
-			// Retrieve a language dependent list of words to be ignored (method copied from search.php)
-			include("{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}");
+			include($search_ignore_words);
 		}
 
-		if ($ignore_words)
+		if ($this->has_ignore_words())
 		{
 			// Merge any custom defined ignore words from the ACP to the stop-words array
 			$words = array_merge($this->make_word_array($this->config['similar_topics_words']), $words);
@@ -353,7 +369,7 @@ class similar_topics
 		$words = array_diff($this->make_word_array($text), $words);
 
 		// Convert our words array back to a string
-		$text = !empty($words) ? implode(' ', $words) : '';
+		$text = (!empty($words)) ? implode(' ', $words) : '';
 
 		return $text;
 	}
@@ -381,6 +397,28 @@ class similar_topics
 		}
 
 		return $words;
+	}
+
+	/**
+	* Check if English is the current user's language
+	*
+	* @return	bool	True if lang is 'en' or 'en_us', false otherwise
+	* @access	protected
+	*/
+	protected function english_lang()
+	{
+		return ($this->user->lang_name == 'en' || $this->user->lang_name == 'en_us');
+	}
+
+	/**
+	* Check if custom ignore words have been defined for similar topics
+	*
+	* @return	bool	True or false
+	* @access	protected
+	*/
+	protected function has_ignore_words()
+	{
+		return !empty($this->config['similar_topics_words']);
 	}
 
 	/**
