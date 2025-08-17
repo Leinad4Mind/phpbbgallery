@@ -1,0 +1,76 @@
+{% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
+
+<a name="maincontent"></a>
+
+<form id="list" method="post" action="{{ U_ACTION }}">
+
+<div class="head-panel">
+	<div class="pagination">
+		{% if pagination or TOTAL_USERS %}
+			{{ TOTAL_USERS }}
+			{% if pagination %}
+				&bull; {% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		{% endif %}
+	</div>
+
+	<div class="select-buttons">
+		<strong>{{ lang('SORT_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_SORT_KEY }}&nbsp;&nbsp;{{ S_SORT_DIR }}
+		&nbsp;&bull;&nbsp;
+		<strong>{{ lang('FILTER_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_FILTER_BY }}&nbsp;{{ S_FILTER_CHAR }}
+		<br><br>
+		<input class="adm-button" type="submit" value="{{ lang('GO') }}" name="sort" />
+		&nbsp;&nbsp;&nbsp;
+		<input class="adm-button" type="submit" value="{{ lang('CLEAR_FILTER') }}" name="clear_filters" />
+	</div>
+</div>
+
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th class="centered-text" colspan="2">{{ lang('PROFILE_DATA') }}</th>
+		<th class="centered-text" colspan="2">{{ lang('REGISTRATION_DATA') }}</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<tr>
+		<th>{{ lang('USERNAME') }}</th>
+		<th class="centered-text">{{ lang('DATE_OF_BIRTH') }}</th>
+		<th class="centered-text">{{ lang('AGE') }}</th>
+		<th class="centered-text">{{ lang('DATE_OF_BIRTH') }}</th>
+		<th class="centered-text">{{ lang('AGE') }}</th>
+		<th class="centered-text">{{ lang('STATUS') }}</th>
+	</tr>
+</thead>
+
+<tbody>
+	{% for ages in agelist %}
+		{% if ages.S_ROW_COUNT is even %}<tr class="row1">{% else %}<tr class="row2">{% endif %}
+			<td>{{ ages.USERNAME }}</td>
+			<td class="centered-text">{{ ages.BIRTHDAY }}</td>
+			<td class="centered-text">{{ ages.AGE }}</td>
+			<td class="centered-text">{{ ages.REG_BDAY }}</td>
+			<td class="centered-text">{{ ages.REG_AGE }}</td>
+			<td class="centered-text">{{ ages.STATUS }}</td>
+		</tr>
+	{% endfor %}
+</tbody>
+
+</table>
+
+<br>
+
+<div class="pagination">
+	{% if pagination %}
+		&bull; {% include 'pagination.html' %}
+	{% else %}
+		&bull; {{ PAGE_NUMBER }}
+	{% endif %}
+</div>
+
+</form>
+
+{% include 'overall_footer.html' %}

@@ -1,0 +1,3 @@
+{% if postrow.POSTER_AGE and (U_SHOW_AGE_ON_PROFILE or U_IS_ADMIN) %}
+	<dd class="profile-joined"><strong>{{ lang('AGE') }}{{ lang('COLON') }} {{ postrow.POSTER_AGE }}</strong></dd>
+{% endif %}

@@ -1,0 +1,7 @@
+/**
+* registrationage.css
+**/
+
+input[type="number"] {
+	max-width: 60px;
+}
