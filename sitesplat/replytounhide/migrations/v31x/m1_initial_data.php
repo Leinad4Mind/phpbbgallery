@@ -39,7 +39,8 @@ class m1_initial_data extends \sitesplat\replytounhide\core\bbcodes_migration_ba
 		'hide' => [
 			'bbcode_helpline'	=> 'HIDE_HELPLINE',
 			'bbcode_match'		=> '[hide]{TEXT}[/hide]',
-			'bbcode_tpl'		=> '<!-- BBCODE_HIDE -->{TEXT}<!-- BBCODE_HIDE -->'
+			'bbcode_tpl'		=> '<!-- BBCODE_HIDE -->{TEXT}<!-- BBCODE_HIDE -->',
+            'display_on_posting'=> 0
 		]
 	];
 }

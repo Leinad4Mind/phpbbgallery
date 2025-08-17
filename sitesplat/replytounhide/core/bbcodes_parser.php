@@ -52,15 +52,14 @@ class bbcodes_parser
 	 */
 	protected function hidden_pass($matches)
 	{
-		if (!$this->replied || $this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot'])
+		if ((!$this->replied && strpos($this->user->data['session_page'], 'mcp') === false) || $this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot'])
 		{
 			$replacements = array(
 				$this->user->lang('HIDE_ON'),
 				$this->user->lang('HIDE_EXPLAIN'),
 				'hidebox_hidden',
 			);
-		}
-		else
+		} else
 		{
 			$replacements = array(
 				$this->user->lang('HIDE_OFF'),

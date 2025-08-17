@@ -57,7 +57,9 @@ class listener implements EventSubscriberInterface
 			// functions_content events
 			'core.modify_text_for_display_before'			=> 'parse_bbcodes_before',
 			'core.modify_text_for_display_after'			=> 'parse_bbcodes_after',
-
+			'core.viewtopic_modify_post_data'				=> 'hide_attachment',
+			'core.mcp_topic_modify_post_data'				=> 'in_mcp',
+			
 			// functions_display events
 			'core.viewtopic_assign_template_vars_before'	=> 'find_replies',
 			'core.bbtranslate_translate_vars_before'		=> 'find_replies',
@@ -81,13 +83,41 @@ class listener implements EventSubscriberInterface
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
+
+	/**
+	 * MCP settings
+	 */
+	public function in_mcp($event)
+	{
+		$this->bbcodes_parser->replied = 1;
+	}
+	
+	/**
+	 * Hide attachement
+	 */
+	public function hide_attachment($event)
+	{
+		if (!$this->bbcodes_parser->replied)
+		{
+			$attach = $event['has_approved_attachments'];
+			
+			$attach = false;
+			$event['has_approved_attachments'] = $attach;
+			
+			$attachments = $event['attachments'];
+			$attachments = array();
+			$event['attachments'] = $attachments;
+		}
+	}
 	
 	/**
 	 * Find topic_id of topic
 	 */
 	public function find_replies($event)
 	{
-		$sql = 'SELECT COUNT(post_id) AS replied FROM ' . POSTS_TABLE . ' WHERE topic_id = ' . $event['topic_id'] . ' AND poster_id = ' . $this->user->data['user_id'];
+		$sql = 'SELECT COUNT(post_id) AS replied 
+				FROM ' . POSTS_TABLE . ' 
+				WHERE post_visibility = 1 AND topic_id = ' . $event['topic_id'] . ' AND poster_id = ' . $this->user->data['user_id'];
 		$result = $this->db->sql_query($sql);
 		$this->bbcodes_parser->replied = $this->db->sql_fetchfield('replied');
 	}
@@ -101,7 +131,11 @@ class listener implements EventSubscriberInterface
 		{
 			(!$this->bbcodes_parser->replied) ? $this->find_replies($event) : null;
 			$post_row  = $event['post_row'];
-			$post_row['DECODED_MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!ies', '', $post_row['DECODED_MESSAGE']);
+			$post_row['DECODED_MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!is', '', $post_row['DECODED_MESSAGE']);
+	
+	//		$post_row['DECODED_MESSAGE'] = preg_replace_callback('!\[hide\](.*?)\[/hide\]!is', function ($matches) {return strtolower($matches[0]);}, $post_row['DECODED_MESSAGE']);	
+	//		$post_row['DECODED_MESSAGE'] = preg_replace_callback('![hide](.*?)[/hide]!is', function ($match) { return ''; }, $post_row['DECODED_MESSAGE']);
+			
 			$event['post_row'] = $post_row;
 		}
 	}
@@ -114,11 +148,16 @@ class listener implements EventSubscriberInterface
 		if ($event['mode'] == 'quote')
 		{
 			$page_data  = $event['page_data'];
-			$page_data['MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!ies', '', $page_data['MESSAGE']);
+
+			$page_data['MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!is', '', $page_data['MESSAGE']);
+
+		//	$page_data['MESSAGE'] = preg_replace_callback('!\[hide\](.*?)\[/hide\]!is', function ($matches) {return strtolower($matches[0]);}, $page_data['MESSAGE']);
+		//	$page_data['MESSAGE'] = preg_replace_callback('![hide](.*?)[/hide]!is', function ($match) { return ''; }, $page_data['MESSAGE']);
+		
 			$event['page_data'] = $page_data;
 		}
 	}
-	
+
 	/**
 	 * Alter BBCodes before they are processed by phpBB
 	 */

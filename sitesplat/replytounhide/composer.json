@@ -20,7 +20,7 @@
         "phpbb/epv": "dev-master"
     },
     "extra": {
-        "display-name": "ReplyToUnihde",
+        "display-name": "ReplyToUnhide",
         "soft-require": {
             "phpbb/phpbb": "3.1.6"
         },
