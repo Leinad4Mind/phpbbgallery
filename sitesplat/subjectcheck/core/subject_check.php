@@ -49,14 +49,14 @@ class subject_check
 		$topics = array();
 
 		// Do we even need to be here?
-		if (!$this->config['subject_check_enable'] ||
-			($event['post_data']['forum_subject_check'] == 0) ||
+		if (empty($this->config['subject_check_enable']) ||
+			empty($event['post_data']['forum_subject_check']) ||
 			$event['mode'] != 'post' ||
 			empty($subject) ||
 			($bypass && $subject === $checked) ||
 			($this->config['subject_check_admin'] && $this->auth->acl_get('a_')) ||
 			($this->config['subject_check_mod'] && $this->auth->acl_get('m_')) ||
-			($this->config['subject_check_postcount'] != 0 && $this->user->data['user_posts'] > $this->config['subject_check_postcount'])
+			(intval($this->config['subject_check_postcount']) != 0 && $this->user->data['user_posts'] > $this->config['subject_check_postcount'])
 		)
 		{
 			$bypass = true;
