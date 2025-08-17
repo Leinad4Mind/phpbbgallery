@@ -45,18 +45,11 @@ class listener implements EventSubscriberInterface
 		$this->path_helper = $path_helper;
 		$this->php_ext = $php_ext;
 	}
-
-	
-	//  This below will add the proper translation to all languages 
-	//  but some of the UCP avatar page strings and other places will stll not work - phpBB bug?
-	//  replace this "core.user_setup" with the event below instead
-	//	'core.page_header'								=> 'add_lang',
 	
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'								=> 'add_lang',
-		//	'core.page_header'								=> 'add_lang',
+			'core.user_setup'	                            => 'load_language_on_setup',
 			'core.page_header_after'						=> 'add_template_variables',
 			'core.page_footer_after'						=> 'disabled_board',
 			'core.index_modify_page_title'					=> 'statistics',
@@ -129,9 +122,14 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	public function add_lang($event)
+	public function load_language_on_setup($event)
 	{
-		$this->user->add_lang_ext('sitesplat/BBCore', 'BBCore');
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'sitesplat/BBCore',
+			'lang_set' => 'BBCore',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 	
 	public function add_template_variables()

@@ -24,6 +24,8 @@ class admin_listener implements EventSubscriberInterface
 */
 	protected $host = 'sitesplat.com';
 	protected $path = 'phpBB3/versioncheck';
+//  protected $host = 'sitesplat.xyz';
+//	protected $path = 'phpBB320/versioncheck';
 	protected $config;
 	protected $db;
 	protected $user;
