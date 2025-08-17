@@ -71,9 +71,8 @@ class checkmail_module
 				{
 					$result = '<tr id="p'.$row['user_id'].'" class="'.(($row['status']) ? 'email_ok ' : '') . (($row['p'] % 2 == 0) ? 'cbEvenLine' : 'cbOddLine') . '">
 						<td>'.$row['p'].'</td>
-						<td><a href="' . str_replace(array('&amp;mode=pages', 'i=-forumhulp-checkmail-acp-checkmail_module'), 
-													 array('', 'i=users&action=edit&u=' . $row['user_id']), 
-												$this->u_action) . '">'.$row['username'].'</a></td>
+						<td><a href="' . $phpbb_container->getParameter('core.root_path') .  'adm/index.' . $phpbb_container->getParameter('core.php_ext') . 
+										'?i=users&action=edit&u=' . $row['user_id'] . '&sid=' . $this->user->session_id . '">'.$row['username'].'</a></td>
 						<td class="show"><div class="msg" style="display:none;">'.$row['responce'].'</div>'.$row['email'].'</td>
 						<td style="text-align: center;">
 							<a class="check_mail" href="#" data-options="url=../../'.$this->u_action.'&amp;action=email&u='.$row['user_id'] . '&p=' . $row['p'] .'" data-ajax="true" title="'.$this->user->lang['CHECK_MAIL_ADDRESS'].'"><i class="fa fa-envelope"></i></a>
@@ -114,10 +113,8 @@ class checkmail_module
 						'NUM'		=> ++$i,
 						'ID'		=> $row['user_id'],
 						'USERNAME'	=> $row['username'],
-						'U_EDIT'	=> str_replace(
-											array('&amp;mode=pages', 'i=-forumhulp-checkmail-acp-checkmail_module'), 
-											array('', 'i=users&action=edit&u=' . $row['user_id']), 
-											$this->u_action),
+						'U_EDIT'	=> $phpbb_container->getParameter('core.root_path') .  'adm/index.' . $phpbb_container->getParameter('core.php_ext') . 
+										'?i=users&action=edit&u=' . $row['user_id'] . '&sid=' . $this->user->session_id,
 						'EMAIL'		=> $row['email'],
 						'STATUS'	=> $row['status'],
 						'RESPONCE'	=> $row['responce'],

@@ -37,7 +37,7 @@
 		}
 		time--;
 	}
-	if ($('#circle').length) var interval = setInterval(progress, 1000);
+	if ($('#circle').length) {var interval = setInterval(progress, 1000);}
 
 	$("a.simpledialog").simpleDialog({
 		opacity: 0.1,
@@ -58,7 +58,6 @@
 		dataType: "json", 
 		success: function (result) {
 			$('#p' + postid).replaceWith(result);
-			
 			bindShowClick();
 		  }
 		});
