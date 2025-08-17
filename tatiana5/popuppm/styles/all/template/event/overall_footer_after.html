@@ -1,0 +1,53 @@
+<!-- IF POPUPPM_ENABLE_POPUP and (S_USER_UNREAD_PRIVMSG > 0) -->
+<script type="text/javascript">
+var newTxt = "{POPUPPM_YOU_NEW_PM_BLINK}";
+var oldTxt = document.title;
+
+function migalka() {
+	if (document.title == oldTxt){
+		document.title = newTxt;
+	} else {
+		document.title = oldTxt;
+	}
+}
+
+var timer = setInterval(migalka, 1000);
+</script>
+<!-- ENDIF -->
+
+<!-- IF POPUPPM_ENABLE_POPUP and S_NEW_PM -->
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#form_popuppm').show(1000);
+});
+
+$(document).on('click', '#form_popuppm .close', function (e) {
+	e.preventDefault();
+	$('#form_popuppm').hide();
+})
+</script>
+
+<div id="form_popuppm">
+	<div class="jq_popuppm">
+		<p class="close_win">
+			<a href="#" class="close" title="{L_CLOSE_WINDOW}">[x]</a>
+		</p>
+		<p class="new_message">
+			{POPUPPM_YOU_NEW_PM}
+		</p>
+		<!-- IF POPUPPM_INFO -->
+			<p class="pm_info">
+				<!-- IF POPUPPM_AVATAR -->
+					<span class="pm_avatar">{POPUPPM_AVATAR}</span>
+				<!-- ENDIF -->
+				<span>{POPUPPM_SENDER}</span> 
+				<span><a href="{POPUPPM_SUBJECT_URL}" class="topictitle">{POPUPPM_SUBJECT}</a></span>
+				<span>{POPUPPM_DATE}</span>
+			</p>
+		<!-- ENDIF -->
+		<p class="click_view">
+			<a href="{U_PRIVATEMSGS}" class="view" title="{L_GO}">{L_GO}</a>
+		</p>
+	</div>
+</div>
+<!-- ENDIF -->

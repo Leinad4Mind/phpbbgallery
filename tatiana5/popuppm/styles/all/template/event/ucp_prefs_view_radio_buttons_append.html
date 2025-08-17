@@ -1,0 +1,18 @@
+<!-- IF POPUPPM_ENABLE_POPUP -->
+<dl>
+	<dt><label for="popuppm_user_popup1">{L_ACP_POPUPPM_ENABLE_POPUP}{L_COLON}</label></dt>
+	<dd>
+		<label for="popuppm_user_popup1"><input type="radio" name="popuppm_user_popup" id="popuppm_user_popup1" value="1"<!-- IF S_PM_ENABLE_POPUP --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+		<label for="popuppm_user_popup0"><input type="radio" name="popuppm_user_popup" id="popuppm_user_popup0" value="0"<!-- IF not S_PM_ENABLE_POPUP --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+	</dd>
+</dl>
+<!-- ENDIF -->
+<!-- IF POPUPPM_ENABLE_BLINK -->
+<dl>
+	<dt><label for="popuppm_user_blink1">{L_ACP_POPUPPM_ENABLE_BLINK}{L_COLON}</label></dt>
+	<dd>
+		<label for="popuppm_user_blink1"><input type="radio" name="popuppm_user_blink" id="popuppm_user_blink1" value="1"<!-- IF S_PM_ENABLE_BLINK --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+		<label for="popuppm_user_blink0"><input type="radio" name="popuppm_user_blink" id="popuppm_user_blink0" value="0"<!-- IF not S_PM_ENABLE_BLINK --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+	</dd>
+</dl>
+<!-- ENDIF -->

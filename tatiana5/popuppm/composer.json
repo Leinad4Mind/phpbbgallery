@@ -1,0 +1,28 @@
+{
+    "name": "tatiana5/popuppm",
+    "type": "phpbb-extension",
+    "description": "Popup jn new PM and blink title",
+    "homepage": "http://www.phpbbguru.net/community/",
+    "version": "0.0.1",
+    "time": "2016-12-03",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Татьяна5",
+            "homepage": "http://www.phpbbguru.net/community/",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+      "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Popup PM",
+        "soft-require": {
+            "phpbb/phpbb": "3.1.*@dev"
+        }
+    }
+}

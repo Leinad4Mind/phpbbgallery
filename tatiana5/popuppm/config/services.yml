@@ -1,0 +1,13 @@
+services:
+    tatiana5.popuppm.listener:
+        class: tatiana5\popuppm\event\listener
+        arguments:
+            - @config
+            - @template
+            - @user
+            - @dbal.conn
+            - @request
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
