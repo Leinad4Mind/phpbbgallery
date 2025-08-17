@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Posting Template Extension for phpBB 3.1",
 	"homepage": "https://github.com/marttiphpbb/phpbb-ext-postingtemplate",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"time": "2014-12-30",
 	"license": "MIT",
 	"authors": [{
@@ -14,7 +14,9 @@
 		}],
 	"require": {
 		"php": ">=5.3.3"
-		
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
 	},
 	"extra": {
 		"display-name": "Posting Template",
@@ -25,6 +27,6 @@
 			"host": "marttiphpbb.github.io",
 			"directory": "/version",
 			"filename": "postingtemplate.json"
-		}			
+		}
 	}
 }
