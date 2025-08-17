@@ -1,0 +1,64 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('DROPBOX_UPLOAD') }}</h1>
+<p>{{ lang('DROPBOX_UPLOAD_EXPLAIN') }}</p>
+
+<img style="float: {{ S_CONTENT_FLOW_END }};" src="https://img.shields.io/badge/{{ lang('VERSION') }}-{{ DROPBOX_UPLOAD_VERSION }}-orange.svg?style=plastic" /><br />
+
+<form id="dropboxupload" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('DROPBOX_UPLOAD_OPTIONS') }}</legend>
+
+		<dl>
+			<dt><label for="dropbox_upload_enable">{{ lang('DROPBOX_UPLOAD_ENABLE') }}{{ lang('COLON') }}</label></dt>
+			<dd><label><input type="radio" class="radio" name="dropbox_upload_enable" value="1" id="dropbox_upload_enable"{% if DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %}/> {{ lang('ENABLE') }}</label>
+				<label><input type="radio" class="radio" name="dropbox_upload_enable" value="0" {% if not DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %} /> {{ lang('DISABLE') }}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_folder">{{ lang('DROPBOX_FOLDER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_FOLDER_EXPLAIN') }}</span></dt>
+			<dd><input name="dropbox_folder" type="text" id="dropbox_folder" value="{{ DROPBOX_FOLDER }}" size="25" maxlength="100" validate="string" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_folder_opt">{{ lang('DROPBOX_FOLDER_OPTIONS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_FOLDER_OPTIONS_EXPLAIN') }}</span></dt>
+			<dd><label>{{ DROPBOX_FOLDER_OPTIONS }}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_key">{{ lang('DROPBOX_KEY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_KEY_EXPLAIN') }}</span></dt>
+			<dd><input name="dropbox_key" type="text" id="dropbox_key" value="{{ DROPBOX_KEY }}" size="15" maxlength="50" validate="string" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_secret">{{ lang('DROPBOX_SECRET') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_SECRET_EXPLAIN') }}</span></dt>
+			<dd><input name="dropbox_secret" type="text" id="dropbox_secret" value="{{ DROPBOX_SECRET }}" size="15" maxlength="50" validate="string" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_token">{{ lang('DROPBOX_TOKEN') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_TOKEN_EXPLAIN') }}</span></dt>
+			<dd><input name="dropbox_token" type="text" id="dropbox_token" value="{{ DROPBOX_TOKEN }}" size="65" maxlength="100" validate="string" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="dropbox_frequency_interval">{{ lang('DROPBOX_FREQUENCY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DROPBOX_FREQUENCY_EXPLAIN') }}</span></dt>
+			<dd><input name="dropbox_frequency_interval" type="number" id="dropbox_frequency_interval" value="{{ DROPBOX_FREQUENCY }}" min="1" max="25" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('CREATE_NEW_APP') }}</legend>
+		<p>{{ lang('CREATE_NEW_APP_TEXT') }}</p>
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}
