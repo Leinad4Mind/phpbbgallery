@@ -1,4 +1,5 @@
 imports:
+    - { resource: alias.yml }
     - { resource: ud_constants.yml }
 
 services:
@@ -7,16 +8,16 @@ services:
         bind:
             $tables: '%tables%'
             $udconstants: '%udconstants%'
-            $ext_images_path: '%core.root_path%ext/david63/userdefaults/adm/style/images'
+            $ext_images_path: '%core.root_path%ext/devspace/userdefaults/adm/style/images'
         public: true
 
-    david63.userdefaults.listener:
-        class: david63\userdefaults\event\listener
+    devspace.userdefaults.listener:
+        class: devspace\userdefaults\event\listener
         tags:
             - { name: event.listener }
 
-    david63.userdefaults.admin.controller:
-        class: david63\userdefaults\controller\admin_controller
+    devspace.userdefaults.admin.controller:
+        class: devspace\userdefaults\controller\admin_controller
 
-    david63.userdefaults.core.functions:
-        class: david63\userdefaults\core\functions
+    devspace.userdefaults.core.functions:
+        class: devspace\userdefaults\core\functions

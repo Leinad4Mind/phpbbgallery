@@ -2,12 +2,12 @@
 /**
  *
  * @package User Defaults Extension
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\userdefaults\acp;
+namespace devspace\userdefaults\acp;
 
 class userdefaults_module
 {
@@ -21,7 +21,7 @@ class userdefaults_module
 		$this->page_title = $phpbb_container->get('language')->lang('USER_DEFAULTS');
 
 		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('david63.userdefaults.admin.controller');
+		$admin_controller = $phpbb_container->get('devspace.userdefaults.admin.controller');
 
 		$admin_controller->display_options();
 	}

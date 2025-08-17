@@ -2,12 +2,12 @@
 /**
  *
  * @package User Defaults Extension
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\userdefaults\event;
+namespace devspace\userdefaults\event;
 
 /**
  * @ignore

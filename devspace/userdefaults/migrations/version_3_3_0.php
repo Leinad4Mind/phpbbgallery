@@ -2,29 +2,36 @@
 /**
  *
  * @package User Defaults Extension
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\userdefaults\migrations;
+namespace devspace\userdefaults\migrations;
 
 use phpbb\db\migration\migration;
 
-class version_2_1_0 extends migration
+class version_3_3_0 extends migration
 {
 	/**
-	 * Assign migration file dependencies for this migration
-	 *
-	 * @return array Array of migration files
-	 * @static
-	 * @access public
+	 * {@inheritdoc
 	 */
-	public static function depends_on()
+	public function effectively_installed(): bool
 	{
-		return ['\phpbb\db\migration\data\v330\v330'];
+		$sql = 'SELECT module_id
+				FROM ' . $this->table_prefix . "modules
+				WHERE module_class = 'acp'
+					AND module_langname = 'USER_DEFAULTS'";
+		$result 	= $this->db->sql_query($sql);
+		$module_id	= (bool) $this->db->sql_fetchfield('module_id');
+		$this->db->sql_freeresult($result);
+
+		return $module_id !== false;
 	}
 
+	/**
+	 * {@inheritdoc
+	 */
 	public function update_data()
 	{
 		/**
@@ -51,12 +58,16 @@ class version_2_1_0 extends migration
 			['config.add', ['ud_topic_sk', 't']],
 			['config.add', ['ud_topic_st', 0]],
 			['config.add', ['ud_type_bookmark', 0]],
+			['config.add', ['ud_type_forum_post', 0]],
 			['config.add', ['ud_type_group', 0]],
 			['config.add', ['ud_type_needs_approval', 0]],
 			['config.add', ['ud_type_pm', 0]],
+			['config.add', ['ud_type_pm_close', 0]],
+			['config.add', ['ud_type_pm_report', 0]],
 			['config.add', ['ud_type_post', 1]],
 			['config.add', ['ud_type_quote', 0]],
 			['config.add', ['ud_type_report', 0]],
+			['config.add', ['ud_type_report_close', 0]],
 			['config.add', ['ud_type_topic', 1]],
 
 			// Add the ACP module
@@ -64,7 +75,7 @@ class version_2_1_0 extends migration
 
 			['module.add', [
 				'acp', 'USER_DEFAULTS', [
-					'module_basename' => '\david63\userdefaults\acp\userdefaults_module',
+					'module_basename' => '\devspace\userdefaults\acp\userdefaults_module',
 					'modes' => ['manage'],
 				],
 			]],

@@ -2,12 +2,12 @@
 /**
  *
  * @package User Defaults Extension
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\userdefaults\controller;
+namespace devspace\userdefaults\controller;
 
 use phpbb\config\config;
 use phpbb\request\request;
@@ -16,7 +16,7 @@ use phpbb\user;
 use phpbb\log\log;
 use phpbb\language\language;
 use phpbb\db\driver\driver_interface;
-use david63\userdefaults\core\functions;
+use devspace\userdefaults\core\functions;
 
 /**
  * Admin controller
@@ -62,20 +62,21 @@ class admin_controller
 	/**
 	 * Constructor for admin controller
 	 *
-	 * @param config                 $config             Config object
-	 * @param request                $request            Request object
-	 * @param template               $template           Template object
-	 * @param user                   $user               User object
-	 * @param log                    $log                phpBB log
-	 * @param language               $language           Language object
-	 * @param driver_interface       $db                 The db connection
-	 * @param functions              $functions          Functions for the extension
-	 * @param array                  $tables             phpBB db tables
-	 * @param string                 $ext_images_path    Path to this extension's images
+	 * @param config                $config             Config object
+	 * @param request               $request            Request object
+	 * @param template              $template           Template object
+	 * @param user                  $user               User object
+	 * @param log                   $log                phpBB log
+	 * @param language              $language           Language object
+	 * @param driver_interface      $db                 The db connection
+	 * @param functions             $functions          Functions for the extension
+	 * @param array                 $tables             phpBB db tables
+	 * @param string                $ext_images_path    Path to this extension's images
+	 * @param array                 $udconstants        Cusom constants
 	 *
 	 * @access public
 	 */
-	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, driver_interface $db, functions $functions, $tables, string $ext_images_path, $udconstants)
+	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, driver_interface $db, functions $functions, array $tables, string $ext_images_path, array $udconstants)
 	{
 		$this->config          = $config;
 		$this->request         = $request;
