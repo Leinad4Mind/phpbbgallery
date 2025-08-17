@@ -1,114 +1,170 @@
 <script>
-	var form_name = 'qr_postform';
-	var text_name = 'message';
-	var load_draft = false;
-	var upload = false;
+  var form_name = 'qr_postform';
+  var text_name = 'message';
+  var load_draft = false;
+  var upload = false;
 
-	// Define the bbCode tags
-	var bbcode = new Array();
-	var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
-	var imageTag = false;
+  // Define the bbCode tags
+  var bbcode = new Array();
+  var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]'{% for custom_tags in loops.custom_tags %}, {{ custom_tags.BBCODE_NAME }}{% endfor %});
+  var imageTag = false;
 
-	// Helpline messages
-	var help_line = {
-		b: '{LA_BBCODE_B_HELP}',
-		i: '{LA_BBCODE_I_HELP}',
-		u: '{LA_BBCODE_U_HELP}',
-		q: '{LA_BBCODE_Q_HELP}',
-		c: '{LA_BBCODE_C_HELP}',
-		l: '{LA_BBCODE_L_HELP}',
-		o: '{LA_BBCODE_O_HELP}',
-		p: '{LA_BBCODE_P_HELP}',
-		w: '{LA_BBCODE_W_HELP}',
-		a: '{LA_BBCODE_A_HELP}',
-		s: '{LA_BBCODE_S_HELP}',
-		f: '{LA_BBCODE_F_HELP}',
-		y: '{LA_BBCODE_Y_HELP}',
-		d: '{LA_BBCODE_D_HELP}'
-		<!-- BEGIN custom_tags -->
-		,cb_{custom_tags.BBCODE_ID}: '{custom_tags.A_BBCODE_HELPLINE}'
-		<!-- END custom_tags -->
-	}
+  // Helpline messages
+  var help_line = { 
+    b: '{{ LA_BBCODE_B_HELP }}',
+    i: '{{ LA_BBCODE_I_HELP }}',
+    u: '{{ LA_BBCODE_U_HELP }}',
+    q: '{{ LA_BBCODE_Q_HELP }}',
+    c: '{{ LA_BBCODE_C_HELP }}',
+    l: '{{ LA_BBCODE_L_HELP }}',
+    o: '{{ LA_BBCODE_O_HELP }}',
+    p: '{{ LA_BBCODE_P_HELP }}',
+    w: '{{ LA_BBCODE_W_HELP }}',
+    a: '{{ LA_BBCODE_A_HELP }}',
+    s: '{{ LA_BBCODE_S_HELP }}',
+    f: '{{ LA_BBCODE_F_HELP }}',
+    y: '{{ LA_BBCODE_Y_HELP }}',
+    d: '{{ LA_BBCODE_D_HELP }}'
+    {% if loops.custom_tags %}
+      {% for custom_tags in loops.custom_tags %}
+        ,cb_{{ custom_tags.BBCODE_ID }}: '{{ custom_tags.A_BBCODE_HELPLINE }}'
+      {% endfor %}
+    {% endif %}
+  }
+  {% if S_BBCODEORDER %}
+    function change_palette()
+    { 
+      phpbb.toggleDisplay('colour_palette');
+      e = document.getElementById('colour_palette');
+
+      if (e.style.display == 'block')
+      { 
+        document.getElementById('bbpalette').value = '{{ lang('FONT_COLOR_HIDE')|addslashes }}';
+      }
+      else
+      { 
+        document.getElementById('bbpalette').value = '{{ lang('FONT_COLOR')|addslashes }}';
+      }
+    }
+  {% endif %}
 </script>
-<script src="{T_THEME_PATH}/vendors/editor.js"></script>
+<script src="{{ T_THEME_PATH ~ '/vendors/editor.js' }} }}"></script>
 
-<!-- IF S_BBCODE_ALLOWED -->
-<div class="space10"></div>
-<!-- IF not S_BBCODEORDER -->
-<div id="sitesplat_snappy_quickreply" class="text-center" role="toolbar">
-    <div class="btn-group">
-         <a href="#" class="btn btn-default" accesskey="b" name="addbbcode0" onclick="bbstyle(0); return false;"  title="{L_BBCODE_B_HELP}"><i class="fa fa-bold"></i></a>
-         <a href="#" class="btn btn-default" accesskey="i" name="addbbcode2" onclick="bbstyle(2); return false;" title="{L_BBCODE_I_HELP}"><i class="fa fa-italic"></i></a>
-         <a href="#" class="btn btn-default" accesskey="u" name="addbbcode4" onclick="bbstyle(4); return false;" title="{L_BBCODE_U_HELP}"><i class="fa fa-underline"></i></a>
-	</div>
-	
-	<div class="btn-group hidden-xs">
-         <a href="#" class="btn btn-default" accesskey="l" name="addbbcode10" onclick="bbstyle(10); return false;" title="{L_BBCODE_L_HELP}"><i class="fa fa-list"></i></a>
-         <a href="#" class="btn btn-default" accesskey="o" name="addbbcode12" onclick="bbstyle(12); return false;" title="{L_BBCODE_O_HELP}"><i class="fa fa-list-ol"></i></a>
-         <a href="#" class="btn btn-default" accesskey="y" name="addlistitem" onclick="bbstyle(-1); return false;" title="{L_BBCODE_LISTITEM_HELP}"><i class="fa fa-asterisk"></i></a>
+{% if S_BBCODE_ALLOWED and S_BBCODEORDER %}
+  <div id="colour_palette" style="display: none;">
+    <label class="control-label">{{ lang('FONT_COLOR') ~ lang('COLON') }}</label>
+    <div id="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></div>
+  </div>
+{% endif %}
+
+{% if S_BBCODE_ALLOWED %}
+  <div class="space10"></div>
+  {% if not S_BBCODEORDER %}
+    <div id="sitesplat_snappy_quickreply" class="text-center" role="toolbar">
+      <div class="btn-group">
+        <a href="#" class="btn btn-default" accesskey="b" name="addbbcode0" onclick="bbstyle(0); return false;" title="{{ lang('BBCODE_B_HELP') }}">
+          <i class="fa fa-bold"></i>
+        </a>
+        <a href="#" class="btn btn-default" accesskey="i" name="addbbcode2" onclick="bbstyle(2); return false;" title="{{ lang('BBCODE_I_HELP') }}">
+          <i class="fa fa-italic"></i>
+        </a>
+        <a href="#" class="btn btn-default" accesskey="u" name="addbbcode4" onclick="bbstyle(4); return false;" title="{{ lang('BBCODE_U_HELP') }}">
+          <i class="fa fa-underline"></i>
+        </a>
+      </div>
+
+      <div class="btn-group hidden-xs">
+        <a href="#" class="btn btn-default" accesskey="l" name="addbbcode10" onclick="bbstyle(10); return false;" title="{{ lang('BBCODE_L_HELP') }}">
+          <i class="fa fa-list"></i>
+        </a>
+        <a href="#" class="btn btn-default" accesskey="o" name="addbbcode12" onclick="bbstyle(12); return false;" title="{{ lang('BBCODE_O_HELP') }}">
+          <i class="fa fa-list-ol"></i>
+        </a>
+        <a href="#" class="btn btn-default" accesskey="y" name="addlistitem" onclick="bbstyle(-1); return false;" title="{{ lang('BBCODE_LISTITEM_HELP') }}">
+          <i class="fa fa-asterisk"></i>
+        </a>
+      </div>
+
+      <div class="btn-group">
+        <a href="#" class="btn btn-default" accesskey="c" name="addbbcode8" onclick="bbstyle(8); return false;" title="{{ lang('BBCODE_C_HELP') }}">
+          <i class="fa fa-code"></i>
+        </a>
+        {% if S_BBCODE_QUOTE %}
+          <a href="#" class="btn btn-default" accesskey="q" name="addbbcode6" onclick="bbstyle(6); return false;" title="{{ lang('BBCODE_Q_HELP') }}">
+            <i class="fa fa-comment"></i>
+          </a>
+        {% endif %}
+        {% if S_BBCODE_IMG %}
+          <a href="#" class="btn btn-default" accesskey="p" name="addbbcode14" onclick="bbstyle(14); return false;" title="{{ lang('BBCODE_P_HELP') }}">
+            <i class="fa fa-picture-o"></i>
+          </a>
+        {% endif %}
+        {% if S_LINKS_ALLOWED %}
+          <a href="#" class="btn btn-default" accesskey="w" name="addbbcode16" onclick="bbstyle(16); return false;" title="{{ lang('BBCODE_W_HELP') }}">
+            <i class="fa fa-link"></i>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="btn-group hidden-xs">
+        {% for custom_tags in loops.custom_tags %}
+          {% if custom_tags.BBCODE_TAG eq 'youtube' %}
+            <a href="#" class="btn btn-default" name="addbbcode{{ custom_tags.BBCODE_ID }}" onclick="bbstyle({{ custom_tags.BBCODE_ID }}); return false;" title="{{ custom_tags.BBCODE_HELPLINE }}">
+              <i class="fa fa-youtube"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+
+        {% for custom_tags in loops.custom_tags %}
+          {% if custom_tags.BBCODE_TAG eq 'c' %}
+            <a href="#" class="btn btn-default" name="addbbcode{{ custom_tags.BBCODE_ID }}" onclick="bbstyle({{ custom_tags.BBCODE_ID }}); return false;" title="{{ custom_tags.BBCODE_HELPLINE }}">
+              <i class="fa fa-text-width"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{{ lang('BBCODE_F_HELP') }}">
+        <option value="50">{{ lang('FONT_TINY') }}</option>
+        <option value="85">{{ lang('FONT_SMALL') }}</option>
+        <option data-icon="fa fa-font" value="100" selected="selected">{{ lang('FONT_NORMAL') }}</option>
+        {% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 %}
+          <option value="150">{{ lang('FONT_LARGE') }}</option>
+          {% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 %}
+            <option value="200">{{ lang('FONT_HUGE') }}</option>
+          {% endif %}
+        {% endif %}
+      </select>
+
+      <select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode_custom" onchange="bbstyle(this.form.addbbcode_custom.options[this.form.addbbcode_custom.selectedIndex].value*1);this.form.addbbcode_custom.selectedIndex = 0;">
+        <option data-icon="fa fa-cog" value="100" selected="selected">{{ lang('BBCODES') }}</option>
+        {% for custom_tags in loops.custom_tags %}
+          <option value="{{ custom_tags.BBCODE_ID }}" title="{{ custom_tags.BBCODE_HELPLINE }}">{{ custom_tags.BBCODE_TAG }}</option>
+        {% endfor %}
+      </select>
+      {% if S_SHOW_ATTACH_BTN %}
+        <button type="button" class="btn btn-default" value="{{ lang('PLUPLOAD_ADD_FILES') }}" id="add_files">
+          <i class="fa fa-cloud-upload"></i>&nbsp;{{ lang('PLUPLOAD_ADD_FILES') }}</button>
+      {% endif %}
+      {% if IN_IMGUR %}
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+          <button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" {% if not S_PRIVMSGS %}onclick="document.getElementById('postform').action += '#imgurAnchor';" {% endif %}data-loading-text="{{ lang('FILE_UPLOADING') }}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{{ lang('IMGUR_UPLOAD') }}</button>
+          <span class="btn btn-default btn-file">
+            <span class="fileinput-new">
+              <i class="fa fa-imgur"></i>
+            </span>
+            <span class="fileinput-exists">
+              <i class="fa fa-edit"></i>
+            </span>
+            <input type="file" name="imgur" id="imgur"/>
+          </span>
+          <i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
+          <a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
+      {% endif %}
     </div>
-
-	<div class="btn-group">
-	    <a href="#" class="btn btn-default" accesskey="c" name="addbbcode8" onclick="bbstyle(8); return false;" title="{L_BBCODE_C_HELP}"><i class="fa fa-code"></i></a>
-        <!-- IF S_BBCODE_QUOTE -->
-	     <a href="#" class="btn btn-default" accesskey="q" name="addbbcode6" onclick="bbstyle(6); return false;" title="{L_BBCODE_Q_HELP}"><i class="fa fa-comment"></i></a>
-	    <!-- ENDIF --> 
-		<!-- IF S_BBCODE_IMG -->
-	     <a href="#" class="btn btn-default" accesskey="p" name="addbbcode14" onclick="bbstyle(14); return false;" title="{L_BBCODE_P_HELP}"><i class="fa fa-picture-o"></i></a>
-	    <!-- ENDIF -->
-	    <!-- IF S_LINKS_ALLOWED -->
-	     <a href="#" class="btn btn-default" accesskey="w" name="addbbcode16" onclick="bbstyle(16); return false;" title="{L_BBCODE_W_HELP}"><i class="fa fa-link"></i></a>
-		<!-- ENDIF -->
-	</div>
-	
-	<div class="btn-group hidden-xs">
-	<!-- BEGIN custom_tags -->
-	<!-- IF custom_tags.BBCODE_TAG eq 'youtube' -->
-	<a href="#" class="btn btn-default" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID}); return false;" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-youtube"></i></a>
-	<!-- ENDIF -->
-	<!-- END custom_tags -->
-	
-	<!-- BEGIN custom_tags -->
-	<!-- IF custom_tags.BBCODE_TAG eq 'c' -->
-	<a href="#" class="btn btn-default" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID}); return false;" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-text-width"></i></a>
-	<!-- ENDIF -->
-	<!-- END custom_tags -->
-   </div>
-
-	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
-		<option value="50">{L_FONT_TINY}</option>
-		<option value="85">{L_FONT_SMALL}</option>
-		<option data-icon="fa fa-font" value="100" selected="selected">{L_FONT_NORMAL}</option>
-		<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
-			<option value="150">{L_FONT_LARGE}</option>
-			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
-				<option value="200">{L_FONT_HUGE}</option>
-			<!-- ENDIF -->
-		<!-- ENDIF -->
-	</select>
-	
-	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode_custom" onchange="bbstyle(this.form.addbbcode_custom.options[this.form.addbbcode_custom.selectedIndex].value*1);this.form.addbbcode_custom.selectedIndex = 0;">
-	  <option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
-      <!-- BEGIN custom_tags -->
-      <option value="{custom_tags.BBCODE_ID}" title="{custom_tags.BBCODE_HELPLINE}">{custom_tags.BBCODE_TAG}</option>
-      <!-- END custom_tags -->   
-    </select>
-	<!-- IF S_SHOW_ATTACH_BTN --> 
-	<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
-    <!-- ENDIF -->
-	<!-- IF IN_IMGUR -->
-		<div class="fileinput fileinput-new" data-provides="fileinput">
-			<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#imgurAnchor';"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
-			<span class="btn btn-default btn-file">
-				<span class="fileinput-new"><i class="fa fa-imgur"></i></span>
-				<span class="fileinput-exists"><i class="fa fa-edit"></i></span>
-				<input type="file" name="imgur" id="imgur" />
-			</span>
-			<i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
-			<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none"><i class="fa fa-times"></i></a>
-		</div>
-    <!-- ENDIF -->
-</div>
-<!-- ENDIF -->
-<!-- EVENT sitesplat_snappy_quickreply_buttons_after -->
-<!-- ENDIF -->
+  {% endif %}
+  {% EVENT sitesplat_snappy_quickreply_buttons_after %}
+{% endif %}

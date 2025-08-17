@@ -1,23 +1,24 @@
 <div class="clearfix text-left" id="attach-panel">
-	<div id="attach-panel-multi">
-	</div>
-	<div id="file-list-container" class="<!-- IF not .attach_row --> hidden<!-- ENDIF -->">
-	 <div id="file-list">
-		<div class="attach-row panel panel-default panel-body" id="attach-row-tpl">
-		   <button type="button" value="{L_DELETE_FILE}" class="close file-delete"><i class="awe-remove-circle"></i></button>	
-			<div class="attach-name">  
-				<span class="pull-left file-name text-overflow"></span>
-				 <span class="file-size"></span>
-				  <span class="file-status"></span>
-				   <button type="button" value="{L_PLACE_INLINE}" class="btn-link hidden file-inline-bbcode">{L_PLACE_INLINE}</button>
-				<div class="attach-comment">
-				 <textarea rows="1" maxlength="45" class="inputbox form-control form-ghost form-plupload" placeholder="{L_ADD_DESCRIPTION}"></textarea>
-				</div>
-		    </div>
-			<span class="file-progress progress">
-			 <span class="file-progress-bar progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100"></span>
-			</span>				
-		</div>
-	 </div>
-	</div>
+  <div id="attach-panel-multi"></div>
+  <div id="file-list-container" class="{% if not loops.attach_row %} hidden{% endif %}">
+    <div id="file-list">
+      <div class="attach-row panel panel-default panel-body" id="attach-row-tpl">
+        <button type="button" value="{{ lang('DELETE_FILE') }}" class="close file-delete">
+          <i class="awe-remove-circle"></i>
+        </button>
+        <div class="attach-name">
+          <span class="pull-left file-name text-overflow"></span>
+          <span class="file-size"></span>
+          <span class="file-status"></span>
+          <button type="button" value="{{ lang('PLACE_INLINE') }}" class="btn-link hidden file-inline-bbcode">{{ lang('PLACE_INLINE') }}</button>
+          <div class="attach-comment">
+            <textarea rows="1" maxlength="45" class="inputbox form-control form-ghost form-plupload" placeholder="{{ lang('ADD_DESCRIPTION') }}"></textarea>
+          </div>
+        </div>
+        <span class="file-progress progress">
+          <span class="file-progress-bar progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100"></span>
+        </span>
+      </div>
+    </div>
+  </div>
 </div>

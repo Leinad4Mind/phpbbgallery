@@ -1,8 +1,9 @@
 {% if S_USER_LOGGED_IN and BB_LOAD_IN_VIEWTOPIC %}
-<script>
-var form_name = 'qr_postform';
-var max_post_chars = {MAX_POST_CHARS};
-</script>
-<!-- INCLUDEJS @sitesplat_snappy/js/jquery.charactercounter.js -->
-<!-- INCLUDEJS @sitesplat_snappy/js/script.js -->
+  <script>
+    var form_name = 'qr_postform';
+    var max_post_chars = {MAX_POST_CHARS};
+    var chars_remaining = {CHARS_REMAINING};
+  </script>
+  {% INCLUDEJS '@sitesplat_snappy/js/jquery.charactercounter.min.js' %}
+  {% INCLUDEJS '@sitesplat_snappy/js/script.min.js' %}
 {% endif %}
