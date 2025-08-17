@@ -16,5 +16,4 @@ namespace robertheim\activitystats;
 abstract class PREFIXES
 {
 	const CONFIG = 'robertheim_activitystats';
-	const TABLE = 'rh';
 }

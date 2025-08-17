@@ -23,7 +23,7 @@ class activitystats_module
 
 	public function main($id, $mode)
 	{
-		global $config, $request, $template, $user, $cache;
+		global $config, $request, $template, $user, $cache, $phpbb_container;
 
 		// shortcut
 		$conf_prefix = PREFIXES::CONFIG;
@@ -68,12 +68,15 @@ class activitystats_module
 			$config->set($conf_prefix.'_check_permissions', $request->variable($conf_prefix.'_check_permissions', 0));
 			$config->set($conf_prefix.'_cache_time', $request->variable($conf_prefix.'_cache_time', 600));
 			$config->set($conf_prefix.'_record', $request->variable($conf_prefix.'_record', 0));
-			$config->set($conf_prefix.'_record_timestamp', $request->variable($conf_prefix.'_record_timestamp', 'D j. M Y'));
+			$config->set($conf_prefix.'_record_timeformat', $request->variable($conf_prefix.'_record_timeformat', 'D j. M Y'));
 			if ($request->variable($conf_prefix.'_reset', 0) > 0)
 			{
-				$config->set($conf_prefix.'_record_ips', 1);
-				$config->set($conf_prefix.'_record_time', time());
-				$config->set($conf_prefix.'_reset_time', time());
+				$reset_time = time();
+				$config->set($conf_prefix.'_record_count', 1);
+				$config->set($conf_prefix.'_record_time', $reset_time);
+				$config->set($conf_prefix.'_reset_time', $reset_time);
+				$sessions_manager = $phpbb_container->get('robertheim.activitystats.sessions_manager');
+				$sessions_manager->prune($reset_time);
 			}
 			// clear cache
 			$cache->destroy('_robertheim_activitystats');
@@ -100,7 +103,7 @@ class activitystats_module
 			'ACTIVITY_STATS_CACHE_TIME'			=> $config[$conf_prefix.'_cache_time'],
 			'ACTIVITY_STATS_CHECK_PERMISSIONS'	=> $config[$conf_prefix.'_check_permissions'],
 			'ACTIVITY_STATS_RECORD'				=> $config[$conf_prefix.'_record'],
-			'ACTIVITY_STATS_RECORD_TIMESTAMP'	=> $config[$conf_prefix.'_record_timestamp'],
+			'ACTIVITY_STATS_RECORD_TIMEFORMAT'	=> $config[$conf_prefix.'_record_timeformat'],
 			'U_ACTION'							=> $this->u_action,
 		));
 
