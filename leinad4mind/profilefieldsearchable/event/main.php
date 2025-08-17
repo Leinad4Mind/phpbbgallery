@@ -144,21 +144,26 @@ class main implements EventSubscriberInterface
 		for ($i = 0; $i < count($rows); $i++)
 		{
 			$option_fields[$i] = [
-				'FIELD_ID'		=> $rows[$i]['field_ident'],
-				'LANG_NAME'		=> $rows[$i]['lang_name'],
-				'lang_values'	=> [],
+				'FIELD_ID'	=> $rows[$i]['field_ident'],
+				'LANG_NAME'	=> $rows[$i]['lang_name'],
+				'SELECTED'	=> $this->request->variable($rows[$i]['field_ident'], -1),
 			];
 
-			$row_option_id = explode(',', $rows[$i]['option_id']);
-			$row_lang_value = explode(',', $rows[$i]['lang_value']);
+			$row_option_ids = explode(',', $rows[$i]['option_id']);
+			$row_lang_values = explode(',', $rows[$i]['lang_value']);
 
-			for ($j = 0; $j < count($row_option_id); $j++)
+			for ($j = 0; $j < count($row_option_ids); $j++)
 			{
-				$lang_values[$i][] = [
-					'OPTION_ID'		=> $row_option_id[$j] + 1,
-					'LANG_VALUE'	=> $row_lang_value[$j],
+				$row_option_id = $row_option_ids[$j];
+				$row_lang_value = $row_lang_values[$j];
+
+				$lang_values[$i][$row_option_id] = [
+					'OPTION_ID'		=> $row_option_id,
+					'LANG_VALUE'	=> $row_lang_value,
 				];
 			}
+
+			ksort($lang_values[$i]);
 
 			$field_names2[] = $rows[$i]['field_name'];
 		}
@@ -190,8 +195,8 @@ class main implements EventSubscriberInterface
 
 			foreach ($field_names2 as $row_field)
 			{
-				$value = $this->request->variable($row_field, 0);
-				$sql_where .= $value && $value !== 'x' ? " AND LOWER(fd.pf_$row_field) " . $this->db->sql_like_expression($any . str_replace('*', $any, strtolower($value)) . $any) . ' ' : '';
+				$value = $this->request->variable($row_field, -1);
+				$sql_where .= $value !== -1 ? " AND LOWER(fd.pf_$row_field) = " . ($value + 1) . ' ' : '';
 				$this->cpf_search_queries[] = urlencode($row_field) . '=' . (int) $value;
 			}
 

@@ -10,9 +10,9 @@
 	<dt><label for="{{ option_field.FIELD_ID }}">{{ option_field.LANG_NAME ~ lang('COLON') }}</label></dt>
 	<dd>
 		<select id="{{ option_field.FIELD_ID }}" name="{{ option_field.FIELD_ID}}">
-			<option selected="selected" value="x">&nbsp;</option>
+			<option value="-1" {{ option_field.SELECTED == -1 ? ' selected' }}></option>
 			{% for lang_value in option_field.lang_values %}
-				<option value="{{ lang_value.OPTION_ID }}">{{ lang_value.LANG_VALUE }}</option>
+				<option value="{{ lang_value.OPTION_ID }}"{{ option_field.SELECTED == lang_value.OPTION_ID ? ' selected' }}>{{ lang_value.LANG_VALUE }}</option>
 			{% endfor %}
 		</select>
 	</dd>
