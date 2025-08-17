@@ -1,0 +1,5 @@
+#divbookmark .avatar, #divfollowers .avatar {
+  border-radius: 50%;
+  max-height: 20px;
+  max-width: 20px;
+}

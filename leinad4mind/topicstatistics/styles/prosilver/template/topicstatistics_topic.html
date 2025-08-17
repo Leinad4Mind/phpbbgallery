@@ -1,46 +1,66 @@
-{% if TOPIC_STATISTICS and (TOPIC_STATISTICS_VISITS or TOPIC_STATISTICS_BOOKMARK or TOPIC_STATISTICS_FOLLOWERS) %}
-	{% if (TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark|length) or (TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers|length) %}
-		{% INCLUDEJS '@leinad4mind_topicstatistics/js/topicstatistics.js' %}
-	{% endif %}
-	<div class="post bg3">
-		<div class="inner">
-			<ul class="linklist">
-				{% if U_BOOKMARK_TOPIC %}
-					<li>
-						<a href="{{ U_BOOKMARK_TOPIC }}" class="bookmark-link" title="{{ lang('BOOKMARK_TOPIC') }}" data-ajax="alt_text" data-alt-text="{{ S_BOOKMARK_TOGGLE }}" data-update-all=".bookmark-link"><i class="icon fa-bookmark-o fa-fw" aria-hidden="true"></i><span>{{ S_BOOKMARK_TOPIC }}</span>
-					</a>
-					</li>
-				{% endif %}
-				{% if U_WATCH_TOPIC %}
-					<li>
-						<a href="{{ U_WATCH_TOPIC }}" class="watch-topic-link" title="{{ S_WATCH_TOPIC_TITLE }}" data-ajax="toggle_link" data-toggle-class="icon {% if S_WATCHING_TOPIC %}fa-check-square-o{% else %}fa-square-o{% endif %} fa-fw" data-toggle-text="{{ S_WATCH_TOPIC_TOGGLE }}" data-toggle-url="{{ U_WATCH_TOPIC_TOGGLE }}" data-update-all=".watch-topic-link"><i class="icon {% if S_WATCHING_TOPIC %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i><span>{{ S_WATCH_TOPIC_TITLE }}</span></a>
-					</li>
-				{% endif %}
-				{% if TOPIC_STATISTICS_FOLLOWERS %}
-					<li class="rightside">
-						{% if loops.topic_followers|length %}<a id="afollowers" title="{{ lang('SH_STATISTICS') }}" href="#" class="topic-statistics-followers">{% endif %}<i class="icon fa-users fa-fw" aria-hidden="true"></i>{{ lang('FOLLOWERS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_FOLLOWERS_NUM }}</strong>{% if loops.topic_followers|length %}</a>{% endif %}
-					</li>
-				{% endif %}
-				{% if TOPIC_STATISTICS_BOOKMARK %}
-					<li class="rightside">
-						{% if loops.topic_bookmark|length %}<a id="abookmark" title="{{ lang('SH_STATISTICS') }}" href="#" class="topic-statistics-bookmarks">{% endif %}<i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('BOOKMARKS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_BOOKMARK_NUM }}</strong>{% if loops.topic_bookmark|length %}</a>{% endif %}</li>
-				{% endif %}
-				{% if TOPIC_STATISTICS_VISITS %}
-					<li class="rightside"><i class="icon fa-eye fa-fw" aria-hidden="true"></i>{{ lang('VIEWS') ~ lang('COLON') }}&nbsp;<strong>{{ TOPIC_STATISTICS_VISITS_NUM }}</strong></li>
-				{% endif %}
-			</ul>
+{% if TOPIC_STATISTICS and(TOPIC_STATISTICS_VISITS or TOPIC_STATISTICS_BOOKMARK or TOPIC_STATISTICS_FOLLOWERS) %}
+  {% if (TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark | length) 
+    or(TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers | length) %}
+    {% INCLUDEJS '@leinad4mind_topicstatistics/js/topicstatistics.js' %}
+  {% endif %}
+  <div class="post bg3">
+    <div class="inner">
+      <ul class="linklist">
+        {% if U_BOOKMARK_TOPIC %}
+          <li>
+            <a href="{{ U_BOOKMARK_TOPIC }}" class="bookmark-link" title="{{ lang('BOOKMARK_TOPIC') }}" data-ajax="alt_text" data-alt-text="{{ S_BOOKMARK_TOGGLE }}" data-update-all=".bookmark-link">
+              <i class="icon fa-bookmark-o fa-fw" aria-hidden="true"></i>
+              <span>{{ S_BOOKMARK_TOPIC }}</span>
+            </a>
+          </li>
+        {% endif %}
+        {% if U_WATCH_TOPIC %}
+          <li>
+            <a href="{{ U_WATCH_TOPIC }}" class="watch-topic-link" title="{{ S_WATCH_TOPIC_TITLE }}" data-ajax="toggle_link" data-toggle-class="icon {% if S_WATCHING_TOPIC %}fa-check-square-o{% else %}fa-square-o{% endif %} fa-fw" data-toggle-text="{{ S_WATCH_TOPIC_TOGGLE }}" data-toggle-url="{{ U_WATCH_TOPIC_TOGGLE }}" data-update-all=".watch-topic-link">
+              <i class="icon {% if S_WATCHING_TOPIC %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i>
+              <span>{{ S_WATCH_TOPIC_TITLE }}</span></a>
+          </li>
+        {% endif %}
+        {% if TOPIC_STATISTICS_FOLLOWERS %}
+          <li class="rightside">
+            {% if loops.topic_followers | length %}
+              <a id="afollowers" title="{{ lang('SH_STATISTICS') }}" href="#" class="topic-statistics-followers">
+              {% endif %}
+              <i class="icon fa-users fa-fw" aria-hidden="true"></i>{{ lang('FOLLOWERS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_FOLLOWERS_NUM }}{% if TOPIC_STATISTICS_FOLLOWERS_NUM_MAX %}+{% endif %}</strong>
+              {% if loops.topic_followers | length %}
+              </a>
+            {% endif %}
+          </li>
+        {% endif %}
+        {% if TOPIC_STATISTICS_BOOKMARK %}
+          <li class="rightside">
+            {% if loops.topic_bookmark | length %}
+              <a id="abookmark" title="{{ lang('SH_STATISTICS') }}" href="#" class="topic-statistics-bookmarks">
+              {% endif %}
+              <i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('BOOKMARKS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_BOOKMARK_NUM }}{% if TOPIC_STATISTICS_BOOKMARK_NUM_MAX %}+{% endif %}</strong>
+              {% if loops.topic_bookmark | length %}
+              </a>
+            {% endif %}
+          </li>
+        {% endif %}
+        {% if TOPIC_STATISTICS_VISITS %}
+          <li class="rightside">
+            <i class="icon fa-eye fa-fw" aria-hidden="true"></i>{{ lang('VIEWS') ~ lang('COLON') }}&nbsp;<strong>{{ TOPIC_STATISTICS_VISITS_NUM }}</strong>
+          </li>
+        {% endif %}
+      </ul>
 
-			{% if TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark|length %}
-				<div id="divbookmark" class="hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
-					<strong><em>{{ lang('BOOKMARKS') ~ lang('COLON') }}</em></strong> {% for topic_bookmark in loops.topic_bookmark %}{{ topic_bookmark.USER }}{% if not topic_bookmark.S_LAST_ROW %}, {% endif %}{% endfor %}
-				</div>
-			{% endif %}
+      {% if TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark | length %}
+        <div id="divbookmark" class="hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
+          <strong><em>{{ lang('BOOKMARKS') ~ lang('COLON') }}</em></strong>&nbsp;{% for topic_bookmark in loops.topic_bookmark %}{% if topic_bookmark.AVATAR %}{{ topic_bookmark.AVATAR }}&nbsp;{% endif %}{{ topic_bookmark.USER }}{% if not topic_bookmark.S_LAST_ROW %},&nbsp;{% endif %}{% endfor %}
+        </div>
+      {% endif %}
 
-			{% if TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers|length %}
-				<div id="divfollowers" class="hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
-					<strong><em>{{ lang('FOLLOWERS') ~ lang('COLON') }}</em></strong> {% for topic_followers in loops.topic_followers %}{{ topic_followers.USER }}{% if not topic_followers.S_LAST_ROW %}, {% endif %}{% endfor %}
-				</div>
-			{% endif %}
-		</div>
-	</div>
+      {% if TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers | length %}
+        <div id="divfollowers" class="hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
+          <strong><em>{{ lang('FOLLOWERS') ~ lang('COLON') }}</em></strong>&nbsp;{% for topic_followers in loops.topic_followers %}{% if topic_followers.AVATAR %}{{ topic_followers.AVATAR }}&nbsp;{% endif %}{{ topic_followers.USER }}{% if not topic_followers.S_LAST_ROW %},&nbsp;{% endif %}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endif %}

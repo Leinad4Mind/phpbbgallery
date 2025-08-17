@@ -9,14 +9,12 @@
  *
  */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +33,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'FOLLOWERS'		=> 'Seguidores',
-	'BOOKMARKS'		=> 'Favoritos',
-	'SH_STATISTICS'	=> 'Mostrar / Ocultar detalhes',
+   'FOLLOWERS'      => 'Seguidores',
+   'BOOKMARKS'      => 'Favoritos',
+   'SH_STATISTICS'   => 'Mostrar / Ocultar detalhes',
 ]);

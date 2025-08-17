@@ -9,14 +9,12 @@
  *
  */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
+if (!defined('IN_PHPBB')) {
+   exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = [];
+if (empty($lang) || !is_array($lang)) {
+   $lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,16 +33,33 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'TS_NAME'						=> 'Topic Statistics',
-	'TS_ENABLED'					=> 'Enable Topic Statistics',
-	'TS_VISIT'						=> 'Display number of visits',
-	'TS_VISIT_EXPLAIN'				=> 'Show number of visits to the topic.',
-	'TS_BOOKMARK'					=> 'Enable favorites',
-	'TS_BOOKMARK_EXPLAIN'			=> 'Show the number of users that have added the topic to favorites.',
-	'TS_BOOKMARK_USERS'				=> 'Show Favorites',
-	'TS_BOOKMARK_USERS_EXPLAIN'		=> 'Show users who have added the topic to favorites.',
-	'TS_FOLLOWERS'					=> 'Enable followers',
-	'TS_FOLLOWERS_EXPLAIN'			=> 'Show the number of users who follow the topic.',
-	'TS_FOLLOWERS_USERS'			=> 'Show followers',
-	'TS_FOLLOWERS_USERS_EXPLAIN'	=> 'Show users who follow the topic.',
+   'TS_NAME'                             => 'Topic Statistics',
+   'TS_TOPICS_ENABLED'                   => 'Enable Topic Statistics',
+   'TS_USER_LIMIT_MAX'                   => 'Maximum amount of users to display',
+   'TS_USER_LIMIT_MAX_EXPLAIN'           => 'Limits the amount of users to display enhancing performance in forums with a lot of users',
+   'TS_USER_PROFILE_LINK'                => 'Display user profile link',
+   'TS_USER_PROFILE_LINK_EXPLAIN'        => 'Add user profile link to the username',
+   'TS_TOPICS_VISIT'                     => 'Display number of visits on topics',
+   'TS_TOPICS_VISIT_EXPLAIN'             => 'Show number of visits to the topic.',
+   'TS_TOPICS_BOOKMARK'                  => 'Enable favorites on topics',
+   'TS_TOPICS_BOOKMARK_EXPLAIN'          => 'Show the number of users that have added the topic to favorites.',
+   'TS_TOPICS_BOOKMARK_USERS'            => 'Show favorites on topics',
+   'TS_TOPICS_BOOKMARK_USERS_EXPLAIN'    => 'Show users who have added the topic to favorites.',
+   'TS_TOPICS_BOOKMARK_AVATARS'          => 'Show favorites avatars on topics',
+   'TS_TOPICS_BOOKMARK_AVATARS_EXPLAIN'  => 'If "Show favorites" is enabled, also display their avatars.',
+   'TS_TOPICS_FOLLOWERS'                 => 'Enable followers on topics',
+   'TS_TOPICS_FOLLOWERS_EXPLAIN'         => 'Show the number of users who follow the topic.',
+   'TS_TOPICS_FOLLOWERS_USERS'           => 'Show followers on topics',
+   'TS_TOPICS_FOLLOWERS_USERS_EXPLAIN'   => 'Show users who follow the topic.',
+   'TS_TOPICS_FOLLOWERS_AVATARS'         => 'Show follower avatars on topics',
+   'TS_TOPICS_FOLLOWERS_AVATARS_EXPLAIN' => 'If "Show followers on topics" is enabled, also display their avatars.',
+   'TS_FORUMS_ENABLED'                   => 'Enable Forum Statistics',
+   'TS_FORUMS_VISIT'                     => 'Display number of visits on forums',
+   'TS_FORUMS_VISIT_EXPLAIN'             => 'Show number of visits to the topic.',
+   'TS_FORUMS_FOLLOWERS'                 => 'Enable followers on forums',
+   'TS_FORUMS_FOLLOWERS_EXPLAIN'         => 'Show the number of users who follow the forum.',
+   'TS_FORUMS_FOLLOWERS_USERS'           => 'Show followers on forums',
+   'TS_FORUMS_FOLLOWERS_USERS_EXPLAIN'   => 'Show users who follow the forum.',
+   'TS_FORUMS_FOLLOWERS_AVATARS'         => 'Show follower avatars on forums',
+   'TS_FORUMS_FOLLOWERS_AVATARS_EXPLAIN' => 'If "Show followers on forums" is enabled, also display their avatars.',
 ]);
