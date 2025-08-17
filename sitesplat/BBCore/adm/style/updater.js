@@ -7,7 +7,7 @@ var sitesplat_bbcore_updater_steps = [
 	'<li><i id="t5_unzip_new_version" class="fa-li fa"></i> Unzip newest version</li>',
 	'<li><i id="t6_load_list_of_changes" class="fa-li fa"></i> Load list of changes</li>',
 	'<li><i id="t7_merge_edits" class="fa-li fa"></i> Merge edits</li>',
-	'<li><i id="t8_check_additions" class="fa-li fa"></i> Check additions</li>',
+//	'<li><i id="t8_check_additions" class="fa-li fa"></i> Check additions</li>',
 	'<li><i id="t9_update_edits" class="fa-li fa"></i> Update edits</li>',
 	'<li><i id="t10_update_added" class="fa-li fa"></i> Update additions</li>',
 	'<li><i id="t11_update_deleted" class="fa-li fa"></i> Update deletions</li>',

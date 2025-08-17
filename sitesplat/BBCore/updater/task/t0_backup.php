@@ -19,8 +19,9 @@ class t0_backup
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config)
+	public function run($style_name, $updater_config, $root_path)
 	{
+		$this->root_path = $root_path;
 		$backup_dir = $this->root_path . 'store/' . $style_name . '_' . time();
 		$this->filesystem->mkdir($backup_dir);
 		$this->filesystem->mirror($this->root_path . 'styles/' . $style_name, $backup_dir);

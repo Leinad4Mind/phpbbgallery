@@ -25,8 +25,9 @@ class t7_merge_edits
 		$this->php_ext = $php_ext;
 	}
 
-	public function run($style_name, $updater_config)
+	public function run($style_name, $updater_config, $root_path)
 	{
+		$this->root_path = $root_path;
 		if (empty($updater_config['update_info']['edited']))
 		{
 			if ($updater_config['merge_conflicts'])
@@ -75,7 +76,7 @@ class t7_merge_edits
 
 					$merge_conflicts_path = $this->root_path . 'store/merge_conflicts_' . $style_name . '/';
 					$this->filesystem->mkdir($merge_conflicts_path . dirname($file_path));
-					file_put_contents($merge_conflicts_path . $file_path, $diff->merged_output());
+					file_put_contents($merge_conflicts_path . $file_path, implode("\n", $diff->merged_output()));
 				}
 
 				if ($diff->merged_output() !== $file_contents[1])

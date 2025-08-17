@@ -54,8 +54,8 @@ $lang = array_merge($lang, array(
 	'START_AUTO'				    => 'Start Auto-update 🚀',
 	
 	'CHANGE_LOG_MSG'				=> 'The Changelog is located here: <a href="%s" target="_blank">%s - Changelog</a>',
-	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">https://www.sitesplat.com</a>',
-	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="https://www.sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
+	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">https://sitesplat.com</a>',
+	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="https://sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
 	'NO_VERSIONINFO'				=> 'No version info available at the moment, try again in a few minutes!',
 
     'LOG_FILES_CHANGED'			    => '<strong>BBcore changed the following %s files for you:</strong><br />» %s',

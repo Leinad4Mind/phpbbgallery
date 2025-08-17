@@ -70,6 +70,7 @@ class admin_listener implements EventSubscriberInterface
 	{
 		if ($event['action'] === 'autoupdate_confirm')
 		{
+			$this->config_text->set('sitesplat_bbcore_updater', '');
 			confirm_box(false, 'AUTOUPDATE_CONFIRM', build_hidden_fields([
 				'id'		=> $event['id'],
 				'mode'		=> $event['mode'],

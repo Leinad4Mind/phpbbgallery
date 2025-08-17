@@ -19,8 +19,9 @@ class t5_unzip_new_version
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config)
+	public function run($style_name, $updater_config, $root_path)
 	{
+		$this->root_path = $root_path;
 		$tmp_path = $this->root_path . 'store/';
 		$tmp_file = $tmp_path . 'bbcore_autoupdate_' . $updater_config['style_data']['direct_download_dir'] . '.zip';
 		$updater_config['tmp_dir'] = $tmp_path . 'bbcore_autoupdate_' . $updater_config['style_data']['direct_download_dir'] . '/';
