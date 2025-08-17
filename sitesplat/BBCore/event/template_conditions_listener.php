@@ -22,19 +22,38 @@ class template_conditions_listener implements \Symfony\Component\EventDispatcher
 		return array(
 			'core.index_modify_page_title'				=> 'in_index',
 			'core.modify_mcp_modules_display_option'	=> 'in_mcp',
-			'core.modify_mcp_modules_display_option'	=> 'in_memberlist',
+			'core.memberlist_modify_template_vars'	    => 'in_memberlist',
+			'core.memberlist_view_profile'			    => 'in_member_profile',
 			'core.posting_modify_template_vars'			=> 'in_posting',
 			'core.search_modify_forum_select_list'		=> 'in_search',
 			'core.ucp_display_module_before'			=> 'in_ucp',
-			'core.viewforum_generate_page_after'		=> 'in_viewforum',
+			'core.viewforum_modify_page_title'		    => 'in_viewforum',
 			'core.viewonline_modify_sql'				=> 'in_viewonline',
 			'core.viewtopic_modify_page_title'			=> 'in_viewtopic',
 		);
 	}
 
 // you can also do things like:	
-// {% if not BB_LOAD_IN_INDEX %}
-// {% if not BB_LOAD_IN_MCP and not BB_LOAD_IN_UCP %}
+/**
+*
+* {% if not BB_LOAD_IN_INDEX %}
+* {% if not BB_LOAD_IN_MCP and not BB_LOAD_IN_UCP %}
+* {% if S_USER_LOGGED_IN and (BB_LOAD_IN_VIEWTOPIC or BB_LOAD_IN_POSTING) and S_BBPROSPECTIVE_ENABLED %}
+* 
+* Statements inside parentheses are evaluated before those outside the
+* parentheses. So, if you had this:
+*
+* ----------------------------------
+* <!-- IF (A and B) or (C and D) -->...<!-- ENDIF -->
+* ----------------------------------
+* ----------------------------------
+* {% if (A and B) or (C and D) %}...{% endif %}
+* ----------------------------------
+*
+* The two "and" conditions in the parentheses will be evaluated before the "or" condition. 
+* 	
+*
+*/
 
 // <!-- IF BB_LOAD_IN_INDEX -->
 	public function in_index()
@@ -52,6 +71,11 @@ class template_conditions_listener implements \Symfony\Component\EventDispatcher
 	{
 		$this->template->assign_var('BB_LOAD_IN_MEMBERLIST', true);
 	}
+// <!-- IF BB_LOAD_IN_MEMBER_PROFILE -->
+	public function in_member_profile()
+	{
+		$this->template->assign_var('BB_LOAD_IN_MEMBER_PROFILE', true);
+	}	
 // <!-- IF BB_LOAD_IN_POSTING -->
 	public function in_posting()
 	{
