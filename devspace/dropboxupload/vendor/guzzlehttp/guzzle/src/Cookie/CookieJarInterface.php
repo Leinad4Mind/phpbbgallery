@@ -80,5 +80,5 @@ interface CookieJarInterface extends \Countable, \IteratorAggregate
      *
      * @return array
      */
-    public function toArray();
+    public function to[];
 }

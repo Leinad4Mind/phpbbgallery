@@ -1,75 +1,77 @@
 {% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
 
-<form id="dropboxupload" method="post" action="{{ U_ACTION }}">
-	<fieldset>
-		<legend>{{ lang('DROPBOX_UPLOAD_OPTIONS') }}</legend>
+{% if PHP_VALID and PHPBB_VALID %}
+	<form id="dropboxupload" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('DROPBOX_UPLOAD_OPTIONS') }}</legend>
 
-		<dl>
-			<dt><label for="dropbox_upload_enable">{{ lang('DROPBOX_UPLOAD_ENABLE') }}{{ lang('COLON') }}</label></dt>
-			<dd>
-				<input type="radio" id="dropbox_upload_enable1" name="dropbox_upload_enable" value="1"{% if DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %} />
-				<label class="set" for="dropbox_upload_enable1">{{ lang('ENABLED') }}</label>
-				<input type="radio" id="dropbox_upload_enable0" name="dropbox_upload_enable" value="0"{% if not DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %} />
-				<label class="unset" for="dropbox_upload_enable0">{{ lang('DISABLED') }}</label>
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_upload_enable">{{ lang('DROPBOX_UPLOAD_ENABLE') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="dropbox_upload_enable1" name="dropbox_upload_enable" value="1"{% if DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %} />
+					<label class="set" for="dropbox_upload_enable1">{{ lang('ENABLED') }}</label>
+					<input type="radio" id="dropbox_upload_enable0" name="dropbox_upload_enable" value="0"{% if not DROPBOX_UPLOAD_ENABLED %} checked="checked"{% endif %} />
+					<label class="unset" for="dropbox_upload_enable0">{{ lang('DISABLED') }}</label>
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_folder">{{ lang('DROPBOX_FOLDER') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FOLDER_EXPLAIN') }}</span></dt>
-			<dd>
-				<input class="textbox" name="dropbox_folder" type="text" id="dropbox_folder" value="{{ DROPBOX_FOLDER }}" size="25" maxlength="100" validate="string" />
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_folder">{{ lang('DROPBOX_FOLDER') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FOLDER_EXPLAIN') }}</span></dt>
+				<dd>
+					<input class="textbox" name="dropbox_folder" type="text" id="dropbox_folder" value="{{ DROPBOX_FOLDER }}" size="25" maxlength="100" validate="string" />
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_folder_opt">{{ lang('DROPBOX_FOLDER_OPTIONS') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FOLDER_OPTIONS_EXPLAIN') }}</span></dt>
-			<dd>
-				{{ DROPBOX_FOLDER_OPTIONS }}
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_folder_opt">{{ lang('DROPBOX_FOLDER_OPTIONS') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FOLDER_OPTIONS_EXPLAIN') }}</span></dt>
+				<dd>
+					{{ DROPBOX_FOLDER_OPTIONS }}
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_key">{{ lang('DROPBOX_KEY') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_KEY_EXPLAIN') }}</span></dt>
-			<dd>
-				<input class="textbox" name="dropbox_key" type="text" id="dropbox_key" value="{{ DROPBOX_KEY }}" size="15" maxlength="50" validate="string" />
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_key">{{ lang('DROPBOX_KEY') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_KEY_EXPLAIN') }}</span></dt>
+				<dd>
+					<input class="textbox" name="dropbox_key" type="text" id="dropbox_key" value="{{ DROPBOX_KEY }}" size="15" maxlength="50" validate="string" />
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_secret">{{ lang('DROPBOX_SECRET') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_SECRET_EXPLAIN') }}</span></dt>
-			<dd>
-				<input class="textbox" name="dropbox_secret" type="text" id="dropbox_secret" value="{{ DROPBOX_SECRET }}" size="15" maxlength="50" validate="string" />
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_secret">{{ lang('DROPBOX_SECRET') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_SECRET_EXPLAIN') }}</span></dt>
+				<dd>
+					<input class="textbox" name="dropbox_secret" type="text" id="dropbox_secret" value="{{ DROPBOX_SECRET }}" size="15" maxlength="50" validate="string" />
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_token">{{ lang('DROPBOX_TOKEN') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_TOKEN_EXPLAIN') }}</span></dt>
-			<dd>
-				<input class="textbox" name="dropbox_token" type="text" id="dropbox_token" value="{{ DROPBOX_TOKEN }}" size="50" maxlength="100" validate="string" />
-			</dd>
-		</dl>
+			<dl>
+				<dt><label for="dropbox_token">{{ lang('DROPBOX_TOKEN') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_TOKEN_EXPLAIN') }}</span></dt>
+				<dd>
+					<input class="textbox" name="dropbox_token" type="text" id="dropbox_token" value="{{ DROPBOX_TOKEN }}" size="50" maxlength="100" validate="string" />
+				</dd>
+			</dl>
 
-		<dl>
-			<dt><label for="dropbox_frequency_interval">{{ lang('DROPBOX_FREQUENCY') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FREQUENCY_EXPLAIN') }}</span></dt>
-			<dd>
-				<input class="textbox" name="dropbox_frequency_interval" type="number" id="dropbox_frequency_interval" value="{{ DROPBOX_FREQUENCY }}" min="1" max="25" />
-			</dd>
-		</dl>
-	</fieldset>
+			<dl>
+				<dt><label for="dropbox_frequency_interval">{{ lang('DROPBOX_FREQUENCY') }}{{ lang('COLON') }}</label><br><span>{{ lang('DROPBOX_FREQUENCY_EXPLAIN') }}</span></dt>
+				<dd>
+					<input class="textbox" name="dropbox_frequency_interval" type="number" id="dropbox_frequency_interval" value="{{ DROPBOX_FREQUENCY }}" min="1" max="25" />
+				</dd>
+			</dl>
+		</fieldset>
 
-	<fieldset>
-		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
-		<p class="submit-buttons">
-			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
-		</p>
-		{{ S_FORM_TOKEN }}
-	</fieldset>
+		<fieldset>
+			<legend>{{ lang('SAVE_CHANGES') }}</legend>
+			<p class="submit-buttons">
+				<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SAVE') }}" />&nbsp;
+				<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			</p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
 
-	<fieldset>
-		<legend>{{ lang('CREATE_NEW_APP') }}</legend>
-		<p>{{ lang('CREATE_NEW_APP_TEXT') }}</p>
-	</fieldset>
-</form>
+		<fieldset>
+			<legend>{{ lang('CREATE_NEW_APP') }}</legend>
+				<p>{{ lang('CREATE_NEW_APP_TEXT') }}</p>
+		</fieldset>
+	</form>
 
-{% include '@' ~ NAMESPACE ~ '/donate.html' %}
+	{% include '@' ~ NAMESPACE ~ '/donate.html' %}
+{% endif %}

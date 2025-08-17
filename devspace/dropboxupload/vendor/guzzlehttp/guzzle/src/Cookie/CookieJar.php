@@ -105,10 +105,10 @@ class CookieJar implements CookieJarInterface
         }
     }
 
-    public function toArray()
+    public function to[]
     {
         return array_map(function (SetCookie $cookie) {
-            return $cookie->toArray();
+            return $cookie->to[];
         }, $this->getIterator()->getArrayCopy());
     }
 

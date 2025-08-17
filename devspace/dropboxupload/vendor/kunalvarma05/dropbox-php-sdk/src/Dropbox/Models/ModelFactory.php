@@ -11,7 +11,7 @@ class ModelFactory
      *
      * @return \Kunnu\Dropbox\Models\ModelInterface
      */
-    public static function make(array $data = array())
+    public static function make(array $data = [])
     {
         if (isset($data['.tag']) && isset($data['id'])) {
             $tag = $data['.tag'];

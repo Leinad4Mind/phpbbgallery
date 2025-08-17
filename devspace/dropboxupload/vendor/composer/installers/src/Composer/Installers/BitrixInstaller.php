@@ -37,7 +37,7 @@ class BitrixInstaller extends BaseInstaller
     /**
      * @var array Storage for informations about duplicates at all the time of installation packages.
      */
-    private static $checkedDuplicates = array();
+    private static $checkedDuplicates = [];
 
     /**
      * {@inheritdoc}
@@ -62,7 +62,7 @@ class BitrixInstaller extends BaseInstaller
     /**
      * {@inheritdoc}
      */
-    protected function templatePath($path, array $vars = array())
+    protected function templatePath($path, array $vars = [])
     {
         $templatePath = parent::templatePath($path, $vars);
         $this->checkDuplicates($templatePath, $vars);
@@ -76,7 +76,7 @@ class BitrixInstaller extends BaseInstaller
      * @param string $path
      * @param array $vars
      */
-    protected function checkDuplicates($path, array $vars = array())
+    protected function checkDuplicates($path, array $vars = [])
     {
         $packageType = substr($vars['type'], strlen('bitrix') + 1);
         $localDir = explode('/', $vars['bitrix_dir']);

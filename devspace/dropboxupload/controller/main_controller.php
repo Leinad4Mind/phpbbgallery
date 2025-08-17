@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package Dropbox Upload
-* @copyright (c) 2016 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Dropbox Upload
+ * @copyright (c) 2016 david63
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace david63\dropboxupload\controller;
 
@@ -19,54 +19,54 @@ use phpbb\log\log;
 use phpbb\language\language;
 use david63\dropboxupload\core\functions;
 
-class main_controller implements main_interface
+class main_controller
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \david63\dropboxupload\core\functions */
+	/** @var functions */
 	protected $functions;
 
 	/**
-	* Constructor for main controller
-	*
-	* @param \phpbb\config\config					$config		phpBB config
-	* @param \phpbb\user							$user		User object
-	* @param \phpbb\log\log							$log		phpBB log
-	* @param \phpbb\language\language				$language	Language object
-	* @param \david63\dropboxupload\core\functions	functions	Functions for the extension
-	*
-	* @access public
-	*/
+	 * Constructor for main controller
+	 *
+	 * @param config         $config         phpBB config
+	 * @param user           $user           User object
+	 * @param log            $log            phpBB log
+	 * @param language       $language       Language object
+	 * @param functions      $functions      Functions for the extension
+	 *
+	 * @access public
+	 */
 	public function __construct(config $config, user $user, log $log, language $language, functions $functions)
 	{
-		$this->config		= $config;
-		$this->user			= $user;
-		$this->log			= $log;
-		$this->language		= $language;
-		$this->functions	= $functions;
+		$this->config    = $config;
+		$this->user      = $user;
+		$this->log       = $log;
+		$this->language  = $language;
+		$this->functions = $functions;
 	}
 
 	/**
-	* Controller for Dropbox process
-	*
-	* @param string		$name
-	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	*/
+	 * Controller for Dropbox process
+	 *
+	 * @param string     $name
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
 	public function processupload($event)
 	{
-		$extension	= $event['extension'];
-		$filename	= $event['filename'];
-		$location 	= $event['location'];
+		$extension = $event['extension'];
+		$filename  = $event['filename'];
+		$location  = $event['location'];
 
 		$backup_file = $location . $filename . $extension;
 
@@ -89,31 +89,31 @@ class main_controller implements main_interface
 				{
 					case 'DEFAULT':
 						$dropbox_folder = $this->config['dropbox_folder'];
-					break;
+						break;
 
 					case 'CURRENT_DAY':
 						$dropbox_folder = date('Y-m-d');
-					break;
+						break;
 
 					case 'DAY_OF_WEEK':
 						$dropbox_folder = date('l');
-					break;
+						break;
 
 					case 'WEEK_NO':
 						$dropbox_folder = $this->language->lang('WEEK') . date('W');
-					break;
+						break;
 
 					case 'MONTH':
 						$dropbox_folder = date('F');
-					break;
+						break;
 
 					case 'YEAR':
 						$dropbox_folder = date('Y');
-					break;
+						break;
 
 					case 'MONTH_YEAR':
 						$dropbox_folder = date('F') . '-' . date('Y');
-					break;
+						break;
 				}
 
 				$dropbox_folder = '/' . $dropbox_folder . '/';
@@ -140,12 +140,12 @@ class main_controller implements main_interface
 				catch (DropboxClientException $e)
 				{
 					$upload = false;
-					$this->log->add('critical', $this->user->data['user_id'], $this->user->ip, 'LOG_DROPBOX_ERROR', time(), array($e->getMessage()));
+					$this->log->add('critical', $this->user->data['user_id'], $this->user->ip, 'LOG_DROPBOX_ERROR', time(), [$e->getMessage()]);
 				}
 
 				if ($upload)
 				{
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_DROPBOX_UPLOAD', time(), array($filename . $extension));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_DROPBOX_UPLOAD', time(), [$filename . $extension]);
 				}
 				else
 				{

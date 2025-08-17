@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package Dropbox Upload
-* @copyright (c) 2016 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Dropbox Upload
+ * @copyright (c) 2016 david63
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace david63\dropboxupload\controller;
 
@@ -18,70 +18,75 @@ use phpbb\log\log;
 use david63\dropboxupload\core\functions;
 
 /**
-* Admin controller
-*/
-class admin_controller implements admin_interface
+ * Admin controller
+ */
+class admin_controller
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\request\request */
+	/** @var request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/** @var \david63\dropboxupload\core\functions */
+	/** @var functions */
 	protected $functions;
+
+	/** @var string */
+	protected $ext_images_path;
 
 	/** @var string Custom form action */
 	protected $u_action;
 
 	/**
-	* Constructor for admin controller
-	*
-	* @param \phpbb\config\config					$config		Config object
-	* @param \phpbb\request\request					$request	Request object
-	* @param \phpbb\template\template				$template	Template object
-	* @param \phpbb\user							$user		User object
-	* @param \phpbb\language\language				$language	Language object
-	* @param \phpbb\log\log							$log		Log object
-	* @param \david63\dropboxupload\core\functions	functions	Functions for the extension
-	*
-	* @return \david63\dropboxupload\controller\admin_controller
-	* @access public
-	*/
-	public function __construct(config $config, request $request, template $template, user $user, language $language, log $log, functions $functions)
+	 * Constructor for admin controller
+	 *
+	 * @param config		$config     		Config object
+	 * @param request		$request    		Request object
+	 * @param template		$template   		Template object
+	 * @param user			$user       		User object
+	 * @param language		$language   		Language object
+	 * @param log			$log        		Log object
+	 * @param functions		$functions			Functions for the extension
+	 * @param string		$ext_images_path	Path to this extension's images
+	 *
+	 * @return \david63\dropboxupload\controller\admin_controller
+	 * @access public
+	 */
+	public function __construct(config $config, request $request, template $template, user $user, language $language, log $log, functions $functions, string $ext_images_path)
 	{
-		$this->config		= $config;
-		$this->request		= $request;
-		$this->template		= $template;
-		$this->user			= $user;
-		$this->language		= $language;
-		$this->log			= $log;
-		$this->functions	= $functions;
+		$this->config    		= $config;
+		$this->request   		= $request;
+		$this->template  		= $template;
+		$this->user      		= $user;
+		$this->language  		= $language;
+		$this->log       		= $log;
+		$this->functions 		= $functions;
+		$this->ext_images_path	= $ext_images_path;
 	}
 
 	/**
-	* Display the options a user can configure for this extension
-	*
-	* @return null
-	* @access public
-	*/
+	 * Display the options a user can configure for this extension
+	 *
+	 * @return null
+	 * @access public
+	 */
 	public function display_options()
 	{
 
 		// Add the language files
-		$this->language->add_lang('acp_dropboxupload', $this->functions->get_ext_namespace());
+		$this->language->add_lang(['acp_dropboxupload', 'acp_common'], $this->functions->get_ext_namespace());
 		$this->language->add_lang('acp_common', $this->functions->get_ext_namespace());
 
 		// Create a form key for preventing CSRF attacks
@@ -121,42 +126,50 @@ class admin_controller implements admin_interface
 		$folder_opts = '<select name="dropbox_folder_opt" id="dropbox_folder_opt">' . $folder_options . '</select>';
 
 		// Template vars for header panel
-		$version_data	= $this->functions->version_check();
+		$version_data = $this->functions->version_check();
 
-		$this->template->assign_vars(array(
-			'DOWNLOAD'			=> (array_key_exists('download', $version_data)) ? '<a href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
+		// Are the PHP and phpBB versions valid for this extension?
+		$valid = $this->functions->ext_requirements();
 
-			'HEAD_TITLE'		=> $this->language->lang('DROPBOX_UPLOAD'),
+		$this->template->assign_vars([
+			'DOWNLOAD' 			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
+
+			'EXT_IMAGE_PATH'	=> $this->ext_images_path,
+
+			'HEAD_TITLE' 		=> $this->language->lang('DROPBOX_UPLOAD'),
 			'HEAD_DESCRIPTION'	=> $this->language->lang('DROPBOX_UPLOAD_EXPLAIN'),
 
-			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
+			'NAMESPACE' 		=> $this->functions->get_ext_namespace('twig'),
 
-			'S_BACK'			=> $back,
-			'S_VERSION_CHECK'	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
+			'PHP_VALID' 		=> $valid[0],
+			'PHPBB_VALID' 		=> $valid[1],
 
-			'VERSION_NUMBER'	=> $this->functions->get_meta('version'),
-		));
+			'S_BACK' 			=> $back,
+			'S_VERSION_CHECK' 	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
+
+			'VERSION_NUMBER' 	=> $this->functions->get_meta('version'),
+		]);
 
 		// Set output vars for display in the template
-		$this->template->assign_vars(array(
-			'DROPBOX_FOLDER'			=> isset($this->config['dropbox_folder']) ? $this->config['dropbox_folder'] : '',
+		$this->template->assign_vars([
+			'DROPBOX_FOLDER' 			=> isset($this->config['dropbox_folder']) ? $this->config['dropbox_folder'] : '',
 			'DROPBOX_FOLDER_OPTIONS'	=> $folder_opts,
-			'DROPBOX_FREQUENCY'			=> isset($this->config['dropbox_frequency_interval']) ? $this->config['dropbox_frequency_interval'] : '',
-			'DROPBOX_KEY'				=> isset($this->config['dropbox_key']) ? $this->config['dropbox_key'] : '',
-			'DROPBOX_SECRET'			=> isset($this->config['dropbox_secret']) ? $this->config['dropbox_secret'] : '',
-			'DROPBOX_TOKEN'				=> isset($this->config['dropbox_token']) ? $this->config['dropbox_token'] : '',
-			'DROPBOX_UPLOAD_ENABLED'	=> isset($this->config['dropbox_upload_enable']) ? $this->config['dropbox_upload_enable'] : '',
+			'DROPBOX_FREQUENCY' 		=> isset($this->config['dropbox_frequency_interval']) ? $this->config['dropbox_frequency_interval'] : '',
+			'DROPBOX_KEY' 				=> isset($this->config['dropbox_key']) ? $this->config['dropbox_key'] : '',
+			'DROPBOX_SECRET' 			=> isset($this->config['dropbox_secret']) ? $this->config['dropbox_secret'] : '',
+			'DROPBOX_TOKEN' 			=> isset($this->config['dropbox_token']) ? $this->config['dropbox_token'] : '',
+			'DROPBOX_UPLOAD_ENABLED' 	=> isset($this->config['dropbox_upload_enable']) ? $this->config['dropbox_upload_enable'] : '',
 
-			'U_ACTION' 					=> $this->u_action,
-		));
+			'U_ACTION' => $this->u_action,
+		]);
 	}
 
 	/**
-	* Set the options a user can configure
-	*
-	* @return null
-	* @access protected
-	*/
+	 * Set the options a user can configure
+	 *
+	 * @return null
+	 * @access protected
+	 */
 	protected function set_options()
 	{
 		$this->config->set('dropbox_folder', $this->request->variable('dropbox_folder', '', true));
@@ -169,12 +182,12 @@ class admin_controller implements admin_interface
 	}
 
 	/**
-	* Set page url
-	*
-	* @param string $u_action Custom form action
-	* @return null
-	* @access public
-	*/
+	 * Set page url
+	 *
+	 * @param string $u_action Custom form action
+	 * @return null
+	 * @access public
+	 */
 	public function set_page_url($u_action)
 	{
 		return $this->u_action = $u_action;

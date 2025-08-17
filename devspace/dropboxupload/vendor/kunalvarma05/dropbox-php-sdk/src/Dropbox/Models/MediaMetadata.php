@@ -11,14 +11,14 @@ class MediaMetadata extends BaseModel
      *
      * @var array
      */
-    protected $location = array();
+    protected $location = [];
 
     /**
      * Dimension of the photo/video.
      *
      * @var array
      */
-    protected $dimensions = array();
+    protected $dimensions = [];
 
     /**
      * The timestamp when the photo/video is taken.

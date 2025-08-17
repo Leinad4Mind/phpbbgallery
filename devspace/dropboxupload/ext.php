@@ -1,54 +1,91 @@
 <?php
 /**
-*
-* @package Dropbox Upload
-* @copyright (c) 2016 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Dropbox Upload
+ * @copyright (c) 2016 david63
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace david63\dropboxupload;
 
 use phpbb\extension\base;
 
-/**
-* Extension class for dropbox upload
-*/
 class ext extends base
 {
+	/** @var Extension name */
+	protected $ext_name = 'dropboxupload';
+
+	/** @var max phpBB version */
+	protected $max_version = '4.0.0@dev';
+
+	/** @var min phpBB version */
+	protected $min_version = '3.3.0';
+
+	/** @var PHP version */
+	protected $php_version = '7.1.3';
+
+	/** @var phpBB check version */
+	protected $phpbb_version = '3.3.0';
+
 	/**
-	* Enable extension if phpBB version requirement is met
-	* and Auto Database Backup is installed
-	*
-	* @return bool
-	* @access public
-	*/
+	 * Enable extension if requirements are met
+	 *
+	 * @return bool True if can be enabled, False if not, or an error message in phpBB 3.3.
+	 * @access public
+	 */
 	public function is_enableable()
 	{
-		// Set globals for use in the language file
-		global $ver_error, $db_error;
-
-		// Requires phpBB 3.2.0 or newer.
-		$ver 		= phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=');
-		// Display a custom warning message if this requirement fails.
-		$ver_error 	= ($ver) ? false : true;
-
-		// Is auto db backup installed?
-		$config 	= $this->container->get('config');
-		$auto_db 	= isset($config['auto_db_backup_enable']);
-		// Display a custom warning message if this requirement fails.
-		$db_error 	= ($auto_db) ? false : true;
-
-		// Need to cater for 3.1 and 3.2
-		if (phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>='))
+		// Check for PHP version
+		if (phpbb_version_compare(PHP_VERSION, $this->php_version, '<'))
 		{
-			$this->container->get('language')->add_lang('ext_enable_error', 'david63/dropboxupload');
-		}
-		else
-		{
-			$this->container->get('user')->add_lang_ext('david63/dropboxupload', 'ext_enable_error');
+			if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_version, '>='))
+			{
+				$language = $this->container->get('language');
+				$language->add_lang('ext_enable_error', 'david63/' . $this->ext_name);
+
+				return $language->lang('EXT_PHP_ERROR', $this->php_version, PHP_VERSION);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
-		return $ver && $auto_db;
+		// Check for phpBB version
+		if (!(phpbb_version_compare(PHPBB_VERSION, $this->min_version, '>=') && phpbb_version_compare(PHPBB_VERSION, $this->max_version, '<')))
+		{
+			if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_version, '>='))
+			{
+				$config   = $this->container->get('config');
+				$language = $this->container->get('language');
+				$language->add_lang('ext_enable_error', 'david63/' . $this->ext_name);
+
+				return $language->lang('EXT_ENABLE_ERROR', $this->min_version, $this->max_version, $config['version']);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// Check for Auto db Backup installed
+		if (!isset($config['auto_db_backup_enable']))
+		{
+			if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_version, '>='))
+			{
+				$config   = $this->container->get('config');
+				$language = $this->container->get('language');
+				$language->add_lang('ext_enable_error', 'david63/' . $this->ext_name);
+
+				return $language->lang('EXT_AUTODB_ERROR');
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

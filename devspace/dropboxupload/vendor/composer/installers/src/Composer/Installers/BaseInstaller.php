@@ -7,7 +7,7 @@ use Composer\Package\PackageInterface;
 
 abstract class BaseInstaller
 {
-    protected $locations = array();
+    protected $locations = [];
     protected $composer;
     protected $package;
     protected $io;
@@ -99,7 +99,7 @@ abstract class BaseInstaller
      * @param  array  $vars
      * @return string
      */
-    protected function templatePath($path, array $vars = array())
+    protected function templatePath($path, array $vars = [])
     {
         if (strpos($path, '{') !== false) {
             extract($vars);

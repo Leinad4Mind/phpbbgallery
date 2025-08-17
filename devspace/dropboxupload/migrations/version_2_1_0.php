@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package Dropbox Upload
-* @copyright (c) 2016 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Dropbox Upload
+ * @copyright (c) 2016 david63
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace david63\dropboxupload\migrations;
 
@@ -15,22 +15,22 @@ class version_2_1_0 extends migration
 {
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('dropbox_folder', '')),
-			array('config.add', array('dropbox_folder_opt', 'DEFAULT')),
-			array('config.add', array('dropbox_frequency_count', 0, 1)),
-			array('config.add', array('dropbox_frequency_interval', 1)),
-			array('config.add', array('dropbox_key', '')),
-			array('config.add', array('dropbox_secret', '')),
-			array('config.add', array('dropbox_token', '')),
-			array('config.add', array('dropbox_upload_enable', 0)),
+		return [
+			['config.add', ['dropbox_folder', '']],
+			['config.add', ['dropbox_folder_opt', 'DEFAULT']],
+			['config.add', ['dropbox_frequency_count', 0, 1]],
+			['config.add', ['dropbox_frequency_interval', 1]],
+			['config.add', ['dropbox_key', '']],
+			['config.add', ['dropbox_secret', '']],
+			['config.add', ['dropbox_token', '']],
+			['config.add', ['dropbox_upload_enable', 0]],
 
-			array('module.add', array(
-				'acp', 'ACP_AUTO_DB_BACKUP', array(
-					'module_basename'	=> '\david63\dropboxupload\acp\dropboxupload_module',
-					'modes'				=> array('main'),
-				),
-			)),
-		);
+			['module.add', [
+				'acp', 'ACP_AUTO_DB_BACKUP', [
+					'module_basename' => '\david63\dropboxupload\acp\dropboxupload_module',
+					'modes' => ['main'],
+				],
+			]],
+		];
 	}
 }
