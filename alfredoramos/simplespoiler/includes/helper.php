@@ -162,14 +162,24 @@ class helper {
 	 * @return	array
 	 */
 	public function bbcode_data() {
+		$title_length = 65;
 		return [
 			'bbcode_tag'	=> 'spoiler=',
 			'bbcode_match'	=> '[spoiler={TEXT2;optional}]{TEXT1}[/spoiler]',
-			'bbcode_tpl'	=> '<xsl:choose>'.
+			'bbcode_tpl'	=> sprintf('<xsl:choose>'.
 				'<xsl:when test="@spoiler">'.
 				'<div class="spoiler">'.
 				'<div class="spoiler-header spoiler-trigger">'.
-				'<span class="spoiler-title">{TEXT2}</span>'.
+				'<span class="spoiler-title">'.
+				'<xsl:choose>'.
+				'<xsl:when test="string-length(@spoiler) > %1$d">'.
+				'<xsl:value-of select="concat(substring(@spoiler, 0, %1$d), \'...\')"/>'.
+				'</xsl:when>'.
+				'<xsl:otherwise>'.
+				'<xsl:value-of select="@spoiler"/>'.
+				'</xsl:otherwise>'.
+				'</xsl:choose>'.
+				'</span>'.
 				'<span class="spoiler-status">{L_SPOILER_SHOW}</span>'.
 				'</div>'.
 				'<div class="spoiler-body">{TEXT1}</div>'.
@@ -184,7 +194,7 @@ class helper {
 				'<div class="spoiler-body">{TEXT1}</div>'.
 				'</div>'.
 				'</xsl:otherwise>'.
-				'</xsl:choose>',
+				'</xsl:choose>', $title_length),
 			'bbcode_helpline'	=> 'SPOILER_HELPLINE',
 			'display_on_posting'	=> 0
 		];
