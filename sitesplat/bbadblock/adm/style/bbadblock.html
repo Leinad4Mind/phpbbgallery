@@ -1,0 +1,152 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbadblock/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbadblock/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/bbadblock.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+	<h1>{L_ACP_BBADBLOCK_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBADBLOCK_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="fa fa-money"></i> {L_ACP_BBADBLOCK}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+	
+<p>{L_ACP_BBADBLOCK_EXPLAIN}</p>
+
+    <!-- IF S_NOTICE_BBMEMBERSHIP or S_NOTICE_MINICMS -->
+    <div id="bbadblock_notice" class="errorbox notice">
+        <a href="{U_BBMEMBERSHIP_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_NOTICE_CLOSE}"></a>
+       <!-- IF S_NOTICE_BBMEMBERSHIP --><p>{S_NOTICE_BBMEMBERSHIP}</p><!-- ENDIF -->
+	   <!-- IF S_NOTICE_MINICMS --><p>{S_NOTICE_MINICMS}</p><!-- ENDIF -->
+    </div>
+    <!-- ENDIF -->
+
+	<form id="acp_bbadblock_main" method="post" action="{U_ACTION}" data-ajax="true">
+	<fieldset>
+  		<legend>{L_ACP_BBADBLOCK_INDEX_TITLE}</legend> 	
+		<div style="float:left;width:59%;">
+        <!-- IF not BBADBLOCK_S_CLASSNAME -->
+            <dl>
+                <dt><label for="bbadblock_classname">{L_BBADBLOCK_CLASSNAME}{L_COLON}</label><br />{L_BBADBLOCK_CLASSNAME_EXPLAIN}</dt>
+                <dd><input type="text" id="bbadblock_classname" name="bbadblock_classname" value="{BBADBLOCK_CLASSNAME}" /></dd>
+            </dl>
+    	<!-- ENDIF --> 
+            <dl>
+                <dt><label for="bbadblock_modal_alert">{L_BBADBLOCK_MODAL_ALERT}{L_COLON}</label><br />{L_BBADBLOCK_MODAL_ALERT_EXPLAIN}</dt>
+                <dd>
+                    <label><input type="radio" class="radio" name="bbadblock_modal_alert" value="1"<!-- IF BBADBLOCK_MODAL_ALERT --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+                    <label><input type="radio" class="radio" name="bbadblock_modal_alert" value="0"<!-- IF not BBADBLOCK_MODAL_ALERT --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+                </dd>
+            </dl>
+			<dl>
+                <dt><label for="bbadblock_message">{L_BBADBLOCK_MESSAGE}{L_COLON}</label><br />{L_BBADBLOCK_MESSAGE_EXPLAIN}</dt>
+                <dd><input type="text" id="bbadblock_message" name="bbadblock_message" value="{BBADBLOCK_MESSAGE}" class="full" /></dd>
+            </dl>
+            <dl>
+                <dt><label for="bbadblock_autoreset">{L_BBADBLOCK_AUTO_RESET}{L_COLON}</label><br />{L_BBADBLOCK_AUTO_RESET_EXPLAIN}</dt>
+                <dd>
+                    <label><input type="radio" class="radio" name="bbadblock_autoreset" value="1"<!-- IF BBADBLOCK_AUTO_RESET --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+                    <label><input type="radio" class="radio" name="bbadblock_autoreset" value="0"<!-- IF not BBADBLOCK_AUTO_RESET --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+                </dd>
+            </dl>
+			
+			<!-- IF .usergroups -->
+			<dl>
+                <dt><label for="bbadblock_redirect">{L_BBADBLOCK_REDIRECT}{L_COLON}</label><br />{L_BBADBLOCK_REDIRECTE_EXPLAIN}</dt>
+                <dd><input type="text" id="bbadblock_redirect" name="bbadblock_redirect" value="{BBADBLOCK_REDIRECT}" class="full" /></dd>
+            </dl>
+            
+            <dl>
+                <dt><label for="bbadblock_group">{L_BBADBLOCK_EXCLUDE_GROUP}{L_COLON}</label><br />{L_BBADBLOCK_EXCLUDE_GROUP_EXPLAIN}</dt>
+                <dd><select id="bbadblock_group" name="bbadblock_group">
+               <option value="0">-----</option>
+                <!-- BEGIN usergroups -->
+                <option value="{usergroups.GROUP_ID}"{usergroups.SELECTED}>{usergroups.GROUP_NAME}</option>
+                <!-- END usergroups -->
+                </select></dd>
+            </dl>
+            <!-- ENDIF -->
+			
+        </div>
+
+		<div style="float:left;width:39%;padding-left:10px;">
+            <dl>
+                <dt><label for="bbadblock_hide_forums">{L_BBADBLOCK_EXCLUDE_HIDE_FORUMS}:</label><br />{L_BBADBLOCK_EXCLUDE_HIDE_FORUMS_EXPLAIN}</dt>
+                <dd><select id="bbadblock_hide_forums" name="bbadblock_hide_forums[]" size="15" multiple>{BBADBLOCK_HIDE_FORUMS}</select></dd>
+            </dl>
+		</div>
+ 
+        <div style="clear:both;width:59%;">
+            <dl>
+                <dt><label for="set_config">{L_SUBMIT}{L_COLON}</label></dt>
+                <dd><input class="button1" type="submit" id="set_config" name="set_config" value="{L_SUBMIT}" />{S_FORM_TOKEN}</dd>
+            </dl>
+        </div>
+  	</fieldset>
+  	</form>
+
+	
+	 <h1>{L_BBADBLOCK_LOG}</h1>
+	 <p>{L_BBADBLOCK_LOG_EXPLAIN}</p>
+	
+    <table class="cbTable" cellpadding="0" cellspacing="0">
+    <tr class="cbHead">
+        <td style="width:20px">#</td>
+        <td>{L_USERNAME}
+        <a href="{U_ACTION}&amp;sk=username&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'username' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        <a href="{U_ACTION}&amp;sk=username&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'username' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </td>
+        <td style="width:40%;">{L_BBADBLOCK_BLOCKED_SINCE}
+			<a href="{U_ACTION}&amp;sk=since&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'since' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a> <a href="{U_ACTION}&amp;sk=since&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'since' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		</td>
+        <td style="width:70px;">{L_BBADBLOCK_HITS}
+			<a href="{U_ACTION}&amp;sk=hits&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'hits' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a> <a href="{U_ACTION}&amp;sk=hits&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'hits' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </td>
+        <td style="width:70px;">{L_CHANGE}</td>
+    </tr>
+    
+    <!-- BEGIN records -->
+    <tr class="<!-- IF records.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->">
+    	<td>{records.NUM}</td>
+        <td>{records.USER}</td>
+        <td>{records.SINCE}</td>
+        <td>{records.COUNT}</td>
+        <td><a href="{U_ACTION}&amp;action=delete&amp;id={records.ID}" data-ajax="row_delete"><img title="Delete" alt="Delete" src="{EXT_PATH}adm/style/css/images/delete.png" width="16px"></a>
+        </td>
+    </tr>
+    <!-- BEGINELSE -->
+    <tr class="cbOddLine">
+    	<td colspan="5">{L_BBADBLOCK_NO_USERS}</td>
+    </tr>
+    <!-- END records -->
+
+    <tr class="cbNew">
+        <td colspan="4"></td>
+        <td>
+            <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF --> 
+            <!-- IF NEXTURL --><a href="{NEXTURL}"><img border="0" title="{L_PAGEFURTHER}" src="{EXT_PATH}adm/style/css/images/next.png"  width="13px" /></a><!-- ENDIF -->
+        </td>
+    </tr>
+    </table>
+
+<!-- INCLUDEJS js/bbadblock.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbadblock/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
