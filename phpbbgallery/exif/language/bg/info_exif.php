@@ -1,11 +1,15 @@
 <?php
 /**
-*
-* @package Gallery - Exif Extension [English]
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP Exif Extension [Bulgarian Translation]
+ *
+ * @package   phpbbgallery/exif
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Lucifer <https://www.anavaro.com>
+ */
 
 /**
 * @ignore
@@ -18,13 +22,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 /**
 * Language for Exif data
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'EXIF_DATA'					=> 'Exif Data',
 	'EXIF_APERTURE'				=> 'F-number',
 	'EXIF_CAM_MODEL'			=> 'Camera-model',
@@ -92,4 +96,7 @@ $lang = array_merge($lang, array(
 	'DISP_EXIF_DATA_EXP'		=> 'This feature can not be used at the moment, as the need function “exif_read_data“ is not included in your PHP Installation.',
 	'SHOW_EXIF'					=> 'show/hide',
 	'VIEWEXIFS_DEFAULT'			=> 'View Exif-Data by default',
-));
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'Първо трябва да бъде инсталирано и активирано разширението phpBB Gallery Core.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'Разширението е активирано успешно.',
+]);

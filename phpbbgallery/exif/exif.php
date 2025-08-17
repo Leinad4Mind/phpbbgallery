@@ -1,11 +1,14 @@
 <?php
 /**
-*
-* @package Gallery - Exif Extension
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP Exif Extension
+ *
+ * @package   phpbbgallery/exif
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\exif;
 
@@ -68,6 +71,11 @@ class exif
 	public $file		= '';
 
 	/**
+	* Original status of the Exif data.
+	*/
+	public $orig_status = null;
+
+	/**
 	* Image-ID, just needed to update the Exif status
 	*/
 	public $image_id	= false;
@@ -93,7 +101,7 @@ class exif
 	}
 
 	/**
-	* Intepret the values from the database, and read the data if we don't have it.
+	* Interpret the values from the database, and read the data if we don't have it.
 	*
 	* @param	int		$status		Value of a status constant (see beginning of the class)
 	* @param	mixed	$data		Either an empty string or the serialized array of the Exif from the database
@@ -104,7 +112,7 @@ class exif
 		$this->status = $status;
 		if ($this->status == self::DBSAVED)
 		{
-			$this->data = unserialize($data);
+			$this->data = @unserialize($data);
 		}
 		else if (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
 		{
@@ -126,7 +134,7 @@ class exif
 
 		if (!empty($this->data["EXIF"]))
 		{
-			// Unset invalid Exifs
+			// Unset invalid Exif's
 			foreach ($this->data as $key => $array)
 			{
 				if (!in_array($key, self::$allowed_groups))
@@ -166,7 +174,7 @@ class exif
 	{
 		global $user;
 
-		$user->add_lang_ext('phpbbgallery/exif', 'exif');
+		$user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
 		$this->prepared_data = array();
 		if (isset($this->data["EXIF"]["DateTimeOriginal"]))
@@ -271,7 +279,7 @@ class exif
 	* Sends the Exif into the template
 	*
 	* @param	bool	$expand_view	Shall we expand the Exif data on page view or collapse?
-	* @param	string	$block			Name of the template loop the Exifs are displayed in.
+	* @param	string	$block			Name of the template loop the Exif's are displayed in.
 	*/
 	public function send_to_template($expand_view = true, $block = 'exif_value')
 	{
@@ -310,7 +318,7 @@ class exif
 		$update_data = ($this->status == self::DBSAVED) ? ", image_exif_data = '" . $db->sql_escape($this->serialized) . "'" : '';
 		$sql = 'UPDATE ' . $table_prefix . 'gallery_images 
 			SET image_has_exif = ' . $this->status . $update_data . '
-			WHERE image_id = ' . $this->image_id;
+			WHERE image_id = ' . (int) $this->image_id;
 		$db->sql_query($sql);
 	}
 
