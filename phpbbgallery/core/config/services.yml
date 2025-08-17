@@ -1,55 +1,225 @@
-imports:
-    - { resource: controller.yml }
-    - { resource: tables.yml }
+parameters:
+    phpbbgallery.core.filedir.import: %core.root_path%files/phpbbgallery/core/import/
+    phpbbgallery.core.filedir.import.noroot: files/phpbbgallery/core/import/
+    phpbbgallery.core.filedir.source: %core.root_path%files/phpbbgallery/core/source/
+    phpbbgallery.core.filedir.source.noroot: files/phpbbgallery/core/source/
+    phpbbgallery.core.filedir.medium: %core.root_path%files/phpbbgallery/core/medium/
+    phpbbgallery.core.filedir.mini: %core.root_path%files/phpbbgallery/core/mini/
+    phpbbgallery.core.file.watermark: %core.root_path%files/phpbbgallery/core/watermark.png
+
+    tables.phpbbgallery.albums: %core.table_prefix%gallery_albums
+    tables.phpbbgallery.contests: %core.table_prefix%gallery_contests
+    tables.phpbbgallery.images: %core.table_prefix%gallery_images
+    tables.phpbbgallery.moderators: %core.table_prefix%gallery_modscache
+    tables.phpbbgallery.permissions: %core.table_prefix%gallery_permissions
+    tables.phpbbgallery.reports: %core.table_prefix%gallery_reports
+    tables.phpbbgallery.roles: %core.table_prefix%gallery_roles
+    tables.phpbbgallery.tracking: %core.table_prefix%gallery_albums_track
+    tables.phpbbgallery.users: %core.table_prefix%gallery_users
 
 services:
-    phpbbgallery.core.helpers.albums:
-        class: phpbbgallery\core\helpers\albums
-
-    phpbbgallery.core.helpers.tables:
-        class: phpbbgallery\core\helpers\tables
-        arguments:
-            - %tables.phpbbgallery.albums%
-            - %tables.phpbbgallery.albums_tracking%
-            - %tables.phpbbgallery.contests%
-            - %tables.phpbbgallery.moderators_cache%
-
-    phpbbgallery.core.albums.display:
-        class: phpbbgallery\core\albums\display
+    phpbbgallery.core.album.display:
+        class: phpbbgallery\core\album\display
         arguments:
             - @auth
             - @config
             - @controller.helper
             - @dbal.conn
+            - @pagination
+            - @request
             - @template
             - @user
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.image.utility
+            - @phpbbgallery.core.user
             - %core.root_path%
             - %core.php_ext%
-            - @phpbbgallery.core.albums.nestedset
-            - @phpbbgallery.core.auth
-            - @phpbbgallery.core.helpers.albums
-            - @phpbbgallery.core.helpers.tables
-
-    phpbbgallery.core.albums.nestedset:
-        class: phpbbgallery\core\albums\nestedset
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.contests%
+            - %tables.phpbbgallery.moderators%
+            - %tables.phpbbgallery.tracking%
+    phpbbgallery.core.album.loader:
+        class: phpbbgallery\core\album\loader
         arguments:
             - @dbal.conn
-            - @phpbbgallery.core.albums.table_lock
+            - @user
             - %tables.phpbbgallery.albums%
-
-    phpbbgallery.core.albums.table_lock:
-        class: phpbb\lock\db
+    phpbbgallery.core.auth:
+        class: phpbbgallery\core\auth\auth
         arguments:
-            - phpbbgallery.table_lock.albums
+            - @phpbbgallery.core.cache
+            - @dbal.conn
+            - @phpbbgallery.core.user
+            - %tables.phpbbgallery.permissions%
+            - %tables.phpbbgallery.roles%
+            - %tables.phpbbgallery.users%
+    phpbbgallery.core.auth.level:
+        class: phpbbgallery\core\auth\level
+        arguments:
+            - @phpbbgallery.core.auth
+            - @config
+            - @template
+            - @user
+    phpbbgallery.core.cache:
+        class: phpbbgallery\core\cache
+        arguments:
+            - @cache
+            - @dbal.conn
+    phpbbgallery.core.file.tools:
+        class: phpbbgallery\core\file\file
+        arguments:
+            - 2
+    phpbbgallery.core.image.utility:
+        class: phpbbgallery\core\image\utility
+        arguments:
+            - @config
+            - @controller.helper
+            - @dispatcher
+    phpbbgallery.core.report:
+        class: phpbbgallery\core\report
+        arguments:
+            - @dbal.conn
+            - %tables.phpbbgallery.images%
+            - %tables.phpbbgallery.reports%
+    phpbbgallery.core.listener:
+        class: phpbbgallery\core\event\main_listener
+        arguments:
+            - @controller.helper
+            - @template
+            - @user
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
+    phpbbgallery.core.upload:
+        class: phpbbgallery\core\upload
+        arguments:
             - @config
             - @dbal.conn
+            - @dispatcher
+            - @user
+            - @phpbbgallery.core.file.tools
+            - %tables.phpbbgallery.images%
+            - %phpbbgallery.core.filedir.import.noroot%
+            - %phpbbgallery.core.filedir.import%
+            - %phpbbgallery.core.filedir.source.noroot%
+            - %phpbbgallery.core.filedir.source%
+            - %phpbbgallery.core.filedir.medium%
+            - %phpbbgallery.core.filedir.mini%
+            - %core.root_path%
+            - %core.php_ext%
+    phpbbgallery.core.user:
+        class: phpbbgallery\core\user
+        arguments:
+            - @dbal.conn
+            - @dispatcher
+            - %tables.phpbbgallery.users%
 
-    phpbbgallery.core.auth:
-        class: phpbbgallery\core\mock\auth
-
-    phpbbgallery.core.config:
-            class: phpbbgallery\core\extconfig
-            arguments:
-                - @config
-                - @dbal.conn
-                - %tables.gallery.config%
+    phpbbgallery.core.controller.album:
+        class: phpbbgallery\core\controller\album
+        arguments:
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @pagination
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.auth.level
+            - @phpbbgallery.core.image.utility
+            - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.file:
+        class: phpbbgallery\core\controller\file
+        arguments:
+            - @config
+            - @dbal.conn
+            - @user
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.user
+            - @phpbbgallery.core.file.tools
+            - %phpbbgallery.core.filedir.source%
+            - %phpbbgallery.core.filedir.medium%
+            - %phpbbgallery.core.filedir.mini%
+            - %phpbbgallery.core.file.watermark%
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.image:
+        class: phpbbgallery\core\controller\image
+        arguments:
+            - @auth
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @dispatcher
+            - @pagination
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.auth.level
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.images%
+            - %tables.phpbbgallery.users%
+    phpbbgallery.core.controller.image_delete:
+        class: phpbbgallery\core\controller\image_delete
+        arguments:
+            - @controller.helper
+            - @dbal.conn
+            - @dispatcher
+            - @log
+            - @request
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.image_report:
+        class: phpbbgallery\core\controller\image_report
+        arguments:
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @dispatcher
+            - @log
+            - @request
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.report
+            - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.index:
+        class: phpbbgallery\core\controller\index
+        arguments:
+            - @auth
+            - @config
+            - @dbal.conn
+            - @request
+            - @template
+            - @user
+            - @controller.helper
+            - @phpbbgallery.core.album.display
+            - %core.root_path%
+            - %core.php_ext%
+    phpbbgallery.core.controller.upload:
+        class: phpbbgallery\core\controller\upload
+        arguments:
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @dispatcher
+            - @log
+            - @request
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.upload
+            - %tables.phpbbgallery.images%
+            - %core.root_path%
+            - %core.php_ext%

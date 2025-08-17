@@ -2,8 +2,8 @@
 
 /**
 *
-* @package phpBB Gallery Extension
-* @copyright (c) 2013 nickvergessen
+* @package phpBB Gallery Core
+* @copyright (c) 2014 nickvergessen
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -12,188 +12,145 @@ namespace phpbbgallery\core\controller;
 
 class index
 {
-	/** @var \phpbb\auth\auth */
+	/* @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\config\config */
+	/* @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\controller\helper */
-	protected $helper;
-
-	/** @var \phpbb\db\driver\driver */
+	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var \phpbb\request\request */
+	/* @var \phpbb\request\request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/* @var \phpbb\template\template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var string */
-	protected $root_path;
+	/* @var \phpbb\controller\helper */
+	protected $helper;
 
-	/** @var string */
-	protected $php_ext;
-
-	/** @var \phpbbgallery\core\albums\display */
+	/* @var \phpbbgallery\core\album\display */
 	protected $display;
 
-	/** @var \phpbbgallery\core\auth\auth_interface */
-	protected $gallery_auth;
+	/* @var string */
+	protected $root_path;
 
-	/** @var \phpbbgallery\core\helpers\albums */
-	protected $albums;
+	/* @var string */
+	protected $php_ext;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth				$auth
-	* @param \phpbb\config\config			$config
-	* @param \phpbb\controller\helper		$helper
-	* @param \phpbb\db\driver\driver		$db
-	* @param \phpbb\request\request			$request
-	* @param \phpbb\template\template		$template
-	* @param \phpbb\user					$user
-	* @param string			$phpbb_root_path
-	* @param string			$php_ext
-	* @param \phpbbgallery\core\albums\display	$display
-	* @param \phpbbgallery\core\auth			$gallery_auth
-	* @param \phpbbgallery\core\helpers\albums	$albums
+	* @param \phpbb\auth\auth			$auth		Auth object
+	* @param \phpbb\config\config		$config		Config object
+	* @param \phpbb\db\driver\driver_interface	$db	Database object
+	* @param \phpbb\request\request		$request	Request object
+	* @param \phpbb\template\template	$template	Template object
+	* @param \phpbb\user				$user		User object
+	* @param \phpbb\controller\helper	$helper		Controller helper object
+	* @param \phpbbgallery\core\album\display	$display	Albums display object
+	* @param string						$root_path	Root path
+	* @param string						$php_ext	php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\db\driver\driver $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext, \phpbbgallery\core\albums\display $display, \phpbbgallery\core\auth\auth_interface $gallery_auth, \phpbbgallery\core\helpers\albums $albums)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
-		$this->helper = $helper;
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
-
+		$this->helper = $helper;
 		$this->display = $display;
-		$this->gallery_auth = $gallery_auth;
-		$this->albums = $albums;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
-	* Display basic gallery index
-	*
-	* Also displays Birthdays, Who is Online, Loginbox, Statistics
+	* Index Controller
+	*	Route: gallery
 	*
 	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function gallery()
+	public function index()
 	{
-		$this->common_index();
+		$this->user->add_lang_ext('phpbbgallery/core', array('gallery'));
+		$this->display->display_albums(false, $this->config['load_moderators']);
 
-		$this->display->display_albums('');
+		$this->display_legend();
+		$this->display_brithdays();
+		$this->assign_dropdown_links('phpbbgallery_index');
 
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->url('gallery'),
-			'FORUM_NAME'		=> $this->user->lang('EXT_GALLERY'),
+			'FORUM_NAME'	=> $this->user->lang('GALLERY'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_index'),
 		));
 
-		return $this->helper->render('gallery_body.html', $this->user->lang('EXT_GALLERY'));
+		return $this->helper->render('gallery/index_body.html', $this->user->lang('GALLERY'));
 	}
 
 	/**
-	* Displays Birthdays, Who is Online, Loginbox, Statistics
+	* Personal Index Controller
+	*	Route: gallery/users
 	*
-	* @return null
+	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	protected function common_index()
+	public function personal()
 	{
-		$this->user->add_lang_ext('phpbbgallery/core', 'index');
+		$this->user->add_lang_ext('phpbbgallery/core', array('gallery'));
+		$this->display->display_albums('personal', $this->config['load_moderators']);
 
-		if ($this->config['phpbb_gallery_disp_birthdays'])
-		{
-			$this->generate_birthday_list();
-		}
+		$this->assign_dropdown_links('phpbbgallery_personal');
 
-		if ($this->config['phpbb_gallery_disp_whoisonline'])
+		$first_char = $this->request->variable('first_char', '');
+		$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $this->user->lang('ALL') . '</option>';
+// Loop the ASCII: a-z
+		for ($i = 97; $i < 123; $i++)
 		{
-			$this->generate_group_legend();
+			$s_char_options .= '<option value="' . chr($i) . '"' . (($first_char == chr($i)) ? ' selected="selected"' : '') . '>' . chr($i - 32) . '</option>';
 		}
+		$s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selected="selected"' : '') . '>#</option>';
 
 		$this->template->assign_vars(array(
-			'S_DISP_LOGIN'			=> $this->config['phpbb_gallery_disp_login'],
-			'S_DISP_WHOISONLINE'	=> $this->config['phpbb_gallery_disp_whoisonline'],
-
-			'TOTAL_IMAGES'			=> ($this->config['phpbb_gallery_disp_statistic']) ? $this->user->lang('TOTAL_IMAGES', (int) $this->config['phpbb_gallery_num_images']) : '',
-			'TOTAL_COMMENTS'		=> ($this->config['phpbb_gallery_allow_comments']) ? $this->user->lang('TOTAL_COMMENTS', (int) $this->config['phpbb_gallery_num_comments']) : '',
-			'TOTAL_PGALLERIES'		=> ($this->gallery_auth->acl_check('a_list', $this->albums->get_owner('personal'))) ? $this->user->lang('TOTAL_PEGAS_SPRINTF', $this->config['phpbb_gallery_num_pegas']) : '',
-			'NEWEST_PGALLERIES'		=> ($this->gallery_auth->acl_check('a_list', $this->albums->get_owner('personal')) || $this->config['phpbb_gallery_num_pegas']) ? $this->user->lang('NEWEST_PGALLERY', get_username_string('full', $this->config['phpbb_gallery_newest_pega_user_id'], $this->config['phpbb_gallery_newest_pega_username'], $this->config['phpbb_gallery_newest_pega_user_colour'], '', $this->helper->url('gallery/album/' . $this->config['phpbb_gallery_newest_pega_album_id']))) : '',
+			'S_CHAR_OPTIONS'				=> $s_char_options,
 		));
+
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->user->lang('GALLERY'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_index'),
+		));
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->user->lang('PERSONAL_ALBUMS'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_personal'),
+		));
+
+		return $this->helper->render('gallery/index_body.html', $this->user->lang('PERSONAL_ALBUMS'));
 	}
 
-	/**
-	* Generates the birthday list for the index
-	*
-	* @return null
-	*/
-	protected function generate_birthday_list()
+	protected function assign_dropdown_links($base_route)
 	{
-		$birthday_list = array();
-		if ($this->config['phpbb_gallery_disp_birthdays'] && $this->config['allow_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
-		{
-			$time = $this->user->create_datetime();
-			$now = phpbb_gmgetdate($time->getTimestamp() + $time->getOffset());
-
-			// Display birthdays of 29th february on 28th february in non-leap-years
-			$leap_year_birthdays = '';
-			if ($now['mday'] == 28 && $now['mon'] == 2 && !$time->format('L'))
-			{
-				$leap_year_birthdays = " OR u.user_birthday LIKE '" . $this->db->sql_escape(sprintf('%2d-%2d-', 29, 2)) . "%'";
-			}
-
-			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_birthday
-				FROM ' . USERS_TABLE . ' u
-				LEFT JOIN ' . BANLIST_TABLE . " b ON (u.user_id = b.ban_userid)
-				WHERE (b.ban_id IS NULL
-					OR b.ban_exclude = 1)
-					AND (u.user_birthday LIKE '" . $this->db->sql_escape(sprintf('%2d-%2d-', $now['mday'], $now['mon'])) . "%' $leap_year_birthdays)
-					AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
-			$result = $this->db->sql_query($sql);
-
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$birthday_username	= get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-				$birthday_year		= (int) substr($row['user_birthday'], -4);
-				$birthday_age		= ($birthday_year) ? max(0, $now['year'] - $birthday_year) : '';
-
-				$this->template->assign_block_vars('birthdays', array(
-					'USERNAME'	=> $birthday_username,
-					'AGE'		=> $birthday_age,
-				));
-
-				// For 3.0 compatibility
-				if ($age = (int) substr($row['user_birthday'], -4))
-				{
-					$birthday_list[] = $birthday_username . (($birthday_year) ? ' (' . $birthday_age . ')' : '');
-				}
-			}
-			$this->db->sql_freeresult($result);
-		}
+//		$this->template->assign_vars(array(
+//			'TOTAL_IMAGES'		=> ($phpbb_ext_gallery->config->get('disp_statistic')) ? $user->lang('TOTAL_IMAGES_SPRINTF', $phpbb_ext_gallery->config->get('num_images')) : '',
+//			'TOTAL_COMMENTS'	=> ($phpbb_ext_gallery->config->get('allow_comments')) ? $user->lang('TOTAL_COMMENTS_SPRINTF', $phpbb_ext_gallery->config->get('num_comments')) : '',
+//			'TOTAL_PGALLERIES'	=> ($phpbb_ext_gallery->auth->acl_check('a_list', phpbb_ext_gallery_core_auth::PERSONAL_ALBUM)) ? $user->lang('TOTAL_PEGAS_SPRINTF', $phpbb_ext_gallery->config->get('num_pegas')) : '',
+//			'NEWEST_PGALLERIES'	=> ($phpbb_ext_gallery->config->get('num_pegas')) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', $phpbb_ext_gallery->config->get('newest_pega_user_id'), $phpbb_ext_gallery->config->get('newest_pega_username'), $phpbb_ext_gallery->config->get('newest_pega_user_colour'), '', $phpbb_ext_gallery->url->append_sid('album', 'album_id=' . $phpbb_ext_gallery->config->get('newest_pega_album_id')))) : '',
+//		));
 
 		$this->template->assign_vars(array(
-			'BIRTHDAY_LIST'	=> (empty($birthday_list)) ? '' : implode($user->lang['COMMA_SEPARATOR'], $birthday_list),
+			//'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_mcp', array('mode' => 'overview')) : '',
+			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, array('hash' => generate_link_hash('global'), 'mark' => 'albums')) : '',
+			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 		));
 	}
 
-	/**
-	* Generates the group legend list for the index
-	*
-	* @return null
-	*/
-	protected function generate_group_legend()
+	protected function display_legend()
 	{
 		$order_legend = ($this->config['legend_sort_groupname']) ? 'group_name' : 'group_legend';
+
 		// Grab group details for legend display
 		if ($this->auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 		{
@@ -230,14 +187,56 @@ class index
 			}
 			else
 			{
-				$legend[] = '<a' . $colour_text . ' href="' . append_sid("{$this->root_path}memberlist.{$this->php_ext}", 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
+				$legend[] = '<a' . $colour_text . ' href="' . append_sid($this->root_path . 'memberlist.' . $this->php_ext, 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
 			}
 		}
 		$this->db->sql_freeresult($result);
 
-
 		$this->template->assign_vars(array(
 			'LEGEND'	=> implode($this->user->lang['COMMA_SEPARATOR'], $legend),
 		));
+	}
+
+	protected function display_brithdays()
+	{
+		// Generate birthday list if required ...
+		if ($this->config['load_birthdays'] && $this->config['allow_birthdays'] && $this->config['phpbb_gallery_disp_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
+		{
+			$this->template->assign_vars(array(
+				'S_DISPLAY_BIRTHDAY_LIST'	=> true,
+			));
+
+			$time = $this->user->create_datetime();
+			$now = phpbb_gmgetdate($time->getTimestamp() + $time->getOffset());
+
+			// Display birthdays of 29th february on 28th february in non-leap-years
+			$leap_year_birthdays = '';
+			if ($now['mday'] == 28 && $now['mon'] == 2 && !$time->format('L'))
+			{
+				$leap_year_birthdays = " OR u.user_birthday LIKE '" . $this->db->sql_escape(sprintf('%2d-%2d-', 29, 2)) . "%'";
+			}
+
+			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_birthday
+				FROM ' . USERS_TABLE . ' u
+				LEFT JOIN ' . BANLIST_TABLE . " b ON (u.user_id = b.ban_userid)
+				WHERE (b.ban_id IS NULL
+					OR b.ban_exclude = 1)
+					AND (u.user_birthday LIKE '" . $this->db->sql_escape(sprintf('%2d-%2d-', $now['mday'], $now['mon'])) . "%' $leap_year_birthdays)
+					AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+			$result = $this->db->sql_query($sql);
+
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$birthday_username	= get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+				$birthday_year		= (int) substr($row['user_birthday'], -4);
+				$birthday_age		= ($birthday_year) ? max(0, $now['year'] - $birthday_year) : '';
+
+				$this->template->assign_block_vars('birthdays', array(
+					'USERNAME'	=> $birthday_username,
+					'AGE'		=> $birthday_age,
+				));
+			}
+			$this->db->sql_freeresult($result);
+		}
 	}
 }

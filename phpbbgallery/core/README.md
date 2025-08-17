@@ -1,19 +1,45 @@
-# phpBB 3.1 Extension - Gallery Extension
+#phpBB Gallery
 
-## Installation
+© 2012 - [nickvergessen](http://www.flying-bits.org)
 
-Clone into phpBB/ext/gallery/core:
+With phpBB 3.1 MODs will mostly be replaced with Extensions. The main difference is, that extensions are designed (by code) in a different way and won't require code edits. So I started to port the Gallery MOD to a Gallery Extension. While refactoring the code, I also split it into several Extensions.
 
-    git clone https://github.com/nickvergessen/phpbb-ext-gallery.git phpBB/ext/phpbbgallery/core
+The aim behind this splitting is, to make it easily possible to disable some features and also be able to remove their code completly from the forum.
 
-Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Gallery Extension" extension.
+So which Extensions will the Gallery include?
 
-##Tests and Continuous Intergration
+##Extensions
 
-[![Build Status](https://travis-ci.org/nickvergessen/phpbb-ext-gallery.png?branch=extension-testframework)](https://travis-ci.org/nickvergessen/phpbb-ext-gallery)
+###Already implemented
 
-We use Travis-CI as a continous intergtation server and phpunit for our unit testing. See more information on the [phpBB development wiki](https://wiki.phpbb.com/Unit_Tests).
+* ACP CleanUp
+* ACP Import
+* Exif Data
+* Favorite
+* Feed
+    * todo: _Add links back to overall_header.html when the template event is commited._
 
-## License
+###Planned
 
-[GPLv2](license.txt)
+* Comment
+* Rating
+* Contest:
+    * Rating required
+    * Comment required
+* Search
+* Notification (Mail)
+* Report
+* HighslideJS/Lytebox/Shadowbox/etc.
+
+###Ideas
+
+The following ideas are not part of the 1.1 code
+
+* Custom image fields
+* Features image
+
+##Support/Testing/Installing
+
+The current code for 1.2-dev from this github branch should **NOT** be installed in a live board.
+
+Additional **NO SUPPORT** will be given, until a final version of 1.2 is released!
