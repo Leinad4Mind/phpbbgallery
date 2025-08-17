@@ -41,15 +41,20 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'SS_AUTOUPDATE_DISABLED'		=>'<strong style="font-size:1.4em">BBCore auto-update is disabled!</strong>',
+	'SS_BAD_FILESYSTEM'				=> 'You are using an obsolete PHP handler that makes your filesystem unwritable by phpBB.<br>Please consider installing a modern FastCGI PHP handler such as PHP-FPM.',
+	'SS_SYSINFO'					=> 'System Information',
+	'SS_FOUNDERS'					=> 'Founders',
 	'ACP_SITESPLAT_UPDATE_MANAGER'  => 'SiteSplat Update Manager',
+	'VERSIONNUMBERS'				=> 'Installed Version: %s, download the new version from the server: <a style="color:#fff;" href="%s" title="Download" target="_blank">%s</a> or go to the <a href="%s">SiteSplat Update Manager</a>.',
+
     'VERSION_INSTALLED'  			=> 'Installed Version',
 	'NEW_BOOTS_VERSION'				=> '🌟 New %s version available 🌟',
-	'VERSIONNUMBERS'				=> 'Installed Version: %s, download the new version from the server: <a style="color:#fff;" href="%s" title="Download" target="_blank">%s</a> or <a href="%s">go to Styles management</a> to use SiteSplat autoupdate system.',
 	'SS_RAPID_DISABLE'				=> 'SS Rapid Disable',
 	'SS_RAPID_DISABLE_TLT'		    => 'Disables (all) extensions at once. Make a backup first!!!',
 	
 	'DOWNLOAD_MSG'					=> 'New Latest Current version: <span class="label label-success">%s</span>',
-	'DOWNLOAD_BTN_ENVATO'		    => ' or <a class="btn btn-default sitesplat-bbcore-autoupdate" href="%s" title="Download from envato" target="_blank">Go to Envato item</a>',
+	'DOWNLOAD_BTN_ENVATO'		    => ' <a class="btn btn-default sitesplat-bbcore-autoupdate" href="%s" title="Download from envato" target="_blank">View Envato item</a>',
 	'DOWNLOAD_MSG_NO_UPD'			=> 'All good! looks like you are up to date! 👍💯',
 	'START_AUTO'				    => 'Start Auto-update 🚀',
 	
@@ -76,10 +81,6 @@ $lang = array_merge($lang, array(
 	'ACP_BBCORE_MSG_SETTINGS'		=> 'There No Configuration setting for this extension.<br />However not all updates were implemented properly due to the server file permissions or missing files. <br />See the admin log for more details.<br /><br />Please update the files permission manually.',
 	'BBCORE_ERROR_DISABLE'		    => 'You cannot disable SiteSplat BBCore due to other active SiteSplat\'s extensions.<br />Disable SiteSplat\'s extensions first. (You can use the rapid disable to disable all the SiteSplat\'s extensions at once.)<br /><br /><div style="margin: 0px auto; width: 50%%;"><strong>» %s</strong></div>',
 
-	// minification
-	'SITESPLAT_BBCORE_MINIFY_HTML'			=> 'Minify HTML',
-	'SITESPLAT_BBCORE_MINIFY_HTML_EXPLAIN'	=> 'This is a BBCore option. Generated content will be minified prior to sending it to the user. This will reduce network traffic but will also increase CPU and memory usage on server side.',
-
 	// autoupdate
 	'AUTOUPDATE_CONFIRM'			=> 'Confirm',
 	'AUTOUPDATE_CONFIRM_CONFIRM'	=> 'Are you sure you wish to update the theme with the auto-update?<br /><br /><strong>NOTE:</strong> The board will be disabled and the board cache will be automatically cleared for you after the update.<br /> A log of the changes is also saved under the ACP Admin log. <br /> A backup of your style (time stamped) will be stored for your convenience under the phpBB root/store/ folder on your server. <br />Make sure to clear your browser cache after the update and if you use CloudFlare make sure to clear the cache there as well plus clear again the forum cache via ACP!!!',
@@ -99,9 +100,4 @@ $lang = array_merge($lang, array(
 
 	// log
 	'LOG_STYLE_UPDATED'	=> '<strong>BBcore auto-updated %s style</strong><br />Edited:<br />&emsp;%s<br /><br />Added:<br />&emsp;%s<br /><br />Deleted:<br />&emsp;%s',
-
-	// Emoji stuff
-	'SS_DEFAULT_EMOJI'				=> 'Default topic titles emoji behavior',
-	'SS_DEFAULT_EMOJI_EXPLAIN'		=> 'Enable or disable the default phpBB topic title emoji behavior. Sadly starting with phpBB 3.2.9 users can freely "spam" emojis in topic titles. The phpBB team decided to blindly allow this and offer no way for admins to control it (not cool!). Luckily, you are using the SiteSplat\'s BBCore for added functionality to phpBB :-). It is strongly recommended to leave this option enabled to avoid users spamming titles.<br>Use then: <strong><a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=29" target="_blank">BBemoji</a></strong> (a premium extension) instead if you wish to take this a step further and have total control via proper forum permission basis for this behavior. This way you can designate a specific forum to allow emojis being posted in topic titles.',
-
 ));

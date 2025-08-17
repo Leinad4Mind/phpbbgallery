@@ -18,6 +18,7 @@ services:
     sitesplat.BBCore.listener:
         class: sitesplat\BBCore\event\listener
         arguments:
+            - '@cache'
             - '@config'
             - '@dbal.conn'
             - '@user'

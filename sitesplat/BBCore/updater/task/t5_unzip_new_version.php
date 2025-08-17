@@ -19,22 +19,28 @@ class t5_unzip_new_version
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config, $root_path)
+	public function run($style_name, $updater_config, $root_path, $fs)
 	{
-		$this->root_path = $root_path;
-		$tmp_path = $this->root_path . 'store/';
+		$tmp_path = $fs->phpbb_root_dir . '/store/';
 		$tmp_file = $tmp_path . 'bbcore_autoupdate_' . $updater_config['style_data']['direct_download_dir'] . '.zip';
 		$updater_config['tmp_dir'] = $tmp_path . 'bbcore_autoupdate_' . $updater_config['style_data']['direct_download_dir'] . '/';
+
+		// temporarily switch to "direct" filesystem since we're using /store
+		$fs_type = $fs->fs_type;
+		$fs->fs_type = 'direct';
 
 		// make sure tmp dir doesn't exist
 		if (file_exists($updater_config['tmp_dir']))
 		{
 			$this->filesystem->remove($updater_config['tmp_dir']);
+//			$fs->rmrf($updater_config['tmp_dir']);
 		}
 
 		// create tmp dir
 		$this->filesystem->mkdir($updater_config['tmp_dir']);
+//		$fs->mkdir($updater_config['tmp_dir']);
 
+/*
 		// unzip archive
 		$zip = new \ZipArchive;
 		$result = $zip->open($tmp_file);
@@ -48,9 +54,21 @@ class t5_unzip_new_version
 			throw new \Exception('DOWNLOADED_FILE_CORRUPTED');
 		}
 		$zip->close();
+*/
+
+		// unzip archive
+		$result = $fs->zip_extract($tmp_file, $updater_config['tmp_dir']);
+		if ($result === false)
+		{
+			throw new \Exception($fs->ftp_error);
+		}
 
 		// remove temporary zip file
 		$this->filesystem->remove($tmp_file);
+//		$fs->delete($tmp_file);
+
+		// restore original filesystem
+		$fs->fs_type = $fs_type;
 
 		$updater_config['last_step'] = 't5_unzip_new_version';
 		return $updater_config;

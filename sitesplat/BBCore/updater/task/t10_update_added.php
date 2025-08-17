@@ -17,7 +17,7 @@ class t10_update_added
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config, $root_path)
+	public function run($style_name, $updater_config, $root_path, $fs)
 	{
 		if (empty($updater_config['update_info']['added']))
 		{
@@ -29,7 +29,8 @@ class t10_update_added
 		$current_files_path = $this->root_path . 'styles/' . $style_name . '/';
 		foreach ($updater_config['update_info']['added'] as $key => $file_path)
 		{
-			file_put_contents($current_files_path . $file_path, file_get_contents($updater_config['tmp_dir'] . 'new/' . $file_path));
+//			file_put_contents($current_files_path . $file_path, file_get_contents($updater_config['tmp_dir'] . 'new/' . $file_path));
+			$fs->put($current_files_path . $file_path, file_get_contents($updater_config['tmp_dir'] . 'new/' . $file_path), true);
 
 			unset($updater_config['update_info']['added'][$key]);
 			break;

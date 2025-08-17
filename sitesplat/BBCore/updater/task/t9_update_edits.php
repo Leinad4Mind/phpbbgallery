@@ -19,7 +19,7 @@ class t9_update_edits
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config, $root_path)
+	public function run($style_name, $updater_config, $root_path, $fs)
 	{
 		$this->root_path = $root_path;
 		if (empty($updater_config['merge_calculated']))
@@ -32,7 +32,8 @@ class t9_update_edits
 		foreach ($updater_config['merge_calculated'] as $key => $file_path)
 		{
 			$cache_name = '_bbcore_updater_' . md5($file_path);
-			file_put_contents($current_files_path . $file_path, $this->cache->get($cache_name));
+//			file_put_contents($current_files_path . $file_path, $this->cache->get($cache_name));
+			$fs->put($current_files_path . $file_path, $this->cache->get($cache_name), true);
 			$this->cache->destroy($cache_name);
 
 			unset($updater_config['merge_calculated'][$key]);

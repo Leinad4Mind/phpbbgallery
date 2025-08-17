@@ -1,0 +1,347 @@
+<?php
+
+/**
+ *
+ * @package sitesplat BBcore
+ * @copyright (c) 2020 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
+
+namespace sitesplat\BBCore\acp;
+
+class bbcore_module
+{
+	var $u_action, $id;
+	protected $fs, $writable, $host, $path;
+	function main($id, $mode)
+	{
+		global $phpbb_container, $user, $template;
+		$this->id = $id;
+		$this->host = $phpbb_container->getParameter('sitesplat.bbcore.updater.host');
+		$this->path = $phpbb_container->getParameter('sitesplat.bbcore.updater.versioncheck_path');
+		$this->tpl_name = 'bbcore';
+		$this->page_title = 'BBCore';
+		$this->fs = \sitesplat\fs_instance();
+		$this->writable = $this->fs->init();
+		$user->add_lang_ext('sitesplat/BBCore', 'filesystem');
+		if ($mode == 'update') {
+			$this->update();
+		} else if ($mode == 'settings') {
+			$this->settings($this->fs_check());
+		} else {
+			$this->fs_check(true);
+		}
+		add_form_key('sitesplat/BBCore');
+		$template->assign_vars(['U_ACTION' => $this->u_action, 'BBCORE_TITLE' => $this->page_title, 'BBCORE_MODE' => $mode, 'SITESPLAT_TAB' => true,]);
+	}
+	function update()
+	{
+		global $request, $db, $template, $user;
+		$action = $request->variable('action', '');
+		if ($this->writable && ($action == 'autoupdate' || $action == 'autoupdate_confirm')) {
+			$this->autoupdate($action);
+		}
+		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result)) {
+			$cfg_ary = parse_cfg_file($this->fs->phpbb_root_dir . '/styles/' . strtoupper($row['style_name']) . '/style.cfg');
+			$data = $this->get_data($row['style_name']);
+			if (isset($data['version'])) {
+				$update = version_compare($cfg_ary['style_version'], $data['version'], '<');
+				$template->assign_block_vars('sitesplat_themes', array('NAME' => strtoupper($row['style_name']), 'VERSION' => $cfg_ary['style_version'], 'DOWNLOAD_MSG' => sprintf($user->lang['DOWNLOAD_MSG'], $data['version'], $data['download_url'], $data['title']), 'DOWNLOAD_BTN_ENVATO' => sprintf($user->lang['DOWNLOAD_BTN_ENVATO'], $data['download_url']), 'CHANGE_LOG' => addslashes($data['changelog']), 'CHANGE_LOG_MSG' => sprintf($user->lang['CHANGE_LOG_MSG'], $data['changelog_url'], $data['title']), 'SUPPORT_FORUM_MSG' => sprintf($user->lang['SUPPORT_FORUM_MSG'], $data['support_forum']), 'S_UPDATE' => $update, 'U_AUTOUPDATE' => $update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate_confirm&style=' . $row['style_name'] : false, 'U_AUTOUPDATE_STEP' => $update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate&style=' . $row['style_name'] : false,));
+			}
+		}
+		$db->sql_freeresult($result);
+	}
+	function settings($ftpuser)
+	{
+		global $auth, $cache, $user, $request, $config, $template, $db;
+		$ftpport = $ftperror = $msg = $addon_msg = '';
+		if ($request->is_set_post('submit') && !check_form_key('sitesplat/BBCore')) {
+			trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		if ($request->is_set_post('addonsave')) {
+			list($addon_error, $addon_msg) = \sitesplat\apply_filters('bbcore_addon_handle', [false, '']);
+			if (!$addon_error) {
+				trigger_error($addon_msg . adm_back_link($this->u_action));
+			}
+		} else if ($request->is_set_post('optsave')) {
+			$config->set('sitesplat_bbcore_emoji_revert', $request->variable('emoji', 0));
+			$config->set('sitesplat_bbcore_minify_html', $request->variable('minify', 0));
+			trigger_error($user->lang['BBCORE_OPT_SAVED'] . adm_back_link($this->u_action));
+		} else if ($request->is_set_post('ftpsave')) {
+			$ftpdata = $request->variable('ftpdata', array('' => ''), true);
+			$ftphost = empty($ftpdata['host']) ? '' : $ftpdata['host'];
+			$ftpport = empty($ftpdata['port']) ? 21 : $ftpdata['port'];
+			$ftpuser = empty($ftpdata['user']) ? '' : $ftpdata['user'];
+			$ftppass = empty($ftpdata['pass']) ? '' : $ftpdata['pass'];
+			$ftpssl = empty($ftpdata['ssl']) ? 0 : 1;
+			if ($ftpssl) {
+				$conn = @ftp_ssl_connect(($ftphost) ?: 'localhost', $ftpport, 60);
+			} else {
+				$conn = @ftp_connect(($ftphost) ?: 'localhost', $ftpport, 60);
+			}
+			if (!$conn) {
+				$ftperror = $user->lang['FTP_BAD_HOST'];
+			} else {
+				if (!@ftp_login($conn, $ftpuser, $ftppass)) {
+					$ftperror = $user->lang['FTP_BAD_USER'];
+				} else if (!$ftproot = $this->find_ftproot($conn)) {
+					$ftperror = $user->lang['FTP_NO_PATH'];
+				} else if (!@ftp_chdir($conn, $ftproot)) {
+					$ftperror = $user->lang['FTP_BAD_PATH'];
+				} else {
+					$config->set('dd_fs', base64_encode(gzdeflate(json_encode([$ftphost, $ftpport, $ftproot, $ftpuser, $ftppass, $ftpssl], 320))));
+					trigger_error($user->lang['FTP_FS_SUCCESS'] . adm_back_link($this->u_action));
+				}
+				@ftp_quit($conn);
+			}
+			$msg = $ftperror ?: $user->lang['FTP_FS_SUCCESS'];
+		}
+		if (!$ftpport && !empty($config['dd_fs'])) {
+			$ftpdata = json_decode(gzinflate(base64_decode($config['dd_fs'])), true);
+			$ftphost = $ftpdata[0];
+			$ftpport = $ftpdata[1];
+			$ftpuser = $ftpdata[3];
+			$ftppass = $ftpdata[4];
+			$ftpssl = $ftpdata[5];
+		} else if (!$ftpport) {
+			$ftphost = '';
+			$ftpport = 21;
+			$ftppass = '';
+			$ftpssl = 0;
+		}
+		$okftp = function_exists('ftp_connect') && function_exists('gzdeflate') && $this->fs->fs_type != 'direct';
+		list($addon_form, $junk) = \sitesplat\apply_filters('bbcore_form_addons', ['', $this->u_action]);
+		$template->assign_vars(['S_FS_FTP' => $okftp && $user->data['user_type'] == USER_FOUNDER, 'S_FS_FTP_ERROR' => $ftperror, 'FS_FTP_MESSAGE' => $msg, 'FS_FTPHOST' => $ftphost, 'FS_FTPPORT' => $ftpport, 'FS_FTPUSER' => $ftpuser, 'FS_FTPPASS' => $ftppass, 'FS_FTPSSL' => $ftpssl, 'S_FTPSSL' => function_exists('ftp_ssl_connect'), 'S_SS_EMOJI' => (int) $config['sitesplat_bbcore_emoji_revert'], 'S_SS_MINIFY' => (int) $config['sitesplat_bbcore_minify_html'], 'BBCORE_ADDONS' => \sitesplat\apply_filters('bbcore_addon_display', ''), 'BBC_FORM_ADDONS' => $addon_form, 'BBC_ADDON_ERROR' => $addon_msg,]);
+	}
+	private function find_ftproot($conn)
+	{
+		@ftp_pasv($conn, true);
+		@ftp_delete($conn, 'ftptest.dd');
+		if (!@ftp_put($conn, 'ftptest.dd', __DIR__ . '/ftptest.dd', FTP_BINARY)) {
+			return false;
+		}
+		$s = DIRECTORY_SEPARATOR;
+		$phpbb = strstr(__DIR__, "{$s}ext{$s}sitesplat{$s}BBCore", true);
+		$rpath = $this->find_ftptest($phpbb, $s);
+		@ftp_delete($conn, 'ftptest.dd');
+		if (!$rpath) {
+			return false;
+		}
+		return ($rpath == $phpbb) ? '/' : str_replace('\\', '/', substr($phpbb, strlen($rpath)));
+	}
+	private function find_ftptest($fdir, $s)
+	{
+		if (file_exists("{$fdir}{$s}ftptest.dd")) {
+			return $fdir;
+		}
+		$newdir = dirname($fdir);
+		if ($fdir == $newdir) {
+			return false;
+		}
+		return $this->find_ftptest($newdir, $s);
+	}
+	public function fs_check($tpl = false)
+	{
+		global $db, $user, $template, $request;
+		$userowner = $baduserowner = $sysinfo = $ownermsg = '';
+		if ($request->is_set_post('dash_submit')) {
+			if (!check_form_key('sitesplat/BBCore')) {
+				trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+			list($addon_error, $addon_msg) = \sitesplat\apply_filters('bbcore_dash_handle', [false, '']);
+			if (!$addon_error) {
+				trigger_error($addon_msg . adm_back_link($this->u_action));
+			}
+			$template->assign_var('BBCORE_DASH_ERROR', $addon_msg);
+		}
+		$opsys = (PHP_SHLIB_SUFFIX == 'dll') ? 'Windows' : 'Linux';
+		$sapi = php_sapi_name();
+		$cgi = strpos(strtolower($sapi), 'cgi') !== false;
+		if ($tpl) {
+			if ($opsys == 'Linux' && @is_readable('/proc/cpuinfo')) {
+				$cpuinfo = (string) @file_get_contents('/proc/cpuinfo');
+				preg_match_all('`model name.*?\:(.*?)\n`m', $cpuinfo, $match);
+				if (!empty($match[1])) {
+					$numcores = count($match[1]);
+					$numcores = ($numcores == 1) ? '(1 Core)' : "($numcores Cores)";
+					$sysinfo .= '<strong>CPU:</strong> ' . trim($match[1][0]) . " $numcores<br />";
+				}
+			}
+			$request->enable_super_globals();
+			$web = empty($_SERVER['SERVER_SOFTWARE']) ? '' : "/{$_SERVER['SERVER_SOFTWARE']}";
+			$sysinfo .= "<strong>OS:</strong> $opsys$web<br /><strong>PHP:</strong> " . PHP_VERSION . " ($sapi)";
+		}
+		$find_ary = [];
+		$dis = trim(ini_get('disable_functions'));
+		if ($dis) {
+			$dis = array_map('trim', explode(',', $dis));
+			if ($opsys == 'Windows' || $cgi) {
+				$find_ary = $this->check_dat($dis, ['shell_exec', 'passthru', 'escapeshellarg', 'escapeshellcmd']);
+			}
+		}
+		$okshell = !count($find_ary);
+		if ($opsys == 'Linux') {
+			if (!extension_loaded('posix')) {
+				$ownermsg = "<br /><br />{$user->lang['PHP_POSIX_MISSING']}";
+			} else if (is_array($dis)) {
+				$find_ary2 = $this->check_dat($dis, ['fileowner', 'posix_getpwuid', 'posix_getuid']);
+				if (count($find_ary2)) {
+					$ownermsg = "\t";
+					$find_ary = array_merge($find_ary, $find_ary2);
+				}
+			}
+		} else {
+			$ownermsg = "\t";
+		}
+		if (!$ownermsg) {
+			$owner = @fileowner(__DIR__);
+			if ($owner !== false) {
+				$userowner = posix_getpwuid($owner)['name'];
+				$baduserowner = ($owner < 500 || in_array($userowner, ['apache', 'www-data', 'nginx', 'nobody'])) ? " ({$user->lang['BBCORE_BIG_INCORRECT']})" : '';
+				$owner = posix_getuid();
+				$userphp = posix_getpwuid($owner)['name'];
+				$ownermsg = '<br /><br />' . sprintf($user->lang['BBCORE_USEROWNER'], $userowner) . "{$baduserowner}<br />" . sprintf($user->lang['BBCORE_PHPOWNER'], $userphp);
+			}
+		}
+		if ($tpl) {
+			if ($opsys == 'Linux' && $okshell) {
+				list($mem_avail, $mem_used) = explode(',', trim(`free -m | grep Mem | awk '{print $2","$3}'`));
+				$mem_avail = ($mem_avail < 1000) ? "{$mem_avail}MB" : $mem_avail / 1000 . 'GB';
+				$mem_used = ($mem_used < 1000) ? "{$mem_used}MB" : $mem_used / 1000 . 'GB';
+				$sysinfo .= '<br /><strong>MEM:</strong> ' . sprintf($user->lang['BBCORE_MEM'], $mem_avail, $mem_used);
+			}
+			$basedir = @ini_get('open_basedir');
+			if ($basedir) {
+				$sysinfo .= '<br /><br />' . sprintf($user->lang['PHP_OPEN_BASEDIR'], $basedir);
+			}
+			$not_installed = $user->lang['PHP_EXT_MISSING'];
+			$messages = [];
+			if (!extension_loaded('curl')) {
+				$messages[] = sprintf($not_installed, 'curl');
+			}
+			if (!extension_loaded('mbstring')) {
+				$messages[] = sprintf($not_installed, 'mbstring');
+			}
+			if (!extension_loaded('zip')) {
+				$messages[] = sprintf($not_installed, 'zip');
+			}
+			if (!extension_loaded('exif')) {
+				$messages[] = sprintf($not_installed, 'exif');
+			}
+			if (version_compare(PHP_VERSION, '7.1.99', '>') && !extension_loaded('sodium')) {
+				$messages[] = sprintf($not_installed, 'sodium');
+			}
+			if (count($messages)) {
+				$sysinfo .= '<br /><br />' . implode('<br />', $messages);
+			}
+			if (count($find_ary)) {
+				$sysinfo .= '<br /><br />' . sprintf($user->lang['PHP_FN_DISABLED'], implode(', ', $find_ary));
+			}
+			$badmsg = '';
+			if (!$this->writable) {
+				if ($opsys == 'Windows') {
+					$badmsg = $user->lang['FS_BAD_WINDOWS'];
+				} else if ($cgi) {
+					$badmsg = $user->lang['FS_BAD_CGI'];
+				} else if (!extension_loaded('zlib')) {
+					$badmsg = sprintf($not_installed, 'zlib');
+				} else if (!extension_loaded('ftp')) {
+					$badmsg = sprintf($not_installed, 'ftp');
+				} else {
+					$badmsg = $user->lang['FS_BAD_CREDS'];
+				}
+				$badmsg = "<strong>$badmsg</strong>{$user->lang['FS_INCOMPATIBLE']}";
+			}
+			$founders = [];
+			if ($user->data['user_type'] == USER_FOUNDER) {
+				$result = $db->sql_query('SELECT username FROM ' . USERS_TABLE . ' WHERE user_type = ' . USER_FOUNDER);
+				while ($row = $db->sql_fetchrow($result)) {
+					$founders[] = $row['username'];
+				}
+				$db->sql_freeresult($result);
+			}
+			$template->assign_vars(['BBCORE_NOT_WRITABLE' => $badmsg, 'BBCORE_SYSTEM_INFO' => $sysinfo . $ownermsg, 'BBC_FOUNDERS' => count($founders) ? implode(', ', $founders) : '', 'BBCORE_DASH_ADDONS' => \sitesplat\apply_filters('bbcore_dash_display', ''),]);
+		} else {
+			return ($userowner && !$baduserowner) ? $userowner : '';
+		}
+	}
+	protected function check_dat($dis, $fn_ary)
+	{
+		$find_ary = [];
+		foreach ($dis as $dat) {
+			if (in_array($dat, $fn_ary)) {
+				$find_ary[] = $dat;
+			}
+		}
+		return $find_ary;
+	}
+	protected function get_data($what = '')
+	{
+		global $cache, $phpbb_container;
+		$file_downloader = $phpbb_container->get('file_downloader');
+		$cache_file = '_versioncheck_' . $this->host . $this->path . $what;
+		if (($info = $cache->get($cache_file)) === false) {
+			try {
+				$info = $file_downloader->get($this->host, $this->path, $what, 443);
+			} catch (\phpbb\exception\runtime_exception $exception) {
+				$info = '';
+			}
+			$info = json_decode($info, true);
+			if (!empty($info)) {
+				$json_sanitizer = function (&$value, $key) {
+					$type_cast_helper = new \phpbb\request\type_cast_helper();
+					$type_cast_helper->set_var($value, $value, gettype($value), true);
+				};
+				array_walk_recursive($info, $json_sanitizer);
+				$cache->put($cache_file, $info, 86400);
+			}
+		}
+		return $info;
+	}
+	public function autoupdate($action)
+	{
+		global $config, $request, $user, $cache, $auth, $db, $phpbb_container;
+		$config_text = $phpbb_container->get('config_text');
+		if ($action === 'autoupdate_confirm') {
+			$config_text->set('sitesplat_bbcore_updater', '');
+			confirm_box(false, 'AUTOUPDATE_CONFIRM', build_hidden_fields(['id' => $this->id, 'mode' => 'bbcore', 'action' => 'autoupdate',]));
+		}
+		if ($action !== 'autoupdate') {
+			return;
+		}
+		if ($request->is_set('cancel')) {
+			redirect($this->u_action);
+		}
+		$style_name = $request->variable('style', '');
+		if (empty($style_name)) {
+			trigger_error($user->lang('STYLE_NOT_DEFINED') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		$config->set('board_disable', true);
+		$finished = $phpbb_container->get('sitesplat.bbcore.updater.next_step_resolver')->run_task($this->fs, $style_name);
+		if ($finished === true) {
+			$config->increment('assets_version', 1);
+			$cache->purge();
+			$phpbb_container->get('text_formatter.s9e.factory')->tidy();
+			$auth->acl_clear_prefetch();
+			phpbb_cache_moderators($db, $cache, $auth);
+			$config->set('board_disable', false);
+			trigger_error($user->lang('UPDATE_SUCCESS') . adm_back_link($this->u_action));
+		} else {
+			if ($finished === false) {
+				if ($request->is_ajax()) {
+					$sitesplat_bbcore_updater = json_decode($config_text->get('sitesplat_bbcore_updater'), true);
+					$response = new \phpbb\json_response;
+					$response->send(['continue' => true, 'href' => $this->u_action . '&action=autoupdate&style=' . $style_name, 'last_step' => $sitesplat_bbcore_updater['last_step'],]);
+				} else {
+					meta_refresh(0, $this->u_action . '&action=autoupdate&style=' . $style_name);
+					trigger_error('UPDATE_IN_PROGRESS');
+				}
+			} else {
+				trigger_error($user->lang($finished) . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+		}
+	}
+}
