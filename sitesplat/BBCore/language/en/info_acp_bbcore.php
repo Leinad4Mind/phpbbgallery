@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'NEW_BOOTS_VERSION'				=> 'New %s version available',
 	'VERSIONNUMBERS'				=> 'Installed Version: %s, download the new version from the server: <a style="color:#fff;" href="%s" title="Download" target="_blank">%s</a>',
 	'SS_RAPID_DISABLE'				=> 'SS Rapid Disable',
-	'SS_RAPID_DISABLE_TLT'		    => 'Disables (all) SiteSplat extensions at once. Make a backup first!!!',
+	'SS_RAPID_DISABLE_TLT'		    => 'Disables (all) extensions at once. Make a backup first!!!',
 	
 	'DOWNLOAD_MSG'					=> 'The current version <span class="label label-success">%s</span> can be downloaded from Themeforest: <a href="%s" title="Download" target="_blank">%s - phpBB3</a>',
 	'CHANGE_LOG_MSG'				=> 'The Changelog is located here: <a href="%s" target="_blank">%s (phpBB3.1) Changelog</a>',

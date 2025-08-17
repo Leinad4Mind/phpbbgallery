@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "The BBcore™© Adds Needed and Essential Functions into your phpBB® Installation in order to run SiteSplat Themes and also enhance the general forum experience",
 	"homepage": "http://sitesplat.com",
-	"version": "3.2.1",
-	"keywords": ["phpbb", "extension", "BBcore", "BBOOTS", "FLATBOOTS", "sitesplat", "envato", "themeforest"],
+	"version": "3.2.2",
+	"keywords": ["phpbb", "extension", "bbcore", "bboots", "flatboots", "sitesplat", "envato", "themeforest", "cosmetic", "core"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{

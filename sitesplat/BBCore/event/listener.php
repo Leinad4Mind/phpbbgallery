@@ -87,23 +87,26 @@ class listener implements EventSubscriberInterface
 				$user_lang = substr($user_lang, 0, strpos($user_lang, '-x-'));
 			}
 			
-			$file = $this->root_path . 'ext/sitesplat/BBCore/styles/all/template/offline_board_body.html';
+			$file = $this->root_path . 'ext/sitesplat/BBCore/styles/' . rawurlencode($this->user->style['style_path']) . '/template/offline_board_body.html';
 			$fp = fopen( $file , 'r' );
 			$content = fread( $fp , filesize($file) );
-			fclose( $fp ); 
+			fclose( $fp );
 
-			$match = array('#\{S_CONTENT_DIRECTION\}#', '#\{S_USER_LANG\}#', '#\{S_CONTENT_ENCODING\}#', '#\{SITENAME\}#', '#\{PAGE_TITLE\}#', '#\{T_STYLESHEET_LINK\}#',
-					 '#\{T_THEME_PATH\}#', '#\{SCRIPT_NAME\}#', '#\{L_BOARD_DISABLED\}#', '#\{ACP_DISABLE_MESSAGE\}#', '#\{L_LOGIN_LOGOUT\}#', 
-					 '#\{U_LOGIN_LOGOUT\}#');
+			$match = array('#\{S_CONTENT_DIRECTION\}#', '#\{BODY_CLASS\}#', '#\{S_USER_LANG\}#', '#\{S_CONTENT_ENCODING\}#', '#\{SITENAME\}#', '#\{PAGE_TITLE\}#', '#\{T_STYLESHEET_LINK\}#',
+				'#\{T_STYLESHEET_OFFLINE\}#', '#\{T_STYLESHEET_ANIMATE\}#', '#\{T_THEME_PATH\}#', '#\{SCRIPT_NAME\}#', '#\{L_BOARD_DISABLED\}#', '#\{ACP_DISABLE_MESSAGE\}#',
+				'#\{L_LOGIN_LOGOUT\}#', '#\{U_LOGIN_LOGOUT\}#');
 			$replace = array(
-				$this->user->lang['DIRECTION'], 
+				$this->user->lang['DIRECTION'],
+				'',
 				$user_lang,
 				'UTF-8',
 				$this->config['sitename'],
-				'Website offline',
+				$this->user->lang['WEBSITE']. ' &#187; ' . $this->user->lang['OFFLINE'],
 				"{$web_path}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/stylesheet.css?assets_version=' . $this->config['assets_version'],
+				"{$web_path}ext/sitesplat/BBCore/styles/" . rawurlencode($this->user->style['style_path']) . '/theme/offline.css',
+				"{$web_path}ext/sitesplat/BBCore/styles/" . rawurlencode($this->user->style['style_path']) . '/theme/animate.css',
 				"{$web_path}styles/" . rawurlencode($this->user->style['style_path']) . '/theme',
-				str_replace('.' . 'php', '', $this->user->page['page_name']),
+				str_replace('.' . $this->php_ext, '', $this->user->page['page_name']),
 				$this->user->lang['BOARD_UNAVAILABLE'],
 				$this->config['board_disable_msg'],
 				$this->user->lang['LOGIN'],

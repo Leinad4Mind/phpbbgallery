@@ -132,7 +132,7 @@ class admin_listener implements EventSubscriberInterface
 			$start_time = time();
 			$enabled_extensions = $this->extension_manager->all_enabled();
 			unset($enabled_extensions['forumhulp/helper'], $enabled_extensions['sitesplat/BBCore']);
-			foreach($enabled_extensions as $ext_name => $value)
+			foreach ($enabled_extensions as $ext_name => $value)
 			{
 				while ($this->extension_manager->disable_step($ext_name))
 				{

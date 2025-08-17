@@ -209,7 +209,7 @@ $lang = array_merge($lang, array(
   'UCP_REG_USR_PLACEHOLDER'      => 'E.g. John Doe',
   'UCP_REG_EMAIL_PLACEHOLDER'    => 'E.g. john@mail.com',
   'UCP_REG_PSWD_PLACEHOLDER'     => 'E.g. ASDFasdf123',
-  'UCP_REG_CAPCTHA_PLACEHOLDER'  => 'E.g. blue sky',
+  'UCP_REG_CTCHA_PLACEHOLDER'    => 'E.g. blue sky',
   'SEARCH_USR_PLACEHOLDER'       => 'E.g. SiteSplat',
   
   'MESSAGE_ENTER_PLACEHOLDER'    => 'Enter your message...',
