@@ -2,7 +2,7 @@
 
 /**
  * Code available to all SiteSplat extensions
- * @copyright (c) 2021 SiteSplat All rights reserved
+ * @copyright (c) 2023 SiteSplat All rights reserved
  * @license Proprietary
  */
 
@@ -14,9 +14,7 @@ function dl_params($dlfile, $url)
 }
 function emoji_convert($text)
 {
-	return (!$text) ? '' : preg_replace_callback('/([\x{1f000}-\x{1ffff}])/u', function ($matches) {
-		return strtolower('&#x' . dechex(substr(mb_convert_encoding($matches[1], 'HTML-ENTITIES', 'UTF-8'), 2, -1)) . ';');
-	}, $text);
+	return empty($text) ? '' : mb_encode_numericentity($text, [0x10000, 0x1ffff, 0, 0xfffff], 'UTF-8', true);
 }
 function add_filter($event, $hook, $priority = 20)
 {
@@ -91,8 +89,9 @@ function load_ext_lang($path, &$addon_lang)
 		}
 	}
 }
-class addon
+final class addon
 {
+	private function __construct() {}
 	public static $data = [];
 	public static $addons = [];
 	public static $events = [];

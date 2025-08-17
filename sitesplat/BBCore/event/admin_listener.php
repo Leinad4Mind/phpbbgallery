@@ -93,19 +93,22 @@ class admin_listener implements EventSubscriberInterface
 	}
 	public function run_action($event)
 	{
+		global $phpbb_dispatcher;
 		$this->template->assign_vars(array('DISABLE_ALL' => $event['u_action'] . '&action=disable-all',));
 		if ($event['action'] == 'disable-all') {
 			$safe_time_limit = (ini_get('max_execution_time') / 2);
 			$start_time = time();
 			$enabled_extensions = $this->extension_manager->all_enabled();
 			unset($enabled_extensions['forumhulp/helper'], $enabled_extensions['sitesplat/BBCore']);
+			extract($phpbb_dispatcher->trigger_event('sitesplat.bbcore_ext_list', compact('enabled_extensions')));
 			foreach ($enabled_extensions as $ext_name => $value) {
 				while ($this->extension_manager->disable_step($ext_name)) {
 					if ((time() - $start_time) >= $safe_time_limit) {
-						meta_refresh(0, $this->u_action . '&amp;action=disable-all');
+						meta_refresh(0, $event['u_action'] . '&amp;action=disable-all');
 					}
 				}
 			}
+			trigger_error($this->user->lang('CONFIG_UPDATED') . adm_back_link($event['u_action']));
 		}
 	}
 }

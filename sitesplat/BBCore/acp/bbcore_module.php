@@ -38,6 +38,8 @@ class bbcore_module
 	function update()
 	{
 		global $request, $db, $template, $user;
+		$BBOOTS = '3.3.0';
+		$FLATBOOTS = '3.3.0';
 		$action = $request->variable('action', '');
 		if ($this->writable && ($action == 'autoupdate' || $action == 'autoupdate_confirm')) {
 			$this->autoupdate($action);
@@ -45,11 +47,13 @@ class bbcore_module
 		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
-			$cfg_ary = parse_cfg_file($this->fs->phpbb_root_dir . '/styles/' . strtoupper($row['style_name']) . '/style.cfg');
+			$ustyle_name = strtoupper($row['style_name']);
+			$cfg_ary = parse_cfg_file($this->fs->phpbb_root_dir . "/styles/$ustyle_name/style.cfg");
 			$data = $this->get_data($row['style_name']);
 			if (isset($data['version'])) {
 				$update = version_compare($cfg_ary['style_version'], $data['version'], '<');
-				$template->assign_block_vars('sitesplat_themes', array('NAME' => strtoupper($row['style_name']), 'VERSION' => $cfg_ary['style_version'], 'DOWNLOAD_MSG' => sprintf($user->lang['DOWNLOAD_MSG'], $data['version'], $data['download_url'], $data['title']), 'DOWNLOAD_BTN_ENVATO' => sprintf($user->lang['DOWNLOAD_BTN_ENVATO'], $data['download_url']), 'CHANGE_LOG' => addslashes($data['changelog']), 'CHANGE_LOG_MSG' => sprintf($user->lang['CHANGE_LOG_MSG'], $data['changelog_url'], $data['title']), 'SUPPORT_FORUM_MSG' => sprintf($user->lang['SUPPORT_FORUM_MSG'], $data['support_forum']), 'S_UPDATE' => $update, 'U_AUTOUPDATE' => $update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate_confirm&style=' . $row['style_name'] : false, 'U_AUTOUPDATE_STEP' => $update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate&style=' . $row['style_name'] : false,));
+				$auto_update = version_compare($cfg_ary['style_version'], ${$ustyle_name}, '>=');
+				$template->assign_block_vars('sitesplat_themes', array('NAME' => $ustyle_name, 'VERSION' => $cfg_ary['style_version'], 'DOWNLOAD_MSG' => sprintf($user->lang['DOWNLOAD_MSG'], $data['version'], $data['download_url'], $data['title']), 'DOWNLOAD_BTN_ENVATO' => sprintf($user->lang['DOWNLOAD_BTN_ENVATO'], $data['download_url']), 'CHANGE_LOG' => addslashes($data['changelog']), 'CHANGE_LOG_MSG' => sprintf($user->lang['CHANGE_LOG_MSG'], $data['changelog_url'], $data['title']), 'SUPPORT_FORUM_MSG' => sprintf($user->lang['SUPPORT_FORUM_MSG'], $data['support_forum']), 'S_UPDATE' => $update, 'U_AUTOUPDATE' => $update && $auto_update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate_confirm&style=' . $row['style_name'] : false, 'U_AUTOUPDATE_STEP' => $update && $auto_update && $this->writable && !empty($data['direct_download_dir']) ? $this->u_action . '&action=autoupdate&style=' . $row['style_name'] : false,));
 			}
 		}
 		$db->sql_freeresult($result);
@@ -199,19 +203,28 @@ class bbcore_module
 		if (!$ownermsg) {
 			$owner = @fileowner(__DIR__);
 			if ($owner !== false) {
-				$userowner = posix_getpwuid($owner)['name'];
-				$baduserowner = ($owner < 500 || in_array($userowner, ['apache', 'www-data', 'nginx', 'nobody'])) ? " ({$user->lang['BBCORE_BIG_INCORRECT']})" : '';
-				$owner = posix_getuid();
-				$userphp = posix_getpwuid($owner)['name'];
-				$ownermsg = '<br /><br />' . sprintf($user->lang['BBCORE_USEROWNER'], $userowner) . "{$baduserowner}<br />" . sprintf($user->lang['BBCORE_PHPOWNER'], $userphp);
+				$userowner = posix_getpwuid($owner);
+				if (!empty($userowner['name'])) {
+					$userowner = $userowner['name'];
+					$baduserowner = ($owner < 500 || in_array($userowner, ['apache', 'www-data', 'nginx', 'nobody'])) ? " ({$user->lang['BBCORE_BIG_INCORRECT']})" : '';
+					$owner = posix_getuid();
+					$userphp = posix_getpwuid($owner);
+					$userphp = $userphp['name'];
+					$ownermsg = '<br /><br />' . sprintf($user->lang['BBCORE_USEROWNER'], $userowner) . "{$baduserowner}<br />" . sprintf($user->lang['BBCORE_PHPOWNER'], $userphp);
+				} else {
+					$ownermsg = "<br /><br />{$user->lang['PHP_POSIX_MISSING']}";
+				}
 			}
 		}
 		if ($tpl) {
 			if ($opsys == 'Linux' && $okshell) {
-				list($mem_avail, $mem_used) = explode(',', trim(`free -m | grep Mem | awk '{print $2","$3}'`));
-				$mem_avail = ($mem_avail < 1000) ? "{$mem_avail}MB" : $mem_avail / 1000 . 'GB';
-				$mem_used = ($mem_used < 1000) ? "{$mem_used}MB" : $mem_used / 1000 . 'GB';
-				$sysinfo .= '<br /><strong>MEM:</strong> ' . sprintf($user->lang['BBCORE_MEM'], $mem_avail, $mem_used);
+				$mem = explode(',', trim(`free -m | grep Mem | awk '{print $2","$3}'`));
+				if (count($mem) == 2) {
+					list($mem_avail, $mem_used) = $mem;
+					$mem_avail = ($mem_avail < 1000) ? "{$mem_avail}MB" : $mem_avail / 1000 . 'GB';
+					$mem_used = ($mem_used < 1000) ? "{$mem_used}MB" : $mem_used / 1000 . 'GB';
+					$sysinfo .= '<br /><strong>MEM:</strong> ' . sprintf($user->lang['BBCORE_MEM'], $mem_avail, $mem_used);
+				}
 			}
 			$basedir = @ini_get('open_basedir');
 			if ($basedir) {

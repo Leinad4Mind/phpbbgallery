@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\Container;
 use phpbb\path_helper;
 
-define('PHPBB_USE_BOARD_URL_PATH', true);
 class listener implements EventSubscriberInterface
 {
 	protected $cache;
@@ -42,6 +41,9 @@ class listener implements EventSubscriberInterface
 		$this->root_path = $phpbb_root_path;
 		$this->path_helper = $path_helper;
 		$this->php_ext = $php_ext;
+		if (!defined('PHPBB_USE_BOARD_URL_PATH')) {
+			define('PHPBB_USE_BOARD_URL_PATH', true);
+		}
 		require(dirname(__DIR__) . '/sitesplat.php');
 		require(dirname(__DIR__) . '/filesystem.php');
 		$this->fs = \sitesplat\fs_instance();

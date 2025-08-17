@@ -2,7 +2,7 @@
 
 /**
  * SiteSplat Filesystem
- * @copyright (c) 2020 Dion Designs. All rights reserved.
+ * @copyright (c) 2023 Dion Designs. All rights reserved.
  * @license Proprietary
  */
 
@@ -22,10 +22,11 @@ class filesystem
 	public $fs_type = false;
 	public $direct = false;
 	public $ftp_error = '';
-	protected $config, $root_ptr, $conn, $fs_root_dir;
+	protected $config, $root_ptr, $conn, $fs_root_dir, $oldhandler;
 	function __construct()
 	{
 		global $phpbb_container;
+		$this->oldhandler = set_error_handler([$this, 'ss_msghandler']);
 		$s = DIRECTORY_SEPARATOR;
 		$ss = "{$s}ext{$s}sitesplat";
 		$this->phpbb_root_dir = strstr(__DIR__, $ss, true);
@@ -43,6 +44,13 @@ class filesystem
 			$this->fs_type = false;
 			@ftp_quit($this->conn);
 		}
+	}
+	function ss_msghandler($errno, $msg_text, $errfile, $errline)
+	{
+		if (!(error_reporting() & $errno) && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE) {
+			return true;
+		}
+		return empty($this->oldhandler) ? false : call_user_func($this->oldhandler, $errno, $msg_text, $errfile, $errline);
 	}
 	function init()
 	{
