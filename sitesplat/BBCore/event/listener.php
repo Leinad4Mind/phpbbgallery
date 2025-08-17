@@ -47,14 +47,16 @@ class listener implements EventSubscriberInterface
 	}
 
 	
-	//  This below will add the proper trnslation to all languages 
-	//  but some of the UCP avatar page strings will not work - Looks like a phpBB bug
+	//  This below will add the proper translation to all languages 
+	//  but some of the UCP avatar page strings and other places will stll not work - phpBB bug?
+	//  replace this "core.user_setup" with the event below instead
 	//	'core.page_header'								=> 'add_lang',
 	
 	static public function getSubscribedEvents()
 	{
 		return array(
 			'core.user_setup'								=> 'add_lang',
+		//	'core.page_header'								=> 'add_lang',
 			'core.page_header_after'						=> 'add_template_variables',
 			'core.page_footer_after'						=> 'disabled_board',
 			'core.index_modify_page_title'					=> 'statistics',

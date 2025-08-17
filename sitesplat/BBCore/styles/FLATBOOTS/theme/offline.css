@@ -182,18 +182,15 @@ h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
     border-radius: 2px;
     color: #fff !important;
     display: inline-block;
-    font-size: 22px;
+    font-size: 20px;
     height: 30px;
     margin: 0 3px;
-    padding: 5px;
     transition: all 0.2s linear 0s;
     width: 30px;
+	line-height: 30px;
 }
 
-.social-network a i {
-    display: block;
-    position: relative;
-}
+
 .google-plus-color {
     background-color: #d34836;
 }

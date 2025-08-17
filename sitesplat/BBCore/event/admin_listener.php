@@ -19,6 +19,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class admin_listener implements EventSubscriberInterface
 {
+/**
+* Path to the helper versioncheck
+*/
 	protected $host = 'sitesplat.com';
 	protected $path = 'phpBB3/versioncheck';
 	protected $config;
@@ -47,7 +50,8 @@ class admin_listener implements EventSubscriberInterface
 		return array(
 			'core.acp_styles_action_before' 	=> 'version_check',
 			'core.acp_main_notice'				=> 'version_check',
-			'core.acp_extensions_run_action'	=> 'run_action'
+			'core.acp_extensions_run_action'		=> 'run_action',
+			'core.acp_extensions_run_action_before'	=> 'run_action'
 		);
 	}
 

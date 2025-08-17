@@ -333,6 +333,7 @@ $lang = array_merge($lang, array(
   'BACK_TO_START'	             => 'BACK TO START',
   
   'TOGGLE_NAV'	                 => 'Toggle Navigation',
+  'NAVIGATION'	                 => 'Navigation',
   
   'DEMO_LINK'	                 => 'Demo link no icons',
   'DEMO_HEADER_MENU'	         => 'Header intro example',
