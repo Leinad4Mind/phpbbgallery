@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Imgur - forum images uploader
+* Snappy Smart Reply
 *
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
