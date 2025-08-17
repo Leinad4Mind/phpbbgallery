@@ -29,6 +29,9 @@ class browser extends \phpbb\notification\method\base
 	/** @var \phpbb\log\log_interface */
 	protected $log;
 
+	/** @var \phpbb\filesystem\filesystem_interface */
+	protected $filesystem;
+
 	/** @var string */
 	protected $phpbb_root_path;
 
@@ -41,18 +44,17 @@ class browser extends \phpbb\notification\method\base
 	/** @var array */
 	protected $user_subscriptions = [];
 
-	public function __construct(\phpbb\user_loader $user_loader, \phpbb\user $user, \phpbb\cache\driver\driver_interface $cache, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\log\log_interface $log, $phpbb_root_path, $php_ext, $subscriptions_table)
+	public function __construct(\phpbb\user_loader $user_loader, \phpbb\user $user, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\log\log_interface $log, \phpbb\filesystem\filesystem_interface $filesystem, $phpbb_root_path, $php_ext, $subscriptions_table)
 	{
 		$this->user_loader = $user_loader;
 		$this->user = $user;
 		$this->config = $config;
 		$this->db = $db;
 		$this->log = $log;
+		$this->filesystem = $filesystem;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 		$this->subscriptions_table = $subscriptions_table;
-
-		parent::__construct($user_loader, $db, $cache, $user, $auth, $config, $phpbb_root_path, $php_ext);
 	}
 
 	/**
