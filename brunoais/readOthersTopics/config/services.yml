@@ -7,12 +7,8 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@user'
-            - '@brunoais.readOthersTopics.shared.accesses'
-            - '%tables.forums%'
             - '%tables.topics%'
             - '%tables.posts%'
-    brunoais.readOthersTopics.shared.accesses:
-        class: brunoais\readOthersTopics\shared\accesses
     brunoais.readOthersTopics.event.main_listener:
         class: brunoais\readOthersTopics\event\main_listener
         arguments:
@@ -21,11 +17,8 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@user'
-            - '@brunoais.readOthersTopics.shared.accesses'
             - '@brunoais.readOthersTopics.shared.permission_evaluation'
-            - '%tables.forums%'
             - '%tables.topics%'
-            - '%tables.posts%'
         tags:
             - { name: event.listener }
     brunoais.readOthersTopics.event.mcp_listener:
@@ -36,11 +29,8 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@user'
-            - '@brunoais.readOthersTopics.shared.accesses'
             - '@brunoais.readOthersTopics.shared.permission_evaluation'
-            - '%tables.forums%'
             - '%tables.topics%'
-            - '%tables.posts%'
         tags:
             - { name: event.listener }
     brunoais.readOthersTopics.event.search_listener:
@@ -51,11 +41,8 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@user'
-            - '@brunoais.readOthersTopics.shared.accesses'
             - '@brunoais.readOthersTopics.shared.permission_evaluation'
-            - '%tables.forums%'
             - '%tables.topics%'
-            - '%tables.posts%'
         tags:
             - { name: event.listener }
     brunoais.readOthersTopics.event.language_listener:
