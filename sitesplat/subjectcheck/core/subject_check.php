@@ -17,19 +17,21 @@ class subject_check
 	protected $user;
 	protected $auth;
 	protected $db;
+	protected $ext_manager;
 	protected $root_path;
 	protected $php_ext;
 	protected $topics_table;
 	protected $forums_table;
 	private $fulltext_native;
 	private $is_using_fulltext_native;
-	public function __construct(\phpbb\request\request $request, \phpbb\config\config $config, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, $root_path, $php_ext, $topics_table, $forums_table)
+	public function __construct(\phpbb\request\request $request, \phpbb\config\config $config, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\extension\manager $ext_manager, $root_path, $php_ext, $topics_table, $forums_table)
 	{
 		$this->request = $request;
 		$this->config = $config;
 		$this->user = $user;
 		$this->auth = $auth;
 		$this->db = $db;
+		$this->ext_manager = $ext_manager;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->topics_table = $topics_table;
@@ -201,7 +203,12 @@ class subject_check
 				}
 
 				$count += 1;
-				$topic_list .= '<a href="' . append_sid(generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id) . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a><br />';
+				$topic_list .= '<a href="' . append_sid(generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id) . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a>';
+				if ($this->ext_manager->is_enabled('sitesplat/bbtpreview'))
+				{
+					$topic_list .= '<a data-toggle="modal" data-id="' . $topic_id . '" href="#BBTPreviewDialog" class="btn btn-xs open-bbtpreview hidden-xs" title=""><i class="fa fa-search-plus"></i></a><span class="visible-xs"><a data-toggle="modal" data-id="' . $topic_id . '" href="#BBTPreviewDialog" class="btn-xs open-bbtpreview" title="">' . $this->user->lang('PREVIEW') . '</a></span>';
+				}
+				$topic_list .= '<br />';
 
 				if (!empty($this->config['subject_check_limit']) && $count >= $this->config['subject_check_limit'])
 				{

@@ -15,6 +15,7 @@ services:
             - '@user'
             - '@auth'
             - '@dbal.conn'
+            - '@ext.manager'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%tables.topics%'
