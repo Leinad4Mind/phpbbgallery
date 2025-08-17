@@ -1,0 +1,99 @@
+{% include 'overall_header.html' %}
+{% INCLUDECSS '@david63_autodbbackup/admin_forms.css' %}
+
+<h1>{{ lang('AUTO_DB_BACKUP_SETTINGS') }}</h1>
+<p>{{ lang('AUTO_DB_BACKUP_SETTINGS_EXPLAIN') }}</p>
+
+<img style="float: {{ S_CONTENT_FLOW_END }};" src="https://img.shields.io/badge/{{ lang('VERSION') }}-{{ AUTO_DB_BACKUP_VERSION }}-orange.svg?style=plastic" /><br />
+
+<form id="acp_auto_db_backup" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('SETTINGS') }}</legend>
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_enable">{{ lang('AUTO_DB_BACKUP_ENABLE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_ENABLE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="radio" id="auto_db_backup_enable1" name="auto_db_backup_enable" value="1"{% if S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
+				<label for="auto_db_backup_enable1">{{ lang('ENABLED') }}</label>
+				<input type="radio" id="auto_db_backup_enable0" name="auto_db_backup_enable" value="0"{% if not S_AUTO_DB_BACKUP_ENABLE %} checked="checked"{% endif %} />
+				<label for="auto_db_backup_enable0">{{ lang('DISABLED') }}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_filetype">{{ lang('AUTO_DB_BACKUP_FILETYPE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_FILETYPE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{% for types in filetypes %}
+					<input type="radio" id="auto_db_backup_filetype_{{ types.FILETYPE }}" name="auto_db_backup_filetype" value="{{ types.FILETYPE }}"{% if types.S_CHECKED %} checked="checked"{% endif %} />
+					<label for="auto_db_backup_filetype_{{ types.FILETYPE }}">{{ types.VALUE }}</label>
+				{% endfor %}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_gc">{{ lang('AUTO_DB_BACKUP_FREQ') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_FREQ_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input class="textbox" id="auto_db_backup_gc" type="number" maxlength="3" name="auto_db_backup_gc" value="{{ AUTO_DB_BACKUP_GC }}" min="1" max="350" /><span> {{ lang('HOURS') }}</span>
+ 			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_copies">{{ lang('AUTO_DB_BACKUP_COPIES') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_COPIES_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input class="textbox" id="auto_db_backup_copies" type="number" maxlength="2" name="auto_db_backup_copies" value="{{ AUTO_DB_BACKUP_COPIES }}" min="0" max="99" />
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_optimize">{{ lang('AUTO_DB_BACKUP_OPTIMIZE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="radio" id="auto_db_backup_optimize1" name="auto_db_backup_optimize" value="1"{% if S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
+ 				<label for="auto_db_backup_optimize1">{{ lang('ENABLED') }}</label>
+				<input type="radio" id="auto_db_backup_optimize0" name="auto_db_backup_optimize" value="0"{% if not S_AUTO_DB_BACKUP_OPTIMIZE %} checked="checked"{% endif %} />
+				<label for="auto_db_backup_optimize0">{{ lang('DISABLED') }}</label>
+			</dd>
+		</dl>
+
+
+		<dl>
+			<dt>
+				<label for="auto_db_backup_dt">{{ lang('AUTO_DB_BACKUP_TIME') }}{{ lang('COLON') }}</label><br /><span>{{ lang('AUTO_DB_BACKUP_TIME_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				&nbsp;{{ lang('DAY') }}{{ lang('COLON') }}
+				&nbsp;<input class="textbox" id="auto_db_backup_day" type="number" maxlength="2" name="auto_db_backup_day" value="{{ AUTO_DB_BACKUP_DAY }}" min="1" max="31" />
+				&nbsp;{{ lang('MONTH') }}{{ lang('COLON') }}
+				&nbsp;<input class="textbox" id="auto_db_backup_month" type="number" maxlength="2" name="auto_db_backup_month" value="{{ AUTO_DB_BACKUP_MONTH }}" min="1" max="12" />
+				{{ lang('YEAR') }}{{ lang('COLON') }}
+				&nbsp;<input class="textbox" id="auto_db_backup_year" type="number" maxlength="4" name="auto_db_backup_year" value="{{ AUTO_DB_BACKUP_YEAR }}" min="{{ YEAR_START }}" max="{{ YEAR_END }}" />
+				<br />
+				{{ lang('HOUR') }}{{ lang('COLON') }}
+				&nbsp;<input class="textbox" id="auto_db_backup_hour" type="number" maxlength="2" name="auto_db_backup_hour" value="{{ AUTO_DB_BACKUP_HOUR }}" min="0" max="23" />
+				{{ lang('MINUTE') }}{{ lang('COLON') }}
+				&nbsp;<input class="textbox" id="auto_db_backup_minute" type="number" maxlength="2" name="auto_db_backup_minute" value="{{ AUTO_DB_BACKUP_MINUTE }}" min="0" max="55" step="5"/>
+			</dd>
+		</dl>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

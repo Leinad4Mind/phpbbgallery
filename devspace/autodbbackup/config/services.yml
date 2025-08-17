@@ -1,0 +1,27 @@
+services:
+    david63.autodbbackup.admin.controller:
+        class: david63\autodbbackup\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@language'
+
+    david63.autodbbackup.cron.task.core.auto_db_backup:
+        class: david63\autodbbackup\cron\task\core\auto_db_backup
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '@service_container'
+            - '@dispatcher'		
+        calls:
+            - [set_name, [cron.task.core.auto_db_backup]]
+        tags:
+            - { name: cron.task }
