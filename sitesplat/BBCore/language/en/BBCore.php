@@ -114,7 +114,8 @@ $lang = array_merge($lang, array(
   'MCP_REPORTS_ZERO'             => 'There are no reports to review',
   'MCP_PM_REPORTS_ZERO'          => 'There are no PM reports to review',
   
-  
+ 
+  'SUBFORUM_LINK'                => 'Link opens in a new tab',
   'FORUMLIST_UNAPPROVED'         => 'At least one topic in this forum has not been approved', 
   'FORUMLIST_UNAPPROVED_POST'    => 'At least one post in this forum has not been approved', 
   'FORUMLIST_LASTPOST'           => 'View the latest post', 
@@ -198,6 +199,7 @@ $lang = array_merge($lang, array(
   'MEMBERLIST_P_JOINED'          => 'Joined the board',
   'MEMBERLIST_P_EXPL'            => 'This is when I joined the board',
   'MEMBERLIST_P_DATE_EXPL'       => 'This was last time I visited the board',
+  'SPAMMER'                      => 'Spammer',
   'SPAMMER_PLACEHOLDER'          => 'You cannot just spam our board and get away with it!',
   'MARK_PLACEHOLDER'      	     => 'Checkmark your choice',
   'INFO_BOX'      			     => 'Information:',
@@ -289,6 +291,7 @@ $lang = array_merge($lang, array(
   'SITESPLAT_NEWEST_MEMBER'		 => 'Newest Member',
   'SITESPLAT_USERS_ONLINE'		 => 'Users Online',
   'SITESPLAT_MOST_USERS_ONLINE'	 => 'Most Users Online',
+  'SITESPLAT_BIRTHDAYS'	         => 'Today\'s birthdays',
   
   'BOOTSTRAP_VERSION'	         => '3.3.6',
   'FLATBOOTS'	                 => 'FLATBOOTS',
@@ -346,6 +349,6 @@ $lang = array_merge($lang, array(
   'SITESPLAT'	                 => 'SiteSplat',
   'SITESPLAT_URL'	             => '<a href="http://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
   'JOIN_US_TWITTER'	             => 'Join us on Twitter',
-  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 1000 sales! Thank-you all for supporting this amzing project and contribuiting to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
+  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amzing project and contribuiting to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
   
 ));
