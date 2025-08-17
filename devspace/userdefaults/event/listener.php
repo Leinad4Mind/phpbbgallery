@@ -3,7 +3,7 @@
 *
 * @package User Defaults Extension
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +14,7 @@ use \phpbb\config\config;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use david63\userdefaults\core\constants;
+use \david63\userdefaults\core\constants;
 
 /**
 * Event listener
@@ -60,49 +60,50 @@ class listener implements EventSubscriberInterface
 	{
 		// Set the required notifications
 		$notifications_data = array();
+
 		if ($this->config['ud_moderation_queue'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'moderation_queue', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'moderation_queue', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.bookmark'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_bookmark'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.bookmark', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.bookmark', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.group_request'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_group'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.group_request', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.group_request', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.needs_approval'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_needs_approval'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.needs_approval', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.needs_approval', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.pm'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_pm'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.pm', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.pm', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.post'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_post'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.post', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.post', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.quote'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_quote'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.quote', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.quote', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.report'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_report'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.report', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.report', 'method' => 'notification.method.email');
 		}
 
-		if ($this->config['ud_type.topic'] != constants::NOTIFICATION)
+		if ($this->config['ud_type_topic'] != constants::NOTIFICATION)
 		{
-			$notifications_data[] = array('item_type' => 'notification.type.topic', 'method' => 'notification.method.email',);
+			$notifications_data[] = array('item_type' => 'notification.type.topic', 'method' => 'notification.method.email');
 		}
 
 		$event->offsetSet('notifications_data', $notifications_data);
@@ -112,7 +113,6 @@ class listener implements EventSubscriberInterface
 		$sql_ary['user_allow_massemail']	= $this->config['ud_allow_massemail'];
 		$sql_ary['user_allow_pm']			= $this->config['ud_allow_pm'];
 		$sql_ary['user_allow_viewemail']	= $this->config['ud_allow_viewemail'];
-		$sql_ary['user_allow_viewonline']	= $this->config['ud_allow_viewonline'];
 		$sql_ary['user_dateformat'] 		= $this->config['ud_date_format'];
 		$sql_ary['user_notify']				= $this->config['ud_notify'];
 		$sql_ary['user_notify_pm']   		= $this->config['ud_notify_pm'];

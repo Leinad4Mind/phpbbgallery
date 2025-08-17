@@ -2,8 +2,8 @@
 	"name": "david63/userdefaults",
 	"type": "phpbb-extension",
 	"description": "Allows an Admin to set the default user settings for new users.",
-	"version": "2.1.0",
-	"time": "2016-12-18",
+	"version": "2.1.0-RC1",
+	"time": "2017-07-30",
 	"keywords": [
 		"phpbb",
 		"extension",
@@ -24,9 +24,9 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "User default settings",
+		"display-name": "New user default settings",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.0-a1"
+			"phpbb/phpbb": ">=3.2.1-RC1"
       	}
 	}
 }

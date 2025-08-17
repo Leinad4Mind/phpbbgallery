@@ -3,7 +3,7 @@
 *
 * @package User Defaults Extension
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -31,8 +31,8 @@ class version_2_1_0 extends migration
 			array('config.add', array('ud_topic_sd', 'd')),
 			array('config.add', array('ud_topic_sk', 't')),
 			array('config.add', array('ud_topic_st', 0)),
-			array('config.add', array('ud_type.bookmark', 0)),
-			array('config.add', array('ud_type_group_request', 0)),
+			array('config.add', array('ud_type_bookmark', 0)),
+			array('config.add', array('ud_type_group', 0)),
 			array('config.add', array('ud_type_needs_approval', 0)),
 			array('config.add', array('ud_type_pm', 0)),
 			array('config.add', array('ud_type_post', 1)),

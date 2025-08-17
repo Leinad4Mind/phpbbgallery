@@ -3,7 +3,7 @@
 *
 * @package User Defaults Extension
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -13,7 +13,7 @@ use \phpbb\config\config;
 use \phpbb\request\request;
 use \phpbb\template\template;
 use \phpbb\user;
-use phpbb\log\log;
+use \phpbb\log\log;
 use \phpbb\language\language;
 use \phpbb\db\driver\driver_interface;
 use \david63\userdefaults\core\constants;
@@ -38,7 +38,7 @@ class admin_controller implements admin_interface
 	/** @var \phpbb\log */
 	protected $log;
 
-	/** @var phpbb\language\language */
+	/** @var \phpbb\language\language */
 	protected $language;
 
 	/** @var \phpbb\db\driver\driver_interface */
@@ -194,7 +194,6 @@ class admin_controller implements admin_interface
 			'USER_ALLOW_MASSEMAIL'		=> isset($this->config['ud_allow_massemail']) ? $this->config['ud_allow_massemail'] : 1,
 			'USER_ALLOW_PM'				=> isset($this->config['ud_allow_pm']) ? $this->config['ud_allow_pm'] : 1,
 			'USER_ALLOW_VIEWEMAIL'		=> isset($this->config['ud_allow_viewemail']) ? $this->config['ud_allow_viewemail'] : 1,
-			'USER_ALLOW_VIEWONLINE'		=> isset($this->config['ud_allow_viewonline']) ? $this->config['ud_allow_viewonline'] : 0,
 			'USER_DATE_FORMAT'			=> $dateformat_options,
 			'USER_DEFAULTS_VERSION'		=> constants::USER_DEFAULTS_VERSION,
 			'USER_NOTIFY'				=> isset($this->config['ud_notify']) ? $this->config['ud_notify'] : 0,
@@ -215,7 +214,6 @@ class admin_controller implements admin_interface
 		$this->config->set('ud_allow_massemail', $this->request->variable('ud_allow_massemail', 0));
 		$this->config->set('ud_allow_pm', $this->request->variable('ud_allow_pm', 0));
 		$this->config->set('ud_allow_viewemail', $this->request->variable('ud_allow_viewemail', 0));
-		$this->config->set('ud_allow_viewonline', $this->request->variable('ud_allow_viewonline', 0));
 		$this->config->set('ud_date_format', $this->request->variable('ud_date_format', ''));
 		$this->config->set('ud_moderation_queue', $this->request->variable('ud_moderation_queue', 0));
 	   	$this->config->set('ud_notify', $this->request->variable('ud_notify', ''));
@@ -236,7 +234,7 @@ class admin_controller implements admin_interface
 		$this->config->set('ud_topic_sk', $this->request->variable('topic_sk', 't'));
 		$this->config->set('ud_topic_st', $this->request->variable('topic_st', 0));
 		$this->config->set('ud_type_bookmark', $this->request->variable('ud_type_bookmark', 0));
-		$this->config->set('ud_type_group_request', $this->request->variable('ud_type_group_request', 0));
+		$this->config->set('ud_type_group', $this->request->variable('ud_type_group', 0));
 		$this->config->set('ud_type_needs_approval', $this->request->variable('ud_type_needs_approval', 0));
 		$this->config->set('ud_type_pm', $this->request->variable('ud_type_pm', 0));
 		$this->config->set('ud_type_post', $this->request->variable('ud_type_post', 1));
