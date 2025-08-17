@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
 * @package Special Birthday
@@ -40,10 +39,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_USER_UTILS'					=> 'User utilities',
 
-	'REGISTRATION_AGE'					=> 'Special Birthdate',
-	'REGISTRATION_AGE_LOG'				=> '<strong>Special Birthdate Settings Updated</strong>',
-	'REGISTRATION_AGE_MANAGE'			=> 'Manage Special Birthdate',
-	'REGISTRATION_AGE_LOG_FAIL'			=> '<strong>Birthdate check failed</strong><br>» %1$s entered an age of %2$s',
+	'REGISTRATION_AGE'					=> 'Special Birthday',
+	'REGISTRATION_AGE_LOG'				=> '<strong>Special Birthday Settings Updated</strong>',
+	'REGISTRATION_AGE_MANAGE'			=> 'Manage Special Birthday',
+	'REGISTRATION_AGE_LOG_FAIL'			=> '<strong>Birthday check failed</strong><br>» %1$s entered an age of %2$s',
 	'REGISTRATION_AGE_CHANGED'			=> '<strong>Birthday changed</strong><br>» from %1$s to %2$s',
 	'REGISTRATION_AGE_CHANGE_ATTEMPT'	=> '<strong>Attempted to change birthday</strong><br>» to %1$s, age: %2$d',
 ));

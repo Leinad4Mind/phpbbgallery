@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
 * @package Special Birthday
@@ -86,7 +85,7 @@ class data_controller implements data_interface
 	public function display_output()
 	{
 		// Add the language file
-		$this->language->add_lang('acp_data_specialbirthday', $this->functions->get_ext_namespace());
+		$this->language->add_lang('acp_data_registrationage', $this->functions->get_ext_namespace());
 
 		// Start initial var setup
 		$action			= $this->request->variable('action', '');

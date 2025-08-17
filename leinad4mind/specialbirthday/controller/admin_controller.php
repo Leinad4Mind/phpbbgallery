@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
 * @package Special Birthday
@@ -138,6 +137,7 @@ class admin_controller implements admin_interface
 			'REGISTRATION_AGE'				=> isset($this->config['registration_age']) ? $this->config['registration_age'] : '',
 			'REGISTRATION_AGE_REQUIRED'		=> isset($this->config['registration_age_required']) ? $this->config['registration_age_required'] : '',
 			'REGISTRATION_AGE_REG_DISPLAY'	=> isset($this->config['registration_age_reg_display']) ? $this->config['registration_age_reg_display'] : '',
+			'REGISTRATION_AGE_DATEPICKER'	=> $this->config['registration_age_datepicker'],
 			'REGISTRATION_AGE_ADMIN'		=> isset($this->config['registration_age_admin']) ? $this->config['registration_age_admin'] : '',
 			'REGISTRATION_AGE_BAN_LENGTH'	=> $ban_opts,
 			'REGISTRATION_AGE_BAN_REASON'	=> isset($this->config['registration_age_ban_reason']) ? $this->config['registration_age_ban_reason'] : '',
@@ -163,6 +163,7 @@ class admin_controller implements admin_interface
 		$this->config->set('registration_age', $this->request->variable('registration_age', 18));
 		$this->config->set('registration_age_required', $this->request->variable('registration_age_required', 0));
 		$this->config->set('registration_age_reg_display', $this->request->variable('registration_age_reg_display', 0));
+		$this->config->set('registration_age_datepicker', $this->request->variable('registration_age_datepicker', 0));
 		$this->config->set('registration_age_admin', $this->request->variable('registration_age_admin', 0));
 		$this->config->set('registration_age_ban_length', $this->request->variable('registration_age_ban_length', 0));
 		$this->config->set('registration_age_ban_reason', $this->request->variable('registration_age_ban_reason', '', true));

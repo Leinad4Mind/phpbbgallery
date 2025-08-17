@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
 * @package Special Birthday
@@ -132,6 +131,7 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars([
 			'REGISTRATION_AGE_REQUIRED'		=> $this->config['registration_age_required'],
 			'REGISTRATION_AGE_REG_DISPLAY'	=> $this->config['registration_age_reg_display'],
+			'REGISTRATION_AGE_DATEPICKER'	=> $this->config['registration_age_datepicker'],
 			'REGISTRATION_AGE_DAY'			=> $today->format('d'),
 			'REGISTRATION_AGE_MONTH'		=> $today->format('m'),
 			'REGISTRATION_AGE_YEAR'			=> $today->format('Y'),
@@ -139,11 +139,45 @@ class listener implements EventSubscriberInterface
 			'YEAR_END' 						=> $today->format('Y'),
 		]);
 
-		$event['data'] = array_merge($event['data'], [
-			'registration_age_day'		=> $this->request->variable('registration_age_day', ''),
-			'registration_age_month'	=> $this->request->variable('registration_age_month', ''),
-			'registration_age_year'		=> $this->request->variable('registration_age_year', ''),
-		]);
+		$data = [
+			'registration_age_day'		=> $this->request->variable('registration_age_day', 0),
+			'registration_age_month'	=> $this->request->variable('registration_age_month', 0),
+			'registration_age_year'		=> $this->request->variable('registration_age_year', 0),
+		];
+
+		if (!$this->config['registration_age_datepicker'])
+		{
+			$s_birthday_day_options = '<option value="0"' . ((!$data['registration_age_day']) ? ' selected="selected"' : '') . '>--</option>';
+			for ($i = 1; $i < 32; $i++)
+			{
+				$selected = ($i == $data['registration_age_day']) ? ' selected="selected"' : '';
+				$s_birthday_day_options .= "<option value=\"$i\"$selected>$i</option>";
+			}
+
+			$s_birthday_month_options = '<option value="0"' . ((!$data['registration_age_month']) ? ' selected="selected"' : '') . '>--</option>';
+			for ($i = 1; $i < 13; $i++)
+			{
+				$selected = ($i == $data['registration_age_month']) ? ' selected="selected"' : '';
+				$s_birthday_month_options .= "<option value=\"$i\"$selected>$i</option>";
+			}
+
+			$now = getdate();
+			$s_birthday_year_options = '<option value="0"' . ((!$data['registration_age_year']) ? ' selected="selected"' : '') . '>--</option>';
+			for ($i = $now['year'] - 100; $i <= $now['year']; $i++)
+			{
+				$selected = ($i == $data['registration_age_year']) ? ' selected="selected"' : '';
+				$s_birthday_year_options .= "<option value=\"$i\"$selected>$i</option>";
+			}
+			unset($now);
+
+			$this->template->assign_vars([
+				'S_BIRTHDAY_DAY_OPTIONS'	=> $s_birthday_day_options,
+				'S_BIRTHDAY_MONTH_OPTIONS'	=> $s_birthday_month_options,
+				'S_BIRTHDAY_YEAR_OPTIONS'	=> $s_birthday_year_options,
+			]);
+		}
+
+		$event['data'] = array_merge($event['data'], $data);
 	}
 
 	/**
@@ -168,7 +202,11 @@ class listener implements EventSubscriberInterface
 		if ($this->config['registration_age_reg_display'])
 		{
 			// Make sure that there is valid birthdate date entered in all fields before going any further
-			if (!is_numeric($data['registration_age_day']) || !is_numeric($data['registration_age_month']) || !is_numeric($data['registration_age_year']))
+			if (
+				!is_numeric($data['registration_age_day']) || !$data['registration_age_day'] ||
+				!is_numeric($data['registration_age_month']) || !$data['registration_age_month'] ||
+				!is_numeric($data['registration_age_year']) || !$data['registration_age_year']
+			)
 			{
 				if ($this->config['registration_age_required'])
 				{
@@ -197,6 +235,7 @@ class listener implements EventSubscriberInterface
 					if ($this->config['registration_age_ip'])
 					{
 						user_ban('ip', $this->user->ip, $this->config['registration_age_ban_length'], '', 0, $this->language->lang('BAN_REASON'), $this->config['registration_age_ban_reason']);
+						$this->user->check_ban(false, $this->user->ip);
 					}
 				}
 			}

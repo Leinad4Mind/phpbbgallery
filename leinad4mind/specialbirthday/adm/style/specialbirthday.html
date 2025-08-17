@@ -22,6 +22,16 @@
 		</dl>
 
 		<dl>
+			<dt><label for="registration_age_datepicker">{{ lang('REGISTRATION_AGE_DATEPICKER') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<input type="radio" id="registration_age_datepicker1" name="registration_age_datepicker" value="1"{% if REGISTRATION_AGE_DATEPICKER %} checked="checked"{% endif %} />
+				<label class="set" for="registration_age_datepicker1">{{ lang('YES') }}</label>
+				<input type="radio" id="registration_age_datepicker0" name="registration_age_datepicker" value="0"{% if not REGISTRATION_AGE_DATEPICKER %} checked="checked"{% endif %} />
+				<label class="unset" for="registration_age_datepicker0">{{ lang('NO') }}</label>
+			</dd>
+		</dl>
+
+		<dl>
 			<dt><label for="registration_age_required">{{ lang('REGISTRATION_AGE_REQUIRED') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="registration_age_required1" name="registration_age_required" value="1"{% if REGISTRATION_AGE_REQUIRED %} checked="checked"{% endif %} />

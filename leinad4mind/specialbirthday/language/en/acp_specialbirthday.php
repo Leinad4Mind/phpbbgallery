@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
 * @package Special Birthday
@@ -53,11 +52,12 @@ $lang = array_merge($lang, array(
 	'REGISTRATION_AGE_EXPLAIN'				=> 'Select the age at which you want to limit access.',
 	'REGISTRATION_AGE_REQUIRED'				=> 'Users are required to enter their birthday',
 	'REGISTRATION_AGE_REG_DISPLAY'			=> 'Display birthday field on registration',
+	'REGISTRATION_AGE_DATEPICKER'			=> 'Use datepicker instead of select elements to pick the date when registering',
 	'REGISTRATION_AGE_IP'					=> 'Block IP',
 	'REGISTRATION_AGE_IP_EXPLAIN'			=> 'Ban the IP address for the user attempting to register under age.',
 	'REGISTRATION_AGE_LOG'					=> 'Log failed attempts',
 	'REGISTRATION_AGE_LOG_EXPLAIN'			=> 'Create a log entry for any attempted registrations that fail due to an incorrect age being entered.',
-	'REGISTRATION_AGE_OPTIONS'				=> 'Special Birthdate options',
+	'REGISTRATION_AGE_OPTIONS'				=> 'Special Birthday options',
 
 	'BAN_END_TEXT' => array(
 		'0' 	=> 'Permanent',
