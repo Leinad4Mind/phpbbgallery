@@ -54,8 +54,10 @@ class listener implements EventSubscriberInterface
 			'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
 			'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
 	        'S_THUMB_ENABLED'		    => ($this->config['img_create_thumbnail']) ? true : false,
-	        'FANCYBOX_JS'				=> $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
-			'CHOCOLAT_JS'			    => $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
+	    //  'FANCYBOX_JS'				=> $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
+		//	'CHOCOLAT_JS'			    => $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
+			'FANCYBOX_JS'				=> generate_board_url() . '/' . $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
+			'CHOCOLAT_JS'			    => generate_board_url() . '/' . $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
 			'FANCYBOX_PROTECT'			=> $this->settings['protect'],
 
 			'CHOCOLAT_ENABLEZOOM'		=> $this->settings['enablezoom'],
