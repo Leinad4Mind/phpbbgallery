@@ -184,7 +184,7 @@ class topfive
 				'U_TOPIC'			=> $view_topic_url,
 				'U_FORUM'			=> $forum_name_url,
 				'S_UNREAD'			=> ($post_unread) ? true : false,
-				'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : $this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+				'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang('POST_BY_AUTHOR') . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : $this->user->lang('POST_BY_AUTHOR') . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 				'TOPIC_TITLE' 		=> $topic_title,
 				'FORUM_NAME'		=> $forum_name,
