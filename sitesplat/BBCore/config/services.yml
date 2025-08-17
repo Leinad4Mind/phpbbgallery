@@ -1,0 +1,27 @@
+services:
+    sitesplat.service:
+        class: sitesplat\service
+        arguments:
+            - @user
+    sitesplat.BBCore.listener:
+        class: sitesplat\BBCore\event\listener
+        arguments:
+            - @config
+            - @dbal.conn
+            - @user
+            - @auth
+            - @controller.helper
+            - @template
+            - @service_container
+        tags:
+            - { name: event.listener }
+    sitesplat.BBCore.admin_listener:
+        class: sitesplat\BBCore\event\admin_listener
+        arguments:
+            - @config
+            - @dbal.conn
+            - @user
+            - @template
+            - %core.root_path%
+        tags:
+            - { name: event.listener }

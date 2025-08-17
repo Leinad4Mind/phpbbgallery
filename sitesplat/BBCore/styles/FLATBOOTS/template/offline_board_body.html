@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="{S_CONTENT_ENCODING}">
+<meta name="author" content="SiteSplat www.sitesplat.com">
+<meta name="designer" content="SiteSplat www.sitesplat.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Set the viewport width to device width for mobile -->
+<meta name="Description" content=""><!-- Set Your forum description here inside the "" tag -->
+<meta name="Keywords" content=""><!-- Set Your forum keywords here inside the "" tag and make sure they are separated by a comma -->
+<meta name="application-name" content="FLATBOOTS"><!-- WIN8 Tiles setup forum name -->
+<meta name="msapplication-TileColor" content="#ffffff"><!-- WIN8 Tiles color -->
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+<title>{SITENAME} {PAGE_TITLE}</title>
+
+<!-- phpBB Premium style name: FLATBOOTS (3.0.2) @SiteSplat.com -->
+
+<!-- IF U_CANONICAL -->
+	<link rel="canonical" href="{U_CANONICAL}" />
+<!-- ENDIF -->
+
+<!-- Google free font here -->
+<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Asap:700' rel='stylesheet' type='text/css'>
+
+<!-- CSS files start here-->
+
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet">
+<link href="{T_THEME_PATH}/basics.css" rel="stylesheet">
+<link rel="stylesheet" href="./ext/sitesplat/BBCore/styles/all/theme/offline.css">
+<link rel="stylesheet" href="./ext/sitesplat/BBCore/styles/all/theme/animate.css">
+<!-- CSS files -->
+
+<!-- Scripts start here after the jquery.js -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+<div class="fullscreen background parallax masthead container" style="background-image:url('');" data-img-width="1600" data-img-height="1064" data-diff="100">
+    <div class="content-a">
+        <div class="content-b">
+            <h1 class="wow fadeInDown"><!-- IF S_BOARD_DISABLED -->{L_BOARD_DISABLED}<!-- ENDIF --></h1>
+            <h2 class="wow fadeInUp" data-wow-delay="0.5s">{ACP_DISABLE_MESSAGE}</h2>
+                <div class="wow bounceIn clearfix socialbar" data-wow-delay="1.2s">
+					<div class="social-network">
+						<a class="google-plus-color" title="Google+" data-original-title="" href="https://plus.google.com/u/0/100435978342273345264/"><i class="fa fa-google-plus"></i></a>
+						<a class="github-color" title="Github" data-original-title="" href="#2"><i class="fa fa-github"></i></a>
+						<a class="pinterest-color" title="Pinterest" data-original-title="" href="#5"><i class="fa fa-pinterest"></i></a> 
+						<a class="facebook-color" title="Facebook" data-original-title="" href="#6"><i class="fa fa-facebook"></i></a>
+						<a class="twitter-color" title="Twitter" data-original-title="" href="https://twitter.com/SiteSplat"><i class="fa fa-twitter"></i></a>
+						<a class="google-plus-color" title="YouTube" data-original-title="" href="#8"><i class="fa fa-youtube"></i></a>
+						<a class="github-color" title="{L_LOGIN_LOGOUT}" data-original-title="" href="{U_LOGIN_LOGOUT}"><i class="fa fa-gear"></i></a>
+					</div>
+				</div>
+		</div>
+    </div>
+</div>
+<script src="{T_THEME_PATH}/vendors/wow.min.js"></script>
+<script>
+$(document).ready(function(){
+  new WOW().init();
+   /* detect touch */
+if("ontouchstart" in window){
+    document.documentElement.className = document.documentElement.className + " touch";
+}
+if(!$("html").hasClass("touch")){
+    /* background fix */
+    $(".parallax").css("background-attachment", "fixed");
+}
+
+/* fix vertical when not overflow
+call fullscreenFix() if .fullscreen content changes */
+function fullscreenFix(){
+    var h = $('body').height();
+    // set .fullscreen height
+    $(".content-b").each(function(i){
+        if($(this).innerHeight() <= h){
+            $(this).closest(".fullscreen").addClass("not-overflow");
+        }
+    });
+}
+$(window).resize(fullscreenFix);
+fullscreenFix();
+
+/* resize background images */
+function backgroundResize(){
+    var windowH = $(window).height();
+    $(".background").each(function(i){
+        var path = $(this);
+        // variables
+        var contW = path.width();
+        var contH = path.height();
+        var imgW = path.attr("data-img-width");
+        var imgH = path.attr("data-img-height");
+        var ratio = imgW / imgH;
+        // overflowing difference
+        var diff = parseFloat(path.attr("data-diff"));
+        diff = diff ? diff : 0;
+        // remaining height to have fullscreen image only on parallax
+        var remainingH = 0;
+        if(path.hasClass("parallax") && !$("html").hasClass("touch")){
+            var maxH = contH > windowH ? contH : windowH;
+            remainingH = windowH - contH;
+        }
+        // set img values depending on cont
+        imgH = contH + remainingH + diff;
+        imgW = imgH * ratio;
+        // fix when too large
+        if(contW > imgW){
+            imgW = contW;
+            imgH = imgW / ratio;
+        }
+        //
+        path.data("resized-imgW", imgW);
+        path.data("resized-imgH", imgH);
+        path.css("background-size", imgW + "px " + imgH + "px");
+    });
+}
+$(window).resize(backgroundResize);
+$(window).focus(backgroundResize);
+backgroundResize();
+
+/* set parallax background-position */
+function parallaxPosition(e){
+    var heightWindow = $(window).height();
+    var topWindow = $(window).scrollTop();
+    var bottomWindow = topWindow + heightWindow;
+    var currentWindow = (topWindow + bottomWindow) / 2;
+    $(".parallax").each(function(i){
+        var path = $(this);
+        var height = path.height();
+        var top = path.offset().top;
+        var bottom = top + height;
+        // only when in range
+        if(bottomWindow > top && topWindow < bottom){
+            var imgW = path.data("resized-imgW");
+            var imgH = path.data("resized-imgH");
+            // min when image touch top of window
+            var min = 0;
+            // max when image touch bottom of window
+            var max = - imgH + heightWindow;
+            // overflow changes parallax
+            var overflowH = height < heightWindow ? imgH - height : imgH - heightWindow; // fix height on overflow
+            top = top - overflowH;
+            bottom = bottom + overflowH;
+            // value with linear interpolation
+            var value = min + (max - min) * (currentWindow - top) / (bottom - top);
+            // set background-position
+            var orizontalPosition = path.attr("data-oriz-pos");
+            orizontalPosition = orizontalPosition ? orizontalPosition : "50%";
+            $(this).css("background-position", orizontalPosition + " " + value + "px");
+        }
+    });
+}
+if(!$("html").hasClass("touch")){
+    $(window).resize(parallaxPosition);
+    //$(window).focus(parallaxPosition);
+    $(window).scroll(parallaxPosition);
+    parallaxPosition();
+}
+});
+</script>
+</body>
+</html>
