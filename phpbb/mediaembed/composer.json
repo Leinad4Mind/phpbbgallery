@@ -1,0 +1,34 @@
+{
+    "name": "phpbb/mediaembed",
+    "type": "phpbb-extension",
+    "description": "An official phpBB extension that allows users to embed content from allowed sites using a [media] BBCode, or from simply posting a supported URL in plain text.",
+    "homepage": "https://www.phpbb.com",
+    "version": "1.0.0",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Matt Friedman (VSE)",
+            "homepage": "http://mattfriedman.me",
+            "role": "Extensions Development Team Lead"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "composer/installers": "~1.0",
+        "phpbb/phpbb": ">=3.2.0,<3.3"
+    },
+    "require-dev": {
+        "phing/phing": "2.4.*"
+    },
+    "extra": {
+        "display-name": "phpBB Media Embed PlugIn",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/mediaembed",
+            "filename": "version_check"
+        }
+    }
+}
