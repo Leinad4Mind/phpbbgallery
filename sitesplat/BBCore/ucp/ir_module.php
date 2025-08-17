@@ -71,7 +71,7 @@ class ir_module
 				'L_IMAGE_RESIZE'			=> $this->page_title,
 				'L_IMAGE_RESIZE_EXPLAIN'	=> $this->user->lang(strtoupper($app) . '_RESIZE_EXPLAIN', $app, $this->config['avatar_max_height'], $this->config['avatar_max_width']),
 				'IMAGENAME'					=> str_replace('tmp_', '' , $imagename),
-				'UPLOADED_IMAGE'			=> 'data: ' . $imginfo['mime'] . ';base64,' . base64_encode(file_get_contents($imagename)),
+				'UPLOADED_IMAGE'			=> 'data:' . $imginfo['mime'] . ';base64,' . base64_encode(file_get_contents($imagename)),
 				'MIN_SIZE'					=> $this->config['avatar_min_width'] . ',' . $this->config['avatar_min_height'],
 				'U_ACTION'					=> $this->helper->route('sitesplat_bb' . $app . 'resize_controller', array('route' => 'index.html')),
 			));

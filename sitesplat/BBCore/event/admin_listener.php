@@ -19,10 +19,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class admin_listener implements EventSubscriberInterface
 {
-	protected $host = 'sitesplat.xyz';
-	protected $path = 'phpbb31/versioncheck';
-//	protected $host = 'sitesplat.com';
-//	protected $path = 'phpBB3/versioncheck';
+	protected $host = 'sitesplat.com';
+	protected $path = 'phpBB3/versioncheck';
 	protected $config;
 	protected $db;
 	protected $user;

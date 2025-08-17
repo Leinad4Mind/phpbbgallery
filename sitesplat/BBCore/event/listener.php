@@ -110,7 +110,7 @@ class listener implements EventSubscriberInterface
 				$this->user->lang['BOARD_UNAVAILABLE'],
 				$this->config['board_disable_msg'],
 				$this->user->lang['LOGIN'],
-				append_sid("{$this->root_path}ucp.php", 'mode=login')
+				append_sid("{$this->phpbb_root_path}ucp.php", 'mode=login')
 			);
 
 			$content = preg_replace($match, $replace, $content);
