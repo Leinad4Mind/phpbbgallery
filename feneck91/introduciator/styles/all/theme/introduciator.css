@@ -1,0 +1,50 @@
+/**
+ * Style used only for all pages that need to display shortcut to user introduce.
+ *
+ * @package phpBB Extension - Introduciator Extension
+ * @author Feneck91 (Stéphane Château) feneck91@free.fr
+ * @copyright (c) 2019-2022 Feneck91
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+/**
+ * For icon margin only.
+ */
+div.introduciator-base-icon {
+	margin-left: 6px;
+	margin-top: 6px;
+}
+
+/**
+ * Width / Height for both div / a (for background image size)).
+ */
+div.introduciator-base-icon, div.introduciator-base-icon a {
+	width: 20px;
+	height: 20px;
+}
+
+/**
+ * To make the hover work.
+ */
+div.introduciator-base-icon {
+	background-position: 0 100%;
+}
+
+/**
+ * To Hide span
+ */
+div.introduciator-base-icon span		{ display: none; }
+div.introduciator-base-icon a span		{ display: none; }
+
+/**
+ * To hide background of a when hover, display green background.
+ */
+div.introduciator-base-icon a:hover		{ background: none; }
+
+/**
+ * Set the images.
+ */
+div.introd-icon, div.introd-icon a		{ background-image: url("./images/icon_introduciator.gif"); }			/* Introduciator extension: icon */
+div.introdno-icon, div.introdno-icon a	{ background-image: url("./images/icon_nointroduciator.gif"); }			/* Introduciator extension: no presentation avalaible */
+div.introdpd-icon, div.introdpd-icon a	{ background-image: url("./images/icon_pendingintroduciator.gif"); }	/* Introduciator extension: presentation is pending */
+div.introdpu-icon, div.introdpu-icon a	{ background-image: url("./images/icon_pendinguintroduciator.gif"); }	/* Introduciator extension: presentation is pending but url is present (user can approve it) */
