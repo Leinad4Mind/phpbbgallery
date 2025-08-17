@@ -1,13 +1,14 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-namespace david63\registrationage\controller;
+namespace leinad4mind\specialbirthday\controller;
 
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
@@ -15,7 +16,7 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\pagination;
 use phpbb\language\language;
-use david63\registrationage\core\functions;
+use leinad4mind\specialbirthday\core\functions;
 
 /**
 * Admin controller
@@ -43,7 +44,7 @@ class data_controller implements data_interface
 	/** @var string */
 	protected $ext_root_path;
 
-	/** @var \david63\registrationage\core\functions */
+	/** @var \leinad4mind\specialbirthday\core\functions */
 	protected $functions;
 
 	/** @var string Custom form action */
@@ -59,9 +60,9 @@ class data_controller implements data_interface
 	* @param \phpbb\pagination							$pagination		Pagination object
 	* @param \phpbb\language\language					$language		Language object
 	* @param string										$ext_root_path	Path to this extension's root
-	* @param \david63\registrationage\core\functions	$functions		Functions for the extension
+	* @param \leinad4mind\specialbirthday\core\functions	$functions		Functions for the extension
 	*
-	* @return \david63\registrationage\controller\data_controller
+	* @return \leinad4mind\specialbirthday\controller\data_controller
 	* @access public
 	*/
 	public function __construct(config $config, driver_interface $db, request $request, template $template, pagination $pagination, language $language, $ext_root_path, functions $functions)
@@ -85,7 +86,7 @@ class data_controller implements data_interface
 	public function display_output()
 	{
 		// Add the language file
-		$this->language->add_lang('acp_data_registrationage', $this->functions->get_ext_namespace());
+		$this->language->add_lang('acp_data_specialbirthday', $this->functions->get_ext_namespace());
 
 		// Start initial var setup
 		$action			= $this->request->variable('action', '');
@@ -108,8 +109,8 @@ class data_controller implements data_interface
 
 		$order_ary = array(
 			'p'	=> 'user_birthday' . $sort_dir. ', username_clean ASC',
-			'r'	=> 'user_registration_birthdate' . $sort_dir. ', username_clean ASC',
 			'u'	=> 'username_clean' . $sort_dir,
+			'a' => 'RIGHT(user_birthday, 4) ' . $sort_dir . ', username_clean ASC',
 		);
 
 		$filter_by = '';
@@ -127,7 +128,7 @@ class data_controller implements data_interface
 
 		$order_by = ($sort_key == '') ? 'username_clean' : $order_ary[$sort_key];
 
-		$sql = 'SELECT user_id, username, username_clean, user_birthday, user_colour, user_registration_birthdate
+		$sql = 'SELECT user_id, username, username_clean, user_birthday, user_colour
 			FROM ' . USERS_TABLE . '
 				WHERE user_type <> ' . USER_IGNORE . "
 				$filter_by
@@ -138,35 +139,12 @@ class data_controller implements data_interface
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$age 		= $this->get_age($row['user_birthday']);
-			$reg_age	= $this->get_age($row['user_registration_birthdate']);
 			$status 	= 'spacer';
 			$title		= '';
-
-			if (($row['user_birthday'] && !$row['user_registration_birthdate']) || (!$row['user_birthday'] && $row['user_registration_birthdate']))
-			{
-				$status = 'question';
-				$title	= $this->language->lang('AGE_QUERY');
-			}
-
-			if ($row['user_birthday'] && $row['user_registration_birthdate'])
-			{
-				if ($age == $reg_age)
-				{
-					$status = 'check';
-					$title	= $this->language->lang('AGE_AGREE');
-				}
-				else
-				{
-					$status = 'error';
-					$title	= $this->language->lang('AGE_ERROR');
-				}
-			}
 
 			$this->template->assign_block_vars('agelist', array(
 				'AGE'		=> $age,
 				'BIRTHDAY'	=> $row['user_birthday'],
-				'REG_AGE'	=> $reg_age,
-				'REG_BDAY'	=> $row['user_registration_birthdate'],
 				'STATUS'	=> '<img src="' . htmlspecialchars($this->ext_root_path) . 'images/' . $status . '.png" align="middle" title="' . $title . '" />',
 				'USERNAME'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 			));
@@ -174,7 +152,11 @@ class data_controller implements data_interface
 
 		$this->db->sql_freeresult($result);
 
-		$sort_by_text	= array('u' => $this->language->lang('SORT_USERNAME'), 'p' => $this->language->lang('SORT_PROFILE'), 'r' => $this->language->lang('SORT_REGISTRATION'));
+		$sort_by_text = array(
+			'u' => $this->language->lang('SORT_USERNAME'),
+			'p' => $this->language->lang('SORT_PROFILE'),
+			'a' => $this->language->lang('SORT_AGE'),
+		);
 		$limit_days	= array();
 		$s_sort_key	= $s_limit_days = $s_sort_dir = $u_sort_param = '';
 
@@ -215,14 +197,10 @@ class data_controller implements data_interface
 		// Template vars for header panel
 		$this->template->assign_vars(array(
 			'HEAD_TITLE'		=> $this->language->lang('REGISTRATION_AGE'),
-			'HEAD_DESCRIPTION'	=> $this->language->lang('REGISTRATION_DATA_EXPLAIN'),
 
 			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
 
 			'S_BACK'			=> $back,
-			'S_VERSION_CHECK'	=> $this->functions->version_check(),
-
-			'VERSION_NUMBER'	=> $this->functions->get_this_version(),
 		));
 
 		$this->template->assign_vars(array(

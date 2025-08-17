@@ -1,21 +1,16 @@
 {
-	"name": "david63/registrationage",
+	"name": "leinad4mind/specialbirthday",
 	"type": "phpbb-extension",
-	"description": "Adds an option to enter a birthdate upon registration and to check that the date is equal to, or greater, than a minimum age.",
-	"version": "2.1.0-RC2",
-	"time": "2017-01-11",
-    "keywords": [
-        "phpbb",
-        "extension",
-        "age",
-		"birthdate",
-		"registration"
-    ],
-	"license": "GPL-2.0-only",
+	"description": "Give you the ability to make the birth date a required field, adds an option to enter a birthdate upon registration, checks if the date is equal or greater than a minimum age and much much more...",
+	"version": "1.0.0",
+	"time": "2019-08-28",
+    "keywords": [ "phpbb", "extension", "age", "special", "birthdate", "registration"],
+	"license": "GPL-2.0",
 	"authors": [
 		{
-			"name": "David Wood",
-			"role": "Developer"
+			"name": "leinad4mind",
+			"homepage": "https://leinad4mind.top/forum",
+			"role": "Extension Developer"
 		}
 	],
 	"require": {
@@ -23,14 +18,15 @@
         "composer/installers": "~1.0"
     },
 	"extra": {
-		"display-name": "[*] Registration age",
+		"display-name": "Special Birthday",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.2.0"
-		},
-		"version-check": {
-        	"host": "version.phpbbdev.space",
-        	"directory": "/3.2",
-        	"filename": "/registration_age_version_file.json"
-    	}
+    	},
+        "version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/specialbirthday",
+            "filename": "version_check.json",
+            "ssl": true
+        }
 	}
 }

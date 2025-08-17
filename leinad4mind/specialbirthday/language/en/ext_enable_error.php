@@ -1,8 +1,9 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */

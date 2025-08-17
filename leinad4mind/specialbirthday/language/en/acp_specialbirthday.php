@@ -1,8 +1,9 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
@@ -40,26 +41,23 @@ $lang = array_merge($lang, array(
 	'NEW_VERSION'							=> 'New Version',
 	'NEW_VERSION_EXPLAIN'					=> 'There is a newer version of this extension available.',
 
-	'REGISTRATION_AGE_ADMIN'				=> 'Show age on mini profile to Admin/Mods',
-	'REGISTRATION_AGE_ADMIN_EXPLAIN'		=> 'Only show the user’s age on the profile of viewtopic to Administrators and Moderators.',
+	'REGISTRATION_AGE_ADMIN'				=> 'Allow admins/mods to see the age',
 	'REGISTRATION_AGE_BAN_LENGTH'			=> 'Length of ban',
 	'REGISTRATION_AGE_BAN_LENGTH_EXPLAIN'	=> 'The length of time that the user’s IP&nbsp;address will be banned.',
 	'REGISTRATION_AGE_BAN_REASON'			=> 'Reason shown to the banned',
 	'REGISTRATION_AGE_BAN_REASON_EXPLAIN'	=> 'This is the reason for the ban that will be shown to the user.',
-	'REGISTRATION_AGE_COPY'					=> 'Copy to user’s birthday',
-	'REGISTRATION_AGE_COPY_EXPLAIN'			=> 'Copy the registration birthdate to the user’s birthday in thier profile.',
-	'REGISTRATION_AGE_DISPLAY'				=> 'Show age',
-	'REGISTRATION_AGE_DISPLAY_EXPLAIN'		=> 'Show the user’s age on the profile of viewtopic.',
+	'REGISTRATION_AGE_MEMBERLIST'			=> 'Show age on memberlist (view profile)',
+	'REGISTRATION_AGE_VIEWTOPIC'			=> 'Show age on viewtopic',
+	'REGISTRATION_AGE_SEARCH'				=> 'Show age on search results (posts view)',
+	'REGISTRATION_AGE_CHANGE'				=> 'Allow users to change their birthday',
 	'REGISTRATION_AGE_EXPLAIN'				=> 'Select the age at which you want to limit access.',
+	'REGISTRATION_AGE_REQUIRED'				=> 'Users are required to enter their birthday',
+	'REGISTRATION_AGE_REG_DISPLAY'			=> 'Display birthday field on registration',
 	'REGISTRATION_AGE_IP'					=> 'Block IP',
 	'REGISTRATION_AGE_IP_EXPLAIN'			=> 'Ban the IP address for the user attempting to register under age.',
 	'REGISTRATION_AGE_LOG'					=> 'Log failed attempts',
 	'REGISTRATION_AGE_LOG_EXPLAIN'			=> 'Create a log entry for any attempted registrations that fail due to an incorrect age being entered.',
-	'REGISTRATION_AGE_OPTIONS'				=> 'Registration age options',
-	'REGISTRATION_AGE_STORE'				=> 'Store the registration age',
-	'REGISTRATION_AGE_STORE_EXPLAIN'		=> 'Save the registration age in the database.<br><strong>Note: Be aware that saving this data may not be legal in your country.</strong>',
-
-	'VERSION'								=> 'Version',
+	'REGISTRATION_AGE_OPTIONS'				=> 'Special Birthdate options',
 
 	'BAN_END_TEXT' => array(
 		'0' 	=> 'Permanent',
@@ -71,14 +69,4 @@ $lang = array_merge($lang, array(
 		'20160'	=> '2 weeks',
 		'40320'	=> '1 month',
 	),
-));
-
-// Donate
-$lang = array_merge($lang, array(
-	'DONATE'					=> 'Donate',
-	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
-	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
-
-	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
-	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));

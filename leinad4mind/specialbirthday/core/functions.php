@@ -1,13 +1,14 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-namespace david63\registrationage\core;
+namespace leinad4mind\specialbirthday\core;
 
 use phpbb\extension\manager;
 
@@ -57,34 +58,5 @@ class functions
 		}
 
 		return $extension_name;
-	}
-
-	/**
-	* Check if there is an updated version of the extension
-	*
-	* @return $new_version
-	* @access public
-	*/
-	public function version_check()
-	{
-		$md_manager 	= $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
-		$versions 		= $this->ext_manager->version_check($md_manager);
-		$new_version	= (array_key_exists('current', $versions) ? $versions['current'] : false);
-
-		return $new_version;
-	}
-
-	/**
-	* Get the version number of this extension
-	*
-	* @return $meta_data
-	* @access public
-	*/
-	public function get_this_version()
-	{
-		$md_manager = $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
-		$meta_data	= $md_manager->get_metadata('version');
-
-		return $meta_data;
 	}
 }

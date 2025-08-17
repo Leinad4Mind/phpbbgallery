@@ -1,13 +1,14 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-namespace david63\registrationage;
+namespace leinad4mind\specialbirthday;
 
 use phpbb\extension\base;
 
@@ -32,11 +33,11 @@ class ext extends base
 			// Need to cater for 3.1 and 3.2
 			if (phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>='))
 			{
-				$this->container->get('language')->add_lang('ext_enable_error', 'david63/registrationage');
+				$this->container->get('language')->add_lang('ext_enable_error', 'leinad4mind/specialbirthday');
 			}
 			else
 			{
-				$this->container->get('user')->add_lang_ext('david63/registrationage', 'ext_enable_error');
+				$this->container->get('user')->add_lang_ext('leinad4mind/specialbirthday', 'ext_enable_error');
 			}
 		}
 

@@ -1,8 +1,9 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
@@ -37,10 +38,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_USER_UTILS'			=> 'User utilities',
+	'ACP_USER_UTILS'					=> 'User utilities',
 
-	'REGISTRATION_AGE'			=> 'Registration age',
-	'REGISTRATION_AGE_LOG'		=> '<strong>Registration age settings updated </strong>',
-	'REGISTRATION_AGE_MANAGE'	=> 'Manage registration age',
-	'REGISTRATION_AGE_LOG_FAIL'	=> '<strong>Registration age check failed »»</strong><br>%1$s entered an age of %2$s',
+	'REGISTRATION_AGE'					=> 'Special Birthdate',
+	'REGISTRATION_AGE_LOG'				=> '<strong>Special Birthdate Settings Updated</strong>',
+	'REGISTRATION_AGE_MANAGE'			=> 'Manage Special Birthdate',
+	'REGISTRATION_AGE_LOG_FAIL'			=> '<strong>Birthdate check failed</strong><br>» %1$s entered an age of %2$s',
+	'REGISTRATION_AGE_CHANGED'			=> '<strong>Birthday changed</strong><br>» from %1$s to %2$s',
+	'REGISTRATION_AGE_CHANGE_ATTEMPT'	=> '<strong>Attempted to change birthday</strong><br>» to %1$s, age: %2$d',
 ));

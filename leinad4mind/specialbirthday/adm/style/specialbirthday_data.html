@@ -30,19 +30,9 @@
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th>&nbsp;</th>
-		<th class="centered-text" colspan="2">{{ lang('PROFILE_DATA') }}</th>
-		<th class="centered-text" colspan="2">{{ lang('REGISTRATION_DATA') }}</th>
-		<th>&nbsp;</th>
-	</tr>
-
-	<tr>
 		<th>{{ lang('USERNAME') }}</th>
 		<th class="centered-text">{{ lang('DATE_OF_BIRTH') }}</th>
 		<th class="centered-text">{{ lang('AGE') }}</th>
-		<th class="centered-text">{{ lang('DATE_OF_BIRTH') }}</th>
-		<th class="centered-text">{{ lang('AGE') }}</th>
-		<th class="centered-text">{{ lang('STATUS') }}</th>
 	</tr>
 </thead>
 
@@ -52,9 +42,6 @@
 			<td>{{ ages.USERNAME }}</td>
 			<td class="centered-text">{{ ages.BIRTHDAY }}</td>
 			<td class="centered-text">{{ ages.AGE }}</td>
-			<td class="centered-text">{{ ages.REG_BDAY }}</td>
-			<td class="centered-text">{{ ages.REG_AGE }}</td>
-			<td class="centered-text">{{ ages.STATUS }}</td>
 		</tr>
 	{% endfor %}
 </tbody>

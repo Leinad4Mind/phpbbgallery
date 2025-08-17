@@ -1,8 +1,9 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
@@ -38,9 +39,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'AGE' 						=> 'Age',
-	'AGE_AGREE'					=> 'Ages match',
-	'AGE_ERROR'					=> 'Ages do not match',
-	'AGE_QUERY'					=> 'Age missing',
 	'ALL'						=> 'All',
 
 	'CLEAR_FILTER'				=> 'Clear filter',
@@ -52,15 +50,11 @@ $lang = array_merge($lang, array(
 
 	'OTHER'						=> 'Other',
 
-	'PROFILE_DATA' 				=> 'From profile',
-
 	'REG_AGE_SORT'				=> 'Sort',
-	'REGISTRATION_DATA'			=> 'From registration',
-	'REGISTRATION_DATA_EXPLAIN' => 'Here is a comparison of the dates of birth entered in the user’s profile and that entered at the time of registration.',
 
-	'SORT_PROFILE'				=> 'Profile dob',
-	'SORT_REGISTRATION'			=> 'Registration dob',
+	'SORT_PROFILE'				=> 'Date of Birth',
 	'SORT_USERNAME'				=> 'Username',
+	'SORT_AGE'					=> 'Age',
 	'STATUS' 					=> 'Status',
 
 	'TOTAL_USERS'				=> 'User count : <strong>%1$s</strong>',

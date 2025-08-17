@@ -1,0 +1,18 @@
+{% if S_REGISTRATION_AGE_PROFILE %}
+	<div class="control-group">
+		<label class="control-label">{{ lang('REGISTRATION_AGE_PROFILE') ~ lang('COLON') }}</label>
+		<div class="controls controls-row">
+			<div class="clearfix">
+				<div class="col-md-2">
+					<label for="user_registration_age_profile_0"><input type="radio" id="user_registration_age_profile_0" name="user_registration_age_profile" value="0"{{ not REGISTRATION_AGE_PROFILE ? ' checked' }}> {{ lang('REGISTRATION_AGE_NOBODY') }}</label>
+				</div>
+				<div class="col-md-2">
+					<label for="user_registration_age_profile_1"><input type="radio" id="user_registration_age_profile_1" name="user_registration_age_profile" value="1"{{ REGISTRATION_AGE_PROFILE == 1 ? ' checked' }}> {{ lang('REGISTRATION_AGE_EVERYBODY') }}</label>
+				</div>
+				<div class="col-md-3">
+					<label for="user_registration_age_profile_2"><input type="radio" id="user_registration_age_profile_2" name="user_registration_age_profile" value="2"{{ REGISTRATION_AGE_PROFILE == 2 ? ' checked' }}> {{ lang('REGISTRATION_AGE_FRIENDS') }}</label>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}

@@ -1,15 +1,16 @@
 <?php
+
 /**
 *
-* @package Registration Age Check
-* @copyright (c) 2016 david63
+* @package Special Birthday
+* @copyright (c) 2019 Leinad4Mind
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-namespace david63\registrationage\acp;
+namespace leinad4mind\specialbirthday\acp;
 
-class registrationage_module
+class specialbirthday_module
 {
 	public $u_action;
 
@@ -17,11 +18,11 @@ class registrationage_module
 	{
 		global $phpbb_container;
 
-		$this->tpl_name		= 'registrationage';
+		$this->tpl_name		= 'specialbirthday';
 		$this->page_title	= $phpbb_container->get('language')->lang('REGISTRATION_AGE');
 
 		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('david63.registrationage.admin.controller');
+		$admin_controller = $phpbb_container->get('leinad4mind.specialbirthday.admin.controller');
 
 		$admin_controller->display_options();
 	}
