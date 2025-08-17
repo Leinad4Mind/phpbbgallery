@@ -55,7 +55,7 @@ $lang = array_merge($lang, array(
 	
 	'ACP_SUBCHECK_SETTINGS'		    => 'Settings',
 	'ACP_SUBCHECK'					=> 'Subject Check',
-	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'SUBCHECK_NOTICE'	            => '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>. <br />Don\'t forget to check/set the permission for each forum if need be. <strong>ACP &#187; FORUMS &#187; Edit forum &#187; Enable subject check</strong></p></div>',
 
 	// ACP labels for individual forums

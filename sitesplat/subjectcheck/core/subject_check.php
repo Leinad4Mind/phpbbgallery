@@ -202,7 +202,7 @@ class subject_check
 				}
 
 				$count += 1;
-				$topic_list .= '<a href="' . append_sid(generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id) . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a>';
+				$topic_list .= '<a href="' . append_sid(generate_board_url() . '/viewtopic.php', "t={$topic_id}") . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a>';
 				if ($this->ext_manager->is_enabled('sitesplat/bbtpreview'))
 				{
 					$topic_list .= '<a data-toggle="modal" data-id="' . $topic_id . '" href="#BBTPreviewDialog" class="btn btn-xs open-bbtpreview hidden-xs" title=""><i class="fa fa-search-plus"></i></a><span class="visible-xs"><a data-toggle="modal" data-id="' . $topic_id . '" href="#BBTPreviewDialog" class="btn-xs open-bbtpreview" title="">' . $this->user->lang('PREVIEW') . '</a></span>';
