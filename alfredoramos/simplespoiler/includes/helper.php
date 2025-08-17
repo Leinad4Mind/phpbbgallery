@@ -15,19 +15,19 @@ use phpbb\filesystem\filesystem;
 class helper
 {
 
-	/** @var \phpbb\db\driver\factory $db */
+	/** @var \phpbb\db\driver\factory */
 	protected $db;
 
-	/** @var \phpbb\filesystem\filesystem $filesystem */
+	/** @var \phpbb\filesystem\filesystem */
 	protected $filesystem;
 
-	/** @var string $root_path */
+	/** @var string */
 	protected $root_path;
 
-	/** @var string $php_ext */
+	/** @var string */
 	protected $php_ext;
 
-	/** @var \acp_bbcodes $acp_bbcodes */
+	/** @var \acp_bbcodes */
 	protected $acp_bbcodes;
 
 	/**
@@ -72,7 +72,7 @@ class helper
 			return;
 		}
 
-		$data['bbcode_id'] = $this->bbcode_id();
+		$data['bbcode_id'] = (int) $this->bbcode_id();
 		$data = array_replace(
 			$data,
 			$this->acp_bbcodes->build_regexp(
@@ -82,7 +82,7 @@ class helper
 		);
 
 		// Get old BBCode ID
-		$old_bbcode_id = $this->bbcode_exists($data['bbcode_tag']);
+		$old_bbcode_id = (int) $this->bbcode_exists($data['bbcode_tag']);
 
 		// Update or add BBCode
 		if ($old_bbcode_id > NUM_CORE_BBCODES)
@@ -115,9 +115,9 @@ class helper
 	/**
 	 * Check whether BBCode already exists.
 	 *
-	 * @param string	$bbcode_tag
+	 * @param string $bbcode_tag
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function bbcode_exists($bbcode_tag = '')
 	{
@@ -128,7 +128,7 @@ class helper
 
 		$sql = 'SELECT bbcode_id
 			FROM ' . BBCODES_TABLE . '
-			WHERE bbcode_tag = "' . $this->db->sql_escape($bbcode_tag) .'"';
+			WHERE ' . $this->db->sql_build_array('SELECT', ['bbcode_tag' => $bbcode_tag]);
 		$result = $this->db->sql_query($sql);
 		$bbcode_id = (int) $this->db->sql_fetchfield('bbcode_id');
 		$this->db->sql_freeresult($result);
@@ -143,7 +143,7 @@ class helper
 	/**
 	 * Calculate the ID for the BBCode that is about to be installed.
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function bbcode_id()
 	{
@@ -166,20 +166,20 @@ class helper
 	/**
 	 * Add the BBCode in the database.
 	 *
-	 * @param array		$data
+	 * @param array $data
 	 *
 	 * @return void
 	 */
 	public function add_bbcode($data = [])
 	{
 		if (empty($data) ||
-			(!empty($data['bbcode_id']) && $data['bbcode_id'] > BBCODE_LIMIT))
+			(!empty($data['bbcode_id']) && (int) $data['bbcode_id'] > BBCODE_LIMIT))
 		{
 			return;
 		}
 
-		$sql = 'INSERT INTO ' . BBCODES_TABLE . ' ' .
-			$this->db->sql_build_array('INSERT', $data);
+		$sql = 'INSERT INTO ' . BBCODES_TABLE . '
+			' . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 
 	}
@@ -187,7 +187,7 @@ class helper
 	/**
 	 * Remove BBCode by tag.
 	 *
-	 * @param string	$bbcode_tag
+	 * @param string $bbcode_tag
 	 *
 	 * @return void
 	 */
@@ -198,7 +198,7 @@ class helper
 			return;
 		}
 
-		$bbcode_id = $this->bbcode_exists($bbcode_tag);
+		$bbcode_id = (int) $this->bbcode_exists($bbcode_tag);
 
 		// Remove only if exists
 		if ($bbcode_id > NUM_CORE_BBCODES)
@@ -212,13 +212,15 @@ class helper
 	/**
 	 * Update BBCode data if it already exists.
 	 *
-	 * @param int		$bbcode_id
+	 * @param integer	$bbcode_id
 	 * @param array		$data
 	 *
 	 * @return void
 	 */
 	public function update_bbcode($bbcode_id = -1, $data = [])
 	{
+		$bbcode_id = (int) $bbcode_id;
+
 		if ($bbcode_id <= NUM_CORE_BBCODES || empty($data))
 		{
 			return;
@@ -261,4 +263,5 @@ class helper
 			'display_on_posting'	=> 1
 		];
 	}
+
 }

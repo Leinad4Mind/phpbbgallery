@@ -2,8 +2,8 @@
  * Spoiler jQuery
  * https://github.com/AlfredoRamos/snippets/tree/master/javascript/spoiler
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
- * @version 0.2.1
- * @copyright (c) 2016 Alfredo Ramos
+ * @version 0.2.2
+ * @copyright 2016 Alfredo Ramos
  * @license GPL-2.0
  */
 (function($) {
@@ -20,14 +20,14 @@
 
 		// Event delegation
 		this.on('click', $settings.selector + '-trigger', function() {
+			var $elements = {};
+
 			// Spoiler elements relative to the object that is pointed to
-			var $elements = {
-				wrapper: $(this).parents($settings.selector).first(),
-				status: $(this).parents($settings.selector).first()
-					.find($settings.selector + '-status').first(),
-				body: $(this).parents($settings.selector).first()
-					.children($settings.selector + '-body').first()
-			};
+			$elements.wrapper = $(this).parents($settings.selector).first();
+			$elements.status = $elements.wrapper
+				.find($settings.selector + '-status').first();
+			$elements.body = $elements.wrapper
+				.children($settings.selector + '-body').first();
 
 			// Toggle CSS class
 			$elements.wrapper.toggleClass($settings.selector.replace('.','') + '-show');
