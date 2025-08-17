@@ -2,7 +2,7 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2016 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

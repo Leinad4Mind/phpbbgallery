@@ -2,12 +2,12 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\acp;
+namespace devspace\dropboxupload\acp;
 
 class dropboxupload_module
 {
@@ -21,7 +21,7 @@ class dropboxupload_module
 		$this->page_title = $phpbb_container->get('language')->lang('DROPBOX_UPLOAD');
 
 		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('david63.dropboxupload.admin.controller');
+		$admin_controller = $phpbb_container->get('devspace.dropboxupload.admin.controller');
 
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);

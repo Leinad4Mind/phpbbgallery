@@ -2,12 +2,12 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\core;
+namespace devspace\dropboxupload\core;
 
 use phpbb\extension\manager;
 use phpbb\exception\version_check_exception;
@@ -23,7 +23,7 @@ class functions
 	/**
 	 * Constructor for functions
 	 *
-	 * @param manager    $phpbb_extension_manager    Extension manager
+	 * @param manager   $phpbb_extension_manager    Extension manager
 	 *
 	 * @access public
 	 */
@@ -161,5 +161,20 @@ class functions
 		}
 
 		return [$php_valid, $phpbb_valid];
+	}
+
+	/**
+	 * Get the UTC timezone offset from server time
+	 *
+	 * @return utc_offset
+	 * @access public
+	 */
+	public function get_utc_offset()
+	{
+		$utc_dtz = new \DateTimeZone('UTC');
+		$php_dtz = new \DateTimeZone(date_default_timezone_get());
+		$utc_dt  = new \DateTime('now', $utc_dtz);
+
+		return $php_dtz->getOffset($utc_dt);
 	}
 }

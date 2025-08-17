@@ -2,12 +2,12 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\controller;
+namespace devspace\dropboxupload\controller;
 
 use phpbb\config\config;
 use phpbb\request\request;
@@ -15,7 +15,7 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbb\language\language;
 use phpbb\log\log;
-use david63\dropboxupload\core\functions;
+use devspace\dropboxupload\core\functions;
 
 /**
  * Admin controller
@@ -52,28 +52,28 @@ class admin_controller
 	/**
 	 * Constructor for admin controller
 	 *
-	 * @param config		$config     		Config object
-	 * @param request		$request    		Request object
-	 * @param template		$template   		Template object
-	 * @param user			$user       		User object
-	 * @param language		$language   		Language object
-	 * @param log			$log        		Log object
-	 * @param functions		$functions			Functions for the extension
-	 * @param string		$ext_images_path	Path to this extension's images
+	 * @param config        $config             Config object
+	 * @param request       $request            Request object
+	 * @param template      $template           Template object
+	 * @param user          $user               User object
+	 * @param language      $language           Language object
+	 * @param log           $log                Log object
+	 * @param functions     $functions          Functions for the extension
+	 * @param string        $ext_images_path    Path to this extension's images
 	 *
-	 * @return \david63\dropboxupload\controller\admin_controller
+	 * @return \devspace\dropboxupload\controller\admin_controller
 	 * @access public
 	 */
 	public function __construct(config $config, request $request, template $template, user $user, language $language, log $log, functions $functions, string $ext_images_path)
 	{
-		$this->config    		= $config;
-		$this->request   		= $request;
-		$this->template  		= $template;
-		$this->user      		= $user;
-		$this->language  		= $language;
-		$this->log       		= $log;
-		$this->functions 		= $functions;
-		$this->ext_images_path	= $ext_images_path;
+		$this->config          = $config;
+		$this->request         = $request;
+		$this->template        = $template;
+		$this->user            = $user;
+		$this->language        = $language;
+		$this->log             = $log;
+		$this->functions       = $functions;
+		$this->ext_images_path = $ext_images_path;
 	}
 
 	/**
@@ -87,7 +87,6 @@ class admin_controller
 
 		// Add the language files
 		$this->language->add_lang(['acp_dropboxupload', 'acp_common'], $this->functions->get_ext_namespace());
-		$this->language->add_lang('acp_common', $this->functions->get_ext_namespace());
 
 		// Create a form key for preventing CSRF attacks
 		$form_key = 'dropboxupload_manage';
@@ -134,7 +133,7 @@ class admin_controller
 		$this->template->assign_vars([
 			'DOWNLOAD' 			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
 
-			'EXT_IMAGE_PATH'	=> $this->ext_images_path,
+			'EXT_IMAGE_PATH' 	=> $this->ext_images_path,
 
 			'HEAD_TITLE' 		=> $this->language->lang('DROPBOX_UPLOAD'),
 			'HEAD_DESCRIPTION'	=> $this->language->lang('DROPBOX_UPLOAD_EXPLAIN'),

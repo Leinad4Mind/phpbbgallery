@@ -2,12 +2,12 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\controller;
+namespace devspace\dropboxupload\controller;
 
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
@@ -17,7 +17,7 @@ use phpbb\config\config;
 use phpbb\user;
 use phpbb\log\log;
 use phpbb\language\language;
-use david63\dropboxupload\core\functions;
+use devspace\dropboxupload\core\functions;
 
 class main_controller
 {

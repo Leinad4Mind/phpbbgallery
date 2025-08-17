@@ -2,17 +2,36 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\migrations;
+namespace devspace\dropboxupload\migrations;
 
 use phpbb\db\migration\migration;
 
-class version_2_1_0 extends migration
+class version_3_3_0 extends migration
 {
+	/**
+	 * {@inheritdoc
+	 */
+	public function effectively_installed(): bool
+	{
+		$sql = 'SELECT module_id
+				FROM ' . $this->table_prefix . "modules
+				WHERE module_class = 'acp'
+					AND module_langname = 'DROPBOX_UPLOAD'";
+		$result 	= $this->db->sql_query($sql);
+		$module_id	= (bool) $this->db->sql_fetchfield('module_id');
+		$this->db->sql_freeresult($result);
+
+		return $module_id !== false;
+	}
+
+	/**
+	 * {@inheritdoc
+	 */
 	public function update_data()
 	{
 		return [
@@ -27,7 +46,7 @@ class version_2_1_0 extends migration
 
 			['module.add', [
 				'acp', 'ACP_AUTO_DB_BACKUP', [
-					'module_basename' => '\david63\dropboxupload\acp\dropboxupload_module',
+					'module_basename' => '\devspace\dropboxupload\acp\dropboxupload_module',
 					'modes' => ['main'],
 				],
 			]],

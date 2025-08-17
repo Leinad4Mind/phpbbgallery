@@ -2,12 +2,12 @@
 /**
  *
  * @package Dropbox Upload
- * @copyright (c) 2016 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\dropboxupload\event;
+namespace devspace\dropboxupload\event;
 
 /**
  * @ignore
@@ -15,7 +15,7 @@ namespace david63\dropboxupload\event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use phpbb\config\config;
-use david63\dropboxupload\controller\main_controller;
+use devspace\dropboxupload\controller\main_controller;
 
 /**
  * Event listener
@@ -31,8 +31,8 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor for listener
 	 *
-	 * @param config			$config             phpBB config
-	 * @param main_controller	$main_controller    Main controller
+	 * @param config            $config             phpBB config
+	 * @param main_controller   $main_controller    Main controller
 	 *
 	 * @access public
 	 */
@@ -52,7 +52,7 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'david63.autodbbackup.backup_file_export' => 'dropbox_upload',
+			'devspace.autodbbackup.backup_file_export' => 'dropbox_upload',
 		];
 	}
 
