@@ -16,6 +16,7 @@ class upload_module
 	public $back_link;
 	private $self_update;
 	private $upload_ext_name;
+	private $phpbb_link_template;
 	var $zip_dir = '';
 	var $error = '';
 	function main($id, $mode)
@@ -35,14 +36,15 @@ class upload_module
 		// if 'i' is a number - continue displaying a number
 		$mode = $request->variable('mode', $mode);
 		$id = $request->variable('i', $id);
-		$this->main_link = $phpbb_root_path . 'adm/index.php?i=' . $id . '&amp;sid=' .$user->session_id . '&amp;mode=' . $mode;
-		$this->back_link = ($request->is_ajax()) ? adm_back_link($this->u_action) : '';
+		$this->main_link = $this->u_action;
+		$this->back_link = ($request->is_ajax()) ? '' : adm_back_link($this->u_action);
+		$this->phpbb_link_template = '#^(https://)www.phpbb.com/customise/db/download/([0-9]*?)(\?sid\=[a-zA-Z0-9]*?)?$#i';
 
-		include($phpbb_root_path . 'ext/boardtools/upload/vendor/filetree/filetree.' . $phpEx);
+		include($phpbb_root_path . 'ext/boardtools/upload/includes/filetree/filetree.' . $phpEx);
 		$file = $request->variable('file', '');
 		if ($file != '')
 		{
-			\filetree::get_file($file);
+			\boardtools\upload\filetree\filetree::get_file($file);
 		}
 
 		$this->upload_ext_name = 'boardtools/upload';
@@ -89,10 +91,10 @@ class upload_module
 
 				$md_manager->output_template_data();
 
-				if ($this->self_update !== false)
+				if ($this->self_update !== false && (preg_match($this->phpbb_link_template, $this->self_update)))
 				{
 					$template->assign_vars(array(
-						'U_UPLOAD_EXT_UPDATE'	=> $this->main_link . '&amp;action=upload_self',
+						'U_UPLOAD_EXT_UPDATE'	=> $this->main_link . '&amp;action=upload_self_confirm',
 					));
 				}
 
@@ -118,10 +120,13 @@ class upload_module
 				{
 					$action = 'upload_local';
 				}
-				/* We use '!== false' because strpos can return 0 if the needle is found in position 0 */
-				else if (strpos($request->variable('remote_upload', ''), 'http://') !== false || strpos($request->variable('remote_upload', ''), 'https://') !== false)
+				else if (strpos($request->variable('remote_upload', ''), 'http://') === 0 || strpos($request->variable('remote_upload', ''), 'https://') === 0)
 				{
 					$action = 'upload_remote';
+				}
+				else if (strpos($request->variable('valid_phpbb_ext', ''), 'http://') === 0 || strpos($request->variable('valid_phpbb_ext', ''), 'https://') === 0)
+				{
+					$action = 'upload_from_phpbb';
 				}
 
 			case 'upload_remote':
@@ -130,12 +135,24 @@ class upload_module
 			case 'upload_self_update':
 				$this->upload_ext($action);
 				$this->listzip();
+				$this->get_valid_extensions();
 				$this->list_available_exts($phpbb_extension_manager);
 				$template->assign_vars(array(
 					'U_ACTION'			=> $this->u_action,
 					'U_UPLOAD'			=> $this->main_link . '&amp;action=upload',
 					'U_UPLOAD_REMOTE'	=> $this->main_link . '&amp;action=upload_remote',
 					'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
+				));
+				break;
+
+			case 'upload_self_confirm':
+				$template->assign_vars(array(
+					'U_ACTION'			=> $this->u_action,
+					'U_UPLOAD'			=> $this->main_link . '&amp;action=upload_self',
+					'U_UPLOAD_EXT_SELF'	=> $this->self_update,
+					'S_UPLOAD_EXT_SELF'	=> true,
+					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array('self_update'	=> $this->self_update)),
+					'S_FORM_ENCTYPE'	=> '',
 				));
 				break;
 
@@ -148,20 +165,9 @@ class upload_module
 
 					$mimetype = 'application/zip';
 
-					header('Cache-Control: private, no-cache');
-					header("Content-Type: $mimetype; name=\"$download_name.zip\"");
-					header("Content-disposition: attachment; filename=$download_name.zip");
+					include($phpbb_root_path . 'ext/boardtools/upload/includes/filetree/filedownload.' . $phpEx);
 
-					$fp = @fopen("$filename.zip", 'rb');
-					if ($fp)
-					{
-						while ($buffer = fread($fp, 1024))
-						{
-							echo $buffer;
-						}
-						fclose($fp);
-					}
-					else
+					if (!(\boardtools\upload\filetree\filedownload::download_file($filename, $download_name, $mimetype)))
 					{
 						redirect($this->main_link);
 					}
@@ -181,20 +187,28 @@ class upload_module
 					{
 						// Ensure that we can delete extensions only in ext/ directory.
 						$ext_name = str_replace('.', '', $ext_name);
+						$no_errors = true;
 						if (substr_count($ext_name, '/') === 1 && is_dir($phpbb_root_path . 'ext/' . $ext_name))
 						{
 							$dir = substr($ext_name, 0, strpos($ext_name, '/'));
 							$extensions = sizeof(glob($phpbb_root_path . 'ext/' . $dir . '/*'));
 							$dir = ($extensions === 1) ? $dir : $ext_name;
-							$this->rrmdir($phpbb_root_path . 'ext/' . $dir);
+							$no_errors = $this->rrmdir($phpbb_root_path . 'ext/' . $dir, true);
 						}
-						if ($request->is_ajax())
+						if ($no_errors)
 						{
-							trigger_error($user->lang('EXT_DELETE_SUCCESS'));
+							if ($request->is_ajax())
+							{
+								trigger_error($user->lang('EXT_DELETE_SUCCESS'));
+							}
+							else
+							{
+								redirect($this->main_link);
+							}
 						}
 						else
 						{
-							redirect($this->main_link);
+							trigger_error($user->lang['EXT_DELETE_ERROR'] . $this->back_link, E_USER_WARNING);
 						}
 					} else {
 						confirm_box(false, $user->lang('EXTENSION_DELETE_CONFIRM', $ext_name), build_hidden_fields(array(
@@ -209,14 +223,21 @@ class upload_module
 				{
 					if (confirm_box(true))
 					{
-						$this->rrmdir($this->zip_dir . '/' . substr($zip_name, 0, -4) . '.zip');
-						if ($request->is_ajax())
+						$no_errors = $this->rrmdir($this->zip_dir . '/' . substr($zip_name, 0, -4) . '.zip', true);
+						if ($no_errors)
 						{
-							trigger_error($user->lang('EXT_ZIP_DELETE_SUCCESS'));
+							if ($request->is_ajax())
+							{
+								trigger_error($user->lang('EXT_ZIP_DELETE_SUCCESS'));
+							}
+							else
+							{
+								redirect($this->main_link);
+							}
 						}
 						else
 						{
-							redirect($this->main_link);
+							trigger_error($user->lang['EXT_ZIP_DELETE_ERROR'] . $this->back_link, E_USER_WARNING);
 						}
 					} else {
 						confirm_box(false, $user->lang('EXTENSION_ZIP_DELETE_CONFIRM', $zip_name), build_hidden_fields(array(
@@ -231,6 +252,7 @@ class upload_module
 
 			default:
 				$this->listzip();
+				$this->get_valid_extensions();
 				$this->list_available_exts($phpbb_extension_manager);
 				$template->assign_vars(array(
 					'U_ACTION'			=> $this->u_action,
@@ -246,12 +268,16 @@ class upload_module
 	{
 		global $phpbb_root_path, $template, $request, $phpbb_container;
 		$zip_array = array();
-		$ffs = scandir($this->zip_dir . '/');
+		$ffs = @scandir($this->zip_dir . '/');
+		if (!$ffs)
+		{
+			return false;
+		}
 		foreach($ffs as $ff)
 		{
 			if ($ff != '.' && $ff != '..')
 			{
-				if (strpos($ff,'.zip') == (strlen($ff) - 4))
+				if (strpos($ff,'.zip') === (strlen($ff) - 4))
 				{
 					$zip_array[] = array(
 						'META_DISPLAY_NAME'	=> $ff,
@@ -279,21 +305,27 @@ class upload_module
 
 	function getComposer($dir)
 	{
-		global $composer;
-		$ffs = scandir($dir);
+		if (@is_file($dir.'/composer.json'))
+		{
+			return $dir . '/composer.json';
+		}
+		$ffs = @scandir($dir);
+		if (!$ffs)
+		{
+			return false;
+		}
 		$composer = false;
 		foreach($ffs as $ff)
 		{
 			if ($ff != '.' && $ff != '..')
 			{
-				if ($ff == 'composer.json')
+				if (@is_dir($dir.'/'.$ff))
 				{
-					$composer = $dir . '/' . $ff;
-					break;
+					$composer = $this->getComposer($dir . '/' . $ff);
 				}
-				if(is_dir($dir.'/'.$ff))
+				if ($composer !== false)
 				{
-					$this->getComposer($dir . '/' . $ff);
+					return $composer;
 				}
 			}
 		}
@@ -301,48 +333,78 @@ class upload_module
 	}
 
 	// Function to remove folders and files
-	function rrmdir($dir)
+	function rrmdir($dir, $no_errors = true)
 	{
-		if (is_dir($dir))
+		global $user;
+		if (@is_dir($dir))
 		{
-			$files = scandir($dir);
+			$files = @scandir($dir);
+			if ($files === false)
+			{
+				$this->trigger_error($user->lang['NO_UPLOAD_FILE'], E_USER_WARNING);
+				return false;
+			}
 			foreach ($files as $file)
 			{
 				if ($file != '.' && $file != '..')
 				{
-					$this->rrmdir($dir . '/' . $file);
+					$no_errors = $this->rrmdir($dir . '/' . $file, $no_errors);
 				}
 			}
 			rmdir($dir);
 		}
-		else if (file_exists($dir))
+		else if (@file_exists($dir))
 		{
-			unlink($dir);
+			if (!(@unlink($dir)))
+			{
+				$this->trigger_error($user->lang['NO_UPLOAD_FILE'], E_USER_WARNING);
+				return false;
+			}
 		}
+		return $no_errors;
 	}
 
-	// Function to Copy folders and files
+	// Function to copy folders and files
 	function rcopy($src, $dst)
 	{
-		if (file_exists($dst))
+		global $user;
+		if (@file_exists($dst))
 		{
-			$this->rrmdir($dst);
+			if (!($this->rrmdir($dst)))
+			{
+				$this->trigger_error($user->lang['NO_UPLOAD_FILE'], E_USER_WARNING);
+				return false;
+			}
 		}
-		if (is_dir($src))
+		if (@is_dir($src))
 		{
 			$this->recursive_mkdir($dst, 0755);
-			$files = scandir($src);
+			$files = @scandir($src);
+			if ($files === false)
+			{
+				$this->trigger_error($user->lang['NO_UPLOAD_FILE'], E_USER_WARNING);
+				return false;
+			}
 			foreach($files as $file)
 			{
 				if ($file != '.' && $file != '..')
 				{
-					$this->rcopy($src . '/' . $file, $dst . '/' . $file);
+					if (!($this->rcopy($src . '/' . $file, $dst . '/' . $file)))
+					{
+						return false;
+					}
 				}
 			}
-		} else if (file_exists($src))
-		{
-			copy($src, $dst);
 		}
+		else if (@file_exists($src))
+		{
+			if (!(@copy($src, $dst)))
+			{
+				$this->trigger_error($user->lang['NO_UPLOAD_FILE'], E_USER_WARNING);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -398,6 +460,21 @@ class upload_module
 		return strnatcasecmp($val1['META_DISPLAY_NAME'], $val2['META_DISPLAY_NAME']);
 	}
 
+	function get_valid_extensions()
+	{
+		global $template, $user;
+
+		$valid_phpbb_ext = $file_contents = $metadata = '';
+		if (($file_contents = @file_get_contents('http://forumhulp.com/ext/phpbb.json')) && ($metadata = @json_decode($file_contents, true)) && is_array($metadata) && sizeof($metadata))
+		{
+			foreach($metadata as $ext => $value)
+			{
+				$valid_phpbb_ext .= '<option value="' . $value['download'] . '">' . $ext . ' (' . $user->lang['EXT_VERSION_LETTER'] . $value['version'] . ')</option>';
+			}
+			$template->assign_vars(array('VALID_PHPBB_EXT'	=> $valid_phpbb_ext));
+		}
+	}
+
 	protected function trigger_error($error, $type)
 	{
 		global $template, $action;
@@ -429,7 +506,14 @@ class upload_module
 
 		$version_check = $meta['extra']['version-check'];
 
-		$version_helper = new \phpbb\version_helper($cache, $config, $user);
+		if (version_compare($config['version'], '3.1.1', '>'))
+		{
+			$version_helper = new \phpbb\version_helper($cache, $config, new \phpbb\file_downloader(), $user);
+		}
+		else
+		{
+			$version_helper = new \phpbb\version_helper($cache, $config, $user);
+		}
 		$version_helper->set_current_version($meta['version']);
 		$version_helper->set_file_location($version_check['host'], $version_check['directory'], $version_check['filename']);
 		$version_helper->force_stability($config['extension_force_unstable'] ? 'unstable' : null);
@@ -451,7 +535,10 @@ class upload_module
 		//$can_upload = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off' || !@extension_loaded('zlib')) ? false : true;
 
 		$user->add_lang('posting');  // For error messages
-		include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
+		if (!class_exists('\fileupload'))
+		{
+			include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
+		}
 		$upload = new \fileupload();
 		$upload->set_allowed_extensions(array('zip'));	// Only allow ZIP files
 
@@ -465,7 +552,7 @@ class upload_module
 
 		if (!is_writable($phpbb_root_path . 'ext'))
 		{
-			$this->trigger_error($user->lang['EXT_NOT_WRITABLE'] . $this->back_link, E_USER_WARNING);
+			$this->trigger_error($user->lang['EXT_NOT_WRITABLE'], E_USER_WARNING);
 			return false;
 		}
 
@@ -483,15 +570,20 @@ class upload_module
 		{
 			$file = $this->remote_upload($upload, $request->variable('remote_upload', ''));
 		}
+		else if ($action == 'upload_from_phpbb')
+		{
+			$file = $this->remote_upload($upload, $request->variable('valid_phpbb_ext', ''));
+		}
 		else if ($action == 'upload_self')
 		{
-			if ($this->self_update !== false && (preg_match('#^(https://)www.phpbb.com/customise/db/download/([0-9]*?)$#i', $this->self_update, $match_phpbb)) || (preg_match('#^(https://)github.com/BoardTools/upload/archive/(.*?)\.zip$#i', $this->self_update, $match_phpbb)))
+			$this->self_update = $request->variable('self_update', '');
+			if ($this->self_update !== false && (preg_match($this->phpbb_link_template, $this->self_update)))
 			{
 				$file = $this->remote_upload($upload, $this->self_update);
 			}
 			else
 			{
-				$this->trigger_error($user->lang['EXT_UPLOAD_ERROR'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['EXT_UPLOAD_ERROR'], E_USER_WARNING);
 				return false;
 			}
 		}
@@ -506,13 +598,13 @@ class upload_module
 			{
 				if (empty($file->filename))
 				{
-					$this->trigger_error((sizeof($file->error) ? implode('<br />', $file->error) : $user->lang['NO_UPLOAD_FILE']) . $this->back_link, E_USER_WARNING);
+					$this->trigger_error((sizeof($file->error) ? implode('<br />', $file->error) : $user->lang['NO_UPLOAD_FILE']), E_USER_WARNING);
 					return false;
 				}
 				else if ($file->init_error || sizeof($file->error))
 				{
 					$file->remove();
-					$this->trigger_error((sizeof($file->error) ? implode('<br />', $file->error) : $user->lang['EXT_UPLOAD_INIT_FAIL']) . $this->back_link, E_USER_WARNING);
+					$this->trigger_error((sizeof($file->error) ? implode('<br />', $file->error) : $user->lang['EXT_UPLOAD_INIT_FAIL']), E_USER_WARNING);
 					return false;
 				}
 
@@ -522,7 +614,7 @@ class upload_module
 				if (sizeof($file->error))
 				{
 					$file->remove();
-					$this->trigger_error(implode('<br />', $file->error) . $this->back_link, E_USER_WARNING);
+					$this->trigger_error(implode('<br />', $file->error), E_USER_WARNING);
 					return false;
 				}
 				$dest_file = $file->destination_file;
@@ -532,7 +624,10 @@ class upload_module
 				$dest_file = $upload_dir . '/' . $request->variable('local_upload', '');
 			}
 
-			include_once($phpbb_root_path . 'includes/functions_compress.' . $phpEx);
+			if (!class_exists('\compress_zip'))
+			{
+				include($phpbb_root_path . 'includes/functions_compress.' . $phpEx);
+			}
 
 			// We need to use the user ID and the time to escape from problems with simultaneous uploads.
 			// We suppose that one user can upload only one extension per session.
@@ -540,7 +635,14 @@ class upload_module
 			// Ensure that we don't have any previous files in the working directory.
 			if (is_dir($phpbb_root_path . 'ext/' . $ext_tmp))
 			{
-				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+				if (!($this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp)))
+				{
+					if($action != 'upload_local')
+					{
+						$file->remove();
+					}
+					return false;
+				}
 			}
 
 			$zip = new \compress_zip('r', $dest_file);
@@ -552,25 +654,32 @@ class upload_module
 			{
 				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
 				$file->remove();
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_ERROR_COMP'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_ERROR_COMP'], E_USER_WARNING);
 				return false;
 			}
-			$string = file_get_contents($composery);
+			$string = @file_get_contents($composery);
+			if ($string === false)
+			{
+				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+				$file->remove();
+				$this->trigger_error($user->lang['EXT_UPLOAD_ERROR'], E_USER_WARNING);
+				return false;
+			}
 			$json_a = json_decode($string, true);
-			$destination = $json_a['name'];
+			$destination = (isset($json_a['name'])) ? $json_a['name'] : '';
 			$ext_version = (isset($json_a['version'])) ? $json_a['version'] : '0.0.0';
 			if (strpos($destination, '/') === false)
 			{
 				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
 				$file->remove();
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_ERROR_DEST'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_ERROR_DEST'], E_USER_WARNING);
 				return false;
 			}
 			else if (strpos($destination, $this->upload_ext_name) !== false && $action != 'upload_self')
 			{
 				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
 				$file->remove();
-				$this->trigger_error($user->lang['EXT_UPLOAD_ERROR'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['EXT_UPLOAD_ERROR'], E_USER_WARNING);
 				return false;
 			}
 			$display_name = (isset($json_a['extra']['display-name'])) ? $json_a['extra']['display-name'] : 'Unknown extension';
@@ -581,7 +690,7 @@ class upload_module
 				{
 					$file->remove();
 				}
-				$this->trigger_error($user->lang['NOT_AN_EXTENSION'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['NOT_AN_EXTENSION'], E_USER_WARNING);
 				return false;
 			}
 			$source = substr($composery, 0, -14);
@@ -597,7 +706,15 @@ class upload_module
 			// We need it to escape from problems with dots on validation.
 			if ($source != $phpbb_root_path . 'ext/' . $source_for_check)
 			{
-				$this->rcopy($source, $phpbb_root_path . 'ext/' . $source_for_check);
+				if (!($this->rcopy($source, $phpbb_root_path . 'ext/' . $source_for_check)))
+				{
+					$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+					if($action != 'upload_local')
+					{
+						$file->remove();
+					}
+					return false;
+				}
 				$source = $phpbb_root_path . 'ext/' . $source_for_check;
 			}
 			// Validate the extension to check if it can be used on the board.
@@ -611,7 +728,7 @@ class upload_module
 					{
 						$file->remove();
 					}
-					$this->trigger_error($user->lang['EXTENSION_NOT_AVAILABLE'] . $this->back_link, E_USER_WARNING);
+					$this->trigger_error($user->lang['EXTENSION_NOT_AVAILABLE'], E_USER_WARNING);
 					return false;
 				}
 			}
@@ -622,7 +739,7 @@ class upload_module
 				{
 					$file->remove();
 				}
-				$this->trigger_error($e . ' ' . $user->lang['ACP_UPLOAD_EXT_ERROR_NOT_SAVED'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($e . ' ' . $user->lang['ACP_UPLOAD_EXT_ERROR_NOT_SAVED'], E_USER_WARNING);
 				return false;
 			}
 
@@ -661,17 +778,16 @@ class upload_module
 			// All checks were done previously. Now we only need to restore the variables.
 			// We try to restore the data of the current upload.
 			$ext_tmp = 'tmp/' . (int) $user->data['user_id'];
-			if (!is_dir($phpbb_root_path . 'ext/' . $ext_tmp) || !($composery = $this->getComposer($phpbb_root_path . 'ext/' . $ext_tmp)))
+			if (!is_dir($phpbb_root_path . 'ext/' . $ext_tmp) || !($composery = $this->getComposer($phpbb_root_path . 'ext/' . $ext_tmp)) || !($string = @file_get_contents($composery)))
 			{
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'], E_USER_WARNING);
 				return false;
 			}
-			$string = file_get_contents($composery);
 			$json_a = json_decode($string, true);
-			$destination = $json_a['name'];
+			$destination = (isset($json_a['name'])) ? $json_a['name'] : '';
 			if (strpos($destination, '/') === false)
 			{
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'], E_USER_WARNING);
 				return false;
 			}
 			$source = substr($composery, 0, -14);
@@ -682,25 +798,24 @@ class upload_module
 			// All checks were done previously. Now we only need to restore the variables.
 			// We try to restore the data of the current upload.
 			$ext_tmp = 'boardtools/new_upload';
-			if (!is_dir($phpbb_root_path . 'ext/' . $ext_tmp) || !($composery = $this->getComposer($phpbb_root_path . 'ext/' . $ext_tmp)))
+			if (!is_dir($phpbb_root_path . 'ext/' . $ext_tmp) || !($composery = $this->getComposer($phpbb_root_path . 'ext/' . $ext_tmp)) || !($string = @file_get_contents($composery)))
 			{
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'], E_USER_WARNING);
 				return false;
 			}
-			$string = file_get_contents($composery);
 			$json_a = json_decode($string, true);
-			$destination = $json_a['name'];
+			$destination = (isset($json_a['name'])) ? $json_a['name'] : '';
 			if (strpos($destination, 'boardtools/') === false)
 			{
-				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'] . $this->back_link, E_USER_WARNING);
+				$this->trigger_error($user->lang['ACP_UPLOAD_EXT_WRONG_RESTORE'], E_USER_WARNING);
 				return false;
 			}
 			$source = substr($composery, 0, -14);
 			$display_name = (isset($json_a['extra']['display-name'])) ? $json_a['extra']['display-name'] : 'Unknown extension';
 		}
+		$made_update = false;
 		if ($action != 'upload_self' && $action != 'upload_self_update')
 		{
-			$made_update = false;
 			// Delete the previous version of extension files - we're able to update them.
 			if (is_dir($phpbb_root_path . 'ext/' . $destination))
 			{
@@ -725,23 +840,42 @@ class upload_module
 				$old_ext_name = $destination;
 				if($old_composery = $this->getComposer($phpbb_root_path . 'ext/' . $destination))
 				{
-					$old_string = file_get_contents($old_composery);
-					$old_json_a = json_decode($old_string, true);
-					$old_display_name = (isset($old_json_a['extra']['display-name'])) ? $old_json_a['extra']['display-name'] : $old_ext_name;
-					$old_ext_version = (isset($old_json_a['version'])) ? $old_json_a['version'] : '0.0.0';
-					$old_ext_name = $old_display_name . '_' . $old_ext_version;
+					if (!($old_string = @file_get_contents($old_composery)))
+					{
+						$old_ext_name = $old_ext_name . '_0.0.0';
+					}
+					else
+					{
+						$old_json_a = json_decode($old_string, true);
+						$old_display_name = (isset($old_json_a['extra']['display-name'])) ? $old_json_a['extra']['display-name'] : $old_ext_name;
+						$old_ext_version = (isset($old_json_a['version'])) ? $old_json_a['version'] : '0.0.0';
+						$old_ext_name = $old_display_name . '_' . $old_ext_version;
+					}
 				}
 				$this->save_zip_archive('ext/' . $destination . '/', str_replace(array('/', '\\'), '_', $old_ext_name) . '_old');
-				$this->rrmdir($phpbb_root_path . 'ext/' . $destination);
+				if (!($this->rrmdir($phpbb_root_path . 'ext/' . $destination)))
+				{
+					return false;
+				}
 			}
-			$this->rcopy($source, $phpbb_root_path . 'ext/' . $destination);
+			if (!($this->rcopy($source, $phpbb_root_path . 'ext/' . $destination)))
+			{
+				$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+				return false;
+			}
 			// No enabling at this stage. Admins should have a chance to revise the uploaded scripts.
-			$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+			if (!($this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp)))
+			{
+				return false;
+			}
 		}
 		else if ($action == 'upload_self')
 		{
 			// No enabling at this stage. Admins should have a chance to revise the uploaded scripts.
-			$this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp);
+			if (!($this->rrmdir($phpbb_root_path . 'ext/' . $ext_tmp)))
+			{
+				return false;
+			}
 			$destination = 'boardtools/new_upload/' . $destination;
 		}
 		else
@@ -768,7 +902,6 @@ class upload_module
 		$string = @file_get_contents($phpbb_root_path . 'ext/' . $destination . '/README.md');
 		if ($string !== false)
 		{
-			include($phpbb_root_path . 'ext/boardtools/upload/vendor/Markdown/Michelf/MarkdownExtra.inc.' . $phpEx);
 			$readme = \Michelf\MarkdownExtra::defaultTransform($string);
 		} else {
 			$readme = false;
@@ -778,13 +911,13 @@ class upload_module
 			'S_UPLOADED'		=> $display_name,
 			'S_UPLOADED_SELF'	=> ($action == 'upload_self'),
 			'EXT_UPDATED'		=> $made_update,
-			'FILETREE'			=> \filetree::php_file_tree($phpbb_root_path . 'ext/' . $destination, $display_name, $this->main_link),
-			'S_ACTION'			=> ($action != 'upload_self') ? $phpbb_root_path . 'adm/index.php?i=acp_extensions&amp;sid=' .$user->session_id . '&amp;mode=main&amp;action=enable_pre&amp;ext_name=' . urlencode($destination) : $this->main_link . '&amp;action=upload_self_update',
+			'FILETREE'			=> \boardtools\upload\filetree\filetree::php_file_tree($phpbb_root_path . 'ext/' . $destination, $display_name, $this->main_link),
+			'S_ACTION'			=> ($action != 'upload_self') ? $phpbb_root_path . 'adm/index.' . $phpEx . '?i=acp_extensions&amp;sid=' . $user->session_id . '&amp;mode=main&amp;action=enable_pre&amp;ext_name=' . urlencode($destination) : $this->main_link . '&amp;action=upload_self_update',
 			'S_ACTION_BACK'		=> $this->main_link,
 			'U_ACTION'			=> $this->u_action,
 			'README_MARKDOWN'	=> $readme,
-			'FILENAME'			=> ($string !== false) ? 'README.md' : '',
-			'CONTENT'			=> ($string !== false) ?  highlight_string($string, true): ''
+			'FILENAME'			=> ($string !== false) ? 'README.md' : 'composer.json',
+			'CONTENT'			=> ($string !== false) ? highlight_string($string, true) : highlight_string(@file_get_contents($phpbb_root_path . 'ext/' . $destination . '/composer.json'), true)
 		));
 
 		return true;
@@ -796,7 +929,10 @@ class upload_module
 	function save_zip_archive($dest_file, $dest_name)
 	{
 		global $phpbb_root_path, $phpEx;
-		include_once($phpbb_root_path . 'includes/functions_compress.' . $phpEx);
+		if (!class_exists('\compress_zip'))
+		{
+			include($phpbb_root_path . 'includes/functions_compress.' . $phpEx);
+		}
 
 		$zip = new \compress_zip('w', $this->zip_dir . '/' . $dest_name . '.zip');
 		$zip->add_file($dest_file);
@@ -849,7 +985,7 @@ class upload_module
 		$upload_ary = array();
 		$upload_ary['local_mode'] = true;
 
-		$upload_from_phpbb = preg_match('#^(https://)www.phpbb.com/customise/db/download/([0-9]*?)$#i', $upload_url, $match_phpbb);
+		$upload_from_phpbb = preg_match($this->phpbb_link_template, $upload_url, $match_phpbb);
 
 		if (!preg_match('#^(https?://).*?\.(' . implode('|', $files->allowed_extensions) . ')$#i', $upload_url, $match) && !$upload_from_phpbb)
 		{
@@ -963,7 +1099,7 @@ class upload_module
 			return $file;
 		}
 
-		$tmp_path = (!@ini_get('safe_mode') || strtolower(@ini_get('safe_mode')) == 'off') ? false : $phpbb_root_path . 'cache';
+		$tmp_path = (@is_writable('/tmp/')) ? '/tmp/' : $phpbb_root_path . 'cache/';
 		$filename = tempnam($tmp_path, unique_id() . '-');
 
 		if (!($fp = @fopen($filename, 'wb')))

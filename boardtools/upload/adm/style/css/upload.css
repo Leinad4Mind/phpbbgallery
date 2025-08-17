@@ -10,9 +10,11 @@ h1 {position: relative;}
 
 #extupload {width:80%; margin-top:5px;}
 
+#br_form_upload {display:block; width:100%; height:10px;}
+
 #ext_table{float:right; width:100%; margin-top:16px;}
 
-#upload {display:none; margin: 50px 0; padding: 0; width: 100%; text-align: center;}
+#upload {display: none; margin: 50px 0; padding: 0; width: 100%; text-align: center;}
 
 #uploaded_ok {
     display: inline-block;
@@ -29,6 +31,11 @@ h1 {position: relative;}
     background: -o-linear-gradient(top, #92d992 0%, #228822 100%);
     background: -ms-linear-gradient(top, #92d992 0%, #228822 100%);
     background: linear-gradient(to bottom, #92d992 0%, #228822 100%);
+}
+
+.rtl #uploaded_ok {
+    margin-right: 0px;
+    margin-left: 15px;
 }
 
 #enable_uploaded {
@@ -48,14 +55,8 @@ h1 {position: relative;}
     background: -ms-linear-gradient(top, #92d992 0%, #228822 100%);
     background: linear-gradient(to bottom, #92d992 0%, #228822 100%);
 }
+
 #enable_uploaded:hover {
-    display: inline-block;
-    float: right;
-    padding: 6px 15px;
-    border-radius: 15px;
-    color: #edfbf7;
-    font-weight: bold;
-    font-size: 1.1em;
     background: #228822;
     background: -moz-linear-gradient(top, #228822 0%, #92d992 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #228822), color-stop(100%, #92d992));
@@ -63,6 +64,10 @@ h1 {position: relative;}
     background: -o-linear-gradient(top, #228822 0%, #92d992 100%);
     background: -ms-linear-gradient(top, #228822 0%, #92d992 100%);
     background: linear-gradient(to bottom, #228822 0%, #92d992 100%);
+}
+
+.rtl #enable_uploaded {
+    float: left;
 }
 
 #back_to_upload {display:block; margin-bottom:15px;}
@@ -99,6 +104,10 @@ h1 {position: relative;}
 #show_filetree:hover, #hide_filetree:hover {
     color: #bc2a4d;
     text-decoration: underline;
+}
+
+.rtl #show_filetree, .rtl #hide_filetree {
+    float: left;
 }
 
 .select_all_code {
@@ -176,6 +185,28 @@ div.filename {
     color: #f8f9fe;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+}
+
+#valid_phpbb_ext_wrapper {
+    margin: 10px 0;
+}
+
+.ext_zips_table {
+    width: 100%;
+    table-layout: fixed;
+    margin-top: 16px;
+}
+
+.zip_name {
+    width: 50%;
+}
+
+div.ext_zip_name {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 100%;
 }
 
 .php-file-tree {

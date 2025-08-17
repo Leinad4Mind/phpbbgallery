@@ -41,15 +41,17 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DELETE'					=> 'Erweiterung Löschen',
 	'EXTENSION_DELETE_CONFIRM'			=> 'Bist du sicher das du die Erweiterung “%s” löschen möchtest?',
 	'EXT_DELETE_SUCCESS'				=> 'Erweiterung erfolgreich gelöscht.',
+	'EXT_DELETE_ERROR'					=> 'Keine Datei angegeben, oder es gab einen Fehler beim Hochladen.',
 
 	'EXTENSION_ZIP_DELETE'				=> 'Zip-Archiv Löschen',
 	'EXTENSION_ZIP_DELETE_CONFIRM'		=> 'Bist du sicher das du das Zip-Archiv “%s” löschen möchtest?',
 	'EXT_ZIP_DELETE_SUCCESS'			=> 'Zip-Archiv erfolgreich gelöscht.',
+	'EXT_ZIP_DELETE_ERROR'				=> 'Keine Datei angegeben, oder es gab einen Fehler beim Hochladen.',
 
-	'ACP_UPLOAD_EXT_ERROR_DEST'			=> 'Kein Anbieter oder Zielordner in der hochgeladenen ZIP-Datei. Die Datei wurde nicht auf dem Server gespeichert.',
-	'ACP_UPLOAD_EXT_ERROR_COMP'			=> 'Die Datei composer.json wurde nicht in der hochgeladenen Zip-Datei gefunden. Die Dateien wurden nicht auf dem Server gespeichert.',
-	'ACP_UPLOAD_EXT_ERROR_NOT_SAVED'	=> 'Die Dateien wurden nicht auf dem Server gespeichert.',
-	'ACP_UPLOAD_EXT_WRONG_RESTORE'		=> 'An error occurred during the update of an installed extension. Try to update it again.', // to translate
+	'ACP_UPLOAD_EXT_ERROR_DEST'			=> 'Kein Anbieter oder Zielordner in der hochgeladenen Zip-Datei. Die Datei wurde nicht auf dem Server gespeichert.',
+	'ACP_UPLOAD_EXT_ERROR_COMP'			=> 'Die Datei composer.json wurde nicht in der hochgeladenen Zip-Datei gefunden. Die Datei wurde nicht auf dem Server gespeichert.',
+	'ACP_UPLOAD_EXT_ERROR_NOT_SAVED'	=> 'Die Datei wurde nicht auf dem Server gespeichert.',
+	'ACP_UPLOAD_EXT_WRONG_RESTORE'		=> 'Ein Fehler ist bei der Aktualisierung einer bereits installierten Erweiterung aufgetreten. Bitte wiederhole die Aktualisierung.',
 
 	'UPLOAD_EXTENSIONS_DEVELOPERS'		=> 'Entwickler',
 
@@ -60,13 +62,28 @@ $lang = array_merge($lang, array(
 	'ZIP_UPLOADED'						=> 'Zip-Archiv der Erweiterung hochgeladen',
 	'EXT_ENABLE'						=> 'Aktivieren',
 	'EXT_UPLOADED'						=> 'Hochgeladen',
-	'EXT_UPDATED'						=> 'updated', // to translate
-	'EXT_UPDATED_LATEST_VERSION'		=> 'updated to the latest version', // to translate
+	'EXT_UPDATED'						=> 'aktualisiert',
+	'EXT_UPDATED_LATEST_VERSION'		=> 'auf die neueste Version aktualisiert',
 	'EXT_UPLOAD_BACK'					=> '« Zurück zum hochladen von Erweiterungen',
 
-	'ACP_UPLOAD_EXT_DIR'				=> 'Extensions\' zip packages storage path', // to translate
-	'ACP_UPLOAD_EXT_DIR_EXPLAIN'		=> 'Path under your phpBB root directory, e.g. <samp>ext</samp>.<br />You can change this path to store zip packages in a special folder (for example, if you want to let users download those files, you can change it to <em>downloads</em>, and if you want to prohibit those downloads, you can change it to the path that is upper by one level than http root of your website (or you can create a folder with the appropriate .htaccess file)).', // to translate
+	'ACP_UPLOAD_EXT_DIR'				=> 'Speicherpfad der Zip-Archive der Erweiterungen',
+	'ACP_UPLOAD_EXT_DIR_EXPLAIN'		=> 'Pfad unter dem phpBB root-Ordner, z.B. <samp>ext</samp>.<br />Du kannst diesen Pfad ändern um die Zip-Archive in einem besonderen Ordner zu speichern (z.B. in <em>downloads</em>, wenn du deinen Mitgliedern die Möglichkeit geben willst, die Archive runterzuladen, oder in einen Pfad außerhalb des http-roots om einen Zugriff von außen zu unterbinden (oder in einem Ordner mit einer entsprechenden .htaccess-Datei)).',
 
-	'ACP_UPLOAD_EXT_UPDATED'			=> 'The installed extension was updated.', // to translate
-	'ACP_UPLOAD_EXT_UPDATED_EXPLAIN'	=> 'You have uploaded a zip file for an already installed extension. That extension <strong>was disabled automatically</strong> to make the update process safer. Now please <strong>check</strong> whether the uploaded files are correct and <strong>enable</strong> the extension if it still should be used on the board.', // to translate
+	'ACP_UPLOAD_EXT_UPDATED'			=> 'Die installierte Erweiterung wurde aktualisiert.',
+	'ACP_UPLOAD_EXT_UPDATED_EXPLAIN'	=> 'Du hast ein Zip-Archiv zu einer bereits installierten Erweiterung hochgeladen. Diese Erweiterung wurde <strong>automatisch deaktiviert</strong> um eine sichere Aktualiserung zu gewährleisten. Bitte <strong>kontrolliere</strong>, daß die hochgeladenen Daten korrekt sind und <strong>aktiviere</strong> danach die Erweiterung.',
+
+	'VALID_PHPBB_EXTENSIONS'			=> 'phpbb.com CDB',
+	'EXT_VERSION_LETTER'				=> 'v',
+
+	'UPLOAD_DESCRIPTION_UPLOAD'			=> 'Upload phpBB extensions',
+	'UPLOAD_DESCRIPTION_UPLOAD_CDB'		=> 'CDB on phpbb.com',
+	'UPLOAD_DESCRIPTION_UPLOAD_LOCAL'	=> 'Local PC',
+	'UPLOAD_DESCRIPTION_UPLOAD_REMOTE'	=> 'Remote server',
+	'UPLOAD_DESCRIPTION_UPDATE'			=> 'Update phpBB extensions',
+	'UPLOAD_DESCRIPTION_UPDATE_ABOUT'	=> 'You can update any of already uploaded extensions. The extension that you want to update will be disabled automatically so that any updates will be safe.',
+	'UPLOAD_DESCRIPTION_ZIP'			=> 'ZIP files management',
+	'UPLOAD_DESCRIPTION_ZIP_SAVE'		=> 'Save zips in a directory of your choice',
+	'UPLOAD_DESCRIPTION_ZIP_UNPACK'		=> 'Unpack a zip file to install an extension',
+	'UPLOAD_DESCRIPTION_CLEANER'		=> 'Extension Cleaner tool',
+	'UPLOAD_DESCRIPTION_CLEANER_ABOUT'	=> 'You can delete extension directories or zip files of extensions from the server.',
 ));

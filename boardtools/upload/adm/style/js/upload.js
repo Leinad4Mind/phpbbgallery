@@ -4,7 +4,8 @@
 	$("a.simpledialog").simpleDialog({
 	    opacity: 0.1,
 	    width: '650px',
-		height: '600px'
+	    height: '600px',
+	    closeLabel: '&times;'
 	});
 
 	/* For noscript compatibility we do it here instead of css file */
@@ -30,6 +31,10 @@
 		$("#filetree").fadeOut(1000, function () {
 			$("#markdown").fadeIn(1000);
 		});
+	});
+
+	$("#valid_phpbb_ext").bind('change keyup', function () {
+		$("#remote_upload").val($(this).val());
 	});
 })(jQuery, window, document);
 
