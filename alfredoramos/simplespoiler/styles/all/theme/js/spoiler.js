@@ -5,47 +5,52 @@
  * @license GPL-2.0-only
  */
 
-function fixIESpoilers() {
-	var userAgent = window.navigator.userAgent;
-	var isIE =	userAgent.indexOf('MSIE') >= 0 ||
-		userAgent.indexOf('Trident/') >= 0;
-	var spoilers = document.querySelectorAll('.spoiler');
-
-	if (spoilers.length <= 0 || !isIE) {
-		return;
-	}
-
-	// Fix spoilers for IE
-	for (var i = 0; i < spoilers.length; i++) {
-		var cssClass = spoilers[i].className + ' ie';
-		spoilers[i].className = cssClass.trim();
-	}
-}
-
-(function($) {
+(function() {
 	'use strict';
 
+	// Polyfill for Element.matches()
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
+	if (!Element.prototype.matches) {
+		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+	}
+
+	// Polyfill for Element.closest()
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
+	if (!Element.prototype.closest) {
+		Element.prototype.closest = function(s) {
+			let el = this;
+
+			do {
+				if (el.matches(s)) {
+					return el;
+				}
+
+				el = el.parentElement || el.parentNode;
+			} while (el !== null && el.nodeType === 1);
+
+			return null;
+		};
+	}
+
 	// Toggle status icon
-	$(document.body).on('click', '.spoiler-header', function() {
-		var $elements = {
-			container: $(this).parent('.spoiler').first(),
-			icon: $(this).find('.spoiler-status > .icon').first()
+	document.body.addEventListener('click', function(e) {
+		// Trigger event on the spoiler header
+		if (!e.target.closest('.spoiler-header')) {
+			return;
+		}
+
+		// Generate elements
+		let elements = {
+			container: e.target.closest('.spoiler')
 		};
 
-		console.log($elements.container.attr('open'));
-		console.log($elements.icon.attr('class'));
+		elements.icon = elements.container.querySelector('.spoiler-status > .icon');
 
-		if (typeof $elements.container.attr('open') === 'undefined') {
-			// Is opened
-			$elements.icon.removeClass('fa-eye');
-			$elements.icon.addClass('fa-eye-slash');
-		} else {
-			// Is closed
-			$elements.icon.removeClass('fa-eye-slash');
-			$elements.icon.addClass('fa-eye');
-		}
+		// Check if spoiler is opened
+		let isOpen = elements.container.hasAttribute('open');
+
+		// Toggle FontAwesome icon
+		elements.icon.classList.toggle('fa-eye', isOpen);
+		elements.icon.classList.toggle('fa-eye-slash', !isOpen);
 	});
-
-	// Fix spoilers for IE11
-	fixIESpoilers();
-})(jQuery);
+})();
