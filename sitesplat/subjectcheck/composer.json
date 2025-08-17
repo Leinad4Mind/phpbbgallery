@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "When a new topic is attempted, a list of topics with similar subjects will first be displayed along with a message urging the user to see if perhaps this new topic is not needed. Includes AJAX support.",
     "homepage": "http://www.sitesplat.com",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "keywords": ["phpbb", "extension", "BBcore", "BBOOTS", "FLATBOOTS", "sitesplat"],
     "license": "Proprietary/All rights reserved",
     "authors": [

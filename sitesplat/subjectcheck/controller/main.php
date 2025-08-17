@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * Subject Check. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2016, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package subjectcheck
+* @copyright (c) 2016 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\subjectcheck\controller;
 
