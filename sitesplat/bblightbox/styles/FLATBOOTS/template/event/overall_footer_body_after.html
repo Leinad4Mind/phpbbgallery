@@ -1,0 +1,125 @@
+{% if BBLIGHTBOX_PLUGIN %}
+	<script>
+		// Prepare attachment images for lightbox
+		[].forEach.call(document.querySelectorAll('.attach-image'), function(elem) {
+			old_html = elem.innerHTML;
+			var caption = elem.parentElement.childNodes[3].innerText;
+
+			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + elem.querySelector('img').src + '">' + old_html + '</a>';
+			elem.innerHTML = new_html;
+		});
+
+		{% if BBLIGHTBOX_BBCODE_ALLOW %}
+			// Prepare BBCode [img] images for lightbox
+			[].forEach.call(document.querySelectorAll('.content .img-bbcodes'), function(img) {
+			//	img.className += " postbody blockquote postimage quotecontent";
+				new_html = '<div class="attach-image img-bbcode"><a {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} href="' + img.src + '">' + img.outerHTML + '</a></div>';
+				img.outerHTML = new_html;
+			});
+		{% endif %}
+	</script>
+
+
+{# 
+# with baguette plugin we need to traverse the dom in a specific manner
+# and take care of all the different situations for the images 
+# otherwise the slide gallery will not work
+# this unfortunately is plugin limitation
+# blockquotes with images can be an issue
+#}	
+	
+{% if BBLIGHTBOX_PLUGIN eq 'baguetteBox' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/baguetteBox/baguetteBox.min.js' %}
+	<script>
+	(function () {	
+	{% if BBLIGHTBOX_SLIDE %}
+	    baguetteBox.run('.postbody .attachbox, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox, .topicreview-content .content, #preview, .attachbox, .pm .attachbox', {
+			{% if BBLIGHTBOX_CAPTIONS %}
+			captions: function(element) {
+				return element.dataset.jslghtbxCaption
+			},
+			{% endif %}
+			animation: '{BBLIGHTBOX_ANIMATION}',
+			filter: /.+/i
+		});
+	{% else %}
+	    baguetteBox.run('.thumbnail, .attach-image', {
+			{% if BBLIGHTBOX_CAPTIONS %}
+			captions: function(element) {
+				return element.dataset.jslghtbxCaption
+			},
+			{% endif %}
+			animation: '{BBLIGHTBOX_ANIMATION}',
+			filter: /.+/i
+		});
+	{% endif %}
+	})();
+	</script>
+{% endif %}
+
+{% if BBLIGHTBOX_PLUGIN eq 'jsOnlyLightbox' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/jsOnlyLightbox/js/lightbox.min.js' %}
+	<script>
+		[].forEach.call(document.querySelectorAll('.thumbnail a, .attach-image a'), function(a) {
+			a.dataset.jslghtbx = a.href;
+		});
+
+		var lightbox = new Lightbox();
+		lightbox.load({
+			carousel: true,
+			captions: {BBLIGHTBOX_CAPTIONS},
+			loadingAnimation:'{BBLIGHTBOX_ANIMATION}',
+		});
+	</script>
+{% endif %}
+
+{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}
+	<script>
+	head.ready(function() {
+	       head.load('{FANCYBOX_JS}', function() {
+				$('.thumbnail a, .attach-image a').fancybox({
+					protect: {FANCYBOX_PROTECT},
+			        transitionIn: '{BBLIGHTBOX_ANIMATION}'
+				});
+			});
+	});
+	</script>
+{% endif %}
+
+{# 
+# with chocolat plugin we need to traverse the dom in a specific manner
+# and take care of all the different situations for the images 
+# otherwise the slide gallery will not work
+# this unfortunately is plugin limitation
+# blockquotes with images can be an issue
+#}
+
+{% if BBLIGHTBOX_PLUGIN eq 'Chocolat' %}
+	<script>
+	head.ready(function() {
+	        head.load('{CHOCOLAT_JS}', function() {
+			{% if BBLIGHTBOX_SLIDE %}	
+				$('.postbody .attachbox, .postbody .content blockquote .img-bbcode, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox, .topicreview-content .content, #preview, .attachbox, .pm .attachbox').Chocolat({
+					imageSelector: 'a',
+					{% if BBLIGHTBOX_CAPTIONS %}setTitle:'<a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a>',{% endif %}	
+					enableZoom: {{ CHOCOLAT_ENABLEZOOM }}
+				});
+			{% else %}	
+				$('.thumbnail, .attach-image').Chocolat({
+					imageSelector: 'a',
+					enableZoom: {{ CHOCOLAT_ENABLEZOOM }}
+				});
+			{% endif %}	
+			});
+			{% if BBLIGHTBOX_CAPTIONS %}
+			// lets take care of the buggy bootstrap tooltip otherwise the chocolat will have a meltdown :-)
+			$('.notip').each( function () {
+				$(this).tooltip('disable').attr('title', $(this).attr('data-original-title') );
+				$(this).removeAttr('data-original-title');
+			});
+			{% endif %}	
+	});
+	</script>
+{% endif %}
+
+{% endif %}
