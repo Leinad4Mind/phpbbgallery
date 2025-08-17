@@ -5,6 +5,7 @@
 	$(function(){
 		$('#bblightbox_plugin').on('change', function(){
 			$('#captions_options, #fancybox_options, #Chocolat_options').hide();
+			$('#slide_options').show();
 	
 			switch ($(this).val())
 			{
@@ -22,6 +23,11 @@
 	
 				case 'Chocolat':
 					$('#Chocolat_options').show();
+				break;
+	
+				case 'lightgallery':
+					$('#slide_options').hide();
+					$('#lightgallery_options').show();
 				break;
 			}
 			switch_layout();
@@ -81,3 +87,17 @@
 
 
 })(jQuery, window, document);
+
+phpbb.addAjaxCallback('bblightbox_multistep', function(res) {
+	function next_call(url) {
+		$.getJSON(url, function(data) {
+			if (data.S_USER_NOTICE) {
+				phpbb.alert(data.MESSAGE_TITLE, data.MESSAGE_TEXT);
+			}
+			phpbb.alert(data.PROGRESS);
+			next_call(data.NEXT_URL);
+		});
+	}
+
+	next_call(res.NEXT_URL);
+});

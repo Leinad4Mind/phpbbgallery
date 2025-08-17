@@ -1,14 +1,43 @@
-{% if BBLIGHTBOX_PLUGIN %}
+{# 
+# 
+# load only if images are detected:
+# {% if S_LOAD_BBLIGHTBOX %}
+# {% endif %}
+# 
+# like this: however needs more work becuase it only works for viewtopic page. See below //@FIX
+# {% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}{% endif %}
+#
+# or previous just plugin enabled:
+# {% if BBLIGHTBOX_PLUGIN %}{% endif %}
+#
+# //@FIX: the following pages need work for the event above to work correctly: listener.php line 67
+#
+#  _mcp_post.html
+#  _mcp_topic.html
+#  _posting_preview.html
+#  _posting_review.html
+#  _posting_topic_review.html
+#  _ucp_pm_viewmessage.html
+#
+#}
+
+{% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}
 	<script>
 		// Prepare attachment images for lightbox
 		[].forEach.call(document.querySelectorAll('.attach-image'), function(elem) {
 			old_html = elem.innerHTML;
 			var caption = elem.parentElement.childNodes[3].innerText;
-
-			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + elem.querySelector('img').src + '">' + old_html + '</a>';
+			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + elem.querySelector('img').src + '">' + old_html + '</a>';
 			elem.innerHTML = new_html;
 		});
-
+		// damn thumbnails 
+           [].forEach.call(document.querySelectorAll('.attach-image-thumb'), function(elem) {
+				old_html = elem.innerHTML;
+				var caption = elem.parentElement.childNodes[3].innerText;
+				var dataSrc = elem.querySelector('img').getAttribute('data-src');
+				new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + dataSrc + '">' + old_html + '</a>';
+				elem.innerHTML = new_html;
+			});
 		{% if BBLIGHTBOX_BBCODE_ALLOW %}
 			// Prepare BBCode [img] images for lightbox
 			[].forEach.call(document.querySelectorAll('.content .img-bbcodes'), function(img) {
@@ -18,7 +47,6 @@
 			});
 		{% endif %}
 	</script>
-
 
 {# 
 # with baguette plugin we need to traverse the dom in a specific manner
@@ -119,6 +147,18 @@
 			});
 			{% endif %}	
 	});
+	</script>
+{% endif %}
+
+
+{% if BBLIGHTBOX_PLUGIN eq 'lightgallery' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/lightgallery/js/lightgallery.min.js' %}
+	<script>
+	(function () {	
+		[].forEach.call(document.querySelectorAll('.attach-image, .attach-image-thumb'), function(a) {
+			lightGallery(a);
+		});
+	})();
 	</script>
 {% endif %}
 

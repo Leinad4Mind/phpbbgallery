@@ -16,11 +16,15 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_post_rowset_data'	=> 'set_bblightbox',
-			'core.posting_modify_template_vars'	=> 'set_bblightbox',
-			'core.ucp_pm_view_messsage'			=> 'set_bblightbox',
-			'core.text_formatter_s9e_configure_after' => 'modify_img_template',
-			'core.parse_attachments_modify_template_data'			=> 'set_bblightbox'
+			'core.viewtopic_post_rowset_data'				=> 'set_bblightbox',
+			'core.posting_modify_template_vars'				=> 'set_bblightbox',
+			'core.ucp_pm_view_messsage'						=> 'set_bblightbox',
+			'core.viewtopic_modify_post_row'				=> 's_load_bblightbox_viewtopic',
+			'core.modify_mcp_modules_display_option'		=> 's_load_bblightbox',
+			'core.posting_modify_template_vars'				=> 's_load_bblightbox',
+			'core.ucp_display_module_before'				=> 's_load_bblightbox_ucp',
+			'core.text_formatter_s9e_configure_after' 		=> 'modify_img_template',
+			'core.parse_attachments_modify_template_data'	=> 'set_bblightbox'
 		);
 	}
 
@@ -50,7 +54,7 @@ class listener implements EventSubscriberInterface
 			'BBLIGHTBOX_CAPTIONS'		=> $this->settings['captions'],
 			'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
 			'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
-	
+	        'S_THUMB_ENABLED'		    => ($this->config['img_create_thumbnail']) ? true : false,
 	        'FANCYBOX_JS'				=> $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
 			'CHOCOLAT_JS'			    => $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
 			'FANCYBOX_PROTECT'			=> $this->settings['protect'],
@@ -61,6 +65,25 @@ class listener implements EventSubscriberInterface
 			
 			'BBLIGHTBOX_COLUMN_LAYOUT'	=> $this->settings['collums'],
 		));
+	}
+
+	public function s_load_bblightbox_viewtopic($event)
+	{
+		if ($event['row']['post_attachment'] || preg_match('/<IMG/', $event['row']['post_text']))
+		{
+			$this->template->assign_var('S_LOAD_BBLIGHTBOX', true);
+		}
+	}
+	public function s_load_bblightbox()
+	{
+		$this->template->assign_var('S_LOAD_BBLIGHTBOX', true);
+	}
+	public function s_load_bblightbox_ucp($event)
+	{
+		if (in_array($event['id'], array('ucp_pm', 'pm')))
+		{
+			$this->template->assign_var('S_LOAD_BBLIGHTBOX', true);
+		}
 	}
 
 	/**
@@ -77,7 +100,6 @@ class listener implements EventSubscriberInterface
 		$xpath = new \DOMXPath($dom);
 		foreach ($xpath->query('//img[@src]') as $img)
 		{
-
 			// quick and dirty Add class needed for the img bbcodes so it can be manipulated in front-end with the lightbox
 			$img->setAttribute('class', 'img-responsive img-post img-bbcodes');
 
