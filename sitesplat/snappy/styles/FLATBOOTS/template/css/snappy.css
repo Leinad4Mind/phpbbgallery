@@ -1,0 +1,12 @@
+/*icon moon fix*/
+.icon-moon-fx {
+    display: inline-block;
+    vertical-align: middle;
+	margin-bottom: 2px;
+}
+/*icon moon fix*/
+
+article:hover .btn-snappy {
+    display: inline-block;
+}
+/*snappy reply */
