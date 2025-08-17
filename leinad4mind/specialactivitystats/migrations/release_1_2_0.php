@@ -12,8 +12,8 @@ namespace robertheim\activitystats\migrations;
 /**
 * @ignore
 */
-use robertheim\activitystats\PERMISSIONS;
-use robertheim\activitystats\PREFIXES;
+use robertheim\activitystats\permissions;
+use robertheim\activitystats\prefixes;
 
 class release_1_2_0 extends \phpbb\db\migration\migration
 {
@@ -21,7 +21,7 @@ class release_1_2_0 extends \phpbb\db\migration\migration
 
 	public function effectively_installed()
 	{
-		return version_compare($this->config[PREFIXES::CONFIG.'_version'], $this->version, '>=');
+		return version_compare($this->config[prefixes::CONFIG.'_version'], $this->version, '>=');
 	}
 
 	static public function depends_on()
@@ -33,22 +33,53 @@ class release_1_2_0 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
+		// result/return value
+		$re = array();
+
 		// shortcut
-		$p = PERMISSIONS::SEE_STATS;
-		return array(
-			// add permissions
-			array('permission.add', array($p)),
+		$p = permissions::SEE_STATS;
 
-			// Set permissions for the board roles
-			array('permission.permission_set', array('ROLE_ADMIN_FULL', $p)),
-			array('permission.permission_set', array('ROLE_USER_FULL', $p)),
-			array('permission.permission_set', array('ROLE_USER_STANDARD', $p)),
+		// add permissions
+		$re[] = array('permission.add', array($p));
 
-			// switch indicating if permissions should be checked
-			array('config.add', array(PREFIXES::CONFIG.'_check_permissions', 0)),
+		// Set permissions for the board roles
+		if ($this->role_exists('ROLE_ADMIN_FULL'))
+		{
+			$re[] = array('permission.permission_set', array('ROLE_ADMIN_FULL', $p));
+		}
+		if ($this->role_exists('ROLE_USER_FULL'))
+		{
+			$re[] = array('permission.permission_set', array('ROLE_USER_FULL', $p));
+		}
+		if ($this->role_exists('ROLE_USER_STANDARD'))
+		{
+			$re[] = array('permission.permission_set', array('ROLE_USER_STANDARD', $p));
+		}
 
-			// update version
-			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
-		);
+		// switch indicating if permissions should be checked
+		$re[] = array('config.add', array(prefixes::CONFIG.'_check_permissions', 0));
+
+		// update version
+		$re[] = array('config.update', array(prefixes::CONFIG.'_version', $this->version));
+
+		return $re;
 	}
+
+	/**
+	 * Checks whether the given role does exist or not.
+	 *
+	 * @param String $role the name of the role
+	 * @return true if the role exists, false otherwise.
+	 */
+	protected function role_exists($role)
+	{
+		$sql = 'SELECT role_id
+			FROM ' . ACL_ROLES_TABLE . '
+			WHERE ' . $this->db->sql_in_set('role_name', $role);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$role_id = $this->db->sql_fetchfield('role_id');
+		$this->db->sql_freeresult($result);
+		return $role_id > 0;
+	}
+
 }

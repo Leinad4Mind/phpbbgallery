@@ -13,7 +13,7 @@ namespace robertheim\activitystats;
 * @ignore
 */
 
-abstract class PREFIXES
+abstract class prefixes
 {
 	const CONFIG = 'robertheim_activitystats';
 }

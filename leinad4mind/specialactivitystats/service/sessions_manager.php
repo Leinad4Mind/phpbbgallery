@@ -12,8 +12,9 @@ namespace robertheim\activitystats\service;
 /**
  * @ignore
  */
-use robertheim\activitystats\PREFIXES;
-use robertheim\activitystats\TABLES;
+use robertheim\activitystats\prefixes;
+use robertheim\activitystats\tables;
+use robertheim\activitystats\modes;
 
 /**
 * Handles all functionallity regarding the session table of activity stats.
@@ -49,108 +50,86 @@ class sessions_manager
 
 	/**
 	* Update the users session in the table.
+	* @param int $timestamp the timestamp on that the update happens.
 	*/
-	public function update_session()
+	public function update_session($timestamp)
 	{
-		if ($this->user->data['user_id'] != ANONYMOUS)
+		$data = array(
+			'user_id'			=> $this->user->data['user_id'],
+			'user_ip'			=> $this->user->ip,
+			'username'			=> $this->user->data['username'],
+			'username_clean'	=> $this->user->data['username_clean'],
+			'user_colour'		=> $this->user->data['user_colour'],
+			'user_type'			=> $this->user->data['user_type'],
+			'viewonline'		=> 1,
+			'lastpage'			=> $timestamp,
+		);
+		if ($data['user_id'] != ANONYMOUS)
 		{
-			// current user is logged in - however he might have opened another session as anonymous from the same ip.
-			// so we need to check user_id and (anonymous AND ip=user->ip)
-			$data = array(
-				'user_id'			=> $this->user->data['user_id'],
-				'user_ip'			=> $this->user->ip,
-				'username'			=> $this->user->data['username'],
-				'username_clean'	=> $this->user->data['username_clean'],
-				'user_colour'		=> $this->user->data['user_colour'],
-				'user_type'			=> $this->user->data['user_type'],
-				'viewonline'		=> $this->user->data['session_viewonline'],
-				'lastpage'			=> time(),
-			);
+			// current user is logged in
+			$data['viewonline'] = $this->user->data['session_viewonline'];
 
-			$this->db->sql_return_on_error(true);
-			$sql = 'UPDATE ' . $this->table_prefix . TABLES::SESSIONS  . ' 
-				SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-				WHERE user_id = ' . (int) $this->user->data['user_id'] . "
-					OR (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
-						AND user_id = " . ANONYMOUS . ')';
+			$sql = 'SELECT id
+					FROM ' . $this->table_prefix . tables::SESSIONS . '
+					WHERE user_id = ' . (int) $this->user->data['user_id'];
 			$result = $this->db->sql_query($sql);
-			$this->db->sql_return_on_error(false);
-
-			if ((bool) $result === false)
+			$session_id = (int) $this->db->sql_fetchfield('id');
+			$this->db->sql_freeresult($result);
+			if ($session_id > 0)
 			{
-				// database does not exist yet...
-				return;
+				// update session
+				$sql = 'UPDATE ' . $this->table_prefix . tables::SESSIONS  . '
+					SET ' . $this->db->sql_build_array('UPDATE', $data) . '
+					WHERE id  = ' . $session_id;
+				$this->db->sql_query($sql);
 			}
-			$sql_affectedrows = (int) $this->db->sql_affectedrows();
-			if ($sql_affectedrows != 1)
+			else
 			{
-				if ($sql_affectedrows > 1)
+				// user is not yet registered as logged in user
+				// check if he has a session as anonymous
+				$sql = 'SELECT id
+						FROM ' . $this->table_prefix . tables::SESSIONS . '
+						WHERE (user_ip = \'' . $this->db->sql_escape($this->user->ip) . '\'
+								AND user_id = ' . ANONYMOUS . ')';
+				$result = $this->db->sql_query($sql);
+				$session_id = (int) $this->db->sql_fetchfield('id');
+				$this->db->sql_freeresult($result);
+				if ($session_id > 0)
 				{
-					// Found multiple matches, so we delete them and just add one
-					$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::SESSIONS . '
-						WHERE user_id = ' . (int) $this->user->data['user_id'] . "
-							OR (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
-								AND user_id = " . ANONYMOUS . ')';
+					// delete it
+					$sql = 'DELETE FROM ' . $this->table_prefix . tables::SESSIONS . '
+						WHERE id = ' . $session_id;
 					$this->db->sql_query($sql);
-					$this->db->sql_query('INSERT INTO ' . $this->table_prefix . TABLES::SESSIONS . ' ' . $this->db->sql_build_array('INSERT', $data));
 				}
 
-				if ($sql_affectedrows == 0)
-				{
-					// No entry updated. Either the user is not listed yet, or has opened two links in the same time
-					$sql = 'SELECT 1 as found
-						FROM ' . $this->table_prefix . TABLES::SESSIONS . '
-						WHERE user_id = ' . (int) $this->user->data['user_id'] . "
-							OR (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
-								AND user_id = " . ANONYMOUS . ')';
-					$result = $this->db->sql_query($sql);
-					$found = (int) $this->db->sql_fetchfield('found');
-					$this->db->sql_freeresult($result);
-					if (!$found)
-					{
-						// He wasn't listed.
-						$this->db->sql_query('INSERT INTO ' . $this->table_prefix . TABLES::SESSIONS . ' ' . $this->db->sql_build_array('INSERT', $data));
-					}
-				}
+				// create new user session
+				$this->db->sql_query('INSERT INTO ' . $this->table_prefix . tables::SESSIONS . ' ' . $this->db->sql_build_array('INSERT', $data));
 			}
 		}
 		else
 		{
-			// current user is anonymous - however he might have opened another session as a user from the same ip.
-			// so we not only need to check (ip=user->ip) but (anonymous AND ip=user->ip)
-			$this->db->sql_return_on_error(true);
-			$sql = 'SELECT user_id
-				FROM ' . $this->table_prefix . TABLES::SESSIONS . "
+			// current user is anonymous
+			$sql = 'SELECT id
+				FROM ' . $this->table_prefix . tables::SESSIONS . "
 				WHERE (user_ip = '" . $this->db->sql_escape($this->user->ip) . "'
 						AND user_id = " . ANONYMOUS . ')';
 			$result = $this->db->sql_query_limit($sql, 1);
-			$this->db->sql_return_on_error(false);
 
-			if ((bool) $result === false)
-			{
-				// database does not exist yet...
-				return;
-			}
-
-			$this->user_logged = (int) $this->db->sql_fetchfield('user_id');
+			$session_id = (int) $this->db->sql_fetchfield('id');
 			$this->db->sql_freeresult($result);
-
-			if (!$this->user_logged)
+			if ($session_id > 0)
 			{
-				$data = array(
-					'user_id'			=> $this->user->data['user_id'],
-					'user_ip'			=> $this->user->ip,
-					'username'			=> $this->user->data['username'],
-					'username_clean'	=> $this->user->data['username_clean'],
-					'user_colour'		=> $this->user->data['user_colour'],
-					'user_type'			=> $this->user->data['user_type'],
-					'viewonline'		=> 1,
-					'lastpage'			=> time(),
-				);
-				$this->db->sql_query('INSERT INTO ' . $this->table_prefix . TABLES::SESSIONS . ' ' . $this->db->sql_build_array('INSERT', $data));
+				// update session
+				$sql = 'UPDATE ' . $this->table_prefix . tables::SESSIONS  . '
+					SET ' . $this->db->sql_build_array('UPDATE', $data) . '
+					WHERE id  = ' . $session_id;
+				$this->db->sql_query($sql);
+			}
+			else
+			{
+				$this->db->sql_query('INSERT INTO ' . $this->table_prefix . tables::SESSIONS . ' ' . $this->db->sql_build_array('INSERT', $data));
 			}
 		}
-		$this->db->sql_return_on_error(false);
 	}
 
 	/**
@@ -160,13 +139,13 @@ class sessions_manager
 	 */
 	public function prune($timestamp)
 	{
-		if ($this->config[PREFIXES::CONFIG . '_last_clean'] != $timestamp)
+		if ($this->config[prefixes::CONFIG . '_last_clean'] != $timestamp)
 		{
-			$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::SESSIONS . '
+			$sql = 'DELETE FROM ' . $this->table_prefix . tables::SESSIONS . '
 				WHERE lastpage < ' . $timestamp;
 			$this->db->sql_query($sql);
 
-			$this->config->set(PREFIXES::CONFIG . '_last_clean', $timestamp);
+			$this->config->set(prefixes::CONFIG . '_last_clean', $timestamp);
 		}
 		// Purging was not needed or done succesfully...
 		return true;
@@ -184,8 +163,8 @@ class sessions_manager
 		if (0 == $cachetime || ($activity = $this->cache->get('_robertheim_activitystats')) === false)
 		{
 			$activity = array();
-	
-			if ($this->config[PREFIXES::CONFIG . '_disp_new_topics'])
+
+			if ($this->config[prefixes::CONFIG . '_disp_new_topics'])
 			{
 				// total new topics
 				$sql = 'SELECT COUNT(topic_id) AS new_topics
@@ -196,7 +175,7 @@ class sessions_manager
 				$this->db->sql_freeresult($result);
 			}
 
-			if ($this->config[PREFIXES::CONFIG . '_disp_new_posts'])
+			if ($this->config[prefixes::CONFIG . '_disp_new_posts'])
 			{
 				// total new posts
 				$sql = 'SELECT COUNT(post_id) AS new_posts
@@ -207,7 +186,7 @@ class sessions_manager
 				$this->db->sql_freeresult($result);
 			}
 
-			if ($this->config[PREFIXES::CONFIG . '_disp_new_users'])
+			if ($this->config[prefixes::CONFIG . '_disp_new_users'])
 			{
 				// total new users (counts inactive users as well)
 				$sql = 'SELECT COUNT(user_id) AS new_users
@@ -218,7 +197,7 @@ class sessions_manager
 				$this->db->sql_freeresult($result);
 			}
 
-			switch ($this->config[PREFIXES::CONFIG . '_sort_by'])
+			switch ($this->config[prefixes::CONFIG . '_sort_by'])
 			{
 				case self::SORT_USERNAME_ASC:
 				case self::SORT_USERNAME_DESC:
@@ -234,7 +213,7 @@ class sessions_manager
 					$sql_order_by = 'lastpage';
 				break;
 			}
-			$sql_ordering = (($this->config[PREFIXES::CONFIG . '_sort_by'] % 2) == self::SORT_ASC) ? 'ASC' : 'DESC';
+			$sql_ordering = (($this->config[prefixes::CONFIG . '_sort_by'] % 2) == self::SORT_ASC) ? 'ASC' : 'DESC';
 
 			// count of total_users (eventually including ANONYMOUS several times)
 			$count_total = 0;
@@ -242,13 +221,13 @@ class sessions_manager
 			$count_reg = $count_hidden = $count_bot = $count_guests = 0;
 
 			// holds all users-data without ANONYMOUS
-			$this->users_list = array();
+			$users_list = array();
 
 			// this array is used to prevent counting users (or bots etc) twice (while ANONYMOUS is counted several times)
 			$ids_user = array();
 
 			$sql = 'SELECT user_id, username, username_clean, user_colour, user_type, viewonline, lastpage, user_ip
-				FROM  ' . $this->table_prefix . TABLES::SESSIONS . "
+				FROM  ' . $this->table_prefix . tables::SESSIONS . "
 				WHERE lastpage >= " . ((int) $timestamp) . "
 				ORDER BY $sql_order_by $sql_ordering";
 			$result = $this->db->sql_query($sql);
@@ -276,7 +255,7 @@ class sessions_manager
 					else if ($row['user_type'] == USER_IGNORE)
 					{
 						// bot
-						$display_username = $this->config[PREFIXES::CONFIG . '_disp_bots'];
+						$display_username = $this->config[prefixes::CONFIG . '_disp_bots'];
 						if ($display_username)
 						{
 							$count_bot++;
@@ -285,14 +264,14 @@ class sessions_manager
 					}
 					else if ($row['viewonline'] == 1)
 					{
-						// registered users that not hides his online status
+						// registered user that does not hide his online status
 						$count_reg++;
 						$count_total++;
 					}
 					else
 					{
 						// hidden users
-						$display_username = $this->config[PREFIXES::CONFIG . '_disp_hidden'];
+						$display_username = $this->config[prefixes::CONFIG . '_disp_hidden'];
 						if ($display_username)
 						{
 							$count_hidden++;
@@ -304,10 +283,11 @@ class sessions_manager
 					{
 						// replace username with the printable username
 						$row['username'] = get_username_string((($row['user_type'] == USER_IGNORE) ? 'no_profile' : 'full'), $row['user_id'], $row['username'], $row['user_colour']);
-						$this->users_list[] = $row;
+						$users_list[] = $row;
 					}
 				}
 			}
+			$this->db->sql_freeresult($result);
 
 			// set calculated counts to activity
 			$activity['count_total']	= $count_total;
@@ -315,16 +295,39 @@ class sessions_manager
 			$activity['count_hidden']	= $count_hidden;
 			$activity['count_bot']		= $count_bot;
 			$activity['count_guests']	= $count_guests;
-
-			$activity['users_list']		= $this->users_list;
+			$activity['users_list']		= $users_list;
 
 			if ($cachetime > 0)
 			{
 				$this->cache->put('_robertheim_activitystats', $activity, $cachetime);
 			}
 		}
-	
+
 		return $activity;
+	}
+
+	public function get_board_timezone()
+	{
+		// local static variables work like static variables of
+		// the class, but with differnt scope
+		static $board_timezone;
+		if (!isset($board_timezone))
+		{
+			$board_timezone = new \DateTimeZone($this->config['board_timezone']);
+		}
+		return $board_timezone;
+	}
+
+	public function get_utc_timezone()
+	{
+		// local static variables work like static variables of
+		// the class, but with differnt scope
+		static $utc;
+		if (!isset($utc))
+		{
+			$utc = new \DateTimeZone('UTC');
+		}
+		return $utc;
 	}
 
 	/**
@@ -332,17 +335,34 @@ class sessions_manager
 	*/
 	public function check_record()
 	{
-		// fetch count of users that have been online
+		$where = '';
+		if (modes::TODAY == $this->config[prefixes::CONFIG . '_mode'])
+		{
+			// the record is calculated based on the boards timezone, because this
+			// is a global value to the board itself and not to a specific user
+			// its stored as UTC timestamp
+			// and we display it in the boards timezone
+			// it is not displayed in the users timezone, because it does not make any
+			// sense to calculate it in another timezone than it is displayed.
+
+			// fetch count of users that have been online today (board timezone)
+			// where lastpage >= midnight;
+			$now = new \phpbb\datetime($this->user, 'now', $this->get_board_timezone());
+			$midnight = clone $now;
+			$midnight->setTime(0,0,0);
+			$where = ' WHERE lastpage >= ' . $midnight->getTimestamp();
+		}
 		$sql = 'SELECT DISTINCT COUNT(user_id) AS count_total
-			FROM  ' . $this->table_prefix . TABLES::SESSIONS;
+			FROM  ' . $this->table_prefix . tables::SESSIONS
+			. $where;
 		$result = $this->db->sql_query($sql);
 		$count_total = (int) $this->db->sql_fetchfield('count_total');
 		$this->db->sql_freeresult($result);
 		// Need to update the record?
-		if ($this->config[PREFIXES::CONFIG . '_record_count'] < $count_total)
+		if ($this->config[prefixes::CONFIG . '_record_count'] < $count_total)
 		{
-			$this->config->set(PREFIXES::CONFIG . '_record_count', $count_total, true);
-			$this->config->set(PREFIXES::CONFIG . '_record_time', time(), true);
+			$this->config->set(prefixes::CONFIG . '_record_count', $count_total, true);
+			$this->config->set(prefixes::CONFIG . '_record_time', time(), true);
 		}
 	}
 }

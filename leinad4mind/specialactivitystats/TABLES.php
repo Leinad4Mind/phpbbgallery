@@ -9,7 +9,7 @@
 
 namespace robertheim\activitystats;
 
-class TABLES
+class tables
 {
 	const SESSIONS = 'rh_activitystats';
 }

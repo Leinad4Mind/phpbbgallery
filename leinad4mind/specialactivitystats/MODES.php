@@ -13,7 +13,7 @@ namespace robertheim\activitystats;
 * @ignore
 */
 
-abstract class MODES
+abstract class modes
 {
 	const TODAY = 1;
 	const PERIOD_OF_TIME = 0;
