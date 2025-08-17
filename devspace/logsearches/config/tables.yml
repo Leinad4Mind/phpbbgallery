@@ -1,0 +1,2 @@
+parameters:
+    david63.logsearches.tables.search_log: %core.table_prefix%search_log

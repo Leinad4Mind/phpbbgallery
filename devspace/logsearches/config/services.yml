@@ -1,0 +1,51 @@
+imports:
+    - { resource: tables.yml }
+    - { resource: phpbb_tables.yml }
+
+services:
+    david63.logsearches.listener:
+        class: david63\logsearches\event\listener
+        arguments:
+            - '@config'
+            - '@user'
+            - '@auth'			
+            - '@dbal.conn'
+            - '@language'
+            - '%david63.logsearches.tables.search_log%'
+            - '@david63.logsearches.core.functions'
+            - '%tables%'			
+        tags:
+            - { name: event.listener }
+
+    david63.logsearches.cron.task.core.search_log_prune:
+        class: david63\logsearches\cron\task\core\search_log_prune
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '%david63.logsearches.tables.search_log%'
+        calls:
+            - [set_name, [cron.task.core.search_log_prune]]
+        tags:
+            - { name: cron.task }
+
+    david63.logsearches.admin.controller:
+        class: david63\logsearches\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@pagination'
+            - '@user'
+            - '@auth'
+            - '%david63.logsearches.tables.search_log%'
+            - '@language'
+            - '@log'
+            - '@david63.logsearches.core.functions'
+
+    david63.logsearches.core.functions:
+        class: david63\logsearches\core\functions
+        arguments:
+            - '@ext.manager'
