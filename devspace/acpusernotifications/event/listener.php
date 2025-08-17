@@ -2,19 +2,19 @@
 /**
  *
  * @package ACP User Notifications
- * @copyright (c) 2020 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\acpusernotifications\event;
+namespace devspace\acpusernotifications\event;
 
 /**
  * @ignore
  */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use david63\acpusernotifications\controller\acp_user_notify_controller;
+use devspace\acpusernotifications\controller\acp_user_notify_controller;
 
 /**
  * Event listener

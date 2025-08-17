@@ -2,22 +2,38 @@
 /**
  *
  * @package ACP User Notifications
- * @copyright (c) 2020 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\acpusernotifications\migrations;
+declare(strict_types=1);
+
+namespace devspace\acpusernotifications\migrations;
 
 use phpbb\db\migration\migration;
 
 class acp_modules extends migration
 {
-	/**
-	 * Add the ACP module
-	 *
-	 * @return array Array update data
-	 * @access public
+   /**
+	 * {@inheritdoc
+	 */
+	public function effectively_installed(): bool
+	{
+		$sql = 'SELECT module_id
+			FROM ' . $this->table_prefix . "modules
+			WHERE module_class = 'acp'
+				AND module_langname = 'USER_NOTIFICATIONS'";
+		$result 	= $this->db->sql_query($sql);
+		$module_id	= $this->db->sql_fetchfield('module_id');
+
+		$this->db->sql_freeresult($result);
+
+		return $module_id !== false;
+	}
+
+   /**
+	 * {@inheritdoc
 	 */
 	public function update_data()
 	{
@@ -30,7 +46,7 @@ class acp_modules extends migration
 					'module_langname'	=> 'USER_NOTIFICATIONS',
 					'module_mode'		=> 'usernotify',
 					'module_display'	=> false,
-					'module_auth'		=> 'ext_david63/acpusernotifications && acl_a_user',
+					'module_auth'		=> 'ext_devspace/acpusernotifications && acl_a_user',
 				],
 			]],
 		];

@@ -2,12 +2,12 @@
 /**
  *
  * @package ACP User Notifications
- * @copyright (c) 2020 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\acpusernotifications\controller;
+namespace devspace\acpusernotifications\controller;
 
 /**
  * @ignore
@@ -18,7 +18,7 @@ use phpbb\auth\auth;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\language\language;
-use david63\acpusernotifications\core\functions;
+use devspace\acpusernotifications\core\functions;
 use phpbb\notification\manager;
 use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
@@ -88,7 +88,7 @@ class acp_user_notify_controller
 	 * @param log					$log                    Log object
 	 * @param string				$ext_images_path        Path to this extension's images
 	 *
-	 * @return \david63\acpusernotifications\controller\acp_user_notify_controller
+	 * @return \devspace\acpusernotifications\controller\acp_user_notify_controller
 	 * @access public
 	 */
 	public function __construct(user $user, config $config, auth $auth, request $request, string $root_path, string $php_ext, template $template, language $language, functions $functions, manager $notification_manager, driver_interface $db, array $tables, log $log, string $ext_images_path)
@@ -203,8 +203,8 @@ class acp_user_notify_controller
 		foreach ($notification_methods as $method => $method_data)
 		{
 			$this->template->assign_block_vars('notification_methods', [
-				'METHOD' => $method_data['id'],
-				'NAME' => $this->language->lang($method_data['lang']),
+				'METHOD'	=> $method_data['id'],
+				'NAME' 		=> $this->language->lang($method_data['lang']),
 			]);
 		}
 	}
@@ -236,10 +236,10 @@ class acp_user_notify_controller
 				foreach ($notification_methods as $method => $method_data)
 				{
 					$this->template->assign_block_vars('notification_types' . '.notification_methods', [
-						'AVAILABLE' => $method_data['method']->is_available($type_data['type']),
-						'METHOD' => $method_data['id'],
-						'NAME' => $this->language->lang($method_data['lang']),
-						'SUBSCRIBED' => (isset($subscriptions[$type]) && in_array($method_data['id'], $subscriptions[$type])) ? true : false,
+						'AVAILABLE'		=> $method_data['method']->is_available($type_data['type']),
+						'METHOD' 		=> $method_data['id'],
+						'NAME' 			=> $this->language->lang($method_data['lang']),
+						'SUBSCRIBED'	=> (isset($subscriptions[$type]) && in_array($method_data['id'], $subscriptions[$type])) ? true : false,
 					]);
 				}
 			}

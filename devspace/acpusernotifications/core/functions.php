@@ -2,12 +2,12 @@
 /**
  *
  * @package ACP User Notifications
- * @copyright (c) 2020 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\acpusernotifications\core;
+namespace devspace\acpusernotifications\core;
 
 use phpbb\extension\manager;
 use phpbb\exception\version_check_exception;

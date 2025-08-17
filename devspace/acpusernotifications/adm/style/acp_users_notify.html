@@ -1,4 +1,4 @@
-{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/acp.css' %}
+{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/admin_forms.css' %}
 
 <h2>{{ lang('NOTIFY_EDIT') }}</h2>
 <div class="panel">
@@ -65,10 +65,10 @@
 						<tr class="{% if notification_types.S_ROW_COUNT is odd %}row1{% else %}row2{% endif %}">
 							<td>
 								{{ notification_types.NAME }}
-								{% if notification_types.EXPLAIN %}<br />&nbsp; &nbsp;{{ notification_types.EXPLAIN }}{% endif %}
+								{% if notification_types.EXPLAIN %}<br>&nbsp; &nbsp;{{ notification_types.EXPLAIN }}{% endif %}
 							</td>
 							{% for notification_methods in notification_types.notification_methods %}
-								<td class="mark"><input type="checkbox" name="{{ notification_types.TYPE }}_{{ notification_methods.METHOD }}"{% if  notification_methods.AVAILABLE and notification_methods.SUBSCRIBED %} checked="checked"{% endif %}{% if not notification_methods.AVAILABLE %} disabled="disabled"{% endif %} /></td>
+								<td class="mark"><input type="checkbox" name="{{ notification_types.TYPE }}_{{ notification_methods.METHOD }}"{% if  notification_methods.AVAILABLE and notification_methods.SUBSCRIBED %} checked="checked"{% endif %}{% if not notification_methods.AVAILABLE %} disabled="disabled"{% endif %}></td>
 							{% endfor %}
 						</tr>
 					{% endif %}
@@ -76,11 +76,13 @@
 			</tbody>
 		</table>
 
-		<fieldset class="quick">
-			<input type="submit" name="submit" value="{{ lang('SAVE') }}" class="button1" />
-			<div><a href="#" onclick="$('#ucp input:checkbox').prop('checked', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="$('#ucp input:checkbox').prop('checked', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
-			{{ S_FORM_TOKEN }}
-		</fieldset>
+		<fieldset>
+				<legend>{{ lang('SAVE_CHANGES') }}</legend>
+				<p class="submit-buttons">
+					<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SAVE') }}">
+					{{ S_FORM_TOKEN }}
+				</p>
+			</fieldset>
 	</form>
 
 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
@@ -93,9 +95,9 @@
 					<dd>
 						<div class="aligner">
 							<div class="aligner-item">
-								<input type="hidden" name="cmd" value="_s-xclick" />
-								<input type="hidden" name="hosted_button_id" value="8QF58X7DVHKJ4" />
-								<button class="paypal_btn" type="submit" name="submit" title="{{ lang('PAYPAL_TITLE') }}" alt="{{ lang('PAYPAL_BUTTON') }}" />{{ lang('DONATE') }}</button>
+								<input type="hidden" name="cmd" value="_s-xclick">
+								<input type="hidden" name="hosted_button_id" value="8QF58X7DVHKJ4">
+								<button class="paypal_btn" type="submit" name="submit" title="{{ lang('PAYPAL_TITLE') }}" alt="{{ lang('PAYPAL_BUTTON') }}">{{ lang('DONATE') }}</button>
 							</div>
 						</div>
 						<img class="qrimage" src="{{ EXT_IMAGE_PATH }}/qrcode.png">
