@@ -9,14 +9,15 @@
 namespace sitesplat\bbembed\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use s9e\TextFormatter\Bundles\MediaPack;
 
 class listener implements EventSubscriberInterface
 {
+	protected $hostRegexp = '(facebook|plus\\.google|medium|soundcloud|twit(?:ch|ter)|vimeo|youtu)Si';
 	protected $inAcp      = false;
 	protected $isDisabled = false;
-	protected $parser;
-	protected $siteIds    = array('facebook', 'medium', 'googleplus', 'soundcloud', 'twitch', 'twitter', 'vimeo', 'youtube');
-	protected $tagNames   = array('FACEBOOK', 'MEDIUM', 'GOOGLEPLUS', 'SOUNDCLOUD', 'TWITCH', 'TWITTER', 'VIMEO', 'YOUTUBE');
+	protected $tagExpr    = '(?:FACEBOOK|GOOGLEPLUS|MEDIUM|SOUNDCLOUD|TWIT(?:CH|TER)|VIMEO|YOUTUBE)';
+	protected $tagNames   = array('FACEBOOK', 'GOOGLEPLUS', 'MEDIUM', 'SOUNDCLOUD', 'TWITCH', 'TWITTER', 'VIMEO', 'YOUTUBE');
 
 	public static function getSubscribedEvents()
 	{
@@ -52,12 +53,13 @@ class listener implements EventSubscriberInterface
 	public function onConfigure($event)
 	{
 		$configurator = $event['configurator'];
-		foreach ($this->siteIds as $siteId)
+		foreach ($this->tagNames as $tagName)
 		{
-			unset($configurator->tags[$siteId]);
+			$siteId = strtolower($tagName);
+			unset($configurator->tags[$tagName]);
 			$configurator->MediaEmbed->add($siteId);
 
-			$tag = $configurator->tags[$siteId];
+			$tag = $configurator->tags[$tagName];
 			$tag->template = $this->addTemplateEffects($tag->template);
 		}
 	}
@@ -132,7 +134,7 @@ class listener implements EventSubscriberInterface
 		if ($event['update_this_message'] && preg_match('(^<[rt][ />])', $event['text']))
 		{
 			$event['text'] = preg_replace(
-				'(</?(?:' . implode('|', $this->tagNames) . ')(?=[ />])[^>]*>)',
+				'(</?' . $this->tagExpr . '(?=[ />])[^>]*>)',
 				'',
 				$event['text']
 			);
@@ -148,7 +150,7 @@ class listener implements EventSubscriberInterface
 
 		// Fix custom BBCodes
 		$event['xml'] = preg_replace(
-			'(<(?:' . implode('|', $this->tagNames) . ') content="([^"]*))',
+			'(<' . $this->tagExpr . ' content="([^"]*))',
 			'$0" id="$1',
 			$event['xml']
 		);
@@ -189,7 +191,7 @@ class listener implements EventSubscriberInterface
 	protected function convertLinks($xml)
 	{
 		return preg_replace_callback(
-			'(<URL[^>]*? url="([^"]+)"[^>]*>(?:https?://|<LINK_TEXT).*?</URL>)i',
+			'(<URL[^>]*? url="([^"]+)"[^>]*>(?:\\w+://|<LINK_TEXT).*?</URL>(</\\w+)?)',
 			array($this, 'convertLinksCallback'),
 			$xml
 		);
@@ -199,14 +201,19 @@ class listener implements EventSubscriberInterface
 	{
 		$originalXml = $m[0];
 		$url         = $m[1];
+		$endTagXml   = isset($m[2]) ? $m[2] : '';
+		$endTagName  = substr($endTagXml, 2);
 
-		$xml = $this->getParser()->parse($url);
-		if ($xml[1] === 'r')
+		if (preg_match($this->hostRegexp, $url) && !in_array($endTagName, $this->tagNames, true))
 		{
-			$regexp = '(^<r[^>]*>(<(?:' . implode('|', $this->tagNames) . ') [^>]+>[^<]+</\\w+>)</r>$)';
-			if (preg_match($regexp, $xml, $m))
+			$xml = MediaPack::parse($url);
+			if ($xml[1] === 'r')
 			{
-				return $m[1];
+				$regexp = '(^<r[^>]*>(<' . $this->tagExpr . ' [^>]+>.*?)</r>$)';
+				if (preg_match($regexp, $xml, $m))
+				{
+					return $m[1] . $endTagXml;
+				}
 			}
 		}
 
@@ -243,16 +250,6 @@ class listener implements EventSubscriberInterface
 		}
 
 		return $attributes;
-	}
-
-	protected function getParser()
-	{
-		if (!isset($this->parser))
-		{
-			$this->parser = unserialize('O:24:"s9e\\TextFormatter\\Parser":4:{s:16:"' . "\0" . '*' . "\0" . 'pluginsConfig";a:2:{s:7:"BBCodes";a:4:{s:7:"bbcodes";a:1:{s:5:"MEDIA";a:2:{s:17:"contentAttributes";a:1:{i:0;s:3:"url";}s:16:"defaultAttribute";s:4:"site";}}s:10:"quickMatch";s:1:"[";s:6:"regexp";s:30:"#\\[/?(\\*|[-\\w]+)(?=[\\]\\s=:/])#";s:11:"regexpLimit";i:10000;}s:10:"MediaEmbed";a:4:{s:10:"quickMatch";s:3:"://";s:6:"regexp";s:26:"/\\bhttps?:\\/\\/[^["\'\\s]+/Si";s:7:"tagName";s:5:"MEDIA";s:11:"regexpLimit";i:10000;}}s:14:"registeredVars";a:2:{s:9:"urlConfig";a:1:{s:14:"allowedSchemes";s:12:"/^https?$/Di";}s:10:"mediasites";a:9:{s:12:"facebook.com";s:8:"facebook";s:10:"medium.com";s:6:"medium";s:15:"plus.google.com";s:10:"googleplus";s:14:"soundcloud.com";s:10:"soundcloud";s:9:"twitch.tv";s:6:"twitch";s:11:"twitter.com";s:7:"twitter";s:9:"vimeo.com";s:5:"vimeo";s:11:"youtube.com";s:7:"youtube";s:8:"youtu.be";s:7:"youtube";}}s:14:"' . "\0" . '*' . "\0" . 'rootContext";a:2:{s:7:"allowed";a:1:{i:0;i:32639;}s:5:"flags";i:0;}s:13:"' . "\0" . '*' . "\0" . 'tagsConfig";a:9:{s:8:"FACEBOOK";a:8:{s:10:"attributes";a:3:{s:2:"id";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:8:"@^\\d+$@D";}}}s:8:"required";b:1;}s:4:"type";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:10:"#^video$#D";}}}s:8:"required";b:0;}s:3:"url";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:50:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl";s:6:"params";a:3:{s:9:"attrValue";N;s:9:"urlConfig";N;s:6:"logger";N;}}}s:8:"required";b:0;}}s:22:"attributePreprocessors";a:3:{i:0;a:3:{i:0;s:3:"url";i:1;s:135:"@/(?!(?:apps|developers|graph)\\.)[-\\w.]*facebook\\.com/(?:[/\\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\\?v=)(?\'id\'\\d+)(?=$|[/?&#])@";i:2;a:2:{i:0;s:0:"";i:1;s:2:"id";}}i:1;a:3:{i:0;s:3:"url";i:1;s:20:"#/(?\'type\'video)s?/#";i:2;a:2:{i:0;s:0:"";i:1;s:4:"type";}}i:2;a:3:{i:0;s:3:"url";i:1;s:15:"@^(?\'id\'\\d+)$@D";i:2;R:66;}}s:11:"filterChain";a:2:{i:0;a:2:{s:8:"callback";s:55:"s9e\\TextFormatter\\Parser::executeAttributePreprocessors";s:6:"params";a:2:{s:3:"tag";N;s:9:"tagConfig";N;}}i:1;a:2:{s:8:"callback";s:42:"s9e\\TextFormatter\\Parser::filterAttributes";s:6:"params";a:4:{s:3:"tag";N;s:9:"tagConfig";N;s:14:"registeredVars";N;s:6:"logger";N;}}}s:12:"nestingLimit";i:10;s:5:"rules";a:1:{s:5:"flags";i:3089;}s:8:"tagLimit";i:1000;s:9:"bitNumber";i:1;s:7:"allowed";a:1:{i:0;i:32604;}}s:10:"GOOGLEPLUS";a:8:{s:10:"attributes";a:4:{s:4:"name";a:2:{s:11:"filterChain";a:2:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:10:"!^[^/]+$!D";}}i:1;a:2:{s:8:"callback";s:9:"urldecode";s:6:"params";a:1:{s:9:"attrValue";N;}}}s:8:"required";b:0;}s:3:"oid";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:8:"!^\\d+$!D";}}}s:8:"required";b:0;}s:3:"pid";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:8:"!^\\w+$!D";}}}s:8:"required";b:0;}s:3:"url";R:53;}s:22:"attributePreprocessors";a:1:{i:0;a:3:{i:0;s:3:"url";i:1;s:83:"!//plus\\.google\\.com/(?:u/\\d+/)?(?:\\+(?\'name\'[^/]+)|(?\'oid\'\\d+))/posts/(?\'pid\'\\w+)!";i:2;a:4:{i:0;s:0:"";i:1;s:4:"name";i:2;s:3:"oid";i:3;s:3:"pid";}}}s:11:"filterChain";a:3:{i:0;R:79;i:1;R:84;i:2;a:2:{s:8:"callback";s:67:"s9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::hasNonDefaultAttribute";s:6:"params";a:1:{s:3:"tag";N;}}}s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:3;s:7:"allowed";a:1:{i:0;i:32598;}}s:5:"MEDIA";a:6:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:54:"s9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::filterTag";s:6:"params";a:3:{s:3:"tag";N;s:6:"parser";N;s:10:"mediasites";N;}}}s:12:"nestingLimit";i:10;s:5:"rules";a:1:{s:5:"flags";i:513;}s:8:"tagLimit";i:1000;s:9:"bitNumber";i:0;s:7:"allowed";a:1:{i:0;i:32638;}}s:6:"MEDIUM";a:8:{s:10:"attributes";a:2:{s:2:"id";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:13:"!^[\\da-f]+$!D";}}}s:8:"required";b:1;}s:3:"url";R:53;}s:22:"attributePreprocessors";a:2:{i:0;a:3:{i:0;s:3:"url";i:1;s:47:"!medium\\.com/[^/]*/(?:[-\\w]+-)?(?\'id\'[\\da-f]+)!";i:2;R:66;}i:1;a:3:{i:0;s:3:"url";i:1;s:20:"!^(?\'id\'[\\da-f]+)$!D";i:2;R:66;}}s:11:"filterChain";R:78;s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:2;s:7:"allowed";a:1:{i:0;i:32602;}}s:10:"SOUNDCLOUD";a:8:{s:10:"attributes";a:5:{s:2:"id";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:83:"@^(?:https?://(?:api\\.)?soundcloud\\.com/(?!pages/)[-/\\w]+/[-/\\w]+|^[^/]+/[^/]+$)$@D";}}}s:8:"required";b:1;}s:11:"playlist_id";a:2:{s:11:"filterChain";R:38;s:8:"required";b:0;}s:12:"secret_token";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:11:"@^[-\\w]+$@D";}}}s:8:"required";b:0;}s:8:"track_id";R:194;s:3:"url";R:53;}s:22:"attributePreprocessors";a:5:{i:0;a:3:{i:0;s:3:"url";i:1;s:83:"@(?\'id\'https?://(?:api\\.)?soundcloud\\.com/(?!pages/)[-/\\w]+/[-/\\w]+|^[^/]+/[^/]+$)@";i:2;R:66;}i:1;a:3:{i:0;s:3:"url";i:1;s:52:"@api\\.soundcloud\\.com/playlists/(?\'playlist_id\'\\d+)@";i:2;a:2:{i:0;s:0:"";i:1;s:11:"playlist_id";}}i:2;a:3:{i:0;s:3:"url";i:1;s:89:"@api\\.soundcloud\\.com/tracks/(?\'track_id\'\\d+)(?:\\?secret_token=(?\'secret_token\'[-\\w]+))?@";i:2;a:3:{i:0;s:0:"";i:1;s:8:"track_id";i:2;s:12:"secret_token";}}i:3;a:3:{i:0;s:3:"url";i:1;s:81:"@soundcloud\\.com/(?!playlists|tracks)[-\\w]+/[-\\w]+/(?=s-)(?\'secret_token\'[-\\w]+)@";i:2;a:2:{i:0;s:0:"";i:1;s:12:"secret_token";}}i:4;a:3:{i:0;s:3:"url";i:1;s:90:"@^(?\'id\'(?:https?://(?:api\\.)?soundcloud\\.com/(?!pages/)[-/\\w]+/[-/\\w]+|^[^/]+/[^/]+$))$@D";i:2;R:66;}}s:11:"filterChain";a:3:{i:0;R:79;i:1;a:2:{s:8:"callback";s:51:"s9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::scrape";s:6:"params";a:3:{s:3:"tag";N;i:0;a:2:{i:0;a:3:{i:0;s:54:"@soundcloud\\.com/(?!playlists|tracks)[-\\w]+/[-\\w]+/s-@";i:1;s:36:"@soundcloud:tracks:(?\'track_id\'\\d+)@";i:2;a:1:{i:0;s:8:"track_id";}}i:1;a:3:{i:0;s:27:"@soundcloud\\.com/\\w+/sets/@";i:1;s:44:"@soundcloud://playlists:(?\'playlist_id\'\\d+)@";i:2;a:1:{i:0;s:11:"playlist_id";}}}s:8:"cacheDir";N;}}i:2;R:84;}s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:4;s:7:"allowed";a:1:{i:0;i:32590;}}s:6:"TWITCH";a:8:{s:10:"attributes";a:6:{s:10:"archive_id";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:8:"#^\\d+$#D";}}}s:8:"required";b:0;}s:7:"channel";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:8:"#^\\w+$#D";}}}s:8:"required";b:0;}s:10:"chapter_id";R:254;s:1:"t";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:27:"#^(?:(?:\\d+h)?\\d+m)?\\d+s$#D";}}}s:8:"required";b:0;}s:3:"url";R:53;s:8:"video_id";R:254;}s:22:"attributePreprocessors";a:2:{i:0;a:3:{i:0;s:3:"url";i:1;s:96:"#twitch\\.tv/(?\'channel\'\\w+)(?:/b/(?\'archive_id\'\\d+)|/c/(?\'chapter_id\'\\d+)|/v/(?\'video_id\'\\d+))?#";i:2;a:5:{i:0;s:0:"";i:1;s:7:"channel";i:2;s:10:"archive_id";i:3;s:10:"chapter_id";i:4;s:8:"video_id";}}i:1;a:3:{i:0;s:3:"url";i:1;s:32:"#t=(?\'t\'(?:(?:\\d+h)?\\d+m)?\\d+s)#";i:2;a:2:{i:0;s:0:"";i:1;s:1:"t";}}}s:11:"filterChain";R:137;s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:5;s:7:"allowed";a:1:{i:0;i:32606;}}s:7:"TWITTER";a:8:{s:10:"attributes";a:2:{s:2:"id";R:37;s:3:"url";R:53;}s:22:"attributePreprocessors";a:2:{i:0;a:3:{i:0;s:3:"url";i:1;s:51:"@twitter\\.com/(?:#!/)?\\w+/status(?:es)?/(?\'id\'\\d+)@";i:2;R:66;}i:1;R:75;}s:11:"filterChain";R:78;s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:6;s:7:"allowed";a:1:{i:0;i:32542;}}s:5:"VIMEO";a:8:{s:10:"attributes";a:2:{s:2:"id";a:2:{s:11:"filterChain";R:113;s:8:"required";b:1;}s:3:"url";R:53;}s:22:"attributePreprocessors";a:2:{i:0;a:3:{i:0;s:3:"url";i:1;s:50:"!vimeo\\.com/(?:channels/[^/]+/|video/)?(?\'id\'\\d+)!";i:2;R:66;}i:1;a:3:{i:0;s:3:"url";i:1;s:15:"!^(?\'id\'\\d+)$!D";i:2;R:66;}}s:11:"filterChain";R:78;s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:5;s:7:"allowed";R:297;}s:7:"YOUTUBE";a:8:{s:10:"attributes";a:7:{s:1:"h";R:112;s:2:"id";a:2:{s:11:"filterChain";a:1:{i:0;a:2:{s:8:"callback";s:53:"s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp";s:6:"params";a:2:{s:9:"attrValue";N;i:0;s:11:"!^[-\\w]+$!D";}}}s:8:"required";b:1;}s:4:"list";a:2:{s:11:"filterChain";R:327;s:8:"required";b:0;}s:1:"m";R:112;s:1:"s";R:112;s:1:"t";R:112;s:3:"url";R:53;}s:22:"attributePreprocessors";a:5:{i:0;a:3:{i:0;s:3:"url";i:1;s:45:"!youtube\\.com/(?:watch.*?v=|v/)(?\'id\'[-\\w]+)!";i:2;R:66;}i:1;a:3:{i:0;s:3:"url";i:1;s:25:"!youtu\\.be/(?\'id\'[-\\w]+)!";i:2;R:66;}i:2;a:3:{i:0;s:3:"url";i:1;s:57:"![#&?]t=(?:(?:(?\'h\'\\d+)h)?(?\'m\'\\d+)m(?\'s\'\\d+)|(?\'t\'\\d+))!";i:2;a:5:{i:0;s:0:"";i:1;s:1:"h";i:2;s:1:"m";i:3;s:1:"s";i:4;s:1:"t";}}i:3;a:3:{i:0;s:3:"url";i:1;s:23:"!&list=(?\'list\'[-\\w]+)!";i:2;a:2:{i:0;s:0:"";i:1;s:4:"list";}}i:4;a:3:{i:0;s:3:"url";i:1;s:18:"!^(?\'id\'[-\\w]+)$!D";i:2;R:66;}}s:11:"filterChain";R:78;s:12:"nestingLimit";i:10;s:5:"rules";R:92;s:8:"tagLimit";i:1000;s:9:"bitNumber";i:5;s:7:"allowed";R:297;}}}');
-		}
-
-		return $this->parser;
 	}
 
 	protected function hasAutolinks($xml)

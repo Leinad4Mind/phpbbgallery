@@ -2,7 +2,7 @@
 	"name": "sitesplat/bbembed",
 	"type": "phpbb-extension",
 	"description": "It allows the automatic embeding of videos and tweets - Supported social medias are: Twitter, Youtube, Twitch, Vimeo, Google+, SoundCloud, Medium and Facebook. The medias are also Responsive by default.",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"keywords": ["phpbb", "extension", "embed", "media"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
