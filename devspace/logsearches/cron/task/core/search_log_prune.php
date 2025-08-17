@@ -1,17 +1,17 @@
 <?php
 /**
-*
-* @package Log Searches Extension
-* @copyright (c) 2015 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Log Searches Extension
+ * @copyright (c) 2022 devspace
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-namespace david63\logsearches\cron\task\core;
+namespace devspace\logsearches\cron\task\core;
 
 /**
-* @ignore
-*/
+ * @ignore
+ */
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
@@ -19,47 +19,44 @@ use phpbb\user;
 
 class search_log_prune extends \phpbb\cron\task\base
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/**
-	* The database table the search log is stored in
-	*
-	* @var string
-	*/
-	protected $search_log_table;
+	/** @var array phpBB tables */
+	protected $tables;
 
 	/**
-	* Constructor.
-	*
-	* @param phpbb_config		$config The config
-	* @param phpbb_db_driver	$db The db connection
-	* @param \phpbb\log\log		$log
-	* @param \phpbb\user		$user
-	*/
-	public function __construct(config $config, driver_interface $db, log $log, user $user, $search_log_table)
+	 * Constructor.
+	 *
+	 * @param phpbb_config       $config     The config
+	 * @param phpbb_db_driver    $db         The db connection
+	 * @param log                $log        Log object
+	 * @param user               $user       User object
+	 * @param array              $tables     phpBB db tables
+	 */
+	public function __construct(config $config, driver_interface $db, log $log, user $user, $tables)
 	{
-		$this->config			= $config;
-		$this->db				= $db;
-		$this->log				= $log;
-		$this->user				= $user;
-		$this->search_log_table	= $search_log_table;
+		$this->config = $config;
+		$this->db     = $db;
+		$this->log    = $log;
+		$this->user   = $user;
+		$this->tables = $tables;
 	}
 
 	/**
-	* Runs this cron task.
-	*
-	* @return null
-	*/
+	 * Runs this cron task.
+	 *
+	 * @return null
+	 */
 	public function run()
 	{
 		if ($this->config['search_log_prune_days'] > 0)
@@ -68,9 +65,9 @@ class search_log_prune extends \phpbb\cron\task\base
 
 			$and = ($this->config['search_log_prune_all']) ? '' : 'AND log_search_type <> 0';
 
-			$sql = 'DELETE FROM ' . $this->search_log_table . '
-				WHERE log_time < ' . $last_log . "
-				$and";
+			$sql = 'DELETE FROM ' . $this->tables['search_log'] . '
+                WHERE log_time < ' . (int) $last_log . "
+                $and";
 			$this->db->sql_query($sql);
 
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'SEARCH_LOG_PRUNE_LOG');
@@ -80,21 +77,21 @@ class search_log_prune extends \phpbb\cron\task\base
 	}
 
 	/**
-	* Returns whether this cron task can run, given current board configuration.
-	*
-	* @return bool
-	*/
+	 * Returns whether this cron task can run, given current board configuration.
+	 *
+	 * @return bool
+	 */
 	public function is_runnable()
 	{
 		return (bool) $this->config['search_log_prune_days'] > 0;
 	}
 
 	/**
-	* Returns whether this cron task should run now, because enough time
-	* has passed since it was last run.
-	*
-	* @return bool
-	*/
+	 * Returns whether this cron task should run now, because enough time
+	 * has passed since it was last run.
+	 *
+	 * @return bool
+	 */
 	public function should_run()
 	{
 		return $this->config['search_log_prune_days'] > 0 && time() > ($this->config['search_log_prune_last_gc'] + $this->config['search_log_prune_gc']);
