@@ -93,8 +93,8 @@ class admin_controller implements admin_interface
 	*/
 	public function display_options()
 	{
-		// Add the language file
-		$this->language->add_lang('acp_userdefaults', $this->functions->get_ext_namespace());
+		// Add the language files
+		$this->language->add_lang(array('acp_userdefaults', 'acp_common'), $this->functions->get_ext_namespace());
 
 		add_form_key($this->constants['form_key']);
 
@@ -178,16 +178,20 @@ class admin_controller implements admin_interface
 		$this->db->sql_freeresult($result);
 
 		// Template vars for header panel
+		$version_data	= $this->functions->version_check();
+
 		$this->template->assign_vars(array(
+			'DOWNLOAD'			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
+
 			'HEAD_TITLE'		=> $this->language->lang('USER_DEFAULTS'),
 			'HEAD_DESCRIPTION'	=> $this->language->lang('USER_DEFAULTS_EXPLAIN'),
 
 			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
 
 			'S_BACK'			=> $back,
-			'S_VERSION_CHECK'	=> $this->functions->version_check(),
+			'S_VERSION_CHECK'	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
 
-			'VERSION_NUMBER'	=> $this->functions->get_this_version(),
+			'VERSION_NUMBER'	=> $this->functions->get_meta('version'),
 		));
 
 		$this->template->assign_vars(array(
@@ -245,15 +249,15 @@ class admin_controller implements admin_interface
 		$this->config->set('ud_moderation_queue', $this->request->variable('ud_moderation_queue', 0));
 		$this->config->set('ud_notify', $this->request->variable('ud_notify', ''));
 		$this->config->set('ud_notify_pm', $this->request->variable('ud_notify_pm', ''));
-		$this->config->set('ud_options', phpbb_optionset(constants::ATTACHSIG, $this->request->variable('ud_sig', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::BBCODE, $this->request->variable('ud_bbcode', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::SMILIES, $this->request->variable('ud1_smilies', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWAVATARS, $this->request->variable('ud_avatars', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWCENSORS, $this->request->variable('ud_wordcensor', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWFLASH, $this->request->variable('ud_flash', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWIMG, $this->request->variable('ud_images', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWSIGS, $this->request->variable('ud_sigs', 0), $this->config['ud_options']));
-		$this->config->set('ud_options', phpbb_optionset(constants::VIEWSMILIES, $this->request->variable('ud_smilies', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['attachsig'], $this->request->variable('ud_sig', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['bbcode'], $this->request->variable('ud_bbcode', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['smilies'], $this->request->variable('ud_smilies', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewavatars'], $this->request->variable('ud_avatars', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewcensors'], $this->request->variable('ud_wordcensor', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewflash'], $this->request->variable('ud_flash', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewimg'], $this->request->variable('ud_images', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewsigs'], $this->request->variable('ud_sigs', 0), $this->config['ud_options']));
+		$this->config->set('ud_options', phpbb_optionset($this->constants['viewsmilies'], $this->request->variable('udl_smilies', 0), $this->config['ud_options']));
 		$this->config->set('ud_post_sd', $this->request->variable('post_sd', 'a'));
 		$this->config->set('ud_post_sk', $this->request->variable('post_sk', 't'));
 		$this->config->set('ud_post_st', $this->request->variable('post_st', 0));
