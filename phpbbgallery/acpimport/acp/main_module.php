@@ -1,11 +1,14 @@
 <?php
 /**
-*
-* @package Gallery - ACP Import Extension
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP Import Extension
+ *
+ * @package   phpbbgallery/acpimport
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\acpimport\acp;
 
@@ -68,7 +71,7 @@ class main_module
 					$filetype = getimagesize($image_src_full);
 					$filetype_ext = '';
 
-					$error_occured = false;
+					$error_occurred = false;
 					switch ($filetype['mime'])
 					{
 						case 'image/jpeg':
@@ -79,7 +82,7 @@ class main_module
 							if ((substr(strtolower($image_src), -4) != '.jpg') && (substr(strtolower($image_src), -5) != '.jpeg'))
 							{
 								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occured = true;
+								$error_occurred = true;
 							}
 						break;
 
@@ -90,7 +93,7 @@ class main_module
 							if (substr(strtolower($image_src), -4) != '.png')
 							{
 								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occured = true;
+								$error_occurred = true;
 							}
 						break;
 
@@ -101,7 +104,7 @@ class main_module
 							if (substr(strtolower($image_src), -4) != '.gif')
 							{
 								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occured = true;
+								$error_occurred = true;
 							}
 						break;
 
@@ -111,32 +114,31 @@ class main_module
 							if (substr(strtolower($image_src), -5) != '.webp')
 							{
 								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occured = true;
+								$error_occurred = true;
 							}
 						break;
 
 						default:
 							$this->log_import_error($import_schema, $user->lang['NOT_ALLOWED_FILE_TYPE']);
-							$error_occured = true;
+							$error_occurred = true;
 						break;
 					}
 					$image_filename = md5(unique_id()) . $filetype_ext;
+					$file_link = $gallery_url->path('upload') . $image_filename;
 
-					if (!$error_occured || !@move_uploaded_file($image_src_full, $gallery_url->path('upload') . $image_filename))
+					if (!$error_occurred || !@move_uploaded_file($image_src_full, $file_link))
 					{
-						if (!@copy($image_src_full, $gallery_url->path('upload') . $image_filename))
+						if (!@copy($image_src_full, $file_link))
 						{
 							$user->add_lang('posting');
-							$this->log_import_error($import_schema, sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $gallery_url->path('upload') . $image_filename));
-							$error_occured = true;
+							$this->log_import_error($import_schema, sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $file_link));
+							$error_occurred = true;
 						}
 					}
 
-					if (!$error_occured)
+					if (!$error_occurred)
 					{
-						@chmod($gallery_url->path('upload') . $image_filename, 0777);
-						// The source image is imported, so we delete it.
-						@unlink($image_src_full);
+						@chmod($file_link, 0777);
 
 						$sql_ary = array(
 							'image_filename' 		=> $image_filename,
@@ -150,17 +152,15 @@ class main_module
 							'image_user_ip'			=> $user->ip,
 							'image_time'			=> $start_time + $done_images,
 							'image_album_id'		=> $album_id,
-							'image_status'			=> \phpbbgallery\core\block::STATUS_APPROVED,
+							'image_status'			=> (int) \phpbbgallery\core\block::STATUS_APPROVED,
 							//'image_exif_data'		=> '',
 						);
 
-						unset($image_tools);
 						$image_tools = $phpbb_container->get('phpbbgallery.core.file.tool');
 						$image_tools->set_image_options($gallery_config->get('max_filesize'), $gallery_config->get('max_height'), $gallery_config->get('max_width'));
-						$image_tools->set_image_data($gallery_url->path('upload') . $image_filename);
+						$image_tools->set_image_data($file_link);
 
-						$additional_sql_data = array();
-						$file_link = $gallery_url->path('upload') . $image_filename;
+						$additional_sql_data = [];
 
 						/**
 						* Event to trigger before mass update
@@ -176,14 +176,14 @@ class main_module
 						if (($filetype[0] > $gallery_config->get('max_width')) || ($filetype[1] > $gallery_config->get('max_height')))
 						{
 							/**
-							* Resize overside images
+							* Resize oversize images
 							*/
 							if ($gallery_config->get('allow_resize'))
 							{
 								$image_tools->resize_image($gallery_config->get('max_width'), $gallery_config->get('max_height'));
 								if ($image_tools->resized)
 								{
-									$image_tools->write_image($gallery_url->path('upload') . $image_filename, $gallery_config->get('jpg_quality'), true);
+									$image_tools->write_image($file_link, $gallery_config->get('jpg_quality'), true);
 								}
 							}
 						}
@@ -203,7 +203,7 @@ class main_module
 						$sql_ary = array_merge($sql_ary, $additional_sql_data);
 
 						// Try to get real filesize from temporary folder (not always working) ;)
-						$sql_ary['filesize_upload'] = (@filesize($gallery_url->path('upload') . $image_filename)) ? @filesize($gallery_url->path('upload') . $image_filename) : 0;
+						$sql_ary['filesize_upload'] = (@filesize($file_link)) ? @filesize($file_link) : 0;
 
 						if ($filename || ($image_name == ''))
 						{
@@ -217,6 +217,11 @@ class main_module
 
 						// Put the images into the database
 						$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
+						// If the source image is imported, we delete it.
+						if (file_exists($image_src_full))
+						{
+							@unlink($image_src_full);
+						}
 					}
 					$done_images++;
 				}
@@ -300,7 +305,7 @@ class main_module
 
 			$sql = 'SELECT username, user_colour, user_id
 				FROM ' . USERS_TABLE . '
-				WHERE user_id = ' . $user_id;
+				WHERE user_id = ' . (int) $user_id;
 			$result = $db->sql_query($sql);
 			$user_row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -337,7 +342,7 @@ class main_module
 			// Where do we put them to?
 			$sql = 'SELECT album_id, album_name
 				FROM ' . $table_prefix . 'gallery_albums
-				WHERE album_id = ' . $album_id;
+				WHERE album_id = ' . (int) $album_id;
 			$result = $db->sql_query($sql);
 			$album_row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -380,9 +385,11 @@ class main_module
 		ksort($files);
 		foreach ($files as $file)
 		{
-			$template->assign_block_vars('imagerow', array(
-				'FILE_NAME'				=> utf8_encode($file),
-			));
+			// Get file name encoding
+			$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
+			$template->assign_block_vars('imagerow', [
+				'FILE_NAME'	=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding),
+			]);
 		}
 
 		$template->assign_vars(array(
@@ -391,7 +398,7 @@ class main_module
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 			'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], $gallery_url->path('import')),
 			'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, \phpbbgallery\core\block::PUBLIC_ALBUM, \phpbbgallery\core\block::TYPE_UPLOAD),
+			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 			'U_FIND_USERNAME'				=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),
 		));
 	}
@@ -445,9 +452,9 @@ class main_module
 
 	function log_import_error($import_schema, $error)
 	{
-		global $phpbb_ext_gallery;
+		global $gallery_url;
 
-		$error_file = $phpbb_ext_gallery->url->_return_file($import_schema . '_errors', 'import', '');
+		$error_file = $gallery_url->_return_file($import_schema . '_errors', 'import', '');
 		$content = @file_get_contents($error_file);
 		file_put_contents($error_file, $content .= (($content) ? "\n" : '') . $error);
 	}

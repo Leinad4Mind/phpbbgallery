@@ -1,11 +1,15 @@
 <?php
 /**
-*
-* @package Gallery - ACP Import Extension [Bulgarian]
-* @copyright (c) 2014 Lucifer - http://www.anavaro.com/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP Import Extension [Bulgarian Translation]
+ *
+ * @package   phpbbgallery/acpimport
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Lucifer <https://www.anavaro.com>
+ */
 
 /**
 * DO NOT CHANGE
@@ -17,10 +21,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_IMPORT_ALBUMS'				=> 'Вкарване на изображения',
 	'ACP_IMPORT_ALBUMS_EXPLAIN'		=> 'Тук можете да вкарате голямо количество изображения от файловата система. Преди да вкарате изображенията, моля оразмерете ги на ръка.',
 
@@ -39,4 +43,7 @@ $lang = array_merge($lang, array(
 	'MISSING_IMPORT_SCHEMA'			=> 'Избраната таблица за вкарване (%s) не може да бъде открита.',
 
 	'NO_FILE_SELECTED'				=> 'Трябва да изберете поне един фаил.',
-));
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'Първо трябва да бъде инсталирано и активирано разширението phpBB Gallery Core.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'Разширението е активирано успешно.',
+]);

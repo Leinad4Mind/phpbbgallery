@@ -1,12 +1,15 @@
 <?php
 /**
-*
-* @package Gallery - ACP Import Extension [Russian]
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-* Translation from Eduard Schlak (http://translations.schlak.info/)
-*/
+ * phpBB Gallery - ACP Import Extension [Russian Translation]
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Eduard Schlak <https://translations.schlak.info>
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,10 +21,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_IMPORT_ALBUMS'				=> 'Импорт новых изображений',
 	'ACP_IMPORT_ALBUMS_EXPLAIN'		=> 'Здесь вы можете ввести количество изображений, которые будут импортированы. Перед тем, как импортировать изображения, измените размер вручную, используя программное обеспечение для редактирования изображений',
 
@@ -40,4 +43,7 @@ $lang = array_merge($lang, array(
 	'MISSING_IMPORT_SCHEMA'			=> 'Схема импорта (%s) не могла быть найдена',
 
 	'NO_FILE_SELECTED'				=> 'Вы должны выбрать минимум один файл',
-));
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'Сначала необходимо установить и включить расширение phpBB Gallery Core.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'Расширение успешно включено.',
+]);
