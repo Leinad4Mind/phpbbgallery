@@ -55,9 +55,13 @@ article:hover .btn-snappy {
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 768px) {
-#qr_full_editor {
-    padding: 9px 11px;
-}
+   #qr_full_editor {
+    padding: 11px 12px;
+   }
+   #sitesplat_snappy_quickreply .btn-group {
+    margin-top: 5px;
+    margin-bottom: 5px;
+   }
 }
 
 
