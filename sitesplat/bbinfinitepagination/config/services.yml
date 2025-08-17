@@ -1,0 +1,9 @@
+services:
+    sitesplat.bbinfinitepagination.listener:
+        class: sitesplat\bbinfinitepagination\event\listener
+        arguments:
+            - '@template'
+            - '@config'
+            - '@language'
+        tags:
+            - { name: event.listener }
