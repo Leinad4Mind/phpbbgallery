@@ -1,7 +1,7 @@
 <?php
 /**
 *
- * @package ReplyToUnhide
+ * @package ReplyToUnihde
  * @copyright (c) 2016 SiteSplat <http://sitesplat.com>
  * @license Proprietary
 *

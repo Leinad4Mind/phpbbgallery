@@ -1,8 +1,8 @@
 <?php
 /**
  *
- * @package ReplyToUnhide
- * @copyright (c) 2016 SiteSplat <http://sitesplat.com>
+ * @package ReplyToUnihde
+ * @copyright (c) 2016 SiteSplat <https://sitesplat.com>
  * @license Proprietary
  *
  */

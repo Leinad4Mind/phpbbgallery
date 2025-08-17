@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package ReplyToUnhide
+ * @package ReplyToUnihde
  * @copyright (c) 2016 SiteSplat <http://sitesplat.com>
  * @license Proprietary
  *
@@ -11,7 +11,6 @@ namespace sitesplat\replytounhide\event;
 
 use phpbb\controller\helper;
 use phpbb\template\template;
-use phpbb\auth\auth;
 use phpbb\user;
 use phpbb\db\driver\driver_interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,7 +25,6 @@ class listener implements EventSubscriberInterface
 	protected $bbcodes_parser;
 	protected $helper;
 	protected $template;
-	protected $auth;
 	protected $user;
 	protected $db;
 	protected $ext_root_path;
@@ -35,12 +33,11 @@ class listener implements EventSubscriberInterface
 	 * Constructor
 	 *
 	 */
-	public function __construct(bbcodes_parser $bbcodes_parser, helper $helper, template $template, auth $auth, user $user, driver_interface $db, $ext_root_path)
+	public function __construct(bbcodes_parser $bbcodes_parser, helper $helper, template $template, user $user, driver_interface $db, $ext_root_path)
 	{
 		$this->bbcodes_parser = $bbcodes_parser;
 		$this->helper = $helper;
 		$this->template = $template;
-		$this->auth = $auth;
 		$this->user = $user;
 		$this->db = $db;
 		$this->ext_root_path = $ext_root_path;
