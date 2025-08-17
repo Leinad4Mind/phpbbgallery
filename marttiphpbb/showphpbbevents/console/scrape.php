@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -30,7 +30,7 @@ class scrape extends command
 		parent::__construct($user);
 	}
 
-	protected function configure()
+	protected function configure():void
 	{
 		$this
 			->setName('ext-showphpbbevents:scrape')
@@ -40,7 +40,7 @@ class scrape extends command
 		;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output):void
 	{
 		$version = $input->getArgument('version');
 		$events = [];

@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 * This file was generated with the ext-showphpbbevents:generate command
 */
@@ -15,7 +15,7 @@ class php_event_listener implements EventSubscriberInterface
 {
 	protected $count_ary = [];
 
-	static public function getSubscribedEvents()
+	static public function getSubscribedEvents():array
 	{
 		return [
 			'core.acl_clear_prefetch_after' => 'add',
@@ -462,34 +462,19 @@ class php_event_listener implements EventSubscriberInterface
 			'core.viewtopic_modify_post_row' => 'add',
 			'core.viewtopic_post_row_after' => 'add',
 			'core.viewtopic_post_rowset_data' => 'add',
-			'core.confirm_box_ajax_before' => 'add',
-			'core.get_group_rank_after' => 'add',
-			'core.get_group_rank_before' => 'add',
-			'core.mcp_main_before' => 'add',
-			'core.mcp_topic_modify_sql_ary' => 'add',
-			'core.message_history_modify_sql_ary' => 'add',
-			'core.message_history_modify_template_vars' => 'add',
-			'core.modify_group_name_string' => 'add',
-			'core.pm_modify_message_subject' => 'add',
-			'core.posting_modify_post_subject' => 'add',
-			'core.posting_modify_row_data' => 'add',
-			'core.topic_review_modify_sql_ary' => 'add',
-			'core.viewtopic_gen_sort_selects_before' => 'add',
 
 		];
 	}
 
-	public function add(Event $event)
+	public function add(Event $event, $event_name):void
 	{
-		$name = $event->getName();
-
-		if (isset($this->count_ary[$name]))
+		if (isset($this->count_ary[$event_name]))
 		{
-			$this->count_ary[$name]++;
+			$this->count_ary[$event_name]++;
 			return;
 		}
 
-		$this->count_ary[$name] = 1;
+		$this->count_ary[$event_name] = 1;
 	}
 
 	public function get_count_ary():array
