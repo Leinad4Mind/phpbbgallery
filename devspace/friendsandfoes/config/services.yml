@@ -1,20 +1,17 @@
 imports:
-    - { resource: phpbb_tables.yml }
+    - { resource: alias.yml }
 
 services:
-    david63.friendsandfoes.admin.controller:
-        class: david63\friendsandfoes\controller\admin_controller
-        arguments:
-            - '@config'
-            - '@dbal.conn'
-            - '@request'
-            - '@template'
-            - '@pagination'
-            - '@language'
-            - '@david63.friendsandfoes.core.functions'
-            - '%tables%'
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/devspace/friendsandfoes/adm/style/images'
+        public: true
 
-    david63.friendsandfoes.core.functions:
-        class: david63\friendsandfoes\core\functions
-        arguments:
-            - '@ext.manager'
+    devspace.friendsandfoes.admin.controller:
+        class: devspace\friendsandfoes\controller\admin_controller
+
+    devspace.friendsandfoes.core.functions:
+        class: devspace\friendsandfoes\core\functions
