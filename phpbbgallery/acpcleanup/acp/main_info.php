@@ -7,15 +7,9 @@
 *
 */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\acpcleanup\acp;
 
-/**
-* @package module_install
-*/
-class phpbb_ext_gallery_cleanup_acp_main_info
+class main_info
 {
 	function module()
 	{
@@ -24,7 +18,11 @@ class phpbb_ext_gallery_cleanup_acp_main_info
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'cleanup'			=> array('title' => 'ACP_GALLERY_CLEANUP',				'auth' => 'acl_a_gallery_cleanup',	'cat' => array('PHPBB_GALLERY')),
+				'cleanup'			=> array(
+					'title' => 'ACP_GALLERY_CLEANUP',
+					'auth' => 'acl_a_gallery_cleanup && ext_phpbbgallery/acpcleanup',
+					'cat' => array('PHPBB_GALLERY')
+				),
 			),
 		);
 	}
