@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* Who Visited This Topic extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 brunino
-* @license GNU General Public License, version 2 (GPL-2.0)
+* @package phpBB Extension - Who Visited This Topic
+* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -38,12 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_U_WVTT'		=> 'Can view Who Visited A Topic',
-	'ACL_U_WVTT_COUNT'		=> 'Can view topics visits number for each user',
-	'ACL_U_WVTT_POPUP'		=> 'Can view the dates of who visited a topic',
-	'ACL_U_WVTT_PROFILE'		=> 'Can view last topics visited by users (in profiles)',
-	'EXTENSION_BY'		=> 'Extension created by',
-	'WVTT_DETAILS'		=> 'See details',
-	'WVTT_PROFILE'		=> 'Last topics visited',
-	'WVTT_TITLE'		=> 'Who Visited This Topic',
+	'WHOVISITEDTHISTOPIC_TITLE'			=> 'Last <strong>%d</strong> Members Who Visited This Topic',
+	'WHOVISITEDTHISTOPIC_VISIT_TITLE'	=> 'Last <strong>%d</strong> topics visited',
 ));

@@ -1,25 +1,30 @@
 imports:
     - { resource: tables.yml }
 services:
-    bruninoit.wvtt.controller:
-        class: bruninoit\wvtt\controller\main
+    dmzx.whovisitedthistopic.admin.controller:
+        class: dmzx\whovisitedthistopic\controller\admin_controller
         arguments:
-            - @template
-            - @dbal.conn
-            - %bruninoit.wvtt.tables.wvtt%
-            - @auth
-            - @user
-            - @controller.helper
-    bruninoit.wvtt.listener:
-        class: bruninoit\wvtt\event\main_listener
+            - '@config'
+            - '@template'
+            - '@log'
+            - '@user'
+            - '@request'
+    dmzx.whovisitedthistopic.listener:
+        class: dmzx\whovisitedthistopic\event\listener
         arguments:
-            - @controller.helper
-            - @template
-            - @dbal.conn
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %bruninoit.wvtt.tables.wvtt%
-            - @auth
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@content.visibility'
+            - '@cache'
+            - '@pagination'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
+            - '@auth'
+            - '%core.adm_relative_path%'
+            - '@?files.factory'
         tags:
-            - { name: event.listener }
+            - { name: event.listener } 

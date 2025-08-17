@@ -1,2 +1,2 @@
 parameters:
-    bruninoit.wvtt.tables.wvtt: %core.table_prefix%wvtt
+    dmzx.whovisitedthistopic.tables.whovisitedthistopic: %core.table_prefix%whovisitedthistopic

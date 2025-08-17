@@ -1,11 +1,9 @@
 <?php
 /**
 *
-* Who Visited This Topic extension for the phpBB Forum Software package.
-* French translation by Draky (http://www.parigotmanchot.fr) & Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2015 brunino
-* @license GNU General Public License, version 2 (GPL-2.0)
+* @package phpBB Extension - Who Visited This Topic
+* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -39,12 +37,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_U_WVTT'		=> 'Peut voir qui a vu un sujet.',
-	'ACL_U_WVTT_COUNT'		=> 'Peut voir le nombre de vues des sujets pour chaque utilisateur.',
-	'ACL_U_WVTT_POPUP'		=> 'Peut voir à quelles dates les sujets ont été vus.',
-	'ACL_U_WVTT_PROFILE'		=> 'Peut voir les derniers sujets vus par les utilisateurs (dans les profils).',
-	'EXTENSION_BY'		=> 'Extension créée par',
-	'WVTT_DETAILS'		=> 'Voir les détails',
-	'WVTT_PROFILE'		=> 'Derniers sujets vus',
-	'WVTT_TITLE'		=> 'Qui a vu ce sujet',
+	'ACP_WHOVISITEDTHISTOPIC_TITLE'				=> 'Who Visited This Topic',
+	'ACP_WHOVISITEDTHISTOPIC_SETTINGS'			=> 'Settings',
+	'ACP_WHOVISITEDTHISTOPIC_OPTIONS_SAVED'		=> 'Who Visited This Topic options has been saved.',
+	// Log entries
+	'LOG_WHOVISITEDTHISTOPIC_UPDATE'			=> '<strong>Who Visited This Topic settings saved</strong>',
 ));

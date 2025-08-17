@@ -1,3 +1,0 @@
-bruninoit_wvtt_controller:
-    path: /wvtt/{topic_id}
-    defaults: { _controller: bruninoit.wvtt.controller:handle }

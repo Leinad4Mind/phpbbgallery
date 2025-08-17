@@ -1,11 +1,9 @@
 <?php
 /**
 *
-* Who Visited This Topic extension for the phpBB Forum Software package.
-* Czech translation by jakubsuchybio (http://www.jakubsuchy.com)
-*
-* @copyright (c) 2015 brunino
-* @license GNU General Public License, version 2 (GPL-2.0)
+* @package phpBB Extension - Who Visited This Topic
+* @copyright (c) 2016 dmzx - http://www.dmzx-web.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -39,12 +37,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_U_WVTT'		=> 'Může vidět Kdo navštívil toto téma',
-	'ACL_U_WVTT_COUNT'		=> 'Může vidět počty navštívení tématu pro každého, kdo navštívil téma',
-	'ACL_U_WVTT_POPUP'		=> 'Může vidět datumy těch, kdo navštívili téma',
-	'ACL_U_WVTT_PROFILE'		=> 'Může vidět poslední navštívené témata uživatelů v jejich profilu',
-	'EXTENSION_BY'		=> 'Doplněk od',
-	'WVTT_DETAILS'		=> 'Zobrazit detaily',
-	'WVTT_PROFILE'		=> 'Poslední navštívené témata',
-	'WVTT_TITLE'		=> 'Kdo navštívil toto téma',
+	'WHOVISITEDTHISTOPIC_INDEX'					=> 'Who Visited This Topic',
+	'ACL_U_WHOVISITEDTHISTOPIC'					=> 'Can view Who Visited A Topic in topics',
+	'ACL_U_WHOVISITEDTHISTOPIC_COUNT'			=> 'Can view Who Visited A Topic counter in topics',
+	'ACL_U_WHOVISITEDTHISTOPIC_PROFILE'			=> 'Can view Who Visited A Topic in profile',
+	'ACL_U_WHOVISITEDTHISTOPIC_SHOW_AVATAR'		=> 'Can view Who Visited A Topic avatars in topics',
 ));

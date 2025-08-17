@@ -1,37 +1,40 @@
 {
-"name": "bruninoit/wvtt",
-"type": "phpbb-extension",
-"description": "Conversion of the Alors MOD which shows the users who have visited a topic and the times they have visited",
-"homepage": "https://github.com/bruninoit/wvtt",
-"version": "0.1.0-RC4",
-"time": "2015-10-03",
-"license": "GPL-2.0",
-"authors": [
-{
-"name": "brunino",
-"email": "brunino@altervista.org",
-"homepage": "http://www.brunino.altervista.org",
-"role": "Developer"
-},
-{
-"name": "Alorse",
-"email": "",
-"homepage": "",
-"role": "Previous Developer"
-}
-],
-"require": {
-"php": ">=5.3"
-},
-"extra": {
-"display-name": "Who Visited This Topic",
-"soft-require": {
-"phpbb/phpbb": "3.1.*@dev"
-},
-"version-check": {
-"host": "brunino.altervista.org",
-"directory": "/version/",
-"filename": "wvtt.json"
-}
-}
+    "name": "dmzx/whovisitedthistopic",
+    "type": "phpbb-extension",
+    "description": "Shows the users who have visited a topic and the times they have visited.",
+    "homepage": "http://www.dmzx-web.net",
+    "version": "1.0.5",
+    "time": "2016-12-26",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "whovisitedthistopic"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "dmzx",
+            "homepage": "http://www.dmzx-web.net",
+            "email": "info@dmzx-web.net",
+            "role": "Extension Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Who Visited This Topic",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/who_visited_this_topic",
+            "filename": "version_check"
+        }
+    }
 }
