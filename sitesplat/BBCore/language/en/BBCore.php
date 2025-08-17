@@ -205,6 +205,13 @@ $lang = array_merge($lang, array(
   'GROUP_REMOVE_PLACEHOLDER'     => 'Click to remove group',
   'EDIT_LINK_PLACEHOLDER'        => 'E.g. I forgot to code my links',
   'POST_IT_UP_PLACEHOLDER'       => 'Post it up!',
+  
+  'UCP_REG_USR_PLACEHOLDER'      => 'E.g. John Doe',
+  'UCP_REG_EMAIL_PLACEHOLDER'    => 'E.g. john@mail.com',
+  'UCP_REG_PSWD_PLACEHOLDER'     => 'E.g. ASDFasdf123',
+  'UCP_REG_CAPCTHA_PLACEHOLDER'  => 'E.g. blue sky',
+  'SEARCH_USR_PLACEHOLDER'       => 'E.g. SiteSplat',
+  
   'MESSAGE_ENTER_PLACEHOLDER'    => 'Enter your message...',
   'FILE_COMMENT_PLACEHOLDER'     => 'Comment your file',
   'HEIGTH_PLACEHOLDER'       	 => 'height',

@@ -19,8 +19,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class admin_listener implements EventSubscriberInterface
 {
-	protected $host = 'sitesplat.com';
-	protected $path = 'phpBB3/versioncheck';
+	protected $host = 'sitesplat.xyz';
+	protected $path = 'phpbb31/versioncheck';
+//	protected $host = 'sitesplat.com';
+//	protected $path = 'phpBB3/versioncheck';
 	protected $config;
 	protected $db;
 	protected $user;
@@ -129,7 +131,7 @@ class admin_listener implements EventSubscriberInterface
 			$safe_time_limit = (ini_get('max_execution_time') / 2);
 			$start_time = time();
 			$enabled_extensions = $this->extension_manager->all_enabled();
-			unset($enabled_extensions['sitesplat/helper'], $enabled_extensions['sitesplat/BBCore']);
+			unset($enabled_extensions['forumhulp/helper'], $enabled_extensions['sitesplat/BBCore']);
 			foreach($enabled_extensions as $ext_name => $value)
 			{
 				while ($this->extension_manager->disable_step($ext_name))
