@@ -2,9 +2,9 @@
 
 /**
  * Simple Spoiler Extension for phpBB.
- * @author pikachuturkey
+ * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GPL-2.0
+ * @license GPL-2.0-only
  */
 
 /**
@@ -25,7 +25,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'SPOILER'			=> 'Spoiler',
-	'SPOILER_HELPLINE'	=> 'Kullanımı: [spoiler]yazı metni[/spoiler] veya [spoiler title=başlık]yazı metni[/spoiler]',
-	'SPOILER_SHOW'		=> 'Göster',
-	'SPOILER_HIDE'		=> 'Gizle'
+	'SPOILER_HELPLINE'	=> 'Usage: [spoiler]text[/spoiler] or [spoiler title=title]text[/spoiler]',
+	'SPOILER_SHOW'		=> 'Show',
+	'SPOILER_HIDE'		=> 'Hide'
 ]);

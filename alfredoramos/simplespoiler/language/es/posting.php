@@ -2,9 +2,9 @@
 
 /**
  * Simple Spoiler Extension for phpBB.
- * @author manicx
+ * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GPL-2.0
+ * @license GPL-2.0-only
  */
 
 /**
@@ -25,7 +25,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'SPOILER'			=> 'Spoiler',
-	'SPOILER_HELPLINE'	=> 'Χρήση: [spoiler]κείμενο[/spoiler] ή [spoiler title=τίτλος]κείμενο[/spoiler]',
-	'SPOILER_SHOW'		=> 'Εμφάνιση',
-	'SPOILER_HIDE'		=> 'Κρύψιμο'
+	'SPOILER_HELPLINE'	=> 'Uso: [spoiler]texto[/spoiler] o [spoiler title=título]texto[/spoiler]',
+	'SPOILER_SHOW'		=> 'Mostrar',
+	'SPOILER_HIDE'		=> 'Ocultar'
 ]);
