@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -18,7 +18,6 @@ use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\request\request_interface;
-use phpbb\files\factory;
 
 class listener implements EventSubscriberInterface
 {
@@ -52,9 +51,6 @@ class listener implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/** @var factory */
-	protected $files_factory;
-
 	/**
 	* Constructor
 	*
@@ -68,7 +64,6 @@ class listener implements EventSubscriberInterface
 	* @param request_interface		$request
 	* @param string					$root_path
 	* @param string					$php_ext
-	* @param factory				$files_factory
 	*/
 	public function __construct(
 		functions_topicindex $functions_topicindex,
@@ -80,8 +75,7 @@ class listener implements EventSubscriberInterface
 		helper $helper,
 		request_interface $request,
 		$root_path,
-		$php_ext,
-		factory $files_factory = null
+		$php_ext
 	)
 	{
 		$this->functions_topicindex		= $functions_topicindex;
@@ -94,7 +88,6 @@ class listener implements EventSubscriberInterface
 		$this->request 					= $request;
 		$this->root_path 				= $root_path;
 		$this->php_ext 					= $php_ext;
-		$this->files_factory 			= $files_factory;
 	}
 
 	static public function getSubscribedEvents()
@@ -141,7 +134,6 @@ class listener implements EventSubscriberInterface
 	{
 		$this->template->assign_vars(array(
 			'U_OTINDEX'				=> $this->helper->route('dmzx_topicindex_controller'),
-			'PHPBB_IS_32'			=> ($this->files_factory !== null) ? true : false,
 			'TOPICINDEXLIST_VIEW'	=> $this->auth->acl_get('u_topicindex_view'),
 		));
 	}

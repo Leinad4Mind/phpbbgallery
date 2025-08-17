@@ -1,30 +1,28 @@
-<!-- IF SHOW_OINDEX -->
+{% if SHOW_OINDEX %}
 <fieldset>
-	<legend>{L_OFFICIAL_TOPIC_INDEX}</legend>
-
-	<p>{L_OTINDEX_LIST_INTOPIC_DSC}</p>
-
+	<legend>{{ lang('OFFICIAL_TOPIC_INDEX') }}</legend>
+	<p>{{ lang('OTINDEX_LIST_INTOPIC_DSC') }}</p>
 	<dl>
-		<dt><label for="post_index">{L_ACTIVE_TOPIC_INDEX}{L_COLON}</label><br /><span>{L_ACTIVE_TOPIC_INDEX_EXPLAIN}</span></dt>
+		<dt><label for="post_index">{{ lang('ACTIVE_TOPIC_INDEX') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACTIVE_TOPIC_INDEX_EXPLAIN') }}</span></dt>
 		<dd><select id="post_index" name="post_index">
-				<option value="0" {LEGATOPIC1}>--- {L_NON_ACTIVE}</option>
-				<!-- BEGIN block_topic_index -->
-					<option value="{block_topic_index.ITOPIC_ID}" {block_topic_index.ITOPIC_SEL}>{block_topic_index.ITOPIC_NAME}</option>
-				<!-- END block_topic_index -->
+				<option value="0" {{ LEGATOPIC1 }}>--- {{ lang('NON_ACTIVE') }}</option>
+				{% for block_topic_index in loops.block_topic_index %}
+					<option value="{{ block_topic_index.ITOPIC_ID }}" {{ block_topic_index.ITOPIC_SEL }}>{{ block_topic_index.ITOPIC_NAME }}</option>
+				{% endfor %}
 			</select>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="default_inindex">{L_TOPIC_INDEX_DEFAULT}{L_COLON}</label><br /><span>{L_TOPIC_INDEX_DEFAULT_EXPLAIN}</span></dt>
+		<dt><label for="default_inindex">{{ lang('TOPIC_INDEX_DEFAULT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('TOPIC_INDEX_DEFAULT_EXPLAIN') }}</span></dt>
 		<dd><select id="default_inindex" name="default_inindex">
-				<option value="0" {ITOPICDEF0}>{L_DEF_ALL_TOPICS_IN}</option>
-				<option value="1" {ITOPICDEF1}>{L_DEF_ALL_TOPICS_OFF}</option>
+				<option value="0" {{ ITOPICDEF0 }}>{{ lang('DEF_ALL_TOPICS_IN') }}</option>
+				<option value="1" {{ ITOPICDEF1 }}>{{ lang('DEF_ALL_TOPICS_OFF') }}</option>
 			</select>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="index_filter">{L_ACTIVE_INDEX_FILTER}{L_COLON}</label><br /><span>{L_ACTIVE_INDEX_FILTER_EXPLAIN}</span></dt>
-		<dd><input type="checkbox" class="radio" name="index_filter" id="index_filter" value="1" {ITOPICTAG} /></dd>
+		<dt><label for="index_filter">{{ lang('ACTIVE_INDEX_FILTER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACTIVE_INDEX_FILTER_EXPLAIN') }}</span></dt>
+		<dd><input type="checkbox" class="radio" name="index_filter" id="index_filter" value="1" {{ ITOPICTAG }} /></dd>
 	</dl>
 </fieldset>
-<!-- ENDIF -->
+{% endif %}

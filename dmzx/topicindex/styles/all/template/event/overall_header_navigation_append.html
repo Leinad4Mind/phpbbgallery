@@ -1,8 +1,7 @@
-<!-- IF TOPICINDEXLIST_VIEW -->
-<li <!-- IF not PHPBB_IS_32 -->class="small-icon icon-topiclist no-bulletin"<!-- ENDIF --> data-last-responsive="true">
-	<a href="{U_OTINDEX}" title="{L_OTINDEX_LINK_TITLE}" role="menuitem">
-		<!-- IF PHPBB_IS_32 --><i class="icon fa fa-list-alt" aria-hidden="true"></i><!-- ENDIF -->
-		<span>{L_OTINDEX_LINK_TITLE}</span>
+{% if TOPICINDEXLIST_VIEW %}
+<li data-last-responsive="true">
+	<a href="{{ U_OTINDEX }}" title="{{ lang('OTINDEX_LINK_TITLE') }}" role="menuitem">
+		<i class="icon fa-envelope fa-fw" aria-hidden="true"></i><span>{{ lang('OTINDEX_LINK_TITLE') }}</span>
 	</a>
 </li>
-<!-- ENDIF -->
+{% endif %}

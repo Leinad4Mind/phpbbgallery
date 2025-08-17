@@ -3,7 +3,7 @@
 *
 * @version $Id: permissions_topicindex.php 51 2017-01-22 14:05:52Z Scanialady $
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

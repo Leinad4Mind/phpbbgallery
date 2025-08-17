@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -175,7 +175,7 @@ class functions_topicindex
 		{
 			foreach ($topiclist as $key => $row)
 			{
-				$order_in_category[$key]	= $row['keybig'];
+				$order_in_category[$key] = $row['keybig'];
 			}
 			array_multisort ($order_in_category, SORT_ASC, $topiclist);
 		}

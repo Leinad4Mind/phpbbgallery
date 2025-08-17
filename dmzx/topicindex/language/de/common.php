@@ -3,7 +3,7 @@
 *
 * @version $Id: common.php 50 2017-01-22 01:57:07Z Scanialady $
 * @package phpBB Extension - Topic Index [Deutsch]
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
