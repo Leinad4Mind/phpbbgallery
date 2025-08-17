@@ -1,10 +1,10 @@
 {
     "name": "leinad4mind/specialbirthday",
     "type": "phpbb-extension",
-    "description": "Give you the ability to make the birth date a required field, adds an option to enter a birthdate upon registration, checks if the date is equal or greater than a minimum age and much much more...",
-    "version": "1.1.0",
-    "time": "2020-05-06",
-    "keywords": [ "phpbb", "extension", "age", "special", "birthdate", "registration"],
+    "description": "Give you the ability to make the birth date a required field, adds an option to enter a birth-date upon registration, checks if the date is equal or greater than a minimum age and much much more...",
+    "version": "1.1.1",
+    "time": "2020-05-07",
+    "keywords": [ "phpbb", "extension", "age", "special", "birthday", "registration"],
     "license": "GPL-2.0",
     "authors": [
         {

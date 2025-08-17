@@ -1,12 +1,13 @@
 jQuery(function($) {
-    $('#registration_age_datepicker').datepicker({
+    let $element = $('#registration_age_datepicker');
+    $element.datepicker({
         autoShow: false,
         autoHide: true,
         autoPick: false,
         inline: false,
-        language: 'en-GB',
+        language: $element.data('lang'),
         date: new Date(),
-        startDate: null,
+        startDate: new Date(1900, 0, 1),
         endDate: new Date(),
         startView: 2
     }).on('pick.datepicker', function(e) {
