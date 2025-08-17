@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Simple Spoiler Extension for phpBB.
+ * Simple Spoiler extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
  * @license GPL-2.0-only
@@ -14,7 +14,6 @@ use alfredoramos\simplespoiler\includes\helper as helper;
 
 class listener implements EventSubscriberInterface
 {
-
 	/** @var \alfredoramos\simplespoiler\includes\helper */
 	protected $helper;
 
@@ -39,7 +38,10 @@ class listener implements EventSubscriberInterface
 	{
 		return [
 			'core.user_setup' => 'user_setup',
-			'core.help_manager_add_block_before' => 'bbcode_help'
+			'core.help_manager_add_block_before' => 'bbcode_help',
+			'core.acp_board_config_edit_add' => 'acp_config_add',
+			'core.message_parser_check_message' => 'parser_check_message',
+			'alfredoramos.seometadata.clean_description_after' => 'clean_description_after'
 		];
 	}
 
@@ -72,4 +74,44 @@ class listener implements EventSubscriberInterface
 		$this->helper->add_bbcode_help($event['block_name']);
 	}
 
+	/**
+	 * Add ACP configuration data.
+	 *
+	 * @param object $event
+	 *
+	 * @return void
+	 */
+	public function acp_config_add($event)
+	{
+		if ($event['mode'] !== 'post')
+		{
+			return;
+		}
+
+		$event['display_vars'] = $this->helper->add_acp_config($event['display_vars']);
+	}
+
+	/**
+	 * Remove spoilers that are nested too deep.
+	 *
+	 * @param object $event
+	 *
+	 * @return void
+	 */
+	public function parser_check_message($event)
+	{
+		$event['message'] = $this->helper->remove_nested_spoilers($event['message']);
+	}
+
+	/**
+	 * Remove spoilers from post description.
+	 *
+	 * @param object $event
+	 *
+	 * @return void
+	 */
+	public function clean_description_after($event)
+	{
+		$event['description'] = $this->helper->remove_description_spoilers($event['description']);
+	}
 }

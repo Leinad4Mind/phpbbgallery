@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Simple Spoiler Extension for phpBB.
+ * Simple Spoiler extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
  * @license GPL-2.0-only
@@ -13,10 +13,12 @@ use phpbb\db\driver\factory as database;
 use phpbb\filesystem\filesystem;
 use phpbb\language\language;
 use phpbb\template\template;
+use phpbb\config\config;
+use phpbb\textformatter\s9e\parser;
+use phpbb\textformatter\s9e\utils;
 
 class helper
 {
-
 	/** @var \phpbb\db\driver\factory */
 	protected $db;
 
@@ -28,6 +30,15 @@ class helper
 
 	/** @var \phpbb\template\template */
 	protected $template;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	/** @var \phpbb\textformatter\s9e\parser */
+	protected $parser;
+
+	/** @var \phpbb\textformatter\s9e\utils */
+	protected $utils;
 
 	/** @var string */
 	protected $root_path;
@@ -41,21 +52,27 @@ class helper
 	/**
 	 * Constructor of the helper class.
 	 *
-	 * @param \phpbb\db\driver\factory		$db
-	 * @param \phpbb\filesystem\filesystem	$filesystem
-	 * @param \phpbb\language\language		$language
-	 * @param \phpbb\template\template		$template
-	 * @param string						$root_path
-	 * @param string						$php_ext
+	 * @param \phpbb\db\driver\factory			$db
+	 * @param \phpbb\filesystem\filesystem		$filesystem
+	 * @param \phpbb\language\language			$language
+	 * @param \phpbb\template\template			$template
+	 * @param \phpbb\config\config				$config
+	 * @param \phpbb\textformatter\s9e\parser	$parser
+	 * @param \phpbb\textformatter\s9e\utils	$utils
+	 * @param string							$root_path
+	 * @param string							$php_ext
 	 *
 	 * @return void
 	 */
-	public function __construct(database $db, filesystem $filesystem, language $language, template $template, $root_path, $php_ext)
+	public function __construct(database $db, filesystem $filesystem, language $language, template $template, config $config, parser $parser, utils $utils, $root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->filesystem = $filesystem;
 		$this->language = $language;
 		$this->template = $template;
+		$this->config = $config;
+		$this->parser = $parser;
+		$this->utils = $utils;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 
@@ -74,15 +91,15 @@ class helper
 	 */
 	public function install_bbcode()
 	{
-		// Remove conflicting BBCode
-		$this->remove_bbcode('spoiler=');
-
 		$data = $this->bbcode_data();
 
 		if (empty($data))
 		{
 			return;
 		}
+
+		// Remove conflicting BBCode
+		$this->remove_bbcode('spoiler=');
 
 		$data['bbcode_id'] = (int) $this->bbcode_id();
 		$data = array_replace(
@@ -267,8 +284,8 @@ class helper
 		$faq = [
 			'title' => 'HELP_BBCODE_BLOCK_SPOILERS',
 			'questions' => [
-				'HELP_BBCODE_SPOILERS_BASIC_QUESTION'	=> 'HELP_BBCODE_SPOILERS_BASIC_ANSWER',
-				'HELP_BBCODE_SPOILERS_TITLE_QUESTION'	=> 'HELP_BBCODE_SPOILERS_TITLE_ANSWER'
+				'HELP_BBCODE_SPOILERS_BASIC_QUESTION' => 'HELP_BBCODE_SPOILERS_BASIC_ANSWER',
+				'HELP_BBCODE_SPOILERS_TITLE_QUESTION' => 'HELP_BBCODE_SPOILERS_TITLE_ANSWER'
 			]
 		];
 
@@ -306,6 +323,107 @@ class helper
 	}
 
 	/**
+	 * Add ACP configuration data.
+	 *
+	 * @param array $display_vars
+	 *
+	 * @return array
+	 */
+	public function add_acp_config($display_vars = [])
+	{
+		if (empty($display_vars) || empty($display_vars['vars']))
+		{
+			return [];
+		}
+
+		if (!function_exists('phpbb_insert_config_array'))
+		{
+			include($this->root_path . 'includes/functions_acp.' . $this->php_ext);
+		}
+
+		$display_vars['vars'] = phpbb_insert_config_array(
+			$display_vars['vars'],
+			[
+				'max_spoiler_depth' => [
+					'lang' => 'SPOILER_DEPTH_LIMIT',
+					'validate' => 'int:0:9999',
+					'type' => 'number:0:9999',
+					'explain' => true
+				]
+			],
+			['after' => 'max_quote_depth']
+		);
+
+		return $display_vars;
+	}
+
+	/**
+	 * Remove nested spoilers at given depth.
+	 *
+	 * @param string $message
+	 *
+	 * @return string
+	 */
+	public function remove_nested_spoilers($message = '')
+	{
+		if (empty($message))
+		{
+			return '';
+		}
+
+		$max_depth = (int) $this->config['max_spoiler_depth'];
+		$data = $this->bbcode_data();
+
+		if ($max_depth <= 0)
+		{
+			return $message;
+		}
+
+		return $this->utils->unparse($this->utils->remove_bbcode(
+			$this->parser->parse($message),
+			$data['bbcode_tag'],
+			$max_depth
+		));
+	}
+
+	/**
+	 * Remove spoilers from post description.
+	 *
+	 * @param string $description
+	 *
+	 * @see \alfredoramos\seometadata\includes\helper::clean_description()
+	 *
+	 * @return string
+	 */
+	public function remove_description_spoilers($description = '')
+	{
+		if (empty($description))
+		{
+			return '';
+		}
+
+		$dom = new \DOMDocument;
+		$dom->preserveWhiteSpace = false;
+		$dom->loadXML($description);
+		$xpath = new \DOMXPath($dom);
+
+		// Remove spoilers
+		foreach ($xpath->query('//SPOILER') as $node)
+		{
+			if (empty($node->nodeType) || empty($node->parentNode))
+			{
+				continue;
+			}
+
+			$node->parentNode->removeChild($node);
+		}
+
+		$description = $dom->saveXML($dom->documentElement);
+
+		return $description;
+	}
+
+	/**
 	 * BBCode data used in the migration files.
 	 *
 	 * @return array
@@ -334,5 +452,4 @@ class helper
 			'display_on_posting'	=> 1
 		];
 	}
-
 }
