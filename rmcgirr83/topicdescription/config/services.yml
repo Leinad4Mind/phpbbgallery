@@ -5,6 +5,6 @@ services:
             - '@auth'
             - '@request'
             - '@template'
-            - '@user'
+            - '@language'
         tags:
             - { name: event.listener }

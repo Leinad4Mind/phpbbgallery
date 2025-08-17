@@ -1,1 +1,1 @@
-<!-- IF searchresults.TOPIC_DESC --><div>{searchresults.TOPIC_DESC}</div><!-- ELSEIF topicrow.TOPIC_DESC --><div>{topicrow.TOPIC_DESC}</div><!-- ENDIF -->
+{% if searchresults.TOPIC_DESC %}<div>{{ searchresults.TOPIC_DESC }}</div>{% elseif topicrow.TOPIC_DESC %}<div>{{ topicrow.TOPIC_DESC }}</div>{% endif %}
