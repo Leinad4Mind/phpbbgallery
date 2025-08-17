@@ -1,0 +1,55 @@
+<li>
+	<div id="pms_list" class="navbar-wrapper">
+        <div class="navbar-notification">
+            <div class="row">
+             <div class="notification-content">
+			   <div id="about" class="nano">
+				<div class="nano-content">
+                    <ul class="list-unstyled">
+					<!-- IF not .pms -->
+						<li class="no_pms no_notifications">
+						 <div class="noti-bubble alert alert-default">{L_NO} {L_PRIVATE_MESSAGES}</div><i class="fa fa-check"></i>
+						</li>
+					<!-- ENDIF -->
+					<!-- BEGIN pms -->
+						<li class="<!-- IF pms.UNREAD -->noti-unread<!-- ENDIF --><!-- IF pms.STYLING --> {pms.STYLING}<!-- ENDIF --><!-- IF not pms.URL --> no-url<!-- ENDIF -->">
+							<!-- IF pms.UNREAD -->
+								<a href="{pms.U_MARK_READ}" class="mark_read icon-mark btn btn-notification" data-ajax="pm.mark_read"><i class="fa fa-check"></i></a>
+							<!-- ELSE -->
+							    <a class="mark_read icon-mark-read btn-notification-read"><i class="fa fa-check"></i></a>
+							<!-- ENDIF -->
+							<!-- IF pms.UNREAD --><a class="tmp_read icon-mark-read btn-notification-read"><i class="fa fa-check"></i></a><!-- ENDIF -->
+							<!-- IF pms.URL -->
+								<a class="notification-block" href="<!-- IF pms.UNREAD -->{pms.U_MARK_READ}" data-real-url="{pms.URL}<!-- ELSE -->{pms.URL}<!-- ENDIF -->">
+							<!-- ELSE -->
+							 <div class="notification-block">
+							<!-- ENDIF -->
+								<!-- IF pms.AVATAR -->{pms.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+								<div class="notification_text">
+									<p class="notification-title">{pms.FORMATTED_TITLE}</p>
+									<!-- IF pms.REFERENCE --><p class="notification-reference">{pms.REFERENCE}</p><!-- ENDIF -->
+									<!-- IF pms.FORUM --><p class="notification-forum">{pms.FORUM}</p><!-- ENDIF -->
+									<!-- IF pms.REASON --><p class="notification-reason">{pms.REASON}</p><!-- ENDIF -->
+									<p class="notification-time pull-right"><i class="fa fa-clock-o"></i>&nbsp;{pms.TIME}</p>
+								</div>
+							<!-- IF pms.URL --></a><!-- ELSE --></div><!-- ENDIF -->
+						</li>
+					<!-- END pms -->
+				    </ul>
+                </div>				
+               </div>				
+             </div>   
+            </div>
+		</div>
+	    <div class="navbar-footer">
+            <div class="navbar-footer-content">
+                <div class="row">
+				   <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm" href="{U_NOTIFICATION_SETTINGS}">{L_SETTINGS}</a></div>
+                  <!-- IF UNREAD_PMS_COUNT -->    
+				   <div id="mark_all_pms" class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm pull-right" id="pms_mark_all_read" href="#">{L_MARK_ALL_READ}</a></div>
+                  <!-- ENDIF -->
+				</div>
+            </div>
+        </div>
+	</div>
+</li>

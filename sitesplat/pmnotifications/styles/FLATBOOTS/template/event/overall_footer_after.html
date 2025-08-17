@@ -1,0 +1,43 @@
+<script>
+head.ready(function(){
+	// prevent mark all notifications read - this would mark PMs too
+	$('#mark_all_notifications a').attr('href', '#').removeAttr('data-ajax');
+	// mark all notifications read, custom implementation
+	$(document).on('click', '#mark_all_notifications a', function(e){
+		$('#notification_list .icon-mark').click();
+		$('#mark_all_notifications').remove();
+
+		e.preventDefault();
+	});
+
+	// This callback will mark a pm notification read
+	phpbb.addAjaxCallback('pm.mark_read', function(res) {
+		if (typeof res.success !== 'undefined') {
+			var unreadCount = Number($('#pms_list_button em').html()) - 1;
+			phpbb.markPMs($(this).parent('li.noti-unread'), unreadCount);
+		}
+	});
+	// mark all PM notifications read
+	$(document).on('click', '#pms_mark_all_read', function(e){
+		$('#pms_list .icon-mark').click();
+		$('#mark_all_pms').remove();
+
+		e.preventDefault();
+	});
+
+	
+	phpbb.markPMs=function(a,e){
+		a.removeClass("noti-unread");
+		a.find("a.mark_read").remove();
+		a.find("a.tmp_read").removeClass("tmp_read");
+		a.each(function(){
+			var a=$(this).find("a");
+			a.attr("href",a.attr("data-real-url"))
+		})
+		$("em","#pms_list_button").html(e)
+		e||$("#mark_all_pms").remove();
+	}
+	
+	$('#pms_list_button').click(function(){setTimeout(function(){$(".nano").nanoScroller();},0);});
+});
+</script>
