@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -11,19 +11,19 @@ use marttiphpbb\showphpbbevents\util\event_type;
 
 class generate_template_listener
 {
-	const LINK_BASE = 'https://github.com/phpbb/phpbb/tree/prep-release-3.2.4/phpBB/';
+	const LINK_BASE = 'https://github.com/phpbb/phpbb/tree/prep-release-3.2.5/phpBB/';
 	const LINK_LINE = '#L';
 	const INCLUDECSS = "{%- INCLUDECSS '@marttiphpbb_showphpbbevents/showphpbbevents.css' -%}\n";
 	const INCLUDEJS = "{%- INCLUDEJS '@marttiphpbb_showphpbbevents/js/showphpbbevents.js' -%}\n";
 	const ENABLE = "{%- if marttiphpbb_showphpbbevents.enable -%}\n%content%{%- endif -%}\n";
 	const DISABLE = "{%- if not marttiphpbb_showphpbbevents.enable -%}\n%content%{%- endif -%}\n";
 	const BUTTON_HIDE = <<<'EOT'
-<a class="showphpbbevents-hide" href="{{- marttiphpbb_showphpbbevents.u_hide -}}" title="{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_HIDE_EXPLAIN') -}}">
+<a class="showphpbbevents-hide" href="{{- marttiphpbb_showphpbbevents.u_hide -}}" title="{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_HIDE_EXPLAIN') -}}" rel="nofollow">
 	{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_HIDE') -}}
 </a>
 EOT;
 	const BUTTON_SHOW = <<<'EOT'
-<a class="showphpbbevents-show" href="{{- marttiphpbb_showphpbbevents.u_show -}}" title="{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_SHOW_EXPLAIN') -}}">
+<a class="showphpbbevents-show" href="{{- marttiphpbb_showphpbbevents.u_show -}}" title="{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_SHOW_EXPLAIN') -}}" rel="nofollow">
 	{{- lang('MARTTIPHPBB_SHOWPHPBBEVENTS_SHOW') -}}
 </a>
 EOT;
