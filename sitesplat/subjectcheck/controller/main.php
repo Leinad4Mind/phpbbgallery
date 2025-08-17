@@ -36,7 +36,7 @@ class main
 
 		$event = array(
 			'post_data'	=> array(
-				'post_subject'			=> $this->request->variable('subject', ''),
+				'post_subject'			=> $this->request->variable('subject', '', true),
 				'forum_subject_check'	=> (int) $forum_subject_check,
 			),
 			'mode'		=> 'post',
