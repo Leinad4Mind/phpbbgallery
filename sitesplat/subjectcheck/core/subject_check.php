@@ -201,7 +201,7 @@ class subject_check
 				}
 
 				$count += 1;
-				$topic_list .= '<a href="' . append_sid($this->root_path . 'viewtopic.' . $this->php_ext . '?t=' . $topic_id) . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a><br />';
+				$topic_list .= '<a href="' . append_sid(generate_board_url() . '/viewtopic.' . $this->php_ext . '?t=' . $topic_id) . '" ' . ($this->config['subject_check_pop'] ? ' onclick="this.target=\'_blank\';"' : '') . '>&bull; ' . $forum_name . $topic_title . '</a><br />';
 
 				if (!empty($this->config['subject_check_limit']) && $count >= $this->config['subject_check_limit'])
 				{
