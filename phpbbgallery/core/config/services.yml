@@ -1,0 +1,48 @@
+imports:
+    - { resource: controller.yml }
+    - { resource: tables.yml }
+
+services:
+    phpbbgallery.core.helpers.albums:
+        class: phpbbgallery\core\helpers\albums
+
+    phpbbgallery.core.helpers.tables:
+        class: phpbbgallery\core\helpers\tables
+        arguments:
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.albums_tracking%
+            - %tables.phpbbgallery.contests%
+            - %tables.phpbbgallery.moderators_cache%
+
+    phpbbgallery.core.albums.display:
+        class: phpbbgallery\core\albums\display
+        arguments:
+            - @auth
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+            - @phpbbgallery.core.albums.nestedset
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.helpers.albums
+            - @phpbbgallery.core.helpers.tables
+
+    phpbbgallery.core.albums.nestedset:
+        class: phpbbgallery\core\albums\nestedset
+        arguments:
+            - @dbal.conn
+            - @phpbbgallery.core.albums.table_lock
+            - %tables.phpbbgallery.albums%
+
+    phpbbgallery.core.albums.table_lock:
+        class: phpbb\lock\db
+        arguments:
+            - phpbbgallery.table_lock.albums
+            - @config
+            - @dbal.conn
+
+    phpbbgallery.core.auth:
+        class: phpbbgallery\core\mock\auth
