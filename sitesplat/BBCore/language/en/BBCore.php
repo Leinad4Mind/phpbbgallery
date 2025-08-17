@@ -36,9 +36,11 @@ if (empty($lang) || !is_array($lang)) {
 }
 
 // load addon lang files first...allow BBCore to overwrite if needed
-$addon_lang = [];
-\sitesplat\load_ext_lang(__DIR__, $addon_lang);
-$lang = array_merge($lang, $addon_lang);
+if (function_exists('\sitesplat\load_ext_lang')) {
+    $addon_lang = [];
+    \sitesplat\load_ext_lang(__DIR__, $addon_lang);
+    $lang = array_merge($lang, $addon_lang);
+}
 
 // BBCore
 $lang = array_merge($lang, array(
