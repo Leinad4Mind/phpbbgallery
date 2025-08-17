@@ -1,0 +1,167 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS css/upload.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
+<!-- INCLUDECSS css/plupload.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{L_ACP_UPLOAD_IMAGE_TITLE} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+
+<p>{L_ACP_UPLOAD_IMAGE_TITLE_EXPLAIN}</p>
+
+<hr />
+<div class="panel bg3 panel-container" id="attach-panel">
+	<div class="inner">
+	<form id="postform" method="post" action="{S_POST_ACTION}"{S_FORM_ENCTYPE_IU}>
+	<div class="panel bg3 panel-container">
+		<div class="inner">
+	
+		<p style="float:left;margin-left:10px;">{L_ADD_ATTACHMENT_EXPLAIN} <span class="hidden" id="drag-n-drop-message">{L_PLUPLOAD_DRAG_TEXTAREA}</span></p>
+		
+		<fieldset class="fields2" id="attach-panel-basic">
+		<dl>
+			<dt><label for="fileupload">{L_FILENAME}{L_COLON}</label></dt>
+			<dd>
+				<input type="file" name="fileupload" id="fileupload" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /> 
+				<input type="submit" name="add_file" value="{L_ADD_FILE}" class="button2" onclick="upload = true;" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="filecomment">{L_FILE_COMMENT}{L_COLON}</label></dt>
+			<dd><textarea name="filecomment" id="filecomment" rows="1" cols="40" class="inputbox autowidth">{FILE_COMMENT}</textarea></dd>
+		</dl>
+		</fieldset>
+
+		<div id="attach-panel-multi">
+			<input type="button" class="button2" value="{L_PLUPLOAD_ADD_FILES}" id="add_files" />
+		</div>
+
+		<div class="panel<!-- IF not .attach_row --> hidden<!-- ENDIF -->" id="file-list-container" style="clear:both;">
+			<div class="inner">
+				<table class="table1 fixed-width-table">
+					<thead>
+						<tr>
+							<th class="attach-name">{L_PLUPLOAD_FILENAME}</th>
+							<th class="attach-filesize">{L_PLUPLOAD_SIZE}</th>
+							<th class="attach-status">{L_PLUPLOAD_STATUS}</th>
+						</tr>
+					</thead>
+					<tbody class="responsive-skip-empty" id="file-list">
+						<tr class="attach-row" id="attach-row-tpl">
+								<td class="attach-name">
+									<span class="file-name ellipsis-text" style="cursor:pointer;"></span>
+									<img class="image-name" style="position: absolute;z-index:1000;display:none;" src="" width="210px" />
+									<span class="attach-controls">
+										<input type="button" value="{L_DELETE_FILE}" class="button2 file-delete" style="float:right" />
+									</span>
+									<span class="clear"></span>
+								</td>
+								<td class="attach-filesize">
+									<span class="file-size"></span>
+								</td>
+								<td class="attach-status">
+									<span class="file-progress">
+										<span class="file-progress-bar"></span>
+									</span>
+									<span class="file-status"></span>
+								</td>
+						</tr>
+						<!-- BEGIN attach_row -->
+							<tr class="attach-row" data-attach-id="{attach_row.ATTACH_ID}">
+								<td class="attach-name">
+									<span class="file-name ellipsis-text"><a href="{attach_row.U_VIEW_ATTACHMENT}">{attach_row.FILENAME}</a></span>
+									<span class="attach-controls">
+										<input type="button" value="{L_PLACE_INLINE}" class="button2 file-inline-bbcode" />&nbsp; 
+										<input type="submit" name="delete_file[{attach_row.ASSOC_INDEX}]" value="{L_DELETE_FILE}" class="button2 file-delete" style="float:right" />
+									</span>
+									<span class="clear"></span>
+								</td>
+								<td class="attach-filesize">
+									<span class="file-size">{attach_row.FILESIZE}</span>
+								</td>
+								<td class="attach-status">
+									<span class="file-status file-uploaded"></span>
+								</td>
+							</tr>
+						<!-- END attach_row -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		</div>
+	</div>
+	</form>
+	</div>
+</div>
+
+	<script type="text/javascript">
+		function flip(x)
+		{
+			xx = document.getElementById(x).style;
+			if (xx.display=='' || xx.display=='none'){    xx.display = 'block';}else{    xx.display = 'none';}
+		}
+	</script>
+<!-- IF .image_list -->
+    <table id="ext_table">
+        <tr>
+            <td class="row3" colspan="7"><strong>{L_IMAGE_LIST}</strong>
+				<form method="post" action="" style="float:right;">
+					<input class="keyword" type="text" name="keyword" id="keyword" value="{KEYWORD}" title="{L_SEARCH}" placeholder="&#xf002;" />
+					<input type="hidden" name="search" value="" />
+				</form>
+			</td>
+        </tr>
+        <tr class="ext_disabled">
+            <td style="border-bottom:#BABABA thin solid;">#</td>
+            <td style="border-bottom:#BABABA thin solid;"></td>
+            <td style="border-bottom:#BABABA thin solid;">{L_IMAGE_PATH}</td>
+            <td style="border-bottom:#BABABA thin solid;">{L_IMAGE_NAME}<a href="{U_ACTION}&amp;sk=n&amp;sd=a" title="{L_DESCENDING}" style="float:right;"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'n' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=n&amp;sd=d" title="{L_ASCENDING}" style="float:right;"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'n' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+</td>
+            <td style="text-align:center;width:110px;border-bottom:#BABABA thin solid;">{L_FORMAT}<a href="{U_ACTION}&amp;sk=f&amp;sd=a" title="{L_DESCENDING}" style="float:right;"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=f&amp;sd=d" title="{L_ASCENDING}" style="float:right;"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+</td>
+            <td style="text-align:center;width:70px;border-bottom:#BABABA thin solid;">{L_SIZE}<a href="{U_ACTION}&amp;sk=s&amp;sd=a" title="{L_DESCENDING}" style="float:right;"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 's' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=s&amp;sd=d" title="{L_ASCENDING}" style="float:right;"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 's' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+
+</td>
+            <td style="text-align:center;border-bottom:#BABABA thin solid;">{L_IMAGE_DELETE}</td>
+        </tr>
+       <!-- BEGIN image_list -->
+        <tr onmouseover="this.className='ruleractueel';" onmouseout="this.className='column';" class="column">
+			<td>{image_list.ID}</td>
+            <td style="cursor:pointer;" onmouseover="javascript:flip('image{image_list.ID}')" onmouseout="javascript:flip('image{image_list.ID}')">
+			<img style="height:12px;" src="{image_list.IMAGEPATH}" />
+			<img id="image{image_list.ID}" style="position: absolute;z-index:1000;display:none;" title="{image_list.FILENAME}" src="{image_list.IMAGEPATH}" width="210px" />
+			</td>
+			<td style="width:210px;"><span id="path{image_list.ID}" class="unc_path" style="display:block; width:210px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{image_list.PATH}</span></td>
+            <td style="display:block; width:200px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{image_list.NAME}</td>
+            <td style="text-align: center;">{image_list.WIDTH} px * {image_list.WIDTH} px</td>
+            <td style="text-align: center;">{image_list.SIZE}</td>
+            <td style="text-align: center;"><a href="{image_list.DELLURL}" data-ajax="row_delete">{L_IMAGE_DELETE}</a></td>
+        </tr>
+        <!-- END image_list -->
+		<tr><td colspan="6" style="text-align:right">{DIR_SIZE}</td><td></td></tr>
+    </table>
+	<!-- IF .pagination or TOTAL_POSTS -->
+		<div class="pagination">
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				&bull; {PAGE_NUMBER}
+			<!-- ENDIF -->
+		</div>
+	<!-- ENDIF -->
+<!-- ENDIF -->
+<br style="clear:both" />
+
+<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
+<!-- INCLUDEJS js/upload.js -->
+
+<!-- INCLUDE overall_footer.html -->

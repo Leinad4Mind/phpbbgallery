@@ -1,0 +1,40 @@
+/* CSS Document */
+
+h1 {position: relative;}
+
+.table1 th {background:#DBDFE2;color:#536482;}
+.ruleractueel { background-color:#f6f6f6;}
+.column {background-color: ;}
+
+#ext_table{float:right; width:100%; margin-top:16px;}
+
+.test{
+width:205px;
+background-image:url('images/search.png');
+background-repeat:no-repeat;
+background-position:right;outline:0;
+}
+
+.test::-webkit-search-cancel-button{
+    position:relative;
+    right:10px;  
+  
+    -webkit-appearance: none;
+}
+
+form fieldset {border-radius:0;}
+
+input[type=text] { font-family: 'FontAwesome'; } /* This is for the placeholder */*/
+
+.keyword:before {
+    font-family: 'FontAwesome';
+    color:red;
+    position: relative;
+    left: -5px;
+    content: "\f007";
+}
+
+.fa-arrow-up, .fa-arrow-down {float:right; color:#CECECE; padding: 0 2px;}
+
+#act-arrow {color:#000;}
+
