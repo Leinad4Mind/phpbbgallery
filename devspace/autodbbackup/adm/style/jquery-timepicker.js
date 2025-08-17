@@ -6,9 +6,12 @@
 $( function() {
 	$('#auto_db_time').datetimepicker({
 		dateFormat: 'dd-mm-yy',
+		timeInput: true,
 		timeFormat: 'HH:mm',
 		stepMinute: 5,
-		isRTL: isRTL
+		isRTL: isRTL,
+		addSliderAccess: true,
+		sliderAccessArgs: { touchonly: false },
 	});
 });
 
@@ -61,7 +64,7 @@ $( function() {
 			secondText: '',
 			millisecText: '',
 			microsecText: '',
-			timezoneText: timezone,
+			timezoneText: '',
 			monthNames: JSON.parse(monthNames),
 			dayNamesMin: JSON.parse(dayNamesMin)
 		};
@@ -86,7 +89,7 @@ $( function() {
 			second: 0,
 			millisec: 0,
 			microsec: 0,
-			timezone: null,
+			timezone: timezone,
 			hourMin: 0,
 			minuteMin: 0,
 			secondMin: 0,

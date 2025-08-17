@@ -102,6 +102,7 @@ class auto_db_backup extends base
 				$next_backup += $this->config['auto_db_backup_gc'] * 3600;
 			}
 		}
+
 		// We do this here to prevent the Auto Backup running twice
 		$this->config->set('auto_db_backup_next_gc', $next_backup, true);
 
@@ -193,7 +194,7 @@ class auto_db_backup extends base
 			arsort($files);
 			reset($files);
 
-			if (is_array($files) > $this->config['auto_db_backup_copies'])
+			if (count($files) > $this->config['auto_db_backup_copies'])
 			{
 				$i = 0;
 				while (list($key, $val) = each($files))

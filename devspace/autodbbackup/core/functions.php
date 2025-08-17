@@ -39,7 +39,7 @@ class functions
 	* @return $extension_name
 	* @access public
 	*/
-		public function get_ext_namespace($mode = 'php')
+	public function get_ext_namespace($mode = 'php')
 	{
 		// Let's extract the extension name from the namespace
 		$extension_name = substr($this->namespace, 0, -(strlen($this->namespace) - strrpos($this->namespace, '\\')));
