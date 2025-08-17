@@ -1,18 +1,20 @@
 {% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
 
 <form id="userdetails" method="post" action="{{ U_ACTION }}">
-	<div class="select-buttons">
-		<input class="adm-button" type="submit" value="{{ lang('DISPLAY') }}" name="display" />
-		&nbsp;&nbsp;&nbsp;
-		<input class="adm-button" type="submit" value="{{ lang('CSV') }}" name="csv" />
-		&nbsp;&nbsp;&nbsp;
-		<input class="adm-button" type="reset" value="{{ lang('CLEAR_ATTRIB') }}" onclick="marklist('userdetails', 'mark', false); return false;" />
+	<div class="head-panel">
+		<div class="select-buttons">
+			<input class="adm-button" type="submit" value="{{ lang('DISPLAY') }}" name="display" />
+			&nbsp;&nbsp;&nbsp;
+			<input class="adm-button" type="submit" value="{{ lang('CSV') }}" name="csv" />
+			&nbsp;&nbsp;&nbsp;
+			<input class="adm-button" type="reset" value="{{ lang('CLEAR_ATTRIB') }}" onclick="marklist('userdetails', 'mark', false); return false;" />
+		</div>
 	</div>
 
 	<div class="table">
 		<div class="table-header">
 			<div class="table-header-cell-select">{{ lang('SELECT') }}</div>
-			<div class="table-header-cell">{{ lang('ATTRIBUTE') }}</div>
+			<div class="table-header-cell-narrow">{{ lang('ATTRIBUTE') }}</div>
 			<div class="table-header-cell-right">{{ lang('ATTRIBUTE_EXPLAIN') }}</div>
 		</div>
 
@@ -29,21 +31,24 @@
 						</div>
 					</div>
 
-					<div class="table-body-cell-bold">{{ row.ATTRIBUTE }}</div>
+					<div class="table-body-cell-narrow">{{ row.ATTRIBUTE }}</div>
 
 					<div class="table-body-cell">{{ row.ATTRIBUTE_EXPLAIN }}</div>
 				</div>
 			{% endfor %}
 		</div>
 	</div>
+	<br>
 
-	<div class="select-buttons">
-		<input class="adm-button" type="submit" value="{{ lang('DISPLAY') }}" name="display" />
-		&nbsp;&nbsp;&nbsp;
-		<input class="adm-button" type="submit" value="{{ lang('CSV') }}" name="csv" />
-		&nbsp;&nbsp;&nbsp;
-		<input class="adm-button" type="reset" value="{{ lang('CLEAR_ATTRIB') }}" onclick="marklist('userdetails', 'mark', false); return false;" />
-		{{ S_FORM_TOKEN }}
+	<div class="head-panel">
+		<div class="select-buttons">
+			<input class="adm-button" type="submit" value="{{ lang('DISPLAY') }}" name="display" />
+			&nbsp;&nbsp;&nbsp;
+			<input class="adm-button" type="submit" value="{{ lang('CSV') }}" name="csv" />
+			&nbsp;&nbsp;&nbsp;
+			<input class="adm-button" type="reset" value="{{ lang('CLEAR_ATTRIB') }}" onclick="marklist('userdetails', 'mark', false); return false;" />
+			{{ S_FORM_TOKEN }}
+		</div>
 	</div>
 </form>
 

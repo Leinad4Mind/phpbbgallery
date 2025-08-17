@@ -50,8 +50,6 @@ $lang = array_merge($lang, array(
 
 	'HASH'						=> '#',
 
-	'NEW_VERSION'				=> 'New Version',
-	'NEW_VERSION_EXPLAIN'		=> 'There is a newer version of this extension available.',
 	'NO_ATTRIBUTES_SELECTED'	=> 'No attributes selected',
 	'NO_DATA'					=> 'The request has not created any data to output',
 	'NO_GROUP'					=> '<strong>** No group **</strong>',
@@ -104,7 +102,6 @@ $lang = array_merge($lang, array(
 	'USER_TYPE'					=> 'User type',
 	'USER_UNREAD_PRIVMSG'		=> 'Unread private messages',
 	'USER_WARNINGS'				=> 'Warnings',
-	'VERSION'					=> 'Version',
 
 	// Translators - set these to whatever is most appropriate in your language
 	// These are used to populate the filter keys
@@ -152,14 +149,4 @@ $lang = array_merge($lang, array(
 		USER_IGNORE 	=> 'Ignoreed',
 		USER_FOUNDER 	=> 'Founder',
 	),
-));
-
-// Donate
-$lang = array_merge($lang, array(
-	'DONATE'					=> 'Donate',
-	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
-	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
-
-	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
-	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));
