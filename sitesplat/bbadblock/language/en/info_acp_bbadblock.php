@@ -28,7 +28,9 @@ $lang = array_merge($lang, array(
 	'ACP_BBADBLOCK_ADS_EXPLAIN'				=> '<br />If Ads is not enabled you should fill in the classname where your ads will reside',
 	'ACP_BBADBLOCK_BBMEMBERSHIP_EXPLAIN'	=> '<br />If BBmembership is enabled you can use one of the membergroups to disable the adblocker. The usergroup should be default for the member then.',
     
-	'BBADBLOCK_NOTICE'						=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
+	'BBADBLOCK_NOTICE'						=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.</p></div>',
+	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	
 	'BBADBLOCK_CLASSNAME'					=> 'Classname',
 	'BBADBLOCK_CLASSNAME_EXPLAIN'			=> 'Name of the div class where your ads reside. <br /> This should not change unless you know what you are doing. <br /> Wrap your ads inside DIV blocks with the class entered here. <br />By default the ads test are in: <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/overall_footer_content_after.html</strong> <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/viewtopic_body_postrow_post_after.html</strong>',
 	'BBADBLOCK_REDIRECT'					=> 'Redirection Page',

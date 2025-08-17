@@ -2,22 +2,22 @@ services:
     sitesplat.bbadblock.controller:
         class: sitesplat\bbadblock\controller\controller
         arguments:
-            - @dbal.conn
-            - @request
-            - @user
-            - @config
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+            - '@config'
 
     sitesplat.bbadblock.listener:
         class: sitesplat\bbadblock\event\listener
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @auth
-            - @config
-            - @controller.helper
-            - %core.root_path%
-            - %core.php_ext%
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
