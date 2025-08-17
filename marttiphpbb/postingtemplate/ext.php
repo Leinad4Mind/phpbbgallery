@@ -1,8 +1,8 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb postingtemplate
-* @copyright (c) 2014 marttiphpbb <info@martti.be>
-* @license http://opensource.org/licenses/MIT
+* @copyright (c) 2015 - 2018 marttiphpbb <info@martti.be>
+* @license GNU General Public License, version 2 (GPL-2.0)
 */
 
 namespace marttiphpbb\postingtemplate;
@@ -25,16 +25,23 @@ class ext extends \phpbb\extension\base
 				// delete posting template data
 				$config_text = $this->container->get('config_text');
 				$db = $this->container->get('dbal.conn');
-				$forums_table = $this->container->getParameter('tables.forums');
+				$config_text_table = $this->container->getParameter('tables.config_text');
 
-				$sql = 'SELECT forum_id FROM ' . $forums_table;
+				// there's no method in the config_text service to retrieve the names with a sql like expression, so we do it with a query here.
+				$sql = 'SELECT config_name
+					FROM ' . $config_text_table . '
+					WHERE config_name ' . $db->sql_like_expression('marttiphpbb_postingtemplate_forum' . $db->get_any_char());
 				$result = $db->sql_query($sql);
-				$rowset = $db->sql_fetchrowset($result);
+				$postingtemplates = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
-				$possible_postingtemplates = array_map(function($row){
-					return 'marttiphpbb_postingtemplate_forum[' . $row['forum_id'] . ']';
-				}, $rowset);
-				$config_text->delete_array($possible_postingtemplates);
+
+				if (sizeof($postingtemplates))
+				{
+					$postingtemplates = array_map(function($row){
+						return $row['config_name'];
+					}, $postingtemplates);
+					$config_text->delete_array($postingtemplates);
+				}
 				return '1';
 				break;
 			default:
