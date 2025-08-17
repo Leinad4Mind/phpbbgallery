@@ -1,15 +1,12 @@
 services:
     leinad4mind.profilefieldsearchable.listener:
-        class: leinad4mind\profilefieldsearchable\event\main
+        class: 'leinad4mind\profilefieldsearchable\event\main'
         arguments:
-            - '@user'
-            - '@language'
             - '@auth'
             - '@request'
             - '@config'
             - '@dbal.conn'
-            - '@log'
             - '@template'
             - '@dispatcher'
         tags:
-            - { name: event.listener }
+            - { name: 'event.listener' }

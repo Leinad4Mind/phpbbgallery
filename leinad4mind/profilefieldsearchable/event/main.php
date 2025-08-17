@@ -4,7 +4,7 @@
  *
  * Profile Field Searchable. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, Leinad4Mind
+ * @copyright (c) 2018-2019, Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -16,21 +16,12 @@ use phpbb\config\config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\event\data;
 use phpbb\event\dispatcher;
-use phpbb\language\language;
-use phpbb\log\log_interface;
 use phpbb\request\request_interface;
 use phpbb\template\template;
-use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class main implements EventSubscriberInterface
 {
-	/** @var user */
-	protected $user;
-
-	/** @var language */
-	protected $lang;
-
 	/** @var auth */
 	protected $auth;
 
@@ -43,48 +34,36 @@ class main implements EventSubscriberInterface
 	/** @var db_interface */
 	protected $db;
 
-	/** @var log_interface */
-	protected $log;
-
 	/** @var template */
 	protected $template;
 
 	/** @var dispatcher */
 	protected $dispatcher;
 
-	/** @var string */
-	protected $u_action;
+	/** @var array */
+	protected $cpf_search_queries = [];
 
 	/**
-	 * @param user				$user
-	 * @param language			$lang
 	 * @param auth				$auth
 	 * @param request_interface	$request
 	 * @param config			$config
 	 * @param db_interface		$db
-	 * @param log_interface		$log
 	 * @param template			$template
 	 * @param dispatcher		$dispatcher
 	 */
 	public function __construct(
-		user $user,
-		language $lang,
 		auth $auth,
 		request_interface $request,
 		config $config,
 		db_interface $db,
-		log_interface $log,
 		template $template,
 		dispatcher $dispatcher
 	)
 	{
-		$this->user = $user;
-		$this->lang = $lang;
 		$this->auth = $auth;
 		$this->request = $request;
 		$this->config = $config;
 		$this->db = $db;
-		$this->log = $log;
 		$this->template = $template;
 		$this->dispatcher = $dispatcher;
 	}
@@ -95,9 +74,10 @@ class main implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'core.memberlist_modify_sql_query_data'	=> 'memberlist_modify_sql_query_data',
-			'core.acp_profile_action'				=> 'acp_profile_action',
-			'core.acp_profile_modify_profile_row'	=> 'acp_profile_modify_profile_row',
+			'core.memberlist_modify_sql_query_data'			=> 'memberlist_modify_sql_query_data',
+			'core.memberlist_modify_sort_pagination_params'	=> 'memberlist_modify_sort_pagination_params',
+			'core.acp_profile_create_edit_init'				=> 'acp_profile_create_edit_init',
+			'core.acp_profile_create_edit_save_before'		=> 'acp_profile_create_edit_save_before',
 		];
 	}
 
@@ -123,15 +103,16 @@ class main implements EventSubscriberInterface
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		$row_field_nom = [];
+		$field_names = [];
 		$text_fields = [];
 
 		foreach ($rows as $row)
 		{
-			$row_field_nom[] = $row['field_name'];
+			$field_names[] = $row['field_name'];
 			$text_fields[] = [
-				'CPF_LANG_NAME' => $this->lang->lang($row['lang_name']),
-				'CPF_NAME'      => $row['field_name']
+				'FIELD_ID'	=> $row['field_name'],
+				'LANG_NAME'	=> $row['lang_name'],
+				'VALUE'		=> $this->request->variable($row['field_name'], '', true),
 			];
 		}
 
@@ -149,75 +130,81 @@ class main implements EventSubscriberInterface
 					AND f.lang_id = l.lang_id
 					AND l.lang_id = a.lang_id
 					AND l.lang_iso = '" . $this->db->sql_escape($this->config['default_lang']) . "'	
-					GROUP BY lang_name, field_name, field_ident, field_order
+				GROUP BY lang_name, field_name, field_ident, field_order
 				ORDER BY field_order, option_id DESC";
 
 		$result = $this->db->sql_query($sql);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		$row_field_nom2 = [];
+		$field_names2 = [];
 		$option_fields = [];
 		$lang_values = [];
 
-		foreach ($rows as $row)
+		for ($i = 0; $i < count($rows); $i++)
 		{
-			$option_fields[] = [
-				'FIELD_ID'		=> $row['field_ident'],
-				'LANG_NAME'		=> $row['lang_name'],
+			$option_fields[$i] = [
+				'FIELD_ID'		=> $rows[$i]['field_ident'],
+				'LANG_NAME'		=> $rows[$i]['lang_name'],
 				'lang_values'	=> [],
 			];
 
-			end($option_fields);
-			$option_field_key = key($option_fields);
+			$row_option_id = explode(',', $rows[$i]['option_id']);
+			$row_lang_value = explode(',', $rows[$i]['lang_value']);
 
-			$row_option_id  = explode(',', $row['option_id']);
-			$row_lang_value = explode(',', $row['lang_value']);
-
-			for ($i = 0; $i < count($row_option_id); $i++)
+			for ($j = 0; $j < count($row_option_id); $j++)
 			{
-				$lang_values[$option_field_key][] = [
-					'OPTION_ID'		=> $row_option_id[$i] + 1,
-					'LANG_VALUE'	=> $row_lang_value[$i],
+				$lang_values[$i][] = [
+					'OPTION_ID'		=> $row_option_id[$j] + 1,
+					'LANG_VALUE'	=> $row_lang_value[$j],
 				];
 			}
 
-			$row_field_nom2[] = $row['field_name'];
+			$field_names2[] = $rows[$i]['field_name'];
 		}
 
-		foreach($row_field_nom as $extend_params)
+		foreach ($field_names as $extend_params)
 		{
 			$search_params[] = $extend_params;
 		}
 
-		foreach ($row_field_nom2 as $extend_params2)
+		foreach ($field_names2 as $extend_params2)
 		{
 			$search_params[] = $extend_params2;
 		}
 
 		$mode = $this->request->variable('mode', '');
 
-		if (($row_field_nom || $row_field_nom2) && (($mode == '' || $mode == 'searchuser') || array_intersect($this->request->variable_names(request_interface::GET), $search_params)) && ($this->config['load_search'] || $this->auth->acl_get('a_')))
+		if (($field_names || $field_names2) && (($mode == '' || $mode == 'searchuser') || array_intersect($this->request->variable_names(request_interface::GET), $search_params)) && ($this->config['load_search'] || $this->auth->acl_get('a_')))
 		{
 			$sql_where = $event['sql_where'];
 
 			$any = $this->db->get_any_char();
 
-			foreach ($row_field_nom as $row_field)
+			foreach ($field_names as $row_field)
 			{
 				$value = $this->request->variable($row_field, '', true);
 				$sql_where .= $value ? " AND LOWER(fd.pf_$row_field) " . $this->db->sql_like_expression($any . str_replace('*', $any, strtolower($value)) . $any) . ' ' : '';
+				$this->cpf_search_queries[] = urlencode($row_field) . '=' . urlencode($value);
 			}
 
-			foreach ($row_field_nom2 as $row_field)
+			foreach ($field_names2 as $row_field)
 			{
 				$value = $this->request->variable($row_field, 0);
 				$sql_where .= $value && $value !== 'x' ? " AND LOWER(fd.pf_$row_field) " . $this->db->sql_like_expression($any . str_replace('*', $any, strtolower($value)) . $any) . ' ' : '';
+				$this->cpf_search_queries[] = urlencode($row_field) . '=' . (int) $value;
 			}
 
 			$event['sql_where'] = $sql_where;
 
-			$event['sql_from'] = $event['sql_from'] . ' LEFT JOIN ' . PROFILE_FIELDS_DATA_TABLE . ' fd ON (u.user_id = fd.user_id)';
+			$sql_from = str_replace(', ' . USER_GROUP_TABLE . ' ug ', '', $event['sql_from'], $count);
+
+			if ($count)
+			{
+				$sql_from .= ' JOIN ' . USER_GROUP_TABLE . ' ug ON (u.user_id = ug.user_id) ';
+			}
+
+			$event['sql_from'] = $sql_from . ' LEFT JOIN ' . PROFILE_FIELDS_DATA_TABLE . ' fd ON (u.user_id = fd.user_id)';
 		}
 
 		$vars = [
@@ -240,75 +227,40 @@ class main implements EventSubscriberInterface
 	/**
 	 * @param data $event
 	 */
-	public function acp_profile_action(data $event)
+	public function memberlist_modify_sort_pagination_params(data $event)
 	{
-		$this->u_action = $event['u_action'];
-
-		switch ($event['action'])
-		{
-			case 'searchable':
-
-				$field_id = $this->request->variable('field_id', 0);
-
-				if (!$field_id)
-				{
-					trigger_error($this->lang->lang('NO_FIELD_ID') . adm_back_link($this->u_action), E_USER_WARNING);
-				}
-
-				$sql = 'UPDATE ' . PROFILE_FIELDS_TABLE . '
-					SET field_searchable = 1
-					WHERE field_id = ' . (int) $field_id;
-				$this->db->sql_query($sql);
-
-				$sql = 'SELECT field_ident
-					FROM ' . PROFILE_FIELDS_TABLE . '
-					WHERE field_id = ' . (int) $field_id;
-				$result = $this->db->sql_query($sql);
-				$field_ident = (string) $this->db->sql_fetchfield('field_ident');
-				$this->db->sql_freeresult($result);
-
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PROFILE_FIELD_SEARCHABLE', false, [$field_ident]);
-				trigger_error($this->lang->lang('PROFILE_FIELD_SEARCHABLE') . adm_back_link($this->u_action));
-
-			break;
-
-			case 'unsearchable':
-
-				$field_id = $this->request->variable('field_id', 0);
-
-				if (!$field_id)
-				{
-					trigger_error($this->lang->lang('NO_FIELD_ID') . adm_back_link($this->u_action), E_USER_WARNING);
-				}
-
-				$sql = 'UPDATE ' . PROFILE_FIELDS_TABLE . '
-					SET field_searchable = 0
-					WHERE field_id = ' . (int) $field_id;
-				$this->db->sql_query($sql);
-
-				$sql = 'SELECT field_ident
-					FROM ' . PROFILE_FIELDS_TABLE . '
-					WHERE field_id = ' . (int) $field_id;
-				$result = $this->db->sql_query($sql);
-				$field_ident = (string) $this->db->sql_fetchfield('field_ident');
-				$this->db->sql_freeresult($result);
-
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PROFILE_FIELD_UNSEARCHABLE', false, [$field_ident]);
-				trigger_error($this->lang->lang('PROFILE_FIELD_UNSEARCHABLE') . adm_back_link($this->u_action));
-
-			break;
-		}
+		$event['params'] = array_merge($event['params'], $this->cpf_search_queries);
+		$event['sort_params'] = array_merge($event['sort_params'], $this->cpf_search_queries);
 	}
 
 	/**
 	 * @param data $event
 	 */
-	public function acp_profile_modify_profile_row(data $event)
+	public function acp_profile_create_edit_init(data $event)
 	{
-		$event['field_block'] = array_merge($event['field_block'], [
-			'L_SEARCHABLE_UNSEARCHABLE'	=> $this->lang->lang($event['row']['field_searchable'] ? 'UNSEARCHABLE' : 'SEARCHABLE'),
-			'U_SEARCHABLE_UNSEARCHABLE'	=> $this->u_action . '&amp;action=' . ($event['row']['field_searchable'] ? 'unsearchable' : 'searchable') . '&amp;field_id=' . $event['row']['field_id'],
-		]);
+		$is_searchable = isset($event['field_row']['field_searchable']) ? $event['field_row']['field_searchable'] : false;
+
+		$this->template->assign_var('S_FIELD_SEARCHABLE', $is_searchable);
+
+		$event->update_subarray('field_row', 'field_searchable', $is_searchable);
+
+		$visibility_ary = $event['visibility_ary'];
+		$visibility_ary[] = 'field_searchable';
+		$event['visibility_ary'] = $visibility_ary;
+
+		$exclude = $event['exclude'];
+		$exclude[1][] = 'field_searchable';
+		$event['exclude'] = $exclude;
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function acp_profile_create_edit_save_before(data $event)
+	{
+		$is_searchable = $is_searchable = $this->request->variable('field_searchable', false);
+
+		$event->update_subarray('profile_fields', 'field_searchable', $is_searchable);
 	}
 
 	/**

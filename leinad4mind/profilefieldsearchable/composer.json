@@ -1,11 +1,11 @@
 {
     "name": "leinad4mind/profilefieldsearchable",
     "type": "phpbb-extension",
-    "description": "Ability to use phpBB 3.2 user search interface to search by custom profile fields.",
+	"description": "This extension allows an administrator to make any custom profile field searchable. It adds new search fields on the memberlist page.",
     "homepage": "https://leinad4mind.top/forum",
-    "version": "1.0.3",
-    "time": "2018-02-18",
-    "license": "GPL-2.0",
+    "version": "1.0.4",
+    "time": "2019-04-01",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Leinad4Mind",
@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.4.7",
         "composer/installers": "~1.0"
     },
     "extra": {

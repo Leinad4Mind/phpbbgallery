@@ -1,7 +1,7 @@
 {% for text_field in text_fields %}
 <dl>
-	<dt><label for="{{ text_field.CPF_NAME }}">{{ text_field.CPF_LANG_NAME ~ lang('COLON') }}</label></dt>
-	<dd><input type="text" name="{{ text_field.CPF_NAME }}" id="{{ text_field.CPF_NAME }}" value="" class="inputbox" /></dd>
+	<dt><label for="{{ text_field.FIELD_ID }}">{{ lang(text_field.LANG_NAME) ~ lang('COLON') }}</label></dt>
+	<dd><input type="text" name="{{ text_field.FIELD_ID }}" id="{{ text_field.FIELD_ID }}" value="{{ text_field.VALUE }}" class="inputbox"></dd>
 </dl>
 {% endfor %}
 
