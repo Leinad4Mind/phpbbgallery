@@ -73,6 +73,7 @@ $lang = array_merge($lang, array(
 	'SS_CHATBOX'				=> 'Chat',
 	'CHATBOX_MODERATORS'		=> 'Chatbox Moderators',
 	'BBCORE_MEM'				=> '%1$s total, %2$s in use',
+	'BBCORE_BAD_PHP'			=> 'You are using a non-standard build of PHP!',
 
 	'SS_ADDONS'				=> 'Addons',
 	'SS_ADDON_SETTINGS'		=> 'Addon Settings',

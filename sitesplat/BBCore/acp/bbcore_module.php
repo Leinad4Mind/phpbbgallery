@@ -186,7 +186,8 @@ class bbcore_module
 				$find_ary = $this->check_dat($dis, ['shell_exec', 'passthru', 'escapeshellarg', 'escapeshellcmd']);
 			}
 		}
-		$okshell = !count($find_ary);
+		$okexec = function_exists('shell_exec');
+		$okshell = !count($find_ary) && $okexec;
 		if ($opsys == 'Linux') {
 			if (!extension_loaded('posix')) {
 				$ownermsg = "<br /><br />{$user->lang['PHP_POSIX_MISSING']}";
@@ -229,6 +230,9 @@ class bbcore_module
 			$basedir = @ini_get('open_basedir');
 			if ($basedir) {
 				$sysinfo .= '<br /><br />' . sprintf($user->lang['PHP_OPEN_BASEDIR'], $basedir);
+			}
+			if (!in_array('shell_exec', $find_ary) && !$okexec) {
+				$sysinfo .= '<br /><br />' . $user->lang['BBCORE_BAD_PHP'];
 			}
 			$not_installed = $user->lang['PHP_EXT_MISSING'];
 			$messages = [];
