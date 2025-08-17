@@ -1,0 +1,31 @@
+{
+	"name": "leinad4mind/staff_notifier",
+	"type": "phpbb-extension",
+	"description": "Made by leinad4mind",
+	"homepage": "https://leinad4mind.top",
+	"version": "2.0.0",
+	"time": "2017-11-23",
+    "keywords": [ "phpbb", "extension", "staff_notifier" ],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "http://leinad4mind.top",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"extra": {
+		"display-name": "Staff Notifier",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.2,<3.3"
+		},
+		"version-check": {
+			"host": "leinad4mind.top",
+			"directory": "/phpbb/staff_notifier",
+			"filename": "version_check"
+		}
+	}
+}

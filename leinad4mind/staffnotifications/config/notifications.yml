@@ -1,0 +1,10 @@
+services:
+    leinad4mind.staff_notifier.notification.type.notify:
+        class: leinad4mind\staff_notifier\notification\type\notify
+        shared: false
+        parent: notification.type.post
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }

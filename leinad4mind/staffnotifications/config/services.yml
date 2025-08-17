@@ -1,0 +1,15 @@
+imports:
+    - { resource: notifications.yml }
+    
+services:
+    leinad4mind.staff_notifier.listener:
+        class: leinad4mind\staff_notifier\event\listener
+        arguments:
+            - '@config'
+            - '@template'
+            - '@user'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@notification_manager'
+        tags:
+            - { name: event.listener }
