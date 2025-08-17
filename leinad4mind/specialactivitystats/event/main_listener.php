@@ -79,6 +79,7 @@ class main_listener implements EventSubscriberInterface
 	public function main($event)
 	{
 		global $config, $auth;
+		$this->update_session();
 		if (!$config[PREFIXES::CONFIG.'_check_permissions'] || $auth->acl_get(PERMISSIONS::SEE_STATS)) {
 			$this->user->add_lang_ext('robertheim/activitystats', 'activitystats');
 
@@ -99,7 +100,6 @@ class main_listener implements EventSubscriberInterface
 				$timestamp -= (  60 * $config['robertheim_activitystats_del_time_m']);
 				$timestamp -=         $config['robertheim_activitystats_del_time_s'];
 			}
-			$this->update_session();
 			$this->prune($timestamp);
 	
 			// don't re-calculate the data within that time, but use the cached data from the last calculation.
@@ -464,10 +464,21 @@ class main_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$explanation = $user->lang['ACTIVITY_STATS_EXP_TIME'];
-			$explanation .= $user->lang('ACTIVITY_STATS_HOURS', (int) $config['robertheim_activitystats_del_time_h']);
-			$explanation .= $user->lang('ACTIVITY_STATS_MINUTES', (int) $config['robertheim_activitystats_del_time_m']);
-			$explanation .= $user->lang('ACTIVITY_STATS_SECONDS', (int) $config['robertheim_activitystats_del_time_s']);
+			$h = (int) $config['robertheim_activitystats_del_time_h'];
+			$m = (int) $config['robertheim_activitystats_del_time_m'];
+			$s = (int) $config['robertheim_activitystats_del_time_s'];
+
+			$plural = $h;
+			if (0==$h) {
+				$plural = $m;
+				if (0==$m) {
+					$plural = $s;
+				}
+			}
+			$explanation = $user->lang('ACTIVITY_STATS_EXP_TIME', $plural);
+			$explanation .= $user->lang('ACTIVITY_STATS_HOURS', $h);
+			$explanation .= $user->lang('ACTIVITY_STATS_MINUTES', $m);
+			$explanation .= $user->lang('ACTIVITY_STATS_SECONDS', $s);
 
 			switch (substr_count($explanation, '%s'))
 			{
