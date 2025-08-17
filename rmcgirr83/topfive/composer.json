@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Displays statistics of the latest new posts, new users and most active users on the boards index page.",
     "homepage": "https://github.com/RMcGirr83/topfive",
-    "version": "1.0.2",
-    "time": "2015-05-28",
+    "version": "1.0.4",
+    "time": "2015-12-21",
     "keywords": [
         "phpbb",
         "extension",
@@ -15,17 +15,17 @@
         {
             "name": "Rich McGirr",
             "homepage": "https://www.phpbb.com/customise/db/author/rmcgirr83/contributions",
-            "email": "rmcgirr83@rmcgirr83.org",
             "role": "Lead Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.2,<3.2.0"
     },
     "extra": {
         "display-name": "Top Five",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.2,<3.2.*@dev"
+            "phpbb/phpbb": ">=3.1.2,<3.2.0"
         },
         "version-check": {
             "host": "www.phpbb.com",

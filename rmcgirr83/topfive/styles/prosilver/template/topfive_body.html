@@ -1,4 +1,5 @@
-<div class="forabg" id="top_five">
+<a class="category<!-- IF S_TOPFIVE_HIDDEN --> hidden-category<!-- ENDIF -->" style="display: none; height: 0"></a>
+<div class="forabg responsive-hide" id="top_five">
 	<div class="inner">
 	<ul class="topiclist">
 		<li class="header">
@@ -7,10 +8,11 @@
 				<dd class="topics tf-active-header">{L_TOP_FIVE_ACTIVE}</dd>
 				<dd class="lastpost"><span>{L_TOP_FIVE_NEWEST}</span></dd>
 			</dl>
+			<!-- IF U_TOPFIVE_COLLAPSE_URL --><a href="{U_TOPFIVE_COLLAPSE_URL}" class="collapse-btn collapse-<!-- IF S_TOPFIVE_HIDDEN -->show<!-- ELSE -->hide<!-- ENDIF -->" data-hidden="{S_TOPFIVE_HIDDEN}" data-ajax="phpbb_collapse" data-overlay="true" title="{L_COLLAPSIBLE_CATEGORIES_TITLE}" style="display: none; line-height: 0;"></a><!-- ENDIF -->
 		</li>
 	</ul>
-	<ul class="topiclist topics">
-		<li class="row bg1">
+	<ul class="topiclist forums">
+		<li class="row">
 			<dl>
 				<dt>
 					<div class="list-inner">
@@ -37,7 +39,7 @@
 						<!-- END top_five_active -->
 					</ul>
 				</dd>
-				<dd class="lastpost tf-newest">
+				<dd class="lastpost tf-newest"><span>
 					<ul>
 						<!-- BEGIN top_five_newest -->
 							<li>
@@ -45,7 +47,7 @@
 							</li>
 						<!-- END top_five_newest -->
 					</ul>
-				</dd>
+				</span></dd>
 			</dl>
 		</li>
 	</ul>
