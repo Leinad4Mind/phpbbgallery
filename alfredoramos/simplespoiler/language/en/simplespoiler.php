@@ -4,20 +4,22 @@
  * Simple Spoiler Extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GNU GPL-3.0+
+ * @license GNU GPL-2.0
  */
 
 /**
  * @ignore
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
 /**
  * @ignore
  */
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 

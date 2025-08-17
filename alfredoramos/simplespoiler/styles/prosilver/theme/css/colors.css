@@ -2,7 +2,7 @@
  * Simple Spoiler Extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GNU GPL-3.0+
+ * @license GNU GPL-2.0
  */
 
 .spoiler {
@@ -26,4 +26,12 @@
 
 .spoiler-shown > .spoiler-header .spoiler-status {
 	background-color: #d9534f;
+}
+
+.bbcode-spoiler- {
+	color: transparent;
+}
+
+.bbcode-spoiler-::before {
+	color: #8f8f8f;
 }
