@@ -1,0 +1,12 @@
+<!-- IF not $INCLUDED_SPOILER_JS -->
+	<!-- INCLUDEJS @alfredoramos_simplespoiler/js/spoiler.js -->
+	<script>
+	$(function() {
+		$('.spoiler').initSpoilers({
+			showText: '{LA_SPOILER_SHOW}',
+			hideText: '{LA_SPOILER_HIDE}'
+		});
+	});
+	</script>
+	<!-- DEFINE $INCLUDED_SPOILER_JS = true -->
+<!-- ENDIF -->
