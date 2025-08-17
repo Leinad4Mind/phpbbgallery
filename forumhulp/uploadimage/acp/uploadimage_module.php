@@ -17,9 +17,6 @@ class uploadimage_module
 	{
 		global $phpbb_container, $request, $user;
 
-		// Add the ACP lang file
-	//	$user->add_lang_ext('forumhulp/uploadimage', 'uploadimage');
-
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('forumhulp.uploadimage.admin.controller');
 
@@ -59,7 +56,7 @@ class uploadimage_module
 		}
 
 		// Perform any actions submitted by the user
-		switch($action)
+		switch ($action)
 		{
 			case 'delete':
 				// Use a confirm box routine when deleting a image
