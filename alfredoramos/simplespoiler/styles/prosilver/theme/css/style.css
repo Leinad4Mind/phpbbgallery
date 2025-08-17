@@ -2,7 +2,7 @@
  * Simple Spoiler Extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GNU GPL-2.0
+ * @license GPL-2.0
  */
 
 .spoiler {
@@ -18,7 +18,11 @@
 }
 
 .spoiler .spoiler-header {
+	display: -ms-flexbox;
 	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-ms-flex-pack: justify;
 	justify-content: space-between;
 }
 
@@ -40,12 +44,12 @@
 	border-style: solid;
 }
 
-.bbcode-spoiler- {
+.bbcode-spoiler {
 	font-size: 0;
 	letter-spacing: -1px;
 }
 
-.bbcode-spoiler-::before {
+.bbcode-spoiler::before {
 	content: "\f070"; /* eye-slash */
 	font-style: normal;
 	font-variant: normal;

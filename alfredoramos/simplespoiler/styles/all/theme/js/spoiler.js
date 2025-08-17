@@ -2,9 +2,9 @@
  * Spoiler jQuery
  * https://github.com/AlfredoRamos/snippets/tree/master/javascript/spoiler
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
- * @version 0.2.0
+ * @version 0.2.1
  * @copyright (c) 2016 Alfredo Ramos
- * @license GNU GPL-2.0
+ * @license GPL-2.0
  */
 (function($) {
 	'use strict';
@@ -23,9 +23,9 @@
 			// Spoiler elements relative to the object that is pointed to
 			var $elements = {
 				wrapper: $(this).parents($settings.selector).first(),
-				status: $(this).parents($settings.selector)
+				status: $(this).parents($settings.selector).first()
 					.find($settings.selector + '-status').first(),
-				body: $(this).parents($settings.selector)
+				body: $(this).parents($settings.selector).first()
 					.children($settings.selector + '-body').first()
 			};
 

@@ -4,7 +4,7 @@
  * Simple Spoiler Extension for phpBB.
  * @author ConeRX
  * @copyright 2017 Alfredo Ramos
- * @license GNU GPL-2.0
+ * @license GPL-2.0
  */
 
 /**
@@ -25,7 +25,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'SPOILER'			=> 'Spoiler',
-	'SPOILER_HELPLINE'	=> 'Verwendung: [spoiler]Text[/spoiler] oder [spoiler=title]Text[/spoiler]',
+	'SPOILER_HELPLINE'	=> 'Verwendung: [spoiler]Text[/spoiler] oder [spoiler title=Titel]Text[/spoiler]',
 	'SPOILER_SHOW'		=> 'Anzeigen',
 	'SPOILER_HIDE'		=> 'Ausblenden'
 ]);

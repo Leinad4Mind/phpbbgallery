@@ -4,7 +4,7 @@
  * Simple Spoiler Extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GNU GPL-2.0
+ * @license GPL-2.0
  */
 
 namespace alfredoramos\simplespoiler\includes;
@@ -63,9 +63,15 @@ class helper
 	public function install_bbcode()
 	{
 		// Remove conflicting BBCode
-		$this->remove_bbcode('spoiler');
+		$this->remove_bbcode('spoiler=');
 
 		$data = $this->bbcode_data();
+
+		if (empty($data))
+		{
+			return;
+		}
+
 		$data['bbcode_id'] = $this->bbcode_id();
 		$data = array_replace(
 			$data,
@@ -97,6 +103,12 @@ class helper
 	public function uninstall_bbcode()
 	{
 		$data = $this->bbcode_data();
+
+		if (empty($data))
+		{
+			return;
+		}
+
 		$this->remove_bbcode($data['bbcode_tag']);
 	}
 
@@ -229,15 +241,21 @@ class helper
 	{
 		// Return absolute path if file exists
 		$xsl = $this->filesystem->realpath(
-			__DIR__ . '/../styles/all/template/spoiler_template.xsl'
+			__DIR__ . '/../styles/all/template/spoiler.xsl'
 		);
 
 		// Store the (trimmed) file content if it is readable
 		$template = $this->filesystem->is_readable($xsl) ? trim(file_get_contents($xsl)) : '';
 
+		// The spoiler template should not be empty
+		if (empty($template))
+		{
+			return [];
+		}
+
 		return [
-			'bbcode_tag'	=> 'spoiler=',
-			'bbcode_match'	=> '[spoiler={TEXT2;optional}]{TEXT1}[/spoiler]',
+			'bbcode_tag'	=> 'spoiler',
+			'bbcode_match'	=> '[spoiler title={TEXT2;optional}]{TEXT1}[/spoiler]',
 			'bbcode_tpl'	=> $template,
 			'bbcode_helpline'	=> 'SPOILER_HELPLINE',
 			'display_on_posting'	=> 1
