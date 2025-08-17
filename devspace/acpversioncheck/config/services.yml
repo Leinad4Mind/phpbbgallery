@@ -1,10 +1,18 @@
+imports:
+    - { resource: alias.yml }
+
 services:
-    david63.acpversioncheck.listener:
-        class: david63\acpversioncheck\event\listener
-        arguments:
-            - '@config'
-            - '@template'
-            - '%core.root_path%'
-            - '@language'
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $root_path: '%core.root_path%'
+        public: true
+
+    devspace.acpversioncheck.core.functions:
+        class: devspace\acpversioncheck\core\functions
+
+    devspace.acpversioncheck.listener:
+        class: devspace\acpversioncheck\event\listener
         tags:
             - { name: event.listener }

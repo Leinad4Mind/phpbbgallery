@@ -3,5 +3,9 @@
 **/
 .toggle {
 	background: transparent none repeat-x 0 0;
-	margin: 0 0 0 10px;
+}
+
+.errorbox a:link,
+.errorbox a:visited {
+	text-decoration: none;
 }

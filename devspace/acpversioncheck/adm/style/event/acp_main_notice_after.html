@@ -1,4 +1,4 @@
-{% INCLUDECSS '@david63_acpversioncheck/acpversioncheck.css' %}
+{% INCLUDECSS '@' ~ NAMESPACE ~ '/css/acpversioncheck.css' %}
 
 {% if S_ACP_VERSIONCHECK %}
 	<div class="successbox notice">
@@ -8,49 +8,85 @@
 	<div class="errorbox">
 		<p>{{ lang('VERSIONS_INCORRECT') }}</p>
 	</div>
-	<div class="toggle">
-		<table class="table1 two-columns no-header" data-no-responsive-header="true">
+{% endif %}
+<div class="toggle">
+	<table class="table1 zebra-table">
+		<thead>
+			<tr>
+				<th>{{ lang('PHPBB') }}</th>
+				<th>{{ lang('PHPBB_VERSION') }}</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td>{{ lang('DATABASE_VERSION') }}</td>
+				<td><strong>{{ DB_VERSION }}</strong></td>
+			</tr>
+
+			<tr>
+				<td>{{ lang('CONSTANT_VERSION') }}</td>
+				<td><strong>{{ CONSTANT_VERSION }}</strong></td>
+			</tr>
+
 			<thead>
 				<tr>
-					<th>{{ lang('VERSION_NAME') }}</th>
-					<th>{{ lang('VERSION') }}<img style="float: {{ S_CONTENT_FLOW_END }};" src="https://img.shields.io/badge/{{ lang('VERSION') }}-{{ ACPVERSIONCHECK_VERSION }}-orange.svg?style=plastic" /></th>
+					<th>{{ lang('VENDOR') }}</th>
+					<th>{{ lang('VENDOR_VERSION') }}</th>
+				</tr>
+			</thead>
+
+			<tr>
+				<td>{{ lang('SYMFONY_VERSION') }}</td>
+				<td><strong>{{ SYMFONY_VERSION }}</strong></td>
+			</tr>
+
+			<tr>
+				<td>{{ lang('TWIG_VERSION') }}</td>
+				<td><strong>{{ TWIG_VERSION }}</strong></td>
+			</tr>
+		</tbody>
+
+		<thead>
+			<tr>
+				<th>{{ lang('STYLE_NAME') }}</th>
+				<th>{{ lang('STYLE_VERSION') }}</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for styles in style_versions %}
+				<tr>
+					<td>{{ styles.STYLE_NAME }}</td>
+					<td><strong>{{ styles.STYLE_VERSION }}</strong></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+
+		{% if S_PHPBB_4 %}
+			<thead>
+				<tr>
+					<th>{{ lang('LANG_NAME') }}</th>
+					<th>{{ lang('LANG_VERSION') }}</th>
 				</tr>
 			</thead>
 
 			<tbody>
-				<tr>
-					<td>{{ lang('DATABASE_VERSION') }}</td>
-					<td><strong>{{ DB_VERSION }}</strong></td>
-				</tr>
-
-				<tr>
-					<td>{{ lang('CONSTANT_VERSION') }}</td>
-					<td><strong>{{ CONSTANT_VERSION }}</strong></td>
-				</tr>
-			</tbody>
-
-			<thead>
-				<tr>
-					<th>{{ lang('STYLE_NAME') }}</th>
-					<th>{{ lang('STYLE_VERSION') }}</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				{% for styles in style_versions %}
+				{% for langs in lang_versions %}
 					<tr>
-						<td>{{ styles.STYLE_NAME }}</td>
-						<td><strong>{{ styles.STYLE_VERSION }}</strong></td>
+						<td>{{ langs.LANG_NAME }}&nbsp;({{ langs.LANG_ISO }})</td>
+						<td><strong>{{ langs.LANG_VERSION }}</strong></td>
 					</tr>
 				{% endfor %}
 			</tbody>
-		</table>
-	</div>
-{% endif %}
+		{% endif %}
+	</table>
+	<br>
+</div>
 
 <script>
-	var showText = '{{ lang('VIEW') | escape('js') }}';
-	var hideText = '{{ lang('HIDE') | escape('js') }}';
+	var showText = '{{ lang_js('VIEW') }}';
+	var hideText = '{{ lang_js('HIDE') }}';
 </script>
 
-{% INCLUDEJS '@david63_acpversioncheck/acpversioncheck_fn.js' %}
+{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/acpversioncheck_fn.js' %}
