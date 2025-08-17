@@ -1,12 +1,8 @@
-{% if not S_IS_BOT and S_REGISTERED_USER %}
-  {% if postrow.U_QUOTE %}
-    <div class="btn-group btn-group-sm btn-snappy hidden-xs" role="group">
-      <a class="btn btn-sm btn-default" href="javascript:void(0);" onclick="addquote({{ postrow.POST_ID }}, '{{ postrow.POST_AUTHOR }}', '{{ postrow.POSTER_ID }}', '{{ lang('WROTE')|addslashes }}');" title="{{ lang('QUOTE') }} {{ postrow.POST_AUTHOR }}">
-        <i class="fa fa-comment"></i>
-      </a>
-      <a class="btn btn-sm btn-default" href="javascript:void(0);" onclick="insert_text('[b]&#64;{{ postrow.POST_AUTHOR }}[/b], ', false);" title="&#64;{{ postrow.POST_AUTHOR }}">
-        <i class="icon-moon-email icon-moon-fx"></i>
-      </a>
-    </div>
-  {% endif %}
-{% endif %}
+<!-- IF not S_IS_BOT and S_REGISTERED_USER -->
+<!-- IF postrow.U_QUOTE -->
+<div class="btn-group btn-group-sm btn-snappy hidden-xs" role="group">
+ <a class="btn btn-sm btn-default" href="javascript:void(0);" onclick="addquote({postrow.POST_ID}, '{postrow.POST_AUTHOR}', '{LA_WROTE}');" title="{L_QUOTE} {postrow.POST_AUTHOR}"><i class="fa fa-comment"></i></a>
+ <a class="btn btn-sm btn-default" href="javascript:void(0);" onclick="insert_text('[b]&#64;{postrow.POST_AUTHOR}[/b], ', false);" title="&#64;{postrow.POST_AUTHOR}"><i class="icon-moon-email icon-moon-fx"></i></a>
+</div>
+<!-- ENDIF -->
+<!-- ENDIF -->

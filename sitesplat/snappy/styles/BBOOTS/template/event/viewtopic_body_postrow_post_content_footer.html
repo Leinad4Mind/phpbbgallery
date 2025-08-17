@@ -1,5 +1,5 @@
-{% if not S_IS_BOT and S_REGISTERED_USER %}
-  {% if postrow.U_QUOTE %}
-    <div id="message_{{ postrow.POST_ID }}" style="display:none">{{ postrow.DECODED_MESSAGE }}</div>
-  {% endif %}
-{% endif %}
+<!-- IF not S_IS_BOT and S_REGISTERED_USER -->
+<!-- IF postrow.U_QUOTE -->
+<div id="message_{postrow.POST_ID}" style="display:none">{postrow.DECODED_MESSAGE}</div>
+<!-- ENDIF -->
+<!-- ENDIF -->

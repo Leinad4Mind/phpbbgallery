@@ -4,12 +4,11 @@ head.ready(function () {
 "use strict";
 
 	$(".ccount").characterCounter({
-        counterFormat: '%1 ' + chars_remaining,
+        counterFormat: '%1 characters remaining',
 		limit: max_post_chars,
     });
 	
 	var button = document.getElementById('show_button')
-	if(!button) return;
     button.addEventListener('click',hideshow,false);
 
     function hideshow() {
@@ -45,14 +44,14 @@ head.ready(function () {
 	});
 	
 	$('#qr_postform').submit(function() {
-        localStorage.removeItem("TextEditorData");
+        localStorage.clear();
     });
 	
 	//lets clear empty local storage and textarea if needed
 	$(".btn-clr").click(function(e) {
         e.preventDefault();
         $(".ccount").val('');
-		localStorage.removeItem("TextEditorData");
+		localStorage.clear();
     });
 	
 //	$('.panel-qr > .qr-textarea > textarea').on('keyup', function(event) {
@@ -64,13 +63,13 @@ head.ready(function () {
 //        }
 //   });
    
-	// setInterval(function () {
-	  // if($("#message").val().length >= 1) {
-		// $(".load").removeAttr("disabled");
-	  // } else {
-		// $(".load").attr("disabled", "disabled");
-	  // }
-	// }, 400); //Runs every 0.4s
+   setInterval(function () {
+	  if($("#message").val().length >= 1) {
+		$(".load").removeAttr("disabled");
+	  } else {
+		$(".load").attr("disabled", "disabled");
+	  }
+	}, 400); //Runs every 0.4s
    
    //	$('.toggleModal').on('click', function () {
    //      $('#col1').toggleClass('col-md-12 col-md-9');
