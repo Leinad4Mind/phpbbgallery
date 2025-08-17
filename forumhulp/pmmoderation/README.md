@@ -29,3 +29,4 @@ We feel sorry as our answers on phpbb sites are removed, so use github or our fo
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
 © 2016 - John Peskens (ForumHulp.com)
+@ 2020 - Leinad4Mind (Leinad4Mind.top/forum)

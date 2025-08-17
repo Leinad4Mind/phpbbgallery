@@ -2,7 +2,7 @@
 /**
 *
 * @package PM Modeatration
-* @copyright (c) 2016 ForumHulp.com
+* @copyright (c) 2016 ForumHulp | 2025 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

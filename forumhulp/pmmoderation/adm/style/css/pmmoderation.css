@@ -21,6 +21,11 @@
 	margin-left: 3em;
 }
 
+#pm_moderation p {float:right;margin-top:5px;}
+#pm_moderation p.left {float:left;}
+#pm_moderation table tr > td:last-of-type {text-align: center;}
+#pm_moderation table tr > td:nth-child(2) {text-align: left;}
+
 /* BB Code styles
 ----------------------------------------*/
 /* Quote block */

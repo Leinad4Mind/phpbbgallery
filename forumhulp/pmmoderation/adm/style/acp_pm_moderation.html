@@ -4,6 +4,7 @@
 <!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
 <!-- ENDIF -->
 <!-- INCLUDECSS css/pmmoderation.css -->
+<!-- INCLUDECSS css/jquery-ui.min.css -->
 <!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
 <!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
 <!-- INCLUDE overall_header.html -->
@@ -13,9 +14,7 @@
 <p>{L_PM_MODERATION_READ_EXPLAIN}</p>
 
 <form id="pm_moderation" method="post" action="{U_ACTION}&amp;action=delete&amp;sk={U_NAME}&amp;sd={U_SORT}">
-<div style="float:left;width:50%;">
-	{L_PM_COUNT}: {MESSAGE_COUNT}
-</div>
+<p class="small left">{L_SEARCH_KEYWORDS} / {L_USERNAME}{L_COLON} <input id="autocomplete" name="keywords" type="text" placeholder="User" value="<!-- IF UNAME -->{UNAME}<!-- ENDIF -->"/> <input type="text" name="keywords" value="{S_KEYWORDS}" />&nbsp;<input type="submit" class="button2" name="filter" value="{L_SEARCH}" /></p>
 <!-- IF .pagination or TOTAL_POSTS -->
 	<div class="pagination">
 		<!-- IF .pagination -->
@@ -30,18 +29,18 @@
 <thead>
 	<tr>
 		<th>{L_SUBJECT}</th>
-		<th>{L_FROM} <a href="{U_ACTION}&amp;sk=f&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'f' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=f&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'f' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_FROM} <a href="{U_ACTION}&amp;sk=f&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'f' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=f&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'f' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
-		<th>{L_TO} <a href="{U_ACTION}&amp;sk=t&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 't' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=t&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 't' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_TO} <a href="{U_ACTION}&amp;sk=t&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 't' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=t&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 't' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
-		<th>{L_BCC} <a href="{U_ACTION}&amp;sk=b&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'b' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=b&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'b' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_BCC} <a href="{U_ACTION}&amp;sk=b&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'b' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=b&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'b' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
 		<th>{L_GROUP}</th>
-		<th>{L_PM_BOX} <a href="{U_ACTION}&amp;sk=p&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'p' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=p&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'p' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_PM_BOX} <a href="{U_ACTION}&amp;sk=p&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'p' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=p&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'p' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
-		<th>{L_AUTHOR_IP} <a href="{U_ACTION}&amp;sk=i&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'i' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=i&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'i' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_AUTHOR_IP} <a href="{U_ACTION}&amp;sk=i&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'i' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=i&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'i' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
-		<th>{L_DATE} <a href="{U_ACTION}&amp;sk=d&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'd' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=d&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'd' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+		<th>{L_DATE} <a href="{U_ACTION}&amp;sk=d&amp;sd=d<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'd' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=d&amp;sd=a<!-- IF UID -->&userid={UID}<!-- ENDIF -->" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'd' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </th>
 		<th>{L_MARK}</th>
 	</tr>
@@ -58,29 +57,22 @@
 		<td>{pm_row.FOLDER}</td>
 		<td>{pm_row.AUTHOR_IP}</td>
 		<td>{pm_row.DATE}</td>
-		<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{pm_row.PM_ID}" /></td>
+		<td><input type="checkbox" class="radio" name="mark[]" value="{pm_row.PM_ID}" /></td>
 	</tr>
-    <tr class="<!-- IF pm_row.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->" style="display:none" id="pm{pm_row.PM_KEY}">
+    <tr class="<!-- IF pm_row.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->"<!-- IF not UID --> style="display:none;"<!-- ENDIF --> id="pm{pm_row.PM_KEY}">
 		<td>&nbsp;</td>
 		<td colspan="8" class="content">{pm_row.PM_TEXT}</td>
 	</tr>
 	<!-- END pm_row -->
 </tbody>
 </table>
-<p class="small" style="float:right;margin-top:5px;"><input class="button2" type="submit" value="{L_DELETE_PMS}" name="delete" /> 
+<p class="small"><input class="button2" type="submit" value="{L_DELETE_PMS}" name="delete" /> 
 <a href="#" onclick="marklist('pm_moderation', 'mark', true); return false;">{L_MARK_ALL}</a> &bull; <a href="#" onclick="marklist('pm_moderation', 'mark', false); return false;">{L_UNMARK_ALL}</a></p>
-<!-- IF .pagination or TOTAL_POSTS -->
-	<div class="pagination">
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
-	</div>
-<!-- ENDIF -->
-
+<p class="small left">{L_PM_COUNT}: {MESSAGE_COUNT}</p>
 </form>
 <!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
 <!-- INCLUDEJS js/pmmoderation.js -->
+<!-- INCLUDEJS js/jquery-ui.min.js -->
+<!-- INCLUDEJS js/autocomplete.js -->
 
 <!-- INCLUDE overall_footer.html -->
