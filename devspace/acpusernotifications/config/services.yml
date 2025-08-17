@@ -1,0 +1,23 @@
+imports:
+    - { resource: alias.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $root_path: '%core.root_path%'
+            $php_ext: '%core.php_ext%'
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/david63/acpusernotifications/adm/style/images'
+        public: true
+
+    david63.acpusernotifications.listener:
+        class: david63\acpusernotifications\event\listener
+        tags:
+            - { name: event.listener }
+
+    david63.acpusernotifications.acp.user.notify.controller:
+        class: david63\acpusernotifications\controller\acp_user_notify_controller
+
+    david63.acpusernotifications.core.functions:
+        class: david63\acpusernotifications\core\functions
