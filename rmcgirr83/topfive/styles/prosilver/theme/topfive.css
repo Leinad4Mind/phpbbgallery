@@ -69,3 +69,7 @@ dd.tf-active-header {
 	padding-left: 0;
 	padding-right: 8px;
 }
+
+#top_five ul.topiclist li.row a.subforum {
+	white-space: normal;
+}

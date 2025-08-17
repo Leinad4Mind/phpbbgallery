@@ -11,7 +11,7 @@
 
 namespace rmcgirr83\topfive\core;
 
-class functions_topfive
+class topfive
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
