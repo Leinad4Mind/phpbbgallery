@@ -2,8 +2,8 @@
     "name": "vse/similartopics",
     "type": "phpbb-extension",
     "description": "A phpBB extension that displays a list of similar (related) topics at the bottom of the current topic's page.",
-    "homepage": "https://github.com/VSEphpbb/similartopics",
-    "version": "1.5.3",
+    "homepage": "https://github.com/iMattPro/similartopics",
+    "version": "1.5.4",
     "keywords": [
         "phpbb",
         "extension",
@@ -14,7 +14,7 @@
     "authors": [
         {
             "name": "Matt Friedman",
-            "homepage": "http://vsephpbb.github.io",
+            "homepage": "https://imattpro.github.io",
             "role": "Developer"
         }
     ],
@@ -31,7 +31,8 @@
         "version-check": {
             "host": "www.phpbb.com",
             "directory": "/customise/db/extension/precise_similar_topics",
-            "filename": "version_check"
+            "filename": "version_check",
+            "ssl": true
         }
     }
 }
