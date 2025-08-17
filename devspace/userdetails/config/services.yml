@@ -1,4 +1,5 @@
 imports:
+    - { resource: imports.yml }
     - { resource: arraydata.yml }
 
 services:
@@ -15,16 +16,14 @@ services:
             - '@group_helper'
             - '@language'
             - '@profilefields.type_collection'
+            - '@david63.userdetails.core.functions'
             - '%select_ary%'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables%'
+            - '%constants%'
 
-    david63.userdetails.config.controller:
-        class: david63\userdetails\controller\config_controller
+    david63.userdetails.core.functions:
+        class: david63\userdetails\core\functions
         arguments:
-            - '@config'
-            - '@request'
-            - '@template'
-            - '@user'
-            - '@log'
-            - '@language'
+            - '@ext.manager'

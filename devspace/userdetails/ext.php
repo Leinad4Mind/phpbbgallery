@@ -9,12 +9,10 @@
 
 namespace david63\userdetails;
 
-use \phpbb\extension\base;
+use phpbb\extension\base;
 
 class ext extends base
 {
-	const USER_DETAILS_VERSION = '2.1.1 RC1';
-
 	/**
 	* Enable extension if phpBB version requirement is met
 	*
@@ -23,8 +21,8 @@ class ext extends base
 	* @return bool
 	* @access public
 	*/
-public function is_enableable()
- 	{
+	public function is_enableable()
+	{
 		// Requires phpBB 3.2.0 or newer.
 		$is_enableable = phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=');
 
@@ -43,5 +41,5 @@ public function is_enableable()
 		}
 
 		return $is_enableable;
- 	}
+	}
 }

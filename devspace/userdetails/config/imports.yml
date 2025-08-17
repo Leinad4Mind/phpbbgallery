@@ -1,0 +1,3 @@
+imports:
+    - { resource: phpbb_tables.yml }
+    - { resource: userdetails_constants.yml }

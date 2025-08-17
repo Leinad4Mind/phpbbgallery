@@ -9,17 +9,17 @@
 
 namespace david63\userdetails\controller;
 
-use \phpbb\config\config;
-use \phpbb\config\db_text;
-use \phpbb\db\driver\driver_interface;
-use \phpbb\request\request;
-use \phpbb\template\template;
-use \phpbb\pagination;
-use \phpbb\user;
-use \phpbb\group\helper;
-use \phpbb\language\language;
-use \phpbb\di\service_collection;
-use \david63\userdetails\ext;
+use phpbb\config\config;
+use phpbb\config\db_text;
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\pagination;
+use phpbb\user;
+use phpbb\group\helper;
+use phpbb\language\language;
+use phpbb\di\service_collection;
+use david63\userdetails\core\functions;
 
 /**
 * Data controller
@@ -56,6 +56,9 @@ class data_controller implements data_interface
 	/** @var \phpbb\di\service_collection */
 	protected $type_collection;
 
+	/** @var \david63\userdetails\core\functions */
+	protected $functions;
+
 	/** @var string custom select_ary */
 	protected $select_ary;
 
@@ -68,31 +71,36 @@ class data_controller implements data_interface
 	/** @var string Custom form action */
 	protected $u_action;
 
-	const FORM_KEY	= 'userdetails';
-	const MAX_AGE	= 120;
-	const MIN_AGE	= 0;
+	/** @var string custom tables */
+	protected $tables;
+
+	/** @var string custom constants */
+	protected $constants;
 
 	/**
 	 * Constructor for data controller
 	 *
-	 * @param \phpbb\config\config              $config             	Config object
-	 * @param \phpbb\config\db_text             $config_text        	Config text object
-	 * @param \phpbb\db\driver\driver_interface $db                 	Db object
-	 * @param \phpbb\request\request            $request            	Request object
-	 * @param \phpbb\template\template          $template           	Template object
-	 * @param \phpbb\pagination                 $pagination         	Pagination object
-	 * @param \phpbb\user                       $user               	User object
-	 * @param \phpbb\group\helper               $group_helper       	Group helper object
-	 * @param \phpbb\language\language          $language           	Language object
-	 * @param \phpbb\di\service_collection 		$type_collection		CPF data
-	 * @param string                            $select_ary             Custom select data
-	 * @param string							$phpbb_root_path    	phpBB root path
-	 * @param string							$php_ext            	phpBB extension
+	 * @param \phpbb\config\config              	$config             Config object
+	 * @param \phpbb\config\db_text             	$config_text        Config text object
+	 * @param \phpbb\db\driver\driver_interface 	$db                 Db object
+	 * @param \phpbb\request\request            	$request            Request object
+	 * @param \phpbb\template\template          	$template           Template object
+	 * @param \phpbb\pagination                 	$pagination         Pagination object
+	 * @param \phpbb\user                       	$user               User object
+	 * @param \phpbb\group\helper               	$group_helper       Group helper object
+	 * @param \phpbb\language\language          	$language           Language object
+	 * @param \phpbb\di\service_collection 			$type_collection	CPF data
+	 * @param \david63\userdetails\core\functions	functions			Functions for the extension
+	 * @param array	                            	$select_ary			Custom select data
+	 * @param string								$phpbb_root_path    phpBB root path
+	 * @param string								$php_ext            phpBB extension
+	 * @param array	                            	$tables				phpBB db tables
+	 * @param array	                            	$constants			phpBB constants
 	 *
 	 * @return \david63\userdetails\controller\data_controller
 	 * @access public
 	 */
-	public function __construct(config $config, db_text $config_text, driver_interface $db, request $request, template $template, pagination $pagination, user $user, helper $group_helper, language $language, service_collection $type_collection, $select_ary, $phpbb_root_path, $php_ext)
+	public function __construct(config $config, db_text $config_text, driver_interface $db, request $request, template $template, pagination $pagination, user $user, helper $group_helper, language $language, service_collection $type_collection, functions $functions, $select_ary, $phpbb_root_path, $php_ext, $tables, $constants)
 	{
 		$this->config			= $config;
 		$this->config_text 		= $config_text;
@@ -104,9 +112,12 @@ class data_controller implements data_interface
 		$this->group_helper		= $group_helper;
 		$this->language			= $language;
 		$this->type_collection 	= $type_collection;
+		$this->functions		= $functions;
 		$this->select_ary		= $select_ary;
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $php_ext;
+		$this->tables			= $tables;
+		$this->constants		= $constants;
 	}
 
 	/**
@@ -121,7 +132,9 @@ class data_controller implements data_interface
 		$this->language->add_lang('userdetails_explain', 'david63/userdetails');
 
 		// Create a form key for preventing CSRF attacks
-		add_form_key(self::FORM_KEY);
+		add_form_key($this->constants['form_key']);
+
+		$back = false;
 
 		// Unset the save flag
 		$this->config->set('user_details_save_flag', false, false);
@@ -149,7 +162,18 @@ class data_controller implements data_interface
 			));
 		}
 
-		$this->template->assign_var('USER_DETAILS_VERSION',	ext::USER_DETAILS_VERSION);
+		// Template vars for header panel
+		$this->template->assign_vars(array(
+			'HEAD_TITLE'		=> $this->language->lang('ACP_USER_DETAILS'),
+			'HEAD_DESCRIPTION'	=> $this->language->lang('ACP_USER_DETAILS_CONFIG'),
+
+			'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
+
+			'S_BACK'			=> $back,
+			'S_VERSION_CHECK'	=> $this->functions->version_check(),
+
+			'VERSION_NUMBER'	=> $this->functions->get_this_version(),
+		));
 	}
 
 	/**
@@ -173,10 +197,10 @@ class data_controller implements data_interface
 		$display_ary	= $this->request->variable('mark', array(''));
 
 		$display_ary	= ($display_ary) ? $display_ary : json_decode(str_replace("'", '"', $disp_ary));
-		$error_explain 	= false;
+		$error = $back 	= false;
 
 		// Is the submitted form is valid - we do not want to check after the first time it is displayed
-		if ($mode == 'display' && !check_form_key(self::FORM_KEY) && $start === 0)
+		if ($mode == 'display' && !check_form_key($this->constants['form_key']) && $start === 0)
 		{
 			trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
@@ -224,7 +248,15 @@ class data_controller implements data_interface
 			{
 				if ($data['id'] == $rows)
 				{
-					$headings	.= '<th>' . $this->language->lang($data['attribute']) . '</th>';
+					if ($this->select_ary[$key]['id'] !== end($display_ary))
+					{
+						$headings .= '<div class="table-header-cell">' . $this->language->lang($data['attribute']) . '</div>';
+					}
+					else
+					{
+						$headings .= '<div class="table-header-cell-right">' . $this->language->lang($data['attribute']) . '</div>';
+					}
+
 					if ($mode == 'csv')
 					{
 						$csv_data	.= '"' . $this->language->lang($data['attribute']) . '",';
@@ -281,8 +313,8 @@ class data_controller implements data_interface
 
 		// Get default style name (we may need this later)
 		$sql = 'SELECT style_name
-			FROM ' . STYLES_TABLE . '
-			WHERE style_id = ' . $this->config['default_style'];
+			FROM ' . $this->tables['styles'] . '
+			WHERE style_id = ' . (int) $this->config['default_style'];
 
 		$result 		= $this->db->sql_query($sql);
 		$default_style	= $this->db->sql_fetchfield('style_name');
@@ -293,23 +325,23 @@ class data_controller implements data_interface
 		$sql = $this->db->sql_build_query('SELECT', array(
 			'SELECT'	=> 'g.group_name, g.group_type, s.style_name, u.*',
 			'FROM'		=> array(
-				USERS_TABLE => 'u',
+				$this->tables['users'] => 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GROUPS_TABLE	=> ' g',),
+					'FROM'	=> array($this->tables['groups']	=> ' g',),
 					'ON'	=> 'u.group_id = g.group_id',
 				),
 				array(
-					'FROM'	=> array(STYLES_TABLE => ' s',),
+					'FROM'	=> array($this->tables['styles'] => ' s',),
 					'ON'	=> 'u.user_style = s.style_id',
 				),
 				array(
-					'FROM'	=> array(PROFILE_FIELDS_DATA_TABLE => ' pf'),
+					'FROM'	=> array($this->tables['profile_fields_data'] => ' pf'),
 					'ON'	=> 'u.user_id = pf.user_id',
 				),
 			),
-			'WHERE' => 'u.user_type <> ' . USER_IGNORE .
+			'WHERE' => 'u.user_type <> ' . (int) $this->constants['user_ignore'] .
 				$filter_by,
 			'ORDER_BY' => $order_by,
 		));
@@ -331,7 +363,7 @@ class data_controller implements data_interface
 		$this->db->sql_freeresult($result);
 
 		// Check that we have some data to output
-		if(empty($user_data))
+		if (empty($user_data))
 		{
 			trigger_error($this->language->lang('NO_DATA') . adm_back_link($this->u_action));
 		}
@@ -352,8 +384,8 @@ class data_controller implements data_interface
 				}
 				else
 				{
-					$group_id 		= $this->language->lang('NO_GROUP');
-					$error_explain	= true;
+					$group_id 	= $this->language->lang('NO_GROUP');
+					$error		= true;
 				}
 
 				if ($row['style_name'] != '')
@@ -362,8 +394,8 @@ class data_controller implements data_interface
 				}
 				else
 				{
-					$style_name		= $this->language->lang('DEFAULT_STYLE', $default_style);
-					$error_explain	= true;
+					$style_name	= $this->language->lang('DEFAULT_STYLE', $default_style);
+					$error		= true;
 				}
 
 				// Create an array of all the data so that we can format the items for output
@@ -376,7 +408,7 @@ class data_controller implements data_interface
 					'user_avatar'			=> phpbb_get_user_avatar($row),
 					'user_avatar_type'		=> ($row['user_avatar_type'] != '') ? $this->language->lang(['avatar_type', $row['user_avatar_type']]) : '',
 					'user_birthday'			=> $this->get_birthday($row['user_birthday']),
-					'user_dateformat'		=> date($row['user_dateformat'], time()),
+					'user_dateformat'		=> $this->user->format_date(time(), $row['user_dateformat']),
 					'user_email'			=> $row['user_email'],
 					'user_emailtime'		=> ($row['user_emailtime'] != 0) ? $this->user->format_date($row['user_emailtime']) : '',
 					'user_id'				=> $this->language->lang('HASH') . $row['user_id'],
@@ -413,15 +445,15 @@ class data_controller implements data_interface
 				$sql = $this->db->sql_build_query('SELECT', array(
 					'SELECT'	=> 'pfd.*',
 					'FROM'		=> array(
-						USERS_TABLE => 'u',
+						$this->tables['users'] => 'u',
 					),
 					'LEFT_JOIN'	=> array(
 						array(
-							'FROM'	=> array(PROFILE_FIELDS_DATA_TABLE	=> ' pfd',),
+							'FROM'	=> array($this->tables['profile_fields_data']	=> ' pfd',),
 							'ON'	=> 'u.user_id = pfd.user_id',
 						),
 					),
-					'WHERE' => "u.user_id = '" . $row['user_id'] . "'",
+					'WHERE' => "u.user_id = '" . (int) $row['user_id'] . "'",
 				));
 
 				$result 	= $this->db->sql_query($sql);
@@ -429,7 +461,7 @@ class data_controller implements data_interface
 
 				$this->db->sql_freeresult($result);
 
-				foreach($pf_data as $key => $data)
+				foreach ($pf_data as $key => $data)
 				{
 					// Only process the items that we need
 					if ($data && $key != 'user_id')
@@ -455,8 +487,8 @@ class data_controller implements data_interface
 					{
 						if ($data['id'] == $rows)
 						{
-							$output_data .= '<td>' . $user_vars[$data['id']] . '</td>';
-						
+							$output_data .= '<div class="table-body-cell">' . $user_vars[$data['id']] . '</div>';
+
 							if ($mode == 'csv')
 							{
 								$csv_data .= '"' . $user_vars[$data['id']] . '",';
@@ -480,7 +512,7 @@ class data_controller implements data_interface
 			{
 				// Count total users for pagination
 				$sql = 'SELECT COUNT(u.user_id) AS total_users
-					FROM ' . USERS_TABLE . ' u
+					FROM ' . $this->tables['users'] . ' u
 					WHERE u.user_type <> ' . USER_IGNORE .
 						$filter_by;
 
@@ -490,26 +522,41 @@ class data_controller implements data_interface
 				$this->db->sql_freeresult($result);
 
 				// Swapping ' for " is needed as request will not handle double quotes
-				$display_ary = str_replace('"', "'", json_encode($display_ary, JSON_UNESCAPED_UNICODE));
+				$display_ary = str_replace('"', "'", json_encode($display_ary));
 
 				$action = "{$this->u_action}&amp;sk=$sort_key&amp;sd=$sd&amp;fc=$fc&amp;fb=$fb&amp;disp_ary=$display_ary";
 
 				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $user_count);
 				$this->pagination->generate_template_pagination($action . '&amp;page=page', 'pagination', 'start', $user_count, $this->config['topics_per_page'], $start);
 
+				// Template vars for header panel
 				$this->template->assign_vars(array(
-					'HEADINGS'				=> $headings,
+					'ERROR_TITLE'		=> $this->language->lang('WARNING'),
+					'ERROR_DESCRIPTION'	=> $this->language->lang('ERROR_EXPLAIN'),
 
-					'S_ERROR_EXPLAIN'		=> $error_explain,
-					'S_FILTER_BY'			=> $this->filter_select($fb, $filter_ary),
-					'S_FILTER_CHAR'			=> $this->character_select($fc),
-					'S_SORT_DIR'			=> $s_sort_dir,
-					'S_SORT_KEY'			=> $s_sort_key,
+					'HEAD_TITLE'		=> $this->language->lang('ACP_USER_DETAILS'),
+					'HEAD_DESCRIPTION'	=> $this->language->lang('USER_DETAILS_DISPLAY'),
 
-					'TOTAL_USERS'			=> $user_count,
+					'NAMESPACE'			=> $this->functions->get_ext_namespace('twig'),
 
-					'USER_DETAILS_VERSION'	=> ext::USER_DETAILS_VERSION,
-					'U_ACTION'				=> $action,
+					'S_BACK'			=> $back,
+					'S_ERROR'			=> $error,
+					'S_VERSION_CHECK'	=> $this->functions->version_check(),
+
+					'VERSION_NUMBER'	=> $this->functions->get_this_version(),
+				));
+
+				$this->template->assign_vars(array(
+					'HEADINGS'		=> $headings,
+
+					'S_FILTER_BY'	=> $this->filter_select($fb, $filter_ary),
+					'S_FILTER_CHAR'	=> $this->character_select($fc),
+					'S_SORT_DIR'	=> $s_sort_dir,
+					'S_SORT_KEY'	=> $s_sort_key,
+
+					'TOTAL_USERS'	=> $user_count,
+
+					'U_ACTION'		=> $action,
 				));
 			}
 			else // Output the csv file
@@ -545,11 +592,11 @@ class data_controller implements data_interface
 	public function get_cpf_data()
 	{
 		$sql = 'SELECT pf.field_name, pl.lang_name, pl.lang_explain
-			FROM ' . PROFILE_FIELDS_TABLE . ' pf, ' . PROFILE_LANG_TABLE . ' pl, ' . LANG_TABLE . " l
+			FROM ' . $this->tables['profile_fields'] . ' pf, ' . $this->tables['profile_lang'] . ' pl, ' . $this->tables['lang'] . " l
 			WHERE pf.field_id  = pl.field_id
 				AND pl.lang_id = l.lang_id
 				AND pf.field_active = 1
-				AND l.lang_iso = '" . $this->user->data['user_lang'] . "'";
+				AND l.lang_iso = '" . (int) $this->user->data['user_lang'] . "'";
 
 		$result	= $this->db->sql_query($sql);
 
@@ -589,11 +636,11 @@ class data_controller implements data_interface
 		$sql = $this->db->sql_build_query('SELECT', array(
 			'SELECT'	=> 'pf.*, pfl.lang_id, pfl.option_id, pfl.lang_value',
 			'FROM'		=> array(
-				PROFILE_FIELDS_TABLE => 'pf',
+				$this->tables['profile_fields'] => 'pf',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(PROFILE_FIELDS_LANG_TABLE	=> ' pfl',),
+					'FROM'	=> array($this->tables['profile_fields_lang']	=> ' pfl',),
 					'ON'	=> 'pf.field_id = pfl.field_id',
 				),
 			),
@@ -640,7 +687,7 @@ class data_controller implements data_interface
 			$age = (int) ($now['year'] - $bday_year - $diff);
 
 			// Add this check in case there are any strange results
-			if ($age < self::MIN_AGE || $age > self::MAX_AGE)
+			if ($age < $this->constants['min_age'] || $age > $this->constants['max_age'])
 			{
 				$birthday_date = '';
 			}
@@ -667,7 +714,7 @@ class data_controller implements data_interface
 		$session_times	= array();
 
 		$sql = 'SELECT session_user_id, MAX(session_time) AS session_time
-			FROM ' . SESSIONS_TABLE . '
+			FROM ' . $this->tables['sessions'] . '
 			WHERE session_time >= ' . (time() - $this->config['session_length']) . '
 				AND ' . $this->db->sql_in_set('session_user_id', $user_id) . '
 			GROUP BY session_user_id';
@@ -682,7 +729,7 @@ class data_controller implements data_interface
 		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT user_lastvisit
-			FROM ' . USERS_TABLE . '
+			FROM ' . $this->tables['users'] . '
 			WHERE ' . $this->db->sql_in_set('user_id', $user_id);
 
 		$result = $this->db->sql_query($sql);

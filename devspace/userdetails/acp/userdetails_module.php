@@ -28,10 +28,10 @@ class userdetails_module
 
 		$mode = ($page == 'page') ? 'display' : $mode;
 
-		// Get an instance of the admin controller
+		// Get an instance of the data controller
 		$data_controller = $phpbb_container->get('david63.userdetails.data.controller');
 
-		// Make the $u_action url available in the admin controller
+		// Make the $u_action url available in the data controller
 		$data_controller->set_page_url($this->u_action);
 
 		// Start the processing

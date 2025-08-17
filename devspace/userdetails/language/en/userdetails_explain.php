@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'USER_DETAILS_SELECT'			=> '&bull;&nbsp;From here you can select the User attributes that you want to display.<br />&bull;&nbsp;Be aware that the number of attributes selected may not fit on the page correctly (this will be dependant on the browser width).',
+	'USER_DETAILS_SELECT'			=> '&bull;&nbsp;From here you can select the User attributes that you want to display.<br>&bull;&nbsp;Be aware that the number of attributes selected may not fit on the page correctly (this will be dependant on the browser width).',
 
 	'ATTRIBUTE'						=> 'Attribute',
 	'ATTRIBUTE_EXPLAIN'				=> 'Attribute description',
@@ -81,7 +81,7 @@ $lang = array_merge($lang, array(
 	'USER_RANK_EXPLAIN'				=> 'The user’s rank.',
 	'USER_REGDATE_EXPLAIN'			=> 'The date that the user registered on this board.',
 	'USER_SIG_EXPLAIN'				=> 'Display the user’s signature.',
-	'USER_STYLE_EXPLAIN'			=> 'The user’s style.<br />NOTE: This may not be the style that the user sees - it depends on whether override user style has been set at board level.',
+	'USER_STYLE_EXPLAIN'			=> 'The user’s style.<br>NOTE: This may not be the style that the user sees - it depends on whether override user style has been set at board level.',
 	'USER_TIMEZONE_EXPLAIN'			=> 'The user’s timezone.',
 	'USER_TYPE_EXPLAIN'				=> 'The user’s type.',
 	'USER_UNREAD_PRIVMSG_EXPLAIN'	=> 'The number of unread private messages that the user has.',
