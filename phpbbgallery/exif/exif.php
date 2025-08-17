@@ -7,19 +7,12 @@
 *
 */
 
-/**
-* @ignore
-*/
-
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\exif;
 
 /**
 * Base class for Exif handling
 */
-class phpbb_ext_gallery_exif
+class exif
 {
 	/**
 	* Default value for new users
@@ -113,7 +106,7 @@ class phpbb_ext_gallery_exif
 		{
 			$this->data = unserialize($data);
 		}
-		elseif (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
+		else if (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
 		{
 			$this->read();
 		}
@@ -173,7 +166,7 @@ class phpbb_ext_gallery_exif
 	{
 		global $user;
 
-		$user->add_lang_ext('gallery/exif', 'exif');
+		$user->add_lang_ext('phpbbgallery/exif', 'exif');
 
 		$this->prepared_data = array();
 		if (isset($this->data["EXIF"]["DateTimeOriginal"]))
@@ -312,10 +305,10 @@ class phpbb_ext_gallery_exif
 			return false;
 		}
 
-		global $db;
+		global $db, $table_prefix;
 
 		$update_data = ($this->status == self::DBSAVED) ? ", image_exif_data = '" . $db->sql_escape($this->serialized) . "'" : '';
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		$sql = 'UPDATE ' . $table_prefix . 'gallery_images 
 			SET image_has_exif = ' . $this->status . $update_data . '
 			WHERE image_id = ' . $this->image_id;
 		$db->sql_query($sql);
