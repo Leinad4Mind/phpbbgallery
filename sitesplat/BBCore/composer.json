@@ -2,31 +2,32 @@
 	"name": "sitesplat/BBCore",
 	"type": "phpbb-extension",
 	"description": "The BBcore™© Adds Needed and Essential Functions into your phpBB® Installation in order to run SiteSplat Themes and also enhance the general forum experience",
-	"homepage": "http://sitesplat.com",
-	"version": "3.2.7",
+	"homepage": "https://sitesplat.com",
+	"version": "3.2.8",
 	"keywords": ["phpbb", "extension", "bbcore", "bboots", "flatboots", "sitesplat", "envato", "themeforest", "cosmetic", "core"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.6",
 		"composer/installers": "~1.0",
 		"wyrihaximus/html-compress": "^1.4"
 	},
 	"extra": {
 		"display-name": "SiteSplat BBCore",
 		"soft-require": {
-			"phpbb/phpbb": ">3.1.11"
+			"phpbb/phpbb": ">3.2.0"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "bbcore.json"
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbcore.json",
+			"ssl": true
 		}
 
 	}

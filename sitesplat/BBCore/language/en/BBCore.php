@@ -297,7 +297,7 @@ $lang = array_merge($lang, array(
   'BOOTS'                		 => 'BOOTS',
   'BBOOTS'       		         => 'BBOOTS',
   
-  'BBOOTS_VERSION'    			 => '<a href="http://www.sitesplat.com/phpBB3/">BBOOTS</a>',
+  'BBOOTS_VERSION'    			 => '<a href="https://sitesplat.com/phpBB3/">BBOOTS</a>',
   'U_LOGOUT'          			 => 'Logout',
 
   'SITESPLAT_STATISTICS'		 => 'Statistics',
@@ -368,8 +368,8 @@ $lang = array_merge($lang, array(
   'TERMS'	                     => 'Terms',
   'ADVERTISE'	                 => 'Advertise',
   'SITESPLAT'	                 => 'SiteSplat',
-  'SITESPLAT_URL'	             => '<a href="http://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
+  'SITESPLAT_URL'	             => '<a href="https://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
   'JOIN_US_TWITTER'	             => 'Join us on Twitter',
-  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amazing project and contributing to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
+  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amazing project and contributing to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">https://bit.ly/000fefs</a>',
   
 ));

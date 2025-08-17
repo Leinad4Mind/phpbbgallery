@@ -48,11 +48,12 @@ $lang = array_merge($lang, array(
 	'VERSIONNUMBERS'				=> 'Installed Version: %s, download the new version from the server: <a style="color:#fff;" href="%s" title="Download" target="_blank">%s</a>',
 	'SS_RAPID_DISABLE'				=> 'SS Rapid Disable',
 	'SS_RAPID_DISABLE_TLT'		    => 'Disables (all) extensions at once. Make a backup first!!!',
+	'UPD_MANAGER_MSG'		        => 'Save yourself ton of time and Download the new BBCore Auto-Update to get your themes updated in one-click!<br /><a href="https://sitesplat.com" target="_blank">BBCore Auto-Update</a> (Make sure you are logged in)',
 	
 	'DOWNLOAD_MSG'					=> 'The current version <span class="label label-success">%s</span> can be downloaded from Themeforest: <a href="%s" title="Download" target="_blank">%s - phpBB3</a>',
 	'CHANGE_LOG_MSG'				=> 'The Changelog is located here: <a href="%s" target="_blank">%s (phpBB3.1) Changelog</a>',
-	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">http://www.sitesplat.com</a>',
-	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="http://www.sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
+	'SUPPORT_FORUM_MSG'				=> 'The support forum is on the official Community Page: <a href="%s" title="Download" target="_blank">https://sitesplat.com</a>',
+	'COLORIZE_MSG'					=> 'The Colorize service is located here: <a href="https://sitesplat.com/phpBB3/themer.php" target="_blank">Colorize</a> (Make sure you are logged in)',
 	'NO_VERSIONINFO'				=> 'No version info available at the moment, try again in a few minutes!',
 
     'LOG_FILES_CHANGED'			    => '<strong>BBcore changed the following %s files for you:</strong><br />» %s',
@@ -76,4 +77,9 @@ $lang = array_merge($lang, array(
 	// minification
 	'SITESPLAT_BBCORE_MINIFY_HTML'			=> 'Minify HTML',
 	'SITESPLAT_BBCORE_MINIFY_HTML_EXPLAIN'	=> 'This is a BBCore option. Generated content will be minified prior to sending it to the user. This will reduce network traffic but will also increase CPU and memory usage on server side.',
+	
+	// Emoji stuff
+	'SS_DEFAULT_EMOJI'				=> 'Default topic titles emoji behavior',
+	'SS_DEFAULT_EMOJI_EXPLAIN'		=> 'Enable or disable the default phpBB topic title emoji behavior. Sadly starting with phpBB 3.2.9 users can freely "spam" emojis in topic titles. The phpBB team decided to blindly allow this and offer no way for admins to control it (not cool!). Luckily, you are using the SiteSplat\'s BBCore for added functionality to phpBB :-). It is strongly recommended to leave this option enabled to avoid users spamming titles.<br>Use then: <strong><a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=29" target="_blank">BBemoji</a></strong> (a premium extension) instead if you wish to take this a step further and have total control via proper forum permission basis for this behavior. This way you can designate a specific forum to allow emojis being posted in topic titles.',
+
 ));

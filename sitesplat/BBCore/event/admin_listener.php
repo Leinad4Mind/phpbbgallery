@@ -20,12 +20,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class admin_listener implements EventSubscriberInterface
 {
 /**
-* Path to the helper versioncheck
+* Path to the helperversioncheck
 */
 	protected $host = 'sitesplat.com';
-	protected $path = 'phpBB3/versioncheck';
-//  protected $host = 'sitesplat.xyz';
-//	protected $path = 'phpBB320/versioncheck';
+	protected $path = 'phpBB3/';
 	protected $config;
 	protected $db;
 	protected $user;
@@ -57,11 +55,15 @@ class admin_listener implements EventSubscriberInterface
 		);
 	}
 
-	public function version_check($event)
+	public function version_check($event, $eventName)
 	{
-		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+		// this is incompatible with phpBB 3.3!!!
+//		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
 
-		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE style_copyright LIKE '© SiteSplat.com%'";
+		// this is compatible...
+		$event_number = array_search($eventName, array_keys($this->getSubscribedEvents()));
+
+		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -102,7 +104,7 @@ class admin_listener implements EventSubscriberInterface
 		{
 			try
 			{
-				$info = $this->file_downloader->get($this->host, '/' . $this->path, $what);
+				$info = $this->file_downloader->get($this->host, $this->path, $what, 443);
 			}
 			catch (\phpbb\exception\runtime_exception $exception)
 			{
