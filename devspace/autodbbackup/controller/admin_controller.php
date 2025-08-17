@@ -2,12 +2,12 @@
 /**
  *
  * @package Auto db Backup
- * @copyright (c) 2015 david63
+ * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace david63\autodbbackup\controller;
+namespace devspace\autodbbackup\controller;
 
 use phpbb\config\config;
 use phpbb\request\request;
@@ -15,7 +15,7 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbb\log\log;
 use phpbb\language\language;
-use david63\autodbbackup\core\functions;
+use devspace\autodbbackup\core\functions;
 
 /**
  * Admin controller
@@ -64,7 +64,7 @@ class admin_controller
 	 * @param functions		$functions			Functions for the extension
 	 * @param string		$ext_images_path	Path to this extension's images
 	 *
-	 * @return \david63\autodbbackup\controller\admin_controller
+	 * @return \devspace\autodbbackup\controller\admin_controller
 	 * @access public
 	 */
 	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, functions $functions, string $ext_images_path)
@@ -105,7 +105,7 @@ class admin_controller
 		}
 
 		// Is there a valid timezone in php.ini?
-		if (!in_array(ini_get('date.timezone'), timezone_identifiers_list()))
+		if (!in_array(date_default_timezone_get(), timezone_identifiers_list()))
 		{
 			trigger_error($this->language->lang('INVALID_PHP_TIMEZONE'), E_USER_WARNING);
 		}
@@ -120,7 +120,6 @@ class admin_controller
 		$utc_offset  = $this->functions->get_utc_offset();
 		$user_dtz    = new \DateTimeZone($this->user->data['user_timezone']);
 		$user_offset = $user_dtz->getOffset(new \DateTime);
-		//$user_offset = ($user_offset > 0) ? $user_offset : 0;
 
 		// Submit
 		if ($this->request->is_set_post('submit'))
@@ -237,8 +236,8 @@ class admin_controller
 		foreach ($filetypes as $filetype => $value)
 		{
 			$this->template->assign_block_vars('filetypes', array(
-				'FILETYPE' => $filetype,
-				'VALUE' => $value,
+				'FILETYPE'	=> $filetype,
+				'VALUE' 	=> $value,
 				'S_CHECKED' => ($this->config['auto_db_backup_filetype'] == $filetype) ? true : false,
 			));
 		}

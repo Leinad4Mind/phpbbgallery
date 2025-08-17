@@ -1,24 +1,24 @@
 <?php
 /**
-*
-* @package Auto db Backup
-* @copyright (c) 2015 david63
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * @package Auto db Backup
+ * @copyright (c) 2022 devspace
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-namespace david63\autodbbackup\acp;
+namespace devspace\autodbbackup\acp;
 
 class auto_db_backup_info
 {
-	function module()
+	public function module()
 	{
-		return array(
-			'filename'	=> '\david63\autodbbackup\acp\auto_db_backup_module',
-			'title'		=> 'ACP_AUTO_DB_BACKUP',
-			'modes'		=> array(
-				'main'	=> array('title' => 'ACP_AUTO_DB_BACKUP_SETTINGS', 'auth' => 'ext_david63/autodbbackup && acl_a_backup', 'cat' => array('ACP_AUTO_DB_BACKUP')),
-			),
-		);
+		return [
+			'filename'	=> '\devspace\autodbbackup\acp\auto_db_backup_module',
+			'title' 	=> 'ACP_AUTO_DB_BACKUP',
+			'modes' 	=> [
+				'main' => ['title' => 'ACP_AUTO_DB_BACKUP_SETTINGS', 'auth' => 'ext_devspace/autodbbackup && acl_a_backup', 'cat' => ['ACP_AUTO_DB_BACKUP']],
+			],
+		];
 	}
 }
