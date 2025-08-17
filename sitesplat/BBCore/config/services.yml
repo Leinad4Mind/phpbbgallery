@@ -1,8 +1,17 @@
 services:
-    sitesplat.service:
-        class: sitesplat\service
+    sitesplat.BBCore.helper:
+        class: sitesplat\BBCore\helper
         arguments:
+            - @dbal.conn
+            - @config
+            - @ext.manager
+            - @template
             - @user
+            - @request
+            - @log
+            - @cache
+            - %core.root_path%
+
     sitesplat.BBCore.listener:
         class: sitesplat\BBCore\event\listener
         arguments:
@@ -15,8 +24,10 @@ services:
             - @service_container
             - %core.root_path%
             - %core.php_ext%
+            - @path_helper
         tags:
             - { name: event.listener }
+
     sitesplat.BBCore.admin_listener:
         class: sitesplat\BBCore\event\admin_listener
         arguments:
@@ -24,6 +35,9 @@ services:
             - @dbal.conn
             - @user
             - @template
+            - @ext.manager
+            - '@cache'
+            - '@file_downloader'
             - %core.root_path%
         tags:
             - { name: event.listener }

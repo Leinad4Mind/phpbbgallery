@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BBCore.
-*
+* @package sitesplat BBcore
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -20,14 +19,30 @@ namespace sitesplat\BBCore;
  */
 class ext extends \phpbb\extension\base
 {
-	public function enable_step($old_state)
+	/**
+	* Single disable step that does nothing
+	*
+	* @param mixed $old_state State returned by previous call of this method
+	* @return mixed Returns false after last step, otherwise temporary state
+	*/
+	public function disable_step($old_state)
 	{
-		if (empty($old_state))
+		$this->extensions = $this->container->get('ext.manager')->all_enabled();
+		foreach($this->extensions as $key => $value)
 		{
-		//	global $user;
-		//	$user->lang['EXTENSION_ENABLE_SUCCESS'] =  $user->lang['EXTENSION_ENABLE_SUCCESS'];
+			if (strpos($value, 'sitesplat') === false)
+			{
+				unset($this->extensions[$key]);	
+			}
 		}
-		// Run parent enable step method
-		return parent::enable_step($old_state);
+		
+		unset($this->extensions['sitesplat/BBCore']);	
+		if (sizeof($this->extensions))
+		{
+			$this->user = $this->container->get('user');
+			trigger_error(sprintf($this->user->lang['BBCORE_ERROR_DISABLE'], implode('<br />', array_keys($this->extensions))), E_USER_WARNING);
+		}
+		
+		return parent::disable_step($old_state);
 	}
 }

@@ -3,9 +3,9 @@
 *
 * BBCore [English]
 *
-* @package language
-* @version $Id$
-* @copyright (c) 2015 SiteSplat.com
+* @package sitesplat BBcore
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
 *
 */
 
@@ -89,6 +89,7 @@ $lang = array_merge($lang, array(
   'VISITED_BOARD'                => 'Last visited',
   'SEE_MORE'                     => 'More',
   'ATTACH_SIGNATURE'             => 'Attach signature',
+  'BBCODES'                      => 'BBcodes',
 
   'DELETE_POST_SOFT'             => 'Soft Delete post',
   'DELETE_POST_PERMANENT'        => 'Perma Delete post',

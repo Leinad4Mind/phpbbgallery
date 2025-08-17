@@ -1,9 +1,9 @@
 {
 	"name": "sitesplat/BBCore",
 	"type": "phpbb-extension",
-	"description": "Adds and Essential Functions set to phpBB in order to run SiteSplat Themes",
+	"description": "The BBcore™© Adds Needed and Essential Functions into your phpBB® Installation in order to run SiteSplat Themes and also Enhance the general Forum Experience",
 	"homepage": "http://sitesplat.com",
-	"version": "3.0.0",
+	"version": "3.2.0",
 	"keywords": ["phpbb", "extension", "BBcore", "BBOOTS", "FLATBOOTS", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -20,7 +20,7 @@
 	"extra": {
 		"display-name": "SiteSplat BBCore",
 		"soft-require": {
-			"phpbb/phpbb": ">3.1.6,<3.2.*@dev"
+			"phpbb/phpbb": ">3.1.9"
 		},
 		"version-check": {
             "host": "www.sitesplat.com",
