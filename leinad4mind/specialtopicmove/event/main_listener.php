@@ -17,6 +17,7 @@ use phpbb\config\config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\event\data;
 use phpbb\language\language;
+use phpbb\notification\manager;
 use phpbb\path_helper;
 use phpbb\request\request_interface;
 use phpbb\template\template;
@@ -37,7 +38,7 @@ class main_listener implements EventSubscriberInterface
 	/** @var auth */
 	protected $auth;
 
-	/* @var \phpbb\template\template */
+	/* @var template */
 	protected $template;
 
 	/** @var request_interface */
@@ -46,8 +47,11 @@ class main_listener implements EventSubscriberInterface
 	/** @var db_interface */
 	protected $db;
 
-	/* @var \phpbb\language\language */
+	/* @var language */
 	protected $language;
+
+	/** @var manager */
+	protected $notification_manager;
 
 	/** @var array */
 	protected $users = [];
@@ -70,6 +74,7 @@ class main_listener implements EventSubscriberInterface
 	 * @param request_interface	$request
 	 * @param db_interface		$db
 	 * @param language			$language
+	 * @param manager			$notification_manager
 	 */
 	public function __construct(
 		user $user,
@@ -79,17 +84,19 @@ class main_listener implements EventSubscriberInterface
 		template $template,
 		request_interface $request,
 		db_interface $db,
-		language $language
+		language $language,
+		manager $notification_manager
 	)
 	{
-		$this->user			= $user;
-		$this->path_helper	= $path_helper;
-		$this->config		= $config;
-		$this->auth			= $auth;
-		$this->template		= $template;
-		$this->request		= $request;
-		$this->db			= $db;
-		$this->language		= $language;
+		$this->user					= $user;
+		$this->path_helper			= $path_helper;
+		$this->config				= $config;
+		$this->auth					= $auth;
+		$this->template				= $template;
+		$this->request				= $request;
+		$this->db					= $db;
+		$this->language				= $language;
+		$this->notification_manager	= $notification_manager;
 	}
 
 	/**
@@ -153,8 +160,14 @@ class main_listener implements EventSubscriberInterface
 	public function move_topics_before_query(data $event)
 	{
 		$sql = $this->db->sql_build_query('SELECT', [
-			'SELECT'	=> 't.topic_id, t.topic_last_post_id, t.forum_id',
+			'SELECT'	=> 't.topic_id, t.topic_last_post_id, t.forum_id, t.topic_poster, u.*',
 			'FROM'		=> [TOPICS_TABLE => 't'],
+			'LEFT_JOIN'	=> [
+				[
+					'FROM'	=> [USERS_TABLE => 'u'],
+					'ON'	=> 'u.user_id = t.topic_poster',
+				],
+			],
 			'WHERE'		=> $this->db->sql_in_set('t.topic_id', $event['topic_ids']),
 		]);
 
@@ -162,16 +175,20 @@ class main_listener implements EventSubscriberInterface
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		$topic_last_post_ids = array_combine(array_column($rows, 'topic_id'), $rows);
+		$topic_data = array_combine(array_column($rows, 'topic_id'), $rows);
+
+		$acl = [];
 
 		foreach ($event['topic_ids'] as $topic_id)
 		{
+			$reason = $this->request->variable('moved_reason', '', true);
+
 			$sql_array = [
-				'topic_moved_from'			=> $topic_last_post_ids[$topic_id]['forum_id'],
+				'topic_moved_from'			=> $topic_data[$topic_id]['forum_id'],
 				'topic_moved_user'			=> $this->user->data['user_id'],
 				'topic_moved_time'			=> time(),
-				'topic_moved_last_post_id'	=> $topic_last_post_ids[$topic_id]['topic_last_post_id'],
-				'topic_moved_reason'		=> $this->request->variable('moved_reason', '', true),
+				'topic_moved_last_post_id'	=> $topic_data[$topic_id]['topic_last_post_id'],
+				'topic_moved_reason'		=> $reason,
 			];
 
 			$sql = 'UPDATE ' . TOPICS_TABLE . '
@@ -179,6 +196,27 @@ class main_listener implements EventSubscriberInterface
 				WHERE topic_id = ' . (int) $topic_id;
 
 			$this->db->sql_query($sql);
+			
+			if ($this->user->data['user_id'] != $topic_data[$topic_id]['topic_poster'])
+			{
+				if (!isset($acl[$topic_data[$topic_id]['topic_poster']]))
+				{
+					$auth = new auth();
+					$auth->acl($topic_data[$topic_id]);
+					$acl[$topic_data[$topic_id]['topic_poster']] = $auth;
+				}
+
+				if ($acl[$topic_data[$topic_id]['topic_poster']]->acl_get('f_list', $event['forum_id']))
+				{
+					$this->notification_manager->add_notifications('leinad4mind.specialtopicmove.notification.type.topic_moved', [
+						'topic_id'		=> $topic_id,
+						'forum_id'		=> $event['forum_id'],
+						'topic_poster'	=> $topic_data[$topic_id]['topic_poster'],
+						'topic_mover'	=> $this->user->data['user_id'],
+						'reason'		=> $reason,
+					]);
+				}
+			}
 		}
 	}
 

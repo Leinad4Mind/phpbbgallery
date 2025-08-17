@@ -10,6 +10,7 @@ services:
             - '@request'
             - '@dbal.conn'
             - '@language'
+            - '@notification_manager'
         tags:
             - { name: 'event.listener' }
 
@@ -22,3 +23,11 @@ services:
         tags:
             - { name: 'event.listener' }
 
+    leinad4mind.specialtopicmove.notification.type.topic_moved:
+        class: 'leinad4mind\specialtopicmove\notification\topic_moved'
+        parent: 'notification.type.base'
+        shared: false
+        calls:
+            - ['set_user_loader', ['@user_loader']]
+        tags:
+            - { name: 'notification.type' }

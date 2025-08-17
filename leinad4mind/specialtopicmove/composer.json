@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "This extension allows to specify a reason when moving a topic as well as moving the topic back to its original forum with a single click.",
     "homepage": "https://leinad4mind.top/forum",
-    "version": "2.0.0",
-    "time": "2019-07-21",
+    "version": "2.1.0",
+    "time": "2019-08-25",
     "license": "GPL-2.0-only",
     "authors": [
         {
@@ -18,7 +18,7 @@
         "composer/installers": "~1.0"
     },
     "extra": {
-        "display-name": "Prime Topic Move",
+        "display-name": "Special Topic Move",
         "soft-require": {
             "phpbb/phpbb": ">=3.2.2"
         },

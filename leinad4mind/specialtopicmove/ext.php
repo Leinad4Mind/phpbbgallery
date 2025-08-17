@@ -27,4 +27,53 @@ class ext extends base
 	{
 		return phpbb_version_compare(PHPBB_VERSION, '3.2.2', '>=') && phpbb_version_compare(PHP_VERSION, '5.4.7', '>=');
 	}
+
+	/**
+	 * @param mixed $old_state
+	 * @return false|string
+	 */
+	public function enable_step($old_state)
+	{
+		return $this->trigger_notifications('enable', $old_state);
+	}
+
+	/**
+	 * @param mixed $old_state
+	 * @return false|string
+	 */
+	public function disable_step($old_state)
+	{
+		return $this->trigger_notifications('disable', $old_state);
+	}
+
+	/**
+	 * @param mixed $old_state
+	 * @return false|string
+	 */
+	public function purge_step($old_state)
+	{
+		return $this->trigger_notifications('purge', $old_state);
+	}
+
+	/**
+	 * @param string $mode
+	 * @param mixed $old_state
+	 * @return false|string
+	 */
+	protected function trigger_notifications($mode, $old_state)
+	{
+		switch ($old_state)
+		{
+			case '':
+				$phpbb_notifications = $this->container->get('notification_manager');
+				$phpbb_notifications->{$mode . '_notifications'}('leinad4mind.specialtopicmove.notification.type.topic_moved');
+				return 'notifications';
+			break;
+
+			default:
+				$step = $mode . '_step';
+				return parent::$step($old_state);
+			break;
+		}
+	}
 }

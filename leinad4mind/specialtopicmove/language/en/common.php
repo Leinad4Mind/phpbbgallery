@@ -36,15 +36,18 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'SPECIAL_TOPIC_MOVE_ENTER_REASON'		=> [
+	'SPECIAL_TOPIC_MOVE_ENTER_REASON'			=> [
 		1 => 'Please enter a reason for moving this topic',
 		2 => 'Please enter a reason for moving these topics',
 	],
-	'SPECIAL_TOPIC_MOVED_MESSAGE'			=> 'This topic was moved',
-	'SPECIAL_TOPIC_MOVED_FROM'				=> 'from <strong>%s</strong>',
-	'SPECIAL_TOPIC_MOVED_TO'				=> 'to <strong>%s</strong>',
-	'SPECIAL_TOPIC_MOVED_BY'				=> 'by %s',
-	'SPECIAL_TOPIC_MOVED_ON'				=> 'on %s.',
-	'SPECIAL_TOPIC_MOVED_NO_USER'			=> 'a nonexistent user',
-	'SPECIAL_TOPIC_MOVED_UNDO'				=> 'Move this topic back.',
+	'SPECIAL_TOPIC_MOVED_MESSAGE'				=> 'This topic was moved',
+	'SPECIAL_TOPIC_MOVED_FROM'					=> 'from <strong>%s</strong>',
+	'SPECIAL_TOPIC_MOVED_TO'					=> 'to <strong>%s</strong>',
+	'SPECIAL_TOPIC_MOVED_BY'					=> 'by %s',
+	'SPECIAL_TOPIC_MOVED_ON'					=> 'on %s.',
+	'SPECIAL_TOPIC_MOVED_NO_USER'				=> 'a nonexistent user',
+	'SPECIAL_TOPIC_MOVED_UNDO'					=> 'Move this topic back.',
+
+	'SPECIAL_TOPIC_MOVED_NOTIFICATION'			=> 'Someone moves your topic.',
+	'SPECIAL_TOPIC_MOVED_NOTIFICATION_TITLE'	=> 'Your topic “%1$s” was <strong>moved</strong> by %2$s to “%3$s”.',
 ]);
