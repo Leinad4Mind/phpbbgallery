@@ -32,7 +32,7 @@ class main_listener implements EventSubscriberInterface
 	protected $user;
 
 	/* @var string */
-	protected $post_table;
+	protected $posts_table;
 
 	/**
 	 * Constructor
