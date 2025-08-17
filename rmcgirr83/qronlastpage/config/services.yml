@@ -1,0 +1,10 @@
+services:
+    rmcgirr83.qronlastpage.listener:
+        class: rmcgirr83\qronlastpage\event\listener
+        arguments:
+            - @auth
+            - @config
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }
