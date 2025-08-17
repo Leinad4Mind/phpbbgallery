@@ -47,8 +47,6 @@ class DropboxResponse
      * @param string|null $body
      * @param int|null    $httpStatusCode
      * @param array       $headers
-     *
-     * @throws DropboxClientException
      */
     public function __construct(DropboxRequest $request, $body = null, $httpStatusCode = null, array $headers = [])
     {
@@ -56,9 +54,30 @@ class DropboxResponse
         $this->body = $body;
         $this->httpStatusCode = $httpStatusCode;
         $this->headers = $headers;
+    }
 
-        //Decode the Response Body
-        $this->decodeBody();
+    /**
+     * @param string $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
+     * @param int $httpStatusCode
+     */
+    public function setHttpStatusCode($httpStatusCode)
+    {
+        $this->httpStatusCode = $httpStatusCode;
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
     }
 
     /**
@@ -84,10 +103,15 @@ class DropboxResponse
     /**
      * Get the Decoded Body
      *
-     * @return string
+     * @return array
      */
     public function getDecodedBody()
     {
+        if (empty($this->decodedBody) || $this->decodedBody === null) {
+            //Decode the Response Body
+            $this->decodeBody();
+        }
+
         return $this->decodedBody;
     }
 
@@ -133,9 +157,7 @@ class DropboxResponse
         $body = $this->getBody();
 
         if (isset($this->headers['Content-Type']) && in_array('application/json', $this->headers['Content-Type'])) {
-            $this->decodedBody = json_decode((string)$body, true);
-        } else {
-            $this->decodedBody = $this->body;
+            $this->decodedBody = (array) json_decode((string) $body, true);
         }
 
         // If the response needs to be validated
@@ -149,6 +171,8 @@ class DropboxResponse
      * Validate Response
      *
      * @return void
+     *
+     * @throws \Kunnu\Dropbox\Exceptions\DropboxClientException
      */
     protected function validateResponse()
     {

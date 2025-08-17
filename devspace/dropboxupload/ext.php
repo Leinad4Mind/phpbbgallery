@@ -3,22 +3,19 @@
 *
 * @package Dropbox Upload
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
 namespace david63\dropboxupload;
 
-use \phpbb\extension\base;
+use phpbb\extension\base;
 
 /**
-* Extension class for stop forum spam
+* Extension class for dropbox upload
 */
-
 class ext extends base
 {
-	const DROPBOX_UPLOAD_VERSION = '2.1.0-rc1';
-
 	/**
 	* Enable extension if phpBB version requirement is met
 	* and Auto Database Backup is installed
@@ -28,20 +25,30 @@ class ext extends base
 	*/
 	public function is_enableable()
 	{
-		$config = $this->container->get('config');
-		$this->container->get('language')->add_lang('ext_dropboxupload', 'david63/dropboxupload');
+		// Set globals for use in the language file
+		global $ver_error, $db_error;
 
-		if (!phpbb_version_compare($config['version'], '3.2.0', '>='))
+		// Requires phpBB 3.2.0 or newer.
+		$ver 		= phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=');
+		// Display a custom warning message if this requirement fails.
+		$ver_error 	= ($ver) ? false : true;
+
+		// Is auto db backup installed?
+		$config 	= $this->container->get('config');
+		$auto_db 	= isset($config['auto_db_backup_enable']);
+		// Display a custom warning message if this requirement fails.
+		$db_error 	= ($auto_db) ? false : true;
+
+		// Need to cater for 3.1 and 3.2
+		if (phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>='))
 		{
-			trigger_error($this->container->get('language')->lang('VERSION_32') . adm_back_link(append_sid('index.' . $this->container->getParameter('core.php_ext'), 'i=acp_extensions&amp;mode=main')), E_USER_WARNING);
-		}
-		else if (!isset($config['auto_db_backup_enable']))
-		{
-			trigger_error($this->container->get('language')->lang('NO_AUTO_DB_BACKUP') . adm_back_link(append_sid('index.' . $this->container->getParameter('core.php_ext'), 'i=acp_extensions&amp;mode=main')), E_USER_WARNING);
+			$this->container->get('language')->add_lang('ext_enable_error', 'david63/dropboxupload');
 		}
 		else
 		{
-			return true;
+			$this->container->get('user')->add_lang_ext('david63/dropboxupload', 'ext_enable_error');
 		}
+
+		return $ver && $auto_db;
 	}
 }

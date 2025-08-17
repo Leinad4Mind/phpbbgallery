@@ -3,7 +3,7 @@
 *
 * @package Dropbox Upload
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -41,8 +41,8 @@ $lang = array_merge($lang, array(
 	'DROPBOX_UPLOAD_LOG'		=> '<strong>Dropbox upload settings updated</strong>',
 	'DROPBOX_UPLOAD_MANAGE'		=> 'Dropbox settings',
 
-	'LOG_DROPBOX_ERROR'			=> '<strong>Dropbox returned the error »»</strong><br />%s',
+	'LOG_DROPBOX_ERROR'			=> '<strong>Dropbox returned the error</strong><br>»» %s',
 	'LOG_DROPBOX_NO_FILE'		=> '<strong>The backup file for Dropbox could not be found</strong>',
-	'LOG_DROPBOX_UPLOAD'		=> '<strong>Backup file uploaded to Dropbox »»</strong><br />%s',
+	'LOG_DROPBOX_UPLOAD'		=> '<strong>Backup file uploaded to Dropbox »»</strong><br>%s',
 	'LOG_DROPBOX_UPLOAD_FAILED'	=> '<strong>The Dropbox upload failed</strong>',
 ));

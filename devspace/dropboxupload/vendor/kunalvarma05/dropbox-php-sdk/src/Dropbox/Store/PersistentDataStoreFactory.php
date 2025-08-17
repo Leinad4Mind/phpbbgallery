@@ -2,8 +2,6 @@
 namespace Kunnu\Dropbox\Store;
 
 use InvalidArgumentException;
-use Kunnu\Dropbox\Exceptions\DropboxClientException;
-use Kunnu\Dropbox\Store\PersistentDataStoreInterface;
 
 /**
  * Thanks to Facebook
@@ -31,6 +29,6 @@ class PersistentDataStoreFactory
             return $store;
         }
 
-        throw new InvalidArgumentException('The persistent data store must be set to null, "session" or be an instance of use \Kunnu\Dropbox\Store\PersistentDataStoreInterface');
+        throw new InvalidArgumentException('The persistent data store must be set to null, "session" or be an instance of use Kunnu\Dropbox\Store\PersistentDataStoreInterface');
     }
 }

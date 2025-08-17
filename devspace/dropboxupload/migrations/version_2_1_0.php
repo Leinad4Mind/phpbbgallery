@@ -3,13 +3,13 @@
 *
 * @package Dropbox Upload
 * @copyright (c) 2016 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
 namespace david63\dropboxupload\migrations;
 
-use \phpbb\db\migration\migration;
+use phpbb\db\migration\migration;
 
 class version_2_1_0 extends migration
 {
@@ -18,7 +18,7 @@ class version_2_1_0 extends migration
 		return array(
 			array('config.add', array('dropbox_folder', '')),
 			array('config.add', array('dropbox_folder_opt', 'DEFAULT')),
-			array('config.add', array('dropbox_frequency_count', 0)),
+			array('config.add', array('dropbox_frequency_count', 0, 1)),
 			array('config.add', array('dropbox_frequency_interval', 1)),
 			array('config.add', array('dropbox_key', '')),
 			array('config.add', array('dropbox_secret', '')),
