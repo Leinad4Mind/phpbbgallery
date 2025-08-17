@@ -1,5 +1,5 @@
 <?php
-$dbms = 'phpbb\\db\\driver\\mysqli';
+$dbms = 'mysqli';
 $dbhost = 'localhost';
 $dbport = '';
 $dbname = 'phpbb_test';

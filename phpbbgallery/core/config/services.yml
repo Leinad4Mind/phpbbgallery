@@ -46,3 +46,10 @@ services:
 
     phpbbgallery.core.auth:
         class: phpbbgallery\core\mock\auth
+
+    phpbbgallery.core.config:
+            class: phpbbgallery\core\extconfig
+            arguments:
+                - @config
+                - @dbal.conn
+                - %tables.gallery.config%

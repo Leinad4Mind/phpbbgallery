@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Experimental version of phpBB Gallery for phpBB 3.1",
 	"homepage": "https://github.com/nickvergessen/phpbb-ext-gallery",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"time": "2013-03-27",
 	"licence": "GPL-2.0",
 	"authors": [{

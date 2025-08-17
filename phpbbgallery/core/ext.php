@@ -15,8 +15,6 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-namespace phpbbgallery\core;
-
-class ext extends \phpbb\extension\base
+class phpbb_ext_gallery_core_ext extends phpbb_extension_base
 {
 }
