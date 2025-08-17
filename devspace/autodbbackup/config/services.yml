@@ -8,9 +8,15 @@ services:
             - '@user'
             - '@log'
             - '@language'
+            - '@david63.autodbbackup.core.functions'
 
-    david63.autodbbackup.cron.task.core.auto_db_backup:
-        class: david63\autodbbackup\cron\task\core\auto_db_backup
+    david63.autodbbackup.core.functions:
+        class: david63\autodbbackup\core\functions
+        arguments:
+            - '@ext.manager'
+
+    david63.autodbbackup.cron.task.auto_db_backup:
+        class: david63\autodbbackup\cron\task\auto_db_backup
         arguments:
             - '%core.root_path%'
             - '%core.php_ext%'
@@ -20,8 +26,9 @@ services:
             - '@log'
             - '@user'
             - '@service_container'
-            - '@dispatcher'		
+            - '@dispatcher'
+            - '@dbal.tools'					
         calls:
-            - [set_name, [cron.task.core.auto_db_backup]]
+            - [set_name, [cron.task.auto_db_backup]]
         tags:
             - { name: cron.task }

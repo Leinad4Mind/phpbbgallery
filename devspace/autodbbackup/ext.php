@@ -9,13 +9,10 @@
 
 namespace david63\autodbbackup;
 
-use \phpbb\extension\base;
+use phpbb\extension\base;
 
 class ext extends base
 {
-	const AUTO_DB_BACKUP_VERSION = '2.1.0 RC2';
-	const seconds = 3600;
-	
 	/**
 	* Enable extension if phpBB version requirement is met
 	*

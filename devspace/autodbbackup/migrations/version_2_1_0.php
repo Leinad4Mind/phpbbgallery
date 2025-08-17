@@ -20,10 +20,10 @@ class version_2_1_0 extends migration
 		$update_data[] = array('config.add', array('auto_db_backup_copies', 5));
 		$update_data[] = array('config.add', array('auto_db_backup_enable', 0));
 		$update_data[] = array('config.add', array('auto_db_backup_filetype', 'text'));
-		$update_data[] = array('config.add', array('auto_db_backup_gc', 3600));
-		$update_data[] = array('config.add', array('auto_db_backup_last_gc', time()));
+		$update_data[] = array('config.add', array('auto_db_backup_gc', 1));
+		$update_data[] = array('config.add', array('auto_db_backup_maintain_freq', 0));
+		$update_data[] = array('config.add', array('auto_db_backup_next_gc', time()));
 		$update_data[] = array('config.add', array('auto_db_backup_optimize', 0));
-		$update_data[] = array('config.add', array('auto_db_backup_timezone', ''));
 
 		if ($this->module_check())
 		{
