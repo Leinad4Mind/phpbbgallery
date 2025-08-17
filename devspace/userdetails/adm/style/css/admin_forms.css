@@ -1,19 +1,56 @@
-/**
-* admin_forms.css
-**/
+/* ---------
+admin_forms.css
+--------- */
+
+/* ---------
+Define colours
+--------- */
+:root {
+	--main-black: 			#000000;
+	--main-blue: 			#3300CC;
+	--main-green: 			#429F21;
+	--main-red: 			#FF3D3D;
+	--main-white: 			#FFFFFF;
+	--main-yellow: 			#FFFF66;
+
+	--background-main: 		#4169E1;
+	--background-row1: 		#F9F9F9;
+	--background-row2: 		#DCEBFE;
+	--background-quote3: 	#E4E4E4;
+
+	--border: 				#D6BCD6;
+	--border-bottom: 		#327AA5;
+	--border-input: 		#BFBFBF;
+	--border-tab: 			#AAAAAA;
+	--border-top: 			#6DACD2;
+
+	--gradient-one: 		#EDEDED;
+	--gradient-two: 		#BAB1BA;
+	--gradient-three: 		#6B6B6B;
+	--gradient-four: 		#70AED3;
+	--gradient-five: 		#99CC00;
+
+	--button: 				#1D444E;
+	--disable: 				#666666;
+	--head-panel: 			#115098;
+	--paypal: 				#FFCA76;
+	--shadow-box: 			#899599;
+	--version: 				#CC7A00;
+}
+
 
 /* ---------
 Buttons
 --------- */
 .adm-button {
-	box-shadow: 0.2em 0.2em 0 0 #899599;
-	background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
-	background-color: #ededed;
+	box-shadow: 0.2em 0.2em 0 0 var(--shadow-box);
+	background: linear-gradient(to bottom, var(--gradient-one) 5%, var(--gradient-two) 100%);
+	background-color: var(--gradient-one);
 	border-radius: 0.5em;
-	border: 0.15em solid #d6bcd6;
+	border: 0.15em solid var(--border);
 	display: inline-block;
 	cursor: pointer;
-	color: #1D444E;
+	color: var(--button);
 	font-family: Arial;
 	font-size: 1em;
 	font-weight: bold;
@@ -25,8 +62,8 @@ Buttons
 }
 
 .adm-button:hover {
-	background: linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
-	background-color: #bab1ba;
+	background: linear-gradient(to bottom, var(--gradient-two) 5%, var(--gradient-one) 100%);
+	background-color: var(--gradient-two);
 }
 
 .adm-button:active {
@@ -35,12 +72,12 @@ Buttons
 }
 
 .large-button {
-    color: #3300CC;
+    color: var(--main-blue);
     padding: 20px 30px 20px;
     cursor: pointer;
     font-size: 20px;
-	background: linear-gradient(to bottom, #6B6B6B 5%, #bab1ba 100%);
-	background-color: #6B6B6B;
+	background: linear-gradient(to bottom, var(--gradient-three) 5%, var(--gradient-two) 100%);
+	background-color: var(--gradient-three);
 	border-radius: 0.5em;
 	display: inline-block;
 }
@@ -50,7 +87,7 @@ Buttons
 }
 
 .large-button:hover {
-    	background-color: #4169E1;
+    	background-color: var(--background-main);
 }
 
 
@@ -58,14 +95,14 @@ Buttons
 Selects
 --------- */
 select, #sk, #sd, #fc, #fb {
-	border: 1px solid #AAA;
+	border: 1px solid var(--border);
 	border-radius: 0.5em;
-	color: #1D444E;
+	color: var(--button);
 	font-family: Arial;
 	font-size: 12px;
 	font-weight: bold;
 	margin: 0.25em;
-	overflow: hidden;
+	overflow: scroll;
 	padding: 0.25em 10px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -74,7 +111,7 @@ select, #sk, #sd, #fc, #fb {
 }
 
 #sk, #sd, #fc, #fb {
-	box-shadow: 0.15em 0.2em 0 0 #899599;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
 }
 
 
@@ -83,7 +120,7 @@ Text
 --------- */
 .textbox, .textbox2, .textarea, .inputbox {
     padding: 0.1em 0.625em;
-    border: 1px solid #BFBFBF;
+    border: 1px solid var(--border);
     height: 2em;
     width: auto;
     border-radius: 0.5em;
@@ -91,15 +128,15 @@ Text
 }
 
 .textbox, .inputbox, .textarea {
-    box-shadow: 0.1em 0.1em 0 0 #FFF, 0.5em 0.5em 2.5em 0.2em #BBB inset;
+    box-shadow: 0.1em 0.1em 0 0 var(--main-white), 0.5em 0.5em 2.5em 0.2em var(--shadow-box) inset;
 }
 
 hr {
 	margin-top: 10px;
 	margin-bottom: 10px;
-	border: 1px solid #BFBFBF;
+	border: 1px solid var(--border);
 	border-radius: 0.5em;
-	background-color: #C8C7C4;
+	background-color: var(--border);
 }
 
 pre {
@@ -110,14 +147,14 @@ a.copy {
 	font-size: 12px;
 	text-align: right;
 	font-weight: bold;
-	color: #FFFFFF;
-	background-color: #0000CC;
+	color: var(--main-white);
+	background-color: var(--main-blue);
 	padding: 4px 50px 0 50px;
 	margin-top: 5px;
 }
 
 .compare-highlight {
-	background-color: #FFFF33;
+	background-color: var(--main-yellow);
 }
 
 
@@ -136,18 +173,18 @@ input[type=radio] + label {
     font-family: Arial;
 	font-size: 12px;
     line-height: 20px;
-    color: #1D444E;
+    color: var(--button);
     text-align: center;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
     vertical-align: middle;
     cursor: pointer;
-    background-color: #C8C7C4;
-    background-image: linear-gradient(to bottom, #FFFFFF, #E6E6E6);
+    background-color: var(--border);
+    background-image: linear-gradient(to bottom, var(--main-white), var(--gradient-one));
     background-repeat: repeat-x;
-    border: 1px solid #ccc;
-    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border: 1px solid var(--border);
+    border-color: var(--gradient-one) var(--gradient-one) var(--border-input);
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    border-bottom-color: #b3b3b3;
+    border-bottom-color: var(--border-tab));
 	border-radius: 0.5em;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -157,15 +194,15 @@ input[type=radio]:checked + label {
     outline: 0;
 	font-weight: bold;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-	color:#FFFFFF;
+	color:var(--main-white);
 }
 
 input[type=radio]:checked + label[class=set] {
-    background-color: #429f21;
+    background-color: var(--main-green);
 }
 
 input[type=radio]:checked + label[class=unset] {
-    background-color: #FF3D3D;
+    background-color: var(--main-red);
 }
 
 
@@ -178,7 +215,7 @@ Checkbox
     text-align: left;
     width: 50px;
     height: 20px;
-    background-color: #C9C9C9;
+    background-color: var(--border);
     overflow: hidden;
     border-radius: 20px;
 }
@@ -203,7 +240,7 @@ Checkbox
 }
 
 .checkbox label {
-    background-color: #FF3D3D;
+    background-color: var(--main-red);
     background-image: linear-gradient(-40deg,rgba(0,0,0,0),rgba(255,255,255,0.1),rgba(0,0,0,0.2));
     box-shadow: 0 0 0 1px rgba(0,0,0,0.1),0 1px 2px rgba(0,0,0,0.7);
     border-radius: 20px;
@@ -211,7 +248,7 @@ Checkbox
     width: 20px;
     text-align: center;
     font: bold 13px/normal Arial, Sans-Serif;
-    color: #FFFFFF;
+    color: var(--main-white);
     text-shadow: 0 -1px 0 rgba(0,0,0,0.7);
     transition: margin-left 0.2s ease-in-out;
     margin: 1px;
@@ -223,8 +260,8 @@ Checkbox
 
 .checkbox input:checked + label {
     margin-left: 28px;
-    background-color: #429F21;
-    color: #FFFFFF;
+    background-color: var(--main-green);
+    color: var(--main-white);
 }
 
 .rtl .checkbox input:checked + label {
@@ -257,7 +294,7 @@ Tabs
 section {
     display: none;
     padding: 10px 0 0;
-    border-top: 1px solid #aaa;
+    border-top: 1px solid var(--border-tab);
 }
 
 label {
@@ -271,7 +308,7 @@ label {
 	font-size: 1em;
 	font-weight: normal;
 	margin-bottom: 0.25em;
-	color: #4150a9;
+	color: var(--background-main);
 }
 
 #tab1:checked ~ #content1,
@@ -291,19 +328,19 @@ label {
 Pagination
 --------- */
 .pagination li a, .pagination li span, li .pagination li a, li .pagination li span, .pagination li.active span, .pagination .ellipsis span {
-	box-shadow: 0.15em 0.2em 0 0 #899599;
-	background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
-	background-color: #ededed;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
+	background: linear-gradient(to bottom, var(--gradient-one) 5%, var(--gradient-two) 100%);
+	background-color: var(--gradient-one);
 	border-radius: 0.25em;
-	border: 1px solid #d6bcd6;
-	color: #1D444E;
+	border: 1px solid var(--border);
+	color: var(--button);
 	font-size: 12px;
 	font-weight: bold;
 }
 
 .pagination li.active span {
-	color: #FFFFFF;
-	background: linear-gradient(to bottom, #99CC00 5%, #336600 100%);
+	color: var(--main-white);
+	background: linear-gradient(to bottom, var(--gradient-five) 5%, var(--main-green) 100%);
 }
 
 
@@ -316,32 +353,32 @@ Panels
 	border-radius: 1em;
 	border-width: 0.1em;
 	border-style: solid;
-	border-color: #d7d7d7;
+	border-color: var(--border);
 	padding: 0.5em;
 	margin-bottom: 1em;
-	box-shadow: 0.15em 0.2em 0 0 #899599;
-	color: #115098;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
+	color: var(--head-panel);
 }
 
 .head-panel {
-	background-color: #ffffff;
+	background-color: var(--main-white);
 }
 
 .head-panel-error, .head-panel-version, .head-panel-noversion {
-	color: #FFFFFF;
+	color: var(--main-white);
 	text-align: center;
 }
 
 .head-panel-error {
-	background-color: #BC2A4D;
+	background-color: var(--main-red);
 }
 
 .head-panel-version {
-	background-color: #228822;
+	background-color: var(--main-green);
 }
 
 .head-panel-noversion {
-	background-color: #546CED;
+	background-color: var(--background-main);
 }
 
 .head-title {
@@ -357,9 +394,16 @@ Panels
 	font-size: 0.90em;
 }
 
+.head-description .download {
+	color: var(--main-yellow);
+	text-decoration: none;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
 fieldset {
 	border-radius: 1em;
-	box-shadow: 0.15em 0.2em 0 0 #899599;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
 }
 
 fieldset.align {
@@ -379,10 +423,10 @@ legend {
 	border-radius: 1em;
 	border-width: 0.1em;
 	border-style: solid;
-	border-color: #d7d7d7;
-	background-color: #ffffff;
+	border-color: var(--border);
+	background-color: var(--main-white);
 	padding: 0.5em;
-	box-shadow: 0.15em 0.2em 0 0 #899599;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
 }
 
 .rtl legend {
@@ -400,6 +444,52 @@ legend {
 
 
 /* ---------
+Quote block
+--------- */
+blockquote {
+	background: var(--gradient-one) none 6px 8px no-repeat;
+	border: 1px solid var(--border);
+	font-size: 0.95em;
+	margin: 0.5em 1px 0 25px;
+	overflow: hidden;
+	padding: 5px;
+	border-radius: 1em;
+	border-width: 0.1em;
+	border-style: solid;
+	border-color: var(--border);
+}
+
+blockquote blockquote {
+	/* Nested quotes */
+	background-color: var(--gradient-two);
+	font-size: 1em;
+	margin: 0.5em 1px 0 15px;
+}
+
+blockquote blockquote blockquote {
+	/* Nested quotes */
+	background-color: var(--background-quote3);
+}
+
+blockquote cite {
+	/* Username/source of quoter */
+	font-style: normal;
+	font-weight: bold;
+	margin-left: 20px;
+	display: block;
+	font-size: 0.9em;
+}
+
+blockquote cite cite {
+	font-size: 1em;
+}
+
+blockquote.uncited {
+	padding-top: 25px;
+}
+
+
+/* ---------
 Tables
 --------- */
 .table {
@@ -407,10 +497,10 @@ Tables
     display: table;
 	width: 100%;
 	border-radius: 1em;
-	border: 1px solid #CCCFD3;
-	background-color: #FFFFFF;
+	border: 1px solid var(--border);
+	background-color: var(--main-white);
 	padding: 2px;
-	box-shadow: 0.15em 0.2em 0 0 #899599;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
 }
 
 .table-header {
@@ -420,12 +510,12 @@ Tables
 .table-header-cell, .table-header-cell-left, .table-header-cell-narrow-left, .table-header-cell-right, .table-header-cell-narrow, .table-header-cell-wide, .table-header-cell-select {
 	display: table-cell;
 	padding: 4px 5px;
-	color: #FFFFFF;
-	background: linear-gradient(to bottom, #70AED3 5%, #4242FF 100%);
-	background-color: #70AED3;
-	border-top: 1px solid #6DACD2;
-	border-right: 1px solid #FFFFFF;
-	border-bottom: 1px solid #327AA5;
+	color: var(--main-white);
+	background: linear-gradient(to bottom, var(--gradient-four) 5%, var(--main-blue) 100%);
+	background-color: var(--gradient-four);
+	border-top: 1px solid var(--border-top);
+	border-right: 1px solid var(--main-white);
+	border-bottom: 1px solid var(--border-bottom);
 	text-align: left;
 	font-size: 0.75em;
 	text-transform: uppercase;
@@ -493,20 +583,12 @@ Tables
 }
 
 .table-row1 {
-	background-color: #F9F9F9;
+	background-color: var(--background-row1);
 }
 
 .table-row2 {
 	display: table-row;
-	background-color: #DCEBFE;
-}
-
-.table-row11 {
-	width: auto !important;
-	min-width: inherit;
-	background-color: #F9F9F9;
-	display: table-row;
-	position: relative;
+	background-color: var(--background-row2);
 }
 
 .table-row-span {
@@ -521,7 +603,7 @@ Tables
 	font-size: 0.85em;
 	padding: 4px 0 4px 5px;
 	line-height: 1.20em;
-	border-right: 1px solid #FFFFFF;
+	border-right: 1px solid var(--main-white);
 }
 
 .rtl .table-body-cell, .rtl .table-body-cell-bold, .rtl .table-body-cell-select {
@@ -564,7 +646,7 @@ Tables
 }
 
 .shaded {
-	background-color: #EBEBEB;
+	background-color: var(--gradient-one);
 }
 
 .pointer {
@@ -576,14 +658,14 @@ Tables
 bbCode buttons
 --------- */
 .button2 {
-	box-shadow: 0.15em 0.2em 0 0 #899599;
-	background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
-	background-color: #ededed;
+	box-shadow: 0.15em 0.2em 0 0 var(--shadow-box);
+	background: linear-gradient(to bottom, var(--gradient-one) 5%, var(--gradient-two) 100%);
+	background-color: var(--gradient-one);
 	border-radius: 0.5em;
-	border: 0.15em solid #d6bcd6;
+	border: 0.15em solid var(--border);
 	display: inline-block;
 	cursor: pointer;
-	color: #1D444E;
+	color: var(--button);
 	font-family: Arial;
 	font-size: 1em;
 	font-weight: bold;
@@ -599,7 +681,7 @@ Privacy IP list
 	height: auto;
 	max-height: 200px;
 	width: 150px;
-	border: 1px solid #ccc;
+	border: 1px solid var(--border);
 	overflow-y: auto;
 	font-size: 11px
 }
@@ -617,7 +699,7 @@ Version
 	width: auto;
 	height: 17px;
 	text-align: center;
-	color: #FFFFFF;
+	color: var(--main-white);
 	font-size: 0.8em;
 	font-weight: bold;
 	padding: 4px 5px 0 5px
@@ -625,7 +707,7 @@ Version
 
 .version-text {
 	border-radius: 4px 0 0 4px;
-	background-color: #2E2E2E;
+	background-color: var(--main-black);
 	float: left;
 }
 
@@ -636,7 +718,7 @@ Version
 
 .version-data {
 	border-radius: 0 4px 4px 0;
-	background-color:#CC7A00;
+	background-color: var(--version);
 	float: right;
 }
 
@@ -663,17 +745,17 @@ PayPal button
 .paypal_btn {
 	padding: 6px 30px;
 	border-radius: 20px;
-	background: linear-gradient(to bottom, #ffca76 5%, #fffbf3 100%);
-	color: #3300FF;
+	background: linear-gradient(to bottom, var(--paypal) 5%, var(--main-white)100%);
+	color: var(--main-blue);
 	font-style: italic;
 	font-weight: bold;
 	font-size: 22px;
-	box-shadow: 0.2em 0.2em 0 0 #899599;
+	box-shadow: 0.2em 0.2em 0 0 var(--shadow-box);
 }
 
 .paypal_btn:hover {
-	background: #fffbf3;
-	background: linear-gradient(to bottom, #fffbf3 5%, #ffca76 100%);
+	background: var(--main-white);
+	background: linear-gradient(to bottom, var(--main-white) 5%, var(--paypal) 100%);
 }
 
 .paypal_btn:before {
@@ -681,6 +763,22 @@ PayPal button
 	font-family: FontAwesome;
 	padding-right: 10px;
 	font-size: 24px;
+}
+
+.qrimage {
+	display: block;
+	margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 200px;
+    width: 200px;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.donate-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
 }
 
 
@@ -704,6 +802,6 @@ p.disable-ext-message {
 	text-align: center;
 	margin-top: 10px;
 	font-weight: bold;
-	color: #666666;
+	color: var(--disable);
 	font-size: 1.5em;
 }

@@ -1,9 +1,9 @@
 {
-	"name": "david63/userdetails",
+	"name": "devspace/userdetails",
 	"type": "phpbb-extension",
 	"description": "Adds an ACP lisitng of selectable user details.",
-	"version": "3.1.0-RC1",
-	"time": "2019-12-27",
+	"version": "3.3.0",
+	"time": "2022-10-28",
 		"keywords": [
 			"phpbb",
 			"extension",
@@ -11,27 +11,30 @@
 		],
 	"license": "GPL-2.0-only",
 	"authors": [{
-			"name": "David Wood",
-			"role": "Developer"
-		}],
+	 	"name": "devspace",
+		"role": "Maintainer"
+    },
+	{
+		"name": "David Wood (david63)",
+		"role": "Developer"
+	}],
 	"require": {
         "php": ">=7.1.3",
-		"phpbb/phpbb": ">=3.3.0",
         "composer/installers": "~1.0"
     },
     "require-dev": {
         "phpbb/epv": "dev-master"
     },
 	"extra": {
-		"display-name": "[**] User details",
+		"display-name": "[devspace] User details",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.3.0"
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
     	},
 		"version-check": {
         	"host": "version.phpbbdev.space",
-        	"directory": "/versions",
+        	"directory": "/versions/devspace",
         	"filename": "user_details_version_file.json",
-			"ssl": false
+			"ssl": true
     	}
 	}
 }
