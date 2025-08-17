@@ -9,6 +9,7 @@ services:
             $php_ext: '%core.php_ext%'
             $table_prefix: '%core.table_prefix%'
             $ext_images_path: '%core.root_path%ext/david63/autodbbackup/adm/style/images'
+        public: true
 
     david63.autodbbackup.admin.controller:
         class: david63\autodbbackup\controller\admin_controller

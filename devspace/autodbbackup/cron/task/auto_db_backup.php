@@ -143,7 +143,7 @@ class auto_db_backup extends base
 		$tables		= $this->db_tools->sql_list_tables();
 		$filename	= 'backup_' . $time . '_' . unique_id();
 		$file_type	= $this->config['auto_db_backup_filetype'];
-		$location	= $this->phpbb_root_path . '/store/';
+		$location	= $this->root_path . 'store/';
 		$extractor	= $this->container->get('dbal.extractor');
 		$extension 	= $this->get_extension($file_type);
 
@@ -222,7 +222,7 @@ class auto_db_backup extends base
 			if (count($files) > $this->config['auto_db_backup_copies'])
 			{
 				$i = 0;
-				while (list($key, $val) = each($files))
+				foreach ($files as $key => $val)
 				{
 					$i++;
 					if ($i > $this->config['auto_db_backup_copies'])

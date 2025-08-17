@@ -120,7 +120,7 @@ class admin_controller
 		$utc_offset  = $this->functions->get_utc_offset();
 		$user_dtz    = new \DateTimeZone($this->user->data['user_timezone']);
 		$user_offset = $user_dtz->getOffset(new \DateTime);
-		$user_offset = ($user_offset > 0) ? $user_offset : 0;
+		//$user_offset = ($user_offset > 0) ? $user_offset : 0;
 
 		// Submit
 		if ($this->request->is_set_post('submit'))
