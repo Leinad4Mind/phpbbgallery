@@ -64,8 +64,8 @@ class main_controller implements main_interface
 	*/
 	public function processupload($event)
 	{
-		$filename	= $event['filename'];
 		$extension	= $event['extension'];
+		$filename	= $event['filename'];
 		$location 	= $event['location'];
 
 		$backup_file = $location . $filename . $extension;

@@ -7,6 +7,7 @@ Extends autobackup to allow the copying of the backup file to your Dropbox accou
 [![Latest Stable Version](https://poser.pugx.org/david63/dropboxupload/v/stable)](https://packagist.org/packages/david63/dropboxupload)
 [![Latest Unstable Version](https://poser.pugx.org/david63/dropboxupload/v/unstable)](https://packagist.org/packages/david63/dropboxupload)
 [![Total Downloads](https://poser.pugx.org/david63/dropboxupload/downloads)](https://packagist.org/packages/david63/dropboxupload)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c5e05eb52faa4b0fa40e2a32d2110685)](https://www.codacy.com/manual/david63/dropboxupload?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=david63/dropboxupload&amp;utm_campaign=Badge_Grade)
 
 ## Minimum Requirements
 * phpBB 3.2.0

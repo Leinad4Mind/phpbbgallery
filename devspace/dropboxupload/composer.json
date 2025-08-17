@@ -2,7 +2,7 @@
 	"name": "david63/dropboxupload",
 	"type": "phpbb-extension",
 	"description": "Extends autobackup to allow the copying of the backup file to your Dropbox account.",
-	"version": "2.1.0-RC3",
+	"version": "2.1.0-RC4",
 	"time": "2019-05-11",
 	"keywords": [
 		"phpbb",
@@ -23,19 +23,20 @@
         }
     ],
 	"require": {
-        "php": ">=5.4.0",
+        "php": ">=5.6.4",
         "composer/installers": "~1.0",
 		"kunalvarma05/dropbox-php-sdk": "^0.2.1"
     },
 	"extra": {
-		"display-name": "[*] Dropbox upload for autobackup",
+		"display-name": "[**] Dropbox upload for autobackup",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.2.0"
       	},
 		"version-check": {
         	"host": "version.phpbbdev.space",
-        	"directory": "/3.2",
-        	"filename": "/dropbox_upload_version_file.json"
+        	"directory": "/versions",
+        	"filename": "dropbox_upload_version_file.json",
+			"ssl": false
     	}
 	}
 }

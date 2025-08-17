@@ -56,11 +56,6 @@ $lang = array_merge($lang, array(
 	'DROPBOX_UPLOAD_EXPLAIN'			=> 'Enter here the required parameters to allow files to be uploaded to your Dropbox account.<br><br><strong>Note:This extension does <em>NOT</em> remove any files from the Dropbox account - this will have to be done manually.</strong>',
 	'DROPBOX_UPLOAD_OPTIONS'			=> 'Dropbox upload options',
 
-	'NEW_VERSION'						=> 'New Version',
-	'NEW_VERSION_EXPLAIN'				=> 'There is a newer version of this extension available.',
-
-	'VERSION'							=> 'Version',
-
 	'dbx_folder_opts'	=> array(
 		'DEFAULT'		=> 'Default',
 		'CURRENT_DAY'	=> 'Current day',
@@ -70,14 +65,4 @@ $lang = array_merge($lang, array(
 		'YEAR'			=> 'Year',
 		'MONTH_YEAR'	=> 'Month/Year',
 	),
-));
-
-// Donate
-$lang = array_merge($lang, array(
-	'DONATE'					=> 'Donate',
-	'DONATE_EXTENSIONS'			=> 'Donate to my extensions',
-	'DONATE_EXTENSIONS_EXPLAIN'	=> 'This extension, as with all of my extensions, is totally free of charge. If you have benefited from using it then please consider making a donation by clicking the PayPal donation button opposite - I would appreciate it. I promise that there will be no spam nor requests for further donations, although they would always be welcome.',
-
-	'PAYPAL_BUTTON'				=> 'Donate with PayPal button',
-	'PAYPAL_TITLE'				=> 'PayPal - The safer, easier way to pay online!',
 ));
