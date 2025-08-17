@@ -1,0 +1,8 @@
+{% if STICKYELEMENTS %}
+	{% INCLUDECSS '@leinad4mind_stickyelements/stickyelements.css' %}
+	<div class="sticky-buttons">
+		{% for stickyelement in STICKYELEMENTS %}
+			<div class="sticky-button" style="background-color: {{ stickyelement.color }};">{{ stickyelement.text }}</div>
+		{% endfor %}
+	</div>
+{% endif %}

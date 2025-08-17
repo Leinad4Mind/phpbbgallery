@@ -1,0 +1,40 @@
+{% INCLUDE 'overall_header.html' %}
+
+{% INCLUDEJS '@leinad4mind_stickyelements/js/jscolor.min.js' %}
+
+<a id="maincontent"></a>
+
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h1>{{ lang('ACP_STICKYELEMENTS_TITLE') }} &raquo; {{ lang('STICKYELEMENTS_' ~ ACTION) }}</h1>
+
+<form id="acp_stickyelements_add_edit" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('STICKYELEMENTS_' ~ ACTION) }}</legend>
+		<dl>
+			<dt><label for="stickyelement_only_index">{{ lang('STICKYELEMENTS_ONLY_INDEX') ~ lang('COLON') }}</label><br><span>{{ lang('STICKYELEMENTS_ONLY_INDEX_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio stickyelement_only_index" name="stickyelement_only_index" value="1"{% if STICKYELEMENT_ONLY_INDEX %} id="stickyelement_only_index" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio stickyelement_only_index" name="stickyelement_only_index" value="0"{% if not STICKYELEMENT_ONLY_INDEX %} id="stickyelement_only_index" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="stickyelement_text">{{ lang('STICKYELEMENTS_TEXT') ~ lang('COLON') }}</label><br><span>{{ lang('STICKYELEMENTS_TEXT_EXPLAIN') }}</span></dt>
+			<dd><textarea class="stickyelement_text inputbox autowidth" name="stickyelement_text" id="stickyelement_text" rows="10">{{ STICKYELEMENT_TEXT }}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><label for="stickyelement_color">{{ lang('STICKYELEMENTS_COLOR') ~ lang('COLON') }}</label></dt>
+			<dd>
+				<input type="text" class="stickyelement_color jscolor" data-jscolor="{refine:false, hash:true, valueElement:'stickyelement_color', styleElement:'stickyelement_color'}" name="stickyelement_color" id="stickyelement_color" size="20" value="{{ STICKYELEMENT_COLOR }}">
+			</dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}

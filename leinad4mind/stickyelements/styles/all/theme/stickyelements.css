@@ -1,0 +1,40 @@
+/**
+ *
+ * Sticky Elements. An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+.sticky-buttons {
+    display: flex;
+    flex-flow: column;
+    position: fixed;
+    top: 33%;
+    right: 0;
+	z-index: 999;
+}
+
+.sticky-button {
+	padding: 15px;
+    margin-bottom: 4px;
+    text-align: center;
+    color: white;
+	font-weight: 500;
+}
+
+/* Left Side */
+/* .sticky-buttons {
+    display: flex;
+    flex-flow: column;
+    position: fixed;
+    top: 33%;
+    left: 0;
+	z-index: 999;
+} */
+
+/* Remove under line from links */
+/* .sticky-button a.postlink {
+	border: 0;
+} */
