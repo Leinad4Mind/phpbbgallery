@@ -107,7 +107,7 @@ class listener implements EventSubscriberInterface
 	{
 		$should_display = in_array((int) $this->config['top_five_location'], [$this->topfive_constants['top_of_index'], $this->topfive_constants['bottom_of_index']]) ? true : false;
 
-		if (!$this->config['top_five_active'] || !$should_display)
+		if (!$should_display)
 		{
 			return;
 		}
@@ -128,7 +128,6 @@ class listener implements EventSubscriberInterface
 			]);
 		}
 		$this->template->assign_vars([
-			'S_TOPFIVE'	=>	true,
 			'S_TOPFIVE_LOCATION'	=> $this->config['top_five_location'],
 		]);
 	}
@@ -143,7 +142,7 @@ class listener implements EventSubscriberInterface
 	{
 		$should_display = (in_array((int) $this->config['top_five_location'], [$this->topfive_constants['top_of_entire_forum'], $this->topfive_constants['bottom_of_entire_forum']]) && !$this->is_non_content_page($this->user->page['page_name'])) ? true : false;
 
-		if (!$this->config['top_five_active'] || !$should_display)
+		if (!$should_display)
 		{
 			return;
 		}
@@ -156,7 +155,6 @@ class listener implements EventSubscriberInterface
 		$this->topfive->toptopics();
 
 		$this->template->assign_vars([
-			'S_TOPFIVE' => true,
 			'S_TOPFIVE_LOCATION'	=> $this->config['top_five_location']
 		]);
 	}
