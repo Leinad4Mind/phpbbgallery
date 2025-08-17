@@ -58,6 +58,8 @@ class listener implements EventSubscriberInterface
 			// functions_display events
 			'core.viewtopic_assign_template_vars_before'	=> 'find_replies',
 			'core.bbtranslate_translate_vars_before'		=> 'find_replies',
+			'core.posting_modify_template_vars'				=> 'delete_hidden',
+			'core.topic_review_modify_row'					=> 'delete_hidden_review',
 
 			// message_parser events
 			'core.modify_format_display_text_after'			=> 'parse_bbcodes_after',
@@ -76,6 +78,7 @@ class listener implements EventSubscriberInterface
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
+	
 	/**
 	 * Find topic_id of topic
 	 */
@@ -86,6 +89,33 @@ class listener implements EventSubscriberInterface
 		$this->bbcodes_parser->replied = $this->db->sql_fetchfield('replied');
 	}
 
+	/**
+	 * Delete hidden at review time
+	 */
+	public function delete_hidden_review($event)
+	{
+		if ($event['mode'] == 'topic_review')
+		{
+			(!$this->bbcodes_parser->replied) ? $this->find_replies($event) : null;
+			$post_row  = $event['post_row'];
+			$post_row['DECODED_MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!ies', '', $post_row['DECODED_MESSAGE']);
+			$event['post_row'] = $post_row;
+		}
+	}
+
+	/**
+	 * Delete hidden at quote time
+	 */
+	public function delete_hidden($event)
+	{
+		if ($event['mode'] == 'quote')
+		{
+			$page_data  = $event['page_data'];
+			$page_data['MESSAGE'] = preg_replace('!\[hide\](.*?)\[/hide\]!ies', '', $page_data['MESSAGE']);
+			$event['page_data'] = $page_data;
+		}
+	}
+	
 	/**
 	 * Alter BBCodes before they are processed by phpBB
 	 */

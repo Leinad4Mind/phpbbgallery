@@ -1,9 +1,9 @@
 {
     "name": "sitesplat/replytounhide",
     "type": "phpbb-extension",
-    "description": "Hides the content places within the hide bbcode for guests and also for registered users who have not replied to that topic yet.d",
+    "description": "Hides the content places within the hide bbcode for guests and also for registered users who have not replied to that topic yet",
 	"homepage": "http://sitesplat.com",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": ["phpbb", "posts", "extension"],
     "license": "@license Proprietary",
     "authors": [

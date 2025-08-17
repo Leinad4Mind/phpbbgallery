@@ -22,8 +22,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// Hide BBCode
-	'HIDE_ON'		=> 'Hide Content',
+	'HIDE_ON'		=> 'Hidden Content',
 	'HIDE_OFF'		=> 'Hidden Content (for members only)',
-	'HIDE_EXPLAIN'	=> 'This board requires you to be registered and logged-in and to reply first to view the hidden content.',
+	'HIDE_EXPLAIN'	=> 'This board requires you to be registered, logged-in and to reply first to view the hidden content...',
 	'HIDE_HELPLINE'	=> '[hide]{TEXT}[/hide]'
 ));

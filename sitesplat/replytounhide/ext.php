@@ -20,7 +20,7 @@ class ext extends \phpbb\extension\base
 		if (!class_exists('sitesplat\BBCore\helper'))
 		{
 			$this->container->get('user')->add_lang_ext('sitesplat/replytounhide', 'info_acp_replytounhide');
-			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTICE'], E_USER_WARNING);
 		}
 
 		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))

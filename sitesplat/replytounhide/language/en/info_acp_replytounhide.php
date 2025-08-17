@@ -34,5 +34,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
     'REPLYTOUNHIDE_NOTICE'		=> '<div class="phpinfo"><p>There are no setting for this extenion. The BBcode HIDE is available to be used in posting page.</p></div>',
-	'FH_HELPER_NOTICE'			=> 'The BBcore extension does not exist!<br />Download the <a href="http://sitesplat.com">BBcore</a> and copy the folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTICE'			=> 'The BBcore extension does not exist!<br />Download the <a href="http://sitesplat.com">BBcore</a> and copy the folder into your sitesplat extension folder.',
 ));
