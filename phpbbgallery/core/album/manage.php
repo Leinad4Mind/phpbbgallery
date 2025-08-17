@@ -509,7 +509,7 @@ class manage
 		// Resync parents
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET right_id = right_id - $diff, album_parents = ''
-			WHERE album_user_id = " . $this->user_id . '
+			WHERE album_user_id = " . (int) $this->user_id . '
 				AND left_id < ' . $from_data['right_id'] . "
 				AND right_id > " . $from_data['right_id'];
 		$this->db->sql_query($sql);
@@ -517,7 +517,7 @@ class manage
 		// Resync righthand side of tree
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET left_id = left_id - $diff, right_id = right_id - $diff, album_parents = ''
-			WHERE album_user_id = " . $this->user_id . '
+			WHERE album_user_id = " . (int) $this->user_id . '
 				AND left_id > ' . $from_data['right_id'];
 		$this->db->sql_query($sql);
 
@@ -529,7 +529,7 @@ class manage
 			// Resync new parents
 			$sql = 'UPDATE ' . $this->albums_table . " 
 				SET right_id = right_id + $diff, album_parents = ''
-				WHERE album_user_id = " . $this->user_id . '
+				WHERE album_user_id = " . (int) $this->user_id . '
 					AND ' . $to_data['right_id'] . ' BETWEEN left_id AND right_id
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
 			$this->db->sql_query($sql);
@@ -537,7 +537,7 @@ class manage
 			// Resync the righthand side of the tree
 			$sql = 'UPDATE ' . $this->albums_table . " 
 				SET left_id = left_id + $diff, right_id = right_id + $diff, album_parents = ''
-				WHERE album_user_id = " . $this->user_id . '
+				WHERE album_user_id = " . (int) $this->user_id . '
 					AND left_id > ' . $to_data['right_id'] . '
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
 			$this->db->sql_query($sql);
@@ -558,7 +558,7 @@ class manage
 		{
 			$sql = 'SELECT MAX(right_id) AS right_id
 				FROM ' . $this->albums_table . ' 
-				WHERE album_user_id = ' . $this->user_id . '
+				WHERE album_user_id = ' . (int) $this->user_id . '
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
@@ -569,7 +569,7 @@ class manage
 
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET left_id = left_id $diff, right_id = right_id $diff, album_parents = ''
-			WHERE album_user_id = " . $this->user_id . '
+			WHERE album_user_id = " . (int) $this->user_id . '
 				AND ' . $this->db->sql_in_set('album_id', $moved_ids);
 		$this->db->sql_query($sql);
 
@@ -669,7 +669,7 @@ class manage
 
 				$sql = 'SELECT album_name
 					FROM ' . $this->albums_table . ' 
-					WHERE album_id = ' . $subalbums_to_id;
+					WHERE album_id = ' . (int) $subalbums_to_id;
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
 				$this->db->sql_freeresult($result);
@@ -697,9 +697,9 @@ class manage
 					$album_data = $this->gallery_album->get_info($album_id);
 
 					$sql = 'UPDATE ' . $this->albums_table . ' 
-						SET parent_id = ' . $subalbums_to_id .'
+						SET parent_id = ' . (int) $subalbums_to_id .'
 						WHERE parent_id = ' . (int) $album_id . '
-							AND album_user_id = ' . $this->user_id;
+							AND album_user_id = ' . (int) $this->user_id;
 					$this->db->sql_query($sql);
 
 					$diff = 2;
@@ -726,13 +726,13 @@ class manage
 		$sql = 'UPDATE ' . $this->albums_table . '  
 			SET right_id = right_id - ' . $diff . '
 			WHERE left_id < ' . $album_data['right_id'] . ' AND right_id > ' . $album_data['right_id']. '
-				AND album_user_id = ' . $this->user_id;
+				AND album_user_id = ' . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->albums_table . ' 
 			SET left_id = left_id - ' . $diff . ', right_id = right_id - ' . $diff . '
 			WHERE left_id > ' . $album_data['right_id']. '
-				AND album_user_id = ' . $this->user_id;
+				AND album_user_id = ' . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
 		$log_action = implode('_', array($log_action_images, $log_action_albums));
@@ -865,7 +865,7 @@ class manage
 		// Before we remove anything we make sure we are able to adjust the image counts later. ;)
 		$sql = 'SELECT image_user_id
 			FROM ' . $this->images_table . ' 
-			WHERE image_album_id = ' . $album_id . '
+			WHERE image_album_id = ' . (int) $album_id . '
 				AND image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
@@ -879,7 +879,7 @@ class manage
 
 		$sql = 'SELECT image_id, image_filename, image_album_id
 			FROM ' . $this->images_table . ' 
-			WHERE image_album_id = ' . $album_id;
+			WHERE image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 
 		$filenames = $deleted_images = array();
@@ -903,14 +903,14 @@ class manage
 
 		//@todo: merge queries into loop
 		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
-			WHERE perm_album_id = ' . $album_id;
+			WHERE perm_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 		$sql = 'DELETE FROM ' . $this->contests_table . ' 
-			WHERE contest_album_id = ' . $album_id;
+			WHERE contest_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
-			WHERE album_id = ' . $album_id;
+			WHERE album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 
 		$this->gallery_notification->delete_albums($album_id);
@@ -1035,7 +1035,7 @@ class manage
 			WHERE
 				left_id BETWEEN {$left_id} AND {$right_id}
 				AND right_id BETWEEN {$left_id} AND {$right_id}
-				AND album_user_id = " . $this->user_id;
+				AND album_user_id = " . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
 		return $target['album_name'];
