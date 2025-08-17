@@ -147,6 +147,17 @@ class manage
 		// Validate the contest timestamps:
 		if ($album_data['album_type'] == \phpbbgallery\core\block::TYPE_CONTEST)
 		{
+			if ($this->user->data['user_timezone'] == '')
+			{
+				$timezone = 'UTC';
+			}
+			else
+			{
+				$timezone = $this->user->data['user_timezone'];
+			}
+			//$timezone = ($this->user->data['user_timezone'] == '' ? $this->user->data['user_timezone'] : 'UTC');
+			$time = $this->user->create_datetime();
+
 			$start_date_error = $date_error = false;
 			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_start'], $m))
 			{
@@ -155,7 +166,7 @@ class manage
 			}
 			else
 			{
-				$contest_data['contest_start'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($this->user->data['user_timezone']);
+				$contest_data['contest_start'] = gmmktime((int) $m[4], (int) $m[5], 0, (int) $m[2], (int) $m[3], (int) $m[1]) - $time->getOffset();// - $offset;
 			}
 			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_rating'], $m))
 			{
@@ -164,7 +175,7 @@ class manage
 			}
 			else if (!$start_date_error)
 			{
-				$contest_data['contest_rating'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($this->user->data['user_timezone']) - $contest_data['contest_start'];
+				$contest_data['contest_rating'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - $contest_data['contest_start'] - $time->getOffset();//- $offset;
 			}
 			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_end'], $m))
 			{
@@ -173,7 +184,7 @@ class manage
 			}
 			else if (!$start_date_error)
 			{
-				$contest_data['contest_end'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($this->user->data['user_timezone']) - $contest_data['contest_start'];
+				$contest_data['contest_end'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - $contest_data['contest_start'] - $time->getOffset();//- $offset;
 			}
 			if (!$start_date_error && !$date_error)
 			{

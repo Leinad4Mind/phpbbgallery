@@ -28,12 +28,12 @@
 			<div id="cp-menu" class="cp-menu">
 				<div class="navigation responsive-hide" id="navigation" role="navigation">
 					<ul>
-						<li id="active-subsection" class="active-subsection"><a href=""><span>{L_GALLERY_MCP_QUEUE}</span></a></li>
+						<li id="active-subsection" class="active-subsection"><a href=""><span>{L_GALLERY_MCP_VIEWALBUM}</span></a></li>
 					</ul>
 				</div>
 			</div>
 			<div id="cp-main" class="cp-main mcp-main panel-container">
-				<h2>{L_GALLERY_MCP_QUEUE}</h2>
+				<h2>{L_GALLERY_MCP_VIEWALBUM}</h2>
 				
 				<form id="overview_action" method="post" action="{S_GALLERY_MODERATE_OVERVIEW_ACTION}">
 	<div class="panel">
@@ -82,7 +82,7 @@
 		<!-- IF .overview -->
 		<fieldset class="display-actions">
 			{U_ACTION_SELECT} &nbsp; <input class="button1" name="submit" value="{L_GO}" type="submit">
-			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">Mark all</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">Unmark all</a></div>
+			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{L_UNMARK_ALL}</a></div>
 		</fieldset>
 		<!-- ENDIF -->
 	</form>
