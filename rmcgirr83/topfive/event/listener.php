@@ -28,18 +28,21 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	public function __construct(\rmcgirr83\topfive\core\functions_topfive $functions, \phpbb\config\config $config, \phpbb\template\template $template)
+	/** @var \phpbb\user */
+	protected $user;
+
+	public function __construct(\rmcgirr83\topfive\core\functions_topfive $functions, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\user $user)
 	{
 		$this->tf_functions = $functions;
 		$this->config = $config;
 		$this->template = $template;
+		$this->user = $user;
 	}
 
 	static public function getSubscribedEvents()
 	{
 
 		return array(
-			'core.user_setup' => 'load_language_on_setup',
 			'core.index_modify_page_title'	=> 'main',
 		);
 	}
@@ -50,23 +53,17 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
+
+		// add lang file
+		$this->user->add_lang_ext('rmcgirr83/topfive', 'topfive');
+
 		$this->tf_functions->topposters();
 		$this->tf_functions->newusers();
 		$this->tf_functions->toptopics();
 
 		$this->template->assign_vars(array(
-			'S_TOPFIVE'				=> $this->config['top_five_active'],
+			'S_TOPFIVE'	=>	$this->config['top_five_active'],
 			'S_TOPFIVE_LOCATION'	=> $this->config['top_five_location'],
 		));
-	}
-
-	public function load_language_on_setup($event)
-	{
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'rmcgirr83/topfive',
-			'lang_set' => 'topfive',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
 	}
 }
