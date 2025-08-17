@@ -24,7 +24,7 @@
 			"phpbb/phpbb": ">3.1.11"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbcore.json"
 		}

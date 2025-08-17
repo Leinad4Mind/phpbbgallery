@@ -61,15 +61,28 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
+	// I commented out original lines no longer used. (Dion)
 	public function disabled_board($event)
 	{
-		$style_id = ((!$this->config['override_user_style']) ? $this->user->data['user_style'] : $this->config['default_style']);
-		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . " WHERE style_copyright LIKE '© SiteSplat.com%'";
+//		$style_id = ((!$this->config['override_user_style']) ? $this->user->data['user_style'] : $this->config['default_style']);
+		$style_id = ((!$this->config['override_user_style']) ? (int) $this->user->data['user_style'] : (int) $this->config['default_style']);
+
+		// Should the line below be used instead of the above line?
+		// Displaying a consistent offline page makes the most sense to me.  (Dion)
+//		$style_id = (int) $this->config['default_style'];
+
+		$style_ary = [];
+//		$sql = 'SELECT style_id FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
+		$sql = 'SELECT style_id, style_path FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
 		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
-		$in_sitesplat = ($row) ?  in_array($style_id, $row) : false;
+//		$row = $this->db->sql_fetchrow($result);
+//		$in_sitesplat = ($row) ?  in_array($style_id, $row) : false;
+		while ($row = $this->db->sql_fetchrow($result)) {
+			$style_ary[intval($row['style_id'])] = $row['style_path'];
+		}
 	
-		if ($this->config['board_disable'] && !defined('IN_LOGIN') && $in_sitesplat && !$this->auth->acl_get('a_'))
+//		if ($this->config['board_disable'] && !defined('IN_LOGIN') && $in_sitesplat && !$this->auth->acl_get('a_'))
+		if ($this->config['board_disable'] && !defined('IN_LOGIN') && !empty($style_ary[$style_id]) && !$this->auth->acl_get('a_'))
 		{		
 			// This path is sent with the base template paths in the assign_vars() call below. We need to correct it in case we are accessing from a
 			// controller because the web paths will be incorrect otherwise.
@@ -82,7 +95,9 @@ class listener implements EventSubscriberInterface
 				$user_lang = substr($user_lang, 0, strpos($user_lang, '-x-'));
 			}
 			
-			$file = $this->root_path . 'ext/sitesplat/BBCore/styles/' . rawurlencode($this->user->style['style_path']) . '/template/offline_board_body.html';
+//			$file = $this->root_path . 'ext/sitesplat/BBCore/styles/' . rawurlencode($this->user->style['style_path']) . '/template/offline_board_body.html';
+			$file = $this->root_path . 'ext/sitesplat/BBCore/styles/' . $style_ary[$style_id] . '/template/offline_board_body.html';
+
 			$fp = fopen( $file , 'r' );
 			$content = fread( $fp , filesize($file) );
 			fclose( $fp );

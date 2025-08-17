@@ -27,7 +27,7 @@ class t4_download_newest_version
 
 	public function run($style_name, $updater_config)
 	{
-		$zip = $this->file_downloader->get($this->host, $this->download_path . $updater_config['style_data']['direct_download_dir'], $updater_config['cfg_data']['style_version'] . '_to_' . $updater_config['style_data']['version'] . '.zip');
+		$zip = $this->file_downloader->get($this->host, $this->download_path . $updater_config['style_data']['direct_download_dir'], $updater_config['cfg_data']['style_version'] . '_to_' . $updater_config['style_data']['version'] . '.zip', 443);
 		if ($zip === false)
 		{
 			throw new \Exception('PROBLEM_DOWNLOADING_UPDATE');

@@ -145,7 +145,7 @@ class admin_listener implements EventSubscriberInterface
 	{
 		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
 
-		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE style_copyright LIKE '© SiteSplat.com%'";
+		$sql = 'SELECT style_name FROM ' . STYLES_TABLE . " WHERE LOWER(style_copyright) LIKE '%sitesplat.com%'";
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -159,7 +159,7 @@ class admin_listener implements EventSubscriberInterface
 					(version_compare($cfg_ary['style_version'], $data['version'] , '<')) ? 
 							$this->template->assign_block_vars('sitesplat_themes', array(
 								'NEW_BOOTS_VERSION'	=> sprintf($this->user->lang['NEW_BOOTS_VERSION'], strtoupper($row['style_name'])),
-								'VERSIONNUMBERS'	=> sprintf($this->user->lang['VERSIONNUMBERS'], $cfg_ary['style_version'], $data['download_url'], $data['version']),
+								'VERSIONNUMBERS'	=> sprintf($this->user->lang['VERSIONNUMBERS'], $cfg_ary['style_version'], $data['download_url'], $data['version'], append_sid($this->root_path . 'adm/index.' . $this->php_ext, 'i=acp_styles')),
 								'MSG'				=> $data['changelog']
 							)) :
 							null;
@@ -169,6 +169,7 @@ class admin_listener implements EventSubscriberInterface
 						'NAME'				=> strtoupper($row['style_name']),
 						'VERSION'			=> $cfg_ary['style_version'],
 						'DOWNLOAD_MSG'		=> sprintf($this->user->lang['DOWNLOAD_MSG'], $data['version'], $data['download_url'], $data['title']),
+						'DOWNLOAD_BTN_ENVATO'		=> sprintf($this->user->lang['DOWNLOAD_BTN_ENVATO'], $data['download_url']),
 						'CHANGE_LOG'		=> addslashes($data['changelog']),
 						'CHANGE_LOG_MSG'	=> sprintf($this->user->lang['CHANGE_LOG_MSG'], $data['changelog_url'], $data['title']),
 						'SUPPORT_FORUM_MSG'	=> sprintf($this->user->lang['SUPPORT_FORUM_MSG'], $data['support_forum']),
@@ -188,7 +189,7 @@ class admin_listener implements EventSubscriberInterface
 		{
 			try
 			{
-				$info = $this->file_downloader->get($this->host, $this->path, $what);
+				$info = $this->file_downloader->get($this->host, $this->path, $what, 443);
 			}
 			catch (\phpbb\exception\runtime_exception $exception)
 			{
