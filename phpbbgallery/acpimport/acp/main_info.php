@@ -7,15 +7,9 @@
 *
 */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\acpimport\acp;
 
-/**
-* @package module_install
-*/
-class phpbb_ext_gallery_acpimport_acp_main_info
+class main_info
 {
 	function module()
 	{
@@ -24,7 +18,11 @@ class phpbb_ext_gallery_acpimport_acp_main_info
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'import_images'		=> array('title' => 'ACP_IMPORT_ALBUMS',				'auth' => 'acl_a_gallery_import',	'cat' => array('PHPBB_GALLERY')),
+				'import_images'		=> array(
+					'title' => 'ACP_IMPORT_ALBUMS',
+					'auth' => 'acl_a_gallery_import && ext_phpbbgallery/acpimport',
+					'cat' => array('PHPBB_GALLERY')
+				),
 			),
 		);
 	}
