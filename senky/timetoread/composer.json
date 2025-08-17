@@ -1,0 +1,32 @@
+{
+    "name": "senky/timetoread",
+    "type": "phpbb-extension",
+    "description": "Adds approximate read time for each topic in list of topics.",
+    "homepage": "",
+    "version": "1.0.0",
+    "time": "2016-12-17",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Jakub Senko",
+            "email": "jakubsenko@gmail.com",
+            "homepage": "",
+            "role": ""
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
+    },
+    "extra": {
+        "display-name": "Time to Read",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/time_to_read",
+            "filename": "version_check"
+        }
+    }
+}
