@@ -20,6 +20,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
+	private $topic_desc = '';
+
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
@@ -65,6 +67,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.permissions'						=> 'add_permission',
 			'core.posting_modify_template_vars'		=> 'topic_data_topic_desc',
+			'core.posting_modify_submission_errors'		=> 'topic_desc_add_to_post_data',
 			'core.posting_modify_submit_post_before'		=> 'topic_desc_add',
 			'core.posting_modify_message_text'		=> 'modify_message_text',
 			'core.submit_post_modify_sql_data'		=> 'submit_post_modify_sql_data',
@@ -91,43 +94,52 @@ class listener implements EventSubscriberInterface
 
 	public function topic_data_topic_desc($event)
 	{
-		$forum_id = $event['forum_id'];
-
 		$mode = $event['mode'];
 		$post_data = $event['post_data'];
 		$page_data = $event['page_data'];
-		if ($this->auth->acl_get('f_topic_desc', $forum_id) && ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_data['post_id'])))
+		$post_data['topic_desc'] = (!empty($post_data['topic_desc'])) ? $post_data['topic_desc'] : '';
+		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']) && ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_data['post_id'])))
 		{
 			$this->user->add_lang_ext('rmcgirr83/topicdescription', 'common');
-			// we need to set the variable upon posting only...only forum table is queried
-			if ($mode == 'post')
-			{
-				$post_data['topic_desc'] = '';
-			}
 			$page_data['TOPIC_DESC'] = $this->request->variable('topic_desc', $post_data['topic_desc'], true);
 			$page_data['S_DESC_TOPIC'] = true;
 		}
 
-		$event['post_data']	= $post_data;
 		$event['page_data']	= $page_data;
+	}
+
+	public function topic_desc_add_to_post_data($event)
+	{
+		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']))
+		{
+			$event['post_data'] = array_merge($event['post_data'], array(
+				'topic_desc'	=> $this->request->variable('topic_desc', '', true),
+			));
+		}
 	}
 
 	public function topic_desc_add($event)
 	{
 		$event['data'] = array_merge($event['data'], array(
-			'topic_desc'	=> $this->request->variable('topic_desc', '', true),
+			'topic_desc'	=> $event['post_data']['topic_desc'],
+		));
+	}
+
+	public function modify_message_text($event)
+	{
+		$event['post_data'] = array_merge($event['post_data'], array(
+			'topic_desc'	=> $this->request->variable('topic_desc', $event['post_data']['topic_desc'], true),
 		));
 	}
 
 	public function submit_post_modify_sql_data($event)
 	{
 		$mode = $event['post_mode'];
-		$data = $event['data'];
-
+		$topic_desc = $event['data']['topic_desc'];
 		$data_sql = $event['sql_data'];
 		if (in_array($mode, array('post', 'edit_topic', 'edit_first_post')))
 		{
-			$data_sql[TOPICS_TABLE]['sql']['topic_desc'] = $data['topic_desc'];
+			$data_sql[TOPICS_TABLE]['sql']['topic_desc'] = $topic_desc;
 		}
 		$event['sql_data'] = $data_sql;
 	}
@@ -136,13 +148,6 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$this->template->assign_var('TOPIC_DESC',censor_text($topic_data['topic_desc']));
-	}
-
-	public function modify_message_text($event)
-	{
-		$event['post_data'] = array_merge($event['post_data'], array(
-			'topic_desc'	=> $this->request->variable('topic_desc', '', true),
-		));
 	}
 
 	public function modify_topicrow($event)
