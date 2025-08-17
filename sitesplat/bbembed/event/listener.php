@@ -60,6 +60,7 @@ class listener implements EventSubscriberInterface
 			$configurator->MediaEmbed->add($siteId);
 
 			$tag = $configurator->tags[$tagName];
+			$tag->template = str_replace(' scrolling="no"', '', $tag->template);
 			$tag->template = $this->addTemplateEffects($tag->template);
 		}
 	}
@@ -71,7 +72,7 @@ class listener implements EventSubscriberInterface
 			$template = '<div style="display:inline-block;position:relative;width:100%;max-width:' . $m[1] . '">' . $template . '</div>';
 		}
 
-		$template = str_replace('<iframe', '<div class="spinner"></div><iframe', $template);
+		$template = str_replace('<iframe', '<span class="spinner"></span><iframe', $template);
 		if (strpos($template, 'onload="') === false)
 		{
 			$template = str_replace('<iframe', '<iframe onload=""', $template);
@@ -369,14 +370,14 @@ class listener implements EventSubscriberInterface
 	{
 		$attributes += array('id' => null, 'type' => null);
 
-		return $this->addTemplateEffects('<iframe data-sitesplat-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/facebook.min.html#' . htmlspecialchars($attributes['type'] . $attributes['id'], 2) . '" style="border:0;height:360px;max-width:640px;width:100%"></iframe>');
+		return $this->addTemplateEffects('<iframe data-sitesplat-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" src="https://s9e.github.io/iframe/facebook.min.html#' . htmlspecialchars($attributes['type'] . $attributes['id'], 2) . '" style="border:0;height:360px;max-width:640px;width:100%"></iframe>');
 	}
-
+// todo remove this RIP g+
 	protected function renderGoogleplus(array $attributes)
 	{
 		$attributes += array('name' => null, 'oid' => null, 'pid' => null);
 
-		$html = '<iframe data-sitesplat-mediaembed="googleplus" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/googleplus.min.html#';
+		$html = '<iframe data-sitesplat-mediaembed="googleplus" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/googleplus.min.html#';
 		if (isset($attributes['oid']))
 		{
 			$html .= htmlspecialchars($attributes['oid'], 2);
@@ -392,14 +393,14 @@ class listener implements EventSubscriberInterface
 
 	protected function renderMedium(array $attributes)
 	{
-		return '<div style="display:inline-block;position:relative;width:100%;max-width:400px"><div class="spinner"></div><iframe allowfullscreen="" onload="if(previousSibling)parentNode.removeChild(previousSibling);window.addEventListener(\'message\',function(a){a=a.data.split(\'::\');\'m\'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+\'px\')})" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F' . htmlspecialchars($attributes['id'],2).'&amp;id=' . htmlspecialchars(strtr($attributes['id'],'abcdef','111111'),2).'" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:400px;max-width:400px;width:100%"></iframe></div>';
+		return '<div style="display:inline-block;position:relative;width:100%;max-width:400px"><span class="spinner"></span><iframe allowfullscreen="" onload="if(previousSibling)parentNode.removeChild(previousSibling);window.addEventListener(\'message\',function(a){a=a.data.split(\'::\');\'m\'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+\'px\')})" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F' . htmlspecialchars($attributes['id'],2).'&amp;id=' . htmlspecialchars(strtr($attributes['id'],'abcdef','111111'),2).'" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:400px;max-width:400px;width:100%"></iframe></div>';
 	}
 
 	protected function renderSoundcloud($attributes)
 	{
 		$attributes += array('id' => null, 'playlist_id' => null, 'secret_token' => null, 'track_id' => null);
 
-		$html = '<iframe data-sitesplat-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=';
+		$html = '<iframe data-sitesplat-mediaembed="soundcloud" allowfullscreen="" src="https://w.soundcloud.com/player/?url=';
 		if (isset($attributes['playlist_id']))
 		{
 			$html .= 'https%3A//api.soundcloud.com/playlists/' . htmlspecialchars($attributes['playlist_id'], 2);
@@ -432,7 +433,7 @@ class listener implements EventSubscriberInterface
 
 	protected function renderTwitch(array $attributes)
 	{
-		$html = '<div data-sitesplat-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;';
+		$html = '<div data-sitesplat-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;';
 		if (isset($attributes['archive_id']))
 		{
 			$html .= 'video=a' . htmlspecialchars($attributes['archive_id'], 2);
@@ -460,17 +461,17 @@ class listener implements EventSubscriberInterface
 
 	protected function renderTwitter(array $attributes)
 	{
-		return '<div style="display:inline-block;width:100%;max-width:500px"><div style="position:relative"><div class="spinner"></div><iframe allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a){style.height=b.data.height+\'px\';if(previousSibling)parentNode.removeChild(previousSibling)}});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)));setTimeout(function(){if(previousSibling)parentNode.removeChild(previousSibling)},5e3)" scrolling="no" src="//s9e.github.io/iframe/twitter.min.html#' . htmlspecialchars($attributes['id']) . '" style="border:0;height:186px;max-width:500px;transition:height .3s;width:100%"></iframe></div></div>';
+		return '<div style="display:inline-block;width:100%;max-width:550px"><div style="position:relative"><span class="spinner"></span><iframe allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a){style.height=b.data.height+\'px\';if(previousSibling)parentNode.removeChild(previousSibling)}});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)));setTimeout(function(){if(previousSibling)parentNode.removeChild(previousSibling)},5e3)" src="//s9e.github.io/iframe/twitter.min.html#' . htmlspecialchars($attributes['id']) . '" style="border:0;height:186px;max-width:550px;transition:height .3s;width:100%"></iframe></div></div>';
 	}
 
 	protected function renderVimeo(array $attributes)
 	{
-		return '<div data-sitesplat-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><div class="spinner"></div><iframe allowfullscreen="" onload="parentNode.removeChild(previousSibling)" scrolling="no" src="//player.vimeo.com/video/' . htmlspecialchars($attributes['id']) . '" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>';
+		return '<div data-sitesplat-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><span class="spinner"></span><iframe allowfullscreen="" onload="parentNode.removeChild(previousSibling)" src="//player.vimeo.com/video/' . htmlspecialchars($attributes['id']) . '" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>';
 	}
 
 	protected function renderYoutube(array $attributes)
 	{
-		return '<div style="background:url(//i.ytimg.com/vi/' . htmlspecialchars($attributes['id']) . '/hqdefault.jpg) no-repeat 50% 50% / cover;display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><div class="spinner"></div><iframe allowfullscreen="" onload="parentNode.removeChild(previousSibling)" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/' . htmlspecialchars($attributes['id']) . '"></iframe></div></div>';
+		return '<div style="background:url(//i.ytimg.com/vi/' . htmlspecialchars($attributes['id']) . '/hqdefault.jpg) no-repeat 50% 50% / cover;display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><span class="spinner"></span><iframe allowfullscreen="" onload="parentNode.removeChild(previousSibling)" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/' . htmlspecialchars($attributes['id']) . '"></iframe></div></div>';
 	}
 
 	protected function replaceTwitter($text)
