@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* Precise Similar Topics
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Precise Similar Topics
+ *
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace vse\similartopics\acp;
 
 /**
-* @package acp
-*/
+ * @package acp
+ */
 class similar_topics_module
 {
 	/** @var \phpbb\config\config */
@@ -55,10 +55,10 @@ class similar_topics_module
 	public $u_action;
 
 	/**
-	* ACP module constructor
-	*
-	* @access public
-	*/
+	 * ACP module constructor
+	 *
+	 * @access public
+	 */
 	public function __construct()
 	{
 		global $phpbb_container;
@@ -81,15 +81,12 @@ class similar_topics_module
 	}
 
 	/**
-	* Main ACP module
-	*
-	* @param int $id
-	* @param string $mode
-	* @access public
-	*/
-	public function main($id, $mode)
+	 * Main ACP module
+	 *
+	 * @access public
+	 */
+	public function main()
 	{
-		$this->user->add_lang('acp/common');
 		$this->user->add_lang_ext('vse/similartopics', 'acp_similar_topics');
 
 		$this->tpl_name = 'acp_similar_topics';
@@ -109,8 +106,8 @@ class similar_topics_module
 				{
 					$this->check_form_key($form_key);
 
-					$similar_topic_forums = implode(',', $this->request->variable('similar_forums_id', array(0)));
-					$this->validate_config_length($similar_topic_forums);
+					$similar_topic_forums = $this->request->variable('similar_forums_id', array(0));
+					$similar_topic_forums = !empty($similar_topic_forums) ? json_encode($similar_topic_forums) : '';
 
 					$sql = 'UPDATE ' . FORUMS_TABLE . "
 						SET similar_topic_forums = '" . $this->db->sql_escape($similar_topic_forums) . "'
@@ -132,7 +129,7 @@ class similar_topics_module
 					$result = $this->db->sql_query($sql);
 					while ($fid = $this->db->sql_fetchrow($result))
 					{
-						$selected = explode(',', trim($fid['similar_topic_forums']));
+						$selected = json_decode($fid['similar_topic_forums'], true);
 						$forum_name = $fid['forum_name'];
 					}
 					$this->db->sql_freeresult($result);
@@ -153,24 +150,21 @@ class similar_topics_module
 				{
 					$this->check_form_key($form_key);
 
-					// Get checkbox array form data and check string length
-					$mark_noshow_forum = implode(',', $this->request->variable('mark_noshow_forum', array(0), true));
-					$mark_ignore_forum = implode(',', $this->request->variable('mark_ignore_forum', array(0), true));
-					$this->validate_config_length($mark_noshow_forum, $mark_ignore_forum);
-
 					// Set basic config settings
 					$this->config->set('similar_topics', $this->request->variable('pst_enable', 0));
 					$this->config->set('similar_topics_limit', abs($this->request->variable('pst_limit', 0))); // use abs for positive values only
 					$this->config->set('similar_topics_cache', abs($this->request->variable('pst_cache', 0))); // use abs for positive values only
 					$this->config->set('similar_topics_words', $this->request->variable('pst_words', '', true));
-					$this->config->set('similar_topics_hide', $mark_noshow_forum);
-					$this->config->set('similar_topics_ignore', $mark_ignore_forum);
 
 					// Set date/time config settings
 					$pst_time = abs($this->request->variable('pst_time', 0)); // use abs for positive values only
 					$pst_time_type = $this->request->variable('pst_time_type', '');
 					$this->config->set('similar_topics_type', $pst_time_type);
 					$this->config->set('similar_topics_time', $this->set_pst_time($pst_time, $pst_time_type));
+
+					// Set checkbox array form data
+					$this->update_forum('similar_topics_hide', $this->request->variable('mark_noshow_forum', array(0), true));
+					$this->update_forum('similar_topics_ignore', $this->request->variable('mark_ignore_forum', array(0), true));
 
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'PST_LOG_MSG');
 
@@ -195,17 +189,11 @@ class similar_topics_module
 
 							$this->end('PST_SAVE_FULLTEXT');
 						}
-						else
-						{
-							$this->end('PST_ERR_FULLTEXT', E_USER_WARNING);
-						}
+						$this->end('PST_ERR_FULLTEXT', E_USER_WARNING);
 					}
-					else
-					{
-						confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
-							'fulltext' => 1,
-						)));
-					}
+					confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+						'fulltext' => 1,
+					)));
 				}
 
 				// Build the time options select menu
@@ -235,17 +223,14 @@ class similar_topics_module
 					'U_ACTION'			=> $this->u_action,
 				));
 
-				$ignore_forums = explode(',', trim($this->config['similar_topics_ignore']));
-				$noshow_forums = explode(',', trim($this->config['similar_topics_hide']));
-
 				$forum_list = $this->get_forum_list();
 				foreach ($forum_list as $row)
 				{
 					$this->template->assign_block_vars('forums', array(
 						'FORUM_NAME'			=> $row['forum_name'],
 						'FORUM_ID'				=> $row['forum_id'],
-						'CHECKED_IGNORE_FORUM'	=> (in_array($row['forum_id'], $ignore_forums)) ? 'checked="checked"' : '',
-						'CHECKED_NOSHOW_FORUM'	=> (in_array($row['forum_id'], $noshow_forums)) ? 'checked="checked"' : '',
+						'CHECKED_IGNORE_FORUM'	=> $row['similar_topics_ignore'] ? 'checked="checked"' : '',
+						'CHECKED_NOSHOW_FORUM'	=> $row['similar_topics_hide'] ? 'checked="checked"' : '',
 						'S_IS_ADVANCED'			=> (bool) $row['similar_topic_forums'],
 						'U_ADVANCED'			=> "{$this->u_action}&amp;action=advanced&amp;f=" . $row['forum_id'],
 						'U_FORUM'				=> append_sid("{$this->root_path}viewforum.{$this->php_ext}", 'f=' . $row['forum_id']),
@@ -256,30 +241,11 @@ class similar_topics_module
 	}
 
 	/**
-	* Check if config field values exceed 255 chars
-	*
-	* @return null
-	* @access protected
-	*/
-	protected function validate_config_length()
-	{
-		$arg_list = func_get_args();
-		foreach ($arg_list as $arg)
-		{
-			if (strlen($arg) > 255)
-			{
-				$this->end('PST_ERR_CONFIG', E_USER_WARNING);
-			}
-		}
-	}
-
-	/**
-	* Check form key, trigger error if invalid
-	*
-	* @param string $form_key The form key value
-	* @return null
-	* @access protected
-	*/
+	 * Check form key, trigger error if invalid
+	 *
+	 * @access protected
+	 * @param string $form_key The form key value
+	 */
 	protected function check_form_key($form_key)
 	{
 		if (!check_form_key($form_key))
@@ -289,14 +255,14 @@ class similar_topics_module
 	}
 
 	/**
-	* Get forums list
-	*
-	* @return array	forum data rows
-	* @access protected
-	*/
+	 * Get forums list
+	 *
+	 * @access protected
+	 * @return array forum data rows
+	 */
 	protected function get_forum_list()
 	{
-		$sql = 'SELECT forum_id, forum_name, similar_topic_forums
+		$sql = 'SELECT forum_id, forum_name, similar_topic_forums, similar_topics_hide, similar_topics_ignore
 			FROM ' . FORUMS_TABLE . '
 			WHERE forum_type = ' . FORUM_POST . '
 			ORDER BY left_id ASC';
@@ -308,13 +274,38 @@ class similar_topics_module
 	}
 
 	/**
-	* Calculate the time in seconds based on requested time period length
-	*
-	* @param int $length user entered value
-	* @param string $type years, months, weeks, days (y|m|w|d)
-	* @return int time in seconds
-	* @access protected
-	*/
+	 * Update the similar topics columns in the forums table
+	 *
+	 * @param string $column    The name of the column to update
+	 * @param array  $forum_ids An array of forum_ids
+	 */
+	protected function update_forum($column, $forum_ids)
+	{
+		$this->db->sql_transaction('begin');
+
+		// Set marked forums (in set) to 1
+		$sql = 'UPDATE ' . FORUMS_TABLE . "
+			SET $column = 1
+			WHERE " . $this->db->sql_in_set('forum_id', $forum_ids, false, true);
+		$this->db->sql_query($sql);
+
+		// Set unmarked forums (not in set) to 0
+		$sql = 'UPDATE ' . FORUMS_TABLE . "
+			SET $column = 0
+			WHERE " . $this->db->sql_in_set('forum_id', $forum_ids, true, true);
+		$this->db->sql_query($sql);
+
+		$this->db->sql_transaction('commit');
+	}
+
+	/**
+	 * Calculate the time in seconds based on requested time period length
+	 *
+	 * @access protected
+	 * @param int    $length user entered value
+	 * @param string $type   years, months, weeks, days (y|m|w|d)
+	 * @return int time in seconds
+	 */
 	protected function set_pst_time($length, $type = 'y')
 	{
 		$type = isset($this->times[$type]) ? $type : 'y';
@@ -323,40 +314,39 @@ class similar_topics_module
 	}
 
 	/**
-	* Get the correct time period length value for the form
-	*
-	* @param int $time as a timestamp
-	* @param string $type years, months, weeks, days (y|m|w|d)
-	* @return int time converted to the given $type
-	* @access protected
-	*/
+	 * Get the correct time period length value for the form
+	 *
+	 * @access protected
+	 * @param int    $time as a timestamp
+	 * @param string $type years, months, weeks, days (y|m|w|d)
+	 * @return int time converted to the given $type
+	 */
 	protected function get_pst_time($time, $type = '')
 	{
 		return isset($this->times[$type]) ? (int) round($time / $this->times[$type]) : 0;
 	}
 
 	/**
-	* Check for FULLTEXT index support
-	*
-	* @return bool True if FULLTEXT is fully supported, false otherwise
-	* @access protected
-	*/
+	 * Check for FULLTEXT index support
+	 *
+	 * @access protected
+	 * @return bool True if FULLTEXT is fully supported, false otherwise
+	 */
 	protected function fulltext_support_enabled()
 	{
 		if ($this->fulltext->is_supported())
 		{
-			return $this->fulltext->index('topic_title');
+			return $this->fulltext->is_index('topic_title');
 		}
 
 		return false;
 	}
 
 	/**
-	* Enable FULLTEXT support for the topic_title
-	*
-	* @return null
-	* @access protected
-	*/
+	 * Enable FULLTEXT support for the topic_title
+	 *
+	 * @access protected
+	 */
 	protected function enable_fulltext_support()
 	{
 		if (!$this->fulltext->is_mysql())
@@ -369,7 +359,7 @@ class similar_topics_module
 		$this->db->sql_query($sql);
 
 		// Prevent adding extra indeces.
-		if ($this->fulltext->index('topic_title'))
+		if ($this->fulltext->is_index('topic_title'))
 		{
 			return;
 		}
@@ -379,25 +369,25 @@ class similar_topics_module
 	}
 
 	/**
-	* Return a variable if it is set, otherwise default
-	*
-	* @param mixed $var The variable to test
-	* @param mixed $default The default value to use
-	* @return mixed The value of the variable if set, otherwise default value
-	* @access protected
-	*/
+	 * Return a variable if it is set, otherwise default
+	 *
+	 * @access protected
+	 * @param mixed $var     The variable to test
+	 * @param mixed $default The default value to use
+	 * @return mixed The value of the variable if set, otherwise default value
+	 */
 	protected function isset_or_default($var, $default)
 	{
-		return (isset($var)) ? $var : $default;
+		return null !== $var ? $var : $default;
 	}
 
 	/**
 	 * End script execution with a trigger_error message
 	 *
+	 * @access protected
 	 * @param string $message Language key string
 	 * @param int    $code    E_USER_NOTICE|E_USER_WARNING
-	 * @return null
-	 * @access protected
+	 * @return void
 	 */
 	protected function end($message, $code = E_USER_NOTICE)
 	{

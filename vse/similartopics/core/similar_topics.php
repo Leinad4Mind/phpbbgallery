@@ -1,12 +1,12 @@
 <?php
 /**
-*
-* Precise Similar Topics
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Precise Similar Topics
+ *
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace vse\similartopics\core;
 
@@ -49,22 +49,22 @@ class similar_topics
 	protected $php_ext;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\auth\auth $auth
-	* @param \phpbb\cache\service $cache
-	* @param \phpbb\config\config $config
-	* @param \phpbb\db\driver\driver_interface $db
-	* @param \phpbb\event\dispatcher_interface $dispatcher
-	* @param \phpbb\pagination $pagination
-	* @param \phpbb\request\request $request
-	* @param \phpbb\template\template $template
-	* @param \phpbb\user $user
-	* @param \phpbb\content_visibility $content_visibility
-	* @param string $root_path
-	* @param string $php_ext
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @access public
+	 * @param \phpbb\auth\auth                  $auth
+	 * @param \phpbb\cache\service              $cache
+	 * @param \phpbb\config\config              $config
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\event\dispatcher_interface $dispatcher
+	 * @param \phpbb\pagination                 $pagination
+	 * @param \phpbb\request\request            $request
+	 * @param \phpbb\template\template          $template
+	 * @param \phpbb\user                       $user
+	 * @param \phpbb\content_visibility         $content_visibility
+	 * @param string                            $root_path
+	 * @param string                            $php_ext
+	 */
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\pagination $pagination, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\content_visibility $content_visibility, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
@@ -82,11 +82,11 @@ class similar_topics
 	}
 
 	/**
-	* Is similar topics available?
-	*
-	* @return bool True if available, false otherwise
-	* @access public
-	*/
+	 * Is similar topics available?
+	 *
+	 * @access public
+	 * @return bool True if available, false otherwise
+	 */
 	public function is_available()
 	{
 		return $this->is_enabled() && $this->is_viewable() && $this->is_mysql();
@@ -95,8 +95,8 @@ class similar_topics
 	/**
 	 * Is similar topics configured?
 	 *
-	 * @return bool True if configured, false otherwise
 	 * @access public
+	 * @return bool True if configured, false otherwise
 	 */
 	public function is_enabled()
 	{
@@ -106,8 +106,8 @@ class similar_topics
 	/**
 	 * Is similar topics viewable bu the user?
 	 *
-	 * @return bool True if viewable, false otherwise
 	 * @access public
+	 * @return bool True if viewable, false otherwise
 	 */
 	public function is_viewable()
 	{
@@ -115,31 +115,24 @@ class similar_topics
 	}
 
 	/**
-	* Is the forum available for displaying similar topics
-	*
-	* @param int $forum_id A forum identifier
-	* @return bool True if available, false otherwise
-	* @access public
-	*/
-	public function forum_available($forum_id)
-	{
-		return !in_array($forum_id, explode(',', $this->config['similar_topics_hide']));
-	}
-
-	/**
-	* Get similar topics by matching topic titles
-	*
-	* NOTE: Currently requires MySQL due to the use of FULLTEXT indexes
-	* and MATCH and AGAINST and UNIX_TIMESTAMP. MySQL FULLTEXT has built-in
-	* English ignore words. We use phpBB's ignore words for non-English
-	* languages. We also remove any admin-defined special ignore words.
-	*
-	* @param	array	$topic_data	Array with topic data
-	* @return 	null
-	* @access	public
-	*/
+	 * Get similar topics by matching topic titles
+	 *
+	 * NOTE: Currently requires MySQL due to the use of FULLTEXT indexes
+	 * and MATCH and AGAINST and UNIX_TIMESTAMP. MySQL FULLTEXT has built-in
+	 * English ignore words. We use phpBB's ignore words for non-English
+	 * languages. We also remove any admin-defined special ignore words.
+	 *
+	 * @access public
+	 * @param array $topic_data Array with topic data
+	 */
 	public function display_similar_topics($topic_data)
 	{
+		// If the forum should not display similar topics, no need to continue
+		if ($topic_data['similar_topics_hide'])
+		{
+			return;
+		}
+
 		$topic_title = $this->clean_topic_title($topic_data['topic_title']);
 
 		// If the cleaned up topic_title is empty, no need to continue
@@ -182,7 +175,7 @@ class similar_topics
 		{
 			// Cookie based tracking copied from search.php
 			$tracking_topics = $this->request->variable($this->config['cookie_name'] . '_track', '', true, \phpbb\request\request_interface::COOKIE);
-			$tracking_topics = ($tracking_topics) ? tracking_unserialize($tracking_topics) : array();
+			$tracking_topics = $tracking_topics ? tracking_unserialize($tracking_topics) : array();
 		}
 
 		// We need to exclude passworded forums so we do not leak the topic title
@@ -192,7 +185,7 @@ class similar_topics
 		if (!empty($topic_data['similar_topic_forums']))
 		{
 			// Remove any passworded forums from this group of forums we will be searching
-			$included_forums = array_diff(explode(',', $topic_data['similar_topic_forums']), $passworded_forums);
+			$included_forums = array_diff(json_decode($topic_data['similar_topic_forums'], true), $passworded_forums);
 			// if there's nothing left to display (user has no access to the forums we want to search)
 			if (empty($included_forums))
 			{
@@ -201,26 +194,25 @@ class similar_topics
 
 			$sql_array['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', $included_forums);
 		}
-		// Otherwise, see what forums are not allowed to be searched, and exclude them
-		else if (!empty($this->config['similar_topics_ignore']))
+		// Otherwise exclude any ignored forums
+		else
 		{
-			// Add passworded forums to the exlude array
-			$excluded_forums = array_unique(array_merge(explode(',', $this->config['similar_topics_ignore']), $passworded_forums));
-			$sql_array['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', $excluded_forums, true);
-		}
-		// In all other cases, exclude any passworded forums the user is not allowed to view
-		else if (!empty($passworded_forums))
-		{
-			$sql_array['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', $passworded_forums, true);
+			// Remove any passworded forums
+			if (sizeof($passworded_forums))
+			{
+				$sql_array['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', $passworded_forums, true);
+			}
+
+			$sql_array['WHERE'] .= ' AND f.similar_topics_ignore = 0';
 		}
 
 		/**
-		* Event to modify the sql_array for similar topics
-		*
-		* @event vse.similartopics.get_topic_data
-		* @var	array	sql_array	SQL array to get similar topics data
-		* @since 1.3.0
-		*/
+		 * Event to modify the sql_array for similar topics
+		 *
+		 * @event vse.similartopics.get_topic_data
+		 * @var array sql_array SQL array to get similar topics data
+		 * @since 1.3.0
+		 */
 		$vars = array('sql_array');
 		extract($this->dispatcher->trigger_event('vse.similartopics.get_topic_data', compact($vars)));
 
@@ -251,7 +243,7 @@ class similar_topics
 
 					if (!$this->user->data['is_registered'])
 					{
-						$this->user->data['user_lastmark'] = (isset($tracking_topics['l'])) ? (int) (base_convert($tracking_topics['l'], 36, 10) + $this->config['board_startdate']) : 0;
+						$this->user->data['user_lastmark'] = isset($tracking_topics['l']) ? ((int) base_convert($tracking_topics['l'], 36, 10) + (int) $this->config['board_startdate']) : 0;
 					}
 				}
 
@@ -260,13 +252,13 @@ class similar_topics
 
 				// Get folder img, topic status/type related information
 				$folder_img = $folder_alt = $topic_type = '';
-				$unread_topic = (isset($topic_tracking_info[$similar_topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$similar_topic_id]) ? true : false;
+				$unread_topic = isset($topic_tracking_info[$similar_topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$similar_topic_id];
 				topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
 
-				$topic_unapproved = ($row['topic_visibility'] == ITEM_UNAPPROVED && $this->auth->acl_get('m_approve', $similar_forum_id)) ? true : false;
-				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $similar_forum_id)) ? true : false;
+				$topic_unapproved = $row['topic_visibility'] == ITEM_UNAPPROVED && $this->auth->acl_get('m_approve', $similar_forum_id);
+				$posts_unapproved = $row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $similar_forum_id);
 				//$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
-				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$similar_topic_id", true, $this->user->session_id) : '';
+				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . ($topic_unapproved ? 'approve_details' : 'unapproved_posts') . "&amp;t=$similar_topic_id", true, $this->user->session_id) : '';
 				//$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->root_path}mcp.{$this->php_ext}", "i=queue&amp;mode=deleted_topics&amp;t=$similar_topic_id", true, $this->user->session_id) : $u_mcp_queue;
 
 				$base_url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id);
@@ -290,14 +282,14 @@ class similar_topics
 					'TOPIC_ICON_IMG_WIDTH'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
 					'TOPIC_ICON_IMG_HEIGHT'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
 					'ATTACH_ICON_IMG'		=> ($this->auth->acl_get('u_download') && $this->auth->acl_get('f_download', $similar_forum_id) && $row['topic_attachment']) ? $this->user->img('icon_topic_attach', $this->user->lang('TOTAL_ATTACHMENTS')) : '',
-					'UNAPPROVED_IMG'		=> ($topic_unapproved || $posts_unapproved) ? $this->user->img('icon_topic_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
+					'UNAPPROVED_IMG'		=> ($topic_unapproved || $posts_unapproved) ? $this->user->img('icon_topic_unapproved', $topic_unapproved ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
 
 					'S_UNREAD_TOPIC'		=> $unread_topic,
-					'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && $this->auth->acl_get('m_report', $similar_forum_id)) ? true : false,
+					'S_TOPIC_REPORTED'		=> !empty($row['topic_reported']) && $this->auth->acl_get('m_report', $similar_forum_id),
 					'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 					'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
 					//'S_TOPIC_DELETED'		=> $topic_deleted,
-					'S_HAS_POLL'			=> ($row['poll_start']) ? true : false,
+					'S_HAS_POLL'			=> (bool) $row['poll_start'],
 
 					'U_NEWEST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;view=unread') . '#unread',
 					'U_LAST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
@@ -308,13 +300,13 @@ class similar_topics
 				);
 
 				/**
-				* Event to modify the similar topics template block
-				*
-				* @event vse.similartopics.modify_topicrow
-				* @var	array	row			Array with similar topic data
-				* @var	array	topic_row	Template block array
-				* @since 1.3.0
-				*/
+				 * Event to modify the similar topics template block
+				 *
+				 * @event vse.similartopics.modify_topicrow
+				 * @var array row       Array with similar topic data
+				 * @var array topic_row Template block array
+				 * @since 1.3.0
+				 */
 				$vars = array('row', 'topic_row');
 				extract($this->dispatcher->trigger_event('vse.similartopics.modify_topicrow', compact($vars)));
 
@@ -335,16 +327,17 @@ class similar_topics
 			'REPORTED_IMG'		=> $this->user->img('icon_topic_reported', 'TOPIC_REPORTED'),
 			//'DELETED_IMG'		=> $this->user->img('icon_topic_deleted', 'TOPIC_DELETED'),
 			'POLL_IMG'			=> $this->user->img('icon_topic_poll', 'TOPIC_POLL'),
+			'S_PST_BRANCH'		=> phpbb_version_compare(max($this->config['phpbb_version'], PHPBB_VERSION), '3.2.0-dev', '<') ? '31x' : '32x',
 		));
 	}
 
 	/**
-	* Clean topic title (and if needed, ignore-words)
-	*
-	* @param	string	$text	The topic title
-	* @return	string	The topic title
-	* @access	public
-	*/
+	 * Clean topic title (and if needed, ignore-words)
+	 *
+	 * @access public
+	 * @param string $text The topic title
+	 * @return string The topic title
+	 */
 	public function clean_topic_title($text)
 	{
 		// Strip quotes, ampersands
@@ -359,12 +352,12 @@ class similar_topics
 	}
 
 	/**
-	* Remove any non-english and/or custom defined ignore-words
-	*
-	* @param	string	$text			The topic title
-	* @return	string	The topic title
-	* @access	protected
-	*/
+	 * Remove any non-english and/or custom defined ignore-words
+	 *
+	 * @access protected
+	 * @param string $text The topic title
+	 * @return string The topic title
+	 */
 	protected function strip_stop_words($text)
 	{
 		$words = array();
@@ -386,18 +379,16 @@ class similar_topics
 		$words = array_diff($this->make_word_array($text), $words);
 
 		// Convert our words array back to a string
-		$text = (!empty($words)) ? implode(' ', $words) : '';
-
-		return $text;
+		return implode(' ', $words);
 	}
 
 	/**
-	* Helper function to split string into an array of words
-	*
-	* @param	string	$text	String of plain text words
-	* @return	array	Array of plaintext words
-	* @access	protected
-	*/
+	 * Helper function to split string into an array of words
+	 *
+	 * @access protected
+	 * @param string $text String of plain text words
+	 * @return array Array of plaintext words
+	 */
 	protected function make_word_array($text)
 	{
 		// Strip out any non-alpha-numeric characters using PCRE regex syntax
@@ -417,35 +408,35 @@ class similar_topics
 	}
 
 	/**
-	* Check if English is the current user's language
-	*
-	* @return	bool	True if lang is 'en' or 'en_us', false otherwise
-	* @access	protected
-	*/
+	 * Check if English is the current user's language
+	 *
+	 * @access protected
+	 * @return bool True if lang is 'en' or 'en_us', false otherwise
+	 */
 	protected function english_lang()
 	{
-		return ($this->user->lang_name == 'en' || $this->user->lang_name == 'en_us');
+		return ($this->user->lang_name === 'en' || $this->user->lang_name === 'en_us');
 	}
 
 	/**
-	* Check if custom ignore words have been defined for similar topics
-	*
-	* @return	bool	True or false
-	* @access	protected
-	*/
+	 * Check if custom ignore words have been defined for similar topics
+	 *
+	 * @access protected
+	 * @return bool True or false
+	 */
 	protected function has_ignore_words()
 	{
 		return !empty($this->config['similar_topics_words']);
 	}
 
 	/**
-	* Check if the database layer is MySQL4 or later
-	*
-	* @return	bool	True is MySQL4 or later, false otherwise
-	* @access	protected
-	*/
+	 * Check if the database layer is MySQL4 or later
+	 *
+	 * @access protected
+	 * @return bool True is MySQL4 or later, false otherwise
+	 */
 	protected function is_mysql()
 	{
-		return ($this->db->get_sql_layer() == 'mysql4' || $this->db->get_sql_layer() == 'mysqli');
+		return ($this->db->get_sql_layer() === 'mysql4' || $this->db->get_sql_layer() === 'mysqli');
 	}
 }

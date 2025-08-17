@@ -1,12 +1,12 @@
 <?php
 /**
-*
-* Precise Similar Topics
-*
-* @copyright (c) 2014 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Precise Similar Topics
+ *
+ * @copyright (c) 2014 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace vse\similartopics\core;
 
@@ -19,31 +19,33 @@ class fulltext_support
 	protected $engine;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\db\driver\driver_interface
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @access public
+	 * @param  \phpbb\db\driver\driver_interface
+	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db)
 	{
 		$this->db = $db;
 	}
 
 	/**
-	* Check if the database is using MySQL
-	*
-	* @return bool True if is mysql, false otherwise
-	*/
+	 * Check if the database is using MySQL
+	 *
+	 * @access public
+	 * @return bool True if is mysql, false otherwise
+	 */
 	public function is_mysql()
 	{
-		return ($this->db->get_sql_layer() == 'mysql4' || $this->db->get_sql_layer() == 'mysqli');
+		return ($this->db->get_sql_layer() === 'mysql4' || $this->db->get_sql_layer() === 'mysqli');
 	}
 
 	/**
-	* Check for FULLTEXT index support
-	*
-	* @return bool True if FULLTEXT is supported, false otherwise
-	*/
+	 * Check for FULLTEXT index support
+	 *
+	 * @access public
+	 * @return bool True if FULLTEXT is supported, false otherwise
+	 */
 	public function is_supported()
 	{
 		// FULLTEXT is supported on InnoDB since MySQL 5.6.4 according to
@@ -52,20 +54,22 @@ class fulltext_support
 	}
 
 	/**
-	* Get the database storage engine name
-	*
-	* @return string The storage engine name
-	*/
+	 * Get the database storage engine name
+	 *
+	 * @access public
+	 * @return string The storage engine name
+	 */
 	public function get_engine()
 	{
-		return (isset($this->engine)) ? $this->engine : $this->set_engine();
+		return isset($this->engine) ? $this->engine : $this->set_engine();
 	}
 
 	/**
-	* Set the database storage engine name
-	*
-	* @return string The storage engine name
-	*/
+	 * Set the database storage engine name
+	 *
+	 * @access public
+	 * @return string The storage engine name
+	 */
 	public function set_engine()
 	{
 		$this->engine = '';
@@ -89,36 +93,41 @@ class fulltext_support
 	}
 
 	/**
-	* Check if a field is a FULLTEXT index
-	*
-	* @param string $field name of a field
-	* @return bool True if field is a FULLTEXT index, false otherwise
-	*/
-	public function index($field = 'topic_title')
+	 * Check if a field is a FULLTEXT index
+	 *
+	 * @access public
+	 * @param string $field name of a field
+	 * @return bool True if field is a FULLTEXT index, false otherwise
+	 */
+	public function is_index($field = 'topic_title')
 	{
+		$is_index = false;
+
 		$sql = 'SHOW INDEX
 			FROM ' . TOPICS_TABLE;
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			// deal with older MySQL versions which didn't use Index_type
-			$index_type = (isset($row['Index_type'])) ? $row['Index_type'] : $row['Comment'];
+			// Older MySQL versions didn't use Index_type, so fallback to Comment
+			$index_type = isset($row['Index_type']) ? $row['Index_type'] : $row['Comment'];
 
-			if ($index_type == 'FULLTEXT' && $row['Key_name'] == $field)
+			if ($index_type === 'FULLTEXT' && $row['Key_name'] === $field)
 			{
-				return true;
+				$is_index = true;
+				break;
 			}
 		}
 
 		$this->db->sql_freeresult($result);
 
-		return false;
+		return $is_index;
 	}
 
 	/**
 	 * Get topics table information
 	 *
+	 * @access protected
 	 * @return mixed Array with the table info, false if the table does not exist
 	 */
 	protected function get_table_info()
