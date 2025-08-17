@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package PM Modeatration
+* @package PM Moderation
 * @copyright (c) 2016 ForumHulp | 2025 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
