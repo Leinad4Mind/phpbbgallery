@@ -1,0 +1,126 @@
+/* CSS Document */
+
+h1 {position: relative;}
+#circle {float: right; font-size: 12px; cursor:pointer;}
+#ProgressStatus {position: absolute; z-index: 2; right: 21px; font-size: 6px; font-weight: bold;}
+
+.cbOddLine, .cbEvenLine {color:#E70509;cursor:pointer;}
+.cbOddLine a, .cbEvenLine a {color:#E70509;cursor:pointer;}
+.email_ok, .email_ok a {color:#0C6C20;cursor:pointer;}
+
+.msg {
+	position: absolute;
+	z-index:1000;
+	display:none;
+	min-width:410px;
+	min-height:30px;
+	background-color:#FFF;
+	border:#A5A5A5 thin solid;
+	border-radius:10px;
+	color:#ABABAB;
+	padding:10px;
+	margin:5px -10px 0;
+	box-shadow: 5px 5px 3px #888;	
+}
+
+.msg.empty {
+	width:0px;
+	height:0px;
+	min-width:0px;
+	min-height:0px;
+	padding:0;
+	margin:0;
+	box-shadow: none;
+	visibility:hidden;
+}
+
+.cbTable {
+	border-collapse:collapse;
+	border: 1px #dddddd solid;
+	margin:0px 10px 10px 10px;
+	width:98%;
+}
+
+.cbTable td {
+    font-size: 100%;
+    padding: 4px;
+    line-height: 1.2em;
+	border: 1px #dddddd solid;
+	padding: 2px 2px;
+	text-align: center;
+}
+
+.cbTable  td:nth-child(2) {text-align: left;}
+.cbTable  td:nth-child(3) {text-align: left;}
+
+
+.cbHead {
+	background-image: url(images/fhbg.gif);
+	background-repeat:repeat-x;
+	font-size:14px;
+	font-weight:bold;
+}
+
+.cbOddLine {
+	background-color: #f7f7f7;
+}
+
+.cbOddLine:hover{
+	background-color: #dcf1fc;
+}
+
+.cbEvenLine {
+	background-color: #fff;
+}
+
+.cbEvenLine:hover{
+	background-color: #dcf1fc;
+}
+
+.fa-arrow-up, .fa-arrow-down {float:right; color:#fff; padding: 0 2px;}
+#act-arrow {color:#CECECE;}
+.cron_run {float: right; color: #105289; cursor: pointer; display: none;}
+
+@media only screen and (max-width: 700px), only screen and (max-device-width: 700px) {
+    table.responsive.show-header thead, table.responsive.show-header th {
+		display: block;
+		width: auto !important;
+		text-align: left !important;
+		margin: 0;
+	}
+}
+
+.checkmailbar {
+	width:100%;
+	float:left;
+	height:2px;
+    margin-left: 0px;
+    margin-top: 0px;
+    display: inline-block;
+}
+
+.checkmailbargreen {
+	background: #a4b357;
+	background: -moz-linear-gradient(left,  #a4b357 0%, #75890c 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#a4b357), color-stop(100%,#75890c));
+	background: -webkit-linear-gradient(left,  #a4b357 0%,#75890c 100%);
+	background: -o-linear-gradient(left,  #a4b357 0%,#75890c 100%);
+	background: -ms-linear-gradient(left,  #a4b357 0%,#75890c 100%);
+	background: linear-gradient(to right,  #a4b357 0%,#75890c 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=1 );
+	height:2px;
+	display:inline-block;	
+}
+
+.checkmailbarred {
+	background: #ff3019;
+	background: -moz-linear-gradient(left,  #ff3019 0%, #cf0404 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#ff3019), color-stop(100%,#cf0404));
+	background: -webkit-linear-gradient(left,  #ff3019 0%,#cf0404 100%);
+	background: -o-linear-gradient(left,  #ff3019 0%,#cf0404 100%);
+	background: -ms-linear-gradient(left,  #ff3019 0%,#cf0404 100%);
+	background: linear-gradient(to right,  #ff3019 0%,#cf0404 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#cf0404',GradientType=1 );
+	height:2px;
+	display:inline-block;	
+}
