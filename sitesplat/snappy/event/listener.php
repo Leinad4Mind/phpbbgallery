@@ -158,7 +158,7 @@ class listener implements EventSubscriberInterface
 		}
 	}
 	
-	// Lets make a copy of the posts and be parsed to the original BBcodes so we can quote this son of a R2 D2 
+	// Lets make a copy of the posts and be parsed to the original BBcodes so we can quote this son of a R2D2 
 	public function decoded_post_add($event)
     {
     $decoded_message = censor_text($event['row']['post_text']);

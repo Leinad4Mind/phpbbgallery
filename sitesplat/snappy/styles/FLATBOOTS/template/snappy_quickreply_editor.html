@@ -1,5 +1,5 @@
 <div class="clearfix">
-	<form role="form" name="qr_postform" id="qr_postform" method="post" action="{U_QR_ACTION}"{S_FORM_ENCTYPE}>
+	<form name="qr_postform" id="qr_postform" method="post" action="{U_QR_ACTION}"{S_FORM_ENCTYPE}>
      <fieldset> 
 		<div class="row">			
 			<div class="col-md-12">
@@ -31,8 +31,8 @@
 		              {QR_HIDDEN_FIELDS}
 		              <button onclick="document.getElementById('show_button').style.display = 'inline-block';" class="btn btn-default" type="button" data-target=".quick-reply" data-toggle="collapse"><i class="fa fa-times"></i></button>
                       <a role="button" class="btn btn-default togglesnappy"><i class="fa fa-cog"></i></a>
-					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
-		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>		   
+					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>		   
 				   </div>
 			    </div>
             </div>
