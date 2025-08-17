@@ -1,0 +1,2 @@
+parameters:
+    tables.searchresults: %core.table_prefix%searchresults
