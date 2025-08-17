@@ -1,0 +1,8 @@
+<span>
+	{{ topicrow.TOPIC_MOVED_MESSAGE }} {{ topicrow.TOPIC_MOVED_TO }} {{ topicrow.TOPIC_MOVED_ON }}
+	{% if topicrow.TOPIC_MOVED_REASON %}
+		<br>
+		<span><strong>{{ lang('REASON') ~ lang('COLON') }}</strong> <em>{{ topicrow.TOPIC_MOVED_REASON }}</em></span>
+	{% endif %}
+	<br>
+</span>

@@ -1,0 +1,7 @@
+<div class="notice">
+	<span>{{ postrow.TOPIC_MOVED_MESSAGE }} {{ postrow.TOPIC_MOVED_FROM }} {{ postrow.TOPIC_MOVED_BY }} {{ postrow.TOPIC_MOVED_ON }} {{ postrow.TOPIC_MOVED_UNDO }}</span>
+	{% if postrow.TOPIC_MOVED_REASON %}
+		<br>
+		<span><strong>{{ lang('REASON') ~ lang('COLON') }}</strong> <em>{{ postrow.TOPIC_MOVED_REASON }}</em></span>
+	{% endif %}
+</div>
