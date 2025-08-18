@@ -18,6 +18,7 @@ services:
             - '@phpbb.wpn.form_helper'
             - '@language'
             - '@template'
+            - '@user'
             - '@notification_manager'
             - '%core.root_path%'
         tags:
@@ -29,7 +30,6 @@ services:
         arguments:
             - '@config'
             - '@dbal.conn'
-            - '@language'
             - '@log'
             - '@user_loader'
             - '@user'
@@ -48,8 +48,11 @@ services:
             - '@controller.helper'
             - '@dbal.conn'
             - '@phpbb.wpn.form_helper'
+            - '@language'
+            - '@notification_manager'
             - '@path_helper'
             - '@request'
+            - '@user_loader'
             - '@user'
             - '@template.twig.environment'
             - '%tables.phpbb.wpn.notification_push%'

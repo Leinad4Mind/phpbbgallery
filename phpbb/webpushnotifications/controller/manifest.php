@@ -61,10 +61,11 @@ class manifest
 		}
 
 		$board_path = $this->config['force_server_vars'] ? $this->config['script_path'] : $this->path_helper->get_web_root_path();
+		$board_url = generate_board_url();
 
 		$manifest = [
 			'name'			=> $this->config['sitename'],
-			'short_name'	=> $this->config['pwa_short_name'] ?: substr($this->config['sitename'], 0, 12),
+			'short_name'	=> $this->config['pwa_short_name'] ?: utf8_substr(preg_replace('/[^\x20-\x7E]/', '', $this->config['sitename']), 0, 12),
 			'display'		=> 'standalone',
 			'orientation'	=> 'portrait',
 			'dir'			=> $this->language->lang('DIRECTION'),
@@ -76,12 +77,12 @@ class manifest
 		{
 			$manifest['icons'] = [
 				[
-					'src' => $this->config['icons_path'] . '/' . $this->config['pwa_icon_small'],
+					'src' => $board_url . '/' . $this->config['icons_path'] . '/' . $this->config['pwa_icon_small'],
 					'sizes' => '192x192',
 					'type' => 'image/png'
 				],
 				[
-					'src' => $this->config['icons_path'] . '/' . $this->config['pwa_icon_large'],
+					'src' => $board_url . '/' . $this->config['icons_path'] . '/' . $this->config['pwa_icon_large'],
 					'sizes' => '512x512',
 					'type' => 'image/png'
 				]

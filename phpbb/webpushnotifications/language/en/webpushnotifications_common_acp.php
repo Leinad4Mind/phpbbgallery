@@ -40,7 +40,8 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'PWA_SETTINGS'				=> 'Progressive web application options',
 	'PWA_SHORT_NAME'			=> 'Short site name',
-	'PWA_SHORT_NAME_EXPLAIN'	=> 'Your site name in 12 characters or less, which may be used as a label for an icon on a mobile device’s home screen.',
+	'PWA_SHORT_NAME_EXPLAIN'	=> 'Your site name in 12 characters or fewer, which may be used as a label for an icon on a mobile device’s home screen. (If this field is left empty, the first 12 characters of the <samp>Site name</samp> will be used.)',
+	'PWA_SHORT_NAME_INVALID'	=> '“Short site name” contains illegal characters or exceeds the 12 character limit.',
 	'PWA_ICON_SMALL'			=> 'Small mobile device icon',
 	'PWA_ICON_SMALL_EXPLAIN'	=> 'File name of a 192px x 192px PNG image. This file must be uploaded to your board’s <samp>icons</samp> directory.',
 	'PWA_ICON_LARGE'			=> 'Large mobile device icon',
@@ -48,5 +49,5 @@ $lang = array_merge($lang, [
 	'PWA_ICON_SIZE_INVALID'		=> '“%s” does not have the correct image dimensions.',
 	'PWA_ICON_MIME_INVALID'		=> '“%s” must be a PNG image file.',
 	'PWA_IMAGE_INVALID'			=> '“%s” does not appear to be a valid image file.',
-	'PWA_IMAGE_NOT_PROVIDED'	=> '%s field must not be empty. All icon fields must contain and image.',
+	'PWA_IMAGE_NOT_PROVIDED'	=> '%s field must not be empty. All icon fields must contain an image.',
 ]);
