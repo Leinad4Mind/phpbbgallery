@@ -141,7 +141,7 @@ $config['auto_delete'] = 0;
 $config['max_backup_files'] = 3;
 
 //configuration file
-$config['cron_configurationfile'] = 'moosdumper.conf.php';
+$config['cron_configurationfile'] = 'phpbbdumper.conf.php';
 //path to perl, for windows use e.g. C:perlbinperl.exe
 $config['cron_perlpath'] = '/usr/bin/perl';
 //mailer use sendmail(1) or SMTP(0) or other SMPT(3) or PHP Default(4)

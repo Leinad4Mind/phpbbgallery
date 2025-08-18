@@ -29,7 +29,7 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-session_name('MyOOSDumperID');
+session_name('phpBBDumperID');
 session_start();
 
 global $config, $databases;
@@ -337,7 +337,7 @@ if ($restore['filehandle']) {
 
 $pagefooter = (1 == $RestoreFertig) ? MODFooter() : '</div></BODY></HTML>';
 // formerly all parameters were submitted via POST; now we use a session but we need the form to do the js-selfcall
-$page_parameter = '<form action="restore.php?MyOOSDumperID='.session_id().'" method="POST" name="restore"></form>';
+$page_parameter = '<form action="restore.php?phpBBDumperID='.session_id().'" method="POST" name="restore"></form>';
 if (1 == $RestoreFertig) {
     $complete_page = $pageheader.(('' != $aus) ? implode("\n", $aus) : '').$pagefooter;
 } else {

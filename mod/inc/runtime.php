@@ -34,7 +34,7 @@ if (function_exists('date_default_timezone_set')) {
 global $config, $databases;
 //Konstanten
 if (!defined('MOD_VERSION')) {
-    define('MOD_VERSION', '1.0.0');
+    define('MOD_VERSION', '1.0.1');
 }
 if (!defined('MOD_OS')) {
     define('MOD_OS', PHP_OS);
@@ -64,13 +64,13 @@ if (isset($_SESSION['config_file'])) {
     $config['config_file'] = $_SESSION['config_file'];
     $config['cron_configurationfile'] = $_SESSION['config_file'];
 } else {
-    $config['config_file'] = 'myoosdumper';
-    $_SESSION['config_file'] = 'myoosdumper';
-    $config['cron_configurationfile'] = 'myoosdumper.conf.php';
+    $config['config_file'] = 'phpbbdumper';
+    $_SESSION['config_file'] = 'phpbbdumper';
+    $config['cron_configurationfile'] = 'phpbbdumper.conf.php';
 }
-$config['files']['log'] = $config['paths']['log'].'myoosdumper.log';
-$config['files']['perllog'] = $config['paths']['log'].'myoosdumper_perl.log';
-$config['files']['perllogcomplete'] = $config['paths']['log'].'myoosdumper_perl.complete.log';
+$config['files']['log'] = $config['paths']['log'].'phpbbdumper.log';
+$config['files']['perllog'] = $config['paths']['log'].'phpbbdumper_perl.log';
+$config['files']['perllogcomplete'] = $config['paths']['log'].'phpbbdumper_perl.complete.log';
 $config['files']['parameter'] = $config['paths']['config'].$config['config_file'].'.php';
 
 // inti MySQL-Setting-Vars

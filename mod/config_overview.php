@@ -84,7 +84,7 @@ if (isset($_GET['config_delete'])) {
     $del_config = urldecode((string) $_GET['config_delete']);
     if ($del_config == $config['config_file']) {
         // currently selected configuration was deleted
-        $config['config_file'] = 'myoosdumper';
+        $config['config_file'] = 'phpbbdumper';
         $_SESSION['config_file'] = $config['config_file'];
         read_config($config['config_file']); // Load standard
     }
@@ -917,7 +917,7 @@ if (sizeof($configs) > 0) {
         $aus['conf'] .= '</table></td><td>';
         $aus['conf'] .= '<a href="config_overview.php?config='.urlencode((string) $c).'">'.$icon['edit'].'</a>';
 
-        if ('myoosdumper' != $c) { // && $old_config['config_file']!= $c)
+        if ('phpbbdumper' != $c) { // && $old_config['config_file']!= $c)
             $aus['conf'] .= '<a href="config_overview.php?config_delete='.urlencode((string) $c).'" onclick="if(!confirm(\''.sprintf($lang['L_CONFIRM_CONFIGFILE_DELETE'], $c).'\')) return false;">'.$icon['delete'].'</a>';
         } else {
             $aus['conf'] .= '&nbsp;';

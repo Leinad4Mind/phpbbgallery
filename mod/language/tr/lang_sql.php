@@ -3,7 +3,7 @@
 $lang['L_COMMAND'] = 'Komut';
 $lang['L_IMPORT_NOTABLE'] = 'Yüklenecek tablo seçilmemiş!';
 $lang['L_PASSWORD_STRENGTH'] = 'Password strength';
-$lang['L_SQL_WARNING'] = 'SQL emirleriinin işlenmesi kayıtlarınıza zarar verebilir! MyOOSDumper işlemden hiç bir yükümlülük kabul etmez.';
+$lang['L_SQL_WARNING'] = 'SQL emirleriinin işlenmesi kayıtlarınıza zarar verebilir! phpBBDumper işlemden hiç bir yükümlülük kabul etmez.';
 $lang['L_SQL_EXEC'] = 'SQL komudu çalıştır';
 $lang['L_SQL_DATAVIEW'] = 'Veri görüntüsü';
 $lang['L_SQL_TABLEVIEW'] = 'Tablo görüntüsü';

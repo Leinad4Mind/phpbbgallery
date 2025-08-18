@@ -27,10 +27,10 @@
  * configurations to update.
  *
  * enter more than one configurationsfile like this
- * $configurationfiles=array('myoosdumper','db2');
+ * $configurationfiles=array('phpbbdumper','db2');
  */
 $configurationfiles = [
-                        'myoosdumper',
+                        'phpbbdumper',
 ];
 
 define('OOS_VALID_MOD', true);

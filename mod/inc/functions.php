@@ -203,7 +203,7 @@ function SetDefault($load_default = false)
     //DB-Liste holen
     mod_mysqli_connect();
 
-    $create_statement = 'CREATE TABLE `moosdumper_test_abcxyvfgh` (`test` varchar(200) default NULL, `id` bigint(20) unsigned NOT NULL auto_increment,'.'PRIMARY KEY  (`id`)) TYPE=MyISAM;';
+    $create_statement = 'CREATE TABLE `phpbbdumper_test_abcxyvfgh` (`test` varchar(200) default NULL, `id` bigint(20) unsigned NOT NULL auto_increment,'.'PRIMARY KEY  (`id`)) TYPE=MyISAM;';
 
     $res = mysqli_query($config['dbconnection'], 'SHOW DATABASES');
     while ($row = mysqli_fetch_row($res)) {
@@ -640,8 +640,8 @@ function WriteCronScript($restore_values = false)
     }
 
     // if standard config was deleted -> restore it with the actual values
-    if (!file_exists($config['paths']['config'].'moosdumper.conf.php')) {
-        $sfile = $config['paths']['config'].'moosdumper.conf.php';
+    if (!file_exists($config['paths']['config'].'phpbbdumper.conf.php')) {
+        $sfile = $config['paths']['config'].'phpbbdumper.conf.php';
         if ($fp = fopen($sfile, 'wb')) {
             if (!fwrite($fp, $cronscript)) {
                 $ret = false;

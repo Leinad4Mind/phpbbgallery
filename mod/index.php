@@ -31,7 +31,7 @@ if (!@ob_start('ob_gzhandler')) {
 
 require './inc/functions.php';
 $page = $_GET['page'] ?? 'main.php';
-if (!file_exists('./work/config/myoosdumper.php')) {
+if (!file_exists('./work/config/phpbbdumper.php')) {
     header('location: install.php');
     ob_end_flush();
     exit();

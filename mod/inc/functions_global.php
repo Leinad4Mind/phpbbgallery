@@ -963,12 +963,27 @@ function SendViaSFTP($i, $source_file, $conn_msg = 1)
     }
 }
 
+/*function Realpfad($p)
+{
+    $dir = __DIR__;
+    $dir = str_replace('/inc', '/', $dir);
+    $dir = str_replace('\\', '/', $dir);
+    $dir = str_replace('//', '/', $dir);
+    if (!str_ends_with($dir, '/')) {
+        $dir .= '/';
+    }
+    return $dir;
+}*/
+
 function Realpfad($p)
 {
     $dir = __DIR__;
-    $dir = str_replace('inc', '', $dir);
     $dir = str_replace('\\', '/', $dir);
-    $dir = str_replace('//', '/', $dir);
+    if (!str_starts_with($dir, '//')) {
+        // Nur doppelte Slashes in der Mitte des Pfades ersetzen
+        $dir = preg_replace('#(?<!:)//+#', '/', $dir);
+    }
+    $dir = str_replace('/inc', '/', $dir);
     if (!str_ends_with($dir, '/')) {
         $dir .= '/';
     }

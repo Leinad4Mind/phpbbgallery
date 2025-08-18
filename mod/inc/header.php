@@ -27,7 +27,7 @@ $mod_path = realpath(__DIR__.'/../').'/';
 if (!defined('MOD_PATH')) {
     define('MOD_PATH', $mod_path);
 }
-session_name('MyOOSDumperID');
+session_name('phpBBDumperID');
 session_start();
 
 global $config, $databases;
