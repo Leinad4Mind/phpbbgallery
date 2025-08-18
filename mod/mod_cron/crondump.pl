@@ -30,7 +30,7 @@
 ########################################################################################
 # Script-Version
 package MyOOSCron;
-our $pcd_version="1.0.4";
+our $pcd_version="1.0.5";
 
 ########################################################################################
 # please enter the absolute path of the config-dir

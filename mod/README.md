@@ -18,7 +18,7 @@ Requirements
 Installation
 ------------
 
-1. download [MyOOS [Dumper] (phpBBDumper)](http://phpbb3-support.square7.ch/)
+1. download [MyOOS [Dumper] (phpBBDumper)](https://www.phpbb3-support.square7.ch/)
 2. unzip the downloaded zip file 
 3. unzip the file into an empty directory and upload everything from the phpBBDumper directory to the server
 4. call up the file install.php with your browser. The installation routine will guide you through the individual steps and help you to create the access data and the database. 
@@ -26,7 +26,7 @@ Installation
 
 Support
 -------------
-For free support visit our support page: (http://phpbb3-support.square7.ch/)
+For free support visit our support page: (https://www.phpbb3-support.square7.ch/)
 
 
 License

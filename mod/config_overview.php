@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
    
    phpBBDumper]
-   http://phpbb3-support.square7.ch/
+   https://www.phpbb3-support.square7.ch/
 
    Copyright (c) 2025 by Mahony
    ----------------------------------------------------------------------
@@ -1045,11 +1045,11 @@ $aus['global1'] .= '</td></tr>';
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_SPEED'], '').$lang['L_SPEED'].':&nbsp;</td>';
 $aus['global1'] .= '<td><input type="number" class="number" name="minspeed" min="0" max="999999" value="'.($config['minspeed'] ?? '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="number" class="maxspeed" name="maxspeed" min="0" max="999999999" value="'.($config['maxspeed'] ?? '').'"></td></tr>';
 
-//$aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
+$aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
 
-//$aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_UPDATE_CORE'].':&nbsp;</td>';
-//$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="update_core" '.((isset($config['update_core']) && (1 == $config['update_core'])) ? ' checked' : '').'>';
-//$aus['global1'] .= '</td></tr>';
+$aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_UPDATE_CORE'].':&nbsp;</td>';
+$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="update_core" '.((isset($config['update_core']) && (1 == $config['update_core'])) ? ' checked' : '').'>';
+$aus['global1'] .= '</td></tr>';
 
 
 $aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_DUMP'].'</legend><table>';

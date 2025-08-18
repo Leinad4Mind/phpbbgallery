@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
    
    phpBBDumper]
-   http://phpbb3-support.square7.ch/
+   https://www.phpbb3-support.square7.ch/
 
    Copyright (c) 2025 by Mahony
    ----------------------------------------------------------------------
@@ -103,14 +103,16 @@ function filter_string_polyfill(mixed $string): mixed
 
 function Help($ToolTip, $Anker, $imgsize = 12)
 {
-    /*
     global $config;
-    if($Anker!=""){
-    return '<a href="language/'.$config['language'].'/help.html#'.$Anker.'" title="'.$ToolTip.'"><img src="'.$config['files']['iconpath'].'help16.gif" width="'.$imgsize.'" height="'.$imgsize.'" hspace="'.(round($imgsize/4,0)).'" vspace="0" border="0" alt="Help"></a>';
-    } else {
-    return '<img src="'.$config['files']['iconpath'].'help16.gif" width="'.$imgsize.'" height="'.$imgsize.'" alt="Help" title="'.$ToolTip.'" border="0" hspace="'.(round($imgsize/4,0)).'" vspace="0" >';
+
+    if (!empty($ToolTip))
+    {
+        if($Anker!=""){
+        return '<a href="language/'.$config['language'].'/help.html#'.$Anker.'" title="'.$ToolTip.'"><img src="'.$config['files']['iconpath'].'helptopics_hd.png" width="'.$imgsize.'" height="'.$imgsize.'" hspace="'.(round($imgsize/4,0)).'" vspace="0" border="0" alt="Help"></a>';
+        } else {
+        return '<img src="'.$config['files']['iconpath'].'/helptopics_hd.png" width="'.$imgsize.'" height="'.$imgsize.'" alt="Help" title="'.$ToolTip.'" border="0" hspace="'.(round($imgsize/4,0)).'" vspace="0" >';
+        }
     }
-    */
 }
 
 function DeleteFilesM($dir, $pattern = '*.*')

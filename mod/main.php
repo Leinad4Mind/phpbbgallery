@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
    
    phpBBDumper
-   http://phpbb3-support.square7.ch/
+   https://www.phpbb3-support.square7.ch/
 
    Copyright (c) 2025 by Mahony
    ----------------------------------------------------------------------
@@ -70,7 +70,7 @@ if ((isset($config['update_core']) && 1 == $config['update_core'])) {
         $update->setCurrentVersion(MOD_VERSION);
 
         // Replace with your server update directory
-        $update->setUpdateUrl('https://oos-shop.de/modserver');
+        $update->setUpdateUrl('https://www.phpbb3-support.square7.ch/modserver');
 
         // Custom logger (optional)
         $logger = new \Monolog\Logger("default");

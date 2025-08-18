@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
    
    phpBBDumper
-   http://phpbb3-support.square7.ch/
+   https://www.phpbb3-support.square7.ch/
 
    Copyright (c) 2025 by Mahony
    ----------------------------------------------------------------------

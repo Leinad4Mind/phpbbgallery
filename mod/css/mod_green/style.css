@@ -1,27 +1,33 @@
 /* ----------------------------------------------------------------------
 
-   phpBBDumper
-   https://www.oos-shop.de/
+	phpBBDumper
+	https://www.phpbb3-support.square7.ch/
 
-   Copyright (c) 2013 - 2023 by the MyOOS Development Team.
-   ----------------------------------------------------------------------
-   Based on:
+	Copyright (c) 2025 by Mahony
+	----------------------------------------------------------------------
 
-   MySqlDumper
-   https://www.mysqldumper.de
+	MyOOS [Dumper]
+	https://www.oos-shop.de/
 
-   Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
-   ----------------------------------------------------------------------
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------- */
+	Copyright (c) 2013 - 2023 by the MyOOS Development Team.
+	----------------------------------------------------------------------
+	Based on:
+
+	MySqlDumper
+	https://www.mysqldumper.de
+
+	Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
+	----------------------------------------------------------------------
+	Released under the GNU General Public License
+	---------------------------------------------------------------------- */
 
 /*
-	@MySQLDumper STYLESHEET
+	@phpBBDumper STYLESHEET
 	@name			mod_green
 	@copyright		MySQLDumper - Daniel Schlichtholz <//www.mysqldumper.de>
-	@author			Ingo Wagener <//www.vorderdeck.de>, Daniel Schlichtholz, Christian Gresshoener <//www.gresshoener.de>
+	@author			Ingo Wagener <//www.vorderdeck.de>, Daniel Schlichtholz, Christian Gresshoener <//www.gresshoener.de>, Kirk <//https://kirk-phpbb.com/>
 	@date			2006-04-11 16:26:00
-	@lastmodified	2009-09-15 00:21:30
+	@lastmodified	2025-08-08
 	@media			screen and projection
 */
 
@@ -156,7 +162,7 @@ a.server:hover {
 }
 
 table td {
-	vertical-align: bottom;
+	vertical-align: top;
 	padding: 2px 3px 4px;
 }
 
@@ -486,6 +492,11 @@ input[type="number"] {
 	padding-left: 2px;
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+	cursor: pointer;
+}
+
 select {
 	background: #B3C2C0;
 	color: #4E5665;
@@ -588,6 +599,11 @@ input[disabled] {
 	line-height: 12px;
 	padding: 2px;
 	margin: 0px;
+}
+
+#sqlheaderbox img,
+p.sqlheadmenu img {
+	vertical-align: middle;
 }
 
 #sqltextarea {

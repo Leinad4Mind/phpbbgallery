@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
    
    phpBBDumper]
-   http://phpbb3-support.square7.ch/
+   https://www.phpbb3-support.square7.ch/
 
    Copyright (c) 2025 by Mahony
    ----------------------------------------------------------------------
@@ -34,7 +34,7 @@ if (function_exists('date_default_timezone_set')) {
 global $config, $databases;
 //Konstanten
 if (!defined('MOD_VERSION')) {
-    define('MOD_VERSION', '1.0.4');
+    define('MOD_VERSION', '1.0.5');
 }
 if (!defined('MOD_OS')) {
     define('MOD_OS', PHP_OS);
@@ -107,7 +107,7 @@ $config['perlspeed'] = 10000; //Anzahl der Datensaetze, die in einem Rutsch gele
 $config['ignore_enable_keys'] = 0;
 
 //Bausteine
-$config['homepage'] = 'http://phpbb3-support.square7.ch/';
+$config['homepage'] = 'https://www.phpbb3-support.square7.ch/';
 
 $nl = "\n";
 $mysql_commentstring = '--';
