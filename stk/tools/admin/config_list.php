@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Clear Extensions
+* @package Support Toolkit - Config List
 * @version $Id$
 * @copyright (c) 2014 Sheer
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -55,6 +55,7 @@ class config_list
 
 		$options = array(
 			'all'				=> $lang['ALL'],
+			'statistics'		=> $lang['STATISTICS'],
 			'cron'				=> $lang['CRON_TASKS'],
 			'attachments'		=> $lang['ATTACHMENTS'],
 			'board_config'		=> $lang['BOARD_CONFIG'],
@@ -74,6 +75,7 @@ class config_list
 			'security'			=> $lang['SECURITY'],
 			'load'				=> $lang['LOAD'],
 			'search'			=> $lang['SEARCH'],
+			'reparsing'			=> 'REPARSING',
 			'misc'				=> $lang['MISC'],
 		);
 
@@ -158,7 +160,7 @@ class config_list
 		);
 
 		$config_cookies = array(
-			'cookie_domain', 'cookie_name', 'cookie_path', 'cookie_secure',
+			'cookie_domain', 'cookie_name', 'cookie_path', 'cookie_secure', 'cookie_notice',
 		);
 
 		$config_server = array(
@@ -176,7 +178,7 @@ class config_list
 			'limit_load', 'session_length', 'active_sessions', 'load_online_time', 'read_notification_expire_days', 'load_notifications', 'load_db_track',
 			'load_db_lastread', 'load_anon_lastread', 'load_online', 'load_online_guests', 'load_onlinetrack', 'load_birthdays', 'load_unreads_search',
 			'load_moderators', 'load_jumpbox', 'load_user_activity', 'load_tplcompile', 'allow_cdn', 'allow_live_searches', 'load_cpf_memberlist',
-			'load_cpf_pm', 'load_cpf_viewprofile', 'load_cpf_viewtopic',
+			'load_cpf_pm', 'load_cpf_viewprofile', 'load_cpf_viewtopic', 'load_user_activity_limit',
 		);
 
 		$config_search = array(
@@ -187,7 +189,20 @@ class config_list
 			'fulltext_sphinx_id', 'fulltext_sphinx_data_path', 'fulltext_sphinx_indexer_mem_limit', 'fulltext_sphinx_host', 'fulltext_sphinx_port', 'fulltext_sphinx_stopwords',
 		);
 
+		$config_statistics = array(
+			'dbms_version', 'last_queue_run', 'board_startdate', 'newest_user_id', 'newest_username', 'num_files', 'num_posts', 'num_topics',
+			'num_users', 'record_online_date', 'record_online_users', 'upload_dir_size', 'version',
+		);
+
+		$config_reparsing = array(
+			'reparse_lock', 'text_reparser.pm_text_cron_interval', 'text_reparser.pm_text_last_cron', 'text_reparser.poll_option_cron_interval',
+			'text_reparser.poll_option_last_cron', 'text_reparser.poll_title_cron_interval', 'text_reparser.poll_title_last_cron',
+			'text_reparser.post_text_cron_interval', 'text_reparser.post_text_last_cron', 'text_reparser.user_signature_cron_interval',
+			'text_reparser.user_signature_last_cron',
+		);
+
 		$config_common = $config_all = array();
+		$config_common = array_merge($config_common, $config_statistics);
 		$config_common = array_merge($config_common, $config_cron);
 		$config_common = array_merge($config_common, $config_attachments);
 		$config_common = array_merge($config_common, $config_avatras);
@@ -207,6 +222,7 @@ class config_list
 		$config_common = array_merge($config_common, $config_security);
 		$config_common = array_merge($config_common, $config_load);
 		$config_common = array_merge($config_common, $config_search);
+		$config_common = array_merge($config_common, $config_reparsing);
 
 		$sql = 'SELECT *
 			FROM ' . CONFIG_TABLE. '
@@ -239,7 +255,11 @@ class config_list
 		{
 			// Show selected
 			switch ($display)
-			{	case 'cron'				:
+			{
+				case 'statistics'		:
+					$where = $config_statistics;
+				break;
+				case 'cron'				:
 					$where = $config_cron;
 				break;
 				case 'attachments'		:
@@ -296,6 +316,9 @@ class config_list
 				case 'search'		:
 					$where = $config_search;
 				break;
+				case 'reparsing'	:
+					$where = $config_reparsing;
+				break;
 				case 'misc'		:
 					$where = $config_misc;
 				break;
@@ -308,14 +331,14 @@ class config_list
 		page_header(user_lang('CONFIG_LIST'));
 
 		$sql = 'SELECT COUNT(config_name) as count
-				FROM ' . CONFIG_TABLE .'
+				FROM ' . CONFIG_TABLE . '
 				' . $sql_where ;
 		$result = $db->sql_query($sql);
 		$count = $db->sql_fetchfield('count');
 		$db->sql_freeresult($result);
 
 		$sql = 'SELECT *
-			FROM ' . CONFIG_TABLE. '
+			FROM ' . CONFIG_TABLE . '
 			' . $sql_where . '
 			ORDER BY config_name ASC';
 		$result = $db->sql_query_limit($sql, $limit, $start);
@@ -323,8 +346,15 @@ class config_list
 		$not_bool = array('assets_version', 'form_token_mintime', 'img_link_height', 'img_link_width', 'img_max_height', 'img_max_width', 'max_attachments_pm', 'max_autologin_time', 'max_post_img_height',
 			'max_post_img_width', 'max_post_smilies', 'max_post_urls', 'max_sig_img_height', 'max_sig_img_width', 'max_sig_smilies', 'num_files', 'default_style', 'cron_lock', 'upload_dir_size',
 			'num_posts', 'num_topics', 'num_users', 'pm_edit_time', 'pm_max_recipients', 'search_interval', 'search_anonymous_interval', 'search_indexing_state', 'plupload_last_gc', 'warnings_expire_days',
+			'last_queue_run', 'text_reparser.user_signature_last_cron',
 		);
 		$ex_time_gc = array('database_gc', 'cache_gc', 'session_gc', 'search_gc', 'warnings_gc', 'read_notification_gc');
+
+		$human_date = array(
+			'board_startdate',
+			'text_reparser.pm_text_last_cron', 'text_reparser.poll_option_last_cron', 'text_reparser.poll_title_last_cron',
+			'text_reparser.post_text_last_cron', 'text_reparser.user_signature_last_cron',
+		);
 
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -354,7 +384,7 @@ class config_list
 				'S_NO_CHECKED'			=> (!$row['config_value'] && $is_bool) ? 'checked="checked"' : '',
 				'NO_DINAMIC_CHECKED'	=> (!$row['is_dynamic']) ? 'checked="checked"' : '',
 				'S_BOOL'				=> ($is_bool) ? true : false,
-				'HUMAN_DATE'			=> (!in_array($row['config_name'], $ex_time_gc) && ((substr($row['config_name'], -3, 3) === '_gc') || $row['config_name'] === 'board_startdate' || $row['config_name'] === 'last_queue_run' || $row['config_name'] === 'rand_seed_last_update') || $row['config_name'] == 'record_online_date' || $row['config_name'] == 'help_send_statistics_time') ? $user->format_date($row['config_value'], '|d M Y|, H:i:s'): ''
+				'HUMAN_DATE'			=> (!in_array($row['config_name'], $ex_time_gc) && ((substr($row['config_name'], -3, 3) === '_gc') || $row['config_name'] === 'last_queue_run' || $row['config_name'] === 'rand_seed_last_update') || $row['config_name'] == 'record_online_date' || $row['config_name'] == 'help_send_statistics_time' || (in_array($row['config_name'], $human_date))) ? $user->format_date($row['config_value'], '|d M Y|, H:i:s'): ''
 			));
 		}
 		$db->sql_freeresult($result);

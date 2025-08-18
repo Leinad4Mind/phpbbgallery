@@ -183,68 +183,60 @@ function user_lang()
 	global $user, $lang;
 
 	$args = func_get_args();
-	//print_r($args);
 
-	//if (method_exists($user, 'lang'))
+	$key = $args[0];
+
+	// Return if language string does not exist
+	if (!isset($lang[$key]) || (!is_string($lang[$key]) && !is_array($lang[$key])))
 	{
-		//return call_user_func_array(array($user, 'lang'), $args);
+		return $key;
 	}
-	//else
+
+	// If the language entry is a string, we simply mimic sprintf() behaviour
+	if (is_string($lang[$key]))
 	{
-		$key = $args[0];
-
-		// Return if language string does not exist
-		if (!isset($lang[$key]) || (!is_string($lang[$key]) && !is_array($lang[$key])))
+		if (sizeof($args) == 1)
 		{
-			return $key;
+			return $lang[$key];
 		}
 
-		// If the language entry is a string, we simply mimic sprintf() behaviour
-		if (is_string($lang[$key]))
-		{
-			if (sizeof($args) == 1)
-			{
-				return $lang[$key];
-			}
-
-			// Replace key with language entry and simply pass along...
-			$args[0] = $lang[$key];
-			return call_user_func_array('sprintf', $args);
-		}
-
-		// It is an array... now handle different nullar/singular/plural forms
-		$key_found = false;
-
-		// We now get the first number passed and will select the key based upon this number
-		for ($i = 1, $num_args = sizeof($args); $i < $num_args; $i++)
-		{
-			if (is_int($args[$i]))
-			{
-				$numbers = array_keys($lang[$key]);
-
-				foreach ($numbers as $num)
-				{
-					if ($num > $args[$i])
-					{
-						break;
-					}
-
-					$key_found = $num;
-				}
-			}
-		}
-
-		// Ok, let's check if the key was found, else use the last entry (because it is mostly the plural form)
-		if ($key_found === false)
-		{
-			$numbers = array_keys($lang[$key]);
-			$key_found = end($numbers);
-		}
-
-		// Use the language string we determined and pass it to sprintf()
-		$args[0] = $lang[$key][$key_found];
+		// Replace key with language entry and simply pass along...
+		$args[0] = $lang[$key];
 		return call_user_func_array('sprintf', $args);
 	}
+
+	// It is an array... now handle different nullar/singular/plural forms
+	$key_found = false;
+
+	// We now get the first number passed and will select the key based upon this number
+	for ($i = 1, $num_args = sizeof($args); $i < $num_args; $i++)
+	{
+		if (is_int($args[$i]))
+		{
+			$numbers = array_keys($lang[$key]);
+
+			foreach ($numbers as $num)
+			{
+				if ($num > $args[$i])
+				{
+					break;
+				}
+
+				$key_found = $num;
+			}
+		}
+	}
+
+	// Ok, let's check if the key was found, else use the last entry (because it is mostly the plural form)
+	if ($key_found === false)
+	{
+		$numbers = array_keys($lang[$key]);
+		$key_found = end($numbers);
+	}
+
+	// Use the language string we determined and pass it to sprintf()
+	$args[0] = $lang[$key][$key_found];
+	return call_user_func_array('sprintf', $args);
 }
 
 /**
@@ -254,10 +246,12 @@ function user_lang()
 
 */
 function stk_add_lang($lang_file)
-{	global $template, $lang, $user;
+{
+	global $template, $lang, $user;
 
-	if (!isset($user))
-	{		if (file_exists(STK_ROOT_PATH . 'default_lang.txt'))
+	if (empty($user->data) || !$user->data['user_lang'])
+	{
+		if (file_exists(STK_ROOT_PATH . 'default_lang.txt'))
 		{
 			$default_lang = trim(file_get_contents(STK_ROOT_PATH . 'default_lang.txt'));
 			if (empty($default_lang))
@@ -268,11 +262,6 @@ function stk_add_lang($lang_file)
 		else
 		{
 			$default_lang = 'en';
-		}
-
-		if (!class_exists('phpbb\user'))
-		{
-			include(PHPBB_ROOT_PATH . 'phpbb/user.' . PHP_EXT);
 		}
 
 		$dir = @opendir(PHPBB_ROOT_PATH . 'language');
@@ -298,19 +287,16 @@ function stk_add_lang($lang_file)
 			die('No language found!');
 		}
 
-		$loader = new phpbb\language\language_file_loader(PHPBB_ROOT_PATH, 'php', 'ru');
-		$lng = new \phpbb\language\language($loader);
-		$user = new \phpbb\user($lng, '\phpbb\datetime');
-
 		$user->data['user_lang'] = $default_lang;
 	}
 
+	include(PHPBB_ROOT_PATH . 'language/' . $user->data['user_lang'] . '/common.' . PHP_EXT);
 	include(STK_ROOT_PATH . 'language/' . $user->data['user_lang'] . '/' . $lang_file . '.' . PHP_EXT);
 
 	if (!defined('IN_ERK') && isset($user->data['user_id']))
 	{
 		foreach($lang as $key => $value)
-		{			//print"<pre>"; print_r($lang); print"</pre>";
+		{
 			$template->assign_var('L_' . $key, $value);
 		}
 	}
@@ -339,6 +325,11 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 		// Can't rely on phpBB to get the phpBB version.
 		case 'request_phpbb_version' :
 			global $cache, $config, $phpbb_container;
+
+			if ($config['version'] < '3.2.0')
+			{
+				trigger_error(sprintf($lang['STK_INCOMPARTIBLE'], $config['version']), E_USER_WARNING);
+			}
 
 			$_version_number = $cache->get('_stk_phpbb_version_number');
 			if ($_version_number === false)
@@ -523,7 +514,7 @@ function perform_authed_quick_tasks($action)
  */
 function stk_version_check()
 {
-	global $cache, $template, $umil, $user;
+	global $cache, $template, $umil, $user, $lang;
 
 	// We cache the result, check once per session
 	$version_check = $cache->get('_stk_version_check');
@@ -536,7 +527,7 @@ function stk_version_check()
 		}
 
 		// Lets collect the latest version data. We can use UMIL for this
-		$info = $umil->version_check('sheer.phpbbguru.net', '/stk', ((defined('STK_QA') && STK_QA) ? 'stk_qa.txt' : 'stk.txt'));
+		$info = $umil->version_check('sheer.phpbbguru.net', '/stk', ((defined('STK_QA') && STK_QA) ? 'stk_32_qa.txt' : 'stk_32.txt'));
 
 		// Compare it and cache the info
 		$version_check = array();
@@ -569,7 +560,7 @@ function stk_version_check()
 	else if (isset($version_check['outdated']) && $version_check['outdated'] === true)
 	{
 		// Need to clear the $user->lang array to prevent the error page from breaking
-		$msg = sprintf($user->lang['STK_OUTDATED'], $version_check['latest'], $version_check['current'], $version_check['topic'], append_sid(STK_ROOT_PATH . $user->page['page_name'], $user->page['query_string'] . '&amp;force_check=1'));
+		$msg = sprintf($lang['STK_OUTDATED'], $version_check['latest'], $version_check['current'], $version_check['topic'], append_sid(STK_ROOT_PATH . $user->page['page_name'], $user->page['query_string'] . '&amp;force_check=1'));
 
 		// Trigger
 		trigger_error($msg, E_USER_ERROR);
@@ -595,7 +586,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 {
 	// First and foremost handle the case where phpBB calls trigger error
 	// but the STK really needs to continue.
-	global $critical_repair, $stk_no_error, $user;
+	global $critical_repair, $stk_no_error, $user, $lang;
 
 	if (!isset($user->lang['STK_FATAL_ERROR']))
 	{
@@ -639,7 +630,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 		case E_USER_ERROR:
 		case E_RECOVERABLE_ERROR:
 			$backtrace = get_backtrace();
-			$msg_text = '<br /><b>[phpBB Debug] PHP '.$error_level[$errno].':</b> in file ' . phpbb_filter_root_path($errfile) . ' on line <b>'. $errline .': ' . $msg_text . '</b><br />'.$backtrace.'';
+			$msg_text = '<br /><b>[phpBB Debug] PHP '. $error_level[$errno] .':</b> in file ' . phpbb_filter_root_path($errfile) . ' on line <b>'. $errline .': ' . $msg_text . '</b><br />'.$backtrace.'';
 		break;
 		default:
 		break;
@@ -660,6 +651,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 		if (!isset($critical_repair))
 		{
+			include(STK_ROOT_PATH . 'includes/critical_repair.' . PHP_EXT);
 			$critical_repair = new critical_repair();
 		}
 
@@ -699,14 +691,19 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 				$errfile = stk_filter_root_path($errfile);
 				$msg_text = stk_filter_root_path($msg_text);
 				$error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
-				echo '<b>[phpBB Debug] ' . $error_name . '</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
+				$id = rand(1, 10000);
+				$template->assign_block_vars('debug_r', array(
+					'U_DEBUGING_ERN'	=> $error_name,
+					'U_DEBUGING_ERF'	=> $errfile,
+					'U_DEBUGING_ERL'	=> $errline,
+					'U_DEBUGING_MSG'	=> $msg_text,
+				));
 
 				// we are writing an image - the user won't see the debug, so let's place it in the log
 				if (defined('IMAGE_OUTPUT') || defined('IN_CRON'))
 				{
 					add_log('critical', 'LOG_IMAGE_GENERATION_ERROR', $errfile, $errline, $msg_text);
 				}
-				echo '<br /><br />BACKTRACE<br />' . get_backtrace() . '<br />' . "\n";
 			}
 
 			return;
@@ -767,10 +764,14 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 			// Try to not call the adm page data...
 
-			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-			echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="' . $user->lang['DIRECTION'] . '" lang="' . $user->lang['USER_LANG'] . '" xml:lang="' . $user->lang['USER_LANG'] . '">';
+			echo '<!DOCTYPE html>';
+			echo "\r\n";
+			echo '<html dir="' . $user->lang['DIRECTION'] . '" lang="' . $user->lang['USER_LANG'] . '">';
+			echo "\r\n";
 			echo '<head>';
-			echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+			echo '<meta charset="utf-8">';
+			echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1" />';
 			echo '<title>' . $msg_title . '</title>';
 			echo '<style type="text/css">' . "\n" . '/* <![CDATA[ */' . "\n";
 			echo '* { margin: 0; padding: 0; } html { font-size: 100%; height: 100%; margin-bottom: 1px; background-color: #E4EDF0; } body { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif; color: #536482; background: #E4EDF0; font-size: 62.5%; margin: 0; } ';
@@ -835,7 +836,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 			}
 
 			$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
-			$msg_title = (!isset($msg_title)) ? $user->lang['INFORMATION'] : ((!empty($user->lang[$msg_title])) ? $user->lang[$msg_title] : $msg_title);
+			$msg_title = (!isset($msg_title)) ? $lang['INFORMATION'] : ((!empty($lang[$msg_title])) ? $lang[$msg_title] : $msg_title);
 
 			if (!defined('HEADER_INC'))
 			{
@@ -950,8 +951,17 @@ function html_entity_decode_utf8($string)
 	static $trans_tbl;
 
 	// replace numeric entities
-	$string = preg_replace('~&#x([0-9a-f]+);~ei', '_code2utf8(hexdec("\\1"))', $string);
-	$string = preg_replace('~&#([0-9]+);~e', '_code2utf8(\\1)', $string);
+	$string = preg_replace_callback(
+		'|&#x([0-9a-f]+)|',
+		function ($matches) { return _code2utf8(hexdec($matches[1])); },
+		$string
+	);
+
+	$string = preg_replace_callback(
+		'|&#([0-9]+);|',
+		function ($matches) { return _code2utf8($matches[1]); },
+		$string
+	);
 
 	// replace literal entities
 	if (!isset($trans_tbl))
@@ -1097,8 +1107,10 @@ function check_phpbb_version()
 }
 
 function sinc_stats()
-{	global $db, $config;
-	$sql = 'SELECT COUNT(post_id) AS stat
+{
+	global $db, $config;
+
+	$sql = 'SELECT COUNT(post_id) AS stat
 		FROM ' . POSTS_TABLE . '
 		WHERE post_visibility = ' . ITEM_APPROVED;
 	$result = $db->sql_query($sql);

@@ -25,7 +25,21 @@ class fix_left_right_ids
 	*/
 	function display_options()
 	{
-		return 'FIX_LEFT_RIGHT_IDS';
+		if (@phpversion() < '7.0.0')
+		{
+			return 'FIX_LEFT_RIGHT_IDS';
+		}
+
+		global $lang;
+
+		if (confirm_box(true))
+		{
+			$this->run_tool();
+		}
+		else
+		{
+			confirm_box(false, user_lang('FIX_LEFT_RIGHT_IDS_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=fix_left_right_ids&amp;submit=' . true);
+		}
 	}
 
 	/**
@@ -38,6 +52,9 @@ class fix_left_right_ids
 		global $cache, $db;
 
 		$changes_made = false;
+
+		// Purge the cache before run tool
+		$cache->purge();
 
 		/**
 		* Fix Left/Right ID's for the modules table

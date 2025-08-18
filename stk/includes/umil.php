@@ -2429,7 +2429,7 @@ class umil
 		if (!function_exists('get_tables'))
 		{
 			global $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . 'includes/functions_install.' . $phpEx);
+			include($phpbb_root_path . 'includes/functions_compatibility.' . $phpEx);
 		}
 
 		$tables = get_tables($this->db);
@@ -2485,7 +2485,7 @@ class umil
 		if (!function_exists('get_available_dbms'))
 		{
 			global $phpbb_root_path, $phpEx;
-			include("{$phpbb_root_path}includes/functions_install.$phpEx");
+			include("functions_install.$phpEx");
 		}
 
 		/*

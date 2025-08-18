@@ -25,7 +25,8 @@ class manage_ext
 	*/
 	function display_options()
 	{
-		global $template, $user, $db, $config, $phpbb_root_path, $phpbb_extension_manager, $cache, $request;
+		global $template, $lang, $db, $config, $phpbb_root_path, $phpbb_extension_manager, $cache, $request;
+
 		$error = array();
 		$submit = $request->variable('sa', false);
 		$mode = $request->variable('m', '');
@@ -64,13 +65,13 @@ class manage_ext
 					{
 						$new_file_rename = $ren_path.$new_file_name;
 						$result = @rename ($file_name, $new_file_rename);
-						$message = ($result) ? sprintf($user->lang['RENAME_FOLDER_OK'], $old_file_name, $new_file_name) : sprintf($user->lang['RENAME_FOLDER_FAIL'], $old_file_name);
+						$message = ($result) ? sprintf($lang['RENAME_FOLDER_OK'], $old_file_name, $new_file_name) : sprintf($lang['RENAME_FOLDER_FAIL'], $old_file_name);
 					}
 					else
 					{
 						$new_file_rename = $phpbb_root_path.$ren_path.$new_file_name;
 						$result = @rename ($phpbb_root_path.$file_name, $new_file_rename);
-						$message = ($result) ? sprintf($user->lang['RENAME_OK'], $old_file_name, $new_file_name) : sprintf($user->lang['RENAME_FAIL'], $old_file_name);
+						$message = ($result) ? sprintf($lang['RENAME_OK'], $old_file_name, $new_file_name) : sprintf($lang['RENAME_FAIL'], $old_file_name);
 					}
 					meta_refresh(3, append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'view', 'e' => $path, 'n' => $name)));
 					trigger_error($message);
@@ -81,13 +82,13 @@ class manage_ext
 				if(is_dir($file_name))
 				{
 					$result = $this->remove_directory($file_name);
-					$message = ($result) ? sprintf($user->lang['DELETE_FOLDER_OK'], $file_name) : sprintf($user->lang['DELETE_FOLDER_FAIL'], $file_name);
+					$message = ($result) ? sprintf($lang['DELETE_FOLDER_OK'], $file_name) : sprintf($lang['DELETE_FOLDER_FAIL'], $file_name);
 				}
 				else
 				{
 					$file_name = $phpbb_root_path.$file_name;
 					$result = @unlink($file_name);
-					$message = ($result) ? sprintf($user->lang['DELETE_OK'], $file_name) : sprintf($user->lang['DELETE_FAIL'], $file_name);
+					$message = ($result) ? sprintf($lang['DELETE_OK'], $file_name) : sprintf($lang['DELETE_FAIL'], $file_name);
 				}
 
 				$template->assign_vars(array(
@@ -104,24 +105,24 @@ class manage_ext
 					$result = @mkdir($path, 0777, true);
 					if (!$result)
 					{
-						trigger_error(sprintf($user->lang['FAIL_CREATE_DIR'], $path_new), E_USER_WARNING);
+						trigger_error(sprintf($lang['FAIL_CREATE_DIR'], $path_new), E_USER_WARNING);
 					}
 				}
 				$file = str_replace('//', '/', $path .'/'. $file);
 				if(file_exists($file))
 				{
-					trigger_error(sprintf($user->lang['FAIL_EXISTS'], $file), E_USER_WARNING);
+					trigger_error(sprintf($lang['FAIL_EXISTS'], $file), E_USER_WARNING);
 				}
 				$fp = @fopen($file, 'w');
 				if(!$fp)
 				{
 					@fclose($fp);
-					trigger_error(sprintf($user->lang['FAIL_CREATE_FILE'], $file), E_USER_WARNING);
+					trigger_error(sprintf($lang['FAIL_CREATE_FILE'], $file), E_USER_WARNING);
 				}
 				fwrite($fp, htmlspecialchars_decode($content));
 				fclose($fp);
 				meta_refresh(3, append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'view', 'e' => $ext, 'n' => $name)));
-				trigger_error(sprintf($user->lang['SAVED'], $file));
+				trigger_error(sprintf($lang['SAVED'], $file));
 			break;
 
 			case 'edit':
@@ -133,7 +134,7 @@ class manage_ext
 					fclose($fp);
 					$cache->purge();
 					meta_refresh(3, append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'view', 'e' => $ext, 'n' => $name)));
-					trigger_error(sprintf($user->lang['EDITED'], $phpbb_root_path.$file_name));
+					trigger_error(sprintf($lang['EDITED'], $phpbb_root_path.$file_name));
 				}
 
 				$handle = fopen($phpbb_root_path.$file_name, 'r');
@@ -202,7 +203,7 @@ class manage_ext
 					{
 						$available_extension_meta_data[$name] = array(
 							'IS_BROKEN'			=> true,
-							'META_DISPLAY_NAME'	=> (isset($display_ext_name)) ? $display_ext_name : objects::$user->lang['EXTENSION_BROKEN'] . ' (' . $name . ')',
+							'META_DISPLAY_NAME'	=> (isset($display_ext_name)) ? $display_ext_name : objects::$lang['EXTENSION_BROKEN'] . ' (' . $name . ')',
 							'META_NAME'			=> $name,
 							'META_VERSION'		=> (isset($meta['version'])) ? $meta['version'] : '0.0.0',
 						);
@@ -246,7 +247,7 @@ class manage_ext
 
 	function list_dir($path = '.', $parent = 0)
 	{
-		global $list_dir_count, $filecount, $list, $root_path, $exclude_paths, $exclude_ext, $root_dir_files, $root_dir_folders, $user, $request;
+		global $list_dir_count, $filecount, $list, $root_path, $exclude_paths, $exclude_ext, $root_dir_files, $root_dir_folders, $user, $lang, $request;
 		$ext_name = $request->variable('n', '');
 		$ext_path = $request->variable('e', '');
 
@@ -286,7 +287,7 @@ class manage_ext
 					$rename = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'rename', 'e' => $ext_path, 'n' => $ext_name, 'f' => '' . $this_link . ''));
 					$del = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'delete', 'e' => $ext_name, 'n' => $ext_path, 'f' => '' . $this_link . ''));
 
-					$list[] = "d.add(" . $filecount . ", " . $parent . ", '" . $name . "', '" . $link . "', '" . $user->lang['EDIT'] . "', '', '', '', '', '" . $del . "', '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
+					$list[] = "d.add(" . $filecount . ", " . $parent . ", '" . $name . "', '" . $link . "', '" . $user->lang['EDIT'] . "', '', '', '', '', '" . $del . "', '" . $rename . "', '" . $lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
 				}
 			}
 
@@ -296,7 +297,7 @@ class manage_ext
 				$filecount++;
 				$rename = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'rename', 'e' => $ext_path, 'n' => $ext_name, 'f' => '' . $path . '/' . basename($folders[$i]) . ''));
 				$del = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'delete', 'e' => $ext_name, 'n' => $ext_path, 'f' => '' . $path . '/' . basename($folders[$i]) . ''));
-				$list[] = "d.add(" . $list_dir_count . "," . $parent . ",'" . basename($folders[$i]) . "', '', '', '', 'images/folder.gif', '', '', '" . $del . "' , '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
+				$list[] = "d.add(" . $list_dir_count . "," . $parent . ",'" . basename($folders[$i]) . "', '', '', '', 'images/folder.gif', '', '', '" . $del . "' , '" . $rename . "', '" . $lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
 				$this->list_dir($folders[$i], $list_dir_count);
 			}
 			closedir($handle);

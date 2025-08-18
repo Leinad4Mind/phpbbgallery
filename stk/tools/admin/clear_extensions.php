@@ -30,7 +30,7 @@ class clear_extensions
 			trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
 		}
 
-		if (confirm_box(true))
+		if (confirm_box(true) || (@phpversion() >= '7.0.0'))
 		{
 			$sql = 'SELECT ext_name FROM ' . EXT_TABLE . '
 				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
@@ -38,7 +38,7 @@ class clear_extensions
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$ext_name = explode('/', $row['ext_name']);
-				$keyword = '*'. $ext_name[1] .'*';
+				$keyword = '*' . $ext_name[1] . '*';
 				$sql = 'DELETE FROM ' . MIGRATIONS_TABLE . '
 					WHERE migration_name ' . $db->sql_like_expression(str_replace('*', $db->get_any_char(), $keyword));
 				$db->sql_query($sql);
@@ -67,6 +67,7 @@ class clear_extensions
 		global $db, $template, $lang, $cache, $request;
 
 		$off = $request->variable('off', false);
+		$on = $request->variable('on', false);
 
 		page_header($lang['CLEAR_EXTENSIONS']);
 		$no_composer = false;
@@ -79,7 +80,7 @@ class clear_extensions
 				$error[] = 'NO_EXT_SELECTED';
 				trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
 			}
-			if (confirm_box(true))
+			if (confirm_box(true) || (@phpversion() >= '7.0.0'))
 			{
 				$sql = 'UPDATE ' . EXT_TABLE . '
 					SET ext_active = 0
@@ -95,9 +96,28 @@ class clear_extensions
 			}
 		}
 
+		if ($on)
+		{
+			$uids = request_var('marked_name', array('', ''));
+			if (empty($uids))
+			{
+				$error[] = 'NO_EXT_SELECTED';
+				trigger_error('NO_EXT_SELECTED', E_USER_WARNING);
+			}
+
+			$sql = 'UPDATE ' . EXT_TABLE . '
+				SET ext_active = 1
+				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
+			$db->sql_query($sql);
+			$cache->purge(); // Purge the cache
+			trigger_error('ON_EXT_SUCCESS');
+		}
+
 		$sql = 'SELECT *
-			FROM ' . EXT_TABLE . '';
+			FROM ' . EXT_TABLE . '
+			ORDER BY ext_active DESC';
 		$result = $db->sql_query($sql);
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$path = explode('/', $row['ext_name']);
@@ -137,7 +157,7 @@ class clear_extensions
 				'EXT_NAME'			=> $row['ext_name'],
 				'MISSING_PATH'		=> ($missing_path) ? $missing_path : '',
 				'NO_COMPOSER'		=> ($no_composer) ? true : false,
-				'DISPLAY_NAME'		=> ($display_name) ? $display_name : sprintf($user->lang['NO_COMPOSER'], $row['ext_name']),
+				'DISPLAY_NAME'		=> ($display_name) ? $display_name : sprintf($lang['NO_COMPOSER'], $row['ext_name']),
 				'NO_COMPOSER'		=> ($display_name) ? false : true,
 				'S_ACTIVE'			=> $row['ext_active'],
 				'EXT_MISSING_PATH'	=> ($missing_path) ? sprintf($lang['EXT_MISSING_PATH'], $row['ext_name']) : '',

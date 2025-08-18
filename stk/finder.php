@@ -117,7 +117,7 @@ if (!$extra_data)
 						$migrations_subdir = (@opendir($sub_dir)) ? array_diff(scandir($sub_dir), array('..', '.')) : array();
 						foreach($migrations_subdir as $key => $value)
 						{
-							$migrations[] = ' '. $file . '\\' . $value . '';
+							$migrations[] = '' . $file . '\\' . $value . '';
 						}
 						$migrations = array_diff($migrations, array($file));
 					}
@@ -139,7 +139,8 @@ if (!$extra_data)
 						}
 						if (isset($table_data['drop_columns']))
 						{
-							$column_extra = array_merge($column_extra, $table_data['drop_columns']);
+							//$column_extra = array_merge($column_extra, $table_data['drop_columns']);
+							$column_extra = $column_extra + $table_data['drop_columns'];
 						}
 
 						$update_data = $phpbb_ext->update_data();
