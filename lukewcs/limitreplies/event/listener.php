@@ -17,12 +17,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
-	protected $language;
-	protected $template;
-	protected $config;
-	protected $auth;
-	protected $user;
-	protected $db;
+	protected object $language;
+	protected object $template;
+	protected object $config;
+	protected object $auth;
+	protected object $user;
+	protected object $db;
 
 	public function __construct(
 		\phpbb\language\language $language,
@@ -33,12 +33,12 @@ class listener implements EventSubscriberInterface
 		\phpbb\db\driver\driver_interface $db
 	)
 	{
-		$this->language			= $language;
-		$this->template			= $template;
-		$this->config			= $config;
-		$this->auth				= $auth;
-		$this->user				= $user;
-		$this->db				= $db;
+		$this->language	= $language;
+		$this->template	= $template;
+		$this->config	= $config;
+		$this->auth		= $auth;
+		$this->user		= $user;
+		$this->db		= $db;
 	}
 
 	public static function getSubscribedEvents(): array
@@ -50,6 +50,9 @@ class listener implements EventSubscriberInterface
 		];
 	}
 
+	/*
+		EVENT: core.viewtopic_modify_page_title
+	*/
 	public function set_template_vars($event): void
 	{
 		if ($this->user->data['user_type'] != USER_NORMAL
@@ -73,6 +76,9 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/*
+		EVENT: core.modify_posting_auth
+	*/
 	public function check_posting($event): void
 	{
 		if ($this->user->data['user_type'] != USER_NORMAL
@@ -93,6 +99,9 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/*
+		EVENT: core.permissions
+	*/
 	public function add_permissions($event): void
 	{
 		$event->update_subarray('permissions', 'u_limitreplies_bypass_lock', ['lang' => 'ACL_U_LIMITREPLIES_BYPASS_LOCK', 'cat' => 'post']);
@@ -103,10 +112,10 @@ class listener implements EventSubscriberInterface
 		$wait_time			= $this->config['limitreplies_number_wait_time'] * 60;
 		$locked_until_time	= 0;
 
-		// Check whether there are posts in the queue of the topic.
+		/* Check whether there are posts in the queue of the topic. */
 		if ($topic_data['topic_posts_unapproved'])
 		{
-			// Get the data of the user's last post in the topic queue, if such a post exists.
+			/* Get the data of the user's last post in the topic queue, if such a post exists. */
 			$sql = 'SELECT post_id, post_time
 					FROM ' . POSTS_TABLE . '
 					WHERE topic_id = ' . (int) $topic_data['topic_id'] . '
@@ -117,14 +126,14 @@ class listener implements EventSubscriberInterface
 			$last_unapproved_post = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			// Check if the timestamp of the user's last post in the queue is greater than the timestamp of the last visible post.
+			/* Check if the timestamp of the user's last post in the queue is greater than the timestamp of the last visible post. */
 			if ($last_unapproved_post !== false && $last_unapproved_post['post_time'] > $topic_data['topic_last_post_time'])
 			{
 				$locked_until_time = $last_unapproved_post['post_time'] + $wait_time;
 			}
 		}
 
-		// Check if the last visible post was from the same user.
+		/* Check if the last visible post was from the same user. */
 		if ($locked_until_time == 0 && $topic_data['topic_last_poster_id'] == $this->user->data['user_id'])
 		{
 			$locked_until_time = $topic_data['topic_last_post_time'] + $wait_time;

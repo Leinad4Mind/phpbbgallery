@@ -15,15 +15,14 @@ namespace lukewcs\limitreplies\controller;
 
 class acp_limitreplies_controller
 {
-	protected $language;
-	protected $template;
-	protected $config;
-	protected $request;
-	protected $ext_manager;
+	protected object $language;
+	protected object $template;
+	protected object $config;
+	protected object $request;
+	protected object $ext_manager;
 
-	protected $u_action;
-
-	private $metadata;
+	protected string $u_action;
+	private   array  $metadata;
 
 	public function __construct(
 		\phpbb\language\language $language,
@@ -51,7 +50,10 @@ class acp_limitreplies_controller
 
 		if ($this->request->is_set_post('submit'))
 		{
-			$this->check_form_key_error('lukewcs_limitreplies');
+			if (!check_form_key('lukewcs_limitreplies'))
+			{
+				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
 
 			$this->config->set('limitreplies_switch_enable'		, $this->request->variable('limitreplies_switch_enable'		, 0));
 			$this->config->set('limitreplies_number_wait_time'	, $this->request->variable('limitreplies_number_wait_time'	, 60));
@@ -71,9 +73,9 @@ class acp_limitreplies_controller
 
 			'LIMITREPLIES_SWITCH_ENABLE'			=> (bool) $this->config['limitreplies_switch_enable'],
 			'LIMITREPLIES_NUMBER_WAIT_TIME'			=> (int) $this->config['limitreplies_number_wait_time'],
-			'LIMITREPLIES_SELECT_HINT_MODE_OPTS'	=> $this->select_struct($this->config['limitreplies_select_hint_mode'], [
-				['LIMITREPLIES_HINT_MODE_ONCLICK'	, 1],
-				['LIMITREPLIES_HINT_MODE_ALWAYS'	, 2],
+			'LIMITREPLIES_SELECT_HINT_MODE_OPTS'	=> $this->select_struct((int) $this->config['limitreplies_select_hint_mode'], [
+				'LIMITREPLIES_HINT_MODE_ONCLICK'	=> 1,
+				'LIMITREPLIES_HINT_MODE_ALWAYS'		=> 2,
 			]),
 		]);
 
@@ -83,14 +85,6 @@ class acp_limitreplies_controller
 	public function set_page_url($u_action): void
 	{
 		$this->u_action = $u_action;
-	}
-
-	private function check_form_key_error(string $key): void
-	{
-		if (!check_form_key($key))
-		{
-			trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
-		}
 	}
 
 	private function set_meta_template_vars(string $tpl_prefix, string $copyright): void
@@ -110,12 +104,22 @@ class acp_limitreplies_controller
 		$this->template->assign_vars([$tpl_prefix . '_METADATA' => $template_vars]);
 	}
 
-	// Check the language pack version for the minimum version and generate notice if outdated
+	/*
+		Determine the version of the language pack with fallback to 0.0.0
+	*/
+	private function get_lang_ver(string $lang_ext_ver): string
+	{
+		preg_match('/^([0-9]+\.[0-9]+\.[0-9]+.*)/', $this->language->lang($lang_ext_ver), $matches);
+		return ($matches[1] ?? '0.0.0');
+	}
+
+	/*
+		Check the language pack version for the minimum version and generate notice if outdated
+	*/
 	private function lang_ver_check_msg(string $lang_version_var, string $lang_outdated_var): string
 	{
 		$lang_outdated_msg = '';
-		preg_match('/^([0-9]+\.[0-9]+\.[0-9]+)/', $this->language->lang($lang_version_var), $matches);
-		$ext_lang_ver = $matches[1] ?? '0.0.0';
+		$ext_lang_ver = $this->get_lang_ver($lang_version_var);
 		$ext_lang_min_ver = $this->metadata['extra']['lang-min-ver'];
 
 		if (phpbb_version_compare($ext_lang_ver, $ext_lang_min_ver, '<'))
@@ -124,8 +128,7 @@ class acp_limitreplies_controller
 			{
 				$lang_outdated_msg = $this->language->lang($lang_outdated_var);
 			}
-			// Fallback if the current language package does not yet have the required variable.
-			else
+			else /* Fallback if the current language package does not yet have the required variable. */
 			{
 				$lang_outdated_msg = 'Note: The language pack for the extension <strong>%1$s</strong> is no longer up-to-date. (installed: %2$s / needed: %3$s)';
 			}
@@ -135,20 +138,24 @@ class acp_limitreplies_controller
 		return $lang_outdated_msg;
 	}
 
-	private function select_struct($value, array $options_params): array
+	private function select_struct($cfg_value, array $options): array
 	{
-		$is_array_value = is_array($value);
-		$options = [];
-		foreach ($options_params as $params)
+		$options_tpl = [];
+
+		foreach ($options as $opt_key => $opt_value)
 		{
-			$options[] = [
-				'label'		=> $params[0],
-				'value'		=> $params[1],
-				'bold'		=> $params[2] ?? false,
-				'selected'	=> $is_array_value ? in_array($params[1], $value) : $params[1] == $value,
+			if (!is_array($opt_value))
+			{
+				$opt_value = [$opt_value];
+			}
+			$options_tpl[] = [
+				'label'		=> $opt_key,
+				'value'		=> $opt_value[0],
+				'bold'		=> $opt_value[1] ?? false,
+				'selected'	=> is_array($cfg_value) ? in_array($opt_value[0], $cfg_value) : $opt_value[0] == $cfg_value,
 			];
 		}
 
-		return $options;
+		return $options_tpl;
 	}
 }
