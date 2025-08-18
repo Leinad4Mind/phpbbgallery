@@ -145,6 +145,7 @@ class reparse_bbcode
 		$step				= request_var('step', 0);
 		$start				= $step * $this->step_size;
 		$cnt				= 0;
+		$sql_forum_where	= '';
 
 		if (sizeof($reparse_forum_ids))
 		{
@@ -298,7 +299,7 @@ class reparse_bbcode
 
 				// Make sure that the loop is finished
 				$last_batch = true;
-				if(!$reparse_id)
+				if(!$reparse_id && empty($reparse_forum_ids))
 				{
 					// Done!
 					$cache->destroy('_stk_reparse_posts');

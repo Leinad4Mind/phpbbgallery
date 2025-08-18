@@ -26,8 +26,10 @@ $user->setup('acp/common', $config['default_style']);
 $umil = new umil(true);
 
 // Set a constant so we know when the STK got to a point where it savely loaded all absolutely required stuff
-define('IN_STK', true);
-
+if (!defined('IN_STK'))
+{
+	@define('IN_STK', true);
+}
 if (!defined('DEBUG'))
 {
 	@define('DEBUG', true);
@@ -49,9 +51,6 @@ stk_add_lang('common');
 
 // Do not use the normal template path (to prevent issues with boards using alternate styles)
 $template->set_custom_style('stk', STK_ROOT_PATH . 'style');
-
-// Work around for a bug in phpBB3.
-$user->theme['template_storedb'] = false;
 
 // Perform some quick tasks here that don't require any authentication!
 perform_unauthed_quick_tasks($action, $submit);
