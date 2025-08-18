@@ -166,6 +166,7 @@ class database_cleaner_views
 		$actions =array(
 			'introduction'			=> $user->lang['INTRODUCTION'],
 			'tables'				=> $user->lang['DATABASE_TABLES'],
+			'indexes'				=> $user->lang['INDEXES'],
 			'columns'				=> $user->lang['COLUMNS'],
 			'config'				=> $user->lang['CONFIG_SETTINGS'],
 			'extension_groups'		=> $user->lang['ACP_EXTENSION_GROUPS'],
@@ -289,7 +290,7 @@ class database_cleaner_views
 			}
 		}
 
-		$this->success_message = 'DATABASE_TABLES_SUCCESS';
+		$this->success_message = 'DATABASE_INDEXES_SUCCESS';
 	}
 
 	/**
@@ -710,6 +711,7 @@ class database_cleaner_views
 	function acp_modules()
 	{
 		global $db, $user, $template, $phpEx, $phpbb_root_path;
+		$user->add_lang(array('ucp', 'mcp'));
 
 		$this->_section_data['acp_modules'] = array(
 			'NAME'		=> 'ACP_MODULES_SETTINGS',
@@ -796,12 +798,12 @@ class database_cleaner_views
 				}
 
 				$sql = 'SELECT module_id FROM ' . MODULES_TABLE . '
-					WHERE module_langname = \''. $key .'\'';
+					WHERE module_langname = \'' .  $key . '\'';
 				$res = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($res);
 				$parent_id = $row['module_id'];
 
-				$db->sql_freeresult($result);
+				$db->sql_freeresult($res);
 
 				// Link to ACP manage module
 				$link = ($parent_id) ? '<a style="color:#70AED3;" href="'. append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=acp_modules&amp;sid=' . $user->data['session_id'] .'&amp;mode=' . $mode . '&parent_id='. $parent_id .'') .'" " target="_blank">' : '';
@@ -809,7 +811,7 @@ class database_cleaner_views
 				$parent_module_langname = $user->lang($key);
 
 				$this->_section_data['acp_modules']['ITEMS'][] = array(
-					'NAME'			=> '' . $module_langname . ' ('.$module.')' . $user->lang['GO_TO_ACP'] .  $link . ''. $parent_module_langname .'</a>',
+					'NAME'			=> '' . $module_langname . ' (' . $module . ')' . $user->lang['GO_TO_ACP'] .  $link . '' . $parent_module_langname . '</a>',
 					'FIELD_NAME'	=> strtolower($module),
 					'MISSING'		=> true,
 				);
@@ -827,5 +829,71 @@ class database_cleaner_views
 		));
 
 		$this->success_message = 'DATABASE_ROLE_DATA_SUCCESS';
+		$this->not_run_message	= 'DATABASE_ROLE_DATA_SKIP';
+	}
+
+	function indexes()
+	{
+		global $db, $user, $template, $phpEx, $phpbb_root_path;
+
+		global $umil;
+		// Time to start going through the database and listing any extra/missing fields
+		$last_output_table = '';
+		foreach ($this->db_cleaner->data->tables as $table_name => $data)
+		{
+			if ($umil->table_exists($table_name) === false)
+			{
+				continue;
+			}
+			$existing_keys = get_keys($table_name);
+			//print "$table_name<pre>";print_r($existing_keys);print "</pre>";
+
+			if ($existing_keys === false)
+			{
+				// Table doesn't exist, don't handle here.
+				continue;
+			}
+
+			if (!empty($data['KEYS']))
+			{
+				$keys = array_unique(array_merge(array_keys($data['KEYS']), $existing_keys));
+			}
+			sort($keys);
+			//print "$table_name<pre>";print_r($keys);print "</pre>";
+			foreach ($keys as $key)
+			{
+				if ((!isset($data['KEYS'][$key]) && in_array($key, $existing_keys)) || (isset($data['KEYS'][$key]) && !in_array($key, $existing_keys)))
+				{
+					if ($last_output_table != $table_name)
+					{
+						$last_output_table = $table_name;
+
+						$this->_section_data[$table_name] = array(
+							'NAME'	=> $table_name,
+							'TITLE'	=> 'INDEXES',
+						);
+					}
+
+					// Add the data
+					$this->_section_data[$table_name]['ITEMS'][] = array(
+						'NAME'			=> $key,
+						'FIELD_NAME'	=> $table_name . '_' . $key,
+						'MISSING'		=> (!in_array($key, $existing_keys) || empty($existing_keys)) ? true : false,
+					);
+
+					if ($this->_has_changes === false)
+					{
+						$this->_has_changes = true;
+					}
+				}
+			}
+		}
+
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
+
+		$this->success_message = 'DATABASE_TABLES_SUCCESS';
 	}
 }
