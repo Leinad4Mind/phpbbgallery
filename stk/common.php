@@ -38,15 +38,7 @@ require(STK_ROOT_PATH . 'includes/functions.' . PHP_EXT);
 require(STK_ROOT_PATH . 'includes/fatal_error_handler.' . PHP_EXT);
 require(PHPBB_ROOT_PATH . 'common.' . PHP_EXT);
 require(STK_ROOT_PATH . 'includes/plugin.' . PHP_EXT);
-// We test for UMIL twice. First look whether this user already has an UMIL installation in its default location.
-if (file_exists(PHPBB_ROOT_PATH . 'umil/umil.' . PHP_EXT))
-{
-	require PHPBB_ROOT_PATH . 'umil/umil.' . PHP_EXT;
-}
-else
-{
-	require STK_ROOT_PATH . 'includes/umil.' . PHP_EXT;
-}
+require STK_ROOT_PATH . 'includes/umil.' . PHP_EXT;
 
 // phpBBs common.php registers hooks, these hooks tend to cause problems with the
 // support toolkit. Therefore we unset the `$phpbb_hook` object here
@@ -61,6 +53,10 @@ if (!defined('IN_ERK'))
 
 	$user->session_begin();
 	$auth->acl($user->data);
+	if (!empty($user) && $user->data['user_id'] == ANONYMOUS && isset($config['default_lang']))
+	{
+		$user->data['user_lang'] = $config['default_lang'];
+	}
 	$user->setup('acp/common', $config['default_style']);
 
 	$umil = new umil(true);
@@ -83,8 +79,19 @@ if ((defined('PHPBB_VERSION') && PHPBB_VERSION == $config['version']) || !define
 {
 	define('PHPBB_VERSION_NUMBER', $config['version']);
 	// Try to determine the phpBB actually version number
+	$updates_available = false;
 	$version_helper = $phpbb_container->get('version_helper');
-	$updates_available = $version_helper->get_suggested_updates(false);
+	try
+	{
+		$updates_available = $version_helper->get_suggested_updates(false);
+	}
+	catch (\RuntimeException $e)
+	{
+		$template->assign_vars(array(
+			'S_VERSIONCHECK_FAIL'		=> true,
+			'VERSIONCHECK_FAIL_REASON'	=> $user->lang('VERSIONCHECK_FAIL'),
+		));
+	}
 	if ($updates_available)
 	{
 		$action = 'check_phpbb_version';

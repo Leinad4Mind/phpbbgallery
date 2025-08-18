@@ -56,6 +56,7 @@ $lang = array_merge($lang, array(
 	'CONFIG_NOT_FOUND'					=> 'The STK configuration file couldn’t be loaded. Please check your installation',
 
 	'DOWNLOAD_PASS'						=> 'Download the password file.',
+	'STK_PASSWORD'						=> 'Password',
 
 	'EMERGENCY_LOGIN_NAME'				=> 'STK Emergency Login',
 	'ERK'								=> 'Emergency Repair Kit',
@@ -127,4 +128,5 @@ $lang = array_merge($lang, array(
 	'CONFIG_LIST_EXPLAIN'				=> 'Here you can view and change the configuration .',
 	'CLOSE'								=> 'Close',
 	'UPDATES_AVAILABLE'					=> 'Your version of phpBB is not the latest. Available version for updates is %1$s<br />Follow this link <a href="%2$s" target="_blank" />%2$s</a> to the release announcement for the latest version, which contains additional information, as well as instructions for updating phpBB',
+	'VERSIONCHECK_FAIL'					=> 'Failed to obtain latest phpBB version information.',
 ));

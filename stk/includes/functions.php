@@ -169,7 +169,7 @@ function use_lang(&$lang_key)
 
 /**
 * A wrapper function for the phpBB $user->lang() call. This method was introduced
-* in phpBB 3.0.3. In all versions ≥ 3.0.3 this function will simply call the method
+* in phpBB 3.0.3. In all versions > 3.0.3 this function will simply call the method
 * for the other versions this method will imitate the method as seen in 3.0.3.
 *
 * More advanced language substitution
@@ -260,7 +260,7 @@ function user_lang()
 *								is used for the file. If set to "false" the users default
 *								langauge will be used
 */
-function stk_add_lang($lang_file, $fore_lang = false)
+function stk_add_lang($lang_file)
 {
 	global $config, $user;
 
@@ -268,7 +268,11 @@ function stk_add_lang($lang_file, $fore_lang = false)
 	{
 		if (file_exists(STK_ROOT_PATH . 'default_lang.txt'))
 		{
-			$default_lang = file_get_contents(STK_ROOT_PATH . 'default_lang.txt');
+			$default_lang = trim(file_get_contents(STK_ROOT_PATH . 'default_lang.txt'));
+			if (empty($default_lang))
+			{
+				$default_lang = 'en';
+			}
 		}
 		else
 		{
@@ -322,7 +326,7 @@ function stk_add_lang($lang_file, $fore_lang = false)
 	{
 		$lang_data = array(
 			'lang_path'	=> $user->lang_path,
-			'lang_name'	=> $user->lang_name,
+			'lang_name'	=> $user->data['user_lang'],
 		);
 	}
 
@@ -335,6 +339,11 @@ function stk_add_lang($lang_file, $fore_lang = false)
 	$user->lang_name = '';
 
 	// Find out what languages we could use
+	if (empty($config['default_lang']))
+	{
+		$config['default_lang'] = $language;
+	}
+
 	if (empty($lang_dirs))
 	{
 		$lang_dirs = array(
@@ -353,12 +362,6 @@ function stk_add_lang($lang_file, $fore_lang = false)
 	// Test all languages
 	foreach ($lang_dirs as $dir)
 	{
-		// When forced skip all others
-		if ($fore_lang !== false && $dir != $fore_lang)
-		{
-			continue;
-		}
-
 		if (file_exists($user->lang_path . $dir . "/{$lang_file}." . PHP_EXT))
 		{
 			$user->lang_name = $dir;
@@ -686,6 +689,26 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 	}
 
 	// We encounter an error while in the ERK, this need some special treatment
+
+	$error_level = array(E_ERROR => 'Fatal error', E_WARNING => 'Runtime Error', E_PARSE => 'Parse error', E_NOTICE => 'Notice', );
+
+	switch ($errno)
+	{
+		case E_ERROR:
+		case E_PARSE:
+		case E_WARNING:
+		case E_NOTICE:
+		case E_CORE_ERROR:
+		case E_COMPILE_ERROR:
+		case E_USER_ERROR:
+		case E_RECOVERABLE_ERROR:
+			$backtrace = get_backtrace();
+			$msg_text = '<br /><b>[phpBB Debug] PHP '.$error_level[$errno].':</b> in file ' . phpbb_filter_root_path($errfile) . ' on line <b>'. $errline .': ' . $msg_text . '</b><br />'.$backtrace.'';
+		break;
+		default:
+		break;
+	}
+
 	if (defined('IN_ERK'))
 	{
 		$critical_repair->trigger_error($msg_text, ($errno == E_USER_ERROR ? false : true));
