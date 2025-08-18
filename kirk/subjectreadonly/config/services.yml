@@ -1,0 +1,8 @@
+services:
+    kirk.subjectreadonly.listener:
+        class: kirk\subjectreadonly\event\listener
+        arguments:
+           - '@auth'
+           - '@template'
+        tags:
+            - { name: event.listener }
