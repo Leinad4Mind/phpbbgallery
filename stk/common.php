@@ -35,6 +35,7 @@ define('PHPBB_MSG_HANDLER', 'stk_msg_handler');
 
 // Include all common stuff
 require(STK_ROOT_PATH . 'includes/functions.' . PHP_EXT);
+require(STK_ROOT_PATH . 'includes/fatal_error_handler.' . PHP_EXT);
 require(PHPBB_ROOT_PATH . 'common.' . PHP_EXT);
 require(STK_ROOT_PATH . 'includes/plugin.' . PHP_EXT);
 // We test for UMIL twice. First look whether this user already has an UMIL installation in its default location.
@@ -49,7 +50,7 @@ else
 
 // phpBBs common.php registers hooks, these hooks tend to cause problems with the
 // support toolkit. Therefore we unset the `$phpbb_hook` object here
-unset($phpbb_hook);  
+unset($phpbb_hook);
 
 // When not in the ERK we setup the user at this point
 // and load UML.
@@ -81,6 +82,13 @@ $submit = request_var('submit', false);
 if ((defined('PHPBB_VERSION') && PHPBB_VERSION == $config['version']) || !defined('PHPBB_VERSION'))
 {
 	define('PHPBB_VERSION_NUMBER', $config['version']);
+	// Try to determine the phpBB actually version number
+	$version_helper = $phpbb_container->get('version_helper');
+	$updates_available = $version_helper->get_suggested_updates(false);
+	if ($updates_available)
+	{
+		$action = 'check_phpbb_version';
+	}
 }
 // Cant correctly determine the version, let the user define it.
 // As the `perform_unauthed_quick_tasks` function is used skip this

@@ -119,6 +119,7 @@ class database_cleaner_views
 						'NAME'			=> user_lang($item['NAME']),
 						'FIELD_NAME'	=> user_lang($item['FIELD_NAME']),
 						'MISSING'		=> $item['MISSING'],
+						'FIND'			=> (isset($item['FIND'])) ? $item['FIND'] : '',
 					));
 				}
 			}
@@ -243,6 +244,7 @@ class database_cleaner_views
 						'NAME'			=> $column,
 						'FIELD_NAME'	=> $table_name . '_' . $column,
 						'MISSING'		=> (!in_array($column, $existing_columns)) ? true : false,
+						'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'col=' . $column . ''),
 					);
 
 					if ($this->_has_changes === false)
@@ -261,18 +263,22 @@ class database_cleaner_views
 	*/
 	function config()
 	{
+		global $db;
+
 		// display extra config variables and let them check/uncheck the ones they want to add/remove
 		$this->_section_data['config'] = array(
 			'NAME'		=> 'CONFIG_SETTINGS',
 			'TITLE'		=> 'ROWS',
 		);
 
+		$removed_config = ($db->get_sql_layer() == 'mysql4') ? array('auth_oauth_bitly_key', 'auth_oauth_bitly_secret', 'auth_oauth_facebook_key', 'auth_oauth_facebook_secret', 'auth_oauth_google_key', 'auth_oauth_google_secret') : array();
+
 		$config_rows = $existing_config = array();
 		get_config_rows($this->db_cleaner->data->config, $config_rows, $existing_config);
 		foreach ($config_rows as $name)
 		{
 			// Skip ones that are in the default install and are in the existing config, or if it was removed by a later update
-			if ((isset($this->db_cleaner->data->config[$name]) && in_array($name, $existing_config)) || in_array($name, $this->db_cleaner->data->removed_config))
+			if ((isset($this->db_cleaner->data->config[$name]) && in_array($name, $existing_config)) || in_array($name, $removed_config))
 			{
 				continue;
 			}
@@ -281,6 +287,7 @@ class database_cleaner_views
 				'NAME'			=> $name,
 				'FIELD_NAME'	=> $name,
 				'MISSING'		=> (!in_array($name, $existing_config)) ? true : false,
+				'FIND'		=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'c=' . $name . ''),
 			);
 
 			if ($this->_has_changes === false)
@@ -297,6 +304,8 @@ class database_cleaner_views
 	*/
 	function extension_groups()
 	{
+		global $user, $template;
+
 		// display extra config variables and let them check/uncheck the ones they want to add/remove
 		$this->_section_data['extension_groups'] = array(
 			'NAME'		=> 'EXTENSION_GROUPS_SETTINGS',
@@ -324,6 +333,11 @@ class database_cleaner_views
 				$this->_has_changes = true;
 			}
 		}
+
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
 
 		$this->success_message = 'CONFIG_UPDATE_SUCCESS';
 	}
@@ -427,6 +441,11 @@ class database_cleaner_views
 			}
 		}
 
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
+
 		$this->success_message = 'PERMISSION_UPDATE_SUCCESS';
 	}
 
@@ -464,6 +483,8 @@ class database_cleaner_views
 	*/
 	function permissions()
 	{
+		global $template, $user;
+
 		$this->_section_data['permissions'] = array(
 			'NAME'		=> 'PERMISSION_SETTINGS',
 			'TITLE'		=> 'ROWS',
@@ -483,6 +504,7 @@ class database_cleaner_views
 				'NAME'			=> $name,
 				'FIELD_NAME'	=> $name,
 				'MISSING'		=> (!in_array($name, $existing_permissions)) ? true : false,
+				'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'p=' . $name . ''),
 			);
 
 			if ($this->_has_changes === false)
@@ -490,6 +512,11 @@ class database_cleaner_views
 				$this->_has_changes = true;
 			}
 		}
+
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
 
 		$this->success_message = 'EXTENSIONS_SUCCESS';
 	}
@@ -527,6 +554,8 @@ class database_cleaner_views
 	*/
 	function roles()
 	{
+		global $template, $user;
+
 		// display extra config variables and let them check/uncheck the ones they want to add/remove
 		$this->_section_data['roles'] = array(
 			'NAME'		=> 'ROLE_SETTINGS',
@@ -555,6 +584,11 @@ class database_cleaner_views
 			}
 		}
 
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
+
 		$this->success_message = 'SYSTEM_GROUP_UPDATE_SUCCESS';
 	}
 
@@ -563,7 +597,7 @@ class database_cleaner_views
 	*/
 	function tables()
 	{
-		global $table_prefix;
+		global $table_prefix, $template, $user;
 
 		$tables_confirm = request_var('tables_confirm', false);
 		if (!$tables_confirm)
@@ -587,6 +621,7 @@ class database_cleaner_views
 						'NAME'			=> $table,
 						'FIELD_NAME'	=> $table,
 						'MISSING'		=> isset($req_tables[$table]) ? true : false,
+						'FIND'		=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 't=' . $table . ''),
 					);
 
 					if ($this->_has_changes === false)
@@ -595,6 +630,11 @@ class database_cleaner_views
 					}
 				}
 			}
+
+			$template->assign_vars(array(
+				'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+				'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			));
 
 			// A bit nasty but the only real work around at this moment
 			if (empty($table_prefix) && $this->_has_changes)
@@ -623,5 +663,130 @@ class database_cleaner_views
 				'message'	=> 'EMPTY_PREFIX_CONFIRM',
 			);
 		}
+	}
+
+	/**
+	* Validate all modules in the database
+	*/
+	function acp_modules()
+	{
+		global $db, $user, $template, $phpEx, $phpbb_root_path;
+
+		$this->_section_data['acp_modules'] = array(
+			'NAME'		=> 'ACP_MODULES_SETTINGS',
+			'TITLE'		=> 'ROWS',
+		);
+
+		$modules = $existing_modules = array();
+		get_acp_modules($this->db_cleaner->data->acp_modules, $modules);
+
+		// Find extra modules
+		$sql = 'SELECT *
+			FROM ' . MODULES_TABLE;
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$existing_modules[] = $row['module_langname'];
+			if(in_array($row['module_langname'], $modules))
+			{
+				continue;
+			}
+
+			$module = $row['module_langname'];
+			$module_id = $row['module_id'];
+
+			$sql = 'SELECT *
+				FROM ' . MODULES_TABLE . '
+				WHERE module_id = ' . $row['parent_id'] . '';
+			$res = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($res);
+			$parent = $row['module_langname'];
+			$class = $row['module_class'];
+			$parent_id = $row['module_id'];
+
+			if ($parent)
+			{
+				$link = append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=acp_modules&amp;sid=' . $user->data['session_id'] .'&amp;mode=' . $class . '&parent_id='. $parent_id .'');
+				$module_mame = (isset($user->lang[$parent])) ? '<b>' . $user->lang[$parent] . '</b>' : '<i>' . $user->lang['UNDEFINED'] . '</i>';
+			}
+			else
+			{
+				$link = append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=acp_modules&amp;sid=' . $user->data['session_id'] .'&amp;mode=' . $main . '');
+				$module_mame = '';
+			}
+			$db->sql_freeresult($res);
+
+			$this->_section_data['acp_modules']['ITEMS'][] = array(
+				'NAME'			=> '' . $module . ' (' . $module_id . ')' . $user->lang['GO_TO_ACP'] . ' <a href="' . $link . '" target="_blank">' . $module_mame . '</a> [' . $parent . ' (' . $parent_id . ')]',
+				'FIELD_NAME'	=> $module_id,
+				'MISSING'		=> false,
+				'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'm=' . $module . ''),
+			);
+
+			if ($this->_has_changes === false)
+			{
+				$this->_has_changes = true;
+			}
+		}
+		$db->sql_freeresult($result);
+
+		//Find missing modules
+		foreach($modules as $module)
+		{
+			if (!in_array($module, $existing_modules))
+			{
+				$key = array_find($this->db_cleaner->data->acp_modules, $module);
+				if ($key)
+				{
+					$parent_key = array_find($this->db_cleaner->data->acp_modules, $key);
+				}
+				if (isset($parent_key))
+				{
+					$cat_key = array_find($this->db_cleaner->data->acp_modules, $parent_key);
+				}
+
+				if($cat_key)
+				{
+					$mode = $cat_key;
+				}
+
+				if (!$cat_key)
+				{
+					$cat_key = $key;
+					$mode = $parent_key;
+				}
+
+				$sql = 'SELECT module_id FROM ' . MODULES_TABLE . '
+					WHERE module_langname = \''. $key .'\'';
+				$res = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($res);
+				$parent_id = $row['module_id'];
+
+				$db->sql_freeresult($result);
+
+				// Link to ACP manage module
+				$link = ($parent_id) ? '<a style="color:#70AED3;" href="'. append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=acp_modules&amp;sid=' . $user->data['session_id'] .'&amp;mode=' . $mode . '&parent_id='. $parent_id .'') .'" " target="_blank">' : '';
+				$module_langname = $user->lang($module);
+				$parent_module_langname = $user->lang($key);
+
+				$this->_section_data['acp_modules']['ITEMS'][] = array(
+					'NAME'			=> '' . $module_langname . ' ('.$module.')' . $user->lang['GO_TO_ACP'] .  $link . ''. $parent_module_langname .'</a>',
+					'FIELD_NAME'	=> strtolower($module),
+					'MISSING'		=> true,
+				);
+			}
+
+			if ($this->_has_changes === false)
+			{
+				$this->_has_changes = true;
+			}
+		}
+
+		$template->assign_vars(array(
+			'NO_CHANGES_TEXT'	=> $user->lang['SECTION_NOT_CHANGED_EXPLAIN'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+			'NO_CHANGES_TITLE'	=> $user->lang['SECTION_NOT_CHANGED_TITLE'][$this->db_cleaner->step_to_action[$this->db_cleaner->step]],
+		));
+
+		$this->success_message = 'DATABASE_ROLE_DATA_SUCCESS';
 	}
 }

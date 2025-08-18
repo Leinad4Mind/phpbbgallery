@@ -2573,14 +2573,14 @@ class umil
 
 		// A list of types being unsigned for better reference in some db's
 		$unsigned_types = array('UINT', 'UINT:', 'USINT', 'BOOL', 'TIMESTAMP');
-		$supported_dbms = array('mssql', 'mssqlnative', 'mysql', 'mysql_4', 'mysql_40', 'mysql_41', 'oracle', 'postgres', 'sqlite', 'sqlite3');
+		$supported_dbms = array('mssql', 'mssqlnative', 'mysqli', 'mysql', 'mysql_4', 'mysql_40', 'mysql_41', 'oracle', 'postgres', 'sqlite', 'sqlite3');
 
 		$sql = '';
 
 		// Create Table statement
 		$generator = $textimage = false;
 
-		if ($dbms == 'mysql4')
+		if ($dbms == 'mysql4' || $dbms == 'mysqli')
 		{
 			$dbms = 'mysql_41';
 		}
@@ -2972,7 +2972,6 @@ class umil
 				if ($generator !== false)
 				{
 					$sql .= "\nCREATE SEQUENCE {$table_name}_seq\n/\n\n";
-
 					$sql .= "CREATE OR REPLACE TRIGGER t_{$table_name}\n";
 					$sql .= "BEFORE INSERT ON {$table_name}\n";
 					$sql .= "FOR EACH ROW WHEN (\n";

@@ -47,7 +47,7 @@ function get_config_rows(&$phpbb_config, &$config_rows, &$existing_config)
 */
 function get_extension_groups_rows(&$extension_groups_data, &$extension_groups_rows, &$existing_extension_groups)
 {
-	global $db;
+	global $db, $user;
 
 	$existing_extension_groups = array();
 	$sql_ary = array(
@@ -60,7 +60,16 @@ function get_extension_groups_rows(&$extension_groups_data, &$extension_groups_r
 	$result	= $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$existing_extension_groups[] = $row['group_name'];
+		// Since phpBB 3.0.8 the module extensions are translatable,
+		// but now module extensions are NOT translatable and we need convert group_name into native
+		$extension_group_name = $row['group_name'];
+		if (in_array($row['group_name'], $user->lang))
+		{
+			$key = array_keys($user->lang, $row['group_name']);
+			$extension_group_name = $key[0];
+			unset ($key);
+		}
+		$existing_extension_groups[] = $extension_group_name;
 	}
 	$db->sql_freeresult($result);
 
@@ -73,7 +82,7 @@ function get_extension_groups_rows(&$extension_groups_data, &$extension_groups_r
 */
 function get_extensions($group, &$group_id)
 {
-	global $db;
+	global $db, $user;
 
 	$sql_ary = array(
 		'SELECT'	=> 'e.extension, eg.group_id',
@@ -82,7 +91,7 @@ function get_extensions($group, &$group_id)
 			EXTENSION_GROUPS_TABLE	=> 'eg',
 		),
 		'WHERE'		=> "e.group_id = eg.group_id
-							AND eg.group_name = '" . $db->sql_escape($group) . "'",
+			AND eg.group_name = '" . $db->sql_escape($group) . "'",
 	);
 	$sql = $db->sql_build_query('SELECT', $sql_ary);
 	$result	= $db->sql_query($sql);
@@ -97,6 +106,50 @@ function get_extensions($group, &$group_id)
 		}
 	}
 	$db->sql_freeresult($result);
+
+	// Since phpBB 3.0.8 the module extensions are translatable,
+	// but now module extensions are NOT translatable and we need convert group_name into native
+	if(!sizeof($set))
+	{
+		if (in_array($user->lang[$group], $user->lang))
+		{
+			$sql_ary = array(
+				'SELECT'	=> 'e.extension, eg.group_id',
+				'FROM'		=> array(
+					EXTENSIONS_TABLE		=> 'e',
+					EXTENSION_GROUPS_TABLE	=> 'eg',
+				),
+				'WHERE'		=> "e.group_id = eg.group_id
+					AND eg.group_name = '" . $db->sql_escape($user->lang[$group]) . "'",
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_ary);
+			$result	= $db->sql_query($sql);
+			$set	= array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$set[] = $row['extension'];
+
+				if (empty($group_id))
+				{
+					$group_id = $row['group_id'];
+				}
+			}
+			$db->sql_freeresult($result);
+		}
+	}
+
+	// # Bugfix from previous verson for phpBB 3.0
+	// # extension_id in extensions table assigned a NULL value
+	if(!sizeof($set))
+	{
+		$sql = 'SELECT group_id FROM '. EXTENSION_GROUPS_TABLE .'
+			WHERE group_name = \''. $db->sql_escape($group) .'\'';
+		$result = $db->sql_query($sql);
+		$id = $db->sql_fetchrow($result);
+		$group_id = $id['group_id'];
+		$db->sql_freeresult($result);
+	}
 
 	return $set;
 }
@@ -193,6 +246,7 @@ function get_columns($table)
 		{
 			// MySQL
 			case 'mysql'	:
+			case 'mysqli'	:
 			case 'mysql4'	:
 			case 'mysql_40'	:
 			case 'mysql_41'	:
@@ -378,8 +432,10 @@ function fetch_cleaner_data(&$data, $phpbb_version)
 		$data->module_categories	= array_merge($data->module_categories, $_datafile->module_categories);
 		$data->module_extras		= array_merge($data->module_extras, $_datafile->module_extras);
 		$data->groups				= array_merge($data->groups, $_datafile->groups);
-		$data->removed_config		= array_merge($data->removed_config, $_datafile->removed_config);
 		$data->report_reasons		= array_merge($data->report_reasons, $_datafile->report_reasons);
+		$data->acp_modules			= array_merge($data->acp_modules, $_datafile->acp_modules);
+		$data->module_categories_basenames			= array_merge($data->module_categories_basenames, $_datafile->module_categories_basenames);
+
 		$_datafile->get_schema_struct($data->schema_data);
 
 		// Just make sure that nothing sticks
@@ -395,10 +451,7 @@ function fetch_cleaner_data(&$data, $phpbb_version)
 	// Perform some actions that only have to be done on given versions or on all
 	switch($phpbb_version)
 	{
-		case '3_0_12'	:
-		case '3_0_11'	:
-		case '3_0_10'	:
-		case '3_0_9' 	:
+		case '3_1_2'	:
 			// The extension group names have been changed, remove the old ones
 			foreach ($data->extension_groups as $key => $null)
 			{
@@ -417,12 +470,6 @@ function fetch_cleaner_data(&$data, $phpbb_version)
 				}
 			}
 
-		// No Break;
-
-		case '3_0_8' :
-		case '3_0_7_pl1' :
-		case '3_0_7' :
-		case '3_0_6' :
 			// If $config['questionnaire_unique_id] exists add it to the config data array
 			if (isset($config['questionnaire_unique_id']))
 			{
@@ -433,18 +480,118 @@ function fetch_cleaner_data(&$data, $phpbb_version)
 			$extra_add = array('ACP_FORUM_PERMISSIONS_COPY');
 			array_splice($data->module_extras['acp']['ACP_FORUM_BASED_PERMISSIONS'], 1, 0, $extra_add);
 
-		// No Break;
-
-		case '3_0_5' :
-		case '3_0_4' :
-		case '3_0_3' :
-		case '3_0_2' :
-		case '3_0_1' :
-		case '3_0_0' :
 			$data->config['version'] = $phpbb_version;		// We always need to set the version afterwards
 		break;
 	}
 
 	// Call init
 	$data->init();
+}
+
+/**
+* Find modules in database
+*/
+function get_acp_modules($acp_modules, &$modules)
+{
+	global $db;
+
+	$existing_modules = array();
+	$main_modules = array('acp', 'ucp', 'mcp');
+	$modules_flat_array = array_values_recursive($acp_modules);
+	$keys_array = recursive_keys ($acp_modules);
+
+	$keys = array();
+	foreach($keys_array as $k)
+	{
+		if(!is_numeric($k))
+		{
+			$keys[] = $k;
+		}
+	}
+	$keys = array_diff($keys, $main_modules);
+	$modules = array_merge($modules_flat_array, $keys);
+	return $modules;
+}
+
+/**
+* Find keys in multidimensional associative array
+*/
+function array_find($array, $needle)
+{
+	foreach($array as $cat)
+	{
+		if(isset($needle) && $needle != '')
+		{
+			if (array_key_exists($needle, $cat))
+			{
+				return array_search($cat, $array);
+			}
+			if (in_array($needle, $cat))
+			{
+				return array_search($cat, $array);
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		foreach($cat as $main_module)
+		{
+			if (array_key_exists($needle, $main_module))
+			{
+				return array_search($main_module, $cat);
+			}
+			if (in_array($needle, $main_module))
+			{
+				return array_search($main_module, $cat);
+			}
+			foreach($main_module as $module)
+			{
+				if(is_array($module))
+				{
+					if (array_key_exists($needle, $module))
+					{
+						return array_search($module, $main_module);
+					}
+					if (in_array($needle, $module))
+					{
+						return array_search($module, $main_module);
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function array_values_recursive($ary)
+{
+	$lst = array();
+	foreach( array_keys($ary) as $k)
+	{
+		$v = $ary[$k];
+		if (is_scalar($v))
+		{
+			$lst[] = $v;
+		}
+		elseif (is_array($v))
+		{
+			$lst = array_merge($lst, array_values_recursive($v));
+		}
+		}
+	return $lst;
+}
+
+function recursive_keys($input, $search_value = null){
+
+	$output = ($search_value !== NULL ? array_keys($input, $search_value) : array_keys($input)) ;
+	foreach($input as $sub)
+	{
+		if(is_array($sub))
+		{
+			$output = ($search_value !== NULL ? array_merge($output, recursive_keys($sub, $search_value)) : array_merge($output, recursive_keys($sub)));
+		}
+	}
+	return $output;
 }

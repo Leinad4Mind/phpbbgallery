@@ -64,6 +64,7 @@ $lang = array_merge($lang, array(
 	'EMPTY_PREFIX_EXPLAIN'			=> 'The database cleaner has determined that you haven\'t set an table prefix for the phpBB database tables. Due to this the database cleaner will check <strong>all</strong> tables in the database. Take extra care when proceding and make sure that you exclude any non-phpBB tables from the selection. Failing to do so will damage database tables that aren\'t part of phpBB.<br />If you aren\'t sure on how to procede seek assistance in the <a href="http://www.phpbb.com/community/viewforum.php?f=46">phpBB Support Forums</a>.',
 	'ERROR'							=> 'Error',
 	'EXTRA'							=> 'Extra',
+	'EXTENSION_GROUPS_SETTINGS'		=> 'Extension groups settings',
 	'EXTENSION_GROUPS_SUCCESS'		=> 'The extension groups have been reset successfully',
 	'EXTENSIONS_SUCCESS'			=> 'The extensions have been reset successfully',
 
@@ -99,6 +100,12 @@ $lang = array_merge($lang, array(
 	'ROLE_SETTINGS'					=> 'Role Settings',
 	'ROWS'							=> 'Rows',
 
+	'ACP_MODULES_SETTINGS'			=> 'Search for additional modules',
+	'UNDEFINED'						=> 'undefined',
+	'RESET_ACP_MODULES_SKIP'		=> 'Checking of additional modules skipped',
+	'RESET_ACP_MODULE_SUCCESS'		=> 'Checking of additional modules is done',
+	'GO_TO_ACP'						=> ' --&raquo; go to control module ',
+
 	'SECTION_NOT_CHANGED_TITLE'		=> array(
 		'tables'			=> 'Tables not changed',
 		'columns'			=> 'Columns not changed',
@@ -109,6 +116,7 @@ $lang = array_merge($lang, array(
 		'groups'			=> 'Groups not changed',
 		'roles'				=> 'Roles not changed',
 		'final_step'		=> 'Final step',
+		'acp_modules'		=> 'Search for additional or missing modules',
 	),
 	'SECTION_NOT_CHANGED_EXPLAIN'	=> array(
 		'tables'			=> 'The database tables haven’t been changed',
@@ -120,11 +128,23 @@ $lang = array_merge($lang, array(
 		'groups'			=> 'There were no changes in the phpBB system groups',
 		'roles'				=> 'There were no roles added or removed',
 		'final_step'		=> 'This last step will clear the cache and re-enable the board.',
+		'acp_modules'		=> 'Not found any additional or missing modules',
 	),
 	'SUCCESS'						=> 'Success',
+	'MODULE_ADD'					=> 'Module add',
+	'MODULE_ALREADY_EXIST'			=> 'Module already exist',
+	'NO_PARENT'						=> 'Parent module not exists.<br />Failed',
 	'SYSTEM_GROUP_UPDATE_SUCCESS'	=> 'The system groups have been reset successfully',
-
 	'TYPE'							=> 'Type',
-
 	'UNSTABLE_DEBUG_ONLY'			=> 'The database cleaner can only run on unstable phpBB versions <em>(dev, a, b, RC)</em>, when "DEBUG" is enabled through the phpBB config file.',
+
+	'ARCHIVES'				=> 'Archives',
+	'DOCUMENTS'				=> 'Documents',
+	'DOWNLOADABLE_FILES'	=> 'Downloadable files',
+	'FLASH_FILES'			=> 'Flash files',
+	'IMAGES'				=> 'Images',
+	'PLAIN_TEXT'			=> 'Plain text files',
+	'QUICKTIME_MEDIA'		=> 'Quicktime files',
+	'REAL_MEDIA'			=> 'RealMedia files',
+	'WINDOWS_MEDIA'			=> 'Windows Media files',
 ));

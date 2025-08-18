@@ -36,6 +36,7 @@ if (!class_exists('database_cleaner'))
 			'groups',
 			'roles',
 			'role_data',
+			'acp_modules',
 			'modules',
 			'bots',
 			'report_reasons',
@@ -70,6 +71,10 @@ if (!class_exists('database_cleaner'))
 			global $config;
 
 			// Correctly format the version number. Only RC releases are in uppercase
+			if (!defined('PHPBB_VERSION_NUMBER'))
+			{
+				define('PHPBB_VERSION_NUMBER', PHPBB_VERSION);
+			}
 			$this->phpbb_version = str_replace(array('.', '-', 'rc'), array('_', '_', 'RC'), strtolower(PHPBB_VERSION_NUMBER));
 
 			// Unstable versions can only be used when debugging
@@ -168,7 +173,7 @@ if (!class_exists('database_cleaner'))
 			// Setup
 			$this->_setup();
 
-			$selected = request_var('items', array('' => ''));
+			$selected = request_var('items', array('' => ''), true);
 
 			if ($this->step > 0 && !check_form_key('database_cleaner'))
 			{

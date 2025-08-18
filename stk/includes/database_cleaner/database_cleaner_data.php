@@ -32,11 +32,6 @@ class database_cleaner_data
 	var $config = array();
 
 	/**
-	* @var Array Config entries that were removed by this version
-	*/
-	var $removed_config = array();
-
-	/**
 	* @var Array The permissions array for this version
 	*/
 	var $acl_options = array();
@@ -92,6 +87,15 @@ class database_cleaner_data
 	* @var Array An array containing all report reasons
 	*/
 	var $report_reasons = array();
+	/**
+	* @var Array An array containing all ACP modules
+	*/
+	var $acp_modules = array();
+
+	/**
+	* @var Array An array containing basenames for ACP modules
+	*/
+	var $module_categories_basenames = array();
 
 	/**
 	* Some data needs to be adjusted in certain cases

@@ -68,11 +68,7 @@ stk_add_lang('common');
 $umil = new umil(true);
 $umil->cache_purge(array(
 	'data',
-//	'template',
-//	'theme',
-//	'imageset',
 ));
-
 
 // Let's tell the user all is okay :)
 $critical_repair->trigger_error($user->lang['ERK_OK'], true);
