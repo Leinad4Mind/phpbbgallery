@@ -32,8 +32,6 @@ class datafile_3_3_1
 	* @var Array  3.3.1 config data
 	*/
 	var $config = array(
-		'img_strip_metadata'				=> array('config_value' => '0', 'is_dynamic' => '0'),
-		'img_quality'						=> array('config_value' => '85', 'is_dynamic' => '0'),
 		'default_search_return_chars'		=> array('config_value' => '300', 'is_dynamic' => '0'),
 		'display_unapproved_posts'			=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'recaptcha_v3_key'					=> array('config_value' => '', 'is_dynamic' => '0'),
@@ -45,12 +43,8 @@ class datafile_3_3_1
 		'recaptcha_v3_threshold_login'		=> array('config_value' => '0.5', 'is_dynamic' => '0'),
 		'recaptcha_v3_threshold_post'		=> array('config_value' => '0.5', 'is_dynamic' => '0'),
 		'recaptcha_v3_threshold_report'		=> array('config_value' => '0.5', 'is_dynamic' => '0'),
-		'feed_limit'						=> array('config_value' => '10', 'is_dynamic' => '0'),
-		'feed_overall_forums_limit'			=> array('config_value' => '15', 'is_dynamic' => '0'),
-		'feed_overall_topics'				=> array('config_value' => '0', 'is_dynamic' => '0'),
-		'feed_overall_topics_limit'			=> array('config_value' => '15', 'is_dynamic' => '0'),
 		'enable_queue_trigger'				=> array('config_value' => '0', 'is_dynamic' => '0'),
-		'queue_trigger_posts'				=> array('config_value' => '3', 'is_dynamic' => '0'),
+		'feed_overall_forums_limit'			=> array('config_value' => '15', 'is_dynamic' => '0'),
 	);
 
 	/**
