@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - phpbb Russian language Sheer
+* @package Support Toolkit - phpbb English language Sheer
 * @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -64,4 +64,5 @@ $lang = array_merge($lang, array(
 
 	'ARE_REQUIRED'			=> '<hr>Fields marked with * are required.',
 	'SUCCESS'				=> 'Workpiece of extension successfully created. Now you can start real creation of extension.',
+	'ALREADY_EXISTS'		=> 'This extension already exists!',
 ));
