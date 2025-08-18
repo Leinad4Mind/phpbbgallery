@@ -205,7 +205,7 @@ final class Utils
      *
      * @param mixed $data Input to check and convert if needed, passed by ref
      */
-    private static function detectAndCleanUtf8(&$data): void
+    /* private static function detectAndCleanUtf8(&$data): void
     {
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(
@@ -225,7 +225,43 @@ final class Utils
                 $data
             );
         }
+    } */
+	
+	private static function detectAndCleanUtf8(&$data): void
+{
+    if (is_string($data)) {
+        $data = self::cleanString($data);
+    } elseif (is_array($data)) {
+        foreach ($data as &$value) {
+            self::detectAndCleanUtf8($value);
+        }
+    } elseif (is_object($data)) {
+        foreach ($data as $key => $value) {
+            self::detectAndCleanUtf8($data->$key);
+        }
     }
+}
+
+private static function cleanString(string $string): string
+{
+    // Ist der String bereits UTF-8?
+    if (preg_match('//u', $string)) {
+        return $string;
+    }
+
+    // Encoding erkennen
+    $encoding = mb_detect_encoding($string, ['ISO-8859-1', 'Windows-1252', 'UTF-8'], true);
+
+    // Konvertieren
+    $string = mb_convert_encoding($string, 'UTF-8', $encoding ?: 'ISO-8859-1');
+
+    // Optional: Zeichenersetzung für Sonderfälle
+    return str_replace(
+        ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],
+        ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'],
+        $string
+    );
+}
 
     /**
      * Converts a string with a valid 'memory_limit' format, to bytes.

@@ -10,7 +10,7 @@
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
  */
 
-if (extension_loaded('mbstring')) {
+/* if (extension_loaded('mbstring')) {
     // 2 - MB_OVERLOAD_STRING
     // mbstring.func_overload is deprecated in php 7.2 and removed in php 8.0.
     if (version_compare(PHP_VERSION, '8.0.0') < 0 && ini_get('mbstring.func_overload') & 2) {
@@ -19,4 +19,10 @@ if (extension_loaded('mbstring')) {
             'is not supported by phpseclib.'
         );
     }
+} */
+
+  if (extension_loaded('mbstring')) {
+    // Kein ini_get('mbstring.func_overload') mehr nötig
+    // Stattdessen direkt mb_* Funktionen verwenden
+    $length = mb_strlen($string);
 }

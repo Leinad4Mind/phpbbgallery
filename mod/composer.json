@@ -1,5 +1,4 @@
 {
-
 	"config": {
         "platform-check": true
     },
@@ -22,3 +21,4 @@
         "roave/security-advisories": "dev-latest"
     }
 }
+

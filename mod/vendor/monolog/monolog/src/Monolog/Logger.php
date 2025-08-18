@@ -337,16 +337,16 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param Level $level
      */
-    public function addRecord(int $level, string $message, array $context = [], ?DateTimeImmutable $datetime = null): bool
+    /* public function addRecord(int $level, string $message, array $context = [], ?DateTimeImmutable $datetime = null): bool
     {
         if (isset(self::RFC_5424_LEVELS[$level])) {
             $level = self::RFC_5424_LEVELS[$level];
         }
 
         if ($this->detectCycles) {
-            if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) {
+            if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) { */
                 // @phpstan-ignore offsetAssign.dimType
-                $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
+                /* $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
                 $logDepth = ++$this->fiberLogDepth[$fiber];
             } else {
                 $logDepth = ++$this->logDepth;
@@ -358,17 +358,17 @@ class Logger implements LoggerInterface, ResettableInterface
         if ($logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
-        } elseif ($logDepth >= 5) { // log depth 4 is let through, so we can log the warning above
-            return false;
+        } elseif ($logDepth >= 5) { */ // log depth 4 is let through, so we can log the warning above
+            /* return false;
         }
 
         try {
             $record = null;
 
             foreach ($this->handlers as $handler) {
-                if (null === $record) {
+                if (null === $record) { */
                     // skip creating the record as long as no handler is going to handle it
-                    if (!$handler->isHandling(['level' => $level])) {
+                    /* if (!$handler->isHandling(['level' => $level])) {
                         continue;
                     }
 
@@ -393,10 +393,10 @@ class Logger implements LoggerInterface, ResettableInterface
 
                         return true;
                     }
-                }
+                } */
 
                 // once the record exists, send it to all handlers as long as the bubbling chain is not interrupted
-                try {
+                /* try {
                     if (true === $handler->handle($record)) {
                         break;
                     }
@@ -417,7 +417,188 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         return null !== $record;
+    } */
+	
+	/* public function addRecord(int $level, string $message, array $context = [], ?DateTimeImmutable $datetime = null): bool
+{
+    if (isset(self::RFC_5424_LEVELS[$level])) {
+        $level = self::RFC_5424_LEVELS[$level];
+    } */
+
+    // Logging-Tiefe bestimmen
+    /* $logDepth = 0;
+    $fiber = null;
+
+    if ($this->detectCycles) {
+        if (\PHP_VERSION_ID >= 80100 && class_exists('Fiber') && method_exists('Fiber', 'getCurrent')) {
+            try {
+                $fiber = \Fiber::getCurrent();
+            } catch (\Throwable $e) {
+                $fiber = null;
+            }
+
+            if ($fiber !== null) {
+                $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
+                $logDepth = ++$this->fiberLogDepth[$fiber];
+            } else {
+                $logDepth = ++$this->logDepth;
+            }
+        } else {
+            $logDepth = ++$this->logDepth;
+        }
+    } */
+
+    // Endlosschleifen verhindern
+    /* if ($logDepth === 3) {
+        $this->warning('A possible infinite logging loop was detected and aborted...');
+        return false;
+    } elseif ($logDepth >= 5) {
+        return false;
     }
+
+    try {
+        $record = null;
+
+        foreach ($this->handlers as $handler) {
+            if (null === $record) {
+                if (!$handler->isHandling(['level' => $level])) {
+                    continue;
+                }
+
+                $levelName = static::getLevelName($level);
+
+                $record = [
+                    'message' => $message,
+                    'context' => $context,
+                    'level' => $level,
+                    'level_name' => $levelName,
+                    'channel' => $this->name,
+                    'datetime' => $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                    'extra' => [],
+                ];
+
+                try {
+                    foreach ($this->processors as $processor) {
+                        $record = $processor($record);
+                    }
+                } catch (Throwable $e) {
+                    $this->handleException($e, $record);
+                    return true;
+                }
+            }
+
+            try {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+            } catch (Throwable $e) {
+                $this->handleException($e, $record);
+                return true;
+            }
+        }
+    } finally {
+        if ($this->detectCycles) {
+            if ($fiber !== null) {
+                $this->fiberLogDepth[$fiber]--;
+            } else {
+                $this->logDepth--;
+            }
+        }
+    }
+
+    return null !== $record;
+} */
+
+    public function addRecord(int $level, string $message, array $context = [], ?DateTimeImmutable $datetime = null): bool
+{
+    if (isset(self::RFC_5424_LEVELS[$level])) {
+        $level = self::RFC_5424_LEVELS[$level];
+    }
+
+    $logDepth = 0;
+    $fiber = null;
+
+    if ($this->detectCycles) {
+        // Nur wenn PHP ≥ 8.1 und Fiber verfügbar ist
+        if (\PHP_VERSION_ID >= 80100 && class_exists(\Fiber::class, false) && method_exists(\Fiber::class, 'getCurrent')) {
+            try {
+                $fiber = \Fiber::getCurrent();
+            } catch (\Throwable $e) {
+                $fiber = null;
+            }
+
+            if ($fiber !== null) {
+                $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
+                $logDepth = ++$this->fiberLogDepth[$fiber];
+            } else {
+                $logDepth = ++$this->logDepth;
+            }
+        } else {
+            // Fallback für PHP < 8.1 oder ohne Fiber
+            $logDepth = ++$this->logDepth;
+        }
+    }
+
+    // Endlosschleifen verhindern
+    if ($logDepth === 3) {
+        $this->warning('A possible infinite logging loop was detected and aborted...');
+        return false;
+    } elseif ($logDepth >= 5) {
+        return false;
+    }
+
+    try {
+        $record = null;
+
+        foreach ($this->handlers as $handler) {
+            if (null === $record) {
+                if (!$handler->isHandling(['level' => $level])) {
+                    continue;
+                }
+
+                $levelName = static::getLevelName($level);
+
+                $record = [
+                    'message' => $message,
+                    'context' => $context,
+                    'level' => $level,
+                    'level_name' => $levelName,
+                    'channel' => $this->name,
+                    'datetime' => $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                    'extra' => [],
+                ];
+
+                try {
+                    foreach ($this->processors as $processor) {
+                        $record = $processor($record);
+                    }
+                } catch (\Throwable $e) {
+                    $this->handleException($e, $record);
+                    return true;
+                }
+            }
+
+            try {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+            } catch (\Throwable $e) {
+                $this->handleException($e, $record);
+                return true;
+            }
+        }
+    } finally {
+        if ($this->detectCycles) {
+            if ($fiber !== null && isset($this->fiberLogDepth[$fiber])) {
+                $this->fiberLogDepth[$fiber]--;
+            } else {
+                $this->logDepth--;
+            }
+        }
+    }
+
+    return null !== $record;
+}
 
     /**
      * Ends a log cycle and frees all resources used by handlers.

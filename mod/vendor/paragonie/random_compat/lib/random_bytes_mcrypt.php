@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-if (!is_callable('random_bytes')) {
+/* if (!is_callable('random_bytes')) { */
     /**
      * Powered by ext/mcrypt (and thankfully NOT libmcrypt)
      *
@@ -39,7 +39,7 @@ if (!is_callable('random_bytes')) {
      *
      * @return string
      */
-    function random_bytes($bytes)
+    /* function random_bytes($bytes)
     {
         try {
             /** @var int $bytes */
@@ -54,26 +54,50 @@ if (!is_callable('random_bytes')) {
             throw new Error(
                 'Length must be greater than 0'
             );
-        }
+        } */
 
         /** @var string|bool $buf */
-        $buf = @mcrypt_create_iv((int) $bytes, (int) MCRYPT_DEV_URANDOM);
+       /*  $buf = @mcrypt_create_iv((int) $bytes, (int) MCRYPT_DEV_URANDOM);
         if (
             is_string($buf)
                 &&
             RandomCompat_strlen($buf) === $bytes
-        ) {
+        ) { */
             /**
              * Return our random entropy buffer here:
              */
-            return $buf;
-        }
+            /* return $buf;
+        } */
 
         /**
          * If we reach here, PHP has failed us.
          */
-        throw new Exception(
+        /* throw new Exception(
             'Could not gather sufficient random data'
         );
+    }
+} */
+
+   /**
+ * Liefert kryptografisch sichere Zufallsbytes
+ *
+ * @param int $bytes
+ * @throws TypeError|Exception
+ * @return string
+ */
+function get_secure_random_bytes(int $bytes): string
+{
+    if ($bytes < 1) {
+        throw new Error('Length must be greater than 0');
+    }
+
+    return random_bytes($bytes);
+}
+
+// Alias setzen, falls random_bytes nicht existiert (z. B. für Tests oder spezielle Umgebungen)
+if (!function_exists('random_bytes')) {
+    function random_bytes(int $bytes): string
+    {
+        return get_secure_random_bytes($bytes);
     }
 }

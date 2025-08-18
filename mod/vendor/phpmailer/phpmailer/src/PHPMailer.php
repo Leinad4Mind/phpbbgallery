@@ -873,16 +873,16 @@ class PHPMailer
      *
      * @return bool
      */
-    private function mailPassthru($to, $subject, $body, $header, $params)
-    {
+    /* private function mailPassthru($to, $subject, $body, $header, $params)
+    { */
         //Check overloading of mail function to avoid double-encoding
-        if ((int)ini_get('mbstring.func_overload') & 1) {
+        /* if ((int)ini_get('mbstring.func_overload') & 1) {
             $subject = $this->secureHeader($subject);
         } else {
             $subject = $this->encodeHeader($this->secureHeader($subject));
-        }
+        } */
         //Calling mail() with null params breaks
-        $this->edebug('Sending with mail()');
+        /* $this->edebug('Sending with mail()');
         $this->edebug('Sendmail path: ' . ini_get('sendmail_path'));
         $this->edebug("Envelope sender: {$this->Sender}");
         $this->edebug("To: {$to}");
@@ -896,7 +896,30 @@ class PHPMailer
         }
         $this->edebug('Result: ' . ($result ? 'true' : 'false'));
         return $result;
+    } */
+	
+	private function mailPassthru($to, $subject, $body, $header, $params)
+{
+    // Immer sichere und korrekt kodierte Header verwenden
+    $subject = $this->encodeHeader($this->secureHeader($subject));
+
+    $this->edebug('Sending with mail()');
+    $this->edebug('Sendmail path: ' . ini_get('sendmail_path'));
+    $this->edebug("Envelope sender: {$this->Sender}");
+    $this->edebug("To: {$to}");
+    $this->edebug("Subject: {$subject}");
+    $this->edebug("Headers: {$header}");
+
+    if (!$this->UseSendmailOptions || null === $params) {
+        $result = @mail($to, $subject, $body, $header);
+    } else {
+        $this->edebug("Additional params: {$params}");
+        $result = @mail($to, $subject, $body, $header, $params);
     }
+
+    $this->edebug('Result: ' . ($result ? 'true' : 'false'));
+    return $result;
+}
 
     /**
      * Output debugging info via a user-defined method.
@@ -1243,7 +1266,7 @@ class PHPMailer
      *
      * @return array
      */
-    public static function parseAddresses($addrstr, $useimap = true, $charset = self::CHARSET_ISO88591)
+    /* public static function parseAddresses($addrstr, $useimap = true, $charset = self::CHARSET_ISO88591)
     {
         $addresses = [];
         if ($useimap && function_exists('imap_rfc822_parse_adrlist')) {
@@ -1319,7 +1342,55 @@ class PHPMailer
         }
 
         return $addresses;
+    } */
+	
+	public static function parseAddresses($addrstr, $charset = self::CHARSET_ISO88591)
+{
+    $addresses = [];
+    $list = explode(',', $addrstr);
+
+    foreach ($list as $address) {
+        $address = trim($address);
+
+        if (strpos($address, '<') === false) {
+            if (static::validateAddress($address)) {
+                $addresses[] = [
+                    'name' => '',
+                    'address' => $address,
+                ];
+            }
+        } else {
+            list($name, $email) = explode('<', $address);
+            $email = trim(str_replace('>', '', $email));
+            $name = trim($name);
+
+            // Optional: IDN-Konvertierung mit UTS#46 (empfohlen ab PHP 8.0)
+            if (function_exists('idn_to_ascii') && preg_match('/@(.+)$/', $email, $matches)) {
+                $domain = idn_to_ascii($matches[1], 0, defined('INTL_IDNA_VARIANT_UTS46') ? INTL_IDNA_VARIANT_UTS46 : 0);
+                if ($domain !== false) {
+                    $email = preg_replace('/@.+$/', '@' . $domain, $email);
+                }
+            }
+
+            if (static::validateAddress($email)) {
+                if (defined('MB_CASE_UPPER') && preg_match('/^=\?.*\?=$/s', $name)) {
+                    $origCharset = mb_internal_encoding();
+                    mb_internal_encoding($charset);
+                    $name = str_replace('_', '=20', $name);
+                    $name = mb_decode_mimeheader($name);
+                    mb_internal_encoding($origCharset);
+                }
+
+                $addresses[] = [
+                    'name' => trim($name, '\'" '),
+                    'address' => $email,
+                ];
+            }
+        }
     }
+
+    return $addresses;
+}
 
     /**
      * Set the From and FromName properties.
@@ -1506,33 +1577,33 @@ class PHPMailer
      *
      * @return string The encoded address in ASCII form
      */
-    public function punyencodeAddress($address)
-    {
+    /* public function punyencodeAddress($address)
+    { */
         //Verify we have required functions, CharSet, and at-sign.
-        $pos = strrpos($address, '@');
+        /* $pos = strrpos($address, '@');
         if (
             !empty($this->CharSet) &&
             false !== $pos &&
             static::idnSupported()
-        ) {
-            $domain = substr($address, ++$pos);
+        ) { */
+            /* $domain = substr($address, ++$pos); */
             //Verify CharSet string is a valid one, and domain properly encoded in this CharSet.
-            if ($this->has8bitChars($domain) && @mb_check_encoding($domain, $this->CharSet)) {
+            /* if ($this->has8bitChars($domain) && @mb_check_encoding($domain, $this->CharSet)) { */
                 //Convert the domain from whatever charset it's in to UTF-8
-                $domain = mb_convert_encoding($domain, self::CHARSET_UTF8, $this->CharSet);
+                /* $domain = mb_convert_encoding($domain, self::CHARSET_UTF8, $this->CharSet); */
                 //Ignore IDE complaints about this line - method signature changed in PHP 5.4
-                $errorcode = 0;
-                if (defined('INTL_IDNA_VARIANT_UTS46')) {
+                /* $errorcode = 0; */
+                /* if (defined('INTL_IDNA_VARIANT_UTS46')) { */
                     //Use the current punycode standard (appeared in PHP 7.2)
-                    $punycode = idn_to_ascii(
+                    /* $punycode = idn_to_ascii(
                         $domain,
                         \IDNA_DEFAULT | \IDNA_USE_STD3_RULES | \IDNA_CHECK_BIDI |
                             \IDNA_CHECK_CONTEXTJ | \IDNA_NONTRANSITIONAL_TO_ASCII,
                         \INTL_IDNA_VARIANT_UTS46
                     );
-                } elseif (defined('INTL_IDNA_VARIANT_2003')) {
+                } elseif (defined('INTL_IDNA_VARIANT_2003')) { */
                     //Fall back to this old, deprecated/removed encoding
-                    $punycode = idn_to_ascii($domain, $errorcode, \INTL_IDNA_VARIANT_2003);
+                    /* $punycode = idn_to_ascii($domain, $errorcode, \INTL_IDNA_VARIANT_2003);
                 } else {
                     //Fall back to a default we don't know about
                     $punycode = idn_to_ascii($domain, $errorcode);
@@ -1544,7 +1615,37 @@ class PHPMailer
         }
 
         return $address;
+    } */
+	
+	public function punyencodeAddress($address)
+{
+    $pos = strrpos($address, '@');
+    if (
+        !empty($this->CharSet) &&
+        false !== $pos &&
+        static::idnSupported()
+    ) {
+        $domain = substr($address, ++$pos);
+        if ($this->has8bitChars($domain) && @mb_check_encoding($domain, $this->CharSet)) {
+            $domain = mb_convert_encoding($domain, self::CHARSET_UTF8, $this->CharSet);
+
+            if (defined('INTL_IDNA_VARIANT_UTS46')) {
+                $punycode = idn_to_ascii(
+                    $domain,
+                    \IDNA_DEFAULT | \IDNA_USE_STD3_RULES | \IDNA_CHECK_BIDI |
+                    \IDNA_CHECK_CONTEXTJ | \IDNA_NONTRANSITIONAL_TO_ASCII,
+                    \INTL_IDNA_VARIANT_UTS46
+                );
+
+                if (false !== $punycode) {
+                    return substr($address, 0, $pos) . $punycode;
+                }
+            }
+        }
     }
+
+    return $address;
+}
 
     /**
      * Create a message and send it.
@@ -4988,7 +5089,7 @@ class PHPMailer
      *
      * @return string The DKIM signature value
      */
-    public function DKIM_Sign($signHeader)
+    /* public function DKIM_Sign($signHeader)
     {
         if (!defined('PKCS7_TEXT')) {
             if ($this->exceptions) {
@@ -5020,7 +5121,43 @@ class PHPMailer
         }
 
         return '';
+    } */
+	
+	public function DKIM_Sign($signHeader)
+{
+    if (!defined('PKCS7_TEXT')) {
+        if ($this->exceptions) {
+            throw new Exception($this->lang('extension_missing') . 'openssl');
+        }
+        return '';
     }
+
+    if (!is_readable($this->DKIM_private)) {
+        throw new \Exception("DKIM private key file is not readable: " . $this->DKIM_private);
+    }
+
+    $privKeyStr = !empty($this->DKIM_private_string)
+        ? $this->DKIM_private_string
+        : file_get_contents($this->DKIM_private);
+
+    $privKey = ('' !== $this->DKIM_passphrase)
+        ? openssl_pkey_get_private($privKeyStr, $this->DKIM_passphrase)
+        : openssl_pkey_get_private($privKeyStr);
+
+    if (!$privKey) {
+        if ($this->exceptions) {
+            throw new \Exception("Unable to load DKIM private key.");
+        }
+        return '';
+    }
+
+    if (openssl_sign($signHeader, $signature, $privKey, OPENSSL_ALGO_SHA256)) {
+        // Kein openssl_pkey_free() mehr nötig ab PHP 8.0
+        return base64_encode($signature);
+    }
+
+    return '';
+}
 
     /**
      * Generate a DKIM canonicalization header.

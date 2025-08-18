@@ -682,7 +682,7 @@ class Prime extends Base
      *
      * @return int[]
      */
-    private static function getJSFPoints(Integer $k1, Integer $k2)
+    private static function getJSFPoints(BigInteger $k1, BigInteger $k2)
     {
         static $three;
         if (!isset($three)) {

@@ -88,23 +88,34 @@ class ErrorHandler
      * @param  array<class-string, LogLevel::*> $levelMap an array of class name to LogLevel::* constant mapping
      * @return $this
      */
-    public function registerExceptionHandler(array $levelMap = [], bool $callPrevious = true): self
-    {
-        $prev = set_exception_handler(function (\Throwable $e): void {
+    
+	
+	public function registerExceptionHandler(array $levelMap = [], bool $callPrevious = true): self
+{
+    // Exception-Handler mit Zugriff auf $this durch bindTo()
+    $prev = set_exception_handler(
+        (function (\Throwable $e): void {
             $this->handleException($e);
-        });
-        $this->uncaughtExceptionLevelMap = $levelMap;
-        foreach ($this->defaultExceptionLevelMap() as $class => $level) {
-            if (!isset($this->uncaughtExceptionLevelMap[$class])) {
-                $this->uncaughtExceptionLevelMap[$class] = $level;
-            }
-        }
-        if ($callPrevious && $prev) {
-            $this->previousExceptionHandler = $prev;
-        }
+        })->bindTo($this, static::class)
+    );
 
-        return $this;
+    // Level-Map setzen
+    $this->uncaughtExceptionLevelMap = $levelMap;
+
+    // Standardwerte ergänzen, falls nicht vorhanden
+    foreach ($this->defaultExceptionLevelMap() as $class => $level) {
+        if (!isset($this->uncaughtExceptionLevelMap[$class])) {
+            $this->uncaughtExceptionLevelMap[$class] = $level;
+        }
     }
+
+    // Vorherigen Handler speichern, falls gewünscht
+    if ($callPrevious && $prev) {
+        $this->previousExceptionHandler = $prev;
+    }
+
+    return $this;
+}
 
     /**
      * @param  array<int, LogLevel::*> $levelMap an array of E_* constant to LogLevel::* constant mapping
@@ -154,26 +165,28 @@ class ErrorHandler
     /**
      * @return array<int, LogLevel::*>
      */
-    protected function defaultErrorLevelMap(): array
-    {
-        return [
-            E_ERROR             => LogLevel::CRITICAL,
-            E_WARNING           => LogLevel::WARNING,
-            E_PARSE             => LogLevel::ALERT,
-            E_NOTICE            => LogLevel::NOTICE,
-            E_CORE_ERROR        => LogLevel::CRITICAL,
-            E_CORE_WARNING      => LogLevel::WARNING,
-            E_COMPILE_ERROR     => LogLevel::ALERT,
-            E_COMPILE_WARNING   => LogLevel::WARNING,
-            E_USER_ERROR        => LogLevel::ERROR,
-            E_USER_WARNING      => LogLevel::WARNING,
-            E_USER_NOTICE       => LogLevel::NOTICE,
-            E_STRICT            => LogLevel::NOTICE,
-            E_RECOVERABLE_ERROR => LogLevel::ERROR,
-            E_DEPRECATED        => LogLevel::NOTICE,
-            E_USER_DEPRECATED   => LogLevel::NOTICE,
-        ];
-    }
+   
+	
+	protected function defaultErrorLevelMap(): array
+{
+    return [
+        E_ERROR             => LogLevel::CRITICAL,
+        E_WARNING           => LogLevel::WARNING,
+        E_PARSE             => LogLevel::ALERT,
+        E_NOTICE            => LogLevel::NOTICE,
+        E_CORE_ERROR        => LogLevel::CRITICAL,
+        E_CORE_WARNING      => LogLevel::WARNING,
+        E_COMPILE_ERROR     => LogLevel::ALERT,
+        E_COMPILE_WARNING   => LogLevel::WARNING,
+        E_USER_ERROR        => LogLevel::ERROR,
+        E_USER_WARNING      => LogLevel::WARNING,
+        E_USER_NOTICE       => LogLevel::NOTICE,
+        // E_STRICT entfernt
+        E_RECOVERABLE_ERROR => LogLevel::ERROR,
+        E_DEPRECATED        => LogLevel::NOTICE,
+        E_USER_DEPRECATED   => LogLevel::NOTICE,
+    ];
+}
 
     /**
      * @phpstan-return never
@@ -267,41 +280,30 @@ class ErrorHandler
     /**
      * @param int $code
      */
-    private static function codeToString($code): string
-    {
-        switch ($code) {
-            case E_ERROR:
-                return 'E_ERROR';
-            case E_WARNING:
-                return 'E_WARNING';
-            case E_PARSE:
-                return 'E_PARSE';
-            case E_NOTICE:
-                return 'E_NOTICE';
-            case E_CORE_ERROR:
-                return 'E_CORE_ERROR';
-            case E_CORE_WARNING:
-                return 'E_CORE_WARNING';
-            case E_COMPILE_ERROR:
-                return 'E_COMPILE_ERROR';
-            case E_COMPILE_WARNING:
-                return 'E_COMPILE_WARNING';
-            case E_USER_ERROR:
-                return 'E_USER_ERROR';
-            case E_USER_WARNING:
-                return 'E_USER_WARNING';
-            case E_USER_NOTICE:
-                return 'E_USER_NOTICE';
-            case E_STRICT:
-                return 'E_STRICT';
-            case E_RECOVERABLE_ERROR:
-                return 'E_RECOVERABLE_ERROR';
-            case E_DEPRECATED:
-                return 'E_DEPRECATED';
-            case E_USER_DEPRECATED:
-                return 'E_USER_DEPRECATED';
-        }
 
-        return 'Unknown PHP error';
+   private static function codeToString($code): string
+{
+    switch ($code) {
+        case E_ERROR:             return 'E_ERROR';
+        case E_WARNING:           return 'E_WARNING';
+        case E_PARSE:             return 'E_PARSE';
+        case E_NOTICE:            return 'E_NOTICE';
+        case E_CORE_ERROR:        return 'E_CORE_ERROR';
+        case E_CORE_WARNING:      return 'E_CORE_WARNING';
+        case E_COMPILE_ERROR:     return 'E_COMPILE_ERROR';
+        case E_COMPILE_WARNING:   return 'E_COMPILE_WARNING';
+        case E_USER_ERROR:        return 'E_USER_ERROR';
+        case E_USER_WARNING:      return 'E_USER_WARNING';
+        case E_USER_NOTICE:       return 'E_USER_NOTICE';
+        case E_RECOVERABLE_ERROR: return 'E_RECOVERABLE_ERROR';
+        case E_DEPRECATED:        return 'E_DEPRECATED';
+        case E_USER_DEPRECATED:   return 'E_USER_DEPRECATED';
     }
+
+    // Rückwärtskompatibilität für E_STRICT nur, wenn definiert und nicht deprecated
+    if (defined('E_STRICT') && PHP_VERSION_ID < 80400 && $code === constant('E_STRICT')) {
+        return 'E_STRICT';
+    }
+
+    return 'Unknown PHP error';
 }

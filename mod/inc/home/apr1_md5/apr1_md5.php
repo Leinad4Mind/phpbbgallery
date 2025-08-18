@@ -1,11 +1,20 @@
 <?php
 
-namespace WhiteHat101\Crypt;
+/* namespace WhiteHat101\Crypt;
 
 class APR1_MD5
 {
     final public const BASE64_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-    final public const APRMD5_ALPHABET = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    final public const APRMD5_ALPHABET = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; */
+	
+	namespace WhiteHat101\Crypt;
+
+class APR1_MD5
+{
+    public const BASE64_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    public const APRMD5_ALPHABET = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+
 
     // Source/References for core algorithm:
     // http://www.cryptologie.net/article/126/bruteforce-apr1-hashes/
