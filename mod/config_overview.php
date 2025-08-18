@@ -1033,17 +1033,17 @@ $aus['global1'] = '<div id="global1"><fieldset><legend>'.$lang['L_GENERAL'].'</l
 
 $aus['global1'] .= '<tr><td>'.Help('', '').'Logfiles:&nbsp;</td>';
 $aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="logcompression" '.(($config['zlib']) ? '' : 'disabled').((isset($config['logcompression']) && (1 == $config['logcompression'])) ? ' checked' : '').'>&nbsp;'.$lang['L_COMPRESSED'].'<br>';
-$aus['global1'] .= ''.$lang['L_MAXSIZE'].':&nbsp;&nbsp;<input type="text" class="text" name="log_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.($config['log_maxsize1'] ?? '').'">&nbsp;&nbsp;';
+$aus['global1'] .= ''.$lang['L_MAXSIZE'].':&nbsp;&nbsp;<input type="number" class="number" name="log_maxsize1" min="0" max="999" value="'.($config['log_maxsize1'] ?? '').'">&nbsp;&nbsp;';
 $aus['global1'] .= '<select name="log_maxsize2"><option value="1" '.((isset($config['log_maxsize2']) && (1 == $config['log_maxsize2'])) ? ' SELECTED' : '').'>Kilobytes</option>';
 $aus['global1'] .= '<option value="2" '.((isset($config['log_maxsize2']) && (2 == $config['log_maxsize2'])) ? ' SELECTED' : '').'>Megabytes</option></select>';
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_MEMORYLIMIT'], '').$lang['L_MEMORY_LIMIT'].':&nbsp;&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" size="10" id="mlimit" name="memory_limit" maxlength="10" style="text-align:right;font-size:11px;" value="'.($config['memory_limit'] ?? '').'"> Bytes&nbsp;&nbsp;&nbsp;<a href="#" onclick="WriteMem();" class="small">'.$lang['L_AUTODETECT'].'</a>';
+$aus['global1'] .= '<td><input type="number" class="number" id="mlimit" name="memory_limit" min="0" max="9999999999" value="'.($config['memory_limit'] ?? '').'"> Bytes&nbsp;&nbsp;&nbsp;<a href="#" onclick="WriteMem();" class="small">'.$lang['L_AUTODETECT'].'</a>';
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_SPEED'], '').$lang['L_SPEED'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" size="6" name="minspeed" maxlength="6" style="text-align:right;" value="'.($config['minspeed'] ?? '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="text" class="text" size="6" name="maxspeed" maxlength="9" style="text-align:right;" value="'.($config['maxspeed'] ?? '').'"></td></tr>';
+$aus['global1'] .= '<td><input type="number" class="number" name="minspeed" min="0" max="999999" value="'.($config['minspeed'] ?? '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="number" class="maxspeed" name="maxspeed" min="0" max="999999999" value="'.($config['maxspeed'] ?? '').'"></td></tr>';
 
 //$aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
 
@@ -1064,7 +1064,7 @@ $aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_MULTIPARTGROESSE'], '').$lang['L_MULTI_PART_GROESSE'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" id="multipartgroesse1" name="multipartgroesse1" size="3" maxlength="8" style="text-align:right;" value="'.($config['multipartgroesse1'] ?? '').'"';
+$aus['global1'] .= '<td><input type="number" class="number" id="multipartgroesse1" name="multipartgroesse1" min="0" max="99999999" value="'.($config['multipartgroesse1'] ?? '').'"';
 if (isset($config['multi_part']) && (0 == $config['multi_part'])) {
     $aus['global1'] .= ' disabled';
 }
@@ -1125,13 +1125,13 @@ $aus['global3'] .= '</table></fieldset><fieldset><legend>'.$lang['L_SQL_BROWSER'
 $aus['global3'] .= '<tr><td>'.Help('', '').$lang['L_SQLBOXHEIGHT'].':&nbsp;</td>';
 
 $config['interface_sqlboxsize'] ??= '';
-$aus['global3'] .= '<td><input type="text" class="text" name="sqlboxsize" style="text-align:right;" value="'.$config['interface_sqlboxsize'].'" size="3" maxlength="3">&nbsp;Pixel</td></tr>';
+$aus['global3'] .= '<td><input type="number" class="number" name="sqlboxsize" value="'.$config['interface_sqlboxsize'].'" min="0" max="9999">&nbsp;Pixel</td></tr>';
 
 $aus['global3'] .= '<tr><td>'.Help('', '').$lang['L_SQLLIMIT'].':&nbsp;</td>';
-$aus['global3'] .= '<td><input type="text" class="text" name="sql_limit" style="text-align:right;" value="'.$config['sql_limit'].'" size="3" maxlength="6">&nbsp;</td></tr>';
+$aus['global3'] .= '<td><input type="number" class="number" name="sql_limit" value="'.$config['sql_limit'].'" min="0" max="999999">&nbsp;</td></tr>';
 $aus['global3'] .= '<tr><td>'.Help('', '').$lang['L_BBPARAMS'].':&nbsp;</td>';
 $aus['global3'] .= '<td>';
-$aus['global3'] .= '<table><tr><td>'.$lang['L_WIDTH'].':</td><td><input type="text" class="text" name="bb_width" style="text-align:right;" value="'.$config['bb_width'].'" size="3" maxlength="3">&nbsp;pixel</td></tr>';
+$aus['global3'] .= '<table><tr><td>'.$lang['L_WIDTH'].':</td><td><input type="number" class="number" name="bb_width" value="'.$config['bb_width'].'" min="0" max="999">&nbsp;pixel</td></tr>';
 $aus['global3'] .= '<tr><td>'.$lang['L_BBTEXTCOLOR'].':&nbsp;</td>';
 $aus['global3'] .= '<td><select name="bb_textcolor">
 <option value="#000000" style="color :#000000;" '.(('#000000' == $config['bb_textcolor'] ? ' selected="selected"' : '')).'>&nbsp;Textcolor&nbsp;</option>
@@ -1155,7 +1155,7 @@ $aus['global2'] .= '<td><input type="checkbox" class="checkbox" value="1" name="
 $aus['global2'] .= '</td></tr>';
 
 $aus['global2'] .= '<tr><td>'.Help($lang['L_HELP_AD3'], 'conf10').$lang['L_NUMBER_OF_FILES_FORM'].':&nbsp;</td>';
-$aus['global2'] .= '<td><input type="text" class="text" size="3" name="max_backup_files" style="text-align:right;" value="'.($config['max_backup_files'] ?? '').'">   ';
+$aus['global2'] .= '<td><input type="number" class="number" name="max_backup_files" min="0" max="9999" value="'.($config['max_backup_files'] ?? '').'">   ';
 $aus['global2'] .= '</td></tr></table></fieldset>'.print_save_button().'</div>';
 
 //Email-->
@@ -1179,7 +1179,7 @@ $aus['transfer1'] .= '<input type="checkbox" class="checkbox" value="1" name="se
 $aus['global3'] .= '</td></tr>';
 
 $aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_MAXSIZE'].':&nbsp;</td><td>';
-$aus['transfer1'] .= '<input type="text" class="text" name="email_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.($config['email_maxsize1'] ?? '').'">&nbsp;&nbsp;';
+$aus['transfer1'] .= '<input type="number" class="number" name="email_maxsize1" min="0" max="999" value="'.($config['email_maxsize1'] ?? '').'">&nbsp;&nbsp;';
 $aus['transfer1'] .= '<select name="email_maxsize2"><option value="1" '.((1 == $config['email_maxsize2']) ? ' SELECTED' : '').'>Kilobytes</option>';
 $aus['transfer1'] .= '<option value="2" '.((2 == $config['email_maxsize2']) ? ' SELECTED' : '').'>Megabytes</option></select></td></tr>';
 
@@ -1199,7 +1199,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_m
 
 <tr><td></td>
 <td>SMTP-Port</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_port" value="'.($config['other_smtp_port'] ?? '').'">
+	<input type="number" class="number" min="0" max="999999" name="other_smtp_port" value="'.($config['other_smtp_port'] ?? '').'">
 </td></tr>
 
 <tr><td></td>
@@ -1230,7 +1230,7 @@ for ($i = 0; $i < 3; ++$i) {
     $aus['transfer2'] .= '<td><input type="checkbox" class="checkbox" value="1" name="ftp_transfer['.$i.']" '.((!extension_loaded('ftp')) ? 'disabled ' : '').((isset($config['ftp_transfer'][$i]) && (1 == $config['ftp_transfer'][$i])) ? ' checked' : '').'></td></tr>';
 
     $aus['transfer2'] .= '<tr><td>'.Help($lang['SFTP'], '').$lang['L_FTP_TIMEOUT'].':&nbsp;</td>';
-    $aus['transfer2'] .= '<td><input type="text" class="text" size="10" name="ftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.($config['ftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
+    $aus['transfer2'] .= '<td><input type="number" class="number" name="ftp_timeout['.$i.']" min="0" max="999" value="'.($config['ftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
 
     $aus['transfer2'] .= '<tr><td>'.Help($lang['L_HELP_FTP_MODE'], '').$lang['L_FTP_CHOOSE_MODE'].':&nbsp;</td>';
     $aus['transfer2'] .= '<td><input type="checkbox" class="checkbox" name="ftp_mode['.$i.']" value="1" '.((isset($config['ftp_mode'][$i]) && (1 == $config['ftp_mode'][$i])) ? 'checked' : '').'>&nbsp;';
@@ -1242,7 +1242,7 @@ for ($i = 0; $i < 3; ++$i) {
 
     $aus['transfer2'] .= '<tr><td><input type="submit" name="testFTP'.$i.'" value="'.$lang['L_TESTCONNECTION'].'" class="Formbutton"><br>'.$checkFTP[$i].'</td><td><table>';
     $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPSERVER'], 'conf14', 12).$lang['L_FTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="ftp_server['.$i.']" value="'.($config['ftp_server'][$i] ?? '').'"></td></tr>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPORT'], 'conf15', 12).$lang['L_FTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_port['.$i.']" style="text-align:right;" value="'.($config['ftp_port'][$i] ?? '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPORT'], 'conf15', 12).$lang['L_FTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_port['.$i.']" value="'.($config['ftp_port'][$i] ?? '').'"></td></tr>';
     $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPUSER'], 'conf16', 12).$lang['L_FTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_user['.$i.']" value="'.($config['ftp_user'][$i] ?? '').'"></td></tr>';
     $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPASS'], 'conf17', 12).$lang['L_FTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="ftp_pass['.$i.']" value="'.($config['ftp_pass'][$i] ?? '').'"></td></tr>';
     $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPDIR'], 'conf18', 12).$lang['L_FTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_dir['.$i.']" value="'.($config['ftp_dir'][$i] ?? '').'"></td></tr>';
@@ -1258,11 +1258,11 @@ for ($i = 0; $i < 3; ++$i) {
     $aus['transfer3'] .= '<tr><td>'.Help($lang['L_HELP_SFTPTRANSFER'], '').$lang['L_SFTP_TRANSFER'].':&nbsp;</td>';
     $aus['transfer3'] .= '<td><input type="checkbox" class="checkbox" value="1" name="sftp_transfer['.$i.']" '.((!extension_loaded('ftp')) ? 'disabled ' : '').((isset($config['sftp_transfer'][$i]) && (1 == $config['sftp_transfer'][$i])) ? ' checked' : '').'></td></tr>';
     $aus['transfer3'] .= '<tr><td>'.Help($lang['SFTP'], '').$lang['L_SFTP_TIMEOUT'].':&nbsp;</td>';
-    $aus['transfer3'] .= '<td><input type="text" class="text" size="10" name="sftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.($config['sftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
+    $aus['transfer3'] .= '<td><input type="number" class="number" name="sftp_timeout['.$i.']" min="0" max="999" value="'.($config['sftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
 
     $aus['transfer3'] .= '<tr><td><input type="submit" name="testSFTP'.$i.'" value="'.$lang['L_TESTCONNECTION'].'" class="Formbutton"><br>'.$checkSFTP[$i].'</td><td><table>';
     $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPSERVER'], 'conf14', 12).$lang['L_SFTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="sftp_server['.$i.']" value="'.($config['sftp_server'][$i] ?? '').'"></td></tr>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPORT'], 'conf15', 12).$lang['L_SFTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_port['.$i.']" style="text-align:right;" value="'.($config['sftp_port'][$i] ?? '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPORT'], 'conf15', 12).$lang['L_SFTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_port['.$i.']" value="'.($config['sftp_port'][$i] ?? '').'"></td></tr>';
     $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPUSER'], 'conf16', 12).$lang['L_SFTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_user['.$i.']" value="'.($config['sftp_user'][$i] ?? '').'"></td></tr>';
     $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPASS'], 'conf17', 12).$lang['L_SFTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="sftp_pass['.$i.']" value="'.($config['sftp_pass'][$i] ?? '').'"></td></tr>';
     $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPDIR'], 'conf18', 12).$lang['L_SFTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_dir['.$i.']" value="'.($config['sftp_dir'][$i] ?? '').'"></td></tr>';

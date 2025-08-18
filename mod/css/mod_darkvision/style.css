@@ -1,0 +1,730 @@
+/* ----------------------------------------------------------------------
+
+	phpBBDumper
+	https://www.oos-shop.de/
+
+	Copyright (c) 2013 - 2023 by the MyOOS Development Team.
+	----------------------------------------------------------------------
+	Based on:
+
+	MySqlDumper
+	https://www.mysqldumper.de
+
+	Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
+	----------------------------------------------------------------------
+	Released under the GNU General Public License
+	---------------------------------------------------------------------- */
+
+/*
+	@MySQLDumper STYLESHEET
+	@name			mod_darkvision
+	@copyright		MySQLDumper - Daniel Schlichtholz <https://www.mysqldumper.de>
+	@author			Ingo Wagener <//www.vorderdeck.de>, Daniel Schlichtholz, Christian Gresshoener <//www.gresshoener.de>, Kirk <//https://kirk-phpbb.com/>
+	@date			2025-08-03
+	@lastmodified	2025-08-07
+	@media			screen and projection
+*/
+
+*,.nomargin {
+	margin: 0;
+	padding: 0;
+}
+
+label {
+	cursor: pointer;
+}
+
+img {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	border-top: 5px solid #404040;
+	background: #010506; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+body.content {
+	min-width: 540px;
+	padding: 0 18px;
+	color: #CDCDCD;
+}
+
+.menu-frame {
+	background-color: #010506;
+}
+
+/* LINKS */
+a {
+	text-decoration: none;
+	color: #FFA500;
+}
+
+a:hover {
+	color: #E87B00;
+	text-decoration: underline;
+}
+
+a.ul {
+	text-decoration: none;
+}
+
+/* general */
+#pagetitle {
+	color: #FFA500;
+	font-size: 1.8em;
+	padding-top: 2px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #958d8d;
+}
+
+#server0 {
+	position: absolute;
+	bottom: 4px;
+	margin-bottom: 1em;
+	text-align: center;
+	left: 0;
+	color: #CDCDCD;
+}
+
+#server1 {
+	position: absolute;
+	right: 16px;
+	text-align: center;
+	padding: 10px;
+}
+
+.small {
+	font-size: 11px;
+}
+
+.ssmall {
+	font-size: 10px;
+}
+
+.success {
+	color: #017901;
+	font-weight: bold;
+}
+
+.error {
+	color: #FF0000;
+	font-weight: bold;
+	line-height: 1.5;
+}
+
+span.error {
+	padding: 0;
+}
+
+.explain {
+	text-decoration: none;
+	border-bottom: 1px dotted;
+}
+
+.explain:hover {
+	cursor: help;
+}
+
+.active_db {
+	font-weight: bold;
+	border-bottom: 1px dotted;
+	color: #9AA2B1;
+}
+
+table,
+table td.sm {
+	color: #CDCDCD;
+}
+
+table.bdr,.bdr {
+	border: 1px solid #573902;
+	border-collapse: collapse;
+}
+
+table td {
+	vertical-align: bottom;
+	padding: 3px 4px 4px;
+}
+
+table th {
+	padding: 0 6px;
+}
+
+/* MENU */
+#menu {
+	text-align: left;
+	position: absolute;
+	margin: 0px;
+	top: 14em;
+	left: 0;
+	width: 190px;
+	height: 225px;
+}
+
+#menu ul {
+	margin: 0px 0 0 0;
+	list-style: none;
+	background-color: transparent;
+}
+
+#menu ul li {
+	border-bottom: 1px solid #DDD;
+}
+
+#menu ul a {
+	padding: 0 10px;
+	display: block;
+	line-height: 2;
+	text-decoration: none;
+	outline: none;
+}
+
+#menu ul a:hover {
+	text-decoration: none;
+}
+
+#menu ul li.active {
+	border-bottom: 1px solid #777;
+}
+
+#menu ul li.active a,
+#menu ul li.active a:hover {
+	color: #E87B00;
+	font-weight: bold;
+	text-decoration: none;
+	background: transparent;
+}
+
+#menu ul li.icon-holder {
+	margin-top: 3em;
+	border-bottom: 0;
+	text-align: center;
+}
+
+#menu ul li strong {
+	font-family: Verdana, sans-serif;
+	font-size: 1em;
+	text-align: left;
+	display: block;
+}
+
+fieldset {
+	margin: 10px;
+	padding: 5px;
+	border: 1px solid #797373;
+	color: #FFA500;
+}
+
+body.content legend {
+	font-weight: bold;
+}
+
+body.menu fieldset p {
+	margin: 5px 0 0;
+	text-align: center;
+}
+
+/* MAIN */
+#topnavi {
+	list-style: none;
+	margin: 10px 0 20px;
+}
+
+#topnavi li {
+	float: left;
+	margin-right: 6px;
+}
+
+#topnavi li a,
+#content .Formbutton,
+#content .ConfigButton,
+#content .ConfigButtonSelected,
+#content .Formtext {
+	float: left;
+	border: 1px solid #714900;
+	border-radius: 6px;
+	background-color: #5D3D16;
+	background-image: -moz-linear-gradient(top, #6D481B, #390019);
+	background-image: -webkit-linear-gradient(top, #6D481B, #390019);
+	background-image: -o-linear-gradient(top, #6D481B, #390019);
+	background-image: linear-gradient(to bottom, #6D481B, #390019);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#6D481B', EndColorStr='#390019')";
+	box-shadow: 0 0 0 1px #5D3D16 inset;
+	-webkit-box-shadow: 0 0 0 1px #664200 inset;
+	color: #FFA500;
+	padding: 2px 8px;
+	font-size: 1.1em;
+	font-weight: 500;
+	font-family: "Open Sans", "Droid Sans", Verdana, Arial, Helvetica;
+	line-height: 1.5;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none;
+}
+
+#topnavi li a span {
+	color: #FFA500;
+}
+
+#topnavi li a:hover,
+#topnavi li a:hover span,
+#content .ConfigButtonSelected:hover,
+#content .ConfigButton:hover,
+#content a.Formbutton:hover,
+#content .Formbutton:hover {
+	border-color: #956100;
+	background-image: -moz-linear-gradient(top, #390019, #6D481B);
+	background-image: -webkit-linear-gradient(top, #390019, #6D481B);
+	background-image: -o-linear-gradient(top, #390019, #6D481B);
+	background-image: linear-gradient(to bottom, #390019, #6D481B);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#390019', EndColorStr='#6D481B')";
+	text-shadow: 1px 1px 0 #5D3D16, -1px -1px 0 #5D3D16, -1px -1px 0 rgba(188, 42, 77, 0.2);
+}
+
+#content p {
+	margin: 10px 0;
+}
+
+/*Tabellen */
+table tr.dbrow,
+table tr.dbrow1,
+table tr.dbrowsel {
+	color: #FFA500;
+	border-bottom: 1px solid #C80;
+}
+
+table tr.dbrowsel a:hover {
+	color: #E87B00;
+}
+
+table td.treffer {
+	background: #000;
+}
+
+/* Treffer bei der MySQL-Suche */
+table tr.dbrow .treffer,
+table tr.dbrow1 .treffer {
+	color: yellow;
+}
+
+table.border {
+	border: 1px solid #714900;
+}
+
+table td.sum {
+	background-color: red;
+	font-weight: bold;
+	text-align: right;
+}
+
+table tr.thead th,
+table tr.thead td {
+	border: 1px solid #714900;
+	color: #FFA500;
+}
+
+#configright table a {
+	font-size: 11px;
+	color: #E87B00;
+}
+
+#configright table tr.dbrowsel a {
+	color: #E87B00;
+}
+
+.tdcompact {
+	width: 100px;
+	height: 16px;
+	overflow: hidden;
+	font-size: 11px;
+}
+
+.tdnormal {
+	white-space: nowrap;
+	padding: 1px;
+}
+
+/* FORM-Elements */
+#content a.Formbutton {
+	padding: 2px 6px;
+	vertical-align: super;
+	float: none;
+}
+
+.Formbutton {
+	cursor: pointer;
+	float: none !important;
+	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+.Formbutton:disabled {
+	cursor: default;
+}
+
+#content .Formtext {
+	overflow: hidden;
+	cursor: text;
+}
+
+#content .ConfigButtonSelected {
+	color: #FFA500;
+}
+
+#content .ConfigButton,
+#content .ConfigButtonSelected {
+	width: 160px;
+	margin-bottom: 4px;
+	cursor: pointer;
+}
+
+#content .SQLbutton {
+	font-size: 11px;
+	background: #E4E9E8;
+	cursor: pointer;
+}
+
+/* htaccess edit area */
+#content textarea #thta {
+	font-size: 11px;
+	color: blue;
+	width: 400px;
+	height: 300px;
+	overflow: scroll;
+}
+
+#content textarea {
+	width: 100%;
+	background: #FFF;
+}
+
+/* Colors for Formelements */
+input[type="text"],
+input[type="number"],
+input[type="small"],
+input[type="password"] {
+	border: 1px solid #FFA500;
+	background: #313131;
+	color: #FFF;
+	text-align: left !important;
+	padding-left: 3px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="checkbox"],
+input[type="password"] {
+	cursor: pointer;
+}
+
+select {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	border: 1px solid #FFA500;
+	border-radius: 3px;
+	background-color: #33363A;
+	color: #FFA500;
+	padding: 1px;
+	cursor: pointer;
+}
+
+@-moz-document url-prefix() {
+	select[name="log_maxsize2"],
+	select[name="multipartgroesse2"],
+	select[name="cron_dbindex"],
+	select[name="sel_dump_encoding"],
+	select[name="email_maxsize2"] {
+		padding-left: 4px;
+	}
+}
+
+textarea {
+	background: #B3C2C0;
+	color: #4E5665;
+}
+
+textarea#thta {
+	background: #33363A;
+	color: #FFF;
+}
+
+/* disabled textarea when editign rows in SQLBrowser */
+.off {
+	background-color: #ccc !important;
+}
+
+/* for Geckos */
+input[disabled] {
+	color: #888 !important;
+	border: 1px solid #CAC8BB !important;
+}
+
+/*horizontal menu */
+#hormenu ul {
+	border-bottom: 1px solid #D5DDDC;
+	margin-bottom: 8px;
+	width: 80%;
+}
+
+#hormenu ul li {
+	display: inline;
+}
+
+#hormenu ul li a {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #FFA500;
+	padding: 0 14px;
+	border: 0;
+	line-height: 1.8;
+}
+
+#hormenu ul li a:hover {
+	color: #E87B00;
+}
+
+#hormenu ul li#active a {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #E87B00;
+	float: left;
+	padding: 0 14px;
+}
+
+#hormenu ul li#active a:hover {
+	color: #E87B00;
+}
+
+/* special elements */
+.MySQLbox {
+	font-size: 10pt;
+	padding: 0px;
+	background: #000;
+	color: #FFF;
+	border: 1px solid #999999;
+	height: 200px;
+	width: 100%;
+	text-align: left;
+	overflow: auto;
+}
+
+#content #sqlheaderbox,
+.sqlbox-warning {
+	white-space: nowrap;
+	vertical-align: top;
+	padding: 8px;
+	background-color: #000;
+	border: 1px solid #DDD;
+	color: #C6C2C2;
+	line-height: 22px;
+}
+
+#sqlheaderbox .Formbutton {
+	line-height: 14px;
+	padding: 2px;
+	margin: 0px;
+}
+
+#sqltextarea {
+	margin-right: 30px !important;
+	width: 100% !important;
+	overflow: auto;
+	background: #000 !important;
+	color: #C6C2C2;
+}
+
+#content #sqleditbox {
+	border: 1px solid #738C88;
+	background: #EEEEEE;
+	margin-bottom: 10px;
+}
+
+#content #sqleditbox form {
+	margin: 10px;
+}
+
+#content #sqleditbox p {
+	background: #A5B6B4;
+	font-weight: bold;
+	text-align: center;
+}
+
+#content #sqlnewbox {
+	border: 1px solid #738C88;
+	background: #E4E9E8;
+}
+
+#content #sqlnewbox p {
+	background: #A5B6B4;
+	font-weight: bold;
+	text-align: center;
+}
+
+#content #sqloutbox {
+	font-size: 11px;
+	width: 700px;
+	padding: 6px;
+	background: #D5DDDC;
+	border: 1px solid #738C88;
+	overflow: auto;
+}
+
+#content p.autodel {
+	font-size: 11px;
+	border-bottom: 1px dashed #8E8989;
+	margin-bottom: 12px;
+}
+
+#content .backupmsg {
+	padding-left: 20px;
+	font-size: 11px;
+}
+
+#content .backupmsg .success,
+#content .backupmsg a {
+	color: #FFA500;
+	font-size: 11px;
+}
+
+#content .backupmsg .error {
+	color: red;
+}
+
+span.success,
+span.error {
+	position: relative;
+}
+
+span.success {
+	top: 1em;
+}
+
+p.error a {
+	text-decoration: underline;
+	color: #FF7800;
+}
+
+.backupmsg p.small {
+	margin-top: 2em !important;
+}
+
+/* TEXT */
+h1 {
+	font-size: 16px;
+}
+
+h5 {
+	font-size: 1.7em;
+	font-weight: normal;
+	color: #FFA500;
+	margin: 20px 0 10px;
+}
+
+h6 {
+	font-size: 1.3em;
+	font-weight: normal;
+	color: #CDCDCD;
+	margin: 10px 0px;
+	padding: 3px 0 4px 3px;
+	background-color: #404040;
+	border: 2px ridge #7D7D7D;
+	border-radius: 5px;
+}
+
+/* Config */
+#configleft {
+	float: left;
+	width: 180px;
+}
+
+#configleft .Formbutton {
+	width: 160px;
+	margin: 4px 0;
+}
+
+#configright {
+	margin-left: 180px;
+}
+
+#footer {
+	margin-top: 36px;
+	padding: 10px 0;
+	border-top: 1px solid #EEE;
+	font-size: 10px;
+	text-align: right;
+}
+
+#version {
+	position: absolute;
+	top: 60px;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	height: 90px;
+	color: #4E5665;
+	z-index: 10;
+}
+
+#version img {
+	margin-top: 8px;
+	margin-left: -15px;
+}
+
+.version-line {
+	position: absolute;
+	top: -11px;
+	left: 3.5em;
+	text-align: center;
+	font-size: 11px;
+	color: #FFF;
+}
+
+#version a:link,
+#version a:active,
+#version a:hover,
+#version a:visited {
+	color: #4E5665;
+}
+
+#selectConfig {
+	position: absolute;
+	top: 400px;
+	left: 0;
+	width: 190px;
+	height: 196px;
+	z-index: 5;
+}
+
+#footer a {
+	text-decoration: none;
+}
+
+#footer a:hover {
+	text-decoration: underline;
+}
+
+#ilog {
+	border: 3px ridge #7D7D7D;
+	padding: 12px;
+	background-color: #333;
+	border-radius: 5px;
+	max-width: max-content;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
+
+p {
+	margin-top: 5px;
+}

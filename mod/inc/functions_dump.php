@@ -564,7 +564,7 @@ function SendMultipartOverviewEmail()
 
 
  
-function DoFTP($i)
+/*function DoFTP($i)
 {
     global $config, $dump, $out;
 
@@ -578,7 +578,37 @@ function DoFTP($i)
             SendViaFTP($i, $mpdatei, $a);
         }
     }
+}*/
+
+function DoFTP($i)
+{
+    global $config, $dump, $out;
+
+    if (0 == $config['multi_part']) {
+        SendViaFTP($i, $dump['backupdatei'], 1);
+    } else {
+        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')) . 'part_';
+        $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
+
+        for ($a = 1; $a < ($dump['part'] - $dump['part_offset']); ++$a) {
+            $mpdatei = $dateistamm . $a . $dateiendung;
+            $source = $config['paths']['backup'] . $mpdatei;
+
+            if (!file_exists($source)) {
+                $out .= '<span class="error">⚠️ Datei nicht gefunden: ' . $mpdatei . '</span><br>';
+                continue;
+            }
+
+            if (filesize($source) === 0) {
+                $out .= '<span class="error">⚠️ Datei ist leer (0 Bytes): ' . $mpdatei . '</span><br>';
+                continue;
+            }
+
+            SendViaFTP($i, $mpdatei, $a);
+        }
+    }
 }
+
 
 function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
 {
@@ -591,12 +621,11 @@ function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
                 ' (' . $config['ftp_server'][$i] . ' - ' . $config['ftp_user'][$i] . ')</span><br>';
     }
 
-    // Prüfen ob FTP-Funktionen verfügbar sind
     if (!function_exists('ftp_connect')) {
         throw new RuntimeException("FTP-Extension nicht verfügbar.");
     }
 
-    // FTP-Verbindung herstellen
+    // Verbindung herstellen
     $conn_id = ($config['ftp_useSSL'][$i] === 0)
         ? ftp_connect($config['ftp_server'][$i], $config['ftp_port'][$i], $config['ftp_timeout'][$i])
         : ftp_ssl_connect($config['ftp_server'][$i], $config['ftp_port'][$i], $config['ftp_timeout'][$i]);
@@ -607,7 +636,6 @@ function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
         return;
     }
 
-    // Einloggen
     if (!ftp_login($conn_id, $config['ftp_user'][$i], $config['ftp_pass'][$i])) {
         $out .= '<span class="error">' . $lang['L_FTPCONNERROR'] . $config['ftp_server'][$i] .
                 $lang['L_FTPCONNERROR1'] . $config['ftp_user'][$i] . $lang['L_FTPCONNERROR2'] . '</span><br>';
@@ -615,21 +643,36 @@ function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
         return;
     }
 
-    if ($config['ftp_mode'][$i] === 1) {
-        ftp_pasv($conn_id, true);
+    // Passivmodus je nach Checkbox setzen
+    if ($config['ftp_mode'][$i] == 1) {
+        if (!ftp_pasv($conn_id, true)) {
+            $out .= '<span class="error">❌ Passivmodus konnte nicht aktiviert werden.</span><br>';
+        } else {
+            $out .= '<span class="success">✅ Passivmodus aktiviert.</span><br>';
+        }
+    } else {
+        $out .= '<span class="info">ℹ️ Aktiver Modus verwendet.</span><br>';
     }
+
+    // Verzeichnis anzeigen
+    $out .= "📁 Server-Verzeichnis: " . ftp_pwd($conn_id) . "<br>";
 
     if ($conn_msg === 1) {
         $out .= '<span class="success">' . $lang['L_FTPCONNECTED1'] . $config['ftp_server'][$i] .
                 $lang['L_FTPCONNERROR1'] . $config['ftp_user'][$i] . '</span><br>';
     }
 
-    // Upload der Datei
+    // Pfade vorbereiten
     $dest   = $config['ftp_dir'][$i] . $source_file;
     $source = $config['paths']['backup'] . $source_file;
 
+    // Debug-Ausgaben
+    $out .= "📂 Lokale Datei: '$source'<br>";
+    $out .= "📁 Upload-Zielpfad: '$dest'<br>";
+
+    // Datei übertragen
     if (!ftp_put($conn_id, $dest, $source, FTP_BINARY)) {
-        $out .= '<span class="error">' . $lang['L_FTPCONNERROR3'] . "<br>($source -> $dest)</span><br>";
+        $out .= '<span class="error">' . $lang['L_FTPCONNERROR3'] . "<br>($source → $dest)</span><br>";
     } else {
         $out .= '<span class="success">' . $lang['L_FILE'] . ' <a href="' . $source .
                 '" class="smallblack">' . $source_file . '</a>' . $lang['L_FTPCONNECTED2'] .
@@ -639,6 +682,9 @@ function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
 
     ftp_close($conn_id);
 }
+
+
+
 
 
 use League\Flysystem\Filesystem;
