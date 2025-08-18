@@ -23,10 +23,6 @@ class listener implements EventSubscriberInterface
 	protected $auth;
 	protected $user;
 	protected $db;
-	protected $phpbb_root_path;
-	protected $php_ext;
-
-	protected $wait_time;
 
 	public function __construct(
 		\phpbb\language\language $language,
@@ -34,9 +30,7 @@ class listener implements EventSubscriberInterface
 		\phpbb\config\config $config,
 		\phpbb\auth\auth $auth,
 		\phpbb\user $user,
-		\phpbb\db\driver\driver_interface $db,
-		$phpbb_root_path,
-		$php_ext
+		\phpbb\db\driver\driver_interface $db
 	)
 	{
 		$this->language			= $language;
@@ -45,24 +39,20 @@ class listener implements EventSubscriberInterface
 		$this->auth				= $auth;
 		$this->user				= $user;
 		$this->db				= $db;
-		$this->phpbb_root_path	= $phpbb_root_path;
-		$this->php_ext			= $php_ext;
-
-		$this->wait_time		= $this->config['limitreplies_number_wait_time'] * 60;
 	}
 
 	public static function getSubscribedEvents(): array
 	{
-		return array(
+		return [
 			'core.viewtopic_modify_page_title' 	=> 'set_template_vars',
 			'core.modify_posting_auth'			=> 'check_posting',
 			'core.permissions'					=> 'add_permissions',
-		);
+		];
 	}
 
 	public function set_template_vars($event): void
 	{
-		if ($this->user->data['user_type'] == USER_IGNORE
+		if ($this->user->data['user_type'] != USER_NORMAL
 			|| $this->auth->acl_get('u_limitreplies_bypass_lock')
 			|| !$this->config['limitreplies_switch_enable']
 			|| $event['topic_data']['topic_status'] == ITEM_LOCKED
@@ -77,7 +67,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->template->assign_vars([
 				'S_QUICK_REPLY' 				=> false,
-				'LIMITREPLIES_MESSAGE' 			=> (string) $this->create_message($locked_until_time),
+				'LIMITREPLIES_MESSAGE' 			=> $this->create_message($locked_until_time),
 				'LIMITREPLIES_SELECT_HINT_MODE'	=> (int) $this->config['limitreplies_select_hint_mode'],
 			]);
 		}
@@ -85,7 +75,7 @@ class listener implements EventSubscriberInterface
 
 	public function check_posting($event): void
 	{
-		if ($this->user->data['user_type'] == USER_IGNORE
+		if ($this->user->data['user_type'] != USER_NORMAL
 			|| !in_array($event['mode'], ['reply', 'quote', 'bump'])
 			|| $this->auth->acl_get('u_limitreplies_bypass_lock')
 			|| !$this->config['limitreplies_switch_enable']
@@ -108,46 +98,36 @@ class listener implements EventSubscriberInterface
 		$event->update_subarray('permissions', 'u_limitreplies_bypass_lock', ['lang' => 'ACL_U_LIMITREPLIES_BYPASS_LOCK', 'cat' => 'post']);
 	}
 
-	private function get_last_unapproved_post(int $topic_id, int $poster_id): ?array
-	{
-		$sql = 'SELECT post_id, post_time
-				FROM ' . POSTS_TABLE . '
-				WHERE topic_id = ' . (int) $topic_id . '
-					AND poster_id = ' . (int) $poster_id . '
-					AND post_visibility = 0
-				ORDER BY post_time DESC LIMIT 1';
-		$result = $this->db->sql_query($sql);
-		$post_row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		return $post_row !== false ? $post_row : null;
-	}
-
 	private function get_lock_time(array $topic_data): int
 	{
-		if (!function_exists('group_memberships'))
-		{
-			include($this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-
-		$locked_until_time = 0;
+		$wait_time			= $this->config['limitreplies_number_wait_time'] * 60;
+		$locked_until_time	= 0;
 
 		// Check whether there are posts in the queue of the topic.
 		if ($topic_data['topic_posts_unapproved'])
 		{
-			$last_unapproved_post = $this->get_last_unapproved_post($topic_data['topic_id'], $this->user->data['user_id']);
+			// Get the data of the user's last post in the topic queue, if such a post exists.
+			$sql = 'SELECT post_id, post_time
+					FROM ' . POSTS_TABLE . '
+					WHERE topic_id = ' . (int) $topic_data['topic_id'] . '
+						AND poster_id = ' . (int) $this->user->data['user_id'] . '
+						AND post_visibility = 0
+					ORDER BY post_time DESC LIMIT 1';
+			$result = $this->db->sql_query($sql);
+			$last_unapproved_post = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
 
 			// Check if the timestamp of the user's last post in the queue is greater than the timestamp of the last visible post.
-			if ($last_unapproved_post !== null && $last_unapproved_post['post_time'] > $topic_data['topic_last_post_time'])
+			if ($last_unapproved_post !== false && $last_unapproved_post['post_time'] > $topic_data['topic_last_post_time'])
 			{
-				$locked_until_time = $last_unapproved_post['post_time'] + $this->wait_time;
+				$locked_until_time = $last_unapproved_post['post_time'] + $wait_time;
 			}
 		}
 
 		// Check if the last visible post was from the same user.
 		if ($locked_until_time == 0 && $topic_data['topic_last_poster_id'] == $this->user->data['user_id'])
 		{
-			$locked_until_time = $topic_data['topic_last_post_time'] + $this->wait_time;
+			$locked_until_time = $topic_data['topic_last_post_time'] + $wait_time;
 		}
 
 		return $locked_until_time > time() ? $locked_until_time : 0;

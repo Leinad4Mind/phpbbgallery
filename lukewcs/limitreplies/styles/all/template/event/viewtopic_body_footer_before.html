@@ -10,6 +10,6 @@
 *
 #}
 
-{% if LIMITREPLIES_MESSAGE is defined && LIMITREPLIES_SELECT_HINT_MODE == 2 %}
+{% if (LIMITREPLIES_SELECT_HINT_MODE ?? 0) == 2 %}
 	{% INCLUDE '@lukewcs_limitreplies/show_message.html' %}
 {% endif %}

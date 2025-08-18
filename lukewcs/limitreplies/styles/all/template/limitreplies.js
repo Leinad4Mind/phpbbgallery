@@ -20,12 +20,12 @@ const HintModeAlways	= 2;
 $(function () {
 	$('a[href*="mode=quote"],a[href*="mode=reply"]').on('click', function (e) {
 		e.preventDefault();
-		if (limitreplies.HintMode == HintModeOnClick) {
-			phpbb.alert(limitreplies.MessageTitle, limitreplies.MessageText);
+		if (LimitReplies.HintMode == HintModeOnClick) {
+			phpbb.alert(LimitReplies.MessageTitle, LimitReplies.MessageText);
 		}
 	});
 
-	if (limitreplies.HintMode == HintModeAlways) {
+	if (LimitReplies.HintMode == HintModeAlways) {
 		$('a[href*="mode=quote"],a[href*="mode=reply"]').addClass('limitreplies_lock');
 	};
 });

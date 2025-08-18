@@ -8,8 +8,6 @@ services:
             - '@auth'
             - '@user'
             - '@dbal.conn'
-            - '%core.root_path%'
-            - '%core.php_ext%'
         tags:
             - { name: event.listener }
     lukewcs.limitreplies.controller.acp:
