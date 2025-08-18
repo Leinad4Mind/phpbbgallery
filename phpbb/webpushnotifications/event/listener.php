@@ -17,6 +17,7 @@ use phpbb\language\language;
 use phpbb\notification\manager;
 use phpbb\template\template;
 use phpbb\user;
+use phpbb\webpushnotifications\ext;
 use phpbb\webpushnotifications\form\form_helper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -63,7 +64,7 @@ class listener implements EventSubscriberInterface
 	 * @param template $template Template object
 	 * @param user $user
 	 * @param manager $phpbb_notifications Notifications manager object
-	 * @param $root_path
+	 * @param string $root_path
 	 */
 	public function __construct(config $config, controller_helper $controller_helper, FastImageSize $imagesize, form_helper $form_helper, language $language, template $template, user $user, manager $phpbb_notifications, $root_path)
 	{
@@ -85,6 +86,7 @@ class listener implements EventSubscriberInterface
 			'core.ucp_display_module_before'	=> 'load_language',
 			'core.acp_main_notice'				=> 'compatibility_notice',
 			'core.acp_board_config_edit_add'		=> 'acp_pwa_options',
+			'core.acp_board_config_emoji_enabled'=> 'acp_pwa_allow_emoji',
 			'core.validate_config_variable'		=> 'validate_pwa_options',
 			'core.help_manager_add_block_after'	=> 'wpn_faq',
 		];
@@ -142,8 +144,8 @@ class listener implements EventSubscriberInterface
 	{
 		$this->template->assign_vars([
 			'U_MANIFEST_URL'	=> $this->controller_helper->route('phpbb_webpushnotifications_manifest_controller'),
-			'U_TOUCH_ICON'		=> $this->config['pwa_icon_small'],
-			'SHORT_SITE_NAME'	=> $this->config['pwa_short_name'] ?: $this->get_shortname($this->config['sitename']),
+			'U_TOUCH_ICON'		=> $this->config['pwa_icon_small'] ? ext::PWA_ICON_DIR . '/' . $this->config['pwa_icon_small'] : null,
+			'SHORT_SITE_NAME'	=> $this->config['pwa_short_name'] ?: $this->trim_shortname($this->config['sitename']),
 		]);
 	}
 
@@ -167,7 +169,27 @@ class listener implements EventSubscriberInterface
 			];
 
 			$event->update_subarray('display_vars', 'vars', phpbb_insert_config_array($event['display_vars']['vars'], $my_config_vars, ['before' => 'legend4']));
+
+			$this->template->assign_var('S_PWA_OPTIONS', true);
 		}
+	}
+
+	/**
+	 * Allow PWA short name ACP field to accept emoji characters
+	 *
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function acp_pwa_allow_emoji($event)
+	{
+		if (in_array('pwa_short_name', $event['config_name_ary'], true))
+		{
+			return;
+		}
+
+		$config_name_ary = $event['config_name_ary'];
+		$config_name_ary[] = 'pwa_short_name';
+		$event['config_name_ary'] = $config_name_ary;
 	}
 
 	/**
@@ -179,7 +201,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function pwa_icon_name($value, $key)
 	{
-		return $this->config['icons_path'] . '/<input id="' . $key . '" type="text" size="40" maxlength="255" name="config[' . $key . ']" value="' . $value . '">';
+		return ext::PWA_ICON_DIR . '/<input id="' . $key . '" type="text" size="40" maxlength="255" name="config[' . $key . ']" value="' . $value . '">';
 	}
 
 	/**
@@ -191,7 +213,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function pwa_short_sitename($value, $key)
 	{
-		$placeholder = $this->get_shortname($this->config['sitename']);
+		$placeholder = $this->trim_shortname($this->config['sitename']);
 
 		return '<input id="' . $key . '" type="text" size="40" maxlength="12" name="config[' . $key . ']" value="' . $value . '" placeholder="' . $placeholder . '">';
 	}
@@ -223,17 +245,10 @@ class listener implements EventSubscriberInterface
 					return;
 				}
 
-				$short_name = $event['cfg_array']['pwa_short_name'];
-
-				// Do not allow multibyte characters or emoji
-				if (strlen($short_name) !== mb_strlen($short_name, 'UTF-8'))
-				{
-					$this->add_error($event, 'PWA_SHORT_NAME_INVALID');
-					return;
-				}
+				$short_name = ext::decode_entities($event['cfg_array']['pwa_short_name'], ENT_QUOTES);
 
 				// Do not allow strings longer than 12 characters
-				if (strlen($short_name) > 12)
+				if (utf8_strlen($short_name) > 12)
 				{
 					$this->add_error($event, 'PWA_SHORT_NAME_INVALID');
 					return;
@@ -252,12 +267,12 @@ class listener implements EventSubscriberInterface
 				// Don't allow empty values, if one icon is set, both must be set.
 				if (empty($value))
 				{
-					$this->add_error($event, 'PWA_IMAGE_NOT_PROVIDED', $this->language->lang(strtoupper($event['config_name'])));
+					$this->add_error($event, 'PWA_ICON_NOT_PROVIDED', $this->language->lang(strtoupper($event['config_name'])));
 					return;
 				}
 
 				// Check if image is valid
-				$image = $this->root_path . $this->config['icons_path'] . '/' . $value;
+				$image = $this->root_path . ext::PWA_ICON_DIR . '/' . $value;
 				$image_info = $this->imagesize->getImageSize($image);
 				if ($image_info !== false)
 				{
@@ -274,7 +289,7 @@ class listener implements EventSubscriberInterface
 				}
 				else
 				{
-					$this->add_error($event, 'PWA_IMAGE_INVALID', $value);
+					$this->add_error($event, 'PWA_ICON_INVALID', $value);
 				}
 			break;
 		}
@@ -346,13 +361,15 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Get short name from a string (strip out multibyte characters and trim to 12 characters)
+	 * Trim short name from a string to 12 characters
 	 *
 	 * @param string $name
 	 * @return string 12 max characters string
 	 */
-	protected function get_shortname($name)
+	protected function trim_shortname($name)
 	{
-		return utf8_substr(preg_replace('/[^\x20-\x7E]/', '', $name), 0, 12);
+		$decoded = ext::decode_entities($name, ENT_QUOTES);
+		$trimmed = utf8_substr($decoded, 0, 12);
+		return htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8');
 	}
 }

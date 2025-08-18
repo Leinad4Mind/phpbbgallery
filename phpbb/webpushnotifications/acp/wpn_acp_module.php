@@ -14,6 +14,7 @@ use phpbb\config\config;
 use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\request\request;
+use phpbb\symfony_request;
 use phpbb\template\template;
 use phpbb\user;
 
@@ -34,6 +35,9 @@ class wpn_acp_module
 
 	/** @var request $request */
 	protected $request;
+
+	/** @var symfony_request $symfony_request */
+	private $symfony_request;
 
 	/** @var template $template */
 	protected $template;
@@ -62,6 +66,7 @@ class wpn_acp_module
 		$this->lang = $phpbb_container->get('language');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');
+		$this->symfony_request = $phpbb_container->get('symfony_request');
 		$this->template = $phpbb_container->get('template');
 		$this->user = $phpbb_container->get('user');
 
@@ -106,7 +111,7 @@ class wpn_acp_module
 			'U_ACTION'						=> $this->u_action,
 		]);
 
-		if (!$this->request->server('HTTPS', false) && $this->request->server('SERVER_NAME') !== 'localhost')
+		if (!$this->symfony_request->isSecure() && $this->request->server('SERVER_NAME') !== 'localhost')
 		{
 			$this->errors[] = $this->lang->lang('WEBPUSH_INSECURE_SERVER_ERROR');
 		}

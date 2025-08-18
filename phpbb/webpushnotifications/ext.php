@@ -16,6 +16,11 @@ namespace phpbb\webpushnotifications;
 class ext extends \phpbb\extension\base
 {
 	/**
+	 * Location for storing PWA touch/app icons.
+	 */
+	public const PWA_ICON_DIR = 'images/site_icons';
+
+	/**
 	 * Require phpBB 3.3.12 due to new template and core events.
 	 */
 	public const PHPBB_MIN_VERSION = '3.3.12';
@@ -123,5 +128,18 @@ class ext extends \phpbb\extension\base
 		}
 
 		return false;
+	}
+
+	/**
+	 * Decode entities, used primarily to fix emoji for display
+	 *
+	 * @param string $text
+	 * @param int $flags Uses ENT_NOQUOTES to leave single and double quotes encoded by default
+	 * @param string $encoding
+	 * @return string Decoded string
+	 */
+	public static function decode_entities($text, $flags = ENT_NOQUOTES, $encoding = 'UTF-8')
+	{
+		return html_entity_decode($text, $flags, $encoding);
 	}
 }
