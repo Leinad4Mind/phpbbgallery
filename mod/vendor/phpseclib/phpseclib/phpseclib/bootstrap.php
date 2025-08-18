@@ -21,8 +21,20 @@
     }
 } */
 
-  if (extension_loaded('mbstring')) {
+  /* if (extension_loaded('mbstring')) {
     // Kein ini_get('mbstring.func_overload') mehr nötig
     // Stattdessen direkt mb_* Funktionen verwenden
+    $length = mb_strlen($string);
+} */
+
+if (extension_loaded('mbstring')) {
+    // Kein ini_get('mbstring.func_overload') mehr nötig
+    // Stattdessen direkt mb_* Funktionen verwenden
+
+    // Sicherstellen, dass $string definiert ist
+    // Falls nicht vorhanden, wird eine leere Zeichenkette verwendet
+    $string = $string ?? '';
+
+    // mb_strlen nur mit gültigem String aufrufen
     $length = mb_strlen($string);
 }

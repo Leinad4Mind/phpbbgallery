@@ -374,7 +374,7 @@ function ExecuteCommand($when)
  
  function DoEmail()
 {
-    global $phpmailer, $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
+    global $phpmailer, $config, $dump, $databases, $lang, $out;
 
     if (empty($config['email_recipient']) || empty($config['email_sender'])) {
         return false;
@@ -388,7 +388,6 @@ function ExecuteCommand($when)
         include_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/SMTP.php';
     }
 
-    // SINGLE-PART: nur eine Datei
     if ($singlePartMode) {
         $file     = $dump['backupdatei'];
         $filename = $config['paths']['backup'] . $file;
@@ -397,34 +396,25 @@ function ExecuteCommand($when)
         $mail->setLanguage($config['language'] ?? 'en', MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/language/');
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
-        $mail->IsHTML(true);
-        $mail->setFrom($config['email_sender'], '');
+        $mail->isHTML(true);
+
+        try {
+            $mail->setFrom($config['email_sender'], '');
+        } catch (PHPMailer\PHPMailer\Exception $e) {
+            $out .= '<span class="error">Fehlerhafte Absenderadresse: ' . htmlentities($e->getMessage()) . '</span><br>';
+            WriteLog("Fehlerhafte Absenderadresse: " . $e->getMessage());
+            ++$dump['errors'];
+            return;
+        }
+
         $mail->addAddress($config['email_recipient']);
         if (!empty($config['email_recipient_cc'])) {
             $mail->addCC($config['email_recipient_cc']);
         }
 
-        switch ((int) $config['cron_use_mail']) {
-            case 0: $mail->IsSMTP(); $mail->Host = $config['cron_smtp']; $mail->Port = 25; break;
-            case 1: $mail->isSendmail(); $mail->Sendmail = $config['cron_sendmail']; break;
-            case 2:
-                $mail->IsSMTP();
-                $mail->SMTPAuth = !empty($config['other_smtp_username']) || !empty($config['other_smtp_password']);
-                $mail->Host     = $config['other_smtp_host'];
-                $mail->Username = $config['other_smtp_username'];
-                $mail->Password = $config['other_smtp_password'];
-                $mail->Port     = $config['other_smtp_port'];
-                if ($mail->Port == 465) {
-                    $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-                } elseif ($mail->Port == 587) {
-                    $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-                }
-                break;
-            default: $mail->IsMail(); break;
-        }
+        ConfigureSMTPMailer($mail);
 
-        $subject = "Backup '" . $databases['Name'][$dump['dbindex']] . "' - " . date("d.m.Y H:i");
-        $mail->Subject = $subject;
+        $mail->Subject = "Backup '" . $databases['Name'][$dump['dbindex']] . "' - " . date("d.m.Y H:i");
 
         if (($config['email_maxsize'] > 0 && filesize($filename) > $config['email_maxsize']) || 0 == $config['send_mail_dump']) {
             include_once './inc/functions.php';
@@ -449,23 +439,22 @@ function ExecuteCommand($when)
         $mail->Body = $msg_body;
         $mail->AltBody = strip_tags($msg_body);
 
-        if (!$mail->Send()) {
-            $out .= '<span class="error">' . $lang['L_MAILERROR'] . '</span><br>';
-            WriteLog("Email to '" . $config['email_recipient'] . "' failed !");
+        try {
+            $mail->send();
+            $out .= '<span class="success">✅ E-Mail erfolgreich versendet an ' . htmlentities($config['email_recipient']) . '</span><br>';
+            WriteLog("E-Mail erfolgreich versendet an '" . $config['email_recipient'] . "'");
+        } catch (PHPMailer\PHPMailer\Exception $e) {
+            $out .= '<span class="error">❌ Versandfehler: ' . htmlentities($e->getMessage()) . '</span><br>';
+            WriteLog("E-Mail-Versand fehlgeschlagen: " . $e->getMessage());
             ++$dump['errors'];
-        } else {
-            $out .= '<span class="success">' . $lang['L_EMAIL_WAS_SEND'] . '`' . $config['email_recipient'] . '`<br>';
-            WriteLog("Email with '$file' was sent to '" . $config['email_recipient'] . "'");
         }
 
         return;
     }
-	
-	// Vor dem Versand der Teil-Mails: Übersichtsmail versenden
+
+    // Übersichtsmail + Multi-Part-Versand
     SendMultipartOverviewEmail();
 
-
-    // MULTIPART: jede Datei in eigener Mail
     $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')) . 'part_';
     $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
     $mpdatei = [];
@@ -474,94 +463,105 @@ function ExecuteCommand($when)
         $mpdatei[] = $dateistamm . $i . $dateiendung;
     }
 
-    for ($i = 0; $i < count($mpdatei); ++$i) {
-        $file = $mpdatei[$i];
+    foreach ($mpdatei as $index => $file) {
         $filename = $config['paths']['backup'] . $file;
 
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
         $mail->setLanguage($config['language'] ?? 'en', MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/language/');
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
-        $mail->IsHTML(true);
-        $mail->setFrom($config['email_sender'], '');
+        $mail->isHTML(true);
+
+        try {
+            $mail->setFrom($config['email_sender'], '');
+        } catch (PHPMailer\PHPMailer\Exception $e) {
+            $out .= '<span class="error">Fehlerhafte Absenderadresse für `' . $file . '`: ' . htmlentities($e->getMessage()) . '</span><br>';
+            WriteLog("Fehlerhafte Absenderadresse für Teil: " . $e->getMessage());
+            ++$dump['errors'];
+            continue;
+        }
+
         $mail->addAddress($config['email_recipient']);
         if (!empty($config['email_recipient_cc'])) {
             $mail->addCC($config['email_recipient_cc']);
         }
 
-        switch ((int) $config['cron_use_mail']) {
-            case 0: $mail->IsSMTP(); $mail->Host = $config['cron_smtp']; $mail->Port = 25; break;
-            case 1: $mail->isSendmail(); $mail->Sendmail = $config['cron_sendmail']; break;
-            case 2:
-                $mail->IsSMTP();
-                $mail->SMTPAuth = !empty($config['other_smtp_username']) || !empty($config['other_smtp_password']);
-                $mail->Host     = $config['other_smtp_host'];
-                $mail->Username = $config['other_smtp_username'];
-                $mail->Password = $config['other_smtp_password'];
-                $mail->Port     = $config['other_smtp_port'];
-                if ($mail->Port == 465) {
-                    $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-                } elseif ($mail->Port == 587) {
-                    $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-                }
-                break;
-            default: $mail->IsMail(); break;
-        }
+        ConfigureSMTPMailer($mail);
 
-        $subject = "Backup '" . $databases['Name'][$dump['dbindex']] . "' - " . date("d.m.Y") . " [Part " . ($i + 1) . " / " . count($mpdatei) . "]";
-        $mail->Subject = $subject;
-
+        $mail->Subject = "Backup '" . $databases['Name'][$dump['dbindex']] . "' - " . date("d.m.Y") . " [Teil " . ($index + 1) . " / " . count($mpdatei) . "]";
         $msg_body = addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'] . $lang['L_EMAILBODY_FOOTER']);
         $mail->Body = $msg_body;
         $mail->AltBody = strip_tags($msg_body);
         $mail->addAttachment($filename);
 
-        if (!$mail->Send()) {
-            $out .= '<span class="error">' . $lang['L_MAILERROR'] . '</span><br>';
-            WriteLog("Email to '" . $config['email_recipient'] . "' failed !");
+        try {
+            $mail->send();
+            $out .= '<span class="success">✅ Datei `' . $file . '` erfolgreich versendet</span><br>';
+            WriteLog("Backup-Teil '$file' versendet an '" . $config['email_recipient'] . "'");
+        } catch (PHPMailer\PHPMailer\Exception $e) {
+            $out .= '<span class="error">❌ Versandfehler für Datei `' . $file . '`: ' . htmlentities($e->getMessage()) . '</span><br>';
+            WriteLog("Fehler beim Versand von '$file': " . $e->getMessage());
             ++$dump['errors'];
-        } else {
-            $out .= '<span class="success">' . $lang['L_EMAIL_WAS_SEND'] . '`' . $config['email_recipient'] . '`' . $lang['L_WITH'] . '`' . $file . '`<br>';
-            WriteLog("Email with '$file' was sent to '" . $config['email_recipient'] . "'");
         }
     }
 }
 
+
 function SendMultipartOverviewEmail()
 {
-    global $config, $dump, $databases, $lang;
-
-    $subject = "Backup Übersicht: '" . $databases['Name'][$dump['dbindex']] . "' - " . date("d.m.Y");
-    $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')) . 'part_';
-    $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
-    $mpfiles = '';
-
-    for ($i = 1; $i < ($dump['part'] - $dump['part_offset']); ++$i) {
-        $filename = $dateistamm . $i . $dateiendung;
-        $size = byte_output(@filesize($config['paths']['backup'] . $filename));
-        $mpfiles .= $filename . ' (' . $size . ')<br>';
-    }
-
-    $body = sprintf($lang['L_EMAILBODY_MP_ATTACH'], $databases['Name'][$dump['dbindex']], $mpfiles);
+    global $config, $dump, $databases, $lang, $out;
 
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
     $mail->setLanguage($config['language'] ?? 'en', MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/language/');
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
     $mail->isHTML(true);
-    $mail->setFrom($config['email_sender'], '');
-    $mail->addAddress($config['email_recipient']);
-	ConfigureSMTPMailer($mail);
-    $mail->Subject = $subject;
-    $mail->Body = $body;
-    $mail->AltBody = strip_tags($body);
 
-    if (!$mail->Send()) {
-        WriteLog("Übersichts-Mail an '" . $config['email_recipient'] . "' fehlgeschlagen!");
-    } else {
-        WriteLog("Übersichts-Mail wurde an '" . $config['email_recipient'] . "' versendet.");
+    try {
+        $mail->setFrom($config['email_sender'], '');
+    } catch (PHPMailer\PHPMailer\Exception $e) {
+        $out .= '<span class="error">Fehlerhafte Absenderadresse (Übersichtsmail): ' . htmlentities($e->getMessage()) . '</span><br>';
+        WriteLog("Fehlerhafte Absenderadresse Übersichtsmail: " . $e->getMessage());
+        ++$dump['errors'];
+        return;
+    }
+
+    $mail->addAddress($config['email_recipient']);
+    if (!empty($config['email_recipient_cc'])) {
+        $mail->addCC($config['email_recipient_cc']);
+    }
+
+    ConfigureSMTPMailer($mail);
+
+    // 🔍 Backup-Dateien auflisten
+    $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')) . 'part_';
+    $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
+    $mpfiles = '';
+
+    for ($i = 1; $i < ($dump['part'] - $dump['part_offset']); ++$i) {
+        $filename = $dateistamm . $i . $dateiendung;
+        $filepath = $config['paths']['backup'] . $filename;
+        $size = @filesize($filepath);
+        $sizeStr = ($size === false) ? 'Datei nicht gefunden' : byte_output($size);
+        $mpfiles .= htmlentities($filename) . ' (' . $sizeStr . ')<br>';
+    }
+
+    // 📧 Mail-Inhalt mit Sprachvariable
+    $mail->Subject = "Übersicht: Backup '" . $databases['Name'][$dump['dbindex']] . "' vom " . date("d.m.Y");
+    $mail->Body = sprintf($lang['L_EMAILBODY_MP_ATTACH'], htmlentities($databases['Name'][$dump['dbindex']]), $mpfiles);
+    $mail->AltBody = strip_tags($mail->Body);
+
+    try {
+        $mail->send();
+        $out .= '<span class="success">ℹ️ Übersichtsmail erfolgreich versendet</span><br>';
+        WriteLog("Übersichtsmail versendet an '" . $config['email_recipient'] . "'");
+    } catch (PHPMailer\PHPMailer\Exception $e) {
+        $out .= '<span class="error">❌ Fehler beim Versand der Übersichtsmail: ' . htmlentities($e->getMessage()) . '</span><br>';
+        WriteLog("Fehler beim Versand der Übersichtsmail: " . $e->getMessage());
+        ++$dump['errors'];
     }
 }
+
 
  
 function DoFTP($i)
@@ -641,18 +641,39 @@ function SendViaFTP(int $i, string $source_file, int $conn_msg = 1): void
 }
 
 
+use League\Flysystem\Filesystem;
+use League\Flysystem\UnableToWriteFile;
+
 function DoSFTP($i)
 {
     global $config, $dump, $out;
 
+    // Überprüfen, ob multipart aktiviert ist
     if (0 == $config['multi_part']) {
-        SendViaSFTP($i, $dump['backupdatei'], 1);
+        try {
+            SendViaSFTP($i, $dump['backupdatei'], 1);
+        } catch (UnableToWriteFile $e) {
+            echo "❌ Fehler beim SFTP-Versand der Datei '{$dump['backupdatei']}': " . $e->getMessage();
+            // Optional: Logging oder alternative Aktion
+        } catch (Exception $e) {
+            echo "❌ Allgemeiner Fehler: " . $e->getMessage();
+        }
     } else {
-        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
+        // Pfadbestandteile berechnen
+        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')) . 'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
+
+        // Einzelne Teile verschicken
         for ($a = 1; $a < ($dump['part'] - $dump['part_offset']); ++$a) {
-            $mpdatei = $dateistamm.$a.$dateiendung;
-            SendViaSFTP($i, $mpdatei, $a);
+            $mpdatei = $dateistamm . $a . $dateiendung;
+            try {
+                SendViaSFTP($i, $mpdatei, $a);
+            } catch (UnableToWriteFile $e) {
+                echo "❌ Fehler beim SFTP-Versand von Teil {$a} ('{$mpdatei}'): " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "❌ Allgemeiner Fehler bei Teil {$a}: " . $e->getMessage();
+            }
         }
     }
 }
+

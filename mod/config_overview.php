@@ -1213,7 +1213,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_m
 </td></tr>
 <tr><td></td>
 <td>SMTP-Passwort</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_password" value="'.($config['other_smtp_password'] ?? '').'">&nbsp;&nbsp;
+	<input type="password" class="text" size="30" name="other_smtp_password" value="'.($config['other_smtp_password'] ?? '').'">&nbsp;&nbsp;
 </td></tr>';
 
 

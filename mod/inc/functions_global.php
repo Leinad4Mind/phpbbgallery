@@ -779,108 +779,75 @@ function TesteFTP($i)
     return $s;
 }
 
-function TesteSFTP($i)
+function TesteSFTP(int $i): string
 {
     global $lang, $config;
 
-    if ('' == $config['sftp_timeout'][$i] || 0 == $config['sftp_timeout'][$i]) {
-        $config['sftp_timeout'][$i] = 30;
-    }
-    if ('' == $config['sftp_port'][$i] || 0 == $config['sftp_port'][$i]) {
-        $config['sftp_port'][$i] = 22;
-    }
-    if ('' == $config['sftp_path_to_private_key'][$i] || 0 == $config['sftp_path_to_private_key'][$i]) {
-        $config['sftp_path_to_private_key'][$i] = null;
-    }
-    if ('' == $config['sftp_secret_passphrase_for_private_key'][$i] || 0 == $config['sftp_secret_passphrase_for_private_key'][$i]) {
-        $config['sftp_secret_passphrase_for_private_key'][$i] = null;
-    }
-    if ('' == $config['sftp_fingerprint'][$i] || 0 == $config['sftp_fingerprint'][$i]) {
-        $config['sftp_fingerprint'][$i] = null;
-    }
+    // Standardwerte setzen
+    $config['sftp_timeout'][$i] ??= 30;
+    $config['sftp_port'][$i] ??= 22;
+    $config['sftp_path_to_private_key'][$i] = $config['sftp_path_to_private_key'][$i] ?: null;
+    $config['sftp_secret_passphrase_for_private_key'][$i] = $config['sftp_secret_passphrase_for_private_key'][$i] ?: null;
+    $config['sftp_fingerprint'][$i] = $config['sftp_fingerprint'][$i] ?: null;
 
-    $s = '';
-    $pass = -1;
+    $output = '';
+    $status = -1;
 
+    // Prüfen, ob FTP-Erweiterung geladen ist (nicht zwingend für SFTP nötig!)
     if (!extension_loaded('ftp')) {
-        $s = '<br><span class="error">'.$lang['L_NOSFTPPOSSIBLE'].'</span>';
+        $output .= '<br><span class="error">'.$lang['L_NOSFTPPOSSIBLE'].'</span>';
+    } elseif (empty($config['sftp_server'][$i]) || empty($config['sftp_user'][$i])) {
+        $output .= '<br><span class="error">'.$lang['L_WRONGCONNECTIONPARS'].'</span>';
     } else {
-        $pass = 0;
+        $status = 1;
     }
 
-    if (0 == $pass) {
-        if ('' == $config['sftp_server'][$i] || '' == $config['sftp_user'][$i]) {
-            $s = '<br><span class="error">'.$lang['L_WRONGCONNECTIONPARS'].'</span>';
-        } else {
-            $pass = 1;
-        }
-    }
+    if ($status === 1) {
+        $output .= $lang['L_CONNECT_TO'].' `'.$config['sftp_server'][$i].'` Port '.$config['sftp_port'][$i];
 
-    if (1 == $pass) {
-        $s = $lang['L_CONNECT_TO'].' `'.$config['sftp_server'][$i].'` Port '.$config['sftp_port'][$i];
-
-        // https://flysystem.thephpleague.com/docs/adapter/sftp-v3/
-        $filesystem = new Filesystem(
-            new SftpAdapter(
+        // SFTP-Verbindung aufbauen
+        try {
+            $adapter = new SftpAdapter(
                 new SftpConnectionProvider(
-                    $config['sftp_server'][$i], // host (required)
-                    $config['sftp_user'][$i], // username (required)
-                    $config['sftp_pass'][$i], // password (optional, default: null) set to null if privateKey is used
-                    $config['sftp_path_to_private_key'][$i], // '/path/to/my/private_key', private key (optional, default: null) can be used instead of password, set to null if password is set
-                    $config['sftp_secret_passphrase_for_private_key'][$i], // 'my-super-secret-passphrase-for-the-private-key', passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
-                    $config['sftp_port'][$i], // port (optional, default: 22)
-                    false, // use agent (optional, default: false)
-                    intval($config['sftp_timeout'][$i]), // timeout (optional, default: 10)
-                    4, // max tries (optional, default: 4)
-                    $config['sftp_fingerprint'][$i], // 'fingerprint-string', host fingerprint (optional, default: null),
-                    null // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+                    $config['sftp_server'][$i],
+                    $config['sftp_user'][$i],
+                    $config['sftp_pass'][$i] ?: null,
+                    $config['sftp_path_to_private_key'][$i],
+                    $config['sftp_secret_passphrase_for_private_key'][$i],
+                    $config['sftp_port'][$i],
+                    false,
+                    (int) $config['sftp_timeout'][$i],
+                    4,
+                    $config['sftp_fingerprint'][$i],
+                    null
                 ),
-                $config['sftp_dir'][$i], // root path (required)
-                PortableVisibilityConverter::fromArray(
-                    [
-                    'file' => [
-                    'public' => 0640,
-                    'private' => 0604,
-                    ],
-                    'dir' => [
-                    'public' => 0740,
-                    'private' => 7604,
-                    ],
-                    ]
-                )
-            )
-        );
+                $config['sftp_dir'][$i],
+                PortableVisibilityConverter::fromArray([
+                    'file' => ['public' => 0640, 'private' => 0604],
+                    'dir'  => ['public' => 0740, 'private' => 7604],
+                ])
+            );
 
-        $path = 'path_'.time().'.txt';
+            $filesystem = new Filesystem($adapter);
+            $testFile = 'test_'.time().'.txt';
 
-        try {
-            $filesystem->write($path, 'contents');
-        } catch (Exception $e) {
-            // handle the error
-            echo 'Exception: ',  $e->getMessage(), "\n";
-            $s .= '<br><span class="error">'.($lang['L_CONN_NOT_POSSIBLE'] ?? '').'</span>';
-            $pass = 2;
-        }
+            // Testdatei schreiben
+            $filesystem->write($testFile, 'SFTP Testinhalt');
 
-        // echo $path;
+            // Testdatei löschen
+            $filesystem->delete($testFile);
 
-        try {
-            $filesystem->delete($path);
-        } catch (Exception $e) {
-            // handle the error
-            echo 'Exception: ',  $e->getMessage(), "\n";
-            $s .= '<br><span class="error">'.($lang['L_CHANGEDIRERROR'] ?? '').'</span>';
-            $pass = 2;
-        }
-
-        if (1 == $pass) {
-            $s .= ' <span class="success">'.($lang['L_OK'] ?? '').'</span>';
-            $s .= '<br><strong>Login ok</strong><br>'.($lang['L_CHANGEDIR'] ?? '').' `'.$config['sftp_dir'][$i].'` ';
-            $s .= '<br><strong>'.($lang['L_SFTP_OK'] ?? '').'</strong>';
+            // Erfolgsmeldung
+            $output .= ' <span class="success">'.($lang['L_OK'] ?? 'OK').'</span>';
+            $output .= '<br><strong>Login ok</strong><br>'.($lang['L_CHANGEDIR'] ?? 'Verzeichnis gewechselt').' `'.$config['sftp_dir'][$i].'` ';
+            $output .= '<br><strong>'.($lang['L_SFTP_OK'] ?? 'SFTP-Verbindung erfolgreich').'</strong>';
+        } catch (\Throwable $e) {
+            $output .= '<br><span class="error">'.($lang['L_CONN_NOT_POSSIBLE'] ?? 'Verbindung fehlgeschlagen').'</span>';
+            $output .= '<br><span class="error">Fehler: '.htmlspecialchars($e->getMessage()).'</span>';
         }
     }
 
-    return $s;
+    return $output;
 }
 
 function SendViaSFTP($i, $source_file, $conn_msg = 1)
@@ -946,7 +913,8 @@ function SendViaSFTP($i, $source_file, $conn_msg = 1)
     $pass = 1;
 
     try {
-        $filesystem->write($path, $source);
+        //$filesystem->write($path, $source);
+		$filesystem->write($path, file_get_contents($source));
     } catch (Exception $e) {
         // handle the error
         $out .= '<br>Exception: ' .  $e->getMessage();
