@@ -245,7 +245,7 @@ else if($permission)
 	));
 }
 
-if($info)
+if ($info)
 {
 	$path = 'ext/' . $info['vendor'] . '/' . $info['ext'] . '';
 	if (file_exists('' . PHPBB_ROOT_PATH . '' . $path . '/composer.json'))
@@ -257,7 +257,7 @@ if($info)
 			$display_name = $obj->{'extra'}->{'display-name'};
 			$ext_path = $obj->{'name'};
 			$version = $obj->{'version'};
-			$description = $obj->{'description'};
+			$description = (isset($obj->{'description'})) ? $obj->{'description'} : '';
 		}
 	}
 	$sql = 'SELECT ext_active FROM ' . EXT_TABLE . '
@@ -265,7 +265,12 @@ if($info)
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
-	$color = ($row['ext_active']) ? '#282' : '#BC2A4D';
+	$color = '#BC2A4D';
+	if ($row)
+	{
+		$color = ($row['ext_active']) ? '#282' : '#BC2A4D';
+	}
+
 }
 
 $template->assign_vars(array(
