@@ -98,6 +98,7 @@ if ($stk_passwd !== false)
 	// No active session?
 	if (!$stk_session)
 	{
+		add_form_key('stk_login_form', '_LOGIN');
 		// We're trying to login
 		if (isset($_POST['login']))
 		{
@@ -106,11 +107,10 @@ if ($stk_passwd !== false)
 				// Make sure that we do not have an stk_last_login cache file (expires after 3 seconds).  To prevent a bruteforce attack
 				$err_msg = 'STK_LOGIN_WAIT';
 			}
-/*			else if (!check_form_key('stk_login_form'))
+			else if (!check_form_key('stk_login_form'))
 			{
 				$err_msg = 'FORM_INVALID';
 			}
-*/
 			else
 			{
 				// Create a hash of the given token to compare the password
@@ -138,8 +138,6 @@ if ($stk_passwd !== false)
 		// Still no session. Make the user happy and show him something to work with
 		if (!$stk_session)
 		{
-			add_form_key('stk_login_form');
-
 			$template->assign_vars(array(
 				// Password field related
 				'TITLE'			=> $lang['SUPPORT_TOOL_KIT_PASSWORD'],
@@ -381,13 +379,20 @@ if ($plugin->get_part('t'))
 		}
 		else if (is_string($options))
 		{
-			if (confirm_box(true))
+			if (@phpversion() < '7.0.0')
 			{
-				$tool->run_tool();
+				if (confirm_box(true))
+				{
+					$tool->run_tool();
+				}
+				else
+				{
+					confirm_box(false, $lang[$options . '_CONFIRM'], '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
+				}
 			}
 			else
 			{
-				confirm_box(false, $lang[$options . '_CONFIRM'], '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
+				$tool->run_tool();
 			}
 		}
 		else
