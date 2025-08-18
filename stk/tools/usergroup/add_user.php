@@ -3,7 +3,6 @@
 *
 * @package Support Toolkit - Add User
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -185,7 +184,7 @@ class add_user
 	*/
 	function validate_data($data, &$error)
 	{
-		global $config, $user;
+		global $config, $user, $lang;
 
 		if (!function_exists('validate_data'))
 		{
@@ -208,7 +207,7 @@ class add_user
 		));
 		if ($data['new_password'] != $data['password_confirm'])
 		{
-			$error[] = $user->lang['NEW_PASSWORD_ERROR'];
+			$error[] = $lang['NEW_PASSWORD_ERROR'];
 		}
 	}
 
@@ -245,47 +244,4 @@ class add_user
 			}
 		}
 	}
-}
-
-/**
-* Get all the groups for the groups dropdown.
-*/
-function get_groups()
-{
-	global $lang;
-	static $option_list = null;
-	$args = func_get_args();
-
-	// Only run this once
-	if ($option_list == null)
-	{
-		global $db, $user;
-
-		// Just ignore the BOTS and GUESTS groups
-		$group_ignore = array('BOTS', 'GUESTS');
-
-		// Get the groups and build the dropdown list
-		$sql = 'SELECT group_id, group_type, group_name
-			FROM ' . GROUPS_TABLE . '
-			WHERE ' . $db->sql_in_set('group_name', $group_ignore, true);
-		$result = $db->sql_query($sql);
-
-		$option_list = '';
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
-			$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $lang['G_' . $row['group_name']] : $row['group_name'];
-			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
-		}
-
-		$db->sql_freeresult($result);
-	}
-
-	// Remove the selected statement if we are displaying the leaderships group list
-	if ($args[1] == 'groupleader')
-	{
-		return str_replace('selected=selected', '', $option_list);
-	}
-
-	return $option_list;
 }

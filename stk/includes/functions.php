@@ -328,7 +328,7 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 
 			if ($config['version'] < '3.2.0')
 			{
-				trigger_error(sprintf($lang['STK_INCOMPARTIBLE'], $config['version']), E_USER_WARNING);
+				trigger_error(sprintf($lang['STK_INCOMPATIBLE'], $config['version']), E_USER_WARNING);
 			}
 
 			$_version_number = $cache->get('_stk_phpbb_version_number');
@@ -1137,4 +1137,50 @@ function sinc_stats()
 	$result = $db->sql_query($sql);
 	$config->set('upload_dir_size', (float) $db->sql_fetchfield('stat'), false);
 	$db->sql_freeresult($result);
+}
+
+/**
+* Get all the groups for the groups dropdown.
+*/
+function get_groups()
+{
+	global $lang;
+	static $option_list = null;
+	$args = func_get_args();
+
+	// Only run this once
+	if ($option_list == null)
+	{
+		global $db, $user;
+
+		// Just ignore the BOTS and GUESTS groups
+		$group_ignore = array('BOTS', 'GUESTS');
+
+		// Get the groups and build the dropdown list
+		$sql = 'SELECT group_id, group_type, group_name
+			FROM ' . GROUPS_TABLE . '
+			WHERE ' . $db->sql_in_set('group_name', $group_ignore, true);
+		$result = $db->sql_query($sql);
+
+		$option_list = '';
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
+			$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $lang['G_' . $row['group_name']] : $row['group_name'];
+			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
+		}
+
+		$db->sql_freeresult($result);
+	}
+
+	// Remove the selected statement if we are displaying the leaderships group list
+	if (isset($args[1]))
+	{
+		if ($args[1] == 'groupleader')
+		{
+			return str_replace('selected=selected', '', $option_list);
+		}
+	}
+
+	return $option_list;
 }
