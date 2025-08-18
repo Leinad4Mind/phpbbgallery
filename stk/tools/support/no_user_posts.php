@@ -43,7 +43,8 @@ class no_user_posts
 			if (empty($user_id))
 			{
 				$post_id = $row['post_id'];
-				$message = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES);
+				$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+				$message = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 
 				$template->assign_block_vars('posts', array(
 					'POST_ID'		=> $row['post_id'],
@@ -51,7 +52,8 @@ class no_user_posts
 					'POST_SUBJECT'	=> $row['post_subject'],
 					'POST_TEXT'		=> $message,
 					'FORUM_NAME'	=> $row['forum_name'],
-					'U_FORUM'		=> append_sid(PHPBB_ROOT_PATH . 'viewforum.' . PHP_EXT, array('f' => '' .$row['forum_id']. '')),
+					'U_TOPIC'		=> append_sid(PHPBB_ROOT_PATH . 'viewtopic.' . PHP_EXT, array('f' => '' . $row['forum_id'] . '', 't' => '' . $row['topic_id'] . '')),
+					'U_FORUM'		=> append_sid(PHPBB_ROOT_PATH . 'viewforum.' . PHP_EXT, array('f' => '' . $row['forum_id'] . '')),
 					'U_FIND_USER'	=> append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'searchuser', 'form' => 'select_user', 'field' => 'username_' .$row['post_id'] . '', 'select_single' => 'true', 'form' => 'stk_no_user_posts')),
 				));
 			}
@@ -80,7 +82,8 @@ class no_user_posts
 		global $db, $lang, $request;
 
 		if (isset($_POST['reassign']))
-		{			$post_map = $request->variable('posts', array(0 => ''));
+		{
+			$post_map = $request->variable('users', array(0 => ''));
 			foreach ($post_map as $post_id => $user_id)
 			{
 				if ($user_id == '')
@@ -93,15 +96,19 @@ class no_user_posts
 			{
 				trigger_error($lang['NO_AUTHOR_SELECTED'], E_USER_WARNING);
 			}
-			foreach ($post_map as $post_id => $author)
-			{				$sql = 'SELECT user_id
+
+			foreach ($post_map as $post_id => $author)
+			{
+				$sql = 'SELECT user_id
 					FROM ' . USERS_TABLE . '
 						WHERE username_clean = \'' . $db->sql_escape(utf8_clean_string($author)) . '\'';
 				$result = $db->sql_query($sql);
 				$user_id = $db->sql_fetchfield('user_id');
 				$db->sql_freeresult($result);
 				if ($user_id)
-				{					$post_username = ($user_id == ANONYMOUS) ? $user->lang['GUEST'] : '';					$sql = 'UPDATE ' . POSTS_TABLE . '
+				{
+					$post_username = ($user_id == ANONYMOUS) ? $lang['GUEST'] : '';
+					$sql = 'UPDATE ' . POSTS_TABLE . '
 						SET poster_id = ' . $user_id . ', post_username = \'' . $post_username . '\'
 						WHERE post_id = ' . $post_id;
 						$db->sql_query($sql);
@@ -128,6 +135,24 @@ class no_user_posts
 			$return = delete_posts('post_id', $post_ids);
 			sinc_stats();
 			trigger_error(sprintf($lang['POSTS_DELETED'], $return));
+		}
+
+		if (isset($_POST['reassign_anonymous']))
+		{
+			$post_ids = $request->variable('posts_del', array(0 => 0));
+
+			if (!sizeof($post_ids))
+			{
+				trigger_error($lang['NO_POSTS_SELECTED'], E_USER_WARNING);
+			}
+
+			$sql = 'UPDATE ' . POSTS_TABLE . '
+				SET poster_id = 1, post_username = \'' . $lang['GUEST'] . '\'
+					WHERE ' . $db->sql_in_set('post_id', $post_ids, false);
+			$db->sql_query($sql);
+
+			sinc_stats();
+			trigger_error(sprintf($lang['POSTS_REASSIGNED_TO_GUEST'], sizeof($post_ids)));
 		}
 	}
 }
