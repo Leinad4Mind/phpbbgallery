@@ -1,0 +1,27 @@
+{#
+*
+* Limit Multiple Replies. An extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2024, LukeWCS, https://github.com/LukeWCS
+* @license GNU General Public License, version 2 (GPL-2.0-only)
+*
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
+#}
+
+{% if LIMITREPLIES_MESSAGE is defined %}
+	{% INCLUDEJS '@lukewcs_limitreplies/limitreplies.js' %}
+	{% INCLUDECSS '@lukewcs_limitreplies/limitreplies.css' %}
+	{% if LIMITREPLIES_SELECT_HINT_MODE == 2 %}
+		{% INCLUDE '@lukewcs_limitreplies/show_message.html' %}
+	{% endif %}
+
+	<script>
+		const limitreplies = Object.freeze({
+			MessageTitle	: {{ lang('INFORMATION')|json_encode }},
+			MessageText		: {{ LIMITREPLIES_MESSAGE|json_encode }},
+			HintMode		: {{ LIMITREPLIES_SELECT_HINT_MODE|json_encode }},
+		});
+	</script>
+{% endif %}
