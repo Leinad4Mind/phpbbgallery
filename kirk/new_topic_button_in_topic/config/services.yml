@@ -1,0 +1,7 @@
+services:
+    kirk.ntbit.listener:
+        class: kirk\ntbit\event\listener
+        arguments:
+            - '@template'
+        tags:
+            - { name: event.listener }
