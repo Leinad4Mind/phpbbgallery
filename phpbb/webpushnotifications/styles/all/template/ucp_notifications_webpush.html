@@ -1,0 +1,27 @@
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="{{ SITENAME }}">
+<link rel="manifest" href="{{ U_MANIFEST_URL }}">
+{% if U_TOUCH_ICON %}<link rel="apple-touch-icon" href="{{ T_ICONS_PATH ~ U_TOUCH_ICON }}">{% endif %}
+
+<script>
+	phpbbWebpushOptions = {
+		serviceWorkerUrl: '{{ U_WEBPUSH_WORKER_URL }}',
+		subscribeUrl: '{{ U_WEBPUSH_SUBSCRIBE }}',
+		unsubscribeUrl: '{{ U_WEBPUSH_UNSUBSCRIBE }}',
+		ajaxErrorTitle: '{{ lang('AJAX_ERROR_TITLE') }}',
+		vapidPublicKey: '{{ VAPID_PUBLIC_KEY }}',
+		formTokens: {
+			creationTime: '{{ WEBPUSH_FORM_TOKENS.creation_time }}',
+			formToken: '{{ WEBPUSH_FORM_TOKENS.form_token }}',
+		},
+		subscriptions: [
+		{% for sub in SUBSCRIPTIONS %}
+			{endpoint: '{{ sub.endpoint }}', expiration: '{{ sub.expiration }}' },
+		{% endfor %}
+		],
+	}
+</script>
+
+{% INCLUDEJS '@phpbb_webpushnotifications/webpush.js' %}
+{% INCLUDECSS '@phpbb_webpushnotifications/phpbb_wpn.css' %}
