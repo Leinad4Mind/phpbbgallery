@@ -34,7 +34,7 @@ if (function_exists('date_default_timezone_set')) {
 global $config, $databases;
 //Konstanten
 if (!defined('MOD_VERSION')) {
-    define('MOD_VERSION', '1.0.5');
+    define('MOD_VERSION', '1.0.6');
 }
 if (!defined('MOD_OS')) {
     define('MOD_OS', PHP_OS);

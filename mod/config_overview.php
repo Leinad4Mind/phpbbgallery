@@ -1045,11 +1045,21 @@ $aus['global1'] .= '</td></tr>';
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_SPEED'], '').$lang['L_SPEED'].':&nbsp;</td>';
 $aus['global1'] .= '<td><input type="number" class="number" name="minspeed" min="0" max="999999" value="'.($config['minspeed'] ?? '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="number" class="maxspeed" name="maxspeed" min="0" max="999999999" value="'.($config['maxspeed'] ?? '').'"></td></tr>';
 
-$aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
+if (!function_exists('curl_version')) {
+    // Hinweis mit Icon und Tooltip, wenn Curl nicht verfügbar ist
+    $aus['global1'] .= '
+    <div style="color:red; font-weight:bold; margin:10px 0;">
+        <img src="images/warning.png" alt="Warnung" title="'.$lang['L_CURL_TOOLTIP'].'" style="vertical-align:middle; margin-right:8px;">
+        '.$lang['L_CURL_NOT_AVAILABLE'].' – Curl ist nicht installiert oder aktiviert. die Funktion Automatische Aktualisierung ist daher nicht verfügbar.
+    </div>';
+} else {
+    // Curl ist aktiv – HTML anzeigen
+    $aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
 
-$aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_UPDATE_CORE'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="update_core" '.((isset($config['update_core']) && (1 == $config['update_core'])) ? ' checked' : '').'>';
-$aus['global1'] .= '</td></tr>';
+    $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_UPDATE_CORE'].':&nbsp;</td>';
+    $aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="update_core" '.((isset($config['update_core']) && (1 == $config['update_core'])) ? ' checked' : '').'>';
+    $aus['global1'] .= '</td></tr>';
+}
 
 
 $aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_DUMP'].'</legend><table>';
