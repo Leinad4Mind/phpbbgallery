@@ -130,19 +130,19 @@ class reparse_bbcode
 	*/
 	function run_tool()
 	{
-		global $cache, $config, $db, $user;
+		global $cache, $config, $db, $user, $request;
 		// Prevent some errors from missing language strings.
 		$user->add_lang('posting');
 
 		// Define some vars that we'll need
 		$last_batch			= false;
-		$reparse_id 		= request_var('reparseids', '');
-		$reparse_pm_id		= request_var('reparsepms', '');
-		$reparse_forum_ids	= request_var('reparseforums', array(0));
-		$create_backup 		= request_var('create_backup', false);
-		$all 				= request_var('reparseall', false);
-		$mode				= request_var('mode', BBCODE_REPARSE_POSTS);
-		$step				= request_var('step', 0);
+		$reparse_id 		= $request->variable('reparseids', '');
+		$reparse_pm_id		= $request->variable('reparsepms', '');
+		$reparse_forum_ids	= $request->variable('reparseforums', array(0));
+		$create_backup 		= $request->variable('create_backup', false);
+		$all 				= $request->variable('reparseall', false);
+		$mode				= $request->variable('mode', BBCODE_REPARSE_POSTS);
+		$step				= $request->variable('step', 0);
 		$start				= $step * $this->step_size;
 		$cnt				= 0;
 		$sql_forum_where	= '';
@@ -155,7 +155,7 @@ class reparse_bbcode
 
 		if (!sizeof($reparse_forum_ids) && !$reparse_id && !$reparse_pm_id && !$all && $step == 0)
 		{
-			trigger_error('REPARSE_IDS_EMPTY', E_USER_WARNING);
+			trigger_error(user_lang('REPARSE_IDS_EMPTY'), E_USER_WARNING);
 		}
 
 		// If post IDs or PM IDs were specified, we need to make sure the list is valid.
@@ -169,7 +169,7 @@ class reparse_bbcode
 
 			if (!sizeof($reparse_posts))
 			{
-				trigger_error('REPARSE_IDS_INVALID', E_USER_WARNING);
+				trigger_error(user_lang('REPARSE_IDS_INVALID'), E_USER_WARNING);
 			}
 
 			// Make sure there's no extra whitespace
@@ -191,7 +191,7 @@ class reparse_bbcode
 
 			if (!sizeof($reparse_pms))
 			{
-				trigger_error('REPARSE_IDS_INVALID');
+				trigger_error(user_lang('REPARSE_IDS_INVALID'));
 			}
 
 			if (!$all)
@@ -258,7 +258,7 @@ class reparse_bbcode
 		else
 		{
 			// Get the total
-			$this->max = request_var('rowsmax', 0);
+			$this->max = $request->variable('rowsmax', 0);
 			if ($this->max == 0)
 			{
 				switch ($mode)
@@ -304,7 +304,7 @@ class reparse_bbcode
 					// Done!
 					$cache->destroy('_stk_reparse_posts');
 					$cache->destroy('_stk_reparse_pms');
-					trigger_error($user->lang['REPARSE_BBCODE_COMPLETE']);
+					trigger_error(user_lang('REPARSE_BBCODE_COMPLETE'));
 				}
 			}
 		}
@@ -328,7 +328,7 @@ class reparse_bbcode
 				$sql_ary = array(
 					'SELECT'	=> 'f.forum_id, f.enable_indexing, f.forum_name,
 									p.post_id, p.poster_id, p.icon_id, p.post_text, p.post_subject, p.post_username, p.post_time, p.post_edit_reason, p.bbcode_uid, p.bbcode_bitfield, p.post_checksum, p.enable_sig, p.post_edit_locked, p.enable_bbcode, p.enable_magic_url, p.enable_smilies, p.post_attachment, p.post_edit_user,
-									t.topic_id, t.topic_first_post_id, t.topic_last_post_id, t.topic_type, t.topic_status, t.topic_title, t.poll_title, t.topic_time_limit, t.poll_start, t.poll_length, t.poll_max_options, t.poll_last_vote, t.poll_vote_change, t.topic_posts_approved, t.topic_posts_unapproved, t.topic_posts_softdeleted,
+									t.topic_id, t.topic_first_post_id, t.topic_last_post_id, t.topic_type, t.topic_status, t.topic_title, t.poll_title, t.topic_time_limit, t.poll_start, t.poll_length, t.poll_max_options, t.poll_last_vote, t.poll_vote_change, t.topic_posts_approved, topic_posts_unapproved, topic_posts_softdeleted,
 									u.username',
 					'FROM'		=> array(
 						FORUMS_TABLE	=> 'f',
@@ -487,10 +487,10 @@ class reparse_bbcode
 	*/
 	function _next_step($step, $mode, $next_mode = false)
 	{
-		global $template, $user;
+		global $template, $user, $request;
 
-		$all = request_var('reparseall', false);
-		$create_backup = request_var('create_backup', false);
+		$all = $request->variable('reparseall', false);
+		$create_backup = $request->variable('create_backup', false);
 
 		$_next_mode	= ($next_mode === false) ? $mode : ++$mode;
 		$_next_step	= ($next_mode === false) ? ++$step : 0;
@@ -719,13 +719,13 @@ class reparse_bbcode
 
 	/**
 	* This method will return the given message into its state as it would have
-	* been just *after* request_var.
+	* been just *after* $request->variable.
 	* It expects the parse_message object related to this post but the object
 	* should only be filled, no changes should be made before this call
 	* @param Object &$parser the parser object
 	*/
 	function _clean_message(&$parser)
-	{
+	{		global $request;
 		// Format the content as if it where *INSIDE* the posting field.
 		$parser->decode_message($this->data['bbcode_uid']);
 		$message = &$parser->message;	// tmp copy
@@ -735,7 +735,7 @@ class reparse_bbcode
 		}
 		$message = html_entity_decode_utf8($message);
 
-		// Now we'll *request_var* the post
+		// Now we'll *$request->variable* the post
 		set_var($message, $message, 'string', true);
 		$message = utf8_normalize_nfc($message);
 

@@ -70,8 +70,8 @@ if (!isset($stk_config))
 }
 
 // Setup some common variables
-$action = request_var('action', '');
-$submit = request_var('submit', false);
+$action = $request->variable('action', '');
+$submit = $request->variable('submit', false);
 
 // Try to determine the phpBB version number, we might need that down the road
 // `PHPBB_VERSION` was added in 3.0.3, for older versions just rely on the config

@@ -44,6 +44,6 @@ class recache_moderators
 
 		cache_moderators();
 
-		trigger_error('RECACHE_MODERATORS_COMPLETE');
+		trigger_error(user_lang('RECACHE_MODERATORS_COMPLETE'));
 	}
 }

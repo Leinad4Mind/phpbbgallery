@@ -42,4 +42,9 @@ $lang = array_merge($lang, array(
 	'AUTO_COOKIES_EXPLAIN'		=> 'This tool allows you to change your forum’s cookie settings. The suggested settings should be correct in most cases. If you are unsure of the correct settings, please seek guidance in the Support Forum before changing any settings as incorrect settings may prevent you from being able to log into your forum.',
 
 	'COOKIE_SETTINGS_UPDATED'	=> 'Cookie settings successfully updated.',
+	'COOKIE_DOMAIN'				=> 'Cookie domain',
+	'COOKIE_NAME'				=> 'Cookie name',
+	'COOKIE_PATH'				=> 'Cookie path',
+	'COOKIE_SECURE'				=> 'Cookie secure',
+	'COOKIE_SECURE_EXPLAIN'		=> 'If your server is running via SSL set this to enabled else leave as disabled. Having this enabled and not running via SSL will result in server errors during redirects.',
 ));

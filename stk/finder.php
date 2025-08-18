@@ -2,7 +2,7 @@
 /**
 *
 * @package Support Toolkit
-* @copyright (c) 2009 phpBB Group
+* @copyright (c) 2016 Sheer
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -40,11 +40,11 @@ stk_add_lang('tools/ext/ext_finder');
 // Do not use the normal template path (to prevent issues with boards using alternate styles)
 $template->set_custom_style('stk', STK_ROOT_PATH . 'style');
 
-$table		= request_var('t', '');
-$column		= request_var('col', '');
-$_config	= request_var('c', '');
-$module		= request_var('m', '');
-$permission	= request_var('p', '');
+$table		= $request->variable('t', '');
+$column		= $request->variable('col', '');
+$_config	= $request->variable('c', '');
+$module		= $request->variable('m', '');
+$permission	= $request->variable('p', '');
 
 // Try get data from cache
 $extra_data = $cache->get('_stk_ext');
@@ -83,7 +83,7 @@ if (!$extra_data)
 
 	$errors = false;
 
-	$db_tools = new \phpbb\db\tools($db);
+	$db_tools = new \phpbb\db\tools\tools($db);
 
 	// Get migrations schema
 	$dir = '' . PHPBB_ROOT_PATH . 'ext';
@@ -105,19 +105,19 @@ if (!$extra_data)
 		{
 			foreach($ext as $key => $extension)
 			{
-				$ext_dir = '' . $phpbb_root_path . 'ext/' . $vendor . '/'. $extension . '/migrations/';
+				$ext_dir = '' . $phpbb_root_path . 'ext/' . $vendor . '/' . $extension . '/migrations/';
 				$migrations = (@opendir($ext_dir)) ? array_diff(scandir($ext_dir), array('..', '.')) : array();
 				$table_extra = $column_extra = $config_extra = $module_extra = $permissions_extra = array();
 				foreach($migrations as $file)
 				{
 					$file = str_replace('.' . PHP_EXT . '', '', $file);
-					$sub_dir = '' . $phpbb_root_path . 'ext/' . $vendor . '/'. $extension . '/migrations/' . $file . '';
+					$sub_dir = '' . $phpbb_root_path . 'ext/' . $vendor . '/' . $extension . '/migrations/' . $file . '';
 					if (is_dir($sub_dir))
 					{
 						$migrations_subdir = (@opendir($sub_dir)) ? array_diff(scandir($sub_dir), array('..', '.')) : array();
 						foreach($migrations_subdir as $key => $value)
 						{
-							$migrations[] = ''.$file.'\\'.$value.'';
+							$migrations[] = ' '. $file . '\\' . $value . '';
 						}
 						$migrations = array_diff($migrations, array($file));
 					}
@@ -143,17 +143,17 @@ if (!$extra_data)
 						}
 
 						$update_data = $phpbb_ext->update_data();
-						foreach($update_data as $key => $alue)
+						foreach($update_data as $key => $value)
 						{
 							// Search config data
-							if ($alue[0] == 'config.add' || $alue[0] == 'config.update')
+							if ($value[0] == 'config.add' || $value[0] == 'config.update')
 							{
-								$configs[] = $alue[1][0];
+								$configs[] = $value[1][0];
 							}
 							// Search modules used for extension
-							if($alue[0] == 'module.add')
+							if($value[0] == 'module.add')
 							{
-								$ext_module_name = $alue[1];
+								$ext_module_name = $value[1];
 								$name = isset($ext_module_name[2]) ? $ext_module_name[2] :  '';
 								if (is_array($name))
 								{
@@ -165,9 +165,9 @@ if (!$extra_data)
 								}
 							}
 							// Search permissions used for extension
-							if($alue[0] == 'permission.add')
+							if($value[0] == 'permission.add')
 							{
-								$permissions[] = $alue[1][0];
+								$permissions[] = $value[1][0];
 							}
 						}
 
@@ -198,9 +198,9 @@ if ($table)
 	$info = (isset($extra_data['tables'])) ? finder($extra_data['tables'], $table) : '';
 	$extra = (isset($info['data'])) ? '' . $table_prefix . '' . $info['data'] . '' : '' . $table_prefix . '' . $table. '';
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $user->lang['TABLE'],
-		'L_EXTRA_DATA'			=> $user->lang['EXT_TABLE_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $user->lang['EXT_TABLE_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $lang['TABLE'],
+		'L_EXTRA_DATA'			=> $lang['EXT_TABLE_FINDER'],
+		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_TABLE_FINDER_EXPLAIN'],
 	));
 }
 else if($column)
@@ -208,9 +208,9 @@ else if($column)
 	$info = (isset($extra_data['colimns'])) ? finder($extra_data['colimns'], $column) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $column;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $user->lang['COLUMN'],
-		'L_EXTRA_DATA'			=> $user->lang['EXT_COLUMN_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $user->lang['EXT_COLUMN_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $lang['COLUMN'],
+		'L_EXTRA_DATA'			=> $lang['EXT_COLUMN_FINDER'],
+		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_COLUMN_FINDER_EXPLAIN'],
 	));
 }
 else if($_config)
@@ -218,9 +218,9 @@ else if($_config)
 	$info = (isset($extra_data['configs'])) ? finder($extra_data['configs'], $_config) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $_config;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $user->lang['CONFIG'],
-		'L_EXTRA_DATA'			=> $user->lang['EXT_CONFIG_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $user->lang['EXT_CONFIG_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $lang['CONFIG'],
+		'L_EXTRA_DATA'			=> $lang['EXT_CONFIG_FINDER'],
+		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_CONFIG_FINDER_EXPLAIN'],
 	));
 }
 else if($module)
@@ -228,9 +228,9 @@ else if($module)
 	$info = (isset($extra_data['modules'])) ? finder($extra_data['modules'], $module) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $module;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $user->lang['MODULE'],
-		'L_EXTRA_DATA'			=> $user->lang['EXT_MODULE_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $user->lang['EXT_MODULE_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $lang['MODULE'],
+		'L_EXTRA_DATA'			=> $lang['EXT_MODULE_FINDER'],
+		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_MODULE_FINDER_EXPLAIN'],
 	));
 }
 else if($permission)
@@ -238,9 +238,9 @@ else if($permission)
 	$info = (isset($extra_data['permissions'])) ? finder($extra_data['permissions'], $permission) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $permission;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $user->lang['PERMISSION'],
-		'L_EXTRA_DATA'			=> $user->lang['EXT_PERM_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $user->lang['EXT_PERM_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $lang['PERMISSION'],
+		'L_EXTRA_DATA'			=> $lang['EXT_PERM_FINDER'],
+		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_PERM_FINDER_EXPLAIN'],
 	));
 }
 
@@ -256,7 +256,7 @@ if($info)
 			$display_name = $obj->{'extra'}->{'display-name'};
 			$ext_path = $obj->{'name'};
 			$version = $obj->{'version'};
-			$description = (isset($obj->{'description'})) ? $obj->{'description'} : '';
+			$description = $obj->{'description'};
 		}
 	}
 	$sql = 'SELECT ext_active FROM ' . EXT_TABLE . '
@@ -270,7 +270,7 @@ if($info)
 $template->assign_vars(array(
 	'EXTRA_DATA'	=> (isset($extra)) ? $extra : '',
 	'PATH'			=> (isset($info['ext'])) ? $path : '',
-	'INFO'			=> (isset($info['ext'])) ? '<b style="color: '. $color .'">' . $display_name . '</b>/'.$version.' - '. $description .'' : $user->lang['NOT_IN_EXT'],
+	'INFO'			=> (isset($info['ext'])) ? '<b style="color: ' . $color . '">' . $display_name . '</b>/' . $version . ' - ' . $description . '' : $lang['NOT_IN_EXT'],
 ));
 
 // Output the main page
@@ -285,6 +285,7 @@ page_footer();
 function finder($extra_data, $unit)
 {
 	global $table_prefix;
+
 	$unit = str_replace($table_prefix, '', $unit); // If $unit is table we need remove table prefix from table name
 	$extension = array();
 	foreach($extra_data as $vendor => $exts)

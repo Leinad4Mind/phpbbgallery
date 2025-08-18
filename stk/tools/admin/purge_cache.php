@@ -45,6 +45,6 @@ class purge_cache
 
 		add_log('admin', 'LOG_PURGE_CACHE');
 
-		trigger_error('PURGE_CACHE_COMPLETE');
+		trigger_error(user_lang('PURGE_CACHE_COMPLETE'));
 	}
 }

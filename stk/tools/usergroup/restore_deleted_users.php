@@ -25,9 +25,9 @@ class restore_deleted_users
 	*/
 	function display_options()
 	{
-		global $db, $template;
+		global $db, $template, $request;
 
-		$conflicted = request_var('conflicted', array(0 => 0));
+		$conflicted = $request->variable('conflicted', array(0 => 0));
 
 		// Find all guest posters
 		if (empty($conflicted))
@@ -70,7 +70,7 @@ class restore_deleted_users
 		// Nothing to do
 		if (empty($users) && empty($damaged))
 		{
-			trigger_error('NO_DELETED_USERS');
+			trigger_error(user_lang('NO_DELETED_USERS'));
 		}
 
 		$return = array('title'	=> $title);
@@ -130,10 +130,10 @@ class restore_deleted_users
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $db, $umil;
+		global $config, $db, $umil, $request;
 
-		$post		= request_var('post', array(0));
-		$conflicted	= request_var('conflicted', array(0 => 0));
+		$post		= $request->variable('post', array(0));
+		$conflicted	= $request->variable('conflicted', array(0 => 0));
 
 		if (!check_form_key('restore_deleted_users'))
 		{
@@ -150,7 +150,7 @@ class restore_deleted_users
 		if (!empty($post))
 		{
 			// Get the selected users
-			$posts = array_keys(request_var('post', array(0 => 0)));
+			$posts = array_keys($request->variable('post', array(0 => 0)));
 			if (empty($posts))
 			{
 				$error[] = 'NO_USER_SELECTED';
@@ -186,7 +186,7 @@ class restore_deleted_users
 		}
 		else
 		{
-			$conflicted = request_var('conflicted', array(0 => ''), true);
+			$conflicted = $request->variable('conflicted', array(0 => ''), true);
 
 			// Get the usernames used for the posts
 			$original = array();
@@ -224,7 +224,7 @@ class restore_deleted_users
 			array('data'),
 		));
 
-		trigger_error(((sizeof($non_conflicted) > 1) ? 'USERS_RESTORED_SUCCESSFULLY' : 'USER_RESTORED_SUCCESSFULLY'));
+		trigger_error(((sizeof($non_conflicted) > 1) ? user_lang('USERS_RESTORED_SUCCESSFULLY') : user_lang('USER_RESTORED_SUCCESSFULLY')));
 	}
 
 	/**

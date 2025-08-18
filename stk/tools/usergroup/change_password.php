@@ -44,7 +44,7 @@ class change_password
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $db, $user;
+		global $config, $db, $user, $request;
 
 		$user->add_lang('ucp');
 
@@ -54,8 +54,8 @@ class change_password
 			return;
 		}
 
-		$req_username = utf8_normalize_nfc(request_var('req_username', '', true));
-		$req_user_id = utf8_normalize_nfc(request_var('req_user_id', 0));
+		$req_username = utf8_normalize_nfc($request->variable('req_username', '', true));
+		$req_user_id = utf8_normalize_nfc($request->variable('req_user_id', 0));
 
 		// Check that at least one field is filled in.
 		if (!$req_username && !$req_user_id)
@@ -101,7 +101,7 @@ class change_password
 		}
 
 		// Drop the arrays
-		$user_id = array_shift($user_id); 
+		$user_id = array_shift($user_id);
 		$username = array_shift($username);
 
 		// No user found
@@ -112,8 +112,8 @@ class change_password
 		}
 
 		$data = array(
-			'new_password'		=> request_var('new_password', '', true),
-			'password_confirm'	=> request_var('password_confirm', '', true),
+			'new_password'		=> $request->variable('new_password', '', true),
+			'password_confirm'	=> $request->variable('password_confirm', '', true),
 		);
 
 		if ($data['new_password'] != $data['password_confirm'])
@@ -135,6 +135,6 @@ class change_password
 
 		add_log('admin', 'LOG_USER_NEW_PASSWORD', $username);
 
-		trigger_error(sprintf($user->lang['CHANGE_PASSWORD_SUCCESS'], append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, 'mode=viewprofile&amp;u=' . $user_id), $username));
+		trigger_error(user_lang('CHANGE_PASSWORD_SUCCESS', append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, 'mode=viewprofile&amp;u=' . $user_id), $username));
 	}
 }

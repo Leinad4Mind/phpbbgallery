@@ -218,7 +218,7 @@ class database_cleaner_controller
 	*/
 	function config($error, $selected)
 	{
-		global $db;
+		global $db, $config;
 
 		$config_rows = $existing_config = array();
 		get_config_rows($this->db_cleaner->data->config, $config_rows, $existing_config);
@@ -234,7 +234,7 @@ class database_cleaner_controller
 				if (isset($this->db_cleaner->data->config[$name]) && !in_array($name, $existing_config))
 				{
 					// Add it with the default settings we've got...
-					set_config($name, $this->db_cleaner->data->config[$name]['config_value'], $this->db_cleaner->data->config[$name]['is_dynamic']);
+					$config->set($name, $this->db_cleaner->data->config[$name]['config_value'], $this->db_cleaner->data->config[$name]['is_dynamic']);
 				}
 				else if (!isset($this->db_cleaner->data->config[$name]) && in_array($name, $existing_config))
 				{
@@ -252,7 +252,7 @@ class database_cleaner_controller
 	*/
 	function extension_groups($error, $selected)
 	{
-		global $db, $user;
+		global $db;
 
 		$extension_groups_rows = $existing_extension_groups = array();
 		get_extension_groups_rows($this->db_cleaner->data->extension_groups, $extension_groups_rows, $existing_extension_groups);
@@ -263,7 +263,7 @@ class database_cleaner_controller
 				continue;
 			}
 
-			if (isset($selected[$user->lang[$name]]))
+			if (isset($selected[$name]))
 			{
 				if (isset($this->db_cleaner->data->extension_groups[$name]) && !in_array($name, $existing_extension_groups))
 				{
@@ -321,8 +321,6 @@ class database_cleaner_controller
 						'extension'	=> $extension,
 					);
 					$db->sql_query('INSERT INTO ' . EXTENSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $insert));
-					// Remove orphaned extension
-					$db->sql_query('DELETE FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = 0');
 				}
 			}
 		}
@@ -336,15 +334,15 @@ class database_cleaner_controller
 	*/
 	function final_step()
 	{
-		global $umil;
+		global $umil, $config;
 
 		$umil->cache_purge();
 		$umil->cache_purge('auth');
-		set_config('board_disable', 0);
-		set_config('board_disable_msg', '');
+		$config->set('board_disable', 0);
+		$config->set('board_disable_msg', '');
 
 		// Finished!
-		trigger_error('DATABASE_CLEANER_SUCCESS');
+		trigger_error(user_lang('DATABASE_CLEANER_SUCCESS'));
 	}
 
 	/**
@@ -356,7 +354,6 @@ class database_cleaner_controller
 
 		$data = $group_rows = $existing_groups = array();
 		get_group_rows($data, $group_rows, $existing_groups);
-		$group_rows = array_keys($this->db_cleaner->data->groups);
 		foreach ($group_rows as $name)
 		{
 			// Skip ones that are in the default install and are in the existing permissions
@@ -371,10 +368,6 @@ class database_cleaner_controller
 				{
 					// Add it with the default settings we've got...
 					$group_id = false;
-					if (!function_exists('group_create'))
-					{
-						include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
-					}
 					group_create($group_id, $this->db_cleaner->data->groups[$name]['group_type'], $name, $this->db_cleaner->data->groups[$name]['group_desc'], array('group_colour' => $this->db_cleaner->data->groups[$name]['group_colour'], 'group_legend' => $this->db_cleaner->data->groups[$name]['group_legend'], 'group_avatar' => $this->db_cleaner->data->groups[$name]['group_avatar'], 'group_max_recipients' => $this->db_cleaner->data->groups[$name]['group_max_recipients']));
 				}
 				else if (!isset($this->db_cleaner->data->groups[$name]) && in_array($name, $existing_groups))
@@ -399,7 +392,7 @@ class database_cleaner_controller
 	*/
 	function introduction()
 	{
-		global $user;
+		global $user, $config;
 
 		// Redirect if they selected quit
 		if (isset($_POST['quit']))
@@ -408,8 +401,8 @@ class database_cleaner_controller
 		}
 
 		// Start by disabling the board
-		set_config('board_disable', 1);
-		set_config('board_disable_msg', user_lang('BOARD_DISABLE_REASON'));
+		$config->set('board_disable', 1);
+		$config->set('board_disable_msg', user_lang('BOARD_DISABLE_REASON'));
 	}
 
 	/**
@@ -430,7 +423,7 @@ class database_cleaner_controller
 			// Re-add the modules
 			if (!class_exists('acp_modules'))
 			{
-				include PHPBB_ROOT_PATH . 'includes/acp/acp_modules.' . PHP_EXT;
+				include STK_ROOT_PATH . 'includes/acp_modules.' . PHP_EXT;
 			}
 
 			$_module = &new acp_modules();
@@ -996,57 +989,6 @@ class database_cleaner_controller
 		return $error;
 	}
 
-
-	function indexes($error, $selected)
-	{
-		global $umil;
-
-		foreach ($this->db_cleaner->data->tables as $table_name => $data)
-		{
-			if ($umil->table_exists($table_name) === false)
-			{
-				continue;
-			}
-			$existing_keys = get_keys($table_name);
-
-			if ($existing_keys === false)
-			{
-				// Table doesn't exist, don't handle here.
-				continue;
-			}
-
-			if (!empty($data['KEYS']))
-			{
-				$keys = array_unique(array_merge(array_keys($data['KEYS']), $existing_keys));
-			}
-
-			foreach ($keys as $key)
-			{
-				if (isset($selected[$table_name . '_' . $key]))
-				{
-					if (!isset($data['KEYS'][$key]) && in_array($key, $existing_keys))
-					{
-						$result = $umil->table_index_remove($table_name, $key);
-						if (stripos($result, 'SQL ERROR'))
-						{
-							$error[] = $result;
-						}
-					}
-					else if (isset($data['KEYS'][$key]) && !in_array($key, $existing_keys))
-					{
-						$columns = $data['KEYS'][$key][1];
-						$result = $umil->table_index_add($table_name, $key, $columns, $data['KEYS'][$key][0]);
-						if (stripos($result, 'SQL ERROR'))
-						{
-							$error[] = $result;
-						}
-					}
-				}
-			}
-		}
-		return $error;
-	}
-
 	/**
 	* Correct the database tables based upon the selection
 	* the user made before.
@@ -1092,8 +1034,7 @@ class database_cleaner_controller
 	*/
 	function acp_modules($error, $selected)
 	{
-		global $db, $user, $phpbb_root_path, $phpEx, $umil;
-
+		global $db, $user, $phpbb_root_path, $phpEx, $umil, $lang;
 		$user->add_lang('ucp');
 		$user->add_lang('mcp');
 
@@ -1101,7 +1042,7 @@ class database_cleaner_controller
 		{
 			if (!class_exists('acp_modules'))
 			{
-				include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
+				include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
 				$acp_tools = new acp_modules();
 			}
 
@@ -1146,7 +1087,7 @@ class database_cleaner_controller
 						$module_class = $row['module_class'];
 						if (!$module_class)
 						{
-							$error[] = '' . $user->lang['MODULE_ADD'] . ' &laquo;' . $module_langname . '&raquo; ' . $user->lang['NO_PARENT'] . '';
+							$error[] = '' . $lang['MODULE_ADD'] . ' &laquo;' . $module_langname . '&raquo; ' . $lang['NO_PARENT'] . '';
 							continue;
 						}
 						$parent_id = $row['module_id'];
@@ -1162,7 +1103,7 @@ class database_cleaner_controller
 						if (file_exists($phpbb_root_path . 'includes/'. $info_file))
 						{
 							include_once($phpbb_root_path . 'includes/'. $info_file);
-							$classname = ''.$base_name.'_info';
+							$classname = '' . $base_name . '_info';
 							$info = new $classname;
 							$module = $info->module();
 							unset($info);
@@ -1184,7 +1125,6 @@ class database_cleaner_controller
 						'module_mode'			=> $module_mode,
 						'module_auth'			=> $module_auth,
 					);
-
 					$result = $umil->module_add($module_class, $parent_id, $data);
 					$error[] = '&laquo;' . $user->lang[$module_langname] . '&raquo; ' . $result . '';
 				}

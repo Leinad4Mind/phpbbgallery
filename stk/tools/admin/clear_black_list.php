@@ -20,7 +20,8 @@ class clear_black_list
 {
 	function display_options()
 	{
-		global $db, $template, $user, $cache, $request;
+		global $db, $template, $user, $cache, $request, $lang;
+
 		$user->add_lang(array('acp/ban', 'acp/users'));
 		$submit = $request->variable('sa', false);
 		$ban = $request->variable('unban', array(''));
@@ -49,7 +50,6 @@ class clear_black_list
 
 		// Ban length options
 		$ban_end_text = array(0 => $user->lang['PERMANENT'], 30 => $user->lang['30_MINS'], 60 => $user->lang['1_HOUR'], 360 => $user->lang['6_HOURS'], 1440 => $user->lang['1_DAY'], 10080 => $user->lang['7_DAYS'], 20160 => $user->lang['2_WEEKS'], 40320 => $user->lang['1_MONTH'], -1 => $user->lang['UNTIL'] . ' -&gt; ');
-
 		$ban_end_options = '';
 		foreach ($ban_end_text as $length => $text)
 		{
@@ -83,7 +83,7 @@ class clear_black_list
 			if ($time_length == 0)
 			{
 				// Banned permanently
-				$ban_length = $user->lang['PERMANENT'];
+				$ban_length = $user->lang('PERMANENT');
 			}
 			else if (isset($ban_end_text[$time_length]))
 			{
@@ -129,7 +129,7 @@ class clear_black_list
 			'BANNED_OPTIONS'	=> $options,
 		));
 
-		page_header($user->lang['CLEAR_BLACK_LIST']);
+		page_header($lang['CLEAR_BLACK_LIST']);
 
 
 		$template->assign_vars(array(

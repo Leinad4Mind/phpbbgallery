@@ -25,10 +25,10 @@ class phpbb
 	*/
 	function display_options()
 	{
-		global $template, $user;
-		$file_name = request_var('f', '');
+		global $template, $user, $request;
+		$file_name = $request->variable('f', '');
 
-		page_header($user->lang['SUPPORT_TOOL_KIT']);
+		page_header(user_lang('SUPPORT_TOOL_KIT'));
 		$dir = PHPBB_ROOT_PATH;
 
 		if($file_name)
@@ -77,8 +77,8 @@ class phpbb
 
 			$template->assign_vars(array(
 				'TREE'	=> $code,
-				'ROOT'	=> $user->lang['ROOT'],
-				'TIME'	=> sprintf($user->lang['G_TIME'], $this->microtime_float() - $time_start),
+				'ROOT'	=> user_lang('ROOT'),
+				'TIME'	=> user_lang('G_TIME', $this->microtime_float() - $time_start),
 			));
 		}
 

@@ -59,14 +59,11 @@ class purge_sessions
 			'session_viewonline'	=> (int) $user->data['session_viewonline'],
 		);
 
-		if (version_compare(PHPBB_VERSION, '3.0.1', '>='))
-		{
-			$sql_ary['session_forum_id'] = $user->page['forum'];
-		}
+		$sql_ary['session_forum_id'] = $user->page['forum'];
 
 		$sql = 'INSERT INTO ' . SESSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 
-		trigger_error('PURGE_SESSIONS_COMPLETE');
+		trigger_error(user_lang('PURGE_SESSIONS_COMPLETE'));
 	}
 }

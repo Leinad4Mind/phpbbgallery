@@ -86,15 +86,16 @@ class resync_user_groups
 	 * Run the required resync actions
 	 */
 	function run_tool(&$error)
-	{
+	{		global $request;
+
 		$this->_load_classes();
-		$this->run_rr	= request_var('rr', false);
-		$this->run_rnr	= request_var('rnr', false);
+		$this->run_rr	= $request->variable('rr', false);
+		$this->run_rnr	= $request->variable('rnr', false);
 
 		// Done nothing
 		if (!$this->run_rr && !$this->run_rnr)
 		{
-			trigger_error('SELECT_RUN_GROUP');
+			trigger_error(user_lang('SELECT_RUN_GROUP'));
 		}
 
 		// Run the required sections
@@ -113,12 +114,12 @@ class resync_user_groups
 		// Done trigger the correct notice
 		if ($this->run_rr && $this->run_rnr)
 		{
-			trigger_error('RUN_BOTH_FINISHED');
+			trigger_error(user_lang('RUN_BOTH_FINISHED'));
 		}
 
 		// only one
 		$msg = ($this->run_rr) ? 'RUN_RR_FINISHED' : 'RUN_RNR_FINISHED';
-		trigger_error($msg);
+		trigger_error(user_lang($msg));
 	}
 
 	/**

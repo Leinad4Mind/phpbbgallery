@@ -20,23 +20,23 @@ class config_list
 {
 	function display_options()
 	{
-		global $db, $template, $config, $umil, $user, $cache, $phpbb_container;
+		global $db, $template, $config, $lang, $cache, $phpbb_container, $request, $user;
 
-		$start = request_var('start', 0);
-		$limit = request_var('limit', $config['topics_per_page']);
-		$submit = request_var('sa', false);
-		$display = request_var('display', '');
+		$start = $request->variable('start', 0);
+		$limit = $request->variable('limit', $config['topics_per_page']);
+		$submit = $request->variable('sa', false);
+		$display = $request->variable('display', '');
 
 		if ($submit)
 		{
-			$config_value = request_var('config', array('' => ''), true);
-			$is_dinamic = request_var('is_dinamic', array('' => 0));
+			$config_value = $request->variable('config', array('' => ''), true);
+			$is_dinamic = $request->variable('is_dinamic', array('' => 0));
 
 			foreach($config_value as $key => $value)
 			{
 				if($config[$key] != $value)
 				{
-					$umil->config_update($key, $value);
+					$config->set($key, $value);
 				}
 			}
 
@@ -50,31 +50,31 @@ class config_list
 			$cache->purge();
 
 			meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=config_list&amp;start=' . $start . ''));
-			trigger_error('CONFIG_CHANGED_SUCCESS');
+			trigger_error(user_lang('CONFIG_CHANGED_SUCCESS'));
 		}
 
 		$options = array(
-			'statistics'		=> 'STATISTICS',
-			'cron'				=> 'CRON_TASKS',
-			'attachments'		=> 'ATTACHMENTS',
-			'board_config'		=> 'BOARD_CONFIG',
-			'board_functions'	=> 'BOARD_FUNCTIONS',
-			'avatars'			=> 'AVATARS',
-			'pm'				=> 'PM',
-			'messages'			=> 'MESSAGES',
-			'signatures'		=> 'SIGNATURES',
-			'feed'				=> 'FEED',
-			'user_register'		=> 'USER_REGISTER',
-			'anti_spam'			=> 'ANTI_SPAM',
-			'auth'				=> 'AUTH',
-			'email'				=> 'EMAIL',
-			'config_jabber'		=> 'CONFIG_JABBER',
-			'cookies'			=> 'COOKIES',
-			'server'			=> 'SERVER',
-			'security'			=> 'SECURITY',
-			'load'				=> 'LOAD',
-			'search'			=> 'SEARCH',
-			'misc'				=> 'MISC',
+			'all'				=> $lang['ALL'],
+			'cron'				=> $lang['CRON_TASKS'],
+			'attachments'		=> $lang['ATTACHMENTS'],
+			'board_config'		=> $lang['BOARD_CONFIG'],
+			'board_functions'	=> $lang['BOARD_FUNCTIONS'],
+			'avatars'			=> $lang['AVATARS'],
+			'pm'				=> $lang['PM'],
+			'messages'			=> $lang['MESSAGES'],
+			'signatures'		=> $lang['SIGNATURES'],
+			'feed'				=> $lang['FEED'],
+			'user_register'		=> $lang['USER_REGISTER'],
+			'anti_spam'			=> $lang['ANTI_SPAM'],
+			'auth'				=> $lang['AUTH'],
+			'email'				=> $lang['EMAIL'],
+			'config_jabber'		=> $lang['CONFIG_JABBER'],
+			'cookies'			=> $lang['COOKIES'],
+			'server'			=> $lang['SERVER'],
+			'security'			=> $lang['SECURITY'],
+			'load'				=> $lang['LOAD'],
+			'search'			=> $lang['SEARCH'],
+			'misc'				=> $lang['MISC'],
 		);
 
 		$config_cron = array(
@@ -97,13 +97,13 @@ class config_list
 
 		$config_board_config = array(
 			'sitename', 'site_desc', 'site_home_url', 'site_home_text', 'board_index_text', 'board_disable', 'default_lang', 'default_dateformat',
-			'board_timezone', 'default_style', 'guest_style', 'override_user_style', 'warnings_expire_days', 'board_disable_msg',
+			'board_timezone', 'default_style', 'guest_style', 'override_user_style', 'warnings_expire_days', 'board_disable_msg', 'help_send_statistics', 'help_send_statistics_time',
 		);
 
 		$config_board_functions = array(
 			'allow_privmsg', 'allow_topic_notify', 'allow_forum_notify', 'allow_namechange', 'allow_attachments', 'allow_pm_attach', 'allow_pm_report', 'allow_bbcode',
 			'allow_smilies', 'allow_sig', 'allow_nocensors', 'allow_bookmarks', 'allow_birthdays', 'display_last_subject', 'allow_quick_reply',
-			'load_birthdays', 'load_moderators', 'load_jumpbox', 'load_cpf_memberlist', 'load_cpf_pm', 'load_cpf_viewprofile', 'load_cpf_viewtopic',
+			'load_birthdays', 'load_moderators', 'load_jumpbox', 'load_cpf_memberlist', 'load_cpf_pm', 'load_cpf_viewprofile', 'load_cpf_viewtopic', 'allow_board_notifications',
 		);
 
 		$config_pm = array(
@@ -169,7 +169,7 @@ class config_list
 		$config_security = array(
 			'allow_autologin', 'allow_password_reset', 'max_autologin_time', 'ip_check', 'browser_check', 'forwarded_for_check', 'referer_validation', 'check_dnsbl',
 			'email_check_mx', 'min_pass_chars', 'pass_complex', 'chg_passforce', 'max_login_attempts', 'ip_login_limit_max', 'ip_login_limit_time',
-			'ip_login_limit_use_forwarded', 'tpl_allow_php', 'form_token_lifetime', 'form_token_sid_guests',
+			'ip_login_limit_use_forwarded', 'tpl_allow_php', 'form_token_lifetime', 'form_token_sid_guests', 'remote_upload_verify',
 		);
 
 		$config_load = array(
@@ -187,13 +187,7 @@ class config_list
 			'fulltext_sphinx_id', 'fulltext_sphinx_data_path', 'fulltext_sphinx_indexer_mem_limit', 'fulltext_sphinx_host', 'fulltext_sphinx_port', 'fulltext_sphinx_stopwords',
 		);
 
-		$config_statistics = array(
-			'dbms_version', 'last_queue_run', 'board_startdate', 'newest_user_id', 'newest_username', 'num_files', 'num_posts', 'num_topics',
-			'num_users', 'record_online_date', 'record_online_users', 'upload_dir_size', 'version',
-		);
-
 		$config_common = $config_all = array();
-		$config_common = array_merge($config_common, $config_statistics);
 		$config_common = array_merge($config_common, $config_cron);
 		$config_common = array_merge($config_common, $config_attachments);
 		$config_common = array_merge($config_common, $config_avatras);
@@ -230,7 +224,7 @@ class config_list
 		{
 			$template->assign_block_vars('options', array(
 				'OPTION'	=> $option,
-				'LANG'		=> isset($user->lang[$lang_key]) ? $user->lang[$lang_key] : $lang_key,
+				'LANG'		=> isset($lang[$lang_key]) ? $lang[$lang_key] : $lang_key,
 				'SELECTED'	=> ($display == $option) ? true : false,
 			));
 		}
@@ -245,11 +239,7 @@ class config_list
 		{
 			// Show selected
 			switch ($display)
-			{
-				case 'statistics'		:
-					$where = $config_statistics;
-				break;
-				case 'cron'				:
+			{	case 'cron'				:
 					$where = $config_cron;
 				break;
 				case 'attachments'		:
@@ -315,10 +305,10 @@ class config_list
 			$sql_where = ' WHERE ' . $db->sql_in_set('config_name', $where) . '';
 		}
 
-		page_header($user->lang['CONFIG_LIST']);
+		page_header(user_lang('CONFIG_LIST'));
 
 		$sql = 'SELECT COUNT(config_name) as count
-				FROM ' . CONFIG_TABLE . '
+				FROM ' . CONFIG_TABLE .'
 				' . $sql_where ;
 		$result = $db->sql_query($sql);
 		$count = $db->sql_fetchfield('count');
@@ -333,7 +323,6 @@ class config_list
 		$not_bool = array('assets_version', 'form_token_mintime', 'img_link_height', 'img_link_width', 'img_max_height', 'img_max_width', 'max_attachments_pm', 'max_autologin_time', 'max_post_img_height',
 			'max_post_img_width', 'max_post_smilies', 'max_post_urls', 'max_sig_img_height', 'max_sig_img_width', 'max_sig_smilies', 'num_files', 'default_style', 'cron_lock', 'upload_dir_size',
 			'num_posts', 'num_topics', 'num_users', 'pm_edit_time', 'pm_max_recipients', 'search_interval', 'search_anonymous_interval', 'search_indexing_state', 'plupload_last_gc', 'warnings_expire_days',
-			'last_queue_run',
 		);
 		$ex_time_gc = array('database_gc', 'cache_gc', 'session_gc', 'search_gc', 'warnings_gc', 'read_notification_gc');
 
@@ -356,7 +345,7 @@ class config_list
 			}
 
 			$template->assign_block_vars('row', array(
-				'CONFIG_PURPOSE'		=> (isset($user->lang[$row['config_name']])) ? $user->lang[$row['config_name']] : $user->lang['UNKNOWN'],
+				'CONFIG_PURPOSE'		=> (isset($lang[$row['config_name']])) ? $lang[$row['config_name']] : $lang['UNKNOWN'],
 				'CONFIG_NAME'			=> $row['config_name'],
 				'CONFIG_VALUE'			=> $row['config_value'],
 				'IS_DINAMIC'			=> $row['is_dynamic'],
@@ -365,7 +354,7 @@ class config_list
 				'S_NO_CHECKED'			=> (!$row['config_value'] && $is_bool) ? 'checked="checked"' : '',
 				'NO_DINAMIC_CHECKED'	=> (!$row['is_dynamic']) ? 'checked="checked"' : '',
 				'S_BOOL'				=> ($is_bool) ? true : false,
-				'HUMAN_DATE'			=> (!in_array($row['config_name'], $ex_time_gc) && ((substr($row['config_name'], -3, 3) === '_gc') || $row['config_name'] === 'board_startdate' || $row['config_name'] === 'last_queue_run' || $row['config_name'] === 'rand_seed_last_update') || $row['config_name'] == 'record_online_date') ? $user->format_date($row['config_value'], '|d M Y|, H:i:s'): ''
+				'HUMAN_DATE'			=> (!in_array($row['config_name'], $ex_time_gc) && ((substr($row['config_name'], -3, 3) === '_gc') || $row['config_name'] === 'board_startdate' || $row['config_name'] === 'last_queue_run' || $row['config_name'] === 'rand_seed_last_update') || $row['config_name'] == 'record_online_date' || $row['config_name'] == 'help_send_statistics_time') ? $user->format_date($row['config_value'], '|d M Y|, H:i:s'): ''
 			));
 		}
 		$db->sql_freeresult($result);
@@ -376,6 +365,13 @@ class config_list
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $count, $limit, $start);
 
 		$template->assign_vars(array(
+			'L_CONFIG_LIST'			=> $lang['CONFIG_LIST'],
+			'L_CONFIG_LIST_EXPLAIN'	=> $lang['CONFIG_LIST_EXPLAIN'],
+			'L_LIMIT'				=> $lang['LIMIT'],
+			'L_FILTER'				=> $lang['FILTER'],
+			'L_TOTAL_ITEMS'			=> $lang['TOTAL_ITEMS'],
+			'L_CLICK_HERE_TO_CHANGE'=> $lang['CLICK_HERE_TO_CHANGE'],
+
 			'TOTAL_ITEMS'		=> $count,
 			'LIMIT'				=> $limit,
 			'A_BASE_URL'		=> append_sid(STK_INDEX, array('c' => 'admin', 't' => 'config_list', 'limit' => '' . $limit . '&amp;display=' . $display . '', 'go' => 1)),

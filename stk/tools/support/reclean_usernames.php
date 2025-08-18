@@ -35,13 +35,14 @@ class reclean_usernames
 	*/
 	function run_tool()
 	{
-		global $db, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $user, $phpbb_root_path, $phpEx, $request;
 
-		$part = request_var('part', 0);
+		$part = $request->variable('part', 0);
 		$limit = 500;
 		$i = 0;
 
-		$sql = 'SELECT user_id, username, username_clean FROM ' . USERS_TABLE;
+		$sql = 'SELECT user_id, username, username_clean
+			FROM ' . USERS_TABLE;
 		$result = $db->sql_query_limit($sql, $limit, ($part * $limit));
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -50,7 +51,9 @@ class reclean_usernames
 
 			if ($username_clean != $row['username_clean'])
 			{
-				$sql = 'SELECT user_id, username, username_clean FROM ' . USERS_TABLE . ' WHERE username_clean LIKE \'' . $username_clean . '\'';
+				$sql = 'SELECT user_id, username, username_clean
+					FROM ' . USERS_TABLE . '
+						WHERE username_clean LIKE \'' . $username_clean . '\'';
 				$res = $db->sql_query_limit($sql, 1);
 				$duplicate = $db->sql_fetchrow($res);
 				$db->sql_freeresult($res);
@@ -72,11 +75,11 @@ class reclean_usernames
 			meta_refresh(0, append_sid(STK_INDEX, 't=reclean_usernames&amp;submit=1&amp;part=' . (++$part)));
 			$template->assign_var('U_BACK_TOOL', false);
 
-			trigger_error('RECLEAN_USERNAMES_NOT_COMPLETE');
+			trigger_error(user_lang('RECLEAN_USERNAMES_NOT_COMPLETE'));
 		}
 		else
 		{
-			trigger_error('RECLEAN_USERNAMES_COMPLETE');
+			trigger_error(user_lang('RECLEAN_USERNAMES_COMPLETE'));
 		}
 	}
 }

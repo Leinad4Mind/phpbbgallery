@@ -25,19 +25,19 @@ class manage_ext
 	*/
 	function display_options()
 	{
-		global $template, $user, $db, $config, $phpbb_root_path, $phpbb_extension_manager, $cache;
+		global $template, $user, $db, $config, $phpbb_root_path, $phpbb_extension_manager, $cache, $request;
 		$error = array();
-		$submit = request_var('sa', false);
-		$mode = request_var('m', '');
-		$save = request_var('save', false);
-		$file = request_var('file', '');
-		$path_new = request_var('path', '');
-		$path = request_var('e', '');
+		$submit = $request->variable('sa', false);
+		$mode = $request->variable('m', '');
+		$save = $request->variable('save', false);
+		$file = $request->variable('file', '');
+		$path_new = $request->variable('path', '');
+		$path = $request->variable('e', '');
 
-		$ext = request_var('e', '');
-		$content = request_var('template_data', '', true);
-		$file_name = request_var('f', '');
-		$name = request_var('n', '', true);
+		$ext = $request->variable('e', '');
+		$content = $request->variable('template_data', '', true);
+		$file_name = $request->variable('f', '');
+		$name = $request->variable('n', '', true);
 
 		$template->assign_vars(array(
 			'U_BACK_TOOL'	=> append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'view', 'e' => $path, 'n' => $name)),
@@ -46,7 +46,7 @@ class manage_ext
 		switch ($mode)
 		{
 			case 'rename':
-				$new_file_name = request_var('newname', '');
+				$new_file_name = $request->variable('newname', '');
 				$fname = explode('/', $file_name);
 				$old_file_name = $fname[max(array_keys($fname))];
 				$ren_path = str_replace($old_file_name, '', $file_name);
@@ -177,7 +177,7 @@ class manage_ext
 					'TREE'		=> $code,
 					'ROOT'		=> 'ext/' .$path,
 					'EXT_FILES'	=> $name,
-					'L_PATH'	=> sprintf($user->lang['PATH'], $dir),
+					'L_PATH'	=> user_lang('PATH', $dir),
 					'S_ACTION'	=> append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'new', 'f' => $file, 'e' => $path, 'n' => $name, 'save' => 1)),
 				));
 			break;
@@ -230,7 +230,7 @@ class manage_ext
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($user->lang['SUPPORT_TOOL_KIT']);
+		page_header(user_lang('SUPPORT_TOOL_KIT'));
 
 		$template->set_filenames(array(
 			'body' => 'tools/manage_extensions_body.html',
@@ -246,9 +246,9 @@ class manage_ext
 
 	function list_dir($path = '.', $parent = 0)
 	{
-		global $list_dir_count, $filecount, $list, $root_path, $exclude_paths, $exclude_ext, $root_dir_files, $root_dir_folders, $user;
-		$ext_name = request_var('n', '');
-		$ext_path = request_var('e', '');
+		global $list_dir_count, $filecount, $list, $root_path, $exclude_paths, $exclude_ext, $root_dir_files, $root_dir_folders, $user, $request;
+		$ext_name = $request->variable('n', '');
+		$ext_path = $request->variable('e', '');
 
 		$folders = array();
 		$files = array();
@@ -286,7 +286,7 @@ class manage_ext
 					$rename = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'rename', 'e' => $ext_path, 'n' => $ext_name, 'f' => '' . $this_link . ''));
 					$del = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'delete', 'e' => $ext_name, 'n' => $ext_path, 'f' => '' . $this_link . ''));
 
-					$list[] = "d.add(" . $filecount . ", " . $parent . ", '" . $name . "', '" . $link . "', '" . $user->lang['EDIT'] . "', '', '', '', '', '" . $del . "', '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . $user->lang['RENAME'] . "');";
+					$list[] = "d.add(" . $filecount . ", " . $parent . ", '" . $name . "', '" . $link . "', '" . $user->lang['EDIT'] . "', '', '', '', '', '" . $del . "', '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
 				}
 			}
 
@@ -296,7 +296,7 @@ class manage_ext
 				$filecount++;
 				$rename = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'rename', 'e' => $ext_path, 'n' => $ext_name, 'f' => '' . $path . '/' . basename($folders[$i]) . ''));
 				$del = append_sid(STK_INDEX, array('c' => 'dev', 't' => 'manage_ext', 'm' => 'delete', 'e' => $ext_name, 'n' => $ext_path, 'f' => '' . $path . '/' . basename($folders[$i]) . ''));
-				$list[] = "d.add(" . $list_dir_count . "," . $parent . ",'" . basename($folders[$i]) . "', '', '', '', 'images/folder.gif', '', '', '" . $del . "' , '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . $user->lang['RENAME'] . "');";
+				$list[] = "d.add(" . $list_dir_count . "," . $parent . ",'" . basename($folders[$i]) . "', '', '', '', 'images/folder.gif', '', '', '" . $del . "' , '" . $rename . "', '" . $user->lang['DELETE'] . "', '" . user_lang('RENAME') . "');";
 				$this->list_dir($folders[$i], $list_dir_count);
 			}
 			closedir($handle);

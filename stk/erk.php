@@ -71,4 +71,4 @@ $umil->cache_purge(array(
 ));
 
 // Let's tell the user all is okay :)
-$critical_repair->trigger_error($user->lang['ERK_OK'], true);
+$critical_repair->trigger_error(user_lang('ERK_OK'), true);

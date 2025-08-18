@@ -68,7 +68,7 @@ class plugin
 	 * Load the list with available plugins and assign them in the correct category
 	 */
 	function plugin()
-	{
+	{		global $request, $user;
 		// Set the path
 		$this->tool_box_path = STK_ROOT_PATH . 'tools/';
 
@@ -101,8 +101,9 @@ class plugin
 		}
 
 		// Get the requested cat and tool
-		$this->_parts['c'] = request_var('c', $this->_parts['c']);
-		$this->_parts['t'] = request_var('t', $this->_parts['t']);
+//		$user = new \phpbb\user('\phpbb\datetime');
+		$this->_parts['c'] = $request->variable('c', $this->_parts['c']);
+		$this->_parts['t'] = $request->variable('t', $this->_parts['t']);
 
 		// We shouldn't rely on the given category request, unless there really is a tool with that name in the given category
 		if ($this->_parts['t'] && (!isset($this->plugin_list[$this->_parts['c']]) || !in_array($this->_parts['t'], $this->plugin_list[$this->_parts['c']])))
@@ -143,7 +144,7 @@ class plugin
 	 */
 	function load_tool($tool_cat, $tool_name, $return = true)
 	{
-		global $user;
+		global $lang, $user;
 
 		static $tools_loaded = array();
 
@@ -155,12 +156,12 @@ class plugin
 		$tool_path = $this->tool_box_path . $tool_cat . '/' . $tool_name . '.' . PHP_EXT;
 		if (false === (@include $tool_path))
 		{
-			trigger_error(sprintf($user->lang['TOOL_INCLUTION_NOT_FOUND'], $tool_path), E_USER_ERROR);
+			trigger_error(sprintf($lang['TOOL_INCLUTION_NOT_FOUND'], $tool_path), E_USER_ERROR);
 		}
 
 		if (!class_exists($tool_name))
 		{
-			trigger_error(sprintf($user->lang['INCORRECT_CLASS'], $tool_name, PHP_EXT), E_USER_ERROR);
+			trigger_error(sprintf($lang['INCORRECT_CLASS'], $tool_name, PHP_EXT), E_USER_ERROR);
 		}
 
 		// Construct the class
@@ -234,7 +235,7 @@ class plugin
 	 */
 	function gen_top_nav()
 	{
-		global $template, $user;
+		global $template, $lang;
 
 		// Loop through the plugin list. The first keys are the categories
 		$cats = array_keys($this->plugin_list);
@@ -251,7 +252,7 @@ class plugin
 
 			// Assign to the template
 			$template->assign_block_vars('top_nav', array(
-				'L_TITLE'		=> $user->lang['CAT_' . strtoupper($cat)],
+				'L_TITLE'		=> $lang['CAT_' . strtoupper($cat)],
 				'S_SELECTED'	=> $_s_active,
 				'U_TITLE'		=> append_sid(STK_INDEX, array('c' => $cat)),
 			));
@@ -264,7 +265,7 @@ class plugin
 	 */
 	function gen_left_nav()
 	{
-		global $template, $user;
+		global $template, $lang;
 
 		// Grep the correct category
 		$tool_list = $this->plugin_list[$this->_parts['c']];
@@ -293,7 +294,7 @@ class plugin
 			{
 				// For us lazy people
 				$info = array(
-					'NAME'			=> (isset($user->lang[strtoupper($tool)])) ? $user->lang[strtoupper($tool)] : strtoupper($tool),
+					'NAME'			=> (isset($lang[strtoupper($tool)])) ? $lang[strtoupper($tool)] : strtoupper($tool),
 				);
 			}
 

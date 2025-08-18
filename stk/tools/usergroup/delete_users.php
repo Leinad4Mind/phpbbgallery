@@ -18,9 +18,10 @@ if (!defined('IN_PHPBB'))
 
 class delete_users
 {
+
 	function run_tool(&$error)
 	{
-		global $user, $db;
+		global $user, $db, $request;
 
 		// Try to override some limits - maybe it helps some...
 		@set_time_limit(0);
@@ -50,8 +51,8 @@ class delete_users
 		}
 		@ini_set('memory_limit', $mem_limit);
 
-		$period = request_var('period', 0);
-		$message = $user->lang['DELETE_USERS_NOT_FOUND'];
+		$period = $request->variable('period', 0);
+		$message = user_lang('DELETE_USERS_NOT_FOUND');
 		$inactive_time = time() - 86400 * $period;
 
 		$sql = 'SELECT group_id
@@ -90,7 +91,7 @@ class delete_users
 			{
 				user_delete('remove', $uid);
 			}
-			$message = $user->lang['DELETE_USERS_SUCESS'];
+			$message = user_lang('DELETE_USERS_SUCESS');
 		}
 		meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=delete_users'));
 		trigger_error($message);
@@ -103,11 +104,12 @@ class delete_users
 	*/
 	function display_options()
 	{
-		global $template, $user;
+		global $template, $user, $request;
+
 		$user->add_lang('memberlist');
 
-		$delete = request_var('delete', false);
-		$period = request_var('period', 3);
+		$delete = $request->variable('delete', false);
+		$period = $request->variable('period', 3);
 
 		$period_ary = array(0 => $user->lang['7_DAYS'], 1 => $user->lang['1_MONTH'], 2 => $user->lang['3_MONTHS'], 3 => $user->lang['6_MONTHS'], 4 => $user->lang['1_YEAR']);
 		$times = array(0 => 7, 1 => 30, 2 => 90, 3 => 180, 4 => 365);
@@ -132,10 +134,10 @@ class delete_users
 			else
 			{
 				$hidden = build_hidden_fields(array('period' => $period));
-				confirm_box(false, $user->lang['DELETE_USERS_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
+				confirm_box(false, user_lang('DELETE_USERS_CONFIRM'), $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
 			}
 		}
-		page_header($user->lang['DELETE_USERS']);
+		page_header(user_lang('DELETE_USERS'));
 
 		$template->set_filenames(array(
 			'body' => 'tools/delete_users.html',

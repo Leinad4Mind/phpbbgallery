@@ -28,13 +28,13 @@ class prune_attachments
 
 	function display_options()
 	{
-		global $db, $template, $config, $user, $cache;
+		global $db, $template, $config, $cache, $request;
 		$list = '';
 		// For further use if make extension "Attachments in subfolders"
 		$subfolders = false;
 		//
 
-		$submit = request_var('sa', false);
+		$submit = $request->variable('sa', false);
 
 		if ($submit)
 		{
@@ -116,13 +116,13 @@ class prune_attachments
 			}
 			else
 			{
-				$list = (sizeof($unsuccess)) ? '' : $user->lang['PRUNE_ATTACHMENTS_FINISHED'];
+				$list = (sizeof($unsuccess)) ? '' : user_lang('PRUNE_ATTACHMENTS_FINISHED');
 				$exit = true;
 			}
 
 			if(sizeof($unsuccess))
 			{
-				$list .= '' . $user->lang['PRUNE_ATTACHMENTS_FAIL'] . '<br />' . implode('<br />', $unsuccess) . '';
+				$list .= '' . user_lang('PRUNE_ATTACHMENTS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
 			}
 
 			if($exit)
@@ -130,11 +130,11 @@ class prune_attachments
 				$cache->destroy('_stk_prune_attachments');
 				if ((sizeof($unsuccess)))
 				{
-					trigger_error(''.$list.'', E_USER_WARNING);
+					trigger_error('' . $list . '', E_USER_WARNING);
 				}
 				else
 				{
-					trigger_error(''.$list.'');
+					trigger_error('' . $list . '');
 				}
 			}
 			else
@@ -144,10 +144,14 @@ class prune_attachments
 			}
 		}
 
-		page_header($user->lang['PRUNE_ATTACHMENTS']);
+		page_header(user_lang('PRUNE_ATTACHMENTS'));
 
 		$template->assign_vars(array(
 			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_attachments&amp;go=1'),
+/*
+			'L_PRUNE_ATTACHMENTS'			=> user_lang('PRUNE_ATTACHMENTS'),
+			'L_PRUNE_ATTACHMENTS_EXPLAIN'	=> user_lang('PRUNE_ATTACHMENTS_EXPLAIN'),
+*/
 		));
 
 		$template->set_filenames(array(

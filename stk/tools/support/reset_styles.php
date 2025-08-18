@@ -45,7 +45,7 @@ class reset_styles
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $request;
+		global $db, $request, $config;
 
 		if (!check_form_key('reset_styles'))
 		{
@@ -60,7 +60,7 @@ class reset_styles
 			return;
 		}
 
-		set_config('default_style', $style_id);
+		$config->set('default_style', $style_id);
 
 		$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_style = ' . $style_id);
 

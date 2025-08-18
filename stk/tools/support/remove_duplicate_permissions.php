@@ -46,7 +46,7 @@ class remove_duplicate_permissions
 
 		if (empty($acl_duplicates))
 		{
-			trigger_error('NO_DUPLICATES_FOUND');
+			trigger_error(user_lang('NO_DUPLICATES_FOUND'));
 		}
 
 		foreach ($acl_duplicates as $dup_id => $orig_id)
@@ -65,7 +65,7 @@ class remove_duplicate_permissions
 				{
 					$sql = 'SELECT auth_option_id, auth_setting FROM ' . $table . "
 						WHERE $column = '" . $db->sql_escape($row[$column]) . "'
-						AND auth_option_id = " . (int) $orig_id . 
+						AND auth_option_id = " . (int) $orig_id .
 						((isset($row['forum_id'])) ? ' AND forum_id = ' . (int) $row['forum_id'] : '');
 					$result1 = $db->sql_query($sql);
 					$row1 = $db->sql_fetchrow($result1);
@@ -114,6 +114,6 @@ class remove_duplicate_permissions
 		// Purge the auth cache in the users table
 		$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_permissions = \'\'');
 
-		trigger_error('DUPLICATES_FOUND');
+		trigger_error(user_lang('DUPLICATES_FOUND'));
 	}
 }

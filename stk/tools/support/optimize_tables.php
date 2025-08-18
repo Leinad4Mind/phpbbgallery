@@ -20,10 +20,10 @@ class optimize_tables
 {
 	function display_options()
 	{
-		global $user, $template, $db;
+		global $user, $template, $db, $request;
 
-		$submit = request_var('sa', false);
-		$tables = request_var('tables_list', array(''));
+		$submit = $request->variable('sa', false);
+		$tables = $request->variable('tables_list', array(''));
 
 		$table_cout = $fragmented = 0;
 		$action = append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=suppor&amp;t=optimize_tables');
@@ -38,7 +38,7 @@ class optimize_tables
 					$sql = 'OPTIMIZE TABLE '.$tables[$i].'';
 					$db->sql_query($sql);
 				}
-				$message = $user->lang['SUCESS'];
+				$message = user_lang('SUCESS');
 			}
 			else
 			{
@@ -71,16 +71,25 @@ class optimize_tables
 			$db->sql_freeresult($result);
 
 			$template->assign_vars(array(
-				'TABLES'			=> $table_cout,
-				'FRAGMENTED'		=> $fragmented,
+				'TABLES'				=> $table_cout,
+				'FRAGMENTED'			=> $fragmented,
 				'U_DISPLAY_ACTION'		=> $action,
+
+				'L_OPTIMIZE_TABLES'			=> user_lang('OPTIMIZE_TABLES'),
+				'L_OPTIMIZE_TABLES_EXPLAIN'	=> user_lang('OPTIMIZE_TABLES_EXPLAIN'),
+				'L_NOT_FOUND'				=> user_lang('NOT_FOUND'),
+				'L_TABLE_NAME'				=> user_lang('TABLE_NAME'),
+				'L_UPDATE_TIME'				=> user_lang('UPDATE_TIME'),
+				'L_TABLE_SIZE'				=> user_lang('TABLE_SIZE'),
+				'L_FRAGMENTED'				=> user_lang('FRAGMENTED'),
+				'L_OPTIMIZER_MESSAGE'		=> user_lang('OPTIMIZER_MESSAGE'),
 				)
 			);
 		}
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($user->lang['SUPPORT_TOOL_KIT']);
+		page_header(user_lang('SUPPORT_TOOL_KIT'));
 
 		$template->set_filenames(array(
 			'body' => 'tools/db_optimizer.html',

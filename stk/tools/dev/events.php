@@ -25,11 +25,11 @@ class events
 	*/
 	function display_options()
 	{
-		global $template, $user, $phpbb_root_path;
+		global $template, $phpbb_root_path;
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($user->lang['SUPPORT_TOOL_KIT']);
+		page_header(user_lang('SUPPORT_TOOL_KIT'));
 
 		$template->assign_vars(array(
 			'PATH'	=> append_sid(STK_INDEX, array('c' => 'dev', 't' => 'phpbb')),

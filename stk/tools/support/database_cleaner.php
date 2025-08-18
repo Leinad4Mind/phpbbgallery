@@ -107,11 +107,11 @@ if (!class_exists('database_cleaner'))
 		*/
 		function _setup()
 		{
-			global $db;
+			global $db, $request;
 
-			$next = request_var('next', false);
-			$next_step = request_var('next_step', 0);
-			$quit = request_var('quit', false);
+			$next = $request->variable('next', false);
+			$next_step = $request->variable('next_step', 0);
+			$quit = $request->variable('quit', false);
 			if ($quit)
 			{
 				 $this->quit();
@@ -124,7 +124,7 @@ if (!class_exists('database_cleaner'))
 
 			// Get the step.
 			// If the step is outside the $this->step_to_action range set it to 0
-			$this->step = request_var('step', 0);
+			$this->step = $request->variable('step', 0);
 			if ($this->step < 0 || $this->step > sizeof($this->step_to_action))
 			{
 				$this->step = 0;
@@ -141,11 +141,11 @@ if (!class_exists('database_cleaner'))
 				include STK_ROOT_PATH . 'includes/database_cleaner/database_cleaner_data.' . PHP_EXT;
 			}
 
-			if (!class_exists('phpbb\db\tools'))
+			if (!class_exists('phpbb\db\tools\tools'))
 			{
-				include PHPBB_ROOT_PATH . 'phpbb/db/tools.' . PHP_EXT;
+				include PHPBB_ROOT_PATH . 'phpbb/db/tools/tools.' . PHP_EXT;
 			}
-			$db_tools = new phpbb\db\tools($db);
+			$db_tools = new phpbb\db\tools\tools($db);
 
 			// Load all data for this version
 			$this->data = new database_cleaner_data($db_tools);
@@ -184,17 +184,18 @@ if (!class_exists('database_cleaner'))
 		*/
 		function run_tool(&$error)
 		{
+			global $request;
+
 			// Setup
 			$this->_setup();
-
 			// Skip this step & did no any action
-			$skip = request_var('skip', false);
+			$skip = $request->variable('skip', false);
 			if ($skip)
 			{
 				redirect(append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->step + 1)));
 			}
 
-			$selected = request_var('items', array('' => ''), true);
+			$selected = $request->variable('items', array('' => ''), true);
 
 			if ($this->step > 0 && !check_form_key('database_cleaner'))
 			{
@@ -232,15 +233,17 @@ if (!class_exists('database_cleaner'))
 
 		function quit()
 		{
-			global $umil;
+			global $umil, $lang, $config;
 
 			$umil->cache_purge();
 			$umil->cache_purge('auth');
-			set_config('board_disable', 0);
-			set_config('board_disable_msg', '');
+
+			$config->set('board_disable', 0);
+			$config->set('board_disable_msg', '');
 
 			// Finished!
-			trigger_error('DATABASE_CLEANER_BREAK', E_USER_WARNING);
+			trigger_error($lang['DATABASE_CLEANER_BREAK'], E_USER_WARNING);
 		}
+
 	}
 }

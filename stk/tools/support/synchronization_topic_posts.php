@@ -20,7 +20,7 @@ class synchronization_topic_posts
 {
 	function display_options()
 	{
-		global $db, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $lang, $phpbb_root_path, $phpEx;
 
 		// Not synchronized topics
 		$sql = 'SELECT t.forum_id, topic_id, topic_title, topic_last_post_id, topic_last_poster_id, topic_last_poster_name, topic_last_post_time,
@@ -51,10 +51,10 @@ class synchronization_topic_posts
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
-			'L_TOPIC_TOTAL_POSTS'				=> sprintf($user->lang['TOPIC_TOTAL_POSTS'], TOPICS_TABLE),
-			'L_POSTS_TOTAL_CAPTION'				=> sprintf($user->lang['POSTS_TOTAL'], POSTS_TABLE),
-			'L_FROM_TOPICS_TABLE'				=> sprintf($user->lang['FROM_TABLE'], TOPICS_TABLE),
-			'L_FROM_POSTS_TABLE'				=> sprintf($user->lang['FROM_TABLE'], POSTS_TABLE),
+			'L_TOPIC_TOTAL_POSTS'				=> sprintf($lang['TOPIC_TOTAL_POSTS'], TOPICS_TABLE),
+			'L_POSTS_TOTAL_CAPTION'				=> sprintf($lang['POSTS_TOTAL'], POSTS_TABLE),
+			'L_FROM_TOPICS_TABLE'				=> sprintf($lang['FROM_TABLE'], TOPICS_TABLE),
+			'L_FROM_POSTS_TABLE'				=> sprintf($lang['FROM_TABLE'], POSTS_TABLE),
 			'U_SYNCHRONIZATION_TOPIC_POSTS'		=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'synchronization_topic_posts', 'submit' => 1)),
 		));
 
@@ -62,7 +62,7 @@ class synchronization_topic_posts
 			'body' => 'tools/synchronization_topic_posts.html',
 		));
 
-		page_header($user->lang['SYNCHRONIZATION_TOPIC_POSTS'], false);
+		page_header($lang['SYNCHRONIZATION_TOPIC_POSTS'], false);
 		page_footer();
 	}
 
@@ -73,7 +73,7 @@ class synchronization_topic_posts
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $user;
+		global $db, $lang;
 
 		$user->add_lang('ucp');
 
@@ -85,7 +85,7 @@ class synchronization_topic_posts
 		$topic_ids = request_var('topics', array(0 => 0));
 		if (!sizeof($topic_ids))
 		{
-			trigger_error($user->lang['NO_TOPICS_SELECTED'], E_USER_WARNING);
+			trigger_error($lang['NO_TOPICS_SELECTED'], E_USER_WARNING);
 		}
 		foreach($topic_ids as $topic_id)
 		{
@@ -128,6 +128,6 @@ class synchronization_topic_posts
 		    }
 		}
 		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'support', 't' => 'synchronization_topic_posts')));
-		trigger_error(sprintf($user->lang['TOPICS_SINCRONIZED'], sizeof($topic_ids)));
+		trigger_error(sprintf($lang['TOPICS_SINCRONIZED'], sizeof($topic_ids)));
 	}
 }

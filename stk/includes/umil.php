@@ -151,12 +151,12 @@ class umil
 		}
 
 		// Setup $this->db_tools
-		if (!class_exists('phpbb\db\tools'))
+		if (!class_exists('phpbb\db\tools\tools'))
 		{
-			include PHPBB_ROOT_PATH . 'phpbb/db/tools.' . PHP_EXT;
+			include PHPBB_ROOT_PATH . 'phpbb/db/tools/tools.' . PHP_EXT;
 		}
 
-		$this->db_tools = new phpbb\db\tools($this->db);
+		$this->db_tools = new phpbb\db\tools\tools($this->db);
 
 		$this->stand_alone = $stand_alone;
 
@@ -229,13 +229,13 @@ class umil
 	*/
 	function umil_start()
 	{
-		global $user;
+		global $lang;
 
 		// Set up the command.  This will get the arguments sent to the function.
 		$args = func_get_args();
 		$this->command = call_user_func_array(array($this, 'get_output_text'), $args);
 
-		$this->result = (isset($user->lang['SUCCESS'])) ? $user->lang['SUCCESS'] : 'SUCCESS';
+		$this->result = (isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS';
 		$this->db->sql_return_on_error(true);
 
 		//$this->db->sql_transaction('begin');
@@ -248,7 +248,7 @@ class umil
 	*/
 	function umil_end()
 	{
-		global $user;
+		global $lang;
 
 		// Set up the result.  This will get the arguments sent to the function.
 		$args = func_get_args();
@@ -257,7 +257,7 @@ class umil
 
 		if ($this->db->get_sql_error_triggered())
 		{
-			if ($this->result == ((isset($user->lang['SUCCESS'])) ? $user->lang['SUCCESS'] : 'SUCCESS'))
+			if ($this->result == ((isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS'))
 			{
 				$error_returned = $this->db->get_sql_error_returned();
 				$result = 'SQL ERROR ' . $error_returned['message'];
@@ -557,7 +557,7 @@ class umil
 	/**
 	* Cache Purge
 	*
-	* This function is for purging either phpBB3’s data cache, authorization cache, or the styles cache
+	* This function is for purging either phpBB3’s data cache, authorization cache, or the styles cache.
 	*
 	* @param string $type The type of cache you want purged.  Available types: auth, imageset, template, theme.  Anything else sent will purge the forum's cache.
 	* @param int $style_id The id of the item you want purged (if the type selected is imageset/template/theme, 0 for all items in that section)
@@ -1157,7 +1157,7 @@ class umil
 	*/
 	function module_add($class, $parent = 0, $data = array(), $include_path = false)
 	{
-		global $cache, $user, $phpbb_root_path, $phpEx;
+		global $cache, $lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1168,11 +1168,11 @@ class umil
 		// Prevent stupid things like trying to add a module with no name or any data on it
 		if (empty($data))
 		{
-			$this->umil_start('MODULE_ADD', $class, 'UNKNOWN');
-			return $this->umil_end($user->lang['FAIL']);
+			$this->umil_start($lang['MODULE_ADD'], $class, 'UNKNOWN');
+			return $this->umil_end($lang['FAIL']);
 		}
 
-		// Allows '' to be sent as 0
+        // Allows '' to be sent as 0
 		$parent = (!$parent) ? 0 : $parent;
 
 		// allow sending the name as a string in $data to create a category
@@ -1192,8 +1192,8 @@ class umil
 			// The manual and automatic ways both failed...
 			if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 			{
-				$this->umil_start('MODULE_ADD', $class, $info_file);
-				return $this->umil_end($user->lang['FAIL']);
+				$this->umil_start($lang['MODULE_ADD'], $class, $info_file);
+				return $this->umil_end($lang['FAIL']);
 			}
 
 			$classname = "{$class}_{$basename}_info";
@@ -1231,8 +1231,8 @@ class umil
 		}
 
 		// The "manual" way
-		$this->umil_start('MODULE_ADD', $class, ((isset($user->lang[$data['module_langname']])) ? $user->lang[$data['module_langname']] : $data['module_langname']));
-		add_log('admin', 'LOG_MODULE_ADD', ((isset($user->lang[$data['module_langname']])) ? $user->lang[$data['module_langname']] : $data['module_langname']));
+		$this->umil_start($lang['MODULE_ADD'], $class, ((isset($lang[$data['module_langname']])) ? $lang[$data['module_langname']] : $data['module_langname']));
+		add_log('admin', 'LOG_MODULE_ADD', ((isset($lang[$data['module_langname']])) ? $lang[$data['module_langname']] : $data['module_langname']));
 
 		$class = $this->db->sql_escape($class);
 
@@ -1259,14 +1259,15 @@ class umil
 
 		if ($this->module_exists($class, $parent, $data['module_langname']))
 		{
-			return $this->umil_end('MODULE_ALREADY_EXIST');
+			return $this->umil_end($lang['MODULE_ALREADY_EXIST']);
 		}
 
 		if (!class_exists('acp_modules'))
 		{
-			include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
+			include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
 			$user->add_lang('acp/modules');
 		}
+
 		$acp_modules = new acp_modules();
 		if(isset($data['module_mode']))
 		{
@@ -1281,7 +1282,7 @@ class umil
 				'ACP_CLIENT_COMMUNICATION',
 					'ACP_AUTH_SETTINGS', 'ACP_JABBER_SETTINGS', 'ACP_EMAIL_SETTINGS',
 				'ACP_SERVER_CONFIGURATION',
-					'ACP_COOKIE_SETTINGS', 'ACP_SERVER_SETTINGS', 'ACP_SECURITY_SETTINGS', 'ACP_LOAD_SETTINGS', 'ACP_SEARCH_SETTINGS', 'ACP_SEND_STATISTICS',
+					'ACP_COOKIE_SETTINGS', 'ACP_SERVER_SETTINGS', 'ACP_SECURITY_SETTINGS', 'ACP_LOAD_SETTINGS', 'ACP_SEARCH_SETTINGS',
 				'ACP_CAT_FORUMS',
 					'ACP_MANAGE_FORUMS',
 						'ACP_PRUNE_FORUMS',
@@ -1563,7 +1564,7 @@ class umil
 					if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 					{
 						$this->umil_start('MODULE_ADD', $class, $info_file);
-						return $this->umil_end($user->lang['FAIL']);
+						return $this->umil_end($lang['FAIL']);
 					}
 
 					$classname = "{$class}_{$basename}_info";
@@ -1684,7 +1685,7 @@ class umil
 	*/
 	function module_remove($class, $parent = 0, $module = '', $include_path = false)
 	{
-		global $cache, $user, $phpbb_root_path, $phpEx;
+		global $cache, $lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1705,7 +1706,7 @@ class umil
 			if (!isset($module['module_basename']))
 			{
 				$this->umil_start('MODULE_REMOVE', $class, 'UNKNOWN');
-				return $this->umil_end($user->lang['FAIL']);
+				return $this->umil_end($lang['FAIL']);
 			}
 
 			// Automatic method
@@ -1716,7 +1717,7 @@ class umil
 			if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 			{
 				$this->umil_start('MODULE_REMOVE', $class, $info_file);
-				return $this->umil_end($user->lang['FAIL']);
+				return $this->umil_end($lang['FAIL']);
 			}
 
 			$classname = "{$class}_{$basename}_info";
@@ -1746,7 +1747,7 @@ class umil
 
 			if (!$this->module_exists($class, $parent, $module))
 			{
-				$this->umil_start('MODULE_REMOVE', $class, ((isset($user->lang[$module])) ? $user->lang[$module] : $module));
+				$this->umil_start('MODULE_REMOVE', $class, ((isset($lang[$module])) ? $lang[$module] : $module));
 				return $this->umil_end('MODULE_NOT_EXIST');
 			}
 
@@ -1806,12 +1807,12 @@ class umil
 				$module_ids[] = $module;
 			}
 
-			$this->umil_start('MODULE_REMOVE', $class, ((isset($user->lang[$module_name])) ? $user->lang[$module_name] : $module_name));
-			add_log('admin', 'LOG_MODULE_REMOVED', ((isset($user->lang[$module_name])) ? $user->lang[$module_name] : $module_name));
+			$this->umil_start('MODULE_REMOVE', $class, ((isset($lang[$module_name])) ? $lang[$module_name] : $module_name));
+			add_log('admin', 'LOG_MODULE_REMOVED', ((isset($lang[$module_name])) ? $lang[$module_name] : $module_name));
 
 			if (!class_exists('acp_modules'))
 			{
-				include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
+				include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
 				$user->add_lang('acp/modules');
 			}
 			$acp_modules = new acp_modules();
@@ -1822,7 +1823,7 @@ class umil
 				$result = $acp_modules->delete_module($module_id);
 				if (!empty($result))
 				{
-					if ($this->result == ((isset($user->lang['SUCCESS'])) ? $user->lang['SUCCESS'] : 'SUCCESS'))
+					if ($this->result == ((isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS'))
 					{
 						$this->result = implode('<br />', $result);
 					}
@@ -2672,7 +2673,7 @@ class umil
 	*
 	* Add a new key/index to a table
 	*/
-	function table_index_add($table_name, $index_name = '', $column = array(), $index_type = 'INDEX')
+	function table_index_add($table_name, $index_name = '', $column = array())
 	{
 		global $config;
 
@@ -2692,29 +2693,25 @@ class umil
 
 		$this->umil_start('TABLE_KEY_ADD', $table_name, $index_name);
 
+		if ($this->table_index_exists($table_name, $index_name))
+		{
+			return $this->umil_end('TABLE_KEY_ALREADY_EXIST', $table_name, $index_name);
+		}
+
 		if (!is_array($column))
 		{
 			$column = array($column);
 		}
 
-		switch ($index_type)
+		// remove index length if we are before 3.0.8
+		// the feature (required for some types when using MySQL4)
+		// was added in that release (ticket PHPBB3-8944)
+		if (version_compare($config['version'], '3.0.7-pl1', '<='))
 		{
-			case 'UNIQUE':
-				if($this->db_tools->sql_unique_index_exists($table_name, $index_name))
-				{
-					return $this->umil_end('TABLE_KEY_ALREADY_EXIST', $table_name, $index_name);
-				}
-				$this->db_tools->sql_create_unique_index($table_name, $index_name, $column);
-			break;
-			case 'INDEX':
-			default:
-				if($this->db_tools->sql_index_exists($table_name, $index_name))
-				{
-					return $this->umil_end('TABLE_KEY_ALREADY_EXIST', $table_name, $index_name);
-				}
-				$this->db_tools->sql_create_index($table_name, $index_name, $column);
-			break;
+			$column = preg_replace('#:.*$#', '', $column);
 		}
+
+		$this->db_tools->sql_create_index($table_name, $index_name, $column);
 
 		return $this->umil_end();
 	}
@@ -2736,16 +2733,18 @@ class umil
 
 		$this->umil_start('TABLE_KEY_REMOVE', $table_name, $index_name);
 
+		if (!$this->table_index_exists($table_name, $index_name))
+		{
+			return $this->umil_end('TABLE_KEY_NOT_EXIST', $table_name, $index_name);
+		}
+
 		$this->db_tools->sql_index_drop($table_name, $index_name);
 
 		return $this->umil_end();
 	}
 
 	// Ignore, function was renamed to table_row_insert and keeping for backwards compatibility
-	function table_insert($table_name, $data = array())
-	{
-		$this->table_row_insert($table_name, $data);
-	}
+	function table_insert($table_name, $data = array()) { $this->table_row_insert($table_name, $data); }
 
 	/**
 	* Table Insert
@@ -2795,7 +2794,7 @@ class umil
 
 		if (!sizeof($data))
 		{
-			return $this->umil_end($user->lang['FAIL']);
+			return $this->umil_end($lang['FAIL']);
 		}
 
 		$this->get_table_name($table_name);
@@ -2834,7 +2833,7 @@ class umil
 
 		if (!sizeof($data))
 		{
-			return $this->umil_end($user->lang['FAIL']);
+			return $this->umil_end($lang['FAIL']);
 		}
 
 		$this->get_table_name($table_name);

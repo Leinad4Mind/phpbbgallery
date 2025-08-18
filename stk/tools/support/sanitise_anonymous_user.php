@@ -60,7 +60,7 @@ class sanitise_anonymous_user
 			return 'ANONYMOUS_WRONG_GROUPS';
 		}
 
-		trigger_error('ANONYMOUS_CORRECT');
+		trigger_error(user_lang('ANONYMOUS_CORRECT'));
 	}
 
 	/**
@@ -70,7 +70,7 @@ class sanitise_anonymous_user
 	*/
 	function run_tool()
 	{
-		global $config, $db, $plugin, $user;
+		global $config, $db, $plugin, $lang, $request;
 
 		// Collect all the information a clean "Anonymous" should have
 		$sql = 'SELECT group_id, group_rank, group_colour
@@ -120,7 +120,7 @@ class sanitise_anonymous_user
 		$msg = '';
 
 		// Do those thangs
-		$action = request_var('a', '');
+		$action = $request->variable('a', '');
 		switch ($action)
 		{
 			case 'clean' :
@@ -129,7 +129,7 @@ class sanitise_anonymous_user
 					SET ' . $db->sql_build_array('UPDATE', $clean_data) . '
 					WHERE user_id = ' . ANONYMOUS;
 				$db->sql_query($sql);
-				$msg = $user->lang['ANONYMOUS_CLEANED'];
+				$msg = $lang['ANONYMOUS_CLEANED'];
 			break;
 
 			case 'groups' :
@@ -148,7 +148,7 @@ class sanitise_anonymous_user
 				{
 					if (($ret = group_user_del($group, ANONYMOUS)) !== false)
 					{
-						trigger_error($user->lang[$ret]);
+						trigger_error($lang[$ret]);
 					}
 				}
 
@@ -157,11 +157,11 @@ class sanitise_anonymous_user
 				{
 					if (($ret = group_user_add($guests_gr, ANONYMOUS, false, false, true)) !== false)
 					{
-						trigger_error($user->lang[$ret]);
+						trigger_error($lang[$ret]);
 					}
 				}
 
-				$msg = $user->lang['ANONYMOUS_GROUPS_REMOVED'];
+				$msg = $lang['ANONYMOUS_GROUPS_REMOVED'];
 			break;
 
 			case 'missing' :
@@ -171,9 +171,9 @@ class sanitise_anonymous_user
 				$db->sql_query($sql);
 				if (!$db->sql_affectedrows())
 				{
-					trigger_error($user->lang['ANONYMOUS_CREATION_FAILED']);
+					trigger_error($lang['ANONYMOUS_CREATION_FAILED']);
 				}
-				$msg = $user->lang['ANONYMOUS_CREATED'];
+				$msg = $lang['ANONYMOUS_CREATED'];
 			break;
 
 			default :
@@ -182,7 +182,7 @@ class sanitise_anonymous_user
 
 		// Inform the user
 		meta_refresh(3, append_sid(STK_INDEX, $plugin->url_arg()));
-		trigger_error($msg . '<br />' . $user->lang['REDIRECT_NEXT_STEP']);
+		trigger_error($msg . '<br />' . $lang['REDIRECT_NEXT_STEP']);
 	}
 
 	function _anon_groups(&$_in_guests, &$_other_groups)

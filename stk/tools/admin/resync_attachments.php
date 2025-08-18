@@ -37,9 +37,9 @@ class resync_attachments
 
 	function run_tool()
 	{
-		global $config, $db, $template;
+		global $config, $db, $template, $request;
 
-		$step	= request_var('step', 0);
+		$step	= $request->variable('step', 0);
 		$begin	= $this->_batch_size * $step;
 
 		// Get the batch
@@ -52,7 +52,7 @@ class resync_attachments
 		if (empty($batch))
 		{
 			// Nothing to do
-			trigger_error('RESYNC_ATTACHMENTS_FINISHED');
+			trigger_error(user_lang('RESYNC_ATTACHMENTS_FINISHED'));
 		}
 
 		$delete_ids = array();
@@ -78,6 +78,6 @@ class resync_attachments
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
 		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_attachments', 'step' => ++$step, 'submit' => true)));
-		trigger_error('RESYNC_ATTACHMENTS_PROGRESS');
+		trigger_error(user_lang('RESYNC_ATTACHMENTS_PROGRESS'));
 	}
 }

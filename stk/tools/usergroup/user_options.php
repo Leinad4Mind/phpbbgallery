@@ -20,13 +20,14 @@ class user_options
 {
 	function display_options()
 	{
-		global $template, $user, $db;
+		global $template, $user, $db, $request;
+
 		$user->add_lang('groups');
 
-		$settings_value = request_var('settings', array('' => ''), true);
-		$groups = request_var('user_groups', array(0));
-		$all_groups = request_var('all_groups', 0);
-		$submit = request_var('sa', false);
+		$settings_value = $request->variable('settings', array('' => ''), true);
+		$groups = $request->variable('user_groups', array(0));
+		$all_groups = $request->variable('all_groups', 0);
+		$submit = $request->variable('sa', false);
 
 		$user_settings = array(
 			0 => 'viewimg',
@@ -68,7 +69,7 @@ class user_options
 				$template->assign_block_vars('settings', array(
 					'SETTINGS'		=> $settings,
 					'BIT'			=> $bit,
-					'SETTINGS_NAME'	=> $user->lang[$settings],
+					'SETTINGS_NAME'	=> user_lang($settings),
 				));
 			}
 		}
@@ -113,10 +114,10 @@ class user_options
 			}
 
 			meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=user_options'));
-			trigger_error($user->lang['USER_OPTIONS_OK']);
+			trigger_error(user_lang('USER_OPTIONS_OK'));
 		}
 
-		page_header($user->lang['USER_OPTIONS'], false);
+		page_header(user_lang('USER_OPTIONS'), false);
 		page_footer();
 	}
 }

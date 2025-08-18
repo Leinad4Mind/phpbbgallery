@@ -25,45 +25,45 @@ class extensions
 	*/
 	function display_options()
 	{
-		global $template, $user, $db, $config, $phpbb_root_path;
+		global $template, $lang, $db, $config, $phpbb_root_path, $request;
 		$error = array();
-		$submit = request_var('sa', false);
+		$submit = $request->variable('sa', false);
 
-		$vendor = request_var('vendor', '');
-		$author = request_var('developer', '', true);
-		$version = request_var('version', '');
-		$description = request_var('description', '');
-		$homepage = request_var('homepage', '');
-		$role = request_var('role', '');
-		$display_name = request_var('display_name', '');
+		$vendor = $request->variable('vendor', '');
+		$author = $request->variable('developer', '');
+		$version = $request->variable('version', '');
+		$description = $request->variable('description', '');
+		$homepage = $request->variable('homepage', '');
+		$role = $request->variable('role', '');
+		$display_name = $request->variable('display_name', '');
 
-		$ext_name = request_var('ext_name', '');
+		$ext_name = $request->variable('ext_name', '');
 
 		if($submit)
 		{
 			if(empty($vendor))
 			{
-				$error[] = $user->lang['EMPTY_VENDOR'];
+				$error[] = $lang['EMPTY_VENDOR'];
 			}
 			if(strlen($vendor) < 3)
 			{
-				$error[] = $user->lang['VENDOR_NAME_TOO_SHORT'];
+				$error[] = $lang['VENDOR_NAME_TOO_SHORT'];
 			}
 			if(empty($ext_name))
 			{
-				$error[] = $user->lang['EMPTY_EXT_NAME'];
+				$error[] = $lang['EMPTY_EXT_NAME'];
 			}
 			if(empty($author))
 			{
-				$error[] = $user->lang['EMPTY_AUTHOR'];
+				$error[] = $lang['EMPTY_AUTHOR'];
 			}
 			if(empty($display_name))
 			{
-				$error[] = $user->lang['EMPTY_DISPLAY_NAME'];
+				$error[] = $lang['EMPTY_DISPLAY_NAME'];
 			}
 			if(empty($version))
 			{
-				$error[] = $user->lang['EMPTY_VERSION'];
+				$error[] = $lang['EMPTY_VERSION'];
 			}
 			if(empty($error))
 			{
@@ -76,7 +76,7 @@ class extensions
 				}
 				if(@opendir($new_dir))
 				{
-					$error[] = $user->lang['ALREADY_EXISTS'];
+					$error[] = $lang['ALREADY_EXISTS'];
 				}
 				if(empty($error))
 				{
@@ -195,14 +195,14 @@ class extensions
 					@fclose($fp);
 
 					meta_refresh(3, append_sid(STK_INDEX, array('c' => 'dev', 't' => 'extensions')));
-					trigger_error($user->lang['SUCCESS']);
+					trigger_error(user_lang('SUCCESS'));
 				}
 			}
 		}
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($user->lang['SUPPORT_TOOL_KIT']);
+		page_header($lang['SUPPORT_TOOL_KIT']);
 
 		$template->assign_vars(array(
 			'ERROR'				=> (sizeof($error)) ? implode('<br />', $error) : '',

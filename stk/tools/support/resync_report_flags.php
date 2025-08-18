@@ -34,8 +34,9 @@ class resync_report_flags
 	 * Run tool
 	 */
 	function run_tool()
-	{
-		$this->mode = request_var('m', 'pf');
+	{		global $request;
+
+		$this->mode = $request->variable('m', 'pf');
 
 		switch ($this->mode)
 		{
@@ -60,7 +61,7 @@ class resync_report_flags
 			break;
 
 			case 'finished':
-				trigger_error('RESYNC_REPORT_FLAGS_FINISHED');
+				trigger_error(user_lang('RESYNC_REPORT_FLAGS_FINISHED'));
 			break;
 		}
 	}
@@ -75,16 +76,8 @@ class resync_report_flags
 	{
 		global $db;
 
-		// PMs can only be reported since version 3.0.5
-		if ($type == 'pms' && version_compare(PHPBB_VERSION, '3.0.5', '<'))
-		{
-			$reported = array();
-		}
-		else
-		{
-			// Fetch the report data
-			$reported = $this->_get_reported($type);
-		}
+		// Fetch the report data
+		$reported = $this->_get_reported($type);
 
 		// Anything to do at all?
 		if (!empty($reported))
@@ -95,7 +88,7 @@ class resync_report_flags
 			$sql_where	= ($type == 'posts') ? 'post_reported' : 'message_reported';
 
 			$corrupted = array();
-			
+
 			// Set all unflagged as flagged
 			$sql = "SELECT {$sql_id}
 				FROM {$sql_from}
@@ -251,7 +244,7 @@ class resync_report_flags
 				TOPICS_TABLE	=> 't',
 			),
 			'WHERE'		=> 'p.post_reported = 1
-								AND t.topic_id = p.topic_id',
+				AND t.topic_id = p.topic_id',
 		);
 		$sql = $db->sql_build_query('SELECT_DISTINCT', $sql_ary);
 		$result = $db->sql_query($sql);
@@ -294,7 +287,7 @@ class resync_report_flags
 		// needed to change the oder or add/remove modes make sure that
 		// the appropriate changes are made to the logic!
 		//
-		// First all the flags on pms and posts are set correctly, than 
+		// First all the flags on pms and posts are set correctly, than
 		// they are flipped off if needed by the status of the report and
 		// finally the topic flags are reset based upon whats left
 		$modes = array(
@@ -309,6 +302,6 @@ class resync_report_flags
 		$redirect = append_sid(STK_INDEX, array('c' => 'support', 't' => 'resync_report_flags', 'm' => $next, 'submit' => true));
 		meta_refresh(3, $redirect);
 		$template->assign_var('U_BACK_TOOL', false);
-		trigger_error('RESYNC_REPORT_FLAGS_NEXT');
+		trigger_error(user_lang('RESYNC_REPORT_FLAGS_NEXT'));
 	}
 }

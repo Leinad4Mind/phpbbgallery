@@ -26,10 +26,8 @@ $user->setup('acp/common', $config['default_style']);
 $umil = new umil(true);
 
 // Set a constant so we know when the STK got to a point where it savely loaded all absolutely required stuff
-if (!defined('IN_STK'))
-{
-	@define('IN_STK', true);
-}
+define('IN_STK', true);
+
 if (!defined('DEBUG'))
 {
 	@define('DEBUG', true);
@@ -82,9 +80,9 @@ if ($stk_passwd !== false)
 	$user->session_id = '';
 
 	// Set some vars
-	$cookie_token	= request_var('stk_token', '', true, true);
+	$cookie_token	= $request->variable('stk_token', '', true, \phpbb\request\request_interface::COOKIE);
 	$err_msg		= '';
-	$login_token	= request_var('stk_pass', '', true);
+	$login_token	= $request->variable('stk_pass', '', true);
 	$stk_session	= false;
 
 	// One foot in the air for an active session
@@ -143,17 +141,17 @@ if ($stk_passwd !== false)
 
 			$template->assign_vars(array(
 				// Password field related
-				'TITLE'			=> $user->lang['SUPPORT_TOOL_KIT_PASSWORD'],
-				'TITLE_EXPLAIN'	=> $user->lang['SUPPORT_TOOL_KIT_PASSWORD_EXPLAIN'],
+				'TITLE'			=> $lang['SUPPORT_TOOL_KIT_PASSWORD'],
+				'TITLE_EXPLAIN'	=> $lang['SUPPORT_TOOL_KIT_PASSWORD_EXPLAIN'],
 				// Other page stuff
-				'LOGIN_ERROR'			=> (!empty($err_msg)) ? $user->lang[$err_msg] : false,
+				'LOGIN_ERROR'			=> (!empty($err_msg)) ? $lang[$err_msg] : false,
 				'U_ACTION'				=> append_sid(STK_INDEX, false, true, $user->session_id),
 				'U_INDEX'				=> append_sid(PHPBB_ROOT_PATH . 'index.' . PHP_EXT),
 				// Identify this method in the template
 				'S_STK_LOGIN_METHOD'	=> true,
 			));
 
-			page_header($user->lang['LOGIN'], false);
+			page_header('LOGIN', false);
 
 			$template->set_filenames(array(
 				'body' => 'login_body.html',
@@ -166,11 +164,11 @@ if ($stk_passwd !== false)
 	// Tell the template engine we're logged through this
 	$template->assign_vars(array(
 		'S_STK_LOGIN'			=> true,
-		'STK_LOGIN_DISABLE_MSG'	=> sprintf($user->lang['USING_STK_LOGIN'], append_sid(STK_INDEX, array('action' => 'delpasswdfile'))),
+		'STK_LOGIN_DISABLE_MSG'	=> sprintf($lang['USING_STK_LOGIN'], append_sid(STK_INDEX, array('action' => 'delpasswdfile'))),
 	));
 
 	// Don't use "Anonymous" as username
-	$user->data['username'] = $user->lang['EMERGENCY_LOGIN_NAME'];
+	$user->data['username'] = $lang['EMERGENCY_LOGIN_NAME'];
 }
 // phpBB authentication. Only allow founders to pass!
 else
@@ -180,25 +178,25 @@ else
 		$user->add_lang('ucp');
 
 		// Assign a string only used here
-		$template->assign_var('GEN_PASS_FILE_EXPLAIN', sprintf($user->lang['GEN_PASS_FILE_EXPLAIN'], append_sid(STK_INDEX, array('action' => 'genpasswdfile'))));
+		$template->assign_var('GEN_PASS_FILE_EXPLAIN', sprintf($lang['GEN_PASS_FILE_EXPLAIN'], append_sid(STK_INDEX, array('action' => 'genpasswdfile'))));
 
 		// A user can potentially access this file directly
-		login_box('', $user->lang['STK_NON_LOGIN'], '', false, false);
+		login_box('', $lang['STK_NON_LOGIN'], '', false, false);
 	}
 
 	// This requires that the user is logged in as an administrator (like how the ACP requires two logins)
 	if (!isset($user->data['session_admin']) || !$user->data['session_admin'])
 	{
 		// Proceed to ACP is misleading
-		$user->lang['PROCEED_TO_ACP'] = $user->lang['PROCEED_TO_STK'];
+		//$lang['PROCEED_TO_ACP'] = $lang['PROCEED_TO_STK'];
 
-		login_box('', $user->lang['STK_FOUNDER_ONLY'], $user->lang['LOGIN_STK_SUCCESS'], true, false);
+		login_box('', $lang['STK_FOUNDER_ONLY'], $lang['LOGIN_STK_SUCCESS'], true, false);
 	}
 
 	// Only Board Founders may use the STK
 	if ($user->data['user_type'] != USER_FOUNDER)
 	{
-		trigger_error('BOARD_FOUNDER_ONLY');
+		trigger_error($lang['BOARD_FOUNDER_ONLY']);
 	}
 }
 /*
@@ -277,11 +275,11 @@ if ($plugin->get_part('t'))
 		{
 			if ($msg === false)
 			{
-				$msg = $user->lang['TOOL_NOT_AVAILABLE'];
+				$msg = $lang['TOOL_NOT_AVAILABLE'];
 			}
 			else
 			{
-				$msg = isset($user->lang[$msg]) ? $user->lang[$msg] : $msg;
+				$msg = isset($lang[$msg]) ? $lang[$msg] : $msg;
 			}
 
 			trigger_error($msg);
@@ -305,9 +303,9 @@ if ($plugin->get_part('t'))
 
 		if (is_array($options) && isset($options['vars']))
 		{
-			page_header($user->lang[$options['title']]);
+			page_header($lang[$options['title']]);
 
-			// Go through each error and see if the key exists in the $user->lang.  If it does, use that.
+			// Go through each error and see if the key exists in the $lang.  If it does, use that.
 			if (!empty($error))
 			{
 				array_walk($error, 'use_lang');
@@ -321,8 +319,8 @@ if ($plugin->get_part('t'))
 			}
 
 			$template->assign_vars(array(
-				'L_TITLE'			=> $user->lang[$options['title']],
-				'L_TITLE_EXPLAIN'	=> (isset($user->lang[$options['title'] . '_EXPLAIN'])) ? $user->lang[$options['title'] . '_EXPLAIN'] : '',
+				'L_TITLE'			=> $lang[$options['title']],
+				'L_TITLE_EXPLAIN'	=> (isset($lang[$options['title'] . '_EXPLAIN'])) ? $lang[$options['title'] . '_EXPLAIN'] : '',
 			));
 
 			foreach ($options['vars'] as $name => $vars)
@@ -336,7 +334,7 @@ if ($plugin->get_part('t'))
 				{
 					$template->assign_block_vars('options', array(
 						'S_LEGEND'		=> true,
-						'LEGEND'		=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
+						'LEGEND'		=> (isset($lang[$vars])) ? $lang[$vars] : $vars)
 					);
 
 					continue;
@@ -347,11 +345,11 @@ if ($plugin->get_part('t'))
 				$l_explain = '';
 				if ($vars['explain'] && isset($vars['lang_explain']))
 				{
-					$l_explain = (isset($user->lang[$vars['lang_explain']])) ? $user->lang[$vars['lang_explain']] : $vars['lang_explain'];
+					$l_explain = (isset($lang[$vars['lang_explain']])) ? $lang[$vars['lang_explain']] : $vars['lang_explain'];
 				}
 				else if ($vars['explain'])
 				{
-					$l_explain = (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '';
+					$l_explain = (isset($lang[$vars['lang'] . '_EXPLAIN'])) ? $lang[$vars['lang'] . '_EXPLAIN'] : '';
 				}
 
 				$content = build_cfg_template($type, $name, $vars);
@@ -363,7 +361,7 @@ if ($plugin->get_part('t'))
 
 				$template->assign_block_vars('options', array(
 					'KEY'			=> $name,
-					'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
+					'TITLE'			=> (isset($lang[$vars['lang']])) ? $lang[$vars['lang']] : $vars['lang'],
 					'S_EXPLAIN'		=> $vars['explain'],
 					'TITLE_EXPLAIN'	=> $l_explain,
 					'CONTENT'		=> $content['tpl'],
@@ -388,7 +386,7 @@ if ($plugin->get_part('t'))
 			}
 			else
 			{
-				confirm_box(false, $options, '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
+				confirm_box(false, $lang[$options . '_CONFIRM'], '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
 			}
 		}
 		else
@@ -404,7 +402,7 @@ if ($plugin->get_part('t'))
 else
 {
 	// Output the main page
-	page_header($user->lang['SUPPORT_TOOL_KIT']);
+	page_header($lang['SUPPORT_TOOL_KIT']);
 
 	// In de event the request category is empty force it to main.
 	if (!$plugin->get_part('c'))
@@ -414,8 +412,8 @@ else
 
 	// Category title and desc if available
 	$template->assign_vars(array(
-		'L_TITLE'			=> $user->lang['CAT_' . strtoupper($plugin->get_part('c'))],
-		'L_TITLE_EXPLAIN'	=> isset($user->lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN']) ? $user->lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN'] : '',
+		'L_TITLE'			=> $lang['CAT_' . strtoupper($plugin->get_part('c'))],
+		'L_TITLE_EXPLAIN'	=> isset($lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN']) ? $lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN'] : '',
 		'CAT'				=> $plugin->get_part('c'),
 	));
 

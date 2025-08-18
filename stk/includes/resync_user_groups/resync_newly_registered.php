@@ -53,7 +53,7 @@ class resync_newly_registered
 	 */
 	function can_run()
 	{
-		return (version_compare(PHPBB_VERSION, '3.0.5', '<=')) ? false : true;
+		return true;
 	}
 
 	/**
@@ -61,11 +61,11 @@ class resync_newly_registered
 	 */
 	function resync()
 	{
-		global $config, $template;
+		global $config, $template, $request;
 
 		// Get global variables
-		$last = request_var('last', 0); // The user_id of the last user in this batch
-		$step = request_var('step', 0);	// Step 0 is syncing the REGISTERED, 1 is REGISTERED_COPPA and 2 is NEWLY_REGISTERED
+		$last = $request->variable('last', 0); // The user_id of the last user in this batch
+		$step = $request->variable('step', 0);	// Step 0 is syncing the REGISTERED, 1 is REGISTERED_COPPA and 2 is NEWLY_REGISTERED
 
 		// Get the user ids
 		$nr_gid		= 0;
@@ -84,7 +84,7 @@ class resync_newly_registered
 			{
 				meta_refresh(3, append_sid(STK_ROOT_PATH, array('c' => 'user_group', 't' => 'resync_user_groups', 'step' => ++$step, 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 				$template->assign_var('U_BACK_TOOL', false);
-				trigger_error('RUN_RNR_NOT_FINISHED');
+				trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
 			}
 		}
 
@@ -126,7 +126,7 @@ class resync_newly_registered
 			// Handle the errors, though continue if all users are already part of the group
 			if ($error != 'GROUP_USERS_EXIST')
 			{
-				trigger_error($error);
+				trigger_error(user_lang($error));
 			}
 		}
 
@@ -136,7 +136,7 @@ class resync_newly_registered
 		// Next batch
 		meta_refresh(3, append_sid(STK_ROOT_PATH, array('c' => 'usergroup', 't' => 'resync_user_groups', 'step' => $step, 'last' => array_pop($users), 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 		$template->assign_var('U_BACK_TOOL', false);
-		trigger_error('RUN_RNR_NOT_FINISHED');
+		trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
 	}
 
 	/**
@@ -159,6 +159,17 @@ class resync_newly_registered
 		$result	= $db->sql_query_limit($sql, 1, 0, 3600);
 		$nr_gid	= $db->sql_fetchfield('group_id', false, $result);
 		$db->sql_freeresult($result);
+
+		// Get the group_id of the ADMINISTRATORS and GLOBAL_MODERATORS users group
+		$sql = 'SELECT group_id
+			FROM ' . GROUPS_TABLE . '
+			WHERE ' . $db->sql_in_set('group_name', array('GLOBAL_MODERATORS', 'ADMINISTRATORS')) .'';
+		$result	= $db->sql_query($sql);
+		while($row = $db->sql_fetchrow($result))
+		{			$admin_gid[] = $row['group_id'];
+		}
+		$db->sql_freeresult($result);
+		$sql_where_not = ' AND ' . $db->sql_in_set('u.group_id', $admin_gid, true) . '';
 
 		// Set some group dependant sql stuff
 		$sql_token = '';
@@ -190,7 +201,7 @@ class resync_newly_registered
 					'ON'	=> "g.group_name = '" . $group_name . "'",
 				),
 			),
-			'WHERE'			=> "ug.group_id = g.group_id AND ug.user_id > {$last} AND (u.user_id = ug.user_id AND {$sql_where})",
+			'WHERE'			=> "ug.group_id = g.group_id AND ug.user_id > {$last} AND (u.user_id = ug.user_id AND {$sql_where}) {$sql_where_not}",
 		);
 		$sql	= $db->sql_build_query('SELECT', $sql_ary);
 		$result	= $db->sql_query_limit($sql, $this->parent->batch_size, 0);

@@ -50,4 +50,14 @@ $lang = array_merge($lang, array(
 	'USER_ADDED'			=> 'The user was successfully created!',
 	'USER_GROUPS'			=> 'User groups',
 	'USER_GROUPS_EXPLAIN'	=> 'Make this user a member of the selected groups.',
+	'EMAIL_ADDRESS'			=> 'Email address',
+	'LANGUAGE'				=> 'Language',
+	'TIMEZONE'					=> 'Timezone',
+	'TOO_SHORT_USERNAME'		=> 'The username you entered is too short.',
+	'TOO_SHORT_NEW_PASSWORD'	=> 'The password you entered is too short.',
+	'TOO_SHORT_PASSWORD_CONFIRM'=> 'The password confirmation you entered is too short.',
+	'TOO_SHORT_EMAIL'			=> 'The email address you entered is too short.',
+	'EMAIL_INVALID_EMAIL'		=> 'The email address you entered is invalid.',
+	'NEW_PASSWORD_ERROR'		=> 'The passwords you entered do not match.',
+
 ));

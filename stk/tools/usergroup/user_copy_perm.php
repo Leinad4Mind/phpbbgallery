@@ -20,13 +20,13 @@ class user_copy_perm
 {
 	function display_options()
 	{
-		global $template, $user, $db;
+		global $template, $user, $db, $request;
 
-		$submit = request_var('sa', false);
-		$source_name = request_var('source_name', '', true);
-		$target_name = request_var('target_name', '', true);
-		$source_id = request_var('source_id', '');
-		$target_id = request_var('target_id', '');
+		$submit = $request->variable('sa', false);
+		$source_name = $request->variable('source_name', '', true);
+		$target_name = $request->variable('target_name', '', true);
+		$source_id = $request->variable('source_id', '');
+		$target_id = $request->variable('target_id', '');
 
 		if ($submit)
 		{
@@ -39,7 +39,7 @@ class user_copy_perm
 			// Not allowed to have both username and user_id filled.
 			if (($source_name && $source_id) || ($target_name && $target_id))
 			{
-				trigger_error('BOTH_FIELDS_FILLED', E_USER_WARNING);
+				trigger_error(user_lang('BOTH_FIELDS_FILLED'), E_USER_WARNING);
 			}
 
 			if ($source_name && empty($source_id))
@@ -74,7 +74,7 @@ class user_copy_perm
 
 			if (($target_id == $source_id) || ($source_name == $target_name))
 			{
-				trigger_error('USERS_IDENTICAL', E_USER_WARNING);
+				trigger_error(user_lang('USERS_IDENTICAL'), E_USER_WARNING);
 			}
 
 			$permissions = array();
@@ -116,7 +116,7 @@ class user_copy_perm
 				}
 			}
 
-			trigger_error('COPY_USER_PERMISSIONS_OK');
+			trigger_error(user_lang('COPY_USER_PERMISSIONS_OK'));
 		}
 
 		$template->assign_vars(array(
@@ -132,7 +132,7 @@ class user_copy_perm
 			'body' => 'tools/user_copy_perm.html',
 		));
 
-		page_header($user->lang['USER_COPY_PERM'], false);
+		page_header(user_lang('USER_COPY_PERM'), false);
 		page_footer();
 	}
 }

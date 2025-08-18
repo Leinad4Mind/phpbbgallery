@@ -55,7 +55,7 @@ class flash_checker
 		// Nothing found
 		if (empty($this->_vulnerable))
 		{
-			trigger_error('FLASH_CHECKER_NO_FOUND');
+			trigger_error(user_lang('FLASH_CHECKER_NO_FOUND'));
 		}
 
 		// Here we'll create the cache files the reparse BBCode tool expects so

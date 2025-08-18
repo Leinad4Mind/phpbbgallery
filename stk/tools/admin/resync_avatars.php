@@ -44,17 +44,17 @@ class resync_avatars
 
 	function run_tool()
 	{
-		global $config, $db, $template;
+		global $config, $db, $template, $request;
 
-		$mode	= request_var('mode', RESYNC_USER_AVATARS);
-		$step	= request_var('step', 0);
+		$mode	= $request->variable('mode', RESYNC_USER_AVATARS);
+		$step	= $request->variable('step', 0);
 		$begin	= $this->_batch_size * $step;
 
 		// Get the batch
 		switch ($mode)
 		{
 			case RESYNC_GROUP_AVATARS :
-				$sql = 'SELECT group_id as id, group_avatar as avatar, group_avatar_type as avatar_type
+				$sql = 'SELECT group_id, group_avatar as avatar, group_avatar_type as avatar_type
 					FROM ' . GROUPS_TABLE . '
 					WHERE ' . $db->sql_in_set('group_avatar_type', array('avatar.driver.upload', 'avatar.driver.gallery')) .'ORDER BY group_id';
 			break;
@@ -76,11 +76,11 @@ class resync_avatars
 			{
 				$template->assign_var('U_BACK_TOOL', false);
 				meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_avatars', 'step' => 0, 'mode' => RESYNC_GROUP_AVATARS, 'submit' => true)));
-				trigger_error('RESYNC_AVATARS_NEXT_MODE');
+				trigger_error(user_lang('RESYNC_AVATARS_NEXT_MODE'));
 			}
 
 			// Nothing to do
-			trigger_error('RESYNC_AVATARS_FINISHED');
+			trigger_error(user_lang('RESYNC_AVATARS_FINISHED'));
 		}
 
 		$update_sql = array();
@@ -143,6 +143,6 @@ class resync_avatars
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
 		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_avatars', 'step' => ++$step, 'mode' => $mode, 'submit' => true)));
-		trigger_error('RESYNC_AVATARS_PROGRESS');
+		trigger_error(user_lang('RESYNC_AVATARS_PROGRESS'));
 	}
 }

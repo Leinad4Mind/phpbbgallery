@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'CAT_DEV'							=> 'Developer Tools',
 	'CAT_DEV_EXPLAIN'					=> 'Developer Tools may be used by phpBB Developers and MODders to perform common tasks.',
 	'CAT_ERK'							=> 'Emergency Repair Kit',
-	'CAT_ERK_EXPLAIN'					=> 'The emergency repair kit is a separate package of the STK that is build to run some checks that can detect issues within your phpBB install that might prevent your board from working. Click <a href="%s">here</a> to run the ERK.',
+	'CAT_ERK_EXPLAIN'					=> 'The emergency repair kit is a seperate package of the STK that is build to run some checks that can detect issues within your phpBB install that might prevent your board from working. Click <a href="%s">here</a> to run the ERK.',
 	'CAT_MAIN'							=> 'Main',
 	'CAT_MAIN_EXPLAIN'					=> 'The Support Toolkit (STK) may be used to fix common issues within a working installation of phpBB 3.1.x. It serves as a second Administration Control Panel, providing an administrator with a set of tools to resolve common problems that may prevent a phpBB3 installation from functioning properly.',
 	'CAT_SUPPORT'						=> 'Support Tools',
@@ -81,8 +81,6 @@ $lang = array_merge($lang, array(
 	'REQUEST_PHPBB_VERSION_EXPLAIN'		=> 'The Support Toolkit was unable to correctly identify which phpBB version you are running, please select the appropriate version in this form before continuing.<br />This indicates that your board files and board version are inconsistent, most likely due to an incomplete update. Please visit the <a href="https://www.phpbb.com/community/viewforum.php?f=46">support forums</a> to get assistance to resolve this issue.',
 
 	'PASS_GENERATED'					=> 'Your STK password file was successfully generated!<br/>The password that was generated for you is: <em>%1$s</em><br />This password will expire on: <span style="text-decoration: underline;">%2$s</span>. After this time you <strong>must</strong> generate a new password file in order to keep using the emergency login feature!<br /><br />Use the following button to download the file. Once you’ve downloaded this file you must upload it to your server into the "stk" directory',
-	'PASS_GENERATED_IPBAN'				=> 'Your STK password file was successfully generated!<br/>The password that was generated for you is: <em>%1$s</em><br />This password will expire on: <span style="text-decoration: underline;">%2$s</span>. After this time you <strong>must</strong> generate a new password file in order to keep using the emergency login feature!<br /><br />',
-	'PASS_GENERATED_DOWNLOAD' 			=> 'Click <a href="%s"><strong>here</strong></a> to download the file. Once you’ve downloaded this file you must upload it to your server into the "stk" directory',
 	'PASS_GENERATED_REDIRECT'			=> 'Once you have uploaded the password file to the correct location, click <a href="%s">here</a> to go back to the login page.',
 	'PLUGIN_INCOMPATIBLE_PHPBB_VERSION'	=> 'This tool isn’t compatible with the version of phpBB that you are running',
 	'PROCEED_TO_STK'					=> '%sProceed to the Support Toolkit%s',
@@ -137,8 +135,11 @@ $lang = array_merge($lang, array(
 
 	'SELECT_ALL'						=> 'To select all, move cursor in field below and press Ctrl-A (PC), Cmd-A (Mac) <br />Double click selects a word and triple entire row.',
 
-	'PHPBB_DEBUG'					=> '[phpBB Debug]',
-	'DEBUG_IN_FILE'					=> 'in file',
-	'DEBUG_ON_LINE'					=> 'on line',
-	'STK_INCOMPATIBLE'				=> 'This STK version is dedicated to phpBB 3.1.x boards, while your phpBB version is %1$s.',
+	'PURGE_CACHE'						=> 'Purge the cache',
+	'PURGE_CACHE_CONFIRM'				=> 'Are you sure you wish to purge the cache?',
+	'USERNAME'							=> 'Username',
+	'PASSWORD'							=> 'Password',
+	'SUBMIT'							=> 'Submit',
+	'CANCEL'							=> 'Cancel',
+	'FORUM_INDEX'						=> 'Board index',
 ));

@@ -36,9 +36,9 @@ class update_email_hashes
 	*/
 	function run_tool()
 	{
-		global $db, $template;
+		global $db, $template, $request;
 
-		$step = request_var('step', 0);
+		$step = $request->variable('step', 0);
 
 		// Select the batch
 		$sql = 'SELECT user_id, user_email, user_email_hash
@@ -60,7 +60,7 @@ class update_email_hashes
 				// Skip if the hash hasn't changed
 				continue;
 			}
-			
+
 			// Update the field
 			$sql = 'UPDATE ' . USERS_TABLE . " SET user_email_hash = '" . $new_hash . "'
 				WHERE user_id = " . $userrow['user_id'];

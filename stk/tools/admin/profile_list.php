@@ -20,18 +20,18 @@ class profile_list
 {
 	function display_options()
 	{
-		global $db, $template, $user, $phpbb_container;
+		global $db, $template, $user, $phpbb_container, $request, $lang;
 
-		$submit = request_var('sa', false);
+		$submit = $request->variable('sa', false);
 
-		page_header($user->lang['PROFILE_LIST']);
+		page_header(user_lang('PROFILE_LIST'));
 
 		$user->add_lang('memberlist');
 
 		// Handle delete
 		if ($submit)
 		{
-			$uids = request_var('marked_user_id', array(0, 0));
+			$uids = $request->variable('marked_user_id', array(0, 0));
 			if (confirm_box(true))
 			{
 				if (!function_exists('user_delete'))
@@ -45,20 +45,20 @@ class profile_list
 					user_delete('remove', $uid);
 				}
 
-				trigger_error('USERS_DELETE_SUCCESSFULL');
+				trigger_error($lang['USERS_DELETE_SUCCESSFULL']);
 			}
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_user_id' => $uids));
-				confirm_box(false, 'USERS_DELETE', $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=profile_list&amp;sa=' . true);
+				confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=profile_list&amp;sa=' . true);
 			}
 		}
 
-		$display = request_var('display', '');
-		$start = request_var('start', 0);
-		$limit = request_var('limit', 20);
-		$order_by = request_var('order', '');
-		$order_dir = (request_var('dir', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
+		$display = $request->variable('display', '');
+		$start = $request->variable('start', 0);
+		$limit = $request->variable('limit', 20);
+		$order_by = $request->variable('order', '');
+		$order_dir = ($request->variable('dir', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
 		$empty_only = (!isset($_GET['go']) || isset($_POST['empty_only']) || isset($_GET['empty_only'])) ? true : false;
 
 		// Build Pagination URL
@@ -77,7 +77,7 @@ class profile_list
 		*/
 		$options = array(
 			'pf_phpbb_icq'			=> 'ICQ',
-			'pf_phpbb_wlm'			=> 'WLM',
+			//'pf_phpbb_wlm'			=> 'WLM',
 			'pf_phpbb_aol'			=> 'AOL',
 			'pf_phpbb_skype'		=> 'SKYPE',
 			'pf_phpbb_facebook'		=> 'FACEBOOK',
@@ -220,7 +220,7 @@ class profile_list
 			}
 
 			$template->assign_block_vars('users', array(
-				'WLM'				=> $row['pf_phpbb_wlm'],
+				//'WLM'				=> $row['pf_phpbb_wlm'],
 				'AOL'				=> $row['pf_phpbb_aol'],
 				'SKYPE'				=> $row['pf_phpbb_skype'],
 				'FACEBOOK'			=> $row['pf_phpbb_facebook'],
@@ -264,7 +264,7 @@ class profile_list
 			'LIMIT'					=> $limit,
 			'OPTION_SECTION'		=> (isset($options[$display]) && $display != 'user_sig') ? $user->lang[$options[$display]] : '',
 			'ORDER_SECTION'			=> ($order_by == 'username_clean') ? '' : ((isset($order[$order_by])) ? $user->lang[$order[$order_by]] : $user->lang['JOINED']),
-			'TOTAL_ITEMS'			=> ''.$user->lang['TOTAL'].': '.$count.'',
+			'TOTAL_ITEMS'			=> ''.user_lang('TOTAL').': '.$count.'',
 
 			'S_DESC'				=> ($order_dir == 'DESC') ? true : false,
 			'S_DISPLAY_ALL'			=> (!isset($options[$display])) ? true : false,

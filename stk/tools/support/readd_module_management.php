@@ -111,12 +111,12 @@ class readd_module_management
 		}
 
 		$cache->destroy('_modules_acp');
-		trigger_error('READD_MODULE_MANAGEMENT_SUCCESS');
+		trigger_error(user_lang('READD_MODULE_MANAGEMENT_SUCCESS'));
 	}
 
 	function module_add($lang_name, $class, $parent, $module_data)
-	{
-		global $db, $phpbb_root_path, $phpEx, $user;
+	{		print "$lang_name, $class, $parent<br />";
+		print"<pre>"; print_r($module_data); print"</pre>";		global $db, $phpbb_root_path, $phpEx, $user;
 
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . '

@@ -53,7 +53,7 @@ class manage_founders
 			'body' => 'tools/manage_founders.html',
 		));
 
-		page_header($user->lang['MANAGE_FOUNDERS'], false);
+		page_header(user_lang('MANAGE_FOUNDERS'), false);
 		page_footer();
 	}
 
@@ -64,7 +64,7 @@ class manage_founders
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $user;
+		global $db, $user, $request;
 
 		if (!check_form_key('manage_founders'))
 		{
@@ -72,11 +72,11 @@ class manage_founders
 		}
 
 		// Lets do something
-		$mode = request_var('mode', '');
+		$mode = $request->variable('mode', '');
 		switch ($mode)
 		{
 			case 'demote' :
-				$req_founders	= request_var('founders', array(0 => ''));
+				$req_founders	= $request->variable('founders', array(0 => ''));
 				if (!sizeof($req_founders))
 				{
 					trigger_error('NO_USER');
@@ -108,14 +108,14 @@ class manage_founders
 				// Did everything to right?
 				if (sizeof($founder_ids) == $db->sql_affectedrows())
 				{
-					trigger_error(sprintf($user->lang['DEMOTE_SUCCESSFULL'], $db->sql_affectedrows()));
+					trigger_error(user_lang('DEMOTE_SUCCESSFULL', $db->sql_affectedrows()));
 				}
-				trigger_error($user->lang['DEMOTE_FAILED']);
+				trigger_error(user_lang('DEMOTE_FAILED'));
 			break;
 
 			case 'promote' :
-				$req_username = utf8_normalize_nfc(request_var('username', '', true));
-				$req_user_id = utf8_normalize_nfc(request_var('user_id', 0));
+				$req_username = utf8_normalize_nfc($request->variable('username', '', true));
+				$req_user_id = utf8_normalize_nfc($request->variable('user_id', 0));
 
 				// Check that at least one field is filled in.
 				if (!$req_username && empty($req_user_id))
@@ -158,7 +158,7 @@ class manage_founders
 				}
 
 				// Drop the arrays
-				$user_id = array_shift($user_id); 
+				$user_id = array_shift($user_id);
 				$username = array_shift($username);
 
 				// No user found
@@ -179,7 +179,7 @@ class manage_founders
 				// Success?
 				if ($db->sql_affectedrows() == 1)
 				{
-					trigger_error(sprintf($user->lang['MAKE_FOUNDER_SUCCESS'], append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
+					trigger_error(user_lang('MAKE_FOUNDER_SUCCESS', append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
 				}
 				trigger_error($user->lang['MAKE_FOUNDER_FAILED']);
 			break;

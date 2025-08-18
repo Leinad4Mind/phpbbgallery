@@ -41,13 +41,15 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'COMPILED_TEMPLATE_EXPLAIN'		=> 'Below is your copy of the Support Request Template. Click below to copy it to your clipboard, then create a new post in the <a href="http://www.phpbb.com/community/viewforum.php?f=46">Support forum</a> with this information. If you already have an existing support topic regarding your issue, please copy the template into a reply to your existing topic instead of creating a new one.',
+	'COMPILED_TEMPLATE_EXPLAIN'		=> 'Below is your copy of the Support Request Template. Click below to copy it to your clipboard, then create a new post in the <a href="http://www.phpbb.com/community/viewforum.php?f=556">Support forum</a> with this information. If you already have an existing support topic regarding your issue, please copy the template into a reply to your existing topic instead of creating a new one.',
 	'COULDNT_LOAD_SRT_ANSWERS'		=> 'The Support Request Template Generator couldn’t load the answers. Make sure that you’ve correctly started the tool.',
 	'SRT_GENERATOR'					=> 'Support Request Template Generator',
 	'SRT_GENERATOR_LANDING'			=> 'Support Request Template Generator',
 	'SRT_GENERATOR_LANDING_CONFIRM'	=> 'Welcome to the Support Team’s Support Request Template Generator. This is the quickest and most efficient way to complete our Support Request Template. The generator will ask you a series of eight to ten questions that are useful for diagnosing most issues. It will then compile your answers into a list that may be copied and pasted into your support topic.<br />This STK tool does the same thing as the <a href="http://www.phpbb.com/support/stk/">SRT Generator on www.phpbb.com</a> but attempts to pre-fill certain questions.<br /><br />Do you wish run the SRT Generator?',
 	'SRT_NO_CACHE'					=> 'The Support Request Template generator uses the phpBB cache system to store information while going through all the steps. You’re using the phpBB null cache which isn’t compatible with this tool. Please switch to one of the other caching backends to use this tool or use the <a href="http://www.phpbb.com/support/srt/">online SRT Generator</a>',
 	'START_OVER'					=> 'Start over',
+	'NO_ANSVER'						=> 'Answer is not provided',
+	'BY_SRT_GENERATOR'				=> 'Created by Support Request Template Generator',
 ));
 
 // Step 1 strings
@@ -56,7 +58,7 @@ $lang = array_merge($lang, array(
 //	'STEP1_CONVERT_EXPLAIN'	=> '',
 	'STEP1_MOD'				=> 'Is your problem MOD-related?',
 	'STEP1_MOD_EXPLAIN'		=> 'Did this problem start after installing or removing a MOD?',
-	'STEP1_MOD_ERROR'		=> 'Support questions for MOD related issues (e.g., if you have just installed a MOD and are now getting errors) should be posted within the topic of where you have downloaded the MOD. If the MOD was downloaded from another site you will have to seek support there.<br /><br /><a href="http://www.phpbb.com/community/viewforum.php?f=81">Go to the MOD Forums</a>',
+	'STEP1_MOD_ERROR'		=> 'Support questions for MOD related issues (e.g., if you have just installed a MOD and are now getting errors) should be posted within the topic of where you have downloaded the MOD. If the MOD was downloaded from another site you will have to seek support there.<br /><br /><a href="http://www.phpbb.com/community/viewforum.php?f=451">Go to the MOD Forums</a>',
 	'STEP1_HACKED'			=> 'Was your board hacked?',
 	'STEP1_HACKED_EXPLAIN'	=> 'Select "Yes" for this option if you are seeking support because your board was defaced/otherwise compromised.',
 	'STEP1_HACKED_ERROR'	=> 'If your board was hacked, we ask that you file a report with the Incident Investigation Tracker instead of posting in the Support forum so that no private information is disclosed.<br /><br />See <a href="http://www.phpbb.com/community/viewtopic.php?f=46&t=543171#iit">this post</a> for directions on doing so.',

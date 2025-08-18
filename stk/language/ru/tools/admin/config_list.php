@@ -218,6 +218,8 @@ $lang = array_merge($lang, array(
 	'fulltext_sphinx_port'				=> 'Порт Sphinx',
 	'fulltext_sphinx_stopwords'			=> 'Игнорировать общеупотребительные слова для поискового механизма Sphinx',
 	'gzip_compress'						=> 'Включить сжатие GZip',
+	'help_send_statistics'				=> 'Разрешить отправку статистической информации',
+	'help_send_statistics_time'			=> 'Время отправки статистической информации',
 	'hot_threshold'						=> 'Сообщений в популярной теме',
 	'icons_path'						=> 'Путь к значкам сообщений',
 	'img_create_thumbnail'				=> 'Содавать миниатюры',
@@ -374,6 +376,9 @@ $lang = array_merge($lang, array(
 	'warnings_expire_days'				=> 'Длительность предупреждений (дней)',
 	'warnings_gc'						=> 'Интервал очистки списка предупреждений (сек)',
 	'warnings_last_gc'					=> 'Дата последней очистки списка предупреждений',
+	'remote_upload_verify'				=> 'Проверять сертификат загрузки',
+	'allow_board_notifications' 		=> 'Разрешить уведомления',
+	'allowed_schemes_links'				=> 'Разрешенные протоколы ссылок',
 
-	'UNKNOWN'							=> '<span style="color:#FF5D00"><em>Назначение неизвестно, параметр не входит в набор стандартных для phpBB3.1.x</em></span>',
+	'UNKNOWN'							=> '<span style="color:#FF5D00"><em>Назначение неизвестно, параметр не входит в набор стандартных для phpBB3.2.x</em></span>',
 ));

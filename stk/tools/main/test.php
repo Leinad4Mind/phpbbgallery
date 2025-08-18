@@ -25,11 +25,11 @@ class test
 	*/
 	function display_options()
 	{
-		global $template, $user, $db, $config;
+		global $template, $user, $db, $config, $lang;
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($user->lang['TEST']);
+		page_header($lang['TEST']);
 
 		ob_start();
 		phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);
@@ -72,14 +72,11 @@ class test
 		$output = (!empty($output[1][0])) ? $output[1][0] : $orig_output;
 
 		$template->assign_vars(array(
-			'L_TITLE'			=> $user->lang['TEST'],
 			'INFO'				=> $output,
 			'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $user->lang['ON'] : $user->lang['OFF'],
 			'DATABASE_INFO'		=> $db->sql_server_info(),
 			'BOARD_VERSION'		=> $config['version'],
 			'DBMS'				=> $db->get_sql_layer(),
-			'PHP_VERSION'		=> @phpversion(),
-			'STK_VERSION'		=> STK_VERSION,
 		));
 
 		if (extension_loaded('mbstring'))

@@ -176,7 +176,7 @@ class orphaned_posts
 			'body' => 'tools/orphaned_posts.html',
 		));
 
-		page_header($user->lang['ORPHANED_POSTS'], false);
+		page_header(user_lang('ORPHANED_POSTS'), false);
 		page_footer();
 	}
 
@@ -187,7 +187,7 @@ class orphaned_posts
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $user;
+		global $db, $lang, $user, $request;
 
 		$user->add_lang('ucp');
 
@@ -197,15 +197,14 @@ class orphaned_posts
 			return;
 		}
 
-		$mode = request_var('mode', '');
+		$mode = $request->variable('mode', '');
 		switch ($mode)
 		{
 			case 'empty_topics':
 			case 'orphaned_shadows':
 			case 'forum_orphaned_topics':
 				if (isset($_POST['reassign']) && $mode == 'forum_orphaned_topics')
-				{
-					$forums_map = request_var('forum', array(0 => 0));
+				{					$forums_map = $request->variable('forum', array(0 => 0));
 					foreach ($forums_map as $topic_id => $forum_id)
 					{
 						if ($forum_id == 0)
@@ -215,7 +214,7 @@ class orphaned_posts
 					}
 					if (!sizeof($forums_map))
 					{
-						trigger_error($user->lang['NO_FORUMS_IDS'], E_USER_WARNING);
+						trigger_error($lang['NO_FORUMS_IDS'], E_USER_WARNING);
 					}
 					// Make sure the specified forums IDs exist
 					$forum_ids = array_values($forums_map);
@@ -231,7 +230,7 @@ class orphaned_posts
 					$missing_forums = array_diff($forum_ids, $existing_forums);
 					if (sizeof($missing_forums))
 					{
-						trigger_error(sprintf($user->lang['NONEXISTENT_FORUMS_IDS'], implode(', ', $missing_forums)), E_USER_WARNING);
+						trigger_error(sprintf($lang['NONEXISTENT_FORUMS_IDS'], implode(', ', $missing_forums)), E_USER_WARNING);
 					}
 
 					foreach ($forums_map as $topic_id => $forum_id)
@@ -239,14 +238,15 @@ class orphaned_posts
 						$sql = 'UPDATE ' . TOPICS_TABLE . ' SET forum_id = ' . $forum_id . ' WHERE topic_id = ' . $topic_id;
 						$db->sql_query($sql);
 					}
-					trigger_error(sprintf($user->lang['TOPICS_REASSIGNED'], sizeof($forums_map)));
+					sinc_stats();
+					trigger_error(sprintf($lang['TOPICS_REASSIGNED'], sizeof($forums_map)));
 				}
 				else
 				{
-					$topic_ids = request_var('topics', array(0 => 0));
+					$topic_ids = $request->variable('topics', array(0 => 0));
 					if (!sizeof($topic_ids))
 					{
-						trigger_error($user->lang['NO_TOPICS_SELECTED'], E_USER_WARNING);
+						trigger_error($lang['NO_TOPICS_SELECTED'], E_USER_WARNING);
 					}
 
 					if (!function_exists('delete_topics'))
@@ -255,7 +255,7 @@ class orphaned_posts
 					}
 
 					$return = delete_topics('topic_id', $topic_ids);
-					trigger_error(sprintf($user->lang['TOPICS_DELETED'], $return['topics']));
+					trigger_error(user_lang('TOPICS_DELETED', $return['topics']));
 				}
 			break;
 
@@ -264,7 +264,7 @@ class orphaned_posts
 			case 'orphaned_posts':
 				if (isset($_POST['reassign']))
 				{
-					$post_map = request_var('posts', array(0 => 0));
+					$post_map = $request->variable('posts', array(0 => 0));
 
 					foreach ($post_map as $post_id => $topic_id)
 					{
@@ -276,7 +276,7 @@ class orphaned_posts
 
 					if (!sizeof($post_map))
 					{
-						trigger_error('NO_TOPIC_IDS', E_USER_WARNING);
+						trigger_error($lang['NO_TOPIC_IDS'], E_USER_WARNING);
 					}
 
 					// Make sure the specified topic IDs exist
@@ -294,7 +294,7 @@ class orphaned_posts
 					$missing_topics = array_diff($topic_ids, $existing_topics);
 					if (sizeof($missing_topics))
 					{
-						trigger_error(sprintf($user->lang['NONEXISTENT_TOPIC_IDS'], implode(', ', $missing_topics)));
+						trigger_error(sprintf($lang['NONEXISTENT_TOPIC_IDS'], implode(', ', $missing_topics)), E_USER_WARNING);
 					}
 					// Update the topics with their new IDs
 					foreach ($post_map as $post_id => $topic_id)
@@ -307,15 +307,16 @@ class orphaned_posts
 						$db->sql_query($sql);
 					}
 
-					trigger_error(sprintf($user->lang['POSTS_REASSIGNED'], sizeof($post_map)));
+					sinc_stats();
+					trigger_error(sprintf($lang['POSTS_REASSIGNED'], sizeof($post_map)));
 				}
 				else if (isset($_POST['delete']))
 				{
-					$post_ids = request_var('posts_del', array(0 => 0));
+					$post_ids = $request->variable('posts_del', array(0 => 0));
 
 					if (!sizeof($post_ids))
 					{
-						trigger_error('NO_POSTS_SELECTED');
+						trigger_error($lang['NO_POSTS_SELECTED'], E_USER_WARNING);
 					}
 
 					if (!function_exists('delete_posts'))
@@ -324,16 +325,17 @@ class orphaned_posts
 					}
 
 					$return = delete_posts('post_id', $post_ids);
-					trigger_error(sprintf($user->lang['POSTS_DELETED'], $return));
+					sinc_stats();
+					trigger_error(sprintf($lang['POSTS_DELETED'], $return));
 				}
 				else
 				{
-					trigger_error($user->lang['NO_MODE'], E_USER_WARNING);
+					trigger_error($lang['NO_MODE'], E_USER_WARNING);
 				}
 			break;
 
 			default:
-				trigger_error($user->lang['NO_MODE'], E_USER_WARNING);
+				trigger_error($lang['NO_MODE'], E_USER_WARNING);
 			break;
 		}
 	}

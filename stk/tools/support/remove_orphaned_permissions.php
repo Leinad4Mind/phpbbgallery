@@ -25,7 +25,7 @@ class remove_orphaned_permissions
 
 	function run_tool()
 	{
-		global $db, $user, $cache;
+		global $db, $cache;
 		$orphaned_permissions = $orphaned_users_permissions = array();
 
 		// Find orphaned_permissions from groups
@@ -92,11 +92,11 @@ class remove_orphaned_permissions
 			}
 
 			$cache->purge();
-			$message = $user->lang['ORPHANED_PERMISSIONS_DELETED'];
+			$message = user_lang('ORPHANED_PERMISSIONS_DELETED');
 		}
 		else
 		{
-			$message = $user->lang['ORPHANED_PERMISSIONS_NOT_FIND'];
+			$message = user_lang('ORPHANED_PERMISSIONS_NOT_FIND');
 		}
 
 		meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=support'));

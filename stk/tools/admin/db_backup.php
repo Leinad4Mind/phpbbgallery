@@ -227,11 +227,11 @@ class db_backup
 				}
 
 				meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=admin&amp;t=db_backup'));
-				trigger_error($user->lang['BACKUP_SUCCESS']);
+				trigger_error(user_lang('BACKUP_SUCCESS'));
 			}
 		}
 
-		page_header($user->lang['DB_BACKUP']);
+		page_header(user_lang('DB_BACKUP'));
 
 		$template->assign_vars(array(
 			'S_SELECT'			=> $option_list,
@@ -255,7 +255,6 @@ class db_backup
 
 		$sql = 'SHOW TABLE STATUS
 			WHERE ' . $db->sql_in_set('Name', $tables) . '';
-
 		$result = $db->sql_query($sql);
 		$table_count = $records = 0;
 		while ($row = $db->sql_fetchrow($result))
@@ -265,7 +264,7 @@ class db_backup
 			$records = $records + $row['Rows'];
 		}
 
-		$data =	'-- Status:' . $table_count . ':' . $records . ':MP_0:' . $db_name . ':STK for phpBB3.1.x:' . STK_VERSION . '::' . $db->sql_server_info() . ':1:::utf8:EXTINFO<br />--<br />'.
+		$data =	'-- Status:' . $table_count . ':' . $records . ':MP_0:' . $db_name . ':STK for phpBB3.2.x:' . STK_VERSION . '::' . $db->sql_server_info() . ':1:::utf8:EXTINFO<br />--<br />'.
 				'-- TABLE-INFO<br />';
 
 		foreach($row_set as $row)
@@ -539,7 +538,6 @@ class mysql_dumper_extractor extends dbbase_extractor
 
 		$sql = 'SHOW TABLE STATUS
 			WHERE ' . $db->sql_in_set('Name', $tables) . '';
-
 		$result = $db->sql_query($sql);
 		$table_count = $records = 0;
 		while ($row = $db->sql_fetchrow($result))
@@ -549,7 +547,7 @@ class mysql_dumper_extractor extends dbbase_extractor
 			$records = $records + $row['Rows'];
 		}
 
-		$data =	"-- Status:" . $table_count . ":" . $records . ":MP_0:" . $db_name . ":STK for phpBB3.1.x:" . STK_VERSION . "::" . $db->sql_server_info() . ":1:::utf8:EXTINFO\n--\n".
+		$data =	"-- Status:" . $table_count . ":" . $records . ":MP_0:" . $db_name . ":STK for phpBB3.2.x:" . STK_VERSION . "::" . $db->sql_server_info() . ":1:::utf8:EXTINFO\n--\n".
 				"-- TABLE-INFO\n";
 
 		foreach($row_set as $row)
@@ -560,7 +558,7 @@ class mysql_dumper_extractor extends dbbase_extractor
 		$db->sql_freeresult($result);
 
 		$data .="-- EOF TABLE-INFO\n--\n".
-				'-- Dump created by Support Toolkit for phpBB3.1.x and compatible with MySQLDumper 1.24.4 (http://mysqldumper.net)'.
+				'-- Dump created by Support Toolkit for phpBB3.2.x and compatible with MySQLDumper 1.24.4 (http://mysqldumper.net)'.
 				"\n/*!40101 SET NAMES 'utf8' */;".
 				"\nSET FOREIGN_KEY_CHECKS=0;".
 				"\n-- Dump created: " . $user->format_date(time(), 'Y-m-d H:i') . "\n";

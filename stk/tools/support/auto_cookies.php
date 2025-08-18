@@ -54,18 +54,19 @@ class auto_cookies
 	* Does the actual stuff we want the tool to do after submission
 	*/
 	function run_tool(&$error)
-	{
+	{		global $config, $request;
+
 		if (!check_form_key('auto_cookies'))
 		{
 			$error[] = 'FORM_INVALID';
 			return;
 		}
 
-		set_config('cookie_domain', request_var('cookie_domain', ''));
-		set_config('cookie_name', request_var('cookie_name', ''));
-		set_config('cookie_path', request_var('cookie_path', ''));
-		set_config('cookie_secure', request_var('cookie_secure', 0));
+		$config->set('cookie_domain', $request->variable('cookie_domain', ''));
+		$config->set('cookie_name', $request->variable('cookie_name', ''));
+		$config->set('cookie_path', $request->variable('cookie_path', ''));
+		$config->set('cookie_secure', $request->variable('cookie_secure', 0));
 
-		trigger_error('COOKIE_SETTINGS_UPDATED');
+		trigger_error(user_lang('COOKIE_SETTINGS_UPDATED'));
 	}
 }

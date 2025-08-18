@@ -28,10 +28,10 @@ class prune_avatars
 
 	function display_options()
 	{
-		global $db, $template, $config, $user, $cache;
+		global $db, $template, $config, $cache, $request;
 		$list = '';
 
-		$submit = request_var('sa', false);
+		$submit = $request->variable('sa', false);
 
 		if ($submit)
 		{
@@ -56,8 +56,7 @@ class prune_avatars
 				{
 					$ext = explode('.', $data['user_avatar']);
 					$filename = explode('_', $data['user_avatar']);
-					$extension = (isset($ext[1])) ? '.' . $ext[1] . '' : '';
-					$bd_files[] = '' . $config['avatar_salt'] . '_' . $filename[0] . $extension;
+					$bd_files[] = '' . $config['avatar_salt'] . '_' . $filename[0] . '.' . $ext[1] . '';
 				}
 				$db->sql_freeresult($result);
 				$files = array_diff($files, $bd_files);
@@ -100,13 +99,13 @@ class prune_avatars
 			}
 			else
 			{
-				$list = (sizeof($unsuccess)) ? '' : $user->lang['PRUNE_AVATARS_FINISHED'];
+				$list = (sizeof($unsuccess)) ? '' : user_lang('PRUNE_AVATARS_FINISHED');
 				$exit = true;
 			}
 
 			if(sizeof($unsuccess))
 			{
-				$list .= '' . $user->lang['PRUNE_AVATARS_FAIL'] . '<br />' . implode('<br />', $unsuccess) . '';
+				$list .= '' . user_lang('PRUNE_AVATARS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
 			}
 
 			if($exit)
@@ -114,24 +113,28 @@ class prune_avatars
 				$cache->destroy('_stk_prune_avatar');
 				if ((sizeof($unsuccess)))
 				{
-					trigger_error(''.$list.'', E_USER_WARNING);
+					trigger_error('' . $list . '', E_USER_WARNING);
 				}
 				else
 				{
-					trigger_error(''.$list.'');
+					trigger_error('' .$list . '');
 				}
 			}
 			else
 			{
 				meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=prune_avatars&sa=true'));
-				trigger_error('' . $user->lang['PRUNE_AVATARS_PROGRESS'] . '<br />' . $list . '');
+				trigger_error('' . user_lang('PRUNE_AVATARS_PROGRESS') . '<br />' . $list . '');
 			}
 		}
 
-		page_header($user->lang['PRUNE_AVATARS']);
+		page_header(user_lang('PRUNE_AVATARS'));
 
 		$template->assign_vars(array(
 			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_avatars&amp;go=1'),
+
+/*			'L_PRUNE_AVATARS'			=> user_lang('PRUNE_AVATARS'),
+			'L_PRUNE_AVATARS_EXPLAIN'	=> user_lang('PRUNE_AVATARS_EXPLAIN'),
+*/
 		));
 
 		$template->set_filenames(array(

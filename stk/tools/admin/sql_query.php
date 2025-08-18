@@ -42,7 +42,7 @@ class sql_query
 	*/
 	function run_tool(&$error)
 	{
-		global $cache, $db, $dbms, $table_prefix, $template;
+		global $cache, $db, $dbms, $table_prefix, $template, $request, $phpbb_root_path;
 
 		if (!check_form_key('sql_query'))
 		{
@@ -50,8 +50,8 @@ class sql_query
 			return;
 		}
 
-		$show_results = request_var('show_results', false);
-		$sql_query = utf8_normalize_nfc(request_var('sql_query', '', true));
+		$show_results = $request->variable('show_results', false);
+		$sql_query = utf8_normalize_nfc($request->variable('sql_query', '', true));
 		$sql_query = htmlspecialchars_decode($sql_query);	// Need special chars like < and > see bug #59755
 
 		// Replace phpbb_ with the correct table prefix.  Do the double replace otherwise you can have issues with prefixes like phpbb_3
@@ -63,17 +63,15 @@ class sql_query
 			return;
 		}
 
-		if (!function_exists('split_sql_file'))
-		{
-			include(PHPBB_ROOT_PATH . 'includes/functions_install.' . PHP_EXT);
-		}
+		$fs = new phpbb\filesystem\filesystem();
+		$database = new phpbb\install\helper\database($fs, $phpbb_root_path);
 
 		$dbms=  str_replace('phpbb\\db\\driver\\', '', $dbms);
-		$dbmd = get_available_dbms($dbms);
+		$dbmd = $database->get_available_dbms($dbms);
 
 		$delimiter = $dbmd[$dbms]['DELIM'];
-		phpbb_remove_comments($sql_query);
-		$sql_query = split_sql_file($sql_query, $delimiter);
+		$database->remove_comments($sql_query);
+		$sql_query = $database->split_sql_file($sql_query, $delimiter);
 
 		// Return on error
 		$db->sql_return_on_error(true);
@@ -91,43 +89,53 @@ class sql_query
 			}
 
 			if ($show_results)
-			{
-				// Display the query
+			{				// Display the query
 				$template->assign_block_vars('queries', array('QUERY' => $sql));
 
 				$cnt = 0;
-				while ($row = $db->sql_fetchrow($result))
+
+				if (is_bool($result) === false)
 				{
-					if ($cnt == 0)
+					while ($row = $db->sql_fetchrow($result))
 					{
-						// Assign the return fields
-						foreach(array_keys($row) as $key)
+						if ($cnt == 0)
 						{
-							$template->assign_block_vars('queries.headings', array('FIELD_NAME' => $key));
+							// Assign the return fields
+							foreach(array_keys($row) as $key)
+							{
+								$template->assign_block_vars('queries.headings', array('FIELD_NAME' => $key));
+							}
 						}
+
+						// Set row class
+						$template->assign_block_vars('queries.resultdata', array('ROWSTYLE' => ($cnt % 2 == 0) ? 1 : 2));
+
+						// Output resultset
+						foreach ($row as $value)
+						{
+							$template->assign_block_vars('queries.resultdata.resultdatafields', array('VALUE' => $value));
+						}
+
+						$cnt++;
 					}
-
-					// Set row class
-					$template->assign_block_vars('queries.resultdata', array('ROWSTYLE' => ($cnt % 2 == 0) ? 1 : 2));
-
-					// Output resultset
-					foreach ($row as $value)
-					{
-						$template->assign_block_vars('queries.resultdata.resultdatafields', array('VALUE' => $value));
-					}
-
-					$cnt++;
 				}
 			}
+
 			$db->sql_freeresult($result);
 		}
+
+		$template->assign_vars(array(
+			'L_SQL_QUERY_LEGEND'	=> user_lang('SQL_QUERY_LEGEND'),
+			'L_QUERY_RESULT'		=> user_lang('QUERY_RESULT'),
+			)
+		);
 
 		// Purge the cache
 		$cache->purge();
 
 		if (empty($error))
 		{
-			trigger_error('SQL_QUERY_SUCCESS');
+			trigger_error(user_lang('SQL_QUERY_SUCCESS'));
 		}
 	}
 

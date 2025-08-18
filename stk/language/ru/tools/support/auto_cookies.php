@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Auto Cookies Russian language Sheer
+* @package Support Toolkit - Auto Cookies Russian language
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
+* @copyright (c) 2016 Sheer
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -39,7 +39,12 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'AUTO_COOKIES'				=> 'Изменение настроек Авто Cookies конференции',
-	'AUTO_COOKIES_EXPLAIN'		=> 'Позволяет вам сменить установки Cookies конференции. Предлагаемый вариант скопирован из настроек администраторского раздела, скорей всего он корректен.',
+	'AUTO_COOKIES_EXPLAIN'		=> 'Позволяет вам сменить установки Cookies конференции. Предлагаемый вариант, скопирован из настроек администраторского раздела, скорей всего он корректен.',
 
 	'COOKIE_SETTINGS_UPDATED'	=> 'Настройки Cookies успешно обновлены.',
+	'COOKIE_DOMAIN'				=> 'Домен cookie',
+	'COOKIE_NAME'				=> 'Имя cookie',
+	'COOKIE_PATH'				=> 'Путь cookie',
+	'COOKIE_SECURE'				=> 'Безопасные cookie [ https ]',
+	'COOKIE_SECURE_EXPLAIN'		=> 'Если ваш сервер работает через SSL, то включите этот параметр. В противном случае оставьте отключённым. Включение этого параметра, если сервер работает не через SSL, приведёт к ошибкам при переходах по страницам конференции и при переадресации.',
 ));

@@ -219,11 +219,11 @@ a:active {
 	Based on: http://www.alistapart.com/articles/slidingdoors2/
 ----------------------------------------*/
 #tabs {
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: normal;
-    margin: 0 7px;
-    position: relative;
-    z-index: 2;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: normal;
+	margin: 0 7px;
+	position: relative;
+	z-index: 2;
 }
 
 .rtl #tabs {
@@ -1865,26 +1865,4 @@ dl.querybox {
 .mark {
 	width: 10%;
 	text-align: center;
-}
-
-/* debug Output
-----------------------------------------*/
-.debug
-{
-	background-repeat: no-repeat;
-	background-position: left 8px top 8px;
-	background-color: #bc2a4d;
-	margin:	10px 0;
-	padding:5px 5px 5px 40px;
-	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
-	color: #fff;
-}
-.notice
-{
-	background-image:	url("./../images/notice.png");
-
-}
-.warning
-{
-	background-image:	url("./../images/warning.png");
 }

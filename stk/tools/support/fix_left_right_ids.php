@@ -64,11 +64,11 @@ class fix_left_right_ids
 
 		if ($changes_made)
 		{
-			trigger_error('LEFT_RIGHT_IDS_FIX_SUCCESS');
+			trigger_error(user_lang('LEFT_RIGHT_IDS_FIX_SUCCESS'));
 		}
 		else
 		{
-			trigger_error('LEFT_RIGHT_IDS_NO_CHANGE');
+			trigger_error(user_lang('LEFT_RIGHT_IDS_NO_CHANGE'));
 		}
 	}
 

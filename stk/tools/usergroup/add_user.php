@@ -55,9 +55,9 @@ class add_user
 	*/
 	function run_tool(&$error)
 	{
-		global $cache, $config, $db, $user;
+		global $cache, $config, $db, $user, $request;
 
-		$user->add_lang(array('acp/groups', 'ucp'));
+		//$user->add_lang(array('acp/groups', 'ucp'));
 
 		if (!check_form_key('add_user'))
 		{
@@ -69,12 +69,12 @@ class add_user
 
 		// Collect the user data
 		$data = array(
-			'username'			=> utf8_normalize_nfc(request_var('username', '', true)),
-			'new_password'		=> request_var('new_password', '', true),
-			'password_confirm'	=> request_var('password_confirm', '', true),
-			'email'				=> strtolower(request_var('email', '')),
-			'lang'				=> basename(request_var('lang', $user->lang_name)),
-			'tz'				=> request_var('tz', $timezone),
+			'username'			=> utf8_normalize_nfc($request->variable('username', '', true)),
+			'new_password'		=> $request->variable('new_password', '', true),
+			'password_confirm'	=> $request->variable('password_confirm', '', true),
+			'email'				=> strtolower($request->variable('email', '')),
+			'lang'				=> basename($request->variable('lang', $user->lang_name)),
+			'tz'				=> $request->variable('tz', $timezone),
 		);
 
 		// A bit of cache hacking to get around disallowed usernames,
@@ -96,9 +96,9 @@ class add_user
 
 		// Collect the groups data
 		$groups = array(
-			'default'	=> request_var('defaultgroup', 0),
-			'groups'	=> request_var('usergroups', array(0)),
-			'leaders'	=> request_var('groupleader', array(0)),
+			'default'	=> $request->variable('defaultgroup', 0),
+			'groups'	=> $request->variable('usergroups', array(0)),
+			'leaders'	=> $request->variable('groupleader', array(0)),
 		);
 
 		// Register the user
@@ -179,7 +179,7 @@ class add_user
 		}
 
 		// And done
-		trigger_error('USER_ADDED');
+		trigger_error(user_lang('USER_ADDED'));
 	}
 
 	/**
@@ -251,4 +251,46 @@ class add_user
 			}
 		}
 	}
+}
+
+/**
+* Get all the groups for the groups dropdown.
+*/
+function get_groups()
+{
+	static $option_list = null;
+	$args = func_get_args();
+
+	// Only run this once
+	if ($option_list == null)
+	{
+		global $db, $user;
+
+		// Just ignore the BOTS and GUESTS groups
+		$group_ignore = array('BOTS', 'GUESTS');
+
+		// Get the groups and build the dropdown list
+		$sql = 'SELECT group_id, group_type, group_name
+			FROM ' . GROUPS_TABLE . '
+			WHERE ' . $db->sql_in_set('group_name', $group_ignore, true);
+		$result = $db->sql_query($sql);
+
+		$option_list = '';
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
+			$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
+		}
+
+		$db->sql_freeresult($result);
+	}
+
+	// Remove the selected statement if we are displaying the leaderships group list
+	if ($args[1] == 'groupleader')
+	{
+		return str_replace('selected=selected', '', $option_list);
+	}
+
+	return $option_list;
 }

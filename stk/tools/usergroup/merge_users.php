@@ -49,7 +49,7 @@ class merge_users
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $user, $db, $cache;
+		global $config, $user, $db, $cache, $request;
 
 		$user->add_lang('ucp');
 
@@ -59,11 +59,11 @@ class merge_users
 			return;
 		}
 
-		$source_name = utf8_normalize_nfc(request_var('source_name', '', true));
-		$source_id = utf8_normalize_nfc(request_var('source_id', 0));
-		$target_name = utf8_normalize_nfc(request_var('target_name', '', true));
-		$target_id = utf8_normalize_nfc(request_var('target_id', 0));
-		$delete = request_var('delete', false);
+		$source_name = utf8_normalize_nfc($request->variable('source_name', '', true));
+		$source_id = utf8_normalize_nfc($request->variable('source_id', 0));
+		$target_name = utf8_normalize_nfc($request->variable('target_name', '', true));
+		$target_id = utf8_normalize_nfc($request->variable('target_id', 0));
+		$delete = $request->variable('delete', false);
 
 		// Check that one source field and one target field is filled in.
 		if ((!$source_name && empty($source_id)) || (!$target_name && empty($target_id)))
@@ -187,7 +187,7 @@ class merge_users
 		update_last_username();
 		$cache->destroy('sql', MODERATOR_CACHE_TABLE);
 
-		trigger_error('MERGE_USERS_MERGED');
+		trigger_error(user_lang('MERGE_USERS_MERGED'));
 	}
 
 	function merge($source, $target)

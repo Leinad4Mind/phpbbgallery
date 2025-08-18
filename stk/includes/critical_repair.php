@@ -123,7 +123,7 @@ class critical_repair
 	 */
 	function trigger_error($msg, $redirect_stk = false)
 	{
-		global $user;
+		global $user, $lang;
 
 		$user = $this->user_setup($user);
 		if (!is_array($msg))
@@ -154,14 +154,14 @@ class critical_repair
 					<?php
 					if ($redirect_stk)
 					{
-						echo '<a href="' . STK_ROOT_PATH . '">' . $user->lang['SUPPORT_TOOL_KIT_INDEX'] . '</a> &bull; ';
+						echo '<a href="' . STK_ROOT_PATH . '">' . $lang['SUPPORT_TOOL_KIT_INDEX'] . '</a> &bull; ';
 					}
 					else
 					{
-						echo '<a href="' . STK_ROOT_PATH . 'erk.'.PHP_EXT.'">' . $user->lang['CAT_ERK'] . '</a> &bull; ';
+						echo '<a href="' . STK_ROOT_PATH . 'erk.'.PHP_EXT.'">' . $lang['CAT_ERK'] . '</a> &bull; ';
 					}
 					?>
-					<a href="<?php echo PHPBB_ROOT_PATH; ?>"><?php echo $user->lang['FORUM_INDEX'] ?></a>
+					<a href="<?php echo PHPBB_ROOT_PATH; ?>"><?php echo $lang['FORUM_INDEX'] ?></a>
 				</p>
 			</div>
 			<div id="page-body">
@@ -169,7 +169,7 @@ class critical_repair
 					<div class="panel">
 						<span class="corners-top"><span></span></span>
 							<div id="content">
-								<h1><?php echo $user->lang['CAT_ERK'] ?></h1>
+								<h1><?php echo $lang['CAT_ERK'] ?></h1>
 								<?php
 								foreach ($msg as $m)
 								{
@@ -177,7 +177,7 @@ class critical_repair
 									$pos = strripos($m, 'Undefined index: user_id');
 									if($pos)
 									{
-										$msg = sprintf($user->lang['ANONYMOUS_MISSING'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
+										$msg = sprintf($lang['ANONYMOUS_MISSING'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
 										?><hr><?php
 										echo $msg;
 										?><hr><?php
@@ -189,12 +189,12 @@ class critical_repair
 									<?php
 									if ($redirect_stk)
 									{
-										$msg = sprintf($user->lang['RELOAD_STK'], STK_ROOT_PATH);
+										$msg = sprintf($lang['RELOAD_STK'], STK_ROOT_PATH);
 										echo $msg;
 									}
 									else
 									{
-										$msg = sprintf($user->lang['RELOAD_ARK'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
+										$msg = sprintf($lang['RELOAD_ARK'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
 										echo $msg;
 									}
 									?>
@@ -205,8 +205,8 @@ class critical_repair
 				</div>
 			</div>
 			<div id="page-footer">
-				Support Toolkit for phpBB3.1.x &copy;</a><br />
-				Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group - adaptation for phpBB3.1.x by &copy; Sheer
+				Support Toolkit for phpBB3.2.x &copy;</a><br />
+				Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group - adaptation for phpBB3.2.x by &copy; Sheer
 			</div>
 		</div>
 	</body>
@@ -217,7 +217,8 @@ class critical_repair
 	}
 
 	function user_setup($user = false)
-	{
+	{		global $user;
+
 		if (!isset($user))
 		{
 			if (!class_exists('phpbb\session'))
@@ -227,6 +228,14 @@ class critical_repair
 			if (!class_exists('phpbb\user'))
 			{
 				include(PHPBB_ROOT_PATH . 'phpbb/user.' . PHP_EXT);
+			}
+			if (!class_exists('phpbb\language\language_file_loader'))
+			{
+				include(PHPBB_ROOT_PATH . 'phpbb/language/language_file_loader.' . PHP_EXT);
+			}
+			if (!class_exists('phpbb\language\language'))
+			{
+				include(PHPBB_ROOT_PATH . 'phpbb/language/language.' . PHP_EXT);
 			}
 
 			if (file_exists(STK_ROOT_PATH . 'default_lang.txt'))
@@ -271,7 +280,10 @@ class critical_repair
 				die('No language found!');
 			}
 
-			$user = new \phpbb\user('\phpbb\datetime');
+			$loader = new phpbb\language\language_file_loader(PHPBB_ROOT_PATH, 'php', 'ru');
+			$lng = new \phpbb\language\language($loader);
+			$user = new \phpbb\user($lng, '\phpbb\datetime');
+
 			$lang_path = $user->lang_path;
 			$lang_path = '' . $lang_path . '' . $language . '';
 			$user->lang_path = '' . PHPBB_ROOT_PATH . '' . $lang_path . '';

@@ -38,6 +38,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
+	'ACP_EXTENSION_GROUPS'			=> 'Группы расширений файлов',
 	'ACP_MODULES_SETTINGS'			=> 'Поиск дополнительных модулей',
 	'BOARD_DISABLE_REASON'			=> 'Конференция в настоящее время отключена в связи с профилактикой Базы Данных. Пожалуйста, попробуйте зайти позже!',
 	'BOARD_DISABLE_SUCCESS'			=> 'Конференция временно отключена!',

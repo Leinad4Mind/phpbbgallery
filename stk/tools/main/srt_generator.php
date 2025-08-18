@@ -186,7 +186,7 @@ class srt_generator
 	 */
 	function display_options()
 	{
-		global $cache, $template, $user;
+		global $cache, $template, $lang;
 
 		// Step 0 is easy
 		if ($this->step == 0)
@@ -253,11 +253,11 @@ class srt_generator
 					}
 
 					$template->assign_block_vars('questionrow', array(
-						'EXPLAIN'	=> (!empty($user->lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']])) ? $user->lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']] : '',
+						'EXPLAIN'	=> (!empty($lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']])) ? $lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']] : '',
 						'NAME'		=> $question['name'],
 						'OPTIONS'	=> ($question['type'] == 'dropdown') ? $options : '',
 						'PREFILL'	=> $_p_callback_result,
-						'QUESTION'	=> $user->lang['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
+						'QUESTION'	=> $lang['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
 						'TYPE'		=> $question['type'],
 					));
 				}
@@ -284,7 +284,7 @@ class srt_generator
 	 */
 	function run_tool()
 	{
-		global $cache, $user, $request;
+		global $cache, $lang, $request;
 
 		// Step 0 is a special place to be, only available for special people
 		// this user isn't special so kick him to the user spot
@@ -301,18 +301,18 @@ class srt_generator
 			// Disable the back link
 			$template->assign_var('U_BACK_TOOL', false);
 
-			$mod_related = request_var('mod_related', false);
+			$mod_related = $request->variable('mod_related', false);
 
 			if (!empty($mod_related) && $mod_related == '1')
 			{
-				trigger_error('STEP1_MOD_ERROR');
+				trigger_error($lang['STEP1_MOD_ERROR']);
 			}
 
-			$hacked = request_var('hacked', false);
+			$hacked = $request->variable('hacked', false);
 
 			if (!empty($hacked) && $hacked == '1')
 			{
-				trigger_error('STEP1_HACKED_ERROR');
+				trigger_error($lang['STEP1_HACKED_ERROR']);
 			}
 		}
 
@@ -320,7 +320,7 @@ class srt_generator
 		else
 		{
 			$_cached_data	= $cache->get('_stk_srt_generator');
-			$_prefilled		= unserialize(htmlspecialchars_decode(request_var('prefill', '', true)));
+			$_prefilled		= unserialize(htmlspecialchars_decode($request->variable('prefill', '', true)));
 
 			// $_cached_data can be "false"
 			if ($_cached_data === false)
@@ -339,7 +339,7 @@ class srt_generator
 				}
 				else
 				{
-					$_answers[$question['name']] = request_var($question['name'], '', true);
+					$_answers[$question['name']] = $request->variable($question['name'], '', true);
 				}
 
 				// For some types some aditional stuff is needed here
@@ -362,7 +362,7 @@ class srt_generator
 						}
 						else
 						{
-							$_answers[$question['name']] = $user->lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$question['name']][$_answers[$question['name']]];
+							$_answers[$question['name']] = $lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$question['name']][$_answers[$question['name']]];
 						}
 					break;
 				}
@@ -385,7 +385,7 @@ class srt_generator
 	 */
 	function _build_srt()
 	{
-		global $cache, $template, $user;
+		global $cache, $template, $lang, $user;
 
 		$_template = array();
 
@@ -398,7 +398,7 @@ class srt_generator
 		}
 
 		// Header
-		$_template[] = '[size=115][color=#368AD2][b]' . $user->lang['SRT_GENERATOR'] . '[/b][/color][/size]<br />';
+		$_template[] = '[size=115][color=#368AD2][b]' . $lang['SRT_GENERATOR'] . '[/b][/color][/size]<br />';
 
 		// Walk through the data
 		foreach ($this->_data as $step => $questions)
@@ -412,12 +412,12 @@ class srt_generator
 					continue;
 				}
 
-				$question_string = $user->lang['SRT_QUESTIONS'][$step][$question['name']];
+				$question_string = $lang['SRT_QUESTIONS'][$step][$question['name']];
 
 				// No answer, easy :)
 				if (empty($_answers[$question['name']]))
 				{
-					$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]: [i]" . $user->lang['NO_ANSVER'] . "[/i]";
+					$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]: [i]" . $lang['NO_ANSVER'] . "[/i]";
 					continue;
 				}
 
@@ -426,7 +426,7 @@ class srt_generator
 		}
 
 		// Footer
-		$_template[] = '<br />[size=80]' . $user->lang['BY_SRT_GENERATOR'] . '[/size]';
+		$_template[] = '<br />[size=80]' . $lang['BY_SRT_GENERATOR'] . '[/size]';
 
 		// Output
 		$user->add_lang('viewtopic');
@@ -449,7 +449,7 @@ class srt_generator
 	 */
 	function _format_options(&$options, $name = '')
 	{
-		global $user;
+		global $lang;
 
 		$_option_list = array();
 
@@ -463,9 +463,9 @@ class srt_generator
 		else
 		{
 			// If there is no language entry for this list return an empty array
-			if (!empty($user->lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name]))
+			if (!empty($lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name]))
 			{
-				foreach ($user->lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name] as $_key => $_value)
+				foreach ($lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name] as $_key => $_value)
 				{
 					$_option_list[] = "<option value='{$_key}'>{$_value}</option>";
 				}

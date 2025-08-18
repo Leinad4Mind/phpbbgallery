@@ -17,9 +17,9 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-* phpBB 3.1.2 data file
+* phpBB 3.2.0 data file
 */
-class datafile_3_1_2
+class datafile_3_2_0
 {
 	/**
 	* @var Array The bots
@@ -73,7 +73,7 @@ class datafile_3_1_2
 	);
 
 	/**
-	* @var Array 3.1.2 config data
+	* @var Array 3.2.0 config data
 	*/
 	var $config = array(
 		'active_sessions'				=> array('config_value' => '0', 'is_dynamic' => '0'),
@@ -112,6 +112,7 @@ class datafile_3_1_2
 		'allow_sig_smilies'				=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'allow_smilies'					=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'allow_topic_notify'			=> array('config_value' => '1', 'is_dynamic' => '0'),
+		'allowed_schemes_links'			=> array('config_value' => 'http,https,ftp', 'is_dynamic' => '0'),
 		'assets_version'				=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'attachment_quota'				=> array('config_value' => '52428800', 'is_dynamic' => '0'),
 		'auth_bbcode_pm'				=> array('config_value' => '1', 'is_dynamic' => '0'),
@@ -184,6 +185,7 @@ class datafile_3_1_2
 		'email_package_size'			=> array('config_value' => '50', 'is_dynamic' => '0'),
 		'enable_confirm'				=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'enable_mod_rewrite'			=> array('config_value' => '0', 'is_dynamic' => '0'),
+		'allow_board_notifications'		=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'enable_pm_icons'				=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'enable_post_confirm'			=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'feed_enable'					=> array('config_value' => '1', 'is_dynamic' => '0'),
@@ -213,10 +215,12 @@ class datafile_3_1_2
 		'fulltext_native_min_chars'		=> array('config_value' => '3', 'is_dynamic' => '0'),
 		'fulltext_postgres_max_word_len'	=> array('config_value' => '254', 'is_dynamic' => '0'),
 		'fulltext_postgres_min_word_len'	=> array('config_value' => '4', 'is_dynamic' => '0'),
-		'fulltext_postgres_ts_name'			=> array('config_value' => 'simple', 'is_dynamic' => '0'),
+		'fulltext_postgres_ts_name'			=> array('simple', 'is_dynamic' => '0'),
 		'fulltext_sphinx_indexer_mem_limit'	=> array('config_value' => '512', 'is_dynamic' => '0'),
 		'fulltext_sphinx_stopwords'			=> array('config_value' => '0', 'is_dynamic' => '0'),
 		'gzip_compress'					=> array('config_value' => '0', 'is_dynamic' => '0'),
+		'help_send_statistics'			=> array('config_value' => '1', 'is_dynamic' => '0'),
+		'help_send_statistics_time'		=> array('config_value' => '0', 'is_dynamic' => '0'),
 		'hot_threshold'					=> array('config_value' => '25', 'is_dynamic' => '0'),
 		'icons_path'					=> array('config_value' => 'images/icons', 'is_dynamic' => '0'),
 		'img_create_thumbnail'			=> array('config_value' => '0', 'is_dynamic' => '0'),
@@ -311,11 +315,11 @@ class datafile_3_1_2
 		'posts_per_page'				=> array('config_value' => '10', 'is_dynamic' => '0'),
 		'print_pm'						=> array('config_value' => '1', 'is_dynamic' => '0'),
 		'queue_interval'				=> array('config_value' => '600', 'is_dynamic' => '0'),
-		'questionnaire_unique_id'		=> array('config_value' => '4aab8fd271d95e2c', 'is_dynamic' => '0'),
 		'ranks_path'					=> array('config_value' => 'images/ranks', 'is_dynamic' => '0'),
 		'read_notification_expire_days'	=> array('config_value' => '30', 'is_dynamic' => '0'),
 		'read_notification_gc'			=> array('config_value' => '86400', 'is_dynamic' => '0'),
 		'read_notification_last_gc'		=> array('config_value' => '0', 'is_dynamic' => '1'),
+		'remote_upload_verify'			=> array('config_value' => '0', 'is_dynamic' => '0'),
 		'require_activation'			=> array('config_value' => '0', 'is_dynamic' => '0'),
 		'script_path'					=> array('config_value' => '', 'is_dynamic' => '0'),
 		'referer_validation'			=> array('config_value' => '1', 'is_dynamic' => '0'),
@@ -386,6 +390,7 @@ class datafile_3_1_2
 	var $acl_options = array(
 		'f_'				=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
 		'f_announce'		=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
+		'f_announce_global'	=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
 		'f_attach'			=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
 		'f_bbcode'			=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
 		'f_bump'			=> array('is_global' => '0', 'is_local' => '1', 'founder_only' => '0'),
@@ -428,6 +433,7 @@ class datafile_3_1_2
 		'm_report'			=> array('is_global' => '1', 'is_local' => '1', 'founder_only' => '0'),
 		'm_split'			=> array('is_global' => '1', 'is_local' => '1', 'founder_only' => '0'),
 		'm_ban'				=> array('is_global' => '1', 'is_local' => '0', 'founder_only' => '0'),
+		'm_pm_report'		=> array('is_global' => '1', 'is_local' => '0', 'founder_only' => '0'),
 		'm_warn'			=> array('is_global' => '1', 'is_local' => '0', 'founder_only' => '0'),
 		'a_'				=> array('is_global' => '1', 'is_local' => '0', 'founder_only' => '0'),
 		'a_aauth'			=> array('is_global' => '1', 'is_local' => '0', 'founder_only' => '0'),
@@ -703,10 +709,7 @@ class datafile_3_1_2
 		'ARCHIVES'			=> array(0, 1, 1, '', 0, ''),
 		'PLAIN_TEXT'		=> array(0, 0, 1, '', 0, ''),
 		'DOCUMENTS'			=> array(0, 0, 1, '', 0, ''),
-		'REAL_MEDIA'		=> array(3, 0, 1, '', 0, ''),
-		'WINDOWS_MEDIA'		=> array(2, 0, 1, '', 0, ''),
 		'FLASH_FILES'		=> array(5, 0, 1, '', 0, ''),
-		'QUICKTIME_MEDIA'	=> array(6, 0, 1, '', 0, ''),
 		'DOWNLOADABLE_FILES'=> array(0, 0, 1, '', 0, ''),
 	);
 
@@ -771,25 +774,8 @@ class datafile_3_1_2
 			'odt',
 			'rtf',
 		),
-		'REAL_MEDIA'			=> array(
-			'rm',
-			'ram',
-		),
-		'WINDOWS_MEDIA'		=> array(
-			'wma',
-			'wmv',
-		),
 		'FLASH_FILES'			=> array(
 			'swf',
-		),
-		'QUICKTIME_MEDIA'		=> array(
-			'mov',
-			'm4v',
-			'm4a',
-			'mp4',
-			'3gp',
-			'3g2',
-			'qt',
 		),
 		'DOWNLOADABLE_FILES'	=> array(
 			'mpeg',
@@ -962,7 +948,6 @@ class datafile_3_1_2
 			'group_desc_uid'		=> '',
 			'group_max_recipients'	=> 5,
 		),
-
 	);
 
 	/**
@@ -1011,11 +996,11 @@ class datafile_3_1_2
 						'ACP_SECURITY_SETTINGS',
 						'ACP_LOAD_SETTINGS',
 						'ACP_SEARCH_SETTINGS',
-						'ACP_SEND_STATISTICS',
+						'ACP_HELP_PHPBB',
 					),
 				),
 				'ACP_CAT_FORUMS'		=> array(
-					'ACP_MANAGE_FORUMS'				=> array(
+					'ACP_MANAGE_FORUMS'		=> array(
 						'ACP_MANAGE_FORUMS',
 						'ACP_PRUNE_FORUMS',
 					),
@@ -1028,7 +1013,7 @@ class datafile_3_1_2
 					),
 				),
 				'ACP_CAT_POSTING'		=> array(
-					'ACP_MESSAGES'			=> array(
+					'ACP_MESSAGES'		=> array(
 						'ACP_BBCODES',
 						'ACP_MESSAGE_SETTINGS',
 						'ACP_POST_SETTINGS',
@@ -1044,7 +1029,7 @@ class datafile_3_1_2
 					),
 				),
 				'ACP_CAT_USERGROUP'		=> array(
-					'ACP_CAT_USERS'			=> array(
+					'ACP_CAT_USERS'		=> array(
 						'ACP_INACTIVE_USERS',
 						'ACP_MANAGE_USERS',
 						'ACP_USER_PROFILE',
@@ -1648,6 +1633,7 @@ class datafile_3_1_2
 				'icons_url'				=> array('VCHAR', ''),
 				'icons_width'			=> array('TINT:4', 0),
 				'icons_height'			=> array('TINT:4', 0),
+				'icons_alt'				=> array('VCHAR', ''),
 				'icons_order'			=> array('UINT', 0),
 				'display_on_posting'	=> array('BOOL', 1),
 			),
@@ -1679,6 +1665,7 @@ class datafile_3_1_2
 				'user_id'				=> array('UINT', 0),
 				'forum_id'				=> array('UINT', 0),
 				'topic_id'				=> array('UINT', 0),
+				'post_id'				=> array('UINT', 0),
 				'reportee_id'			=> array('UINT', 0),
 				'log_ip'				=> array('VCHAR:40', ''),
 				'log_time'				=> array('TIMESTAMP', 0),
@@ -1692,6 +1679,7 @@ class datafile_3_1_2
 				'topic_id'				=> array('INDEX', 'topic_id'),
 				'reportee_id'			=> array('INDEX', 'reportee_id'),
 				'user_id'				=> array('INDEX', 'user_id'),
+				'log_time'				=> array('INDEX', 'log_time'),
 			),
 		);
 
@@ -1808,6 +1796,19 @@ class datafile_3_1_2
 				'session_id'			=> array('CHAR:32', ''),
 				'provider'				=> array('VCHAR', ''),
 				'oauth_token'			=> array('MTEXT', ''),
+			),
+			'KEYS'			=> array(
+				'user_id'				=> array('INDEX', 'user_id'),
+				'provider'				=> array('INDEX', 'provider'),
+			),
+		);
+
+		$schema_data['phpbb_oauth_states'] = array(
+			'COLUMNS'		=> array(
+				'user_id'				=> array('UINT', 0),
+				'session_id'			=> array('CHAR:32', ''),
+				'provider'				=> array('VCHAR', ''),
+				'oauth_state'			=> array('VCHAR', ''),
 			),
 			'KEYS'			=> array(
 				'user_id'				=> array('INDEX', 'user_id'),

@@ -38,6 +38,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
+	'ACP_EXTENSION_GROUPS'			=> 'Attachment extensions groups',
 	'ACP_MODULES_SETTINGS'			=> 'Search for additional modules',
 
 	'BOARD_DISABLE_REASON'			=> 'The board is currently disabled due to some database maintenance. Please check back soon!',
