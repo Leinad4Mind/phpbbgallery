@@ -136,4 +136,9 @@ $lang = array_merge($lang, array(
 	'VERSIONCHECK_FAIL'					=> 'Не удалось получить сведения о последней версии phpBB.',
 
 	'SELECT_ALL'						=> 'Чтобы выбрать все, переместите курсор в поле ниже и нажмите Ctrl-A (PC), Cmd-A (Mac)<br />Двойной щелчок выделяет слово, тройной всю строку',
+
+	'PHPBB_DEBUG'					=> '[phpBB Debug]',
+	'DEBUG_IN_FILE'					=> 'в файле',
+	'DEBUG_ON_LINE'					=> 'в строке',
+	'STK_INCOMPATIBLE'				=> 'Эта версия STK для phpBB версии 3.1.x, в то время как ваша версия %1$s',
 ));

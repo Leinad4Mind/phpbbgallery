@@ -1,16 +1,17 @@
 <?php
 /**
-*
-* @package Support Toolkit - DB Optimizer
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* @French translation by Galixte (http://www.galixte.com)
-*
-*/
+ *
+ * @package Support Toolkit - DB Optimizer French language
+ * French translation by Galixte (http://www.galixte.com)
+ *
+ * @copyright (c) 2017 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -51,5 +52,5 @@ $lang = array_merge($lang, array(
 	'ALL'						=> 'Total : ',
 	'SUCESS'					=> 'Les tables sélectionnées ont été optimisées avec succès',
 	'NOTHING'					=> 'Aucune sélection',
-	'OPTIMIZER_MESSAGE'			=> '<b>Attention !</b> Selon la taille des tables et l’importance de la fragmentation, l’optimisation pourrait prendre un certain temps.<br /> Veuillez ne pas quitter cette page jusqu’à la fin de l’optimisation.',
+	'OPTIMIZER_MESSAGE'			=> '<b>Attention !</b> Selon la taille des tables et l’importance de la fragmentation, l’optimisation pourrait prendre un certain temps.<br />Merci de ne pas quitter cette page jusqu’à la fin de l’optimisation.',
 ));

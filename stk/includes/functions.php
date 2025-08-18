@@ -391,7 +391,7 @@ function stk_add_lang($lang_file)
  */
 function perform_unauthed_quick_tasks($action, $submit = false)
 {
-	global $template, $umil, $user;
+	global $template, $umil, $user, $config;
 
 	switch ($action)
 	{
@@ -408,6 +408,7 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			global $cache, $config, $phpbb_container;
 
 			$_version_number = $cache->get('_stk_phpbb_version_number');
+
 			if ($_version_number === false)
 			{
 				if ($submit)
@@ -547,6 +548,12 @@ if (!defined('IN_PHPBB') || !defined('STK_VERSION'))
 \$stk_passwd_expiration\t= {$_pass_exprire};
 ";
 			exit_handler();
+		break;
+		default:
+			if ($config['version'] > '3.1.11')
+			{
+				trigger_error(user_lang('STK_INCOMPATIBLE'));
+			}
 		break;
 	}
 }
@@ -710,7 +717,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 		case E_USER_ERROR:
 		case E_RECOVERABLE_ERROR:
 			$backtrace = get_backtrace();
-			$msg_text = '<br /><b>[phpBB Debug] PHP '.$error_level[$errno].':</b> in file ' . phpbb_filter_root_path($errfile) . ' on line <b>'. $errline .': ' . $msg_text . '</b><br />'.$backtrace.'';
+			$msg_text = '<br /><strong>[phpBB Debug] PHP ' . $error_level[$errno] . ':</strong> in file ' . phpbb_filter_root_path($errfile) . ' on line <strong>' . $errline . ': ' . $msg_text . '</strong><br />' . $backtrace . '';
 		break;
 		default:
 		break;
@@ -770,14 +777,19 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 				$errfile = stk_filter_root_path($errfile);
 				$msg_text = stk_filter_root_path($msg_text);
 				$error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
-				echo '<b>[phpBB Debug] ' . $error_name . '</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
 
+				$id = rand(1, 10000);
+				$template->assign_block_vars('debug_r', array(
+					'U_DEBUGING_ERN'	=> $error_name,
+					'U_DEBUGING_ERF'	=> $errfile,
+					'U_DEBUGING_ERL'	=> $errline,
+					'U_DEBUGING_MSG'	=> $msg_text,
+				));
 				// we are writing an image - the user won't see the debug, so let's place it in the log
 				if (defined('IMAGE_OUTPUT') || defined('IN_CRON'))
 				{
 					add_log('critical', 'LOG_IMAGE_GENERATION_ERROR', $errfile, $errline, $msg_text);
 				}
-				echo '<br /><br />BACKTRACE<br />' . get_backtrace() . '<br />' . "\n";
 			}
 
 			return;
@@ -1162,4 +1174,49 @@ function check_phpbb_version()
 			'UPDATES_AVAILABLE'		=> (PHPBB_VERSION < $version_data['current'] || $config['version'] < $version_data['current']) ? sprintf($user->lang['UPDATES_AVAILABLE'], $version_data['current'], $announcement) : false,
 		));
 	}
+}
+
+/**
+* Get all the groups for the groups dropdown.
+*/
+function get_groups()
+{
+	static $option_list = null;
+	$args = func_get_args();
+
+	// Only run this once
+	if ($option_list == null)
+	{
+		global $db, $user;
+
+		// Just ignore the BOTS and GUESTS groups
+		$group_ignore = array('BOTS', 'GUESTS');
+
+		// Get the groups and build the dropdown list
+		$sql = 'SELECT group_id, group_type, group_name
+			FROM ' . GROUPS_TABLE . '
+			WHERE ' . $db->sql_in_set('group_name', $group_ignore, true);
+		$result = $db->sql_query($sql);
+
+		$option_list = '';
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
+			$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
+		}
+
+		$db->sql_freeresult($result);
+	}
+
+	// Remove the selected statement if we are displaying the leaderships group list
+	if (isset($args[1]))
+	{
+		if ($args[1] == 'groupleader')
+		{
+			return str_replace('selected=selected', '', $option_list);
+		}
+	}
+
+	return $option_list;
 }
