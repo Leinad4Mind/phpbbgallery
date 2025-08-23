@@ -188,7 +188,6 @@ class ext_mgr_plus
 		if ($this->request->variable('versioncheck_force', false))
 		{
 			$this->versioncheck_save();
-			redirect($this->u_action);
 		}
 
 		$notes = [];
@@ -327,10 +326,10 @@ class ext_mgr_plus
 		)
 		{
 			$this->template->assign_vars([
-				'MESSAGE_TEXT'		=>	sprintf('%1$s<br><br><strong>%2$s v%3$s (%4$s)</strong><br><br><em>%5$s</em>%6$s',
+				'MESSAGE_TEXT'		=>	sprintf('%1$s<br><br><strong>%2$s %3$s (%4$s)</strong><br><br><em>%5$s</em>%6$s',
 											/* 1 */	$this->language->lang('EXTMGRPLUS_MSG_PROCESS_ABORTED', $this->language->lang($last_action)),
 											/* 2 */	$ext_display_name,
-											/* 3 */	$ext_version,
+											/* 3 */	$this->language->lang('EXTMGRPLUS_VERSION_STRING', $ext_version),
 											/* 4 */	$ext_name,
 											/* 5 */	$message_text,
 											/* 6 */	$this->common->back_link('RETURN_TO_EXTENSION_LIST')
@@ -501,9 +500,9 @@ class ext_mgr_plus
 		$ext_list_failed_activation = [];
 		$get_failed_msg = function ($display_name, $ext_version, $ext_name, $message)
 		{
-			return sprintf('<br><br><strong>%1$s v%2$s (%3$s)</strong><br><br><em>%4$s</em>',
+			return sprintf('<br><br><strong>%1$s %2$s (%3$s)</strong><br><br><em>%4$s</em>',
 				/* 1 */	$display_name,
-				/* 2 */	$ext_version,
+				/* 2 */	$this->language->lang('EXTMGRPLUS_VERSION_STRING', $ext_version),
 				/* 3 */	$ext_name,
 				/* 4 */	$message
 			);
@@ -626,15 +625,21 @@ class ext_mgr_plus
 		$this->load_migrations_db();
 
 		$ext_with_migrations_list = [];
-		if (isset($this->migrations_db))
+		if ($this->config['extmgrplus_switch_order_and_ignore'])
 		{
-			foreach ($ext_list as $ext_name => $ext_path)
+			$ext_list_ignore = array_flip($this->common->config_text_get('extmgrplus_list_order_and_ignore', 'ignore') ?? []);
+		}
+
+		foreach ($ext_list as $ext_name => $ext_path)
+		{
+			if (isset($ext_list_ignore[$ext_name]))
 			{
-				$migration_files_count = $this->get_new_migrations_count($ext_name, $ext_path);
-				if ($migration_files_count)
-				{
-					$ext_with_migrations_list[$ext_name] = $migration_files_count;
-				}
+				continue;
+			}
+			$migration_files_count = $this->get_new_migrations_count($ext_name, $ext_path);
+			if ($migration_files_count)
+			{
+				$ext_with_migrations_list[$ext_name] = $migration_files_count;
 			}
 		}
 		unset($this->migrations_db);
@@ -666,7 +671,7 @@ class ext_mgr_plus
 	private function is_migration(string $file): int
 	{
 		$file_info = pathinfo($file);
-		if ($file_info['extension'] == $this->php_ext && file_exists($file))
+		if (($file_info['extension'] ?? '') == $this->php_ext && file_exists($file))
 		{
 			$file_content = file_get_contents($file);
 			if ($file_content !== false)
