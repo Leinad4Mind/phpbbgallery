@@ -6,6 +6,9 @@
 * @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
 * @license GNU General Public License, version 2 (GPL-2.0-only)
 *
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
 */
 
 /**
@@ -54,6 +57,8 @@ $lang = array_merge($lang, [
 	'EXTMGRPLUS_ORDER_AND_IGNORE_EXPLAIN'	=> 'Wenn Sie diese Option aktivieren, wird bei der Aktion „Ausgewählte aktivieren“ die Reihenfolge-Gruppe berücksichtigt und bei „Ausgewählte aktivieren“ und „Ausgewählte deaktivieren“ das Ignorieren-Merkmal. Ausserdem werden beim Auswählen/Abwählen auch definierte Abhängigkeiten berücksichtigt.',
 	'EXTMGRPLUS_SELF_DISABLE'				=> 'Erlaube Eigendeaktivierung',
 	'EXTMGRPLUS_SELF_DISABLE_EXPLAIN'		=> 'Wenn Sie diese Option aktivieren, dann kann sich „Extension Manager Plus“ bei der Aktion „Ausgewählte deaktivieren“ auch selbst deaktivieren, da diese Erweiterung dann wie jede andere ausgewählt werden kann.',
+	'EXTMGRPLUS_INSTRUCTIONS'				=> 'Anleitungen anzeigen',
+	'EXTMGRPLUS_INSTRUCTIONS_EXPLAIN'		=> 'Mit dieser Option können Sie festlegen, ob die Anleitungen für Installieren, Aktualisieren und Deinstallieren am Ende der Erweiterungen-Liste angezeigt werden sollen.',
 
 	// settings expert
 	'EXTMGRPLUS_SECTION_EXPERT_SETTINGS'	=> 'Experten-Einstellungen',

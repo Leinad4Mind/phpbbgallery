@@ -5,9 +5,12 @@
 * @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
 * @license GNU General Public License, version 2 (GPL-2.0-only)
 *
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
 */
 
-(function () {	// IIFE start
+(function ($) {	// IIFE start
 
 'use strict';
 
@@ -109,7 +112,7 @@ function disableEnter(e) {
 
 // Event registration
 
-$(window).ready(function () {
+$(function () {
 	$('#extmgrplus_list')						.on('keypress'	, disableEnter);
 	$('#extmgrplus_link_version_check')			.on('click'		, versionCheck);
 	$('#extmgrplus_link_order_ignore')			.on('click'		, showHideOrderIgnore);
@@ -121,4 +124,4 @@ $(window).ready(function () {
 	$('[name="ext_ignore[]"]')					.on('change'	, setInputBoxState);
 });
 
-})();	// IIFE end
+})(jQuery);	// IIFE end
