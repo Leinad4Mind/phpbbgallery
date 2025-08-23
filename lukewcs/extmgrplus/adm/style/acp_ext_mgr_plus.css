@@ -1,25 +1,3 @@
-/* HEADER */
-
-.extmgrplus_info_table {
-	background-color: inherit;
-	border: 0;
-	border-collapse: collapse;
-	width: auto;
-}
-
-.extmgrplus_info_table td {
-	padding: 0;
-}
-
-.extmgrplus_info_table td:nth-of-type(1) {
-	font-size: 0.90em;
-	padding-right: .5em;
-}
-
-.extmgrplus_info_table td:nth-of-type(2) {
-	font-size: 0.90em;
-}
-
 /* SETTINGS */
 
 fieldset {
@@ -36,17 +14,33 @@ legend {
 	top: 0;
 }
 
-.extmgrplus_legend {
-	font-family: Tahoma,arial,Verdana,Sans-serif;
-	font-size: .9em;
-	font-weight: bold;
-	color: #115098;
+legend.legend_sub {
+	border: 0;
+	margin: 1em 0;
+	padding: 0;
+	display: flex;
+	white-space: nowrap;
+}
+
+legend.legend_sub:after {
+	content: "";
+	border-bottom: 1px solid #cccccc;
+	width: 100%;
+	margin: 0 0 .5em 1em;
 }
 
 /* LIST */
 
-#extmgrplus_list input[name="extmgrplus_save_order_and_ignore"] {
-	padding: 3px 2px;
+input[name="extmgrplus_save_order_and_ignore"],
+input[name="extmgrplus_defaults"],
+.submit-buttons input[type=submit],
+.submit-buttons input[type=reset] {
+	padding: 3px 4px;
+}
+
+#extmgrplus_list input[name="extmgrplus_disable_all"],
+#extmgrplus_list input[name="extmgrplus_enable_all"] {
+	padding: 1px 5px;
 }
 
 #extmgrplus_list th:nth-of-type(1n + 2), /* version+ */
@@ -76,11 +70,6 @@ legend {
 
 #extmgrplus_list td:nth-of-type(1n + 6) { /* checkboxes(select)+  */
 	padding: 0 4px;
-}
-
-#extmgrplus_list input[name="extmgrplus_disable_all"],
-#extmgrplus_list input[name="extmgrplus_enable_all"] {
-	padding: 1px 5px;
 }
 
 .extmgrplus_migration_files {
