@@ -1,0 +1,20 @@
+services:
+    lukewcs.extmgrplus.core:
+        class: lukewcs\extmgrplus\core\ext_mgr_plus
+        arguments:
+            - '@ext.manager' 
+            - '@migrator'
+            - '@cache.driver'
+            - '@request'
+            - '@log'
+            - '@user'
+            - '@config'
+            - '@config_text'
+            - '@language'
+            - '@template'
+    lukewcs.extmgrplus.listener:
+        class: lukewcs\extmgrplus\event\listener
+        arguments:
+            - '@lukewcs.extmgrplus.core'
+        tags:
+            - { name: event.listener }
