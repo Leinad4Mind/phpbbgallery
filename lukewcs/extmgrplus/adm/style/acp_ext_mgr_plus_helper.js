@@ -7,6 +7,12 @@
 *
 */
 
+ExtMgrPlus.constants = Object.freeze({
+	CheckBoxModeOff		: '0',
+	CheckBoxModeAll		: '1',
+	CheckBoxModeLast	: '2',
+});
+
 ExtMgrPlus.CheckUncheckAll = function (e) {
 	'use strict';
 
@@ -35,14 +41,14 @@ ExtMgrPlus.SetInputBoxState = function (e) {
 ExtMgrPlus.ShowHideSettings = function () {
 	'use strict';
 
-	var show = ($('#version_check_settings').css('display') == 'none');
+	var show = ($('.extmgrplus_settings').css('display') == 'none');
 
 	if (show) {
 		$('.extmgrplus_settings')							.show();
 	} else {
 		$('.extmgrplus_settings')							.hide();
 	}
-	$('#extmgrplus_order_and_ignore')						.hide();
+	$('.extmgrplus_order_and_ignore')						.hide();
 
 	ExtMgrPlus.ShowOrderIgnoreColumns(false);
 	ExtMgrPlus.ShowActionElements(!show);
@@ -51,12 +57,12 @@ ExtMgrPlus.ShowHideSettings = function () {
 ExtMgrPlus.ShowHideOrderIgnore = function () {
 	'use strict';
 
-	var show = ($('#extmgrplus_order_and_ignore').css('display') == 'none');
+	var show = ($('.extmgrplus_order_and_ignore').css('display') == 'none');
 
 	if (show) {
-		$('#extmgrplus_order_and_ignore')					.show();
+		$('.extmgrplus_order_and_ignore')					.show();
 	} else {
-		$('#extmgrplus_order_and_ignore')					.hide();
+		$('.extmgrplus_order_and_ignore')					.hide();
 	}
 	$('.extmgrplus_settings')								.hide();
 
@@ -72,11 +78,13 @@ ExtMgrPlus.ShowActionElements = function (show) {
 		$('#extmgrplus_list input[name*="ext_mark_"]')		.show();
 		$('#extmgrplus_list a')								.show();
 		$('#extmgrplus_list td.row2 span')					.show();
+		$('#extmgrplus_save_checkboxes')					.removeClass('disabled');
 	} else {
 		$('#extmgrplus_list .table1 input[type="submit"]')	.hide();
 		$('#extmgrplus_list input[name*="ext_mark_"]')		.hide();
 		$('#extmgrplus_list a')								.hide();
 		$('#extmgrplus_list td.row2 span')					.hide();
+		$('#extmgrplus_save_checkboxes')					.addClass('disabled');
 	}
 };
 
@@ -103,11 +111,11 @@ ExtMgrPlus.ShowOrderIgnoreColumns = function (show) {
 ExtMgrPlus.ConfirmMigrations = function () {
 	'use strict';
 
-	if ($('input[name="extmgrplus_enable_migrations"]').prop('checked')) {
+	if ($('input[name="extmgrplus_switch_migrations"]').prop('checked')) {
 		requestAnimationFrame(function() {
 			setTimeout(function() {
 				if (!confirm(ExtMgrPlus.lang.MsgConfirmMigrations)) {
-					$('input[name="extmgrplus_enable_migrations"]').prop('checked', false)
+					$('input[name="extmgrplus_switch_migrations"]').prop('checked', false)
 				}
 			});
 		});
@@ -117,12 +125,26 @@ ExtMgrPlus.ConfirmMigrations = function () {
 ExtMgrPlus.SetDefaults = function () {
 	'use strict';
 
-	$('input[name="extmgrplus_enable_log"]'					).prop('checked'	, true);
-	$('input[name="extmgrplus_enable_confirmation"]'		).prop('checked'	, true);
-	$('input[name="extmgrplus_enable_checkboxes_all_set"]'	).prop('checked'	, true);
-	$('input[name="extmgrplus_enable_order_and_ignore"]'	).prop('checked'	, true);
-	$('input[name="extmgrplus_enable_self_disable"]'		).prop('checked'	, false);
-	$('input[name="extmgrplus_enable_migrations"]'			).prop('checked'	, false);
+	var c = ExtMgrPlus.constants;
+
+	$('input[name="extmgrplus_switch_log"]'					).prop('checked'	, true);
+	$('input[name="extmgrplus_switch_confirmation"]'		).prop('checked'	, true);
+	$('select[name="extmgrplus_select_checkbox_mode"]'		).prop('value'		, c.CheckBoxModeAll);
+	$('input[name="extmgrplus_switch_order_and_ignore"]'	).prop('checked'	, true);
+	$('input[name="extmgrplus_switch_self_disable"]'		).prop('checked'	, false);
+	$('input[name="extmgrplus_switch_migration_col"]'		).prop('checked'	, false);
+	$('input[name="extmgrplus_switch_migrations"]'			).prop('checked'	, false);
+};
+
+ExtMgrPlus.SaveCheckboxes = function () {
+	'use strict';
+
+	if (($('.extmgrplus_settings').css('display') != 'none') || ($('.extmgrplus_order_and_ignore').css('display') != 'none')) {
+		return;
+	}
+
+	$('#extmgrplus_list').append('<input type="hidden" name="extmgrplus_save_checkboxes" value="1">');
+	$('#extmgrplus_list').submit();
 };
 
 $('#extmgrplus_list').keypress(function(e) {
@@ -136,7 +158,7 @@ $('#extmgrplus_list').keypress(function(e) {
 $(window).ready(function() {
 	'use strict';
 
-	$('input[name="extmgrplus_enable_migrations"]'	).on('change'	, ExtMgrPlus.ConfirmMigrations);
+	$('input[name="extmgrplus_switch_migrations"]'	).on('change'	, ExtMgrPlus.ConfirmMigrations);
 	$('input[name="extmgrplus_defaults"]'			).on('click'	, ExtMgrPlus.SetDefaults);
 	$('input[name="ext_mark_all_enabled"]:enabled'	).on('change'	, {CheckBoxType: 'enabled'}, ExtMgrPlus.CheckUncheckAll);
 	$('input[name="ext_mark_all_disabled"]:enabled'	).on('change'	, {CheckBoxType: 'disabled'}, ExtMgrPlus.CheckUncheckAll);

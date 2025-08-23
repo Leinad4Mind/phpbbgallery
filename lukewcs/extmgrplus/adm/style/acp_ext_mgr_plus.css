@@ -1,3 +1,11 @@
+/* LINK BAR */
+
+.extmgrplus_link_icon {
+	display: inline-block;
+	margin-right: .3em;
+	font-size: 12px;
+}
+
 /* SETTINGS */
 
 fieldset {
@@ -29,14 +37,29 @@ legend.legend_sub:after {
 	margin: 0 0 .5em 1em;
 }
 
-/* LIST */
-
-input[name="extmgrplus_save_order_and_ignore"],
-input[name="extmgrplus_defaults"],
+input[name*="extmgrplus_"].button2,
 .submit-buttons input[type=submit],
 .submit-buttons input[type=reset] {
 	padding: 3px 4px;
 }
+
+fieldset.extmgrplus_order_and_ignore dt {
+	width: 50%;
+}
+
+fieldset.extmgrplus_order_and_ignore dd {
+	margin-left: 50%;
+	color: inherit;
+}
+
+fieldset.extmgrplus_order_and_ignore label {
+	font-size: 1em;
+	text-align: left;
+	font-weight: bold;
+	color: #4A5A73;
+}
+
+/* LIST */
 
 #extmgrplus_list input[name="extmgrplus_disable_all"],
 #extmgrplus_list input[name="extmgrplus_enable_all"] {
@@ -53,7 +76,7 @@ input[name="extmgrplus_defaults"],
 }
 
 #extmgrplus_list th:nth-of-type(3) {		/* migration files */
-	width: 2%;
+	width: 1%;
 }
 
 #extmgrplus_list th:nth-of-type(4) {		/* options */
@@ -76,13 +99,6 @@ input[name="extmgrplus_defaults"],
 	cursor: help;
 }
 
-#extmgrplus_list input[type="text"] {
-	text-align: right;
-	padding: 0 2px;
-	margin: 0 2px;
-	background-color: #F9F9F9;
-}
-
 .inactive {
 	opacity: .5;
 }
@@ -95,6 +111,13 @@ input[name="extmgrplus_defaults"],
 
 #extmgrplus_list input[type="checkbox"]:disabled {
 	cursor: not-allowed;
+}
+
+#extmgrplus_list input[type="text"] {
+	text-align: right;
+	padding: 0 2px;
+	margin: 0 2px;
+	background-color: #F9F9F9;
 }
 
 /* FOOTER */
@@ -123,11 +146,17 @@ input[name="extmgrplus_defaults"],
 		padding: 2px 5px;
 	}
 
-	#extmgrplus_list dd:nth-of-type(1) {
-		text-align: center;
-	}
-
+	.extmgrplus_order_and_ignore dd,
 	.extmgrplus_settings dd {
 		margin-top: .5em;
+	}
+
+	fieldset.extmgrplus_order_and_ignore dt {
+		width: 100%;
+	}
+
+	fieldset.extmgrplus_order_and_ignore dd {
+		margin-left: 0;
+		padding-left: 0;
 	}
 }

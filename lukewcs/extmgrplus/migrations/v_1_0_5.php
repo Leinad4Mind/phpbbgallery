@@ -10,7 +10,7 @@
 
 namespace lukewcs\extmgrplus\migrations;
 
-class v_1_0_5 extends \phpbb\db\migration\container_aware_migration
+class v_1_0_5 extends \phpbb\db\migration\migration
 {
 	public static function depends_on()
 	{
@@ -20,8 +20,8 @@ class v_1_0_5 extends \phpbb\db\migration\container_aware_migration
 	public function update_data()
 	{
 		return [
-			['config.add',		['extmgrplus_enable_version_notification', 1]],
-			['config_text.add', ['extmgrplus_version_check', '']],
+			['config.add',		['extmgrplus_enable_version_notification'	, 1]],
+			['config_text.add', ['extmgrplus_version_check'					, '']],
 		];
 	}
 }
