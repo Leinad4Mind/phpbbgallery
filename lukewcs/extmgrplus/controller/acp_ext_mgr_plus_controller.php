@@ -10,7 +10,7 @@
 
 namespace lukewcs\extmgrplus\controller;
 
-class ext_mgr_plus_acp
+class acp_ext_mgr_plus_controller
 {
 	protected $common;
 	protected $language;
@@ -46,20 +46,17 @@ class ext_mgr_plus_acp
 		);
 		$this->common->set_template_vars('EXTMGRPLUS');
 
-		$lang_outdated_msg = $this->common->lang_ver_check_msg('EXTMGRPLUS_LANG_VER',	'EXTMGRPLUS_MSG_LANGUAGEPACK_OUTDATED');
+		$lang_outdated_msg = $this->common->lang_ver_check_msg('EXTMGRPLUS_LANG_VER', 'EXTMGRPLUS_MSG_LANGUAGEPACK_OUTDATED');
 		if ($lang_outdated_msg)
 		{
 			$notes[] = $lang_outdated_msg;
 		}
-
-		add_form_key('lukewcs_extmgrplus');
 
 		if ($this->request->is_set_post('extmgrplus_save_settings'))
 		{
 			$this->common->check_form_key_error('lukewcs_extmgrplus');
 
 			$this->config->set('extension_force_unstable'			, $this->request->variable('force_unstable', false));
-
 			$this->config->set('extmgrplus_switch_log'				, $this->request->variable('extmgrplus_switch_log', 0));
 			$this->config->set('extmgrplus_switch_confirmation'		, $this->request->variable('extmgrplus_switch_confirmation', 0));
 			$this->config->set('extmgrplus_switch_auto_redirect'	, $this->request->variable('extmgrplus_switch_auto_redirect', 0));
@@ -74,7 +71,6 @@ class ext_mgr_plus_acp
 
 		$this->template->assign_vars([
 			'EXTMGRPLUS_NOTES'							=> $notes,
-
 			'FORCE_UNSTABLE'							=> $this->config['extension_force_unstable'],
 			'EXTMGRPLUS_SWITCH_LOG'						=> $this->config['extmgrplus_switch_log'],
 			'EXTMGRPLUS_SWITCH_CONFIRMATION'			=> $this->config['extmgrplus_switch_confirmation'],
@@ -90,6 +86,8 @@ class ext_mgr_plus_acp
 			'EXTMGRPLUS_SWITCH_MIGRATION_COL'			=> $this->config['extmgrplus_switch_migration_col'],
 			'EXTMGRPLUS_SWITCH_MIGRATIONS'				=> $this->config['extmgrplus_switch_migrations'],
 		]);
+
+		add_form_key('lukewcs_extmgrplus');
 	}
 
 	public function set_page_url($u_action): void
