@@ -109,6 +109,7 @@ legend {
 	opacity: .5;
 }
 
+.disabled,
 #extmgrplus_list input[type="submit"]:disabled {
 	opacity: .5;
 	cursor: not-allowed;

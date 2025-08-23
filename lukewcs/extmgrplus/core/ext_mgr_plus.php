@@ -3,7 +3,7 @@
 *
 * Extension Manager Plus. An extension for the phpBB Forum Software package.
 *
-* @copyright (c) 2022, LukeWCS, https://www.wcsaga.org/
+* @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
 * @license GNU General Public License, version 2 (GPL-2.0-only)
 *
 */
@@ -58,7 +58,7 @@ class ext_mgr_plus
 
 		if ($this->config_text_get('extmgrplus_todo_list', 'self_disable'))
 		{
-			$this->config_text_set('extmgrplus_todo_list', 'self_disable', false);
+			$this->config_text_set('extmgrplus_todo_list', 'self_disable', null);
 
 			$safe_time_limit = (ini_get('max_execution_time') / 2);
 			$start_time = time();
@@ -74,14 +74,14 @@ class ext_mgr_plus
 
 		if ($this->config_text_get('extmgrplus_todo_list', 'purge_cache'))
 		{
-			$this->config_text_set('extmgrplus_todo_list', 'purge_cache', false);
+			$this->config_text_set('extmgrplus_todo_list', 'purge_cache', null);
 			$this->cache->purge();
 		}
 
 		if ($this->config_text_get('extmgrplus_todo_list', 'add_log'))
 		{
 			$last_job = $this->config_text_get('extmgrplus_todo_list', 'add_log');
-			$this->config_text_set('extmgrplus_todo_list', 'add_log', false);
+			$this->config_text_set('extmgrplus_todo_list', 'add_log', null);
 
 			if ($last_job !== null)
 			{
@@ -97,9 +97,7 @@ class ext_mgr_plus
 					]
 				);
 			}
-
 		}
-		$this->config_text_set('extmgrplus_todo_list', null, null);
 	}
 
 	public function ext_manager($event)
@@ -122,8 +120,8 @@ class ext_mgr_plus
 			{
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
+
 			$this->enable_disable_confirm();
-			return;
 		}
 		else if ($this->request->is_set_post('extmgrplus_save_settings'))
 		{
@@ -131,32 +129,33 @@ class ext_mgr_plus
 			{
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
+
 			$this->config->set('extmgrplus_enable_log', $this->request->variable('extmgrplus_enable_log', 0));
 			$this->config->set('extmgrplus_enable_confirmation', $this->request->variable('extmgrplus_enable_confirmation', 0));
 			$this->config->set('extmgrplus_enable_checkboxes_all_set', $this->request->variable('extmgrplus_enable_checkboxes_all_set', 0));
 			$this->config->set('extmgrplus_enable_order_and_ignore', $this->request->variable('extmgrplus_enable_order_and_ignore', 0));
 			$this->config->set('extmgrplus_enable_self_disable', $this->request->variable('extmgrplus_enable_self_disable', 0));
 			$this->config->set('extmgrplus_enable_migrations', $this->request->variable('extmgrplus_enable_migrations', 0));
+
 			trigger_error($this->language->lang('EXTMGRPLUS_MSG_SETTINGS_SAVED') . adm_back_link($this->u_action), E_USER_NOTICE);
 		}
-		else if ($this->request->is_set_post('extmgrplus_save_order_and_ignore'))
+		else if ($this->request->is_set_post('extmgrplus_save_order_and_ignore') && $this->config['extmgrplus_enable_order_and_ignore'])
 		{
 			if (!check_form_key('lukewcs_extmgrplus'))
 			{
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
-			$order_and_ignore_list = $this->request->variable('ext_order_and_ignore', ['' => '']);
-			$order_and_ignore_list = array_filter($order_and_ignore_list, function($value) {
-				return preg_match('/^[0-9]{1,2}$|^-$/', $value);
+
+			$order_list = $this->request->variable('ext_order', ['' => '']);
+			$ignore_list = $this->request->variable('ext_ignore', ['']);
+
+			$order_list = array_filter($order_list, function($value) {
+				return preg_match('/^[0-9]{1,2}$/', $value);
 			});
-			if (count($order_and_ignore_list) == 0)
-			{
-				$this->config_text_set('extmgrplus_order_and_ignore_list', null, null);
-			}
-			else
-			{
-				$this->config_text_set('extmgrplus_order_and_ignore_list', 'tech_names', $order_and_ignore_list);
-			}
+
+			$this->config_text_set('extmgrplus_order_and_ignore_list', 'order', count($order_list) ? $order_list : null);
+			$this->config_text_set('extmgrplus_order_and_ignore_list', 'ignore', count($ignore_list) ? $ignore_list : null);
+
 			trigger_error($this->language->lang('EXTMGRPLUS_MSG_ORDER_AND_IGNORE_SAVED') . adm_back_link($this->u_action), E_USER_NOTICE);
 		}
 
@@ -166,20 +165,22 @@ class ext_mgr_plus
 
 		if ($this->config['extmgrplus_enable_order_and_ignore'])
 		{
-			$ext_list_order_and_ignore = $this->config_text_get('extmgrplus_order_and_ignore_list', 'tech_names');
+			$ext_list_ignore = $this->config_text_get('extmgrplus_order_and_ignore_list', 'ignore');
+			$ext_list_order = $this->config_text_get('extmgrplus_order_and_ignore_list', 'order');
 		}
-		if (isset($ext_list_order_and_ignore) && is_array($ext_list_order_and_ignore))
+		if (!isset($ext_list_order) || !is_array($ext_list_order))
 		{
-			$ext_list_enabled_and_ignored = array_filter($ext_list_order_and_ignore, function($value, $key) use ($ext_list_enabled) {
-				return preg_match('/^-$/', $value) && isset($ext_list_enabled[$key]);
-			}, ARRAY_FILTER_USE_BOTH);
-			$ext_list_disabled_and_ignored = array_filter($ext_list_order_and_ignore, function($value, $key) use ($ext_list_disabled) {
-				return preg_match('/^-$/', $value) && isset($ext_list_disabled[$key]);
-			}, ARRAY_FILTER_USE_BOTH);
+			$ext_list_order = [];
+		}
+		if (isset($ext_list_ignore) && is_array($ext_list_ignore))
+		{
+			$ext_list_ignore = array_flip($ext_list_ignore);
+			$ext_list_enabled_and_ignored = array_intersect_key($ext_list_ignore, $ext_list_enabled);
+			$ext_list_disabled_and_ignored = array_intersect_key($ext_list_ignore, $ext_list_disabled);
 		}
 		else
 		{
-			$ext_list_order_and_ignore = [];
+			$ext_list_ignore = [];
 			$ext_list_enabled_and_ignored = [];
 			$ext_list_disabled_and_ignored = [];
 		}
@@ -211,7 +212,8 @@ class ext_mgr_plus
 
 		$this->template->assign_vars([
 			'EXTMGRPLUS_ALLOW_MIGRATIONS'			=> $this->config['extmgrplus_enable_migrations'],
-			'EXTMGRPLUS_ORDER_AND_IGNORE'			=> $ext_list_order_and_ignore,
+			'EXTMGRPLUS_ORDER'						=> $ext_list_order,
+			'EXTMGRPLUS_IGNORE'						=> $ext_list_ignore,
 			'EXTMGRPLUS_COUNT_AVAILABLE'			=> $ext_count_available,
 			'EXTMGRPLUS_COUNT_ENABLED'				=> $ext_count_enabled,
 			'EXTMGRPLUS_COUNT_ENABLED_CLEAN'		=> $ext_count_enabled_clean,
@@ -300,7 +302,6 @@ class ext_mgr_plus
 						$this->language->lang('EXTMGRPLUS_MSG_CONFIRM_DISABLE', $this->language->lang('EXTMGRPLUS_EXTENSION_PLURAL', $ext_count_enabled)),
 						build_hidden_fields([
 							'extmgrplus_disable_all'	=> true,
-							'extmgrplus_confirm_box'	=> true,
 							'ext_mark_enabled'			=> $ext_list_marked,
 							'u_action'					=> $this->u_action
 						]),
@@ -331,7 +332,6 @@ class ext_mgr_plus
 						$this->language->lang('EXTMGRPLUS_MSG_CONFIRM_ENABLE', $this->language->lang('EXTMGRPLUS_EXTENSION_PLURAL', $ext_count_disabled)),
 						build_hidden_fields([
 							'extmgrplus_enable_all'		=> true,
-							'extmgrplus_confirm_box'	=> true,
 							'ext_mark_disabled'			=> $ext_list_marked,
 							'u_action'					=> $this->u_action
 						]),
@@ -425,13 +425,11 @@ class ext_mgr_plus
 
 			if ($this->config['extmgrplus_enable_order_and_ignore'])
 			{
-				$ext_list_order = $this->config_text_get('extmgrplus_order_and_ignore_list', 'tech_names');
+				$ext_list_order = $this->config_text_get('extmgrplus_order_and_ignore_list', 'order');
 			}
 			if (isset($ext_list_order) && is_array($ext_list_order))
 			{
-				$ext_list_order = array_filter($ext_list_order, function ($value, $key) use ($ext_list_disabled) {
-					return preg_match('/^[0-9]{1,2}$/', $value) && isset($ext_list_disabled[$key]);
-				}, ARRAY_FILTER_USE_BOTH);
+				$ext_list_order = array_intersect_key($ext_list_order, $ext_list_disabled);
 				asort($ext_list_order, SORT_NUMERIC);
 			}
 			else
@@ -496,7 +494,7 @@ class ext_mgr_plus
 
 			if (count($ext_list_failed_activation))
 			{
-				$msg_failed = sprintf('<br><br>%s', $this->language->lang('EXTMGRPLUS_MSG_ACTIVATION_FAILED'));
+				$msg_failed = '<br><br>' . $this->language->lang('EXTMGRPLUS_MSG_ACTIVATION_FAILED');
 				foreach ($ext_list_failed_activation as $name => $vars)
 				{
 					if (is_array($vars['message']))
@@ -621,7 +619,7 @@ class ext_mgr_plus
 		{
 			return $messages;
 		}
-		return $messages . (($messages != '') ? "\n" : '') . sprintf('<p>%s</p>', $text);
+		return $messages . (($messages != '') ? "\n" : '') . "<p>${text}</p>";
 	}
 
 	// Set a variable/array in a config_text variable container or delete one or all variables/arrays
@@ -647,7 +645,7 @@ class ext_mgr_plus
 		else if ($name !== null && $value === null)
 		{
 			unset($vars[$name]);
-			$this->config_text->set($container, json_encode($vars));
+			$this->config_text->set($container, (is_array($vars) && count($vars) ? json_encode($vars) : ''));
 		}
 		else if ($name === null && $value === null)
 		{
