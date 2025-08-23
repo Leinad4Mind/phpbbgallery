@@ -1,9 +1,45 @@
+/* GENERAL */
+
+.disabled,
+.disabled:hover {
+	color: inherit !important;
+	text-decoration: none;
+}
+
+.inactive,
+.disabled,
+input[type="submit"]:disabled,
+input[type="button"]:disabled,
+input[type="checkbox"][class^="toggle"]:disabled {
+	opacity: .5;
+}
+
+.disabled,
+input[type="submit"]:disabled,
+input[type="button"]:disabled,
+input[type="checkbox"]:disabled {
+	cursor: not-allowed;
+}
+
+/* CONFIRM BOX */
+
+div[id$="_confirmbox"] h2,
+#confirm h2 {
+	margin-bottom: .25em;
+}
+
 /* LINK BAR */
 
-.extmgrplus_link_icon {
+fieldset.quick a .icon {
 	display: inline-block;
-	margin-right: .3em;
+	margin: 0 .3em;
 	font-size: 12px;
+}
+
+/* MESSAGE BOX */
+
+div.successbox .icon {
+	display: inline-block;
 }
 
 /* SETTINGS */
@@ -37,9 +73,8 @@ legend.legend_sub:after {
 	margin: 0 0 .5em 1em;
 }
 
-input[name*="extmgrplus_"].button2,
-.submit-buttons input[type=submit],
-.submit-buttons input[type=reset] {
+input[name^="extmgrplus_"].button2,
+.submit-buttons input[class^="button"] {
 	padding: 3px 4px;
 }
 
@@ -59,11 +94,29 @@ fieldset.extmgrplus_order_and_ignore label {
 	color: #4A5A73;
 }
 
+div[id$="_confirmbox"] {
+	max-width: 450px;
+	border: 2px solid skyblue;
+	padding: .25em .5em;
+	margin: .75em .5em;
+	border-radius: 5px;
+}
+
 /* LIST */
 
-#extmgrplus_list input[name="extmgrplus_disable_all"],
-#extmgrplus_list input[name="extmgrplus_enable_all"] {
+#extmgrplus_list input[name$="able_all"] {
 	padding: 1px 5px;
+}
+
+#extmgrplus_list input[type="text"] {
+	text-align: right;
+	padding: 0 2px;
+	margin: 0 2px;
+	background-color: #F9F9F9;
+}
+
+.extmgrplus_migration_files {
+	cursor: help;
 }
 
 #extmgrplus_list th:nth-of-type(1n + 2),	/* version+ */
@@ -95,43 +148,12 @@ fieldset.extmgrplus_order_and_ignore label {
 	padding: 0 4px;
 }
 
-.extmgrplus_migration_files {
-	cursor: help;
-}
-
-.inactive {
-	opacity: .5;
-}
-
-.disabled,
-#extmgrplus_list input[type="submit"]:disabled {
-	opacity: .5;
-	cursor: not-allowed;
-}
-
-#extmgrplus_list input[type="checkbox"]:disabled {
-	cursor: not-allowed;
-}
-
-#extmgrplus_list input[type="text"] {
-	text-align: right;
-	padding: 0 2px;
-	margin: 0 2px;
-	background-color: #F9F9F9;
-}
-
 /* FOOTER */
 
 .extmgrplus_footer {
 	margin-top: 1em;
 	text-align: center;
 	font-size: .75em;
-}
-
-/* CONFIRM BOX */
-
-#confirm h2 {
-	margin-bottom: .25em;
 }
 
 /* RESPONSIVE */
@@ -147,7 +169,7 @@ fieldset.extmgrplus_order_and_ignore label {
 	}
 
 	.extmgrplus_order_and_ignore dd,
-	.extmgrplus_settings dd {
+	#extmgrplus_settings dd {
 		margin-top: .5em;
 	}
 
