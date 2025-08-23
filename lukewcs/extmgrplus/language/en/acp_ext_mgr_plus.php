@@ -50,46 +50,52 @@ $lang = array_merge($lang, [
 		1									=> '%2$u (%1$u invalid)',
 	],
 	'EXTMGRPLUS_VERSIONCHECK_DATE' => [
-		0									=> '%2$s',
-		1									=> '%2$s (%1$u errors)',
+		0									=> '%2$s (%3$u sec.)',
+		1									=> '%2$s (%3$u sec. / %1$u error)',
+		2									=> '%2$s (%3$u sec. / %1$u errors)',
 	],
 
 	// link bar
-	'EXTMGRPLUS_LINK_ORDER_AND_IGNORE'		=> 'Order & Ignore',
+	'EXTMGRPLUS_LINK_EXT_PROPERTIES'		=> 'Extension properties',
 	'EXTMGRPLUS_LINK_SAVE_CHECKBOXES'		=> 'Save',
 
 	// settings order and ignore
 	'EXTMGRPLUS_SECTION_SETTINGS'			=> 'Settings (Plus)',
-	'EXTMGRPLUS_ORDER'						=> 'Order',
-	'EXTMGRPLUS_ORDER_EXPLAIN'				=> '%s This column allows you to define order groups in the range 0 to 99 for the “Enable selected” action. This allows extensions that other extensions depend on to be activated before them to avoid error messages. Extensions belonging to such a group are activated first, starting with group 0, then group 1 and so on. Extensions without a group are activated last.',
+	'EXTMGRPLUS_ORDER'						=> '%s Order & Dependency',
+	'EXTMGRPLUS_ORDER_EXPLAIN'				=> 'In this column, you can define order groups in the range 0 to 99 for the “Enable selected” and “Disable selected” actions. This allows extensions that depend on other extensions to be activated before them to avoid error messages. Extensions that belong to such a group are activated first, starting with group 0, then group 1, and so on. Extensions without a group are activated last. When deactivating, the order is reversed.',
+	'EXTMGRPLUS_DEPENDENCY'					=> 'Dependency',
 	'EXTMGRPLUS_DEPENDENCY_EXPLAIN'			=> 'An extension can be linked to a group by preceding it with <code>+</code>. For example, if you have extension B which is dependent on extension A, you can enter <code>0</code> for A and <code>+0</code> for B. If both extensions are enabled, selecting A will also select B. If both extensions are disabled, selecting B will also select A.',
-	'EXTMGRPLUS_IGNORE'						=> 'Ignore',
-	'EXTMGRPLUS_IGNORE_EXPLAIN'				=> '%s This column allows you to specify which extensions should be ignored during the “Enable selected” and “Disable selected” actions. Ignored extensions can no longer be selected in the extensions list. If an order group was defined for an ignored extension, then this is retained, but it no longer has any meaning.',
+	'EXTMGRPLUS_IGNORE'						=> '%s Ignore',
+	'EXTMGRPLUS_IGNORE_EXPLAIN'				=> 'This column allows you to specify which extensions should be ignored during the “Enable selected” and “Disable selected” actions. Ignored extensions can no longer be selected in the extensions list and no new migrations will be detected and displayed for such extensions. If an order group was defined for an ignored extension, then this is retained, but it no longer has any meaning.',
 
 	// ext manager
+	'EXTMGRPLUS_COL_CDB'					=> 'Validated extension',
 	'EXTMGRPLUS_COL_MIGRATIONS'				=> 'New migrations',
 	'EXTMGRPLUS_COL_SELECT'					=> 'Select',
 	'EXTMGRPLUS_COL_ORDER'					=> 'Order',
 	'EXTMGRPLUS_COL_IGNORE'					=> 'Ignore',
-	'EXTMGRPLUS_ALL_DISABLE'				=> 'Disable selected',
-	'EXTMGRPLUS_ALL_ENABLE'					=> 'Enable selected',
+	'EXTMGRPLUS_DISABLE_ALL'				=> 'Disable selected',
+	'EXTMGRPLUS_ENABLE_ALL'					=> 'Enable selected',
 	'EXTMGRPLUS_EXTENSIONS_ENABLED'			=> 'Enabled Extensions: %u',
 	'EXTMGRPLUS_EXTENSIONS_DISABLED'		=> 'Disabled Extensions: %u',
 	'EXTMGRPLUS_EXTENSIONS_NOT_INSTALLED'	=> 'Not installed Extensions: %u',
 
 	// tooltips
 	'EXTMGRPLUS_TOOLTIP_HAS_MIGRATION'		=> 'This extension has new migrations that are applied when activating the extension.',
-	'EXTMGRPLUS_TOOLTIP_OUTDATED'			=> 'The installed version of this extension is out of date.',
-	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_ERROR'	=> 'An error occurred during the version check. Click on “Details” to find out more.',
-	'EXTMGRPLUS_TOOLTIP_NO_VERSIONCHECK'	=> 'This extension does not provide version checking.',
-	'EXTMGRPLUS_TOOLTIP_IS_IGNORED'			=> 'This extension is ignored by “Extension Manager Plus”.',
-	'EXTMGRPLUS_TOOLTIP_IS_LOCKED'			=> 'The selection of this extension is blocked due to new migrations.',
-	'EXTMGRPLUS_TOOLTIP_BUTTON_DISABLE'		=> 'Disable all selected extensions.',
-	'EXTMGRPLUS_TOOLTIP_BUTTON_ENABLE'		=> 'Enable all selected extensions.',
+	'EXTMGRPLUS_TOOLTIP_DISABLE_ALL'		=> 'Disable all selected extensions.',
+	'EXTMGRPLUS_TOOLTIP_ENABLE_ALL'			=> 'Enable all selected extensions.',
 	'EXTMGRPLUS_TOOLTIP_ORDER'				=> 'Order group in the range 0-99. A group can be linked with a preceding +.',
 	'EXTMGRPLUS_TOOLTIP_IGNORE'				=> 'Ignore extension.',
 	'EXTMGRPLUS_TOOLTIP_SELECT_ALL'			=> 'Select or deselect all extensions.',
 	'EXTMGRPLUS_TOOLTIP_SELECT'				=> 'Select extension.',
+	'EXTMGRPLUS_TOOLTIP_IS_LOCKED'			=> 'The selection of this extension is blocked due to new migrations.',
+	// tooltips icons
+	'EXTMGRPLUS_TOOLTIP_CDB_EXT'			=> 'This extension has been officially validated.',
+	'EXTMGRPLUS_TOOLTIP_OUTDATED'			=> 'The installed version of this extension is out of date.',
+	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_ERROR'	=> 'An error occurred during the version check. Click on “Details” to find out more.',
+	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_EMPTY'	=> 'No version check was performed for this extension.',
+	'EXTMGRPLUS_TOOLTIP_NO_VERSIONCHECK'	=> 'This extension does not provide version checking.',
+	'EXTMGRPLUS_TOOLTIP_IS_IGNORED'			=> 'This extension is ignored by “Extension Manager Plus”.',
 
 	// misc
 	'EXTMGRPLUS_EXTENSION_PLURAL' => [
@@ -97,17 +103,32 @@ $lang = array_merge($lang, [
 		1									=> '1 extension',
 		2									=> '%u extensions',
 	],
+	'EXTMGRPLUS_SECOND_PLURAL' => [
+		0									=> '0 seconds',
+		1									=> '1 second',
+		2									=> '%u seconds',
+	],
+	'EXTMGRPLUS_SPOILER_LABEL'				=> 'Explanation',
+
+	// details
+	'EXTMGRPLUS_SECTION_DETAILS'			=> 'Information from Extension Manager Plus',
+	'EXTMGRPLUS_DETAILS_CDB_PAGE'			=> 'phpBB extension database page',
+	'EXTMGRPLUS_DETAILS_VERSION_URL'		=> 'Link to version file',
 
 	// messages
 	'EXTMGRPLUS_MSG_CONFIRM_DISABLE'		=> 'Are you sure that you wish to disable %s?',
 	'EXTMGRPLUS_MSG_CONFIRM_ENABLE'			=> 'Are you sure that you wish to enable %s?',
-	'EXTMGRPLUS_MSG_ORDER_AND_IGNORE_SAVED'	=> 'Order and Ignore columns saved successfully.',
+	'EXTMGRPLUS_MSG_EXT_PROPERTIES_SAVED'	=> 'Extension properties saved successfully.',
 	'EXTMGRPLUS_MSG_CHECKBOXES_SAVED'		=> 'Selection of checkboxes saved successfully.',
 	'EXTMGRPLUS_MSG_PROCESS_ABORTED'		=> 'The “%s” operation was interrupted by the following extension:',
 	'EXTMGRPLUS_MSG_DEACTIVATION'			=> '%1$u of %2$u extensions have been disabled.',
 	'EXTMGRPLUS_MSG_ACTIVATION'				=> '%1$u of %2$u extensions have been enabled.',
-	'EXTMGRPLUS_MSG_ACTIVATION_FAILED'		=> 'The following extensions could not be activated:',
+	'EXTMGRPLUS_MSG_DEACTIVATION_FAILED'	=> 'The following extensions could not be disabled:',
+	'EXTMGRPLUS_MSG_ACTIVATION_FAILED'		=> 'The following extensions could not be enabled:',
 	'EXTMGRPLUS_MSG_SAFE_TIME_EXCEEDED'		=> 'The tolerance range (%u seconds) of the maximum PHP execution time has been exceeded.',
 	'EXTMGRPLUS_MSG_SELF_DISABLE'			=> 'Note: The “Extension Manager Plus” extension will also be disabled.',
-	'EXTMGRPLUS_MSG_VERSIONCHECK_HINT'		=> 'The extensions are being checked for new versions, please wait. %s',
+	// messages versioncheck
+	'EXTMGRPLUS_MSG_VERSIONCHECK_HINT'		=> 'The extensions are being checked for new versions.',
+	'EXTMGRPLUS_MSG_VERSIONCHECK_BLOCK'		=> 'Current block (maximum %s)',
+	'EXTMGRPLUS_MSG_VERSIONCHECK_PROGRESS'	=> 'Extensions checked: %1$u / %2$u',
 ]);

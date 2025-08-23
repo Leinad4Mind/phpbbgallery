@@ -15,14 +15,14 @@ namespace lukewcs\extmgrplus\core;
 
 class ext_mgr_plus_common
 {
-	protected $config;
-	protected $config_text;
-	protected $language;
-	protected $template;
-	protected $ext_manager;
+	protected object $config;
+	protected object $config_text;
+	protected object $language;
+	protected object $template;
+	protected object $ext_manager;
 
-	protected $metadata;
-	protected $u_action;
+	protected array  $metadata;
+	public    string $u_action;
 
 	public function __construct(
 		\phpbb\config\config $config,
@@ -41,43 +41,35 @@ class ext_mgr_plus_common
 		$this->metadata		= $this->ext_manager->create_extension_metadata_manager('lukewcs/extmgrplus')->get_metadata('all');
 	}
 
-	public function set_this(
-		$u_action
-	): void
+	public function set_meta_template_vars(string $tpl_prefix, string $copyright): void
 	{
-		$this->u_action = $u_action;
+		$template_vars = [
+			'ext_name'		=> $this->metadata['extra']['display-name'],
+			'ext_ver'		=> $this->language->lang($tpl_prefix . '_VERSION_STRING', $this->metadata['version']),
+			'ext_copyright'	=> $copyright,
+			'class'			=> strtolower($tpl_prefix) . '_footer',
+		];
+		$template_vars += $this->language->is_set($tpl_prefix . '_LANG_VER') ? [
+			'lang_desc'		=> $this->language->lang($tpl_prefix . '_LANG_DESC'),
+			'lang_ver'		=> $this->language->lang($tpl_prefix . '_VERSION_STRING', $this->language->lang($tpl_prefix . '_LANG_VER')),
+			'lang_author'	=> $this->language->lang($tpl_prefix . '_LANG_AUTHOR'),
+		] : [];
+
+		$this->template->assign_vars([$tpl_prefix . '_METADATA' => $template_vars]);
 	}
 
-	public function set_template_vars(string $tpl_prefix): void
-	{
-		$this->template->assign_vars([
-			$tpl_prefix . '_METADATA'	=> [
-				'ext_name'		=> $this->metadata['extra']['display-name'],
-				'ext_ver'		=> $this->language->lang($tpl_prefix . '_VERSION_STRING', $this->metadata['version']),
-				'lang_desc'		=> $this->language->lang($tpl_prefix . '_LANG_DESC'),
-				'lang_ver'		=> $this->language->lang($tpl_prefix . '_VERSION_STRING', $this->language->lang($tpl_prefix . '_LANG_VER')),
-				'lang_author'	=> $this->language->lang($tpl_prefix . '_LANG_AUTHOR'),
-				'class'			=> strtolower($tpl_prefix) . '_footer',
-			],
-		]);
-	}
-
-	public function check_form_key_error(string $key): void
-	{
-		if (!check_form_key($key))
-		{
-			$this->trigger_error_($this->language->lang('FORM_INVALID'), E_USER_WARNING);
-		}
-	}
-
-	// Determine the version of the language pack with fallback to 0.0.0
+	/*
+		Determine the version of the language pack with fallback to 0.0.0
+	*/
 	public function get_lang_ver(string $lang_ext_ver): string
 	{
-		preg_match('/^([0-9]+\.[0-9]+\.[0-9]+)/', $this->language->lang($lang_ext_ver), $matches);
+		preg_match('/^([0-9]+\.[0-9]+\.[0-9]+.*)/', $this->language->lang($lang_ext_ver), $matches);
 		return ($matches[1] ?? '0.0.0');
 	}
 
-	// Check the language pack version for the minimum version and generate notice if outdated
+	/*
+		Check the language pack version for the minimum version and generate notice if outdated
+	*/
 	public function lang_ver_check_msg(string $lang_version_var, string $lang_outdated_var): string
 	{
 		$lang_outdated_msg = '';
@@ -100,8 +92,10 @@ class ext_mgr_plus_common
 		return $lang_outdated_msg;
 	}
 
-	// Set a variable/array in a config_text variable container or delete one or all variables/arrays
-	public function config_text_set(string $container, $name, $value): void
+	/*
+		Set a variable/array in a config_text variable container or delete one or all variables/arrays
+	*/
+	public function config_text_set(string $container, ?string $name, $value): void
 	{
 		if ($this->config_text->get($container) === null)
 		{
@@ -113,10 +107,7 @@ class ext_mgr_plus_common
 		}
 		if ($name !== null && $value !== null)
 		{
-			if ($vars === null)
-			{
-				$vars = [];
-			}
+			$vars ??= [];
 			$vars[$name] = $value;
 			$this->config_text->set($container, json_encode($vars));
 		}
@@ -131,7 +122,9 @@ class ext_mgr_plus_common
 		}
 	}
 
-	// Get a variable/array from a config_text variable container
+	/*
+		Get a variable/array from a config_text variable container
+	*/
 	public function config_text_get(string $container, ?string $name = null)
 	{
 		$config_text = $this->config_text->get($container);
@@ -151,15 +144,28 @@ class ext_mgr_plus_common
 		}
 	}
 
-	// Wrapper for trigger_error
+	/*
+		Wrapper for check_form_key
+	*/
+	public function check_form_key_(string $key): void
+	{
+		if (!check_form_key($key))
+		{
+			$this->trigger_error_($this->language->lang('FORM_INVALID'), E_USER_WARNING);
+		}
+	}
+
+	/*
+		Wrapper for trigger_error
+	*/
 	public function trigger_error_(string $message, int $error_type, ?string $back_link_lang_var = null): void
 	{
-		$this->template->assign_var('EXTMGRPLUS_LAST_EMP_ACTION', 'trigger_error');
 		if ($error_type == E_USER_NOTICE && $this->config['extmgrplus_switch_auto_redirect'])
 		{
 			meta_refresh(1, $this->rotate_get_params($this->u_action));
 			$this->template->assign_var('EXTMGRPLUS_AUTO_REDIRECT', true);
 		}
+		$this->template->assign_var('EXTMGRPLUS_TRIGGER_ERROR', true);
 		trigger_error($message . $this->back_link($back_link_lang_var), $error_type);
 	}
 
@@ -171,7 +177,9 @@ class ext_mgr_plus_common
 		);
 	}
 
-	// Rotates the GET parameters (Firefox F5-form-resend-workaround)
+	/*
+		Rotates the GET parameters (Firefox F5-form-resend-workaround)
+	*/
 	public function rotate_get_params(string $url_full): string
 	{
 		$separator	= (strpos($url_full, '&amp;') ? '&amp;' : '&');

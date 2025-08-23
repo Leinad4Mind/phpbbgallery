@@ -10,11 +10,13 @@
 *
 */
 
-(function ($) {	// IIFE start
+(function ($) {
 
 'use strict';
 
-// Classes
+/*
+	Classes
+*/
 
 class LukeWCSphpBBConfirmBox {
 /*
@@ -77,7 +79,9 @@ class LukeWCSphpBBConfirmBox {
 	}
 }
 
-// Declarations
+/*
+	Declarations
+*/
 
 const constants = Object.freeze({
 	CheckBoxModeOff:	'0',
@@ -86,7 +90,9 @@ const constants = Object.freeze({
 });
 let ConfirmBox;
 
-// Settings form
+/*
+	Settings form
+*/
 
 function setDefaults() {
 	const c = constants;
@@ -98,8 +104,10 @@ function setDefaults() {
 	setSwitch('[name="extmgrplus_switch_order_and_ignore"]',			true);
 	setSwitch('[name="extmgrplus_switch_self_disable"]',				false);
 	setSwitch('[name="extmgrplus_switch_instructions"]',				true);
+	$(        '[name="extmgrplus_number_vc_limit"]').prop('value',		15);
 	setSwitch('[name="extmgrplus_switch_migration_col"]',				false);
 	setSwitch('[name="extmgrplus_switch_migrations"]',					false);
+	setSwitch('[name="extmgrplus_switch_version_url"]',					false);
 
 	ConfirmBox.HideAll();
 };
@@ -116,10 +124,12 @@ function setSwitch(selector, checked) {
 };
 
 function formSubmit() {
-	$('#extmgrplus_settings').submit();
+	$('[name="extmgrplus_save_settings"]').click();
 };
 
-// Common
+/*
+	Common
+*/
 
 function disableEnter(e) {
 	if (e.key == 'Enter' && e.target.type != 'textarea') {
@@ -127,7 +137,9 @@ function disableEnter(e) {
 	}
 };
 
-// Event registration
+/*
+	Event registration
+*/
 
 $(function () {
 	$('#extmgrplus_settings')			.on('keypress'	, disableEnter);
@@ -137,4 +149,4 @@ $(function () {
 	ConfirmBox = new LukeWCSphpBBConfirmBox('[name="extmgrplus_submit"]', 300);
 });
 
-})(jQuery);	// IIFE end
+})(jQuery);

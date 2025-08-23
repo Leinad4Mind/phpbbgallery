@@ -10,35 +10,34 @@
 *
 */
 
-(function ($) {	// IIFE start
+(function ($) {
 
 'use strict';
 
-// Extension Manager
+/*
+	Extension Manager
+*/
 
 function versionCheck() {
 	if ($('#extmgrplus_link_version_check').hasClass('disabled')) {
 		return;
 	}
 
-	showHideActionElements(false);
-	$('[id^="extmgrplus_link_"]')			.addClass('disabled');
-	$('#extmgrplus_versioncheck_notice')	.show();
-	$(location)								.prop('href', $('#extmgrplus_link_version_check').attr('data-url'));
+	$(location).prop('href', $('#extmgrplus_link_version_check').attr('data-url'));
 };
 
-function showHideOrderIgnore() {
-	if ($('#extmgrplus_link_order_ignore').hasClass('disabled')) {
+function showExtProperties() {
+	if ($('#extmgrplus_link_ext_properties').hasClass('disabled')) {
 		return;
 	}
 
-	const show = !$('.extmgrplus_order_and_ignore').is(":visible");
+	const show = !$('.ext_properties').is(":visible");
 
 	showHideActionElements(!show);
-	$('[id^="extmgrplus_link_"]:not([id$="_order_ignore"])')		.toggleClass('disabled', show);
-	$('.extmgrplus_order_and_ignore')								.toggle(show);
-	$('#extmgrplus_list th:nth-of-type(1n+7):nth-of-type(-1n+8)')	.toggle(show);
-	$('#extmgrplus_list td:nth-of-type(1n+7):nth-of-type(-1n+8)')	.toggle(show);
+	$('[id^="extmgrplus_link_"]:not([id$="_ext_properties"])')		.toggleClass('disabled', show);
+	$('.ext_properties')											.toggle(show);
+	$('#extmgrplus_list th:nth-of-type(1n+8):nth-of-type(-1n+9)')	.toggle(show);
+	$('#extmgrplus_list td:nth-of-type(1n+8):nth-of-type(-1n+9)')	.toggle(show);
 };
 
 function saveCheckboxes() {
@@ -50,7 +49,7 @@ function saveCheckboxes() {
 };
 
 function showHideActionElements(show) {
-	$('#extmgrplus_list td:nth-of-type(1n+4):nth-of-type(-1n+6) *:not(dfn)').toggle(show);
+	$('#extmgrplus_list td:nth-of-type(1n+5):nth-of-type(-1n+7) *:not(dfn)').toggle(show);
 };
 
 function checkUncheckAll(e) {
@@ -64,8 +63,7 @@ function setCheckboxes(e) {
 	const extChecked = e.currentTarget.checked;
 	const dependency = orderValue.charAt(0) != '+';
 
-	if (
-		orderValue != '' && (
+	if (orderValue != '' && (
 			(extEnabled && (extChecked && dependency || !extChecked && !dependency)) ||
 			(!extEnabled && (!extChecked && dependency || extChecked && !dependency))
 		)
@@ -95,14 +93,16 @@ function setButtonState(e) {
 	const checkedCount = $('input[name="ext_mark_' + e.data.checkboxType + '[]"]:checked').length;
 	const buttonType = e.data.checkboxType == 'enabled' ? 'disable' : 'enable';
 
-	$('input[name="extmgrplus_' + buttonType + '_all').prop('disabled', checkedCount == 0);
+	$('input[name="extmgrplus_' + buttonType + '_all"]').prop('disabled', checkedCount == 0);
 };
 
 function setInputBoxState(e) {
 	$('input[name="ext_order[' + e.currentTarget.value + ']"]').toggleClass('inactive', e.currentTarget.checked);
 };
 
-// Common
+/*
+	Common
+*/
 
 function disableEnter(e) {
 	if (e.key == 'Enter' && e.target.type != 'textarea') {
@@ -110,12 +110,14 @@ function disableEnter(e) {
 	}
 };
 
-// Event registration
+/*
+	Event registration
+*/
 
 $(function () {
 	$('#extmgrplus_list')						.on('keypress'	, disableEnter);
 	$('#extmgrplus_link_version_check')			.on('click'		, versionCheck);
-	$('#extmgrplus_link_order_ignore')			.on('click'		, showHideOrderIgnore);
+	$('#extmgrplus_link_ext_properties')		.on('click'		, showExtProperties);
 	$('#extmgrplus_link_save_checkboxes')		.on('click'		, saveCheckboxes);
 	$('[name="ext_mark_all_enabled"]:enabled')	.on('change'	, {checkboxType: 'enabled'}, checkUncheckAll);
 	$('[name="ext_mark_all_disabled"]:enabled')	.on('change'	, {checkboxType: 'disabled'}, checkUncheckAll);
@@ -124,4 +126,4 @@ $(function () {
 	$('[name="ext_ignore[]"]')					.on('change'	, setInputBoxState);
 });
 
-})(jQuery);	// IIFE end
+})(jQuery);

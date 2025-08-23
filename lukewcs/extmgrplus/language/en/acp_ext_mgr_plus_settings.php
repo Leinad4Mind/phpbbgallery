@@ -53,24 +53,32 @@ $lang = array_merge($lang, [
 	'EXTMGRPLUS_CHECKBOX_MODE_OFF'			=> 'Off',
 	'EXTMGRPLUS_CHECKBOX_MODE_ALL'			=> 'Set all',
 	'EXTMGRPLUS_CHECKBOX_MODE_LAST'			=> 'Remember last state',
-	'EXTMGRPLUS_ORDER_AND_IGNORE'			=> 'Order and Ignore',
-	'EXTMGRPLUS_ORDER_AND_IGNORE_EXPLAIN'	=> 'If you enable this option, the “Enable selected” action respects the Order group and the “Enable selected” and “Disable selected” actions respect the Ignore property. In addition, defined dependencies are also taken into account when selecting/deselecting.',
 	'EXTMGRPLUS_SELF_DISABLE'				=> 'Allow self-deactivation',
 	'EXTMGRPLUS_SELF_DISABLE_EXPLAIN'		=> 'If you enable this option, then “Extension Manager Plus” can also deactivate itself in the “Disable selected” action, since this extension can then be selected like any other.',
 	'EXTMGRPLUS_INSTRUCTIONS'				=> 'View instructions',
 	'EXTMGRPLUS_INSTRUCTIONS_EXPLAIN'		=> 'This option allows you to choose whether to display the install, update, and uninstall instructions at the end of the extensions list.',
+	'EXTMGRPLUS_VC_LIMIT'					=> 'Divide execution time of the version check',
+	'EXTMGRPLUS_VC_LIMIT_EXPLAIN'			=> 'The version check is executed in blocks and with this value you can specify the maximum length of a single block of the version check. This prevents PHP or database time limits from being exceeded.',
+
+	// settings extension properties
+	'EXTMGRPLUS_SECTION_EXT_PROPERTIES'		=> 'Extension properties',
+	'EXTMGRPLUS_ORDER_AND_IGNORE'			=> 'Order, dependency and ignore',
+	'EXTMGRPLUS_ORDER_AND_IGNORE_EXPLAIN'	=> 'If you enable this option, the “Enable selected” and “Disable selected” actions will take the order group and the ignore property into account. In addition, defined dependencies will also be taken into account when selecting/deselecting.',
 
 	// settings expert
 	'EXTMGRPLUS_SECTION_EXPERT_SETTINGS'	=> 'Expert settings',
+	'EXTMGRPLUS_EXPERT_SETTINGS_EXPLAIN'	=> 'In this section, special functions can be activated that are relevant for developers, for example. For functions that could be problematic, a query must be confirmed.',
 	'EXTMGRPLUS_MIGRATION_COL'				=> 'Show column with new migrations',
 	'EXTMGRPLUS_MIGRATION_COL_EXPLAIN'		=> 'If this option is enabled, then an additional column is displayed in which the number of new migrations is listed. The number is displayed for both “Disabled Extensions” and “Not installed extensions”.',
 	'EXTMGRPLUS_MIGRATIONS'					=> 'Allow extensions with new migrations',
-	'EXTMGRPLUS_MIGRATIONS_EXPLAIN'			=> 'If this option is enabled, you can also activate those extensions for which there are new migrations with the “Enable selected” action. This applies to updated extensions that contain a “migrations” folder. Without this option, such extensions must be activated manually, which is recommended.',
+	'EXTMGRPLUS_MIGRATIONS_EXPLAIN'			=> 'If this option is enabled, the “Enable selected” action will also allow you to select extensions that have new migrations. This applies to updated extensions that contain a <code>migrations</code> folder. Without this option, such extensions must be activated manually, which is recommended.',
+	'EXTMGRPLUS_VERSION_URL'				=> 'Show link to version file',
+	'EXTMGRPLUS_VERSION_URL_EXPLAIN'		=> 'If you activate this option, you can display the link to the version file on the “Details” page of an extension, which is loaded and evaluated by phpBB from the respective server during a version check. Primarily interesting for extension developers.',
 
 	// settings reset
 	'EXTMGRPLUS_SECTION_RESET'				=> 'Reset',
 	'EXTMGRPLUS_DEFAULTS'					=> 'Reset settings',
-	'EXTMGRPLUS_DEFAULTS_EXP'				=> 'Resets all settings to the installation standard. (Does not affect the “Order” and “Ignore columns”.)',
+	'EXTMGRPLUS_DEFAULTS_EXP'				=> 'Resets all settings to the installation default. (Has no effect on the “Extension Properties” columns.)',
 	'EXTMGRPLUS_BUTTON_DEFAULTS'			=> 'Defaults',
 
 	// messages

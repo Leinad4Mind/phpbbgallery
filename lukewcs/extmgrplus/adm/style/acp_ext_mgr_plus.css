@@ -10,7 +10,7 @@ fieldset p.submit-buttons {
 }
 
 fieldset dt label,
-fieldset.extmgrplus_order_and_ignore dd label {
+fieldset dd label {
 	cursor: inherit;
 }
 
@@ -35,6 +35,10 @@ code {
 	background-color: #dddddd;
 	padding: 0 0.25em;
 	color: black;
+}
+
+.inactive {
+	opacity: 0.5;
 }
 
 /* Footer */
@@ -174,7 +178,7 @@ input.confirmbox_active {
 
 fieldset.quick a i.icon,
 .js_link i.icon {
-	margin: 0 0.3em;
+	margin: 0 0.3em 0 0;
 	font-size: 1.1em;
 }
 
@@ -184,53 +188,51 @@ fieldset.quick a i.icon,
 	display: inline-block;
 }
 
-div.successbox.notice {
-	border-radius: 5px;
-}
-
 div.successbox.notice i.icon {
 	font-size: 1.2em;
 }
 
+fieldset.ext_properties i.icon,
 thead th i.icon {
 	font-size: 1.1em;
 	font-weight: normal;
 }
 
-#extmgrplus_list td:nth-of-type(2) i.fa-exclamation-triangle {
-	color: #df950d;
-}
-
-#extmgrplus_list td:nth-of-type(2) i.icon {
-	cursor: help;
-	font-size: 1.2em;
-}
-
-#extmgrplus_list td:nth-of-type(3) i.icon {
-	font-size: 1.2em;
-}
-
-#extmgrplus_list td:nth-of-type(6) i.icon {
-	cursor: help;
-	font-size: 1.3em;
-}
-
-fieldset.extmgrplus_order_and_ignore dt {
-	width: 50%;
-}
-
-fieldset.extmgrplus_order_and_ignore dd {
-	margin-left: 50%;
+fieldset.ext_properties dd {
 	color: inherit;
 }
 
-fieldset.extmgrplus_order_and_ignore dd label {
-	text-align: left;
+fieldset.ext_properties dd label {
+	font-size: inherit;
 	font-weight: bold;
 }
 
-fieldset.extmgrplus_order_and_ignore dd label:hover {
+fieldset.ext_properties dd label:hover {
 	color: inherit;
+}
+
+fieldset.ext_properties dd details {
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+}
+
+fieldset.ext_properties dd summary {
+	padding: 0.25em 0.5em;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+fieldset.ext_properties dd details div {
+	border-top: 1px solid #cccccc;
+	font-size: inherit;
+	padding: 0.25em 0;
+	margin: 0 0.5em;
+}
+
+input[type="checkbox"]:disabled {
+	cursor: not-allowed;
 }
 
 #extmgrplus_list input[name$="able_all"] {
@@ -244,48 +246,103 @@ fieldset.extmgrplus_order_and_ignore dd label:hover {
 	background-color: #f9f9f9;
 }
 
-input[type="text"].inactive {
-	opacity: 0.5;
+#extmgrplus_list th:nth-of-type(1) {
+	width: 1%;
 }
 
-input[type="checkbox"]:disabled {
-	cursor: not-allowed;
-}
-
-#extmgrplus_list th:nth-of-type(1n+2),		/* version+ */
-#extmgrplus_list td:nth-of-type(1n+2) {
-	text-align: center;
-}
-
-#extmgrplus_list th:nth-of-type(2) {		/* version */
+#extmgrplus_list th:nth-of-type(3) {
 	width: 16%;
 }
 
-#extmgrplus_list th:nth-of-type(3) {		/* migrations */
+#extmgrplus_list th:nth-of-type(1n+3) {
+	text-align: center;
+}
+
+#extmgrplus_list th:nth-of-type(4) {
 	width: 1%;
 }
 
-#extmgrplus_list td:nth-of-type(3) span {	/* migrations */
-	cursor: help;
-}
-
-#extmgrplus_list th:nth-of-type(4) {		/* options */
+#extmgrplus_list th:nth-of-type(5) {
 	width: 10%;
 }
 
-#extmgrplus_list th:nth-of-type(5) {		/* actions */
+#extmgrplus_list th:nth-of-type(6) {
 	width: 25%;
 }
 
-#extmgrplus_list th:nth-of-type(1n+6) {		/* select+  */
+#extmgrplus_list th:nth-of-type(1n+7) {
 	width: 1%;
 }
 
-/* RESPONSIVE */
-
-.extmgrplus_responsive {
-	display: none;
+#extmgrplus_list td:nth-of-type(1) i.icon {
+	cursor: help;
 }
+
+#extmgrplus_list td:nth-of-type(3) i.icon {
+	cursor: help;
+	font-size: 1.2em;
+}
+
+#extmgrplus_list td:nth-of-type(3) i.icon:is(.fa-question-circle, .fa-exclamation-triangle, .fa-refresh) {
+	color: #df950d;
+}
+
+#extmgrplus_list td:nth-of-type(1n+3) {
+	text-align: center;
+}
+
+#extmgrplus_list td:nth-of-type(4) span {
+	cursor: help;
+}
+
+#extmgrplus_list td:nth-of-type(7) i.icon {
+	cursor: help;
+	font-size: 1.3em;
+}
+
+/* VERSIONCHECK PROGGRESS */
+
+.progress_container {
+	background-color: #f9f9f9;
+	height: 1.20em;
+	border-radius: 5px;
+	position: relative;
+	margin: 1em 0 0.25em 0;
+}
+
+.progress_bar {
+	background-color: lightgreen;
+	height: 100%;
+	border-radius: 5px;
+}
+
+.progress_value {
+	color: black;
+	position: absolute;
+	font-size: 0.85em;
+	top: 1px;
+	left: 0;
+	right: 0;
+}
+
+.progress_anim {
+	background-color: lightblue;
+	animation-name: progress_anim_block;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+@keyframes progress_anim_block {
+	from {
+		width: 0%;
+	}
+
+	to {
+		width: 100%;
+	}
+}
+
+/* RESPONSIVE */
 
 @media (max-width: 700px){
 	legend {
@@ -297,13 +354,7 @@ input[type="checkbox"]:disabled {
 		margin: 0.5em 0 0 0;
 	}
 
-	fieldset.extmgrplus_order_and_ignore dt {
-		width: 100%;
-	}
-
-	fieldset.extmgrplus_order_and_ignore dd {
-		margin: 0.5em 0 0 0;
+	fieldset.ext_properties dd {
 		padding: 0.5em 0 0 0;
-		border-top: 1px solid #cccccc;
 	}
 }
