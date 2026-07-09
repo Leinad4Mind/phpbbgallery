@@ -1,0 +1,71 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_CLOUDFLARE}</h1>
+<p>{L_ACP_CLOUDFLARE_EXPLAIN}</p>
+
+<!-- IF ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_SETTINGS}</legend>
+		<dl>
+			<dt>
+				<label for="sitesplat_cf_email">{L_CLOUDFLARE_EMAIL}{L_COLON}</label>
+			</dt>
+			<dd>
+				<input class="text medium" type="email" id="sitesplat_cf_email" name="sitesplat_cf_email" value="{SITESPLAT_CF_EMAIL}" />
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="sitesplat_cf_api_key">{L_CLOUDFLARE_API_KEY}{L_COLON}</label><br /><span>{L_CLOUDFLARE_API_KEY_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<input class="text medium" type="text" id="sitesplat_cf_api_key" name="sitesplat_cf_api_key" value="{SITESPLAT_CF_API_KEY}" />
+			</dd>
+		</dl>
+        <dl>
+			<dt>
+				<label for="sitesplat_cf_domain">{L_CLOUDFLARE_DOMAIN}{L_COLON}</label><br /><span>{L_CLOUDFLARE_DOMAIN_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<input class="text medium" type="text" id="sitesplat_cf_domain" name="sitesplat_cf_domain" value="{SITESPLAT_CF_DOMAIN}" />
+			</dd>
+		</dl>
+
+        <!-- IF SITESPLAT_CF_DEV_MODE_STATUS -->
+            <dl>
+                <dt>
+                    <label for="sitesplat_cf_dev_mode">{L_CLOUDFLARE_DEVELOPMENT_MODE}{L_COLON}</label><br /><span>{L_CLOUDFLARE_DEVELOPMENT_MODE_EXPLAIN}</span>
+                </dt>
+                <dd>
+                    <label><input type="radio" class="radio" name="sitesplat_cf_dev_mode" value="on"<!-- IF SITESPLAT_CF_DEV_MODE_STATUS eq 'on' --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                    <label><input type="radio" class="radio" id="sitesplat_cf_dev_mode" name="sitesplat_cf_dev_mode" value="off"<!-- IF SITESPLAT_CF_DEV_MODE_STATUS eq 'off' --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt>
+                    <label>{L_CLOUDFLARE_CLEAR_CACHE}{L_COLON}</label><br /><span>{L_CLOUDFLARE_CLEAR_CACHE_EXPLAIN}</span>
+                </dt>
+                <dd>
+                    <input class="button2" type="submit" name="sitesplat_cf_clear_cache" value="{L_CLOUDFLARE_CLEAR_CACHE}" />
+                </dd>
+            </dl>
+        <!-- ENDIF -->
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	{S_FORM_TOKEN}
+</form>
+<!-- INCLUDE overall_footer.html -->

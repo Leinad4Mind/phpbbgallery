@@ -1,0 +1,9 @@
+services:
+    sitesplat.cloudflareip.listener:
+        class: sitesplat\cloudflareip\event\listener
+        arguments:
+            - '@request'
+            - '@config'
+            - '@template'
+        tags:
+            - { name: event.listener }
