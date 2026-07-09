@@ -1,0 +1,31 @@
+services:
+    sitesplat.futurepost.listener:
+        class: sitesplat\futurepost\event\listener
+        arguments:
+            - '@auth'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '%tables.topics%'
+            - '%tables.posts%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+    sitesplat.futurepost.posts:
+        class: sitesplat\futurepost\cron\task\core\future_posts
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@config'
+            - '@dbal.conn'
+            - '@service_container'
+            - '@user'
+        calls:
+            - [set_name, [sitesplat.cron.future_posts]]
+        tags:
+            - { name: cron.task }
