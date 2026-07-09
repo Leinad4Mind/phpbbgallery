@@ -1,0 +1,316 @@
+<?php
+/**
+ *
+* @package BBprefix
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+ *
+ */
+
+namespace sitesplat\bbprefix\event;
+
+use sitesplat\bbprefix\core\manager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class listener implements EventSubscriberInterface
+{
+	protected $db;
+	protected $cache;
+	protected $template;
+	protected $request;
+	protected $user;
+	protected $manager;
+	protected $table_prefix;
+	protected $bb_prefix = false;
+	protected $setup_has_been_run = false;
+
+	static public function getSubscribedEvents()
+	{
+		return [
+			'core.user_setup'							=> 'setup',
+			'core.viewforum_modify_topicrow'			=> 'get_topiclist_topic_prefixes',
+			'core.viewtopic_modify_page_title'			=> 'get_viewtopic_topic_prefix',
+			'core.submit_post_end'						=> 'manage_prefixes_on_posting',
+			'core.posting_modify_template_vars'			=> 'generate_posting_form',
+			'core.mcp_view_forum_modify_topicrow'		=> 'get_topiclist_topic_prefixes',
+			'core.viewforum_get_topic_data'				=> 'prefilter_viewforum_by_prefix',
+			'core.viewforum_get_announcement_topic_ids_data' => 'hack_out_announcements',
+			'core.viewforum_get_topic_ids_data'			=> 'filter_viewforum_by_prefix',
+			'core.pagination_generate_page_link'		=> 'fix_viewforum_base_url',
+			'core.display_forums_modify_sql'			=> 'modify_forumlist_sql',
+			'core.display_forums_modify_template_vars'	=> 'get_forumlist_topic_prefixes',
+			'core.search_modify_tpl_ary'				=> 'get_searchlist_topic_prefixes', 
+		];
+	}
+
+	/**
+	 * Set up the environment
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function setup($event)
+	{
+		// Keep this from running twice
+		if(true === $this->setup_has_been_run)
+		{
+			return;
+		}
+
+		global $phpbb_container;
+
+		$this->setup_has_been_run = true;
+
+		$this->container = $phpbb_container;
+
+		// Let's get our table constants out of the way
+		$table_prefix = $this->container->getParameter('core.table_prefix');
+		define('BBPREFIX_TABLE', $table_prefix . 'bbprefix');
+		define('BBPREFIX_INSTANCES_TABLE', $table_prefix . 'bbprefix_instances');
+
+		$this->user = $this->container->get('user');
+		$this->db = $this->container->get('dbal.conn');
+		$this->request = $this->container->get('request');
+		$this->manager = $this->container->get('bbprefix.manager');
+	}
+
+	/**
+	 * Get the actual data to store in the DB for given tokens
+	 * This handles the tokens available by default in this extension
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function get_token_data($event)
+	{
+		$tokens =& $event['token_data'];
+
+		if (false !== strpos($event['prefix'], '{DATE}'))
+		{
+			$tokens['DATE'] = $this->container->get('user')->format_date(microtime(true));
+		}
+
+		if (false !== strpos($event['prefix'], '{USERNAME}'))
+		{
+			$tokens['USERNAME'] = $this->container->get('user')->data['username'];
+		}
+	}
+
+	/**
+	 * Get the form things for the posting form
+	 *
+	 * @return Event $event Event object
+	 */
+	public function generate_posting_form($event)
+	{
+		$this->user->add_lang_ext('sitesplat/bbprefix', 'bbprefix');
+		$this->manager->generate_posting_form($event);
+	}
+
+	/**
+	 * Perform given actions with given prefix IDs on the posting screen
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function manage_prefixes_on_posting($event)
+	{
+		// This event is only called when a post has been submitted.
+
+		// We only want to do things when we're editing the first post
+		// or posting a new topic, so those are the only cases in which
+		// this function can continue.
+		if ('edit' === $event['mode'])
+		{
+			$sql = 'SELECT topic_first_post_id FROM ' . TOPICS_TABLE . ' WHERE topic_id = ' . (int) $event['data']['topic_id'];
+			$result = $this->db->sql_query($sql);
+			$first_post_id = $this->db->sql_fetchfield('topic_first_post_id');
+			$this->db->sql_freeresult($result);
+
+			if ((int) $event['data']['post_id'] !== (int) $first_post_id)
+			{
+				return;
+			}
+		} elseif ('post' !== $event['mode']) {
+			return;
+		}
+
+		$this->manager->set_topic_prefixes((int) $event['data']['topic_id'], $this->manager->get_submitted_prefixes(), (int) $event['data']['forum_id']);
+	}
+
+	/**
+	 * Get the parsed prefix for the current topic, output it to the template
+	 * Also gets a plaintext version for the browser page title
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function get_viewtopic_topic_prefix($event)
+	{
+		$event['page_title'] = $this->load_prefixes_topic($event, 'topic_data') . $event['page_title'];
+	}
+
+	/**
+	 * Get the parsed prefix for each of the topics in the forum row
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function get_topiclist_topic_prefixes($event)
+	{
+		$topic_row = $event['topic_row'];
+		$topic_row['TOPIC_PREFIX'] = $this->load_prefixes_topic($event, 'row', '', true);
+		$event['topic_row'] = $topic_row;
+	}
+
+    public function get_searchlist_topic_prefixes($event)
+    {
+        $tpl_ary = $event['tpl_ary']; // Template variables
+        $title = $this->load_prefixes_topic($event, 'row', '', true);
+        $tpl_ary['TOPIC_TITLE'] = $title . $tpl_ary['TOPIC_TITLE'];
+        if (!empty($tpl_ary['POST_SUBJECT']))
+        {
+            $tpl_ary['POST_SUBJECT'] = $title . $tpl_ary['POST_SUBJECT'];
+        }
+        $event['tpl_ary'] = $tpl_ary;
+    }
+ 
+	/**
+	 * Get the parsed prefix for each of the last posts
+	 *
+	 * @param Event $event Event object
+	 * @return null
+	 */
+	public function get_forumlist_topic_prefixes($event)
+	{
+		if ($this->manager->get_on_index_enabled($event))
+		{
+			$forum_row = $event['forum_row'];
+			$forum_row['TOPIC_PREFIX'] = $this->load_prefixes_topic($event, 'row', '', true);
+			$event['forum_row'] = $forum_row;
+		}
+	}
+
+	/**
+	 * Functions to show approved topics with the given prefix in viewforum
+	 */
+	public function prefilter_viewforum_by_prefix($event)
+	{
+		if ($prefix = $this->request->variable('prefix', 0))
+		{
+			$this->bb_prefix = (int) $prefix;
+
+			// approved topics only (a necessary hack)
+			$sql_where = 't.topic_visibility = ' . ITEM_APPROVED . " AND pr.prefix = {$this->bb_prefix} AND pr.topic = t.topic_id ";
+
+			$sql_ary = $event['sql_array'];
+			if (!empty($sql_ary['WHERE'])) {
+				$sql_ary['WHERE'] .= " AND $sql_where";
+			}
+			else {
+				$sql_ary['WHERE'] = $sql_where;
+			}
+
+			// LEFT JOIN will mess up topic count, so use CROSS JOIN
+			$sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
+
+			// reset topic count
+			$cnt_ary = $sql_ary;
+			$cnt_ary['SELECT'] = 'COUNT(topic_id) AS cnt';
+			$cnt_ary['WHERE'] .= " AND t.forum_id = {$event['forum_id']}";
+			$sql = $this->db->sql_build_query('SELECT', $cnt_ary);
+			$result = $this->db->sql_query($sql);
+			$event['topics_count'] = (int) $this->db->sql_fetchfield('cnt');
+			$this->db->sql_freeresult($result);
+
+			$event['sql_array'] = $sql_ary;
+		}
+	}
+
+	public function hack_out_announcements($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// remove announcements from display (a necessary hack)
+			$sql_ary = $event['sql_ary'];
+			$sql_ary['SELECT'] = 't.topic_id';
+			$sql_ary['FROM'] = [TOPICS_TABLE => 't'];
+			$sql_ary['WHERE'] = '1 = 0';
+			unset($sql_ary['LEFT_JOIN'], $sql_ary['ORDER_BY']);
+			$event['sql_ary'] = $sql_ary;
+		}
+	}
+
+	public function filter_viewforum_by_prefix($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// disable sorting (a necessary hack)
+			$this->container->get('template')->assign_var('S_SELECT_SORT_DAYS', false);
+
+			// approved topics only (a necessary hack)
+			$sql_ary = $event['sql_ary'];
+			$sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
+			$sql_ary['WHERE'] .= ' AND t.topic_visibility = ' . ITEM_APPROVED . " AND pr.prefix = {$this->bb_prefix} AND pr.topic = t.topic_id ";
+			$event['sql_ary'] = $sql_ary;
+		}
+	}
+
+	public function fix_viewforum_base_url($event)
+	{
+		if ($this->bb_prefix)
+		{
+			// add the prefix to query string in pagination
+			$url = $event['base_url'];
+			$delim = strpos($url, '?') ? '&amp;' : '?';
+			$event['base_url'] = $url . "{$delim}prefix={$this->bb_prefix}";
+		}
+	}
+
+	/**
+	 * Alter the SQL performed when forums are loaded
+	 *
+	 * @param Event $event
+	 * @return null
+	 */
+	public function modify_forumlist_sql($event)
+	{
+		$sql = $event['sql_ary'];
+		$sql['SELECT'] .= ', t.topic_id AS forum_last_post_topic_id';
+		$sql['LEFT_JOIN'][] = [
+			'FROM' => [POSTS_TABLE => 'p'],
+			'ON' => 'f.forum_last_post_id = p.post_id',
+		];
+		$sql['LEFT_JOIN'][] = [
+			'FROM' => [TOPICS_TABLE => 't'],
+			'ON' => 't.topic_id = p.topic_id',
+		];
+
+		$event['sql_ary'] = $sql;
+	}
+
+	/**
+	 * Helper method that gets the topic prefixes for view(forum/topic) page
+	 *
+	 * @param Event $event Event object
+	 * @param string $array_name Name of the array that contains the topic_id
+	 * @param string $block The name of the template block
+	 * @return string Plaintext string of topic prefixes
+	 */
+	protected function load_prefixes_topic($event, $array_name = 'row', $block = 'prefix', $return_parsed = false)
+	{
+		if (isset($event[$array_name]['topic_id']))
+		{
+			$topic_id = (int) $event[$array_name]['topic_id'];
+		}
+		else if (isset($event[$array_name]['forum_last_post_id']))
+		{
+			$topic_id = (int) $event[$array_name]['forum_last_post_topic_id'];
+		}
+
+		return $topic_id && $this->manager->count_prefixes() && $this->manager->count_prefix_instances()
+			? $this->manager->load_prefixes_topic($topic_id, $block, $return_parsed)
+			: ''
+		;
+	}
+}
