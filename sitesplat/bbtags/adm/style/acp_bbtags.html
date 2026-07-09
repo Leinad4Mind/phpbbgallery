@@ -1,0 +1,171 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbtags/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbtags/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/bbtags.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+<!-- IF U_BACK --><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a><!-- ENDIF -->
+
+<h1>{L_ACP_BBTAGS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBTAGS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="fa fa-tag fa-rotate-90"></i> {L_ACP_BBTAGS}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+<p>{L_ACP_BBTAGS_EXPLAIN}</p>
+
+<form method="post" style="border-radius:10px; border:#999999 thin solid;background: url('{EXT_PATH}adm/style/css/images/spacer.png') repeat;margin-bottom:20px;">
+    <fieldset style="background-color: transparent;border:0;margin-bottom:0;padding-bottom:0;">
+        <legend>{L_OPTIONS}</legend>
+        <div style="float:left;width:50%;">
+            <dl>
+                <dt style="width:40%;"><label for="bbtags_min_length">{L_BBTAGS_MIN_LENGTH}<br /><span style="font-weight:normal;">{L_BBTAGS_MIN_LENGTH_EXPLAIN}</span></label></dt>
+                <dd style="margin-left:40%;"><input type="number" id="bbtags_min_length" name="bbtags_min_length" min="3" max="30" value="{BBTAGS_MIN_LENGTH}" /></dd>
+            </dl>
+            <dl>
+                <dt style="width:40%;"><label for="bbtags_max_tags">{L_BBTAGS_MAX_TAGS}<br /><span style="font-weight:normal;">{L_BBTAGS_MAX_TAGS_EXPLAIN}</span></label></dt>
+                <dd style="margin-left:40%;"><input type="number" id="bbtags_max_tags" name="bbtags_max_tags" min="1" max="10" value="{BBTAGS_MAX_TAGS}" /></dd>
+            </dl>
+            <dl>
+                <dt style="width:40%;"><label for="bbtags_cloud_limit">{L_BBTAGS_CLOUD_LIMIT}<br /><span style="font-weight:normal;">{L_BBTAGS_CLOUD_LIMIT_EXPLAIN}</span></label></dt>
+                <dd style="margin-left:40%;"><input type="number" id="bbtags_cloud_limit" name="bbtags_cloud_limit" min="1" value="{BBTAGS_CLOUD_LIMIT}" /></dd>
+            </dl>
+             <dl>
+                <dt style="width:40%;"><label for="bbtags_on_index">{L_BBTAGS_ON_INDEX}<br /><span style="font-weight:normal;">{L_BBTAGS_ON_INDEX_EXPLAIN}</span></label></dt>
+                <dd style="margin-left:40%;">
+                	<label><input type="radio" class="radio" name="bbtags_on_index" value="2" <!-- IF BBTAGS_ON_INDEX eq 2 -->checked="checked"<!-- ENDIF --> /> {L_YES}</label> &nbsp;
+					<label><input type="radio" class="radio" name="bbtags_on_index" value="1" <!-- IF BBTAGS_ON_INDEX eq 1 -->checked="checked"<!-- ENDIF --> /> {L_INDEX_ONLY}</label> &nbsp;
+					<label><input type="radio" class="radio" name="bbtags_on_index" value="0" <!-- IF not BBTAGS_ON_INDEX -->checked="checked"<!-- ENDIF --> /> {L_NEVER}</label>
+               	</dd>
+            </dl>
+           <dl>
+                <dt style="width:40%;"><label for="save">{L_SAVE}</label></dt>
+                <dd style="margin-left:40%;"><input type="hidden" id="action" name="action" value="save_config" /><input type="submit" id="submit" name="submit" value="{L_SAVE}" /></dd>
+            </dl>
+           </div>
+        <div style="float:left;width:50%;">
+            <dl>
+                <dt style="width:20%;"><label for="bbtags_pre_tags">{L_PRE_BBTAGS}<br /><span style="font-weight:normal;">{L_PRE_BBTAGS_EXPLAIN}</span></label></dt>
+                <dd style="margin-left:20%;"><textarea id="bbtags_pre_tags" name="bbtags_pre_tags" rows="8">{PRE_BBTAGS}</textarea></dd>
+            </dl>
+        </div>
+    </fieldset>
+</form>
+
+<script type="text/javascript">
+	function theCB(a,b){
+		this.restrFname=a;
+		this.restrVal=b;
+		this.data=null;
+		return this
+	}
+	var cb = new theCB('', '');
+	var sid = '{_SID}';
+</script>
+<h4 style="margin-bottom:10px;">{L_ACP_BBTAGS_MANAGE}</h4>
+<form name="cbNewForm" method="post" action="{U_ACTION}">
+    <table class="cbTable" cellpadding="0" cellspacing="0">
+    <tr class="cbHead">
+        <td style="width:20px">#</td>
+        <td>{L_TAG}
+        <a href="{U_ACTION}&amp;sk=tag&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'tag' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        <a href="{U_ACTION}&amp;sk=tag&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'tag' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </td>
+        <td style="width:40%;">{L_FORUM}</td>
+        <td style="width:70px;">{L_QTY}
+			<a href="{U_ACTION}&amp;sk=hits&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'hits' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a> <a href="{U_ACTION}&amp;sk=hits&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'hits' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </td>
+        <td style="width:70px;">{L_CHANGE}</td>
+    </tr>
+    
+    <!-- BEGIN records -->
+    <tr class="<!-- IF records.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->">
+    	<td>{records.NUM}</td>
+        <td>{records.TAG}</td>
+        <td>{records.FORUMS}</td>
+        <td>{records.COUNT}</td>
+        <td>
+          	<img id="cbChangeId{records.ID}" onclick="cbCmd('cbChange', {records.ID})" src="{EXT_PATH}adm/style/css/images/edit.png" style="width:16px; cursor:pointer;" title="{L_CHANGE}" /> 
+               <a href="{U_ACTION}&amp;action=delete&amp;id={records.ID}" data-ajax="row_delete"><img title="{L_DELETE}" alt="{L_DELETE}" src="{EXT_PATH}adm/style/css/images/delete.png" width="16px"></a>
+        </td>
+    </tr>
+    <!-- BEGINELSE -->
+    <tr class="cbOddLine">
+    	<td colspan="5">{L_BBTAGS_NO_TAGS}</td>
+    </tr>
+    <!-- END records -->
+
+    <tr class="cbNew">
+        <td></td>
+        <td><!-- IF .records --><input type="text" id="tag" size="30" maxlength="30" name="tag" value=""><!-- ENDIF --></td>
+        <td>
+            <input type="hidden" name="action" value="gaAdd">
+            <input type="hidden" name="id" value="">
+            <input class="btn btn-primary btn-xs" type="submit" class="button1" style="display:none;" id="button" value="{L_SUBMIT}">
+        </td>
+        <td></td>
+        <td>
+            <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF --> 
+            <!-- IF NEXTURL --><a href="{NEXTURL}"><img border="0" title="{L_PAGEFURTHER}" src="{EXT_PATH}adm/style/css/images/next.png"  width="13px" /></a><!-- ENDIF -->
+        </td>
+    </tr>
+    </table>
+</form>
+<script type="text/javascript">
+function cbItem(a,b){
+	this.id=a;
+	this.tag=b;
+	return this
+}
+function cbShowChange(id){
+	d=cb.data;
+	cb.isChange=true;
+	for(i=0;i<d.length;i++)if(d[i].id==id)break;
+	if(i==d.length){
+		alert('{L_BBTAGS_NO_TAGS}');
+		return
+	}
+	g=d[i];
+	if(i==d.length-1)isLast=true;
+	else isLast=false;
+	f.id.value=g.id;
+	f.tag.value=g.tag;
+	f.tag.focus();
+	var new_position = $('#tag').offset();
+	window.scrollTo(new_position.left,new_position.top);
+}
+
+function cbCmd(a,b,c){
+	if(a=='cbChange'){
+		cb.isNew=false;
+		f=document.forms['cbNewForm'];
+		f.action.value='gaUpdate';
+		f.button.style.display = 'block';
+		cbShowChange(b);
+		return
+	}
+}
+{JS}
+</script>
+
+
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbtags/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,36 @@
+{
+	"name": "sitesplat/bbtags",
+	"type": "phpbb-extension",
+	"description": "Adds an efficient modern and simple to use Topic Tag system. Comes with the classic Tag Cloud for the WordPress lovers :p",
+	"homepage": "https://sitesplat.com",
+	"version": "1.1.5",
+	"keywords": ["phpbb", "extension", "premium", "Topic tags", "SiteSplat"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBtags",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0,<3.3.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbtags.json",
+			"ssl": true
+		}
+
+	}
+}

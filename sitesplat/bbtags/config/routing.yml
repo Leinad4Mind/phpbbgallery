@@ -1,0 +1,12 @@
+sitesplat_bbtags_suggest_tags_controller:
+    path: /bbtags/suggest
+    defaults: { _controller: sitesplat.bbtags.controller:suggest_tags }
+    methods:  [POST]
+sitesplat_bbtags_auto_complete_controller:
+    path: /bbtags/auto_complete
+    defaults: { _controller: sitesplat.bbtags.controller:auto_complete }
+    methods:  [POST]
+sitesplat_bbtags_controller:
+    path: /bbtags/{tags}
+    defaults: { _controller: sitesplat.bbtags.controller:show_topic }
+
