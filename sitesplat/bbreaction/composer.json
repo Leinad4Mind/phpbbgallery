@@ -1,0 +1,34 @@
+{
+	"name": "sitesplat/bbreaction",
+	"type": "phpbb-extension",
+	"description": "Allows a board running SiteSplat's themes to provide a meaningful kick-ass post reaction system. Post reactions are an easy and fun way for your users to leave feedback on your topics.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.2.9",
+	"keywords": ["phpbb", "extension", "reaction", "topic", "premium", "sitesplat"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "ThemeSplat (SiteSplat)",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.6",
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"display-name": "BBreaction",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0,<3.3.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbreaction.json",
+			"ssl": true
+		}
+
+	}
+}

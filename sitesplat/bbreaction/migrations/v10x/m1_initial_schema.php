@@ -1,0 +1,82 @@
+<?php
+/**
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
+
+namespace sitesplat\bbreaction\migrations\v10x;
+
+/**
+ * Migration stage 1: Initial schema
+ */
+class m1_initial_schema extends \phpbb\db\migration\migration
+{
+	/**
+	 * Assign migration file dependencies for this migration
+	 *
+	 * @return array Array of migration files
+	 * @static
+	 * @access public
+	 */
+	static public function depends_on()
+	{
+		return array('\phpbb\db\migration\data\v310\gold');
+	}
+
+	/**
+	 * Add the like table schema to the database:
+	 *
+	 * @return array Array of table schema
+	 * @access public
+	 */
+	public function update_schema()
+	{
+		return array(
+			'add_tables'	=> array(
+				$this->table_prefix . 'reward'	=> array(
+					'COLUMNS'	=> array(
+						'like_id'			=> array('UINT', NULL, 'auto_increment'),
+						'post_id'			=> array('UINT', 0),
+						'user_id'			=> array('UINT', 0),
+						'like_type'			=> array('UINT', 0),
+						'like_time'			=> array('INT:11', 0)
+					),
+					'PRIMARY_KEY'	=> 'like_id',
+				),
+				$this->table_prefix . 'reward_type'	=> array(
+					'COLUMNS'		=> array(
+						'type_id'			=> array('UINT', NULL, 'auto_increment'),
+						'weight'			=> array('UINT', 0),
+						'title'				=> array('VCHAR:50', ''),
+						'description'		=> array('VCHAR:50', ''),
+						'symbol'			=> array('VCHAR:50', ''),
+						'positive'			=> array('TINT:1', 1),
+						'seperator'			=> array('TINT:1', 0),
+						'active'			=> array('TINT:1', 1),
+						'notify'			=> array('TINT:1', 0)
+					),
+					'PRIMARY_KEY'	=> 'type_id',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Drop the like table schema from the database
+	 *
+	 * @return array Array of table schema
+	 * @access public
+	 */
+	public function revert_schema()
+	{
+		return array(
+			'drop_tables'	=> array(
+				$this->table_prefix . 'reward',
+				$this->table_prefix . 'reward_type',
+			),
+		);
+	}
+}

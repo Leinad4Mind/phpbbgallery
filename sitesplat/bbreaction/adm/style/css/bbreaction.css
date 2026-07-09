@@ -1,0 +1,438 @@
+/* ===[ BBREACTION STYLE ]=== */
+
+@font-face {
+  font-family: 'bbreaction';
+  src: url('font/bbreaction.eot?89251315');
+  src: url('font/bbreaction.eot?89251315#iefix') format('embedded-opentype'),
+       url('font/bbreaction.woff?89251315') format('woff'),
+       url('font/bbreaction.ttf?89251315') format('truetype'),
+       url('font/bbreaction.svg?89251315#bbreaction') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'bbreaction';
+    src: url('../font/bbreaction.svg?89251315#bbreaction') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-bbreact-"]:before, [class*=" icon-bbreact-"]:before {
+  font-family: "bbreaction";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-bbreact-emo-happy:before { content: '\e800'; } /* '' */
+.icon-bbreact-emo-wink:before { content: '\e801'; } /* '' */
+.icon-bbreact-emo-wink2:before { content: '\e802'; } /* '' */
+.icon-bbreact-emo-unhappy:before { content: '\e803'; } /* '' */
+.icon-bbreact-emo-sleep:before { content: '\e804'; } /* '' */
+.icon-bbreact-emo-thumbsup:before { content: '\e805'; } /* '' */
+.icon-bbreact-emo-devil:before { content: '\e806'; } /* '' */
+.icon-bbreact-emo-surprised:before { content: '\e807'; } /* '' */
+.icon-bbreact-emo-tongue:before { content: '\e808'; } /* '' */
+.icon-bbreact-emo-coffee:before { content: '\e809'; } /* '' */
+.icon-bbreact-emo-sunglasses:before { content: '\e80a'; } /* '' */
+.icon-bbreact-emo-displeased:before { content: '\e80b'; } /* '' */
+.icon-bbreact-emo-beer:before { content: '\e80c'; } /* '' */
+.icon-bbreact-emo-grin:before { content: '\e80d'; } /* '' */
+.icon-bbreact-emo-angry:before { content: '\e80e'; } /* '' */
+.icon-bbreact-emo-saint:before { content: '\e80f'; } /* '' */
+.icon-bbreact-emo-cry:before { content: '\e810'; } /* '' */
+.icon-bbreact-emo-shoot:before { content: '\e811'; } /* '' */
+.icon-bbreact-emo-squint:before { content: '\e812'; } /* '' */
+.icon-bbreact-emo-laugh:before { content: '\e813'; } /* '' */
+.icon-bbreact-crown-minus:before { content: '\e814'; } /* '' */
+.icon-bbreact-crown-plus:before { content: '\e815'; } /* '' */
+.icon-bbreact-crown:before { content: '\e816'; } /* '' */
+
+.icon-bbreact-emo-minus:before { content: '\e814'; } /* '' */
+.icon-bbreact-emo-plus:before { content: '\e815'; } /* '' */
+.icon-bbreact-emo:before { content: '\e816'; } /* '' */
+/* BBreaction */
+
+
+/* simple input toggle love*/
+
+.onoffswitch {
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border-radius: 24px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 24px; padding: 0; line-height: 24px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 10px;
+    background-color: #092; color: #fff;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 10px;
+    background-color: #ccc; color: #666;
+    text-align: right;
+}
+.onoffswitch-inner-position:before {
+    content: "%";
+}
+.onoffswitch-inner-position:after {
+    content: "#";
+}
+	
+.onoffswitch-inner-yn:before {
+    content: "YES";
+}
+.onoffswitch-inner-yn:after {
+    content: "NO";
+}
+
+.onoffswitch-inner-top:before {
+    content: "ABOVE";
+}
+.onoffswitch-inner-top:after {
+    content: "BELOW";
+}
+	
+.onoffswitch-switch {
+    display: block; width: 18px; margin: 3px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 66px;
+    border-radius: 18px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+
+.label-acp {
+    color: #4a5a73;
+    font-size: 1em;
+    font-weight: bold;
+	margin-bottom: 4px;
+    margin-left: 2px;
+}	
+	
+	
+dd label {
+    margin: inherit;
+}
+label {
+    cursor: pointer;
+    padding: inherit;
+}
+
+.label-entry-normal {
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+
+
+/* simple input range love*/
+
+#acp_sidebar input[type=range] {
+   background-color: #eee;
+}
+
+
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+    
+    /*required for proper track sizing in FF*/
+    width: 300px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+
+
+
+/* Extension details */
+.alert-update {
+    border: 2px solid;
+}
+
+.modal-dialog {
+    margin: 130px auto;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.label {
+    padding: 0.2em 0.3em 0.1em 0.2em;
+}
+
+.md-trigger {
+    text-decoration: none!important;
+}
+
+
+.md-content h3 {
+    opacity: 1;
+}
+
+/* loading stuff */
+.loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #ce4233;
+  letter-spacing: 0.2em;
+}
+.loader::before, .loader::after {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #ce4233;
+  position: absolute;
+  -webkit-animation: load .7s infinite alternate ease-in-out;
+          animation: load .7s infinite alternate ease-in-out;
+}
+.loader::before {
+  top: 0;
+}
+.loader::after {
+  bottom: 0;
+}
+
+@-webkit-keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+
+.md-content button {
+	border: none;
+	padding: 0.6em 1.2em;
+	background: #c0392b;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+.md-content button:hover {
+	background: #A5281B;
+}
+
+
+.ExtensionName {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+#meta_homepage > a {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.description-ext span {
+ color: #fff;
+    font-weight: bold;
+}
+
+.extension_author_link {
+    color: #c0392b !important;
+}
+
+.description-ext > div {
+    margin-bottom: 10px;
+}
+
+
+
+/* style the close button */
+#badgeaward_notice .close {
+	float: right;
+	width: 12px;
+	height: 12px;
+	background: transparent url("images/close.png") no-repeat 0 0;
+	opacity: 0.6;
+}
+
+td .fa {
+	font-size:16px;
+}
+
+.onoffswitch {
+    margin-bottom: 10px;
+}
+
+
