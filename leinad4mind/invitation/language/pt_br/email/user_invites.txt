@@ -1,0 +1,21 @@
+{USERNAME} convidou você para se registrar no site "{SITENAME}".
+Você pode clicar nos links abaixo para se cadastrar.
+
+{U_ACTIVATE}
+
+A data de expiração destes convites é de {INVITE_TIME_END}. Quando o período de expiração terminar, seus convites ficarão inválidos!
+
+Se você quiser recusar este convite, simplesmente ignore este e-mail ou clique no seguinte link para excluí-lo:
+{U_DEACTIVATE}
+
+Mensagem de {USERNAME} para você:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{MESSAGE}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Se a mensagem acima for ofensiva para você ou contiver comentários ofensivos, entre em contato com o administrador do site no 
+seguinte endereço de e-mail: {BOARD_CONTACT}
+Anexe esta mensagem ao e-mail (certifique-se de incluir o cabeçalho do e-mail).
+O endereço de retorno deste e-mail está definido para o endereço de e-mail de {USERNAME}, para que eles recebam sua resposta.
+--------------------------------------
+
+Link do site: {U_BOARD}

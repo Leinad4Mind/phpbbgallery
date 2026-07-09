@@ -1,0 +1,7 @@
+You have received a request for additional invitations from the user {USERNAME}.
+They request {INVITE_NUMBER} invitation(s).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Webpage link: {U_BOARD}
+Contact: {BOARD_CONTACT}

@@ -1,0 +1,7 @@
+Du hast eine Anforderung für weitere Einladungen von dem Benutzer {USERNAME} erhalten.
+Er verlangt weitere {INVITE_NUMBER} Einladungen.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Webseitenlink: {U_BOARD}
+Kontakt: {BOARD_CONTACT}

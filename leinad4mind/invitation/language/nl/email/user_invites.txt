@@ -1,0 +1,21 @@
+{USERNAME} heeft je uitgenodigd jezelf te registreren op "{SITENAME}" webpagina.
+Klik op de linken hieronder om jezelf te registreren.
+
+{U_ACTIVATE}
+
+De verval datum van de uitnodigingen is ({INVITE_TIME_END}).Als de verval datum voorbij is, dan zullen de uitnodigingen niet meer geldig zijn!
+
+Als je deze uitnodigingen wilt weigeren, kun je de e-mail negeren, of je drukt op de volgende link om het te verwijderen:
+{U_DEACTIVATE}
+
+{USERNAME}'s boodschap aan jouw:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{MESSAGE}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Als het bovenstaande bericht beledigend is voor u of anderszins beledigende opmerkingen bevat, neem dan contact op met de site beheerder
+op het volgende e-mail adres: {BOARD_CONTACT}
+Voeg het bericht toe (zorg ervoor dat de e-mail de bericht kop bevat).
+Het bericht retouradres is ingesteld op {USERNAME}'s e-mail adres, zo deze zal je bericht ontvangen.
+--------------------------------------
+
+Webpagina link: {U_BOARD}

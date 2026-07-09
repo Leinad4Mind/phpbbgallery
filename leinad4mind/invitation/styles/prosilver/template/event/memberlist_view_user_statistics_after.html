@@ -1,0 +1,13 @@
+{% if INVITE_USER_NAME %}
+	<dt>{{ lang('INVITE_INVITED') }}{{ lang('COLON') }}</dt>
+	<dd>{{ INVITE_USER_NAME }}</dd>
+{% endif %}
+
+<dt>{{ lang('INVITE_INVITES') }}{{ lang('COLON') }}</dt>
+<dd>
+	{% if INVITE_USERS_LIST %}
+		<a href="{{ INVITE_USERS_LIST }}">{{ INVITE_USER_DB }}</a>
+	{% else %}
+		{{ INVITE_USER_DB }}
+	{% endif %}
+</dd>

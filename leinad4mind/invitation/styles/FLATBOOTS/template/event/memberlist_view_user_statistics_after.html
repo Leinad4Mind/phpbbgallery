@@ -1,0 +1,33 @@
+{% if INVITE_USER_NAME %}
+<div class="tl-item">
+	<div class="tl-body">
+		<div class="tl-entry">
+			<div class="tl-time"></div>
+			<div class="tl-icon square-icon sm bg-success"><i class="fa fa-ticket"></i></div>
+			<div class="tl-content">
+				<h4 class="tl-tile text-warning">{{ lang('INVITE_INVITED') }}</h4>
+				<p>{{ INVITE_USER_NAME }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+
+<div class="tl-item">
+	<div class="tl-body">
+		<div class="tl-entry">
+			<div class="tl-time"></div>
+			<div class="tl-icon square-icon sm bg-info"><i class="fa fa-user-plus"></i></div>
+			<div class="tl-content">
+				<h4 class="tl-tile text-warning">{{ lang('INVITE_INVITES') }}</h4>
+				{% if INVITE_USERS_LIST %}
+				<span><a href="{{ INVITE_USERS_LIST }}">{{ INVITE_USER_DB }}</a></span>
+					{% else %}
+				<span>{{ INVITE_USER_DB }}</span>
+					{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+

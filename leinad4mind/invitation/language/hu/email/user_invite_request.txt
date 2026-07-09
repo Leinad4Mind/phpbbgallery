@@ -1,0 +1,7 @@
+Meghívó kérelem érkezett {USERNAME} felhasználótól.
+Igényelt meghívók száma {INVITE_NUMBER} darab.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Oldal címe: {U_BOARD}
+Kapcsolat: {BOARD_CONTACT}
