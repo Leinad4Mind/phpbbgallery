@@ -1,0 +1,5 @@
+services:
+    leinad4mind.similartopicsextras.listener:
+        class: 'leinad4mind\similartopicsextras\event\listener'
+        tags:
+            - { name: event.listener }
