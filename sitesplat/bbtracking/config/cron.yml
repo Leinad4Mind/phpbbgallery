@@ -1,0 +1,13 @@
+services:
+    sitesplat.bbtracking.cron.task.prune_post_revisions:
+        class: sitesplat\bbtracking\cron\task\prune_post_revisions
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '%sitesplat.bbtracking.tables.postrev%'
+        calls:
+            - [set_name, [cron.task.postrevisions.prune]]
+        tags:
+            - { name: cron.task }

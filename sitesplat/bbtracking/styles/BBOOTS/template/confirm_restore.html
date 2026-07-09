@@ -1,0 +1,43 @@
+<!-- IF S_AJAX_REQUEST -->
+<form action="{S_CONFIRM_ACTION}" method="post">
+	<div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+	<p>{MESSAGE_TEXT}</p>
+
+	<fieldset>
+			<label for="post_edit_reason">{L_EDIT_REASON}{L_COLON}</label>
+			<input type="text" name="post_edit_reason" id="post_edit_reason" value="{POST_EDIT_REASON}" class="form-control" maxlength="120" size="45" />
+	</fieldset>
+<div class="space10"></div>
+	<fieldset class="submit-buttons">
+		{S_HIDDEN_FIELDS}
+		<input type="button" name="confirm" value="{L_YES}" class="btn btn-default" />
+		<input type="button" name="cancel" value="{L_NO}" class="btn btn-default" />
+	</fieldset>
+</form>
+
+<!-- ELSE -->
+
+<!-- INCLUDE overall_header.html -->
+
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<div class="side-segment"><h3>{MESSAGE_TITLE}</h3>
+	<div class="well">
+	<p>{MESSAGE_TEXT}</p>
+
+	<fieldset>
+			<label for="post_edit_reason">{L_EDIT_REASON}{L_COLON}</label>
+			<input type="text" name="post_edit_reason" id="post_edit_reason" value="{POST_EDIT_REASON}" class="form-control" maxlength="120" size="45" />
+	</fieldset>
+<div class="space10"></div>
+	<fieldset class="submit-buttons">
+		{S_HIDDEN_FIELDS}
+		<input type="submit" name="confirm" value="{L_YES}" class="btn btn-default" />
+		<input type="submit" name="cancel" value="{L_NO}" class="btn btn-default" />
+	</fieldset>
+
+	</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
+
+<!-- ENDIF -->

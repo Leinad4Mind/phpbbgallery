@@ -1,0 +1,42 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{{ lang('ACP_BBTRACKING_SETTINGS') }}</h1>
+<p>{{ lang('ACP_BBTRACKING_EXPLAIN') }}</p>
+<form id="select_user" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<dl>
+			<dt><label for="username">{{ lang('ADD_USER') }}{{ lang('COLON') }}</label></dt>
+			<dd><input class="text medium" type="text" id="username" name="username" /></dd>
+			<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+		</dl>
+	
+		<dl>
+			<dt>{{ lang('TRACKED_USERS') }}{{ lang('COLON') }}</dt>
+			<dd>
+				{% for user in tracked_users %}
+					{{ user.USERNAME_FULL }} <a href="{{ user.U_DELETE }}">[x]</a>{% if not loop.last %}, {% endif %}
+				{% endfor %}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>{{ lang('TRACKED_GROUPS') }}{{ lang('COLON') }}</dt>
+			<dd>
+				<select name="groups[]" multiple size="10">
+					{% for group in tracked_groups %}
+						<option value="{{ group.GROUP_ID }}"{% if group.GROUP_SELECTED %} selected{% endif %}>{{ group.GROUP_NAME }}</option>
+					{% endfor %}
+				</select>
+			</dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input type="hidden" name="action" value="add">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		</p>
+
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
