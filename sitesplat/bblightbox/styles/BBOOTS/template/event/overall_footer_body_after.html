@@ -1,0 +1,167 @@
+{# 
+# 
+# load only if images are detected:
+# {% if S_LOAD_BBLIGHTBOX %}
+# {% endif %}
+# 
+# like this: however needs more work becuase it only works for viewtopic page. See below //@FIX
+# {% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}{% endif %}
+#
+# or previous just plugin enabled:
+# {% if BBLIGHTBOX_PLUGIN %}{% endif %}
+#
+# //@FIX: the following pages need work for the event above to work correctly: listener.php line 70 to 87
+#
+#  _mcp_post.html
+#  _mcp_topic.html
+#  _posting_preview.html
+#  _posting_review.html
+#  _posting_topic_review.html
+#  _ucp_pm_viewmessage.html
+#
+#}
+
+{% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}
+	<script>
+		// Prepare attachment images for lightbox
+		[].forEach.call(document.querySelectorAll('.attach-image'), function(elem) {
+			old_html = elem.innerHTML;
+			var caption = elem.parentElement.childNodes[3].innerText;
+			var dataSrc = elem.querySelector('img').dataset.src || elem.querySelector('img').src;
+			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + dataSrc + '">' + old_html + '</a>';
+			elem.innerHTML = new_html;
+		});
+		// damn thumbnails 
+           [].forEach.call(document.querySelectorAll('.attach-image-thumb'), function(elem) {
+				old_html = elem.innerHTML;
+				var caption = elem.parentElement.childNodes[3].innerText;
+				var dataSrc = elem.querySelector('img').getAttribute('data-src');
+				new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + dataSrc + '">' + old_html + '</a>';
+				elem.innerHTML = new_html;
+			});
+		{% if BBLIGHTBOX_BBCODE_ALLOW %}
+			// Prepare BBCode [img] images for lightbox
+			[].forEach.call(document.querySelectorAll('.content .img-bbcodes'), function(img) {
+			//	img.className += " postbody blockquote postimage quotecontent";
+				var dataSrc = img.dataset.src || img.src;
+				new_html = '<div class="attach-image img-bbcode b-loading"><a {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} href="' + dataSrc + '">' + img.outerHTML + '</a></div>';
+				img.outerHTML = new_html;
+			});
+		{% endif %}
+	</script>
+
+{# 
+# with baguette plugin we need to traverse the dom in a specific manner
+# and take care of all the different situations for the images 
+# otherwise the slide gallery will not work
+# this unfortunately is plugin limitation
+# blockquotes with images can be an issue
+#}	
+	
+{% if BBLIGHTBOX_PLUGIN eq 'baguetteBox' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/baguetteBox/baguetteBox.min.js' %}
+	<script>
+	(function () {	
+	{% if BBLIGHTBOX_SLIDE %}
+	    baguetteBox.run('.postbody .attachbox .attach-image, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox .attach-image, .topicreview-content .content, .attachbox .attach-image, .pm .attachbox .attach-image', {
+			{% if BBLIGHTBOX_CAPTIONS %}
+			captions: function(element) {
+				return element.dataset.jslghtbxCaption
+			},
+			{% endif %}
+			animation: '{BBLIGHTBOX_ANIMATION}',
+			filter: /.+/i
+		});
+	{% else %}
+	    baguetteBox.run('.thumbnail, .attach-image', {
+			{% if BBLIGHTBOX_CAPTIONS %}
+			captions: function(element) {
+				return element.dataset.jslghtbxCaption
+			},
+			{% endif %}
+			animation: '{BBLIGHTBOX_ANIMATION}',
+			filter: /.+/i
+		});
+	{% endif %}
+	})();
+	</script>
+{% endif %}
+
+{% if BBLIGHTBOX_PLUGIN eq 'jsOnlyLightbox' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/jsOnlyLightbox/js/lightbox.min.js' %}
+	<script>
+		[].forEach.call(document.querySelectorAll('.thumbnail a, .attach-image a'), function(a) {
+			a.dataset.jslghtbx = a.href;
+		});
+
+		var lightbox = new Lightbox();
+		lightbox.load({
+			carousel: true,
+			captions: {BBLIGHTBOX_CAPTIONS},
+			loadingAnimation:'{BBLIGHTBOX_ANIMATION}',
+		});
+	</script>
+{% endif %}
+
+{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}
+	<script>
+	head.ready(function() {
+	       head.load('{FANCYBOX_JS}', function() {
+				$('.thumbnail a, .attach-image a').fancybox({
+					protect: {FANCYBOX_PROTECT},
+			        transitionIn: '{BBLIGHTBOX_ANIMATION}'
+				});
+			});
+	});
+	</script>
+{% endif %}
+
+{# 
+# with chocolat plugin we need to traverse the dom in a specific manner
+# and take care of all the different situations for the images 
+# otherwise the slide gallery will not work
+# this unfortunately is plugin limitation
+# blockquotes with images can be an issue
+#}
+
+{% if BBLIGHTBOX_PLUGIN eq 'Chocolat' %}
+	<script>
+	head.ready(function() {
+	        head.load('{CHOCOLAT_JS}', function() {
+			{% if BBLIGHTBOX_SLIDE %}	
+				$('.postbody .attachbox .attach-image, .postbody .content blockquote .img-bbcode, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox .attach-image, .topicreview-content .content, #preview, .attachbox .attach-image, .pm .attachbox .attach-image').Chocolat({
+					imageSelector: 'a',
+					{% if BBLIGHTBOX_CAPTIONS %}setTitle:'<a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a>',{% endif %}	
+					enableZoom: {{ CHOCOLAT_ENABLEZOOM }}
+				});
+			{% else %}	
+				$('.thumbnail, .attach-image').Chocolat({
+					imageSelector: 'a',
+					enableZoom: {{ CHOCOLAT_ENABLEZOOM }}
+				});
+			{% endif %}	
+			});
+			{% if BBLIGHTBOX_CAPTIONS %}
+			// lets take care of the buggy bootstrap tooltip otherwise the chocolat will have a meltdown :-)
+			$('.notip').each( function () {
+				$(this).tooltip('disable').attr('title', $(this).attr('data-original-title') );
+				$(this).removeAttr('data-original-title');
+			});
+			{% endif %}	
+	});
+	</script>
+{% endif %}
+
+
+{% if BBLIGHTBOX_PLUGIN eq 'lightgallery' %}
+	{% INCLUDEJS '@sitesplat_bblightbox/lightgallery/js/lightgallery.min.js' %}
+	<script>
+	(function () {	
+		[].forEach.call(document.querySelectorAll('.attach-image, .attach-image-thumb'), function(a) {
+			lightGallery(a);
+		});
+	})();
+	</script>
+{% endif %}
+
+{% endif %}

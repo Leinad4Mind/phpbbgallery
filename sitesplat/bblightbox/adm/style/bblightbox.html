@@ -1,0 +1,177 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bblightbox/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bblightbox/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/bblightbox.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+<!-- IF U_BACK --><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a><!-- ENDIF -->
+
+<h1>{L_ACP_BBLIGHTBOX} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBLIGHTBOX_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="fa fa-picture"></i> {L_ACP_BBLIGHTBOX}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+		
+<p>{L_ACP_BBLIGHTBOX_EXPLAIN}</p>
+
+<form id="acp_bblightbox" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ACP_BBLIGHTBOX_GENERAL_OPTIONS}</legend>
+
+		<div style="float:right;width:146px;border:thin solid #EDEDED;">
+			<div id="sidebar-header">{L_ACP_BBLIGHTBOX_LAYOUT_PREVIEW}</div>
+			<div id="sidebar-section">
+				{% for i in 0..11 %}
+				<div class="defaultlayout aboximg<!-- IF BBLIGHTBOX_PLUGIN neq '------' --><!-- IF BBLIGHTBOX_COLUMN_LAYOUT == 1 --> columnreg<!-- ELSEIF BBLIGHTBOX_COLUMN_LAYOUT == 2 --> medium<!-- ELSEIF BBLIGHTBOX_COLUMN_LAYOUT == 3 --> small<!-- ENDIF --><!-- ENDIF -->"></div>
+                {% endfor %}
+			</div>
+			
+			<div id="sidebar-footer">{L_ACP_BBLIGHTBOX} {L_SITESPLAT_COPY}</div>
+		</div>
+
+
+		<div style="float:left;width:80%;">
+		<dl>
+			<dt><label for="bblightbox_plugin">{L_ACP_BBLIGHTBOX_PLUGIN}{L_COLON}</label><br /><span>{L_ACP_BBLIGHTBOX_PLUGIN_EXPLAIN}</span></dt>
+			<dd>
+				<select id="bblightbox_plugin" name="bblightbox[plugin]">
+					<!-- BEGIN plugins -->
+						<option{plugins.SELECTED}>{plugins.NAME}</option>
+					<!-- END plugins -->
+				</select>
+			</dd>
+		</dl>
+        
+		<dl>
+			<dt><label for="bblightbox_bbcode_allow">{L_ACP_BBLIGHTBOX_BBCODE_ALLOW}{L_COLON}</label><br />{L_ACP_BBLIGHTBOX_BBCODE_EXPLAIN}</dt>
+			<dd>
+			<label><input type="radio" id="bblightbox_bbcode_allow" class="radio" name="bblightbox[bbcode_allow]" value="1"<!-- IF BBLIGHTBOX_BBCODE_ALLOW --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bblightbox[bbcode_allow]" value="0"<!-- IF not BBLIGHTBOX_BBCODE_ALLOW --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl id="Quoted_images"<!-- IF not BBLIGHTBOX_BBCODE_ALLOW --> class="hidden"<!-- ENDIF -->>
+			<dt><label for="Quoted_images">{L_QUOTED_IMAGES}{L_COLON}</label><br />{L_QUOTED_IMAGES_EXPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" id="Quoted_images" name="bblightbox[qimages]" value="1"<!-- IF QUOTED_IMAGES --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bblightbox[qimages]" value="0"<!-- IF not QUOTED_IMAGES --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+		</dl>
+
+		<dl id="Resize_images"<!-- IF not BBLIGHTBOX_BBCODE_ALLOW --> class="hidden"<!-- ENDIF -->>
+			<dt><label for="Resize_images">{L_RESIZED_IMAGES}{L_COLON}</label><br />{L_RESIZED_IMAGES_EXPLAIN}</dt>
+			<dd>
+            <input type="text" class="inputbox" id="Resize_images" name="bblightbox[resize]" value="{RESIZED_IMAGES}" />
+            </dd>
+		</dl>
+
+ 		<dl id="captions_options">
+			<dt><label for="bblightbox_captions">{L_BBLIGHTBOX_CAPTIONS}{L_COLON}</label><br />{L_BBLIGHTBOX_CAPTIONS_EXPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" id="bblightbox_captions" name="bblightbox[captions]" value="1"<!-- IF BBLIGHTBOX_CAPTIONS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bblightbox[captions]" value="0"<!-- IF not BBLIGHTBOX_CAPTIONS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+		</dl>
+
+		<dl id="fancybox_options"<!-- IF BBLIGHTBOX_PLUGIN neq 'fancybox' --> class="hidden"<!-- ENDIF -->>
+			<dt><label for="fancybox_protect">{L_FANCYBOX_PROTECT}{L_COLON}</label><br />{L_FANCYBOX_PROTECT_EXLPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" name="bblightbox[protect]" value="1"<!-- IF FANCYBOX_PROTECT --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" id="bblightbox_protect" name="bblightbox[protect]" value="0"<!-- IF not FANCYBOX_PROTECT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+		</dl>
+
+		<dl id="slide_options"<!-- IF BBLIGHTBOX_PLUGIN eq 'lightgallery' --> class="hidden"<!-- ENDIF -->>
+			<dt><label for="bblightbox_slide">{L_BBLIGHTBOX_SLIDE}{L_COLON}</label><br />{L_BBLIGHTBOX_SLIDE_EXPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" id="bblightbox_slide" name="bblightbox[slide]" value="1"<!-- IF BBLIGHTBOX_SLIDE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bblightbox[slide]" value="0"<!-- IF not BBLIGHTBOX_SLIDE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+		</dl>
+
+		<dl>
+			<dt><label for="fancybox_animationeffect">{L_FANCYBOX_ANIMATIONEFFECT}{L_COLON}</label><br />{L_FANCYBOX_ANIMATIONEFFECT_EXPLAIN}</dt>
+			<dd>
+            <select id="fancybox_animationeffect" name="bblightbox[animationeffect]">
+                <option value="false"{% if BBLIGHTBOX_ANIMATION == 'false' %} selected="selected"{% endif %}>{L_NONE}</option>
+                <option value="zoom"{% if BBLIGHTBOX_ANIMATION == 'zoom' %} selected="selected"{% endif %}>{L_ZOOM}</option>
+                <option value="fade"{% if BBLIGHTBOX_ANIMATION == 'fade' %} selected="selected"{% endif %}>{L_FADEIN}</option>
+                <option value="slideIn"{% if BBLIGHTBOX_ANIMATION == 'slideIn' %} selected="selected"{% endif %}>{L_SLIDEIN}</option>
+                <option value="zoom-in-out"{% if BBLIGHTBOX_ANIMATION == 'zoom-in-out' %} selected="selected"{% endif %}>{L_ZOOM_IN_OUT}</option>
+            </select>
+			</dd>
+		</dl>
+
+		<dl id="Chocolat_options"<!-- IF BBLIGHTBOX_PLUGIN neq 'Chocolat' --> class="hidden"<!-- ENDIF -->>
+			<dt><label for="Chocolat_enablezoom">{L_CHOCOLAT_ENABLEZOOM}{L_COLON}</label><br />{L_CHOCOLAT_ENABLEZOOM_EXPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" id="Chocolat_enablezoom" name="bblightbox[enablezoom]" value="1"<!-- IF CHOCOLAT_ENABLEZOOM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bblightbox[enablezoom]" value="0"<!-- IF not CHOCOLAT_ENABLEZOOM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl id="Colluns">
+			<dt><label for="Collums_layout">{L_COLUMN_LAYOUT}{L_COLON}</label><br />{L_COLUMN_LAYOUT_EXPLAIN}</dt>
+			<dd>
+            <label><input type="radio" class="radio" name="bblightbox[collums]" value="0"<!-- IF BBLIGHTBOX_COLUMN_LAYOUT == 0 --> checked="checked"<!-- ENDIF --> /> {L_1COLLUMS}</label>
+			<label><input type="radio" class="radio" name="bblightbox[collums]" value="1"<!-- IF BBLIGHTBOX_COLUMN_LAYOUT == 1 --> checked="checked"<!-- ENDIF --> /> {L_2COLLUMS}</label>
+			<label><input type="radio" class="radio" name="bblightbox[collums]" value="2"<!-- IF BBLIGHTBOX_COLUMN_LAYOUT == 2--> checked="checked"<!-- ENDIF --> /> {L_3COLLUMS}</label>
+			<label><input type="radio" class="radio" name="bblightbox[collums]" value="3"<!-- IF BBLIGHTBOX_COLUMN_LAYOUT == 3 --> checked="checked"<!-- ENDIF --> /> {L_4COLLUMS}</label>
+            </dd>
+		</dl>
+	</div>
+    
+	<p class="text-center" style="clear:both;">
+		<input class="btn btn-default btn-success" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		<input class="btn btn-default" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+
+<fieldset class="acp_bblightbox">
+	<legend>{{ lang('BBLIGHTBOX_OPTIONS') }}</legend>
+
+	<dl id="remove_inline_attachments">
+		<dt><label for="bblightbox_slide">{{ lang('REMOVE_INLINE_ATTACHMENTS') }}{L_COLON}</label><br />{{ lang('REMOVE_INLINE_ATTACHMENTS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REMOVE_INLINE_ATTACHMENTS }}" data-ajax="bblightbox_multistep">{{ lang('REMOVE_INLINE_ATTACHMENTS') }}</a>
+		</dd>
+	</dl>
+
+	<dl id="remove_thumbnails">
+		<dt><label for="bblightbox_slide">{{ lang('REMOVE_THUMBNAILS') }}{L_COLON}</label><br />{{ lang('REMOVE_THUMBNAILS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REMOVE_THUMBNAILS }}" data-ajax="true">{{ lang('REMOVE_THUMBNAILS') }}</a>
+		</dd>
+	</dl>
+
+	<dl id="remove_reassign_thumbnails">
+		<dt><label for="bblightbox_slide">{{ lang('REASSIGN_THUMBNAILS') }}{L_COLON}</label><br />{{ lang('REASSIGN_THUMBNAILS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REASSIGN_THUMBNAILS }}" data-ajax="bblightbox_multistep">{{ lang('REASSIGN_THUMBNAILS') }}</a>
+		</dd>
+	</dl>
+
+</fieldset>
+
+<!-- INCLUDEJS js/bblightbox.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bblightbox/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
