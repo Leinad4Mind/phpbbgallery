@@ -1,0 +1,19 @@
+services:
+
+    leinad4mind.grouprules.listener:
+        class: leinad4mind\grouprules\event\listener
+        arguments:
+            - '@config_text'
+            - '@request'
+        tags:
+            - { name: event.listener }
+
+    leinad4mind.grouprules.controller.acp:
+        class: leinad4mind\grouprules\controller\acp
+        arguments:
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@config_text'
+            - '@template'
+            - '@log'
