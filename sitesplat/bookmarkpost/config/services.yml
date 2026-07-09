@@ -1,0 +1,32 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.bookmarkpost.listener:
+        class: sitesplat\bookmarkpost\event\main_listener
+        arguments:
+            - '@template'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '@auth'
+            - '@controller.helper'
+            - '%tables.posts%'
+            - '%sitesplat.bookmarkpost.tables.post_bookmarks%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bookmarkpost.controller:
+        class: sitesplat\bookmarkpost\controller\controller
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '@auth'
+            - '@request'
+            - '@controller.helper'
+            - '%tables.posts%'
+            - '%sitesplat.bookmarkpost.tables.post_bookmarks%'
+            - '%core.root_path%'
+            - '%core.php_ext%'

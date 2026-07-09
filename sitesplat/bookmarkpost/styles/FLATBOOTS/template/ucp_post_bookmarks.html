@@ -1,0 +1,108 @@
+<!-- INCLUDECSS @sitesplat_bookmarkpost/bookmarked.css -->
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<div class="tab-pane active">
+		<fieldset class="framed-ucp">
+			<legend>{L_BOOKMARK_POST_TITLE}</legend>
+			<p>{L_POST_BOOKMARKS_EXPLAIN}</p>
+
+			<!-- IF .postrow -->
+				<div class="panel panel-forum">
+					<div class="panel-heading">
+						<i class="fa fa-bookmark"></i>&nbsp;{L_POST_BOOKMARKS}
+					</div>
+					<div class="panel-inner">
+						<table class="footable table table-striped table-primary table-hover">
+							<thead>
+								<tr>
+									<th data-class="expand">{L_POSTS}</th>
+									<th class="table-check">{L_MARK}</th>
+								</tr> 
+							</thead>
+							<tbody>
+								<!-- BEGIN postrow -->
+									<tr>
+										<td>
+											<!-- user avatar -->
+											<span class="avatar-over avatar-over-ucp-bookmarked pull-left">
+												<!-- IF postrow.POSTER_AVATAR -->
+													<a href="{postrow.U_POST_AUTHOR}">{postrow.POSTER_AVATAR}</a>
+												<!-- ELSE -->
+													<img src="{T_THEME_PATH}/images/no_avatar.gif" alt="">
+												<!-- ENDIF -->
+											</span>
+
+											<!-- post subject (with icon) -->
+											<a href="{postrow.U_POST}" class="topictitle">
+												<!-- IF postrow.ICON_IMG -->
+													<img class="post-icon" src="{T_ICONS_PATH}{postrow.ICON_IMG}" width="{postrow.ICON_IMG_WIDTH}" height="{postrow.ICON_IMG_HEIGHT}" alt=""/>
+												<!-- ENDIF -->
+												{postrow.SUBJECT}
+											</a>
+
+											<!-- post author and date -->
+											<br>
+											{L_POST_BY_AUTHOR}
+											{postrow.AUTHOR}
+											<span class="hidden-xs">
+												&#45;
+												<i class="fa fa-clock-o"></i>
+												{postrow.DATE}
+											</span>
+										</td>
+										<td class="table-check">
+											<div class="checker">
+												<input type="checkbox" name="p[{postrow.POST_ID}]" id="p{postrow.POST_ID}">
+												<label for="p{postrow.POST_ID}"></label>
+											</div>
+										</td>
+									</tr>
+								<!-- END postrow -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+	
+				<div class="table_options">
+					<div class="pull-left">
+						<div class="btn-group">
+							<!-- IF .postrow and not S_NO_DISPLAY_BOOKMARKS -->
+								<div class="dropdown">
+									<button href="#" data-toggle="dropdown" class="btn btn-default" title="">
+										<i class="fa fa-check-square-o"></i>
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a href="#" onclick="marklist('ucp', '', true); return false;" title=""><i class="fa fa-check-square-o"></i>{L_MARK_ALL}</a></li>
+										<li><a href="#" onclick="marklist('ucp', '', false); return false;" title=""><i class="fa fa-square-o"></i>{L_UNMARK_ALL}</a></li>
+									</ul> 
+									<button class="btn btn-default" type="submit" name="unbookmark" title="{L_REMOVE_BOOKMARK_MARKED}"><i class="fa fa-bookmark"></i></button>
+								</div>
+								{S_FORM_TOKEN}
+							<!-- ENDIF -->		  
+						</div> 
+					</div>
+					<div class="clearfix">
+						<ul class="pagination pagination-sm pull-right">
+							<li><a>{TOTAL_POSTS}</a></li>
+							<!-- IF .pagination -->
+								<!-- INCLUDE pagination.html -->
+							<!-- ELSE -->
+								<li class="active"><a>{PAGE_NUMBER}</a></li>	
+							<!-- ENDIF -->
+						</ul> 
+					</div>
+				</div>
+			<!-- ELSE -->
+				<div class="alert alert-info fade in">
+					<button data-dismiss="alert" class="close" type="button" aria-hidden="true">
+						<i class="awe-remove-circle"></i>
+					</button>
+					{L_NO_BOOKMARKS}
+				</div> 
+			<!-- ENDIF -->
+		</fieldset>
+	</div>
+</form>
+
+<!-- INCLUDE ucp_footer.html -->
