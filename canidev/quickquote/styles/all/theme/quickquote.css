@@ -1,0 +1,203 @@
+/*  cBB QuickQuote StyleSheet
+    --------------------------------------------------------------
+	Style:	All
+	Copyright (c) 2025 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+/* Tooltip
+-------------------------- */
+.quickquote-tooltip {
+	background: rgba(0, 0, 0, 0.7);
+	border-radius: 4px;
+	padding: 7px;
+	position: absolute;
+	z-index: 10;
+}
+
+.quickquote-tooltip.min-font-size {
+	font-size: 11px;
+}
+
+.quickquote-tooltip,
+.quickquote-tooltip a {
+	color: #fff;
+}
+
+.quickquote-tooltip a {
+	display: inline-block;
+}
+
+.quickquote-tooltip a > i {
+	margin-right: 5px;
+}
+
+.quickquote-tooltip .tooltip-sep {
+	margin: 0 6px;
+}
+
+/* Button
+-------------------------- */
+.quickquote-floatbtn {
+	bottom: 30px;
+	box-shadow: 0 0 2px #738fb3;
+	font-weight: bold;
+	padding: 10px 30px 10px 10px;
+    position: fixed;
+    right: 60px;
+	z-index: 10;
+}
+
+.quickquote-floatbtn.min-font-size {
+	font-size: 12px;
+}
+
+.quickquote-floatbtn:hover {
+	text-decoration: none;
+}
+
+.quickquote-floatbtn:after {
+    border: 0px solid #ccc;
+    border-left-width: 1px;
+    content: '\f0d7';
+	font-family: FontAwesome;
+	line-height: 28px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+	text-align: center;
+	transform: translate(0, -50%);
+    width: 20px;
+}
+
+.quickquote-inlinebtn,
+.quickquote-floatbtn {
+	display: none;
+}
+
+/* Dialog
+---------------------------- */
+.qq-dialog .dialog-content {
+	overflow: auto;
+}
+
+.qq-dialog .dialog-content > ul {
+	list-style-type: none;
+	margin: 0 4px 0 0;
+	padding: 0;
+}
+
+.qq-dialog .dialog-content > ul > li {
+    border: 1px solid #ccdff7;
+	display: block;
+	margin-bottom: 5px;
+}
+
+.qq-dialog .titlebar {
+	background-color: #ccdff7;
+    padding: 6px;
+}
+
+.qq-dialog .titlebar a {
+    float: right;
+    margin: 1px 8px;
+}
+
+.qq-dialog .titlebar .fa {
+	font-size: 1.4em;
+}
+
+.qq-dialog .titlebar .fa-close {
+	margin-top: -1px;
+}
+
+.qq-dialog .content {
+	font-size: 1.1em;
+	margin-top: 2px;
+	max-height: 100px;
+	min-height: 50px;
+	overflow: hidden;
+    padding: 6px;
+	position: relative;
+}
+
+.qq-dialog .content:after {
+	background: transparent;
+	background: linear-gradient(to bottom, #fefefe00 0%, #fefefe 90%);
+	content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+}
+
+.qq-dialog .content img {
+	max-width: 100px;
+    height: auto;
+}
+
+/* RTL
+------------------------- */
+.rtl .quickquote-tooltip a > i {
+	margin-left: 5px;
+	margin-right: unset;
+}
+
+.rtl .quickquote-floatbtn {
+	left: 60px;
+	padding: 10px 10px 10px 30px;
+	right: unset;
+}
+
+.rtl .quickquote-floatbtn:after {
+	border-width: 0 1px 0 0;
+	left: 0;
+	right: unset;
+}
+
+.rtl .qq-dialog .titlebar a {
+	float: left;
+}
+
+/* Dark Themes
+------------------------- */
+.dark-theme .quickquote-tooltip {
+	background: rgba(62, 62, 62, 0.7);
+}
+
+.dark-theme .quickquote-floatbtn {
+	background: #212121;
+    box-shadow: 0px 0px 2px #616161;
+	color: #5d5d5d;
+}
+
+.dark-theme .quickquote-floatbtn:after {
+	border-color: #464646;
+}
+
+.dark-theme .quickquote-floatbtn:hover {
+	color: #868686;
+}
+
+.dark-theme .qq-dialog .titlebar {
+    background-color: #2b2b2b;
+}
+
+.dark-theme .qq-dialog .content:after {
+    background-image: linear-gradient(to bottom, #25252500 0%, #252525 90%);
+}
+
+.dark-theme .qq-dialog .dialog-content > ul > li {
+    border-color: #3a3a3a;
+}
+
+/* Responsive
+------------------------- */
+@media only screen and (max-width: 375px) {
+	.quickquote-floatbtn {
+		left: 50%;
+		right: auto;
+		transform: translateX(-50%);
+	}
+}

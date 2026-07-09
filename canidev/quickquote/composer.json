@@ -1,0 +1,33 @@
+{
+	"name": "canidev/quickquote",
+	"type": "phpbb-extension",
+	"description": "",
+	"homepage": "https://www.canidev.com",
+	"version": "1.0.5",
+	"time": "2025-04-08",
+	"keywords": ["phpbb", "extension", "canidev", "quotes"],
+	"license": "CreativeCommons Attribution-NonCommercial v4.0",
+	"authors": [
+		{
+			"name": "CaniDev",
+			"email": "contact@canidev.com",
+			"homepage": "https://www.canidev.com",
+			"role": "Lead Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.6"
+	},
+	"extra": {
+		"display-name": "cBB QuickQuote",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		},
+		"version-check": {
+			"host": "www.canidev.com",
+			"directory": "/store/cbb-quickquote",
+			"filename": "version",
+			"ssl": true
+		}
+	}
+}

@@ -1,0 +1,59 @@
+{% if QQ_ENABLED %}
+	<template id="quickquote-tooltip">
+		<div class="quickquote-tooltip">
+			<a href="#" data-action="quote"><i class="fa fa-plus"></i>{{ lang('QQ_SAVE_QUOTE') }}</a>
+			<span class="tooltip-sep">|</span>
+			<a href="#" data-action="reply"><i class="fa fa-reply"></i>{{ lang('QQ_REPLY') }}</a>
+		</div>
+	</template>
+
+	<template id="quickquote-floatbtn">
+		<a href="#" class="quickquote-floatbtn button" data-text="{{ lang('QUOTES') }}"></a>
+	</template>
+
+	<template id="quickquote-inlinebtn">
+		<input type="button" class="button1 quickquote-inlinebtn" data-text="{{ lang('QQ_INSERT_QUOTES') }}" />
+	</template>
+
+	<template id="quickquote-dialog">
+		<div class="qq-dialog" title="{{ lang('QUOTES') }}">
+			<div class="cbb-dialog-content dialog-content">
+				<ul class="js-quickquote-list">
+					<li>
+						<div class="titlebar">
+							<input id="check-<%id%>" type="checkbox" class="cbb-checkbox" value="<%id%>" />
+							<label for="check-<%id%>"></label><span><%username%></span>
+							<a href="#" data-action="remove" title="{{ lang('QQ_REMOVE') }}"><i class="fa fa-close"></i></a>
+							<a href="#" data-action="insert" title="{{ lang('QQ_INSERT') }}"><i class="fa fa-download"></i></a>
+						</div>
+						<div class="content"><%text%></div>
+					</li>
+				</ul>
+			</div>
+			<div class="cbb-dialog-buttons">
+				<div class="js-btn-marked cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertSelected">{{ lang('QQ_INSERT_SELECTED') }}</a>
+					<a href="#" class="cbb-btn" data-action="removeSelected">{{ lang('QQ_REMOVE_SELECTED') }}</a>
+				</div>
+				<div class="js-btn-all cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertAll">{{ lang('QQ_INSERT_ALL') }}</a>
+					<a href="#" class="cbb-btn" data-action="removeAll">{{ lang('QQ_REMOVE_ALL') }}</a>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<script>
+	(function($) {
+		cbbCore.initService('quickquote', {
+			btnTarget		: {% if QQ_FLOAT_BTN %}'body'{% else %}'#qr_postform .submit-buttons, #postform .submit-buttons'{% endif %},
+			target			: '.post .content, .block-postbody',
+			editors			: {
+				phpbb: '#message-box textarea[name]'
+			},
+			replyURL		: '{{ U_QQ_REPLY }}',
+			replyOverwrite	: '{{ QQ_REPLY_OVERWRITE }}'
+		});
+	})(jQuery);
+	</script>
+{% endif %}

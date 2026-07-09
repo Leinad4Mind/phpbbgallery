@@ -1,0 +1,20 @@
+services:
+    canidev.quickquote.listener:
+        class: canidev\quickquote\event\listener
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@canidev.core.lib'
+            - '@request'
+            - '@canidev.core.template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+            
+    canidev.quickquote.admin.config:
+        class: canidev\quickquote\controller\admin_controller_config
+        parent: canidev.core.controller.acp
+        arguments:
+            - '@dbal.conn'
+            - '@dispatcher'
