@@ -1,0 +1,46 @@
+imports:
+    - { resource: tables.yml }
+    - { resource: cron.yml }
+
+services:
+    sitesplat_donations_donations:
+        class: sitesplat\donations\event\listener
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '@sitesplat.donations.manager'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '%sitesplat.donation.tables.donations%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.donations.controller:
+        class: sitesplat\donations\controller\donation
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@sitesplat.donations.manager'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.donation.tables.donations%'
+
+    sitesplat.donations.manager:
+        class: sitesplat\donations\controller\manager
+        arguments:
+            - '@config'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.donation.tables.donations%'

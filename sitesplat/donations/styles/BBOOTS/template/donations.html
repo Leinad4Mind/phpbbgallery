@@ -1,0 +1,104 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{L_DONATIONS}</h3></div>
+<div class="clearfix">
+ <div class="donation-actions">
+<script>
+    var vals = [<!-- BEGIN amounts -->{amounts.AMOUNT}<!-- IF not amounts.S_LAST_ROW -->,<!-- ENDIF --><!-- END amounts -->];
+</script>
+ 	<form action="<!-- IF SUCCESS or ERROR -->{U_INDEX}<!-- ELSE -->{U_DONATE}<!-- ENDIF -->" method="post">
+        <h2>{L_DONATIONS_THANK_YOU}</h2>
+        <!-- IF DONATIONS_PREMIUM --><p class="donation-premium">{DONATIONS_PREMIUM}</p><!-- ENDIF -->
+        <div id="donationmessage">
+            <h3>{L_DONATIONS_MESSAGE}</h3>
+        </div>
+        <div id="donationicons">
+        <!-- BEGIN amounts -->
+            <span<!-- IF amounts.S_ROW_COUNT == 1 --> class="selected"<!-- ENDIF --> title="{DONATIONS_CURRENCY_SYMBOL}&nbsp;{amounts.AMOUNT}{L_DONATIONS_DIGIT}">{DONATIONS_CURRENCY_SYMBOL}&nbsp;{amounts.AMOUNT}{L_DONATIONS_DIGIT}</span>
+            <!-- IF amounts.TXT --><p class="hidden-xs">{amounts.TXT}</p><!-- ENDIF -->
+        <!-- END amounts -->
+        </div>	
+        <input type="range" min="0" max="{STEPS}" step="1" value="1" id="donationvalue">
+
+	<!-- IF S_USER_LOGGED_IN -->  
+        <div id="submission">
+			<div class="input-group">
+			  <span class="input-group-addon">
+				<output for="donationvalue">
+					 <span>{DONATIONS_CURRENCY_SYMBOL}</span>
+					 <span id="donationoutput"><script>document.write(vals[1])</script>{L_DONATIONS_DIGIT}</span>
+				</output>
+			  </span>
+			  <!-- IF ENABLE_MESSAGE -->
+			    <input id="custom_message" type="text" value="" name="custom" class="form-control dcount" placeholder="{L_DONATIONS_MSG_PLACEHOLDER}" autocomplete="off">
+			  <!-- ENDIF -->	
+			  <span class="input-group-btn">
+			    <input type="hidden" name="amount" id="amount" value="">
+				<!-- IF BITCOIN_ENABLED --><button class="btn btn-bbdonation" name="bitcoin" type="submit" value="" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="bitcoin-logo"></span>&nbsp;{L_CONTINUE_ON_BITCOINS}</button><!-- ENDIF -->
+				<!-- IF PAYPAL_ENABLED --><button class="btn btn-bbdonation" type="submit" value="" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="paypal-logo"></span>&nbsp;{L_CONTINUE_ON_PAYPAL}</button><!-- ENDIF -->
+			  </span>
+			</div>	
+        </div>
+        <script>
+            document.getElementById('amount').value=vals[1];
+        </script>
+	<!-- ELSE -->
+      	<p>{L_DONATIONS_NOGUESTS}</p>
+	<!-- ENDIF -->	
+	
+ 	</form>
+	<div class="space10"></div><p class="text-muted">{L_DONATION_DEPOSIT_DISCLAIMER}</p>
+ </div>
+ <div class="text-right"><small>{L_BBDONATION_COPY}</small>&nbsp;<i class="fa fa-heart text-flatboots-red rosso heart-ss pulse-ss"></i>&nbsp;<small>{L_BY}<a href="http://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="{L_SITESPLAT_EXT_COPY}" target="_blank">&nbsp;{L_SITESPLAT}</a></small></div>
+</div> 
+
+ 
+<!-- IF .donors -->
+	<div class="space10"></div>
+	  <div class="space10"></div>
+    <div class="side-segment"><h3>{L_DONATIONS_DONORS}</h3></div>
+	<div class="row">
+	<div class="panel panel-default">
+	 <div class="panel-body">
+        <!-- BEGIN donors -->
+		<div class="col-md-3 col-sm-4 col-xs-4">
+        <figure class="member-info">{donors.AVATAR}
+			<figcaption>
+                  <h3>{donors.NAME}</h3>
+				  <span>&nbsp;{donors.TXT}</span>
+                  <a>{DONATIONS_CURRENCY_SYMBOL}&nbsp;{donors.AMOUNT}</a>
+            </figcaption>
+        </figure>
+		</div>
+        <!-- END donors -->
+	 </div>	
+    </div>
+	</div>
+<!-- ENDIF -->  
+
+
+<!-- IF DONATIONS_COINBASE_CODE -->
+<div class="bitcoin_box">
+      <iframe
+		  id="{DONATIONS_COINBASE_CODE}"
+		  src="{DONATIONS_COINBASE_URL}/checkouts/{DONATIONS_COINBASE_CODE}/inline"
+		  style="width: 460px; height: 350px; box-shadow: 0 1px 3px rgba(0,0,0,0.25);"
+		  allowtransparency="true"
+		  frameborder="0">
+      </iframe>
+</div>  
+<div class="darken_bitcoin"></div>
+<!-- ENDIF -->
+
+<!-- IF NOTIFY_STATUS -->
+<script>
+    var info = '{L_INFORMATION}';
+    var notify = '{NOTIFY_STATUS}';
+</script>
+<!-- INCLUDEJS @sitesplat_donations/js/notify_status.js -->
+<!-- ENDIF -->
+<!-- IF ENABLE_MESSAGE -->
+<!-- INCLUDEJS @sitesplat_donations/js/jquery.charactercounter.js -->
+<!-- INCLUDEJS @sitesplat_donations/js/char.init.js -->
+<!-- ENDIF -->	
+<!-- INCLUDEJS @sitesplat_donations/js/donations.js -->
+<!-- INCLUDE overall_footer.html -->
