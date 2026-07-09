@@ -1,0 +1,5 @@
+{% if postrow.S_FIRST_POST and postrow.ANSWER_POST_ID %}
+<div class="postbody post_answer"><i class="icon fa-check fa-fw icon-green" aria-hidden="true"></i><span class="author">{{ lang('POST_BY_AUTHOR') }} {{ postrow.ANSWER_USERNAME_FULL }} &raquo; {{ postrow.ANSWER_POST_TIME }}</span>
+<div class="content">{{ postrow.ANSWER_POST_TEXT }}</div>
+<a href="{{ postrow.U_ANSWER }}">{{ lang('TO_POST') }}</a></div>
+{% endif %}

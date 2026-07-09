@@ -1,0 +1,10 @@
+Subject: Your topic reply was marked as best answer
+
+Hello,
+
+Your topic reply in "{{ TOPIC_TITLE }}" at "{{ SITENAME }}" was marked as the best answer by "{{ USERNAME }}".
+
+To view the post use this link:
+{{ U_LINK_TO_TOPIC }}
+
+{{ EMAIL_SIG }}
