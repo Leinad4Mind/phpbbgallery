@@ -1,0 +1,133 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_SETTINGS}</h1>
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl>
+			<dt><label for="bblinks_enable">{L_BBLINKS_ENABLE}</label></dt>
+			<dd><input type="radio" class="radio" name="bblinks_enable" value="1" <!-- IF BBLINKS_ENABLE -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp;
+				<input type="radio" class="radio" name="bblinks_enable" value="0" <!-- IF not BBLINKS_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_enable_modal">{L_BBLINKS_ENABLE_MODAL}</label><br /><span>{L_BBLINKS_ENABLE_MODAL_EXPLAIN}</span></dt>
+			<dd><input type="radio" class="radio" name="bblinks_enable_modal" value="1" <!-- IF BBLINKS_ENABLE_MODAL -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp;
+				<input type="radio" class="radio" name="bblinks_enable_modal" value="0" <!-- IF not BBLINKS_ENABLE_MODAL -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_skip_link_types">{L_BBLINKS_SKIP_LINK_TYPES}{L_COLON}</label><br /><span>{L_BBLINKS_SKIP_LINK_TYPES_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_skip_link_types" name="bblinks_skip_link_types" value="{BBLINKS_SKIP_LINK_TYPES}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_internal_link_types">{L_BBLINKS_INTERNAL_LINK_TYPES}{L_COLON}</label><br /><span>{L_BBLINKS_INTERNAL_LINK_TYPES_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_internal_link_types" name="bblinks_internal_link_types" value="{BBLINKS_INTERNAL_LINK_TYPES}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_external_link_types">{L_BBLINKS_EXTERNAL_LINK_TYPES}{L_COLON}</label><br /><span>{L_BBLINKS_EXTERNAL_LINK_TYPES_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_external_link_types" name="bblinks_external_link_types" value="{BBLINKS_EXTERNAL_LINK_TYPES}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_forbidden_domains">{L_BBLINKS_FORBIDDEN_DOMAINS}{L_COLON}</label><br /><span>{L_BBLINKS_FORBIDDEN_DOMAINS_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_forbidden_domains" name="bblinks_forbidden_domains" value="{BBLINKS_FORBIDDEN_DOMAINS}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_forbidden_new_url">{L_BBLINKS_FORBIDDEN_NEW_URL}{L_COLON}</label><br /><span>{L_BBLINKS_FORBIDDEN_NEW_URL_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_forbidden_new_url" name="bblinks_forbidden_new_url" value="{BBLINKS_FORBIDDEN_NEW_URL}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_internal_link_class">{L_BBLINKS_INTERNAL_LINK_CLASS}{L_COLON}</label></dt>
+			<dd><input class="text medium" type="text" id="bblinks_internal_link_class" name="bblinks_internal_link_class" value="{BBLINKS_INTERNAL_LINK_CLASS}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_external_link_class">{L_BBLINKS_EXTERNAL_LINK_CLASS}{L_COLON}</label></dt>
+			<dd><input class="text medium" type="text" id="bblinks_external_link_class" name="bblinks_external_link_class" value="{BBLINKS_EXTERNAL_LINK_CLASS}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_internal_link_target">{L_BBLINKS_INTERNAL_LINK_TARGET}{L_COLON}</label></dt>
+			<dd><input class="text medium" type="text" id="bblinks_internal_link_target" name="bblinks_internal_link_target" value="{BBLINKS_INTERNAL_LINK_TARGET}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_external_link_target">{L_BBLINKS_EXTERNAL_LINK_TARGET}{L_COLON}</label></dt>
+			<dd><input class="text medium" type="text" id="bblinks_external_link_target" name="bblinks_external_link_target" value="{BBLINKS_EXTERNAL_LINK_TARGET}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_internal_link_rel">{L_BBLINKS_INTERNAL_LINK_REL}{L_COLON}</label><br /><span>{L_BBLINKS_LINK_REL_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_internal_link_rel" name="bblinks_internal_link_rel" value="{BBLINKS_INTERNAL_LINK_REL}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_external_link_rel">{L_BBLINKS_EXTERNAL_LINK_REL}{L_COLON}</label><br /><span>{L_BBLINKS_LINK_REL_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_external_link_rel" name="bblinks_external_link_rel" value="{BBLINKS_EXTERNAL_LINK_REL}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_hide_links_from_guests">{L_BBLINKS_HIDE_LINKS_FROM_GUESTS}</label></dt>
+			<dd><input type="radio" class="radio" name="bblinks_hide_links_from_guests" value="1" <!-- IF BBLINKS_HIDE_LINKS_FROM_GUESTS -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp;
+				<input type="radio" class="radio" name="bblinks_hide_links_from_guests" value="0" <!-- IF not BBLINKS_HIDE_LINKS_FROM_GUESTS -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_hide_links_from_guests_text">{L_BBLINKS_HIDE_LINKS_FROM_GUESTS_TEXT}{L_COLON}</label><br /><span>{L_BBLINKS_HIDE_LINKS_FROM_GUESTS_TEXT_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_hide_links_from_guests_text" name="bblinks_hide_links_from_guests_text" value="{BBLINKS_HIDE_LINKS_FROM_GUESTS_TEXT}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_external_prefix">{L_BBLINKS_EXTERNAL_PREFIX}{L_COLON}</label><br /><span>{L_BBLINKS_EXTERNAL_PREFIX_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_external_prefix" name="bblinks_external_prefix" value="{BBLINKS_EXTERNAL_PREFIX}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_skip_prefix_types">{L_BBLINKS_SKIP_PREFIX_TYPES}{L_COLON}</label><br /><span>{L_BBLINKS_SKIP_PREFIX_TYPES_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_skip_prefix_types" name="bblinks_skip_prefix_types" value="{BBLINKS_SKIP_PREFIX_TYPES}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_internal_link_domains">{L_BBLINKS_INTERNAL_LINK_DOMAINS}{L_COLON}</label><br /><span>{L_BBLINKS_INTERNAL_LINK_DOMAINS_EXPLAIN}</span></dt>
+			<dd><input class="text medium" type="text" id="bblinks_internal_link_domains" name="bblinks_internal_link_domains" value="{BBLINKS_INTERNAL_LINK_DOMAINS}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_cpf_link_new_window">{L_BBLINKS_CPF_LINK_NEW_WINDOW}</label></dt>
+			<dd><input type="radio" class="radio" name="bblinks_cpf_link_new_window" value="1" <!-- IF BBLINKS_CPF_LINK_NEW_WINDOW -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp;
+				<input type="radio" class="radio" name="bblinks_cpf_link_new_window" value="0" <!-- IF not BBLINKS_CPF_LINK_NEW_WINDOW -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_signature">{L_BBLINKS_SIGNATURE}</label></dt>
+			<dd><input type="radio" class="radio" name="bblinks_signature" value="1" <!-- IF BBLINKS_SIGNATURE -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp;
+				<input type="radio" class="radio" name="bblinks_signature" value="0" <!-- IF not BBLINKS_SIGNATURE -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_LOCALURLTOTEXT_TITLE') }}</legend>
+		<dl>
+			<dt><label for="bblinks_urltotext_forum">{L_ACP_LOCALURLTOTEXT_FORUM}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_FORUM_EXPLAIN}</span></dt>
+			<dd><input type="text" value="{BBLINKS_URLTOTEXT_FORUM}" name="bblinks_urltotext_forum" maxlength="255" size="40"></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_urltotext_topic">{L_ACP_LOCALURLTOTEXT_TOPIC}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_TOPIC_EXPLAIN}</span></dt>
+			<dd><input type="text" value="{BBLINKS_URLTOTEXT_TOPIC}" name="bblinks_urltotext_topic" maxlength="255" size="40"></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_urltotext_post">{L_ACP_LOCALURLTOTEXT_POST}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_POST_EXPLAIN}</span></dt>
+			<dd><input type="text" value="{BBLINKS_URLTOTEXT_POST}" name="bblinks_urltotext_post" maxlength="255" size="40"></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_urltotext_user">{L_ACP_LOCALURLTOTEXT_USER}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_USER_EXPLAIN}</span></dt>
+			<dd><input type="text" value="{BBLINKS_URLTOTEXT_USER}" name="bblinks_urltotext_user" maxlength="255" size="40"></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_urltotext_page">{L_ACP_LOCALURLTOTEXT_PAGE}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_PAGE_EXPLAIN}</span></dt>
+			<dd><input type="text" value="{BBLINKS_URLTOTEXT_PAGE}" name="bblinks_urltotext_page" maxlength="255" size="40"></dd>
+		</dl>
+		<dl>
+			<dt><label for="bblinks_urltotext_cpf">{L_ACP_LOCALURLTOTEXT_CPF}{L_COLON}</label><br /><span>{L_ACP_LOCALURLTOTEXT_CPF_EXPLAIN}</span></dt>
+			<dd>
+				<label><input type="radio" name="bblinks_urltotext_cpf" value="1" class="radio"<!-- IF BBLINKS_URLTOTEXT_CPF == 1 --> checked="checked"<!-- ENDIF--> /> {L_YES}</label>
+				<label><input type="radio" name="bblinks_urltotext_cpf" value="0" class="radio"<!-- IF BBLINKS_URLTOTEXT_CPF == 0 --> checked="checked"<!-- ENDIF--> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
