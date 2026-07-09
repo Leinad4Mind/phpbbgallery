@@ -1,0 +1,21 @@
+services:
+    marttiphpbb.showphpbbevents.listener:
+        class: marttiphpbb\showphpbbevents\event\listener
+        arguments:
+            - '@request'
+            - '@user'
+            - '@marttiphpbb.showphpbbevents.php_event_listener'
+        tags:
+            - { name: event.listener }
+
+    marttiphpbb.showphpbbevents.php_event_listener:
+        class: marttiphpbb\showphpbbevents\event\php_event_listener
+        tags:
+            - { name: event.listener }
+
+    marttiphpbb.showphpbbevents.console.extract:
+        class: marttiphpbb\showphpbbevents\console\extract
+        arguments:
+            - '@user'
+        tags:
+            - { name: console.command }

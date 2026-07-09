@@ -1,0 +1,31 @@
+{
+	"name": "marttiphpbb/showphpbbevents",
+	"type": "phpbb-extension",
+	"description": "This extension for developers shows all phpBB core template and PHP events (phpBB 3.3.7)",
+	"homepage": "https://github.com/marttiphpbb/phpbb-ext-showphpbbevents",
+	"version": "3.0.0",
+	"time": "2025-08-16",
+	"keywords": ["phpbb", "extension", "template", "PHP", "events", "development"],
+	"license": "GPL-2.0-only",
+	"authors": [{
+			"name": "martti",
+			"email": "phpbb@martti.be",
+			"homepage": "https://github.com/marttiphpbb/",
+			"role": "Developer"
+		}],
+	"require": {
+		"php": ">=7.1",
+		"symfony/finder": "^7.3"
+	},
+	"extra": {
+		"display-name": "Show phpBB Events",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0"
+		},
+		"version-check": {
+			"host": "marttiphpbb.github.io",
+			"directory": "/version",
+			"filename": "showphpbbevents.json"
+		}
+	}
+}
