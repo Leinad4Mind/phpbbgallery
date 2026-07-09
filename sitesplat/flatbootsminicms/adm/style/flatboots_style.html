@@ -1,0 +1,577 @@
+<!-- INCLUDE overall_header.html -->
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- IF S_FLATBOOTS_STYLE_CONFIG -->
+
+  <h1>{L_FLATBOOTS_STYLE_CONFIG}</h1>
+
+  <form method="post" action="">
+  	<fieldset>
+
+			<dl>
+				<dt><label for="about_us_title">{L_ABOUT_US_TITLE}</label><br />{L_ABOUT_US_TITLE_EXPLAIN}</dt>
+				<dd><input type="text" id="about_us_title" name="about_us_title" value="{ABOUT_US_TITLE}" /></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="about_us">{L_ABOUT_US}:</label><br />{L_ABOUT_US_EXPLAIN}</dt>
+				<dd><textarea name="about_us" id="about_us" rows="5" cols="70" style="width:95%;font-size: 11px;">{ABOUT_US}</textarea></dd>
+			</dl>
+
+      <dl>
+        <dt><label for="teaser_title">{L_TEASER_TITLE}</label><br />{L_TEASER_TITLE_EXPLAIN}</dt>
+        <dd><input type="text" id="teaser_title" name="teaser_title" value="{TEASER_TITLE}" size="40" /></dd>
+      </dl>
+
+      <dl>
+        <dt><label for="teaser_text">{L_TEASER_TEXT}:</label><br />{L_TEASER_TEXT_EXPLAIN}</dt>
+        <dd><textarea name="teaser_text" id="teaser_text" rows="5" cols="70" style="width:95%;font-size: 11px;">{TEASER_TEXT}</textarea></dd>
+      </dl>
+
+			<dl>
+				<dt><label for="google_analytics">{L_GOOGLE_ANALYTICS}:</label><br />{L_GOOGLE_ANALYTICS_EXPLAIN}</dt>
+				<dd><textarea name="google_analytics" id="google_analytics" rows="5" cols="70" style="width:95%;font-size: 11px;">{GOOGLE_ANALYTICS}</textarea></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="twitter_screen_name">{L_TWITTER_SCREEN_NAME}</label><br />{L_TWITTER_SCREEN_NAME_EXPLAIN}</dt>
+				<dd><input type="text" id="twitter_screen_name" name="twitter_screen_name" value="{TWITTER_SCREEN_NAME}" /></dd>
+			</dl>
+
+      <dl>
+        <dt><label for="twitter_id">{L_TWITTER_ID}</label><br />{L_TWITTER_ID_EXPLAIN}</dt>
+        <dd><input type="text" id="twitter_id" name="twitter_id" value="{TWITTER_ID}" /></dd>
+      </dl>
+
+			<dl>
+				<dt><label for="adsense_header">{L_ADSENSE_HEADER}:</label><br />{L_ADSENSE_HEADER_EXPLAIN}</dt>
+				<dd><textarea name="adsense_header" id="adsense_header" rows="5" cols="70" style="width:95%;font-size: 11px;">{ADSENSE_HEADER}</textarea></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="adsense_footer">{L_ADSENSE_FOOTER}:</label><br />{L_ADSENSE_FOOTER_EXPLAIN}</dt>
+				<dd><textarea name="adsense_footer" id="adsense_footer" rows="5" cols="70" style="width:95%;font-size: 11px;">{ADSENSE_FOOTER}</textarea></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="adsense_topic">{L_ADSENSE_TOPIC}:</label><br />{L_ADSENSE_TOPIC_EXPLAIN}</dt>
+				<dd><textarea name="adsense_topic" id="adsense_topic" rows="5" cols="70" style="width:95%;font-size: 11px;">{ADSENSE_TOPIC}</textarea></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="logo_text">{L_LOGO_TEXT}:</label><br />{L_LOGO_TEXT_EXPLAIN}</dt>
+				<dd><input type="text" id="logo_text" name="logo_text" value="{LOGO_TEXT}" /></dd>
+			</dl>
+			
+			<dl>
+				<dt><label for="hide_header">{L_HIDE_HEADER}:</label><br />{L_HIDE_HEADER_EXPLAIN}</dt>
+				<dd>
+					<label><input type="radio" class="radio" name="hide_header" value="1"<!-- IF HIDE_HEADER --> id="hide_header" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="hide_header" value="0"<!-- IF not HIDE_HEADER --> id="hide_header" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				</dd>
+			</dl>
+			
+			<dl>
+				<dt><label for="hide_footer">{L_HIDE_FOOTER}:</label><br />{L_HIDE_FOOTER_EXPLAIN}</dt>
+				<dd>
+					<label><input type="radio" class="radio" name="hide_footer" value="1"<!-- IF HIDE_FOOTER --> id="hide_footer" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="hide_footer" value="0"<!-- IF not HIDE_FOOTER --> id="hide_footer" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				</dd>
+			</dl>
+			
+			<dl>
+				<dt><label for="enable_popup_login">{L_ENABLE_POPUP_LOGIN}:</label><br />{L_ENABLE_POPUP_LOGIN_EXPLAIN}</dt>
+				<dd>
+					<label><input type="radio" class="radio" name="enable_popup_login" value="1"<!-- IF ENABLE_POPUP_LOGIN --> id="enable_popup_login" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="enable_popup_login" value="0"<!-- IF not ENABLE_POPUP_LOGIN --> id="enable_popup_login" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				</dd>
+			</dl>
+			<dl>
+  		  <dt><label for="flatboots_avatar_effect">{L_AVATAR_EFFECT}</label><br />{L_AVATAR_EFFECT_EXPLAIN}</dt>
+    		<dd>  
+          <select name="flatboots_avatar_effect" id="flatboots_avatar_effect">
+    				<option value="none"<!-- IF AVATAR_EFFECT == "none" --> selected<!-- ENDIF -->>none</option>
+    				<option value="img-rounded"<!-- IF AVATAR_EFFECT == "img-rounded" --> selected<!-- ENDIF -->>Rounded</option>
+    				<option value="img-circle"<!-- IF AVATAR_EFFECT == "img-circle" --> selected<!-- ENDIF -->>Circle</option>
+    				<option value="img-thumbnail"<!-- IF AVATAR_EFFECT == "img-thumbnail" --> selected<!-- ENDIF -->>Polaroid</option>
+    			</select>                              
+  			</dd>
+			</dl>
+			<dl>
+  		  <dt><label for="mini_profile_position">{L_MINI_PROFILE_POSITION}</label><br />{L_MINI_PROFILE_POSITION_EXPLAIN}</dt>
+    		<dd>  
+          <select name="mini_profile_position" id="mini_profile_position">
+    				<option value="left"<!-- IF MINI_PROFILE_POSITION == "left" --> selected<!-- ENDIF -->>Left</option>
+    				<option value="right"<!-- IF MINI_PROFILE_POSITION == "right" --> selected<!-- ENDIF -->>Right</option>
+    				<option value="alternate"<!-- IF MINI_PROFILE_POSITION == "alternate" --> selected<!-- ENDIF -->>Alternate</option>
+    			</select>
+  			</dd>
+			</dl>
+
+      <dl>
+				<dt><label for="call_enabled">{L_CALL_ENABLED}:</label></dt>
+				<dd>
+					<label><input type="radio" class="radio" name="call_enabled" value="1"<!-- IF CALL_ENABLED --> id="call_enabled" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="call_enabled" value="0"<!-- IF not CALL_ENABLED --> id="call_enabled" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				</dd>
+			</dl>
+
+      <dl>
+				<dt><label for="call_only_registered">{L_CALL_ONLY_REGISTERED}:</label></dt>
+				<dd>
+					<label><input type="radio" class="radio" name="call_only_registered" value="1"<!-- IF CALL_ONLY_REGISTERED --> id="call_only_registered" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="call_only_registered" value="0"<!-- IF not CALL_ONLY_REGISTERED --> id="call_only_registered" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				</dd>
+			</dl>
+
+      <dl>
+				<dt><label for="call_text">{L_CALL_TEXT}:</label></dt>
+				<dd><input type="text" id="call_text" name="call_text" value="{CALL_TEXT}" /></dd>
+			</dl>
+
+      <dl>
+				<dt><label for="call_button_text">{L_CALL_BUTTON_TEXT}:</label></dt>
+				<dd><input type="text" id="call_button_text" name="call_button_text" value="{CALL_BUTTON_TEXT}" /></dd>
+			</dl>
+
+      <dl>
+				<dt><label for="call_link">{L_CALL_LINK}:</label></dt>
+				<dd><input type="text" id="call_link" name="call_link" value="{CALL_LINK}" /></dd>
+			</dl>
+
+  	</fieldset>
+  	<p class="submit-buttons"><input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" /></p>
+  	{S_FORM_TOKEN}
+  </form>
+  
+<!-- ELSEIF S_FLATBOOTS_STYLE_MENU -->
+      
+  <!-- IF S_MENU_BUTTONS_LIST -->
+  
+    <h1>{L_FLATBOOTS_STYLE_BUTTONS}</h1>
+    
+    <p><strong>{S_BUTTONS_NAV}</strong></p>
+    <!-- IF .buttons -->  
+    	<table cellspacing="2">
+    		<col class="row1" /><col class="row2" />
+    		<tbody>
+    		<!-- BEGIN buttons -->
+    			<tr>
+    				<td>
+    					<strong><!-- IF not S_PARENT_ID --><a href="{buttons.U_OPEN}">{buttons.NAME}</a><!-- ELSE -->{buttons.NAME}<!-- ENDIF --></strong>
+    					<br /><span>{buttons.URL}</span>
+    				</td>
+    				<td style="width: 10%; text-align: center; white-space: nowrap;">
+      				<!-- IF buttons.S_FIRST_ROW && not buttons.S_LAST_ROW -->
+    						{ICON_MOVE_UP_DISABLED}
+    						<a href="{buttons.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF not buttons.S_FIRST_ROW && not buttons.S_LAST_ROW -->
+    						<a href="{buttons.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						<a href="{buttons.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF buttons.S_LAST_ROW && not buttons.S_FIRST_ROW -->
+    						<a href="{buttons.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ELSE -->
+    						{ICON_MOVE_UP_DISABLED}
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ENDIF -->
+    					<a href="{buttons.U_EDIT}">{ICON_EDIT}</a>
+    					<a href="{buttons.U_DELETE}">{ICON_DELETE}</a>  
+    				</td>
+    			</tr>
+    		<!-- END buttons -->
+    		</tbody>
+    	</table>
+    <!-- ELSE -->
+      <div class="errorbox"><!-- IF not S_PARENT_ID -->{L_NO_BUTTONS}<!-- ELSE -->{L_NO_SUBBUTTONS}<!-- ENDIF --></div>
+    <!-- ENDIF -->        
+	
+    <form method="post" action="">    
+      <fieldset class="quick">
+      	<input class="post" type="text" id="menu_button_name" name="button_name" value="" />
+        <input class="button2" type="submit" id="submit" name="submit" value="{L_FLATBOOTS_STYLE_ADD_BUTTON}" />&nbsp;
+        {S_FORM_TOKEN} 
+      </fieldset>
+    </form>
+    
+	<form method="post" action="">
+    <fieldset>
+      <dl>
+        <dt><label for="enable_custom_links">{L_ENABLE_CUSTOM_LINKS}:</label><br />{L_ENABLE_CUSTOM_LINKS_EXPLAIN}</dt>
+        <dd>
+          <label><input type="radio" class="radio" name="enable_custom_links" value="1"<!-- IF ENABLED_CUSTOM_LINKS --> id="enable_custom_links" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+          <label><input type="radio" class="radio" name="enable_custom_links" value="0"<!-- IF not ENABLED_CUSTOM_LINKS --> id="enable_custom_links" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+        </dd>
+	    <dd>
+		 <p style="margin-top:15px;font-size: inherit;">
+		  <input class="button1" type="submit" id="set_config" name="set_config" value="{L_SUBMIT}" />
+         </p>
+		</dd>
+      </dl>
+    </fieldset>
+    {S_FORM_TOKEN}
+  </form>
+	
+  <!-- ELSEIF S_MENU_CREATE_BUTTON or S_MENU_EDIT_BUTTON -->
+  
+    <h1><!-- IF S_MENU_EDIT_BUTTON -->{L_ACP_MENU_EDIT_BUTTON}<!-- ELSE -->{L_FLATBOOTS_STYLE_ADD_BUTTON}<!-- ENDIF --></h1>
+
+    <form method="post" action="">
+      <fieldset>
+    		<dl>
+    			<dt><label for="menu_button_name">{L_MENU_BUTTON_NAME}</label><br />{L_MENU_BUTTON_NAME_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_name" name="button_name" value="{S_NAME}" /></dd>
+    		</dl>
+			
+		<!-- NOT USED IN FLATBOOTS
+			<dl>
+    			<dt><label for="menu_button_desc">{L_MENU_BUTTON_DESC}</label><br />{L_MENU_BUTTON_DESC_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_desc" name="button_desc" value="{S_DESC}" /></dd>
+    		</dl>
+		 NOT USED IN FLATBOOTS -->
+			
+    		<dl>
+    			<dt><label for="menu_button_url">{L_MENU_BUTTON_URL}</label><br />{L_MENU_BUTTON_URL_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_url" name="button_url" value="<!-- IF not S_MENU_EDIT_BUTTON -->http://<!-- ENDIF -->{S_URL}" /></dd>
+    		</dl>
+			
+			
+				<dl>
+    			<dt><label for="button_icon">{L_MENU_ICON}</label><br />{L_MENU_BUTTON_ICON_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="button_icon" name="button_icon" value="{S_ICON}" /> <span style="margin-top: 2px;"><i class="{S_ICON}" style="font-size:18px;vertical-align: middle;"></i></span></dd>
+    		</dl>
+			
+    		<dl>
+    		  <dt><label for="menu_button_parent">{L_MENU_BUTTON_PARENT}</label><br />{L_MENU_BUTTON_PARENT_EXPLAIN}</dt>
+      		<dd>  
+            <select name="button_parent" id="menu_button_parent">
+           		<option value=""></option>
+      				<!-- BEGIN parents -->
+      					<option value="{parents.ID}"<!-- IF ( S_MENU_EDIT_BUTTON and parents.ID == S_PARENT ) or (not S_MENU_EDIT_BUTTON and parents.ID == S_PARENT_ID ) --> selected="selected"<!-- ENDIF -->>{parents.NAME}</option>
+      				<!-- END parents -->
+      			</select>
+    			</dd>
+  			</dl>
+    		<dl>
+    			<dt><label for="menu_button_external_yes">{L_MENU_EXTERNAL}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_external_yes" name="button_external" value="1"<!-- IF S_EXTERNAL --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp; 
+    				<input type="radio" class="radio" id="menu_button_external_no" name="button_external" value="0"<!-- IF not S_EXTERNAL --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_registered_yes">{L_MENU_ONLY_REGISTERED}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_registered_yes" name="button_only_registered" value="1"<!-- IF S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp; 
+    				<input type="radio" class="radio" id="menu_button_only_registered_no" name="button_only_registered" value="0"<!-- IF not S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_guest_yes">{L_MENU_ONLY_GUEST}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_guest_yes" name="button_only_guest" value="1"<!-- IF S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp; 
+    				<input type="radio" class="radio" id="menu_button_only_guest_no" name="button_only_guest" value="0"<!-- IF not S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_display_yes">{L_MENU_DISPLAY}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_display_yes" name="button_display" value="1"<!-- IF S_DISPLAY or not S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp; 
+    				<input type="radio" class="radio" id="menu_button_display_no" name="button_display" value="0"<!-- IF not S_DISPLAY and S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    	</fieldset>
+      <p class="submit-buttons">
+      	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+      	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+      </p>
+      {S_FORM_TOKEN}
+    </form> 
+        
+  <!-- ENDIF -->
+
+<!-- ELSEIF S_FLATBOOTS_STYLE_UPLOAD -->
+
+  <h1>{L_FLATBOOTS_STYLE_UPLOAD}</h1>
+
+  <form method="post" action="" enctype="multipart/form-data">
+  	<fieldset>
+
+			<dl>
+				<dt><label for="image">{L_SELECT_IMAGE}:</label><br>{L_IMG_UPLOAD_EXPLAIN}</dt>
+				<dd>
+					<input type="file" name="image" id="image" /><br>
+					<input type="checkbox" name="upload_bg" value="1" /> {L_CHECK_TO_UPLOAD_BG}
+				</dd>
+			</dl>
+
+			<p class="submit-buttons"><input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" /></p>
+  		{S_FORM_TOKEN}
+  	</fieldset>
+  </form>
+
+	<!-- IF LOGO_IMAGE_EXIST or BACKGROUND_IMAGE_EXIST -->
+	<style>
+	  .img-bgs dd .bg > img { 
+	    max-width: 80%;
+        width: 100%;
+	  }
+	</style>
+	<form method="post" action="" enctype="multipart/form-data">
+	<fieldset class="img-bgs">
+			<!-- IF LOGO_IMAGE_EXIST -->
+			<dl>
+				<dt><label for="delete_logo">{L_IMAGE_LOGO}:</label><div style="margin-top: 5px;"><input type="checkbox" name="delete_logo" value="1" /> {L_CHECK_TO_DELETE}</div></dt>
+				<dd><span class="bg-logo"><img src="{LOGO_FILENAME}" alt="" /></span></dd>
+			</dl>
+			<!-- ENDIF -->
+
+			<!-- IF BACKGROUND_IMAGE_EXIST -->
+			<dl>
+				<dt><label for="delete_bg">{L_IMAGE_BG}:</label><div style="margin-top: 5px;"><input type="checkbox" name="delete_bg" value="1" /> {L_CHECK_TO_DELETE}</div></dt>
+				<dd><span class="bg"><img src="{BACKGROUND_FILENAME}" alt="" /></span></dd>
+			</dl>
+			<!-- ENDIF -->
+
+			<p class="submit-buttons" style="text-align: left;"><input class="button1" type="submit" id="submit" name="delete" value="{L_DELETE}" /></p>
+  		{S_FORM_TOKEN}
+  	</fieldset>
+  </form>
+	<!-- ENDIF -->
+
+<!-- ELSEIF S_FLATBOOTS_STYLE_LINKS -->
+
+  <!-- IF S_MENU_BUTTONS_LIST -->
+
+    <h1>{L_FLATBOOTS_STYLE_LINKS}</h1>
+
+    <p><strong>{L_MENU_LINK_NAV}</strong></p>
+    <!-- IF .links -->
+    	<table cellspacing="2">
+    		<col class="row1" /><col class="row2" />
+    		<tbody>
+    		<!-- BEGIN links -->
+    			<tr>
+    				<td>
+    					<strong>{links.NAME}</strong>
+    					<br /><span>{links.URL}</span>
+    				</td>
+    				<td style="width: 10%; text-align: center; white-space: nowrap;">
+      				<!-- IF links.S_FIRST_ROW && not links.S_LAST_ROW -->
+    						{ICON_MOVE_UP_DISABLED}
+    						<a href="{links.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF not links.S_FIRST_ROW && not links.S_LAST_ROW -->
+    						<a href="{links.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						<a href="{links.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF links.S_LAST_ROW && not links.S_FIRST_ROW -->
+    						<a href="{links.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ELSE -->
+    						{ICON_MOVE_UP_DISABLED}
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ENDIF -->
+    					<a href="{links.U_EDIT}">{ICON_EDIT}</a>
+    					<a href="{links.U_DELETE}">{ICON_DELETE}</a>
+    				</td>
+    			</tr>
+    		<!-- END links -->
+    		</tbody>
+    	</table>
+    <!-- ELSE -->
+      <div class="errorbox">{L_NO_LINKS}</div>
+    <!-- ENDIF -->
+
+    <form method="post" action="">
+      <fieldset class="quick">
+      	<input class="post" type="text" id="menu_button_name" name="button_name" value="" />
+        <input class="button2" type="submit" id="submit" name="submit" value="{L_FLATBOOTS_STYLE_ADD_LINK}" />&nbsp;
+        {S_FORM_TOKEN}
+      </fieldset>
+    </form>
+
+  <!-- ELSEIF S_MENU_CREATE_BUTTON or S_MENU_EDIT_BUTTON -->
+
+    <h1><!-- IF S_MENU_EDIT_BUTTON -->{L_FLATBOOTS_STYLE_EDIT_LINK}<!-- ELSE -->{L_FLATBOOTS_STYLE_ADD_LINK}<!-- ENDIF --></h1>
+
+    <form method="post" action="">
+      <fieldset>
+    		<dl>
+    			<dt><label for="menu_button_name">{L_MENU_LINK_NAME}</label><br />{L_MENU_LINK_NAME_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_name" name="button_name" value="{S_NAME}" /></dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_url">{L_MENU_LINK_URL}</label><br />{L_MENU_LINK_URL_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_url" name="button_url" value="<!-- IF not S_MENU_EDIT_BUTTON -->http://<!-- ENDIF -->{S_URL}" /></dd>
+    		</dl>
+				<dl>
+    			<dt><label for="button_icon">{L_MENU_LINK_ICON}</label></dt>
+    			<dd><input class="post" type="text" size="50" id="button_icon" name="button_icon" value="{S_ICON}" /> <span style="margin-top: 2px;"><i class="{S_ICON}" style="font-size:18px;vertical-align: middle;"></i></span></dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_external_yes">{L_MENU_LINK_EXTERNAL}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_external_yes" name="button_external" value="1"<!-- IF S_EXTERNAL --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_external_no" name="button_external" value="0"<!-- IF not S_EXTERNAL --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_registered_yes">{L_MENU_LINK_ONLY_REGISTERED}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_registered_yes" name="button_only_registered" value="1"<!-- IF S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_only_registered_no" name="button_only_registered" value="0"<!-- IF not S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_guest_yes">{L_MENU_LINK_ONLY_GUEST}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_guest_yes" name="button_only_guest" value="1"<!-- IF S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_only_guest_no" name="button_only_guest" value="0"<!-- IF not S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_display_yes">{L_MENU_LINK_DISPLAY}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_display_yes" name="button_display" value="1"<!-- IF S_DISPLAY or not S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_display_no" name="button_display" value="0"<!-- IF not S_DISPLAY and S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    	</fieldset>
+      <p class="submit-buttons">
+      	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+      	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+      </p>
+      {S_FORM_TOKEN}
+    </form>
+
+  <!-- ENDIF -->
+
+<!-- ELSEIF S_FLATBOOTS_STYLE_SOCIAL -->
+
+  <!-- IF S_MENU_BUTTONS_LIST -->
+
+    <h1>{L_FLATBOOTS_STYLE_SOCIAL}</h1>
+
+    <p><strong>{L_MENU_SOCIAL_NAV}</strong></p>
+    <!-- IF .social -->
+    	<table cellspacing="2">
+    		<col class="row1" /><col class="row2" />
+    		<tbody>
+    		<!-- BEGIN social -->
+    			<tr>
+    				<td>
+    					<strong>{social.NAME}</strong>
+    					<br /><span>{social.URL}</span>
+    				</td>
+    				<td style="width: 10%; text-align: center; white-space: nowrap;">
+      				<!-- IF social.S_FIRST_ROW && not social.S_LAST_ROW -->
+    						{ICON_MOVE_UP_DISABLED}
+    						<a href="{social.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF not social.S_FIRST_ROW && not social.S_LAST_ROW -->
+    						<a href="{social.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						<a href="{social.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+    					<!-- ELSEIF social.S_LAST_ROW && not social.S_FIRST_ROW -->
+    						<a href="{social.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ELSE -->
+    						{ICON_MOVE_UP_DISABLED}
+    						{ICON_MOVE_DOWN_DISABLED}
+    					<!-- ENDIF -->
+    					<a href="{social.U_EDIT}">{ICON_EDIT}</a>
+    					<a href="{social.U_DELETE}">{ICON_DELETE}</a>
+    				</td>
+    			</tr>
+    		<!-- END social -->
+    		</tbody>
+    	</table>
+    <!-- ELSE -->
+      <div class="errorbox">{L_NO_SOCIALS}</div>
+    <!-- ENDIF -->
+
+    <form method="post" action="">
+      <fieldset class="quick">
+      	<input class="post" type="text" id="menu_button_name" name="button_name" value="" />
+        <input class="button2" type="submit" id="submit" name="submit" value="{L_FLATBOOTS_STYLE_ADD_SOCIAL}" />&nbsp;
+        {S_FORM_TOKEN}
+      </fieldset>
+    </form>
+
+  <!-- ELSEIF S_MENU_CREATE_BUTTON or S_MENU_EDIT_BUTTON -->
+
+    <h1><!-- IF S_MENU_EDIT_BUTTON -->{L_FLATBOOTS_STYLE_EDIT_SOCIAL}<!-- ELSE -->{L_FLATBOOTS_STYLE_ADD_SOCIAL}<!-- ENDIF --></h1>
+
+    <form method="post" action="">
+      <fieldset>
+    		<dl>
+    			<dt><label for="menu_button_name">{L_MENU_SOCIAL_NAME}</label><br />{L_MENU_SOCIAL_NAME_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_name" name="button_name" value="{S_NAME}" /></dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_url">{L_MENU_SOCIAL_URL}</label><br />{L_MENU_SOCIAL_URL_EXPLAIN}</dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_url" name="button_url" value="<!-- IF not S_MENU_EDIT_BUTTON -->http://<!-- ENDIF -->{S_URL}" /></dd>
+    		</dl>
+				<dl>
+    			<dt><label for="menu_button_icon">{L_MENU_ICON}</label></dt>
+    			<dd><input class="post" type="text" size="50" id="menu_button_icon" name="button_icon" value="{S_ICON}" /> <span style="margin-top: 2px;"><i class="{S_ICON}" style="font-size:18px;vertical-align: middle;"></i></span></dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_registered_yes">{L_MENU_SOCIAL_ONLY_REGISTERED}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_registered_yes" name="button_only_registered" value="1"<!-- IF S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_only_registered_no" name="button_only_registered" value="0"<!-- IF not S_ONLY_REGISTERED --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_only_guest_yes">{L_MENU_SOCIAL_ONLY_GUEST}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_only_guest_yes" name="button_only_guest" value="1"<!-- IF S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_only_guest_no" name="button_only_guest" value="0"<!-- IF not S_ONLY_GUEST --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    		<dl>
+    			<dt><label for="menu_button_display_yes">{L_MENU_SOCIAL_DISPLAY}:</label></dt>
+    			<dd>
+            <input type="radio" class="radio" id="menu_button_display_yes" name="button_display" value="1"<!-- IF S_DISPLAY or not S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_YES} &nbsp;
+    				<input type="radio" class="radio" id="menu_button_display_no" name="button_display" value="0"<!-- IF not S_DISPLAY and S_MENU_EDIT_BUTTON --> checked="checked"<!-- ENDIF --> /> {L_NO}
+          </dd>
+    		</dl>
+    	</fieldset>
+      <p class="submit-buttons">
+      	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+      	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+      </p>
+      {S_FORM_TOKEN}
+    </form>
+
+  <!-- ENDIF -->
+
+<!-- ELSEIF S_FLATBOOTS_STYLE_CSS -->
+
+  <h1>{L_FLATBOOTS_STYLE_CSS}</h1>
+
+  <form method="post" action="">
+    <fieldset>
+
+      <dl>
+        <dt><label for="enable_custom_css">{L_ENABLE_CUSTOM_CSS}:</label><br />{L_ENABLE_CUSTOM_CSS_EXPLAIN}</dt>
+        <dd>
+          <label><input type="radio" class="radio" name="enable_custom_css" value="1"<!-- IF ENABLED_CUSTOM_CSS --> id="enable_custom_css" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+          <label><input type="radio" class="radio" name="enable_custom_css" value="0"<!-- IF not ENABLED_CUSTOM_CSS --> id="enable_custom_css" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt><label for="css_data">{L_SELECTED_FILE}:</label><br />{L_SELECTED_FILE_EXPLAIN}</dt>
+        <dd>custom.css</dd>
+      </dl>
+
+      <textarea id="css_data" name="css_data" style="font-family:'Courier New', monospace;font-size:9pt;line-height:125%;width:100%;" cols="80" rows="20">{CSS_DATA}</textarea>
+
+    </fieldset>
+    <p class="submit-buttons"><input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" /></p>
+    {S_FORM_TOKEN}
+  </form>
+
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

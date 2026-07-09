@@ -1,0 +1,31 @@
+{
+	"name": "sitesplat/flatbootsminicms",
+	"type": "phpbb-extension",
+	"description": "This extension allows the administrator to easily customize the FLATBOOTS style via ACP. Much like WordPress system.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.11",
+	"keywords": ["phpbb", "extension", "BBOOTS", "FLATBOOTS", "CMS"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4"
+	},
+	"extra": {
+		"display-name": "FLATBOOTS Mini CMS",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.5"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "flatboots_minicms.json",
+			"ssl": true
+		}
+	}
+}

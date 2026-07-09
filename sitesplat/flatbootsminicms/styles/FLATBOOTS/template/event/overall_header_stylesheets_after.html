@@ -1,0 +1,30 @@
+<!-- INCLUDECSS @sitesplat_flatbootsminicms/minicms.css -->
+
+<!-- IF BACKGROUND_IMAGE_EXIST -->
+	<style>
+		body {
+			background: url("{T_IMAGES_PATH}../ext/sitesplat/flatbootsminicms/images/bg/{BACKGROUND_FILENAME}") repeat scroll 0 0 #999999;
+		}
+	</style>
+<!-- ENDIF -->
+
+
+	<!-- IF MINI_PROFILE_POSITION != 'left' -->
+		<style>
+			# {MINI_PROFILE_POSITION}
+			.forum-answer .side-segment {margin-right: 80px;margin-left: 0;}
+			.avatar-over.pull-right {margin-left: 10px; margin-right: -15px;}
+			.prof-right {margin-right: 0;}
+		</style>
+	<!-- ENDIF -->
+
+	<!-- IF MINI_PROFILE_POSITION == 'right' or (MINI_PROFILE_POSITION == 'alternate' and postrow.S_ROW_COUNT is even ) -->
+	<style>
+			# {MINI_PROFILE_POSITION}
+			.avatar-over {
+				width: 70px;
+				margin-left: 10px;
+			}
+		</style>
+	<!-- ENDIF -->
+	
