@@ -1,0 +1,37 @@
+{
+	"name": "sitesplat/likedd",
+	"type": "phpbb-extension",
+	"description": "An extension for like / dislike posts, Ajax driven(real time user interaction).",
+	"homepage": "https://sitesplat.com",
+	"version": "2.3.9",
+	"keywords": ["phpbb", "extension", "likeBB", "Ajax", "like", "dislike", "award"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "LikeBB",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0,<3.3.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "likebb.json",
+			"ssl": true
+		}
+
+	}
+}
