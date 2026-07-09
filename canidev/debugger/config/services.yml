@@ -1,0 +1,14 @@
+services:
+    canidev.debugger.exception_subscriber:
+        class: canidev\debugger\event\exception_subscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    canidev.debugger.controller.admin:
+        class: canidev\debugger\controller\admin_controller
+        parent: canidev.core.controller.acp
+        arguments:
+            - '@service_container'
+            - '@log'
+            - '@request'
+            - '@user'
