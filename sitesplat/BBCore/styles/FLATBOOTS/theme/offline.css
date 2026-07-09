@@ -1,0 +1,225 @@
+.flat-header {
+    color: #fafafa;
+    font-size: 20px;
+    height: 172px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+    text-align: left;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+.masthead:before {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 400%;
+  content: "";
+  background: url("./images/tile-bg-head.png") 0 0 #26bcb5;
+  background-repeat: repeat;
+}
+.masthead {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  -webkit-animation-name: sideupscroll;
+          animation-name: sideupscroll;
+  -webkit-animation-duration: 70s;
+          animation-duration: 70s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+@-webkit-keyframes sideupscroll {
+  0% {
+    -webkit-transform: translateX(0%) translateY(0%);
+            transform: translateX(0%) translateY(0%);
+  }
+  50% {
+    -webkit-transform: translateX(-50%) translateY(-100%);
+            transform: translateX(-50%) translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateX(-100%) translateY(-200%);
+            transform: translateX(-100%) translateY(-200%);
+  }
+}
+@keyframes sideupscroll {
+  0% {
+    -webkit-transform: translateX(0%) translateY(0%);
+            transform: translateX(0%) translateY(0%);
+  }
+  50% {
+    -webkit-transform: translateX(-50%) translateY(-100%);
+            transform: translateX(-50%) translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateX(-100%) translateY(-200%);
+            transform: translateX(-100%) translateY(-200%);
+  }
+}
+
+.wrapper-head {
+    margin-top: -35%;
+    position: relative;
+    z-index: 2;
+}
+
+
+@media (min-width: 769px) and (max-width: 1100px) {
+
+	.wrapper-head {
+    margin-top: -50%;
+    }
+	
+	.wrapper-head h1, .wrapper-head h2 {
+    font-size: 22px;
+    }
+}	
+
+
+@media (min-width: 469px) and (max-width: 768px) {
+
+	.wrapper-head {
+    top: -30%;
+    }
+	
+	.wrapper-head h1, .wrapper-head h2 {
+    font-size: 22px;
+    }
+}	
+
+@media (max-width: 468px) {
+    body {
+        font-size: 15px;
+    }
+
+	.wrapper-head {
+    margin-top: -120%;
+    }
+	
+	.wrapper-head h1, .wrapper-head h2 {
+    font-size: 22px;
+    }
+
+    .flat-header {
+    font-size: 14px;
+    }
+}	
+
+
+/* background setup */
+.background {
+    background-repeat:no-repeat;
+    /* custom background-position */
+    background-position:50% 50%;
+    /* ie8- graceful degradation */
+    background-position:50% 50%\9 !important;
+}
+
+/* fullscreen setup */
+html, body {
+    /* give this to all tags from html to .fullscreen */
+    height:100%;
+}
+.fullscreen,
+.content-a {
+    width:100%;
+    min-height:100%;
+}
+.not-fullscreen,
+.not-fullscreen .content-a,
+.fullscreen.not-overflow,
+.fullscreen.not-overflow .content-a {
+    height:100%;
+    overflow:hidden;
+}
+
+/* content centering styles */
+.content-a {
+	display:table;
+}
+.content-b {
+	display:table-cell;
+    position:relative;
+	vertical-align:middle;
+	text-align:center;
+	z-index: 1;
+}
+
+/* visual styles */
+body{
+    margin:0;
+    font-size:28px;
+    line-height:100px;
+	color:#ffffff;
+    text-align:center;
+}
+section {
+	background:#9ed100;
+}
+.not-fullscreen {
+    height:50%;
+}
+
+h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: #fff !important;
+    font-family: "Asap","Arial","Helvetica",sans-serif;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0 0 10px;
+    text-rendering: optimizelegibility;
+}
+.social-network {
+    text-align: center;
+}
+.social-network a {
+    border-radius: 2px;
+    color: #fff !important;
+    display: inline-block;
+    font-size: 20px;
+    height: 30px;
+    margin: 0 3px;
+    transition: all 0.2s linear 0s;
+    width: 30px;
+	line-height: 30px;
+}
+
+
+.google-plus-color {
+    background-color: #d34836;
+}
+.github-color {
+    background-color: #333;
+}
+.facebook-color {
+    background-color: #3b5998;
+}
+.twitter-color {
+    background-color: #00aced;
+}
+.pinterest-color {
+    background-color: #cb2027;
+}
+.github-color {
+    background-color: #333;
+}
+
+.social-network a:hover {
+    transition: all .1s linear 0s;
+    color: #2d2d2d!important;
+    border-bottom: none;
+    background-color: #fff;
+	outline: none;
+    text-decoration: none;
+}
+
+.social-network a:focus {
+    outline: none;
+    text-decoration: none;
+}
