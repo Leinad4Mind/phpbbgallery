@@ -1,0 +1,36 @@
+{
+    "name": "welshpaul/ajaxusernamecheck",
+    "type": "phpbb-extension",
+    "description": "Checks in real time if the username entered on the registration form is already in use",
+    "version": "1.0.2",
+    "time": "2025-08-15",
+    "keywords": [
+        "ajax",
+        "username",
+        "check",
+        "username check",
+        "ajax check",
+        "ajax username check"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "WelshPaul",
+            "role": "Previous Developer"
+        },
+        {
+            "name": "Leinad4Mind",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.x",
+        "phpbb/phpbb": ">=3.2"
+    },
+    "extra": {
+        "display-name": "AJAX Username Check",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2"
+        }
+    }
+}

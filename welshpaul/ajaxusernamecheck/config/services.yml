@@ -1,0 +1,17 @@
+services:
+    welshpaul.ajaxusernamecheck.listener:
+        class: welshpaul\ajaxusernamecheck\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+    welshpaul.ajaxusernamecheck.controller:
+        class: welshpaul\ajaxusernamecheck\controller\controller
+        arguments:
+            - '@request'
+            - '@dbal.conn'
+            - '@user'
+            - '@dispatcher'
