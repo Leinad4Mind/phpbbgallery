@@ -1,0 +1,34 @@
+{
+	"name": "sitesplat/tfa",
+	"type": "phpbb-extension",
+	"description": "Adds a full 2-step Authentication ((also known as two-factor authentication)) system for phpBB using Google Authenticator App. When you enable 2-Step Verification, you add an extra layer of security to your account. You sign in with something you know (your password) and something you have (a code sent to your phone, in this case the key generated on your phone via Google Authenticator App).",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.5",
+	"keywords": ["sitesplat", "phpbb", "extension", "security", "ucp", "authentication"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"phpbb/phpbb": "3.1.*@dev",
+		"paragonie/random_compat": "~1.4"
+	},
+	"extra": {
+		"display-name": "2-Step Authentication",
+		"soft-require": {
+           "phpbb/phpbb": "3.1.*@dev"
+        },
+		"version-check": {
+			"host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "twofa.json",
+			"ssl": true
+		}
+	}
+}
+

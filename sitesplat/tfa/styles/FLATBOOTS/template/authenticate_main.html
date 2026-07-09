@@ -1,0 +1,14 @@
+<!-- INCLUDE overall_header.html -->
+<!-- BEGIN tfa_options -->
+    <!-- IF tfa_options.S_TFA_INCLUDE_HTML -->
+        <div id="auth_{tfa_options.ID}" <!-- IF not tfa_options.S_FIRST_ROW -->style="display:none "<!-- ENDIF -->>
+            <form action="{tfa_options.U_SUBMIT_AUTH}" id="submit_auth" method="post" data-focus="authenticate" autocomplete="off">
+                {S_FORM_TOKEN}
+                <input type="hidden" name="random" value="{RANDOM}" />
+                <input type="hidden" name="redirect" value="{REDIRECT}">
+                <!-- INCLUDE {tfa_options.S_TFA_INCLUDE_HTML} -->
+            </form>
+        </div>
+    <!-- ENDIF -->
+<!-- END tfa_options -->
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,8 @@
+sitesplat_tfa_read_controller_submit:
+    path: /sitesplat/tfa/save/{user_id}/{admin}/{auto_login}/{viewonline}/
+    defaults: { _controller: sitesplat.tfa.controller:submit }
+    requirements:
+        user_id: \d+
+        admin: \d+
+        auto_login: \d+
+        viewonline: \d+

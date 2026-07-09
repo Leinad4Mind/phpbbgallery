@@ -1,0 +1,25 @@
+<div class="panel-w-form panel-two-factor">
+    <div class="side-segment">
+		<h3>{L_TFA}</h3>
+	</div>
+	<div class="space10"></div>
+	<div class="well">
+	  <p>{L_TFA_OTP_KEY_LOG_EXPLAIN}</p>	
+		<!-- IF S_ERROR -->
+           <div class="alert alert-info fade in">
+			 <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> {S_ERROR}
+			</div>
+        <!-- ENDIF -->
+	<fieldset>
+		<div class="input-group tfa-input col-md-6">
+            <input name="authenticate" class="form-control" id="authenticate" maxlength="128" placeholder="{L_TFA_OTP_KEY_LOG}" value="" autocomplete="off"> 
+			 <span class="input-group-btn">
+			<button class="btn btn-default btn-block" id="add_key" type="submit">
+			   <span class="hidden-xs">{L_SUBMIT}</span><span class="visible-xs"><i class="fa fa-send"></i></span>
+			</button>
+			</span>
+		</div>	
+	</fieldset>
+	</div>
+	<div class="space10"></div>
+</div>
