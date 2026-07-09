@@ -1,0 +1,31 @@
+{
+    "name": "kasimi/faviconnotifications",
+    "type": "phpbb-extension",
+    "description": "Displays the number of new notifications in the favicon",
+    "homepage": "https://github.com/kasimi",
+    "version": "1.0.1",
+    "time": "2020-02-19",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "kasimi",
+            "email": "mail@kasimi.net",
+            "homepage": "https://kasimi.net",
+            "role": "Extension Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "extra": {
+        "display-name": "Favicon Notifications",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/favicon_notifications",
+            "filename": "version_check"
+        }
+    }
+}
