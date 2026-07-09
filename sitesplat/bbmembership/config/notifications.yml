@@ -1,0 +1,20 @@
+services:
+    sitesplat.bbmembership.notification.type.membership_bought:
+        class: sitesplat\bbmembership\notification\type\membership_bought
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
+
+    sitesplat.bbmembership.notification.type.membership_expiring:
+        class: sitesplat\bbmembership\notification\type\membership_expiring
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }

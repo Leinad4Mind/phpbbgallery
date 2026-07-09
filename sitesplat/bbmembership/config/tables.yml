@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.bbmembership.tables.bbmembership: '%core.table_prefix%bbmembership'

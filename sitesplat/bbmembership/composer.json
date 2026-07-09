@@ -1,0 +1,36 @@
+{
+	"name": "sitesplat/bbmembership",
+	"type": "phpbb-extension",
+	"description": "This extension adds a configurable membership levels system for the forum. It allows users to select a membership package and pay for it via PayPal. The Admin can configure the expiry time for each membership and also the group. Many handy options available included the Club mode to have a completely private forum and open only via membership.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.4.8",
+	"keywords": ["phpbb", "extension", "membership", "paypal", "club", "premium"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBmembership",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbmembership.json",
+			"ssl": true
+		}
+
+	}
+}
