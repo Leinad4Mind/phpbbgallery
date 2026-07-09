@@ -1,0 +1,50 @@
+{
+    "name": "phpbb/ads",
+    "type": "phpbb-extension",
+    "description": "An extension for phpBB that allows administrators to manage and display advertisements on their forums.",
+    "homepage": "https://www.phpbb.com/customise/db/extension/ads/",
+    "version": "3.0.0",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "advertisement"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Jakub Senko",
+            "email": "jakubsenko@gmail.com",
+            "role": "Extension Developer"
+        },
+        {
+            "name": "Matt Friedman",
+            "homepage": "https://imattpro.github.io",
+            "role": "Extensions Development Team Lead"
+        },
+        {
+            "name": "Derky",
+            "homepage": "http://www.derky.nl",
+            "role": "Extensions Team"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "composer/installers": "~1.0.0",
+        "phpbb/phpbb": ">=3.3.2"
+    },
+    "require-dev": {
+        "phing/phing": "2.4.*"
+    },
+    "extra": {
+        "display-name": "Advertisement Management",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.2"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/ads",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}
