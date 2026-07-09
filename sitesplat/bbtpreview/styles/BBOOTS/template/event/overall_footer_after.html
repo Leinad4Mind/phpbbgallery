@@ -1,0 +1,36 @@
+{% if topicrow or searchresults or BB_LOAD_IN_POSTING %}
+<!-- INCLUDEJS @sitesplat_bbtpreview/js/bbtpreview.js -->
+<div class="modal fade" id="BBTPreviewDialog" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-bbpreview">
+		<div class="modal-content">
+			<div class="modal-header">
+			 <button type="button" class="close" data-dismiss="modal"><span class="awe-remove-circle"></span></button>
+				<h4 class="modal-title" id="modal-title">&nbsp;</h4>
+			    <i class="fa fa-clock-o"></i>&nbsp;<small><span id="starttime" title="{L_TOPICSTART}"></span></small> 
+			</div>	
+			<div class="modal-subheader">	
+                <div class="media">
+				  <div class="media-left">
+				     <div id="author"></div>
+				  </div>
+				  <div class="media-body">
+				     <div id="author_rank"></div>
+				  </div>
+				</div>
+			</div>
+			<div class="modal-body">
+			<ul class="list-inline text-ghost">   
+			    <li><i class="fa fa-comments" title="{L_POSTS}"></i>&nbsp;<span id="messages" title="{L_POSTS}"></span></li>
+			    <li><i class="fa fa-eye " title="{L_VIEWS}"></i>&nbsp;<span id="views" title="{L_VIEWS}"></span></li>
+			    <li><i class="fa fa-paperclip " title="{L_ATTACHMENTS}"></i>&nbsp;<span id="attachments" title="{L_ATTACHMENTS}"></span></li>
+			    <li style="display:none;"><i class="fa fa-clock-o" title="{L_TOPICTIME}"></i>&nbsp;<span id="topictime" title="{L_TOPICTIME}"></span></li>
+			</ul>
+			    <div class="profile-data" id="BBTPreviewContent"></div>
+			</div>
+			<div class="modal-footer">
+			    <a class="btn btn-sm btn-default pull-right" id="url" href=""><i class="fa fa-link"></i>&nbsp;{L_VIEW_TOPIC}</a> 
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
