@@ -1,0 +1,17 @@
+services:
+    leinad4mind.forcingprofilefields.listener:
+        class: leinad4mind\forcingprofilefields\event\listener
+        arguments:
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@profilefields.manager'
+            - '@ext.manager'
+            - '@profilefields.type_collection'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
