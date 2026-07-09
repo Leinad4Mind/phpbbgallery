@@ -1,0 +1,30 @@
+{
+    "name": "sitesplat/bbprofile",
+    "type": "phpbb-extension",
+    "description": "Encourages the user to complete their profile with some visual pretty cues.",
+	"homepage": "http://sitesplat.com",
+    "version": "1.0.0",
+    "keywords": ["phpbb", "extension", "cosmetic", "users"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "display-name": "BBprofile",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbprofile.json"
+		}
+    }
+}

@@ -1,0 +1,3 @@
+sitesplat_bbprofile_controller:
+    path: /demo/{name}
+    defaults: { _controller: sitesplat.bbprofile.controller:handle }
