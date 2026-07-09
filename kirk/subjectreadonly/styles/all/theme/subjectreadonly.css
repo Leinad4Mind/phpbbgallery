@@ -1,0 +1,6 @@
+/* subjectreadonly css
+---------------------- */
+
+input#subject {
+	pointer-events: none;
+}
