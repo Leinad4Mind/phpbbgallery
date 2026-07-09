@@ -1,0 +1,22 @@
+services:
+    chris1278.cptfork.controller.acp:
+        class: chris1278\cptfork\controller\acp_controller
+        arguments:
+            - '@config'
+            - '@language'
+            - '@request'
+            - '@template'
+        
+    chris1278.cptfork.listener:
+        class: chris1278\cptfork\event\listener
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '@auth'
+            - '@request'
+            - '@log'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

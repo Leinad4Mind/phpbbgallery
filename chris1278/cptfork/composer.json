@@ -1,0 +1,39 @@
+{
+    "name": "chris1278/cptfork",
+    "type": "phpbb-extension",
+    "description": "Adds the option for a moderator to change the posting date and time of a post.",
+    "homepage": "https://christian-esch.de",
+    "version": "2.0.1",
+    "time": "2022-08-21",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Chris1278",
+            "email": "smilie-man@gmx.de",
+            "homepage": "https://christian-esch.de",
+            "role": "Developer (adapting for 3.3+ and improvements)"
+        },
+        {
+            "name": "Javier Lopez (javiexin)",
+            "email": "javiexin@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0,<8.3@dev",
+        "phpbb/phpbb": ">=3.3.0,<4.0@dev",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "CF Change Post Time",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.4,<4.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/cf_change_post_time",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

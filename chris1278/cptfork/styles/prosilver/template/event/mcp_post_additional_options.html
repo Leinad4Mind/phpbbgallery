@@ -1,0 +1,16 @@
+{% if S_CF_CAN_CHGPOSTTIME %}
+{% INCLUDECSS 'cptfork_mcp.css' %}
+	<form method="post" id="mcp_cf_chgposttime" action="{{ U_POST_ACTION }}">
+		<fieldset>
+		<dl>
+			<dt><label>{{ lang('CF_CHANGE_POST_TIME') ~ lang('COLON') }}</label></dt>
+			<dd class="cpt_dd">
+					<input type="date" name="cf_date" max="{{ CF_DATE_RULE }}" pattern="ttt" value="{{ CF_DATE }}">
+					<input type="time" name="cf_time" value="{{ CF_TIME }}">
+					<input type="submit" class="button2" name="action[cf_chgposttime]" value="{{ lang('CONFIRM') }}">
+			</dd>
+		</dl>
+		{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+{% endif %}
