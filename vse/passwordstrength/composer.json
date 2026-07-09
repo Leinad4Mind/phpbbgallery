@@ -1,0 +1,39 @@
+{
+    "name": "vse/passwordstrength",
+    "type": "phpbb-extension",
+    "description": "An extension for phpBB that will show users the strength of a password as they type it into the password field when creating or updating their account.",
+    "homepage": "https://github.com/iMattPro/passwordstrength",
+    "version": "1.3.0",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "password",
+        "strength",
+        "zxcvbn"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Matt Friedman",
+            "homepage": "https://imattpro.github.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3 || ^8.0.0",
+        "composer/installers": "~1.0.0",
+        "phpbb/phpbb": ">=3.3.10"
+    },
+    "extra": {
+        "display-name": "Password Strength",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.10"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/password_strength",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}
