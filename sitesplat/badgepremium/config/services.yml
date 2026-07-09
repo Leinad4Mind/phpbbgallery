@@ -1,0 +1,11 @@
+imports:
+    - { resource: conditions.yml }
+    - { resource: autogroups.yml }
+
+services:
+    sitesplat.badgepremium.listener:
+        class: sitesplat\badgepremium\event\listener
+        arguments:
+            - '@user'
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,51 @@
+services:
+# ----- Auto groups types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badgepremium.type.bookmarked:
+        class: sitesplat\badgepremium\autogroups\type\bookmarked
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.cross_badge:
+        class: sitesplat\badgepremium\autogroups\type\cross_badge
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.bbpoints:
+        class: sitesplat\badgepremium\autogroups\type\bbpoints
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.polls:
+        class: sitesplat\badgepremium\autogroups\type\polls
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.reports:
+        class: sitesplat\badgepremium\autogroups\type\reports
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.subscribed:
+        class: sitesplat\badgepremium\autogroups\type\subscribed
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgepremium.type.topics:
+        class: sitesplat\badgepremium\autogroups\type\topics
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }

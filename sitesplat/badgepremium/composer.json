@@ -1,0 +1,35 @@
+{
+    "name": "sitesplat/badgepremium",
+    "type": "phpbb-extension",
+    "description": "BBAwards Premium Rules for the BBAwards extension. It allows a series of special premium rules for the awards combinations.",
+    "homepage": "https://sitesplat.com",
+    "version": "1.1.3",
+    "keywords": ["style", "sitesplat", "phpbb", "extension", "pages", "bbawards"],
+     "license": "Proprietary/All rights reserved",
+    "authors": [
+        {
+            "name": "SiteSplat",
+            "email": "info@sitesplat.com",
+            "homepage": "https://sitesplat.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+		"composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "BBAwards Premium Rules",
+        "soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+        },
+        "version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbawards_premium_one.json",
+			"ssl": true
+		}
+    }
+}
