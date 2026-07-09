@@ -1,0 +1,8 @@
+Subject: You have been deleted from «{SITENAME}»
+
+Hello, {USERNAME}
+
+Administrator of «{SITENAME}» thought that you registered twice or more under different names on his forum, and this was the reason for deleting your "{USERNAME}" account. Sorry about that.
+If you believe this is a mistake, you can contact admin by e-mail: {BOARD_CONTACT}
+
+{EMAIL_SIG}
