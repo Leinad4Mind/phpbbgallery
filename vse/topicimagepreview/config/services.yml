@@ -1,0 +1,28 @@
+services:
+    vse.topicimagepreview.helper:
+        class: vse\topicimagepreview\event\helper
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+
+    vse.topicimagepreview.preview:
+        class: vse\topicimagepreview\event\preview
+        arguments:
+            - '@config'
+            - '@vse.topicimagepreview.helper'
+            - '@template'
+        tags:
+            - { name: event.listener }
+
+    vse.topicimagepreview.settings:
+        class: vse\topicimagepreview\event\settings
+        arguments:
+            - '@config'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
