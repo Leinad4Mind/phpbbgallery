@@ -1,0 +1,5 @@
+services:
+    leinad4mind.customlanguage.listener:
+        class: leinad4mind\customlanguage\event\listener
+        tags:
+            - { name: event.listener }
