@@ -1,0 +1,64 @@
+<!-- IF not VIEW_TABLE -->
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS css/checkmail.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<h1>{L_ACP_CHECKMAIL} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+
+<p>{L_ACP_CHECKMAIL_EXPLAIN}</p>
+<fieldset class="tabulated">
+<!-- ENDIF -->
+    <table cellspacing="1" id="statistics_table" class="cbTable">
+    <thead>
+    <tr style="height:2px;">
+        <td colspan="4" style="padding:0;height:2px;">
+        <div class="checkmailbar"><span class="checkmailbargreen" title="{L_CHECKMAIL_USERS} {TOTAL_CHECKED_USERS} %" style="width:{TOTAL_CHECKED_USERS}%;">&nbsp;</span><span class="checkmailbarred" title="{L_CHECKMAIL_TOTAL} {TOTAL_USERS} %" style="width:{TOTAL_USERS}%;">&nbsp;</span></div>
+        </td>
+    </tr>
+    <tr class="cbHead">
+        <td style="width: 3%;">#<!-- IF CRON --><img id="cron_run" src="{CRON}" width="1" height="1" alt="cron" /><!-- ENDIF --></td>
+        <td style="width: 22%;">{L_USERNAME}<a href="{U_ACTION}&amp;sk=username&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'username' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+            <a href="{U_ACTION}&amp;sk=username&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'username' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a></td>
+        <td style="width: 65%;">{L_EMAIL_STATUS}
+        <a href="{U_ACTION}&amp;sk=status&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'status' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+            <a href="{U_ACTION}&amp;sk=status&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'status' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a></td>
+        <td style="width: 10%;">{L_CHECK_STATUS} <i id="circle" class="fa fa-circle-o-notch fa-spin"></i></td>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- BEGIN memberrow -->
+    <tr id="p{memberrow.ID}" class="<!-- IF memberrow.STATUS -->email_ok<!-- ENDIF --><!-- IF memberrow.S_ROW_COUNT is even --> cbOddLine<!-- ELSE --> cbEvenLine<!-- ENDIF -->">
+        <td>{memberrow.NUM}</td>
+        <td><a href="{memberrow.U_EDIT}">{memberrow.USERNAME}</a></td>
+        <td class="show">
+        	<div class="msg<!-- IF not memberrow.RESPONCE --> empty<!-- ENDIF -->">{memberrow.RESPONCE}</div>{memberrow.EMAIL}</td>
+        <td><a class="check_mail" href="#" data-options="url={memberrow.U_CHECK}" data-ajax="true" title="{L_CHECK_MAIL_ADDRESS}"><i class="fa fa-envelope"></i></a>
+        </td>
+     </tr>
+     <!-- END memberrow -->
+    </tbody>
+    </table>
+    <!-- IF not VIEW_TABLE -->
+    <!-- IF .pagination or TOTAL_POSTS -->
+    <div class="pagination">
+        <!-- IF .pagination -->
+            <!-- INCLUDE pagination.html -->
+        <!-- ELSE -->
+            {PAGE_NUMBER}
+        <!-- ENDIF -->
+    </div>
+    </fieldset>
+    <!-- ENDIF -->
+<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
+<!-- INCLUDEJS js/checkmail.js -->
+
+<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->
