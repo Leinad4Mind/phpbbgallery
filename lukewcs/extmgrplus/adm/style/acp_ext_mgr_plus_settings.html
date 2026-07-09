@@ -1,0 +1,240 @@
+{#
+*
+* Extension Manager Plus. An extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
+* @license GNU General Public License, version 2 (GPL-2.0-only)
+*
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
+#}
+
+{% import '@lukewcs_extmgrplus/acp_ext_mgr_plus_macros.html' as common %}
+
+{% INCLUDE 'overall_header.html' %}
+
+{% set switch_type = TOGGLECTRL_TYPE ?? 'toggle' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('EXTENSIONS_ADMIN') }}</h1>
+
+<p>{{ lang('EXTENSIONS_EXPLAIN') }}</p>
+
+{{ common.notes(EXTMGRPLUS_NOTES) }}
+
+<form id="extmgrplus_settings" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('EXTENSIONS_VERSION_CHECK_SETTINGS') }}</legend>
+
+		<dl>
+			<dt>
+				<label>{{ lang('FORCE_UNSTABLE') ~ lang('COLON') }}</label>
+			</dt>
+			<dd>
+				{{ _self.switch('force_unstable', FORCE_UNSTABLE, switch_type) }}
+				{{ _self.confirmbox('force_unstable', lang('EXTENSION_FORCE_UNSTABLE_CONFIRM')) }}
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('EXTMGRPLUS_SECTION_SETTINGS') }}</legend>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_LOG') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_LOG_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_log', EXTMGRPLUS_SWITCH_LOG, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_CONFIRMATION') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_CONFIRMATION_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_confirmation', EXTMGRPLUS_SWITCH_CONFIRMATION, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_AUTO_REDIRECT') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_AUTO_REDIRECT_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_auto_redirect', EXTMGRPLUS_SWITCH_AUTO_REDIRECT, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_CHECKBOX_MODE') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_CHECKBOX_MODE_EXPLAIN', common.icon('fa-check-square-o')) }}</span>
+			</dt>
+			<dd>
+				{{ _self.select('extmgrplus_select_checkbox_mode', EXTMGRPLUS_SELECT_CHECKBOX_MODE_OPTIONS) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_SELF_DISABLE') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_SELF_DISABLE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_self_disable', EXTMGRPLUS_SWITCH_SELF_DISABLE, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_INSTRUCTIONS') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_INSTRUCTIONS_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_instructions', EXTMGRPLUS_SWITCH_INSTRUCTIONS, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_VC_LIMIT') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_VC_LIMIT_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.number('extmgrplus_number_vc_limit', EXTMGRPLUS_NUMBER_VC_LIMIT, 1, 99) }}
+				{{ lang('SECONDS') }}
+			</dd>
+		</dl>
+
+		<legend class="legend_sub">{{ lang('EXTMGRPLUS_SECTION_EXT_PROPERTIES') }}</legend>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_ORDER_AND_IGNORE') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_ORDER_AND_IGNORE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_order_and_ignore', EXTMGRPLUS_SWITCH_ORDER_AND_IGNORE, switch_type) }}
+			</dd>
+		</dl>
+
+		<legend class="legend_sub">{{ lang('EXTMGRPLUS_SECTION_EXPERT_SETTINGS') }}</legend>
+		<p>{{ lang('EXTMGRPLUS_EXPERT_SETTINGS_EXPLAIN') }}</p>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_MIGRATION_COL') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_MIGRATION_COL_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_migration_col', EXTMGRPLUS_SWITCH_MIGRATION_COL, switch_type) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_MIGRATIONS') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_MIGRATIONS_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_migrations', EXTMGRPLUS_SWITCH_MIGRATIONS, switch_type) }}
+				{{ _self.confirmbox('extmgrplus_switch_migrations', lang('EXTMGRPLUS_MSG_CONFIRM_MIGRATIONS')) }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_VERSION_URL') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_VERSION_URL_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				{{ _self.switch('extmgrplus_switch_version_url', EXTMGRPLUS_SWITCH_VERSION_URL, switch_type) }}
+			</dd>
+		</dl>
+
+		<legend class="legend_sub">{{ lang('EXTMGRPLUS_SECTION_RESET') }}</legend>
+
+		<dl>
+			<dt>
+				<label>{{ lang('EXTMGRPLUS_DEFAULTS') ~ lang('COLON') }}</label><br>
+				<span>{{ lang('EXTMGRPLUS_DEFAULTS_EXP') }}</span>
+			</dt>
+			<dd>
+				{{ _self.button('extmgrplus_defaults', 'EXTMGRPLUS_BUTTON_DEFAULTS') }}
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+
+		<p class="submit-buttons">
+			<input type="submit" name="extmgrplus_save_settings" value="save_settings" hidden>
+			<input type="button" class="button1" name="extmgrplus_submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input type="reset" class="button2" name="extmgrplus_reset" value="{{ lang('RESET') }}">
+		</p>
+	</fieldset>
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{{ common.footer(EXTMGRPLUS_METADATA) }}
+
+{% INCLUDE 'overall_footer.html' %}
+
+{% INCLUDEJS '@lukewcs_extmgrplus/acp_ext_mgr_plus_settings.js' %}
+{% INCLUDECSS '@lukewcs_extmgrplus/acp_ext_mgr_plus.css' %}
+
+{% macro switch(name, checked = false, type = 'toggle') -%}
+	{% if type == 'toggle' || type == 'checkbox' -%}
+		<input type="checkbox" class="{{ type }}" name="{{ name }}" value="1"{{ checked ? ' checked' }}>
+	{%- elseif type == 'radio' -%}
+		<label><input type="radio" class="radio" name="{{ name }}" value="1"{{ checked ? ' checked' }}> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="{{ name }}" value="0"{{ !checked ? ' checked' }}> {{ lang('NO') }}</label>
+	{%- endif %}
+{%- endmacro %}
+
+{% macro select(name, options, multiple = null, size = null) -%}
+	<select name="{{ name }}{{ multiple ? '[]' }}"{{
+		(size !== null ? ' size="' ~ size ~ '"') ~
+		(multiple ? ' multiple')
+	}}>
+		{% for opt in options %}
+			<option value="{{ opt.value }}"{{
+				(opt.bold ? ' class="sep"') ~
+				(opt.selected ? ' selected')
+			}}>{{ lang(opt.label) }}</option>
+		{% endfor %}
+	</select>
+{%- endmacro %}
+
+{% macro number(name, value, min = null, max = null, step = null, placeholder = null) -%}
+	<input type="number" name="{{ name }}" value="{{ value }}"{{
+		(min !== null ? ' min="' ~ min ~ '"') ~
+		(max !== null ? ' max="' ~ max ~ '"') ~
+		(step !== null ? ' step="' ~ step ~ '"') ~
+		(placeholder !== null ? ' placeholder="' ~ placeholder ~ '"')
+	}}>
+{%- endmacro %}
+
+{% macro button(name, lang_var) -%}
+	<input type="button" class="button2" name="{{ name }}" value="{{ lang(lang_var) }}">
+{%- endmacro %}
+
+{% macro confirmbox(name, message, default = false) -%}
+	<div id="{{ name }}_confirmbox" data-default="{{ default }}" style="display: none;">
+		<h2>{{ lang('CONFIRM') }}</h2>
+		<p>{{ message }}</p>
+		<p>
+			<input type="button" class="button1" name="{{ name }}_confirm_yes" value="{{ lang('YES') }}">&nbsp;
+			<input type="button" class="button2" name="{{ name }}_confirm_no" value="{{ lang('NO') }}">
+		</p>
+	</div>
+{%- endmacro %}

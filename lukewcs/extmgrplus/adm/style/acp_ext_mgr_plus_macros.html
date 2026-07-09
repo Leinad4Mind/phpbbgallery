@@ -1,0 +1,35 @@
+{#
+*
+* Extension Manager Plus. An extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
+* @license GNU General Public License, version 2 (GPL-2.0-only)
+*
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
+#}
+
+{% macro notes(notes) %}
+	{% if notes|length %}
+		<div class="successbox notice">
+			{% for note in notes %}
+				<p>{{ note }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro icon(classes, decorative = true) -%}
+	<i class="icon {{ classes }}"{{ decorative ? ' aria-hidden="true"' }}></i>
+{%- endmacro %}
+
+{% macro footer(metadata) %}
+	<p class="{{ metadata.class  }}">
+		{{ metadata.ext_name }} {{ metadata.ext_ver }} &copy; {{ metadata.ext_copyright }}
+		{% if metadata.lang_ver is defined %}
+			<br>
+			{{ metadata.lang_desc|e('html') }} {{ metadata.lang_ver|e('html') }} &bull; {{ metadata.lang_author|e('html') }}
+		{% endif %}
+	</p>
+{% endmacro %}
