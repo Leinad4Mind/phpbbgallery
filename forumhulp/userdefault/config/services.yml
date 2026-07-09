@@ -1,0 +1,15 @@
+services:
+    forumhulp.userdefault.entity.constants:
+        class: forumhulp\userdefault\entity\constants
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+    forumhulp.userdefault.listener:
+        class: forumhulp\userdefault\event\listener
+        arguments:
+            - '@config'
+            - '@forumhulp.userdefault.entity.constants'
+            - '@dbal.conn'
+            - '@service_container'
+        tags:
+            - { name: event.listener }

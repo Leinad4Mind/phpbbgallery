@@ -1,0 +1,89 @@
+/* CSS Document */
+
+h1 {position: relative;}
+#circle {display: none; float: right; font-size: 30px;}
+
+#acp_userdefaults {
+	border-radius:10px;
+	border:#999999 thin solid;
+	background: url('images/spacer.png') repeat;
+	margin-bottom:20px;	
+}
+#acp_userdefaults fieldset {
+	background-color: transparent;
+	border:0;
+	margin-bottom:10px;
+	padding-bottom:0;
+}
+dd select{font-size:.7em;margin:0;width:100px;}
+.fa-arrow-up, .fa-arrow-down {float:right; color:#fff; padding: 0 2px;}
+#act-arrow {color:#CECECE;}
+
+#progressbar {
+	display:none;
+    width: 200px;
+    height: 9px;
+    background-color: #eee;
+    padding: 1px;
+    margin-top: 12px;
+    border: 1px #000 double;
+}
+
+#sync_users {
+	float:right;
+	margin-right:2px;
+	margin-top:10px;
+}
+
+#progress {
+    background: #A1C969; /*-- Color of the bar --*/
+    height: 9px;
+    width: 1%;
+    max-width: 100%;
+    float: left;
+    -webkit-animation: progress 2s 1 forwards;
+    -moz-animation: progress 2s 1 forwards;
+    -ms-animation: progress 2s 1 forwards;
+    animation: progress 2s 1 forwards;
+}
+
+#percent {
+	font-size:9px;
+	display:block;
+	font-weight: bold;
+}
+
+#pbaranim {
+	text-align:center;
+    height: 9px;
+    width: 100%;
+    overflow: hidden;
+    background: url('images/7uo1osj.gif') repeat-x;
+    -moz-opacity: 0.25;
+    -khtml-opacity: 0.25;
+    opacity: 0.25;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=25);
+    filter: alpha(opacity=25);
+}
+
+@-webkit-keyframes progress { 
+    from { }
+
+    to { width: 36% }
+}
+
+@-moz-keyframes progress { c
+    from { }
+
+    to { width: 36% }
+}
+
+@-ms-keyframes progress { 
+    from { }
+
+    to { width: 36% }
+}
+
+@keyframes progress { 
+    from { }

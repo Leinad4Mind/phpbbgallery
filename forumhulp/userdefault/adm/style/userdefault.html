@@ -1,0 +1,165 @@
+<!-- INCLUDECSS css/userdefault.css -->
+<!-- INCLUDECSS css/jquery.tzCheckbox.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<h1>{L_ACP_USERDEFAULT} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+
+<p>{L_ACP_USERDEFAULT_EXPLAIN}</p>
+
+<!-- IF ERRORS -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERRORS}</p>
+	</div>
+<!-- ENDIF -->
+
+
+<form id="acp_userdefaults" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ACP_USERDEFAUL_SETTINGS}</legend>
+	<dl> 
+		<dt><label for="viewemail">{L_SHOW_EMAIL}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[viewemail]" id="viewemail" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEW_EMAIL --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt><label for="massemail">{L_ADMIN_EMAIL}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[massemail]" id="massemail" data-on="{L_YES}" data-off="{L_NO}"<!-- IF MASS_EMAIL --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt><label for="allowpm">{L_ALLOW_PM}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[allowpm]" id="allowpm" data-on="{L_YES}" data-off="{L_NO}"<!-- IF ALLOW_PM --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt><label for="notify">{L_DEFAULT_NOTIFY}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[notify]" id="notify" data-on="{L_YES}" data-off="{L_NO}"<!-- IF NOTIFY --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt><label for="notifypm">{L_NOTIFY_ON_PM}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[notifypm]" id="notifypm" data-on="{L_YES}" data-off="{L_NO}"<!-- IF NOTIFY_PM --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt><label for="hideonline">{L_HIDE_ONLINE}{L_COLON}</label></dt>
+		<dd><input type="checkbox" name="general[hideonline]" id="hideonline" data-on="{L_YES}" data-off="{L_NO}"<!-- IF HIDE_ONLINE --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+   	<dl> 
+		<dt><label for="user_notify_type">{L_NOTIFY_METHOD}{L_COLON}</label><br /><span>{L_NOTIFY_METHOD_EXPLAIN}</span></dt>
+		<dd><label><input type="radio" class="radio" name="user_notify_type" id="notify_email" value="0"<!-- IF NOTIFY_EMAIL --> id="user_notify_type" checked="checked"<!-- ENDIF --> /> {L_NOTIFY_METHOD_EMAIL}</label>
+			<label><input type="radio" class="radio" name="user_notify_type" id="notify_im" value="1"<!-- IF NOTIFY_IM --> id="user_notify_type" checked="checked"<!-- ENDIF --><!-- IF S_JABBER_DISABLED --> disabled="disabled"<!-- ENDIF --> /> {L_NOTIFY_METHOD_IM}</label>
+			<label><input type="radio" class="radio" name="user_notify_type" id="notify_both" value="2"<!-- IF NOTIFY_BOTH --> id="user_notify_type" checked="checked"<!-- ENDIF --> /> {L_NOTIFY_METHOD_BOTH}</label></dd>
+	</dl>
+	<dl> 
+		<dt><label for="date_format">{L_DEFAULT_DATE_FORMAT}{L_COLON}</label></dt>
+		<dd><select name="date_format" style="width:250px;">{USER_DATE_FORMAT}</select></dd>
+	</dl>
+
+<hr>
+<div style="float:left;width:49%">
+	<dl> 
+		<dt style="width:60%;"><label for="viewimg">{L_VIEW_IMAGES}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewimg]" id="viewimg" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWIMG --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="viewflash">{L_VIEW_FLASH}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewflash]" id="viewsmilies" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWFLASH --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="viewsmilies">{L_VIEW_SMILIES}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewsmilies]" id="viewflash" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWSMILIES --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="viewsigs">{L_VIEW_SIGS}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewsigs]" id="viewsigs" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWSIGS --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="viewavatars">{L_VIEW_AVATARS}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewavatars]" id="viewavatars" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWAVATAR --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="viewcensors">{L_DISABLE_CENSORS}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[viewcensors]" id="viewcensors" data-on="{L_YES}" data-off="{L_NO}"<!-- IF VIEWCENSORS --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:60%;"><label for="attachsig">{L_DEFAULT_ADD_SIG}{L_COLON}</label></dt>
+		<dd style="margin-left:60%;"><input type="checkbox" name="options[attachsig]" id="attachsig" data-on="{L_YES}" data-off="{L_NO}"<!-- IF ATTACHSIG --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+</div>
+
+<div style="float:left;width:49%">
+	<dl> 
+		<dt style="width:76%;"><label for="bbcode">{L_DEFAULT_BBCODE}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[bbcode]" id="bbcode" data-on="{L_YES}" data-off="{L_NO}"<!-- IF BBCODE --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:76%;"><label for="smilies">{L_DEFAULT_SMILIES}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[smilies]" id="smilies" data-on="{L_YES}" data-off="{L_NO}"<!-- IF SMILIES --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:76%;"><label for="popuppm">{L_POPUP_PM}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[popuppm]" id="popuppm" data-on="{L_YES}" data-off="{L_NO}"<!-- IF POPUPPM --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:76%;"><label for="sig_bbcode">{L_ALLOW_SIG_BBCODE}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[sig_bbcode]" id="sig_bbcode" data-on="{L_YES}" data-off="{L_NO}"<!-- IF SIG_BBCODE --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:76%;"><label for="sig_smilies">{L_ALLOW_SIG_SMILIES}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[sig_smilies]" id="sig_smilies" data-on="{L_YES}" data-off="{L_NO}"<!-- IF SIG_SMILIES --> checked="checked"<!-- ENDIF --> /></dd>
+	</dl>
+	<dl> 
+		<dt style="width:76%;"><label for="sig_links">{L_ALLOW_SIG_LINKS}{L_COLON}</label></dt>
+		<dd style="margin-left:76%;"><input type="checkbox" name="options[sig_links]" id="sig_links" data-on="{L_YES}" data-off="{L_NO}"<!-- IF SIG_LINKS --> checked="checked"<!-- ENDIF --> />   </dd>
+	</dl>
+</div>
+
+<hr style="clear:both;">
+<!-- BEGIN notification_types -->
+<dl<!-- IF notification_types.GROUP_NAME --> style="border-bottom:thin solid #807E7E;"<!-- ENDIF -->> 
+    <dt style="width:70%;<!-- IF notification_types.GROUP_NAME --> border-right:none;<!-- ENDIF -->">
+    	<label for="{notification_types.TYPE}">
+        <!-- IF notification_types.GROUP_NAME -->{notification_types.GROUP_NAME}<!-- ELSE -->{notification_types.NAME}{L_COLON}<!-- ENDIF --></label>
+    </dt>
+    <dd style="margin-left:70%;">
+    <!-- IF notification_types.S_FIRST_ROW --><!-- BEGIN methods --><span style="text-align:center;width:90px;display:inline-block;">{methods.NAME}</span><!-- END methods --><!-- ENDIF -->
+    <!-- BEGIN notification_methods -->
+        <input type="checkbox" name="noti_types[{notification_types.TYPE}~{notification_methods.METHOD}]" id="noti_types[{notification_types.TYPE}_{notification_methods.METHOD}]"<!-- IF notification_methods.SUBSCRIBED --> checked="checked"<!-- ENDIF --> />
+    <!-- END notification_methods -->
+    </dd>
+</dl>
+<!-- END notification_types -->
+
+<hr style="clear:both;">
+	<dl> 
+		<dt><label>{L_VIEW_POSTS_TOPICS}{L_COLON}</label><br /><span style="float:right">{L_TOPICS}<br style="line-height:20px;" />{L_POSTS}</span></dt>
+		<dd>
+            <div style="float:left;width:33%;">{L_SORT_DAYS}<br />{S_TOPIC_SORT_DAYS}<br />{S_POST_SORT_DAYS}</div>
+            <div style="float:left;width:33%;">{L_SORT_BY}<br />{S_TOPIC_SORT_KEY}<br />{S_POST_SORT_KEY}</div>
+            <div style="float:left;width:33%;">{L_SORT_DIRECTION}<br />{S_TOPIC_SORT_DIR}<br />{S_POST_SORT_DIR}</div>
+        </dd>
+	</dl>
+
+    <dl>
+        <dt><label for="sync_points">{L_SYNC_USERS}:</label><input class="button2" type="submit" id="sync_users" name="sync_users" value="{L_RUN}" /><br /><span>{L_SYNC_USERS_EXPLAIN}</span></dt>
+        <dd>
+        <div id="progressbar"><div id="progress"><div id="pbaranim"><span id="percent"></span></div></div></div>
+        </dd>
+    </dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+	<script type="text/javascript">
+	// <![CDATA[
+		var adminurl ='{UA_PROGRESS_BAR}';
+	// ]]>
+	</script>
+<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
+<!-- INCLUDEJS js/jquery.tzCheckbox.js -->
+<!-- INCLUDEJS js/userdefault.js -->
+<!-- INCLUDE overall_footer.html -->
