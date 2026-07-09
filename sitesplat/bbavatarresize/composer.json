@@ -1,0 +1,35 @@
+{
+	"name": "sitesplat/bbavatarresize",
+	"type": "phpbb-extension",
+	"description": "Allows uploaded avatars to be cropped, resized via in browser canvas and smartly working around the dreadful avatar image size error",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.4",
+	"keywords": ["phpbb", "extension", "ucp", "avatar", "cosmetic", "sitesplat"],
+	"license": "@license Proprietary",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBAvatarResize",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.9"
+		},
+		"version-check": {
+			"host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbavatarresize.json",
+			"ssl": true
+		}
+	}
+}
