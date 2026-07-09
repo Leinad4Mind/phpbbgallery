@@ -1,0 +1,22 @@
+imports:
+    - {resource: gender_constants.yml}
+
+services:
+    rmcgirr83.genders.listener:
+        class: rmcgirr83\genders\event\listener
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%gender_constants%'
+        tags:
+            - { name: event.listener }
+
+    rmcgirr83.genders.core.genders:
+        class: rmcgirr83\genders\core\genders
+        arguments:
+            - '%gender_constants%'
