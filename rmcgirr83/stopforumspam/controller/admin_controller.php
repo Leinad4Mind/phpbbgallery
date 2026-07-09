@@ -9,9 +9,9 @@
 
 namespace rmcgirr83\stopforumspam\controller;
 
-use phpbb\cache\service as cache_service;
+use phpbb\cache\service as cache;
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\json_response;
 use phpbb\language\language;
 use phpbb\log\log;
@@ -65,9 +65,9 @@ class admin_controller implements admin_interface
 	/**
 	* Constructor
 	*
-	* @param cache_service			$cache				Cache object
+	* @param cache					$cache				Cache object
 	* @param config					$config				Config object
-	* @param driver_interface		$db					Database object
+	* @param db						$db					Database object
 	* @param language				$language			Language object
 	* @param log					$log				Log object
 	* @param request				$request			Request object
@@ -81,9 +81,9 @@ class admin_controller implements admin_interface
 	* @access public
 	*/
 	public function __construct(
-			cache_service $cache,
+			cache $cache,
 			config $config,
-			driver_interface $db,
+			db $db,
 			language $language,
 			log $log,
 			request $request,
@@ -152,7 +152,7 @@ class admin_controller implements admin_interface
 
 		switch ($action)
 		{
-			case 'clr_reports':
+			case 'sfsclrreports':
 				//if none have been reported there's nothing to do
 				if (empty($sfs_posts_pms_count))
 				{
@@ -161,7 +161,7 @@ class admin_controller implements admin_interface
 
 				if (confirm_box(true))
 				{
-					$this->clr_reports();
+					$this->sfsclrreports();
 				}
 				else
 				{
@@ -224,14 +224,16 @@ class admin_controller implements admin_interface
 			'SFS_BY_EMAIL'	=> ($this->config['sfs_by_email']) ? true : false,
 			'SFS_BY_IP'		=> ($this->config['sfs_by_ip']) ? true : false,
 			'SFS_BAN_REASON'	=> ($this->config['sfs_ban_reason']) ? true : false,
+			'SFS_REPORT_PM'	=> ($this->config['sfs_report_pm']) ? true : false,
 			'SFS_BAN_TIME'	=> $this->display_ban_time($this->config['sfs_ban_time']),
 			'SFS_NOTIFY'	=> ($this->config['sfs_notify']) ? true : false,
 			'SFS_POSTS_PMS_COUNT'	=> $sfs_posts_pms_count,
 			'NOTICE'	=> $cache_built,
-			'L_SFS_CLEAR_EXPLAIN'	=> $this->language->lang('SFS_CLEAR_EXPLAIN', (int) $posts_reported, (int) $pms_reported),
+			'POSTS_REPORTED' => (int) $posts_reported,
+			'PMS_REPORTED'	=> (int) $pms_reported,
 
 			'U_BUILD_CACHE'	=> $this->u_action . '&amp;action=build_adminsmods',
-			'U_CLR_REPORTS'	=> $this->u_action . '&amp;action=clr_reports',
+			'U_CLR_REPORTS'	=> $this->u_action . '&amp;action=sfsclrreports',
 			'U_ACTION'		=> $this->u_action,
 		]);
 	}
@@ -256,6 +258,7 @@ class admin_controller implements admin_interface
 		$this->config->set('sfs_api_key', $this->request->variable('sfs_api_key', '', true));
 		$this->config->set('sfs_ban_time', $this->request->variable('sfs_ban_time', 0));
 		$this->config->set('sfs_notify', $this->request->variable('sfs_notify', 0));
+		$this->config->set('sfs_report_pm', $this->request->variable('sfs_report_pm', 0));
 	}
 
 	/**
@@ -307,7 +310,7 @@ class admin_controller implements admin_interface
 	 * @return json response
 	 * @access protected
 	 */
-	protected function clr_reports()
+	protected function sfsclrreports()
 	{
 		$sql = 'UPDATE ' . POSTS_TABLE . ' SET sfs_reported = 0
 			WHERE sfs_reported = 1';
@@ -322,13 +325,11 @@ class admin_controller implements admin_interface
 		$data = [
 			'MESSAGE_TITLE'	=> $this->language->lang('SUCCESS'),
 			'MESSAGE_TEXT'	=> $this->language->lang('SFS_REPORTED_CLEARED'),
-			'REFRESH_DATA'	=> [
-				'url'	=> '',
-				'time'	=> 5,
-			],
+			'success'	=> true,
 		];
 
-		$this->send_json_response($data);
+		$json_response = new json_response;
+		$json_response->send($data);
 	}
 
 	/**
@@ -351,25 +352,12 @@ class admin_controller implements admin_interface
 		$data = [
 			'MESSAGE_TITLE'	=> $this->language->lang('SUCCESS'),
 			'MESSAGE_TEXT'	=> $this->language->lang('LOG_ADMINSMODS_CACHE_BUILT'),
+			'success'	=> true,
 		];
 
-		$this->send_json_response($data);
+		$json_response = new json_response;
+		$json_response->send($data);
 
-	}
-
-	/**
-	 * Send a JSON response
-	 *
-	 * @param array $data The data of the JSON response (true|false)
-	 * @access protected
-	 */
-	protected function send_json_response($data)
-	{
-		if ($this->request->is_ajax())
-		{
-			$json_response = new json_response;
-			$json_response->send($data);
-		}
 	}
 
 	/**

@@ -20,22 +20,22 @@ use phpbb\user;
 
 class sfsapi
 {
-	/** @var \phpbb\config\config */
+	/** @var config $config */
 	protected $config;
 
-	/** @var \phpbb\language\language */
+	/** @var language $language */
 	protected $language;
 
-	/** @var \phpbb\log\log */
+	/** @var log $log */
 	protected $log;
 
-	/** @var \phpbb\user */
+	/** @var user $user */
 	protected $user;
 
-	/** @var string phpBB root path */
+	/** @var string root_path */
 	protected $root_path;
 
-	/** @var string phpEx */
+	/** @var string php_ext */
 	protected $php_ext;
 
 	public function __construct(
@@ -43,8 +43,8 @@ class sfsapi
 		language $language,
 		log $log,
 		user $user,
-		$root_path,
-		$php_ext)
+		string $root_path,
+		string $php_ext)
 	{
 		$this->config = $config;
 		$this->language = $language;
@@ -133,7 +133,7 @@ class sfsapi
 	* sfs_ban
 	* @param 	$type 			ban by either IP or username
 	* @param	$user_info		the users info of who we are banning
-	* @return 	null			return either a string on success or false on failure
+	* @return 	null
 	*/
 	public function sfs_ban($type, $user_info)
 	{

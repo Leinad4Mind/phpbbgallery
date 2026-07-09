@@ -14,96 +14,110 @@ namespace rmcgirr83\stopforumspam\core;
 * ignore
 */
 use phpbb\config\config;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
+use phpbb\controller\helper;
 use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\request\request;
+use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\stopforumspam\core\sfsgroups;
 use rmcgirr83\stopforumspam\core\sfsapi;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use phpbb\exception\http_exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class report_pm_to_sfs
 {
-	/** @var \phpbb\config\config */
+	/** @var config $config */
 	protected $config;
+
+	/** @var db $db */
+	protected $db;
+
+	/** @var helper $helper */
+	protected $helper;
+
+	/** @var language $language */
+	protected $language;
+
+	/** @var log $log */
+	protected $log;
+
+	/** @var request $request */
+	protected $request;
+
+	/** @var template $template */
+	protected $template;
+
+	/** @var user $user */
+	protected $user;
+
+	/* @var sfsgroups $sfsgroups */
+	protected $sfsgroups;
+
+	/* @var sfsapi $sfsapi */
+	protected $sfsapi;
 
 	/** @var ContainerInterface */
 	protected $container;
 
-	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
-
-	/** @var \phpbb\language\language */
-	protected $language;
-
-	/** @var \phpbb\log\log */
-	protected $log;
-
-	/** @var \phpbb\request\request */
-	protected $request;
-
-	/** @var \phpbb\user */
-	protected $user;
-
-	/* @var \rmcgirr83\stopforumspam\core\sfsgroups */
-	protected $sfsgroups;
-
-	/* @var \rmcgirr83\stopforumspam\core\sfsapi */
-	protected $sfsapi;
-
 	public function __construct(
 			config $config,
-			ContainerInterface $container,
-			driver_interface $db,
+			db $db,
+			helper $helper,
 			language $language,
 			log $log,
 			request $request,
+			template $template,
 			user $user,
 			sfsgroups $sfsgroups,
-			sfsapi $sfsapi)
+			sfsapi $sfsapi,
+			ContainerInterface $container)
 	{
 		$this->config = $config;
-		$this->container = $container;
 		$this->db = $db;
+		$this->helper = $helper;
 		$this->language = $language;
 		$this->log = $log;
 		$this->request = $request;
+		$this->template = $template;
 		$this->user = $user;
 		$this->sfsgroups = $sfsgroups;
 		$this->sfsapi = $sfsapi;
+		$this->container = $container;
 	}
 
 	/*
 	* report_pm_to_sfs
-	* @param	int		$msgid			the pm msgid
-	* @param	int		$authorid		the author id of the pm
+	* @param	int		$postid			the pm msgid
+	* @param	int		$posterid		the author id of the pm
 	* @return 	json response
 	*/
-	public function report_pm_to_sfs($msgid, $authorid)
+	public function report_pm_to_sfs($postid, $posterid)
 	{
+		$postid = (int) $postid;
+		$posterid = (int) $posterid;
+
 		$this->language->add_lang('stopforumspam', 'rmcgirr83/stopforumspam');
 
 		$admins_mods = $this->sfsgroups->getadminsmods(0);
 
-		$author_id = (int) $authorid;
-		$msg_id = (int) $msgid;
-
 		// Check if reporting PMs is enabled
-		if (!$this->config['allow_pm_report'] || in_array($author_id, $admins_mods))
+		if (!$this->config['allow_pm_report'] || in_array($posterid, $admins_mods) || empty($this->config['sfs_report_pm']))
 		{
 			throw new http_exception(403, 'SFS_PM_REPORT_NOT_ALLOWED');
 		}
 
 		if (empty($this->config['allow_sfs']) || empty($this->config['sfs_api_key']))
 		{
-			return false;
+			throw new http_exception(403, 'SFS_MISSING_DATA');
 		}
 
-		// msg_id must be greater than 0
-		if ($msg_id <= 0)
+		// postid must be greater than 0
+		if ($postid <= 0)
 		{
 			throw new http_exception(403, 'PM_NOT_EXIST');
 		}
@@ -111,7 +125,7 @@ class report_pm_to_sfs
 		$sql = 'SELECT pm.sfs_reported, pm.author_id, pm.author_ip, u.username, u.user_email
 			FROM ' . PRIVMSGS_TABLE . ' pm
 			LEFT JOIN ' . USERS_TABLE . ' u on pm.author_id = u.user_id
-			WHERE pm.msg_id = ' . (int) $msg_id . ' AND pm.author_id = ' . (int) $author_id;
+			WHERE pm.msg_id = ' . (int) $postid . ' AND pm.author_id = ' . (int) $posterid;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -127,18 +141,28 @@ class report_pm_to_sfs
 		$useremail = $row['user_email'];
 		$sfs_reported = (int) $row['sfs_reported'];
 
+		// ensure the IP is something other than 127.0.0.1 which can happen if the anonymised extension is installed
+		if (filter_var($userip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false)
+		{
+			throw new http_exception(403, 'SFS_ANONYMIZED_IP');
+		}
+
 		if ($sfs_reported)
 		{
 			throw new http_exception(403, 'SFS_PM_REPORTED');
 		}
 
-		// only allow this via ajax calls
-		//
-		if ($this->request->is_ajax())
+		// fix confirm box non-ajax error (controller must return)
+		if ($this->request->is_set_post('cancel') && !$this->request->is_ajax())
+		{
+			return $this->helper->message('SFS_OPERATION_CANCELED');
+		}
+
+		if (confirm_box(true))
 		{
 			$response = $this->sfsapi->sfsapi('add', $username, $userip, $useremail, $this->config['sfs_api_key']);
 
-			if (!$response)
+			if (!$response && $this->request->is_ajax())
 			{
 				$data = [
 					'MESSAGE_TITLE'	=> $this->user->lang('ERROR'),
@@ -147,30 +171,77 @@ class report_pm_to_sfs
 				];
 				return new JsonResponse($data);
 			}
+			else if (!$response)
+			{
+				$this->template->assign_vars([
+					'MESSAGE_TITLE' => $this->language->lang('ERROR'),
+					'MESSAGE_TEXT'	=> $this->language->lang('SFS_ERROR_MESSAGE')
+				]);
+
+				return $this->helper->render('message_body.html');
+			}
 
 			// Report the uhmmm reported?
 			if ($this->config['sfs_notify'])
 			{
-				$this->check_report($msg_id);
+				$this->check_report($postid);
 			}
 
 			$sql = 'UPDATE ' . PRIVMSGS_TABLE . '
 				SET sfs_reported = 1
-				WHERE msg_id = ' . (int) $msg_id;
+				WHERE msg_id = ' . (int) $postid;
 			$this->db->sql_query($sql);
 
 			$sfs_username = $this->language->lang('SFS_USERNAME_STOPPED', $username);
 
-			$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_SFS_PM_REPORTED', false, [$sfs_username, 'msg_id'  => $msg_id]);
+			$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_SFS_PM_REPORTED', false, [$sfs_username, 'msg_id'  => $postid]);
 
-			$data = [
-				'MESSAGE_TITLE'	=> $this->language->lang('SUCCESS'),
-				'MESSAGE_TEXT'	=> $this->language->lang('SFS_SUCCESS_MESSAGE'),
-				'success'	=> true,
-				'msg_id'	=> $msg_id,
-			];
+			if ($this->request->is_ajax())
+			{
+				$data = [
+					'MESSAGE_TITLE'	=> $this->language->lang('SFS_SUCCESS'),
+					'MESSAGE_TEXT'	=> $this->language->lang('SFS_SUCCESS_MESSAGE'),
+					'success'	=> true,
+					'postid'	=> $postid,
+				];
 
-			return new JsonResponse($data);
+				return new JsonResponse($data);
+			}
+			else
+			{
+				$this->template->assign_vars([
+					'MESSAGE_TITLE' => $this->language->lang('SFS_SUCCESS'),
+					'MESSAGE_TEXT'	=> $this->language->lang('SFS_SUCCESS_MESSAGE')
+				]);
+
+				return $this->helper->render('message_body.html');
+			}
+		}
+		else
+		{
+			if ($this->request->is_ajax())
+			{
+				confirm_box(
+					false,
+					$this->language->lang('SFS_CONFIRM'),
+					'',
+					'confirm_body.html',
+					$this->helper->route(
+						'rmcgirr83_stopforumspam_core_report_pm_to_sfs',
+						[
+							'postid' => $postid,
+							'posterid' => $posterid,
+						],
+						true,
+						false,
+						UrlGeneratorInterface::ABSOLUTE_URL
+					)
+				);
+			}
+			else
+			{
+				confirm_box(false, $this->language->lang('SFS_CONFIRM'));
+			}
 		}
 	}
 
@@ -188,7 +259,7 @@ class report_pm_to_sfs
 		$report_data = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		if (!$report_data)
+		if (!$report_data && $this->request->is_ajax())
 		{
 			$data = [
 				'MESSAGE_TITLE'	=> $this->user->lang('ERROR'),
@@ -196,6 +267,15 @@ class report_pm_to_sfs
 				'success'	=> false,
 			];
 			return new JsonResponse($data);
+		}
+		else if (!$report_data)
+		{
+			$this->template->assign_vars([
+				'MESSAGE_TITLE'	=> $this->language->lang('ERROR'),
+				'MESSAGE_TEXT'	=> $this->language->lang('PM_NOT_EXIST'),
+			]);
+
+			return $this->helper->render('message_body.html');
 		}
 
 		// if the pm isn't reported, then report it
