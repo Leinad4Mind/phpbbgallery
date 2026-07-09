@@ -1,0 +1,16 @@
+services:
+    forumhulp.uploadimage.admin.controller:
+        class: forumhulp\uploadimage\controller\admin_controller
+        arguments:
+            - @config
+            - @request
+            - @user
+            - @service_container
+            - @template
+            - @path_helper
+            - @cache
+            - @pagination
+            - @log
+            - @plupload
+            - %core.root_path%
+            - %core.php_ext%
