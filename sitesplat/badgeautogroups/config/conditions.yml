@@ -1,0 +1,65 @@
+services:
+# ----- Auto groups types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badgeautogroups.type.avatar:
+        class: sitesplat\badgeautogroups\conditions\type\avatar
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.badges:
+        class: sitesplat\badgeautogroups\conditions\type\badges
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.custom:
+        class: sitesplat\badgeautogroups\conditions\type\custom
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.donations:
+        class: sitesplat\badgeautogroups\conditions\type\donations
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.likedd:
+        class: sitesplat\badgeautogroups\conditions\type\likedd
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.profilewall:
+        class: sitesplat\badgeautogroups\conditions\type\profilewall
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.signature:
+        class: sitesplat\badgeautogroups\conditions\type\signature
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.zebra_foes:
+        class: sitesplat\badgeautogroups\conditions\type\zebra_foes
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    sitesplat.badgeautogroups.type.zebra_friends:
+        class: sitesplat\badgeautogroups\conditions\type\zebra_friends
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
