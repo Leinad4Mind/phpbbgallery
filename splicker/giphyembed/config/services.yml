@@ -1,0 +1,13 @@
+services:
+    splicker.giphyembed.listener:
+        class: splicker\giphyembed\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@dbal.conn'
+            - '@auth'
+            - '@config_text'
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,23 @@
+{% if GE_ENABLED %}
+<div class="widget-body tab-pane" id="posting-giphy-html">
+	<p>{{ lang('GE_TAB_EXPLAIN') }}</p>
+	<fieldset>
+	<div class="control-group">
+		<label class="control-label" for="subject">{{ lang('GE_TAB_SEARCHBOX') ~ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group input-group-sm col-md-6">
+				<input type="text" name="giphysearch" id="giphysearch" maxlength="255" value="" placeholder="Funny Cats" class="form-control input-sm">
+				<div class="input-group-btn">
+					<a class="btn btn-default giphy">{{ lang('SEARCH') }}</a>
+				</div>
+			</div>
+		</div>
+		<div class="gifpanel"></div>
+	</div>
+	</fieldset>
+	<div class="space10"></div>
+	<a class="btn btn-default back" style="display:none">{{ lang('GE_BACK') }}</a>
+	<a class="btn btn-default more" style="display:none">{{ lang('MORE') }}</a>
+	<div class="giphycopyright"></div>
+</div>
+{% endif %}

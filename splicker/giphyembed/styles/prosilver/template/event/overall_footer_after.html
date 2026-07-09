@@ -1,0 +1,32 @@
+<!-- IF GE_ENABLED -->
+<script>
+/*-- phpBB Giphy Embed Extensions by SplickerSnap.com 2021 --*/
+var offset = 0;	
+$('.giphy').click(function() {offset = 0;$('.more').hide();$('.back').hide();getgifs();});
+$('.more').click(function() {offset += 32;getgifs();});
+$('.back').click(function() {offset -= 32;getgifs();}); 
+function getgifs()
+{
+	if(offset < 32){$('.back').hide();$('.more').show();}else {$('.back').show();}
+	$.get({			
+		url: "https://api.giphy.com/v1/gifs/search?q="+$("#giphysearch").val()+"&api_key={GE_APIKEY}&rating={GE_RATING}&offset="+offset+"&limit=32",
+		success: function(result) {
+			var data = result.data;
+			var output = "";
+			for (var index in data)
+			{
+				var gifObject = data[index];
+				var gifURL = gifObject.images.downsized_medium.url;
+				output += '<img class="giphyimg <!-- IF GE_SCROLL -->giphyheight<!-- ENDIF -->" src="'+gifObject.images.fixed_height_still.url+'" loading="lazy" data-animate="'+gifObject.images.fixed_height.url+'" data-still="'+gifObject.images.fixed_height_still.url+'" data-state="still"/>';
+			}			
+				$(".gifpanel").html(output);			
+			}
+	});
+}
+$(".gifpanel").on("click", ".giphyimg", function(){ insert_text('[img]' + $(this).attr("src") + '[/img]');});
+$(".gifpanel").on("mouseenter", ".giphyimg", function(){$(this).attr("src", $(this).attr("data-animate"));$(this).attr("data-state", "animate");});
+$(".gifpanel").on("mouseleave", ".giphyimg", function(){$(this).attr("src", $(this).attr("data-still"));$(this).attr("data-state", "still");});
+$(document).keyup(function(event){if ($("#giphysearch").is(":focus") && event.key == "Enter"){$('.giphy').click();}});
+$(document).ready(function(){$("#giphysearch").focus(function(){$(':input[type="submit"]').prop('disabled', true);});$("#giphysearch").focusout(function(){$(':input[type="submit"]').prop('disabled', false);});});
+</script>
+<!-- ENDIF -->
