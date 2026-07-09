@@ -1,0 +1,39 @@
+{% if FORUM_STATISTICS and(FORUM_STATISTICS_VISITS or FORUM_STATISTICS_FOLLOWERS) %}
+  {% if FORUM_STATISTICS_FOLLOWERS and loops.forum_followers | length %}
+    {% INCLUDEJS '@leinad4mind_topicstatistics/js/topicstatistics.js' %}
+  {% endif %}
+  <div class="post bg3">
+    <div class="inner">
+      <ul class="linklist">
+        {% if S_WATCH_FORUM_LINK %}
+          <li>
+            <a href="{{ S_WATCH_FORUM_LINK }}" title="{{ S_WATCH_FORUM_TITLE }}">{{ S_WATCH_FORUM_TITLE }}</a>
+          </li>
+        {% endif %}
+        {% if FORUM_STATISTICS_FOLLOWERS %}
+          <li class="rightside">
+            {% if loops.forum_followers | length %}
+              <a id="afollowers" title="{{ lang('SH_STATISTICS') }}" href="#" class="topic-statistics-followers">
+              {% endif %}
+              <i class="icon fa-users fa-fw" aria-hidden="true"></i>{{ lang('FOLLOWERS') ~ lang('COLON')}}&nbsp;<strong>{{ FORUM_STATISTICS_FOLLOWERS_NUM }}{% if FORUM_STATISTICS_FOLLOWERS_NUM_MAX %}+{% endif %}</strong>
+              {% if loops.forum_followers | length %}
+              </a>
+            {% endif %}
+          </li>
+        {% endif %}
+        {% if FORUM_STATISTICS_VISITS %}
+          <li class="rightside">
+            <li class="rightside">
+              <i class="icon fa-eye fa-fw" aria-hidden="true"></i>{{ lang('VIEWS') ~ lang('COLON')}}&nbsp;<strong>{{ FORUM_STATISTICS_VISITS_NUM }}</strong>
+            </li>
+          </ul>
+        {% endif %}
+
+        {% if FORUM_STATISTICS_FOLLOWERS and loops.forum_followers | length %}
+          <div id="divfollowers" class="hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
+            <strong><em>{{ lang('FOLLOWERS') ~ lang('COLON')}}</em></strong>&nbsp;{% for forum_followers in loops.forum_followers %}{% if forum_followers.AVATAR %}{{ forum_followers.AVATAR }}&nbsp;{% endif %}{{ forum_followers.USER }}{% if not forum_followers.S_LAST_ROW %},&nbsp;{% endif %}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}

@@ -1,0 +1,13 @@
+services:
+    leinad4mind.topicstatistics.listener:
+        class: 'leinad4mind\topicstatistics\event\main_listener'
+        arguments:
+            - '@user'
+            - '@auth'
+            - '@language'
+            - '@dbal.conn'
+            - '@template'
+            - '@config'
+            - '@request'
+        tags:
+            - { name: 'event.listener' }
