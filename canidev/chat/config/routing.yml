@@ -1,0 +1,7 @@
+canidev_chat_controller:
+    path: /chat{tslash}
+    defaults:
+        _controller: canidev.chat.controller:display
+        tslash: ""
+    requirements:
+        tslash: "/?"

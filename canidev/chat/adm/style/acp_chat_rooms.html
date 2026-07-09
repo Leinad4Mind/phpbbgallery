@@ -1,0 +1,64 @@
+{% include 'overall_header.html' %}
+
+<a name="maincontent"></a>
+
+{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
+
+<h1>{{ lang('ACP_CHAT_ROOMS') }}</h1>
+<p>{{ lang('ACP_CHAT_ROOMS_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_chat_rooms" name="acp_chat_rooms" method="post" action="{{ U_ACTION }}">
+
+{% if S_EDIT %}
+
+	{% include '@canidev_core/acp_options.html' %}
+	
+{% else %}
+
+	<table cellspacing="1">
+	<tr>
+		<th>{{ lang('ROOM_TITLE') }}</th>
+	</tr>
+	
+	{% if roomrow|length %}
+		<tr>
+			<td class="sortable-text">
+			<ul>
+			{% for room in roomrow %}
+				<li data-row-id="{{ room.S_ID }}">
+					<table><tr>
+						<td><strong>{{ room.S_TITLE }}</strong> <em>(ID: {{ room.S_KEY }})</em></td>
+						<td class="actions-col-2">
+							<a href="{{ room.U_EDIT }}">{{ ICON_EDIT }}</a>
+							{% if room.U_DELETE %}<a href="{{ room.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>{% endif %}
+						</td>
+					</tr></table>
+					<input type="hidden" name="row[]" value="{{ room.S_ID }}" />
+				</li>
+			{% endfor %}
+			</ul>
+			</td>
+		</tr>
+	{% else %}
+		<tr><td class="row3">{{ lang('ACP_NO_ITEMS') }}</td></tr>
+	{% endif %}
+
+	</table>
+
+	<p class="quick">
+		<a class="cbb-btn" href="{{ U_ROOM_ADD }}">{{ lang('ADD_ROOM') }}</a>
+		{{ S_FORM_TOKEN }}
+		{{ S_HIDDEN_FIELDS }}
+	</p>
+{% endif %}
+
+</form>
+
+{% include 'overall_footer.html' %}

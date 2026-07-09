@@ -1,0 +1,55 @@
+/*  cBB Chat StyleSheet
+    --------------------------------------------------------------
+	Style:	Admin
+	Copyright (c) 2025 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+.pagerow-input {
+	color: #929292;
+	font-style: italic;
+	width: 100%;
+}
+
+td.actions-col {
+	width: 80px;
+	text-align: center;
+}
+
+td.actions-col-2 {
+	width: 40px;
+	text-align: right;
+}
+
+.sortable-text {
+	padding: 2px;
+}
+
+.sortable-text ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.sortable-text li {
+	border: 1px solid #CCC;
+	cursor: move;
+	margin-bottom: 2px;
+}
+
+.sortable-text li:hover {
+	background-color: #FBFBFB;
+}
+
+.sortable-text table {
+	background: none;
+	border: none;
+}
+
+.ui-sortable-placeholder {
+	border: 1px dotted #CCC !important;
+	visibility: visible !important;
+}
+
+.ui-sortable-placeholder * { visibility: hidden; }

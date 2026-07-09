@@ -1,0 +1,162 @@
+
+{% if MESSAGE_TITLE %}
+{% include 'overall_header.html' %}
+<form id="confirm" action="{{ S_CONFIRM_ACTION }}" method="post">
+<div class="panel">
+	<div class="inner">
+
+	<h2 class="message-title">{{ MESSAGE_TITLE }}</h2>
+	
+	{% if S_EDIT %}
+		<fieldset class="fields1">
+		<dl>
+			<dt><label for="ban-period">{{ lang('CHAT_BAN_PERIOD') ~ lang('COLON') }}</label></dt>
+			<dd><select name="period" id="ban-period" class="inputbox">{{ S_PERIOD_OPTIONS }}</select></dd>
+			<dd id="ban-date" class="cbb-helper-hidden">
+				<label><input type="text" name="date" class="inputbox autowidth" size="25" /><br /><span>{{ lang('CHAT_BAN_DATE_EXPLAIN') }}</span></label>
+			</dd>
+		</dl>
+		</fieldset>
+		<br /><br />
+	{% endif %}
+	
+	<p>{{ MESSAGE_TEXT }}</p>
+
+	<fieldset class="submit-buttons">
+		{{ S_HIDDEN_FIELDS }}
+		<input type="submit" name="confirm" value="{{ lang('YES') }}" class="button2" />&nbsp;
+		<input type="submit" name="cancel" value="{{ lang('NO') }}" class="button2" />
+	</fieldset>
+
+	</div>
+</div>
+</form>
+
+{% include 'overall_footer.html' %}
+
+{% else %}
+
+{% include 'mcp_header.html' %}
+
+<h2>{{ lang('TITLE') }}</h2>
+
+<form method="post" id="mcp" action="{{ U_POST_ACTION }}">
+
+<div class="panel">
+	<div class="inner">
+		<h3>{{ lang('CHAT_BAN_LIST') }}</h3>
+
+	<div class="action-bar top">
+		{{ lang('SEARCH_KEYWORDS') ~ lang('COLON') }} <input type="search" class="inputbox autowidth" name="keywords" value="{{ S_KEYWORDS }}" />&nbsp;<input type="submit" class="button2" name="filter" value="{{ lang('SEARCH') }}" />
+		<div class="pagination">
+			{% if pagination|length %} 
+				{% include 'pagination.html' %}
+			{% else %} 
+				{{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+	</div>
+
+	<table class="table1">
+	<thead>
+	<tr>
+		<th>{{ lang('MARK') }}</th>
+		<th class="name">{{ lang('USERNAME') }}</th>
+		<th class="center">{{ lang('IP') }}</th>
+		<th class="center">{{ lang('CHAT_BAN_DATE') }}</th>
+		<th class="center">{{ lang('ACTION') }}</th>
+	</tr>
+	</thead>
+		<tbody>
+	{% if user|length %}
+		{% for user in loops.user %}
+		{% if user.S_ROW_COUNT is even %}<tr class="bg1">{% else %}<tr class="bg2">{% endif %}
+			<td class="ic-mark-col"><input type="checkbox" name="mark[]" value="{{ user.ID }}" /></td>
+			<td>{{ user.USERNAME }}</td>
+			<td class="center">{{ user.IP }}</td>
+			<td class="center">{{ user.EXCLUSION }}</td>
+			<td class="center">
+				<a href="{{ user.U_EDIT }}">{{ lang('EDIT') }}</a>&nbsp;
+				<a href="{{ user.U_UNBAN }}">{{ lang('CHAT_UNBAN_USER') }}</a>
+			</td>
+		</tr>
+		{% endfor %}
+	{% else %}
+		<tr>
+			<td class="bg1" colspan="5" align="center"><span class="gen">{{ lang('NO_ENTRIES') }}</span></td>
+		</tr>
+	{% endif %}
+	</tbody>
+	</table>
+
+	{% if user|length %}
+		<fieldset class="display-options">
+			<label>{{ lang('SORT_BY') }} {{ S_SELECT_SORT_KEY }}</label>
+			<label>{{ S_SELECT_SORT_DIR }}</label>
+			<input type="submit" name="sort" value="{{ lang('GO') }}" class="button2" />
+		</fieldset>
+
+		<hr />
+
+		<div class="action-bar bottom">
+			<div class="pagination">
+				{% if pagination|length %} 
+					{% include 'pagination.html' %}
+				{% else %} 
+					{{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+
+			<div>
+				<select name="action">
+					<option value="">{{ lang('BATCH_ACTIONS') }}</option>
+					<option value="edit">{{ lang('EDIT') }}</a></option>
+					<option value="unban">{{ lang('CHAT_UNBAN_USER') }}</a></option>
+				</select>
+				<input type="submit" name="submit" class="button2" value="{{ lang('CHAT_APPLY') }}" />
+				<div class="ic-mark-options"><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+			</div>
+		</div>
+	{% endif %}
+
+		</div>
+	</div>
+
+<br /><br />
+	
+<div class="panel">
+	<div class="inner">
+
+	<h3>{{ lang('CHAT_BAN_USER') }}</h3>
+
+	<fieldset>
+	<dl>
+		<dt>
+			<label for="ban">{{ lang('CHAT_BAN_CELL') ~ lang('COLON') }}</label>
+			<br /><span>{{ lang('CHAT_BAN_CELL_EXPLAIN') }}</span>
+		</dt>
+		<dd><label for="ban"><textarea name="ban" id="ban" class="inputbox" cols="40" rows="3">{{ BAN_QUANTIFIER }}</textarea></label></dd>
+		{% if U_FIND_USERNAME %}<dd><strong><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a></strong></dd>{% endif %}
+	</dl>
+	<dl>
+		<dt><label for="ban-period">{{ lang('CHAT_BAN_PERIOD') ~ lang('COLON') }}</label></dt>
+		<dd><select name="period" id="ban-period" class="inputbox">{{ S_PERIOD_OPTIONS }}</select></dd>
+		<dd id="ban-date" class="cbb-helper-hidden">
+			<label><input type="text" name="date" class="inputbox autowidth" size="25" /><br /><span>{{ lang('CHAT_BAN_DATE_EXPLAIN') }}</span></label>
+		</dd>
+	</dl>
+	</fieldset>
+	
+	<fieldset class="submit-buttons">
+		<input type="submit" name="bansubmit" value="{{ lang('SUBMIT') }}" class="button1" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+	</div>
+</div>
+
+</form>
+
+{% include 'mcp_footer.html' %}
+
+{% endif %}

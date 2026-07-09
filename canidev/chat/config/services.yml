@@ -1,0 +1,67 @@
+imports:
+    - { resource: controllers.yml }
+    - { resource: tables.yml }
+
+services:
+    canidev.chat.listener:
+        class: canidev\chat\event\listener
+        arguments:
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@dbal.conn'
+            - '%tables.canidev.chat%'
+        tags:
+            - { name: event.listener }
+            
+    canidev.chat.cron.prune:
+        class: canidev\chat\cron\prune
+        arguments:
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@dbal.conn'
+            - '%tables.canidev.chat%'
+        calls:
+            - [set_name, [cron.task.chat_prune]]
+        tags:
+            - { name: cron.task }
+
+    canidev.chat.chat:
+        class: canidev\chat\libraries\chat
+        arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@canidev.core.lib'
+            - '@dispatcher'
+            - '@dbal.conn'
+            - '@language'
+            - '@request'
+            - '@routing.helper'
+            - '@canidev.core.template'
+            - '@canidev.core.text_parser'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.canidev.chat%'
+
+    canidev.chat.action_manager:
+        class: canidev\chat\libraries\action_manager
+        arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@canidev.chat.chat'
+            - '@config'
+            - '@service_container'
+            - '@canidev.core.lib'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@routing.helper'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.canidev.chat%'

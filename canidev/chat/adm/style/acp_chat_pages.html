@@ -1,0 +1,59 @@
+{% include 'overall_header.html' %}
+
+<a name="maincontent"></a>
+
+{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
+
+<h1>{{ lang('ACP_CHAT_PAGES') }}</h1>
+<p>{{ lang('ACP_CHAT_PAGES_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_chat_pages" method="post" action="{{ U_ACTION }}">
+
+{% if S_EDIT %}
+
+	{% include '@canidev_core/acp_options.html' %}
+
+{% else %}
+
+	<table cellspacing="1">
+	<tr>
+		<th>{{ lang('PAGE_ALIAS') }}</th>
+		<th>{{ lang('PAGE_URL') }}</th>
+		<th>{{ lang('ACTION') }}</th>	
+	</tr>
+
+{% for page in pagerow %}
+	<tr data-row-id="{{ page.S_ID }}" class="{{ page.S_ROW_COUNT is even ? 'row2' : 'row1' }}">
+		<td>{{ page.S_TITLE }}</td>
+		<td><input type="text" class="pagerow-input cbb-inputbox" value="{{ page.S_URL }}" readonly="readonly" /></td>
+		<td class="actions-col">
+			<a href="{{ page.U_EDIT }}">{{ ICON_EDIT }}</a>
+			<a href="{{ page.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>
+		</td>
+	</tr>
+{% else %}
+	<tr>
+		<td colspan="3" class="row3">{{ lang('NO_PAGES') }}</td>
+	</tr>
+{% endfor %}
+
+	</table>
+
+	<p class="quick">
+		<a class="cbb-btn" href="{{ U_PAGE_ADD }}">{{ lang('PAGE_ADD') }}</a>
+		{{ S_FORM_TOKEN }}
+		{{ S_HIDDEN_FIELDS }}
+	</p>
+
+{% endif %}
+
+</form>
+
+{% include 'overall_footer.html' %}
