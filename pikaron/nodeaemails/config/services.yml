@@ -1,0 +1,36 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    pikaron.nodeaemails.listener:
+        class: pikaron\nodeaemails\event\listener
+        arguments:
+            - '@pikaron.nodeaemails.core.functions.nodeaemails'
+            - '@language'
+            - '@config'
+            - '@request'
+            - '@user'
+            - '@auth'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    pikaron.nodeaemails.core.functions.nodeaemails:
+        class: pikaron\nodeaemails\core\functions_nodeaemails
+        arguments:
+            - '@config'        
+            - '@dbal.conn'
+            - '%pikaron.nodeaemails.table.nodeaemails%'
+
+    pikaron.nodeaemails.cron.task.nodeaemails_cron:
+        class: pikaron\nodeaemails\cron\task\nodeaemails_cron
+        arguments:
+            - '@pikaron.nodeaemails.core.functions.nodeaemails'
+        calls:
+            - [set_name, [pikaron.nodeaemails.cron.task.nodeaemails_cron]]
+        tags:
+            - { name: cron.task }
+    _defaults:
+        public: true
