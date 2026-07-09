@@ -1,0 +1,37 @@
+{
+    "name": "rmcgirr83/qronlastpage",
+    "type": "phpbb-extension",
+    "description": "Only allow quick reply on last page of a topic",
+    "version": "1.0.1",
+    "time": "2017-01-09",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "quick reply"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Rich McGirr",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.0,<3.3"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Quick Reply On Last Page Only",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0,<3.3"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/quick_reply_on_last_page_only",
+            "filename": "version_check"
+        }
+    }
+}
