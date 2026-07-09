@@ -1,0 +1,68 @@
+/* CSS Document */
+/* Extension details */
+
+#sync_like_points-progressbar {
+	display:none;
+    width: 180px;
+    height: 9px;
+    background-color: #eee;
+    padding: 2px;
+    vertical-align: middle;
+/*    margin: .6em 0 0 0;*/
+    border: 1px #000 double;
+    clear: both;
+}
+
+#sync_like_points-progress {
+    background: #A1C969; /*-- Color of the bar --*/
+    height: 9px;
+    width: 1%;
+    max-width: 100%;
+    float: left;
+    -webkit-animation: progress 8.5s 1 forwards;
+    animation: progress 8.5s 1 forwards;
+	animation-delay: 0.8s;
+}
+
+.done {
+    width: 100% !important;
+	 -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
+}
+
+#sync_like_points-percent {
+    color: #000;
+	font-size:9px;
+	display:block;
+	font-weight: bold;
+	line-height: 8px;
+}
+
+#sync_like_points-pbaranim {
+	text-align:center;
+    height: 9px;
+    width: 100%;
+    overflow: hidden;
+    -moz-opacity: 0.25;
+    -khtml-opacity: 0.25;
+    opacity: 0.25;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=25);
+    filter: alpha(opacity=25);
+}
+
+/* Chrome, Safari, Opera */ 
+@-webkit-keyframes progress {
+    0%   {left: 0px; background: red; width: 10px;}
+    4%   {width: 20px;}
+    100% {right: 40px; background: #A1C969; width: 180px;}
+}
+
+/* Standard syntax */
+@keyframes progress {
+    0%   {left: 0px; background: red; width: 10px;}
+    4%   {width: 20px;}
+    100% {right: 40px; background: #A1C969; width: 180px;}
+}
+
+
