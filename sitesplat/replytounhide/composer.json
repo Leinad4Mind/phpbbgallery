@@ -1,0 +1,34 @@
+{
+    "name": "sitesplat/replytounhide",
+    "type": "phpbb-extension",
+    "description": "Hides the content places within the hide bbcode for guests and also for registered users who have not replied to that topic yet",
+	"homepage": "https://sitesplat.com",
+    "version": "1.0.1",
+    "keywords": ["phpbb", "posts", "extension"],
+    "license": "Proprietary/All rights reserved",
+    "authors": [
+        {
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "ReplyToUnhide",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "replytounhide.json",
+			"ssl": true
+		}
+    }
+}
