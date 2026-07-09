@@ -1,0 +1,8 @@
+/* CSS Document */
+
+h1 {position: relative;}
+#circle {float: right; font-size: 30px;}
+
+.fa-arrow-up, .fa-arrow-down {float:right; color:#fff; padding: 0 2px;}
+
+#act-arrow {color:#CECECE;}
