@@ -1,0 +1,5 @@
+services:
+  sitesplat.bbembed.listener:
+    class: sitesplat\bbembed\event\listener
+    tags:
+      - { name: event.listener }
