@@ -1,0 +1,3 @@
+sitesplat_bbadblock_controller:
+    path: /bbadblock/
+    defaults: { _controller: sitesplat.bbadblock.controller:display }
