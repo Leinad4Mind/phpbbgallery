@@ -1,0 +1,25 @@
+imports:
+    - { resource: alias.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $root_path: '%core.root_path%'
+            $php_ext: '%core.php_ext%'
+            $table_prefix: '%core.table_prefix%'
+            $ext_images_path: '%core.root_path%ext/devspace/autodbbackup/adm/style/images'
+        public: true
+
+    devspace.autodbbackup.admin.controller:
+        class: devspace\autodbbackup\controller\admin_controller
+
+    devspace.autodbbackup.core.functions:
+        class: devspace\autodbbackup\core\functions
+
+    devspace.autodbbackup.cron.task.auto_db_backup:
+        class: devspace\autodbbackup\cron\task\auto_db_backup
+        calls:
+            - [set_name, [cron.task.auto_db_backup]]
+        tags:
+            - { name: cron.task }
