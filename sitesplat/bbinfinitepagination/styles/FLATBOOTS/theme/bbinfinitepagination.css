@@ -1,0 +1,27 @@
+#sitesplat_bbinfinitepagination_loader,
+		#sitesplat_bbinfinitepagination_loader div {
+			-webkit-transition: height 0.2s ease-in-out;
+			-o-transition: height 0.2s ease-in-out;
+			transition: height 0.2s ease-in-out;
+			overflow: hidden;
+		}
+		#sitesplat_bbinfinitepagination_loader {
+			text-align: center;
+			height: 0;
+		}
+		#sitesplat_bbinfinitepagination_loader.flex {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: center;
+			    -ms-flex-pack: center;
+			        justify-content: center;
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			    -ms-flex-direction: column;
+			        flex-direction: column;
+		}
+		#sitesplat_bbinfinitepagination_loader.displayed,
+		#sitesplat_bbinfinitepagination_loader.displayed div {
+			height: 50px !important;
+		}
