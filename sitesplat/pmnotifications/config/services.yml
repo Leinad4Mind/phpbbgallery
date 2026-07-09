@@ -1,0 +1,19 @@
+services:
+    sitesplat.pmnotifications.listener:
+        class: sitesplat\pmnotifications\event\listener
+        arguments:
+            - '@notification_manager'
+            - '@template'
+            - '@config'
+            - '@user'
+            - '@dbal.conn'
+            - '@user_loader'
+            - '@auth'
+            - '@request'
+            - '@pagination'
+            - '%tables.notification_types%'
+            - '%tables.notifications%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

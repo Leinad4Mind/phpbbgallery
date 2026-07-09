@@ -1,0 +1,9 @@
+<!-- IF S_PMS_DISPLAY -->
+<li class="dropdown dropdown-avatar dropdown-notification">
+	<a id="pms_list_button" href="javascript:void(0)" data-toggle="dropdown"><i class="fa fa-envelope"></i><!-- IF .pms and UNREAD_PMS_COUNT --><em class="notifications badge badge-danger">{UNREAD_PMS_COUNT}</em><!-- ENDIF --></a>
+	<ul class="dropdown-menu user-login-drop arrow-up">
+		<li><a href="{U_PRIVATEMSGS}" class="notification-heading">{L_PRIVATE_MESSAGES} - {{ lang('PM_UNREAD_COUNT', PRIVATE_MESSAGE_COUNT) }}</a></li>
+		<!-- INCLUDE @sitesplat_pmnotifications/pms_dropdown.html -->
+	</ul>
+</li>
+<!-- ENDIF -->
