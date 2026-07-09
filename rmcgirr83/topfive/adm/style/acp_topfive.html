@@ -1,0 +1,60 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('TF_TITLE') }}</h1>
+<fieldset>
+	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
+	<dl>
+		<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+	</dl>
+</fieldset>
+{% if TF_ERROR %}
+	<div class="errorbox"><h3>{{ lang('WARNING') }}</h3>
+		<p>{{ TF_ERROR }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_topfive" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('TF_CONFIG') }}</legend>
+		<dl>
+			<dt><label>{{ lang('TF_LOCATION') ~ lang('COLON') }}</label><br>
+			<span>{{ lang('TF_LOCATION_EXPLAIN') }}</span></dt>
+			<dd><select name="top_five_location">{{ LOCATION }}</select></dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_AVATARS') }}</label><br />{{ lang('TF_AVATARS_EXPLAIN') }}</dt>
+			<dd><input type="radio" class="radio" name="top_five_avatars" value="1" {% if AVATARS %}checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="top_five_avatars" value="0" {% if not AVATARS %}checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_HOWMANY') }}</label><br />{{ lang('TF_HOWMANY_EXPLAIN') }}</dt>
+			<dd><input type="number" name="top_five_how_many" size="10" min="5" max="100" value="{{ HOWMANY }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_EXCLUDED') ~ lang('COLON') }}</label><br /><span>{{ lang('TF_EXCLUDED_EXPLAIN') }}</span></dt>
+			<dd>{{ TF_EXCLUDED }}</dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_IGNORE_USERS') }}</label><br />{{ lang('TF_IGNORE_USERS_EXPLAIN') }}</dt>
+			<dd><input type="radio" class="radio" name="top_five_ignore_inactive_users" value="1" {% if IGNORE_INACTIVE %}checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="top_five_ignore_inactive_users" value="0" {% if not IGNORE_INACTIVE %}checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_IGNORE_FOUNDER') }}</label><br />{{ lang('TF_IGNORE_FOUNDER_EXPLAIN') }}</dt>
+			<dd><input type="radio" class="radio" name="top_five_ignore_founder" value="1" {% if IGNORE_FOUNDER %}checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="top_five_ignore_founder" value="0" {% if not IGNORE_FOUNDER %}checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('TF_SHOW_ADMINS_MODS') }}</label><br />{{ lang('TF_SHOW_ADMINS_MODS_EXPLAIN') }}</dt>
+			<dd><input type="radio" class="radio" name="top_five_show_admins_mods" value="1" {% if SHOW_ADMINS_MODS %}checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="top_five_show_admins_mods" value="0" {% if not SHOW_ADMINS_MODS %}checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
+		</dl>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+{% INCLUDE 'overall_footer.html' %}

@@ -1,0 +1,57 @@
+<a class="category{% if S_TOPFIVE_HIDDEN %} hidden-category{% endif %}" style="display: none; height: 0"></a>
+<div class="forabg" id="top_five">
+	<div class="inner">
+	<ul class="topiclist">
+		<li class="header">
+			<dl class="row-item">
+				<dt><div class="list-inner">{{ lang('NEWEST_TOPICS') }}</div></dt>
+				<dd class="topics tf-active-header">{{ lang('TOP_FIVE_ACTIVE') }}</dd>
+				<dd class="lastpost"><span>{{ lang('TOP_FIVE_NEWEST') }}</span></dd>
+			</dl>
+			{% if U_TOPFIVE_COLLAPSE_URL %}<a href="{{ U_TOPFIVE_COLLAPSE_URL }}" class="collapse-btn collapse-{% if S_TOPFIVE_HIDDEN %}show{% else %}hide{% endif %}" data-hidden="{{ S_TOPFIVE_HIDDEN }}" data-ajax="phpbb_collapse" data-overlay="true" title="{{ lang('COLLAPSIBLE_CATEGORIES_TITLE') }}" style="display: none; line-height: 0;"></a>{% endif %}
+		</li>
+	</ul>
+	<ul class="topiclist forums">
+		<li class="row">
+			<dl>
+				<dt>
+					<div class="list-inner">
+						<ul>
+							{% for top_five_topic in loops.top_five_topic %}
+								<li class="top_five">
+									{% if top_five_topic.NO_TOPIC_TITLE%}
+										{{ top_five_topic.NO_TOPIC_TITLE }}
+									{% else %}
+										<a href="{{ top_five_topic.U_TOPIC }}" class="topictitle subforum{% if top_five_topic.S_UNREAD %} unread{% else %} read{% endif %}">
+											<i class="icon fa-file-o fa-fw {% if top_five_topic.S_UNREAD %} icon-red{% else %} icon-blue{% endif %} icon-md" aria-hidden="true"></i>
+											{{ top_five_topic.TOPIC_TITLE }}</a><span class="meta">{{ top_five_topic.USERNAME_FULL }} {% if top_five_topic.USER_FLAG %} {{ top_five_topic.USER_FLAG }} {% endif %}&raquo; {{ top_five_topic.LAST_TOPIC_TIME }} &raquo; {{ lang('IN') }}&nbsp;<a href="{{ top_five_topic.U_FORUM }}">{{ top_five_topic.FORUM_NAME }}</a></span>
+										{% EVENT rmcgirr83_top_five_topiclist_row_append %}
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</dt>
+				<dd class="topics tf-most-active">
+					<ul>
+						{% for top_five_active in loops.top_five_active %}
+							<li>
+								<span class="meta">{{ top_five_active.USERNAME_FULL }} {% if top_five_active.USER_FLAG %} {{ top_five_active.USER_FLAG }} {% endif %}<span><br>&nbsp;&nbsp;{{ lang('POSTS') }}{{ lang('COLON') }} <a href="{{ top_five_active.S_SEARCH_ACTION }}" title="{{ top_five_active.USER_LASTPOST_TIME }}">{{ top_five_active.POSTS }}</a></span></span>
+							</li>
+						{% endfor %}
+					</ul>
+				</dd>
+				<dd class="lastpost tf-newest"><span>
+					<ul>
+						{% for top_five_newest in loops.top_five_newest %}
+							<li>
+								<span class="meta">{{ top_five_newest.USERNAME_FULL }}{% if top_five_newest.USER_FLAG %} {{ top_five_newest.USER_FLAG }} {% endif %}<span><br>&nbsp;&nbsp;{{ lang('JOINED') }}{{ lang('COLON') }} {{ top_five_newest.REG_DATE }}</span></span>
+							</li>
+						{% endfor %}
+					</ul>
+				</span></dd>
+			</dl>
+		</li>
+	</ul>
+	</div>
+</div>
