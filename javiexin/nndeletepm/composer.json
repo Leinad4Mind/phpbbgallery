@@ -1,9 +1,9 @@
 {
     "name": "javiexin/nndeletepm",
     "type": "phpbb-extension",
-    "description": "When a post is deleted before being sent (ie, in the outbox), it is deleted without notice to others",
-    "version": "1.0.0",
-    "time": "2016-11-18",
+    "description": "When a private message is deleted before being read (ie, in the outbox), it is deleted without notice to others",
+    "version": "1.0.1",
+    "time": "2025-08-16",
     "keywords": [
         "phpbb",
         "extension",
@@ -14,9 +14,13 @@
     "license": "GPL-2.0",
     "authors": [
         {
+            "name": "Leinad4Mind",
+            "role": "Developer"
+        },
+        {
             "name": "Javier Lopez (javiexin)",
             "email": "javiexin@gmail.com",
-            "role": "Developer"
+            "role": "Previous Developer (RIP)"
         },
         {
             "name": "JimA",
