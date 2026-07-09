@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{% if PHP_VALID and PHPBB_VALID %}
+		<form id="list" method="post" action="{{ U_ACTION }}">
+			<div class="head-panel">
+				<div class="pagination">
+					{% if pagination or TOTAL_USERS %}
+   						{{ TOTAL_USERS }}
+						{% if pagination %}
+							&bull; {% include 'pagination.html' %}
+						{% else %}
+							&bull; {{ PAGE_NUMBER }}
+						{% endif %}
+					{% endif %}
+				</div>
+
+				<div class="select-buttons">
+					<strong>{{ lang('SORT_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_SORT_KEY }}&nbsp;&nbsp;{{ S_SORT_DIR }}
+					&nbsp;&bull;&nbsp;
+					<strong>{{ lang('FILTER_BY') }}&nbsp;{{ lang('COLON') }}</strong>&nbsp;{{ S_FILTER_BY }}&nbsp;{{ S_FILTER_CHAR }}
+					<br><br>
+					<input class="adm-button" type="submit" value="{{ lang('GO') }}" name="sort">
+					&nbsp;&nbsp;&nbsp;
+					<input class="adm-button" type="submit" value="{{ lang('CLEAR_FILTER') }}" name="clear_filters">
+				</div>
+			</div>
+
+			<div class="table">
+				<div class="table-header">
+					<div class="table-header-cell-left">{{ lang('USERNAME') }}</div>
+					<div class="table-header-cell">{{ lang('SESSION_IP') }}</div>
+					<div class="table-header-cell">{{ lang('SESSION_ID') }}</div>
+					<div class="table-header-cell-right">{{ lang('SESSION_START') }}</div>
+				</div>
+
+				<div class="table-body">
+					{% for sessions in active_sessions %}
+						{% if sessions.S_ROW_COUNT is even %}<div class="table-row1">{% else %}<div class="table-row2">{% endif %}
+							<div class="table-body-cell">{{ sessions.USERNAME }}</div>
+							<div class="table-body-cell"><a href="{{ sessions.U_WHOIS }}" class="whois">{{ sessions.SESSION_IP }}</a></div>
+							<div class="table-body-cell pointer showkey" key="{{ sessions.SESSION_KEY }}">{{ sessions.SESSION_ID }}</div>
+							<div class="table-body-cell">{{ sessions.SESSION_START }}</div>
+						</div>
+
+						<div class="table-row-span" id="{{ sessions.SESSION_KEY }}">
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('SESSION_TIME') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.SESSION_TIME }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('LAST_VISIT') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.LAST_VISIT }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('BROWSER') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.BROWSER }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('USER_PAGE') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide"><a href="{{ sessions.SESSION_PAGE }}">{{ sessions.SESSION_PAGE }}</a></div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('FORUM') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.FORUM }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-narrow">{{ lang('SESSION_FORWARD_FOR') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.SESSION_FORWARD }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('AUTO_LOGIN') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.AUTO_LOGIN }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('SESSION_VIEWONLINE') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.SESSION_ONLINE }}</div>
+							</div>
+
+							<div class="table-row11">
+								<div class="table-body-cell-medium">{{ lang('ADMIN_USER') }} {{ lang('COLON') }}</div>
+								<div class="table-body-cell-wide">{{ sessions.ADMIN }}</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div class="pagination">
+				{% if pagination %}
+					&bull; {% include 'pagination.html' %}
+				{% else %}
+					&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+		</form>
+
+		{% INCLUDEJS '@' ~ NAMESPACE ~ '/js/activesessions.js' %}
+	{% endif %}
+{% endblock %}
