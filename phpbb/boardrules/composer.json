@@ -1,0 +1,55 @@
+{
+    "name": "phpbb/boardrules",
+    "type": "phpbb-extension",
+    "description": "An extension which allows you to create a set of rules for your phpBB forum",
+    "homepage": "https://www.phpbb.com/customise/db/extension/boardrules/",
+    "version": "3.0.1",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "rules"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Michael Cullum",
+            "homepage": "http://michaelcullum.com",
+            "email": "michael@phpbb.com",
+            "role": "Extensions Team Consultant"
+        },
+        {
+            "name": "Nathan Guse",
+            "email": "nathaniel.guse@gmail.com",
+            "role": "Former Extensions Development Team Lead"
+        },
+        {
+            "name": "Matt Friedman",
+            "homepage": "https://imattpro.github.io",
+            "role": "Extensions Development Team Lead"
+        },
+        {
+            "name": "Lukasz Kaczynski",
+            "role": "Former Extensions Development Team Member"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "composer/installers": "~1.0.0",
+        "phpbb/phpbb": ">=3.3.2"
+    },
+    "require-dev": {
+        "phing/phing": "2.4.*"
+    },
+    "extra": {
+        "display-name": "Board Rules",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.2"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/boardrules",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

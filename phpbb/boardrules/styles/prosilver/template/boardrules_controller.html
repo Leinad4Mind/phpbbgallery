@@ -1,0 +1,43 @@
+{% INCLUDECSS '@phpbb_boardrules/boardrules_controller.css' %}
+{% INCLUDE 'overall_header.html' %}
+
+{% if S_CATEGORIES %}
+<div class="boardrules-categories">
+	<div class="bg1 mini-panel">
+		<div class="inner">
+			<h3>{{ lang('BOARDRULES_CATEGORIES') }}</h3>
+			<ul class="boardrules-menu">
+				{% for rules in loops.rules %}
+					{% if rules.S_IS_CATEGORY %}<li><a href="#{{ rules.U_ANCHOR }}">{{ rules.TITLE }}</a></li>{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div class="boardrules-container">
+	<h2 class="boardrules-header">{{ lang('BOARDRULES_HEADER') }}</h2>
+	<div id="main" class="content">
+		<p>{{ BOARDRULES_EXPLAIN }}</p>
+		<ol class="boardrules-rules{{ BOARDRULES_LIST_STYLE ? ' br-list-style-' ~ BOARDRULES_LIST_STYLE }}">
+			{% for rules in loops.rules %}
+				{% if rules.S_CLOSE_LIST %}
+						</ol>
+					</li>
+				{% elseif rules.S_IS_CATEGORY %}
+					<li id="{{ rules.U_ANCHOR }}">
+						<h3>{{ rules.TITLE }}</h3>
+						<ol{{ BOARDRULES_LIST_STYLE ? ' class="br-list-style-' ~ BOARDRULES_LIST_STYLE ~ '"' }}>
+				{% else %}
+							<li class="rule-item" id="{{ rules.U_ANCHOR }}">
+								{{ rules.MESSAGE }} <a class="rule-anchor postlink" href="#{{ rules.U_ANCHOR }}">#</a>
+							</li>
+				{% endif %}
+			{% endfor %}
+		</ol>
+	</div>
+</div>
+
+{% INCLUDEJS '@phpbb_boardrules/boardrules_controller.js' %}
+{% INCLUDE 'overall_footer.html' %}
