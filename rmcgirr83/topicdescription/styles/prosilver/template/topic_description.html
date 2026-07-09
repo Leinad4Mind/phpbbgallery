@@ -1,0 +1,6 @@
+{% if S_DESC_TOPIC %}
+		<dl style="clear: left;">
+			<dt><label for="topic_desc">{{ lang('TOPIC_DESC') }}{{ lang('COLON') }}</label></dt>
+			<dd><input type="text" name="topic_desc" id="topic_desc" size="45" maxlength="124" tabindex="2" value="{{ TOPIC_DESC }}" class="inputbox autowidth" /></dd>
+		</dl>
+{% endif %}
