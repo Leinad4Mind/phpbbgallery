@@ -1,0 +1,3 @@
+sitesplat_newsletter_main_controller:
+    path: /newsletter/{route}
+    defaults: { _controller: sitesplat.newsletter.controller:display }

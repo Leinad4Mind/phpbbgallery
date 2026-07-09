@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.newsletter.tables.newsletter: '%core.table_prefix%newsletter'

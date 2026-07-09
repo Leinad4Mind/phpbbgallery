@@ -1,0 +1,52 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.newsletter.helper:
+        class: sitesplat\newsletter\helper\helper
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@request'
+            - '@ext.manager'
+            - '@controller.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.newsletter.listener:
+        class: sitesplat\newsletter\event\listener
+        arguments:
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.newsletter.controller:
+        class: sitesplat\newsletter\controller\main_controller
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@request'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@passwords.manager'
+            - '%sitesplat.newsletter.tables.newsletter%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+# ----- Cron tasks -----
+    sitesplat.task.core.newsletter:
+        class: sitesplat\newsletter\cron\task\core\newsletter
+        arguments:
+            - '@config'
+            - '@sitesplat.newsletter.helper'
+        calls:
+            - [set_name, [sitesplat.task.core.newsletter]]
+        tags:
+            - { name: cron.task }

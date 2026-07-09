@@ -1,0 +1,6 @@
+Subject: Newsletter from {SITENAME}
+
+{MESSAGE}
+
+All newsletter online {NEWSLETTER_ONLINE}
+Don't want to receive our newsletter anymore, click here {NEWSLETTER_OPTOUT}
