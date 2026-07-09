@@ -1,0 +1,36 @@
+services:
+    leinad4mind.pmwelcome.admin.controller:
+        class: leinad4mind\pmwelcome\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@leinad4mind.pmwelcome.core'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+    leinad4mind.pmwelcome.listener:
+        class: leinad4mind\pmwelcome\event\listener
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    leinad4mind.pmwelcome.core:
+        class: leinad4mind\pmwelcome\core\pmwelcome
+        arguments:
+            - '@dbal.conn'
+            - '@language'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
