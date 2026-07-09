@@ -1,0 +1,29 @@
+services:
+    sitesplat.titlesandavatars.listener:
+        class: sitesplat\titlesandavatars\event\listener
+        arguments:
+            - '@config'
+            - '@user'
+            - '@template'
+        tags:
+            - { name: event.listener }
+    sitesplat.titlesandavatars.admin_listener:
+        class: sitesplat\titlesandavatars\event\admin_listener
+        arguments:
+            - '@config'
+            - '@request'
+            - '@controller.helper'
+            - '@template'
+        tags:
+            - { name: event.listener }
+    sitesplat.titlesandavatars.controller:
+        class: sitesplat\titlesandavatars\controller\main_controller
+        arguments:
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@path_helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'

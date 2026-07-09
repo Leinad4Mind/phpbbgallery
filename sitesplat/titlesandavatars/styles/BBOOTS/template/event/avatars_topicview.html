@@ -1,0 +1,8 @@
+<span class="thread-poster-thumbs <!-- IF SCRIPT_NAME == "viewforum" -->posters-vf<!-- ENDIF --> hidden-xs">
+		<!-- IF topicrow.TAT_SETTING != 2 -->
+		<span class="author-wrapper"><!-- IF topicrow.FP_AVATAR -->{topicrow.FP_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF --></span>
+	<!-- ENDIF -->
+	<!-- IF topicrow.TAT_SETTING != 1 -->
+	<span class="author-wrapper<!-- IF topicrow.TAT_SETTING == 0 -->-thumb<!-- ENDIF -->"><!-- IF topicrow.LP_AVATAR -->{topicrow.LP_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF --></span>
+	<!-- ENDIF -->
+</span>
