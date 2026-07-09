@@ -1,0 +1,15 @@
+/* Import base collapsible categories stylesheet */
+@import url("../../all/theme/collapsiblecategories.css");
+
+/* Styling overrides for CelticDreams theme */
+
+/* Collapse button */
+.collapse-btn {
+	font-size: 0.8rem !important;
+	margin-top: -20px;
+	padding-right: 2px;
+}
+
+.rtl .collapse-btn {
+	padding-left: 2px;
+}
