@@ -1,0 +1,30 @@
+imports:
+    - { resource: 'tables.yml' }
+services:
+    dmzx.whovisitedthistopic.admin.controller:
+        class: 'dmzx\whovisitedthistopic\controller\admin_controller'
+        arguments:
+            - '@config'
+            - '@template'
+            - '@log'
+            - '@user'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+    dmzx.whovisitedthistopic.listener:
+        class: 'dmzx\whovisitedthistopic\event\listener'
+        arguments:
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@content.visibility'
+            - '@cache'
+            - '@pagination'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
+            - '@auth'
+        tags:
+            - { name: 'event.listener' }
