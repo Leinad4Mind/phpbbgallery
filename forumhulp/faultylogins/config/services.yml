@@ -1,0 +1,8 @@
+services:
+    forumhulp.faultylogins.listener:
+        class: forumhulp\faultylogins\event\listener
+        arguments:
+            - '@user'
+            - '@log'
+        tags:
+            - { name: event.listener }
