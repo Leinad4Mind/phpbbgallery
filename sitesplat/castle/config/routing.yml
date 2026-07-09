@@ -1,0 +1,7 @@
+sitesplat_castle_hook:
+    path: /sitesplat/castle/hook
+    defaults: { _controller: sitesplat.castle.controller:hook }
+
+sitesplat_castle_feedback:
+    path: /sitesplat/castle/feedback
+    defaults: { _controller: sitesplat.castle.controller:feedback }

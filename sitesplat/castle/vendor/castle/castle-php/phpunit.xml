@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="test/Castle.php">
+  <testsuites>
+    <testsuite name="Test Suite">
+      <directory>./test</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+      <log type="coverage-php" target="build/cov/coverage.cov"/>
+      <log type="coverage-clover" target="build/logs/clover.xml"/>
+  </logging>
+  <filter>
+      <blacklist>
+          <directory suffix=".php">./vendor</directory>
+          <directory suffix=".php">./test</directory>
+      </blacklist>
+      <whitelist processUncoveredFilesFromWhitelist="true">
+          <directory suffix=".php">./src</directory>
+      </whitelist>
+  </filter>
+</phpunit>
