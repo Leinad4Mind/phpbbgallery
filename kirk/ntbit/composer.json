@@ -1,0 +1,34 @@
+{
+	"name": "kirk/ntbit",
+	"type": "phpbb-extension",
+	"description": "Adds a New Topic button in topic.",
+	"homepage": "https://kirk-phpbb.com/viewtopic.php?t=202",
+	"version": "1.2.0",
+	"time": "2024-12-18",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Kirk",
+			"email": "kirk@kirk-phpbb.com",
+			"homepage": "https://kirk-phpbb.com",
+			"role": "Lead Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.1.3,<8.4.0@dev",
+		"composer/installers": "~1.0.0",
+		"phpbb/phpbb": ">=3.3.0,<3.4.0@dev"
+	},
+	"extra": {
+		"display-name": "New Topic Button in Topic",
+			"soft-require": {
+			"phpbb/phpbb": ">=3.2.0,<3.4.0@dev"
+		},
+		"version-check": {
+			"host": "kirk-phpbb.com",
+			"directory": "/download/phpbb_ext_updatecheck",
+			"filename": "ntbit.json",
+			"ssl": true
+		}
+	}
+}

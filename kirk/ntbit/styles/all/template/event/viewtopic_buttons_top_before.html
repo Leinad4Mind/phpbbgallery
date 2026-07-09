@@ -1,0 +1,9 @@
+{% if !S_IS_BOT && S_DISPLAY_POST_INFO %}
+	<a href="{{ U_POST_NEW_TOPIC }}" class="button" title="{% if S_FORUM_LOCKED %}{{ lang('FORUM_LOCKED') }}{% else %}{{ lang('POST_TOPIC') }}{% endif %}">
+		{% if S_FORUM_LOCKED %}
+			<span>{{ lang('FORUM_LOCKED') }}</span> <i class="icon fa-lock fa-fw" aria-hidden="true"></i>
+		{% else %}
+			<span>{{ lang('BUTTON_NEW_TOPIC') }}</span> <i class="icon fa-pencil fa-fw" aria-hidden="true"></i>
+		{% endif %}
+	</a>
+{% endif %}
