@@ -1,0 +1,100 @@
+<!-- IF S_SHOW_POLL_BOX -->
+<!-- IF WOLFSBLVT_POLL_END or WOLFSBLVT_POLL_SCORING -->
+<!-- IF not $INCLUDED_JXTOOLSJS -->
+    <!-- INCLUDEJS lib/jxtools.js -->
+	<!-- DEFINE $INCLUDED_JXTOOLSJS = true -->
+<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF WOLFSBLVT_POLL_END -->
+	<!-- INCLUDEJS js/poll_length_posting.js -->
+	<div id="ap_poll_length_container" style="display:none;" jxdom-target="label > #poll_length" jxdom-closest="dl" jxdom-action="replace">
+<!-- Replace the dl ancestor of a #poll_length element directly under a label with the contents of this element -->
+<dl>
+	<dt><label for="wolfsblvt_poll_duration">{L_AP_RUN_POLL}{L_COLON}</label></dt>
+	<dd>
+		<select name="wolfsblvt_poll_duration" id="wolfsblvt_poll_duration" onchange="apChangeDuration(this.value);">
+			<option value="" selected="selected">{L_AP_RUN_POLL_INDEFINITELY}</option>
+			<option value="wolfsblvt_poll_length">{L_AP_RUN_POLL_FOR}</option>
+			<option value="wolfsblvt_poll_end">{L_AP_RUN_POLL_UNTIL}</option>
+		</select>
+		<span id="wolfsblvt_poll_length" style="display: none; margin: 0px 10px;">
+			<input style="width: 4em !important;" id="poll_length" name="poll_length" size="3" maxlength="3" min="0" max="999" value="{POLL_LENGTH}" class="inputbox autowidth" type="number" onchange="apAdjustLength(this.value);">
+			<select name="wolfsblvt_poll_length_scale" onchange="apAdjustLengthScale(this.value);">
+				<option value="1">{L_HOURS}</option>
+				<option value="24" selected="selected">{L_DAYS}</option>
+			</select>
+			&nbsp;
+			<strong id="wolfsblvt_poll_end_label"></strong>
+		</span>
+		<span id="wolfsblvt_poll_end" style="display: none; margin: 0px 10px;">
+			<input style="width: 5em !important;" size="4" maxlength="4" id="wolfsblvt_poll_end_year" name="wolfsblvt_poll_end_year" value="{WOLFSBLVT_POLL_END_YEAR}" type="number" onchange="apAdjustEnd('year',this.value);">
+			<input style="width: 3em !important;" size="2" maxlength="2" min="1" max="12" id="wolfsblvt_poll_end_mon" name="wolfsblvt_poll_end_mon" value="{WOLFSBLVT_POLL_END_MON}" type="number" onchange="apAdjustEnd('mon',this.value);">
+			<input style="width: 3em !important;" size="2" maxlength="2" min="1" max="31" id="wolfsblvt_poll_end_mday" name="wolfsblvt_poll_end_mday" value="{WOLFSBLVT_POLL_END_MDAY}" type="number" onchange="apAdjustEnd('mday',this.value);">
+			&nbsp;
+			<input style="width: 3em !important;" size="2" maxlength="2" min="0" max="23" id="wolfsblvt_poll_end_hours" name="wolfsblvt_poll_end_hours" value="{WOLFSBLVT_POLL_END_HOURS}" type="number" onchange="apAdjustEnd('hours',this.value);">
+			<input style="width: 3em !important;" size="2" maxlength="2" min="0" max="59" id="wolfsblvt_poll_end_minutes" name="wolfsblvt_poll_end_minutes" value="{WOLFSBLVT_POLL_END_MINUTES}" type="number" onchange="apAdjustEnd('minutes',this.value);">
+			&nbsp;
+			{L_AP_YYYY_MM_DD} {L_AP_HH_MM}
+		</span>
+	</dd>
+</dl>
+<hr class="dashed" />
+	</div>
+<!-- ENDIF -->
+
+<!-- IF WOLFSBLVT_POLL_SCORING -->
+<span style="display:none;" jxdom-target="#poll_max_options" jxdom-closest="dl" jxdom-action="remove">
+<!-- Remove the #poll_max_options dl ancestor, to be replaced by the following dl block (in a different position in the DOM, closer to other similar options) -->
+</span>
+<dl>
+	<dt><label for="poll_max_options">{L_POLL_MAX_OPTIONS}{L_COLON}</label></dt>
+	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="poll_max_options" id="wolfsblvt_poll_max_options" size="3" maxlength="3" value="{POLL_MAX_OPTIONS}" class="inputbox autowidth" />{L_POLL_MAX_OPTIONS_EXPLAIN}</dd>
+</dl>
+<dl>
+	<dt><label for="wolfsblvt_poll_max_value">{L_AP_POLL_MAX_VALUE}{L_COLON}</label></dt>
+	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="wolfsblvt_poll_max_value" id="wolfsblvt_poll_max_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_MAX_VALUE}" class="inputbox autowidth" />{L_AP_POLL_MAX_VALUE_EXPLAIN}</dd>
+</dl>
+<dl>
+	<dt><label for="wolfsblvt_poll_total_value">{L_AP_POLL_TOTAL_VALUE}{L_COLON}</label></dt>
+	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="wolfsblvt_poll_total_value" id="wolfsblvt_poll_total_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_TOTAL_VALUE}" class="inputbox autowidth" />{L_AP_POLL_TOTAL_VALUE_EXPLAIN}</dd>
+</dl>
+<hr class="dashed" />
+<!-- ENDIF -->
+
+<!-- IF not WOLFSBLVT_POLL_END and not WOLFSBLVT_POLL_SCORING -->
+	<hr class="dashed" />
+<!-- ENDIF -->
+
+<!-- IF S_AP_POLL_VOTE_CHANGE -->
+<dl>
+	<dt><label for="poll_vote_change">{L_POLL_VOTE_CHANGE}{L_COLON}</label></dt>
+	<dd><label for="poll_vote_change"><input type="checkbox" id="poll_vote_change" name="poll_vote_change"{VOTE_CHANGE_CHECKED} /> {L_POLL_VOTE_CHANGE_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+
+<!-- IF WOLFSBLVT_POLL_VOTES_HIDE -->
+<dl>
+	<dt><label for="wolfsblvt_poll_votes_hide">{L_AP_POLL_VOTES_HIDE}{L_COLON}</label></dt>
+	<dd><label for="wolfsblvt_poll_votes_hide"><input type="checkbox" id="wolfsblvt_poll_votes_hide" name="wolfsblvt_poll_votes_hide"{WOLFSBLVT_POLL_VOTES_HIDE_CHECKED} /> {L_AP_POLL_VOTES_HIDE_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+<!-- IF WOLFSBLVT_POLL_VOTERS_LIMIT -->
+<dl>
+	<dt><label for="wolfsblvt_poll_voters_limit">{L_AP_POLL_VOTERS_LIMIT}{L_COLON}</label></dt>
+	<dd><label for="wolfsblvt_poll_voters_limit"><input type="checkbox" id="wolfsblvt_poll_voters_limit" name="wolfsblvt_poll_voters_limit"{WOLFSBLVT_POLL_VOTERS_LIMIT_CHECKED} /> {L_AP_POLL_VOTERS_LIMIT_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+<!-- IF WOLFSBLVT_POLL_VOTERS_SHOW -->
+<dl>
+	<dt><label for="wolfsblvt_poll_voters_show">{L_AP_POLL_VOTERS_SHOW}{L_COLON}</label></dt>
+	<dd><label for="wolfsblvt_poll_voters_show"><input type="checkbox" id="wolfsblvt_poll_voters_show" name="wolfsblvt_poll_voters_show"{WOLFSBLVT_POLL_VOTERS_SHOW_CHECKED} /> {L_AP_POLL_VOTERS_SHOW_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+<!-- IF WOLFSBLVT_POLL_SHOW_ORDERED -->
+<dl>
+	<dt><label for="wolfsblvt_poll_show_ordered">{L_AP_POLL_SHOW_ORDERED}{L_COLON}</label></dt>
+	<dd><label for="wolfsblvt_poll_show_ordered"><input type="checkbox" id="wolfsblvt_poll_show_ordered" name="wolfsblvt_poll_show_ordered"{WOLFSBLVT_POLL_SHOW_ORDERED_CHECKED} /> {L_AP_POLL_SHOW_ORDERED_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+<!-- ENDIF -->
