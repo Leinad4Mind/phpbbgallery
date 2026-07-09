@@ -1,0 +1,21 @@
+.table-bbswitch img {
+    width: 50px;
+    height: 50px;
+    margin-right: 4px;
+}
+.bb-switch-list img {
+    width: 26px;
+	height: 26px;
+	margin-right: 2px;
+	max-width: 100%;
+	max-height: 30px;
+}
+
+.user-profile-bbswitch-output img {
+	border-radius: 50%;
+	width: 26px;
+	height: 26px;
+	padding: 2px;
+	max-height: 20px;
+	max-width: 20px;
+}

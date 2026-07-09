@@ -1,0 +1,31 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+	<fieldset class="framed-ucp">
+	 <legend>{L_ACCOUNTSWITCH}</legend>
+	   <p>{L_ACCOUNTSWITCH_EXPLAIN}</p>
+	<div class="panel panel-default">   
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover table-bbswitch">
+		<thead>
+			<tr>
+				<th>{L_USERNAME}</th>
+				<th class="center">{L_POSTS}</th>
+				<th class="center">{L_LAST_VISIT}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN accounts_linked -->
+			<tr>
+				<td>{accounts_linked.AVATAR} {accounts_linked.USERNAME}</td>
+				<td>{accounts_linked.USERPOSTS}</td>
+				<td class="center">{accounts_linked.LAST_VISIT}</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr><td colspan="4" class="bg1" style="text-align: center">{L_ACCOUNTSWITCH_NO_RECORDS}</td></tr>
+		<!-- END accounts_linked -->
+		</tbody>
+	</table>
+	</div>
+    </fieldset>
+
+</div>
+<!-- INCLUDE ucp_footer.html -->
