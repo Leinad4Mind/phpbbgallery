@@ -1,0 +1,17 @@
+imports:
+    - { resource: alias.yml }
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/devspace/friendsandfoes/adm/style/images'
+        public: true
+
+    devspace.friendsandfoes.admin.controller:
+        class: devspace\friendsandfoes\controller\admin_controller
+
+    devspace.friendsandfoes.core.functions:
+        class: devspace\friendsandfoes\core\functions
