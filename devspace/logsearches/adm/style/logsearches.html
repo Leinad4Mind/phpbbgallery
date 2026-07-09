@@ -1,0 +1,61 @@
+{% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
+
+	<form id="list" method="post" action="{{ U_ACTION }}">
+
+		{% if pagination %}
+			<div class="head-panel">
+				<div class="pagination">
+					{% include 'pagination.html' %}
+				</div>
+			</div>
+		{% endif %}
+
+		{% if log %}
+			<div class="table">
+				<div class="table-header">
+					<div class="table-header-cell-left">{{ lang('USERNAME') }}</div>
+					<div class="table-header-cell">{{ lang('IP') }}</div>
+					<div class="table-header-cell">{{ lang('TIME') }}</div>
+					<div class="table-header-cell">{{ lang('SEARCH_STATUS') }}</div>
+					<div class="table-header-cell">{{ lang('SEARCH_TITLE') }}</div>
+					<div class="table-header-cell">{{ lang('SEARCH_AUTHOR') }}</div>
+					<div class="table-header-cell">{{ lang('KEYWORDS') }}</div>
+					<div class="table-header-cell">{{ lang('SEARCH_FORA') }}</div>
+					<div class="table-header-cell-right">{{ lang('SEARCH_DATA') }}</div>
+				</div>
+
+				<div class="table-body">
+					{% for logs in log %}
+						{% if logs.S_ROW_COUNT is even %}<div class="table-row1">{% else %}<div class="table-row2">{% endif %}
+							<div class="table-body-cell-narrow">{{ logs.USERNAME }}</div>
+							<div class="table-body-cell-narrow">{{ logs.IP }}</div>
+							<div class="table-body-cell-narrow">{{ logs.DATE }}</div>
+							<div class="table-body-cell-narrow">{{ logs.TYPE }}</div>
+							<div class="table-body-cell-narrow">{{ logs.TITLE }}</div>
+							<div class="table-body-cell-narrow">{{ logs.AUTHOR }}</div>
+							<div class="table-body-cell-narrow">{{ logs.KEYWORDS }}</div>
+							<div class="table-body-cell">{{ logs.FORA }}</div>
+							<div class="table-body-cell-narrow">{{ logs.DATA }}</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			{% if pagination %}
+				<div class="pagination">
+					{% include 'pagination.html' %}
+				</div>
+			{% endif %}
+		{% else %}
+			<div class="errorbox">
+				<p>{{ lang('NO_ENTRIES') }}</p>
+			</div>
+		{% endif %}
+
+		<fieldset>
+			{{ lang('DISPLAY_ENTRIES') }}{{ lang('COLON') }}&nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+			<input class="adm-button" type="submit" id="submit" name="sort" value="{{ lang('GO') }}">
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+{% include 'overall_footer.html' %}}

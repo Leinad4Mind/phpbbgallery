@@ -1,0 +1,29 @@
+imports:
+    - { resource: alias.yml }
+    - { resource: tables.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/devspace/logsearches/adm/style/images'
+        public: true
+
+    devspace.logsearches.listener:
+        class: devspace\logsearches\event\listener
+        tags:
+            - { name: event.listener }
+
+    devspace.logsearches.cron.task.core.search_log_prune:
+        class: devspace\logsearches\cron\task\core\search_log_prune
+        calls:
+            - [set_name, [cron.task.core.search_log_prune]]
+        tags:
+            - { name: cron.task }
+
+    devspace.logsearches.admin.controller:
+        class: devspace\logsearches\controller\admin_controller
+
+    devspace.logsearches.core.functions:
+        class: devspace\logsearches\core\functions
