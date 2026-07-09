@@ -78,7 +78,7 @@ class main_listener implements EventSubscriberInterface
 	 * Constructor
 	 *
 	 * @param auth					$auth
-	 * @param config					$config
+	 * @param config				$config
 	 * @param db_text				$config_text
 	 * @param language				$language
 	 * @param template				$template
@@ -104,12 +104,21 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function add_custom_sites($event)
 	{
+		$phpbb4_builtins = array_flip([
+			'applepodcasts', 'bluesky', 'bunny', 'mastodon', 'pastebin', 'threads', 'twitter',
+		]);
+
 		foreach ($this->custom_sites->get_collection() as $site)
 		{
-			$event['configurator']->MediaEmbed->defaultSites->add(
-				basename($site, ext::YML),
-				Yaml::parse(file_get_contents($site))
-			);
+			$name = basename($site, ext::YML);
+
+			// Skip built-in sites when running phpBB 4
+			if ($this->is_phpbb4() && isset($phpbb4_builtins[$name]))
+			{
+				continue;
+			}
+
+			$event['configurator']->MediaEmbed->defaultSites->add($name, Yaml::parseFile($site));
 		}
 	}
 
@@ -166,9 +175,13 @@ class main_listener implements EventSubscriberInterface
 	{
 		try
 		{
-			// force YouTube to use the no cookies until the user starts video playback
+			// force YouTube to use the no cookies until the user starts video playback, and fix referrer policy issues
 			$tag = $event['configurator']->tags['YOUTUBE'];
-			$tag->template = str_replace('www.youtube.com', 'www.youtube-nocookie.com', $tag->template);
+			$tag->template = str_replace(['www.youtube.com'], 'www.youtube-nocookie.com', $tag->template);
+			if (!$this->is_phpbb4())
+			{
+				$tag->template = str_replace([' allowfullscreen'], ' referrerpolicy="origin" allowfullscreen', $tag->template);
+			}
 
 			$event['configurator']->finalize();
 		}
@@ -383,5 +396,13 @@ class main_listener implements EventSubscriberInterface
 		$this->language->add_lang('ucp', 'phpbb/mediaembed');
 
 		$this->template->append_var('AGREEMENT_TEXT', $this->language->lang('MEDIA_EMBED_PRIVACY_POLICY', $this->config['sitename']));
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private function is_phpbb4()
+	{
+		return phpbb_version_compare($this->config['version'], '4.0.0-a1', '>=');
 	}
 }
