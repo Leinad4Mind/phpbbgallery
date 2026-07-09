@@ -10,10 +10,13 @@
 *
 #}
 
+{% set const = {
+	HINT_MODE_ONCLICK	: 1,
+	HINT_MODE_ALWAYS	: 2,
+} %}
+
 {% if LIMITREPLIES_MESSAGE is defined %}
-	{% INCLUDEJS '@lukewcs_limitreplies/limitreplies.js' %}
-	{% INCLUDECSS '@lukewcs_limitreplies/limitreplies.css' %}
-	{% if LIMITREPLIES_SELECT_HINT_MODE == 2 %}
+	{% if LIMITREPLIES_SELECT_HINT_MODE == const.HINT_MODE_ALWAYS %}
 		{% INCLUDE '@lukewcs_limitreplies/show_message.html' %}
 	{% endif %}
 
@@ -24,4 +27,7 @@
 			HintMode		: {{ LIMITREPLIES_SELECT_HINT_MODE|json_encode }},
 		});
 	</script>
+
+	{% INCLUDEJS '@lukewcs_limitreplies/limitreplies.js' %}
+	{% INCLUDECSS '@lukewcs_limitreplies/limitreplies.css' %}
 {% endif %}

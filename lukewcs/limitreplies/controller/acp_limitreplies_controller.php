@@ -15,30 +15,18 @@ namespace lukewcs\limitreplies\controller;
 
 class acp_limitreplies_controller
 {
-	protected object $language;
-	protected object $template;
-	protected object $config;
-	protected object $request;
-	protected object $ext_manager;
-
-	protected string $u_action;
-	private   array  $metadata;
+	private array  $metadata;
+	public  string $u_action;
 
 	public function __construct(
-		\phpbb\language\language $language,
-		\phpbb\template\template $template,
-		\phpbb\config\config $config,
-		\phpbb\request\request $request,
-		\phpbb\extension\manager $ext_manager
+		protected \phpbb\language\language $language,
+		protected \phpbb\template\template $template,
+		protected \phpbb\config\config $config,
+		protected \phpbb\request\request $request,
+		protected \phpbb\extension\manager $ext_manager,
 	)
 	{
-		$this->language		= $language;
-		$this->template		= $template;
-		$this->config		= $config;
-		$this->request		= $request;
-		$this->ext_manager	= $ext_manager;
-
-		$this->metadata		= $this->ext_manager->create_extension_metadata_manager('lukewcs/limitreplies')->get_metadata('all');
+		$this->metadata = $this->ext_manager->create_extension_metadata_manager('lukewcs/limitreplies')->get_metadata('all');
 	}
 
 	public function module_settings(): void
@@ -55,15 +43,15 @@ class acp_limitreplies_controller
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			$this->config->set('limitreplies_switch_enable'		, $this->request->variable('limitreplies_switch_enable'		, 0));
-			$this->config->set('limitreplies_number_wait_time'	, $this->request->variable('limitreplies_number_wait_time'	, 60));
-			$this->config->set('limitreplies_select_hint_mode'	, $this->request->variable('limitreplies_select_hint_mode'	, 1));
+			$this->config->set('limitreplies_switch_enable'		, $this->request->variable('limitreplies_switch_enable'								, 0));
+			$this->config->set('limitreplies_number_wait_time'	, $this->min_max(1, 999, $this->request->variable('limitreplies_number_wait_time'	, 60)));
+			$this->config->set('limitreplies_select_time_unit'	, $this->request->variable('limitreplies_select_time_unit'							, 'minutes'));
+			$this->config->set('limitreplies_select_hint_mode'	, $this->request->variable('limitreplies_select_hint_mode'							, 1));
 
 			trigger_error($this->language->lang('LIMITREPLIES_MSG_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
 
-		$lang_outdated_msg = $this->lang_ver_check_msg('LIMITREPLIES_LANG_VER', 'LIMITREPLIES_MSG_LANGUAGEPACK_OUTDATED');
-		if ($lang_outdated_msg)
+		if ($lang_outdated_msg = $this->lang_ver_check_msg('LIMITREPLIES_LANG_VER', 'LIMITREPLIES_MSG_LANGUAGEPACK_OUTDATED'))
 		{
 			$notes[] = $lang_outdated_msg;
 		}
@@ -73,6 +61,11 @@ class acp_limitreplies_controller
 
 			'LIMITREPLIES_SWITCH_ENABLE'			=> (bool) $this->config['limitreplies_switch_enable'],
 			'LIMITREPLIES_NUMBER_WAIT_TIME'			=> (int) $this->config['limitreplies_number_wait_time'],
+			'LIMITREPLIES_SELECT_TIME_UNIT_OPTS'	=> $this->select_struct($this->config['limitreplies_select_time_unit'], [
+				'LIMITREPLIES_TIME_UNIT_MINUTES'	=> 'minutes',
+				'LIMITREPLIES_TIME_UNIT_HOURS'		=> 'hours',
+				'LIMITREPLIES_TIME_UNIT_DAYS'		=> 'days',
+			]),
 			'LIMITREPLIES_SELECT_HINT_MODE_OPTS'	=> $this->select_struct((int) $this->config['limitreplies_select_hint_mode'], [
 				'LIMITREPLIES_HINT_MODE_ONCLICK'	=> 1,
 				'LIMITREPLIES_HINT_MODE_ALWAYS'		=> 2,
@@ -85,6 +78,27 @@ class acp_limitreplies_controller
 	public function set_page_url($u_action): void
 	{
 		$this->u_action = $u_action;
+	}
+
+	private function select_struct(array|int|string $cfg_value, array $options): array
+	{
+		$options_tpl = [];
+
+		foreach ($options as $opt_key => $opt_value)
+		{
+			if (!is_array($opt_value))
+			{
+				$opt_value = [$opt_value];
+			}
+			$options_tpl[] = [
+				'label'		=> $opt_key,
+				'value'		=> $opt_value[0],
+				'bold'		=> $opt_value[1] ?? false,
+				'selected'	=> is_array($cfg_value) ? in_array($opt_value[0], $cfg_value) : $opt_value[0] == $cfg_value,
+			];
+		}
+
+		return $options_tpl;
 	}
 
 	private function set_meta_template_vars(string $tpl_prefix, string $copyright): void
@@ -102,6 +116,15 @@ class acp_limitreplies_controller
 		] : [];
 
 		$this->template->assign_vars([$tpl_prefix . '_METADATA' => $template_vars]);
+	}
+
+	private function min_max(float|int $min, float|int $max, float|int $value): float|int
+	{
+		return match (true) {
+			$value < $min	=> $min,
+			$value > $max	=> $max,
+			default			=> $value,
+		};
 	}
 
 	/*
@@ -136,26 +159,5 @@ class acp_limitreplies_controller
 		}
 
 		return $lang_outdated_msg;
-	}
-
-	private function select_struct($cfg_value, array $options): array
-	{
-		$options_tpl = [];
-
-		foreach ($options as $opt_key => $opt_value)
-		{
-			if (!is_array($opt_value))
-			{
-				$opt_value = [$opt_value];
-			}
-			$options_tpl[] = [
-				'label'		=> $opt_key,
-				'value'		=> $opt_value[0],
-				'bold'		=> $opt_value[1] ?? false,
-				'selected'	=> is_array($cfg_value) ? in_array($opt_value[0], $cfg_value) : $opt_value[0] == $cfg_value,
-			];
-		}
-
-		return $options_tpl;
 	}
 }

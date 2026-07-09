@@ -10,6 +10,11 @@
 *
 #}
 
-{% if (LIMITREPLIES_SELECT_HINT_MODE ?? 0) == 2 %}
+{% set const = {
+	HINT_MODE_ONCLICK	: 1,
+	HINT_MODE_ALWAYS	: 2,
+} %}
+
+{% if LIMITREPLIES_SELECT_HINT_MODE == const.HINT_MODE_ALWAYS %}
 	{% INCLUDE '@lukewcs_limitreplies/show_message.html' %}
 {% endif %}

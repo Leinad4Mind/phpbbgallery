@@ -41,7 +41,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'LIMITREPLIES_LANG_DESC'					=> 'Deutsch (Du)',
-	'LIMITREPLIES_LANG_VER'	 					=> '1.0.0',
+	'LIMITREPLIES_LANG_VER'	 					=> '1.1.0',
 	'LIMITREPLIES_LANG_AUTHOR'	 				=> 'LukeWCS',
 
 	'LIMITREPLIES_MSG_LANGUAGEPACK_OUTDATED'	=> 'Hinweis: Das Sprachpaket der Erweiterung <strong>%1$s</strong> ist nicht mehr aktuell. (vorhanden: %2$s / benötigt: %3$s)',

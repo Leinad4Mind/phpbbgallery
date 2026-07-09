@@ -11,23 +11,21 @@
 */
 
 (function ($) {
+	'use strict';
 
-'use strict';
+	const HintModeOnClick	= 1;
+	const HintModeAlways	= 2;
 
-const HintModeOnClick	= 1;
-const HintModeAlways	= 2;
+	$(function () {
+		$('a[href*="mode=quote"],a[href*="mode=reply"]').on('click', function (e) {
+			e.preventDefault();
+			if (LimitReplies.HintMode == HintModeOnClick) {
+				phpbb.alert(LimitReplies.MessageTitle, LimitReplies.MessageText);
+			}
+		});
 
-$(function () {
-	$('a[href*="mode=quote"],a[href*="mode=reply"]').on('click', function (e) {
-		e.preventDefault();
-		if (LimitReplies.HintMode == HintModeOnClick) {
-			phpbb.alert(LimitReplies.MessageTitle, LimitReplies.MessageText);
-		}
+		if (LimitReplies.HintMode == HintModeAlways) {
+			$('a[href*="mode=quote"],a[href*="mode=reply"]').addClass('limitreplies_lock');
+		};
 	});
-
-	if (LimitReplies.HintMode == HintModeAlways) {
-		$('a[href*="mode=quote"],a[href*="mode=reply"]').addClass('limitreplies_lock');
-	};
-});
-
 })(jQuery);

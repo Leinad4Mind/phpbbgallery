@@ -12,8 +12,6 @@
 
 {% INCLUDE 'overall_header.html' %}
 
-{% set switch_type = TOGGLECTRL_TYPE ?? 'toggle' %}
-
 <a id="maincontent"></a>
 
 <h1>{{ lang('LIMITREPLIES_CONFIG_TITLE') }}</h1>
@@ -31,7 +29,7 @@
 				<span>{{ lang('LIMITREPLIES_ENABLE_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				{{ _self.switch('limitreplies_switch_enable', LIMITREPLIES_SWITCH_ENABLE, switch_type) }}
+				{{ _self.switch('limitreplies_switch_enable', LIMITREPLIES_SWITCH_ENABLE) }}
 			</dd>
 		</dl>
 
@@ -42,7 +40,7 @@
 			</dt>
 			<dd>
 				{{ _self.number('limitreplies_number_wait_time', LIMITREPLIES_NUMBER_WAIT_TIME, 1, 999) }}
-				{{ lang('LIMITREPLIES_MINUTES') }}
+				{{ _self.select('limitreplies_select_time_unit', LIMITREPLIES_SELECT_TIME_UNIT_OPTS) }}
 			</dd>
 		</dl>
 
@@ -75,14 +73,17 @@
 {% INCLUDE 'overall_footer.html' %}
 
 {% INCLUDECSS '@lukewcs_limitreplies/acp_limitreplies_settings.css' %}
+{% INCLUDEJS '@lukewcs_limitreplies/acp_limitreplies_settings.js' %}
 
-{% macro switch(name, checked = false, type = 'toggle') -%}
-	{% if type == 'toggle' || type == 'checkbox' -%}
+{% macro switch(name, checked = false, type = null) -%}
+	{% set type = type ?? (TOGGLECTRL_TYPE in ['toggle', 'checkbox', 'radio'] ? TOGGLECTRL_TYPE : 'toggle') -%}
+	{% if type in ['toggle', 'checkbox'] -%}
 		<input type="checkbox" class="{{ type }}" name="{{ name }}" value="1"{{ checked ? ' checked' }}>
 	{%- elseif type == 'radio' -%}
 		<label><input type="radio" class="radio" name="{{ name }}" value="1"{{ checked ? ' checked' }}> {{ lang('YES') }}</label>
 		<label><input type="radio" class="radio" name="{{ name }}" value="0"{{ !checked ? ' checked' }}> {{ lang('NO') }}</label>
 	{%- endif %}
+	{#- v1.3.1 #}
 {%- endmacro %}
 
 {% macro number(name, value, min = null, max = null, step = null, placeholder = null) -%}
@@ -109,21 +110,22 @@
 {%- endmacro %}
 
 {% macro notes(notes) %}
+	{% set note_dot = notes|length > 1 ? '&bull; ' %}
 	{% if notes|length %}
 		<div class="successbox notice">
 			{% for note in notes %}
-				<p>{{ note }}</p>
+				<p>{{ note_dot }}{{ note }}</p>
 			{% endfor %}
 		</div>
 	{% endif %}
 {% endmacro %}
 
 {% macro footer(metadata) %}
-	<p class="{{ metadata.class  }}">
+	<p class="{{ metadata.class }}">
 		{{ metadata.ext_name }} {{ metadata.ext_ver }} &copy; {{ metadata.ext_copyright }}
 		{% if metadata.lang_ver is defined %}
 			<br>
-			{{ metadata.lang_desc|e('html') }} {{ metadata.lang_ver|e('html') }} &bull; {{ metadata.lang_author|e('html') }}
+			{{ metadata.lang_desc|e('html') }} {{ metadata.lang_ver|e('html') }} &copy; {{ metadata.lang_author|e('html') }}
 		{% endif %}
 	</p>
 {% endmacro %}

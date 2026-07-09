@@ -17,28 +17,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
-	protected object $language;
-	protected object $template;
-	protected object $config;
-	protected object $auth;
-	protected object $user;
-	protected object $db;
-
 	public function __construct(
-		\phpbb\language\language $language,
-		\phpbb\template\template $template,
-		\phpbb\config\config $config,
-		\phpbb\auth\auth $auth,
-		\phpbb\user $user,
-		\phpbb\db\driver\driver_interface $db
+		protected \phpbb\language\language $language,
+		protected \phpbb\template\template $template,
+		protected \phpbb\config\config $config,
+		protected \phpbb\auth\auth $auth,
+		protected \phpbb\user $user,
+		protected \phpbb\db\driver\driver_interface $db,
 	)
 	{
-		$this->language	= $language;
-		$this->template	= $template;
-		$this->config	= $config;
-		$this->auth		= $auth;
-		$this->user		= $user;
-		$this->db		= $db;
 	}
 
 	public static function getSubscribedEvents(): array
@@ -109,7 +96,7 @@ class listener implements EventSubscriberInterface
 
 	private function get_lock_time(array $topic_data): int
 	{
-		$wait_time			= $this->config['limitreplies_number_wait_time'] * 60;
+		$wait_time			= strtotime($this->config['limitreplies_number_wait_time'] . ' ' . $this->config['limitreplies_select_time_unit'], 0);
 		$locked_until_time	= 0;
 
 		/* Check whether there are posts in the queue of the topic. */
@@ -139,7 +126,7 @@ class listener implements EventSubscriberInterface
 			$locked_until_time = $topic_data['topic_last_post_time'] + $wait_time;
 		}
 
-		return $locked_until_time > time() ? $locked_until_time : 0;
+		return ($locked_until_time > time()) ? $locked_until_time : 0;
 	}
 
 	private function create_message(int $locked_until_time): string
@@ -147,7 +134,8 @@ class listener implements EventSubscriberInterface
 		$this->language->add_lang('limitreplies', 'lukewcs/limitreplies');
 
 		return $this->language->lang('LIMITREPLIES_MSG_REPLY_DENIED',
-			$this->language->lang('LIMITREPLIES_MINUTES_PLURAL', (int) $this->config['limitreplies_number_wait_time']),
+			$this->language->lang('LIMITREPLIES_PLURAL_' . strtoupper($this->config['limitreplies_select_time_unit']),
+				(int) $this->config['limitreplies_number_wait_time']),
 			$this->user->format_date($locked_until_time)
 		);
 	}
