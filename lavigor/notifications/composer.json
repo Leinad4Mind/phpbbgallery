@@ -1,0 +1,33 @@
+{
+	"name": "lavigor/notifications",
+	"type": "phpbb-extension",
+	"description": "This extension adds a new notification type using Web Push Notifications API.",
+	"version": "1.2.0",
+	"keywords": ["phpbb", "extension", "push", "browser", "notifications"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Igor Lavrov",
+			"homepage": "https://github.com/lavigor",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.0",
+		"minishlink/web-push": "^2.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"config": {
+		"platform": {
+			"php": "7.0.0"
+		}
+	},
+	"extra": {
+		"display-name": "Web Push Notifications",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		}
+	}
+}

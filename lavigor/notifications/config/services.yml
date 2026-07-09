@@ -1,0 +1,47 @@
+services:
+    lavigor.notifications.listener:
+        class: lavigor\notifications\event\listener
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@template'
+            - '@language'
+            - '@request'
+        tags:
+            - { name: event.listener }
+
+    lavigor.notifications.notification.method.browser:
+        class: lavigor\notifications\types\browser
+        shared: false
+        arguments:
+            - '@user_loader'
+            - '@user'
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@filesystem'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%push_subscriptions'
+        tags:
+            - { name: notification.method }
+
+    lavigor.notifications.controller:
+        class: lavigor\notifications\controller\main
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '%core.php_ext%'
+            - '%core.root_path%'
+            - '%core.table_prefix%push_subscriptions'
+
+    lavigor.notifications.subscription:
+        class: lavigor\notifications\functions\subscription
+        shared: false
+        arguments:
+            - '@user'
+            - '@dbal.conn'
+            - '%core.table_prefix%push_subscriptions'
