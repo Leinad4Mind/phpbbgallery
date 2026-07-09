@@ -1,0 +1,7 @@
+services:
+    kasimi.topicindexattributes.listener:
+        class: kasimi\topicindexattributes\event\main_listener
+        arguments:
+            - '@?ernadoo.qte'
+        tags:
+            - { name: event.listener }
