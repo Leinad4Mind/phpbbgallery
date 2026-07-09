@@ -1,0 +1,204 @@
+.wrapper-head {
+    margin-top: 18px!important;
+}
+
+.badge-intro {
+    position: relative;
+    z-index: 999;
+}
+
+.flat-masthead, .flat-header {
+    background-color: #ed6e64;
+    background-repeat: repeat-x;
+	background-image: none;
+}
+
+#home {
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+#home span {
+    font-size: 2.0em;
+    position: absolute;
+}
+
+#home span.light {
+    color: #f0837b;
+}
+#home span.dark {
+    color: #ea594d;
+}
+
+#home span.first {
+    left: 3%;
+    top: 14%;
+}
+#home span.second {
+    left: 14%;
+    top: 34%;
+}
+#home span.third {
+    right: 11%;
+    top: -6%;
+}
+#home span.fourth {
+    right: 27%;
+    top: 5%;
+}
+#home span.fifth {
+    left: 3%;
+    top: 93%;
+}
+#home span.sixth {
+    color: #f38c77;
+    right: 8%;
+    top: 14%;
+}
+#home span.seventh {
+    right: 19%;
+    top: 30%;
+}
+#home span.eighth {
+    right: 12%;
+    top: 63%;
+}
+#home span.ninth {
+    right: 20%;
+    top: 74%;
+}
+#home span.tenth {
+    right: 8%;
+    top: 93%;
+}
+
+.rhex {
+  position: relative;
+  margin: 1em auto;
+  width: 6em; 
+  height: 10.32em;
+  border-radius: 1em /.3em;
+  opacity: .25;
+  background: orange;
+  transition: opacity .5s;
+  cursor: pointer;
+}
+.rhex:before, .rhex:after {
+  position: absolute;
+  width: inherit; 
+  height: inherit;
+  border-radius: inherit;
+  background: inherit;
+  content: "";
+}
+.rhex:before {
+  transform: rotate(60deg);
+}
+.rhex:after {
+  transform: rotate(-60deg);
+}
+.rhex:hover {
+  opacity: 1;
+}
+
+.rhex i {
+    font-size: 126px;
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    vertical-align: top;
+    z-index: 1;
+}
+
+.rhex span::before {
+    color: #fff;
+    content: "500+" !important;
+    display: inline-block;
+    font-size: 68px;
+    position: relative;
+    right: 3px;
+    top: 42px;
+    vertical-align: sub;
+    width: 140px;
+    z-index: 1;
+}
+
+.rhex-two {
+    background: #999;
+    height: 6.82em;
+    width: 4em;
+}
+
+.rhex-four {
+   background: #d24d33;
+}
+
+.position-one {
+    height: 6.42em;
+    left: 40px;
+    position: absolute;
+    top: -72px;
+    width: 4em;
+}
+
+.position-two {
+    left: 41px;
+    position: absolute;
+    top: 65px;
+}
+
+.position-three {
+    height: 6.32em;
+    left: 160px;
+    position: absolute;
+    top: -3px;
+    width: 4em;
+}
+
+.position-four {
+    left: 240px;
+    position: absolute;
+    top: 10px;
+}
+
+.position-one i {
+    color: #fff;
+    font-size: 80px;
+    position: absolute;
+    right: 4px;
+    top: 36px;
+    vertical-align: top;
+    z-index: 1;
+}
+
+.position-three i {
+    color: #ea594d;
+    font-size: 80px;
+    position: absolute;
+    right: 0;
+    top: 26px;
+    vertical-align: top;
+    z-index: 1;
+}
+
+.space-invader { 
+    box-shadow: 0 0 0 1em #d24d33, 0 1em 0 1em #d24d33, -2.5em 1.5em 0 .5em #d24d33, 2.5em 1.5em 0 .5em #d24d33, -3em -3em 0 0 #d24d33, 3em -3em 0 0 #d24d33, -2em -2em 0 0 #d24d33, 2em -2em 0 0 #d24d33, -3em -1em 0 0 #d24d33, -2em -1em 0 0 #d24d33, 2em -1em 0 0 #d24d33, 3em -1em 0 0 #d24d33, -4em 0 0 0 #d24d33, -3em 0 0 0 #d24d33, 3em 0 0 0 #d24d33, 4em 0 0 0 #d24d33, -5em 1em 0 0 #d24d33, -4em 1em 0 0 #d24d33, 4em 1em 0 0 #d24d33, 5em 1em 0 0 #d24d33, -5em 2em 0 0 #d24d33, 5em 2em 0 0 #d24d33, -5em 3em 0 0 #d24d33, -3em 3em 0 0 #d24d33, 3em 3em 0 0 #d24d33, 5em 3em 0 0 #d24d33, -2em 4em 0 0 #d24d33, -1em 4em 0 0 #d24d33, 1em 4em 0 0 #d24d33, 2em 4em 0 0 #d24d33; 
+	background: #d24d33; 
+	width: 1em; 
+	height: 1em; 
+	overflow: hidden; 
+}
+
+.position-space-x {
+    margin-left: auto;
+    margin-right: auto;
+	width: 1px;
+}
+
+.animated, .animated {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}

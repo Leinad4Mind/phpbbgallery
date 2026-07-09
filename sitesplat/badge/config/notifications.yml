@@ -1,0 +1,21 @@
+services:
+# ----- Badge notification types -----
+    sitesplat.badge.notification.type.award_added:
+        class: sitesplat\badge\notification\type\award_added
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
+
+    sitesplat.badge.notification.type.award_removed:
+        class: sitesplat\badge\notification\type\award_removed
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
