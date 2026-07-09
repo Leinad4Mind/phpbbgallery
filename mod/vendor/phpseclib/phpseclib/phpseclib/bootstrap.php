@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Bootstrapping File for phpseclib
+ *
+ * composer isn't a requirement for phpseclib 2.0 but this file isn't really required
+ * either. it's a bonus for those using composer but if you're not phpseclib will
+ * still work
+ *
+ * @license http://www.opensource.org/licenses/mit-license.html MIT License
+ */
+
+/* if (extension_loaded('mbstring')) {
+    // 2 - MB_OVERLOAD_STRING
+    // mbstring.func_overload is deprecated in php 7.2 and removed in php 8.0.
+    if (version_compare(PHP_VERSION, '8.0.0') < 0 && ini_get('mbstring.func_overload') & 2) {
+        throw new UnexpectedValueException(
+            'Overloading of string functions using mbstring.func_overload ' .
+            'is not supported by phpseclib.'
+        );
+    }
+} */
+
+  /* if (extension_loaded('mbstring')) {
+    // Kein ini_get('mbstring.func_overload') mehr nötig
+    // Stattdessen direkt mb_* Funktionen verwenden
+    $length = mb_strlen($string);
+} */
+
+if (extension_loaded('mbstring')) {
+    // Kein ini_get('mbstring.func_overload') mehr nötig
+    // Stattdessen direkt mb_* Funktionen verwenden
+
+    // Sicherstellen, dass $string definiert ist
+    // Falls nicht vorhanden, wird eine leere Zeichenkette verwendet
+    $string = $string ?? '';
+
+    // mb_strlen nur mit gültigem String aufrufen
+    $length = mb_strlen($string);
+}
