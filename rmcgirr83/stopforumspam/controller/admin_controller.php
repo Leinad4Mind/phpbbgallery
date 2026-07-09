@@ -19,6 +19,7 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\stopforumspam\core\sfsgroups as sfsgroups;
+use rmcgirr83\contactadmin\controller\main_controller as contactadmin;
 
 /**
 * Admin controller
@@ -59,6 +60,9 @@ class admin_controller implements admin_interface
 	/** @var string phpEx */
 	protected $php_ext;
 
+	/* @var contactadmin $contactadmin */
+	protected $contactadmin;
+
 	/** @var string Custom form action */
 	protected $u_action;
 
@@ -76,6 +80,7 @@ class admin_controller implements admin_interface
 	* @param sfsgroups				$sfsgroups			functions for the controller
 	* @param string                 $root_path      	phpBB root path
 	* @param string                 $php_ext        	phpEx
+	* @param contactadmin			$contactadmin		Contactadmin extension
 	*
 	* @return \rmcgirr83\stopforumspam\controller\admin_controller
 	* @access public
@@ -91,7 +96,8 @@ class admin_controller implements admin_interface
 			user $user,
 			sfsgroups $sfsgroups,
 			$root_path,
-			$php_ext
+			$php_ext,
+			contactadmin $contactadmin = null
 	)
 	{
 		$this->cache = $cache;
@@ -105,6 +111,7 @@ class admin_controller implements admin_interface
 		$this->sfsgroups = $sfsgroups;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->contactadmin = $contactadmin;
 	}
 
 	/**
@@ -228,9 +235,11 @@ class admin_controller implements admin_interface
 			'SFS_BAN_TIME'	=> $this->display_ban_time($this->config['sfs_ban_time']),
 			'SFS_NOTIFY'	=> ($this->config['sfs_notify']) ? true : false,
 			'SFS_POSTS_PMS_COUNT'	=> $sfs_posts_pms_count,
+			'SFS_CONTACTADMIN'	=> ($this->config['sfs_contactadmin']) ? true : false,
 			'NOTICE'	=> $cache_built,
 			'POSTS_REPORTED' => (int) $posts_reported,
 			'PMS_REPORTED'	=> (int) $pms_reported,
+			'S_CONTACTADMIN' => ($this->contactadmin) ? true : false,
 
 			'U_BUILD_CACHE'	=> $this->u_action . '&amp;action=build_adminsmods',
 			'U_CLR_REPORTS'	=> $this->u_action . '&amp;action=sfsclrreports',
@@ -259,6 +268,7 @@ class admin_controller implements admin_interface
 		$this->config->set('sfs_ban_time', $this->request->variable('sfs_ban_time', 0));
 		$this->config->set('sfs_notify', $this->request->variable('sfs_notify', 0));
 		$this->config->set('sfs_report_pm', $this->request->variable('sfs_report_pm', 0));
+		$this->config->set('sfs_contactadmin', $this->request->variable('sfs_contactadmin', 0));
 	}
 
 	/**

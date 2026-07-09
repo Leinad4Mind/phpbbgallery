@@ -61,7 +61,7 @@ class sfsapi
 	* @param	$userip			the users ip
 	* @param	$useremail		the users email addy
 	* @param	$apikey			the api key of the forum
-	* @return 	string			return either a string on success or false on failure
+	* @return 	bool|string		return true on success or false on failure or string on curl error
 	*/
 	public function sfsapi($type, $username, $userip, $useremail, $apikey = '')
 	{
@@ -109,12 +109,25 @@ class sfsapi
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_TIMEOUT => 5,
 			CURLOPT_CONNECTTIMEOUT => 5,
+			CURLOPT_FAILONERROR => true, //Required for HTTP error codes to be reported via our call to curl_error($ch)//
 		]);
 
 		$contents = curl_exec($ch);
 		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		// if curl isn't set correctly on server
+		if ($contents === false)
+		{
+			$error_message = array($this->language->lang('CURL_ERROR') => curl_error($ch));
+			// If there is a curl error, log the error
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_SFS_CURL_ERROR', false, [$error_message[$this->language->lang('CURL_ERROR')]]);
+		}
 		curl_close($ch);
 
+		if (isset($error_message))
+		{
+			return json_encode($error_message);
+		}
 		// if nothing is returned (SFS is down)
 		if ($httpcode != 200)
 		{
@@ -123,9 +136,10 @@ class sfsapi
 
 		if ($type == 'add' && $httpcode == 200)
 		{
-			$contents = true;
+			return true;
 		}
 
+		// We made it this far, returns the results of the curl request
 		return $contents;
 	}
 
@@ -135,7 +149,7 @@ class sfsapi
 	* @param	$user_info		the users info of who we are banning
 	* @return 	null
 	*/
-	public function sfs_ban($type, $user_info)
+	public function sfs_ban($type, $user_info, $check = 0)
 	{
 		if (!function_exists('user_ban'))
 		{
@@ -144,7 +158,7 @@ class sfsapi
 
 		if ($this->config['sfs_ban_ip'])
 		{
-			$lang_display = ($type == 'user') ? $this->language->lang('SFS_USER_BANNED') : $this->language->lang('SFS_BANNED');
+			$lang_display = ($type == 'user') ? $this->language->lang('SFS_USER_BANNED') : $this->language->lang('SFS_BANNED', (int) $check);
 			$ban_reason = (!empty($this->config['sfs_ban_reason'])) ? $lang_display : '';
 			// ban the nub
 			user_ban($type, $user_info, (int) $this->config['sfs_ban_time'], 0, false, $lang_display, $ban_reason);

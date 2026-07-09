@@ -5,7 +5,7 @@
 	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
 	<dl>
 		<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
-		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" alt="{{ lang('PAYPAL_ALT') }}" style="cursor: pointer; margin-top: 15px;"></a></dd>
 	</dl>
 </fieldset>
 {% if CURL_ACTIVE %}
@@ -88,6 +88,13 @@
 			<dd><input type="radio" class="radio" name="sfs_notify" value="1" {% if SFS_NOTIFY %}id="sfs_notify" checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
 				<input type="radio" class="radio" name="sfs_notify" value="0" {% if not SFS_NOTIFY %}id="sfs_notify" checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
 		</dl>
+		{% if S_CONTACTADMIN %}
+		<dl>
+			<dt><label for="sfs_contactadmin">{{ lang('SFS_CONTACTADMIN_EXT') }}{{ lang('COLON') }}</label><br />{{ lang('SFS_CONTACTADMIN_EXT_EXPLAIN') }}</dt>
+			<dd><input type="radio" class="radio" name="sfs_contactadmin" value="1" {% if SFS_CONTACTADMIN %}id="sfs_contactadmin" checked="checked"{% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="sfs_contactadmin" value="0" {% if not SFS_CONTACTADMIN %}id="sfs_contactadmin" checked="checked"{% endif %} /> {{ lang('NO') }}</dd>
+		</dl>
+		{% endif %}
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
