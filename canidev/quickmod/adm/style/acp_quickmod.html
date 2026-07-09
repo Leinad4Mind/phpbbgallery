@@ -1,0 +1,62 @@
+{% include 'overall_header.html' %}
+
+<a name="maincontent"></a>
+
+<h1>{{ lang('ACP_QUICKMOD_CONFIG') }}</h1>
+<p>{{ lang('ACP_QUICKMOD_CONFIG_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_quick_mod" method="post" action="{{ U_ACTION }}">
+
+	{% set display_submit_save = false %}
+	{% include '@canidev_core/acp_options.html' %}
+
+	<fieldset>
+		<legend>{{ lang('QM_BUTTON_MANAGE') }}</legend>
+
+	<table class="quickmod-buttons">
+	<tr>
+		<td class="row2">
+			<strong>{{ lang('BUTTONS_AVAILABLE') }}</strong>
+			<hr />
+			<div id="available_buttons" class="qm-drag-row">
+	{% for button in available_button %}
+				<div class="qm-draggable">
+					<div><i class="fa {{ button.S_ICON }}"></i>{{ button.S_TITLE }}</div>
+					{{ button.S_HIDDEN_FIELDS }}
+				</div>
+	{% endfor %}	
+			</div>	
+		</td>
+
+		<td class="row2">
+			<strong>{{ lang('BUTTONS_SELECTED') }}</strong>
+			<hr />
+			<div id="selected_buttons" class="qm-drag-row">
+	{% for button in selected_button %}
+				<div class="qm-draggable">
+					<div><i class="fa {{ button.S_ICON }}"></i>{{ button.S_TITLE }}</div>
+					{{ button.S_HIDDEN_FIELDS }}
+				</div>
+	{% endfor %}		
+			</div>
+		</td>
+	  </tr>
+	</table>
+
+	</fieldset>
+
+	<div class="cbb-submit-buttons">
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
+		{{ S_FORM_TOKEN }}
+	</div>
+
+</form>
+
+{% include 'overall_footer.html' %}

@@ -1,0 +1,119 @@
+{% if S_USERLIST %}
+<div class="cbb-dropdown">
+	<ul class="cbb-menu qm-user-selector">
+		{% for user in loops.user %}
+		<li>
+			<a href="#" data-username="{{ user.S_USERNAME }}">
+				<div class="cbb-circular-avatar size-small">
+					{% if user.S_AVATAR_IMG %}{{ user.S_AVATAR_IMG }}{% else %}<div class="cbb-no-avatar"></div>{% endif %}
+				</div>
+				<span>{{ user.S_USERNAME_FORMATTED }}</span>
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+{% elseif DIALOG_CONTENT %}
+<div class="qm-dialog" title="{{ MESSAGE_TITLE }}">
+	<form id="qm-dialog-form" onsubmit="return false;">
+
+	<div class="cbb-dialog-content">
+	{% if S_APPROVE %}
+
+		<div class="qm-center">
+			<label><input type="checkbox" name="send_notify" value="1" /> {{ lang('NOTIFY_POSTER_APPROVAL') }}</label>
+		</div>
+
+	{% elseif S_DISAPPROVE %}
+
+		<fieldset>
+		<dl>
+			<dt>&nbsp;</dt>
+			<dd><label><input type="checkbox" name="send_notify" value="1" /> {{ lang('NOTIFY_POSTER_DISAPPROVAL') }}</label></dd>
+		</dl>
+
+		{% if reason|length %}
+			<dl>
+				<dt><label>{{ lang('DISAPPROVE_REASON') ~ lang('COLON') }}</label></dt>
+				<dd><select name="reason_id" class="cbb-inputbox">
+				{% for reason in loops.reason %}
+					<option value="{{ reason.ID }}"{% if reason.S_SELECTED %} selected="selected"{% endif %}>{{ reason.DESCRIPTION }}</option>
+				{% endfor %}
+					</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="reason">{{ lang('MORE_INFO') ~ lang('COLON') }}</label><br /><span>{{ lang('CAN_LEAVE_BLANK') }}</span></dt>
+				<dd><textarea class="inputbox cbb-inputbox" name="reason" id="reason" rows="4" cols="40">{{ REASON }}</textarea></dd>
+			</dl>
+		{% endif %}
+		</fieldset>
+		
+	{% elseif S_DELETE %}
+
+		<fieldset>
+		<dl>
+			<dt><label>{{ lang('REASON') ~ lang('COLON') }}</label></dt>
+			<dd><input class="inputbox autowidth cbb-inputbox" type="text" name="delete_reason" value="" size="25" /></dd>
+		</dl>
+		</fieldset>
+
+	{% elseif S_FORUM_REQUEST %}
+
+		<fieldset>
+		<dl>
+			<dt><label>{{ lang('SELECT_DESTINATION_FORUM') ~ lang('COLON') }}</label></dt>
+			<dd><select name="to_forum_id" class="cbb-inputbox">{{ S_FORUM_SELECT }}</select></dd>
+		</dl>
+		{% if S_CAN_LEAVE %}
+		<dl>
+			<dt>&nbsp;</dt>
+			<dd><label for="move_leave_shadow"><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" /> {{ lang('LEAVE_SHADOW') }}</label></dd>
+		</dl>
+		{% endif %}
+		</fieldset>
+
+	{% elseif S_CHGPOSTER %}
+
+		<fieldset>
+		<dl>
+			<dt><label>{{ lang('CHANGE_POSTER') ~ lang('COLON') }}</label></dt>
+			<dd>
+				<div class="cbb-group">
+					<input class="inputbox autowidth cbb-inputbox" type="text" name="username" value="" size="20" />
+					<a href="{{ U_FIND_USERNAME }}" class="cbb-btn" onclick="find_username(this.href); return false;"><i class="fa fa-search"></i></a>
+				</div>
+			</dd>
+		</dl>
+		</fieldset>
+
+	{% elseif S_CHGICON %}
+
+		<div class="qm-center">
+			<label for="icon"><input type="radio" name="icon" id="icon" value="0" checked="checked" /> {{ lang('NO_TOPIC_ICON') }}</label>
+			{% for topic_icon in loops.topic_icon %}<label for="icon-{{ topic_icon.ICON_ID }}"><input type="radio" name="icon" id="icon-{{ topic_icon.ICON_ID }}" value="{{ topic_icon.ICON_ID }}" {{ topic_icon.S_ICON_CHECKED }} /> <img src="{{ topic_icon.ICON_IMG }}" width="{{ topic_icon.ICON_WIDTH }}" height="{{ topic_icon.ICON_HEIGHT }}" alt="icon-{{ topic_icon.ICON_ID }}" /></label> {% endfor %}
+		</div>
+
+	{% elseif S_CHGTIME %}
+	
+		<div class="qm-center">
+			<label for="day">{{ lang('DAY') ~ lang('COLON') }} <select name="day" id="day" class="cbb-inputbox">{{ S_DAY_OPTIONS }}</select></label> 
+			<label for="month">{{ lang('MONTH') ~ lang('COLON') }} <select name="month" id="month" class="cbb-inputbox">{{ S_MONTH_OPTIONS }}</select></label> 
+			<label for="year">{{ lang('YEAR') ~ lang('COLON') }} <select name="year" id="year" class="cbb-inputbox">{{ S_YEAR_OPTIONS }}</select></label>
+			
+			<br /><br /><label for="hour">{{ lang('TIME') ~ lang('COLON') }} <input type="time" class="cbb-inputbox" name="hour" id="hour" value="{{ S_HOUR }}" /></label>
+		</div>
+
+	{% endif %}
+
+		{{ S_HIDDEN_FIELDS }}
+	</div>
+
+	</form>
+	
+	<div class="cbb-dialog-buttons">
+		<button class="cbb-btn" value="submit">{{ lang('ACCEPT') }}</button>
+		<button class="cbb-btn" value="close">{{ lang('CANCEL') }}</button>
+	</div>
+</div>
+{% endif %}

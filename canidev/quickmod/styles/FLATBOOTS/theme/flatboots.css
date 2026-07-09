@@ -1,0 +1,52 @@
+/*  cBB QuickMod StyleSheet
+    --------------------------------------------------------------
+	Style:	FLATBOOTS
+	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+#qm-main {
+	font-size: inherit !important;
+}
+
+.qm-layout-default #qm-main {
+	padding: 5px 10px;
+}
+
+.qm-layout-fixed #qm-main {
+	margin-left: 5px;
+	margin-top: 3px;
+}
+
+.qm-layout-default .qm-main-container {
+	min-height: 38px !important;
+}
+
+.qm-row .footable-first-column,
+.qm-row .footable-last-column {
+	position: relative;
+}
+
+.qm-row .desc-wrapper > a {
+    vertical-align: top;
+}
+
+body div.row_mark {
+	right: 5px;
+}
+
+.qm-mobile div.row_mark {
+	height: 70px;
+	width: 60px !important;
+}
+
+.qm-mobile .row_mark .topic_id_list + label {
+	font-size: 9px !important;
+	height: 20px !important;
+	top: 56% !important;
+	width: 20px !important;
+}
+
+.cbb-dialog.qm-dialog .cbb-dialog-content {
+	font-size: 1.2em;
+}

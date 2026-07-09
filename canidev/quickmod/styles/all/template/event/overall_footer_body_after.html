@@ -1,0 +1,53 @@
+{% if S_QUICKMOD_ENABLED %}
+	<template id="quickmod-main">
+		<div id="qm-main" class="{{ S_QM_LAYOUT == 'default' ? 'panel' : '' }}">
+			<form name="quick_mod_form" method="post" onsubmit="return false;">
+				<div class="qm-main-container">
+					<div class="qm-select-container"><select name="qm_mark" class="cbb-inputbox">{{ S_QM_MARK_OPTIONS }}</select></div>
+					
+					{{ S_FORM_TOKEN_QM }}
+					{{ S_QM_HIDDEN_FIELDS }}
+				</div>
+			</form>
+		</div>
+	</template>
+
+	<template id="quickmod-loading">
+		<div class="qm-loading cbb-loading cbb-helper-hidden"><span></span></div>
+	</template>
+
+	<template id="quickmod-action-container">
+		<div class="qm-action-container cbb-helper-hidden">
+			<span>{{ lang('WITH_SELECTED') }} <span id="row_mark_count">0</span></span>
+			<ul class="qm-action-group">
+			{% for category in qm_quick_options %}
+				<li>
+					<a href="#" aria-label="{{ category.LABEL }}"><i class="fa {{ category.ICON }}" aria-hidden="true"></i></a>
+					<div class="cbb-helper-hidden">
+						<ul class="cbb-menu qm-menu">
+						{% for action in category.action %}
+							<li>
+								<a href="#" data-qm-action="{{ action.VALUE }}">
+									<i class="fa {{ action.ICON }}" aria-hidden="true"></i>
+									<span>{{ action.LABEL }}</span>
+								</a>
+							</li>
+						{% endfor %}
+						</ul>
+					</div>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	</template>
+
+	<template id="quickmod-rename">
+		<div id="quick_rename" class="cbb-group">
+			<input type="text" class="cbb-inputbox" id="topic_title" name="topic_title" maxlength="124" value="" />
+			<button class="cbb-btn" data-action="submit"><i class="fa fa-check"></i></button>
+			<button class="cbb-btn" data-action="cancel"><i class="fa fa-remove"></i></button>
+		</div>
+	</template>
+
+	{% include '@canidev_quickmod/components/service_loader.html' %}
+{% endif %}
