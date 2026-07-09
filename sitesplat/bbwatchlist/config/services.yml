@@ -1,0 +1,36 @@
+parameters:
+    tables.watch_keywords: '%core.table_prefix%watch_keywords'
+
+services:
+    sitesplat.bbwatchlist.bbwatchlist:
+        class: sitesplat\bbwatchlist\bbwatchlist\bbwatchlist
+        arguments:
+            - '@dbal.conn'
+            - '@text_formatter.utils'
+            - '@notification_manager'
+            - '@user'
+            - '%tables.posts%'
+            - '%tables.topics%'
+            - '%tables.watch_keywords%'
+
+    sitesplat.bbwatchlist.listener:
+        class: sitesplat\bbwatchlist\event\main_listener
+        arguments:
+            - '@sitesplat.bbwatchlist.bbwatchlist'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bbwatchlist.notification.type.content_keyword:
+        class: sitesplat\bbwatchlist\notification\type\content_keyword
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }
+
+    sitesplat.bbwatchlist.notification.type.subject_keyword:
+        class: sitesplat\bbwatchlist\notification\type\subject_keyword
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }
+

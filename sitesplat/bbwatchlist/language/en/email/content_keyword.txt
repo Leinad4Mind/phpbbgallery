@@ -1,0 +1,8 @@
+Subject: Watched keyword found in the post content
+
+Hello,
+
+a keyword "{KEYWORD}" watched by you was found in the post content. Click here to see it:
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}
