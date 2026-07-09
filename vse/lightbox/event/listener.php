@@ -56,7 +56,7 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'core.page_header'					=> 'set_lightbox_tpl_data',
+			'core.page_header'				=> 'set_lightbox_tpl_data',
 			'core.acp_board_config_edit_add'	=> 'add_lightbox_acp_config',
 		];
 	}
@@ -99,8 +99,8 @@ class listener implements EventSubscriberInterface
 
 			$my_config_vars = [
 				'legend_lightbox'		=> 'LIGHTBOX_SETTINGS',
-				'lightbox_max_width'	=> ['lang' => 'LIGHTBOX_MAX_WIDTH', 'validate' => 'int:0:99999', 'type' => 'number:0:99999', 'explain' => true, 'append' => ' ' . $this->language->lang('PIXEL') . '<br />' . $l_append],
-				'lightbox_max_height'	=> ['lang' => 'LIGHTBOX_MAX_HEIGHT', 'validate' => 'int:0:99999', 'type' => 'number:0:99999', 'explain' => true, 'append' => ' ' . $this->language->lang('PIXEL') . '<br />' . $l_append],
+				'lightbox_max_width'	=> ['lang' => 'LIGHTBOX_MAX_WIDTH', 'validate' => 'int:0:99999', 'type' => 'number:0:99999', 'explain' => true, 'append' => ' ' . $this->language->lang('PIXEL') . '<br>' . $l_append],
+				'lightbox_max_height'	=> ['lang' => 'LIGHTBOX_MAX_HEIGHT', 'validate' => 'int:0:99999', 'type' => 'number:0:99999', 'explain' => true, 'append' => ' ' . $this->language->lang('PIXEL') . '<br>' . $l_append],
 				'lightbox_all_images'	=> ['lang' => 'LIGHTBOX_ALL_IMAGES', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true],
 				'lightbox_gallery'		=> ['lang' => 'LIGHTBOX_GALLERY', 'validate' => 'int', 'type' => 'select', 'function' => 'build_select', 'params' => [[0 => 'DISABLED', 1 => 'LIGHTBOX_GALLERY_ALL', 2 => 'LIGHTBOX_GALLERY_POSTS'], '{CONFIG_VALUE}'], 'explain' => true],
 				'lightbox_signatures'	=> ['lang' => 'LIGHTBOX_SIGNATURES', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true],
@@ -112,7 +112,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Find lowest value that is not 0
+	 * Find the lowest value that is not 0
 	 * Accepts variable number of comparable parameters
 	 *
 	 * @return mixed The lowest of the parameter values, false on no result.
