@@ -1,0 +1,40 @@
+services:
+    sitesplat.subjectcheck.controller:
+        class: sitesplat\subjectcheck\controller\main
+        arguments:
+            - '@request'
+            - '@dbal.conn'
+            - '@sitesplat.subjectcheck.subject_check'
+            - '%tables.forums%'
+
+    sitesplat.subjectcheck.subject_check:
+        class: sitesplat\subjectcheck\core\subject_check
+        arguments:
+            - '@request'
+            - '@config'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@ext.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.topics%'
+            - '%tables.forums%'
+
+    sitesplat.subjectcheck.acp_listener:
+        class: sitesplat\subjectcheck\event\acp_listener
+        arguments:
+            - '@request'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.subjectcheck.listener:
+        class: sitesplat\subjectcheck\event\main_listener
+        arguments:
+            - '@sitesplat.subjectcheck.subject_check'
+            - '@template'
+            - '@user'
+            - '@controller.helper'
+            - '@config'
+        tags:
+            - { name: event.listener }
