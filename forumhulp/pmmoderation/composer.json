@@ -1,0 +1,36 @@
+{
+	"name": "forumhulp/pmmoderation",
+	"type": "phpbb-extension",
+	"description": "Show PMs of your members, delete them if you want.",
+	"homepage": "http://forumhulp.com",
+	"version": "3.2.1",
+	"keywords": ["forumhulp", "phpbb", "extension", "add user", "pb"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "http://forumhulp.com",
+			"role": "Developer"
+		},
+		{
+			"name": "John Peskens",
+			"homepage": "http://forumhulp.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"phpbb/phpbb": "3.1.*@dev"
+	},
+	"extra": {
+		"display-name": "PM Moderation",
+		"soft-require": {
+			"phpbb/phpbb": "3.1.*@dev"
+		},
+		"version-check": {
+			"host": "forumhulp.com",
+			"directory": "/versioncheck",
+			"filename": "pm-moderation"
+		}
+	}
+}
