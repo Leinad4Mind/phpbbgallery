@@ -10,6 +10,10 @@
 .cbb-helper-hidden-soft					{ visibility: hidden; }
 .cbb-helper-wait, .cbb-helper-wait * 	{ cursor: progress!important; }
 
+:root {
+	--cbb-btn-border-radius: 2px;
+}
+
 .cbb-helper-clear:after {
 	content: "";
 	clear: both;
@@ -45,6 +49,7 @@
 	height: 100px;
 	overflow: scroll;
 	visibility: hidden;
+	box-sizing: border-box;
 }
 
 .cbb-message {
@@ -209,7 +214,7 @@ span.cbb-loading {
 .cbb-dialog {
 	border-radius: 6px;
 	box-shadow: 0 0 15px #313030;
-	font-size: 11px;
+	font-size: 12px;
 	overflow: hidden;
 	width: 300px;
 	z-index: 9991;
@@ -221,6 +226,14 @@ span.cbb-loading {
     padding: 10px 5px;
     border-bottom: 1px solid #ccc;
     margin: 0 5px;
+}
+
+.cbb-dialog .cbb-dialog-header a {
+	color: #474747;
+}
+
+.cbb-dialog .cbb-dialog-header a:hover {
+	color: #000;
 }
 
 .cbb-dialog.notitle .cbb-dialog-header {
@@ -634,7 +647,7 @@ body > .cbb-dialog.fixed {
 
 .cbb-menu li a:hover,
 .cbb-menu li a.active {
-	background: #EFEFEF;
+	background: #f3f5f6;
 	text-decoration: none;
 }
 
@@ -864,7 +877,7 @@ a.cbb-btn,
 .rtl .cbb-btn {
 	background-color: #f8f8f8;
 	border: 1px solid #e4e4e4;
-	border-radius: 2px;
+	border-radius: var(--cbb-btn-border-radius);
 	color: #666;
 	cursor: pointer;
 	display: inline-block;
@@ -1122,13 +1135,17 @@ select.cbb-inputbox {
 	border-radius: 0;
 }
 
+.cbb-group > :first-child:last-child {
+	border-radius: var(--cbb-btn-border-radius);
+}
+
 .cbb-group > :first-child:not(:last-child),
 .cbb-group > .cbb-group-wrapper:first-child:not(:last-child) input {
-	border-radius: 2px 0 0 2px;
+	border-radius: var(--cbb-btn-border-radius) 0 0 var(--cbb-btn-border-radius);
 }
 
 .cbb-group > :last-child:not(:first-child) {
-	border-radius: 0 2px 2px 0;
+	border-radius: 0 var(--cbb-btn-border-radius) var(--cbb-btn-border-radius) 0;
 }
 
 .cbb-groups-selector {
@@ -1292,11 +1309,11 @@ a.cbb-state-highlight,
 }
 
 .rtl .cbb-group > :first-child:not(:last-child) {
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 var(--cbb-btn-border-radius) var(--cbb-btn-border-radius) 0;
 }
 
 .rtl .cbb-group > :last-child:not(:first-child) {
-    border-radius: 2px 0 0 2px;
+    border-radius: var(--cbb-btn-border-radius) 0 0 var(--cbb-btn-border-radius);
 }
 
 .rtl .cbb-modal-dialog .cbb-dialog-menu {
@@ -1423,10 +1440,12 @@ a.cbb-state-highlight,
 	border-bottom-color: #1f1f1f;
 }
 
+.dark-theme .cbb-dialog .cbb-dialog-header a,
 .dark-theme .cbb-menu li a {
 	color: #8c8c8c;
 }
 
+.dark-theme .cbb-dialog .cbb-dialog-header a:hover,
 .dark-theme .cbb-menu li a:hover,
 .dark-theme .cbb-menu li a.active {
 	background-color: #2b2b2b;

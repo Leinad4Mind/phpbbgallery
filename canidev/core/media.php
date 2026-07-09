@@ -1,14 +1,15 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.4 26/01/2024
+ * @version 1.1.10 24/02/2025
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\core;
 
+use bantu\IniGetWrapper\IniGetWrapper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use \canidev\core\JsonResponse;
 
@@ -59,7 +60,7 @@ class Media
 	/** @var \phpbb\path_helper */
 	protected $path;
 
-	/** @var \phpbb\php\ini */
+	/** @var IniGetWrapper */
 	protected $php_ini;
 
 	/** @var \phpbb\request\request_interface */
@@ -99,7 +100,7 @@ class Media
 		$this->json				= JsonResponse::getInstance();
 		$this->language			= $container->get('language');
 		$this->path				= $container->get('path_helper');
-		$this->php_ini			= new \phpbb\php\ini;
+		$this->php_ini			= new IniGetWrapper;
 		$this->request			= $container->get('request');
 		$this->template			= $container->get('canidev.core.template');
 		$this->uploader 		= $container->get('files.upload');
@@ -227,11 +228,11 @@ class Media
 		if(function_exists('ini_get'))
 		{
 			$server_max_filesize = min(
-				$this->php_ini->get_bytes('post_max_size'),
-				max(1, $this->php_ini->get_bytes('memory_limit')),
-				$this->php_ini->get_bytes('upload_max_filesize')
+				$this->php_ini->getBytes('post_max_size'),
+				max($this->config['max_filesize'], $this->php_ini->getBytes('memory_limit')),
+				$this->php_ini->getBytes('upload_max_filesize')
 			);
-			
+
 			if($server_max_filesize)
 			{
 				$this->options['max_filesize'] = ($this->options['max_filesize']) ? min($this->options['max_filesize'], $server_max_filesize) : $server_max_filesize;
@@ -1000,7 +1001,7 @@ class Media
 
 	/**
 	 * Load menu sections
-	 * @return static
+	 * @return mixed
 	 * 
 	 * @access private
 	 */
