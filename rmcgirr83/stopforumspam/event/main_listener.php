@@ -27,6 +27,9 @@ class main_listener implements EventSubscriberInterface
 	/** @var phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
 	/** @var \phpbb\log\log */
 	protected $log;
 
@@ -46,20 +49,28 @@ class main_listener implements EventSubscriberInterface
 		\phpbb\config\config $config,
 		\phpbb\user $user,
 		\phpbb\db\driver\driver_interface $db,
+		\phpbb\controller\helper $helper,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		$phpbb_root_path,
-		$php_ext)
+		$php_ext,
+		\rmcgirr83\contactadmin\controller\main_controller $contactadmin = null)
 	{
 		$this->config = $config;
 		$this->user = $user;
 		$this->db = $db;
+		$this->helper = $helper;
 		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+		$this->contactadmin = $contactadmin;
+		if (!function_exists('phpbb_validate_email'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
 	}
 
 	static public function getSubscribedEvents()
@@ -86,10 +97,10 @@ class main_listener implements EventSubscriberInterface
 
 		/* On registration and only when all errors have cleared
 		 * do not want the admin message area to fill up
+		 * stopforumspam only works with IPv4 not IPv6
 		*/
-		if (!sizeof($error_array))
+		if (!sizeof($error_array) && strpos($this->user->ip, ':') == false)
 		{
-
 			$check = $this->stopforumspam_check($event['data']['username'], $this->user->ip, $event['data']['email']);
 
 			if ($check)
@@ -156,8 +167,8 @@ class main_listener implements EventSubscriberInterface
 					$error_array = array_merge($username_error, $error_array);
 				}
 			}
-
-			if (!sizeof($error_array))
+			// stopforumspam only works with IPv4 not IPv6
+			if (!sizeof($error_array) && strpos($this->user->ip, ':') == false)
 			{
 				$check = $this->stopforumspam_check($event['post_data']['username'], $this->user->ip, $event['post_data']['email']);
 
@@ -193,9 +204,14 @@ class main_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			if ($this->config['contact_admin_form_enable'] && $this->config['email_enable'])
+			if ($this->contactadmin !== null && !empty($this->config['contactadmin_enable']))
 			{
-				$message = $this->user->lang('NO_SOUP_FOR_YOU', '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=contactadmin') . '">', '</a>');
+				$message = $this->user->lang('NO_SOUP_FOR_YOU', '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>');
+			}
+			else if ($this->config['contact_admin_form_enable'])
+			{
+				$link = ($this->config['contact_admin_form_enable'] && $this->config['email_enable']) ? append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=contactadmin') : 'mailto:' . htmlspecialchars($this->config['board_contact']);
+				$message = $this->user->lang('NO_SOUP_FOR_YOU', '<a href="'. $link .'">','</a>');
 			}
 			else
 			{
@@ -340,10 +356,7 @@ class main_listener implements EventSubscriberInterface
 	private function validate_email($email)
 	{
 		$error = array();
-		if (!function_exists('phpbb_validate_email'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
+
 		$error = phpbb_validate_email($email);
 
 		return $error;
@@ -353,10 +366,6 @@ class main_listener implements EventSubscriberInterface
 	private function validate_username($username)
 	{
 		$error = array();
-		if (!function_exists('validate_string'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
 		if (($result = validate_username($username)) !== false)
 		{
 			$error[] = $this->user->lang[$result . '_USERNAME'];
@@ -374,11 +383,6 @@ class main_listener implements EventSubscriberInterface
 	// ban a nub
 	private function ban_by_ip($ip)
 	{
-		if (!function_exists('user_ban'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-
 		$ban_reason = (!empty($this->config['sfs_ban_reason'])) ? $this->user->lang['SFS_BANNED'] : '';
 		// ban the nub for one hour
 		user_ban('ip', $ip, 60, 0, false, $this->user->lang['SFS_BANNED'], $ban_reason);
