@@ -1,0 +1,31 @@
+<!-- IF .last_bbreactions -->
+<div class="sidebar">
+<div id="lastbbreactions{slot.SIDEBAR_ID}" class="panel panel-inverse">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_LAST_BBREACTIONS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerlastbbreactions{slot.SIDEBAR_ID}" class="inner">
+		<ul class="media-list user-list">	
+		<!-- BEGIN last_bbreactions -->
+		<li class="media">
+                <div class="media-left bbreactions-emoji">
+                    <!-- IF last_bbreactions.EMOJI -->
+                    {last_bbreactions.EMOJI}
+                    <!-- ELSE -->
+                    <i class="fa {last_bbreactions.SYMBOL} fa-object" style="color:<!-- IF last_bbreactions.POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;"></i>
+                    <!-- ENDIF -->
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{last_bbreactions.USERNAME_FULL}</h4>
+                    <span><a href="{last_bbreactions.POST_URL}">{last_bbreactions.TYPE}</a></span>
+                <small class="date"><i class="glyphicon glyphicon-time"></i>&nbsp;{last_bbreactions.BADGE_DATE}</small>
+				</div>
+         </li>
+		<!-- END last_bbreactions -->		
+		</ul>
+	 </div>
+	</div>
+</div>
+</div>
+<!-- ENDIF -->

@@ -1,0 +1,44 @@
+<!-- IF .pop_downloads -->
+<div class="sidebar">
+<div id="bbdownloads{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_DOWNLOADS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="bbdownloadsinner{slot.SIDEBAR_ID}" class="inner">
+		
+		  <ul class="nav nav-pills nav-top-poster nav-justified">
+			<li class="active"><a data-toggle="pill" href="#popDown">{L_POP_DOWNLOADS}</a></li>
+			<li><a data-toggle="pill" href="#newDown">{L_NEW_DOWNLOADS}</a></li>
+		  </ul>
+		  
+		  <div class="tab-content media-list user-list">
+			<div id="popDown" class="tab-pane fade in active">
+				<ul class="media">
+				<!-- BEGIN pop_downloads -->
+					<li><a href="{pop_downloads.S_SEARCH_ACTION}">{pop_downloads.TITLE}</a> <span class="pull-right">{pop_downloads.TOTAL}</span><!-- IF not pop_downloads.S_LAST_ROW --><hr /><!-- ENDIF --></li>
+				<!-- BEGINELSE -->
+					<li>{L_NO_MEMBERS}<hr /></li>
+				<!-- END pop_downloads -->	
+				</ul>
+			</div>
+				
+			<div id="newDown" class="tab-pane fade">
+				<ul class="media">
+				<!-- BEGIN new_downloads -->
+					<li><a href="{new_downloads.S_SEARCH_ACTION}">{new_downloads.TITLE}</a> <span class="pull-right">{new_downloads.TIMESTAMP}</span><!-- IF not new_downloads.S_LAST_ROW --><hr /><!-- ENDIF --></li>
+				<!-- BEGINELSE -->
+					<li>{L_NO_MEMBERS}<hr /></li>
+				<!-- END new_downloads -->	
+				</ul>
+			</div>
+		  </div>
+		</div>
+	 </div>
+	</div>
+</div>
+<!-- ENDIF -->
+
+
+
+

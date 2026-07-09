@@ -1,0 +1,30 @@
+<!-- IF .staff -->
+<div class="sidebar">
+<div id="staff{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_STAFF}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerstaff{slot.SIDEBAR_ID}" class="inner">
+		 <div class="media-list user-list">
+			<!-- BEGIN staff -->
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{staff.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
+				<div class="media-body">
+					<h4 class="media-heading">{staff.USERNAME_FULL}</h4>
+					<span><a href="{staff.S_SEARCH_ACTION}" title="">{staff.TIME}</a></span>
+				</div>
+			</div>
+			<!-- BEGINELSE -->
+             <div>{L_NO_MEMBERS}</div>
+			<!-- END staff -->
+		 </div>	
+		</div>
+	 </div>
+	</div>
+</div>
+<!-- ENDIF -->

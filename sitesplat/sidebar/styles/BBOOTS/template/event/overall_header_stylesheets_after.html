@@ -1,0 +1,37 @@
+<!-- IF S_INDEX -->
+	<!-- IF not S_SIDEBAR_TYPE -->
+		<!-- IF S_SIDEBAR_WIDTH -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarright.css -->
+		<!-- ELSE -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebar20right.css -->
+		<!-- ENDIF -->
+	<!-- ELSE -->
+		<!-- IF S_SIDEBAR_WIDTH -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarleft.css -->
+		<!-- ELSE -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarleft20.css -->
+		<!-- ENDIF -->
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF S_SIDEBAR_ALL_PAGES and not S_INDEX -->
+	<!-- IF not S_SIDEBAR_TYPE -->
+		<!-- IF S_SIDEBAR_WIDTH -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarright.css -->
+		<!-- ELSE -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebar20right.css -->
+		<!-- ENDIF -->
+	<!-- ELSE -->
+		<!-- IF S_SIDEBAR_WIDTH -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarleft.css -->
+		<!-- ELSE -->
+			<!-- INCLUDECSS @sitesplat_sidebar/sidebarleft20.css -->
+		<!-- ENDIF -->
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- INCLUDECSS @sitesplat_sidebar/sidebar.css -->
+
+<!-- IF S_SIDEBAR_DYNAMIC -->
+	<!-- INCLUDECSS @sitesplat_sidebar/sidebar_dynamic.css -->
+<!-- ENDIF -->

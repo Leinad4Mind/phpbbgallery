@@ -1,0 +1,29 @@
+<!-- IF .donations -->
+<div class="sidebar">
+<div id="donators{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_DONATIONS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerdonators{slot.SIDEBAR_ID}" class="inner">
+		 <div class="media-list user-list">
+			<!-- BEGIN donations -->
+			<div class="media">
+				<div class="media-left">
+					  <img alt="" src="{donations.AVATAR}" class="media-object img-circle">
+				 </div>
+				<div class="media-body">
+					<h4 class="media-heading">{donations.USERNAME_FULL}</h4>
+					<span><a href="#" title="{donations.TIME}">{donations.CURRENCY_SYMBOL} {donations.AMOUNT}</a></span>
+				</div>
+			</div>
+			<!-- BEGINELSE -->
+             <div>{L_NO_MEMBERS}</div>
+			<!-- END donations -->
+		 </div>	
+        <!-- IF U_DONATE_PAGE --><a href="{U_DONATE_PAGE}">{L_DONATE_ALSO}</a><!-- ENDIF -->
+		</div>
+	 </div>
+	</div>
+</div>
+<!-- ENDIF -->
