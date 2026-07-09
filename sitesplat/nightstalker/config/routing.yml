@@ -1,0 +1,3 @@
+sitesplat_nightstalker_controller:
+    path: /nightstalker
+    defaults: { _controller: sitesplat.nightstalker.controller:nightstalker }

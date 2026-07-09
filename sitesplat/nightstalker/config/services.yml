@@ -1,0 +1,19 @@
+services:
+    sitesplat_nightstalker:
+        class: sitesplat\nightstalker\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@user'
+            - '@request'
+            - '@template'
+        tags:
+            - { name: event.listener }
+    sitesplat.nightstalker.controller:
+        class: sitesplat\nightstalker\controller\controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@controller.helper'

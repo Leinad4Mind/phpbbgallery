@@ -1,0 +1,32 @@
+{
+	"name": "sitesplat/nightstalker",
+	"type": "phpbb-extension",
+	"description": "It adds a on/off style switcher for the user for a comfortable forum night browsing or peace of mind for the avid night walkers obsessed with the dark style :-)",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.8",
+	"keywords": ["phpbb", "extension", "sitesplat", "premium", "themeswitcher", "cosmetic"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "Dave",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4"
+	},
+	"extra": {
+		"display-name": "Nightstalker",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.5"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "nightstalker.json",
+			"ssl": true
+		}
+	}
+}
