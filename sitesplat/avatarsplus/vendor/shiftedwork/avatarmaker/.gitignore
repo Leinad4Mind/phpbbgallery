@@ -1,0 +1,6 @@
+.idea
+vendor
+temp
+nbproject
+vendor
+composer.lock

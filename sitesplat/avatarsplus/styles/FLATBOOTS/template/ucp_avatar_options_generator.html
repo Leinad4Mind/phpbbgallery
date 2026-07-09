@@ -1,0 +1,54 @@
+<div id="svgAvatars"></div>
+
+<script>
+//Global options
+var path_to_folder = '{{ ROOT_PATH }}',
+	delta_sat = 0.1, //the step of saturation color change in HSV (HSB) mode (10% by default)
+	delta_val = 0.06, //the step of value (brightness) color change in HSV (HSB) mode (6% by default)
+	save_format = 'png', //'png' or 'svg'
+	save_size = {{ S_MAX_AVATAR_SIZE }},
+	svg_download_size = 0,
+	png_one_download_size = {{ S_MAX_AVATAR_SIZE }},
+	png_two_download_size = 0,
+	png_ios_download_size = {{ S_MAX_AVATAR_SIZE }},
+	png_win8tablet_download_size = {{ S_MAX_AVATAR_SIZE }},
+	gravatar_size = {{ S_MAX_AVATAR_SIZE }},
+	hide_save = false,
+	hide_svg_download_on_Android = true,
+	hide_svg_download = true,
+	hide_png_one_download = false,
+	hide_png_two_download = true,
+	hide_gravatar = false,
+	color_theme = 'light';
+
+//Share options
+var	hide_share = {{ S_ENABLE_GENERATOR_SHARE }},
+	share_image_size = {{ S_MAX_AVATAR_SIZE }},
+	facebook_app_id = '{{ BBOPENGRAPH_APPID }}',
+	facebook = true,
+	twitter = false,
+	pinterest = true,
+	googleplus = false,
+	share_link = '{{ U_BOARD_URL }}',
+	share_title = '{{ lang('AVATARSPLUS_SHARE_TITLE') }}',
+	share_description = '{{ lang('AVATARSPLUS_SHARE_DESC') }}',
+	share_credit = '{{ lang('AVATARSPLUS_SHARE_CREDIT') }}';
+
+head.ready(function(){
+	$(function(){
+		$('#ucp').on('submit', function(){
+			$('#svga-work-overlay').fadeIn('fast');
+			$('#svga-canvas').attr({width: png_one_download_size, height: png_one_download_size});
+			var svg = $('#svga-svgmain').html();
+			svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + png_one_download_size+ 'px" height="' + png_one_download_size+ 'px" xlink="http://www.w3.org/1999/xlink" style="overflow:hidden!important;"><g id="svga-group-wrapper" transform="scale(' + png_one_download_size/200 + ' ' + png_one_download_size/200 + ')">'
+				+
+				svg.replace(/<svg(.*?)>/, '').replace(/<g id(.*?)>/, '').replace(/data-(.*?)\"(.*?)\"/g, '').replace(/   /g, ' ').replace(/  /g, ' ').replace(/  /g, ' ');
+			var canvas = document.getElementById('svga-canvas');
+			canvg(canvas, svg, { ignoreMouse: true, ignoreDimensions: true });
+			var img = canvas.toDataURL("image/png");
+
+			$(this).append('<input type="hidden" name="imgdata" value="' + img + '" />')
+		});
+	});
+});
+</script>
