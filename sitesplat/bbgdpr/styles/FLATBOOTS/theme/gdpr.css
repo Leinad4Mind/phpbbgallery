@@ -1,0 +1,34 @@
+.panel-gdpr {
+    position: relative;
+}
+
+.gdpr-badge {
+    width: auto;
+    height: 110px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+#cookies-eu-banner {
+    position: fixed;
+    bottom: 0;
+    left: 15px;
+    z-index: 1015;
+}
+#cookies-eu-more {
+    border-bottom: 1px dashed #d24d33;
+}
+
+@media (min-width: 360px) and (max-width: 718px) {
+	#cookies-eu-banner .btn-xs {
+		display: block;
+		margin-top: 5px;
+	}
+}
+
+@media (max-width: 600px) {
+	.gdpr-badge {
+		display: none;
+	}
+}

@@ -1,0 +1,29 @@
+{% if S_QUICK_AGREE %}
+	<div class="space10"></div>
+	    <div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="sitesplat_bbgdpr_bulk_emails" class="check-control">{{ lang('BULK_EMAILS_QUICK_AGREE') ~ lang('COLON') }}</label>
+					<input id="sitesplat_bbgdpr_bulk_emails" name="sitesplat_bbgdpr_bulk_emails" type="checkbox" />&nbsp;{{ lang('REG_UNDRSTD') }}
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="sitesplat_bbgdpr_privacy_policy" class="check-control">{{ lang('PRIVACY_POLICY_QUICK_AGREE') ~ lang('COLON') }}</label>
+					<input id="sitesplat_bbgdpr_privacy_policy" name="sitesplat_bbgdpr_privacy_policy" type="checkbox" />&nbsp;{{ lang('REG_UNDRSTD') }}
+				</div>
+			</div>
+		</div>
+	<script>
+		document.querySelector('input[name="register"]').disabled = true;
+
+		// uh, oh, opting for this solution because iCheck won't trigger "change" event :/
+		setInterval(function() {
+			if (document.querySelectorAll('#sitesplat_bbgdpr_bulk_emails:checked, #sitesplat_bbgdpr_privacy_policy:checked').length == 2) {
+				document.querySelector('input[name="register"]').disabled = false;
+			} else {
+				document.querySelector('input[name="register"]').disabled = true;
+			}
+		}, 300);
+	</script>
+{% endif %}

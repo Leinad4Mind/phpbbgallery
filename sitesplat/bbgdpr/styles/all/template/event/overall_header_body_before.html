@@ -1,0 +1,21 @@
+{% if S_DISPLAY_COOKIE_BANNER %}
+<div id="cookies-eu-banner" class="alert alert-warning alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="document.cookie = '{{ COOKIE_NAME }}_sitesplat_bbgdpr_hide_cookie_notice=1;path=/';"><span aria-hidden="true">&times;</span></button>
+	<i class="fa fa-hand-o-right fa-lg"></i>&nbsp;{{ lang('COOKIE_CONSENT') }}
+	<a href="{{ U_GDPR }}" id="cookies-eu-more" class="btn-link">{{ lang('READ_MORE') }}</a>&nbsp;&nbsp;
+	<!-- IF S_USER_LOGGED_IN -->
+	<a href="{{ U_COOKIE_ACCEPT }}" id="cookies-eu-accept" class="gdpr-dd-ajax btn btn-xs btn-success">{{ lang('ACCEPT_BBGDPR_COOKIE') }}</a>
+	<a href="{{ U_COOKIE_REJECT }}" id="cookies-eu-reject" class="gdpr-dd-ajax btn btn-xs btn-danger">{{ lang('REJECT_BBGDPR_COOKIE') }}</a>
+	<!-- ENDIF -->
+</div>
+{% endif %}
+
+{% if S_DISPLAY_REACCEPT_COOKIE_BANNER %}
+<div id="cookies-eu-banner" class="alert alert-warning alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<i class="fa fa-hand-o-right fa-lg"></i>&nbsp;{{ lang('REACCEPT_COOKIE') }}
+	<!-- IF S_USER_LOGGED_IN -->
+	<a href="{{ U_COOKIE_ACCEPT }}" id="cookies-eu-accept" class="gdpr-dd-ajax btn btn-xs btn-success">{{ lang('ACCEPT_BBGDPR_COOKIE') }}</a>
+	<!-- ENDIF -->
+</div>
+{% endif %}

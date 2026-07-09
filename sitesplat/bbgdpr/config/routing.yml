@@ -1,0 +1,11 @@
+sitesplat_bbgdpr_privacy:
+    path: /privacy
+    defaults: { _controller: sitesplat.bbgdpr.controller.privacy:handle }
+
+sitesplat_bbgdpr_cookie:
+    path: /sitesplat/bbgdpr/cookie/{mode}
+    defaults: { _controller: sitesplat.bbgdpr.controller.cookie:handle }
+
+sitesplat_bbgdpr_mcp:
+    path: /sitesplat/bbgdpr/mcp/
+    defaults: { _controller: sitesplat.bbgdpr.controller.mcp:handle }
