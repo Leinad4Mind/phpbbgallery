@@ -1,0 +1,39 @@
+{% INCLUDE 'ucp_header.html' %}
+
+<h2>{{ lang('UCP_NOTES') }}</h2>
+
+<form id="notes_config" method="post" action="{{ U_NOTES_FORM_ACTION }}" />
+
+<div class="panel">
+	<div class="inner">
+
+	<fieldset>
+
+		<dl>
+			<dt>{{ lang('POPUP_NOTES') }}</dt>
+			<dd>
+				<input type="radio" name="notes_popup" class="radio" value="1" {% if NOTES_POPUP %}checked="checked"{% endif %} /> {{ lang('YES') }}
+				<input type="radio" name="notes_popup" class="radio" value="0" {% if not NOTES_POPUP %}checked="checked"{% endif %} /> {{ lang('NO') }}
+			</dd>
+		</dl>
+		<dl>
+			<dt>{{ lang('SLIDE_NOTES') }}</dt>
+			<dd>
+				<input type="radio" name="notes_slide" class="radio" value="1" {% if NOTES_SLIDE %}checked="checked"{% endif %} /> {{ lang('YES') }}
+				<input type="radio" name="notes_slide" class="radio" value="0" {% if not NOTES_SLIDE %}checked="checked"{% endif %} /> {{ lang('NO') }}
+			</dd>
+		</dl>
+
+	</fieldset>
+
+	<fieldset class="quick">
+		<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+	</div>
+</div>
+
+</form>
+
+{% INCLUDE 'ucp_footer.html' %}

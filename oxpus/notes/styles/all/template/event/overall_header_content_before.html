@@ -1,0 +1,14 @@
+		{% if S_NOTES_MEM %}
+		<div id="information" class="rules">
+			<div class="inner">
+				{{ NOTES_MEM }}
+			</div>
+		</div>
+		{% endif %}
+		{% if U_NOTES_POPUP %}
+		<script type="text/javascript">
+		function notes() {
+			window.open("{{ U_NOTES_POPUP }}", "_blank", "width=800,height=600,scrollbars=yes,resizable=no");
+		}
+		</script>
+		{% endif %}

@@ -1,0 +1,114 @@
+{% if S_NOTES_POPUP %}
+	{% INCLUDE 'simple_header.html' %}
+{% else %}
+	{% INCLUDE 'overall_header.html' %}
+{% endif %}
+
+<h2>
+	{{ lang('NOTES') }}
+	&bull;&nbsp;{{ NOTES_TOTAL_USED }} / {{ NOTES_TOTAL_ALLOWED }}
+</h2>
+
+<br />
+
+<form action="{{ S_NOTES_FORM_ACTION }}" method="post" id="postform">
+
+	<div class="panel bg2">
+		<div class="post" id="postingbox">
+
+			<div class="inner">
+				<h3>{{ NOTE_MODE }}</h3>
+
+				<fieldset>
+
+				<dl>
+					<dt class="notes-field-name"><label for="subject">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label></dt>
+					<dd class="notes-field-data"><input type="text" name="subject" id="subject" size="75" maxlength="255" tabindex="2" value="{{ NOTES_SUBJECT }}" class="inputbox autowidth" /></dd>
+				</dl>
+
+				<dl>
+					<dt class="notes-field-name"><label>{{ lang('NOTES_MEM') }}{{ lang('COLON') }}</dt>
+					<dd class="notes-field-data"><input type="checkbox" class="checkbox" name="mem_yesno" value="1"{% if NOTES_MEM_CHECKED %} checked="checked"{% endif %} /></label></dt>
+				</dl>
+
+				<dl>
+					<dt class="notes-field-name"><label>{{ lang('NOTES_MEM_TIME') }}{{ lang('COLON') }}</label></dt>
+					<dd class="notes-field-data">
+						<select name="mem_day">
+							{% for notes_days in loops.notes_days %}
+							<option value="{{ notes_days.DAY }}"{% if notes_days.DAY eq S_NOTE_MEM_DAY %} selected="selected"{% endif %}>{{ notes_days.DAY }}</option>
+							{% endfor %}
+						</select>
+						<select name="mem_month">
+							{% for notes_months in loops.notes_months %}
+							<option value="{{ notes_months.MONTH }}"{% if notes_months.MONTH eq S_NOTE_MEM_MONTH %} selected="selected"{% endif %}>{{ notes_months.MONTH }}</option>
+							{% endfor %}
+						</select>
+						<select name="mem_year">
+							{% for notes_years in loops.notes_years %}
+							<option value="{{ notes_years.YEAR }}"{% if notes_years.YEAR eq S_NOTE_MEM_YEAR %} selected="selected"{% endif %}>{{ notes_years.YEAR }}</option>
+							{% endfor %}
+						</select>
+						&bull;
+						<select name="mem_hour">
+							{% for notes_hours in loops.notes_hours %}
+							<option value="{{ notes_hours.HOUR }}"{% if notes_hours.HOUR eq S_NOTE_MEM_HOUR %} selected="selected"{% endif %}>{{ notes_hours.HOUR }}</option>
+							{% endfor %}
+						</select>
+						<select name="mem_minute">
+							{% for notes_minutes in loops.notes_minutes %}
+							<option value="{{ notes_minutes.MINUTE }}"{% if notes_minutes.MINUTE eq S_NOTE_MEM_MIN %} selected="selected"{% endif %}>{{ notes_minutes.MIN }}</option>
+							{% endfor %}
+						</select>
+					</dd>
+				</dl>
+
+				{% if loops.smiley|length %}
+				<div id="smiley-box" class="smiley-box">
+					<strong>{{ lang('SMILIES') }}</strong><br />
+					{% for smiley in loops.smiley %}
+						<a href="#" onclick="insert_text('{{ smiley.A_SMILEY_CODE }}', true); return false;"><img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" /></a>
+					{% endfor %}
+					<br /><br /><a href="{{ U_MORE_SMILIES }}" onclick="window.open('{{ U_MORE_SMILIES }}', '_blank', 'HEIGHT=200,resizable=yes,scrollbars=yes,WIDTH=400'); return false;">{{ lang('MORE_SMILIES') }}</a>
+				</div>
+				{% endif %}
+
+				<div>{% INCLUDE 'posting_buttons.html' %}</div>
+
+				<div id="message-box" class="message-box">
+					<textarea name="message" id="message" rows="13" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{{ NOTES_MESSAGE }}</textarea>
+				</div>
+
+				</fieldset>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="panel bg2">
+		<div class="inner">
+
+		<fieldset class="submit-buttons">
+			<input type="submit" name="save" class="button1" value="{{ lang('SUBMIT') }}" />&nbsp;&nbsp;<input type="submit" name="cancel" class="button2" value="{{ lang('CANCEL') }}" />
+			{{ S_FORM_TOKEN }}
+			{{ S_NOTES_HIDDEN_FIELDS }}
+		</fieldset>
+
+		</div>
+	</div>
+
+</form>
+
+{% if S_NOTES_POPUP %}
+<br />
+
+<p class="submit-buttons">
+	<input type="submit" name="cancel" class="button1" value="{{ lang('CLOSE_WINDOW') }}" onclick="window.close()" />
+</p>
+
+<br />
+
+	{% INCLUDE 'simple_footer.html' %}
+{% else %}
+	{% INCLUDE 'overall_footer.html' %}
+{% endif %}

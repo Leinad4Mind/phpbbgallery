@@ -1,0 +1,136 @@
+{% if S_NOTES_POPUP %}
+{% INCLUDE 'simple_header.html' %}
+{% else %}
+{% INCLUDE 'overall_header.html' %}
+{% endif %}
+
+<h2>
+	{{ lang('NOTES') }}
+	{% if not S_NO_NOTES %}
+	&bull;&nbsp;{{ NOTES_TOTAL_USED }} / {{ NOTES_TOTAL_ALLOWED }}
+	{% endif %}
+</h2>
+
+<br />
+
+<form action="{{ S_NOTES_FORM_ACTION }}" method="post" id="notes">
+<div class="navbar">
+	<div class="inner">
+
+	<fieldset>
+	<dl>
+		<dt>
+			<br />
+			<select name="search_in" class="selectbox">
+				<option value="note_subject"{% if NOTES_SEARCH_IN eq 'note_subject' %} selected="selected"{% endif %}>{{ lang('SUBJECT') }}</option>
+				<option value="note_text"{% if NOTES_SEARCH_IN eq 'note_text' %} selected="selected"{% endif %}>{{ lang('POST') }}</option>
+			</select>
+			<input type="text" name="search_string" size="30" maxlength="50" class="inputbox autowidth" />
+			<input type="submit" class="button2" value="{{ lang('SEARCH') }}{% if NOTES_SEARCH_ACTIVE %}*{% endif %}" />
+		</dt>
+		<dd>
+			<br />
+			<select name="sort_by" class="selectbox">
+				<option value="note_subject"{% if NOTES_SORT_BY eq 'note_subject' %} selected="selected"{% endif %}>{{ lang('SUBJECT') }}</option>
+				<option value="note_time"{% if NOTES_SORT_BY eq 'note_time' %} selected="selected"{% endif %}>{{ lang('TIME') }}</option>
+				<option value="note_mem"{% if NOTES_SORT_BY eq 'note_mem' %} selected="selected"{% endif %}>{{ lang('NOTES_MEM') }}</option>
+			</select>
+			<select name="sort_order" class="selectbox">
+				<option value="ASC"{% if NOTES_SORT_ORDER eq 'ASC' %} selected="selected"{% endif %}>{{ lang('ASCENDING') }}</option>
+				<option value="DESC"{% if NOTES_SORT_ORDER eq 'DESC' %} selected="selected"{% endif %}>{{ lang('DESCENDING') }}</option>
+			</select>
+			<input type="submit" class="button2" value="{{ lang('SORT_BY') }}" />
+		</dd>
+	</dl>
+	</fieldset>
+
+	</div>
+</div>
+</form>
+
+<br />
+
+{% if NOTES_FILTER_ACTIVE %}
+<p class="submit-buttons"><i>* {{ lang('FILTER_NOTES') }}</i><p>
+{% endif %}
+
+ <div class="action-bar bottom">
+	<div class="buttons">
+
+		{% if S_NEW_NOTE %}<a href="{{ U_NEW_NOTE }}" class="button icon-button post-icon">{{ lang('NEW_POST') }}</a>{% endif %}
+
+	</div>
+</div>
+
+{% if S_NO_NOTES %}
+	<h3>{% if NOTES_NOT_FOUND %}{{ lang('NO_SEARCH_RESULTS') }}{% else %}{{ lang('NO_NOTES') }}{% endif %}</h3>
+
+	<br />
+
+{% else %}
+	{% for notes_row in loops.notes_row %}
+	<div class="post {% if notes_row.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
+		<div class="inner">
+
+		<fieldset>
+
+		<div class="postbody">
+
+			<h3 {% if notes_row.S_FIRST_ROW %}class="first"{% endif %}>{% if NOTES_SLIDE_MODE %}<a href="#" onclick="showHideNote({{ notes_row.NOTE_ID }}); return false;">{% endif %}{{ notes_row.NOTE_SUBJECT }}{% if NOTES_SLIDE_MODE %}</a>{% endif %}</h3>
+			<div class="content{% if NOTES_SLIDE_MODE %} hide-note{% endif %}" id="note_{{ notes_row.NOTE_ID }}">{{ notes_row.NOTE_TEXT }}</div>
+			{% if notes_row.NOTES_MEM %}<div class="notice"><strong>{{ lang('NOTES_MEM') }}: </strong>{{ notes_row.NOTES_MEM }}</div>{% endif %}
+
+		</div>
+
+		<dl class="postprofile notes">
+			<ul class="post-buttons">
+				<li>
+					<a href="{{ notes_row.U_EDIT_NOTE }}" title="{{ lang('CHANGE') }}" class="button button-icon-only">
+						<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('CHANGE') }}</span>
+					</a>
+				</li>
+				<li>
+					<a href="{{ notes_row.U_DELETE_NOTE }}" title="{{ lang('DELETE') }}" class="button button-icon-only">
+						<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE') }}</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="author"> <b>{{ lang('POSTED') }}:</b><br />{{ notes_row.NOTE_DATE }}</div>
+		</dl>
+
+		<div class="back2top">
+			<a href="#wrap" class="top" title="{{ lang('BACK_TO_TOP') }}">
+				<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
+				<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
+			</a>
+		</div>
+
+		</fieldset>
+
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+
+<div class="action-bar bottom">
+	<div class="buttons">
+
+		{% if S_NEW_NOTE %}<a href="{{ U_NEW_NOTE }}" class="button icon-button post-icon">{{ lang('NEW_POST') }}</a>{% endif %}
+
+	</div>
+</div>
+
+<br />
+
+{% if S_NOTES_POPUP %}
+<p class="submit-buttons">
+	<input type="submit" name="cancel" class="button1" value="{{ lang('CLOSE_WINDOW') }}" onclick="javascript:window.close()" />
+</p>
+
+<br />
+
+{% INCLUDE 'simple_footer.html' %}
+{% else %}
+{% INCLUDE 'overall_footer.html' %}
+{% endif %}

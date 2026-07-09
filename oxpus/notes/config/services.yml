@@ -1,0 +1,30 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    oxpus.notes.controller:
+        class: oxpus\notes\controller\main
+        public: true
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@dbal.conn'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '%oxpus.notes.table%'
+    oxpus.notes.listener:
+        class: oxpus\notes\event\main_listener
+        public: true
+        arguments:
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '%oxpus.notes.table%'
+        tags:
+            - { name: event.listener }
