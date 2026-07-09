@@ -1,0 +1,11 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_ADD_ANNOUNCEMENT %}
+	{% include '@phpbb_boardannouncements/settings_add_edit.html' %}
+{% else %}
+	{% include '@phpbb_boardannouncements/settings_list.html' %}
+{% endif %}
+
+{% include 'overall_footer.html' %}
