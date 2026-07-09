@@ -1,0 +1,34 @@
+.answer + .post,
+.answer + a#unread + .post {
+	background-color: #EAF8E2;
+}
+
+.post_answer, .post_answer-dark {
+	background-color: #EAF8E2 !important;
+	padding: 10px;
+	border-radius: 7px;
+	width: 97.5% !important;
+	margin-bottom: 17px;
+}
+
+.profile-answers {
+	margin-left: 8px;
+}
+
+.profile-answers a {
+	font-weight: normal;
+}
+
+.answer-post .panel {
+	background-color: #eff9e9 !important;
+}
+
+.post_answer-dark, .answer-post-dark .panel {
+	background-color: #1a3509 !important;
+}
+
+@media (max-width: 700px) {
+	div.profile-answers {
+		display: none;
+	}
+}
