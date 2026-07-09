@@ -1,0 +1,100 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('SETTINGS') }}</h1>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+  <fieldset>
+    <dl>
+      <dt>
+        <label for="acp_enable">{{ lang('ACP_ENABLE') }}</label>
+      </dt>
+      <dd><input type="radio" class="radio" name="acp_enable" value="1" {% if ACP_ENABLE %} checked="checked" {% endif %}/>
+        {{ lang('YES') }}
+        &nbsp;
+        <input type="radio" class="radio" name="acp_enable" value="0" {% if not ACP_ENABLE %} checked="checked" {% endif %}/>
+        {{ lang('NO') }}
+      </dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="api_key">{{ lang('ACP_API_KEY') }}</label>
+      </dt>
+      <dd><input style="min-width:325px" type="text" name="api_key" value="{{ ACP_API_KEY }}"/></dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="acp_provider">{{ lang('ACP_PROVIDER') }}</label>
+      </dt>
+      <dd>
+        <select id="acp_provider" name="acp_provider" onchange="display_options(this.options[this.selectedIndex].value);">
+          <option value="1" {% if ACP_PROVIDER eq "1" %} selected="selected" {% endif %}>{{ lang('ACP_PROVIDER_REALDEBRID') }}</option>
+          <option value="2" {% if ACP_PROVIDER eq "2" %} selected="selected" {% endif %}>{{ lang('ACP_PROVIDER_ALLDEBRID') }}</option>
+        </select>
+      </dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="use_proxy">{{ lang('ACP_USE_PROXY') }}</label>
+      </dt>
+      <dd><input type="radio" class="radio" name="use_proxy" value="1" {% if ACP_USE_PROXY %} checked="checked" {% endif %}/>
+        {{ lang('YES') }}
+        &nbsp;
+        <input type="radio" class="radio" name="use_proxy" value="0" {% if not ACP_USE_PROXY %} checked="checked" {% endif %}/>
+        {{ lang('NO') }}
+      </dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="proxy_host">{{ lang('ACP_PROXY_HOST') }}</label><br /><span>{{ lang('ACP_PROXY_HOST_EXPLAIN') }}</span>
+      </dt>
+      <dd><input style="min-width:275px" type="text" name="proxy_host" value="{{ ACP_PROXY_HOST }}"/></dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="proxy_credentials">{{ lang('ACP_PROXY_CREDENTIALS') }}</label><br /><span>{{ lang('ACP_PROXY_CREDENTIALS_EXPLAIN') }}</span>
+      </dt>
+      <dd><input style="min-width:325px" type="text" name="proxy_credentials" value="{{ ACP_PROXY_CREDENTIALS }}"/></dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label for="proxy_type">{{ lang('ACP_PROXY_TYPE') }}</label>
+      </dt>
+      <dd>
+        <select id="proxy_type" name="proxy_type" onchange="display_options(this.options[this.selectedIndex].value);">
+          <option value="1" {% if ACP_PROXY_TYPE eq "1" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_HTTP') }}</option>
+          <option value="2" {% if ACP_PROXY_TYPE eq "2" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_HTTPS') }}</option>
+          <option value="3" {% if ACP_PROXY_TYPE eq "3" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_HTTP_1_0') }}</option>
+          <option value="4" {% if ACP_PROXY_TYPE eq "4" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_SOCKS4') }}</option>
+          <option value="5" {% if ACP_PROXY_TYPE eq "5" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_SOCKS4A') }}</option>
+          <option value="6" {% if ACP_PROXY_TYPE eq "6" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_SOCKS5') }}</option>
+          <option value="7" {% if ACP_PROXY_TYPE eq "7" %} selected="selected" {% endif %}>{{ lang('ACP_PROXY_TYPE_CURLPROXY_SOCKS5_HOSTNAME') }}</option>
+        </select>
+      </dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <label>{{ lang('DEBRIDER_MYSQL_UPDATE') }}{{ lang('COLON') }}</label>
+        <br /><span>{{ lang('DEBRIDER_MYSQL_UPDATE_EXPLAIN') }}</span>
+      </dt>
+      <dd>
+        <span>{{ lang('DEBRIDER_MYSQL_UPDATE_CODE') }}</span>
+      </dd>
+    </dl>
+
+    <p class="submit-buttons">
+      <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}"/>&nbsp;
+      <input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+    </p>
+
+    {{ S_FORM_TOKEN }}
+  </fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}

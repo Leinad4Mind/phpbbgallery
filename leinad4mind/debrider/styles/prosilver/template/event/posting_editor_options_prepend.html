@@ -1,0 +1,7 @@
+{% if CAN_ENABLE_DEBRID %}
+<div>
+  <label for="enable_debrider">
+    <input type="checkbox" name="enable_debrider" value="1" id="enable_debrider" {% if CHECKED_ENABLE_DEBRID %}checked="checked" {% endif %}> {{ lang('DEBRIDER_ENABLE_OPTION') }}
+  </label>
+</div>
+{% endif %}

@@ -1,0 +1,18 @@
+<dl>
+  <dt>
+    <label for="can_enable_debrid">{{ lang('DEBRIDER_CAN_ENABLE') }}</label>
+    <br>
+    <span>{{ lang('DEBRIDER_CAN_ENABLE_EXPLAIN') }}</span>
+  </dt>
+  <dd>
+    <label><input type="radio" class="radio" name="can_enable_debrid" value="2" {% if CAN_ENABLE_DEBRID eq 2 %} checked="checked" {% endif %}>
+      {{ lang('DEBRIDER_PRESELECTED') }}
+    </label>
+    <label><input type="radio" class="radio" name="can_enable_debrid" value="1" {% if CAN_ENABLE_DEBRID eq 1 %} checked="checked" {% endif %}>
+      {{ lang('YES') }}
+    </label>
+    <label><input type="radio" class="radio" name="can_enable_debrid" value="0" {% if CAN_ENABLE_DEBRID eq 0 %} checked="checked" {% endif %}>
+      {{ lang('NO') }}
+    </label>
+  </dd>
+</dl>
