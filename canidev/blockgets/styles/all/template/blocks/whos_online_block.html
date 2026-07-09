@@ -1,0 +1,44 @@
+
+{% if S_ADVANCED_MODE %}
+<table class="blg-table">
+	<col class="wio-col-image" /><col />
+	<tr>
+		<td class="blg-align-center">{% if U_VIEWONLINE %}<a href="{{ U_VIEWONLINE }}"><span class="blg-image online-users-img"></span></a>{% else %}<span class="blg-image online-users-img"></span>{% endif %}</td>
+		<td class="blg-align-top">
+			<p>
+				{{ TOTAL_USERS_ONLINE }} ({{ lang('ONLINE_EXPLAIN') }})<br />{{ RECORD_USERS }}
+				{% if S_WIO_USERS %}<br /><br />{{ LOGGED_IN_USER_LIST }}{% endif %}
+			</p>
+		</td>
+	</tr>
+	<tr><td colspan="2"><hr /></td></tr>
+	<tr>
+		<td class="blg-align-center"><span class="blg-image last-online-img"></span></td>
+		<td class="blg-align-top"><p>{{ S_TOTAL_USERS_LASTVISIT }}{% if S_WIO_USERS %}<br /><br />{{ S_LASTVISIT_USER_LIST }}{% endif %}</p></td>
+	</tr>
+</table>
+{% if S_LEGEND %}<hr />{{ lang('LEGEND') ~ lang('COLON') }} <em>{{ S_LEGEND }}</em>{% endif %}
+
+{% else %}
+
+<div class="blg-align-center">
+	<div class="wio-block">
+		<div><strong>{{ lang('WIO_ONLINE') }}</strong><hr /></div>
+
+		<div><strong>{{ lang('WIO_TOTAL') ~ lang('COLON') }}<span>{{ S_TOTAL_ONLINE }}</span></strong></div>
+		<div>{{ lang('WIO_REGISTERED') ~ lang('COLON') }}<span>{{ S_VISIBLE_ONLINE }}</span></div>
+		<div>{{ lang('WIO_HIDDEN') ~ lang('COLON') }}<span>{{ S_HIDDEN_ONLINE }}</span></div>
+		<div>{{ lang('WIO_GUEST') ~ lang('COLON') }}<span>{{ S_GUEST_ONLINE }}</span></div>
+	</div>
+
+	<div class="wio-block">
+		<div><strong>{{ lang('WIO_LASTDAY') }}</strong><hr /></div>
+
+		<div><strong>{{ lang('WIO_TOTAL') ~ lang('COLON') }}<span>{{ S_TOTAL_LASTDAY }}</span></strong></div>
+		<div>{{ lang('WIO_REGISTERED') ~ lang('COLON') }}<span>{{ S_VISIBLE_LASTDAY }}</span></div>
+		<div>{{ lang('WIO_HIDDEN') ~ lang('COLON') }}<span>{{ S_HIDDEN_LASTDAY }}</span></div>
+		<div>{{ lang('WIO_GUEST') ~ lang('COLON') }}<span>{{ S_GUEST_LASTDAY }}</span></div>
+	</div>
+</div>
+
+{% endif %}

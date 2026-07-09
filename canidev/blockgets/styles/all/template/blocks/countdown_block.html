@@ -1,0 +1,22 @@
+{% if BLG_IN_AJAX or COUNTOWN_EXPIRED %}
+	<div class="counter-message block-postbody">{{ S_COUNTDOWN_MESSAGE }}</div>
+{% else %}
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#countdown-{{ BLOCK_ID }}').blgCountdown({{ COUNTDOWN_OPTIONS }});
+		});
+	// ]]>
+	</script>
+
+	<div id="countdown-{{ BLOCK_ID }}" class="blg-countdown">
+		<div class="counter-digits cbb-helper-hidden">
+			<div class="counter-digit">
+				<div class="counter-number"><%number%></div>
+				<div class="counter-label"><%label%></div>
+			</div>
+		</div>
+		<div class="counter-message block-postbody">{{ S_COUNTDOWN_MESSAGE }}</div>
+	</div>
+{% endif %}

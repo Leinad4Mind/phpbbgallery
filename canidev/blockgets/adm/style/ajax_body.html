@@ -1,0 +1,17 @@
+
+<div id="confirm-box" title="{{ MESSAGE_TITLE }}">
+	<form action="{{ S_CONFIRM_ACTION }}">
+		<div class="cbb-dialog-content blg-align-center">
+			<div>{{ lang('EXPLAIN') }}<br /><br /></div>
+
+			{% if S_PAGE_OPTIONS %}<select name="target_page_id" id="target-page-id" class="cbb-inputbox">{{ S_PAGE_OPTIONS }}</select><br />{% endif %}
+			{% if S_GROUP_SELECT %}{{ S_GROUP_SELECT }}{% endif %}
+		</div>
+
+		<div class="cbb-dialog-buttons">
+			<button class="cbb-btn" value="submit" data-confirm="{{ YES_VALUE }}">{{ lang('ACCEPT') }}</button>
+			<button class="cbb-btn" value="close">{{ lang('CANCEL') }}</button>
+			{{ S_HIDDEN_FIELDS }}
+		</div>
+	</form>
+</div>

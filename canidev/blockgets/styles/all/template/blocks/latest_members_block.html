@@ -1,0 +1,9 @@
+
+<ul class="blg-linear-list blg-menu">
+{% for member in members %}
+	<li class="userrow double-space" title="{{ lang('JOINED') ~ lang('COLON') }} {{ member.JOINED }}">
+		<div class="cbb-circular-avatar">{% if member.AVATAR %}{{ member.AVATAR }}{% else %}><div class="cbb-no-avatar"></div>{% endif %}</div>
+		{{ member.S_USER_FULL }}
+	</li>
+{% endfor %}
+</ul>

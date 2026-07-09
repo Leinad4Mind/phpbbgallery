@@ -1,0 +1,65 @@
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#announcements-{{ BLOCK_ID }}').blgAccordion({
+			collapsable: '{{ S_ANNS_COLLAPSE }}'
+		});
+	});
+// ]]>
+</script>
+
+{% if ann_row|length %}
+<div id="announcements-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+    
+{% for topicrow in ann_row %}
+	{% if BLOCK_VIEW_SMALL %}
+    <h5><span class="cbb-helper-text">{{ topicrow.TOPIC_TITLE }}</span></h5>
+	<div class="block-postbody">
+		<div class="blg-panel">{{ topicrow.TEXT }}</div>
+		<div class="small">{{ topicrow.FIRST_POST_TIME }}</div>
+		
+		<div>
+			<hr />
+			<a class="blg-align-right floated" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ lang('READ_FULL') }}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a>
+			<strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong>
+		</div>
+	
+	{% else %}
+	
+    <h5>
+    	<span class="blg-announcement-time small">{{ topicrow.FIRST_POST_TIME }}</span>
+
+    	{% EVENT topiclist_row_prepend %}
+    	<span class="cbb-helper-text cbb-inline half-size">{{ topicrow.TOPIC_TITLE }}</span>
+   	</h5>
+	<div>
+		<table class="blg-table">
+		<tr>
+			<td colspan="2" class="blg-align-left">
+				<div class="block-postbody news-content">{{ topicrow.TEXT }}</div>
+	              
+			{% if topicrow.S_HAS_ATTACHMENTS %}
+				<dl class="attachbox">
+					<dt>{{ lang('ATTACHMENTS') }}</dt>
+					{% for attachment in topicrow.attachment %}
+						<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
+					{% endfor %}
+				</dl>
+			{% endif %}
+	
+			</td>
+		</tr>
+		<tr><td colspan="2"><hr /></td></tr>
+		<tr>
+			<td class="blg-align-left">{{ lang('POSTED_BY') ~ lang('COLON') }} <strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong></td>
+			<td class="blg-align-right"><a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ lang('READ_FULL') }}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></td>
+		</tr>
+		</table>
+	{% endif %}
+	</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="blg-align-center">{{ lang('NO_ANNOUNCEMENTS') }}</div>
+{% endif %}

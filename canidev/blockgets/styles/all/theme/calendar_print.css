@@ -1,0 +1,65 @@
+/**
+ * cBB Blockgets (Calendar Print stylesheet)
+ * Copyright (c) 2023, CaniDev
+ * license https://creativecommons.org/licenses/by-nc/4.0/
+ */
+ 
+html	{ height: 100%; }
+body	{ padding: 0; }
+
+#wrap {
+	border: none;
+	border-radius: 0;
+    max-width: none;
+    min-width: 0;
+	padding: 0 15px;
+}
+
+#page-body,
+.blg-area {
+    margin: 0;
+}
+
+.blg-calendar-actionbar {
+	float: right;
+	margin: 2em 0 0 0;
+}
+
+#page-header,
+#page-footer,
+#wrap > .navbar,
+.blg-calendar-actionbar .cbb-group,
+.blg-calendar-actionbar .cbb-btn {
+	display: none;
+}
+
+#blg-column-center h2 {
+	float: left;
+}
+
+.blg-calendar:before {
+    content: "";
+    display: block;
+    clear: both;
+    margin-bottom: 20px;
+}
+
+body,
+#wrap,
+.blg-calendar td.today {
+	background: none;
+}
+
+.blg-calendar td.today .blg-calendar-day,
+.blg-calendar td.today .blg-calendar-content {
+    border: inherit;
+}
+
+.blg-calendar td.today .blg-calendar-day {
+	border-bottom: none;
+	font-weight: normal;
+}
+
+.blg-calendar td.today .blg-calendar-content {
+	border-top: none;
+}

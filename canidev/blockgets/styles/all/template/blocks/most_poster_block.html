@@ -1,0 +1,44 @@
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function (){
+		$('#most-poster-{{ BLOCK_ID }}').blgAccordion({
+			collapsible : true
+		});
+	});
+// ]]>
+</script>
+
+{% if most_poster|length %}
+<div id="most-poster-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+    
+{% for member in most_poster %}
+	<h5><a href="#">{{ member.USERNAME }}</a></h5>
+	<div>
+		<div class="blg-align-center">
+			<div class="cbb-circular-avatar">{% if member.AVATAR %}{{ member.AVATAR }}{% else %}><div class="cbb-no-avatar"></div>{% endif %}</div>
+		</div>
+
+		<br />
+		
+		<div class="blg-inline-list">
+			<dl>
+				<dt><strong>{{ lang('USER') ~ lang('COLON') }}</strong></dt>
+				<dd>{{ member.USER_FULL }}</dd>
+			</dl>
+			<dl>
+				<dt><strong>{{ lang('JOINED') ~ lang('COLON') }}</strong></dt>
+				<dd>{{ member.REGDATE }}</dd>
+			</dl>
+			<dl>
+				<dt><strong>{{ lang('POSTS') ~ lang('COLON') }}</strong></dt>
+				<dd><a href="{{ member.U_FIND_POSTS }}">{{ member.POSTS }}</a></dd>
+			</dl>
+		</div>
+	</div>
+{% endfor %}
+
+</div>
+{% else %}
+	<div class="blg-align-center">{{ lang('NO_MOST_POSTER') }}</div>
+{% endif %}

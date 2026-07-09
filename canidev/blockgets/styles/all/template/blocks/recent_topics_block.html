@@ -1,0 +1,138 @@
+
+{% if SHOW_TABS %}
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.cbbTabs();{% endif %}
+	});
+// ]]>
+</script>
+{% endif %}
+
+<div id="recent-{{ BLOCK_ID }}"{% if SHOW_TABS %} class="cbb-helper-hidden"{% endif %}>
+
+{% if BLOCK_VIEW_SMALL %}
+	{% for tab in recent_tab %}
+		<h5><a href="#">{{ tab.TITLE }}</a></h5>
+		<div class="no-wrap">
+			{% if tab.IS_EMPTY %}{{ lang('NO_ITEMS') }}{% endif %}
+
+			<ul class="blg-linear-list">
+			{% for topicrow in tab.rows %}
+				<li>
+					{% EVENT topiclist_row_prepend %}
+					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	{% endfor %}
+
+{% else %}
+
+{% if SHOW_TABS %}
+    <ul>
+	{% for tab in recent_tab %}
+		<li><a href="#{{ tab.ID }}-{{ BLOCK_ID }}"><i class="fa {{ tab.ICON }} fa-lg"></i>{% if not BLOCK_VIEW_MEDIUM %} <span class="tab-title">{{ tab.TITLE }}</span>{% endif %}</a></li>
+	{% endfor %}
+    </ul>
+{% endif %}
+
+    {% if TOPIC_DESIGN == 'simple' %}
+		{% for tab in recent_tab %}
+			<div class="blg-align-center recent-content block-postbody" id="{{ tab.ID }}-{{ BLOCK_ID }}">
+
+				<div class="blg-table">
+				{% if tab.IS_EMPTY %}
+					<div class="blg-align-center"><span>{{ lang('NO_ITEMS') }}</span></div>
+				{% else %}
+					<div>
+						<div class="blg-column-topic-title blg-widget-header">{{ lang('TOPIC_TITLE') }}</div>
+						<div class="blg-column-posted-by blg-widget-header">{{ lang('POSTED_BY') }}</div>
+					{% if not BLOCK_VIEW_MEDIUM %}
+						<div class="blg-column-comments blg-widget-header">{{ lang('COMMENTS') }}</div>
+						<div class="blg-column-topic-views blg-widget-header">{{ lang('TOPIC_VIEWS') }}</div>
+					{% endif %}
+					</div>
+					
+					{% for topicrow in tab.rows %}
+						<div>
+							<div class="blg-column-topic-title blg-align-left">
+								{% EVENT topiclist_row_prepend %}
+								<a href="{{ topicrow.U_VIEW_TOPIC }}" class="cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+							</div>
+							<div class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</div>
+						{% if not BLOCK_VIEW_MEDIUM %}
+							<div class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_COMMENTS') }}">{{ topicrow.REPLIES }}</a></div>
+							<div class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</div>
+						{% endif %}
+						</div>
+					{% endfor %}
+				{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	{% else %}
+		{% for tab in recent_tab %}
+			<div id="{{ tab.ID }}-{{ BLOCK_ID }}" class="blg-forum-list{% if SHOW_TABS %} cbb-helper-hidden{% endif %}{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+			{% if tab.IS_EMPTY %}
+				<div class="blg-message">{{ lang('NO_ITEMS') }}</div>
+			{% else %}
+				<div class="blg-widget-header">
+					{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+					<span>{{ lang('TOPIC') }}</span>
+				</div>
+				<ul class="topiclist topics">
+
+				{% for topicrow in tab.rows %}
+					<li class="row{% if topicrow.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}{% if topicrow.S_POST_GLOBAL %} global-announce{% endif %}{% if topicrow.S_POST_ANNOUNCE %} announce{% endif %}{% if topicrow.S_POST_STICKY %} sticky{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
+						{% EVENT viewforum_body_topic_row_prepend %}
+						<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
+							<dt{%if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH ~ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
+								<div class="list-inner">
+									{% EVENT topiclist_row_prepend %}
+									<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+									<br />
+									{% EVENT topiclist_row_topic_title_after %}
+
+								{% if not S_IS_BOT %}
+									<div class="responsive-show" style="display: none;">
+										{{ lang('LAST_POST') }} {{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ topicrow.LAST_POST_TIME }}</a>
+									</div>
+									{% if topicrow.REPLIES %}<span class="responsive-show left-box" style="display: none;">{{ lang('REPLIES') ~ lang('COLON') }} <strong>{{ topicrow.REPLIES }}</strong></span>{% endif %}
+								{% endif %}
+
+									<div class="topic-poster responsive-hide">
+										{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }} &raquo; {{ topicrow.FIRST_POST_TIME }}
+										{% if SHOW_TOPIC_PARENT %}<br />{{ lang('IN') }} <a href="{{ topicrow.U_VIEW_FORUM }}">{{ topicrow.FORUM_NAME }}</a>{% endif %}
+									</div>
+
+									{% EVENT topiclist_row_append %}
+								</div>
+							</dt>
+						{% if not BLOCK_VIEW_MEDIUM %}
+							<dd class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {{ lang('VIEWS') }}<br />{{ topicrow.REPLIES }} {{ lang('REPLIES') }}</dd>
+							<dd class="lastpost">
+								<span><dfn>{{ lang('LAST_POST') }} </dfn>{{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+									{% if not S_IS_BOT %}
+										<a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">
+											<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span>
+										</a>
+									{% endif %}
+									<br />{{ topicrow.LAST_POST_TIME }}
+								</span>
+							</dd>
+						{% endif %}
+						</dl>
+						{% EVENT viewforum_body_topic_row_append %}
+					</li>
+				{% endfor %}
+
+				</ul>
+			{% endif %}
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endif %}
+</div>

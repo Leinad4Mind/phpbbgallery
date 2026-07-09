@@ -1,0 +1,57 @@
+{% if ACP_MANAGE_GALLERY %}
+<button class="cbb-btn" data-id="{{ S_BUTTON_ID }}">{{ lang('GALLERY_MANAGE') }}</button>
+{{ S_GALLERY_HIDDEN_FIELDS }}
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('[data-id="{{ S_BUTTON_ID }}"]').click(function(e) {
+			e.preventDefault();
+			
+			var btn = $(this);
+			
+			var mediaManager = cbbCore.getService('mediaManager');
+
+			mediaManager.init({
+				instanceID 	: 'blockgets',
+				custom		: true,
+				returnMask	: 'list',
+				sources		: [],
+				beforeLoad: function(options) {
+					btn.siblings('[name^="item_ids"]').each(function() {
+						options.sources.push($(this).val());
+					});
+				},
+				onSubmit: function(data) {
+					btn.siblings('[name^="item_ids"]').remove();
+					
+					$.each(data, function(i, row) {
+						var id = (row.type == 'attachment') ? row.originalId : row.code;
+						
+						btn.parent().append('<input type="hidden" name="item_ids[]" value="' + id + '" />');
+					});
+				}
+			});
+		});
+	});
+// ]]>
+</script>
+
+{% else %}
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }}').blgGallery({{ S_GALLERY_OPTIONS }});
+	});
+// ]]>
+</script>
+
+<div class="gallery">
+{% for image in loops.image %}
+	<a href="{{ image.ACTION }}" title="{{ image.TITLE }}" class="blank"><img src="{{ image.SRC }}" alt="{{ image.TITLE }}" /></a>
+{% endfor %}
+</div>
+{% endif %}

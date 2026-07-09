@@ -1,0 +1,58 @@
+{% if BLG_IN_AJAX %}
+	<ul class="yt-list yt-list-{{ YT_MODE }}">
+	{% for item in ytitem %}
+		<li>
+		{% if YT_MODE == 'full' %}
+			<a class="yt-thumbnail" href="{{ item.S_HREF }}">
+				<img src="{{ item.S_THUMBNAIL }}" alt="thumbnail" />
+				<span class="yt-time">{{ item.S_TIME }}</span>
+			</a>
+			<div class="yt-title"><a href="{{ item.S_HREF }}">{{ item.S_TITLE }}</a></div>
+			<div class="yt-info">{{ item.S_DATE }} &bull; {{ item.S_VIEWS }}</div>
+			<div class="yt-description">{{ item.S_DESCRIPTION }}</div>
+		{% elseif YT_MODE == 'simple' %}
+			<a class="yt-thumbnail" href="{{ item.S_HREF }}">
+				<img src="{{ item.S_THUMBNAIL }}" alt="thumbnail" />
+				<span class="yt-time">{{ item.S_TIME }}</span>	
+			</a>
+			<div class="yt-title"><a href="{{ item.S_HREF }}"{% if BLOCK_VIEW_SMALL %} title="{{ item.S_DESCRIPTION|e }}"{% endif %}>{{ item.S_TITLE }}</a></div>
+		{% elseif YT_MODE == 'video' %}
+			<iframe width="{{ item.S_WIDTH }}" height="{{ item.S_HEIGHT }}" src="{{ item.S_MOVIE }}" frameborder="0" allowfullscreen></iframe>
+		{% elseif YT_MODE == 'list' %}
+			<i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;<a href="{{ item.S_HREF }}">{{ item.S_TITLE }}</a>
+		{% endif %}
+		</li>
+	{% else %}
+		<li class="no-items blg-message cbb-state-highlight">{{ lang('NO_VIDEOS') }}</li>
+	{% endfor %}
+	</ul>
+
+{% else %}
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#youtube-{{ BLOCK_ID }}').cbbLoader($.extend(true, {{ S_OPTIONS }}, {
+			onComplete: function() {
+				this.element.find('a').click(function(e) {
+					e.preventDefault();
+
+					$('<div />')
+						.addClass('yt-preview')
+						.append('<iframe src="' + this.href.replace('watch?v=', 'embed/') + '?autoplay=1" frameborder="0" allow="autoplay"></iframe>')
+						.cbbDialog({
+							destroyOnClose: true,
+							title: $(this).closest('.yt-list').find('.yt-title').text(),
+							width: 600
+						});
+				});
+			}
+		}));
+	});
+// ]]>
+</script>
+
+<div id="youtube-{{ BLOCK_ID }}"></div>
+
+{% endif %}

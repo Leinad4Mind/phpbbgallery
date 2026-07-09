@@ -1,0 +1,84 @@
+{% if S_LIST or S_ITEM %}
+
+{% if not S_ITEM %}
+<div class="js-list-{{ S_LIST_ID }}">
+
+	<table class="blg-table {% if S_LIST_FORMAT == 'minimal' %}acp-blg-list-minimal{% else %}acp-blg-list2{% endif %} not-responsive">
+	<tr class="js-no-over">
+		<td>
+			<ul class="sortable">
+{% endif %}
+			{% for item in loops.item %}
+				<li id="row-{{ item.ID }}" class="move {% if item.IS_DISABLED %}blg-state-active{% else %}blg-state-default{% endif %}">
+					<table class="not-responsive"><tr>
+					{% if S_LIST_FORMAT <> 'minimal' %}
+						<td class="blg-align-center" style="width:1%;">
+							<input type="checkbox" class="js-check-field radio cbb-checkbox" id="item-{{ S_LIST_ID }}-{{ item.ID }}" name="item_list[]" value="{{ item.ID }}" />
+							<label for="item-{{ S_LIST_ID }}-{{ item.ID }}"></label>
+						</td>
+					{% endif %}
+						{% if item.IMG %}<td class="icon">{{ item.IMG }}</td>{% endif %}
+						<td>{{ item.TITLE }}<br /><span class="row-subtitle small">{{ item.SUBTITLE }}</span></td>
+						<td class="column-actions">
+							<div class="row-actions">
+								<a href="{{ item.U_EDIT }}" title="{{ lang('EDIT') }}"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+								<a href="{{ item.U_DELETE }}" title="{{ lang('DELETE') }}"><i class="fa fa-remove fa-lg" aria-hidden="true"></i></a>
+							</div>
+						</td>
+					</tr></table>
+					{{ item.HIDDEN_FIELDS }}
+				</li>
+			{% endfor %}
+{% if not S_ITEM %}
+			</ul>
+		</td>
+	</tr>
+	</table>
+
+	<div class="batch-actions blg-align-right">
+	{% if S_LIST_FORMAT <> 'minimal' %}
+		<div class="cbb-group blg-align-left floated">
+			<select class="cbb-inputbox" name="batch">
+				<option value="">{{ lang('BATCH_ACTIONS') }}</option>
+				<option value="delete">{{ lang('DELETE') }}</option>
+			</select>
+			<a href="{{ U_BATCH }}" class="cbb-btn">{{ lang('SUBMIT') }}</a>
+		</div>
+	{% endif %}
+
+		<a href="{{ U_ADD_ITEM }}" class="cbb-btn">{{ S_ADD_ITEM }}</a>
+	</div>
+	
+	{{ S_LIST_HIDDEN_FIELDS }}
+	
+	<script type="text/html" id="tpl-list-no-items">
+		<li class="blg-message cbb-state-highlight no-items">{{ lang('ACP_NO_ITEMS') }}</li>
+	</script>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(['@blockgets/bindList', '{{ S_LIST_ID }}']);
+// ]]>
+</script>
+{% endif %}
+
+{% elseif S_CONFIRM_ACTION %}
+
+<div title="{{ MESSAGE_TITLE }}" data-width="800">
+	<form action="{{ S_CONFIRM_ACTION }}" onsubmit="return false;">
+		<div class="cbb-dialog-content">
+			{% set display_submit_save = false %}
+			{% include '@canidev_core/acp_options.html' %}
+		</div>
+		
+		<div class="cbb-dialog-buttons">
+			<button class="cbb-btn" value="submit" data-confirm="{{ YES_VALUE }}">{{ lang('ACCEPT') }}</button>
+			<button class="cbb-btn" value="close">{{ lang('CANCEL') }}</button>
+			{{ S_HIDDEN_FIELDS }}
+		</div>
+	</form>
+</div>
+
+{% endif %}

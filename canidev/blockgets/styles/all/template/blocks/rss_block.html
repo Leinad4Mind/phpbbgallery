@@ -1,0 +1,84 @@
+{% if BLG_IN_AJAX %}
+
+{% if rss|length %}
+
+	{% if S_SCROLL_V %}
+
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#rss-accordion-{{ BLOCK_ID }}').blgAccordion({
+				collapsable: '{{ S_RSS_COLLAPSE }}'
+			});
+			
+		{% if not S_RSS_COLLAPSE %}
+			$('#block-{{ BLOCK_ID }}').blgMarquee({
+				direction: 'up',
+				height: '{{ S_BLOCK_HEIGHT }}',
+				container: '#rss-accordion-{{ BLOCK_ID }}',
+				fps: 1
+			});
+		{% endif %}
+		
+			$('#block-{{ BLOCK_ID }}').cbbImageGallery({ maxWidth: 400 });
+		});
+	// ]]>
+	</script>
+
+	{% if not S_RSS_COLLAPSE %}<div class="marquee" style="padding:2px;">{% endif %}
+		<div id="rss-accordion-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+		{% for rss in loops.rss %}
+			<h5><span class="cbb-helper-text">{{ rss.S_TITLE }}</span></h5>
+			<div class="block-postbody content">
+			{% for item in rss.item %}
+				{% if not item.S_FIRST_ROW %}<hr />{% endif %}
+				<h4>{% if item.U_LINK %}<a class="blank" href="{{ item.U_LINK }}">{{ item.S_TITLE }}</a>{% else %}{{ item.S_TITLE }}{% endif %}</h4>
+				<div>{{ item.S_DESCRIPTION }}</div>
+			{% endfor %}
+			</div>
+		{% endfor %}
+		</div>
+	{% if not S_RSS_COLLAPSE %}</div>{% endif %}
+
+	{% else %}
+	
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#block-{{ BLOCK_ID }}').blgMarquee({
+				direction: 'left',
+				fps: 1
+			});
+		});
+	// ]]>
+	</script>
+	
+	<div class="marquee" style="padding:2px;">
+		<div class="marquee-container no-wrap">
+		{% for rss in loops.rss %}
+			{% if not rss.S_FIRST_ROW %} | {% endif %}
+			<strong>( {{ rss.S_TITLE }} )</strong>{% for item in rss.item %} <strong>{{ item.S_TITLE }} ::</strong> <em>{{ item.S_DESCRIPTION }}</em>{% endfor %}
+		{% endfor %}
+		</div>
+	</div>
+
+	{% endif %}
+
+{% else %}
+	<div class="blg-align-center">{{ lang('NO_RSS') }}</div>
+{% endif %}
+
+{% else %}
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#rss-block-{{ BLOCK_ID }}').cbbLoader({{ S_OPTIONS }});
+		});
+	// ]]>
+	</script>
+
+	<div id="rss-block-{{ BLOCK_ID }}"></div>
+{% endif %}

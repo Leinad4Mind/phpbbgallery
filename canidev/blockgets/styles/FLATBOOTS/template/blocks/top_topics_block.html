@@ -1,0 +1,87 @@
+
+{% if BLOCK_VIEW_SMALL or TOPIC_DESIGN == 'simple' %}
+{% for topicrow in top_topic %}
+	{% if not topicrow.S_FIRST_ROW %}<hr />{% endif %}
+	<div class="lunread-row">
+		{% EVENT topiclist_row_prepend %}
+		<a class="cbb-helper-text cbb-inline half-size" href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
+		{% if not BLOCK_VIEW_SMALL %}<span>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }}</span>{% endif %}
+		<span> &raquo; <em>{{ topicrow.FIRST_POST_TIME }}</em></span>
+		{% EVENT topiclist_row_append %}
+	</div>
+{% else %}
+	<div class="blg-align-center">{{ lang('NO_UNREAD') }}</div>
+{% endfor %}
+
+{% else %}
+
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+	<div class="panel panel-default">
+	{% elseif top_topic|length %}
+		<div class="blg-widget-header">
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			<span>{{ lang('TOPIC') }}</span>
+		</div>
+	{% endif %}
+
+		<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
+	{% if BLOCK_STYLE == 'content_simple' %}
+		<thead>
+			<tr><th colspan="3">{{ BLOCK_TITLE }}</th></tr>
+		</thead>
+	{% endif %}
+		<tbody>
+
+		{% for topicrow in top_topic %}
+			{% EVENT viewforum_body_topicrow_row_before %}
+			<tr>
+				<td>
+					{% if topicrow.TOPIC_ICON_IMG %}
+					<i class="topic-icon" style="background-image: url({% if not S_BBEMOJI %}{{ T_ICONS_PATH }}{% endif %}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					{% endif %}
+
+					<span class="icon-wrapper">
+				    	<i class="row-icon-font icon-moon-default2{% if topicrow.S_POST_ANNOUNCE %} icon-moon-voice2{% endif %}{% if topicrow.S_POST_GLOBAL %} icon-moon-podcast2{% endif %}{% if topicrow.S_POST_STICKY %} icon-moon-pushpin2{% endif %}{% if topicrow.S_HAS_POLL %} icon-moon-poll{% endif %}{% if topicrow.S_TOPIC_MOVED %} icon-moon-moved{% endif %}{% if topicrow.S_UNREAD_TOPIC %} forum-unread{% else %} forum-read{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					</span>
+
+					<i class="row-icon-font-mini{% if topicrow.S_TOPIC_LOCKED %} fa fa-lock forumview-lock{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					
+					<div class="desc-wrapper">
+			  			{% EVENT topiclist_row_prepend %}
+						{% if topicrow.S_UNREAD_TOPIC %}<a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_FIRST_UNREAD') }}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;{% endif %}{% if topicrow.U_VIEW_TOPIC %}<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>{% else %}{{ topicrow.TOPIC_TITLE }}{% endif %}
+
+						<br />{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ topicrow.TOPIC_AUTHOR_FULL }} 
+						<small>&nbsp;&#45;&nbsp;{{ topicrow.FIRST_POST_TIME }}</small>
+			 		 	{% EVENT topiclist_row_append %}	
+					</div>
+				</td>
+
+			{% if not BLOCK_VIEW_MEDIUM %}
+				<td class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {{ lang('VIEWS') }}<br />{{ topicrow.REPLIES }} {{ lang('REPLIES') }}</td>
+				<td class="lastpost">
+					<i class="fa fa-user"></i>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+					{% if not S_IS_BOT %}
+						<a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">
+							<i class="mobile-post fa fa-sign-out" aria-hidden="true"></i>
+						</a>
+					{% endif %}
+					<br /><i class="fa fa-clock-o"></i>&nbsp;<small>{{ topicrow.LAST_POST_TIME }}</small>
+				</td>
+			{% endif %}
+			</tr>
+			{% EVENT viewforum_body_topicrow_row_after %}
+		{% else %}
+			<tr><td colspan="3" class="blg-message">{{ lang('NO_UNREAD') }}</td></tr>
+		{% endfor %}
+		</tbody>
+		</table>
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+	</div>
+	{% endif %}
+
+</div>
+
+{% endif %}

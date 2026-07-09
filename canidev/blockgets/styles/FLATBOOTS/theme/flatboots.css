@@ -1,0 +1,98 @@
+/**
+ * cBB Blockgets (FLATBOOTS stylesheet)
+ * Copyright (c) 2023, CaniDev
+ * license https://creativecommons.org/licenses/by-nc/4.0/
+ */
+
+ li.blg-breadcrumb-fix,
+ li.blg-breadcrumb-fix + li {
+ 	display: none;
+ }
+
+.blg-block.style-alternative {
+	background-color: #fff !important;
+	padding-top: 0 !important; 
+}
+
+.blg-block.style-alternative .block-title,
+.blg-block.style-content_full table,
+.blg-block.style-content_full table tr,
+.blg-block.style-content_full table td {
+	background: none !important;
+	border: none !important;
+	box-shadow: none;
+}
+
+.blg-block.style-alternative .block-title {
+	padding: 8px !important;
+}
+
+.blg-block.style-content_full .block-title {
+	border-width: 0 0 1px 0;
+}
+
+.blg-block.style-alternative .block-title,
+.blg-block.style-alternative .block-title i,
+.blg-block.style-content_full .block-title,
+.blg-block.style-content_full .block-title i {
+	color: #808080 !important;
+}
+
+.panel-forum > .block-title.panel-heading {
+	line-height: 36px;
+	padding: 0 10px;
+}
+
+.panel-forum.style-alternative > .block-title.panel-heading {
+	height: auto;
+	line-height: normal;
+}
+
+.fb-lastpost-title {
+	width: 150px !important;
+}
+
+.blg-menu,
+.blg-menu .fa,
+.blg-message {
+    font-size: 1em !important;
+}
+
+.block-title .fa {
+	vertical-align: middle !important;
+}
+
+.blg-admin-bar,
+a.blg-admin-opener {
+	box-sizing: content-box;
+}
+
+/* Contact Block
+-------------------------- */
+.contact-table {
+	border-spacing: 8px !important;
+}
+
+.contact-table.short-view .cbb-inputbox {
+	max-width: 170px;
+}
+
+/* Login Block
+-------------------------- */
+.blg-block .panel-login {
+	background: none;
+	padding-bottom: 0;
+}
+
+.panel-login .signin-text {
+	margin-bottom: 10px;
+}
+
+.blg-block .panel-login .signin-text span {
+	background: #fff;
+}
+
+.blg-block .oauth-list-btns {
+	margin-bottom: 0;
+	margin-left: 0;
+}

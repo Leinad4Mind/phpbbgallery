@@ -1,0 +1,52 @@
+{% include 'overall_header.html' %}
+
+{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
+
+<h1>{{ S_TITLE }}</h1>
+<p>{{ S_TITLE_EXPLAIN }}</p>
+
+<form id="acp_block_form" name="acp_block_form" method="post" action="{{ U_ACTION }}">
+
+	{% set display_submit_save = false %}
+	{% include '@canidev_core/acp_options.html' %}
+
+{% if not HAS_CONFIG and not HAS_LINKS %}
+	<div class="blg-message cbb-state-ok">{{ lang('BLOCK_NO_CONFIG') }}</div>
+{% else %}
+<div class="block-config-tabs">
+	<ul>
+		{% if HAS_CONFIG %}<li><a href="#block-config-tab">{{ lang('CONFIG') }}</a></li>{% endif %}
+		{% if HAS_LINKS %}<li><a href="#block-links-tab">{{ S_LINKS_TITLE }}</a></li>{% endif %}
+	</ul>
+	
+{% if HAS_CONFIG %}
+	<div id="block-config-tab">
+	{% if config|length %}
+		{% set display_submit_save = false %}
+		{% set options = config %}
+		{% include '@canidev_core/acp_options.html' %}
+	{% endif %}
+
+	{% if CONFIG_TEMPLATE %}
+		{% include CONFIG_TEMPLATE %}
+	{% endif %}
+	</div>
+{% endif %}
+
+{% if HAS_LINKS %}
+	<div id="block-links-tab">
+		{% include 'acp_list_edit.html' %}
+	</div>
+{% endif %}
+
+</div>
+{% endif %}
+
+	<div class="cbb-submit-buttons">
+		{% if S_ADD_MODE %}&nbsp;<input class="cbb-btn" type="submit" name="submitmore" value="{{ lang('SAVE_AND_ADD') }}" />{% endif %}
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
+		{{ S_HIDDEN_FIELDS }}
+	</div>
+</form>
+
+{% include 'overall_footer.html' %}

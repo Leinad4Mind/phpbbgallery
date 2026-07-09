@@ -1,0 +1,95 @@
+
+{% if BLOCK_VIEW_SMALL or TOPIC_DESIGN == 'simple' %}
+{% for topicrow in top_topic %}
+	{% if not topicrow.S_FIRST_ROW %}<hr />{% endif %}
+	<div class="lunread-row">
+		{% EVENT topiclist_row_prepend %}
+		<a class="cbb-helper-text cbb-inline half-size" href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
+		{% if not BLOCK_VIEW_SMALL %}<span>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }}</span>{% endif %}
+		<span> &raquo; <em>{{ topicrow.FIRST_POST_TIME }}</em></span>
+	</div>
+{% else %}
+	<div class="blg-align-center">{{ lang('NO_UNREAD') }}</div>
+{% endfor %}
+
+{% else %}
+
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+	<div class="forabg">
+		<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="row-item">
+					<dt><div class="list-inner">{{ BLOCK_TITLE }}</div></dt>
+				{% if not BLOCK_VIEW_MEDIUM %}
+					<dd class="fb-stats">&nbsp;</dd>
+					<dd class="fb-lastpost-title lastpost"><span>{{ lang('LAST_POST') }}</span></dd>
+				{% endif %}
+				</dl>
+			</li>
+		</ul>
+	{% elseif top_topic|length %}
+		<div class="blg-widget-header">
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			<span>{{ lang('TOPIC') }}</span>
+		</div>
+	{% endif %}
+		<ul class="topiclist topics">
+
+		{% for topicrow in top_topic %}
+			<li class="row{% if topicrow.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}{% if topicrow.S_POST_GLOBAL %} global-announce{% endif %}{% if topicrow.S_POST_ANNOUNCE %} announce{% endif %}{% if topicrow.S_POST_STICKY %} sticky{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
+				{% EVENT viewforum_body_topic_row_prepend %}
+				<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
+					<dt{% if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH ~ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
+						<div class="list-inner">
+							{% EVENT topiclist_row_prepend %}
+							<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>
+							<br />
+							{% EVENT topiclist_row_topic_title_after %}
+
+							{% if not S_IS_BOT %}
+							<div class="responsive-show" style="display: none;">
+								{{ lang('LAST_POST') }} {{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ topicrow.LAST_POST_TIME }}</a>
+							</div>
+							{% if topicrow.REPLIES %}<span class="responsive-show left-box" style="display: none;">{{ lang('REPLIES') ~ lang('COLON') }} <strong>{{ topicrow.REPLIES }}</strong></span>{% endif %}
+							{% endif %}
+
+							<div class="topic-poster responsive-hide">
+								{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }} &raquo; {{ topicrow.FIRST_POST_TIME }}
+								{% if SHOW_TOPIC_PARENT %}<br />{{ lang('IN') }} <a href="{{ topicrow.U_VIEW_FORUM }}">{{ topicrow.FORUM_NAME }}</a>{% endif %}
+							</div>
+
+							{% EVENT topiclist_row_append %}
+						</div>
+					</dt>
+				{% if not BLOCK_VIEW_MEDIUM %}
+					<dd class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {{ lang('VIEWS') }}<br />{{ topicrow.REPLIES }} {{ lang('REPLIES') }}</dd>
+					<dd class="lastpost">
+						<span><dfn>{{ lang('LAST_POST') }} </dfn>{{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+							{% if not S_IS_BOT %}
+								<a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">
+									<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span>
+								</a>
+							{% endif %}
+							<br />{{ topicrow.LAST_POST_TIME }}
+						</span>
+					</dd>
+				{% endif %}
+				</dl>
+				{% EVENT viewforum_body_topic_row_append %}
+			</li>
+		{% else %}
+			<li class="blg-message">{{ lang('NO_UNREAD') }}</li>
+		{% endfor %}
+		</ul>
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+
+{% endif %}

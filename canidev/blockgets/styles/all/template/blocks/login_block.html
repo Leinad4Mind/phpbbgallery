@@ -1,0 +1,105 @@
+
+{% if S_USER_LOGGED_IN %}
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }} #blg-logout').cbbAjaxify();
+	});
+// ]]>
+</script>
+
+<ul class="blg-linear-list blg-align-center">
+	<li class="menu-cat">{{ USERNAME_FULL }}</li>
+	<li class="double-space">
+		<a href="{{ U_PROFILE }}">
+			<span class="cbb-circular-avatar">{% if USER_AVATAR %}{{ USER_AVATAR }}{% else %}<span class="cbb-no-avatar"></span>{% endif %}</span>
+		</a>
+	</li>
+
+	{% if USER_RANK_IMG %}<li>{{ USER_RANK_TITLE }}<br />{{ USER_RANK_IMG }}</li>{% endif %}
+	{% if S_LAST_VISIT %}<li class="double-space">{{ S_LAST_VISIT }}</li>{% endif %}
+	{% if S_CURRENT_TIME %}<li class="double-space">{{ S_CURRENT_TIME }}</li>{% endif %}
+	
+	{{ S_BLG_LOGIN_FIELDS }}
+</ul>
+
+<br />
+
+<ul class="blg-menu blg-linear-list">
+{% for link in userlink %}
+	<li>
+		<i class="icon fa {% if link.ICON %}{{ link.ICON }}{% else %}fa-chevron-right{% endif %} fa-fw" aria-hidden="true"></i>
+		<a href="{{ link.URL }}">{{ link.TITLE }}</a>
+	</li>
+{% endfor %}
+
+	<li class="blg-align-center double-space top-bordered"><a id="blg-logout" class="cbb-btn" href="{{ U_LOGOUT }}">{{ lang('LOGIN_LOGOUT') }}</a></li>
+</ul>
+
+{% else %}
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }} form').cbbAjaxify();
+	});
+// ]]>
+</script>
+
+<form action="{{ U_BLG_ACTION }}" method="post">
+	<ul class="blg-linear-list blg-align-center">
+		<li class="double-space bottom-bordered"><strong>{{ lang('LOGIN') }}</strong></li>
+
+		<li class="blg-align-left"><strong>{{ lang('USERNAME') ~ lang('COLON') }}</strong></li>
+		<li><input class="cbb-inputbox full-width" type="text" name="username" value="{{ S_USERNAME }}" /></li>
+		
+		<li class="blg-align-left"><strong>{{ lang('PASSWORD') ~ lang('COLON') }}</strong></li>
+		<li><input class="cbb-inputbox full-width" type="password" name="password" value="" /></li>
+		{% if U_SEND_PASSWORD %}<li class="blg-align-left"><a href="{{ U_SEND_PASSWORD }}">{{ lang('FORGOT_PASS') }}</a></li>{% endif %}
+		{% if U_RESEND_ACTIVATION %}<li class="blg-align-left"><a href="{{ U_RESEND_ACTIVATION }}">{{ lang('RESEND_ACTIVATION') }}</a></li>{% endif %}
+	</ul>
+	
+	{% if S_DISPLAY_FULL_LOGIN %}
+	<br />
+	<ul class="blg-linear-list">
+		{% if S_AUTOLOGIN_ENABLED %}
+		<li>
+			<input id="autologin-{{ BLOCK_ID }}" type="checkbox" class="radio cbb-checkbox" name="autologin" />
+			<label for="autologin-{{ BLOCK_ID }}">{{ lang('REMEMBER_ME') }}</label>
+		</li>
+		{% endif %}
+		
+		<li>
+			<input id="viewonline-{{ BLOCK_ID }}" type="checkbox" class="radio cbb-checkbox" name="viewonline" />
+			<label for="viewonline-{{ BLOCK_ID }}">{{ lang('HIDE_ME_NOW') }}</label>
+		</li>
+	</ul>
+	{% endif %}
+
+	<div class="blg-align-center">
+		<br />
+		<input type="submit" name="login" class="cbb-btn" value="{{ lang('LOGIN') }}" />
+		{{ S_BLG_LOGIN_FIELDS }}
+		{{ S_FORM_TOKEN_BLG_LOGIN }}
+	</div>
+
+	{% if PROVIDER_TEMPLATE_FILE %}
+		<div class="blg-alt-login-legend"><span>{{ lang('BLG_OR') }}</span></div>
+		{% INCLUDE PROVIDER_TEMPLATE_FILE %}
+	{% endif %}
+</form>
+
+	{% if S_REGISTER_ENABLED and S_DISPLAY_REGISTER %}
+	<br />
+	<ul class="blg-linear-list">
+		<li class="double-space bottom-bordered blg-align-center"><strong>{{ lang('REGISTER') }}</strong></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_TERMS_USE }}">{{ lang('TERMS_USE') }}</a></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_PRIVACY }}">{{ lang('PRIVACY') }}</a></li>
+	
+		<li class="double-space blg-align-center"><a href="{{ U_REGISTER }}"><input type="button" class="cbb-btn" value="{{ lang('REGISTER') }}" /></a></li>
+	</ul>
+	{% endif %}
+
+{% endif %}

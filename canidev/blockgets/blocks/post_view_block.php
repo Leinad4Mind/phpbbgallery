@@ -1,0 +1,230 @@
+<?php
+/**
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
+
+namespace canidev\blockgets\blocks;
+
+use canidev\core\TextParser;
+
+class post_view_block extends base
+{
+	static $icon = 'fa-file-text-o';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function init()
+	{
+		$this->tpl_name = 'post_view_block';
+
+		if(($data = $this->unserialize()) === false)
+		{
+			return false;
+		}
+
+		if(($config = $this->get_config_from_url($data['item_url'])) === false)
+		{
+			return false;
+		}
+
+		switch($config['mode'])
+		{
+			case 'forum':
+				$sql_ary = [
+					'SELECT'	=> 'p.*',
+					'FROM'		=> [FORUMS_TABLE => 'f'],
+					
+					'LEFT_JOIN'	=> [
+						[
+							'FROM' => [POSTS_TABLE => 'p'],
+							'ON'	=> 'p.post_id = f.forum_last_post_id'
+						]
+					],
+					
+					'WHERE'		=> 'f.forum_type = ' . FORUM_POST . '
+						AND f.forum_id = ' . $config['id']
+				];
+			break;
+
+			case 'post':
+				$sql_ary = [
+					'SELECT'	=> 'p.*',
+					'FROM'		=> [POSTS_TABLE => 'p'],
+					'WHERE'		=> 'p.post_id = ' . $config['id']
+				];
+			break;
+			
+			case 'topic':
+				$sql_ary = [
+					'SELECT'	=> 'p.*',
+					'FROM'		=> [TOPICS_TABLE => 't'],
+					
+					'LEFT_JOIN'	=> [
+						[
+							'FROM' => [POSTS_TABLE => 'p'],
+							'ON'	=> 'p.post_id = t.topic_last_post_id'
+						]
+					],
+					
+					'WHERE'		=> 't.topic_visibility = ' . ITEM_APPROVED . '
+						AND t.topic_id = ' . $config['id']
+				];
+			break;
+
+			default:
+				return false;
+		}
+
+		/**
+		 * @event block.post_view_query
+		 * @var array	sql_ary		The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
+		$vars = ['sql_ary', 'data'];
+		extract($this->dispatcher->trigger_event('block.post_view_query', compact($vars)));
+		
+		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
+		$result = $this->db->sql_query($sql);
+		$post_data = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		
+		if(!$post_data || (!$this->auth->acl_get('f_read', $post_data['forum_id']) && !$data['ignore_auth']))
+		{
+			return false;
+		}
+		
+		$attachments = $update_count = [];
+		
+		// Does post have an attachment? If so, add it to the list
+		if($post_data['post_attachment'] && $this->config['allow_attachments'] && $this->auth->acl_get('u_download') && 
+			($this->auth->acl_get('f_download', $post_data['forum_id']) || $data['ignore_auth']))
+		{
+			$sql = 'SELECT *
+				FROM ' . ATTACHMENTS_TABLE . '
+				WHERE post_msg_id = ' . $post_data['post_id'] . '
+					AND in_message = 0
+				ORDER BY filetime DESC, post_msg_id ASC';
+			$result = $this->db->sql_query($sql);
+			while($row = $this->db->sql_fetchrow($result))
+			{
+				$attachments[] = $row;
+			}
+			$this->db->sql_freeresult($result);
+		}
+		
+		// Parse the message
+		$message = $this->text_parser->generateForDisplay($post_data['post_text'], TextParser::FLAG_CENSOR_TEXT, $post_data['bbcode_uid'], $post_data['bbcode_bitfield']);
+
+		if(sizeof($attachments))
+		{
+			parse_attachments($post_data['forum_id'], $message, $attachments, $update_count);
+		}
+
+		$this->template->assign_vars([
+			'PV_HAS_ATTACHMENTS'	=> sizeof($attachments) ? true : false,
+			'PV_CONTENT'			=> $message,
+		]);
+		
+		// Delete the array in the template if exists, prevent errors between blocks
+		$this->template->destroy_block_vars('pv_attachment');
+
+		// Display not already displayed Attachments for this post, we already parsed them. ;)
+		foreach($attachments as $attachment)
+		{
+			$this->template->assign_block_vars('pv_attachment', [
+				'DISPLAY_ATTACHMENT'	=> $attachment
+			]);
+		}
+
+		unset($data, $post_data, $attachments);
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_config()
+	{
+		$this->display_vars = [
+			'item_url'		=> ['lang' => 'PV_ITEM_URL',	'validate' => 'url',	'type' => 'text:40:255'],
+			'ignore_auth'	=> ['lang' => 'IGNORE_AUTH',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0],
+		];
+
+		return true;
+	}
+
+	/**
+	 * Get fragments from url
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return array|false
+	 * @access private
+	 */
+	protected function get_config_from_url($url)
+	{
+		if(($url_parts = @parse_url($url)) === false)
+		{
+			return false;
+		}
+
+		// External url is not allowed
+		if($url_parts['host'] &&
+			stripos($this->request->server('HTTP_HOST', ''), $url_parts['host']) === false)
+		{
+			return false;
+		}
+
+		$filename 	= basename($url_parts['path'], '.' . $this->php_ext);
+		$params 	= [];
+
+		parse_str(str_replace('&amp;', '&', $url_parts['query']), $params);
+
+		switch($filename)
+		{
+			case 'viewforum':
+				if(isset($params['f']))
+				{
+					return [
+						'mode' 	=> 'forum',
+						'id'	=> (int)$params['f'],
+					];
+				}
+			break;
+
+			case 'viewtopic':
+				if(isset($params['p']))
+				{
+					return [
+						'mode' 	=> 'post',
+						'id'	=> (int)$params['p'],
+					];
+				}
+
+				if(isset($url_parts['fragment']) && preg_match('#^p([0-9]+)#', $url_parts['fragment'], $match))
+				{
+					return [
+						'mode' 	=> 'post',
+						'id'	=> (int)$match[1],
+					];
+				}
+				
+				if(isset($params['t']))
+				{
+					return [
+						'mode' 	=> 'topic',
+						'id'	=> (int)$params['t'],
+					];
+				}
+			break;
+		}
+
+		return false;
+	}
+}

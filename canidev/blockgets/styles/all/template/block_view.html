@@ -1,0 +1,50 @@
+	
+{% if block.IS_GROUP %}
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-grid">
+	{% for sub in block.blocks %}
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block forabg {{ sub.BLOCK_CLASSES }}"{% if sub.DOM_STYLE %} style="{{ sub.DOM_STYLE}} "{% endif %}>
+		<div class="inner">
+			<ul class="block-title topiclist">
+				<li class="header">
+					<dl>
+						<dt>
+							{{ sub.BLOCK_ICON }}
+							<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
+						</dt>
+						<dd></dd>
+					</dl>
+				</li>
+			</ul>
+
+			<ul class="block-content forums">
+			<li>
+				{{ sub.BLOCK_CONTENT }}
+			</li>
+			</ul>
+		</div>
+		</div>
+	{% endfor %}
+	</div>
+{% else %}
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-block forabg {{ block.BLOCK_CLASSES }}">
+	<div class="inner">
+		<ul class="block-title topiclist">
+			<li class="header">
+				<dl>
+					<dt>
+						{{ block.BLOCK_ICON }}
+						<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
+					</dt>
+					<dd></dd>
+				</dl>
+			</li>
+		</ul>
+
+		<ul class="block-content forums">
+		<li>
+			{{ block.BLOCK_CONTENT }}
+		</li>
+		</ul>
+	</div>
+    </div>
+{% endif %}

@@ -1,0 +1,27 @@
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }}').blgMarquee({
+			direction: '{{ S_MARQUEE_DIRECTION }}',
+			align: '{{ S_MARQUEE_ALIGN }}',
+			height: '{{ S_BLOCK_HEIGHT }}',
+			type: '{{ S_MARQUEE_TYPE }}',
+			fps: '{{ S_MARQUEE_SPEED }}'
+		});
+	});
+// ]]>
+</script>
+
+<div class="marquee">
+	<div class="marquee-container{% if S_MARQUEE_DIRECTION == 'left' and S_MARQUEE_TYPE != 'static' %} no-wrap{% endif %}">
+	{% for banner in banners %}
+		<div class="mini-banner{% if S_MARQUEE_TYPE != 'static' %} {{ S_MARQUEE_DIRECTION }}{% endif %}">
+			<a{% if banner.S_WINDOW %} class="blank"{% endif %} href="{{ banner.U_URL }}" title="{{ banner.S_TITLE }}">{{ banner.S_IMG }}</a>
+			{% if banner.S_SHOW_TITLE %}<br />{{ banner.S_TITLE }}{% endif %}
+		</div>
+	{% endfor %}
+		<br class="clear" />
+	</div>
+</div>

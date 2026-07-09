@@ -1,0 +1,40 @@
+{% if S_VIEW == 'simple' %}
+	<ul class="blg-linear-list">
+	{% for group in group_row %}
+		<li class="menu-cat"><a href="{{ group.U_GROUP }}">{{ group.GROUP_NAME }}</a></li>
+		
+		{% for user in group.user %}
+			<li class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></li>
+		{% endfor %}
+	{% endfor %}
+	</ul>
+
+{% elseif S_VIEW == 'accordion' %}
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#leader-groups-{{ BLOCK_ID }}').blgAccordion({
+			active		: 0,
+			collapsible : true
+		});
+	});
+// ]]>
+</script>
+
+<div id="leader-groups-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+{% for group in group_row %}
+	<h5>{{ group.GROUP_NAME }}</h5>
+	<div>
+		<ul class="blg-linear-list">
+		{% for user in group.user %}
+			<li class="userrow">
+				<div class="cbb-circular-avatar">{% if user.AVATAR %}{{ user.AVATAR }}{% else %}><div class="cbb-no-avatar"></div>{% endif %}</div>
+				<strong>{{ user.USERNAME_FULL }}</strong>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endfor %}
+</div>
+{% endif %}

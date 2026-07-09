@@ -1,0 +1,51 @@
+{% if S_IN_WINDOW %}
+	{% INCLUDE 'simple_header.html' %}
+{% endif %}
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#player-{{ BLOCK_ID }}').blgPlayer({{ PLAYER_OPTIONS }});
+	});
+// ]]>
+</script>
+
+{% if S_IN_WINDOW %}<div class="player-window panel">{% endif %}
+
+<div id="player-{{ BLOCK_ID }}">
+	<div class="player-wrap">
+		<div class="player-buttons blg-corner-all">
+			<a class="js-play cbb-btn" href="#" data-action="play" title="{{ lang('PLAY') }}"><i class="fa fa-play" aria-hidden="true"></i></a>
+			<a class="js-stop cbb-btn" href="#" data-action="stop" title="{{ lang('STOP') }}"><i class="fa fa-stop" aria-hidden="true"></i></a>
+			<a class="js-mute cbb-btn" href="#" data-action="mute" title="{{ lang('MUTE') }}"><i class="fa fa-volume-off" aria-hidden="true"></i></a>
+
+			<div class="blg-player-volume" title="{{ lang('VOLUME') }}"></div>
+		</div>
+	</div>
+
+	<div class="player-list-wrap blg-corner-all">
+		<ol class="player-playlist">
+	{% for track in loops.track %}
+			<li><a href="{{ track.S_URL }}">{{ track.S_TITLE }}</a></li>
+	{% endfor %}
+		</ol>
+	</div>
+	
+	<div class="player-newwin-message">
+		<div>{{ lang('WIN_OPEN_EXPLAIN') }}</div>
+		<div><a class="player-newwin" href="#" data-action="returnwin" title="{{ lang('WIN_RETURN') }}"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></a></div>
+		<br class="clear" />
+	</div>
+	
+	<div class="player-statusbar">
+		<a class="player-newwin" href="#" {% if S_IN_WINDOW %}data-action="closewin" title="{{ lang('WIN_CLOSE') }}"{% else %}data-action="openwin" title="{{ lang('WIN_OPEN') }}"{% endif %}><i class="fa fa-external-link" aria-hidden="true"></i></a>
+		<div class="player-statusbar-text"><div></div></div>
+	</div>
+</div>
+
+{% if S_IN_WINDOW %}
+	</div>
+
+	{% INCLUDE 'simple_footer.html' %}
+{% endif %}

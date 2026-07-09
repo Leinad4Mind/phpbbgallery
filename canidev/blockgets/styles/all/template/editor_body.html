@@ -1,0 +1,97 @@
+{% if S_EVENT_OUTPUT %}
+	<div {{ S_EVENT_ATTR }}>{{ S_EVENT_TITLE }}</div>
+{% else %}
+<div class="cbb-modal-dialog editor{% if S_EDITOR_TYPE == 'event' %} is-event{% endif %}">
+	<div class="cbb-dialog-header">
+		<h1>{{ S_EDITOR_TITLE }}</h1>
+		<a href="#" data-action="close" class="cbb-dialog-close">
+			<i class="fa fa-remove" aria-hidden="true"></i>
+		</a>
+		<a href="#" data-action="sidebarChange" class="cbb-dialog-sidebarlauncher">
+			<i class="fa fa-bars" aria-hidden="true"></i>
+		</a>
+	</div>
+
+	<div class="cbb-dialog-content">
+		<form id="editor-form" onsubmit="return false;">
+		<div class="cbb-dialog-sidebar">
+		
+		{% if smileyrow|length %}
+		<div class="sidebar-box smileys">
+			<h3>{{ lang('SMILIES') }}</h3>
+			<div class="box-content">
+				{% INCLUDE '@canidev_core/smiley_box.html' %}
+			</div>
+		</div>
+		{% endif %}
+		{% if S_EDITOR_TYPE == 'event' %}
+			<hr />
+			<div class="sidebar-box">
+				<h3>{{ lang('EVENT_TIME') }}</h3>
+				<div class="box-content">
+					<select name="event_day" class="cbb-inputbox">{{ S_DAY_OPTIONS }}</select>
+					<select name="event_month" class="cbb-inputbox">{{ S_MONTH_OPTIONS }}</select>
+					<select name="event_year" class="cbb-inputbox">{{ S_YEAR_OPTIONS }}</select>
+				</div>
+			</div>
+			<div class="sidebar-box">
+				<h3>{{ lang('EVENT_GROUPS') }}</h3>
+				<div class="box-content">
+					{{ S_GROUPS_SELECT }}
+				</div>
+			</div>
+			<div class="sidebar-box">
+				<h3>{{ lang('EVENT_COLOR') }}</h3>
+				<div class="box-content">
+					{{ S_COLOR_SELECT }}
+				</div>
+			</div>
+		{% endif %}
+		</div>
+		<div class="cbb-section-content">
+		{% if S_EDITOR_TYPE == 'event' %}
+			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{{ S_TITLE }}" placeholder="{{ lang('EVENT_TITLE') }}" />
+		{% endif %}
+
+			{% INCLUDE '@canidev_core/editor_body.html' %}
+		</div>
+		</form>
+	</div>
+		
+	<div class="cbb-dialog-toolbar">
+		<div class="media-toolbar-secondary">
+			<button class="cbb-btn" data-action="gallery">
+				<i class="fa fa-camera" aria-hidden="true"></i>&nbsp;
+				<span>{{ lang('GALLERY') }}</span>
+			</button>
+		</div>
+		<div class="media-toolbar-primary">
+			<button type="button" class="cbb-btn" data-action="submit">{{ lang('SAVE') }}</button>
+		</div>
+	</div>
+	
+	<script type="text/html" id="tpl-editor-html">
+		<!DOCTYPE html>
+		<html<%attrs%>>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html;charset=<%charset%>" />
+			<link rel="stylesheet" type="text/css" href="<%style%>" />
+			
+			<style>
+				html { background: none; height: auto; }
+				
+				{% if BLG_RSZ_WIDTH %}img { max-width: {{ BLG_RSZ_WIDTH }}px; }{% endif %}
+				
+				.ie * {min-height: auto !important}
+				.ie table td {height:15px}
+				/* Target Edge (fixes edge issues) */
+				@supports (-ms-ime-align:auto) {
+					* { min-height: auto !important; }
+				}
+			</style>
+		</head>
+		<body class="sceditor-body content" contenteditable="true" <%spellcheck%>><p></p></body>
+		</html>
+	</script>
+</div>
+{% endif %}

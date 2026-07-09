@@ -1,0 +1,7 @@
+<table class="blg-table">
+{% for bot in bots %}
+	<tr><td>{% if not bots.S_FIRST_ROW %}<hr/>{% endif %}{{ bot.BOT_NAME }}<br /> &raquo; {{ bot.BOT_VISIT }}</td></tr>
+{% else %}
+	<tr><td class="blg-align-center">{{ lang('NO_BOTS') }}</td></tr>
+{% endfor %}
+</table>

@@ -1,0 +1,26 @@
+
+<fieldset>
+	<dl>
+		<dt>
+			<label>{{ lang('GOOGLE_LANGS') ~ lang('COLON') }}</label>
+		</dt>
+		<dd>
+			<div class="blg-option-selector google-translate">
+			{% for translate in loops.translate %}
+				<div title="{{ translate.S_LANG_EN }}">
+					<input id="option-{{ translate.S_ISO }}" type="checkbox" class="radio" name="langs[]" value="{{ translate.S_ISO }}"{% if translate.S_SELECTED %} checked="checked"{% endif %}/>
+					<label for="option-{{ translate.S_ISO }}"> {{ translate.S_LANG }}</label>
+				</div>
+			{% endfor %}
+			</div>
+
+			<br />
+			
+			<p class="quick">
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{{ lang('MARK_ALL') }}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{{ lang('UNMARK_ALL') }}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
+			</p>
+		</dd>
+	</dl>
+</fieldset>
+

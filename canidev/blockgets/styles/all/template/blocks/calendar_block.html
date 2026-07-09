@@ -1,0 +1,71 @@
+{% if IN_EVENTLIST %}
+	{% for event in loops.event %}
+		<div {{ event.S_ATTR }}>{% if event.S_TYPE == 'birthday' %}<i class="fa fa-birthday-cake" aria-hidden="true"></i> {% endif %}{{ event.S_TITLE }}</div>
+	{% endfor %}
+
+{% else %}
+
+	{% if not IN_CALENDAR %}
+	<script>
+	// <![CDATA[
+		window._jPostponed = window._jPostponed || [];
+		window._jPostponed.push(function() {
+			$('#calendar-{{ BLOCK_ID }}').blgCalendar({{ S_OPTIONS }});
+		});
+	// ]]>
+	</script>
+
+	<script type="text/html" id="tpl-calendar-info">
+		<div class="blg-calendar-info">
+			<div class="info-header">
+				<span>{{ lang('EVENTS') }} <%date%></span>
+				<a href="#" data-action="close"><i class="fa fa-remove" aria-hidden="true"></i></a>
+			</div>
+			
+			<div class="info-content">
+				<div class="no-items blg-message cbb-state-highlight">{{ lang('NO_EVENTS') }}</div>
+			</div>
+			
+		{% if S_CAN_CREATE_EVENT %}
+			<div class="blg-align-right floated">
+				<a href="#" class="cbb-btn" data-action="add">{{ lang('ADD_EVENT') }}</a>
+			</div>
+		{% endif %}
+		</div>
+	</script>
+	
+	<div id="calendar-{{ BLOCK_ID }}" class="calendar_container">
+	{% endif %}
+
+	{% for calendar in loops.calendar %}
+		<div class="calendar-month">
+		<form name="calendar-{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" method="post">
+			<table class="calendar{% if BLOCK_VIEW_SMALL %} autofit{% endif %}">
+			<thead>
+			<tr>
+				<td class="blg-align-left">{% if calendar.S_FIRST_ROW %}<a href="#" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-action="prev"><i class="fa fa-arrow-circle-left fa-lg" aria-hidden="true"></i></a>{% else %}&nbsp;{% endif %}</td>
+				<td colspan="5" class="month-title blg-align-center"><a href="{{ calendar.U_ACTION }}">{{ calendar.S_MONTH }}</a></td>
+				<td class="blg-align-right">{% if calendar.S_LAST_ROW %}<a href="#" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-action="next"><i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i></a>{% else %}&nbsp;{% endif %}</td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+		{% for day in calendar.days %}
+			{% if day.NEW_LINE and not day.S_FIRST_ROW %}</tr><tr>{% endif %}
+
+			{% if day.IS_HEADER %}
+				<td class="cal-header">{{ day.S_DAY_SHORT }}</td>
+			{% else %}
+				<td>{% if day.S_DAY %}<a href="#" class="blg-calendar-day{% if day.IS_TODAY %} today{% endif %}" data-calendar="{{ BLOCK_ID }}-{{ calendar.S_ROW_COUNT }}" data-time="{{ day.S_DATA }}" data-color="{{ day.S_COLOR }}"{% if S_SHOW_EVENTS %} data-event="{{ day.S_EVENT }}"{% endif %}>{{ day.S_DAY }}</a>{% else %}&nbsp;{% endif %}</td>
+			{% endif %}
+		{% endfor %}
+			</tr>
+			</tbody>
+			</table>
+			<div>{{ calendar.S_HIDDEN_FIELDS }}</div>
+		</form>
+		</div>
+	{% endfor %}
+	
+	{% if not IN_CALENDAR %}</div>{% endif %}
+{% endif %}

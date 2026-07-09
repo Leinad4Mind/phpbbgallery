@@ -1,0 +1,45 @@
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }} form').cbbAjaxify({
+			onSuccess: function() {
+				this.element.find('[name=subject], [name=message]').val('');
+			}
+		});
+	});
+// ]]>
+</script>
+
+<form method="post" action="{{ U_BLG_ACTION }}">
+
+	<fieldset class="contact-fields{% if BLOCK_VIEW_SMALL %} short-view{% endif %}">
+	{% for field in fieldrow %}
+		<dl>
+			<dt><strong>{{ field.TITLE ~ lang('COLON') }}</strong></dt>
+			<dd>
+			{% if field.TYPE == 'text' %}
+				<input type="text" name="{{ field.KEY }}" size="35" value="{{ field.VALUE }}" class="cbb-inputbox autowidth" />
+			{% elseif field.TYPE == 'textarea' %}
+				<textarea name="{{ field.KEY }}" cols="30" rows="8" class="cbb-inputbox">{{ field.VALUE }}</textarea>
+			{% elseif field.TYPE == 'custom' %}
+				{{ field.TEMPLATE }}
+			{% endif %}
+			</dd>
+		</dl>
+	{% endfor %}
+
+	{% if CAPTCHA_TEMPLATE %}
+		{% DEFINE CAPTCHA_TAB_INDEX = 4 %}
+		{% INCLUDE CAPTCHA_TEMPLATE %}
+	{% endif %}
+	</fieldset>
+
+	<br />
+	<div class="blg-align-center">
+		<input type="submit" class="cbb-btn" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ BLOCK_HIDDEN_FIELDS }}
+		{{ S_FORM_TOKEN_BLG_CONTACT }}
+	</div>
+</form>

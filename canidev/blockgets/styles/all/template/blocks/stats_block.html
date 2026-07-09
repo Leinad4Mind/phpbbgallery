@@ -1,0 +1,35 @@
+
+{% if S_INLINE %}
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }} .st-inline').each(function() {
+			$(this).find('p:not(:last)').after(' &bull;');
+		});
+	});
+// ]]>
+</script>
+{% endif %}
+
+{% for stat in loops.stat %}
+	{% if stat.IS_CAT %}
+		{% if not stat.S_FIRST_ROW %}</div>{% endif %}
+		{% if stat.S_SEP %}<hr />{% elseif not stat.S_FIRST_ROW %}<br />{% endif %}
+	<div{% if S_INLINE %} class="st-inline"{% endif %}>
+		{% if stat.S_LEGEND %}<p><strong>{{ stat.S_LEGEND }}</strong></p>{% endif %}
+	{% else %}
+		<p>{{ stat.S_NAME ~ lang('COLON') }} <strong>{{ stat.S_VALUE }}</strong></p>
+	{% endif %}
+	{% if stat.S_LAST_ROW %}</div>{% endif %}
+{% endfor %}
+
+{% if SHOW_USER_STATS %}
+	<hr />
+
+	<div>
+		<p>{{ S_TOTAL_USERS_LASTVISIT }}</p><br />
+		{% if S_LASTVISIT_USER_LIST %}<p>{{ S_LASTVISIT_USER_LIST }}</p><br />{% endif %}
+		<p>{{ lang('ST_NEWEST_USER') ~ lang('COLON') }} {{ S_NEWEST_USER }}</p>
+	</div>
+{% endif %}

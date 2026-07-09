@@ -1,0 +1,123 @@
+
+{% if BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
+<ul class="blg-linear-list">
+
+{% for forumrow in loops.forum_row %}
+	{% if forumrow.S_IS_CAT or forumrow.S_FIRST_ROW or forumrow.S_NO_CAT %}
+	<li class="menu-cat">
+		{% if forumrow.S_IS_CAT %}<a href="{{ forumrow.U_VIEWFORUM }}">{{ forumrow.FORUM_NAME }}</a>{% else %}{{ lang('FORUM') }}{% endif %}
+	</li>
+	{% endif %}
+
+	{% if not forumrow.S_IS_CAT %}
+	<li class="subchild double-space">
+		<i class="fa {{ forumrow.FORUM_ICON }} fa-lg"></i>
+		<a href="{{ forumrow.U_VIEWFORUM }}">{{ forumrow.FORUM_NAME }}</a>
+	</li>
+	{% endif %}
+
+{% else %}
+	<li><strong>{{ lang('NO_FORUMS') }}</strong></li>
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+
+{% for forumrow in loops.forum_row %}
+	{% if (forumrow.S_IS_CAT and not forumrow.S_FIRST_ROW) or forumrow.S_NO_CAT %}
+		</ul>
+
+		{% if BLOCK_STYLE == 'content_simple' %}
+			</div>
+		</div>
+		{% endif %}
+	{% endif %}
+
+	{% if forumrow.S_IS_CAT or forumrow.S_FIRST_ROW or forumrow.S_NO_CAT %}
+		{% if BLOCK_STYLE == 'content_simple' %}
+		<div class="forabg">
+			<div class="inner">
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="row-item">
+						<dt>{% if forumrow.S_IS_CAT %}<a href="{{ forumrow.U_VIEWFORUM }}">{{ forumrow.FORUM_NAME }}</a>{% else %}{{ lang('FORUM') }}{% endif %}</dt>
+					{% if not BLOCK_VIEW_MEDIUM %}
+						<dd class="fb-stats">&nbsp;</dd>
+						<dd class="fb-lastpost-title lastpost"><span>{{ lang('LAST_POST') }}</span></dd>
+					{% endif %}
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+		{% else %}
+		<div class="blg-widget-header">
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			{% if forumrow.S_IS_CAT %}<a href="{{ forumrow.U_VIEWFORUM }}">{{ forumrow.FORUM_NAME }}</a>{% else %}{{ lang('FORUM') }}{% endif %}
+		</div>
+		<ul class="topiclist forums">
+		{% endif %}
+	{% endif %}
+
+	{% if not forumrow.S_IS_CAT %}
+		<li class="row">
+			<dl class="row-item {{ forumrow.FORUM_IMG_STYLE }}">
+				<dt>
+					<div class="list-inner">
+						{% if forumrow.FORUM_IMAGE %}<span class="forum-image">{{ forumrow.FORUM_IMAGE }}</span>{% endif %}
+						<a href="{{ forumrow.U_VIEWFORUM }}" class="forumtitle">{{ forumrow.FORUM_NAME }}</a><br />
+						{{ forumrow.FORUM_DESC }}
+						{% if forumrow.MODERATORS %}
+							<br /><strong>{{ forumrow.L_MODERATOR_STR ~ lang('COLON') }}</strong> {{ forumrow.MODERATORS }}
+						{% endif %}
+						{% if forumrow.SUBFORUMS and forumrow.S_LIST_SUBFORUMS %}<br /><strong>{{ forumrow.L_SUBFORUM_STR }}</strong> {{ forumrow.SUBFORUMS }}{% endif %}
+					
+						{% if not S_IS_BOT %}
+						<div class="responsive-show" style="display: none;">
+							{% if forumrow.CLICKS %}
+								{{ lang('REDIRECTS') ~ lang('COLON') }} <strong>{{ forumrow.CLICKS }}</strong>
+							{% elseif not forumrow.S_IS_LINK and forumrow.TOPICS %}
+								{{ lang('TOPICS') ~ lang('COLON') }} <strong>{{ forumrow.TOPICS }}</strong>
+							{% endif %}
+						</div>
+						{% endif %}
+					</div>
+				</dt>
+			{% if not BLOCK_VIEW_MEDIUM %}
+				{% if forumrow.CLICKS %}
+					<dd class="redirect"><span>{{ lang('REDIRECTS') ~ lang('COLON') }} {{ forumrow.CLICKS }}</span></dd>
+				{% elseif not forumrow.S_IS_LINK %}
+					<dd class="fb-stats blg-align-center">{{ forumrow.TOPICS }} {{ lang('TOPICS') }}<br />{{ forumrow.POSTS }} {{ lang('POSTS') }}</dd>
+					<dd class="lastpost">
+					<span>
+					{% if forumrow.LAST_POST_TIME %}
+						<a class="cbb-helper-text" href="{{ forumrow.U_LAST_POST }}" title="{{ forumrow.LAST_POST_SUBJECT }}">{{ forumrow.LAST_POST_SUBJECT }}</a>
+						{{ lang('POST_BY_AUTHOR') }} {{ forumrow.LAST_POSTER_FULL }}
+						<br />{{ forumrow.LAST_POST_TIME }}
+					{% else %}
+						{{ lang('NO_POSTS') }}<br />&nbsp;
+					{% endif %}
+					</span>
+					</dd>
+				{% endif %}
+			{% endif %}
+			</dl>
+		</li>
+	{% endif %}
+	
+	{% if forumrow.S_LAST_ROW %}
+	</ul>
+
+		{% if BLOCK_STYLE eq 'content_simple' %}
+			</div>
+		</div>
+		{% endif %}
+	{% endif %}
+{% else %}
+	<strong>{{ lang('NO_FORUMS') }}</strong>
+{% endfor %}
+
+</div>
+{% endif %}

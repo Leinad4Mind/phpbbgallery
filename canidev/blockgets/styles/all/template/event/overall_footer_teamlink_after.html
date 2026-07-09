@@ -1,0 +1,7 @@
+{% for link in loops.blglink_bottom %}
+	<li class="rightside" data-skip-responsive="true">
+		<a href="{{ link.HREF }}" title="{{ link.TITLE }}" role="menuitem">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
+		</a>
+	</li>
+{% endfor %}

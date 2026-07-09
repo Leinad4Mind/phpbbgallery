@@ -1,0 +1,17 @@
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#dock-{{ BLOCK_ID }}').blgDock({{ S_DOCK_PARAMS }});
+	});
+// ]]>
+</script>
+
+<div id="dock-{{ BLOCK_ID }}" class="dock cbb-helper-hidden">
+	<div class="dock-container">
+	{% for row in menu_row %}
+		<a href="{{ row.U_LINK }}"{% if row.S_WINDOW %} class="blank"{% endif %}>{{ row.S_ICON }}</a>
+	{% endfor %}
+	</div>
+</div>

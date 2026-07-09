@@ -1,0 +1,24 @@
+<ul class="blg-linear-list blg-align-center">
+{% for row in birthday %}
+	{% if loop.index != 1 %}<li class="double-space">&nbsp;</li>{% endif %}
+	<li class="menu-cat">{{ row.S_TITLE }}</li>
+
+	{% if BLOCK_VIEW_SMALL %}
+	<li>
+		<table class="blg-table">
+		{% for user in row.user %}
+			<tr>
+				<td class="blg-align-left">{{ user.USERNAME_FULL }}</td>
+				<td class="blg-align-right"><strong>{{ user.AGE }}</strong></td>
+			</tr>
+		{% endfor %}
+		</table>
+	</li>
+	{% else %}
+		<li class="subchild">{{ row.S_USERS_STR }}</li>
+	{% endif %}
+
+{% else %}
+	<li>{{ lang('NO_BIRTHDAYS') }}</li>
+{% endfor %}
+</ul>

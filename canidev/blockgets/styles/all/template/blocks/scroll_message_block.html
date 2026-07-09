@@ -1,0 +1,12 @@
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }}').blgMarquee({{ S_MARQUEE_OPTIONS }});
+	});
+// ]]>
+</script>
+
+<div class="marquee">
+	<div class="marquee-container">{{ S_MARQUEE_TEXT }}</div>
+</div>

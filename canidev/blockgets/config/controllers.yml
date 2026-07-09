@@ -1,0 +1,58 @@
+services:
+    canidev.blockgets.controller:
+        class: canidev\blockgets\controller\main_controller
+        arguments:
+            - '@canidev.blockgets.core'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+
+    canidev.blockgets.controller.calendar:
+        class: canidev\blockgets\controller\calendar_controller
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@canidev.blockgets.helper'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@canidev.core.template'
+            - '@user'
+            - '%tables.canidev.blockgets%'
+            
+    canidev.blockgets.controller.player:
+        class: canidev\blockgets\controller\player_controller
+        arguments:
+            - '@dbal.conn'
+            - '@canidev.blockgets.helper'
+            - '@language'
+            - '@request'
+            - '@canidev.core.template'
+            - '@user'
+            - '%tables.canidev.blockgets%'
+
+    canidev.blockgets.controller.admin:
+        abstract: true
+        parent: canidev.core.controller.acp
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@filesystem'
+            - '@canidev.blockgets.helper'
+            - '@canidev.blockgets.helper.admin'
+            - '@log'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.canidev.blockgets%'
+            
+    canidev.blockgets.controller.admin.main:
+        class: canidev\blockgets\controller\admin_controller_main
+        parent: canidev.blockgets.controller.admin
+            
+    canidev.blockgets.controller.admin.pages:
+        class: canidev\blockgets\controller\admin_controller_pages
+        parent: canidev.blockgets.controller.admin

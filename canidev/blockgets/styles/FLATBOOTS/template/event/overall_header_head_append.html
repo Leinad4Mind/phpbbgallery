@@ -1,0 +1,14 @@
+{% if (BLG_ENABLED or BLG_ADMIN_BAR) and CANIDEV_CORE_STARTED %}
+	{% include '@canidev_core/event/overall_header_head_append.html' %}
+	{% INCLUDECSS '@canidev_blockgets/flatboots.css' %}
+	
+	{% if BLG_ENABLED %}
+		<style>
+		.blg-center-area 					{ grid-template-columns: {{ LEFT_COLUMN_WIDTH }} 1fr {{ RIGHT_COLUMN_WIDTH }}; }
+		.blg-block, .blg-area, .blg-grid 	{ margin-bottom: {{ BLG_BLOCK_SPACE }}; }
+		.blg-grid, .blg-center-area 		{ gap: {{ BLG_BLOCK_SPACE }}; }
+
+		{% if BLG_LOGO %}.site_logo, .imageset.site_logo { background-image: url('{{ BLG_LOGO }}'); }{% endif %}
+		</style>
+	{% endif %}
+{% endif %}

@@ -1,0 +1,14 @@
+
+<div class="block-postbody">
+	<div>{{ PV_CONTENT }}</div>
+
+{% if PV_HAS_ATTACHMENTS %}
+	<dl class="attachbox">
+		<dt>{{ lang('ATTACHMENTS') }}</dt>
+		{% for attachment in pv_attachment %}
+			<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
+		{% endfor %}
+	</dl>
+	<div class="clear"></div>
+{% endif %}
+</div>
