@@ -1,0 +1,67 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_SENKY_MASSNOTIFICATION_TITLE') }}</h1>
+<p>{{ lang('MASSNOTIFICATION_DESC') }}</p>
+
+{% if S_WARNING %}
+<div class="errorbox">
+		<h3>{{ WARNING }}</h3>
+		<p>{{ WARNING_MSG }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_notification" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('COMPOSE') }}</legend>
+		<dl>
+			<dt><label for="group">{{ lang('SEND_TO_GROUP') ~ lang('COLON') }}</label></dt>
+			<dd>
+				<select id="group" name="g">
+					<option value="0">{{ lang('ALL_USERS') }}</option>
+					{% for group in groups %}
+						<option value="{{ group.ID }}">{{ group.NAME }}</option>
+					{% endfor %}
+				</select>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="usernames">{{ lang('SEND_TO_USERS') ~ lang('COLON') }}</label><br /><span>{{ lang('SEND_TO_USERS_EXPLAIN') }}</span></dt>
+			<dd><textarea name="usernames" id="usernames" rows="5" cols="40">{{ USERNAMES }}</textarea></dd>
+			<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="title">{{ lang('TITLE') ~ lang('COLON') }}</label></dt>
+			<dd><input size="40" name="title" type="text" id="title" value="{{ TITLE }}" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="message">{{ lang('MESSAGE') ~ lang('COLON') }}</label><br /><span>{{ lang('MESSAGE_EXPLAIN') }}</span></dt>
+			<dd><textarea id="message" name="message" rows="10" cols="60">{{ MESSAGE }}</textarea></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="url">{{ lang('URL') ~ lang('COLON') }}</label><br /><span>{{ lang('URL_EXPLAIN') }}</span></dt>
+			<dd><input size="70" name="url" type="url" id="url" value="{{ URL }}" /></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="author">{{ lang('AUTHOR') ~ lang('COLON') }}</label><br /><span>{{ lang('AUTHOR_EXPLAIN') }}</span></dt>
+			<dd><input size="40" name="author" type="author" id="author" value="{{ AUTHOR }}" /></dd>
+			<dd>[ <a href="{{ U_FIND_AUTHOR }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+		</dl>
+
+		{% EVENT senky_massnotification_adm_after %}
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SEND_NOTIFICATION') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+
+{% INCLUDEJS '@senky_massnotification/massnotification.js' %}
+
+{% include 'overall_footer.html' %}
