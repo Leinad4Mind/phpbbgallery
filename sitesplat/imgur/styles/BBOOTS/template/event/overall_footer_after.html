@@ -1,0 +1,14 @@
+<!-- IF BB_LOAD_IN_POSTING -->
+	<!-- INCLUDEJS @sitesplat_imgur/js/clipboard.min.js -->
+<script>
+head.load("{T_THEME_PATH}/vendors/jupload.min.js");
+head.ready(function () {
+   var clipboardSnippets = new Clipboard('[data-clipboard-snippet]', {
+	  text: function(trigger) {
+		return $(trigger).closest(".input-group").find('input').first().val().trim();
+	  }
+	});	
+	
+});
+</script>
+<!-- ENDIF -->
