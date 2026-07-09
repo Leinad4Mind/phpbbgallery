@@ -1,0 +1,142 @@
+<!-- IF S_AJAX_REQUEST -->
+<form action="{S_CONFIRM_ACTION}" method="post" id="bbpointsform">
+ <h3 class="alert_title">{MESSAGE_TITLE}</h3>
+	<p>{MESSAGE_TEXT}</p>
+		
+	<div class="row">
+		<div class="col-md-6">
+		<label class="control-label" for="mtransfer_to">{L_BB_TRANSFER}{L_COLON}</label>
+		<div class="input-group">
+		<span class="input-group-addon"><i class="fa fa-user"></i></span>
+		    <input placeholder="{L_USERNAME}" id="mtransfer_to" value="" class="form-control" /><input type="hidden" id="mtransfer_id_to" name="transfer_to" value="0" />
+		</div>
+		</div>
+		
+		<div class="col-md-6">
+		<label class="control-label" for="mtransfer_to">{L_BB_AMOUNT}{L_COLON}</label>
+		<div class="input-group">
+			<span class="input-group-addon">{L_BBPOINTS}</span>
+		    <input placeholder="{L_BB_AMOUNT}" type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{USER_POINTS}" class="form-control" onkeypress="return isNumberKey(event)">
+		</div>
+		</div>
+	</div>
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="comment">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45" />
+		  </div> 
+		</div> 
+		<!-- ENDIF -->
+		
+	 <div class="space10"></div>
+	 <div class="space10"></div>
+	<fieldset>
+		<input id="sendclick" type="button" name="confirm" value="{L_YES}" class="btn btn-default" />
+		<input type="button" name="cancel" value="{L_NO}" class="btn btn-default" />
+	</fieldset>
+</form>	
+
+<!-- // previously link to ./ext/sitesplat/bbpoints/styles/FLATBOOTS/template/js/modal_bbpoints.js -->
+<script>
+head.ready(function () {
+; (function ($, window, document) {
+
+    $('#sendclick').click(function(event) {
+		event.preventDefault();
+		if ($('#mtransfer_to').val() > 0 && parseInt($('#amount').val()) > 4 && parseInt($('#amount').val()) <= parseInt(userpoints))
+		{
+			amount = parseInt(userpoints) - parseInt($('#amount').val());
+			$('#userbbpoint').text(amount.toFixed(2));
+		}
+    });
+
+	$('#mtransfer_to').autocomplete({
+		source: function(request, response) {
+			
+					$.ajax({
+						type: "POST",
+						url: sitesplat_board_url + 'bbpoints/search_user',
+						dataType: "json",
+						data: {
+							term: request.term
+						},
+						error: function(xhr, textStatus, errorThrown) {
+							alert('Error: ' + xhr.responseText);
+						},
+						success: function(data) {
+							response($.map(data, function(c) {
+								return {
+									value: c.value,
+									label: c.label,
+								};
+							}));
+						}
+					});
+				},
+		select: function(event, ui) { 
+			event.preventDefault(); 
+			$(this).val(ui.item.label); 
+			$("#mtransfer_id_to").val(ui.item.value); 
+		},
+		placeholder: 'Enter user ...',
+		minLength: 2
+	});
+	
+})(jQuery, window, document);
+});
+</script>
+<!-- ELSE -->
+
+<!-- INCLUDE overall_header.html -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+ <div class="alert alert-warning">{MESSAGE_TEXT}</div>
+	<div class="well">
+	 <div class="control-group">
+		  <label class="control-label" for="delete_reason">{L_BBPOINTS_TRANSFER_AMT}{L_COLON}</label>
+		   <div class="input-group">
+		    <select name="transfer_to" id="transfer_to" class="selectpicker" data-container="body" data-size="5" data-style="btn btn-default form-control" data-width="30%">
+			 <option value="0">--</option>
+		     <!-- BEGIN userlist --><option value="{userlist.USER_ID}"{userlist.SELECTED}>{userlist.USER_NAME}</option><!-- END userlist -->
+		    </select>
+			<!-- IF SYMBOL_POS --><span class="input-group-addon"><i class="fa {BBPOINTS_SYMBOL}"></i></span><!-- ENDIF -->
+		    <input type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{USER_POINTS}" class="form-control">
+			<!-- IF not SYMBOL_POS --><span class="input-group-addon"><i class="fa {BBPOINTS_SYMBOL}"></i></span><!-- ENDIF -->
+		   </div>
+		</div>
+		
+	
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="delete_reason">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" type="text" name="comment" value=""class="form-control" maxlength="120" size="45" />
+		  </div> 
+		</div> 
+		<!-- ENDIF -->
+	 <div class="space10"></div>
+	<fieldset>
+	  {S_HIDDEN_FIELDS}
+		<button type="submit" name="confirm" value="{L_YES}" class="btn btn-default">{L_YES}</button>
+		<button type="submit" name="cancel" value="{L_NO}" class="btn btn-default">{L_NO}</button>
+	</fieldset>
+</div>
+</form>
+<!-- INCLUDE overall_footer.html -->
+
+<script src="./ext/sitesplat/bbpoints/styles/FLATBOOTS/template/js/bbpoints.js"></script>
+<!-- ENDIF -->
+
+<script>
+var userpoints =  {USER_POINTS};
+
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+</script>
+
+

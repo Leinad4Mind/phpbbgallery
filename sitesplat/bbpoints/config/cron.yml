@@ -1,0 +1,13 @@
+services:
+# ----- Cron tasks -----
+    sitesplat.bbpoints:
+        class: sitesplat\bbpoints\cron\task\core\bbpoints
+        arguments:
+            - '@config'
+            - '@user'
+            - '@dbal.conn'
+            - '%sitesplat.bbpoints.table%'
+        calls:
+            - [set_name, [sitesplat.bbpoints]]
+        tags:
+            - { name: cron.task }
