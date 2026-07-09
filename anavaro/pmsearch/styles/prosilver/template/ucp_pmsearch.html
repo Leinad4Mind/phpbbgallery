@@ -1,0 +1,70 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<h2>{L_PMSEARCH_TITLE}</h2>
+	<fieldset>
+		<dl>
+			<dt><label for="keywords">{L_SEARCH_KEYWORDS}{L_COLON}</label><br /><span>{L_PMSEARCH_KEYWORDS_EXPLAIN}</span></dt>
+			<dd><input type="search" class="inputbox" name="keywords" id="keywords" size="40" title="{L_SEARCH_KEYWORDS}" value="{S_KEYWORDS}" /></dd>
+			<dd><label for="terms1"><input type="radio" name="terms" id="terms1" value="all" <!-- IF SEARCH_TEARM_TYPE == 1 -->checked="checked" <!-- ENDIF --> /> {L_SEARCH_ALL_TERMS}</label></dd>
+			<dd><label for="terms2"><input type="radio" name="terms" id="terms2" value="any" <!-- IF SEARCH_TEARM_TYPE == 2 -->checked="checked" <!-- ENDIF --> /> {L_SEARCH_ANY_TERMS}</label></dd>
+			<dd><label for="terms3"><input type="radio" name="terms" id="terms3" value="nick" <!-- IF SEARCH_TEARM_TYPE == 3 -->checked="checked" <!-- ENDIF --> /> {L_SEARCH_FOR_NICK}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		{S_HIDDEN_FIELDS}<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp;
+		<input type="submit" name="submit" value="{L_SEARCH_PMS}" class="button1" />
+	</fieldset>
+</form>
+<!-- IF HAS_RESULTS -->
+<div class="panel">
+	<div class="inner">
+		<div class="action-bar top">
+			<div class="pagination">
+					{TOTAL_MESSAGES}
+					<!-- IF .pagination -->
+						<!-- INCLUDE pagination.html -->
+					<!-- ELSE -->
+						 &bull; {PAGE_NUMBER}
+					<!-- ENDIF -->
+			</div>
+		</div>
+		
+		<ul class="topiclist two-columns">
+			<li class="header">
+				<dl>
+					<dt><div class="list-inner">{L_MESSAGE}</div></dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist cplist pmlist responsive-show-all <!-- IF S_SHOW_RECIPIENTS -->missing-column<!-- ELSE -->two-columns<!-- ENDIF -->">
+
+		<!-- BEGIN pm_results -->
+			<li class="row<!-- IF pm_results.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF pm_results.PM_CLASS --> {pm_results.PM_CLASS}<!-- ENDIF -->">
+				<dl class="row-item {pm_results.FOLDER_IMG_STYLE}">
+					<dt<!-- IF pm_results.PM_ICON_URL and S_PM_ICONS --> style="background-image: url({pm_results.PM_ICON_URL}); background-repeat: no-repeat;"<!-- ENDIF -->>
+						<!-- IF pm_results.S_PM_UNREAD --><a href="{pm_results.U_VIEW_PM}" class="icon-link"></a><!-- ENDIF -->
+						<div class="list-inner">
+							<a href="{pm_results.U_VIEW_PM}" class="topictitle">{pm_results.SUBJECT}</a><br />
+							{L_MESSAGE_BY_AUTHOR} {pm_results.MESSAGE_AUTHOR_FULL} &raquo; {pm_results.SENT_TIME}
+						</div>
+					</dt>
+				</dl>
+			</li>
+		<!-- END pm_results -->
+
+		</ul>
+		
+		<div class="action-bar top">
+			<div class="pagination">
+					{TOTAL_MESSAGES}
+					<!-- IF .pagination -->
+						<!-- INCLUDE pagination.html -->
+					<!-- ELSE -->
+						 &bull; {PAGE_NUMBER}
+					<!-- ENDIF -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- INCLUDE ucp_footer.html -->
