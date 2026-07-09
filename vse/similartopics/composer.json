@@ -1,0 +1,38 @@
+{
+    "name": "vse/similartopics",
+    "type": "phpbb-extension",
+    "description": "A phpBB extension that displays a list of similar (related) topics at the bottom of the current topic's page.",
+    "homepage": "https://github.com/iMattPro/similartopics",
+    "version": "1.6.0",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "similar",
+        "topics"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Matt Friedman",
+            "homepage": "https://imattpro.github.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "composer/installers": "~1.0.0",
+        "phpbb/phpbb": ">=3.2.1"
+    },
+    "extra": {
+        "display-name": "Precise Similar Topics",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.1"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/precise_similar_topics",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}
