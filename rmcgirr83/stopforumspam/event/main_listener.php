@@ -121,6 +121,8 @@ class main_listener implements EventSubscriberInterface
 			'core.ucp_pm_view_message'				=> 'ucp_pm_view_message',
 			// Custom events for integration with Contact Admin Extension
 			'rmcgirr83.contactadmin.modify_data_and_error'	=> 'user_sfs_validate_registration',
+			// phpBB default contact us page
+			'core.message_admin_form_submit_before'	=> 'message_admin_form_submit_before',
 		];
 	}
 
@@ -421,6 +423,53 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/*
+	* message_admin_form_submit_before
+	*
+	* @param	$event	the event object
+	* @return 	null
+	* @access	public
+	*/
+	public function message_admin_form_submit_before($event)
+	{
+		if ($this->config['allow_sfs'] == false)
+		{
+			return false;
+		}
+
+		$errors = $event['errors'];
+
+		// validate the user ip
+		$userip_error = $this->validate_ip($this->user->ip);
+		if ($userip_error)
+		{
+			$errors[] = $userip_error;
+		}
+
+		/* On registration and only when all errors have cleared
+		 * do not want the admin message area to fill up
+		*/
+		if (!sizeof($errors))
+		{
+			$check = $this->stopforumspam_check($this->request->variable('name', '', true), $this->user->ip, $this->request->variable('email', ''));
+
+			if ($check)
+			{
+				if ($this->config['sfs_down'] && $check === 'sfs_down')
+				{
+					return;
+				}
+				$errors[] = $this->show_message($check);
+				// now ban the spammer by IP
+				if (is_int($check) && $this->config['sfs_ban_ip'])
+				{
+					$this->sfsapi->sfs_ban('ip', $this->user->ip, (int) $check);
+				}
+			}
+		}
+		$event['errors'] = $errors;
+	}
+
+	/*
 	* show_message
 	* @param 	string	$check 		the type of check we are, uhmmm, checking
 	* @return 	string
@@ -469,6 +518,7 @@ class main_listener implements EventSubscriberInterface
 
 		// Query the SFS database and pull the data into script
 		$json = $this->sfsapi->sfsapi('query', $username, $ip, $email);
+
 		$json_decode = json_decode($json, true);
 
 		// If there is a curl error as set in sfs_api, log the error
@@ -507,7 +557,7 @@ class main_listener implements EventSubscriberInterface
 			{
 				if ($sfs_log_message)
 				{
-					$this->log_message('user', $username, $ip, 'LOG_SFS_MESSAGE', $email, $username_freq, $ip_freq, $email_freq);
+					$this->log_message($username, $ip, 'LOG_SFS_MESSAGE', $email, $username_freq, $ip_freq, $email_freq);
 				}
 				//user is a spammer
 				return $spam_score;
@@ -523,11 +573,11 @@ class main_listener implements EventSubscriberInterface
 			{
 				if ($this->config['sfs_down'])
 				{
-					$this->log_message('admin', $username, $ip, 'LOG_SFS_DOWN_USER_ALLOWED', $email);
+					$this->log->add('admin', $username, $ip, 'LOG_SFS_DOWN_USER_ALLOWED', $email);
 				}
 				else
 				{
-					$this->log_message('admin', $username, $ip, 'LOG_SFS_DOWN', $email);
+					$this->log->add('admin', $username, $ip, 'LOG_SFS_DOWN', $email);
 				}
 			}
 			return 'sfs_down';
@@ -536,7 +586,6 @@ class main_listener implements EventSubscriberInterface
 
 	/*
 	* log_message	function used in this class to inject messages into the logs
-	* @param 	string	$mode 		the mode that we are doing for the log either admin or user
 	* @param	string	$username	the users name
 	* @param	string	$ip			the users ip
 	* @param	string	$message	the message we are injecting
@@ -544,51 +593,51 @@ class main_listener implements EventSubscriberInterface
 	* @return 	void
 	* @access	private
 	*/
-	private function log_message($mode, $username, $ip, $message, $email, $username_score = 0, $ip_score = 0, $email_score = 0)
+	private function log_message($username, $ip, $message, $email, $username_score = 0, $ip_score = 0, $email_score = 0)
 	{
 
 		$sfs_ip = $this->language->lang('SFS_IP_STOPPED', $ip);
 		$sfs_username = $this->language->lang('SFS_USERNAME_STOPPED', $username);
 		$sfs_email = $this->language->lang('SFS_EMAIL_STOPPED', $email);
 
-		if ($mode === 'admin')
+		if ($this->config['sfs_by_name'] == false)
 		{
-			$this->log->add('admin', $this->user->data['user_id'], $ip, $message, false, [$sfs_username, $sfs_ip, $sfs_email]);
+			$username_score = $this->language->lang('SFS_NOT_CHECKED');
 		}
 		else
 		{
-			if ($this->config['sfs_by_name'] == false)
-			{
-				$username_score = $this->language->lang('SFS_NOT_CHECKED');
-			}
-			else
-			{
-				$username_score = $this->language->lang('SFS_FREQUENCY', $username_score);
-			}
+			$username_score = $this->language->lang('SFS_FREQUENCY', $username_score);
+		}
 
-			if ($this->config['sfs_by_email'] == false)
+		if ($this->config['sfs_by_email'] == false)
+		{
+			$email_score = $this->language->lang('SFS_NOT_CHECKED');
+		}
+		else
+		{
+			if ($email_score == (int) 255)
 			{
-				$email_score = $this->language->lang('SFS_NOT_CHECKED');
+				$email_score = $this->language->lang('SFS_MARKED_TOXIC');
 			}
 			else
 			{
 				$email_score = $this->language->lang('SFS_FREQUENCY', $email_score);
 			}
-
-			if ($this->config['sfs_by_ip'] == false)
-			{
-				$ip_score = $this->language->lang('SFS_NOT_CHECKED');
-			}
-			else
-			{
-				$ip_score = $this->language->lang('SFS_FREQUENCY', $ip_score);
-			}
-			$sfs_ip .= $ip_score;
-			$sfs_username .= $username_score;
-			$sfs_email .= $email_score;
-
-			$this->log->add('user', $this->user->data['user_id'], $ip, $message, false, ['reportee_id' => $this->user->data['user_id'], $sfs_username, $sfs_ip, $sfs_email]);
 		}
+
+		if ($this->config['sfs_by_ip'] == false)
+		{
+			$ip_score = $this->language->lang('SFS_NOT_CHECKED');
+		}
+		else
+		{
+			$ip_score = $this->language->lang('SFS_FREQUENCY', $ip_score);
+		}
+		$sfs_ip .= $ip_score;
+		$sfs_username .= $username_score;
+		$sfs_email .= $email_score;
+
+		$this->log->add('user', $this->user->data['user_id'], $ip, $message, false, ['reportee_id' => $this->user->data['user_id'], $sfs_username, $sfs_ip, $sfs_email]);
 	}
 
 	/*
@@ -599,7 +648,7 @@ class main_listener implements EventSubscriberInterface
 	*/
 	private function validate_email($email)
 	{
-		$error = phpbb_validate_email($email);
+		$error = validate_user_email($email);
 
 		return $error;
 	}

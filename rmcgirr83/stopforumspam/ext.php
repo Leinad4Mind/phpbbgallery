@@ -19,7 +19,6 @@ class ext extends \phpbb\extension\base
 {
 	/** @var string Require phpBB 3.3.0 */
 	const PHPBB_MIN_VERSION = '3.3.0';
-
 	/**
 	* Enable extension if phpBB version requirement is met
 	*
