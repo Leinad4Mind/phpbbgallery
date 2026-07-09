@@ -1,0 +1,42 @@
+services:
+    david63.loginredirect.listener:
+        class: david63\loginredirect\event\listener
+        arguments:
+            - '@david63.loginredirect.core.functions'		
+            - '@david63.loginredirect.main.controller'
+        tags:
+            - { name: event.listener }
+
+    david63.loginredirect.main.controller:
+        class: david63\loginredirect\controller\main_controller
+        arguments:
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '@language'
+            - '@david63.loginredirect.core.functions'
+            - '%tables%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    david63.loginredirect.admin.controller:
+        class: david63\loginredirect\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@language'
+            - '@david63.loginredirect.core.functions'
+            - '%tables%'
+
+    david63.loginredirect.core.functions:
+        class: david63\loginredirect\core\functions
+        arguments:
+            - '@ext.manager'
+
+    _defaults:
+        public: true

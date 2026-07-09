@@ -1,0 +1,42 @@
+{
+    "name": "david63/loginredirect",
+    "type": "phpbb-extension",
+    "description": "Redirects a user to a chosen topic/announcement when they log in.",
+    "version": "3.1.0-RC1",
+    "time": "2020-01-28",
+    "keywords": [
+		"phpbb",
+		"extension",
+		"login",
+		"redirect"
+	],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "David Wood",
+            "role": "Extension converter"
+        },
+        {
+            "name": "Mark Barnes",
+            "email": "markthedaemon@gmail.com",
+            "role": "Original developer"
+        }
+    ],
+	"require": {
+        "php": ">=7.1.3",
+		"phpbb/phpbb": ">=3.3.0",
+        "composer/installers": "~1.0"
+    },
+	"extra": {
+		"display-name": "Login redirect",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0"
+		},
+		"version-check": {
+        	"host": "version.phpbbdev.space",
+        	"directory": "/versions",
+        	"filename": "login_redirect_version_file.json",
+			"ssl": false
+    	}
+	}
+}
