@@ -1,0 +1,23 @@
+imports:
+    - { resource: alias.yml }
+    - { resource: ud_constants.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $tables: '%tables%'
+            $udconstants: '%udconstants%'
+            $ext_images_path: '%core.root_path%ext/devspace/userdefaults/adm/style/images'
+        public: true
+
+    devspace.userdefaults.listener:
+        class: devspace\userdefaults\event\listener
+        tags:
+            - { name: event.listener }
+
+    devspace.userdefaults.admin.controller:
+        class: devspace\userdefaults\controller\admin_controller
+
+    devspace.userdefaults.core.functions:
+        class: devspace\userdefaults\core\functions
