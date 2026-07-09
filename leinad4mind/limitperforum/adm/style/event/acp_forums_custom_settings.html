@@ -1,0 +1,63 @@
+<style>
+	.limit-posts-per-forum input[type="number"] {
+		width: 40px;
+		-moz-padding-end: 0;
+	}
+</style>
+<fieldset class="limit-posts-per-forum">
+	<legend>{{ lang('LIMIT_PER_FORUM') }}</legend>
+	<dl>
+		<dt><label for="forum_topic_limit">{{ lang('FORUM_MAX_TOPICS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_TP_EXPLAIN') }}</span></dt>
+		<dd>
+			<input type="text" id="forum_topic_limit" name="forum_topic_limit" value="{{ FORUM_TOPIC_LIMIT }}" size="5">
+			{{ lang('LIMIT_POSTS_PER_FORUM_TOPICS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
+			<input type="number" id="forum_topic_time_limit" name="forum_topic_time_limit" value="{{ FORUM_TOPIC_TIME_LIMIT }}" min="0">
+			{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="forum_post_limit">{{ lang('FORUM_MAX_POSTS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_TP_EXPLAIN') }}</span></dt>
+		<dd>
+			<input type="text" id="forum_post_limit" name="forum_post_limit" value="{{ FORUM_POST_LIMIT }}" size="5">
+			{{ lang('LIMIT_POSTS_PER_FORUM_POSTS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
+			<input type="number" id="forum_post_time_limit" name="forum_post_time_limit" value="{{ FORUM_POST_TIME_LIMIT }}" min="0">
+			{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
+		</dd>
+	</dl>
+
+	{% if topics_posts_limits | length %}
+	<dl>
+		<dt><label for="forum_post_group_limit">{{ lang('FORUM_MAX_GROUPS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_GROUPS_EXPLAIN') }}</span></dt>
+		<dd>
+			<table id="forum_post_group_limit">
+				<thead>
+					<tr>
+						<th>{{ lang('GROUP') }}</th>
+						<th>{{ lang('FORUM_MAX_TOPICS_SHORT') }}</th>
+						<th>{{ lang('FORUM_MAX_POSTS_SHORT') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for limit in topics_posts_limits %}
+						<tr>
+							<td>{{ limit.group_name }}</td>
+							<td>
+								<input type="number" id="limit_forum_group_topic_{{ limit.group_id }}" name="lfgt[{{ limit.group_id }}]" value="{{ limit.topics | default(0) }}" min="0">
+								{{ lang('LIMIT_POSTS_PER_FORUM_TOPICS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
+								<input type="number" id="limit_forum_group_topic_time_{{ limit.group_id }}" name="lfgtt[{{ limit.group_id }}]" value="{{ limit.topic_time_limit | default(0) }}" min="0">
+								{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
+							</td>
+							<td>
+								<input type="number" id="limit_forum_group_post_{{ limit.group_id }}" name="lfgp[{{ limit.group_id }}]" value="{{ limit.posts | default(0) }}" min="0">
+								{{ lang('LIMIT_POSTS_PER_FORUM_POSTS') ~ ' ' ~ lang('LIMIT_POSTS_PER_FORUM_EVERY') }}
+								<input type="number" id="limit_forum_group_post_time_{{ limit.group_id }}" name="lfgpt[{{ limit.group_id }}]" value="{{ limit.post_time_limit | default(0) }}" min="0">
+								{{ lang('LIMIT_POSTS_PER_FORUM_HOURS') }}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</dd>
+	</dl>
+	{% endif %}
+</fieldset>

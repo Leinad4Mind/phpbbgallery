@@ -1,0 +1,2 @@
+parameters:
+    leinad4mind.limitperforum.table.forum_groups: '%core.table_prefix%limit_posts_forum_groups'
