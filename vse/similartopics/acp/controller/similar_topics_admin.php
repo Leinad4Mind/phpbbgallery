@@ -157,6 +157,7 @@ class similar_topics_admin
 
 			// Set basic config settings
 			$this->config->set('similar_topics', $this->request->variable('pst_enable', 0));
+			$this->config->set('similar_topics_dynamic', $this->request->variable('pst_dynamic', 0));
 			$this->config->set('similar_topics_limit', abs($this->request->variable('pst_limit', 0))); // use abs for positive values only
 			$this->config->set('similar_topics_cache', abs($this->request->variable('pst_cache', 0))); // use abs for positive values only
 			$this->config_text_set('similar_topics_words', $this->request->variable('pst_words', '', true));
@@ -208,20 +209,22 @@ class similar_topics_admin
 
 		$this->template->assign_vars(array(
 			'S_PST_ENABLE'    => $this->isset_or_default($this->config['similar_topics'], false),
+			'S_PST_DYNAMIC'   => $this->isset_or_default($this->config['similar_topics_dynamic'], false),
 			'PST_LIMIT'       => $this->isset_or_default($this->config['similar_topics_limit'], ''),
 			'PST_CACHE'       => $this->isset_or_default($this->config['similar_topics_cache'], ''),
 			'PST_SENSE'       => $this->isset_or_default($this->config['similar_topics_sense'], ''),
 			'PST_WORDS'       => $this->isset_or_default($this->config_text_get('similar_topics_words'), ''),
 			'PST_TIME'        => $this->get_pst_time($this->config['similar_topics_time'], $this->config['similar_topics_type']),
+			'PST_SENSITIVITY' => $this->similartopics && $this->similartopics->get_engine() === 'innodb' ? 1 : 5,
 			'S_PST_NO_COMPAT' => $this->similartopics === null || !$this->similartopics->is_fulltext('topic_title'),
 			'U_ACTION'        => $this->u_action,
 		));
 
 		// If postgresql, we need to make an options list of text search names
-		if ($this->similartopics && $this->similartopics->get_type() === 'postgres')
+		if ($this->similartopics instanceof \vse\similartopics\driver\postgres)
 		{
 			$this->language->add_lang('acp/search');
-			foreach ($this->get_cfgname_list() as $row)
+			foreach ($this->similartopics->get_cfg_name_list() as $row)
 			{
 				$this->template->assign_block_vars('postgres_ts_names', array(
 					'NAME'       => $row['ts_name'],
@@ -266,6 +269,8 @@ class similar_topics_admin
 				WHERE forum_id = $forum_id";
 			$this->db->sql_query($sql);
 
+			$this->cache->destroy('sql', FORUMS_TABLE);
+
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'PST_LOG_MSG');
 
 			$this->end('PST_SAVED');
@@ -308,22 +313,6 @@ class similar_topics_admin
 		{
 			$this->end('FORM_INVALID', E_USER_WARNING);
 		}
-	}
-
-	/**
-	 * Get list of PostgreSQL text search names
-	 *
-	 * @access protected
-	 * @return array array of text search names
-	 */
-	protected function get_cfgname_list()
-	{
-		$sql = 'SELECT cfgname AS ts_name FROM pg_ts_config';
-		$result = $this->db->sql_query($sql);
-		$ts_options = $this->db->sql_fetchrowset($result);
-		$this->db->sql_freeresult($result);
-
-		return $ts_options;
 	}
 
 	/**
