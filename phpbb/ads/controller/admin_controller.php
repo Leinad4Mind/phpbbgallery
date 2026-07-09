@@ -109,16 +109,6 @@ class admin_controller
 	}
 
 	/**
-	 * Get ACP page title for Ads module
-	 *
-	 * @return	string	Language string for Ads ACP module
-	 */
-	public function get_page_title()
-	{
-		return $this->language->lang('ACP_PHPBB_ADS_TITLE');
-	}
-
-	/**
 	 * Process user request for settings mode
 	 *
 	 * @return	void
@@ -133,6 +123,7 @@ class admin_controller
 				$this->config->set('phpbb_ads_adblocker_message', $this->request->variable('adblocker_message', 0));
 				$this->config->set('phpbb_ads_enable_views', $this->request->variable('enable_views', 0));
 				$this->config->set('phpbb_ads_enable_clicks', $this->request->variable('enable_clicks', 0));
+				$this->config->set('phpbb_ads_show_agreement', $this->request->variable('show_agreement', 0));
 
 				$this->success('ACP_AD_SETTINGS_SAVED');
 			}
@@ -146,6 +137,7 @@ class admin_controller
 			'AD_BLOCK_CONFIG'	=> $this->config['phpbb_ads_adblocker_message'],
 			'ENABLE_VIEWS'      => $this->config['phpbb_ads_enable_views'],
 			'ENABLE_CLICKS'     => $this->config['phpbb_ads_enable_clicks'],
+			'SHOW_AGREEMENT'    => $this->config['phpbb_ads_show_agreement'],
 		));
 	}
 
