@@ -1,0 +1,158 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbfront/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbfront/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/bbfront.css -->
+<!-- INCLUDECSS css/component.css -->
+
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_BBFRONT} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBFRONT_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_BBFRONT}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+
+		<p>{L_ACP_BBFRONT_EXPLAIN}</p>
+
+<!-- IF S_NOTICE_BBTAGS or S_NOTICE_BBEMBED or S_NOTICE_LIKEBB -->
+<div id="ext_notice" class="errorbox notice">
+	<a href="{U_BBFRONT_NOTICE_CLOSE}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{L_ACP_BBTAGS_NOTICE_CLOSE}"></a>
+	 <!-- IF S_NOTICE_BBTAGS --><p>{L_NOTICE_BBTAGS}</p><!-- ENDIF -->
+	 <!-- IF S_NOTICE_BBEMBED --><p>{L_NOTICE_BBEMBED}</p><!-- ENDIF -->
+	 <!-- IF S_NOTICE_LIKEBB --><p>{L_NOTICE_LIKEBB}</p><!-- ENDIF -->
+</div>
+<!-- ENDIF -->
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl style="width:48%;float:left;">
+			<dt><label for="bbfront_inc_forums">{L_ACP_BBFRONT_FORUMS}{L_COLON}</label><br />{L_ACP_BBFRONT_FORUMS_EXPLAIN}</dt>
+			<dd><select multiple style="width:140px;" size="10" name="bbfront_inc_forums[]" id="bbfront_inc_forums" title="Included forums">{INC_FORUMS}</select></dd>
+
+		</dl>
+        <dl style="width:48%;float:left;">
+        	<dt><label for="bbfront_inc_groups">{L_ACP_BBFRONT_GROUPS}{L_COLON}</label><br />{L_ACP_BBFRONT_GROUPS_EXPLAIN}</dt>
+			<dd><select multiple style="width:140px;" size="10" name="bbfront_inc_groups[]" id="bbfront_inc_groups" title="Included groups">{INC_GROUPS}</select></dd>
+        </dl>
+        <dl style="width:48%;float:left;">
+			<dt><label for="bbfront_name">{L_ACP_BBFRONT_NAME}{L_COLON}</label><br />{L_ACP_BBFRONT_NAME_EXPLAIN}</dt>
+			<dd><input type="text" class="input" name="bbfront_settings[name]" value="{BBFRONT_NAME}" pattern=".{3,}" required title="3 characters minimum" /></dd>
+        </dl>
+        <dl style="width:48%;float:left;">
+			<dt><label for="bbfront_chars">{L_ACP_BBFRONT_CHARS}{L_COLON}</label><br />{L_ACP_BBFRONT_CHARS_EXPLAIN}</dt>
+			<dd><input type="number" class="input" name="bbfront_settings[chars]" value="{BBFRONT_CHARS}" min="100" max="700" /></dd>
+        </dl>
+		<dl style="width:48%;float:left;">
+			<dt><label for="bbfront_per_page">{L_ACP_BBFRONT_PAGES}</label><br />{{ lang('ACP_BBFRONT_PAGES_EXPLAIN') }}</dt>
+			<dd><input type="number" class="input" name="bbfront_settings[per_page]" value="{BBFRONT_PER_PAGE}" min="4" max="20" /></dd>
+        </dl>
+        <dl style="clear:both;">
+            <dt><label for="avatar">{L_USE_AVATAR}{L_COLON}</label></dt>
+            <dd>
+            <label><input type="radio" class="radio" name="bbfront_settings[use_avatar]" value="1"<!-- IF USE_AVATAR --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+            <label><input type="radio" class="radio" name="bbfront_settings[use_avatar]" value="0"<!-- IF not USE_AVATAR --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_grid_layout">{{ lang('BBFRONT_GRID_LAYOUT') }}</label><br />{{ lang('BBFRONT_GRID_LAYOUT_EXPLAIN') }}</dt>
+			<dd>
+				<select name="bbfront_grid_layout">
+					<option value="4-l"{% if BBFRONT_GRID_LAYOUT == '4-l' %} selected{% endif %}>{{ lang('BBFRONT_GRID_LAYOUT_4L') }}</option>
+					<option value="5-s"{% if BBFRONT_GRID_LAYOUT == '5-s' %} selected{% endif %}>{{ lang('BBFRONT_GRID_LAYOUT_5S') }}</option>
+					<option value="4-s"{% if BBFRONT_GRID_LAYOUT == '4-s' %} selected{% endif %}>{{ lang('BBFRONT_GRID_LAYOUT_4S') }}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_grid_fx_first">{{ lang('BBFRONT_GRID_FX_FIRST') }}</label><br />{{ lang('BBFRONT_GRID_FX_FIRST_EXPLAIN') }}</dt>
+			<dd>
+				<select name="bbfront_grid_fx_first">
+					<option value="Hapi"{% if BBFRONT_GRID_FX_FIRST == 'Hapi' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_HAPI') }}</option>
+					<option value="Amun"{% if BBFRONT_GRID_FX_FIRST == 'Amun' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_AMUN') }}</option>
+					<option value="Kek"{% if BBFRONT_GRID_FX_FIRST == 'Kek' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_KEK') }}</option>
+					<option value="Isis"{% if BBFRONT_GRID_FX_FIRST == 'Isis' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_ISIS') }}</option>
+					<option value="Montu"{% if BBFRONT_GRID_FX_FIRST == 'Montu' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_MONTU') }}</option>
+					<option value="Osiris"{% if BBFRONT_GRID_FX_FIRST == 'Osiris' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_OSIRIS') }}</option>
+					<option value="Satet"{% if BBFRONT_GRID_FX_FIRST == 'Satet' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SATET') }}</option>
+					<option value="Atum"{% if BBFRONT_GRID_FX_FIRST == 'Atum' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_ATUM') }}</option>
+					<option value="Ra"{% if BBFRONT_GRID_FX_FIRST == 'Ra' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_RA') }}</option>
+					<option value="Sobek"{% if BBFRONT_GRID_FX_FIRST == 'Sobek' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SOBEK') }}</option>
+					<option value="Ptah"{% if BBFRONT_GRID_FX_FIRST == 'Ptah' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_PTAH') }}</option>
+					<option value="Bes"{% if BBFRONT_GRID_FX_FIRST == 'Bes' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_BES') }}</option>
+					<option value="Seker"{% if BBFRONT_GRID_FX_FIRST == 'Seker' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SEKER') }}</option>
+					<option value="Nut"{% if BBFRONT_GRID_FX_FIRST == 'Nut' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_NUT') }}</option>
+					<option value="Shu"{% if BBFRONT_GRID_FX_FIRST == 'Shu' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SHU') }}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_grid_fx_load">{{ lang('BBFRONT_GRID_FX_LOAD') }}</label><br />{{ lang('BBFRONT_GRID_FX_LOAD_EXPLAIN') }}</dt>
+			<dd>
+				<select name="bbfront_grid_fx_load">
+					<option value="Hapi"{% if BBFRONT_GRID_FX_LOAD == 'Hapi' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_HAPI') }}</option>
+					<option value="Amun"{% if BBFRONT_GRID_FX_LOAD == 'Amun' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_AMUN') }}</option>
+					<option value="Kek"{% if BBFRONT_GRID_FX_LOAD == 'Kek' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_KEK') }}</option>
+					<option value="Isis"{% if BBFRONT_GRID_FX_LOAD == 'Isis' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_ISIS') }}</option>
+					<option value="Montu"{% if BBFRONT_GRID_FX_LOAD == 'Montu' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_MONTU') }}</option>
+					<option value="Osiris"{% if BBFRONT_GRID_FX_LOAD == 'Osiris' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_OSIRIS') }}</option>
+					<option value="Satet"{% if BBFRONT_GRID_FX_LOAD == 'Satet' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SATET') }}</option>
+					<option value="Atum"{% if BBFRONT_GRID_FX_LOAD == 'Atum' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_ATUM') }}</option>
+					<option value="Ra"{% if BBFRONT_GRID_FX_LOAD == 'Ra' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_RA') }}</option>
+					<option value="Sobek"{% if BBFRONT_GRID_FX_LOAD == 'Sobek' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SOBEK') }}</option>
+					<option value="Ptah"{% if BBFRONT_GRID_FX_LOAD == 'Ptah' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_PTAH') }}</option>
+					<option value="Bes"{% if BBFRONT_GRID_FX_LOAD == 'Bes' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_BES') }}</option>
+					<option value="Seker"{% if BBFRONT_GRID_FX_LOAD == 'Seker' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SEKER') }}</option>
+					<option value="Nut"{% if BBFRONT_GRID_FX_LOAD == 'Nut' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_NUT') }}</option>
+					<option value="Shu"{% if BBFRONT_GRID_FX_LOAD == 'Shu' %} selected{% endif %}>{{ lang('BBFRONT_GRID_FX_SHU') }}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_per_page_load">{{ lang('ACP_BBFRONT_PAGES_LOAD') }}</label><br />{{ lang('ACP_BBFRONT_PAGES_LOAD_EXPLAIN') }}</dt>
+			<dd><input type="number" class="input" name="bbfront_per_page_load" value="{{ BBFRONT_PER_PAGE_LOAD }}" min="1" max="20" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_infinite_scroll">{L_ACP_BBFRONT_INFINITE_SCROLL}{L_COLON}</label><br />{{ lang('ACP_BBFRONT_INFINITE_SCROLL_EXPLAIN') }}</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="bbfront_infinite_scroll" value="1"<!-- IF BBFRONT_INFINITE_SCROLL --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="bbfront_infinite_scroll" value="0"<!-- IF not BBFRONT_INFINITE_SCROLL --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_ad_frequency">{{ lang('ACP_BBFRONT_AD_FREQUENCY') }}</label><br />{{ lang('ACP_BBFRONT_AD_FREQUENCY_EXPLAIN') }}</dt>
+			<dd><input type="number" class="input" name="bbfront_ad_frequency" value="{{ BBFRONT_AD_FREQUENCY }}" min="0" max="20" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="bbfront_ad_content">{{ lang('ACP_BBFRONT_AD_CONTENT') }}</label><br />{{ lang('ACP_BBFRONT_AD_CONTENT_EXPLAIN') }}</dt>
+			<dd><textarea name="bbfront_ad_content" rows="15" cols="100">{{ BBFRONT_AD_CONTENT }}</textarea></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbfront/vendor/bootstrap/js/bootstrap.min.js -->
+<!-- INCLUDEJS js/bbfront.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
+<!-- if you need to use straight JS with jQuery dependency you need to do it after the overall_footer tag otherwise it will not be loaded properly -->

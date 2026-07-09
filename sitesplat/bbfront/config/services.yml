@@ -1,0 +1,27 @@
+services:
+    sitesplat.bbfront.controller:
+        class: sitesplat\bbfront\controller\main
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@dispatcher'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.bbfront.listener:
+        class: sitesplat\bbfront\event\main_listener
+        arguments:
+            - '@request'
+            - '@controller.helper'
+            - '@config'
+            - '@user'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
