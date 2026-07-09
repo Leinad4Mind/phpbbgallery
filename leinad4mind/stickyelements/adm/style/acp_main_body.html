@@ -1,0 +1,48 @@
+{% INCLUDE 'overall_header.html' %}
+
+{% INCLUDECSS '@leinad4mind_stickyelements/theme/stickyelements.css' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('ACP_STICKYELEMENTS_TITLE') }}</h1>
+
+<form id="acp_stickyelements" method="post" action="{{ U_ACTION }}">
+	<fieldset class="tabulated">
+		<legend>{{ lang('ACP_STICKYELEMENTS_TITLE') }}</legend>
+		<table class="table1 zebra-table">
+			<thead>
+				<tr>
+					<th>{{ lang('STICKYELEMENTS_ONLY_INDEX') }}</th>
+					<th>{{ lang('STICKYELEMENTS_TEXT') }}</th>
+					<th>{{ lang('STICKYELEMENTS_COLOR') }}</th>
+					<th>{{ lang('ACTION') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for stickyelement in stickyelements %}
+					<tr>
+						<td>{{ lang(stickyelement.ONLY_INDEX ? 'YES' : 'NO') }}</td>
+						<td style="background-color: {{ stickyelement.COLOR }};">{{ stickyelement.TEXT }}</td>
+						<td><span style="color: {{ stickyelement.COLOR }};">{{ stickyelement.COLOR }}</span></td>
+						<td class="actions">
+							<a href="{{ stickyelement.U_MOVE_UP }}" class="stickyelement-up" data-ajax="row_up">{{ ICON_MOVE_UP }}</a>
+							<a href="{{ stickyelement.U_MOVE_DOWN }}" class="stickyelement-down" data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a>
+							<a href="{{ stickyelement.U_EDIT }}" class="stickyelement-edit">{{ ICON_EDIT }}</a>
+							<a href="{{ stickyelement.U_DELETE }}" class="stickyelement-delete" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr class="row4">
+						<td colspan="4">{{ lang('ACP_NO_ITEMS') }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<p class="quick">
+			<input class="button2" name="add" type="submit" value="{{ lang('STICKYELEMENTS_ADD') }}">
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}

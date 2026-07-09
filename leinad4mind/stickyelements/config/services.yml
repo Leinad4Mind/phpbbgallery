@@ -1,0 +1,29 @@
+services:
+    leinad4mind.stickyelements.listener:
+        class: 'leinad4mind\stickyelements\event\listener'
+        arguments:
+            - '@user'
+            - '@template'
+            - '@text_formatter.renderer'
+            - '@path_helper'
+            - '@leinad4mind.stickyelements.helper'
+        tags:
+            - { name: 'event.listener' }
+
+    leinad4mind.stickyelements.controller.acp:
+        class: 'leinad4mind\stickyelements\controller\acp'
+        arguments:
+            - '@user'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@text_formatter.parser'
+            - '@text_formatter.renderer'
+            - '@text_formatter.utils'
+            - '@log'
+            - '@leinad4mind.stickyelements.helper'
+
+    leinad4mind.stickyelements.helper:
+        class: 'leinad4mind\stickyelements\includes\helper'
+        arguments:
+            - '@config_text'
