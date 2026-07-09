@@ -1,0 +1,14 @@
+.limitreplies_hint {
+	margin: 0.5em 0;
+	padding: 0.5em 1em;
+	font-size: 1.2em;
+}
+
+.limitreplies_lock {
+	cursor: not-allowed;
+}
+
+a[href*="mode=quote"],
+a[href*="mode=reply"] {
+	opacity: 0.5;
+}
