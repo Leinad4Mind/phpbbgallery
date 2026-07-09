@@ -1,21 +1,40 @@
 services:
+    rmcgirr83.stopforumspam.admin.controller:
+        class: rmcgirr83\stopforumspam\controller\admin_controller
+        arguments:
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@rmcgirr83.stopforumspam.core.sfsgroups'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
     rmcgirr83.stopforumspam.mainlistener:
         class: rmcgirr83\stopforumspam\event\main_listener
         arguments:
             - '@auth'
+            - '@cache'
             - '@config'
-            - '@user'
             - '@controller.helper'
+            - '@language'
             - '@log'
             - '@request'
             - '@template'
+            - '@user'
             - '@rmcgirr83.stopforumspam.core.sfsgroups'
             - '@rmcgirr83.stopforumspam.core.sfsapi'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '@?rmcgirr83.contactadmin.main.controller'
+
         tags:
             - { name: event.listener }
+
     rmcgirr83.stopforumspam.core.reporttosfs:
         class: rmcgirr83\stopforumspam\core\reporttosfs
         arguments:
@@ -23,6 +42,20 @@ services:
             - '@config'
             - '@service_container'
             - '@dbal.conn'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@user'
+            - '@rmcgirr83.stopforumspam.core.sfsgroups'
+            - '@rmcgirr83.stopforumspam.core.sfsapi'
+
+    rmcgirr83.stopforumspam.core.report_pm_to_sfs:
+        class: rmcgirr83\stopforumspam\core\report_pm_to_sfs
+        arguments:
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@language'
             - '@log'
             - '@request'
             - '@user'
@@ -39,5 +72,8 @@ services:
         class: rmcgirr83\stopforumspam\core\sfsapi
         arguments:
             - '@config'
+            - '@language'
             - '@log'
             - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
