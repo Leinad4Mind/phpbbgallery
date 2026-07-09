@@ -1,0 +1,44 @@
+<?php
+/**
+ *
+ * @package phpBB Extension - Introduciator Extension
+ * @author Feneck91 (Stéphane Château) feneck91@free.fr
+ * @copyright (c) 2019-2022 Feneck91
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+namespace feneck91\introduciator\acp;
+
+class introduciator_info
+{
+	function module()
+	{
+		return [
+			'filename'	=> '\feneck91\introduciator\acp\introduciator_module',
+			'title'		=> 'ACP_INTRODUCIATOR_EXTENSION',
+			'version'	=> "3.0.0",
+			'modes'		=> [
+				'general'	=> [
+					'title' => 'INTRODUCIATOR_GENERAL',
+					'auth' => 'ext_feneck91/introduciator && acl_a_board && acl_a_introduciator_manage',
+					'cat' => ['ACP_INTRODUCIATOR_EXTENSION'],
+				],
+				'configuration'	=> [
+					'title' => 'INTRODUCIATOR_CONFIGURATION',
+					'auth' => 'ext_feneck91/introduciator && acl_a_board && acl_a_introduciator_manage',
+					'cat' => ['ACP_INTRODUCIATOR_EXTENSION'],
+				],
+				'explanation'	=> [
+					'title' => 'INTRODUCIATOR_EXPLANATION',
+					'auth' => 'ext_feneck91/introduciator && acl_a_board && acl_a_introduciator_manage',
+					'cat' => ['ACP_INTRODUCIATOR_EXTENSION'],
+				],
+				'statistics'	=> [
+					'title' => 'INTRODUCIATOR_STATISTICS',
+					'auth' => 'ext_feneck91/introduciator && acl_a_board && acl_a_introduciator_manage',
+					'cat' => ['ACP_INTRODUCIATOR_EXTENSION'],
+				],
+			],
+		];
+	}
+}

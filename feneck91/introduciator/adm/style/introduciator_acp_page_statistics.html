@@ -1,0 +1,75 @@
+{% INCLUDECSS '@feneck91_introduciator/introduciator_acp.css' %}
+{% INCLUDE 'overall_header.html' %}
+
+<h1 class="acp_img_title">{{ lang('INTRODUCIATOR_ST_TITLE') }}</h1>
+
+{{ lang('INTRODUCIATOR_ST_TITLE_EXPLAIN') }}
+<form id="acp_introduciator" method="post" action="{U_ACTION}">
+	{# --------------------------- Posting --------------------------------------------- #}
+	{% if S_CHECK_DATABASE %}
+	<fieldset>
+		<legend class="legend-bg acp_img_statistics">{{ lang('INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE') }}</legend>
+		<dl>
+			<dt><label>{{ lang('INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE') }}</label></dt>
+			<dd><label>{{ INTRODUCTIONS_NUMBER }}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend class="legend-bg acp_img_too_much_introduction">{{ lang('INTRODUCIATOR_ST_ARRAY_TITLE') }}</legend>
+		<div class="pagination top-pagination">
+			{% if loops.pagination|length %}
+				{% INCLUDE 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th style="text-align:center;width:3%;">#</th>
+					<th style="text-align:center;width:11%;">{{ lang('INTRODUCIATOR_ST_ARRAY_HEADER_USER') }}</th>
+					<th style="text-align:center;width:11%;">{{ lang('INTRODUCIATOR_ST_ARRAY_HEADER_DATE') }}</th>
+					<th>{{ lang('INTRODUCIATOR_ST_ARRAY_HEADER_INTRODUCE') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% if S_DISPLAY_INTRODUCES %}
+				{% for introduce in loops.introduces %}
+				<tr class="row{% if introduce.ROW_NUMBER is even %}1{% else %}2{% endif %}">
+					{% if introduce.FIRST_ROW_SPAN %}
+						<td rowspan="{{ introduce.ROW_SPAN }}" style="text-align:center">{{ introduce.ROW_NUMBER }}</td>
+						<td rowspan="{{ introduce.ROW_SPAN }}" style="text-align:center"> {{ introduce.POSTER }}</td>
+					{% endif %}
+					<td style="text-align:center">{{ introduce.DATE }}</td>
+					<td>{{ introduce.INTRODUCE }}</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+				<tr class="row2">
+					<td colspan="4" style="text-align:center; font-size:14px;"><strong><em>{{ lang('INTRODUCIATOR_ST_ARRAY_NO_MULTIPLE_DETECTED') }}</em></strong></td>
+				</tr>
+			{% endif %}
+			</tbody>
+		</table>
+
+		<div class="pagination bottom-pagination">
+			{% if loops.pagination|length %}
+			{% INCLUDE 'pagination.html' %}
+			{% else %}
+			&bull; {{ PAGE_NUMBER }}
+			{% endif %}
+		</div>
+	</fieldset>
+	{% else %}
+	<fieldset>
+		<legend class="legend-bg acp_img_submit">{{ lang('SUBMIT') }}</legend>
+		<p class="submit-buttons">
+			{S_HIDDEN_FIELDS}
+			<input class="button1" type="submit" id="check" name="update" value="{{ lang('INTRODUCIATOR_ST_CHECK') }}">
+			{S_FORM_TOKEN}
+		</p>
+	</fieldset>
+	{% endif %}
+</form>
+
+{% INCLUDE 'overall_footer.html' %}
