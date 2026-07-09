@@ -1,0 +1,28 @@
+services:
+  sitesplat.bbmention.controller:
+    class: sitesplat\bbmention\controller\controller
+    arguments:
+      - '@auth'
+      - '@dbal.conn'
+      - '@request'
+      - '@user'
+      - '%core.table_prefix%groups'
+      - '%tables.posts%'
+      - '%tables.topics%'
+      - '%tables.users%'
+  sitesplat.bbmention.listener:
+    class: sitesplat\bbmention\event\listener
+    arguments:
+      - '@controller.helper'
+      - '@notification_manager'
+      - '@template'
+    tags:
+      - { name: event.listener }
+  sitesplat.bbmention.notification:
+    class: sitesplat\bbmention\notification\notification
+    shared: false
+    parent: notification.type.post
+    tags:
+      - { name: notification.type }
+    calls:
+      - [setBbmentionTables, ['%core.table_prefix%groups', '%core.table_prefix%user_group', '%tables.users%']]
