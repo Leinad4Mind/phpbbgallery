@@ -1,0 +1,77 @@
+{
+    "name": "phpbb/autogroups",
+    "type": "phpbb-extension",
+    "description": "An extension that can automate the process of adding and removing users from groups upon reaching specified milestones related to their post count, age, membership, and warnings count.",
+    "homepage": "https://www.phpbb.com",
+    "version": "2.0.0",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "auto",
+        "groups"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Marc Alexander",
+            "email": "admin@m-a-styles.de",
+            "homepage": "http://www.m-a-styles.de",
+            "role": "Extensions Team Consultant"
+        },
+        {
+            "name": "Michael Cullum",
+            "email": "michael@phpbb.com",
+            "homepage": "http://michaelcullum.com",
+            "role": "Extensions Team Consultant"
+        },
+        {
+            "name": "Matt Friedman",
+            "homepage": "http://mattfriedman.me",
+            "role": "Extensions Development Team Lead"
+        },
+        {
+            "name": "Nathan Guse",
+            "email": "nathaniel.guse@gmail.com",
+            "role": "Former Extensions Development Team Lead"
+        },
+        {
+            "name": "Clemens Husung",
+            "email": "wolfsblvt@pinkes-forum.de",
+            "role": "Extensions Development Team"
+        },
+        {
+            "name": "Lukasz Kaczynski",
+            "role": "Former Extensions Development Team Member"
+        },
+        {
+            "name": "John Peskens",
+            "email": "info@forumhulp.com",
+            "homepage": "http://forumhulp.com",
+            "role": "Former Extensions Development Team Member"
+        },
+        {
+            "name": "Ruslan Uzdenov",
+            "homepage": "http://www.phpbbguru.net",
+            "role": "Extensions Development Team"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "phpbb/phpbb": ">=3.2.0",
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "phing/phing": "2.4.*"
+    },
+    "extra": {
+        "display-name": "Auto Groups",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/auto_groups",
+            "filename": "version_check"
+        }
+    }
+}
