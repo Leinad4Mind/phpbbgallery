@@ -61,10 +61,11 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 	public function outputblock()
 	{
 		$howmany = $this->howmany();
-		$sql_where = $this->ignore_users();
+		$sql_where = $this->ignore_users('user_posts > 1');
+		$sql_where_improve = $this->ignore_users('post_counts.user_posts > 1');
 
 		//set two variables for the sql
-		$sql_and = $sql_other = '';
+		$sql_and = $sql_other = $sql_other_improve = '';
 
 		if (($user_posts = $this->cache->get('_sidebar_posters')) === false)
 		{
@@ -89,17 +90,19 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 				}
 			}
 			$sql_other = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
-			$sql_other .=  ' user_posts <> 0';
+			$sql_other .= empty($sql_where) ? ' user_posts <> 0' : ' 1=1';
+			$sql_other_improve = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
+			$sql_other_improve .= empty($sql_where_improve) ? ' post_counts.user_posts <> 0' : ' 1=1';
 			$user_posts[0] = $user_posts[1] = $user_posts[2] = array();
 
 		//  damn phpbb url rewrite and broken driver
 		//	$board_url = generate_board_url();
 			$board_url = generate_board_url() . '/';
 			
-			// do the main sql query		
+			// do the main sql query
 			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, user_posts
 				FROM ' . USERS_TABLE . '
-				 ' . $sql_where . ' ' . $sql_and . '
+				' . $sql_where . ' ' . $sql_and . '
 				' . $sql_other . '
 				ORDER BY user_posts DESC';
 
@@ -115,13 +118,21 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 										'avatar_width'	=> $row['user_avatar_width'], 
 										'avatar_height'	=> $row['user_avatar_height'])), $match) :
 										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+										
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
 				
 				$user_posts[0][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
 					'user_posts'    => $row['user_posts'],
 				);
 			}
@@ -129,14 +140,23 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, COUNT(p.post_id) AS user_posts
-					FROM ' . POSTS_TABLE . ' p
-					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
-					' . $sql_where . ' ' . $sql_and . '
-					' . $sql_other . '
-					AND p.post_time > ' . (time() - 86400 ) . '
-					GROUP BY p.poster_id
-					ORDER BY user_posts DESC';
+			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, post_counts.user_posts
+					FROM ' . USERS_TABLE . ' u
+					LEFT JOIN (
+						SELECT
+							poster_id,
+							COUNT(post_id) AS user_posts
+						FROM
+							' . POSTS_TABLE . '
+						WHERE
+							post_time > ' . (time() - 86400) . '
+						GROUP BY
+							poster_id
+					) AS post_counts ON u.user_id = post_counts.poster_id 
+					' . $sql_where_improve . ' ' . $sql_and . '
+					' . $sql_other_improve . '
+					AND IFNULL(post_counts.user_posts, 0) <> 0
+					ORDER BY post_counts.user_posts DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -162,18 +182,26 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
-			$sql = 'SELECT user_id, username, user_colour, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, COUNT(p.post_id) AS user_posts
-					FROM ' . POSTS_TABLE . ' p
-					LEFT JOIN ' . USERS_TABLE . ' ON user_id = p.poster_id
-					' . $sql_where . ' ' . $sql_and . '
-					' . $sql_other . '
-					AND p.post_time > ' . (time() - (86400 * 7)) . '
-					GROUP BY p.poster_id
-					ORDER BY user_posts DESC';
+			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, post_counts.user_posts
+					FROM ' . USERS_TABLE . ' u
+					LEFT JOIN (
+						SELECT
+							poster_id,
+							COUNT(post_id) AS user_posts
+						FROM
+							' . POSTS_TABLE . '
+						WHERE
+							post_time > ' . (time() - (86400 * 7)) . '
+						GROUP BY
+							poster_id
+					) AS post_counts ON u.user_id = post_counts.poster_id
+					' . $sql_where_improve . ' ' . $sql_and . '
+					' . $sql_other_improve . '
+					AND IFNULL(post_counts.user_posts, 0) <> 0
+					ORDER BY post_counts.user_posts DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$board_url = generate_board_url() . '/';
 				$match = array();
 				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 							phpbb_get_user_avatar(
@@ -195,8 +223,8 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			}
 			$this->db->sql_freeresult($result);
 
-			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_sidebar_posters', $user_posts, 300);
+			// cache this data for 30 minutes, this improves performance
+			$this->cache->put('_sidebar_posters', $user_posts, 1800);
 		}
 
 		foreach ($user_posts[0] as $row)

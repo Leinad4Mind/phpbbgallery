@@ -173,27 +173,35 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 					);
 					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.top_topics_tpl_before', compact($vars)));
 
-					$board_url = generate_board_url() . '/';
 					$match = array();
 					$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 							  phpbb_get_user_avatar(
 								  array('avatar'			=> $row['user_avatar'], 
-								        'user_id'			=> $row['user_id'],
+								        'user_id'      => $row['user_id'],
 										'avatar_type'		=> $row['user_avatar_type'], 
-										'avatar_width'		=> $row['user_avatar_width'], 
-										'avatar_height'		=> $row['user_avatar_height'])), $match) :
+										'avatar_width'	=> $row['user_avatar_width'], 
+										'avatar_height'	=> $row['user_avatar_height'])), $match) :
 										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-				
+
 					$username_string = ($this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
 										get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
 										$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']);
+
+					if (count($match) > 1) {
+						$avatar = array_pop($match);
+						// fix an issue with BBrandom
+						if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+							$board_url = generate_board_url() . '/';
+							$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+						}
+					}
 
 					$tpl_ary = array(
 						'U_TOPIC'			=> $view_topic_url,
 						'U_FORUM'			=> $forum_name_url,
 						'S_UNREAD'			=> ($post_unread) ? true : false,
-						//'AVATAR'			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-						'AVATAR'			=> ((sizeof($match) > 1) ? strtr(array_pop($match), [ 'gallery/../random' => 'random', './../../' => $board_url,  './../' => $board_url, './' => $board_url ]) : $avatar),
+					//	'AVATAR'			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+						'AVATAR'			=> $avatar,
 						'USERNAME_FULL'		=> $username_string,
 						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 						'TOPIC_TITLE' 		=> $topic_title,

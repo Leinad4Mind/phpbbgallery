@@ -80,7 +80,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT forum_id, topic_id, topic_type
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $visibility->get_forums_visibility_sql('topic', $forum_ary) . '
-				AND topic_status <> ' . ITEM_MOVED . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'] . ' 
+				AND topic_status <> ' . ITEM_MOVED . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'] . '
 				ORDER BY topic_last_post_time DESC';
 
 			$result = $this->db->sql_query_limit($sql, $howmany);
@@ -188,10 +188,6 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 					$username_string = ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
 												get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : 
 												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-					
-					// $username_string = ($this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
-										// get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
-										// $this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']);
 
 					$tpl_ary = array(
 						'U_TOPIC'			=> $view_topic_url,

@@ -99,7 +99,7 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 			$this->db->sql_freeresult($result);
 
 			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_sidebar_bbpoints', $newest_users, 300);
+			
 		}
 
 		$this->helper = $this->container->get('controller.helper');

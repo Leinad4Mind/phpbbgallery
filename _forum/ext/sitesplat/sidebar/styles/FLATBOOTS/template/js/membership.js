@@ -18,8 +18,8 @@ head.ready(function () {
 			},
 			credits: {
 				enabled: false,
-				text: 'ForumHulp.com',
-				href: 'http://forumhulp.com'
+				text: 'goldtuganime.com',
+				href: 'https://goldtuganime.com'
 			},
 			exporting: { enabled: false },
 			tooltip: {
