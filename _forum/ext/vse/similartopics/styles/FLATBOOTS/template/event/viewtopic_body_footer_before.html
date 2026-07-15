@@ -10,6 +10,7 @@
 			<th data-class="expand">{{ lang('TOPICS') }}</th>
 			<th class="large110" data-hide="phone">{{ lang('TOPICS_POSTS_STATISTICS') }}</th>
 			<th class="large21" data-hide="phone">{{ lang('LAST_POST') }}</th>
+			{% EVENT search_results_topic_header_lastpost_after %}
 		</tr>
 	</thead>
 	<tbody>
@@ -64,6 +65,7 @@
 				<br /><small><time datetime="{{ similar.LAST_POST_TIME_RFC3339 }}">{{ similar.LAST_POST_TIME }}</time></small>
 			 </span>
 			</td>
+			{% EVENT search_results_topic_row_lastpost_after %}
 		</tr>
 		{% EVENT search_results_topic_after %}
 	{% endfor %}

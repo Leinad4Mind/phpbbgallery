@@ -1,9 +1,0 @@
-{% if S_SIMILAR_TOPICS %}
-<div class="control-group">
-	<label class="control-label" for="similar_topics1">{{ lang('DISPLAY_SIMILAR_TOPICS') ~ lang('COLON') }}</label>
-	<div class="controls controls-row">
-	 <div class="radio"><input type="radio" name="similar_topics" id="similar_topics1" value="1"{% if S_DISPLAY_SIMILAR_TOPICS %} checked="checked"{% endif %} /><label for="similar_topics1">{{ lang('YES') }}</label></div>
-	 <div class="radio"><input type="radio" name="similar_topics" id="similar_topics0" value="0"{% if not S_DISPLAY_SIMILAR_TOPICS %} checked="checked"{% endif %} /><label for="similar_topics0">{{ lang('NO') }}</label></div>
-    </div>
-</div>
-{% endif %}
