@@ -1,7 +1,7 @@
 /*  cBB Core StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -190,20 +190,6 @@ span.cbb-loading {
     width: 14px;
     outline: 1px solid #ccc;
     outline-offset: 1px;
-}
-
-/* ACP
----------------------------------- */
-.cbb-help-icon {
-	font-size: 28px;
-	opacity: .4;
-	position: absolute;
-	right: 10px;
-	top: 4px;
-}
-
-.cbb-help-icon:hover {
-	opacity: 1;
 }
 
 /* Dialogs
@@ -648,13 +634,18 @@ body > .cbb-dialog.fixed {
 }
 
 .editor-wrapper-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
 	margin-bottom: 5px;
+	max-height: 160px;
+	overflow: auto;
 }
 
 .editor-wrapper-toolbar > .cbb-btn,
 .editor-wrapper-toolbar > .cbb-inputbox {
 	line-height: 26px;
-	margin: 2px;
+	margin: 0;
 }
 
 .editor-wrapper-toolbar > .cbb-inputbox {
@@ -728,6 +719,53 @@ body > .cbb-dialog.fixed {
     height: 100%;
 }
 
+/* Switch
+-------------------------- */
+.cbb-switch {
+	display: inline-block;
+	height: 20px;
+	position: relative;
+	width: 32px;
+}
+
+.cbb-switch input {
+	height: 0;
+	opacity: 0;
+	width: 0;
+}
+
+.cbb-switch .slider {
+	background-color: #ccc;
+	bottom: 0;
+	border-radius: 34px;
+	cursor: pointer;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: .4s;
+}
+
+.cbb-switch .slider:before {
+	background-color: white;
+	border-radius: 50%;
+	bottom: 3px;
+	content: "";
+	left: 4px;
+	height: 14px;
+	position: absolute;
+	transition: .4s;
+	width: 14px;
+}
+
+.cbb-switch input:checked + .slider {
+	background-color: #2196F3;
+}
+
+.cbb-switch input:checked + .slider:before {
+	transform: translateX(15px);
+}
+
 /* Tabs
 ----------------------------------*/
 .cbb-tabs {
@@ -791,9 +829,11 @@ body > .cbb-dialog.fixed {
 
 /* Buttons and Inputs
 ------------------------------------- */
-.cbb-btn, a.cbb-btn {
-	background: #f8f8f8;
-	border: 1px solid #d0cfcf;
+.cbb-btn,
+a.cbb-btn,
+.cbb-label {
+	background-color: #f8f8f8;
+	border: 1px solid #e4e4e4;
 	border-radius: 2px;
 	color: #666;
 	cursor: pointer;
@@ -809,7 +849,8 @@ body > .cbb-dialog.fixed {
 	vertical-align: middle;
 }
 
-.cbb-btn, .cbb-btn:focus {
+.cbb-btn,
+.cbb-btn:focus {
 	outline: none;
 }
 
@@ -820,21 +861,27 @@ a.cbb-btn.default-btn {
     color: #FFF;
 }
 
-.cbb-btn:hover,
-a.cbb-btn:hover {
+.cbb-btn:not(:disabled):hover,
+a.cbb-btn:not(:disabled):hover {
 	background-color: #fff;
-    background-image: linear-gradient(top,#fff,#f8f8f8);
+    background-image: linear-gradient(to top,#fff,#f8f8f8);
 	border-color: #c6c6c6;
 	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 	text-decoration: none;
 }
 
-.cbb-btn.default-btn:hover,
-a.cbb-btn.default-btn:hover {
+.cbb-btn.default-btn:not(:disabled):hover,
+a.cbb-btn.default-btn:not(:disabled):hover {
     background: #2c56b1;
     border-color: #21448d;
 	color: #fff;
+}
+
+.cbb-btn:disabled,
+.cbb-btn:disabled:hover {
+	cursor: default;
+	opacity: .7;
 }
 
 .cbb-btn.dropdown-select {
@@ -855,6 +902,10 @@ a.cbb-btn.default-btn:hover {
     width: 20px;
 }
 
+.cbb-label {
+	cursor: default;
+}
+
 .cbb-submit-buttons {
 	text-align: right;
 }
@@ -866,9 +917,10 @@ a.cbb-btn.default-btn:hover {
 
 .cbb-inputbox,
 .cbb-inputbox-labelled input,
-.cbb-inputbox-labelled textarea {
+.cbb-inputbox-labelled textarea,
+.rtl .cbb-inputbox {
 	background: #fafafa;
-	border: 1px solid #d0cfcf;
+	border: 1px solid #e4e4e4;
 	border-radius: 4px;
 	cursor: text;
 	font-family: Verdana, Helvetica, Arial, sans-serif;
@@ -885,13 +937,14 @@ a.cbb-btn.default-btn:hover {
 .cbb-inputbox:focus,
 .cbb-inputbox-labelled .active {
 	background: #fafafa;
-	border-color: #a1a1a1;
+	border-color: #bcbcbc;
 	color: initial;
 	outline: none;
 }
 
 input.cbb-inputbox,
-.cbb-inputbox-labelled input {
+.cbb-inputbox-labelled input,
+.rtl input.cbb-inputbox {
 	padding: 6px;
 }
 
@@ -982,12 +1035,14 @@ select.cbb-inputbox {
 }
 
 .cbb-group .cbb-inputbox,
-.cbb-group .cbb-btn {
+.cbb-group .cbb-btn,
+.cbb-group .cbb-label {
     margin: 0;
 }
 
 .cbb-group .cbb-inputbox:not(:last-child),
-.cbb-group .cbb-btn:not(:last-child) {
+.cbb-group .cbb-btn:not(:last-child),
+.cbb-group .cbb-label:not(:last-child) {
 	margin-right: -1px;
 }
 
@@ -1001,7 +1056,8 @@ select.cbb-inputbox {
 	outline: none;
 }
 
-.cbb-group > * {
+.cbb-group > *,
+.cbb-group > .cbb-btn {
 	border-radius: 0;
 }
 
@@ -1034,6 +1090,7 @@ input.cbb-checkbox {
 
 .cbb-groups-selector input[type="checkbox"] + label,
 input.cbb-checkbox + label {
+	margin: 0;
 	padding: 0;
 }
 
@@ -1152,7 +1209,8 @@ a.cbb-state-highlight,
 }
 
 .rtl .cbb-group .cbb-inputbox:not(:last-child),
-.rtl .cbb-group .cbb-btn:not(:last-child) {
+.rtl .cbb-group .cbb-btn:not(:last-child),
+.rtl .cbb-group .cbb-label:not(:last-child) {
 	margin-left: -1px;
 	margin-right: 0;
 }
@@ -1305,7 +1363,8 @@ a.cbb-state-highlight,
 }
 
 .dark-theme .cbb-inputbox,
-.dark-theme .cbb-dialog input.cbb-inputbox {
+.dark-theme .cbb-dialog input.cbb-inputbox,
+.dark-theme .cbb-color-picker .presets > a {
 	border-color: #333;
 	color: #E0E0E0;
 	outline-color: #5a5a5a;

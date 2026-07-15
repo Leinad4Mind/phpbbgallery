@@ -1,18 +1,22 @@
 <?php
 /**
-* @package Ext Common Core
-* @version 1.1.0 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package Ext Common Core
+ * @version 1.1.2 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\core\event;
 
-use canidev\core\dom;
-use canidev\core\json_response;
+use canidev\core\Dom;
+use canidev\core\JsonResponse;
 use canidev\core\constants;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class listener implements EventSubscriberInterface
 {
@@ -28,27 +32,27 @@ class listener implements EventSubscriberInterface
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	private $items				= array();
+	private $items				= [];
 	private $in_acp_extensions 	= false;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param \phpbb\cache\driver\driver_interface 							$cache 				Cache instance
-	 * @param \phpbb\config\config 											$config				Config Object
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface 	$container			Service container interface
-	 * @param \phpbb\event\dispatcher_interface								$dispatcher			Event dispatcher
-	 * @param \phpbb\language\language 										$language			Language Object
-	 * @param \phpbb\request\request 										$request			Request object
-	 * @param \canidev\core\template 										$template 			Core Template object
-	 * @param \phpbb\user													$user				User object
-	 * @param string														$root_path			phpBB root path
-	 * @param string														$php_ext			phpEx
+	 * @param \phpbb\cache\driver\driver_interface 			$cache 				Cache instance
+	 * @param \phpbb\config\config 							$config				Config Object
+	 * @param ContainerInterface 							$container			Service container interface
+	 * @param \phpbb\event\dispatcher_interface				$dispatcher			Event dispatcher
+	 * @param \phpbb\language\language 						$language			Language Object
+	 * @param \phpbb\request\request 						$request			Request object
+	 * @param \canidev\core\template 						$template 			Core Template object
+	 * @param \phpbb\user									$user				User object
+	 * @param string										$phpbb_root_path	phpBB root path
+	 * @param string										$php_ext			phpEx
 	 */
 	public function __construct(
 		\phpbb\cache\driver\driver_interface $cache,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface  $container,
+		ContainerInterface  $container,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
@@ -76,26 +80,28 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
-			'core.common'								=> 'load_plugins',
-			'core.user_setup_after' 					=> array('user_setup_after',	99), // Make sure it is loaded first
-			'core.page_footer' 							=> array('page_footer',			-10),
-			'core.adm_page_footer' 						=> array('adm_page_footer',		-10),
-			'core.append_sid' 							=> 'fix_controller_urls',
-			'core.acp_extensions_run_action' 			=> 'check_acp_extensions_module', // for phpBB < 3.2.1
-			'core.acp_extensions_run_action_before' 	=> 'check_acp_extensions_module', // for phpBB >= 3.2.1
+		return [
+			'core.common'								=> 'loadMainLibraries',
+			'core.user_setup_after' 					=> ['userSetupAfter',		99], // Make sure it is loaded first
+			'core.page_footer' 							=> ['pageFooter',			-10],
+			'core.adm_page_footer' 						=> ['admPageFooter',		-10],
+			'core.append_sid' 							=> 'fixControllerUrls',
+			'core.acp_extensions_run_action' 			=> 'checkAcpExtensionsModule', // for phpBB < 3.2.1
+			'core.acp_extensions_run_action_before' 	=> 'checkAcpExtensionsModule', // for phpBB >= 3.2.1
 
-			'core.modify_text_for_display_after' 		=> 'modify_text_for_display',
-			'core.modify_format_display_text_after' 	=> 'modify_text_for_display',
-		);
+			'core.modify_text_for_display_after' 		=> 'modifyTextForDisplay',
+			'core.modify_format_display_text_after' 	=> 'modifyTextForDisplay',
+
+			KernelEvents::REQUEST 						=> ['onKernelRequest', 33],
+		];
 	}
 
 	/**
 	 * Execute actions on admin footer
 	 */
-	public function adm_page_footer()
+	public function admPageFooter()
 	{
-		$this->page_footer();
+		$this->pageFooter();
 
 		// Build links to extensions configurations
 		if($this->in_acp_extensions)
@@ -108,7 +114,7 @@ class listener implements EventSubscriberInterface
 			}
 
 			$module_ary = $this->cache->get('_modules_acp');
-			$modules 	= array();
+			$modules 	= [];
 
 			if($module_ary !== false)
 			{
@@ -132,11 +138,11 @@ class listener implements EventSubscriberInterface
 				{
 					$this->template->alter_block_array(
 						'enabled[' . $ext_key . '].actions',
-						array(
+						[
 							'ACTION_AJAX' 	=> 'false',
 							'L_ACTION'		=> $this->language->lang('CONFIGURE'),
 		                    'U_ACTION'	 	=> append_sid($this->phpbb_root_path . 'adm/index.' . $this->php_ext, 'i=-' . str_replace('/', '-', $ext_data['NAME']) . '-acp-' . $modules[$ext_data['NAME']], true, $this->user->session_id),
-		                )
+						]
 					);
 				}
 			}
@@ -146,7 +152,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Workaround to check if the user is in acp extensions module
 	 */
-	public function check_acp_extensions_module()
+	public function checkAcpExtensionsModule()
 	{
 		$this->in_acp_extensions = true;
 	}
@@ -156,7 +162,7 @@ class listener implements EventSubscriberInterface
 	 * 
 	 * @param \phpbb\event\data 	$event
 	 */
-	public function fix_controller_urls($event)
+	public function fixControllerUrls($event)
 	{
 		if(!$this->config['enable_mod_rewrite'] && substr_count($event['url'], 'app.') > 1)
 		{
@@ -165,13 +171,72 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Get additional plugins for the extensions
+	 * Try to load deprecated classes of core
+	 * 
+	 * @param string 	$class		Class name
 	 */
-	public function load_plugins()
+	public function loadDeprecatedClass($class)
 	{
+		if($class[0] !== '\\')
+		{
+			$class = '\\' . $class;
+		}
+
+		$class 			= str_replace('\\', '/', $class);
+		$namespace 		= '/canidev/core/';
+
+		if(strpos($class, $namespace) === 0)
+		{
+			$basename 	= basename($class);
+		
+			$old_basename = preg_replace_callback('#([a-z]|^)([A-Z])#', function($match) {
+				return $match[1] . '_' . $match[2];
+			}, $basename);
+			
+			$old_basename = strtolower(trim($old_basename, '_'));
+
+			// try to remove old class
+			if(strtolower($basename) === $basename)
+			{
+				$deprecated_class_filename 	= $this->phpbb_root_path . 'ext' . $namespace . 'deprecated/' . str_replace($namespace, '', $class) .  '.' . $this->php_ext;
+				$class_filename 			= $this->phpbb_root_path . 'ext' . $class . '.' . $this->php_ext;
+
+				if(file_exists($deprecated_class_filename))
+				{
+					if(file_exists($class_filename) && (strpos($class_filename, '_') !== false || strtoupper(substr(\PHP_OS, 0, 3)) !== 'WIN'))
+					{
+						@unlink($class_filename);
+					}
+
+					require($deprecated_class_filename);
+				}
+			}
+			else
+			{
+				$deprecated_class_filename 	= $this->phpbb_root_path . 'ext' . $namespace . 'deprecated/' . $old_basename .  '.' . $this->php_ext;
+				$class_filename 			= $this->phpbb_root_path . 'ext/' . $namespace . $old_basename . '.' . $this->php_ext;
+				
+				if(file_exists($deprecated_class_filename) && (strpos($class_filename, '_') !== false || strtoupper(substr(\PHP_OS, 0, 3)) !== 'WIN'))
+				{
+					if(strtolower($class_filename) !== $class_filename && file_exists($class_filename))
+					{
+						@unlink($class_filename);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get additional libraries and plugins for the extensions 
+	 */
+	public function loadMainLibraries()
+	{
+		spl_autoload_register([$this, 'loadDeprecatedClass'], true, true);
+
 		if(($this->items = $this->cache->get('_cbbext_plugins')) === false)
 		{
-			$this->items = array();
+			$this->items = [];
 
 			$base_path	= $this->phpbb_root_path . 'ext/' . constants::PLUGINS_PATH;
 			$directory	= new \RecursiveDirectoryIterator($base_path);
@@ -188,8 +253,8 @@ class listener implements EventSubscriberInterface
 				}
 
 				$path = str_replace(
-					array('\\', $base_path),
-					array('/', ''),
+				 ['\\', $base_path],
+				 ['/', ''],
 					$file->getPathInfo()->getPathname()
 				);
 
@@ -203,7 +268,7 @@ class listener implements EventSubscriberInterface
 
 				if(!isset($this->items[$path]))
 				{
-					$this->items[$path] = array();
+					$this->items[$path] = [];
 				}
 				
 				$this->items[$path][] = $basename;
@@ -217,35 +282,46 @@ class listener implements EventSubscriberInterface
 		{
 			foreach($items as $id => $item)
 			{
-				$fullname	= constants::PLUGINS_PATH . $namespace . '/' . $item;
-				$filename	= $this->phpbb_root_path . 'ext/' . $fullname . '.' . $this->php_ext;
-				$class_name = '\\' . str_replace('/', '\\', $fullname);
+				$fullname		= constants::PLUGINS_PATH . $namespace . '/' . $item;
+				$filename		= $this->phpbb_root_path . 'ext/' . $fullname . '.' . $this->php_ext;
+				$class_name 	= '\\' . str_replace('/', '\\', $fullname);
+				$has_own_dir 	= strpos($item, '/') !== false;
 
 				if(!file_exists($filename) || !class_exists($class_name))
 				{
 					unset($this->items[$namespace][$id]);
 					continue;
 				}
-					
+
 				$this->items[$namespace][$id] = $item = new $class_name($this->container);
 				
 				if($item->is_runnable())
 				{
+					if($has_own_dir)
+					{
+						$base_path = dirname($filename) . '/';
+						
+						if(is_dir($base_path . 'styles'))
+						{
+							$this->template->add_custom_namespace('plugin_' . $namespace . '_' . basename($base_path), $base_path);
+						}
+					}
+
 					foreach($item->core_events() as $event_name => $params)
 					{
 						if(is_string($params))
 						{
-							$this->dispatcher->addListener($event_name, array($item, $params), -1);
+							$this->dispatcher->addListener($event_name, [$item, $params], -1);
 						}
 						else if(is_string($params[0]))
 						{
-							$this->dispatcher->addListener($event_name, array($item, $params[0]), isset($params[1]) ? $params[1] : -1);
+							$this->dispatcher->addListener($event_name, [$item, $params[0]], isset($params[1]) ? $params[1] : -1);
 						}
 						else
 						{
 							foreach($params as $listener)
 							{
-								$this->dispatcher->addListener($event_name, array($item, $listener[0]), isset($listener[1]) ? $listener[1] : -1);
+								$this->dispatcher->addListener($event_name, [$item, $listener[0]], isset($listener[1]) ? $listener[1] : -1);
 							}
 						}
 					}
@@ -255,17 +331,25 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * @deprecated 		Preserved only for compatibility. To be removed on 1.2.0
+	 */
+	public function load_plugins()
+	{
+		return $this->loadMainLibraries();
+	}
+
+	/**
 	 * Wordaround to modify text for posts with custom event
 	 * 
 	 * @param \phpbb\event\data 	$event
 	 */
-	public function modify_text_for_display($event)
+	public function modifyTextForDisplay($event)
 	{
 		if($this->dispatcher->hasListeners('canidev.core.modify_text_for_display'))
 		{
 			$text 	= $event['text'];
 			$flags 	= $event['flags'];
-			$finder = dom::string_to_xpath($text);
+			$finder = Dom::stringToXpath($text);
 
 			if($finder === false)
 			{
@@ -273,43 +357,60 @@ class listener implements EventSubscriberInterface
 			}
 			
 			/**
-			* @event canidev.core.modify_text_for_display
-			* @var	DomXPath		finder		XPath Object
-			* @var	string			text		Original Post Text (Read Only)
-			* @var 	int				flags		The BBCode Flags
-			* @since 1.0.4
-			*/
-			$vars = array('finder', 'text', 'flags');
+			 * @event canidev.core.modify_text_for_display
+			 * @var	\DomXPath		finder		XPath Object
+			 * @var	string			text		Original Post Text (Read Only)
+			 * @var int				flags		The BBCode Flags
+			 * @since 1.0.4
+			 */
+			$vars = ['finder', 'text', 'flags'];
 			extract($this->dispatcher->trigger_event('canidev.core.modify_text_for_display', compact($vars)));
 
-			$event['text'] = dom::xpath_to_string($finder);
+			$event['text'] = Dom::xpathToString($finder);
+		}
+	}
+
+	/**
+	 * Show empty 404 response for non-existent files inside "files" directory to prevent that phpBB shows default "Not found" page
+	 * for "media" files and saves the request as "session_page" in DB
+	 * 
+	 * @param GetResponseEvent 	$event
+	 */
+	public function onKernelRequest(GetResponseEvent $event)
+	{
+		$uri = $event->getRequest()->getRequestUri();
+
+		if(preg_match('#/files/[a-z0-9_\-]+/.*?\.[a-z0-9]+$#', $uri))
+		{
+			$response = new Response('', 404);
+			$event->setResponse($response);
 		}
 	}
 
 	/**
 	 * Do actions on footer
 	 */
-	public function page_footer()
+	public function pageFooter()
 	{
 		$is_admin	= defined('IN_ADMIN');
-		$js_events 	= array();
+		$js_events 	= [];
 
 		// Execute ajax request
 		if($this->request->is_ajax())
 		{
-			$json_request = json_response::get_instance();
+			$json_request = JsonResponse::getInstance();
 
-			if($json_request->is_requested())
+			if($json_request->isRequested())
 			{
 				$json_request
-					->add_html($this->template->assign_display('body'))
+					->addHtml($this->template->assign_display('body'))
 					->send();
 			}
 		}
 
 		foreach($this->items as $namespace => $null)
 		{
-			if($event_string = $this->get_js_events($namespace, $is_admin))
+			if($event_string = $this->getJsEvents($namespace, $is_admin))
 			{
 				$js_events[] = $event_string;
 			}
@@ -319,12 +420,13 @@ class listener implements EventSubscriberInterface
 		
 		// Add core assets
 		$this->template->prepend_assets = true;
-		$this->template->append_asset('css', '@canidev_core/../theme/cbbcore.css');
+		$this->template->append_asset('css', '@canidev_core/cbbcore-acp.css', false, 'admin');
+		$this->template->append_asset('css', '@canidev_core/cbbcore.css');
 
-		$this->template->append_asset('script', array(
+		$this->template->append_asset('script', [
 			'type'		=> 'text/javascript',
 			'content'	=> implode("\n", $js_events),
-		));
+		]);
 
 		$this->template->append_asset('js', '@canidev_core/js/cbbcore.min.js');
 
@@ -334,7 +436,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Load core language and namespace
 	 */
-	public function user_setup_after()
+	public function userSetupAfter()
 	{
 		$this->language->add_lang('main', 'canidev/core');
 
@@ -352,9 +454,9 @@ class listener implements EventSubscriberInterface
 	 * @return string
 	 * @access private
 	 */
-	private function get_js_events($namespace, $is_admin)
+	private function getJsEvents($namespace, $is_admin)
 	{
-		$js_code = array();
+		$js_code = [];
 
 		foreach($this->items[$namespace] as $item)
 		{
@@ -366,7 +468,7 @@ class listener implements EventSubscriberInterface
 				{
 					foreach($events as $event_name => $code)
 					{
-						$js_code[] = "cbbCore.addListener('$event_name'," . str_replace(array("\n", "\t", '{ ', ' }'), array('', '', '{', '}'), $code) . ');';
+						$js_code[] = "cbbCore.addListener('$event_name'," . str_replace(["\n", "\t", '{ ', ' }'], ['', '', '{', '}'], $code) . ');';
 					}
 				}
 			}
@@ -378,5 +480,21 @@ class listener implements EventSubscriberInterface
 		}
 		
 		return trim(implode("\n", $js_code));
+	}
+
+	/**
+	 * Magic method for compatibility, to load obsolete functions
+	 * To be removed in v1.2.0
+	 */
+	public function __call($name, $arguments)
+	{
+		$name = preg_replace_callback('#_([a-z])#', function($match) {
+			return strtoupper($match[1]);
+		}, $name);
+
+		if(method_exists($this, $name))
+		{
+			return call_user_func_array([$this, $name], $arguments);
+		}
 	}
 }

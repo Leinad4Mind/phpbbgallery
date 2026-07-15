@@ -5,6 +5,13 @@
 			title	: '{{ lang('DOCUMENTATION_AND_SUPPORT')|escape('js') }}',
 			url		: '{{ U_HELP }}'
 		};
+
+	{% if U_REPORT %}
+		window.__report = {
+			title	: '{{ lang('REPORT_TITLE')|escape('js') }}',
+			url		: '{{ U_REPORT }}'
+		};
+	{% endif %}
 	// ]]>
 	</script>
 {% endif %}
