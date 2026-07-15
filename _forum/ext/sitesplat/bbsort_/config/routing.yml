@@ -1,3 +1,0 @@
-sitesplat_bbsort_controller:
-    path: /demo/{name}
-    defaults: { _controller: sitesplat.bbsort.controller:handle }

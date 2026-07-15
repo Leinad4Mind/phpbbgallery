@@ -1,8 +1,0 @@
-services:
-    phpbbmodders.postingtemplate.listener:
-        class: phpbbmodders\postingtemplate\event\listener
-        arguments:
-            - '@request'
-            - '@user'
-        tags:
-            - { name: event.listener }
