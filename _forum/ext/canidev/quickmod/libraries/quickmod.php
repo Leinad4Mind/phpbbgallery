@@ -1,20 +1,21 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries;
 
 use \Symfony\Component\DependencyInjection\ContainerInterface;
-use canidev\core\json_response;
+use canidev\core\JsonResponse;
 
 class quickmod
 {
 	protected $auth;
+	protected $cache;
 	protected $config;
 	protected $container;
 	protected $db;
@@ -28,7 +29,8 @@ class quickmod
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	protected $categories = array('OPTIONS_BASIC', 'TOPIC_TYPE', 'OPTIONS_ADVANCED');
+	protected $categories 	= ['OPTIONS_BASIC', 'TOPIC_TYPE', 'OPTIONS_ADVANCED'];
+	protected $tasks 		= null;
 
 	public $forum_id		= false;
 	public $active			= false;
@@ -44,7 +46,7 @@ class quickmod
 	* @param \phpbb\language\language 				$language			Language object
 	* @param \phpbb\request\request 				$request			Request object
 	* @param \canidev\core\template 				$template 			Core Template
-	* @param \canidev\core\tools 					$tool 				Core Tools
+	* @param \canidev\core\tools 					$tools 				Core Tools
 	* @param \phpbb\user							$user				User object
 	* @param string									$root_path			phpBB root path
 	* @param string									$php_ext			phpEx
@@ -89,7 +91,7 @@ class quickmod
 		$this->forum_id = $this->request->variable('f', 0);
 		
 		$active			= false;
-		$mod_pages		= array('viewforum', 'search', 'viewforum.' . $this->php_ext, 'search.' . $this->php_ext);
+		$mod_pages		= ['viewforum', 'search', 'viewforum.' . $this->php_ext, 'search.' . $this->php_ext];
 
 		if($this->phpbb_root_path == './' && in_array($this->user->page['page_name'], $mod_pages))
 		{
@@ -105,7 +107,7 @@ class quickmod
 		 * @var	bool	active		Status of the extension
 		 * @since 1.1.0
 		 */
-		$vars = array('categories', 'active');
+		$vars = ['categories', 'active'];
 		extract($this->dispatcher->trigger_event('quickmod.setup', compact($vars)));
 
 		$this->active		= $active;
@@ -150,7 +152,7 @@ class quickmod
 			return;
 		}
 
-		$tasks_tree = array();
+		$tasks_tree = [];
 
 		foreach($this->tasks as $task_id => $task)
 		{
@@ -164,18 +166,18 @@ class quickmod
 
 			if(!isset($tasks_tree[$category]))
 			{
-				$tasks_tree[$category] = array();
+				$tasks_tree[$category] = [];
 			}
 
 			if(!isset($tasks_tree[$category][$order]))
 			{
-				$tasks_tree[$category][$order] = array();
+				$tasks_tree[$category][$order] = [];
 			}
 
 			$tasks_tree[$category][$order][] = $task_id;
 		}
 
-		$quick_options = array('' => 'SELECT_ACTION');
+		$quick_options = ['' => 'SELECT_ACTION'];
 
 		foreach($this->categories as $i => $category_name)
 		{
@@ -198,7 +200,7 @@ class quickmod
 			}
 		}
 		
-		$mark_options = array(
+		$mark_options = [
 			'-1'		=> 'MARK_TOPICS',
 
 			'legend1'	=> 'MARK_GENERAL',
@@ -215,7 +217,7 @@ class quickmod
 				'type-' . POST_STICKY	=> 'MARK_STICKY',
 				'type-' . POST_ANNOUNCE	=> 'MARK_ANNOUNCE',
 				'type-' . POST_GLOBAL	=> 'MARK_GLOBAL',
-		);
+		];
 
 		add_form_key('quick_mod_form');
 		
@@ -225,19 +227,19 @@ class quickmod
 		 * @var	array	quick_options		Array with options to the actions select
 		 * @since 1.1.0
 		 */
-		$vars = array('mark_options', 'quick_options');
+		$vars = ['mark_options', 'quick_options'];
 		extract($this->dispatcher->trigger_event('quickmod.display', compact($vars)));
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_QUICKMOD_ENABLED'	=> true,
 			'S_QUICK_OPTIONS'		=> $this->tools->make_select($quick_options, false, ''),
 			'S_QM_MARK_OPTIONS'		=> $this->tools->make_select($mark_options, false, '-1'),
 			'S_QM_TYPE'				=> $this->config['qm_type'],
 
-			'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+			'S_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'f'				=> $this->forum_id
-			)),
-		));
+			]),
+		]);
 	}
 
 	/**
@@ -258,10 +260,10 @@ class quickmod
 		$this->language->add_lang('mcp');
 
 		$action			= $this->request->variable('action', '');
-		$topic_ids		= $this->request->variable('topic_id_list', array(0));
-		$response 		= \canidev\core\json_response::get_instance();
+		$topic_ids		= $this->request->variable('topic_id_list', [0]);
+		$response 		= \canidev\core\JsonResponse::getInstance();
 
-		$no_authorized_ids = array();
+		$no_authorized_ids = [];
 		
 		/**
 		 * @event quickmod.before_ajax_action
@@ -269,25 +271,25 @@ class quickmod
 		 * @var	array	topic_ids	List of selected topics
 		 * @since 1.1.0
 		 */
-		$vars = array('action', 'topic_ids');
+		$vars = ['action', 'topic_ids'];
 		extract($this->dispatcher->trigger_event('quickmod.before_ajax_action', compact($vars)));
 
 		if($action == 'finduser')
 		{
 			$query			= $this->request->variable('query', '', true);
 			$username_clean = utf8_clean_string($query);
-			$user_ary 		= array();
+			$user_ary 		= [];
 			$limit 			= 100;
 
 			// Base query
-			$sql_ary = array(
+			$sql_ary = [
 				'SELECT'	=> 'u.user_id, u.username, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height',
-				'FROM'		=> array(USERS_TABLE => 'u'),
+				'FROM'		=> [USERS_TABLE => 'u'],
 				'ORDER_BY'	=> 'u.username_clean ASC'
-			);
+			];
 			
 			// First, find user that start with search query
-			$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+			$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
 				AND username_clean ' . $this->db->sql_like_expression($username_clean . $this->db->get_any_char());
 			$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_ary), $limit);
 			while($row = $this->db->sql_fetchrow($result))
@@ -298,7 +300,7 @@ class quickmod
 			$this->db->sql_freeresult($result);
 
 			// Second, find users that contains search query
-			$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+			$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
 				AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $username_clean . $this->db->get_any_char());
 			
 			if(sizeof($user_ary))
@@ -318,27 +320,27 @@ class quickmod
 
 			foreach($user_ary as $row)
 			{
-				$this->template->assign_block_vars('user', array(
+				$this->template->assign_block_vars('user', [
 					'S_AVATAR_IMG'			=> phpbb_get_user_avatar($row),
 					'S_USERNAME'			=> $row['username'],
 					'S_USERNAME_FORMATTED'	=> preg_replace('#(' . preg_quote($query) . ')#i', '<strong>$1</strong>', $row['username'])
-				));
+				]);
 			}
 			
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_USERLIST'	=> true
-			));
+			]);
 
-			$this->template->set_filenames(array(
+			$this->template->set_filenames([
 				'quickmod' => '@canidev_quickmod/quickmod_ajax.html'
-			));
+			]);
 
 			$response
-				->add(array(
+				->add([
 					'query'		=> $query,
 					'results'	=> sizeof($user_ary)
-				))
-				->add_html($this->template->assign_display('quickmod'))
+				])
+				->addHtml($this->template->assign_display('quickmod'))
 				->send();
 		}
 		else
@@ -389,11 +391,11 @@ class quickmod
 
 			if(!empty($topic_ids) && is_array($topic_ids))
 			{
-				$response->add(array(
+				$response->add([
 					'action'	=> $action,
 					'reload'	=> true,
-					'status'	=> json_response::JSON_STATUS_SUCCESS,
-				));
+					'status'	=> JsonResponse::JSON_STATUS_SUCCESS,
+				]);
 
 				$task->set_run_services($this->container);
 
@@ -403,11 +405,11 @@ class quickmod
 					 * @event quickmod.after_ajax_action
 					 * @var	string									action		The current request action
 					 * @var	array									topic_ids	List of selected topics
-					 * @var	\canidev\core\json_response 			response 	Core JsonResponse Object
+					 * @var	\canidev\core\JsonResponse 				response 	Core JsonResponse Object
 					 * @var \canidev\quickmod\libraries\tasks\base 	task 		Task Object
 					 * @since 1.1.0
 					 */
-					$vars = array('action', 'topic_ids', 'response', 'task');
+					$vars = ['action', 'topic_ids', 'response', 'task'];
 					extract($this->dispatcher->trigger_event('quickmod.after_ajax_action', compact($vars)));
 					
 					$response->send();
@@ -428,7 +430,7 @@ class quickmod
 	{
 		if(($this->tasks = $this->cache->get('_quickmod_tasks')) === false)
 		{
-			$this->tasks = array();
+			$this->tasks = [];
 
 			$base_path	= $this->phpbb_root_path . 'ext/canidev/quickmod/libraries/tasks/';
 			$directory	= new \RecursiveDirectoryIterator($base_path);
@@ -519,7 +521,7 @@ class quickmod
 			 * @var	int		topic_visibility	Current topic visibility
 			 * @since 1.1.0
 			 */
-			$vars = array(
+			$vars = [
 				'qm_content',
 				'selected_actions',
 				'forum_id',
@@ -527,16 +529,16 @@ class quickmod
 				'topic_type',
 				'topic_status',
 				'topic_visibility'
-			);
+			];
 			extract($this->dispatcher->trigger_event('quickmod.row_content', compact($vars)));
 
 			$qm_content .= "</div>\n";
 			
-			$qm_content .= build_hidden_fields(array(
+			$qm_content .= build_hidden_fields([
 				'topic_id'			=> $topic_id,
 				'topic_type'		=> $topic_type,
 				'topic_status'		=> $topic_status,
-			));
+			]);
 		}
 
 		return $qm_content;

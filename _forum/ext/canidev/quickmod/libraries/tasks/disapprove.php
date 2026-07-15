@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -52,7 +52,7 @@ class disapprove extends base
 			$notify_poster		= $this->request->is_set_post('send_notify');
 			$topic_info			= phpbb_get_topic_data($topic_ids, $this->permissions);
 
-			$user_track = $delete_ary = array();
+			$user_track = $delete_ary = [];
 
 			// Get poster information
 			foreach($topic_info as $topic_id => $topic_data)
@@ -65,7 +65,7 @@ class disapprove extends base
 				WHERE ' . $this->db->sql_in_set('user_id', array_unique($user_track));
 			$result = $this->db->sql_query($sql);
 
-			$user_track = array();
+			$user_track = [];
 
 			while($row = $this->db->sql_fetchrow($result))
 			{
@@ -100,13 +100,13 @@ class disapprove extends base
 				}
 
 				// Save log
-				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_TOPIC_DISAPPROVED', false, array(
+				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_TOPIC_DISAPPROVED', false, [
 					'forum_id'	=> $topic_data['forum_id'],
 					'topic_id'	=> ($topic_data['topic_visibility'] == ITEM_APPROVED) ? $topic_data['topic_id'] : 0,
 					$topic_data['topic_title'],
 					$this->get_reason($reason_row),
 					$topic_data['topic_first_poster_name']
-				));
+				]);
 			}
 
 			if(sizeof($delete_ary))
@@ -118,22 +118,22 @@ class disapprove extends base
 			foreach($topic_info as $topic_id => $topic_data)
 			{
 				$this->notifications->delete_notifications(
-					array(
+					[
 						'notification.type.quote',
 						'notification.type.topic',
 						'notification.type.topic_in_queue',
-					),
+					],
 					$topic_id
 				);
 
 				if($notify_poster)
 				{
-					$topic_data = array_merge($topic_data, array(
+					$topic_data = array_merge($topic_data, [
 						'post_time'			=> $topic_data['topic_time'],
 						'post_username'		=> $topic_data['topic_first_poster_name'],
 						'poster_id'			=> $topic_data['topic_poster'],
 						'disapprove_reason'	=> $this->get_reason($reason_row, isset($user_track[$topic_data['topic_poster']]) ? $user_track[$topic_data['topic_poster']] : null)
-					));
+					]);
 
 					$this->notifications->add_notifications('notification.type.disapprove_topic', $topic_data);
 				}
@@ -145,24 +145,24 @@ class disapprove extends base
 			return true;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DIALOG_CONTENT'	=> true,
 			'S_DISAPPROVE'		=> true,
-		));
+		]);
 
 		$this->container->get('phpbb.report.report_reason_list_provider')->display_reasons();
 
 		$this->core->modal_dialog(
 			false,
 			$this->title,
-			array(
+			[
 				'action'		=> 'disapprove',
 				'topic_id_list'	=> $topic_ids,
-			),
+			],
 			'@canidev_quickmod/quickmod_ajax.html',
-			array(
+			[
 				'dialogWidth'	=> 800
-			)
+			]
 		);
 	}
 
@@ -197,12 +197,12 @@ class disapprove extends base
 		if(file_exists($this->phpbb_root_path . 'language/' . $user_lang . '/mcp.' . $this->php_ext))
 		{
 			// Load up the language pack
-			$lang = array();
+			$lang = [];
 			include($this->phpbb_root_path . 'language/' . $user_lang . '/mcp.' . $this->php_ext);
 
 			if(strtolower($reason_row['reason_title']) != 'other')
 			{
-				$report_reasons 	= isset($lang['report_reasons']) ? $lang['report_reasons'] : array();
+				$report_reasons 	= isset($lang['report_reasons']) ? $lang['report_reasons'] : [];
 				$disapprove_reason 	= (isset($report_reasons['DESCRIPTION'][$lang_key]) ? $report_reasons['DESCRIPTION'][$lang_key] : $reason_row['reason_description']);
 			}
 

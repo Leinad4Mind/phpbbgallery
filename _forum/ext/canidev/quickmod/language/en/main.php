@@ -1,12 +1,12 @@
 <?php
 /**
-* [English [En]]
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [English [En]]
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'APPROVE_TOPIC'			=> 'Approve',
 	'CHANGE_ICON'			=> 'Change icon',
 	'CHANGE_ICON_TOPIC'		=> 'Change icon',
@@ -42,7 +42,6 @@ $lang = array_merge($lang, array(
 	
 	'DELETE_TOPIC'				=> 'Delete',
 	'DELETE_PERMANENTLY_TOPIC'	=> 'Delete permanently',
-	'LOCK_TOPIC'				=> 'Lock',
 	'MAKE_ANNOUNCE_TOPIC'		=> 'Change to Announcement',
 	'MAKE_GLOBAL_TOPIC'			=> 'Change to Global',
 	'MAKE_NORMAL_TOPIC'			=> 'Change to Normal',
@@ -79,4 +78,4 @@ $lang = array_merge($lang, array(
 	
 	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
 		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
-));
+]);

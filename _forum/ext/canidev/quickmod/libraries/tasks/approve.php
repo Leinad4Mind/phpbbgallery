@@ -1,11 +1,11 @@
 <?php
 /**
-* @package cBB QuickMod
-* @version 1.1.4 01/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB QuickMod
+ * @version 1.1.5 20/10/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickmod\libraries\tasks;
 
@@ -51,27 +51,27 @@ class approve extends base
 			$notify_poster	= $this->request->is_set_post('send_notify');
 			$topic_info		= phpbb_get_topic_data($topic_ids, $this->permissions);
 			
-			$first_post_ids = $approve_log = array();
+			$first_post_ids = $approve_log = [];
 	
 			foreach($topic_info as $topic_id => $topic_data)
 			{
 				$this->visibility->set_topic_visibility(ITEM_APPROVED, $topic_id, $topic_data['forum_id'], $this->user->data['user_id'], time(), '');
 				$first_post_ids[$topic_id] = (int)$topic_data['topic_first_post_id'];
 
-				$approve_log[] = array(
+				$approve_log[] = [
 					'forum_id'		=> $topic_data['forum_id'],
 					'topic_id'		=> $topic_data['topic_id'],
 					'topic_title'	=> $topic_data['topic_title'],
-				);
+				];
 			}
 			
 			foreach($approve_log as $log_data)
 			{
-				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_TOPIC_APPROVED', false, array(
+				$this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_TOPIC_APPROVED', false, [
 					'forum_id'	=> $log_data['forum_id'],
 					'topic_id'	=> $log_data['topic_id'],
 					$log_data['topic_title'],
-				));
+				]);
 			}
 			
 			// Grab the first post text as it's needed for the quote notification.
@@ -88,13 +88,13 @@ class approve extends base
 			// Handle notifications
 			foreach($topic_info as $topic_id => $topic_data)
 			{
-				$topic_data = array_merge($topic_data, array(
+				$topic_data = array_merge($topic_data, [
 					'post_id'		=> $topic_data['topic_first_post_id'],
 					'post_subject'	=> $topic_data['topic_title'],
 					'post_time'		=> $topic_data['topic_time'],
 					'poster_id'		=> $topic_data['topic_poster'],
 					'post_username'	=> $topic_data['topic_first_poster_name'],
-				));
+				]);
 	
 				$this->notifications->delete_notifications('notification.type.topic_in_queue', $topic_id);
 	
@@ -104,10 +104,10 @@ class approve extends base
 				// again.
 				if($topic_data['topic_visibility'] == ITEM_UNAPPROVED)
 				{
-					$this->notifications->add_notifications(array(
+					$this->notifications->add_notifications([
 						'notification.type.quote',
 						'notification.type.topic',
-					), $topic_data);
+					], $topic_data);
 				}
 	
 				$this->notifications->mark_notifications('notification.type.quote', $topic_data['post_id'], $this->user->data['user_id']);
@@ -134,32 +134,32 @@ class approve extends base
 			 * @var string	redirect			Variable containing the redirect url
 			 * @since 3.1.4-RC1
 			 */
-			$vars = array(
+			$vars = [
 				'action',
 				'topic_info',
 				'first_post_ids',
 				'notify_poster',
 				'success_msg',
 				'redirect',
-			);
+			];
 			extract($this->dispatcher->trigger_event('core.approve_topics_after', compact($vars)));
 
 			$this->response->add('message', $this->language->lang($success_msg));
 			return true;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DIALOG_CONTENT'	=> true,
 			'S_APPROVE'			=> true,
-		));
+		]);
 
 		$this->core->modal_dialog(
 			false,
 			$this->title,
-			array(
+			[
 				'action'		=> 'approve',
 				'topic_id_list'	=> $topic_ids,
-			),
+			],
 			'@canidev_quickmod/quickmod_ajax.html'
 		);
 	}

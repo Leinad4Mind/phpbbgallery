@@ -26,10 +26,10 @@
 			<strong>{{ lang('BUTTONS_AVAILABLE') }}</strong>
 			<hr />
 			<div id="available_buttons" class="qm-drag-row">
-	{% for available_button in loops.available_button %}
+	{% for button in available_button %}
 				<div class="qm-draggable">
-					<div><i class="fa {{ available_button.S_ICON }}"></i>{{ available_button.S_TITLE }}</div>
-					{{ available_button.S_HIDDEN_FIELDS }}
+					<div><i class="fa {{ button.S_ICON }}"></i>{{ button.S_TITLE }}</div>
+					{{ button.S_HIDDEN_FIELDS }}
 				</div>
 	{% endfor %}	
 			</div>	
@@ -39,10 +39,10 @@
 			<strong>{{ lang('BUTTONS_SELECTED') }}</strong>
 			<hr />
 			<div id="selected_buttons" class="qm-drag-row">
-	{% for selected_button in loops.selected_button %}
+	{% for button in selected_button %}
 				<div class="qm-draggable">
-					<div><i class="fa {{ selected_button.S_ICON }}"></i>{{ selected_button.S_TITLE }}</div>
-					{{ selected_button.S_HIDDEN_FIELDS }}
+					<div><i class="fa {{ button.S_ICON }}"></i>{{ button.S_TITLE }}</div>
+					{{ button.S_HIDDEN_FIELDS }}
 				</div>
 	{% endfor %}		
 			</div>

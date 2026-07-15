@@ -91,7 +91,7 @@
 
 		<div class="qm-center">
 			<label for="icon"><input type="radio" name="icon" id="icon" value="0" checked="checked" /> {{ lang('NO_TOPIC_ICON') }}</label>
-			{% for topic_icon in loops.topic_icon %}<label for="icon-{{ topic_icon.ICON_ID }}"><input type="radio" name="icon" id="icon-{{ topic_icon.ICON_ID }}" value="{{ topic_icon.ICON_ID }}" {{ topic_icon.S_ICON_CHECKED }} /> <img src="{{ topic_icon.ICON_IMG }}" width="{{ topic_icon.ICON_WIDTH }}" height="{{ topic_icon.ICON_HEIGHT }}" alt="" title="" /></label> {% endfor %}
+			{% for topic_icon in loops.topic_icon %}<label for="icon-{{ topic_icon.ICON_ID }}"><input type="radio" name="icon" id="icon-{{ topic_icon.ICON_ID }}" value="{{ topic_icon.ICON_ID }}" {{ topic_icon.S_ICON_CHECKED }} /> <img src="{{ topic_icon.ICON_IMG }}" width="{{ topic_icon.ICON_WIDTH }}" height="{{ topic_icon.ICON_HEIGHT }}" alt="icon-{{ topic_icon.ICON_ID }}" /></label> {% endfor %}
 		</div>
 
 	{% elseif S_CHGTIME %}
