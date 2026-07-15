@@ -2,18 +2,18 @@
     "name": "sitesplat/bbcodeorder",
     "type": "phpbb-extension",
     "description": "Enhances default BBcodes and allows some essential combinations. Custom icons, Group permission, sorting, ordering and more...",
-    "homepage": "http://sitesplat.com",
-    "version": "1.0.5",
+    "homepage": "https://sitesplat.com",
+    "version": "1.0.7",
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
             "name": "SiteSplat",
             "email": "info@sitesplat.com",
-            "homepage": "http://sitesplat.com"
+            "homepage": "https://sitesplat.com"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "composer/installers": "~1.0"
     },
     "extra": {

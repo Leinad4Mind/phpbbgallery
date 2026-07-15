@@ -1,5 +1,4 @@
 {% if S_BBCODE_ALLOWED %}
-	{% set IN_SNAPPY = S_SHOW_ATTACH_BTN %} {# sitesplat/snappy addition #}
 	{% set SELECTBOX_PRESENT = false %}
 	<div class="{% if IN_SNAPPY %}text-center{% else %}btn-toolbar{% endif %} btn-toolbar-bbcodeorder posting-btns" role="toolbar">
 
@@ -113,7 +112,7 @@
 		{% else %}
 			</div>
 		{% endif %}
-		{% if IN_SNAPPY %}
+		{% if S_SHOW_ATTACH_BTN %}
 			<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
 		{% endif %}
 		
