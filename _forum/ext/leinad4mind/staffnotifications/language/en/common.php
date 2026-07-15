@@ -4,7 +4,7 @@
  *
  * Staff Notifications. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind
+ * @copyright (c) 2019-2020, Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -45,6 +45,14 @@ $lang = array_merge($lang, [
 	// soft_delete_post
 	'STAFFNOTIFICATIONS_SOFT_DELETE_POST'			=> 'A post is soft-deleted',
 	'STAFFNOTIFICATIONS_TITLE_SOFT_DELETE_POST'		=> '%1$s <strong>soft-deleted a post</strong> by %2$s',
+
+	// merge_topics
+	'STAFFNOTIFICATIONS_MERGE_TOPICS'				=> 'Topics are merged',
+	'STAFFNOTIFICATIONS_TITLE_MERGE_TOPICS'			=> '%1$s <strong>merged topics</strong>',
+
+	// merge_posts
+	'STAFFNOTIFICATIONS_MERGE_POSTS'				=> 'Posts are merged',
+	'STAFFNOTIFICATIONS_TITLE_MERGE_POSTS'			=> '%1$s <strong>merged posts</strong>',
 
 	// delete_post
 	'STAFFNOTIFICATIONS_DELETE_TOPIC'				=> 'A topic is deleted',

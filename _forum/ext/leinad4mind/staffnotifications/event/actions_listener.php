@@ -4,7 +4,7 @@
  *
  * Staff Notifications. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind
+ * @copyright (c) 2019-2020, Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -23,6 +23,9 @@ class actions_listener implements EventSubscriberInterface {
 
 	/** @var helper */
 	protected $helper;
+
+	/** @var bool */
+	protected $is_merging = false;
 
 	/**
 	 * @param helper $helper
@@ -45,12 +48,15 @@ class actions_listener implements EventSubscriberInterface {
 
 		return [
 			'core.user_setup'					=> 'load_language_on_setup',
+			'core.mcp_main_before'				=> ['mcp_main_before', $priority],
 			'core.delete_post_after'			=> ['soft_delete_post', $priority],
 			'core.add_log'						=> ['soft_delete_topic', $priority],
 			'core.delete_posts_before'			=> ['delete_posts', $priority],
 			'core.delete_topics_before_query'	=> ['delete_topics', $priority],
 			'core.acp_ban_after' 				=> ['ban_user', $priority],
 			'core.mcp_ban_after' 				=> ['ban_user', $priority],
+			'core.mcp_forum_merge_topics_after'	=> ['merge_topics', $priority],
+			'core.mcp_topics_merge_posts_after'	=> ['merge_posts', $priority],
 		];
 	}
 
@@ -65,6 +71,19 @@ class actions_listener implements EventSubscriberInterface {
 			'lang_set' => 'common',
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function mcp_main_before(data $event)
+	{
+		$this->is_merging = in_array($event['action'], [
+			'merge_select',
+			'merge_topic',
+			'merge_topics',
+			'merge_posts',
+		]);
 	}
 
 	/**
@@ -114,7 +133,7 @@ class actions_listener implements EventSubscriberInterface {
 	{
 		$post_ids = array_map('intval', is_array($event['where_ids']) ? $event['where_ids'] : [$event['where_ids']]);
 
-		if ($post_ids)
+		if ($post_ids && !$this->is_merging)
 		{
 			$post_data = $this->helper->get_post_data($post_ids);
 
@@ -141,7 +160,7 @@ class actions_listener implements EventSubscriberInterface {
 	{
 		$topic_ids = array_map('intval', is_array($event['topic_ids']) ? $event['topic_ids'] : [$event['topic_ids']]);
 
-		if ($topic_ids)
+		if ($topic_ids && !$this->is_merging)
 		{
 			$topic_data = $this->helper->get_topic_data($topic_ids);
 
@@ -180,6 +199,46 @@ class actions_listener implements EventSubscriberInterface {
 					],
 				]);
 			}
+		}
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function merge_topics(data $event)
+	{
+		if ($this->is_merging)
+		{
+			$to_topic_data = $this->helper->get_topic_data([$event['to_topic_id']]);
+			$to_topic_data = reset($to_topic_data);
+
+			$this->helper->add_notifications('leinad4mind.staffnotifications.notification.type.merge_topics', [
+				'topic_id'	=> $event['to_topic_id'],
+				'forum_id'	=> $to_topic_data['forum_id'],
+				'reference'	=> [
+					'title'  	=> $to_topic_data['topic_title'],
+				],
+			]);
+		}
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function merge_posts(data $event)
+	{
+		if ($this->is_merging)
+		{
+			$to_topic_data = $this->helper->get_topic_data([$event['to_topic_id']]);
+			$to_topic_data = reset($to_topic_data);
+
+			$this->helper->add_notifications('leinad4mind.staffnotifications.notification.type.merge_posts', [
+				'topic_id'	=> $event['to_topic_id'],
+				'forum_id'	=> $to_topic_data['forum_id'],
+				'reference'	=> [
+					'title'  	=> $to_topic_data['topic_title'],
+				],
+			]);
 		}
 	}
 }
