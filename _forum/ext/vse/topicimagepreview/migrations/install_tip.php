@@ -8,7 +8,7 @@
  *
  */
 
-namespace vse\TopicImagePreview\migrations;
+namespace vse\topicimagepreview\migrations;
 
 class install_tip extends \phpbb\db\migration\migration
 {
@@ -27,7 +27,8 @@ class install_tip extends \phpbb\db\migration\migration
 		return [
 			['config.add', ['vse_tip_new', 1]],
 			['config.add', ['vse_tip_num', 3]],
-			['config.add', ['vse_tip_dim', 200]],
+			['config.add', ['vse_tip_dim_min', 200]],
+			['config.add', ['vse_tip_dim_max', 500]],
 		];
 	}
 }

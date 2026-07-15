@@ -8,14 +8,14 @@
  *
  */
 
-namespace vse\TopicImagePreview;
+namespace vse\topicimagepreview;
 
 class ext extends \phpbb\extension\base
 {
 	/**
 	 * The minimum phpBB version required by this extension
 	 */
-	const PHPBB_MIN_VERSION = '3.2.0';
+	const PHPBB_MIN_VERSION = '3.2.1';
 
 	/**
 	 * {@inheritdoc}
@@ -29,7 +29,7 @@ class ext extends \phpbb\extension\base
 		if (!$is_enableable)
 		{
 			$lang = $this->container->get('language');
-			$lang->add_lang('tip_install', 'vse/TopicImagePreview');
+			$lang->add_lang('tip_install', 'vse/topicimagepreview');
 		}
 
 		return $is_enableable;
