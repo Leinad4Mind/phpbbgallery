@@ -38,6 +38,13 @@
 	height: 50px;
 }
 
+.phpbb-ads-visual-demo-btn {
+	text-align: center;
+	width: 25%;
+	margin: 0 auto !important;
+	padding: 10px !important;
+}
+
 .phpbb-ads-button {
 	font-family: system-ui, sans-serif;
 	font-size: 13px;

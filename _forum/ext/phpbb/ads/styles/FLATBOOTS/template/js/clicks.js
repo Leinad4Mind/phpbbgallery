@@ -1,1 +1,0 @@
-head.ready(function(){!function(a,t){"use strict";a(function(){a("[data-ad-id]").on("click","a",function(e){a.get(t.replace(/0$/,a(e.delegateTarget).attr("data-ad-id")))})})}(jQuery,u_phpbb_ads_click)});
