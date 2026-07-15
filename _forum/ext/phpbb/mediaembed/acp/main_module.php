@@ -54,8 +54,13 @@ class main_module
 	/** @var string $u_action */
 	public $u_action;
 
+	/** @var array An array of errors */
+	protected $errors = [];
+
 	/**
 	 * Constructor
+	 *
+	 * @throws \Exception
 	 */
 	public function __construct()
 	{
@@ -79,6 +84,7 @@ class main_module
 	 *
 	 * @param int    $id   The module ID (not used)
 	 * @param string $mode The module mode (manage|settings)
+	 * @throws \Exception
 	 */
 	public function main($id, $mode)
 	{
@@ -118,12 +124,15 @@ class main_module
 
 	/**
 	 * Add manage sites template vars to the form
+	 *
+	 * @throws \Exception
 	 */
 	protected function display_manage()
 	{
 		$this->template->assign_vars([
 			'MEDIA_SITES'	=> $this->get_sites(),
 			'U_ACTION'		=> $this->u_action,
+			'ERRORS'		=> $this->errors,
 		]);
 	}
 
@@ -131,6 +140,7 @@ class main_module
 	 * Get a list of available sites
 	 *
 	 * @return array An array of available sites
+	 * @throws \Exception
 	 */
 	protected function get_sites()
 	{
@@ -140,7 +150,7 @@ class main_module
 		foreach ($configurator->MediaEmbed->defaultSites as $siteId => $siteConfig)
 		{
 			$disabled = isset($configurator->BBCodes[$siteId]);
-			$sites[] = [
+			$sites[$siteId] = [
 				'id'		=> $siteId,
 				'name'		=> $siteConfig['name'],
 				'title'		=> $this->language->lang($disabled ? 'ACP_MEDIA_SITE_DISABLED' : 'ACP_MEDIA_SITE_TITLE', $siteId),
@@ -148,6 +158,10 @@ class main_module
 				'disabled'	=> $disabled,
 			];
 		}
+
+		ksort($sites);
+
+		$this->errors = array_diff($this->get_enabled_sites(), array_keys($sites));
 
 		return $sites;
 	}

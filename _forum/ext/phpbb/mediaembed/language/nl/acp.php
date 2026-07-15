@@ -27,7 +27,7 @@ $lang = array_merge($lang, array(
 	'ACP_MEDIA_ALLOW_SIG'				=> 'Toestaan in onderschriften',
 	'ACP_MEDIA_ALLOW_SIG_EXPLAIN'		=> 'Toestaan dat onderschriften ook ingevoegde media inhoud (Embed Media Content) bevatten.',
 	'ACP_MEDIA_PARSE_URLS'				=> 'Convert plain URLs',
-	'ACP_MEDIA_PARSE_URLS_EXPLAIN'		=> 'Enable this to convert plain URLs (not wrapped in <samp>[media]</samp> or <samp>[url]</samp> tags) to embedded media content. Note that changing this setting will only affect new posts, as exisiting posts have already been parsed.',
+	'ACP_MEDIA_PARSE_URLS_EXPLAIN'		=> 'Enable this to convert plain URLs (not wrapped in <samp>[media]</samp> or <samp>[url]</samp> tags) to embedded media content. Note that changing this setting will only affect new posts, as existing posts have already been parsed.',
 	'ACP_MEDIA_SITE_TITLE'				=> 'Site id: %s',
 	'ACP_MEDIA_SITE_DISABLED'			=> 'Deze website heeft een conflict met een bestaande BBCode: [%s]',
 
@@ -35,4 +35,5 @@ $lang = array_merge($lang, array(
 	'ACP_MEDIA_MANAGE'					=> 'Beheer Media Embed Websites',
 	'ACP_MEDIA_MANAGE_EXPLAIN'			=> 'Hier kunt u de websites beheren van welke u de de Media Embed PlugIn wilt toestaan inhoud te tonen.',
 	'ACP_MEDIA_SITES_ERROR'				=> 'Er zijn geen media websites om te tonen.',
+	'ACP_MEDIA_SITES_MISSING'			=> 'The following sites are no longer supported or working. Please re-submit this page to remove them.',
 ));

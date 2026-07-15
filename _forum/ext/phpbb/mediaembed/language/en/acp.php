@@ -27,7 +27,7 @@ $lang = array_merge($lang, array(
 	'ACP_MEDIA_ALLOW_SIG'				=> 'Allow in user signatures',
 	'ACP_MEDIA_ALLOW_SIG_EXPLAIN'		=> 'Allow user signatures to display embedded media content.',
 	'ACP_MEDIA_PARSE_URLS'				=> 'Convert plain URLs',
-	'ACP_MEDIA_PARSE_URLS_EXPLAIN'		=> 'Enable this to convert plain URLs (not wrapped in <samp>[media]</samp> or <samp>[url]</samp> tags) to embedded media content. Note that changing this setting will only affect new posts, as exisiting posts have already been parsed.',
+	'ACP_MEDIA_PARSE_URLS_EXPLAIN'		=> 'Enable this to convert plain URLs (not wrapped in <samp>[media]</samp> or <samp>[url]</samp> tags) to embedded media content. Note that changing this setting will only affect new posts, as existing posts have already been parsed.',
 	'ACP_MEDIA_SITE_TITLE'				=> 'Site id: %s',
 	'ACP_MEDIA_SITE_DISABLED'			=> 'This site conflicts with an existing BBCode: [%s]',
 
@@ -35,4 +35,5 @@ $lang = array_merge($lang, array(
 	'ACP_MEDIA_MANAGE'					=> 'Manage Media Embed Sites',
 	'ACP_MEDIA_MANAGE_EXPLAIN'			=> 'Here you can manage the sites you want to allow the Media Embed PlugIn to display content from.',
 	'ACP_MEDIA_SITES_ERROR'				=> 'There are no media sites to display.',
+	'ACP_MEDIA_SITES_MISSING'			=> 'The following sites are no longer supported or working. Please re-submit this page to remove them.',
 ));
