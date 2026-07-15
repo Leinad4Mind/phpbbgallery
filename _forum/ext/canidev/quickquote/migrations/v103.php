@@ -16,7 +16,8 @@ class v103 extends \phpbb\db\migration\migration
 	 */
 	public function effectively_installed()
 	{
-		return isset($this->config['quickquote_version']) && version_compare($this->config['quickquote_version'], '1.0.3', '>=');
+		return isset($this->config['quickquote_floatbtn']) &&
+			(!isset($this->config['quickquote_version']) || version_compare($this->config['quickquote_version'], '1.0.3', '>='));
 	}
 
 	/**

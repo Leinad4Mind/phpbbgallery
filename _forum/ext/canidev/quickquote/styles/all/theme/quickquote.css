@@ -1,7 +1,7 @@
 /*  cBB QuickQuote StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2023 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -26,6 +26,10 @@
 
 .quickquote-tooltip a {
 	display: inline-block;
+}
+
+.quickquote-tooltip a > i {
+	margin-right: 5px;
 }
 
 .quickquote-tooltip .tooltip-sep {

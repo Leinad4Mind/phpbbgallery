@@ -1,9 +1,9 @@
 {% if QQ_ENABLED %}
 	<script type="text/html" id="tpl-quickquote-tooltip">
 		<div class="quickquote-tooltip">
-			<a href="#" data-action="quote"><i class="fa fa-plus"></i> {{ lang('QQ_SAVE_QUOTE') }}</a>
+			<a href="#" data-action="quote"><i class="fa fa-plus"></i>{{ lang('QQ_SAVE_QUOTE') }}</a>
 			<span class="tooltip-sep">|</span>
-			<a href="#" data-action="reply"><i class="fa fa-reply"></i> {{ lang('QQ_REPLY') }}</a>
+			<a href="#" data-action="reply"><i class="fa fa-reply"></i>{{ lang('QQ_REPLY') }}</a>
 		</div>
 	</script>
 
@@ -47,7 +47,7 @@
 	(function($) {
 		cbbCore.initService('quickquote', {
 			btnTarget		: {% if QQ_FLOAT_BTN %}'body'{% else %}'#qr_postform .submit-buttons, #postform .submit-buttons'{% endif %},
-			target			: '.post .content',
+			target			: '.post .content, .block-postbody',
 			editors			: {
 				phpbb: '#message-box textarea[name]'
 			},

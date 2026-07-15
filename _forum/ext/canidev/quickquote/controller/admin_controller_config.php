@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Quickquote
- * @version 1.0.3 15/01/2023
+ * @version 1.0.4 01/06/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -36,7 +36,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 	 */
 	public function display($mode)
 	{
-		$this->page_header('cbb-quickquote', $this->config['quickquote_version']);
+		$this->pageHeader('canidev/quickquote');
 
 		$this->tpl_name		= 'acp_quickquote_config';
 		$this->page_title	= 'ACP_QUICKQUOTE_CONFIG';
@@ -50,7 +50,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		$display_vars = [
 			'legend1'			=> 'MAIN_OPTIONS',
 			'quickquote_floatbtn'			=> ['lang' => 'QUICKQUOTE_FLOATBTN',			'validate' => 'bool',	'type' => 'radio:yes_no'],
-			'quickquote_groups'				=> ['lang' => 'QUICKQUOTE_GROUPS',				'type' => 'custom',		'function' => [$this->tools, 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}', 1]],
+			'quickquote_groups'				=> ['lang' => 'QUICKQUOTE_GROUPS',				'type' => 'custom',		'function' => ['tools', 'groups_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}', 1]],
 			'quickquote_reply_overwrite'	=> ['lang' => 'QUICKQUOTE_REPLY_OVERWRITE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 		];
 
@@ -107,7 +107,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 
 			if($submit)
 			{
-				$value = (is_array($this->new_config[$config_name]) ? implode(',', $this->new_config[$config_name]) : $this->new_config[$config_name]);
+				$value = is_array($this->new_config[$config_name]) ? implode(',', $this->new_config[$config_name]) : $this->new_config[$config_name];
 				$this->config->set($config_name, $value);
 			}
 		}

@@ -13,7 +13,7 @@ class v101 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['quickquote_version']) && version_compare($this->config['quickquote_version'], '1.0.1', '>=');
+		return isset($this->config['quickquote_reply_overwrite']);
 	}
 
 	static public function depends_on()
