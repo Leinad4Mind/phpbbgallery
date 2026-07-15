@@ -151,9 +151,6 @@ class likedd_added extends \phpbb\notification\type\base
 		$type2 = (strpos($this->get_data('like_txt'), 'LIKE') === false) ? 0 : 1;
 		
 		return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), '<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
-		// return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKES_DISLIKE'] : $this->user->lang['LIKES_LIKE'] ),
-				// (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE']), 
-            	// (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), (($type1) ? $this->user->lang['FROM_YOUR'] : $this->user->lang['TO_YOUR']), $username);
 	}
 
 	/**

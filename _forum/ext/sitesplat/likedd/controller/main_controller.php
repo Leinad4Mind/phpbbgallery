@@ -144,6 +144,10 @@ class main_controller
 			break;
 			
 			case 'toplist':
+				if (!$this->auth->acl_get('u_likedd'))
+				{
+					trigger_error($this->user->lang['NOT_AUTHORISED'], E_USER_NOTICE);
+				}
 				$type = $this->request->variable('t', 0);
 
 				$exclude_forums = array_keys($this->auth->acl_getf('!f_read', true));
@@ -162,6 +166,8 @@ class main_controller
 						(($type == 2) ? 'p.post_id' : 
 						(($type == 3) ? 'l.user_id' : 'p.forum_id'))) . '
 						ORDER BY num_likes DESC';
+			//	$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0);
+			// cache query for 24 hours
 				$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0, 86400);
 				$likes['name'] = $this->user->lang['LIKES_SORT_LIKES'];
 				$dislikes['name'] = $this->user->lang['LIKES_SORT_DISIKES'];

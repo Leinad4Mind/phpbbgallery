@@ -3,10 +3,10 @@ $(document).on("click", ".btn-likedd-trigger", function (e) {
 	e.preventDefault();
 	var val = $(this).data("options");
 	$.ajax({ type: "POST", 
-		url: "app.php/likedd/index.html", 
-		data: $(this).data("options"), 
-		dataType: "json", 
-		success: function (result) {
+    url: "app.php/likedd/index.html", 
+    data: $(this).data("options"), 
+    dataType: "json", 
+    success: function (result) {
 			if (result.likes)
 			{
 				val = val.replace('=', '');
@@ -17,8 +17,8 @@ $(document).on("click", ".btn-likedd-trigger", function (e) {
 				phpbb.alert(result.info, result.txt, true);
 				phpbb.closeDarkenWrapper(3000);
 			}
-		}
-	});
+       }
+    });
 });
 
 $(document).on("click", ".open-LikersDialog", function () {

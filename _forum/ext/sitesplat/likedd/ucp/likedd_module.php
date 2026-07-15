@@ -34,7 +34,7 @@ class likedd_module
 				COUNT(CASE WHEN l.ld = 1 THEN l.user_id END) AS lrectot
 				FROM ' . $this->likes_table . ' l
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id'; 
-		$result = $db->sql_query($sql, 60);
+		$result = $db->sql_query($sql);
 		$likes = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 		$i = 0;
@@ -76,7 +76,7 @@ class likedd_module
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.user_id
 					WHERE p.poster_id = ' . $user->data['user_id'] . '
 				) x';
-		$result = $db->sql_query($sql, 60);
+		$result = $db->sql_query($sql);
 		$total_likes = $db->sql_fetchfield('total');
 
 		$per_page = 12;
