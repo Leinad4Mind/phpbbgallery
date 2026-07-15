@@ -1,8 +1,8 @@
-Subject: Points - "{FORUM_NAME}"
+Subject: PontosGold - "{FORUM_NAME}"
 
-Hi {USERNAME},
+Olá, {USERNAME},
 
-You recieved this e-mail because there was a donation made to your address from {POSTER}
+enviamos este e-mail para informar que recebeste um donativo de PontosGold da parte de {POSTER}
 
 {TEXT}
 

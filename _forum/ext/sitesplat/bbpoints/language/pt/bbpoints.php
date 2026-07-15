@@ -1,83 +1,82 @@
 <?php
-/**
-*
-* BBpoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * BBpoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if ( empty($lang) || !is_array($lang) )
-{
+if (empty($lang) || !is_array($lang)) {
 	$lang = array();
 }
 
 $lang = array_merge($lang, array(
-	'UCP_BBPOINTS_EXPLAIN'					=> 'Transactions Overview of your earned points',
-	'BB_DONATION'							=> 'Donation from',
-	'BB_TRANSFER'							=> 'Transfer to',
-    'BBPOINTS_LOG'							=> 'Points Log',
-	'BBPOINTS_TRANSFER_AMT'					=> 'Transfer amount',
-	'TRANSFER_DESCR'						=> 'Comment',  
-	'BBPOINTS_COMMENT_PLACEHOLDER'			=> 'Optional comment about the transaction',
-	'BBPOINTS_NO_RECORDS'			        => 'Sorry, there are no records yet!',
-	
-	'BBPOINTS_STATS'						=> 'Statistics',
-	'BBPOINTS_STATS_BAR'					=> 'and overall progress goal',
-	'BBPOINTS_GOAL'							=> 'Points goal',
-	'BBPOINTS_GOAL_TO_GO'					=> 'more to go!',
+	'UCP_BBPOINTS_EXPLAIN'					=> 'Visão Geral dos pontos ganhos',
+	'BB_DONATION'							=> 'Oferecidos por',
+	'BB_TRANSFER'							=> 'Transferir para',
+	'BBPOINTS_LOG'							=> 'Log dos PontosGold',
+	'BBPOINTS_TRANSFER_AMT'					=> 'Montante Transferido',
+	'TRANSFER_DESCR'						=> 'Comentário',
+	'BBPOINTS_COMMENT_PLACEHOLDER'			=> 'Adiciona um comentário para ser entregue com os pontos enviados',
+	'BBPOINTS_NO_RECORDS'			        => 'Lamentamos, não existem ainda registos!',
 
-	'EARN_PER_TOPIC'						=> 'You can earn <strong>%1$s</strong> per topic',
-	'EARN_PER_POST'							=> 'You can earn <strong>%1$s</strong> per post',
-	'EARN_PER_WORD'							=> 'You can earn <strong>%1$s</strong> per word',
-	
-	'TRANSFER_TO'							=> 'Here you can transfer/donate points to another user - Cannot be reversed!',
-	'TRANSFER_SUCCESS'						=> 'The transfer was successful.',
-	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'To read and react to this topic you have to donate: <span class="label label-primary">%1$s Points</span><br />This is a one time fee to the Topic starter<br />**Please note, this fee can be asked again if the topic is edited',
-	'NO_USER_SELECTED'						=> 'You did not select any user',
-	'NO_AMOUNT_SELECTED'					=> 'You did not select any amount or the amount is < 5',           
-	'TRANSFER_NOT_ENOUGH_POINTS'			=> 'You do not have enough points to transfer.',
+	'BBPOINTS_STATS'						=> 'Estatísticas dos PontosGold',
+	'BBPOINTS_STATS_BAR'					=> 'e progresso geral dos objectivos',
+	'BBPOINTS_GOAL'							=> 'Objectivos de Pontos',
+	'BBPOINTS_GOAL_TO_GO'					=> 'em falta!',
 
-	'POINTS_RETURN_POST'				 	 => 'Return to the topic',
-	'POINTS_RETURN_INDEX'				 	 => 'Return to the index',
-	'POINTS_RETURN_TRANSFER'		 		 => 'Return to the transfer',
-	'POINTS_MAIN'						     => '%s overwiev',
-	'POINTS_MODIFY'						     => 'Modify',
-	'POINTS_DONATE'						     => 'Donate',	
-	'POINTS_DISABLED'            			 => 'Points is currently disabled',
-	
-	'POINTS_RECEIVED_POST_MESSAGE'			 => 'Recebeu <strong>%1$s %2$s</strong> por este tópico',
-	'POINTS_RECEIVED_REPLY_MESSAGE'		     => 'Recebeu <strong>%1$s %2$s</strong> por esta mensagem',
-	'POINTS_RECEIVED_POST_MOD_MESSAGE'		 => 'You will receive <strong>%1$s %2$s</strong> for this topic when it will be approved',
-	'POINTS_RECEIVED_REPLY_MOD_MESSAGE'		 => 'You will receive <strong>%1$s %2$s</strong> for this post when it will be approved',
-	'POINTS_POST_REMOVED'		             => 'You have lost <strong>%1$s %2$s</strong> for deleting this post',
-	
-	'TRANSFER_DISABLED'						 => 'Transfer is disabled',
-	'TRANSFER_USERNAME_NOT_EXIST' 			 => 'There is no user with this username.',
-	'TRANSFER_PM_SUBJECT'				     => 'Recebeu um donativo de pontos!',
-	'TRANSFER_PM_BODY'					     => 'Recebeu um donativo de %1$s %2$s.',
-	'TRANSFER_PM_BODY_COMMENT'	             => 'Recebeu um donativo de %1$s %2$s com o seguinte comentário: <br />%3$s',
+	'EARN_PER_TOPIC'						=> 'Podes ganhar <strong>%1$s</strong> por tópico',
+	'EARN_PER_POST'							=> 'Podes ganhar <strong>%1$s</strong> por mensagem',
+	'EARN_PER_WORD'							=> 'Podes ganhar <strong>%1$s</strong> por palavra',
+
+	'TRANSFER_TO'							=> 'Podes transferir/oferecer pontos teus a outro utilizador - Esta acção é irreversível!',
+	'TRANSFER_SUCCESS'						=> 'A transferência de pontos foi feita com sucesso.',
+	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'Para poderes aceder a este tópico terás de efectuar uma troca de <span class="label label-primary">%1$s pontos</span><br />Estes pontos serão transferidos uma única vez para a conta do Autor do Tópico<br />Vejam aqui como podem ganhar pontos: <a href="https://goldtuganime.com/forum/viewtopic.php?f=29&t=10711">Sistema de Pontos GoldTugAnime</a>',
+	'NO_USER_SELECTED'						=> 'Não seleccionaste nenhum utilizador',
+	'NO_AMOUNT_SELECTED'					=> 'Não seleccionaste nenhum montante ou o montante é menor do que 5',
+	'TRANSFER_NOT_ENOUGH_POINTS'			=> 'Não tens pontos suficientes para oferecer.',
+
+	'POINTS_RETURN_POST'				 	 => 'Regressar ao tópico',
+	'POINTS_RETURN_INDEX'				 	 => 'Regressar ao índice',
+	'POINTS_RETURN_TRANSFER'		 		 => 'Regressar à transferência',
+	'POINTS_MAIN'						     => '%s visão geral',
+	'POINTS_MODIFY'						     => 'Modificar',
+	'POINTS_DONATE'						     => 'Oferecer',
+	'POINTS_DISABLED'            			 => 'Os PontosGold estão de momento desactivados',
+
+	'POINTS_RECEIVED_POST_MESSAGE'			 => 'Recebeste <strong>%1$s %2$s</strong> por este tópico',
+	'POINTS_RECEIVED_REPLY_MESSAGE'		     => 'Recebeste <strong>%1$s %2$s</strong> por esta mensagem',
+	'POINTS_RECEIVED_POST_MOD_MESSAGE'		 => 'Irás receber <strong>%1$s %2$s</strong> por este tópico assim que for aprovado',
+	'POINTS_RECEIVED_REPLY_MOD_MESSAGE'		 => 'Irás receber <strong>%1$s %2$s</strong> por esta mensagem assim que for aprovada',
+	'POINTS_POST_REMOVED'		             => 'Perdeste <strong>%1$s %2$s</strong> por teres apagado esta mensagem',
+
+	'TRANSFER_DISABLED'						 => 'A transferência de pontos está desactivada',
+	'TRANSFER_USERNAME_NOT_EXIST' 			 => 'Não existe nenhum utilizador com esse nome.',
+	'TRANSFER_PM_SUBJECT'				     => 'Recebeste PontosGold!',
+	'TRANSFER_PM_BODY'					     => 'Recebeste %1$s PontosGold da parte de %2$s.',
+	'TRANSFER_PM_BODY_COMMENT'	             => 'Recebeste %1$s PontosGold da parte de %2$s com o seguinte comentário: <br />%3$s',
 	'TRANSFER_POINTS_TITLE'				     => 'Transferir %s',
-	'TRANSFER_POINTS'						 => 'Transferir %s',   
+	'TRANSFER_POINTS'						 => 'Transferir %s',
 	'TRANSFER_AMOUNT'						 => 'Montante',
 	'TRANSFER_COMMENT'						 => 'Comentário',
 	'BBPOINT_LOG'						     => 'Log de Transferências',
-	
-	
-	'CHANGE_NO_USER_SELECTED'			     => 'No user selected',
-	'CHANGE_SUCCESS'					     => 'The user has been updated.',
-	'CHANGE_POINTS'						     => 'Change %s',
-	'CHANGE_AMOUNT'						     => 'New amount',
-	
-	'MAIN_HELLO'				             => 'Hello %s !',
-	'MAIN_TEXT'				                 => 'You have %1$s %2$s.<br /><br />%2$s per new topic: %3$s<br />%2$s per new post: %4$s<br />%2$s per word: %5$s',
+
+
+	'CHANGE_NO_USER_SELECTED'			     => 'Nenhum utilizador seleccionado',
+	'CHANGE_SUCCESS'					     => 'O utilizador foi actualizado.',
+	'CHANGE_POINTS'						     => 'Alterar %s',
+	'CHANGE_AMOUNT'						     => 'Novo montante',
+
+	'MAIN_HELLO'				             => 'Olá, %s!',
+	'MAIN_TEXT'				                 => 'Tens %1$s %2$s.<br /><br />%2$s por novos tópicos: %3$s<br />%2$s por novas mensagens: %4$s<br />%2$s por palavra: %5$s',
 ));

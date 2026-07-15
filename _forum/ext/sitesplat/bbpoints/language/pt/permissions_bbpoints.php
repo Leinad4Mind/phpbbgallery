@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACL_F_HIDE_TOPIC'		    => 'Can hide (and set a price) own topic',
-	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Can override Points limit',
+	'ACL_F_HIDE_TOPIC'		    => 'Pode ocultar (e colocar preço) do próprio tópico',
+	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Pode subscrever limite de PontosGold',
 ));

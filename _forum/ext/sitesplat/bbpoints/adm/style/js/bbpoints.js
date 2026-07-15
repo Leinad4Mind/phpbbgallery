@@ -60,44 +60,60 @@
 			{
 				adminurl = result.url;
 				$('#sync_points').click(); 
-			}else
+			} else
 			{
-				$("#pbaranim").css('background', '#A1C969'); 	
+				$("#pbaranim").css('background', '#A1C969');
 			}
 		   }
 		});
 	});
 
+	function transferTo(event, ui) { 
+		event.preventDefault(); 
+		$(this).val(ui.item.label); 
+		$("#transfer_id_to").val(ui.item.value);
+		$(".comments").show("slow");
+	};
+
+	function transferSender(event, ui) { 
+		event.preventDefault(); 
+		$(this).val(ui.item.label); 
+		$("#transfer_sender_id").val(ui.item.value);
+	};
+
+	function source(request, response) {
+		$.ajax({
+			type: "POST",
+			url: boardurl + 'bbpoints/search_user',
+			dataType: "json",
+			data: {
+				term: request.term
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				alert('Error: ' + xhr.responseText);
+			},
+			success: function(data) {
+				response($.map(data, function(c) {
+					return {
+						value: c.value,
+						label: c.label,
+					};
+				}));
+			}
+		});
+	};
+
 	$('#transfer_to').autocomplete({
-		source: function(request, response) {
-			
-					$.ajax({
-						type: "POST",
-						url: boardurl + 'bbpoints/search_user',
-						dataType: "json",
-						data: {
-							term: request.term
-						},
-						error: function(xhr, textStatus, errorThrown) {
-							alert('Error: ' + xhr.responseText);
-						},
-						success: function(data) {
-							response($.map(data, function(c) {
-								return {
-									value: c.value,
-									label: c.label,
-								};
-							}));
-						}
-					});
-				},
-		select: function(event, ui) { 
-			event.preventDefault(); 
-			$(this).val(ui.item.label); 
-			$("#transfer_id_to").val(ui.item.value);
-			$(".comments").show("slow");
-		},
-		placeholder: 'Enter user ...',
+		source: source,
+		select: transferTo,
+		placeholder: enter_user_lang,
+		minLength: 2
+	});
+
+	$('#transfer_sender').autocomplete({
+		source: source,
+		select: transferSender,
+		placeholder: enter_user_lang,
 		minLength: 2
 	});
 

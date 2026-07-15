@@ -1,3 +1,0 @@
-head.ready(function () {
-$("input[name='sitesplat.bbpoints.notification.type.transfer_notification.method.email']").parent().hide();
-});

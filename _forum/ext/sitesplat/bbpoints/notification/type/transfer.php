@@ -1,40 +1,41 @@
 <?php
+
 /**
-*
-* BBPoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBPoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbpoints\notification\type;
 
 class transfer extends \phpbb\notification\type\base
 {
 	/**
-	* Get notification type name
-	*
-	* @return string
-	*/
+	 * Get notification type name
+	 *
+	 * @return string
+	 */
 	public function get_type()
 	{
 		return 'sitesplat.bbpoints.notification.type.transfer';
 	}
 
 	/**
-	* Language key used to output the text
-	*
-	* @var string
-	*/
+	 * Language key used to output the text
+	 *
+	 * @var string
+	 */
 	protected $language_key = 'NOTIFICATION_BBPOINTS';
 
 	/**
-	* Notification option data (for outputting to the user)
-	*
-	* @var bool|array False if the service should use it's default data
-	* 					Array of data (including keys 'id', 'lang', and 'group')
-	*/
+	 * Notification option data (for outputting to the user)
+	 *
+	 * @var bool|array False if the service should use it's default data
+	 * 					Array of data (including keys 'id', 'lang', and 'group')
+	 */
 	static public $notification_option = array(
 		'lang'	=> 'NOTIFICATION_TYPE_BBPOINTS_TRANSFER',
 		'group'	=> 'NOTIFICATION_GROUP_POSTING',
@@ -57,51 +58,50 @@ class transfer extends \phpbb\notification\type\base
 	}
 
 	/**
-	* Is available
-	*/
+	 * Is available
+	 */
 	public function is_available()
 	{
 		return true;
 	}
 
 	/**
-	* Get the id of the item
-	*
-	* @param array $post The data from the post
-	* @return int The post id
-	*/
+	 * Get the id of the item
+	 *
+	 * @param array $post The data from the post
+	 * @return int The post id
+	 */
 	static public function get_item_id($data)
 	{
 		return (int) $data['post_id'];
 	}
 
 	/**
-	* Get the id of the parent
-	*
-	* @param array $post The data from the post
-	* @return int The topic id
-	*/
+	 * Get the id of the parent
+	 *
+	 * @param array $post The data from the post
+	 * @return int The topic id
+	 */
 	static public function get_item_parent_id($data)
 	{
 		return (int) $data['parent_id'];
 	}
 
 	/**
-	* Find the users who want to receive notifications
-	*
-	* @param array $post Data from submit_post
-	* @param array $options Options for finding users for notification
-	*
-	* @return array
-	*/
-	public function find_users_for_notification($data, $options = array())
+	 * Find the users who want to receive notifications
+	 *
+	 * @param array $post Data from submit_post
+	 * @param array $options Options for finding users for notification
+	 *
+	 * @return array
+	 */
+	public function find_users_for_notification($data, $options = [])
 	{
-		$users = array();
+		$users = [];
 
 		$data['user_ids'] = (!is_array($data['user_ids'])) ? array($data['user_ids']) : $data['user_ids'];
 
-		foreach ($data['user_ids'] as $user_id)
-		{
+		foreach ($data['user_ids'] as $user_id) {
 			$users[$user_id] = $user_id;
 		}
 
@@ -109,111 +109,122 @@ class transfer extends \phpbb\notification\type\base
 	}
 
 	/**
-	* Get the user's avatar
-	*/
+	 * Get the user's avatar
+	 */
 	public function get_avatar()
 	{
-		return $this->user_loader->get_avatar($this->user->data['user_id'], false, true);
+		// Check if $this->get_data is not null before accessing its elements
+		if ($this->get_data !== null && isset($this->get_data['user_id'])) {
+			return $this->user_loader->get_avatar($this->get_data['user_id'], true, false);
+		} else {
+			return $this->user_loader->get_avatar(140, true, false);
+		}
 	}
 
 	/**
-	* Get the HTML formatted title of this notification
-	*
-	* @return string
-	*/
+	 * Get the HTML formatted title of this notification
+	 *
+	 * @return string
+	 */
 	public function get_title()
 	{
 		return $this->get_data('like_txt');
 	}
 
 	/**
-	* Get the HTML formatted reference of the notification
-	*
-	* @return string
-	*/
+	 * Get the HTML formatted reference of the notification
+	 *
+	 * @return string
+	 */
 	public function get_reference()
 	{
-		return '';
+		return false;
 	}
 
 	/**
-	* Get email template
-	*
-	* @return string|bool
-	*/
+	 * Get email template
+	 *
+	 * @return string|bool
+	 */
 	public function get_email_template()
 	{
 		return '@sitesplat_bbpoints/bbpoints_notify';
 	}
 
 	/**
-	* Get email template variables
-	*
-	* @return array
-	*/
+	 * Get email template variables
+	 *
+	 * @return array
+	 */
 	public function get_email_template_variables()
 	{
 		$sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$currency = $this->get_data('currency');
-		
+
+		// Convert HTML entity to UTF-8
+		$currency_symbol = html_entity_decode($currency[2], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+		// Replace symbol on the string text
+		$text = str_replace($currency[2], $currency_symbol, $this->get_data('like_txt'));
+		$text = str_replace('<br />', "\r\n", $text);
+
 		return array(
 			'POSTER'				=> $row['username'],
 			'FORUM_NAME'			=> $this->config['sitename'],
-			'U_FORUM'				=> generate_board_url() . $this->root_path . '/ucp.' . $this->php_ext . 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints',
-			'TEXT'					=> str_replace(array($currency[2], '<br />'), array($currency[1], "\r\n"), $this->get_data('like_txt'))
+			'U_FORUM'				=> append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints'),
+			'TEXT'					=> $text
 		);
 	}
 
 	/**
-	* Get the url to this item
-	*
-	* @return string URL
-	*/
+	 * Get the url to this item
+	 *
+	 * @return string URL
+	 */
 	public function get_url()
 	{
 		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints');
 	}
 
 	/**
-	* {inheritDoc}
-	*/
+	 * {inheritDoc}
+	 */
 	public function get_redirect_url()
 	{
 		return $this->get_url();
 	}
 
 	/**
-	* Users needed to query before this notification can be displayed
-	*
-	* @return array Array of user_ids
-	*/
+	 * Users needed to query before this notification can be displayed
+	 *
+	 * @return array Array of user_ids
+	 */
 	public function users_to_query()
 	{
-		return array();
+		return [];
 	}
 
 	/**
-	* Trim the user array passed down to 3 users if the array contains
-	* more than 4 users.
-	*
-	* @param array $users Array of users
-	* @return array Trimmed array of user_ids
-	*/
+	 * Trim the user array passed down to 3 users if the array contains
+	 * more than 4 users.
+	 *
+	 * @param array $users Array of users
+	 * @return array Trimmed array of user_ids
+	 */
 	public function trim_user_ary($users)
 	{
-		if (sizeof($users) > 4)
-		{
+		if (count($users) > 4) {
 			array_splice($users, 3);
 		}
 		return $users;
 	}
 
 	/**
-	* {@inheritdoc}
-	*/
-	public function create_insert_array($data, $pre_create_data = array())
+	 * {@inheritdoc}
+	 */
+	public function create_insert_array($data, $pre_create_data = [])
 	{
 		$this->set_data('like_txt', $data['like_txt']);
 		$this->set_data('poster_id', $data['poster_id']);
@@ -221,6 +232,6 @@ class transfer extends \phpbb\notification\type\base
 		$this->set_data('parent_id', $data['parent_id']);
 		$this->set_data('currency', $data['currency']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

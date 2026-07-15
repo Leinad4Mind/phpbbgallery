@@ -7,7 +7,6 @@ services:
     sitesplat.bbpoints.helper:
         class: sitesplat\bbpoints\core\helper
         arguments:
-            - '@user'
             - '@config'
             - '@notification_manager'
 
@@ -18,7 +17,10 @@ services:
             - '@request'
             - '@template'
             - '@user'
+            - '@language'
             - '@config'
+            - '@service_container'
+            - '@dispatcher'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%sitesplat.bbpoints.table%'
@@ -32,6 +34,8 @@ services:
             - '@template'
             - '@user'
             - '@config'
+            - '@dispatcher'
+            - '@service_container'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%sitesplat.bbpoints.table%'

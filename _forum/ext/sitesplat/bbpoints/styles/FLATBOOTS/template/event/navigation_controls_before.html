@@ -1,12 +1,21 @@
 <li class="dropdown dropdown-avatar dropdown-notification dropdown-bbpoints">
-    <a class="btn-bbpoints" href="javascript:void(0)" data-toggle="dropdown"><i class="fa {EXT_SYMBOL}"></i></a>
-    <ul class="dropdown-menu arrow-up">
-	<!-- IF USER_POINTS -->
-	<!-- IF U_POINTS -->
-	 <li><a title="" role="menuitem" href="{U_POINTS}" data-ajax="true"><i class="fa {EXT_SYMBOL}"></i>&nbsp;&#91;&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL} currency-icon"></i>&nbsp;<!-- ENDIF --><span id="userbbpoint">{USER_POINTS}</span><!-- IF not SYMBOL_POS -->&nbsp;<i class="fa {BBPOINTS_SYMBOL} currency-icon"></i><!-- ENDIF -->&nbsp;&#93;</a></li>
-	 <!-- ENDIF -->
-	<!-- ENDIF -->
-	 <li><a href="{U_BBPOINTS}" title="" role="menuitem"><i class="fa fa-sort-numeric-asc"></i>&nbsp;{L_BBPOINT_LOG}</a></li>
-	</ul>
+  <a class="btn-bbpoints" href="javascript:void(0)" data-toggle="dropdown">
+    <i class="fa {{ EXT_SYMBOL }}"></i>
+  </a>
+  <ul class="dropdown-menu arrow-up">
+    {% if USER_POINTS %}
+      <li>
+        <a {% if U_POINTS %} href="{{ U_POINTS }}" data-ajax="true" {% endif %} title="">
+          <i class="fa {{ EXT_SYMBOL }}"></i>&nbsp;&#91;&nbsp;{% if SYMBOL_POS %}
+            <i class="fa {{ BBPOINTS_SYMBOL }} currency-icon"></i>&nbsp;{% endif %}
+          <span id="userbbpoint">{{ USER_POINTS }}</span>
+          {% if not SYMBOL_POS %}&nbsp;{{ lang('BBPOINTS') }}
+          {% endif %}&nbsp;&#93;</a>
+      </li>
+    {% endif %}
+    <li>
+      <a href="{{ U_BBPOINTS }}" title="">
+        <i class="fa fa-sort-numeric-asc"></i>&nbsp;{{ lang('BBPOINTS_LOG') }}</a>
+    </li>
+  </ul>
 </li>
-

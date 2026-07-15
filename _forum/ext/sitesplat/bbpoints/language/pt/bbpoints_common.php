@@ -22,15 +22,20 @@ if ( empty($lang) || !is_array($lang) )
 }
 
 $lang = array_merge($lang, array(
-	'BBPOINTS'						=> 'Pontos', // This is the forum point name. You can edit it to reflect your own point name.
-	'YOUR_BBPOINTS'					=> 'Os Teus Pontos',
+	'BBPOINTS'						=> 'PontosGold', // This is the forum point name. You can edit it to reflect your own point name.
+	'BBPOINTS_SHORT'				=> 'Pontos',
+	'YOUR_BBPOINTS'					=> 'Os Teus PontosGold',
 	'BB_AMOUNT'			    		=> 'Montante',
 	'BB_PAID_UP'			    	=> 'PontosGold',
-	'TOPIC_HIDDEN'					=> 'Tópico Oculto. Requer Pontos.',
-	'WAS_HIDDEN'					=> 'Este tópico requer uma troca de pontos',
-	'BBPOINTS_HIDE_TOPIC'	        => 'Pontos Min.',
-	'BBPOINTS_HIDE_TOPIC_EXPLAIN'	=> 'Enter the Minimum Points required for the next user to read this topic. <br />(The points will be transfered to your account)',
-	'TRANSFER_NOTI'					=> 'Recebeu um donativo de %1$s Pontos por %2$s',
+	'BB_PAID'			    		=> 'Obtido',
+	'BB_PERSONAL'					=> 'Autor',
+	'BB_PERSONAL_EXPLAIN'			=> 'Tens acesso ao tópico por seres o autor do mesmo',
+	'TOPIC_HIDDEN'					=> 'O acesso antecipado a este projecto requer uma troca de PontosGold para com o seu autor.',
+	'WAS_HIDDEN'					=> 'Já obtiveste este tópico à troca de PontosGold',
+	'BBPOINTS_HIDE_TOPIC'	        => 'Pontos Mín.',
+	'BBPOINTS_HIDE_TOPIC_EXPLAIN'	=> 'Introduza o montante mínimo de PontosGold necessários para acederem a este tópico. <br />(Os pontos serão transferidos para a tua conta)',
+	'TRANSFER_NOTI'			        => 'Recebeste %1$s PontosGold da parte de %2$s %3$s',
 
-	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER' => 'Alguém te transferiu Pontos',
+	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Foram-te transferidos PontosGold.',
+	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER' => 'Foram-te transferidos PontosGold',
 ));
