@@ -4,7 +4,7 @@
 # {% if S_LOAD_BBLIGHTBOX %}
 # {% endif %}
 # 
-# like this: however needs more work because it only works for viewtopic page. See below //@FIX
+# like this: however needs more work becuase it only works for viewtopic page. See below //@FIX
 # {% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}{% endif %}
 #
 # or previous just plugin enabled:
@@ -21,7 +21,7 @@
 #
 #}
 
-{% if BBLIGHTBOX_PLUGIN %}
+{% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}
 	<script>
 		// Prepare attachment images for lightbox
 		[].forEach.call(document.querySelectorAll('.attach-image'), function(elem) {
