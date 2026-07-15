@@ -34,14 +34,17 @@ class main_listener implements EventSubscriberInterface
 	protected $bblinks;
 	protected $config;
 	protected $template;
+	protected $dispatcher;
 	protected $db;
 	protected $is_rt = false;
 	protected $next_is_signature = false;
-	public function __construct(\sitesplat\bblinks\core\bblinks $bblinks, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db)
+	
+	public function __construct(\sitesplat\bblinks\core\bblinks $bblinks, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\event\dispatcher $dispatcher, \phpbb\db\driver\driver_interface $db)
 	{
 		$this->bblinks = $bblinks;
 		$this->config = $config;
 		$this->template = $template;
+		$this->dispatcher = $dispatcher;
 		$this->db = $db;
 	}
 
@@ -89,6 +92,22 @@ class main_listener implements EventSubscriberInterface
 			{
 				$event['text'] = $this->bblinks->local_url_to_text($event['text']);
 				$event['text'] = $this->bblinks->modify_links($event['text']);
+
+				$topic_title = $event['text'];
+
+				/**
+				 * This event enables you to edit topic title before it is
+				 * displayed in viewtopic.
+				 *
+				 * @event sitesplat.bblinks.display
+				 * @var	string	topic_title	Topic title
+				 */
+				$vars = array(
+					'topic_title',
+				);
+				extract($this->dispatcher->trigger_event('sitesplat.bblinks.display', compact($vars)));
+
+				$event['text'] = $topic_title;
 				$this->is_rt = false;
 			}
 		}

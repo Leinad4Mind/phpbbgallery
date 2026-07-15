@@ -8,6 +8,7 @@ services:
             - '@auth'
             - '@dbal.conn'
             - '%core.php_ext%'
+            - '@service_container'
 
     sitesplat.bblinks.listener:
         class: sitesplat\bblinks\event\main_listener
@@ -15,6 +16,7 @@ services:
             - '@sitesplat.bblinks.bblinks'
             - '@config'
             - '@template'
+            - '@dispatcher'
             - '@dbal.conn'
         tags:
             - { name: event.listener }

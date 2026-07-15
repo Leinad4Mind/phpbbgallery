@@ -20,7 +20,10 @@ class bblinks
     protected $link_type_classes;
     protected $ids_to_fetch;
     protected $infos;
-    public function __construct(\phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, $php_ext)
+    protected $manager;
+    protected $container;
+
+    public function __construct(\phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, $php_ext, \Symfony\Component\DependencyInjection\Container $container)
     {
         $this->config = $config;
         $this->config_text = $config_text;
@@ -28,6 +31,7 @@ class bblinks
         $this->auth = $auth;
         $this->db = $db;
         $this->php_ext = $php_ext;
+		$this->container = $container;
         $this->link_type_classes = array(
             'pdf'	                => 'pdf-link',
             'gif|jpg|jpeg|png|bmp'	=> 'img-link',
@@ -39,12 +43,32 @@ class bblinks
 			$this->ids_to_fetch[$resource]	= array();
 			$this->infos[$resource]			= array();
         }
-        
+
         define('LOCALURLTOTEXT_TYPE_FORUM', 1);
 		define('LOCALURLTOTEXT_TYPE_TOPIC', 2);
 		define('LOCALURLTOTEXT_TYPE_POST', 3);
 		define('LOCALURLTOTEXT_TYPE_USER', 4);
     }
+
+	/**
+	 * Lazy load the BbPrefix Manager
+	 * @return mixed The manager service or null if not found
+	 */
+	protected function getBbPrefixManager()
+	{
+		// If we already loaded it, return it immediately
+		if ($this->manager !== null) {
+			return $this->manager;
+		}
+
+		// Otherwise, try to load it from the container
+		if ($this->container && $this->container->has('bbprefix.manager')) {
+			$this->manager = $this->container->get('bbprefix.manager');
+			return $this->manager;
+		}
+
+		return null;
+	}
 
     public function modify_links($message = '')
 	{
@@ -54,6 +78,7 @@ class bblinks
             return $message;
         }
 
+        $forbidden_domains = $this->config_text->get('bblinks_forbidden_domains');
         preg_match_all('#(<a\s[^>]+?>)(.*?</a>)#i', $message, $matches, PREG_SET_ORDER);
         foreach ($matches as $links)
         {
@@ -84,7 +109,7 @@ class bblinks
             $is_local = ($this->config['bblinks_external_link_types'] && preg_match('/\.(?:' . $this->config['bblinks_external_link_types'] . ')(?:[#?]|$)/', $href)) ? false : $is_local;
             if ($is_local === null)
             {
-                if ($this->config_text->get('bblinks_forbidden_domains') && $this->match_domain($href, $this->config_text->get('bblinks_forbidden_domains')))
+                if ($forbidden_domains && $this->match_domain($href, $forbidden_domains))
                 {
                     $searches[] = $link;
                     $replacements[] = $this->insert_attribute('href', $this->config['bblinks_forbidden_new_url'], $new_link, true);
@@ -313,7 +338,7 @@ class bblinks
 			if (sizeof($this->ids_to_fetch['post']))
 			{
 				$sql_ary = array(
-					'SELECT'		=> 'p.post_id, p.post_subject, t.topic_id, t.topic_title, f.forum_id, f.forum_name, u.user_id, u.username, u.user_colour',
+					'SELECT'		=> 'p.post_id, p.post_subject, t.topic_id, t.topic_title, t.bbpoints_payed, f.forum_id, f.forum_name, u.user_id, u.username, u.user_colour',
 					'FROM'			=> array(POSTS_TABLE => 'p'),
 					'LEFT_JOIN'		=> array(
 						array(
@@ -339,7 +364,7 @@ class bblinks
 			if ($this->ids_to_fetch['topic'])
 			{
 				$sql_ary = array(
-					'SELECT'		=> 't.topic_id, t.topic_title, f.forum_id, f.forum_name',
+					'SELECT'		=> 't.topic_id, t.topic_title, f.forum_id, f.forum_name, t.bbpoints_payed',
 					'FROM'			=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'		=> array(
 						array(
@@ -378,95 +403,137 @@ class bblinks
 			// and replace the local links with the configured text replacements
 			foreach ($matches as $match)
 			{
-				if(isset($match['type'])) {
-					switch ($match['type'])
-					{
-						case LOCALURLTOTEXT_TYPE_FORUM:
-							if (isset($this->infos['forum'][$match['id']]))
-							{
-								$text = str_replace(
-									$match[0],
-									$match['anchor'] . str_replace(
+				if (empty($match['type']))
+				{
+					continue;
+				}
+
+				switch ($match['type'])
+				{
+					case LOCALURLTOTEXT_TYPE_FORUM:
+						if (isset($this->infos['forum'][$match['id']]))
+						{
+							$text = str_replace(
+								$match[0],
+								$match['anchor'] . str_replace(
+									'{FORUM_NAME}',
+									$this->infos['forum'][$match['id']]['name'],
+									htmlspecialchars_decode($this->config['bblinks_urltotext_forum'])
+								) . '</a>',
+								$text
+							);
+						}
+					break;
+
+					case LOCALURLTOTEXT_TYPE_POST:
+						if (isset($this->infos['post'][$match['id']]))
+						{
+							$text = str_replace(
+								$match[0],
+								$match['anchor'] . str_replace(
+									array(
+										'{USER_NAME}',
+										'{USER_COLOUR}',
+										'{POST_SUBJECT}',
+										'{TOPIC_TITLE}',
 										'{FORUM_NAME}',
-										$this->infos['forum'][$match['id']]['name'],
-										htmlspecialchars_decode($this->config['bblinks_urltotext_forum'])
-									) . '</a>',
-									$text
-								);
-							}
-						break;
+										'{POST_OR_TOPIC_TITLE}',
+									),
+									array(
+										$this->infos['user'][$this->infos['post'][$match['id']]['user_id']]['username'],
+										$this->infos['user'][$this->infos['post'][$match['id']]['user_id']]['usercolour'],
+										$this->infos['post'][$match['id']]['subject'],
+										$this->infos['topic'][$this->infos['post'][$match['id']]['topic_id']]['title'],
+										$this->infos['forum'][$this->infos['post'][$match['id']]['forum_id']]['name'],
+										($this->infos['post'][$match['id']]['subject'] == '' ? $this->infos['topic'][$this->infos['post'][$match['id']]['topic_id']]['title'] : $this->infos['post'][$match['id']]['subject']),
+									),
+									htmlspecialchars_decode($this->config['bblinks_urltotext_post'])
+								) . '</a>',
+								$text
+							);
+						}
+					break;
 
-						case LOCALURLTOTEXT_TYPE_POST:
-							if (isset($this->infos['post'][$match['id']]))
-							{
-								$text = str_replace(
-									$match[0],
-									$match['anchor'] . str_replace(
-										array(
-											'{USER_NAME}',
-											'{USER_COLOUR}',
-											'{POST_SUBJECT}',
-											'{TOPIC_TITLE}',
-											'{FORUM_NAME}',
-											'{POST_OR_TOPIC_TITLE}',
-										),
-										array(
-											$this->infos['user'][$this->infos['post'][$match['id']]['user_id']]['username'],
-											$this->infos['user'][$this->infos['post'][$match['id']]['user_id']]['usercolour'],
-											$this->infos['post'][$match['id']]['subject'],
-											$this->infos['topic'][$this->infos['post'][$match['id']]['topic_id']]['title'],
-											$this->infos['forum'][$this->infos['post'][$match['id']]['forum_id']]['name'],
-											($this->infos['post'][$match['id']]['subject'] == '' ? $this->infos['topic'][$this->infos['post'][$match['id']]['topic_id']]['title'] : $this->infos['post'][$match['id']]['subject']),
-										),
-										htmlspecialchars_decode($this->config['bblinks_urltotext_post'])
-									) . '</a>',
-									$text
-								);
-							}
-						break;
+					case LOCALURLTOTEXT_TYPE_TOPIC:
+						if (isset($this->infos['topic'][$match['id']]))
+						{
+							$paid = (int) ($this->infos['topic'][$match['id']]['paid'] ?? 0);
 
-						case LOCALURLTOTEXT_TYPE_TOPIC:
-							if (isset($this->infos['topic'][$match['id']]))
+							$paid_html = '';
+							if ($paid > 0)
 							{
-								$text = str_replace(
-									$match[0],
-									$match['anchor'] . str_replace(
-										array(
-											'{TOPIC_TITLE}',
-											'{FORUM_NAME}',
-										),
-										array(
-											$this->infos['topic'][$match['id']]['title'],
-											$this->infos['forum'][$this->infos['topic'][$match['id']]['forum_id']]['name'],
-										),
-										htmlspecialchars_decode($this->config['bblinks_urltotext_topic'])
-									) . '</a>',
-									$text
-								);
+								$paid_html = '<span class="label label-success"><i class="fa fa-eye-slash"></i>&nbsp;' 
+										   . $paid . '&nbsp;' . $this->user->lang('BBPOINTS') . '</span>&nbsp;';
 							}
-						break;
 
-						case LOCALURLTOTEXT_TYPE_USER:
-							if (isset($this->infos['user'][$match['id']]))
+							$manager = $this->getBbPrefixManager();
+							if ($manager && method_exists($manager, 'load_prefixes_topic'))
 							{
-								$text = str_replace(
-									$match[0],
-									$match['anchor'] . str_replace(
-										array(
-											'{USER_NAME}',
-											'{USER_COLOUR}',
-										),
-										array(
-											$this->infos['user'][$match['id']]['username'],
-											$this->infos['user'][$match['id']]['usercolour'],
-										),
-										htmlspecialchars_decode($this->config['bblinks_urltotext_user'])
-									) . '</a>',
-									$text
-								);
+								$manager->load_prefix_instances(true);
+								$prefix = $manager->load_prefixes_topic($match['id'], '', true);
+
+								$current_forum_id = 0;
+								if (isset($GLOBALS['forum_data']['forum_id']))
+								{
+									$current_forum_id = (int) $GLOBALS['forum_data']['forum_id'];
+								}
+								else if (isset($GLOBALS['topic_data']['forum_id']))
+								{
+									$current_forum_id = (int) $GLOBALS['topic_data']['forum_id'];
+								}
+								
+								if ($current_forum_id === 77 || $current_forum_id === 99)
+								{
+									// 4: $this->infos['topic'][$match['id']]['title'] =  '<div style="display:flex;justify-content:space-between;align-items:center;padding-left:5px;"><div>' . $this->infos['topic'][$match['id']]['title'] . '</div><div><div style="display:flex;justify-content:flex-end;">'  . $prefix . '</div><div style="display:flex;justify-content:end;align-items:center;">' . $paid_html . '</div></div></div>';
+									$this->infos['topic'][$match['id']]['title'] =  '<div style="display:flex;justify-content:space-between;padding-left:5px;"><div style="display:inline-flex;align-items:center;">' . $this->infos['topic'][$match['id']]['title'] . '&nbsp;' . $paid_html . '</div><div>' . $prefix . '</div></div>';
+								}
+								else
+								{
+									$this->infos['topic'][$match['id']]['title'] =  $paid_html . $prefix . $this->infos['topic'][$match['id']]['title'];
+								}
 							}
-						break;
-					}
+							
+
+							$topic_title_full = $this->infos['topic'][$match['id']]['title'];
+
+							$text = str_replace(
+								$match[0],
+								$match['anchor'] . str_replace(
+									array(
+										'{TOPIC_TITLE}',
+										'{FORUM_NAME}',
+									),
+									array(
+										$topic_title_full,
+										$this->infos['forum'][$this->infos['topic'][$match['id']]['forum_id']]['name'],
+									),
+									htmlspecialchars_decode($this->config['bblinks_urltotext_topic'])
+								) . '</a>',
+								$text
+							);
+						}
+					break;
+
+					case LOCALURLTOTEXT_TYPE_USER:
+						if (isset($this->infos['user'][$match['id']]))
+						{
+							$text = str_replace(
+								$match[0],
+								$match['anchor'] . str_replace(
+									array(
+										'{USER_NAME}',
+										'{USER_COLOUR}',
+									),
+									array(
+										$this->infos['user'][$match['id']]['username'],
+										$this->infos['user'][$match['id']]['usercolour'],
+									),
+									htmlspecialchars_decode($this->config['bblinks_urltotext_user'])
+								) . '</a>',
+								$text
+							);
+						}
+					break;
 				}
 			}
 		}
@@ -512,6 +579,7 @@ class bblinks
 				{
 					$this->infos['topic'][$row['topic_id']] = array(
 						'title'		=> $row['topic_title'],
+						'paid'		=> $row['bbpoints_payed'],
 						'forum_id'	=> $row['forum_id'],
 					);
 				}

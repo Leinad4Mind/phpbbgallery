@@ -2,15 +2,15 @@
     "name": "sitesplat/bblinks",
     "type": "phpbb-extension",
     "description": "Adds many handling options to the board links.",
-	"homepage": "http://sitesplat.com",
-    "version": "1.1.0",
+	"homepage": "https://sitesplat.com",
+    "version": "1.1.1",
 	"keywords": ["phpbb", "extension", "url", "media"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
     "require": {
