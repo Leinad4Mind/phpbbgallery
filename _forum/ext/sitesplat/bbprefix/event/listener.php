@@ -39,7 +39,7 @@ class listener implements EventSubscriberInterface
 			'core.pagination_generate_page_link'		=> 'fix_viewforum_base_url',
 			'core.display_forums_modify_sql'			=> 'modify_forumlist_sql',
 			'core.display_forums_modify_template_vars'	=> 'get_forumlist_topic_prefixes',
-			'core.search_modify_tpl_ary'				=> 'get_searchlist_topic_prefixes', 
+			'core.search_modify_tpl_ary'				=> 'get_searchlist_topic_prefixes',
 		];
 	}
 
@@ -212,13 +212,16 @@ class listener implements EventSubscriberInterface
 			}
 
 			// LEFT JOIN will mess up topic count, so use CROSS JOIN
-			$sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
+			// $sql_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
 
 			// reset topic count
 			$cnt_ary = $sql_ary;
 			$cnt_ary['SELECT'] = 'COUNT(topic_id) AS cnt';
+			// Leinad4Mind Change - Improve SQL a LOT
+			$cnt_ary['FROM'] += [BBPREFIX_INSTANCES_TABLE => 'pr'];
 			$cnt_ary['WHERE'] .= " AND t.forum_id = {$event['forum_id']}";
 			$sql = $this->db->sql_build_query('SELECT', $cnt_ary);
+
 			$result = $this->db->sql_query($sql);
 			$event['topics_count'] = (int) $this->db->sql_fetchfield('cnt');
 			$this->db->sql_freeresult($result);

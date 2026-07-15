@@ -47,29 +47,36 @@ class manager
 	 */
 	public function load_prefixes($refresh = false)
 	{
-		if (false === ($this->prefixes = $this->cache->get('_prefixes')) || $refresh)
-		{
-			// If we're refreshing, we have to reset the array first
-			$this->prefixes = [];
-			$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
-			$result = $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
+		try {
+			if (false === ($this->prefixes = $this->cache->get('_prefixes')) || $refresh)
 			{
-				$this->prefixes[$row['id']] = [
-					'id'				=> $row['id'],
-					'prefix'			=> $row['prefix'],
-					'name'				=> $row['name'],
-					'forums'			=> $row['forums'],
-					'groups'			=> $row['groups'],
-					'on_index'			=> $row['on_index'],
-					'bbcode_uid'		=> $row['bbcode_uid'],
-					'bbcode_bitfield'	=> $row['bbcode_bitfield'],
-				];
-			}
-			$this->db->sql_freeresult($result);
+				// $this->cache->destroy('_prefixes');
+				// If we're refreshing, we have to reset the array first
+				$this->prefixes = [];
+				$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
+				$result = $this->db->sql_query($sql);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$this->prefixes[$row['id']] = [
+						'id'				=> $row['id'],
+						'prefix'			=> $row['prefix'],
+						'name'				=> $row['name'],
+						'forums'			=> $row['forums'],
+						'groups'			=> $row['groups'],
+						'on_index'			=> $row['on_index'],
+						'bbcode_uid'		=> $row['bbcode_uid'],
+						'bbcode_bitfield'	=> $row['bbcode_bitfield'],
+					];
+				}
+				$this->db->sql_freeresult($result);
 
-			$this->prefixes = $this->get_prefixes_atributes($this->prefixes);
-			$this->cache->put('_prefixes', $this->prefixes);
+				$this->prefixes = $this->get_prefixes_atributes($this->prefixes);
+				$this->cache->put('_prefixes', $this->prefixes);
+			}
+		} catch (Exception $e) {
+			// Log any exceptions
+			$this->log('Error loading prefixes: ' . $e->getMessage());
+			$this->log('prefixes: ' . $this->prefixes);
 		}
 
 		return $this;
@@ -100,15 +107,22 @@ class manager
 		
 		foreach($this->prefix_keys as $prefix)
 		{
-			foreach (json_decode($prefix['groups'], true) as $key)
-			{
-				$this->prefix_keys[$prefix['id']]['groupnames'][] = $this->group_names[$key];
+			if (isset($prefix['groups'])) {
+				foreach (json_decode($prefix['groups'], true) as $key)
+				{
+					$this->prefix_keys[$prefix['id']]['groupnames'][] = $this->group_names[$key];
+				}
 			}
-
-
-			foreach (json_decode($prefix['forums'], true) as $key)
-			{
-				$this->prefix_keys[$prefix['id']]['forumnames'][] = $this->forum_names[$key];
+			if (isset($prefix['forums'])) {
+				foreach (json_decode($prefix['forums'], true) as $key)
+				{
+					if (isset($this->forum_names[$key])) {
+						$this->prefix_keys[$prefix['id']]['forumnames'][] = $this->forum_names[$key];
+					}
+					else {
+						error_log("Forum name index not found: " . $key);
+					}
+				}
 			}
 		}
 		return $this->prefix_keys;
@@ -164,28 +178,42 @@ class manager
 	 */
 	public function load_prefix_instances($refresh = false)
 	{
-		if (false === ($this->prefix_instances = $this->cache->get('_prefixes_used')) || $refresh)
-		{
-			// If we're refreshing, we have to reset the array first
-			$this->prefix_instances = [];
-			$sql = 'SELECT id, prefix, topic, ordered, token_data FROM ' . BBPREFIX_INSTANCES_TABLE;
-			$result = $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
+		try {
+			if (false === ($this->prefix_instances = $this->cache->get('_prefixes_used')) || $refresh)
 			{
-				$this->prefix_instances[$row['id']] = [
-					'id'			=> $row['id'],
-					'prefix'		=> $row['prefix'],
-					'topic'			=> $row['topic'],
-					'ordered'		=> $row['ordered'],
-					'token_data'	=> $row['token_data'],
-				];
-			}
-			$this->db->sql_freeresult($result);
+				// $this->cache->destroy('_prefixes_used');
+				// If we're refreshing, we have to reset the array first
+				$this->prefix_instances = [];
+				$sql = 'SELECT id, prefix, topic, ordered, token_data FROM ' . BBPREFIX_INSTANCES_TABLE;
+				$result = $this->db->sql_query($sql);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$this->prefix_instances[$row['id']] = [
+						'id'			=> $row['id'],
+						'prefix'		=> $row['prefix'],
+						'topic'			=> $row['topic'],
+						'ordered'		=> $row['ordered'],
+						'token_data'	=> $row['token_data'],
+					];
+				}
+				$this->db->sql_freeresult($result);
 
-			$this->cache->put('_prefixes_used', $this->prefix_instances);
+				$this->cache->put('_prefixes_used', $this->prefix_instances);
+			}
+		} catch (Exception $e) {
+			// Log any exceptions
+			$this->log('Error loading prefix instances: ' . $e->getMessage());
+			$this->log('prefixes_used (instances): ' . $this->prefix_instances);
 		}
 
 		return $this;
+	}
+
+	private function log($message)
+	{
+		// Log to a file or any other preferred logging mechanism
+		$logFile = 'file.log';
+		error_log(date('[Y-m-d H:i:s]') . ' ' . $message . PHP_EOL, 3, $logFile);
 	}
 
 	/**
@@ -214,7 +242,7 @@ class manager
 	 *								otherwise, it is the plaintext version
 	 * @return	string	Plaintext string of a topic's prefixes
 	 */
-	public function load_prefixes_topic($topic_id, $block = '', $return_parsed = false)
+	public function load_prefixes_topic($topic_id, $block = '', $return_parsed = false, $forum_id = 0)
 	{
 		// If there aren't any instantiated prefixes, the topic won't have any
 		// to load, so let's just stop right here
@@ -250,7 +278,7 @@ class manager
 			// A URL to a viewforum view filtered by the prefix
 			if ($this->request->variable('f', 0))
 			{
-				$vars['URL'] = append_sid($this->root_path . 'viewforum.php', ['f' => $this->request->variable('f', 0), 'prefix' => $instance['prefix']]);
+				$vars['URL'] = append_sid($this->root_path . 'viewforum.php', ['f' => $forum_id ? $forum_id : $this->request->variable('f', 0), 'prefix' => $instance['prefix']]);
 			}
 			$return_string .= $instance->parse($block, $vars, $return_parsed) . '&nbsp;';
 		}
