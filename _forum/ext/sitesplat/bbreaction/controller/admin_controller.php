@@ -86,6 +86,8 @@ class admin_controller implements admin_interface
 		$this->config->set('rewards_progressbar', $this->request->variable('rewards_progressbar', 0));
 		$this->config->set('rewards_memberlist', $this->request->variable('rewards_memberlist', 0));
 		$this->config->set('rewards_display_top', $this->request->variable('rewards_display_top', 0));
+		$this->config->set('rewards_allow_locked', $this->request->variable('rewards_allow_locked', 0));
+		$this->config->set('rewards_allow_global', $this->request->variable('rewards_allow_global', 0));
 		
 		// Log the action
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_BBREACTION_DELETE_LOG', time());
@@ -144,7 +146,7 @@ class admin_controller implements admin_interface
 				'U_EDIT'		=> $this->u_action . '&amp;action=edit&amp;type_id=' . $row['type_id'],
 				'U_ACTIVE'		=> $this->u_action . '&amp;action=active&amp;type_id=' . $row['type_id'],
 				'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;type_id=' . $row['type_id'],
-				'U_SYNC'		=> $this->u_action . '&amp;action=sync&amp;type_id=' . $row['type_id'] . '&amp;hash=' . generate_link_hash('sync' . $row['type_id'])
+	//			'U_SYNC'		=> $this->u_action . '&amp;action=sync&amp;type_id=' . $row['type_id'] . '&amp;hash=' . generate_link_hash('sync' . $row['type_id'])
 			);
 
 			/**
@@ -174,13 +176,16 @@ class admin_controller implements admin_interface
 			'HITSTITLE'		=> '\'' . $this->user->lang['ACP_REACTIONS'] . '\'',
 			'LABELENABLE'	=> 'true',
 			'BTNEN'			=> 'false',
-			'MULTIVOTE'		=> ($this->config['rewards_multivote']) ? ' checked="checked"' : '',
-			'PERCENT'		=> ($this->config['rewards_percent']) ? ' checked="checked"' : '',
-			'PROGRESS'		=> ($this->config['rewards_progressbar']) ? ' checked="checked"' : '',
-			'MEMBERLIST'	=> ($this->config['rewards_memberlist']) ? ' checked="checked"' : '',
-			'DISPLAY_TOP'	=> ($this->config['rewards_display_top']) ? ' checked="checked"' : '',
+			'MULTIVOTE'		=> !empty($this->config['rewards_multivote']) ? ' checked="checked"' : '',
+			'PERCENT'		=> !empty($this->config['rewards_percent']) ? ' checked="checked"' : '',
+			'PROGRESS'		=> !empty($this->config['rewards_progressbar']) ? ' checked="checked"' : '',
+			'MEMBERLIST'	=> !empty($this->config['rewards_memberlist']) ? ' checked="checked"' : '',
+			'DISPLAY_TOP'	=> !empty($this->config['rewards_display_top']) ? ' checked="checked"' : '',
+			'ALLOW_LOCKED'	=> !empty($this->config['rewards_allow_locked']) ? ' checked="checked"' : '',
+			'ALLOW_GLOBAL'	=> !empty($this->config['rewards_allow_global']) ? ' checked="checked"' : '',
 
-			'U_ACTION'		=> $this->u_action,
+			'S_ACP_BBREACTION'	=> true,
+			'U_ACTION'			=> $this->u_action,
 		));
 	}
 

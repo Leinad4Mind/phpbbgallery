@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'BBREACTION_META_TASKS_5'				=> 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BBREACTION_META_TASKS_6'				=> 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.2.6',
+	'ACP_BBREACTION_VERSION'	            => '1.2.8',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
@@ -59,6 +59,9 @@ $lang = array_merge($lang, array(
 	'ACP_BBREACTION_SAVE_GENERAL'			=> 'Save options',
 	'ACP_BBREACTION_CREATE_TYPE'			=> 'Create reaction type',
 	'ACP_BBREACTION_STATISTICS'				=> 'BBreaction statistics',
+
+	'ACP_ALLOW_LOCKED'						=> 'Allow in locked topics',
+	'ACP_ALLOW_GLOBAL'						=> 'Allow in global announcements',
 
 	'ACP_BBREACTION_ADD'					=> 'Add reaction type',
 	'ACP_BBREACTION_EDIT'					=> 'Edit reaction type',

@@ -21,9 +21,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'BBREACTION'						=> 'BBreaction',
+	'BBREACTION'						=> 'Reactions',
 	'BBREACTION_TOP_LIST'				=> 'Reactions Toplist',
 	'BBREACTION_OTHERS'				    => 'Others?',
+	'BBREACTION_REACT'				    => 'React!',
 	
 	'BBREACTION_WHAT'					=> 'What\'s your reaction',
 	'BBREACTION_MODE_ERROR'				=> 'Mode does not exist',

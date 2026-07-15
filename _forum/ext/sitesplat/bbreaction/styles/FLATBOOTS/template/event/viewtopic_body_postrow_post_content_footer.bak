@@ -1,0 +1,32 @@
+<!-- IF not postrow.S_FIRST_POST and U_BBREACTION_VIEW -->
+<div class="bbreaction-wrap">
+	<div class="card text-center">
+	 <div class="com-contain">
+	  <div class="com-stuff">
+	   <!-- IF postrow.rewards -->
+		<ul class="list-inline bbreact-list">
+		<!-- BEGIN postrow.rewards -->
+		 <li>
+		  <a class="btn-bbreaction reward" href="#p{postrow.POST_ID}" data-options="p={postrow.POST_ID}&e={postrow.rewards.TYPE_ID}">
+		  <i class="{postrow.rewards.CLASSLIST}" style="color:<!-- IF not postrow.rewards.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{postrow.rewards.CONTENTS}</i>
+		  <br /> {postrow.rewards.TITLE}<br /><span id="p{postrow.POST_ID}{postrow.rewards.TYPE_ID}">{postrow.rewards.PERCENT}</span>
+		</a>
+		 </li>
+		<!-- END postrow.rewards -->
+		</ul>
+	   <!-- ENDIF -->
+	   <!-- IF postrow.POSITIVE or postrow.NEGATIVE --><a data-toggle="modal" data-id="{postrow.POST_ID}" href="#ReactionDialog" class="open-ReactionDialog btn btn-xs btn-link">{L_BBREACTION_OTHERS}</a><!-- ENDIF -->
+	  </div>
+	</div>
+	</div>
+    <div class="com-expand-holder">
+      <span class="star">
+       <span class="star-icon fa fa-star"></span>
+      </span>
+    </div>
+
+	<div class="ribbon ribbon-corner ribbon-primary ribbon-reverse ribbon-bottom ribbon-xs ribbon-bbreaction">
+      <span class="ribbon-inner"><i aria-hidden="true" class="fa fa-fire"></i></span>
+    </div>
+</div>
+<!-- ENDIF -->

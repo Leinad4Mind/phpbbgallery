@@ -134,7 +134,9 @@
 						<!-- IF not reward.S_MAX_WEIGHT --><a href="{reward.U_MOVE_DOWN}"><!-- ENDIF -->
 						<i class="fa fa-arrow-down down"<!-- IF reward.S_MAX_WEIGHT -->style="color:#C5C5C5;"<!-- ENDIF -->></i>
 						<!-- IF not reward.S_MAX_WEIGHT --></a><!-- ENDIF -->
-						<a href="{reward.U_SYNC}" title="{L_RESYNC}" style="margin:0 5%"><i class="fa fa-refresh"></i></a>  
+				<!-- sync not used for now -->		
+						<a style="display:none;" href="{reward.U_SYNC}" title="{L_RESYNC}" style="margin:0 5%"><i class="fa fa-refresh"></i></a>  
+				<!-- sync not used for now -->		
 						<a href="{reward.U_ACTIVE}" title="<!-- IF reward.S_ACTIVE -->{L_ACP_DO_DEACTIVATE}<!-- ELSE -->{L_ACP_DO_ACTIVATE}<!-- ENDIF -->"><i class="fa fa-power-off"<!-- IF not reward.S_ACTIVE -->style="color:#C5C5C5;"<!-- ENDIF -->></i></a>  
 						<!-- IF reward.S_DELETEABLE --><a href="{reward.U_DELETE}" data-ajax="row_delete" title="{L_DELETE}" style="margin:0 5%"><i class="fa fa-trash-o"></i></a>
 						<!-- ELSE --><i class="fa fa-lock" style="margin:0 5%;"></i><!-- ENDIF -->
@@ -207,6 +209,24 @@
 		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_display_top" name="rewards_display_top"{DISPLAY_TOP}>
 			<label class="onoffswitch-label" for="rewards_display_top">
 				<span class="onoffswitch-inner onoffswitch-inner-top"></span>
+				<span class="onoffswitch-switch"></span>
+			</label>
+		</div>
+		
+		<div class="label-acp">{L_ACP_ALLOW_LOCKED}{L_COLON}</div>
+		<div class="onoffswitch">
+		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_locked" name="rewards_allow_locked"{ALLOW_LOCKED}>
+			<label class="onoffswitch-label" for="rewards_allow_locked">
+				<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+				<span class="onoffswitch-switch"></span>
+			</label>
+		</div>
+		
+		<div class="label-acp">{L_ACP_ALLOW_GLOBAL}{L_COLON}</div>
+		<div class="onoffswitch">
+		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_global" name="rewards_allow_global"{ALLOW_GLOBAL}>
+			<label class="onoffswitch-label" for="rewards_allow_global">
+				<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
 				<span class="onoffswitch-switch"></span>
 			</label>
 		</div>

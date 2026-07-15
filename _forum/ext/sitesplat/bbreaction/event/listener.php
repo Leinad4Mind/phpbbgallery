@@ -100,14 +100,15 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 		//	'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
             'U_BBREACTION_PAGE'         => ($this->auth->acl_get('u_bbreaction_module')) ? $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')) : '',
+			'U_BBREACTION_VIEW'			=> $this->auth->acl_get('u_bbreaction'),
 			'BBREACTION_DISPLAY_TOP'	=> $this->config['rewards_display_top']
 		));
 	}
 	
 	public function viewtopic_handle_posts($event)
 	{
-		if (($event['topic_data']['topic_status'] != ITEM_LOCKED) &&
-			($event['topic_data']['topic_type'] != POST_GLOBAL))
+		if (($this->config['rewards_allow_locked'] || $event['topic_data']['topic_status'] != ITEM_LOCKED) &&
+			($this->config['rewards_allow_global'] || $event['topic_data']['topic_type'] != POST_GLOBAL))
 		{
 			$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
 			$positive = $negative = 0;
