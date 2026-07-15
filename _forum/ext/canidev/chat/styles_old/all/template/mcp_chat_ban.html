@@ -1,0 +1,165 @@
+
+<!-- IF MESSAGE_TITLE -->
+<!-- INCLUDE overall_header.html -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+<div class="panel">
+	<div class="inner">
+
+	<h2 class="message-title">{MESSAGE_TITLE}</h2>
+	
+	<!-- IF S_EDIT -->
+		<fieldset class="fields1">
+		<dl>
+			<dt><label for="ban-period">{L_CHAT_BAN_PERIOD}:</label></dt>
+			<dd><select name="period" id="ban-period" class="inputbox">{S_PERIOD_OPTIONS}</select></dd>
+			<dd id="ban-date" class="cbb-helper-hidden">
+				<label><input type="text" name="date" class="inputbox autowidth" size="25" /><br /><span>{L_CHAT_BAN_DATE_EXPLAIN}</span></label>
+			</dd>
+		</dl>
+		</fieldset>
+		<br /><br />
+	<!-- ENDIF -->
+	
+	<p>{MESSAGE_TEXT}</p>
+
+	<fieldset class="submit-buttons">
+		{S_HIDDEN_FIELDS}
+		<input type="submit" name="confirm" value="{L_YES}" class="button2" />&nbsp;
+		<input type="submit" name="cancel" value="{L_NO}" class="button2" />
+	</fieldset>
+
+	</div>
+</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
+
+<!-- ELSE -->
+
+<!-- INCLUDE mcp_header.html -->
+
+<h2>{L_TITLE}</h2>
+
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+
+<div class="panel">
+	<div class="inner">
+		<h3>{L_CHAT_BAN_LIST}</h3>
+
+	<div class="action-bar top">
+		{L_SEARCH_KEYWORDS}{L_COLON} <input type="search" class="inputbox autowidth" name="keywords" value="{S_KEYWORDS}" />&nbsp;<input type="submit" class="button2" name="filter" value="{L_SEARCH}" />
+		<div class="pagination">
+			<!-- IF .pagination --> 
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE --> 
+				{PAGE_NUMBER}
+			<!-- ENDIF -->
+		</div>
+	</div>
+
+	<table class="table1">
+	<thead>
+	<tr>
+		<th>{L_MARK}</th>
+		<th class="name">{L_USERNAME}</th>
+		<th class="center">{L_IP}</th>
+		<th class="center">{L_CHAT_BAN_DATE}</th>
+		<th class="center">{L_ACTION}</th>
+	</tr>
+	</thead>
+		<tbody>
+	<!-- IF .user -->
+		<!-- BEGIN user -->
+		<!-- IF user.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+			<td class="ic-mark-col"><input type="checkbox" name="mark[]" value="{user.ID}" /></td>
+			<td>{user.USERNAME}</td>
+			<td class="center">{user.IP}</td>
+			<td class="center">{user.EXCLUSION}</td>
+			<td class="center">
+				<a href="{user.U_EDIT}">{L_EDIT}</a>&nbsp;
+				<a href="{user.U_UNBAN}">{L_CHAT_UNBAN_USER}</a>
+			</td>
+		</tr>
+		<!-- END user -->
+	<!-- ELSE -->
+		<tr>
+			<td class="bg1" colspan="5" align="center"><span class="gen">{L_NO_ENTRIES}</span></td>
+		</tr>
+	<!-- ENDIF -->
+	</tbody>
+	</table>
+
+	<!-- IF .user -->
+		<fieldset class="display-options">
+			<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
+			<label>{S_SELECT_SORT_DIR}</label>
+			<input type="submit" name="sort" value="{L_GO}" class="button2" />
+		</fieldset>
+
+		<hr />
+
+		<div class="action-bar bottom">
+			<div class="pagination">
+				<!-- IF .pagination --> 
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE --> 
+					{PAGE_NUMBER}
+				<!-- ENDIF -->
+			</div>
+
+			<div>
+				<select name="action">
+					<option value="">{L_BATCH_ACTIONS}</option>
+					<option value="edit">{L_EDIT}</a></option>
+					<option value="unban">{L_CHAT_UNBAN_USER}</a></option>
+				</select>
+				<input type="submit" name="submit" class="button2" value="{L_CHAT_APPLY}" />
+				<div class="ic-mark-options"><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+			</div>
+		</div>
+	<!-- ENDIF -->
+
+		</div>
+	</div>
+
+<br /><br />
+	
+<div class="panel">
+	<div class="inner">
+
+	<h3>{L_CHAT_BAN_USER}</h3>
+
+	<fieldset>
+	<dl>
+		<dt>
+			<label for="ban">{L_CHAT_BAN_CELL}{L_COLON}</label>
+			<br /><span>{L_CHAT_BAN_CELL_EXPLAIN}</span>
+		</dt>
+		<dd><label for="ban"><textarea name="ban" id="ban" class="inputbox" cols="40" rows="3">{BAN_QUANTIFIER}</textarea></label></dd>
+		<!-- IF U_FIND_USERNAME --><dd><strong><a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a></strong></dd><!-- ENDIF -->
+	</dl>
+	<dl>
+		<dt><label for="ban-period">{L_CHAT_BAN_PERIOD}{L_COLON}</label></dt>
+		<dd><select name="period" id="ban-period" class="inputbox">{S_PERIOD_OPTIONS}</select></dd>
+		<dd id="ban-date" class="cbb-helper-hidden">
+			<label><input type="text" name="date" class="inputbox autowidth" size="25" /><br /><span>{L_CHAT_BAN_DATE_EXPLAIN}</span></label>
+		</dd>
+	</dl>
+	</fieldset>
+	
+	<fieldset class="submit-buttons">
+		<input type="submit" name="bansubmit" value="{L_SUBMIT}" class="button1" />
+	</fieldset>
+
+	</div>
+</div>
+
+<div>
+{S_FORM_TOKEN}
+</div>
+
+</form>
+
+<!-- INCLUDE mcp_footer.html -->
+
+<!-- ENDIF -->

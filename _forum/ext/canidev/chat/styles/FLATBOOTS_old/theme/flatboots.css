@@ -1,0 +1,170 @@
+/*  cBB Chat StyleSheet
+    --------------------------------------------------------------
+	Style:	FLATBOOTS
+	Copyright (c) 2020 CaniDev ( https://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+#chat-body {
+	margin: 0 0 30px 0 !important;
+}
+
+#chat-body .table>tbody>tr>td {
+	padding: 0;
+}
+
+#chat-title {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+#chat-content {
+	padding: 8px !important;
+}
+
+#chat-content,
+.cbb-menu li a {
+	font-family: 'Source Sans Pro', 'Arial', 'Helvetica', sans-serif !important;
+	font-size: 14px !important;
+}
+
+.chat-user-status.available {
+	background-image: none !important;
+	background: #71d398 !important;
+	border-color: #71d398 !important;
+}
+
+.chat-user-status.away {
+	background-image: none !important;
+	background: #f39c12 !important;
+	border-color: #f39c12 !important;
+}
+
+.chat-user-status.busy {
+	background-image: none !important;
+	background: #cb1111 !important;
+	border-color: #cb1111 !important;
+}
+
+.chat-user-status.hidden {
+	background-image: none !important;
+	background: #bdc3c7 !important;
+	border-color: #bdc3c7 !important;
+}
+
+.cbb-menu li a {
+	color: #303e41 !important;
+}
+
+#chat-right-panel,
+#chat-conversation-container,
+#chat-toolbar {
+	border-radius: 4px;
+	border: 2px solid #d6d9e0 !important;	
+}
+
+.chat-row:hover {
+	border-radius: 4px;
+}
+
+#chat-tabs {
+	margin: -2px 0 0 5px !important;
+}
+#chat-tabs li {
+	border-bottom: 2px solid #d6d9e0 !important;
+	border-left: 2px solid #d6d9e0 !important;
+	border-right: 2px solid #d6d9e0 !important;
+	margin: 0 -1px 0 -1px !important;
+	line-height: 18px !important;
+}
+
+#chat-tabs li.active {
+	line-height: 21px !important;
+}
+
+#chat-toolbar {
+	background: unset !important;
+	background-color: #d6d9e0 !important;
+	border-color: #d6d9e0 !important;
+}
+
+.cbb-inputbox,
+.cbb-inputbox-labelled input,
+.cbb-inputbox-labelled textarea {
+	font-family: 'Source Sans Pro', 'Arial', 'Helvetica', sans-serif !important;
+	font-size: 13px !important;
+	font-weight: 600;
+	color: #555 !important;
+	line-height: 19px !important;
+	border: 2px solid #d6d9e0 !important;
+	border-radius: 3px !important;
+}
+
+#chat-message textarea,
+.ic-edit-container textarea {
+	border: none !important;
+}
+
+span.chat-responsive-menu { display: none; }
+
+@media only screen and (max-width: 430px) {
+	span.ic-loading { margin-left: 0; }
+	span.chat-responsive-refresh, span.chat-responsive-hide { display: none; }
+	span.chat-responsive-menu { display: inline-block; }
+}
+
+.cbb-loading {
+	position: unset !important;
+	height: unset !important;
+}
+
+#chat-main-message {
+	font-size: 14px !important;
+}
+
+.cbb-dialog .cbb-dialog-content {
+	font-size: 14px !important;
+}
+
+.cbb-dialog .cbb-dialog-header {
+	padding: 10px 10px !important;
+	margin: 0 !important;
+}
+
+.cbb-dialog .cbb-dialog-buttons {
+	height: 50px !important;
+	margin: 0!important;
+	padding: 10px 15px !important;
+}
+
+a.cbb-dialog-close,
+a.cbb-dialog-sidebarlauncher,
+button.cbb-dialog-close {
+	font-size: 20px !important;
+	font-weight: 700;
+	line-height: 20px;
+	opacity: .2;
+	color: #000;
+	text-shadow: 0 1px 0 #fff;
+}
+
+a.cbb-dialog-close:focus,
+a.cbb-dialog-sidebarlauncher:focus,
+button.cbb-dialog-close:focus,
+a.cbb-dialog-close:hover,
+a.cbb-dialog-sidebarlauncher:hover,
+button.cbb-dialog-close:hover {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+	filter: alpha(opacity=50);
+	opacity:.5
+}
+
+div.editor-wrapper-toolbar button {
+	margin-right: 2px !important;
+}
+
+div.editor-wrapper-toolbar button:last-child {
+	margin-right: 0 !important;
+}

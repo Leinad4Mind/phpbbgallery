@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -101,14 +101,6 @@ class chat
 
 		$this->enabled = true;
 		
-		if($this->config['chat_disallowed_bbcode'])
-		{
-			$bitfield = new \bitfield($this->config['chat_disallowed_bbcode']);
-			$this->disallowed_bbcodes = $bitfield->get_all_set();
-
-			unset($bitfield);
-		}
-		
 		include($this->root_path . 'libraries/constants.' . $this->php_ext);
 	}
 	
@@ -151,140 +143,172 @@ class chat
 	
 	public function display()
 	{
-		if($this->enabled && !defined('IN_ERROR_HANDLER') && !defined('IN_CHAT_AJAX'))
+		if(defined('IN_ERROR_HANDLER') || defined('IN_CHAT_AJAX'))
 		{
-			$user_key		= $this->request->variable($this->config['cookie_name'] . '_chat_key', 0, false, \phpbb\request\request_interface::COOKIE);
-			$lastcheck		= $this->request->variable($this->config['cookie_name'] . '_chat_lastcheck', 0, false, \phpbb\request\request_interface::COOKIE);
+			$this->enabled = false;
+		}
+
+		if(!$this->enabled)
+		{
+			return;
+		}
+
+		$user_key	= $this->request->variable($this->config['cookie_name'] . '_chat_key', 0, false, \phpbb\request\request_interface::COOKIE);
+		$lastcheck	= $this->request->variable($this->config['cookie_name'] . '_chat_lastcheck', 0, false, \phpbb\request\request_interface::COOKIE);
+		
+		// Update session of user when navigate into forum with chat connected
+		$time_limit = time() - ((int)$this->config['chat_refresh'] * 2);
+
+		$service_options = array(
+			'maxChars' 	=> (int)$this->config['chat_max_chars'],
+			'mode' 		=> $this->custom_page,
+		);
+
+		if($this->custom_page === null && $user_key && $lastcheck && $time_limit < $lastcheck)
+		{
+			$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
+				SET user_lastjoin = ' . time() . '
+				WHERE user_id = ' . $this->user->data['user_id'] . '
+				AND user_key = ' . $user_key . '
+				AND user_online = 1';
+			$this->db->sql_query($sql);
+		}
+
+		if($this->custom_page === null)
+		{
+			$current_page	= (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . $this->user->page['page_name'];
+			
+			if(strpos($current_page, 'app.' . $this->php_ext) === 0 && $this->config['enable_mod_rewrite'])
+			{
+				$current_page = str_replace('app.' . $this->php_ext . '/', '', $current_page);
+			}
+			
+			$page_data 		= $this->obtain_pages($current_page);
+			$forum_id 		= $this->request->variable('f', 0);
+			$this->enabled	= (!empty($page_data) ? true : false);
+			
+			if(!empty($page_data['page_data']['forum_ids']) && !in_array($forum_id, $page_data['page_data']['forum_ids']))
+			{
+				$this->enabled = false;
+			}
+		}
+		
+		if($this->enabled && $this->custom_page != 'archive')
+		{
+			// Get default room
 			$default_room	= CHAT_GUEST_ROOM;
+			$room_ary 		= $this->obtain_rooms();
 			
-			// Update session of user when navigate into forum with chat connected
-			$time_limit = time() - ((int)$this->config['chat_refresh'] * 2);
-
-			if($this->enabled && $this->custom_page === null && $user_key && $lastcheck && $time_limit < $lastcheck)
+			foreach($room_ary as $room_key => $row)
 			{
-				$sql = 'UPDATE ' . CHAT_USERS_TABLE . '
-					SET user_lastjoin = ' . time() . '
-					WHERE user_id = ' . $this->user->data['user_id'] . '
-					AND user_key = ' . $user_key . '
-					AND user_online = 1';
-				$this->db->sql_query($sql);
+				// If is set a linked forum, use it
+				if($this->custom_page === null && isset($row['room_data']['linked_forums']) && in_array($forum_id, $row['room_data']['linked_forums']))
+				{
+					$default_room = $room_key;
+					break;
+				}
+				
+				// Check for linked group and allow to continue search for linked forum
+				if(isset($row['room_data']['linked_groups']) && $default_room == CHAT_GUEST_ROOM && $this->core->group_auth($row['room_data']['linked_groups']))
+				{
+					$default_room = $room_key;
+				}
 			}
 
-			if($this->custom_page === null)
-			{
-				$current_page	= (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . $this->user->page['page_name'];
-				
-				if(strpos($current_page, 'app.' . $this->php_ext) === 0 && $this->config['enable_mod_rewrite'])
-				{
-					$current_page = str_replace('app.' . $this->php_ext . '/', '', $current_page);
-				}
-				
-				$page_data 		= $this->obtain_pages($current_page);
-				$this->enabled	= (!empty($page_data) ? true : false);
-				$forum_id 		= $this->request->variable('f', 0);
-				
-				if(!empty($page_data['page_data']['forum_ids']) && !in_array($forum_id, $page_data['page_data']['forum_ids']))
-				{
-					$this->enabled = false;
-				}
-				else
-				{
-					// Get default room
-					$room_ary = $this->obtain_rooms();
-					
-					foreach($room_ary as $room_key => $row)
-					{
-						// If is set a linked forum, use it
-						if(isset($row['room_data']['linked_forums']) && in_array($forum_id, $row['room_data']['linked_forums']))
-						{
-							$default_room = $room_key;
-							break;
-						}
-						
-						// Check for linked group and allow to continue search for linked forum
-						if(isset($row['room_data']['linked_groups']) && $default_room == CHAT_GUEST_ROOM && $this->core->group_auth($row['room_data']['linked_groups']))
-						{
-							$default_room = $room_key;
-						}
-					}
-				}
-			}
-			
-			if($this->enabled && $this->custom_page != 'archive')
-			{
-				$this->user->add_lang('posting');
+			$texts 			= $this->obtain_texts();
+			$bbcode_status	= ($this->config['allow_bbcode'] && $this->config['chat_allow_bbcode']) ? true : false;
+			$smilies_status	= ($this->config['allow_smilies']) ? true : false;
 
-				$texts 			= $this->obtain_texts();
-				$bbcode_status	= ($this->config['allow_bbcode'] && $this->config['chat_allow_bbcode']) ? true : false;
-				$smilies_status	= ($this->config['allow_smilies']) ? true : false;
+			$service_options += array(
+				'autoconnect'	=> (bool)$this->config['chat_autoconnect'],
+				'defaultRoom' 	=> $default_room,
+				'direction' 	=> $this->config['chat_direction'],
+				'guestRoom' 	=> CHAT_GUEST_ROOM,
+				'floodTime' 	=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
+				'height' 		=> ($this->custom_page === null && $page_data['chat_height']) ? (int)$page_data['chat_height'] : (int)$this->config['chat_height'],
+				'hidePopup'		=> (bool)$this->config['chat_hide_popup'],
+				'maxRows' 		=> (int)$this->config['chat_max_rows'],
+				'page' 			=> ($this->custom_page !== null) ? 'custom' : $page_data['page_alias'],
+				'position' 		=> ($this->custom_page !== null) ? '' : $page_data['chat_position'],
+				'refresh' 		=> $this->config['chat_refresh'] * 1000,
+				'soundPath' 	=> $this->web_path . $this->path . 'sounds/',
+			);
 
-				// Assign to template
+			if($this->auth->acl_get('u_chat_post'))
+			{
+				$editor = \canidev\core\editor::get_instance($this->container);
+
+				$editor->do_actions();
+
+				$editor_ary = $editor->build(
+					array(
+						'bbcodeMenu'			=> ($this->config['chat_bbcode_format'] == 'select'),
+						'name'					=> 'ic_message',
+						'emoticonContainer'		=> '.chat-smiley-box > div',
+						'plugins'				=> 'chat',
+						'rows'					=> 3,
+						'type'					=> 'basic',
+						'toolbarContainer' 		=> '.chat-bbcode-box',
+						'toolbarExclude' 		=> array_merge($this->get_disallowed_bbcodes(), array(
+							'color' // Don't put color inside bbcode toolbar
+						)),
+					),
+					true
+				);
+
+				$editor->smilies_to_template();
+
 				$this->template->assign_vars(array(
-					'S_CHAT_ENABLED'		=> true,
-					'S_CHAT_RULES'			=> (!empty($texts[CHAT_TEXT_RULE]) ? true : false),
-
-					'S_CHAT_ALLOW_PM'			=> $this->config['chat_allow_pm'],
-					'S_CHAT_AUTOCONNECT'		=> $this->config['chat_autoconnect'],
-					'S_CHAT_CAN_CLEAR'			=> $this->auth->acl_get('m_chat_delete'),
-					'S_CHAT_CAN_POST'			=> $this->auth->acl_get('u_chat_post'),
-					'S_CHAT_CURRENT_PAGE'		=> ($this->custom_page !== null) ? 'custom' : $page_data['page_alias'],
-					'S_CHAT_DEBUG'				=> (defined('DEBUG') && $this->auth->acl_get('a_')) ? true : false,
-					'S_CHAT_DEFAULT_ROOM'		=> $default_room,
-					'S_CHAT_DIRECTION'			=> $this->config['chat_direction'],
-					'S_CHAT_FLOOD_TIME'			=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
-					'S_CHAT_GUEST_ROOM'			=> CHAT_GUEST_ROOM,
-					'S_CHAT_HEIGHT'				=> ($this->custom_page === null && $page_data['chat_height']) ? $page_data['chat_height'] : $this->config['chat_height'],
-					'S_CHAT_MAX_CHARS'			=> $this->config['chat_max_chars'],
-					'S_CHAT_MAX_FONT_SIZE'		=> (int)$this->config['max_post_font_size'],
-					'S_CHAT_MAX_ROWS'			=> $this->config['chat_max_rows'],
-					'S_CHAT_PLAYER_PATH'		=> $this->web_path . $this->path . 'sounds/',
-					'S_CHAT_POSITION'			=> (($this->custom_page !== null) ? '' : $page_data['chat_position']),
-					'S_CHAT_REFRESH'			=> $this->config['chat_refresh'] * 1000,
-					
-					'S_CHAT_BBCODE_ALLOWED'		=> $bbcode_status,
-					'S_CHAT_BBCODE_COLOR'		=> ($bbcode_status && !in_array(6, $this->disallowed_bbcodes)) ? true : false,
-					'S_CHAT_BBCODE_INSELECT'	=> ($this->config['chat_bbcode_format'] == 'select') ? true : false,
-					'S_CHAT_SMILIES_ALLOWED'	=> $smilies_status,
-					'S_CHAT_SOUND_ENABLED'		=> $this->config['chat_sound'],
-
-					'S_CHAT_HIDDEN_FIELDS'	=> build_hidden_fields(array(
-						'last_update'	=> 0,
-						'time_mark'		=> 0,
-					)),
-
-					'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->helper->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
+					'S_CHAT_CAN_POST' 	=> true,
+					'S_CHAT_EDITOR'		=> $editor_ary['template'],
 				));
-				
-				// Generate notices and tips
-				foreach(array(CHAT_TEXT_NOTICE => 'notice',	CHAT_TEXT_TIP => 'tip') as $type => $id)
-				{
-					if(!empty($texts[$type]))
-					{
-						$tpl_id = 'S_' .strtoupper($id);
+			}
 
-						foreach($texts[$type] as $text)
-						{
-							$this->template->assign_block_vars("chat_$id", array($tpl_id => $text));
-						}
+			$this->template->assign_vars(array(
+				'S_CHAT_ENABLED'		=> true,
+				'S_CHAT_RULES'			=> (!empty($texts[CHAT_TEXT_RULE]) ? true : false),
+
+				'S_CHAT_ALLOW_PM'			=> $this->config['chat_allow_pm'],
+				'S_CHAT_CAN_CLEAR'			=> $this->auth->acl_get('m_chat_delete'),
+				'S_CHAT_DIRECTION'			=> $this->config['chat_direction'],
+				'S_CHAT_MAX_FONT_SIZE'		=> (int)$this->config['max_post_font_size'],
+				
+				'S_CHAT_BBCODE_ALLOWED'		=> $bbcode_status,
+				'S_CHAT_BBCODE_COLOR'		=> ($bbcode_status && !in_array('color', $this->get_disallowed_bbcodes())) ? true : false,
+				'S_CHAT_SMILIES_ALLOWED'	=> $smilies_status,
+				'S_CHAT_SOUND_ENABLED'		=> $this->config['chat_sound'],
+
+				'S_CHAT_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+					'last_update'	=> 0,
+					'time_mark'		=> 0,
+				)),
+
+				'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->helper->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
+			));
+			
+			// Generate notices and tips
+			foreach(array(CHAT_TEXT_NOTICE => 'notice',	CHAT_TEXT_TIP => 'tip') as $type => $id)
+			{
+				if(!empty($texts[$type]))
+				{
+					$tpl_id = 'S_' .strtoupper($id);
+
+					foreach($texts[$type] as $text)
+					{
+						$this->template->assign_block_vars("chat_$id", array($tpl_id => $text));
 					}
-				}
-				
-				// Generate smilies
-				if($smilies_status)
-				{
-					$this->generate_smilies();
-				}
-				
-				// Generate bbcodes
-				if($bbcode_status)
-				{
-					$this->generate_bbcodes();
 				}
 			}
 		}
 		
 		if($this->enabled || $this->custom_page !== null)
 		{
+			$this->template->assign_json_var('S_CHAT_OPTIONS', $service_options);
+
+			\canidev\core\lib::get_instance($this->container)->set_js_lang(array(
+				'CHAT_FLOOD_WAIT'
+			));
+
 			// Assets
 			$this->template->append_asset('css', '@canidev_chat/../theme/chat.css');
 			
@@ -294,160 +318,64 @@ class chat
 			));
 		}
 	}
-	
-	private function generate_bbcodes()
+
+	public function get_disallowed_bbcodes()
 	{
-		// Default BBcodes
-		$default_bbcodes = array(
-			'b'			=> array('bbcode_id'	=> BBCODE_ID_B,		'help' => 'BBCODE_B_HELP',			'name' => 'bold',			'icon' => 'fa-bold'),
-			'i'			=> array('bbcode_id'	=> BBCODE_ID_I,		'help' => 'BBCODE_I_HELP',			'name' => 'italic',			'icon' => 'fa-italic'),
-			'u'			=> array('bbcode_id'	=> BBCODE_ID_U,		'help' => 'BBCODE_U_HELP',			'name' => 'underline',		'icon' => 'fa-underline'),
-			'quote'		=> array('bbcode_id'	=> BBCODE_ID_QUOTE,	'help' => 'BBCODE_Q_HELP',			'name' => 'quote',			'icon' => 'fa-quote-right'),
-			'code'		=> array('bbcode_id'	=> BBCODE_ID_CODE,	'help' => 'BBCODE_C_HELP',			'name' => 'code',			'icon' => 'fa-code'),
-			'list'		=> array('bbcode_id'	=> BBCODE_ID_LIST,	'help' => 'BBCODE_L_HELP',			'name' => 'list',			'icon' => 'fa-list-ul'),
-			'list=1'	=> array('bbcode_id'	=> BBCODE_ID_LIST,	'help' => 'BBCODE_O_HELP',			'name' => 'list-numeric',	'icon' => 'fa-list-ol'),
-			'*'			=> array('bbcode_id'	=> BBCODE_ID_LIST,	'help' => 'BBCODE_LISTITEM_HELP',	'name' => 'list-item',		'icon' => 'fa-asterisk'),
-			'img'		=> array('bbcode_id'	=> BBCODE_ID_IMG,	'help' => 'BBCODE_P_HELP',			'name' => 'img',			'icon' => 'fa-image'),
-			'url'		=> array('bbcode_id'	=> BBCODE_ID_URL,	'help' => 'BBCODE_W_HELP',			'name' => 'url',			'icon' => 'fa-link'),
-			'flash'		=> array('bbcode_id'	=> BBCODE_ID_FLASH,	'help' => 'BBCODE_D_HELP',			'name' => 'flash',			'icon' => 'fa-film'),
-			'size'		=> array('bbcode_id'	=> BBCODE_ID_SIZE,	'help' => '',						'name' => 'size',			'icon' => ''),
-		);
-
-		foreach($default_bbcodes as $bbcode_tag => $row)
+		if($this->config['chat_disallowed_bbcode'])
 		{
-			if(!in_array($row['bbcode_id'], $this->disallowed_bbcodes))
+			$data_cache = $this->cache->get('_chat_options');
+		
+			if($data_cache === false || !isset($data_cache['disallowed_bbcodes']))
 			{
-				// Compatibility for events
-				$row['bbcode_tag']	= $bbcode_tag;
-				$template_key		= 'chat_default_tags';
-
-				$item_ary = array(
-					'S_HELP'	=> ($row['help']) ? $this->lang->lang($row['help']) : '',
-					'S_ICON'	=> $row['icon'],
-					'S_TAG'		=> $bbcode_tag,
+				$data_cache = ($data_cache === false) ? array() : $data_cache;
+				$data_cache['disallowed_bbcodes'] = array();
+				
+				// Default BBcodes
+				$bbcode_ary = array(
+					'b'			=> BBCODE_ID_B,
+					'i'			=> BBCODE_ID_I,
+					'u'			=> BBCODE_ID_U,
+					'quote'		=> BBCODE_ID_QUOTE,
+					'code'		=> BBCODE_ID_CODE,
+					'list'		=> BBCODE_ID_LIST,
+					'list=1'	=> BBCODE_ID_LIST,
+					'*'			=> BBCODE_ID_LIST,
+					'img'		=> BBCODE_ID_IMG,
+					'url'		=> BBCODE_ID_URL,
+					'size'		=> BBCODE_ID_SIZE,
 				);
 
-				/**
-				* @event chat.generate_bbcodes
-				* @var	string	template_key	Key assigned to the block template
-				* @var	array	row				Array with bbcode row
-				* @var	array	item_ary		Array with items to push on template
-				* @since 1.1.1
-				*/
-				$vars = array('template_key', 'row', 'item_ary');
-				extract($this->dispatcher->trigger_event('chat.generate_bbcodes', compact($vars)));
-				
-				if(sizeof($item_ary))
+				// Custom BBcodes
+				$sql = 'SELECT bbcode_id, bbcode_tag
+					FROM ' . BBCODES_TABLE . '
+					WHERE display_on_posting = 1';
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
 				{
-					$this->template->assign_block_vars($template_key, $item_ary);
+					$bbcode_ary[$row['bbcode_tag']] = (int)$row['bbcode_id'];
 				}
-			}
-		}
-		
-		// Custom BBcodes
-		$sql_ary = array(
-			'SELECT'	=> 'b.*',
-			'FROM'		=> array(BBCODES_TABLE => 'b'),
-			'WHERE'		=> 'b.display_on_posting = 1',
-			'ORDER_BY'	=> 'b.bbcode_tag',
-		);
-		
-		/**
-		* @event chat.custom_bbcodes_modify_sql
-		* @var	array	sql_ary		The SQL array to get the bbcode data
-		* @since 1.1.1
-		*/
-		$vars = array('sql_ary');
-		extract($this->dispatcher->trigger_event('chat.custom_bbcodes_modify_sql', compact($vars)));
-		
-		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary), 3600);
-		while($row = $this->db->sql_fetchrow($result))
-		{
-			if(in_array($row['bbcode_id'], $this->disallowed_bbcodes))
-			{
-				continue;
+				$this->db->sql_freeresult($result);
+
+				$bitfield = new \bitfield($this->config['chat_disallowed_bbcode']);
+				$disallowed_ids = $bitfield->get_all_set();
+
+				foreach($bbcode_ary as $tag => $id)
+				{
+					if(in_array($id, $disallowed_ids))
+					{
+						$data_cache['disallowed_bbcodes'][] = $tag;
+					}
+				}
+
+				$this->cache->put('_chat_options', $data_cache);
+
+				unset($bitfield);
 			}
 
-			// If the helpline is defined within the language file, we will use the localised version, else just use the database entry...
-			if($this->lang->is_set(strtoupper($row['bbcode_helpline'])))
-			{
-				$row['bbcode_helpline'] = $this->lang->lang(strtoupper($row['bbcode_helpline']));
-			}
-			
-			$row['bbcode_tag']	= str_replace('=', '', $row['bbcode_tag']);
-			$template_key		= 'chat_custom_tags';
-			
-			$item_ary = array(
-				'S_HELP'	=> $row['bbcode_helpline'],
-				'S_TAG'		=> $row['bbcode_tag'],
-			);
-			
-			/**
-			* @event chat.generate_bbcodes
-			* @var	string	template_key	Key assigned to the block template
-			* @var	array	row				Array with bbcode row
-			* @var	array	item_ary		Array with items to push on template
-			* @since 1.1.1
-			*/
-			$vars = array('template_key', 'row', 'item_ary');
-			extract($this->dispatcher->trigger_event('chat.generate_bbcodes', compact($vars)));
-
-			if(sizeof($item_ary))
-			{
-				$this->template->assign_block_vars($template_key, $item_ary);
-			}
-		}
-		$this->db->sql_freeresult($result);
-	}
-	
-	public function generate_smilies($start = 0)
-	{
-		$smilies	= array();
-		$limit		= 200;
-
-		$sql = 'SELECT smiley_url, MIN(emotion) as emotion, MIN(code) AS code, smiley_width, smiley_height, MIN(smiley_order) AS min_smiley_order
-			FROM ' . SMILIES_TABLE . '
-			GROUP BY smiley_url, smiley_width, smiley_height
-			ORDER BY min_smiley_order';
-		$result = $this->db->sql_query_limit($sql, $limit, $start, 3600);
-		while($row = $this->db->sql_fetchrow($result))
-		{
-			if(empty($smilies[$row['smiley_url']]))
-			{
-				$smilies[$row['smiley_url']] = $row;
-			}
-		}
-		$this->db->sql_freeresult($result);
-
-		foreach($smilies as $row)
-		{
-			$item_ary = array(
-				'S_CODE'	=> $row['code'],
-				'A_CODE'	=> addslashes($row['code']),
-				'S_IMG'		=> $this->web_path . $this->config['smilies_path'] . '/' . $row['smiley_url'],
-				'S_WIDTH'	=> $row['smiley_width'],
-				'S_HEIGHT'	=> $row['smiley_height'],
-				'S_DESC'	=> $row['emotion']
-			);
-
-			/**
-			* Event to modify the smilies loaded in the chat
-			*
-			* @event chat.generate_smilies
-			* @var	array	row			Array with bbcode row
-			* @var	string	item_ary	Array with items to push on template
-			* @since 1.1.1
-			*/
-			$vars = array('row', 'item_ary');
-			extract($this->dispatcher->trigger_event('chat.generate_smilies', compact($vars)));
-
-			$this->template->assign_block_vars('chat_smiley', $item_ary);
+			return $data_cache['disallowed_bbcodes'];
 		}
 
-		if(sizeof($smilies) == $limit)
-		{
-			$this->template->assign_var('S_SMILEY_PAGE_NEXT', $start + $limit);
-		}
+		return array();
 	}
 	
 	public function obtain_pages($current_page = false)
@@ -564,7 +492,7 @@ class chat
 						$row['text_content'] = htmlspecialchars_decode($row['text_content']);
 					}
 					
-					$row['text_content'] = bbcode_nl2br($row['text_content']);
+					//$row['text_content'] = bbcode_nl2br($row['text_content']);
 					
 					// Return and save simple html output
 					$data_cache['texts'][$text_type][$row_id] = $row['text_content'];
@@ -583,7 +511,7 @@ class chat
 					$this->parse_lang_variables($text);
 				}
 
-				$text = smiley_text($text);
+				//$text = smiley_text($text);
 				
 				$data_cache['texts'][$text_type][$row_id] = $text;
 			}
@@ -596,7 +524,7 @@ class chat
 
 		return $data_cache['texts'];
 	}
-	
+
 	public function format_date($timestamp)
 	{
 		if(!$this->midnight)
@@ -630,7 +558,7 @@ class chat
 			}
 		}
 		
-		return $this->user->format_date($timestamp, $this->lang->lang('default_dateformat'));
+		return $this->user->format_date($timestamp, false, true);
 	}
 	
 	public function parse_lang_variables(&$text)
