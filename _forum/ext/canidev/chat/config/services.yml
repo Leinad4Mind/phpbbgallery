@@ -1,0 +1,66 @@
+services:
+    canidev.chat.controller:
+        class: canidev\chat\controller\main_controller
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    canidev.chat.listener:
+        class: canidev\chat\event\listener
+        arguments:
+            - '@config'
+            - '@service_container'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+
+    canidev.chat.chat:
+        class: canidev\chat\chat
+        arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dispatcher'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    canidev.chat.chat_ajax:
+        class: canidev\chat\chat_ajax
+        arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    canidev.chat.compatibility.manager:
+        class: canidev\chat\compatibility\manager
+        arguments:
+            - '@cache.driver'
+            - '@dispatcher'
+            - '@ext.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'

@@ -1,0 +1,19 @@
+<!-- IF IN_CHAT_ADMIN -->
+	<!-- INCLUDECSS @canidev_chat/../theme/{S_CHAT_VARIANT}.css -->
+	<!-- INCLUDECSS @canidev_chat/acp.css -->
+	
+	<!-- INCLUDEJS js/jquery-ui-sortable.min.js -->
+	<!-- INCLUDEJS js/jchat.js -->
+	<!-- INCLUDEJS js/jchat-acp.js -->
+	
+	<!-- IF U_HELP and not U_BACK -->
+	<script type="text/javascript">
+	// <![CDATA[
+		window.__jChat = {
+			help_title	: '{LA_CHAT_HELP}',
+			help_url	: '{U_HELP}'
+		};
+	// ]]>
+	</script>
+	<!-- ENDIF -->
+<!-- ENDIF -->

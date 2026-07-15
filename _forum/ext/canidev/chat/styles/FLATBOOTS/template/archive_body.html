@@ -1,0 +1,133 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF .message -->
+	<div class="pull-right">	 
+		<ul class="pagination pagination-sm hidden-xs">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+		</ul>
+	</div>
+<!-- ENDIF -->
+
+<h2>{L_CHAT_ARCHIVE}</h2>
+
+<form method="post" action="{U_ACTION}">
+
+<div class="panel has-nav-tabs panel-default">
+	<ul class="nav nav-tabs">
+	<!-- BEGIN roomtab -->
+		<li<!-- IF roomtab.S_ACTIVE --> class="active"<!-- ENDIF -->><a href="{roomtab.U_ACTION}"><span>{roomtab.S_TITLE}</span></a></li>
+	<!-- BEGINELSE -->
+		<li class="active"><a href=""><span>{L_CHAT_ARCHIVE}</span></a></li>
+	<!-- END roomtab -->
+	</ul>
+
+	<div id="chat-content" class="tab-content panel-content">
+	<!-- IF .message -->
+		<div id="chat-conversation-container">
+		<!-- BEGIN message -->
+			<div id="chat-row-{message.S_ID}" class="chat-row">
+				<!-- IF message.S_SHOW_AVATAR -->
+					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+				<!-- ENDIF -->
+				
+				<!-- IF S_BATCH_OPTIONS --><div class="ic-row-actions"><input class="row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" /></div><!-- ENDIF -->
+				
+				<div class="ic-row-actions">
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#!move/{message.S_ID}" title="{L_CHAT_MOVE}"><span class="chat-icon-move"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
+				</div>
+
+				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
+				<div class="ic-row-text<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">
+					{message.S_TEXT}
+				</div>
+			</div>
+		<!-- END message -->
+		</div>
+	<!-- ELSE -->
+		{L_NO_MESSAGES}
+	<!-- ENDIF -->
+	</div>
+</div>
+
+<!-- IF .message -->
+	<div class="row">
+		<!-- IF S_BATCH_OPTIONS -->
+		<div class="col-md-4 col-xs-7">
+			<div class="pull-left">
+				<div class="chat-state-hidden js-delete-selected input-group input-group-sm">
+					<select class="form-control" name="action">
+						<option value="">{L_BATCH_ACTIONS}</option>
+						{S_BATCH_OPTIONS}
+					</select>
+					<div class="input-group-btn">
+						<button type="submit" name="submit" class="btn btn-default">{L_CHAT_APPLY}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ENDIF -->
+	  
+		<div class="col-md-8">
+			<div class="pull-right">	 
+				<ul class="pagination pagination-sm hidden-xs">
+				<!-- IF .pagination -->
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE -->
+					<li class="active"><a>{PAGE_NUMBER}</a></li>	
+				<!-- ENDIF -->
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- IF S_SELECT_SORT_DAYS and not S_IS_BOT -->
+	<div class="controls-row">
+       <div class="sorting">
+			<div class="panel panel-default">
+				<div class="panel-body">
+                  <div class="row">
+						<div class="col-md-3 col-sm-3"> 
+                         <label for="st">{L_DISPLAY_MESSAGES}{L_COLON}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_DAYS}
+                            </div>
+						</div>
+	                    <div class="col-md-3 col-sm-3"> 
+                          <label for="sk">{L_SORT_BY}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_KEY}
+                            </div>
+						</div>
+						<div class="col-md-3 col-sm-3"> 
+                           <label for="sd">{L_SORT_BY}</label>
+                            <div class="control-row">
+							<div class="input-group">
+                             {S_SELECT_SORT_DIR}
+							 <span class="input-group-btn">
+                              <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+							</span>
+							</div>
+						    </div>   
+						</div>
+                    </div>
+                </div>
+		    </div>
+		</div>
+	</div> 
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+</form>
+
+<div id="ic-data-container" style="display:none;"></div>
+
+<br />
+
+<!-- INCLUDE overall_footer.html -->

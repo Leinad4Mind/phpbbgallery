@@ -1,0 +1,58 @@
+
+<!-- IF S_CHAT_EMBEDMODE -->
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width" />
+
+	<title>{SITENAME} &bull; {PAGE_TITLE}</title>
+	
+	<!-- Google free font here -->
+	<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' />
+	<link href='//fonts.googleapis.com/css?family=Asap:700' rel='stylesheet' />
+
+	<link href="{T_STYLESHEET_LINK}" rel="stylesheet" />
+
+<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
+	<link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" />
+<!-- ENDIF -->
+
+<!-- INCLUDE event/overall_header_stylesheets_after.html -->
+
+{$STYLESHEETS}
+
+<link href="{T_THEME_PATH}/basics.min.css" rel="stylesheet"/>
+
+<!-- INCLUDE event/overall_header_head_append.html -->
+
+<!-- Scripts start here after the headjs -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
+<script>
+// this loads jquery asyncrounously & in parallel
+head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js", "{T_THEME_PATH}/vendors/bootstrap/js/bootstrap.js", "{T_THEME_PATH}/vendors/core.min.js?assets_version={T_ASSETS_VERSION}", "{T_THEME_PATH}/vendors/forum_fn.min.js", "{T_THEME_PATH}/vendors/ajax.min.js");
+</script>
+
+</head>
+
+<body id="phpbb" class="nojs notouch embedmode section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+
+<div>
+
+	<!-- INCLUDE event/overall_footer_content_after.html -->
+
+</div>
+
+<script src="{T_JQUERY_LINK}"></script>
+<!-- IF S_ALLOW_CDN --><script>window.jQuery || document.write(unescape('%3Cscript src="{T_ASSETS_PATH}/javascript/jquery.min.js?assets_version={T_ASSETS_VERSION}" type="text/javascript"%3E%3C/script%3E'));</script><!-- ENDIF -->
+
+<!-- INCLUDE event/overall_footer_after.html -->
+
+<body>
+
+<!-- ELSE -->
+
+	<!-- INCLUDE overall_header.html -->
+	<!-- INCLUDE overall_footer.html -->
+
+<!-- ENDIF --></html>

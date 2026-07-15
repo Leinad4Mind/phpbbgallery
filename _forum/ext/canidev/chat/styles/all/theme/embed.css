@@ -1,0 +1,31 @@
+/*  cBB Chat StyleSheet
+    --------------------------------------------------------------
+	Style:	Embed Mode
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+html { height: auto; }
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#chat-body {
+	margin: 0;
+	padding: 2px 0 0 0;
+}
+
+#chat-body.notitle {
+	background: none;
+}
+
+#chat-body, #chat-body.notitle {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+
+#chat-body.notitle #chat-title { display: none; }
+#chat-body.notitle #chat-content { margin: 0; }

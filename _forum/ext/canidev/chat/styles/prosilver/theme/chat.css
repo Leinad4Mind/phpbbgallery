@@ -1,0 +1,197 @@
+/*  cBB Chat StyleSheet
+    --------------------------------------------------------------
+	Style:	proSilver	
+	Copyright (c) 2017 CaniDev ( http://www.canidev.com )
+    --------------------------------------------------------------
+*/
+
+#chat-title {
+	color: #FFFFFF;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+#chat-content {
+	background: #E9F0F5;
+}
+
+#chat-tabs li {
+	border-color: #CCC;
+}
+
+#chat-tabs li.active {
+	border-top-color: #FFFFFF;
+	font-weight: bold;
+}
+
+#chat-right-panel, #chat-conversation-container, #chat-toolbar {
+	border: 1px solid #CCC;
+}
+
+#chat-toolbar li.separator {
+	background: #CCC;
+}
+
+#chat-toolbar a:hover, .chat-button:hover {
+	background: #FAFAFA;
+	border-color: #CCC;
+}
+
+/* For IE7+ (without css3) */
+#chat-toolbar a.disabled:hover {
+	background: none;
+}
+
+#chat-toolbar a.active {
+	border-color: #999 !important;
+}
+
+#chat-toolbar a,
+.chat-button [class*="chat-icon-"] {
+	font-size: 15px;
+	color: #105289;
+}
+
+#chat-toolbar a.disabled, .chat-button.disabled [class*="chat-icon-"] {
+	border-color: transparent !important;
+	color: #999;
+	cursor: default;
+}
+
+#chat-toolbar a:not(.disabled):hover,
+.chat-button:not(.disabled):hover [class*="chat-icon-"] {
+	color: #D31141;
+}
+
+.ic-row-actions a {
+	color: #999;
+}
+
+.ic-row-actions a:hover {
+	color: #105289;
+}
+
+/* Boxes
+------------------------------- */
+.ic-box {
+	border: 1px solid #999;
+}
+
+.color-box .colour, .smiley-box a {
+	border: 1px solid #FFFFFF;
+}
+
+.color-box .colour:hover, .smiley-box a:hover {
+	border-color: #CCC;
+}
+
+#chat-right-panel, #chat-conversation-container,
+#chat-tabs li.active, #chat-toolbar a.active, .ic-box  {
+	background: #FFFFFF;
+}
+
+/* Tabs
+------------------------------- */
+.chat-archive-tabs a {
+	color: #FFF;
+}
+
+.chat-archive-tabs .active {
+	background: #E9F0F5;
+	color: #000;
+}
+
+/* Style overrides
+------------------------------- */
+.chat-row blockquote {
+	background-color: #F4F4F4;
+	border-color: #DDD;
+	margin-left: 15px;
+}
+
+.chat-row ul, .chat-row ol {
+	margin-left: 20px;
+}
+
+.dropdown-extended { z-index: 3; }
+.dropdown, .dropdown .dropdown-contents { z-index: 4; }
+.dropdown .pointer { z-index: 5; }
+
+/* Responsive Layout
+------------------------------- */
+@media only screen and (max-width: 950px) {
+	#chat-left-panel 	{ width: 80%; }
+	#chat-right-panel	{ width: 19.4% }
+}
+
+@media only screen and (max-width: 750px) {
+	#chat-left-panel 	{ width: 75%; }
+	#chat-right-panel	{ width: 24.4% }
+}
+
+@media only screen and (min-width: 500px) and (max-width: 600px) {
+	.ic-row-date {
+		display: block;
+		font-size: 0.9em;
+	}
+	
+	.ic-row-date:before {
+		content: '';
+		padding: 0;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	#chat-left-panel, #chat-right-panel  {
+		float: none;
+		width: auto;
+	}
+	
+	#chat-right-panel {
+		clear: both;
+		height: auto !important;
+		margin-top: 10px;
+		max-height: 60px;
+		overflow: auto;
+	}
+	
+	.ic-userlist > li {
+		display: inline-block;
+		margin: 2px 0;
+	}
+	
+	#chat-message { width: 70%; }
+	#chat-message textarea { font-size: 12px; }
+	
+	.ic-edit-textarea {
+		width: 280px;
+	}
+	
+	.color-box .colour span {
+		height: 18px;
+		width: 18px;
+	}
+}
+
+@media only screen and (max-width: 430px) {
+	#chat-toolbar li.ic-loading { margin-left: 0; }
+	.chat-responsive-refresh, .chat-responsive-hide { display: none; }
+	.chat-responsive-menu { display: inline-block; }
+	
+	#chat-notices [class*="chat-icon"] { display: none; }
+	
+	.ic-row-date { font-size: 0.9em; }
+	
+	.ic-row-avatar {
+		height: 30px;
+		width: 30px;
+	}
+	
+	.ic-row-text.avatar-margin, .ic-row-title.avatar-margin {
+		margin-left: 38px;
+	}
+	
+	.ic-edit-textarea {
+		width: 260px;
+	}
+}
