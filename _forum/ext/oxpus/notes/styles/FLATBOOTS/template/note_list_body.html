@@ -70,11 +70,11 @@
 {% for notes_row in loops.notes_row %}
 <div class="panel">
 
-    <div class="panel-heading">
+    <div class="panel-heading{% if SLIDE_MODE %} note-hidden" id="panel-heading-{{ notes_row.NOTE_ID }}{% endif %}">
         <div class="clearfix">
 
             <div class="side-segment">
-                <h3 style="border-bottom: 4px solid #e5e5e5;">{{ notes_row.NOTE_SUBJECT }}</h3></div>
+                <h3 style="border-bottom: 4px solid #e5e5e5;">{% if SLIDE_MODE %}<a href="#" onclick="showHideNote({{ notes_row.NOTE_ID }}); return false;">{% endif %}{{ notes_row.NOTE_SUBJECT }}{% if SLIDE_MODE %}</a>{% endif %}</h3></div>
             <div class="clearfix">
                 <div class="text-muted pull-left">
                     <span><i class="fa fa-clock-o"></i>&nbsp;{{ notes_row.NOTE_DATE }}</span>
@@ -100,21 +100,19 @@
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body{% if SLIDE_MODE %} hide-note{% endif %}" id="note_{{ notes_row.NOTE_ID }}">
         <div class="clearfix">
             <div class="postbody">
-                <div>
 
-                    <span class="hidden hook-bfr-message"></span>
-                    <div class="content">{{ notes_row.NOTE_TEXT }}</div>
-                    {% if notes_row.NOTES_MEM %}
-                    <div class="notice text-muted">
-                        <div class="space10"></div>
-                        <small><span class="label label-danger"><i class="fa fa-bell-o"></i>&nbsp;{{ lang('NOTES_MEM') }}</span>&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o"></i>&nbsp;{{ notes_row.NOTES_MEM }}</small>
-                    </div>
-                    {% endif %}
-
+                <span class="hidden hook-bfr-message"></span>
+                <div class="content">{{ notes_row.NOTE_TEXT }}</div>
+                {% if notes_row.NOTES_MEM %}
+                <div class="notice text-muted">
+                    <div class="space10"></div>
+                    <small><span class="label label-danger"><i class="fa fa-bell-o"></i>&nbsp;{{ lang('NOTES_MEM') }}</span>&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o"></i>&nbsp;{{ notes_row.NOTES_MEM }}</small>
                 </div>
+                {% endif %}
+
             </div>
         </div>
     </div>

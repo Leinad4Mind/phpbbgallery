@@ -111,12 +111,12 @@ class main
 		include_once($this->root_path . 'includes/bbcode.' . $this->php_ext);
 
 		// Define the ext path
-		$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/dl_ext', true);
+		$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
 		$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
 		$ext_path_web				= $this->phpbb_path_helper->update_web_root_path($ext_path);
 
 		$this->template->assign_vars([
-			'EXT_PATH_WEB'		=> $ext_path_web,
+			'EXT_NOTES_WEB'		=> $ext_path_web,
 		]);
 
 		$this->template->assign_block_vars('navlinks', [
@@ -154,6 +154,14 @@ class main
 		$notes_data = [];
 		$display_notes = 0;
 
+		/*
+		* Output page header
+		*/
+		if ( $this->user->data['user_popup_notes'] == true )
+		{
+			$this->template->assign_var('S_NOTES_POPUP', true);
+		}
+
 		if ($mode == 'delete')
 		{
 			if (confirm_box(true))
@@ -167,18 +175,10 @@ class main
 			}
 			else 
 			{
-				confirm_box(false, $this->language->lang('NOTES_DELETE_CONFIRM'));
+				confirm_box(false, $this->language->lang('NOTES_DELETE_CONFIRM'), '', 'note_confirm_body.html');
 			}
 
 			$mode = '';
-		}
-
-		/*
-		* Output page header
-		*/
-		if ( $this->user->data['user_popup_notes'] == true )
-		{
-			$this->template->assign_var('S_NOTES_POPUP', true);
 		}
 
 		/*
@@ -503,6 +503,15 @@ class main
 
 		$this->language->add_lang('search');
 
+		if ($this->user->data['user_slide_notes'])
+		{
+			$notes_slide = true;
+		}
+		else
+		{
+			$notes_slide = false;
+		}
+
 		/*
 		* Send vars to template
 		*/
@@ -514,6 +523,7 @@ class main
 			'L_CLOSE'			=> $this->language->lang('CLOSE_WINDOW'),
 
 			'NOTES_TOTAL'		=> $total_notes . ' / ' . $this->config['notes'],
+			'SLIDE_MODE'		=> $notes_slide,
 
 			'SORT_ORDER'		=> $sort_order,
 			'SORT_BY'			=> $sort_by,
@@ -536,6 +546,7 @@ class main
 				for($i = 0; $i < $display_notes; $i++)
 				{
 					$note_date	= $this->notes_format_date($notes_data[$i]['note_time']);
+					$note_id	= $notes_data[$i]['note_id'];
 					$subject	= $notes_data[$i]['note_subject'];
 					$message	= $notes_data[$i]['note_text'];
 
@@ -556,8 +567,8 @@ class main
 						}
 					}
 
-					$u_edit		= $this->helper->route('oxpus_notes_controller', ['mode' => 'edit_note', 'note_id' => $notes_data[$i]['note_id']]);
-					$u_del		= $this->helper->route('oxpus_notes_controller', ['mode' => 'delete', 'note_id' => $notes_data[$i]['note_id']]);
+					$u_edit		= $this->helper->route('oxpus_notes_controller', ['mode' => 'edit_note', 'note_id' => $note_id]);
+					$u_del		= $this->helper->route('oxpus_notes_controller', ['mode' => 'delete', 'note_id' => $note_id]);
 
 					if ($notes_data[$i]['note_mem'])
 					{
@@ -569,6 +580,7 @@ class main
 					}
 
 					$this->template->assign_block_vars('notes_row', [
+						'NOTE_ID'		=> $note_id,
 						'NOTE_DATE' 	=> $note_date,
 						'NOTE_SUBJECT'	=> $subject,
 						'NOTE_TEXT' 	=> $message,

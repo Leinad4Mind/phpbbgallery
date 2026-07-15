@@ -1,0 +1,8 @@
+.hide-note
+{
+    display: none;
+}
+
+.postprofile.notes {
+	min-height: 2em;
+}

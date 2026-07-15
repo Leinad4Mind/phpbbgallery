@@ -35,6 +35,7 @@ $lang = array_merge($lang, [
 	'NEW_NOTE'			=> 'New note',
 	'POST_NEW_NOTE'		=> 'Post a new note',
 	'POPUP_NOTES'		=> 'Display Personal Notes as Popup',
+	'SLIDE_NOTES'		=> 'Open notes as title list, display by clicking the title',
 	'FILTER_NOTES'		=> '<strong>Filter mode</strong><br />Press the search button again or change the sort method to display all notes.',
 	'NOTES_MEM'			=> 'Set a reminder',
 	'NOTES_MEM_ENABLE'	=> 'Yes remind me!',

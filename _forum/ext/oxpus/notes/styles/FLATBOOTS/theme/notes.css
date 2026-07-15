@@ -1,0 +1,9 @@
+.hide-note
+{
+    display: none;
+}
+
+.note-hidden
+{
+    border-bottom: none;
+}
