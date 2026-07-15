@@ -1,0 +1,1 @@
+head.ready(function(){!function(e){"use strict";phpbb.alert(info,'<p align="center"><img style="width:100px;height:100px;" src="'+new_badge+'"><br /><br />'+rule_name+"<br />"+rule_descr+"<br /><br />"+badge_whohoo+"</p>",!0)}(jQuery)});

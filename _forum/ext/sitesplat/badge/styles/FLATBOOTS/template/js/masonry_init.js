@@ -1,0 +1,1 @@
+head.ready(function(){jQuery(window).load(function(){var e=document.querySelector(".user_view");new Masonry(e,{columnWidth:".col-xs-6",itemSelector:".col-xs-6"})})});

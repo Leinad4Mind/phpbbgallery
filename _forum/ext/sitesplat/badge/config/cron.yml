@@ -1,0 +1,11 @@
+services:
+# ----- Cron tasks -----
+    sitesplat.badgeaward:
+        class: sitesplat\badge\cron\task\core\badge_award
+        arguments:
+            - '@config'
+            - '@sitesplat.badge.manager'
+        calls:
+            - [set_name, [sitesplat.badgeaward]]
+        tags:
+            - { name: cron.task }
