@@ -1,0 +1,36 @@
+services:
+    sitesplat.fltl.listener:
+        class: sitesplat\fltl\event\listener
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@config'
+            - '@user'
+            - '@template'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.fltl.main:
+        class: sitesplat\fltl\controller\main
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.fltl.admin_listener:
+        class: sitesplat\fltl\event\admin_listener
+        arguments:
+            - '@config'
+            - '@request'
+            - '@controller.helper'
+            - '@template'
+        tags:
+            - { name: event.listener }

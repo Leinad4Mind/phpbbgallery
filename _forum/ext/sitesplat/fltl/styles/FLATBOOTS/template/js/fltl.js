@@ -1,0 +1,1 @@
+head.ready(function(){$(document).on("click",".rtbutton",function(){var t=new Date;$.ajax({url:boardurl+"app.php/fltl/fltl.html?fltl_start="+start+"&time="+String(t.getTime()),context:document.getElementById("fltl"),error:function(t,l,n){},success:function(t,l){t=t.replace(/\.\.\/\.\.\/download/g,"download"),$("#fltl").html(t)}})})});

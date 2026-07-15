@@ -1,0 +1,36 @@
+<!-- IF .fltl -->
+<div class="row text-center" id="fltl">
+	<!-- BEGIN fltl -->
+		<div class="col-md-3 col-sm-6">
+			<div class="panel panel-post">
+				<div class="blog-meta">
+				 <time datetime="{fltl.TOPIC_YEAR_DIGIT}-{fltl.TOPIC_MONTH_DIGIT}-{fltl.TOPIC_DAY_DIGIT}" class="entry-date">
+					<span class="day">{fltl.TOPIC_DAY}</span>
+					<span class="month">{fltl.TOPIC_MONTH}</span>
+				 </time>
+				</div>
+				<div class="title">
+				 <header class="entry-header">
+				  <h6 class="inverse-font"><a title="" href="{fltl.U_TOPIC}">{fltl.TOPIC_TITLE}</a></h6>
+					<div class="entry-meta">
+					 <span class="jp-views"><!-- IF fltl.AVATAR -->{fltl.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->{L_FLTL_BY}{fltl.TOPIC_AUTHOR}</span>
+					</div>
+				 </header>
+				</div>
+				<div class="content-post">
+				  <p>{fltl.FP_EXCERPT}</p>  
+				</div>
+				<div class="panel-bottom">
+				 <a title="" class="btn btn-xs btn-block" href="{fltl.U_LAST_POST}">{L_FLTL_READ_MORE}</a>
+				</div>               
+			</div>
+		</div>
+	<!-- END fltl -->	
+</div>
+
+<div id="rtbtnrow" class="row text-center">
+	<div class="col-md-12">
+	  <a class="rtbutton btn btn-default btn-block btn-lazy" href="javascript:void(0)">{L_FLTL_VIEW_MORE_TOPICS}</a>
+	</div>
+</div>
+<!-- ENDIF -->

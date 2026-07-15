@@ -1,0 +1,7 @@
+fltl_controller:
+    pattern: /fltl/{route}
+    defaults: { _controller: sitesplat.fltl.main:handle }
+
+fltl_index:
+    pattern: /fltl/
+    defaults: { _controller: sitesplat.fltl.main:handle }
