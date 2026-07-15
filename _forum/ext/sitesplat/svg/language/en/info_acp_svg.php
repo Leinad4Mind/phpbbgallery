@@ -21,8 +21,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'FORUM_ICONS'	                            => 'Forum icons',
-	'BBSVG_NOTICE'						        => '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />You can also add SVG for group ranks. <strong>ACP &#187; Users and Groups &#187; Users &#187; Manage ranks</strong>.</p></div>',
-	'SS_HELPER_NOTY'	                        => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'BBSVG_NOTICE'						        => '<div style="width:auto;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />You can also add SVG for group ranks. <strong>ACP &#187; Users and Groups &#187; Users &#187; Manage ranks</strong>.</p></div>',
+	'SS_HELPER_NOTY'	                        => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
     'ACP_BBSVG_FORUMS'	                        => 'Forum administration. Select forum and edit to find the custom Forum icons settings',
 	'ACP_BBSVG_FORUMS_EXPLAIN'	                => 'If you need to remove the default gray circle in the forum/topic list you can add the following code to your custom.css:',
 	
