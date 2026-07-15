@@ -39,7 +39,7 @@ class listener implements EventSubscriberInterface
 		global $phpbb_root_path;
 
 		$sql_ary = $event['sql_ary'];
-		$valid_user = in_array($sql_ary['user_type'], array(0,3));
+		$valid_user = in_array($sql_ary['user_type'], array(0,1,3));
 
 		if ($valid_user && $this->config['allow_avatar_local'] && $this->config['default_cuavatar'])
 		{
