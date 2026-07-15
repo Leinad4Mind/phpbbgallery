@@ -1,5 +1,25 @@
 # Changelog
 
+### 2.0.2 - 2024-01-21
+
+- Small QoL improvement in the ACP, added sample placeholder data to the custom max-width field in the content-sizing settings.
+- Minor code updates.
+- Added and/or updated support for media sites:
+	- Apple Music
+	- x.com (aka Twitter)
+	- kick.com
+	- Threads
+    - Bunny Stream
+
+### 2.0.1 - 2023-04-15
+
+- Refactored the ACP and added AJAX to its user interface.
+- Added support for these media sites:
+  - bilibili.com
+  - mastodon.social
+  - tenor.com
+  - music.yandex.ru
+
 ### 2.0.0 - 2022-03-03
 
 - Backwards incompatible changes require a new minimum phpBB version of 3.3.2.
