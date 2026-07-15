@@ -65,27 +65,27 @@ $lang = array_merge($lang, array(
 	'ACP_BBFRONT_AD_CONTENT'				=> 'Ad code',
 	'ACP_BBFRONT_AD_CONTENT_EXPLAIN'		=> 'Add your advertisement code or custom code. HTML is enabled.',
 	
-	'SITESPLAT_COM'		        			=> 'http://sitesplat.com',
+	'SITESPLAT_COM'		        			=> 'https://sitesplat.com',
 	'SITESPLAT_COPY'		    			=> '&#169; SiteSplat',
 	'LICENSE_INFO'		        			=> 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    			=> 'Developer',
 	'ACP_NOTICE_CLOSE'						=> 'Close',
-	'ACP_BBFRONT_VERSION'       			=> '2.0.1',
+	'ACP_BBFRONT_VERSION'       			=> '3.0.0',
 	'ACP_LOADING'		        			=> 'Loading... Hold on',
 
 	'EXT_BBF_DESCRIPTION_PAGE'				=> 'A modern front page WordPress style for your board',
 	'EXT_BBF_TASKS_1'						=> 'Special Group permissions',
 	'EXT_BBF_TASKS_2'						=> 'Choose what to publish and the format',
-	'EXT_BBF_TASKS_3'						=> 'Checkout the other premium addons on <a href="http://www.sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
+	'EXT_BBF_TASKS_3'						=> 'Checkout the other premium addons on <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'EXT_BBF_TASKS_4'						=> 'Supports video embed with BBembed premium extension',
 	'EXT_BBF_TASKS_5'						=> 'Dynamic Masonry layout',
 	'EXT_BBF_TASKS_6'						=> 'phpBB 3.2 ready',
 	
 	'ACP_BBTAGS_NOTICE_CLOSE'				=> 'Close',
-	'NOTICE_BBTAGS'							=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=36"><strong>BBtags</strong></a> is not installed, you can NOT use the Tags in the published blocks',
-	'NOTICE_BBEMBED'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=32"><strong>BBembed</strong></a> is not installed, you can NOT use Media Rich Cards in the published blocks',
-	'NOTICE_LIKEBB'							=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use Like/dislike system in the published blocks',
-	'SS_HELPER_NOTY'	            		=> 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'NOTICE_BBTAGS'							=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=36"><strong>BBtags</strong></a> is not installed, you can NOT use the Tags in the published blocks',
+	'BBNOTICE_EMBED'						=> 'The extension <a href="https://www.phpbb.com/customise/db/extension/mediaembed"><strong>phpBB Media Embed</strong></a> is not installed, you can NOT use Media Rich Cards in the published blocks',
+	'NOTICE_LIKEBB'							=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use Like/dislike system in the published blocks',
+	'SS_HELPER_NOTY'	            		=> 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBFRONT_NOTICE'	            		=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.<br/>You can add cards to the front page while composing a post and/or also via the ajax quick card pin directly in viewtopic page.</p></div>',
 ));
 
@@ -100,7 +100,7 @@ $lang = array_merge($lang, array(
 			'DESCRIPTION_3'		=> 'Frontpage name',
 		),
 		'note' => array(
-			'NOTICE_1'			=> 'phpBB 3.2 ready',
+			'NOTICE_1'			=> 'phpBB 3.3 ready',
 		)
 	)
 ));

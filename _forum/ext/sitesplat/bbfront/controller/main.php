@@ -213,7 +213,7 @@ class main
 
 				$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 				$tpl_ary = array(
-					'URL'		=> append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&t=' . $row['topic_id'] . '#p' . $row['post_id']),
+					'URL'		=> append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'] . '#p' . $row['post_id']),
 					'TITLE'		=> $row['post_subject'],
 					'TEXT'		=> truncate_string(strip_tags(generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true)), $config_aray['chars'], $config_aray['chars'], true, " ..."),
 					'QUOTE'		=> (isset($quote[2])) ? true: false,
@@ -260,7 +260,8 @@ class main
 				{
 					$this->template->assign_block_vars('masonry.tag', array(
 					'TAG'	=> $value['tag'],
-					'ROUTE'	=> $url . '/app.' . $this->php_ext . '/bbtags/' . $value['route']
+//					'ROUTE'	=> $url . '/app.' . $this->php_ext . '/bbtags/' . $value['route']
+					'ROUTE'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $value['route'])),
 					));
 				}
 				
@@ -293,9 +294,9 @@ class main
 				"@/(?!(?:apps|developers|graph)\\.)[-\\w.]*facebook\\.com/(?:[/\\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\\?v=)(?<id>\\d+)(?![^/?&#])@",
 				"#/(?<type>video)s?/#"
 			),
-			'googleplus' => array(
-				'!//plus\\.google\\.com/(?:u/\\d+/)?(?:\\+(?<name>[^/]+)|(?<oid>\\d+))/posts/(?<pid>\\w+)!'
-			),
+//			'googleplus' => array(
+//				'!//plus\\.google\\.com/(?:u/\\d+/)?(?:\\+(?<name>[^/]+)|(?<oid>\\d+))/posts/(?<pid>\\w+)!'
+//			),
 			'soundcloud' => array(
 				'@api\\.soundcloud\\.com/playlists/(?<playlist_id>\\d+)@',
 				'@api\\.soundcloud\\.com/tracks/(?<track_id>\\d+)(?:\\?secret_token=(?<secret_token>[-\\w]+))?@',
