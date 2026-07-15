@@ -1,0 +1,245 @@
+<style>#forum_icons img {
+    max-width: 41px;
+    height: auto;
+    position: absolute;
+    margin-left: 12px;
+    margin-top: -10px;
+}
+
+#forum_icons input {
+    position: relative;
+}
+#forum_icons fieldset dd {
+    padding: 0 8px 25px 5px;
+}
+</style>
+<div id="forum_icons">
+    <fieldset>
+        <legend>{L_FORUM_ICONS}</legend>
+        <p>{L_ACP_BBSVG_FORUMS_EXPLAIN} <pre><code>.icon-wrapper {
+    background-color: transparent;
+}</code></pre></p>
+        <dl>
+            <dt>
+                <label for="viewforum_icon_folder_unread">{L_VIEWFORUM_ICON_FOLDER_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWFORUM_ICON_FOLDER_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewforum_icon_folder_unread" name="viewforum_icon_folder_unread" value="{VIEWFORUM_ICON_FOLDER_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWFORUM_ICON_FOLDER_UNREAD_SRC -->
+                <img src="{VIEWFORUM_ICON_FOLDER_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewforum_icon_folder_read">{L_VIEWFORUM_ICON_FOLDER_READ}{L_COLON}</label><br />
+                <span>{L_VIEWFORUM_ICON_FOLDER_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewforum_icon_folder_read" name="viewforum_icon_folder_read" value="{VIEWFORUM_ICON_FOLDER_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWFORUM_ICON_FOLDER_READ_SRC -->
+                <img src="{VIEWFORUM_ICON_FOLDER_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewforum_icon_lock">{L_VIEWFORUM_ICON_LOCK}{L_COLON}</label><br />
+                <span>{L_VIEWFORUM_ICON_LOCK_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewforum_icon_lock" name="viewforum_icon_lock" value="{VIEWFORUM_ICON_LOCK}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWFORUM_ICON_LOCK_SRC -->
+                <img src="{VIEWFORUM_ICON_LOCK_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewforum_icon_link">{L_VIEWFORUM_ICON_LINK}{L_COLON}</label><br />
+                <span>{L_VIEWFORUM_ICON_LINK_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewforum_icon_link" name="viewforum_icon_link" value="{VIEWFORUM_ICON_LINK}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWFORUM_ICON_LINK_SRC -->
+                <img src="{VIEWFORUM_ICON_LINK_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <hr>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_lock">{L_VIEWTOPIC_ICON_LOCK}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_LOCK_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_lock" name="viewtopic_icon_lock" value="{VIEWTOPIC_ICON_LOCK}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_LOCK_SRC -->
+                <img src="{VIEWTOPIC_ICON_LOCK_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_global_unread">{L_VIEWTOPIC_ICON_GLOBAL_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_GLOBAL_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_global_unread" name="viewtopic_icon_global_unread" value="{VIEWTOPIC_ICON_GLOBAL_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+           <!-- IF VIEWTOPIC_ICON_GLOBAL_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_GLOBAL_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+		   </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_global_read">{L_VIEWTOPIC_ICON_GLOBAL_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_GLOBAL_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_global_read" name="viewtopic_icon_global_read" value="{VIEWTOPIC_ICON_GLOBAL_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_GLOBAL_READ_SRC -->
+                <img src="{VIEWTOPIC_ICON_GLOBAL_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_announce_unread">{L_VIEWTOPIC_ICON_ANNOUNCE_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_ANNOUNCE_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_announce_unread" name="viewtopic_icon_announce_unread" value="{VIEWTOPIC_ICON_ANNOUNCE_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_ANNOUNCE_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_ANNOUNCE_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_announce_read">{L_VIEWTOPIC_ICON_ANNOUNCE_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_ANNOUNCE_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_announce_read" name="viewtopic_icon_announce_read" value="{VIEWTOPIC_ICON_ANNOUNCE_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_ANNOUNCE_READ_SRC -->
+                <img src="{VIEWTOPIC_ICON_ANNOUNCE_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_sticky_unread">{L_VIEWTOPIC_ICON_STICKY_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_STICKY_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_sticky_unread" name="viewtopic_icon_sticky_unread" value="{VIEWTOPIC_ICON_STICKY_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_STICKY_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_STICKY_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_sticky_read">{L_VIEWTOPIC_ICON_STICKY_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_STICKY_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_sticky_read" name="viewtopic_icon_sticky_read" value="{VIEWTOPIC_ICON_STICKY_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_STICKY_READ_SRC -->
+                <img src="{VIEWTOPIC_ICON_STICKY_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_poll_unread">{L_VIEWTOPIC_ICON_POLL_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_POLL_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_poll_unread" name="viewtopic_icon_poll_unread" value="{VIEWTOPIC_ICON_POLL_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_POLL_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_POLL_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_poll_read">{L_VIEWTOPIC_ICON_POLL_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_POLL_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_poll_read" name="viewtopic_icon_poll_read" value="{VIEWTOPIC_ICON_POLL_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_POLL_READ_SRC -->
+                <img src="{VIEWTOPIC_ICON_POLL_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+		   </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_moved_unread">{L_VIEWTOPIC_ICON_MOVED_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_MOVED_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_moved_unread" name="viewtopic_icon_moved_unread" value="{VIEWTOPIC_ICON_MOVED_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_MOVED_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_MOVED_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_moved_read">{L_VIEWTOPIC_ICON_MOVED_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_MOVED_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_moved_read" name="viewtopic_icon_moved_read" value="{VIEWTOPIC_ICON_MOVED_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_MOVED_READ -->
+                <img src="{VIEWTOPIC_ICON_MOVED_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_normal_unread">{L_VIEWTOPIC_ICON_NORMAL_UNREAD}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_NORMAL_UNREAD_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_normal_unread" name="viewtopic_icon_normal_unread" value="{VIEWTOPIC_ICON_NORMAL_UNREAD}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_NORMAL_UNREAD_SRC -->
+                <img src="{VIEWTOPIC_ICON_NORMAL_UNREAD_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="viewtopic_icon_normal_read">{L_VIEWTOPIC_ICON_NORMAL_READ}{L_COLON}</label><br />
+                <span>{L_VIEWTOPIC_ICON_NORMAL_READ_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <input class="text medium" type="text" id="viewtopic_icon_normal_read" name="viewtopic_icon_normal_read" value="{VIEWTOPIC_ICON_NORMAL_READ}" maxlength="255" placeholder="/images/MySVG_icon.svg"/>
+            <!-- IF VIEWTOPIC_ICON_NORMAL_READ_SRC -->
+                <img src="{VIEWTOPIC_ICON_NORMAL_READ_SRC}" alt="{L_FORUM_IMAGE}" />
+            <!-- ENDIF -->
+			</dd>
+        </dl>
+    </fieldset>
+</div>
