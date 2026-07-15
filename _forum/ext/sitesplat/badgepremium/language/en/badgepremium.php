@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'BADGEAUTO_TYPE_SUBSCRIBED'		=> 'Badge Award Subscribed',
 	'BADGEAUTO_TYPE_TOPICS'			=> 'Badge Award Topics',
 
-	'BOOKMARKED_EXPLAIN'			=> 'Award badges to topic-starters who`s topic is bookmarked by members',
+	'BOOKMARKED_EXPLAIN'			=> 'Award badges to topic-starters whose topic is bookmarked by members',
 	'BBPOINTS_EXPLAIN'				=> 'Award badges to users with BBpoints',
 	'CROSS_BADGE_EXPLAIN'			=> 'Award badges to specific rules',
 	'POLLS_EXPLAIN'					=> 'Award badges to posters who made a poll',

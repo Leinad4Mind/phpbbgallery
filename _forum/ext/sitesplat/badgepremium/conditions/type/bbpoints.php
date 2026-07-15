@@ -87,20 +87,23 @@ class bbpoints extends \sitesplat\badge\conditions\type\base
 		$sync = $options['action'] == 'sync';
 
 		// Get data for the users to be checked (exclude bots and guests)
-			$sql = 'SELECT u.user_id, SUM(points) as bbpoints FROM tbl_users u 
-					LEFT JOIN ( 
-					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM tbl_bbpoints GROUP BY to_id 
-					UNION 
-					SELECT from_id AS user_id, SUM(-bbpoints) AS points FROM tbl_bbpoints GROUP BY from_id 
-					UNION 
-					SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM tbl_topics GROUP BY topic_poster 
-					UNION 
-					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM tbl_posts WHERE post_visibility = 1 GROUP BY poster_id) t1 
-					ON t1.user_id = u.user_id 
-					WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-					AND ' . $this->db->sql_in_set('u.user_id', $user_ids, $sync, true) . '
-					GROUP BY user_id 
-					ORDER BY bbpoints DESC ';
+		$this->bbpoints_table = $this->container->getParameter('sitesplat.bbpoints.table');
+		$sql = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));";
+		$this->db->sql_query($sql);
+		$sql = 'SELECT u.user_id, SUM(points) as bbpoints FROM ' . USERS_TABLE . ' u 
+				LEFT JOIN ( 
+				SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' GROUP BY to_id 
+				UNION 
+				SELECT from_id AS user_id, SUM(-bbpoints) AS points FROM ' . $this->bbpoints_table . ' GROUP BY from_id 
+				UNION 
+				SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' GROUP BY topic_poster 
+				UNION 
+				SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 GROUP BY poster_id) t1 
+				ON t1.user_id = u.user_id 
+				WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
+				AND ' . $this->db->sql_in_set('u.user_id', $user_ids, $sync, true) . '
+				GROUP BY user_id 
+				ORDER BY bbpoints DESC ';
 		$result = $this->db->sql_query($sql);
 
 		$user_data = array();

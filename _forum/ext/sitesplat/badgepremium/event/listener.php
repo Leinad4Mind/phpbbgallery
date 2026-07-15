@@ -30,11 +30,17 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup' => 'add_language',
+			'core.user_setup' => 'load_language_on_setup',
 		);
 	}
-
-	public function add_language($event)
+	/**
+	 * Load common language files during user setup
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
