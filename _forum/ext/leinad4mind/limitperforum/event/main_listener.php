@@ -271,7 +271,7 @@ class main_listener implements EventSubscriberInterface
 
 		foreach (get_forum_branch((int) $forum_id, 'children') as $subforum)
 		{
-			if ($subforum['parent_id'] == $forum_id)
+			if ($subforum['forum_id'] != 223 & $subforum['parent_id'] == $forum_id)
 			{
 				$subforum_ids[] = $subforum['forum_id'];
 			}
