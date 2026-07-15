@@ -17,9 +17,12 @@ class bbprefix_info
 			'filename'	=> '\sitesplat\bbprefix\acp\bbprefix_module',
 			'title'		=> 'ACP_BBPREFIX_MANAGEMENT',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'prefixes'		=> array('title' => 'ACP_BBPREFIX_MANAGE', 'auth' => '', 'cat' => array('ACP_MESSAGES')),
-			),
+			'modes'     => array(
+                'prefixes'    => array(
+                    'title' => 'ACP_BBPREFIX_MANAGE',
+					'auth'	=> 'ext_sitesplat/bbprefix && acl_a_board',
+                    'cat'   => array('ACP_MESSAGES')),
+            ),
 		);
 	}
 }

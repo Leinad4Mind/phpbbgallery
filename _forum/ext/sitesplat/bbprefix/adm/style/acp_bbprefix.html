@@ -62,8 +62,8 @@
 		<!-- END prefix -->
     <tr class="cbNew">
 			<td></td>
-            <td><input type="text" id="prefix_name" name="prefix_name" maxlength="255" value="" style="width:95%" /></td>
-            <td><input type="text" id="prefix_prefix" name="prefix_prefix" maxlength="255" value=""  style="width:95%"/></td>
+            <td><input type="text" id="prefix_name" name="prefix_name" maxlength="255" value="" style="width:95%" placeholder="{L_PREFIX_NAME}"/></td>
+            <td><input type="text" id="prefix_prefix" name="prefix_prefix" maxlength="255" value=""  style="width:95%" placeholder="{L_PREFIX_PARSED}"/></td>
             <td style="text-align:left;" colspan="3"><input type="hidden" name="action" value="add" /><input class="button1" type="submit" id="submitadd" name="submitadd" value="{L_ADD_PREFIX}" /></td>
             <td>
                 <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF --> 
@@ -135,6 +135,7 @@
 
 			<p class="submit-buttons">
             <!-- IF ACTION --><input type="hidden" name="action" value="{ACTION}" /><!-- ENDIF -->
+	            <input type="hidden" name="prefix_id" value="{PREFIX_ID}" />
 				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
 			</p>

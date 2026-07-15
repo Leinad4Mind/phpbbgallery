@@ -35,15 +35,16 @@ $lang = array_merge($lang, [
 	'ACP_BBPREFIX_MANAGE_EXPLAIN'	=> 'On this page, you can manage the topic prefixes for your board. Use of variables in your prefix is possible. Custom BBcodes is also supported so you can create fun and flexible prefixes. <br />You can also exclude forums and exclude groups from using prefixes. Have Fun!!!',
     'BBPREFIX_MANAGE_EXONE'	        => '<h3>Font Awesome icon could be:</h3> <br /><br /><strong>BBCode usage:</strong> <code>[fa-bug][/fa-bug]</code> <br /><strong>HTML Replacement</strong> <code>&lt;i class=&quot;fa fa-bug&quot;&gt;&lt;/i&gt;</code> <br /><strong>Prefix usage:</strong> <code>[fa-bug][/fa-bug]</code>',
 	'BBPREFIX_MANAGE_EXTWO'	        => '<h3>Bootstrap labels could be:</h3> <br /><br /><strong>BBCode usage:</strong> <code>[label-warning][/label-warning]</code> <br /><strong>HTML Replacement</strong> <code>&lt;span class=&quot;label label-warning&quot;&gt;MyTextHere&lt;/span&gt;</code> <br /><strong>Prefix usage:</strong> <code>[label-warning][/label-warning]</code> ',
-	'BBPREFIX_MANAGE_EXTHREE'	    => '<h3>Image based bbcode could be:</h3> <br /><br /><strong>BBCode usage:</strong> <code>[img-owl][/img-owl]</code> <br /><strong>HTML Replacement</strong> <code>&lt;img src=&quot;https://cdn2.iconfinder.com/data/icons/thesquid-ink-40-free-flat-icon-pack/64/owl-20.png&quot;&gt;</code> <br /><strong>Prefix usage:</strong> <code>[img-owl][/img-owl]</code>',
+	'BBPREFIX_MANAGE_EXTHREE'	    => '<h3>Image based bbcode could be:</h3> <br /><br /><strong>BBCode usage:</strong> <code>[img-owl][/img-owl]</code> <br /><strong>HTML Replacement</strong> <code>&lt;img class="bbprefix-index-tag" src=&quot;https://cdn2.iconfinder.com/data/icons/thesquid-ink-40-free-flat-icon-pack/64/owl-20.png&quot; alt=""&gt;</code> <br /><strong>Prefix usage:</strong> <code>[img-owl][/img-owl]</code><br />**<small>Note the class="bbprefix-index-tag" for images which is necessary to ensure the correct max size is applied on the index page.</small>',
 	
 	
 	'TITLE_EXPLAIN_TIPS'			=> 'Tips and Usage:',
 	'TITLE_EXPLAIN_TIPS_EXPLAIN'	=> 'The current allowed variables are: (<strong>{DATE}</strong>, <strong>{POSTER}</strong> and <strong>{USERNAME}</strong>)<br /> Custom BBcodes would need to be created <strong>first</strong> and then the BBcode can be used in BBprefix as follows for example:',
 	'TITLE_EXPLAIN_TIPS_STAR'	    => '<small>**Create your custom BBcode FIRST under  ACP > POSTING > Messages > BBcodes and then create your BBprefix entry.</small>',
 	
-	'BBPREFIX_NOTICE'				=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
-
+	'BBPREFIX_NOTICE'				=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.</p></div>',
+    'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	
 	'ACP_BBPREFIX'					=> 'Topic Prefixes',
 	'PREFIX_NAME'					=> 'Prefix name',
 	'PREFIX_PARSED'					=> 'Prefix',
@@ -67,7 +68,7 @@ $lang = array_merge($lang, [
 	
 	'BBPREFIX_EMPTY_ERROR'			=> 'Empty name and / or prefix',
 	'BBPREFIX_NAME_ERROR'			=> 'This BBprefix id already taken',
-	'BBPREFIX_TITLE_ERROR'			=> 'This prefix already excists',
+	'BBPREFIX_TITLE_ERROR'			=> 'This prefix already exists',
 	
 	'PREFIX_ADDED_SUCCESS'			=> 'The prefix has been added successfully.',
 	'PREFIX_EDITED_SUCCESS'			=> 'The prefix has been updated successfully.',
@@ -89,7 +90,7 @@ $lang = array_merge($lang, [
 	'EXTENSION_DEVELOPER'	    	=> 'Developer',
 	'ACP_BBPREFIX_NOTICE_CLOSE'		=> 'Close',
 	
-	'ACP_BBPREFIX_VERSION'			=> '1.0.5',
+	'ACP_BBPREFIX_VERSION'			=> '1.0.7',
 	'ACP_BBPREFIX'					=> 'BBprefix',
     'ACP_LOADING'			    	=> 'Hold On. Loading...'
 ]);
