@@ -3,7 +3,7 @@
 *
 * @package User Login Redirect
 * @copyright (c) 2014 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,49 +14,32 @@ namespace david63\loginredirect\event;
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use david63\loginredirect\core\functions;
+use david63\loginredirect\controller\main_controller;
+
 /**
 * Event listener
 */
 class listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\config\config */
-	protected $config;
+	/** @var \david63\loginredirect\core\functions */
+	protected $functions;
 
-	/** @var \phpbb\user */
-	protected $user;
-
-	/** @var \phpbb\request\request */
-	protected $request;
-
-	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
-
-	/** @var string phpBB root path */
-	protected $root_path;
-
-	/** @var string PHP extension */
-	protected $phpEx;
+	/** @var \david63\loginredirect\controller\main_controller */
+	protected $indexoutput;
 
 	/**
-	* Constructor
+	* Constructor for listener
 	*
-	* @param \phpbb\config\config $config
-	* @param \phpbb\user $user
-	* @param \phpbb\request\request $request
-	* @param \phpbb\db\driver\driver_interface $db
-	* @param string $root_path
-	* @param string $php_ext
+	* @param \david63\loginredirect\core\functions				functions			Functions for the extension
+	* @param \david63\loginredirect\controller\main_controller	$main_controller	Main controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, $root_path, $php_ext)
+	public function __construct(functions $functions, main_controller $main_controller)
 	{
-		$this->config		= $config;
-		$this->user			= $user;
-		$this->request		= $request;
-		$this->db			= $db;
-		$this->root_path	= $root_path;
-		$this->phpEx		= $php_ext;
+		$this->functions		= $functions;
+		$this->main_controller	= $main_controller;
 	}
 
 	/**
@@ -70,7 +53,10 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'			=> 'load_language_on_setup',
-			'core.login_box_redirect'	=> 'login_redirect',
+			'core.login_box_redirect'	=> array(
+				'login_redirect',
+				5, // Needed to allow Profile redirect extension to run first.
+			),
 		);
 	}
 
@@ -85,7 +71,7 @@ class listener implements EventSubscriberInterface
 	{
 		$lang_set_ext	= $event['lang_set_ext'];
 		$lang_set_ext[]	= array(
-			'ext_name' => 'david63/loginredirect',
+			'ext_name' => $this->functions->get_ext_namespace(),
 			'lang_set' => 'loginredirect_common',
 		);
 
@@ -101,161 +87,6 @@ class listener implements EventSubscriberInterface
 	*/
 	public function login_redirect($event)
 	{
-		// No point going any further if the user is banned, but we have to allow founders to login
-		if (defined('IN_CHECK_BAN') && $this->user->data['user_type'] != USER_FOUNDER)
-		{
-			return;
-		}
-
-		$redirect = $event['redirect'];
-
-		if ($this->config['redirect_enabled'])
-		{
-			$refresh = $proceed = $latest_announce = $select_announce = false;
-
-			// Redirect new member on first log in
-			if ($this->config['redirect_welcome'] && !empty($this->config['redirect_welcome_topic_id']) && $this->user->data['user_lastvisit'] == 0)
-			{
-				$sql = 'SELECT topic_id
-					FROM ' . TOPICS_TABLE . '
-						WHERE topic_id = ' . (int)$this->config['redirect_welcome_topic_id'];
-
-				$result	= $this->db->sql_query($sql);
-				$row	= $this->db->sql_fetchrow($result);
-
-				$this->db->sql_freeresult($result);
-
-				$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-				$message	= $this->user->lang('REDIRECT_LOGIN_WELCOME_TOPIC');
-				$l_redirect	= $this->user->lang('REDIRECT_REFRESH_WELCOME');
-				$refresh	= $this->config['redirect_welcome_refresh'];
-			}
-			else if ($this->config['redirect_announce'] || $this->config['redirect_group'])
-			{
-				// Redirect to an announcement
-				if ($this->config['redirect_announce'])
-				{
-					// Redirect to latest announcement
-					$sql = 'SELECT topic_id, topic_time
-						FROM ' . TOPICS_TABLE . '
-							WHERE topic_type = ' . POST_ANNOUNCE . '
-							ORDER BY topic_time DESC';
-
-					$result	= $this->db->sql_query_limit($sql, 1);
-					$row	= $this->db->sql_fetchrow($result);
-
-					$this->db->sql_freeresult($result);
-
-					$announce_redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-					// Check that the member has not visited since this announcement was posted
-					$latest_announce	= ($this->user->data['user_lastvisit'] < $row['topic_time']) ? true : false;
-
-					// Redirect to selected announcement
-					if (!empty($this->config['redirect_announce_topic_id']))
-					{
-						$sql = 'SELECT topic_id, topic_time
-							FROM ' . TOPICS_TABLE . '
-								WHERE topic_id = ' . (int)$this->config['redirect_announce_topic_id'];
-
-						$result	= $this->db->sql_query($sql);
-						$row	= $this->db->sql_fetchrow($result);
-
-						$this->db->sql_freeresult($result);
-
-						$select_redirect = "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-						// Check that the member has not visited since this announcement was posted
-						$select_announce = ($this->user->data['user_lastvisit'] < $row['topic_time']) ? true : false;
-					}
-
-					// Which do we use?
-					// Latest is priority and not visited
-					if ($this->config['redirect_announce_priority'] && $latest_announce)
-					{
-						$redirect = $announce_redirect;
-					}
-					// Selected is priority and not visited
-					else if (!$this->config['redirect_announce_priority'] && $select_announce)
-					{
-						$redirect = $select_redirect;
-					}
-					// Selected is priority and visited but latest has not been visited
-					else if (!$this->config['redirect_announce_priority'] && $latest_announce)
-					{
-						$redirect = $announce_redirect;
-					}
-
-					if ($latest_announce || $select_announce)
-					{
-						$message	= $this->user->lang('REDIRECT_LOGIN_ANNOUNCE_TOPIC');
-						$l_redirect	= $this->user->lang('REDIRECT_REFRESH_ANNOUNCE');
-						$refresh	= $this->config['redirect_announce_refresh'];
-					}
-				}
-
-				// Redirect to group message if already been to announcement
-				if ($this->config['redirect_group'] && !$announce)
-				{
-					if ($this->config['redirect_group_all'])
-					{
-						// No need to check group if all are being redirected
-						$proceed = true;
-					}
-					else
-					{
-						// Is user in the selected group?
-						$sql = 'SELECT group_id
-						FROM ' . USER_GROUP_TABLE . '
-							WHERE group_id = ' . (int)$this->config['redirect_group_id'] . '
-								AND user_id = ' . (int)$this->user->data['user_id'];
-
-						$result	= $this->db->sql_query($sql);
-						$row	= $this->db->sql_fetchrow($result);
-
-						$this->db->sql_freeresult($result);
-
-						// Check that the member is in the group
-						if ($row && ($this->config['redirect_group_id'] == $row['group_id']))
-						{
-							$proceed = true;
-						}
-					}
-
-					if ($proceed && !empty($this->config['redirect_group_topic_id']))
-					{
-						$sql = 'SELECT topic_id, topic_time
-						FROM ' . TOPICS_TABLE . '
-							WHERE topic_id = ' . (int)$this->config['redirect_group_topic_id'];
-
-						$result	= $this->db->sql_query($sql);
-						$row	= $this->db->sql_fetchrow($result);
-
-						$this->db->sql_freeresult($result);
-
-						// Check that the member has not visited since this topic was posted
-						if ($this->user->data['user_lastvisit'] < $row['topic_time'])
-						{
-							$redirect	= "{$this->root_path}viewtopic.$this->phpEx?t=" . $row['topic_id'];
-							$message	= $this->user->lang('REDIRECT_LOGIN_GROUP_TOPIC');
-							$l_redirect	= $this->user->lang('REDIRECT_REFRESH_GROUP');
-							$refresh	= $this->config['redirect_group_refresh'];
-						}
-					}
-				}
-			}
-		}
-
-		// append/replace SID (may change during the session for AOL users)
-		$redirect = reapply_sid($redirect);
-
-		if ($refresh)
-		{
-			// This is legacy code but is required if the user is to be informed of the redirection
-			$redirect = meta_refresh(2, $redirect);
-			trigger_error($message . '<br /><br />' . sprintf($l_redirect, '<a href="' . $redirect . '">', '</a>'));
-		}
-		else
-		{
-			redirect($redirect);
-		}
+		$this->main_controller->loginredirect($event);
 	}
 }

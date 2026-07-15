@@ -3,13 +3,15 @@
 *
 * @package User Login Redirect
 * @copyright (c) 2014 david63
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
 namespace david63\loginredirect\migrations;
 
-class version_1_0_0 extends \phpbb\db\migration\migration
+use phpbb\db\migration\migration;
+
+class version_1_0_0 extends migration
 {
 	public function update_data()
 	{
