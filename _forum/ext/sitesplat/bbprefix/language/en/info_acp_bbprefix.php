@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 	'TITLE_EXPLAIN_TIPS_STAR'	    => '<small>**Create your custom BBcode FIRST under  ACP > POSTING > Messages > BBcodes and then create your BBprefix entry.</small>',
 	
 	'BBPREFIX_NOTICE'				=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>.</p></div>',
-    'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+    'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	
 	'ACP_BBPREFIX'					=> 'Topic Prefixes',
 	'PREFIX_NAME'					=> 'Prefix name',
@@ -84,13 +84,13 @@ $lang = array_merge($lang, [
 	'BBPREFIX_TASKS_5'				=> 'Group Exclusion',
 	'BBPREFIX_TASKS_6'				=> 'Much more..!',
 	
-	'SITESPLAT_COM'		       		=> 'http://sitesplat.com',
+	'SITESPLAT_COM'		       		=> 'https://sitesplat.com',
 	'SITESPLAT_COPY'		    	=> '&#169; SiteSplat',
 	'LICENSE_INFO'		        	=> 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    	=> 'Developer',
 	'ACP_BBPREFIX_NOTICE_CLOSE'		=> 'Close',
 	
-	'ACP_BBPREFIX_VERSION'			=> '1.0.7',
+	'ACP_BBPREFIX_VERSION'			=> '1.0.8',
 	'ACP_BBPREFIX'					=> 'BBprefix',
     'ACP_LOADING'			    	=> 'Hold On. Loading...'
 ]);
