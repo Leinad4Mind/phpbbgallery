@@ -29,6 +29,7 @@ class listener implements EventSubscriberInterface
 			'core.delete_posts_after'						=> 'delete_like_dislike',
 			'core.memberlist_view_profile'					=> 'modify_profile',
 			'core.delete_forum_content_before_query'		=> 'delete_like_dislike_forum',
+			'core.delete_user_before'						=> 'delete_like_dislike_user',
 		);
 	}
 
@@ -295,15 +296,25 @@ class listener implements EventSubscriberInterface
 	
 	public function delete_like_dislike_forum($event)
 	{
-		$forum_id = $event['forum_id'];
-		$sql = 'DELETE FROM ' . $this->reward_table . '
-		WHERE post_id IN (
-			SELECT p.post_id
-			FROM ' . $this->topics_table . ' t
-			LEFT JOIN ' . $this->posts_table . ' p
-				ON (t.topic_id = p.topic_id)
-			WHERE t.forum_id = ' . (int) $forum_id . '
-		)';
+		$sql = "DELETE r.* FROM {$this->reward_table} r INNER JOIN {$this->posts_table} p
+			WHERE p.forum_id = {$event['forum_id']}
+			AND r.post_id = p.post_id";
+
 		$this->db->sql_query($sql);
+	}
+
+	public function delete_like_dislike_user($event)
+	{
+		if (!empty($event['user_ids'])) {
+			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
+			$this->db->sql_query("DELETE FROM {$this->reward_table} WHERE user_id $user_id_in");
+			if ($event['mode'] == 'remove') {
+				$sql = "DELETE r.* FROM {$this->reward_table} r INNER JOIN {$this->posts_table} p
+					WHERE p.poster_id $user_id_in
+					AND r.post_id = p.post_id";
+	
+				$this->db->sql_query($sql);
+			}
+		}
 	}
 }

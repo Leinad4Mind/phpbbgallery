@@ -165,6 +165,10 @@ class main_controller
 			break;
 			
 			case 'toplist':
+				if (!$this->auth->acl_get('u_bbreaction_module'))
+				{
+					trigger_error($this->user->lang['NOT_AUTHORISED'], E_USER_NOTICE);
+				}
 				$type = $this->request->variable('t', 0);
 				
 				$visibility = $this->container->get('content.visibility');
