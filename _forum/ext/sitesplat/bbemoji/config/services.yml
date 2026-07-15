@@ -1,7 +1,7 @@
 parameters:
   sitesplat.bbemoji.url.generators:
     - ["EmojiOne", "//cdn.jsdelivr.net/emojione/assets/svg/", "svg"]
-    - ["EmojiOne", "$web_root_path$ext/sitesplat/bbemoji/images/", "svg"]
+    - ["EmojiOne", "$web_root_path$ext/sitesplat/bbemoji/images/",   "svg"]
 #    - ["Twemoji",  "//twemoji.maxcdn.com/svg/",               "svg"]
 #    - ["Gemoji",   "/path/to/gemoji/",                        "png"]
 
@@ -79,21 +79,9 @@ services:
     parent: sitesplat.bbemoji.listener
     tags:
       - { name: event.listener }
-
-  sitesplat.bbemoji.bblinks_listener:
-    class: sitesplat\bbemoji\event\bblinks_listener
-    parent: sitesplat.bbemoji.listener
-    tags:
-      - { name: event.listener }
-
+      
   sitesplat.bbemoji.bbchat_listener:
     class: sitesplat\bbemoji\event\bbchat_listener
     parent: sitesplat.bbemoji.listener
     tags:
-      - { name: event.listener }
-
-  sitesplat.bbemoji.likedd_listener:
-    class: sitesplat\bbemoji\event\likedd_listener
-    parent: sitesplat.bbemoji.listener
-    tags:
-      - { name: event.listener }
+      - { name: event.listener }      

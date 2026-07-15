@@ -1,12 +1,11 @@
 <?php
-
 /**
- *
- * @package BBEmoji
- * @copyright (c) 2018-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* @package BBemoji
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbemoji\migrations;
 

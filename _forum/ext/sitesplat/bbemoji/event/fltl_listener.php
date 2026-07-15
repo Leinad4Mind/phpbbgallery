@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @package BBEmoji
- * @copyright (c) 2016-2022 SiteSplat All rights reserved
- * @license Proprietary
- */
-
+* @package BBemoji
+* @copyright (c) 2016 SiteSplat All rights reserved
+* @license Proprietary
+*/
 namespace sitesplat\bbemoji\event;
 
 class fltl_listener extends listener
@@ -24,7 +23,8 @@ class fltl_listener extends listener
 	{
 		$sql_ary = $event['sql_ary'];
 		$sql_ary['SELECT'] .= ', sbf.enable_subject_emoji';
-		if (!isset($sql_ary['LEFT_JOIN'])) {
+		if (!isset($sql_ary['LEFT_JOIN']))
+		{
 			$sql_ary['LEFT_JOIN'] = array();
 		}
 		$sql_ary['LEFT_JOIN'][] = array(
@@ -37,9 +37,11 @@ class fltl_listener extends listener
 	public function emojify_fltl_sql_after($event)
 	{
 		$rows = $event['rows'];
-		foreach ($rows as &$row) {
+		foreach ($rows as &$row)
+		{
 			$row['post_text'] = $this->unparse($row['post_text']);
-			if ($row['enable_subject_emoji']) {
+			if ($row['enable_subject_emoji'])
+			{
 				$row['topic_title'] = $this->render($this->parse($row['topic_title']));
 			}
 		}
