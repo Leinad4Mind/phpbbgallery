@@ -13,7 +13,7 @@
 				</li>
 		<!-- ELSE -->
             <li>
-               <!-- IF top_topics.S_UNREAD --><span class="label label-warning">{L_UNREAD}</span>&nbsp;<!-- ENDIF --><a class="title-head" href="{top_topics.U_TOPIC}" title="{top_topics.TOPIC_TITLE}">{top_topics.TOPIC_TITLE}</a>
+               <!-- IF top_topics.S_UNREAD --><span class="label label-warning">{L_UNREAD}</span>&nbsp;<!-- ENDIF --><a class="title-head" href="{top_topics.U_TOPIC}" title="{{ top_topics.TOPIC_TITLE|striptags }}">{top_topics.TOPIC_TITLE}</a>
                <div>{top_topics.USERNAME_FULL}</div>
 			   <div>{L_IN}{L_COLON}&nbsp;<a href="{top_topics.U_FORUM}" title="{top_topics.FORUM_NAME}">{top_topics.FORUM_NAME}</a></div>
 			   <small class="date"><i class="fa fa-clock-o"></i>&nbsp;{top_topics.LAST_TOPIC_TIME}</small>

@@ -43,12 +43,13 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_DATE'		=> 'Data',
 	'LAST_BBREACTIONS'	=> 'Últimas Reacções',
 	'SIDEBAR_REACTION'	=> 'Tipo de Reacção',
-	//'BBPOINTS'		=> 'Points',
+	'BBPOINTS'			=> 'Pontos',
 	'POLL'				=> 'Última Votação',
 	'NEWSLETTER'		=> 'Newsletter',
 	'SIGN_IN_NEWS'		=> 'Subscreve a nossa newsletter',
 	'SUBSCRIBE_BTN'		=> 'Subscrever',
 	'DOWNLOADS'			=> 'Downloads',
+	'UNREAD'			=> 'por ler',
 	
 	'INFOMSG'			=> 'Informação',
 	'VOTE_NOT_POSIIBLE'	=> 'Alteração de votos não é possível',
@@ -57,7 +58,7 @@ $lang = array_merge($lang, array(
 	'NOT_FOUND'			=> 'Votação não encontrada',
 	
 	'STAFF'				=> 'Staff online',
-	'UNKNOWN'			=> 'Desconhecido',
+	'STAFF_UNKNOWN'	    => 'N/A',
 	
 	'RECEIVED_BY'		=> 'Recebido Por',
 	

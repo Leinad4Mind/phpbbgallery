@@ -59,6 +59,8 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
+		$phpbb_dispatcher = $this->container->get('dispatcher');
+
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
 		$forum_ary = array();
@@ -108,7 +110,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 				// grab all posts that meet criteria and auths
 				$sql_array = array(
 					'SELECT'	=> 'u.user_id, u.username, u.user_colour, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
-									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name, 
+									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
 									at.attr_name',
 					'FROM'		=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'	=> array(
@@ -158,8 +160,21 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 						'TOPIC_TITLE' 		=> $topic_title,
+						'TOPIC_TITLE_NO_HTML'	=> $topic_title,
 						'FORUM_NAME'		=> $forum_name,
 					);
+
+					/**
+					* Event to modify reaction data before they are assigned
+					*
+					* @event sitesplat.bbsidebar.type.hot_topics_tpl_before
+					* @var	array	tpl_ary	Template array
+					* @since 1.5.0
+					*/
+					$vars = array(
+						'tpl_ary',
+					);
+					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.hot_topics_tpl_before', compact($vars)));
 
 					$this->template->assign_block_vars('hot_topics', $tpl_ary);
 				}
@@ -167,14 +182,14 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			}
 			else
 			{
-				$this->template->assign_block_vars('top_topics', array(
+				$this->template->assign_block_vars('hot_topics', array(
 					'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
 				));
 			}
 		}
 		else
 		{
-			$this->template->assign_block_vars('top_topics', array(
+			$this->template->assign_block_vars('hot_topics', array(
 				'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
 			));
 		}

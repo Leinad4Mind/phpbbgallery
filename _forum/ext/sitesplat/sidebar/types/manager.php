@@ -28,6 +28,9 @@ class manager
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	
+	protected $template;
+	
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -36,6 +39,10 @@ class manager
 
 	/** @var string The database table the badge types are stored in */
 	protected $sidebar_types_table;
+	
+	protected $bbemoji_icons_table;
+	protected $bbemoji_parser;
+	protected $bbemoji_enabled = false;
 
 	/**
 	 * Constructor
@@ -50,13 +57,14 @@ class manager
 	 *
 	 * @access public
 	 */
-	public function __construct($sidebar_types, ContainerInterface $phpbb_container, \phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, $sidebar_types_table)
+	public function __construct($sidebar_types, ContainerInterface $phpbb_container, \phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\template\template $template, \phpbb\request\request $request, $sidebar_types_table, $bbemoji_icons_table)
 	{
 		$this->sidebar_types = $sidebar_types;
 		$this->phpbb_container = $phpbb_container;
 		$this->cache = $cache;
 		$this->db = $db;
 		$this->user = $user;
+		$this->template = $template;
 		$this->request = $request;
 		$this->sidebar_types_table = $sidebar_types_table;
 	}

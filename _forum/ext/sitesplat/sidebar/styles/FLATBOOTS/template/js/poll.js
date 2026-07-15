@@ -1,1 +1,73 @@
-head.ready(function(){var t;t=jQuery,window,document,t(function(){t("#pollchart").highcharts({chart:{plotBackgroundColor:null,backgroundColor:"rgba(255, 255, 255, 0.0)",plotBorderWidth:null,plotShadow:!1,type:"pie"},title:{text:""},credits:{enabled:!1,text:"sitesplat.com",href:"http://sitesplat.com"},exporting:{enabled:!1},tooltip:{pointFormat:"{series.name}: <b>{point.percentage:.1f}%</b>"},plotOptions:{pie:{allowPointSelect:!1,cursor:"pointer",point:{events:{click:function(){t.ajax({type:"POST",url:"app.php/sidebar/poll.html",data:{f:this.f,t:this.t,v:this.v},dataType:"json",success:function(e){e.data&&t("#pollchart").highcharts().series[0].setData(e.data),phpbb.alert(e.info,e.txt,!0),phpbb.closeDarkenWrapper(3e3)}})}}},dataLabels:{enabled:!1,format:"<b>{point.name}</b>: {point.percentage:.1f} %",style:{color:Highcharts.theme&&Highcharts.theme.contrastTextColor||"black"}}}},series:[{name:"votes:",colorByPoint:!0,data:polstats}]})})});
+head.ready(function () {
+; (function ($, window, document) {
+	// do stuff here and use $, window and document safely
+	// https://www.phpbb.com/community/viewtopic.php?p=13589106#p13589106
+//	if (typeof stats !== 'undefined')
+//	{
+	$(function () {
+		$('#pollchart').highcharts({
+			chart: {
+				plotBackgroundColor: null,
+				backgroundColor:'rgba(255, 255, 255, 0.0)',
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+			},
+			title: {
+				text: ''
+			},
+			credits: {
+				enabled: false,
+				text: 'sitesplat.com',
+				href: 'http://sitesplat.com'
+			},
+			exporting: { enabled: false },
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: false,
+					cursor: 'pointer',
+					 point: {
+                    events: {
+                        click: function () {
+							$.ajax({ type: "POST", 
+							url: "app.php/sidebar/poll.html", 
+							data: {"f" : this.f,
+									"t": this.t,
+									"v": this.v},
+							dataType: "json", 
+							success: function (result) {
+								if (result.data)
+								{
+									var pollchart = $('#pollchart').highcharts();
+									pollchart.series[0].setData(result.data);
+								}
+								
+								phpbb.alert(result.info, result.txt, true);
+								phpbb.closeDarkenWrapper(3000);
+							   }
+							});
+                        }
+                    }
+                },
+					dataLabels: {
+						enabled: false,
+						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						style: {
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+						}
+					}
+				}
+			},
+			series: [{
+				name: "votes:",
+				colorByPoint: true,
+				data: polstats
+			}]
+		});
+	});
+//	}
+})(jQuery, window, document);
+});

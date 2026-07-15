@@ -61,6 +61,8 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
+		$phpbb_dispatcher = $this->container->get('dispatcher');
+
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
 		$forum_ary = array();
@@ -87,7 +89,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 			$reward_type_table = $this->container->getParameter('sitesplat.bbreaction.tables.reward_type');
 
 			// grab users
-			$sql = 'SELECT b.user_id, r.title, r.symbol, r.positive, u.username, u.user_colour, b.like_time, b.post_id, p.forum_id 
+			$sql = 'SELECT b.user_id, r.*, u.username, u.user_colour, b.like_time, b.post_id, p.forum_id 
 				FROM ' . $reward_table . ' b
 				LEFT JOIN ' . $reward_type_table . ' r ON r.type_id = b.like_type
 				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = b.post_id
@@ -105,6 +107,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 					'user_colour'	=> $row['user_colour'],
 					'rule_name'		=> $row['title'],
 					'symbol'		=> $row['symbol'],
+					'emoji'			=> $row['emoji'],
 					'positive'		=> $row['positive'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
@@ -113,7 +116,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 			$this->db->sql_freeresult($result);
 
 			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_sidebar_last_bbreactions', $newest_users, 300);
+			$this->cache->put('_sidebar_last_bbreactions', $newest_users, 0);
 		}
 
 		foreach ($newest_users as $row)
@@ -122,14 +125,31 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 								get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
 								get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 
-			$this->template->assign_block_vars('last_bbreactions',array(
+			$tpl_ary = array(
 				'BADGE_DATE'		=> $this->user->format_date($row['date']),
 				'USERNAME_FULL'		=> $username_string,
 				'TYPE'				=> $row['rule_name'],
 				'SYMBOL'			=> $row['symbol'],
+				'EMOJI'				=> $row['emoji'],
 				'POSITIVE'			=> $row['positive'],
 				'POST_URL'			=> $row['post_url']
-			));
+			);
+
+			/**
+			* Event to modify reaction data before they are assigned
+			*
+			* @event sitesplat.bbsidebar.type.last_bbreaction_assign_before
+			* @var	array	row		Reaction row
+			* @var	array	tpl_ary	Template array
+			* @since 1.5.0
+			*/
+			$vars = array(
+				'row',
+				'tpl_ary',
+			);
+			extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.last_bbreaction_assign_before', compact($vars)));
+
+			$this->template->assign_block_vars('last_bbreactions', $tpl_ary);
 		}
 	}
 }

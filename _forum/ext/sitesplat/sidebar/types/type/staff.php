@@ -90,13 +90,16 @@ class staff extends \sitesplat\sidebar\types\type\base
 				}
 			}
 		//	$sql_other = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
-			$board_url = generate_board_url();
+		
+		//  damn phpbb url rewrite and broken driver
+		//	$board_url = generate_board_url();
+			$board_url = generate_board_url() . '/';
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id 
 					FROM ' . USER_GROUP_TABLE . ' u
 					INNER JOIN ' . GROUPS_TABLE . " g ON g.group_id = u.group_id 
-					WHERE LCASE(g.group_id) = 15";
+					WHERE g.group_id = 15";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -120,13 +123,14 @@ class staff extends \sitesplat\sidebar\types\type\base
 									'avatar_type'		=> $row['user_avatar_type'], 
 									'avatar_width'	=> $row['user_avatar_width'], 
 									'avatar_height'	=> $row['user_avatar_height'])), $match) :
-									generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
 				$staff_online[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
 					'last_visit'    => $row['session_time'],
 				);
 			}
@@ -145,7 +149,7 @@ class staff extends \sitesplat\sidebar\types\type\base
 	
 				$this->template->assign_block_vars('staff',array(
 					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
-					'TIME'	 			=> ($row['last_visit']) ? $this->user->format_date($row['last_visit'], '|d M Y|, H:i') : $this->user->lang['UNKNOWN'],
+					'TIME'	 			=> ($row['last_visit']) ? $this->user->format_date($row['last_visit'], '|d M Y|, H:i') : $this->user->lang['STAFF_UNKNOWN'],
 					'USERNAME_FULL'		=> $username_string,
 					'AVATAR'			=> $row['avatar']
 				));

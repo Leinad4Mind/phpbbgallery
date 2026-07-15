@@ -37,7 +37,7 @@ $lang = array_merge($lang, array(
 	'ACP_SIDEBAR_PANEL_PAGES'			=> 'View Sidebar in setting pages',
 	'ACP_SIDEBAR_PANEL_PAGES_EXPLAIN'	=> 'Enable or disable the sidebar in the UCP, MCP and under registration pages',
 	'ACP_SIDEBAR_ALL_PAGES'				=> 'View Sidebar in all pages',
-	'ACP_SIDEBAR_ALL_PAGES_EXPLAIN'		=> 'Set to ON to have the side blocks display in any forum page, OFF to have the sidebar on index only. <br />(NOTE: BBsidebar is automatically disabled in the following extensions: BBdownloads, BBfront and BBclassifieds regardless of the on/off settings.)',
+	'ACP_SIDEBAR_ALL_PAGES_EXPLAIN'		=> 'Set to ON to have the side blocks display in any forum page, OFF to have the sidebar on index only. <br />(NOTE: BBsidebar is automatically disabled in the following extensions: BBdownloads, BBfront, BBgallery and BBclassifieds regardless of the on/off settings.)',
 	'ACP_SIDEBAR_SHUFFLE'				=> 'Shuffle blocks',
 	'ACP_SIDEBAR_SHUFFLE_EXPLAIN'		=> 'Set to ON to randomize the blocks at each page refresh',
 	
@@ -122,7 +122,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.4.0',
+	'ACP_SIDEBAR_VERSION'		        => '1.4.1',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',

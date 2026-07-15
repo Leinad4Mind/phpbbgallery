@@ -93,7 +93,9 @@ class donations extends \sitesplat\sidebar\types\type\base
 				}
 			}
 
-			$board_url = generate_board_url();
+		//  damn phpbb url rewrite and broken driver
+		//	$board_url = generate_board_url();
+			$board_url = generate_board_url() . '/';
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height,
@@ -112,13 +114,14 @@ class donations extends \sitesplat\sidebar\types\type\base
 									'avatar_type'		=> $row['user_avatar_type'], 
 									'avatar_width'	=> $row['user_avatar_width'], 
 									'avatar_height'	=> $row['user_avatar_height'])), $match) :
-									generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif');
+									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 				
 				$donations[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
 					'mc_gross'    => $row['mc_gross'],
 				);
 			}

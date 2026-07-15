@@ -96,6 +96,10 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 				ORDER BY l.like_time DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 
+		//  damn phpbb url rewrite and broken driver
+		//	$board_url = generate_board_url();
+			$board_url = generate_board_url() . '/';
+			
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 			  $match = array();
@@ -106,12 +110,13 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 									'avatar_type'		=> $row['user_avatar_type'], 
 									'avatar_width'	    => $row['user_avatar_width'], 
 									'avatar_height'	    => $row['user_avatar_height'])), $match) :
-									generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif');
+									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
 				$newest_users[] = array(
 					'user_id'		=> $row['poster_id'],
 					'username'		=> $row['username'],
-					'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
 					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
@@ -120,7 +125,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 			}
 			$this->db->sql_freeresult($result);
 			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_sidebar_likes', $newest_users, 300);
+			$this->cache->put('_sidebar_likes', $newest_users, 0);
 		}
 
 		foreach ($newest_users as $row)

@@ -10,7 +10,7 @@
 namespace sitesplat\sidebar\types\type;
 
 /**
- * Top posters class
+ * Top topics class
  */
 class top_topics extends \sitesplat\sidebar\types\type\base
 {
@@ -59,6 +59,8 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 	*/
 	public function outputblock()
 	{
+		$phpbb_dispatcher = $this->container->get('dispatcher');
+
 		$howmany = $this->howmany();
 		$visibility = $this->container->get('content.visibility');
 		$forum_ary = array();
@@ -108,7 +110,7 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 				// grab all posts that meet criteria and auths
 				$sql_array = array(
 					'SELECT'	=> 'u.user_id, u.username, u.user_colour, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
-									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name,
+									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
 									at.attr_name',
 					'FROM'		=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'	=> array(
@@ -143,11 +145,38 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 										$row['topic_last_post_id']);
 					$forum_name_url = append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
 					$topic_title = censor_text($row['attr_name'] . $row['topic_title']);
-					if (utf8_strlen($topic_title) >= 60)
-					{
-						$topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
-					}
+			        // can't truncate with bbemoji
+				//	if (utf8_strlen($topic_title) >= 60)
+				//	{
+				//		$topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
+				//	}
 					$is_guest = ($row['user_id'] == ANONYMOUS) ? true : false;
+
+					/**
+					* Event to modify topic data before they are assigned
+					*
+					* @event sitesplat.bbsidebar.type.top_topics_tpl_before
+					* @var	string	topic_id		Topic ID
+					* @var	string	forum_id		Forum ID
+					* @var	string	forum_name		Forum name
+					* @var	boolean	post_unread		Are there any posts unread?
+					* @var	string	view_topic_url	Topic URL
+					* @var	string	forum_name_url	Forum URL
+					* @var	string	topic_title		Topic title
+					* @var	boolean	is_guest		Is post author anonymous?
+					* @since 1.5.0
+					*/
+					$vars = array(
+						'topic_id',
+						'forum_id',
+						'forum_name',
+						'post_unread',
+						'view_topic_url',
+						'forum_name_url',
+						'topic_title',
+						'is_guest',
+					);
+					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.top_topics_tpl_before', compact($vars)));
 
 					$tpl_ary = array(
 						'U_TOPIC'			=> $view_topic_url,
