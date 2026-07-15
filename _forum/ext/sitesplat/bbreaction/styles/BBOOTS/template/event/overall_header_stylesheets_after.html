@@ -1,1 +1,6 @@
-<!-- INCLUDECSS @sitesplat_bbreaction/bbreaction.css -->
+{% if BB_LOAD_IN_VIEWTOPIC or BB_LOAD_IN_MEMBER_PROFILE or S_SIDEBAR_ALL_PAGES or S_INDEX %}
+  {% INCLUDECSS '@sitesplat_bbreaction/bbreaction.min.css' %}
+{% endif %}
+{% if STATS  %}
+  {% INCLUDECSS '@sitesplat_bbreaction/stats.min.css' %}
+{% endif %}

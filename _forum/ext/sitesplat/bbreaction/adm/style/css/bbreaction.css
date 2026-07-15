@@ -83,7 +83,7 @@
 .icon-bbreact-emo-minus:before { content: '\e814'; } /* '' */
 .icon-bbreact-emo-plus:before { content: '\e815'; } /* '' */
 .icon-bbreact-emo:before { content: '\e816'; } /* '' */
-/* BBreaction */
+/* BBReaction */
 
 
 /* simple input toggle love*/
@@ -97,26 +97,26 @@
 }
 .onoffswitch-label {
     display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #ddd; border-radius: 20px;
+    border-radius: 24px;
 }
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;
     transition: margin 0.3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 20px; padding: 0; line-height: 20px;
+    display: block; float: left; width: 50%; height: 24px; padding: 0; line-height: 24px;
     font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
     content: "ON";
     padding-left: 10px;
-    background-color: #C9DBE0; color: #FFFFFF;
+    background-color: #092; color: #fff;
 }
 .onoffswitch-inner:after {
     content: "OFF";
     padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
+    background-color: #ccc; color: #666;
     text-align: right;
 }
 .onoffswitch-inner-position:before {
@@ -127,10 +127,10 @@
 }
 	
 .onoffswitch-inner-yn:before {
-    content: "NO";
+    content: "YES";
 }
 .onoffswitch-inner-yn:after {
-    content: "YES";
+    content: "NO";
 }
 
 .onoffswitch-inner-top:before {
@@ -141,11 +141,11 @@
 }
 	
 .onoffswitch-switch {
-    display: block; width: 14px; margin: 3px;
+    display: block; width: 18px; margin: 3px;
     background: #FFFFFF;
     position: absolute; top: 0; bottom: 0;
     right: 66px;
-    border: 2px solid #999999; border-radius: 20px;
+    border-radius: 18px;
     transition: all 0.3s ease-in 0s; 
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
@@ -431,8 +431,14 @@ td .fa {
 	font-size:16px;
 }
 
-.onoffswitch {
+.onoffswitch,
+.btn-position {
     margin-bottom: 10px;
 }
-
-
+.mixed_case {
+    background-color: #eb3941;
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    width: fit-content;
+}

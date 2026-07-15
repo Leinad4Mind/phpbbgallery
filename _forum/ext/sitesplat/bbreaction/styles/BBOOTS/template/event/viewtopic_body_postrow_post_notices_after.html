@@ -1,0 +1,23 @@
+{% if postrow.enable_rewards and postrow.latest_rewards %}
+<div class="all-reactions pull-right">
+	{% for latest_reward in postrow.latest_rewards %}
+	<div class="label label-huskygray">
+		<a href="{{ latest_reward.U_USERNAME }}" style="color: #{{ latest_reward.USER_COLOUR }}">
+			{{ latest_reward.USERNAME }}
+		</a>
+		<span>
+		{% if latest_reward.CLASSLIST %}
+			{% for classlists in latest_reward.CLASSLIST %}
+				{% if latest_reward.CONTENTS[loop.index0].EMOJI %}
+					<i>{{ latest_reward.CONTENTS[loop.index0].EMOJI }}</i>
+				{% else %}
+					<i style="padding:4px 0;vertical-align:bottom;color:{% if not latest_reward.S_POSITIVE[loop.index0].POSITIVE %}red{% else %}green{% endif %};" class="{{ classlists.SYMBOL }}"></i>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+		</span>
+	</div>
+	{% endfor %}
+	{% if postrow.SHOW_OTHERS %}<a data-toggle="modal" data-id="{{ postrow.POST_ID }}" href="#ReactionDialog" class="open-ReactionDialog btn btn-xs btn-link">{{ lang('BBREACTION_OTHERS') }}</a>{% endif %}
+</div>
+{% endif %}

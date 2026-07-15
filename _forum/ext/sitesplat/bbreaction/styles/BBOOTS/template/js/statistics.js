@@ -30,7 +30,7 @@ head.ready(function () {
 				credits: {
 					enabled: false,
 					text: 'sitesplat.com',
-					href: 'http://sitesplat.com'
+					href: '//sitesplat.com'
 				},
 				legend: {
 					enabled: false,
@@ -62,10 +62,10 @@ head.ready(function () {
 				},
 				series: stats,
 				lang: {
-				   forumKey: 'Forum overview',
-				   topicKey: 'Topic overview',
-				   messageKey: 'Messages overview',
-				   userKey: 'User overview'
+				   forumKey: overviewforum,
+				   topicKey: overviewtopic,
+				   messageKey: overviewposts,
+				   userKey: overviewuser
 				},
 				exporting: {
 					buttons: {

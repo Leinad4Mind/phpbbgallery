@@ -1,34 +1,29 @@
+{% if not S_HIDE_BBREACTION %}
+{% if postrow.enable_rewards and U_BBREACTION_VIEW %}
 <div class="bbreaction-wrap">
-<div class="card text-center">
- <div class="com-contain">
-  <div class="com-stuff">
-   <!-- IF postrow.rewards -->
-    <ul class="list-inline bbreact-list">
-    <!-- BEGIN postrow.rewards -->
-	  <li>
-	  <a class="btn-bbreaction reward" href="#p{postrow.POST_ID}" data-options="p={postrow.POST_ID}&e={postrow.rewards.TYPE_ID}">
-      <!-- IF BBREACTION_EMOJI and postrow.rewards.EMOJI -->
-      <i class="<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->">{postrow.rewards.EMOJI}</i>
-      <!-- ELSE -->
-      <i class="fa {postrow.rewards.SYMBOL}<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->"></i>
-      <!-- ENDIF -->
-      <br /> {postrow.rewards.TITLE}<br /><span id="p{postrow.POST_ID}{postrow.rewards.TYPE_ID}">{postrow.rewards.PERCENT}</span>
-    </a>
-	 </li>
-	<!-- END postrow.rewards -->	 
-	</ul>
-   <!-- ENDIF -->
-   <!-- IF postrow.POSITIVE or postrow.NEGATIVE --><a data-toggle="modal" data-id="{postrow.POST_ID}" href="#ReactionDialog" class="open-ReactionDialog btn btn-xs btn-link">{L_BBREACTION_OTHERS}</a><!-- ENDIF -->
+  <div class="card text-center">
+    <div class="com-contain">
+      <div class="com-stuff">
+        {% if postrow.rewards %}
+          <ul class="list-inline bbreact-list">
+            {% for reward in postrow.rewards %}
+              <li{% if reward.ACTIVE %} class="reacted"{% endif %}>
+                <a class="btn-bbreaction reward" href="#p{{ postrow.POST_ID }}" data-options="p={{ postrow.POST_ID }}&e={{ reward.TYPE_ID }}">
+                  <i class="{{ reward.CLASSLIST }}" style="color:{% if not reward.S_POSITIVE %}red{% else %}green{% endif %};">{{ reward.CONTENTS }}</i>
+                  <br/>
+                  {{ reward.TITLE }}<br/>
+                  <span id="p{{ postrow.POST_ID ~ reward.TYPE_ID }}">{{ reward.PERCENT }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if postrow.POSITIVE or postrow.NEGATIVE %}
+          <a data-toggle="modal" data-id="{{ postrow.POST_ID }}" href="#ReactionDialog" class="open-ReactionDialog btn btn-xs btn-link">{{ lang('BBREACTION_OTHERS') }}</a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
-</div>
-    <div class="com-expand-holder">
-      <span class="star">
-       <span class="star-icon fa fa-star"></span>
-      </span>
-    </div>
-	
-	<div class="ribbon-base ribbon-corner ribbon-primary ribbon-reverse ribbon-bottom ribbon-xs ribbon-bbreaction">
-      <span class="ribbon-inner"><i aria-hidden="true" class="fa fa-fire"></i></span>
-    </div>
-</div>
+{% endif %}
+{% endif %}
