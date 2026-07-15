@@ -43,7 +43,7 @@ class listener implements EventSubscriberInterface
 			'core.display_forums_modify_first_last_avatar'	=> 'forums_modify_forum_rows',
 			'core.display_forums_modify_template_vars'		=> 'forums_modify_template_vars',
 			'core.viewforum_modify_topicrow'				=> 'modify_topicrow',
-			
+
 			'core.memberlist_memberrow_before'				=> 'memberlist_avatar',
 			'core.viewtopic_modify_post_data'				=> 'participants_avatars',
 			'core.obtain_users_online_string_sql'			=> 'online_userlist_sql',
@@ -68,8 +68,8 @@ class listener implements EventSubscriberInterface
 		{
 //			$online_userlist = $event['online_userlist'];
 			$user_online_link = $event['user_online_link'];
-			
-			$rows = $event['rowset']; 
+
+			$rows = $event['rowset'];
 			$avatars = array();
 			foreach ($rows as $row)
 			{
@@ -82,10 +82,10 @@ class listener implements EventSubscriberInterface
 								array('class="avatar"', 'alt='),
 								array('class="online_img"', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title='),
 								phpbb_get_user_avatar([
-									'avatar' => $row['user_avatar'], 
-									'id' => $row['user_id'], 
-									'avatar_type' => $row['user_avatar_type'], 
-									'avatar_width' => $row['user_avatar_width'], 
+									'avatar' => $row['user_avatar'],
+									'id' => $row['user_id'],
+									'avatar_type' => $row['user_avatar_type'],
+									'avatar_width' => $row['user_avatar_width'],
 									'avatar_height' => $row['user_avatar_height'],
 								], $row['username'])
 							);
@@ -95,7 +95,7 @@ class listener implements EventSubscriberInterface
 							$avatar = '<img class="avatar" alt="" title="' .  $row['username'] . '" src="./styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png" alt="">';
 						}
 
-	//					$avatars[] = '<a href="' . $matches[1] . '">' . $avatar . '</a>';
+//						$avatars[] = '<a href="' . $matches[1] . '">' . $avatar . '</a>';
 						$user_online_link[intval($row['user_id'])] = '<a href="' . $matches[1] . '">' . $avatar . '</a>';
 					}
 				}
@@ -138,7 +138,7 @@ class listener implements EventSubscriberInterface
 			'MEMBERLIST_AVATAR' => $this->config['titles_avatar_memberlist']
 		));
 	}
-	
+
 	public function modify_display_sql_array($event)
 	{
 		$sql_array = $event['sql_ary'];
@@ -178,9 +178,9 @@ class listener implements EventSubscriberInterface
 		$forum_rows[$parent_id]['fpa_id']		= $row['fpa_id'];
 		$forum_rows[$parent_id]['fpa_type']		= $row['fpa_type'];
 		$forum_rows[$parent_id]['fpa_width']	= $row['fpa_width'];
-		$forum_rows[$parent_id]['fpa_height']	= $row['fpa_height'];		
-		$forum_rows[$parent_id]['fpa_username']	= $row['fpa_username'];		
-			
+		$forum_rows[$parent_id]['fpa_height']	= $row['fpa_height'];
+		$forum_rows[$parent_id]['fpa_username']	= $row['fpa_username'];
+
 		$event['forum_rows'] = $forum_rows;
 	}
 
@@ -189,46 +189,51 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
 		$row = $event['row'];
 		$template = $event['forum_row'];
-				
+
 		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
-								array('avatar'			=> $row['fpa'], 
-									  'id'				=> $row['fpa_id'], 
-									  'avatar_type'		=> $row['fpa_type'], 
-									  'avatar_width'	=> $row['fpa_width'], 
+								array('avatar'			=> $row['fpa'],
+									  'id'				=> $row['fpa_id'],
+									  'avatar_type'		=> $row['fpa_type'],
+									  'avatar_width'	=> $row['fpa_width'],
 									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
 
 		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
-								array('avatar'			=> $row['lpa'], 
-									  'id'				=> $row['lpa_id'], 
-									  'avatar_type'		=> $row['lpa_type'], 
-									  'avatar_width'	=> $row['lpa_width'], 
+								array('avatar'			=> $row['lpa'],
+									  'id'				=> $row['lpa_id'],
+									  'avatar_type'		=> $row['lpa_type'],
+									  'avatar_width'	=> $row['lpa_width'],
 									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
 
 		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
 		$template['FORUM_POSTS'] = $row['forum_posts'];
 		$event['forum_row'] = $template;
 	}
-		
+
 	public function modify_topicrow($event)
 	{
 		$this->user->add_lang_ext('sitesplat/titlesandavatars', 'info_acp_titlesandavatars');
 		$row = $event['row'];
 		$template = $event['topic_row'];
-		
-		$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
-								array('avatar'			=> $row['fpa'], 
-									  'id'				=> $row['fpa_id'], 
-									  'avatar_type'		=> $row['fpa_type'], 
-									  'avatar_width'	=> $row['fpa_width'], 
-									  'avatar_height'	=> $row['fpa_height']), $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
-		
-		$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar(
-								array('avatar'			=> $row['lpa'], 
-									  'id'				=> $row['lpa_id'], 
-									  'avatar_type'		=> $row['lpa_type'], 
-									  'avatar_width'	=> $row['lpa_width'], 
-									  'avatar_height'	=> $row['lpa_height']), $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
-		
+
+		if(!empty($row['fpa_id'])) {
+			$template['FP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar([
+				'avatar'			=> $row['fpa'],
+				'id'				=> $row['fpa_id'],
+				'avatar_type'		=> $row['fpa_type'],
+				'avatar_width'		=> $row['fpa_width'],
+				'avatar_height'		=> $row['fpa_height'],
+			], $this->user->lang['TAT_AVATAR_FIRST'] . ' ' . $row['fpa_username']));
+		}
+		if(!empty($row['lpa_id'])) {
+			$template['LP_AVATAR'] = str_replace('alt=', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title=', phpbb_get_user_avatar([
+				'avatar'			=> $row['lpa'],
+					'id'				=> $row['lpa_id'],
+					'avatar_type'		=> $row['lpa_type'],
+					'avatar_width'		=> $row['lpa_width'],
+					'avatar_height'		=> $row['lpa_height'],
+			], $this->user->lang['TAT_AVATAR_LAST'] . ' ' . $row['lpa_username']));
+		}
+
 		$template['TAT_SETTING'] = $this->config['titles_avatar_setting'];
 		$event['topic_row'] = $template;
 	}
@@ -241,7 +246,7 @@ class listener implements EventSubscriberInterface
 			'FROM'	=> array(USERS_TABLE => 'u'),
 			'ON'	=> 'u.user_id = t.topic_last_poster_id'
 		);
-	
+
 		$sql_array['LEFT_JOIN'][] = array(
 			'FROM'	=> array(USERS_TABLE => 'uu'),
 			'ON'	=> 'uu.user_id = t.topic_poster'
