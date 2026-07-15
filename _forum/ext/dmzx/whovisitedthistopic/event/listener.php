@@ -145,55 +145,21 @@ class listener implements EventSubscriberInterface
 		// Add lang file
 		$this->user->add_lang_ext('dmzx/whovisitedthistopic', 'common');
 
-		$topic_id = $event['topic_id'];
-		$user_id = $this->user->data['user_id'];
-		$value = $this->config['whovisitedthistopic_value'];
+		$topic_id = (int) $event['topic_id'];
+		$user_id = (int) $this->user->data['user_id'];
+		$value = (int) $this->config['whovisitedthistopic_value'];
 
-		if (($this->user->data['user_id'] != ANONYMOUS) && (!$this->user->data['is_bot']) && $this->config['whovisitedthistopic_allow_topics'])
+		if ($user_id !== ANONYMOUS && !$this->user->data['is_bot'] && $this->config['whovisitedthistopic_allow_topics'])
 		{
-			// Get the excluded members arrays
-			$whovisitedthistopic_members = json_decode($this->config['whovisitedthistopic_members']);
+			$date = time();
 
-			$sql = 'SELECT *
-				FROM ' . $this->whovisitedthistopic_table . '
-				WHERE user_id = ' . (int) $user_id . '
-					AND topic_id = ' . (int) $topic_id;
-			$result = $this->db->sql_query($sql);
-
-			if ($row = $this->db->sql_fetchrow($result))
-			{
-				$counter_user = $row['counter_user'] + 1;
-				$date = time();
-				$sql_arr = [
-					'counter_user'	=> (int) $counter_user,
-					'date'			=> $date
-				];
-
-				$sql_insert = 'UPDATE ' . $this->whovisitedthistopic_table . '
-					SET	' . $this->db->sql_build_array('UPDATE', $sql_arr) . '
-					WHERE user_id = ' . (int) $user_id . '
-						AND topic_id = ' . (int) $topic_id;
-
-					if (!empty($whovisitedthistopic_members))
-					{
-						$sql_insert .= ' AND ' . $this->db->sql_in_set('user_id', $whovisitedthistopic_members, true);
-					}
-				$this->db->sql_query($sql_insert);
-			}
-			else
-			{
-				$date = time();
-				$sql_arr = [
-					'counter_user'	=> 1,
-					'user_id'		=> (int) $user_id,
-					'topic_id'		=> (int) $topic_id,
-					'date'			=> $date
-				];
-
-				$sql_insert = 'INSERT INTO ' . $this->whovisitedthistopic_table . ' ' . $this->db->sql_build_array('INSERT', $sql_arr);
-				$this->db->sql_query($sql_insert);
-			}
-			$this->db->sql_freeresult($result);
+			// Usa INSERT ON DUPLICATE KEY UPDATE
+			$sql = 'INSERT INTO ' . $this->whovisitedthistopic_table . ' (user_id, topic_id, counter_user, date)
+				VALUES (' . $user_id . ', ' . $topic_id . ', 1, ' . $date . ')
+				ON DUPLICATE KEY UPDATE
+					counter_user = counter_user + 1,
+					date = ' . $date;
+			$this->db->sql_query($sql);
 		}
 
 		if ($this->auth->acl_get('u_whovisitedthistopic') && $this->config['whovisitedthistopic_allow_topics'])
@@ -201,53 +167,44 @@ class listener implements EventSubscriberInterface
 			// Get the excluded members arrays
 			$whovisitedthistopic_members = json_decode($this->config['whovisitedthistopic_members']);
 
-			$query = 'SELECT w.user_id, w.topic_id, w.counter_user, w.date, u.username, u.user_colour, u.user_id, u.user_avatar, u.user_avatar_type, u.user_avatar_height, u.user_avatar_width, u.user_type, SUM(w.counter_user) AS total
+			$query = 'SELECT w.user_id, u.username, u.user_colour, u.user_id, u.user_avatar, u.user_avatar_type, u.user_avatar_height, u.user_avatar_width, u.user_type, MAX(w.date) AS last_visit, SUM(w.counter_user) AS total
 				FROM ' . $this->whovisitedthistopic_table . ' w, ' . USERS_TABLE . ' u
-				WHERE w.topic_id = ' . (int) $topic_id . '
-					AND w.user_id = u.user_id';
+				WHERE w.topic_id = ' . $topic_id . '
+				AND w.user_id = u.user_id';
 
 			if (!empty($whovisitedthistopic_members))
 			{
 				$query .= ' AND ' . $this->db->sql_in_set('w.user_id', $whovisitedthistopic_members, true);
 			}
 
-			$query .= ' GROUP BY w.user_id';
-			$query .= ' ORDER BY w.date DESC';
+			$query .= ' GROUP BY w.user_id
+						ORDER BY last_visit DESC';
+
 			$row_query = $this->db->sql_query_limit($query, $value);
 
 			while ($row = $this->db->sql_fetchrow($row_query))
 			{
-				$username = $row['username'];
-				$user_colour = ($row['user_colour']) ? ' style="color:#' . $row['user_colour'] . '" class="username-coloured"' : '';
-				$user_id = $row['user_id'];
-				$date = ($row['date']) ? ' title="' . $this->user->format_date($row['date']) . '" ': '';
 				$avatar = phpbb_get_user_avatar($row);
-
-				if ($this->auth->acl_get('u_whovisitedthistopic_count'))
-				{
-					$visits = (int) $row['total'];
-				}
-				else
-				{
-					$visits = null;
-				}
-
-				$url = append_sid("{$this->root_path}memberlist.{$this->phpEx}?mode=viewprofile&amp;u={$user_id}");
+				$user_colour = ($row['user_colour']) ? ' style="color:#' . $row['user_colour'] . '" class="username-coloured"' : '';
+				$visits = $this->auth->acl_get('u_whovisitedthistopic_count') ? (int) $row['total'] : null;
+				$date = $row['last_visit'] ? ' title="' . $this->user->format_date($row['last_visit']) . '" ' : '';
+				$url = append_sid("{$this->root_path}memberlist.{$this->phpEx}?mode=viewprofile&amp;u={$row['user_id']}");
 
 				$this->template->assign_block_vars('whovisitedthistopic', [
-					'USERNAME'			=> $username,
+					'USERNAME'			=> $row['username'],
 					'USERNAME_COLOUR'	=> $user_colour,
 					'VISITS'			=> $visits,
 					'URL'				=> $url,
-					'AVATAR'			=> empty($avatar) ? '<img src="' . $this->root_path . 'styles/prosilver/theme/images/no_avatar.gif" width="60px;" height="60px;" alt="" />' : $avatar,
+					'AVATAR'			=> empty($avatar) ? '<img class="img-thumbnail avatar" src="' . $this->root_path . 'styles/FLATBOOTS/theme/images/no-avatar.png" width="60px;" height="60px;" alt="" />' : $avatar,
 					'DATE'				=> $date
 				]);
 			}
 			$this->db->sql_freeresult($row_query);
 
+			// Total
 			$sql = 'SELECT topic_id, SUM(counter_user) AS counter
 				FROM ' . $this->whovisitedthistopic_table . '
-				WHERE topic_id = ' . (int) $topic_id;
+				WHERE topic_id = ' . $topic_id;
 			$result = $this->db->sql_query($sql);
 			$counter = (int) $this->db->sql_fetchfield('counter');
 			$this->db->sql_freeresult($result);
@@ -273,19 +230,27 @@ class listener implements EventSubscriberInterface
 		if ($this->auth->acl_get('u_whovisitedthistopic_profile') && $this->config['whovisitedthistopic_allow_memberpage'])
 		{
 			$sql_list = [
-				'SELECT'	=> 'ft.*, tt.*, wt.*',
-				'FROM'		=> [
-					FORUMS_TABLE	=> 'ft',
-					TOPICS_TABLE	=> 'tt',
-					$this->whovisitedthistopic_table	=> 'wt',
+				'SELECT'	=> 'ft.forum_id, ft.forum_name,
+								tt.*,
+								wt.date',
+				'FROM' => [
+					$this->whovisitedthistopic_table => 'wt',
+				],
+				'LEFT_JOIN' => [
+					['FROM' => [TOPICS_TABLE => 'tt'], 'ON' => 'wt.topic_id = tt.topic_id'],
+					['FROM' => [FORUMS_TABLE => 'ft'], 'ON' => 'ft.forum_id = tt.forum_id'],
 				],
 				'WHERE' => 'tt.topic_moved_id = 0
 					AND tt.topic_visibility = 1
-					AND wt.user_id = ' . (int) $user_id . '
-					AND wt.topic_id = tt.topic_id
-					AND ft.forum_id = tt.forum_id',
+					AND wt.user_id = ' . (int) $user_id,
 				'ORDER_BY'	=> 'wt.date DESC',
 			];
+
+			// Get the excluded members arrays
+			$excluded_ids = json_decode($this->config['whovisitedthistopic_members_profile'], true);
+			if (is_array($excluded_ids) && !empty($excluded_ids)) {
+				$sql_list['WHERE'] .= ' AND ' . $this->db->sql_in_set('wt.user_id', $excluded_ids, true);
+			}
 
 			if ($this->user->data['is_registered'] && $this->config['load_db_lastread'])
 			{

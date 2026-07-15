@@ -1,0 +1,73 @@
+{% if PERMISSION_PROFILE and loops.whovisitedthistopic|length %}
+<div class="panel panel-forum">
+	<div class="panel-heading">
+		{{ WHOVISITEDTHISTOPIC_VISIT_TITLE }}
+	</div>
+	<div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+			<thead>
+				<tr>
+				<th data-class="expand">{{ lang('TOPICS') }}</th>
+				<th class="posts" data-hide="phone">{{ lang('REPLIES') }}</th>
+				<th class="views" data-hide="phone">{{ lang('VIEWS') }}</th>
+				<th class="lastpost" data-hide="phone">{{ lang('LAST_POST') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for whovisitedthistopic in loops.whovisitedthistopic %}
+				<tr id="forum-{forumrow.FORUM_ID}" class="topiclist topics">
+						<td title="{forumrow.FORUM_FOLDER_IMG_ALT}">
+							{% if whovisitedthistopic.S_UNREAD_TOPIC and not S_IS_BOT %}
+									<a href="{{ whovisitedthistopic.U_NEWEST_POST }}">
+										<i class="icon fa-file fa-fw icon-red icon-md" aria-hidden="true"></i><span class="sr-only">{{ NEW_POST }}</span>
+									</a>
+									{% endif %}
+									<a href="{{ whovisitedthistopic.U_VIEW_TOPIC }}" class="topictitle">{{ whovisitedthistopic.TOPIC_TITLE }}</a>
+									{% if whovisitedthistopic.S_TOPIC_UNAPPROVED or whovisitedthistopic.S_POSTS_UNAPPROVED %}
+									<a href="{{ whovisitedthistopic.U_MCP_QUEUE }}">
+										<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ TOPIC_UNAPPROVED }}</span>
+									</a>
+									{% endif %}
+									{% if whovisitedthistopic.S_TOPIC_REPORTED %}
+									<a href="{{ whovisitedthistopic.U_MCP_REPORT }}">
+										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ TOPIC_REPORTED }}</span>
+									</a>
+									{% endif %}
+									<br>
+
+									{% if not S_IS_BOT %}
+									<div class="responsive-show" style="display: none;">
+										{{ lang('LAST_POST') }} {{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ whovisitedthistopic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ whovisitedthistopic.LAST_POST_TIME }}</a>
+										<br>{{ lang('POSTED') }} {{ lang('IN') }} <a href="{{ whovisitedthistopic.U_VIEW_FORUM }}">{{ whovisitedthistopic.FORUM_TITLE }}</a>
+									</div>
+										{% if whovisitedthistopic.TOPIC_REPLIES %}
+										<span class="responsive-show left-box" style="display: none;">{{ lang('REPLIES') ~ lang('COLON') }} <strong>{{ whovisitedthistopic.TOPIC_REPLIES }}</strong></span>
+										{% endif %}
+									{% endif %}
+
+									<div class="topic-poster responsive-hide left-box">
+										{% if whovisitedthistopic.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
+										{% if whovisitedthistopic.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
+										{{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.TOPIC_AUTHOR_FULL }} &raquo; {{ whovisitedthistopic.FIRST_POST_TIME }} &raquo; {{ lang('IN') }} <a href="{{ whovisitedthistopic.U_VIEW_FORUM }}">{{ whovisitedthistopic.FORUM_TITLE }}</a>
+									</div>
+						</td>
+						<td class="posts">
+							{{ whovisitedthistopic.TOPIC_REPLIES }} <small>{{ lang('REPLIES') }}</small></td>
+						<td class="views">
+							{{ whovisitedthistopic.TOPIC_VIEWS }} <small>{{ lang('VIEWS') }}</small>
+						</td>	
+						<td class="lastpost">
+							<span><small>{{ lang('LAST_POST') }} </small>{{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.LAST_POST_AUTHOR_FULL }}
+									{% if not S_IS_BOT %}
+									<a href="{{ whovisitedthistopic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}"><i class="icon fa fa-external-link-square " aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span></a>
+									{% endif %}
+									<br>{{ whovisitedthistopic.LAST_POST_TIME }}
+								</span>
+						</td>
+					</tr>
+					{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endif %}

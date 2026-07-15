@@ -1,0 +1,18 @@
+{% if PERMISSION_VIEW %}
+	{% if whovisitedthistopic %}
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="panel panel-forum panel-whois">
+					<div class="panel-heading"><i class="fa fa-user"></i>&nbsp;{{ WHOVISITEDTHISTOPIC_TITLE }}</div>
+					<div class="panel-body">
+						<p>
+							{% for whovisitedthistopic in loops.whovisitedthistopic %}
+								{% if PERMISSION_SHOW_AVATAR %}<span class="whovisitedthistopic-avatar">{{ whovisitedthistopic.AVATAR }}</span>{% endif %} <span><a href="{{ whovisitedthistopic.URL }}" {{ whovisitedthistopic.DATE }} {{ whovisitedthistopic.USERNAME_COLOUR }}>{{ whovisitedthistopic.USERNAME }}</a></span>{% if PERMISSION_COUNT %} ({{ whovisitedthistopic.VISITS }}){% endif %}{% if not whovisitedthistopic.S_LAST_ROW %}, {% endif %}
+							{% endfor %}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endif %}
