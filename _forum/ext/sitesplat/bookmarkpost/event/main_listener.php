@@ -17,12 +17,13 @@ class main_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'	=> 'load_language_on_setup',
+			'core.user_setup'					=> 'load_language_on_setup',
+			'core.delete_user_after'			=> 'delete_users',
 
-			'core.viewtopic_get_post_data'			=> 'add_bookmark_post_info',
-			'core.viewtopic_post_rowset_data'		=> 'add_bookmark_post_rowset',
-			'core.viewtopic_modify_post_row'		=> 'add_bookmark_post_url',
-			'core.viewtopic_modify_post_data'		=> 'add_bookmarked_posts_count',
+			'core.viewtopic_get_post_data'		=> 'add_bookmark_post_info',
+			'core.viewtopic_post_rowset_data'	=> 'add_bookmark_post_rowset',
+			'core.viewtopic_modify_post_row'	=> 'add_bookmark_post_url',
+			'core.viewtopic_modify_post_data'	=> 'add_bookmarked_posts_count',
 
 			'core.display_forums_modify_sql'			=> 'bookmarked_post_index_sql',
 			'core.display_forums_modify_forum_rows'		=> 'bookmarked_post_index_subforums',
@@ -181,5 +182,14 @@ class main_listener implements EventSubscriberInterface
 		$topic_row['TOPIC_BOOKMARKED_POSTS'] = $event['row']['bookmarked_posts'];
 
 		$event['topic_row'] = $topic_row;
+	}
+
+	public function delete_users($event)
+	{
+		if (!empty($event['user_ids'])) {
+			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
+
+			$this->db->sql_query("DELETE FROM {$this->post_bookmarks_table } WHERE user_id $user_id_in");
+		}
 	}
 }
