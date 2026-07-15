@@ -18,6 +18,7 @@ class rgravatar extends \phpbb\avatar\driver\driver
 	* The URL for the Gravatar service
 	*/
 	const GRAVATAR_URL = '//secure.gravatar.com/avatar/';
+	const ADORABLE_URL = '//api.adorable.io/avatars/';
 
 	public function get_config_name()
 	{
@@ -50,8 +51,9 @@ class rgravatar extends \phpbb\avatar\driver\driver
 	public function prepare_form_acp($user)
 	{
 		return array(
-			'default_rgravatar'	=> array('lang' => 'DEFAULT_RGRAVATAR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-			'default_cuavatar'	=> array('lang' => 'DEFAULT_CUAVATAR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+			'default_rgravatar'			=> array('lang' => 'DEFAULT_RGRAVATAR',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+			'default_cuavatar'			=> array('lang' => 'DEFAULT_CUAVATAR',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+			'default_rgravatar_style'	=> array('lang' => 'DEFAULT_RGRAVATAR_STYLE',	'validate' => 'string',	'type' => 'select', 'function' => [$this, 'rgravatar_select'], 'params' => ['{CONFIG_VALUE}'], 'explain' => false),
 		);
 	}
 
@@ -90,7 +92,9 @@ class rgravatar extends \phpbb\avatar\driver\driver
 	*/
 	public function process_form($request, $template, $user, $row, &$error)
 	{
-		$row['avatar'] = $user->data['user_email'];
+		$row['avatar'] = md5(mt_rand());
+	// based on email address
+	//	$row['avatar'] = $user->data['user_email'];
 		$row['avatar_width'] = $request->variable('avatar_rgravatar_width', 0);
 		$row['avatar_height'] = $request->variable('avatar_rgravatar_height', 0);
 
@@ -188,14 +192,35 @@ class rgravatar extends \phpbb\avatar\driver\driver
 
 		if ($avatarname)
 		{
-			$url = self::GRAVATAR_URL;
-			$url .=  md5(strtolower(trim($row['avatar'])));
-			$url .= '?d=identicon&amp;s=' . max($row['avatar_width'], $row['avatar_height']);
+			if ($this->config['default_rgravatar_style'] == 'adorable')
+			{
+				$url = self::ADORABLE_URL;
+				$url .= max($row['avatar_width'], $row['avatar_height']) . '/';
+				$url .= md5(strtolower(trim($row['avatar']))) . '.png';
+			}
+			else
+			{
+				$url = self::GRAVATAR_URL;
+				$url .=  md5(strtolower(trim($row['avatar'])));
+				$url .= '?d=' . $this->config['default_rgravatar_style'] . '&amp;s=' . max($row['avatar_width'], $row['avatar_height']);
+			}
 		} else
 		{
 			$url = 	'styles/' . $user->style['style_path'] . '/theme/images/no_avatar.gif';
 		}
 
 		return $url;
+	}
+
+	public function rgravatar_select($default = '')
+	{
+		$style_options = '';
+		foreach (['identicon', 'retro', 'adorable', 'robohash'] as $id)
+		{
+			$selected = ($id == $default) ? ' selected="selected"' : '';
+			$style_options .= '<option value="' . $id . '"' . $selected . '>' . $id . '</option>';
+		}
+
+		return $style_options;
 	}
 }
