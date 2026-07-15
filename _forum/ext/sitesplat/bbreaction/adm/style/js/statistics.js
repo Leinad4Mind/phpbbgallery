@@ -52,10 +52,10 @@
 				},
 				series: stats,
 				lang: {
-				   forumKey: 'Forum overview',
-				   topicKey: 'Topic overview',
-				   messageKey: 'Messages overview',
-				   userKey: 'User overview'
+				   forumKey: overviewforum,
+				   topicKey: overviewtopic,
+				   messageKey: overviewposts,
+				   userKey: overviewuser
 				},
 				exporting: {
 					buttons: {

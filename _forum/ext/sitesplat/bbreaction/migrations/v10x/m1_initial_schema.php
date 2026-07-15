@@ -1,18 +1,21 @@
 <?php
+
 /**
-*
-* BBreaction
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBReaction
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbreaction\migrations\v10x;
+
+use \phpbb\db\migration\migration;
 
 /**
  * Migration stage 1: Initial schema
  */
-class m1_initial_schema extends \phpbb\db\migration\migration
+class m1_initial_schema extends migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -23,7 +26,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v310\gold');
+		return ['\phpbb\db\migration\data\v310\gold'];
 	}
 
 	/**
@@ -34,34 +37,34 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	 */
 	public function update_schema()
 	{
-		return array(
-			'add_tables'	=> array(
-				$this->table_prefix . 'reward'	=> array(
-					'COLUMNS'	=> array(
-						'like_id'			=> array('UINT', NULL, 'auto_increment'),
-						'post_id'			=> array('UINT', 0),
-						'user_id'			=> array('UINT', 0),
-						'like_type'			=> array('UINT', 0),
-						'like_time'			=> array('INT:11', 0)
-					),
+		return [
+			'add_tables'	=> [
+				$this->table_prefix . 'reward'	=> [
+					'COLUMNS'	=> [
+						'like_id'			=> ['UINT', NULL, 'auto_increment'],
+						'post_id'			=> ['UINT', 0],
+						'user_id'			=> ['UINT', 0],
+						'like_type'			=> ['UINT', 0],
+						'like_time'			=> ['INT:11', 0]
+					],
 					'PRIMARY_KEY'	=> 'like_id',
-				),
-				$this->table_prefix . 'reward_type'	=> array(
-					'COLUMNS'		=> array(
-						'type_id'			=> array('UINT', NULL, 'auto_increment'),
-						'weight'			=> array('UINT', 0),
-						'title'				=> array('VCHAR:50', ''),
-						'description'		=> array('VCHAR:50', ''),
-						'symbol'			=> array('VCHAR:50', ''),
-						'positive'			=> array('TINT:1', 1),
-						'seperator'			=> array('TINT:1', 0),
-						'active'			=> array('TINT:1', 1),
-						'notify'			=> array('TINT:1', 0)
-					),
+				],
+				$this->table_prefix . 'reward_type'	=> [
+					'COLUMNS'		=> [
+						'type_id'			=> ['UINT', NULL, 'auto_increment'],
+						'weight'			=> ['UINT', 0],
+						'title'				=> ['VCHAR:50', ''],
+						'description'		=> ['VCHAR:50',],
+						'symbol'			=> ['VCHAR:50', ''],
+						'positive'			=> ['TINT:1', 1],
+						'seperator'			=> ['TINT:1', 0],
+						'active'			=> ['TINT:1', 1],
+						'notify'			=> ['TINT:1', 0]
+					],
 					'PRIMARY_KEY'	=> 'type_id',
-				)
-			)
-		);
+				]
+			]
+		];
 	}
 
 	/**
@@ -72,11 +75,11 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	 */
 	public function revert_schema()
 	{
-		return array(
-			'drop_tables'	=> array(
+		return [
+			'drop_tables'	=> [
 				$this->table_prefix . 'reward',
 				$this->table_prefix . 'reward_type',
-			),
-		);
+			],
+		];
 	}
 }

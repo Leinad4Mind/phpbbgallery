@@ -1,257 +1,319 @@
-<!-- IF S_ALLOW_CDN -->
-<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
-<!-- ELSE -->
-<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbreaction/vendor/font-awesome/css/font-awesome.min.css -->
-<!-- ENDIF -->
-<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbreaction/vendor/bootstrap/css/bootstrap_modified.css -->
-<!-- INCLUDECSS css/component.css -->
-<!-- INCLUDECSS css/bbreaction.css -->
-<!-- INCLUDE overall_header.html -->
+{% if S_ALLOW_CDN %}
+  {% INCLUDECSS '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css' %}
+{% else %}
+  {% INCLUDECSS ROOT_PATH ~ 'ext/sitesplat/bbreaction/vendor/font-awesome/css/font-awesome.min.css' %}
+{% endif %}
+{% INCLUDECSS ROOT_PATH ~ 'ext/sitesplat/bbreaction/vendor/bootstrap/css/bootstrap_modified.css' %}
+{% INCLUDECSS ROOT_PATH ~ 'ext/sitesplat/bbreaction/vendor/jqueryui/jquery-ui.css' %}
+{% INCLUDECSS 'css/component.min.css' %}
+{% INCLUDECSS 'css/bbreaction.min.css' %}
+{% include 'overall_header.html' %}
 
 <a id="maincontent"></a>
-<!-- IF S_ADD or S_EDIT -->
-	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
-<!-- ENDIF -->
+{% if S_ADD or S_EDIT %}
+  <a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo;
+    {{ lang('BACK') }}</a>
+{% endif %}
 
+<h1>{{ lang('ACP_BBREACTION_MANAGE') }}
+  <a href="javascript:void(0)" class="md-trigger" data-remote="{{ U_ACTION }}&amp;action=details" data-toggle="modal" data-target="#myModal">
+    <span class="label label-success">{{ lang('ACP_BBREACTION_VERSION') }}
+      <i class="fa fa-info-circle"></i></span></a>
+</h1>
 
-<h1>{L_ACP_BBREACTION_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBREACTION_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
-
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content md-content">
-			  <h3><i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i> {L_ACP_BBREACTION}</h3>
-			  <div class="modal-body">
-			   <div class="panel-body">
-				<div class="loader">{L_ACP_LOADING}</div>
-			   </div>
-			  <div class="modal-footer">
-			  </div>
-			</div>
-		  </div>
-		</div>
-		</div>
-
-<p>{L_ACP_BBREACTION_EXPLAIN}</p>
-<!-- IF S_ADD or S_EDIT -->
-	<form id="acp_badge_rule" method="post" action="{U_FORM_ACTION}">
-		<fieldset class="onofswitch-reverse">
-			<legend><!-- IF S_ADD -->{L_ACP_BBREACTION_ADD}<!-- ELSE -->{L_ACP_BBREACTION_EDIT}<!-- ENDIF --></legend>
-			<dl>
-				<dt><label for="title">{L_ACP_BBREACTION_NAME}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NAME_EXPLAIN}</span></dt>
-				<dd><input id="title" type="text" name="title" maxlength="50" value="{TITLE}" style="width:200px;" /></dd>
-			</dl>
-			<dl>
-				<dt><label for="description">{L_ACP_BBREACTION_DESCRIPTION}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_DESCRIPTION_EXPLAIN}</span></dt>
-				<dd><textarea id="description" name="description" maxlength="50">{DESCRIPTION}</textarea></dd>
-			</dl>
-			<dl>
-				<dt><label for="badge_id">{L_ACP_BBREACTION_SYMBOL}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_SYMBOL_EXPLAIN}</span></dt>
-				<dd>
-					{ICONS} <input id="option" type="text" name="option" value="{OPTION}" style="width:50px;" />
-				</dd>
-			</dl>
-			<!-- EVENT sitesplat_bbreaction_manage_bbreaction_inside -->
-			<dl>
-				<dt><label for="rule_notify">{L_ACP_BBREACTION_NEGATIVE}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NEGATIVE_EXPLAIN}</span></dt>
-				<dd>
-				<div class="onoffswitch">
-				 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_positive" name="rule_positive"{S_POSITIVE}>
-					<label class="onoffswitch-label" for="rule_positive">
-						<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>
-				</dd>
-			</dl>
-			
-	<!-- active but not in used for now	
-			<dl>
-				<dt><label for="rule_notify">{L_ACP_BBREACTION_SEPERATOR}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_SEPERATOR_EXPLAIN}</span></dt>
-				<dd>
-				<div class="onoffswitch">
-				 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_seperator" name="rule_seperator"{S_SEPERATOR}>
-					<label class="onoffswitch-label" for="rule_seperator">
-						<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>
-				</dd>
-			</dl>
-	-->
-			<dl>
-				<dt><label for="rule_notify">{L_ACP_BBREACTION_NOTIFY}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NOTIFY_EXPLAIN}</span></dt>
-				<dd>
-				<div class="onoffswitch">
-				 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_notify" name="rule_notify"{S_NOTIFY}>
-					<label class="onoffswitch-label" for="rule_notify">
-						<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>	
-				</dd>
-			</dl>
-		</fieldset>
-		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-			{S_FORM_TOKEN}
-		</p>
-	</form>
-<!-- ELSE -->
-	<script>
-		var stats = {STATS};
-		var dates = {DATES};
-		var title = '{L_ACP_REACTIONS}';
-		var ytitle = {HITSTITLE};
-		var btnena	= {BTNEN};
-		var labelenabled = {LABELENABLE};
-	</script>
-	<table class="table1 zebra-table fixed-width-table">
-		<thead>
-			<tr>
-				<th style="width: 42%;">{L_ACP_BBREACTION_NAME}</th>
-				<th style="width: 12%;text-align:center;">{L_ACP_BBREACTION_SYMBOL}</th>
-				<th style="width: 12%;text-align:center;">{L_ACP_BBREACTION_USED}</th>
-				<th style="width: 12%;text-align:center;">{L_ACP_BBREACTION_NOTIFY}</th>
-				<th style="width: 22%;text-align:center;">{L_ACTION}</th>
-			</tr>
-		</thead>
-		<tbody>
-			<!-- BEGIN reward -->
-				<tr>
-					<td><strong>{reward.GROUP_NAME}</strong></td>
-					<td style="text-align:center;">
-						<i class="{reward.CLASSLIST}" style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{reward.CONTENTS}</i>
-					</td>
-					<td style="text-align:center;">{reward.USED}</td>
-					<td style="text-align:center;"><!-- IF reward.S_NOTIFY -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
-					<td style="text-align:center;">
-						<a href="{reward.U_EDIT}" title="{L_EDIT}" style="margin:0 5%"><i class="fa fa-pencil"></i></a> 					
-						<!-- IF not reward.S_MIN_WEIGHT --><a href="{reward.U_MOVE_UP}"><!-- ENDIF -->
-						<i class="fa fa-arrow-up"<!-- IF reward.S_MIN_WEIGHT --> style="color:#C5C5C5;"<!-- ENDIF -->></i>
-						<!-- IF not reward.S_MIN_WEIGHT --></a><!-- ENDIF -->
-						<!-- IF not reward.S_MAX_WEIGHT --><a href="{reward.U_MOVE_DOWN}"><!-- ENDIF -->
-						<i class="fa fa-arrow-down down"<!-- IF reward.S_MAX_WEIGHT -->style="color:#C5C5C5;"<!-- ENDIF -->></i>
-						<!-- IF not reward.S_MAX_WEIGHT --></a><!-- ENDIF -->
-				<!-- sync not used for now -->		
-						<a style="display:none;" href="{reward.U_SYNC}" title="{L_RESYNC}" style="margin:0 5%"><i class="fa fa-refresh"></i></a>  
-				<!-- sync not used for now -->		
-						<a href="{reward.U_ACTIVE}" title="<!-- IF reward.S_ACTIVE -->{L_ACP_DO_DEACTIVATE}<!-- ELSE -->{L_ACP_DO_ACTIVATE}<!-- ENDIF -->"><i class="fa fa-power-off"<!-- IF not reward.S_ACTIVE -->style="color:#C5C5C5;"<!-- ENDIF -->></i></a>  
-						<!-- IF reward.S_DELETEABLE --><a href="{reward.U_DELETE}" data-ajax="row_delete" title="{L_DELETE}" style="margin:0 5%"><i class="fa fa-trash-o"></i></a>
-						<!-- ELSE --><i class="fa fa-lock" style="margin:0 5%;"></i><!-- ENDIF -->
-					</td>
-				</tr>
-			<!-- BEGINELSE -->
-				<tr>
-					<td colspan="4" style="text-align: center;">{L_ACP_BBREACTION_EMPTY}</td>
-				</tr>
-			<!-- END reward -->
-		</tbody>
-	</table>
-
-	<div class="clearfix">
-		<form id="badge_add_rule" method="post" action="{U_ACTION}">
-			<fieldset class="quick">
-				<input class="btn btn-sm btn-default" type="submit" name="addrule" value="{L_ACP_BBREACTION_CREATE_TYPE}" />
-				<input type="hidden" name="action" value="add" />
-				{S_FORM_TOKEN}
-			</fieldset>
-		</form>
-	</div>	
-	
-<div class="row">	
-	<div class="col-md-2">
-	
-	<form id="reward_option" method="post" action="{U_ACTION}" style="float:left;text-align:left;">
-		<fieldset>
-		<legend>{L_OPTIONS}</legend>
-		
-		<div class="label-acp">{L_ACP_MULTIVOTE}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_multivote" name="rewards_multivote"{MULTIVOTE}>
-			<label class="onoffswitch-label" for="rewards_multivote">
-				<span class="onoffswitch-inner"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-		
-		<div class="label-acp">{L_ACP_PERCENT}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_percent" name="rewards_percent"{PERCENT}>
-			<label class="onoffswitch-label" for="rewards_percent">
-				<span class="onoffswitch-inner onoffswitch-inner-position"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-		
-		
-		<div class="label-acp">{L_ACP_PROGRESSBAR}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_progressbar" name="rewards_progressbar"{PROGRESS}>
-			<label class="onoffswitch-label" for="rewards_progressbar">
-				<span class="onoffswitch-inner"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-	
-        <div class="label-acp">{L_ACP_MEMBERLIST_STAT}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_memberlist" name="rewards_memberlist"{MEMBERLIST}>
-			<label class="onoffswitch-label" for="rewards_memberlist">
-				<span class="onoffswitch-inner"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-		
-		<div class="label-acp">{L_ACP_DISPLAY_TOP}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_display_top" name="rewards_display_top"{DISPLAY_TOP}>
-			<label class="onoffswitch-label" for="rewards_display_top">
-				<span class="onoffswitch-inner onoffswitch-inner-top"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-		
-		<div class="label-acp">{L_ACP_ALLOW_LOCKED}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_locked" name="rewards_allow_locked"{ALLOW_LOCKED}>
-			<label class="onoffswitch-label" for="rewards_allow_locked">
-				<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-		
-		<div class="label-acp">{L_ACP_ALLOW_GLOBAL}{L_COLON}</div>
-		<div class="onoffswitch">
-		 <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_global" name="rewards_allow_global"{ALLOW_GLOBAL}>
-			<label class="onoffswitch-label" for="rewards_allow_global">
-				<span class="onoffswitch-inner onoffswitch-inner-yn"></span>
-				<span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-
-			<input class="btn btn-sm btn-default" type="submit" name="generalsubmit" value="{L_ACP_BBREACTION_SAVE_GENERAL}" />
-			{S_FORM_TOKEN}
-		</fieldset>
-	</form>
-	</div>
-	
-	<div class="col-md-10">
-	
-		<fieldset>
-			<legend>{L_ACP_BBREACTION_STATISTICS}</legend>
-				<div id="chart" style="max-width: 99%; height: 306px; margin: auto;"></div>
-		</fieldset>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content md-content">
+      <h3>
+        <i class="icon-bbreact-emo-beer" style="margin-right:20px;"></i>
+        {{ lang('ACP_BBREACTION') }}</h3>
+      <div class="modal-body">
+        <div class="panel-body">
+          <div class="loader">{{ lang('ACP_LOADING') }}</div>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
     </div>
-	
- </div>	
-	
-<!-- INCLUDEJS js/highcharts.js -->
-<!-- INCLUDEJS js/statistics.js -->
-<!-- INCLUDEJS js/exporting.js -->
-<!-- ENDIF -->
+  </div>
+</div>
 
-<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbreaction/vendor/bootstrap/js/bootstrap.min.js -->
-<div class="md-overlay"></div><!-- the overlay element -->
-<!-- INCLUDE overall_footer.html -->
+<p>{{ lang('ACP_BBREACTION_EXPLAIN') }}</p>
+{% if MIXED_CASE and MULTIVOTE %}<p class="mixed_case">{{ lang('ACP_BBREACTION_MIXED_CASE') }}</p>{% endif %}
+{% if S_ADD or S_EDIT %}
+  <form id="acp_badge_rule" method="post" action="{{ U_FORM_ACTION }}">
+    <fieldset class="onofswitch-reverse">
+      <legend>
+        {% if S_ADD %}{{ lang('ACP_BBREACTION_ADD') }}
+        {% else %}{{ lang('ACP_BBREACTION_EDIT') }}
+        {% endif %}
+      </legend>
+      <dl>
+        <dt>
+          <label for="title">{{ lang('ACP_BBREACTION_NAME') ~ lang('COLON') }}</label><br/>
+          <span>{{ lang('ACP_BBREACTION_NAME_EXPLAIN') }}</span></dt>
+        <dd><input id="title" type="text" name="title" maxlength="50" value="{{ TITLE }}" style="width:200px;"/></dd>
+      </dl>
+      <dl>
+        <dt>
+          <label for="description">{{ lang('ACP_BBREACTION_DESCRIPTION') ~ lang('COLON') }}</label><br/>
+          <span>{{ lang('ACP_BBREACTION_DESCRIPTION_EXPLAIN') }}</span></dt>
+        <dd>
+          <textarea id="description" name="description" maxlength="50">{{ DESCRIPTION }}</textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>
+          <label for="badge_id">{{ lang('ACP_BBREACTION_SYMBOL') ~ lang('COLON') }}</label><br/>
+          <span>{{ lang('ACP_BBREACTION_SYMBOL_EXPLAIN') }}</span></dt>
+        <dd>
+          {{ ICONS }}
+          <input id="option" type="text" name="option" value="{{ OPTION }}" style="width:50px;"/>
+        </dd>
+      </dl>
+
+      {% EVENT sitesplat_bbreaction_manage_bbreaction_inside %}
+
+      <dl>
+        <dt>
+          <label for="rule_notify">{{ lang('ACP_BBREACTION_NEGATIVE') ~ lang('COLON') }}</label><br/>
+          <span>{{ lang('ACP_BBREACTION_NEGATIVE_EXPLAIN') }}</span></dt>
+        <dd>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_positive" name="rule_positive" {{ S_POSITIVE }}>
+            <label class="onoffswitch-label" for="rule_positive">
+              <span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </dd>
+      </dl>
+
+      <!-- active but not in used for now <dl> <dt><label for="rule_notify">{{ lang('ACP_BBREACTION_SEPARATOR') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_BBREACTION_SEPARATOR_EXPLAIN') }}</span></dt> <dd> <div class="onoffswitch"> <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_seperator" name="rule_seperator"{{ S_SEPARATOR }}> <label class="onoffswitch-label" for="rule_seperator"> <span class="onoffswitch-inner onoffswitch-inner-yn"></span> <span class="onoffswitch-switch"></span> </label> </div> </dd> </dl> -->
+      <dl>
+        <dt>
+          <label for="rule_notify">{{ lang('ACP_BBREACTION_NOTIFY') ~ lang('COLON') }}</label><br/>
+          <span>{{ lang('ACP_BBREACTION_NOTIFY_EXPLAIN') }}</span></dt>
+        <dd>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rule_notify" name="rule_notify" {{ S_NOTIFY }}>
+            <label class="onoffswitch-label" for="rule_notify">
+              <span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </dd>
+      </dl>
+    </fieldset>
+    <p class="submit-buttons">
+      <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}"/>&nbsp;
+      <input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+      {{ S_FORM_TOKEN }}
+    </p>
+  </form>
+{% else %}
+  <script>
+    var stats = {{ STATS }};
+    var dates = {{ DATES }};
+    var title = '{{ lang("ACP_REACTIONS") }}';
+    var ytitle = {{ HITSTITLE }};
+    var btnena = {{ BTNEN }};
+    var labelenabled = {{ LABELENABLE }};
+    var overviewforum = '{{ lang("REACTIONS_OVERVIEW_FORUM") }}';
+    var overviewtopic = '{{ lang("REACTIONS_OVERVIEW_TOPIC") }}';
+    var overviewposts = '{{ lang("REACTIONS_OVERVIEW_POSTS") }}';
+    var overviewuser = '{{ lang("REACTIONS_OVERVIEW_USER") }}';
+  </script>
+  <table class="table1 zebra-table fixed-width-table">
+    <thead>
+      <tr>
+        <th style="width: 42%;">{{ lang('ACP_BBREACTION_NAME') }}</th>
+        <th style="width: 12%;text-align:center;">{{ lang('ACP_BBREACTION_SYMBOL') }}</th>
+        <th style="width: 12%;text-align:center;">{{ lang('ACP_BBREACTION_USED') }}</th>
+        <th style="width: 12%;text-align:center;">{{ lang('ACP_BBREACTION_NOTIFY') }}</th>
+        <th style="width: 22%;text-align:center;">{{ lang('ACTION') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if loops.reward %}
+        {% for reward in loops.reward %}
+          <tr>
+            <td>
+              <strong>{{ reward.GROUP_NAME }}</strong>
+            </td>
+            <td style="text-align:center;">
+              <i class="{{ reward.CLASSLIST }}" style="color:{% if reward.S_POSITIVE %}red{% else %}green{% endif %};">{{ reward.CONTENTS }}</i>
+            </td>
+            <td style="text-align:center;">{{ reward.USED }}</td>
+            <td style="text-align:center;">
+              {% if reward.S_NOTIFY %}{{ lang('YES') }}
+              {% else %}{{ lang('NO') }}
+              {% endif %}
+            </td>
+            <td style="text-align:center;">
+              <a href="{{ reward.U_EDIT }}" title="{{ lang('EDIT') }}" style="margin:0 5%">
+                <i class="fa fa-pencil"></i>
+              </a>
+              {% if not reward.S_MIN_WEIGHT %}
+                <a href="{{ reward.U_MOVE_UP }}">
+                {% endif %}
+                <i class="fa fa-arrow-up" {% if reward.S_MIN_WEIGHT %} style="color:#C5C5C5;" {% endif %}></i>
+                {% if not reward.S_MIN_WEIGHT %}
+                </a>
+              {% endif %}
+              {% if not reward.S_MAX_WEIGHT %}
+                <a href="{{ reward.U_MOVE_DOWN }}">
+                {% endif %}
+                <i class="fa fa-arrow-down down" {% if reward.S_MAX_WEIGHT %} style="color:#C5C5C5;" {% endif %}></i>
+                {% if not reward.S_MAX_WEIGHT %}
+                </a>
+              {% endif %}
+              <!-- sync not used for now -->
+              <a style="margin:0 5%" href="{{ reward.U_SYNC }}" title="{{ lang('RESYNC') }}">
+                <i class="fa fa-refresh"></i>
+              </a>
+              <!-- sync not used for now -->
+              <a href="{{ reward.U_ACTIVE }}" title="{% if reward.S_ACTIVE %}{{ lang('ACP_DO_DEACTIVATE') }}{% else %}{{ lang('ACP_DO_ACTIVATE') }}{% endif %}">
+                <i class="fa fa-power-off" {% if not reward.S_ACTIVE %} style="color:#C5C5C5;" {% endif %}></i>
+              </a>
+              {% if reward.S_DELETEABLE %}
+                <a href="{{ reward.U_DELETE }}" data-ajax="row_delete" title="{{ lang('DELETE') }}" style="margin:0 5%">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              {% else %}
+                <i class="fa fa-lock" style="margin:0 5%;"></i>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4" style="text-align: center;">{{ lang('ACP_BBREACTION_EMPTY') }}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="clearfix">
+    <form id="badge_add_rule" method="post" action="{{ U_ACTION }}">
+      <fieldset class="quick">
+        <input class="btn btn-sm btn-default" type="submit" name="addrule" value="{{ lang('ACP_BBREACTION_CREATE_TYPE') }}"/>
+        <input type="hidden" name="action" value="add"/>
+        {{ S_FORM_TOKEN }}
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+
+      <form id="reward_option" method="post" action="{{ U_ACTION }}" style="float:left;text-align:left;">
+        <fieldset>
+          <legend>{{ lang('OPTIONS') }}</legend>
+
+          <div class="label-acp">{{ lang('ACP_MULTIVOTE') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_multivote" name="rewards_multivote" {{ MULTIVOTE }}/>
+            <label class="onoffswitch-label" for="rewards_multivote">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_PERCENT') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_percent" name="rewards_percent" {{ PERCENT }}/>
+            <label class="onoffswitch-label" for="rewards_percent">
+              <span class="onoffswitch-inner onoffswitch-inner-position"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_PROGRESSBAR') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_progressbar" name="rewards_progressbar" {{ PROGRESS }}/>
+            <label class="onoffswitch-label" for="rewards_progressbar">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_MEMBERLIST_STAT') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_memberlist" name="rewards_memberlist" {{ MEMBERLIST }}/>
+            <label class="onoffswitch-label" for="rewards_memberlist">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_DISPLAY_TOP_SHOW') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_display_top_show" name="rewards_display_top_show" {{ DISPLAY_TOP_SHOW }}/>
+            <label class="onoffswitch-label" for="rewards_display_top_show">
+              <span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_DISPLAY_TOP_POSITION') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_display_top" name="rewards_display_top" {{ DISPLAY_TOP_POSITION }}/>
+            <label class="onoffswitch-label" for="rewards_display_top">
+              <span class="onoffswitch-inner onoffswitch-inner-top"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_ALLOW_LOCKED') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_locked" name="rewards_allow_locked" {{ ALLOW_LOCKED }}/>
+            <label class="onoffswitch-label" for="rewards_allow_locked">
+              <span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_ALLOW_GLOBAL') ~ lang('COLON') }}</div>
+          <div class="onoffswitch">
+            <input type="checkbox" class="onoffswitch-checkbox" value="1" id="rewards_allow_global" name="rewards_allow_global" {{ ALLOW_GLOBAL }}/>
+            <label class="onoffswitch-label" for="rewards_allow_global">
+              <span class="onoffswitch-inner onoffswitch-inner-yn"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <div class="label-acp">{{ lang('ACP_BUTTON_POSITION') ~ lang('COLON') }}</div>
+          <div class="btn-position">
+            <label><input {% if BUTTON_POSITION eq 0 %}checked="checked" {% endif %}type="radio" name="rewards_button_position" value="0"/>
+              {{ lang('ACP_BUTTON_POSITION_ALL') }}</label><br/>
+            <label><input {% if BUTTON_POSITION eq 1 %}checked="checked" {% endif %}type="radio" name="rewards_button_position" value="1"/>
+              {{ lang('ACP_BUTTON_POSITION_FIRST_POST_ONLY') }}</label><br/>
+            <label><input {% if BUTTON_POSITION eq 2 %}checked="checked" {% endif %}type="radio" name="rewards_button_position" value="2"/>
+              {{ lang('ACP_BUTTON_POSITION_ALL_EXCEPT_FIRST_POST') }}</label><br/>
+          </div>
+
+          <input class="btn btn-sm btn-default" type="submit" name="generalsubmit" value="{{ lang('ACP_BBREACTION_SAVE_GENERAL') }}"/>
+          {{ S_FORM_TOKEN }}
+        </fieldset>
+      </form>
+    </div>
+
+    <div class="col-md-10">
+      <fieldset>
+        <legend>{{ lang('ACP_BBREACTION_STATISTICS') }}</legend>
+        <div id="chart" style="max-width: 99%; height: 306px; margin: auto;"></div>
+      </fieldset>
+    </div>
+
+  </div>
+
+  {% INCLUDEJS 'js/highcharts.js' %}
+  {% INCLUDEJS 'js/statistics.min.js' %}
+  {% INCLUDEJS 'js/exporting.js' %}
+{% endif %}
+
+{% INCLUDEJS ROOT_PATH ~ 'ext/sitesplat/bbreaction/vendor/bootstrap/js/bootstrap.min.js' %}
+<!-- the overlay element -->
+<div class="md-overlay"></div>
+{% include 'overall_footer.html' %}

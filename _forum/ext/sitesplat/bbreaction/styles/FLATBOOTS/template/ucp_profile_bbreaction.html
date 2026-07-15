@@ -1,74 +1,93 @@
-<!-- INCLUDE ucp_header.html -->
-<!-- INCLUDECSS @sitesplat_bbreaction/bbreaction.css -->
+{% include 'ucp_header.html' %}
+{% INCLUDECSS '@sitesplat_bbreaction/bbreaction.min.css' %}
 <div class="tab-pane active">
-<fieldset class="framed-ucp">
-<legend>{L_BBREACTION}</legend>
-	<p>{L_UCP_BBREACTION_EXPLAIN}</p>
-<div class="row">
-<div class="col-md-6">
- <ul class="list-unstyled">
- <!-- BEGIN likestat -->
-	<li><!-- IF likestat.ICON --><i class="fa {likestat.ICON}"></i><!-- ENDIF --><!-- IF likestat.CONTENTS -->{likestat.CONTENTS}<!-- ENDIF -->&nbsp;{likestat.GIVEN_RECIEVED}{L_COLON}&nbsp;{likestat.GIVE_RECIEVE}</li>
- <!-- END likestat -->
- </ul>
-</div>
-	
-<div class="col-md-6">
- <div id="chart" class="hidden-xs hidden-sm" style="height: 150px; margin-top:-30px; background-color:transparent;"></div>
-</div>
-</div>
+  <fieldset class="framed-ucp">
+    <legend>{{ lang('BBREACTION') }}</legend>
+    <p>{{ lang('UCP_BBREACTION_EXPLAIN') }}</p>
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="list-unstyled">
+          {% if loops.likestat %}
+            {% for likestat in loops.likestat %}
+              <li>
+                {% if likestat.ICON %}
+                  <i class="fa {{ likestat.ICON }}"></i>
+                {% endif %}
+                {% if likestat.CONTENTS %}{{ likestat.CONTENTS }}
+                {% endif %}&nbsp;{{ likestat.GIVEN_RECEIVED ~ lang('COLON') }}&nbsp;{{ likestat.GIVE_RECEIVE }}</li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
 
- <script>
- var stats = {STATS};
-</script>
+      <div class="col-md-6">
+        <div id="chart" class="hidden-xs hidden-sm" style="height: 150px; margin-top:-30px; background-color:transparent;"></div>
+      </div>
+    </div>
+
+    <script>
+      var stats = {{ STATS }};
+    </script>
     <div class="panel panel-forum">
-	    <div class="panel-heading">
-		 {L_BBREACTION}
-		</div>
-	<div class="panel-inner">
-	<table class="footable table table-striped table-primary table-hover">
-		<thead>
-			<tr>
-				<th data-class="expand">{L_POST_SUBJECT}</th>
-				<th data-hide="phone">{L_BBREACTION}</th>
-				<th data-hide="phone">{L_POST_TIME}</th>
-				<th data-hide="phone">{L_USERNAME}</th>
-			</tr>
-		</thead>
-		<tbody>
-		<!-- BEGIN likes -->
-			<tr>
-				<td><a href="{likes.SUBJECTURL}">{likes.SUBJECT}</a></td>
-				<td>
-					<!-- IF likes.ICON --><i class="fa {likes.ICON}"></i><!-- ENDIF --><!-- IF likes.CONTENTS -->{likes.CONTENTS}<!-- ENDIF -->&nbsp;{likes.GIVE_RECIEVE}
-				</td>
-				<td class="center">{likes.LIKE_TIME}</td>
-				<td class="center mark">{likes.USERNAME}</td>
-			</tr>
-		<!-- BEGINELSE -->
-			<tr><td colspan="4">{L_BBREACTION_NO_RECORDS}</td></tr>
-		<!-- END likes -->
-		</tbody>
-	</table>
-	</div>
-	</div>
-	<!-- IF .pagination or TOTAL_POSTS -->
-		<div class="pull-right">	 
-		 <ul class="pagination pagination-sm hidden-xs">
-		<!-- <li><a>{TOTAL_LIKES}</a></li> -->
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li class="active"><a>{PAGE_NUMBER}</a></li>	
-			<!-- ENDIF -->
-		 </ul>
-	   </div>
-	<!-- ENDIF -->
-</fieldset>	
+      <div class="panel-heading">
+        {{ lang('BBREACTION') }}
+      </div>
+      <div class="panel-inner">
+        <table class="footable table table-striped table-primary table-hover">
+          <thead>
+            <tr>
+              <th data-class="expand">{{ lang('POST_SUBJECT') }}</th>
+              <th data-hide="phone">{{ lang('BBREACTION') }}</th>
+              <th data-hide="phone">{{ lang('POST_TIME') }}</th>
+              <th data-hide="phone">{{ lang('USERNAME') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if loops.likes %}
+              {% for like in loops.likes %}
+                <tr>
+                  <td>
+                    <a href="{{ like.SUBJECTURL }}">{{ like.SUBJECT }}</a>
+                  </td>
+                  <td>
+                    {% if like.ICON %}
+                      <i class="fa {{ like.ICON }}"></i>
+                    {% endif %}
+                    {% if like.CONTENTS %}{{ like.CONTENTS }}
+                    {% endif %}&nbsp;{{ like.GIVE_RECEIVE }}
+                  </td>
+                  <td class="center">{{ like.LIKE_TIME }}</td>
+                  <td class="center mark">{{ like.USERNAME }}</td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td colspan="4">{{ lang('BBREACTION_NO_RECORDS') }}</td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% if loops.pagination or TOTAL_POSTS %}
+      <div class="pull-right">
+        <ul class="pagination pagination-sm hidden-xs">
+          <!-- <li><a>{{ TOTAL_LIKES }}</a></li> -->
+          {% if loops.pagination %}
+            {% include 'pagination.html' %}
+          {% else %}
+            <li class="active">
+              <a>{{ PAGE_NUMBER }}</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+  </fieldset>
 </div>
-<!-- IF not POLSTATS -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/highcharts.js -->
-<!-- ENDIF -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/ucp_statistics.js -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/exporting.js -->
-<!-- INCLUDE ucp_footer.html -->
+{% if not POLSTATS %}
+  {% INCLUDEJS '@sitesplat_bbreaction/js/highcharts.js' %}
+{% endif %}
+{% INCLUDEJS '@sitesplat_bbreaction/js/statistics.min.js' %}
+{% INCLUDEJS '@sitesplat_bbreaction/js/exporting.js' %}
+{% include 'overall_footer.html' %}

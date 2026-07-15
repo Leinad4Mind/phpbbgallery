@@ -1,1 +1,6 @@
-<!-- IF U_BBREACTION_PAGE --><li><a href="{U_BBREACTION_PAGE}"><i class="fa fa-trophy"></i>{L_BBREACTION_TOP_LIST}</a></li><!-- ENDIF -->
+{% if U_BBREACTION_PAGE %}
+  <li>
+    <a href="{{ U_BBREACTION_PAGE }}">
+      <i class="fa fa-trophy"></i>{{ lang('BBREACTION_TOP_LIST') }}</a>
+  </li>
+{% endif %}

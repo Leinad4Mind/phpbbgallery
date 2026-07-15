@@ -87,8 +87,7 @@ function sitesplat_bbreaction_init() {
 				elem.classList.add('cehhooked');
 				elem.onclick = function(e) {
 					e.preventDefault();
-					$(elem).parent().find(".com-expand-holder").toggleClass('active');
-					$(elem).parent().parent().parent().parent().parent().parent().parent().find(".com-contain").toggleClass('active');
+					$(elem).parent().find(".com-contain, .com-expand-holder").toggleClass('active');
 				};
 			}
 		});

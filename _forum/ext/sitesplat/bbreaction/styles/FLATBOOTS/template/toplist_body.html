@@ -1,49 +1,57 @@
-<!-- INCLUDE overall_header.html -->
-<div class="side-segment"><h3>{L_BBREACTION_TOP_LIST}</h3></div>
-<div class="panel panel-forum">
-	<div id="table_title" class="panel-heading">
-	{L_BBREACTION_TOP_LIST}
-	</div>
-	<!-- IF not VIEW_TABLE -->
-	<table class="graph_table" id="graph_table">
-	<thead>
-		<tr>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<!-- IF STATS -->
-		<tr>
-		   <td>
-		   <table style="width:100%;">
-		   <tr>
-		    <td style="width:100%; text-align:center"><div id="chart" style="width: 90%; height: 230px; margin: auto;"></div></td>
-		   </tr>
-		   </table>
-		<!-- ENDIF -->
-			<script>
-			var stats = {STATS};
-			var dates = {DATES};
-			var title = '{L_BBREACTION_TOP_LIST}';
-			var ytitle = {HITSTITLE};
-			var btnena	= {BTNEN};
-			var labelenabled = {LABELENABLE};
-			</script>
-	<!-- IF not VIEW_TABLE -->
-			</td>
-		</tr>
-		<!-- ELSE -->
-		<tr>
-			<td>{L_ACP_NO_ITEMS}</td>
-		</tr>
-		<!-- ENDIF -->
-	</tbody>
-	</table>
-	<!-- ENDIF -->
+{% include 'overall_header.html' %}
+<div class="side-segment">
+  <h3>{{ lang('BBREACTION_TOP_LIST') }}</h3>
 </div>
-<!-- IF not POLSTATS and not MEMBERSTATS -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/highcharts.js -->
-<!-- ENDIF -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/statistics.js -->
-<!-- INCLUDEJS @sitesplat_bbreaction/js/exporting.js -->
-<!-- INCLUDE overall_footer.html -->
+<div class="panel panel-forum">
+  <div id="table_title" class="panel-heading">
+    {{ lang('BBREACTION_TOP_LIST') }}
+  </div>
+  {% if not VIEW_TABLE %}
+    <table class="graph_table" id="graph_table">
+      <thead>
+        <tr>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if STATS %}
+          <tr>
+            <td>
+              <table style="width:100%;">
+                <tr>
+                  <td style="width:100%; text-align:center">
+                    <div id="chart" style="width: 90%; height: 230px; margin: auto;"></div>
+                  </td>
+                </tr>
+              </table>
+            {% endif %}
+            <script>
+              var stats = {{ STATS }};
+              var dates = {{ DATES }};
+              var title = '{{ lang("BBREACTION_TOP_LIST") }}';
+              var ytitle = {{ HITSTITLE }};
+              var btnena = {{ BTNEN }};
+              var labelenabled = {{ LABELENABLE }};
+              var overviewforum = '{{ lang("REACTIONS_OVERVIEW_FORUM") }}';
+              var overviewtopic = '{{ lang("REACTIONS_OVERVIEW_TOPIC") }}';
+              var overviewposts = '{{ lang("REACTIONS_OVERVIEW_POSTS") }}';
+              var overviewuser = '{{ lang("REACTIONS_OVERVIEW_USER") }}';
+            </script>
+            {% if not VIEW_TABLE %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td>{{ lang('ACP_NO_ITEMS') }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+{% if not POLSTATS and not MEMBERSTATS %}
+  {% INCLUDEJS '@sitesplat_bbreaction/js/highcharts.js' %}
+{% endif %}
+{% INCLUDEJS '@sitesplat_bbreaction/js/statistics.min.js' %}
+{% INCLUDEJS '@sitesplat_bbreaction/js/exporting.js' %}
+{% include 'overall_footer.html' %}

@@ -1,12 +1,13 @@
-<!-- IF postrow.POSITIVE or postrow.NEGATIVE -->
-<li class="profile-custom-field"><i class="fa fa-random"></i>&nbsp;{L_BBREACTION}{L_COLON}&nbsp;
-  <div class="progress progress-sm"> 
-  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{postrow.POSITIVE}" aria-valuemin="0" aria-valuemax="100" style="width:{postrow.POSITIVE}%;">
-   {postrow.POSITIVE}%
-  </div>
-  <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="{postrow.NEGATIVE}" aria-valuemin="0" aria-valuemax="100" style="width:{postrow.NEGATIVE}%;">
-  {postrow.NEGATIVE}%
-  </div>
-  </div>
-</li>
-<!-- ENDIF -->
+{% if U_BBREACTION_VIEW and (postrow.POSITIVE or postrow.NEGATIVE) %}
+  <li class="profile-custom-field">
+    <i class="fa fa-random"></i>&nbsp;{{ lang('BBREACTION') ~ lang('COLON') }}&nbsp;
+    <div class="progress progress-sm">
+      <span class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{ postrow.POSITIVE }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ postrow.POSITIVE }}%;">
+        {{ postrow.POSITIVE }}%
+      </span>
+      <span class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="{{ postrow.NEGATIVE }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ postrow.NEGATIVE }}%;">
+        {{ postrow.NEGATIVE }}%
+      </span>
+    </div>
+  </li>
+{% endif %}

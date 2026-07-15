@@ -1,18 +1,21 @@
 <?php
+
 /**
-*
-* BBreaction
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBReaction
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbreaction\migrations\v10x;
 
+use \phpbb\db\migration\migration;
+
 /**
-* Migration stage 6: Initial module
-*/
-class m4_initial_module extends \phpbb\db\migration\migration
+ * Migration stage 4: Initial module
+ */
+class m4_initial_module extends migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -23,7 +26,7 @@ class m4_initial_module extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\bbreaction\migrations\v10x\m1_initial_schema');
+		return ['\sitesplat\bbreaction\migrations\v10x\m1_initial_schema'];
 	}
 
 	/**
@@ -34,21 +37,22 @@ class m4_initial_module extends \phpbb\db\migration\migration
 	 */
 	public function update_data()
 	{
-		return array(
-			array('module.add', array(
-				'acp', 'ACP_QUICK_ACCESS', array(
-					'module_basename'	=> '\sitesplat\bbreaction\acp\bbreaction_module',
-					'modes'				=> array('settings'),
-				),
-				),
-			),
-			array('module.add', array(
-				'ucp', 'UCP_PROFILE', array(
+		return [
+			[
+				'module.add', [
+					'acp', 'ACP_QUICK_ACCESS', [
+						'module_basename'	=> '\sitesplat\bbreaction\acp\bbreaction_module',
+						'modes'				=> ['settings'],
+					],
+				],
+			],
+			['module.add', [
+				'ucp', 'UCP_PROFILE', [
 					'module_basename'	=> '\sitesplat\bbreaction\ucp\bbreaction_module',
 					'auth'				=> 'ext_sitesplat/bbreaction',
-					'modes'				=> array('bbreaction'),
-				),
-			)),
-		);
+					'modes'				=> ['bbreaction'],
+				],
+			]],
+		];
 	}
 }

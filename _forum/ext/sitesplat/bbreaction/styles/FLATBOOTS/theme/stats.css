@@ -1,0 +1,45 @@
+.statistics_table {
+  table-layout: fixed; 
+  width: 100%;
+  white-space: nowrap;
+}
+
+.graph_table {
+  table-layout: fixed; 
+  width: 100%;
+  white-space: nowrap;
+  margin-bottom:20px;
+}
+
+.statistics_table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align:left;
+}
+
+.graph_table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align:center;
+}
+
+.statistics_table td:nth-child(1), .statistics_table td:nth-child(2), .overview_table td:nth-child(1), .overview_table td:nth-child(3) {
+  text-align:center;
+}
+
+.graph_table td:nth-child(2), .overview_table td:nth-child(2) {
+  text-align:left;
+}
+
+.statistics_table td img, .graph_table td img {
+	margin-right:10px;
+}
+
+@media (max-width:499px){
+  .highcharts-subtitle {
+    visibility: hidden;
+   }
+  
+}

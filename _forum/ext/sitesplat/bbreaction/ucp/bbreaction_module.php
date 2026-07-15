@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* BBreaction
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBReaction
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbreaction\ucp;
 
@@ -25,13 +26,13 @@ class bbreaction_module
 		$this->tpl_name = 'ucp_profile_bbreaction';
 		$this->reward_table = $phpbb_container->getParameter('sitesplat.bbreaction.tables.reward');
 		$this->reward_type_table = $phpbb_container->getParameter('sitesplat.bbreaction.tables.reward_type');
-		
+
 		/**
-		* Event to run code at the beginning of the UCP module
-		*
-		* @event sitesplat.bbreaction.ucp_before
-		* @since 1.3.0
-		*/
+		 * Event to run code at the beginning of the UCP module
+		 *
+		 * @event sitesplat.bbreaction.ucp_before
+		 * @since 1.3.0
+		 */
 		extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_before'));
 
 		$userid = $user->data['user_id'];
@@ -41,47 +42,48 @@ class bbreaction_module
 				UNION
 
 				SELECT *, (SELECT COUNT(r.like_id) FROM ' . $this->reward_table . ' r
-				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = r.post_id WHERE r.like_type = t.type_id AND p.poster_id = ' . $userid . ') AS num, "recieved" AS type
+				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = r.post_id WHERE r.like_type = t.type_id AND p.poster_id = ' . $userid . ') AS num, "received" AS type
 				FROM ' . $this->reward_type_table . ' t WHERE active = 1 
 				
 				ORDER BY weight, type';
 		$result = $db->sql_query($sql);
-		while($row = $db->sql_fetchrow($result)) 
-		{
-				$ary_tpl = array(
-					'TITLE'				=> $row['title'],
-					'ICON'				=> $row['symbol'],
-					'S_POSITIVE'		=> $row['positive'],
-					'GIVEN_RECIEVED'	=> (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED']),
-					'GIVE_RECIEVE'		=> $row['num'],
+		while ($row = $db->sql_fetchrow($result)) {
+			$ary_tpl = [
+				'TITLE'				=> $row['title'],
+				'ICON'				=> $row['symbol'],
+				'S_POSITIVE'		=> $row['positive'],
+				'GIVEN_RECEIVED'	=> (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVEN'] : $user->lang['BBREACTION_RECEIVED']),
+				'GIVE_RECEIVE'		=> $row['num'],
 
-					'CLASSLIST'	=> 'fa ' . $row['symbol'],
-					'CONTENTS'	=> '',
-				);
-				
-				/**
-				* Event to modify reward template variables
-				*
-				* @event sitesplat.bbreaction.ucp_likestat
-				* @var	array	row	Reward data
-				* @var	array	ary_tpl	Current reward template array
-				* @since 1.3.0
-				*/
-				$vars = array(
-					'row',
-					'ary_tpl',
-				);
-				extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_likestat', compact($vars)));
+				'CLASSLIST'	=> 'fa ' . $row['symbol'],
+				'CONTENTS'	=> '',
+			];
 
-				$template->assign_block_vars('likestat', $ary_tpl);
+			/**
+			 * Event to modify reward template variables
+			 *
+			 * @event sitesplat.bbreaction.ucp_likestat
+			 * @var	array	row	Reward data
+			 * @var	array	ary_tpl	Current reward template array
+			 * @since 1.3.0
+			 */
+			$vars = [
+				'row',
+				'ary_tpl',
+			];
+			extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_likestat', compact($vars)));
 
-				$data[] = array('name'	=> $row['title'] . ': ' . (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED']),
-								'y'		=> $row['num']);
+			$template->assign_block_vars('likestat', $ary_tpl);
+
+			$data[] = [
+				'name'	=> $row['title'] . ': ' . (($row['type'] == 'given') ? $user->lang['BBREACTION_GIVEN'] : $user->lang['BBREACTION_RECEIVED']),
+				'y'		=> $row['num']
+			];
 		}
 
-		$template->assign_vars(array(
-			'STATS'	=> str_replace(array('"name"', '"y"'), array('name', 'y'), json_encode($data, JSON_NUMERIC_CHECK))
-		));
+		$template->assign_vars([
+			'STATS'	=> str_replace(['"name"', '"y"'], ['name', 'y'], json_encode($data, JSON_NUMERIC_CHECK))
+		]);
 
 		$sql = 'SELECT SUM(subtotal) as total
 				FROM
@@ -113,17 +115,17 @@ class bbreaction_module
 		$select_append = '';
 		$left_join_append = '';
 		/**
-		* Event to modify reward template variables
-		*
-		* @event sitesplat.bbreaction.ucp_likes_sql_before
-		* @var	string	select_append	string to append to selects
-		* @var	string	left_join_append	string to append to joins
-		* @since 1.4.0
-		*/
-		$vars = array(
+		 * Event to modify reward template variables
+		 *
+		 * @event sitesplat.bbreaction.ucp_likes_sql_before
+		 * @var	string	select_append	string to append to selects
+		 * @var	string	left_join_append	string to append to joins
+		 * @since 1.4.0
+		 */
+		$vars = [
 			'select_append',
 			'left_join_append',
-		);
+		];
 		extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_likes_sql_before', compact($vars)));
 
 		$sql = 'SELECT p.post_subject, p.post_id, p.topic_id, p.forum_id, l.user_id, u.username, t.*, l.like_time' . $select_append . '
@@ -145,44 +147,42 @@ class bbreaction_module
 				WHERE p.poster_id = ' . $user->data['user_id'] . '
 				
 				ORDER BY like_time DESC ';
-				$result = $db->sql_query_limit($sql, $per_page, $start);
-				while($row = $db->sql_fetchrow($result)) 
-				{
-					$url = $phpbb_root_path . 'viewtopic.' . $phpEx . '?f=' . $row['forum_id'] . '&t=' . $row['topic_id'] . '&p='. $row['post_id'];
-					$ary_tpl = array(
-						'SUBJECT'			=> $row['post_subject'],
-						'SUBJECTURL'		=> append_sid($url),
-						'TITLE'				=> $row['title'],
-						'ICON'				=> $row['symbol'],
-						'S_POSITIVE'		=> $row['positive'],
-						'GIVE_RECIEVE'		=> ($row['user_id'] == $user->data['user_id']) ? $user->lang['BBREACTION_GIVVEN'] : $user->lang['BBREACTION_RECIEVED'],
-						'LIKE_TIME'			=> $user->format_date($row['like_time']),
-						'USERNAME'			=> $row['username'],
-						
-						'CLASSLIST'	=> 'fa ' . $row['symbol'],
-						'CONTENTS'	=> '',
-					);
+		$result = $db->sql_query_limit($sql, $per_page, $start);
+		while ($row = $db->sql_fetchrow($result)) {
+			$url = $phpbb_root_path . 'viewtopic.' . $phpEx . '?f=' . $row['forum_id'] . '&t=' . $row['topic_id'] . '&p=' . $row['post_id'];
+			$ary_tpl = [
+				'SUBJECT'			=> $row['post_subject'],
+				'SUBJECTURL'		=> append_sid($url),
+				'TITLE'				=> $row['title'],
+				'ICON'				=> $row['symbol'],
+				'S_POSITIVE'		=> $row['positive'],
+				'GIVE_RECEIVE'		=> ($row['user_id'] == $user->data['user_id']) ? $user->lang['BBREACTION_GIVEN'] : $user->lang['BBREACTION_RECEIVED'],
+				'LIKE_TIME'			=> $user->format_date($row['like_time']),
+				'USERNAME'			=> $row['username'],
 
-					/**
-					* Event to modify reward template variables
-					*
-					* @event sitesplat.bbreaction.ucp_likes
-					* @var	array	row	Reward data
-					* @var	array	ary_tpl	Current reward template array
-					* @since 1.3.0
-					*/
-					$vars = array(
-						'row',
-						'ary_tpl',
-					);
-					extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_likes', compact($vars)));
+				'CLASSLIST'	=> 'fa ' . $row['symbol'],
+				'CONTENTS'	=> '',
+			];
 
-					$template->assign_block_vars('likes', $ary_tpl);
-				}
+			/**
+			 * Event to modify reward template variables
+			 *
+			 * @event sitesplat.bbreaction.ucp_likes
+			 * @var	array	row	Reward data
+			 * @var	array	ary_tpl	Current reward template array
+			 * @since 1.3.0
+			 */
+			$vars = [
+				'row',
+				'ary_tpl',
+			];
+			extract($phpbb_dispatcher->trigger_event('sitesplat.bbreaction.ucp_likes', compact($vars)));
 
-		$template->assign_vars(array(
+			$template->assign_block_vars('likes', $ary_tpl);
+		}
+
+		$template->assign_vars([
 			'U_ACTION'					=>	$this->u_action,
-		));
+		]);
 	}
-
 }

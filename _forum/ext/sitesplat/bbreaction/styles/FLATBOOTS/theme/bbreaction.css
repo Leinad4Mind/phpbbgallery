@@ -83,7 +83,7 @@
 .icon-bbreact-emo-minus:before { content: '\e814'; } /* '' */
 .icon-bbreact-emo-plus:before { content: '\e815'; } /* '' */
 .icon-bbreact-emo:before { content: '\e816'; } /* '' */
-/* BBreaction */
+/* BBReaction */
 
 .bbreactionbar {
     margin-top: 10px;
@@ -108,13 +108,13 @@
   
 .bbreact-list li {
     margin-right: 8px;
+	padding: 4px;
 }
   
 .bbreact-list a:focus {
     outline: medium none;
     text-decoration: none;
 }
-
 
 .bbreact-list a {
   line-height: 1.1;
@@ -134,8 +134,11 @@
   width: 100%;
 }
 
+.bbreact-list li.reacted {
+	border: 2px solid #d6d9e0;
+	border-radius: 4px;
+}
 
-  
 .card {
   border-radius: 4px;
   overflow: hidden;
@@ -217,7 +220,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     left: 0;
     margin: 0 auto;
     right: 0;
-	top: 0;
+    top: 0;
   -webkit-transform: translateX(-300px);
           transform: translateX(-300px);
   -webkit-transition: 0.3s all cubic-bezier(0.36, 0.49, 0.26, 1.27);
@@ -249,7 +252,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 .progress-sm {
     height: 10px;
-	margin-bottom: 5px;
+    width: inherit;
+    margin-bottom: 5px;
     margin-top: 5px;
 }
 
@@ -320,8 +324,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
             transform: rotate(120deg);
   }
   100% {
-    -webkit-transform: rotate(144deg);
-            transform: rotate(144deg);
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
   }
 }
 
@@ -339,8 +343,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
             transform: rotate(120deg);
   }
   100% {
-    -webkit-transform: rotate(144deg);
-            transform: rotate(144deg);
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
   }
 }
 
@@ -350,8 +354,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
             transform: rotate(142deg);
   }
   100% {
-    -webkit-transform: rotate(72deg);
-            transform: rotate(72deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
 }
 
@@ -361,8 +365,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
             transform: rotate(142deg);
   }
   100% {
-    -webkit-transform: rotate(72deg);
-            transform: rotate(72deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
 }
 
@@ -432,7 +436,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 
 
-/* BBreaction modal css */
+/* BBReaction modal css */
 
 .pagination-likes {
     bottom: -66px;
@@ -441,12 +445,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     right: 0;
 }
 .avatar-likers {
-padding: 5px 0 0 10px;
+    padding: 5px 0 0 10px;
 }
 .avatar-likers img{
     border: 4px solid #dedede;
     border-radius: 50%;
-	max-height: 70px;
+    max-height: 70px;
     max-width: 70px;
 }
 .likers-time-stamp {
@@ -516,11 +520,40 @@ padding: 5px 0 0 10px;
 
 /* likeBB and shareon fix for posts*/
 .label-huskygray {
-    float: left !important;
-    margin-top: 5px;
+  float: left !important;
+  margin-top: 5px;
+  line-height: 1.25;
+  max-height: 17px;
 }
 .share-buttons {
-    margin-bottom: 0 !important;
-	margin-right:24px;
+  margin-bottom: 0 !important;
+  margin-right: 24px;
 }
 /* likeBB and shareon fix for posts*/
+
+#reaction_button .emoji {
+  width: 16px;
+}
+.all-reactions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+.all-reactions .emoji {
+  width: 24px;
+}
+
+.all-reactions .label {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+}
+
+li.profile-custom-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}

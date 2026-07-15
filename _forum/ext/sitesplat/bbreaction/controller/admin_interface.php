@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* BBreaction
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBReaction
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbreaction\controller;
 

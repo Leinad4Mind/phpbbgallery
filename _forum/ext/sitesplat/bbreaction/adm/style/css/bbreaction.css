@@ -83,7 +83,7 @@
 .icon-bbreact-emo-minus:before { content: '\e814'; } /* '' */
 .icon-bbreact-emo-plus:before { content: '\e815'; } /* '' */
 .icon-bbreact-emo:before { content: '\e816'; } /* '' */
-/* BBreaction */
+/* BBReaction */
 
 
 /* simple input toggle love*/
@@ -431,8 +431,14 @@ td .fa {
 	font-size:16px;
 }
 
-.onoffswitch {
+.onoffswitch,
+.btn-position {
     margin-bottom: 10px;
 }
-
-
+.mixed_case {
+    background-color: #eb3941;
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    width: fit-content;
+}

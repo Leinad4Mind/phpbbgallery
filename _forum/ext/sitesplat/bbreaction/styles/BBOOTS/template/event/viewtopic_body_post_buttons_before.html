@@ -1,0 +1,17 @@
+{% if postrow.enable_rewards and U_BBREACTION_VIEW %}
+  <div id="reaction_button" class="btn-group btn-group-sm com-expand-holder" role="group">
+    <a class="btn {{ LIKE_CLASS }} btn-sm btn-reaction-trigger {{ postrow.HIDE_CLASS }}" href="#" title="{{ lang('BBREACTION_REACT') }}">
+      {% if postrow.CURRENT_USER_REWARD_CLASSLIST or postrow.CURRENT_USER_REWARD_CONTENTS %}
+        <span>
+          <i style="color:{% if not postrow.CURRENT_USER_REWARD_S_POSITIVE %}red{% else %}green{% endif %};" class="{{ postrow.CURRENT_USER_REWARD_CLASSLIST }}">
+            {{ postrow.CURRENT_USER_REWARD_CONTENTS }}
+          </i>
+        </span>
+      {% else %}
+        <span class="star">
+          <i class="star-icon fa fa-star"></i>
+        </span>
+      {% endif %}
+    </a>
+  </div>
+{% endif %}

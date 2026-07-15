@@ -1,23 +1,23 @@
-<!-- IF .rewards_memberlist -->
-<li>
-{L_BBREACTION}{L_COLON}&nbsp;<a class="btn-link btn-swap" role="button" data-toggle="collapse" href="#collapseList" aria-expanded="false" aria-controls="collapseList" data-text-swap="{L_CLOSE}" data-text-original="{L_OPEN}">&#91;{L_OPEN}&#93;</a>
-<ul class="collapse list-unstyled" id="collapseList">
-<!-- BEGIN rewards_memberlist -->
-<li>
-  <i class="{rewards_memberlist.CLASSLIST}" style="color:<!-- IF rewards_memberlist.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;">{rewards_memberlist.CONTENTS}</i>
-	<label>&nbsp;&nbsp;{rewards_memberlist.GIVEN_RECIEVED}{L_COLON}</label>&nbsp;{rewards_memberlist.GIVE_RECIEVE}
-</li> 	
-<!-- END rewards_memberlist -->
-</ul>
+{% if loops.rewards_memberlist %}
+  <li>
+    {{ lang('BBREACTION') ~ lang('COLON') }}&nbsp;<a class="btn-link btn-swap" role="button" data-toggle="collapse" href="#collapseList" aria-expanded="false" aria-controls="collapseList" data-text-swap="{{ lang('CLOSE') }}" data-text-original="{{ lang('OPEN') }}">&#91;{{ lang('OPEN') }}&#93;</a>
+    <ul class="collapse list-unstyled" id="collapseList">
+      {% for reward_memberlist in loops.rewards_memberlist %}
+        i>
+        <i class="{{ reward_memberlist.CLASSLIST }}" style="color:{% if reward_memberlist.S_POSITIVE %}green{% else %}red{% endif %};">{{ reward_memberlist.CONTENTS }}</i>
+        <label>&nbsp;&nbsp;{{ reward_memberlist.GIVEN_RECEIVED ~ lang('COLON') }}</label>&nbsp;{{ reward_memberlist.GIVE_RECEIVE }}
+      </li>
+    {% endfor %}
+  </ul>
 </li>
 <script>
-head.ready(function () {
-$(".btn-swap").on("click", function() {
-  var el = $(this);
-  el.text() == el.data("text-swap") 
-    ? el.text(el.data("text-original")) 
-    : el.text(el.data("text-swap"));
-});
-});
+  head.ready(function () {
+    $(".btn-swap").on("click", function () {
+      var el = $(this);
+      el.text() == el.data("text-swap")
+        ? el.text(el.data("text-original"))
+        : el.text(el.data("text-swap"));
+    });
+  });
 </script>
-<!-- ENDIF --> 
+{% endif %}
