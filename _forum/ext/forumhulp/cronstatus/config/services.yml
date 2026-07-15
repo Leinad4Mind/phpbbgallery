@@ -1,0 +1,14 @@
+services:
+    forumhulp.cronstatus.listener:
+        class: forumhulp\cronstatus\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@dbal.conn'
+            - '@cron.manager'
+            - '@dispatcher'
+        tags:
+            - { name: event.listener }
