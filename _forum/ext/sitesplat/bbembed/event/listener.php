@@ -53,6 +53,12 @@ class listener implements EventSubscriberInterface
 	public function onConfigure($event)
 	{
 		$configurator = $event['configurator'];
+		
+		if (!isset($configurator->MediaEmbed->defaultSites['twitch']) || !defined('PHPBB_VERSION') || version_compare(PHPBB_VERSION, '3.3.3', '<'))
+		{
+			$configurator->MediaEmbed->defaultSites['twitch'] = ['attributes'=>[],'example'=>['https://www.twitch.tv/twitch','https://www.twitch.tv/twitch/v/29415830?t=17m17s','https://www.twitch.tv/videos/29415830?t=17m17s','https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop','https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck'],'extract'=>['#twitch\\.tv/(?:videos|\\w+/v)/(?\'video_id\'\\d+)?#','#www\\.twitch\\.tv/(?!videos/)(?\'channel\'\\w+)(?:/clip/(?\'clip_id\'\\w+))?#','#t=(?\'t\'(?:(?:\\d+h)?\\d+m)?\\d+s)#','#clips\\.twitch\\.tv/(?:(?\'channel\'\\w+)/)?(?\'clip_id\'\\w+)#'],'homepage'=>'https://www.twitch.tv/','host'=>['twitch.tv'],'iframe'=>['onload'=>'contentWindow.postMessage(\'\',\'https://s9e.github.io\')','src'=>'https://s9e.github.io/iframe/2/twitch.min.html#channel={@channel};clip_id={@clip_id};t={@t};video_id={@video_id}'],'name'=>'Twitch','scrape'=>[],'source'=>'https://dev.twitch.tv/docs/embed/video-and-clips','tags'=>['gaming','livestreaming']];
+		}
+		
 		foreach ($this->tagNames as $tagName)
 		{
 			$siteId = strtolower($tagName);
