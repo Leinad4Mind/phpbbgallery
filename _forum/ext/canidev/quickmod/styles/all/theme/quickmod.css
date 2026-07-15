@@ -1,7 +1,7 @@
 /*  cBB QuickMod StyleSheet
     --------------------------------------------------------------
 	Style:	Prosilver
-	Copyright (c) 2019 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2022 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -13,7 +13,8 @@
 }
 
 .qm-action-container {
-	border-right: 1px solid #ccc;
+	border: 0px solid #ccc;
+	border-right-width: 1px;
     padding-right: 8px;
     margin-right: 7px;
 }
@@ -72,10 +73,6 @@ dl.row-item dt a.qm-overflow {
 	margin-bottom: -2px;
 }
 
-.qm-dialog .cbb-dialog-content {
-	text-align: center;
-}
-
 .qm-dialog label {
 	display: inline-block;
 }
@@ -88,6 +85,10 @@ dl.row-item dt a.qm-overflow {
 .qm-dialog label[for^="icon-"] {
 	display: inline-block;
     margin: 4px;
+}
+
+.qm-center {
+	text-align: center;;
 }
 
 /* Context Menu
@@ -135,30 +136,22 @@ dl.row-item dt a.qm-overflow {
 .qm-mobile .row_mark .topic_id_list + label {
 	background: green;
 	border: 2px solid #ddd;
+	border-radius: 50%;
+	box-sizing: border-box;
     color: #fff;
 	font-size: 8px;
+	font-weight: normal;
+	height: 17px;
+	left: 4px;
 	line-height: 15px;
 	position: absolute;
 	opacity: 0;
 	padding: 0;
-	left: 4px;
-    width: 17px;
-    height: 17px;
-    z-index: 1;
 	text-align: center;
-    font-weight: normal;
 	top: 50%;
-	
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	
-	-webkit-transition: opacity .25s ease-in-out;
     transition: opacity .25s ease-in-out;
+    width: 17px;
+    z-index: 1;
 }
 
 .qm-mobile .row_mark .topic_id_list:checked + label {
@@ -194,13 +187,14 @@ dl.row-item dt a.qm-overflow {
 	position: relative;
 }
 
-.qm-mobile .qm-row .list-inner, .qm-row dl {
+.qm-mobile .qm-row .list-inner,
+.qm-row dl {
 	position: static;
 }
 
 .qm-row a.unread {
+	display: inline-block;
 	vertical-align: top;
-    display: inline-block;
 }
 
 /* ACP
@@ -216,16 +210,13 @@ dl.row-item dt a.qm-overflow {
 }
 
 .qm-draggable {
-	display: block;
+	background-color: #fff;
 	border: 1px solid #ccc;
-	padding: 8px;
-	margin: 4px 0;
-	background: #fff;
-	cursor: move;
-	
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
+	cursor: move;
+	display: block;
+	margin: 4px 0;
+	padding: 8px;
 }
 
 .qm-drag-row {
@@ -237,18 +228,20 @@ dl.row-item dt a.qm-overflow {
 }
 
 .ui-sortable-placeholder {
+	background-color: white;
 	border: 1px dotted gray;
-	background: white;
 	visibility: visible !important;
 }
 
-.ui-sortable-placeholder * { visibility: hidden; }
+.ui-sortable-placeholder * {
+	visibility: hidden;
+}
 
 /* RTL Support
 ------------------------------- */
 .rtl div.row_mark {
+	left: 0;
     right: inherit;
-    left: 0;
 }
 
 .qm-mobile.rtl div.row_mark {
@@ -265,15 +258,14 @@ dl.row-item dt a.qm-overflow {
 }
 
 .rtl .quick_mod_buttons {
+	left: 4px;
     right: inherit;
-    left: 4px;
 }
 
 .rtl .qm-action-container {
-    border-right: none;
-	border-left: 1px solid #ccc;
+    border-width: 0 0 0 1px;
+	margin-left: 7px;
     padding-left: 8px;
-    margin-left: 7px;
 }
 
 .rtl .qm-drag-row .fa {
@@ -290,7 +282,9 @@ dl.row-item dt a.qm-overflow {
 /* Responsive
 ------------------------------- */
 @media only screen and (max-width: 700px) {
-	.qm-action-container, .qm-select-container {
+	.qm-action-container,
+	.qm-select-container,
+	.rtl .qm-action-container {
 		border: none;
 		display: block;
 		margin: 8px 50px;
