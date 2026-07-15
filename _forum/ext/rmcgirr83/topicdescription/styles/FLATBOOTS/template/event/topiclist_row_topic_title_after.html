@@ -1,0 +1,9 @@
+{% if searchresults.TOPIC_DESC or topicrow.TOPIC_DESC %}
+	<div class="desc-color">
+		{% if searchresults.TOPIC_DESC %}
+			<a href="{{ U_VIEW_TDESC }}{{ searchresults.TOPIC_DESC }}">{{ searchresults.TOPIC_DESC }}</a>
+		{% elseif topicrow.TOPIC_DESC %}
+			<a href="{{ U_VIEW_TDESC }}{{ topicrow.TOPIC_DESC }}">{{ topicrow.TOPIC_DESC }}</a>
+		{% endif %}
+	</div>
+{% endif %}
