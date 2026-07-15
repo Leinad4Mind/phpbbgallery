@@ -1,0 +1,110 @@
+
+<!-- IF S_SHORT_MODE -->
+<ul class="blg-linear-list">
+
+<!-- BEGIN forum_row -->
+	<!-- IF forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT -->
+	<li class="menu-cat">
+		<!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF -->
+	</li>
+	<!-- ENDIF -->
+
+	<!-- IF not forum_row.S_IS_CAT -->
+	<li class="subchild double-space">
+		<span class="blg-icon {forum_row.FORUM_ICON}"></span>
+		<a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a>
+	</li>
+	<!-- ENDIF -->
+
+<!-- BEGINELSE -->
+	<li><strong>{L_NO_FORUMS}</strong></li>
+<!-- END forum_row -->
+
+</ul>
+
+<!-- ELSE -->
+
+<div class="fb-forum-list">
+
+<!-- BEGIN forum_row -->
+	<!-- IF (forum_row.S_IS_CAT and not forum_row.S_FIRST_ROW) or forum_row.S_NO_CAT -->
+			<tbody>
+		</table>
+		</div>
+	<!-- ENDIF -->
+
+	<!-- IF forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT -->
+		<div class="panel panel-forum">
+		<!-- IF BLOCK_STYLE eq 'content_simple' -->
+			<div class="panel-heading">
+				<!-- IF forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSEIF forum_row.S_IS_LINK -->{L_LINKS}<!-- ELSE -->{L_FORUM}<!-- ENDIF -->
+			</div>
+		<!-- ENDIF -->
+		<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+			 <th data-class="expand"><!-- IF BLOCK_STYLE <> 'content_simple' and forum_row.S_IS_CAT --><a href="{forum_row.U_VIEWFORUM}">{forum_row.FORUM_NAME}</a><!-- ELSE -->{L_FORUM}<!-- ENDIF --></th>
+			 <th class="large110" data-hide="phone">&nbsp;</th>
+			 <th class="large21" data-hide="phone">{L_LAST_POST}</th>
+			</tr>
+		</thead>
+		<tbody>
+	<!-- ENDIF -->
+
+	<!-- IF not forum_row.S_IS_CAT -->
+		<tr>
+			<td title="{forum_row.FORUM_FOLDER_IMG_ALT}">
+				<span class="icon-wrapper">
+					<i class="row-icon-font icon-moon-default<!-- IF forum_row.S_IS_LINK --> icon-moon-link2<!-- ENDIF --><!-- IF forum_row.S_UNREAD_FORUM --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{forum_row.FORUM_FOLDER_IMG_ALT}"></i>
+				</span>
+				<i class="row-icon-font-mini <!-- IF forum_row.S_LOCKED_FORUM -->icon-moon-lock forum-list-lock<!-- ENDIF -->" title="{forum_row.FORUM_FOLDER_IMG_ALT}"></i>
+				<span class="desc-wrapper">
+					<a href="{forum_row.U_VIEWFORUM}" class="forumtitle">{forum_row.FORUM_NAME}</a><br />
+					<!-- IF forum_row.FORUM_DESC --><span class="description">{forum_row.FORUM_DESC}</span><br /><!-- ENDIF -->
+				<!-- IF forum_row.MODERATORS -->
+					<span class="forum-mods"><strong>{forum_row.L_MODERATOR_STR}{L_COLON}</strong>&nbsp;{forum_row.MODERATORS}</span>
+				<!-- ENDIF -->
+				<!-- IF forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS -->
+					<span class="subforums">
+						<strong>{forum_row.L_SUBFORUM_STR}</strong>
+						<!-- BEGIN subforum -->				  
+							<a href="{forum_row.subforum.U_SUBFORUM}" class="subforum<!-- IF forum_row.subforum.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->" title="<!-- IF forum_row.subforum.S_UNREAD -->{L_UNREAD_POSTS}<!-- ELSE -->{L_NO_UNREAD_POSTS}<!-- ENDIF -->">{forum_row.subforum.SUBFORUM_NAME}</a><!-- IF not forum_row.subforum.S_LAST_ROW -->{L_COMMA_SEPARATOR}<!-- ENDIF -->
+						<!-- END subforum --> 
+					</span>
+				<!-- ENDIF -->
+			  </span>
+			</td>
+			
+		<!-- IF forum_row.CLICKS -->
+			<td colspan="2"><span class="stats-wrapper">{L_FORUM_REDIRECTS}&nbsp;{forum_row.CLICKS}</span></td>	
+		<!-- ELSEIF not forum_row.S_IS_LINK -->
+			<td class="stats-col">
+				<span class="stats-wrapper">
+					{forum_row.TOPICS}&nbsp;{L_TOPICS}&nbsp;<br />{forum_row.POSTS}&nbsp;{L_POSTS} 
+				</span>
+			</td>	
+			<td>
+			  <span class="last-wrapper text-overflow">
+				<!-- IF forum_row.S_DISPLAY_SUBJECT -->
+					<a href="{forum_row.U_LAST_POST}" title="" class="lastsubject">{forum_row.LAST_POST_SUBJECT_TRUNCATED}</a><br />
+				<!-- ENDIF -->
+				<!-- IF forum_row.LAST_POST_TIME -->{L_POST_BY_AUTHOR}&nbsp;{forum_row.LAST_POSTER_FULL}
+				<!-- IF not S_IS_BOT --><a class="moderator-item" href="{forum_row.U_LAST_POST}" title="{L_FORUMLIST_LASTPOST}"><i class="mobile-post fa fa-sign-out"></i></a><!-- ENDIF -->
+				<br /><span class="forum-time">{forum_row.LAST_POST_TIME}</span><!-- ELSE -->{L_NO_POSTS}&nbsp;<!-- ENDIF -->
+			  </span>
+			</td>
+		<!-- ENDIF -->
+		</tr>
+	<!-- ENDIF -->
+	
+	<!-- IF forum_row.S_LAST_ROW -->
+		</tbody>
+	</table>
+	</div>
+	<!-- ENDIF -->
+<!-- BEGINELSE -->
+	<strong>{L_NO_FORUMS}</strong>
+<!-- END forum_row -->
+
+</div>
+<!-- ENDIF -->

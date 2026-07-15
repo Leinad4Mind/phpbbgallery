@@ -1,0 +1,6 @@
+
+Este email fue enviado desde "{SITENAME}" por {FROM_USERNAME} mediante el formulario de contacto:
+
+----------
+
+{MESSAGE}

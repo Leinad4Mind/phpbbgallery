@@ -1,0 +1,87 @@
+<!-- IF BLG_IN_AJAX -->
+
+<!-- IF .rss -->
+
+	<!-- IF S_SCROLL_V -->
+
+	<script>
+	// <![CDATA[
+		jblockgets(function($) {
+			$('#rss-accordion-{BLOCK_ID}').accordion({
+				collapsable: '{S_RSS_COLLAPSE}'
+			});
+			
+		<!-- IF not S_RSS_COLLAPSE -->
+			$('#block-{BLOCK_ID}').marquee({
+				direction: 'up',
+				height: '{S_BLOCK_HEIGHT}',
+				container: '#rss-accordion-{BLOCK_ID}',
+				fps: 1
+			});
+		<!-- ENDIF -->
+		
+			$('#block-{BLOCK_ID} .marquee').adjustImages({ maxwidth: 150 });
+		});
+	// ]]>
+	</script>
+
+	<!-- IF not S_RSS_COLLAPSE --><div class="marquee" style="padding:2px;"><!-- ENDIF -->
+		<div id="rss-accordion-{BLOCK_ID}">
+		<!-- BEGIN rss -->
+			<h5>{rss.S_TITLE}</h5>
+			<div>
+			<!-- BEGIN item -->
+				<!-- IF not item.S_FIRST_ROW --><hr /><!-- ENDIF -->
+				<h4><!-- IF rss.item.U_LINK --><a class="blank" href="{rss.item.U_LINK}">{rss.item.S_TITLE}</a><!-- ELSE -->{rss.item.S_TITLE}<!-- ENDIF --></h4>
+				<div>{rss.item.S_DESCRIPTION}</div>
+			<!-- END item -->
+			</div>
+		<!-- END rss -->
+		</div>
+	<!-- IF not S_RSS_COLLAPSE --></div><!-- ENDIF -->
+
+	<!-- ELSE -->
+	
+	<script>
+	// <![CDATA[
+		jblockgets(function($) {
+			$('#block-{BLOCK_ID}').marquee({
+				direction: 'left',
+				fps: 1
+			});
+		});
+	// ]]>
+	</script>
+	
+	<div class="marquee" style="padding:2px;">
+		<div class="marquee-container no-wrap">
+		<!-- BEGIN rss -->
+			<!-- IF not rss.S_FIRST_ROW --> | <!-- ENDIF -->
+			<strong>( {rss.S_TITLE} )</strong><!-- BEGIN item --> <strong>{rss.item.S_TITLE} ::</strong> <em>{rss.item.S_DESCRIPTION}</em><!-- END item -->
+		<!-- END rss -->
+		</div>
+	</div>
+
+	<!-- ENDIF -->
+
+<!-- ELSE -->
+	<div class="blg-align-center">{L_NO_RSS}</div>
+<!-- ENDIF -->
+
+<!-- ELSE -->
+	<script>
+	// <![CDATA[
+		window._jBlg = window._jBlg || [];
+	
+		window._jBlg.push(function() {
+			$('#rss-block-{BLOCK_ID}').rssloader({
+				action	: '{U_BLG_ACTION}',
+				jblgm	: '{BLOCK_ID}',
+				m		: 'load'
+			});
+		});
+	// ]]>
+	</script>
+
+	<div id="rss-block-{BLOCK_ID}"><div class="blg-loading"></div></div>
+<!-- ENDIF -->

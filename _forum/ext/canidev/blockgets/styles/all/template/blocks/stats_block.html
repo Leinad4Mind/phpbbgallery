@@ -1,0 +1,34 @@
+
+<!-- IF S_INLINE -->
+<script>
+// <![CDATA[
+	jblockgets(function($) {
+		$('.st-inline').each(function() {
+			$(this).find('p:not(:last)').after(' &bull;');
+		});
+	});
+// ]]>
+</script>
+<!-- ENDIF -->
+
+<!-- BEGIN stat -->
+	<!-- IF stat.IS_CAT -->
+		<!-- IF not stat.S_FIRST_ROW --></div><!-- ENDIF -->
+		<!-- IF stat.S_SEP --><hr style="width:95%;" /><!-- ELSEIF not stat.S_FIRST_ROW --><br /><!-- ENDIF -->
+	<div<!-- IF S_INLINE --> class="st-inline"<!-- ENDIF -->>
+		<!-- IF stat.S_LEGEND --><p><strong>{stat.S_LEGEND}</strong></p><!-- ENDIF -->
+	<!-- ELSE -->
+		<p>{stat.S_NAME}{L_COLON} <strong>{stat.S_VALUE}</strong></p>
+	<!-- ENDIF -->
+	<!-- IF stat.S_LAST_ROW --></div><!-- ENDIF -->
+<!-- END stat -->
+
+<!-- IF SHOW_USER_STATS -->
+	<hr style="width:95%;" />
+
+	<div>
+		<p>{S_TOTAL_USERS_LASTVISIT}</p><br />
+		<!-- IF S_LASTVISIT_USER_LIST --><p>{S_LASTVISIT_USER_LIST}</p><br /><!-- ENDIF -->
+		<p>{L_ST_NEWEST_USER}{L_COLON} {S_NEWEST_USER}</p>
+	</div>
+<!-- ENDIF -->

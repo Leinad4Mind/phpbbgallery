@@ -1,0 +1,41 @@
+{
+	"name": "canidev/blockgets",
+	"type": "phpbb-extension",
+	"description": "",
+	"homepage": "https://www.canidev.com",
+	"version": "2.0.0",
+	"keywords": ["phpbb", "extension", "canidev", "blockgets"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "CaniDev",
+			"email": "contact@canidev.com",
+			"homepage": "https://www.canidev.com",
+			"role": "Lead Developer"
+		},
+		{
+			"name": "Oscar",
+			"homepage": "https://www.pasionreef.com",
+			"role": "Translator"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "cBB Blockgets",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.8"
+		},
+		"version-check": {
+			"host": "www.canidev.com",
+			"directory": "/app/info",
+			"filename": "ext-cbb-blockgets.json",
+			"ssl": true
+		}
+	}
+}

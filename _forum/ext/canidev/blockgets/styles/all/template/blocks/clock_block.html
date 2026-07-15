@@ -1,0 +1,22 @@
+
+<!-- IF S_CLOCK_URL -->
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID}').flash({
+			id		: 'flash-{BLOCK_ID}',
+			parent	: '#clock-{BLOCK_ID}',
+			url		: '{S_CLOCK_URL}',
+			autoadjust: 8,
+			params: {
+				wmode: 'transparent'
+			}
+		});
+	});
+// ]]>
+</script>
+
+<div id="clock-{BLOCK_ID}" class="blg-align-center"></div>
+<!-- ENDIF -->

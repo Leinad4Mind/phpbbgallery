@@ -1,0 +1,95 @@
+
+<!-- IF S_USER_LOGGED_IN -->
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID} #blg-logout').ajaxify({
+			done: function() { window.location.reload(); }
+		});
+	});
+// ]]>
+</script>
+
+<ul class="blg-linear-list blg-align-center">
+	<li class="menu-cat">{USERNAME_FULL}</li>
+	<li class="blg-user-avatar adjusted double-space"><a href="{U_PROFILE}"><!-- IF USER_AVATAR -->{USER_AVATAR} <!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></a></li>
+
+	<!-- IF USER_RANK_IMG --><li>{USER_RANK_TITLE}<br />{USER_RANK_IMG}</li><!-- ENDIF -->
+	<!-- IF S_LAST_VISIT --><li class="double-space">{S_LAST_VISIT}</li><!-- ENDIF -->
+	
+	{S_BLG_LOGIN_FIELDS}
+</ul>
+
+<ul class="blg-linear-list">
+<!-- BEGIN userlink -->
+	<li class="btn btn-default" >
+		<a href="{userlink.URL}">
+		<!-- IF userlink.TITLE == 'Mensagens novas' or userlink.TITLE == 'New messages' -->
+		<i class="fa fa-commenting" aria-hidden="true"></i>
+		<!-- ELSEIF userlink.TITLE == 'As minhas Mensagens' or userlink.TITLE == 'My messages' -->
+		<i class="fa fa-comment" aria-hidden="true"></i>
+		<!-- ELSEIF userlink.TITLE == 'Favoritos' or userlink.TITLE == 'Favorites' -->
+		<i class="fa fa-star" aria-hidden="true"></i>
+		<!-- ELSEIF userlink.TITLE == 'Subscrições' or userlink.TITLE == 'Subscriptions' -->
+		<i class="fa fa-eye" aria-hidden="true"></i>
+		<!-- ELSEIF userlink.TITLE == 'Mensagens Privadas' or userlink.TITLE == 'Private Messages' -->
+		<i class="fa fa-envelope" aria-hidden="true"></i>
+		<!-- ENDIF -->
+		 {userlink.TITLE}</a>
+	</li>
+<!-- END userlink -->
+
+	<li class="btn btn-default blg-align-center double-space top-bordered"><a id="blg-logout" href="{U_LOGOUT}"><i class="fa fa-sign-out" aria-hidden="true"></i> {L_LOGIN_LOGOUT}</a></li>
+</ul>
+
+<!-- ELSE -->
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID} form').ajaxify({
+			done	: function() { window.location.reload(); }
+		});
+	});
+// ]]>
+</script>
+
+<form action="{U_BLG_ACTION}" method="post">
+	<ul class="blg-linear-list blg-align-center">
+		<li class="blg-align-left"><strong>{L_USERNAME}{L_COLON}</strong></li>
+		<li><input class="blg-inputbox autowidth" type="text" name="username" value="{S_USERNAME}" /></li>
+		
+		<li class="blg-align-left"><strong>{L_PASSWORD}{L_COLON}</strong></li>
+		<li><input class="blg-inputbox autowidth" type="password" name="password" value="" /></li>
+		<!-- IF U_SEND_PASSWORD --><li class="blg-align-center"><a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a></li><!-- ENDIF -->
+		<!-- IF U_RESEND_ACTIVATION --><li class="blg-align-center"><a href="{U_RESEND_ACTIVATION}">{L_RESEND_ACTIVATION}</a></li><!-- ENDIF -->
+	</ul>
+	
+	<!-- IF S_DISPLAY_FULL_LOGIN -->
+	<br />
+	<ul class="blg-linear-list">
+		<!-- IF S_AUTOLOGIN_ENABLED --><li><label><input type="checkbox" class="radio" name="autologin" /> {L_REMEMBER_ME}</label></li><!-- ENDIF -->
+		<li><label><input type="checkbox" class="radio" name="viewonline" /> {L_HIDE_ME_NOW}</label></li>
+	</ul>
+	<!-- ENDIF -->
+
+	<div class="blg-align-center">
+		<br />
+		<input type="submit" name="login" class="btn btn-default" value="{L_LOGIN}" />
+		{S_BLG_LOGIN_FIELDS}
+	</div>
+</form>
+
+	<!-- IF S_REGISTER_ENABLED and S_DISPLAY_REGISTER -->
+	<br />
+	<ul class="blg-linear-list">
+		<li class="double-space bottom-bordered blg-align-center"></li>
+		<li class="blg-align-center"><a href="{U_TERMS_USE}">{L_TERMS_USE}</a></li>
+		<li class="blg-align-center"><a href="{U_PRIVACY}">{L_PRIVACY}</a></li>
+	
+		<li class="double-space blg-align-center"><a href="{U_REGISTER}" class="btn btn-default btn-reg-login">{L_REGISTER}</a></li>
+	</ul>
+	<!-- ENDIF -->
+
+<!-- ENDIF -->

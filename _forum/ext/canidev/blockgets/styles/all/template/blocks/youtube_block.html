@@ -1,0 +1,46 @@
+<!-- IF BLG_IN_AJAX -->
+	<ul class="yt-list yt-list-{YT_MODE}">
+	<!-- BEGIN ytitem -->
+		<li>
+		<!-- IF YT_MODE eq 'full' -->
+			<div class="yt-thumbnail">
+				<img src="{ytitem.S_THUMBNAIL}" alt="" />
+				<span class="yt-time">{ytitem.S_TIME}</span>
+			</div>
+			<div class="yt-title"><a href="{ytitem.S_HREF}">{ytitem.S_TITLE}</a></div>
+			<div class="yt-info">{ytitem.S_DATE} &bull; {ytitem.S_VIEWS}</div>
+			<div class="yt-description">{ytitem.S_DESCRIPTION}</div>
+		<!-- ELSEIF YT_MODE eq 'simple' -->
+			<div class="yt-thumbnail">	
+				<img src="{ytitem.S_THUMBNAIL}" alt="" />	
+				<span class="yt-time">{ytitem.S_TIME}</span>	
+			</div>	
+			<div class="yt-title"><a href="{ytitem.S_HREF}">{ytitem.S_TITLE}</a></div>
+		<!-- ELSEIF YT_MODE eq 'video' -->
+			<iframe width="{ytitem.S_WIDTH}" height="{ytitem.S_HEIGHT}" src="{ytitem.S_MOVIE}" frameborder="0" allowfullscreen></iframe>
+		<!-- ELSEIF YT_MODE eq 'list' -->
+			<span class="blg-icon blg-icon-youtube-play"></span>&nbsp;<a href="{ytitem.S_HREF}">{ytitem.S_TITLE}</a>
+		<!-- ENDIF -->
+		</li>
+	<!-- BEGINELSE -->
+		<li class="no-items blg-message blg-state-highlight">{L_NO_VIDEOS}</li>
+	<!-- END ytitem -->
+	</ul>
+
+<!-- ELSE -->
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#youtube-{BLOCK_ID}').youtube({
+			url		: '{U_BLG_ACTION}',
+			vars	: '{S_EXTRA}',
+		});
+	});
+// ]]>
+</script>
+
+<div id="youtube-{BLOCK_ID}"></div>
+
+<!-- ENDIF -->

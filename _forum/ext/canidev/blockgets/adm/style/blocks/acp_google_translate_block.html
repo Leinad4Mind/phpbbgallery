@@ -1,0 +1,23 @@
+
+<fieldset>
+	<dl>
+		<dt>
+			<label>{L_GOOGLE_LANGS}:</label><br />
+			Powered by <img src="{S_GOOGLE_LOGO}" alt="Google" style="vertical-align: middle;" />
+		</dt>
+		<dd>
+			<div class="google-translate">
+			<!-- BEGIN translate -->
+				<div title="{translate.S_LANG_EN}"><label><input type="checkbox" class="radio" name="langs[]" value="{translate.S_ISO}" <!-- IF translate.S_SELECTED --> checked="checked"<!-- ENDIF -->/> {translate.S_LANG}</label></div>
+			<!-- END translate -->
+			</div>
+			<br style="clear: both;" /><br />
+			
+			<p class="quick">
+				<a class="blg-button small" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{L_MARK_ALL}"><span class="blg-icon blg-icon-check-square-o"></span></a>
+				<a class="blg-button small" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{L_UNMARK_ALL}"><span class="blg-icon blg-icon-square-o"></span></a>
+			</p>
+		</dd>
+	</dl>
+</fieldset>
+

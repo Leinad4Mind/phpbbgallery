@@ -1,0 +1,79 @@
+
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#qsearch_form-{BLOCK_ID}')
+			.submit(function() {
+				var search_urls = {
+					google		: 'https://www.google.com.tr/search?q=',
+					yahoo		: 'https://search.yahoo.com/search?p=',
+					bing		: 'https://www.bing.com/search?q='
+				};
+
+				qs_enginename	= $(this).find('.qsearch_select').val();
+				qs_keywords		= $(this).find('.qsearch_field').val();
+
+				if(!qs_keywords || qs_keywords == s_label)
+				{
+					return false;
+				}
+
+				switch(qs_enginename)
+				{
+					case 'author':
+						$(this).find('.qsearch_field').attr('name', 'author');
+
+					case 'site':
+						return true;
+					break;
+		
+					case 'google':
+					case 'yahoo':
+					case 'bing':
+						url = search_urls[qs_enginename];
+					break;
+
+					default:
+						url = '';
+					break;
+				}
+
+				if(url)
+				{
+					window.open(url + qs_keywords, '_' + qs_enginename, '');
+				}
+
+				return false;
+			});
+	});
+// ]]>
+</script>
+
+<form id="qsearch_form-{BLOCK_ID}" method="get" action="{U_SEARCH}">
+	<ul class="blg-linear-list blg-align-center">
+		<li class="double-space"><input type="text" class="qsearch_field blg-inputbox" name="keywords" size="22" value="" placeholder="{L_SEARCH_MINI}" /></li>
+		<li class="double-space">
+			<select name="qsearch_select" class="qsearch_select blg-inputbox">
+			<!-- IF S_DISPLAY_SEARCH -->
+				<optgroup label="{L_FORUMS}">
+					<option value="site">{L_MESSAGES}</option>
+					<option value="author">{L_AUTHOR}</option>
+				</optgroup>
+			<!-- ENDIF -->
+				<optgroup label="{L_SH_ENGINE}">
+					<option value="google">Google</option>
+					<option value="yahoo">Yahoo</option>
+					<option value="bing">Msnlive</option>
+				</optgroup>
+			</select>
+		</li>
+
+		<li class="double-space"><input class="button2" type="submit" value="{L_SEARCH}" /></li>
+
+		<!-- IF S_DISPLAY_SEARCH --><li class="double-space top-bordered"><a href="{U_SEARCH}" title="{L_SEARCH_ADV_EXPLAIN}">{L_SEARCH_ADV}</a></li><!-- ENDIF -->
+	</ul>
+	
+	<div>{S_BLOCK_HIDDEN_FIELDS}</div>
+</form>

@@ -1,0 +1,34 @@
+
+<script type="text/javascript">
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	window._jBlg.push(function() {
+		$('#clock_url')
+			.change(function() {
+				$('#clock_preview').flash({
+					id			: 'clock',
+					url			: '{S_CLOCK_PATH}' + $(this).val(),
+					width		: 120,
+					height		: 120,
+					overwrite	: true,
+					params: {
+						wmode: 'transparent'
+					}
+				});
+			})
+			.change();
+	});
+// ]]>
+</script>
+
+<fieldset>
+	<dl>
+		<dt><label for="clock_url">{L_DISPLAY_CLOCK}:</label><br /><span>{L_DISPLAY_CLOCK_EXPLAIN}</span></dt>
+		<dd><select name="clock_url" id="clock_url">{S_CLOCK_SELECT}</select></dd>
+	</dl>
+
+	<dl>
+		<dt><label>{L_PREVIEW_CLOCK}:</label><br /><span>{L_PREVIEW_CLOCK_EXPLAIN}</span></dt>
+		<dd id="clock_preview"></dd>
+	</dl>
+</fieldset>

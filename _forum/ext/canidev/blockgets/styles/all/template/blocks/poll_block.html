@@ -1,0 +1,72 @@
+
+<!-- IF .poll -->
+<!-- IF not BLG_IN_AJAX -->
+	<script>
+	// <![CDATA[
+		window._jBlg = window._jBlg || [];
+		
+		window._jBlg.push(function() {
+			var poll_ajaxify_options = {
+				done{L_COLON} function(json, xorig) {
+					$('#block-{BLOCK_ID} .js-poll-content')
+						.html(json.htmlContent)
+						.children('form').ajaxify(poll_ajaxify_options);
+				}
+			};
+
+			$('#block-{BLOCK_ID} form').ajaxify(poll_ajaxify_options);
+		});
+	// ]]>
+	</script>
+
+	<div class="js-poll-content">
+<!-- ENDIF -->
+
+<!-- BEGIN poll -->
+<!-- IF poll.S_CAN_VOTE --><form method="post" action="{U_BLG_ACTION}"><!-- ENDIF -->
+	<ul class="blg-linear-list blg-align-center">
+		<li class="double-space menu-cat">{poll.S_POLL_QUESTION}</li>
+		<!-- IF poll.S_POLL_LENGTH --><li>{poll.S_POLL_LENGTH}</li><!-- ENDIF -->
+		<!-- IF poll.S_CAN_VOTE --><li>{poll.S_MAX_VOTES}</li><!-- ENDIF -->
+	</ul>
+
+	<div class="blg-poll-table">
+	<!-- BEGIN poll_option -->
+		<dl>
+			<dt><label>
+				<!-- IF poll.S_CAN_VOTE --><input type="<!-- IF poll.S_IS_MULTI_CHOICE -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" name="poll_vote_id[]" id="vote_{poll.poll_option.POLL_OPTION_ID}" value="{poll.poll_option.POLL_OPTION_ID}"<!-- IF poll.poll_option.POLL_OPTION_VOTED --> checked="checked"<!-- ENDIF --> /><!-- ENDIF -->
+				{poll.poll_option.POLL_OPTION_CAPTION}
+			</label></dt>
+		<!-- IF poll.S_DISPLAY_RESULTS -->
+			<dd class="blg-progress no-wrap"><div class="blg-progressbar blg-widget-header blg-corner-all" style="width{L_COLON}{poll.poll_option.POLL_OPTION_PERCENT};"<!-- IF S_SHORT_MODE --> title="{poll.poll_option.POLL_OPTION_PERCENT}"<!-- ENDIF -->><!-- IF poll.poll_option.POLL_OPTION_RESULT --><span class="blg-progressbar-value">{poll.poll_option.POLL_OPTION_RESULT}</span><!-- ENDIF --></div></dd>
+			<!-- IF not S_SHORT_MODE -->
+			<dd class="blg-align-right no-wrap">
+				<!-- IF poll.poll_option.POLL_OPTION_VOTED --><span class="blg-icon blg-icon-check-circle-o" title="{L_POLL_VOTED_OPTION}"></span><!-- ENDIF -->
+				<strong>{poll.poll_option.POLL_OPTION_PERCENT}</strong>
+			</dd>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+		</dl>
+	<!-- END poll_option -->
+	</div>
+
+	<br />
+	
+	<ul class="blg-linear-list blg-align-center">
+		<!-- IF poll.S_CAN_VOTE --><li><input type="submit" name="update_vote" value="{L_SUBMIT_VOTE}" class="button2" /></li><!-- ENDIF -->
+		<!-- IF poll.S_DISPLAY_RESULTS --><li>{L_TOTAL_VOTES} {L_COLON} {poll.S_TOTAL_VOTES}</li><!-- ENDIF -->
+          
+		<li><a href="{poll.U_POLL_RESULTS}">{L_VIEW_TOPIC}</a></li>
+	</ul>
+
+<!-- IF poll.S_CAN_VOTE -->
+	<div>{poll.S_HIDDEN_FIELDS}</div>
+</form>
+<!-- ENDIF -->
+<!-- END poll -->
+
+<!-- IF not BLG_IN_AJAX --></div><!-- ENDIF -->
+
+<!-- ELSE -->
+<div class="blg-align-center">{L_NO_POLL}</div>
+<!-- ENDIF -->

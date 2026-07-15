@@ -1,0 +1,26 @@
+
+<!-- BEGIN message -->
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID}').marquee({
+			direction: '{message.DIRECTION}',
+			align: '{message.ALIGN}',
+			height: '{message.HEIGHT}',
+			delay: '{message.SCROLLDELAY}',
+			fps: '{message.SPEED}',
+			background: '{message.BGCOLOR}',
+			padding: '{message.PADDING}'
+		});
+	});
+// ]]>
+</script>
+
+<div class="marquee">
+	<div class="marquee-container">
+{message.TEXT}
+	</div>
+</div>
+<!-- END message -->

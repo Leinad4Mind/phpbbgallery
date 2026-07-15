@@ -1,0 +1,75 @@
+<!-- IF BLG_ENABLED or BLG_LOAD_HEADER or BLG_ADMIN_BAR -->
+
+<!-- BEGIN asset_js -->
+	<script type="text/javascript" src="{asset_js.DATA}"{asset_js.PARAMS}></script>
+<!-- END asset_js -->
+
+<!-- BEGIN asset_javascript -->
+	<script type="text/javascript"{asset_javascript.PARAMS}>
+	// <![CDATA[
+	{asset_javascript.DATA}
+	// ]]>
+	</script>
+<!-- END asset_javascript -->
+
+	<!-- IF BLG_ENABLED -->
+	<script type="text/javascript">
+	// <![CDATA[
+		jblockgets(function($) {
+			$.jblockgets.initialize({
+				background	: '{BLG_BACKGROUND}',
+				cookie_name	: '{S_COOKIE_NAME}',
+				cookie_settings	: '{S_COOKIE_SETTINGS}',
+				<!-- IF BLG_DEBUG -->debugmode	: true,<!-- ENDIF -->
+				notice_timeout: '{BLG_NOTICE_TIMEOUT}',
+				page_id		: '{BLG_PAGE_ID}',
+				
+				lang	: {
+					'rsz-enlarge'	: '{LA_IMAGE_ENLARGE}',
+					'rsz-close'		: '{LA_IMAGE_CLOSE}',
+					'side-title'	: '{LA_EXPAND_CONTRACT}',
+					'player-stop'	: '{LA_STOP_MSG}',
+					'player-volume'	: '{LA_VOLUME_MSG}'
+				}
+			});
+			
+		<!-- IF BLG_RSZ_GO -->
+			$('.blg-block .user-avatar, .avatar-container').adjustImages({ maxWidth: '{BLG_RSZ_AVATAR_WIDTH}' });
+			$('.block-postbody<!-- IF BLG_RSZ_ON_POST -->, .post .postbody<!-- ENDIF -->').adjustImages({ maxWidth: '{BLG_RSZ_WIDTH}' });
+		<!-- ENDIF -->
+
+			if(window._jBlg)
+			{
+				$.each(window._jBlg, function(key, value) {
+					value.call($);
+				});
+			}
+		});
+	// ]]>
+	</script>
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF BLG_ADMIN_BAR -->
+	<script type="text/javascript">
+	// <![CDATA[
+		jblockgets(function($) {
+			$.jblockgets.initAdminBar();
+		});
+	// ]]>
+	</script>
+
+	<div class="blg-admin-bar">
+		<ul class="blg-align-left floated">
+			<li><a href="{U_BLG_MANAGE_BLOCKS}" class="blg-button"><span class="blg-icon blg-icon-th-large"></span> <span class="btn-title">{L_MANAGE_BLOCKS}</span></a></li>
+			<li><a href="{U_BLG_PAGE_EDIT}" class="blg-button"><span class="blg-icon blg-icon-cog"></span> <span class="btn-title">{L_EDIT_CONFIGURATION}</span></a></li>
+		</ul>
+		
+		<ul class="blg-align-right floated">
+			<li><a href="{U_BLG_PAGE_ADD}" class="blg-button"><span class="blg-icon blg-icon-plus-circle"></span> <span class="btn-title">{L_ADD_PAGE}</span></a></li>
+		</ul>
+
+		<a href="#" class="blg-admin-opener" title="{L_EDIT_THIS_PAGE}"><span class="blg-icon blg-icon-pencil"></span></a>
+	</div>
+<!-- ENDIF -->
+

@@ -1,0 +1,39 @@
+
+<!-- IF S_ADVANCED_MODE -->
+<table class="blg-table">
+	<col style="width:65px" /><col />
+	<tr>
+		<td class="blg-align-center"><!-- IF U_VIEWONLINE --><a href="{U_VIEWONLINE}"><span class="blg-image online-users-img"></span></a><!-- ELSE --><img src="{T_BLOCKGETS_PATH}images/online_users.png" /><!-- ENDIF --></td>
+		<td class="blg-align-top">{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<!-- IF S_WIO_USERS --><br /><br />{LOGGED_IN_USER_LIST}<!-- ENDIF --></td>
+	</tr>
+	<tr><td colspan="2"><hr /></td></tr>
+	<tr>
+		<td class="blg-align-center"><span class="blg-image last-online-img"></span></td>
+		<td class="blg-align-top">{S_TOTAL_USERS_LASTVISIT}<!-- IF S_WIO_USERS --><br /><br />{S_LASTVISIT_USER_LIST}<!-- ENDIF --></td>
+	</tr>
+</table>
+<!-- IF S_LEGEND --><hr />{L_LEGEND}{L_COLON} <em>{S_LEGEND}</em><!-- ENDIF -->
+
+<!-- ELSE -->
+
+<div class="blg-align-center">
+	<div class="wio-block">
+		<div><strong>{L_WIO_ONLINE}</strong><hr /></div>
+
+		<div><strong>{L_WIO_TOTAL}{L_COLON}<span>{S_TOTAL_ONLINE}</span></strong></div>
+		<div>{L_WIO_REGISTERED}{L_COLON}<span>{S_VISIBLE_ONLINE}</span></div>
+		<div>{L_WIO_HIDDEN}{L_COLON}<span>{S_HIDDEN_ONLINE}</span></div>
+		<div>{L_WIO_GUEST}{L_COLON}<span>{S_GUEST_ONLINE}</span></div>
+	</div>
+
+	<div class="wio-block">
+		<div><strong>{L_WIO_LASTDAY}</strong><hr /></div>
+
+		<div><strong>{L_WIO_TOTAL}{L_COLON}<span>{S_TOTAL_LASTDAY}</span></strong></div>
+		<div>{L_WIO_REGISTERED}{L_COLON}<span>{S_VISIBLE_LASTDAY}</span></div>
+		<div>{L_WIO_HIDDEN}{L_COLON}<span>{S_HIDDEN_LASTDAY}</span></div>
+		<div>{L_WIO_GUEST}{L_COLON}<span>{S_GUEST_LASTDAY}</span></div>
+	</div>
+</div>
+
+<!-- ENDIF -->

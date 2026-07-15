@@ -1,0 +1,17 @@
+canidev_blockgets_controller:
+    pattern: /portal
+    defaults: { _controller: canidev.blockgets.controller:display }
+    
+canidev_blockgets_calendar_controller:
+    pattern: /calendar
+    defaults: { _controller: canidev.blockgets.controller.calendar:display }
+    
+canidev_blockgets_page_controller:
+    pattern: /page/{page}
+    defaults: { _controller: canidev.blockgets.controller:display }
+    
+canidev_blockgets_player_controller:
+    pattern: /player
+    defaults: { _controller: canidev.blockgets.controller.player:display }
+
+    

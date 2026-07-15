@@ -1,0 +1,46 @@
+
+<!-- IF S_VIEW eq 'simple' -->
+	<ul class="blg-linear-list">
+	<!-- BEGIN group_row -->
+		<!-- IF group_row.LEGEND -->
+		<!-- IF not group_row.S_FIRST_ROW --><li>&nbsp;</li><!-- ENDIF -->
+		<li class="menu-cat"><a href="{group_row.U_GROUP}" style="color: #{group_row.GROUP_COLOR};">{group_row.GROUP_NAME}</a></li>
+		<!-- ENDIF -->
+		<li class="userrow"><strong>{group_row.USERNAME_FULL}</strong></li>
+	<!-- END group_row -->
+	</ul>
+
+<!-- ELSE IF S_VIEW eq 'accordion' -->
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#leader-groups-{BLOCK_ID}').accordion({
+			active		: 0,
+			collapsible : true
+		});
+	});
+// ]]>
+</script>
+
+<div id="leader-groups-{BLOCK_ID}">
+<!-- BEGIN group_row -->
+	<!-- IF group_row.LEGEND -->
+	<!-- IF not group_row.S_FIRST_ROW -->
+		</table>
+	</div>
+	<!-- ENDIF -->
+	<h5><a href="#" style="color: #{group_row.GROUP_COLOR};">{group_row.GROUP_NAME}</a></h5>
+	<div>
+		<table>
+	<!-- ELSE -->
+			<tr><td class="userrow"><strong>{group_row.USERNAME_FULL}</strong></td></tr>
+	<!-- ENDIF -->
+	<!-- IF group_row.S_LAST_ROW -->
+		</table>
+	</div>
+	<!-- ENDIF -->
+<!-- END group_row -->
+</div>
+<!-- ENDIF -->

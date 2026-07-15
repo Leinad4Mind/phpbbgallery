@@ -1,0 +1,85 @@
+
+<!-- IF not BLG_IN_AJAX --><div id="topic-index-{BLOCK_ID}"><!-- ENDIF -->
+
+<script type="text/javascript">
+// <![CDATA[
+<!-- IF not BLG_IN_AJAX -->
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+<!-- ELSE -->
+	jblockgets(function($) {
+<!-- ENDIF -->
+		var options = {
+			id		: '{BLOCK_ID}',
+			action	: '{U_ACTION}',
+			params	: {
+				fchar : '{S_FIRST_CHAR}'
+			}
+		};
+
+		$('#topic-index-{BLOCK_ID}')<!-- IF S_CHAR_SELECT -->.blg_charselect(options)<!-- ENDIF -->.blg_pagination(options);
+	});
+// ]]>
+</script>
+
+<!-- IF S_CHAR_SELECT -->
+	<div class="char-select blg-align-center">
+	<!-- BEGIN first_char -->
+		<!-- IF first_char.S_SELECTED --><span>{first_char.DESC}</span><!-- ELSE --><a href="#" data-char="{first_char.VALUE}">{first_char.DESC}</a><!-- ENDIF -->&nbsp; 
+	<!-- END first_char -->
+	</div>
+<!-- ENDIF -->
+
+	<div class="topic-index-content blg-widget-content blg-corner-all">
+
+	<table cellspacing="1" width="100%">
+	<!-- IF S_ADVANCED_DISPLAY -->
+		<tr>
+			<th class="blg-column-topic-title blg-widget-header">{L_TOPIC_TITLE}</th>
+			<th class="blg-column-posted-by blg-widget-header">{L_POSTED_BY}</th>
+			<th class="blg-column-comments blg-widget-header">{L_COMMENTS}</th>
+			<th class="blg-column-topic-views blg-widget-header">{L_TOPIC_VIEWS}</th>
+		</tr>
+	<!-- ENDIF -->
+		
+	<!-- BEGIN topic -->
+		<tr>
+			<td class="blg-column-topic-title"><a href="{topic.U_VIEW_TOPIC}" title="{topic.FULL_TITLE}">{topic.TITLE}</a></td>
+		<!-- IF S_ADVANCED_DISPLAY -->
+			<td class="blg-column-posted-by blg-align-center">{topic.POST_AUTHOR_FULL}</td>
+			<td class="blg-column-comments blg-align-center"><a href="{topic.U_LAST_COMMENTS}" title="{L_VIEW_COMMENTS}">{topic.REPLIES}</a></td>
+			<td class="blg-column-topic-views blg-align-center">{topic.TOPIC_VIEWS}</td>
+		<!-- ENDIF -->
+		</tr>
+	<!-- BEGINELSE -->
+		<tr><td class="blg-align-center" colspan="4">{L_NO_TOPICS}</td></tr>
+	<!-- END topic -->
+
+	</table>
+	</div>
+
+<!-- IF .block_pagination -->
+<div class="clearfix">
+	<div class="pull-right">
+		<br />
+		<ul class="pagination pagination-sm hidden-xs">
+		<!-- BEGIN block_pagination -->
+			<!-- IF block_pagination.S_IS_PREV -->
+			<li><a href="{block_pagination.PAGE_URL}" rel="prev" role="button">{L_PREVIOUS}</a></li>
+			<!-- ELSEIF block_pagination.S_IS_CURRENT -->
+			<li class="active"><a>{block_pagination.PAGE_NUMBER}</a></li>
+			<!-- ELSEIF block_pagination.S_IS_ELLIPSIS -->
+			<li class="ellipsis" role="separator"><a>{L_ELLIPSIS}</a></li>
+			<!-- ELSEIF block_pagination.S_IS_NEXT -->
+			<li><a href="{block_pagination.PAGE_URL}" rel="next" role="button">{L_NEXT}</a></li>
+			<!-- ELSE -->
+			<li><a href="{block_pagination.PAGE_URL}" role="button">{block_pagination.PAGE_NUMBER}</a></li>
+			<!-- ENDIF -->
+		<!-- END block_pagination -->
+		</ul>
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF not BLG_IN_AJAX --></div><!-- ENDIF -->

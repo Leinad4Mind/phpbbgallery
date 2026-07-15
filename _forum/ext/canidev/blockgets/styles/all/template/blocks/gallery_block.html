@@ -1,0 +1,62 @@
+<!-- IF ACP_MANAGE_GALLERY -->
+<button class="blg-button" data-id="{S_BUTTON_ID}">{L_GALLERY_MANAGE}</button>
+{S_GALLERY_HIDDEN_FIELDS}
+		
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('[data-id="{S_BUTTON_ID}"]').click(function(e) {
+			e.preventDefault();
+			
+			var btn = $(this);
+
+			$.mediaManager.init({
+				custom		: true,
+				returnMask	: 'list',
+				sources		: [],
+				beforeLoad: function(options) {
+					btn.siblings('[name^="item_ids"]').each(function() {
+						options.sources.push($(this).val());
+					});
+				},
+				onSubmit: function(data) {
+					btn.siblings('[name^="item_ids"]').remove();
+					
+					$.each(data, function(i, row) {
+						var id = (row.type == 'attachment') ? row.originalId : row.code;
+						
+						btn.parent().append('<input type="hidden" name="item_ids[]" value="' + id + '" />');
+					});
+				}
+			});
+		});
+	});
+// ]]>
+</script>
+
+<!-- ELSE -->
+
+<script>
+// <![CDATA[
+	window._jBlg = window._jBlg || [];
+	
+	window._jBlg.push(function() {
+		$('#block-{BLOCK_ID}').gallery({
+			height	: '{S_GALLERY_HEIGHT}',
+			margin	: '{S_GALLERY_MARGIN}',
+			fps	: '{S_GALLERY_FPS}',
+			direction: '{S_GALLERY_DIRECTION}',
+			zoom	: '{S_GALLERY_ZOOM}'
+		});
+	});
+// ]]>
+</script>
+
+<div class="gallery">
+<!-- BEGIN image -->
+	<a href="{image.ACTION}" title="{image.TITLE}" class="blank"><img src="{image.SRC}" alt="" /></a>
+<!-- END image -->
+</div>
+<!-- ENDIF -->

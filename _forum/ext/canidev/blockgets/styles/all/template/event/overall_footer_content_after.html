@@ -1,0 +1,44 @@
+<!-- IF BLG_ENABLED -->
+		<!-- IF DISPLAY_FORUM_BLOCK --><div style="height:{BLG_BLOCK_SPACE};"></div><!-- ENDIF -->
+		{% for block in loops.center_blockrow %}
+			{% if block.AFTER_FORUM %}
+				{% include 'block_view.html' %}
+			{% endif %}
+		{% endfor %}
+		<!-- IF not .center_blockrow -->&nbsp;<!-- ENDIF -->
+		</div>
+	</div>
+<!-- [-] center block area -->
+
+<!-- IF SHOW_LEFT_COLUMN and .left_blockrow -->
+<!-- [+] left block area -->
+	<div id="blg-column-left">
+	{% for block in loops.left_blockrow %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+<!-- [-] left block area -->
+<!-- ENDIF -->
+
+<!-- IF SHOW_RIGHT_COLUMN and .right_blockrow -->
+<!-- [+] right block area -->
+	<div id="blg-column-right">
+	{% for block in loops.right_blockrow %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+<!-- [-] right block area -->
+<!-- ENDIF -->
+</div>
+
+<!-- IF .bottom_blockrow -->
+<!-- [+] bottom block area -->
+<div class="blg-area">
+	{% for block in loops.bottom_blockrow %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+</div>
+<!-- [-] bottom block area -->
+<!-- ENDIF -->
+
+<!-- ENDIF -->
