@@ -1,0 +1,50 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.tfa.sessionhelper:
+        class: sitesplat\tfa\helper\session_helper
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '@user'
+            - '@template'
+            - '@controller.helper'
+            - '%tables.users%'
+            - '%sitesplat.tfa.tables.registration%'
+
+    sitesplat.tfa.acp_listener:
+        class: sitesplat\tfa\event\acp_listener
+        arguments:
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.tfa.listener:
+        class: sitesplat\tfa\event\listener
+        arguments:
+            - '@sitesplat.tfa.sessionHelper'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '@config'
+            - '%sitesplat.tfa.tables.registration%'
+            - '%core.php_ext%'
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.tfa.controller:
+        class: sitesplat\tfa\controller\main_controller
+        arguments:
+            - '@controller.helper'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@request'
+            - '@config'
+            - '@sitesplat.tfa.sessionHelper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
