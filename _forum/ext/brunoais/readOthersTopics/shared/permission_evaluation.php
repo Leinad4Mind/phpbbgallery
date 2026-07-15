@@ -9,6 +9,9 @@
 
 namespace brunoais\readOthersTopics\shared;
 
+use brunoais\readOthersTopics\shared\accesses;
+
+
 /**
 * Auxiliary content
 */
@@ -33,32 +36,23 @@ class permission_evaluation
 
 	/* @var \brunoais\readOthersTopics\shared\permission_evaluation */
 	protected $permission_evaluation;
-	
-	/* @var \brunoais\readOthersTopics\shared\accesses */
-	protected $accesses;
 
 	/* Tables */
-	public $forums_table;
 	public $topics_table;
 	public $posts_table;
 
 	/**
 	* Constructor
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \brunoais\readOthersTopics\shared\accesses $accesses,
-	$forums_table, $topics_table, $posts_table)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $topics_table, $posts_table)
 	{
 		$this->auth = $auth;
 		$this->phpbb_content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
-		$this->accesses = $accesses;
-		$this->forums_table = $forums_table;
 		$this->topics_table = $topics_table;
 		$this->posts_table = $posts_table;
-
-		$this->infoStorage = array();
 	}
 	
 	/**
@@ -72,48 +66,68 @@ class permission_evaluation
 	 *
 	 * Any missing info is automatically checked with a database search
 	 */
-	public function permissionEvaluate($info)
+	public function permission_evaluate($info)
 	{
-		if(empty($info['forum_id'])){
-			if(!empty($info['topic_id'])){
-				$this->getForumIdAndPosterFromTopic($info);
-			}else if(!empty($info['post_id'])){
-				$this->getForumIdAndTopicFromPost($info);
+		if (empty($info['forum_id']))
+		{
+			if (!empty($info['topic_id']))
+			{
+				$this->get_forum_id_and_poster_from_topic($info);
+			}
+			else if (!empty($info['post_id']))
+			{
+				$this->get_forum_id_and_poster_from_post($info);
 			}
 		}
 
-		if(!$this->auth->acl_get('f_read', $info['forum_id'])){
+		if (!$this->auth->acl_get('f_read', $info['forum_id']))
+		{
 			return accesses::NO_READ;
 		}
 
 
-		if(!$this->auth->acl_get('f_read_others_topics_brunoais', $info['forum_id'])){
-			if($this->user->data['user_id'] == ANONYMOUS){
+		if (!$this->auth->acl_get('f_read_others_topics_brunoais', $info['forum_id']))
+		{
+			if ($this->user->data['user_id'] == ANONYMOUS)
+			{
 				return accesses::NO_READ_OTHER;
 			}
 
-			if(
+			if (
 				isset($info['topic_type']) &&
 				(
 					$info['topic_type'] == POST_ANNOUNCE ||
 					$info['topic_type'] == POST_GLOBAL
 				)
-				){
-				return true;
+				)
+			{
+				return accesses::FULL_READ;
 			}
 
-			if(!isset($info['topic_poster'])){
-				$this->getPosterAndTypeFromTopicId($info);
-			}
-
-			if($info['topic_poster'] != $this->user->data['user_id']){
-				if(!isset($info['topic_type'])){
-					$this->getPosterAndTypeFromTopicId($info);
+			if (!isset($info['topic_poster']))
+			{
+				if (!isset($info['topic_id']))
+				{
+					$this->get_forum_id_and_poster_from_post($info);
 				}
-				if(
+				$this->get_poster_and_type_from_topic_id($info);
+			}
+
+			if ($info['topic_poster'] != $this->user->data['user_id'])
+			{
+				if (!isset($info['topic_type']))
+				{
+					if (!isset($info['topic_id']))
+					{
+						$this->get_forum_id_and_poster_from_post($info);
+					}
+					$this->get_poster_and_type_from_topic_id($info);
+				}
+				if (
 					$info['topic_type'] != POST_ANNOUNCE &&
 					$info['topic_type'] != POST_GLOBAL
-					){
+					)
+				{
 					return accesses::NO_READ_OTHER;
 				}
 			}
@@ -123,12 +137,14 @@ class permission_evaluation
 
 	}
 	
-	public function accessFailed(){
+	public function access_failed()
+	{
 		$this->user->add_lang_ext('brunoais/readOthersTopics', 'common');
 		trigger_error('SORRY_AUTH_READ_OTHER');
 	}
 
-	private function getForumIdAndPosterFromTopic(&$info){
+	private function get_forum_id_and_poster_from_topic(&$info)
+	{
 		$sql = 'SELECT forum_id, topic_poster, topic_type
 				FROM ' . $this->topics_table . '
 				WHERE topic_id = ' . (int) $info['topic_id'];
@@ -142,7 +158,8 @@ class permission_evaluation
 		$this->db->sql_freeresult($result);
 	}
 
-	private function getForumIdAndTopicFromPost(&$info){
+	private function get_forum_id_and_poster_from_post(&$info)
+	{
 		$sql = 'SELECT forum_id, topic_id
 				FROM ' . $this->posts_table . '
 				WHERE post_id = ' . (int) $info['post_id'];
@@ -155,7 +172,8 @@ class permission_evaluation
 		$this->db->sql_freeresult($result);
 	}
 
-	private function getPosterAndTypeFromTopicId(&$info){
+	private function get_poster_and_type_from_topic_id(&$info)
+	{
 		$sql = 'SELECT topic_poster, topic_type
 				FROM ' . $this->topics_table . '
 				WHERE topic_id = ' . (int) $info['topic_id'];
@@ -167,7 +185,6 @@ class permission_evaluation
 
 		$this->db->sql_freeresult($result);
 	}
-
 
 }
 

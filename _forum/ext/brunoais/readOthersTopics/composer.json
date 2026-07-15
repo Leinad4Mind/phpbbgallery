@@ -1,32 +1,38 @@
 {
-	"name": "brunoais/readOthersTopics",
-	"type": "phpbb-extension",
-	"description": "An extension which allows you to restrict topic viewing to who made the first post and who has this permission",
-	"homepage": "https://github.com/brunoais/",
-	"version": "1.0.0",
-	"keywords": ["phpbb", "extension", "permission", "topic"],
-	"license": "GPL-2.0",
-	"authors": [
-		{
-			"name": "Brunoais",
-			"homepage": "https://github.com/brunoais",
-			"email": "no@mail.pls",
-			"role": "Lead developer"
-		}
-	],
-	"require": {
-		"php": ">=5.4.0",
-		"phpbb/phpbb": ">=3.1.7"
-	},
-	"extra": {
-		"display-name": "Read other's topics Permission",
+    "name": "brunoais/readOthersTopics",
+    "type": "phpbb-extension",
+    "description": "An extension which allows you to restrict topic viewing to who made the first post and who has this permission",
+    "homepage": "https://github.com/brunoais/",
+    "version": "1.0.5",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "permission",
+        "topic"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Brunoais",
+            "homepage": "https://github.com/brunoais",
+            "email": "no@mail.pls",
+            "role": "Lead developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "phpbb/phpbb": ">=3.1.7",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "Read other's topics Permission",
         "soft-require": {
-           "phpbb/phpbb": ">=3.1.7"
+            "phpbb/phpbb": ">=3.1.7"
         },
-		"version-check": {
-			"host": "www.phpbb.com",
-			"directory": "/customise/db/extension/readOthersTopics",
-			"filename": "version_check"
-		}
-	}
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/readotherstopics",
+            "filename": "version_check"
+        }
+    }
 }
