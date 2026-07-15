@@ -1,4 +1,4 @@
-Subject: BBpoints - "{FORUM_NAME}"
+Subject: Points - "{FORUM_NAME}"
 
 Hi {USERNAME},
 

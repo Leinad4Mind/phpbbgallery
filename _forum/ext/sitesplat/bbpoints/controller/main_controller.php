@@ -10,7 +10,6 @@
 
 namespace sitesplat\bbpoints\controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use phpbb\json_response;
 
 /**
@@ -23,7 +22,6 @@ class main_controller
 	protected $template;
 	protected $user;
 	protected $config;
-	protected $container;
 	protected $root_path;
 	protected $php_ext;
 	protected $bbpoints_table;
@@ -34,14 +32,13 @@ class main_controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, ContainerInterface $container, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
-		$this->container = $container;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbpoints_table = $bbpoints_table;
@@ -115,7 +112,6 @@ class main_controller
 						);
 						$this->bbpoints_helper->add_noti($noti_ary);
 					}
-					$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
 					trigger_error($this->user->lang['TRANSFER_SUCCESS']);	
 				} else
 				{
@@ -131,9 +127,7 @@ class main_controller
 	public function search_user()
 	{
 		$term = strtolower($this->request->variable('term', '', true));
-		$sql = 'SELECT user_id, username 
-				FROM ' . USERS_TABLE . ' 
-				WHERE user_id <> ' . 0 . ' AND user_id <> ' . $this->user->data['user_id'] . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
+		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' WHERE user_id <> ' . 0 . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
 		$result = $this->db->sql_query($sql);
 		$user_ary = array();
 		while($row = $this->db->sql_fetchrow($result)) 

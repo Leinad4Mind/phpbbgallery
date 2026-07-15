@@ -10,8 +10,6 @@
 
 namespace sitesplat\bbpoints\controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
 * Main controller
 */
@@ -22,7 +20,6 @@ class admin_controller
 	protected $template;
 	protected $user;
 	protected $config;
-	protected $container;
 	protected $root_path;
 	protected $php_ext;
 	protected $bbpoints_table;
@@ -33,14 +30,13 @@ class admin_controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, ContainerInterface $container, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
-		$this->container = $container;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbpoints_table = $bbpoints_table;
@@ -102,7 +98,12 @@ class admin_controller
 	 */
 	public function sync_points()
 	{
-		$sql = 'SELECT forum_id, bbpoints_per_topic, bbpoints_per_post, bbpoints_per_word FROM ' . FORUMS_TABLE . ' WHERE bbpoints_enabled = 1';
+/*		$sql = 'UPDATE ' . TOPICS_TABLE . ' SET bbpoints = 0';
+		$this->db->sql_query($sql);
+		$sql = 'UPDATE ' . POSTS_TABLE . ' SET bbpoints = 0';
+		$this->db->sql_query($sql);
+
+*/		$sql = 'SELECT forum_id, bbpoints_per_topic, bbpoints_per_post, bbpoints_per_word FROM ' . FORUMS_TABLE . ' WHERE bbpoints_enabled = 1';
 		$result = $this->db->sql_query($sql);
 		$forum_ary = $points_ary = array();
 		while ($row = $this->db->sql_fetchrow($result))
@@ -272,7 +273,7 @@ class admin_controller
 
 		if ($user_id) 
 		{
-			$user_ids = (array) $user_id;
+			$user_ids[] = $user_id;
 		}
 		
 		if (sizeof($user_ids))
@@ -342,8 +343,9 @@ class admin_controller
 					$pm_data['address_list'] = array('u' => array($user_id => 'to'));
 					submit_pm('post', $pm_subject, $pm_data, false); 
 				}
+				$this->db->sql_freeresult($result);
 			}
-			$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
+
 			$this->show_result($this->user->lang['POINTS_GROUP_TRANSFER_SUCCESS']);
 		}
 		else

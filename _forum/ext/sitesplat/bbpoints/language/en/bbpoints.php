@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'UCP_BBPOINTS_EXPLAIN'					=> 'Transactions Overview of your earned points',
 	'BB_DONATION'							=> 'Donation from',
 	'BB_TRANSFER'							=> 'Transfer to',
-    'BBPOINTS_LOG'							=> 'BBpoints Log',
+    'BBPOINTS_LOG'							=> 'Points Log',
 	'BBPOINTS_TRANSFER_AMT'					=> 'Transfer amount',
 	'TRANSFER_DESCR'						=> 'Comment',  
 	'BBPOINTS_COMMENT_PLACEHOLDER'			=> 'Optional comment about the transaction',
@@ -42,7 +42,7 @@ $lang = array_merge($lang, array(
 	
 	'TRANSFER_TO'							=> 'Here you can transfer/donate points to another user - Cannot be reversed!',
 	'TRANSFER_SUCCESS'						=> 'The transfer was successful.',
-	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'To read and react to this topic you have to donate: <span class="label label-primary">%1$s</span> <br />This is a one time fee to the Topic starter<br />**Please note, this fee can be asked again if the topic is edited',
+	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'To read and react to this topic you have to donate: <span class="label label-primary">%1$s Points</span><br />This is a one time fee to the Topic starter<br />**Please note, this fee can be asked again if the topic is edited',
 	'NO_USER_SELECTED'						=> 'You did not select any user',
 	'NO_AMOUNT_SELECTED'					=> 'You did not select any amount or the amount is < 5',           
 	'TRANSFER_NOT_ENOUGH_POINTS'			=> 'You do not have enough points to transfer.',
@@ -53,7 +53,7 @@ $lang = array_merge($lang, array(
 	'POINTS_MAIN'						     => '%s overwiev',
 	'POINTS_MODIFY'						     => 'Modify',
 	'POINTS_DONATE'						     => 'Donate',	
-	'POINTS_DISABLED'            			 => 'BBpoints is currently disabled',
+	'POINTS_DISABLED'            			 => 'Points is currently disabled',
 	
 	'POINTS_RECEIVED_POST_MESSAGE'			 => 'You have received <strong>%1$s %2$s</strong> for this topic',
 	'POINTS_RECEIVED_REPLY_MESSAGE'		     => 'You have received <strong>%1$s %2$s</strong> for this post',

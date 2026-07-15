@@ -62,7 +62,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			// frontend
-			'core.user_setup'						=> 'add_common_language',
+			'core.user_setup_after'					=> 'add_common_language',
 			'core.permissions'						=> 'add_permission',
 			'core.page_header_after'				=> 'page_header_after',
 			'core.index_modify_page_title'			=> 'bbpoints_stats',
@@ -97,9 +97,7 @@ class listener implements EventSubscriberInterface
 				if (!confirm_box(true))
 				{
 					$this->template->assign_vars(array('COMMENT_ENABLED' => $this->bbpoints_config['comments_enable'], 'TOPIC_POINTS' => $event['topic_data']['bbpoints_payed']));
-					$amount = ($this->bbpoints_config['symbol_pos']) ? 
-							'<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($event['topic_data']['bbpoints_payed'], 2) :
-							number_format($event['topic_data']['bbpoints_payed'], 2) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
+					$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($event['topic_data']['bbpoints_payed'], 2) : number_format($event['topic_data']['bbpoints_payed'], 2) . ' <i class"fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
 					confirm_box(false, $this->user->lang('TRANSFER_TO_HIDDEN_TOPIC', $amount), build_hidden_fields(array(
 						'userid'		=> $this->user->data['user_id'],
 						'amount'		=> $event['topic_data']['bbpoints_payed'],
@@ -120,7 +118,7 @@ class listener implements EventSubscriberInterface
 								SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
 								UNION ALL
 								SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
-								) t1 GROUP BY user_id';		
+								) t1 GROUP BY user_id';
 						$result = $this->db->sql_query($sql);
 						$user_points  = $this->db->sql_fetchfield('total');
 					
@@ -134,8 +132,8 @@ class listener implements EventSubscriberInterface
 		
 							if ($this->bbpoints_config['transfer_notify'] && 1 == 0)
 							{
-								$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '></i> ' . $this->request->variable('amount', 0) :
-										   $this->request->variable('amount', 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '></i>';
+								$amount = ($this->bbpoints_config['symbol_pos']) ? $this->bbpoints_config['currency'][0] . ' ' . $this->request->variable('amount', 0) :
+										   $this->request->variable('amount', 0) . ' ' . $this->bbpoints_config['currency'][0];
 								$noti_ary = array(
 									'user_ids'		=> $this->request->variable('transfer_to', 0),
 									'parent_id'		=> 0,
@@ -167,7 +165,13 @@ class listener implements EventSubscriberInterface
 
 	public function add_common_language($event)
 	{
-		$this->user->add_lang_ext('sitesplat/bbpoints', 'bbpoints_common');	
+		$this->user->add_lang_ext('sitesplat/bbpoints', 'bbpoints_common');
+		/*$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'sitesplat/bbpoints',
+			'lang_set' => 'bbpoints_common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;*/
 	}
 	
 	/**
@@ -256,10 +260,7 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_points = ($event['topic_data']['topic_first_post_id'] == $event['row']['post_id']) ? $event['topic_data']['bbpoints'] : 0;
 		$event['post_row'] = array_merge($event['post_row'], array(
-		// points value per post
-		//	'BBPOINTS' => ($event['row']['post_visibility'] == 1) ? number_format($event['row']['bbpoints'] + $topic_points, 2) : 0,
-        // total points		
-		'USER_TOTAL_POINTS' => number_format($this->load_user_points($event['row']['user_id']), 2),
+			'BBPOINTS' => ($event['row']['post_visibility'] == 1) ? number_format($event['row']['bbpoints'] + $topic_points, 2) : 0,
 		));
 	}
 
@@ -302,7 +303,9 @@ class listener implements EventSubscriberInterface
 		if ($this->bbpoints_config['bar_stats'])
 		{
 			$sql = 'SELECT SUM(points) as total FROM ( 
-					SELECT SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = 0
+					SELECT SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . '
+					UNION
+					SELECT SUM(-bbpoints) AS points FROM ' . $this->bbpoints_table . '
 					UNION
 					SELECT SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . '
 					UNION 

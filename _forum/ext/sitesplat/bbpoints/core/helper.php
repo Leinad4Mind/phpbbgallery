@@ -14,8 +14,9 @@ class helper
 	protected $config;
 	protected $notification_manager;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\notification\manager $notification_manager)
+	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\notification\manager $notification_manager)
 	{
+		$this->user = $user;
 		$this->config = $config;
 		$this->notification_manager = $notification_manager;
 	}
@@ -28,6 +29,7 @@ class helper
 
 	public function currency($select = '', $currency = '')
 	{
+		//$this->user->setup();
 	    $currencies['N/A'] = array('fa-na', 'N/A', '');
         $currencies['PTS'] = array('Points', 'Points', '');
 		$currencies['USD'] = array('fa-usd', 'Dollar', '&#36;');

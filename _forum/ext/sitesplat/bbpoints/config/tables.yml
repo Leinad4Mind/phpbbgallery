@@ -1,2 +1,2 @@
 parameters:
-    sitesplat.bbpoints.table: '%core.table_prefix%bbpoints'
+    sitesplat.bbpoints.table: %core.table_prefix%bbpoints
