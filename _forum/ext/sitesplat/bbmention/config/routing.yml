@@ -1,0 +1,3 @@
+sitesplat.bbmention.controller:
+    path: /bbmention/
+    defaults: { _controller: sitesplat.bbmention.controller:getMatches }

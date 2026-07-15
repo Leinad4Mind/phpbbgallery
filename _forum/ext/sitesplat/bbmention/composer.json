@@ -1,0 +1,31 @@
+{
+	"name": "sitesplat/bbmention",
+	"type": "phpbb-extension",
+	"description": "Allows a baord running SiteSplat's themes to mention users Twitter/Github style with the @username. It also supports the @group. The mentioned user or leader of X group will receive a notification with a link to the mentioned post. Supports mention users outside the topic discussion as well.",
+	"homepage": "http://www.sitesplat.com",
+	"version": "1.6.0",
+	"keywords": ["phpbb", "extension", "reaction", "topic", "premium", "sitesplat", "mention", "username"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"display-name": "BB@mention",
+		"soft-require": {
+			"phpbb/phpbb": "3.1.*"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb31/ext",
+            "filename": "bbmention.json"
+		}
+	}
+}

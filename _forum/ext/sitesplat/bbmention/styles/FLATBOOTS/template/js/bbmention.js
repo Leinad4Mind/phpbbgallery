@@ -1,0 +1,1 @@
+head.ready(function(){"undefined"!=typeof s9eNemtionsUrl&&s9eNemtionsUrl&&$('textarea[name="message"]').textcomplete([{match:/\B@(\S*)$/,search:function(e,t){$.getJSON(s9eNemtionsUrl,{str:e}).done(function(e){t(e)})},template:function(e){return e[1]},replace:function(e){return e[0]+" "},index:1,cache:!0}])});
