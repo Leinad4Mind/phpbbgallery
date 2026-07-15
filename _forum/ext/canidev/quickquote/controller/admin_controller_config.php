@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -55,7 +55,7 @@ class admin_controller_config extends \canidev\core\acp
 		$this->page_header('cbb-quickquote', $this->config['quickquote_version']);
 
 		$this->tpl_name		= 'acp_quickquote_config';
-		$this->page_title	= $this->lang->lang('ACP_CAT_QUICKQUOTE') . ' &bull; ' . $this->lang->lang('ACP_QUICKQUOTE_CONFIG');
+		$this->page_title	= 'ACP_QUICKQUOTE_CONFIG';
 
 		$submit 	= $this->request->is_set_post('submit');
 		$form_key 	= 'acp_quickquote';
@@ -135,11 +135,8 @@ class admin_controller_config extends \canidev\core\acp
 		
 		$this->template->assign_vars(array(
 			'QUICKQUOTE_IN_ADMIN'	=> true,
-			'L_TITLE'				=> $this->lang->lang('ACP_QUICKQUOTE_CONFIG'),
-			'L_TITLE_EXPLAIN'		=> $this->lang->lang('ACP_QUICKQUOTE_CONFIG_EXPLAIN'),
-			
-			'S_ERROR'			=> (sizeof($error)) ? true : false,
-			'ERROR_MSG'			=> implode('<br />', $error),
+			'S_ERROR'				=> (sizeof($error)) ? true : false,
+			'ERROR_MSG'				=> implode('<br />', $error),
 		));
 
 		$this->display_vars($display_vars);

@@ -1,3 +1,3 @@
-<!-- IF QQ_ENABLED and CANIDEV_CORE_STARTED -->
-	<!-- INCLUDE @canidev_core/event/overall_footer_after.html -->
-<!-- ENDIF -->
+{% if QQ_ENABLED and CANIDEV_CORE_STARTED %}
+	{% INCLUDE '@canidev_core/event/overall_footer_after.html' %}
+{% endif %}

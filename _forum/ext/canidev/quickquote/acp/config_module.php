@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickQuote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -34,6 +34,6 @@ class config_module
 		$this->controller->display($mode);
 		
 		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title();
+		$this->page_title	= $this->controller->get_title('ACP_CAT_QUICKQUOTE');
 	}
 }

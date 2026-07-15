@@ -1,6 +1,6 @@
 # cBB QuickQuote Extension
 
-## Quick Install
+## Install
 
 1. Download the latest release and unzip the package.
 2. Upload the content of the 'upload' directory to the 'ext' directory of your forum.
@@ -15,4 +15,4 @@
 3. To permanently uninstall, click 'Delete Data' and then delete the '/ext/canidev/quickquote' directory.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
+[GNU General Public License v2](https://opensource.org/licenses/GPL-2.0)

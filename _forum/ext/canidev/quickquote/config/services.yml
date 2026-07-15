@@ -2,23 +2,23 @@ services:
     canidev.quickquote.listener:
         class: canidev\quickquote\event\listener
         arguments:
-            - @auth
-            - @config
-            - @service_container
-            - @request
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@service_container'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
             
     canidev.quickquote.admin.config:
         class: canidev\quickquote\controller\admin_controller_config
         arguments:
-            - @cache.driver
-            - @config
-            - @dbal.conn
-            - @dispatcher
-            - @language
-            - @request
-            - @template
-            - @user
+            - '@cache.driver'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'

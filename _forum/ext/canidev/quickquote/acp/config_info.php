@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Quickquote
-* @version v1.0.1 10/02/2019
+* @version v1.0.2 21/04/2021
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -16,7 +16,7 @@ class config_info
 		return array(
 			'filename'	=> '\canidev\quickquote\acp\config_module',
 			'title'		=> 'ACP_QUICKQUOTE',
-			'version'	=> '1.0.1',
+			'version'	=> '1.0.2',
 			'modes'		=> array(
 				'config'	=> array('title' => 'ACP_QUICKQUOTE_CONFIG',		'auth' => 'ext_canidev/quickquote && acl_a_board', 'cat' => array('ACP_CAT_QUICKQUOTE')),
 			),
