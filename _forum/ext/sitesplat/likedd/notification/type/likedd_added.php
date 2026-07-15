@@ -137,20 +137,22 @@ class likedd_added extends \phpbb\notification\type\base
 		$sql = 'SELECT username, user_colour FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
 		$result = $this->db->sql_query($sql);
 		$username = $this->db->sql_fetchfield('username');
-		
+
 		$sql2 = 'SELECT user_colour FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
 		$result = $this->db->sql_query($sql2);
 		$user_colour = $this->db->sql_fetchfield('user_colour');
-		
+
 		$sql3 = 'SELECT post_subject FROM bbgta_likes l, bbgta_users u, bbgta_posts p WHERE l.user_id = ' . $this->get_data('poster_id') . ' AND l.user_id = u.user_id AND l.post_id = p.post_id AND p.post_id = ' . $this->get_data('parent_id');
 		$result = $this->db->sql_query($sql3);
 		$post_subject = $this->db->sql_fetchfield('post_subject');
-		
+
 		$type = (strpos($this->get_data('like_txt'), 'DISLIKE') === false) ? 0 : 1;
 		$type1 = (strpos($this->get_data('like_txt'), 'REMOVED') === false) ? 0 : 1;
 		$type2 = (strpos($this->get_data('like_txt'), 'LIKE') === false) ? 0 : 1;
-		
-		return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), '<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
+
+		return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE'] ),
+				(($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']),
+				'<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
 	}
 
 	/**

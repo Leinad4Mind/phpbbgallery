@@ -119,9 +119,19 @@ class listener implements EventSubscriberInterface
 		{
 				$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
 				$post_row = $event['post_row'];
+
 				$post_row['U_LIKE'] = ($this->auth->acl_get('u_likebb_like')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']) : false;
 				$post_row['U_DISLIKE'] = (!$this->config['dislike_off'] && $this->auth->acl_get('u_likebb_dislike')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
-		
+
+				$sqlhide = 'SELECT COUNT(like_id) > 0
+					FROM ' . USERS_TABLE . ' u, ' . $this->likes_table . ' l 
+					WHERE u.user_id = l.user_id
+					AND u.user_id = ' . $this->user->data['user_id'] . '
+					AND l.post_id = ' . $post_row['POST_ID'] . '
+					GROUP BY l.like_id';
+				$resulthide = $this->db->sql_query($sqlhide);
+				$hide = $this->db->sql_fetchrow($resulthide);
+
 				$sql = 'SELECT post_id, 
 						GROUP_CONCAT(case when l.ld = 0 then CONCAT("<a href=\"memberlist.php?mode=viewprofile&u=", l.user_id, "\">", u.username, "</a>") else NULL end, ", ") AS names_likes,
 						COUNT(case when l.ld = 0 then 1 else null end) AS num_likes, COUNT(case when l.ld = 1 then 1 else null end) AS num_dislikes, 
@@ -133,7 +143,9 @@ class listener implements EventSubscriberInterface
 						WHERE l.post_id = ' . $post_row['POST_ID'];
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
-			
+
+				$post_row['HIDE'] = $hide;
+				$post_row['HIDE_CLASS'] = $hide ? 'disabled' : '';
 				$post_row['LIKES'] = $row['num_likes'];
 				$post_row['DISLIKES'] = $row['num_dislikes'];
 				$post_row['LAST_LIKER']	= $row['lastliker'];

@@ -7,18 +7,18 @@ $(document).on("click", ".btn-likedd-trigger", function (e) {
     data: $(this).data("options"), 
     dataType: "json", 
     success: function (result) {
-			if (result.likes)
-			{
-				val = val.replace('=', '');
-				$("#" + val).text(result.likes);
-				document.location.reload();
-			}
-			else{
-				phpbb.alert(result.info, result.txt, true);
-				phpbb.closeDarkenWrapper(3000);
-			}
-       }
-    });
+		if (result.likes)
+		{
+			val = val.replace('=', '');
+			$("#" + val).text(result.likes);
+			document.location.reload();
+		}
+		else{
+			phpbb.alert(result.info, result.txt, true);
+			phpbb.closeDarkenWrapper(3000);
+		}
+    }
+	});
 });
 
 $(document).on("click", ".open-LikersDialog", function () {
