@@ -1,0 +1,3 @@
+kasimi_mchatinfinitescroll_load:
+    path: /mchat/infinite/{page}
+    defaults: { _controller: kasimi.mchatinfinitescroll.controller.main:load }

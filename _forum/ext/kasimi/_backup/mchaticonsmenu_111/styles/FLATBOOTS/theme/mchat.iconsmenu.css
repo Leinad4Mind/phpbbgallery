@@ -1,0 +1,117 @@
+/**
+ *
+ * @package phpBB Extension - mChat Icons Menu
+ * @copyright (c) 2016 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
+
+.mchat-wrapper .dropdown-container-mchat-message-icons .mchat-buttons {
+	top: 0;
+}
+
+.mchat-wrapper .dropdown-container-mchat-message-icons .mchat-buttons > li {
+	display: inline-block;
+	margin: 0;
+}
+
+.mchat-wrapper .dropdown-container-mchat-message-icons .mchat-buttons {
+	margin-top: 0;
+}
+
+.mchat-buttons-wrapper .dropdown {
+	top: -1px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.mchat-buttons-wrapper .dropdown li {
+	padding: 0;
+	border: 0;
+}
+
+.mchat-buttons-wrapper .dropdown .dropdown-contents {
+	box-shadow: none;
+}
+
+.mchat-buttons + .mchat-message-header + .mchat-text {
+	margin-right: 30px;
+}
+
+.imageset.mchat-message-icons-menu-black {
+	background-image: url("./images/icon_mchat_message_icons_black.png");
+	padding-left: 16px;
+	padding-top: 16px;
+}
+
+.imageset.mchat-message-icons-menu-white {
+	background-image: url("./images/icon_mchat_message_icons_white.png");
+	padding-left: 16px;
+	padding-top: 16px;
+}
+
+.mchat-wrapper .mchat-buttons span.mchat-message-icons-menu {
+	top: 8px;
+	right: 8px;
+}
+
+.dropdown-container-mchat-message-icons .dropdown {
+	top: -10px;
+	right: 30px;
+}
+
+.dropdown-container-mchat-message-icons .contact-icons a {
+	padding: 7px;
+	border: 0;
+}
+
+.dropdown-container-mchat-message-icons .arrow:after,
+.dropdown-container-mchat-message-icons .arrow:before {
+	z-index: 5;
+	left: calc(100% - 1px);
+	top: 25px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.dropdown-container-mchat-message-icons .arrow:after {
+	border-color: rgba(192, 241, 77, 0);
+	border-left-color: white;
+	border-width: 10px;
+	margin-top: -10px;
+}
+
+.dropdown-container-mchat-message-icons .arrow:before {
+	border-color: rgba(185, 185, 185, 0);
+	border-left-color: #B9B9B9;
+	border-width: 11px;
+	margin-top: -11px;
+}
+
+.mchat-buttons .mchat-buttons-expanded-always ~ li {
+	display: none;
+}
+
+.mchat-buttons .mchat-buttons-expanded-mobile ~ li {
+	display: block;
+}
+
+.mchat-buttons-wrapper.mchat-buttons-wrapper-mobile {
+	display: none;
+}
+
+@media only screen and (max-width: 700px), only screen and (max-device-width: 700px) {
+
+	.mchat-buttons .mchat-buttons-expanded-mobile ~ li {
+		display: none;
+	}
+
+	.mchat-buttons-wrapper.mchat-buttons-wrapper-mobile {
+		display: block;
+	}
+
+}

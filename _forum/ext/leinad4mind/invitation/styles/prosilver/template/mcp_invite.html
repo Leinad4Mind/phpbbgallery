@@ -1,0 +1,70 @@
+{% INCLUDE 'mcp_header.html' %}
+
+{% if S_INVITE_PETITION %}
+	{% if loops.petition|length %}
+		<h2>{{ lang('ACP_INVITE_CLAIMING') }}</h2>
+		<form id="invite_petition" method="post" action="{{ U_ACTION }}">
+			<div class="panel">
+				<div class="inner">
+					<table class="table1" cellspacing="1">
+						<thead>
+							<tr>
+								<th style="width:8%;">{{ lang('USERNAME') }}</th>
+								<th style="width:3%;">{{ lang('ACP_INVITE_DB') }}</th>
+								<th style="text-align: left;width: 50%;">{{ lang('ACP_INVITE_MESSAGE') }}</th>
+								<th style="width:16%;">{{ lang('ACP_INVITE_MESSAGE_TIME') }}</th>
+								<th style="width:8%;">{{ lang('MARK') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for petition in loops.petition %}
+						<tr class="{% if petition.S_ROW_COUNT is even %}bg1{% else %}bg2{% endif %}">
+							<td>{{ petition.P_USERNAME }}</td>
+							<td style="text-align: center;">{{ petition.P_DB }}</td>
+							<td>{{ petition.P_MESSAGE }}</td>
+							<td>{{ petition.P_MESSAGE_TIME }}</td>
+							<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{{ petition.P_USER_ID }}" /></td>
+						</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			{% if S_SORT_KEY and S_SORT_DIR %}
+			<fieldset class="display-options">
+				{{ lang('DISPLAY_LOG') }}{{ lang('COLON') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+				<noscript><p>&nbsp;&nbsp;<input class="btnmain" type="submit" value="{{ lang('GO') }}" id="start" name="start" /></p></noscript>
+			</fieldset>
+			{% endif %}
+
+			<hr />
+
+
+			<div class="pagination">
+				{{ TOTAL_TOPICS }}
+				{% if loops.pagination|length %}
+					{% INCLUDE 'pagination.html' %}
+				{% else %}
+					 &bull; {{ PAGE_NUMBER }}
+				{% endif %}
+				<a href="#" onclick="marklist('invite_petition', 'mark', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="marklist('invite_petition', 'mark', false); return false;">{{ lang('UNMARK_ALL') }}</a>
+				<p>
+					<input class="button2" type="submit" id="allocate" name="allocate" value="{{ lang('ACP_INVITE_ALLOCATE') }}" />&nbsp;
+					<input class="button2" type="submit" id="deny" name="deny" value="{{ lang('ACP_INVITE_DENY') }}" />
+				</p>
+			</div>
+		</form>
+	{% else %}
+		<h2>{{ lang('INFORMATION') }}</h2>
+		<div class="panel">
+			<div class="inner">
+				<fieldset style="text-alig:center;">
+					<br /><span class="invite_tred">{{ lang('ACP_INVITE_NO_PETITION') }}</span><br />
+				</fieldset>
+			</div>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% INCLUDE 'mcp_footer.html' %}

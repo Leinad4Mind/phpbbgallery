@@ -1,0 +1,99 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    kasimi.mchatrooms.base_listener:
+        class: kasimi\mchatrooms\event\base_listener
+        abstract: true
+        arguments:
+            - '@user'
+            - '@?dmzx.mchat.settings'
+
+    kasimi.mchatrooms.listener.main:
+        class: kasimi\mchatrooms\event\main_listener
+        parent: kasimi.mchatrooms.base_listener
+        calls:
+            - [set_rooms, ['@kasimi.mchatrooms.rooms']]
+            - [set_functions, ['@kasimi.mchatrooms.functions']]
+            - [set_request, ['@request']]
+        tags:
+            - { name: event.listener }
+
+    kasimi.mchatrooms.listener.acp:
+        class: kasimi\mchatrooms\event\acp_listener
+        arguments:
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@dbal.conn'
+            - '@kasimi.mchatrooms.functions'
+            - '@kasimi.mchatrooms.constants'
+        tags:
+            - { name: event.listener }
+
+    kasimi.mchatrooms.rooms:
+        class: kasimi\mchatrooms\core\rooms
+        arguments:
+            - '@kasimi.mchatrooms.functions'
+            - '@user'
+            - '@request'
+            - '@auth'
+            - '@template'
+            - '@passwords.manager'
+            - '@controller.helper'
+            - '@?dmzx.mchat.core'
+            - '@?dmzx.mchat.settings'
+
+    kasimi.mchatrooms.functions:
+        class: kasimi\mchatrooms\core\functions
+        arguments:
+            - '@kasimi.mchatrooms.constants'
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@cache.driver'
+            - '@notification_manager'
+            - '@log'
+            - '%tables.users%'
+            - '%tables.notifications%'
+            - '@?dmzx.mchat.settings'
+
+    kasimi.mchatrooms.constants:
+        class: kasimi\mchatrooms\core\constants
+        arguments:
+            - '@service_container'
+            - '%kasimi.mchatrooms.table.mchat_rooms%'
+            - '%kasimi.mchatrooms.table.mchat_rooms_users%'
+            - '%kasimi.mchatrooms.table.mchat_rooms_sessions%'
+
+    kasimi.mchatrooms.notification_factory:
+        class: kasimi\mchatrooms\notification\factory
+        arguments:
+            # phpBB 3.1.x constructor arguments
+            - '@user_loader'
+            - '@cache.driver'
+            - '@config'
+            - '%tables.notification_types%'
+            - '%tables.notifications%'
+            # phpBB 3.2.x constructor arguments
+            - '@dbal.conn'
+            - '@user'
+            - '@auth'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.user_notifications%'
+            - '@?language'
+
+    kasimi.mchatrooms.notification.type.invite:
+        class: kasimi\mchatrooms\notification\invite
+        scope: prototype
+        factory_service: 'kasimi.mchatrooms.notification_factory'
+        factory_method: 'create_invite_notification'
+        calls:
+            - [set_controller_helper, ['@controller.helper']]
+            - [set_user_loader, ['@user_loader']]
+            - [set_room_functions, ['@kasimi.mchatrooms.functions']]
+            - [set_mchat_settings, ['@?dmzx.mchat.settings']]
+        tags:
+            - { name: notification.type }

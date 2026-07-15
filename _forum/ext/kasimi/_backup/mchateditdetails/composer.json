@@ -1,0 +1,32 @@
+{
+	"name": "kasimi/mchateditdetails",
+	"type": "phpbb-extension",
+	"description": "Displays details about edited messages in a popup.",
+	"homepage": "https://kasimi.net",
+	"version": "1.1.0",
+	"time": "2018-04-05",
+	"keywords": [],
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "kasimi",
+			"homepage": "https://kasimi.net",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.7"
+	},
+	"extra": {
+		"display-name": "mChat Edit Details Addon",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		},
+		"version-check": {
+			"host": "kasimi.github.io",
+			"directory": "/phpbb_versions",
+			"filename": "mchateditdetails_version.json",
+			"ssl": true
+		}
+	}
+}

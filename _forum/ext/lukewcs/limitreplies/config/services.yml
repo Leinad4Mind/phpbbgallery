@@ -1,0 +1,20 @@
+services:
+    lukewcs.limitreplies.listener:
+        class: lukewcs\limitreplies\event\listener
+        arguments:
+            - '@language'
+            - '@template'
+            - '@config'
+            - '@auth'
+            - '@user'
+            - '@dbal.conn'
+        tags:
+            - { name: event.listener }
+    lukewcs.limitreplies.controller.acp:
+        class: lukewcs\limitreplies\controller\acp_limitreplies_controller
+        arguments:
+            - '@language'
+            - '@template'
+            - '@config'
+            - '@request'
+            - '@ext.manager' 

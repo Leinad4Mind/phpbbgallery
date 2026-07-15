@@ -1,0 +1,7 @@
+Recebeste uma solicitação de convites adicionais do utilizador {USERNAME}.
+Ele solicitou {INVITE_NUMBER} convite(s).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Link do site: {U_BOARD}
+Contacto: {BOARD_CONTACT}

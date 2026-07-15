@@ -1,0 +1,7 @@
+<dl>
+	<dt><label for="field_searchable">{{ lang('CPF_SEARCHABLE') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" class="radio" id="field_searchable" name="field_searchable" value="1"{{ S_FIELD_SEARCHABLE ? ' checked' }}> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="field_searchable" value="0"{{ not S_FIELD_SEARCHABLE ? ' checked' }}> {{ lang('NO') }}</label>
+	</dd>
+</dl>

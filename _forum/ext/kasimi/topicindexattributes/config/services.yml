@@ -1,0 +1,7 @@
+services:
+    kasimi.topicindexattributes.listener:
+        class: kasimi\topicindexattributes\event\main_listener
+        arguments:
+            - '@text_formatter.renderer'
+        tags:
+            - { name: event.listener }

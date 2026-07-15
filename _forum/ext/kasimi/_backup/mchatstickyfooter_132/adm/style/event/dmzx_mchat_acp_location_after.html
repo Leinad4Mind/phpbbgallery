@@ -1,0 +1,7 @@
+<dl>
+	<dt><label for="user_mchat_sticky_footer">{{ lang('MCHAT_STICKY_FOOTER') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_sticky_footer" value="1"{{ MCHAT_STICKY_FOOTER ? ' id="user_mchat_sticky_footer" checked="checked"' : '' }}{{ MCHAT_STICKY_FOOTER_NOAUTH ? ' disabled' : '' }} /> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_sticky_footer" value="0"{{ not MCHAT_STICKY_FOOTER ? ' id="user_mchat_sticky_footer" checked="checked"' : '' }}{{ MCHAT_STICKY_FOOTER_NOAUTH ? ' disabled' : '' }} /> {{ lang('NO') }}</label>
+	</dd>
+</dl>

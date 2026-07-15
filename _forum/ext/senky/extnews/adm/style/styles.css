@@ -1,0 +1,49 @@
+.extnews {
+	/* slider */
+	display: flex;
+	overflow-x: auto;
+
+	/* make space for scrollbar and separate from heading */
+	padding: 5px 0 10px;
+
+	/* remove original ul margin and add compensation for first item's margin-left */
+	margin: 0 0 0 -5px;
+}
+
+.extnews li {
+	/* only one row of items; this makes it a slider */
+	flex-shrink: 0;
+
+	/* allow img to stretch to remaining space */
+	display: flex;
+	flex-direction: column;
+
+	/* remove original styling */
+	list-style: none;
+
+	/* make it nice */
+	padding: 10px;
+	margin: 0 5px;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #CCCCCC;
+	background-color: #DCEBFE;
+}
+
+.extnews .img-container {
+	/* make sure ext name will always be at the bottom by stretching img as much as possible */
+	flex-grow: 1;
+
+	/* separate img and ext name a little */
+	margin-bottom: 10px;
+}
+.extnews img {
+	/* vertical centering */
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.extnews .author {
+	font-size: 80%;
+}

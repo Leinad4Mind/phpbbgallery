@@ -1,0 +1,13 @@
+services:
+    kasimi.topicindexusertopics.listener:
+        class: 'kasimi\topicindexusertopics\event\main_listener'
+        arguments:
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@language'
+            - '@user_loader'
+            - '@controller.helper'
+            - '@?dmzx.topicindex.controller'
+        tags:
+            - { name: 'event.listener' }

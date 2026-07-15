@@ -1,0 +1,9 @@
+Subject: Gesuchtes Schlüsselwort im Beitrag gefunden
+
+Hallo!
+
+Dein Schlüsselwort "{KEYWORD}" wurde in einem Beitrag gefunden. Schaue hier nach, um den Beitrag zu öffnen:
+
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}

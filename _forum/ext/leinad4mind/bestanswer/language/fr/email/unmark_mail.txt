@@ -1,0 +1,10 @@
+Subject: Votre message n’est plus la réponse la plus pertinente de son sujet
+
+Bonjour,
+
+votre message du sujet « {{ TOPIC_TITLE }} » sur le forum « {{ SITENAME }} » s’est vu retiré par « {{ USERNAME }} » sa mise en avant comme étant la réponse la plus pertinente de son sujet.
+
+Pour consulter votre message, cliquez sur le lien suivant :
+{{ U_LINK_TO_TOPIC }}
+
+{{ EMAIL_SIG }}

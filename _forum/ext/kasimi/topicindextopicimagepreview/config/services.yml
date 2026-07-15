@@ -1,0 +1,8 @@
+services:
+    kasimi.topicindextopicimagepreview.listener:
+        class: kasimi\topicindextopicimagepreview\event\main_listener
+        arguments:
+            - '@?vse.topicimagepreview.preview'
+            - '@?vse.topicimagepreview.settings'
+        tags:
+            - { name: event.listener }

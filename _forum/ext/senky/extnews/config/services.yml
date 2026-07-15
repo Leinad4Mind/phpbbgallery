@@ -1,0 +1,16 @@
+services:
+    senky.extnews.scraper:
+        class: senky\extnews\scraper
+        arguments:
+            - '@cache.driver'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    senky.extnews.listener:
+        class: senky\extnews\event\listener
+        arguments:
+            - '@senky.extnews.scraper'
+            - '@template'
+            - '@language'
+        tags:
+            - { name: event.listener }

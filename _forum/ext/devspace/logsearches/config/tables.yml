@@ -1,0 +1,2 @@
+parameters:
+    tables.search_log: '%core.table_prefix%search_log'

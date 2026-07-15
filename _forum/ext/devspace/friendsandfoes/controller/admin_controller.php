@@ -1,0 +1,322 @@
+<?php
+/**
+ *
+ * @package Friends & Foes Extension
+ * @copyright (c) 2022 devspace
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
+
+namespace devspace\friendsandfoes\controller;
+
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\pagination;
+use phpbb\language\language;
+use devspace\friendsandfoes\core\functions;
+
+/**
+ * Admin controller
+ */
+class admin_controller
+{
+	/** @var config */
+	protected $config;
+
+	/** @var driver_interface */
+	protected $db;
+
+	/** @var request */
+	protected $request;
+
+	/** @var template */
+	protected $template;
+
+	/** @var pagination*/
+	protected $pagination;
+
+	/** @var language */
+	protected $language;
+
+	/** @var functions */
+	protected $functions;
+
+	/** @var array phpBB tables */
+	protected $tables;
+
+	/** @var string */
+	protected $ext_images_path;
+
+	/** @var string Custom form action */
+	protected $u_action;
+
+	/**
+	 * Constructor for admin controller
+	 *
+	 * @param config				$config         	Config object
+	 * @param driver_interface		$db             	Database object
+	 * @param request               $request        	Request object
+	 * @param template              $template       	Template object
+	 * @param pagination            $pagination     	Pagination object
+	 * @param language              $language       	Language object
+	 * @param functions             $functions      	Functions for the extension
+	 * @param array                  tables         	phpBB db tables
+	 * @param string         		$ext_images_path    Path to this extension's images
+	 *
+	 * @return \devspace\friendsandfoes\controller\admin_controller
+	 *
+	 * @access public
+	 */
+	public function __construct(config $config, driver_interface $db, request $request, template $template, pagination $pagination, language $language, functions $functions, array $tables, string  $ext_images_path)
+	{
+		$this->config     		= $config;
+		$this->db         		= $db;
+		$this->request    		= $request;
+		$this->template   		= $template;
+		$this->pagination 		= $pagination;
+		$this->language   		= $language;
+		$this->functions  		= $functions;
+		$this->tables     		= $tables;
+		$this->ext_images_path	= $ext_images_path;
+	}
+
+	/**
+	 * Display the output for this extension
+	 *
+	 * @return null
+	 * @access public
+	 */
+	public function display_output()
+	{
+		// Add the language files
+		$this->language->add_lang(['acp_friendsandfoes', 'acp_common'], $this->functions->get_ext_namespace());
+
+		// Start initial var setup
+		$action        = $this->request->variable('action', '');
+		$clear_filters = $this->request->variable('clear_filters', '');
+		$fc            = $this->request->variable('fc', '');
+		$sort_key      = $this->request->variable('sk', 'u');
+		$sd            = $sort_dir = $this->request->variable('sd', 'a');
+		$start         = $this->request->variable('start', 0);
+
+		$back = false;
+
+		if ($clear_filters)
+		{
+			$fc       = '';
+			$sd       = $sort_dir = 'a';
+			$sort_key = 'u';
+		}
+
+		$sort_dir = ($sort_dir == 'd') ? ' DESC' : ' ASC';
+
+		$order_ary = [
+			'f' => 'z.friend' . $sort_dir . ', u.username_clean ASC',
+			'o' => 'z.foe' . $sort_dir . ', u.username_clean ASC',
+			'u' => 'u.username_clean' . $sort_dir,
+		];
+
+		$filter_by = '';
+		if ($fc == 'other')
+		{
+			for ($i = ord($this->language->lang('START_CHARACTER')); $i <= ord($this->language->lang('END_CHARACTER')); $i++)
+			{
+				$filter_by .= ' AND u.username_clean ' . $this->db->sql_not_like_expression(utf8_clean_string(chr($i)) . $this->db->get_any_char());
+			}
+		}
+		else if ($fc)
+		{
+			$filter_by .= ' AND u.username_clean ' . $this->db->sql_like_expression(utf8_clean_string(substr($fc, 0, 1)) . $this->db->get_any_char());
+		}
+
+		$sql = $this->db->sql_build_query('SELECT', [
+			'SELECT' => 'u.user_id, u.username, u.username_clean, u.user_colour, z.*',
+			'FROM' => [
+				$this->tables['users'] => 'u',
+				$this->tables['zebra'] => 'z',
+			],
+			'WHERE' => 'u.user_id = z.user_id' . $filter_by,
+			'ORDER_BY' => ($sort_key == '') ? 'u.username_clean' : $order_ary[$sort_key],
+		]);
+
+		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rowset[] = $row;
+		}
+
+		$this->db->sql_freeresult($result);
+
+		if (!empty($rowset))
+		{
+			foreach ($rowset as $rowdata)
+			{
+				$sql = 'SELECT user_id, username
+                    FROM ' . $this->tables['users'] . '
+                    WHERE user_id = ' . (int) $rowdata['zebra_id'];
+
+				$result = $this->db->sql_query($sql);
+				$row    = $this->db->sql_fetchrow($result);
+
+				$this->template->assign_block_vars('friends_foes', [
+					'FOE' => ($rowdata['foe'] == 0) ? '' : get_username_string('full', $row['user_id'], $row['username'], 'CC3300'),
+					'FRIEND' => ($rowdata['friend'] == 0) ? '' : get_username_string('full', $row['user_id'], $row['username'], '006600'),
+					'USERNAME' => get_username_string('full', $rowdata['user_id'], $rowdata['username'], $rowdata['user_colour']),
+				]);
+			}
+
+			$this->db->sql_freeresult($result);
+		}
+
+		$sort_by_text = ['u' => $this->language->lang('SORT_USERNAME'), 'f' => $this->language->lang('SORT_FRIEND'), 'o' => $this->language->lang('SORT_FOE')];
+		$limit_days   = [];
+		$s_sort_key   = $s_limit_days   = $s_sort_dir   = $u_sort_param   = '';
+
+		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sd, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+
+		// Are there any friends & foes?
+		$sql = $this->db->sql_build_query('SELECT', [
+			'SELECT' => 'COUNT(z.user_id) AS total_users',
+			'FROM' => [
+				$this->tables['users'] => 'u',
+				$this->tables['zebra'] => 'z',
+			],
+			'WHERE' => 'u.user_id = z.user_id',
+		]);
+
+		$result      = $this->db->sql_query($sql);
+		$fandf_count = (int) $this->db->sql_fetchfield('total_users');
+
+		$this->db->sql_freeresult($result);
+
+		// Get total user count for pagination
+		$sql = $this->db->sql_build_query('SELECT', [
+			'SELECT' => 'COUNT(z.user_id) AS total_users',
+			'FROM' => [
+				$this->tables['users'] => 'u',
+				$this->tables['zebra'] => 'z',
+			],
+			'WHERE' => 'u.user_id = z.user_id' . $filter_by,
+		]);
+
+		$result     = $this->db->sql_query($sql);
+		$user_count = (int) $this->db->sql_fetchfield('total_users');
+
+		$this->db->sql_freeresult($result);
+
+		$action = "{$this->u_action}&amp;sk=$sort_key&amp;sd=$sd";
+		$link   = ($fandf_count) ? adm_back_link($action . '&amp;start=' . $start) : '';
+
+		if ($user_count == 0)
+		{
+			trigger_error($this->language->lang('NO_FF_DATA') . $link);
+		}
+
+		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $user_count);
+		$this->pagination->generate_template_pagination($action . "&ampfc=$fc", 'pagination', 'start', $user_count, $this->config['topics_per_page'], $start);
+
+		$first_characters     = [];
+		$first_characters[''] = $this->language->lang('ALL');
+		for ($i = ord($this->language->lang('START_CHARACTER')); $i <= ord($this->language->lang('END_CHARACTER')); $i++)
+		{
+			$first_characters[chr($i)] = chr($i);
+		}
+		$first_characters['other'] = $this->language->lang('OTHER');
+
+		foreach ($first_characters as $char => $desc)
+		{
+			$this->template->assign_block_vars('first_char', [
+				'DESC' 		=> $desc,
+				'U_SORT'	=> $action . '&amp;fc=' . $char,
+			]);
+		}
+
+		// Template vars for header panel
+		$version_data = $this->functions->version_check();
+
+		// Are the PHP and phpBB versions valid for this extension?
+		$valid = $this->functions->ext_requirements();
+
+		$this->template->assign_vars([
+			'DOWNLOAD' 			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
+
+			'EXT_IMAGE_PATH' 	=> $this->ext_images_path,
+
+			'HEAD_TITLE' 		=> $this->language->lang('FRIENDS_AND_FOES'),
+			'HEAD_DESCRIPTION'	=> $this->language->lang('FRIENDS_AND_FOES_EXPLAIN'),
+
+			'PHP_VALID' 		=> $valid[0],
+			'PHPBB_VALID' 		=> $valid[1],
+
+			'NAMESPACE' 		=> $this->functions->get_ext_namespace('twig'),
+
+			'S_BACK' 			=> $back,
+			'S_VERSION_CHECK' 	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
+
+			'VERSION_NUMBER' 	=> $this->functions->get_meta('version'),
+		]);
+
+		$this->template->assign_vars([
+			'S_FILTER_CHAR'	=> $this->character_select($fc),
+			'S_SORT_DIR' 	=> $s_sort_dir,
+			'S_SORT_KEY' 	=> $s_sort_key,
+
+			'TOTAL_USERS' 	=> $this->language->lang('TOTAL_USERS', (int) $user_count),
+
+			'U_ACTION' 		=> $action . "&ampfc=$fc",
+		]);
+	}
+
+	/**
+	 * Create the character select
+	 *
+	 * @param $default
+	 *
+	 * @return string $char_select
+	 * @access protected
+	 */
+	protected function character_select($default)
+	{
+		$options     = [];
+		$options[''] = $this->language->lang('ALL');
+
+		for ($i = ord($this->language->lang('START_CHARACTER')); $i <= ord($this->language->lang('END_CHARACTER')); $i++)
+		{
+			$options[chr($i)] = chr($i);
+		}
+
+		$options['other'] = $this->language->lang('OTHER');
+		$char_select      = '<select name="fc" id="fc">';
+
+		foreach ($options as $value => $char)
+		{
+			$char_select .= '<option value="' . $value . '"';
+
+			if (isset($default) && $default == $char)
+			{
+				$char_select .= ' selected';
+			}
+
+			$char_select .= '>' . $char . '</option>';
+		}
+
+		$char_select .= '</select>';
+
+		return $char_select;
+	}
+
+	/**
+	 * Set page url
+	 *
+	 * @param string $u_action Custom form action
+	 * @return null
+	 * @access public
+	 */
+	public function set_page_url($u_action)
+	{
+		$this->u_action = $u_action;
+	}
+}

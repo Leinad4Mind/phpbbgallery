@@ -1,0 +1,14 @@
+{% if MCHAT_PAGE %}
+<script type="text/javascript">
+// <![CDATA[
+	jQuery(function($) {
+		"use strict";
+		if (typeof mChat === 'object') {
+			mChat.cached('body').on('click', '.mchat-last-edit', function() {
+				phpbb.alert('{{ lang('MCHAT_EDIT_DETAILS') | escape('js') }}', $(this).next().html());
+			});
+		}
+	});
+// ]]>
+</script>
+{% endif %}

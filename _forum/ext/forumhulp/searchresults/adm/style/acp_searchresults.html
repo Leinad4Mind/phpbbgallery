@@ -1,0 +1,118 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS css/searchresults.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{L_ACP_SR_MANAGE} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+
+<p>{L_ACP_SR_MANAGE_EXPLAIN}</p>
+
+<form id="acp_referrers" method="post" action="{U_ACTION}">
+
+<!-- IF .pagination or TOTAL_POSTS -->
+    <div class="pagination">
+        <!-- IF .pagination -->
+            <!-- INCLUDE pagination.html -->
+        <!-- ELSE -->
+            &bull; {PAGE_NUMBER}
+        <!-- ENDIF -->
+    </div>
+<!-- ENDIF -->
+
+<fieldset class="tabulated">
+
+<table class="table1 zebra-table fixed-width-table">
+<thead>
+<tr>
+	<th style="width:50%;">{L_SEARCHWORD}<a href="{U_ACTION}&amp;sk=h&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'h' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=h&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'h' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
+	<th>{L_REF_HITS}<a href="{U_ACTION}&amp;sk=v&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'v' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=v&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'v' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
+	<th>{L_REF_FIRST}<a href="{U_ACTION}&amp;sk=f&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=f&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
+	<th>{L_REF_LAST}<a href="{U_ACTION}&amp;sk=l&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'l' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
+            <a href="{U_ACTION}&amp;sk=l&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'l' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
+	<!-- IF S_REFDEL -->
+	<th style="width:10%;">{L_MARK}</th>
+	<!-- ENDIF -->
+</tr>
+</thead>
+<tbody>
+<!-- IF .not_found -->
+<tr>
+    <td class="row3" colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->"><strong>{L_NOTFOUND} {L_SEARCHWORD}</strong></td>
+</tr>
+
+<!-- BEGIN not_found -->
+<tr class="ext_enabled row-highlight">
+	<td title="{not_found.SEARCHWORD}"><a href="/search.php?keywords={not_found.SEARCHWORD}">{not_found.SEARCHWORD}</a></td>
+	<td style="text-align:center;">{not_found.HITS}</td>
+	<td style="text-align:center;">{not_found.FIRST}</td>
+	<td style="text-align:center;">{not_found.LAST}</td>
+	<!-- IF S_REFDEL -->
+	<td style="text-align: center;">
+		<input type="checkbox" class="radio" name="mark[]" value="{not_found.ID}" />
+	</td>
+	<!-- ENDIF -->
+</tr>
+<!-- END not_found -->
+<!-- ENDIF -->
+
+<!-- IF .found -->
+<tr>
+    <td class="row3" colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->"><strong>{L_FOUND} {L_SEARCHWORD}</strong></td>
+</tr>
+
+<!-- BEGIN found -->
+<tr class="ext_enabled row-highlight">
+	<td title="{found.SEARCHWORD}"><a href="/search.php?keywords={found.SEARCHWORD}">{found.SEARCHWORD}</a></td>
+	<td style="text-align:center;">{found.HITS}</td>
+	<td style="text-align:center;">{found.FIRST}</td>
+	<td style="text-align:center;">{found.LAST}</td>
+	<!-- IF S_REFDEL -->
+	<td style="text-align: center;">
+		<input type="checkbox" class="radio" name="mark[]" value="{found.ID}" />
+	</td>
+	<!-- ENDIF -->
+</tr>
+<!-- END found -->
+<!-- ENDIF -->
+<!-- IF not .found and not .not_found -->
+<tr class="row3">
+	<td colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->">{L_ACP_NO_ITEMS}</td>
+</tr>
+<!-- ENDIF -->
+</tbody>
+</table>
+
+<!-- IF .pagination or TOTAL_POSTS -->
+    <div class="pagination">
+        <!-- IF .pagination -->
+            <!-- INCLUDE pagination.html -->
+        <!-- ELSE -->
+            &bull; {PAGE_NUMBER}
+        <!-- ENDIF -->
+    </div>
+<!-- ENDIF -->
+
+<!-- IF (.found || .not_found) && S_REFDEL -->
+<fieldset class="quick">
+	<input class="button2" type="submit" name="delall" value="{L_DELETE_ALL}" />&nbsp;
+	<input class="button2" type="submit" name="delmarked" value="{L_DELETE_MARKED}" /><br />
+	<p class="small"><a href="#" onclick="marklist('acp_referrers', 'mark', true); return false;">{L_MARK_ALL}</a> &bull; <a href="#" onclick="marklist('acp_referrers', 'mark', false); return false;">{L_UNMARK_ALL}</a></p>
+</fieldset>
+<!-- ENDIF -->
+
+</fieldset>
+</form>
+<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
+<!-- INCLUDEJS js/searchresults.js -->
+
+<!-- INCLUDE overall_footer.html -->

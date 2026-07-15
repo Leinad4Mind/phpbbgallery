@@ -1,0 +1,434 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a name="maincontent"></a>
+
+{% if S_INVITE_MAIN %}
+
+	<h1>{{ lang('ACP_INVITE_INDEX_TITLE') }}</h1>
+	<p>{{ lang('ACP_INVITE_INDEX_TITLE_EXPLAIN') }}</p>
+
+	{% if S_ERROR %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MSG }}</p>
+		</div>
+	{% endif %}
+
+	{% if ERROR_MESSAGE %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MESSAGE }}</p>
+		</div>
+	{% endif %}
+
+	<table cellspacing="1">
+		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
+		<thead>
+			<tr>
+				<th>{{ lang('STATISTIC') }}</th>
+				<th>{{ lang('VALUE') }}</th>
+				<th>{{ lang('STATISTIC') }}</th>
+				<th>{{ lang('VALUE') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{ lang('ACP_INVITE_INSTALL') }}{{ lang('COLON') }} </td>
+				<td><strong>{{ INVITE_INSTALL }}</strong></td>
+				<td>{{ lang('ACP_INVITE_TOTAL_USERS_DAY') }}{{ lang('COLON') }} </td>
+				<td><strong>{{ INVITE_TOTAL_USERS_DAY }}</strong></td>
+			</tr>
+			<tr>
+				<td>{{ lang('ACP_INVITE_TOTAL_USERS') }}{{ lang('COLON') }} </td>
+				<td><strong>{{ INVITE_TOTAL_USERS }}</strong></td>
+				<td>{{ lang('ACP_INVITE_PEND_DB') }}{{ lang('COLON') }} </td>
+				<td><strong>{{ INVITE_PEND_DB }}</strong></td>
+			</tr>
+		</tbody>
+	</table>
+
+	{% if S_USER_FOUNDER || S_INVITE_MANAGE %}
+		<fieldset>
+			<legend>{{ lang('STATISTIC_RESYNC_OPTIONS') }}</legend>
+			<form id="sync_users_form" method="post" action="{{ U_ACTION }}">
+				<dl>
+					<dt><label for="sync_users_action">{{ lang('ACP_INVITE_SYNC_USERS') }}</label><br /><span>{{ lang('ACP_INVITE_SYNC_USERS_EXPLAIN') }}</span></dt>
+					<dd><input type="hidden" name="action" value="sync_users" /><input class="button2" type="submit" id="sync_users_action" name="sync_users_action" value="{{ lang('RUN') }}" /></dd>
+				</dl>
+			</form>
+
+			<form id="sync_data_form" method="post" action="{{ U_ACTION }}">
+				<dl>
+					<dt><label for="sync_data_action">{{ lang('ACP_INVITE_SYNC_DATA') }}</label><br /><span>{{ lang('ACP_INVITE_SYNC_DATA_EXPLAIN') }}</span></dt>
+					<dd><input type="hidden" name="action" value="sync_data" /><input class="button2" type="submit" id="sync_data_action" name="sync_data_action" value="{{ lang('RUN') }}" /></dd>
+				</dl>
+			</form>
+		</fieldset>
+
+	{% endif %}
+{% endif %}
+
+{% if S_INVITE_HANDLING %}
+	<h1>{{ INVITE_MANAGEMENT_TITLE }}</h1>
+	<p>{{ INVITE_MANAGEMENT_TITLE_EXPLAIN }}</p>
+
+	{% if ERROR_MESSAGE %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MESSAGE }}</p>
+	</div>
+	{% endif %}
+
+	<form id="handling_user" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_INVITE_USER_MANAGEMENT') }}</legend>
+		{% if S_MANAGEMENT_USER %}
+			<dl>
+				<dt>{{ lang('USERNAME') }}{{ lang('COLON') }}</dt>
+				<dd><b>{{ MANAGEMENT_USERNAME }}</b></dd>
+			</dl>
+
+			<dl>
+				<dt><label for="invite">{{ lang('ACP_INVITE') }}{{ lang('COLON') }}</label><br />{{ lang('ACP_INVITE_USER_EXPLAIN') }}</dt>
+				<dd><input type="text" id="invite" size="3" name="invite" maxlength="3" value="{{ INVITE_USER }}" /> {{ lang('ACP_INVITE_DB') }}</dd>
+			</dl>
+		{% else %}
+			<dl>
+				<dt><label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
+				<dd><input class="text medium" type="text" id="username" name="username" value="{{ MANAGEMENT_USERNAME }}" /></dd>
+				<dd><br />[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+			</dl>
+			<input type="hidden" name="action" value="management_user" />
+		{% endif %}
+		<p class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1" />
+		</p>
+	</fieldset>
+	</form>
+
+	<form id="handling_select_users" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_INVITE_USERS_MANAGEMENT') }}</legend>
+
+		<dl>
+			<dt><label for="invite_select_users">{{ lang('ACP_INVITE_UG_TASK') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+			<label><input onclick="display_user_invite('_users', false);" {% if not S_ACTION_INVITE_SEND %}disabled="disabled"{% endif %} type="radio" class="radio" name="invite_select_users" value="1" {% if S_TASK_USERS_CECHKED %}    checked="checked" id="invite_select_users"{% endif %} /> <strong style="color:green;">{{ lang('ACP_INVITE_ALLOCATE') }}</strong></label>
+			<label><input onclick="display_user_invite('_users', true);"  {% if not S_ACTION_INVITE_TORLES %}disabled="disabled"{% endif %} type="radio" class="radio" name="invite_select_users" value="0" {% if not S_TASK_USERS_CECHKED %}checked="checked" id="invite_select_users"{% endif %} /> <strong class="error">{{ lang('DELETE') }}</strong></label>
+			</dd>
+		</dl>
+
+		<dl id="display_invite_users">
+			<dt><label for="uinvite">{{ lang('ACP_INVITE') }}{{ lang('COLON') }}</label><br />{{ lang('ACP_INVITE_EXPLAIN') }}</dt>
+			<dd><input type="text" id="uinvite" name="uinvite" maxlength="3" size="3" value="{{ INVITE_USERS }}" /> {{ lang('ACP_INVITE_DB') }}</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="usernames">{{ lang('USERNAMES') }}{{ lang('COLON') }}</label></dt>
+			<dd><textarea cols="40" rows="5" id="usernames" name="usernames">{{ SELECT_USERNAMES }}</textarea></dd>
+			<dd><br />[ <a href="{{ U_FIND_USERNAMES }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
+		</dl>
+
+		<p class="quick">
+			<input type="hidden" name="action" value="management_users" />
+			{{ S_HIDDEN_FIELDS_USERS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1" />
+		</p>
+	</fieldset>
+	</form>
+
+	<form id="handling_select_groups" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_INVITE_GROUPS_MANAGEMENT') }}</legend>
+
+		<dl>
+			<dt><label for="invite_select_groups">{{ lang('ACP_INVITE_UG_TASK') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+			<label><input onclick="display_user_invite('_groups', false);" {% if not S_ACTION_INVITE_SEND %}disabled="disabled"{% endif %} type="radio" class="radio" name="invite_select_groups" value="1" {% if S_TASK_GROUPS_CECHKED %}	checked="checked" id="invite_select_groups"{% endif %} /> <strong style="color:green;">{{ lang('ACP_INVITE_ALLOCATE') }}</strong></label>
+			<label><input onclick="display_user_invite('_groups', true);"  {% if not S_ACTION_INVITE_TORLES %}disabled="disabled"{% endif %} type="radio" class="radio" name="invite_select_groups" value="0" {% if not S_TASK_GROUPS_CECHKED %}checked="checked" id="invite_select_groups"{% endif %} /> <strong class="error">{{ lang('DELETE') }}</strong></label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="default_group">{{ lang('ACP_INVITE_DEFAULT_GROUP_USERS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACP_INVITE_DEFAULT_GROUP_USERS_EXPLAIN') }}</span></dt>
+			<dd>
+			<label><input type="radio" class="radio" name="default_group" value="1" {% if S_DEFAULT_GROUP %}    checked="checked" id="default_group"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="default_group" value="0" {% if not S_DEFAULT_GROUP %}checked="checked" id="default_group"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+
+		<dl id="display_invite_groups">
+			<dt><label for="ginvite">{{ lang('ACP_INVITE') }}{{ lang('COLON') }}</label><br />{{ lang('ACP_INVITE_EXPLAIN') }}</dt>
+			<dd><input type="text" id="ginvite" name="ginvite" maxlength="3" size="3" value="{{ INVITE_GROUPS }}" /> {{ lang('ACP_INVITE_DB') }}</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label>{{ lang('GROUPS') }}{{ lang('COLON') }}</label>
+			</dt>
+			<dd>
+				{% for groups in loops.groups %}
+					{{ groups.GROUPS_LIST }}
+				{% endfor %}
+			</dd>
+			<dd>
+				<br /><a href="#" onclick="marklist('handling_select_groups', 'group_ids', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="marklist('handling_select_groups', 'group_ids', false); return false;">{{ lang('UNMARK_ALL') }}</a>
+			</dd>
+		</dl>
+
+		<p class="quick">
+			<input type="hidden" name="action" value="management_groups" />
+			{{ S_HIDDEN_FIELDS_GROUPS }}
+			{{ S_FORM_TOKEN }}
+			<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}"/>&nbsp;
+		</p>
+	</fieldset>
+	</form>
+
+	<script type="text/javascript">
+	// <![CDATA[
+	for (i=document.forms['handling_select_users'].invite_select_users.length-1; i > -1; i--)
+	{
+		if (document.forms['handling_select_users'].invite_select_users[i].checked)
+		{
+			display_user_invite('_users', document.forms['handling_select_users'].invite_select_users[i].value != 1);
+		}
+	}
+
+	for (i=document.forms['handling_select_groups'].invite_select_groups.length-1; i > -1; i--)
+	{
+		if (document.forms['handling_select_groups'].invite_select_groups[i].checked)
+		{
+			display_user_invite('_groups', document.forms['handling_select_groups'].invite_select_groups[i].value != 1);
+		}
+	}
+
+	function display_user_invite(mode, value)
+	{
+		var id = (mode == '_users') ? 'u' : 'g';
+
+		document.getElementById("display_invite"+mode).style.display = ((value === true) ? 'none' : 'block');
+		document.forms['handling_select'+mode][id+'invite'].disabled = value;
+	}
+	// ]]>
+	</script>
+{% endif %}
+
+{% if S_INVITE_PETITION %}
+	<h1>{{ lang('ACP_INVITE_CLAIMING') }}</h1>
+	<p>{{ lang('ACP_INVITE_CLAIMING_EXPLAIN') }}</p>
+
+	{% if loops.petition|length %}
+		<form id="acp_invite_claim" method="post" action="{{ U_ACTION }}">
+		<div class="pagination">
+			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span>{% endif %}<br /><br />
+		</div>
+
+		<table cellspacing="1">
+			<thead>
+			<tr>
+				<th>{{ lang('USERNAME') }}</th>
+				<th style="text-align: center;width:12%;">{{ lang('SORT_IP') }}</th>
+				<th style="text-align: center;">{{ lang('ACP_INVITE_DB') }}</th>
+				<th style="width: 40%;">{{ lang('ACP_INVITE_MESSAGE') }}</th>
+				<th style="width: 16%;">{{ lang('ACP_INVITE_MESSAGE_TIME') }}</th>
+				<th style="width: 8%;">{{ lang('MARK') }}</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			{% for petition in loops.petition %}
+				<tr class="{% if petition.S_ROW_COUNT is even %}row1{% else %}row2{% endif %}">
+				<td>{% if S_USER_ADMIN %}<a href="{{ petition.U_USER_ADMIN }}">(A)</a> - {% endif %}{{ petition.P_USERNAME }}</td>
+				<td style="text-align: center;"><a href="{{ petition.U_USER_IP }}">{{ petition.P_USER_IP }}</a><br /><strong>[ <a href="#" onclick="window.open('{{ petition.U_WHOIS }}', '_whois', 'height=500, resizable=yes, scrollbars=yes, width=700'); return false;">{{ lang('WHOIS') }}</a> ]</strong></td>
+				<td style="text-align: center;">{{ petition.P_DB }}</td>
+				<td>{{ petition.P_MESSAGE }}</td>
+				<td>{{ petition.P_MESSAGE_TIME }}</td>
+				<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{{ petition.P_USER_ID }}" /></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+		{% if S_SORT_KEY and S_SORT_DIR %}
+			<fieldset class="display-options">
+				{{ lang('DISPLAY_LOG') }}{{ lang('COLON') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+				<input class="button2" type="submit" value="{{ lang('GO') }}" name="submit" />
+			</fieldset>
+		{% endif %}
+
+		<hr />
+
+		<div class="pagination">
+			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span><br /><br />{% endif %}
+		</div>
+
+		<fieldset class="quick">
+			<p class="small"><a href="#" onclick="marklist('acp_invite_claim', 'mark', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="marklist('acp_invite_claim', 'mark', false); return false;">{{ lang('UNMARK_ALL') }}</a></p>
+			<input class="button1" type="submit" id="allocate" name="allocate" value="{{ lang('ACP_INVITE_ALLOCATE') }}" />&nbsp;
+			<input class="button2" type="submit" id="deny" name="deny" value="{{ lang('ACP_INVITE_DENY') }}" />
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+		</form>
+
+	{% else %}
+
+		<div class="errorbox">
+			<p>{{ lang('ACP_INVITE_NO_PETITION') }}</p>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% if S_INVITE_USERS %}
+	<h1>{{ lang('ACP_INVITE_USERS') }}</h1>
+	<p>{{ lang('ACP_INVITE_USERS_EXPLAIN') }}</p>
+
+	{% if ERROR_MESSAGE %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MESSAGE }}</p>
+	</div>
+	{% endif %}
+
+	{% if loops.users|length %}
+		<form id="acp_invite_users" method="post" action="{{ U_ACTION }}">
+	
+			{% if pagination or TOTAL_POSTS %}
+				<div class="pagination">
+				{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+				{% if pagination %}
+					{% include 'pagination.html' %}
+				{% else %}
+					&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+				</div>
+			{% endif %}
+
+			<table cellspacing="1">
+				<thead>
+				<tr>
+					<th>{{ lang('ACP_INVITE') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
+					<th>{{ lang('ACP_INVITE_SORT_NAME') }}</th>
+					<th>{{ lang('EMAIL') }}</th>
+					<th>{{ lang('ACP_INVITE_SORT_NAME') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
+					<th>{{ lang('ACP_INVITE_REG_EMAIL') }}</th>
+					<th>{{ lang('JOINED') }}</th>
+				</tr>
+				</thead>
+
+				<tbody>
+				{% for users in loops.users %}
+					<tr class="{% if users.S_ROW_COUNT is even %}row1{% else %}row2{% endif %}">
+					<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLER_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLER_USERNAME }}</td>
+					<td>{{ users.CALLER_INVITE }}</td>
+					<td>{{ users.CALLER_EMAIL }}</td>
+					<td>{% if S_USER_ADMIN %}<a href="{{ users.CALLED_USER_ADMIN }}">(A)</a> - {% endif %}{{ users.CALLED_USERNAME }}</td>
+					<td>{{ users.CALLED_EMAIL }}</td>
+					<td>{{ users.CALLED_TIME_REG }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
+			{% if pagination or TOTAL_POSTS %}
+			<div class="pagination">
+				{% if U_VIEW_UNREAD_POST and not S_IS_BOT %}<a href="{{ U_VIEW_UNREAD_POST }}" class="mark">{{ L_VIEW_UNREAD_POST }}</a> &bull; {% endif %}{{ TOTAL_POSTS }}
+				{% if pagination %}
+				{% include 'pagination.html' %}
+				{% else %}
+				&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+			{% endif %}
+
+			<fieldset class="display-options">
+				{{ lang('DISPLAY_LOG') }} &nbsp;{{ S_LIMIT_DAYS }}&nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+				<input class="button2" type="submit" value="{{ lang('GO') }}" name="submit" />
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+
+			<hr />
+			<div class="pagination">
+				{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span><br /><br />{% endif %}
+			</div>
+		</form>
+
+	{% else %}
+
+		<div class="errorbox">
+			<p>{{ lang('ACP_INVITE_NO_USERS') }}</p>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% if S_INVITE_PEND %}
+	<h1>{{ lang('ACP_INVITE_PENDING') }}</h1>
+	<p>{{ lang('ACP_INVITE_PENDING_EXPLAIN') }}</p>
+
+	{% if ERROR_MESSAGE %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MESSAGE }}</p>
+	</div>
+	{% endif %}
+
+	{% if loops.invite|length %}
+		<form id="acp_invite_pending" method="post" action="{{ U_ACTION }}">
+		<div class="pagination">
+			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span>{% endif %}<br /><br />
+		</div>
+
+		<table cellspacing="1">
+			<thead>
+			<tr>
+				<th>{{ lang('ACP_INVITE') }} {{ lang('ACP_INVITE_USER_NAME') }}</th>
+				<th>{{ lang('ACP_INVITE_PEND_DATE') }}</th>
+				<th>{{ lang('ACP_INVITE_PEND_END_DATE') }}</th>
+				<th>{{ lang('ACP_INVITE_PEND_EMAIL') }}</th>
+				<th style="width: 8%;">{{ lang('MARK') }}</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			{% for invite in loops.invite %}
+				<tr class="{% if invite.S_ROW_COUNT is even %}row1{% else %}row2{% endif %}">
+				<td>{% if S_USER_ADMIN %}<a href="{{ invite.USER_ADMIN }}">(A)</a> - {% endif %}{{ invite.USERNAME }}</td>
+				<td>{{ invite.TIME }}</td>
+				<td>{{ invite.END_TIME }}</td>
+				<td>{{ invite.EMAIL }}</td>
+				<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{{ invite.ID }}" /></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+		<fieldset class="display-options">
+			{{ lang('DISPLAY_LOG') }} &nbsp;{{ lang('SORT_BY') }}{{ lang('COLON') }} {{ S_SORT_KEY }} {{ S_SORT_DIR }}
+			<input class="button2" type="submit" value="{{ lang('GO') }}" name="submit" />
+		</fieldset>
+
+		<hr />
+		<div class="pagination">
+			{{ TOTAL_COUNT }}&nbsp;&nbsp;{% if PAGINATION %}<a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ S_ON_PAGE }}</a> &bull; <span>{{ PAGINATION }}</span><br /><br />{% endif %}
+		</div>
+
+		<fieldset class="quick">
+			<p class="small"><a href="#" onclick="marklist('acp_invite_pending', 'mark', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="marklist('acp_invite_pending', 'mark', false); return false;">{{ lang('UNMARK_ALL') }}</a></p>
+			<input class="button1" type="submit" name="pend_delete_all" id="pend_delete_all"  value="{{ lang('DELETE_ALL') }}" />
+			<input class="button2" type="submit" name="pend_delete_mark" id="pend_delete_mark" value="{{ lang('DELETE_MARKED') }}" />
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+		</form>
+
+	{% else %}
+
+		<div class="errorbox">
+			<p>{{ lang('ACP_INVITE_NO_PEND_INVITE') }}</p>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}

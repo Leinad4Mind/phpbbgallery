@@ -1,0 +1,9 @@
+services:
+    kasimi.mchaticonsmenu.listener:
+        class: kasimi\mchaticonsmenu\event\listener
+        arguments:
+            - '@user'
+            - '@template'
+            - '@?dmzx.mchat.settings'
+        tags:
+            - { name: event.listener }

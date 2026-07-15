@@ -1,0 +1,7 @@
+<div class="notice text-muted">
+	<small>{{ postrow.TOPIC_MOVED_MESSAGE }} {{ postrow.TOPIC_MOVED_FROM }} {{ postrow.TOPIC_MOVED_BY }} {{ postrow.TOPIC_MOVED_ON }} {{ postrow.TOPIC_MOVED_UNDO }}</small>
+	{% if postrow.TOPIC_MOVED_REASON %}
+		<br>
+		<small><strong>{{ lang('REASON') ~ lang('COLON') }}</strong> <em>{{ postrow.TOPIC_MOVED_REASON }}</em></small>
+	{% endif %}
+</div>

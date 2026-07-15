@@ -1,0 +1,30 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.replytounhide.bbcodes_parser:
+        class: sitesplat\replytounhide\core\bbcodes_parser
+        arguments:
+            - '@user'
+            - '@auth'
+
+    sitesplat.replytounhide.acp_manager:
+        class: sitesplat\replytounhide\core\acp_manager
+        arguments:
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+
+    sitesplat.replytounhide.listener:
+        class: sitesplat\replytounhide\event\listener
+        arguments:
+            - '@sitesplat.replytounhide.bbcodes_parser'
+            - '@controller.helper'
+            - '@template'
+            - '@auth'
+            - '@user'
+            - '@dbal.conn'
+            - '%sitesplat.replytounhide.table.likes%'
+            - ext/sitesplat/replytounhide/
+        tags:
+            - { name: event.listener }

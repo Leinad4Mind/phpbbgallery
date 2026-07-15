@@ -1,0 +1,99 @@
+{% if S_SMARTFEED_FEED_TYPE eq 1 %}
+<rdf:RDF
+	xmlns="http://purl.org/rss/1.0/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel rdf:about="{{ U_SMARTFEED_FEED_ID }}">
+		<title><![CDATA[{{ SMARTFEED_FEED_TITLE }}]]></title>
+		<description>{{ SMARTFEED_FEED_DESCRIPTION }}</description>
+		<link>{{ U_SMARTFEED_FEED_LINK }}</link>
+		<image rdf:resource="{{ U_SMARTFEED_FEED_IMAGE }}"></image>
+		<dc:date>{{ SMARTFEED_FEED_UPDATED }}</dc:date>
+		<items>
+			<rdf:Seq>
+{% for item in loops.items %}
+				<rdf:li rdf:resource="{{ item.U_ID }}"></rdf:li>
+{% endfor %}
+			</rdf:Seq>
+		</items>
+	</channel>
+	<image rdf:about="{{ U_SMARTFEED_FEED_IMAGE }}">
+		<title><![CDATA[{{ SMARTFEED_FEED_TITLE }}]]></title>
+		<link>{{ U_SMARTFEED_FEED_LINK }}</link>
+		<url>{{ U_SMARTFEED_FEED_IMAGE }}</url>
+	</image>
+{% for item in loops.items %}
+	<item rdf:about="{{ item.U_ID }}">
+		<dc:format>text/html</dc:format>
+		<dc:date>{{ item.PUBLISHED }}</dc:date>
+		<dc:source>{{ item.U_SOURCE }}</dc:source>
+		<dc:creator><![CDATA[{{ item.CREATOR }}]]></dc:creator>
+		<title><![CDATA[{{ item.L_TITLE }}]]></title>
+		<link>{{ item.U_ID }}</link>
+		<description><![CDATA[{{ item.L_SUMMARY }}]]></description>
+	</item>
+{% endfor %}
+</rdf:RDF>
+{% elseif S_SMARTFEED_FEED_TYPE eq 2 %}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title><![CDATA[{{ SMARTFEED_FEED_TITLE }}]]></title>
+		<description><![CDATA[{{ SMARTFEED_FEED_DESCRIPTION }}]]></description>
+		<link>{{ U_SMARTFEED_FEED_ID }}</link>
+		<lastBuildDate>{{ SMARTFEED_FEED_PUBDATE }}</lastBuildDate>
+		<generator>{{ U_SMARTFEED_FEED_GENERATOR }}</generator>
+		<atom:link href="{{ U_SMARTFEED_FEED_URL }}" rel="self" type="application/rss+xml" ></atom:link>
+		{% if S_SMARTFEED_SHOW_WEBMASTER %}
+		<webMaster>{{ U_SMARTFEED_WEBMASTER }}</webMaster>
+		{% endif %}
+		<image>
+			<url><![CDATA[{{ U_SMARTFEED_FEED_IMAGE  }}]]></url>
+			<title><![CDATA[{{ SMARTFEED_FEED_TITLE }}]]></title>
+			<link><![CDATA[{{ U_SMARTFEED_FEED_ID  }}]]></link>
+		</image>
+		<language>{{ SMARTFEED_FEED_LANGUAGE }}</language>
+		<pubDate>{{ SMARTFEED_FEED_PUBDATE }}</pubDate>
+		<ttl>{{ SMARTFEED_FEED_TTL }}</ttl>
+{% for item in loops.items %}
+		<item>
+			<title><![CDATA[{{ item.L_TITLE }}]]></title>
+			<link>{{ item.U_ID }}</link>
+			<description><![CDATA[{{ item.L_SUMMARY }}]]></description>
+			<author>{{ item.CREATOR }}</author>
+			<category><![CDATA[{{ item.L_CATEGORY }}]]></category>
+			{% if item.S_COMMENTS %}
+			<comments>{{ item.U_ID }}</comments>
+			{% endif %}
+			<pubDate>{{ item.PUBDATE }}</pubDate>
+			<guid>{{ item.U_ID }}</guid>
+		</item>
+{% endfor %}
+	</channel>
+</rss>
+{% else %}
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ SMARTFEED_FEED_LANGUAGE }}">
+	<title><![CDATA[{{ SMARTFEED_FEED_TITLE }}]]></title>
+	<subtitle><![CDATA[{{ SMARTFEED_FEED_DESCRIPTION }}]]></subtitle>
+	<id>{{ U_SMARTFEED_FEED_ID }}</id>
+	<link type="application/atom+xml" href="{{ U_SMARTFEED_FEED_LINK }}"></link>
+	<updated>{{ SMARTFEED_FEED_UPDATED }}</updated>
+	<generator uri="{{ U_SMARTFEED_FEED_PAGE_URL }}" version="{{ SMARTFEED_FEED_VERSION }}">{{ U_SMARTFEED_FEED_GENERATOR }}</generator>
+{% for item in loops.items %}
+	<entry>
+		<title><![CDATA[{{ item.L_TITLE }}]]></title>
+		<link rel="alternate" type="text/html" href="{{ item.U_ID }}"></link>
+		<published>{{ item.PUBLISHED }}</published>
+		<updated>{{ item.UPDATED }}</updated>
+		<id>{{ item.U_ID }}</id>
+		<author>
+			<name><![CDATA[{{ item.L_NAME }}]]></name>
+			<email><![CDATA[{{ item.L_EMAIL }}]]></email>
+		</author>
+		<category term="{{ item.L_CATEGORY }}"></category>
+		<content type="html"><![CDATA[{{ item.L_CONTENT }}]]></content>
+		<summary type="html"><![CDATA[{{ item.L_SUMMARY }}]]></summary>
+	</entry>
+{% endfor %}
+</feed>
+{% endif %}

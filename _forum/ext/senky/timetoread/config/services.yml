@@ -1,0 +1,8 @@
+services:
+    senky.timetoread.listener:
+        class: senky\timetoread\event\main_listener
+        arguments:
+            - '@user'
+            - '%tables.posts%'
+        tags:
+            - { name: event.listener }

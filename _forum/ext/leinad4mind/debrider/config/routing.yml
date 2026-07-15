@@ -1,0 +1,3 @@
+debrider_convert_route:
+  path: /debrider/convert
+  defaults: { _controller: leinad4mind.debrider.controller:handle, name: "convert" }

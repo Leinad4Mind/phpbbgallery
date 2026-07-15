@@ -1,0 +1,11 @@
+{% if S_TOPIC_LINK %}
+<div class="control-group">
+	<label class="control-label" for="tlink">{{ lang('TOPIC_LINK') ~ lang('COLON') }}</label>
+	<div class="row">
+		<div class="col-xs-12 col-lg-8">
+			<input type="text" class="form-control input-sm" name="tlink" id="tlink" size="100" maxlength="250" value="{{ TOPIC_LINK }}">
+		</div>
+	</div>
+</div>
+<hr class="dashed">
+{% endif %}

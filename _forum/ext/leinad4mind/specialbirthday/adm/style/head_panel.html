@@ -1,0 +1,21 @@
+{% include 'overall_header.html' %}
+{% INCLUDECSS '@' ~ NAMESPACE ~ '/admin_forms.css' %}
+
+<a name="maincontent"></a>
+
+{% if S_BACK %}
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+	<br>
+{% endif %}
+
+<div class="head-panel">
+	<div class="head-title">{{ HEAD_TITLE }}</div>
+	<br>
+</div>
+
+{% if S_ERROR %}
+	<div class="head-panel-error">
+		<div class="head-title">{{ ERROR_TITLE }}</div>
+		<div class="head-description">{{ ERROR_DESCRIPTION }}</div>
+	</div>
+{% endif %}

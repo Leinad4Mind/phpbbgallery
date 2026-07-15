@@ -1,0 +1,30 @@
+{
+    "name": "senky/extnews",
+    "type": "phpbb-extension",
+    "description": "Adds a list of the most recently updated extensions from the CDB.",
+    "version": "1.0.0",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Jakub Senko",
+            "email": "jakubsenko@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "composer/installers": "~1.0.0",
+        "duzun/hquery": "^2.2",
+        "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+    },
+    "extra": {
+        "display-name": "Extension News",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/extension_news",
+            "filename": "version_check"
+        }
+    }
+}

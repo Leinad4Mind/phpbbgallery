@@ -1,0 +1,5 @@
+{% if MCHAT_PAGE and MCHAT_PAGE != 'archive' and S_MCHAT_INFINITESCROLL_INCLUDE %}
+	{% INCLUDECSS '@kasimi_mchatinfinitescroll/mchat.infinitescroll.css' %}
+	{% INCLUDEJS '@kasimi_mchatinfinitescroll/js/jquery.waypoints.min.js' %}
+	{% INCLUDEJS '@kasimi_mchatinfinitescroll/js/mchat.infinitescroll.min.js' %}
+{% endif %}

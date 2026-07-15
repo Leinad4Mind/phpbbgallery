@@ -1,0 +1,5 @@
+<ul class="mchat-rooms-users">
+	{% for user in loops.mchatroom_users %}
+		<li data-mchatrooms-user="{{ user.USER_ID }}" data-mchatrooms-room="{{ user.ROOM_ID }}">{{ user.USER_NAME }}{% if user.IS_KICKABLE %} <a href="#" data-mchatrooms-action="kick" title="{{ lang('MCHATROOMS_KICK') }}"><i class="icon fa fa-times-circle fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_KICK') }}</span></a>{% endif %}</li>
+	{% endfor %}
+</ul>

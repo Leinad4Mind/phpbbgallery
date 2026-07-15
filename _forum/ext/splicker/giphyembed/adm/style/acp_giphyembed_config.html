@@ -1,0 +1,51 @@
+{% INCLUDE 'overall_header.html' %}
+<h1>{L_ACP_GE_TITLE}</h1>
+<p>{L_ACP_GE_TITLE_SUB}</p>
+<form id="acp_giphyembed_config" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{L_ACP_GE_DISPLAY_TITLE}:</legend>
+                <dl>
+            <dt><label for="giphyembed_enable">{L_ACP_GE_ENABLE}:</label><br /><span>{L_ACP_GE_ENABLE_TEXT}</span></dt>
+                <dd>
+                    <label><input type="radio" class="radio" name="giphyembed_enable" value="1"<!-- IF GE_ENABLED --> id="giphyembed_enable" checked="checked"<!-- ENDIF --> /> {L_ACP_YES} </label>
+                    <label><input type="radio" class="radio" name="giphyembed_enable" value="0"<!-- IF not GE_ENABLED --> id="giphyembed_enable" checked="checked"<!-- ENDIF --> /> {L_ACP_NO} </label>
+				</dd>                
+                </dl>
+                <dl>
+			<dt><label for="giphyembed_apikey">{L_ACP_GE_API}:</label><br /><span>{L_ACP_GE_API_TEXT}</span></dt>
+				<dd>
+                	<input id="giphyembed_apikey" type="text" size="40" maxlength="255" name="giphyembed_apikey" value="{GE_APIKEY}">
+                </dd>                
+                </dl>                
+                <dl>
+			<dt><label for="giphyembed_rating">{L_ACP_GE_RATING}:</label><br /><span>{L_ACP_GE_RATING_TEXT}</span></dt>
+                <dd>
+                    <select name="giphyembed_rating">
+                        <option value="g" <!-- IF GE_RATING eq 'g' -->selected="selected"<!-- ENDIF -->>{L_ACP_GE_AG_G}</option>
+                        <option value="pg" <!-- IF GE_RATING eq 'pg' -->selected="selected"<!-- ENDIF -->>{L_ACP_GE_AG_PG}</option>
+                        <option value="pg-13" <!-- IF GE_RATING eq 'pg-13' -->selected="selected"<!-- ENDIF -->>{L_ACP_GE_AG_PGT}</option>
+                        <option value="r" <!-- IF GE_RATING eq 'r' -->selected="selected"<!-- ENDIF -->>{L_ACP_GE_AG_R}</option>
+                    </select>
+				</dd>
+                </dl>                
+                <dl>
+            <dt><label for="giphyembed_scroll">{L_ACP_GE_SCROLL}:</label><br /><span>{L_ACP_GE_SCROLL_TEXT}</span></dt>
+                <dd>
+                    <label><input type="radio" class="radio" name="giphyembed_scroll" value="1"<!-- IF GE_SCROLL --> id="giphyembed_scroll" checked="checked"<!-- ENDIF --> /> {L_ACP_YES} </label>
+                    <label><input type="radio" class="radio" name="giphyembed_scroll" value="0"<!-- IF not GE_SCROLL --> id="giphyembed_scroll" checked="checked"<!-- ENDIF --> /> {L_ACP_NO} </label>
+				</dd>                
+                </dl>               
+        </fieldset>
+        <p class="submit-buttons">
+			<input type="hidden" name="action" value="save" />
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+    <fieldset>
+        <legend>Copyright</legend>
+        <p>Extension designed and created by Splicker &copy; 2021 - <br>For support or custom modifications please visit the website at <a href="https://www.splickersnap.com" target="_blank">SplickerSnap.com</a></p>
+    </fieldset>
+</form>
+{% INCLUDE 'overall_footer.html' %}

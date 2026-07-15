@@ -1,0 +1,4 @@
+{% if block_topic_index.TOPIC_ICON_IMG %}
+	<div style="display: flex; flex-direction: row;">
+		<div style="align-self: center; margin-right: 5px; width: {{ block_topic_index.TOPIC_ICON_WIDTH }}px; height: {{ block_topic_index.TOPIC_ICON_HEIGHT }}px; background-image: url({{ T_ICONS_PATH ~ block_topic_index.TOPIC_ICON_IMG }}); background-repeat: no-repeat; background-size: contain;" title="{{ block_topic_index.TOPIC_FOLDER_IMG_ALT|escape }}"></div>
+{% endif %}

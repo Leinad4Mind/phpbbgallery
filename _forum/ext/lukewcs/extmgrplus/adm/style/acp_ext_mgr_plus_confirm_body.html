@@ -1,0 +1,48 @@
+{#
+*
+* Extension Manager Plus. An extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2022, LukeWCS, https://www.wcsaga.org
+* @license GNU General Public License, version 2 (GPL-2.0-only)
+*
+* Note: This extension is 100% genuine handcraft and consists of selected
+*       natural raw materials. There was no AI involved in making it.
+*
+#}
+
+{% import '@lukewcs_extmgrplus/acp_ext_mgr_plus_macros.html' as common %}
+
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('EXTENSIONS_ADMIN') }}</h1>
+
+<p>{{ lang('EXTENSIONS_EXPLAIN') }}</p>
+
+<p>{{ lang('EXTENSION_' ~ EXTMGRPLUS_ACTION_MODE ~ '_EXPLAIN') }}</p>
+
+<form id="confirm" method="post" action="{{ S_CONFIRM_ACTION }}">
+	<fieldset>
+		<h2>{{ MESSAGE_TITLE }}</h2>
+
+		<p>{{ MESSAGE_TEXT }}</p>
+
+		{% if EXTMGRPLUS_SELF_DISABLE %}
+			<p>{{ lang('EXTMGRPLUS_MSG_SELF_DISABLE') }}</p>
+		{% endif %}
+
+		{{ S_HIDDEN_FIELDS }}
+
+		<fieldset class="submit-buttons">
+			<input type="submit" name="confirm" value="{{ lang('YES') }}" class="button1">&nbsp;
+			<input type="submit" name="cancel" value="{{ lang('NO') }}" class="button2">
+		</fieldset>
+	</fieldset>
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{{ common.footer(EXTMGRPLUS_METADATA) }}
+
+{% INCLUDE 'overall_footer.html' %}
+
+{% INCLUDECSS '@lukewcs_extmgrplus/acp_ext_mgr_plus.css' %}

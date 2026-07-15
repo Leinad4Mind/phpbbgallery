@@ -1,0 +1,22 @@
+/**
+ *
+ * @package phpBB Extension - mChat Icons Menu
+ * @copyright (c) 2016 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
+
+.dropdown-container-mchat-message-icons .dropdown {
+	top: -1px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.dropdown-container-mchat-message-icons .arrow::after,
+.dropdown-container-mchat-message-icons .arrow::before {
+	top: 17px;
+}
+
+.dropdown-container-mchat-message-icons .arrow::after {
+	border-left-color: #fafafa;
+}

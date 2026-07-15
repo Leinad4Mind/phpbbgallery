@@ -1,0 +1,7 @@
+{% if (MCHAT_CUSTOM_HEIGHT or MCHAT_INDEX_HEIGHT) and MCHAT_PAGE != 'archive' %}
+<style>
+#mchat-messages {
+	height: {{ MCHAT_PAGE == 'custom' ? MCHAT_CUSTOM_HEIGHT : MCHAT_INDEX_HEIGHT }}px;
+}
+</style>
+{% endif %}

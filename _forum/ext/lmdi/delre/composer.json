@@ -1,0 +1,38 @@
+{
+    "name": "lmdi/delre",
+    "type": "phpbb-extension",
+    "description": "Deletes the 'Re:' prefix in subject lines",
+    "homepage": "http://www.insecte.org/ext/readme.txt",
+    "version": "1.0.7",
+    "time": "2016-7-22",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Pierre Duhem",
+            "email": "pierre@duhem.com",
+            "homepage": "http://www.insecte.org/ext/readme.txt",
+            "role": "Extension Developer"
+        },
+        {
+            "name": "kasimi",
+            "homepage": "https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1330603",
+            "role": "Solution for managing the quick reply editor"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "composer/installers": "~1.0",
+        "phpbb/phpbb": ">=3.1.0"
+    },
+    "extra": {
+        "display-name": "LMDI Delete Re:",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/delre",
+            "filename": "version_check"
+        }
+    }
+}

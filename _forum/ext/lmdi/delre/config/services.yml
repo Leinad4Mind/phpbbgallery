@@ -1,0 +1,7 @@
+services:
+    lmdi.delre.listener:
+        class: lmdi\delre\event\listener
+        arguments:
+            - '@template'
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,10 @@
+services:
+    sitesplat.bbbreadcrumbs.listener:
+        class: sitesplat\bbbreadcrumbs\event\main_listener
+        arguments:
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

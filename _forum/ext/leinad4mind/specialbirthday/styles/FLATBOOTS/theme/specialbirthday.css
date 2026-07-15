@@ -1,0 +1,14 @@
+/**
+* specialbirthday.css
+**/
+
+input[type="number"] {
+	min-width: 70px;
+}
+.d-flex {
+	display: -ms-flexbox!important;
+	display: flex!important;
+}
+.mr-1 {
+	margin-right: 1rem;
+}

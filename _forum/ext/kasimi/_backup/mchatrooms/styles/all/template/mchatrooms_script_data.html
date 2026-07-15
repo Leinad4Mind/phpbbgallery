@@ -1,0 +1,53 @@
+<script>
+	jQuery(function($) {
+
+		"use strict";
+
+		if (typeof mChat !== 'object') {
+			if (typeof console !== 'undefined' && console.log) {
+				console.log('mChat was not initialized, cannot initialize mChat Rooms');
+			}
+
+			return;
+		}
+
+		mChat.rooms = {
+			lang: {
+				{% if MCHATROOMS_ALLOW_CREATE or MCHATROOMS_ALLOW_CREATE_PRIVATE %}
+				create		: '{{ lang('MCHATROOMS_CREATE') | escape('js') }}',
+				{% endif %}
+				{% if MCHATROOMS_ALLOW_INVITE %}
+				invite		: '{{ lang('MCHATROOMS_INVITE') | escape('js') }}',
+				{% endif %}
+				{% if MCHATROOMS_ALLOW_EDIT_OWN or MCHATROOMS_ALLOW_EDIT_ALL %}
+				edit		: '{{ lang('MCHATROOMS_EDIT') | escape('js') }}',
+				{% endif %}
+				{% if MCHATROOMS_ALLOW_DEL_OWN or MCHATROOMS_ALLOW_DEL_ALL %}
+				del			: '{{ lang('MCHATROOMS_DEL') | escape('js') }}',
+				{% endif %}
+				protect		: '{{ lang('MCHATROOMS_PROTECTED') | escape('js') }}',
+				joining		: '{{ lang('MCHATROOMS_JOINING') | escape('js') }}',
+				empty		: '{{ lang('MCHATROOMS_EMPTY') | escape('js') }}',
+				yes			: '{{ lang('YES') | escape('js') }}',
+				no 			: '{{ lang('NO') | escape('js') }}',
+				type		: {
+					0		: '{{ lang('MCHATROOMS_PUBLIC') | escape('js') }}',
+					1		: '{{ lang('MCHATROOMS_PROTECTED') | escape('js') }}',
+					2		: '{{ lang('MCHATROOMS_PRIVATE') | escape('js') }}'
+				}
+			},
+			masterKey		: {{ MCHATROOMS_MASTERKEY ? 'true' : 'false' }},
+			canSort			: {{ MCHATROOMS_ALLOW_SORT ? 'true' : 'false' }},
+			lobbyId			: {{ MCHATROOMS_LOBBY_ID }},
+			inviteId		: {{ MCHATROOMS_INVITE_ID }},
+			inviteRoomId	: {{ MCHATROOMS_INVITE_ROOM_ID }},
+			latestIds		: JSON.parse('{{ MCHATROOMS_LATEST_MESSAGE_IDS }}')
+		};
+
+		$.extend(mChat.actionUrls, {
+			{% for mchatroomsurl in loops.mchatroomsurl %}
+				room_{{ mchatroomsurl.ACTION }}: '{{ mchatroomsurl.URL }}'{{ not loop.last ? ',' }}
+			{% endfor %}
+		});
+	});
+</script>

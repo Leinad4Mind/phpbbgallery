@@ -1,0 +1,24 @@
+services:
+    kasimi.mchatinfinitescroll.controller.main:
+        class: kasimi\mchatinfinitescroll\controller\main
+        arguments:
+            - '@user'
+            - '@auth'
+            - '@request'
+            - '@template'
+            - '@dispatcher'
+            - '@ext.manager'
+            - '@?dmzx.mchat.core'
+            - '@?dmzx.mchat.functions'
+            - '@?dmzx.mchat.settings'
+            - '@?kasimi.mchatrooms.rooms'
+
+    kasimi.mchatinfinitescroll.listener:
+        class: kasimi\mchatinfinitescroll\event\listener
+        arguments:
+            - '@template'
+            - '@controller.helper'
+            - '@dispatcher'
+            - '@kasimi.mchatinfinitescroll.controller.main'
+        tags:
+            - { name: event.listener }

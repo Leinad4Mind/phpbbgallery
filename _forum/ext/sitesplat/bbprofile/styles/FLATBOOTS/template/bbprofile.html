@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+<div class="row">
+<div class="col-sm-12">
+ <div class="panel-body">
+ <div class="side-segment">
+		<h3 style="border-bottom: 4px solid #e5e5e5;">{{ lang('COMPLETE_PROFILE_TITLE') }}</h3>
+	 </div>
+  <p>{{ APPEAL_TEXT }}</p>
+
+    <div class="resultbar progress progress-fix clearfix">
+      <div class="progress-bar progress-bar-striped pollbar3 progress-bar-info" role="progressbar" aria-valuenow="{{ COMPLETED_PERCENTAGE }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ COMPLETED_PERCENTAGE }}%;">
+        {{ L_COMPLETED_PERCENTAGE }}
+      </div>
+    </div>
+  <p><a class="btn btn btn-default" href="{{ APPEAL_BUTTON_URL }}"><i class="fa fa-{{ APPEAL_ICON }} fa-lg"></i>&nbsp;{{ APPEAL_BUTTON_LABEL }}</a></p>
+ </div>
+</div>
+
+</div>
+</div>
+<div class="space10"></div>	   

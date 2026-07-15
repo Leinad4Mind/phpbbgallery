@@ -1,0 +1,22 @@
+imports:
+    - { resource: alias.yml }
+    - { resource: userdetails_constants.yml }
+    - { resource: arraydata.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $root_path: '%core.root_path%'
+            $php_ext: '%core.php_ext%'
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/devspace/userdetails/adm/style/images'
+            $select_ary: '%select_ary%'
+            $constants: '%constants%'
+        public: true
+
+    devspace.userdetails.data.controller:
+        class: devspace\userdetails\controller\data_controller
+
+    devspace.userdetails.core.functions:
+        class: devspace\userdetails\core\functions

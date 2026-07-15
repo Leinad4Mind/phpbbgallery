@@ -1,0 +1,2 @@
+parameters:
+    forumhulp.checkmail.tables.checkmail: %core.table_prefix%checkmail

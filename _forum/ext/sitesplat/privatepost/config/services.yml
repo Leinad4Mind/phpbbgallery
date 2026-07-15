@@ -1,0 +1,12 @@
+services:
+    sitesplat.privatepost.listener:
+        class: sitesplat\privatepost\event\main_listener
+        arguments:
+            - '@request'
+            - '@template'
+            - '@auth'
+            - '@dbal.conn'
+            - '@user'
+            - '%tables.posts%'
+        tags:
+            - { name: event.listener }

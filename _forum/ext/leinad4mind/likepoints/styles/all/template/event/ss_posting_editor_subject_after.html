@@ -1,0 +1,28 @@
+{% if S_ENABLE_CONTRIBUTORS %}
+  {% INCLUDECSS '@leinad4mind_likepoints/lptags.min.css' %}
+  <script>
+    var lptagsNemtionsUrl = './likepoints/auto_complete';
+    var lptagsLangPlaceholder = '{{ lang('ENTER_TAGS_PLACEHOLDER') }}';
+  </script>
+
+  {% if not INCLUDED_LPTAGS_TEXTCOMPLETEJS %}
+	{% if not BBTAGS_SHOW_FIELD %}
+		{% INCLUDEJS '@leinad4mind_likepoints/js/jquery.tag-editor.min.js' %}
+		{% INCLUDEJS '@leinad4mind_likepoints/js/jquery.caret.min.js' %}
+		{% INCLUDEJS '@leinad4mind_likepoints/js/jquery-ui.min.js' %}
+		{% INCLUDECSS '@leinad4mind_likepoints/jquery.tag-editor.min.css' %}
+	{% endif %}
+	{% INCLUDEJS '@leinad4mind_likepoints/js/lptags.min.js' %}
+
+	{% DEFINE INCLUDED_LPTAGS_TEXTCOMPLETEJS = true %}
+  {% endif %}
+
+  <div class="control-group contributors-box">
+    <label class="control-label" for="contributors">{{ lang('CONTRIBUTOR_LABEL') }}{{ lang('COLON') }}</label>
+    <div class="row">
+      <div class="col-xs-12 col-lg-8">
+        <input type="text" class="form-control input-sm" autocomplete="off" name="contributors" id="contributors" maxlength="255" value="{{ CONTRIBUTOR }}" placeholder="{{ lang('ENTER_TAGS_PLACEHOLDER') }}">
+      </div>
+    </div>
+  </div>
+{% endif %}

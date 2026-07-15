@@ -1,0 +1,34 @@
+{
+    "name": "marttiphpbb/postingtemplate",
+    "type": "phpbb-extension",
+    "description": "Posting Template Extension for phpBB 3.1",
+    "homepage": "https://github.com/marttiphpbb/phpbb-ext-postingtemplate",
+    "version": "1.0.0",
+    "time": "2015-12-30",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "martti",
+            "email": "info@martti.be",
+            "homepage": "https://github.com/marttiphpbb/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Posting Template",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0-RC2,<3.2.*@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/posting_template_4",
+            "filename": "version_check"
+        }
+    }
+}

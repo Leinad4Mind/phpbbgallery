@@ -1,0 +1,32 @@
+{
+    "name": "leinad4mind/specialtopicmove",
+    "type": "phpbb-extension",
+    "description": "This extension allows to specify a reason when moving a topic as well as moving the topic back to its original forum with a single click.",
+    "homepage": "https://leinad4mind.top/forum",
+    "version": "2.1.0",
+    "time": "2019-08-25",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+			"name": "Leinad4Mind",
+			"homepage": "https://leinad4mind.top/forum",
+			"role": "Extension Developer"
+		}
+    ],
+    "require": {
+        "php": ">=5.4.7",
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "display-name": "Special Topic Move",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.2"
+        },
+        "version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/specialtopicmove",
+            "filename": "version_check.json",
+            "ssl": true
+        }
+    }
+}

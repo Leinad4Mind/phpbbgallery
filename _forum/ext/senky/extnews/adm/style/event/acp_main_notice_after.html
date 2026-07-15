@@ -1,0 +1,16 @@
+{% if extnews %}
+	{% INCLUDECSS '@senky_extnews/styles.css' %}
+
+	<h2>{{ lang('EXT_NEWS') }}</h2>
+	<ul class="extnews">
+		{% for ext in extnews %}
+			<li>
+				<a class="img-container" href="{{ ext.URL | e('html_attr') }}" target="_blank" title="{{ ext.DESC | e('html_attr') }}"><img src="{{ ext.IMG }}"></a>
+				<div>
+					<a href="{{ ext.URL | e('html_attr') }}" target="_blank" title="{{ ext.DESC | e('html_attr') }}">{{ ext.NAME }}</a>
+					<div class="author">{{ lang('POST_BY_AUTHOR') }} <a href="{{ ext.AUTHOR_URL }}" target="_blank"{% if ext.AUTHOR_COLOUR %} style="color: #{{ ext.AUTHOR_COLOUR }}"{% endif %}>{{ ext.AUTHOR }}</a></div>
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}

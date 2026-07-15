@@ -1,0 +1,27 @@
+{% if REGISTRATION_AGE_REG_DISPLAY %}
+	{% INCLUDECSS '@leinad4mind_specialbirthday/specialbirthday.css' %}
+	<div class="col-md-6">
+		<div class="form-group"> 
+			<div class="control-group">
+				<label class="control-label" for="birthdate">{{ lang('ENTER_BIRTHDATE') }}{{ lang('COLON') }}{{ REGISTRATION_AGE_REQUIRED ? ' *' }}</label>
+				<div class="controls controls-row">
+					<div class="clearfix">
+						<div class="d-flex col-md-3">
+							<label for="registration_age_day" class="control-label mr-1">{{ lang('DAY') }}</label>
+							<input class="form-control" type="number" name="registration_age_day" id="registration_age_day" size="25" maxlength="2" value="{{ REGISTRATION_AGE_DAY }}" placeholder="{{ lang('DAY') }}" min="1" max="31" />
+						</div>
+						<div class="d-flex col-md-3">
+							<label for="registration_age_month" class="control-label mr-1">{{ lang('MONTH') }}</label>
+							<input class="form-control" type="number" name="registration_age_month" id="registration_age_month" size="25" maxlength="2" value="{{ REGISTRATION_AGE_MONTH }}" placeholder="{{ lang('MONTH') }}" min="1" max="12" />
+							
+						</div>
+						<div class="d-flex col-md-3">
+							<label for="registration_age_year" class="control-label mr-1">{{ lang('YEAR') }}</label>
+							<input class="form-control" type="number" name="registration_age_year" id="registration_age_year" size="25" maxlength="4" value="{{ REGISTRATION_AGE_YEAR }}" placeholder="{{ lang('YEAR') }}" min="{{ YEAR_START }}" max="{{ YEAR_END }}" step="-1" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif  %}

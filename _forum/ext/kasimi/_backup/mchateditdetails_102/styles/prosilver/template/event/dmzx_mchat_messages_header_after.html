@@ -1,0 +1,13 @@
+<!-- IF mchatrow.MCHAT_EDIT_DETAILS -->
+	&bull; <span class="mchat-last-edit" title="{L_MCHAT_EDIT_LAST_EDIT}{L_COLON} {mchatrow.MCHAT_EDIT_TIME_TITLE}">&#x270D;</span>
+	<div class="hidden">
+		<div class="inner">
+			<dl class="details">
+				<dt>{L_MCHAT_EDIT_MESSAGE_AUTHOR}{L_COLON}</dt> <dd>{mchatrow.MCHAT_USERNAME_FULL}</dd>
+				<dt>{L_MCHAT_EDIT_NAME}{L_COLON}</dt> <dd>{mchatrow.MCHAT_EDIT_USER}</dd>
+				<!-- IF mchatrow.MCHAT_EDIT_IP --><dt>{L_MCHAT_EDIT_IP}{L_COLON}</dt> <dd><a href="{mchatrow.MCHAT_U_EDIT_IP}" title="{mchatrow.MCHAT_EDIT_WHOIS_USER}" onclick="popup(this.href, 750, 500); return false;">{mchatrow.MCHAT_EDIT_IP}</a></dd><!-- ENDIF -->
+				<dt>{L_MCHAT_EDIT_TIME}{L_COLON}</dt> <dd>{mchatrow.MCHAT_EDIT_TIME}</dd>
+			</dl>
+		</div>
+	</div>
+<!-- ENDIF -->

@@ -1,0 +1,54 @@
+services:
+    leinad4mind.specialbirthday.listener:
+        class: leinad4mind\specialbirthday\event\listener
+        arguments:
+            - '@config'
+            - '@user'
+            - '@language'
+            - '@template'
+            - '@request'
+            - '@auth'
+            - '@log'
+            - '@leinad4mind.specialbirthday.core.friends'
+            - '%rpconstants%'
+        tags:
+            - { name: event.listener }
+
+    leinad4mind.specialbirthday.admin.controller:
+        class: leinad4mind\specialbirthday\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@log'
+            - '@leinad4mind.specialbirthday.core.functions'
+            - '%rpconstants%'
+
+    leinad4mind.specialbirthday.data.controller:
+        class: leinad4mind\specialbirthday\controller\data_controller
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@pagination'
+            - '@language'
+            - '%core.root_path%ext/leinad4mind/specialbirthday/'
+            - '@leinad4mind.specialbirthday.core.functions'
+
+    leinad4mind.specialbirthday.core.functions:
+        class: leinad4mind\specialbirthday\core\functions
+        arguments:
+            - '@ext.manager'
+
+    leinad4mind.specialbirthday.core.friends:
+        class: leinad4mind\specialbirthday\core\friends
+        arguments:
+            - '@dbal.conn'
+
+parameters:
+    rpconstants:
+        form_key: 'specialbirthday'
+        century: 100

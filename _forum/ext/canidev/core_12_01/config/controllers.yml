@@ -1,5 +1,0 @@
-services:
-    canidev.core.controller.acp:
-        class: canidev\core\controller\acp
-        calls:
-            - [set_basic_services, ['@service_container']]

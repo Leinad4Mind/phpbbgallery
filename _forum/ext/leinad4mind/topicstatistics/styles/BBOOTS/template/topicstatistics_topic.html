@@ -1,0 +1,54 @@
+{% if TOPIC_STATISTICS and (TOPIC_STATISTICS_VISITS or TOPIC_STATISTICS_BOOKMARK or TOPIC_STATISTICS_FOLLOWERS) %}
+  {% if (TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark | length) 
+    or(TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers | length) %}
+    {% INCLUDEJS '@leinad4mind_topicstatistics/js/topicstatistics.js' %}
+  {% endif %}
+  <div class="clearfix">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+
+        {% if TOPIC_STATISTICS_FOLLOWERS %}
+          <div class="{% if loops.topic_followers|length %}btn {% endif %}pull-right col-md-4 text-center topic-statistics-followers" style="padding:8px 12px;color:#7f7f7f;border:0">
+            {% if loops.topic_followers | length %}
+              <a id="afollowers" title="{{ lang('SH_STATISTICS') }}" href="#">
+              {% endif %}
+              <i class="icon fa fa-users fa-fw" aria-hidden="true"></i>{{ lang('FOLLOWERS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_FOLLOWERS_NUM }}{% if TOPIC_STATISTICS_FOLLOWERS_NUM_MAX %}+{% endif %}</strong>
+              {% if loops.topic_followers | length %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if TOPIC_STATISTICS_BOOKMARK %}
+          <div class="{% if loops.topic_bookmark|length %}btn {% endif %}pull-right col-md-4 text-center topic-statistics-bookmarks" style="padding:8px 12px;color:#7f7f7f;border:0">
+            {% if loops.topic_bookmark | length %}
+              <a id="abookmark" title="{{ lang('SH_STATISTICS') }}" href="#">
+              {% endif %}
+              <i class="icon fa fa-star fa-fw" aria-hidden="true"></i>{{ lang('BOOKMARKS') ~ lang('COLON')}}&nbsp;<strong>{{ TOPIC_STATISTICS_BOOKMARK_NUM }}{% if TOPIC_STATISTICS_BOOKMARK_NUM_MAX %}+{% endif %}</strong>
+              {% if loops.topic_bookmark | length %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if TOPIC_STATISTICS_VISITS %}
+          <div class="pull-right col-md-4 text-center" style="padding:8px 12px;color:#7f7f7f;border:0">
+            <i class="icon fa fa-eye fa-fw" aria-hidden="true"></i>{{ lang('VIEWS') ~ lang('COLON') }}&nbsp;<strong>{{ TOPIC_STATISTICS_VISITS_NUM }}</strong>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if TOPIC_STATISTICS_BOOKMARK and loops.topic_bookmark | length %}
+        <div id="divbookmark" class="col-xs-12 text-right hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
+          <strong><em>{{ lang('BOOKMARKS') ~ lang('COLON') }}</em></strong>&nbsp;{% for topic_bookmark in loops.topic_bookmark %}{% if topic_bookmark.AVATAR %}{{ topic_bookmark.AVATAR }}&nbsp;{% endif %}{{ topic_bookmark.USER }}{% if not topic_bookmark.S_LAST_ROW %},&nbsp;{% endif %}{% endfor %}
+        </div>
+      {% endif %}
+
+      {% if TOPIC_STATISTICS_FOLLOWERS and loops.topic_followers | length %}
+        <div id="divfollowers" class="col-xs-12 text-right hidden" style="float: {{ S_CONTENT_FLOW_END }}; clear: both;">
+          <strong><em>{{ lang('FOLLOWERS') ~ lang('COLON') }}</em></strong>&nbsp;{% for topic_followers in loops.topic_followers %}{% if topic_followers.AVATAR %}{{ topic_followers.AVATAR }}&nbsp;{% endif %}{{ topic_followers.USER }}{% if not topic_followers.S_LAST_ROW %},&nbsp;{% endif %}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

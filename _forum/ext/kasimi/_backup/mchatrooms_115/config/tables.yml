@@ -1,0 +1,4 @@
+parameters:
+    kasimi.mchatrooms.table.mchat_rooms: %core.table_prefix%mchat_rooms
+    kasimi.mchatrooms.table.mchat_rooms_users: %core.table_prefix%mchat_rooms_users
+    kasimi.mchatrooms.table.mchat_rooms_sessions: %core.table_prefix%mchat_rooms_sessions

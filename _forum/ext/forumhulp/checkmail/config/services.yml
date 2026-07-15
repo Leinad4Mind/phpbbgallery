@@ -1,0 +1,3 @@
+imports:
+    - { resource: cron.yml }
+    - { resource: tables.yml }

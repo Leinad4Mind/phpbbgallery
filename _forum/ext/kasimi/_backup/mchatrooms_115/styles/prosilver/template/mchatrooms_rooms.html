@@ -1,0 +1,22 @@
+{% EVENT dmzx_mchat_messages_define_icons %}
+
+{% for mchatroom in loops.mchatroom %}
+	<li id="mchat-room-{{ mchatroom.ID }}" class="row stat-block mchat-room{{ mchatroom.IS_PROTECTED ? ' protected' : '' }}{{ mchatroom.IS_PRIVATE ? ' private' : '' }}{{ mchatroom.IS_ENTERED ? ' entered' : '' }}{{ mchatroom.IS_LOBBY ? ' lobby' : '' }}{{ mchatroom.IS_ACTIVE ? ' active' : '' }}" title="{{ lang('MCHATROOMS_ENTER') }}" data-mchatrooms-action="enter" data-room-id="{{ mchatroom.ID }}" data-room-name="{{ mchatroom.NAME }}" data-room-type="{{ mchatroom.TYPE }}" data-room-owner="{{ mchatroom.OWNER }}"{{ MCHATROOMS_ALLOW_INVITE and mchatroom.OWNER_INVITE ? ' data-owner-invite' : '' }}{{ MCHATROOMS_ALLOW_INVITE and mchatroom.ALLOW_INVITE ? ' data-allow-invite' : '' }}>
+		<div class="mchat-room-wrapper">
+			{% if not S_IS_BOT %}
+				<ul class="mchat-buttons mchat-rooms-buttons {{ definition.MCHAT_USE_WHITE_MESSAGE_ICONS ? 'mchat-icons-white' : 'mchat-icons-black' }}">
+					{% if mchatroom.ALLOW_LEAVE %}<li class="mchat-rooms-button-leave{{ not mchatroom.IS_ENTERED ? ' hidden' : '' }}"><a href="#" title="{{ lang('MCHATROOMS_LEAVE') }}" data-mchatrooms-action="leave"><i class="{{ IS_PHPBB31 ? 'mchat-icon mchat-rooms-icon mchat-rooms-icon-leave' : IS_PHPBB32 ? 'fa fa-sign-out' : '' }}"><span>{{ lang('MCHATROOMS_LEAVE') }}</span></i></a></li>{% endif %}
+					<li class="mchat-rooms-button-sound-enabled{{ not mchatroom.IS_ENTERED ? ' hidden' : '' }}"><a href="#" title="{{ lang('MCHATROOMS_SOUND_ENABLED') }}" data-mchatrooms-action="mute"><i class="{{ IS_PHPBB31 ? 'mchat-icon mchat-rooms-icon mchat-rooms-icon-bell' : IS_PHPBB32 ? 'fa fa-bell-o' : '' }}"><span>{{ lang('MCHATROOMS_SOUND_ENABLED') }}</span></i></a></li>
+					<li class="mchat-rooms-button-sound-disabled hidden"><a href="#" title="{{ lang('MCHATROOMS_SOUND_DISABLED') }}" data-mchatrooms-action="unmute"><i class="{{ IS_PHPBB31 ? 'mchat-icon mchat-rooms-icon mchat-rooms-icon-no-bell' : IS_PHPBB32 ? 'fa fa-bell-slash-o' : '' }}"><span>{{ lang('MCHATROOMS_SOUND_DISABLED') }}</span></i></a></li>
+					{% if mchatroom.ALLOW_EDIT %}<li><a href="#" title="{{ lang('MCHATROOMS_EDIT') }}" data-mchatrooms-action="edit"><i class="{{ IS_PHPBB31 ? 'mchat-icon mchat-icon-edit' : IS_PHPBB32 ? 'fa fa-pencil' : '' }}"><span>{{ lang('MCHATROOMS_EDIT') }}</span></i></a></li>{% endif %}
+					{% if mchatroom.ALLOW_DEL %}<li><a href="#" title="{{ lang('MCHATROOMS_DEL') }}" data-mchatrooms-action="del"><i class="{{ IS_PHPBB31 ? 'mchat-icon mchat-icon-delete' : IS_PHPBB32 ? 'fa fa-trash-o' : '' }}"><span>{{ lang('MCHATROOMS_DEL') }}</span></i></a></li>{% endif %}
+				</ul>
+			{% endif %}
+			<div class="mchat-room-name">
+				<span>{{ mchatroom.NAME }}</span>
+				<span class="mchat-rooms-loading hidden" title="{{ lang('MCHATROOMS_LOADING') }}"></span>
+				<strong class="mchat-rooms-new-messages badge hidden" title="{{ lang('MCHATROOMS_NEW_MESSAGES') }}">0</strong>
+			</div>
+		</div>
+	</li>
+{% endfor %}

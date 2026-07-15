@@ -1,0 +1,23 @@
+services:
+
+    kasimi.mchatstickyfooter.listener:
+        class: kasimi\mchatstickyfooter\event\listener
+        arguments:
+            - '@user'
+            - '@auth'
+            - '@template'
+            - '@dispatcher'
+            - '@controller.helper'
+            - '@?dmzx.mchat.core'
+            - '@?dmzx.mchat.functions'
+            - '@?dmzx.mchat.settings'
+        tags:
+            - { name: event.listener }
+
+    kasimi.mchatstickyfooter.resize:
+        class: kasimi\mchatstickyfooter\controller\resize
+        arguments:
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '%tables.users%'

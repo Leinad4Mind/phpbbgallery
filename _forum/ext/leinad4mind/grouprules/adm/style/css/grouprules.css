@@ -1,0 +1,44 @@
+/**
+ *
+ * @package phpBB Extension - Group Rules
+ * @copyright (c) 2017-2018 Leinad4Mind - https://leinad4mind.top/forum
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
+
+.grouprules-rule {
+	display: inline-flex;
+	flex-direction: row;
+}
+
+.grouprules-rule label,
+.grouprules-rule .actions {
+	font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.grouprules-when {
+	flex: 1 0 auto;
+}
+
+.grouprules-then-action {
+	margin-bottom: 5px;
+}
+
+.grouprules-row:first-of-type .grouprules-row-actions .move-up,
+.grouprules-row:last-of-type .grouprules-row-actions .move-down,
+.grouprules-then-action:first-of-type .grouprules-then-actions .move-up,
+.grouprules-then-action:last-of-type .grouprules-then-actions .move-down,
+.grouprules-then-action:first-of-type:last-of-type .grouprules-then-action-delete {
+	cursor: not-allowed;
+	filter: grayscale(1);
+}
+
+.grouprules-then-action img {
+	vertical-align: text-bottom;
+	width: 14px;
+}
+
+.row3 {
+	text-align: center;
+}

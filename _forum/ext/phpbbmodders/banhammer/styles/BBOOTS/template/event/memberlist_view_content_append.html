@@ -1,0 +1,121 @@
+<!-- IF BH_MESSAGE -->
+<div class="alert alert-warning">
+	<div class="inner bh">{BH_MESSAGE}</div>
+</div>
+<!-- ELSEIF S_SHOW_BH -->
+<!-- Modal -->
+<div class="modal fade" id="bh-options" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{L_BH_THIS_USER}</h4>
+      </div>
+      <div class="modal-body">
+        <form id="bh-form" method="post" action="{U_HAMMERBAN}">
+			<fieldset>
+                <div class="control-group"> 
+					<label class="control-label" for="ban_email">{L_BH_BAN_EMAIL}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="ban_email" id="ban_email1" value="1" <!-- IF BH_BAN_EMAIL -->checked="checked"<!-- ENDIF -->/><label for="ban_email1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="ban_email" id="ban_email0" value="0" <!-- IF not BH_BAN_EMAIL -->checked="checked"<!-- ENDIF -->/><label for="ban_email0">{L_NO}</label></div>
+				  </div> 
+				</div>
+			
+				<div class="control-group"> 
+					<label class="control-label" for="ban_ip">{L_BH_BAN_IP}{L_COLON}</label><span class="help-block">{L_BH_BAN_IP_EXPLAIN}</span>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="ban_ip" id="ban_ip1" value="1" <!-- IF BH_BAN_IP -->checked="checked"<!-- ENDIF -->/><label for="ban_ip1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="ban_ip" id="ban_ip0" value="0" <!-- IF not BH_BAN_IP -->checked="checked"<!-- ENDIF -->/><label for="ban_ip0">{L_NO}</label></div>
+				  </div> 
+				</div>
+
+				<div class="control-group"> 
+					<label class="control-label" for="ban_length">{L_BAN_LENGTH}{L_COLON}</label><span class="help-block">{L_BAN_LENGTH_EXPLAIN}</span>
+					<div class="controls controls-row"> 
+				         <div class="selector">
+							<select class="selectpicker" data-container="body" data-width="100%" name="ban_time" id="ban_time" tabindex="4">{BAN_TIME}</select>
+						</div>   
+					</div>
+				</div>
+
+				<div class="control-group"> 
+					<label class="control-label" for="del_posts">{L_BH_DEL_POSTS}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="del_posts" id="del_posts1" value="1" <!-- IF BH_DEL_POSTS -->checked="checked"<!-- ENDIF -->/><label for="del_posts1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="del_posts" id="del_posts0" value="0" <!-- IF not BH_DEL_POSTS -->checked="checked"<!-- ENDIF -->/><label for="del_posts0">{L_NO}</label></div>
+				  </div> 
+				</div>
+			
+		        <div class="control-group"> 
+					<label class="control-label" for="del_privmsgs">{L_BH_DEL_PRIVMSGS}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="del_privmsgs" id="del_privmsgs1" value="1" <!-- IF BH_DEL_PRIVMSGS -->checked="checked"<!-- ENDIF -->/><label for="del_privmsgs1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="del_privmsgs" id="del_privmsgs0" value="0" <!-- IF not BH_DEL_PRIVMSGS -->checked="checked"<!-- ENDIF -->/><label for="del_privmsgs0">{L_NO}</label></div>
+				  </div> 
+				</div>
+		
+			    <div class="control-group"> 
+					<label class="control-label" for="del_avatar">{L_BH_DEL_AVATAR}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="del_avatar" id="del_avatar1" value="1" <!-- IF BH_DEL_AVATAR -->checked="checked"<!-- ENDIF -->/><label for="del_avatar1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="del_avatar" id="del_avatar0" value="0" <!-- IF not BH_DEL_AVATAR -->checked="checked"<!-- ENDIF -->/><label for="del_avatar0">{L_NO}</label></div>
+				  </div> 
+				</div>
+			
+				<div class="control-group"> 
+					<label class="control-label" for="del_signature">{L_BH_DEL_SIGNATURE}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="del_signature" id="del_signature1" value="1" <!-- IF BH_DEL_SIGNATURE -->checked="checked"<!-- ENDIF -->/><label for="del_signature1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="del_signature" id="del_signature0" value="0" <!-- IF not BH_DEL_SIGNATURE -->checked="checked"<!-- ENDIF -->/><label for="del_signature0">{L_NO}</label></div>
+				  </div> 
+				</div>
+
+				<div class="control-group"> 
+					<label class="control-label" for="del_profile">{L_BH_DEL_PROFILE}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="del_profile" id="del_profile1" value="1" <!-- IF BH_DEL_PROFILE -->checked="checked"<!-- ENDIF -->/><label for="del_profile1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="del_profile" id="del_profile0" value="0" <!-- IF not BH_DEL_PROFILE -->checked="checked"<!-- ENDIF -->/><label for="del_profile0">{L_NO}</label></div>
+				  </div> 
+				</div>
+				<!-- IF L_BH_MOVE_GROUP -->
+				<div class="control-group"> 
+					<label class="control-label" for="move_group">{L_BH_MOVE_GROUP}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="move_group" id="move_group1" value="1" checked="checked"/><label for="move_group1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="move_group" id="move_group0" value="0" /><label for="move_group0">{L_NO}</label></div>
+				  </div> 
+				</div>
+				<!-- ENDIF -->
+				<!-- IF S_BH_SFS -->
+				<div class="control-group"> 
+					<label class="control-label" for="bh_reason">{L_SFS_REPORT}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				    <div class="radio"><input type="radio" name="sfs_report" id="sfs_report1" value="1" checked="checked"/><label for="sfs_report1">{L_YES}</label></div>   
+                    <div class="radio"><input type="radio" name="sfs_report" id="sfs_report0" value="0" /><label for="sfs_report0">{L_NO}</label></div>
+				  </div> 
+				</div>
+				<!-- ENDIF -->
+				<div class="control-group"> 
+					<label class="control-label" for="bh_reason">{L_BH_BAN_REASON}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				     <input name="bh_reason" type="text" class="form-control" maxlength="255" />
+				  </div> 
+				</div>
+				
+				<div class="control-group"> 
+					<label class="control-label" for="bh_reason_user">{L_BH_BAN_GIVE_REASON}{L_COLON}</label>
+				<div class="controls controls-row"> 
+				     <input name="bh_reason_user" type="text" class="form-control" maxlength="255" />
+				  </div> 
+				</div>
+				
+				<div class="space10"></div>
+				<button class="btn btn-danger btn-block" type="submit" id="submit" name="submit" value="{L_SUBMIT}">{L_SUBMIT}</button>
+			</fieldset>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ENDIF -->

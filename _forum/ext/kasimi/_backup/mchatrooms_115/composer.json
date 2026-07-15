@@ -1,0 +1,33 @@
+{
+	"name": "kasimi/mchatrooms",
+	"type": "phpbb-extension",
+	"description": "Adds rooms to mChat",
+	"homepage": "https://kasimi.net",
+	"version": "1.1.5",
+	"time": "2017-10-21",
+	"keywords": [],
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "kasimi",
+			"email": "mail@kasimi.net",
+			"homepage": "https://kasimi.net",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"extra": {
+		"display-name": "mChat Rooms Addon",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.8-RC1"
+		},
+		"version-check": {
+            "host": "kasimi.github.io",
+			"directory": "/phpbb_versions",
+			"filename": "mchatrooms_version.json",
+			"ssl": true
+        }
+	}
+}

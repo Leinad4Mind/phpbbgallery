@@ -1,0 +1,15 @@
+{% if S_FORM_CREATOR %}
+	{% INCLUDECSS '@leinad4mind_formcreator/formcreator_buttons.css' %}
+{% endif %}
+
+{% INCLUDECSS '@leinad4mind_formcreator/formcreator.css' %}
+{% INCLUDEJS '@leinad4mind_formcreator/forms/form_mod.js' %}
+
+{% if not S_FORCE_FORM %}
+	{% if MODE == 'post' %}
+		<div class="space10"></div>
+		<button type="button" class="btn btn-default" accesskey="f" name="useform" onclick="toggle_validation(); switch_mode(this);" title="{{ lang(S_SHOW_FORM ? 'OPEN_FORM_EXPLAIN' : 'OPEN_POST_EXPLAIN') }}">{{ lang(S_SHOW_FORM ? 'OPEN_POST' : 'OPEN_FORM') }}</button>
+	{% endif %}
+{% endif %}
+
+{% INCLUDE '@leinad4mind_formcreator/forms/form_creator.html' %}

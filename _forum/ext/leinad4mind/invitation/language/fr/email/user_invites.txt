@@ -1,0 +1,22 @@
+{USERNAME} vous invite à venir vous enregistrer sur le site "{SITENAME}".
+Vous pouvez cliquer sur le lien ci-dessous pour vous enregistrer.
+
+{U_ACTIVATE}
+
+Cette invitation expirera le {INVITE_TIME_END}. 
+Quand la date d’expiration sera dépassée, les invitations deviendront invalides !
+
+Si votre souhait est de décliner ces invitations, vous pouvez simplement ignorer cet e-mail.
+Vous pouvez aussi cliquer sur le lien suivant pour les supprimer :
+{U_DEACTIVATE}
+
+{USERNAME} vous joint ce message :
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{MESSAGE}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Si le message ci-dessus vous semble offensant ou s’il contient des propos injurieux, veuillez contacter l’administrateur du site via l'adresse e-mail suivante : {BOARD_CONTACT}
+Joignez ce présent message à votre courrier de doléance (en vous assurant de bien inclure l’en-tête de l’e-mail).
+A noter que l’adresse de retour de courrier se règle automatiquement sur l’adresse e-mail de {USERNAME} de sorte qu’il recevra bien votre réponse.
+--------------------------------------
+
+Lien vers la page Web : {U_BOARD}

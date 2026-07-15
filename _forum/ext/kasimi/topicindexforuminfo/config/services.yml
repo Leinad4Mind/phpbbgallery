@@ -1,0 +1,8 @@
+services:
+    kasimi.topicindexforuminfo.listener:
+        class: kasimi\topicindexforuminfo\event\main_listener
+        arguments:
+            - '@cache'
+            - '@path_helper'
+        tags:
+            - { name: event.listener }

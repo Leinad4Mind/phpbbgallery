@@ -1,0 +1,7 @@
+U hebt een verzoek om extra uitnodigingen te ontvangen van gebruiker {USERNAME}.
+Het verzoek {INVITE_NUMBER} uitnodiging(s).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Webpagina link: {U_BOARD}
+Contact: {BOARD_CONTACT}

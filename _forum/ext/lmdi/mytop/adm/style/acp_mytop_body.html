@@ -1,0 +1,41 @@
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+<h1>{L_ACP_MYTOP_TITLE}</h1>
+<p>{L_ACP_MYTOP_CONFIG}</p>
+
+<!-- IF S_CONFIG_PAGE -->
+<form id="acp_autolinks" method="post" action="{R_ACTION}">
+<fieldset>
+	<dl>
+		<dt><label>{L_MYTOP_POS}{L_COLON}</label><br />
+		<span>{L_MYTOP_POS_EXPLAIN}</span></dt>
+		<dd>
+		<label><input type="radio" id="mytop_up" name="mytop_up"
+		value="0" class="radio" {MYTOP_UP}/> {L_ACP_MYTOP_TOP}</label>
+		<label><input type="radio" id="mytop_up" name="mytop_up"
+		value="1" class="radio" {MYTOP_DOWN}/> {L_ACP_MYTOP_BOTTOM}</label>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label>{L_MYPOST_NO}{L_COLON}</label><br />
+		<span>{L_MYPOST_NO_EXPLAIN}</span></dt>
+		<dd>
+		<label><input type="radio" id="myposts_no" name="myposts_no"
+		value="1" class="radio" {MYPOSTS_YES}/> {L_YES}</label>
+		<label><input type="radio" id="myposts_no" name="myposts_no"
+		value="0" class="radio" {MYPOSTS_NO}/> {L_NO}</label>
+		</dd>
+	</dl>
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit"
+		value="{L_SUBMIT}" />&nbsp;
+	</p>
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+<!-- ENDIF -->
+
+
+<!-- INCLUDE overall_footer.html -->
+

@@ -1,0 +1,13 @@
+{% if not postrow.S_FIRST_POST and postrow.S_AUTH and postrow.S_ANSWER %}
+<div class="btn-group btn-group-post btn-group-sm" role="group">
+	{% if postrow.POST_ID == postrow.ANSWER_POST_ID %}
+	<a href="{{ postrow.U_UNMARK_ANSWER }}" title="{{ lang('UNMARK_ANSWER') }}" class="btn btn-danger btn-sm">
+		<i class="fa fa-times"></i>
+	</a>
+	{% else %}
+	<a href="{{ postrow.U_MARK_ANSWER }}" title="{{ lang('MARK_ANSWER') }}" class="btn btn-success btn-sm">
+		<i class="fa fa-check"></i>
+	</a>
+	{% endif %}
+</div>
+{% endif %}

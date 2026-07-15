@@ -1,0 +1,11 @@
+/**
+* acpversioncheck.css
+**/
+.toggle {
+	background: transparent none repeat-x 0 0;
+}
+
+.errorbox a:link,
+.errorbox a:visited {
+	text-decoration: none;
+}

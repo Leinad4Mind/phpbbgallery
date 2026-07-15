@@ -1,0 +1,18 @@
+imports:
+    - { resource: alias.yml }
+
+services:
+    _defaults:
+        autowire: true
+        bind:
+            $root_path: '%core.root_path%'
+            $php_ext: '%core.php_ext%'
+            $tables: '%tables%'
+            $ext_images_path: '%core.root_path%ext/devspace/activesessions/adm/style/images'
+        public: true			
+
+    devspace.activesessions.admin.controller:
+        class: devspace\activesessions\controller\admin_controller
+
+    devspace.activesessions.core.functions:
+        class: devspace\activesessions\core\functions

@@ -1,0 +1,164 @@
+<div class="panel cp-mini mchat-rooms-body">
+	<div class="mchat-rooms-header">
+		<h3>{{ lang('MCHATROOMS_HEADER') }}</h3>
+		{% if MCHATROOMS_ALLOW_CREATE or MCHATROOMS_ALLOW_CREATE_PRIVATE or MCHATROOMS_ALLOW_INVITE %}
+		<ul class="mchat-rooms-header-menu">
+			{% if MCHATROOMS_ALLOW_CREATE or MCHATROOMS_ALLOW_CREATE_PRIVATE %}
+				<li><a href="#" title="{{ lang('MCHATROOMS_CREATE') }}" data-mchatrooms-action="create">{{ lang('MCHATROOMS_CREATE') }}</a></li>
+			{% endif %}
+			{% if MCHATROOMS_ALLOW_INVITE %}
+				<li><a href="#" title="{{ lang('MCHATROOMS_INVITE') }}" data-mchatrooms-action="invite">{{ lang('MCHATROOMS_INVITE') }}</a></li>
+			{% endif %}
+		</ul>
+		{% endif %}
+	</div>
+	<ul id="mchat-rooms" class="topiclist">
+		{% INCLUDE '@kasimi_mchatrooms/mchatrooms_rooms.html' %}
+	</ul>
+</div>
+
+<div id="mchatrooms-confirm" class="hidden">
+	<h3>{{ lang('CONFIRM') }}</h3>
+	<div class="mchat-confirm-fields">
+		{% if MCHATROOMS_ALLOW_PROTECTED %}
+			<div class="mchatrooms-confirm-enter">
+				<fieldset>
+					<legend></legend>
+					<dl>
+						<dt><label for="room_enter_password">{{ lang('MCHATROOMS_PASSWORD') ~ lang('COLON') }}</label></dt>
+						<dd>
+							<input type="password" title="{{ lang('MCHATROOMS_PASSWORD') }}" class="hidden">
+							<input type="password" name="room_enter_password" id="room_enter_password" size="25" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD') }}" autocomplete="off" data-mchatrooms-reset="val" required="required" />
+						</dd>
+					</dl>
+				</fieldset>
+			</div>
+		{% endif %}
+
+		{% if MCHATROOMS_ALLOW_CREATE or MCHATROOMS_ALLOW_CREATE_PRIVATE %}
+			<div class="mchatrooms-confirm-create">
+				<fieldset>
+					<dl>
+						<dt><label for="room_create_name">{{ lang('MCHATROOMS_NAME') ~ lang('COLON') }}</label></dt>
+						<dd><input type="text" name="room_create_name" id="room_create_name" size="25" maxlength="64" class="inputbox autowidth" title="{{ lang('MCHATROOMS_NAME') }}" data-mchatrooms-reset="val" required="required" /></dd>
+					</dl>
+					<dl>
+						<dt><label>{{ lang('MCHATROOMS_TYPE') ~ lang('COLON') }}</label></dt>
+						<dd>
+							{% if MCHATROOMS_ALLOW_CREATE_PRIVATE %}
+							<div class="mchatrooms-type">
+								<label><input type="radio" class="radio" name="room_type" value="2" title="{{ lang('MCHATROOMS_PRIVATE') }}" id="room_type_private"{{ MCHATROOMS_ALLOW_CREATE_PRIVATE ? ' data-mchatrooms-reset="check" checked="checked"' : '' }} /> <span class="mchatrooms-icon mchatrooms-private-icon" title="{{ lang('MCHATROOMS_PRIVATE') }}"></span><span>{{ lang('MCHATROOMS_PRIVATE') }}</span></label>
+								<div class="mchatrooms-type-description">{{ lang('MCHATROOMS_PRIVATE_EXPLAIN') }}</div>
+							</div>
+							{% endif %}
+							{% if MCHATROOMS_ALLOW_PROTECTED %}
+							<div class="mchatrooms-type">
+								<label><input type="radio" class="radio" name="room_type" value="1" title="{{ lang('MCHATROOMS_PROTECTED') }}" id="room_type_protected"{{ not MCHATROOMS_ALLOW_CREATE_PRIVATE ? ' data-mchatrooms-reset="check" checked="checked"' : '' }} /> <span class="mchatrooms-icon mchatrooms-protected-icon" title="{{ lang('MCHATROOMS_PROTECTED') }}"></span><span>{{ lang('MCHATROOMS_PROTECTED') }}</span></label>
+								<div class="mchatrooms-type-description">
+									<input type="password" name="room_create_password" id="room_create_password" size="19" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD') }}" autocomplete="off" placeholder="{{ lang('MCHATROOMS_PASSWORD') }}" data-mchatrooms-reset="val" />
+								</div>
+								<div class="mchatrooms-type-description">
+									<input type="password" name="room_create_password_confirm" id="room_create_password_confirm" size="19" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD_CONFIRM') }}" autocomplete="off" placeholder="{{ lang('MCHATROOMS_PASSWORD_CONFIRM') }}" data-mchatrooms-reset="val" />
+								</div>
+							</div>
+							{% endif %}
+							<div class="mchatrooms-type">
+								<label><input type="radio" class="radio" name="room_type" value="0" title="{{ lang('MCHATROOMS_PUBLIC') }}" id="room_type_public"{{ not MCHATROOMS_ALLOW_PROTECTED and not MCHATROOMS_ALLOW_CREATE_PRIVATE ? ' data-mchatrooms-reset="check" checked="checked"' : '' }} /> <span>{{ lang('MCHATROOMS_PUBLIC') }}</span></label>
+							</div>
+						</dd>
+					</dl>
+					{% if MCHATROOMS_ALLOW_INVITE %}
+					<dl>
+						<dt><label for="room_owner_invite_create">{{ lang('MCHATROOMS_OWNER_INVITE') ~ lang('COLON') }}</label><br /><span>{{ lang('MCHATROOMS_OWNER_INVITE_EXPLAIN') }}</span></dt>
+						<dd>
+							<label><input type="radio" name="room_owner_invite" value="1" id="room_owner_invite_create" /> {{ lang('YES') }}</label>
+							<label><input type="radio" name="room_owner_invite" value="0" checked="checked" data-mchatrooms-reset="check" /> {{ lang('NO') }}</label>
+						</dd>
+					</dl>
+					{% endif %}
+				</fieldset>
+			</div>
+		{% endif %}
+
+		{% if MCHATROOMS_ALLOW_INVITE %}
+			<div class="mchatrooms-confirm-invite">
+				<fieldset>
+					<dl>
+						<dt><label for="room_invite_room">{{ lang('MCHATROOMS_INVITE_ROOM') ~ lang('COLON') }}</label></dt>
+						<dd><select id="room_invite_room" required="required"></select></dd>
+					</dl>
+					<dl>
+						<dt><label for="room_invite_usernames">{{ lang('MCHATROOMS_INVITE_USERNAMES') ~ lang('COLON') }}</label><br /><span>{{ lang('MCHATROOMS_INVITE_USERNAMES_EXPLAIN') }}</span><br /><span>{{ lang('MCHATROOMS_INVITE_EXPIRE', MCHATROOMS_INVITE_EXPIRE_MINUTES) }}</span></dt>
+						<dd><textarea name="room_invite_usernames" id="room_invite_usernames" rows="4" data-mchatrooms-reset="val" required="required"></textarea></dd>
+					</dl>
+					<dl>
+						<dt><label for="room_invite_message">{{ lang('MCHATROOMS_INVITE_MESSAGE') ~ lang('COLON') }}</label></dt>
+						<dd><input type="text" name="room_invite_message" id="room_invite_message" size="42" maxlength="255" class="inputbox autowidth" data-mchatrooms-reset="val" /></dd>
+					</dl>
+				</fieldset>
+			</div>
+		{% endif %}
+
+		{% if MCHATROOMS_ALLOW_EDIT_OWN or MCHATROOMS_ALLOW_EDIT_ALL %}
+			<div class="mchatrooms-confirm-edit">
+				<fieldset>
+					<dl>
+						<dt></dt>
+						<dd><span id="room_edit_type" title="{{ lang('MCHATROOMS_TYPE') }}"></span></dd>
+					</dl>
+					<dl>
+						<dt><label for="room_edit_name">{{ lang('MCHATROOMS_NAME') ~ lang('COLON') }}</label></dt>
+						<dd><input type="text" name="room_edit_name" id="room_edit_name" size="25" maxlength="64" class="inputbox autowidth" title="{{ lang('MCHATROOMS_NAME') }}" required="required" /></dd>
+					</dl>
+					<dl>
+						<dt><label for="room_edit_owner">{{ lang('MCHATROOMS_OWNER') ~ lang('COLON') }}</label><br /><span>{{ lang('MCHATROOMS_OWNER_EXPLAIN') }}</span></dt>
+						<dd><span id="room_edit_owner"></span></dd>
+					</dl>
+					{% if MCHATROOMS_ALLOW_PROTECTED %}
+					<div id="room-edit-password-container">
+						<dl>
+							<dt><label for="room_edit_new_password">{{ lang('MCHATROOMS_PASSWORD_NEW') ~ lang('COLON') }}</label><br /><span>{{ lang('MCHATROOMS_PASSWORD_NEW_EXPLAIN') }}</span></dt>
+							<dd><input type="password" name="room_edit_new_password" id="room_edit_new_password" size="25" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD_NEW') }}" autocomplete="off" data-mchatrooms-reset="val" /></dd>
+						</dl>
+						<dl>
+							<dt><label for="room_edit_new_password_confirm">{{ lang('MCHATROOMS_PASSWORD_NEW_CONFIRM') ~ lang('COLON') }}</label></dt>
+							<dd><input type="password" name="room_edit_new_password_confirm" id="room_edit_new_password_confirm" size="25" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD_NEW_CONFIRM') }}" autocomplete="off" data-mchatrooms-reset="val" /></dd>
+						</dl>
+						<dl id="room-edit-password">
+							<dt><label for="room_edit_password">{{ lang('MCHATROOMS_PASSWORD_CURRENT') ~ lang('COLON') }}</label></dt>
+							<dd><input type="password" name="room_edit_password" id="room_edit_password" size="25" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD_CURRENT') }}" autocomplete="off" data-mchatrooms-reset="val" required="required" /></dd>
+						</dl>
+					</div>
+					{% endif %}
+					{% if MCHATROOMS_ALLOW_INVITE %}
+					<dl id="room-owner-invite-container">
+						<dt><label for="room_owner_invite_edit_0">{{ lang('MCHATROOMS_OWNER_INVITE') ~ lang('COLON') }}</label><br /><span>{{ lang('MCHATROOMS_OWNER_INVITE_EXPLAIN') }}</span></dt>
+						<dd>
+							<label><input type="radio" name="room_owner_invite" value="1" id="room_owner_invite_edit_1" /> {{ lang('YES') }}</label>
+							<label><input type="radio" name="room_owner_invite" value="0" id="room_owner_invite_edit_0" checked="checked" /> {{ lang('NO') }}</label>
+						</dd>
+					</dl>
+					{% endif %}
+				</fieldset>
+			</div>
+		{% endif %}
+
+		{% if MCHATROOMS_ALLOW_DEL_OWN or MCHATROOMS_ALLOW_DEL_ALL %}
+			<div class="mchatrooms-confirm-delete">
+				<p>{{ lang('MCHATROOMS_DEL_CONFIRM') }}</p>
+				{% if MCHATROOMS_ALLOW_PROTECTED %}
+					<fieldset class="mchatrooms-password">
+						<dl>
+							<dt><label for="room_delete_password">{{ lang('MCHATROOMS_PASSWORD') ~ lang('COLON') }}</label></dt>
+							<dd><input type="password" name="room_delete_password" id="room_delete_password" size="25" class="inputbox autowidth" title="{{ lang('MCHATROOMS_PASSWORD') }}" autocomplete="off" data-mchatrooms-reset="val" required="required" /></dd>
+						</dl>
+					</fieldset>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+	<fieldset class="submit-buttons">
+		<input type="button" name="confirm" value="{{ lang('MCHAT_OK') }}" class="button2" />&nbsp;
+		<input type="button" name="cancel" value="{{ lang('CANCEL') }}" class="button2" />
+	</fieldset>
+</div>

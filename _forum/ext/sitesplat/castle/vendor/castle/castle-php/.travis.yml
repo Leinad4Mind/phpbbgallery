@@ -1,0 +1,16 @@
+language: php
+php:
+- 5.6
+before_script:
+- curl -s http://getcomposer.org/installer | php
+- php composer.phar install --dev --no-interaction
+script:
+- mkdir -p build/logs
+- php vendor/bin/phpunit -c phpunit.xml
+after_script:
+- php vendor/bin/coveralls -v
+notifications:
+  slack:
+    secure: d6VHA/1HeSMhxNJSKwm0SisupkIw+BP3y97IUp8wCdLaLO5y7fIRF7g35cZbbzMOTaFYUIXabfPuyzCTA1+1JvbgbJ8ykr2/g8LmThe5MXxLvMXtKH2A/qCmQ0TGZ7rMRxjAm14X28920n1vyc+bu5McMZsOnKnACz/SmTnrbKs=
+    on_success: change
+    on_failure: always

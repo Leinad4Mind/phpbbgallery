@@ -1,0 +1,58 @@
+<!-- IF S_JX_CAN_CHGPOSTTIME -->
+<form method="post" id="mcp_chgposter" action="{U_POST_ACTION}">
+		 <fieldset class="framed-ucp">
+		   <legend>{L_MOD_OPTIONS}</legend>
+		   
+		   
+		   <div class="form-group">
+    <div class="col-xs-10">
+        <div class="form-inline">
+					<span class="help-block">{L_JX_CHANGE_POST_TIME_DATE}</span>
+
+            <div class="form-group">
+                <input type="text" class="form-control" size="4" maxlength="4" name="jx_year" id="jx_year"value="{JX_POST_DATE_YEAR}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" size="2" maxlength="2" name="jx_month" id="jx_month" value="{JX_POST_DATE_MONTH}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" size="2" maxlength="2" name="jx_day" id="jx_day" value="{JX_POST_DATE_DAY}"/>
+            </div>
+	        </div>
+    </div>
+</div>
+		     <div class="form-group">
+    <div class="col-xs-10">
+        <div class="form-inline">
+            			<span class="help-block">{L_JX_CHANGE_POST_TIME_TIME}</span>
+
+            <div class="form-group">
+                <input type="text" class="form-control" size="2" maxlength="2" name="jx_hour" id="jx_hour" value="{JX_POST_TIME_HOUR}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" size="2" maxlength="2" name="jx_minute" id="jx_minute" value="{JX_POST_DATE_DAY}"/>
+            </div>
+        </div>
+    </div>
+</div>
+		 
+			<div class="space10"></div>
+
+	  <div class="form-group">
+    <div class="col-xs-10">
+       <span class="input-group-btn">	
+				<button class="btn btn-default" type="submit" name="action[chgposttime]" value="{L_SUBMIT}">{L_CONFIRM}</button>
+			</span>
+	 
+    </div>
+</div>
+		
+	{S_FORM_TOKEN}
+	</fieldset>
+	</form>
+			 
+	
+<!-- ENDIF -->
+<div class="space10"></div>
+		 <div class="space10"></div> 
+		

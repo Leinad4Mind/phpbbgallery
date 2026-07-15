@@ -1,0 +1,32 @@
+{
+	"name": "forumhulp/searchresults",
+	"type": "phpbb-extension",
+	"description": "Search Results logs the searchwords yur visitors searched for. It will totalize words and show you first and last time your visitor searched for the words. A cron job will maximize the words in the archive.",
+	"homepage": "http://forumhulp.com",
+	"version": "3.1.2",
+	"keywords": ["forumhulp", "phpbb", "extension", "add user", "pb"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "John Peskens",
+			"homepage": "http://forumhulp.com",
+			"email": "info@forumhulp.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"phpbb/phpbb": "3.1.*@dev"
+	},
+	"extra": {
+		"display-name": "Search Results",
+		"soft-require": {
+           "phpbb/phpbb": "3.1.*@dev"
+        },
+		"version-check": {
+			"host": "forumhulp.com",
+			"directory": "/ext",
+			"filename": "index.php?id=38"
+		}
+	}
+}

@@ -1,0 +1,8 @@
+{% if S_AUTO_ADVERTISE_PUBLIC_FEED %}
+<link rel="alternate" type="application/atom+xml" title="{{ lang('SMARTFEED_PUBLIC_ATOM_TITLE') }}" href="{{ U_SMARTFEED_URL_ATOM }}" />
+<link rel="alternate" type="application/rss+xml" title="{{ lang('SMARTFEED_PUBLIC_RSS_TITLE') }}" href="{{ U_SMARTFEED_URL_RSS }}" />
+{% endif %}
+{% if S_SHOW_TOPIC_FEED %}
+<link rel="alternate" type="application/atom+xml" title="{{ TOPIC_TITLE }} - {{ lang('SMARTFEED_ATOM_TOPIC_FEED') }}" href="{{ U_SMARTFEED_TOPIC_URL_ATOM }}" />
+<link rel="alternate" type="application/rss+xml" title="{{ TOPIC_TITLE }} - {{ lang('SMARTFEED_RSS_TOPIC_FEED') }}" href="{{ U_SMARTFEED_TOPIC_URL_RSS }}" />
+{% endif %}

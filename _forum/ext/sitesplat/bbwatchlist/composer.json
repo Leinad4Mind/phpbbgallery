@@ -1,0 +1,31 @@
+{
+    "name": "sitesplat/bbwatchlist",
+    "type": "phpbb-extension",
+    "description": "A simple and useful extension allows the user to watch and get notified about keywords in subjects and post content.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.1",
+	"keywords": ["sitesplat", "phpbb", "extension", "keywords", "search", "utility"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "display-name": "BBwatchlist",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbwatchlist.json",
+			"ssl": true
+		}
+    }
+}

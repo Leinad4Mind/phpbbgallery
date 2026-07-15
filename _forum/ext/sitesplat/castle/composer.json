@@ -1,0 +1,33 @@
+{
+    "name": "sitesplat/castle",
+    "type": "phpbb-extension",
+    "description": "Protect your users from stolen credentials. Track events in your phpbb forum. It analyzes device, location, and usage patterns to detect fraudulent activity and much much more to protect your users.",
+	"homepage": "http://sitesplat.com",
+    "version": "1.0.0",
+	"keywords": ["phpbb", "extension", "premium", "security", "SiteSplat"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4",
+        "castle/castle-php": "^1.6",
+        "firebase/php-jwt": "^5.0"
+    },
+    "extra": {
+        "display-name": "BBCastle",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbcastle.json",
+			"ssl": true
+		}
+    }
+}

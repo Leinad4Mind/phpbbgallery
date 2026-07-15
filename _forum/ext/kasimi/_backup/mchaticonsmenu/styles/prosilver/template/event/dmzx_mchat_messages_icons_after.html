@@ -1,0 +1,22 @@
+{% if definition.MCHAT_ICONS_MENU_HAS_ELEMENTS %}
+	{% if not definition.MCHAT_ICONS_MENU_INCLUDED %}
+		{% DEFINE MCHAT_ICONS_MENU_INCLUDED = true %}
+		<ul class="mchat-buttons mchat-buttons-wrapper mchat-buttons-wrapper-{{ MCHAT_ICONSMENU_ALWAYS ? 'always' : 'mobile' }}">
+			<li>
+				<div class="dropdown-container dropdown-left dropdown-container-mchat-message-icons">
+					<a href="#" class="dropdown-trigger" role="menuitem">
+						<i class="icon fa-ellipsis-v fa-fw" aria-hidden="true"></i><span class="mchat-message-icons-menu" title="{{ lang('QUICK_LINKS') }}">{{ lang('QUICK_LINKS') }}</span>
+					</a>
+					<div class="dropdown mchat-dropdown hidden">
+						<div class="dropdown-contents contact-icons">
+						{% include '@dmzx_mchat/mchat_messages_icons.html' %}
+	{% else %}
+						</div>
+						<div class="arrow"></div>
+					</div>
+				</div>
+			</li>
+		</ul>
+		{% DEFINE MCHAT_ICONS_MENU_INCLUDED = false %}
+	{% endif %}
+{% endif %}

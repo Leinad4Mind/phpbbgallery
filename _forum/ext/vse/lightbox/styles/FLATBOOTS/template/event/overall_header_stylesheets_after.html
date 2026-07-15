@@ -1,0 +1,12 @@
+{% if LIGHTBOX_RESIZE_HEIGHT || LIGHTBOX_RESIZE_WIDTH %}
+	<style>
+		@media (min-width: 900px) {
+			{% if S_LIGHTBOX_SIGNATURES %}.post-signature img.img-post.b-lazy,{% endif %}
+			.content img.img-post.b-lazy,
+			.attachbox img.img-post.b-lazy {
+				{{ LIGHTBOX_RESIZE_HEIGHT ? 'max-height: ' ~ LIGHTBOX_RESIZE_HEIGHT ~ 'px;' : '' }}
+				{{ LIGHTBOX_RESIZE_WIDTH ? 'max-width: ' ~ LIGHTBOX_RESIZE_WIDTH ~ 'px;' : '' }}
+			}
+		}
+	</style>
+{% endif %}

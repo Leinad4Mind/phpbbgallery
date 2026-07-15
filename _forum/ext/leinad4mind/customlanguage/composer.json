@@ -1,0 +1,37 @@
+{
+    "name": "leinad4mind/customlanguage",
+    "type": "phpbb-extension",
+    "description": "Adds custom parts to the languages of your board.",
+    "homepage": "https://leinad4mind.top/forum",
+    "version": "1.0.0",
+    "time": "2021-06-05",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "language",
+        "custom"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Leinad4Mind",
+            "homepage": "https://leinad4mind.top/forum",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "extra": {
+        "display-name": "Custom Language",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0"
+        },
+        "version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/customlanguage",
+            "filename": "version_check.json",
+            "ssl": true
+        }
+    }
+}

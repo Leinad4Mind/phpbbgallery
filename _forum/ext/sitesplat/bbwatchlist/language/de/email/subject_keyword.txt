@@ -1,0 +1,8 @@
+Subject: Gesuchtes Schlüsselwort im Themen-Betreff gefunden
+
+Hallo!
+
+Dein Schlüsselwort "{KEYWORD}" wurde in Betreff eines Themas gefunden. Schaue hier nach, um das Thema zu öffnen:
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}

@@ -1,0 +1,33 @@
+{
+	"name": "kasimi/mchatinfinitescroll",
+	"type": "phpbb-extension",
+	"description": "This add-on extension for mChat loads older messages when scrolling up/down the message history.",
+	"homepage": "https://kasimi.net",
+	"version": "1.1.0",
+	"time": "2018-11-26",
+	"keywords": [],
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "kasimi",
+			"email": "mail@kasimi.net",
+			"homepage": "https://kasimi.net",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.7"
+	},
+	"extra": {
+		"display-name": "mChat Infinite Scroll Addon",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		},
+		"version-check": {
+            "host": "kasimi.github.io",
+			"directory": "/phpbb_versions",
+			"filename": "mchatinfinitescroll_version.json",
+			"ssl": true
+        }
+	}
+}

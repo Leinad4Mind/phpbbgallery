@@ -1,0 +1,34 @@
+/**
+ * Style used only for introduciator_explain.php page.
+ *
+ * @package phpBB Extension - Introduciator Extension
+ * @author Feneck91 (Stéphane Château) feneck91@free.fr
+ * @copyright (c) 2019 Feneck91
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+.introduciator_explain {
+	color: orangered !important;
+	text-align: center;
+}
+
+.introduciator_disabled {
+	color: red !important;
+	text-align: center;
+}
+
+span.corners-top.corners-top-introduciator {
+	background-image: url("./images/corners_left_introduciator.png") ;
+}
+
+span.corners-top.corners-top-introduciator span {
+	background-image: url("./images/corners_right_introduciator.png");
+}
+
+span.corners-bottom.corners-bottom-introduciator {
+	background-image: url("./images/corners_left_introduciator.png");
+}
+
+span.corners-bottom.corners-bottom-introduciator span {
+	background-image: url("./images/corners_right_introduciator.png");
+}

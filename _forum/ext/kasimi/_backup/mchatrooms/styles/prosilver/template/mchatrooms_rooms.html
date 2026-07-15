@@ -1,0 +1,25 @@
+{% for mchatroom in loops.mchatroom %}
+	<li id="mchat-room-{{ mchatroom.ID }}" class="row stat-block mchat-room{{ mchatroom.IS_PROTECTED ? ' protected' }}{{ mchatroom.IS_PRIVATE ? ' private' }}{{ mchatroom.IS_ENTERED ? ' entered' }}{{ mchatroom.IS_LOBBY ? ' lobby' }}{{ mchatroom.IS_ACTIVE ? ' active' }}{{ MCHATROOMS_ALLOW_SORT ? ' sortable' }}" title="{{ lang('MCHATROOMS_ENTER') }}" data-mchatrooms-action="enter" data-room-id="{{ mchatroom.ID }}" data-room-name="{{ mchatroom.NAME }}" data-room-type="{{ mchatroom.TYPE }}" data-room-owner="{{ mchatroom.OWNER }}"{{ MCHATROOMS_ALLOW_INVITE and mchatroom.OWNER_INVITE ? ' data-owner-invite' }}{{ MCHATROOMS_ALLOW_INVITE and mchatroom.ALLOW_INVITE ? ' data-allow-invite' }}>
+		<div class="mchat-room-wrapper">
+			{% if not S_IS_BOT %}
+				<ul class="mchat-buttons mchat-rooms-buttons">
+					{% if mchatroom.ALLOW_LEAVE %}<li class="mchat-rooms-button-leave{{ not mchatroom.IS_ENTERED ? ' hidden' }}"><a href="#" title="{{ lang('MCHATROOMS_LEAVE') }}" data-mchatrooms-action="leave"><i class="icon fa fa-sign-out" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_LEAVE') }}</span></a></li>{% endif %}
+					<li class="mchat-rooms-button-sound-enabled{{ not mchatroom.IS_ENTERED ? ' hidden' }}"><a href="#" title="{{ lang('MCHATROOMS_SOUND_ENABLED') }}" data-mchatrooms-action="mute"><i class="icon fa fa-bell-o" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_SOUND_ENABLED') }}</span></a></li>
+					<li class="mchat-rooms-button-sound-disabled hidden"><a href="#" title="{{ lang('MCHATROOMS_SOUND_DISABLED') }}" data-mchatrooms-action="unmute"><i class="icon fa fa-bell-slash-o" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_SOUND_DISABLED') }}</span></a></li>
+					{% if mchatroom.ALLOW_EDIT %}<li><a href="#" title="{{ lang('MCHATROOMS_EDIT') }}" data-mchatrooms-action="edit"><i class="icon fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_EDIT') }}</span></a></li>{% endif %}
+					{% if mchatroom.ALLOW_DEL %}<li><a href="#" title="{{ lang('MCHATROOMS_DEL') }}" data-mchatrooms-action="del"><i class="icon fa fa-trash-o" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_DEL') }}</span></a></li>{% endif %}
+				</ul>
+			{% endif %}
+			<div class="mchat-room-name">
+				<span>{{ mchatroom.NAME }}</span>
+				{%- if mchatroom.IS_PROTECTED -%}
+					<span class="mchat-room-protected"><i class="icon fa fa-lock" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_PROTECTED') }}</span></span>
+				{%- elseif mchatroom.IS_PRIVATE -%}
+					<span class="mchat-room-private"><i class="icon fa fa-lock" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_PRIVATE') }}</span></span>
+				{%- endif -%}
+				<strong class="mchat-rooms-new-messages badge hidden" title="{{ lang('MCHATROOMS_NEW_MESSAGES') }}">0</strong>
+				<span class="mchat-rooms-loading hidden" title="{{ lang('MCHATROOMS_LOADING') }}"><i class="icon fa fa-refresh fa-spin" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHATROOMS_LOADING') }}</span></span>
+			</div>
+		</div>
+	</li>
+{% endfor %}

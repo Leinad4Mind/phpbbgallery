@@ -1,0 +1,49 @@
+language: php
+
+php:
+  - 7.3
+  - 7.2
+  - 7.1
+  - 7.0
+  - 5.6
+  - 5.5
+  - 5.4
+  - nightly
+  - hhvm
+
+matrix:
+    include:
+        - php: 5.3
+          dist: precise
+    fast_finish: true
+    allow_failures:
+        - php: nightly
+        - php: hhvm
+
+dist: trusty
+
+sudo: false
+
+cache:
+    directories:
+        - tests/data/
+        - $HOME/.composer/cache
+
+install:
+    # remove composer lock to allow installing env speciffic versions
+    - rm -f composer.lock
+    # flags to pass to install
+    - flags="--prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+    # install dependencies using system provided composer binary
+    - if php -r "die(+(version_compare(PHP_VERSION,'5.5')!=1));"; then composer install $flags; else composer dump-autoload; fi
+
+script: phpunit tests/
+
+deploy:
+  provider: npm
+  email: contact@duzun.me
+  api_key:
+    secure: UeTmKdjg0MEmy8iK0ZmlmNww+hytHQoEkh7uhssV2Pizq2sSEKki9m64v7xe35Kwk38TcbMvrZkwtim/ZnZt1JJ2LOw8Ogz88OVviqAfkHOe2VRH8SrP3NpRFGFWLZ0JmvKGkvCLiDkLHiz+vSegUXDPwyGdpS932lyxJ5U3ntE=
+  on:
+    tags: true
+    repo: hquery.php

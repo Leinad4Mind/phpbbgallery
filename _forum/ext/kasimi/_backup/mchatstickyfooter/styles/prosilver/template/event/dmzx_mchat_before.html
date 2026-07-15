@@ -1,0 +1,4 @@
+{% if MCHAT_IS_STICKY_FOOTER %}
+<div class="mchat-fixed-wrapper{{ S_MCHAT_HIDDEN ? ' mchat-fixed-wrapper-collapsed' }}"{% if MCHAT_STICKY_SHOW_USERS %} data-users="{{ MCHAT_STICKY_USERS }}"{% endif %}{% if U_MCHAT_STICKY_RESIZE %} data-resize-url="{{ U_MCHAT_STICKY_RESIZE }}" style="width:{{ MCHAT_STICKY_WIDTH }}px;height:{{ MCHAT_STICKY_HEIGHT }}px;"{% endif %}>
+	<div class="mchat-sticky-footer-resize"></div>
+{% endif %}

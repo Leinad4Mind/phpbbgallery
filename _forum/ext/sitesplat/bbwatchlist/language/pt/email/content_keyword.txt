@@ -1,0 +1,8 @@
+Assunto: Palavra-chave encontrada no conteúdo de uma mensagem
+
+Olá,
+
+a palavra-chave "{KEYWORD}" que segues foi encontrada no conteúdo de uma mensagem. Clica aqui para veres:
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}

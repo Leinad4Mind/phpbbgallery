@@ -1,0 +1,1 @@
+$('#quick-links').find('[href*="search_id=egosearch"]').parent('li').remove();

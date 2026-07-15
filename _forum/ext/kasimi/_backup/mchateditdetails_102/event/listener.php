@@ -1,0 +1,177 @@
+<?php
+
+/**
+ *
+ * @package phpBB Extension - mChat Edit Details
+ * @copyright (c) 2016 kasimi - https://kasimi.net
+ * @license proprietary
+ *
+ */
+
+namespace kasimi\mchateditdetails\event;
+
+use dmzx\mchat\core\functions;
+use dmzx\mchat\core\settings;
+use phpbb\auth\auth;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\user;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class listener implements EventSubscriberInterface
+{
+	/** @var user */
+	protected $user;
+
+	/** @var auth */
+	protected $auth;
+
+	/** @var db_interface */
+	protected $db;
+
+	/** @var helper */
+	protected $helper;
+
+	/** @var functions */
+	protected $functions;
+
+	/** @var settings */
+	protected $settings;
+
+	/** @var string */
+	protected $table_mchat_log = null;
+
+	/** @var bool */
+	private $user_has_u_mchat_ip = false;
+
+	/**
+	 * Constructor
+	 *
+	 * @param ContainerInterface	$container
+	 * @param user					$user
+	 * @param auth					$auth
+	 * @param db_interface			$db
+	 * @param helper				$helper
+	 * @param functions				$functions
+	 * @param settings				$settings
+	 */
+	public function __construct(
+		ContainerInterface $container,
+		user $user,
+		auth $auth,
+		db_interface $db,
+		helper $helper,
+		functions $functions = null,
+		settings $settings = null
+	)
+	{
+		$this->user			= $user;
+		$this->auth			= $auth;
+		$this->db			= $db;
+		$this->helper		= $helper;
+		$this->functions	= $functions;
+		$this->settings		= $settings;
+
+		if ($container->hasParameter('dmzx.mchat.table.mchat_log'))
+		{
+			$this->table_mchat_log = $container->getParameter('dmzx.mchat.table.mchat_log');
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	static public function getSubscribedEvents()
+	{
+		return array(
+			'dmzx.mchat.ucp_settings_modify'			=> 'add_language',
+			'dmzx.mchat.get_messages_modify_sql'		=> 'fetch_edit_time',
+			'dmzx.mchat.message_modify_template_data'	=> 'inject_edit_time',
+		);
+	}
+
+	/**
+	 * @param Event $event
+	 */
+	public function add_language($event)
+	{
+		$this->user->add_lang_ext('kasimi/mchateditdetails', 'common');
+		$this->user_has_u_mchat_ip = $this->auth->acl_get('u_mchat_ip');
+	}
+
+	/**
+	 * @param Event $event
+	 */
+	public function fetch_edit_time($event)
+	{
+		$sql_latest_edit = $this->db->sql_build_query('SELECT', array(
+			'SELECT'	=> 'MAX(l3.log_id) AS log_id',
+			'FROM'		=> array($this->table_mchat_log => 'l3'),
+			'WHERE'		=> 'l2.message_id = l3.message_id',
+		));
+
+		$sql_edit_log = array(
+			'SELECT'	=> 'l2.message_id, l2.user_id as edit_user_id, l2.log_time AS edit_time',
+			'FROM'		=> array($this->table_mchat_log => 'l2'),
+			'WHERE'		=> 'l2.log_type = ' . (int) array_search('edit', $this->functions->log_types) . ' AND l2.log_id = (' . $sql_latest_edit . ')',
+		);
+
+		$sql_array = $event['sql_array'];
+		$sql_array['SELECT'] .= ', l.edit_user_id, l.edit_time, u2.username AS edit_username, u2.user_colour AS edit_user_colour';
+
+		if ($this->user_has_u_mchat_ip)
+		{
+			$sql_edit_log['SELECT'] .= ', l2.log_ip AS edit_ip';
+			$sql_array['SELECT'] .= ', l.edit_ip';
+		}
+
+		$sql_array['LEFT_JOIN'] = array_merge($sql_array['LEFT_JOIN'], array(
+			array(
+				'FROM'	=> array('(' . $this->db->sql_build_query('SELECT', $sql_edit_log) . ') AS' => 'l'),
+				'ON'	=> 'l.message_id = m.message_id',
+			),
+			array(
+				'FROM'	=> array(USERS_TABLE => 'u2'),
+				'ON'	=> 'l.edit_user_id = u2.user_id',
+			)
+		));
+
+		$event['sql_array'] = $sql_array;
+	}
+
+	/**
+	 * @param Event $event
+	 */
+	public function inject_edit_time($event)
+	{
+		$row = $event['row'];
+
+		if (!empty($row['edit_time']))
+		{
+			if (!isset($row['edit_username']))
+			{
+				$row['edit_user_id'] = ANONYMOUS;
+			}
+
+			$edit_details_template_data = array(
+				'MCHAT_EDIT_DETAILS'	=> true,
+				'MCHAT_EDIT_USER'		=> get_username_string('full', $row['edit_user_id'], $row['edit_username'], $row['edit_user_colour'], $this->user->lang('GUEST')),
+				'MCHAT_EDIT_TIME'		=> $this->user->format_date($row['edit_time'], $this->settings->cfg('mchat_date'), false),
+				'MCHAT_EDIT_TIME_TITLE'	=> $this->user->format_date($row['edit_time'], $this->settings->cfg('mchat_date'), true),
+			);
+
+			if ($this->user_has_u_mchat_ip)
+			{
+				$edit_details_template_data = array_merge($edit_details_template_data, array(
+					'MCHAT_EDIT_IP'			=> $row['edit_ip'],
+					'MCHAT_EDIT_WHOIS_USER'	=> $this->user->lang('MCHAT_WHOIS_USER', $row['edit_ip']),
+					'MCHAT_U_EDIT_IP'		=> $this->helper->route('dmzx_mchat_page_whois_controller', array('ip' => $row['edit_ip'])),
+				));
+			}
+
+			$event['template_data'] = array_merge($event['template_data'], $edit_details_template_data);
+		}
+	}
+}

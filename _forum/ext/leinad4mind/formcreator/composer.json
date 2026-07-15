@@ -1,0 +1,44 @@
+{
+	"name": "leinad4mind/formcreator",
+	"type": "phpbb-extension",
+	"description": "Create forms to collect data from you members in any forum (one form per forum)",
+	"homepage": "https://www.leinad4mind.top/forum",
+	"version": "2.2.5",
+	"time": "2019-08-07",
+	"keywords": ["phpbb", "extension", "formcreator"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "leinad4mind",
+			"homepage": "https://www.leinad4mind.top/forum",
+			"role": "Extension Developer"
+		},
+		{
+			"name": "dmzx",
+			"role": "Original Extension Port"
+		},
+		{
+			"name": "michaelo",
+			"role": "Original MOD Author"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Form Creator",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0,<3.3"
+		},
+		"version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/formcreator",
+            "filename": "version_check_2.json",
+            "ssl": true
+        }
+	}
+}

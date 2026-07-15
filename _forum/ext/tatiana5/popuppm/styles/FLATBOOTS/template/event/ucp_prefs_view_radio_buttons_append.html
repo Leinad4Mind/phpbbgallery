@@ -1,0 +1,18 @@
+{% if POPUPPM_UCP_ENABLE_POPUP %}
+<div class="control-group">
+	<label class="control-label">{{ lang('ACP_POPUPPM_ENABLE_POPUP') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+		<div class="radio"><input type="radio" name="popuppm_user_popup" id="popuppm_user_popup1" value="1" <!-- IF S_PM_ENABLE_POPUP --> checked="checked"<!-- ENDIF --> /><label for="popuppm_user_popup1">{{ lang('YES') }}</label></div>
+		<div class="radio"><input type="radio" name="popuppm_user_popup" id="popuppm_user_popup0" value="0" <!-- IF not S_PM_ENABLE_POPUP --> checked="checked"<!-- ENDIF --> /><label for="popuppm_user_popup0">{{ lang('NO') }}</label></div>
+	</div>
+</div>
+{% endif %}
+{% if POPUPPM_UCP_ENABLE_BLINK %}
+<div class="control-group">
+	<label class="control-label">{{ lang('ACP_POPUPPM_ENABLE_BLINK') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+		<div class="radio"><input type="radio" name="popuppm_user_blink" id="popuppm_user_blink1" value="1" <!-- IF S_PM_ENABLE_BLINK --> checked="checked"<!-- ENDIF --> /><label for="popuppm_user_blink1">{{ lang('YES') }}</label></div>
+		<div class="radio"><input type="radio" name="popuppm_user_blink" id="popuppm_user_blink0" value="0" <!-- IF not S_PM_ENABLE_BLINK --> checked="checked"<!-- ENDIF --> /><label for="popuppm_user_blink0">{{ lang('NO') }}</label></div>
+	</div>
+</div>
+{% endif %}

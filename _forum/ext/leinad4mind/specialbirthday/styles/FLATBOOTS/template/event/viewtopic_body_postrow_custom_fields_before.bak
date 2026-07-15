@@ -1,0 +1,3 @@
+{% if postrow.POSTER_AGE %}
+	<li><strong>{{ lang('AGE') }}{{ lang('COLON') }}</strong> {{ postrow.POSTER_AGE }}</li>
+{% endif %}

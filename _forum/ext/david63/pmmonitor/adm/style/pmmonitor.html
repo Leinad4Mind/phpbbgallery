@@ -1,0 +1,84 @@
+{% include 'overall_header.html' %}
+{% INCLUDECSS '@david63_pmmonitor/pmmonitor.css' %}
+
+<a name="maincontent"></a>
+
+<h1>{{ lang('PM_MONITOR_READ') }}</h1>
+<p>{{ lang('PM_MONITOR_READ_EXPLAIN') }}</p>
+<span class="version_name">{{ lang('VERSION') }}{{ lang('COLON') }}</span><span class="version">{PM_MONITOR_VERSION}</span>
+<hr />
+
+<form id="pm_monitor" method="post" action="{U_ACTION}">
+
+<div class="pagination">
+	[ {{ lang('MSG_COUNT') }} {{ lang('COLON') }} {MESSAGE_COUNT} ]
+	{% if pagination %}
+		&bull; {% include 'pagination.html' %}
+	{% else %}
+		&bull; {PAGE_NUMBER}
+	{% endif %}
+</div>
+
+<fieldset class="display-options">
+	<strong>{{ lang('SORT_BY') }} :</strong> {S_SORT_KEY} {S_SORT_DIR}
+	<input class="button2" type="submit" value="{{ lang('GO') }}" name="sort" />
+</fieldset>
+
+<table class="table1 zebra-table fixed-width-table">
+	<thead>
+		<tr>
+			<th style="width: 6%;">{{ lang('MARK') }}</th>
+			<th style="width: 15%;">{{ lang('SUBJECT') }}</th>
+			<th style="width: 15%;">{{ lang('SORT_FROM') }}</th>
+			<th style="width: 14%;">{{ lang('SORT_TO') }}</th>
+			<th style="width: 11%;">{{ lang('BCC') }}</th>
+			<th style="width: 9%;">{{ lang('IS_GROUP') }}</th>
+			<th style="width: 9%;">{{ lang('PM_BOX') }}</th>
+			<th style="width: 10%;">{{ lang('AUTHOR_IP') }}</th>
+			<th style="width: 10%;">{{ lang('DATE') }}</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for pm in pm_row %}
+			{% if pm.S_ROW_COUNT is even %}<tr class="row1">{% else %}<tr class="row2">{% endif %}
+				<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{pm.PM_ID}" /></td>
+				{% if S_CAN_READ %}
+					<td style="cursor:pointer" onclick="ShowHide('{pm.PM_KEY}')">{pm.PM_SUBJECT}</td>
+				{% else %}
+					<td>{pm.PM_SUBJECT}</td>
+				{% endif %}
+				<td>{pm.FROM}<br />{pm.LAST_VISIT_FROM}</td>
+				<td>{pm.TO}<br />{pm.LAST_VISIT_TO}</td>
+				<td>{pm.BCC}</td>
+				<td>{pm.IS_GROUP}</td>
+				<td>{pm.FOLDER}</td>
+				<td>{pm.AUTHOR_IP}</td>
+				<td>{pm.DATE}</td>
+			</tr>
+
+			<tr class="row3" id="{pm.PM_KEY}" style="display: none;">
+				<td>&nbsp;</td>
+				<td colspan="8" class="content">{pm.PM_TEXT}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<br />
+	
+<input class="button2" type="submit" value="{{ lang('DELETE_PMS') }}" name="delete" />
+<p class="small"><a href="#" onclick="marklist('pm_monitor', 'mark', true); return false;">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" onclick="marklist('pm_monitor', 'mark', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+
+<div class="pagination">
+	{% if pagination %}
+		&bull; {% include 'pagination.html' %}
+	{% else %}
+		&bull; {PAGE_NUMBER}
+	{% endif %}
+</div>
+
+</form>
+
+{% INCLUDEJS '@david63_pmmonitor/dropdown.js' %}
+{% include 'overall_footer.html' %}

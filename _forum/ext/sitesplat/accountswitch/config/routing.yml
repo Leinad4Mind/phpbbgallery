@@ -1,0 +1,3 @@
+sitesplat_accountswitch_controller:
+    path: /accountswitch/{route}
+    defaults: { _controller: sitesplat.accountswitch.controller:usr_switch }

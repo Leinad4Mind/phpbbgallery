@@ -1,0 +1,32 @@
+{
+	"name": "sitesplat/bbsort",
+	"type": "phpbb-extension",
+	"description": "Allows quick sorting for the viewforum  page, title, views last post etc. It also adds a new pagination system where the pages can be scrolled on click.",
+	"homepage": "http://sitesplat.com",
+	"version": "1.0.0",
+	"time": "2017-01-19",
+	"keywords": ["phpbb", "extension", "pagination", "search"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4"
+	},
+	"extra": {
+		"display-name": "BBsort",
+		"soft-require": {
+		"phpbb/phpbb": ">=3.1.0,<3.3.0@dev"
+		},
+		"version-check": {
+			"host": "sitesplat.com",
+			"directory": "/updatecheck/phpbb32/ext",
+			"filename": "bbsort.json",
+			"ssl": true
+		}
+	}
+}

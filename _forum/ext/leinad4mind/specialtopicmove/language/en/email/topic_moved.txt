@@ -1,0 +1,17 @@
+Subject: Topic moved - "{{ TOPIC_TITLE }}"
+
+Hello {{ USERNAME }},
+
+
+You are receiving this notification because your topic "{{ TOPIC_TITLE }}" was moved by "{{ TOPIC_MOVER }}" to "{{ FORUM_NAME }}".
+{% if REASON %}
+Reason:
+
+{{ REASON }}
+{% endif %}
+
+If you no longer wish to receive emails when your topics are moved, please update your notification settings here:
+
+{{ U_NOTIFICATION_SETTINGS }}
+
+{{ EMAIL_SIG }}

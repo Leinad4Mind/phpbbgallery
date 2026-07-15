@@ -1,0 +1,19 @@
+{% INCLUDECSS '@kasimi_mchatrooms/common.css' %}
+{% if MCHATROOMS_ALLOW_VIEW %}
+	{% INCLUDECSS '@kasimi_mchatrooms/mchat.rooms.css' %}
+	{% if MCHAT_PAGE == 'archive' %}
+		<script>
+			jQuery(function($) {
+				$('#phpbb').on('change', '.mchat-rooms-dropdown select', function() {
+					window.location = $(this).find('option:selected').val();
+				});
+			});
+		</script>
+	{% else %}
+		{% INCLUDE '@kasimi_mchatrooms/mchatrooms_script_data.html' %}
+		{% if MCHATROOMS_ALLOW_SORT %}
+			{% INCLUDEJS '@kasimi_mchatrooms/js/html5sortable.min.js' %}
+		{% endif %}
+		{% INCLUDEJS '@kasimi_mchatrooms/js/mchat.rooms.min.js' %}
+	{% endif %}
+{% endif %}

@@ -1,0 +1,4 @@
+kasimi_mchatstickyfooter_resize:
+    path: /mchat/sticky/resize
+    methods: [POST]
+    defaults: { _controller: kasimi.mchatstickyfooter.resize:main }

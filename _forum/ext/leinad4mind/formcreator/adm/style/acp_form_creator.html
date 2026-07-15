@@ -1,0 +1,242 @@
+{% INCLUDE 'overall_header.html' %}
+{% INCLUDECSS '@leinad4mind_formcreator/form_mod.css' %}
+{% INCLUDEJS '@leinad4mind_formcreator/form_mod.js' %}
+
+<a name="maincontent"></a>
+
+<h1>{{ lang('ACP_FORM_CREATOR') }}&nbsp;{{ FORM_CREATOR_VERS }}</h1>
+
+<p id="info2" title="{{ lang('HOW_TO_MORE') }}" onclick="ShowHide('info1');ShowHide('info2');" style="cursor:pointer;">{{ lang('ACP_FORM_CREATOR_EXPLAIN') }} <img id="info" alt=""></p>
+
+<fieldset id="info1" style="display:none; border-radius: 5px; margin-top: 8px; width: 90%;">
+	<p>{{ lang('HOW_TO') }}</p>
+	<hr>
+	<p style="cursor:pointer; float:right; margin-top: -35px;" onclick="ShowHide('info1');ShowHide('info2');">{{ lang('HOW_TO_HIDE') }}</p>
+	<p>{{ lang('ACP_FORM_CREATOR_FAQ') }}</p>
+</fieldset>
+
+<p>{{ lang('ACP_FORM_EXT_NOTE') }}</p>
+
+<form method="post" action="{{ F_ADD_CONFIG }}" id="acp_apply">
+
+<fieldset>
+	<legend>{{ lang('ACP_FORM_CURRENT') }}</legend>
+	<dl>
+		<dt class="dt100"><label>{{ lang('FORM_MANAGE') }}{{ lang('COLON') }}</label> {{ lang('FORM_MANAGE_EXPLAIN') }}</dt>
+	</dl>
+	<table cellspacing="1">
+		<thead>
+			<tr>
+				<th class="th_current"> {{ lang('CURRENT_FORUM') }}{{ lang('COLON') }} &nbsp; &nbsp;
+					<select name="form_id" class="input" style="font-size: 11px" onchange="this.form.submit();">
+					{% for forms in loops.forms %}
+						<option	name="form_id" {{ forms.SELECT }} value="{{ forms.FORUM_ID }}">({{ forms.FORUM_ID }}) {{ forms.FORUM_NAME }}</option>
+					{% endfor %}
+					</select>
+				</th>
+			</tr>
+		</thead>
+	</table>
+	<table cellspacing="1">
+		<thead>
+			<tr>
+				<th class="th_action">{{ lang('ACTION') }}</th>
+				<th class="th_ndx">{{ lang('NDX') }}</th>
+				<th class="th_type">{{ lang('FORM_ELEMENT_TYPE') }}</th>
+				<th class="th_mand" title="{{ lang('MANDATORY') }}">&#8730;</th>
+				<th class="th_mand" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}"><i class="fa fa-eye" aria-hidden="true"></i></th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
+				<th class="th_name">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}/{{ lang('FORM_ELEMENT_HINT') }}</th>
+				<th class="th_option">{{ lang('FORM_ELEMENT_OPTIONS') }}</th>
+				<th class="th_minmax">{{ lang('FORM_ELEMENT_MIN_MAX') }}</th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_VALUE_BEFORE_AFTER') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td></td></tr><!-- in order to validate I need this code -->
+			{% for form_template in loops.form_template %}
+				{% if ranks_row.S_ROW_COUNT is even %}
+			<tr class="row1">
+				{% else %}
+			<tr class="row2">
+				{% endif %}
+				<td class="th_action" style="padding: 1px;">
+					<span style="padding: 3px;">
+						{% if form_template.NDX_ORDER <= 1 and not PREVIOUS_PAGE %}
+							{{ ICON_MOVE_UP_DISABLED }}
+						{% else %}
+							<a href="{{ form_template.U_MOVE_UP }}">{{ ICON_MOVE_UP }}</a>
+						{% endif %}
+
+						{% if form_template.S_LAST_ROW and not NEXT_PAGE %}
+							{{ ICON_MOVE_DOWN_DISABLED }}
+						{% else %}
+							<a href="{{ form_template.U_MOVE_DOWN }}">{{ ICON_MOVE_DOWN }}</a>
+						{% endif %}
+
+						<a href="{{ form_template.U_DELETE }}">{{ ICON_DELETE }}</a>
+					</span>
+				</td>
+				<td class="th_com" title="{{ lang('NDX_ORDER') }}">
+					<input style=" text-align:right;" size="2" maxlength="3" type="text" name="q_ndx_order[{{ form_template.ID }}]" value="{{ form_template.NDX_ORDER }}">
+				</td>
+				<td class="td_80">
+					<select name="q_type[{{ form_template.ID }}]" class="input" style="font-size: 11px">
+						{% for template_type in form_template.template_type %}
+							<option	value="{{ template_type.TYPE }}"{{ template_type.SELECTED }}>{{ template_type.TYPE }}</option>
+							{% if template_type.SELECTED !== '' %}
+								{% DEFINE template_type_selected = template_type.TYPE %}
+							{% endif %}
+						{% endfor %}
+					</select>
+				</td>
+				<td class="td_20" title="{{ lang('MANDATORY') }}">
+					<input style="cursor:pointer{% if definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' %};display:none{% endif %}" type="checkbox" name="q_mandatory[{{ form_template.ID }}]" value="1"{{ form_template.MANDATORY ? ' checked'}}>
+				</td>
+				<td class="td_20" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}">
+					<input style="cursor:pointer{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" type="checkbox" name="q_name_visible[{{ form_template.ID }}]" value="1"{{ form_template.NAME_VISIBLE ? ' checked'}}>
+				</td>
+				<td class="td_02">
+					<textarea style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" name="q_name_before[{{ form_template.ID }}]" rows="3">{{ form_template.NAME_BEFORE }}</textarea><br>
+					<textarea style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" name="q_name_after[{{ form_template.ID }}]" rows="3">{{ form_template.NAME_AFTER }}</textarea>
+				</td>
+				<td class="td_02">
+					<input style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" type="text" name="q_name[{{ form_template.ID }}]" value="{{ form_template.NAME }}" placeholder="{{ lang('FORM_ELEMENT_NAME') }}">
+					<textarea style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" name="q_explain[{{ form_template.ID }}]" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}">{{ form_template.EXPLAIN }}</textarea>
+					{% if definition.template_type_selected == 'textbox' %}
+						<textarea style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" name="q_hint[{{ form_template.ID }}]" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">{{ form_template.HINT }}</textarea>
+					{% else %}
+						<input style="width:97%{% if (definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'file' or definition.template_type_selected == 'number' or definition.template_type_selected == 'date' or definition.template_type_selected == 'time') %};display:none{% endif %}" type="text" name="q_hint[{{ form_template.ID }}]" value="{{ form_template.HINT }}" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
+					{% endif %}
+				</td>
+				<td class="td_02">
+					<textarea style="width:97%{% if !(definition.template_type_selected == 'checkbox' or definition.template_type_selected == 'separator' or definition.template_type_selected == 'radiobuttons' or definition.template_type_selected == 'selectbox') %};display:none{% endif %}" name="q_options[{{ form_template.ID }}]" rows="3">{{ form_template.OPTIONS }}</textarea>
+					<input style="width:97%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="text" name="q_options_separator[{{ form_template.ID }}]" value="{{ form_template.OPTIONS_SEPARATOR }}" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
+				</td>
+				<td class="td_02">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_mins[{{ form_template.ID }}]" value="{{ form_template.MIN }}" placeholder="{{ lang('FORM_ELEMENT_MIN') }}">
+					<input style="width:90%{% if definition.template_type_selected != 'checkbox' %};display:none{% endif %}" type="number" min="0" name="q_maxs[{{ form_template.ID }}]" value="{{ form_template.MAX}}" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
+				</td>
+				
+				<td class="td_02">
+						<textarea style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" name="q_value_before[{{ form_template.ID }}]" rows="3">{{ form_template.VALUE_BEFORE }}</textarea><br>
+						<textarea style="width:97%{% if definition.template_type_selected == 'separator' %};display:none{% endif %}" name="q_value_after[{{ form_template.ID }}]" rows="3">{{ form_template.VALUE_AFTER }}</textarea>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	{% if ELEMENTS != '0' %}
+	<label for="show_form"><input type="checkbox" id="show_form" name="show_form"{% if S_SHOW_FORM %} checked{% endif %}> {{ lang('SHOW_FORM_DEFAULT') }}</label><br>
+	<label for="force_form"><input type="checkbox" id="force_form" name="force_form"{% if S_FORCE_FORM %} checked{% endif %}> {{ lang('FORCE_FORM') }}</label><br>
+	<div class="div_0">
+		<input id="show2" style="display:inline; font-size:10px;" onclick="ShowHide('preview');ShowHide('show2');ShowHide('hide2');" type="button" value="{{ lang('SHOW_PREVIEW') }}" class="button1">
+		<input id="hide2" style="display:none; font-size:10px;" onclick="ShowHide('preview');ShowHide('hide2');ShowHide('show2');" type="button" value="{{ lang('HIDE_PREVIEW') }}" class="button1">
+		<input id="show3" style="display:inline; font-size:10px;" onclick="ShowHide('copy');ShowHide('show3');ShowHide('hide3');" type="button" value="{{ lang('SHOW_COPY') }}" class="button1">
+		<input id="hide3" style="display:none; font-size:10px;" onclick="ShowHide('copy');ShowHide('hide3');ShowHide('show3');" type="button" value="{{ lang('HIDE_COPY') }}" class="button1">
+	</div>
+	{% endif %}
+
+	<p class="quick"><input type="submit" name="update" id="update_button" value="{{ lang('UPDATE') }}" class="button1"></p>
+
+	{% if ELEMENTS != '0' %}
+		<div id="preview" style="display:none; width:80%; margin-left: auto; margin-right:auto;">
+			{% include '@leinad4mind_formcreator/forms/form_creator.html' %}
+		</div>
+		<div id="copy" style="display:none; width:80%; margin-left: auto; margin-right:auto;">
+			{% include '@leinad4mind_formcreator/forms/copy.html' %}
+		</div>
+	{% endif %}
+
+</fieldset>
+
+{% if ELEMENTS == '0' %}
+<fieldset>
+	{{ lang('FORM_NO_FORM') }}
+</fieldset>
+{% endif %}
+
+<fieldset>
+<legend>{{ lang('FORM_ADD_ITEM') }}</legend>
+	<table cellspacing="1">
+		<thead>
+			<tr>
+				<th class="th_type">{{ lang('FORM_ELEMENT_TYPE') }}</th>
+				<th class="th_mand" title="{{ lang('MANDATORY') }}">&#8730;</th>
+				<th class="th_mand" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}"><i class="fa fa-eye" aria-hidden="true"></i></th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_NAME_BEFORE_AFTER') }}</th>
+				<th class="th_name">{{ lang('FORM_ELEMENT_NAME_EXPLAIN') }}/{{ lang('FORM_ELEMENT_HINT') }}</th>
+				<th class="th_option">{{ lang('FORM_ELEMENT_OPTIONS') }}</th>
+				<th class="th_minmax">{{ lang('FORM_ELEMENT_MIN_MAX') }}</th>
+				<th class="th_before">{{ lang('FORM_ELEMENT_VALUE_BEFORE_AFTER') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="row1">
+				<td class="td_0">
+					<select name="add_type" class="input" id="add_type">
+						<option value="text">{{ lang('FORM_INPUTBOX') }}</option>
+						<option value="textbox">{{ lang('FORM_TXTBOX') }}</option>
+						<option value="selectbox">{{ lang('FORM_SELECTBOX') }}</option>
+						<option value="radiobuttons">{{ lang('FORM_RADIOBOX') }}</option>
+						<option value="checkbox">{{ lang('FORM_CHECKBOX') }}</option>
+						<option value="email">{{ lang('FORM_EMAILBOX') }}</option>
+						<option value="password">{{ lang('FORM_PASSWORDBOX') }}</option>
+						<option value="url">{{ lang('FORM_URLBOX') }}</option>
+						<option value="file">{{ lang('FORM_ATTACH') }}</option>
+						<option value="number">{{ lang('FORM_NUMBER') }}</option>
+						<option value="date">{{ lang('FORM_DATE') }}</option>
+						<option value="time">{{ lang('FORM_TIME') }}</option>
+						<option value="separator">{{ lang('FORM_SEPARATOR') }}</option>
+					</select>
+				</td>
+				<td class="td_20" title="{{ lang('MANDATORY') }}">
+					<input style="cursor: pointer;" type="checkbox" name="mandatory" value="1">
+				</td>
+				<td class="td_20" title="{{ lang('FORM_ELEMENT_NAME_VISIBLE') }}">
+					<input style="cursor: pointer;" type="checkbox" name="name_visible" value="1" checked>
+				</td>
+				<td class="td_pad">
+					<textarea style="width:97%" name="name_before" rows="3"></textarea><br>
+					<textarea style="width:97%" name="name_after" rows="3"></textarea>
+				</td>
+				<td class="td_pad">
+					<input style="width:97%" type="text" name="name" value="" placeholder="{{ lang('FORM_ELEMENT_NAME') }}"><br>
+					<textarea style="width:97%" name="explanation" placeholder="{{ lang('FORM_ELEMENT_EXPLAIN') }}"></textarea>
+					<input style="width:97%" type="text" name="hint" value="" placeholder="{{ lang('FORM_ELEMENT_HINT') }}">
+				</td>
+				<td class="td_pad">
+					<textarea style="width:97%" name="options"></textarea>
+					<input style="width:97%" type="text" name="options_separator" value="" placeholder="{{ lang('FORM_ELEMENT_OPTIONS_SEPARATOR') }}">
+				</td>
+				<td class="td_pad">
+					<input style="width:90%" type="number" name="min_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MIN') }}"><br>
+					<input style="width:90%" type="number" name="max_value" value="" min="0" placeholder="{{ lang('FORM_ELEMENT_MAX') }}">
+				</td>
+				
+				<td class="td_pad">
+					<textarea style="width:97%" name="value_before" rows="3"></textarea><br>
+					<textarea style="width:97%" name="value_after" rows="3"></textarea>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div id="info0" style="padding-top: 10px; margin-bottom: -23px; display: none;">
+		<pre>{{ lang('FORM_NEW_ITEM_EXPLAIN') }}</pre>
+		<input style="font-size:10px;" onclick="ShowHide('info0');ShowHide('show0');" type="button" value="{{ lang('HIDE_FORM_INFO') }}" class="button1">
+	</div>
+	<div id="show0" style="display: inline;">
+		<input style="font-size:10px;" onclick="ShowHide('info0');ShowHide('show0');" type="button" value="{{ lang('SHOW_FORM_INFO') }}" class="button1">
+	</div>
+
+	<p class="quick"><input type="submit" name="add" value="{{ lang('ADD') }}" class="button1"></p>
+	{{ S_FORM_TOKEN }}
+</fieldset>
+
+</form>
+
+<!-- {{ REPORT }} -->
+
+{% INCLUDE 'overall_footer.html' %}

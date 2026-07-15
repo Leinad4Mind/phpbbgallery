@@ -1,0 +1,2 @@
+parameters:
+    sitesplat.replytounhide.table.likes: '%core.table_prefix%likes'

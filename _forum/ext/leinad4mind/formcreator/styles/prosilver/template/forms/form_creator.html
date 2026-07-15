@@ -1,0 +1,48 @@
+{% if MODE == 'post' %}
+
+<div id="thisform" class="panels {{ S_SHOW_FORM or S_FORCE_FORM ? 'form-creator-visible' : 'form-creator-hidden' }}" data-form="{{ lang('OPEN_FORM') }}" data-post="{{ lang('OPEN_POST') }}">
+	<div class="inner">
+		{% set has_mandatory_field = 0 %}
+		{% for form_creator_template in loops.form_creator_template %}
+			{% if form_creator_template.MANDATORY %}
+				{% set has_mandatory_field = 1 %}
+			{% endif %}
+		{% endfor %}
+		{% if has_mandatory_field %}
+			<div class="mand"><span class="mandatory">*</span> {{ lang('MANDATORY') }}</div>
+		{% endif %}
+		<fieldset class="fields2">
+			{% for form_creator_template in loops.form_creator_template %}
+				{% if form_creator_template.IS_SEPARATOR %}
+					</fieldset>
+					<div class="form-separator">
+						{{ form_creator_template.ENTRY }}
+					</div>
+					<fieldset class="fields2">
+				{% else %}
+					<dl>
+						<dt>
+							{% if form_creator_template.NAME_RICH %}<label for="{{ form_creator_template.CLEAN_NAME }}">{{ form_creator_template.NAME_RICH ~ lang('COLON') }}</label>{% endif %}{{ form_creator_template.MANDATORY }}
+							{% if form_creator_template.EXPLAIN %}
+								<br><span class="small">{{ form_creator_template.EXPLAIN }}</span>
+							{% endif %}
+						</dt>
+						<dd>{{ form_creator_template.ENTRY }}</dd>
+					</dl>
+				{% endif %}
+			{% endfor %}
+		</fieldset>
+	</div>
+	<div class="panels">
+		<div class="inner">
+			<fieldset class="submit-buttons">
+				{{ S_FORM_TOKEN }}
+				<input type="reset" name="reset" value="{{ lang('RESET') }}" class="button2">&nbsp;
+				<input type="submit" tabindex="5" name="preview" value="{{ lang('PREVIEW') }}" class="button1" onclick="enable_form_preview(); document.getElementById('postform').action += '#preview';">&nbsp;
+				<input type="submit" accesskey="s" tabindex="6" name="post" value="{{ lang('SUBMIT') }}" class="button1 default-submit-action" onclick="enable_form_preview();">
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+{% endif %}

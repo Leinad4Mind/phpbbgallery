@@ -1,0 +1,25 @@
+services:
+    sitesplat.castle.controller:
+        class: sitesplat\castle\controller\main
+        arguments:
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '@language'
+            - '@controller.helper'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.users%'
+
+    sitesplat.castle.listener:
+        class: sitesplat\castle\event\main_listener
+        arguments:
+            - '@template'
+            - '@user'
+            - '@request'
+            - '@config'
+            - '@captcha.factory'
+            - '%core.root_path%ext/sitesplat/castle/vendor/castle/castle-php/'
+        tags:
+            - { name: event.listener }

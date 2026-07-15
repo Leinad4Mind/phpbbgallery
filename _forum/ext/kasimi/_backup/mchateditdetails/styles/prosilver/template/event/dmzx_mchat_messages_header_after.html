@@ -1,0 +1,13 @@
+{% if mchatrow.MCHAT_EDIT_DETAILS %}
+	&bull; <span class="mchat-last-edit" title="{{ lang('MCHAT_EDIT_LAST_EDIT') ~ lang('COLON') }} {{ mchatrow.MCHAT_EDIT_TIME_TITLE }}">&#x270D;</span>
+	<div class="hidden">
+		<div class="inner">
+			<dl class="details">
+				<dt>{{ lang('MCHAT_EDIT_MESSAGE_AUTHOR') ~ lang('COLON') }}</dt> <dd>{{ mchatrow.MCHAT_USERNAME_FULL }}</dd>
+				<dt>{{ lang('MCHAT_EDIT_NAME') ~ lang('COLON') }}</dt> <dd>{{ mchatrow.MCHAT_EDIT_USER }}</dd>
+				{% if mchatrow.MCHAT_EDIT_IP %}<dt>{{ lang('MCHAT_EDIT_IP') ~ lang('COLON') }}</dt> <dd><a href="{{ mchatrow.MCHAT_U_EDIT_IP }}" title="{{ mchatrow.MCHAT_EDIT_WHOIS_USER }}" onclick="popup(this.href, 750, 500); return false;">{{ mchatrow.MCHAT_EDIT_IP }}</a></dd>{% endif %}
+				<dt>{{ lang('MCHAT_EDIT_TIME') ~ lang('COLON') }}</dt> <dd>{{ mchatrow.MCHAT_EDIT_TIME }}</dd>
+			</dl>
+		</div>
+	</div>
+{% endif %}

@@ -1,0 +1,17 @@
+{% if not S_SHOW_DRAFTS and not definition.SIG_EDIT eq 1 and S_FORM_CREATOR %}
+<div id="form_hide" class="panels">
+	<div class="inner">
+		<div class="space10"></div>
+		<fieldset class="submit-buttons form-buttons">
+			{S_HIDDEN_ADDRESS_FIELD}
+			{S_HIDDEN_FIELDS}
+			{% EVENT posting_editor_submit_buttons %}
+			{% if S_HAS_DRAFTS %}<button type="submit" class="btn btn-default" data-loading-text="{{ lang('LOADING') }}&nbsp;<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>" accesskey="d" tabindex="8" name="load" value="{{ lang('LOAD_DRAFT') }}" onclick="load_draft = true;"><span class="hidden-xs">{{ lang('LOAD_DRAFT') }}</span><i class="visible-xs fa fa-upload fa-btn-fx"></i></button>{% endif %}
+			{% if S_SAVE_ALLOWED %}<button type="submit" class="btn btn-default" data-loading-text="{{ lang('SAVING') }}&nbsp;<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>" accesskey="k" tabindex="7" name="save" value="{{ lang('SAVE_DRAFT') }}"><span class="hidden-xs">{{ lang('SAVE_DRAFT') }}</span><i class="visible-xs fa fa-floppy-o fa-btn-fx"></i></button>{% endif %}
+			<button type="submit" class="btn btn-default" data-loading-text="{{ lang('LOADING') }}&nbsp;<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>" tabindex="5" name="preview" value="{{ lang('PREVIEW') }}"{% if not S_PRIVMSGS %} onclick="enable_form_preview(); document.getElementById('postform').action += '#preview';"{% endif %} >{{ lang('PREVIEW') }}</button>
+			<button type="submit" class="btn btn-default" data-loading-text="{{ lang('LOADING') }}&nbsp;<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>" accesskey="s" tabindex="6" name="post" value="{{ lang('SUBMIT') }}">{{ lang('SUBMIT') }}</button>
+		</fieldset>
+		<div class="space10"></div>
+	</div>
+</div>
+{% endif %}

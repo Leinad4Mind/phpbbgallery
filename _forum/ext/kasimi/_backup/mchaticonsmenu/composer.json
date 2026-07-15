@@ -1,0 +1,33 @@
+{
+	"name": "kasimi/mchaticonsmenu",
+	"type": "phpbb-extension",
+	"description": "Displays mChat message icons in a submenu",
+	"homepage": "https://github.com/kasimi/phpbb-ext-mchaticonsmenu",
+	"version": "1.2.0",
+	"time": "2018-07-31",
+	"keywords": [],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "kasimi",
+			"homepage": "https://kasimi.net",
+			"email": "mail@kasimi.net",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.7"
+	},
+	"extra": {
+		"display-name": "mChat Icons Menu Addon",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		},
+		"version-check": {
+			"host": "kasimi.github.io",
+			"directory": "/phpbb-ext-mchaticonsmenu",
+			"filename": "version.json",
+			"ssl": true
+		}
+	}
+}
