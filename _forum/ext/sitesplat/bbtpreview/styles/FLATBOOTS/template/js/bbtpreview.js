@@ -1,1 +1,34 @@
-head.ready(function(){!function(t){"use strict";t(document).on("click",".open-bbtpreview",function(e){e.preventDefault();var a=t(this).data("id"),o=new Date,r=t(location).attr("href").indexOf("bbtag");r=r>0?"&b=1":"",t.ajax({url:boardurl+"app.php/bbtpreview/topic.html?t="+a+r+"&time="+String(o.getTime()),context:document.getElementById("BBTPreviewProfile"),error:function(t,e,a){},success:function(e,a){t(".modal-header #modal-title").html(e.subject),t(".modal-header #starttime").html(e.starttime),t(".modal-subheader #author").html(e.author),t(".modal-subheader #author_rank").html(e.author_rank),t(".modal-body #BBTPreviewContent").html(e.message),t(".modal-footer #url").attr("href",boardurl+e.url),t(".modal-body #messages").html(e.messages),t(".modal-body #views").html(e.views),t(".modal-body #attachments").html(e.attachments),t(".modal-body #topictime").html(e.topictime)}})})}(jQuery)});
+head.ready(function () {
+(function($) { // Avoid conflicts with other libraries
+
+"use strict";
+
+$(document).on("click", ".open-bbtpreview", function (event) {
+ event.preventDefault();
+	var topicid = $(this).data('id');
+	var hack = new Date();
+	var in_bbtag = $(location).attr("href").indexOf('bbtag');
+	in_bbtag  = (in_bbtag > 0) ? '&b=1': '';
+
+	$.ajax({
+		url: sitesplat_board_url + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
+		context: document.getElementById("BBTPreviewProfile"),
+		error: function (e, text, ee) {
+		},
+		success: function (s, x) {
+			$(".modal-header #modal-title").html( s.subject );
+			$(".modal-header #starttime").html( s.starttime );
+			$(".modal-subheader #author").html( s.author );
+			$(".modal-subheader #author_rank").html( s.author_rank );
+			$(".modal-body #BBTPreviewContent").html( s.message );
+			$(".modal-footer #url").attr("href", s.url.replace(/\&amp;/g, '&'));
+			$(".modal-body #messages").html( s.messages );
+			$(".modal-body #views").html( s.views );
+			$(".modal-body #attachments").html( s.attachments );
+			$(".modal-body #topictime").html( s.topictime );
+		}
+	});
+});
+
+})(jQuery); // Avoid conflicts with other libraries
+});

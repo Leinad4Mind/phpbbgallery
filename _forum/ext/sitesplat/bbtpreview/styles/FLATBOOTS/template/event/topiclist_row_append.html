@@ -1,6 +1,6 @@
-<!-- IF topicrow.BBTPREVIEW -->
-<a data-toggle="modal" data-id="{topicrow.TOPIC_ID}" href="#BBTPreviewDialog" class="btn btn-xs open-bbtpreview topic-preview hidden-xs" title=""><i class="fa fa-search-plus"></i></a>
+{% if topicrow.BBTPREVIEW or searchresults or BB_LOAD_IN_POSTING or SCRIPT_NAME eq 'portal' %}
+<a data-toggle="modal" data-id="{topicrow.TOPIC_ID}{searchresults.TOPIC_ID}" href="#BBTPreviewDialog" class="btn btn-xs open-bbtpreview topic-preview hidden-xs" title=""><i class="fa fa-search-plus"></i></a>
 <span class="visible-xs">
-<a data-toggle="modal" data-id="{topicrow.TOPIC_ID}" href="#BBTPreviewDialog" class="btn-xs open-bbtpreview" title="">{L_PREVIEW}</a>
+	<a data-toggle="modal" data-id="{topicrow.TOPIC_ID}{searchresults.TOPIC_ID}" href="#BBTPreviewDialog" class="btn-xs open-bbtpreview" title="">{L_PREVIEW}</a>
 </span>
-<!-- ENDIF -->
+{% endif %}

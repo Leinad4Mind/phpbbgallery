@@ -11,7 +11,7 @@ $(document).on("click", ".open-bbtpreview", function (event) {
 	in_bbtag  = (in_bbtag > 0) ? '&b=1': '';
 
 	$.ajax({
-		url: boardurl + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
+		url: sitesplat_board_url + 'app.php/bbtpreview/topic.html?t=' + topicid + in_bbtag + '&time=' + String(hack.getTime()),
 		context: document.getElementById("BBTPreviewProfile"),
 		error: function (e, text, ee) {
 		},
@@ -21,7 +21,7 @@ $(document).on("click", ".open-bbtpreview", function (event) {
 			$(".modal-subheader #author").html( s.author );
 			$(".modal-subheader #author_rank").html( s.author_rank );
 			$(".modal-body #BBTPreviewContent").html( s.message );
-			$(".modal-footer #url").attr("href", boardurl + s.url);
+			$(".modal-footer #url").attr("href", s.url.replace(/\&amp;/g, '&'));
 			$(".modal-body #messages").html( s.messages );
 			$(".modal-body #views").html( s.views );
 			$(".modal-body #attachments").html( s.attachments );

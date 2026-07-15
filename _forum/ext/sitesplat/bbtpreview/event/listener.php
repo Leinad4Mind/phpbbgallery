@@ -56,9 +56,7 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('sitesplat/bbtpreview', 'bbtpreview');
 
 		$bbtpreview = true;
-		/* Desactiva o BBPreview nos tópicos pagos
-		$bbtpreview = false;
-		if (isset($event['row']['bbpoints_payed']) && $event['row']['bbpoints_payed'])
+		/*if (isset($event['row']['bbpoints_payed']) && $event['row']['bbpoints_payed'])
 		{
 			$manager = $this->container->get('ext.manager');
 			if ($manager->is_enabled('sitesplat/bbpoints'))
@@ -75,13 +73,12 @@ class listener implements EventSubscriberInterface
 							   );
 			} else
 			{
-				$bbtpreview = true;	
+				$bbtpreview = true;
 			}		
 		} else
 		{
 			$bbtpreview = true;	
-		}
-		*/
+		}*/
 		
 		$template_data = $event['topic_row'];
 		$template_data['BBTPREVIEW'] = $bbtpreview;
