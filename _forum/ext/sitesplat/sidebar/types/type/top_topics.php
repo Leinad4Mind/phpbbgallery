@@ -109,9 +109,8 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 			{
 				// grab all posts that meet criteria and auths
 				$sql_array = array(
-					'SELECT'	=> 'u.user_id, u.username, u.user_colour, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
-									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name,
-									at.attr_name',
+					'SELECT'	=> 'u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
+									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
 					'FROM'		=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'	=> array(
 						array(
@@ -121,10 +120,6 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 						array(
 							'FROM'	=> array(FORUMS_TABLE => 'f'),
 							'ON'	=> 't.forum_id = f.forum_id',
-						),
-						array(
-							'FROM'	=> array('bbgta_topics_attr' => 'at'),
-							'ON'	=> 'at.attr_id = t.topic_attr_id',
 						),
 					),
 					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
@@ -144,7 +139,7 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 					$view_topic_url = append_sid("{$this->root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;p=' . $row['topic_last_post_id'] . '#p' .
 										$row['topic_last_post_id']);
 					$forum_name_url = append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
-					$topic_title = censor_text($row['attr_name'] . $row['topic_title']);
+					$topic_title = censor_text($row['topic_title']);
 			        // can't truncate with bbemoji
 				//	if (utf8_strlen($topic_title) >= 60)
 				//	{
@@ -178,13 +173,36 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 					);
 					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.top_topics_tpl_before', compact($vars)));
 
+					$match = array();
+					$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+							  phpbb_get_user_avatar(
+								  array('avatar'			=> $row['user_avatar'], 
+								        'user_id'      => $row['user_id'],
+										'avatar_type'		=> $row['user_avatar_type'], 
+										'avatar_width'	=> $row['user_avatar_width'], 
+										'avatar_height'	=> $row['user_avatar_height'])), $match) :
+										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+				
+					$username_string = ($this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
+										get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
+										$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']);
+
+					if (count($match) > 1) {
+						$avatar = array_pop($match);
+						// fix an issue with BBrandom
+						if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+							$board_url = generate_board_url() . '/';
+							$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+						}
+					}
+
 					$tpl_ary = array(
 						'U_TOPIC'			=> $view_topic_url,
 						'U_FORUM'			=> $forum_name_url,
 						'S_UNREAD'			=> ($post_unread) ? true : false,
-						'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
-												get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : 
-												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+					//	'AVATAR'			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+						'AVATAR'			=> $avatar,
+						'USERNAME_FULL'		=> $username_string,
 						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 						'TOPIC_TITLE' 		=> $topic_title,
 						'FORUM_NAME'		=> $forum_name,

@@ -5,7 +5,6 @@
 /***** PANELS *****/
 
 .sidebar .panel {
-    background-color: #fff;
     border: 0 none;
     border-radius: 2px;
     box-shadow: none;
@@ -23,10 +22,11 @@
 
 .panel-title {
     color: #313745;
-    font-family: "Open Sans","Helvetica Neue",Helvetica,sans-serif;
-    font-size: 12px;
+    font-family: inherit;
+    font-size: 14px;
+	font-style: normal;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: inherit;
     text-transform: uppercase;
 }
 
@@ -189,9 +189,7 @@ transform:rotate(0.001deg);
 
 
 /***** MISC FIXES DUE TO SIDEBAR *****/
-.com-stuff {
-    right: 26%;
-}
+
 
 .btn-noti-td {
     width: 100px;

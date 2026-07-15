@@ -90,16 +90,15 @@ class staff extends \sitesplat\sidebar\types\type\base
 				}
 			}
 		//	$sql_other = (empty($sql_and) && empty($sql_where)) ? ' WHERE' : ' AND';
-		
+
 		//  damn phpbb url rewrite and broken driver
 		//	$board_url = generate_board_url();
 			$board_url = generate_board_url() . '/';
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id 
-					FROM ' . USER_GROUP_TABLE . ' u
-					INNER JOIN ' . GROUPS_TABLE . " g ON g.group_id = u.group_id 
-					WHERE u.group_id = 15";
+					FROM ' . GROUPS_TABLE . ' g, ' . USER_GROUP_TABLE . " u
+					WHERE LOWER(g.group_name) LIKE '%staff%' AND u.group_id = g.group_id";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -107,33 +106,43 @@ class staff extends \sitesplat\sidebar\types\type\base
 			}
 
 			$sql_other .=  (sizeof($staff_ids)) ? ' AND ' . $this->db->sql_in_set('u.user_id', $staff_ids) : '';
-			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, s.session_time
+			$sql = 'SELECT u.user_id, u.username, u.user_lastvisit, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, MAX(s.session_time) as smax
 				FROM ' . USERS_TABLE . ' u
-				LEFT JOIN ' . SESSIONS_TABLE . ' s ON s.session_user_id = u.user_id
-				 ' . $sql_where . ' ' . $sql_and . '
-				' . $sql_other . '
-				ORDER BY s.session_time DESC';
+				LEFT JOIN ' . SESSIONS_TABLE . " s ON s.session_user_id = u.user_id
+				$sql_where $sql_and $sql_other
+				GROUP BY u.user_id
+				ORDER BY smax DESC, u.user_lastvisit DESC";
+
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-			  $match = array();
-			  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
-						  phpbb_get_user_avatar(
-							  array('avatar'			=> $row['user_avatar'], 
-									'avatar_type'		=> $row['user_avatar_type'], 
-									'avatar_width'	=> $row['user_avatar_width'], 
-									'avatar_height'	=> $row['user_avatar_height'])), $match) :
-									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-				
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@', phpbb_get_user_avatar([
+					'avatar'		=> $row['user_avatar'],
+					'avatar_type'	=> $row['user_avatar_type'],
+					'avatar_width'	=> $row['user_avatar_width'],
+					'avatar_height'	=> $row['user_avatar_height']
+				]), $match) : "{$board_url}styles/" . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+
+				if (count($match) > 1) {
+					$avatar = array_pop($match);
+					// fix an issue with BBrandom
+					if (strpos($avatar, "{$this->config['avatar_gallery_path']}/../random/") === false) {
+						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
+					}
+				}
+
 				$staff_online[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
-					'last_visit'    => $row['session_time'],
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> $avatar,
+					'last_visit'    => $row['smax'],
+					'last_active'	=> $row['user_lastvisit'],
 				);
 			}
+
 			$this->db->sql_freeresult($result);
 
 			// cache this data for 5 minutes, this improves performance
@@ -144,14 +153,15 @@ class staff extends \sitesplat\sidebar\types\type\base
 		{
 			foreach ($staff_online as $row)
 			{
-				$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
-									get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
-	
+				$last_visit = $this->user->format_date($row['last_visit'], '|d M Y|, H:i');
+				$last_active = (!empty($row['last_active'])) ? $this->user->format_date($row['last_active'], '|d M Y|, H:i') : $this->user->lang['STAFF_UNKNOWN'];
+				$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+
 				$this->template->assign_block_vars('staff',array(
 					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
-					'TIME'	 			=> ($row['last_visit']) ? $this->user->format_date($row['last_visit'], '|d M Y|, H:i') : $this->user->lang['STAFF_UNKNOWN'],
+					'TIME'	 			=> (!empty($row['last_visit'])) ? $last_visit : $last_active,
 					'USERNAME_FULL'		=> $username_string,
-					'AVATAR'			=> $row['avatar']
+					'AVATAR'			=> $row['avatar'],
 				));
 			}
 		}

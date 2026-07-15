@@ -80,7 +80,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT forum_id, topic_id, topic_type
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $visibility->get_forums_visibility_sql('topic', $forum_ary) . '
-				AND topic_status <> ' . ITEM_MOVED . '
+				AND topic_status <> ' . ITEM_MOVED . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'] . '
 				ORDER BY topic_last_post_time DESC';
 
 			$result = $this->db->sql_query_limit($sql, $howmany);
@@ -110,8 +110,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 				// grab all posts that meet criteria and auths
 				$sql_array = array(
 					'SELECT'	=> 'u.user_id, u.username, u.user_colour, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
-									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name,
-									at.attr_name',
+									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
 					'FROM'		=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'	=> array(
 						array(
@@ -122,12 +121,8 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 							'FROM'	=> array(FORUMS_TABLE => 'f'),
 							'ON'	=> 't.forum_id = f.forum_id',
 						),
-						array(
-							'FROM'	=> array('bbgta_topics_attr' => 'at'),
-							'ON'	=> 'at.attr_id = t.topic_attr_id',
-						),
 					),
-					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids) . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'],
+					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
 					'ORDER_BY'	=> 't.topic_last_post_time DESC',
 				);
 
@@ -144,7 +139,7 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 					$view_topic_url = append_sid("{$this->root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;p=' . $row['topic_last_post_id'] . '#p' .
 										$row['topic_last_post_id']);
 					$forum_name_url = append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
-					$topic_title = censor_text($row['attr_name'] . $row['topic_title']);
+					$topic_title = censor_text($row['topic_title']);
 					if (utf8_strlen($topic_title) >= 60)
 					{
 						$topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
