@@ -81,6 +81,6 @@ $lang = array_merge($lang, array(
 	'NOTIFICATION_TYPE_AWARD_REMOVED'	=> 'When an Award has been removed',
 	
 	// Misc
-	'BADGE_LINK_AD'	                    => 'BBAwards by SiteSplat',
-	'BADGE_LINK_AD_TITLE'	            => 'Professional Premium Themes And Extensions',
+	'BADGE_LINK_AD'	                    => 'GoldTugAnime Awards',
+	'BADGE_LINK_AD_TITLE'	            => 'Are you ready to be our champion?!',
 ));
