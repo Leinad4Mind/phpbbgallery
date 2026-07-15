@@ -1,0 +1,118 @@
+<!-- IF S_NOTES_POPUP -->
+	<!-- INCLUDE simple_header.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_header.html -->
+<!-- ENDIF -->
+
+<h2>{L_NOTES}</h2>
+
+<!-- IF not S_NO_NOTES -->
+<form action="{S_FORM_ACTION}" method="post" id="notes">
+
+<div class="navbar">
+	<div class="inner">
+
+	<ul class="linklist">
+		<li>{SEARCH_IN}&nbsp;<input type="text" name="search_string" size="30" maxlength="50" class="inputbox autowidth" />&nbsp;<input type="submit" class="button2" value="{L_SEARCH}" /></li>
+		<li class="rightside">{SORT_BY}&nbsp;{SORT_ORDER}&nbsp;<input type="submit" class="button2" value="{L_SORT}" /></li>
+	</ul>
+
+	</div>
+</div>
+
+</form>
+
+<!-- IF L_FILTER -->
+<p class="submit-buttons"><i>* {L_FILTER}</i><p>
+<!-- ENDIF -->
+
+<ul class="linklist"><li><label>{L_NOTES}</label>&bull;&nbsp;{L_NOTES_TOTAL}</li></ul>
+
+ <div class="action-bar bottom">
+	<div class="buttons">
+
+		<!-- IF S_NEW_NOTE --><a href="{U_NEW_NOTE}" class="button icon-button post-icon">{L_ADD_NOTE}</a><!-- ENDIF -->
+
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_NO_NOTES -->
+	<h3>{L_NO_NOTES}</h3>
+
+	<br />
+
+<!-- ELSE -->
+	<!-- BEGIN notes_row -->
+	<div class="post <!-- IF notes_row.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<div class="inner">
+	
+		<div class="postbody">
+		
+			<h3 <!-- IF notes_row.S_FIRST_ROW -->class="first"<!-- ENDIF -->>{notes_row.NOTE_SUBJECT}</h3>
+			<div class="content">{notes_row.NOTE_TEXT}</div>
+			<!-- IF notes_row.NOTES_MEM --><div class="notice"><strong>{L_NOTES_MEM}: </strong>{notes_row.NOTES_MEM}</div><!-- ENDIF -->
+
+		</div>
+	
+		<dl class="postprofile">
+			<dt>
+				<p class="author"> <b>{L_POSTED}:</b><br />{notes_row.NOTE_DATE}</p>
+	
+				<br />
+	
+				<ul class="post-buttons">
+					<li>
+						<a href="{notes_row.U_EDIT_NOTE}" title="{L_EDIT_POST}" class="button button-icon-only">
+							<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_EDIT}</span>
+						</a>
+					</li>
+					<li>
+						<a href="{notes_row.U_DELETE_NOTE}" title="{L_DELETE_POST}" class="button button-icon-only">
+							<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_POST}</span>
+						</a>
+					</li>
+				</ul>
+		
+			</dt>
+		</dl>
+
+		<div class="back2top">	
+			<a href="#wrap" class="top" title="{L_BACK_TO_TOP}">
+				<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
+				<span class="sr-only">{L_BACK_TO_TOP}</span>
+			</a>
+		</div>
+	
+		</div>
+	</div>
+	<!-- END notes_row -->
+<!-- ENDIF -->
+
+<div class="action-bar bottom">
+	<div class="buttons">
+
+		<!-- IF S_NEW_NOTE --><a href="{U_NEW_NOTE}" class="button icon-button post-icon">{L_ADD_NOTE}</a><!-- ENDIF -->
+
+	</div>
+</div>
+
+<!-- IF not S_NO_NOTES -->
+<ul class="linklist"><li><label>{L_NOTES}</label>&bull;&nbsp;{L_NOTES_TOTAL}</li></ul>
+<!-- ENDIF -->
+
+<br />
+
+<!-- IF S_NOTES_POPUP -->
+	<br />
+
+	<p class="submit-buttons" style="text-align: center;">
+		<input type="submit" name="cancel" class="button1" value="{L_CLOSE}" onclick="javascript:window.close()" />
+	</p>
+
+	<br />
+
+	<!-- INCLUDE simple_footer.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->

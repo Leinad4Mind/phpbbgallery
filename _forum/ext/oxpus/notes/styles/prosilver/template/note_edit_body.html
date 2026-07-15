@@ -1,0 +1,77 @@
+<!-- IF S_NOTES_POPUP -->
+	<!-- INCLUDE simple_header.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_header.html -->
+<!-- ENDIF -->
+
+<ul class="linklist"><li><label>{L_NOTES}</label>&bull;&nbsp;{L_NOTES_TOTAL}</li></ul>
+
+<br />
+
+<form action="{S_FORM_ACTION}" method="post" id="postform">
+
+	<div class="panel" id="postingbox">
+
+		<div class="inner">
+			<h3>{L_NOTES} - {L_NOTE_MODE}</h3>
+
+		<dl style="clear: left;">
+			<dt><label for="subject">{L_SUBJECT}:</label><input type="text" name="subject" id="subject" size="75" maxlength="255" tabindex="2" value="{NOTES_SUBJECT}" class="inputbox autowidth" /></dt>
+		</dl>
+
+		<br />
+
+		<dl style="clear: left;">
+			<dt><label>{L_NOTES_MEM}</label> <label><input type="radio" name="mem_yesno" value="0" {MEM_CHECKED_NO} /> {L_NO}</label> &nbsp; <label><input type="radio" name="mem_yesno" value="1" {MEM_CHECKED_YES} /> {L_YES}&nbsp;&raquo;&nbsp;</label>{S_NOTE_MEM_DAY}&nbsp;{S_NOTE_MEM_MONTH}&nbsp;{S_NOTE_MEM_YEAR}&nbsp;&bull;&nbsp;{S_NOTE_MEM_HOUR}&nbsp;{S_NOTE_MEM_MIN}</dt>
+		</dl>
+
+		<div><!-- INCLUDE posting_buttons.html --></div>
+	 
+		<!-- IF .smiley -->
+		<div id="smiley-box">
+			<strong>{L_SMILIES}</strong><br />
+			<!-- BEGIN smiley -->
+				<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
+			<!-- END smiley -->
+			<br /><a href="{U_MORE_SMILIES}" onclick="window.open('{U_MORE_SMILIES}', '_blank', 'HEIGHT=200,resizable=yes,scrollbars=yes,WIDTH=400'); return false;">{L_MORE_SMILIES}</a>
+		</div>
+		<!-- ENDIF -->
+	
+	     <div id="message-box">
+	        <textarea name="message" id="message" rows="13" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{NOTES_MESSAGE}</textarea>
+	     </div>
+
+		<br />
+		
+		</div>
+	</div>
+
+	<div class="panel bg2">
+		<div class="inner">
+
+		<fieldset class="submit-buttons">
+			<input type="submit" name="save" class="button1" value="{L_SUBMIT}" />&nbsp;&nbsp;<input type="submit" name="cancel" class="button2" value="{L_CANCEL}" />
+			{S_FORM_TOKEN}
+			{S_HIDDEN_FIELDS}
+		</fieldset>
+
+		</div>
+	</div>
+
+</form>
+
+<br />
+
+<!-- IF S_NOTES_POPUP -->
+	<br />
+
+	<p class="submit-buttons" style="text-align: center;">
+		<input type="submit" name="cancel" class="button1" value="{L_CLOSE}" onclick="javascript:window.close()" />
+	</p>
+
+	<br />
+
+	<!-- INCLUDE simple_footer.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->

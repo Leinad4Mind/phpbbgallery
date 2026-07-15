@@ -1,0 +1,37 @@
+services:
+    oxpus.notes.controller:
+        class: oxpus\notes\controller\main
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
+            - '@service_container'
+            - '@ext.manager'
+            - '@path_helper'
+            - '@dbal.conn'
+            - '@config'
+            - '@log'
+            - '@controller.helper'
+            - '@auth'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+    oxpus.notes.listener:
+        class: oxpus\notes\event\main_listener
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
+            - '@ext.manager'
+            - '@path_helper'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@config'
+            - '@controller.helper'
+            - '@auth'
+            - '@template'
+            - '@user'
+            - '@language'
+        tags:
+            - { name: event.listener }
