@@ -29,8 +29,9 @@ class listener implements EventSubscriberInterface
 	protected $config;
 	protected $root_path;
 	protected $php_ext;
+	protected $ext_manager;
 
-	public function __construct(\sitesplat\sidebar\types\manager $manager, \phpbb\user $user, \phpbb\request\request $request, \phpbb\config\db_text $config_text, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $phpbb_root_path, $php_ext)
+	public function __construct(\sitesplat\sidebar\types\manager $manager, \phpbb\user $user, \phpbb\request\request $request, \phpbb\config\db_text $config_text, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $phpbb_root_path, $php_ext, \phpbb\extension\manager $ext_manager)
 	{
 		$this->manager = $manager;
 		$this->user = $user;
@@ -41,6 +42,7 @@ class listener implements EventSubscriberInterface
 		$this->config = $config;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+		$this->ext_manager = $ext_manager;
 	}
 
 	static public function getSubscribedEvents()
@@ -97,7 +99,14 @@ class listener implements EventSubscriberInterface
 				($this->manager->is_enabled($type_name) && $this->manager->is_enabled($type_name) && $slot[$i-1]['id'] > 1) ? 
 					$this->manager->check_condition($type_name) : null;
 			}
-			
+
+			if ($this->ext_manager->is_enabled('phpbb/collapsiblecategories'))
+			{
+				$this->template->assign_vars(array(
+					'PHPBB_COLLAPSIBLE_ENABLED'	=> true,
+				));
+			}
+
 			$this->template->assign_vars(array(
 				'S_SIDEBAR_TYPE'			=> !$sidebar_config['type'],
 				'S_SIDEBAR_ALL_PAGES'		=> !$sidebar_config['all_pages'],

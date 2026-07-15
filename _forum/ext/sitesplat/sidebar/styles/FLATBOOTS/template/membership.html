@@ -1,25 +1,29 @@
-<!-- IF MEMBERSTATS -->
+{% if MEMBERSTATS %}
 <div class="sidebar">
-<div id="membership{slot.SIDEBAR_ID}" class="panel panel-inverse">
+<div id="membership{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
     <div class="panel-heading">
-     <h4 class="panel-title">{L_MEMBERSHIPS}</h4>
+		{% if PHPBB_COLLAPSIBLE_ENABLED %}
+		<a class="toggle-membership{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
+		{% endif %}
+		<span>{{ lang('MEMBERSHIPS') }}</span>
     </div>
-	<div class="panel-body">
-	 <div id="innermembership{slot.SIDEBAR_ID}" class="inner">
-		<a href="{U_MEMBERSHIPS}">{L_MEMBERSHIPS_CTA}</a>
+    <div id="innermembership{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+		<a href="{{ U_MEMBERSHIPS }}">{{ lang('MEMBERSHIPS_CTA') }}</a>
 		<div id="membershipchart" style="width:100%;height:150px;margin:0 auto;background-color:transparant;"></div>
 	    <script>
-			var memberstats = {MEMBERSTATS};
+			var memberstats = {{ MEMBERSTATS }};
 		</script>
-	 </div>
 	</div>
 </div>
 </div>
-<!-- ENDIF -->
+{% if PHPBB_COLLAPSIBLE_ENABLED %}
+<script>head.ready(function(){(function(){window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}!=""){$(".toggle-membership{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }});$("#innermembership{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }})}$(".toggle-membership{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-membership{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innermembership{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-membership{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innermembership{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_membership{{ slot.SIDEBAR_ID }}=""}})})()});</script>
+{% endif %}
+{% endif %}
 <!-- // some trickery here to eliminate the conflict with the poll type block, likeBB and BBreaction extensions top stats pages  -->
-<!-- IF not POLTITLE -->
-    <!-- INCLUDEJS @sitesplat_sidebar/js/highcharts.js -->
-<!-- ENDIF -->  
-<!-- IF MEMBERSTATS -->
-    <!-- INCLUDEJS @sitesplat_sidebar/js/membership.js -->
-<!-- ENDIF --> 
+{% if not POLTITLE %}
+    {% INCLUDEJS '@sitesplat_sidebar/js/highcharts.js' %}
+{% endif %}  
+{% if MEMBERSTATS %}
+    {% INCLUDEJS '@sitesplat_sidebar/js/membership.js' %}
+{% endif %}

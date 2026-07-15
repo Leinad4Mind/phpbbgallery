@@ -21,7 +21,7 @@ $lang = array_merge($lang, array(
 	'ACP_SIDEBAR_SLOTS'	=> 'Sidebar',
 	'NEWEST_TOPICS'		=> 'Newest Posts',
 	'NO_TOPIC_EXIST'	=> 'No posts exist for viewing',
-	'TOP_POSTERS'		=> 'Top active users',
+	'TOP_POSTERS'		=> 'Most active users',
 	'NEWEST_USERS'		=> 'Newest users',
 	'IN'                => 'In',
     'BBPOINTS_TRANSFER' => 'Transfer points',
@@ -36,15 +36,15 @@ $lang = array_merge($lang, array(
 
 	'CALENDAR'			=> 'Calendar',
 	'CLOCK'				=> 'Time',
-	'LIKEDD'			=> 'Last likes',
+	'LIKEDD'			=> 'Recent received likes',
 	
-	'LAST_BADGES'		=> 'Last badges',	
+	'LAST_BADGES'		=> 'Recent badges',	
 	'SIDEBAR_BADGE'		=> 'Badge name',
 	'SIDEBAR_DATE'		=> 'Date',
-	'LAST_BBREACTIONS'	=> 'Last BBreactions',
+	'LAST_BBREACTIONS'	=> 'Recent reactions',
 	'SIDEBAR_REACTION'	=> 'Reaction type',
-	'BBPOINTS'			=> 'Points',
-	'POLL'				=> 'Last poll',
+	'BBPOINTS'			=> 'BBpoints',
+	'POLL'				=> 'Recent poll',
 	'NEWSLETTER'		=> 'Newsletter',
 	'SIGN_IN_NEWS'		=> 'Sign in for our newsletter',
 	'SUBSCRIBE_BTN'		=> 'Subscribe',
@@ -59,7 +59,6 @@ $lang = array_merge($lang, array(
 	
 	'STAFF'				=> 'Staff online',
 	'STAFF_UNKNOWN'	    => 'N/A',
-	'RECEIVED_BY'		=> 'Received By',
 	
 	'DONATIONS'			=> 'Donations',
 	'DONATE_ALSO'		=> 'Ready to donate? Awesome! here you go.',

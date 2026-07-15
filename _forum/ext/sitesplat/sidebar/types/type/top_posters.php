@@ -148,7 +148,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 									  'avatar_type'		=> $row['user_avatar_type'], 
 									  'avatar_width'	=> $row['user_avatar_width'], 
 									  'avatar_height'	=> $row['user_avatar_height'])), $match) :
-									  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+									  generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
 				$user_posts[1][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
@@ -173,6 +173,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				$board_url = generate_board_url() . '/';
 				$match = array();
 				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 							phpbb_get_user_avatar(
@@ -181,13 +182,14 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 									  'avatar_type'		=> $row['user_avatar_type'], 
 									  'avatar_width'	=> $row['user_avatar_width'], 
 									  'avatar_height'	=> $row['user_avatar_height'])),$match) :
-									  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif');
+									  generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
 
 				$user_posts[2][$row['user_id']] = array(
 					'user_id'      => $row['user_id'],
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
-					'avatar'		=> (sizeof($match) > 1) ? array_pop($match) : $avatar,
+					//'avatar'		=> (sizeof($match) > 1) ? array_pop($match) : $avatar,
+					'avatar'		=> ((sizeof($match) > 1) ? strtr(array_pop($match), [ 'gallery/../random' => 'random', './../../' => $board_url,  './../' => $board_url, './' => $board_url ]) : $avatar),
 					'user_posts'    => $row['user_posts'],
 				);
 			}

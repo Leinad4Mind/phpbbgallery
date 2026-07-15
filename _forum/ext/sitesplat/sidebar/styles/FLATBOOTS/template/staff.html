@@ -1,30 +1,37 @@
-<!-- IF .staff -->
+{% if loops.staff|length %}
 <div class="sidebar">
-<div id="staff{slot.SIDEBAR_ID}" class="panel panel-info">
+<div id="staff{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
     <div class="panel-heading">
-     <h4 class="panel-title">{L_STAFF}</h4>
+		{% if PHPBB_COLLAPSIBLE_ENABLED %}
+		<a class="toggle-staff{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
+		{% endif %}
+		<span>{{ lang('STAFF') }}</span>
     </div>
-	<div class="panel-body">
-	 <div id="staff{slot.SIDEBAR_ID}" class="inner">
-		 <div class="media-list user-list">
-			<!-- BEGIN staff -->
-			<div class="media">
+	 <div id="innerstaff{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+		 <ul class="media-list user-list">
+			{% for staff in loops.staff %}
+            <div class="media">
 				<div class="media-left">
-					<a href="#">
-					  <img alt="" src="{staff.AVATAR}" class="media-object img-circle">
-					</a>
-				 </div>
-				<div class="media-body">
-					<h4 class="media-heading">{staff.USERNAME_FULL}</h4>
-					<span><a href="{staff.S_SEARCH_ACTION}" title="">{staff.TIME}</a></span>
+					<img alt="" src="{{ staff.AVATAR }}" class="media-object img-circle">
 				</div>
+				<div class="media-body">
+					<div class="media-heading">{{ staff.USERNAME_FULL }}</div>
+					<span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;<a href="{{ staff.S_SEARCH_ACTION }}" title="">{{ staff.TIME }}</a></span>
+				</div>
+				<div class="space5"></div>
 			</div>
-			<!-- BEGINELSE -->
-             <div>{L_NO_MEMBERS}</div>
-			<!-- END staff -->
-		 </div>	
+			{% else %}
+			<li class="sidebar-last-column">
+				<span class="last-wrapper text-overflow">
+					{{ lang('NO_MEMBERS') }}
+				</span>
+			</li>
+			{% endfor %}
+		 </ul>	
 		</div>
-	 </div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% if PHPBB_COLLAPSIBLE_ENABLED %}
+<script>head.ready(function(){(function(){window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}!=""){$(".toggle-staff{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }});$("#innerstaff{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }})}$(".toggle-staff{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-staff{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerstaff{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-staff{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerstaff{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_staff{{ slot.SIDEBAR_ID }}=""}})})()});</script>
+{% endif %}
+{% endif %}

@@ -1,29 +1,30 @@
-<!-- IF .last_badges -->
+{% if loops.last_badges|length %}
 <div class="sidebar">
-<div id="lastbadges{slot.SIDEBAR_ID}" class="panel panel-success">
+<div id="lastbadges{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
     <div class="panel-heading">
-     <h4 class="panel-title">{L_LAST_BADGES}</h4>
+		{% if PHPBB_COLLAPSIBLE_ENABLED %}
+		<a class="toggle-lastbadges{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
+		{% endif %}
+		<span>{{ lang('LAST_BADGES') }}</span>
     </div>
-	<div class="panel-body">
-	 <div id="innerlastbadges{slot.SIDEBAR_ID}" class="inner">
-		<ul class="media-list user-list">
-		<!-- BEGIN last_badges -->
-			<li class="media">
-                    <div class="media-left">
-                        <a href="#">
-                          <img alt="" src="{last_badges.BADGE}" class="media-object img-circle">
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">{last_badges.USERNAME_FULL}</h4>
-                        <span>{last_badges.NAME}</span>  
-						<small class="date"><i class="fa fa-clock-o"></i>&nbsp;{last_badges.BADGE_DATE}</small>
-                    </div>
-            </li>
-		<!-- END last_badges -->
-		</ul>
-	 </div>
+	 <div id="innerlastbadges{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+		<div class="media-list user-list">
+		{% for last_badges in loops.last_badges %}
+			<div class="media">
+				<div class="media-left">
+					<img alt="" src="{{ last_badges.BADGE }}" class="media-object img-circle">
+				</div>
+				<div class="media-body">
+					<div class="media-heading">{{ last_badges.USERNAME_FULL }}<br />{{ last_badges.NAME }}</div>
+					<span><a href="#"><i class="fa fa-clock-o"></i>&nbsp;{{ last_badges.BADGE_DATE }}</a></span>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
 	</div>
 </div>
 </div>
-<!-- ENDIF -->
+{% if PHPBB_COLLAPSIBLE_ENABLED %}
+<script>head.ready(function(){(function(){window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}!=""){$(".toggle-lastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }});$("#innerlastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }})}$(".toggle-lastbadges{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-lastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerlastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-lastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerlastbadges{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_lastbadges{{ slot.SIDEBAR_ID }}=""}})})()});</script>
+{% endif %}
+{% endif %}

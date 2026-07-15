@@ -99,7 +99,7 @@ class staff extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT u.user_id 
 					FROM ' . USER_GROUP_TABLE . ' u
 					INNER JOIN ' . GROUPS_TABLE . " g ON g.group_id = u.group_id 
-					WHERE g.group_id = 15";
+					WHERE u.group_id = 15";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{

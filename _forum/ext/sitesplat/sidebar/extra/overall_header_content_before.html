@@ -1,18 +1,18 @@
-<!-- IF S_SIDEBAR_ALL_PAGES or S_INDEX -->
+{% if S_SIDEBAR_ALL_PAGES or S_INDEX %}
 <div class="row">
 	<div class="col-md-3" id="page-sidebar">
 		<div id="sidebar-border">
-		<!-- BEGIN slot -->
-		<!-- IF slot.SIDEBAR_SLOT == 1 -->
-			<!-- DEFINE $TITLE = '{slot.SIDEBAR_TITLE}' -->
-			<!-- DEFINE $TEXT = '{slot.SIDEBAR_TEXT}' -->
-			<!-- INCLUDE custom.html -->
-		<!-- ELSE IF not slot.SIDEBAR_SLOT == 0 -->
-			<!-- INCLUDE {slot.SIDEBAR_SLOT} -->
-		<!-- ENDIF -->
-		<!-- END slot -->
+		{% for slot in loops.slot %}
+		{% if slot.SIDEBAR_SLOT == 1 %}
+			{% DEFINE TITLE = ''~ slot.SIDEBAR_TITLE ~'' %}
+			{% DEFINE TEXT = ''~ slot.SIDEBAR_TEXT ~'' %}
+			{% INCLUDE 'custom.html' %}
+		{% elseif not slot.SIDEBAR_SLOT == 0 %}
+			{% INCLUDE ''~ slot.SIDEBAR_SLOT ~'' %}
+		{% endif %}
+		{% endfor %}
 		</div>
 	</div>
 	<div id="contentje">
 	 <div class="col-md-9">
-<!-- ENDIF -->
+{% endif %}

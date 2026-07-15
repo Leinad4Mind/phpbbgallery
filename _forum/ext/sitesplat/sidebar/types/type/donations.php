@@ -99,16 +99,18 @@ class donations extends \sitesplat\sidebar\types\type\base
 
 			// do the main sql query
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height,
-				d.mc_gross, d.payment_date
+				d.mc_gross, d.payment_date, d.payment_status
 				FROM ' . $donations_table . ' d
 				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = d.user_id
 				 ' . $sql_where . ' ' . $sql_and . '
+				 AND d.payment_status LIKE "Completed"
 				ORDER BY d.payment_date DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-			  $match = array();
-			  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+				$board_url = generate_board_url() . '/';
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 						  phpbb_get_user_avatar(
 							  array('avatar'			=> $row['user_avatar'], 
 									'avatar_type'		=> $row['user_avatar_type'], 
@@ -121,7 +123,8 @@ class donations extends \sitesplat\sidebar\types\type\base
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
 				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+				//	'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'		=> ((sizeof($match) > 1) ? strtr(array_pop($match), [ 'gallery/../random' => 'random', './../../' => $board_url,  './../' => $board_url, './' => $board_url ]) : $avatar),
 					'mc_gross'    => $row['mc_gross'],
 				);
 			}
@@ -135,8 +138,9 @@ class donations extends \sitesplat\sidebar\types\type\base
 		{
 			foreach ($donations as $row)
 			{
-				$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
-									get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+				$username_string = ($this->auth->acl_get('u_viewprofile')) ? 
+								get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
+								get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 	
 				$this->template->assign_block_vars('donations',array(
 					'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),

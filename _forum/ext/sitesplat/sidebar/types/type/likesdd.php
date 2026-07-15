@@ -66,14 +66,14 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 
 		$sql_and = !empty($sql_where) ? ' AND user_inactive_reason = 0' : ' WHERE user_inactive_reason = 0';
 
-		$forum_read_ary = $this->auth->acl_getf('f_read');
-		foreach ($forum_read_ary as $forum_id => $allowed)
-		{
-			if ($allowed['f_read'])
-			{
-				$forum_ary[] = (int) $forum_id;
-			}
+		$forum_read_ary = $this->auth->acl_getf('f_read', true);
+		
+		// no readable forums, so we're done
+		if (!count($forum_read_ary)) {
+			return;
 		}
+		
+		$forum_ary = array_keys($forum_read_ary); 
 		$forum_ary = array_unique($forum_ary);
 		$visibility = $this->container->get('content.visibility');
 		$sql_and .= ' AND ' . $visibility->get_forums_visibility_sql('post', $forum_ary);
@@ -97,7 +97,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 
 		//  damn phpbb url rewrite and broken driver
-		//	$board_url = generate_board_url();
+			//$board_url = generate_board_url();
 			$board_url = generate_board_url() . '/';
 			
 			while ($row = $this->db->sql_fetchrow($result))
@@ -116,10 +116,11 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 					'user_id'		=> $row['poster_id'],
 					'username'		=> $row['username'],
 				//	'avatar'		=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-					'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					//'avatar'	    => ((sizeof($match) > 1) ? str_replace(['./../../', './../', './'], $board_url, array_pop($match)) : $avatar),
+					'avatar'	    => ((sizeof($match) > 1) ? strtr(array_pop($match), [ 'gallery/../random' => 'random', './../../' => $board_url,  './../' => $board_url, './' => $board_url ]) : $avatar),
 					'user_colour'	=> $row['user_colour'],
 					'subject'		=> $row['post_subject'],
-					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
+					'post_url'		=> append_sid($board_url . 'viewtopic.' . $this->php_ext, 'p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
 				);
 			}

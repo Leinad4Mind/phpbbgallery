@@ -1,33 +1,34 @@
-<!-- IF NEWSLETTER and SCRIPT_NAME eq 'index' -->
+{% if NEWSLETTER and SCRIPT_NAME eq 'index' %}
 <div class="sidebar">
-<div id="newsletter{slot.SIDEBAR_ID}" class="panel panel-info">
+<div id="newsletter{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
     <div class="panel-heading">
-     <h4 class="panel-title">{L_NEWSLETTER}</h4>
+		{% if PHPBB_COLLAPSIBLE_ENABLED %}
+		<a class="toggle-newsletter{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
+		{% endif %}
+		<span>{{ lang('NEWSLETTER') }}</span>
     </div>
-	<div class="panel-body">
-	 <div id="innernewsletter{slot.SIDEBAR_ID}" class="inner">
+	 <div id="innernewsletter{{ slot.SIDEBAR_ID }}" class="panel-body inner">
 		<div class="subscribe-form" id="subscribe-sidebar">
-			<!-- IF not S_SUBSCRIBE_MESSAGE -->
-				<form method="post" action="{U_SUBSCRIBE_ACTION}" id="subscribe-form-sidebar">
+			{% if not S_SUBSCRIBE_MESSAGE %}
+				<form method="post" action="{{ U_SUBSCRIBE_ACTION }}" id="subscribe-form-sidebar">
 					<fieldset>
 					  <div class="form-group nomargin">
-					   <label class="sr-only" for="email">{L_SUBSCRIBE_EMAIL}{L_COLON}</label>
+					   <label class="sr-only" for="email">{{ lang('SUBSCRIBE_EMAIL') }}{{ lang('COLON') }}</label>
 						<div class="input-group">
 						  <span class="input-group-addon"><i class="icon-moon-email"></i></span>
-						  <input class="form-control" type="email" name="email" id="email" spellcheck="false" autocomplete="off" placeholder="{L_EMAIL}">
+						  <input class="form-control" type="email" name="email" id="email" spellcheck="false" autocomplete="off" placeholder="{{ lang('EMAIL') }}">
 						</div>
 					  </div>
 					<div class="form-group">
-					  <button type="submit" class="btn btn-success btn-block" name="subscribe" value="{L_SUBSCRIBE_BUTTON}">{L_SUBSCRIBE_BTN}</button>
+					  <button type="submit" class="btn btn-success btn-block" name="subscribe" value="{{ lang('SUBSCRIBE_BUTTON') }}">{{ lang('SUBSCRIBE_BTN') }}</button>
 					</div>
 					</fieldset>
 				</form>
-			<!-- ELSEIF S_SUBSCRIBE_MESSAGE -->
+			{% elseif S_SUBSCRIBE_MESSAGE %}
 				<div class="col-sm-12">
-					<p>{S_SUBSCRIBE_MESSAGE}</p>
+					<p>{{ S_SUBSCRIBE_MESSAGE }}</p>
 				</div>
-			<!-- ENDIF -->
-	 </div>
+			{% endif %}
 	 </div>
 	</div>
 </div>
@@ -51,5 +52,8 @@ head.ready('jquery.min.js', function(){
 		});
 	});
 });
-</script>	
-<!-- ENDIF -->
+</script>
+{% if PHPBB_COLLAPSIBLE_ENABLED %}
+<script>head.ready(function(){(function(){window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}!=""){$(".toggle-newsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }});$("#innernewsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }})}$(".toggle-newsletter{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-newsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innernewsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-newsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innernewsletter{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_newsletter{{ slot.SIDEBAR_ID }}=""}})})()});</script>
+{% endif %}
+{% endif %}
