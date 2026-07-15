@@ -15,6 +15,11 @@ namespace sitesplat\flatbootsminicms\migrations\v10x;
  */
 class m1_initial_schema extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		return $this->db_tools->sql_table_exists($this->table_prefix . 'flatboots_style_menu');
+	}
+
 	/**
 	 * Assign migration file dependencies for this migration
 	 *

@@ -15,6 +15,17 @@ namespace sitesplat\flatbootsminicms\migrations\v10x;
 */
 class m5_add_twitter_screen_name_config extends \phpbb\db\migration\migration
 {
+	public function effectively_installed()
+	{
+		$sql = 'SELECT config_value
+			FROM ' . $this->table_prefix . "flatboots_style_config
+			WHERE config_name = 'twitter_screen_name'";
+		$result = $this->db->sql_query($sql);
+		$value = (int) $this->db->sql_fetchfield('config_value');
+		$this->db->sql_freeresult($result);
+		return $value;
+	}
+
 	/**
 	 * Assign migration file dependencies for this migration
 	 *

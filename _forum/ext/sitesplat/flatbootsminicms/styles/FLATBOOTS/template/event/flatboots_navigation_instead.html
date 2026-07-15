@@ -61,6 +61,7 @@
 </ul>
 <!-- ENDIF -->
 <!-- Remove ext links -->
+<!-- EVENT overall_header_navigation_new -->
 
 <!-- IF not S_USER_LOGGED_IN -->
     <ul class="nav navbar-nav navbar-right navbar-nav-fancy">
@@ -93,7 +94,7 @@
 			
 			<li class="dropdown dropdown-avatar">
 			  <a href="javascript:void(0)" data-toggle="dropdown">
-			   <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
+			   <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/user.png" alt="No avatar"><!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
 			  </a>
                 <!-- IF S_USER_NEW_PRIVMSG --><em class="notifications-pm badge badge-warning">{PM_NEW_COUNT_BADGE}</em><!-- ELSEIF S_USER_UNREAD_PRIVMSG --><em class="notifications-pm badge badge-success">{PRIVATE_MESSAGE_COUNT}</em><!-- ENDIF -->                   
 				   <ul class="dropdown-menu user-login-drop arrow-up">
@@ -103,34 +104,49 @@
                               <div class="navbar-content navbar-avatar">
                                     <div class="row">
                                         <div class="col-md-5 col-xs-5">
-                                          <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->
-                                            <p class="text-center">
-												<a href="{U_UCP_PROFILE_AVATAR}"><small>{L_CHANGE_AVATAR}</small></a>
-											</p>
+                                          <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user.png" alt="No avatar"><!-- ENDIF -->
+                                            <p class="text-center"><a href="{U_UCP_PROFILE_AVATAR}">
+                                                <small>{L_CHANGE_AVATAR}</small>
+                                            </a></p>
                                         </div>
-                                        <div class="col-md-7 col-xs-7">
-											<span>{CURRENT_USERNAME_FULL}</span>
+                                        <div class="col-md-7 col-xs-7"><span>{CURRENT_USERNAME_FULL}</span>
                                             <p class="text-muted small">{USER_EMAIL_MENU}</p>
                                              <!-- IF U_ACP --><a class="btn btn-info btn-sm btn-block" href="{U_ACP}"><i class="fa fa-user-md"></i>&nbsp;{L_ADMIN_PANEL_GENERAL}</a><!-- ENDIF -->
 	                                         <!-- IF U_MCP and SCRIPT_NAME neq 'mcp' --><a class="btn btn-warning btn-sm btn-block" href="{U_MCP}"><i class="fa fa-legal"></i>&nbsp;{L_MODERATOR_PANEL_GENERAL}</a><!-- ENDIF -->
                                              <!-- IF S_REGISTERED_USER and SCRIPT_NAME neq 'ucp' --><a class="btn btn-success btn-sm btn-block" href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a><!-- ENDIF -->
 											 <!-- EVENT navbar_header_profile_list_after -->
+											 <!-- IF .accountswitch -->
+												<div class="navbar-footer">
+													<div class="navbar-footer-content">
+														<div class="row">
+															<!-- IF U_RESTORE_PERMISSIONS -->
+															<div class="col-md-6 col-xs-6"><a class="btn btn-warning btn-sm" href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i>&nbsp;{L_RESTORE_PERMISSIONS}</a></div>
+															<!-- ELSE -->
+															<div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm" href="{U_UCP_PROFILE_SETTINGS}"><i class="fa fa-key"></i>&nbsp;{L_CHANGE_PASSWORD}</a></div>
+															<!-- ENDIF -->
+															<div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm pull-right" href="{U_LOGIN_LOGOUT}"><i class="fa fa-sign-out"></i>&nbsp;{L_LOGOUT}</a></div>
+														</div>
+													</div>
+											   </div>
+											 <!-- ENDIF -->
 										</div>
                                     </div>
 							  </div>
 
+							<!-- IF not .accountswitch -->
 							  <div class="navbar-footer">
                                     <div class="navbar-footer-content">
                                         <div class="row">
-                                            <!-- IF U_RESTORE_PERMISSIONS -->
-                                            <div class="col-md-6 col-xs-6"><a class="btn btn-warning btn-sm btn-block" href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i>&nbsp;{L_RESTORE_PERMISSIONS}</a></div>
+                                        	<!-- IF U_RESTORE_PERMISSIONS -->
+                                            <div class="col-md-6 col-xs-6"><a class="btn btn-warning btn-sm" href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i>&nbsp;{L_RESTORE_PERMISSIONS}</a></div>
                                             <!-- ELSE -->
-                                            <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm btn-block" href="{U_UCP_PROFILE_SETTINGS}"><i class="fa fa-key"></i>&nbsp;{L_CHANGE_PASSWORD}</a></div>
+                                            <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm" href="{U_UCP_PROFILE_SETTINGS}"><i class="fa fa-key"></i>&nbsp;{L_CHANGE_PASSWORD}</a></div>
                                             <!-- ENDIF -->
-                                            <div class="col-md-6 col-xs-6"><a class="btn btn-danger btn-sm btn-block pull-right" href="{U_LOGIN_LOGOUT}"><i class="fa fa-sign-out"></i>&nbsp;{L_LOGOUT}</a></div>
+                                            <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm pull-right" href="{U_LOGIN_LOGOUT}"><i class="fa fa-sign-out"></i>&nbsp;{L_LOGOUT}</a></div>
                                         </div>
                                     </div>
                                </div>
+							<!-- ENDIF -->
 							</div>
                         </li>
                     </ul>
