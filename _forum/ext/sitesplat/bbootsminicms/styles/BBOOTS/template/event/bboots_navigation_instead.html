@@ -1,0 +1,101 @@
+<!-- Main navigation block -->
+<nav class="mainnav" aria-label="Primary">
+	  <ul>	
+<!-- Remove ext links -->
+<!-- IF S_ALLOW_CUSTOMLINKS -->
+    <li class="nav-icon">
+		<a>{L_MORE}&nbsp;<span class="has-sub"><i class="fa fa-globe"></i></span></a>
+		<p>{L_MAIN_MAIN_STUFF}</p>
+		 <ul class="submenu greydout">
+            <!-- EVENT overall_header_navigation_prepend -->
+			 <li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i>&nbsp;{L_FAQ}</a><span></span></li>
+			<!-- EVENT overall_header_navigation_append -->
+	     </ul>
+	</li>
+<!-- ENDIF -->
+<!-- Remove ext links -->
+	  
+<!-- BEGIN menu -->
+	<li class="nav-icon">
+			<a href="{menu.URL}"<!-- IF menu.EXTERNAL --> target="_blank"<!-- ENDIF -->>{menu.NAME} <span class="has-sub"><i class="{menu.ICON} icon-flip-horizontal"></i></span></a>
+			<p>{menu.DESC}</p>
+			<!-- IF .menu.sub -->
+		 	<ul class="submenu greydout">
+				<!-- BEGIN sub -->
+				<li><a href="{sub.URL}"<!-- IF sub.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{sub.ICON} icon-flip-horizontal"></i> {sub.NAME}</a><span></span></li>
+				<!-- END sub -->
+			</ul>
+			<!-- ENDIF -->
+	</li>
+<!-- END menu -->	
+
+		<!-- IF not S_USER_LOGGED_IN -->
+		<li class="nav-icon">
+			<!-- IF not ENABLE_POPUP_LOGIN -->
+				<a href="{U_LOGIN_LOGOUT}">{L_LOGIN} <span class="has-sub"><i class="fa fa-sign-in"></i></span></a>
+			<!-- ELSE -->
+				<a href="" data-toggle="modal" data-target="#modal-login" role="button" data-toggle="modal">{L_LOGIN} <span class="has-sub"><i class="fa fa-sign-in"></i></span></a>
+			<!-- ENDIF -->
+			<p>{L_HANG_AROUND}</p>
+		</li>
+		<!-- ENDIF -->
+					 
+		<!-- IF not S_IS_BOT -->
+	    <!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+	    <li class="nav-icon">
+			<a href="{U_REGISTER}">{L_REGISTER} <span class="has-sub"><i class="fa fa-thumbs-up"></i></span></a>
+			<p>{L_JOIN_THE_CLUB}</p>
+		</li>
+	    <!-- ENDIF -->
+		<!-- ENDIF -->
+	  </ul>
+		<div class="navBtn"><span>{L_MENU}</span>
+		 <a data-toggle="collapse" data-target="#responsive-navigation" class="listen_menu fa fa-align-justify" href="javascript:void(0);" title=""></a>
+		 <!-- IF not S_USER_LOGGED_IN -->
+		 	<!-- IF not ENABLE_POPUP_LOGIN -->
+		 		<a class="fa fa-sign-in" href="{U_LOGIN_LOGOUT}" title=""></a>
+		 	<!-- ELSE -->
+				<a class="fa fa-sign-in" href="" data-toggle="modal" data-target="#modal-login" role="button" data-toggle="modal"></a>
+			<!-- ENDIF -->
+		 <!-- ENDIF -->
+		</div>
+</nav> 
+<!-- Main navigation block -->
+
+<!-- MOBILE Navigation block -->
+<!-- Everything you want hidden at 940px or less, place within here -->
+    <nav class="hidden-lg hidden-md hidden-sm">
+	 <div id="responsive-navigation" class="collapse">
+		<ul class="flexnav list-unstyled">
+	<!-- BEGIN menu -->
+	      <!-- IF .menu.sub -->
+	      <li class="item-with-ul">
+			<a href="{menu.URL}"<!-- IF menu.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{menu.ICON}"></i> {menu.NAME}</a>
+	        <ul class="collapse list-unstyled viewdetails-{menu.S_ROW_COUNT}">
+			<!-- BEGIN sub -->
+			 <li><a href="{sub.URL}"<!-- IF sub.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{sub.ICON}"></i> {sub.NAME}</a></li>
+			<!-- END sub -->
+			</ul>
+			 <a class="touch-button" href="javascript:void(0);" data-toggle="collapse" data-target=".viewdetails-{menu.S_ROW_COUNT}"><i class="navicon fa fa-sort-down"></i></a>
+		  </li>
+	      <!-- ELSE -->
+	      <li><a href="{menu.URL}"<!-- IF menu.EXTERNAL --> target="_blank"<!-- ENDIF -->><i class="{menu.ICON}"></i> {menu.NAME}</a></li>
+	      <!-- ENDIF -->
+	<!-- END menu -->
+		<!-- Remove ext links -->
+		<!-- IF S_ALLOW_CUSTOMLINKS -->
+			<li class="item-with-ul">
+			<a href="javascript:void(0);"><i class="fa fa-globe"></i>&nbsp;{L_MORE}</a>
+		     <ul class="collapse viewmore list-unstyled">
+                <!-- EVENT overall_header_navigation_prepend -->
+					 <li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i>&nbsp;{L_FAQ}</a><span></span></li>
+				<!-- EVENT overall_header_navigation_append -->
+             </ul>
+			  <a class="touch-button" href="javascript:void(0);" data-toggle="collapse" data-target=".viewmore"><i class="navicon fa fa-sort-down"></i></a>
+		</li>
+		<!-- ENDIF -->
+		<!-- Remove ext links -->
+        </ul>
+	  </div>
+    </nav> 
+<!-- MOBILE Navigation block -->
