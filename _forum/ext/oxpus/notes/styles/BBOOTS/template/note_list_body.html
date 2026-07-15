@@ -1,0 +1,170 @@
+<!-- IF S_NOTES_POPUP -->
+	<!-- INCLUDE simple_header.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_header.html -->
+<!-- ENDIF -->
+<div class="side-segment"><h3>{L_NOTES}</h3></div> 
+<!-- IF not S_NO_NOTES -->
+<form action="{S_FORM_ACTION}" method="post" id="notes">
+
+<div class="well">
+        <div class="input-group">    					
+					
+						<div class="input-group-btn search-panel">
+							
+							<span id="search_concept">{SEARCH_IN}</span>
+						
+						</div>
+						<input name="search_string" value="all" id="search_string" type="hidden">         
+						<input class="form-control" name="search_string" type="text">
+						<span class="input-group-btn">
+								<input type="submit" class="btn btn-info" value=" {L_SEARCH}" />
+
+						</span>
+					</div>
+
+
+      
+		<div class="space10"></div>
+
+        <div class="input-group buscador-principal">    					
+		{SORT_BY}&nbsp;{SORT_ORDER}&nbsp;<input type="submit" class="btn btn-default" value="{L_SORT}" />
+
+	</div>
+</div>
+
+</form>
+
+<!-- IF L_FILTER -->
+<div class="alert alert-info">
+   * {L_FILTER}
+</div>
+<!-- ENDIF -->
+
+<div class="clearfix">
+   <div class="pull-left">
+		<!-- IF S_NEW_NOTE --><a href="{U_NEW_NOTE}" role="button" class="btn btn-default btn-load" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-plus"></i>&nbsp;{L_ADD_NOTE}</a><!-- ENDIF -->
+	</div>
+
+<!-- IF not S_NO_NOTES -->
+ <div class="pull-right">
+     <ul class="pagination pagination-sm">
+	 <li><a class="pagination-trigger" data-placement="top">{L_NOTES}</a></li>
+	 <li class="active"><a>{L_NOTES_TOTAL}</a></li>
+	</ul>
+	</div>
+<!-- ENDIF -->
+ </div>
+
+
+<!-- ENDIF -->
+
+<!-- IF S_NO_NOTES -->
+<div class="alert alert-primary">
+   {L_NO_NOTES}
+</div>
+
+		<div class="space10"></div>
+
+
+<!-- ELSE -->
+	<!-- BEGIN notes_row -->
+  <div class="well well-sm forum-answer">
+    <div class="row">
+	    <div class="postbody col-md-12">
+		<div class="pull-left">
+		     <h3>{notes_row.NOTE_SUBJECT}</h3>
+		    </div>
+		  <div class="clearfix">
+			<div class="pull-right">
+			<div role="toolbar" class="btn-toolbar">
+		
+			 
+			
+					<div class="btn-group btn-group-post hidden-xs visible-sm visible-md visible-lg" role="group">
+					 <a class="btn btn-default btn-sm" href="{notes_row.U_EDIT_NOTE}" title="{L_EDIT_POST}" role="button"><i class="fa fa-edit"></i></a>
+					</div>
+					<div class="btn-group btn-group-post hidden-xs visible-sm visible-md visible-lg" role="group">
+					 <a class="btn btn-default btn-sm" href="{notes_row.U_DELETE_NOTE}" title="{L_DELETE_POST}" role="button"><i class="fa fa-trash-o"></i></a>
+					</div>
+
+			</div>
+			</div>
+			
+		
+		  </div>
+			
+		<div class="clearfix">
+			<div class="pull-left timepost">
+				<i class="fa fa-clock-o"></i>&nbsp;{notes_row.NOTE_DATE}
+			</div>
+		</div>
+		
+		<div class="space10"></div>	
+			
+            <div id="post_content{postrow.POST_ID}">
+
+				
+					
+				
+					
+			
+					<span class="hidden hook-bfr-message"></span>
+					<div class="content">{notes_row.NOTE_TEXT}</div>
+						<!-- IF notes_row.NOTES_MEM -->
+						<div class="notice text-muted">
+						<small><span class="label label-danger"><i class="fa fa-bell-o"></i>&nbsp;{L_NOTES_MEM}</span>&nbsp;<i class="fa fa-clock-o"></i>&nbsp;{notes_row.NOTES_MEM}</small>
+						</div>
+						<!-- ENDIF -->
+				
+            </div>
+		</div>
+			
+    </div>
+	
+  </div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- END notes_row -->
+<!-- ENDIF -->
+
+<div class="clearfix">
+   <div class="pull-left">
+		<!-- IF S_NEW_NOTE --><a href="{U_NEW_NOTE}" role="button" class="btn btn-default btn-load" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-plus"></i>&nbsp;{L_ADD_NOTE}</a><!-- ENDIF -->
+		   <!-- IF U_NOTES_PATH --><a href="{U_NOTES_PATH}" role="button" class="btn btn-default btn-load" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-list"></i>&nbsp;{L_NOTES}</a><!-- ENDIF -->
+	</div>
+
+<!-- IF not S_NO_NOTES -->
+ <div class="pull-right">
+     <ul class="pagination pagination-sm">
+	 <li><a class="pagination-trigger" data-placement="top">{L_NOTES}</a></li>
+	 <li class="active"><a>{L_NOTES_TOTAL}</a></li>
+	</ul>
+	</div>
+<!-- ENDIF -->
+ </div>
+
+
+
+
+
+<!-- IF S_NOTES_POPUP -->
+	<div class="space10"></div>
+
+
+	<p class="submit-buttons" style="text-align: center;">
+		<input type="submit" name="cancel" class="btn btn-default" value="{L_CLOSE}" onclick="javascript:window.close()" />
+	</p>
+
+	<br />
+
+	<!-- INCLUDE simple_footer.html -->
+<!-- ELSE -->
+	<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->

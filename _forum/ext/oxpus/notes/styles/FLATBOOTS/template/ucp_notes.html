@@ -1,0 +1,24 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="notes_config" method="post" action="{U_FORM_ACTION}" />
+<div class="tab-pane active">
+	<fieldset class="framed-ucp">
+	<legend>{L_UCP_NOTES}</legend>
+   <div class="control-group"> 
+	<label for="gender" class="control-label">{L_POPUP_NOTES}{L_COLON}</label>
+	<div class="controls controls-row"> 
+        <div class="radio"><input type="radio" name="notes_popup" id="notes_popup1" value="1"<!-- IF NOTES_POPUP --> checked="checked"<!-- ENDIF --> /><label for="notes_popup1">{L_YES}</label></div>   
+        <div class="radio"><input type="radio" name="notes_popup" id="notes_popup0" value="0"<!-- IF not NOTES_POPUP --> checked="checked"<!-- ENDIF --> /><label for="notes_popup0">{L_NO}</label></div>
+	</div> 
+	</div> 
+</fieldset>
+</div>
+
+<div class="space10"></div>
+<div class="form-actions"> 
+	{S_HIDDEN_FIELDS}
+	<button type="submit" name="submit" value="{L_SUBMIT}" class="btn btn-default" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+</div>
+	
+</form>
+<!-- INCLUDE ucp_footer.html -->
