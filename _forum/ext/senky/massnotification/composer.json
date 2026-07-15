@@ -2,7 +2,7 @@
     "name": "senky/massnotification",
     "type": "phpbb-extension",
     "description": "Allows to send mass board notification just like Mass email works.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "GPL-2.0-only",
     "authors": [
         {
