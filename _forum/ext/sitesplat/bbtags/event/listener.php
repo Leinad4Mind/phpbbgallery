@@ -65,7 +65,7 @@ class listener implements EventSubscriberInterface
 			'core.page_header_after'				=> 'load_tags',
 			'core.posting_modify_template_vars'		=> 'modify_template_vars',
 			'core.submit_post_end'					=> 'save_tags',
-            'core.delete_topics_after_query'		=> 'delete_tags',
+			'core.delete_topics_after_query'		=> 'delete_tags',
 			'core.permissions'						=> 'add_permission',
 		);
 	}
@@ -87,7 +87,7 @@ class listener implements EventSubscriberInterface
 				$this->config['bbtags_on_index'] == 1
 				&& substr($this->user->data['session_page'], 0, 6) == 'index.'
 			)
-		) 		        
+		)
 		{
 			$tags = $this->manager->get_tags(0);
 			if ($tags != '')
@@ -97,11 +97,11 @@ class listener implements EventSubscriberInterface
 					$this->assign_tags_to_template('bbtags', explode(',', $tags));
 				}
 				$this->template->assign_vars(array(
-					'META'				=> '<meta name="keywords" content="' . $tags . '">',
+					'META_KEYWORDS' => '<meta name="keywords" content="' . $tags . '">',
 				));
 			}
 		}
-
+		
 		$topic_id = $this->request->variable('t', 0);
 		if ($topic_id)
 		{

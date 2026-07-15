@@ -40,7 +40,7 @@ $lang = array_merge($lang, array(
 	'PAGEFURTHER'						=> 'Next page',
 	'BBTAGS_NO_TAGS'					=> 'No BBtags found',
 	
-	'SS_HELPER_NOTY'	                => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	                => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBTAGS_NOTICE'						=> '<div class="phpinfo"><p>The extension settings are under <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Don\'t forget to review/adjust the <strong>User Permission Roles</strong> under <strong>Permissions &#187; Permission roles &#187; User Roles (Select the Role and hit edit) &#187; Misc (tab): "Can Manage BBtags"</strong>.</p></div>',
 
     'ACP_BBTAGS_MANAGE'					=> 'Manage the current topic tags',
@@ -52,16 +52,16 @@ $lang = array_merge($lang, array(
 	'BBTAGS_TASKS_2'					=> 'Min and Max Tags Settings',
 	'BBTAGS_TASKS_3'					=> 'ACP Module to manage your tags and settings',
 	'BBTAGS_TASKS_4'					=> 'Tag Cloud',
-	'BBTAGS_TASKS_5'					=> 'Built-in Support for BBPreview extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
+	'BBTAGS_TASKS_5'					=> 'Built-in Support for BBPreview extension <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'BBTAGS_TASKS_6'					=> 'Much more..!',
 	
-	'SITESPLAT_COM'		       		    => 'http://sitesplat.com/',
+	'SITESPLAT_COM'		       		    => 'https://sitesplat.com/',
 	'SITESPLAT_COPY'		    		=> '&#169; SiteSplat',
 	'LICENSE_INFO'		        		=> 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_BBTAGS_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBTAGS_VERSION'				=> '1.1.2',
+	'ACP_BBTAGS_VERSION'				=> '1.1.3',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	
 ));
