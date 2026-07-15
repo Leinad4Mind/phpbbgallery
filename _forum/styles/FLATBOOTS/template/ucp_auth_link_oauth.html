@@ -1,0 +1,28 @@
+<!-- BEGIN oauth -->
+	<form id="ucp_oauth_{oauth.SERVICE_ID}" method="post" action="{S_UCP_ACTION}">
+		<fieldset class="framed-ucp">
+	     <legend>{oauth.SERVICE_NAME}</legend>
+			<!-- IF oauth.UNIQUE_ID -->
+			  <label class="control-label">{L_UCP_AUTH_LINK_ID}{L_COLON}</label>
+			<div class="row"> 
+            <div class="col-md-6"> 			
+			<div class="input-group">  
+			<input class="form-control" type="text" value="{oauth.UNIQUE_ID}" readonly>
+			 <span class="input-group-btn">
+			  <button type="submit" name="submit" tabindex="6" value="{L_UCP_AUTH_LINK_UNLINK}" class="btn btn-danger"><i class="fa fa-unlink"></i>&nbsp;{L_UCP_AUTH_LINK_UNLINK}</button>			 
+			 </span>
+			</div>
+			</div>
+			</div>
+			<!-- ELSE -->
+			<div>{L_UCP_AUTH_LINK_ASK}</div>
+			 <button type="submit" name="submit" tabindex="6" value="{L_UCP_AUTH_LINK_LINK}" class="btn btn-success"><i class="fa fa-link"></i>&nbsp;{L_UCP_AUTH_LINK_LINK}</button>
+			<!-- ENDIF -->
+		</fieldset>
+		{oauth.HIDDEN_FIELDS}
+		{S_HIDDEN_FIELDS}
+		{S_FORM_TOKEN}
+	</form>
+	<div class="space10"></div>
+	<div class="space10"></div>
+<!-- END oauth -->

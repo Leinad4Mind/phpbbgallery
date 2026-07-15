@@ -1,0 +1,121 @@
+<div class="side-segment"><h3>{L_FIND_USERNAME}</h3></div>
+<form method="post" action="{S_MODE_ACTION}" id="search_memberlist">
+<div class="clearfix">
+<div class="well">
+ <p>{L_FIND_USERNAME_EXPLAIN}</p>
+<!-- EVENT memberlist_search_fields_before -->
+	
+<div class="row">
+	<div class="col-md-6">
+	<fieldset>
+	<div class="control-group"> 
+	   <label class="control-label" for="username">{L_USERNAME}{L_COLON}</label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm"<!-- IF U_LIVE_SEARCH --> autocomplete="off" data-filter="phpbb.search.filter" data-ajax="member_search" data-min-length="3" data-url="{U_LIVE_SEARCH}" data-results="#user-search"<!-- ENDIF --> placeholder="{L_USERNAME}" name="username" id="username" value="{USERNAME}">
+	<!-- IF U_LIVE_SEARCH -->
+		<div class="dropdown live-search hidden" id="user-search">
+			<ul class="list-unstyled dropdown-contents search-results">
+				<li class="search-result-tpl"><span class="search-result"></span></li>
+			</ul>
+		</div>
+	<!-- ENDIF -->			
+	</div> 
+	</div>
+	
+	<!-- IF S_EMAIL_SEARCH_ALLOWED -->
+	<div class="control-group"> 
+	   <label class="control-label" for="email">{L_EMAIL}{L_COLON}</label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" placeholder="{L_EMAIL}" name="email" id="email" value="{EMAIL}">
+	</div> 
+	</div>
+	<!-- ENDIF -->
+	
+	<!-- IF S_JABBER_ENABLED -->
+	<div class="control-group"> 
+	   <label class="control-label" for="jabber">{L_JABBER}{L_COLON}</label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" placeholder="{L_UCP_JABBER}" name="jabber" id="jabber" value="{JABBER}">
+	</div> 
+	</div>
+	<!-- ENDIF -->
+	
+	<div class="control-group"> 
+	   <label class="control-label" for="joined">{L_JOINED}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+		<select class="selectpicker" data-style="btn btn-default form-control" data-width="auto" name="joined_select">{S_JOINED_TIME_OPTIONS}</select>
+		<input type="text" class="form-control" placeholder="{L_YEAR_MONTH_DAY_PLACEHOLDER}" name="joined" id="joined" value="{JOINED}">
+	</div>
+	</div>
+	
+	<!-- IF S_IP_SEARCH_ALLOWED -->
+    <div class="control-group"> 
+	   <label class="control-label" for="ip">{L_POST_IP}{L_COLON}</label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" placeholder="{L_IP_PLACEHOLDER}" name="ip" id="ip" value="{IP}">
+	</div> 
+	</div>
+    <!-- ENDIF -->
+	
+	<div class="control-group"> 
+	   <label class="control-label" for="search_group_id">{L_GROUP}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+      <select class="selectpicker" name="search_group_id" id="search_group_id">{S_GROUP_SELECT}</select>
+	</div> 
+	</div>
+	
+	</fieldset>
+    </div>
+	
+	<div class="col-md-6">
+	<fieldset>
+	
+	<!-- IF S_VIEWONLINE -->
+	<div class="control-group"> 
+	   <label class="control-label" for="active">{L_LAST_ACTIVE}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+		<select class="selectpicker" data-style="btn btn-default form-control" data-width="auto" name="active_select">{S_ACTIVE_TIME_OPTIONS}</select>
+		<input type="text" class="form-control input-sm" placeholder="{L_YEAR_MONTH_DAY_PLACEHOLDER}" name="active" id="active" value="{ACTIVE}">
+	</div>
+	</div>
+	<!-- ENDIF -->
+
+	<div class="control-group"> 
+	   <label class="control-label" for="count">{L_POSTS}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+		<select class="selectpicker" data-style="btn btn-default form-control" data-width="auto" name="count_select">{S_COUNT_OPTIONS}</select>
+		<input type="text" class="form-control input-sm" placeholder="{L_POSTS_PLACEHOLDER}" name="count" id="count" value="{COUNT}">
+	</div>
+	</div>
+
+	<!-- EVENT memberlist_search_sorting_options_before -->
+	
+	<div class="control-group"> 
+	   <label class="control-label" for="sk">{L_SORT_BY}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+      <select class="selectpicker" data-width="auto" name="sk" id="sk">{S_SORT_OPTIONS}</select>
+	</div> 
+	</div>
+	
+	<div class="control-group"> 
+	   <label class="control-label" for="sk">{L_SORT_BY}{L_COLON}</label>
+	<div class="input-group col-md-12 col-sm-12 col-xs-12">
+      <select class="selectpicker" data-width="auto" name="sd">{S_ORDER_SELECT}</select>
+	</div> 
+	</div>
+	
+	<!-- EVENT memberlist_search_fields_after -->
+	
+	</fieldset>
+	</div>
+</div>
+	
+
+</div>
+	<fieldset class="form-actions">
+		<button type="submit" name="submit" value="{L_SEARCH}" class="btn btn-default" data-loading-text="{L_SEARCHING} <i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SEARCH}</button>
+		{S_FORM_TOKEN}
+	</fieldset>
+</div>
+</form>
+<div class="space10"></div>

@@ -1,0 +1,55 @@
+<li>
+	<div id="notification_list" class="navbar-wrapper">
+        <div class="navbar-notification">
+            <div class="row">
+             <div class="notification-content">
+			   <div id="about" class="nano">
+				<div class="nano-content">
+                    <ul class="list-unstyled">
+					<!-- IF not .notifications -->
+						<li class="no_notifications">
+						 <div class="noti-bubble alert alert-default">{L_NO_NOTIFICATIONS}</div><i class="fa fa-check"></i>
+						</li>
+					<!-- ENDIF -->
+					<!-- BEGIN notifications -->
+						<li class="<!-- IF notifications.UNREAD -->noti-unread<!-- ENDIF --><!-- IF notifications.STYLING --> {notifications.STYLING}<!-- ENDIF --><!-- IF not notifications.URL --> no-url<!-- ENDIF -->">
+							<!-- IF notifications.UNREAD -->
+								<a href="{notifications.U_MARK_READ}" class="mark_read icon-mark btn btn-notification" data-ajax="notification.mark_read"><i class="fa fa-check"></i></a>
+							<!-- ELSE -->
+							    <a class="mark_read icon-mark-read btn-notification-read"><i class="fa fa-check"></i></a>
+							<!-- ENDIF -->
+							<!-- IF notifications.UNREAD --><a class="tmp_read icon-mark-read btn-notification-read"><i class="fa fa-check"></i></a><!-- ENDIF -->
+							<!-- IF notifications.URL -->
+								<a class="notification-block" href="<!-- IF notifications.UNREAD -->{notifications.U_MARK_READ}" data-real-url="{notifications.URL}<!-- ELSE -->{notifications.URL}<!-- ENDIF -->">
+							<!-- ELSE -->
+							 <div class="notification-block">
+							<!-- ENDIF -->
+								<!-- IF notifications.AVATAR -->{notifications.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+								<div class="notification_text">
+									<p class="notification-title">{notifications.FORMATTED_TITLE}</p>
+									<!-- IF notifications.REFERENCE --><p class="notification-reference">{notifications.REFERENCE}</p><!-- ENDIF -->
+									<!-- IF notifications.FORUM --><p class="notification-forum">{notifications.FORUM}</p><!-- ENDIF -->
+									<!-- IF notifications.REASON --><p class="notification-reason">{notifications.REASON}</p><!-- ENDIF -->
+									<p class="notification-time pull-right"><i class="fa fa-clock-o"></i>&nbsp;{notifications.TIME}</p>
+								</div>
+							<!-- IF notifications.URL --></a><!-- ELSE --></div><!-- ENDIF -->
+						</li>
+					<!-- END notifications -->
+				    </ul>
+                </div>				
+               </div>				
+             </div>   
+            </div>
+		</div>
+	    <div class="navbar-footer">
+            <div class="navbar-footer-content">
+                <div class="row">
+				   <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm" href="{U_NOTIFICATION_SETTINGS}">{L_SETTINGS}</a></div>
+                  <!-- IF NOTIFICATIONS_COUNT -->    
+				   <div id="mark_all_notifications" class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm pull-right" href="{U_MARK_ALL_NOTIFICATIONS}" data-ajax="notification.mark_all_read">{L_MARK_ALL_READ}</a></div>
+                  <!-- ENDIF -->
+				</div>
+            </div>
+        </div>
+	</div>
+</li>

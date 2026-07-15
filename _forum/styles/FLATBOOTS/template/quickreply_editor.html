@@ -1,0 +1,26 @@
+<form method="post" action="{U_QR_ACTION}" id="qr_postform">
+<!-- EVENT quickreply_editor_panel_before -->
+    <div class="widget-content">			
+	 <div class="space10"></div>
+	 <!-- EVENT quickreply_editor_subject_before -->
+		<label class="sr-only" for="subject">{L_SUBJECT}{L_COLON}</label>
+        <div class="form-group">
+         <input class="form-control input-sm" type="text" name="subject" id="subject" value="{SUBJECT}"/>
+        </div> 
+         <label class="sr-only" for="message">{L_MESSAGE}{L_COLON}</label>
+	    <!-- EVENT quickreply_editor_message_before -->
+		<div class="form-group">
+		 <textarea class="form-control ccount" name="message" id="message" rows="3" placeholder="{L_MESSAGE_ENTER_PLACEHOLDER}"></textarea>
+        </div>
+		<!-- EVENT quickreply_editor_message_after -->
+    </div>
+    <div class="widget-footer"> 
+	  <div class="form-group">
+		{S_FORM_TOKEN}
+		{QR_HIDDEN_FIELDS}
+		<button type="submit" class="btn btn-default" tabindex="7" name="post" value="{L_SUBMIT}" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+		<button type="submit" class="btn btn-default" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_FULL_EDITOR}</button>
+     </div>
+	</div>
+<!-- EVENT quickreply_editor_panel_after -->
+</form>

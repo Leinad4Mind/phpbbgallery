@@ -1,0 +1,113 @@
+<script>
+	var form_name = 'postform';
+	var text_name = <!-- IF $SIG_EDIT -->'signature'<!-- ELSE -->'message'<!-- ENDIF -->;
+	var load_draft = false;
+	var upload = false;
+
+	// Define the bbCode tags
+	var bbcode = new Array();
+	var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]','[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
+	var imageTag = false;
+
+	function change_palette()
+	{
+		phpbb.toggleDisplay('colour_palette');
+		e = document.getElementById('colour_palette');
+
+		if (e.style.display == 'block')
+		{
+			document.getElementById('bbpalette').value = '{LA_FONT_COLOR_HIDE}';
+		}
+		else
+		{
+			document.getElementById('bbpalette').value = '{LA_FONT_COLOR}';
+		}
+	}
+</script>
+<script src="{T_THEME_PATH}/vendors/editor.js"></script>
+
+<!-- IF S_BBCODE_ALLOWED -->
+<div id="colour_palette" style="display: none;">
+	<label class="control-label">{L_FONT_COLOR}{L_COLON}</label>
+	<div id="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></div>
+</div>
+<div class="space10"></div>
+<!-- EVENT posting_editor_buttons_before -->  
+<!-- IF not S_BBCODEORDER -->
+<div id="imgurAnchor" class="btn-toolbar posting-btns" role="toolbar">
+<!-- EVENT posting_editor_buttons_toolbar_inner_before -->
+	<div class="btn-group">
+         <button class="btn btn-default" type="button" accesskey="b" name="addbbcode0" onclick="bbstyle(0);" title="{L_BBCODE_B_HELP}"><i class="fa fa-bold"></i></button>
+         <button class="btn btn-default" type="button" accesskey="i" name="addbbcode2" onclick="bbstyle(2);" title="{L_BBCODE_I_HELP}"><i class="fa fa-italic"></i></button>
+         <button class="btn btn-default" type="button" accesskey="u" name="addbbcode4" onclick="bbstyle(4);" title="{L_BBCODE_U_HELP}"><i class="fa fa-underline"></i></button>
+	</div>
+	
+	<div class="btn-group hidden-xs">
+         <button class="btn btn-default" type="button" accesskey="l" name="addbbcode10" onclick="bbstyle(10);" title="{L_BBCODE_L_HELP}"><i class="fa fa-list"></i></button>
+         <button class="btn btn-default" type="button" accesskey="o" name="addbbcode12" onclick="bbstyle(12);" title="{L_BBCODE_O_HELP}"><i class="fa fa-list-ol"></i></button>
+         <button class="btn btn-default" type="button" accesskey="y" name="addlistitem" onclick="bbstyle(-1);" title="{L_BBCODE_LISTITEM_HELP}"><i class="fa fa-asterisk"></i></button>
+    </div>
+
+	<div class="btn-group">
+	     <button class="btn btn-default" type="button" accesskey="c" name="addbbcode8" onclick="bbstyle(8);" title="{L_BBCODE_C_HELP}"><i class="fa fa-code"></i></button>
+        <!-- IF S_BBCODE_QUOTE -->
+	     <button class="btn btn-default" type="button" accesskey="q" name="addbbcode6" onclick="bbstyle(6);" title="{L_BBCODE_Q_HELP}"><i class="fa fa-comment"></i></button>
+	    <!-- ENDIF --> 
+		<!-- IF S_BBCODE_IMG -->
+	     <button class="btn btn-default" type="button" accesskey="p" name="addbbcode14" onclick="bbstyle(14);" title="{L_BBCODE_P_HELP}"><i class="fa fa-picture-o"></i></button>
+	    <!-- ENDIF -->
+	    <!-- IF S_LINKS_ALLOWED -->
+	     <button class="btn btn-default" type="button" accesskey="w" name="addbbcode16" onclick="bbstyle(16);" title="{L_BBCODE_W_HELP}"><i class="fa fa-link"></i></button>
+		<!-- ENDIF -->
+	</div>
+	
+	<div class="btn-group hidden-xs">
+		<!--// flash no mooorrreeeeee --> 
+		 <button class="btn btn-default" type="button" name="bbpalette" id="bbpalette" value="{L_FONT_COLOR}" onclick="change_palette();" title="{L_BBCODE_S_HELP}"><i class="fa fa-tint"></i></button>
+	
+	<!-- EVENT posting_editor_buttons_custom_tags_before -->
+	
+{# custom tag example
+#
+#    <!-- BEGIN custom_tags --> 
+#        <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{{ custom_tags.BBCODE_HELPLINE }}"><i class="fa fa-cog"></i></button>
+#    <!-- END custom_tags -->
+#
+#}
+	
+	<!-- BEGIN custom_tags -->
+	<!-- IF custom_tags.BBCODE_TAG eq 'youtube' -->
+	 <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-youtube"></i></button>
+	<!-- ENDIF -->
+	<!-- END custom_tags -->
+	
+	<!-- BEGIN custom_tags -->
+	<!-- IF custom_tags.BBCODE_TAG eq 'c' -->
+	 <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-text-width"></i></button>
+	<!-- ENDIF -->
+	<!-- END custom_tags -->
+   </div>
+
+	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+		<option value="50">{L_FONT_TINY}</option>
+		<option value="85">{L_FONT_SMALL}</option>
+		<option data-icon="fa fa-font" value="100" selected="selected">{L_FONT_NORMAL}</option>
+		<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
+			<option value="150">{L_FONT_LARGE}</option>
+			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
+				<option value="200">{L_FONT_HUGE}</option>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+	</select>
+	
+	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode_custom" onchange="bbstyle(this.form.addbbcode_custom.options[this.form.addbbcode_custom.selectedIndex].value*1);this.form.addbbcode_custom.selectedIndex = 0;">
+	  <option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
+      <!-- BEGIN custom_tags -->
+      <option value="{custom_tags.BBCODE_ID}" title="{custom_tags.BBCODE_HELPLINE}">{custom_tags.BBCODE_TAG}</option>
+      <!-- END custom_tags -->   
+    </select>
+<!-- EVENT posting_editor_buttons_toolbar_inner_after -->
+</div>
+<!-- ENDIF -->
+<!-- EVENT posting_editor_buttons_after -->
+<!-- ENDIF -->

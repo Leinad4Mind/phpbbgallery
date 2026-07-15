@@ -1,0 +1,224 @@
+<!-- EVENT overall_footer_content_after -->
+
+	</div> <!-- page-body id in header -->
+  </div> <!-- content-forum in header -->
+ </div> <!-- container in header -->
+
+<!-- EVENT overall_footer_page_body_after -->
+
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and s_on_index -->
+    <!-- INCLUDE addons/sitesplat_login_body.html -->
+<!-- ENDIF -->
+
+	<section class="section-page">
+        <div id="rtblock" class="container">
+            <!-- IF .fltl --><!-- EVENT fltl --><!-- ELSE --><!-- INCLUDE addons/recent_topics_body.html --><!-- ENDIF -->
+        </div>
+    </section>
+
+<!-- EVENT call_to_action_before -->	
+  <!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
+     <!-- EVENT call_to_action_body_instead -->
+  <!-- ELSE --> 
+	<!-- INCLUDE addons/call_to_action_body.html -->
+  <!-- ENDIF -->
+<!-- EVENT call_to_action_after -->  
+	
+	<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
+		<!-- EVENT prefooter_instead -->
+	<!-- ELSE -->
+    <section class="section-pre-footer">
+		<div class="container center">
+			<div class="row">
+				<div class="col-sm-5 about_us">
+				<!-- IF .bbtags -->
+					 <!-- EVENT about_section_before -->
+				<!-- ELSE -->
+					<div class="thumb"><i class="fa fa-paw"></i></div>
+					<div class="text">
+						<h3>{L_FLATBOOTS_ABOUT_TITLE}</h3>
+						<p>{L_FLATBOOTS_ABOUT_PART_ONE}</p>
+						<a href="#"><strong>{L_READ_MORE}</strong></a>
+					</div>
+				<!-- ENDIF -->	
+				</div>
+				<div class="col-sm-5 col-sm-offset-2 twitter">
+					<div class="thumb"><i class="fa fa-twitter"></i></div>
+					<div class="text">
+						<h3><a href="https://twitter.com/SiteSplat">{L_JOIN_US_TWITTER}&nbsp;<small>@SiteSplat</small></a></h3>
+						 <div id="twitter-feed"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		 <div class="section-bg"></div>
+	</section>
+	<!-- ENDIF -->
+    
+	<footer class="burned-asphalt"> <!-- Footer block -->
+		<div class="midnight-" id="sub-footer">
+			<div class="container">
+
+				<div class="row bottomLinks">
+					<div class="col-sm-6 sm-direction">
+					 <nav>
+					<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
+						<!-- EVENT footer_links_instead -->
+					<!-- ELSE -->
+						<ul class="list-inline footer-nav">
+						 <li><a href="https://goo.gl/LvmwlF" title="">{L_ADVERTISE}</a></li>
+						 <li><a href="{U_PRIVACY}" title="">{L_PRIVACY}</a></li>
+						 <li><a href="{U_DMCA}" title="">{L_DMCA}</a></li>
+						 <li><a href="{U_TERMS_USE}" title="">{L_TERMS}</a></li>
+						 <!-- EVENT overall_footer_teamlink_before -->
+						 <!-- IF U_CONTACT_US -->
+						 <li><a href="{U_CONTACT_US}" title="">{L_CONTACT_US}</a></li>
+						 <!-- ENDIF -->
+						 <!-- EVENT overall_footer_teamlink_after -->
+						</ul>
+					<!-- ENDIF -->	
+					 </nav>
+					</div>
+						
+					<div class="col-sm-6 sm-direction">	
+						<div class="clearfix socialbar">
+						<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
+								<!-- EVENT footer_social_instead -->
+						<!-- ELSE -->
+							<div class="social-network">
+								<a class="github-color" title="Github" href="#2" aria-label="GitHub"><i class="fa fa-github"></i></a>
+								<a class="behance-color" title="Behance" href="#3" aria-label="Behance"><i class="fa fa-behance"></i></a>
+								<!-- <a class="dropbox-color" title="Dropbox" href="#4"><i class="fa fa-dropbox"></i></a> -->
+								<a class="pinterest-color" title="Pinterest" href="#5" aria-label="Pinterest"><i class="fa fa-pinterest"></i></a> 
+								<a class="facebook-color" title="Facebook" href="#6" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+								<a class="twitter-color" title="Twitter" href="https://twitter.com/SiteSplat" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+								<!-- <a class="bitbucket-color" title="Bitbucket" href="#8"><i class="fa fa-bitbucket"></i></a> -->
+								<a class="envato-color" title="Envato" href="https://themeforest.net/user/ThemeSplat/portfolio?ref=ThemeSplat" aria-label="Envato"><i class="icon-moon-envatoleaf"></i></a>
+								<a class="rss-color hidden-xs" title="rss" href="{U_FEED}" aria-label="rss"><i class="fa fa-rss"></i></a>
+							</div>
+						<!-- ENDIF -->	
+						</div>
+					</div>	
+				</div>
+				
+                <div class="row">				
+					<div class="col-sm-6 sm-direction">
+					 <p class="copyrights">
+					  <!-- EVENT overall_footer_copyright_prepend -->
+						<small>{L_PHPBB_CREDIT}{L_SS_HANDCRAFTED}</small>
+					  <!-- EVENT overall_footer_copyright_append -->
+					 </p>
+					</div>
+					
+					<div class="col-sm-6 sm-direction">
+					  <p class="debug-output">
+					  <!-- EVENT overall_footer_timezone_before -->
+						<small>&#45;&nbsp;{S_TIMEZONE}&nbsp;&#45;</small>
+					  <!-- EVENT overall_footer_timezone_after -->
+						<!-- IF U_ACP and DEBUG_OUTPUT --><small>{DEBUG_OUTPUT}</small><!-- ENDIF -->
+						<!-- {L_FLATBOOTS_VERSION} -->
+					  </p>
+					</div>
+				</div>	
+
+			</div>
+		</div>
+	</footer>
+
+<a id="totop" class="top-flat" href="" onclick="return false;" style="display:none;" aria-label="to-top"></a>
+
+<div class="hidden"><!-- IF not S_IS_BOT -->{RUN_CRON_TASK}<!-- ENDIF --></div> 
+
+<!-- injected via core and ajax JS for the return confirmation actions -->
+   <div id="page-footer">
+	<div id="darkenwrapper" data-ajax-error-title="{L_AJAX_ERROR_TITLE}" data-ajax-error-text="{L_AJAX_ERROR_TEXT}" data-ajax-error-text-abort="{L_AJAX_ERROR_TEXT_ABORT}" data-ajax-error-text-timeout="{L_AJAX_ERROR_TEXT_TIMEOUT}" data-ajax-error-text-parsererror="{L_AJAX_ERROR_TEXT_PARSERERROR}">
+		<div id="darken">&nbsp;</div>
+	</div>
+
+	<div id="phpbb_alert" class="alert alert-default phpbb_alert" data-l-err="{L_ERROR}" data-l-timeout-processing-req="{L_TIMEOUT_PROCESSING_REQ}">
+		<button type="button" class="close alert_close" data-dismiss="alert"><span class="awe-remove-circle"></span></button>
+		<h3 class="alert_title">&nbsp;</h3>
+		 <p class="alert_text"></p>
+	</div>
+	
+	<div id="phpbb_confirm" class="alert alert-default phpbb_alert">
+		<button type="button" class="close alert_close" data-dismiss="alert"><span class="awe-remove-circle"></span></button>
+		<div class="alert_text"></div>
+	</div>
+  </div>	
+<!-- injected via core and ajax JS for the return confirmation actions -->
+
+<!-- IF S_USER_LOGGED_IN and (SCRIPT_NAME == "viewforum" or SCRIPT_NAME == "viewtopic") -->
+	<div class="modal fade" id="BreadcrumbMap" tabindex="-1" role="dialog" aria-labelledby="BreadcrumbsLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="awe-remove-circle"></span></button>
+			<h4 class="modal-title" id="BreadcrumbsLabel">{L_NAVIGATION}</h4>
+		  </div>
+		  <div class="modal-body file-tree">
+		   <ul>
+			<li class="root"><a href="{U_INDEX}">{L_INDEX}</a></li>
+			<!-- BEGIN navlinks -->
+			{% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
+		    {% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
+				<li><a href="{{ NAVLINK_LINK }}">{{ NAVLINK_NAME }}</a></li>
+			<!-- END navlinks -->
+		   </ul>
+		    <i class="icon-compass fa fa-compass"></i>
+		  </div>
+		  <div class="modal-footer">
+		  </div>
+		</div>
+	  </div>
+	</div>
+<!-- ENDIF -->
+
+<!-- EVENT ss_overall_footer_scripts_before -->
+
+<script>
+// this loads jquery asynchronously & in parallel
+head.load("{T_THEME_PATH}/vendors/jquery-1.12.4.min.js", "{T_THEME_PATH}/vendors/bootstrap/336/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js");
+</script>
+
+<!-- we use this event to load the JS scripts properly via the extension system -->
+<!-- EVENT overall_footer_after -->
+
+<!-- injected via a module or an include -->
+<script>
+// some function that depends on bootstrap and jquery
+head.ready(function () {
+	$('.footable').footable();$(".selectpicker").selectpicker();$(".selectpicker").tooltip("disable");var totop=$("#totop");totop.click(function(){$("html, body").stop(true,true).animate({scrollTop:0},500);return false});$(window).scroll(function(){if($(this).scrollTop()>600){totop.fadeIn()}else{totop.fadeOut()}});$("button[data-loading-text], input[data-loading-text], .btn-load").click(function(){var e=$(this);e.button("loading");setTimeout(function(){e.button("reset")},3e3)});
+	$("input").iCheck({checkboxClass:"icheckbox_flat-aero",radioClass:"iradio_flat-aero"});$(".btn-search").click(function(){$(".search-input").toggleClass("open").find("input").focus()});$(".close").click(function(){$(this).prev("input").val("").parents(".search-input").removeClass("open")});$(".nav-tog").click(function(){if($(this).hasClass("neutro")){$(this).removeClass("neutro").addClass("open")}else{$(this).removeClass("open").addClass("neutro")}});
+	$('input[data-reset-on-edit]').on('keyup', function() {$(this.getAttribute('data-reset-on-edit')).val('');});
+	$('a').tooltip({trigger : 'hover',container: 'body'})
+    $('#notification_list_button').click(function(){setTimeout(function(){$(".nano").nanoScroller();},0);});	
+});
+<!-- IF PROVIDER_TEMPLATE_FILE -->
+head.ready(function(){!function(n){n(".oauth-content ul > li").each(function(){var i=n(this).find("a").text();n(this).find("a").prepend('<i class="'+i+'"></i>')})}(jQuery)});
+<!-- ENDIF -->
+// some function that depends on bootstrap and jquery
+<!-- IF not HIDE_FOOTER -->
+
+// ex twitter script
+
+<!-- ENDIF -->
+<!-- IF S_RECAPTCHA_AVAILABLE -->
+head.load("{T_THEME_PATH}/vendors/inv-recaptcha.js");
+<!-- ENDIF -->
+</script>
+
+<!-- injected via a module or an include -->
+
+{$SCRIPTS}
+
+<!-- IF S_PLUPLOAD -->
+<!-- INCLUDE plupload.html -->
+<!-- ENDIF -->
+
+<!-- EVENT overall_footer_body_after -->
+
+<!-- Google Analytics here -->
+{GOOGLE_ANALYTICS}
+</body>
+</html>

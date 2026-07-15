@@ -1,0 +1,64 @@
+<div class="panel-body tab-pane <!-- IF S_SHOW_DRAFTS -->active<!-- ENDIF -->" id="posting-attach-body-html">
+	<p>{L_ADD_ATTACHMENT_EXPLAIN}
+		<span class="hidden" id="drag-n-drop-message">&nbsp;{L_PLUPLOAD_DRAG_TEXTAREA}</span>
+		{% if MAX_ATTACHMENT_FILESIZE is not empty %}<p>{{ MAX_ATTACHMENT_FILESIZE }}</p>{% endif %}
+	</p>	
+<div class="clearfix" id="attach-panel">
+    <fieldset id="attach-panel-basic">
+	<label for="fileupload">{L_FILENAME}{L_COLON}</label>
+	 <input type="file" accept="{{ ALLOWED_ATTACHMENTS }}" name="fileupload" id="fileupload" class="inputbox form-control" /> 
+	 <input type="submit" name="add_file" value="{L_ADD_FILE}" class="btn btn-default" onclick="upload = true;" />
+	 
+	<label for="filecomment">{L_FILE_COMMENT}{L_COLON}</label>
+	 <textarea name="filecomment" id="filecomment" rows="1" cols="40" class="inputbox form-control">{FILE_COMMENT}</textarea>
+	</fieldset>
+
+	<div id="attach-panel-multi">
+	 <button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
+	<!-- EVENT posting_attach_options_prepend -->
+	</div>
+
+	<div id="file-list-container" class="<!-- IF not .attach_row --> hidden<!-- ENDIF -->">
+	 <div id="file-list">
+		<div class="attach-row panel panel-default panel-body" id="attach-row-tpl">
+		   <button type="button" value="{L_DELETE_FILE}" class="close file-delete"><i class="awe-remove-circle"></i></button>	
+			<div class="attach-name">  
+				<span class="pull-left file-name text-overflow"></span>
+				 <span class="file-size"></span>
+				  <span class="file-status"></span>
+				   <!-- IF S_BBCODE_ALLOWED -->
+				    <button type="button" value="{L_PLACE_INLINE}" class="btn-link hidden file-inline-bbcode">{L_PLACE_INLINE}</button>
+				   <!-- ENDIF -->
+				<div class="attach-comment">
+				 <textarea rows="1" maxlength="45" class="inputbox form-control form-plupload" placeholder="{L_ADD_DESCRIPTION}"></textarea>
+				</div>
+		    </div>
+			<span class="file-progress progress">
+			 <span class="file-progress-bar progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100"></span>
+			</span>				
+		</div>
+		
+		<!-- BEGIN attach_row -->
+		<div class="attach-row panel panel-default panel-body" data-attach-id="{attach_row.ATTACH_ID}">
+		  <!-- EVENT posting_attach_body_attach_row_controls_prepend -->
+		   <button type="button" value="{L_DELETE_FILE}" class="close file-delete"><i class="awe-remove-circle"></i></button>	
+		  <!-- EVENT posting_attach_body_attach_row_controls_append -->	
+			<div class="attach-name">  
+				<span class="pull-left file-name text-overflow"><a href="{attach_row.U_VIEW_ATTACHMENT}">{attach_row.FILENAME}</a></span>
+				 <span class="file-size">{attach_row.FILESIZE}</span>
+				  <span class="file-status file-uploaded"></span>
+				  <!-- IF S_BBCODE_ALLOWED and S_INLINE_ATTACHMENT_OPTIONS -->
+				   <button type="button" value="{L_PLACE_INLINE}" class="btn-link file-inline-bbcode">{L_PLUPLOAD_PLACE_INLINE}</button>
+				  <!-- ENDIF -->
+				<div class="attach-comment">
+				 <textarea name="comment_list[{attach_row.ASSOC_INDEX}]" rows="1" class="inputbox form-control form-plupload" placeholder="{L_ADD_DESCRIPTION}">{attach_row.FILE_COMMENT}</textarea>
+			     {attach_row.S_HIDDEN}
+				</div>
+		    </div>	
+		</div>
+		<!-- END attach_row -->
+	 </div>
+	</div>
+</div>
+</div>
+

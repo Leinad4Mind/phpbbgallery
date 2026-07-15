@@ -1,0 +1,159 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}">
+	<fieldset class="framed-ucp">
+      <legend>{L_TITLE}</legend>
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR_MESSAGE}
+    </div>
+	<!-- ENDIF -->
+	
+	<!-- IF NOTIFICATION_MESSAGE --><p class="error">{NOTIFICATION_MESSAGE}</p><!-- ENDIF -->
+
+<fieldset class="framed-ucp">
+    <legend>{L_DEFINED_RULES}</legend>
+	<ul class="fa-ul">
+	<!-- BEGIN rule -->
+	<li>
+	  <i class="fa-li fa fa-check-square text-muted"></i>
+	  <strong>&nbsp;{L_IF}</strong>&nbsp;{rule.CHECK}<em>&nbsp;{rule.RULE}</em><!-- IF rule.STRING --><strong>&nbsp;{rule.STRING}</strong>&nbsp;&#124;&nbsp;<!-- ENDIF -->{rule.ACTION}<!-- IF rule.FOLDER -->{L_COLON}&nbsp;{rule.FOLDER}<!-- ENDIF -->
+	  <button class="btn btn-xs btn-default" name="delete_rule[{rule.RULE_ID}]" type="submit" title="{L_DELETE_RULE}"><i class="fa fa-times"></i></button>
+	</li>
+	<!-- BEGINELSE -->
+	<li><i class="fa-li fa fa-minus-circle text-muted"></i>{L_NO_RULES_DEFINED}</li>
+	<!-- END rule -->
+	</ul>
+</fieldset>
+
+	<div class="space10"></div>
+	
+<fieldset class="framed-ucp">
+      <legend>{L_ADD_NEW_RULE}</legend>
+	<div class="input-group">  
+    <!-- IF S_CHECK_DEFINED -->
+     <span class="input-group-addon">{L_IF}{L_COLON}</span>
+			<!-- IF S_CHECK_SELECT -->
+			 <select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="check_option" id="check_option">{S_CHECK_OPTIONS}</select>
+			 <span class="input-group-btn">
+			 <button class="btn btn-default" name="next" type="submit">{L_NEXT_STEP}</button>
+			 </span>
+			 <!-- ELSE -->
+			  <span class="input-group-addon">{CHECK_CURRENT}</span><input type="hidden" name="check_option" value="{CHECK_OPTION}" />
+			<!-- ENDIF -->
+	<!-- ENDIF -->
+
+	<!-- IF S_RULE_DEFINED -->
+		<!-- IF S_RULE_SELECT -->
+		 <select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="rule_option" id="rule_option">{S_RULE_OPTIONS}</select> 
+		<span class="input-group-btn">
+		 <button class="btn btn-default" name="back[rule]" type="submit">{L_PREVIOUS_STEP}</button> 
+		 <button class="btn btn-default" name="next" type="submit">{L_NEXT_STEP}</button>
+		</span>
+		<!-- ELSE -->
+		 <span class="input-group-addon">{RULE_CURRENT}</span><input type="hidden" name="rule_option" value="{RULE_OPTION}" />
+		<!-- ENDIF -->
+	<!-- ENDIF -->
+
+	<!-- IF S_COND_DEFINED -->
+		<!-- IF S_COND_SELECT or COND_CURRENT -->
+					<!-- IF S_COND_SELECT -->
+						<!-- IF S_TEXT_CONDITION -->
+						    <input class="form-control" name="rule_string" value="{CURRENT_STRING}" type="text" maxlength="50">
+						<!-- ELSEIF S_USER_CONDITION -->
+							<input class="form-control" name="rule_string" value="{CURRENT_STRING}" type="text" maxlength="50">&nbsp;<span>&#91;&nbsp;<a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a>&nbsp;&#93;</span>
+						<!-- ELSEIF S_GROUP_CONDITION -->
+							<input type="hidden" name="rule_string" value="{CURRENT_STRING}" /><!-- IF S_GROUP_OPTIONS --><select class="selectpicker" name="rule_group_id">{S_GROUP_OPTIONS}</select><!-- ELSE -->{L_NO_GROUPS}<!-- ENDIF -->
+						<!-- ENDIF -->
+						<span class="input-group-btn">
+						 <button class="btn btn-default" name="back[cond]" type="submit">{L_PREVIOUS_STEP}</button> 
+						 <button class="btn btn-default" name="next" type="submit">{L_NEXT_STEP}</button>
+					    </span>
+					<!-- ELSE -->
+						<span class="input-group-addon">{COND_CURRENT}</span><input type="hidden" name="rule_string" value="{CURRENT_STRING}" /><input type="hidden" name="rule_user_id" value="{CURRENT_USER_ID}" /><input type="hidden" name="rule_group_id" value="{CURRENT_GROUP_ID}" />
+					<!-- ENDIF -->
+		<!-- ENDIF -->
+		<input type="hidden" name="cond_option" value="{COND_OPTION}" />
+	<!-- ENDIF -->
+
+     <!-- IF NONE_CONDITION --><input type="hidden" name="cond_option" value="none" /><!-- ENDIF -->
+
+	<!-- IF S_ACTION_DEFINED -->
+		<!-- IF S_ACTION_SELECT --> 
+	    <select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="action_option">{S_ACTION_OPTIONS}</select>
+		<span class="input-group-btn">
+		<button class="btn btn-default" name="back[action]" type="submit">{L_PREVIOUS_STEP}</button> 
+		<button class="btn btn-success" name="add_rule" type="submit"><i class="fa fa-check-square-o"></i>&nbsp;{L_ADD_RULE}</button>
+		</span>
+		<!-- ELSE -->
+		 <span class="input-group-addon">{ACTION_CURRENT}</span><input type="hidden" name="action_option" value="{ACTION_OPTION}" />
+	    <!-- ENDIF -->
+	<!-- ENDIF -->
+	</div>
+</fieldset>
+	
+<div class="space10"></div>
+
+<fieldset class="framed-ucp">
+    <legend>{L_FOLDER_OPTIONS}</legend>
+	<!-- IF not S_MAX_FOLDER_ZERO -->
+	    <label class="control-label" for="foldername">{L_ADD_FOLDER}{L_COLON}</label>
+		<!-- IF S_MAX_FOLDER_REACHED -->{L_MAX_FOLDER_REACHED}<!-- ELSE -->
+		<div class="input-group">
+		<input class="form-control" type="text" name="foldername" id="foldername" maxlength="30"> 
+		<span class="input-group-btn">
+		<button type="submit" name="addfolder" class="btn btn-default">{L_ADD}</button>
+		</span>
+		</div>
+		<!-- ENDIF -->
+	    <!-- IF S_FOLDER_OPTIONS --><hr class="dashed" /><!-- ENDIF -->
+	<!-- ENDIF -->
+
+	<!-- IF S_FOLDER_OPTIONS -->
+	    <label for="rename_folder_id" class="control-label">{L_RENAME_FOLDER}{L_COLON}</label>
+		  <div class="input-group">
+			<select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="rename_folder_id" id="rename_folder_id">{S_FOLDER_OPTIONS}</select>
+			<input class="form-control" type="text" name="new_folder_name" id="new_folder_name" maxlength="30" placeholder="{L_NEW_FOLDER_NAME}" />  
+		   <span class="input-group-btn">
+			<button type="submit" name="rename_folder" class="btn btn-default">{L_RENAME}</button>
+		   </span>
+		  </div>
+		  
+		<hr class="dashed" />
+		
+		<label for="remove_folder_id" class="control-label">{L_REMOVE_FOLDER}{L_COLON}</label>
+			<select class="selectpicker" data-container="body" data-width="auto" name="remove_folder_id" id="remove_folder_id">{S_FOLDER_OPTIONS}</select>
+			 <div class="space10"></div>
+			<input type="radio" name="remove_action" id="remove_action1" value="1" checked="checked" /><label for="remove_action1" class="check-control">&nbsp;{L_MOVE_DELETED_MESSAGES_TO}{L_COLON}</label> 
+			 <div class="space10"></div>
+			<select class="selectpicker" data-container="body" data-width="auto" name="move_to">{S_TO_FOLDER_OPTIONS}</select>
+			 <div class="space10"></div>
+			<input type="radio" name="remove_action" id="remove_action2" value="2" /><label for="remove_action2" class="check-control">{L_DELETE_MESSAGES_IN_FOLDER}</label>
+	     	 <div class="space10"></div>
+			<button type="submit" name="remove_folder" class="btn btn-default">{L_UCP_APPLY}</button>
+	<!-- ENDIF -->
+
+<hr class="dashed" />
+ <div class="section-ucp-pm-options">
+   <label for="full_action1" class="control-label">{L_IF_FOLDER_FULL}{L_COLON}</label>
+	<input type="radio" name="full_action" id="full_action3" value="3"{S_HOLD_CHECKED} /><label class="check-control" for="full_action3">{L_UCP_PM_DEFAULT_RULE}<span class="label">{L_UCP_PM_DEFAULT_RULE_TAG}</span></label>
+	<input type="radio" name="full_action" id="full_action1" value="1"{S_DELETE_CHECKED} /><label class="check-control" for="full_action1">{L_DELETE_OLDEST_MESSAGES}</label>
+	<input type="radio" name="full_action" id="full_action2" value="2"{S_MOVE_CHECKED} /><label class="check-control" for="full_action2">{L_MOVE_TO_FOLDER}{L_COLON}</label> 
+	<select class="selectpicker" data-container="body" data-width="auto" name="full_move_to">{S_FULL_FOLDER_OPTIONS}</select>
+ </div>
+ <div class="space10"></div>
+ 
+	<div class="control-group">
+       <span class="label label-info">{L_DEFAULT_ACTION}{L_COLON}</span>
+          <span>{L_UCP_PM_DEFAULT_RULE_EXPLAIN}</span>                      
+      </div>
+	  
+  <div class="space10"></div>
+	  
+	  <button type="submit" name="fullfolder" class="btn btn-default">{L_CHANGE}</button>
+</fieldset>
+
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+
+<!-- INCLUDE ucp_footer.html -->

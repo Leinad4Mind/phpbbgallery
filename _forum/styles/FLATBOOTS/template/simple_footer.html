@@ -1,0 +1,58 @@
+
+   <div class="clearfix">
+		<p class="debug-output"><small>
+		<!-- IF TRANSLATION_INFO -->{TRANSLATION_INFO}<!-- ENDIF -->
+		<!-- IF DEBUG_OUTPUT -->{DEBUG_OUTPUT}<!-- ENDIF -->
+		<!-- {L_FLATBOOTS_VERSION} -->
+		</small></p>
+	</div>
+
+<!-- injected via core and ajax JS for the return confirmation actions -->
+    <div id="darkenwrapper" data-ajax-error-title="{L_AJAX_ERROR_TITLE}" data-ajax-error-text="{L_AJAX_ERROR_TEXT}" data-ajax-error-text-abort="{L_AJAX_ERROR_TEXT_ABORT}" data-ajax-error-text-timeout="{L_AJAX_ERROR_TEXT_TIMEOUT}" data-ajax-error-text-parsererror="{L_AJAX_ERROR_TEXT_PARSERERROR}">
+		<div id="darken">&nbsp;</div>
+	</div>
+	<div id="loading_indicator"></div>
+
+	<div id="phpbb_alert" class="alert alert-default phpbb_alert" data-l-err="{L_ERROR}" data-l-timeout-processing-req="{L_TIMEOUT_PROCESSING_REQ}">
+		<a href="#" class="close alert_close"><span class="awe-remove-circle"></span></a>
+		<h3 class="alert_title">&nbsp;</h3>
+		 <p class="alert_text"></p>
+	</div>
+	
+	<div id="phpbb_confirm" class="alert alert-default phpbb_alert">
+		<a href="#" class="close alert_close"><span class="awe-remove-circle"></span></a>
+		<div class="alert_text"></div>
+	</div>
+<!-- injected via core and ajax JS for the return confirmation actions -->
+
+
+<!-- EVENT ss_overall_footer_scripts_before -->
+
+<script>
+// this loads jquery asynchronously & in parallel
+head.load("{T_THEME_PATH}/vendors/jquery-1.12.4.min.js", "{T_THEME_PATH}/vendors/bootstrap/336/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js");
+</script>
+
+<!-- we use this event to load the JS scripts properly via the extension system -->
+<!-- EVENT overall_footer_after -->
+
+<!-- injected via a module or an include -->
+<script>
+// some function that depends on bootstrap and jquery
+head.ready(function () {
+	$('.footable').footable();$(".selectpicker").selectpicker();$(".selectpicker").tooltip("disable");var totop=$("#totop");totop.click(function(){$("html, body").stop(true,true).animate({scrollTop:0},500);return false});$(window).scroll(function(){if($(this).scrollTop()>600){totop.fadeIn()}else{totop.fadeOut()}});$("button[data-loading-text], input[data-loading-text], .btn-load").click(function(){var e=$(this);e.button("loading");setTimeout(function(){e.button("reset")},3e3)});
+	$("input").iCheck({checkboxClass:"icheckbox_flat-aero",radioClass:"iradio_flat-aero"});$(".btn-search").click(function(){$(".search-input").toggleClass("open").find("input").focus()});$(".close").click(function(){$(this).prev("input").val("").parents(".search-input").removeClass("open")});$(".nav-tog").click(function(){if($(this).hasClass("neutro")){$(this).removeClass("neutro").addClass("open")}else{$(this).removeClass("open").addClass("neutro")}});
+	$('input[data-reset-on-edit]').on('keyup', function() {$(this.getAttribute('data-reset-on-edit')).val('');});
+	$('a').tooltip({trigger : 'hover',container: 'body'})	
+});
+</script>
+
+<!-- injected via a module or an include -->
+
+{$SCRIPTS}
+
+<!-- EVENT overall_footer_body_after -->
+<!-- EVENT simple_footer_after -->
+
+</body>
+</html>

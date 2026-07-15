@@ -1,0 +1,46 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<fieldset class="framed-ucp">
+    <legend>{L_TITLE}</legend>
+	 <p>{L_FRIENDS_EXPLAIN}</p>
+	
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}
+    </div>
+	<!-- ENDIF -->
+	
+    <!-- EVENT ucp_friend_list_before -->
+	
+	<div class="control-group"> 
+	   <label class="control-label"<!-- IF S_USERNAME_OPTIONS --> for="usernames"<!-- ENDIF -->>{L_YOUR_FRIENDS}{L_COLON}</label><span class="help-block">{L_YOUR_FRIENDS_EXPLAIN}</span>
+	<div class="controls controls-row"> 
+       <div class="selector">
+	    <!-- IF S_USERNAME_OPTIONS -->
+			<select class="selectpicker" data-selected-text-format="count" data-container="body" name="usernames[]" id="usernames" multiple="multiple" size="5">{S_USERNAME_OPTIONS}</select>
+		<!-- ELSE -->
+			<span class="label label-default">{L_NO_FRIENDS}</span>
+		<!-- ENDIF -->
+	   </div>
+	</div> 
+	</div>
+	
+	<!-- EVENT ucp_friend_list_after -->
+	
+	<div class="control-group"> 
+	   <label class="control-label" for="add">{L_ADD_FRIENDS}{L_COLON}</label><span class="help-block">{L_ADD_FRIENDS_EXPLAIN}</span>
+	<div class="controls controls-row"> 
+    	<textarea class="form-control" name="add" id="add" rows="2" placeholder="{L_UCP_REG_USR_PLACEHOLDER}">{USERNAMES}</textarea>
+	<a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a>
+	</div> 
+	<div class="space10"></div>
+	</div>
+	<div class="space10"></div>
+	{S_HIDDEN_FIELDS}
+	   <button type="submit" name="submit" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,104 @@
+<!-- INCLUDE overall_header.html -->
+    <!-- IF LOGIN_EXPLAIN -->
+        <div class="alert alert-info fade in">
+           <i class="fa fa-warning"></i><strong>&nbsp;{LOGIN_EXPLAIN}</strong>
+        </div>
+    <!-- ENDIF -->
+ 
+    <!-- IF LOGIN_ERROR -->
+         <div class="alert alert-danger fade in">
+           <i class="fa fa-warning"></i><strong>&nbsp;{LOGIN_ERROR}</strong>
+         </div>
+    <!-- ENDIF -->
+	
+    <div class="panel-login panel-w-form login-full">
+            <div class="row">
+                <!-- IF S_REGISTER_ENABLED and not S_ADMIN_AUTH -->
+				<div class="col-sm-6">
+				<div class="signin-text">
+					<span>{L_CREATE_ACCOUNT}</span>
+				</div>
+                    <p>{L_LOGIN_INFO}</p>
+				    <p><a href="{U_TERMS_USE}">{L_TERMS_USE}</a>&nbsp;&#124;&nbsp;<a href="{U_PRIVACY}">{L_PRIVACY}</a></p>
+					<p><a href="{U_REGISTER}" class="btn btn-default btn-reg-login">{L_REGISTER}</a></p>
+                </div>
+				<!-- ELSEIF S_ADMIN_AUTH -->
+				<div class="col-sm-6">
+				<div class="signin-text">
+					<span>{L_ADMIN_TIPS}</span>
+				</div>
+				    <p>{L_ADMIN_TIP_INTRO}</p>
+                    <ul>
+					<li>{L_ADMIN_TIP_ONE}</li>
+				    <li>{L_ADMIN_TIP_TWO}</li>
+					<li>{L_ADMIN_TIP_THREE}</li>
+					</ul>
+					<p>{L_SITESPLAT_URL}</p>
+                </div>
+				<!-- ELSE -->
+				<div class="col-sm-6">
+				<div class="signin-text">
+					<span>{L_CREATE_ACCOUNT_DISABLED}</span>
+				</div>
+                    <p>{L_REGISTRATION_DISABLED}</p>
+				    <p><a href="{U_TERMS_USE}">{L_TERMS_USE}</a>&nbsp;&#124;&nbsp;<a href="{U_PRIVACY}">{L_PRIVACY}</a></p>
+					<p><a href="mailto:{BOARD_EMAIL}?subject=Registrations%20Closed&body=Dear%20Admin,%20%0A%0AI%20Just%20wanted%20to%20let%20you%20know%20that%20the%20board%20registrations%20are%20closed.%20%0A%0AThis%20might%20be%20an%20error%20and%20I%20would%20like%20to%20register.%20%0A%0APlease%20let%20me%20know%20if%20this%20is%20possible.%0A%0AThanks!" class="btn btn-default">{L_CONTACT_WEBMASTER}</a></p>
+                </div>
+				<!-- ENDIF -->
+				<div class="col-sm-6">
+				<div class="signin-text">
+					<span>{L_SIGN_IN_ACCOUNT}</span>
+				</div>
+				 <form action="{S_LOGIN_ACTION}" method="post" id="login">
+				  <fieldset>
+					<div class="form-group">
+					<label class="sr-only" for="{USERNAME_CREDENTIAL}">{L_USERNAME}{L_COLON}</label>
+					<div class="form-icon">
+					 <input type="text" class="form-control input-lg" tabindex="1" name="{USERNAME_CREDENTIAL}" id="{USERNAME_CREDENTIAL}" value="{USERNAME}" placeholder="{L_USERNAME}">
+					 <span class="fa fa-user login-form-icon"></span>
+					</div> 
+				    </div> 
+					<div class="form-group">
+					 <label class="sr-only" for="{PASSWORD_CREDENTIAL}">{L_PASSWORD}{L_COLON}</label>
+					  <div class="form-icon">
+						<input type="password" class="form-control input-lg" tabindex="2" id="{PASSWORD_CREDENTIAL}" name="{PASSWORD_CREDENTIAL}" placeholder="{L_PASSWORD}" autocomplete="off">
+						<span class="fa fa-lock login-form-icon"></span>
+					  </div> 
+					</div>
+				
+				 <!-- IF S_DISPLAY_FULL_LOGIN -->
+					<!-- IF S_AUTOLOGIN_ENABLED -->
+					<div class="checkbox pull-right">                                              
+					 <label for="autologin"><input type="checkbox" name="autologin" id="autologin" tabindex="4">{L_LOGIN_REMEMBER}</label>
+					 <label for="viewonline"><input type="checkbox" name="viewonline" id="viewonline" tabindex="5">{L_LOGIN_HIDE_ME}</label>
+					</div>
+					<!-- ENDIF -->
+				 <!-- ENDIF -->
+					<button type="submit" class="btn btn btn-primary" tabindex="6" name="login" value="{L_LOGIN}">{L_LOGIN_ME_IN}</button>
+				
+				  <!-- IF S_DISPLAY_FULL_LOGIN and (U_SEND_PASSWORD or U_RESEND_ACTIVATION) -->
+				    <div class="space10"></div>
+					<p>
+						<!-- IF U_SEND_PASSWORD --><a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a><!-- ENDIF -->
+						<!-- IF U_RESEND_ACTIVATION -->&nbsp;&#124;&nbsp;<a href="{U_RESEND_ACTIVATION}">{L_RESEND_ACTIVATION}</a><!-- ENDIF -->
+	                </p>			  
+				  <!-- ENDIF -->
+				  
+				    <!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+						<div class="space10"></div>
+						<!-- DEFINE $CAPTCHA_TAB_INDEX = 3 -->
+						<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+					<!-- ENDIF -->
+				  {S_LOGIN_REDIRECT}
+				  {S_FORM_TOKEN_LOGIN}
+				  {S_HIDDEN_FIELDS}
+				  </fieldset>
+				  </form>
+				<!-- EVENT login_body_form_after -->
+				<!-- IF not S_ADMIN_AUTH and PROVIDER_TEMPLATE_FILE -->
+					<!-- INCLUDE {PROVIDER_TEMPLATE_FILE} -->
+				<!-- ENDIF -->
+			    </div>  
+            </div>
+    </div>
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,173 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+	
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+       {L_UCP_WELCOME}
+    </div> 
+	
+<!-- IF .topicrow -->
+	<div class="side-segment"><h3>{L_IMPORTANT_NEWS}</h3></div>
+	
+	<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-bolt"></i>&nbsp;{L_IMPORTANT_NEWS}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{L_TOPICS}</th>
+			<th data-hide="phone">{L_LAST_POST}</th>
+		</tr>
+	</thead>
+	<!-- DEFINE $VAR -->{L_VIEW_TOPIC_LOCKED}<!-- ENDDEFINE -->
+	<!-- BEGIN topicrow -->
+		<tbody>
+			<tr id="topic-{topicrow.TOPIC_ID}">
+				<td>
+				 <span class="icon-wrapper">
+				 <i class="row-icon-font icon-moon-podcast2<!-- IF topicrow.S_UNREAD --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+				 </span>
+				 <i class="row-icon-font-mini<!-- IF topicrow.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+				 <!-- IF topicrow.S_UNREAD --><a href="{topicrow.U_NEWEST_POST}"><i class="fa fa-asterisk"></i></a><!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">&nbsp;{topicrow.TOPIC_TITLE}</a><br>
+				 <!-- IF .topicrow.pagination -->
+				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
+						<!-- BEGIN pagination -->
+						 <!-- IF topicrow.pagination.S_IS_PREV -->
+						 <!-- ELSEIF topicrow.pagination.S_IS_CURRENT --><li class="active">{topicrow.pagination.PAGE_NUMBER}</li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_ELLIPSIS --><li class="ellipsis"><a>{L_ELLIPSIS}</a></li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_NEXT -->
+						<!-- ELSE -->
+						 <li><a href="{topicrow.pagination.PAGE_URL}">{topicrow.pagination.PAGE_NUMBER}</a></li>
+						<!-- ENDIF -->
+						<!-- END pagination -->
+					</ul>		
+			    <!-- ENDIF -->
+				 <!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i>&nbsp;<!-- ENDIF -->{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL}<small>&nbsp;{topicrow.FIRST_POST_TIME}</small>
+				</td>
+				<td class="center">{L_POST_BY_AUTHOR}&nbsp;{topicrow.LAST_POST_AUTHOR_FULL}
+				<a title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="fa fa-sign-out"></i></a> 
+				<br /><small>{topicrow.LAST_POST_TIME}</small>
+				</td>
+			</tr>
+		</tbody>
+	<!-- END topicrow -->
+	</table>
+	</div>
+	</div>
+<!-- ENDIF -->
+
+<div class="side-segment"><h3>{L_YOUR_DETAILS}</h3></div>
+ <div class="clearfix">
+    <!-- EVENT ucp_main_front_user_activity_before -->
+                <div class="panel panel-poll">
+                    <div class="panel-body">
+                        <div class="scroll-content">
+                            <ul class="mini-timeline">
+							<!-- EVENT ucp_main_front_user_activity_prepend -->
+                                <li class="mini-timeline-lime">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_USER}&nbsp;{L_JOINED_BOARD}</a>
+                                            <span class="time">{JOINED}</span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="mini-timeline-deeporange">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_VISITED_BOARD}</a>
+                                            <span class="time">{LAST_VISIT_YOU}</span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="mini-timeline-info">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_TOTAL_POSTS}</a>&nbsp;<!-- IF POSTS_PCT -->{POSTS}<!-- IF S_DISPLAY_SEARCH -->&nbsp;&#124;&nbsp;<a href="{U_SEARCH_USER}">{L_SEARCH_YOUR_POSTS}</a><!-- ENDIF --><!-- ELSE -->{POSTS}<!-- ENDIF -->
+                                            <span class="time">&#40;{POSTS_DAY}&nbsp;&#47;&nbsp;{POSTS_PCT}&#41;</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            <!-- IF ACTIVE_FORUM != '' -->
+                                <li class="mini-timeline-indigo">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_ACTIVE_IN_FORUM}</a>&nbsp;<strong><a href="{U_ACTIVE_FORUM}">{ACTIVE_FORUM}</a></strong>
+                                            <span class="time">&#40;{ACTIVE_FORUM_POSTS}&nbsp;&#47;&nbsp;{ACTIVE_FORUM_PCT}&#41;</span>
+                                        </div>
+                                    </div>
+                                </li>
+							<!-- ENDIF -->
+							<!-- IF ACTIVE_TOPIC != '' -->
+                                <li class="mini-timeline-lime">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_ACTIVE_IN_TOPIC}</a>&nbsp;<strong><a href="{U_ACTIVE_TOPIC}">{ACTIVE_TOPIC}</a></strong>
+                                            <span class="time">&#40;{ACTIVE_TOPIC_POSTS}&nbsp;&#47;&nbsp;{ACTIVE_TOPIC_PCT}&#41;</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            <!-- ENDIF -->
+							<!-- IF WARNINGS -->
+                                <li class="mini-timeline-deeporange">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name">{L_YOUR_WARNINGS}</a>&nbsp;{WARNING_IMG}
+                                            <span class="time">&#91;{WARNINGS}&#93;</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            <!-- ENDIF -->
+                              
+						<!-- Ready to use here	  
+							  <li class="mini-timeline-info">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name" href="#">User</a> commented on thread <a href="#/">SiteSplat.com</a> and <a class="name" href="#/">Themesplat</a>
+                                            <span class="time">12 mins ago</span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="mini-timeline-indigo">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-content">
+                                            <a class="name" href="#">User</a> commented on thread <a href="#/">SiteSplat.com</a> and <a class="name" href="#/">Themesplat</a>
+                                            <span class="time">12 mins ago</span>
+                                        </div>
+                                    </div>
+                                </li>
+	
+								
+                                <li class="mini-timeline-default">
+                                    <div class="timeline-body ml-n">
+                                        <div class="timeline-content">
+                                            <a href="" class="btn btn-sm btn-default" type="button">{L_SEE_MORE}</a>
+                                        </div>
+                                    </div>
+                                </li>
+								
+						Ready to use here -->		
+								
+							<!-- EVENT ucp_main_front_user_activity_append -->	
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+	<!-- EVENT ucp_main_front_user_activity_after -->		
+    </div>
+</div>
+
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,140 @@
+<!-- INCLUDE mcp_header.html -->
+<form id="mcp" method="post" action="{S_MCP_ACTION}">
+<div class="side-segment"><h3>{L_TITLE}</h3></div>
+ <p>{L_EXPLAIN}</p>
+<div class="row">
+	<!-- IF not S_PM -->
+	<div class="col-md-4">
+	  <fieldset class="form-group">
+	  <div class="input-group">
+		<select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="f" id="fo">{S_FORUM_OPTIONS}</select>  
+		<span class="input-group-btn">
+		<button type="submit" name="sort" class="btn btn-default">{L_GO}</button>
+		</span>
+		</div>
+		{S_FORM_TOKEN}
+	 </fieldset>
+   </div>
+   <!-- ENDIF -->
+   
+   <div class="col-md-8 pull-right">
+        <ul class="pagination pagination-sm pull-right">
+			 <li><a>{TOTAL_REPORTS}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul>	
+	</div>
+</div>
+	
+	<!-- IF .postrow -->
+	<div class="panel panel-forum">
+	     <div class="panel-heading">
+		  <i class="fa fa-list-ol"></i>&nbsp;{L_REPORTS}
+		 </div>
+		 <div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+        <thead>
+		<tr>
+			<th data-class="expand">{L_VIEW_DETAILS}</th>
+			<th data-hide="phone">{L_REPORTER}<!-- IF not S_PM -->&nbsp;{L_FORUM}<!-- ENDIF --></th>
+		    <th class="table-check">{L_MARK}</th>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN postrow -->
+	<tr>
+		<!-- IF S_PM -->
+		<td>
+		   <a href="{postrow.U_VIEW_DETAILS}" class="topictitle">{postrow.PM_SUBJECT}</a>&nbsp;{postrow.ATTACH_ICON_IMG}<br />
+		   {L_MESSAGE_BY_AUTHOR}&nbsp;{postrow.PM_AUTHOR_FULL}&nbsp;{L_MESSAGE_TO}&nbsp;{postrow.RECIPIENTS}&nbsp;&#45;&nbsp;
+		   <small>{postrow.PM_TIME}</small>
+		</td>
+		
+		<td>
+		{postrow.REPORTER_FULL}<br>
+		<small>{postrow.REPORT_TIME}</small>
+		</td>
+		<!-- ELSE -->
+		
+		<td>
+		<a href="{postrow.U_VIEW_DETAILS}">{postrow.POST_SUBJECT}</a>&nbsp;{postrow.ATTACH_ICON_IMG}<br />
+	    {L_POST_BY_AUTHOR} {postrow.POST_AUTHOR_FULL}&nbsp;&#45;
+		<small>{postrow.POST_TIME}</small>
+		</td>
+		
+		<td>
+		{postrow.REPORTER_FULL}&nbsp;&#45;
+		<small>{postrow.REPORT_TIME}</small><br />
+		<!-- IF postrow.U_VIEWFORUM -->{L_FORUM}{L_COLON}&nbsp;<a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a><!-- ELSE -->{postrow.FORUM_NAME}<!-- ENDIF -->
+		</td>
+		<!-- ENDIF -->
+		<td class="table-check"><div class="checker"><input type="checkbox" name="report_id_list[]" value="{postrow.REPORT_ID}" id="report_id_list[]"><label for="report_id_list[]"></label></div></td>
+	</tr>
+			
+		<!-- END postrow -->
+			</tbody>
+	</table>
+	</div>
+</div>
+	<!-- ELSE -->
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        <i class="fa fa-warning"></i>&nbsp;<strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_REPORTS}
+    </div> 
+	<!-- ENDIF -->
+
+<!-- IF .postrow -->	
+<!-- // quick and dirtyyyyyyyy for now -->
+	<!-- IF TOPIC_ID --><input type="checkbox" class="radio" name="t" id="t" value="{TOPIC_ID}" checked="checked"><label class="checkbox-inline" for="t">{L_ONLY_TOPIC}</label><!-- ENDIF -->
+ <div class="space10"></div>
+ <script>
+head.ready(function () { 
+ $('#t').on('ifUnchecked', function(event){
+	$('#mcp').submit();
+  });
+}); 
+ </script>
+<!-- ENDIF -->
+	
+<div class="row">	
+	<!-- IF .postrow -->
+	<div class="col-md-4">
+	<div class="pull-left">
+	<fieldset>
+	<div class="btn-group">
+	 <button class="btn btn-default" type="submit" name="action[delete]" title="" data-original-title="{L_DELETE_REPORTS}"><i class="fa fa-trash-o"></i></button>
+	 <!-- IF not S_CLOSED -->
+	 <button class="btn btn-default" type="submit" name="action[close]" title="" data-original-title="{L_CLOSE_REPORTS}"><i class="fa fa-lock"></i></button>
+	 <!-- ENDIF -->
+	</div>
+	
+	<div class="btn-group">
+	<a href="javascript:;" onclick="marklist('mcp', 'report_id_list', true); return false;" class="btn btn-default" title="" data-original-title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
+	<a href="javascript:;" onclick="marklist('mcp', 'report_id_list', false); return false;" class="btn btn-default" title="" data-original-title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+	</div>
+    </fieldset>
+	</div>
+	</div>
+    <!-- ENDIF -->
+	
+	<div class="col-md-8 pull-right">
+        <ul class="pagination pagination-sm pull-right">
+		<li><a title="" data-original-title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
+			 <li><a>{TOTAL_REPORTS}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul>	
+	</div>	
+</div>
+
+<div class="space10"></div>
+ <!-- INCLUDE display_options.html -->
+
+</form>
+<!-- INCLUDE mcp_footer.html -->

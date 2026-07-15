@@ -1,0 +1,74 @@
+body {
+    font-family: 'Source Sans Pro','Arial','Helvetica',sans-serif;
+    color: #8d9aa5;
+    background-color: #ecf0f1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    font-family: 'Asap Condensed','Arial','Helvetica',sans-serif;
+    font-weight: 600;
+    line-height: normal;
+    color: #7f7f7f;
+	word-wrap: break-word;
+    text-rendering: optimizeLegibility;/* Fix for webkit rendering, well at least for the time being */
+    -webkit-font-smoothing: antialiased;/* Fix for webkit rendering, well at least for the time being */
+	 letter-spacing: 0.4px;
+}
+
+legend {
+    font-family: 'Asap Condensed','Arial','Helvetica',sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #b7b7b7;
+}
+
+table .stats-col {
+    font-family: 'Asap Condensed','Arial','Helvetica',sans-serif;
+    font-size: 13px;
+	letter-spacing: 0.4px;
+}
+
+.blog-meta {
+    font-family: "Asap Condensed","Arial","Helvetica",sans-serif;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+}
+
+.panel-stats .output {
+    font-family: "Asap Condensed","Arial","Helvetica",sans-serif;
+}
+
+.panel-login .signin-text {
+    font-family: "Asap Condensed","Arial","Helvetica",sans-serif;
+    font-size: 15px;
+    font-style: normal;
+    color: #999;
+}
+
+.call-to-action {
+    font-family: "Asap Condensed","Arial","Helvetica",sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+}
+
+.navbar-brand {
+    font-family: "Asap Condensed","Arial","Helvetica",sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+}

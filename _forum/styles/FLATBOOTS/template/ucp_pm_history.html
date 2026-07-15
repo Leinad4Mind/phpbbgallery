@@ -1,0 +1,55 @@
+<!-- </div> breaks the tabbed panel so the review is not merged into the tabs above -->
+
+<div class="space10"></div>
+<div class="clearfix">
+<div class="side-segment"><h3>{L_MESSAGE_HISTORY}{L_COLON}
+   <small class="pull-right" id="topic-review">
+	 <a data-text-swap="{L_EXPAND_CLOSE}" data-text-original="{L_EXPAND_VIEW}" class="topic-review-trigger" href="#topic-review">{L_EXPAND_VIEW}</a>
+	</small></h3></div>
+</div>
+<!-- EVENT ucp_pm_history_review_before -->
+<div class="topicreview-content">
+<script>
+	bbcodeEnabled = {S_BBCODE_ALLOWED};
+</script>
+	<!-- BEGIN history_row -->
+		<div class="well well-sm" id="pr{history_row.MSG_ID}">
+		 <h3><a href="{history_row.U_VIEW_MESSAGE}"<!-- IF history_row.S_CURRENT_MSG --> class="current"<!-- ENDIF -->>{history_row.SUBJECT}</a></h3>
+			<div class="pull-left">
+			 {history_row.MINI_POST_IMG}&nbsp;{L_SENT_AT}{L_COLON}&nbsp;<strong>{history_row.SENT_DATE}</strong><br /> 
+			 {L_MESSAGE_BY_AUTHOR}&nbsp;{history_row.MESSAGE_AUTHOR_FULL}
+			</div> 
+			<!-- DEFINE $SHOW_PM_HISTORY_POST_BUTTONS = (history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE) -->
+			
+			<!-- EVENT ucp_pm_history_post_buttons_list_before -->
+			<!-- IF $SHOW_PM_HISTORY_POST_BUTTONS -->
+			<div class="pull-right">
+			<!-- EVENT ucp_pm_history_post_buttons_before -->
+				<!-- IF history_row.U_QUOTE or history_row.MESSAGE_AUTHOR_QUOTE -->
+				<a class="btn btn-sm btn-default" <!-- IF history_row.U_QUOTE -->href="{history_row.U_QUOTE}"<!-- ELSE -->href="#postingbox" onclick="addquote({history_row.MSG_ID}, '{history_row.MESSAGE_AUTHOR_QUOTE}', '{LA_WROTE}', {time:{history_row.MESSAGE_TIME},user_id:{history_row.USER_ID}});"<!-- ENDIF --> title="{L_QUOTE} {history_row.MESSAGE_AUTHOR}"><i class="fa fa-comment"></i></a>
+			    <!-- ENDIF -->
+			<!-- EVENT ucp_pm_history_post_buttons_after -->
+			</div>
+			<!-- ENDIF -->
+			<!-- EVENT ucp_pm_history_post_buttons_list_after -->
+			
+		  <div class="space10"></div>
+			<div class="content"><!-- IF history_row.MESSAGE -->{history_row.MESSAGE}<!-- ELSE --><span class="error">{L_MESSAGE_REMOVED_FROM_OUTBOX}</span><!-- ENDIF --></div>
+			 <div id="message_{history_row.MSG_ID}" style="display: none;">{history_row.DECODED_MESSAGE}</div>
+		</div>
+	<!-- END history_row -->
+<script>
+// some function that depends on bootstrap and jquery
+// We use a single ternary operator to check if the swap matches the orignal and perform the right action text swap based on the truthiness
+head.ready(function () {
+
+$('.topic-review-trigger').click(function() {
+  var el = $(this);
+    el.text() == el.data("text-swap") ? el.text(el.data("text-original")) : el.text(el.data("text-swap"));
+    $('.topicreview-content').toggleClass('topicreview-expand');
+});
+
+});
+</script>
+</div>
+<!-- EVENT ucp_pm_history_review_after -->

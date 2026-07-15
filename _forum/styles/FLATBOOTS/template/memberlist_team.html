@@ -1,0 +1,54 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{PAGE_TITLE}</h3></div>
+<form method="post" action="{S_MODE_ACTION}">
+<!-- BEGIN group -->
+<div class="forumbg forumbg-table">
+	<div class="panel panel-forum">
+	   <div class="panel-heading">
+		<i class="fa fa-group"></i>&nbsp;<!-- IF group.U_GROUP --><a href="{group.U_GROUP}">{group.GROUP_NAME}</a><!-- ELSE -->{group.GROUP_NAME}<!-- ENDIF -->
+	   </div>
+	 <div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+	<thead>
+	<tr>
+		<th data-class="expand" data-dfn="{L_RANK}{L_COMMA_SEPARATOR}{L_USERNAME}">{L_MEMBERS}</th>
+		<th class="large20" data-hide="phone">{L_PRIMARY_GROUP}</th>
+		<th class="large20" data-hide="phone">{L_RANK_IMAGE}</th>
+		<!-- IF S_DISPLAY_MODERATOR_FORUMS --><th class="large20" data-hide="phone">{L_MODERATOR}</th><!-- ENDIF -->
+	</tr>
+	</thead>
+	<tbody>
+<!-- BEGIN user -->
+	<tr>
+		<td>{group.user.USERNAME_FULL}<!-- IF group.user.S_INACTIVE -->&nbsp;&#40;{L_INACTIVE}&#41;<!-- ENDIF --><!-- IF group.user.RANK_TITLE -->&nbsp;&#45;&nbsp;{group.user.RANK_TITLE}<!-- ENDIF --></td>
+		<td><!-- IF group.user.U_GROUP -->
+			<a<!-- IF group.user.GROUP_COLOR --> style="font-weight: bold; color: #{group.user.GROUP_COLOR}"<!-- ENDIF --> href="{group.user.U_GROUP}">{group.user.GROUP_NAME}</a>
+			<!-- ELSE -->
+				{group.user.GROUP_NAME}
+			<!-- ENDIF -->
+		</td>
+		<td><!-- IF group.user.RANK_IMG --><span class="rank-img">{group.user.RANK_IMG}</span><!-- ENDIF --></td>
+		<!-- IF S_DISPLAY_MODERATOR_FORUMS -->
+			<td><!-- IF group.user.FORUM_OPTIONS --><select class="selectpicker">{group.user.FORUMS}</select><!-- ELSEIF group.user.FORUMS -->{group.user.FORUMS}<!-- ELSE -->-<!-- ENDIF --></td>
+		<!-- ENDIF -->
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td colspan="4"><strong>{L_NO_MEMBERS}</strong></td>
+	</tr>
+<!-- END user -->
+	</tbody>
+	</table>
+	</div>
+	</div>
+</div>
+<!-- END group -->
+</form>
+
+<div class="row">
+<div class="col-md-4">
+<!-- INCLUDE jumpbox_options.html -->
+</div>
+</div>
+<div class="space10"></div>
+<!-- INCLUDE overall_footer.html -->

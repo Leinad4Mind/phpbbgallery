@@ -1,0 +1,92 @@
+<div class="clearfix">
+<div class="side-segment"><h3>{L_TOPIC_REVIEW}{L_COLON}&nbsp;{TOPIC_TITLE}
+   <small class="pull-right" id="topic-review">
+	 <a data-text-swap="{L_EXPAND_CLOSE}" data-text-original="{L_EXPAND_VIEW}" class="topic-review-trigger" href="#topic-review">{L_EXPAND_VIEW}</a>
+	</small></h3></div>
+</div>
+
+<div class="topicreview-content">
+<!-- BEGIN topic_review_row -->
+
+	<!-- IF topic_review_row.S_IGNORE_POST -->
+	<div class="well post-ignore">
+		<span>{topic_review_row.L_IGNORE_POST}</span>
+		    <a class="btn btn-warning btn-xs pull-right" data-toggle="collapse" href="#pr{topic_review_row.POST_ID}" aria-expanded="false" aria-controls="pr{topic_review_row.POST_ID}">{L_SHOW}</a>
+			<div class="space10"></div>
+	<!-- ELSE IF topic_review_row.S_POST_DELETED -->
+		<div class="alert alert-default">{topic_review_row.L_DELETE_POST}
+		    <a class="btn btn-warning btn-xs pull-right" data-toggle="collapse" href="#pr{topic_review_row.POST_ID}" aria-expanded="false" aria-controls="pr{topic_review_row.POST_ID}">{L_SHOW}</a>
+	    </div>
+    <!-- ELSE -->
+    <!-- ENDIF -->
+<!-- // REPORTED_POST only works under MCP mcp.php?i=reports&mode=report_details& etc etc -->
+	<div class="panel panel-default panel-body<!-- IF topic_review_row.POST_ID == REPORTED_POST_ID --> panel-danger<!-- ENDIF --> post text-muted<!-- IF topic_review_row.S_IGNORE_POST or topic_review_row.S_POST_DELETED --> collapse<!-- ELSE --><!-- ENDIF -->" id="pr{topic_review_row.POST_ID}">
+	 
+	<!-- IF topic_review_row.S_POST_PRIVATE -->
+		<div class="text-muted pull-left">
+		  {L_PRIVATE_BY}<strong>&nbsp;{topic_review_row.POST_AUTHOR_FULL}</strong>&nbsp;&raquo;&nbsp;{topic_review_row.POST_DATE}
+		</div>
+    <!-- ELSE -->
+	
+	 <h3><a href="#pr{topic_review_row.POST_ID}">{topic_review_row.POST_SUBJECT}</a><!-- IF S_IS_BOT --><span class="pull-right post-id hidden-xs"><i class="fa fa-file"></i></span><!-- ELSE --><span class="pull-right post-id hidden-xs"><a href="{topic_review_row.U_MINI_POST}" title="{L_JUMP_TO_POST}">&#35;{topic_review_row.POST_ID}</a></span><!-- ENDIF --></h3>
+	 <div class="clearfix">
+	 
+	    <!-- EVENT posting_topic_review_row_post_details_before -->
+		<div class="text-muted pull-left">
+		  {L_POST_BY_AUTHOR}<strong>&nbsp;{topic_review_row.POST_AUTHOR_FULL}</strong>&nbsp;&raquo;&nbsp;{topic_review_row.POST_DATE}
+		</div>
+		<!-- EVENT posting_topic_review_row_post_details_after -->
+		
+	    <!-- IF (topic_review_row.POSTER_QUOTE and topic_review_row.DECODED_MESSAGE) or topic_review_row.U_MCP_DETAILS -->
+	    <div class="pull-right">
+			<!-- IF topic_review_row.POSTER_QUOTE and topic_review_row.DECODED_MESSAGE -->
+			<a class="btn btn-sm btn-default" href="#postingbox" onclick="addquote({topic_review_row.POST_ID}, '{topic_review_row.POSTER_QUOTE}', '{LA_WROTE}', {post_id:{topic_review_row.POST_ID},time:{topic_review_row.POST_TIME},user_id:{topic_review_row.USER_ID}});" title="{L_QUOTE} {topic_review_row.POST_AUTHOR}"><i class="fa fa-comment"></i></a>
+			<!-- ENDIF -->
+			
+			<!-- IF topic_review_row.U_MCP_DETAILS -->
+			<a class="btn btn-sm btn-default" href="{topic_review_row.U_MCP_DETAILS}" title="{L_POST_DETAILS}"><i class="fa fa-question-circle"></i></a>
+			<!-- ENDIF -->
+		</div>
+	    <!-- ENDIF -->
+	 </div>
+		
+	    <div class="content clearfix">{topic_review_row.MESSAGE}</div>
+	
+			<!-- IF topic_review_row.S_HAS_ATTACHMENTS -->
+			<div class="clearfix">
+				<div class="attachbox">
+					<h5>{L_ATTACHMENTS}</h5>
+					<!-- EVENT ss_posting_topic_review_attachment_row_before -->
+					    <!-- BEGIN attachment -->{topic_review_row.attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
+					<!-- EVENT ss_posting_topic_review_attachment_row_after -->
+				</div>
+			</div>	
+			<!-- ENDIF -->
+
+			<!-- IF topic_review_row.POSTER_QUOTE and topic_review_row.DECODED_MESSAGE -->
+				<div id="message_{topic_review_row.POST_ID}" style="display:none;">{topic_review_row.DECODED_MESSAGE}</div>
+			<!-- ENDIF -->
+			
+	<!-- ENDIF --><!-- // this is for the private post above at 22 -->			
+	</div>
+	
+<!-- IF topic_review_row.S_IGNORE_POST -->
+</div>
+<!-- ELSE -->
+<!-- ENDIF -->
+		
+<!-- END topic_review_row -->
+<script>
+// some function that depends on bootstrap and jQuery
+// We use a single ternary operator to check if the swap matches the original and perform the right action text swap based on the truthiness
+head.ready(function () {
+    bbcodeEnabled = {S_BBCODE_ALLOWED};
+	
+	$('.topic-review-trigger').click(function() {
+	  var el = $(this);
+		el.text() == el.data("text-swap") ? el.text(el.data("text-original")) : el.text(el.data("text-swap"));
+		$('.topicreview-content').toggleClass('topicreview-expand');
+	});
+});
+</script>
+</div>

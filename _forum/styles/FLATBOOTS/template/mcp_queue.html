@@ -1,0 +1,149 @@
+<!-- INCLUDE mcp_header.html -->
+<form id="mcp" method="post" action="{S_MCP_ACTION}">
+<div class="side-segment"><h3>{L_TITLE}</h3></div>
+	<p>{L_EXPLAIN}</p>
+<div class="row">
+    
+	<div class="col-md-4">
+	   <fieldset class="form-group">
+	  <div class="input-group">
+		<select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="f" id="fo">{S_FORUM_OPTIONS}</select>  
+		<span class="input-group-btn">
+		<button type="submit" name="sort" class="btn btn-default">{L_GO}</button>
+		</span>
+		</div>
+		{S_FORM_TOKEN}
+	 </fieldset>
+   </div>
+   
+   <div class="col-md-8">
+		<ul class="pagination pagination-sm pull-right">
+		 <li><a>{TOTAL}</a></li>
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+       </ul>
+	</div>   
+   
+</div>
+
+
+<!-- IF .postrow -->	
+ <div class="panel panel-forum">
+	  <div class="panel-heading">
+	    <i class="fa fa-bar-chart-o"></i>&nbsp;{L_QUEUE}
+	  </div>
+	 <div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+      <thead>
+		<tr>
+			<th data-class="expand"><!-- IF S_TOPICS -->{L_TOPIC}<!-- ELSE -->{L_POST}<!-- ENDIF --></th>
+			<th data-hide="phone"><!-- IF not S_TOPICS -->{L_TOPIC}<!-- ENDIF -->{L_FORUM}</th>
+		    <th class="table-check">{L_MARK}</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<!-- BEGIN postrow -->
+
+		<!-- IF postrow.S_DELETED_TOPIC -->
+		 <p>{L_DELETED_TOPIC}</p>
+		<!-- ELSE -->
+	  <tr>
+		<td>
+		<a href="{postrow.U_VIEW_DETAILS}" class="topictitle">{postrow.POST_SUBJECT}</a><br />
+		<!-- IF postrow.S_HAS_ATTACHMENTS --><i class="fa fa-paperclip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF --> 
+		 {L_POST_BY_AUTHOR}&nbsp;{postrow.POST_AUTHOR_FULL}&nbsp;&#45;&nbsp;
+		 <small>{postrow.POST_TIME}</small>
+		</td>
+		<td>
+		<!-- IF S_TOPICS -->{L_TOPIC}{L_COLON}&nbsp;<a href="{postrow.U_TOPIC}">{postrow.TOPIC_TITLE}</a><!-- ENDIF --><br>
+		{L_FORUM}{L_COLON}&nbsp;<a href="{postrow.U_VIEWFORUM}">{postrow.FORUM_NAME}</a>
+		</td>
+		<td class="table-check">
+		 <div class="checker">
+		  <!-- IF S_TOPICS -->
+		  <input type="checkbox" name="topic_id_list[]" value="{postrow.TOPIC_ID}" id="{postrow.TOPIC_ID}"><label for="{postrow.TOPIC_ID}"></label>			
+		  <!-- ELSE -->
+		  <input type="checkbox" name="post_id_list[]" value="{postrow.POST_ID}" id="{postrow.POST_ID}"><label for="{postrow.POST_ID}"></label>
+		  <!-- ENDIF -->
+		 </div>
+		</td>
+	   </tr>
+		<!-- ENDIF -->
+		<!-- END postrow -->
+	  </tbody>
+	</table>
+	</div>
+ </div>
+<!-- ELSE -->
+	<div class="alert alert-info fade in">
+        <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;
+		<!-- IF S_RESTORE -->
+			<!-- IF S_TOPICS -->{L_NO_TOPICS_DELETED}<!-- ELSE -->{L_NO_POSTS_DELETED}<!-- ENDIF -->
+		<!-- ELSE -->
+			<!-- IF S_TOPICS -->{L_NO_TOPICS_QUEUE}<!-- ELSE -->{L_NO_POSTS_QUEUE}<!-- ENDIF -->
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+	
+<!-- IF .postrow -->	
+<!-- // quick and dirtyyyyyyyy for now -->
+	<!-- IF TOPIC_ID --><input type="checkbox" class="radio" name="t" id="t" value="{TOPIC_ID}" checked="checked"><label class="checkbox-inline" for="t">{L_ONLY_TOPIC}</label><!-- ENDIF -->
+ <div class="space10"></div>
+ <script>
+head.ready(function () { 
+ $('#t').on('ifUnchecked', function(event){
+	$('#mcp').submit();
+  });
+}); 
+ </script>
+<!-- ENDIF -->
+	
+ <div class="clearfix">
+	<!-- IF .postrow -->
+	<div class="pull-left">
+	 <fieldset class="display-actions">
+		<!-- IF S_RESTORE -->
+		<div class="btn-group">
+		 <button class="btn btn-default" type="submit" name="action[delete]" value="{L_DELETE}" title="{L_DELETE}"><i class="fa fa-trash-o"></i></button>
+		 <button class="btn btn-default" type="submit" name="action[restore]" value="{L_RESTORE}" title="{L_RESTORE}"><i class="fa fa-refresh"></i></button>
+		</div>
+		<!-- ELSE -->
+		<div class="btn-group">
+		 <button class="btn btn-default" type="submit" name="action[approve]" id="action[approve]" title="{L_APPROVE}"><i class="fa fa-thumbs-up"></i></button>
+		 <button class="btn btn-default" type="submit" name="action[disapprove]" id="action[disapprove]" title="{L_DISAPPROVE}"><i class="fa fa-thumbs-down"></i></button>
+		</div>
+		<!-- ENDIF -->
+
+		<div class="btn-group">
+		<!-- IF S_TOPICS -->
+		 <a href="javascript:void(0);" onclick="marklist('mcp', 'topic_id_list', true); return false;" class="btn btn-default" title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
+		 <a href="javascript:void(0);" onclick="marklist('mcp', 'topic_id_list', false); return false;" class="btn btn-default" title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+		<!-- ELSE -->
+		 <a href="javascript:void(0);" onclick="marklist('mcp', 'post_id_list', true); return false;" class="btn btn-default" title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
+		 <a href="javascript:void(0);" onclick="marklist('mcp', 'post_id_list', false); return false;" class="btn btn-default" title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+		<!-- ENDIF -->
+		</div>	
+	 </fieldset>
+	</div>
+    <!-- ENDIF -->
+	
+	<ul class="pagination pagination-sm pull-right">
+	 <li><a title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
+		<li><a>{TOTAL}</a></li>
+	 <!-- IF .pagination -->
+		<!-- INCLUDE pagination.html -->
+	 <!-- ELSE -->
+		<li class="active"><a>{PAGE_NUMBER}</a></li>	
+	 <!-- ENDIF -->
+	</ul>
+ </div>
+	
+	<div class="space10"></div>
+<!-- INCLUDE display_options.html -->
+
+</form>
+
+<!-- INCLUDE mcp_footer.html -->

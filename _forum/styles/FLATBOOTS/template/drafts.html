@@ -1,0 +1,35 @@
+<!-- IF .draftrow -->
+<div class="side-segment"><h3>{L_LOAD_DRAFT}</h3></div>
+	<div class="alert alert-info fade in">
+       <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_DRAFT_LOADED}</strong><br>{L_LOAD_DRAFT_EXPLAIN}
+    </div> 
+<div class="panel panel-forum">
+	<div class="panel-heading">
+		{L_DRAFT}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand"><i class="fa fa-bar-chart"></i>&nbsp;{L_LOAD_DRAFT}</th>
+			<th data-hide="phone"><i class="fa fa-bar-chart"></i>&nbsp;{L_SAVE_DATE}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN draftrow -->
+	     <tr>
+			<td>
+			    <a href="{draftrow.U_INSERT}" title="{L_LOAD_DRAFT}" class="topictitle"><i class="fa fa-edit"></i>{draftrow.DRAFT_SUBJECT}</a><br />
+				<!-- IF not S_PRIVMSGS --><!-- IF draftrow.S_LINK_TOPIC -->{L_TOPIC}{L_COLON}&nbsp;<a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
+				<!-- ELSEIF draftrow.S_LINK_FORUM -->{L_FORUM}{L_COLON}&nbsp;<a href="{draftrow.U_VIEW}">{draftrow.TITLE}</a>
+				<!-- ELSE -->{L_NO_TOPIC_FORUM}<!-- ENDIF --><!-- ENDIF -->
+			</td>
+			<td><i class="fa fa-clock-o"></i>&nbsp;{draftrow.DATE}</td>
+		</tr>
+	<!-- END draftrow -->
+	</tbody>
+  </table>
+  </div>
+</div>  
+<!-- ENDIF -->

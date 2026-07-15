@@ -1,0 +1,60 @@
+<div class="panel-body tab-pane" id="posting-poll-html">
+	<!-- IF S_SHOW_POLL_BOX -->
+	<p>{L_ADD_POLL_EXPLAIN}</p>
+	<!-- ENDIF -->
+
+	<fieldset>
+	<!-- IF S_SHOW_POLL_BOX -->
+	  <div class="control-group"> 
+	   <label class="control-label" for="poll_title">{L_POLL_QUESTION}{L_COLON}</label>
+	    <div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" placeholder="" name="poll_title" id="poll_title" maxlength="100" value="{POLL_TITLE}">
+	    </div> 
+	  </div>
+		
+	   <div class="control-group"> 
+	   <label class="control-label" for="poll_option_text">{L_POLL_OPTIONS}{L_COLON}</label><span class="help-block">{L_POLL_OPTIONS_EXPLAIN}</span>
+	    <div class="controls controls-row"> 
+        <textarea placeholder="" rows="4" name="poll_option_text" id="poll_option_text" class="form-control">{POLL_OPTIONS}</textarea>
+	    </div> 
+	    </div>
+	<div class="control-group"> 
+	<div class="row"> 
+		<div class="col-md-4"> 
+	         <label class="control-label" for="poll_max_options">{L_POLL_MAX_OPTIONS}{L_COLON}</label><span class="help-block">{L_POLL_MAX_OPTIONS_EXPLAIN_ALT}</span>
+			<div class="input-group col-xs-7">
+		       <input type="number" min="0" max="999" name="poll_max_options" id="poll_max_options" value="{POLL_MAX_OPTIONS}" placeholder="" class="form-control input-sm">
+		      <span class="input-group-addon">{L_OPTIONS}</span>
+	         </div>
+	    </div>
+		<div class="col-md-4"> 
+	         <label class="control-label" for="poll_length">{L_POLL_FOR}{L_COLON}</label><span class="help-block">{L_POLL_FOR_EXPLAIN}</span>
+			<div class="input-group col-xs-7">
+		       <input type="number" name="poll_length" id="poll_length" size="3" value="{POLL_LENGTH}" placeholder="" class="form-control input-sm" min="0" max="999">
+		      <span class="input-group-addon">{L_DAYS}</span>
+	         </div>
+        </div>
+		<div class="col-md-4"> 
+		<!-- IF S_POLL_VOTE_CHANGE -->
+	     <label class="control-label" for="poll_vote_change">{L_POLL_VOTE_CHANGE}{L_COLON}</label><span class="help-block">{L_POLL_VOTE_CHANGE_EXPLAIN}</span>
+	    <div class="controls controls-row"> 
+         <input type="checkbox" id="poll_vote_change" name="poll_vote_change"{VOTE_CHANGE_CHECKED}><label class="checkbox-inline" for="poll_vote_change">{L_POLL_VOTE_CHANGE_LABEL}</label>
+	     </div> 
+		<!-- ENDIF -->
+		</div>
+	</div>	
+	</div>
+    <!-- ENDIF -->
+	<!-- EVENT posting_poll_body_options_after -->
+    
+	    <!-- IF S_POLL_DELETE -->	
+		<div class="control-group"> 
+		 <label class="control-label" for="poll_delete">{L_DELETE_POLL}{L_COLON}</label><span class="help-block">{L_POLL_DELETE_HELPER}</span>
+	    <div class="controls controls-row"> 
+        <input type="checkbox" name="poll_delete" id="poll_delete"<!-- IF S_POLL_DELETE_CHECKED --> checked="checked"<!-- ENDIF -->><label class="checkbox-inline" for="poll_delete">{L_POLL_DELETE}</label>
+	    </div> 
+	     <div class="space10"></div>
+		</div>
+	    <!-- ENDIF -->
+	</fieldset>
+</div>

@@ -1,0 +1,69 @@
+<!-- INCLUDE mcp_header.html -->
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+<div class="side-segment"><h3>{L_WARNED_USERS}</h3></div>
+<div class="tab-pane active">
+	<p>{L_WARNED_USERS_EXPLAIN}</p>
+<!-- IF .user -->
+	<div class="clearfix">
+	 <ul class="pagination pagination-sm pull-right">
+		 <li><a>{TOTAL_USERS}</a></li>
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+     </ul>
+	</div>
+	
+	<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-warning"></i>&nbsp;{L_WARNINGS}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_USERNAME}</th>
+				<th data-hide="phone">{L_WARNINGS}</th>
+				<th data-hide="phone">{L_LATEST_WARNING_TIME}</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		<!-- BEGIN user -->
+			<tr>
+				<td>{user.USERNAME_FULL}</td>
+				<td>{user.WARNINGS}&nbsp;&#91;<a href="{user.U_NOTES}">{L_VIEW_NOTES}</a>&#93;</td>
+				<td>{user.WARNING_TIME}</td>
+			</tr>
+		<!-- END user -->
+		</tbody>
+		</table>
+		</div>
+	</div>
+	
+    <div class="clearfix">
+		<ul class="pagination pagination-sm pull-right">
+		 <li><a title="" data-original-title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
+		 <li><a>{TOTAL_USERS}</a></li>
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+     </ul>
+    </div>
+		
+<!-- INCLUDE display_options.html -->
+
+	<!-- ELSE -->
+	<div class="alert alert-info fade in">
+        <i class="fa fa-warning"></i>&nbsp;<strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_WARNINGS}
+    </div> 
+	<!-- ENDIF -->
+
+{S_FORM_TOKEN}
+</div>
+</form>
+
+<!-- INCLUDE mcp_footer.html -->

@@ -1,0 +1,46 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="postform" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<!-- IF SIGNATURE_PREVIEW != '' -->
+	<div class="well">
+	  <h3>{L_SIGNATURE_PREVIEW}</h3>
+		<div class="signature" style="border-top:none; margin-top: 0;">{SIGNATURE_PREVIEW}</div>
+	</div>
+<!-- ENDIF -->
+
+<div class="well">
+   <fieldset class="framed-ucp">
+   <legend>{L_TITLE}</legend>
+	<div class="alert alert-info fade in">
+			{L_SIGNATURE_EXPLAIN}
+		</div>
+	<!-- DEFINE $SIG_EDIT = 1 -->
+	<!-- INCLUDE posting_editor.html -->
+	</fieldset>
+	
+	<!-- EVENT ucp_profile_signature_options_before -->
+	<div class="space10"></div>
+	<fieldset class="framed-ucp">
+	<legend>{L_OPTIONS}</legend>
+	{% EVENT ucp_profile_signature_posting_editor_options_prepend %}
+		<!-- IF S_BBCODE_ALLOWED -->
+        <input type="checkbox" name="disable_bbcode" id="disable_bbcode"{S_BBCODE_CHECKED}><label class="checkbox-inline" for="disable_bbcode">{L_DISABLE_BBCODE}</label>
+		<!-- ENDIF -->
+		<!-- IF S_SMILIES_ALLOWED -->
+		<input type="checkbox" name="disable_smilies" id="disable_smilies"{S_SMILIES_CHECKED}><label class="checkbox-inline" for="disable_smilies">{L_DISABLE_SMILIES}</label>
+		<!-- ENDIF -->
+		<!-- IF S_LINKS_ALLOWED -->
+		<input type="checkbox" name="disable_magic_url" id="disable_magic_url"{S_MAGIC_URL_CHECKED}><label class="checkbox-inline" for="disable_magic_url">{L_DISABLE_MAGIC_URL}</label>
+		<!-- ENDIF -->
+	</fieldset>
+	<div class="space10"></div>
+	<!-- EVENT ucp_profile_signature_options_after -->
+</div>
+
+	<div class="form-actions"> 
+	  {S_HIDDEN_FIELDS}
+	  <button type="submit" class="btn btn-default" name="preview" value="{L_PREVIEW}" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_PREVIEW}</button>
+	  <button type="submit" class="btn btn-default" name="submit" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+	</div>
+</form>
+<!-- INCLUDE ucp_footer.html -->

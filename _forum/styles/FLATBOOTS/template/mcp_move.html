@@ -1,0 +1,63 @@
+<!-- IF S_AJAX_REQUEST -->
+   <div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+	<div class="well">
+		<!-- IF ADDITIONAL_MSG --><p>{ADDITIONAL_MSG}</p><!-- ENDIF -->
+		<div class="control-group">
+			<label class="control-label">{L_SELECT_DESTINATION_FORUM}{L_COLON}</label>
+		 <div class="controls controls-row">
+			<select class="selectpicker" data-container="body" name="to_forum_id">{S_FORUM_SELECT}</select>
+			<div class="space10"></div>
+			<!-- IF S_CAN_LEAVE_SHADOW -->
+			   <div><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" checked="checked"><label class="icheck-control" for="move_leave_shadow">{L_LEAVE_SHADOW}</label></div>
+			<!-- ENDIF -->
+			<!-- IF S_CAN_LOCK_TOPIC -->
+			  <div><input type="checkbox" name="move_lock_topics" id="move_lock_topics"><label class="icheck-control" for="move_lock_topics">{L_LOCK_TOPIC}</label></div>
+			<!-- ENDIF -->
+	     </div>
+		</div>
+		<span class="help-block">{MESSAGE_TEXT}</span>
+		
+	<div class="space10"></div>
+    <fieldset>
+	<button class="btn btn-default" name="confirm" type="submit" value="{YES_VALUE}">{YES_VALUE}</button>
+	<button class="btn btn-default" name="cancel" type="submit">{L_NO}</button>
+    </fieldset>
+	</div>
+<!-- ELSE -->
+
+<!-- INCLUDE overall_header.html -->
+<!-- EVENT mcp_move_before -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+      <div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+	<div class="well">
+		<!-- IF ADDITIONAL_MSG --><p>{ADDITIONAL_MSG}</p><!-- ENDIF -->
+	<fieldset>
+		<div class="control-group">
+		<!-- EVENT mcp_move_destination_forum_before -->
+			<label class="control-label">{L_SELECT_DESTINATION_FORUM}{L_COLON}</label>
+		 <div class="controls controls-row">
+			<select class="selectpicker" data-container="body" name="to_forum_id">{S_FORUM_SELECT}</select>
+			<div class="space10"></div>
+			<!-- IF S_CAN_LEAVE_SHADOW -->
+			   <div><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" checked="checked"><label class="icheck-control" for="move_leave_shadow">{L_LEAVE_SHADOW}</label></div>
+			<!-- ENDIF -->
+			<!-- IF S_CAN_LOCK_TOPIC -->
+			  <div><input type="checkbox" name="move_lock_topics" id="move_lock_topics"><label class="icheck-control" for="move_lock_topics">{L_LOCK_TOPIC}</label></div>
+			<!-- ENDIF -->
+	     </div>
+		 <!-- EVENT mcp_move_destination_forum_after -->
+		</div>
+	 </fieldset>
+		<span class="help-block">{MESSAGE_TEXT}</span>
+		
+	<div class="space10"></div>
+    <fieldset>
+	{S_HIDDEN_FIELDS}
+	<button class="btn btn-default" name="confirm" type="submit" value="{YES_VALUE}">{YES_VALUE}</button>
+	<button class="btn btn-default" name="cancel" type="submit">{L_NO}</button>
+	{S_FORM_TOKEN}
+    </fieldset>
+	</div>
+</form>
+<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->

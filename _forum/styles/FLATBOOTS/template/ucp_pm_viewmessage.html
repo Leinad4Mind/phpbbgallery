@@ -1,0 +1,234 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<!-- INCLUDE ucp_pm_message_header.html -->
+
+<!-- </fieldset> FORMER DOUBLE DIV PANEL AND INNER FOR VIEW FOLDER AND VIEW MESSASGE-->
+
+<!-- IF S_DISPLAY_HISTORY and (U_VIEW_PREVIOUS_HISTORY or U_VIEW_NEXT_HISTORY) -->
+	<fieldset>
+		<ul class="pager">
+		  <!-- IF U_VIEW_PREVIOUS_HISTORY --><li class="previous"><a href="{U_VIEW_PREVIOUS_HISTORY}" class="pull-left">{L_VIEW_PREVIOUS_HISTORY}</a></li><!-- ENDIF -->
+		  <!-- IF U_VIEW_NEXT_HISTORY --><li class="next"><a href="{U_VIEW_NEXT_HISTORY}" class="pull-right">{L_VIEW_NEXT_HISTORY}</a></li><!-- ENDIF -->
+		</ul>
+	</fieldset>
+<!-- ENDIF -->
+
+<div class="space10"></div>
+  
+<div id="post-{MESSAGE_ID}" class="pm">
+ <div class="panel panel-poll">
+    <div class="panel-heading">
+        <div class="side-segment"><h3 style="border-bottom: 4px solid #ccc;">{SUBJECT}</h3></div>    
+		<div class="clearfix">
+		 <div class="text-muted pull-left"><i class="fa fa-clock-o"></i>&nbsp;{SENT_DATE}</div>
+		  <div class="pull-right">
+			 <div class="btn-group btn-group-sm">	
+			 <!-- IF U_EMAIL_PM --><a href="{U_EMAIL_PM}" title="{L_EMAIL_PM}" class="btn btn-default"><i class="fa fa-envelope"></i></a><!-- ENDIF -->
+			 <!-- IF U_PRINT_PM --><a class="btn btn-default print" href="{U_PRINT_PM}" title="{L_PRINT_PM}" accesskey="p"><i class="fa fa-print"></i></a><!-- ENDIF -->
+             </div>
+		     <!-- DEFINE $SHOW_PM_POST_BUTTONS = (U_EDIT or U_DELETE or U_REPORT or U_QUOTE) -->
+		       <!-- EVENT ucp_pm_viewmessage_post_buttons_list_before -->
+		      <!-- IF $SHOW_PM_POST_BUTTONS -->
+		      <div class="btn-group btn-group-sm">
+			  <!-- EVENT ucp_pm_viewmessage_post_buttons_before -->
+			  <!-- IF U_EDIT --><a class="btn btn-default" href="{U_EDIT}" title="{L_POST_EDIT_PM}"><i class="fa fa-edit"></i></a><!-- ENDIF -->
+			  <!-- IF U_DELETE --><a class="btn btn-default" href="{U_DELETE}" title="{L_DELETE_MESSAGE}"><i class="fa fa-trash-o"></i></a><!-- ENDIF -->
+			  <!-- IF U_REPORT --><a class="btn btn-default" href="{U_REPORT}" title="{L_REPORT_PM}"><i class="fa fa-warning"></i></a><!-- ENDIF -->
+			  <!-- IF U_QUOTE --><a class="btn btn-default" href="{U_QUOTE}" title="{L_POST_QUOTE_PM}"><i class="fa fa-comment"></i></a><!-- ENDIF -->
+		      <!-- EVENT ucp_pm_viewmessage_post_buttons_after -->
+			  </div>
+		     <!-- ENDIF -->
+			   <!-- EVENT ucp_pm_viewmessage_post_buttons_list_after -->
+	        </div>
+		</div>
+	</div>
+   
+    <div class="panel-body">
+	    <div class="media media-pm">
+			<div class="avatar-over pull-left">
+				<!-- IF AUTHOR_AVATAR --><a href="{U_MESSAGE_AUTHOR}">{AUTHOR_AVATAR}</a><!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+				<!-- IF S_ONLINE --> 
+				<span class="status"></span>
+				<!-- ENDIF -->
+			</div>
+                <ul class="media-body user-info list-unstyled text-muted">
+                 <li>{L_PM_FROM}{L_COLON}&nbsp;{MESSAGE_AUTHOR_FULL}</li>
+				 <!-- IF S_TO_RECIPIENT --><li>{L_TO}{L_COLON}&nbsp;<!-- BEGIN to_recipient --><!-- IF to_recipient.NAME_FULL -->{to_recipient.NAME_FULL}&nbsp;&#45;<!-- ELSE --><a href="{to_recipient.U_VIEW}"<!-- IF to_recipient.COLOUR --> style="color:{to_recipient.COLOUR};"<!-- ENDIF -->><strong>{to_recipient.NAME}</strong></a><!-- ENDIF -->&nbsp;<!-- END to_recipient --></li><!-- ENDIF --> 
+				 <!-- IF S_BCC_RECIPIENT --><li>{L_BCC}{L_COLON}&nbsp;<!-- BEGIN bcc_recipient --><!-- IF bcc_recipient.NAME_FULL -->{bcc_recipient.NAME_FULL}&nbsp;&#45;<!-- ELSE --><a href="{bcc_recipient.U_VIEW}"<!-- IF bcc_recipient.COLOUR --> style="color:{bcc_recipient.COLOUR};"<!-- ENDIF -->><strong>{bcc_recipient.NAME}</strong></a><!-- ENDIF -->&nbsp;<!-- END bcc_recipient --></li><!-- ENDIF --> 
+				  
+				<li class="share-box">
+				   <a data-toggle="modal" href="#mini{MESSAGE_ID}" class="btn btn-bordered btn-xs"><i class="fa fa-address-card-o"></i></a>
+				<div class="modal fade" id="mini{MESSAGE_ID}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						  <h4 class="modal-title" id="myModalLabel">{L_USER_MINI_PROFILE}</h4>
+						</div>
+						<div class="modal-body">
+						  <div class="row profile-data">
+							<!-- Left Side Start -->
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 text-center">
+							  <!-- EVENT ucp_pm_viewmessage_avatar_before -->
+							  <div class="profile-avatar">
+								<!-- IF AUTHOR_AVATAR --><a href="{U_MESSAGE_AUTHOR}">{AUTHOR_AVATAR}</a><!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+							  </div>
+							  <!-- EVENT ucp_pm_viewmessage_avatar_after -->
+							  
+                          <!-- EVENT ucp_pm_viewmessage_rank_before --> 
+							<!-- IF RANK_IMG --><div class="profile-rank text-center">{RANK_IMG}</div><!-- ENDIF -->
+	                      <!-- EVENT ucp_pm_viewmessage_rank_after -->
+						  
+							<a class="btn btn-sm btn-default" title="" href="{U_MESSAGE_AUTHOR}">{L_USER_MINI_PROFILE_VIEW_FULL}</a>
+							
+							</div>
+							<!-- Left Side End -->
+
+							<!-- Right Side Start -->
+							<div class="col-lg-8 col-md-8 col-sm-9 col-xs-12">
+							 <h3 style="border-bottom: 4px solid #ffffff;">{MESSAGE_AUTHOR_FULL}</h3>
+							  <ul class="icon-list list-unstyled">
+								<!-- IF RANK_TITLE --><li><i class="fa fa-sitemap"></i>&nbsp;{L_RANK}{L_COLON}&nbsp;{RANK_TITLE}</li><!-- ENDIF -->
+								<li><i class="fa fa-comments"></i>&nbsp;{L_POSTS}{L_COLON}&nbsp;{AUTHOR_POSTS}</li>
+								<!-- IF AUTHOR_JOINED --><li><i class="fa fa-calendar"></i>&nbsp;{L_JOINED}{L_COLON}&nbsp;{AUTHOR_JOINED}</li><!-- ENDIF -->
+								<li><i class="fa fa-bolt"></i>&nbsp;{L_USER_STATUS}{L_COLON}<!-- IF S_ONLINE -->&nbsp;{L_ONLINE}<!-- ELSE -->&nbsp;{L_OFF_LINE}<!-- ENDIF --></li>
+							    <!-- EVENT ucp_pm_viewmessage_custom_fields_before -->
+								<!-- BEGIN custom_fields -->
+									<!-- IF not custom_fields.S_PROFILE_CONTACT -->
+										<li class="profile-custom-field profile-{custom_fields.PROFILE_FIELD_IDENT}"><i class="fa fa-cog"></i>&nbsp;{custom_fields.PROFILE_FIELD_NAME}{L_COLON}&nbsp;{custom_fields.PROFILE_FIELD_VALUE}</li>
+									<!-- ENDIF -->
+								<!-- END custom_fields -->
+								<!-- EVENT ucp_pm_viewmessage_custom_fields_after -->
+
+								<!-- EVENT ucp_pm_viewmessage_contact_fields_before -->
+							  </ul>
+							</div>
+							<!-- Right Side End -->
+                         </div>
+						</div>
+						<div class="modal-footer">
+		                <!-- EVENT ucp_pm_viewmessage_contact_fields_before -->
+						<!-- IF .contact -->
+						<div class="clearfix">
+						  <ul class="mini-profile-contact">
+						   <!-- BEGIN contact -->
+								{% set REMAINDER = contact.S_ROW_COUNT % 4 %}
+								<!-- DEFINE $S_LAST_CELL = ((REMAINDER eq 3) or (contact.S_LAST_ROW and contact.S_NUM_ROWS < 4)) -->
+								<!-- IF REMAINDER eq 0 -->
+								<!-- ENDIF -->
+									<li><a class="default-contact" href="<!-- IF contact.U_CONTACT -->{contact.U_CONTACT}<!-- ELSE -->{contact.U_PROFILE_AUTHOR}<!-- ENDIF -->" title="{contact.NAME}"<!-- IF contact.ID eq 'jabber' --> onclick="popup(this.href, 750, 320); return false;"<!-- ENDIF -->>
+										<i class="icon-moon-{contact.ID}"></i>
+									    </a>
+									</li>
+								<!-- IF REMAINDER eq 3 or contact.S_LAST_ROW -->
+								<!-- ENDIF -->
+							<!-- END contact -->
+						 </ul>
+						</div>
+						<!-- ENDIF -->
+						<!-- EVENT ucp_pm_viewmessage_contact_fields_after -->
+						</div>
+					  </div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				  </div><!-- /.modal -->
+				  
+				  <!-- IF U_PM --><a title="" href="{U_PM}" class="btn btn-bordered btn-xs"><i class="fa fa-envelope"></i></a><!-- ENDIF -->
+				</li>
+			   </ul>
+        </div>
+	
+		<div class="content">{MESSAGE}</div>
+
+		<!-- IF S_HAS_ATTACHMENTS -->
+		<div class="clearfix">
+			<div class="attachbox">
+				<h5>{L_ATTACHMENTS}</h5>
+				<!-- EVENT ss_ucp_pm_viewmessage_attachment_row_before -->
+				    <!-- BEGIN attachment -->{attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
+				<!-- EVENT ss_ucp_pm_viewmessage_attachment_row_after -->	
+			</div>
+		</div>
+		<!-- ENDIF -->
+
+		<!-- IF S_DISPLAY_NOTICE -->
+			<div class="rules">{L_DOWNLOAD_NOTICE}</div>
+		<!-- ENDIF -->
+
+		<!-- IF EDITED_MESSAGE or EDIT_REASON -->
+		<div class="notice">{EDITED_MESSAGE}
+			<!-- IF EDIT_REASON --><strong>{L_REASON}{L_COLON}</strong> <small>{EDIT_REASON}</small><!-- ENDIF -->
+		</div>
+		<!-- ENDIF -->
+
+		<!-- IF SIGNATURE -->
+		 <p class="separator text-center hidden-xs"><i class="fa fa-ellipsis-h fa-2x"></i></p>
+		 <div id="sig{MESSAGE_ID}" class="hidden-xs post-signature">{SIGNATURE}</div>
+		<!-- ENDIF -->
+	</div>	
+	
+	</div>
+</div>
+
+<ul class="pager">
+  <!-- IF U_PREVIOUS_PM --><li class="previous"><a href="{U_PREVIOUS_PM}" class="pull-left">{L_VIEW_PREVIOUS_PM}</a></li><!-- ENDIF -->
+  <!-- IF U_NEXT_PM --><li class="next"><a href="{U_NEXT_PM}" class="pull-right">{L_VIEW_NEXT_PM}</a></li><!-- ENDIF -->
+</ul>
+
+<div class="clearfix">
+<div class="pull-right">
+    <ul class="pagination pagination-sm hidden-xs">
+	 <li><a title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
+    </ul>
+</div>
+</div>
+	 
+<!-- IF S_VIEW_MESSAGE -->
+<div class="clearfix">
+<fieldset class="controls-row">
+   <div class="sorting collapse">
+	<div class="panel panel-default">
+	 <div class="panel-body">
+	 <div class="row">
+	<!-- IF S_MARK_OPTIONS -->
+	<div class="col-md-6"> 
+	<label class="control-label" for="mark_option">{L_MARK}</label>
+	  <div class="input-group">
+	   <select class="selectpicker" data-container="body" data-style="btn btn-default form-control" name="mark_option" id="mark_option">{S_MARK_OPTIONS}</select>
+	   <div class="input-group-btn">
+	   <button class="btn btn-default" type="submit" name="submit_mark" value="{L_GO}">{L_GO}</button>
+	   </div>
+	  </div>
+	</div> 
+	<!-- ENDIF -->
+   <!-- IF not S_UNREAD and not S_SPECIAL_FOLDER -->
+	<div class="col-md-6"> 
+	<label class="control-label" for="dest_folder"><!-- IF S_VIEW_MESSAGE -->{L_MOVE_TO_FOLDER}{L_COLON}<!-- ELSE -->{L_MOVE_MARKED_TO_FOLDER}<!-- ENDIF --></label>
+	  <div class="input-group">
+	    <select class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control" name="dest_folder" id="dest_folder">{S_TO_FOLDER_OPTIONS}</select>
+	   
+	   <div class="input-group-btn">
+		<button class="btn btn-default" type="submit" name="move_pm" value="{L_GO}">{L_GO}</button>
+	   </div>
+	   </div>
+	</div> 
+	<!-- ENDIF -->
+	<input type="hidden" name="marked_msg_id[]" value="{MSG_ID}" />
+	<input type="hidden" name="cur_folder_id" value="{CUR_FOLDER_ID}" />
+	<input type="hidden" name="p" value="{MSG_ID}" />
+    </div>
+   </div>
+   </div>
+  </div>
+</fieldset>
+</div>
+<!-- ENDIF -->
+
+<!-- INCLUDE ucp_pm_message_footer.html -->
+<!-- IF S_DISPLAY_HISTORY -->
+ <div class="space10"></div>
+   <div class="space10"></div>
+   <!-- INCLUDE ucp_pm_history.html -->
+<!-- ENDIF -->
+
+</div>
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,26 @@
+<!-- IF S_DISPLAY_JUMPBOX -->
+<div class="col-md-3 col-sm-6 pull-left">
+<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.f.value == -1){return false;}">
+	<!-- IF $CUSTOM_FIELDSET_CLASS -->
+	<fieldset class="{$CUSTOM_FIELDSET_CLASS}">
+	<!-- ELSE -->
+	<fieldset>
+	<!-- ENDIF -->
+	  <label for="" accesskey="j"><!-- IF S_IN_MCP and S_MERGE_SELECT -->{L_SELECT_TOPICS_FROM}<!-- ELSEIF S_IN_MCP -->{L_MODERATE_FORUM}<!-- ELSE -->{L_JUMP_TO}<!-- ENDIF -->{L_COLON}</label>
+		<div class="input-group input-group-sm">
+			<select class="selectpicker" data-style="btn btn-default form-control" data-width="auto" data-container="body" name="f" id="f" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
+			<!-- BEGIN jumpbox_forums -->
+				<!-- IF jumpbox_forums.S_FORUM_COUNT == 1 --><option value="-1">------------------</option><!-- ENDIF -->
+				<option value="{jumpbox_forums.FORUM_ID}"{jumpbox_forums.SELECTED}><!-- BEGIN level -->&nbsp;&nbsp;<!-- END level -->{jumpbox_forums.FORUM_NAME}</option>
+			<!-- END jumpbox_forums -->
+			</select>
+		<span class="input-group-btn">
+			<button type="submit" class="btn btn-default">{L_GO}</button>
+		</span>
+		</div>
+	</fieldset>
+</form>
+</div>
+<!-- ELSE -->
+	<br />
+<!-- ENDIF -->

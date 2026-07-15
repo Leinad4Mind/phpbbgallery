@@ -1,0 +1,59 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{TOTAL_REGISTERED_USERS_ONLINE}</h3></div>
+<p>{TOTAL_GUEST_USERS_ONLINE}<!-- IF S_SWITCH_GUEST_DISPLAY -->&nbsp;&#166;&nbsp;<a href="{U_SWITCH_GUEST_DISPLAY}">{L_SWITCH_GUEST_DISPLAY}</a><!-- ENDIF --></p>
+<!-- IF LEGEND -->
+<div class="clearfix">
+ <div class="pull-left">
+  <p><small>{L_LEGEND}{L_COLON}&nbsp;{LEGEND}</small></p>
+ </div>
+</div>
+<!-- ENDIF -->
+<div class="panel panel-forum">
+	     <div class="panel-heading">
+		  <i class="fa fa-map-marker"></i>&nbsp;{L_WHO_IS_ONLINE}
+		 </div>
+		 <div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover viewonline-table">
+	<!-- IF .user_row -->	
+	<thead>
+		<tr>
+			<th data-class="expand"><a href="{U_SORT_USERNAME}">{L_USERNAME}</a></th>
+			<th data-hide="phone"><a href="{U_SORT_LOCATION}">{L_FORUM_LOCATION}</a></th>
+			<th data-hide="phone"><a href="{U_SORT_UPDATED}">{L_LAST_UPDATED}</a></th>
+		</tr>
+	</thead>		
+	<tbody>
+		<!-- BEGIN user_row -->
+		<tr>
+			<td>{user_row.USERNAME_FULL}<!-- IF user_row.USER_IP -->&nbsp;&#166;&nbsp;{L_IP}{L_COLON}&nbsp;<a href="{user_row.U_USER_IP}">{user_row.USER_IP}</a>&nbsp;&#187;&nbsp;<a href="{user_row.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><!-- ENDIF -->
+			<!-- IF user_row.USER_BROWSER --><br />{user_row.USER_BROWSER}<!-- ENDIF -->
+			</td>
+			<td><a href="{user_row.U_FORUM_LOCATION}">{user_row.FORUM_LOCATION}</a></td>
+			<td>{user_row.LASTUPDATE}</td>
+		</tr>
+		<!-- END user_row -->
+	<!-- ELSE -->
+		<tr>
+			<td colspan="3">{L_NO_ONLINE_USERS}<!-- IF S_SWITCH_GUEST_DISPLAY -->&nbsp;&bull;&nbsp;<a href="{U_SWITCH_GUEST_DISPLAY}">{L_SWITCH_GUEST_DISPLAY}</a><!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+	</tbody>
+	</table>
+	</div>
+</div>
+
+<div class="row">
+ <div class="col-md-5">
+  <!-- INCLUDE jumpbox_options.html -->
+ </div>
+ <div class="col-md-7">
+	<ul class="pagination pagination-sm pull-right pagination-bottom">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+		<!-- ENDIF -->
+    </ul>	
+ </div>
+</div>
+<!-- INCLUDE overall_footer.html -->

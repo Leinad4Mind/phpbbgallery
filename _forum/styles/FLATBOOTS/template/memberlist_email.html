@@ -1,0 +1,134 @@
+<!-- INCLUDE overall_header.html -->
+<!-- EVENT memberlist_email_before -->
+<form method="post" action="{S_POST_ACTION}" id="post">
+<div class="clearfix">
+<!-- IF S_CONTACT_ADMIN-->
+<div class="side-segment"><h3>{L_CONTACT_ADMIN}</h3></div>	
+<!-- ELSEIF S_SEND_USER -->
+<div class="side-segment"><h3>{L_SEND_EMAIL_USER}</h3></div>	
+<!-- ELSE -->
+<div class="side-segment"><h3>{L_EMAIL_TOPIC}</h3></div>	
+<!-- ENDIF -->
+<!-- IF CONTACT_INFO -->
+	<div class="panel">
+		<div class="panel-body">
+			<div class="postbody">
+				<div class="content">
+					{CONTACT_INFO}
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- ENDIF -->
+<div class="well memberlist-email">
+	<!-- IF ERROR_MESSAGE -->
+	<div class="alert alert-info fade in">
+    <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR_MESSAGE}
+    </div> 
+	<!-- ENDIF -->
+	<fieldset>
+	<!-- IF S_SEND_USER -->
+        <div class="control-group">
+		  <label for="username" class="control-label">{L_RECIPIENT}{L_COLON}</label>
+			<div class="controls">
+			<span>&nbsp;&nbsp;{USERNAME_FULL}</span>
+			</div>
+		</div>	
+		
+		<div class="control-group">
+		  <label for="subject" class="control-label">{L_SUBJECT}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="fa fa-tag"></i>
+			  <input type="text" class="form-control input-sm" name="subject" id="subject" value="{SUBJECT}">
+			</div>
+			</div>
+		</div>	
+    <!-- ELSEIF S_CONTACT_ADMIN-->
+	    <div class="control-group">
+		  <label for="username" class="control-label">{L_RECIPIENT}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="fa fa-tag"></i>
+			   <input type="text" class="form-control input-sm" name="username" id="username" placeholder="{L_ADMINISTRATOR}" disabled="">
+			</div>
+			</div>
+		</div>	
+		<!-- IF not S_IS_REGISTERED -->
+		<div class="control-group">
+		  <label for="email" class="control-label">{L_SENDER_EMAIL_ADDRESS}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="icon-moon-email"></i>
+			  <input type="text" class="form-control input-sm" name="email" id="email" value="{EMAIL}">
+			</div>
+			</div>
+		</div>	
+        <div class="control-group">
+		  <label for="name" class="control-label">{L_SENDER_NAME}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="fa fa-user"></i>
+			  <input type="text" class="form-control input-sm" name="name" id="name" value="{NAME}">
+			</div>
+			</div>
+		</div>	
+		<!-- ENDIF -->	
+        <div class="control-group">
+		  <label for="subject" class="control-label">{L_SUBJECT}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="fa fa-tag"></i>
+			  <input type="text" class="form-control input-sm" name="subject" id="subject" value="{SUBJECT}">
+			</div>
+			</div>
+		</div>				
+	<!-- ELSE -->
+		
+        <div class="control-group">
+		  <label for="email" class="control-label">{L_EMAIL_ADDRESS}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="icon-moon-email"></i>
+			  <input type="text" class="form-control input-sm" name="email" id="email" value="{EMAIL}">
+			</div>
+			</div>
+		</div>	
+
+        <div class="control-group">
+		  <label for="name" class="control-label">{L_REAL_NAME}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			 <i class="fa fa-ok"></i>
+			  <input type="text" class="form-control input-sm" name="name" id="name" value="{NAME}">
+			</div>
+			</div>
+		</div>	
+		
+        <div class="control-group">
+		  <label for="lang" class="control-label">{L_DEST_LANG}{L_COLON}</label><span class="help-block">{L_DEST_LANG_EXPLAIN}</span>
+			<div class="controls">
+			 <select class="selectpicker" name="lang">{S_LANG_OPTIONS}</select>
+			</div>
+		</div>	
+	<!-- ENDIF -->
+	
+		<div class="space10"></div>
+		  <label for="message" class="control-label">{L_MESSAGE_BODY}{L_COLON}</label>
+			<div class="controls">
+			  <textarea class="form-control" name="message" id="message" rows="5" tabindex="4" placeholder="{L_MESSAGE_BODY}">{MESSAGE}</textarea>
+			  <p class="help-block">{L_EMAIL_BODY_EXPLAIN}</p>
+			<input type="checkbox" name="cc_sender" id="cc_sender" value="1" checked="checked" tabindex="5" /><label class="checkbox-inline" for="cc_sender">{L_CC_SENDER}</label>
+			</div>
+        <div class="space10"></div>
+	</fieldset>
+
+	<fieldset class="form-actions">
+		<button type="submit" tabindex="6" name="submit" class="btn btn-default" value="{L_SEND_EMAIL}" data-loading-text="{L_SENDING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">&nbsp;{L_SEND_EMAIL}</button>
+	</fieldset>
+{S_FORM_TOKEN}
+</div>
+</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

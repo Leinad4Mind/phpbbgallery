@@ -1,0 +1,48 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF S_SHOW_COPPA or S_REGISTRATION -->
+<div class="side-segment"><h3>{SITENAME}&nbsp;&#45;&nbsp;{L_REGISTRATION}</h3></div>
+ <!-- IF S_LANG_OPTIONS -->
+<script>
+/* Change language */
+	function change_language(lang_iso)
+	{
+		document.cookie = '{COOKIE_NAME}_lang=' + lang_iso + '; path={COOKIE_PATH}';
+		document.forms['register'].change_lang.value = lang_iso;
+		document.forms['register'].submit();
+	}
+</script>
+    <div class="language-selection">
+	 <form method="post" action="{S_UCP_ACTION}" id="register">
+			<label class="sr-only" for="lang">{L_LANGUAGE}{L_COLON}</label>
+			 <select class="selectpicker" data-style="btn-default btn-sm" data-container="body" name="lang" id="lang" onchange="change_language(this.value); return false;" title="{L_LANGUAGE}">{S_LANG_OPTIONS}</select>
+			{S_HIDDEN_FIELDS}
+	 </form>
+	</div>
+<!-- ENDIF -->
+
+ <form method="post" action="{S_UCP_ACTION}" id="agreement">
+	<div class="well">
+		<p><!-- IF S_SHOW_COPPA -->{L_COPPA_BIRTHDAY}<!-- ELSE -->{L_TERMS_OF_USE}<!-- ENDIF --></p>
+	</div>
+		<fieldset>
+		<!-- EVENT ucp_agreement_terms_before -->
+			<!-- IF S_SHOW_COPPA -->
+			 <input type="submit" class="btn btn-default" name="coppa_no" id="coppa_no" value="{{ L_COPPA_NO }}" />
+			 <input type="submit" class="btn btn-default" name="coppa_yes" id="coppa_yes" value="{{ L_COPPA_YES }}" />
+			<!-- ELSE -->
+             <button type="submit" class="btn btn-block btn-success btn-lg" name="agreed" id="agreed" value="{L_AGREE}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-check"></i>&nbsp;{L_AGREE}</button>
+			 <button type="submit" class="btn btn-block btn-danger btn-lg" name="not_agreed" value="{L_NOT_AGREE}" data-loading-text="{L_CANCELLING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-times"></i>&nbsp;{L_NOT_AGREE}</button>
+			<!-- ENDIF -->
+		<!-- EVENT ucp_agreement_terms_after -->
+			{S_HIDDEN_FIELDS}
+			{S_FORM_TOKEN}
+		</fieldset>
+	<div class="space10"></div>
+ </form>
+<!-- ELSEIF S_AGREEMENT -->
+	 <div class="side-segment"><h3>{SITENAME}&nbsp;&#45;&nbsp;{AGREEMENT_TITLE}</h3></div>
+	<div class="well">
+		<p>{AGREEMENT_TEXT}</p>
+	</div>
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

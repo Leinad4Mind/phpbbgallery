@@ -1,0 +1,37 @@
+<div class="side-segment">
+	<h3>{L_POST_REVIEW}</h3>
+</div>
+<div class="alert alert-info"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;<strong>{L_POST_REVIEW_EXPLAIN}</strong></div>
+
+<!-- BEGIN post_review_row -->
+<!-- IF post_review_row.S_IGNORE_POST -->
+<div class="well post-ignore">
+	<div class="inner">
+		{post_review_row.L_IGNORE_POST}
+<!-- ELSE -->
+<div class="post<!-- IF post_review_row.ONLINE_STATUS --> online<!-- ENDIF -->">
+<!-- ENDIF -->
+	<div class="well" id="ppr{post_review_row.POST_ID}">
+	<!-- IF post_review_row.S_POST_PRIVATE -->
+		<p class="author">{L_PRIVATE_BY}<strong>&nbsp;{post_review_row.POST_AUTHOR_FULL}</strong>&nbsp;&raquo;&nbsp;{post_review_row.POST_DATE}</p>
+	<!-- ELSE -->	
+		<h3><a href="#ppr{post_review_row.POST_ID}">{post_review_row.POST_SUBJECT}</a></h3>
+		<p class="author"><!-- IF S_IS_BOT -->{post_review_row.MINI_POST_IMG}<!-- ELSE --><a href="{post_review_row.U_MINI_POST}"><i class="fa fa-file" aria-hidden="true"></i></a><!-- ENDIF -->&nbsp;{L_POST_BY_AUTHOR}<strong>&nbsp;{post_review_row.POST_AUTHOR_FULL}</strong>&nbsp;&raquo;&nbsp;{post_review_row.POST_DATE}</p>
+		<div class="content">{post_review_row.MESSAGE}</div>
+		
+		<!-- IF post_review_row.S_HAS_ATTACHMENTS -->
+		<div class="clearfix">
+			<div class="attachbox">
+				<h5>{L_ATTACHMENTS}</h5>
+				<!-- EVENT ss_posting_review_attachment_row_before -->
+				   <!-- BEGIN attachment -->{post_review_row.attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
+				<!-- EVENT ss_posting_review_attachment_row_after -->  
+			</div>
+		</div>	
+		<!-- ENDIF -->
+		
+	<!-- ENDIF -->	
+	</div>
+</div>
+<!-- END post_review_row -->
+<hr />

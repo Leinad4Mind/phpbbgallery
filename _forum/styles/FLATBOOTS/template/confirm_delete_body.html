@@ -1,0 +1,64 @@
+<!-- IF S_AJAX_REQUEST -->
+<form action="{S_CONFIRM_ACTION}" method="post">
+ <h3 class="alert_title">{MESSAGE_TITLE}</h3>
+	<p>{MESSAGE_TEXT}</p>
+	<!-- IF not S_SHADOW_TOPICS -->
+		<!-- IF not S_SOFTDELETED and S_ALLOWED_DELETE and S_ALLOWED_SOFTDELETE -->
+			  <input id="delete_permanent" name="delete_permanent" type="checkbox" value="1" {S_CHECKED_PERMANENT} />
+			   <label class="check-control" for="delete_permanent">&nbsp;&nbsp;<!-- IF S_TOPIC_MODE -->{DELETE_TOPIC_PERMANENTLY_EXPLAIN}<!-- ELSE -->{DELETE_POST_PERMANENTLY_EXPLAIN}<!-- ENDIF --></label>
+		<!-- ENDIF -->
+        <div class="control-group">
+		  <label class="control-label" for="delete_reason">{L_DELETE_REASON}{L_COLON}</label><span class="help-block">{L_DELETE_REASON_EXPLAIN}</span>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_SOFT_DELETE_PLACEHOLDER}" type="text" name="delete_reason" id="delete_reason" value="" class="form-control" maxlength="120" size="45" />
+		  </div> 
+		 </div> 
+	<!-- ENDIF -->
+	 <div class="space10"></div>
+	<fieldset>
+		<input type="button" name="confirm" value="{L_YES}" class="btn btn-default" />
+		<input type="button" name="cancel" value="{L_NO}" class="btn btn-default" />
+	</fieldset>
+</form>
+<script>
+// We gotta do this on ajax calls because it will not inherit it from the overall_footer due to the ajax call
+head.ready(function () {
+  $("input").iCheck({checkboxClass:"icheckbox_flat-aero",radioClass:"iradio_flat-aero"});
+});
+</script>
+<!-- ELSE -->
+
+<!-- INCLUDE overall_header.html -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<div class="side-segment"><h3>{MESSAGE_TITLE}</h3></div>
+ <div class="alert alert-warning">{MESSAGE_TEXT}</div>
+	<div class="well">
+	<!-- IF not S_SHADOW_TOPICS -->
+	<fieldset>
+		<!-- IF not S_SOFTDELETED and S_ALLOWED_DELETE and S_ALLOWED_SOFTDELETE -->
+		<div class="control-group">
+		 <label class="control-label" for="delete_permanent">{L_DELETE_PERMANENTLY}{L_COLON}</label>
+		 <div class="controls controls-row">
+		  <input id="delete_permanent" name="delete_permanent" type="checkbox" value="1" {S_CHECKED_PERMANENT}><label class="checkbox-inline" for="delete_permanent"><!-- IF S_TOPIC_MODE -->{L_DELETE_POST_PERMANENT}&nbsp;&#40;{L_DELETE_POST_PERMANENT_WARN}&#41;<!-- ELSE -->{L_DELETE_POST_PERMANENT}&nbsp;&#40;{L_DELETE_POST_PERMANENT_WARN}&#41;<!-- ENDIF --></label>
+	     </div>
+		</div>
+		 
+		 <div class="control-group">
+		  <label class="control-label" for="delete_reason">{L_DELETE_REASON}{L_COLON}</label><span class="help-block">{L_DELETE_REASON_EXPLAIN}</span>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_SOFT_DELETE_PLACEHOLDER}" type="text" name="delete_reason" id="delete_reason" value="" class="form-control" maxlength="120" size="45" />
+		  </div> 
+		 </div> 
+		 <!-- ENDIF -->
+	 </fieldset>
+	<!-- ENDIF -->
+	 <div class="space10"></div>
+	<fieldset>
+	  {S_HIDDEN_FIELDS}
+		<button type="submit" name="confirm" value="{L_YES}" class="btn btn-default">{L_YES}</button>
+		<button type="submit" name="cancel" value="{L_NO}" class="btn btn-default">{L_NO}</button>
+	</fieldset>
+</div>
+</form>
+<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->

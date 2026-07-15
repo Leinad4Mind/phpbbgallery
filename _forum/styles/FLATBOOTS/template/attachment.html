@@ -1,0 +1,35 @@
+<!-- EVENT attachment_file_before -->
+<!-- BEGIN _file -->
+	<!-- IF _file.S_DENIED -->
+	<p>[{_file.DENIED_MESSAGE}]</p>
+	<!-- ELSE -->
+	<!-- EVENT attachment_file_prepend -->
+	
+		<!-- IF _file.S_THUMBNAIL -->
+		<div class="thumbnail">
+			<div class="attach-image-thumb"><img class="img-post imgthumb" src="{_file.THUMB_IMAGE}" data-src="{_file.U_DOWNLOAD_LINK}" name="{_file.U_DOWNLOAD_LINK}" alt="{% if _file.COMMENT %}{{ _file.COMMENT|e('html') }}{% else %}{{ _file.DOWNLOAD_NAME }}{% endif %}" /></div>
+			<!-- IF _file.COMMENT --><small><i class="fa fa-pencil"></i> {_file.COMMENT}</small><br><!-- ENDIF -->
+			<small><i class="fa fa-eye"></i> {_file.DOWNLOAD_NAME} ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}</small>
+		</div>
+		<!-- ENDIF -->
+		
+		<!-- IF _file.S_IMAGE -->
+		<div class="file">
+			<div class="attach-image"><img class="img-post" src="{_file.U_INLINE_LINK}" alt="{% if _file.COMMENT %}{{ _file.COMMENT|e('html') }}{% else %}{{ _file.DOWNLOAD_NAME }}{% endif %}" /></div>
+			<!-- IF _file.COMMENT --><small><i class="fa fa-pencil"></i> {_file.COMMENT}</small><br><!-- ENDIF -->
+			<small><i class="fa fa-eye"></i> {_file.DOWNLOAD_NAME} ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}</small>
+		</div>
+		<!-- ENDIF -->	
+		
+		<!-- IF _file.S_FILE -->
+		<div class="file">
+			<div><!-- IF _file.UPLOAD_ICON --><i class="fa fa-paperclip fa-flip-horizontal"></i> <!-- ENDIF --><a class="postlink" href="{_file.U_DOWNLOAD_LINK}">{_file.DOWNLOAD_NAME}</a></div>
+			<!-- IF _file.COMMENT --><small><i class="fa fa-pencil"></i> {_file.COMMENT}</small><br><!-- ENDIF -->
+			<small><i class="fa fa-download"></i> ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}</small>
+		</div>
+		<!-- ENDIF -->
+
+	<!-- EVENT attachment_file_append -->
+	<!-- ENDIF -->
+<!-- END _file -->
+<!-- EVENT attachment_file_after -->

@@ -1,0 +1,15 @@
+<!-- IF .quickmod -->
+<div id="quickmod" class="dropdown">
+  <button class="btn btn-default btn-block dropdown-toggle" type="button" id="quickmod-tools" data-toggle="dropdown" aria-expanded="true">
+   {L_QUICK_MOD}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="quickmod-tools" style="width: 100%;">
+  <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
+    <!-- BEGIN quickmod -->
+	 <!-- DEFINE $QUICKMOD_AJAX = (quickmod.VALUE in ['lock', 'unlock', 'delete_topic', 'restore_topic', 'make_normal', 'make_sticky', 'make_announce', 'make_global']) -->
+	 <li role="presentation"><a role="menuitem" tabindex="-1" href="{quickmod.LINK}"<!-- IF $QUICKMOD_AJAX --> data-ajax="true" data-refresh="true"<!-- ENDIF -->>{quickmod.TITLE}</a></li>
+	<!-- END quickmod -->
+  </ul>
+</div>		
+<!-- ENDIF -->

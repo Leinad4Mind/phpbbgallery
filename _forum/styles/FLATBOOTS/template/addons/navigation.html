@@ -1,0 +1,156 @@
+<!-- Main navigation block -->
+<nav class="collapse navbar-collapse flat-nav-collapse" aria-label="Primary">
+    <!-- IF S_USER_LOGGED_IN -->
+	<div class="user-login hidden-lg hidden-md hidden-sm">
+		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown dropdown-avatar">
+				<a href="javascript:void(0)" data-toggle="dropdown" class="user-menu">
+				 <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
+				</a>
+				<ul class="dropdown-menu usermenu">
+				   <li><a title="" href="{U_UCP_PREFERENCE}"><i class="fa fa-user"></i>&nbsp;{L_UCP_PROFILE}</a></li>
+				   <!-- IF S_DISPLAY_PM -->
+				   <li><a title="" href="{U_PRIVATEMSGS}"><i class="fa fa-inbox"></i>&nbsp;{L_UCP_MESSAGES}&nbsp;&nbsp;<span class="badge badge-info"><!-- IF S_DISPLAY_PM and S_USER_UNREAD_PRIVMSG -->{S_USER_UNREAD_PRIVMSG}<!-- ELSE -->{S_USER_NEW_PRIVMSG}<!-- ENDIF --></span></a></li>
+				   <!-- ENDIF -->
+				   <!-- IF S_NOTIFICATIONS_DISPLAY -->	
+					 <li><a title="" href="{U_VIEW_ALL_NOTIFICATIONS}"><i class="fa fa-bell"></i>&nbsp;{L_NOTIFICATIONS}&nbsp;&nbsp;<!-- IF not .notifications --><!-- ELSE --><span class="badge badge-info">{NOTIFICATIONS_COUNT}</span><!-- ENDIF --></a></li>
+				   <!-- ENDIF -->
+				   <!-- EVENT overall_header_mobile_navigation_append -->
+				   <li><a title="" href="{U_UCP_PROFILE_SETTINGS}"><i class="fa fa-cog"></i>&nbsp;{L_UCP_PROFILE_SETTINGS}</a></li>
+	               <!-- IF U_ACP --><li><a title="" href="{U_ACP}"><i class="fa fa-user-md"></i>&nbsp;{L_ADMIN_PANEL_GENERAL}</a></li><!-- ENDIF -->
+	               <!-- IF U_MCP --><li><a href="{U_MCP}"><i class="fa fa-legal"></i>&nbsp;{L_MODERATOR_PANEL_GENERAL}</a></li><!-- ENDIF -->
+				   <!-- IF S_REGISTERED_USER and not (U_ACP or U_MCP) --><li><a href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a></li><!-- ENDIF -->
+				   <!-- IF U_RESTORE_PERMISSIONS --><li><a href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i>&nbsp;{L_RESTORE_PERMISSIONS}</a></li><!-- ENDIF -->
+				  <li><a title="" href="{U_LOGIN_LOGOUT}"><i class="fa fa-power-off"></i>&nbsp;{L_LOGOUT}</a></li>
+				  <!-- EVENT overall_header_mobile_navigation_ending -->
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<!-- ENDIF -->
+	
+      <ul class="nav navbar-nav navbar-nav-fancy">
+        <li class=""><a href="{U_INDEX}">{L_HOME}</a></li>
+        <li class="dropdown">
+             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{L_MAIN_FORUM}&nbsp;<b class="caret"></b></a>
+             <span class="dropdown-arrow"></span>
+            <ul class="dropdown-menu">
+                <!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
+				<li><a href="{U_SEARCH_UNANSWERED}"><i class="fa fa-search"></i>{L_SEARCH_UNANSWERED}</a></li>
+				<!-- IF S_LOAD_UNREADS -->
+				<li><a href="{U_SEARCH_UNREAD}"><i class="fa fa-comment"></i>{L_SEARCH_UNREAD}</a></li>
+				<!-- ENDIF -->
+				<!-- IF S_USER_LOGGED_IN -->
+				<li><a href="{U_SEARCH_NEW}"><i class="fa fa-thumbs-up"></i>{L_SEARCH_NEW}</a></li>
+				<!-- ENDIF -->
+				<li><a href="{U_SEARCH_ACTIVE_TOPICS}"><i class="fa fa-star"></i>{L_SEARCH_ACTIVE_TOPICS}</a></li>
+				<!-- ENDIF -->
+				<!-- IF not S_IS_BOT and U_MARK_FORUMS -->
+			   <li><a href="{U_MARK_FORUMS}" data-ajax="mark_forums_read"><i class="fa fa-check"></i>{L_MARK_FORUMS_READ}</a></li>
+	           <!-- ENDIF -->
+			   <!-- EVENT overall_header_navigation_prepend -->
+			   <li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i>{L_FAQ}</a></li>
+			   <!-- EVENT overall_header_navigation_append -->
+			   <!-- IF S_DISPLAY_MEMBERLIST --><li><a href="{U_MEMBERLIST}"><i class="fa fa-group"></i>{L_MEMBERLIST}</a></li><!-- ENDIF -->
+			  <!-- IF U_TEAM --><li><a href="{U_TEAM}"><i class="fa fa-trophy"></i>{L_THE_TEAM}</a></li><!-- ENDIF -->
+            </ul>
+        </li>
+		
+		<li class="dropdown">
+             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{L_SEARCH}&nbsp;<b class="caret"></b></a>
+             <span class="dropdown-arrow"></span>
+            <ul class="dropdown-menu">
+                <li><a href="{U_SEARCH}"><i class="fa fa-search fa"></i>{L_SEARCH_ADV}</a></li>
+                <!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
+				 <!-- IF S_DISPLAY_SEARCH --> 
+				<li><a href="{U_SEARCH_SELF}"><i class="fa fa-comments"></i>{L_SEARCH_SELF}</a></li>
+				<li><a href="{SITESPLAT_SEARCH_LAST_DAY}"><i class="fa fa-sort-numeric-asc"></i>{L_SITESPLAT_SEARCH_LAST_DAY}</a></li>
+				<li><a href="{SITESPLAT_SEARCH_WEEK}"><i class="fa fa-sort-alpha-asc"></i>{L_SITESPLAT_SEARCH_WEEK}</a></li>
+				<!-- ENDIF -->
+				<!-- ENDIF -->
+                <li class="divider"></li>
+                <li class="dropdown-header">{L_DEMO_HEADER_MENU}</li>
+                <li><a href="#">{L_DEMO_LINK}</a></li>
+                <li><a href="#">{L_DEMO_LINK}</a></li>
+            </ul>
+        </li>
+      </ul>
+	  <!-- EVENT overall_header_navigation_new -->
+	  
+	<!-- IF not S_USER_LOGGED_IN -->
+    <ul class="nav navbar-nav navbar-right navbar-nav-fancy">
+	    <!-- IF not S_IS_BOT and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+		<li><a href="{U_REGISTER}">{L_CREATE_ACCOUNT}</a></li>
+	   <!-- ENDIF -->
+	    <!-- IF not ENABLE_POPUP_LOGIN -->
+			<li><a href="{U_LOGIN_LOGOUT}">{L_LOGIN}</a></li>
+		<!-- ELSE -->
+			<li><a href="" data-toggle="modal" data-target="#modal-login" role="button" data-toggle="modal">{L_LOGIN}</a></li>
+		<!-- ENDIF -->
+	</ul>
+	<!-- ENDIF -->
+	  
+	<!-- IF S_USER_LOGGED_IN -->
+	<div class="user-login hidden-xs">
+		<ul class="nav navbar-nav navbar-right navbar-nav-fancy">
+		<!-- EVENT navigation_controls_before -->
+		<!-- IF S_DISPLAY_SEARCH -->
+		   <li><a class="btn-search" href="javascript:void(0)"><i class="fa fa-lightbulb-o"></i></a></li>
+		<!-- ENDIF -->
+		<!-- EVENT navigation_controls_after -->
+		<!-- IF S_NOTIFICATIONS_DISPLAY -->	
+		    <li class="dropdown dropdown-avatar dropdown-notification">
+			  <a id="notification_list_button" href="javascript:void(0)" data-toggle="dropdown"><i class="fa fa-bell"></i><!-- IF .notifications and NOTIFICATIONS_COUNT --><em class="notifications badge badge-danger">{NOTIFICATIONS_COUNT}</em><!-- ENDIF --></a>
+                <ul class="dropdown-menu user-login-drop arrow-up">
+                 <li><a href="{U_VIEW_ALL_NOTIFICATIONS}" class="notification-heading">{L_NOTIFICATIONS}</a></li>
+                   <!-- INCLUDE notification_dropdown.html -->
+                </ul>
+            </li>
+		<!-- ENDIF -->
+			
+			<li class="dropdown dropdown-avatar">
+			  <a href="javascript:void(0)" data-toggle="dropdown">
+			   <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
+			  </a>
+                <!-- IF S_USER_NEW_PRIVMSG --><em class="notifications-pm badge badge-warning">{PM_NEW_COUNT_BADGE}</em><!-- ELSEIF S_USER_UNREAD_PRIVMSG --><em class="notifications-pm badge badge-success">{PRIVATE_MESSAGE_COUNT}</em><!-- ENDIF -->                   
+				   <ul class="dropdown-menu user-login-drop arrow-up">
+				    <!-- IF S_DISPLAY_PM -->
+                        <li><!-- IF S_USER_NEW_PRIVMSG --><a href="{U_PRIVATEMSGS}">{PM_NEW_COUNT}</a><!-- ELSEIF S_USER_UNREAD_PRIVMSG--><a href="{U_PRIVATEMSGS}">{PM_UNREAD_COUNT}</a><!-- ELSE --><a href="{U_PRIVATEMSGS}">{L_NO_PMS_INFO}</a><!-- ENDIF --></li>
+					<!-- ELSE -->
+					<li></li>
+					<!-- ENDIF -->	
+						<li>
+							<div class="navbar-wrapper">
+                              <div class="navbar-content navbar-avatar">
+                                    <div class="row">
+                                        <div class="col-md-5 col-xs-5">
+                                          <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->
+                                            <p class="text-center"><a href="{U_UCP_PROFILE_AVATAR}">
+                                                <small>{L_CHANGE_AVATAR}</small>
+                                            </a></p>
+                                        </div>
+                                        <div class="col-md-7 col-xs-7"><span>{CURRENT_USERNAME_FULL}</span>
+                                            <p class="text-muted small text-overflow">{USER_EMAIL_MENU}</p>
+                                             <!-- IF U_ACP --><a class="btn btn-info btn-sm btn-block" href="{U_ACP}"><i class="fa fa-user-md"></i>&nbsp;{L_ADMIN_PANEL_GENERAL}</a><!-- ENDIF -->
+	                                         <!-- IF U_MCP --><a class="btn btn-warning btn-sm btn-block" href="{U_MCP}"><i class="fa fa-legal"></i>&nbsp;{L_MODERATOR_PANEL_GENERAL}</a><!-- ENDIF -->
+                                             <!-- IF S_REGISTERED_USER and not (U_ACP or U_MCP) --><a class="btn btn-success btn-sm btn-block" href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a><!-- ENDIF -->
+										</div>
+                                    </div>
+							  </div>
+							  <!-- EVENT navbar_header_profile_list_after -->
+							  <div class="navbar-footer">
+                                    <div class="navbar-footer-content">
+                                        <div class="row">
+                                            <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm" href="{U_UCP_PROFILE_SETTINGS}">{L_CHANGE_PASSWORD}</a></div>
+                                            <div class="col-md-6 col-xs-6"><a class="btn btn-default btn-sm pull-right" href="{U_LOGIN_LOGOUT}">{L_LOGOUT}</a></div>
+                                        </div>
+                                    </div>
+                               </div>
+							</div>
+                        </li>
+                    </ul>
+            </li>
+		</ul>
+	</div>
+	<!-- ENDIF -->
+</nav>

@@ -1,0 +1,135 @@
+<!-- INCLUDE mcp_header.html -->
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+<div class="side-segment"><h3>{L_TITLE}</h3></div>
+<div class="well">
+<div class="row">
+    <div class="col-md-2">
+	  <!-- IF AVATAR_IMG --><div class="fileinput-new thumbnail" style="width: 100px; height: 100px;">{AVATAR_IMG}</div><!-- ELSE --><div class="fileinput-new thumbnail" style="width: 100px; height: 100px;"><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /></div><!-- ENDIF -->
+    </div>
+	<div class="col-md-10">
+      <ul class="list-unstyled">
+	    <li><i class="fa fa-user text-muted"></i><!-- IF USER_COLOR --><span style="color: #{USER_COLOR}">&nbsp;{USERNAME}</span><!-- ELSE -->&nbsp;{USERNAME}<!-- ENDIF --></li>
+        <li><i class="fa fa-calendar text-muted"></i>&nbsp;{L_JOINED}{L_COLON}&nbsp;{JOINED}</li>
+        <li><i class="fa fa-comments text-muted"></i> {L_TOTAL_POSTS}{L_COLON}&nbsp;{POSTS}</li>
+        <li><i class="fa fa-warning text-muted"></i> {L_WARNINGS}{L_COLON}&nbsp;{WARNINGS}</li>
+		<!-- IF RANK_TITLE --><li>&nbsp;{RANK_TITLE}</li><!-- ENDIF -->
+      </ul>
+	</div>  
+</div>
+</div>
+
+<div class="well">
+    <div class="control-group"> 
+	  <label class="control-label" for="usernote">{L_ADD_FEEDBACK}{L_COLON}</label><span class="help-block">{L_ADD_FEEDBACK_EXPLAIN}</span>
+	    <div class="controls controls-row"> 
+         <textarea placeholder="{L_ADD_FEEDBACK}" rows="2"  name="usernote" id="usernote" class="form-control"></textarea>
+	    </div> 
+	</div>
+    <div class="space10"></div>
+    <div class="space10"></div>
+	<fieldset>
+		{S_HIDDEN_FIELDS}
+		<button type="submit" name="action[add_feedback]" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+		{S_FORM_TOKEN}
+	</fieldset>
+</div>
+
+<div class="space10"></div>
+ <div class="space10"></div>
+
+<div class="row">
+	<div class="col-md-6">
+	 <div class="input-group input-group-sm">
+	   <input class="form-control" type="text" class="medium" size="" name="keywords" id="search_keywords" placeholder="{L_SEARCH_KEYWORDS}{L_COLON}">
+	  <span class="input-group-btn">
+	   <button type="submit" class="btn btn-default">{L_SEARCH}</button>
+      </span>
+	 </div>
+	</div>
+	
+	<div class="col-md-6">
+        <ul class="pagination pagination-sm pull-right">
+			<li><a>{TOTAL_REPORTS}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul>
+	</div>	
+</div>
+
+<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-edit"></i>&nbsp;{L_NOTE}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+	<thead>
+	<tr>
+		<th data-hide="phone"><i class="fa fa-book"></i>&nbsp;{L_ACTION_NOTE}</th>
+		<th data-class="expand"><i class="fa fa-user"></i>&nbsp;{L_REPORT_BY}</th>
+		<th data-hide="phone"><i class="icon-moon-ipcontrol"></i>&nbsp;{L_IP}</th>
+		<th data-hide="phone"><i class="fa fa-clock-o"></i>&nbsp;{L_TIME}</th>
+		<!-- IF S_CLEAR_ALLOWED -->
+        <th><i class="fa fa-check-square-o"></i>&nbsp;{L_MARK}</th>
+		<!-- ENDIF -->
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN usernotes -->
+	<tr>
+	    <td>{usernotes.ACTION}</td>
+	    <td>{usernotes.REPORT_BY}</td>
+		<td class="center">{usernotes.IP}</td>
+		<td class="center">{usernotes.REPORT_AT}</td>
+	<!-- IF S_CLEAR_ALLOWED -->
+	    <td class="table-check"><div class="checker"><input type="checkbox" name="marknote[]" id="note-{usernotes.ID}" value="{usernotes.ID}"><label for="note-{usernotes.ID}"></label></div></td>
+	<!-- ENDIF -->
+	</tr>
+	<!-- BEGINELSE -->
+	<tr>
+		<td class="bg1" colspan="<!-- IF S_CLEAR_ALLOWED -->5<!-- ELSE -->4<!-- ENDIF -->" align="center"><span class="gen">{L_NO_ENTRIES}</span></td>
+	</tr>
+	<!-- END usernotes -->
+	</tbody>
+	</table>
+	</div>
+</div>
+	
+<div class="clearfix">
+    <div class="pull-right">
+        <ul class="pagination pagination-sm">
+			 <li><a title="" data-original-title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">{L_OPTIONS}</a></li>
+			 <li><a>{TOTAL_REPORTS}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul>			
+	</div>
+   
+  <!-- IF S_CLEAR_ALLOWED -->
+   <div class="pull-left">
+	<fieldset>
+	<div class="btn-group">
+	   <button class="btn btn-default" type="submit" name="action[del_all]" title="" data-original-title="{L_DELETE_ALL}"><i class="fa fa-trash-o"></i></button>
+	   <button class="btn btn-default" type="submit" name="action[del_marked]" title="" data-original-title="{L_DELETE_MARKED}"><i class="fa fa-times"></i></button>
+	</div>
+	
+	<div class="btn-group">
+	   <a href="javascript:;" onclick="marklist('mcp', 'marknote', true); return false;" class="btn btn-default" title="" data-original-title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
+	   <a href="javascript:;" onclick="marklist('mcp', 'marknote', false); return false;" class="btn btn-default" title="" data-original-title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+	</div>
+    </fieldset>
+	</div>
+   <!-- ENDIF -->
+   
+</div>  
+  
+  <div class="space10"></div>
+  
+<!-- INCLUDE display_options.html -->
+</form>
+<!-- INCLUDE mcp_footer.html -->

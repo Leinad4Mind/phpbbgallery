@@ -1,0 +1,143 @@
+<!-- INCLUDE overall_header.html -->
+  <div class="side-segment"><h3>{L_SEARCH}</h3></div>
+  
+  <!-- EVENT search_body_form_before -->
+
+<form method="get" action="{S_SEARCH_ACTION}" data-focus="keywords" autocomplete="off">
+ <div class="well">
+	<h3>{L_SEARCH_QUERY}</h3>
+	<!-- EVENT search_body_search_query_before -->
+  <fieldset>
+    <!-- EVENT search_body_search_query_prepend -->
+	<div class="form-group">
+		 <label class="control-label" for="skwrds">{L_SEARCH_KEYWORDS}{L_COLON}</label><span class="help-block">{L_SEARCH_KEYWORDS_EXPLAIN}</span>
+          <div class="input-group">
+	        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+		    <input class="form-control input-sm" type="text" placeholder="{L_SEARCH_KWDS_PLACEHOLDER}" name="keywords" id="skwrds" title="{L_SEARCH_KEYWORDS}"/>
+		  </div> 
+	</div>
+	<div class="form-group">
+	  <input type="radio" checked="checked" name="terms" id="terms1" value="all"><label class="checkbox-inline" for="terms1">{L_SEARCH_ALL_TERMS}</label>
+	  <input type="radio" name="terms" id="terms2" value="any"><label class="checkbox-inline" for="terms2">{L_SEARCH_ANY_TERMS}</label>
+	 <div class="control-group"></div>
+	</div>
+	
+	<div class="form-group">
+		<label class="control-label" for="author">{L_SEARCH_AUTHOR}{L_COLON}</label><span class="help-block">{L_SEARCH_AUTHOR_EXPLAIN}</span>
+         <div class="input-group">
+	       <span class="input-group-addon"><i class="fa fa-user"></i></span>
+		   <input class="form-control input-sm" type="text" placeholder="{L_SEARCH_USR_PLACEHOLDER}" name="author" id="author" title="{L_SEARCH_AUTHOR}"/>
+		</div> 
+	</div>
+	<!-- EVENT search_body_search_query_append -->
+  </fieldset>
+    <!-- EVENT search_body_search_query_after -->
+ </div>
+
+
+<div class="well">
+	<h3>{L_SEARCH_OPTIONS}</h3>
+    <!-- EVENT search_body_search_options_before -->
+	<fieldset>
+	<!-- EVENT search_body_search_options_prepend -->
+	<div class="form-group">
+	   <label class="control-label" for="search_forum">{L_SEARCH_FORUMS}{L_COLON}</label><span class="help-block">{L_SEARCH_FORUMS_EXPLAIN}</span>
+       <select class="selectpicker" data-container="body" data-selected-text-format="count" name="fid[]" id="search_forum" multiple="multiple" size="8" title="{L_SEARCH_FORUMS}">{S_FORUM_OPTIONS}</select>
+     <div class="control-group"></div>
+	</div>
+	
+	<div class="form-group">
+	 <label class="control-label" for="search_child1">{L_SEARCH_SUBFORUMS}{L_COLON}</label>
+      <input type="radio" checked="checked" name="sc" id="search_child1" value="1"><label class="radio-inline" for="search_child1">{L_YES}</label>
+	  <input type="radio" name="sc" id="search_child2" value="0"><label class="radio-inline" for="search_child2">{L_NO}</label>
+	<div class="control-group"></div>
+	</div>
+	
+	<div class="form-group">
+	   <label class="control-label" for="sf1">{L_SEARCH_WITHIN}{L_COLON}</label>
+     <input type="radio" checked="checked" name="sf" id="sf1" value="all"><label class="radio-inline" for="sf1">{L_SEARCH_TITLE_MSG}</label>
+	 <input type="radio" name="sf" id="sf2" value="msgonly"><label class="radio-inline" for="sf2">{L_SEARCH_MSG_ONLY}</label>
+	 <input type="radio" name="sf" id="sf3" value="titleonly"><label class="radio-inline" for="sf3">{L_SEARCH_TITLE_ONLY}</label>
+	 <input type="radio" name="sf" id="sf4" value="firstpost"><label class="radio-inline" for="sf4">{L_SEARCH_FIRST_POST}</label>
+	<div class="control-group"></div>
+	</div>
+	
+	<div class="form-group"> 
+	   <label class="control-label" for="show_results1">{L_DISPLAY_RESULTS}{L_COLON}</label>
+    <input type="radio" checked="checked" name="sr" id="show_results1" value="posts"><label class="radio-inline" for="show_results1">{L_POSTS}</label>
+	<input type="radio" name="sr" id="show_results2" value="topics"><label class="radio-inline" for="show_results2">{L_TOPICS}</label>
+	<div class="control-group"></div>
+	</div>
+	
+	<div class="form-group">
+	   <label class="control-label" for="sk">{L_RESULT_SORT}{L_COLON}</label>
+	<div>{S_SELECT_SORT_KEY}</div> 
+	 <div class="space10"></div>
+	<input type="radio" name="sd" id="sa" value="a"> <label class="radio-inline" for="sa">{L_SORT_ASCENDING}</label>
+	<input type="radio" name="sd" id="sd" value="d" checked="checked"> <label class="radio-inline" for="sd">{L_SORT_DESCENDING}</label>
+	<div class="control-group"></div>
+	</div>
+	
+	<div class="form-group">
+	   <label class="control-label" for="st">{L_RESULT_DAYS}{L_COLON}</label>
+	<div>{S_SELECT_SORT_DAYS}</div>
+	<div class="control-group"></div>
+	</div>
+   
+   <div class="form-group">
+   <div class="row">
+   <div class="col-md-3 col-sm-5 col-xs-6">
+   <label class="control-label" for="pc">{L_RETURN_FIRST}{L_COLON}</label><span class="help-block">{{ lang('RETURN_FIRST_EXPLAIN') }}</span>
+  <div class="input-group">
+     <input type="number" id="ch" name="ch" value="{{ DEFAULT_RETURN_CHARS }}" min="0" max="9999" title="{{ lang('RETURN_FIRST') }}" class="form-control" />
+     <span class="input-group-addon">{L_POST_CHARACTERS}</span>
+   </div>
+   </div>
+   </div>
+   </div>
+   
+   <!-- EVENT search_body_search_options_append -->
+   
+  </fieldset>
+
+</div>
+
+	<fieldset class="form-actions">
+		{S_HIDDEN_FIELDS}
+		<button type="submit" name="submit" value="{L_SEARCH}" class="btn btn-default" data-loading-text="{L_SEARCHING} <i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SEARCH}</button>
+	</fieldset>
+</form>
+<!-- EVENT search_body_form_after -->
+<div class="space10"></div>
+ 
+<!-- EVENT search_body_recent_search_before --> 
+<!-- IF .recentsearch -->
+   <div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-tags"></i>&nbsp;{L_SEARCH_KEYWORDS}
+	</div>
+	<div class="panel-inner">
+    <table class="footable table table-striped table-primary table-hover">
+	<thead>
+	<tr>
+		<th colspan="2" class="name">{L_RECENT_SEARCHES}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN recentsearch -->
+		<tr>
+			<td><a href="{recentsearch.U_KEYWORDS}">{recentsearch.KEYWORDS}</a></td>
+			<td class="active"><span>&nbsp;{recentsearch.TIME}</span></td>
+		</tr>
+	<!-- BEGINELSE -->
+		<tr>
+			<td colspan="2">{L_NO_RECENT_SEARCHES}</td>
+		</tr>
+	<!-- END recentsearch -->
+	</tbody>
+	</table>
+	</div>
+	</div>
+<!-- ENDIF -->
+<!-- EVENT search_body_recent_search_after -->
+<!-- INCLUDE overall_footer.html -->

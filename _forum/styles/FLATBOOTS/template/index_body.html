@@ -1,0 +1,69 @@
+<!-- INCLUDE overall_header.html -->
+<!-- EVENT index_body_forumlist_body_before -->
+<!-- INCLUDE forumlist_body.html -->
+<!-- EVENT index_body_forumlist_body_after -->
+
+<!-- EVENT index_body_stat_blocks_before -->
+<!-- IF S_USER_LOGGED_IN -->
+<div class="panel panel-forum panel-stats">
+ <div class="panel-heading">{L_SITESPLAT_STATISTICS}</div>
+ <div class="panel-body">
+    <div class="row">
+	  <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-acqua">{SITESPLAT_CURRENTLY_ONLINE}&nbsp;<a data-toggle="collapse" data-target=".sorting" href="javascript:void(0);" title="{L_EXPAND_VIEW}"><i class="fa fa-angle-double-down"></i></a></span><strong>{L_SITESPLAT_USERS_ONLINE}</strong>
+	   </div>
+	   <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-seppia">{SITESPLAT_RECORD_ONLINE}</span><strong>{L_SITESPLAT_MOST_USERS_ONLINE}</strong>
+	   </div>
+	   <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-melograno">{SITESPLAT_TOTAL_POSTS}</span><strong>{L_SITESPLAT_TOTAL_POSTS}</strong>
+	   </div>
+	   
+	 <div class="visible-xs space10"></div>
+	  <div class="visible-xs space10"></div>
+	  
+	   <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-drank">{SITESPLAT_TOTAL_TOPICS}</span><strong>{L_SITESPLAT_TOTAL_TOPICS}</strong>
+	   </div>
+	   <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-orange">{SITESPLAT_TOTAL_USERS}</span><strong>{L_SITESPLAT_TOTAL_USERS}</strong>
+	   </div>
+	   <div class="col-md-2 col-sm-2 col-xs-4 text-center">
+	    <span class="output text-red">{SITESPLAT_NEWEST_USER}</span><strong>{L_SITESPLAT_NEWEST_MEMBER}</strong>
+	   </div> 
+	</div>
+ </div>
+ <!-- IF S_DISPLAY_ONLINE_LIST -->
+	<div class="panel-footer sorting collapse">
+	 <div class="row">
+	 <!-- EVENT index_body_block_stats_legend_before -->
+	   <div class="col-md-6">
+		<span class="stats-heading">{TOTAL_USERS_ONLINE}&nbsp;&#40;{L_ONLINE_EXPLAIN}&#41;&nbsp;<!-- IF U_VIEWONLINE --><a href="{U_VIEWONLINE}" title="{L_WHO_IS_ONLINE}"><i class="fa fa-question-circle"></i></a><!-- ENDIF --></span>
+		<!-- IF LEGEND -->
+		  <div class="space10"></div>
+		 <small>{L_LEGEND}{L_COLON}&nbsp;{LEGEND}</small>
+		<!-- ENDIF -->
+	   </div>
+	   <!-- EVENT index_body_block_stats_prepend --> 
+	   <div class="col-md-12">	
+		<!-- EVENT index_body_block_online_prepend -->
+		 <div class="space10"></div>
+		<!-- IF U_VIEWONLINE --><p>{LOGGED_IN_USER_LIST}</p><!-- ENDIF -->
+		<!-- EVENT index_body_block_online_append -->
+	 
+		<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
+		 <!-- EVENT index_body_block_birthday_prepend -->
+		  <!-- IF .birthdays --><p>{L_SITESPLAT_BIRTHDAYS}{L_COLON}&nbsp;<strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' -->&nbsp;&#40;{birthdays.AGE}&#41;<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->&#44;&nbsp;<!-- ENDIF --><!-- END birthdays --></strong></p><!-- ENDIF -->
+		 <!-- EVENT index_body_block_birthday_append -->
+		<!-- ENDIF -->
+	   </div>
+	  <!-- EVENT index_body_block_stats_append --> 
+	 </div>
+	</div>
+ <!-- ENDIF -->
+</div>
+<!-- ENDIF -->
+<!-- EVENT index_body_stat_blocks_after -->
+{% set s_on_index = true %}
+<!-- INCLUDE overall_footer.html -->
+

@@ -1,0 +1,321 @@
+<!-- INCLUDE overall_header.html -->
+ <!-- EVENT memberlist_view_content_prepend -->
+<form method="post" action="{S_PROFILE_ACTION}" id="viewprofile">
+ <div class="side-segment"><h3>{PAGE_TITLE}</h3></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-profile text-muted">
+                <div class="panel-heading text-center bg-profile">
+				 <div class="pull-left pos-abs l-25">
+					<!-- IF U_EDIT_SELF --><a href="{U_EDIT_SELF}" title="{L_EDIT_PROFILE}" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i></a><!-- ENDIF -->
+				 </div>
+				 <div class="pull-right pos-abs r-25">
+					<!-- IF U_ACP or U_USER_BAN -->
+					<div class="btn-group">
+						<div class="dropdown">
+						  <a href="#" data-toggle="dropdown" class="btn btn-xs btn-primary" title="{L_USER_ADMIN}"><i class="fa fa-cog"></i></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<!-- IF U_USER_ADMIN --><li><a href="{U_USER_ADMIN}">{L_USER_ADMIN}</a></li><!-- ENDIF -->
+								<!-- IF U_USER_BAN --><li><a href="{U_USER_BAN}">{L_USER_BAN}</a></li><!-- ENDIF -->
+								<!-- IF U_SWITCH_PERMISSIONS --><li><a href="{U_SWITCH_PERMISSIONS}">{L_USE_PERMISSIONS}</a></li><!-- ENDIF -->
+								<!-- IF U_RESTORE_PERMISSIONS --><li><a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a></li><!-- ENDIF -->
+							</ul>
+						</div>
+					</div>
+					<!-- ENDIF -->
+				 </div>
+				 
+				 <div class="profile-avatar">
+				  <!-- IF AVATAR_IMG -->{AVATAR_IMG}<!-- ENDIF -->
+				  <!-- IF not AVATAR_IMG -->
+				   <img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" />
+			      <!-- ENDIF -->
+				 </div>
+
+                    <h4><!-- IF USER_COLOR --><span style="color:{USER_COLOR};font-weight:bold;">{USERNAME}</span><!-- ELSE -->{USERNAME}<!-- ENDIF --></h4>
+                   
+				   <!-- EVENT memberlist_view_rank_no_avatar_before -->
+					<!-- IF RANK_TITLE --><p>{RANK_TITLE}</p><!-- ENDIF -->
+				   <!-- EVENT memberlist_view_rank_no_avatar_after -->
+				   
+				   <!-- EVENT memberlist_view_rank_avatar_before --> 	
+                    <!-- IF RANK_IMG --><p>{RANK_IMG}</p><!-- ENDIF -->
+				   <!-- EVENT memberlist_view_rank_avatar_after -->	
+					  
+					  <!-- <small>@SiteSplat</small> -->
+                </div>
+				<!-- IF INTERESTS -->
+				<div class="panel-body"> 
+                <div class="text-center"> 
+				    <h5>{L_INTERESTS}</h5>
+                    <p>{INTERESTS}</p>
+                </div>
+				</div>
+				<!-- ENDIF -->
+				<div class="panel-footer">
+				<!-- EVENT memberlist_view_zebra_before -->
+				<!-- IF S_USER_LOGGED_IN and S_ZEBRA -->
+                <div class="btn-group btn-group-justified" role="group">
+				<!-- IF U_REMOVE_FRIEND -->
+				<div class="btn-group" role="group">
+					<a class="btn btn-default zebra" title="" href="{U_REMOVE_FRIEND}" data-ajax="zebra"><i class="icon-moon-heart-broken"></i>&nbsp;{L_REMOVE_FRIEND}</a>
+				</div>
+				<!-- ELSEIF U_REMOVE_FOE -->
+				<div class="btn-group" role="group">
+					<a class="btn btn-default zebra" title="" href="{U_REMOVE_FOE}" data-ajax="zebra"><i class="fa fa-times"></i>&nbsp;<i class="fa fa-bug"></i>&nbsp;{L_REMOVE_FOE}</a>
+				</div>
+				<!-- ELSE -->
+				<!-- IF U_ADD_FRIEND -->
+				    <div class="btn-group" role="group">
+				    <a class="btn btn-default zebra" title="" href="{U_ADD_FRIEND}" data-ajax="zebra"><i class="fa fa-heart"></i>&nbsp;{L_ADD_FRIEND}</a>
+					</div>
+					<!-- ENDIF -->
+					<!-- IF U_ADD_FOE -->
+					<div class="btn-group" role="group">
+					<a class="btn btn-default zebra" title="" href="{U_ADD_FOE}" data-ajax="zebra"><i class="fa fa-bug"></i>&nbsp;{L_ADD_FOE}</a>
+				    </div>
+				<!-- ENDIF -->	
+			    <!-- ENDIF -->
+				</div>					
+		        <!-- ENDIF --> 
+				<!-- EVENT memberlist_view_zebra_after -->
+				</div>
+            </div>
+    	</div>
+	
+	    <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong><span class="fa fa-address-card-o"></span>&nbsp;{L_BIO}<!-- IF S_USER_INACTIVE --><span class="label label-default">{L_USER_IS_INACTIVE}{L_COLON}&nbsp;{USER_INACTIVE_REASON}</span><!-- ENDIF --></strong></div>
+                <div class="panel-body">
+                    <ul class="list-unstyled list-info text-muted">
+					<!-- EVENT memberlist_view_user_statistics_before -->
+                        <li>
+                            <span class="fa fa-user"></span>
+                            <label>{L_USERNAME}</label>
+                            <!-- IF USER_COLOR --><span style="color:{USER_COLOR};font-weight:bold;">{USERNAME}</span><!-- ELSE -->{USERNAME}<!-- ENDIF -->
+                        </li>
+					    <li>
+                            <span class="fa fa-retweet"></span>
+                            <label>{L_USER_STATUS}</label>
+                            <!-- IF S_ONLINE -->{L_ONLINE}<!-- ELSE -->{L_OFF_LINE}<!-- ENDIF -->
+                        </li>
+                        <!-- IF AGE !== '' -->
+						<li>
+                        <span class="fa fa-birthday-cake"></span>
+                           <label>{L_AGE}</label>
+                           {AGE}
+                        </li>
+						<!-- ENDIF -->
+						<!-- EVENT memberlist_view_non_contact_custom_fields_before -->
+                        <!-- BEGIN custom_fields -->
+						<!-- IF not custom_fields.S_PROFILE_CONTACT -->
+				        <li>
+                           <span class="fa fa-cog"></span>
+                           <label>{custom_fields.PROFILE_FIELD_NAME}</label>
+                            {custom_fields.PROFILE_FIELD_VALUE}
+                        </li>
+						<!-- ENDIF -->
+						<!-- END custom_fields -->	
+						<!-- EVENT memberlist_view_non_contact_custom_fields_after -->
+					<!-- EVENT memberlist_view_user_statistics_after -->
+                    </ul>
+				  <div class="space10"></div>
+                </div>
+				<div class="panel-footer">
+				    <div class="clearfix mini-profile-contact-wrapper">
+						<ul class="mini-profile-contact pull-right">
+						    <!-- IF U_PM --><li><a class="default-contact" href="{U_PM}" title="{L_SEND_PRIVATE_MESSAGE}"><i class="icon-moon-pm"></i></a></li><!-- ENDIF -->
+							<!-- IF U_EMAIL --><li><a class="default-contact" href="{U_EMAIL}" title="{L_SEND_EMAIL_USER}"><i class="icon-moon-email"></i></a></li><!-- ENDIF -->
+							<!-- IF U_JABBER and S_JABBER_ENABLED --><li><a class="default-contact" href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_SEND_JABBER_MESSAGE}"><i class="fa fa-comment"></i></a></li><!-- ENDIF -->
+			                <!-- EVENT memberlist_view_non_contact_custom_fields_after -->
+							<!-- BEGIN custom_fields -->
+							<!-- IF custom_fields.S_PROFILE_CONTACT -->
+								<!-- IF custom_fields.PROFILE_FIELD_CONTACT -->
+									<li><a class="default-contact" href="{custom_fields.PROFILE_FIELD_CONTACT}" title="{custom_fields.PROFILE_FIELD_DESC}"><i class="icon-moon-{custom_fields.PROFILE_FIELD_NAME}"></i></a></li>
+								<!-- ENDIF -->
+							<!-- ENDIF -->
+						    <!-- END custom_fields -->
+							<!-- EVENT memberlist_view_contact_custom_fields_after -->
+						</ul>
+					</div>
+			    </div>
+            </div>
+        </div>
+	
+    </div>
+</form>
+ 
+<div class="clearfix">
+<!-- EVENT ss_memberlist_view_timeline_before -->
+<div class="side-segment"><h3>{L_USER_FORUM}</h3></div>
+
+    <div class="ui-timeline text-muted">
+	    <!-- EVENT ss_memberlist_view_timeline_item_before -->
+            <div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-caption">
+                            <a class="btn btn-primary btn-block" href="#">{L_JOINED}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time">{JOINED}</div>
+                        <div class="tl-icon square-icon sm bg-info"><i class="fa fa-automobile"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-primary">{USERNAME}&nbsp;{L_MEMBERLIST_P_JOINED}</h4>
+                            <p>{L_MEMBERLIST_P_EXPL}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tl-item alt">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time">{LAST_ACTIVE}</div>
+                        <div class="tl-icon square-icon sm bg-warning"><i class="fa fa-eye"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-danger">{L_LAST_ACTIVE}</h4>
+                            <p>{L_MEMBERLIST_P_DATE_EXPL}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			
+			<div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time"></div>
+                        <div class="tl-icon square-icon sm bg-success"><i class="fa fa-comments"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-warning">{L_TOTAL_POSTS}</h4>
+                            <p>
+							{POSTS}&nbsp;
+							<!-- IF S_DISPLAY_SEARCH -->&#45;<strong><a href="{U_SEARCH_USER}">&nbsp;{L_SEARCH_USER_POSTS}</a></strong><!-- ENDIF -->
+							<!-- IF POSTS_PCT -->&#40;{POSTS_PCT}&nbsp;&#47;&nbsp;{POSTS_DAY}&#41;<!-- ENDIF -->
+							<!-- IF POSTS_IN_QUEUE and U_MCP_QUEUE -->&#40;<a href="{U_MCP_QUEUE}">{L_POSTS_IN_QUEUE}</a>&#41;<!-- ELSEIF POSTS_IN_QUEUE -->&#40;{L_POSTS_IN_QUEUE}&#41;<!-- ENDIF -->
+							</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			<!-- IF S_SHOW_ACTIVITY and POSTS -->
+			<div class="tl-item alt">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time"></div>
+                        <div class="tl-icon square-icon sm bg-primary"><i class="fa fa-check"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-success">{L_ACTIVE_IN_FORUM}</h4>
+                            <p><!-- IF ACTIVE_FORUM != '' --><a href="{U_ACTIVE_FORUM}">{ACTIVE_FORUM}</a>&nbsp;&#40;{ACTIVE_FORUM_POSTS}&nbsp;&#47;&nbsp;{ACTIVE_FORUM_PCT}&#41;<!-- ELSE -->&nbsp;&#45;&nbsp;<!-- ENDIF --></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			
+			<div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time"></div>
+                        <div class="tl-icon square-icon sm bg-info"><i class="fa fa-fire"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-warning">{L_ACTIVE_IN_TOPIC}</h4>
+                            <p><!-- IF ACTIVE_TOPIC != '' --><a href="{U_ACTIVE_TOPIC}">{ACTIVE_TOPIC}</a>&nbsp;&#40;{ACTIVE_TOPIC_POSTS}&nbsp;&#47;&nbsp;{ACTIVE_TOPIC_PCT}&#41;<!-- ELSE -->&nbsp;&#45;&nbsp;<!-- ENDIF --></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!-- ENDIF -->
+			
+		   <!-- IF S_WARNINGS -->
+            <div class="tl-item alt">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time"></div>
+                        <div class="tl-icon square-icon sm bg-success"><i class="fa fa-exclamation-triangle"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-warning">{L_WARNINGS}</h4>
+                            <p>{WARNINGS}&nbsp;<!-- IF U_NOTES or U_WARN -->&#91;<!-- IF U_NOTES --><a href="{U_NOTES}">{L_VIEW_NOTES}</a><!-- ENDIF --><!-- IF U_WARN --><!-- IF U_NOTES -->&nbsp;&#124;&nbsp;<!-- ENDIF --><a href="{U_WARN}">{L_WARN_USER}</a><!-- ENDIF -->&#93;<!-- ENDIF --></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ENDIF -->
+
+		<!-- Last divs
+		    <div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time">10 hours ago</div>
+                        <div class="tl-icon square-icon sm bg-primary"><i class="fa fa-clock-o"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-info">Accusantium sint</h4>
+                            <p>Ipsam, minus, quam, sit officiis accusantium sint voluptates voluptatibus minima cum non quos corrupti dolorem eligendi modi eius magnam unde!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		
+            <div class="tl-item alt">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-time">9:10 AM</div>
+                        <div class="tl-icon square-icon sm bg-info"><i class="fa fa-gift"></i></div>
+                        <div class="tl-content">
+                            <h4 class="tl-tile text-primary">Sed cumque temporibus</h4>
+                            <p>Deserunt sed cumque temporibus. Doloribus, iste, sit recusandae fugiat assumenda ea magni at doloremque ipsum amet molestias error mollitia maxime ad alias eos id cumque corporis placeat nisi a quaerat nemo magnam ab numquam ratione facere dolorum. Cumque, dolores, sint molestiae eaque quibusdam illo error!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>	
+        Last divs -->
+		<!-- EVENT ss_memberlist_view_timeline_item_after -->
+		  <div class="tl-item">
+                <div class="tl-body">
+                    <div class="tl-entry">
+                        <div class="tl-caption">
+                            <a class="btn btn-danger btn-block" href="javascript:;">{L_END_TIMELINE}</a>
+                        </div>
+                    </div>
+                </div>
+          </div>
+    </div>
+
+<!-- EVENT ss_memberlist_view_timeline_after -->	
+</div>
+
+
+<!-- EVENT memberlist_view_signature_before -->
+
+<!-- IF SIGNATURE -->
+   <div class="clearfix">
+    <div class="side-segment"><h3>{L_SIGNATURE}</h3></div>
+     <div class="panel">
+	 <div class="panel-body">
+      <div class="signature" style="border-top:none; margin-top: 0;">{SIGNATURE}</div>
+    </div>
+	</div>
+   </div>
+<!-- ENDIF -->
+
+
+ <!-- EVENT memberlist_view_content_append -->
+<div class="row">
+<div class="col-md-4 col-md-offset-4">
+<!-- INCLUDE jumpbox_options.html -->
+</div>
+<div class="space10"></div>
+ <div class="space10"></div>
+</div>
+
+<!-- INCLUDE jump_links.html -->
+<!-- INCLUDE overall_footer.html -->

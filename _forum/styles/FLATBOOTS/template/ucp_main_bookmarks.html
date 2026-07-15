@@ -1,0 +1,113 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<fieldset class="framed-ucp">
+  <legend>{L_TITLE}</legend>
+	<p>{L_BOOKMARKS_EXPLAIN}</p>
+
+<!-- IF S_NO_DISPLAY_BOOKMARKS -->
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        {L_BOOKMARKS_DISABLED}
+    </div> 
+<!-- ELSE -->
+
+<!-- IF .topicrow -->
+<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-bookmark"></i>&nbsp;{L_BOOKMARKS}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{L_TOPICS}</th>
+			<th data-hide="phone">{L_LAST_POST}</th>
+			<th class="table-check">{L_MARK}</th>
+		</tr> 
+	</thead>
+	<tbody>
+	<!-- DEFINE $VAR -->{L_VIEW_TOPIC_LOCKED}<!-- ENDDEFINE -->
+	<!-- BEGIN topicrow -->
+		<tr id="topic-{topicrow.TOPIC_ID}">
+			<!-- IF topicrow.S_DELETED_TOPIC -->
+			{L_DELETED_TOPIC}
+			<!-- ELSE -->
+			<td>
+			    <span class="icon-wrapper">
+				 <i class="row-icon-font icon-moon-default2<!-- IF topicrow.S_TOPIC_TYPE == 2 --> icon-moon-voice2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 3 --> icon-moon-podcast2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 1 --> icon-moon-pushpin2<!-- ELSEIF topicrow.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF topicrow.S_TOPIC_MOVED --> icon-moon-moved<!-- ENDIF --><!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+				</span>
+				<i class="row-icon-font-mini<!-- IF topicrow.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+				<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><i class="fa fa-asterisk"></i></a><!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">&nbsp;{topicrow.TOPIC_TITLE}</a>
+				<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPICS_ROW_NOT_APPROVED}"><i class="fa fa-question-circle"></i></a><!-- ENDIF -->
+				<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}" title="{L_TOPICS_ROW_REPORTED}"><i class="fa fa-exclamation-circle"></i></a><!-- ENDIF --><br />
+				<!-- IF .topicrow.pagination -->
+				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
+						<!-- BEGIN pagination -->
+						 <!-- IF topicrow.pagination.S_IS_PREV -->
+						 <!-- ELSEIF topicrow.pagination.S_IS_CURRENT --><li class="active">{topicrow.pagination.PAGE_NUMBER}</li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_ELLIPSIS --><li class="ellipsis"><a>{L_ELLIPSIS}</a></li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_NEXT -->
+						<!-- ELSE -->
+						 <li><a href="{topicrow.pagination.PAGE_URL}">{topicrow.pagination.PAGE_NUMBER}</a></li>
+						<!-- ENDIF -->
+						<!-- END pagination -->
+					</ul>		
+			    <!-- ENDIF -->
+				<!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paper-clip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
+				{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL}<small>&nbsp;{topicrow.FIRST_POST_TIME}</small>
+			</td>
+			<td class="center">
+			 {L_POST_BY_AUTHOR}&nbsp;{topicrow.LAST_POST_AUTHOR_FULL}
+			 <!-- IF not S_IS_BOT --><a title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="fa fa-sign-out"></i></a><!-- ENDIF -->
+			 <br /><small>&nbsp;{topicrow.LAST_POST_TIME}</small>
+			</td>
+			<!-- ENDIF -->
+			<td class="table-check"><div class="checker"><input type="checkbox" name="t[{topicrow.TOPIC_ID}]" id="t{topicrow.TOPIC_ID}"><label for="t{topicrow.TOPIC_ID}"></label></div></td>
+		</tr>
+	<!-- END topicrow -->
+	</tbody>
+ </table>
+ </div>
+</div>
+	
+	<div class="table_options">
+            <div class="pull-left">
+                <div class="btn-group">
+				    <!-- IF .topicrow and not S_NO_DISPLAY_BOOKMARKS -->
+                    <div class="dropdown">
+                        <button data-toggle="dropdown" class="btn btn-default" title=""><i class="fa fa-check-square-o"></i>&nbsp;<span class="caret"></span></button>
+						 <ul class="dropdown-menu">
+                            <li><a href="#" onclick="marklist('ucp', '', true); return false;" title=""><i class="fa fa-check-square-o"></i>{L_MARK_ALL}</a></li>
+                            <li><a href="#" onclick="marklist('ucp', '', false); return false;" title=""><i class="fa fa-square-o"></i>{L_UNMARK_ALL}</a></li>
+                          </ul> 
+				    <button class="btn btn-default" type="submit" name="unbookmark" title="{L_REMOVE_BOOKMARK_MARKED}"><i class="fa fa-bookmark"></i></button>
+				   </div>
+                        {S_FORM_TOKEN}
+                    <!-- ENDIF -->		  
+		        </div> 
+           </div>
+          <div class="clearfix">
+           <ul class="pagination pagination-sm pull-right">
+				 <li><a>{TOTAL_TOPICS}</a></li>
+				<!-- IF .pagination -->
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE -->
+					<li class="active"><a>{PAGE_NUMBER}</a></li>	
+				<!-- ENDIF -->
+			 </ul> 
+         </div>
+    </div>
+	
+<!-- ELSE -->
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        {L_NO_BOOKMARKS}
+    </div> 
+<!-- ENDIF -->
+
+<!-- ENDIF -->
+</fieldset>
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->

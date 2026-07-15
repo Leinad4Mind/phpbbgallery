@@ -1,0 +1,41 @@
+<fieldset class="controls-row">
+        <div class="sorting collapse">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					 <div class="row">
+					<form class="form-horizontal" method="post" action="{S_FORUM_ACTION}">
+						<div class="col-md-3 col-sm-3"> 
+                         <label for="st">{L_DISPLAY}{L_COLON}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_DAYS}
+                            </div>
+						</div>
+	                    <div class="col-md-3 col-sm-3"> 
+                          <label for="sk">{L_SORT_BY}{L_COLON}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_KEY}
+                            </div>
+						</div>				
+						<div class="col-md-3 col-sm-3">  
+                           <label for="sd">{L_SORT_BY}{L_COLON}</label>
+                            <div class="control-row">
+							<div class="input-group">
+                             {S_SELECT_SORT_DIR}
+							 <span class="input-group-btn">
+                              <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+							</span>
+							</div>
+						    </div>   
+						</div>
+					</form>
+					<div class="col-md-3 col-sm-3"> 
+                      <label accesskey="j">{L_JUMP_TO}{L_COLON}</label>
+                       <div class="control-row">
+                         <!-- INCLUDE jumpbox_options.html -->
+                       </div>
+					</div>
+                   </div>
+                </div>
+			</div>
+		</div> 
+</fieldset> 
