@@ -1,0 +1,14 @@
+parameters:
+  sitesplat.bbemoji.url.generators:
+    - ["EmojiOne", "//cdn.jsdelivr.net/emojione/assets/svg/", "svg"]
+    - ["EmojiOne", "$web_root_path$ext/sitesplat/bbemoji/images/",   "svg"]
+#    - ["Twemoji",  "//twemoji.maxcdn.com/svg/",               "svg"]
+#    - ["Gemoji",   "/path/to/gemoji/",                        "png"]
+services:
+  sitesplat.bbemoji.listener:
+    class: sitesplat\bbemoji\event\listener
+    arguments:
+      - %sitesplat.bbemoji.url.generators%
+      - @path_helper
+    tags:
+      - { name: event.listener }
