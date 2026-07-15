@@ -1,3 +1,3 @@
-<!-- IF searchresults.USER_GENDER -->
-	<dd class="profile-gender">{L_GENDER}{L_COLON} {searchresults.USER_GENDER}</dd>
-<!-- ENDIF -->
+{% if searchresults.USER_GENDER %}
+	<dd class="profile-gender">{{ lang('GENDER') }}{{ lang('COLON') }} {{ searchresults.USER_GENDER }}</dd>
+{% endif %}

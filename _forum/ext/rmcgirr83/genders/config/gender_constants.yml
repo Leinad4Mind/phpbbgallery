@@ -1,0 +1,5 @@
+parameters:
+    gender_constants:
+        gender_none: 0
+        fa-mars: 1
+        fa-venus: 2
