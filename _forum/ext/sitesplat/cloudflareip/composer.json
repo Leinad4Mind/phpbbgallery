@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "This extension normalizes user IP addresses while your server is under Cloudflare proxy.",
 	"homepage": "http://sitesplat.com",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"keywords": ["sitesplat", "phpbb", "extension", "ip", "users", "security", "tools"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -25,8 +25,9 @@
 		},
 		"version-check": {
             "host": "sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "cloudflare.json"
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "cloudflare.json",
+			"ssl": true
 		}
 	}
 }

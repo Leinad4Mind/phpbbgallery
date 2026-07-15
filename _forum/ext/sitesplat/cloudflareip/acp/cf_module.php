@@ -18,7 +18,7 @@ class cf_module
 
 	public function main($id, $mode)
 	{
-        global $user, $request, $config, $template;
+        global $user, $request, $config, $template, $phpbb_container;
 
 		$this->tpl_name = 'cloudflare';
 		$this->page_title = $user->lang('ACP_CLOUDFLARE');
@@ -73,7 +73,11 @@ class cf_module
                     }
                     trigger_error($user->lang('CLOUDFLARE_CLEAR_CACHE_FAILED', implode('<br>', $errors)) . adm_back_link($this->u_action), E_USER_WARNING);
                 }
-				trigger_error($user->lang('CLOUDFLARE_CLEAR_CACHE_SUCCESS') . adm_back_link($this->u_action));
+
+                $log = $phpbb_container->get('log');
+                $log->add('admin', $user->data['user_id'], $user->ip, 'LOG_PURGE_CLOUDFLARE_CACHE');
+
+                trigger_error($user->lang('CLOUDFLARE_CLEAR_CACHE_SUCCESS') . adm_back_link($this->u_action));
             }
         }
 

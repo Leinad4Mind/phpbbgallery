@@ -42,4 +42,6 @@ $lang = array_merge($lang, array(
 	'CLOUDFLARE_CLEAR_CACHE_EXPLAIN'		=> 'Remove ALL files from CloudFlare’s cache',
 
 	'CLOUDFLARE_CF_CLEAR_CACHE'	=> 'Clear CloudFlare’s cache',
+
+	'LOG_PURGE_CLOUDFLARE_CACHE'	=> '<strong>Purged CloudFlare’s cache</strong>',
 ));
