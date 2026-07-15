@@ -83,7 +83,7 @@ class main_module
 					AND pb.post_id = p.post_id
 					AND p.poster_id = u.user_id
 					AND ' . $phpbb_content_visibility->get_visibility_sql('post', 0);
-		$result = $db->sql_query($sql);
+		$result = $db->sql_query_limit($sql, $config['posts_per_page'], $start);
 		while($row = $db->sql_fetchrow($result))
 		{
 			// make sure icon exists
