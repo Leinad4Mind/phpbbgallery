@@ -76,18 +76,18 @@ class main_controller
 				$sql = 'SELECT COUNT(DISTINCT poster_id) AS total FROM ' . POSTS_TABLE . '	WHERE topic_id = ' . $this->request->variable('t', 0);
 				$result = $this->db->sql_query($sql);
 				$total_posters = $this->db->sql_fetchfield('total');
-
+				
 				$per_page = 12;
 				$start = $this->request->variable('start', 0);
 				$start = $this->pagination->validate_start($start, $per_page, $total_posters);
 				$base_url = append_sid('app.' . $this->php_ext . '/titlesandavatars/avatars.html?t=' . $this->request->variable('t', 0));
 
-				$sql = 'SELECT DISTINCT l.poster_id, COUNT(l.poster_id) AS posts, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_id, u.user_avatar_width, u.user_avatar_height FROM ' . POSTS_TABLE . ' l 
-						INNER JOIN ' . USERS_TABLE . ' u ON u.user_id = l.poster_id
+				$sql = 'SELECT l.poster_id, COUNT(l.poster_id) AS posts, u.username, u.user_colour, u.user_avatar, user_avatar_type, user_id, user_avatar_width, user_avatar_height 
+						FROM ' . POSTS_TABLE . ' l 
+						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.poster_id
 						WHERE l.topic_id = ' . $this->request->variable('t', 0) . ' 
-						GROUP BY l.poster_id';
+						GROUP BY l.poster_id';		
 				$result = $this->db->sql_query_limit($sql, $per_page, $start);
-
 				while($row = $this->db->sql_fetchrow($result))
 				{
 				  $match = array();
@@ -104,8 +104,7 @@ class main_controller
 
 					echo '<div class="avatar-partecipants col-md-2 col-sm-3 col-xs-4">' .
 						  (($row['posts'] > 1) ? '<span class="badge badge-danger tabadge">' . $row['posts'] . '</span>' : '') . '
-						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar) . ' " style="float:left;width:70px;height:70px;">
-						  
+						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar) . ' " style="float:left;width:70px;">
 						  <div class="partecipants-time-stamp" style="text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['poster_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a></div></div>';
 				}

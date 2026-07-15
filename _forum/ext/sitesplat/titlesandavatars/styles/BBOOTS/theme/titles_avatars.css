@@ -178,16 +178,16 @@
     right: 0;
 }
 
-.tabadge {
-    position: absolute;
-    right: 12px;
-}
-
 .partecipants-time-stamp {
     margin-top: 6px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.tabadge {
+    position: absolute;
+    right: 12px;
 }
 
 #footerContent .recent-topic .avatar {

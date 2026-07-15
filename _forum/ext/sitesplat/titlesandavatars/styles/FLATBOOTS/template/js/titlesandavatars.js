@@ -1,1 +1,45 @@
-head.ready(function(){!function(t){"use strict";function a(t,a){return(RegExp(a+"=(.+?)(&|$)").exec(t)||[,null])[1]}t(document).on("click",".open-AvatarsDialog",function(){var a=t(this).data("id"),e=new Date;t.ajax({url:"app.php/titlesandavatars/avatars.html?t="+a+"&time="+String(e.getTime()),context:document.getElementById("profileBBavatar"),error:function(t,a,e){},success:function(a,e){t(".modal-body #profileBBavatar").html(a)}})}),t(document).on("click",".AvatarsPagination",function(e){e.preventDefault();var n=t(this).attr("href"),r=a(n,"t"),i=a(n,"start"),o=new Date;t.ajax({url:"app.php/titlesandavatars/avatars.html?t="+r+"&start="+i+"&time="+String(o.getTime()),context:document.getElementById("profileBBavatar"),error:function(t,a,e){},success:function(a,e){t(".modal-body #profileBBavatar").html(a)}})})}(jQuery)});
+head.ready(function () {
+(function($) { // Avoid conflicts with other libraries
+
+"use strict";
+
+$(document).on("click", ".open-AvatarsDialog", function () {
+	var topicid = $(this).data('id');
+	var hack = new Date();
+
+	$.ajax({
+		url: 'app.php/titlesandavatars/avatars.html?t=' + topicid + '&time=' + String(hack.getTime()),
+		context: document.getElementById("profileBBavatar"),
+		error: function (e, text, ee) {
+		},
+		success: function (s, x) {
+			$(".modal-body #profileBBavatar").html( s );
+		}
+	});
+});
+
+$(document).on("click", ".AvatarsPagination", function (e) {
+	e.preventDefault();
+	
+	var url = $(this).attr("href");
+	var topicid = getURLParameter(url, "t");
+	var start = getURLParameter(url, "start");
+	var hack = new Date();
+
+	$.ajax({
+		url: 'app.php/titlesandavatars/avatars.html?t=' + topicid + '&start=' + start + '&time=' + String(hack.getTime()),
+		context: document.getElementById("profileBBavatar"),
+		error: function (e, text, ee) {
+		},
+		success: function (s, x) {
+			$(".modal-body #profileBBavatar").html( s );
+		}
+	});
+});
+
+function getURLParameter(url, name) {
+	return (RegExp(name + "=" + "(.+?)(&|$)").exec(url)||[,null])[1];
+}
+
+})(jQuery); // Avoid conflicts with other libraries
+});
