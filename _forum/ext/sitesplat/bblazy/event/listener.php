@@ -4,7 +4,6 @@
 * @package BBlazy
 * @copyright (c) 2018 SiteSplat All rights reserved
 * @license Proprietary
-*
 */
 
 namespace sitesplat\bblazy\event;
@@ -16,14 +15,13 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_modify_post_row'	=> 'modify_posts',
-
-			'core.posting_modify_template_vars'	=> 'modify_preview',
-			
-			'core.ucp_pm_view_message'	=> 'modify_pms',
+			'core.viewtopic_modify_post_row'		=> 'modify_posts',
+			'core.posting_modify_template_vars'		=> 'modify_preview',
+			'core.ucp_pm_view_message'				=> 'modify_pms',
 
 			'core.memberlist_view_profile'			=> 'modify_member_profile_signature',
 			'core.memberlist_prepare_profile_data'	=> 'modify_member_profile_avatar',
+			'core.get_gravatar_url_after'			=> 'add_gravatar_class',
 		);
 	}
 
@@ -77,6 +75,11 @@ class listener implements EventSubscriberInterface
 			while (true)
 			{
 				$attachment = $this->template->retrieve_block_vars("attachment[$i]", ['DISPLAY_ATTACHMENT']);
+				if (empty($attachment))
+				{
+					break;
+				}
+
 				if ($attachment['DISPLAY_ATTACHMENT'] == $prev_attachment)
 				{
 					break;
@@ -138,27 +141,57 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	public function add_gravatar_class($event)
+	{
+		$event->offsetSet('url', $event['url'] .= '" class="avatar');
+	}
+
 	protected function lazify_img($html)
 	{
 		if (is_array($html)) {
 			return $html;
 		}
 
-		// no need for <noscript> junk from old code because javascript is required anyway!
-		return preg_replace_callback('`<img (.*?)src\="(.*?)"(.*?) />`uis', function($matches) {
+		// Dion - preg_replace_callback() method is almost twice as fast as using DOM/XML. ( PHP7 also has optimizations for regular expressions.) 
+		// no need for <noscript> junk from old code because javascript is required for all sitesplat themes
+		return preg_replace_callback('`<img (.*?)src\="(.*?)"(.*?)>`uis', function($matches) {
 			$part1 = $matches[1];
 			$part3 = $matches[3];
-
-			if (strpos($part1, 'class="') !== false) {
-				$part1 = preg_replace('`class\="(.*?)"`uis', 'class="$1  b-lazy"', $part1);
+			if ($part1 && strpos($part1, 'class="') !== false) {
+				$part1 = preg_replace('`class\="(.*?)"`uis', 'class="$1 b-lazy"', $part1);
 			}
-			else if (strpos($part3, 'class="') !== false) {
-				$part3 = preg_replace('`class\="(.*?)"`uis', 'class="$1  b-lazy"', $part3);
+			else if ($part3 && strpos($part3, 'class="') !== false) {
+				$part3 = preg_replace('`class\="(.*?)"`uis', 'class="$1 b-lazy"', $part3);
 			}
 
-			// A default image shouldn't be needed. If for some reason it is, use commented-out line instead
-			return '<img ' . $part1 . 'src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="' . $matches[2] . '"' . $part3 . ' />';
-		//	return '<img ' . $part1 . 'src="" data-src="' . $matches[2] . '"' . $part3 . ' />';
+			// For retina images to work correctly
+			// <img> tags must have either a width or height attribute specified.
+			// CSS background images must have a background-size property.
+			if ($part1 && strpos($part1, 'data-lqip="') !== false) {
+				$part1 = preg_replace_callback('`data-lqip\="(.*?)"`uis', function($matches) {
+					$size = explode(',', $matches[1]);
+					return 'width="' . $size[0] . '" height="' . $size[1] . '" src="' . $size[2] . '"';
+				}, $part1);
+				return '<img ' . $part1 . 'data-src="' . $matches[2] . '"' . $part3 . '>';
+			}
+
+			else if ($part3 && strpos($part3, 'data-lqip="') !== false && strpos($part3, 'data-lqip=""') === false) {
+
+				$part3 = preg_replace_callback('`data-lqip\="(.*?)"`uis', function($matches) {
+					$size = explode(',', $matches[1]);
+					return 'width="' . $size[0] . '" height="' . $size[1] . '" src="' . $size[2] . '"';
+				}, $part3);
+				return '<img ' . $part1 . 'data-src="' . $matches[2] . '"' . $part3 . '>';
+			}
+
+			// Gravatars
+//			else if (strpos($matches[2], 'gravatar')) {
+//				return '<img ' . $part1 . 'class="b-lazy" data-src="' . $matches[2] . '"' . $part3 . '>';
+//			}
+
+			// default image
+			return '<img ' . $part1 . 'src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="' . $matches[2] . '"' . $part3 . '>';
+		//	return '<img ' . $part1 . 'src="" data-src="' . $matches[2] . '"' . $part3 . '>';
 		}, $html);
 	}
 }

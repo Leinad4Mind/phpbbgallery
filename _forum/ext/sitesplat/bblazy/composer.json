@@ -1,16 +1,16 @@
 {
 	"name": "sitesplat/bblazy",
 	"type": "phpbb-extension",
-	"description": "Boost your Google ranking and make your forum mobile friendly by sparing users bandwidth with BBlazy. Lazy-load all images. User posts signatures, avatars, BBcode linked images, attachments.",
-	"homepage": "http://sitesplat.com",
-	"version": "1.0.0",
-	"keywords": ["phpbb", "extension", "BBlazy", "BBOOTS", "FLATBOOTS", "sitesplat"],
+	"description": "Revolutionary extension that uses Low Quality Image Placeholders (LQIP) method coupled with a custom pure JavaScript library to Lazy-load all posted images. Including avatars, signatures, PM images, preview and more.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.8",
+	"keywords": ["phpbb", "extension", "lazyloading", "BBOOTS", "FLATBOOTS", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
@@ -20,12 +20,13 @@
 	"extra": {
 		"display-name": "BBlazy",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.4"
+			"phpbb/phpbb": ">=3.2.6"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bblazy.json"
+            "filename": "bblazy.json",
+			"ssl": true
 		}
 
 	}
