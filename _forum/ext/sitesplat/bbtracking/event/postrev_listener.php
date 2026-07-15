@@ -135,7 +135,7 @@ class postrev_listener implements EventSubscriberInterface
 		if (!empty($event['post_list']))
 		{
 			#$sql	= "SELECT post_id FROM {$this->revisions_table} WHERE post_id IN(" . implode(', ', $event['post_list']) . ') GROUP BY post_id';
-			$sql	= "SELECT post_id FROM {$this->revisions_table} WHERE " . $this->db->sql_in_set('post_id', $event['post_list']) . ' GROUP BY post_id';
+			$sql	= "SELECT DISTINCT post_id FROM {$this->revisions_table} WHERE " . $this->db->sql_in_set('post_id', $event['post_list']);
 			$result	= $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{

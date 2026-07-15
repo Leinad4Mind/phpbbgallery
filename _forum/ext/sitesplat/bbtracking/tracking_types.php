@@ -3,9 +3,6 @@
 *
 * BBtracking
 *
-* @copyright (c) 2018 Ken F. Innes IV <https://www.absoluteanime.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
 * @copyright (c) 2017, Sitesplat
 * @license private
 */
@@ -14,7 +11,7 @@ namespace sitesplat\bbtracking;
 
 class tracking_types
 {
-	const TYPE = array(
+	public static $type = array(
         'TRACKING_TYPE_ACCOUNT_SETTINGS'	    => 1,
         'TRACKING_TYPE_VIEWFORUM'			    => 2,
         'TRACKING_TYPE_VIEWTOPIC'			    => 3,

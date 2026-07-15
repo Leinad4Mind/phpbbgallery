@@ -165,7 +165,7 @@ class main_module
 				$db->sql_freeresult($result);
 
 				// generate tracking type options
-				foreach (tracking_types::TYPE as $tracking_type_name => $tracking_type_id)
+				foreach (tracking_types::$type as $tracking_type_name => $tracking_type_id)
 				{
 					$template->assign_block_vars('tracking_types', array(
 						'ID'		=> $tracking_type_id,
@@ -193,7 +193,7 @@ class main_module
 	{
 		switch ($tracking_type)
 		{
-			case tracking_types::TYPE['TRACKING_TYPE_ACCOUNT_SETTINGS']:
+			case tracking_types::$type['TRACKING_TYPE_ACCOUNT_SETTINGS']:
 				return $this->user->lang(
 					'TRACKING_TYPE_ACCOUNT_SETTINGS',
 					$tracking_data['username'],
@@ -204,7 +204,7 @@ class main_module
 				);
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_VIEWFORUM']:
+			case tracking_types::$type['TRACKING_TYPE_VIEWFORUM']:
 				return $this->user->lang(
 					'TRACKING_TYPE_VIEWFORUM',
 					append_sid("{$this->root_path}viewforum.{$this->php_ext}", 'f=' . $tracking_data['forum_id'] . '&amp;start=' . $tracking_data['start']),
@@ -213,7 +213,7 @@ class main_module
 				);
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_VIEWTOPIC']:
+			case tracking_types::$type['TRACKING_TYPE_VIEWTOPIC']:
 				return $this->user->lang(
 					'TRACKING_TYPE_VIEWTOPIC',
 					append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $tracking_data['forum_id'] . '&amp;t=' . $tracking_data['topic_id'] . '&amp;start=' . $tracking_data['start']),
@@ -224,7 +224,7 @@ class main_module
 				);
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_MEMBERLIST_VIEWPROFILE']:
+			case tracking_types::$type['TRACKING_TYPE_MEMBERLIST_VIEWPROFILE']:
 				return $this->user->lang(
 					'TRACKING_TYPE_MEMBERLIST_VIEWPROFILE',
 					append_sid("{$this->root_path}memberlist.{$this->php_ext}", 'mode=viewprofile&amp;u=' . $tracking_data['member_id']),
@@ -232,7 +232,7 @@ class main_module
 				);
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_EDIT_POST']:
+			case tracking_types::$type['TRACKING_TYPE_EDIT_POST']:
 				return $this->user->lang(
 					'TRACKING_TYPE_EDIT_POST',
 					append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . $tracking_data['post_id'] . '#p=' . $tracking_data['post_id']),
@@ -240,15 +240,15 @@ class main_module
 				);
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_LOGIN']:
+			case tracking_types::$type['TRACKING_TYPE_LOGIN']:
 				return $this->user->lang('TRACKING_TYPE_LOGIN');
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_LOGOUT']:
+			case tracking_types::$type['TRACKING_TYPE_LOGOUT']:
 				return $this->user->lang('TRACKING_TYPE_LOGOUT');
 			break;
 
-			case tracking_types::TYPE['TRACKING_TYPE_SEND_PM']:
+			case tracking_types::$type['TRACKING_TYPE_SEND_PM']:
 				$users = array();
 				foreach (array_keys($tracking_data['recipients']) as $user_id)
 				{
