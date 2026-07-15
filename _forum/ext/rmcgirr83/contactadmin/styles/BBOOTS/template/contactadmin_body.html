@@ -1,0 +1,136 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF S_ERROR -->
+		<div class="alert alert-info fade in">
+          <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> <br />{S_ERROR}
+        </div> 
+<!-- ENDIF -->
+
+<form method="post" id="postform" name="postform" action="{S_CONTACT_ACTION}"{S_FORM_ENCTYPE}>
+ <div class="side-segment"><h3>{L_ACP_CAT_CONTACTADMIN}</h3></div>
+	<div class="row">
+
+	<!-- IF CONTACT_INFO -->
+	<div class="col-md-12">
+	
+
+	<div class="well">
+	<span class="help-block">{CONTACT_INFO}</span>
+	</div></div>
+	<!-- ENDIF -->
+	
+ <div class="col-md-12">
+	<div class="well">
+	<div class="row">
+	
+
+		<!-- IF not S_USER_LOGGED_IN -->
+	<div class="col-xs-12 col-lg-12">
+		  <div class="control-group">
+			<label class="control-label" for="contact_name">{L_CONTACT_YOUR_NAME}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			  <i class="fa fa-user"></i>
+			<input type="text" class="form-control input-sm" name="username" id="username" value="{USERNAME}" size="30" tabindex="1" placeholder="{L_USERNAME}"/>
+			</div>
+			</div>
+		  </div>	
+		 </div>
+		  <div class="col-xs-12 col-lg-12">
+	     <div class="control-group">
+			<label class="control-label" for="email">{L_CONTACT_YOUR_EMAIL}{L_COLON}</label>
+			<div class="controls">
+			<div class="input-icon left">
+			  <i class="fa fa-mail-forward"></i>
+			<input type="text" class="form-control input-sm" name="email" id="email" value="{EMAIL}" size="30" tabindex="2" placeholder="{L_EMAIL}"/>
+			</div>
+			</div>
+		  </div>
+		</div>
+		<!-- ENDIF -->
+		<!-- IF CONTACT_REASONS -->
+				<div class="col-xs-12 col-lg-12">
+		<div class="control-group">
+			<label class="control-label" for="contact_reason">{L_CONTACT_REASON}{L_COLON}</label>
+			 <select class="selectpicker" data-container="body" data-width="100%" name="contact_reason" id="contact_reason" tabindex="4">{CONTACT_REASONS}</select>
+		</div>
+		</div>
+	
+		<!-- ENDIF -->
+		<!-- IF not CONTACT_REASONS -->
+			  <div class="<!-- IF CONTACT_REASONS -->col-xs-12 col-lg-6<!-- ELSE -->col-xs-12 col-lg-12<!-- ENDIF -->">
+		<div class="control-group">
+		  <label class="control-label" for="contact_subject">{L_SUBJECT}{L_COLON}</label>
+		  <div class="controls">
+		  <div class="input-icon left">
+            <i class="fa fa-user"></i>
+		  <input type="text" class="form-control input-sm" size="45" maxlength="64" name="contact_subject" id="contact_subject" value="{CONTACT_SUBJECT}" tabindex="5" placeholder="{L_SUBJECT}"/>
+		  </div>
+		  </div>
+	    </div>
+	  </div>
+		
+		<!-- ENDIF -->
+		 </div>	
+		<div class="space10"></div>
+		
+		  <label for="message" class="control-label">{L_MESSAGE_BODY}{L_COLON}</label>
+			<div class="controls">
+			  <textarea class="form-control" name="message" id="message" rows="4" cols="76" tabindex="6" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" placeholder="{L_MESSAGE_BODY}">{CONTACT_MESSAGE}</textarea>
+			</div>
+        <div class="space10"></div>
+		
+	</div>	
+</div> 	
+</div>	
+
+
+
+<!-- IF CAPTCHA_TEMPLATE -->
+<div class="well">
+	<div class="inner">
+	<!-- DEFINE $CAPTCHA_TAB_INDEX = 8 -->
+	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_ATTACH_BOX -->
+<div class="well">
+	<p>{L_ADD_ATTACHMENT_EXPLAIN}</p>
+
+<fieldset>
+<div class="control-group"> 
+	<label class="control-label" for="fileupload">{L_FILENAME}{L_COLON}</label>
+	<div class="controls controls-row"> 
+      <input type="file" name="fileupload" id="fileupload" class="inputbox autowidth" />
+   </div> 
+</div>
+	
+<div class="control-group"> 
+	<label class="control-label" for="filecomment">{L_FILE_COMMENT}{L_COLON}</label>
+	<div class="controls controls-row"> 
+	 <textarea placeholder="{L_FILE_COMMENT_PLACEHOLDER}" rows="1" name="filecomment" id="filecomment" class="form-control">{FILE_COMMENT}</textarea>
+    </div> 
+</div>
+</fieldset>
+
+</div>
+<!-- ENDIF -->
+
+
+
+
+<fieldset class="form-actions">
+
+			{S_HIDDEN_FIELDS}
+
+		<button type="submit" name="submit" id="submit" value="{L_SUBMIT}" class="btn btn-default" tabindex="9" autocomplete="off" data-loading-text="{L_SENDING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+
+		{S_FORM_TOKEN}
+
+
+	</fieldset>
+
+
+</form>
+<!-- INCLUDE overall_footer.html -->
