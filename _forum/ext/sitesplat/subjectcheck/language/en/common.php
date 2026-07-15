@@ -24,8 +24,12 @@ $lang = array_merge($lang, array(
 		2	=> 'The subject of your topic is similar to existing topics. Please check them out and/or reply there instead of creating a new topic.',
 	),
 	'SUBJECT_CHECK_STRICT_TOPIC'	=> array(
-		1	=> 'The subject of your topic is similar to an existing topic. Please reply to this instead of creating a new topic.',
-		2	=> 'The subject of your topic is similar to existing topics. Please reply to the one that most closely matches your message instead of creating a new topic.',
+		1	=> 'The subject of your topic is an exact match of an existing topic. Please reply to this instead of creating a new topic.',
+		2	=> 'The subject of your topic is an exact match of existing topics. Please reply to the one that most closely matches your message instead of creating a new topic.',
+	),
+	'SUBJECT_CHECK_EXACT_TOPIC'	=> array(
+		1	 => 'The subject of your topic is one exact match of an existing topic. Please reply to that one instead of creating a new topic.',
+		2	=> 'The subject of your topic has more then one exact match of existing topics. Please reply to the one that most closely matches your message instead of creating a new topic.',
 	),
 
 	// One of these two strings will be appended to the above strings, so they need a leading space or some other separator.

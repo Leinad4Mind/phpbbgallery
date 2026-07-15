@@ -2,15 +2,15 @@
     "name": "sitesplat/subjectcheck",
     "type": "phpbb-extension",
     "description": "When a new topic is attempted, a list of topics with similar subjects will first be displayed along with a message urging the user to see if perhaps this new topic is not needed. Includes AJAX support.",
-    "homepage": "http://www.sitesplat.com",
-    "version": "1.0.4",
+    "homepage": "https://www.sitesplat.com",
+    "version": "1.0.6",
     "keywords": ["phpbb", "extension", "BBcore", "BBOOTS", "FLATBOOTS", "sitesplat"],
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
             "name": "SiteSplat",
             "email": "info@sitesplat.com",
-            "homepage": "http://sitesplat.com"
+            "homepage": "https://sitesplat.com"
         }
     ],
     "require": {
@@ -25,7 +25,8 @@
 		"version-check": {
             "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "subjectcheck.json"
+            "filename": "subjectcheck.json",
+			"ssl": true
 		}
     }
 }

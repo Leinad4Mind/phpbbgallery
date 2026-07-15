@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * Subject Check. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2016, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package subjectcheck
+* @copyright (c) 2016 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\subjectcheck\event;
 
@@ -35,6 +34,7 @@ class main_listener implements EventSubscriberInterface
 	protected $config;
 	private $subject;
 	private $bypass;
+	private $checked;
 	public function __construct(\sitesplat\subjectcheck\core\subject_check $subject_check, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, \phpbb\config\config $config)
 	{
 		$this->subject_check = $subject_check;
@@ -46,7 +46,14 @@ class main_listener implements EventSubscriberInterface
 
 	public function check_subject($event)
 	{
+		$can_bypass = false;
+		if((int) $this->config['subject_check_bypass'] === 1 && $this->config['subject_check_ajax']) return;
+		if((int) $this->config['subject_check_bypass'] === 2 && $this->config['subject_check_ajax']) {
+			$can_bypass = $this->subject_check->can_bypass($event);
+		}
+		if($can_bypass) return;
 		list($this->subject, $this->bypass) = $this->subject_check->look_for_posts($event);
+		if($this->bypass) $this->subject = '';
 	}
 
 	public function setup_ajax_bypass($event)
@@ -58,7 +65,7 @@ class main_listener implements EventSubscriberInterface
 				$this->user->add_lang_ext('sitesplat/subjectcheck', 'common');
 				$this->template->assign_vars(array(
 					'U_PRIME_SUBJECT_CHECK_AJAX'	=> $this->helper->route('sitesplat_subjectcheck_controller', array('forum_id' => $event['forum_id'], 'a' => '1')),
-					'S_BYPASS_OPTION'				=> $this->config['subject_check_bypass'],
+					'S_BYPASS_OPTION'		=> $this->config['subject_check_bypass'],
 				));
 			}
 

@@ -53,7 +53,7 @@
 		}
 		var obj_r = document.getElementById('prime_subject_check_ajax_results');
 		var obj_d = document.getElementById('prime_subject_check_ajax_display');
-		obj_r.innerHTML = '{{ lang('SUBJECT_CHECK_WORKING') }}';
+		obj_r.innerHTML = "{{ lang('SUBJECT_CHECK_WORKING') }}";
 		obj_d.style.display = '';
 		postform.subject_checked.value = subject;
 
@@ -95,12 +95,6 @@
 		postform.onsubmit = function() {
 			var result = prime_subject_check(true),
 				msg = document.getElementById('prime_subject_check_ajax_results').innerHTML;
-
-			if (!result && msg && (msg = msg.replace(/<br ?\/?>.*/i, "").replace(/(<([^>]+)>)/ig, "")))
-			{
-				alert(msg)
-			}
-			return result;
 		}
 
 		var subject_obj = document.getElementById('subject') || document.getElementsByName('subject')[0];
