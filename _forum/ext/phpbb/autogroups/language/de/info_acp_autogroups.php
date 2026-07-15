@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Auto Gruppen Verwaltung',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Die Auto Gruppe `%1$s` existiert nicht.',
+	'ACP_AUTOGROUPS_MANAGE'			=> 'Auto Groups Verwaltung',
+	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Die Auto-Gruppe `%1$s` existiert nicht.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Eine Auto Gruppenkonfiguration wurde gespeichert</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Eine Auto Gruppenkonfiguration wurde gelöscht</strong>',
+	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Eine Auto Groups-Konfiguration wurde gespeichert</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Eine Auto Groups-Konfiguration wurde gelöscht</strong>',
 ));

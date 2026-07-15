@@ -2,9 +2,9 @@
 /**
 *
 * Auto Groups extension for the phpBB Forum Software package.
-* Brazilian Portuguese  translation by MarcosFPo
+* Estonian translation by phpBBeesti.ee [Exabot]
 *
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+* @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
@@ -39,7 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// Notifications
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'	=> '<strong>Grupo actualizado</strong>: Foste adicionado no grupo %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED'	=> '<strong>Grupo actualizado</strong>: Foste removido do grupo %1$s.',
+	'AUTOGROUPS_NOT_ENABLEABLE'	=> 'Automaatseid gruppe ei saanud lubada. phpBB 3.2.0 ja/või PHP 5.5.0 miinimumnõuded ei olnud täidetud.',
 ));
