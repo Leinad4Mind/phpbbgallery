@@ -108,12 +108,12 @@ class notification extends post
 	protected function getUserIdsFromPost(array $post)
 	{
 		$bbcodeUid = $post['bbcode_uid'];
-		$text      = $this->scrubText($post['message'], $bbcodeUid);
+		$text      = $this->scrubText($post['post_text'], $bbcodeUid);
 
 		$groupIds   = array();
 		$userIds    = array();
 
-		if ($this->isNewFormat($post['message']))
+		if ($this->isNewFormat($post['post_text']))
 		{
 			$regexp = '(<(?:GROUP|USER)MENTION (group|user)mention="(\\d+).*?</(?:GROUP|USER)MENTION>)';
 		}
@@ -168,6 +168,8 @@ class notification extends post
 
 	protected function scrubText($text, $bbcodeUid)
 	{
+		global $phpbb_root_path;
+
 		if ($this->isNewFormat($text))
 		{
 			$text = Utils::removeTag($text, 'CODE');

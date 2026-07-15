@@ -55,10 +55,7 @@ class controller
 		{
 			$rows['group'] = $this->getMatchingGroups($prefix);
 		}
-		if ($this->canRead($topicId))
-		{
-			$rows['user'] = $this->getMatchingUsers($topicId, $prefix);
-		}
+		$rows['user'] = $this->getMatchingUsers($topicId, $prefix);
 
 		$response = new json_response;
 		$response->send($this->formatRows($rows));

@@ -1,3 +1,0 @@
-head.ready(function () {
-$("input[name='sitesplat.nemtions.notification_notification.method.email']").parent().hide();
-});
