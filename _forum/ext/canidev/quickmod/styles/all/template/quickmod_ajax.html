@@ -1,0 +1,58 @@
+<!-- IF JSON_RESULT --><json>{JSON_RESULT}</json><!-- ENDIF -->
+
+<!-- IF DIALOG_CONTENT -->
+<dialog>
+<div class="qm-dialog">
+	<div class="qm-dialog-header">
+		<a href="#close" class="qm-dialog-close"><span class="qm-icon-close"></span></a>
+		<span>{MESSAGE_TITLE}</span>
+	</div>
+
+	<div class="qm-dialog-content">
+		<div>
+
+	<!-- IF S_APPROVE -->
+
+		<label><input type="checkbox" name="send_notify" value="1" /> {L_NOTIFY_POSTER}</label>
+		
+	<!-- ELSEIF S_DELETE -->
+	
+		<label>{L_REASON}: <input class="inputbox autowidth qm_inputbox" type="text" name="delete_reason" value="" size="25" /></label>
+
+	<!-- ELSEIF S_FORUM_REQUEST -->
+
+		<label>{L_SELECT_DESTINATION_FORUM}:<br /><select name="to_forum_id">{S_FORUM_SELECT}</select></label>
+		<!-- IF S_CAN_LEAVE --><br /><br /><label for="move_leave_shadow"><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" /> {L_LEAVE_SHADOW}</label><!-- ENDIF -->
+
+	<!-- ELSEIF S_CHGPOSTER -->
+
+		<label>{L_CHANGE_POSTER}: <input class="inputbox autowidth qm_inputbox" type="text" name="username" value="" size="25" /></label>
+		<br /><span>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span>
+
+	<!-- ELSEIF S_CHGICON -->
+	
+		<label for="icon"><input type="radio" name="icon" id="icon" value="0" checked="checked" /> {L_NO_TOPIC_ICON}</label>
+		<!-- BEGIN topic_icon --><label for="icon-{topic_icon.ICON_ID}"><input type="radio" name="icon" id="icon-{topic_icon.ICON_ID}" value="{topic_icon.ICON_ID}" {topic_icon.S_ICON_CHECKED} /> <img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="" title="" /></label> <!-- END topic_icon -->
+
+	<!-- ELSEIF S_CHGTIME -->
+	
+		<label for="day">{L_DAY}: <select name="day" id="day">{S_DAY_OPTIONS}</select></label> 
+		<label for="month">{L_MONTH}: <select name="month" id="month">{S_MONTH_OPTIONS}</select></label> 
+		<label for="year">{L_YEAR}: <select name="year" id="year">{S_YEAR_OPTIONS}</select></label>
+		
+		<br /><br /><label for="hour">{L_TIME}: <input type="text" class="qm_inputbox" name="hour" id="hour" value="{S_HOUR}" /></label>
+	
+	<!-- ENDIF -->
+		</div>
+	
+		<div class="qm-dialog-buttons">
+			<a href="#submit">{L_QM_ACCEPT}</a>
+			<a href="#close">{L_QM_CANCEL}</a>
+		</div>
+	</div>
+
+{S_QM_HIDDEN_FIELDS}
+</div>
+
+</dialog>
+<!-- ENDIF -->

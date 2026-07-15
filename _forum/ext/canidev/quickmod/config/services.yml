@@ -1,0 +1,35 @@
+services:
+    canidev.quickmod.listener:
+        class: canidev\quickmod\event\listener
+        arguments:
+            - @config
+            - @service_container
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+
+        tags:
+            - { name: event.listener }
+
+    canidev.quickmod.quickmod:
+        class: canidev\quickmod\quickmod
+        arguments:
+            - @auth
+            - @config
+            - @service_container
+            - @dbal.conn
+            - @dispatcher
+            - @request
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+
+    canidev.quickmod.compatibility.manager:
+        class: canidev\quickmod\compatibility\manager
+        arguments:
+            - @cache.driver
+            - @dispatcher
+            - @ext.manager
+            - %core.root_path%
+            - %core.php_ext%
