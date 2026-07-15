@@ -19,7 +19,7 @@ class release_3_0_4 extends \phpbb\db\migration\migration
 		return isset($this->config['notes_version']) && version_compare($this->config['notes_version'], $this->ext_version, '>=');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return ['\oxpus\notes\migrations\release_3_0_3'];
 	}

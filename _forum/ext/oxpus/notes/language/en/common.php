@@ -46,7 +46,7 @@ $lang = array_merge($lang, [
 	'NOTES_DISCLAIMER'  		=> '**Notes you see here cannot be seen by anyone else, including administrators and moderators. If you have any questions or concerns, please contact a Board Administrator.',
 	'NOTES_DISCLAIMER_POPUP'	=> '**Notes you see here cannot be seen by anyone else, including administrators and moderators.',
 
-	'NOTES_CONFIG_SUCCESSFULL'	=> 'The settings for the notes are saved successfully.<br /><br />%sClick here to return to the configuration%s',
+	'NOTES_CONFIG_SUCCESSFULL'	=> 'The settings for the notes are saved successfully.',
 	'NOTES_DELETE_CONFIRM'		=> 'Are you sure you want to delete this note?',
 	'NOTES_LOG_CONFIG'			=> 'Change number of notes per user',
 ]);

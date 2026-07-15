@@ -29,9 +29,9 @@ class release_3_0_0 extends \phpbb\db\migration\migration
 			['config.add', ['notes', '50']],
 
 			['module.add', [
- 				'acp',
- 				'ACP_CAT_DOT_MODS',
- 				'ACP_NOTES'
+				'acp',
+				'ACP_CAT_DOT_MODS',
+				'ACP_NOTES'
 			]],
 			['module.add', [
 				'acp',
@@ -42,9 +42,9 @@ class release_3_0_0 extends \phpbb\db\migration\migration
 				],
 			]],
 			['module.add', [
- 				'ucp',
- 				false,
- 				'UCP_NOTES'
+				'ucp',
+				false,
+				'UCP_NOTES'
 			]],
 			['module.add', [
 				'ucp',

@@ -13,7 +13,6 @@ namespace oxpus\notes\event;
 /**
 * @ignore
 */
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,82 +20,53 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class main_listener implements EventSubscriberInterface
 {
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return [
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_links',
 			'core.viewonline_overwrite_location'	=> 'add_viewonline',
 			'core.delete_user_after'				=> 'delete_user',
-			'core.permissions'						=> 'add_permission',
+			'core.permissions'						=> 'add_permission_cat',
 		];
 	}
 
-	/* @var string phpbb_root_path */
-	protected $root_path;
-
-	/* @var string phpEx */
-	protected $php_ext;
-
-	/* @var string table_prefix */
-	protected $table_prefix;
-
-	/* @var \phpbb\extension\manager */
-	protected $phpbb_extension_manager;
-
-	/* @var \phpbb\path_helper */
-	protected $phpbb_path_helper;
-
-	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
-
-	/* @var \phpbb\config\config */
-	protected $config;
-
-	/* @var \phpbb\controller\helper */
 	protected $helper;
-
-	/* @var \phpbb\auth\auth */
 	protected $auth;
-
-	/* @var \phpbb\template\template */
 	protected $template;
-
-	/* @var \phpbb\user */
 	protected $user;
-
-	/** @var \phpbb\language\language $language Language object */
 	protected $language;
+	protected $notes_table;
 
 	/**
 	* Constructor
 	*
-	* @param string									$root_path
-	* @param string									$php_ext
-	* @param string									$table_prefix
-	* @param \phpbb\extension\manager				$phpbb_extension_manager
-	* @param \phpbb\path_helper						$phpbb_path_helper
 	* @param \phpbb\db\driver\driver_interfacer		$db
-	* @param \phpbb\config\config					$config
 	* @param \phpbb\controller\helper				$helper
 	* @param \phpbb\auth\auth						$auth
 	* @param \phpbb\template\template				$template
 	* @param \phpbb\user							$user
+	* @param \phpbb\language\language				$language
+	* @param string									$notes_table
 	*/
-	public function __construct($root_path, $php_ext, $table_prefix, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
+	public function __construct(
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\controller\helper $helper,
+		\phpbb\auth\auth $auth,
+		\phpbb\template\template $template,
+		\phpbb\user $user,
+		\phpbb\language\language $language,
+		$notes_table
+	)
 	{
-		$this->root_path				= $root_path;
-		$this->php_ext 					= $php_ext;
-		$this->table_prefix 			= $table_prefix;
-		$this->phpbb_extension_manager	= $phpbb_extension_manager;
-		$this->phpbb_path_helper		= $phpbb_path_helper;
 		$this->db 						= $db;
-		$this->config 					= $config;
 		$this->helper 					= $helper;
 		$this->auth						= $auth;
 		$this->template 				= $template;
 		$this->user 					= $user;
 		$this->language					= $language;
+		$this->notes_table 				= $notes_table;
 	}
 
 	public function load_language_on_setup($event)
@@ -111,17 +81,10 @@ class main_listener implements EventSubscriberInterface
 
 	}
 
-	public function add_page_header_links($event)
+	public function add_page_header_links()
 	{
 		if ($this->auth->acl_get('u_notes'))
 		{
-			$ext_path		= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-			$ext_path_web	= $this->phpbb_path_helper->update_web_root_path($ext_path);
-
-			$this->template->assign_vars([
-				'EXT_NOTES_WEB'		=> $ext_path_web,
-			]);
-
 			$ext_main_link = $this->helper->route('oxpus_notes_controller');
 
 			if ($this->user->data['user_popup_notes'])
@@ -140,7 +103,7 @@ class main_listener implements EventSubscriberInterface
 			$cur_time = time();
 
 			$this->db->return_on_error = true;
-			$sql = 'SELECT COUNT(note_id) AS total FROM ' . $this->table_prefix . 'notes
+			$sql = 'SELECT COUNT(note_id) AS total FROM ' . $this->notes_table . '
 				WHERE note_user_id = ' . (int) $this->user->data['user_id'] . '
 					AND note_mem <= ' . (int) $cur_time . '
 					AND note_mem <> 0
@@ -164,7 +127,7 @@ class main_listener implements EventSubscriberInterface
 
 			$this->template->assign_vars([
 				'U_NOTES_PATH'			=> $u_notes_path,
-				'U_NOTES_HOME'	=> $u_notes_home,
+				'U_NOTES_HOME'			=> $u_notes_home,
 				'U_NOTES_POPUP'			=> ($this->user->data['user_popup_notes']) ? str_replace('&amp;', '&', $u_notes_popup) : $u_notes_popup,
 			]);
 		}
@@ -183,12 +146,12 @@ class main_listener implements EventSubscriberInterface
 
 	public function delete_user($event)
 	{
-		$sql = 'DELETE FROM ' . $this->table_prefix . 'notes
+		$sql = 'DELETE FROM ' . $this->notes_table . '
 			WHERE ' . $this->db->sql_in_set('note_user_id', $event['user_ids']);
 		$this->db->sql_query($sql);
 	}
 
-	public function add_permission($event)
+	public function add_permission_cat($event)
 	{
 		$perm_cat = $event['categories'];
 		$perm_cat['notes'] = 'ACP_NOTES';

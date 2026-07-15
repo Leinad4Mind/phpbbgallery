@@ -1,4 +1,4 @@
-{% if PAGE_TITLE eq "Notes" and EXT_NOTES_WEB %}
+{% if PAGE_TITLE eq "Notes" %}
 {% INCLUDECSS '@oxpus_notes/notes.css' %}
-{% INCLUDEJS ''~ EXT_NOTES_WEB ~'assets/javascript/notes.js' %}
+{% INCLUDEJS '@oxpus_notes/js/notes.js' %}
 {% endif %}

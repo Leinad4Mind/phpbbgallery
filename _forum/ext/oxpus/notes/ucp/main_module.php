@@ -17,37 +17,22 @@ class main_module
 {
 	var $u_action;
 
-	function main($id, $mode)
+	function main()
 	{
-		global $db, $user, $auth, $cache;
-		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix;
-		global $phpbb_container, $phpbb_extension_manager, $phpbb_log, $phpbb_path_helper;
-
-		$config			= $phpbb_container->get('config');
-		$language		= $phpbb_container->get('language');
-		$request		= $phpbb_container->get('request');
-		$template		= $phpbb_container->get('template');
-
-		$ext_path		= $phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-		$ext_path_web	= $phpbb_path_helper->update_web_root_path($ext_path);
+		global $db, $user, $language, $request, $template;
 
 		$this->tpl_name = 'ucp_notes';
 		$this->page_title = 'UCP_NOTES';
 
-		$submit			= $request->variable('submit', '');
-
-		if ($submit && !check_form_key('notes_config'))
-		{
-			trigger_error('FORM_INVALID', E_USER_WARNING);
-		}
-
-		if (!$submit)
-		{
-			add_form_key('notes_config');
-		}
+		$submit = $request->variable('submit', '');
 
 		if ($submit)
 		{
+			if (!check_form_key('notes_config'))
+			{
+				trigger_error('FORM_INVALID', E_USER_WARNING);
+			}
+
 			$notes_popup = $request->variable('notes_popup', 0);
 			$notes_slide = $request->variable('notes_slide', 0);
 
@@ -57,14 +42,17 @@ class main_module
 			]) . ' WHERE user_id = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
 
-			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL', '<a href="' . $this->u_action . '" />', '</a>');
+			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL') . '<br /><br /><a href="' . $this->u_action . '">' . $language->lang('RETURN_TO', $language->lang('NOTES')) . '</a>';
+
 			trigger_error($message);
 		}
 
+		add_form_key('notes_config');
+
 		$template->assign_vars([
-			'NOTES_POPUP'	=> ($user->data['user_popup_notes']) ? true : false,
-			'NOTES_SLIDE'	=> ($user->data['user_slide_notes']) ? true : false,
-			'U_FORM_ACTION'	=> $this->u_action,
+			'NOTES_POPUP'			=> ($user->data['user_popup_notes']) ? true : false,
+			'NOTES_SLIDE'			=> ($user->data['user_slide_notes']) ? true : false,
+			'U_NOTES_FORM_ACTION'	=> $this->u_action,
 		]);
 	}
 }

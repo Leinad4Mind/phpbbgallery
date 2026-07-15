@@ -1,8 +1,16 @@
 .hide-note
 {
-    display: none;
+	display: none;
 }
 
 .postprofile.notes {
 	min-height: 2em;
+}
+
+.notes-field-name {
+	max-width: 10%;
+}
+
+.notes-field-data {
+	margin-left: 10%;
 }

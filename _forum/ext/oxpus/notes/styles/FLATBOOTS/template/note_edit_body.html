@@ -4,8 +4,8 @@
 {% INCLUDE 'overall_header.html' %}
 {% endif %}
 
-<h2>{{ lang('NOTES') }} - {{ NOTES_TOTAL }}</h2>
-<form action="{{ S_FORM_ACTION }}" method="post" id="postform">
+<h2>{{ lang('NOTES') }} - {{ NOTES_TOTAL_USED }} / {{ NOTES_TOTAL_ALLOWED }}</h2>
+<form action="{{ S_NOTES_FORM_ACTION }}" method="post" id="postform">
     <div class="clearfix">
         <div class="well">
             <div class="side-segment section-posting">
@@ -27,7 +27,7 @@
 
                 <div class="space10"></div>
 
-                <input type="checkbox" name="mem_yesno" id="mem_yesno" value="1"{{ MEM_CHECKED }}><label class="checkbox-inline">{{ lang('NOTES_MEM_ENABLE') }}</label>
+                <input type="checkbox" name="mem_yesno" id="mem_yesno" value="1"{% if NOTES_MEM_CHECKED %} checked="checked"{% endif %}><label class="checkbox-inline">{{ lang('NOTES_MEM_ENABLE') }}</label>
                 &nbsp;<i class="icon fa fa-bell" style="transform: rotate(40deg);vertical-align: middle;"></i>
                 <i class="icon fa fa-bell" style="transform: rotate(-40deg);vertical-align: middle;"></i>
 
@@ -39,10 +39,33 @@
                         <div class="clearfix">
                             <div class="controls">
                                 <div class="selector">
-                                    {{ S_NOTE_MEM_DAY }}&nbsp;{{ S_NOTE_MEM_MONTH }}&nbsp;{{ S_NOTE_MEM_YEAR }}
+                                    <select name="mem_day" class="selectpicker" data-width="auto">
+                                        {% for notes_days in loops.notes_days %}
+                                        <option value="{{ notes_days.DAY }}"{% if notes_days.DAY eq S_NOTE_MEM_DAY %} selected="selected"{% endif %}>{{ notes_days.DAY }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="mem_month" class="selectpicker" data-width="auto">
+                                        {% for notes_months in loops.notes_months %}
+                                        <option value="{{ notes_months.MONTH }}"{% if notes_months.MONTH eq S_NOTE_MEM_MONTH %} selected="selected"{% endif %}>{{ notes_months.MONTH }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="mem_year" class="selectpicker" data-width="auto">
+                                        {% for notes_years in loops.notes_years %}
+                                        <option value="{{ notes_years.YEAR }}"{% if notes_years.YEAR eq S_NOTE_MEM_YEAR %} selected="selected"{% endif %}>{{ notes_years.YEAR }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                                 <div class="selector">
-                                    {{ S_NOTE_MEM_HOUR }}&nbsp;{{ S_NOTE_MEM_MIN }}
+                                    <select name="mem_hour" class="selectpicker" data-width="auto">
+                                        {% for notes_hours in loops.notes_hours %}
+                                        <option value="{{ notes_hours.HOUR }}"{% if notes_hours.HOUR eq S_NOTE_MEM_HOUR %} selected="selected"{% endif %}>{{ notes_hours.HOUR }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="mem_minute" class="selectpicker" data-width="auto">
+                                        {% for notes_minutes in loops.notes_minutes %}
+                                        <option value="{{ notes_minutes.MINUTE }}"{% if notes_minutes.MINUTE eq S_NOTE_MEM_MIN %} selected="selected"{% endif %}>{{ notes_minutes.MIN }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +96,7 @@
             <div class="space10"></div>
 
             <fieldset class="form-actions">
-                {{ S_HIDDEN_FIELDS }}
+                {{ S_NOTES_HIDDEN_FIELDS }}
                 <button type="submit" class="btn btn-default" name="save" value="{{ lang('SUBMIT') }}" data-loading-text="{{ lang('LOADING') }}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{{ lang('SUBMIT') }}</button>
                 {{ S_FORM_TOKEN }}
             </fieldset>
@@ -85,8 +108,8 @@
 
 {% if S_NOTES_POPUP %}
 <br />
-<p class="submit-buttons" style="text-align: center;">
-    <input type="submit" name="cancel" class="btn btn-default" value="{{ lang('CLOSE') }}" onclick="javascript:window.close()" />
+<p class="submit-buttons">
+    <input type="submit" name="cancel" class="btn btn-default" value="{{ lang('CLOSE_WINDOW') }}" onclick="javascript:window.close()" />
 </p>
 <br />
 {% INCLUDE 'simple_footer.html' %}

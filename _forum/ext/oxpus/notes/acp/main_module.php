@@ -19,38 +19,22 @@ class main_module
 	var $edit_lang_id;
 	var $lang_defs;
 
-	function main($id, $mode)
+	function main()
 	{
-		global $db, $user, $auth, $cache, $phpbb_log, $phpbb_container;
+		global $user, $cache, $phpbb_log, $config, $language, $request, $template;
 
-		$config			= $phpbb_container->get('config');
-		$language		= $phpbb_container->get('language');
-		$request		= $phpbb_container->get('request');
-		$template		= $phpbb_container->get('template');
-
-		$submit			= $request->variable('submit', '');
-
-		$auth->acl($user->data);
-		if (!$auth->acl_get('a_'))
-		{
-			trigger_error('NO_PERMISSION', E_USER_WARNING);
-		}
+		$submit = $request->variable('submit', '');
 
 		$this->tpl_name = 'acp_notes';
 		$this->page_title = 'ACP_NOTES';
 
-		if ($submit && !check_form_key('notes_config'))
-		{
-			trigger_error('FORM_INVALID', E_USER_WARNING);
-		}
-
-		if (!$submit)
-		{
-			add_form_key('notes_config');
-		}
-
 		if ($submit)
 		{
+			if (!check_form_key('notes_config'))
+			{
+				trigger_error('FORM_INVALID', E_USER_WARNING);
+			}
+
 			$notes_per_user = $request->variable('notes', 0);
 
 			$config->set('notes', $notes_per_user);
@@ -58,9 +42,12 @@ class main_module
 			$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'NOTES_LOG_CONFIG');
 			$cache->destroy('config');
 
-			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL', '<a href="' . $this->u_action . '">', '</a>') . adm_back_link($this->u_action);
+			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL') . adm_back_link($this->u_action);
+
 			trigger_error($message);
 		}
+
+		add_form_key('notes_config');
 
 		$template->assign_vars([
 			'NOTES'			=> $config['notes'],
