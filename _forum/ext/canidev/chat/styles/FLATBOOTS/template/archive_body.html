@@ -18,7 +18,7 @@
 		<!-- BEGIN message -->
 			<div id="chat-row-{message.S_ID}" class="chat-row" data-id="{message.S_ID}" data-time="{message.S_TIMESTAMP}">
 				<!-- IF message.S_SHOW_AVATAR -->
-					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
+					<div class="chat-row-avatar cbb-circular-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><span class="cbb-no-avatar"></span><!-- ENDIF --></div>
 				<!-- ENDIF -->
 				
 			<!-- IF S_BATCH_OPTIONS -->
@@ -29,10 +29,10 @@
 			<!-- ENDIF -->
 				
 				<div class="ic-row-actions">
-					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash"></i></a><!-- ENDIF -->
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit" aria-hidden="true"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash" aria-hidden="true"></i></a><!-- ENDIF -->
 				</div>
 
 				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
@@ -52,14 +52,14 @@
 		<!-- IF S_BATCH_OPTIONS -->
 		<div class="col-md-4 col-xs-7">
 			<div class="pull-left">
-				<div class="chat-state-hidden js-delete-selected input-group input-group-sm">
-					<select class="form-control" name="action">
+				<div class="chat-state-hidden js-delete-selected input-group">
+					<select class="selectpicker" data-width="auto" data-style="btn btn-default form-control" name="action">
 						<option value="">{L_BATCH_ACTIONS}</option>
 						{S_BATCH_OPTIONS}
 					</select>
-					<div class="input-group-btn">
-						<button type="submit" name="submit" class="btn btn-default">{L_CHAT_APPLY}</button>
-					</div>
+				<div class="input-group-btn">
+					<button type="submit" name="submit" class="btn btn-default">{L_CHAT_APPLY}</button>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -98,14 +98,12 @@
 						</div>
 						<div class="col-md-3 col-sm-3"> 
                            <label for="sd">{L_SORT_BY}</label>
-                            <div class="control-row">
 							<div class="input-group">
                              {S_SELECT_SORT_DIR}
-							 <span class="input-group-btn">
-                              <button class="cbb-btn" name="sort" type="submit">{L_GO}</button>
-							</span>
+							<div class="input-group-btn">
+                              <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
 							</div>
-						    </div>   
+							</div>
 						</div>
                     </div>
                 </div>

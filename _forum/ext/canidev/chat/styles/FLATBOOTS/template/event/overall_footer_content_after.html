@@ -4,22 +4,22 @@
 
 <!-- EVENT chat_body_before -->
 
-<div id="chat-body" class="panel panel-forum<!-- IF S_CHAT_NOTITLE --> notitle<!-- ENDIF -->" style="display:none;">
+<div id="chat-body" class="panel panel-forum cbb-helper-hidden<!-- IF S_CHAT_NOTITLE --> notitle<!-- ENDIF -->">
 	<div id="chat-title" class="panel-heading">
 		<a class="ic-minimize" data-action="minimize" href="#"><i class="fa fa-minus"></i></a>
-		<i class="fa fa-comments-o" aria-hidden="true"></i>
+		<i class="fa fa-comments-o"></i>
 		<a href="{U_CHAT}">{L_CHAT}</a>
 	</div>
 	
-	<div id="chat-content"  class="panel-body">
+	<div id="chat-content"  class="panel-inner">
 		<form id="ic-chat-form">
-		
+
+		<div class="space10"></div>
+
 	<!-- IF .chat_notice -->
-		<div id="chat-notices" class="chat-message state-notice cbb-helper-hidden">
-			<i class="fa fa-info-circle"></i>
-		<!-- BEGIN chat_notice -->
-			<span class="chat-message-text js-message cbb-helper-hidden">{chat_notice.S_NOTICE}</span>
-		<!-- END chat_notice -->
+		<div id="chat-notices" class="alert alert-info fade in">
+			<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
+			<i class="fa fa-info-circle"></i><!-- BEGIN chat_notice -->{chat_notice.S_NOTICE}<!-- END chat_notice -->
 		</div>
 	<!-- ENDIF -->
 
@@ -30,50 +30,67 @@
 		
 		<div id="chat-right-panel"></div>
 		
-		<div style="clear:both;"></div>
-		
-		<ul id="chat-toolbar">
-			<li><a href="#" data-action="connect" title="{L_CHAT_CONNECT}"><i class="fa fa-sign-in"></i></a></li>
-			<li class="separator"></li>
-			<li class="chat-responsive-refresh"><a href="#" data-action="refresh" title="{L_CHAT_REFRESH}"><i class="fa fa-refresh"></i></a></li>
-			<!-- IF S_CHAT_CAN_CLEAR --><li><a href="#" data-action="clear" id="purge-button" title="{L_CHAT_PURGE}"><i class="fa fa-trash"></i></a></li><!-- ENDIF -->
-			<!-- IF U_CHAT_ARCHIVE --><li<!-- IF S_CHAT_RULES or S_CHAT_SOUND_ENABLED --> class="chat-responsive-hide"<!-- ENDIF -->><a href="{U_CHAT_ARCHIVE}"  title="{L_CHAT_ARCHIVE}"><i class="fa fa-history"></i></a></li><!-- ENDIF -->
+		<div class="cbb-helper-clear"></div>
 
-		<!-- IF S_CHAT_CAN_POST -->
-			<li class="separator"></li>
-			<!-- IF S_CHAT_BBCODE_ALLOWED --><li><a href="#" data-action="showbox" data-box="bbcode" title="{L_CHAT_BBCODE}"><i class="fa fa-code"></i></a></li><!-- ENDIF -->
-			<!-- IF S_CHAT_SMILIES_ALLOWED --><li><a href="#" data-action="showbox" data-box="smiley"  title="{L_CHAT_SMILIES}"><i class="fa fa-smile-o"></i></a></li><!-- ENDIF -->
-			<!-- IF S_CHAT_BBCODE_COLOR --><li><a href="#" data-action="showbox" data-box="color"  title="{L_CHAT_COLOR}"><i class="fa fa-tint"></i></a></li><!-- ENDIF -->
-		<!-- ENDIF -->
+		<div class="space10"></div>
+
+
+<div class="row text-center">
+<div class="btn-group">
+<a class="btn btn-default" href="#" data-action="connect" title="{L_CHAT_CONNECT}"><i class="fa fa-sign-in"></i></a>
+<a class="btn btn-default chat-responsive-refresh" href="#" data-action="refresh" title="{L_CHAT_REFRESH}"><i class="fa fa-refresh"></i></a>
+<!-- IF U_CHAT_ARCHIVE --><a  class="btn btn-default<!-- IF S_CHAT_RULES or S_CHAT_SOUND_ENABLED --> chat-responsive-hide<!-- ENDIF -->" href="{U_CHAT_ARCHIVE}"  title="{L_CHAT_ARCHIVE}"><i class="fa fa-history"></i></a><!-- ENDIF -->
+</div>
+
+<!-- IF S_CHAT_CAN_POST -->
+<div class="btn-group">
+<!-- IF S_CHAT_BBCODE_ALLOWED -->
+<a class="btn btn-default" href="#" data-action="showbox" title="{L_CHAT_BBCODE}"><i class="fa fa-code"></i></a>
+<div class="chat-bbcode-box cbb-helper-hidden"></div>
+<!-- ENDIF -->
+<!-- IF S_CHAT_SMILIES_ALLOWED -->
+	<a class="btn btn-default" href="#" data-action="showbox" title="{L_CHAT_SMILIES}"><i class="fa fa-smile-o"></i></a>
+	<div class="chat-smiley-box cbb-helper-hidden">
+		<div><!-- INCLUDE @canidev_core/smiley_box.html --></div>
+	</div>
+<!-- ENDIF -->
+<!-- IF S_CHAT_BBCODE_COLOR --><a class="btn btn-default" href="#" data-action="color" title="{L_CHAT_COLOR}"><i class="fa fa-tint"></i></a><!-- ENDIF -->
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_CHAT_RULES or S_CHAT_SOUND_ENABLED -->
+<div class="btn-group">
+	<!-- IF S_CHAT_SOUND_ENABLED --><span class="chat-responsive-hide"><a class="btn btn-default chat-responsive-hide" href="#" data-action="sound" title="{L_CHAT_SOUND}"><i class="fa fa-volume-up"></i></a></span><!-- ENDIF -->
+	<!-- IF S_CHAT_RULES --><span class="chat-responsive-hide"><a class="btn btn-default" href="#" data-action="rules" title="{L_CHAT_RULES}"><i class="fa fa-question-circle"></i></a></span><!-- ENDIF -->
+
+	<div class="chat-responsive-menu">
+		<a class="btn btn-default" href="#" data-action="showbox"><i class="fa fa-bars"></i></a>
+		<div class="cbb-helper-hidden">
+			<ul class="cbb-menu">
+				<!-- IF U_CHAT_ARCHIVE --><li><a href="{U_CHAT_ARCHIVE}"><i class="fa fa-history"></i> {L_CHAT_ARCHIVE}</a></li><!-- ENDIF -->
 		
-		<!-- IF S_CHAT_RULES or S_CHAT_SOUND_ENABLED -->
-			<li class="separator"></li>
-			<!-- IF S_CHAT_SOUND_ENABLED --><li class="chat-responsive-hide"><a href="#" data-action="sound" title="{L_CHAT_SOUND}"><i class="fa fa-volume-up"></i></a></li><!-- ENDIF -->
-			<!-- IF S_CHAT_RULES --><li class="chat-responsive-hide"><a href="#" data-action="rules" title="{L_CHAT_RULES}"><i class="fa fa-question-circle"></i></a></li><!-- ENDIF -->
-		
-			<li class="chat-responsive-menu"><a href="#" data-action="showbox" data-box="options"><i class="fa fa-bars"></i></a></li>
-		<!-- ENDIF -->
-		
-			<li class="ic-loading cbb-loading"><span></span></li>
-		</ul>
-		
+				<!-- IF S_CHAT_SOUND_ENABLED --><li><a href="#" data-action="sound"><i class="fa fa-volume-up"></i> {L_CHAT_SOUND}</a></li><!-- ENDIF -->
+				<!-- IF S_CHAT_RULES --><li><a href="#" data-action="rules"><i class="fa fa-question-circle"></i> {L_CHAT_RULES}</a></li><!-- ENDIF -->
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- ENDIF -->
+</div>
+
+<div class="ic-loading cbb-loading"><span></span></div>
+
+<div class="space10"></div>
 	<!-- IF .chat_tip -->
-		<div id="chat-tips" class="chat-tip-message cbb-helper-hidden">
-			<strong><em>{L_CHAT_TIP}</em>:</strong> <!-- BEGIN chat_tip --><span class="js-message cbb-helper-hidden">{chat_tip.S_TIP}</span><!-- END chat_tip -->
+		<div id="chat-tips" class="text-center chat-tip-message cbb-helper-hidden">
+			<strong><em>{L_CHAT_TIP}</em>{L_COLON}</strong> <!-- BEGIN chat_tip --><span class="js-message cbb-helper-hidden">{chat_tip.S_TIP}</span><!-- END chat_tip -->
 		</div>
 	<!-- ENDIF -->
 		
 	<!-- IF S_CHAT_CAN_POST -->
-		<div class="ic-input">
-			<div class="tool-buttons">
-				<a href="#" data-action="clear-bbcode" class="cbb-btn"  title="{L_CHAT_CLEAR_BBCODE}"><i class="fa fa-times-circle-o"></i></a>
-				<a href="#" data-action="clear-input" class="cbb-btn"  title="{L_CHAT_CLEAR_INPUT}"><i class="fa fa-ban"></i></a>
-			</div>
-			<div id="chat-message">
-				<textarea name="ic_message" class="cbb-inputbox no-auto-resize"></textarea>
-				<!-- IF S_CHAT_MAX_CHARS --><div class="ic-chars-info"><span></span> {L_CHAT_REMAINING_CHARS}</div><!-- ENDIF -->
-			</div>
-			<div class="submit-button"><a href="#" data-action="submit" class="cbb-btn submit"><i class="fa fa-share"></i></a></div>
+		<div id="chat-message" class="cbb-inputbox">
+			{S_CHAT_EDITOR}
+			<a href="#" data-action="submit" class="chat-submit-btn"><i class="fa fa-sign-in"></i></a>
 		</div>
 	<!-- ENDIF -->
 		
@@ -81,73 +98,6 @@
 			{S_CHAT_HIDDEN_FIELDS}
 		</div>
 		</form>
-		
-	<!-- IF S_CHAT_CAN_POST -->
-		<div id="boxes">
-		<!-- IF S_CHAT_BBCODE_ALLOWED -->
-			<div class="ic-box">
-				<div class="bbcode-box">
-				<!-- BEGIN chat_default_tags -->
-					<!-- IF chat_default_tags.S_TAG eq 'size' -->
-						<select id="ic-font-select" class="cbb-inputbox">
-							<option value="50">{L_FONT_TINY}</option>
-							<option value="85">{L_FONT_SMALL}</option>
-							<option value="100" selected="selected">{L_FONT_NORMAL}</option>
-							<!-- IF not S_CHAT_MAX_FONT_SIZE or S_CHAT_MAX_FONT_SIZE >= 150 -->
-								<option value="150">{L_FONT_LARGE}</option>
-								<!-- IF not S_CHAT_MAX_FONT_SIZE or S_CHAT_MAX_FONT_SIZE >= 200 -->
-									<option value="200">{L_FONT_HUGE}</option>
-								<!-- ENDIF -->
-							<!-- ENDIF -->
-						</select>
-					<!-- ELSE -->
-						<a href="#" data-action="bbcode" data-bbcode="{chat_default_tags.S_TAG}" title="{chat_default_tags.S_HELP}"><i class="fa {chat_default_tags.S_ICON}"></i></a>
-					<!-- ENDIF -->
-				<!-- END chat_default_tags -->
-					
-				<!-- IF .chat_custom_tags -->
-					<!-- IF S_CHAT_BBCODE_INSELECT -->
-						<select id="ic-bbcode-select" class="cbb-inputbox">
-							<option value="">{L_CHAT_CUSTOM_BBCODES}</option>
-						<!-- BEGIN chat_custom_tags -->
-							<option value="{chat_custom_tags.S_TAG}">{chat_custom_tags.S_TAG}</option>
-						<!-- END chat_custom_tags -->
-						</select>
-					<!-- ELSE -->
-						<br />
-					<!-- BEGIN chat_custom_tags -->
-						<a href="#" data-action="bbcode" data-bbcode="{chat_custom_tags.S_TAG}" title="{chat_custom_tags.S_HELP}">{chat_custom_tags.S_TAG}</a>
-					<!-- END chat_custom_tags -->
-					<!-- ENDIF -->
-				<!-- ENDIF -->
-				
-					<!-- EVENT chat_bbcodebox_after -->
-				</div>
-			</div>
-		<!-- ENDIF -->
-		
-		<!-- IF S_CHAT_SMILIES_ALLOWED -->
-			<div class="ic-box">
-				<div class="smiley-box">
-					<!-- INCLUDE smiley_box.html -->
-				</div>
-			</div>
-		<!-- ENDIF -->
-		
-		<!-- IF S_CHAT_RULES or S_CHAT_SOUND_ENABLED -->
-			<div class="ic-box">
-				<ul class="options-box">
-					<!-- IF U_CHAT_ARCHIVE --><li><a href="{U_CHAT_ARCHIVE}"><i class="fa fa-history"></i> {L_CHAT_ARCHIVE}</a></li><!-- ENDIF -->
-			
-					<!-- IF S_CHAT_SOUND_ENABLED --><li><a href="#" data-action="sound"><i class="fa fa-volume-up"></i> {L_CHAT_SOUND}</a></li><!-- ENDIF -->
-					<!-- IF S_CHAT_RULES --><li><a href="#" data-action="rules"><i class="fa fa-question-circle"></i> {L_CHAT_RULES}</a></li><!-- ENDIF -->
-				</ul>
-			</div>
-		<!-- ENDIF -->
-		
-			<!-- IF S_CHAT_BBCODE_COLOR --><div class="ic-box"><div class="color-box"></div></div><!-- ENDIF -->
-		</div>
-	<!-- ENDIF -->
 
 		<div id="chat-main-message"><i class="fa fa-info-circle"></i>{L_CHAT_DISCONNECT_MESSAGE}</div>
 	</div>

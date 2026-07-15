@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -15,7 +15,7 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-class mcp_controller_config
+class mcp_controller_config extends \canidev\core\acp
 {
 	protected $config;
 	protected $db;
@@ -33,12 +33,12 @@ class mcp_controller_config
 	* Constructor
 	*
 	* @param \phpbb\config\config 				$config			Config Object
+	* @param ContainerInterface 				$container		Service container interface
 	* @param \phpbb\db\driver\driver_interface	$db				DB Object
 	* @param \phpbb\language\language 			$language		Language object
 	* @param \phpbb\log\log						$log			Log object
 	* @param \phpbb\pagination					$pagination		Pagination object
 	* @param \phpbb\request\request 			$request		Request object
-	* @param \phpbb\template\template			$template     	Template object
 	* @param \phpbb\user						$user			User object
 	* @param string								$root_path		phpBB root path
 	* @param string								$php_ext		phpEx
@@ -47,12 +47,12 @@ class mcp_controller_config
 	*/
 	public function __construct(
 		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\pagination $pagination,
 		\phpbb\request\request $request,
-		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$phpbb_root_path,
 		$php_ext)
@@ -63,7 +63,7 @@ class mcp_controller_config
 		$this->log			= $log;
 		$this->pagination	= $pagination;
 		$this->request		= $request;
-		$this->template 	= $template;
+		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 	
 		$this->phpbb_root_path	= $phpbb_root_path;
@@ -84,7 +84,7 @@ class mcp_controller_config
 		$sort_key	= $this->request->variable('sk', 'u');
 		$sort_dir	= $this->request->variable('sd', 'a');
 
-		$this->page_title 	= '';
+		$this->page_title 	= 'MCP_CHAT_BAN';
 		$this->tpl_name 	= 'mcp_chat_ban';
 		
 		// Sorting
@@ -99,7 +99,7 @@ class mcp_controller_config
 		$sql_where = ($sort_days) ? (time() - ($sort_days * 86400)) : 0;
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		
-		$keywords = utf8_normalize_nfc($this->request->variable('keywords', '', true));
+		$keywords = $this->request->variable('keywords', '', true);
 		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
 		
 		$complete_u_action = $this->u_action . "&amp;$u_sort_param$keywords_param&amp;start=$start";
@@ -107,7 +107,7 @@ class mcp_controller_config
 		// Do actions
 		if($action == 'banusers')
 		{
-			$userlist = utf8_normalize_nfc($this->request->variable('ban', '', true));
+			$userlist = $this->request->variable('ban', '', true);
 			$userlist = array_unique(array_map('trim', explode("\n", $userlist)));
 			
 			$user_keys = $usernames = array();
@@ -228,9 +228,6 @@ class mcp_controller_config
 					'mark'		=> $marked,
 					'sk'		=> $sort_key,
 					'sd'		=> $sort_dir,
-					'i'			=> $id,
-					'mode'		=> $mode,
-					'action'	=> $action,
 					'submit'	=> true,
 				)), 'mcp_chat_ban.html');
 				
@@ -307,18 +304,10 @@ class mcp_controller_config
 			'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=mcp&amp;field=ban'),
 			'U_POST_ACTION'		=> $complete_u_action,
 		));
-		
+
+		$this->template->append_asset('css', '@canidev_chat/../theme/chat.css');
+
 		$this->build_period_options();
-	}
-	
-	public function get_template()
-	{
-		return 'mcp_chat_ban';
-	}
-	
-	public function get_title()
-	{
-		return '';
 	}
 	
 	protected function exclude($user_list, $usernames = array(), $u_action = '')
@@ -436,14 +425,7 @@ class mcp_controller_config
 			31104000	=> 'ONE_YEAR',
 			0			=> 'CUSTOM_DATE',
 		);
-
-		$option_str = '';
-
-		foreach($option_ary as $value => $title)
-		{
-			$option_str .= '<option value="' . $value . '">' . $this->lang->lang($title) . '</option>';
-		}
 		
-		$this->template->assign_var('S_PERIOD_OPTIONS', $option_str);
+		$this->template->assign_var('S_PERIOD_OPTIONS', $this->make_select($option_ary, false, null));
 	}
 }

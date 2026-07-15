@@ -9,8 +9,8 @@
 		<div class="control-group"> 
 			<label class="control-label" for="banlength">{L_CHAT_BAN_PERIOD}{L_COLON}</label>
 			<div class="controls controls-row"> 
-				<select class="selectpicker" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
-				<div id="ban-date" style="display: none;">
+				<select class="selectpicker" data-width="auto" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
+				<div id="ban-date" class="cbb-helper-hidden">
 					<label class="control-label">{L_CHAT_BAN_DATE_EXPLAIN}</label>
 					<input placeholder="" type="text" name="date" class="form-control" />
 				</div>
@@ -75,7 +75,7 @@
 	<!-- IF .user -->
 		<!-- BEGIN user -->
 		<!-- IF user.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-			<td style="width: 5%" align="center"><input type="checkbox" name="mark[]" value="{user.ID}" /></td>
+			<td class="ic-mark-col"><input type="checkbox" name="mark[]" value="{user.ID}" /></td>
 			<td>{user.USERNAME}</td>
 			<td class="center">{user.IP}</td>
 			<td class="center">{user.EXCLUSION}</td>
@@ -107,7 +107,7 @@
 
 		<div class="col-md-4 col-sm-6">
 			<div class="input-group input-group-sm">
-			<select class="form-control" name="action">
+			<select class="selectpicker" data-width="auto" name="action">
 				<option value="">{L_BATCH_ACTIONS}</option>
 				<option value="edit">{L_EDIT}</a></option>
 				<option value="unban">{L_CHAT_UNBAN_USER}</a></option>
@@ -119,8 +119,8 @@
 		</div>
 	
 		<div class="btn-group">
-			<a href="javascript:;" onclick="marklist('mcp', 'mark', true); return false;" class="btn btn-default" title="" data-original-title="{L_MARK_ALL}"><i class="fa fa-check-square-o"></i></a>
-			<a href="javascript:;" onclick="marklist('mcp', 'mark', false); return false;" class="btn btn-default" title="" data-original-title="{L_UNMARK_ALL}"><i class="fa fa-square-o"></i></a>
+			<a href="javascript:;" onclick="marklist('mcp', 'mark', true); return false;" class="btn btn-default" title="" data-original-title="{L_MARK_ALL}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+			<a href="javascript:;" onclick="marklist('mcp', 'mark', false); return false;" class="btn btn-default" title="" data-original-title="{L_UNMARK_ALL}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
 		</div>
 	</div>
 	
@@ -174,8 +174,8 @@
 	<div class="control-group"> 
 	    <label class="control-label" for="banlength">{L_CHAT_BAN_PERIOD}{L_COLON}</label>
 		<div class="controls controls-row"> 
-			<select class="selectpicker" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
-			<div id="ban-date" style="display: none;">
+			<select class="selectpicker" data-width="auto" name="period" id="ban-period">{S_PERIOD_OPTIONS}</select>
+			<div id="ban-date" class="cbb-helper-hidden">
 				<label class="control-label">{L_CHAT_BAN_DATE_EXPLAIN}</label>
 				<input placeholder="" type="text" name="date" class="form-control" />
 			</div>

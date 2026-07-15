@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -242,11 +242,6 @@ class main_controller
 						}
 					break;
 				}
-			
-				if(!function_exists('get_user_avatar'))
-				{
-					include($this->root_path. 'includes/functions_display.' . $this->php_ext);
-				}
 
 				$action_manager = $this->container->get('canidev.chat.action_manager');
 				$limit_days 	= array(0 => $this->lang->lang('ALL_MESSAGES'), 1 => $this->lang->lang('1_DAY'), 7 => $this->lang->lang('7_DAYS'), 14 => $this->lang->lang('2_WEEKS'), 30 => $this->lang->lang('1_MONTH'), 90 => $this->lang->lang('3_MONTHS'), 180 => $this->lang->lang('6_MONTHS'), 365 => $this->lang->lang('1_YEAR'));
@@ -280,14 +275,18 @@ class main_controller
 				$result = $this->db->sql_query_limit($sql, $messages_per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$row_avatar = '';
-					
-					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$message = generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+					$row_avatar 	= '';
+					$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$message 		= generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 					
 					if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
 					{
-						$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
+						$row_avatar = phpbb_get_user_avatar(array(
+							'avatar'		=> $row['user_avatar'],
+							'avatar_type'	=> $row['user_avatar_type'],
+							'avatar_width'	=> $row['user_avatar_width'], 
+							'avatar_height'	=> $row['user_avatar_height'],
+						));
 					}
 
 					$this->template->assign_block_vars('message', array(
@@ -350,11 +349,10 @@ class main_controller
 				$this->template->assign_vars(array(
 					'S_BATCH_OPTIONS'		=> $batch_options,
 					'S_CHAT_IN_ARCHIVE'		=> true,
-					'S_CHAT_MAX_CHARS'		=> $this->config['chat_max_chars'],
 					
-					'S_SELECT_SORT_DIR'		=> str_replace('<select', '<select class="cbb-inputbox"', $s_sort_dir),
-					'S_SELECT_SORT_KEY'		=> str_replace('<select', '<select class="cbb-inputbox"', $s_sort_key),
-					'S_SELECT_SORT_DAYS'	=> str_replace('<select', '<select class="cbb-inputbox"', $s_limit_days),
+					'S_SELECT_SORT_DIR'		=> str_replace('<select', '<select class="selectpicker" data-width="auto"', $s_sort_dir),
+					'S_SELECT_SORT_KEY'		=> str_replace('<select', '<select class="selectpicker" data-width="auto"', $s_sort_key),
+					'S_SELECT_SORT_DAYS'	=> str_replace('<select', '<select class="selectpicker" data-width="auto"', $s_limit_days),
 				
 					'U_ACTION'			=> $u_archive,
 				));

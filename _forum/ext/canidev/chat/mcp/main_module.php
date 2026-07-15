@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.0 02/03/2019
+* @version v1.2.1 01/02/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -28,7 +28,7 @@ class main_module
 	{
 		global $phpbb_container;
 
-		$this->controller = $phpbb_container->get('canidev.chat.mcp.' . $mode);
+		$this->controller = $phpbb_container->get('canidev.chat.controller.mcp.' . $mode);
 
 		$this->controller->u_action = $this->u_action;
 		$this->controller->display($mode);
