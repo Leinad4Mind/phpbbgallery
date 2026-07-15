@@ -1,0 +1,10 @@
+services:
+    rmcgirr83.topicdescription.listener:
+        class: rmcgirr83\topicdescription\event\listener
+        arguments:
+            - '@auth'
+            - '@request'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
