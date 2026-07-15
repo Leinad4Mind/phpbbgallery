@@ -1,0 +1,35 @@
+{
+	"name": "sitesplat/bbcompress",
+	"type": "phpbb-extension",
+	"description": "Speed up your website and save server space. Optimize your JPEG and PNG attached images and avatars automatically with TinyPNG, PHP native functions or Kraken drivers.",
+	"homepage": "http://sitesplat.com",
+	"version": "2.1.0",
+	"keywords": ["phpbb", "extension", "BBcompress", "BBOOTS", "FLATBOOTS", "attachment", "avatar", "sitesplat"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0",
+		"tinify/tinify": "*",
+		"kraken-io/kraken-php": "^1.2",
+		"imageoptim/imageoptim": "^1.3"
+	},
+	"extra": {
+		"display-name": "BBcompress",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.9,<3.3@dev"
+		},
+		"version-check": {
+            "host": "www.sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbcompress.json",
+			"ssl": true
+		}
+	}
+}
