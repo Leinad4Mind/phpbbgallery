@@ -1,8 +1,12 @@
+imports:
+    - { resource: ud_constants.yml }
+
 services:
     david63.userdefaults.listener:
         class: david63\userdefaults\event\listener
         arguments:
             - '@config'
+            - '%udconstants%'
         tags:
             - { name: event.listener }
 
@@ -16,3 +20,14 @@ services:
             - '@log'
             - '@language'
             - '@dbal.conn'
+            - '@david63.userdefaults.core.functions'
+            - '%tables%'
+            - '%udconstants%'
+
+    david63.userdefaults.core.functions:
+        class: david63\userdefaults\core\functions
+        arguments:
+            - '@ext.manager'
+
+    _defaults:
+        public: true

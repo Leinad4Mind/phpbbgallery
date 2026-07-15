@@ -1,10 +1,4 @@
-{% include 'overall_header.html' %}
-{% INCLUDECSS '@david63_userdefaults/admin_forms.css' %}
-
-<h1>{{ lang('USER_DEFAULTS') }}</h1>
-<p>{{ lang('USER_DEFAULTS_EXPLAIN') }}</p>
-
-<img style="float: {{ S_CONTENT_FLOW_END }};" src="https://img.shields.io/badge/{{ lang('VERSION') }}-{{ USER_DEFAULTS_VERSION }}-orange.svg?style=plastic" /><br />
+{% include '@' ~ NAMESPACE ~ '/head_panel.html' %}
 
 <form id="userdefaults" method="post" action="{{ U_ACTION }}">
 	<fieldset>
@@ -14,9 +8,9 @@
 			<dt><label for="ud_allow_viewemail">{{ lang('USER_ALLOW_VIEWEMAIL') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_allow_viewemail1" name="ud_allow_viewemail" value="1"{% if USER_ALLOW_VIEWEMAIL %} checked="checked"{% endif %} />
-				<label for="ud_allow_viewemail1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_allow_viewemail1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_allow_viewemail0" name="ud_allow_viewemail" value="0"{% if not USER_ALLOW_VIEWEMAIL %} checked="checked"{% endif %} />
-				<label for="ud_allow_viewemail0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_allow_viewemail0">{{ lang('NO') }}</label>
 				<label for="ud_allow_viewemail" class="label">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -25,9 +19,9 @@
 			<dt><label for="ud_allow_massemail">{{ lang('USER_ALLOW_MASSEMAIL') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_allow_massemail1" name="ud_allow_massemail" value="1"{% if USER_ALLOW_MASSEMAIL %} checked="checked"{% endif %} />
-				<label for="ud_allow_massemail1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_allow_massemail1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_allow_massemail0" name="ud_allow_massemail" value="0"{% if not USER_ALLOW_MASSEMAIL %} checked="checked"{% endif %} />
-				<label for="ud_allow_massemail0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_allow_massemail0">{{ lang('NO') }}</label>
 				<label for="ud_allow_massemail">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -36,9 +30,9 @@
 			<dt><label for="ud_allow_pm">{{ lang('USER_ALLOW_PM') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_allow_pm1" name="ud_allow_pm" value="1"{% if USER_ALLOW_PM %} checked="checked"{% endif %} />
-				<label for="ud_allow_pm1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_allow_pm1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_allow_pm0" name="ud_allow_pm" value="0"{% if not USER_ALLOW_PM %} checked="checked"{% endif %} />
-				<label for="ud_allow_pm0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_allow_pm0">{{ lang('NO') }}</label>
 				<label for="ud_allow_pm">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -47,9 +41,9 @@
 			<dt><label for="ud_notify_pm">{{ lang('USER_NOTIFY_PM') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_notify_pm1" name="ud_notify_pm" value="1"{% if USER_NOTIFY_PM %} checked="checked"{% endif %} />
-				<label for="ud_notify_pm1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_notify_pm1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_notify_pm0" name="ud_notify_pm" value="0"{% if not USER_NOTIFY_PM %} checked="checked"{% endif %} />
-				<label for="ud_notify_pm0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_notify_pm0">{{ lang('NO') }}</label>
 				<label for="ud_notify_pm">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -70,9 +64,9 @@
 			<dt><label for="ud_bbcode">{{ lang('DEFAULT_BBCODE') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_bbcode1" name="ud_bbcode" value="1"{% if S_BBCODE %} checked="checked"{% endif %} />
-				<label for="ud_bbcode1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_bbcode1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_bbcode0" name="ud_bbcode" value="0"{% if not S_BBCODE %} checked="checked"{% endif %} />
-				<label for="ud_bbcode0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_bbcode0">{{ lang('NO') }}</label>
 				<label for="ud_bbcode">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -81,9 +75,9 @@
 			<dt><label for="ud_smilies">{{ lang('DEFAULT_SMILIES') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_smilies1" name="ud_smilies" value="1"{% if S_SMILIES %} checked="checked"{% endif %} />
-				<label for="ud_smilies1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_smilies1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_smilies0" name="ud_smilies" value="0"{% if not S_SMILIES %} checked="checked"{% endif %} />
-				<label for="ud_smilies0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_smilies0">{{ lang('NO') }}</label>
 				<label for="ud_smilies">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -92,9 +86,9 @@
 			<dt><label for="ud_sig">{{ lang('DEFAULT_ADD_SIG') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_sig1" name="ud_sig" value="1"{% if S_SIG %} checked="checked"{% endif %} />
-				<label for="ud_sig1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_sig1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_sig0" name="ud_sig" value="0"{% if not S_SIG %} checked="checked"{% endif %} />
-				<label for="ud_sig0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_sig0">{{ lang('NO') }}</label>
 				<label for="ud_sig">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -103,9 +97,9 @@
 			<dt><label for="ud_notify">{{ lang('USER_NOTIFY') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_notify1" name="ud_notify" value="1"{% if USER_NOTIFY %} checked="checked"{% endif %} />
-				<label for="ud_notify1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_notify1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_notify0" name="ud_notify" value="0"{% if not USER_NOTIFY %} checked="checked"{% endif %} />
-				<label for="ud_notify0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_notify0">{{ lang('NO') }}</label>
 				<label for="ud_notify">{{ lang('DEFAULT_NO') }}</label>
 			</dd>
 		</dl>
@@ -118,9 +112,9 @@
 			<dt><label for="ud_images">{{ lang('VIEW_IMAGES') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_images1" name="ud_images" value="1"{% if S_IMAGES %} checked="checked"{% endif %} />
-				<label for="ud_images1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_images1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_images0" name="ud_images" value="0"{% if not S_IMAGES %} checked="checked"{% endif %} />
-				<label for="ud_images0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_images0">{{ lang('NO') }}</label>
 				<label for="ud_images">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -129,9 +123,9 @@
 			<dt><label for="ud_flash">{{ lang('VIEW_FLASH') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_flash1" name="ud_flash" value="1"{% if S_FLASH %} checked="checked"{% endif %} />
-				<label for="ud_flash1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_flash1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_flash0" name="ud_flash" value="0"{% if not S_FLASH %} checked="checked"{% endif %} />
-				<label for="ud_flash0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_flash0">{{ lang('NO') }}</label>
 				<label for="ud_flash">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -140,9 +134,9 @@
 			<dt><label for="ud1_smilies">{{ lang('VIEW_SMILIES') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud1_smilies1" name="ud1_smilies" value="1"{% if S_VSMILIES %} checked="checked"{% endif %} />
-				<label for="ud1_smilies1">{{ lang('YES') }}</label>
+				<label class="set" for="ud1_smilies1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud1_smilies0" name="ud1_smilies" value="0"{% if not S_VSMILIES %} checked="checked"{% endif %} />
-				<label for="ud1_smilies0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud1_smilies0">{{ lang('NO') }}</label>
 				<label for="ud1_smilies">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -151,9 +145,9 @@
 			<dt><label for="ud_sigs">{{ lang('VIEW_SIGS') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_sigs1" name="ud_sigs" value="1"{% if S_SIGS %} checked="checked"{% endif %} />
-				<label for="ud_sigs1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_sigs1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_sigs0" name="ud_sigs" value="0"{% if not S_SIGS %} checked="checked"{% endif %} />
-				<label for="ud_sigs0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_sigs0">{{ lang('NO') }}</label>
 				<label for="ud_sigs">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -162,9 +156,9 @@
 			<dt><label for="ud_avatars">{{ lang('VIEW_AVATARS') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_avatars1" name="ud_avatars" value="1"{% if S_AVATARS %} checked="checked"{% endif %} />
-				<label for="ud_avatars1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_avatars1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_avatars0" name="ud_avatars" value="0"{% if not S_AVATARS %} checked="checked"{% endif %} />
-				<label for="ud_avatars0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_avatars0">{{ lang('NO') }}</label>
 				<label for="ud_avatars">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
@@ -173,14 +167,14 @@
 			<dt><label for="ud_wordcensor">{{ lang('DISABLE_CENSORS') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_wordcensor1" name="ud_wordcensor" value="1"{% if S_DISABLE_CENSORS %} checked="checked"{% endif %} />
-				<label for="ud_wordcensor1">{{ lang('YES') }}</label>
+				<label class="set" for="ud_wordcensor1">{{ lang('YES') }}</label>
 				<input type="radio" id="ud_wordcensor0" name="ud_wordcensor" value="0"{% if not S_DISABLE_CENSORS %} checked="checked"{% endif %} />
-				<label for="ud_wordcensor0">{{ lang('NO') }}</label>
+				<label class="unset" for="ud_wordcensor0">{{ lang('NO') }}</label>
 				<label for="ud_wordcensor">{{ lang('DEFAULT_YES') }}</label>
 			</dd>
 		</dl>
 
-		<hr />
+		<hr>
 
 		<dl>
 			<dt><label for="topic_st">{{ lang('VIEW_TOPICS_DAYS') }}{{ lang('COLON') }}</label></dt>
@@ -206,7 +200,7 @@
 			</dd>
 		</dl>
 
-		<hr />
+		<hr>
 
 		<dl>
 			<dt><label for="post_st">{{ lang('VIEW_POSTS_DAYS') }}{{ lang('COLON') }}</label></dt>
@@ -240,9 +234,9 @@
 			<dt><label for="ud_moderation_queue">{{ lang('APPROVE_NOTIFICATION') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_moderation_queue0" name="ud_moderation_queue" value="0"{% if not NOTIFY_MODERATION_QUEUE %} checked="checked"{% endif %} />
-				<label for="ud_moderation_queue0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_moderation_queue0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_moderation_queue1" name="ud_moderation_queue" value="1"{% if NOTIFY_MODERATION_QUEUE %} checked="checked"{% endif %} />
-				<label for="ud_moderation_queue1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_moderation_queue1">{{ lang('EMAIL') }}</label>
 				<label for="ud_moderation_queue">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -251,9 +245,9 @@
 			<dt><label for="ud_type_bookmark">{{ lang('REPLY_BOOKMARK_TOPIC') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_bookmark0" name="ud_type_bookmark" value="0"{% if not NOTIFY_BOOKMARK %} checked="checked"{% endif %} />
-				<label for="ud_type_bookmark0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_bookmark0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_bookmark1" name="ud_type_bookmark" value="1"{% if NOTIFY_BOOKMARK %} checked="checked"{% endif %} />
-				<label for="ud_type_bookmark1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_bookmark1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_bookmark">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -262,9 +256,9 @@
 			<dt><label for="ud_type_post">{{ lang('REPLY_SUBSCRIBED_TOPIC') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_post0" name="ud_type_post" value="0"{% if not NOTIFY_SUBSCRIBED %} checked="checked"{% endif %} />
-				<label for="ud_type_post0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_post0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_post1" name="ud_type_post" value="1"{% if NOTIFY_SUBSCRIBED %} checked="checked"{% endif %} />
-				<label for="ud_type_post1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_post1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_post">{{ lang('DEFAULT_EMAIL') }}</label>
 			</dd>
 		</dl>
@@ -273,9 +267,9 @@
 			<dt><label for="ud_type_quote">{{ lang('QUOTE_POST') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_quote0" name="ud_type_quote" value="0"{% if not NOTIFY_QUOTE %} checked="checked"{% endif %} />
-				<label for="ud_type_quote0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_quote0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_quote1" name="ud_type_quote" value="1"{% if NOTIFY_QUOTE %} checked="checked"{% endif %} />
-				<label for="ud_type_quote1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_quote1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_quote">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -284,9 +278,9 @@
 			<dt><label for="ud_type_topic">{{ lang('CREATE_SUBSCRIBED_TOPIC') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_topic0" name="ud_type_topic" value="0"{% if not NOTIFY_TOPIC %} checked="checked"{% endif %} />
-				<label for="ud_type_topic0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_topic0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_topic1" name="ud_type_topic" value="1"{% if NOTIFY_TOPIC %} checked="checked"{% endif %} />
-				<label for="ud_type_topic1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_topic1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_topic">{{ lang('DEFAULT_EMAIL') }}</label>
 			</dd>
 		</dl>
@@ -299,9 +293,9 @@
 			<dt><label for="ud_type_needs_approval">{{ lang('MODERATOR_APPROVAL') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_needs_approval0" name="ud_type_needs_approval" value="0"{% if not NOTIFY_MODERATOR_APPROVAL %} checked="checked"{% endif %} />
-				<label for="ud_type_needs_approval0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_needs_approval0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_needs_approval1" name="ud_type_needs_approval" value="1"{% if NOTIFY_MODERATOR_APPROVAL %} checked="checked"{% endif %} />
-				<label for="ud_type_needs_approval1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_needs_approval1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_needs_approval">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -310,9 +304,9 @@
 			<dt><label for="ud_type_report">{{ lang('MODERATOR_REPORT') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_report0" name="ud_type_report" value="0"{% if not NOTIFY_REPORT %} checked="checked"{% endif %} />
-				<label for="ud_type_report0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_report0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_report1" name="ud_type_report" value="1"{% if NOTIFY_REPORT %} checked="checked"{% endif %} />
-				<label for="ud_type_report1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_report1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_report">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -325,9 +319,9 @@
 			<dt><label for="ud_type_group">{{ lang('REQUEST_GROUP') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_group0" name="ud_type_group" value="0"{% if not NOTIFY_GROUP %} checked="checked"{% endif %} />
-				<label for="ud_type_group0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_group0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_group1" name="ud_type_group" value="1"{% if NOTIFY_GROUP %} checked="checked"{% endif %} />
-				<label for="ud_type_group1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_group1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_group">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -336,9 +330,9 @@
 			<dt><label for="ud_type_pm">{{ lang('SEND_PM') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="radio" id="ud_type_pm0" name="ud_type_pm" value="0"{% if not NOTIFY_PM %} checked="checked"{% endif %} />
-				<label for="ud_type_pm0">{{ lang('NOTIFICATION') }}</label>
+				<label class="set" for="ud_type_pm0">{{ lang('NOTIFICATION') }}</label>
 				<input type="radio" id="ud_type_pm1" name="ud_type_pm" value="1"{% if NOTIFY_PM %} checked="checked"{% endif %} />
-				<label for="ud_type_pm1">{{ lang('EMAIL') }}</label>
+				<label class="set" for="ud_type_pm1">{{ lang('EMAIL') }}</label>
 				<label for="ud_type_pm">{{ lang('DEFAULT_NOTIFICATION') }}</label>
 			</dd>
 		</dl>
@@ -354,4 +348,4 @@
 	</fieldset>
 </form>
 
-{% include 'overall_footer.html' %}
+{% include '@' ~ NAMESPACE ~ '/donate.html' %}

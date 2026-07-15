@@ -2,31 +2,33 @@
 	"name": "david63/userdefaults",
 	"type": "phpbb-extension",
 	"description": "Allows an Admin to set the default user settings for new users.",
-	"version": "2.1.0-RC1",
-	"time": "2017-07-30",
+	"version": "3.1.0-RC1",
+	"time": "2020-01-20",
 	"keywords": [
-		"phpbb",
-		"extension",
 		"user",
 		"defaults",
 		"settings"
 	],
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [{
-			"name": "David Wood",
-			"role": "Developer"
-		}],
+		"name": "David Wood",
+		"role": "Developer"
+		}
+	],
 	"require": {
-        "php": ">=5.3.3",
+        "php": ">=7.1.3",
         "composer/installers": "~1.0"
     },
-	"require-dev": {
-		"phpbb/epv": "dev-master"
-	},
 	"extra": {
 		"display-name": "New user default settings",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.1-RC1"
-      	}
+			"phpbb/phpbb": ">=3.3.0"
+      	},
+		"version-check": {
+        	"host": "version.phpbbdev.space",
+        	"directory": "/versions",
+        	"filename": "user_defaults_version_file.json",
+			"ssl": false
+    	}
 	}
 }
