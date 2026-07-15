@@ -1,0 +1,48 @@
+.open-bbtpreview {
+    border: 2px solid #ccc!important;
+	margin-left: 5px;
+}
+.topic-preview {
+    font-size: 14px!important;
+    padding: 0 5px!important;
+    opacity: 0;
+    transition: all 0.2s linear 0s;
+}
+.topic-preview:hover {
+    opacity: 1;
+	color:#888;
+	
+}
+.topic-preview.touch {
+    opacity: 1;
+}
+.table-hover > tbody > tr:hover > td .topic-preview {
+    opacity: 1;
+	transition: all 0.3s linear 0s;
+}
+
+.modal-subheader {
+    border-bottom: 1px solid #dfdfdf;
+    padding: 15px;
+}
+
+.bbtpreview_img {
+    border-radius: 50%;
+    vertical-align: middle;
+	height: 36px;
+    width: 36px;
+}
+
+.modal-bbpreview #author .avatar {
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+}
+
+.text-ghost {
+    color: #ccc;
+}
+
+#prime_subject_check_ajax_display .btn-xs{
+    padding: 0 5px;
+}

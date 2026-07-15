@@ -1,0 +1,3 @@
+sitesplat_bbtpreview_main_controller:
+    path: /bbtpreview/{route}
+    defaults: { _controller: sitesplat.bbtpreview.controller:display }
