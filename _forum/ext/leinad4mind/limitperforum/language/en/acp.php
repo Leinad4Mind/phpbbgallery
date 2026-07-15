@@ -36,8 +36,12 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'LIMIT_PER_FORUM'			=> 'Limit Posts and Topics per Forum',
-	'FORUM_MAX_POSTS'			=> 'Maximum count of posts per users',
-	'FORUM_MAX_TOPICS'			=> 'Maximum count of topics per users',
+	'FORUM_MAX_POSTS'			=> 'Maximum count of posts per user',
+	'FORUM_MAX_POSTS_SHORT'		=> 'Post limit',
+	'FORUM_MAX_TOPICS'			=> 'Maximum count of topics per user',
+	'FORUM_MAX_TOPICS_SHORT'	=> 'Topic limit',
+	'FORUM_MAX_GROUPS'			=> 'Group limits',
+	'FORUM_MAX_GROUPS_EXPLAIN'	=> 'Group limits override the limits above.',
 	'FORUM_MAX_TOPICS_EXPLAIN'	=> 'Should be lower than the maximum post count unless if it is set to 0',
 	'FORUM_MAX_TOPICS_ERROR'	=> 'The maximum of topic per forums should be lower than the maximum of post per forums',
 	'FORUM_MAX_TP_EXPLAIN'		=> 'Set 0 to disable',

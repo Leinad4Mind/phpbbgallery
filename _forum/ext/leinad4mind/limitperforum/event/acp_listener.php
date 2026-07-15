@@ -11,6 +11,7 @@
 
 namespace leinad4mind\limitperforum\event;
 
+use leinad4mind\limitperforum\manager\forum_groups_manager;
 use phpbb\event\data;
 use phpbb\language\language;
 use phpbb\request\request_interface;
@@ -28,20 +29,26 @@ class acp_listener implements EventSubscriberInterface
 	/** @var template */
 	protected $template;
 
+	/** @var forum_groups_manager */
+	protected $manager;
+
 	/**
-	 * @param language			$lang
-	 * @param request_interface	$request
-	 * @param template			$template
+	 * @param language				$lang
+	 * @param request_interface		$request
+	 * @param template				$template
+	 * @param forum_groups_manager	$manager
 	 */
 	public function __construct(
 		language $lang,
 		request_interface $request,
-		template $template
+		template $template,
+		forum_groups_manager $manager
 	)
 	{
 		$this->lang 	= $lang;
 		$this->request	= $request;
 		$this->template	= $template;
+		$this->manager	= $manager;
 	}
 
 	/**
@@ -50,8 +57,9 @@ class acp_listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'core.acp_manage_forums_display_form'	=> 'acp_manage_forums_display_form',
-			'core.acp_manage_forums_validate_data'	=> 'acp_manage_forums_validate_data',
+			'core.acp_manage_forums_display_form'		=> 'acp_manage_forums_display_form',
+			'core.acp_manage_forums_validate_data'		=> 'acp_manage_forums_validate_data',
+			'core.acp_manage_forums_update_data_after'	=> 'acp_manage_forums_update_data_after',
 		];
 	}
 
@@ -62,10 +70,15 @@ class acp_listener implements EventSubscriberInterface
 	{
 		$this->lang->add_lang('acp', 'leinad4mind/limitperforum');
 
+		$forum_data = $event['forum_data'];
+
 		$this->template->assign_vars([
-			'FORUM_TOPIC_LIMIT'	=> $event['forum_data']['forum_topic_limit'],
-			'FORUM_POST_LIMIT'	=> $event['forum_data']['forum_post_limit'],
+			'FORUM_TOPIC_LIMIT'	=> isset($forum_data['forum_topic_limit']) ? $forum_data['forum_topic_limit'] : 0,
+			'FORUM_POST_LIMIT'	=> isset($forum_data['forum_post_limit']) ? $forum_data['forum_post_limit'] : 0,
 		]);
+
+		$limits = $this->manager->get_limits($event['action'] == 'edit' ? $event['forum_id'] : 0);
+		$this->template->assign_block_vars_array('topics_posts_limits', $limits);
 	}
 
 	/**
@@ -84,5 +97,15 @@ class acp_listener implements EventSubscriberInterface
 				$this->lang->lang('FORUM_MAX_TOPICS_ERROR')
 			]);
 		}
+	}
+
+	/**
+	 * @param data $event
+	 */
+	public function acp_manage_forums_update_data_after(data $event)
+	{
+		$topics = $this->request->variable('lfgt', [0]);
+		$posts = $this->request->variable('lfgp', [0]);
+		$this->manager->set_limits($event['forum_data']['forum_id'], $topics, $posts);
 	}
 }

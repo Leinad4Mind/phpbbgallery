@@ -8,4 +8,30 @@
 		<dt><label for="forum_post_limit">{{ lang('FORUM_MAX_POSTS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_TP_EXPLAIN') }}</span></dt>
 		<dd><input type="text" id="forum_post_limit" name="forum_post_limit" value="{{ FORUM_POST_LIMIT }}" size="5"></dd>
 	</dl>
+
+	{% if topics_posts_limits | length %}
+	<dl>
+		<dt><label for="forum_group_limit">{{ lang('FORUM_MAX_GROUPS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_GROUPS_EXPLAIN') }}</span></dt>
+		<dd>
+			<table id="forum_post_group_limit">
+				<thead>
+					<tr>
+						<th>{{ lang('GROUP') }}</th>
+						<th>{{ lang('FORUM_MAX_TOPICS_SHORT') }}</th>
+						<th>{{ lang('FORUM_MAX_POSTS_SHORT') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for limit in topics_posts_limits %}
+						<tr>
+							<td>{{ limit.group_name }}</td>
+							<td><input type="number" id="limit_forum_group_topic_{{ limit.group_id }}" name="lfgt[{{ limit.group_id }}]" value="{{ limit.topics | default(0) }}"></td>
+							<td><input type="number" id="limit_forum_group_post_{{ limit.group_id }}" name="lfgp[{{ limit.group_id }}]" value="{{ limit.posts | default(0) }}"></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</dd>
+	</dl>
+	{% endif %}
 </fieldset>

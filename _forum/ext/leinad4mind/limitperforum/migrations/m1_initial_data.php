@@ -29,8 +29,8 @@ class m1_initial_data extends migration
 	public function update_data()
 	{
 		return [
-			['permission.add', ['f_topic_limit', false]],
-			['permission.add', ['f_post_limit', false]],
+			['permission.add', ['f_topic_limit', true]],
+			['permission.add', ['f_post_limit', true]],
 		];
 	}
 }

@@ -1,3 +1,6 @@
+imports:
+    - { resource: parameters.yml }
+
 services:
 
     leinad4mind.limitperforum.main_listener:
@@ -8,6 +11,7 @@ services:
             - '@language'
             - '@dbal.conn'
             - '@path_helper'
+            - '@leinad4mind.limitperforum.forum_groups_manager'
         tags:
             - { name: 'event.listener' }
 
@@ -17,5 +21,13 @@ services:
             - '@language'
             - '@request'
             - '@template'
+            - '@leinad4mind.limitperforum.forum_groups_manager'
         tags:
             - { name: 'event.listener' }
+
+    leinad4mind.limitperforum.forum_groups_manager:
+        class: 'leinad4mind\limitperforum\manager\forum_groups_manager'
+        arguments:
+            - '@dbal.conn'
+            - '@group_helper'
+            - '%leinad4mind.limitperforum.table.forum_groups%'
