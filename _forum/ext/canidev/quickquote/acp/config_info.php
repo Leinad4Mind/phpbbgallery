@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Quickquote
-* @version v1.0.2 21/04/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Quickquote
+ * @version 1.0.3 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickquote\acp;
 
@@ -13,13 +13,13 @@ class config_info
 {
 	function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\canidev\quickquote\acp\config_module',
 			'title'		=> 'ACP_QUICKQUOTE',
-			'version'	=> '1.0.2',
-			'modes'		=> array(
-				'config'	=> array('title' => 'ACP_QUICKQUOTE_CONFIG',		'auth' => 'ext_canidev/quickquote && acl_a_board', 'cat' => array('ACP_CAT_QUICKQUOTE')),
-			),
-		);
+			'version'	=> '1.0.3',
+			'modes'		=> [
+				'config'	=> ['title' => 'ACP_QUICKQUOTE_CONFIG',		'auth' => 'ext_canidev/quickquote && acl_a_board', 'cat' => ['ACP_CAT_QUICKQUOTE']],
+			],
+		];
 	}
 }

@@ -4,8 +4,9 @@ services:
         arguments:
             - '@auth'
             - '@config'
-            - '@service_container'
+            - '@canidev.core.lib'
             - '@request'
+            - '@canidev.core.template'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
@@ -13,12 +14,7 @@ services:
             
     canidev.quickquote.admin.config:
         class: canidev\quickquote\controller\admin_controller_config
+        parent: canidev.core.controller.acp
         arguments:
-            - '@cache.driver'
-            - '@config'
             - '@dbal.conn'
             - '@dispatcher'
-            - '@language'
-            - '@request'
-            - '@template'
-            - '@user'

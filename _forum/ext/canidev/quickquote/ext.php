@@ -1,23 +1,25 @@
 <?php
-/*
-* @package cBB QuickQuote
-* @version v1.0.2 21/04/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Quickquote
+ * @version 1.0.3 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\quickquote;
 
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.0.9';
+	const REQUIRED_CORE		= '1.1.1';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function is_enableable()
 	{
-		$config 	= $this->container->get('config');
-		$language 	= $this->container->get('language');
+		$config = $this->container->get('config');
 
 		// Check phpBB version
 		if(phpbb_version_compare($config['version'], self::REQUIRED_PHPBB, '<'))
@@ -26,11 +28,11 @@ class ext extends \phpbb\extension\base
 		}
 
 		// Check Core version
-		$core_lib_filename = $this->container->getParameter('core.root_path') . 'ext/canidev/core/lib.' . $this->container->getParameter('core.php_ext');
-		
-		if(!file_exists($core_lib_filename) || phpbb_version_compare(\canidev\core\lib::VERSION, self::REQUIRED_CORE, '<'))
+		if(!class_exists('\canidev\core\constants') || phpbb_version_compare(\canidev\core\constants::VERSION, self::REQUIRED_CORE, '<'))
 		{
+			$language = $this->container->get('language');
 			$language->add_lang('frontend', 'canidev/quickquote');
+			
 			trigger_error($language->lang('CORE_INSTALL_ERROR'), E_USER_WARNING);
 		}
 
