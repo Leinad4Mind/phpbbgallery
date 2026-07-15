@@ -76,8 +76,8 @@ class notification extends post
 
 		$sql = 'SELECT user_id
 		          FROM ' . $this->tables['user_group'] . '
-		         WHERE group_id IN (' . implode(', ', $groupIds) . ')
-		           AND group_leader = 1';
+		         WHERE group_id IN (' . implode(', ', $groupIds) . ')';
+		           // AND group_leader = 1';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
