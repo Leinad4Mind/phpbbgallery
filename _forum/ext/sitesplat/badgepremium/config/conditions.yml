@@ -1,0 +1,51 @@
+services:
+# ----- Badge types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.badge.type.bookmarked:
+        class: sitesplat\badgepremium\conditions\type\bookmarked
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.cross_badge:
+        class: sitesplat\badgepremium\conditions\type\cross_badge
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.bbpoints:
+        class: sitesplat\badgepremium\conditions\type\bbpoints
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.polls:
+        class: sitesplat\badgepremium\conditions\type\polls
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.reports:
+        class: sitesplat\badgepremium\conditions\type\reports
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.subscribed:
+        class: sitesplat\badgepremium\conditions\type\subscribed
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
+
+    sitesplat.badge.type.topics:
+        class: sitesplat\badgepremium\conditions\type\topics
+        shared: false
+        parent: sitesplat.badge.type
+        tags:
+            - { name: sitesplat.badge.type }
