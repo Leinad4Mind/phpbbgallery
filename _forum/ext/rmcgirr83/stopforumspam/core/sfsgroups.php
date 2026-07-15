@@ -10,23 +10,17 @@
 
 namespace rmcgirr83\stopforumspam\core;
 
-/**
-* ignore
-**/
-use phpbb\auth\auth;
-use phpbb\cache\service as cache;
-
 class sfsgroups
 {
-	/** @var auth $auth */
+	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var cache $cache */
+	/** @var \phpbb\cache\service */
 	protected $cache;
 
 	public function __construct(
-			auth $auth,
-			cache $cache)
+			\phpbb\auth\auth $auth,
+			\phpbb\cache\service $cache)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;

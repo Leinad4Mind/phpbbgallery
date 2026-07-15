@@ -12,7 +12,7 @@
 namespace rmcgirr83\stopforumspam\event;
 
 use phpbb\auth\auth;
-use phpbb\cache\service as cache;
+use phpbb\cache\service;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\language\language;
@@ -22,7 +22,6 @@ use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\stopforumspam\core\sfsgroups as sfsgroups;
 use rmcgirr83\stopforumspam\core\sfsapi as sfsapi;
-use rmcgirr83\contactadmin\controller\main_controller as contactadmin;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -63,18 +62,21 @@ class main_listener implements EventSubscriberInterface
 	/* @var sfsapi */
 	protected $sfsapi;
 
-	/** @var string root_path */
+	/* @var sfs_admins_mods */
+	protected $sfs_admins_mods;
+
+	/** @var string phpBB root path */
 	protected $root_path;
 
-	/** @var string php_ext */
+	/** @var string phpEx */
 	protected $php_ext;
 
-	/* @var contactadmin $contactadmin */
+	/* @var \rmcgirr83\contactadmin\controller\main_controller */
 	protected $contactadmin;
 
 	public function __construct(
 		auth $auth,
-		cache $cache,
+		service $cache,
 		config $config,
 		helper $helper,
 		language $language,
@@ -84,9 +86,9 @@ class main_listener implements EventSubscriberInterface
 		user $user,
 		sfsgroups $sfsgroups,
 		sfsapi $sfsapi,
-		string $root_path,
-		string $php_ext,
-		contactadmin $contactadmin = null)
+		$root_path,
+		$php_ext,
+		\rmcgirr83\contactadmin\controller\main_controller $contactadmin = null)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -128,7 +130,7 @@ class main_listener implements EventSubscriberInterface
 	 * Check for and create if needed admins and mods cache
 	 *
 	 * @param object $event The event object
-	 * @return void
+	 * @return null
 	 * @access public
 	 */
 	public function user_setup_after($event)
@@ -141,7 +143,7 @@ class main_listener implements EventSubscriberInterface
 	* user_sfs_validate_registration		validate a users registration event
 	*
 	* @param	$event	the event object
-	* @return 	null
+	* @return 	$error
 	* @access	public
 	*/
 	public function user_sfs_validate_registration($event)
@@ -153,15 +155,9 @@ class main_listener implements EventSubscriberInterface
 
 		$error_array = $event['error'];
 
-		// validate the user ip
-		$userip_error = $this->validate_ip($this->user->ip);
-		if ($userip_error)
-		{
-			$error_array[] = $userip_error;
-		}
-
 		/* On registration and only when all errors have cleared
 		 * do not want the admin message area to fill up
+		 * stopforumspam only works with IPv4 not IPv6
 		*/
 		if (!sizeof($error_array))
 		{
@@ -188,7 +184,7 @@ class main_listener implements EventSubscriberInterface
 	* poster_data_email			inject email address into posting if allowed for guests
 	*
 	* @param	$event			the event object
-	* @return 	void
+	* @return 	null
 	* @access	public
 	*/
 	public function poster_data_email($event)
@@ -207,7 +203,7 @@ class main_listener implements EventSubscriberInterface
 	* poster_modify_message_text	inject email address into post data  for validation
 	*
 	* @param	$event			the event object
-	* @return 	void
+	* @return 	null
 	* @access	public
 	*/
 	public function poster_modify_message_text($event)
@@ -221,7 +217,7 @@ class main_listener implements EventSubscriberInterface
 	* user_sfs_validate_posting		validate username and email for guest posting
 	*
 	* @param	$event			the event object
-	* @return 	void
+	* @return 	$error_array
 	* @access	public
 	*/
 	public function user_sfs_validate_posting($event)
@@ -253,13 +249,6 @@ class main_listener implements EventSubscriberInterface
 				}
 			}
 
-			// validate the user ip
-			$userip_error = $this->validate_ip($event['post_data']['user_ip']);
-			if ($userip_error)
-			{
-				$error_array[] = $userip_error;
-			}
-
 			if (!sizeof($error_array))
 			{
 				$check = $this->stopforumspam_check($event['post_data']['username'], $this->user->ip, $event['post_data']['email']);
@@ -286,7 +275,7 @@ class main_listener implements EventSubscriberInterface
 	/*
 	* update_sfs_admin_mods 			update admin and mods cache when adding|deleting users to|from a group
 	* @param 		$event				event object
-	* @return		void
+	* @return		null
 	* @access		public
 	*/
 	public function update_sfs_admin_mods($event)
@@ -349,77 +338,65 @@ class main_listener implements EventSubscriberInterface
 
 		// ensure we have an IP and email address..this may happen if users have "post" bots on the forum
 		// also ensure the IP is something other than 127.0.0.1 which can happen if the anonymised extension is installed
-		if (empty($this->validate_ip($row['poster_ip'])) && filter_var($row['poster_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE))
-		{
-			$sfs_report_allowed = (!empty($row['user_email']) && $event['poster_id'] != ANONYMOUS && !$row['sfs_reported']) ? true : false;
+		$sfs_report_allowed = (!empty($row['poster_ip'] && $row['poster_ip'] != '127.0.0.1') && !empty($row['user_email']) && $event['poster_id'] != ANONYMOUS) ? true : false;
 
-			if ($sfs_report_allowed && in_array($this->user->data['user_id'], $this->sfs_admins_mods) && !in_array((int) $event['poster_id'], $this->sfs_admins_mods))
-			{
-				$reporttosfs_url = $this->helper->route('rmcgirr83_stopforumspam_core_reporttosfs', ['postid' => (int) $row['post_id'], 'posterid' => (int) $event['poster_id']]);
-				$event['post_row'] = array_merge($event['post_row'], [
-					'S_SFS'	=> true,
-					'U_SFS'	=> $reporttosfs_url,
-				]);
-			}
+		if ($sfs_report_allowed && in_array($this->user->data['user_id'], $this->sfs_admins_mods) && !in_array((int) $event['poster_id'], $this->sfs_admins_mods))
+		{
+			$reporttosfs_url = $this->helper->route('rmcgirr83_stopforumspam_core_reporttosfs', ['postid' => (int) $row['post_id'], 'posterid' => (int) $event['poster_id']]);
+
+			$event['post_row'] = array_merge($event['post_row'], [
+				'SFS_LINK'			=> (!$row['sfs_reported']) ? $reporttosfs_url : '',
+			]);
 		}
 	}
 
 	/*
-	* ucp_pm_view_message		show a link to report a spammer
-	* @param 	$event			event object
-	* @return	bool
+	* ucp_pm_view_message				show a link to report a spammer
+	* @param 	$event					event object
+	* @return	void
 	* @access	public
 	*/
 	public function ucp_pm_view_message($event)
 	{
 		$user_info = $event['user_info'];
 
-		$allowed = ($this->config['allow_sfs'] && $this->config['allow_pm_report'] && !empty($this->config['sfs_api_key']) && $this->config['sfs_report_pm']) ? true : false;
-
-		if (!$allowed || $this->user->data['user_id'] == $user_info['user_id'])
+		if (empty($this->config['allow_sfs']) || empty($this->config['sfs_api_key']) || $this->user->data['user_id'] == $user_info['user_id'])
 		{
-			return false;
+			return;
 		}
 
 		// get mods and admins
 		$this->sfs_admins_mods = $this->sfsgroups->getadminsmods(0);
 
-		if (in_array((int) $user_info['user_id'], $this->sfs_admins_mods))
-		{
-			return false;
-		}
-
 		$message_row = $event['message_row'];
 
 		// ensure we have an IP and email address..this may happen if users have "post" bots on the forum
 		// also ensure the IP is something other than 127.0.0.1 which can happen if the anonymised extension is installed
-		if (empty($this->validate_ip($user_info['author_ip'])) && filter_var($user_info['author_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE))
+		$sfs_report_allowed = (!empty($user_info['author_ip'] && $user_info['author_ip'] != '127.0.0.1') && !empty($user_info['user_email']) && !in_array((int) $user_info['user_id'], $this->sfs_admins_mods)) ? true : false;
+
+		if ($sfs_report_allowed)
 		{
-			$sfs_report_allowed = (!empty($user_info['user_email'])) ? true : false;
+			$reporttosfs_url = $this->helper->route('rmcgirr83_stopforumspam_core_report_pm_to_sfs', ['msgid' => (int) $message_row['msg_id'], 'authorid' => (int) $user_info['user_id']]);
 
-			if ($sfs_report_allowed && !$message_row['sfs_reported'] )
-			{
-				$reporttosfs_url = $this->helper->route('rmcgirr83_stopforumspam_core_report_pm_to_sfs', ['postid' => (int) $message_row['msg_id'], 'posterid' => (int) $user_info['user_id']]);
+			$report_link = '<a href="' . $reporttosfs_url . '" title="' . $this->language->lang('REPORT_TO_SFS'). '" data-ajax="report_pm_to_sfs" class="button button-icon-only"><i class="icon fa-exchange fa-fw" aria-hidden="true"></i><span class="sr-only">' . $this->language->lang('REPORT_TO_SFS'). '</span></a>';
 
-				$event['msg_data'] = array_merge($event['msg_data'], [
-					'S_SFS'		=> true,
-					'U_SFS'		=> $reporttosfs_url,
-				]);
-			}
+			$event['msg_data'] = array_merge($event['msg_data'], [
+				'SFS_LINK'			=> (!$message_row['sfs_reported'] && $this->config['allow_pm_report']) ? $report_link : '',
+			]);
 		}
 	}
 
 	/*
 	* show_message
-	* @param 	string	$check 		the type of check we are, uhmmm, checking
-	* @return 	string
-	* @access	private
+	* @param 		string	$check 		the type of check we are, uhmmm, checking
+	* @return 		string
+	* @access		public
 	*/
 	private function show_message($check = '')
 	{
 		if ($check === 'sfs_down')
 		{
-			return $this->language->lang('SFS_ERROR_MESSAGE');
+			return $this->user->lang['SFS_ERROR_MESSAGE'];
 		}
 		else
 		{
@@ -446,7 +423,7 @@ class main_listener implements EventSubscriberInterface
 	* @param	string	$ip				the users ip
 	* @param	string	$email			email from the forum inputs
 	* @return 	bool|string				true if found, false if not, string if other
-	* @access	private
+	* @access	public
 	*/
 	private function stopforumspam_check($username, $ip, $email)
 	{
@@ -463,9 +440,9 @@ class main_listener implements EventSubscriberInterface
 		// Check if user is a spammer, but only if we successfully got the SFS data
 		if ($json_decode['success'])
 		{
-			$username_freq = (int) $json_decode['username']['frequency'];
-			$email_freq = (int) $json_decode['email']['frequency'];
-			$ip_freq = (int) $json_decode['ip']['frequency'];
+			$username_freq = $json_decode['username']['frequency'];
+			$email_freq = $json_decode['email']['frequency'];
+			$ip_freq = $json_decode['ip']['frequency'];
 
 			// ACP settings in effect
 			if ($this->config['sfs_by_name'] == false)
@@ -490,7 +467,7 @@ class main_listener implements EventSubscriberInterface
 			{
 				if ($sfs_log_message)
 				{
-					$this->log_message('user', $username, $ip, 'LOG_SFS_MESSAGE', $email, $username_freq, $ip_freq, $email_freq);
+					$this->log_message('user', $username, $ip, 'LOG_SFS_MESSAGE', $email);
 				}
 				//user is a spammer
 				return true;
@@ -518,71 +495,36 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/*
-	* log_message	function used in this class to inject messages into the logs
+	* log_message					function used in this class to inject messages into the logs
 	* @param 	string	$mode 		the mode that we are doing for the log either admin or user
 	* @param	string	$username	the users name
 	* @param	string	$ip			the users ip
 	* @param	string	$message	the message we are injecting
 	* @param	string	$email		email from the forum inputs
 	* @return 	void
-	* @access	private
+	* @access	public
 	*/
-	private function log_message($mode, $username, $ip, $message, $email, $username_score = 0, $ip_score = 0, $email_score = 0)
+	private function log_message($mode, $username, $ip, $message, $email)
 	{
+		$sfs_ip_check = $this->language->lang('SFS_IP_STOPPED', $ip);
+		$sfs_username_check = $this->language->lang('SFS_USERNAME_STOPPED', $username);
+		$sfs_email_check = $this->language->lang('SFS_EMAIL_STOPPED', $email);
 
 		if ($mode === 'admin')
 		{
-			$sfs_ip = $this->language->lang('SFS_IP_STOPPED', $ip);
-			$sfs_username_ = $this->language->lang('SFS_USERNAME_STOPPED', $username);
-			$sfs_email = $this->language->lang('SFS_EMAIL_STOPPED', $email);
-
-			$this->log->add('admin', $this->user->data['user_id'], $ip, $message, false, [$sfs_username, $sfs_ip, $sfs_email]);
+			$this->log->add('admin', $this->user->data['user_id'], $ip, $message, false, [$sfs_username_check, $sfs_ip_check, $sfs_email_check]);
 		}
 		else
 		{
-			$sfs_ip = $this->language->lang('SFS_IP_STOPPED_SCORE', $ip);
-			$sfs_username = $this->language->lang('SFS_USERNAME_STOPPED_SCORE', $username);
-			$sfs_email = $this->language->lang('SFS_EMAIL_STOPPED_SCORE', $email);
-
-			if ($this->config['sfs_by_name'] == false)
-			{
-				$username_score = $this->language->lang('SFS_NOT_CHECKED');
-			}
-			else
-			{
-				$username_score = $this->language->lang('SFS_FREQUENCY', $username_score);
-			}
-
-			if ($this->config['sfs_by_email'] == false)
-			{
-				$email_score = $this->language->lang('SFS_NOT_CHECKED');
-			}
-			else
-			{
-				$email_score = $this->language->lang('SFS_FREQUENCY', $email_score);
-			}
-
-			if ($this->config['sfs_by_ip'] == false)
-			{
-				$ip_score = $this->language->lang('SFS_NOT_CHECKED');
-			}
-			else
-			{
-				$ip_score = $this->language->lang('SFS_FREQUENCY', $ip_score);
-			}
-			$sfs_ip .= $ip_score;
-			$sfs_username .= $username_score;
-			$sfs_email .= $email_score;
-
-			$this->log->add('user', $this->user->data['user_id'], $ip, $message, false, ['reportee_id' => $this->user->data['user_id'], $sfs_username, $sfs_ip, $sfs_email]);
+			$this->log->add('user', $this->user->data['user_id'], $ip, $message, false, ['reportee_id' => $this->user->data['user_id'], $sfs_username_check, $sfs_ip_check, $sfs_email_check]);
 		}
 	}
 
 	/*
-	* validate_email	function used in this class to validate a guest posters email address
+	* validate_email			function used in this class to validate a guest posters email address
 	* @param	string	$email	email from the forum inputs
 	* @return 	string
-	* @access	private
+	* @access	public
 	*/
 	private function validate_email($email)
 	{
@@ -592,10 +534,10 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/*
-	* validate_username	function used in this class to validate a guest posters username
+	* validate_username		function used in this class to validate a guest posters username
 	* @param	string	$username	username from the forum inputs
 	* @return 	array
-	* @access	private
+	* @access	public
 	*/
 	private function validate_username($username)
 	{
@@ -609,24 +551,6 @@ class main_listener implements EventSubscriberInterface
 		{
 			$min_max_amount = ($result == 'TOO_SHORT') ? $this->config['min_name_chars'] : $this->config['max_name_chars'];
 			$error[] = $this->language->lang('FIELD_' . $result, $min_max_amount, $this->language->lang('USERNAME'));
-		}
-
-		return $error;
-	}
-
-	/*
-	* validate_ip		function used in this class to validate an ip address
-	* @param	string	$ip		the users ip
-	* @return 	string
-	* @access	private
-	*/
-	private function validate_ip($ip)
-	{
-		$error = '';
-
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) === false)
-		{
-			$error = $this->language->lang('INVALID_IP_ADDRESS');
 		}
 
 		return $error;

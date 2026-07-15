@@ -6,8 +6,8 @@ rmcgirr83_stopforumspam_core_reporttosfs:
         posterid: \d+
 
 rmcgirr83_stopforumspam_core_report_pm_to_sfs:
-    path: /reportpmtosfs/{postid}/{posterid}
+    path: /report_pm_to_sfs/{msgid}/{authorid}
     defaults: { _controller: rmcgirr83.stopforumspam.core.report_pm_to_sfs:report_pm_to_sfs }
     requirements:
-        postid:  \d+
-        posterid: \d+
+        msgid:  \d+
+        authorid: \d+        
