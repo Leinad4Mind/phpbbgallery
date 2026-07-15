@@ -1,0 +1,78 @@
+{% include 'overall_header.html' %}
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbgdpr/vendor/bootstrap/css/bootstrap_modified.css -->
+
+<h1>{{ lang('GDPR') }}</h1>
+<p>{{ lang('DELETED_USERS', SITESPLAT_BBGDPR_DELETED) }}<br />{{ lang('ACP_BBGDPR_EXPLAIN') }}</p>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('PRIVACY_POLICY') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_privacy_policy">{{ lang('PRIVACY_POLICY') ~ lang('COLON') }}</label><br><span>{{ lang('PRIVACY_POLICY_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_privacy_policy" rows="15">{{ SITESPLAT_BBGDPR_PRIVACY_POLICY }}</textarea>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('COOKIES_BANNER') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_js">{{ lang('TRACKING_CODES') ~ lang('COLON') }}</label><br><span>{{ lang('TRACKING_CODES_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_js" rows="15">{{ SITESPLAT_BBGDPR_JS }}</textarea>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_adsense">{{ lang('SITESPLAT_BBGDPR_ADSENSE') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_ADSENSE_EXPLAIN') }}</span></dt>
+			<dd>
+				<textarea name="sitesplat_bbgdpr_adsense" rows="15">{{ SITESPLAT_BBGDPR_ADSENSE }}</textarea>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_geoip">{{ lang('SITESPLAT_BBGDPR_GEOIP') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_GEOIP_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_geoip" value="1"{% if SITESPLAT_BBGDPR_GEOIP %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_geoip" value="0"{% if not SITESPLAT_BBGDPR_GEOIP %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_delete_keep_username">{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="1"{% if SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_delete_keep_username" value="0"{% if not SITESPLAT_BBGDPR_DELETE_KEEP_USERNAME %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_accept_old_users">{{ lang('SITESPLAT_BBGDPR_ACCEPT_OLD_USERS') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_ACCEPT_OLD_USERS_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_accept_old_users" value="1"{% if SITESPLAT_BBGDPR_ACCEPT_OLD_USERS %} id="display_active" checked{% endif %} /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_accept_old_users" value="0"{% if not SITESPLAT_BBGDPR_ACCEPT_OLD_USERS %} id="display_active" checked{% endif %} /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="sitesplat_bbgdpr_request_delete">{{ lang('SITESPLAT_BBGDPR_REQUEST_DELETE') ~ lang('COLON') }}</label><br><span>{{ lang('SITESPLAT_BBGDPR_REQUEST_DELETE_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_request_delete" value="1"{% if SITESPLAT_BBGDPR_REQUEST_DELETE %} id="display_active" checked{% endif %} /> {L_REQUEST_DELETE}</label>
+				<label><input type="radio" class="radio" name="sitesplat_bbgdpr_request_delete" value="0"{% if not SITESPLAT_BBGDPR_REQUEST_DELETE %} id="display_active" checked{% endif %} /> {L_SELF_DELETE}</label>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+</form>
+
+{% include 'overall_footer.html' %}

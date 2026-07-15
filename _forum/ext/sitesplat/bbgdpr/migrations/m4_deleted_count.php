@@ -1,0 +1,30 @@
+<?php
+/**
+*
+* @package BBgdpr
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*/
+
+namespace sitesplat\bbgdpr\migrations;
+
+class m4_deleted_count extends \phpbb\db\migration\migration
+{
+	public function effectively_installed()
+	{
+		return $this->config->offsetExists('sitesplat_bbgdpr_deleted');
+	}
+
+	static public function depends_on()
+	{
+		return array('\sitesplat\bbgdpr\migrations\m3_acp');
+	}
+
+	public function update_data()
+	{
+		return array(
+			array('config.add', array('sitesplat_bbgdpr_deleted', 0)),
+			array('config.add', array('sitesplat_bbgdpr_delete_keep_username', 0)),
+		);
+	}
+}

@@ -1,0 +1,48 @@
+{% include 'ucp_header.html' %}
+<fieldset class="framed-ucp">
+    <legend>{{ lang('UCP_REVIEW') }}</legend>
+	   <p>{{ lang('UCP_REVIEW_EXPLAIN') }}</p>
+	<dl class="details">
+		<dt>{{ lang('USERNAME') }}{{ lang('COLON') }}</dt>
+		<dd>{{ USERNAME }}</dd>
+
+		{% if BIRTHDAY %}
+			<dt>{{ lang('BIRTHDAY') }}{{ lang('COLON') }}</dt>
+			<dd>{{ BIRTHDAY }}</dd>
+		{% endif %}
+
+		<dt>{{ lang('REG_DATE') }}{{ lang('COLON') }}</dt>
+		<dd>{{ REG_DATE }}</dd>
+
+		<dt>{{ lang('PRIVACY_ACCEPT_DATE') }}{{ lang('COLON') }}</dt>
+		<dd>{{ PRIVACY_ACCEPT_DATE }}</dd>
+
+		<dt>{{ lang('COOKIE_ACCEPT_DATE') }}{{ lang('COLON') }}</dt>
+		<dd>{{ COOKIE_ACCEPT_DATE }}</dd>
+
+		{% if MCP_ACCEPT_DATE %}
+			<dt>{{ lang('MCP_ACCEPT_DATE') }}{{ lang('COLON') }}</dt>
+			<dd>{{ MCP_ACCEPT_DATE }}</dd>
+		{% endif %}
+
+		<dt>{{ lang('EMAIL') }}{{ lang('COLON') }}</dt>
+		<dd>{{ EMAIL }}</dd>
+
+		<dt>{{ lang('REG_IP') }}{{ lang('COLON') }}</dt>
+		<dd>{{ REG_IP }}</dd>
+
+		{% for cpf in cpf_data %}
+			<dt>{{ cpf.FIELD_NAME }}{{ lang('COLON') }}</dt><dd>{{ cpf.FIELD_DATA }}</dd>
+		{% endfor %}
+
+		{% if ips %}
+			<dt>{{ lang('USER_IPS') }}{{ lang('COLON') }}</dt>
+			<dd>
+				{% for ip in ips %}
+					{{ ip.IP }}<br>
+				{% endfor %}
+			</dd>
+		{% endif %}
+	</dl>
+</fieldset>
+{% include 'ucp_footer.html' %}
