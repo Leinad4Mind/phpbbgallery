@@ -19,6 +19,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 			'core.display_custom_bbcodes_modify_sql'	=> 'custom_bbcode_modify_sql',
 			'core.display_custom_bbcodes_modify_row'	=> 'display_custom_bbcodes',
 			'core.modify_bbcode_init'					=> 'allow_custom_bbcodes',
+			'core.text_formatter_s9e_parser_setup'		=> 'check_custom_bbcodes32',
 		);
 	}
 
@@ -26,13 +27,15 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 	protected $user;
 	protected $template;
 	protected $default_bbcodes_table;
+	protected $bbcodes_table;
 	protected $memberships;
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\template\template $template, $default_bbcodes_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\template\template $template, $default_bbcodes_table, $bbcodes_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
 		$this->template = $template;
 		$this->default_bbcodes_table = $default_bbcodes_table;
+		$this->bbcodes_table = $bbcodes_table;
 	}
 
 	public function load_language_on_setup($event)
@@ -85,6 +88,21 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 		}
 
 		$event['bbcodes'] = $bbcodes;
+	}
+
+	public function check_custom_bbcodes32($event)
+	{
+		$sql = 'SELECT bbcode_tag, bbcode_group
+				FROM ' . $this->bbcodes_table;
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			if (!$this->user_in_bbcode_group($row['bbcode_group']))
+			{
+				$event['parser']->disable_bbcode(str_replace('=', '', $row['bbcode_tag']));
+			}
+		}
+		$this->db->sql_freeresult($result);
 	}
 
 	protected function user_in_bbcode_group($group_ids = '')

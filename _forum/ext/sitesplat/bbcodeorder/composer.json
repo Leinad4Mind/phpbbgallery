@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Enhances default BBcodes and allows some essential combinations. Custom icons, Group permission, sorting, ordering and more...",
     "homepage": "http://sitesplat.com",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "license": "Proprietary/All rights reserved",
     "authors": [
         {
@@ -23,8 +23,9 @@
         },
 		"version-check": {
             "host": "sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "bbcodeorder.json"
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbcodeorder.json",
+			"ssl": true
 		}
     }
 }

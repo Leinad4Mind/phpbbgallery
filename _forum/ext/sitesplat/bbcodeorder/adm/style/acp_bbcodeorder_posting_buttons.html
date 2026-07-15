@@ -77,16 +77,16 @@
 					{% endif %}	
 				{% elseif bbcode.BBCODE_TAG == 'size=' %}
 					{% if not SELECTBOX_PRESENT %}
-						<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="bbcodeorder_addbbcode20" onchange="bbfontstyle('[size=' + this.form.bbcodeorder_addbbcode20.options[this.form.bbcodeorder_addbbcode20.selectedIndex].value + ']', '[/size]');this.form.bbcodeorder_addbbcode20.selectedIndex = 2;" title="{{ lang('BBCODE_F_HELP') }}">
-							<option value="50">{{ lang('FONT_TINY') }}</option>
-							<option value="85">{{ lang('FONT_SMALL') }}</option>
-							<option value="100" selected="selected">{{ lang('FONT_NORMAL') }}</option>
-							{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 %}
-							<option value="150">{{ lang('FONT_LARGE') }}</option>
-								{% if not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 %}
-									<option value="200">{{ lang('FONT_HUGE') }}</option>
-								{% endif %}
-							{% endif %}
+						<select name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+							<option value="50">{L_FONT_TINY}</option>
+							<option value="85">{L_FONT_SMALL}</option>
+							<option value="100" selected="selected">{L_FONT_NORMAL}</option>
+							<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
+							<option value="150">{L_FONT_LARGE}</option>
+							<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
+							<option value="200">{L_FONT_HUGE}</option>
+							<!-- ENDIF -->
+							<!-- ENDIF -->
 						</select>
 					{% endif %}
 				{% elseif bbcode.BBCODE_TAG == '-' %}

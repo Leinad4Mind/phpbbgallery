@@ -26,5 +26,6 @@ services:
             - '@user'
             - '@template'
             - '%core.table_prefix%default_bbcodes'
+            - '%core.table_prefix%bbcodes'
         tags:
             - { name: event.listener }
