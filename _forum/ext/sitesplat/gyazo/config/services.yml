@@ -1,0 +1,10 @@
+services:
+    sitesplat.gyazo.listener:
+        class: sitesplat\gyazo\event\listener
+        arguments:
+            - '@config'
+            - '@user'
+            - '@template'
+            - '@request'
+        tags:
+            - { name: event.listener }
