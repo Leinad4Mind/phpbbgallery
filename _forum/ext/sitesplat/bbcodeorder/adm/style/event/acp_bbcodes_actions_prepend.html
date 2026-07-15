@@ -1,0 +1,15 @@
+<span class="up-disabled" style="display: none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+<span class="up"><a href="{{ bbcodes.U_MOVE_UP }}" data-ajax="row_up" data-overlay="false">{{ ICON_MOVE_UP }}</a></span>
+<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+<span class="down"><a href="{{ bbcodes.U_MOVE_DOWN }}" data-ajax="row_down" data-overlay="false">{{ ICON_MOVE_DOWN }}</a></span>
+{% if bbcodes.S_IS_DEFAULT %}
+	<span class="bbcode-is-default"></span>
+	{% if not bbcodes.S_IS_DIVIDER %}
+		{% if bbcodes.S_IS_HIDDEN %}
+			<a href="{{ bbcodes.U_SHOW }}">{{ ICON_SHOW }}</a>
+		{% else %}
+			<a href="{{ bbcodes.U_DELETE }}">{{ ICON_HIDE }}</a>
+		{% endif %}
+	{% endif %}
+{% endif %}
+{% if bbcodes.S_IS_DIVIDER %}<span class="bbcode-is-divider"></span>{% endif %}

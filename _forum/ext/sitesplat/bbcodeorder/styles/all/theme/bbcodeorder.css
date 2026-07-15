@@ -1,0 +1,8 @@
+/* Hide native phpbb BBCode buttons */
+#imgurAnchor, #sitesplat_snappy_quickreply { display: none }
+
+/* font familty border fix */
+.btn-toolbar-bbcodeorder .btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
