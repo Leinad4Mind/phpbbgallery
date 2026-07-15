@@ -1,11 +1,11 @@
 <?php
-/**
-* [Spanish [Es]]
+/*
+* media.php [Spanish [Es]]
 * @package Ext Common Core
-* @version 1.1.1 15/01/2023
+* @version v1.0.4 01/02/2020
 *
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -16,7 +16,7 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
 $lang = array_merge($lang, array(
@@ -39,10 +39,8 @@ $lang = array_merge($lang, array(
 	'FILES_DROP'			=> 'Suelte los archivos para subirlos',
 	'FILES_REMOVE_CONFIRM'	=> 'Está a punto de eliminar permanentemente los archivos seleccionados<br />¿Desea continuar?',
 	'FORMAT_INVALID'		=> 'Formato no válido',
-	'MAX_IMAGESIZE'			=> 'Las imágenes se redimensionarán a %d x %d píxeles.',
 	'MAX_FILESIZE'			=> 'Tamaño máximo de archivo: %s.',
 	'MEDIA_UPDATED'			=> 'Cambios guardados',
-	'OR'					=> 'o',
 	'PROCCESS'				=> 'Procesar',
 	'SELECT_ICON'			=> 'Seleccionar icono nuevo',
 	'SELECT_IMAGE'			=> 'Seleccionar imagen nueva',

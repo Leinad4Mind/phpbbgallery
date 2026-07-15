@@ -1,0 +1,60 @@
+
+<!-- IF S_EDITOR_ID -->
+	<!-- IF S_EDITOR_NAME -->
+	<div class="editor-wrapper">
+		<textarea id="editor-{S_EDITOR_ID}" name="{S_EDITOR_NAME}" class="cbb-inputbox" rows="{S_EDITOR_ROWS}">{S_EDITOR_CONTENT}</textarea>
+	<!-- ENDIF -->
+
+	<script type="text/html" id="tpl-editor-bbcodes-{S_EDITOR_ID}">
+		<button type="button" title="{L_BBCODE_B_HELP}" data-code="b"><i class="fa fa-bold fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_I_HELP}" data-code="i"><i class="fa fa-italic fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_U_HELP}" data-code="u"><i class="fa fa-underline fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_Q_HELP}" data-code="quote"><i class="fa fa-quote-left fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_C_HELP}" data-code="code"><i class="fa fa-code fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_L_HELP}" data-code="list"><i class="fa fa-list fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_O_HELP}" data-code="list=1"><i class="fa fa-list-ol fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_LISTITEM_HELP}" data-code="*"><i class="fa fa-asterisk fa-fw" aria-hidden="true"></i></button>
+		<button type="button" title="{L_BBCODE_P_HELP}" data-code="img"><i class="fa fa-image fa-fw" aria-hidden="true"></i></button>
+		<!-- IF S_BBCODE_URL -->
+		<button type="button" title="{L_BBCODE_W_HELP}" data-code="url"><i class="fa fa-link fa-fw" aria-hidden="true"></i></button>
+		<!-- ENDIF -->
+		<button type="button" title="{L_BBCODE_S_HELP}" data-code="color"><i class="fa fa-tint fa-fw" aria-hidden="true"></i></button>
+		<select class="selectpicker" title="{L_BBCODE_F_HELP}" data-style="btn btn-sm btn-default" data-code="size" data-width="auto">
+			<option value="50">{L_FONT_TINY}</option>
+			<option value="85">{L_FONT_SMALL}</option>
+			<option value="100" selected="selected">{L_FONT_NORMAL}</option>
+		<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
+			<option value="150">{L_FONT_LARGE}</option>
+			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
+			<option value="200">{L_FONT_HUGE}</option>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+		</select>
+
+	<!-- IF S_SHOW_REMOVEFORMAT -->
+		<button type="button" title="{L_REMOVE_FORMAT}" data-code="removeformat"><i class="fa fa-eraser fa-fw" aria-hidden="true"></i></button>
+	<!-- ENDIF -->
+
+	<!-- BEGIN editor_custom_tag -->
+		<!-- IF editor_custom_tag.BBCODE_CUSTOM_TEMPLATE -->
+			{editor_custom_tag.BBCODE_CUSTOM_TEMPLATE}
+		<!-- ELSE -->
+			<button type="button" data-code="{editor_custom_tag.BBCODE_CODE}" data-custom="1" title="{editor_custom_tag.BBCODE_HELPLINE}"><!-- IF editor_custom_tag.BBCODE_ICON -->{editor_custom_tag.BBCODE_ICON}<!-- ELSE -->{editor_custom_tag.BBCODE_TAG}<!-- ENDIF --></button>
+		<!-- ENDIF -->
+	<!-- END editor_custom_tag -->
+
+		<button type="button" data-menu="custom-bbcodes" class="dropdown-select"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></button>
+	</script>
+
+	<!-- IF S_EDITOR_NAME -->
+		<script>
+			window._jPostponed = window._jPostponed || [];
+			window._jPostponed.push(function() {
+				$('#editor-{S_EDITOR_ID}').cbbEditorWrapper({S_EDITOR_OPTIONS});
+			});
+		</script>
+	</div>
+	<!-- ELSE -->
+		<script type="application/json" id="editor-options-{S_EDITOR_ID}">{S_EDITOR_OPTIONS}</script>
+	<!-- ENDIF -->
+<!-- ENDIF -->

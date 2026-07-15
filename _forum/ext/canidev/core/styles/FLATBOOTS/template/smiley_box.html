@@ -1,25 +1,25 @@
 
 	<div class="cbb-smiley-container">
-	{% for smiley in loops.smileyrow %}
-		<a href="#" data-code="{{ smiley.SMILEY_CODE }}">
-			<img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" />
+	<!-- BEGIN smileyrow -->
+		<a href="#" data-code="{smileyrow.SMILEY_CODE}">
+			<img src="{smileyrow.SMILEY_IMG}" width="{smileyrow.SMILEY_WIDTH}" height="{smileyrow.SMILEY_HEIGHT}" alt="{smileyrow.SMILEY_CODE}" title="{smileyrow.SMILEY_DESC}" />
 		</a>
-	{% endfor %}
+	<!-- END smileyrow -->
 	</div>
 
-{% if smiley_pagination|length %}
+<!-- IF .smiley_pagination -->
 	<div class="pull-right">	 
 		<ul class="pagination pagination-xs pagination-forum hidden-xs">
-		{% for pagination in loops.smiley_pagination %}
-			{% if pagination.S_IS_CURRENT %}
-			<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
-			{% elseif pagination.S_IS_ELLIPSIS %}
-			<li class="ellipsis" role="separator"><span>{{ lang('ELLIPSIS') }}</span></li>
-			{% elseif not pagination.S_IS_NEXT and not pagination.S_IS_PREV %}
-			<li><a href="{{ pagination.PAGE_URL }}" role="button">{{ pagination.PAGE_NUMBER }}</a></li>
-			{% endif %}
-		{% endfor %}
+		<!-- BEGIN smiley_pagination -->
+			<!-- IF smiley_pagination.S_IS_CURRENT -->
+			<li class="active"><span>{smiley_pagination.PAGE_NUMBER}</span></li>
+			<!-- ELSEIF smiley_pagination.S_IS_ELLIPSIS -->
+			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
+			<!-- ELSEIF not smiley_pagination.S_IS_NEXT and not smiley_pagination.S_IS_PREV -->
+			<li><a href="{smiley_pagination.PAGE_URL}" role="button">{smiley_pagination.PAGE_NUMBER}</a></li>
+			<!-- ENDIF -->
+		<!-- END smiley_pagination -->
 		</ul>
 	</div>
 	<div class="cbb-helper-clear"></div>
-{% endif %}
+<!-- ENDIF -->

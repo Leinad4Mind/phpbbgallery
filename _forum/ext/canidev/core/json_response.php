@@ -1,13 +1,19 @@
 <?php
-/**
- * @package Ext Common Core
- * @version 1.1.1 15/01/2023
- *
- * @copyright (c) 2023 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/*
+* @package Ext Common Core
+* @version v1.0.4 01/02/2020
+*
+* @copyright (c) 2020 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 namespace canidev\core;
+
+// @ignore
+if(!defined('IN_PHPBB'))
+{
+	exit;
+}
 
 /**
 * JSON class
@@ -21,57 +27,22 @@ class json_response
 
 	static $instance;
 	
-	/**
-	 * Constructor
-	 */
 	public function __construct()
 	{
 		$this->reset();
 	}
 	
-	/**
-	 * Add values to response
-	 * 
-	 * @param array|string 		$key 		Simple key or array with key => value
-	 * @param string|null 		$value 		Set a single value if key is a string
-	 * 
-	 * @return json_response
-	 */
-	public function add($key, $value = null)
+	public function add($data)
 	{
-		if(is_array($key))
-		{
-			foreach($key as $k => $value)
-			{
-				$this->add($k, $value);
-			}
-
-			return $this;
-		}
-
-		if(is_array($value) && isset($this->cache[$key]) && is_array($this->cache[$key]))
-		{
-			$this->cache[$key] = array_merge($this->cache[$key], $value);
-		}
-		else
-		{
-			$this->cache[$key] = $value;
-		}
-
+		$this->cache = array_merge($this->cache, $data);
 		return $this;
 	}
 
-	/**
-	 * Add component to response
-	 * 
-	 * @param string 	$type
-	 * @param array 	$component
-	 */
 	public function add_component($type, $component)
 	{
 		if(!isset($this->cache['components'][$type]))
 		{
-			$this->cache['components'][$type] = [];
+			$this->cache['components'][$type] = array();
 		}
 
 		if($type == 'lang')
@@ -83,14 +54,6 @@ class json_response
 		$this->cache['components'][$type][] = $component;
 	}
 	
-	/**
-	 * Add HTML to response
-	 * 
-	 * @param string 	$html
-	 * @param bool 		$append 		Set if defined html must be overwrite
-	 * 
-	 * @return json_response
-	 */
 	public function add_html($html, $append = false)
 	{
 		if(!$append)
@@ -102,60 +65,20 @@ class json_response
 		
 		return $this;
 	}
-
-	/**
-	 * Send error message as return
-	 * 
-	 * @param string 	$message
-	 */
-	public function error($message)
-	{
-		$this
-			->reset()
-			->send(array(
-				'status'	=> self::JSON_STATUS_ERROR,
-				'message'	=> $message,
-			));
-	}
-
-	/**
-	 * Get response value
-	 * @return mixed
-	 */
-	public function get($key)
-	{
-		return isset($this->cache[$key]) ? $this->cache[$key] : '';
-	}
 	
-	/**
-	 * Check if response is initialized
-	 * @return bool
-	 */
 	public function is_requested()
 	{
-		return (sizeof($this->cache) > 2 || !empty($this->cache['htmlContent']));
+		return (sizeof($this->cache) > 2);
 	}
 	
-	/**
-	 * Reset all data
-	 * @return json_response
-	 */
 	public function reset()
 	{
 		$this->cache = array(
-			'components'	=> [],
+			'components'	=> array(),
 			'htmlContent'	=> '',
 		);
-
-		return $this;
 	}
 	
-	/**
-	 * Send response to browser
-	 * 
-	 * @param array|false 		$data 			Additional data to be appened
-	 * @param bool 				$ignore_html 	Set if html must be send with response
-	 */
 	public function send($data = false, $ignore_html = false)
 	{
 		header('Content-Type: application/json');
@@ -181,22 +104,6 @@ class json_response
 		exit_handler();
 	}
 
-	/**
-	 * Set response status
-	 * 
-	 * @param int 	$status 	json_response::JSON_STATUS_SUCCESS | json_response::JSON_STATUS_ERROR
-	 * @return json_response
-	 */
-	public function set_status($status = self::JSON_STATUS_SUCCESS)
-	{
-		$this->cache['status'] = $status;
-		return $this;
-	}
-
-	/**
-	 * Get class instance
-	 * @return json_response
-	 */
 	static public function get_instance()
 	{
 		if(!self::$instance)

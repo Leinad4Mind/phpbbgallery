@@ -1,0 +1,28 @@
+<!-- IF not $CBBCORE_JS_LOADED -->
+
+{% set script_names = '' %}
+
+{% for script in core_script %}
+	{% if script.TYPE == 'text/javascript' %}
+		{% if script.IS_SINGLE %}
+			{% set script_names = script_names ~ '"' ~ script.SRC ~ '"' ~ ',' %}
+		{% else %}
+		<script>
+			head.ready('cbbcore.min.js', function () {
+				{{ script.DATA }}
+			});
+		</script>
+		{% endif %}
+	{% else %}
+		<script {{ script.PARAMS }}>{{ script.DATA }}</script>
+	{% endif %}
+{% endfor %}
+
+{% if script_names %}
+	<script>
+		head.load({{ script_names|trim(',') }});
+	</script>
+{% endif %}
+
+	<!-- DEFINE $CBBCORE_JS_LOADED = 1 -->
+<!-- ENDIF -->
