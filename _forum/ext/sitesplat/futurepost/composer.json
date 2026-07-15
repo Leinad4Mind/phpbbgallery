@@ -1,0 +1,35 @@
+{
+	"name": "sitesplat/futurepost",
+	"type": "phpbb-extension",
+	"description": "Allow to setup future posts and then post the content automatically once the date criteria is met.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.3",
+	"keywords": ["phpbb", "extension", "posts", "pages"],
+	"license": "@license Proprietary",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBPostDated",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbpostdated.json",
+			"ssl": true
+		}
+	}
+}
