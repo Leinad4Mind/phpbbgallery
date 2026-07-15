@@ -182,7 +182,7 @@ class top_topics extends \sitesplat\sidebar\types\type\base
 										'avatar_width'	=> $row['user_avatar_width'], 
 										'avatar_height'	=> $row['user_avatar_height'])), $match) :
 										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-				
+
 					$username_string = ($this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
 										get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
 										$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']);

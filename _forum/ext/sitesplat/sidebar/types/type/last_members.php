@@ -87,7 +87,7 @@ class last_members extends \sitesplat\sidebar\types\type\base
 						'avatar_width'     => $row['user_avatar_width'], 
 						'avatar_height'    => $row['user_avatar_height'])), $match) :
 						generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-
+						
 				if (count($match) > 1) {
 					$avatar = array_pop($match);
 					// fix an issue with BBrandom
@@ -98,7 +98,7 @@ class last_members extends \sitesplat\sidebar\types\type\base
 				}
 
 				$newest_users[$row['user_id']] = array(
-				//	'avatar'     			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
+					//	'avatar'     			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
 					'avatar'				=> $avatar,
 					'user_id'				=> $row['user_id'],
 					'username'				=> $row['username'],

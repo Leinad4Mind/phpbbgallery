@@ -38,10 +38,10 @@ $lang = array_merge($lang, array(
 	'CLOCK'				=> 'Time',
 	'LIKEDD'			=> 'Last likes',
 	
-	'LAST_BADGES'		=> 'Last badges',	
+	'LAST_BADGES'		=> 'Last badges',
 	'SIDEBAR_BADGE'		=> 'Badge name',
 	'SIDEBAR_DATE'		=> 'Date',
-	'LAST_BBREACTIONS'	=> 'Last BBreactions',
+	'LAST_BBREACTIONS'	=> 'Last reactions',
 	'SIDEBAR_REACTION'	=> 'Reaction type',
 	'BBPOINTS'			=> 'BBpoints',
 	'POLL'				=> 'Last poll',

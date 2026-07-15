@@ -1,27 +1,33 @@
-<!-- IF .last_likes -->
+{% if loops.last_likes|length %}
 <div class="sidebar">
-<div id="lastlikes{slot.SIDEBAR_ID}" class="panel panel-warning">
+<div id="lastlikes{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
     <div class="panel-heading">
-     <h4 class="panel-title">{L_LIKEDD}</h4>
+		{% if PHPBB_COLLAPSIBLE_ENABLED %}
+		<a class="toggle-lastlikes{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
+		{% endif %}
+		<span>{{ lang('LIKEDD') }}</span>
     </div>
-	<div class="panel-body">
-	 <div id="innerlastlikes{slot.SIDEBAR_ID}" class="inner">
+	 <div id="innerlastlikes{{ slot.SIDEBAR_ID }}" class="panel-body inner">
 		<ul class="media-list user-list">
-            <!-- BEGIN last_likes -->
-			<li class="media">
-			    <div class="media-left">
-                     <img alt="" src="{last_likes.AVATAR}" class="media-object img-circle">
-                </div>
-                <div class="media-body">
-					<div><i class="fa fa-thumbs-up"></i>&nbsp;{L_BY}&nbsp;{last_likes.USERNAME_FULL}</div>
-                    <a href="{last_likes.POST_URL}">{last_likes.SUBJECT}</a>
-                    <small class="date"><i class="fa fa-clock-o"></i>&nbsp;{last_likes.LIKE_DATE}</small>
-                </div>
-            </li>
-			<!-- END last_likes -->
+            {% for last_likes in loops.last_likes %}
+			<div class="media">
+				<div class="media-left">
+					<img alt="" src="{{ last_likes.AVATAR }}" class="media-object img-circle">
+				</div>
+				<div class="media-body">
+					<div class="media-heading">
+						<i class="fa fa-thumbs-up"></i>&nbsp;{{ last_likes.USERNAME_FULL }}
+					</div>
+					<a href="{{ last_likes.POST_URL }}">{{ last_likes.SUBJECT }}</a>
+				</div>
+				<div class="space10"></div>
+			</div>
+			{% endfor %}
 		</ul>
 	 </div>
-	</div>
 </div>
 </div>
-<!-- ENDIF -->
+{% if PHPBB_COLLAPSIBLE_ENABLED %}
+<script>head.ready(function(){(function(){window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}=window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}||"";if(window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}!=""){$(".toggle-lastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }});$("#innerlastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }})}$(".toggle-lastlikes{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-lastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerlastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-lastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerlastlikes{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.localStorage.toggle_lastlikes{{ slot.SIDEBAR_ID }}=""}})})()});</script>
+{% endif %}
+{% endif %}

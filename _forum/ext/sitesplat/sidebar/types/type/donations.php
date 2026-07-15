@@ -103,19 +103,20 @@ class donations extends \sitesplat\sidebar\types\type\base
 				FROM ' . $donations_table . ' d
 				LEFT JOIN ' . USERS_TABLE . " u ON u.user_id = d.user_id $sql_where $sql_and
 				AND d.payment_status = 'Completed'
+				AND d.payment_date >= UNIX_TIMESTAMP(DATE_SUB( CURDATE(), INTERVAL 1 MONTH)) 
 				ORDER BY d.payment_date DESC";
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-			  $match = array();
-			  $avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
+				$match = array();
+				$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
 						  phpbb_get_user_avatar(
 							  array('avatar'			=> $row['user_avatar'], 
 									'avatar_type'		=> $row['user_avatar_type'], 
 									'avatar_width'	=> $row['user_avatar_width'], 
 									'avatar_height'	=> $row['user_avatar_height'])), $match) :
 									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-				
+									
 				if (count($match) > 1) {
 					$avatar = array_pop($match);
 					// fix an issue with BBrandom
@@ -123,7 +124,7 @@ class donations extends \sitesplat\sidebar\types\type\base
 						$avatar = str_replace(['./../../', './../', './'], $board_url, $avatar);
 					}
 				}
-
+				
 				$donations[$row['user_id']] = array(
 					'user_id'  	    => $row['user_id'],
 					'username'      => $row['username'],
