@@ -23,7 +23,7 @@ $lang = array_merge($lang, array(
 	'AD_SIDEBAR_EXPLAIN'				=> 'Configure BBsidebar options and blocks. There are many configurations possible and with the use of the custom blocks there are no limits as it supports HTML. You can also choose to enable or disable completely the blocks for mobile and tablet devices.<br/> Please note, <strong>the blocks activity is cached for 5min</strong> to improve the server performance. In order to see immediate changes you will need to purge the forum cache from ACP > General : Purge the Cache.',
 	
 	'ACP_SIDEBAR_HEADSUP'				=> 'Heads up',
-	'ACP_SIDEBAR_HEADSIP_EXPLAIN'		=> '<strong>Custom</strong> type block allows HTML to be used. <br /><strong>Staff online</strong> type block will show the staff online in the forum. Create a new users Group named "staff" under "Users and Groups" &#187; "Manage groups" &#187; "Create new group" and then enter the username of the people you would like to display as staff online for the block.<br /><strong>Hot topics</strong> type block follows the board setting for the "popular topic" under: "Posting" &#187; "Messages" &#187; "Post settings" &#187; "Popular topic threshold"<br /><strong>Other Blocks</strong> Other blocks type become available after the corresponding Premium addon has been enabled. You can find many premium addons here: <a href="https://sitesplat.com/phpBB3/marketplace.php"><strong>Marketplace</strong></a>.',
+	'ACP_SIDEBAR_HEADSIP_EXPLAIN'		=> '<strong>Custom</strong> type block allows HTML to be used. <br /><strong>Staff online</strong> type block will show the staff online in the forum. Create a new users Group named "staff" under "Users and Groups" &#187; "Manage groups" &#187; "Create new group" and then enter the username of the people you would like to display as staff online for the block.<br /><strong>Hot topics</strong> type block follows the board setting for the "popular topic" under: "Posting" &#187; "Messages" &#187; "Post settings" &#187; "Popular topic threshold"<br /><strong>Other Blocks</strong> Other blocks type become available after the corresponding Premium addon has been enabled. You can find many premium addons here: <a href="http://www.sitesplat.com/phpBB3/marketplace.php"><strong>Marketplace</strong></a>.',
 	
 	'ACP_SIDEBAR_CONFIG'				=> 'BBsidebar',
 	'ACP_SIDEBAR_OPTIONS'				=> 'BBsidebar options',
@@ -78,15 +78,15 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_DEVELOPERS'				=> 'Developers',
 	
 	'SIDEBAR_TYPE_NOT_EXIST'			=> 'The Sidebar type `%1$s` does not exist.',
-	'NOTICE_BADGE'					    => 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=24"><strong>BBAwards</strong></a> is not installed, you can NOT use the BBAwards type block.',
-	'NOTICE_BBDONATION'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=44"><strong>BBDonation</strong></a> is not installed, you can NOT use the Donations type block.',
-	'NOTICE_BBMEMBERSHIP'				=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=31"><strong>BBMembership</strong></a> is not installed, you can NOT use the Membership type block.',
-	'NOTICE_BBPOINTS'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints type block.',
-	'NOTICE_BBREACTION'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=27"><strong>BBreaction</strong></a> is not installed, you can NOT use the BBreaction type block.',
-	'NOTICE_LIKEDD'						=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type block.',
-	'NOTICE_NEWSLETTER'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=21"><strong>E-mail Subscribers</strong></a> is not installed, you can NOT use the E-mail Subscribers type block.',
-	'NOTICE_BBDOWNLOAD'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php"><strong>BBdownloads</strong></a> is not installed, you can NOT use the Download type block.',
-	'SIDEBAR_NOTICE'					=> '<div style="width:auto;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
+	'NOTICE_BADGE'					    => 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=24"><strong>BBAwards</strong></a> is not installed, you can NOT use the BBAwards type block.',
+	'NOTICE_BBDONATION'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=44"><strong>BBDonation</strong></a> is not installed, you can NOT use the Donations type block.',
+	'NOTICE_BBMEMBERSHIP'				=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=31"><strong>BBMembership</strong></a> is not installed, you can NOT use the Membership type block.',
+	'NOTICE_BBPOINTS'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>BBpoints</strong></a> is not installed, you can NOT use the BBpoints type block.',
+	'NOTICE_BBREACTION'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=27"><strong>BBreaction</strong></a> is not installed, you can NOT use the BBreaction type block.',
+	'NOTICE_LIKEDD'						=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type block.',
+	'NOTICE_NEWSLETTER'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=21"><strong>E-mail Subscribers</strong></a> is not installed, you can NOT use the E-mail Subscribers type block.',
+	'NOTICE_BBDOWNLOAD'					=> 'The extension <a href="http://www.sitesplat.com/phpBB3/marketplace.php"><strong>BBdownloads</strong></a> is not installed, you can NOT use the Download type block.',
+	'SIDEBAR_NOTICE'					=> '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
 	'SS_HELPER_NOTY'					=> 'The BBcore addon does not exist!<br />Download the <a href="#">BBcore</a> and copy the folder to your sitesplat extension folder.',
 	
 	'SIDEBAR_TYPE_BBPOINTS'				=> 'BBpoints',
@@ -116,13 +116,13 @@ $lang = array_merge($lang, array(
 	'ONE_R'								=> 'R',
 	
 	
-	'SITESPLAT_COM'		                => 'https://sitesplat.com',
+	'SITESPLAT_COM'		                => 'http://sitesplat.com',
 	'SITESPLAT_COPY'		            => '&#169; SiteSplat',
 	'LICENSE_INFO'		                => 'Proprietary - SiteSplat All rights reserved',
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.4.7',
+	'ACP_SIDEBAR_VERSION'		        => '1.4.1',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',
@@ -131,6 +131,6 @@ $lang = array_merge($lang, array(
 	'SIDEBAR_TASKS_2'				    => 'Bootstrap grid system',
 	'SIDEBAR_TASKS_3'				    => 'Ignore rules',
 	'SIDEBAR_TASKS_4'				    => 'Fine tuning settings like mobile and tablet options',
-	'SIDEBAR_TASKS_5'				    => 'Expandable with support for many Premium addons out of the box. Checkout the premium addons on <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
+	'SIDEBAR_TASKS_5'				    => 'Expandable with support for many Premium addons out of the box. Checkout the premium addons on <a href="http://www.sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'SIDEBAR_TASKS_6'				    => 'Much more..!'
 ));

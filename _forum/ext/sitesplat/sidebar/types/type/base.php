@@ -53,49 +53,47 @@ abstract class base implements type_interface
  	/** 
  	* {@inheritdoc} 
  	*/ 
-	protected function ignore_users($post_users_argument = '')
+	protected function ignore_users()
 	{
-		// an array of user types we don't bother with
+		// an array of user types we dont' bother with
 		$ignore_users = $ignore_founders = array();
 		
 		$sql = 'SELECT group_id FROM ' . GROUPS_TABLE . ' WHERE group_name = "BOTS" AND group_type = ' . GROUP_SPECIAL;
 		$result = $this->db->sql_query($sql, 3600);
 		$bot_group = $this->db->sql_fetchfield('group_id');
 
-		if (!$this->sidebar_settings['ignore_inactive_users']) {
+		if (!$this->sidebar_settings['ignore_inactive_users'])
+		{
 			$ignore_users = array(USER_IGNORE, USER_INACTIVE);
 		}
 
-		if (!$this->sidebar_settings['ignore_founder']) {
+		if (!$this->sidebar_settings['ignore_founder'])
+		{
 			$ignore_founders = array(USER_FOUNDER);
 		}
 
 		$ignore_users = array_merge($ignore_users, $ignore_founders);
 
 		// Do we have anyone we want to ignore
-		$sql_where = 'WHERE ';
-		
-		if ($post_users_argument !== '') {
-			$sql_where .= $post_users_argument . ' AND ';
-		}
-		
-		$sql_where .= 'group_id <> ' . $bot_group . ' AND user_id <> ' . ANONYMOUS;
-
-		if (sizeof($ignore_users)) {
+		$sql_where = 'WHERE group_id <> ' . $bot_group . ' AND user_id <> ' . ANONYMOUS;
+		if (sizeof($ignore_users))
+		{
 			$sql_where .= ' AND ' . $this->db->sql_in_set('user_type', $ignore_users, true);
 		}
 		
-		if (!$this->sidebar_settings['ignore_admins_mods']) {
+		if (!$this->sidebar_settings['ignore_admins_mods'])
+		{
 			// grab all admins
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : array();
-
-			// grab all mods
-			$mod_ary = $this->auth->acl_get_list(false, 'm_', false);
+	
+			//grab all mods
+			$mod_ary = $this->auth->acl_get_list(false,'m_', false);
 			$mod_ary = (!empty($mod_ary[0]['m_'])) ? $mod_ary[0]['m_'] : array();
 			$admin_mod_array = array_unique(array_merge($admin_ary, $mod_ary));
-
-			if (sizeof($admin_mod_array)) {
+			
+			if (sizeof($admin_mod_array))
+			{
 				$sql_where .= empty($sql_where) ? ' WHERE' : ' AND';
 				$sql_where .= ' ' . $this->db->sql_in_set('user_id', $admin_mod_array, true);
 			}

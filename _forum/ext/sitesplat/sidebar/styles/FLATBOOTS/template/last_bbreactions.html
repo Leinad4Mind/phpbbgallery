@@ -1,36 +1,31 @@
-{% if loops.last_bbreactions|length %}
+<!-- IF .last_bbreactions -->
 <div class="sidebar">
-<div id="lastbbreactions{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
+<div id="lastbbreactions{slot.SIDEBAR_ID}" class="panel panel-inverse">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-lastbbreactions{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('LAST_BBREACTIONS') }}</span>
+     <h4 class="panel-title">{L_LAST_BBREACTIONS}</h4>
     </div>
-	 <div id="innerlastbbreactions{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="innerlastbbreactions{slot.SIDEBAR_ID}" class="inner">
 		<ul class="media-list user-list">	
-            {% for last_bbreactions in loops.last_bbreactions %}
-			<li class="sidebar-last-column">
-				<span class="sidebar-poster-thumbs bbreactions-emoji">
-					{% if last_bbreactions.EMOJI %}
-					{{ last_bbreactions.EMOJI }}
-					{% else %}
-					<i class="fa {{ last_bbreactions.SYMBOL }} fa-object" style="color:{% if last_bbreactions.POSITIVE %}green{% else %}red{% endif %};"></i>
-					{% endif %}
-				</span>
-				<span class="last-wrapper text-overflow">
-					{{ last_bbreactions.USERNAME_FULL }}
-					<br />
-					<i class="fa fa-volume-control-phone"></i>&nbsp;<a href="{{ last_bbreactions.POST_URL }}">{{ last_bbreactions.TYPE }}</a>
-				</span>
-				<span class="space5"></span>
+		<!-- BEGIN last_bbreactions -->
+		<li class="media">
+                <div class="media-left bbreactions-emoji">
+                    <!-- IF last_bbreactions.EMOJI -->
+                    {last_bbreactions.EMOJI}
+                    <!-- ELSE -->
+                    <i class="fa {last_bbreactions.SYMBOL} fa-object" style="color:<!-- IF last_bbreactions.POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->;"></i>
+                    <!-- ENDIF -->
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{last_bbreactions.USERNAME_FULL}</h4>
+                    <span><a href="{last_bbreactions.POST_URL}">{last_bbreactions.TYPE}</a></span>
+                <small class="date"><i class="fa fa-clock-o"></i>&nbsp;{last_bbreactions.BADGE_DATE}</small>
+				</div>
          </li>
-		{% endfor %}		
+		<!-- END last_bbreactions -->		
 		</ul>
+	 </div>
 	</div>
 </div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}=window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}||"";if(window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}!=""){$(".toggle-lastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }});$("#innerlastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }})}$(".toggle-lastbbreactions{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-lastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerlastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-lastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerlastbbreactions{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.localStorage.toggle_lastbbreactions{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

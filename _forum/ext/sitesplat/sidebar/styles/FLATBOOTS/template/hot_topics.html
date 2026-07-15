@@ -1,40 +1,27 @@
-{% if loops.hot_topics|length %}
+<!-- IF .hot_topics -->
 <div class="sidebar">
-<div id="hot_topics{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
+<div id="hot_topics{slot.SIDEBAR_ID}" class="panel panel-danger list-announcement">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-hot-topics{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('HOT_TOPICS') }}</span>
+        <h4 class="panel-title">{L_HOT_TOPICS}</h4>
     </div>
-    <div id="innerhot_topics{{ slot.SIDEBAR_ID }}" class="panel-body inner">
-        <ul class="media-list user-list">
-		{% for hot_topics in loops.hot_topics %}
-		{% if hot_topics.NO_TOPIC_TITLE%}
-				<li class="media">    
-				   {{ hot_topics.NO_TOPIC_TITLE }}
+    <div id="hot_topics{slot.SIDEBAR_ID}" class="panel-body inner">
+        <ul class="list-unstyled mb20">
+		<!-- BEGIN hot_topics -->
+		<!-- IF hot_topics.NO_TOPIC_TITLE-->
+				<li>   
+				   {hot_topics.NO_TOPIC_TITLE}
 				</li>
-		{% else %}
-            <li class="media">
-				<span class="media-left">
-					<img alt="" src="{{ hot_topics.AVATAR }}" class="media-object img-circle">
-					{% if hot_topics.S_UNREAD %}<span class="label label-warning">{{ lang('UNREAD') }}</span>&nbsp;{% endif %}
-				</span>
-				<span class="media-body">
-					<a class="title-head" href="{{ hot_topics.U_TOPIC }}">{{ hot_topics.TOPIC_TITLE }}</a>
-					<br />
-					{{ hot_topics.USERNAME_FULL }}<br />
-					<span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;{{ hot_topics.LAST_TOPIC_TIME }}</span>
-				</span>
-				<!--// <span>{{ lang('IN') }}{{ lang('COLON') }}&nbsp;<a href="{{ hot_topics.U_FORUM }}" title="{{ hot_topics.FORUM_NAME }}">{{ hot_topics.FORUM_NAME }}</a></span><br /> -->
+		<!-- ELSE -->
+            <li>
+               <!-- IF hot_topics.S_UNREAD --><span class="label label-warning">{L_UNREAD}</span>&nbsp;<!-- ENDIF --><a class="title-head" href="{hot_topics.U_TOPIC}" title="{{ hot_topics.TOPIC_TITLE_NO_HTML|e('html_attr') }}">{hot_topics.TOPIC_TITLE}</a>
+               <div>{hot_topics.USERNAME_FULL}</div>
+		  <!--// <div>{L_IN}{L_COLON}&nbsp;<a href="{hot_topics.U_FORUM}" title="{hot_topics.FORUM_NAME}">{hot_topics.FORUM_NAME}</a></div> -->
+			   <small class="date"><i class="fa fa-clock-o"></i>&nbsp;{hot_topics.LAST_TOPIC_TIME}</small>
 			</li>
-		{% endif %}	
-		{% endfor %}
+		<!-- ENDIF -->	
+		<!-- END hot_topics -->
         </ul>
     </div>
 </div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}!=""){$(".toggle-hot-topics{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }});$("#innerhot_topics{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }})}$(".toggle-hot-topics{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-hot-topics{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerhot_topics{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-hot-topics{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerhot_topics{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_hot_topics{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

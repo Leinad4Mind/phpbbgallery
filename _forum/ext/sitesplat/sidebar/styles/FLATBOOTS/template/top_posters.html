@@ -1,96 +1,71 @@
-{% if loops.top_posters|length %}
+<!-- IF .top_posters -->
 <div class="sidebar">
-<div id="posters{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
+<div id="posters{slot.SIDEBAR_ID}" class="panel panel-info">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-posters{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('TOP_POSTERS') }}</span>
+     <h4 class="panel-title">{L_TOP_POSTERS}</h4>
     </div>
-	 <div id="innerposters{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="innerposters{slot.SIDEBAR_ID}" class="inner">
+		
 		  <ul class="nav nav-pills nav-top-poster nav-justified">
-			<li class="active"><a data-toggle="pill" href="#topAll">{{ lang('SIDEBAR_ALL_TIME') }}</a></li>
-			<li><a data-toggle="pill" href="#topDay">{{ lang('SIDEBAR_DAILY') }}</a></li>
-			<li><a data-toggle="pill" href="#topWeek">{{ lang('SIDEBAR_WEEKLY') }}</a></li>
+			<li class="active"><a data-toggle="pill" href="#topAll">{L_SIDEBAR_ALL_TIME}</a></li>
+			<li><a data-toggle="pill" href="#topDay">{L_SIDEBAR_DAILY}</a></li>
+			<li><a data-toggle="pill" href="#topWeek">{L_SIDEBAR_WEEKLY}</a></li>
 		  </ul>
-
-		  <div class="space10"></div>
-
+		  
 		  <div class="tab-content media-list user-list">
+			
 			<div id="topAll" class="tab-pane fade in active">
-			<div class="media-list user-list">
-			{% for top_posters in loops.top_posters %}
-            <div class="media">
-				<div class="media-left">
-					<img alt="" src="{{ top_posters.AVATAR }}" class="media-object img-circle">
-				</div>
-				<div class="media-body">
-					<div class="media-heading">{{ top_posters.USERNAME_FULL }}</div>
-					<span>{{ lang('POSTS') }}{{ lang('COLON') }}&nbsp;<a href="{{ top_posters.S_SEARCH_ACTION }}" title="">{{ top_posters.POSTS }}</a></span>
-				</div>
-				<div class="space10"></div>
-			</div>
-			{% else %}
+			<!-- BEGIN top_posters -->
 			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
 				<div class="media-body">
-					{{ lang('NO_MEMBERS') }}
+					<h4 class="media-heading">{top_posters.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters.S_SEARCH_ACTION}" title="">{top_posters.POSTS}</a></span>
 				</div>
 			</div>
-			{% endfor %}
-			</div>
+			<!-- END top_posters -->
 			</div>
 			
 			<div id="topDay" class="tab-pane fade">
-			<div class="media-list user-list">
-			{% for top_posters_day in loops.top_posters_day %}
-            <div class="media">
-				<div class="media-left">
-					<img alt="" src="{{ top_posters_day.AVATAR }}" class="media-object img-circle">
-				</div>
-				<div class="media-body">
-					<div class="media-heading">{{ top_posters_day.USERNAME_FULL }}</div>
-					<span>{{ lang('POSTS') }}{{ lang('COLON') }}&nbsp;<a href="{{ top_posters_day.S_SEARCH_ACTION }}" title="">{{ top_posters_day.POSTS }}</a></span>
-				</div>
-				<div class="space10"></div>
-			</div>
-			{% else %}
+			<!-- BEGIN top_posters_day -->
 			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters_day.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
 				<div class="media-body">
-					{{ lang('NO_MEMBERS') }}
+					<h4 class="media-heading">{top_posters_day.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters_day.S_SEARCH_ACTION}" title="">{top_posters_day.POSTS}</a></span>
 				</div>
 			</div>
-			{% endfor %}
-			</div>
+			<!-- END top_posters_day -->
 			</div>
 			
 			<div id="topWeek" class="tab-pane fade">
-			<div class="media-list user-list">
-			{% for top_posters_week in loops.top_posters_week %}
-            <div class="media">
-				<div class="media-left">
-					<img alt="" src="{{ top_posters_week.AVATAR }}" class="media-object img-circle">
-				</div>
-				<div class="media-body">
-					<div class="media-heading">{{ top_posters_week.USERNAME_FULL }}</div>
-					<span>{{ lang('POSTS') }}{{ lang('COLON') }}&nbsp;<a href="{{ top_posters_week.S_SEARCH_ACTION }}" title="">{{ top_posters_week.POSTS }}</a></span>
-				</div>
-				<div class="space10"></div>
-			</div>
-			{% else %}
+			<!-- BEGIN top_posters_week -->
 			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters_week.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
 				<div class="media-body">
-					{{ lang('NO_MEMBERS') }}
+					<h4 class="media-heading">{top_posters_week.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters_week.S_SEARCH_ACTION}" title="">{top_posters_week.POSTS}</a></span>
 				</div>
 			</div>
-			{% endfor %}
-			</div>
+			<!-- END top_posters_week -->
 			</div>
 			
 		  </div>
 		</div>
+	 </div>
 	</div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}=window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}||"";if(window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}!=""){$(".toggle-posters{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }});$("#innerposters{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }})}$(".toggle-posters{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-posters{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerposters{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-posters{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerposters{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.localStorage.toggle_posters{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

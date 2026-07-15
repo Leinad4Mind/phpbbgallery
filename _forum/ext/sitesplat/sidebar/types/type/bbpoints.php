@@ -74,11 +74,11 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 			// grab users
 			$sql = 'SELECT t1.user_id, SUM(points) as total, u.username, u.user_colour FROM ( 
 					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $bbpoints_table . ' GROUP BY to_id
-					UNION ALL
+					UNION
 					SELECT from_id AS user_id, SUM(-bbpoints) AS points FROM ' . $bbpoints_table . ' GROUP BY from_id
-					UNION ALL
+					UNION
 					SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' GROUP BY topic_poster
-					UNION ALL
+					UNION 
 					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 GROUP BY poster_id) t1 
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t1.user_id
 					' . $sql_where . '
@@ -107,12 +107,9 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 
 		foreach ($newest_users as $row)
 		{
-			$username_string = ($this->auth->acl_get('u_viewprofile')) ? 
-							get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : 
-							get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 			$this->template->assign_block_vars('bbpoints',array(
 				'BBPOINTS'			=> $row['bbpoints'],
-				'USERNAME_FULL'		=> $username_string,
+				'USERNAME_FULL'		=> get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']),
 				'TRANSFER_URL'		=> ($this->bbpoints_config['transfer_notify'] && $row['user_id'] != $this->user->data['user_id']) ? 
 										$this->helper->route('sitesplat_bbpoints_main_controller', array('u' => $row['user_id'])) : ''
 			));

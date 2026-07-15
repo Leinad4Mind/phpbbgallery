@@ -1,26 +1,22 @@
-{% if loops.bbpoints|length %}
+<!-- IF .bbpoints -->
 <div class="sidebar">
-<div id="bbpoints{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
+<div id="bbpoints{slot.SIDEBAR_ID}" class="panel panel-inverse">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-bbpoints{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('BBPOINTS') }}</span>
+     <h4 class="panel-title">{L_BBPOINTS}</h4>
     </div>
-	<div id="innerbbpoints{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="innerbbpoints{slot.SIDEBAR_ID}" class="inner">
 		<ul class="media-list user-list">
-		{% for bbpoints in loops.bbpoints %}
+		<!-- BEGIN bbpoints -->
 		<li class="media">
-		 <span class="media-body">
-		    {{ bbpoints.USERNAME_FULL }}{{ lang('COLON') }}&nbsp;{% if SYMBOL_POS %}<i class="fa {{ BBPOINTS_SYMBOL }}"></i>&nbsp;{% endif %}{{ bbpoints.BBPOINTS }}{% if not SYMBOL_POS %}<i class="fa {{ BBPOINTS_SYMBOL }}"></i>{% endif %}{% if S_REGISTERED_USER and bbpoints.TRANSFER_URL %}&nbsp;<a href="{{ bbpoints.TRANSFER_URL }}" data-ajax="true" title="{{ lang('TRANSFER_TO') }}"><i class="fa fa-random"></i></a>{% endif %}
-		 </span>
+		 <div class="media-body">
+		    {bbpoints.USERNAME_FULL}{L_COLON}&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{bbpoints.BBPOINTS}<!-- IF not SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --><!-- IF S_REGISTERED_USER and bbpoints.TRANSFER_URL -->&nbsp;<a href="{bbpoints.TRANSFER_URL}" data-ajax="true" title="{L_TRANSFER_TO}"><i class="fa fa-random"></i></a><!-- ENDIF -->
+		 </div>
 		</li>
-		{% endfor %}
+		<!-- END bbpoints -->		
 		</ul>
+	 </div>
 	</div>
 </div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}!=""){$(".toggle-bbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }});$("#innerbbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }})}$(".toggle-bbpoints{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-bbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerbbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-bbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerbbpoints{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_bbpoints{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

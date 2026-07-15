@@ -1,33 +1,31 @@
-{% if loops.donations|length %}
+<!-- IF .donations -->
 <div class="sidebar">
-<div id="donators{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
+<div id="donators{slot.SIDEBAR_ID}" class="panel panel-info">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-donators{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('DONATIONS') }}</span>
+     <h4 class="panel-title">{L_DONATIONS}</h4>
     </div>
-	<div id="innerdonators{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="innerdonators{slot.SIDEBAR_ID}" class="inner">
 		 <div class="media-list user-list">
-			{% for donations in loops.donations %}
+			<!-- BEGIN donations -->
 			<div class="media">
 				<div class="media-left">
-					<img alt="" src="{{ donations.AVATAR }}" class="media-object img-circle">
-				</div>
+					<a href="#">
+					  <img alt="" src="{donations.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
 				<div class="media-body">
-					<div class="media-heading">{{ donations.USERNAME_FULL }}</div>
-					<span><a href="#" title="{{ donations.TIME }}">{{ donations.CURRENCY_SYMBOL }} {{ donations.AMOUNT }}</a></span>
+					<h4 class="media-heading">{donations.USERNAME_FULL}</h4>
+					<span><a href="#" title="{donations.TIME}">{donations.CURRENCY_SYMBOL} {donations.AMOUNT}</a></span>
 				</div>
 			</div>
-			{% else %}
-             <div>{{ lang('NO_MEMBERS') }}</div>
-			{% endfor %}
+			<!-- BEGINELSE -->
+             <div>{L_NO_MEMBERS}</div>
+			<!-- END donations -->
 		 </div>	
-        {% if U_DONATE_PAGE %}<br /><a href="{{ U_DONATE_PAGE }}">{{ lang('DONATE_ALSO') }}</a>{% endif %}
+        <!-- IF U_DONATE_PAGE --><br /><a href="{U_DONATE_PAGE}">{L_DONATE_ALSO}</a><!-- ENDIF -->
 		</div>
+	 </div>
 	</div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}!=""){$(".toggle-donators{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }});$("#innerdonators{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }})}$(".toggle-donators{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-donators{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerdonators{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-donators{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerdonators{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_donators{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

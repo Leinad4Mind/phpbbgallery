@@ -64,7 +64,7 @@ class last_badges extends \sitesplat\sidebar\types\type\base
 		$howmany = $this->howmany();
 		$sql_where = str_replace('user_id', 'b.user_id', $this->ignore_users());
 
-		$sql_and = !empty($sql_where) ? ' AND user_posts > 1 AND user_inactive_reason = 0' : ' WHERE user_posts > 1 AND user_inactive_reason = 0';
+		$sql_and = !empty($sql_where) ? ' AND user_inactive_reason = 0' : ' WHERE user_inactive_reason = 0';
 		// latest users
 		if (($newest_users = $this->cache->get('_sidebar_last_badges')) === false)
 		{
@@ -77,8 +77,8 @@ class last_badges extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT b.user_id, r.rule_name, u.username, u.user_colour, b.date, ba.badge 
 				FROM ' . $badge_event_table . ' b
 				LEFT JOIN ' . $badge_rules_table . ' r ON r.rule_id = b.rule_id
-				INNER JOIN ' . $badge_badges_table . ' ba ON ba.badge_id = r.badge_id 
-				INNER JOIN ' . USERS_TABLE . ' u ON u.user_id = b.user_id
+				LEFT JOIN ' . $badge_badges_table . ' ba ON ba.badge_id = r.badge_id 
+				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = b.user_id
 				' . $sql_where . '
 				' . $sql_and . '
 				ORDER BY b.date DESC';
@@ -97,8 +97,8 @@ class last_badges extends \sitesplat\sidebar\types\type\base
 			}
 			$this->db->sql_freeresult($result);
 
-			// cache this data for 30 minutes, this improves performance
-			$this->cache->put('_sidebar_last_badges', $newest_users, 1800);
+			// cache this data for 5 minutes, this improves performance
+			$this->cache->put('_sidebar_last_badges', $newest_users, 300);
 		}
 
 		foreach ($newest_users as $row)

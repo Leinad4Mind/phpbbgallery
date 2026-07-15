@@ -1,29 +1,22 @@
-{% if loops.newest_users|length %}
+<!-- IF .newest_users -->
 <div class="sidebar">
-<div id="users{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
+<div id="users{slot.SIDEBAR_ID}" class="panel panel-info">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-users{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('NEWEST_USERS') }}</span>
+     <h4 class="panel-title">{L_NEWEST_USERS}</h4>
     </div>
-	<div id="innerusers{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="innerusers{slot.SIDEBAR_ID}" class="inner">
 		<ul class="media-list user-list">
-		{% for newest_users in loops.newest_users %}
+		<!-- BEGIN newest_users -->
 		<li class="media">
-			<div class="media-left">
-				<img alt="" src="{{ newest_users.AVATAR }}" class="media-object img-circle">
-			</div>
             <div class="media-body">
-                <div class="media-heading">{{ newest_users.USERNAME_FULL }}&nbsp;&#45;&nbsp;<small>{{ newest_users.REG_DATE }}</small></div>
+                <div class="media-heading">{newest_users.USERNAME_FULL}&nbsp;&#45;&nbsp;<small>{newest_users.REG_DATE}</small></div>
             </div>
         </li>
-		{% endfor %}
+		<!-- END newest_users -->
 		</ul>
+	 </div>
 	</div>
 </div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}!=""){$(".toggle-users{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }});$("#innerusers{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }})}$(".toggle-users{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-users{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerusers{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-users{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerusers{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_users{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->

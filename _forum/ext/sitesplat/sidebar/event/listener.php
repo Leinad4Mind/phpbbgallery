@@ -29,9 +29,8 @@ class listener implements EventSubscriberInterface
 	protected $config;
 	protected $root_path;
 	protected $php_ext;
-	protected $ext_manager;
 
-	public function __construct(\sitesplat\sidebar\types\manager $manager, \phpbb\user $user, \phpbb\request\request $request, \phpbb\config\db_text $config_text, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $phpbb_root_path, $php_ext, \phpbb\extension\manager $ext_manager)
+	public function __construct(\sitesplat\sidebar\types\manager $manager, \phpbb\user $user, \phpbb\request\request $request, \phpbb\config\db_text $config_text, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\config\config $config, $phpbb_root_path, $php_ext)
 	{
 		$this->manager = $manager;
 		$this->user = $user;
@@ -42,7 +41,6 @@ class listener implements EventSubscriberInterface
 		$this->config = $config;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$this->ext_manager = $ext_manager;
 	}
 
 	static public function getSubscribedEvents()
@@ -74,13 +72,11 @@ class listener implements EventSubscriberInterface
 			for($i = 1; $i <= $sidebar_config['slots']; $i++)
 			{
 				$type_name = $this->manager->get_sidebar_type_name($this->config['sidebar_slot' . $i . '_active']);
-				$type_name = !empty($type_name) ? $this->manager->get_sidebar_type_id($type_name) : null; 
-				if (
-					$type_name === null ||
-					!$isTablet && !$isMobile && !empty($type_name) || 
-					$isMobile && !substr($type_name['options'], 0, 1) || 
-					$isTablet && !substr($type_name['options'], 1, 1)
-					)
+				$type_name = ($type_name) ? $this->manager->get_sidebar_type_id($type_name) : null; 
+				if ($isMobile && !substr($type_name['options'], 0, 1) || 
+					$isTablet && !substr($type_name['options'], 1, 1) || 
+					!$isTablet && !$isMobile && $type_name || 
+					$type_name == null)
 				{
 					$slot[] = array('id' => $this->config['sidebar_slot' . $i . '_active'], 'pos' => $i);
 				}
@@ -101,14 +97,7 @@ class listener implements EventSubscriberInterface
 				($this->manager->is_enabled($type_name) && $this->manager->is_enabled($type_name) && $slot[$i-1]['id'] > 1) ? 
 					$this->manager->check_condition($type_name) : null;
 			}
-
-			if ($this->ext_manager->is_enabled('phpbb/collapsiblecategories'))
-			{
-				$this->template->assign_vars(array(
-					'PHPBB_COLLAPSIBLE_ENABLED'	=> true,
-				));
-			}
-
+			
 			$this->template->assign_vars(array(
 				'S_SIDEBAR_TYPE'			=> !$sidebar_config['type'],
 				'S_SIDEBAR_ALL_PAGES'		=> !$sidebar_config['all_pages'],

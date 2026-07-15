@@ -18,8 +18,8 @@ head.ready(function () {
 			},
 			credits: {
 				enabled: false,
-				text: 'goldtuganime.com',
-				href: 'https://goldtuganime.com'
+				text: 'sitesplat.com',
+				href: 'http://sitesplat.com'
 			},
 			exporting: { enabled: false },
 			tooltip: {
@@ -33,7 +33,7 @@ head.ready(function () {
                     events: {
                         click: function () {
 							$.ajax({ type: "POST", 
-							url: sitesplat_board_url + "app.php/sidebar/poll.html",
+							url: "app.php/sidebar/poll.html", 
 							data: {"f" : this.f,
 									"t": this.t,
 									"v": this.v},

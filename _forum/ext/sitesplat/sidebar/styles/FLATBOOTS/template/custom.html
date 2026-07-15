@@ -1,16 +1,12 @@
 <div class="sidebar">
-<div id="custom{{ slot.SIDEBAR_ID }}" class="panel panel-forum">
+<div id="custom{slot.SIDEBAR_ID}" class="panel panel-inverse">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-custom{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ definition.TITLE }}</span>
+     <h4 class="panel-title">{$TITLE}</h4>
     </div>
-    <div id="innercustom{{ slot.SIDEBAR_ID }}" class="panel-body inner">
-		{{ definition.TEXT }}
-    </div>
+	<div class="panel-body">
+	 <div id="innercustom{slot.SIDEBAR_ID}" class="inner">
+		{$TEXT}
+	 </div>
+	</div>
 </div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}!=""){$(".toggle-custom{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }});$("#innercustom{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }})}$(".toggle-custom{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-custom{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innercustom{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-custom{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innercustom{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_custom{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}

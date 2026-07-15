@@ -1,62 +1,44 @@
-{% if loops.pop_downloads|length %}
+<!-- IF .pop_downloads -->
 <div class="sidebar">
-<div id="bbdownloads{{ slot.SIDEBAR_ID }}" class="panel panel-forum list-announcement">
+<div id="bbdownloads{slot.SIDEBAR_ID}" class="panel panel-info">
     <div class="panel-heading">
-		{% if PHPBB_COLLAPSIBLE_ENABLED %}
-		<a class="toggle-bbdownloads{{ slot.SIDEBAR_ID }}" href="javascript:void(0)"></a>
-		{% endif %}
-		<span>{{ lang('DOWNLOADS') }}</span>
+     <h4 class="panel-title">{L_DOWNLOADS}</h4>
     </div>
-	 <div id="innerbbdownloads{{ slot.SIDEBAR_ID }}" class="panel-body inner">
+	<div class="panel-body">
+	 <div id="bbdownloadsinner{slot.SIDEBAR_ID}" class="inner">
 		
 		  <ul class="nav nav-pills nav-top-poster nav-justified">
-			<li class="active"><a data-toggle="pill" href="#popDown">{{ lang('POP_DOWNLOADS') }}</a></li>
-			<li><a data-toggle="pill" href="#newDown">{{ lang('NEW_DOWNLOADS') }}</a></li>
+			<li class="active"><a data-toggle="pill" href="#popDown">{L_POP_DOWNLOADS}</a></li>
+			<li><a data-toggle="pill" href="#newDown">{L_NEW_DOWNLOADS}</a></li>
 		  </ul>
 		  
 		  <div class="tab-content media-list user-list">
 			<div id="popDown" class="tab-pane fade in active">
-				<ul class="media-list user-list">
-				{% for pop_downloads in loops.pop_downloads %}
-					<li class="sidebar-last-column">
-						<span class="last-wrapper text-overflow">
-							<a href="{{ pop_downloads.S_SEARCH_ACTION }}">{{ pop_downloads.TITLE }}</a><br />
-							<span class="pull-right"><i class="fa fa-download"></i>&nbsp;{{ pop_downloads.TOTAL }}</span>
-						</span>
-					</li>
-				{% else %}
-					<li class="sidebar-last-column">
-						<span class="last-wrapper text-overflow">
-							{{ lang('NO_MEMBERS') }}
-						</span>
-					</li>
-				{% endfor %}	
+				<ul class="media">
+				<!-- BEGIN pop_downloads -->
+					<li><a href="{pop_downloads.S_SEARCH_ACTION}">{pop_downloads.TITLE}</a> <span class="pull-right">{pop_downloads.TOTAL}</span><!-- IF not pop_downloads.S_LAST_ROW --><hr /><!-- ENDIF --></li>
+				<!-- BEGINELSE -->
+					<li>{L_NO_MEMBERS}<hr /></li>
+				<!-- END pop_downloads -->	
 				</ul>
 			</div>
 				
 			<div id="newDown" class="tab-pane fade">
-				<ul class="media-list user-list">
-				{% for new_downloads in loops.new_downloads %}
-					<li class="sidebar-last-column">
-						<span class="last-wrapper text-overflow">
-							<a href="{{ new_downloads.S_SEARCH_ACTION }}">{{ new_downloads.TITLE }}</a><br />
-							<span class="pull-right forum-time"><i class="fa fa-clock-o"></i>&nbsp;{{ new_downloads.TIMESTAMP }}</span>
-						</span>
-					</li>
-				{% else %}
-					<li class="sidebar-last-column">
-						<span class="last-wrapper text-overflow">
-							{{ lang('NO_MEMBERS') }}
-						</span>
-					</li>
-				{% endfor %}	
+				<ul class="media">
+				<!-- BEGIN new_downloads -->
+					<li><a href="{new_downloads.S_SEARCH_ACTION}">{new_downloads.TITLE}</a> <span class="pull-right">{new_downloads.TIMESTAMP}</span><!-- IF not new_downloads.S_LAST_ROW --><hr /><!-- ENDIF --></li>
+				<!-- BEGINELSE -->
+					<li>{L_NO_MEMBERS}<hr /></li>
+				<!-- END new_downloads -->	
 				</ul>
 			</div>
 		  </div>
 		</div>
+	 </div>
 	</div>
 </div>
-{% if PHPBB_COLLAPSIBLE_ENABLED %}
-<script>head.ready(function(){(function(){window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}=window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}||"";if(window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}!=""){$(".toggle-bbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapsed"+window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }});$("#innerbbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapse"+window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }})}$(".toggle-bbdownloads{{ slot.SIDEBAR_ID }}").on("click",function(){if(window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}!=" toggle"){$(".toggle-bbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",true);$("#innerbbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapse",true);window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}=" toggle"}else{$(".toggle-bbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapsed",false);$("#innerbbdownloads{{ slot.SIDEBAR_ID }}").toggleClass("collapse",false);window.window.localStorage.toggle_bbdownloads{{ slot.SIDEBAR_ID }}=""}})})()});</script>
-{% endif %}
-{% endif %}
+<!-- ENDIF -->
+
+
+
+

@@ -99,10 +99,6 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 				ORDER BY b.like_time DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 
-        //  damn phpbb url rewrite and broken driver
-		//	$board_url = generate_board_url();
-			$board_url = generate_board_url() . '/';
-			
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$newest_users[] = array(
@@ -113,8 +109,7 @@ class last_bbreactions extends \sitesplat\sidebar\types\type\base
 					'symbol'		=> $row['symbol'],
 					'emoji'			=> $row['emoji'],
 					'positive'		=> $row['positive'],
-			//		'post_url'		=> append_sid($board_url . 'viewtopic.' . $this->php_ext, '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
-					'post_url'		=> append_sid($board_url . 'viewtopic.' . $this->php_ext, 'p=' . $row['post_id'] . '#p'. $row['post_id']),
+					'post_url'		=> append_sid('./viewtopic.' . $this->php_ext . '?f='. $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p'. $row['post_id']),
 					'date'			=> $row['like_time'],
 				);
 			}

@@ -80,11 +80,10 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			$sql = 'SELECT forum_id, topic_id, topic_type
 				FROM ' . TOPICS_TABLE . '
 				WHERE ' . $visibility->get_forums_visibility_sql('topic', $forum_ary) . '
-				AND topic_status <> ' . ITEM_MOVED . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'] . '
+				AND topic_status <> ' . ITEM_MOVED . '
 				ORDER BY topic_last_post_time DESC';
 
 			$result = $this->db->sql_query_limit($sql, $howmany);
-
 			$forums = $ga_topic_ids = $topic_ids = array();
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -110,8 +109,9 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 			{
 				// grab all posts that meet criteria and auths
 				$sql_array = array(
-					'SELECT'	=> 'u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
-									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
+					'SELECT'	=> 'u.user_id, u.username, u.user_colour, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id,
+									t.topic_last_post_time, t.topic_last_poster_name, f.forum_name,
+									at.attr_name',
 					'FROM'		=> array(TOPICS_TABLE => 't'),
 					'LEFT_JOIN'	=> array(
 						array(
@@ -122,8 +122,12 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 							'FROM'	=> array(FORUMS_TABLE => 'f'),
 							'ON'	=> 't.forum_id = f.forum_id',
 						),
+						array(
+							'FROM'	=> array('bbgta_topics_attr' => 'at'),
+							'ON'	=> 'at.attr_id = t.topic_attr_id',
+						),
 					),
-					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
+					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids) . ' AND topic_posts_approved >= ' . $this->config['hot_threshold'],
 					'ORDER_BY'	=> 't.topic_last_post_time DESC',
 				);
 
@@ -140,62 +144,20 @@ class hot_topics extends \sitesplat\sidebar\types\type\base
 					$view_topic_url = append_sid("{$this->root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;p=' . $row['topic_last_post_id'] . '#p' .
 										$row['topic_last_post_id']);
 					$forum_name_url = append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
-					$topic_title = censor_text($row['topic_title']);
-					// can't truncate with bbemoji
-					// if (utf8_strlen($topic_title) >= 60)
-					// {
-						// $topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
-					// }
+					$topic_title = censor_text($row['attr_name'] . $row['topic_title']);
+					if (utf8_strlen($topic_title) >= 60)
+					{
+						$topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
+					}
 					$is_guest = ($row['user_id'] == ANONYMOUS) ? true : false;
-
-					/**
-					* Event to modify topic data before they are assigned
-					*
-					* @event sitesplat.bbsidebar.type.hot_topics_tpl_before
-					* @var	string	topic_id		Topic ID
-					* @var	string	forum_id		Forum ID
-					* @var	string	forum_name		Forum name
-					* @var	boolean	post_unread		Are there any posts unread?
-					* @var	string	view_topic_url	Topic URL
-					* @var	string	forum_name_url	Forum URL
-					* @var	string	topic_title		Topic title
-					* @var	boolean	is_guest		Is post author anonymous?
-					* @since 1.5.0
-					*/
-					$vars = array(
-						'topic_id',
-						'forum_id',
-						'forum_name',
-						'post_unread',
-						'view_topic_url',
-						'forum_name_url',
-						'topic_title',
-						'is_guest',
-					);
-					extract($phpbb_dispatcher->trigger_event('sitesplat.bbsidebar.type.hot_topics_tpl_before', compact($vars)));
-					
-					$board_url = generate_board_url() . '/';
-					$match = array();
-					$avatar = (($row['user_avatar']) ? preg_match( '@src="([^"]+)"@',
-							  phpbb_get_user_avatar(
-								  array('avatar'			=> $row['user_avatar'], 
-								        'user_id'			=> $row['user_id'],
-										'avatar_type'		=> $row['user_avatar_type'], 
-										'avatar_width'		=> $row['user_avatar_width'], 
-										'avatar_height'		=> $row['user_avatar_height'])), $match) :
-										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-
-					$username_string = ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
-												get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : 
-												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
 
 					$tpl_ary = array(
 						'U_TOPIC'			=> $view_topic_url,
 						'U_FORUM'			=> $forum_name_url,
 						'S_UNREAD'			=> ($post_unread) ? true : false,
-						//'AVATAR'			=> ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar),
-						'AVATAR'			=> ((sizeof($match) > 1) ? strtr(array_pop($match), [ 'gallery/../random' => 'random', './../../' => $board_url,  './../' => $board_url, './' => $board_url ]) : $avatar),
-						'USERNAME_FULL'		=> $username_string,
+						'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . 
+												get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : 
+												$this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
 						'TOPIC_TITLE' 		=> $topic_title,
 						'TOPIC_TITLE_NO_HTML'	=> $topic_title,
