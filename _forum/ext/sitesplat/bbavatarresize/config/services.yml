@@ -9,6 +9,7 @@ services:
             - '@template'
             - '@service_container'
             - '@controller.helper'
+            - '@dispatcher'
             - '%core.php_ext%'
             - '%core.root_path%'
 
