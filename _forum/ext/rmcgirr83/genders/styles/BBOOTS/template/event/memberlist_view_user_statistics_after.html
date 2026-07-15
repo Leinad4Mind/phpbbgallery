@@ -1,3 +1,3 @@
-<!-- IF USER_GENDER -->
-<li>{L_GENDER}{L_COLON} {USER_GENDER}</li>
-<!-- ENDIF -->
+{% if USER_GENDER %}
+<li>{{ lang('GENDER') }}{{ lang('COLON') }}&nbsp;{{ USER_GENDER }}</li>
+{% endif %}

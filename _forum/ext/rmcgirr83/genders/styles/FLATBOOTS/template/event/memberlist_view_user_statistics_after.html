@@ -1,7 +1,7 @@
-<!-- IF USER_GENDER -->
+{% if USER_GENDER %}
 <li>
 	<span class="icon glyphicon icon-moon-man-woman" style="color:goldenrod"></span>
-	<label>{L_GENDER}</label>
-	{USER_GENDER}
+	<label>{{ lang('GENDER') }}</label>
+	{{ USER_GENDER }}
 </li>
-<!-- ENDIF -->
+{% endif %}

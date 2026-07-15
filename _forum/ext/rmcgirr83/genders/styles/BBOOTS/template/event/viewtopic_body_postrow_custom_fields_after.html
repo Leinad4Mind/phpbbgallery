@@ -1,8 +1,8 @@
-<!-- IF postrow.USER_GENDER -->
+{% if postrow.USER_GENDER %}
 <div class="user-profile-row">
-	<div class="user-profile-tag">{L_GENDER}</div>
+	<div class="user-profile-tag">{{ lang('GENDER') }}</div>
 		<div class="user-profile-output">
-			{postrow.USER_GENDER}
+			{{ postrow.USER_GENDER }}
 		</div>
 </div>
-<!-- ENDIF -->
+{% endif %}

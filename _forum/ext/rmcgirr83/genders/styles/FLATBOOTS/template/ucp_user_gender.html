@@ -1,6 +1,11 @@
-<div class="control-group"> 
-	<label class="control-label" for="user_gender">{L_GENDER}{L_COLON}{{ GENDER_REQUIRED ? ' *' }}</label>
-	<div class="controls controls-row"> 
-		<select class="selectpicker" data-container="body" name="user_gender" id="user_gender" size="3" title="{L_GENDER}">{S_GENDER_OPTIONS}</select>&nbsp;<span id="gender_image" <!-- IF not USER_GENDER -->style="display:none;"<!-- ENDIF -->><i class="fa {USER_GENDER}" style="font-size:18px"></i></span>
-	</div> 
-</div> 
+{% if AJAX_GENDER %}
+	<script>
+		var AJAX_GENDER = "{{ AJAX_GENDER|escape('js') }}";
+	</script>
+	<div class="control-group"> 
+		<label class="control-label" for="user_gender">{{ lang('GENDER') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<select class="selectpicker" data-container="body" name="user_gender" id="user_gender" size="3" title="{L_GENDER}">{{ S_GENDER_OPTIONS }}</select>&nbsp;<span id="gender_image" {% if not USER_GENDER %}style="display:none;"{% endif %}><i class="fa {{ USER_GENDER }}" style="font-size:18px"></i></span>
+		</div>
+	</div>
+{% endif %}
