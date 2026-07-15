@@ -1,52 +1,71 @@
 <?php
-/*
+/**
 * @package Ext Common Core
-* @version v1.0.10 09/07/2021
+* @version 1.1.0 01/06/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\core;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Symfony\Component\DependencyInjection\ContainerInterface;
 
 class template
 {
-	public $prepend_assets = false;
-
-	protected $assets 			= array();
-	protected $assets_cache		= array();
-	protected $context_ary		= array();
-
 	protected $config;
-	protected $container;
 	protected $filesystem;
+	protected $language;
 	protected $path_helper;
 	protected $phpbb_template;
 	protected $request;
 	protected $twig;
-	
-	static $instance;
+
+	protected $assets 			= array();
+	protected $assets_cache		= array();
+	protected $context_ary		= array();
+	protected $js_lang_keys 	= array();
+
+	public $prepend_assets = false;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 	$container		Service container interface
-	*
-	* @access public
-	*/
-	public function __construct(ContainerInterface $container)
+	 * Constructor
+	 *
+	 * @param \phpbb\config\config 						$config				Config Object
+	 * @param \phpbb\filesystem\filesystem 				$filesystem 		The filesystem object
+	 * @param \phpbb\language\language 					$language 			Language Object
+	 * @param \phpbb\path_helper						$path_helper		Path Helper Object
+	 * @param \phpbb\request\request 					$request			Request object
+	 * @param \phpbb\template\template					$template     		Template object
+	 * @param \phpbb\template\twig\environment 			$twig_environment
+	 *
+	 * @access public
+	 */
+	public function __construct(
+		\phpbb\config\config $config,
+		\phpbb\filesystem\filesystem $filesystem,
+		\phpbb\language\language $language,
+		\phpbb\path_helper $path_helper,
+		\phpbb\request\request $request,
+		\phpbb\template\template $template,
+		\phpbb\template\twig\environment $twig_environment
+	)
 	{
-		$this->config			= $container->get('config');
-		$this->container 		= $container;
-		$this->filesystem 		= $container->get('filesystem');
-		$this->path_helper		= $container->get('path_helper');
-		$this->phpbb_template	= $container->get('template');
-		$this->request 			= $container->get('request');
-		$this->twig				= $container->get('template.twig.environment');
+		$this->config			= $config;
+		$this->filesystem 		= $filesystem;
+		$this->language 		= $language;
+		$this->path_helper		= $path_helper;
+		$this->phpbb_template	= $template;
+		$this->request 			= $request;
+		$this->twig				= $twig_environment;
 	}
 	
+	/**
+	 * Workaround for default template methods
+	 * 
+	 * @param string 	$name 		Method name
+	 * @param array 	$args 		Method arguments
+	 */
 	public function __call($name, $args)
 	{
 		if(method_exists($this->phpbb_template, $name))
@@ -57,6 +76,13 @@ class template
 		return false;
 	}
 	
+	/**
+	 * Add custom namespace for templates
+	 * 
+	 * @param string 	$namespace 			Namespace tag
+	 * @param string 	$path 				Templates path
+	 * @param bool 		$add_style_paths 	Set if "template" and "theme" folders must be included
+	 */
 	public function add_custom_namespace($namespace, $path, $add_style_paths = true)
 	{
 		if(!file_exists($path))
@@ -96,6 +122,16 @@ class template
 		}
 	}
 
+	/**
+	 * Append asset
+	 * 
+	 * @param string 	$type 				(js | css | javascript | script | style)
+	 * @param array 	$data 				Asset data
+	 * @param bool 		$return_filename 	Set if asset filename must be returned
+	 * @param string 	$space 				(admin | frontend)
+	 * 
+	 * @return string|bool
+	 */
 	public function append_asset($type, $data, $return_filename = false, $space = 'common')
 	{
 		// Recursive
@@ -105,7 +141,8 @@ class template
 			{
 				$this->append_asset($type, $item, $return_filename, $space);
 			}
-			return;
+
+			return true;
 		}
 
 		// Don't load admin assets in normal styles and vice versa
@@ -255,7 +292,7 @@ class template
 				$new_asset = array(
 					'ID'		=> $data['id'],
 					'DATA'		=> $data['content'] ,
-					'PARAMS'	=> implode(' ', $params),
+					'PARAMS'	=> sizeof($params) ? ' ' . implode(' ', $params) : '',
 					'IS_SINGLE'	=> $is_single,
 					'TYPE'		=> $data['type'],
 					'SRC'		=> ($is_single) ? $data[$file_key] : '',
@@ -276,8 +313,22 @@ class template
 		}
 	}
 	
+	/**
+	 * Put assets on template
+	 * 
+	 * @param string 	$namespace
+	 */
 	public function assets_to_template($namespace = 'all')
 	{
+		if(sizeof($this->js_lang_keys))
+		{
+			$this->append_asset('script', array(
+				'id'		=> 'core-lang',
+				'type'		=> 'application/json',
+				'content'	=> json_encode($this->js_lang_keys, JSON_PRETTY_PRINT),
+			));
+		}
+
 		if(!isset($this->assets[$namespace]))
 		{
 			return false;
@@ -294,12 +345,23 @@ class template
 		}
 	}
 	
+	/**
+	 * Assign vars to template
+	 * 
+	 * @param array 	$vars
+	 */
 	public function assign_vars(array $vars)
 	{
 		$this->phpbb_template->assign_vars($vars);
 		$this->context_ary = array_merge($this->context_ary, $vars);
 	}
 
+	/**
+	 * Assign JSON variable to template
+	 * 
+	 * @param string 	$key
+	 * @param array 	$options
+	 */
 	public function assign_json_var($key, $options)
 	{
 		$options = array_map(
@@ -317,17 +379,38 @@ class template
 		$this->assign_var($key, json_encode($options));
 	}
 	
+	/**
+	 * Get template variable
+	 * 
+	 * @param string 	$name 			Variable name
+	 * @param mixed 	$default 		Default value if variable don't exists
+	 */
 	public function get_var($name, $default = '')
 	{
 		return (isset($this->context_ary['.'][0][$name]) ? $this->context_ary['.'][0][$name] : $default);
 	}
 	
-	public function load_context($phpbb_container)
+	/**
+	 * Load template context
+	 * 
+	 * @param ContainerInterface 	$container
+	 * @return array
+	 */
+	public function load_context(ContainerInterface $container)
 	{
-		$this->context_ary = $phpbb_container->get('template_context')->get_data_ref();
+		$this->context_ary = $container->get('template_context')->get_data_ref();
 		return $this->context_ary;
 	}
 	
+	/**
+	 * Render template
+	 * 
+	 * @param string 	$id 		Filename ID
+	 * @param string 	$filename 	Template filename
+	 * @param bool 		$return 	Set if result must be return to variable
+	 * 
+	 * @return string|void
+	 */
 	public function render($id, $filename, $return = false)
 	{
 		$this->phpbb_template->set_filenames(array(
@@ -341,7 +424,61 @@ class template
 
 		$this->phpbb_template->display($id);
 	}
+
+	/**
+	 * Set javascript language variables
+	 * 
+	 * @param array 	$ary 			Language keys
+	 * @param bool 		$convert_keys 	Convert phpBB keys into javascript keys
+	 */
+	public function set_js_lang($ary, $convert_keys = false)
+	{
+		if(array_keys($ary) === range(0, count($ary) - 1))
+		{
+			$new_ary = array();
+
+			foreach($ary as $key)
+			{
+				$new_ary[$key] = $this->language->lang($key);
+			}
+
+			return $this->set_js_lang($new_ary, $convert_keys);
+		}
+
+		if($convert_keys)
+		{
+			foreach($ary as $key => $value)
+			{
+				$new_key = preg_replace_callback(
+					'#_(\w)#', 
+					function($m) {
+						return strtoupper($m[1]);
+					},
+					strtolower($key)
+				);
+
+				$ary[$new_key] = $value;
+				unset($ary[$key]);
+			}
+		}
+
+		$this->js_lang_keys = array_merge($this->js_lang_keys, $ary);
+
+		if($this->request->is_ajax())
+		{
+			\canidev\core\json_response::get_instance()->add_component('lang', $this->js_lang_keys);
+		}
+	}
 	
+	/**
+	 * Find specific asset
+	 * 
+	 * @param string 	$path
+	 * @param bool 		$is_admin
+	 * 
+	 * @return string|false
+	 * @access private
+	 */
 	private function find_asset($path, $is_admin = false)
 	{
 		$paths = array();
@@ -383,28 +520,23 @@ class template
 				return $filename;
 			}
 		}
-		
-		// For "core" search in compatibility path too
-		if(strpos($path, '@canidev_core') === 0)
-		{
-			$filename = sprintf($uri, $this->path_helper->get_phpbb_root_path(), 'compatibility');
-
-			if(file_exists($filename))
-			{
-				return $filename;
-			}
-		}
 
 		return false;
 	}
 	
-	static public function get_instance($container)
+	/**
+	 * Get template instance
+	 * 
+	 * @param ContainerInterface  $container 	Service container
+	 * @return template
+	 * @deprecated Use services instead
+	 */
+	static public function get_instance(ContainerInterface $container)
 	{
-		if(!self::$instance)
-		{
-			self::$instance = new self($container);
-		}
+		// Make sure services are loaded
+		\canidev\core\lib::get_instance($container);
 
-		return self::$instance;
+		// Return service
+		return $container->get('canidev.core.template');
 	}
 }
