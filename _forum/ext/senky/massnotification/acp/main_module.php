@@ -134,11 +134,11 @@ class main_module
 				if (!empty($usernames))
 				{
 					$sql_ary = [
-						'SELECT'	=> 'user_id',
+						'SELECT'	=> 'u.user_id',
 						'FROM'		=> [
-							$this->users_table	=> '',
+							$this->users_table	=> 'u',
 						],
-						'WHERE'		=> $this->db->sql_in_set('username_clean', array_map('utf8_clean_string', $usernames)),
+						'WHERE'		=> $this->db->sql_in_set('u.username_clean', array_map('utf8_clean_string', $usernames)),
 					];
 				}
 				else
@@ -159,9 +159,9 @@ class main_module
 					else
 					{
 						$sql_ary = [
-							'SELECT'	=> 'user_id',
+							'SELECT'	=> 'u.user_id',
 							'FROM'		=> [
-								$this->users_table	=> '',
+								$this->users_table	=> 'u',
 							],
 						];
 					}
@@ -219,8 +219,8 @@ class main_module
 		}
 
 		$sql = 'SELECT group_id, group_name
-			FROM ' . $this->groups_table . "
-			WHERE group_name NOT IN ('BOTS', 'GUESTS')";
+			FROM ' . $this->groups_table . '
+			WHERE ' . $this->db->sql_in_set('group_name', ['BOTS', 'GUESTS']);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
