@@ -283,7 +283,7 @@ class flatboots_style_module
 					$upload_bg	= $request->variable('upload_bg', '0');
 					$temp = explode(".", $image_name);
 
-					if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'gif')
+					if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'svg' || end($temp) == 'gif')
 					{
 						if ($image["error"] > 0)
 						{
@@ -390,7 +390,7 @@ class flatboots_style_module
 						if(is_file($file))
 						{
 							$temp = explode(".", $file);
-							if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'gif')
+							if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'svg' || end($temp) == 'gif')
 							{
 								$logo_exist = true;
 								$logo_filename = basename($file);
@@ -411,7 +411,7 @@ class flatboots_style_module
 						if(is_file($file))
 						{
 							$temp = explode(".", $file);
-							if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'gif')
+							if (end($temp) == 'png' || end($temp) == 'jpg' || end($temp) == 'jpeg' || end($temp) == 'svg' || end($temp) == 'gif')
 							{
 								$bg_exist = true;
 								$bg_filename = basename($file);
