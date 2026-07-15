@@ -4,17 +4,18 @@
 		<div class="row">
 			<div class="col-md-6">
 			<div class="form-group">
-				<label for="sitesplat_bbgdpr_bulk_emails" class="check-control">{{ lang('BULK_EMAILS') ~ lang('COLON') }}</label><span class="help-block">{{ lang('BULK_EMAILS_EXPLAIN') }}</span>
-				<input id="sitesplat_bbgdpr_bulk_emails" name="sitesplat_bbgdpr_bulk_emails" type="checkbox" value="1"{% if S_SITESPLAT_BBGDPR_BULK_EMAILS %} checked{% endif %} /> {{ lang('REG_UNDRSTD') }}
-				<div class="control-group"></div>
+				{{ lang('BULK_EMAILS') ~ lang('COLON') }}
+				<span class="help-block">{{ lang('BULK_EMAILS_EXPLAIN') }}</span>
+				<div class="d-flex"><input id="sitesplat_bbgdpr_bulk_emails" name="sitesplat_bbgdpr_bulk_emails" type="checkbox" value="1"{% if S_SITESPLAT_BBGDPR_BULK_EMAILS %} checked{% endif %} /> <label for="sitesplat_bbgdpr_bulk_emails" class="check-control checkbox-inline">{{ lang('REG_UNDRSTD') }}</label></div>
+				<div class="hidden-md hidden-lg control-group"></div>
 			</div>
 			</div>
 			
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="sitesplat_bbgdpr_privacy_policy" class="check-control">{{ lang('PRIVACY_POLICY') ~ lang('COLON') }}</label><span class="help-block">{{ lang('PRIVACY_POLICY_EXPLAIN') }}</span>
-					<input id="sitesplat_bbgdpr_privacy_policy" name="sitesplat_bbgdpr_privacy_policy" type="checkbox" value="1"{% if S_SITESPLAT_BBGDPR_PRIVACY_POLICY %} checked{% endif %} /> {{ lang('REG_UNDRSTD') }}
-					<div class="control-group"></div>
+					{{ lang('PRIVACY_POLICY') ~ lang('COLON') }}
+					<span class="help-block">{{ lang('PRIVACY_POLICY_EXPLAIN') }}</span>
+					<div class="d-flex"><input id="sitesplat_bbgdpr_privacy_policy" name="sitesplat_bbgdpr_privacy_policy" type="checkbox" value="1"{% if S_SITESPLAT_BBGDPR_PRIVACY_POLICY %} checked{% endif %} /> <label for="sitesplat_bbgdpr_privacy_policy" class="check-control checkbox-inline">{{ lang('REG_UNDRSTD') }}</label></div>
 				</div>
 				</div>
 		</div>
