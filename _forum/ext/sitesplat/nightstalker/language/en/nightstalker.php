@@ -3,7 +3,7 @@
 *
 * Nightstalker
 *
-* @copyright (c) 2015 sitesplat.com <http://sitesplat.com>
+* @copyright (c) 2015 sitesplat.com <https://sitesplat.com>
 * @license Proprietary
 *
 */
@@ -22,7 +22,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'NIGHTSTALKER'			=> 'Nighstalker mode',
+	'NIGHTSTALKER'			=> 'Nightstalker mode',
 	'NORMAL_VIEW'			=> 'Normal mode',
-	'NIGHTSTALKER_NOTICE'	=> '<div class="phpinfo"><p>There are no specific settings for this extension.<br />Nighstalker (Night Mode) is activated by clicking on the Nightstalker mode from the user navigation.</p></div>',
 ));
