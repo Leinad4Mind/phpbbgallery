@@ -1,0 +1,86 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS css/pmspy.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
+<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+<h1>{L_PM_SPY_READ} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+<p>{L_PM_SPY_READ_EXPLAIN}</p>
+
+<form id="pm_spy" method="post" action="{U_ACTION}&amp;action=delete&amp;sk={U_NAME}&amp;sd={U_SORT}">
+<div style="float:left;width:50%;">
+	{L_PM_COUNT}: {MESSAGE_COUNT}
+</div>
+<!-- IF .pagination or TOTAL_POSTS -->
+	<div class="pagination">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th>{L_SUBJECT}</th>
+		<th>{L_FROM} <a href="{U_ACTION}&amp;sk=f&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'f' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=f&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'f' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_TO} <a href="{U_ACTION}&amp;sk=t&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 't' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=t&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 't' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_BCC} <a href="{U_ACTION}&amp;sk=b&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'b' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=b&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'b' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_GROUP}</th>
+		<th>{L_PM_BOX} <a href="{U_ACTION}&amp;sk=p&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'p' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=p&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'p' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_AUTHOR_IP} <a href="{U_ACTION}&amp;sk=i&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'i' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=i&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'i' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_DATE} <a href="{U_ACTION}&amp;sk=d&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'd' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a><a href="{U_ACTION}&amp;sk=d&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'd' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a>
+        </th>
+		<th>{L_MARK}</th>
+	</tr>
+</thead>
+
+<tbody>
+	<!-- BEGIN pm_row -->
+	<tr class="<!-- IF pm_row.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->">
+		<td class="cursor" onclick="ShowHide('pm{pm_row.PM_KEY}')" title="{L_READ_MESSAGE}">{pm_row.PM_SUBJECT}</td>
+		<td>{pm_row.FROM}</td>
+		<td>{pm_row.TO}</td>
+		<td>{pm_row.BCC}</td>
+		<td>{pm_row.IS_GROUP}</td>
+		<td>{pm_row.FOLDER}</td>
+		<td>{pm_row.AUTHOR_IP}</td>
+		<td>{pm_row.DATE}</td>
+		<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{pm_row.PM_ID}" /></td>
+	</tr>
+    <tr class="<!-- IF pm_row.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->" style="display:none" id="pm{pm_row.PM_KEY}">
+		<td>&nbsp;</td>
+		<td colspan="8" class="content">{pm_row.PM_TEXT}</td>
+	</tr>
+	<!-- END pm_row -->
+</tbody>
+</table>
+<p class="small" style="float:right;margin-top:5px;"><input class="button2" type="submit" value="{L_DELETE_PMS}" name="delete" /> 
+<a href="#" onclick="marklist('pm_spy', 'mark', true); return false;">{L_MARK_ALL}</a> &bull; <a href="#" onclick="marklist('pm_spy', 'mark', false); return false;">{L_UNMARK_ALL}</a></p>
+<!-- IF .pagination or TOTAL_POSTS -->
+	<div class="pagination">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
+</form>
+<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
+<!-- INCLUDEJS js/pmspy.js -->
+
+<!-- INCLUDE overall_footer.html -->
