@@ -1,7 +1,0 @@
-{% if S_OVERALL_HEADER_BREADCRUMBS_BEFORE %}
-	{% for link in overall_header_breadcrumbs_before_links %}
-		<li {$MICRODATA}>
-			<span itemprop="title"><a href="{{ link.U_LINK_URL }}">{{ link.LINK_TITLE }}</a></span>
-		</li>
-	{% endfor %}
-{% endif %}
