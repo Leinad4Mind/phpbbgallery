@@ -1,0 +1,14 @@
+services:
+    sitesplat.opengraph.listener:
+        class: sitesplat\opengraph\event\listener
+        arguments:
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

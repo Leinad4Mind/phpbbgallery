@@ -1,0 +1,49 @@
+<!-- IF OPENGRAPH_ID -->
+<meta property="fb:admins" content="{OPENGRAPH_ID}">
+<!-- ENDIF -->
+<!-- IF OPENGRAPH_APPID -->
+<meta property="fb:app_id" content="{OPENGRAPH_APPID}"> 
+<!-- ENDIF -->
+
+<!-- IF SCRIPT_NAME == "index" -->
+<meta property="og:title" content="{SITENAME}">
+<meta property="og:description" content="{SITE_DESCRIPTION}">
+<meta property="og:url" content="{URL_BBOPENGRAPH_INDEX}"> 
+<meta property="og:type" content="website">
+<meta property="og:image" content="{IMG_OPENGRAPH}">
+<!-- ENDIF -->
+
+<!-- IF SCRIPT_NAME == "viewtopic" -->
+<meta property="og:url" content="{U_CANONICAL}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{TITLE_OPENGRAPH}">
+<meta property="og:description" content="{DESC_OPENGRAPH}">
+<!-- IF IMG_OPENGRAPH --><meta property="og:image" content="{IMG_OPENGRAPH}"><!-- ENDIF -->
+<!-- IF BBTAG_OPENGRAPH --><meta property="article:tag" content="{BBTAG_OPENGRAPH}"><!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF OPENGRAPH_TT_ID and SCRIPT_NAME == "index" -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="{OPENGRAPH_TT_ID}">
+<meta name="twitter:title" content="{SITENAME}">
+<meta name="twitter:description" content="{SITE_DESCRIPTION}">
+<meta name="twitter:image" content="{IMG_OPENGRAPH}">
+<meta name="twitter:app:country" content="{S_USER_LANG}">
+<!-- ENDIF -->
+
+<!-- IF OPENGRAPH_TT_ID and SCRIPT_NAME == "viewtopic" -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="{OPENGRAPH_TT_ID}">
+<meta name="twitter:title" content="{TITLE_OPENGRAPH}">
+<meta name="twitter:description" content="{DESC_OPENGRAPH}">
+<!-- IF IMG_OPENGRAPH --><meta name="twitter:image" content="{IMG_OPENGRAPH}"><!-- ENDIF -->
+<meta name="twitter:app:country" content="{S_USER_LANG}">
+<!-- ENDIF -->
+
+<!-- IF OPENGRAPH_CLASSIFIEDS -->
+<meta property="og:type" content="product">
+<meta property="product:price:amount" content="{PRICE_OPENGRAPH}">
+<meta property="product:price:currency" content="{CURRENCY_OPENGRAPH}">
+<!-- ENDIF -->
+
+

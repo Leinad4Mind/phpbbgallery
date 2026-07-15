@@ -1,0 +1,36 @@
+{
+	"name": "sitesplat/opengraph",
+	"type": "phpbb-extension",
+	"description": "A solid social meta tag plugin is the foundation of any good social strategy — BBopenGraph gives you total control over all the information social website crawlers need, improving Google Search ranking, social engagement, and click-through-rates on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more — independently of any social sharing buttons you may or may not already use. This also comes with a special sharing button system and support for BBtags out of the box.",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.3",
+	"keywords": ["phpbb", "extension", "premium", "topic", "SiteSplat", "opengraph", "share", "social media", "seo"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBopenGraph",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbopengraph.json",
+			"ssl": true
+		}
+
+	}
+}
