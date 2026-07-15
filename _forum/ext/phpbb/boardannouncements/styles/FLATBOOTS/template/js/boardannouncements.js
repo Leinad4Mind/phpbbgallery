@@ -1,0 +1,1 @@
+head.ready(function(){phpbb.addAjaxCallback("close_announcement",function(n){n.success&&phpbb.toggleDisplay("phpbb_announcement",-1)})});

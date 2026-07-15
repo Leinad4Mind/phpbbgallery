@@ -1,0 +1,9 @@
+<!-- IF S_BOARD_ANNOUNCEMENT -->
+	<!-- INCLUDEJS @phpbb_boardannouncements/js/boardannouncements.js -->
+	<div id="phpbb_announcement"<!-- IF BOARD_ANNOUNCEMENT_BGCOLOR --> style="background-color:#{BOARD_ANNOUNCEMENT_BGCOLOR}"<!-- ENDIF --> class="alert alert-default">
+		<!-- IF S_BOARD_ANNOUNCEMENT_DISMISS -->
+		 <a href="{U_BOARD_ANNOUNCEMENT_CLOSE}" data-ajax="close_announcement" data-overlay="false" class="close"><span class="awe-remove-circle"></span></a>
+		<!-- ENDIF -->
+	{BOARD_ANNOUNCEMENT}
+	</div>
+<!-- ENDIF -->
