@@ -9,5 +9,5 @@ interface Arrayable
      *
      * @return array
      */
-    public function to[];
+    public function toArray();
 }

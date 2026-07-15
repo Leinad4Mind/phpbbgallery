@@ -1,23 +1,33 @@
-imports:
-    - { resource: alias.yml }
-
 services:
-    _defaults:
-        autowire: true
-        bind:
-            $ext_images_path: '%core.root_path%ext/david63/announceonindex/adm/style/images'
-        public: true
-
     david63.dropboxupload.listener:
         class: david63\dropboxupload\event\listener
+        arguments:
+            - '@config'
+            - '@david63.dropboxupload.main.controller'
         tags:
             - { name: event.listener }
 
     david63.dropboxupload.admin.controller:
         class: david63\dropboxupload\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@log'
+            - '@david63.dropboxupload.core.functions'
 
     david63.dropboxupload.main.controller:
         class: david63\dropboxupload\controller\main_controller
+        arguments:
+            - '@config'
+            - '@user'
+            - '@log'
+            - '@language'
+            - '@david63.dropboxupload.core.functions'			
 
     david63.dropboxupload.core.functions:
         class: david63\dropboxupload\core\functions
+        arguments:
+            - '@ext.manager'

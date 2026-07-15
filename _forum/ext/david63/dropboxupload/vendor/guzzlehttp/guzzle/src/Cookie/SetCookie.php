@@ -98,7 +98,7 @@ class SetCookie
         return rtrim($str, '; ');
     }
 
-    public function to[]
+    public function toArray()
     {
         return $this->data;
     }

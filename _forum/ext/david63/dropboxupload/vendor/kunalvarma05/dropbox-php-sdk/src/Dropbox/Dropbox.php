@@ -833,7 +833,7 @@ class Dropbox
      *
      * @return \Kunnu\Dropbox\Models\FileMetadata
      */
-    public function uploadChunked($dropboxFile, $path, $fileSize = null, $chunkSize = null, array $params = [])
+    public function uploadChunked($dropboxFile, $path, $fileSize = null, $chunkSize = null, array $params = array())
     {
         //Make Dropbox File
         $dropboxFile = $this->makeDropboxFile($dropboxFile);
