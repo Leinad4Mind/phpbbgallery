@@ -39,9 +39,10 @@
 		{% if loops.webhookrow %}
 			{% for webhook in loops.webhookrow %}
 				<dl>
-					<dt><label>{{ webhook.ALIAS }}</label></dt>
+					<dt><label for="dn_webhook_{{ webhook.ALIAS }}">{{ webhook.ALIAS }}</label></dt>
 					<dd>
-						<label><input type="text" size="100" maxlength="255" name="dn_webhook[{{ webhook.ALIAS }}]" value="{{ webhook.URL }}" /></label>
+						<input type="text" size="100" maxlength="255" id="dn_webhook_{{ webhook.ALIAS }}" name="dn_webhook[{{ webhook.ALIAS }}]" value="{{ webhook.URL }}" />
+						<input type="submit" name="action_delete_alias[{{ webhook.ALIAS }}]" value="{{ lang('DELETE') }}" class="button2" onclick="return confirm('{{ lang('CONFIRM_OPERATION') }}');">
 					</dd>
 				</dl>
 			{% endfor %}
@@ -54,13 +55,13 @@
 		<legend>{{ lang('DN_WEBHOOK_NEW') }}</legend>
 		<p>{{ lang('DN_WEBHOOK_NEW_DESCRIPTION') }}</p>
 		<dl>
-			<dt><label for="dn_webhook_new_alias">{{ lang('DN_WEBHOOK_NEW_ALIAS') }}{{ lang('COLON') }}</label></dt>
+			<dt><label for="dn_webhook_new_alias">{{ lang('DN_WEBHOOK_NEW_ALIAS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DN_WEBHOOK_NEW_ALIAS_DESCRIPTION') }}</span></dt>
 			<dd>
 				<input id="dn_webhook_new_alias" name="dn_webhook_new_alias" type="text" value="" size="100" maxlength="255" />
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="dn_webhook_new_url">{{ lang('DN_WEBHOOK_NEW_URL') }}{{ lang('COLON') }}</label></dt>
+			<dt><label for="dn_webhook_new_url">{{ lang('DN_WEBHOOK_NEW_URL') }}{{ lang('COLON') }}</label><br /><span>{{ lang('DN_WEBHOOK_NEW_URL_DESCRIPTION') }}</span></dt>
 			<dd>
 				<input id="dn_webhook_new_url" name="dn_webhook_new_url" type="text" value="" size="100" maxlength="255" />
 			</dd>
@@ -191,7 +192,7 @@
 					<p><strong>» {{ forum.FORUM_NAME }}</strong></p>
 				{% else %}
 					<dl>
-						<dt><label for="dn_forum_{{ forum.FORUM_ID }}">{{ forum.FORUM_NAME }}</label></dt>
+						<dt><i>{{ forum.PARENTS }}</i><label for="dn_forum_{{ forum.FORUM_ID }}">{{ forum.FORUM_NAME }}</label></dt>
 						<dd>
 							<select id="dn_forum_{{ forum.FORUM_ID }}" name="dn_forum[{{ forum.FORUM_ID }}]">
 								<option value="">({{ lang('DISABLED') }})</option>

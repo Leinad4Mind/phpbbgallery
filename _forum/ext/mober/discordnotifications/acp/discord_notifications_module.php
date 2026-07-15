@@ -86,6 +86,10 @@ class discord_notifications_module
 		{
 			$this->process_send_test_message();
 		}
+		else if ($this->request->is_set_post('action_delete_alias'))
+		{
+			$this->process_delete_alias();
+		}
 		else if ($this->request->is_set_post('submit'))
 		{
 			$this->process_form_submit();
@@ -157,7 +161,7 @@ class discord_notifications_module
 	{
 		global $table_prefix;
 
-		$webhook = $this->request->variable('dn_test_webhook', '');
+		$webhook = $this->request->variable('dn_test_webhook', '', true);
 		$test_message = $this->request->variable('dn_test_message', '');
 
 		// Check user inputs before attempting to send the message
@@ -176,7 +180,7 @@ class discord_notifications_module
 		$this->db->sql_freeresult($result);
 
 		$result = $this->notification_service->force_send_discord_notification($data['url'], $test_message);
-		if ($result == true)
+		if ($result)
 		{
 			trigger_error($this->language->lang('DN_TEST_SUCCESS') . adm_back_link($this->u_action));
 		}
@@ -184,6 +188,27 @@ class discord_notifications_module
 		{
 			trigger_error($this->language->lang('DN_TEST_FAILURE') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
+	}
+
+	private function process_delete_alias()
+	{
+		global $table_prefix;
+
+		if (!check_form_key(self::PAGE_FORM_NAME))
+		{
+			trigger_error('FORM_INVALID', E_USER_WARNING);
+		}
+
+		$delete_alias = $this->request->variable('action_delete_alias',  ['' => ''], true);
+		foreach ($delete_alias as $alias => $url)
+		{
+			$sql = "DELETE FROM {$table_prefix}discord_webhooks WHERE alias = '" . $this->db->sql_escape($alias) . "'";
+			$this->db->sql_query($sql);
+
+			$sql = "UPDATE " . FORUMS_TABLE . " SET discord_notifications = '' WHERE discord_notifications = '" . $this->db->sql_escape($alias) . "'";
+			$this->db->sql_query($sql);
+		}
+		trigger_error($this->language->lang('DN_SETTINGS_SAVED') . adm_back_link($this->u_action));
 	}
 
 	/**
@@ -203,7 +228,7 @@ class discord_notifications_module
 		$preview_length = $this->request->variable('dn_post_preview_length', '');
 
 		// Verify that the post preview length is a numeric string, convert to an int and check the valid range
-		if (is_numeric($preview_length) == false)
+		if (!is_numeric($preview_length))
 		{
 			trigger_error($this->language->lang('DN_POST_PREVIEW_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
@@ -214,11 +239,11 @@ class discord_notifications_module
 		}
 
 		// Create new entry
-		$new_alias = $this->request->variable('dn_webhook_new_alias', '');
+		$new_alias = $this->request->variable('dn_webhook_new_alias', '', true);
 		$new_url = $this->request->variable('dn_webhook_new_url', '');
 		if ($new_alias !== '' && $new_url !== '')
 		{
-			if (!filter_var($new_url, FILTER_VALIDATE_URL))
+			if (!$this->validate_url($new_url))
 			{
 				trigger_error($this->language->lang('DN_WEBHOOK_URL_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
@@ -227,29 +252,23 @@ class discord_notifications_module
 		}
 
 		// Update existing entries
-		$webhook_configuration = $this->request->variable('dn_webhook', ['' => '']);
+		$webhook_configuration = $this->request->variable('dn_webhook', ['' => ''], true);
+		// Validate all entries before updating
+		foreach ($webhook_configuration as $url)
+		{
+			if (!$this->validate_url($url))
+			{
+				trigger_error($this->language->lang('DN_WEBHOOK_URL_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+		}
 		foreach ($webhook_configuration as $alias => $url)
 		{
-			if ($url === '')
-			{
-				$sql = "DELETE FROM {$table_prefix}discord_webhooks WHERE alias = '" . $this->db->sql_escape($alias) . "'";
-				$this->db->sql_query($sql);
-
-				$sql = "UPDATE " . FORUMS_TABLE . " SET discord_notifications = '' WHERE discord_notifications = '" . $this->db->sql_escape($alias) . "'";
-				$this->db->sql_query($sql);
-			} else
-			{
-				if (!$this->validate_url($url))
-				{
-					trigger_error($this->language->lang('DN_WEBHOOK_URL_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
-				}
-				$sql = "UPDATE {$table_prefix}discord_webhooks SET url = '" . $this->db->sql_escape($url) . "' WHERE alias = '" . $this->db->sql_escape($alias) . "'";
-				$this->db->sql_query($sql);
-			}
+			$sql = "UPDATE {$table_prefix}discord_webhooks SET url = '" . $this->db->sql_escape($url) . "' WHERE alias = '" . $this->db->sql_escape($alias) . "'";
+			$this->db->sql_query($sql);
 		}
 
 		// Update configuration per forum
-		$forum_configuration = $this->request->variable('dn_forum', [0 => '']);
+		$forum_configuration = $this->request->variable('dn_forum', [0 => ''], true);
 		foreach ($forum_configuration as $id => $value)
 		{
 			// Don't update deleted entries
@@ -295,7 +314,7 @@ class discord_notifications_module
 		$this->config->set('discord_notification_type_user_create', $this->request->variable('dn_user_create', 0));
 		$this->config->set('discord_notification_type_user_delete', $this->request->variable('dn_user_delete', 0));
 
-		$this->config->set('discord_notification_default_webhook', $this->request->variable('dn_webhook_default', ''));
+		$this->config->set('discord_notification_default_webhook', $this->request->variable('dn_webhook_default', '', true));
 
 		// Log the settings change
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE');
@@ -329,7 +348,15 @@ class discord_notifications_module
 	 */
 	private function generate_forum_section()
 	{
-		$sql = "SELECT forum_id, forum_type, forum_name, discord_notifications FROM " . FORUMS_TABLE . " ORDER BY left_id ASC";
+		global $phpbb_root_path, $phpEx;
+		if (!function_exists('get_forum_parents'))
+		{
+			include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+		}
+
+		$sql = "SELECT forum_id, forum_type, forum_name, left_id, right_id, parent_id, forum_parents, discord_notifications
+			FROM " . FORUMS_TABLE . "
+			ORDER BY left_id ASC";
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
@@ -340,6 +367,7 @@ class discord_notifications_module
 				$tpl_row = array(
 					'S_IS_CAT'		=> true,
 					'FORUM_NAME'	=> $row['forum_name'],
+					'PARENTS'	=> '',
 				);
 				$this->template->assign_block_vars('forumrow', $tpl_row);
 			}
@@ -351,7 +379,16 @@ class discord_notifications_module
 							'FORUM_NAME'	=> $row['forum_name'],
 							'FORUM_ID'		=> $row['forum_id'],
 							'ALIAS'			=> $row['discord_notifications'],
+							'PARENTS'		=> '',
 						);
+				$parents = get_forum_parents($row);
+				if (is_array($parents))
+				{
+					foreach ($parents as $parent)
+					{
+						$tpl_row['PARENTS'] .= $parent[0] . ' &rarr; ';
+					}
+				}
 				$this->template->assign_block_vars('forumrow', $tpl_row);
 			}
 			// Other forum types (links) are ignored
