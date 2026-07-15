@@ -2,19 +2,19 @@
 	"name": "sitesplat/newsletter",
 	"type": "phpbb-extension",
 	"description": "A Newsletter system with an archive, weekly, monthly and many more options to run your own HTML style newsletter like a pro!",
-	"homepage": "http://sitesplat.com",
-	"version": "1.0.3",
+	"homepage": "https://sitesplat.com",
+	"version": "1.0.5",
 	"keywords": ["sitesplat", "phpbb", "extension", "newsletter", "attachments", "email", "user"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.4",
 		"phpbb/phpbb": ">3.1.*@dev"
 	},
 	"extra": {
@@ -23,7 +23,7 @@
            "phpbb/phpbb": ">3.1.*@dev"
         },
 		"version-check": {
-			"host": "www.sitesplat.com",
+			"host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
             "filename": "bbnewsletter.json",
 			"ssl": true

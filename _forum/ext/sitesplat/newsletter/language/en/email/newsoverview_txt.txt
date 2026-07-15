@@ -14,4 +14,4 @@ Forum				Topic
 
 
 {EMAIL_SIG}
-Don't want to recieve our newsletter anymore, click here {NEWSLETTER_OPTOUT}
+Don't want to receive our newsletter anymore, click here {NEWSLETTER_OPTOUT}

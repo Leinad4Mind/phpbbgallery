@@ -53,9 +53,7 @@
 		 <dl>
             <dt><label for="priority">{L_FORUMS_NEWS_FROM}{L_COLON}</label><br /><span>{L_FORUMS_FROM_EXPLAIN}</span></dt>
             <dd><select size="1" id="forums" name="newsletter_forums[]" multiple style="max-width:200px;max-height:160px;height:160px;">
-            <!-- BEGIN forumrows -->
-            <option value="{forumrows.ID}"{forumrows.SELECTED}>{forumrows.FORUMNAME}</option>
-            <!-- END forumrows -->
+            {S_FORUM_LIST}
             </select></dd>
         </dl>
         <dl>
@@ -213,6 +211,9 @@
 
 <!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/newsletter/vendor/bootstrap/js/bootstrap.min.js -->
 <!-- INCLUDEJS js/newsletter.js -->
+<script>
+document_base_url = '{BOARD_URL}';
+</script>
 <div class="md-overlay"></div><!-- the overlay element -->
 <!-- INCLUDE overall_footer.html -->
 <!-- if you need to use straight JS with jQuery dependency you need to do it after the overall_footer tag otherwise it will not be loaded properly -->

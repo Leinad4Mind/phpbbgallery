@@ -187,21 +187,12 @@ class newsletter_module
 					));
 				}
 		
-				$sql = 'SELECT forum_id, forum_name FROM ' . FORUMS_TABLE . ' WHERE forum_type = 1 ORDER BY forum_name';
-				$result = $this->db->sql_query($sql);
 				$forum_ary = json_decode($this->config['newsletter_forums'], true);
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$template->assign_block_vars('forumrows', array(
-						'ID'			=> $row['forum_id'],
-						'FORUMNAME'		=> $row['forum_name'],
-						'SELECTED'		=> (in_array($row['forum_id'], $forum_ary)) ? ' selected="selected"' : '',
-					));
-				}
-				$this->db->sql_freeresult($result);
-		
+				$forum_list = make_forum_select($forum_ary, false, true, true);
+
 				$enable_html = $phpbb_container->get('ext.manager')->is_enabled('forumhulp/htmlemail');
 				$template->assign_vars(array(
+					'S_FORUM_LIST'			=> $forum_list,
 					'WARNING_MSG'			=> (sizeof($error)) ? implode('<br />', $error) : '',
 					'U_ACTION'				=> $this->u_action,
 					'S_GROUP_OPTIONS'		=> $select_list,
@@ -213,6 +204,7 @@ class newsletter_module
 					'ENABLE_HTML'			=> $enable_html,
 					'NEW_USER'				=> $config_aray['newuser'],
 					'USE_HTML'				=> ($enable_html && $config_aray['use_html']) ? true : false,
+					'BOARD_URL'				=> generate_board_url(false),
 					'LAST_SEND'				=> $this->user->lang('LAST_SEND', $subscribed, $this->user->format_date(max($lastsend, $this->config['newsletter_last_gc'])))
 					)
 				);
