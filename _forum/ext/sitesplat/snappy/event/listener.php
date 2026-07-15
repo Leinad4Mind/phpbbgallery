@@ -156,6 +156,14 @@ class listener implements EventSubscriberInterface
 				'IN_IMGUR'	=> ($this->config['imgur_clientid'] && $this->config['imgur_quickreply']) ? true : false,
 			));
 		}
+
+		if ($this->ext_manager->is_enabled('sitesplat/gyazo'))
+		{
+			$this->user->add_lang_ext('sitesplat/gyazo', 'gyazo');
+			$this->template->assign_vars(array(
+				'IN_GYAZO'	=> ($this->config['gyazo_clientid'] && $this->config['gyazo_quickreply']) ? true : false,
+			));
+		}
 	}
 	
 	// Lets make a copy of the posts and be parsed to the original BBcodes so we can quote this son of a R2D2 
@@ -183,6 +191,24 @@ class listener implements EventSubscriberInterface
 			);
 
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_imgur_var, array('before' =>'display_order'));
+			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
+		}
+
+		if ($event['mode'] == 'attach' && $this->ext_manager->is_enabled('sitesplat/gyazo'))
+		{
+			$this->user->add_lang_ext('sitesplat/gyazo', 'gyazo');
+			$display_vars = $event['display_vars'];
+
+			$add_gyazo_var = array(
+				'gyazo_quickreply' =>
+					array(
+						'lang'		=> 'GYAZO_QUICKREPLY',
+						'validate'	=> 'bool',
+						'type' 		=> 'radio:yes_no',
+						'explain' => false),
+			);
+
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_gyazo_var, array('before' =>'display_order'));
 			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
 		}
 	}

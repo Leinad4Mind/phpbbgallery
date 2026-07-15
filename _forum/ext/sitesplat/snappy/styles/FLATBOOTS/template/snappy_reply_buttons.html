@@ -138,6 +138,20 @@
 		</div>
 	</div>
     <!-- ENDIF -->
+	<!-- IF IN_GYAZO -->
+	<div class="btn-group">
+		<div class="fileinput fileinput-new" data-provides="fileinput">
+			<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="if (document.getElementById('postform') != null) { document.getElementById('postform').action += '#gyazoAnchor' } else if (document.getElementById('qr_postform') != null) { document.getElementById('qr_postform').action += '#gyazoAnchor' };"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_GYAZO_UPLOAD}</button>
+			<span class="btn btn-default btn-file">
+				<span class="fileinput-new"><i class="fa fa-gyazo"></i></span>
+				<span class="fileinput-exists"><i class="fa fa-edit"></i></span>
+				<input type="file" name="gyazo" id="gyazo" />
+			</span>
+			<i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
+			<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float:none"><i class="fa fa-times"></i></a>
+		</div>
+	</div>
+    <!-- ENDIF -->	
 </div>
 <!-- ENDIF -->
 <!-- EVENT sitesplat_snappy_quickreply_buttons_after -->
