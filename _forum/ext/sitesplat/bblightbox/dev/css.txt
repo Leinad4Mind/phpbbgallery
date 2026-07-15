@@ -5,26 +5,34 @@
     padding: 5px;
     margin: 5px;
     text-align: center;
-	width:200px;
+    max-width: 200px;
+    width: 100%;
+}
+.inline-attachment .file {
+    width: auto;
 }
 
-.inline-attachment .file {width: auto;padding-right: unset;padding-left: unset;}
-
-/* fix odd z-index around the themes and the lightboxes :-| */
-.jslghtbx,
-.chocolat-wrapper {
-    z-index: 9999!important;
+.inline-attachment .file-lightbox {
+    width: auto;
 }
 
-/*
-* 
-* https://codepen.io/bootstrapped/pen/RrabNe
-*
-*/
+.chocolat-wrapper,
+.jslghtbx {
+    z-index: 9999!important
+}
+
+.file {
+    margin-bottom: 16px;
+}
+
+.img-bbcode img {
+    border-radius: 4px;
+}
+
 .masonary-row.row {
-	-webkit-column-gap: 30px; 
-	-moz-column-gap: 30px;
-	column-gap: 30px;
+	-webkit-column-gap: 20px; 
+	-moz-column-gap: 20px;
+	column-gap: 20px;
 	padding-left: 15px;
 	padding-right: 15px;
 	word-wrap: break-word;
@@ -36,6 +44,7 @@
 	 float: none;
 	 padding: 0px;
 }
+
 @media (min-width: 480px) {
 	.masonary-row.row {
 		-webkit-column-count: 2;
@@ -43,6 +52,7 @@
 		column-count: 2;
 	}
 }
+
 @media (min-width: 768px) {
 	.masonary-row.row {
 		-webkit-column-count: 5;
@@ -56,54 +66,81 @@
 
 
 
-
-
-
-
-
-.attach-image {
+.col-masonry-file {
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    padding: 6px !important;
+    margin: 4px 0px 24px 0px;
     position: relative;
-    display: inline-block; /* added */
-    overflow: hidden; /* added */
 }
 
-.attach-image img {width:100%;} /* remove if using in grid system */
-
-.attach-image:hover span {
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; /* added */
-    top: 0; /* added */
-    z-index: 500;
-    background: rgba(255, 255, 255, .6);
- -webkit-transition:.2s;
-  /* ...and now for the proper property */
- transition:.2s;
+.col-masonry-file::before {
+    display: inline-block;
+    content: "file:";
+    background: #fff;
+    position: absolute;
+    top: -12px;
+    width: 26px;
+    text-align: center;
+    color: #777;
 }
-/* added */
-.attach-image:hover span i {
+
+.file-lightbox img {
+    border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+.attach-image-thumb {
+    position: relative;
+    display: inline-block
+}
+.attach-image-thumb:after {
+    content: '\f00e';
+    z-index: 5;
+    position: absolute;
+    left: 50%;
     top: 50%;
-    position: absolute;
-    left: 0;
-    right: 0;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-}
-/* added */
-.attach-image span {
-    display: block;
-    position: absolute;
-    top: -100%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    padding: 4px 15px 3px 20px;
+    color: #fff;
+    font-family: 'FontAwesome';
+    font-size: 4rem;
+    background-color: rgba(23, 35, 34, .65);
+    border-radius: 4px;
+    -webkit-transition: all .3s;
+    transition: all .3s;
     opacity: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    left: 0;
-    bottom: 0;
-    right: 0;
-    text-align: center;
-    color: inherit;
- -webkit-transition:.3s;
-  /* ...and now for the proper property */
- transition:.3s;
+    pointer-events: none
 }
-.attach-image span i {
-    color: #7a7373;
+.attach-image-thumb:hover:after {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    background-color: rgba(0, 0, 0, .75);
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+
+
+
+
+
+
+
+
+
+@media (min-width: 768px) {
+	.masonary-row.row {
+		-webkit-column-count: 4;
+		-moz-column-count: 4;
+		column-count: 4;
+	}
 }

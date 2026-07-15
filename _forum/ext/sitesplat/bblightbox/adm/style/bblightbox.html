@@ -82,7 +82,7 @@
             </dd>
 		</dl>
 
- 		<dl id="captions_options"<!-- IF BBLIGHTBOX_PLUGIN eq 'Chocolat'--> class="hidden"<!-- ENDIF -->>
+ 		<dl id="captions_options">
 			<dt><label for="bblightbox_captions">{L_BBLIGHTBOX_CAPTIONS}{L_COLON}</label><br />{L_BBLIGHTBOX_CAPTIONS_EXPLAIN}</dt>
 			<dd>
             <label><input type="radio" class="radio" id="bblightbox_captions" name="bblightbox[captions]" value="1"<!-- IF BBLIGHTBOX_CAPTIONS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
@@ -94,11 +94,11 @@
 			<dt><label for="fancybox_protect">{L_FANCYBOX_PROTECT}{L_COLON}</label><br />{L_FANCYBOX_PROTECT_EXLPLAIN}</dt>
 			<dd>
             <label><input type="radio" class="radio" name="bblightbox[protect]" value="1"<!-- IF FANCYBOX_PROTECT --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" id="bblightbox[protect]" name="fancybox_protect" value="0"<!-- IF not FANCYBOX_PROTECT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			<label><input type="radio" class="radio" id="bblightbox_protect" name="bblightbox[protect]" value="0"<!-- IF not FANCYBOX_PROTECT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
             </dd>
 		</dl>
 
-		<dl id="slide_options">
+		<dl id="slide_options"<!-- IF BBLIGHTBOX_PLUGIN eq 'lightgallery' --> class="hidden"<!-- ENDIF -->>
 			<dt><label for="bblightbox_slide">{L_BBLIGHTBOX_SLIDE}{L_COLON}</label><br />{L_BBLIGHTBOX_SLIDE_EXPLAIN}</dt>
 			<dd>
             <label><input type="radio" class="radio" id="bblightbox_slide" name="bblightbox[slide]" value="1"<!-- IF BBLIGHTBOX_SLIDE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
@@ -144,6 +144,32 @@
 	</fieldset>
 	{S_FORM_TOKEN}
 </form>
+
+<fieldset class="acp_bblightbox">
+	<legend>{{ lang('BBLIGHTBOX_OPTIONS') }}</legend>
+
+	<dl id="remove_inline_attachments">
+		<dt><label for="bblightbox_slide">{{ lang('REMOVE_INLINE_ATTACHMENTS') }}{L_COLON}</label><br />{{ lang('REMOVE_INLINE_ATTACHMENTS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REMOVE_INLINE_ATTACHMENTS }}" data-ajax="bblightbox_multistep">{{ lang('REMOVE_INLINE_ATTACHMENTS') }}</a>
+		</dd>
+	</dl>
+
+	<dl id="remove_thumbnails">
+		<dt><label for="bblightbox_slide">{{ lang('REMOVE_THUMBNAILS') }}{L_COLON}</label><br />{{ lang('REMOVE_THUMBNAILS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REMOVE_THUMBNAILS }}" data-ajax="true">{{ lang('REMOVE_THUMBNAILS') }}</a>
+		</dd>
+	</dl>
+
+	<dl id="remove_reassign_thumbnails">
+		<dt><label for="bblightbox_slide">{{ lang('REASSIGN_THUMBNAILS') }}{L_COLON}</label><br />{{ lang('REASSIGN_THUMBNAILS_EXPLAIN') }}</dt>
+		<dd>
+			<a class="btn btn-sm btn-default btn-block" href="{{ U_REASSIGN_THUMBNAILS }}" data-ajax="bblightbox_multistep">{{ lang('REASSIGN_THUMBNAILS') }}</a>
+		</dd>
+	</dl>
+
+</fieldset>
 
 <!-- INCLUDEJS js/bblightbox.js -->
 <!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bblightbox/vendor/bootstrap/js/bootstrap.min.js -->

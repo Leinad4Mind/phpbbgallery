@@ -1,4 +1,4 @@
-#acp_bblightbox fieldset {background:url(images/spacer.png) repeat;padding:20px 10px;border:none;}
+#acp_bblightbox fieldset, fieldset.acp_bblightbox {background:url(images/spacer.png) repeat;padding:20px 10px;border:none;}
 #acp_bblightbox select {width:150px;}
 #Colluns {overflow:visible;}
 #Colluns dd {width:80%;}
@@ -47,7 +47,9 @@
 .medium {width:30px;height:30px;margin:5px;padding:unset;background:cornflowerblue;}
 .small {width:20px;height:20px;margin:4px;padding:unset;background:cornflowerblue;}
 
-
+fieldset dd {
+    padding: 5px 24px 6px 10px;
+}
 
 .radio, .checkbox {
     display: inherit;

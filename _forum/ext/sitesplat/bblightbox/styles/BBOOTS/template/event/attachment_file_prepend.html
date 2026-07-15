@@ -1,0 +1,6 @@
+{% if BBLIGHTBOX_COLUMN_LAYOUT %}
+	      {% if BBLIGHTBOX_COLUMN_LAYOUT == 1 %}
+	         <div class="row">
+	      {% endif %}
+	        <div class="file-lightbox{% if BBLIGHTBOX_COLUMN_LAYOUT == 1 %} col-md-3{% endif %}{% if BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %} col-md-2 col-sm-2 col-xs-6{% endif %}{% if _file.S_FILE %} col-masonry-file{% endif %}">
+{% endif %}
