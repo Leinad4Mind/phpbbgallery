@@ -4,13 +4,13 @@
 # {% if S_LOAD_BBLIGHTBOX %}
 # {% endif %}
 # 
-# like this: however needs more work becuase it only works for viewtopic page. See below //@FIX
+# like this: however needs more work because it only works for viewtopic page. See below //@FIX
 # {% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}{% endif %}
 #
 # or previous just plugin enabled:
 # {% if BBLIGHTBOX_PLUGIN %}{% endif %}
 #
-# //@FIX: the following pages need work for the event above to work correctly: listener.php line 67
+# //@FIX: the following pages need work for the event above to work correctly: listener.php line 70 TO 87
 #
 #  _mcp_post.html
 #  _mcp_topic.html
@@ -27,11 +27,11 @@
 #
 #}
 
-{% if BBLIGHTBOX_PLUGIN and S_LOAD_BBLIGHTBOX %}
+{% if BBLIGHTBOX_PLUGIN %}
     {% INCLUDECSS '@sitesplat_bblightbox/bblightbox.css' %}
     <!-- INCLUDECSS @sitesplat_bblightbox/{BBLIGHTBOX_PLUGIN}/{BBLIGHTBOX_PLUGIN}.min.css -->
 	{% if QUOTED_IMAGES %}{% INCLUDECSS '@sitesplat_bblightbox/qimages.css' %}{% endif %}
-    {% if RESIZE_IMAGES %}<style>.img-bbcode img {max-width: {RESIZE_IMAGES}px;} .img-bbcode {width: {RESIZE_IMAGES}px; max-width:100%;}</style>{% endif %}
+    {% if RESIZE_IMAGES %}<style>.img-bbcodes img {max-width: {RESIZE_IMAGES}px;} .img-bbcodes, #live_preview .img-post {width: {RESIZE_IMAGES}px; max-width:100%;}</style>{% endif %}
 	{% if BBLIGHTBOX_COLUMN_LAYOUT == 2 %}{% INCLUDECSS '@sitesplat_bblightbox/grid4.css' %}{% endif %}
 	{% if BBLIGHTBOX_COLUMN_LAYOUT == '1' %}<style>.col-masonry-file{margin:4px 15px 24px !important;}</style>{% endif %}
     {% if BBLIGHTBOX_COLUMN_LAYOUT == '1' or BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}<style>.attach-image{position:relative;display:inline-block}.attach-image:after{content:'\f00e';z-index:5;position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);padding:4px 15px 3px 20px;color:#fff;font-family:'FontAwesome';font-size:4rem;background-color:rgba(23,35,34,.65);border-radius:4px;-webkit-transition:all .3s;transition:all .3s;opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";pointer-events:none}.attach-image:hover:after{opacity:1;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";background-color:rgba(0,0,0,.75);-webkit-transition:all .3s;transition:all .3s;}</style>{% endif %}

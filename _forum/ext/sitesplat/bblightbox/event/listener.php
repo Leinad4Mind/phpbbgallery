@@ -100,9 +100,7 @@ class listener implements EventSubscriberInterface
 		$xpath = new \DOMXPath($dom);
 		foreach ($xpath->query('//img[@src]') as $img)
 		{
-			// quick and dirty Add class needed for the img bbcodes so it can be manipulated in front-end with the lightbox
 			$img->setAttribute('class', 'img-responsive img-post img-bbcodes');
-
 		}
 		$dom->saveChanges();
 	}
