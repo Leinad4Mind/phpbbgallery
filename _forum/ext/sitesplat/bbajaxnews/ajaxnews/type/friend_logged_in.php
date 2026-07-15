@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -26,7 +25,7 @@ class friend_logged_in extends base
 	public function get_lang_array($data)
 	{
 		return [
-			get_username_string('full', $data['user_id'], $data['username'], $data['user_colour']),
+			get_username_string('full', (int) $data['user_id'], $data['username'], $data['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
 		];
 	}
 

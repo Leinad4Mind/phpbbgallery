@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -27,9 +26,9 @@ class new_sticky extends base
 		$this->db->sql_freeresult($result);
 
 		return [
-			get_username_string('full', $data['poster_id'], $user['username'], $user['user_colour']),
-			'<a href="' . generate_board_url() . '/' . append_sid('viewtopic.' . $this->php_ext, 't=' . $data['topic_id']) . '">' . $data['post_subject'] . '</a>',
-			'<a href="' . generate_board_url() . '/' . append_sid('viewforum.' . $this->php_ext, 'f=' . $data['forum_id']) . '" title="' . $data['forum_desc'] . '">' . $data['forum_name'] . '</a>',
+			get_username_string('full', (int) $data['poster_id'], $user['username'], $user['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
+			'<a href="' . $this->url . append_sid('/viewtopic.php', 't=' . $data['topic_id']) . '">' . $data['post_subject'] . '</a>',
+			'<a href="' . $this->url . append_sid('/viewforum.php', 'f=' . $data['forum_id']) . '" title="' . $data['forum_desc'] . '">' . $data['forum_name'] . '</a>',
 		];
 	}
 

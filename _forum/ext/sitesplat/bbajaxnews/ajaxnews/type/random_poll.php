@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -38,19 +37,20 @@ class random_poll extends base
 			return false;
 		}
 
-		$sql = 'SELECT t.topic_id, t.poll_title
-				FROM ' . $this->topics_table . ' t
-				WHERE t.poll_start <> 0
-					AND ( (t.poll_length + t.poll_start) = poll_start 
-						OR (t.poll_length + t.poll_start) < ' . time() . ' )
-					AND ' . $this->db->sql_in_set('t.forum_id', $forums) . '
-					AND (
-						SELECT COUNT(pv.vote_user_id)
-						FROM ' . $this->poll_votes_table . ' pv
-						WHERE pv.topic_id = t.topic_id
-							AND pv.vote_user_id = ' . $this->user->data['user_id'] . '
-					) = 0
-				ORDER BY ' . $this->sql_random();
+		$sql = 'SELECT t.topic_id, t.poll_title FROM ' . $this->topics_table . ' t
+			WHERE ' . $this->db->sql_in_set('t.forum_id', $forums) . '
+			AND t.poll_start > (' . time() . ' - 31556926)
+			AND (t.poll_length = 0 OR t.poll_start + t.poll_length > ' . time() . ')
+			AND t.topic_poster <> ' . $this->user->data['user_id'] . '
+			AND t.topic_status NOT IN (1, 2)
+			AND (
+				SELECT COUNT(pv.vote_user_id)
+				FROM ' . $this->poll_votes_table . ' pv
+				WHERE pv.topic_id = t.topic_id
+				AND pv.vote_user_id = ' . $this->user->data['user_id'] . '
+			) = 0
+		ORDER BY ' . $this->sql_random();
+
 		$result = $this->db->sql_query_limit($sql, 1);
 		$poll = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -61,7 +61,7 @@ class random_poll extends base
 		}
 
 		return [
-			'<a href="' . generate_board_url() . '/' . append_sid('viewtopic.' . $this->php_ext, 't=' . $poll['topic_id']) . '">' . $poll['poll_title'] . '</a>',
+			'<a href="' . $this->url . append_sid('/viewtopic.php', 't=' . $poll['topic_id']) . '">' . $poll['poll_title'] . '</a>',
 		];
 	}
 

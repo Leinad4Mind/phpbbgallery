@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -27,11 +26,11 @@ class bbmembership extends base
 			'WHERE'		=> 'u.user_id = ' . (int) $data['user_id'],
 		];
 		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary));
-		$row = $this->db->sql_fetchrow($result);
+		$user = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
 		return [
-			get_username_string('full', (int) $data['user_id'], $row['username'], $row['user_colour']),
+			get_username_string('full', (int) $data['user_id'], $user['username'], $user['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
 			$data['level'],
 		];
 	}

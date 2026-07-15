@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -19,6 +18,8 @@ abstract class base implements type_interface
 	protected $users_table;
 	protected $root_path;
 	protected $php_ext;
+	protected $url;
+
 	public function __construct(\phpbb\language\language $language, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, $sessions_table, $users_table, $root_path, $php_ext)
 	{
 		$this->language = $language;
@@ -28,6 +29,7 @@ abstract class base implements type_interface
 		$this->users_table = $users_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->url = generate_board_url();
 	}
 
 	public function get_db_type()

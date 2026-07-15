@@ -2,15 +2,15 @@
     "name": "sitesplat/bbajaxnews",
     "type": "phpbb-extension",
     "description": "BBajaxnews is a powerful and revolutionary extension allows your phpBB forum running SiteSplat premium products to have real live notifications for your users with at almost 0 server resources expense!",
-	"homepage": "http://sitesplat.com",
-    "version": "1.0.0",
+	"homepage": "https://sitesplat.com",
+    "version": "1.0.2",
 	"keywords": ["phpbb", "extension", "news", "ajax"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
     "require": {
@@ -27,7 +27,8 @@
 		"version-check": {
             "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbajaxnews.json"
+            "filename": "bbajaxnews.json",
+			"ssl": true
 		}
     }
 }

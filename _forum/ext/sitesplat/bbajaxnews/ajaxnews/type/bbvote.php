@@ -1,12 +1,11 @@
 <?php
 /**
- *
- * BBajaxnews. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2018, SiteSplat
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
+*
+* @package BBajaxnews
+* @copyright (c) 2018 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbajaxnews\ajaxnews\type;
 
@@ -37,7 +36,7 @@ class bbvote extends base
 		$this->db->sql_freeresult($result);
 
 		return [
-			'<a href="' . generate_board_url() . '/' . append_sid('viewtopic.' . $this->php_ext, 't=' .  (int) $data['topic_id']) . '">' . $row['topic_title'] . '</a>',
+			'<a href="' . $this->url . append_sid('/viewtopic.php', 't=' .  (int) $data['topic_id']) . '">' . $row['topic_title'] . '</a>',
 		];
 	}
 
