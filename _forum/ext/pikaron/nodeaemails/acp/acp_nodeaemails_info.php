@@ -16,22 +16,22 @@ class acp_nodeaemails_info
 	{
 		return array(
 			'filename'		=> '\pikaron\nodeaemails\acp\acp_nodeaemails_module',
-			'title'			=> 'ACP_NO_DEA_EMAILS',
+			'title'			=> 'LOG_NO_DEA_EMAILS',
 			'modes'			=> array(
 				'configuration'	=> array(
-					'title' => 'ACP_NO_DEA_EMAILS_SETTINGS',
+					'title' => 'LOG_NO_DEA_EMAILS_SETTINGS',
 					'auth'	=> 'ext_pikaron/nodeaemails && acl_a_board',
-					'cat'	=> array('ACP_NO_DEA_EMAILS'),
+					'cat'	=> array('ACP_CAT_DOT_MODS'),
 				),
 				'locals'	=> array(
-					'title' => 'ACP_NO_DEA_EMAILS_LOCALS',
+					'title' => 'LOG_NO_DEA_EMAILS_LOCALS',
 					'auth'	=> 'ext_pikaron/nodeaemails && acl_a_board',
-					'cat'	=> array('ACP_NO_DEA_EMAILS'),
+					'cat'	=> array('ACP_CAT_DOT_MODS'),
 				),
 				'users'		=> array(
-					'title' => 'ACP_NO_DEA_EMAILS_USERS',
+					'title' => 'LOG_NO_DEA_EMAILS_USERS',
 					'auth'	=> 'ext_pikaron/nodeaemails && acl_a_board',
-					'cat'	=> array('ACP_NO_DEA_EMAILS'),
+					'cat'	=> array('ACP_CAT_DOT_MODS'),
 				),
 			),
 		);

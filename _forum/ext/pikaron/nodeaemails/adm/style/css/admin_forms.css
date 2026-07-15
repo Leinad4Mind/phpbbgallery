@@ -509,9 +509,17 @@ No DEA Emails
 }
 
 .deatd {
-	float: right;
+	text-align: center;
 }
 
 .deatdri {
 	text-align: right;
+}
+
+.pagination {
+	margin: 10px 0 10px;
+}
+
+input.button3 {
+	min-width: 3em;
 }

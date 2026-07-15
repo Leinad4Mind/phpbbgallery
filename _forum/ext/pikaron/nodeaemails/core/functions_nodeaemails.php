@@ -137,7 +137,7 @@ class functions_nodeaemails
 	/**
 	* Get number of all users
 	*/
-	function count_users()
+	function count_total_users()
 	{
 		$sql = 'SELECT COUNT(user_id) AS total_users
 				FROM ' . USERS_TABLE;
@@ -145,6 +145,29 @@ class functions_nodeaemails
 		$total_users = (int) $this->db->sql_fetchfield('total_users');
 		$this->db->sql_freeresult($result);
 		return $total_users;
+	}
+
+	/**
+	* Get users with DEA email
+	*/
+	function get_users_dea()
+	{
+		$sql = "SELECT user_id, user_email FROM " . USERS_TABLE ." WHERE user_email <> '' ORDER BY user_id ASC";
+		$result = $this->db->sql_query($sql);
+		$MiArray = $this->load_total_deas();
+		$dea_users = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			// split on @ and return last value of array in $domain[1]
+			$domain = explode('@', $row['user_email']);
+
+			if (array_search($domain[1], $MiArray) !== false)
+			{
+				$dea_users[] = $row['user_id'];
+			}
+		}
+		$this->db->sql_freeresult($result);
+		return $dea_users;
 	}
 
 	/**
