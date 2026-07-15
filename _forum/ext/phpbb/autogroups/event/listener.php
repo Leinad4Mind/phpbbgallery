@@ -38,7 +38,7 @@ class listener implements EventSubscriberInterface
 	 * @static
 	 * @access public
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.delete_group_after'	=> 'delete_group_rules',
@@ -57,7 +57,8 @@ class listener implements EventSubscriberInterface
 			'core.session_create_after'	=> 'last_visit_check',
 
 			// Auto Groups "Membership" listeners
-			'core.user_add_after'		=> 'membership_check',
+			'core.user_add_after'			=> 'membership_check',
+			'core.user_active_flip_after'	=> 'membership_check',
 		);
 	}
 
@@ -170,8 +171,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function membership_check($event)
 	{
+		$users = $event->offsetExists('user_id_ary') ? 'user_id_ary' : 'user_id';
 		$this->manager->check_condition('phpbb.autogroups.type.membership', array(
-			'users'		=> $event['user_id'],
+			'users'		=> $event[$users],
 		));
 	}
 }
