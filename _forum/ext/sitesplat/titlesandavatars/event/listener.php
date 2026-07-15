@@ -47,7 +47,8 @@ class listener implements EventSubscriberInterface
 			'core.memberlist_memberrow_before'				=> 'memberlist_avatar',
 			'core.viewtopic_modify_post_data'				=> 'participants_avatars',
 			'core.obtain_users_online_string_sql'			=> 'online_userlist_sql',
-			'core.obtain_users_online_string_modify'		=> 'online_userlist'
+//			'core.obtain_users_online_string_modify'		=> 'online_userlist'
+			'core.obtain_users_online_string_before_modify'		=> 'online_userlist'
 		);
 	}
 
@@ -65,24 +66,43 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->config['titles_avatar_online'])
 		{
-			$online_userlist = $event['online_userlist'];
+//			$online_userlist = $event['online_userlist'];
 			$user_online_link = $event['user_online_link'];
 			
 			$rows = $event['rowset']; 
 			$avatars = array();
-			foreach($rows as $row)
+			foreach ($rows as $row)
 			{
-				$avatars[] = '<a href="memberlist.php?mode=viewprofile&u=' . $row['user_id'] . '">' . (($row['user_avatar']) ? 
-								 str_replace(array('class="avatar"', 'alt='), array('class="online_img"', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title='), phpbb_get_user_avatar(
-									array('avatar'			=> $row['user_avatar'], 
-										  'id'				=> $row['user_id'], 
-										  'avatar_type'		=> $row['user_avatar_type'], 
-										  'avatar_width'	=> $row['user_avatar_width'], 
-										  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
-										  '<img class="avatar" alt="" title="' .  $row['username'] . '" src="./styles/' . 
-										  $this->user->style['style_path'] . '/theme/images/no-avatar.png" alt="">') . '</a>';
+				$userId = intval($row['user_id']);
+				if (isset($user_online_link[$userId])) {
+					if (preg_match('` href\="(.*?)"`', $user_online_link[$userId], $matches)) {
+						if ($row['user_avatar'])
+						{
+							$avatar = str_replace(
+								array('class="avatar"', 'alt='),
+								array('class="online_img"', 'alt="' . $this->user->lang['USER_AVATAR'] . '" title='),
+								phpbb_get_user_avatar([
+									'avatar' => $row['user_avatar'], 
+									'id' => $row['user_id'], 
+									'avatar_type' => $row['user_avatar_type'], 
+									'avatar_width' => $row['user_avatar_width'], 
+									'avatar_height' => $row['user_avatar_height'],
+								], $row['username'])
+							);
+						}
+						else
+						{
+							$avatar = '<img class="avatar" alt="" title="' .  $row['username'] . '" src="./styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png" alt="">';
+						}
+
+	//					$avatars[] = '<a href="' . $matches[1] . '">' . $avatar . '</a>';
+						$user_online_link[intval($row['user_id'])] = '<a href="' . $matches[1] . '">' . $avatar . '</a>';
+					}
+				}
 			}
-			$event['online_userlist'] = str_replace($user_online_link, $avatars, $online_userlist);
+
+//			$event['online_userlist'] = str_replace($user_online_link, $avatars, $online_userlist);
+			$event['user_online_link'] = $user_online_link;
 		}
 	}
 
@@ -100,7 +120,7 @@ class listener implements EventSubscriberInterface
 
 			for ($i = 0; $i < min(10, sizeof($row)); $i++)
 			{
-				if ($row[$i]['author_username'])
+				if (!empty($row[$i]['author_username']))
 				{
 					$this->template->assign_block_vars('participants_avatars', array(
 						'TOPIC_AVATAR'	=> $row[$i]['avatar'],
