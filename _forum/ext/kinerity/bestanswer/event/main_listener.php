@@ -10,16 +10,6 @@
 
 namespace kinerity\bestanswer\event;
 
-use phpbb\config\config;
-use phpbb\auth\auth;
-use phpbb\db\driver\driver_interface;
-use phpbb\controller\helper;
-use phpbb\language\language;
-use phpbb\request\request;
-use phpbb\template\template;
-use phpbb\user;
-use phpbb\log\log;
-
 /**
  * @ignore
  */
@@ -30,9 +20,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class main_listener implements EventSubscriberInterface
 {
-	/* @var \phpbb\config\config */
-	protected $config;
-
 	/* @var \phpbb\auth\auth */
 	protected $auth;
 
@@ -42,9 +29,6 @@ class main_listener implements EventSubscriberInterface
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
-	/* @var \phpbb\language\language */
-	protected $lang;
-
 	/* @var \phpbb\request\request */
 	protected $request;
 
@@ -53,12 +37,6 @@ class main_listener implements EventSubscriberInterface
 
 	/* @var \phpbb\user */
 	protected $user;
-
-	/* @var \phpbb\log\log */
-	protected $log;
-
-	/* @var int bbpoints */
-	protected $bbpoints_table;
 
 	/* @var string */
 	protected $root_path;
@@ -72,44 +50,23 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
-	 * @param config				$config			Config object
-	 * @param auth					$auth			Auth object
-	 * @param driver_interface		$db				Database object
-	 * @param helper				$helper			Controller Helper object
-	 * @param language				$lang			Language object
-	 * @param request				$request		Request object
-	 * @param template				$template		Template object
-	 * @param user					$user			User object
-	 * @param log					$log			Log object
-	 * @param int					$bbpoints_table
-	 * @param string				$root_path
-	 * @param string				$php_ext
+	 * @param \phpbb\auth\auth                    $auth
+	 * @param \phpbb\db\driver\driver_interface   $db
+	 * @param \phpbb\controller\helper            $helper
+	 * @param \phpbb\request\request              $request
+	 * @param \phpbb\template\template            $template
+	 * @param \phpbb\user                         $user
+	 * @param string                              $root_path
+	 * @param string                              $php_ext
 	 */
-	public function __construct(
-		config $config,
-		auth $auth,
-		driver_interface $db, 
-		helper $helper,
-		language $lang,
-		request $request,
-		template $template,
-		user $user,
-		log $log,
-		$bbpoints_table,
-		$root_path,
-		$php_ext
-	)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
-		$this->config = $config;
 		$this->auth = $auth;
 		$this->db = $db;
 		$this->helper = $helper;
-		$this->lang = $lang;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->log = $log;
-		$this->bbpoints_table = $bbpoints_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -153,7 +110,6 @@ class main_listener implements EventSubscriberInterface
 	public function acp_manage_forums_display_form($event)
 	{
 		$event->update_subarray('template_data', 'S_ENABLE_ANSWER', $event['forum_data']['enable_answer']);
-		$event->update_subarray('template_data', 'S_BBPOINTS_ANSWER', (int)$event['forum_data']['bbpoints_answer']);
 	}
 
 	public function acp_manage_forums_initialise_data($event)
@@ -161,21 +117,19 @@ class main_listener implements EventSubscriberInterface
 		if ($event['action'] == 'add')
 		{
 			$event->update_subarray('forum_data', 'enable_answer', false);
-			$event->update_subarray('forum_data', 'bbpoints_answer', 0);
 		}
 	}
 
 	public function acp_manage_forums_request_data($event)
 	{
 		$event->update_subarray('forum_data', 'enable_answer', $this->request->variable('enable_answer', 0));
-		$event->update_subarray('forum_data', 'bbpoints_answer', $this->request->variable('bbpoints_answer', 0));
 	}
 
 	public function delete_posts_in_transaction_before($event)
 	{
 		$post_ids = $event['post_ids'];
 		$topic_ids = $event['topic_ids'];
-		$answer_post_ids = $answer_user_ids = $answer_bbpoints_ids = array();
+		$answer_post_ids = $answer_user_ids = array();
 
 		// Only query topics with answers
 		$sql = 'SELECT answer_post_id, answer_user_id
@@ -189,7 +143,6 @@ class main_listener implements EventSubscriberInterface
 			{
 				$answer_post_ids[] = $row['answer_post_id'];
 				$answer_user_ids[] = $row['answer_user_id'];
-				$answer_bbpoints_ids[] = 'bestanswer-'.$row['answer_post_id'];
 			}
 		}
 		$this->db->sql_freeresult($result);
@@ -201,15 +154,12 @@ class main_listener implements EventSubscriberInterface
 
 		if ($answer_post_ids)
 		{
-			// remove bbpoints
-			$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
-			' . $this->db->sql_in_set('to_id', $answer_user_ids) . ' AND '.$this->db->sql_in_set('reason', $answer_bbpoints_ids);
-			$this->db->sql_query($sql);
-			$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWERS', time(), array(implode(",",$answer_user_ids), implode(",",$answer_post_ids)));
-
 			$sql = 'UPDATE ' . TOPICS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE ' . $this->db->sql_in_set('answer_post_id', $answer_post_ids);
 			$this->db->sql_query($sql);
+		}
 
+		if ($answer_user_ids)
+		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_answers = user_answers - 1
 				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
@@ -232,10 +182,13 @@ class main_listener implements EventSubscriberInterface
 		}
 		$this->db->sql_freeresult($result);
 
-		$sql = 'UPDATE ' . USERS_TABLE . '
-			SET user_answers = user_answers - 1
-			WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
-		$this->db->sql_query($sql);
+		if ($answer_user_ids)
+		{
+			$sql = 'UPDATE ' . USERS_TABLE . '
+				SET user_answers = user_answers - 1
+				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
+			$this->db->sql_query($sql);
+		}
 	}
 
 	public function display_forums_modify_forum_rows($event)
@@ -250,7 +203,7 @@ class main_listener implements EventSubscriberInterface
 			$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
 
 			// Is the extension enabled on the forum and related answer_post_id not null?
-			if ($row['enable_answer'] && !($forum_rows[$parent_id]['answer_post_id'] === false))
+			if ($row['enable_answer'] && $forum_rows[$parent_id]['answer_post_id'] !== false)
 			{
 				$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
 			}
@@ -378,7 +331,6 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$post_row = array_merge($post_row, array(
-			'S_ANSWER'	=> $topic_info['enable_answer'] ? true : false,
 			'ANSWER_POST_ID'	=> (int) $topic_info['answer_post_id'],
 
 			'S_FIRST_POST'	=> $topic_info['topic_first_post_id'] == $row['post_id'] ? true : false,
@@ -504,10 +456,6 @@ class main_listener implements EventSubscriberInterface
 			'lang_set' => 'common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
-		$cookie = $this->request->variable($this->config['cookie_name'] . '_nightstalker', 0, false, \phpbb\request\request_interface::COOKIE);
-		$this->template->assign_vars(array(
-			'S_NIGHTSTAKLER_ENABLED'	=> ($cookie) ? true : false,
-		));
 	}
 
 	public function viewtopic_assign_template_vars_before($event)
@@ -516,7 +464,6 @@ class main_listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'S_ANSWERED'	=> $topic_data['answer_post_id'] ? true : false,
-			'U_ANSWER'		=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . (int) $topic_data['answer_post_id'] . '#p' . (int) $topic_data['answer_post_id']),
 		));
 	}
 

@@ -1,0 +1,8 @@
+{% if ANSWERS %}
+{% INCLUDEJS '@kinerity_bestanswer/jxtools.js' %}
+
+<div id="list_inner_hidden_container_1" jxdom-closest="div.column2" jxdom-find="dd:nth-of-type({%if S_WARNINGS %}4{% else %}3{% endif %})" jxdom-action="after" >
+<dt>{{ lang('TOTAL_ANSWERS') }}{{ lang('COLON') }}</dt>
+<dd>{{ ANSWERS }}</dd>
+</div>
+{% endif %}

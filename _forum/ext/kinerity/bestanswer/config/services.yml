@@ -9,30 +9,25 @@ services:
             - '@request'
             - '@user'
             - '@notification_manager'
-            - '%sitesplat.bbpoints.table%'
             - '%core.root_path%'
             - '%core.php_ext%'
 
     kinerity.bestanswer.listener:
         class: kinerity\bestanswer\event\main_listener
         arguments:
-            - '@config'
             - '@auth'
             - '@dbal.conn'
             - '@controller.helper'
-            - '@language'
             - '@request'
             - '@template'
             - '@user'
-            - '@log'
-            - '%sitesplat.bbpoints.table%'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
 
-    kinerity.bestanswer.notification.type.bestanswer:
-        class: kinerity\bestanswer\notification\type\bestanswer
+    kinerity.bestanswer.notification.type.markanswer:
+        class: kinerity\bestanswer\notification\type\markanswer
         shared: false
         parent: notification.type.base
         calls:
@@ -41,8 +36,8 @@ services:
         tags:
             - { name: notification.type }
 
-    kinerity.bestanswer.notification.type.notbestanswer:
-        class: kinerity\bestanswer\notification\type\notbestanswer
+    kinerity.bestanswer.notification.type.unmarkanswer:
+        class: kinerity\bestanswer\notification\type\unmarkanswer
         shared: false
         parent: notification.type.base
         calls:

@@ -10,14 +10,6 @@
 
 namespace kinerity\bestanswer\controller;
 
-use phpbb\auth\auth;
-use phpbb\db\driver\driver_interface;
-use phpbb\language\language;
-use phpbb\notification\manager;
-use phpbb\log\log;
-use phpbb\request\request;
-use phpbb\user;
-
 /**
  * Best Answer main controller
  */
@@ -50,8 +42,6 @@ class main_controller
 	/* @var string */
 	protected $php_ext;
 
-	/* @var int bbpoints_table */
-	protected $bbpoints_table;
 	/**
 	 * Constructor
 	 *
@@ -61,23 +51,11 @@ class main_controller
 	 * @param \phpbb\log\log                      $log
 	 * @param \phpbb\request\request              $request
 	 * @param \phpbb\user                         $user
-	 * @param int								  $bbpoints_table
 	 * @param \phpbb\notification\manager         $notification_manager
 	 * @param string                              $root_path
 	 * @param string                              $php_ext
 	 */
-	public function __construct(
-		auth $auth,
-		driver_interface $db,
-		language $lang,
-		log $log,
-		request $request,
-		user $user,
-		manager $notification_manager,
-		$bbpoints_table,
-		$root_path,
-		$php_ext
-	)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $lang, \phpbb\log\log $log, \phpbb\request\request $request, \phpbb\user $user, \phpbb\notification\manager $notification_manager, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->db = $db;
@@ -86,7 +64,6 @@ class main_controller
 		$this->request = $request;
 		$this->user = $user;
 		$this->notification_manager = $notification_manager;
-		$this->bbpoints_table = $bbpoints_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -100,7 +77,7 @@ class main_controller
 
 		// Query necessary topic data
 		$sql_arr = array(
-			'SELECT'	=> 't.*, f.*, p.*, u.user_id, u.username, u.user_colour',
+			'SELECT'	=> 'f.forum_id, f.enable_answer, p.post_id, p.topic_id, p.poster_id, p.post_subject, t.topic_id, t.forum_id, t.topic_title, t.topic_poster, t.topic_status, t.topic_first_post_id, t.answer_post_id, t.answer_user_id, u.user_id, u.username, u.user_colour',
 
 			'FROM'		=> array(
 				FORUMS_TABLE	=> 'f',
@@ -160,15 +137,9 @@ class main_controller
 
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
-				
-				// remove bbpoints
-				$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
-				to_id=' . (int) $topic_data['user_id'] . ' AND reason="bestanswer-'.$post_id.'"';
-				$this->db->sql_query($sql);
-				$this->log->add($log_var, (int) $topic_data['user_id'], (int) $this->user->data['user_ip'], 'LOG_BBPOINTS_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 
-				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.notbestanswer', $post_id, $post_id, $topic_data['user_id']);
-				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.notbestanswer', [
+				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.unmarkanswer', $post_id, $post_id, $topic_data['user_id']);
+				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.unmarkanswer', [
 					'user_id'			=> $this->user->data['user_id'],
 					'user_ids'			=> array($topic_data['user_id']),
 					'username'			=> $this->user->data['username'],
@@ -223,16 +194,8 @@ class main_controller
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 
-				// add bbpoints
-				if ($topic_data['bbpoints_answer'] > 0) {
-					$sql = 'INSERT INTO ' . $this->bbpoints_table . ' (from_id, to_id, bbpoints, reason, timestamp) 
-						VALUES(0, ' . (int) $topic_data['user_id'] . ', ' . $topic_data['bbpoints_answer'] . ', "bestanswer-'.$post_id.'", ' . time() . ')';
-					$this->db->sql_query($sql);
-					$this->log->add($log_var, (int) $topic_data['user_id'], (int) $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));				
-				}
-
-				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.bestanswer', $post_id, $post_id, $topic_data['user_id']);
-				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.bestanswer', [
+				$this->notification_manager->delete_notifications('kinerity.bestanswer.notification.type.markanswer', $post_id, $post_id, $topic_data['user_id']);
+				$this->notification_manager->add_notifications('kinerity.bestanswer.notification.type.markanswer', [
 					'user_id'			=> $this->user->data['user_id'],
 					'user_ids'			=> array($topic_data['user_id']),
 					'username'			=> $this->user->data['username'],
@@ -255,6 +218,7 @@ class main_controller
 
 		// Redirect back to the post
 		$url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . (int) $post_id . '#p' . (int) $post_id);
-		redirect($url);
+		$response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302);
+		$response->send();
 	}
 }

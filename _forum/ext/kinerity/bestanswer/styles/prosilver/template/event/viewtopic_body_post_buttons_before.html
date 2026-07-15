@@ -1,0 +1,13 @@
+{% if not postrow.S_FIRST_POST and postrow.S_AUTH and postrow.S_ANSWER %}
+<li>
+	{% if postrow.POST_ID == postrow.ANSWER_POST_ID %}
+	<a href="{{ postrow.U_UNMARK_ANSWER }}" title="{{ lang('UNMARK_ANSWER') }}" class="button button-icon-only">
+		<i class="icon fa-minus fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('BUTTON_UNMARK') }}</span>
+	</a>
+	{% else %}
+	<a href="{{ postrow.U_MARK_ANSWER }}" title="{{ lang('MARK_ANSWER') }}" class="button button-icon-only">
+		<i class="icon fa-check fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('BUTTON_MARK') }}</span>
+	</a>
+	{% endif %}
+</li>
+{% endif %}

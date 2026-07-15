@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * Best Answer extension for the phpBB Forum Software package.
@@ -52,8 +51,8 @@ class ext extends \phpbb\extension\base
 
 				// Enable notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->enable_notifications('kinerity.bestanswer.notification.type.bestanswer');
-				$phpbb_notifications->enable_notifications('kinerity.bestanswer.notification.type.notbestanswer');
+				$phpbb_notifications->enable_notifications('kinerity.bestanswer.notification.type.markanswer');
+				$phpbb_notifications->enable_notifications('kinerity.bestanswer.notification.type.unmarkanswer');
 				return 'notifications';
 
 			break;
@@ -83,8 +82,8 @@ class ext extends \phpbb\extension\base
 
 				// Disable notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->disable_notifications('kinerity.bestanswer.notification.type.bestanswer');
-				$phpbb_notifications->disable_notifications('kinerity.bestanswer.notification.type.notbestanswer');
+				$phpbb_notifications->disable_notifications('kinerity.bestanswer.notification.type.markanswer');
+				$phpbb_notifications->disable_notifications('kinerity.bestanswer.notification.type.unmarkanswer');
 				return 'notifications';
 
 			break;
@@ -114,8 +113,8 @@ class ext extends \phpbb\extension\base
 
 				// Purge notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->purge_notifications('kinerity.bestanswer.notification.type.bestanswer');
-				$phpbb_notifications->purge_notifications('kinerity.bestanswer.notification.type.notbestanswer');
+				$phpbb_notifications->purge_notifications('kinerity.bestanswer.notification.type.markanswer');
+				$phpbb_notifications->purge_notifications('kinerity.bestanswer.notification.type.unmarkanswer');
 				return 'notifications';
 
 			break;

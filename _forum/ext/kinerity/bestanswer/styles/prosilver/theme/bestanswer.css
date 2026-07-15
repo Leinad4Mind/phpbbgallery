@@ -1,0 +1,26 @@
+.answer + .post,
+.answer + a#unread + .post {
+	background-color: #EAF8E2;
+}
+
+.post_answer {
+	background-color: #EAF8E2 !important;
+	padding: 10px;
+	border-radius: 7px;
+	width: 97.5% !important;
+	margin-bottom: 17px;
+}
+
+.profile-answers {
+	margin-left: 8px;
+}
+
+.profile-answers a {
+	font-weight: normal;
+}
+
+@media (max-width: 700px) {
+	div.profile-answers {
+		display: none;
+	}
+}

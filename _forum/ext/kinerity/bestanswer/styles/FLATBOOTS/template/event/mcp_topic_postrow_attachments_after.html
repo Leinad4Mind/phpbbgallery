@@ -1,6 +1,0 @@
-{% if postrow.S_FIRST_POST and postrow.ANSWER_POST_ID %}
-<br />
-<div class="postbody post_answer{% if S_NIGHTSTAKLER_ENABLED %}-dark{% endif %}"><span class="answered-icon-color" title="{{ lang('ANSWERED') }}"><i class="fa fa-check"></i></span> {{ lang('BEST_ANSWER') }} <span class="author">{{ lang('POST_BY_AUTHOR') }} {{ postrow.ANSWER_USERNAME_FULL }} &raquo; {{ postrow.ANSWER_POST_TIME }}</span><hr />
-<div class="content">{{ postrow.ANSWER_POST_TEXT }}</div>
-<hr /><a href="{{ postrow.U_ANSWER }}" class="btn btn-default btn-load">{{ lang('TO_POST') }}</a></div>
-{% endif %}
