@@ -1,0 +1,172 @@
+
+.legend-content {
+    margin-bottom: 44px;
+    margin-top: 10px;
+}
+
+#ext_notice .close {
+	float: right;
+	width: 12px;
+	height: 12px;
+	background: transparent url("images/close.png") no-repeat 0 0;
+	opacity: 0.6;
+}
+
+/* Extension details */
+.alert-update {
+    border: 2px solid;
+}
+
+.modal-dialog {
+    margin: 130px auto;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.label {
+    padding: 0.2em 0.3em 0.1em 0.2em;
+}
+
+.md-trigger {
+    text-decoration: none!important;
+}
+
+
+.md-content h3 {
+    opacity: 1;
+}
+
+/* loading stuff */
+.loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #ce4233;
+  letter-spacing: 0.2em;
+}
+.loader::before, .loader::after {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #ce4233;
+  position: absolute;
+  -webkit-animation: load .7s infinite alternate ease-in-out;
+          animation: load .7s infinite alternate ease-in-out;
+}
+.loader::before {
+  top: 0;
+}
+.loader::after {
+  bottom: 0;
+}
+
+@-webkit-keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+
+.md-content button {
+	border: none;
+	padding: 0.6em 1.2em;
+	background: #c0392b;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+.md-content button:hover {
+	background: #A5281B;
+}
+
+
+.ExtensionName {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+#meta_homepage > a {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.description-ext span {
+ color: #fff;
+    font-weight: bold;
+}
+
+.extension_author_link {
+    color: #c0392b !important;
+}
+
+.description-ext > div {
+    margin-bottom: 10px;
+}
+
+.radio, .checkbox {
+    display: inline-block;
+    margin-bottom: 1px;
+}
+
+#bbfront_notice .close {
+	float: right;
+	font-size:20px;
+	background-color: transparent;
+	opacity: 0.9;
+	margin-top:-8px;
+}
+
+h1 {position: relative;}
+#circle {display: none; float: right; font-size: 30px;}
+.fa-arrow-up, .fa-arrow-down {float:right; color:#fff; padding: 0 2px;}
+
+#act-arrow {color:#CECECE;}
+
+fieldset {background: url(images/spacer.png) repeat;margin-bottom:20px;}
+fieldset dt {width:320px;float:left;border:none;}
+fieldset dd {float:left;margin:0;}
