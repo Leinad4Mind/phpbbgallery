@@ -4,20 +4,11 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    canidev.debugger.listener:
-        class: canidev\debugger\event\listener
-        arguments:
-            - '@service_container'
-        tags:
-            - { name: event.listener }
-
     canidev.debugger.controller.admin:
         class: canidev\debugger\controller\admin_controller
+        parent: canidev.core.controller.acp
         arguments:
-            - '@cache.driver'
-            - '@config'
             - '@service_container'
-            - '@language'
             - '@log'
             - '@request'
             - '@user'

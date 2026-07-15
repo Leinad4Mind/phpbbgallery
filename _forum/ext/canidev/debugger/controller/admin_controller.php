@@ -1,61 +1,50 @@
 <?php
-/*
-* @package cBB Debugger
-* @version v1.0.0 21/06/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Debugger
+ * @version 1.0.1 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\debugger\controller;
 
-class admin_controller extends \canidev\core\acp
-{
-	public $u_action = '';
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-	protected $cache;
-	protected $config;
+class admin_controller extends \canidev\core\controller\acp
+{
 	protected $container;
-	protected $lang;
 	protected $log;
 	protected $request;
-	protected $template;
 	protected $user;
 
-	/*
-	* Constructor
-	*
-	* @param \phpbb\cache\driver\driver_interface 		$cache 				Cache instance
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param ContainerInterface 						$container			Service container interface
-	* @param \phpbb\language\language					$language			Language Object
-	* @param \phpbb\log\log                       		$log				Log Object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\user								$user				User object
-	*
-	* @access public
-	*/
+	/**
+	 * Constructor
+	 *
+	 * @param ContainerInterface 				$container			Service container interface
+	 * @param \phpbb\log\log 					$log				Log Object
+	 * @param \phpbb\request\request 			$request			Request object
+	 * @param \phpbb\user						$user				User object
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
-		\phpbb\language\language $language,
+		ContainerInterface $container,
 		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\user $user
 	)
 	{
-		$this->cache		= $cache;
-		$this->config		= $config;
 		$this->container	= $container;
-		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
-		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user 		= $user;
 	}
 	
-	public function display($mode)
+	/**
+	 * Display controller
+	 */
+	public function display()
 	{
 		$this->page_header('cbb-debugger', $this->config['debugger_version']);
 
@@ -64,29 +53,30 @@ class admin_controller extends \canidev\core\acp
 		
 		$config 	= \canidev\debugger\libraries\config::instance();
 		$submit 	= $this->request->is_set_post('submit');
-		$error 		= array();
+		$error 		= [];
 		$form_key 	= 'acp_debugger';
 		
-		$this->new_config = $config->get_all();
+		$this->new_config = $config->get_source();
 
-		$display_vars = array(
+		$display_vars = [
 			'legend1' 		=> 'OPTIONS',
-			'debug_enable' 	=> array('lang' => 'DEBUG_ENABLE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-			'show_stats' 	=> array('lang' => 'DEBUG_SHOW_STATS',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-		);
+			'debug_enable' 	=> ['lang' => 'DEBUG_ENABLE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+			'show_stats' 	=> ['lang' => 'DEBUG_SHOW_STATS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+			'allowed_ips'	=> ['lang' => 'DEBUG_ALLOWED_IPS',	'validate' => 'string',	'type' => 'textarea:10:20'],
+		];
 
 		add_form_key($form_key);
 
 		if($submit)
 		{
-			$this->new_config = $this->request->variable('config', array('' => ''));
+			$this->new_config = $this->request->variable('config', ['' => '']);
 
 			// We validate the complete config if whished
 			validate_config_vars($display_vars, $this->new_config, $error);
 			
 			if(!check_form_key($form_key))
 			{
-				$error[] = $this->lang->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
 			}
 		}
 		
@@ -106,6 +96,25 @@ class admin_controller extends \canidev\core\acp
 
 			if($submit)
 			{
+				if($config_name == 'allowed_ips')
+				{
+					$this->new_config[$config_name] = trim($this->new_config[$config_name]);
+
+					if($this->new_config[$config_name])
+					{
+						// Normalize
+						$this->new_config[$config_name] = str_replace(
+							[' ', ','],
+							['', "\n"],
+							$this->new_config[$config_name]
+						);
+
+						$this->new_config[$config_name] = implode("\n", array_filter(explode("\n", $this->new_config[$config_name]), function($value) {
+							return !empty($value);
+						}));
+					}
+				}
+
 				$config->set($config_name, $this->new_config[$config_name]);
 			}
 		}
@@ -117,14 +126,14 @@ class admin_controller extends \canidev\core\acp
 			$this->cache->purge();
 
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_DEBUGGER_CONFIG');
-			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->form_action));
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'DEBUGGER_IN_ADMIN'		=> true,
 			'S_ERROR'				=> !empty($error),
 			'ERROR_MSG'				=> implode('<br />', $error),
-		));
+		]);
 
 		$this->display_vars($display_vars);
 	}

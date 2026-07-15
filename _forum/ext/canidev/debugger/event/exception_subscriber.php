@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Debugger
-* @version v1.0.0 21/06/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Debugger
+ * @version 1.0.1 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\debugger\event;
 
@@ -18,12 +18,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class exception_subscriber implements EventSubscriberInterface
 {
 	/**
-	* Construct method
-	*/
-	public function __construct()
-	{
-	}
-
+	 * Handle Kernel exception
+	 * @param GetResponseForExceptionEvent 	$event
+	 */
 	public function on_kernel_exception(GetResponseForExceptionEvent $event)
 	{
 		$config = \canidev\debugger\libraries\config::instance();
@@ -43,10 +40,13 @@ class exception_subscriber implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
-			KernelEvents::EXCEPTION		=> array('on_kernel_exception', 10),
-		);
+		return [
+			KernelEvents::EXCEPTION		=> ['on_kernel_exception', 10],
+		];
 	}
 }

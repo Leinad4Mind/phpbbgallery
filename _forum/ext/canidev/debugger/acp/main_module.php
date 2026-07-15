@@ -1,33 +1,36 @@
 <?php
-/*
-* @package cBB Debugger
-* @version v1.0.0 21/06/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Debugger
+ * @version 1.0.1 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\debugger\acp;
 
-/**
-* @package acp
-*/
 class main_module
 {
 	public $u_action;
-	
-	protected $controller;
 
-	public function main($id, $mode)
+	public $page_title;
+	public $tpl_name;
+
+	/**
+	 * Loads module
+	 */
+	public function main()
 	{
 		global $phpbb_container;
 
-		$this->controller = $phpbb_container->get('canidev.debugger.controller.admin');
+		/** @var \canidev\debugger\controller\admin_controller */
+		$controller = $phpbb_container->get('canidev.debugger.controller.admin');
 
-		$this->controller->u_action = $this->u_action;
-		$this->controller->display($mode);
+		$controller
+			->set_form_action($this->u_action)
+			->display();
 		
-		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title();
+		$this->tpl_name		= $controller->get_template();
+		$this->page_title	= $controller->get_title();
 	}
 }

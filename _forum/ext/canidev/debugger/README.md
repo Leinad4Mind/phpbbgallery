@@ -14,4 +14,4 @@
 3. To permanently uninstall, click 'Delete Data' and then delete the '/ext/canidev/qe' directory.
 
 ## License
-[GNU General Public License v2](https://opensource.org/licenses/GPL-2.0)
+[CreativeCommons Attribution-NonCommercial v4.0](https://creativecommons.org/licenses/by-nc/4.0/)

@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package cBB Debugger
+ * @version 1.0.1 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\debugger\tunnel;
 
@@ -43,9 +50,9 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
 		return;
 	}
 
-	$twig_vars = array(
+	$twig_vars = [
 		'S_ERROR' 	=> "[$errno] $errstr<br />$errfile ($errline)",
-	);
+	];
 
 	echo $twig->render('enable_body.html', $twig_vars);
 	exit;
@@ -61,10 +68,10 @@ try
 
 	$phpbb_container = $phpbb_container_builder
 		->with_config($phpbb_config_php_file)
-		->with_custom_parameters(array('cache.driver.class' => 'phpbb\cache\driver\file'))
+		->with_custom_parameters(['cache.driver.class' => 'phpbb\cache\driver\file'])
 		->get_container();
 }
-catch(InvalidArgumentException $e)
+catch(\InvalidArgumentException $e)
 {
 	throw $e;
 }
@@ -73,9 +80,9 @@ register_compatibility_globals();
 
 $request->enable_super_globals();
 
-$request 		= Request::createFromGlobals();
-$template_path 	= $ext_root_path . 'styles/all/template/';
-$twig_vars 		= array();
+$symfony_request 		= Request::createFromGlobals();
+$template_path 			= $ext_root_path . 'styles/all/template/';
+$twig_vars 				= [];
 
 if(class_exists('Twig_Environment'))
 {
@@ -87,7 +94,7 @@ else
 }
 
 // Get display language
-$lang_ary 		= $request->getLanguages();
+$lang_ary 		= $symfony_request->getLanguages();
 $lang_path 		= $ext_root_path . 'language/';
 $user_lang_name = 'en';
 
@@ -116,11 +123,13 @@ foreach($lang_ary as $lang_name)
 }
 
 // Process
-if($request->get('submit'))
+if($request->is_set_post('submit'))
 {
-	$ext_name 		= 'canidev/debugger';
-	$ext_manager 	= $phpbb_container->get('ext.manager');
-	$config 		= \canidev\debugger\libraries\config::instance();
+	$ext_name 	= 'canidev/debugger';
+	$config 	= \canidev\debugger\libraries\config::instance();
+
+	/** @var \phpbb\extension\manager */
+	$ext_manager = $phpbb_container->get('ext.manager');
 
 	$ext_manager->load_extensions();
 
@@ -133,6 +142,7 @@ if($request->get('submit'))
 	// Set new config
 	$config
 		->set('debug_enable', true)
+		->set('allowed_ips', '')
 		->save();
 
 	// Remove container to force reload
@@ -154,8 +164,8 @@ if($request->get('submit'))
 	$twig_vars['S_SUCCESS'] = true;
 }
 
-$twig_vars['S_USER_LANG'] = $user_lang_name;
-$twig_vars['U_ACTION'] = $request->getRequestUri();
+$twig_vars['S_USER_LANG'] 	= $user_lang_name;
+$twig_vars['U_ACTION'] 		= $symfony_request->getRequestUri();
 
 echo $twig->render('enable_body.html', $twig_vars);
 

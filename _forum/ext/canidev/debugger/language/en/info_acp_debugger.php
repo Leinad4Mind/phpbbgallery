@@ -1,12 +1,12 @@
 <?php
-/*
-* [English [En]]
-* @package cBB Debugger
-* @version v1.0.0 21/06/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [English [En]]
+ * @package cBB Debugger
+ * @version 1.0.1 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,13 +16,17 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_DEBUGGER'			=> 'Debugging',
 	'ACP_DEBUGGER_EXPLAIN'	=> 'From here you can enable the debugging mode of the forum, as well as other statistics options.',
 
+	'DEBUG_ALLOWED_IPS'			=> 'Allowed IPs',
+	'DEBUG_ALLOWED_IPS_EXPLAIN'	=> 'Defines the ips from which debug mode can be seen.<br />
+		Leave this field blank so that debug mode is visible to everyone.<br /><br />
+		<em>You must separate the ips by a comma or set each one per line.</em>',
 	'DEBUG_ENABLE'				=> 'Enable debug',
 	'DEBUG_ENABLE_EXPLAIN'		=> 'Define whether debug mode is enabled to display errors in the forum code and their extensions.',
 	'DEBUG_SHOW_STATS'			=> 'Show statistics',
@@ -32,4 +36,4 @@ $lang = array_merge($lang, array(
 
 	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
 		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
-));
+]);
