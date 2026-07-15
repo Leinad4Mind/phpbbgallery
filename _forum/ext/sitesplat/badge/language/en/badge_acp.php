@@ -41,7 +41,7 @@ $lang = array_merge($lang, array(
 	'ACP_BADGE_MANAGE'					=> 'Manage Badge Award',
 	'ACP_BADGE_MANAGE_EXPLAIN'			=> 'Welcome to "BBawards" the phpBB forum user award system. Using the form below you can add, edit, view and delete Badge Award rules. <br />You will also be able to upload new badges directly on the server so that they can be used for the badge rules creation at any time.',
     'ACP_BADGE_MANAGE_LEGEND_TITLE'	    => 'Usage Notes',
-	'ACP_BADGE_MANAGE_LEGEND_EXPLAIN'	=> 'The user badge rules are automatically syncronized every 24h via the special Badge Award Cron System. (You can monitor the Crons via <a href="https://github.com/ForumHulp/cronstatus">Cron Status</a> extension) This is to keep in check the server load. <br />Some rules are awarded instantly upon meeting certain criteria, for example the "posts", "warning", "likeBB", "custom" and "donations" rules.<br />You can edit, delete and manually synch rules via the "Actions" column option. The Synch <i class="fa fa-refresh fa-lg"></i> option is meant to manually trigger X rule instantly. The "Custom" rule does not need to be syncronized as its already syncronized upon assigning the user to the custom rule.',
+	'ACP_BADGE_MANAGE_LEGEND_EXPLAIN'	=> 'The user badge rules are automatically synchronized every 24h via the special Badge Award Cron System. (You can monitor the Crons via <a href="https://github.com/ForumHulp/cronstatus">Cron Status</a> extension) This is to keep in check the server load. <br />Some rules are awarded instantly upon meeting certain criteria, for example the "posts", "warning", "membership days", "likeBB", "custom" and "donations" rules.<br />You can edit, delete and manually synch rules via the "Actions" column option. The Synch <i class="fa fa-refresh fa-lg"></i> option is meant to manually trigger X rule instantly. The "Custom" rule does not need to be syncronized as its already syncronized upon assigning the user to the custom rule.',
 	
 	'BADGE_DESCRIPTION'					=> 'Award users with badges based on custom and default rules',
 	'BADGE_DEVELOPERS'					=> 'Developers',
@@ -58,7 +58,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_BBAWARDS_VERSION'				=> '1.4.0',
+	'ACP_BBAWARDS_VERSION'				=> '1.4.1',
 	'ACP_BBAWARDS'						=> 'BBAwards',
     'ACP_LOADING'			    		=> 'Hold On. Loading...',
 	
@@ -71,8 +71,8 @@ $lang = array_merge($lang, array(
 	'BIRTHDAYS_EXPLAIN'					=> 'Award badges to members on their birthday',
 	'CUSTOM_EXPLAIN'					=> 'Award custom badges to members. This can be anything, fro example a forum competition or maybe lottery of some sort? Be creative!',
 	'DONATION_EXPLAIN'					=> 'Award badges to forum donators',
-	'LIKEDD_EXPLAIN'					=> 'Award badges to members with likes / dislikes given or recieved',
-	'MEMBERSHIP_EXPLAIN'				=> 'Award badges to members for their subsribed/purchased memberships',
+	'LIKEDD_EXPLAIN'					=> 'Award badges to members with likes / dislikes given or received',
+	'MEMBERSHIP_EXPLAIN'				=> 'Award badges to members for their subscribed/purchased memberships',
 	'POSTS_EXPLAIN'						=> 'Award badges to members with X amount of posts',
 	'PROFILEWALL_EXPLAIN'				=> 'Award badges to members for profile comments',
 	'SIGNATURE_EXPLAIN'					=> 'Award badges to members with a signature',
@@ -103,9 +103,9 @@ $lang = array_merge($lang, array(
 	'ACP_BADGE_LIKE'					=> 'Likes',
 	'ACP_BADGE_DISLIKE'					=> 'Dislikes',
 	'ACP_BADGE_GIVEN'					=> 'Given',
-	'ACP_BADGE_RECIEVED'				=> 'Recieved',
+	'ACP_BADGE_RECIEVED'				=> 'Received',
 	'ACP_BADGE_PROFILEWALL'				=> 'Profilewall',
-	'ACP_BADGE_PROFILEWALL_EXPLAIN'		=> 'Choose wether to count comment & replies or profilewall-likes',
+	'ACP_BADGE_PROFILEWALL_EXPLAIN'		=> 'Choose whether to count comment & replies or profilewall-likes',
 	'ACP_BADGE_COMMENTS_REPLIES'		=> 'Comment & Replies',
 	'ACP_BADGE_LIKES'					=> 'Profilewall-likes',
 		

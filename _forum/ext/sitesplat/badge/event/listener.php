@@ -83,6 +83,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'					=> 'add_page_header_link',
+		//	'core.user_setup'	                => 'load_language_on_setup',
 			'core.viewtopic_modify_post_row'	=> 'modify_post_row',
 			'core.memberlist_view_profile'		=> 'modify_profile',
 
@@ -111,13 +112,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function add_page_header_link($event)
 	{
-		//$this->user->add_lang_ext('sitesplat/badge', 'badge_common');
-		$set = $event['lang_set_ext'];
-		$set[] = array(
-			'ext_name' => 'sitesplat/badge',
-			'lang_set' => 'badge_common',
-		);
-		$event['lang_set_ext'] = $set;
+		$this->user->add_lang_ext('sitesplat/badge', 'badge_common');
 		
 		$this->template->assign_vars(array(
 			'U_BADGE_PAGE'	=> $this->controller_helper->route('badge_award_controller', array('route' => 'index.html')),

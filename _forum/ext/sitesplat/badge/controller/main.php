@@ -148,7 +148,7 @@ class main
 						'U_URL'		=> $this->helper->route('badge_award_controller', array('route' => 
 										(($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $row['user_id']))),
 						'U_COLOR'	=> $row['user_colour'],
-						'AVATAR'	=> ($row['avatar']) ? phpbb_get_user_avatar($row) : '<img style="width:34px;height:34px;" src="' . generate_board_url() . '/styles/FLATBOOTS/theme/images/no_avatar.gif" alt="' . $this->user->lang['USER_AVATAR'] . '">',
+						'AVATAR'	=> ($row['avatar']) ? phpbb_get_user_avatar($row) : '<img style="width:34px;height:34px;" src="' . generate_board_url() . '/styles/' . $row['style_path'] . '/theme/images/no_avatar.gif" alt="' . $this->user->lang['USER_AVATAR'] . '">',
 						'DATE'		=> ($row['date']) ? $this->user->format_date($row['date'], 'j M Y') : '',
 					));
 				}

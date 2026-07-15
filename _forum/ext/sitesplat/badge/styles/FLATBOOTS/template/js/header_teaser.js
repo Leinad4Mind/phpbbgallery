@@ -1,1 +1,150 @@
-head.ready(function(){!function(e){var a=[],i=!1,t=!1,n={interval:250,force_process:!1},r=e(window),s=[];function o(){t=!1;for(var i=0,n=a.length;i<n;i++){var r=e(a[i]).filter(function(){return e(this).is(":appeared")});if(r.trigger("appear",[r]),s[i]){var o=s[i].not(r);o.trigger("disappear",[o])}s[i]=r}}e.expr[":"].appeared=function(a){var i=e(a);if(!i.is(":visible"))return!1;var t=r.scrollLeft(),n=r.scrollTop(),s=i.offset(),o=s.left,f=s.top;return f+i.height()>=n&&f-(i.data("appear-top-offset")||0)<=n+r.height()&&o+i.width()>=t&&o-(i.data("appear-left-offset")||0)<=t+r.width()},e.fn.extend({appear:function(r){var f=e.extend({},n,r||{}),d=this.selector||this;if(!i){var l=function(){t||(t=!0,setTimeout(o,f.interval))};e(window).scroll(l).resize(l),i=!0}return f.force_process&&setTimeout(o,f.interval),function(e){a.push(e),s.push()}(d),e(d)}}),e.extend({force_appear:function(){return!!i&&(o(),!0)}})}("undefined"!=typeof module?require("jquery"):jQuery),$(".animated").on("appear",function(){var e=$(this),a=e.data("animation");if(!e.hasClass("visible")){var i=e.data("animation-delay");i?setTimeout(function(){e.addClass(a+" visible")},i):e.addClass(a+" visible")}}),$(window).load(function(){$(".onstart").each(function(){var e=$(this);if(!e.hasClass("visible")){var a=e.data("animation-delay"),i=e.data("animation");a?setTimeout(function(){e.addClass(i+" visible")},a):e.addClass(i+" visible")}})})});
+head.ready(function () {
+
+/*
+ * jQuery appear plugin
+ *
+ * Copyright (c) 2012 Andrey Sidorov
+ * licensed under MIT license.
+ *
+ * https://github.com/morr/jquery.appear/
+ *
+ * Version: 0.3.6
+ */
+(function($) {
+  var selectors = [];
+
+  var check_binded = false;
+  var check_lock = false;
+  var defaults = {
+    interval: 250,
+    force_process: false
+  };
+  var $window = $(window);
+
+  var $prior_appeared = [];
+
+  function process() {
+    check_lock = false;
+    for (var index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
+      var $appeared = $(selectors[index]).filter(function() {
+        return $(this).is(':appeared');
+      });
+
+      $appeared.trigger('appear', [$appeared]);
+
+      if ($prior_appeared[index]) {
+        var $disappeared = $prior_appeared[index].not($appeared);
+        $disappeared.trigger('disappear', [$disappeared]);
+      }
+      $prior_appeared[index] = $appeared;
+    }
+  };
+
+  function add_selector(selector) {
+    selectors.push(selector);
+    $prior_appeared.push();
+  }
+
+  // "appeared" custom filter
+  $.expr[':']['appeared'] = function(element) {
+    var $element = $(element);
+    if (!$element.is(':visible')) {
+      return false;
+    }
+
+    var window_left = $window.scrollLeft();
+    var window_top = $window.scrollTop();
+    var offset = $element.offset();
+    var left = offset.left;
+    var top = offset.top;
+
+    if (top + $element.height() >= window_top &&
+        top - ($element.data('appear-top-offset') || 0) <= window_top + $window.height() &&
+        left + $element.width() >= window_left &&
+        left - ($element.data('appear-left-offset') || 0) <= window_left + $window.width()) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  $.fn.extend({
+    // watching for element's appearance in browser viewport
+    appear: function(options) {
+      var opts = $.extend({}, defaults, options || {});
+      var selector = this.selector || this;
+      if (!check_binded) {
+        var on_check = function() {
+          if (check_lock) {
+            return;
+          }
+          check_lock = true;
+
+          setTimeout(process, opts.interval);
+        };
+
+        $(window).scroll(on_check).resize(on_check);
+        check_binded = true;
+      }
+
+      if (opts.force_process) {
+        setTimeout(process, opts.interval);
+      }
+      add_selector(selector);
+      return $(selector);
+    }
+  });
+
+  $.extend({
+    // force elements's appearance check
+    force_appear: function() {
+      if (check_binded) {
+        process();
+        return true;
+      }
+      return false;
+    }
+  });
+})(function() {
+  if (typeof module !== 'undefined') {
+    // Node
+    return require('jquery');
+  } else {
+    return jQuery;
+  }
+}());
+
+	$('.animated').on('appear', function() {
+		var elem = $(this);
+		var animation = elem.data('animation');
+			if ( !elem.hasClass('visible') ) {
+				var animationDelay = elem.data('animation-delay');
+					if ( animationDelay ) {
+					setTimeout(function(){
+						elem.addClass( animation + " visible" );
+						}, animationDelay);
+					} else {
+						elem.addClass( animation + " visible" );
+					}
+			}
+	});
+				
+	/* Starting Animation on Load */
+		$(window).load(function() {
+			$('.onstart').each( function() {
+				var elem = $(this);
+					if ( !elem.hasClass('visible') ) {
+						var animationDelay = elem.data('animation-delay');
+						var animation = elem.data('animation');
+						if ( animationDelay ) {
+						setTimeout(function(){
+							elem.addClass( animation + " visible" );
+							}, animationDelay);
+						} else {
+							elem.addClass( animation + " visible" );
+						}
+					}
+			});
+		});	
+
+});
