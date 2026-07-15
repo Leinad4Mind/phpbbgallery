@@ -1,0 +1,17 @@
+<!-- IF BBREACTION_DISPLAY_TOP -->
+<div class="space10"></div>
+<div class="pull-left">
+<div class="bbreactionbar">
+<!-- BEGIN reward -->
+<span title="{reward.TITLE}">
+    <!-- IF BBREACTION_EMOJI and reward.EMOJI -->
+    <i style="color:<!-- IF reward.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->">{reward.EMOJI}</i>
+    <!-- ELSE -->
+    <i class="fa {reward.SYMBOL}" style="color:<!-- IF reward.S_POSITIVE -->green<!-- ELSE -->red<!-- ENDIF -->"></i>
+    <!-- ENDIF -->
+    {reward.PERCENT}
+</span>
+<!-- END reward -->
+</div>
+</div>
+<!-- ENDIF -->

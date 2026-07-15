@@ -1,0 +1,12 @@
+services:
+# ----- BB reaction notification types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.bbreaction.notification.type.reward_added:
+        class: sitesplat\bbreaction\notification\type\reward_added
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
