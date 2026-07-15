@@ -1,1 +1,10 @@
-<li><i class="fa {EXT_SYMBOL}"></i>&nbsp;<b>{L_BBPOINTS}{L_COLON}</b>&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{postrow.USER_TOTAL_POINTS}<!-- IF not SYMBOL_POS -->&nbsp;<i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --></li>
+{% if postrow.USER_TOTAL_POINTS %}
+<li>
+  <i class="fa {{ EXT_SYMBOL }}"></i>&nbsp;<b>{{ lang('BBPOINTS') }}{{ lang('COLON') }}</b>&nbsp;
+  {% if SYMBOL_POS %}
+    <i class="fa {{ BBPOINTS_SYMBOL }}"></i>&nbsp;
+  {% endif %}{{ postrow.USER_TOTAL_POINTS }}
+  {% if not SYMBOL_POS %}&nbsp;<i class="fa {{ BBPOINTS_SYMBOL }}"></i>
+  {% endif %}
+</li>
+{% endif %}

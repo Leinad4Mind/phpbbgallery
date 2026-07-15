@@ -3,7 +3,7 @@
 *
 * BBPoints extension for the phpBB Forum Software package.
 *
-* @copyright (c) 2015 SiteSplat All rights reserved
+* @copyright (c) 2015-2022 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -28,19 +28,22 @@ class main_controller
 	protected $php_ext;
 	protected $bbpoints_table;
 	protected $bbpoints_helper;
+	protected $phpbb_dispatcher;
 	
 	/**
 	* Constructor
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, ContainerInterface $container, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config,
+	\phpbb\event\dispatcher $phpbb_dispatcher, ContainerInterface $container, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->container = $container;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -58,6 +61,14 @@ class main_controller
 	*/
 	public function display()
 	{
+		/**
+		* Before main display
+		*
+		* @event sitesplat.bbpoints.before_main_controller_display
+		*/
+		$vars = [];
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbpoints.before_main_controller_display', compact($vars)));
+
 		$this->user->add_lang_ext('sitesplat/bbpoints', 'bbpoints');
 		if (!confirm_box(true))
 		{
@@ -65,30 +76,42 @@ class main_controller
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result)) 
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'USER_ID'	=> $row['user_id'],
 					'USER_NAME'	=> $row['username'],
-				));
+				]);
 			}
-			$this->template->assign_vars(array('COMMENT_ENABLED' => $this->bbpoints_config['comments_enable']));
-			confirm_box(false, $this->user->lang['TRANSFER_TO'], build_hidden_fields(array(
+			$this->template->assign_vars(['COMMENT_ENABLED' => $this->bbpoints_config['comments_enable']]);
+			confirm_box(false, $this->user->lang['TRANSFER_TO'], build_hidden_fields([
 				'userid'	=> $this->user->data['user_id'],
 				'action'	=> 'transfer',
-			)), 'confirm_transfer.html', generate_board_url() . '/app.php/bbpoints/');
+			]), 'confirm_transfer.html', generate_board_url() . '/app.php/bbpoints/');
 		} else
 		{
 			if ($this->request->variable('transfer_to', 0) && $this->request->variable('amount', 0) > 4 && $this->request->variable('transfer_to', 0) != $this->user->data['user_id'])
 			{
 				$user_id = $this->user->data['user_id'];
-				$sql = 'SELECT user_id, SUM(points) as total FROM (
-						SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' GROUP BY poster_id
-						UNION ALL
-						SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . ' GROUP BY topic_poster
-						UNION ALL
-						SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
-						UNION ALL
-						SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
-						) t1 GROUP BY user_id';
+				$sql = 'SELECT ' . $user_id . ' AS user_id,
+				COALESCE((
+					SELECT SUM(bbpoints)
+					FROM bbgta_posts
+					WHERE post_visibility = 1 AND poster_id = ' . $user_id . '
+				), 0)
+				 + COALESCE((
+					SELECT SUM(bbpoints)
+					FROM bbgta_topics
+					WHERE topic_poster = ' . $user_id . '
+				), 0)
+				 + COALESCE((
+					SELECT SUM(bbpoints)
+					FROM bbgta_bbpoints
+					WHERE to_id = ' . $user_id . '
+				), 0)
+				 - COALESCE((
+					SELECT SUM(bbpoints)
+					FROM bbgta_bbpoints
+					WHERE from_id = ' . $user_id . '
+				), 0) AS total;';
 				$result = $this->db->sql_query($sql);
 				$user_points  = $this->db->sql_fetchfield('total');
 			
@@ -104,7 +127,7 @@ class main_controller
 					{
 						$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($this->request->variable('amount', 0), 0) :
 								   number_format($this->request->variable('amount', 0), 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
-						$noti_ary = array(
+						$noti_ary = [
 							'user_ids'		=> $this->request->variable('transfer_to', 0),
 							'parent_id'		=> 0,
 							'post_id'		=> $item_id,
@@ -112,34 +135,57 @@ class main_controller
 							'amount'		=> $this->request->variable('amount', 0),
 							'like_txt'		=> sprintf($this->user->lang('TRANSFER_NOTI'), $amount, $this->user->data['username'], $this->request->variable('comment', '')),
 							'currency'		=> $this->bbpoints_config['currency']
-						);
+						];
 						$this->bbpoints_helper->add_noti($noti_ary);
 					}
-					$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
-					trigger_error($this->user->lang['TRANSFER_SUCCESS']);
+					$this->container->get('cache')->destroy('sql', [$this->bbpoints_table]);
+					trigger_error($this->user->lang['TRANSFER_SUCCESS']);	
 				} else
 				{
-					trigger_error($this->user->lang['TRANSFER_NOT_ENOUGH_POINTS']);
+					trigger_error($this->user->lang['TRANSFER_NOT_ENOUGH_POINTS']);	
 				}
 			} else
 			{
-				trigger_error($this->user->lang[(!$this->request->variable('transfer_to', 0) ? 'NO_USER_SELECTED' : 'NO_AMOUNT_SELECTED')]);
+				trigger_error($this->user->lang[(!$this->request->variable('transfer_to', 0) ? 'NO_USER_SELECTED' : 'NO_AMOUNT_SELECTED')]);	
 			}
 		}
+		/**
+		* After main display
+		*
+		* @event sitesplat.bbpoints.after_main_controller_display
+		*/
+		$vars = [];
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbpoints.after_main_controller_display', compact($vars)));
 	}
 
 	public function search_user()
 	{
 		$term = strtolower($this->request->variable('term', '', true));
+
+		/**
+		* Before main search user
+		*
+		* @event sitesplat.bbpoints.before_main_controller_search_user
+		*/
+		$vars = [];
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbpoints.before_main_controller_search_user', compact($vars)));
+
 		$sql = 'SELECT user_id, username 
 				FROM ' . USERS_TABLE . ' 
-				WHERE user_id <> ' . 0 . ' AND user_id <> ' . $this->user->data['user_id'] . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
+				WHERE user_id <> ' . 0 . ' AND username_clean like "' . $term . '%"';
 		$result = $this->db->sql_query($sql);
-		$user_ary = array();
+		$user_ary = [];
 		while($row = $this->db->sql_fetchrow($result)) 
 		{
-			$user_ary[] = array('value' => $row['user_id'], 'label' => $row['username']);
+			$user_ary[] = ['value' => $row['user_id'], 'label' => $row['username']];
 		}
+		/**
+		* After main search user
+		*
+		* @event sitesplat.bbpoints.after_main_controller_search_user
+		*/
+		$vars = [];
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbpoints.after_main_controller_search_user', compact($vars)));
 		$json_response = new json_response();
 		$json_response->send($user_ary);
 	}

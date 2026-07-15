@@ -1,2 +1,2 @@
-<!-- IF SYMBOL_POS --><span class="input-group-addon"><i class="fa {BBPOINTS_SYMBOL}"></i></span><!-- ENDIF -->
-<!-- IF not SYMBOL_POS --><span class="input-group-addon"><i class="fa {BBPOINTS_SYMBOL}"></i></span><!-- ENDIF -->
+{% if SYMBOL_POS %}<span class="input-group-addon"><i class="fa {{ BBPOINTS_SYMBOL }}"></i></span>{% endif %}
+{% if not SYMBOL_POS %}<span class="input-group-addon"><i class="fa {{ BBPOINTS_SYMBOL }}"></i></span>{% endif %}

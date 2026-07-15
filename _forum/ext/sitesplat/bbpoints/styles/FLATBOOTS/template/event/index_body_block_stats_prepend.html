@@ -1,22 +1,29 @@
-<!-- IF .richest_users -->
-<div class="col-md-6">
-	<p>{L_BBPOINTS_STATS}<!-- IF TOTAL_POINTS -->&nbsp;{L_BBPOINTS_STATS_BAR}<!-- ENDIF -->{L_COLON}</p>
-	
-	<!-- IF TOTAL_POINTS -->
-	<div class="progress progress-sm"> 
-	  <div class="progress-bar progress-bar-success progress-bar-striped" aria-valuemax="100" style="width:{TOTAL_POINTS}%;" title="{L_BBPOINTS_GOAL} {TOTAL_POINTS} %">
-	   {TOTAL_POINTS}%
-	  </div>
-	  <div class="progress-bar progress-bar-danger progress-bar-striped" aria-valuemax="100" style="width:{BBPOINTS_GOAL}%;" title="{L_BBPOINTS_GOAL} {BBPOINTS_GOAL} % {L_BBPOINTS_GOAL_TO_GO}">
-	  {BBPOINTS_GOAL}%
-	  </div>
-	  </div>
-	<!-- ENDIF -->
-	
-	<p>
-		<!-- BEGIN richest_users -->
-			{richest_users.USERNAME}&nbsp;&#40;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{richest_users.POINTS}<!-- IF not SYMBOL_POS -->&nbsp;<i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF -->&#41;<!-- IF not richest_users.S_LAST_ROW -->&#44;&nbsp;<!-- ENDIF -->
-		<!-- END richest_users -->
-	</p>
-</div>	
-<!-- ENDIF -->
+{% if loops.richest_users %}
+  <div class="col-md-6">
+    <p>{{ lang('BBPOINTS') }}&nbsp;{{ lang('BBPOINTS_STATS') }}
+      {% if TOTAL_POINTS %}&nbsp;{{ lang('BBPOINTS_STATS_BAR') }}
+      {% endif %}{{ lang('COLON') }}</p>
+
+    {% if TOTAL_POINTS %}
+      <div class="progress progress-sm">
+        <div class="progress-bar progress-bar-success progress-bar-striped" aria-valuemax="100" style="width:{{ TOTAL_POINTS }}%;" title="{{ lang('BBPOINTS_GOAL') }} {{ TOTAL_POINTS }} %">
+          {{ TOTAL_POINTS }}%
+        </div>
+        <div class="progress-bar progress-bar-danger progress-bar-striped" aria-valuemax="100" style="width:{{ BBPOINTS_GOAL }}%;" title="{{ lang('BBPOINTS_GOAL') }} {{ BBPOINTS_GOAL }} % {{ lang('BBPOINTS_GOAL_TO_GO') }}">
+          {{ BBPOINTS_GOAL }}%
+        </div>
+      </div>
+    {% endif %}
+
+    <p>
+      {% if loops.richest_users %}
+        {% for richest_user in loops.richest_users %}
+          {{ richest_user.USERNAME }}&nbsp;&#40;{% if SYMBOL_POS %}
+            <i class="fa {{ EXT_SYMBOL }}"></i>&nbsp;{% endif %}{{ richest_user.POINTS }}
+          {% if not SYMBOL_POS %}&nbsp;<i class="fa {{ EXT_SYMBOL }}"></i>
+          {% endif %}&#41;{% if not richest_user.S_LAST_ROW %}&#44;&nbsp;{% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+    </div>
+  {% endif %}

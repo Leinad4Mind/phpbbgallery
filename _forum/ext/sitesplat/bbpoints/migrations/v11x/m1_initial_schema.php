@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* BBPoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBPoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbpoints\migrations\v11x;
 
@@ -24,43 +25,43 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\bbpoints\migrations\v10x\m1_initial_schema');
+		return ['\sitesplat\bbpoints\migrations\v10x\m1_initial_schema'];
 	}
 
 	/**
-	 * Add collums to the database:
+	 * Add columns to the database:
 	 *
 	 * @return array Array of table schema
 	 * @access public
 	 */
 	public function update_schema()
 	{
-		return array(
-			'add_columns'	=> array(
-				$this->table_prefix . 'bbpoints'		=> array(
-					'topic_id'	=> array('INT:11', '0'),
-				),
-				$this->table_prefix . 'topics'		=> array(
-					'bbpoints_payed'	=> array('INT:11', '0'),
-				),
-			)
-		);
+		return [
+			'add_columns'	=> [
+				$this->table_prefix . 'bbpoints'		=> [
+					'topic_id'	=> ['INT:11', '0'],
+				],
+				$this->table_prefix . 'topics'		=> [
+					'bbpoints_payed'	=> ['INT:11', '0'],
+				],
+			]
+		];
 	}
 
 	/**
-	 * Drop collumns from the database
+	 * Drop columns from the database
 	 *
 	 * @return array Array of table schema
 	 * @access public
 	 */
 	public function revert_schema()
 	{
-		return array(
-			'drop_columns'	=> array(
-				$this->table_prefix . 'topics'	=> array(
+		return [
+			'drop_columns'	=> [
+				$this->table_prefix . 'topics'	=> [
 					'bbpoints_payed',
-				),
-			)
-		);
+				],
+			]
+		];
 	}
 }

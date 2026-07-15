@@ -1,12 +1,12 @@
-Subject: BBpoints - "{FORUM_NAME}"
+Subject: BBpoints - "{{ FORUM_NAME }}"
 
-Hi {USERNAME},
+Hi {{ USERNAME }},
 
 You received this e-mail because there was a donation of GoldenPoints made to your address from {POSTER}
 
-{TEXT}
+{{ TEXT }}
 
-{U_FORUM}
+{{ U_FORUM }}
 
 
-{EMAIL_SIG}
+{{ EMAIL_SIG }}

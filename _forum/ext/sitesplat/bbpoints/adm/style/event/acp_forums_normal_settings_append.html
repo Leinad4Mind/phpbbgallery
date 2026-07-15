@@ -1,26 +1,30 @@
+{% EVENT sitesplat_bbpoints_acp_before_forum_normal_settings_append %}
 <dl>
-	<dt><label for="forum_bbpoints_enabled">{L_ACP_ENABLE_POINTS}{L_COLON}</label></dt>
+	<dt><label for="forum_bbpoints_enabled">{{ lang('ACP_ENABLE_POINTS') ~ lang('COLON') }}</label></dt>
 	<dd>
-		<label><input type="radio" class="radio" name="forum_bbpoints_enabled" value="1"<!-- IF S_ENABLE_POINTS --> id="forum_bbpoints_enabled" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-		<label><input type="radio" class="radio" name="forum_bbpoints_enabled" value="0"<!-- IF not S_ENABLE_POINTS --> id="forum_bbpoints_enabled" checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		<label><input type="radio" class="radio" name="forum_bbpoints_enabled" value="1"{% if S_ENABLE_POINTS %} id="forum_bbpoints_enabled" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="forum_bbpoints_enabled" value="0"{% if not S_ENABLE_POINTS %} id="forum_bbpoints_enabled" checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 	</dd>
 </dl>
-
+{% EVENT sitesplat_bbpoints_acp_after_forum_normal_settings_append_after_enable_points %}
 <dl>
-	<dt><label for="bbpoints_per_topic">{L_FORUM_PERTOPIC}{L_COLON}</label><br /><span>{L_FORUM_PERTOPIC_FORUM_EXPLAIN}</span></dt>
+	<dt><label for="bbpoints_per_topic">{{ lang('FORUM_PERTOPIC') ~ lang('COLON') }}</label><br /><span>{{ lang('FORUM_PERTOPIC_FORUM_EXPLAIN') }}</span></dt>
 	<dd>
-		<input type="text" id="bbpoints_per_topic" name="bbpoints_per_topic" value="{PERTOPIC}" maxlength="8" size="10" /> {POINTS_NAME}
+		<input type="text" id="bbpoints_per_topic" name="bbpoints_per_topic" value="{{ PERTOPIC }}" maxlength="8" size="10" /> {{ POINTS_NAME }}
 	</dd>
 </dl>
+{% EVENT sitesplat_bbpoints_acp_after_forum_normal_settings_append_after_per_topic %}
 <dl>
-	<dt><label for="bbpoints_per_post">{L_FORUM_PERPOST}{L_COLON}</label><br /><span>{L_FORUM_PERPOST_FORUM_EXPLAIN}</span></dt>
+	<dt><label for="bbpoints_per_post">{{ lang('FORUM_PERPOST') ~ lang('COLON') }}</label><br /><span>{{ lang('FORUM_PERPOST_FORUM_EXPLAIN') }}</span></dt>
 	<dd>
-		<input type="text" id="bbpoints_per_post" name="bbpoints_per_post" value="{PERPOST}" maxlength="8" size="10" /> {POINTS_NAME}
+		<input type="text" id="bbpoints_per_post" name="bbpoints_per_post" value="{{ PERPOST }}" maxlength="8" size="10" /> {{ POINTS_NAME }}
 	</dd>
 </dl>
+{% EVENT sitesplat_bbpoints_acp_after_forum_normal_settings_append_after_forum_perpost %}
 <dl>
-	<dt><label for="bbpoints_per_word">{L_FORUM_PERWORD}{L_COLON}</label><br /><span>{L_FORUM_PERWORD_FORUM_EXPLAIN}</span></dt>
+	<dt><label for="bbpoints_per_word">{{ lang('FORUM_PERWORD') ~ lang('COLON') }}</label><br /><span>{{ lang('FORUM_PERWORD_FORUM_EXPLAIN') }}</span></dt>
 	<dd>
-		<input type="text" id="bbpoints_per_word" name="bbpoints_per_word" value="{PERWORD}" maxlength="8" size="10" /> {POINTS_NAME}
+		<input type="text" id="bbpoints_per_word" name="bbpoints_per_word" value="{{ PERWORD }}" maxlength="8" size="10" /> {{ POINTS_NAME }}
 	</dd>
 </dl>
+{% EVENT sitesplat_bbpoints_acp_after_forum_normal_settings_append %}

@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* BBPoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * BBPoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbpoints\cron\task\core;
 
@@ -41,8 +42,7 @@ class bbpoints extends \phpbb\cron\task\base
 
 		// Display birthdays of 29th february on 28th february in non-leap-years
 		$leap_year_birthdays = '';
-		if ($now['mday'] == 28 && $now['mon'] == 2 && !$time->format('L'))
-		{
+		if ($now['mday'] == 28 && $now['mon'] == 2 && !$time->format('L')) {
 			$leap_year_birthdays = ' OR user_birthday LIKE "' . $this->db->sql_escape(sprintf("%2d-%2d-", 29, 2)) . '%"';
 		}
 
@@ -51,16 +51,14 @@ class bbpoints extends \phpbb\cron\task\base
 				(user_birthday LIKE "' . $this->db->sql_escape(sprintf("%2d-%2d-", $now["mday"], $now["mon"])) . '%"' . $leap_year_birthdays . ') AND 
 				bbpoints_birthday + 15778463 < UNIX_TIMESTAMP(now())';
 		$result = $this->db->sql_query($sql);
-		$user_ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
+		$user_ids = [];
+		while ($row = $this->db->sql_fetchrow($result)) {
 			$user_ids[] = $row['user_id'];
 			$sql = 'INSERT INTO ' . $this->bbpoints_table . ' (from_id, to_id, bbpoints, reason, timestamp) 
 					VALUES(0, ' . $row['user_id'] . ', ' . $this->bbpoints_config['per_birthday'] . ', "Happy birthday", ' . time() . ')';
 			$this->db->sql_query($sql);
 		}
-		if (sizeof($user_ids))
-		{
+		if (count($user_ids)) {
 			$sql = 'UPDATE ' . USERS_TABLE . ' SET bbpoints_birthday = ' . time() . ' WHERE user_id IN (' . implode(',', $user_ids) . ')';
 			$this->db->sql_query($sql);
 		}

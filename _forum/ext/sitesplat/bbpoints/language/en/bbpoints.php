@@ -1,27 +1,26 @@
 <?php
-/**
-*
-* BBpoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * BBPoints extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if ( empty($lang) || !is_array($lang) )
-{
-	$lang = array();
+if (empty($lang) || !is_array($lang)) {
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'UCP_BBPOINTS_EXPLAIN'					=> 'Transactions Overview of your earned points',
 	'BB_DONATION'							=> 'Donation from',
 	'BB_TRANSFER'							=> 'Transfer to',
@@ -42,7 +41,7 @@ $lang = array_merge($lang, array(
 
 	'TRANSFER_TO'							=> 'Here you can transfer/donate points to another user - Cannot be reversed!',
 	'TRANSFER_SUCCESS'						=> 'The transfer was successful.',
-	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'To read and react to this topic you have to trade <span class="label label-primary">%1$s points</span><br />This is a one time trade to the Topic Starter',
+	'TRANSFER_TO_HIDDEN_TOPIC'				=> 'To read and react to this topic you have to trade <span class="label label-primary">%1$s points</span><br />This is a one time trade to the Topic Starter<br />Check here how you can make points: <a href="https://goldtuganime.com/forum/viewtopic.php?f=29&t=10711">GoldTugAnime Points System</a>',
 	'NO_USER_SELECTED'						=> 'You did not select any user',
 	'NO_AMOUNT_SELECTED'					=> 'You did not select any amount or the amount is < 5',
 	'TRANSFER_NOT_ENOUGH_POINTS'			=> 'You do not have enough points to transfer.',
@@ -67,10 +66,10 @@ $lang = array_merge($lang, array(
 	'TRANSFER_PM_BODY'					     => 'You have received GoldenPoints of %1$s %2$s.',
 	'TRANSFER_PM_BODY_COMMENT'	             => 'You have received GoldenPoints of %1$s %2$s with the following comment: <br />%3$s',
 	'TRANSFER_POINTS_TITLE'				     => 'Transfer %s',
-	'TRANSFER_POINTS'						 => 'Transfer %s',   
+	'TRANSFER_POINTS'						 => 'Transfer %s',
 	'TRANSFER_AMOUNT'						 => 'Amount',
 	'TRANSFER_COMMENT'						 => 'Comment',
-	'BBPOINT_LOG'						     => 'Transfer log',
+	'BBPOINTS_LOG'						     => 'Transfer log',
 
 
 	'CHANGE_NO_USER_SELECTED'			     => 'No user selected',
@@ -80,4 +79,4 @@ $lang = array_merge($lang, array(
 
 	'MAIN_HELLO'				             => 'Hello %s !',
 	'MAIN_TEXT'				                 => 'You have %1$s %2$s.<br /><br />%2$s per new topic: %3$s<br />%2$s per new post: %4$s<br />%2$s per word: %5$s',
-));
+]);

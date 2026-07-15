@@ -1,4 +1,8 @@
 <li>
-<span class="icon fa {EXT_SYMBOL}"></span>
-<label>{L_BBPOINTS}&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{USER_PROFILE_POINTS}<!-- IF not SYMBOL_POS -->&nbsp;<i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --></label>
+  <span class="icon fa {{ EXT_SYMBOL }}"></span>
+  <label>{{ lang('BBPOINTS') }}&nbsp;{% if SYMBOL_POS %}
+      <i class="fa {{ BBPOINTS_SYMBOL }}"></i>&nbsp;{% endif %}{{ USER_PROFILE_POINTS }}
+    {% if not SYMBOL_POS %}&nbsp;<i class="fa {{ BBPOINTS_SYMBOL }}"></i>
+    {% endif %}
+  </label>
 </li>

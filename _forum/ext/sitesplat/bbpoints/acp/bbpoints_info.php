@@ -3,7 +3,7 @@
 *
 * BBPoints extension for the phpBB Forum Software package.
 *
-* @copyright (c) 2015 SiteSplat All rights reserved
+* @copyright (c) 2015-2022 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -14,15 +14,16 @@ class bbpoints_info
 {
     public function module()
     {
-        return array(
+        return [
             'filename'  => '\sitesplat\bbpoints\acp\bbpoints_module',
             'title'     => 'ACP_POINTS_INDEX_TITLE',
-            'modes'     => array(
-                'settings'    => array(
+            'modes'     => [
+                'settings'    => [
                     'title' => 'ACP_POINTS_INDEX_TITLE',
 					'auth'	=> 'ext_sitesplat/bbpoints && acl_a_board',
-                    'cat'   => array('ACP_CAT_FORUMS')),
-            ),
-        );
+                    'cat'   => ['ACP_CAT_FORUMS']
+                ],
+            ],
+        ];
     }
 }

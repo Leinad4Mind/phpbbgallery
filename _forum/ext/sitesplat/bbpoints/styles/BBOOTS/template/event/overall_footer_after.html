@@ -1,13 +1,15 @@
-<!-- IF S_USER_LOGGED_IN -->
-<!-- INCLUDEJS @sitesplat_bbpoints/js/jquery-ui.min.js -->
-<!-- IF SCRIPT_NAME == "ucp" -->
-   <!-- INCLUDEJS @sitesplat_bbpoints/js/bbpoints.js -->
-<!-- ENDIF -->
-<script>
-var boardurl = '{BOARD_URL}';
-   if(document.getElementById("userbbpoint") != null){
-       n = parseInt(document.getElementById("userbbpoint").innerHTML);
-       document.getElementById("userbbpoint").innerHTML = n.toFixed(2);
-   }
-</script>
-<!-- ENDIF -->
+{% if S_USER_LOGGED_IN %}
+  {% INCLUDEJS '@sitesplat_bbpoints/js/jquery-ui.min.js' %}
+  {% if SCRIPT_NAME == "ucp" %}
+    {% INCLUDEJS '@sitesplat_bbpoints/js/bbpoints.min.js' %}
+  {% endif %}
+  <script>
+    var boardurl = '{{ BOARD_URL }}';
+    if (document.getElementById("userbbpoint") != null) {
+      n = parseInt(document.getElementById("userbbpoint").innerHTML);
+      document
+        .getElementById("userbbpoint")
+        .innerHTML = n.toFixed(2);
+    }
+  </script>
+{% endif %}
