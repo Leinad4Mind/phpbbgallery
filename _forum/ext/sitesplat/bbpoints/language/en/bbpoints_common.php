@@ -22,16 +22,20 @@ if ( empty($lang) || !is_array($lang) )
 }
 
 $lang = array_merge($lang, array(
-	'BBPOINTS'						=> 'BBpoints', // This is the forum point name. You can edit it to reflect your own point name.
-	'YOUR_BBPOINTS'					=> 'Your BBpoints',
+	'BBPOINTS'						=> 'GoldenPoints', // This is the forum point name. You can edit it to reflect your own point name.
+	'BBPOINTS_SHORT'				=> 'Points',
+	'YOUR_BBPOINTS'					=> 'Your GoldenPoints',
 	'BB_AMOUNT'			    		=> 'Amount',
-	'BB_PAID_UP'			    	=> 'Paid-up',
-	'TOPIC_HIDDEN'					=> 'Hidden topic. Requires a payment',
-	'WAS_HIDDEN'					=> 'This is a payed up topic',
+	'BB_PAID_UP'			    	=> 'Trade-up',
+	'BB_PAID'			    		=> 'Acquired',
+	'BB_PERSONAL'					=> 'Poster',
+	'BB_PERSONAL_EXPLAIN'			=> 'You can enter the topic since you\'re the poster',
+	'TOPIC_HIDDEN'					=> 'Hidden topic. Requires GoldenPoints',
+	'WAS_HIDDEN'					=> 'You\'ve already acquired this golden topic',
 	'BBPOINTS_HIDE_TOPIC'	        => 'Points Min.',
-	'BBPOINTS_HIDE_TOPIC_EXPLAIN'	=> 'Enter the Minimum Points required for the next user to read this topic. <br />(The points will be transfered to your account)',
+	'BBPOINTS_HIDE_TOPIC_EXPLAIN'	=> 'Enter the Minimum Points required for the next user to read this topic. <br />(The points will be transferred to your account)',
 	'TRANSFER_NOTI'			        => 'You have received a donation of %1$s from %2$s %3$s',
 
-	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Someone transfered you BBpoints.',
-	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER' => 'Someone transfered you BBpoints',
+	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Someone transferred you GoldenPoints.',
+	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER' => 'Someone transferred you GoldenPoints',
 ));

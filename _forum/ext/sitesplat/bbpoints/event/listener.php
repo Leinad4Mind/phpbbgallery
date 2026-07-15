@@ -87,7 +87,7 @@ class listener implements EventSubscriberInterface
 	{
 		if($event['topic_data']['bbpoints_payed'])
 		{
-			$this->user->add_lang_ext('sitesplat/bbpoints', 'bbpoints');	
+			$this->user->add_lang_ext('sitesplat/bbpoints', 'bbpoints');
 			$sql = 'SELECT * FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $this->user->data['user_id'] . ' AND topic_id = ' . $event['topic_id'] . ' ORDER BY timestamp DESC';
 			$result = $this->db->sql_query_limit($sql, 1);
 			$row = $this->db->sql_fetchrow($result);
@@ -98,8 +98,8 @@ class listener implements EventSubscriberInterface
 				{
 					$this->template->assign_vars(array('COMMENT_ENABLED' => $this->bbpoints_config['comments_enable'], 'TOPIC_POINTS' => $event['topic_data']['bbpoints_payed']));
 					$amount = ($this->bbpoints_config['symbol_pos']) ? 
-							'<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($event['topic_data']['bbpoints_payed'], 2) :
-							number_format($event['topic_data']['bbpoints_payed'], 2) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
+							'<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($event['topic_data']['bbpoints_payed'], 0) :
+							number_format($event['topic_data']['bbpoints_payed'], 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
 					confirm_box(false, $this->user->lang('TRANSFER_TO_HIDDEN_TOPIC', $amount), build_hidden_fields(array(
 						'userid'		=> $this->user->data['user_id'],
 						'amount'		=> $event['topic_data']['bbpoints_payed'],
@@ -146,16 +146,16 @@ class listener implements EventSubscriberInterface
 								);
 								$this->bbpoints_helper->add_noti($noti_ary);
 							}
-							meta_refresh(3, append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'f=' . $this->request->variable('f', 0) . '&amp;t=' . $this->request->variable('topic_id', 0)));
+							meta_refresh(2, append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'f=' . $this->request->variable('f', 0) . '&amp;t=' . $this->request->variable('topic_id', 0)));
 							trigger_error($this->user->lang['TRANSFER_SUCCESS'] /*. adm_back_link($this->u_action)*/, E_USER_WARNING);	
 						} else
 						{
-							meta_refresh(3, append_sid($this->phpbb_root_path . 'viewforum.' . $this->php_ext, 'f=' . $this->request->variable('f', 0)));
+							meta_refresh(2, append_sid($this->phpbb_root_path . 'viewforum.' . $this->php_ext, 'f=' . $this->request->variable('f', 0)));
 							trigger_error($this->user->lang['TRANSFER_NOT_ENOUGH_POINTS']);	
 						}
 					} else
 					{
-						meta_refresh(3, append_sid($this->phpbb_root_path . 'viewforum.' . $this->php_ext, 'f=' . $this->request->variable('f', 0)));
+						meta_refresh(2, append_sid($this->phpbb_root_path . 'viewforum.' . $this->php_ext, 'f=' . $this->request->variable('f', 0)));
 						trigger_error($this->user->lang[(!$this->request->variable('transfer_to', 0) ? 'NO_USER_SELECTED' : 'NO_AMOUNT_SELECTED')]);	
 					}
 		
@@ -203,17 +203,17 @@ class listener implements EventSubscriberInterface
 		$bbpoints = $event['forum_data'];
 		if ($bbpoints['bbpoints_enabled'])
 		{
-			$this->template->assign_block_vars('rules', array(
+			$this->template->assign_block_vars('points', array(
 				'RULE'	=> sprintf($this->user->lang['EARN_PER_TOPIC'], (($bbpoints['bbpoints_per_topic']) ? $bbpoints['bbpoints_per_topic'] : 
-							$this->bbpoints_config['per_topic']) . ' ' . $this->bbpoints_config['currency'][1]),
+							$this->bbpoints_config['per_topic']) . ' ' . $this->user->lang['BBPOINTS_SHORT']),
 			));
-			$this->template->assign_block_vars('rules', array(
+			$this->template->assign_block_vars('points', array(
 				'RULE'	=> sprintf($this->user->lang['EARN_PER_POST'], (($bbpoints['bbpoints_per_post']) ? $bbpoints['bbpoints_per_post'] : 
-							$this->bbpoints_config['per_post']) . ' ' . $this->bbpoints_config['currency'][1]),
+							$this->bbpoints_config['per_post']) . ' ' . $this->user->lang['BBPOINTS_SHORT']),
 			));
-			$this->template->assign_block_vars('rules', array(
+			$this->template->assign_block_vars('points', array(
 				'RULE'	=> sprintf($this->user->lang['EARN_PER_WORD'], (($bbpoints['bbpoints_per_word']) ? $bbpoints['bbpoints_per_word'] : 
-							$this->bbpoints_config['per_word']) . ' ' . $this->bbpoints_config['currency'][1]),
+							$this->bbpoints_config['per_word']) . ' ' . $this->user->lang['BBPOINTS_SHORT']),
 			));
 		}
 	}
@@ -228,6 +228,8 @@ class listener implements EventSubscriberInterface
 		$topic_row = $event['topic_row'];
 		$topic_row['TOPIC_HIDDEN'] = $event['row']['bbpoints_payed'];
 		$topic_row['TOPIC_PAYED'] = ($bbpoints == $event['row']['bbpoints_payed'] || $this->user->data['user_id'] == $event['row']['topic_poster']) ? false : true;
+		$topic_row['TOPIC_PERSONAL'] = $this->user->data['user_id'] == $event['row']['topic_poster'] ? false : true;
+		$topic_row['TOPIC_POINTS'] = $event['row']['bbpoints_payed'];
 		$event['topic_row'] = $topic_row;
 	}
 
@@ -241,7 +243,7 @@ class listener implements EventSubscriberInterface
 	public function viewtopic_post_rowset_data($event)
 	{
 		$rowset_data = $event['rowset_data'];
-		$rowset_data['bbpoints'] = number_format($event['row']['bbpoints'], 2);
+		$rowset_data['bbpoints'] = number_format($event['row']['bbpoints'], 0);
 		$event['rowset_data'] = $rowset_data;
 	}
 
@@ -259,7 +261,7 @@ class listener implements EventSubscriberInterface
 		// points value per post
 		//	'BBPOINTS' => ($event['row']['post_visibility'] == 1) ? number_format($event['row']['bbpoints'] + $topic_points, 2) : 0,
         // total points		
-		'USER_TOTAL_POINTS' => number_format($this->load_user_points($event['row']['user_id']), 2),
+		'USER_TOTAL_POINTS' => number_format($this->load_user_points($event['row']['user_id']), 0),
 		));
 	}
 
@@ -292,7 +294,7 @@ class listener implements EventSubscriberInterface
 				{
 					$this->template->assign_block_vars('richest_users', array(
 						'USERNAME'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-						'POINTS'	=> number_format($row['total'], 2),
+						'POINTS'	=> number_format($row['total'], 0),
 					));
 				}
 			}
@@ -327,7 +329,7 @@ class listener implements EventSubscriberInterface
 	public function memberlist_view_profile($event)
 	{
 		$this->template->assign_vars(array(
-			'USER_PROFILE_POINTS' => number_format($this->load_user_points($event['member']['user_id']), 2),
+			'USER_PROFILE_POINTS' => number_format($this->load_user_points($event['member']['user_id']), 0),
 		));
 	}
 
@@ -368,7 +370,7 @@ class listener implements EventSubscriberInterface
 			elseif ($event['mode'] == 'reply' || 'quote')
 			{
 				$add_points = ($forum_data['bbpoints_per_post']) ? $forum_data['bbpoints_per_post'] : $this->bbpoints_config['per_post'];
-			}              
+			}
 
 			if ($forum_data['bbpoints_per_word'] || $this->bbpoints_config['per_word'])
 			{
@@ -384,10 +386,12 @@ class listener implements EventSubscriberInterface
 			$sql = 'UPDATE ' . POSTS_TABLE . ' SET bbpoints = ' . $add_points . ' WHERE post_id = ' . $event['data']['post_id'];
 			$this->db->sql_query($sql);
 
-			if ($this->request->variable('bbpoints_hide', 0))
-			{
-				$sql = 'UPDATE ' . TOPICS_TABLE . ' SET bbpoints_payed = ' . $this->request->variable('bbpoints_hide', 0) . ' WHERE topic_id = ' . $event['data']['topic_id'];
-				$this->db->sql_query($sql);
+			if ($event['mode'] == 'post' || ($event['mode'] == 'edit' && $event['post_data']['topic_first_post_id'] == $event['post_id'])) {
+				if (is_numeric($this->request->variable('bbpoints_hide', 0)) && $this->request->variable('bbpoints_hide', 0) >= 0)
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . ' SET bbpoints_payed = ' . $this->request->variable('bbpoints_hide', 0) . ' WHERE topic_id = ' . $event['data']['topic_id'];
+					$this->db->sql_query($sql);
+				}
 			}
 		}
 	}
@@ -399,7 +403,7 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function transfer_login($event)	
+	public function transfer_login($event)
 	{
 		if ($this->bbpoints_config['per_login'])
 		{
@@ -416,7 +420,7 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function pay_points($event)	
+	public function pay_points($event)
 	{
 		$sql = 'INSERT INTO ' . $this->bbpoints_table . ' (from_id, to_id, bbpoints, reason, timestamp) 
 				VALUES(' . $this->user->data['user_id'] . ', 0, ' . $event['bbpoints'] . ', "' . $event['reason'] . '", ' . time() . ')';
@@ -430,7 +434,7 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function transfer_register($event)	
+	public function transfer_register($event)
 	{
 		if ($this->bbpoints_config['per_register'])
 		{

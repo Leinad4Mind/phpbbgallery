@@ -47,7 +47,7 @@ head.ready(function () {
 		if ($('#mtransfer_to').val() > 0 && parseInt($('#amount').val()) > 4 && parseInt($('#amount').val()) <= parseInt(userpoints))
 		{
 			amount = parseInt(userpoints) - parseInt($('#amount').val());
-			$('#userbbpoint').text(amount.toFixed(2));
+			$('#userbbpoint').text(amount.toFixed(0));
 		}
     });
 

@@ -2,7 +2,7 @@ Subject: BBpoints - "{FORUM_NAME}"
 
 Hi {USERNAME},
 
-You recieved this e-mail because there was a donation made to your address from {POSTER}
+You received this e-mail because there was a donation of GoldenPoints made to your address from {POSTER}
 
 {TEXT}
 

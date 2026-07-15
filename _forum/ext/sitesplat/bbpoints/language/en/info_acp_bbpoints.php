@@ -22,10 +22,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_POINTS'							=> 'BBpoints',
-	'ACP_POINTS_INDEX_TITLE'				=> 'BBpoints Settings',
-	'ACP_POINTS_INDEX_EXPLAIN'				=> 'Assign point per topic, post or words or assign them per forum basis via Forums Management. You can exclude forums from BBpoints as well.<br /> Give points to groups of your choice or even by single user. Synchronize and rest point at your wish. Have Fun and make your baord unique and engaging for your users!<br /><br /><strong>NOTE</strong>: The Hide Topic feauture, allows a user to set a minimum amount of point for the topic to be viewable for the next user. It needs to be set by forum group permission. "User can hide own topic" ',
-    'ACP_ENABLE_POINTS'					    => 'Enable BBpoints',
+	'ACP_POINTS'							=> 'GoldenPoints',
+	'ACP_POINTS_INDEX_TITLE'				=> 'GoldenPoints Settings',
+	'ACP_POINTS_INDEX_EXPLAIN'				=> 'Assign point per topic, post or words or assign them per forum basis via Forums Management. You can exclude forums from GoldenPoints as well.<br /> Give points to groups of your choice or even by single user. Synchronize and rest point at your wish. Have Fun and make your board unique and engaging for your users!<br /><br /><strong>NOTE</strong>: The Hide Topic feature, allows a user to set a minimum amount of point for the topic to be viewable for the next user. It needs to be set by forum group permission. "User can hide own topic" ',
+    'ACP_ENABLE_POINTS'					    => 'Enable GoldenPoints',
 	
 	'POINTS_NAME'							=> 'Points Symbol (or name)',
 	'POINTS_NAME_EXPLAIN'					=> 'Choose the currency symbol. This will shows on different places on the forum<br /> Left and right position can also be selected.<br /> You can easily use your own custom point name by editing one line of the language file located in:<br /> <strong>root/ext/sitesplat/bbpoints/language/bbpoints_common.php</strong>',
@@ -33,7 +33,7 @@ $lang = array_merge($lang, array(
 	'EXT_SYMBOL'							=> 'Extension Symbol',
 	'EXT_SYMBOL_EXPLAIN'					=> 'Choose the symbol for this extension',
 	
-	'ACP_POINTS_EXPLAIN'					=> 'Set how much points a user will receive in general. These values will be overridden if a different value is entered in forum management. <strong>ACP > FORUMS > Your forum</strong> Then click edit for existent forums or find the BBpoints setting for new forums.',
+	'ACP_POINTS_EXPLAIN'					=> 'Set how much points a user will receive in general. These values will be overridden if a different value is entered in forum management. <strong>ACP > FORUMS > Your forum</strong> Then click edit for existent forums or find the GoldenPoints setting for new forums.',
 	'ACP_POINTS_PER_EXPLAIN'				=> 'Set how much points a user will receive per login, registration or on his birthday. Set to 0 to switch off.',
 
 	'POINTS_PERLOGIN'						=> 'Points per login',
@@ -45,7 +45,7 @@ $lang = array_merge($lang, array(
 	'BAR_STATS'								=> 'Display progress bar on Index',
 	'BAR_STATS_EXPLAIN'						=> 'Display a progress bar and your points amount goal on the index page',
 	
-	'BBPOINT_STATS'							=> 'Display BBpoints statistics on index page',
+	'BBPOINT_STATS'							=> 'Display GoldenPoints statistics on index page',
 	'BBPOINT_STATS_EXPLAIN'					=> 'Display user statistics on the index page',
 
 	'TRANSFER_NOTIFY'						=> 'Allow transfer',
@@ -56,7 +56,7 @@ $lang = array_merge($lang, array(
 	'POINTS_COMMENTS'						=> 'Allow comments',
 	'POINTS_COMMENTS_EXPLAIN'				=> 'Allow user to leave the comment about the points transfer',
 
-	'ACP_POINTS_VERSION'	                => '1.2.3',
+	'ACP_POINTS_VERSION'	                => '1.2.4',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
 
@@ -68,7 +68,7 @@ $lang = array_merge($lang, array(
 	'BBPOINTS_NOTICE'						=> '<div style="width:80%;margin:20px auto;"><p>The setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.<br />Don\'t forget to check Forum Group Permissions and also the Forums Management options!</p></div>',
 	'SS_HELPER_NOTY'	                    => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	
-	'POINTS_DESCRIPTION'					=> 'BBpoints allows your forum members to have fun and collect points for determined actions...',
+	'POINTS_DESCRIPTION'					=> 'GoldenPoints allows your forum members to have fun and collect points for determined actions...',
 	'POINTS_TASKS_1'						=> 'Points per topic, post, words, upon new registrations, birthdays and more!',
 	'POINTS_TASKS_2'						=> 'Transfer/donate points to other users',
 	'POINTS_TASKS_3'						=> 'Granular points control configurable for each forum',
@@ -89,7 +89,7 @@ $lang = array_merge($lang, array(
 	'POINTS_TRANSFER'					       => 'Allow users to transfer points',
 	'POINTS_TRANSFER_EXPLAIN'		           => 'Allow users to transfer their points to another user',
 	
-	'POINTS_CONFIG_SUCCESS'					   => 'BBPoints settings have been updated successfully',
+	'POINTS_CONFIG_SUCCESS'					   => 'GoldenPoints settings have been updated successfully',
 	
 	'POINTS_GROUP_TRANSFER'                    => 'Transfer points to group or single user',
 	'POINTS_GROUP_TRANSFER_EXPLAIN'            => 'Start typing the username you wish to send the points to or select the group',
@@ -109,11 +109,11 @@ $lang = array_merge($lang, array(
 	
 	'SYNC_POINTS_CONFIRM'						=> 'Are you sure, you want to synchronize all points?<br />Note: This can not be undone!',
 	'SYNC_POINTS'								=> 'Synchronize users points',
-	'LOG_RESYNC_SUCCESS'                    	=> 'BBPoints has been reset succesfully',
+	'LOG_RESYNC_SUCCESS'                    	=> 'GoldenPoints has been reset successfully',
 	'RESET_POINTS_CONFIRM'						=> 'Are you sure, you want to reset all points?<br />Note: This can not be undone!',
 	'RESET_POINTS'								=> 'Reset users points',
 	
 	'RESET_POINTS_EXPLAIN'						=> 'This action cannot be undone! it will reset the users points',
-	'SYNC_POINTS_EXPLAIN'				        => 'Calculates all the points criteria set above for all the users.<br />It can take several minutes and it depends on how many users and posts your baord hosts.<br /> Do NOT interrput the process once started.',
+	'SYNC_POINTS_EXPLAIN'				        => 'Calculates all the points criteria set above for all the users.<br />It can take several minutes and it depends on how many users and posts your board hosts.<br /> Do NOT interrupt the process once started.',
 	
 ));

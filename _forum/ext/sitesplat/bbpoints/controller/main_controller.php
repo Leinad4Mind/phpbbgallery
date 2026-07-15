@@ -102,8 +102,8 @@ class main_controller
 
 					if ($this->bbpoints_config['transfer_notify'])
 					{
-						$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($this->request->variable('amount', 0), 2) :
-								   number_format($this->request->variable('amount', 0), 2) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
+						$amount = ($this->bbpoints_config['symbol_pos']) ? '<i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i> ' . number_format($this->request->variable('amount', 0), 0) :
+								   number_format($this->request->variable('amount', 0), 0) . ' <i class="fa ' . $this->bbpoints_config['currency'][0] . '"></i>';
 						$noti_ary = array(
 							'user_ids'		=> $this->request->variable('transfer_to', 0),
 							'parent_id'		=> 0,
@@ -116,14 +116,14 @@ class main_controller
 						$this->bbpoints_helper->add_noti($noti_ary);
 					}
 					$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
-					trigger_error($this->user->lang['TRANSFER_SUCCESS']);	
+					trigger_error($this->user->lang['TRANSFER_SUCCESS']);
 				} else
 				{
-					trigger_error($this->user->lang['TRANSFER_NOT_ENOUGH_POINTS']);	
+					trigger_error($this->user->lang['TRANSFER_NOT_ENOUGH_POINTS']);
 				}
 			} else
 			{
-				trigger_error($this->user->lang[(!$this->request->variable('transfer_to', 0) ? 'NO_USER_SELECTED' : 'NO_AMOUNT_SELECTED')]);	
+				trigger_error($this->user->lang[(!$this->request->variable('transfer_to', 0) ? 'NO_USER_SELECTED' : 'NO_AMOUNT_SELECTED')]);
 			}
 		}
 	}

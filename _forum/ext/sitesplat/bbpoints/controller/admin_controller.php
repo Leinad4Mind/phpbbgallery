@@ -297,8 +297,8 @@ class admin_controller
 			$buffer->flush();
 			
 			$currency_symbol = $this->bbpoints_helper->currency(0, $this->bbpoints_config['currency']);
-			$transfer_amount = ($this->bbpoints_config['symbol_pos']) ? $currency_symbol[2] . ' ' . number_format($amount, 2) :
-							   number_format($amount, 2) . ' ' . $currency_symbol[2];
+			$transfer_amount = ($this->bbpoints_config['symbol_pos']) ? $currency_symbol[2] . ' ' . number_format($amount, 0) :
+							   number_format($amount, 0) . ' ' . $currency_symbol[2];
 			if ($this->bbpoints_config['transfer_notify'])
 			{
 				$noti_ary = array(
