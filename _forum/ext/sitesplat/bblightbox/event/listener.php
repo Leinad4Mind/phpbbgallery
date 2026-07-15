@@ -17,10 +17,11 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewtopic_post_rowset_data'				=> 'set_bblightbox',
-			'core.posting_modify_template_vars'				=> [['set_bblightbox'], ['s_load_bblightbox']],
+			'core.posting_modify_template_vars'				=> 'set_bblightbox',
 			'core.ucp_pm_view_messsage'						=> 'set_bblightbox',
 			'core.viewtopic_modify_post_row'				=> 's_load_bblightbox_viewtopic',
 			'core.modify_mcp_modules_display_option'		=> 's_load_bblightbox',
+			'core.posting_modify_template_vars'				=> 's_load_bblightbox',
 			'core.ucp_display_module_before'				=> 's_load_bblightbox_ucp',
 			'core.text_formatter_s9e_configure_after' 		=> 'modify_img_template',
 			'core.parse_attachments_modify_template_data'	=> 'set_bblightbox'
@@ -41,37 +42,29 @@ class listener implements EventSubscriberInterface
 		$this->ext_path = $ext_path;
 		$this->php_ex = $phpEx;
 		
-		$this->settings = json_decode(stripslashes($this->config['bblightbox']), true);
+		$this->settings = json_decode($this->config['bblightbox'], true);
 	}
 
 	public function set_bblightbox()
 	{
 		$pagename = (str_replace('.' . $this->php_ex, '', $this->user->page['page_name']));
-
 		$this->template->assign_vars(array(
+			'BBLIGHTBOX_PLUGIN'			=> ($this->match($pagename)) ? (($this->settings['plugin'] != '------') ? $this->settings['plugin'] : false) : false,
+			'BBLIGHTBOX_BBCODE_ALLOW'	=> $this->settings['bbcode_allow'],
+			'BBLIGHTBOX_CAPTIONS'		=> $this->settings['captions'],
+			'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
+			'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
 	        'S_THUMB_ENABLED'		    => ($this->config['img_create_thumbnail']) ? true : false,
-	    //  'FANCYBOX_JS'				=> $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
-		//	'CHOCOLAT_JS'			    => $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
-			'FANCYBOX_JS'				=> generate_board_url() . '/' . $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
-			'CHOCOLAT_JS'			    => generate_board_url() . '/' . $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
+	        'FANCYBOX_JS'				=> $this->ext_path . 'styles/FLATBOOTS/template/fancybox/jquery.fancybox.min.js',
+			'CHOCOLAT_JS'			    => $this->ext_path . 'styles/FLATBOOTS/template/Chocolat/js/jquery.chocolat.min.js',
+			'FANCYBOX_PROTECT'			=> $this->settings['protect'],
+
+			'CHOCOLAT_ENABLEZOOM'		=> $this->settings['enablezoom'],
+			'QUOTED_IMAGES'				=> $this->settings['qimages'],
+			'RESIZE_IMAGES'				=> $this->settings['resize'],
+			
+			'BBLIGHTBOX_COLUMN_LAYOUT'	=> $this->settings['collums'],
 		));
-
-		if (!empty($this->settings)) {
-			$this->template->assign_vars(array(
-				'BBLIGHTBOX_PLUGIN'			=> ($this->match($pagename)) ? (($this->settings['plugin'] != '------') ? $this->settings['plugin'] : false) : false,
-				'BBLIGHTBOX_BBCODE_ALLOW'	=> $this->settings['bbcode_allow'],
-				'BBLIGHTBOX_CAPTIONS'		=> $this->settings['captions'],
-				'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
-				'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
-				'FANCYBOX_PROTECT'			=> $this->settings['protect'],
-
-				'CHOCOLAT_ENABLEZOOM'		=> $this->settings['enablezoom'],
-				'QUOTED_IMAGES'				=> $this->settings['qimages'],
-				'RESIZE_IMAGES'				=> $this->settings['resize'],
-				
-				'BBLIGHTBOX_COLUMN_LAYOUT'	=> $this->settings['collums'],
-			));
-		}
 	}
 
 	public function s_load_bblightbox_viewtopic($event)
@@ -107,7 +100,9 @@ class listener implements EventSubscriberInterface
 		$xpath = new \DOMXPath($dom);
 		foreach ($xpath->query('//img[@src]') as $img)
 		{
+			// quick and dirty Add class needed for the img bbcodes so it can be manipulated in front-end with the lightbox
 			$img->setAttribute('class', 'img-responsive img-post img-bbcodes');
+
 		}
 		$dom->saveChanges();
 	}

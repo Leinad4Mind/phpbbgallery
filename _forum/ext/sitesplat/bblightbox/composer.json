@@ -2,15 +2,15 @@
 	"name": "sitesplat/bblightbox",
 	"type": "phpbb-extension",
 	"description": "The perfect Lightbox for a phpBB forum.",
-	"homepage": "https://sitesplat.com",
-	"version": "1.0.6",
+	"homepage": "http://sitesplat.com",
+	"version": "1.0.1",
 	"keywords": ["phpbb", "extension", "premium", "cosmetic", "SiteSplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "https://sitesplat.com"
+			"homepage": "http://sitesplat.com"
 		}
 	],
 	"require": {
@@ -23,10 +23,9 @@
 			"phpbb/phpbb": ">=3.2.0,<3.3@dev"
 		},
 		"version-check": {
-            "host": "sitesplat.com",
+            "host": "www.sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bblightbox.json",
-			"ssl": true
+            "filename": "bblightbox.json"
 		}
 	}
 }

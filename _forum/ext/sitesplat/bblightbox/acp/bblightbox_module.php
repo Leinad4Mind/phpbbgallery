@@ -19,8 +19,8 @@ class bblightbox_module
 		global $config, $phpbb_container;
 		global $phpbb_root_path, $phpEx;
 
-
-		$this->settings = json_decode(stripslashes($config['bblightbox']), true);
+		
+		$this->settings = json_decode($config['bblightbox'], true);
 		$user->add_lang_ext('sitesplat/bblightbox', 'info_acp_bblightbox');
 		$this->tpl_name = 'bblightbox';
 		$this->page_title = $user->lang('ACP_BBLIGHTBOX_TITLE');
@@ -44,7 +44,7 @@ class bblightbox_module
 						'action'	=> 'ria',
 					)));
 				}
-
+			
 			break;
 
 			case 'ria_process':
@@ -71,7 +71,7 @@ class bblightbox_module
 						$sql = 'UPDATE ' . POSTS_TABLE . '
 								SET post_text = "' . $db->sql_escape($text) . '"
 								WHERE post_id = ' . (int) $row['post_id'];
-						$db->sql_query($sql);
+						$db->sql_query($sql); 
 					}
 					$db->sql_freeresult($result);
 
@@ -103,7 +103,7 @@ class bblightbox_module
 						'action'	=> 'remove_thumbnails',
 					)));
 				}
-
+			
 			break;
 
 			case 'remove_thumbnails_process':
@@ -143,7 +143,7 @@ class bblightbox_module
 						'action'	=> 'rt',
 					)));
 				}
-
+			
 			break;
 
 			case 'rt_process':
@@ -215,9 +215,10 @@ class bblightbox_module
 			{
 				trigger_error('FORM_INVALID');
 			}
-
+			
 			$bblightbox = $request->variable('bblightbox', array('' => ''));
-//			$this->settings = $bblightbox;
+			
+			$this->settings = $bblightbox;
 			$config->set('bblightbox', json_encode($bblightbox));
 
 			trigger_error($user->lang('ACP_BBLIGHTBOX_SETTING_SAVED') . adm_back_link($this->u_action));
@@ -228,40 +229,35 @@ class bblightbox_module
 		{
 			$phpbb_container->get('sitesplat.BBCore.helper')->detail('sitesplat/bblightbox');
 			$this->tpl_name = 'acp_ext_details';
-		}
-		else
+		} else
 		{
 			foreach (array('------', 'baguetteBox', 'fancybox', 'Chocolat', 'jsOnlyLightbox', 'lightgallery') as $plugin)
 			{
 				$template->assign_block_vars('plugins', array(
 					'NAME'		=> $plugin,
-					'SELECTED'	=> (!empty($this->settings) && $plugin == $this->settings['plugin']) ? ' selected="selected"' : ''
+					'SELECTED'	=> ($plugin == $this->settings['plugin']) ? ' selected="selected"' : ''
 				));
 			}
 
-			if (!empty($this->settings)) {
-				$template->assign_vars(array(
-					'BBLIGHTBOX_PLUGIN'			=> $this->settings['plugin'],
-					'BBLIGHTBOX_BBCODE_ALLOW'	=> $this->settings['bbcode_allow'],
-					'BBLIGHTBOX_CAPTIONS'		=> $this->settings['captions'],
-					'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
-					'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
+			$template->assign_vars(array(
+				'U_ACTION'					=> $this->u_action,
+				'BBLIGHTBOX_PLUGIN'			=> $this->settings['plugin'],
+				'BBLIGHTBOX_BBCODE_ALLOW'	=> $this->settings['bbcode_allow'],
+				'BBLIGHTBOX_CAPTIONS'		=> $this->settings['captions'],
+				'BBLIGHTBOX_ANIMATION'		=> $this->settings['animationeffect'],
+				'BBLIGHTBOX_SLIDE'			=> $this->settings['slide'],
+				
+				'FANCYBOX_PROTECT'			=> $this->settings['protect'],
+	
+				'CHOCOLAT_ENABLEZOOM'		=> $this->settings['enablezoom'],
+				'QUOTED_IMAGES'				=> $this->settings['qimages'],
+				'RESIZED_IMAGES'			=> $this->settings['resize'],
+				'BBLIGHTBOX_COLUMN_LAYOUT'	=> $this->settings['collums'],
 
-					'FANCYBOX_PROTECT'			=> $this->settings['protect'],
-
-					'CHOCOLAT_ENABLEZOOM'		=> $this->settings['enablezoom'],
-					'QUOTED_IMAGES'				=> $this->settings['qimages'],
-					'RESIZED_IMAGES'			=> $this->settings['resize'],
-					'BBLIGHTBOX_COLUMN_LAYOUT'	=> $this->settings['collums'],
-				));
-			}
+				'U_REMOVE_INLINE_ATTACHMENTS'	=> $this->u_action . '&action=ria',
+				'U_REMOVE_THUMBNAILS'			=> $this->u_action . '&action=remove_thumbnails',
+				'U_REASSIGN_THUMBNAILS'			=> $this->u_action . '&action=rt',
+			));
 		}
-
-		$template->assign_vars(array(
-			'U_ACTION'						=> $this->u_action,
-			'U_REMOVE_INLINE_ATTACHMENTS'	=> $this->u_action . '&action=ria',
-			'U_REMOVE_THUMBNAILS'			=> $this->u_action . '&action=remove_thumbnails',
-			'U_REASSIGN_THUMBNAILS'			=> $this->u_action . '&action=rt',
-		));
 	}
 }

@@ -10,7 +10,7 @@
 # or previous just plugin enabled:
 # {% if BBLIGHTBOX_PLUGIN %}{% endif %}
 #
-# //@FIX: the following pages need work for the event above to work correctly: listener.php line 70 to 87
+# //@FIX: the following pages need work for the event above to work correctly: listener.php line 67
 #
 #  _mcp_post.html
 #  _mcp_topic.html
@@ -27,8 +27,7 @@
 		[].forEach.call(document.querySelectorAll('.attach-image'), function(elem) {
 			old_html = elem.innerHTML;
 			var caption = elem.parentElement.childNodes[3].innerText;
-			var dataSrc = elem.querySelector('img').dataset.src || elem.querySelector('img').src;
-			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + dataSrc + '">' + old_html + '</a>';
+			new_html = '<a class="notip" {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'Chocolat' %}title="' + caption + '"{% endif %} {% if BBLIGHTBOX_CAPTIONS and BBLIGHTBOX_PLUGIN eq 'fancybox' %}data-caption="' + caption + '"{% endif %} {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} data-jslghtbx-caption="' + caption + '" href="' + elem.querySelector('img').src + '">' + old_html + '</a>';
 			elem.innerHTML = new_html;
 		});
 		// damn thumbnails 
@@ -43,8 +42,7 @@
 			// Prepare BBCode [img] images for lightbox
 			[].forEach.call(document.querySelectorAll('.content .img-bbcodes'), function(img) {
 			//	img.className += " postbody blockquote postimage quotecontent";
-				var dataSrc = img.dataset.src || img.src;
-				new_html = '<div class="attach-image img-bbcode b-loading"><a {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} href="' + dataSrc + '">' + img.outerHTML + '</a></div>';
+				new_html = '<div class="attach-image img-bbcode"><a {% if BBLIGHTBOX_SLIDE %} data-{% if BBLIGHTBOX_PLUGIN eq 'fancybox' %}fancybox{% else %}jslghtbx-group{% endif %}="mygroup"{% endif %} href="' + img.src + '">' + img.outerHTML + '</a></div>';
 				img.outerHTML = new_html;
 			});
 		{% endif %}
@@ -63,7 +61,7 @@
 	<script>
 	(function () {	
 	{% if BBLIGHTBOX_SLIDE %}
-	    baguetteBox.run('.postbody .attachbox .attach-image, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox .attach-image, .topicreview-content .content, .attachbox .attach-image, .pm .attachbox .attach-image', {
+	    baguetteBox.run('.postbody .attachbox, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox, .topicreview-content .content, #preview, .attachbox, .pm .attachbox', {
 			{% if BBLIGHTBOX_CAPTIONS %}
 			captions: function(element) {
 				return element.dataset.jslghtbxCaption
@@ -129,7 +127,7 @@
 	head.ready(function() {
 	        head.load('{CHOCOLAT_JS}', function() {
 			{% if BBLIGHTBOX_SLIDE %}	
-				$('.postbody .attachbox .attach-image, .postbody .content blockquote .img-bbcode, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox .attach-image, .topicreview-content .content, #preview, .attachbox .attach-image, .pm .attachbox .attach-image').Chocolat({
+				$('.postbody .attachbox, .postbody .content blockquote .img-bbcode, .postbody .content, .topicreview-content .content .img-bbcode, .topicreview-content .attachbox, .topicreview-content .content, #preview, .attachbox, .pm .attachbox').Chocolat({
 					imageSelector: 'a',
 					{% if BBLIGHTBOX_CAPTIONS %}setTitle:'<a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a>',{% endif %}	
 					enableZoom: {{ CHOCOLAT_ENABLEZOOM }}
