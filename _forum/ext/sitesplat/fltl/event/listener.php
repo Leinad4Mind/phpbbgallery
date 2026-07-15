@@ -72,8 +72,8 @@ class listener implements EventSubscriberInterface
 		foreach($rows['rows'] as $row)
 		{
 			strip_bbcode($row['post_text']);
-			// switch for 3.2 and the new parser
-			//$row['post_text'] = (version_compare($this->config['version'], '3.2.*', '<')) ? censor_text($row['post_text']) : htmlentities(censor_text($row['post_text']));
+			// switch for 3.2 and the new parser (not needed anymore)
+			// $row['post_text'] = (version_compare($this->config['version'], '3.2.*', '<')) ? censor_text($row['post_text']) : htmlentities(censor_text($row['post_text']));
 			$row['post_text'] = censor_text($row['post_text']);
 			$row['post_text'] = (utf8_strlen($row['post_text']) > 50) ? utf8_substr($row['post_text'], 0, 50) . '&#91;&hellip;&#93;' : $row['post_text'];
 	
