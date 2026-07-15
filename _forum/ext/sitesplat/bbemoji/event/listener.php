@@ -13,8 +13,15 @@ class listener implements EventSubscriberInterface
 {
 	protected $fallback;
 	protected $generator;
+	protected $template;
+	protected $request;
+	protected $user;
+	protected $db;
+	protected $emoji_icons_table;
 
-	public function __construct(array $generators, \phpbb\path_helper $pathHelper)
+	private $icons;
+
+	public function __construct(array $generators, \phpbb\path_helper $pathHelper, \phpbb\template\template $template, \phpbb\request\request $request, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, $emoji_icons_table)
 	{
 		$webRootPath = $pathHelper->get_web_root_path();
 		foreach ($generators as $k => $generator)
@@ -24,25 +31,195 @@ class listener implements EventSubscriberInterface
 
 		$this->generator = array_shift($generators);
 		$this->fallback  = $generators;
+		$this->template  = $template;
+		$this->request  = $request;
+		$this->user  = $user;
+		$this->db  = $db;
+		$this->emoji_icons_table  = $emoji_icons_table;
 	}
 
 	public static function getSubscribedEvents()
 	{
 		return array(
+			'core.viewforum_get_topic_data'			  => array(array('loadIcons'), array('retrieve_enable_subject_emoji')),
+			'core.viewtopic_before_f_read_check'	  => 'loadIcons',
 			'core.message_parser_check_message'       => 'onCheck',
 			'core.modify_format_display_text_after'   => 'onPreview',
+			'core.posting_modify_template_vars'		  => array(array('onPreviewSubject'), array('replaceTopicIcons')),
+			'core.ucp_pm_compose_template'				=> array(array('loadIcons'), array('replaceTopicIcons')),
 			'core.modify_submit_post_data'            => 'onSubmit',
 			'core.modify_text_for_display_after'      => 'onDisplay',
+			'core.viewtopic_modify_page_title'		  => 'onViewtopicDisplayTopicSubject',
+			'core.viewtopic_modify_post_row'		  => 'onViewtopicDisplayPostSubject',
+			'core.display_forums_modify_template_vars'=> 'onLastPostDisplayPostSubject',
+			'core.viewforum_modify_topicrow'		  => 'onViewforumDisplayPostSubject',
+			'core.search_modify_tpl_ary'			  => 'onSearchDisplaySubject',
+			'core.mcp_topic_review_modify_row'		  => 'onMcpDisplaySubject',
+			'core.mcp_post_template_data'		 	  => 'onMcpPostDisplaySubject',
+			'core.mcp_queue_get_posts_for_posts_query_before'	=> 'onMcpQueuePostQuery',
+			'core.mcp_queue_get_posts_modify_post_row'			=> 'onMcpQueuePostDisplaySubject',
+			'core.mcp_queue_get_posts_for_topics_query_before'	=> 'onMcpQueueTopicQuery',
 			'core.modify_text_for_storage_after'      => 'onStorage',
 			'core.text_formatter_s9e_configure_after' => 'onConfigure',
 			'core.text_formatter_s9e_parser_setup'    => 'onParserSetup',
-			'core.submit_pm_before'                   => 'onPmStorage'
+			'core.submit_pm_before'                   => 'onPmStorage',
+			'core.ucp_main_topiclist_topic_modify_template_vars'	=> 'onBookmarks',
+			'core.posting_modify_post_data'				=> 'allow_subject_emoji',
+			'core.viewtopic_post_rowset_data'		=> 'keep_icons',
+			'core.topic_review_modify_row'			=> 'topic_review',
+			'core.display_user_activity_modify_actives'	=> 'memberlist_view_parse_topic',
+
+			'core.acp_manage_forums_request_data'		=> 'acp_request_enable_subject_emoji',
+			'core.acp_manage_forums_initialise_data'	=> 'acp_init_enable_subject_emoji',
+			'core.acp_manage_forums_display_form'		=> 'acp_tpl_enable_subject_emoji',
+
+			'core.viewforum_get_announcement_topic_ids_data'	=> 'remove_duplicate_forum_join',
+			'core.search_get_posts_data'						=> 'retrieve_search_post_enable_subject_emoji',
+			'core.search_get_topic_data'						=> 'retrieve_search_topic_enable_subject_emoji',
 		);
+	}
+
+	public function memberlist_view_parse_topic($event)
+	{
+		$active_t_row = $event['active_t_row'];
+		$active_t_row['topic_title'] = $this->render($this->parse($active_t_row['topic_title']));
+		$event['active_t_row'] = $active_t_row;
+	}
+
+	public function topic_review($event)
+	{
+		$post_row = $event['post_row'];
+		$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
+		$event['post_row'] = $post_row;
+	}
+
+	public function keep_icons($event)
+	{
+		$rowset_data = $event['rowset_data'];
+		$rowset_data['emoji_icon_id'] = $event['row']['icon_id'];
+		$event['rowset_data'] = $rowset_data;
+	}
+
+	public function allow_subject_emoji($event)
+	{
+		if ($event['post_data']['enable_subject_emoji'])
+		{
+			$this->template->assign_var('S_SUBJECT_EMOJI', true);
+		}
+	}
+
+	public function acp_request_enable_subject_emoji($event)
+	{
+		$forum_data = $event['forum_data'];
+		$forum_data['enable_subject_emoji'] = $this->request->variable('enable_subject_emoji', false);
+		$event['forum_data'] = $forum_data;
+	}
+
+	public function acp_init_enable_subject_emoji($event)
+	{
+		$forum_data = $event['forum_data'];
+		$forum_data['enable_subject_emoji'] = isset($event['forum_data']['enable_subject_emoji']) ? $event['forum_data']['enable_subject_emoji'] : false;
+		$event['forum_data'] = $forum_data;
+	}
+
+	public function acp_tpl_enable_subject_emoji($event)
+	{
+		$template_data = $event['template_data'];
+		$template_data['S_SUBJECT_EMOJI'] = ($event['forum_data']['enable_subject_emoji']) ? true : false;
+		$event['template_data'] = $template_data;
+	}
+
+	public function retrieve_enable_subject_emoji($event)
+	{
+		$sql_array = $event['sql_array'];
+		$sql_array['SELECT'] .= ', f.enable_subject_emoji';
+		$sql_array['LEFT_JOIN'][] = array('FROM' => array(FORUMS_TABLE => 'f'), 'ON' => 't.forum_id = f.forum_id');
+		$event['sql_array'] = $sql_array;
+	}
+
+	public function remove_duplicate_forum_join($event)
+	{
+		$sql_ary = $event['sql_ary'];
+		unset($sql_ary['LEFT_JOIN'][0]);
+		$event['sql_ary'] = $sql_ary;
+	}
+
+	public function retrieve_search_post_enable_subject_emoji($event)
+	{
+		$sql_array = $event['sql_array'];
+		$sql_array['SELECT'] .= ', f.enable_subject_emoji';
+		$event['sql_array'] = $sql_array;
+	}
+
+	public function retrieve_search_topic_enable_subject_emoji($event)
+	{
+		$event['sql_select'] .= ', f.enable_subject_emoji';
+	}
+
+	public function loadIcons()
+	{
+		$sql = 'SELECT *
+				FROM ' . $this->emoji_icons_table;
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			if (substr($row['icons_emoji'], 0, 1) !== ':')
+			{
+				$img_src = generate_board_url() . '/' . $row['icons_emoji'];
+			}
+			else
+			{
+				$parsed = $this->parse($row['icons_emoji']);
+				preg_match('/<!-- sitesplat:bbemoji:([-0-9a-f]+) -->/', $parsed, $match);
+				$img_src = $this->getUrl($match[1], $this->generator);
+			}
+
+			$this->icons[$row['icons_id']] = $img_src;
+		}
+
+		$this->template->assign_var('S_BBEMOJI', true);
+	}
+
+	public function replaceTopicIcons($event)
+	{
+		$this->template->destroy_block_vars('topic_icon');
+
+		$sql = 'SELECT *
+				FROM ' . $this->emoji_icons_table . '
+				WHERE display_on_posting = 1';
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			if (substr($row['icons_emoji'], 0, 1) !== ':')
+			{
+				$img_src = generate_board_url() . '/' . $row['icons_emoji'];
+			}
+			else
+			{
+				$parsed = $this->parse($row['icons_emoji']);
+				preg_match('/<!-- sitesplat:bbemoji:([-0-9a-f]+) -->/', $parsed, $match);
+				$img_src = $this->getUrl($match[1], $this->generator);
+			}
+			
+			$this->template->assign_block_vars('topic_icon', array(
+				'ICON_ID'		=> $row['icons_id'],
+				'ICON_IMG'		=> $img_src,
+				'ICON_WIDTH'	=> 20,
+				'ICON_HEIGHT'	=> 20,
+				'ICON_ALT'		=> $row['icons_emoji'],
+
+				'S_CHECKED'			=> ($row['icons_id'] == $event['post_data']['icon_id']) ? true : false,
+				'S_ICON_CHECKED'	=> ($row['icons_id'] == $event['post_data']['icon_id']) ? ' checked="checked"' : '',
+			));
+		}
 	}
 
 	public function onCheck($event)
 	{
-		$event['message'] = self::encodeUnicodeSupplementaryCharacters($event['message']);
+		if (phpbb_version_compare(PHPBB_VERSION, '3.2', '<'))
+		{
+			$event['message'] = self::encodeUnicodeSupplementaryCharacters($event['message']);
+		}
 	}
 
 	public function onConfigure($event)
@@ -54,6 +231,128 @@ class listener implements EventSubscriberInterface
 	public function onDisplay($event)
 	{
 		$event['text'] = $this->render($event['text']);
+	}
+
+	public function onViewtopicDisplayTopicSubject($event)
+	{
+		if ($event['topic_data']['enable_subject_emoji'])
+		{
+			$this->template->assign_vars(array(
+				'TOPIC_TITLE'			=> $this->render($this->parse($event['topic_data']['topic_title'])),
+				'TOPIC_TITLE_UNPARSED'	=> $event['topic_data']['topic_title'],
+			));
+		}
+	}
+
+	public function onViewtopicDisplayPostSubject($event)
+	{
+		$post_row = $event['post_row'];
+		if ($event['topic_data']['enable_subject_emoji'])
+		{
+			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
+		}
+		if (!empty($post_row['POST_ICON_IMG']))
+		{
+			$post_row['POST_ICON_IMG'] = !empty($this->icons[$event['row']['emoji_icon_id']]) ? $this->icons[$event['row']['emoji_icon_id']] : '';
+			$post_row['POST_ICON_IMG_WIDTH'] = 20;
+			$post_row['POST_ICON_IMG_HEIGHT'] = 20;
+			$post_row['POST_ICON_IMG_ALT'] = '';
+		}
+		$event['post_row'] = $post_row;
+	}
+
+	public function onLastPostDisplayPostSubject($event)
+	{
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$forum_row = $event['forum_row'];
+			$last_post_subject = $this->render($this->parse($forum_row['LAST_POST_SUBJECT']));
+			if ($forum_row['LAST_POST_SUBJECT'] != $last_post_subject) // we have emoji in subject!
+			{
+				$forum_row['LAST_POST_SUBJECT'] = $forum_row['LAST_POST_SUBJECT'];
+				// We don't truncate subject. This is a price to have emoji in subject.
+				$forum_row['LAST_POST_SUBJECT_TRUNCATED'] = $last_post_subject;
+			}
+			$event['forum_row'] = $forum_row;
+		}
+	}
+
+	public function onViewforumDisplayPostSubject($event)
+	{
+		$topic_row = $event['topic_row'];
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$topic_row['TOPIC_TITLE'] = $this->render($this->parse($topic_row['TOPIC_TITLE']));
+		}
+		$topic_row['TOPIC_ICON_IMG'] = !empty($this->icons[$event['row']['icon_id']]) ? $this->icons[$event['row']['icon_id']] : '';
+		$topic_row['TOPIC_ICON_IMG_WIDTH'] = 20;
+		$topic_row['TOPIC_ICON_IMG_HEIGHT'] = 20;
+		$event['topic_row'] = $topic_row;
+	}
+
+	public function onSearchDisplaySubject($event)
+	{
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$tpl_ary = $event['tpl_ary'];
+			if (isset($event['row']['post_subject']))
+			{
+				$tpl_ary['POST_SUBJECT'] = $this->render($this->parse($event['row']['post_subject']));
+			}
+			$tpl_ary['TOPIC_TITLE'] = $this->render($this->parse($event['topic_title']));
+			$event['tpl_ary'] = $tpl_ary;
+		}
+	}
+
+	public function onMcpDisplaySubject($event)
+	{
+		if ($event['topic_info']['enable_subject_emoji'])
+		{
+			$post_row = $event['post_row'];
+			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
+			$event['post_row'] = $post_row;
+	
+			$topic_info = $event['topic_info'];
+			$topic_info['topic_title'] = $this->render($this->parse($topic_info['topic_title']));
+			$event['topic_info'] = $topic_info;
+		}
+	}
+
+	public function onMcpPostDisplaySubject($event)
+	{
+		if ($event['post_info']['enable_subject_emoji'])
+		{
+			$mcp_post_template_data = $event['mcp_post_template_data'];
+			$mcp_post_template_data['POST_SUBJECT'] = $this->render($this->parse($event['post_info']['post_subject']));
+			$event['mcp_post_template_data'] = $mcp_post_template_data;
+		}
+	}
+
+	public function onMcpQueuePostQuery($event)
+	{
+		$event['sql'] = str_replace('u.user_colour', 'u.user_colour, f.enable_subject_emoji', $event['sql']);
+		$event['sql'] = str_replace(TOPICS_TABLE . ' t', TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f', $event['sql']);
+		$event['sql'] = str_replace('AND u.user_id = p.poster_id', 'AND u.user_id = p.poster_id AND p.forum_id = f.forum_id', $event['sql']);
+	}
+
+	public function onMcpQueuePostDisplaySubject($event)
+	{
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$post_row = $event['post_row'];
+			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
+			$post_row['TOPIC_TITLE'] = $this->render($this->parse($post_row['TOPIC_TITLE']));
+			$event['post_row'] = $post_row;
+		}
+	}
+
+	public function onMcpQueueTopicQuery($event)
+	{
+		$event['sql'] = str_replace('AS user_colour', 'AS user_colour, f.enable_subject_emoji', $event['sql']);
+		$event['sql'] = str_replace(TOPICS_TABLE . ' t', TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f', $event['sql']);
+		$event['sql'] = str_replace('AND topic_delete_user <> 0', 'AND topic_delete_user <> 0 AND t.forum_id = f.forum_id', $event['sql']);
+		// fix ambiguity
+		$event['sql'] = str_replace('WHERE forum_id', 'WHERE t.forum_id', $event['sql']);
 	}
 
 	public function onParserSetup($event)
@@ -86,6 +385,23 @@ class listener implements EventSubscriberInterface
 		$event['text'] = $this->render($this->parse($event['text']));
 	}
 
+	public function onPreviewSubject($event)
+	{
+		if ($event['post_data']['enable_subject_emoji'])
+		{
+			if ($event['preview'])
+			{
+				$this->template->assign_vars(array(
+					'PREVIEW_SUBJECT'	=> $this->render($this->parse($this->request->variable('subject', '', true))),
+				));
+			}
+
+			$page_data = $event['page_data'];
+			$page_data['TOPIC_TITLE'] = $this->render($this->parse($page_data['TOPIC_TITLE']));
+			$event['page_data'] = $page_data;
+		}
+	}
+
 	public function onStorage($event)
 	{
 		$event['text'] = $this->parse($event['text']);
@@ -96,6 +412,14 @@ class listener implements EventSubscriberInterface
 		$data = $event['data'];
 		$data['message'] = $this->parse($data['message']);
 		$event['data'] = $data;
+	}
+
+	public function onBookmarks($event)
+	{
+		$template_vars = $event['template_vars'];
+		$template_vars['LAST_POST_SUBJECT'] = $this->render($this->parse($template_vars['LAST_POST_SUBJECT']));
+		$template_vars['TOPIC_TITLE'] = $this->render($this->parse($template_vars['TOPIC_TITLE']));
+		$event['template_vars'] = $template_vars;
 	}
 
 	protected static function decodeNumericEntities($text)
@@ -209,7 +533,7 @@ class listener implements EventSubscriberInterface
 		return $url . call_user_func(array($this, $methodName), $seq, $ext);
 	}
 
-	protected function parse($text)
+	public function parse($text)
 	{
 		if (preg_match('(^<[rt][ />])', $text))
 		{
@@ -222,7 +546,7 @@ class listener implements EventSubscriberInterface
 		return $this->encodeUnicodeSupplementaryCharacters($text);
 	}
 
-	protected function render($text)
+	public function render($text)
 	{
 		global $user;
 		if (strpos($text, '<!-- sitesplat:bbemoji') === false || !$user->optionget('viewsmilies'))
@@ -233,6 +557,15 @@ class listener implements EventSubscriberInterface
 		return preg_replace_callback(
 			'(<!-- sitesplat:bbemoji:([-0-9a-f]+) -->(.*?)<!-- /sitesplat:bbemoji -->)',
 			array($this, 'renderCallback'),
+			$text
+		);
+	}
+
+	protected function unparse($text)
+	{
+		return preg_replace(
+			'(<!-- sitesplat:bbemoji:([-0-9a-f]+) -->(.*?)<!-- /sitesplat:bbemoji -->)',
+			'\2',
 			$text
 		);
 	}
