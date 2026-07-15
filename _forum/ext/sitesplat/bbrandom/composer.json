@@ -2,15 +2,15 @@
 	"name": "sitesplat/bbrandom",
 	"type": "phpbb-extension",
 	"description": "Allows a Random Gravatar avatars for newly registered users and also selectable in UCP. It also allows custom avatars that will be assigned randomly for newly registered users",
-	"homepage": "http://sitesplat.com",
-	"version": "1.1.0",
+	"homepage": "https://sitesplat.com",
+	"version": "1.1.1",
 	"keywords": ["phpbb", "extension", "gravatars", "avatar", "UCP", "cosmetic", "sitesplat"],
 	"license": "@license Proprietary",
 	"authors": [
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
 	"require": {
@@ -26,9 +26,10 @@
 			"phpbb/phpbb": ">=3.2.0,<3.3"
 		},
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbrandom.json"
+            "filename": "bbrandom.json",
+			"ssl": true
 		}
 	}
 }
