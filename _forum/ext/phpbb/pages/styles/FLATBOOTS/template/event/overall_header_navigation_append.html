@@ -1,0 +1,9 @@
+{% if S_OVERALL_HEADER_NAVIGATION_APPEND %}
+	{% for link in overall_header_navigation_append_links %}
+		<li>
+			<a href="{{ link.U_LINK_URL }}">
+				{% if not link.ICON_FONT %}<i class="fa fa-link"></i>{% endif %}
+				{% if link.ICON_FONT %}<i class="fa fa-{{ link.ICON_FONT }}"></i>{% endif %}{{ link.LINK_TITLE }}</a>
+		</li>
+	{% endfor %}
+{% endif %}
