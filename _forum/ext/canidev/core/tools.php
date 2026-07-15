@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Ext Common Core
- * @version 1.1.4 26/01/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+* @package Ext Common Core
+* @version 1.1.1 15/01/2023
+*
+* @copyright (c) 2023 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
+*/
 
 namespace canidev\core;
 
@@ -45,14 +45,14 @@ class tools
 	/**
 	 * Build select input
 	 * 
-	 * @param array 			$options 		Pair of (value => title) data
-	 * @param string|false 		$key 			Id of the input
-	 * @param mixed 			$select_ids 	Options to ve marked as selected for default
-	 * @param int 				$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
-	 * @param string 			$classname 		Custom class name for the input
+	 * @param array 		$options 		Pair of (value => title) data
+	 * @param string 		$key 			Id of the input
+	 * @param mixed 		$select_ids 	Options to ve marked as selected for default
+	 * @param int 			$flags 			SELECT_PARSE_LANG | SELECT_MULTIPLE
+	 * @param string 		$classname 		Custom class name for the input
 	 * 
 	 * @return string
-	 */
+	*/
 	public function make_select($options, $key, $select_ids = '', $flags = self::SELECT_PARSE_LANG, $classname = '')
 	{
 		$in_group		= false;
@@ -86,7 +86,7 @@ class tools
 		}
 		else if($key !== false)
 		{
-			$select_ids = [$select_ids[0]];
+			$select_ids = array($select_ids[0]);
 			$string = '<select' . $classname . ' id="' . $key . '" name="config[' . $key . ']">';
 		}
 
@@ -158,7 +158,7 @@ class tools
 	 * 
 	 * @param string 	$config_key 		Key for input
 	 * @param mixed 	$select_groups 		Selected group IDs
-	 * @param bool 		$include_all 		Define if "All" checkbox must be displayed
+	 * @param boll 		$include_all 		Define if "All" checkbox must be displayed
 	 * 
 	 * @return string
 	 */
@@ -208,12 +208,80 @@ class tools
 	 * @param int		$limit			Maximum length of string
 	 * @param string	$append			String to be appended
 	 * @param bool		$count_all		Defines if count all or only plain text
-	 * 
-	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function html_truncate($input = '', $limit = 0, $append = '', $count_all = false)
 	{
-		return TextParser::truncate($input, $limit, $append, $count_all);
+		$check_len = ($count_all) ? utf8_strlen($input) : utf8_strlen(strip_tags($input));
+
+		if(!$input || $limit <= 0 || $check_len <= $limit)
+		{
+			return $input;
+		}
+
+		$splits = preg_split('#(</?[^>]*/?>)#', $input, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+		$text		= '';
+		$open_tag	= false;
+		$open_tags 	= [];
+
+		foreach($splits as $split)
+		{
+			// Open new tag
+			if(preg_match('#^<([a-zA-Z0-9]+).*>#', $split, $match))
+			{
+				if(utf8_substr($match[0], -2) !== '/>' && !in_array($match[1], ['img', 'br', 'hr', 'input']))
+				{
+					$open_tags[] = $match[1];
+				}
+			}
+			
+			// Close tag, if the current
+			if(sizeof($open_tags) && $split === "</" . end($open_tags) . ">")
+			{
+				array_splice($open_tags, -1, 1);
+			}
+
+			// Adjust the string
+			if(sizeof($open_tags) && $split[0] != '<')
+			{ 
+				$length = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
+
+				if(($length + utf8_strlen($split)) > $limit)
+				{
+					$split = utf8_substr($split, 0, $limit - $length);
+				}
+			}
+			
+			$text .= $split;
+
+			// If exceed the limit and no open tags finish here,
+			// and it is looking backwards to remove the tag open.
+			$check_len = ($count_all) ? utf8_strlen($text) : utf8_strlen(strip_tags($text));
+			if($check_len >= $limit)
+			{
+				// Try to cut the text before close the open tags
+				if($split[0] != '<' && $check_len > $limit)
+				{
+					$chars_to_remove = max(0, utf8_strlen($split) - $limit);
+					
+					if($chars_to_remove)
+					{
+						$text = utf8_substr($text, 0, utf8_strlen($text) - $chars_to_remove);
+					}
+				}
+
+				$tags_count = sizeof($open_tags);
+
+				for($i = $tags_count; $i > 0; $i--)
+				{
+					$text .= '</' . $open_tags[$i-1] . '>';
+				}
+		
+				break;
+			}
+		}
+
+		return $text . (($append) ? $append : '');
 	}
 
 	/**
@@ -221,12 +289,19 @@ class tools
 	 * 
 	 * @param string $text 		Original text
 	 * @return string
-	 * 
-	 * @deprecated 		To be removed in v1.2.0
 	 */
 	public static function fix_smilies_path($text)
 	{
-		return TextParser::fixSmiliesPath($text);
+		if(defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH)
+		{
+			return $text;
+		}
+
+		$board_url	= generate_board_url();
+
+		return preg_replace_callback('#class\="smilies" src\="(.*?)(/images/.*?)"#', function($matches) use ($board_url) {
+			return 'class="smilies" src="' . $board_url . $matches[2] . '"';
+		}, $text);
 	}
 
 	/**
@@ -234,11 +309,29 @@ class tools
 	 * 
 	 * @param array 	$attributes
 	 * @return string
-	 * @deprecated 		To be removed on v1.2.0
 	 */
 	public static function array_to_attr($attributes)
 	{
-		return Dom::arrayToAttr($attributes);
+		return implode(
+			' ',
+			array_map(
+				function($key) use ($attributes)
+				{
+					if($attributes[$key] === null)
+					{
+						return '';
+					}
+
+					if(is_bool($attributes[$key]))
+					{
+						return ($attributes[$key]) ? $key : '';
+					}
+
+					return $key . '="' . $attributes[$key] . '"';
+				},
+				array_keys($attributes)
+			)
+		);
 	}
 
 	
@@ -317,15 +410,20 @@ class tools
 
 		if(!file_exists($path))
 		{
-			@mkdir($path, 0777, true);
+			@mkdir($path);
 		}
 
-		$htaccess_str = vsprintf($htaccess_str, ($public_access) ? ['Allow', 'granted'] : ['Deny', 'denied']);
-		$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
+		try {
+			$htaccess_str = vsprintf($htaccess_str, ($public_access) ? ['Allow', 'granted'] : ['Deny', 'denied']);
+			$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
 
-		@file_put_contents($path . '.htaccess', $htaccess_str);
-		@file_put_contents($path . 'index.htm', '');
+			file_put_contents($path . '.htaccess', $htaccess_str);
+			file_put_contents($path . 'index.htm', '');
+		}
+		catch(\Exception $e) {
+			return false;
+		}
 
-		return file_exists($path . '.htaccess');
+		return true;
 	}
 }

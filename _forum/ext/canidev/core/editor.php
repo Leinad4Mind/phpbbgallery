@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.1 15/01/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -146,9 +146,9 @@ class editor
 			$options = array_merge($options, array(
 				'emoticons'		=> $this->generate_editor_emoticons(),
 				'stylesheets'	=> array(
-					$this->template->append_asset('css', 'stylesheet.css', true),
+					$this->template->append_asset('css', '../theme/stylesheet.css', true),
 					$this->template->append_asset('css', (!empty($this->config['allow_cdn']) && !empty($this->config['load_font_awesome_url'])) ? $this->config['load_font_awesome_url'] : './assets/css/font-awesome.min.css', true),
-					$this->template->append_asset('css', '@canidev_core/editor.css', true),
+					$this->template->append_asset('css', '@canidev_core/../theme/editor.css', true),
 				)
 			));
 		}
@@ -189,7 +189,7 @@ class editor
 			if($options['type'] == 'advanced')
 			{
 				$this->template->prepend_assets = true;
-				$this->template->append_asset('css', '@canidev_core/editor.css');
+				$this->template->append_asset('css', '@canidev_core/../theme/editor.css');
 				$this->template->append_asset('js', '@canidev_core/js/editor.min.js');
 				$this->template->prepend_assets = false;
 			}
@@ -328,11 +328,11 @@ class editor
 				'ORDER_BY'	=> 'b.bbcode_tag',
 			);
 
-			/**
-			 * @event canidev.core.editor_bbcodes_modify_sql
-			 * @var	array	sql_ary		The SQL array to get the bbcode data
-			 * @since 1.0.4
-			 */
+			/*
+			* @event canidev.core.editor_bbcodes_modify_sql
+			* @var	array	sql_ary		The SQL array to get the bbcode data
+			* @since 1.0.4
+			*/
 			$vars = ['sql_ary'];
 			extract($this->trigger_event('editor_bbcodes_modify_sql', compact($vars)));
 
@@ -371,13 +371,13 @@ class editor
 				'BBCODE_HELPLINE'	=> $row['bbcode_helpline'],
 			);
 
-			/**
-			 * @event canidev.core.editor_bbcodes_modify_row
-			 * @var	array	custom_tag			Template data of the bbcode
-			 * @var	array	row					The data of the bbcode
-			 * @var 	bool 	prevent_default 	Define if the default action is override
-			 * @since 1.0.4
-			 */
+			/*
+			* @event canidev.core.editor_bbcodes_modify_row
+			* @var	array	custom_tag			Template data of the bbcode
+			* @var	array	row					The data of the bbcode
+			* @var 	bool 	prevent_default 	Define if the default action is override
+			* @since 1.0.4
+			*/
 			$vars = ['custom_tag', 'row', 'prevent_default'];
 			extract($this->trigger_event('editor_bbcodes_modify_row', compact($vars)));
 
@@ -447,13 +447,13 @@ class editor
 		{
 			$this->smilies_to_template();
 
-			$this->template->set_filenames([
+			$this->template->set_filenames(array(
 				'smiley'	=> '@canidev_core/smiley_box.html'
-			]);
+			));
 
-			\canidev\core\JsonResponse::getInstance()->send([
+			\canidev\core\json_response::get_instance()->send(array(
 				'htmlContent'	=> $this->template->assign_display('smiley')
-			]);
+			));
 		}
 	}
 

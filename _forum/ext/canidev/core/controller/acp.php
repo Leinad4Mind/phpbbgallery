@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.3 20/10/2023
+ * @version 1.1.1 15/01/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -68,37 +68,28 @@ class acp
 	/**
 	 * Do basic actions on acp controller
 	 * 
-	 * @param string 	$ext_namespace 		CaniDev extension namespace
+	 * @param string 	$canidev_id 		CaniDev ID for the extension
+	 * @param string 	$current_version 	Extension's version
 	 */
-	public function pageHeader($ext_namespace)
+	public function page_header($canidev_id, $current_version)
 	{
-		$ext_info = $this->getExtInfo($ext_namespace);
-		
-		$this->template->assign_var('U_ACTION', $this->form_action);
+		$this->template->assign_vars([
+			'U_ACTION'		=> $this->form_action,
+			'U_HELP'		=> 'https://www.canidev.com/store/' . $canidev_id . '?rq=documentation&v=' . $current_version,
+		]);
 
-		if($ext_info !== false)
+		// Check is symfony_request is present to make sure old versions of extensions are compatible
+		if($this->symfony_request !== null)
 		{
-			$this->template->assign_vars([
-				'U_HELP'		=> 'https://www.canidev.com' . $ext_info->extra->{'version-check'}->directory . '?rq=documentation&v=' . $ext_info->version,
-			]);
+			$this->template->assign_var('U_REPORT', $this->symfony_request->getUri());
 
-			// Check is symfony_request is present to make sure old versions of extensions are compatible
-			if($this->symfony_request !== null)
+			if($this->request->is_ajax() && $this->request->is_set_post('send_report'))
 			{
-				$this->template->assign_var('U_REPORT', $this->symfony_request->getUri());
+				$report = new \canidev\core\report($this->container, $canidev_id, $current_version);
 
-				if($this->request->is_ajax() && $this->request->is_set_post('send_report'))
+				if($report->request_data())
 				{
-					$report = new \canidev\core\Report(
-						$this->container,
-						str_replace('/store/', '', $ext_info->extra->{'version-check'}->directory),
-						$ext_info->version
-					);
-
-					if($report->requestData())
-					{
-						$report->send(true);
-					}
+					$report->send(true);
 				}
 			}
 		}
@@ -142,36 +133,10 @@ class acp
 				
 				continue;
 			}
-
-			if(isset($vars['builder']))
-			{
-				$this->template->assign_block_vars($tpl_key, [
-					'INCLUDE'		=> call_user_func($vars['builder'], $vars, $cfg_array),
-				]);
-
-				continue;
-			}
 			
 			if(!isset($cfg_array[$config_key]) && isset($vars['default']))
 			{
 				$cfg_array[$config_key] = $vars['default'];
-			}
-
-			if(isset($vars['function']) && is_array($vars['function']))
-			{
-				switch($vars['function'][0])
-				{
-					case 'controller':
-						$vars['function'][0] = $this;
-					break;
-
-					default:
-						if(is_string($vars['function'][0]) && property_exists($this, $vars['function'][0]))
-						{
-							$vars['function'][0] = $this->{$vars['function'][0]};
-						}
-					break;
-				}
 			}
 
 			$type 		= explode(':', $vars['type']);
@@ -249,23 +214,5 @@ class acp
 	{
 		$this->form_action = $u_action;
 		return $this;
-	}
-
-	protected function getExtInfo($ext_namespace)
-	{
-		$composer_filename = $this->container->getParameter('core.root_path') . 'ext/' . $ext_namespace . '/composer.json';
-
-		return @json_decode(@file_get_contents($composer_filename));
-	}
-
-	/**
-	 * @deprecated 		To be removed in v1.2.0
-	 */
-	public function page_header()
-	{
-		$class = str_replace('\\', '/', get_called_class());
-		$parts = explode('/', $class);
-
-		return $this->pageHeader($parts[0] . '/' . $parts[1]);
 	}
 }

@@ -1,4 +1,4 @@
-	{% for option in options %}
+	{% for option in loops.options %}
 		{% if option.S_LEGEND or option.S_FIRST_ROW %}
 			{% if not option.S_FIRST_ROW %}</fieldset>{% endif %}
 			<fieldset>
@@ -6,14 +6,10 @@
 		{% endif %}
 		
 		{% if not option.S_LEGEND %}
-			{% if option.INCLUDE %}
-				{% include option.INCLUDE %}
-			{% else %}
 			<dl>
 				<dt><label for="{{ option.KEY }}">{{ option.TITLE ~ lang('COLON') }}</label>{% if option.S_EXPLAIN %}<br /><span>{{ option.S_EXPLAIN }}</span>{% endif %}</dt>
 				<dd>{{ option.CONTENT }}</dd>
 			</dl>
-			{% endif %}
 		{% endif %}
 		
 		{% if option.S_LAST_ROW %}</fieldset>{% endif %}

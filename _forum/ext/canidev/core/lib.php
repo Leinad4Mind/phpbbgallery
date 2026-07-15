@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.4 26/01/2024
+ * @version 1.1.1 15/01/2023
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -169,11 +169,11 @@ class lib
 			return true;
 		}
 
-		$hidden = array_merge($hidden, [
+		$hidden = array_merge($hidden, array(
 			'confirm_uid'	=> $this->user->data['user_id'],
 			'sess'			=> $this->user->session_id,
 			'sid'			=> $this->user->session_id,
-		]);
+		));
 
 		$formatted_title = (!$this->language->is_set($title)) ? $this->language->lang('CONFIRM') : $this->language->lang($title);
 
@@ -190,7 +190,7 @@ class lib
 		$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $this->user->page['page']);
 		$u_action = reapply_sid($this->path_helper->get_valid_page($use_page, $this->config['enable_mod_rewrite']));
 
-		$this->template->assign_vars([
+		$this->template->assign_vars(array(
 			'MESSAGE_TITLE'		=> $formatted_title,
 			'MESSAGE_TEXT'		=> (!$this->language->is_set($title . '_CONFIRM')) ? $title : $this->language->lang($title . '_CONFIRM'),
 
@@ -198,7 +198,7 @@ class lib
 			'S_CONFIRM_ACTION'	=> $u_action,
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
 			'S_AJAX_REQUEST'	=> true,
-		]);
+		));
 
 		/**
 		 * @event canidev.core.dialog
@@ -209,21 +209,26 @@ class lib
 		 * @var array 		json_data 	JSON Data
 		 * @since 1.1.0
 		 */
-		$vars = ['title', 'hidden', 'html_body', 'json_data'];
+		$vars = array(
+			'title',
+			'hidden',
+			'html_body',
+			'json_data',
+		);
 		extract($this->dispatcher->trigger_event('canidev.core.modal_dialog', compact($vars)));
 
 		$this->template->set_filenames([
 			'body' => $html_body
 		]);
 
-		$response = \canidev\core\JsonResponse::getInstance();
+		$response = \canidev\core\json_response::get_instance();
 
 		if($json_data !== null)
 		{
 			$response->add($json_data);
 		}
 
-		$response->send([
+		$response->send(array(
 			'isModalDialog'		=> true,
 			
 			'MESSAGE_BODY'		=> $this->template->assign_display('body'),
@@ -233,7 +238,7 @@ class lib
 			'YES_VALUE'			=> $this->language->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden),
-		]);
+		));
 	}
 
 	/**

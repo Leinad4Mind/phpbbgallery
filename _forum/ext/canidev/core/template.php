@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.2 20/09/2023
+ * @version 1.1.1 15/01/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -77,7 +77,7 @@ class template
 	{
 		if(method_exists($this->phpbb_template, $name))
 		{
-			return call_user_func_array([$this->phpbb_template, $name], $args);
+			return call_user_func_array(array($this->phpbb_template, $name), $args);
 		}
 		
 		return false;
@@ -120,17 +120,22 @@ class template
 				}
 			}
 
-			$this->twig->getLoader()->setPaths($path_ary, $namespace);
+			$path_ary[] =  $path . 'plugins/';
+
+			if(sizeof($path_ary))
+			{
+				$this->twig->getLoader()->setPaths($path_ary, $namespace);
+			}
 		}
 	}
 
 	/**
 	 * Append asset
 	 * 
-	 * @param string 		$type 				(js | css | javascript | script | style)
-	 * @param array|string 	$data 				Asset data
-	 * @param bool 			$return_filename 	Set if asset filename must be returned
-	 * @param string 		$space 				(common | admin | frontend)
+	 * @param string 	$type 				(js | css | javascript | script | style)
+	 * @param array 	$data 				Asset data
+	 * @param bool 		$return_filename 	Set if asset filename must be returned
+	 * @param string 	$space 				(admin | frontend)
 	 * 
 	 * @return string|bool
 	 */
@@ -323,7 +328,7 @@ class template
 
 				if($this->in_ajax_request)
 				{
-					\canidev\core\JsonResponse::getInstance()->addComponent('asset', $new_asset);
+					\canidev\core\json_response::get_instance()->add_component('asset', $new_asset);
 				}
 			break;
 			
@@ -491,7 +496,7 @@ class template
 
 		if($this->in_ajax_request)
 		{
-			\canidev\core\JsonResponse::getInstance()->addComponent('lang', $this->js_lang_keys);
+			\canidev\core\json_response::get_instance()->add_component('lang', $this->js_lang_keys);
 		}
 
 		return $this;

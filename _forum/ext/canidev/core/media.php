@@ -1,20 +1,20 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.4 26/01/2024
+ * @version 1.1.1 15/01/2023
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\core;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use \canidev\core\JsonResponse;
+use \canidev\core\json_response;
 
-class Media
+class media
 {
-	protected $params = [
+	private $params = [
 		'action'		=> '',
 		'allow_gallery'	=> true,
 		'custom'		=> false,
@@ -25,12 +25,12 @@ class Media
 		'start'			=> 0,
 	];
 	
-	protected $upload_path		= '';
-	protected $referer_ext		= '';
-	protected $events_assigned	= false;
-	protected $instance_id 		= null;
+	private $upload_path		= '';
+	private $referer_ext		= '';
+	private $events_assigned	= false;
+	private $instance_id 		= null;
 
-	protected $options = [
+	private $options = [
 		'allowPagination'		=> false,
 		'allowRemoteOrigin'		=> true,
 		'allowedExtensions'		=> ['jpg', 'png', 'gif', 'webp', 'svg', 'ico', 'mp4', 'mov'],
@@ -50,7 +50,7 @@ class Media
 	/** @var \phpbb\event\dispatcher_interface */
 	protected $dispatcher;
 
-	/** @var JsonResponse */
+	/** @var json_response */
 	protected $json;
 
 	/** @var \phpbb\language\language */
@@ -80,7 +80,6 @@ class Media
 	/** @var string */
 	protected $php_ext;
 	
-	/** @var static[] */
 	static $instances = [];
 	
 	/**
@@ -96,7 +95,7 @@ class Media
 		$this->config			= $container->get('config');
 		$this->container		= $container;
 		$this->dispatcher		= $container->get('dispatcher');
-		$this->json				= JsonResponse::getInstance();
+		$this->json				= json_response::get_instance();
 		$this->language			= $container->get('language');
 		$this->path				= $container->get('path_helper');
 		$this->php_ini			= new \phpbb\php\ini;
@@ -116,19 +115,19 @@ class Media
 	 * @param string 	$image
 	 * @return string
 	 */
-	public function buildIconHtml($image)
+	public function build_icon_html($image)
 	{
 		if(!$image)
 		{
 			return '';
 		}
 
-		if($this->isIcon($image))
+		if($this->is_icon($image))
 		{
 			return '<i class="icon cbb-fa-icon fa ' . $image . '" aria-hidden="true"></i>';
 		}
 		
-		return '<img src="' . $this->getFullPath($image) . '" alt="' . basename($image) . '" class="cbb-media-icon">';
+		return '<img src="' . $this->get_full_path($image) . '" alt="" class="cbb-media-icon" />';
 	}
 	
 	/**
@@ -141,7 +140,7 @@ class Media
 	 * 
 	 * @return string
 	 */
-	public function buildSelector($key, $type, $value, $use_config = 0)
+	public function build_selector($key, $type, $value, $use_config = 0)
 	{
 		$label = strtoupper($type);
 
@@ -149,7 +148,7 @@ class Media
 			'<a href="#" data-module="media" data-type="%1$s" data-value="%2$s" data-value-parsed="%3$s" data-id="%4$s" data-key="%5$s" data-label-btn="%6$s" data-label-delete="%7$s"></a>',
 			$type,
 			$value,
-			($this->isIcon($value)) ? '' : $this->getFullPath($value),
+			($this->is_icon($value)) ? '' : $this->get_full_path($value),
 			$this->instance_id,
 			($use_config) ? "config[$key]" : $key,
 			$this->language->lang("SELECT_$label"),
@@ -162,7 +161,7 @@ class Media
 	 * 
 	 * @param array 	$item_ids 		AFfected items
 	 */
-	public function deleteItems($item_ids)
+	public function delete_items($item_ids)
 	{
 		$this->params['items'] = array_map(
 			function($value) {
@@ -179,7 +178,7 @@ class Media
 		 * @event media.gallery.delete
 		 * @var array		params		The input params
 		 * @var array		rowset		Array with files to delete
-		 * @var static 		instance 	This media instance
+		 * @var media 		instance 	This media instance
 		 * @since 1.0.1
 		 */
 		$vars = ['params', 'rowset', 'instance'];
@@ -188,14 +187,14 @@ class Media
 		// Try to delete the files from the server
 		foreach($rowset as $filename)
 		{
-			@unlink($this->getFullPath($filename, false, true));
+			@unlink($this->get_full_path($filename, false, true));
 		}
 	}
 
 	/**
 	 * Do ajax actions
 	 */
-	public function performActions()
+	public function do_actions()
 	{
 		$instance_name = $this->request->variable('mediaInstance', '');
 		
@@ -218,7 +217,7 @@ class Media
 		}
 
 		$this->json->add([
-			'status'	=> JsonResponse::JSON_STATUS_SUCCESS,
+			'status'	=> json_response::JSON_STATUS_SUCCESS,
 			'action'	=> $this->params['action'],
 		]);
 		
@@ -246,9 +245,9 @@ class Media
 		/**
 		 * @event media.gallery.before_action
 		 * @var array 			params				Input params
-		 * @var JsonResponse 	json				JSON response object
+		 * @var json_response 	json				JSON response object
 		 * @var array 			options 			Common Options (Deprecated)
-		 * @var static 			instance 			This media instance
+		 * @var media 			instance 			This media instance
 		 * @since 1.0.7
 		 */
 		$vars = ['params', 'json', 'options', 'instance'];
@@ -275,10 +274,10 @@ class Media
 				/**
 				 * @event media.gallery.create
 				 * @var array 			params				Input params
-				 * @var JsonResponse 	json				JSON response object
+				 * @var json_response 	json				JSON response object
 				 * @var string			submit_label		Label for the submit button
 				 * @var array 			options 			Common Options (Deprecated)
-				 * @var static 			instance 			This media instance
+				 * @var media 			instance 			This media instance
 				 * @since 1.0.7
 				 */
 				$vars = ['params', 'json', 'submit_label', 'options', 'instance'];
@@ -294,7 +293,7 @@ class Media
 				$this->json->add(['options' => $this->options]);
 			
 				$this
-					->loadSections()
+					->load_sections()
 					->display();
 			break;
 			
@@ -303,7 +302,7 @@ class Media
 				{
 					if(!empty($this->params['items']))
 					{
-						$this->deleteItems($this->params['items']);
+						$this->delete_items($this->params['items']);
 					
 						$this->json->send([
 							'message'	=> $this->language->lang('FILES_DELETED'),
@@ -367,33 +366,47 @@ class Media
 				
 				if($this->params['copy'] && $this->upload_path)
 				{
-					$basename 	= $this->parseBasename($filename, $extension);
-					$filename	= $this->getFullPath($basename, false, true);
-
-					try {
-						$client = new \GuzzleHttp\Client;
-
-						$client->get($this->params['url'], [
-							'save_to' => $filename
-						]);
-					}
-					catch(\RuntimeException $e)
+					$basename 	= $this->parse_basename($filename, $extension);
+					$filename	= $this->get_full_path($basename, false, true);
+					
+					if($this->php_ini->get_bool('allow_url_fopen'))
 					{
-						$error[] = $this->language->lang('IMAGE_SAVE_ERROR');
-						break;
+						$image_data = @file_get_contents($this->params['url']);
+						
+						if(!@file_put_contents($filename, $image_data))
+						{
+							$error[] = $this->language->lang('IMAGE_SAVE_ERROR');
+							break;
+						}
+					}
+					else
+					{
+						if(($ch = @curl_init($this->params['url'])) === false)
+						{
+							$error[] = $this->language->lang('IMAGE_SAVE_ERROR');
+							break;
+						}
+						
+						$fp = fopen($filename, 'wb');
+						curl_setopt($ch, CURLOPT_FILE, $fp);
+						curl_setopt($ch, CURLOPT_HEADER, 0);
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+						curl_exec($ch);
+						curl_close($ch);
+						fclose($fp);
 					}
 
 					// Resize uploaded image
 					if($this->options['imageMaxWidth'] && $this->options['imageMaxHeight'] && in_array($extension, ['jpg', 'png', 'gif', 'webp']))
 					{
-						$image = new Image($filename);
+						$image_parser = new image_parser();
 
-						$image
-							->resize($this->options['imageMaxWidth'], $this->options['imageMaxHeight'])
-							->save();
+						$image_parser
+							->set_resize_limit($this->options['imageMaxWidth'], $this->options['imageMaxHeight'])
+							->parse($filename, (($extension == 'jpg') ? 'jpeg' : $extension), image_parser::RESIZE);
 					}
 
-					list($this->params['width'], $this->params['height']) = $this->getImagesize($filename, $extension);
+					list($this->params['width'], $this->params['height']) = $this->get_imagesize($filename, $extension);
 
 					$filesize = @filesize($filename);
 				}
@@ -420,20 +433,20 @@ class Media
 				 * @var array		params		The input params
 				 * @var array		headers		Returned headers of image url
 				 * @var string		filename	Complete route of the file
-				 * @var static 		instance 	This media instance
+				 * @var media 		instance 	This media instance
 				 * @since 1.0.1
 				 */
 				$vars = ['rowset', 'params', 'headers', 'filename', 'instance'];
 				extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.insert', compact($vars)));
 
 				$this->json->send([
-					'item'	=> $this->getOutput('attachment', $rowset)
+					'item'	=> $this->get_output('attachment', $rowset)
 				]);
 			break;
 
 			case 'pagination':
 			case 'search':
-				$section = $this->loadSections();
+				$section = $this->load_sections();
 
 				$this->json->send([
 					'section' => $section
@@ -446,7 +459,7 @@ class Media
 				/**
 				 * @event media.gallery.update
 				 * @var array		params		Array with item variables
-				 * @var static 		instance 	This media instance
+				 * @var media 		instance 	This media instance
 				 * @since 1.0.1
 				 */
 				$vars = ['params', 'instance'];
@@ -481,7 +494,7 @@ class Media
 
 					$file = $this->uploader->handle_upload('files.types.form', 'file');
 
-					$this->parseBasename($file);
+					$this->parse_basename($file);
 
 					$file->move_file($this->upload_path, false, true);
 
@@ -502,12 +515,12 @@ class Media
 					
 					if(!sizeof($error))
 					{
-						$filename	= $this->getFullPath($file->get('realname'), false, true);
+						$filename	= $this->get_full_path($file->get('realname'), false, true);
 						$rowset		= [];
 
 						@chmod($filename, 0644);
 
-						list($width, $height) = $this->getImagesize($filename, $file->get('extension'));
+						list($width, $height) = $this->get_imagesize($filename, $file->get('extension'));
 						
 						$rowset = [
 							'id'			=> time(),
@@ -525,14 +538,14 @@ class Media
 						 * @var array		rowset		The output array
 						 * @var object		file		The uploaded file object
 						 * @var string		filename	Complete route of the file
-						 * @var static 		instance 	This media instance
+						 * @var media 		instance 	This media instance
 						 * @since 1.0.1
 						 */
 						$vars = ['rowset', 'file', 'filename', 'instance'];
 						extract($this->dispatcher->trigger_event('media.' . $this->instance_id . '.' . 'gallery.upload', compact($vars)));
 						
 						$this->json->send([
-							'item'	=> $this->getOutput('attachment', $rowset)
+							'item'	=> $this->get_output('attachment', $rowset)
 						]);
 					}
 				}
@@ -542,7 +555,7 @@ class Media
 		if(sizeof($error))
 		{
 			$this->json->send([
-				'status'	=> JsonResponse::JSON_STATUS_ERROR,
+				'status'	=> json_response::JSON_STATUS_ERROR,
 				'message'	=> implode('<br />', $error)
 			]);
 		}
@@ -555,18 +568,18 @@ class Media
 	 * 
 	 * @return array
 	 */
-	public function getImages($path = '')
+	public function get_images($path = '')
 	{
 		$image_ary	= [];
-		$query 		= strtolower($this->getParam('query', ''));
+		$query 		= strtolower($this->get_param('query', ''));
 
 		if($path)
 		{
-			$full_path = $this->getFullPath($path, false, true);
+			$full_path = $this->get_full_path($path, false, true);
 		}
 		else
 		{
-			$full_path = $this->getUploadPath();
+			$full_path = $this->get_upload_path();
 		}
 		
 		if(!file_exists($full_path))
@@ -582,10 +595,10 @@ class Media
 			$file 		= $fileinfo->getFilename();
 			$basename 	= substr($file, 0, strrpos($file, '.'));
 
-			$image_ary[] = $this->getOutput('image', [
+			$image_ary[] = $this->get_output('image', array(
 				'code'		=> $path . $file,
 				'name'		=> ucfirst(str_replace('_', ' ', $basename)),
-			]);
+			));
 		}
 
 		return $image_ary;
@@ -600,7 +613,7 @@ class Media
 	 * 
 	 * @return array
 	 */
-	public function getOutput($type, $rowset, $return_ids = false)
+	public function get_output($type, $rowset, $return_ids = false)
 	{
 		$output = [];
 		
@@ -616,11 +629,11 @@ class Media
 			{
 				if($type == 'attachment' && $return_ids)
 				{
-					$output[$row['id']] = $this->getOutput($type, $row);
+					$output[$row['id']] = $this->get_output($type, $row);
 					continue;
 				}
 
-				$output[] = $this->getOutput($type, $row);
+				$output[] = $this->get_output($type, $row);
 			}
 			
 			return $output;
@@ -629,36 +642,36 @@ class Media
 		switch($type)
 		{
 			case 'attachment':
-				$output = [
+				$output = array(
 					'originalId'	=> is_numeric($rowset['id']) ? (int)$rowset['id'] : $rowset['id'],
 					'code'			=> $rowset['filename'],
 					'title'			=> $rowset['title'],
 					'description'	=> $rowset['description'],
-					'filename'		=> $this->getFullPath($rowset['filename']),
+					'filename'		=> $this->get_full_path($rowset['filename']),
 					'filesize'		=> get_formatted_filesize($rowset['filesize']),
-					'url'			=> $this->getFullPath($rowset['filename'], true),
+					'url'			=> $this->get_full_path($rowset['filename'], true),
 					'width'			=> $rowset['width'],
 					'height'		=> $rowset['height'],
-				];
+				);
 			break;
 			
 			case 'image':
-				$filename = $this->getFullPath($rowset['code'], false, true);
-				list($width, $height) = $this->getImagesize($filename);
+				$filename = $this->get_full_path($rowset['code'], false, true);
+				list($width, $height) = $this->get_imagesize($filename);
 				
-				$output = array_merge($rowset, [
-					'filename'	=> $this->getFullPath($rowset['code']),
+				$output = array_merge($rowset, array(
+					'filename'	=> $this->get_full_path($rowset['code']),
 					'filesize'	=> get_formatted_filesize(@filesize($filename)),
-					'url'		=> $this->getFullPath($rowset['code'], true),
+					'url'		=> $this->get_full_path($rowset['code'], true),
 					'width'		=> $width,
 					'height'	=> $height,
-				]);
+				));
 			break;
 		}
 		
 		$output['type'] = $type;
 		
-		return ($return_ids && $type == 'attachment') ? [$rowset['id'] => $output] : $output;
+		return ($return_ids && $type == 'attachment') ? array($rowset['id'] => $output) : $output;
 	}
 	
 	/**
@@ -670,7 +683,7 @@ class Media
 	 * 
 	 * @return string
 	 */
-	public function getFullPath($image, $full_url = false, $server_path = false)
+	public function get_full_path($image, $full_url = false, $server_path = false)
 	{
 		$filename = '';
 		$web_path = ($server_path) ? $this->path->get_phpbb_root_path() : $this->path->get_web_root_path();
@@ -704,7 +717,7 @@ class Media
 	 * 
 	 * @return array
 	*/
-	public function getImagesize($filename, $extension = '')
+	public function get_imagesize($filename, $extension = '')
 	{
 		$height = $width = 0;
 
@@ -712,10 +725,10 @@ class Media
 		{
 			$extension = $match[2];
 		}
-
+		
 		if($extension == 'svg')
 		{
-			$xml 		= Dom::simpleXmlFile($filename);
+			$xml 		= \canidev\core\dom::simple_xml_file($filename);
 			$xml_attr 	= $xml->attributes();
 			$viewbox 	= explode(' ', $xml_attr->viewBox);
 
@@ -727,10 +740,10 @@ class Media
 			list($width, $height) = @getimagesize($filename);
 		}
 
-		return [
+		return array(
 			(int)$width,
 			(int)$height,
-		];
+		);
 	}
 
 	/**
@@ -739,7 +752,7 @@ class Media
 	 * @param string $key 	Key to search
 	 * @return mixed
 	 */
-	public function getOption($key)
+	public function get_option($key)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : null;
 	}
@@ -751,7 +764,7 @@ class Media
 	 * @param mixed 	$default 		Returned value if param is not defined
 	 * @return mixed
 	 */
-	public function getParam($key, $default = null)
+	public function get_param($key, $default = null)
 	{
 		return isset($this->params[$key]) ? $this->params[$key] : $default;
 	}
@@ -760,7 +773,7 @@ class Media
 	 * Get upload path
 	 * @return string
 	 */
-	public function getUploadPath()
+	public function get_upload_path()
 	{
 		return $this->path->get_phpbb_root_path() . $this->upload_path;
 	}
@@ -769,20 +782,20 @@ class Media
 	 * Define if image is an icon
 	 * @return bool
 	 */
-	public function isIcon($image)
+	public function is_icon($image)
 	{
 		return strpos($image, 'fa-') === 0;
 	}
 
 	/**
 	 * Load language and assets
-	 * @return static
+	 * @return media
 	 */
 	public function preload()
 	{
 		$this->language->add_lang('media', 'canidev/core');
 
-		$this->template->append_asset('css', '@canidev_core/mediaManager.css');
+		$this->template->append_asset('css', '@canidev_core/../theme/mediaManager.css');
 		$this->template->append_asset('js', '@canidev_core/js/jquery-ui.min.js');
 		$this->template->append_asset('js', '@canidev_core/js/mediaManager.js');
 
@@ -795,15 +808,15 @@ class Media
 	 * @string 	$key 	Key to set
 	 * @mixed 	$value 	Value to set
 	 * 
-	 * @return static
+	 * @return media
 	 */
-	public function setOption($key, $value = null)
+	public function set_option($key, $value = null)
 	{
 		if(is_array($key))
 		{
 			foreach($key as $k => $v)
 			{
-				$this->setOption($k, $v);
+				$this->set_option($k, $v);
 			}
 
 			return $this;
@@ -819,15 +832,15 @@ class Media
 	 * @string 	$key 	Key to set
 	 * @mixed 	$value 	Value to set
 	 * 
-	 * @return static
+	 * @return media
 	 */
-	public function setParam($key, $value = null)
+	public function set_param($key, $value = null)
 	{
 		if(is_array($key))
 		{
 			foreach($key as $k => $v)
 			{
-				$this->setParam($k, $v);
+				$this->set_param($k, $v);
 			}
 
 			return $this;
@@ -841,9 +854,9 @@ class Media
 	 * Set events for this instance
 	 * 
 	 * @param array 	$event_ary 		Array with Events
-	 * @return static
+	 * @return media
 	 */
-	public function setEvents($event_ary)
+	public function set_events($event_ary)
 	{
 		if(!$this->events_assigned)
 		{
@@ -862,9 +875,9 @@ class Media
 	 * Set associated extension
 	 * 
 	 * @param string 	$ext_name 	Extension name
-	 * @return static
+	 * @return media
 	 */
-	public function setRefererExt($ext_name)
+	public function set_referer_ext($ext_name)
 	{
 		if($this->referer_ext == $ext_name)
 		{
@@ -878,7 +891,7 @@ class Media
 
 		if($this->container->has($service_name))
 		{
-			$this->setEvents($this->container->get($service_name)->getSubscribedEvents());
+			$this->set_events($this->container->get($service_name)->getSubscribedEvents());
 		}
 		
 		return $this;
@@ -886,9 +899,9 @@ class Media
 
 	/**
 	 * Set upload path
-	 * @return static
+	 * @return media
 	 */
-	public function setUploadPath($path)
+	public function set_upload_path($path)
 	{
 		$this->upload_path = $path;
 		
@@ -903,11 +916,11 @@ class Media
 	/**
 	 * Display
 	 */
-	protected function display()
+	private function display()
 	{
-		$this->json->send([
+		$this->json->send(array(
 			'htmlContent'	=> $this->template->render('media', '@canidev_core/media_body.html', true),
-		]);
+		));
 	}
 	
 	/**
@@ -919,7 +932,7 @@ class Media
 	 * @return array
 	 * @access private
 	 */
-	protected function getGallery($item_ary = false, $return_index = false)
+	private function get_gallery($item_ary = false, $return_index = false)
 	{
 		$rowset 		= [];
 		$instance 		= $this;
@@ -933,7 +946,7 @@ class Media
 		 * @var array		rowset			The output array
 		 * @var array|bool	item_ary		The input array or false if no items
 		 * @var int 		total_items 	Total item count (for pagination)
-		 * @var static 		instance 		This media instance
+		 * @var media 		instance 		This media instance
 		 * @since 1.0.1
 		 */
 		$vars = ['rowset', 'item_ary', 'total_items', 'start', 'instance'];
@@ -945,7 +958,7 @@ class Media
 		}
 
 		return [
-			'items'		=> $this->getOutput('attachment', $rowset, $return_index),
+			'items'		=> $this->get_output('attachment', $rowset, $return_index),
 			'length'	=> $total_items,
 		];
 	}
@@ -956,7 +969,7 @@ class Media
 	 * @return array
 	 * @access private
 	 */
-	protected function getCustomList()
+	private function get_custom_list()
 	{
 		$items = $gallery_items = [];
 		
@@ -971,7 +984,7 @@ class Media
 			$items[] = $source;
 		}
 		
-		$gallery_items = $this->getGallery($gallery_items, true);
+		$gallery_items = $this->get_gallery($gallery_items, true);
 
 		foreach($items as $i => $source)
 		{
@@ -981,10 +994,10 @@ class Media
 			}
 			else if(preg_match('#^([^&\'"<>]+)\.(?:gif|png|jpg|jpeg|webp|svg)$#i', $source, $match))
 			{
-				$items[$i] = $this->getOutput('image', [
+				$items[$i] = $this->get_output('image', array(
 					'code'		=> $source,
 					'name'		=> ucfirst(str_replace('_', ' ', $match[1])),
-				]);
+				));
 			}
 			else
 			{
@@ -1000,18 +1013,18 @@ class Media
 
 	/**
 	 * Load menu sections
-	 * @return static
+	 * @return media
 	 * 
 	 * @access private
 	 */
-	protected function loadSections()
+	private function load_sections()
 	{
 		$sections		= [];
 		$type			= $this->params['type'];
 		$instance 		= $this;
 		$section_id 	= !empty($this->params['section']) ? $this->params['section'] : null;
-		$start 			= $this->getParam('start', 0);
-		$query 			= $this->getParam('query', '');
+		$start 			= $this->get_param('start', 0);
+		$query 			= $this->get_param('query', '');
 
 		if($this->params['type'] == 'icon')
 		{
@@ -1079,7 +1092,7 @@ class Media
 			 * @var array			sections		The output array
 			 * @var string			type			Type of media required (image | attachment)
 			 * @var string|null 	section_id		ID of requested section (for pagination and seeker)
-			 * @var static 			instance 		This media instance
+			 * @var media 			instance 		This media instance
 			 * @since 1.0.1
 			 */
 			$vars = ['sections', 'type', 'section_id', 'instance'];
@@ -1101,7 +1114,7 @@ class Media
 					{
 						$image_ary = array_merge(
 							$image_ary,
-							$this->getImages($path)
+							$this->get_images($path)
 						);
 					}
 
@@ -1134,7 +1147,7 @@ class Media
 				'title'		=> $this->language->lang('GALLERY'),
 				'editable'	=> true,
 				'sortable'	=> false,
-			], $this->getGallery());
+			], $this->get_gallery());
 		}
 		
 		if($this->params['type'] == 'image' && $this->params['custom'] && (!$section_id || $section_id == 'custom'))
@@ -1145,7 +1158,7 @@ class Media
 				'title'		=> $this->language->lang('CURRENT_LIST'),
 				'editable'	=> true,
 				'sortable'	=> true,
-			], $this->getCustomList());
+			], $this->get_custom_list());
 		}
 
 		if(!$section_id)
@@ -1196,7 +1209,7 @@ class Media
 	 * @return string|false
 	 * @access private
 	 */
-	protected function parseBasename($file, $extension = '')
+	protected function parse_basename($file, $extension = '')
 	{
 		if(is_string($file))
 		{
@@ -1245,157 +1258,13 @@ class Media
 	 * 
 	 * @return static
 	 */
-	static public function getInstance(ContainerInterface $container, $instance_name = 'default')
-	{
-		if(!isset(static::$instances[$instance_name]))
-		{
-			static::$instances[$instance_name] = new static($container, $instance_name);
-		}
-
-		return static::$instances[$instance_name];
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function build_icon_html($image)
-	{
-		return $this->buildIconHtml($image);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function build_selector($key, $type, $value, $use_config = 0)
-	{
-		return $this->buildSelector($key, $type, $value, $use_config);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function delete_items($item_ids)
-	{
-		return $this->deleteItems($item_ids);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function do_actions()
-	{
-		return $this->performActions();
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_images($path = '')
-	{
-		return $this->getImages($path);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_output($type, $rowset, $return_ids = false)
-	{
-		return $this->getOutput($type, $rowset, $return_ids);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_full_path($image, $full_url = false, $server_path = false)
-	{
-		return $this->getFullPath($image, $full_url, $server_path);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_imagesize($filename, $extension = '')
-	{
-		return $this->getImagesize($filename, $extension);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_option($key)
-	{
-		return $this->getOption($key);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_param($key, $default = null)
-	{
-		return $this->getParam($key, $default);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function get_upload_path()
-	{
-		return $this->getUploadPath();
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function is_icon($image)
-	{
-		return $this->isIcon($image);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function set_option($key, $value = null)
-	{
-		return $this->setOption($key, $value);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function set_param($key, $value = null)
-	{
-		return $this->setParam($key, $value);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function set_events($event_ary)
-	{
-		return $this->setEvents($event_ary);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function set_referer_ext($ext_name)
-	{
-		return $this->setRefererExt($ext_name);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
-	public function set_upload_path($path)
-	{
-		return $this->setUploadPath($path);
-	}
-
-	/**
-	 * @deprecated 	To be removed in v1.2.0
-	 */
 	static public function get_instance(ContainerInterface $container, $instance_name = 'default')
 	{
-		return static::getInstance($container, $instance_name);
+		if(!isset(self::$instances[$instance_name]))
+		{
+			self::$instances[$instance_name] = new self($container, $instance_name);
+		}
+
+		return self::$instances[$instance_name];
 	}
 }

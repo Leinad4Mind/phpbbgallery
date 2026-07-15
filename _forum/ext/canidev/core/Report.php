@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.4 26/01/2024
+ * @version 1.1.1 15/01/2023
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -11,7 +11,7 @@ namespace canidev\core;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Report
+class report
 {
 	/** @var \phpbb\config\db */
 	protected $config;
@@ -71,7 +71,7 @@ class Report
 	 * 
 	 * @return bool
 	 */
-	public function requestData($title = 'REPORT_TITLE', $tpl_name = '@canidev_core/report_body.html')
+	public function request_data($title = 'REPORT_TITLE', $tpl_name = '@canidev_core/report_body.html')
 	{
 		if($this->core->modal_dialog(true))
 		{
@@ -95,7 +95,7 @@ class Report
 	 */
 	public function send($collect_data = false)
 	{
-		$response = new \canidev\core\JsonResponse;
+		$response = new \canidev\core\json_response;
 
 		if(empty($this->data['extension_id']) || empty($this->data['version']))
 		{
@@ -104,13 +104,14 @@ class Report
 
 		if($collect_data)
 		{
-			$this->data += $this->collectData();
+			$this->data += $this->collect_data();
 		}
 
 		// Send report to CaniDev.com
+		$client = new \GuzzleHttp\Client();
+
 		try {
-			$key 	= phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
-			$client = new \GuzzleHttp\Client;
+			$key = phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') ? 'body' : 'form_params';
 
 			$rsp = $client->post($this->report_url, [
 				$key	=> [
@@ -146,11 +147,11 @@ class Report
 			{
 				$this->set($k, $v);
 			}
+
+			return;
 		}
-		else
-		{
-			$this->data[$key] = $value;
-		}
+
+		$this->data[$key] = $value;
 
 		return $this;
 	}
@@ -161,7 +162,7 @@ class Report
 	 * @return array
 	 * @access private
 	 */
-	protected function collectData()
+	protected function collect_data()
 	{
 		$user_agent = $this->request->header('User-Agent');
 		$agents 	= ['firefox', 'msie', 'opera', 'chrome', 'safari', 'mozilla', 'seamonkey', 'konqueror', 'netscape', 'gecko', 'navigator', 'mosaic', 'lynx', 'amaya', 'omniweb', 'avant', 'camino', 'flock', 'aol'];
@@ -195,13 +196,11 @@ class Report
 			],
 
 			'site'		=> [
-				'version'			=> PHPBB_VERSION,
-				'domain'			=> $this->request->server('HTTP_HOST'),
-				'contact'			=> $this->config['board_contact'],
-				'style'				=> $this->user->style['style_name'],
-				'language_default'	=> $this->config['default_lang'],
-				'language_user'		=> $this->user->lang_name,
-				'extensions'		=> array_keys($this->extensions_manager->all_enabled()),
+				'version'		=> PHPBB_VERSION,
+				'domain'		=> $this->request->server('HTTP_HOST'),
+				'contact'		=> $this->config['board_contact'],
+				'style'			=> $this->user->style['style_name'],
+				'extensions'	=> array_keys($this->extensions_manager->all_enabled()),
 			],
 
 			'server'	=> [

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.3 20/10/2023
+ * @version 1.1.1 15/01/2023
  *
  * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,7 +9,7 @@
 
 namespace canidev\core;
 
-class ImageParser
+class image_parser
 {
 	const RESIZE 	= 1;
 	const THUMBNAIL = 2;
@@ -45,7 +45,7 @@ class ImageParser
 	 * 
 	 * @param string 	$filename
 	 * @param string 	$type 		Image type (bmp | gif | jpeg | png | webp)
-	 * @param int 		$flags 		ImageParser::RESIZE | ImageParser::THUMBAIL | ImageParser::WATERMARK
+	 * @param int 		$flags 		image_parser::RESIZE | image_parser::THUMBAIL | image_parser::WATERMARK
 	 */
 	public function parse($filename, $type, $flags = self::WATERMARK)
 	{
@@ -75,7 +75,7 @@ class ImageParser
 
 		if($flags & self::WATERMARK)
 		{
-			$this->addWatermark(40, 'left_bottom');
+			$this->add_watermark(40, 'left_bottom');
 		}
 
 		if($flags & self::RESIZE)
@@ -87,7 +87,7 @@ class ImageParser
 
 		if($flags & self::THUMBNAIL)
 		{
-			$this->generateThumb();
+			$this->generate_thumb();
 		}
 
 		$this->reset();
@@ -95,9 +95,9 @@ class ImageParser
 
 	/**
 	 * Set base path
-	 * @return static
+	 * @return image_parser
 	 */
-	public function setPath($path)
+	public function set_path($path)
 	{
 		if(substr($path, -1) != '/')
 		{
@@ -117,9 +117,9 @@ class ImageParser
 	 * @param int|null 		$thumb_width
 	 * @param int|null 		$thumb_height
 	 * 
-	 * @return static
+	 * @return image_parser
 	 */
-	public function setResizeLimit($img_width = null, $img_height = null, $thumb_width = null, $thumb_height = null)
+	public function set_resize_limit($img_width = null, $img_height = null, $thumb_width = null, $thumb_height = null)
 	{
 		foreach($this->max_sizes as $key => $value)
 		{
@@ -136,9 +136,9 @@ class ImageParser
 	 * Set watermark file
 	 * 
 	 * @param string 	$filename
-	 * @return static
+	 * @return image_parser
 	 */
-	public function setWatermark($filename)
+	public function set_watermark($filename)
 	{
 		$this->data['watermark_file'] = $filename;
 
@@ -151,7 +151,7 @@ class ImageParser
 	 * @param int 		$alpha_level 		Watermark transparency
 	 * @param string 	$position 			Watermark position (left_top | left_center | left_bottom | right_top | right_center | right_bottom | center)
 	 */
-	protected function addWatermark($alpha_level = 100, $position = '')
+	protected function add_watermark($alpha_level = 100, $position = '')
 	{
 		if(!$this->data['watermark_file'] || !file_exists($this->data['watermark_file']))
 		{
@@ -211,33 +211,30 @@ class ImageParser
 		$dest_x = $image_width - $dest_w - $x_shift;
 		$dest_y = $image_height - $dest_h - $y_shift;
 		
-		$pct 		= $alpha_level / 100;
-		$w 			= $watermark_width;
-		$h 			= $watermark_height;
-		$minalpha 	= 127;
+		$pct = $alpha_level / 100;
+		$w = $watermark_width;
+		$h = $watermark_height;
 		
 		imagealphablending($water, false);
+		$minalpha = 127;
 		
 		for($x = 0; $x < $w; $x++)
 		{
 			for($y = 0; $y < $h; $y++)
 			{
 				$alpha = (imagecolorat($water, $x, $y) >> 24) & 0xFF;
-				
 				if($alpha < $minalpha)
 				{
 					$minalpha = $alpha;
 				}
 			}
 		}
-		
 		for($x = 0; $x < $w; $x++)
 		{
 			for($y = 0; $y < $h; $y++)
 			{
-				$colorxy 	= imagecolorat($water, $x, $y);
-				$alpha 		= ($colorxy >> 24) & 0xFF;
-				
+				$colorxy = imagecolorat($water, $x, $y);
+				$alpha = ($colorxy >> 24) & 0xFF;
 				if($minalpha !== 127)
 				{
 					$alpha = 127 + 127 * $pct * ($alpha - 127) / (127 - $minalpha);
@@ -246,9 +243,7 @@ class ImageParser
 				{
 					$alpha += 127 * $pct;
 				}
-				
 				$alphacolorxy = imagecolorallocatealpha($water, ($colorxy >> 16) & 0xFF, ($colorxy >> 8) & 0xFF, $colorxy & 0xFF, $alpha);
-				
 				if(!imagesetpixel($water, $x, $y, $alphacolorxy))
 				{
 					return false;
@@ -262,9 +257,9 @@ class ImageParser
 	/**
 	 * Generate thumbnail file
 	 */
-	protected function generateThumb()
+	protected function generate_thumb()
 	{
-		$sizes = $this->validateSize('thumb');
+		$sizes = $this->validate_size('thumb');
 		$thumb = imagecreatetruecolor($sizes['width'], $sizes['height']);
 		imagecopyresampled($thumb, $this->data['resource'], 0, 0, 0, 0, $sizes['width'], $sizes['height'], $this->data['width'], $this->data['height']);
 
@@ -278,7 +273,7 @@ class ImageParser
 	 */
 	protected function resize()
 	{
-		$sizes = $this->validateSize('img');
+		$sizes = $this->validate_size('img');
 
 		if($sizes['width'] != $this->data['width'])
 		{
@@ -294,16 +289,11 @@ class ImageParser
 	/**
 	 * Save image to file
 	 * 
-	 * @param \resource|\GdImage|false 	$resource
-	 * @param string 					$filename
+	 * @param \resource 	$resource
+	 * @param string 		$filename
 	 */
 	protected function save($resource, $filename)
 	{
-		if($resource === false)
-		{
-			return;
-		}
-
 		$fn = 'image' . $this->data['type'];
 
 		if(is_numeric($this->quality[$this->data['type']]))
@@ -341,7 +331,7 @@ class ImageParser
 	 * @param string 	$prefix 		(img | thumb)
 	 * @return array
 	 */
-	protected function validateSize($prefix = 'img')
+	protected function validate_size($prefix = 'img')
 	{
 		$orig_width = $width = $this->data['width'];
 		$orig_height = $height = $this->data['height'];
@@ -370,9 +360,9 @@ class ImageParser
 			}
 		}
 
-		return [
+		return array(
 			'height' 	=> $height,
 			'width'		=> $width,
-		];
+		);
 	}
 }

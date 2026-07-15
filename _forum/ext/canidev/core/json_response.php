@@ -1,18 +1,18 @@
 <?php
 /**
  * @package Ext Common Core
- * @version 1.1.4 26/01/2024
+ * @version 1.1.1 15/01/2023
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2023 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
 namespace canidev\core;
 
 /**
- * JSON class
- */
-class JsonResponse
+* JSON class
+*/
+class json_response
 {
 	const JSON_STATUS_ERROR		= 1;
 	const JSON_STATUS_SUCCESS	= 2;
@@ -32,10 +32,10 @@ class JsonResponse
 	/**
 	 * Add values to response
 	 * 
-	 * @param array|string 			$key 		Simple key or array with key => value
-	 * @param string|array|null 	$value 		Set a single value if key is a string
+	 * @param array|string 		$key 		Simple key or array with key => value
+	 * @param string|null 		$value 		Set a single value if key is a string
 	 * 
-	 * @return static
+	 * @return json_response
 	 */
 	public function add($key, $value = null)
 	{
@@ -67,7 +67,7 @@ class JsonResponse
 	 * @param string 	$type
 	 * @param array 	$component
 	 */
-	public function addComponent($type, $component)
+	public function add_component($type, $component)
 	{
 		if(!isset($this->cache['components'][$type]))
 		{
@@ -89,9 +89,9 @@ class JsonResponse
 	 * @param string 	$html
 	 * @param bool 		$append 		Set if defined html must be overwrite
 	 * 
-	 * @return static
+	 * @return json_response
 	 */
-	public function addHtml($html, $append = false)
+	public function add_html($html, $append = false)
 	{
 		if(!$append)
 		{
@@ -112,10 +112,10 @@ class JsonResponse
 	{
 		$this
 			->reset()
-			->send([
+			->send(array(
 				'status'	=> self::JSON_STATUS_ERROR,
 				'message'	=> $message,
-			]);
+			));
 	}
 
 	/**
@@ -131,21 +131,21 @@ class JsonResponse
 	 * Check if response is initialized
 	 * @return bool
 	 */
-	public function isRequested()
+	public function is_requested()
 	{
 		return (sizeof($this->cache) > 2 || !empty($this->cache['htmlContent']));
 	}
 	
 	/**
 	 * Reset all data
-	 * @return static
+	 * @return json_response
 	 */
 	public function reset()
 	{
-		$this->cache = [
+		$this->cache = array(
 			'components'	=> [],
 			'htmlContent'	=> '',
-		];
+		);
 
 		return $this;
 	}
@@ -184,10 +184,10 @@ class JsonResponse
 	/**
 	 * Set response status
 	 * 
-	 * @param int 	$status 	jsonResponse::JSON_STATUS_SUCCESS | JsonResponse::JSON_STATUS_ERROR
-	 * @return static
+	 * @param int 	$status 	json_response::JSON_STATUS_SUCCESS | json_response::JSON_STATUS_ERROR
+	 * @return json_response
 	 */
-	public function setStatus($status = self::JSON_STATUS_SUCCESS)
+	public function set_status($status = self::JSON_STATUS_SUCCESS)
 	{
 		$this->cache['status'] = $status;
 		return $this;
@@ -195,15 +195,15 @@ class JsonResponse
 
 	/**
 	 * Get class instance
-	 * @return static
+	 * @return json_response
 	 */
-	static public function getInstance()
+	static public function get_instance()
 	{
-		if(!static::$instance)
+		if(!self::$instance)
 		{
-			static::$instance = new static();
+			self::$instance = new self();
 		}
 
-		return static::$instance;
+		return self::$instance;
 	}
 }
