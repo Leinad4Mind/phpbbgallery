@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -10,6 +10,7 @@
 namespace dmzx\topicindex\controller;
 
 use dmzx\topicindex\core\functions_topicindex;
+use phpbb\event\dispatcher_interface;
 use phpbb\template\template;
 use phpbb\user;
 use phpbb\auth\auth;
@@ -45,6 +46,9 @@ class main
 	/** @var config */
 	protected $config;
 
+	/** @var dispatcher_interface */
+	protected $dispatcher;
+
 	/** @var string */
 	protected $root_path;
 
@@ -69,6 +73,7 @@ class main
 	* @param request_interface		$request
 	* @param helper		 			$helper
 	* @param config					$config
+	* @param dispatcher_interface	$dispatcher
 	* @param string 				$root_path
 	* @param string 				$php_ext
 	* @param string 				$forum_lists_table
@@ -82,6 +87,7 @@ class main
 		request_interface $request,
 		helper $helper,
 		config $config,
+		dispatcher_interface $dispatcher,
 		$root_path,
 		$php_ext,
 		$forum_lists_table
@@ -95,6 +101,7 @@ class main
 		$this->request 				= $request;
 		$this->helper 				= $helper;
 		$this->config				= $config;
+		$this->dispatcher			= $dispatcher;
 		$this->root_path 			= $root_path;
 		$this->php_ext 				= $php_ext;
 		$this->forum_lists_table 	= $forum_lists_table;
@@ -127,11 +134,7 @@ class main
 			redirect($zurl, false, true);
 		}
 
-		// Navigation
-		$this->template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $this->user->lang['OIINDEX_HEADER'],
-			'U_VIEW_FORUM'	=> $zurl
-		));
+		$selected_category = '';
 
 		if (empty($list))
 		{
@@ -167,6 +170,11 @@ class main
 			$result	= $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
+				if ($list == $row['list_id'])
+				{
+					$selected_category = $row['list_name'];
+				}
+
 				$s_list_options .= '<option value="' . $row['list_id'] . '"' . (($list == $row['list_id']) ? ' selected="selected"' : '') . '>' . $row['list_name'] . '</option>';
 			}
 			$this->db->sql_freeresult($result);
@@ -186,18 +194,17 @@ class main
 			$row1		= $this->db->sql_fetchrow($result1);
 			$this->db->sql_freeresult($result1);
 
-			$forumsari 	= json_decode($row1['list_forum']);
+			$forumsari 	= @json_decode($row1['list_forum']);
+			$forumsari	= is_array($forumsari) ? $forumsari : [];
 			$filtrini	= range('a', 'z');
 			$indexlist	= array();
 
-			if(!empty($forumsari)){
 			foreach ($forumsari as $forum_id)
 			{
 				$forum_id			= (int) $forum_id;
 				$forum_data			= $this->functions_topicindex->get_ForumBasedata($forum_id);
 				$indexlist_temp		= $this->functions_topicindex->get_topic_index($forum_id, 0, $forum_data['inindex'], $forum_data['filter']);
 				$indexlist			= array_merge($indexlist, $indexlist_temp);
-			}
 			}
 
 			// Order the topics
@@ -238,14 +245,26 @@ class main
 				{
 					if ($realfilter == $indexdata['key'])
 					{
-						$this->template->assign_block_vars('block_list.block_topic_index', array(
-							'ITOPIC_URL'	=> append_sid("{$this->root_path}viewtopic.$this->php_ext", "f={$forum_id}&amp;t={$indexdata['id']}"),
+						$template_vars = array(
+							'ITOPIC_URL'	=> append_sid("{$this->root_path}viewtopic.$this->php_ext", "f={$indexdata['forum_id']}&amp;t={$indexdata['id']}"),
 							'ITOPIC_TITLE'	=> $indexdata['title'],
 							'ITOPIC_POSTER'	=> get_username_string('full', $indexdata['posterid'], $indexdata['poster'], $indexdata['postercol']),
 							'ITOPIC_TOTREP'	=> $indexdata['posts'],
 							'U_REMOVE_FROM'	=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list, 'iremove' => $indexdata['id'])),
 							'ITOPIC_CLASS'	=> ($nums % 2) ? 'row bg1' : 'row bg2'
-						));
+						);
+
+						/**
+						 * Modify the topic index data before it is assigned to the template
+						 *
+						 * @event dmzx.topicindex.modify_block_topic_index_ary
+						 * @var		array	template_vars	Template block array with topic data
+						 * @since 1.0.5
+						 */
+						$vars = array('indexdata', 'template_vars');
+						extract($this->dispatcher->trigger_event('dmzx.topicindex.modify_block_topic_index_ary', compact($vars)));
+
+						$this->template->assign_block_vars('block_list.block_topic_index', $template_vars);
 						$nums++;
 					}
 				}
@@ -261,11 +280,22 @@ class main
 			));
 		}
 
+		$title = implode(' - ', array_filter([$this->user->lang['OIINDEX_HEADER'], $selected_category]));
+
+		// Navigation
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $title,
+			'U_VIEW_FORUM'	=> $zurl
+		));
+
 		$this->functions_topicindex->assign_authors();
 
-		$this->template->assign_var('TOPICINDEX_FOOTER_VIEW', true);
+		$this->template->assign_vars([
+			'TOPICINDEX_FOOTER_VIEW'	=> true,
+			'L_OIINDEX_HEADER'			=> $title,
+		]);
 
 		// Send all data to the template file
-		return $this->helper->render('topiclist.html', $this->user->lang['OIINDEX_HEADER']);
+		return $this->helper->render('topiclist.html', $title);
 	}
 }

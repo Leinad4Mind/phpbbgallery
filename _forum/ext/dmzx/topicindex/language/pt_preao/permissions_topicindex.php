@@ -2,8 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
-* Nederlandse vertaling @ Solidjeuh <http://www.froddelpower.be>
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -39,10 +38,5 @@ if (empty($lang) || !is_array($lang))
 
 // Merge the following language entries into the lang array
 $lang = array_merge($lang, array(
-	'ACP_CAT_OINDEX'				=> 'Officiële Topic Index',
-	'ACP_OINDEX_CFG'				=> 'Configuratie',
-	//Log
-	'LOG_OINDEX_ADDLIST'			=> '<strong>Nieuwe topic lijst toegevoegd.</strong><br />%s',
-	'LOG_OINDEX_DELETELIST'			=> '<strong>Topic lijst verwijderd.</strong><br />%s',
-	'LOG_OINDEX_EDITCFG'			=> '<strong>Bewerkte de configuratie van Offici&euml;le topic index</strong><br />%s',
+	'ACL_U_TOPICINDEX'		=> 'Pode ver a Official Topic Index - Topics List',
 ));

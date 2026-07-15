@@ -1,52 +1,58 @@
-<div id="{S_ISTYLE}">
-	<strong>{L_INDEX_POST_PRES}</strong>
+<div id="{{ S_ISTYLE }}">
+	<strong>{{ lang('INDEX_POST_PRES') }}</strong>
 	<fieldset>
+		{% EVENT dmzx_topic_index_topic_filter_container_before %}
 		<p class="filtrino icenter">
-			<!-- BEGIN block_nofiltrino -->
-				<span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_TUTTI}">{L_ALL}</a></span>
-				<!-- IF block_nofiltrino.S_09 --><span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_09}">{L_09}</a></span><!-- ELSE --><span class="btn-basic btn-xs">{L_09}</span><!-- ENDIF -->
-				<!-- IF block_nofiltrino.S_SYMB --><span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_SYMB}">{L_SYMB}</a></span><!-- ELSE --><span class="btn-basic btn-xs">{L_SYMB}</span><!-- ENDIF -->
-			<!-- END block_nofiltrino -->
-			<!-- BEGIN block_filtrino -->
-				<!-- IF block_filtrino.S_ISWITH -->
-					<span class="btn btn-default btn-xs"><a href="{block_filtrino.U_FILTER}">{block_filtrino.FILTRINO}</a></span>
-				<!-- ELSE -->
-					<span class="btn-basic btn-xs">{block_filtrino.FILTRINO}</span>
-				<!-- ENDIF -->
-			<!-- END block_filtrino -->
+			{% for block_nofiltrino in loops.block_nofiltrino %}
+				<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_TUTTI }}">{{ lang('ALL') }}</a></span>
+				{% if block_nofiltrino.S_09 %}<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_09 }}">{{ lang('09') }}</a></span>{% else %}<span class="btn-basic btn-xs">{{ lang('09') }}</span>{% endif %}
+				{% if block_nofiltrino.S_SYMB %}<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_SYMB }}">{{ lang('SYMB') }}</a></span>{% else %}<span class="btn-basic btn-xs">{{ lang('SYMB') }}</span>{% endif %}
+			{% endfor %}
+			{% for block_filtrino in loops.block_filtrino %}
+				{% EVENT dmzx_topic_index_topic_filter_before %}
+				{% if block_filtrino.S_ISWITH %}
+					<span class="btn btn-default btn-xs"><a href="{{ block_filtrino.U_FILTER }}">{{ block_filtrino.FILTRINO }}</a></span>
+				{% else %}
+					<span class="btn-basic btn-xs">{{ block_filtrino.FILTRINO }}</span>
+				{% endif %}
+				{% EVENT dmzx_topic_index_topic_filter_after %}
+			{% endfor %}
 		</p>
+		{% EVENT dmzx_topic_index_topic_filter_container_after %}
 	</fieldset>
-
-	<!-- IF .block_list -->
-	<!-- BEGIN block_list -->
-	<!-- IF block_list.S_ISWITH2 -->
+    <div class="filtrino icenter">
+		<a href="{ROOT_PATH}posting.php?mode=post" role="button" title="{L_BUTTON_UPLOAD_EXPLAIN}"class="btn btn-default btn-load" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-plus"></i>&nbsp;{L_BUTTON_UPLOAD}</a>
+	</div>
+	{% if loops.block_list|length %}
+	{% for block_list in loops.block_list %}
+	{% if block_list.S_ISWITH2 %}
 	<br/><br/>
-	<h3>{block_list.FILTRINO}</h3>
+	<h3>{{ block_list.FILTRINO }}</h3>
 	<table class="table table-bordered">
 		<thead> 
 			<tr> 
-				<th class="list-inner">{L_TOPIC_TITLE}</th>
-				<th class="topics">{L_OTI_POSTER}</th>
-				<th class="posts">{L_REPLIES}</th>
-				<!-- IF U_MCP --><th class="lastpost"><span>{L_REMOVE_FROM_LIST}</span></th><!-- ENDIF -->
+				<th class="list-inner">{{ lang('TITLE') }}</th>
+				<th class="topics">{{ lang('AUTHOR') }}</th>
+				<th class="posts">{{ lang('COMMENTS') }}</th>
+				{% if U_ACP %}<th class="lastpost"><span>{{ lang('REMOVE_FROM_LIST') }}</span></th>{% endif %}
 			</tr>
 		</thead>
-		<!-- BEGIN block_topic_index -->
+		{% for block_topic_index in block_list.block_topic_index %}
 		<tbody>
 			<tr>
-				<td class="topicindex"><a href="{block_topic_index.ITOPIC_URL}" class="topictitle"><strong>{block_topic_index.ITOPIC_TITLE}</strong></a></td>
-				<td class="topics">{block_topic_index.ITOPIC_POSTER}</td>
-				<td class="posts">{block_topic_index.ITOPIC_TOTREP}</td>
-				<!-- IF U_MCP --><td class="lastpost"><span class="topicindexremove"><a href="{block_topic_index.U_REMOVE_FROM}" class="btn btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></span></td><!-- ENDIF -->
+				<td class="topicindex">{% EVENT dmzx_topic_index_topic_before %}<a href="{{ block_topic_index.ITOPIC_URL }}" class="topictitle">{% EVENT dmzx_topic_index_topic_title_container_before %}<strong>{% EVENT dmzx_topic_index_topic_title_before %} {{ block_topic_index.ITOPIC_TITLE }}</strong>{% EVENT dmzx_topic_index_topic_title_after %}</a>{% EVENT dmzx_topic_index_topic_title_container_after %}</td>
+				<td class="topics">{{ block_topic_index.ITOPIC_POSTER }}</td>
+				<td class="posts">{{ block_topic_index.ITOPIC_TOTREP }}</td>
+				{% if U_ACP %}<td class="lastpost"><span class="topicindexremove"><a href="{{ block_topic_index.U_REMOVE_FROM }}" class="btn btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true" title="{{ lang('REMOVE_FROM_LIST') }}"></i></a></span></td>{% endif %}
 			</tr>
 		</tbody>
-		<!-- END block_topic_index -->
+		{% endfor %}
 	</table>
-	<!-- ENDIF -->
-	<!-- END block_list -->
-	<!-- ELSE -->
+	{% endif %}
+	{% endfor %}
+	{% else %}
 	<fieldset>
-		<p class="ianytopuc">{L_ANY_TOPIC_IN_LIST}</p>
+		<p class="ianytopuc">{{ lang('ANY_TOPIC_IN_LIST') }}</p>
 	</fieldset>
-	<!-- ENDIF -->
+	{% endif %}
 </div>

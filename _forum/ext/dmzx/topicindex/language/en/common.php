@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -41,7 +41,7 @@ $lang = array_merge($lang, array(
 	'REMOVE_INILIST'				=> '-List',
 	'OTINDEX_LINK_TITLE'			=> 'Topics list',
 	'NUM'							=> 'N°',
-	'OTI_POSTER'					=> 'Posted by',
+	'POSTER'						=> 'Posted by',
 	'INDEX_POST_PRES'				=> 'Before to opening a new topic, please check if is not already in this list. If there is use that topic to write your posts.<br />Thanks',
 	'NON_ACTIVE'					=> 'Inactive',
 	'DEF_ALL_TOPICS_IN'				=> 'All new topic automatically',
@@ -53,5 +53,5 @@ $lang = array_merge($lang, array(
 	'SYMB'							=> '#&%',
 	'ANY_TOPIC_IN_LIST'				=> 'Any topics',
 	'SELECT_A_LIST'					=> 'Select a list',
-	'OIINDEX_HEADER'				=> 'Topic Index - Topics List',
+	'OIINDEX_HEADER'				=> 'Topics List',
 ));

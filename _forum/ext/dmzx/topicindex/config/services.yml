@@ -14,7 +14,6 @@ services:
             - '@request'
             - '%core.root_path%'
             - '%core.php_ext%'
-            - '@?files.factory'
         tags:
             - { name: event.listener }
     dmzx.topicindex.admin.controller:
@@ -38,6 +37,7 @@ services:
             - '@request'
             - '@controller.helper'
             - '@config'
+            - '@dispatcher'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%dmzx.topicindex.table.topicindex%'
@@ -48,4 +48,5 @@ services:
             - '@template'
             - '@config'
             - '@auth'
+            - '@dispatcher'
             - '@ext.manager'

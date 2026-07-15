@@ -2,8 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
-* Nederlandse vertaling @ Solidjeuh <http://www.froddelpower.be>
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -38,21 +37,27 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ADD_INILIST'					=> '+Lijst',
-	'REMOVE_INILIST'				=> '-Lijst',
-	'OTINDEX_LINK_TITLE'			=> 'Topics lijst',
+	'ADD_INILIST'					=> '+Lista',
+	'REMOVE_INILIST'				=> '-Lista',
+	'OTINDEX_LINK_TITLE'			=> 'Lista de Tópicos',
 	'NUM'							=> 'N°',
-	'POSTER'						=> 'Gepost door',
-	'INDEX_POST_PRES'				=> 'Kijk eerst eens in deze lijst dat de topic niet reeds bestaat alvorens een nieuwe topic te openen.<br />Bedankt.',
-	'NON_ACTIVE'					=> 'Inactief',
-	'DEF_ALL_TOPICS_IN'				=> 'Alle nieuwe topics automatisch',
-	'DEF_ALL_TOPICS_OFF'			=> 'Voeg manueel topics toe in de lijst.',
-	'REMOVE_FROM_LIST'				=> 'verwijder',
-	'TOPICINDEX_VERSION'			=> 'Versie',
-	'ALL'							=> 'Alle',
+	'POSTER'						=> 'Enviado por',
+	'INDEX_POST_PRES'				=> 'Antes de abrir um novo tópico, por favor verifica se já existe na lista. Se existir, usa esse tópico para escrever uma mensagem.<br />Obrigado',
+	'NON_ACTIVE'					=> 'Inactivo',
+	'DEF_ALL_TOPICS_IN'				=> 'Todos os novos tópicos automaticamente',
+	'DEF_ALL_TOPICS_OFF'			=> 'Adiciona tópicos manualmente à lista',
+	'REMOVE_FROM_LIST'				=> 'remover',
+	'TOPICINDEX_VERSION'			=> 'Versão',
+	'ALL'							=> 'Todos',
 	'09'							=> '0-9',
 	'SYMB'							=> '#&%',
-	'ANY_TOPIC_IN_LIST'				=> 'Alle topics',
-	'SELECT_A_LIST'					=> 'Selecteer een lijst',
-	'OIINDEX_HEADER'				=> 'Officiële Topic Index - Topics Lijst',
+	'ANY_TOPIC_IN_LIST'				=> 'Nenhum tópico enviado!',
+	'SELECT_A_LIST'					=> 'Seleccione uma lista',
+	'OIINDEX_HEADER'				=> 'Lista de tópicos',
+	'LANGUAGE'				        => 'Idioma',
+	'CATEGORY'				        => 'Categoria',
+	'COMMENTS'				        => 'Comentários',
+	'BUTTON_UPLOAD'				    => 'Partilhar Projecto',
+	'BUTTON_UPLOAD_EXPLAIN'		    => 'Sim! Começa a partilhar projectos na nossa comunidade!',
+	
 ));

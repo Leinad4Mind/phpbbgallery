@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -10,6 +10,7 @@
 namespace dmzx\topicindex\core;
 
 use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\event\dispatcher_interface;
 use phpbb\template\template;
 use phpbb\config\config;
 use phpbb\auth\auth;
@@ -29,6 +30,9 @@ class functions_topicindex
 	/** @var auth */
 	protected $auth;
 
+	/** @var dispatcher_interface */
+	protected $dispatcher;
+
 	/** @var manager */
 	protected $extension_manager;
 
@@ -39,6 +43,7 @@ class functions_topicindex
 	* @param template		$template
 	* @param config			$config
 	* @param auth			auth
+	* @param dispatcher_interface $dispatcher
 	* @param manager 		$extension_manager
 	*/
 	public function __construct(
@@ -46,6 +51,7 @@ class functions_topicindex
 		template $template,
 		config $config,
 		auth $auth,
+		dispatcher_interface $dispatcher,
 		manager $extension_manager
 	)
 	{
@@ -53,6 +59,7 @@ class functions_topicindex
 		$this->template 			= $template;
 		$this->config				= $config;
 		$this->auth					= $auth;
+		$this->dispatcher			= $dispatcher;
 		$this->extension_manager	= $extension_manager;
 	}
 
@@ -62,13 +69,24 @@ class functions_topicindex
 	*/
 	function get_topic_index($the_forum, $the_topic, $inlistvalue = 0, $tagfilter = 0)
 	{
-		$sql = "SELECT topic_id, topic_title, topic_poster, topic_first_poster_name, topic_first_poster_colour, forum_id, topic_posts_approved, topic_title, inindex_topic, outindex_topic
-			FROM " . TOPICS_TABLE . "
-			WHERE forum_id = " . (int) $the_forum . "
-				AND topic_posts_approved >= 1
-				AND inindex_topic >= " . (int) $inlistvalue . "
-				AND outindex_topic = 0
-			ORDER BY topic_title ASC";
+		$sql_array = [
+			'SELECT'	=> 't.topic_id, t.topic_title, t.topic_poster, t.topic_first_poster_name, t.topic_first_poster_colour, t.forum_id, t.topic_posts_approved, t.inindex_topic, t.outindex_topic',
+			'FROM'		=> [TOPICS_TABLE => 't'],
+			'WHERE'		=> 't.forum_id = ' . (int) $the_forum . ' AND t.topic_posts_approved >= 1 AND t.inindex_topic >= ' . (int) $inlistvalue . ' AND t.outindex_topic = 0',
+			'ORDER_BY'	=> 't.topic_title ASC',
+		];
+
+		/**
+		 * Event to modify the SQL query that fetches topics
+		 *
+		 * @event dmzx.topicindex.sql_fetch_topics_before
+		 * @var array	sql_array	Array with SQL query data to fetch the current active sessions
+		 * @since 1.0.5
+		 */
+		$vars = ['sql_array'];
+		extract($this->dispatcher->trigger_event('dmzx.topicindex.sql_fetch_topics_before', compact($vars)));
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result	= $this->db->sql_query($sql);
 
 		$topiclist	= array();
@@ -77,71 +95,70 @@ class functions_topicindex
 		{
 			if ($tagfilter == 1)
 			{
-				switch (substr(trim($row['topic_title']),0,1))
+				switch (mb_substr(trim($row['topic_title']),0,1))
 				{
 					case '(':
-						$newstring	= substr($row['topic_title'], strpos($row['topic_title'], ')') + 1);
+						$newstring	= mb_substr($row['topic_title'], mb_strpos($row['topic_title'], ')') + 1);
 						$newstring	= trim($newstring);
 
-						if (substr($newstring,0,1) == '(')
+						if (mb_substr($newstring,0,1) == '(')
 						{
-							$newstring	= substr($newstring, strpos($row['topic_title'], ')') + 1);
+							$newstring	= mb_substr($newstring, mb_strpos($row['topic_title'], ')') + 1);
 							$newstring	= trim($newstring);
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 						else
 						{
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 					break;
 					case '[':
-						$newstring	= substr($row['topic_title'], strpos($row['topic_title'], ']') + 1);
+						$newstring	= mb_substr($row['topic_title'], mb_strpos($row['topic_title'], ']') + 1);
 						$newstring	= trim($newstring);
 
-						if (substr($newstring,0,1) == '[')
+						if (mb_substr($newstring,0,1) == '[')
 						{
-							$newstring	= substr($newstring, strpos($row['topic_title'], ']') + 1);
+							$newstring	= mb_substr($newstring, mb_strpos($row['topic_title'], ']') + 1);
 							$newstring	= trim($newstring);
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 						else
 						{
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 					break;
 					case '{':
-						$newstring	= substr($row['topic_title'], strpos($row['topic_title'], '}') + 1);
+						$newstring	= mb_substr($row['topic_title'], mb_strpos($row['topic_title'], '}') + 1);
 						$newstring	= trim($newstring);
 
-						if (substr($newstring,0,1) == '{')
+						if (mb_substr($newstring,0,1) == '{')
 						{
-							$newstring	= substr($newstring, strpos($row['topic_title'], '}') + 1);
+							$newstring	= mb_substr($newstring, mb_strpos($row['topic_title'], '}') + 1);
 							$newstring	= trim($newstring);
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 						else
 						{
-							$keytag		= strtolower(substr($newstring,0,1));
-							$keyBig		= strtolower(substr($newstring,0,4));
+							$keytag		= strtolower(mb_substr($newstring,0,1));
+							$keyBig		= strtolower(mb_substr($newstring,0,30));
 						}
 					break;
 					default:
-						$keytag	= strtolower(substr($row['topic_title'],0,1));
-						$keyBig	= strtolower(substr($row['topic_title'],0,4));
+						$keytag	= strtolower(mb_substr($row['topic_title'],0,1));
+						$keyBig	= strtolower(mb_substr($row['topic_title'],0,30));
 					break;
 				}
 			}
 			else
 			{
-				$keytag	= strtolower(substr($row['topic_title'],0,1));
-				$keyBig	= strtolower(substr($row['topic_title'],0,30));
+				$keytag	= strtolower(mb_substr($row['topic_title'],0,1));
+				$keyBig	= strtolower(mb_substr($row['topic_title'],0,30));
 			}
-
 			if (preg_match('#^[a-z]#u', $keytag))
 			{
 				$keytag;
@@ -158,6 +175,7 @@ class functions_topicindex
 			if ($row['topic_id'] != $the_topic)
 			{
 				$array['id']		= $row['topic_id'];
+				$array['forum_id']	= $row['forum_id'];
 				$array['key']		= $keytag;
 				$array['keybig']	= $keyBig;
 				$array['title']		= $row['topic_title'];
@@ -165,19 +183,32 @@ class functions_topicindex
 				$array['posterid']	= $row['topic_poster'];
 				$array['poster']	= $row['topic_first_poster_name'];
 				$array['postercol']	= $row['topic_first_poster_colour'];
+
+				/**
+				 * Event to modify the SQL query that fetches topics
+				 *
+				 * @event dmzx.topicindex.sql_fetch_topics_after
+				 * @var array	topiclist	Array with all topics returned
+				 * @var array	array		Array with data returned for the current topic
+				 * @var array	row			Array with SQL fields from the current topic
+				 * @since 1.0.5
+				 */
+				$vars = ['topiclist', 'array', 'row'];
+				extract($this->dispatcher->trigger_event('dmzx.topicindex.sql_fetch_topics_after', compact($vars)));
+
 				$topiclist[] 		= $array;
 			}
 		}
 		$this->db->sql_freeresult($result);
-
+		
 		/* order array */
 		if (count($topiclist) > 0)
 		{
 			foreach ($topiclist as $key => $row)
 			{
-				$order_in_category[$key]	= $row['keybig'];
+				$order_in_category[$key] = $row['keybig'];
 			}
-			array_multisort ($order_in_category, SORT_ASC, $topiclist);
+			array_multisort($order_in_category, SORT_ASC, $topiclist);
 		}
 
 		return	$topiclist;
@@ -298,8 +329,8 @@ class functions_topicindex
 		$this->db->sql_freeresult($result2);
 
 		$output = array();
-		$output['inindex']	= $forum_data['default_inindex'];
-		$output['filter']	= $forum_data['tag_filter'];
+		$output['inindex'] = isset($forum_data['default_inindex']) ? $forum_data['default_inindex'] : 0;
+		$output['filter'] = isset($forum_data['tag_filter']) ? $forum_data['tag_filter'] : 0;
 
 		return $output;
 	}
