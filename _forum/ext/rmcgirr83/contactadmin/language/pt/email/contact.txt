@@ -1,0 +1,14 @@
+Subject: {{ SUBJECT }}
+
+Olá, {{ ADM_USERNAME }},
+
+A seguinte mensagem foi enviada pelos contactos do "{{ SITENAME }}".
+Foi enviada por um indivíduo de nome {{ USERNAME }}", com o seguinte endereço de e-mail "{{ USER_EMAIL }}" e endereço IP "{{ USER_IP }}".
+Enviada em "{{ DATE }}".
+
+Mensagem:
+
+{{ MESSAGE }}
+
+
+{{ EMAIL_SIG }}
