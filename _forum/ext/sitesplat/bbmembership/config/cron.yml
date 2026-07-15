@@ -1,0 +1,15 @@
+services:
+    sitesplat.bbmembership.membership:
+        class: sitesplat\bbmembership\cron\task\membership
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '%sitesplat.bbmembership.tables.bbmembership%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@sitesplat.bbmembership.helper'
+        calls:
+            - [set_name, [sitesplat.bbmembership]]
+        tags:
+            - { name: cron.task }
