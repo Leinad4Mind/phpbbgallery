@@ -99,11 +99,11 @@ class main
 	public function handle($view = '')
 	{
 		/*
-		* Prevent guest access
+		* Prevent unauthorised access
 		*/
-		if ( !$this->user->data['is_registered'] )
+		if (!$this->auth->acl_get('u_notes'))
 		{
-			redirect($this->root_path . 'index.' . $this->php_ext);
+			throw new \phpbb\exception\http_exception(404, 'PAGE_NOT_FOUND');
 		}
 
 		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
@@ -156,12 +156,19 @@ class main
 
 		if ($mode == 'delete')
 		{
-			$sql = 'DELETE FROM ' . $this->table_prefix . 'notes
-					WHERE ' . $this->db->sql_build_array('SELECT', array(
-						'note_id' => $note_id,
-						'note_user_id' => $this->user->data['user_id'],
-					));
-			$this->db->sql_query($sql);
+			if (confirm_box(true))
+			{
+				$sql = 'DELETE FROM ' . $this->table_prefix . 'notes
+						WHERE ' . $this->db->sql_build_array('SELECT', array(
+							'note_id' => $note_id,
+							'note_user_id' => $this->user->data['user_id'],
+						));
+				$this->db->sql_query($sql);
+			}
+			else 
+			{
+				confirm_box(false, $this->language->lang('NOTES_DELETE_CONFIRM'));
+			}
 
 			$mode = '';
 		}
@@ -207,20 +214,20 @@ class main
 			/*
 			* Prepare sort, search and filter
 			*/
-			$sort_order = '<select name="sort_order" class="selectbox">';
+			$sort_order = '<select name="sort_order" class="selectpicker" data-width="auto">';
 			$sort_order .= '<option value="ASC">'.$this->language->lang('ASCENDING').'</option>';
 			$sort_order .= '<option value="DESC">'.$this->language->lang('DESCENDING').'</option>';
 			$sort_order .= '</select>';
 			$sort_order = str_replace('value="'.$sql_order.'">', 'value="'.$sql_order.'" selected="selected">', $sort_order);
 
-			$sort_by = '<select name="sort_by" class="selectbox">';
+			$sort_by = '<select name="sort_by" class="selectpicker" data-width="auto">';
 			$sort_by .= '<option value="note_subject">'.$this->language->lang('SUBJECT').'</option>';
 			$sort_by .= '<option value="note_time">'.$this->language->lang('TIME').'</option>';
 			$sort_by .= '<option value="note_mem">'.$this->language->lang('NOTES_MEM').'</option>';
 			$sort_by .= '</select>';
 			$sort_by = str_replace('value="'.$sql_order_by.'">', 'value="'.$sql_order_by.'" selected="selected">', $sort_by);
 
-			$search_in = '<select name="search_in" class="selectbox">';
+			$search_in = '<select name="search_in" class="selectpicker" data-width="auto" data-style="btn btn-default form-control">';
 			$search_in .= '<option value="note_subject">'.$this->language->lang('SUBJECT').'</option>';
 			$search_in .= '<option value="note_text">'.$this->language->lang('POST').'</option>';
 			$search_in .= '</select>';
@@ -309,7 +316,7 @@ class main
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . 'notes SET ' . $this->db->sql_build_array('UPDATE', array(
 					'note_subject' => $note_subject,
-					'note_text' => $note_message,
+					'note_text' => utf8_encode_ucr($note_message),
 					'note_uid' => $uid,
 					'note_bitfield' => $bitfield,
 					'note_flags' => $flags,
@@ -327,7 +334,7 @@ class main
 				$sql = 'INSERT INTO ' . $this->table_prefix . 'notes ' . $this->db->sql_build_array('INSERT', array(
 					'note_id' => $note_id,
 					'note_user_id' => $this->user->data['user_id'],
-					'note_subject' => $note_subject,
+					'note_subject' => utf8_encode_ucr($note_subject),
 					'note_text' => $note_message,
 					'note_time' => time(),
 					'note_uid' => $uid,
@@ -374,35 +381,35 @@ class main
 				'mode' => 'save',
 			);
 
-			$s_note_mem_day = '<select name="mem_day">';
+			$s_note_mem_day = '<select name="mem_day" class="selectpicker" data-width="auto">';
 			for ($i = 1; $i <= 31; $i++)
 			{
 				$s_note_mem_day .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_day .= '</select>';
 
-			$s_note_mem_month = '<select name="mem_month">';
+			$s_note_mem_month = '<select name="mem_month" class="selectpicker" data-width="auto">';
 			for ($i = 1; $i <= 13; $i++)
 			{
 				$s_note_mem_month .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_month .= '</select>';
 
-			$s_note_mem_year = '<select name="mem_year">';
+			$s_note_mem_year = '<select name="mem_year" class="selectpicker" data-width="auto">';
 			for ($i = intval(date('Y')); $i <= intval(date('Y')) + 9; $i++)
 			{
 				$s_note_mem_year .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_year .= '</select>';
 
-			$s_note_mem_hour = '<select name="mem_hour">';
+			$s_note_mem_hour = '<select name="mem_hour" class="selectpicker" data-width="auto">';
 			for ($i = 0; $i <= 23; $i++)
 			{
 				$s_note_mem_hour .= '<option value="' . $i . '">' . $i . '</option>';
 			}
 			$s_note_mem_hour .= '</select>';
 
-			$s_note_mem_minute = '<select name="mem_minute">';
+			$s_note_mem_minute = '<select name="mem_minute" class="selectpicker" data-width="auto">';
 			for ($i = 0; $i <= 59; $i++)
 			{
 				if ($i < 10)

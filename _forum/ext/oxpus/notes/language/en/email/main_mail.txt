@@ -1,8 +1,8 @@
 Subject: SUBJECT
 
-Hello {USERNAME},
+Hello {{ USERNAME }},
 
 TEXT
 
 
-{BOARD_EMAIL}
+{{ BOARD_EMAIL }}

@@ -21,7 +21,7 @@ class main_info
 			'title'		=> 'NOTES',
 			'version'	=> $config['notes_version'],
 			'modes'		=> array(
-				'main'	=> array('title' => 'UCP_NOTES_CONFIG', 'auth' => 'ext_oxpus/notes', 'cat' => array('NOTES')),
+				'main'	=> array('title' => 'UCP_NOTES_CONFIG', 'auth' => 'ext_oxpus/notes && acl_u_notes', 'cat' => array('NOTES')),
 			),
 		);
 	}

@@ -1,6 +1,6 @@
 Subject: SUBJECT
 
-Hallo {USERNAME},
+Olá, {USERNAME},
 
 TEXT
 

@@ -57,9 +57,9 @@ class release_3_0_0 extends \phpbb\db\migration\migration
 
 			// The needed permissions
 			array('permission.add', array('a_notes')),
-
-			// Join permissions to administrators
+			array('permission.add', array('u_notes', 1, 0)),
 			array('permission.permission_set', array('ROLE_ADMIN_FULL', 'a_notes')),
+			array('permission.permission_set', array('ROLE_USER_FULL', 'u_notes')),
 		);
 	}
 			

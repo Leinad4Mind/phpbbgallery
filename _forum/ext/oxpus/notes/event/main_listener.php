@@ -28,7 +28,7 @@ class main_listener implements EventSubscriberInterface
 			'core.page_header'						=> 'add_page_header_links',
 			'core.viewonline_overwrite_location'	=> 'add_viewonline',
 			'core.delete_user_after'				=> 'delete_user',
-			'core.permissions'						=> 'add_permission_cat',
+			'core.permissions'						=> 'add_permission',
 		);
 	}
 
@@ -126,7 +126,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function add_page_header_links($event)
 	{
-		if ($this->user->data['is_registered'])
+		if ($this->auth->acl_get('u_notes'))
 		{
 			$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
 			$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
@@ -194,7 +194,7 @@ class main_listener implements EventSubscriberInterface
 		$this->db->sql_query($sql);
 	}
 
-	public function add_permission_cat($event)
+	public function add_permission($event)
 	{
 		$perm_cat = $event['categories'];
 		$perm_cat['notes'] = 'ACP_NOTES';
@@ -202,6 +202,7 @@ class main_listener implements EventSubscriberInterface
 
 		$permission = $event['permissions'];
 		$permission['a_notes'] = array('lang' => 'ACL_A_NOTES', 'cat' => 'notes');
+		$permission['u_notes'] = array('lang' => 'ACL_U_NOTES', 'cat' => 'misc');
 		$event['permissions'] = $permission;
 	}
 }

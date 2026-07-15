@@ -9,7 +9,7 @@
 */
 
 /**
-* Language pack for Extension permissions [German]
+* Language pack for Extension permissions [English]
 */
 
 /**
@@ -22,11 +22,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Permissions
-$lang = array_merge($lang, array(
-	'ACP_NOTES'		=> 'Notizen',
-	'ACL_A_NOTES'	=> 'Kann die persönlichen Notizen einstellen',
-));
+$lang = array_merge($lang, [
+	'ACP_NOTES'		=> 'Notas',
+
+	'ACL_A_NOTES'	=> 'Pode configurar notas pessoais',
+	'ACL_U_NOTES'	=> 'Pode usar notas pessoais',
+]);
