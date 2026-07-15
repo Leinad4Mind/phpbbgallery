@@ -22,7 +22,7 @@ class m3_initial_permission extends \phpbb\db\migration\migration
 	* @static
 	* @access public
 	*/
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\pages\migrations\v10x\m1_initial_schema');
 	}
@@ -40,8 +40,14 @@ class m3_initial_permission extends \phpbb\db\migration\migration
 			array('permission.add', array('a_pages', true)),
 
 			// Set permissions
-			array('permission.permission_set', array('ROLE_ADMIN_FULL', 'a_pages')),
-			array('permission.permission_set', array('ROLE_ADMIN_STANDARD', 'a_pages')),
+			array('if', array(
+				array('permission.role_exists', array('ROLE_ADMIN_FULL')),
+				array('permission.permission_set', array('ROLE_ADMIN_FULL', 'a_pages')),
+			)),
+			array('if', array(
+				array('permission.role_exists', array('ROLE_ADMIN_STANDARD')),
+				array('permission.permission_set', array('ROLE_ADMIN_STANDARD', 'a_pages')),
+			)),
 		);
 	}
 }
