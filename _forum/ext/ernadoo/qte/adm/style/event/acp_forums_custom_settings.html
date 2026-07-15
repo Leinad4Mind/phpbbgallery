@@ -1,0 +1,23 @@
+<fieldset>
+	<legend>{L_QTE_TOPICS_ATTR_SETTINGS}</legend>
+	<!-- IF .attributes -->
+	<dl>
+		<dt><label for="default_attr">{L_QTE_DEFAULT_ATTR}{L_COLON}</label><br /><span>{L_QTE_DEFAULT_ATTR_EXPLAIN}</span></dt>
+		<dd><select name="default_attr">
+			<option style="padding-left:0px; font-weight:bold;" value="0">{L_QTE_ATTRIBUTE_DESIRED}</option>
+			<!-- BEGIN attributes -->
+			<option value="{attributes.QTE_ID}"{attributes.QTE_COLOUR}<!-- IF attributes.IS_SELECTED --> selected="selected"<!-- ENDIF -->>{attributes.QTE_NAME}<!-- IF attributes.S_QTE_DESC --> [{attributes.QTE_DESC}]<!-- ENDIF --></option>
+			<!-- END attributes -->
+		</select></dd>
+	</dl>
+	<!-- ENDIF -->
+	<dl>
+		<dt><label for="from_attr">{L_QTE_COPY_PERMISSIONS}{L_COLON}</label><br /><span>{L_QTE_COPY_PERMISSIONS_EXPLAIN}</span></dt>
+		<dd><select id="from_attr" name="from_attr"><option value="0">{L_NO_PERMISSIONS}</option>{S_FORUM_OPTIONS}</select></dd>
+	</dl>
+	<dl>
+		<dt><label for="force_attr">{L_QTE_FORCE_USERS}{L_COLON}</label><br /><span>{L_QTE_FORCE_USERS_EXPLAIN}</span></dt>
+		<dd><label><input type="radio" class="radio" name="force_attr" value="1"<!-- IF S_FORCE_ATTR --> id="force_attr" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="force_attr" value="0"<!-- IF not S_FORCE_ATTR --> id="force_attr" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+	</dl>
+</fieldset>

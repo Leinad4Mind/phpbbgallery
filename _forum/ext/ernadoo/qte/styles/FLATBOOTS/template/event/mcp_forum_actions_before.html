@@ -1,0 +1,15 @@
+<!-- IF S_QTE_SELECT -->
+<fieldset class="display-actions">
+	<select class="selectpicker" data-container="body" name="attr_id" id="attribute">
+		<option style="padding-left:0px; font-weight:bold;" value="0">{L_QTE_ATTRIBUTE_SELECT}</option>
+		<!-- IF S_QTE_REMOVE --><option value="-1" style="font-weight:bold;">{L_QTE_ATTRIBUTE_REMOVE}</option><!-- ENDIF -->
+		<!-- BEGIN attributes -->
+		<option value="{attributes.QTE_ID}"{attributes.QTE_COLOUR}>{attributes.QTE_NAME}<!-- IF attributes.S_QTE_DESC --> [{attributes.QTE_DESC}]<!-- ENDIF --></option>
+		<!-- END attributes -->
+	</select>
+	<span class="input-group-btn">
+	<button class="btn btn-default" name="attribute" type="submit" value="{L_SUBMIT}">{L_SUBMIT}</button>
+	</span>
+</fieldset>
+<div class="space10"></div>
+<!-- ENDIF -->

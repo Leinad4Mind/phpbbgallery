@@ -1,0 +1,9 @@
+<!-- IF S_IN_SEARCH and .attributes -->
+<label class="control-label" for="attribute">{L_QTE_ATTRIBUTE_SEARCH}{L_COLON}</label><span class="help-block">{L_QTE_ATTRIBUTE_SEARCH_EXPLAIN}</span>
+		<select class="selectpicker" data-container="body" size="8" name="attr_id" id="attribute">
+			<option style="padding-left:0px; font-weight:bold;" value="0">{L_QTE_ATTRIBUTE_SELECT}</option>
+			<!-- BEGIN attributes -->
+			<option value="{attributes.QTE_ID}"{attributes.QTE_COLOUR}>{attributes.QTE_NAME}<!-- IF attributes.S_QTE_DESC --> [{attributes.QTE_DESC}]<!-- ENDIF --></option>
+			<!-- END attributes -->
+		</select>
+<!-- ENDIF -->

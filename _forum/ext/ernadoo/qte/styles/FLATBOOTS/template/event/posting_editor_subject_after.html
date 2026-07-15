@@ -1,0 +1,13 @@
+<!-- IF S_QTE_SELECT -->
+	<label for="attribute">{L_QTE_ATTRIBUTE}{L_COLON}</label>
+	<select class="selectpicker" data-width="auto" data-container="body" data-style="btn btn-default form-control" name="attr_id" id="attribute">
+		<!-- IF not S_QTE_EMPTY -->
+		<option value="-2" style="font-weight:bold;"<!-- IF S_QTE_KEEP --> selected="selected"<!-- ENDIF -->>{L_QTE_ATTRIBUTE_KEEP}</option>
+		<!-- IF S_QTE_REMOVE --><option value="-1"<!-- IF S_QTE_SELECTED --> selected="selected"<!-- ENDIF -->>{L_QTE_ATTRIBUTE_REMOVE}</option><!-- ENDIF -->
+		<!-- ENDIF -->
+		<!-- IF S_QTE_EMPTY --><option value="0"<!-- IF S_QTE_SELECTED --> selected="selected"<!-- ENDIF --> style="font-weight:bold;<!-- IF S_QTE_EMPTY --> color:#808080;<!-- ENDIF -->">{L_QTE_ATTRIBUTE_ADD}</option><!-- ENDIF -->
+		<!-- BEGIN attributes -->
+		<option value="{attributes.QTE_ID}"{attributes.QTE_COLOUR}<!-- IF attributes.IS_SELECTED --> selected="selected"<!-- ENDIF -->>{attributes.QTE_NAME}<!-- IF attributes.S_QTE_DESC --> [{attributes.QTE_DESC}]<!-- ENDIF --></option>
+		<!-- END attributes -->
+	 </select>
+<!-- ENDIF -->
