@@ -97,17 +97,8 @@ class admin_listener implements EventSubscriberInterface
 	{
 		global $config, $db;
 		$forum_excluded_aray = json_decode($config['fltl_excluded_forums'], true);
-		$forum_options = '';
-		
-		$sql = 'SELECT forum_id, forum_name FROM ' . FORUMS_TABLE . ' WHERE forum_type = 1 ORDER BY forum_name';
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) 
-		{
-			$forum_options .= '<option value="' . $row['forum_id'] . '"' . 
-								((in_array($row['forum_id'], $forum_excluded_aray)) ? ' selected="selected"' : '') . '>' . $row['forum_name'] . '</option>';
-		}
-		return '<select multiple style="width:140px;" size="10" name="fltl_excluded_forums[]" id="fltl_excluded_forums" title="Exclude forums">' . $forum_options . '</select>';
-
+		$forum_list = make_forum_select($forum_excluded_aray, false, true, true);
+		return '<select multiple style="width:140px;" size="10" name="fltl_excluded_forums[]" id="fltl_excluded_forums" title="Exclude forums">' . $forum_list . '</select>';
 	}
 
 }

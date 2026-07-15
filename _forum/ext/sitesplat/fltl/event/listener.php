@@ -24,10 +24,11 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $template;
 	protected $phpbb_container;
+	protected $dispatcher;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, Container $phpbb_container, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\user $user, \phpbb\template\template $template, Container $phpbb_container, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->auth = $auth;
@@ -35,6 +36,7 @@ class listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->template = $template;
 		$this->phpbb_container = $phpbb_container;
+		$this->dispatcher = $dispatcher;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -56,34 +58,57 @@ class listener implements EventSubscriberInterface
 
 	public function fltl($event)
 	{
+		if (defined('IN_ERROR_HANDLER')) {
+			// disable FLTL when in trigger_error()
+			$this->template->assign_block_vars('fltl', []);
+			$this->template->assign_var('DISABLE_FLTL', true);
+			return;
+		}
+
 		$display = $this->phpbb_container->get('sitesplat.fltl.main');
+		$manager = $this->phpbb_container->get('ext.manager');
 		$rows = $display->handle('index.html');
 
 		foreach($rows['rows'] as $row)
 		{
 			strip_bbcode($row['post_text']);
 			// switch for 3.2 and the new parser
-			$row['post_text'] = (version_compare($this->config['version'], '3.2.*', '<')) ? censor_text($row['post_text']) : htmlentities(censor_text($row['post_text']));
+			//$row['post_text'] = (version_compare($this->config['version'], '3.2.*', '<')) ? censor_text($row['post_text']) : htmlentities(censor_text($row['post_text']));
+			$row['post_text'] = censor_text($row['post_text']);
 			$row['post_text'] = (utf8_strlen($row['post_text']) > 50) ? utf8_substr($row['post_text'], 0, 50) . '&#91;&hellip;&#93;' : $row['post_text'];
 	
+			/**
+			* Event to modify data before it is outputted
+			*
+			* @event sitesplat.fltl.controller_echo_before
+			* @var array	row	Array with current row data
+			* @since 2.1.13
+			*/
+			$vars = array(
+				'row',
+			);
+			extract($this->dispatcher->trigger_event('sitesplat.fltl.listener_echo_before', compact($vars)));
+
 			$this->template->assign_block_vars('fltl', array(
 				'U_TOPIC'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
 				'U_LAST_POST'		=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext, 'p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
 				'TOPIC_AUTHOR'		=> ($row['topic_' . $this->config['fltl_type'] . '_poster_colour']) ? 
 										('<strong style="color:#' . $row['topic_' . $this->config['fltl_type'] . '_poster_colour'] . '">' . $row['username'] . '</strong>') :
 										$row['username'],
-				'AVATAR'			=> ($row['user_avatar']) ? str_replace(['./../../','./../'], '/forum/', phpbb_get_user_avatar(
+				'AVATAR'			=> ($row['user_avatar']) ? phpbb_get_user_avatar(
 											array('avatar' => $row['user_avatar'], 
 											      'id' => $row['user_id'],
 												  'avatar_type' => $row['user_avatar_type'],
 												  'avatar_width' => $row['user_avatar_width'], 
-												  'avatar_height' => $row['user_avatar_height']))): '',
+												  'avatar_height' => $row['user_avatar_height'])): '',
 				'TOPIC_MONTH'       => $this->user->format_date($row['topic_last_post_time'], 'M', true),
 				'TOPIC_DAY'         => $this->user->format_date($row['topic_last_post_time'], 'd', true),
 				'TOPIC_YEAR_DIGIT'  => $this->user->format_date($row['topic_last_post_time'], 'Y', true),
 				'TOPIC_MONTH_DIGIT' => $this->user->format_date($row['topic_last_post_time'], 'm', true),
 				'TOPIC_DAY_DIGIT'   => $this->user->format_date($row['topic_last_post_time'], 'd', true),
+				'TOPIC_ANSWERED'	=> ($manager->is_enabled('kinerity/bestanswer')) && $row['answer_post_id'] ? true : false,
 				'TOPIC_TITLE'		=> censor_text($row['topic_title']),
+				'TOPIC_REPLIES'		=> $row['topic_posts_approved'],
 				'FP_EXCERPT'		=> $row['post_text'],
 			));
 		}

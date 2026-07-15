@@ -37,7 +37,7 @@ class m1_initial_config extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('fltl_limit', 4)),
+			array('config.add', array('fltl_limit', 0)),
 			array('config.add', array('fltl_time', 20)),
 			array('config.add', array('fltl_type', 'last')),
 			array('config.add', array('fltl_excluded_forums', '[]')),
