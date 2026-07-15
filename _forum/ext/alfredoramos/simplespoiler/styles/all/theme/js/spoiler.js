@@ -1,61 +1,65 @@
 /**
- * Spoiler jQuery
- * https://github.com/AlfredoRamos/snippets/tree/master/javascript/spoiler
+ * Simple Spoiler extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
- * @version 0.4.0
- * @copyright 2016 Alfredo Ramos
+ * @copyright 2017 Alfredo Ramos
  * @license GPL-2.0-only
  */
-(function($) {
+
+(function() {
 	'use strict';
 
-	// Ensure settings exist
-	if (typeof window.$spoiler === 'undefined') {
-		var $spoiler = {};
-	} else {
-		$spoiler = window.$spoiler;
+	// Polyfill for Element.matches()
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
+	if (!Element.prototype.matches) {
+		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 	}
 
-	// Overwrite settings
-	$spoiler = $.extend({
-		lang: {
-			show: 'Show',
-			hide: 'Hide'
-		},
-		selector: '.spoiler'
-	}, $spoiler);
+	// Polyfill for Element.closest()
+	// https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
+	if (!Element.prototype.closest) {
+		Element.prototype.closest = function(s) {
+			let el = this;
 
-	// Event delegation
-	$('body').on('click', $spoiler.selector + '-trigger', function() {
-		var $elements = {};
+			do {
+				if (el.matches(s)) {
+					return el;
+				}
 
-		// Spoiler elements relative to the object that triggered the event
-		$elements.wrapper = $(this).parents($spoiler.selector).first();
-		$elements.status = $elements.wrapper
-			.find($spoiler.selector + '-status').first();
-		$elements.body = $elements.wrapper
-			.children($spoiler.selector + '-body').first();
+				el = el.parentElement || el.parentNode;
+			} while (el !== null && el.nodeType === 1);
 
-		// Toggle spoiler class
-		$elements.wrapper.toggleClass($spoiler.selector.replace('.','') + '-show');
+			return null;
+		};
+	}
 
-		// Toggle status icon
-		$elements.status.children('.fa').first().toggleClass(function() {
-			var $iconClass = 'fa-eye';
-			debugger
+	// Toggle status icon
+	document.body.addEventListener('click', function(e) {
+		// Trigger event on the spoiler header
+		if (!e.target.closest('.spoiler-header')) {
+			return;
+		}
 
-			if ($elements.body.is(':visible')) {
-				$(this).removeClass($iconClass);
-				return $iconClass + '-slash';
-			} else {
-				$(this).removeClass($iconClass + '-slash');
-				return $iconClass;
-			}
-		});
+		// Generate elements
+		let elements = {
+			container: e.target.closest('.spoiler')
+		};
 
-		// Toggle status text
-		$elements.status.children('span').first().text(
-			$elements.body.is(':visible') ? $spoiler.lang.hide : $spoiler.lang.show
-		);
+		if (!elements.container) {
+			return;
+		}
+
+		// Status icon
+		elements.icon = elements.container.querySelector('.spoiler-status > .icon');
+
+		if (!elements.icon) {
+			return;
+		}
+
+		// Check if spoiler is opened
+		let isOpen = elements.container.hasAttribute('open');
+
+		// Toggle FontAwesome icon
+		elements.icon.classList.toggle('fa-eye', isOpen);
+		elements.icon.classList.toggle('fa-eye-slash', !isOpen);
 	});
-})(jQuery);
+})();

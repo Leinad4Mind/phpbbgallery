@@ -38,9 +38,11 @@ class listener implements EventSubscriberInterface
 	{
 		return [
 			'core.user_setup' => 'user_setup',
+			'core.text_formatter_s9e_configure_after' => 'configure_spoiler',
+			'core.text_formatter_s9e_parse_after' => 'parser_check_message',
 			'core.help_manager_add_block_before' => 'bbcode_help',
 			'core.acp_board_config_edit_add' => 'acp_config_add',
-			'core.message_parser_check_message' => 'parser_check_message',
+			'core.posting_modify_template_vars' => 'posting_template_vars',
 			'alfredoramos.seometadata.clean_description_after' => 'clean_description_after'
 		];
 	}
@@ -60,6 +62,52 @@ class listener implements EventSubscriberInterface
 			'lang_set'	=> 'posting'
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	/**
+	 * Add BBCode.
+	 *
+	 * @param object $event
+	 *
+	 * @return void
+	 */
+	public function configure_spoiler($event)
+	{
+		$configurator = $event['configurator'];
+		$spoiler = $this->helper->bbcode_data();
+
+		// Spoiler data must not be empty
+		if (empty($spoiler) ||
+			empty($spoiler['bbcode_tag']) ||
+			empty($spoiler['bbcode_match']) ||
+			empty($spoiler['bbcode_tpl']))
+		{
+			return;
+		}
+
+		// Remove previous definitions
+		unset(
+			$configurator->BBCodes[$spoiler['bbcode_tag']],
+			$configurator->tags[$spoiler['bbcode_tag']]
+		);
+
+		// Create spoiler BBCode
+		$configurator->BBCodes->addCustom(
+			$spoiler['bbcode_match'],
+			$spoiler['bbcode_tpl']
+		);
+	}
+
+	/**
+	 * Remove spoilers that are nested too deep.
+	 *
+	 * @param object $event
+	 *
+	 * @return void
+	 */
+	public function parser_check_message($event)
+	{
+		$event['xml'] = $this->helper->remove_nested_spoilers($event['xml']);
 	}
 
 	/**
@@ -92,15 +140,15 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Remove spoilers that are nested too deep.
+	 * Add posting template variables.
 	 *
 	 * @param object $event
 	 *
 	 * @return void
 	 */
-	public function parser_check_message($event)
+	public function posting_template_vars($event)
 	{
-		$event['message'] = $this->helper->remove_nested_spoilers($event['message']);
+		$event['page_data'] = $this->helper->posting_template_vars($event['page_data']);
 	}
 
 	/**
