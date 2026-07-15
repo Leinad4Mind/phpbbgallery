@@ -2,9 +2,9 @@
 /*
 * media.php [Spanish [Es]]
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -39,8 +39,10 @@ $lang = array_merge($lang, array(
 	'FILES_DROP'			=> 'Suelte los archivos para subirlos',
 	'FILES_REMOVE_CONFIRM'	=> 'Está a punto de eliminar permanentemente los archivos seleccionados<br />¿Desea continuar?',
 	'FORMAT_INVALID'		=> 'Formato no válido',
+	'MAX_IMAGESIZE'			=> 'Las imágenes se redimensionarán a %d x %d píxeles.',
 	'MAX_FILESIZE'			=> 'Tamaño máximo de archivo: %s.',
 	'MEDIA_UPDATED'			=> 'Cambios guardados',
+	'OR'					=> 'o',
 	'PROCCESS'				=> 'Procesar',
 	'SELECT_ICON'			=> 'Seleccionar icono nuevo',
 	'SELECT_IMAGE'			=> 'Seleccionar imagen nueva',

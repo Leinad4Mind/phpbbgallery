@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.10 09/07/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class acp
 {
@@ -27,7 +21,7 @@ class acp
 	{
 		$this->template->assign_vars(array(
 			'U_ACTION'			=> $this->u_action,
-			'U_HELP'			=> 'https://www.canidev.com/docs.php?i=' . $canidev_id . '-v' . $current_version,
+			'U_HELP'			=> 'https://www.canidev.com/store/' . $canidev_id . '?rq=documentation&v=' . $current_version,
 		));
 		
 		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
@@ -98,19 +92,36 @@ class acp
 
 	/**
 	 * make_select
-	 * Build select input for blocks config
+	 * Build select input
 	*/
 	public function make_select($options, $key, $select_ids = '', $flags = self::SELECT_PARSE_LANG, $classname = '')
 	{
 		$in_group		= false;
-		$classname		= ($classname) ? ' class="' . $classname . '"' : '';
 		$string 		= '';
 		$flags 			= (int)$flags; // Make sure it is a number
+		$dispatcher 	= isset($this->dispatcher) ? $this->dispatcher : (isset($this->container) ? $this->container->get('dispatcher') : null);
 		
 		if(!is_array($select_ids) && !is_null($select_ids))
 		{
 			$select_ids = explode(',', $select_ids);
 		}
+
+		if($dispatcher !== null)
+		{
+			/*
+			* @event core.acp_make_select
+			* @var array	options			Options to show in the select "value => title"
+			* @var string	key				Key (name) for the select
+			* @var array	select_ids		Selected values
+			* @var int 		flags 			Config for the select
+			* @var string 	classname 		Additional class name
+			* @since 1.0.8
+			*/
+			$vars = array('options', 'key', 'select_ids', 'flags', 'classname');
+			extract($dispatcher->trigger_event('canidev.core.acp_make_select', compact($vars)));
+		}
+
+		$classname = ($classname) ? ' class="' . $classname . '"' : '';
 		
 		if($flags & self::SELECT_MULTIPLE)
 		{
@@ -143,7 +154,7 @@ class acp
 			$string .= '</optgroup>';
 		}
 		
-		if($key !== false)
+		if($key !== false || $flags & self::SELECT_MULTIPLE)
 		{
 			$string .= '</select>';
 		}

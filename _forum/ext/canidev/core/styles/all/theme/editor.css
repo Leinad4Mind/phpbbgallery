@@ -42,10 +42,6 @@ div.sceditor-grip {
 	z-index: 2;
 }
 
-.sceditor-dropdown {
-	padding: 5px;
-}
-
 .sceditor-container iframe,
 .sceditor-container textarea {
 	display: block;
@@ -144,16 +140,6 @@ body.sceditor-maximize {
 .sceditor-maximize div.sceditor-toolbar {
 	border-radius: 0;
 	background-clip: padding-box;
-}
-
-/**
-* Dropdown styleing
-*/
-div.sceditor-dropdown label {
-	display: block;
-	font-weight: bold;
-	color: #3c3c3c;
-	padding: 4px 0;
 }
 
 /**
@@ -402,12 +388,13 @@ html.sceditor-doc {
 
 body.sceditor-body {
 	background: #fff;
+	caret-color: #000;
 	font-size: 13px;
 	overflow: auto;
 	padding: 8px;
 }
 
-body.sceditor-body code {
+.sceditor-body code {
 	color: #2E8B57;
 	overflow: auto;
 	display: block;
@@ -424,7 +411,7 @@ body.sceditor-body code {
 	display: block;
 }
 
-body.sceditor-body code:before {
+.sceditor-body code:before {
 	border-bottom: 1px solid #ccc;
 	content: attr(data-title);
 	color: #000;
@@ -440,20 +427,20 @@ body.sceditor-body code:before {
 	text-align: left;
 }
 
-body.sceditor-body code[data-sceditor-html] {
+.sceditor-body code[data-sceditor-html] {
 	background: none;
 	border: 1px dotted #C9D2D8;
 }
 
-body.sceditor-body code[data-sceditor-html]:before {
+.sceditor-body code[data-sceditor-html]:before {
 	border-bottom-style: dotted;
 }
 
-body.sceditor-body blockquote {
+.sceditor-body blockquote {
 	position: relative;
 }
 
-body.sceditor-body blockquote:after {
+.sceditor-body blockquote:after {
     content: attr(data-time-formatted);
     position: absolute;
     font-size: 0.9em;
@@ -461,7 +448,7 @@ body.sceditor-body blockquote:after {
     top: 2px;
 }
 
-body.sceditor-body .uncited:before {
+.sceditor-body .uncited:before {
 	display: block;
 }
 
@@ -471,21 +458,66 @@ body.sceditor-body p {
 	margin-bottom: 0;
 }
 
-body.sceditor-body a:visited {
+.sceditor-body a:visited {
 	border-bottom-color: #5D8FBD;
 	color: #5D8FBD;
 }
 
-body.sceditor-body a:hover {
+.sceditor-body a:hover {
 	background-color: #D0E4F6;
 	color: #0D4473;
 }
 
-body.sceditor-body a {
+.sceditor-body a {
 	color: #368AD2;
 	text-decoration: none;
 	border-bottom: 1px solid #368AD2;
 	padding-bottom: 0;
+}
+
+.interactive-box {
+	border: 2px solid transparent;
+	display: inline-block;
+	line-height: 1px;
+	max-width: 100%;
+    overflow: hidden;
+    position: relative;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.interactive-box.active {
+	border-color: #8dbaff;
+}
+
+.interactive-box .media-controls {
+	background: #8dbaff;
+	display: none;
+	line-height: 24px;
+	padding: 0 3px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 3;
+}
+
+.interactive-box .media-controls > a,
+.interactive-box .media-controls > a:visited {
+	border: none;
+	color: #fff;
+	margin: 0 4px;
+	text-decoration: none;
+}
+
+.interactive-box .media-controls > a:hover {
+	background: none;
+	text-decoration: none;
+}
+
+.interactive-box.active .media-controls {
+	display: block;
 }
 
 /* Dark Themes
@@ -541,35 +573,32 @@ body.sceditor-body a {
 	background: #161616;
 }
 
-.dark-theme div.sceditor-dropdown,
-.dark-theme div.sceditor-dropdown label,
-.dark-theme div.sceditor-dropdown a,
-.dark-theme div.sceditor-dropdown a:link {
-	color: #ccc
+.dark-theme .sceditor-body {
+	caret-color: #fff;
 }
 
-.dark-theme body.sceditor-body code {
+.dark-theme .sceditor-body code {
 	background-color: #212121;
 	border-color: #404040;
 	color: #ccc;
 }
 
-.dark-theme body.sceditor-body code:before {
+.dark-theme .sceditor-body code:before {
 	border-color: #404040;
 	color: #e6e6e6;
 }
 
 @media print {
-	.dark-theme body.sceditor-body,
-	.dark-theme body.sceditor-body code,
-	.dark-theme body.sceditor-body code:before,
-	.dark-theme body.sceditor-body blockquote {
+	.dark-theme .sceditor-body,
+	.dark-theme .sceditor-body code,
+	.dark-theme .sceditor-body code:before,
+	.dark-theme .sceditor-body blockquote {
 		color: #000;
 	}
 	
-	.dark-theme body.sceditor-body code,
-	.dark-theme body.sceditor-body code:before,
-	.dark-theme body.sceditor-body blockquote {
+	.dark-theme .sceditor-body code,
+	.dark-theme .sceditor-body code:before,
+	.dark-theme .sceditor-body blockquote {
 		background: none !important;
 		border-color: #ccc;
 	}

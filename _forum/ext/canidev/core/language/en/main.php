@@ -2,9 +2,9 @@
 /*
 * main.php [English [En]]]
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.8 12/01/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,6 +22,8 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACCEPT'					=> 'Accept',
 	'ALL_GROUPS'				=> 'All groups',
+	'BATCH_ACTIONS'				=> 'Batch actions',
+	'CONFIGURE'					=> 'Configure',
 	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
 	'EDIT'						=> 'Edit',
 	'NO_ITEMS'					=> 'No items to show',

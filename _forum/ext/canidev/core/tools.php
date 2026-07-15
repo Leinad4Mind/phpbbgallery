@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.10 09/07/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class tools
 {
@@ -123,6 +117,11 @@ class tools
 			array_map(
 				function($key) use ($attributes)
 				{
+					if($attributes[$key] === null)
+					{
+						return '';
+					}
+
 					if(is_bool($attributes[$key]))
 					{
 						return ($attributes[$key]) ? $key : '';
@@ -133,5 +132,43 @@ class tools
 				array_keys($attributes)
 			)
 		);
+	}
+
+	public static function mkdir($path, $public_access = false)
+	{
+		$htaccess_str = '<IfModule mod_access_compat.c>
+			<Files *>
+				Order Allow,Deny
+				%1$s from All
+			</Files>
+		</IfModule>
+		<IfModule mod_authz_host.c>
+			<Files *>
+				Require all %2$s
+			</Files>
+		</IfModule>';
+
+		if(substr($path, -1) != '/')
+		{
+			$path .= '/';
+		}
+
+		if(!file_exists($path))
+		{
+			@mkdir($path);
+		}
+
+		try {
+			$htaccess_str = vsprintf($htaccess_str, ($public_access) ? array('Allow', 'granted') : array('Deny', 'denied'));
+			$htaccess_str = str_replace("\n\t\t", "\n", $htaccess_str);
+
+			file_put_contents($path . '.htaccess', $htaccess_str);
+			file_put_contents($path . 'index.htm', '');
+		}
+		catch(\Exception $e) {
+			return false;
+		}
+
+		return true;
 	}
 }

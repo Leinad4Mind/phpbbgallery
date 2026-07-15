@@ -1,19 +1,13 @@
 <?php
 /*
 * @package Ext Common Core
-* @version v1.0.4 01/02/2020
+* @version v1.0.10 09/07/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\core;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 /**
 * JSON class
@@ -34,7 +28,17 @@ class json_response
 	
 	public function add($data)
 	{
-		$this->cache = array_merge($this->cache, $data);
+		foreach($data as $key => $value)
+		{
+			if(is_array($value) && isset($this->cache[$key]) && is_array($this->cache[$key]))
+			{
+				$this->cache[$key] = array_merge($this->cache[$key], $value);
+				continue;
+			}
+
+			$this->cache[$key] = $value;
+		}
+
 		return $this;
 	}
 
