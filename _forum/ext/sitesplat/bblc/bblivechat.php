@@ -1,18 +1,159 @@
 <?php
 /**
- * BBlivechat Dark Mode Addon
- * @copyright (c) 2020 SiteSplat. All rights reserved.
+ * BBlivechat Giphy Addon
+ * @copyright (c) 2021 SiteSplat. All rights reserved.
  * @license Proprietary
  */
 
-namespace sitesplat\bblc_darkmode;
-class bblivechat { protected $css, $dkcookie; public function __construct() { global $cache, $db; $this->css = $cache->get('_bblc_darkmode'); if ($this->css === false) { $sql = 'SELECT config_value FROM ' . CONFIG_TEXT_TABLE . " WHERE config_name = 'bblc_darkmode'"; $result = $db->sql_query($sql); $this->css = (string) $db->sql_fetchfield('config_value'); $db->sql_freeresult($result); if (!$this->css) { $this->css = file_get_contents(__DIR__ . '/dark.css'); $db->sql_query('REPLACE INTO ' . CONFIG_TEXT_TABLE . " VALUES('bblc_darkmode', '" . $db->sql_escape($this->css) . "')"); } $cache->put('_bblc_darkmode', $this->css); } \sitesplat\add_filter('bblivechat_load', [$this, 'darkmode_cookie'], 1); \sitesplat\add_filter('bblivechat_css', [$this, 'darkmode_css'], 99); \sitesplat\add_filter('bblivechat_js', [$this, 'darkmode_js'], 99); \sitesplat\add_filter('bblivechat_content_classes', [$this, 'darkmode_class'], 99); \sitesplat\add_filter('bblivechat_profile_menu', [$this, 'darkmode_menu'], 99); \sitesplat\add_filter('bblc_handle_acp_settings', [$this, 'darkmode_handle'], 1); \sitesplat\add_filter('bblc_display_acp_settings', [$this, 'darkmode_form'], 1); } public function darkmode_cookie($css) { global $request; $this->dkcookie = $request->variable('bblc_darkmode', '', false, \phpbb\request\request_interface::COOKIE); } public function darkmode_css($css) { if ($this->dkcookie) { return $css . $this->css; } } public function darkmode_js($js) { return $js . <<<EOT
-function darktoggle() { var content = document.getElementById('content');  if (content.classList.contains('dark-theme')) { var darkmode = ''; } else { var darkmode = 'dark-theme'; }  document.cookie = 'bblc_darkmode=' + darkmode + '; expires=Tue, 1 Jan 2030 00:00:00 GMT;'; setTimeout("window.location.reload()", 750); }
+namespace sitesplat\bblc_giphy;
+
+class bblivechat
+{
+	public function __construct()
+	{
+		global $config;
+
+		\sitesplat\add_filter('bblc_handle_acp_settings', [$this, 'giphy_handle'], 1);
+		\sitesplat\add_filter('bblc_display_acp_settings', [$this, 'giphy_form'], 5);
+
+		if ($config['bblc_giphy']) {
+			\sitesplat\add_filter('bblivechat_js', [$this, 'add_giphy_js'], 1);
+			\sitesplat\add_filter('bblivechat_picker_box', [$this, 'add_giphy_box'], 1);
+			\sitesplat\add_filter('bblivechat_picker_btn', [$this, 'add_giphy_btn'], 1);
+		}
+	}
+
+	public function giphy_handle($error)
+	{
+		global $config, $request;
+
+		$config->set('bblc_giphy', $request->variable('bblc_giphy', ''));
+		return $error;
+	}
+
+	public function giphy_form($html)
+	{
+		global $config, $language;
+
+		$giphylabel = $language->lang('GIPHY_LABEL') . $language->lang('COLON');
+		$giphyexplain = $language->lang('GIPHY_EXPLAIN');
+		$giphy = $config['bblc_giphy'];
+
+		return $html . <<<EOT
+		<dl>
+			<dt><label>$giphylabel</label><span>$giphyexplain</span></dt>
+			<dd>
+				<input type="text" size="32" maxlength="128" name="bblc_giphy" value="$giphy" />
+			</dd>
+		</dl>
+		<hr />
 EOT;
-} public function darkmode_class($classes) { if ($this->dkcookie) { $classes .= ' dark-theme'; } return $classes; } public function darkmode_menu($html) { $chk = ($this->dkcookie) ? 'checked' : ''; return $html . <<<EOT
-<li class="container-dark-toggle"> <input type="checkbox" class="chk" id="chk" $chk name="theme" /> <label for="chk" class="toggle" onclick="darktoggle()"> <span class="star star1"></span> <span class="star star2"></span> <span class="star star3"></span> <span class="star star4"></span> <span class="star star5"></span> <span class="star star6"></span> <span class="handler"> <span class="crater crater1"></span> <span class="crater crater2"></span> <span class="crater crater3"></span> </span> </label> </li>
+	}
+
+	public function add_giphy_js($js)
+	{
+		global $config;
+
+		$giphy = $config['bblc_giphy'];
+		return $js . <<<EOT
+var mirrorText = document.querySelector('.mirror-text');
+var form = document.querySelector('.search-form');
+var field = document.querySelector('.search-field');
+var giphyResult = document.querySelector('.giphyResult');
+var clearSearch = document.querySelector('.search__clear');
+var url = 'https://api.giphy.com/v1/gifs/search?';
+var giphy_api = '$giphy';
+
+function getQueryString() {
+	var query = url + 'q=' + encodeURI(field.value) + '&api_key=' + giphy_api + '&limit=40';
+	return query;
+}
+
+var result = {};
+form.addEventListener('submit', function (event) {
+	fetch(getQueryString()).then(function (response) {
+		return response.json();
+	}).then(function (response) {
+		renderImages(response.data);
+	});
+	event.preventDefault();
+	form.reset();
+});
+
+const insertGif = (bbCode, src) => {
+	let element = document.querySelector('#inputField');
+	if (element) {
+		element.value += `[\${bbCode}]\${src}[/\${bbCode}]`;
+	}
+};
+
+function renderImages(data) {
+	var oldImage = document.querySelectorAll('.search__result');
+	if (oldImage.length > 0) {
+		oldImage.forEach(function (image) {
+			image.remove();
+		});
+	}
+
+	data.forEach(function (value, key) {
+		var anchor = getElement('div', {class: 'result__link'});
+		setElement(anchor, '.giphyResult');
+		var image = getElement('img', {
+			src: value.images.fixed_width.url,
+			alt: value.title,
+			class: 'search__result',
+			onclick: `insertGif("img","\${value.images.fixed_width.url}")`
+		});
+		setElement(image, '.result__link');
+	});
+}
+function getElement(type, attributes) {
+	var element = document.createElement(type);
+	for (attribute in attributes) {
+		element.setAttribute(attribute, attributes[attribute]);
+	}
+	return element;
+}
+function setElement(element, target) {
+	document.querySelector(target).appendChild(element);
+}
 EOT;
-} public function darkmode_handle($error) { global $cache, $db, $language, $request; $css = htmlspecialchars_decode($request->variable('bblc_darkmode', '', true)); if (strlen($css) > 32000) { $error[] = sprintf($language->lang('SETTING_TOO_LONG'), $language->lang('BBLC_DARKMODE'), 32000); } else if (!$css) { $error[] = $language->lang('TOO_SHORT'); } else { $css = $db->sql_escape($css); $db->sql_query('REPLACE INTO ' . CONFIG_TEXT_TABLE . " VALUES('bblc_darkmode', '$css')"); $cache->destroy('_bblc_darkmode'); } return $error; } public function darkmode_form($html) { global $language; $csslabel = $language->lang('BBLC_DARKMODE') . $language->lang('COLON'); $cssexplain = $language->lang('BBLC_DARKMODE_EXPLAIN'); $css = $this->css; return $html . <<<EOT
-<dl> <dt style="width:auto;border-right:none"><label>$csslabel</label><span>$cssexplain</span></dt> <div style="clear:both;height:8px"></div> <textarea name="bblc_darkmode" rows="8" cols="80" style="width:90%">$css</textarea> </dl>
+	}
+
+	public function add_giphy_box($html)
+	{
+		global $bblivechat;
+
+		$gifsearch = $bblivechat->getLang('gifSearch');
+		return $html . <<<EOT
+<div class="colorPicker hidden" id="GifPicker">
+	<div class="arrow-top" style="display:none;"></div>
+	<div class="arrowWhite-top" style="display:none;"></div>
+	<div class="colorList">
+		<div class="header">
+			<div class="banner">
+				<form class="search-form">
+					<div class="search-form-items">
+					<input class="search-field" type="search" placeholder="$gifsearch" />
+					</div>
+				</form>
+			</div>
+			<div class="giphyResult"></div>
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+	<div class="arrow-bottom"></div>
+	<div class="arrowWhite-bottom"></div>
+</div>
 EOT;
-} }
+	}
+
+	public function add_giphy_btn($html)
+	{
+		return $html . <<<EOT
+<a class="chat-input__button" aria-label="" onclick='bblivechat.toggleElement("#GifPicker", "hidden")'>
+  <i class="chat-input__button-icon chat-input__button-icon--chat icon-moon-gif" aria-hidden="true"></i>
+</a>
+EOT;
+	}
+}
