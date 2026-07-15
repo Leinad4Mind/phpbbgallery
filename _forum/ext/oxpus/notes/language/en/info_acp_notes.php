@@ -22,9 +22,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
     'NOTES_NOTICE'				    => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
-));
+]);

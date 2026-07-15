@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Personal Notes",
 	"homepage": "https://phpbb3.oxpus.net",
-	"version": "3.1.4",
-	"time": "2020-02-02",
+	"version": "3.1.6",
+	"time": "2020-05-01",
 	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "Karsten Ude",
@@ -13,7 +13,7 @@
 			"role": "Lead Developer"
 		}],
 	"require": {
-		"php": ">=5.6.0"
+		"php": ">=7.0.0"
 	},
 	"extra": {
 		"display-name": "Personal Notes",

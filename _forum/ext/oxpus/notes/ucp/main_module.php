@@ -50,18 +50,18 @@ class main_module
 		{
 			$notes_popup = $request->variable('notes_popup', 0);
 
-			$sql = 'UPDATE ' . USERS_TABLE . ' set ' . $db->sql_build_array('UPDATE', array(
+			$sql = 'UPDATE ' . USERS_TABLE . ' set ' . $db->sql_build_array('UPDATE', [
 				'user_popup_notes'	=> $notes_popup,
-			)) . ' WHERE user_id = ' . (int) $user->data['user_id'];
+			]) . ' WHERE user_id = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
 
 			$message = $language->lang('NOTES_CONFIG_SUCCESSFULL', '<a href="' . $this->u_action . '" />', '</a>');
 			trigger_error($message);
 		}
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'NOTES_POPUP'	=> ($user->data['user_popup_notes']) ? true : false,
 			'U_FORM_ACTION'	=> $this->u_action,
-		));
+		]);
 	}
 }

@@ -1,8 +1,0 @@
-Subject: SUBJECT
-
-Olá, {USERNAME},
-
-TEXT
-
-
-{BOARD_EMAIL}

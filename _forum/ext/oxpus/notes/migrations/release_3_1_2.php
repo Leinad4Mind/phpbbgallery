@@ -21,14 +21,14 @@ class release_3_1_2 extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\oxpus\notes\migrations\release_3_1_1');
+		return ['\oxpus\notes\migrations\release_3_1_1'];
 	}
 
 	public function update_data()
 	{
-		return array(
+		return [
 			// Set the current version
-			array('config.update', array('notes_version', $this->ext_version)),
-		);
+			['config.update', ['notes_version', $this->ext_version]],
+		];
 	}
 }

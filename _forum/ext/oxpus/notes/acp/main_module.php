@@ -62,9 +62,9 @@ class main_module
 			trigger_error($message);
 		}
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'NOTES'			=> $config['notes'],
 			'U_FORM_ACTION'	=> $this->u_action,
-		));
+		]);
 	}
 }

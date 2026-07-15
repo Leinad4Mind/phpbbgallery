@@ -22,17 +22,18 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_NOTES'				=> 'Config notes',
 	'ACP_NOTES_SETTINGS'	=> 'Max. number of notes per user',
 	'UCP_NOTES'				=> 'Notes',
 	'UCP_NOTES_CONFIG'		=> 'Settings',
 
 	'NOTES'				=> 'Notes',
-	'NEW_NOTE'			=> 'Post a new note',
+	'NEW_NOTE'			=> 'New note',
+	'POST_NEW_NOTE'		=> 'Post a new note',
 	'POPUP_NOTES'		=> 'Display Personal Notes as Popup',
 	'FILTER_NOTES'		=> '<strong>Filter mode</strong><br />Press the search button again or change the sort method to display all notes.',
 	'NOTES_MEM'			=> 'Set a reminder',
@@ -47,4 +48,4 @@ $lang = array_merge($lang, array(
 	'NOTES_CONFIG_SUCCESSFULL'	=> 'The settings for the notes are saved successfully.<br /><br />%sClick here to return to the configuration%s',
 	'NOTES_DELETE_CONFIRM'		=> 'Are you sure you want to delete this note?',
 	'NOTES_LOG_CONFIG'			=> 'Change number of notes per user',
-));
+]);

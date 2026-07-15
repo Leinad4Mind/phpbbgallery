@@ -21,92 +21,94 @@ class release_3_0_0 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
-		return array(
+		return [
 			// Set the current version
-			array('config.add', array('notes_version', $this->ext_version)),
+			['config.add', ['notes_version', $this->ext_version]],
 
 			// Preset the config data
-			array('config.add', array('notes', '50')),
+			['config.add', ['notes', '50']],
 
-			array('module.add', array(
+			['module.add', [
  				'acp',
  				'ACP_CAT_DOT_MODS',
  				'ACP_NOTES'
- 			)),
-			array('module.add', array(
+			]],
+			['module.add', [
 				'acp',
 				'ACP_NOTES',
-				array(
+				[
 					'module_basename'	=> '\oxpus\notes\acp\main_module',
-					'modes'				=> array('main'),
-				),
-			)),
-			array('module.add', array(
+					'modes'				=> ['main'],
+				],
+			]],
+			['module.add', [
  				'ucp',
  				false,
  				'UCP_NOTES'
- 			)),
-			array('module.add', array(
+			]],
+			['module.add', [
 				'ucp',
 				'UCP_NOTES',
-				array(
+				[
 					'module_basename'	=> '\oxpus\notes\ucp\main_module',
-					'modes'				=> array('main'),
-				),
-			)),
+					'modes'				=> ['main'],
+				],
+			]],
 
 			// The needed permissions
-			array('permission.add', array('a_notes')),
-			array('permission.add', array('u_notes', 1, 0)),
-			array('permission.permission_set', array('ROLE_ADMIN_FULL', 'a_notes')),
-			array('permission.permission_set', array('ROLE_USER_FULL', 'u_notes')),
-		);
+			['permission.add', ['a_notes']],
+			['permission.add', ['u_notes', 1, 0]],
+
+			// Join permissions
+			['permission.permission_set', ['ROLE_ADMIN_FULL', 'a_notes']],
+			['permission.permission_set', ['ROLE_USER_FULL', 'u_notes']],
+		];
 	}
 			
 	public function update_schema()
 	{
-		return array(
-			'add_tables'	=> array(
-				$this->table_prefix . 'notes' => array(
-					'COLUMNS'		=> array(
-						'note_id'		=> array('UINT:11', 0,),
-						'note_user_id'	=> array('UINT:11', 0),
-						'note_subject'	=> array('STEXT_UNI', ''),
-						'note_text'		=> array('MTEXT_UNI', ''),
-						'note_time'		=> array('UINT:11', 0),
-						'note_uid'		=> array('CHAR:8', 1),
-						'note_bitfield'	=> array('VCHAR', ''),
-						'note_flags'	=> array('UINT:11', 0),
-						'note_mem'		=> array('UINT:11', 0),
-						'note_memx'		=> array('BOOL', 1),
-					),
+		return [
+			'add_tables'	=> [
+				$this->table_prefix . 'notes' => [
+					'COLUMNS'		=> [
+						'note_id'		=> ['UINT:11', 0],
+						'note_user_id'	=> ['UINT:11', 0],
+						'note_subject'	=> ['STEXT_UNI', ''],
+						'note_text'		=> ['MTEXT_UNI', ''],
+						'note_time'		=> ['UINT:11', 0],
+						'note_uid'		=> ['CHAR:8', 1],
+						'note_bitfield'	=> ['VCHAR', ''],
+						'note_flags'	=> ['UINT:11', 0],
+						'note_mem'		=> ['UINT:11', 0],
+						'note_memx'		=> ['BOOL', 1],
+					],
 					'PRIMARY_KEY'	=> 'note_id',
-					'KEYS'	=> array(
-						'note_user_id'	=> array('INDEX', 'note_user_id'),
-					),
-				),
-			),
+					'KEYS'	=> [
+						'note_user_id'	=> ['INDEX', 'note_user_id'],
+					],
+				],
+			],
 
-			'add_columns' => array(
-				$this->table_prefix . 'users'		=> array(
-					'user_popup_notes' => array('TINT:1', 0),
-				),
-			),
-		);
+			'add_columns' => [
+				$this->table_prefix . 'users'		=> [
+					'user_popup_notes' => ['TINT:1', 0],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return array(
-			'drop_tables' => array(
+		return [
+			'drop_tables' => [
 				$this->table_prefix . 'notes',
-			),
+			],
 
-			'drop_columns'	=> array(
-				$this->table_prefix . 'users' => array(
+			'drop_columns'	=> [
+				$this->table_prefix . 'users' => [
 					'user_popup_notes',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

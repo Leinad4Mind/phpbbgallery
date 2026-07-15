@@ -16,13 +16,13 @@ class main_info
 	{
 		global $config;
 
-		return array(
+		return [
 			'filename'	=> '\oxpus\notes\acp\main_info',
 			'title'		=> 'ACP_NOTES',
 			'version'	=> $config['notes_version'],
-			'modes'		=> array(
-				'main'		=> array('title' => 'ACP_NOTES', 'auth' => 'ext_oxpus/notes && acl_a_notes', 'cat' => array('NOTES')),
-			),
-		);
+			'modes'		=> [
+				'main'		=> ['title' => 'ACP_NOTES', 'auth' => 'ext_oxpus/notes && acl_a_notes', 'cat' => ['NOTES']],
+			],
+		];
 	}
 }
