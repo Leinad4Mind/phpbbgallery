@@ -1,0 +1,36 @@
+services:
+    avatar.driver.generator:
+        class: sitesplat\avatarsplus\avatar\driver\generator
+        arguments:
+            - '@config'
+            - '@upload_imagesize'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@path_helper'
+            - '@cache.driver'
+            - '@ext.manager'
+        calls:
+            - [set_name, [avatar.driver.generator]]
+        tags:
+            - { name: avatar.driver }
+
+    avatar.driver.material:
+        class: sitesplat\avatarsplus\avatar\driver\material
+        arguments:
+            - '@config'
+            - '@upload_imagesize'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@path_helper'
+            - '@cache.driver'
+        calls:
+            - [set_name, [avatar.driver.material]]
+        tags:
+            - { name: avatar.driver }
+
+    sitesplat.avatarsplus.controller:
+        class: sitesplat\avatarsplus\controller\main_controller
+        arguments:
+            - '@request'
+            - '@user'
+            - '%core.root_path%/ext/sitesplat/avatarsplus/'
