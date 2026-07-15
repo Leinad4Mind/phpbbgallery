@@ -1,0 +1,16 @@
+services:
+    sitesplat.snappy.listener:
+        class: sitesplat\snappy\event\listener
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@user'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@plupload'
+            - '@cache'
+            - '@request'
+            - '@ext.manager'
+        tags:
+            - { name: event.listener }

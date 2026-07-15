@@ -1,0 +1,80 @@
+/*icon moon fix*/
+.icon-moon-fx {
+    display: inline-block;
+    vertical-align: middle;
+	margin-bottom: 2px;
+}
+/*icon moon fix*/
+
+.btn-snappy {
+	-webkit-transition: opacity 0.2s ease-in-out 0s;
+	        transition: opacity 0.2s ease-in-out 0s;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+
+article:hover .btn-snappy {
+    display: inline-block;
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+.counter_right {
+    margin-right: 30px !important;
+}
+
+.btn-clr {
+     border: 0 none;
+    margin-right: 15px;
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+}
+.counter {
+    color: #999;
+}
+
+
+#qr_postform .row div {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+}
+
+.quick-reply {
+    position: relative;
+}
+
+#qr_postform .col-md-snappy {
+     background: #fcfcfc none repeat scroll 0 0;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    right: 1px;
+    top: 0;
+    width: 270px;
+    z-index: 1;
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 768px) {
+#qr_full_editor {
+    padding: 11px 12px;
+}
+}
+.fa-imgur {
+    display: inline-block;
+    height: auto;
+}
+.fa-imgur::before {
+    background: #85bf25;
+    border-radius: 50%;
+    color: #85bf25;
+     content: "";
+    display: inherit;
+    height: 16px;
+    vertical-align: top;
+    width: 16px;
+}
+/*snappy reply */
