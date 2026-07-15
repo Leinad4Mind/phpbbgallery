@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'BBREACTION_META_TASKS_5'				=> 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BBREACTION_META_TASKS_6'				=> 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.2.4',
+	'ACP_BBREACTION_VERSION'	            => '1.2.5',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',

@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows a board running SiteSplat's themes to provide a meaningful kick-ass post reaction system. Post reactions are an easy and fun way for your users to leave feedback on your topics.",
 	"homepage": "https://sitesplat.com",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"keywords": ["phpbb", "extension", "reaction", "topic", "premium", "sitesplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
