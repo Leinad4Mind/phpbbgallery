@@ -1,0 +1,11 @@
+<fieldset>
+	<legend>{{ lang('LIMIT_PER_FORUM') }}</legend>
+	<dl>
+		<dt><label for="forum_topic_limit">{{ lang('FORUM_MAX_TOPICS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_TP_EXPLAIN') }}</span></dt>
+		<dd><input type="text" id="forum_topic_limit" name="forum_topic_limit" value="{{ FORUM_TOPIC_LIMIT }}" size="5"></dd>
+	</dl>
+	<dl>
+		<dt><label for="forum_post_limit">{{ lang('FORUM_MAX_POSTS') ~ lang('COLON') }}</label><br><span>{{ lang('FORUM_MAX_TP_EXPLAIN') }}</span></dt>
+		<dd><input type="text" id="forum_post_limit" name="forum_post_limit" value="{{ FORUM_POST_LIMIT }}" size="5"></dd>
+	</dl>
+</fieldset>
