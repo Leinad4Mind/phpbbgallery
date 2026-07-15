@@ -57,13 +57,6 @@ class main_listener implements EventSubscriberInterface
 			'core.posting_modify_submission_errors'		=> 'posting_check_attribute',
 			'core.posting_modify_submit_post_before'	=> 'posting_submit_data',
 			'core.submit_post_modify_sql_data'			=> 'posting_save_attribute',
-
-			//Canidev
-			'block.recent_topics_topic_row'				=> 'viewforum_assign_topic_attributes',
-			'block.topic_index_row'						=> 'viewforum_assign_topic_attributes',
-
-			//Sitesplat
-			//'sitesplat.topics_title_row'				=> 'viewforum_assign_topic_attributes',
 		);
 	}
 
@@ -116,9 +109,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		$topic_attribute = $this->request->variable('attr_id', !empty($event['post_data']['topic_attr_id']) ? \ernadoo\qte\qte::KEEP : 0, false, \phpbb\request\request_interface::POST);
 
-		//$this->qte->attr_select($event['forum_id'], !empty($event['post_data']['topic_attr_user']) ? $event['post_data']['topic_attr_user'] : 0, (int) $topic_attribute, '', $event['mode']);
 		$this->qte->attr_select($event['forum_id'], !empty($event['post_data']['topic_poster']) ? $event['post_data']['topic_poster'] : 0, (int) $topic_attribute, '', $event['mode']);
-
 
 		if ($event['mode'] != 'post')
 		{

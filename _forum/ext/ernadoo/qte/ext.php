@@ -14,7 +14,7 @@ namespace ernadoo\qte;
 
 class ext extends \phpbb\extension\base
 {
-	const VERSION = '2.0.0-a2';
+	const VERSION = '2.0.0-RC1';
 
 	public function is_enableable()
 	{

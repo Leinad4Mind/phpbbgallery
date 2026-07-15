@@ -1,5 +1,5 @@
 <!-- IF S_QTE_SELECT -->
-	<label for="attribute">{L_QTE_ATTRIBUTE}{L_COLON}</label>
+<div class="<!-- IF S_EDIT_DRAFT -->col-md-12<!-- ELSE -->col-xs-8 col-lg-2<!-- ENDIF -->">
 	<select class="selectpicker" data-width="auto" data-container="body" data-style="btn btn-default form-control" name="attr_id" id="attribute">
 		<!-- IF not S_QTE_EMPTY -->
 		<option value="-2" style="font-weight:bold;"<!-- IF S_QTE_KEEP --> selected="selected"<!-- ENDIF -->>{L_QTE_ATTRIBUTE_KEEP}</option>
@@ -9,5 +9,6 @@
 		<!-- BEGIN attributes -->
 		<option value="{attributes.QTE_ID}"{attributes.QTE_COLOUR}<!-- IF attributes.IS_SELECTED --> selected="selected"<!-- ENDIF -->>{attributes.QTE_NAME}<!-- IF attributes.S_QTE_DESC --> [{attributes.QTE_DESC}]<!-- ENDIF --></option>
 		<!-- END attributes -->
-	 </select>
+	</select>
+</div>
 <!-- ENDIF -->
