@@ -24,8 +24,9 @@
 		},
 		"version-check": {
             "host": "sitesplat.com",
-            "directory": "/updatecheck/phpbb31/ext",
-            "filename": "pmnotification.json"
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "pmnotification.json",
+			"ssl": true
 		}
 	}
 }

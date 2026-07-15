@@ -24,4 +24,5 @@ $lang = array_merge($lang, array(
 		1	=> '1 unread PM',
 		2	=> '%d unread PMs',
 	),
+	'NO_PRIVATE_MESSAGES' => 'No Private Messages'
 ));

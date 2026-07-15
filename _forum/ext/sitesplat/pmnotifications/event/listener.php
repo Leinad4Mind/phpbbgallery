@@ -215,8 +215,14 @@ class listener implements EventSubscriberInterface
 	public function ucp_pm_view_folder_get_pm_from_template($event)
 	{
 		$start = $this->request->variable('start', 0);
+		$unread_only = $this->request->variable('unread_only', 0);
 		$from_author = $this->request->variable('from_author', 0);
-		$url_from_author = $sql_from_author = '';
+		$url_from_author = $sql_from_author = $url_unread_only = $sql_unread_only = '';
+		if ($unread_only)
+		{
+			$url_unread_only = '&amp;unread_only=1';
+			$sql_unread_only = ' AND t.pm_unread = 1';
+		}
 		if ($from_author)
 		{
 			$url_from_author = '&amp;from_author=' . $from_author;
@@ -238,25 +244,27 @@ class listener implements EventSubscriberInterface
 				FROM ' . PRIVMSGS_TO_TABLE . ' t, ' . PRIVMSGS_TABLE . ' p
 				WHERE t.folder_id = ' . (int) $event['folder_id'] . "
 					$sql_from_author
+					$sql_unread_only
 					AND t.user_id = {$event['user_id']}
 					AND t.msg_id = p.msg_id
 					AND p.message_time >= $min_post_time";
 			$result = $this->db->sql_query_limit($sql, 1);
-			$pm_count = (int) $this->db->sql_fetchfield('pm_count', $result);
+			$pm_count = (int) $this->db->sql_fetchfield('pm_count', false, $result);
 			$this->db->sql_freeresult($result);
 
 			$pm_count_changed = true;
 		}
-		else if ($sql_from_author)
+		else if ($sql_from_author || $sql_unread_only)
 		{
 			$sql = 'SELECT COUNT(t.msg_id) AS pm_count
 				FROM ' . PRIVMSGS_TO_TABLE . ' t, ' . PRIVMSGS_TABLE . ' p
 				WHERE t.folder_id = ' . (int) $event['folder_id'] . "
 					$sql_from_author
+					$sql_unread_only
 					AND t.user_id = {$event['user_id']}
 					AND t.msg_id = p.msg_id";
 			$result = $this->db->sql_query_limit($sql, 1);
-			$pm_count = (int) $this->db->sql_fetchfield('pm_count', $result);
+			$pm_count = (int) $this->db->sql_fetchfield('pm_count', false, $result);
 			$this->db->sql_freeresult($result);
 
 			$pm_count_changed = true;
@@ -264,7 +272,7 @@ class listener implements EventSubscriberInterface
 
 		if ($pm_count_changed)
 		{
-			$base_url = $event['base_url'] . $url_from_author;
+			$base_url = $event['base_url'] . $url_from_author . $url_unread_only;
 			$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $pm_count);
 			$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $pm_count, $this->config['topics_per_page'], $start);
 
@@ -277,13 +285,18 @@ class listener implements EventSubscriberInterface
 	public function ucp_pm_view_folder_get_pm_from_sql($event)
 	{
 		$from_author = $this->request->variable('from_author', 0);
+		$unread_only = $this->request->variable('unread_only', 0);
 
+		$sql_ary = $event['sql_ary'];
 		if ($from_author)
 		{
-			$sql_ary = $event['sql_ary'];
 			$sql_ary['WHERE'] .= ' AND p.author_id = ' . $from_author;
-			$event['sql_ary'] = $sql_ary;
 		}
+		if ($unread_only)
+		{
+			$sql_ary['WHERE'] .= ' AND t.pm_unread = 1';
+		}
+		$event['sql_ary'] = $sql_ary;
 	}
 
 	public function ucp_pm_view_messsage($event)
