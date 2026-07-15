@@ -4,7 +4,7 @@
  *
  * Hide Profile Fields To Groups. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2018-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

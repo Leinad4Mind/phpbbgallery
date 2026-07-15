@@ -4,7 +4,7 @@
  *
  * Hide Profile Fields To Groups. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2018-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -69,7 +69,7 @@ class profilefields_manager extends manager
 
 		// Display hidden/no_view fields for admin/moderator
 		$sql = 'SELECT l.*, f.*
-			FROM ' . $this->fields_lang_table  . ' l, ' . $this->fields_table . ' f
+			FROM ' . $this->fields_lang_table . ' l, ' . $this->fields_table . ' f
 			WHERE l.lang_id = ' . $this->user->get_iso_lang_id() . '
 				AND f.field_active = 1 ' .
 				((!$this->auth->acl_gets('a_', 'm_') && !$this->auth->acl_getf_global('m_')) ? ' AND f.field_hide = 0 ' : '') . '
@@ -96,7 +96,8 @@ class profilefields_manager extends manager
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		}
 
-		$groups = group_memberships(false, $this->user->data['user_id']);
+		$groups = group_memberships(false, $this->user->data['user_id']); //Any Group
+		//$groups = [$this->user->data['group_id']]; //Default Groups
 		$group_ids = array_column($groups, 'group_id');
 
 		return $this->get_profilefields($group_ids);
