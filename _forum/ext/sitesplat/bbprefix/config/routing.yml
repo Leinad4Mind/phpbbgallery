@@ -1,0 +1,3 @@
+bbprefix.handle_posting:
+    path: /bbprefix/{prefix_id}
+    defaults: { _controller: bbprefix.manager:parse_instance }

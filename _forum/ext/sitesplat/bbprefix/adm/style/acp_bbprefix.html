@@ -1,0 +1,158 @@
+<!-- IF S_ALLOW_CDN -->
+<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
+<!-- ELSE -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbprefix/vendor/font-awesome/css/font-awesome.min.css -->
+<!-- ENDIF -->
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/bbprefix/vendor/bootstrap/css/bootstrap_modified.css -->
+<!-- INCLUDECSS css/component.css -->
+<!-- INCLUDECSS css/bbprefix.css -->
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+	<h1>{L_ACP_BBPREFIX_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBPREFIX_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content md-content">
+			  <h3><i class="fa fa-tasks"></i> {L_ACP_BBPREFIX}</h3>
+			  <div class="modal-body">
+			   <div class="panel-body">
+				<div class="loader">{L_ACP_LOADING}</div>
+			   </div>
+			  <div class="modal-footer">
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+		
+<p>{L_TITLE_EXPLAIN}</p>
+
+<!-- IF S_LIST -->
+	<form method="post" action="{U_ACTION}">
+		<table class="cbTable" cellpadding="0" cellspacing="0">
+		<thead>
+		<tr class="cbHead">
+			<td style="width:5px;">#</td>
+			<td>{L_PREFIX_NAME}</td>
+			<td>{L_PREFIX_PARSED}</td>
+			<td style="width:25%;">{L_EX_FORUMS}</td>
+			<td style="width:25%;">{L_GROUPS}</td>
+			<td>{L_USED}</td>
+			<td>{L_ACTION}</td>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN prefix -->
+    		<tr class="<!-- IF prefix.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->">
+				<td>{prefix.NR}</td>
+				<td>{prefix.NAME}</td>
+				<td>{prefix.PREFIX}</td>
+				<td class="row">{prefix.FORUMS}</td>
+				<td class="row">{prefix.GROUPS}</td>
+				<td>{prefix.USED}</td>
+				<td style="text-align: center; width: 50px;"><a href="{prefix.U_EDIT}" title="{L_EDIT}" style="margin:0 10%"><i class="fa fa-pencil"></i></a> <a href="{prefix.U_DELETE}" title="{L_DELETE}"><i class="fa fa-trash-o"></i></a></td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr class="cbOddLine">
+				<td colspan="6">{L_ACP_NO_ITEMS}</td>
+			</tr>
+		<!-- END prefix -->
+    <tr class="cbNew">
+			<td></td>
+            <td><input type="text" id="prefix_name" name="prefix_name" maxlength="255" value="" style="width:95%" /></td>
+            <td><input type="text" id="prefix_prefix" name="prefix_prefix" maxlength="255" value=""  style="width:95%"/></td>
+            <td style="text-align:left;" colspan="3"><input type="hidden" name="action" value="add" /><input class="button1" type="submit" id="submitadd" name="submitadd" value="{L_ADD_PREFIX}" /></td>
+            <td>
+                <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF --> 
+                <!-- IF NEXTURL --><a href="{NEXTURL}"><img border="0" title="{L_PAGEFURTHER}" src="{EXT_PATH}adm/style/css/images/next.png"  width="13px" /></a><!-- ENDIF -->
+            </td>
+        </tr>
+        </tbody>
+        </table>
+ 	</form>
+<!-- ELSE -->
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_bbprefix" method="post" action="{U_ACTION}">
+		<fieldset>
+			<legend>{LEGEND}</legend>
+			<dl>
+				<dt>
+					<label for="prefix_name">{L_BBPREFIX_NAME}:</label>
+						<br /><span>{L_BBPREFIX_NAME_EXPLAIN}</span>
+				</dt>
+				<dd><input type="text" id="prefix_name" name="prefix_name" size="60" maxlength="255" value="{PREFIX_NAME}" /></dd>
+			</dl>
+            
+			<dl>
+				<dt>
+					<label for="prefix_prefix">{L_BBPREFIX_TITLE}:</label>
+						<br /><span>{L_BBPREFIX_TITLE_EXPLAIN}</span>
+				</dt>
+				<dd><input type="text" id="prefix_prefix" name="prefix_prefix" size="60" maxlength="255" value="{PREFIX_PREFIX}" /></dd>
+			</dl>
+            
+			<dl>
+				<dt>
+					<label for="prefix_on_index">{L_BBPREFIX_ON_INDEX}:</label>
+						<br /><span>{L_BBPREFIX_ON_INDEX_EXPLAIN}</span>
+				</dt>
+				<dd><label><input type="radio" class="radio" name="prefix_on_index" value="1"<!-- IF BBPREFIX_ON_INDEX --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
+                    <label><input type="radio" class="radio" name="prefix_on_index" value="0"<!-- IF not BBPREFIX_ON_INDEX --> checked="checked" <!-- ENDIF --> /> {L_NO}</label>
+                </dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="prefix_forums">{L_BBPREFIX_FORUMS}:</label>
+						<br /><span>{L_BBPREFIX_FORUMS_EXPLAIN}</span>
+				</dt>
+				<dd><select id="prefix_forums" name="prefix_forums[]" size="10" multiple>{PREFIX_FORUMS}</select></dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="prefix_groups">{L_BBPREFIX_GROUPS}:</label>
+						<br /><span>{L_BBPREFIX_GROUPS_EXPLAIN}</span>
+				</dt>
+				<dd>                
+                <select id="prefix_groups" name="prefix_groups[]" size="5" multiple>
+               <option value="0">-----</option>
+                <!-- BEGIN usergroups -->
+                <option value="{usergroups.GROUP_ID}"{usergroups.SELECTED}>{usergroups.GROUP_NAME}</option>
+                <!-- END usergroups -->
+                </select>
+                </dd>
+			</dl>
+
+			<p class="submit-buttons">
+            <!-- IF ACTION --><input type="hidden" name="action" value="{ACTION}" /><!-- ENDIF -->
+				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			</p>
+			{S_FORM_TOKEN}
+		</fieldset>
+	</form>	
+<!-- ENDIF -->
+
+   <div class="legend-box">
+	<h1>{L_TITLE_EXPLAIN_TIPS}</h1>
+	<p>{L_TITLE_EXPLAIN_TIPS_EXPLAIN}</p>
+	<p>{L_TITLE_EXPLAIN_TIPS_STAR}</p>
+     <p>{L_BBPREFIX_MANAGE_EXONE}</p>
+      <p>{L_BBPREFIX_MANAGE_EXTWO}</p>
+	  <p>{L_BBPREFIX_MANAGE_EXTHREE}</p>
+	<div>  
+
+<!-- INCLUDEJS js/bbprefix.js -->
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbprefix/vendor/bootstrap/js/bootstrap.min.js -->
+<div class="md-overlay"></div><!-- the overlay element -->
+<!-- INCLUDE overall_footer.html -->
