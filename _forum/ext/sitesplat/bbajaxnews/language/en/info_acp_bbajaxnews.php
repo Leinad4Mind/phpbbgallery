@@ -87,6 +87,6 @@ $lang = array_merge($lang, array(
 
 	'LOG_BBAJAXNEWS_PUBLISH_FAIL'	=> '<strong>BBAjaxNews publishing of “%s” type failed</strong><br />» %s',
 	
-	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	            => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBAJAXNEWS_NOTICE'	            => '<div class="phpinfo"><p>The settings for this extension are under the "Extensions" tab.</p></div>',
 ));

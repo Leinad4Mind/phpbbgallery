@@ -26,7 +26,7 @@ class bbdonation extends base
 		$this->db->sql_freeresult($result);
 
 		return [
-			get_username_string('full', $data['user_id'], $user['username'], $user['user_colour']),
+			get_username_string('full', $data['user_id'], $user['username'], $user['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
 		];
 	}
 
