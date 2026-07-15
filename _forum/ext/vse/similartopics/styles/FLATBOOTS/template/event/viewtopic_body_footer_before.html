@@ -45,7 +45,7 @@
 				{% EVENT topiclist_row_topic_title_after %}
 				<br />
 				{% if similar.ATTACH_ICON_IMG %}<i class="fa fa-paperclip fa-flip-horizontal" title="{{ lang('ATTACH_FORUM') }}"></i>{% endif %}
-				{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ similar.TOPIC_AUTHOR_FULL }}&nbsp;
+				{{ lang('POST_BY_AUTHOR') }}&nbsp;{% EVENT search_results_last_post_author_username_prepend %}{{ similar.TOPIC_AUTHOR_FULL }}&nbsp;
 				<small>&#45;&nbsp;{{ similar.FIRST_POST_TIME }}&nbsp;&nbsp;&#45;&nbsp;{{ lang('IN') ~ lang('COLON') }}&nbsp;<a href="{{ similar.U_VIEW_FORUM }}">{{ similar.FORUM_TITLE }}</a></small>
 				{% EVENT topiclist_row_append %}
 				</div>
@@ -57,7 +57,7 @@
 			</td>
 			<td> 
 			 <span class="last-wrapper text-overflow">
-				{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ similar.LAST_POST_AUTHOR_FULL }}
+				{{ lang('POST_BY_AUTHOR') }}&nbsp;{% EVENT search_results_last_post_author_username_prepend %}{{ similar.LAST_POST_AUTHOR_FULL }}
 				{% if not S_IS_BOT %}<a title="{{ lang('FORUMLIST_LASTPOST') }}" href="{{ similar.U_LAST_POST }}"><i class="mobile-post fa fa-sign-out"></i></a>{% endif %}
 				<br /><small>{{ similar.LAST_POST_TIME }}</small>
 			 </span>
