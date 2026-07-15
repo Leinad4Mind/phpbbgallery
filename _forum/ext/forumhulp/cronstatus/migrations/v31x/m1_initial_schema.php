@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package cronstatus
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package       Cron Status
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
+ * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 namespace forumhulp\cronstatus\migrations\v31x;
 
@@ -75,7 +75,7 @@ class m1_initial_schema extends container_aware_migration
 	{
 		$replacements = array(
 			'files' => array(
-				0 => '/cron.' . $this->php_ext,
+				0 => '/phpbb/cron/event/cron_runner_listener.' . $this->php_ext,
 				1 => '/phpbb/lock/db.' . $this->php_ext,
 				2 => '/includes/functions.' . $this->php_ext
 				),
@@ -88,7 +88,7 @@ class m1_initial_schema extends container_aware_migration
 					1 => '$this->unique_id = time() . \' \' . unique_id();',
 					),
 				2 => array(
-					0 => 'if (!defined(\'IN_CRON\') && !$config[\'use_system_cron\'] && $run_cron && !$config[\'board_disable\'] && !$user->data[\'is_bot\'] && !$cache->get(\'_cron.lock_check\'))'
+					0 => 'if (!defined(\'IN_CRON\') && !$this->config[\'use_system_cron\'] && !$this->config[\'board_disable\'] && !$this->user->data[\'is_bot\'] && !$this->cache->get(\'_cron.lock_check\'))'
 					)
 				),
 			'replaces' => array(
@@ -100,7 +100,7 @@ class m1_initial_schema extends container_aware_migration
 					1 => '$this->unique_id = time() . \' \' . $task;',
 					),
 				2 => array(
-					0 => 'if (!defined(\'IN_CRON\') && !$config[\'use_system_cron\'] && $run_cron && !$config[\'board_disable\'] && ($config[\'cronstatus_run_always\'] || !$user->data[\'is_bot\']) && !$cache->get(\'_cron.lock_check\'))'
+					0 => 'if (!defined(\'IN_CRON\') && !$this->config[\'use_system_cron\'] && !$this->config[\'board_disable\'] && ($this->config[\'cronstatus_run_always\'] || !$this->user->data[\'is_bot\']) && !$this->cache->get(\'_cron.lock_check\'))'
 					)
 				)
 			);

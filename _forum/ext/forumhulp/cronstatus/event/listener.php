@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package cronstatus
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package       Cron Status
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
+ * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 namespace forumhulp\cronstatus\event;
 
@@ -51,6 +51,11 @@ class listener implements EventSubscriberInterface
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 	}
 
+	/**
+	 * Assign functions defined in this class to event listeners in the core
+	 *
+	 * @return array
+	 */
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -60,6 +65,7 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
+
 	public function cron_always()
 	{
 		$this->template->assign_vars(array(
@@ -68,6 +74,11 @@ class listener implements EventSubscriberInterface
 	}
 
 
+	/**
+	 * Displays Cron Status Notice if needed
+	 *
+	 * @param object $event The event object
+	 */
 	public function load_cronstatus($event)
 	{
 		$this->user->add_lang_ext('forumhulp/cronstatus', 'cronstatus');
@@ -92,7 +103,15 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	// array_search with partial matches
+	/**
+	 * Performs the search for a specific config_name and
+	 * returns the corresponding config_value or false if nothing was found
+	 * Works like array_search with partial matches
+	 *
+	 * @param string $needle   The config_name to search for
+	 * @param array  $haystack The array to search in
+	 * @return mixed
+	 */
 	public function array_find($needle, $haystack)
 	{
 		if (!is_array($haystack))
@@ -109,6 +128,11 @@ class listener implements EventSubscriberInterface
 		return false;
 	}
 
+	/**
+	 * Adds configuration strings for current extension to the ACP
+	 *
+	 * @param object $event The event object
+	 */
 	public function add_config($event)
 	{
 		if ($event['mode'] == 'settings')
@@ -130,6 +154,13 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	 * Returns configuration parameters for all available Cron tasks
+	 *
+	 * @param string $cronlock      The name of the latest executed Cron task
+	 * @param bool   $get_last_task Calculate the latest executed task only
+	 * @return array|true If $get_last_task is true, true is always returned instead of parameters
+	 */
 	public function get_cron_tasks(&$cronlock, $get_last_task = false)
 	{
 		$sql = "SELECT config_name, config_value FROM " . CONFIG_TABLE . " WHERE config_name LIKE " . (($get_last_task) ? "'%_last_gc' OR config_name = 'last_queue_run' ORDER BY config_value DESC" : "'%_gc' OR config_name = 'last_queue_run' OR config_name = 'queue_interval' OR config_name = 'autogroups_last_run' OR config_name = 'update_hashes_last_cron' OR config_name LIKE 'text_reparser%'");
@@ -149,27 +180,33 @@ class listener implements EventSubscriberInterface
 		$sql = 'SELECT prune_next, prune_freq * 86400 AS prune_time FROM ' . FORUMS_TABLE . ' WHERE enable_prune = 1 ORDER BY prune_next';
 		$result = $this->db->sql_query_limit($sql, 1);
 		$prune = $this->db->sql_fetchrow($result);
-		$rows[] = array(
-			"config_name"	=> "prune_forum_last_gc", // This is the time of the last Cron Job, not the time of pruned forums.
-			"config_value"	=> $prune['prune_next'] - $prune['prune_time']
-		);
-		$rows[] = array(
-			"config_name"	=> "prune_forum_gc",
-			"config_value"	=> $prune['prune_time']
-		);
+		if ($prune)
+		{
+			$rows[] = array(
+				"config_name"	=> "prune_forum_last_gc", // This is the time of the last Cron Job, not the time of pruned forums.
+				"config_value"	=> $prune['prune_next'] - $prune['prune_time']
+			);
+			$rows[] = array(
+				"config_name"	=> "prune_forum_gc",
+				"config_value"	=> $prune['prune_time']
+			);
+		}
 		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT prune_shadow_next, prune_shadow_freq * 86400 AS prune_shadow_time FROM ' . FORUMS_TABLE . ' WHERE enable_shadow_prune = 1 ORDER BY prune_shadow_next';
 		$result = $this->db->sql_query_limit($sql, 1);
 		$prune_shadow = $this->db->sql_fetchrow($result);
-		$rows[] = array(
-			"config_name"	=> "prune_shadow_topics_last_gc", // This is the time of the last Cron Job, not the time of pruned shadow topics.
-			"config_value"	=> $prune_shadow['prune_shadow_next'] - $prune_shadow['prune_shadow_time']
-		);
-		$rows[] = array(
-			"config_name"	=> "prune_shadow_topics_gc",
-			"config_value"	=> $prune_shadow['prune_shadow_time']
-		);
+		if ($prune_shadow)
+		{
+			$rows[] = array(
+				"config_name"	=> "prune_shadow_topics_last_gc", // This is the time of the last Cron Job, not the time of pruned shadow topics.
+				"config_value"	=> $prune_shadow['prune_shadow_next'] - $prune_shadow['prune_shadow_time']
+			);
+			$rows[] = array(
+				"config_name"	=> "prune_shadow_topics_gc",
+				"config_value"	=> $prune_shadow['prune_shadow_time']
+			);
+		}
 		$this->db->sql_freeresult($result);
 
 		$rows[] = array(
@@ -188,10 +225,10 @@ class listener implements EventSubscriberInterface
 		* Event to modify cron configuration variables before displaying cron information
 		*
 		* @event forumhulp.cronstatus.modify_cron_config
-		* @var	array	rows			Configuration array
-		* @var	string	cronlock		Name of the task that released cron lock (in last task date format)
-		* @var	string	last_task_date	Last task date of the task that released cron lock
-		* @since 3.1.0-RC3
+		 * @var array  rows           Configuration array
+		 * @var string cronlock       Name of the task that released cron lock (in last task date format)
+		 * @var string last_task_date Last task date of the task that released cron lock
+		 * @since 3.1.0-RC3
 		* @changed 3.1.2-RC Added last_task_date variable
 		*/
 		$vars = array('rows', 'cronlock', 'last_task_date');
@@ -200,9 +237,16 @@ class listener implements EventSubscriberInterface
 		return (!$get_last_task) ? $rows : true;
 	}
 
+	/**
+	 * Calculates the maximum value for last date of the cron task execution
+	 *
+	 * @param array  $array       Array of Cron configuration parameters
+	 * @param string $keyToSearch Array key containing last date value
+	 * @return array
+	 */
 	public function maxValueInArray($array, $keyToSearch)
 	{
-		$currentMax = null;
+		$currentName = $currentMax = null;
 		foreach ($array as $arr)
 		{
 			foreach ($arr as $key => $value)

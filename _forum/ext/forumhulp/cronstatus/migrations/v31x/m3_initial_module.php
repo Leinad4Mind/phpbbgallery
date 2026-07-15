@@ -1,11 +1,11 @@
 <?php
 /**
-*
-* @package cronstatus
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package       Cron Status
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
+ * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 namespace forumhulp\cronstatus\migrations\v31x;
 

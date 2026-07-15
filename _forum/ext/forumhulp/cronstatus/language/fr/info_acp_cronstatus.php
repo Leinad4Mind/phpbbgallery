@@ -1,11 +1,10 @@
 <?php
 /**
  *
- * Cron Status. An extension for the phpBB Forum Software package.
  * French translation by Galixte (http://www.galixte.com)
- *
- * @copyright (c) 2017 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
- * @license GNU General Public License, version 2 (GPL-2.0)
+ * @package       Cron Status
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
+ * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
