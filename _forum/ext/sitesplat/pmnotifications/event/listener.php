@@ -27,6 +27,9 @@ class listener implements EventSubscriberInterface
 			'core.ucp_pm_view_folder_get_pm_from_template'	=> 'ucp_pm_view_folder_get_pm_from_template',
 			'core.ucp_pm_view_folder_get_pm_from_sql'		=> 'ucp_pm_view_folder_get_pm_from_sql',
 			'core.ucp_pm_view_messsage'						=> 'ucp_pm_view_messsage',
+
+			// No notice delete unread PMs
+			'core.delete_pm_before'	=> 'delete_pm_before',
 		);
 	}
 
@@ -92,6 +95,13 @@ class listener implements EventSubscriberInterface
 
 	public function page_header_after()
 	{
+		if (!$this->config['allow_privmsg'])
+		{
+			return;
+		}
+
+		$this->user->add_lang_ext('sitesplat/pmnotifications', 'common');
+
 		// only produce extra load when necessary
 		if ($this->config['load_notifications'] && $this->user->data['user_id'] != ANONYMOUS && $this->user->data['user_type'] != USER_IGNORE)
 		{
@@ -205,8 +215,14 @@ class listener implements EventSubscriberInterface
 	public function ucp_pm_view_folder_get_pm_from_template($event)
 	{
 		$start = $this->request->variable('start', 0);
+		$unread_only = $this->request->variable('unread_only', 0);
 		$from_author = $this->request->variable('from_author', 0);
-		$url_from_author = $sql_from_author = '';
+		$url_from_author = $sql_from_author = $url_unread_only = $sql_unread_only = '';
+		if ($unread_only)
+		{
+			$url_unread_only = '&amp;unread_only=1';
+			$sql_unread_only = ' AND t.pm_unread = 1';
+		}
 		if ($from_author)
 		{
 			$url_from_author = '&amp;from_author=' . $from_author;
@@ -228,25 +244,27 @@ class listener implements EventSubscriberInterface
 				FROM ' . PRIVMSGS_TO_TABLE . ' t, ' . PRIVMSGS_TABLE . ' p
 				WHERE t.folder_id = ' . (int) $event['folder_id'] . "
 					$sql_from_author
+					$sql_unread_only
 					AND t.user_id = {$event['user_id']}
 					AND t.msg_id = p.msg_id
 					AND p.message_time >= $min_post_time";
 			$result = $this->db->sql_query_limit($sql, 1);
-			$pm_count = (int) $this->db->sql_fetchfield('pm_count', $result);
+			$pm_count = (int) $this->db->sql_fetchfield('pm_count', false, $result);
 			$this->db->sql_freeresult($result);
 
 			$pm_count_changed = true;
 		}
-		else if ($sql_from_author)
+		else if ($sql_from_author || $sql_unread_only)
 		{
 			$sql = 'SELECT COUNT(t.msg_id) AS pm_count
 				FROM ' . PRIVMSGS_TO_TABLE . ' t, ' . PRIVMSGS_TABLE . ' p
 				WHERE t.folder_id = ' . (int) $event['folder_id'] . "
 					$sql_from_author
+					$sql_unread_only
 					AND t.user_id = {$event['user_id']}
 					AND t.msg_id = p.msg_id";
 			$result = $this->db->sql_query_limit($sql, 1);
-			$pm_count = (int) $this->db->sql_fetchfield('pm_count', $result);
+			$pm_count = (int) $this->db->sql_fetchfield('pm_count', false, $result);
 			$this->db->sql_freeresult($result);
 
 			$pm_count_changed = true;
@@ -254,7 +272,7 @@ class listener implements EventSubscriberInterface
 
 		if ($pm_count_changed)
 		{
-			$base_url = $event['base_url'] . $url_from_author;
+			$base_url = $event['base_url'] . $url_from_author . $url_unread_only;
 			$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $pm_count);
 			$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $pm_count, $this->config['topics_per_page'], $start);
 
@@ -267,21 +285,85 @@ class listener implements EventSubscriberInterface
 	public function ucp_pm_view_folder_get_pm_from_sql($event)
 	{
 		$from_author = $this->request->variable('from_author', 0);
+		$unread_only = $this->request->variable('unread_only', 0);
 
+		$sql_ary = $event['sql_ary'];
 		if ($from_author)
 		{
-			$sql_ary = $event['sql_ary'];
 			$sql_ary['WHERE'] .= ' AND p.author_id = ' . $from_author;
-			$event['sql_ary'] = $sql_ary;
 		}
+		if ($unread_only)
+		{
+			$sql_ary['WHERE'] .= ' AND t.pm_unread = 1';
+		}
+		$event['sql_ary'] = $sql_ary;
 	}
 
 	public function ucp_pm_view_messsage($event)
 	{
-		$this->user->add_lang_ext('sitesplat/pmnotifications', 'common');
-
 		$msg_data = $event['msg_data'];
 		$msg_data['U_FROM_AUTHOR_PM_LIST'] = append_sid("{$this->root_path}ucp.{$this->php_ext}", "i=pm&amp;folder={$event['folder_id']}&amp;from_author={$event['message_row']['author_id']}");
 		$event['msg_data'] = $msg_data;
+	}
+
+	public function delete_pm_before($event)
+	{
+		$user_id = (int) $event['user_id'];
+		$msg_ids = array_map('intval', $event['msg_ids']);
+		$folder_id = (int) $event['folder_id'];
+
+		// Only applies to messages deleted from the outbox
+		if ($folder_id !== PRIVMSGS_OUTBOX)
+		{
+			return;
+		}
+
+		// Validate that the messages are still pending to be deleted
+		$sql = 'SELECT msg_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE ' . $this->db->sql_in_set('msg_id', $msg_ids) . "
+				AND folder_id = $folder_id
+				AND user_id = $user_id";
+		$result = $this->db->sql_query($sql);
+
+		$delete_rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$delete_rows[(int) $row['msg_id']] = 1;
+		}
+		$this->db->sql_freeresult($result);
+
+		// Nothing left to do, so exit
+		if (!sizeof($delete_rows))
+		{
+			return;
+		}
+
+		$this->db->sql_transaction('begin');
+
+		// Delete the private message recipients that are pending, but not the sender
+		$sql = 'SELECT user_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE author_id = ' . $user_id . '
+			AND user_id <> ' . $user_id . '
+			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
+		$result = $this->db->sql_query($sql);
+
+		// The new messages counter is set back one and no notice will be shown
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$sql = 'UPDATE ' . USERS_TABLE . '
+				SET user_new_privmsg = user_new_privmsg - 1, user_unread_privmsg = user_unread_privmsg - 1
+				WHERE user_id = ' . (int) $row['user_id'];
+			$this->db->sql_query($sql);
+		}
+
+		$sql = 'DELETE FROM ' . PRIVMSGS_TO_TABLE . '
+			WHERE author_id = ' . $user_id . '
+			AND user_id <> ' . $user_id . '
+			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
+		$this->db->sql_query($sql);
+
+		$this->db->sql_transaction('commit');
 	}
 }

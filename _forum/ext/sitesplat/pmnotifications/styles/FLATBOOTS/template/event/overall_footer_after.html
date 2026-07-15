@@ -9,6 +9,17 @@ head.ready(function(){
 
 		e.preventDefault();
 	});
+	// Mobile Leinad Code Start
+	// prevent mark all notifications read - this would mark PMs too
+	$('#mark_all_notifications_mobile a').attr('href', '#').removeAttr('data-ajax');
+	// mark all notifications read, custom implementation
+	$(document).on('click', '#mark_all_notifications_mobile a', function(e){
+		$('#notification_list_mobile .icon-mark').click();
+		$('#mark_all_notifications_mobile').remove();
+
+		e.preventDefault();
+	});
+	// Mobile Leinad Code End
 
 	// This callback will mark a pm notification read
 	phpbb.addAjaxCallback('pm.mark_read', function(res) {
