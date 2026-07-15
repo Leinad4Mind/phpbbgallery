@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Gallery - Exif Extension
+* @package phpBB Gallery - Exif Extension
 * @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -16,6 +16,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class exif_listener implements EventSubscriberInterface
 {
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbbgallery\core\config */
+	protected $gallery_config;
+
+	/** @var \phpbbgallery\core\auth\auth */
+	protected $gallery_auth;
+
+	/** @var \phpbbgallery\core\url */
+	protected $gallery_url;
+
+	/** @var \phpbbgallery\core\user */
+	protected $gallery_user;
+
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -197,10 +212,12 @@ class exif_listener implements EventSubscriberInterface
 
 	public function ucp_set_settings_submit($event)
 	{
+		global $request;
+
 		$additional_settings = $event['additional_settings'];
 		if (!in_array('user_viewexif', $additional_settings))
 		{
-			$additional_settings['user_viewexif'] = request_var('viewexifs', false);
+			$additional_settings['user_viewexif'] = $request->variable('viewexifs', false);
 			$event['additional_settings'] = $additional_settings;
 		}
 	}
