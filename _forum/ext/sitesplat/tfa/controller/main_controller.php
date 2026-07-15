@@ -11,6 +11,7 @@ namespace sitesplat\tfa\controller;
 
 use sitesplat\tfa\helper\session_helper_interface;
 use phpbb\config\config;
+use phpbb\event\dispatcher_interface;
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
 use phpbb\exception\http_exception;
@@ -29,6 +30,7 @@ class main_controller
 	private $user;
 	private $request;
 	private $config;
+	private $phpbb_dispatcher;
 	private $session_helper;
 	private $root_path;
 	private $php_ext;
@@ -38,7 +40,7 @@ class main_controller
 	*
 	* @access public
 	*/
-	public function __construct(helper $controller_helper, driver_interface $db, template $template, user $user, request_interface $request, config $config, session_helper_interface $session_helper, $root_path, $php_ext)
+	public function __construct(helper $controller_helper, driver_interface $db, template $template, user $user, request_interface $request, config $config, dispatcher_interface $phpbb_dispatcher, session_helper_interface $session_helper, $root_path, $php_ext)
 	{
 		$this->controller_helper 	= $controller_helper;
 		$this->template 			= $template;
@@ -46,6 +48,7 @@ class main_controller
 		$this->user					= $user;
 		$this->request				= $request;
 		$this->config				= $config;
+		$this->phpbb_dispatcher		= $phpbb_dispatcher;
 		$this->session_helper		= $session_helper;
 		$this->root_path			= $root_path;
 		$this->php_ext				= $php_ext;
@@ -115,6 +118,17 @@ class main_controller
 		$result = $this->user->session_create($user_id, $admin, $auto_login, $viewonline);
 		if ($result === true)
 		{
+			/**
+			* This event allows an extension to modify the redirection when a user successfully logs in
+			*
+			* @event sitesplat.tfa.login_box_redirect
+			* @var  string	redirect	Redirect string
+			* @var	bool	admin		Is admin?
+			* @var	array	result		Result from auth provider
+			*/
+			$vars = array('redirect', 'admin', 'result');
+			extract($this->phpbb_dispatcher->trigger_event('sitesplat.tfa.login_box_redirect', compact($vars)));
+
 			if ($admin)
 			{
 				$sql = 'DELETE FROM ' . SESSIONS_TABLE . "

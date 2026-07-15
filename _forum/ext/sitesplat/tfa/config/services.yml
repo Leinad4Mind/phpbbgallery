@@ -45,6 +45,7 @@ services:
             - '@user'
             - '@request'
             - '@config'
+            - '@dispatcher'
             - '@sitesplat.tfa.sessionHelper'
             - '%core.root_path%'
             - '%core.php_ext%'

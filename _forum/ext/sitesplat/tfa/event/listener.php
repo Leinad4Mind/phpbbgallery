@@ -55,6 +55,7 @@ class listener implements EventSubscriberInterface
 			'core.auth_login_session_create_before'		=> 'auth_login_session_create_before',
 			'core.user_setup_after'						=> 'user_setup_after',
 			'core.ucp_activate_after'					=> 'user_reset',
+			'core.delete_user_after'					=> 'delete_users',
 		);
 	}
 
@@ -133,5 +134,14 @@ class listener implements EventSubscriberInterface
 	{
 		$sql = 'DELETE FROM ' . $this->registration_table . ' WHERE user_id = ' . $event['user_row']['user_id'];
 		$this->db->sql_query($sql);
+	}
+
+	public function delete_users($event)
+	{
+		if (!empty($event['user_ids'])) {
+			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
+
+			$this->db->sql_query("DELETE FROM {$this->registration_table } WHERE user_id $user_id_in");
+		}
 	}
 }
