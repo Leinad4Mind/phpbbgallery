@@ -86,16 +86,16 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.permissions'						=> 'add_permission',
-			'core.posting_modify_template_vars'		=> 'topic_data_topic_desc',
-			'core.posting_modify_submit_post_before'		=> 'topic_desc_add',
-			'core.posting_modify_message_text'		=> 'modify_message_text',
-			'core.submit_post_modify_sql_data'		=> 'submit_post_modify_sql_data',
-			'core.viewtopic_modify_page_title'		=> 'topic_desc_add_viewtopic',
-			'core.viewforum_modify_topicrow'		=> 'modify_topicrow',
-			'core.search_modify_tpl_ary'			=> 'search_modify_tpl_ary',
-			'core.mcp_view_forum_modify_topicrow'	=> 'modify_topicrow',
-			'core.mcp_topic_review_modify_row'		=> 'mcp_topic_review_modify_row',
+			'core.permissions'						 => 'add_permission',
+			'core.posting_modify_template_vars'		 => 'topic_data_topic_desc',
+			'core.posting_modify_submit_post_before' => 'topic_desc_add',
+			'core.posting_modify_message_text'		 => 'modify_message_text',
+			'core.submit_post_modify_sql_data'		 => 'submit_post_modify_sql_data',
+			'core.viewtopic_modify_page_title'		 => 'topic_desc_add_viewtopic',
+			'core.viewforum_modify_topicrow'		 => 'modify_topicrow',
+			'core.search_modify_tpl_ary'			 => 'search_modify_tpl_ary',
+			'core.mcp_view_forum_modify_topicrow'	 => 'modify_topicrow',
+			'core.mcp_topic_review_modify_row'		 => 'mcp_topic_review_modify_row',
 			// Native
 			'core.search_native_index_before'					=> 'search_native_index_before',
 			// MySQL
@@ -182,15 +182,20 @@ class listener implements EventSubscriberInterface
 
 	public function topic_desc_add_viewtopic($event)
 	{
+		global $phpEx;
 		$topic_data = $event['topic_data'];
-		$this->template->assign_var('TOPIC_DESC', censor_text($topic_data['topic_desc']));
+		$this->template->assign_vars(array(
+			'TOPIC_DESC' 	=> censor_text($topic_data['topic_desc']),
+			'U_VIEW_TDESC' => append_sid( "{$phpbb_root_path}search.$phpEx", "terms=all&amp;sr=topics&amp;sf=titleonly&amp;sk=t&amp;sd=d&amp;st=0&amp;keywords=". urlencode( $topic_data['topic_desc'] ) ),
+		));
 	}
 
+	
 	public function modify_message_text($event)
 	{
 		$post_data = $event['post_data'];
 
-		$this->new_topic_desc = $this->request->variable('topic_desc', '', true);
+		$this->new_topic_desc = $this->request->variable('topic_desc', $event['post_data']['topic_desc'], true);
 
 		if (isset($post_data['topic_desc']))
 		{
