@@ -1331,3 +1331,15 @@ footer__divider {
         float: left;
     }
 }
+
+/* medium embed fix
+------------------------- */
+.mdm-hero--story .mdm-hero-title {
+  padding-top: 0!important;
+}
+
+
+.blog-video iframe .mdm-hero--story .mdm-hero-title {
+  padding-top: 0!important;
+}
+

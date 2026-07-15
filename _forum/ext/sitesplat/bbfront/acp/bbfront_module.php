@@ -52,7 +52,7 @@ class bbfront_module
 	
 				$this->config->set('bbfront_inc_forums', json_encode($this->request->variable('bbfront_inc_forums', array(0))));
 				$this->config->set('bbfront_inc_groups', json_encode($this->request->variable('bbfront_inc_groups', array(0))));
-				$this->config->set('bbfront_settings', json_encode($this->request->variable('bbfront_settings', array('' => ''))));
+				$this->config->set('bbfront_settings', json_encode($this->request->variable('bbfront_settings', array('' => ''), true)));
 				$this->config->set('sitesplat_bbfront_grid_layout', $this->request->variable('bbfront_grid_layout', '4-l'));
 				$this->config->set('sitesplat_bbfront_grid_fx_first', $this->request->variable('bbfront_grid_fx_first', 'Hapi'));
 				$this->config->set('sitesplat_bbfront_grid_fx_load', $this->request->variable('bbfront_grid_fx_load', 'Hapi'));
@@ -117,7 +117,7 @@ class bbfront_module
 		$cookie = $this->request->variable($this->config['cookie_name'] . '_bbfront', '', true, \phpbb\request\request_interface::COOKIE);
 		$this->template->assign_vars(array(
 			'S_NOTICE_BBTAGS'		=> (!$ext_manager->is_enabled('sitesplat/bbtags') && !$cookie) ? $this->user->lang['NOTICE_BBTAGS'] : '',
-			'S_NOTICE_BBEMBED'		=> (!$ext_manager->is_enabled('sitesplat/bbembed') && !$cookie) ? $this->user->lang['NOTICE_BBEMBED'] : '',
+			'S_NOTICE_BBEMBED'		=> (!$ext_manager->is_enabled('phpbb/mediaembed') && !$cookie) ? $this->user->lang['BBNOTICE_EMBED'] : '',
 			'S_NOTICE_LIKEBB'		=> (!$ext_manager->is_enabled('sitesplat/likedd') && !$cookie) ? $this->user->lang['NOTICE_LIKEBB'] : '',
 			'U_BBFRONT_NOTICE_CLOSE'	=> "{$this->u_action}&amp;hash=" . generate_link_hash('close_notice')
 		));
