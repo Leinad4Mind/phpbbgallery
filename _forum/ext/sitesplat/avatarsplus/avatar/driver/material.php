@@ -37,7 +37,7 @@ class material extends \phpbb\avatar\driver\driver
 		}
 		else
 		{
-			return '<img src="' . $root_path . 'images/avatars/material/' . $row['avatar'] . '.png" ' .
+			return '<img class="avatar" src="' . $root_path . 'images/avatars/material/' . $row['avatar'] . '.png" ' .
 				($row['avatar_width'] ? ('width="' . $row['avatar_width'] . '" ') : '') .
 				($row['avatar_height'] ? ('height="' . $row['avatar_height'] . '" ') : '') .
 				'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
