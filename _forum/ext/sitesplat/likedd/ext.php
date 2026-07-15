@@ -3,7 +3,7 @@
 *
 * phpBB Ajax likeBB.
 *
-* @copyright (c) 2015 SiteSplat All rights reserved
+* @copyright (c) 2015-2022 SiteSplat All rights reserved
 * @license Proprietary
 *
 */

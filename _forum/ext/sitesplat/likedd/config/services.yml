@@ -10,6 +10,7 @@ services:
             - '@request'
             - '@controller.helper'
             - '@template'
+            - '@language'
         tags:
             - { name: event.listener }
 

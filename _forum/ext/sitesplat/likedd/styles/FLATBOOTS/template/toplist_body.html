@@ -1,51 +1,59 @@
-<!-- INCLUDE overall_header.html -->
-<div class="side-segment"><h3>{L_LIKES_TOP_LIST}</h3></div>
+{% include 'overall_header.html' %}
+<div class="side-segment">
+  <h3>{{ lang('LIKES_TOP_LIST') }}</h3>
+</div>
 <div class="clearfix">
-<div class="panel panel-forum">
-	<div id="table_title" class="panel-heading">
-	{L_LIKES_TOP_LIST}
-	</div>
-	<!-- IF not VIEW_TABLE -->
-	<table class="graph_table" id="graph_table">
-	<thead>
-		<tr>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<!-- IF STATS -->
-		<tr>
-		   <td>
-		   <table style="width:100%;">
-		   <tr>
-		    <td style="width:100%; text-align:center"><div id="chart" style="width: 90%; height: 230px; margin: auto;"></div></td>
-		   </tr>
-		   </table>
-		<!-- ENDIF -->
-			<script>
-			var stats = {STATS};
-			var dates = {DATES};
-			var title = '{L_LIKES_TOP_LIST}';
-			var ytitle = {HITSTITLE};
-			var btnena	= {BTNEN};
-			var labelenabled = {LABELENABLE};
-			</script>
-	<!-- IF not VIEW_TABLE -->
-			</td>
-		</tr>
-		<!-- ELSE -->
-		<tr>
-			<td>{L_ACP_NO_ITEMS}</td>
-		</tr>
-		<!-- ENDIF -->
-	</tbody>
-	</table>
-	<!-- ENDIF -->
+  <div class="panel panel-forum">
+    <div id="table_title" class="panel-heading">
+      {{ lang('LIKES_TOP_LIST') }}
+    </div>
+    {% if not VIEW_TABLE %}
+      <table class="graph_table" id="graph_table">
+        <thead>
+          <tr>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if STATS %}
+            <tr>
+              <td>
+                <table style="width:100%;">
+                  <tr>
+                    <td style="width:100%; text-align:center">
+                      <div id="chart" style="width: 90%; height: 230px; margin: auto;"></div>
+                    </td>
+                  </tr>
+                </table>
+              {% endif %}
+              <script>
+                var stats = {{ STATS }};
+                var dates = {{ DATES }};
+                var title = '{{ lang("LIKES_TOP_LIST") }}';
+                var ytitle = {{ HITSTITLE }};
+                var btnena = {{ BTNEN }};
+                var labelenabled = {{ LABELENABLE }};
+                var overviewforum = '{{  lang("LIKES_OVERVIEW_FORUM") }}';
+                var overviewtopic = '{{  lang("LIKES_OVERVIEW_TOPIC") }}';
+                var overviewposts = '{{  lang("LIKES_OVERVIEW_POSTS") }}';
+                var overviewuser = '{{ lang("LIKES_OVERVIEW_USER")  }}';
+              </script>
+              {% if not VIEW_TABLE %}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td>{{ lang('ACP_NO_ITEMS') }}</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
 </div>
-</div>
-<!-- IF not POLSTATS and not MEMBERSTATS -->
-<!-- INCLUDEJS @sitesplat_likedd/js/highcharts.js -->
-<!-- ENDIF -->
-<!-- INCLUDEJS @sitesplat_likedd/js/statistics.js -->
-<!-- INCLUDEJS @sitesplat_likedd/js/exporting.js -->
-<!-- INCLUDE overall_footer.html -->
+{% if not POLSTATS and not MEMBERSTATS %}
+  {% INCLUDEJS '@sitesplat_likedd/js/highcharts.js' %}
+{% endif %}
+{% INCLUDEJS '@sitesplat_likedd/js/statistics.min.js' %}
+{% INCLUDEJS '@sitesplat_likedd/js/exporting.js' %}
+{% include 'overall_footer.html' %}

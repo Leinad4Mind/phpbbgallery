@@ -1,3 +1,5 @@
-<!-- BEGIN likes -->
-<li>{likes.GIVEN_RECIEVED}{L_COLON}&nbsp;{likes.GIVE_RECIEVE}</li> 
-<!-- END likes -->
+{% if loops.likes %}
+  {% for like in loops.likes %}
+    <li>{{ like.GIVEN_RECEIVED ~ lang('COLON') }}&nbsp;{{ like.GIVE_RECEIVE }}</li>
+  {% endfor %}
+{% endif %}

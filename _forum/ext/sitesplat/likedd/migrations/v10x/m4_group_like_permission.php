@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* phpBB Ajax likeBB.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * phpBB Ajax likeBB.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\likedd\migrations\v10x;
 
@@ -24,7 +25,7 @@ class m4_group_like_permission extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\likedd\migrations\v10x\m3_initial_module');
+		return ['\sitesplat\likedd\migrations\v10x\m3_initial_module'];
 	}
 
 	/**
@@ -35,11 +36,14 @@ class m4_group_like_permission extends \phpbb\db\migration\migration
 	 */
 	public function update_data()
 	{
-		return array(
-			array('permission.add', array('u_likebb_like')),
-			array('permission.add', array('u_likebb_dislike')),
-            array('permission.permission_set', array('REGISTERED', 'u_likebb_like', 'group')),
-            array('permission.permission_set', array('REGISTERED', 'u_likebb_dislike', 'group')),
-		);
+		return [
+			['permission.add', ['u_likebb_like']],
+			['permission.add', ['u_likebb_dislike']],
+			['if', [
+				['permission.role_exists', ['REGISTERED']], // Check if REGISTERED exists before updating it
+				['permission.permission_set', ['REGISTERED', 'u_likebb_like', 'group']], // Give REGISTERED u_likebb_like permission
+				['permission.permission_set', ['REGISTERED', 'u_likebb_dislike', 'group']], // Give REGISTERED u_likebb_dislike permission
+			]],
+		];
 	}
 }

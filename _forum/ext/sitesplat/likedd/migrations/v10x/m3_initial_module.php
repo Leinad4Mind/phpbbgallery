@@ -1,18 +1,19 @@
 <?php
+
 /**
-*
-* phpBB Ajax likeBB.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * phpBB Ajax likeBB.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\likedd\migrations\v10x;
 
 /**
-* Migration stage 3: Initial module
-*/
+ * Migration stage 3: Initial module
+ */
 class m3_initial_module extends \phpbb\db\migration\migration
 {
 	/**
@@ -24,7 +25,7 @@ class m3_initial_module extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\likedd\migrations\v10x\m1_initial_schema');
+		return ['\sitesplat\likedd\migrations\v10x\m1_initial_schema'];
 	}
 
 	/**
@@ -35,15 +36,15 @@ class m3_initial_module extends \phpbb\db\migration\migration
 	 */
 	public function update_data()
 	{
-		return array(
-			array('module.add', array('ucp', 'UCP_PROFILE', 'UCP_LIKEDD_TITLE')),
-			array('module.add', array(
-				'ucp', 'UCP_LIKEDD_TITLE', array(
+		return [
+			['module.add', ['ucp', 'UCP_PROFILE', 'UCP_LIKEDD_TITLE']],
+			['module.add', [
+				'ucp', 'UCP_LIKEDD_TITLE', [
 					'module_basename'	=> '\sitesplat\likedd\ucp\likedd_module',
 					'auth'				=> 'ext_sitesplat/likedd',
-					'modes'				=> array('likedd'),
-				),
-			)),
-		);
+					'modes'				=> ['likedd'],
+				],
+			]],
+		];
 	}
 }

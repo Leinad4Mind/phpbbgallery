@@ -38,48 +38,61 @@ class admin_listener implements EventSubscriberInterface
 	/* @var \phpbb\template\template */
 	protected $template;
 
+	/* @var \phpbb\language\language */
+	protected $language;
+
 	/**
 	* Constructor
 	*
 	* @param \phpbb\controller\helper	$helper		Controller helper object
 	* @param \phpbb\template			$template	Template object
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template)
+	public function __construct(\phpbb\config\config $config, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language)
 	{
 		$this->config = $config;
 		$this->request = $request;
 		$this->helper = $helper;
 		$this->template = $template;
+		$this->language = $language;
 	}
 
 	public function add_config($event)
 	{
-		
-		if($event['mode'] == 'settings')
-		{
-			if ($this->request->is_set_post('submit') && !$this->config['dislike_off'])
-			{
+		global $config;
+		if ($event['mode'] == 'settings') {
+			if ($this->request->is_set_post('submit') && !$this->config['dislike_off']) {
 				set_config('dislike_icon', $this->request->variable('dislike_icon', 'fa-thumbs-up'));
 				set_config('dislike_style', $this->request->variable('dislike_style', 'btn-default'));
+				set_config('sitesplat_likedd_button_position', $this->request->variable('sitesplat_likedd_button_position', $config['sitesplat_likedd_button_position']));
 			}
 
 			$display_vars = $event['display_vars'];
 			$submit_key = array_search('ACP_SUBMIT_CHANGES', $display_vars['vars']);
 			$submit_legend_number = substr($submit_key, 6);
-			$display_vars['vars']['legend'.$submit_legend_number] = 'ACP_LIKEDD_TITLE';
+			$display_vars['vars']['legend'.$submit_legend_number] = 'ACP_LIKEBB_TITLE';
 			$new_vars = array(
-				'like_icon'		    => array('lang' => 'LIKEDD_LIKE_ICON',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_icon',  'explain' => true),
-				'like_style'	    => array('lang' => 'LIKEDD_LIKE_STYLE',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_select', 'explain' => true),
-				'like_list'		    => array('lang' => 'LIKEDD_LIKE_LIST',	  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
-				'dislike_off'	    => array('lang' => 'LIKEDD_DISLIKE_OFF',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
-				'max_dislikes'	    => array('lang' => 'LIKEDD_MAX_DISLIKES', 'validate' => 'int:0',  'type' => 'text:4:10', 'method' => false, 'explain' => true),
-				'like_locked'		=> array('lang' => 'LIKEDD_LIKE_LOCKED',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
-				'like_global'		=> array('lang' => 'LIKEDD_LIKE_GLOBAL',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'like_icon'		    => array('lang' => 'LIKEBB_LIKE_ICON',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_icon',  'explain' => true),
+				'like_style'	    => array('lang' => 'LIKEBB_LIKE_STYLE',	  'validate' => 'string', 'type' => 'custom', 'function' => __NAMESPACE__.'\admin_listener::like_select', 'explain' => true),
+				'like_list'		    => array('lang' => 'LIKEBB_LIKE_LIST',	  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'dislike_off'	    => array('lang' => 'LIKEBB_DISLIKE_OFF',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'max_dislikes'	    => array('lang' => 'LIKEBB_MAX_DISLIKES', 'validate' => 'int:0',  'type' => 'text:4:10', 'method' => false, 'explain' => true),
+				'like_locked'		=> array('lang' => 'LIKEBB_LIKE_LOCKED',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'like_global'		=> array('lang' => 'LIKEBB_LIKE_GLOBAL',  'validate' => 'bool',	  'type' => 'radio:yes_no', 'explain' => true),
+				'sitesplat_likedd_button_position' => array('lang' => 'LIKEBB_BUTTON_POSITION',	  'int:0' => 'bool',	  'type' => 'custom', 'function' => 			__NAMESPACE__.'\admin_listener::button_position_radios', 'explain' => true),
 				'legend'.($submit_legend_number + 1)	=> 'ACP_SUBMIT_CHANGES',
 			);
 			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $new_vars, array('after' => $submit_key));
 			$event['display_vars'] = $display_vars;
 		}
+	}
+
+	static function button_position_radios($value, $key)
+	{
+		global $phpbb_container, $config;
+		$language = $phpbb_container->get('language');
+		return '<label><input type="radio" name="config[sitesplat_likedd_button_position]" value="0" ' . ($config['sitesplat_likedd_button_position'] == 0 ? 'checked="checked"' : '') . '/> ' . $language->lang('LIKEBB_BUTTON_POSITION_ALL') . '</label>' .
+		'<label><input type="radio" name="config[sitesplat_likedd_button_position]" value="1" ' . ($config['sitesplat_likedd_button_position'] == 1 ? 'checked="checked"' : '') . ' /> ' . $language->lang('LIKEBB_BUTTON_POSITION_FIRST_POST_ONLY') . '</label>' .
+		'<label><input type="radio" name="config[sitesplat_likedd_button_position]" value="2" ' . ($config['sitesplat_likedd_button_position'] == 2 ? 'checked="checked"' : '') . ' /> ' . $language->lang('LIKEBB_BUTTON_POSITION_ALL_EXCEPT_FIRST_POST') . '</label>';
 	}
 
 	/**
@@ -89,7 +102,7 @@ class admin_listener implements EventSubscriberInterface
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['u_likedd'] = array('lang' => 'ACL_U_LIKEDD', 'cat' => 'post');
+		$permissions['u_likedd'] = array('lang' => 'ACL_U_LIKEBB', 'cat' => 'post');
 		$event['permissions'] = $permissions;
 	}
 

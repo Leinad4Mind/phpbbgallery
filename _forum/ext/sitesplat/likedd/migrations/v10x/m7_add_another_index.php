@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* phpBB Ajax likeBB.
-*
-* @copyright (c) 2019 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * phpBB Ajax likeBB.
+ *
+ * @copyright (c) 2019 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\likedd\migrations\v10x;
 
@@ -24,7 +25,7 @@ class m7_add_another_index extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\likedd\migrations\v10x\m6_add_indices');
+		return ['\sitesplat\likedd\migrations\v10x\m6_add_indices'];
 	}
 
 	/**
@@ -35,13 +36,13 @@ class m7_add_another_index extends \phpbb\db\migration\migration
 	 */
 	public function update_schema()
 	{
-		return array(
-			'add_index'	=> array(
-				$this->table_prefix . 'likes'	=> array(
-					'ld'	=> array('ld'),
-				),
-			),
-		);
+		return [
+			'add_index'	=> [
+				$this->table_prefix . 'likes'	=> [
+					'ld'	=> ['ld'],
+				],
+			],
+		];
 	}
 
 	/**
@@ -52,10 +53,10 @@ class m7_add_another_index extends \phpbb\db\migration\migration
 	 */
 	public function revert_schema()
 	{
-		return array(
-			'drop_keys'	=> array(
-				$this->table_prefix . 'likes'	=> array('ld'),
-			),
-		);
+		return [
+			'drop_keys'	=> [
+				$this->table_prefix . 'likes'	=> ['ld'],
+			],
+		];
 	}
 }

@@ -1,15 +1,13 @@
-<!-- IF postrow.S_FIRST_POST -->
-	<!-- IF postrow.U_LIKE -->
+{% if postrow.U_LIKE %}
 	<div id="thanks_button" class="btn-group btn-group-sm" role="group">
-		<a class="btn {LIKE_CLASS} btn-sm btn-likedd-trigger {postrow.HIDE_CLASS}" href="#p{postrow.POST_ID}" title="{L_LIKES_LIKE_IT}" data-options="l={postrow.POST_ID}">
-			<i class="fa {LIKE_ICON}"></i><span class="hidden-xs">&nbsp;<!-- IF not postrow.HIDE -->{L_LIKES_LIKE}<!-- ELSE -->{L_LIKES_LIKED}<!-- ENDIF --></span><!-- IF not postrow.HIDE --><span id="l{postrow.POST_ID}"><!-- IF postrow.LIKES -->&nbsp;({postrow.LIKES})<!-- ENDIF --></span><!-- ENDIF --></a>
+		<a class="btn {{ LIKE_CLASS }} btn-sm btn-likedd-trigger {{ postrow.HIDE_CLASS }}" href="#p{{ postrow.POST_ID }}" title="{{ lang('LIKES_LIKE_IT') }}" data-options="l={{ postrow.POST_ID }}">
+			<i class="fa {{ LIKE_ICON }}"></i><span class="hidden-xs">&nbsp;{% if not postrow.HIDE %}{{ lang('LIKES_LIKE') }}{% else %}{{ lang('LIKES_LIKED') }}{% endif %}</span>{% if not postrow.HIDE %}<span id="l{{ postrow.POST_ID }}">{% if postrow.LIKES %}&nbsp;({{ postrow.LIKES }}){% endif %}</span>{% endif %}</a>
 	</div>
-	<!-- ENDIF -->
+{% endif %}
 
-	<!-- IF postrow.U_DISLIKE and postrow.HIDE -->
+{% if postrow.U_DISLIKE and postrow.HIDE %}
 	<div class="btn-group btn-group-sm" role="group">
-		<a class="btn {DISLIKE_CLASS} btn-sm btn-likedd-trigger" href="#p{postrow.POST_ID}" title="{L_LIKES_DISLIKE_IT}" data-options="d={postrow.POST_ID}">
-		<i class="fa {DISLIKE_ICON}"></i><span id="d{postrow.POST_ID}"><!-- IF postrow.DISLIKES -->&nbsp;({postrow.DISLIKES})<!-- ENDIF --></span></a>
+		<a class="btn {{ DISLIKE_CLASS }} btn-sm btn-likedd-trigger" href="#p{{ postrow.POST_ID }}" title="{{ lang('LIKES_DISLIKE_IT') }}" data-options="d={{ postrow.POST_ID }}">
+		<i class="fa {{ DISLIKE_ICON }}"></i><span id="d{postrow.POST_ID }}">{% if postrow.DISLIKES %}&nbsp;({{ postrow.DISLIKES }}){% endif %}</span></a>
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+{% endif %}

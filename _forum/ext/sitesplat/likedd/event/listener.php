@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* phpBB Ajax likeBB.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * phpBB Ajax likeBB.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\likedd\event;
 
@@ -20,24 +21,24 @@ use phpbb\controller\helper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
-* Event listener
-*/
+ * Event listener
+ */
 class listener implements EventSubscriberInterface
 {
 	static public function getSubscribedEvents()
 	{
-		return array(
-			'core.permissions'							=> 'add_permissions',
-			'core.user_setup'							=> 'add_page_header_link',
+		return [
+			'core.permissions'								=> 'add_permissions',
+			'core.user_setup'									=> 'add_page_header_link',
 			'core.viewtopic_modify_page_title'			=> 'assign_buttons',
-			'core.viewtopic_modify_post_row'			=> 'viewtopic_handle_posts',
-			'core.delete_posts_after'					=> 'delete_like_dislike',
+			'core.viewtopic_modify_post_row'				=> 'viewtopic_handle_posts',
+			'core.delete_posts_after'						=> 'delete_like_dislike',
 			'core.memberlist_view_profile'				=> 'modify_profile',
-			'core.bbfront_before_display'				=> 'viewtopic_handle_posts',
+			'core.bbfront_before_display'					=> 'viewtopic_handle_posts',
 			'core.delete_forum_content_before_query'	=> 'delete_like_dislike_forum',
 			'core.delete_posts_in_transaction_before'	=> 'delete_like_dislike_topic',
-			'core.delete_user_before'					=> 'delete_like_dislike_user',
-		);
+			'core.delete_user_before'						=> 'delete_like_dislike_user',
+		];
 	}
 
 	/* @var \phpbb\config\config*/
@@ -63,13 +64,13 @@ class listener implements EventSubscriberInterface
 
 	/** @var string The database table the likes are stored in */
 	protected $likes_table;
-	
+
 	/** @var string The database table the posts are stored in */
 	protected $posts_table;
 
 	/** @var string The database table the topics are stored in */
 	protected $topics_table;
-	
+
 	public function __construct(auth $auth, config $config, driver_interface $db, user $user, request $request, template $template, helper $helper, $likes_table, $posts_table, $topics_table)
 	{
 		$this->auth = $auth;
@@ -87,52 +88,71 @@ class listener implements EventSubscriberInterface
 	public function add_permissions($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['u_likebb_like'] = array('lang' => 'ACL_U_LIKEBB_LIKE', 'cat' => 'post');
-		$permissions['u_likebb_dislike'] = array('lang' => 'ACL_U_LIKEBB_DISLIKE', 'cat' => 'post');
+		$permissions['u_likebb_like'] = ['lang' => 'ACL_U_LIKEBB_LIKE', 'cat' => 'post'];
+		$permissions['u_likebb_dislike'] = ['lang' => 'ACL_U_LIKEBB_DISLIKE', 'cat' => 'post'];
 		$event['permissions'] = $permissions;
 	}
 
 	public function add_page_header_link($event)
 	{
-		$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
-		
-		$this->template->assign_vars(array(
-		//	'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html'))
-			'U_LIKE_PAGE'		=> ($this->auth->acl_get('u_likedd')) ? $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html')) : ''
-		));
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'sitesplat/likedd',
+			'lang_set' => 'likedd',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
+
+		$this->template->assign_vars([
+			//	'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', ['route' => 'toplist.html'])
+			'U_LIKE_PAGE'		=> ($this->auth->acl_get('u_likedd')) ? $this->helper->route('sitesplat_likedd_controller', ['route' => 'toplist.html']) : ''
+		]);
 	}
-	
+
 	public function assign_buttons()
 	{
-		$this->template->assign_vars(array(
-			'LIKE_CLASS'		=> (isset($this->config['like_style'])) ? $this->config['like_style'] : 'btn-default',
-			'DISLIKE_CLASS'		=> (isset($this->config['dislike_style'])) ? $this->config['dislike_style'] : 'btn-default',
-			'LIKE_ICON'			=> (isset($this->config['like_icon'])) ? $this->config['like_icon'] : 'fa-thumbs-up',
-			'DISLIKE_ICON'		=> (isset($this->config['dislike_icon'])) ? $this->config['dislike_icon'] : 'fa-thumbs-down',
-		));
+		$this->template->assign_vars(
+			[
+				'LIKE_CLASS'		=> (isset($this->config['like_style'])) ? $this->config['like_style'] : 'btn-default',
+				'DISLIKE_CLASS'	=> (isset($this->config['dislike_style'])) ? $this->config['dislike_style'] : 'btn-default',
+				'LIKE_ICON'			=> (isset($this->config['like_icon'])) ? $this->config['like_icon'] : 'fa-thumbs-up',
+				'DISLIKE_ICON'		=> (isset($this->config['dislike_icon'])) ? $this->config['dislike_icon'] : 'fa-thumbs-down',
+			]
+		);
 	}
-	
+
 	public function viewtopic_handle_posts($event)
 	{
 		if (($this->config['like_locked'] || $event['topic_data']['topic_status'] != ITEM_LOCKED) &&
-			($this->config['like_global'] || $event['topic_data']['topic_type'] != POST_GLOBAL))
-		{
-				$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
-				$post_row = $event['post_row'];
+			($this->config['like_global'] || $event['topic_data']['topic_type'] != POST_GLOBAL)
+		) {
+			$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
+			$post_row = $event['post_row'];
 
-				$post_row['U_LIKE'] = ($this->auth->acl_get('u_likebb_like')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?l=' . $post_row['POST_ID']) : false;
-				$post_row['U_DISLIKE'] = (!$this->config['dislike_off'] && $this->auth->acl_get('u_likebb_dislike')) ? append_sid($this->helper->route('sitesplat_likedd_controller', array('route' => 'index.html')) . '?d=' . $post_row['POST_ID']) : '';
+			$post_row['U_LIKE'] = (
+				$this->auth->acl_get('u_likebb_like') &&
+				($this->config['sitesplat_likedd_button_position'] == 0 ||
+				($this->config['sitesplat_likedd_button_position'] == 1 && isset($post_row['S_FIRST_POST']) && $post_row['S_FIRST_POST']) ||
+				($this->config['sitesplat_likedd_button_position'] == 2 && isset($post_row['S_FIRST_POST']) && !$post_row['S_FIRST_POST'])
+			)) ? append_sid($this->helper->route('sitesplat_likedd_controller', ['route' => 'index.html']) . '?l=' . $post_row['POST_ID']) : false;
 
-				$sqlhide = 'SELECT COUNT(like_id) > 0
+			$post_row['U_DISLIKE'] = (
+				!$this->config['dislike_off'] &&
+				$this->auth->acl_get('u_likebb_dislike') &&
+				($this->config['sitesplat_likedd_button_position'] == 0 ||
+				($this->config['sitesplat_likedd_button_position'] == 1 && isset($post_row['S_FIRST_POST']) && $post_row['S_FIRST_POST']) ||
+				($this->config['sitesplat_likedd_button_position'] == 2 && isset($post_row['S_FIRST_POST']) && !$post_row['S_FIRST_POST'])
+			)) ? append_sid($this->helper->route('sitesplat_likedd_controller', ['route' => 'index.html']) . '?d=' . $post_row['POST_ID']) : '';
+
+			$sqlhide = 'SELECT COUNT(like_id) > 0
 					FROM ' . USERS_TABLE . ' u, ' . $this->likes_table . ' l 
 					WHERE u.user_id = l.user_id
 					AND u.user_id = ' . $this->user->data['user_id'] . '
 					AND l.post_id = ' . $post_row['POST_ID'] . '
 					GROUP BY l.like_id';
-				$resulthide = $this->db->sql_query($sqlhide);
-				$hide = $this->db->sql_fetchrow($resulthide);
+			$resulthide = $this->db->sql_query($sqlhide);
+			$hide = $this->db->sql_fetchrow($resulthide);
 
-				$sql = 'SELECT post_id, 
+			$sql = 'SELECT post_id, 
 						GROUP_CONCAT(case when l.ld = 0 then CONCAT("<a href=\"memberlist.php?mode=viewprofile&u=", l.user_id, "\">", u.username, "</a>") else NULL end, ", ") AS names_likes,
 						COUNT(case when l.ld = 0 then 1 else null end) AS num_likes, COUNT(case when l.ld = 1 then 1 else null end) AS num_dislikes, 
 						(SELECT u.username FROM ' . $this->likes_table . ' l 
@@ -141,21 +161,21 @@ class listener implements EventSubscriberInterface
 						FROM ' . $this->likes_table . ' l
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = l.user_id
 						WHERE l.post_id = ' . $post_row['POST_ID'];
-				$result = $this->db->sql_query($sql);
-				$row = $this->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$row = $this->db->sql_fetchrow($result);
 
-				$post_row['HIDE'] = $hide;
-				$post_row['HIDE_CLASS'] = $hide ? 'disabled' : '';
-				$post_row['LIKES'] = $row['num_likes'];
-				$post_row['DISLIKES'] = $row['num_dislikes'];
-				$post_row['LAST_LIKER']	= $row['lastliker'];
-				$post_row['NAMES_LIKES'] = ($this->config['like_list']) ? $this->truncateByOccurence(rtrim(str_replace(', ,', ', ', $row['names_likes']),', '), ', ', 3) : '';
-				$post_row['NUMNAMES_LIKES'] = $row['num_likes'] - sizeof(explode(', ', $this->truncateByOccurence(rtrim(str_replace(', ,', ', ', $row['names_likes']),', '), ', ', 3)));
-				$post_row['MESSAGE'] = ($this->config['max_dislikes'] && $row['num_dislikes'] > $this->config['max_dislikes']) ? 
-										'<div class="disliked-post-msg">' . sprintf($this->user->lang['TO_MANY_DISLIKES'], $row['post_id']) . '</div>
+			$post_row['HIDE'] = $hide;
+			$post_row['HIDE_CLASS'] = $hide ? 'disabled' : '';
+			$post_row['LIKES'] = $row['num_likes'];
+			$post_row['DISLIKES'] = $row['num_dislikes'];
+			$post_row['LAST_LIKER']	= $row['lastliker'];
+			$post_row['NAMES_LIKES'] = ($this->config['like_list']) ? $this->truncateByOccurence(rtrim(str_replace(', ,', ', ', $row['names_likes']), ', '), ', ', 3) : '';
+			$post_row['NUMNAMES_LIKES'] = $row['num_likes'] - count(explode(', ', $this->truncateByOccurence(rtrim(str_replace(', ,', ', ', $row['names_likes']), ', '), ', ', 3)));
+			$post_row['MESSAGE'] = ($this->config['max_dislikes'] && $row['num_dislikes'] > $this->config['max_dislikes']) ?
+				'<div class="disliked-post-msg">' . sprintf($this->user->lang['TO_MANY_DISLIKES'], $row['post_id']) . '</div>
 										<div class="dkd-wrapper-' . $row['post_id'] . ' collapse">' . $post_row['MESSAGE'] . '</div>' : $post_row['MESSAGE'];
-						
-				$event['post_row'] = $post_row;
+
+			$event['post_row'] = $post_row;
 		}
 	}
 
@@ -168,44 +188,42 @@ class listener implements EventSubscriberInterface
 
 	public function modify_profile($event)
 	{
-		$userid = $event['member']['user_id'];
-		$sql = 'SELECT
-				COUNT(CASE WHEN l.user_id = ' . $userid . ' AND l.ld = 0 THEN l.user_id END) AS lgiv,
-				COUNT(CASE WHEN p.poster_id = ' . $userid . ' AND l.ld = 0 THEN p.poster_id END) AS lrec, 
-				COUNT(CASE WHEN l.user_id = ' . $userid . ' AND l.ld = 1 THEN l.user_id END) AS dgiv,
-				COUNT(CASE WHEN p.poster_id = ' . $userid . ' AND l.ld = 1 THEN p.poster_id END) AS drec,
-				COUNT(CASE WHEN l.ld = 0 THEN l.user_id END) AS lgivtot,
-				COUNT(CASE WHEN l.ld = 1 THEN l.user_id END) AS lrectot
-				FROM ' . $this->likes_table . ' l
-				LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id'; 
-		$result = $this->db->sql_query($sql);
-		$likes = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-		$i = 0;
-		foreach($likes as $key => $value)
-		{
-			if (++$i <= (($this->config['dislike_off']) ? 2 : 4))
-			{
-				$percentvalue = (substr($key, 0, 1) == 'l') ? $likes['lgivtot'] : $likes['lrectot'];
-				$this->template->assign_block_vars('likes', array(
-					'ICON'				=> (substr($key, 0, 1) == 'l') ? $this->config['like_icon'] : $this->config['dislike_icon'],
-					'GIVEN_RECIEVED'	=> ((substr($key, 0, 1) == 'l') ? ((substr($key, 1) == 'rec') ? $this->user->lang['LIKES_RECEIVED'] : $this->user->lang['LIKES_GIVEN']) :
-											((substr($key, 1) == 'rec') ? $this->user->lang['DISLIKES_RECEIVED'] : $this->user->lang['DISLIKES_GIVEN'])),
-					'GIVE_RECIEVE'		=> $value . ' (' . (($percentvalue) ? number_format(($value / $percentvalue) * 100, 2) :  0) .
-											((substr($key, 0, 1) == 'l') ? '% ' . $this->user->lang['LIKES_ALL_LIKES'] . ')' :  '% ' . $this->user->lang['LIKES_ALL_DISLIKES'] . ')')
-				));
-			}
-		}
+		// This query takes too long and it doesnt show the likes at membership page
+		// $userid = $event['member']['user_id'];
+		// $sql = 'SELECT
+				// COUNT(CASE WHEN l.user_id = ' . $userid . ' AND l.ld = 0 THEN l.user_id END) AS lgiv,
+				// COUNT(CASE WHEN p.poster_id = ' . $userid . ' AND l.ld = 0 THEN p.poster_id END) AS lrec, 
+				// COUNT(CASE WHEN l.user_id = ' . $userid . ' AND l.ld = 1 THEN l.user_id END) AS dgiv,
+				// COUNT(CASE WHEN p.poster_id = ' . $userid . ' AND l.ld = 1 THEN p.poster_id END) AS drec,
+				// COUNT(CASE WHEN l.ld = 0 THEN l.user_id END) AS lgivtot,
+				// COUNT(CASE WHEN l.ld = 1 THEN l.user_id END) AS lrectot
+				// FROM ' . $this->likes_table . ' l
+				// LEFT JOIN ' . POSTS_TABLE . ' p ON p.post_id = l.post_id';
+		// $result = $this->db->sql_query($sql);
+		// $likes = $this->db->sql_fetchrow($result);
+		// $this->db->sql_freeresult($result);
+		// $i = 0;
+		// foreach ($likes as $key => $value) {
+			// if (++$i <= (($this->config['dislike_off']) ? 2 : 4)) {
+				// $percentvalue = (substr($key, 0, 1) == 'l') ? $likes['lgivtot'] : $likes['lrectot'];
+				// $this->template->assign_block_vars('likes', [
+					// 'ICON'				=> (substr($key, 0, 1) == 'l') ? $this->config['like_icon'] : $this->config['dislike_icon'],
+					// 'GIVEN_RECEIVED'	=> ((substr($key, 0, 1) == 'l') ? ((substr($key, 1) == 'rec') ? $this->user->lang['LIKES_RECEIVED'] : $this->user->lang['LIKES_GIVEN']) : ((substr($key, 1) == 'rec') ? $this->user->lang['DISLIKES_RECEIVED'] : $this->user->lang['DISLIKES_GIVEN'])),
+					// 'GIVE_RECEIVE'		=> $value . ' (' . (($percentvalue) ? number_format(($value / $percentvalue) * 100, 2) :  0) .
+						// ((substr($key, 0, 1) == 'l') ? '% ' . $this->user->lang['LIKES_ALL_LIKES'] . ')' :  '% ' . $this->user->lang['LIKES_ALL_DISLIKES'] . ')')
+				// ]);
+			// }
+		// }
 	}
 
 	// Must use $event['forum_id'] for deletion...original function was broken
 	public function delete_like_dislike_forum($event)
 	{
-//		$sql = 'DELETE FROM ' . $this->likes_table . '
-//			WHERE post_id IN (
-//				SELECT post_id FROM ' . POSTS_TABLE . '
-//				WHERE ' . $this->db->sql_in_set('topic_id', $event['topic_ids']) . '
-//			)';
+		//		$sql = 'DELETE FROM ' . $this->likes_table . '
+		//			WHERE post_id IN (
+		//				SELECT post_id FROM ' . POSTS_TABLE . '
+		//				WHERE ' . $this->db->sql_in_set('topic_id', $event['topic_ids']) . '
+		//			)';
 
 		// This query is 100 times faster than the above!
 		$sql = "DELETE l.* FROM {$this->likes_table} l INNER JOIN {$this->posts_table} p
@@ -226,28 +244,28 @@ class listener implements EventSubscriberInterface
 	{
 		// Add a sanity check to guard against stupid things done by other extensions
 		if (!empty($event['user_ids'])) {
-//			$this->db->sql_query('DELETE FROM ' . $this->likes_table . ' WHERE ' . $this->db->sql_in_set('user_id', $event['user_ids']));
+			//			$this->db->sql_query('DELETE FROM ' . $this->likes_table . ' WHERE ' . $this->db->sql_in_set('user_id', $event['user_ids']));
 			$user_id_in = is_array($event['user_ids']) ? 'IN (' . implode(',', $event['user_ids']) . ')' : "= {$event['user_ids']}";
 			$this->db->sql_query("DELETE FROM {$this->likes_table} WHERE user_id $user_id_in");
 			if ($event['mode'] == 'remove') {
-//			if ($event['mode'] != 'retain') {
-//				$sql = 'DELETE FROM ' . $this->likes_table . '
-//					WHERE post_id IN (
-//						SELECT post_id FROM ' . POSTS_TABLE . '
-//						WHERE ' . $this->db->sql_in_set('poster_id', $event['user_ids']) . '
-//					)';
+				//			if ($event['mode'] != 'retain') {
+				//				$sql = 'DELETE FROM ' . $this->likes_table . '
+				//					WHERE post_id IN (
+				//						SELECT post_id FROM ' . POSTS_TABLE . '
+				//						WHERE ' . $this->db->sql_in_set('poster_id', $event['user_ids']) . '
+				//					)';
 
 				// This query is 100 times faster than the above!
 				$sql = "DELETE l.* FROM {$this->likes_table} l INNER JOIN {$this->posts_table} p
 					WHERE p.poster_id $user_id_in
 					AND l.post_id = p.post_id";
-	
+
 				$this->db->sql_query($sql);
 			}
 		}
 	}
 
-	protected function truncateByOccurence ($haystack, $needle, $limit)
+	protected function truncateByOccurence($haystack, $needle, $limit)
 	{
 		$haystack = explode($needle, $haystack, $limit + 1);
 		$haystack = array_slice($haystack, 0, $limit);

@@ -1,3 +1,5 @@
-<!-- IF postrow.NAMES_LIKES -->
- <div class="label label-huskygray pull-right">{postrow.NAMES_LIKES}<!-- IF postrow.NUMNAMES_LIKES -->&nbsp;{L_AND}&nbsp;{postrow.NUMNAMES_LIKES}&nbsp;<a data-toggle="modal" data-id="{postrow.POST_ID}" href="#LikersDialog" class="open-LikersDialog">{L_OTHERS}</a><!-- ENDIF -->&nbsp;{L_LIKED_THIS}</div>
-<!-- ENDIF -->
+{% if postrow.NAMES_LIKES %}
+  <div class="label label-huskygray pull-right">{{ postrow.NAMES_LIKES }}
+    {% if postrow.NUMNAMES_LIKES %}&nbsp;{{ lang('AND') }}&nbsp;{{ postrow.NUMNAMES_LIKES }}&nbsp;<a data-toggle="modal" data-id="{{ postrow.POST_ID }}" href="#LikersDialog" class="open-LikersDialog">{{ lang('OTHERS') }}</a>
+    {% endif %}&nbsp;{{ lang('LIKED_THIS') }}</div>
+{% endif %}

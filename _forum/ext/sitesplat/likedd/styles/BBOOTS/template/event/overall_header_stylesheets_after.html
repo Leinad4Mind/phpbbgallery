@@ -1,6 +1,6 @@
-<!-- IF BB_LOAD_IN_VIEWTOPIC -->
-	<!-- INCLUDECSS @sitesplat_likedd/css/likedd.css -->
-<!-- ENDIF -->
-<!-- IF STATS -->
-	<!-- INCLUDECSS @sitesplat_likedd/css/stats.css -->
-<!-- ENDIF -->
+{% if BB_LOAD_IN_VIEWTOPIC %}
+  {% INCLUDECSS '@sitesplat_likedd/css/likedd.min.css' %}
+{% endif %}
+{% if STATS %}
+  {% INCLUDECSS '@sitesplat_likedd/css/stats.min.css' %}
+{% endif %}

@@ -17,8 +17,8 @@ $(document).on("click", ".btn-likedd-trigger", function (e) {
 			phpbb.alert(result.info, result.txt, true);
 			phpbb.closeDarkenWrapper(3000);
 		}
-    }
-	});
+       }
+    });
 });
 
 $(document).on("click", ".open-LikersDialog", function () {

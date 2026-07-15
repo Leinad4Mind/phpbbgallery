@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* phpBB Ajax likeBB.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * phpBB Ajax likeBB.
+ *
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\likedd\migrations\v10x;
 
@@ -24,7 +25,7 @@ class m2_initial_config extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\sitesplat\likedd\migrations\v10x\m1_initial_schema');
+		return ['\sitesplat\likedd\migrations\v10x\m1_initial_schema'];
 	}
 
 	/**
@@ -35,16 +36,16 @@ class m2_initial_config extends \phpbb\db\migration\migration
 	 */
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('like_icon', 'fa-thumbs-up')),
-			array('config.add', array('dislike_icon', 'fa-thumbs-down')),
-			array('config.add', array('like_style', 'btn-default')),
-			array('config.add', array('dislike_style', 'btn-default')),
-			array('config.add', array('like_list', 1)),
-			array('config.add', array('dislike_off', 0)),
-			array('config.add', array('max_dislikes', 10)),
-			array('config.add', array('like_locked', 0)),
-			array('config.add', array('like_global', 0)),
-		);
+		return [
+			['config.add', ['like_icon', 'fa-thumbs-up']],
+			['config.add', ['dislike_icon', 'fa-thumbs-down']],
+			['config.add', ['like_style', 'btn-default']],
+			['config.add', ['dislike_style', 'btn-default']],
+			['config.add', ['like_list', 1]],
+			['config.add', ['dislike_off', 0]],
+			['config.add', ['max_dislikes', 10]],
+			['config.add', ['like_locked', 0]],
+			['config.add', ['like_global', 0]],
+		];
 	}
 }
