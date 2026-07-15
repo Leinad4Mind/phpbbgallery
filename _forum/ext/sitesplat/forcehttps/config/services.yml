@@ -1,0 +1,5 @@
+services:
+  sitesplat.forcehttps.listener:
+    class: sitesplat\forcehttps\event\listener
+    tags:
+      - { name: event.listener }
