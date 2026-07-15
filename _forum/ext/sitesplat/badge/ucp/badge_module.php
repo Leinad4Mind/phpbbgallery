@@ -70,11 +70,11 @@ class badge_module
 			if ($row['rule_id'])
 			{
 				$template->assign_block_vars('rules.badge.users', array(
-					'USERNAME'	=> '',
+					'USERNAME'	=> ucwords(strtolower($this->get_condition_lang($row['rule_name']))),
 					'USER_ID'	=> '',
 					'U_URL'		=> '',
-					'AVATAR'	=> '<img title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->get_condition_lang($row['rule_type_name']) . $this->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . '"
-									style="margin-top:4px;width:30px;height:30px;" src="' . $phpbb_root_path . '/ext/sitesplat/badge/badges/' . $row['badge'] . '">',
+					'AVATAR'	=> '<img title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom' || $row['rule_type_name'] != 'sitesplat.badge.type.donations') ? $this->get_condition_lang($row['rule_type_name']) . $this->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . '"
+					 				style="margin-top:4px;width:30px;height:30px;" src="' . $phpbb_root_path . '/ext/sitesplat/badge/badges/' . $row['badge'] . '">',
 					'DATE'		=> ($row['date']) ? $user->format_date($row['date'], 'j M Y') : '',
 				));
 			}

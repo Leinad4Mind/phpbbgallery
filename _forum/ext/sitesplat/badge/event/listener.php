@@ -138,7 +138,7 @@ class listener implements EventSubscriberInterface
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 			
-		if (!defined('ADMIN_START') && $row['user_id'])
+		if (!defined('ADMIN_START') && isset($row) && is_array($row) && isset($row['user_id']))
 		{
 			$notification_data = unserialize($row['notification_data']);
 			
@@ -196,7 +196,7 @@ class listener implements EventSubscriberInterface
 		{
 			if ($i < $this->config['badgeaward_amount'])
 			{
-				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . '" style="vertical-align:middle;width:16px;height:16px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '"></a> ';
+				$badges .= '<a href="' . $this->root_path . 'badge/' . (($row['badge_route'] != '') ? $row['badge_route'] . '.html' : 'index.html?u=' . $event['row']['user_id']) . '"><img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . $row['rule_name'] . '" style="vertical-align:middle;width:32px;height:32px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '"></a> ';
 			}
 			$i++;
 		}
@@ -231,7 +231,8 @@ class listener implements EventSubscriberInterface
 			$this->template->assign_block_vars('badges', array(
 				'NAME'			=> $this->manager->get_condition_lang($row['rule_type_name']),
 				'BADGE'			=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
-				'TITLE'			=> ($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name'],
+				// 'TITLE'			=> ($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name'],
+				'TITLE'			=> $row['rule_name'],
 				'DESCRIPTION'	=> $row['rule_description'],
 				'DATE'			=> $this->user->format_date($row['date'], 'j M Y')
 			));

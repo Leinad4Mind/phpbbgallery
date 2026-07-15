@@ -84,10 +84,10 @@ class custom extends \sitesplat\badge\conditions\type\base
 		$user_ids = $this->helper->prepare_users_for_query($options['users']);
 
 		// Get data for the users to be checked (exclude bots, guests and inactive users)
+		// WHERE ' . $this->db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
 		$sql = 'SELECT user_id, ' . implode(', ', $condition_data) . '
 			FROM ' . USERS_TABLE . '
-			WHERE ' . $this->db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-				AND ' . $this->db->sql_in_set('user_id', $user_ids, false, true);
+			WHERE ' . $this->db->sql_in_set('user_id', $user_ids, false, true);
 		$result = $this->db->sql_query($sql);
 
 		$user_data = array();

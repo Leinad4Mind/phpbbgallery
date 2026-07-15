@@ -107,17 +107,18 @@ class main
 		}, 'id');
 
 		$sql = 'SELECT r.rule_id, r.rule_type_id, r.rule_name, r.rule_description, rule_min_value, rule_max_value, e.user_id, u.username, u.badge_route, s.style_path,
-					   u.user_avatar AS avatar, u.user_avatar_width AS avatar_width, u.user_avatar_height AS avatar_height, u.user_avatar_type AS avatar_type, u.user_colour, 
-					   e.date, b.badge, t.rule_type_name
+				u.user_avatar AS avatar, u.user_avatar_width AS avatar_width, u.user_avatar_height AS avatar_height, u.user_avatar_type AS avatar_type, u.user_colour, 
+				e.date, b.badge, t.rule_type_name
 				FROM ' . $this->badge_rules_table . ' r
 				LEFT OUTER JOIN ' . $this->badge_events_table . ' e ON e.rule_id = r.rule_id
 				LEFT JOIN ' . $this->badge_types_table . ' t ON t.rule_type_id = r.rule_type_id
 				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = e.user_id
 				LEFT JOIN ' . STYLES_TABLE . ' s ON s.style_id = u.user_style
 				LEFT JOIN ' . $this->badge_badges_table . ' b ON b.badge_id = r.badge_id
-				' . ((!$userid ) ? ' WHERE r.rule_type_id IN (' . implode(',', $type_ids) . ')' : ' WHERE e.user_id = ' . $userid) . ' AND r.rule_type_id IN (' . implode(',', $type_ids) . ') AND u.user_posts > 100
-				 ' . (($route == 'recent.html') ? 'AND e.date >= ((SELECT MAX(date) FROM ' . $this->badge_events_table . ') - 31536000)' : '') . '
-				ORDER BY ' . (($route == 'recent.html') ? 't.rule_type_name, r.rule_min_value, e.date DESC' : 't.rule_type_name, r.rule_id, u.username_clean');
+				WHERE ' . ((!$userid) ? ('r.rule_type_id IN (' . implode(',', $type_ids) . ')') : ('e.user_id = ' . $userid . ' AND r.rule_type_id IN (' . implode(',', $type_ids) . ')')) . ' 
+				AND (' . (!$userid ? '((u.user_posts >= 1 AND r.rule_id IN (66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 85)) OR u.user_posts >= 21)' : '1=1') . ')
+				' . (($route == 'recent.html') ? 'AND e.date >= ((SELECT MAX(date) FROM ' . $this->badge_events_table . ') - 31536000)' : '') . '
+				ORDER BY ' . (($route == 'recent.html') ? 't.rule_type_name, e.date DESC LIMIT 100' : 't.rule_type_name, r.rule_id, e.date, u.username_clean');
 		$result = $this->db->sql_query($sql);
 		$ruleid = $rulename = '0';
 		
@@ -138,7 +139,8 @@ class main
 					$this->template->assign_block_vars('rules.badge', array(
 						'BADGE'				=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
 						'GROUP_NAME'		=> $row['rule_name'],
-						'DESCRIPTION'		=> (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . (($row['rule_description']) ? '<br />' . $row['rule_description'] : '')
+						'DESCRIPTION'		=> ($row['rule_description']) ? $row['rule_description'] : ''
+						// 'DESCRIPTION'		=> (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . (($row['rule_description']) ? '<br />' . $row['rule_description'] : '')
 					));
 				}
 				if (!empty($row['username']))
@@ -188,7 +190,7 @@ class main
 						'RULETITLE'	=> $row['rule_name'],
 					//	'DESCR'		=> $row['rule_name'] . '<br />' . $row['rule_description'],
 						'DESCR'		=> $row['rule_description'],
-						'AVATAR'	=> '<img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;width:30px;height:30px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '">',
+						'AVATAR'	=> '<img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '">',
 						'DATE'		=> ($row['date']) ? $this->user->format_date($row['date'], 'j M Y') : '',
 					));
 				}

@@ -67,9 +67,17 @@ class likedd extends \sitesplat\badge\conditions\type\base
 	 * @return array Array of users ids as keys and their condition data as values
 	 * @access public
 	 */
+	 
+	/**	 
+	 * DISLIKE RECEIVED - Option = 0
+	 * DISLIKE GIVEN - Option = 1
+	 * LIKE RECEIVED - Option = 2
+	 * LIKE GIVEN - Option = 3
+	*/
+
 	public function get_users_for_condition($options = array())
 	{
-		$user_data = array();
+        $user_data = array();
 		$manager = $this->container->get('ext.manager');
 		if ($manager->is_enabled('sitesplat/likedd'))
 		{
@@ -77,46 +85,66 @@ class likedd extends \sitesplat\badge\conditions\type\base
 			$condition_data = array(
 				$this->get_condition_field(),
 			);
-	
-			// Merge default options, empty user array as the default
-			$options = array_merge(array(
-				'users'		=> array(),
-			), $options);
-	
-			// Prepare the user ids data for use in the query
-			$user_ids = $this->helper->prepare_users_for_query($options['users']);
-	
-			$this->likes_table = $this->container->getParameter('sitesplat.likedd.tables.likes');
-	
-			$rule_data['options'] = sprintf( "%02d", decbin($options['option'])); 
-	
-			$like_dislike = ((int) substr($rule_data['options'], 0, 1)) ? true : false;
-			$give_recieve = ((int) substr($rule_data['options'], 1, 1)) ? false : true;
-	
-			// Get data for the users to be checked (exclude bots, guests and inactive users)
-			$sql = ($give_recieve) ? 'SELECT u.user_id, COUNT(CASE WHEN l.ld = ' . (($like_dislike) ? 0 : 1) . ' THEN l.user_id END) AS likedd
-				FROM ' . USERS_TABLE . ' u
-				LEFT JOIN ' . POSTS_TABLE . ' p ON p.poster_id = u.user_id
-				LEFT JOIN ' . $this->likes_table . ' l ON l.post_id = p.post_id
-				WHERE 
-				' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-					AND ' . $this->db->sql_in_set('l.user_id', $user_ids, !sizeof($user_ids), true) . '
-				group by u.user_id' :
-				'SELECT u.user_id, (SELECT COUNT(ld) FROM ' . $this->likes_table . ' WHERE ld = ' . (($like_dislike) ? 0 : 1) . ' AND user_id = u.user_id) AS likedd
-				FROM ' . USERS_TABLE . ' u 
-				WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-					AND ' . $this->db->sql_in_set('u.user_id', $user_ids, !sizeof($user_ids), true);
-			$result = $this->db->sql_query($sql);
-	
-			$user_data = array();
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$user_data[$row['user_id']] = array(
-					$this->get_condition_field() => $row['likedd']
-				);
-			}
-			$this->db->sql_freeresult($result);
+            
+
+		// Merge default options, empty user array as the default
+		$options = array_merge(array(
+			'users'		=> array(),
+		), $options);
+
+		// Prepare the user ids data for use in the query
+		$user_ids = $this->helper->prepare_users_for_query($options['users']);
+        
+		$this->likes_table = $this->container->getParameter('sitesplat.likedd.tables.likes');
+ 
+        /**	 
+         * DISLIKE RECEIVED - Option = 0
+         * DISLIKE GIVEN - Option = 1
+         * LIKE RECEIVED - Option = 2
+         * LIKE GIVEN - Option = 3
+        */	
+		$option = (int)$options['option'];
+		if ($option < 2) {
+            // dislike
+            $like_dislike = 1;
+        }
+        else {
+            // like
+            $like_dislike = 0;
+        }
+        if (($option % 2) == 1) {
+            $give_recieve = 0;
+        }
+        else {
+            $give_recieve = 1;
+        }
+        
+		// Get data for the users to be checked (exclude bots, guests and inactive users)
+        // Case: (Dis)Likes RECEIVED
+		$sql = ($give_recieve) ? 'SELECT u.user_id, COUNT(CASE WHEN l.ld = '.$like_dislike.' THEN l.user_id END) AS likedd
+			FROM ' . USERS_TABLE . ' u
+			LEFT JOIN ' . POSTS_TABLE . ' p ON p.poster_id = u.user_id
+			LEFT JOIN ' . $this->likes_table . ' l ON l.post_id = p.post_id
+			WHERE 
+			' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
+				AND ' . $this->db->sql_in_set('u.user_id', $user_ids, !sizeof($user_ids), true) . '
+			group by u.user_id' :
+            // Case: (Dis)Likes GIVEN
+			'SELECT u.user_id, (SELECT COUNT(ld) FROM ' . $this->likes_table . ' WHERE ld = '.$like_dislike.' AND user_id = u.user_id) AS likedd
+			FROM ' . USERS_TABLE . ' u 
+			WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
+				AND ' . $this->db->sql_in_set('u.user_id', $user_ids, !sizeof($user_ids), true);
+		$result = $this->db->sql_query($sql);
+
+		$user_data = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$user_data[$row['user_id']] = array(
+				$this->get_condition_field() => $row['likedd']
+			);
 		}
-		return $user_data;
+		$this->db->sql_freeresult($result);
+	}
+	return $user_data;
 	}
 }

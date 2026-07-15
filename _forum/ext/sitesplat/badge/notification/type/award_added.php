@@ -95,6 +95,38 @@ class award_added extends \phpbb\notification\type\base
 	}
 
 	/**
+	 * Get the user's avatar
+	 */
+	public function get_avatar()
+	{
+		// Define a mapping of badge types to corresponding image URLs
+		$badgeTypeToImageMap = array(
+			'BADGE_TYPE_RADAR' => 'radar.png',
+			// Add more mappings as needed
+		);
+
+		// Check if the badge type is in the mapping
+		if (isset($badgeTypeToImageMap[$this->get_data('rule_name')])) {
+			// Get the corresponding image URL
+			$imageURL = $badgeTypeToImageMap[$this->get_data('rule_name')];
+		} else {
+			// Use a default image URL if not found in the mapping
+			$imageURL = 'default.png';
+		}
+		
+		$url = generate_board_url();
+		
+		
+		// Build the URL to the badge image
+		$badgeImagePath = $url . '/ext/sitesplat/badge/badges/' . $imageURL;
+
+		// Return an HTML image tag with the badge image
+		return '<img src="' . $badgeImagePath . '" alt="Badge ' . $this->user->lang[$this->get_data('rule_name')] . '" />';
+	}
+
+
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function users_to_query()

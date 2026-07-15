@@ -83,13 +83,15 @@ class zebra_friends extends \sitesplat\badge\conditions\type\base
 		$user_ids = $this->helper->prepare_users_for_query($options['users']);
 
 		// Get data for the users to be checked (exclude bots, guests and inactive users)
-		$sql = 'SELECT u.user_id, (SELECT SUM(friend) FROM ' . ZEBRA_TABLE . ' WHERE user_id = u.user_id) AS friends  
+		// $sql = 'SELECT u.user_id, (SELECT SUM(friend) FROM ' . ZEBRA_TABLE . ' WHERE zebra_id = u.user_id) AS friends
+		$sql = 'SELECT u.user_id, (SELECT SUM(friend) FROM ' . ZEBRA_TABLE . ' z1 WHERE z1.zebra_id = u.user_id AND z1.friend = 1 AND EXISTS (SELECT 1 FROM ' . ZEBRA_TABLE . ' z2 WHERE z2.zebra_id = z1.user_id AND z2.user_id = z1.zebra_id AND z2.friend = 1)) AS friends
 			FROM ' . USERS_TABLE . ' u
 			WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
 				AND ' . $this->db->sql_in_set('u.user_id', $user_ids, !sizeof($user_ids), true);
 		$result = $this->db->sql_query($sql);
 
 		$user_data = array();
+
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$user_data[$row['user_id']] = array(
