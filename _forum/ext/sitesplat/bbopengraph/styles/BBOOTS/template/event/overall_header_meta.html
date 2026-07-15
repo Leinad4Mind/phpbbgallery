@@ -1,0 +1,43 @@
+<!-- IF BBOPENGRAPH_ID -->
+<meta property="fb:admins" content="{BBOPENGRAPH_ID}" />
+<!-- ENDIF -->
+<!-- IF BBOPENGRAPH_APPID -->
+<meta property="fb:app_id" content="{BBOPENGRAPH_APPID}" /> 
+<!-- ENDIF -->
+
+<!-- IF SCRIPT_NAME == "viewtopic" -->
+<meta property="og:url" content="{U_CANONICAL}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{TITLE_BBOPENGRAPH}" />
+<meta property="og:description" content="{DESC_BBOPENGRAPH}" />
+<!-- IF IMG_BBOPENGRAPH --><meta property="og:image" content="{IMG_BBOPENGRAPH}" /><!-- ENDIF -->
+<!-- IF TIME_BBOPENGRAPH --><meta property="article:published_time" content="{TIME_BBOPENGRAPH}" /><!-- ENDIF -->
+<!-- IF SECT_BBOPENGRAPH --><meta property="article:section" content="{SECT_BBOPENGRAPH}" /><!-- ENDIF -->
+<!-- IF BBTAG_BBOPENGRAPH --><meta property="article:tag" content="{BBTAG_BBOPENGRAPH}" /><!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF BBOPENGRAPH_TT_ID and SCRIPT_NAME == "viewtopic" -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="{BBOPENGRAPH_TT_ID}" />
+<meta name="twitter:title" content="{TITLE_BBOPENGRAPH}" />
+<meta name="twitter:description" content="{DESC_BBOPENGRAPH}" />
+<!-- IF IMG_BBOPENGRAPH --><meta name="twitter:image" content="{IMG_BBOPENGRAPH}" /><!-- ENDIF -->
+<meta name="twitter:app:country" content="{S_USER_LANG}">
+<!-- ENDIF -->
+
+<!-- IF BBOPENGRAPH_TT_ID and SCRIPT_NAME == "index" -->
+<meta property="og:title" content="{SITENAME}" />
+<meta property="og:description" content="{SITE_DESCRIPTION}">
+<meta property="og:url" content="{URL_BBOPENGRAPH_INDEX}" /> 
+<meta property="og:type" content="website">
+<meta property="og:image" content="{IMG_BBOPENGRAPH}" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="{BBOPENGRAPH_TT_ID}" />
+<meta name="twitter:title" content="{SITENAME}" />
+<meta name="twitter:description" content="{SITE_DESCRIPTION}" />
+<meta name="twitter:image" content="{IMG_BBOPENGRAPH}" />
+<meta name="twitter:app:country" content="{S_USER_LANG}">
+<!-- ENDIF -->
+
+
