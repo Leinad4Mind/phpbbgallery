@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* @package BBemoji
-* @copyright (c) 2016 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * @package BBEmoji
+ * @copyright (c) 2016-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbemoji\migrations;
 
@@ -32,13 +33,15 @@ class m3_initial_bbemoji_data extends \phpbb\db\migration\migration
 	 * @return array Array of table data
 	 * @access public
 	 */
-	public function update_data() {
-        return array(
-                array('custom', array(array($this, 'insert_initial_data'))),
-        );
+	public function update_data()
+	{
+		return array(
+			array('custom', array(array($this, 'insert_initial_data'))),
+		);
 	}
 
-	public function insert_initial_data() {
+	public function insert_initial_data()
+	{
 		// Set a constant to let m6 migration script know this is new
 		define('BBEMOJI_NEW_M3', true);
 

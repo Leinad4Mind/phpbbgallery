@@ -1,9 +1,11 @@
 <?php
 
 /**
-* @package   BBemoji
-* @copyright (c) 2018 SiteSplat All rights reserved
-*/
+ * @package BBEmoji
+ * @copyright (c) 2018-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ */
+
 namespace sitesplat\bbemoji\event;
 
 class bbsidebar_linstener extends listener
@@ -24,8 +26,7 @@ class bbsidebar_linstener extends listener
 
 	public function emojify_last_bbreaction($event)
 	{
-		if ($event['row']['emoji'])
-		{
+		if ($event['row']['emoji']) {
 			$tpl_ary = $event['tpl_ary'];
 			$tpl_ary['EMOJI'] = $this->render($tpl_ary['EMOJI']);
 			$event['tpl_ary'] = $tpl_ary;
@@ -35,7 +36,9 @@ class bbsidebar_linstener extends listener
 	public function emojify_hot_topics($event)
 	{
 		$tpl_ary = $event['tpl_ary'];
-		$tpl_ary['TOPIC_TITLE'] = $this->render($this->parse($tpl_ary['TOPIC_TITLE']));
+		if (isset($tpl_ary['TOPIC_TITLE'])) {
+			$tpl_ary['TOPIC_TITLE'] = $this->render($this->parse($tpl_ary['TOPIC_TITLE']));
+		}
 		$event['tpl_ary'] = $tpl_ary;
 	}
 }

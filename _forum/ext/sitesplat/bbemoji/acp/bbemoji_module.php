@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* @package BBemoji
-* @copyright (c) 2016 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * @package BBEmoji
+ * @copyright (c) 2016-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbemoji\acp;
 
@@ -27,12 +28,10 @@ class bbemoji_module
 
 		$icon_id = $request->variable('id', 0);
 		$action = $request->variable('action', '');
-		switch ($action)
-		{
+		switch ($action) {
 			case 'add':
 
-				if ($request->is_set_post('submit', false))
-				{
+				if ($request->is_set_post('submit', false)) {
 					$data = array(
 						'icons_emoji'			=> $request->variable('icons_emoji', '') ?: $request->variable('icon', ''),
 						'icons_order'			=> $this->get_max_order() + 1,
@@ -47,7 +46,7 @@ class bbemoji_module
 					'S_ADD'	=> true,
 				));
 
-			break;
+				break;
 
 			case 'edit':
 
@@ -55,13 +54,11 @@ class bbemoji_module
 						FROM ' . $table_prefix . 'emoji_icons
 						WHERE icons_id = ' . (int) $icon_id;
 				$result = $db->sql_query($sql);
-				if (!$db->sql_affectedrows())
-				{
+				if (!$db->sql_affectedrows()) {
 					trigger_error($user->lang('ICON_NOT_EXIST') . adm_back_link($this->u_action));
 				}
 
-				if ($request->is_set_post('submit', false))
-				{
+				if ($request->is_set_post('submit', false)) {
 					$data = array(
 						'icons_emoji'			=> $request->variable('icons_emoji', '') ?: $request->variable('icon', ''),
 						'display_on_posting'	=> $request->variable('display_on_posting', false),
@@ -81,12 +78,11 @@ class bbemoji_module
 					'DISPLAY_ON_POSTING'	=> (bool) $data['display_on_posting'],
 				));
 
-			break;
+				break;
 
 			case 'delete':
 
-				if (confirm_box(true))
-				{
+				if (confirm_box(true)) {
 					$sql = 'DELETE FROM ' . $table_prefix . 'emoji_icons
 						WHERE icons_id = ' . (int) $icon_id;
 					$db->sql_query($sql);
@@ -102,8 +98,7 @@ class bbemoji_module
 
 					$notice = $user->lang['ICONS_DELETED'];
 
-					if ($request->is_ajax())
-					{
+					if ($request->is_ajax()) {
 						$json_response = new \phpbb\json_response;
 						$json_response->send(array(
 							'MESSAGE_TITLE'	=> $user->lang['INFORMATION'],
@@ -113,9 +108,7 @@ class bbemoji_module
 							)
 						));
 					}
-				}
-				else
-				{
+				} else {
 					confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
 						'i'			=> $id,
 						'mode'		=> $mode,
@@ -124,13 +117,12 @@ class bbemoji_module
 					)));
 				}
 
-			break;
+				break;
 
 			case 'move_up':
 			case 'move_down':
 
-				if (!check_link_hash($request->variable('hash', ''), 'acp_icons'))
-				{
+				if (!check_link_hash($request->variable('hash', ''), 'acp_icons')) {
 					trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
@@ -142,8 +134,7 @@ class bbemoji_module
 				$current_order = (int) $db->sql_fetchfield('current_order');
 				$db->sql_freeresult($result);
 
-				if ($current_order == 0 && $action == 'move_up')
-				{
+				if ($current_order == 0 && $action == 'move_up') {
 					break;
 				}
 
@@ -159,8 +150,7 @@ class bbemoji_module
 				$move_executed = (bool) $db->sql_affectedrows();
 
 				// Only update the other entry too if the previous entry got updated
-				if ($move_executed)
-				{
+				if ($move_executed) {
 					$sql = 'UPDATE ' . $table_prefix . "emoji_icons
 						SET icons_order = $switch_order_id
 						WHERE icons_order = $current_order
@@ -168,15 +158,14 @@ class bbemoji_module
 					$db->sql_query($sql);
 				}
 
-				if ($request->is_ajax())
-				{
+				if ($request->is_ajax()) {
 					$json_response = new \phpbb\json_response;
 					$json_response->send(array(
 						'success'	=> $move_executed,
 					));
 				}
 
-			break;
+				break;
 		}
 
 		// By default, check that icons_order is valid and fix it if necessary
@@ -184,20 +173,16 @@ class bbemoji_module
 			FROM ' . $table_prefix . 'emoji_icons
 			ORDER BY icons_order';
 		$result = $db->sql_query($sql);
-		if ($row = $db->sql_fetchrow($result))
-		{
+		if ($row = $db->sql_fetchrow($result)) {
 			$order = 0;
-			do
-			{
+			do {
 				++$order;
-				if ($row['fields_order'] != $order)
-				{
+				if ($row['fields_order'] != $order) {
 					$db->sql_query('UPDATE ' . $table_prefix . "emoji_icons
 						SET icons_order = $order
 						WHERE icons_id = " . $row['order_id']);
 				}
-			}
-			while ($row = $db->sql_fetchrow($result));
+			} while ($row = $db->sql_fetchrow($result));
 		}
 		$db->sql_freeresult($result);
 
@@ -206,14 +191,10 @@ class bbemoji_module
 				FROM ' . $table_prefix . 'emoji_icons
 				ORDER BY icons_order';
 		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			if (substr($row['icons_emoji'], 0, 1) !== ':')
-			{
+		while ($row = $db->sql_fetchrow($result)) {
+			if (substr($row['icons_emoji'], 0, 1) !== ':') {
 				$img_src = '<img src="' . generate_board_url() . '/' . $row['icons_emoji'] . '">';
-			}
-			else
-			{
+			} else {
 				$img_src = $bbemoji_listener->render($bbemoji_listener->parse($row['icons_emoji']));
 			}
 

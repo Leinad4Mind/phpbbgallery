@@ -1,4 +1,13 @@
 <?php
+
+/**
+ *
+ * @package BBEmoji
+ * @copyright (c) 2016-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
+
 if (!defined('BBEMOJI_DEFAULT_ICON_SQL')) {
 	define('BBEMOJI_DEFAULT_ICON_SQL', "
 	(1, ':fire:', 1, 1),

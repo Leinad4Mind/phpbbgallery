@@ -1,9 +1,11 @@
 <?php
 
 /**
-* @package   BBemoji
-* @copyright (c) 2015 SiteSplat All rights reserved
-*/
+ * @package BBEmoji
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ */
+
 namespace sitesplat\bbemoji\event;
 
 class likedd_listener extends listener
@@ -38,8 +40,7 @@ class likedd_listener extends listener
 
 	public function likebb_render_subject($event)
 	{
-		if (!empty($event['row']['enable_subject_emoji']))
-		{
+		if (!empty($event['row']['enable_subject_emoji'])) {
 			$template_data = $event['template_data'];
 			$template_data['SUBJECT'] = $this->render($this->parse($template_data['SUBJECT']));
 			$event['template_data'] = $template_data;

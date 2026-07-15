@@ -1,9 +1,11 @@
 <?php
 
 /**
-* @package   BBemoji
-* @copyright (c) 2018 SiteSplat All rights reserved
-*/
+ * @package BBEmoji
+ * @copyright (c) 2018-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ */
+
 namespace sitesplat\bbemoji\event;
 
 class bbchat_listener extends listener

@@ -1,17 +1,18 @@
 <?php
+
 /**
-*
-* @package BBemoji
-* @copyright (c) 2016 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ *
+ * @package BBEmoji
+ * @copyright (c) 2016-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ *
+ */
 
 namespace sitesplat\bbemoji\migrations;
 
 /**
-* Migration stage 6: Initial module
-*/
+ * Migration stage 2: Initial module
+ */
 class m2_initial_module extends \phpbb\db\migration\migration
 {
 	/**
@@ -35,18 +36,20 @@ class m2_initial_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('module.remove', array(
-				'acp', 'ACP_MESSAGES', array(
-					'module_basename'	=> 'acp_icons',
-					'modes'				=> array('icons'),
-				),
+			array(
+				'module.remove', array(
+					'acp', 'ACP_MESSAGES', array(
+						'module_basename'	=> 'acp_icons',
+						'modes'				=> array('icons'),
+					),
 				),
 			),
-			array('module.add', array(
-				'acp', 'ACP_MESSAGES', array(
-					'module_basename'	=> '\sitesplat\bbemoji\acp\bbemoji_module',
-					'modes'				=> array('icons'),
-				),
+			array(
+				'module.add', array(
+					'acp', 'ACP_MESSAGES', array(
+						'module_basename'	=> '\sitesplat\bbemoji\acp\bbemoji_module',
+						'modes'				=> array('icons'),
+					),
 				),
 			),
 		);
