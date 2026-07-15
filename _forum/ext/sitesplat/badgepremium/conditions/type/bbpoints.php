@@ -101,6 +101,7 @@ class bbpoints extends \sitesplat\badge\conditions\type\base
 				SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 GROUP BY poster_id) t1 
 				ON t1.user_id = u.user_id 
 				WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
+				AND u.user_posts >= 1
 				AND ' . $this->db->sql_in_set('u.user_id', $user_ids, $sync, true) . '
 				GROUP BY user_id 
 				ORDER BY bbpoints DESC ';

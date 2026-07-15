@@ -6,6 +6,6 @@ services:
     sitesplat.badgepremium.listener:
         class: sitesplat\badgepremium\event\listener
         arguments:
-            - @user
+            - '@user'
         tags:
             - { name: event.listener }
