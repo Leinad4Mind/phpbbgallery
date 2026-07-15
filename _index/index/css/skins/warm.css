@@ -1,0 +1,51 @@
+/* Section Titles */
+.section-title {color: #daa520;}
+
+/* Logo */
+.logo {background: url('../../img/logo_gold.png') no-repeat 0 50%;}
+
+/* Text Links */
+a:hover, a:focus { color: #daa520;}
+
+/* Menu item hover */
+#menu a:hover {color: #daa520;}
+
+/* Mobile menu icon */
+.mobile-menu .icon {color: #daa520;}
+
+/* Portfolio Item */
+.portfolio-item-title span {color: #daa520;}
+.portfolio-item:hover {background: #daa520;}
+.portfolio-item-title span {color: #daa520;}
+
+/* Portfolio Filtering */
+.option-set a:hover .icon {color: #5851db; }
+.option-set a:hover .filter-title {color: #daa520;}
+.option-set a:hover .icon {box-shadow: 0 0 0 8px #daa520; background: #FFFFFF;}
+.option-set a:hover .icon {box-shadow: 0 0 0 7px #daa520; background: #FFFFFF;}
+
+/* Option Icons on Hover */
+.option-set a:hover .icon-heart {color: #B12323}
+.option-set a:hover .icon-shopping-cart {color: #DABB36}
+.option-set a:hover .icon-facebook-sign {color: #3B5998}
+.option-set a:hover .icon-instagram {color: #5851db}
+.option-set a:hover .icon-youtube-sign {color: #B22222}
+
+/* Footer */
+#footer {background: linear-gradient(#daa520, #9e7233)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

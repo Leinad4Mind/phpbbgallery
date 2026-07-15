@@ -1,0 +1,86 @@
+/*------------------------------------------------------*/
+/*	# Style Switcher Panel */
+/*------------------------------------------------------*/
+
+#style-switcher {height: 200px;left: -130px; padding: 0; position: fixed; top: 200px; width: 100px; z-index: 99998;}
+#style-switcher h2 {height: 40px; background: rgba(0, 0, 0, 0.8); font-family: 'Open Sans', sans-serif; font-size: 13px; width: 100%; font-weight: bold; line-height: 40px; color: #fff; padding: 0 10px 0 20px; margin: 0; text-align: left; text-transform: none;}
+#style-switcher i {color: #C7C7C7; display: table; font-size: 18px; line-height: 40px; margin: 0 auto; transition: all 1.3s ease-in-out; cursor: pointer;}
+#style-switcher-tab {position: absolute; cursor: pointer; top: 0;  left: 130px; height: 40px; width: 40px; background: rgba(0, 0, 0, 0.8);}
+#style-switcher-content {float:left; padding: 10px 20px 20px 20px; background: rgba(0, 0, 0, 0.8);}
+.colors li, .patterns li {float: left; margin: 2px;}
+.colors li a, .patterns li a {width: 25px; height: 25px; display: block; cursor: pointer;}
+
+/*------------------------------------------------------*/
+/*	# Color Schemes */
+/*------------------------------------------------------*/
+
+.patterns .patternNone {background: white;}
+
+/* WARM SCHEME */
+.warm-skin .section-title {color: #FCCE59;}
+.warm-skin .logo {background: url('../img/logo_gold.png') no-repeat 0 50%;}
+.warm-skin a:hover, .warm-skin a:focus { color: #FCCE59;}
+.warm-skin #menu a:hover {color: #FCCE59;}
+.warm-skin .mobile-menu .icon {color: #FCCE59;}
+.warm-skin .portfolio-item-title span {color: #FCCE59;}
+.warm-skin .portfolio-item:hover {background: #FCCE59;}
+.warm-skin .portfolio-item-title span {color: #FCCE59;}
+.warm-skin .option-set a:hover .icon {color: #FCCE59; }
+.warm-skin .option-set a:hover .filter-title {color: #FCCE59;}
+.warm-skin .option-set a:hover .icon {box-shadow: 0 0 0 8px #FCCE59;}
+.warm-skin .option-set a:hover .icon {box-shadow: 0 0 0 7px #FCCE59; color: #FCCE59;}
+.warm-skin .team-member:hover, .warm-skin .team-member-active {border: 15px solid #FCCE59;}
+.warm-skin .memberProfile {background: #FCCE59;}
+.warm-skin .bullet {background: url("../img/bullet_warm.png");}
+.warm-skin .process-icon.first  {background: url('../img/icons/process_01_warm.html') no-repeat 50% 0;}
+.warm-skin .process-icon.second {background: url('../img/icons/process_02_warm.html') no-repeat 50% 0;}
+.warm-skin .process-icon.third  {background: url('../img/icons/process_03_warm.html') no-repeat 50% 0;}
+.warm-skin .process-icon.fourth {background: url('../img/icons/process_04_warm.html') no-repeat 50% 0;}
+.warm-skin .processInfo {background: #FCCE59;}
+.warm-skin .service-item:hover {background: #FCCE59;}
+.warm-skin .service-item-title span {color: #FCCE59;}
+.warm-skin .service-item:hover .icon {color: #FCCE59;}
+.warm-skin .prev:hover .icon, .warm-skin .next:hover .icon {color: #FCCE59;}
+.warm-skin .blog-item-title .line-1 {background: #FCCE59;}
+.warm-skin .blog-article-intro {background: rgba(215,107,0,0.9);}
+.warm-skin .contact-title {color: #FCCE59;}
+.warm-skin .small-button {background: #FCCE59;}
+.warm-skin .map-title {color: #FCCE59;}
+.warm-skin .office-info.right a {color: #FCCE59;}
+.warm-skin .contact-info .icon {color: #FCCE59;}
+.warm-skin #footer {background: #FCCE59;}
+
+/* COLD SCHEME */
+.cold-skin .section-title {color: #77c4bc;}
+.cold-skin .logo {background: url('../img/logo_cold.png') no-repeat 0 50%;}
+.cold-skin a:hover, .cold-skin a:focus { color: #77c4bc;}
+.cold-skin #menu a:hover {color: #77c4bc;}
+.cold-skin .mobile-menu .icon {color: #77c4bc;}
+.cold-skin .portfolio-item-title span {color: #77c4bc;}
+.cold-skin .portfolio-item:hover {background: #77c4bc;}
+.cold-skin .portfolio-item-title span {color: #77c4bc;}
+.cold-skin .option-set a:hover .icon {color: #77c4bc; }
+.cold-skin .option-set a:hover .filter-title {color: #77c4bc;}
+.cold-skin .option-set a:hover .icon {box-shadow: 0 0 0 8px #77c4bc;}
+.cold-skin .option-set a:hover .icon {box-shadow: 0 0 0 7px #77c4bc; color: #77c4bc;}
+.cold-skin .team-member:hover, .cold-skin .team-member-active {border: 15px solid #77c4bc;}
+.cold-skin .memberProfile {background: #77c4bc;}
+.cold-skin .bullet {background: url("../img/bullet_cold.png");}
+.cold-skin .process-icon.first  {background: url('../img/process/process_01_cold.png') no-repeat 50% 0;}
+.cold-skin .process-icon.second {background: url('../img/process/process_02_cold.png') no-repeat 50% 0;}
+.cold-skin .process-icon.third  {background: url('../img/process/process_03_cold.png') no-repeat 50% 0;}
+.cold-skin .process-icon.fourth {background: url('../img/process/process_04_cold.png') no-repeat 50% 0;}
+.cold-skin .processInfo {background: #77c4bc;}
+.cold-skin .service-item:hover {background: #77c4bc;}
+.cold-skin .service-item-title span {color: #77c4bc;}
+.cold-skin .service-item:hover .icon {color: #77c4bc;}
+.cold-skin .prev:hover .icon, .cold-skin .next:hover .icon {color: #77c4bc;}
+.cold-skin .blog-item-title .line-1 {background: #77c4bc;}
+.cold-skin .blog-article-intro {background: rgba(215,107,0,0.9);}
+.cold-skin .contact-title {color: #77c4bc;}
+.cold-skin .small-button {background: #77c4bc;}
+.cold-skin .map-title {color: #77c4bc;}
+.cold-skin .office-info.right a {color: #77c4bc;}
+.cold-skin .contact-info .icon {color: #77c4bc;}
+.cold-skin #footer {background: #77c4bc;}
+
