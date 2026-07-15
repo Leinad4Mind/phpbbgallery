@@ -1,10 +1,11 @@
 <?php
 
 /**
-* @package BBemoji
-* @copyright (c) 2016 SiteSplat All rights reserved
-* @license Proprietary
-*/
+ * @package BBEmoji
+ * @copyright (c) 2016-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ */
+
 namespace sitesplat\bbemoji\event;
 
 class bbfront_listener extends listener
@@ -31,8 +32,7 @@ class bbfront_listener extends listener
 	public function bbfront_tpl($event)
 	{
 		$tpl_ary = $event['tpl_ary'];
-		if ($event['row']['enable_subject_emoji'])
-		{
+		if ($event['row']['enable_subject_emoji']) {
 			$tpl_ary['TITLE'] = $this->render($this->parse($tpl_ary['TITLE']));
 		}
 
@@ -48,30 +48,23 @@ class bbfront_listener extends listener
 		$emoji_chars = 0;
 		$in_tag = false;
 		$new_post_text = '';
-		foreach (str_split($post_text) as $char)
-		{
-			if ($chars_count > $event['config_aray']['chars'])
-			{
+		foreach (str_split($post_text) as $char) {
+			if ($chars_count > $event['config_aray']['chars']) {
 				break;
 			}
 
-			if ($char == '<')
-			{
+			if ($char == '<') {
 				$in_tag = true;
 			}
-			if ($char == '>')
-			{
+			if ($char == '>') {
 				$chars_count++;
 				$emoji_chars++;
 				$in_tag = false;
 			}
 
-			if ($in_tag)
-			{
+			if ($in_tag) {
 				$emoji_chars++;
-			}
-			else
-			{
+			} else {
 				$chars_count++;
 			}
 
