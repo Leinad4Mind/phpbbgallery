@@ -1,0 +1,150 @@
+<!-- INCLUDE gallery/gallery_header.html -->
+<script>
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
+<div class="side-segment"><h3><!-- IF SEARCH_TITLE -->{SEARCH_TITLE}<!-- ELSE -->{SEARCH_MATCHES}<!-- ENDIF --><!-- IF SEARCH_WORDS -->{L_COLON} <a href="{U_SEARCH_WORDS}">{SEARCH_WORDS}</a><!-- ENDIF --></h3></div>
+
+<!-- IF IGNORED_WORDS --> <p>{L_IGNORED_TERMS}{L_COLON} <strong>{IGNORED_WORDS}</strong></p><!-- ENDIF -->
+
+<!-- IF U_GALLERY_SEARCH --><p><a href="{U_GALLERY_SEARCH}" title="{L_SEARCH_ADV}">{L_RETURN_TO_SEARCH_ADV}</a></p><!-- ENDIF -->
+
+
+<!-- IF PAGINATION or SEARCH_MATCHES or PAGE_NUMBER -->
+<form method="post" action="{S_SEARCH_ACTION}">
+	<div class="clearfix">
+	<!-- IF SEARCH_MATCHES -->
+	<div class="pull-left">
+	<!-- IF SEARCH_IN_RESULTS -->
+	<div class="input-group">  
+	   <input type="text" class="form-control" size="" name="add_keywords" id="add_keywords" placeholder="{L_SEARCH_IN_RESULTS}">
+	 <span class="input-group-btn">
+	   <button type="submit" class="btn btn-default">{L_SEARCH}</button>
+     </span>
+	</div>
+	<input type="hidden" name="show_results" value="posts" />
+	<!-- ENDIF -->
+	</div>
+	<!-- ENDIF -->
+	
+    <div class="pull-right">
+           <ul class="pagination pagination-sm">
+	         <li class="active"><a>{SEARCH_MATCHES}</a></li>
+             <!-- IF PAGINATION --><li><a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a></li> {PAGINATION}<!-- ELSE --> <li><a>{PAGE_NUMBER}</a></li><!-- ENDIF -->
+	       </ul>	
+	</div>
+</div>
+</form>
+<!-- ENDIF -->
+
+<!-- IF SEARCH_MATCHES -->
+	<!-- IF S_IN_GALLERY_POPUP -->
+		<!-- INCLUDE gallery/imageblock_popup.html -->
+	<!-- ELSE -->
+		<!-- INCLUDE gallery/imageblock_polaroid.html -->
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF .commentrow -->
+<div id="recent-comments">
+	<!-- BEGIN commentrow -->
+	<a id="comment_{commentrow.COMMENT_ID}"></a>
+	<div class="well well-small">
+      <div class="row">
+		<div class="postbody col-md-9">
+		   <div class="clearfix">
+		     <div class="pull-left timepost">
+		        <ul class="list-unstyled">
+				<li><i class="fa fa-file"></i> {L_COMMENT_ON}{L_COLON} {commentrow.UC_IMAGE_NAME}</li>
+				<li><i class="fa fa-user"></i> {L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> <i class="fa fa-clock-o"></i> {commentrow.TIME}</li>
+			    </ul>
+			 </div>
+		<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO or commentrow.U_QUOTE -->
+				<ul class="list-inline pull-right hidden-xs">
+				    <!-- IF commentrow.U_EDIT --><li><a class="btn btn-xs btn-default" href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}"><i class="fa fa-pencil"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_DELETE --><li><a class="btn btn-xs btn-default" href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><i class="fa fa-times"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_INFO --><li><a class="btn btn-xs btn-default" href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><i class="icon-moon-ipcontrol"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_QUOTE --><li><a class="btn btn-xs btn-default" href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}"><i class="fa fa-comment"></i></a></li><!-- ENDIF -->
+				</ul>
+	        </div>
+		<!-- ENDIF -->
+			<div class="space10"></div>
+			 <div class="space10"></div>
+			<div class="content">{commentrow.TEXT}</div>
+		</div>
+			
+		<div class="col-md-3 hidden-xs">
+            <div class="user-profile-tab text-center">
+			<div class="postprofile" id="profile{commentrow.COMMENT_ID}">
+				{commentrow.UC_THUMBNAIL}
+			 <ul class="list-unstyled">
+				<li><i class="fa fa-user"></i> {L_UPLOADED_BY_USER} {commentrow.IMAGE_AUTHOR}</li>
+				<li><i class="fa fa-clock-o"></i> {commentrow.IMAGE_TIME}</li>
+			 </ul>
+			</div>
+			</div>
+		</div>
+      </div>
+	</div>
+	<!-- END commentrow -->
+</div>
+<!-- ENDIF -->
+<div class="clearfix">
+<!-- IF PAGINATION or .imagerow or ((S_SELECT_SORT_KEY or S_SELECT_SORT_DAYS) and SEARCH_IN_RESULTS) -->
+<!-- IF S_SELECT_SORT_KEY and SEARCH_IN_RESULTS -->
+	<div class="pull-left">
+	  <form method="post" action="{S_SEARCH_ACTION}">
+	  <fieldset>
+		<div class="controls-row"> 
+        <label class="control-label" for="bday_day">{L_SORT_BY}{L_COLON}</label>
+         <div class="input-group">
+		 {S_SELECT_SORT_KEY} 
+		 <span class="input-group-btn">
+		 {S_SELECT_SORT_DIR} 
+		
+		 <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+		 </span>
+		 </div> 
+	    </div>
+	  </fieldset>
+	</form>
+  </div> 
+<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF PAGINATION or .imagerow or PAGE_NUMBER -->
+	<div class="pull-right">
+	<div class="space10"></div>
+			 <div class="space10"></div>
+			 <div class="space10"></div>
+           <ul class="pagination pagination-sm">
+	         <li class="active"><a>{SEARCH_MATCHES}</a></li>
+			 <!-- IF PREVIOUS_PAGE --><li><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a></li><!-- ENDIF -->
+             <!-- IF PAGINATION --><li><a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a></li> {PAGINATION}<!-- ELSE --> <li><a>{PAGE_NUMBER}</a></li><!-- ENDIF -->
+	       <!-- IF NEXT_PAGE --><li><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a></li><!-- ENDIF -->
+		  </ul>	
+	</div>
+<!-- ENDIF -->
+</div>
+<!-- INCLUDE gallery/gallery_footer.html -->

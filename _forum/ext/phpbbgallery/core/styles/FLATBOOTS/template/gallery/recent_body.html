@@ -1,0 +1,51 @@
+<!-- INCLUDE gallery/imageblock_body.html -->
+<!-- IF .commentrow -->
+	<div class="side-segment">
+		<h3><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE --><a href="javascript: dE('recent-comments');">{L_RECENT_COMMENTS}</a><!-- ENDIF --></h3>
+	</div>
+	<div class="clearfix" id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
+	<!-- BEGIN commentrow -->
+	<a id="comment_{commentrow.COMMENT_ID}"></a>
+	<div class="well well-small">
+      <div class="row">
+		<div class="postbody col-md-9">
+		   <div class="clearfix">
+		     <div class="pull-left timepost">
+		        <ul class="list-unstyled">
+				<li><i class="fa fa-file"></i> {L_COMMENT_ON}{L_COLON} {commentrow.UC_IMAGE_NAME}</li>
+				<li><i class="fa fa-user"></i> {L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> <i class="fa fa-clock-o"></i> {commentrow.TIME}</li>
+			    </ul>
+			 </div>
+		<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO or commentrow.U_QUOTE -->
+				<ul class="list-inline pull-right hidden-xs">
+				    <!-- IF commentrow.U_EDIT --><li><a class="btn btn-xs btn-default" href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}"><i class="fa fa-pencil"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_DELETE --><li><a class="btn btn-xs btn-default" href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><i class="fa fa-times"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_INFO --><li><a class="btn btn-xs btn-default" href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><i class="fa fa-info"></i></a></li><!-- ENDIF -->
+					<!-- IF commentrow.U_QUOTE --><li><a class="btn btn-xs btn-default" href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}"><i class="fa fa-comment"></i></a></li><!-- ENDIF -->
+				</ul>
+		<!-- ENDIF -->
+		   </div>
+			<div class="space10"></div>
+			 <div class="space10"></div>
+			<div class="content">{commentrow.TEXT}</div>
+		</div>
+			
+		<div class="col-md-3 hidden-xs">
+            <div class="user-profile-tab text-center">
+			<div class="postprofile" id="profile{commentrow.COMMENT_ID}">
+				{commentrow.UC_THUMBNAIL}
+			 <ul class="list-unstyled">
+				<li><i class="fa fa-user"></i> {L_UPLOADED_BY_USER} {commentrow.IMAGE_AUTHOR}</li>
+				<li><i class="fa fa-clock-o"></i> {commentrow.IMAGE_TIME}</li>
+			 </ul>
+			</div>
+			</div>
+		</div>
+      </div>
+	</div>
+	<!-- END commentrow -->
+	</div>
+<!-- ENDIF -->
+<p class="separator gallery-sep text-center"><i class="fa fa-camera fa-2x"></i></p>
+<div class="space10"></div>
+	<div class="space10"></div>

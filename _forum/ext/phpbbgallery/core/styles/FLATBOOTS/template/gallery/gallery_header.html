@@ -1,0 +1,28 @@
+<!-- IF S_IN_GALLERY_POPUP -->
+	<!-- INCLUDE simple_header.html -->
+
+	<div class="well">
+		<a href="{U_POPUP_OWN}">{L_OWN_IMAGES}</a> &#47;
+		<a href="{U_POPUP_RECENT}">{L_RECENT_IMAGES}</a> &#47;
+		<!-- IF U_POPUP_UPLOAD --> <a href="{U_POPUP_UPLOAD}">{L_UPLOAD_IMAGE}</a><!-- ENDIF -->
+	</div>
+
+<script>
+head.ready(function () {
+	function insert_image(image_id, field_id)
+	{
+		opener.document.forms['postform'].message.value += '[album]' + image_id +'[/album]';
+		document.getElementById('inserted_' + field_id).style.display = 'block';
+	}
+});
+</script>
+
+<!-- ELSE -->
+	<!-- INCLUDE overall_header.html -->
+
+	<!-- IF GALLERY_VERSION_CHECK and U_ACP --> 
+	<div id="gallery_version_check" class="well">
+			<strong>{L_INFORMATION}{L_COLON}</strong> {GALLERY_VERSION_CHECK}<!-- IF U_MVC_IGNORE --> [ <a href="{U_MVC_IGNORE}">{L_IGNORE_NOTUPTODATE_MESSAGE}</a> ]<!-- ENDIF -->
+	</div>
+	<!-- ENDIF -->
+<!-- ENDIF -->

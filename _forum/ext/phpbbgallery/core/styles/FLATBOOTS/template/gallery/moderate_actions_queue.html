@@ -1,0 +1,41 @@
+<div class="panel">
+	<div class="panel-body">
+		<!-- IF U_OVERVIEW -->
+		<div class="alert alert-info fade in">
+			<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+			<i class="fa fa-warning"></i>&nbsp;<strong>{L_LATEST_LOGS}</strong>
+		</div>
+		<!-- ENDIF -->
+		<!-- IF S_HAS_LOGS -->
+			<table class="footable table table-striped table-primary table-hover footable-loaded tablet">
+				<thead>
+					<tr>
+						<th class="footable-visible footable-first-column">{L_ACTION}</th>
+						<th class="footable-visible">{L_USERNAME}</th>
+						<th class="footable-visible">{L_IP}</th>
+						<th class="footable-visible">{L_LOGVIEW_VIEWALBUM}</th>
+						<th class="footable-visible">{L_LOGVIEW_VIEWIMAGE}</th>
+						<th class="footable-visible footable-last-column">{L_TIME}</td>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- BEGIN log -->
+					<tr class="<!-- IF log.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+						<td class="expand footable-visible footable-first-column">{log.U_LOG_ACTION}</td>
+						<td class="footable-visible">{log.U_LOG_USER}</td>
+						<td class="footable-visible">{log.U_LOG_IP}</td>
+						<td class="footable-visible"><!-- IF log.U_ALBUM_LINK --><a href="{log.U_ALBUM_LINK}">{L_LOGVIEW_VIEWALBUM}</a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+						<td class="footable-visible"><!-- IF log.U_IMAGE_LINK --><a href="{log.U_IMAGE_LINK}">{L_LOGVIEW_VIEWIMAGE}</a><!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+						<td class="footable-visible footable-last-column">{log.U_TIME}</td>
+					</tr>
+					<!-- END log -->
+				</tbody>
+			</table>
+		<!-- ELSE -->
+		<div class="alert alert-info fade in">
+			<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+			<i class="fa fa-warning"></i>&nbsp;<strong>{L_NO_ENTRIES}</strong>
+		</div>
+		<!-- ENDIF -->
+	</div>
+</div>

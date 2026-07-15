@@ -1,0 +1,53 @@
+<!-- BEGIN imageblock -->
+<div>
+	<div class="side-segment">
+		<h3><!-- IF imageblock.U_BLOCK --><a href="{imageblock.U_BLOCK}">{imageblock.BLOCK_NAME}</a><!-- ELSE -->{imageblock.BLOCK_NAME}<!-- ENDIF --></h3>
+	</div>
+	<div class="clearfix">
+		<div class="row">
+			<!-- BEGIN image -->
+			<div class="col-md-3">
+				<div class="well well-sm">
+				<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 1.2em;">
+					<!-- IF imageblock.image.U_IMAGE --><a href="{imageblock.image.U_IMAGE}"><!-- ENDIF -->{imageblock.image.UC_IMAGE_NAME}<!-- IF imageblock.image.U_IMAGE --></a><!-- ENDIF -->
+				</p>
+				<div style="display:table;margin-right:auto;margin-left:auto;height:180px;width:230px;">
+					<div style="display:table-cell;vertical-align:middle;text-align:center;" id="thumbnail">
+						<div class="img-thumbnail" id="thumbnail">
+							<!-- IF imageblock.image.UC_THUMBNAIL_ACTION --><a href="{imageblock.image.UC_THUMBNAIL_ACTION}"><!-- ENDIF --><img class="img-responsive center-block" src="{imageblock.image.UC_THUMBNAIL}" alt="{imageblock.image.UC_IMAGE_NAME}" title="{imageblock.image.UC_IMAGE_NAME}" /><!-- IF imageblock.image.UC_THUMBNAIL_ACTION --></a><!-- ENDIF -->
+						</div>
+					</div>
+				</div>
+					<div class="clearfix details-gallery text-overflow">
+						<ul class="list-unstyled">
+							<!-- IF imageblock.image.CONTEST_RANK --><li>{L_CONTEST_RESULT}{L_COLON} <strong>{imageblock.image.CONTEST_RANK}</strong></li><!-- ENDIF -->
+							<!-- IF imageblock.image.UC_IMAGE_NAME --><li>{L_IMAGE_NAME}{L_COLON} {imageblock.image.UC_IMAGE_NAME}</li><!-- ENDIF -->
+							<!-- IF imageblock.image.U_ALBUM --><li>{L_ALBUM_NAME}{L_COLON} <a href="{imageblock.image.U_ALBUM}" style="font-weight: bold;" title="{imageblock.image.ALBUM_NAME_FULL}">{imageblock.image.ALBUM_NAME}</a></li><!-- ENDIF -->
+							<!-- IF imageblock.image.POSTER --><li>{L_UPLOADED_BY_USER}{L_COLON} {imageblock.image.POSTER}</li><!-- ENDIF -->
+							<!-- IF imageblock.image.TIME --><li>{L_UPLOADED_ON_DATE}{L_COLON} {imageblock.image.TIME}</li><!-- ENDIF -->
+							<!-- IF imageblock.image.VIEW > -1 --><li>{L_GALLERY_VIEWS}{L_COLON} {imageblock.image.VIEW}</li><!-- ENDIF -->
+							<!-- IF imageblock.image.S_RATINGS --><li>{L_RATING}{L_COLON} <a href="{imageblock.image.U_RATINGS}">{imageblock.image.S_RATINGS}</a></li><!-- ENDIF -->
+							<!-- IF imageblock.image.S_COMMENTS --><li>{imageblock.image.L_COMMENTS}{L_COLON} <a href="{imageblock.image.U_COMMENTS}">{imageblock.image.S_COMMENTS}</a></li><!-- ENDIF -->
+							<!-- IF imageblock.image.S_IP --><li>{L_IP}{L_COLON} {imageblock.image.S_IP} &#187; <a href="{imageblock.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a></li><!-- ENDIF -->
+						 </ul>
+						 
+						<!-- IF imageblock.image.U_REPORT or imageblock.image.U_STATUS or imageblock.image.U_MOVE or  imageblock.image.U_EDIT or imageblock.image.U_DELETE -->
+						<a href="javascript: dE('moderate_imageblock_{imageblock.S_ROW_COUNT}_imagerow_{imageblock.image.IMAGE_ID}');">{L_MODERATE}</a>
+						<div id="moderate_imageblock_{imageblock.S_ROW_COUNT}_imagerow_{imageblock.image.IMAGE_ID}" style="display: none;">
+							<ul class="list-unstyled">
+								<!-- IF imageblock.image.U_REPORT --><li><a href="{imageblock.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a></li><!-- ENDIF -->
+								<!-- IF imageblock.image.U_STATUS --><li><a href="{imageblock.image.U_STATUS}">{imageblock.image.L_STATUS}</a></li><!-- ENDIF -->
+								<!-- IF imageblock.image.U_MOVE --><li><a href="{imageblock.image.U_MOVE}">{L_MOVE}</a></li><!-- ENDIF -->
+								<!-- IF imageblock.image.U_EDIT --><li><a href="{imageblock.image.U_EDIT}">{L_EDIT_IMAGE}</a></li><!-- ENDIF -->
+								<!-- IF imageblock.image.U_DELETE --><li><a href="{imageblock.image.U_DELETE}">{L_DELETE_IMAGE}</a></li><!-- ENDIF -->
+							</ul>
+						</div>
+						<!-- ENDIF -->
+					</div>
+				</div>
+			</div>
+			<!-- END image -->
+		</div>
+	</div>
+</div>
+<!-- END imageblock -->

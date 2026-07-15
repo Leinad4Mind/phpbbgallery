@@ -1,0 +1,59 @@
+<!-- INCLUDE gallery/gallery_header.html -->
+
+<h2>{L_MCP}<!-- IF U_ALBUM_NAME --> - {U_ALBUM_NAME}<!-- ENDIF --></h2>
+<!-- IF .pagination -->
+	<div class="col-md-12">
+		<ul class="pagination pagination-sm pull-right">
+			<li><a>{TOTAL_PAGES}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>
+			<!-- ENDIF -->
+		</ul>
+		
+	</div>
+	<br><br><br>
+<!-- ENDIF -->
+<div id="tabs" class="panel has-nav-tabs no-border">
+	<ul class="nav nav-tabs">
+		<li class="tab"><a href="{U_GALLERY_MODERATE_OVERVIEW}">{L_GALLERY_MCP_MAIN}</a></li>
+		<!-- IF U_ALBUM_OVERVIEW --><li class="tab"><a href="{U_ALBUM_OVERVIEW}">{L_GALLERY_MCP_ALBUM_OVERVIEW}</a></li><!-- ENDIF -->
+		<li class="tab"><a href="{U_GALLERY_MODERATE_APPROVE}">{L_GALLERY_MCP_QUEUE}</a></li>
+		<li class="tab"><a href="{U_GALLERY_MODERATE_REPORT}">{L_GALLERY_MCP_REPORTED}</a></li>
+		<li class="tab activetab"><a href="{U_GALLERY_MCP_LOGS}">{L_MCP_LOGS}</a></li>
+	</ul>
+	<div class="panel-content">
+		<div class="panel-body">
+			<div class="row">
+			<div id="cp-menu" class="col-md-3">
+				<div class="list-group">
+					<a class="list-group-item active" href=""><span>{L_MCP_LOGS}</span></a>
+				</div>
+			</div>
+			<div id="cp-main" class="col-md-9">
+				<fieldset class="framed-ucp">
+					<legend>{L_MCP_LOGS}</legend>
+					<!-- INCLUDE gallery/moderate_actions_queue.html -->
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- IF .pagination -->
+	<div class="col-md-12">
+		<ul class="pagination pagination-sm pull-right">
+			<li><a>{TOTAL_PAGES}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>
+			<!-- ENDIF -->
+		</ul>
+	</div>
+<br>
+<!-- ENDIF -->
+<br>
+<!-- INCLUDE gallery/gallery_footer.html -->

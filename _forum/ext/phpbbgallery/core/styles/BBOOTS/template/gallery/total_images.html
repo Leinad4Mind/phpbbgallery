@@ -1,0 +1,16 @@
+<!-- IF .pagination or TOTAL_IMAGES -->
+	<div class="pull-right">
+		<div class="pagination pagination-sm">
+			<li class="active">
+				<a>{TOTAL_IMAGES}</a>
+			</li>
+			<!-- IF .pagination -->
+				 <!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+			<li class="active">
+				<a>{PAGE_NUMBER}</a>
+			</li>
+			<!-- ENDIF -->
+		</div>
+	</div>
+<!-- ENDIF -->

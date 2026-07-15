@@ -1,0 +1,68 @@
+<!-- BEGIN albumrow -->
+	<!-- IF (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT -->
+     </table>
+	 </div>
+	 </div>
+	<!-- ENDIF -->
+
+	<!-- IF albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT  -->
+	<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand"><!-- IF albumrow.S_IS_CAT --><i class="fa fa-list-ol"></i> <a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE --><i class="fa fa-list"></i> {L_ALBUM}<!-- ENDIF --></th>
+				<th style="width: 100px;" data-hide="phone"><i class="fa fa-bar-chart-o"></i> {L_IMAGES}</th>
+				<th style="width: 125px;" data-hide="phone"><i class="fa fa-picture-o"></i> Thumbnail</th>
+			    <th style="width: 150px;" data-hide="phone"><i class="fa fa-comments"></i> {L_LAST_IMAGE}</th>
+			</tr>
+		</thead>
+		<tbody>
+	<!-- ENDIF -->
+
+	<!-- IF not albumrow.S_IS_CAT -->
+		    <tr>
+				<td>
+				<!-- IF albumrow.ALBUM_IMAGE -->
+			     <span class="forum-image"><img src="{T_IMAGES_PATH}{albumrow.ALBUM_IMAGE}" alt="{albumrow.ALBUM_NAME}" title="{albumrow.ALBUM_FOLDER_IMG_ALT}"/></span>
+			    <!-- ELSE -->
+			     <i class="icon-moon-default <!-- IF albumrow.S_IS_LINK --> icon-moon-link2<!-- ENDIF --> <!-- IF albumrow.S_UNREAD_ALBUM --> text-info<!-- ELSE --> text-muted<!-- ENDIF -->" title="{albumrow.ALBUM_FOLDER_IMG_ALT}"></i>
+			    <!-- ENDIF -->
+			   <i class="row-icon-font-mini <!-- IF albumrow.S_LOCKED_FORUM -->fa fa-lock forum-list-lock<!-- ENDIF -->" title="{albumrow.FORUM_FOLDER_IMG_ALT}"></i>
+			   
+					<a href="{albumrow.U_VIEWALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color:{albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a><br />
+					<small>{albumrow.ALBUM_DESC}</small>
+					<!-- IF albumrow.MODERATORS -->
+						<br /><small><i class="fa fa-user"></i> <strong>{albumrow.L_MODERATOR_STR}{L_COLON}</strong> {albumrow.MODERATORS}</small>
+					<!-- ENDIF -->
+					<!-- IF albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS --><small><i class="fa fa-folder"></i> <strong>{albumrow.L_SUBALBUM_STR}</strong> {albumrow.SUBALBUMS}</small><!-- ENDIF -->
+				</td>
+				
+				<td class="text-center">{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --> {L_IMAGES}</td>
+					
+				<td class="text-center">
+				<!-- IF albumrow.UC_FAKE_THUMBNAIL --><span class="fake-thumb-list"><a href="{albumrow.UC_IMAGE_URL}"><img width="60px" height="auto" src="{albumrow.UC_FAKE_THUMBNAIL}" alt="{albumrow.UC_IMAGE_NAME}" title="{albumrow.UC_IMAGE_NAME}" style="max-width: 50px;" /></a></span><!-- ENDIF -->
+				</td>
+				
+				<td class="text-center">
+				 <!-- IF albumrow.LAST_IMAGE_TIME -->
+						<i class="fa fa-image"></i>{albumrow.UC_IMAGE_NAME}<br />
+						<i class="fa fa-user"></i> {L_POST_BY_AUTHOR} {albumrow.LAST_USER_FULL}<br />
+						<i class="fa fa-clock-o"></i> {albumrow.LAST_IMAGE_TIME}
+				<!-- ELSE -->{L_NO_IMAGES}
+				<!-- ENDIF -->
+				</td>
+
+		    </tr>
+	<!-- ENDIF -->
+
+	<!-- IF albumrow.S_LAST_ROW -->
+		</tbody>
+	</table>
+	</div>
+	<!-- ENDIF -->
+
+<!-- BEGINELSE -->
+	<div class="well">
+		<strong>{L_NO_ALBUMS}</strong>
+	</div>
+<!-- END albumrow -->

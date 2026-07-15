@@ -1,0 +1,37 @@
+{
+	"name": "phpbbgallery/core",
+	"type": "phpbb-extension",
+	"description": "phpBB Gallery",
+	"homepage": "https://github.com/satanasov/phpbbgallery",
+	"version": "3.3.0",
+	"time": "2020-12-22",
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Joas Schilling",
+			"email": "nickvergessen@gmx.de",
+			"homepage": "http://github.com/nickvergessen",
+			"role": "Main MOD Author"
+		},
+		{
+			"name": "Stanislav Atanasov",
+			"email": "lucifer@anavaro.com",
+			"homepage": "http://www.anavaro.com",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.1"
+	},
+	"extra": {
+		"display-name": "phpBB Gallery",
+		"version-check": {
+			"host": "lab.anavaro.com",
+			"directory": "/phpbb-ext/3.3.x",
+			"filename": "phpbbgallery_core.json"
+		},
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0@dev"
+		}
+	}
+}
