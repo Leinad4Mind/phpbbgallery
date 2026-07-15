@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class counter_block extends base
 {
 	static $icon = 'fa-line-chart';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'counter_block';
@@ -32,7 +35,7 @@ class counter_block extends base
 			{
 				$data['visit_count'] = $counter_visits = $counter_visits + 1;
 			
-				$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
+				$sql = 'UPDATE ' . $this->tables['blocks'] . "
 					SET block_content = '" . serialize($data) . "'
 					WHERE block_id = " . $this->data['block_id'];
 				$this->db->sql_query($sql);
@@ -58,22 +61,22 @@ class counter_block extends base
 		$counter_months	= $time_online / 2592000;
 		$counter_years	= $time_online / 31536000;
 		
-		$hits = array(
+		$hits = [
 			'USER'		=> min(($counter_visits / $this->config['num_users']), $counter_visits),
 			'HOUR'		=> min(($counter_visits / $counter_hours), $counter_visits),
 			'DAY'		=> min(($counter_visits / $counter_days), $counter_visits),
 			'WEEK'		=> min(($counter_visits / $counter_weeks), $counter_visits),
 			'MONTH'		=> min(($counter_visits / $counter_months), $counter_visits),
 			'YEAR'		=> min(($counter_visits / $counter_years), $counter_visits),
-		);
+		];
 
-		/*
-		* @event block.counter_hits
-		* @var array	hits	The output array
-		* @var	array	data	Block Configuration
-		* @since 2.0.0
-		*/
-		$vars = array('hits', 'data');
+		/**
+		 * @event block.counter_hits
+		 * @var array	hits	The output array
+		 * @var	array	data	Block Configuration
+		 * @since 2.0.0
+		 */
+		$vars = ['hits', 'data'];
 		extract($this->dispatcher->trigger_event('block.counter_hits', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -81,22 +84,25 @@ class counter_block extends base
 		
 		foreach($hits as $lang => $value)
 		{
-			$this->template->assign_block_vars('counter_hit', array(
-				'S_TITLE'	=> $this->lang->lang('HITS_PER_' . $lang),
+			$this->template->assign_block_vars('counter_hit', [
+				'S_TITLE'	=> $this->language->lang('HITS_PER_' . $lang),
 				'S_VALUE'	=> sprintf('%.2f', $value),
-			));	
+			]);	
 		}
 
-		$this->template->assign_vars(array(
-			'L_COUNTER'				=> ($data['local_count']) ? $this->lang->lang('COUNTER_LOCAL') : $this->lang->lang('COUNTER_TOTAL'),
+		$this->template->assign_vars([
+			'L_COUNTER'				=> ($data['local_count']) ? $this->language->lang('COUNTER_LOCAL') : $this->language->lang('COUNTER_TOTAL'),
 			'S_COUNTER'				=> preg_replace('#([0-9])#', '<span class="digit-\\1"></span>', sprintf("%08d", $counter_visits)),
-			'COUNTER_STARTDATE'		=> $this->lang->lang('COUNTER_STARTDATE', $this->user->format_date($count_startdate)),
-		));
+			'COUNTER_STARTDATE'		=> $this->language->lang('COUNTER_STARTDATE', $this->user->format_date($count_startdate)),
+		]);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($this->request->is_set_post('counter_reset'))
@@ -116,14 +122,17 @@ class counter_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'local_count'		=> array('lang' => 'COUNTER_LOCAL',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'reset'				=> array('lang' => 'COUNTER_RESET',		'type' => 'custom', 		'method' => 'helper',	'params' => array('counter_rst')),
+		$this->display_vars = [
+			'local_count'		=> ['lang' => 'COUNTER_LOCAL',		'validate' => 'bool',		'type' => 'radio:yes_no'],
+			'reset'				=> ['lang' => 'COUNTER_RESET',		'type' => 'custom', 		'method' => 'helper',	'params' => ['counter_rst']],
 			'start_date'		=> false,
 			'visit_count'		=> false,
-		);
+		];
 
 		return true;
 	}

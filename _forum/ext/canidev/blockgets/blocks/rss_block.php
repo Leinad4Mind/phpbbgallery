@@ -1,34 +1,41 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class rss_block extends base
 {
 	static $icon = 'fa-rss';
 
-	private $default_rss_data = array(
+	private $default_rss_data = [
 		'encoding'	=> 'UTF-8',
 		'language'	=> '',
 		'type'		=> '',
-	);
+	];
+
+	private $cache;
 
 	private $rss_data;
 	private $rss_type;
 	private $rss_ttl 	= 86400;
 	private $plain_text	= '';
 	
-	private $tags = array(
-		'rss'	=> array('name'	=> 'channel', 	'tags'	=> 'item|image'),
-		'feed'	=> array('name'	=> 'feed', 		'tags'	=> 'entry'),
-	);
+	private $tags = [
+		'rss'	=> ['name'	=> 'channel', 	'tags'	=> 'item|image'],
+		'feed'	=> ['name'	=> 'feed', 		'tags'	=> 'entry'],
+	];
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'rss_block';
@@ -51,15 +58,15 @@ class rss_block extends base
 			// Force vertical direction
 			if($data['collapsable'])
 			{
-				$data['direction'] = BLG_SCROLL_V;
+				$data['direction'] = constants::SCROLL_V;
 			}
 			
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_RSS_COLLAPSE'	=> (int)$data['collapsable'],
 				'S_BLOCK_HEIGHT'	=> $data['height'],
-				'S_SCROLL_V'		=> ($data['direction'] == BLG_SCROLL_V) ? true : false,
-				'S_SCROLL_H'		=> ($data['direction'] == BLG_SCROLL_H) ? true : false,
-			));
+				'S_SCROLL_V'		=> ($data['direction'] == constants::SCROLL_V),
+				'S_SCROLL_H'		=> ($data['direction'] == constants::SCROLL_H),
+			]);
 
 			// Delete the array in the template if exists, prevent errors between blocks
 			$this->template->destroy_block_vars('rss');
@@ -79,20 +86,20 @@ class rss_block extends base
 							break;
 						}
 				
-						$this->template->assign_block_vars('rss', array(
+						$this->template->assign_block_vars('rss', [
 							'S_TITLE'	=> $this->get(false, 'title'),
-						));
+						]);
 				
 						$entries	= $this->get('item');
 						$limit		= min($limit, count($entries));
 						
 						for($i = 0; $i < $limit; $i++)
 						{
-							$this->template->assign_block_vars('rss.item', array(
+							$this->template->assign_block_vars('rss.item', [
 								'S_TITLE'		=> $this->get($i, 'title', $entries),
 								'S_DESCRIPTION'	=> $this->_clear($this->get($i, 'description', $entries), $data),
 								'U_LINK'		=> $this->get($i, 'link', $entries),
-							));
+							]);
 						}
 					break;
 					
@@ -102,84 +109,100 @@ class rss_block extends base
 							break;
 						}
 				
-						$this->template->assign_block_vars('rss', array(
+						$this->template->assign_block_vars('rss', [
 							'S_TITLE'	=> $this->get(false, 'title'),
-						));
+						]);
 				
 						$entries	= $this->get('entry');
 						$limit		= min($limit, count($entries));
 						
 						for($i = 0; $i < $limit; $i++)
 						{
-							$this->template->assign_block_vars('rss.item', array(
+							$this->template->assign_block_vars('rss.item', [
 								'S_TITLE'		=> $this->get($i, 'title', $entries),
 								'S_DESCRIPTION'	=> $this->_clear($this->get($i, 'content', $entries), $data),
 								'U_LINK'		=> $this->get($i, 'id', $entries),
-							));
+							]);
 						}
 					break;	
 				}
 			}
 		}
 
-		$this->template->assign_json_var('S_OPTIONS', array(
+		$this->template->assign_json_var('S_OPTIONS', [
 			'loadOnInit' 	=> true,
-			'requestData' 	=> array(
+			'requestData' 	=> [
 				'jblgm' => $this->data['block_id'],
 				'm' 	=> 'load'
-			)
-		));
+			]
+		]);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$dir_options = array(
-			BLG_SCROLL_H	=> 'LIST_SCROLL_H',
-			BLG_SCROLL_V	=> 'LIST_SCROLL_V',
-		);
+		$dir_options = [
+			constants::SCROLL_H		=> 'LIST_SCROLL_H',
+			constants::SCROLL_V		=> 'LIST_SCROLL_V',
+		];
 
-		$ttl_options = array(
+		$ttl_options = [
 			3600	=> '1_HOUR',
 			7200	=> '2_HOURS',
 			21600	=> '6_HOURS',
 			86400	=> '1_DAY',
 			604800	=> '7_DAYS',
-		);
+		];
 		
-		$this->display_vars = array(
-			'limit'			=> array('lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'number:1:999',		'default' => 5),
-			'ignore_lang'	=> array('lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
-			'direction'		=> array('lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $dir_options, false, '{CONFIG_VALUE}'),	'default' => BLG_SCROLL_V),
-			'collapsable'	=> array('lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1),
-			'height'  		=> array('lang' => 'RSS_HEIGHT',		'validate' => 'int', 	'type' => 'number:0:999',		'default' => 150),
-			'ttl'  			=> array('lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => array('make_select', $ttl_options, false, '{CONFIG_VALUE}'),	'default' => 86400),
-		);
+		$this->display_vars = [
+			'limit'			=> ['lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'number:1:999',		'default' => 5],
+			'ignore_lang'	=> ['lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1],
+			'direction'		=> ['lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => ['make_select', $dir_options, false, '{CONFIG_VALUE}'],	'default' => constants::SCROLL_V],
+			'collapsable'	=> ['lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1],
+			'height'  		=> ['lang' => 'RSS_HEIGHT',			'validate' => 'int', 	'type' => 'number:0:999',		'default' => 150],
+			'ttl'  			=> ['lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => ['make_select', $ttl_options, false, '{CONFIG_VALUE}'],	'default' => 86400],
+		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_options(array(
+			->set_options([
 				'title'	=> 'RSS_SOURCES',
-				'type'	=> LIST_TYPE_NONE,
-			))
-			->set_events(array(
-				'edit.before'	=> array($this, 'list_edit_before'),
-			));
+				'type'	=> constants::LIST_TYPE_NONE,
+			])
+			->set_events([
+				'edit.before'	=> [$this, 'list_edit_before'],
+			]);
 
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
-		$event['display_vars'] = array(
-			'title'		=> array('lang' => 'RSS_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-			'url'		=> array('lang' => 'RSS_URL',		'validate' => 'url',			'type' => 'text:40:255'),
-		);
+		$event['display_vars'] = [
+			'title'		=> ['lang' => 'RSS_TITLE',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
+			'url'		=> ['lang' => 'RSS_URL',		'validate' => 'url',			'type' => 'text:40:255'],
+		];
 	}
 	
+	/**
+	 * Clear text
+	 * 
+	 * @param string 	$text 	Original text
+	 * @param array 	$data 	Block data
+	 * 
+	 * @return string
+	 * @access private
+	 */
 	private function _clear($text, $data)
 	{
 		if(($xpath = \canidev\core\dom::string_to_xpath($text)) === false)
@@ -202,7 +225,7 @@ class rss_block extends base
 				continue;
 			}
 
-			$node = \canidev\core\dom::remove_attributes($node, array('class', 'href'));
+			$node = \canidev\core\dom::remove_attributes($node, ['class', 'href']);
 		}
 
 		// Convert objects and iframes to links
@@ -218,7 +241,7 @@ class rss_block extends base
 		}
 
 		// Delete line breaks and images and put all containers "inline"
-		if($data['direction'] == BLG_SCROLL_H)
+		if($data['direction'] == constants::SCROLL_H)
 		{
 			foreach($xpath->query("//p|//div|//blockquote|//code|//pre") as $node)
 			{
@@ -240,6 +263,14 @@ class rss_block extends base
 		return \canidev\core\dom::xpath_to_string($xpath);
 	}
 	
+	/**
+	 * Read Rss from url
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return bool
+	 * @access private
+	 */
 	private function read($url)
 	{
 		if(!$url)
@@ -302,6 +333,14 @@ class rss_block extends base
 		return true;
 	}
 	
+	/**
+	 * Helper for read method
+	 * 
+	 * @param string 	$url
+	 * 
+	 * @return bool
+	 * @access private
+	 */
 	private function _read($url)
 	{
 		$url = str_replace('&amp;', '&', $url);
@@ -326,9 +365,9 @@ class rss_block extends base
 		}
 		else 
 		{
-			$context  = stream_context_create(array(
-				'http' => array('user_agent' => $user_agent)
-			));
+			$context  = stream_context_create([
+				'http' => ['user_agent' => $user_agent]
+			]);
 			
 			if(($this->plain_text = @file_get_contents($url, false, $context)) === false)
 			{
@@ -346,6 +385,16 @@ class rss_block extends base
 		return (!$this->plain_text) ? false : true;
 	}
 	
+	/**
+	 * Get item from the rss part
+	 * 
+	 * @param mixed 		$id
+	 * @param string 		$name
+	 * @param array|false 	$ary
+	 * 
+	 * @return mixed
+	 * @access private
+	 */
 	private function get($id, $name = '', $ary = false)
 	{
 		if($name)
@@ -371,9 +420,13 @@ class rss_block extends base
 			return $this->rss_data[$id];
 		}
 		
-		return array();
+		return [];
 	}
 	
+	/**
+	 * Obtain RSS data
+	 * @access private
+	 */
 	private function _get()
 	{
 		$channel_name	= $this->tags[$this->rss_type]['name'];
@@ -394,7 +447,7 @@ class rss_block extends base
 		{
 			if(!isset($this->rss_data[$out[1]]))
 			{
-				$this->rss_data[$out[1]] = array();
+				$this->rss_data[$out[1]] = [];
 			}
 			
 			$this->rss_data[$out[1]][] = $this->_compose($out[2]);
@@ -408,9 +461,15 @@ class rss_block extends base
 		unset($file_text);
 	}
 
+	/**
+	 * Normalize text
+	 * 
+	 * @param string 	$text
+	 * @return string
+	 */
 	private function adjust($text)
 	{
-		$text = str_replace(array('<![CDATA[', ']]>'), '', $text);
+		$text = str_replace(['<![CDATA[', ']]>'], '', $text);
 		$text = trim(htmlspecialchars_decode($text));
 		
 		$text = preg_replace('#<img[^>]*src="([^"]*)"[^>]*/?>#', '<img src="\\1" alt="" />', $text);
@@ -423,9 +482,15 @@ class rss_block extends base
 		return $text;	
 	}
 
+	/**
+	 * Compose and normalize text
+	 * 
+	 * @param string $text
+	 * @return array
+	 */
 	private function _compose($text)
 	{
-		$ary = array();
+		$ary = [];
 		
 		preg_match_all('#<([\w\:]+)[^>]*>(.*?)<\/\\1>#si', $text, $out, PREG_SET_ORDER);
 

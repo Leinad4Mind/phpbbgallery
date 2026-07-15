@@ -1,7 +1,6 @@
 {% if poll|length %}
 	<script>
 	// <![CDATA[
-	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
 			$('#poll-{{ BLOCK_ID }}').ajaxify({
@@ -10,7 +9,6 @@
 				}
 			});
 		});
-	});
 	// ]]>
 	</script>
 
@@ -33,7 +31,7 @@
 		<div class="poll-option-results">
 			<div class="blg-progressbar" title="{{ poll_option.POLL_OPTION_PERCENT }}"><div style="width:{{ poll_option.POLL_OPTION_PERCENT }};"></div></div>
 			<div class="poll-option-text">
-				{% if poll_option.POLL_OPTION_VOTED %}<i class="fa fa-check-circle-o fa-lg" title="{L_POLL_VOTED_OPTION}"></i>{% endif %}
+				{% if poll_option.POLL_OPTION_VOTED %}<i class="fa fa-check-circle-o fa-lg" title="{{ lang('POLL_VOTED_OPTION') }}"></i>{% endif %}
 				{{ poll_option.POLL_OPTION_PERCENT }}
 			</div>
 		</div>
@@ -44,10 +42,10 @@
 	<br />
 	
 	<ul class="blg-linear-list blg-align-center">
-		{% if poll.S_CAN_VOTE %}<li><input type="submit" name="update_vote" value="{L_SUBMIT_VOTE}" class="btn btn-default" /></li>{% endif %}
-		{% if poll.S_DISPLAY_RESULTS %}<li>{L_TOTAL_VOTES}{L_COLON} {{ poll.S_TOTAL_VOTES }}</li>{% endif %}
+		{% if poll.S_CAN_VOTE %}<li><input type="submit" name="update_vote" value="{{ lang('SUBMIT_VOTE') }}" class="btn btn-default" /></li>{% endif %}
+		{% if poll.S_DISPLAY_RESULTS %}<li>{{ lang('TOTAL_VOTES') ~ lang('COLON') }} {{ poll.S_TOTAL_VOTES }}</li>{% endif %}
           
-		<li><a href="{{ poll.U_POLL_RESULTS }}">{L_VIEW_TOPIC}</a></li>
+		<li><a href="{{ poll.U_POLL_RESULTS }}">{{ lang('VIEW_TOPIC') }}</a></li>
 	</ul>
 
 {% if poll.S_CAN_VOTE %}
@@ -57,5 +55,5 @@
 {% endfor %}
 
 {% else %}
-<div class="blg-align-center">{L_NO_POLL}</div>
+<div class="blg-align-center">{{ lang('NO_POLL') }}</div>
 {% endif %}

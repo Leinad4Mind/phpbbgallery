@@ -2,12 +2,10 @@
 {% if S_SHOW_ANIMATION %}
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }}').blgCloudtag();
 	});
-});
 // ]]>
 </script>
 {% endif %}
@@ -17,7 +15,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	{% for tag in clouds %}
 		<a href="{{ tag.U_TAG_URL }}" title="{{ tag.S_TAG_NAME }}" style="font-size: {{ tag.S_TAG_SIZE }}px;">{{ tag.S_TAG_NAME }}</a>
 	{% else %}
-		<div class="blg-message cbb-state-highlight">{L_NO_ITEMS}</div>
+		<div class="blg-message cbb-state-highlight">{{ lang('NO_ITEMS') }}</div>
 	{% endfor %}
 	</div>
 </div>

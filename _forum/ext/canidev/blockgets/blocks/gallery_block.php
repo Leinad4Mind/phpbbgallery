@@ -1,13 +1,15 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class gallery_block extends base
 {
@@ -17,6 +19,9 @@ class gallery_block extends base
 	const SOURCE_ATTACHMENTS	= 2;
 	const SOURCE_IMAGES			= 3;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'gallery_block';
@@ -25,11 +30,23 @@ class gallery_block extends base
 		{
 			return false;
 		}
+
+		switch($this->db->get_sql_layer())
+		{
+			case 'postgres':
+			case 'sqlite3':
+				$random_key = 'RANDOM()';
+			break;
+
+			default:
+				$random_key = 'RAND()';
+			break;
+		}
 		
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('image');
 		
-		$topic_ids = $post_ids = $images = array();
+		$topic_ids = $post_ids = $images = [];
 		
 		/* Do some checks
 		---------------------------------------- */
@@ -39,7 +56,7 @@ class gallery_block extends base
 		{
 			foreach($data['gallery_forums'] as $id => $forum_id)
 			{
-				if(!$this->auth->acl_get('f_download', $forum_id))
+				if(!$this->auth->acl_get('f_', $forum_id) || !$this->auth->acl_get('f_list', $forum_id) || !$this->auth->acl_get('f_read', $forum_id) || !$this->auth->acl_get('f_download', $forum_id))
 				{
 					unset($data['gallery_forums'][$id]);
 				}
@@ -65,7 +82,7 @@ class gallery_block extends base
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
 			{
-				if(!$this->auth->acl_get('f_download', $row['forum_id']))
+				if(!$this->auth->acl_get('f_', $row['forum_id']) || !$this->auth->acl_get('f_list', $row['forum_id']) || !$this->auth->acl_get('f_read', $row['forum_id']) || !$this->auth->acl_get('f_download', $row['forum_id']))
 				{
 					unset($topic_ids[$row['topic_id']]);
 				}
@@ -92,7 +109,7 @@ class gallery_block extends base
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
 			{
-				if(!$this->auth->acl_get('f_download', $row['forum_id']))
+				if(!$this->auth->acl_get('f_', $row['forum_id']) || !$this->auth->acl_get('f_list', $row['forum_id']) || !$this->auth->acl_get('f_read', $row['forum_id']) || !$this->auth->acl_get('f_download', $row['forum_id']))
 				{
 					unset($post_ids[$row['post_id']]);
 				}
@@ -104,7 +121,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if($data['gallery_source'] != self::SOURCE_IMAGES)
 		{
-			$sql_where = array();
+			$sql_where = [];
 
 			if(!empty($data['gallery_forums']))
 			{
@@ -123,52 +140,52 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
-				$sql_ary = array(
+				$sql_ary = [
 					'SELECT'	=> 'a.*, t.forum_id',
-					'FROM'		=> array(ATTACHMENTS_TABLE => 'a'),
+					'FROM'		=> [ATTACHMENTS_TABLE => 'a'],
 					
-					'LEFT_JOIN'	=> array(
-						array('FROM' => array(TOPICS_TABLE => 't'),	'ON' => 't.topic_id = a.topic_id')
-					),
+					'LEFT_JOIN'	=> [
+						['FROM' => [TOPICS_TABLE => 't'],	'ON' => 't.topic_id = a.topic_id']
+					],
 					
-					'WHERE'		=> $this->db->sql_in_set('a.extension', array('jpg', 'gif', 'png')) . '
+					'WHERE'		=> $this->db->sql_in_set('a.extension', ['jpg', 'gif', 'png']) . '
 						AND a.is_orphan = 0
 						AND a.filesize > 0
 						AND (' . implode(' OR ', $sql_where) . ')',
 						
-					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : 'RAND()',
-				);
+					'ORDER_BY'	=> ($data['image_order'] == 'last') ? 'a.filetime DESC' : $random_key,
+				];
 				
-				/*
-				* @event block.gallery_attachments_query
-				* @var array	sql_ary		The SQL data
-				* @var array	data		Block Configuration
-				* @since 2.0.0
-				*/
-				$vars = array('sql_ary', 'data');
+				/**
+				 * @event block.gallery_attachments_query
+				 * @var array	sql_ary		The SQL data
+				 * @var array	data		Block Configuration
+				 * @since 2.0.0
+				 */
+				$vars = ['sql_ary', 'data'];
 				extract($this->dispatcher->trigger_event('block.gallery_attachments_query', compact($vars)));
 				
 				$sql = $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$image = array(
-						'SRC'		=> $this->helper->url('download/file', array('mode' => 'view', 'id' => $row['attach_id'])),
-						'ACTION'	=> $this->helper->url('viewtopic', array(
+					$image = [
+						'SRC'		=> $this->helper->url('download/file', ['mode' => 'view', 'id' => $row['attach_id']]),
+						'ACTION'	=> $this->helper->url('viewtopic', [
 							'f'	=> $row['forum_id'],
 							'p'	=> $row['post_msg_id'],
 							'#'	=> 'p' . $row['post_msg_id']
-						))
-					);
+						])
+					];
 
-					/*
-					* @event block.gallery_row
-					* @var array		$image		The row array
-					* @var array		$data		Block Configuration
-					* @var array 		$row		Row data
-					* @since 2.0.3
-					*/
-					$vars = array('image', 'data', 'row');
+					/**
+					 * @event block.gallery_row
+					 * @var array		$image		The row array
+					 * @var array		$data		Block Configuration
+					 * @var array 		$row		Row data
+					 * @since 2.0.3
+					 */
+					$vars = ['image', 'data', 'row'];
 					extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
 					$images[] = $image;
@@ -181,7 +198,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if($data['gallery_source'] != self::SOURCE_ATTACHMENTS)
 		{
-			$sql_where = array();
+			$sql_where = [];
 
 			if(!empty($data['gallery_forums']))
 			{
@@ -200,42 +217,38 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
-				// Declare two new variables
-				$post_ary = $prefix_ary = array();
-
 				$sql_ary = array(
 					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text, p.post_subject',
 					'FROM'			=> array(POSTS_TABLE => 'p'),
-					'WHERE'			=> '(' . implode(' OR ', $sql_where) . ")
-						AND p.bbcode_uid <> ''
-						AND p.post_text " . $this->db->sql_like_expression($this->db->get_any_char() . '[album]' . $this->db->get_any_char()),
-					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : 'RAND()',
+					'WHERE'		=> "p.post_visibility = " . ITEM_APPROVED . " 
+						AND p.bbcode_uid NOT LIKE '' 
+						AND (" . implode(' OR ', $sql_where) . ")
+						AND p.post_text " . $this->db->sql_like_expression('<r><CENTER><s>[center]</s><ALBUM' . $this->db->get_any_char()),
+					'ORDER_BY'		=> ($data['image_order'] == 'last') ? 'p.post_time DESC' : $random_key,
 				);
 
-				/*
-				* @event block.gallery_posts_query
-				* @var array	sql_ary		The SQL data
-				* @var array	data		Block Configuration
-				* @since 2.0.3
-				*/
-				$vars = array('sql_ary', 'data');
+				/**
+				 * @event block.gallery_posts_query
+				 * @var array	sql_ary		The SQL data
+				 * @var array	data		Block Configuration
+				 * @since 2.0.3
+				 */
+				$vars = ['sql_ary', 'data'];
 				extract($this->dispatcher->trigger_event('block.gallery_posts_query', compact($vars)));
 
 				$sql 	= $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
-
-				while($row = $this->db->sql_fetchrow($result))
+				while ($row = $this->db->sql_fetchrow($result))
 				{
-				   $post_ary[] = $row;
+					$post_ary[] = $row;
 
-				   // Prepare array for prefixes
-				   if(!isset($prefix_ary[$row['topic_id']]))
-				   {
-					  $prefix_ary[$row['topic_id']] = array();
-				   }
+					// Prepare array for prefixes
+					if (!isset($prefix_ary[$row['topic_id']])) {
+						$prefix_ary[$row['topic_id']] = array();
+					}
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				// Obtain prefixes
 				$sql = 'SELECT i.*, p.*
 				   FROM ' . BBPREFIX_INSTANCES_TABLE . ' i
@@ -243,45 +256,41 @@ class gallery_block extends base
 				   WHERE ' . $this->db->sql_in_set('topic', array_keys($prefix_ary)) . '
 				   ORDER BY i.ordered';
 				$result = $this->db->sql_query($sql);
-				while($row = $this->db->sql_fetchrow($result))
-				{
-				   $prefix_ary[$row['topic']][] = $row;
+
+				while ($row = $this->db->sql_fetchrow($result)) {
+					$prefix_ary[$row['topic']][] = $row;
 				}
 				$this->db->sql_freeresult($result);
 
 				// Parse data
-				foreach($post_ary as $row)
-				{
-				   $row_prefixes = array();
-				   
-				   preg_match_all('#<ALBUM content="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
+				foreach ($post_ary as $row) {
+					$row_prefixes = array();
 
-				   if(!empty($prefix_ary[$row['topic_id']]))
-				   {
-					  foreach($prefix_ary[$row['topic_id']] as $prefix)
-					  {
-						 $row_prefixes[] = array(
-							'NAME'   => $prefix['name']
-						 );
-					  }
-				   }
+					preg_match_all('#<ALBUM content="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
 
-					foreach($matches as $match)
-					{
+					if (!empty($prefix_ary[$row['topic_id']])) {
+						foreach ($prefix_ary[$row['topic_id']] as $prefix) {
+							$row_prefixes[] = array(
+								'NAME'   => $prefix['name']
+							);
+						}
+					}
+
+					foreach ($matches as $match) {
 						$row_images[] = array(
-							 'ACTION'       => '/forum/viewtopic.php?f=' . $row['forum_id'] . '&t=' . $row['topic_id'],
-							 'SRC'          => '/forum/gallery/image/' . $match[1] . '/mini',
-							 'TITLE'        => $row['post_subject'],
-							 'PREFIX_STR'   => implode('-', array_map(
-								function($prefix) {
-								   return $prefix['NAME'];
+							'ACTION'       => '/forum/viewtopic.php?f=' . $row['forum_id'] . '&t=' . $row['topic_id'],
+							'SRC'          => '/forum/gallery/image/' . $match[1] . '/mini',
+							'TITLE'        => $row['post_subject'],
+							'PREFIX_STR'   => implode('-', array_map(
+								function ($prefix) {
+									return $prefix['NAME'];
 								},
 								$row_prefixes
-							 )),
-							 
-							 'prefix'       => $row_prefixes,
+							)),
+
+							'prefix'       => $row_prefixes,
 						);
-						
+
 						/*
 						* @event block.gallery_posts_row
 						* @var array		$row_images		The rows array
@@ -304,7 +313,7 @@ class gallery_block extends base
 		---------------------------------------- */
 		if(sizeof($data['item_ids']))
 		{
-			$items = $gallery_items = array();
+			$items = $gallery_items = [];
 			
 			foreach($data['item_ids'] as $source)
 			{
@@ -320,12 +329,12 @@ class gallery_block extends base
 			if(sizeof($gallery_items))
 			{
 				$sql = 'SELECT data_id, data_title, data_settings
-					FROM ' . BLG_DATA_TABLE . '
-					WHERE data_type = ' . BLG_DATA_ATTACHMENT . '
+					FROM ' . $this->tables['data'] . '
+					WHERE data_type = ' . constants::DATA_ATTACHMENT . '
 					AND ' . $this->db->sql_in_set('data_id', $gallery_items);
 				$result = $this->db->sql_query($sql);
 				
-				$gallery_items = array();
+				$gallery_items = [];
 
 				while($row = $this->db->sql_fetchrow($result))
 				{
@@ -341,33 +350,33 @@ class gallery_block extends base
 					$source		= $gallery_items[$source];
 					$settings	= unserialize($source['data_settings']);
 					
-					$image = array(
+					$image = [
 						'ACTION'	=> $this->helper->build_image_filename($settings['filename']),
 						'SRC'		=> $this->helper->build_image_filename($settings['filename']),
 						'TITLE'		=> $source['data_title'],
-					);
+					];
 				}
 				else if(preg_match('#^([^&\'"<>]+)\.(?:gif|png|jpg|jpeg)$#i', $source, $match))
 				{
-					$image = array(
+					$image = [
 						'ACTION'	=> $this->helper->build_image_filename($source),
 						'SRC'		=> $this->helper->build_image_filename($source),
 						'TITLE'		=> '',
-					);
+					];
 				}
 				else
 				{
 					continue;
 				}
 
-				/*
-				* @event block.gallery_row
-				* @var array		$image		The row array
-				* @var array		$data		Block Configuration
-				* @var mixed		$source		Row data
-				* @since 2.0.3
-				*/
-				$vars = array('image', 'data', 'source');
+				/**
+				 * @event block.gallery_row
+				 * @var array		$image		The row array
+				 * @var array		$data		Block Configuration
+				 * @var mixed		$source		Row data
+				 * @since 2.0.3
+				 */
+				$vars = ['image', 'data', 'source'];
 				extract($this->dispatcher->trigger_event('block.gallery_row', compact($vars)));
 
 				$images[] = $image;
@@ -384,61 +393,75 @@ class gallery_block extends base
 			$this->template->assign_block_vars('image', $row);
 		}
 
-		$this->template->assign_json_var('S_GALLERY_OPTIONS', array(
+		$this->template->assign_json_var('S_GALLERY_OPTIONS', [
 			'height'		=> $data['gallery_height'],
 			'margin'		=> $data['image_margin'],
 			'fps'			=> $data['gallery_fps'],
 			'direction'		=> $data['gallery_dir'],
 			'zoom'			=> $data['image_zoom']
-		));
+		]);
 
 		unset($data, $images);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['gallery_forums']	= $this->request->variable('forums', array(0));
-			$new['item_ids']		= $this->request->variable('item_ids', array(0 => ''));
+			$new['gallery_forums']	= $this->request->variable('forums', [0]);
+			$new['item_ids']		= $this->request->variable('item_ids', [0 => '']);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$gallery_order = array(
+		$gallery_order = [
 			'last'		=> 'GALLERY_ORDER_LAST',
 			'rand'		=> 'GALLERY_ORDER_RAND',
-		);
+		];
 
-		$gallery_sources = array(
+		$gallery_sources = [
 			self::SOURCE_ALL			=> 'GALLERY_SOURCE_ALL',
 			self::SOURCE_ATTACHMENTS	=> 'GALLERY_SOURCE_ATTACHMENTS',
 			self::SOURCE_IMAGES			=> 'GALLERY_SOURCE_IMAGES',
-		);
+		];
 
-		$this->display_vars = array(
-			'gallery_height'	=> array('lang' => 'GALLERY_HEIGHT',		'validate' => 'int',		'type' => 'number:1:999',	'default' => 100),
-			'gallery_fps'		=> array('lang' => 'GALLERY_FPS',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 4),
-			'gallery_dir'		=> array('lang' => 'GALLERY_DIRECTION',		'validate' => 'string',		'type' => 'select', 		'method' => 'helper',	'params' => array('scroll_select', '{CONFIG_VALUE}', 'direction_x'),  'default' => 'left'),
-			'image_margin'		=> array('lang' => 'GALLERY_MARGIN',		'validate' => 'int',		'type' => 'number:0:999',	'default' => 4),
-			'image_zoom'		=> array('lang' => 'GALLERY_ZOOM',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2),
-			'max_number'		=> array('lang' => 'GALLERY_MAX_NUMBER',	'validate' => 'int:1:500',	'type' => 'number:1:500',	'default' => 50),
-			'gallery_source'	=> array('lang' => 'GALLERY_SOURCE',		'validate' => 'string',		'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_sources, '{KEY}', '{CONFIG_VALUE}'),  'default' => self::SOURCE_ATTACHMENTS),
-			'gallery_forums'	=> array('lang' => 'GALLERY_FORUMS',		'type' => 'custom',			'method' => 'helper',	'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
-			'gallery_topics'	=> array('lang' => 'GALLERY_TOPICS',		'validate' => 'string',		'type' => 'text:40:255'),
-			'gallery_posts'		=> array('lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'),
-			'image_order'		=> array('lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 	'method' => 'helper',	'params' => array('make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'),  'default' => 'rand'),
-			'item_ids'			=> array('lang' => 'GALLERY_CUSTOM',		'type' => 'custom', 		'function' => array($this, 'acp_build_image_browser'), 'params' => array('{KEY}', '{CONFIG_VALUE}')),
-		);
+		$this->display_vars = [
+			'gallery_height'	=> ['lang' => 'GALLERY_HEIGHT',			'validate' => 'int',		'type' => 'number:1:999',	'default' => 100],
+			'gallery_fps'		=> ['lang' => 'GALLERY_FPS',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 4],
+			'gallery_dir'		=> ['lang' => 'GALLERY_DIRECTION',		'validate' => 'string',		'type' => 'select', 		'method' => 'helper',	'params' => ['scroll_select', '{CONFIG_VALUE}', 'direction_x'],  'default' => 'left'],
+			'image_margin'		=> ['lang' => 'GALLERY_MARGIN',			'validate' => 'int',		'type' => 'number:0:999',	'default' => 4],
+			'image_zoom'		=> ['lang' => 'GALLERY_ZOOM',			'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2],
+			'max_number'		=> ['lang' => 'GALLERY_MAX_NUMBER',		'validate' => 'int:1:500',	'type' => 'number:1:500',	'default' => 50],
+			'gallery_source'	=> ['lang' => 'GALLERY_SOURCE',			'validate' => 'string',		'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $gallery_sources, '{KEY}', '{CONFIG_VALUE}'],  'default' => self::SOURCE_ATTACHMENTS],
+			'gallery_forums'	=> ['lang' => 'GALLERY_FORUMS',			'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'gallery_topics'	=> ['lang' => 'GALLERY_TOPICS',			'validate' => 'string',		'type' => 'text:40:255'],
+			'gallery_posts'		=> ['lang' => 'GALLERY_POSTS',			'validate' => 'string',		'type' => 'text:40:255'],
+			'image_order'		=> ['lang' => 'GALLERY_ORDER',			'validate' => 'string', 	'type' => 'custom', 		'method' => 'helper',	'params' => ['make_select', $gallery_order, '{KEY}', '{CONFIG_VALUE}'],  'default' => 'rand'],
+			'item_ids'			=> ['lang' => 'GALLERY_CUSTOM',			'type' => 'custom', 		'function' => [$this, 'acp_build_image_browser'], 	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+		];
 
 		return true;
 	}
 	
+	/**
+	 * Build image browser
+	 * 
+	 * @param string 	$key
+	 * @param array 	$ary
+	 * 
+	 * @return string
+	 */
 	public function acp_build_image_browser($key, $ary)
 	{
-		$ary = (empty($ary) || !is_array($ary)) ? array() : $ary;
+		$ary = (empty($ary) || !is_array($ary)) ? [] : $ary;
 		$hidden_fields = '';
 		
 		foreach($ary as $id)
@@ -446,15 +469,15 @@ class gallery_block extends base
 			$hidden_fields .= '<input type="hidden" name="item_ids[]" value="' . $id . '" />';
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ACP_MANAGE_GALLERY'		=> true,
 			'S_BUTTON_ID'				=> gen_rand_string(4),
 			'S_GALLERY_HIDDEN_FIELDS'	=> $hidden_fields,
-		));
+		]);
 		
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'gallery_body'	=> '@canidev_blockgets/blocks/gallery_block.html'
-		));
+		]);
 		
 		return $this->template->assign_display('gallery_body');
 	}

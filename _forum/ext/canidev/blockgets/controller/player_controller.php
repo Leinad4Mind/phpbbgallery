@@ -1,64 +1,75 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
 /**
-* Main controller
-*/
-class player_controller implements main_interface
+ * Player controller
+ */
+class player_controller
 {
-	protected $container;
 	protected $db;
 	protected $helper;
-	protected $lang;
+	protected $language;
 	protected $request;
 	protected $template;
+	protected $user;
+
+	protected $tables;
+
+	protected $filter = false;
 
 	/**
-	* Constructor
-	*
-	* @param ContainerInterface 					$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface		$db				DB Object
-	* @param \canidev\blockgets\libraries\helper	$helper			Blockgets helper Object
-	* @param \phpbb\language\language				$language		Language Object
-	* @param \phpbb\request\request 				$request		Request object
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param ContainerInterface 					$container		Service container interface
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param \canidev\blockgets\libraries\helper	$helper			Blockgets helper Object
+	 * @param \phpbb\language\language				$language		Language Object
+	 * @param \phpbb\request\request 				$request		Request object
+	 * @param \canidev\core\template 				$template 		Core Template Object
+	 * @param \phpbb\user 							$user 			User Object
+	 * @param array 								$tables 		Blockgets DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\canidev\blockgets\libraries\helper $helper,
 		\phpbb\language\language $language,
-		\phpbb\request\request $request)
+		\phpbb\request\request $request,
+		\canidev\core\template $template,
+		\phpbb\user $user,
+		$tables)
 	{
-		$this->container 	= $container;
 		$this->db			= $db;
 		$this->helper 		= $helper;
-		$this->lang			= $language;
+		$this->language		= $language;
 		$this->request		= $request;
-		$this->template		= \canidev\core\template::get_instance($container);
+		$this->template		= $template;
+		$this->user 		= $user;
+
+		$this->tables 		= $tables;
 	}
 
 	/**
-	* Display
-	* @access public
-	*/
+	 * Display player
+	 * @return Response
+	 */
 	public function display()
 	{
 		$block_id = $this->request->variable('id', 0);
 
 		$sql = 'SELECT block_content
-			FROM ' . BLG_BLOCK_TABLE . "
+			FROM ' . $this->tables['blocks'] . "
 			WHERE block_id = $block_id";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -75,29 +86,36 @@ class player_controller implements main_interface
 		
 		$this->template->assign_var('S_IN_PLAYER', true);
 		
-		page_header($this->lang->lang('PLAYER'));
+		page_header($this->language->lang('PLAYER'));
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'body'	=> '@canidev_blockgets/blocks/player_block.html',
-		));
+		]);
 
 		page_footer(true, false, false);
 
-		$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : array();
+		$headers = !empty($this->user->data['is_bot']) ? ['X-PHPBB-IS-BOT' => 'yes'] : [];
 
 		return new Response($this->template->assign_display('body'), 200, $headers);
 	}
 	
+	/**
+	 * Creates the player
+	 * 
+	 * @param array 	$data 			Block configuration data
+	 * @param int 		$block_id		Block ID
+	 * @param bool 		$in_window		Sets if player is loaded in separated window
+	 */
 	public function create($data, $block_id, $in_window = false)
 	{
 		$this->template->assign_var('S_IN_WINDOW', $in_window);
 
-		$this->template->assign_json_var('PLAYER_OPTIONS', array(
+		$this->template->assign_json_var('PLAYER_OPTIONS', [
 			'autoplay'		=> ($data['autoplay']) ? true : false,
 			'playlist'		=> $data['playlist'],
 			'in_window'		=> $in_window,
-			'player_url'	=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', array('id' => $block_id), false) : '',
-		));
+			'player_url'	=> (!$in_window) ? $this->helper->route('canidev_blockgets_player_controller', ['id' => $block_id], false) : '',
+		]);
 		
 		if($in_window)
 		{
@@ -108,9 +126,9 @@ class player_controller implements main_interface
 
 		if(!empty($data['list']))
 		{
-			$this->filter = array('mp3', 'wav');
+			$this->filter = ['mp3', 'wav'];
 			
-			$track_ary = array();
+			$track_ary = [];
 
 			foreach($data['list'] as $track)
 			{
@@ -129,21 +147,28 @@ class player_controller implements main_interface
 			{
 				if($this->is_valid($track))
 				{
-					$this->template->assign_block_vars('track', array(
+					$this->template->assign_block_vars('track', [
 						'S_TITLE'	=> $track['title'],
 						'S_URL'		=> $track['url'],
-					));
+					]);
 				}
 			}
 		}
 
-		\canidev\core\lib::get_instance($this->container)->set_js_lang(array(
+		$this->template->set_js_lang([
 			'PLAY_MSG',
 			'STOP_MSG',
 			'VOLUME_MSG',
-		));
+		]);
 	}
 	
+	/**
+	 * Load playlist from file
+	 * 
+	 * @param string 	$filename
+	 * @return array|false
+	 * @access private
+	 */
 	private function load_playlist($filename)
 	{
 		$content	= '';
@@ -192,13 +217,20 @@ class player_controller implements main_interface
 		return $tracklist;
 	}
 	
+	/**
+	 * Check if track is valid
+	 * 
+	 * @param array 	$track
+	 * @return bool
+	 * @access private
+	 */
 	private function is_valid($track)
 	{
 		if($this->filter !== false)
 		{
 			if(!is_array($this->filter))
 			{
-				$this->filter = array($this->filter);
+				$this->filter = [$this->filter];
 			}
 
 			if($track['ext'] && !in_array($track['ext'], $this->filter))
@@ -210,9 +242,16 @@ class player_controller implements main_interface
 		return true;
 	}
 	
+	/**
+	 * Read tracks from ASX format
+	 * 
+	 * @param string 	$content 		Raw file content
+	 * @return array
+	 * @access private
+	 */
 	private function _read_asx($content)
 	{
-		$track_ary = array();
+		$track_ary = [];
 
 		preg_match_all('#<entry><ref href\s?=\s?"(.*?)"\s?/></entry>#i', $content, $matches);
 		
@@ -227,12 +266,19 @@ class player_controller implements main_interface
 		return $track_ary;
 	}
 	
+	/**
+	 * Read tracks from M3U format
+	 * 
+	 * @param string 	$content 		Raw file content
+	 * @return array
+	 * @access private
+	 */
 	private function _read_m3u($content)
 	{
 		$regexp = "/(.*)[\r\n]*/i";
 		$has_ext = false;
 		
-		$track_ary = array();
+		$track_ary = [];
 
 		if(strpos($content, '#EXTM3U') !== false)
 		{
@@ -266,9 +312,16 @@ class player_controller implements main_interface
 		return $track_ary;
 	}
 	
+	/**
+	 * Read tracks from PLS format
+	 * 
+	 * @param string 	$content 		Raw file content
+	 * @return array
+	 * @access private
+	 */
 	private function _read_pls($content)
 	{
-		$track_ary = $ary = array();
+		$track_ary = $ary = [];
 		
 		// Get all lines
 		preg_match_all('#(file|title)+([0-9]+)=(.*)#i', $content, $matches);
@@ -280,7 +333,7 @@ class player_controller implements main_interface
 
 			if(!is_array($ary[$i]))
 			{
-				$ary[$i] = array();
+				$ary[$i] = [];
 			}
 
 			$ary[$i][$type] = $matches[3][$id];
@@ -305,6 +358,15 @@ class player_controller implements main_interface
 		return $track_ary;
 	}
 	
+	/**
+	 * Parse and fix track data
+	 * 
+	 * @param string 	$url 		Track URL
+	 * @param string 	$title 		Track title
+	 * 
+	 * @return array|false
+	 * @access private
+	 */
 	private function _parse_track($url, $title = '')
 	{
 		$ext = '';
@@ -323,16 +385,16 @@ class player_controller implements main_interface
 		if($title && $url)
 		{
 			// Streaming URLs need final /; to run correctly
-			if(preg_match('/^http[s]?:\/\/[^:]+:([0-9]{4,})$/', $url))
+			if(preg_match('/^https?:\/\/[^:]+:([0-9]{4,})$/', $url))
 			{
 				$url .= '/;';
 			}
 
-			return array(
+			return [
 				'title'		=> $title,
 				'url'		=> $url,
 				'ext'		=> $ext,
-			);
+			];
 		}
 		
 		return false;

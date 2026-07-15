@@ -1,12 +1,12 @@
 <?php
-/*
-* [English [En]]
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [English [En]]
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,11 +16,11 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Local Variables
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'PORTAL'			=> 'Portal',
 	'DOCK_MENU'			=> 'Dock menu',
 	'MAIN_MENU'			=> 'Main Menu',
@@ -40,4 +40,4 @@ $lang = array_merge($lang, array(
 
 	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
 		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
-));
+]);

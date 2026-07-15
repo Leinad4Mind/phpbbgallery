@@ -1,9 +1,9 @@
 
 {% if LATLNG_HELPER %}
 	<div class="cbb-group js-group-{{ HP_ID }}">
-		<input type="text" class="cbb-inputbox autowidth" name="latitude" placeholder="{L_LATITUDE}" value="{{ HP_LAT }}" size="12" />
-		<input type="text" class="cbb-inputbox autowidth" name="longitude" placeholder="{L_LONGITUDE}" value="{{ HP_LNG }}" size="12" />
-		<button class="js-map-launcher cbb-btn">{L_MAP}</button>
+		<input type="text" class="cbb-inputbox autowidth" name="latitude" placeholder="{{ lang('LATITUDE') }}" value="{{ HP_LAT }}" size="12" />
+		<input type="text" class="cbb-inputbox autowidth" name="longitude" placeholder="{{ lang('LONGITUDE') }}" value="{{ HP_LNG }}" size="12" />
+		<button class="js-map-launcher cbb-btn">{{ lang('MAP') }}</button>
 	</div>
 	
 	<script>
@@ -14,14 +14,14 @@
 	</script>
 	
 	<script type="text/html" id="tpl-map-dialog">
-		<div title="{L_SELECT_LOCATION}">
+		<div title="{{ lang('SELECT_LOCATION') }}">
 			<div class="map-editor"></div>
 			
 			<br />
 			
 			<div class="cbb-group">
-				<input type="text" class="cbb-inputbox" name="address" placeholder="{L_SEARCH_ADDRESS}" value="" size="40" />
-				<button class="js-map-search cbb-btn">{L_SEARCH}</button>
+				<input type="text" class="cbb-inputbox" name="address" placeholder="{{ lang('SEARCH_ADDRESS') }}" value="" size="40" />
+				<button class="js-map-search cbb-btn">{{ lang('SEARCH') }}</button>
 			</div>
 		</div>
 	</script>

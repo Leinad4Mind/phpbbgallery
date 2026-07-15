@@ -5,12 +5,12 @@
 	<div class="lunread-row">
 		{% EVENT topiclist_row_prepend %}
 		<a class="cbb-helper-text cbb-inline half-size" href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
-		{% if not BLOCK_VIEW_SMALL %}<span>&nbsp;{L_POST_BY_AUTHOR} {{ topicrow.TOPIC_AUTHOR_FULL }}</span>{% endif %}
+		{% if not BLOCK_VIEW_SMALL %}<span>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }}</span>{% endif %}
 		<span> &raquo; <em>{{ topicrow.FIRST_POST_TIME }}</em></span>
 		{% EVENT topiclist_row_append %}
 	</div>
 {% else %}
-	<div class="blg-align-center">{L_NO_UNREAD}</div>
+	<div class="blg-align-center">{{ lang('NO_UNREAD') }}</div>
 {% endfor %}
 
 {% else %}
@@ -21,8 +21,8 @@
 	<div class="panel panel-default">
 	{% elseif top_topic|length %}
 		<div class="blg-widget-header">
-			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
-			<span>{L_TOPIC}</span>
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			<span>{{ lang('TOPIC') }}</span>
 		</div>
 	{% endif %}
 
@@ -50,20 +50,20 @@
 					
 					<div class="desc-wrapper">
 			  			{% EVENT topiclist_row_prepend %}
-						{% if topicrow.S_UNREAD_TOPIC %}<a href="{{ topicrow.U_NEWEST_POST }}" title="{L_VIEW_FIRST_UNREAD}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;{% endif %}{% if topicrow.U_VIEW_TOPIC %}<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>{% else %}{{ topicrow.TOPIC_TITLE }}{% endif %}
+						{% if topicrow.S_UNREAD_TOPIC %}<a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_FIRST_UNREAD') }}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;{% endif %}{% if topicrow.U_VIEW_TOPIC %}<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>{% else %}{{ topicrow.TOPIC_TITLE }}{% endif %}
 
-						<br />{L_POST_BY_AUTHOR}&nbsp;{{ topicrow.TOPIC_AUTHOR_FULL }} 
+						<br />{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ topicrow.TOPIC_AUTHOR_FULL }} 
 						<small>&nbsp;&#45;&nbsp;{{ topicrow.FIRST_POST_TIME }}</small>
 			 		 	{% EVENT topiclist_row_append %}	
 					</div>
 				</td>
 
 			{% if not BLOCK_VIEW_MEDIUM %}
-				<td class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {L_VIEWS}<br />{{ topicrow.REPLIES }} {L_REPLIES}</td>
+				<td class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {{ lang('VIEWS') }}<br />{{ topicrow.REPLIES }} {{ lang('REPLIES') }}</td>
 				<td class="lastpost">
-					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+					<i class="fa fa-user"></i>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }}
 					{% if not S_IS_BOT %}
-						<a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">
+						<a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">
 							<i class="mobile-post fa fa-sign-out" aria-hidden="true"></i>
 						</a>
 					{% endif %}
@@ -73,7 +73,7 @@
 			</tr>
 			{% EVENT viewforum_body_topicrow_row_after %}
 		{% else %}
-			<tr><td colspan="3" class="blg-message">{L_NO_UNREAD}</td></tr>
+			<tr><td colspan="3" class="blg-message">{{ lang('NO_UNREAD') }}</td></tr>
 		{% endfor %}
 		</tbody>
 		</table>

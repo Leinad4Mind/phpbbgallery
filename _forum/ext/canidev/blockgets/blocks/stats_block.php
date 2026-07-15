@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class stats_block extends base
 {
 	static $icon = 'fa-bar-chart';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'stats_block';
@@ -28,12 +31,12 @@ class stats_block extends base
 		$total_users	= $this->config['num_users'];
 		$board_days		= ceil((time() - $this->config['board_startdate']) / 86400);
 
-		$stats 		= array();
+		$stats 		= [];
 		$stat_data	= $this->get_stats();
 
 		if($this->user->data['user_id'] != ANONYMOUS)
 		{
-			$stats[] = array(
+			$stats[] = [
 				'legend'	=> 'ST_NEW',
 				'sep'		=> false,
 
@@ -41,10 +44,10 @@ class stats_block extends base
 				'TOPICS'	=> $stat_data['newtopictotal'],
 				'ANNS'		=> $stat_data['newannouncmenttotal'],
 				'STICKYS'	=> $stat_data['newstickytotal'],
-			);
+			];
 		}
 
-		$stats[] = array(
+		$stats[] = [
 			'legend'	=> 'ST_TOP',
 			'sep'		=> false,
 
@@ -52,9 +55,9 @@ class stats_block extends base
 			'TOPICS'	=> $total_topics,
 			'ANNS'		=> $stat_data['announcmenttotal'],
 			'STICKYS'	=> $stat_data['stickytotal'],
-		);
+		];
 
-		$stats[] = array(
+		$stats[] = [
 			'sep'		=> true,
 
 			'TOPICS_PER_DAY'	=> (!$board_days) ? 0 : min(round($total_topics / $board_days, 0), $total_topics),	
@@ -63,9 +66,9 @@ class stats_block extends base
 			'TOPICS_PER_USER'	=> (!$total_users) ? 0 : min(round($total_topics / $total_users, 0), $total_topics),	
 			'POSTS_PER_USER'	=> (!$total_users) ? 0 : min(round($total_posts  / $total_users, 0), $total_posts),	
 			'POSTS_PER_TOPIC'	=> (!$total_topics) ? 0 : min(round($total_posts  / $total_topics, 0), $total_posts),
-		);
+		];
 
-		$stats[] = array(
+		$stats[] = [
 			'sep'		=> true,
 
 			'ATTACHMENTS'		=> sprintf('%d (%s)', $stat_data['attachmentcount'], get_formatted_filesize($stat_data['attachmentsize'])),
@@ -74,15 +77,15 @@ class stats_block extends base
 			'VISIT_IP'			=> $this->user->ip,
 
 			'TOTAL_USERS'		=> $total_users,
-		);
+		];
 
-		/*
-		* @event block.stats_rows
-		* @var array	stats	The output data
-		* @var	array	data	Block Configuration
-		* @since 2.0.0
-		*/
-		$vars = array('stats', 'data');
+		/**
+		 * @event block.stats_rows
+		 * @var array	stats	The output data
+		 * @var	array	data	Block Configuration
+		 * @since 2.0.0
+		 */
+		$vars = ['stats', 'data'];
 		extract($this->dispatcher->trigger_event('block.stats_rows', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -91,11 +94,11 @@ class stats_block extends base
 		// Build stats
 		foreach($stats as $stat)
 		{
-			$this->template->assign_block_vars('stat', array(
+			$this->template->assign_block_vars('stat', [
 				'IS_CAT'	=> true,
 				'S_SEP'		=> $stat['sep'],
-				'S_LEGEND'	=> (isset($stat['legend']) ? $this->lang->lang($stat['legend']) : ''),
-			));
+				'S_LEGEND'	=> (isset($stat['legend']) ? $this->language->lang($stat['legend']) : ''),
+			]);
 
 			foreach($stat as $lang => $value)
 			{
@@ -104,12 +107,12 @@ class stats_block extends base
 					continue;
 				}
 
-				$this->template->assign_block_vars('stat', array(
+				$this->template->assign_block_vars('stat', [
 					'IS_CAT'	=> false,
 
-					'S_NAME'	=> $this->lang->lang("ST_$lang"),
+					'S_NAME'	=> $this->language->lang("ST_$lang"),
 					'S_VALUE'	=> $value,
-				));
+				]);
 			}
 		}
 
@@ -118,12 +121,12 @@ class stats_block extends base
 			// Grab an array with all the today users info
 			$today_users = $this->helper->obtain_today_visits();
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'SHOW_USER_STATS'			=> true,
 				'S_TOTAL_USERS_LASTVISIT'	=> $today_users['lastvisit_users'],
 				'S_LASTVISIT_USER_LIST' 	=> $today_users['userlist'],
 				'S_NEWEST_USER'				=> get_username_string('full', $this->config['newest_user_id'], $this->config['newest_username'], $this->config['newest_user_colour']),
-			));
+			]);
 		}
 
 		$this->template->assign_var('S_INLINE', (int)$data['stats_inline']);
@@ -132,16 +135,25 @@ class stats_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'stats_inline'	=> array('lang' => 'STATS_INLINE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0),
-			'user_stats'	=> array('lang' => 'USER_STATS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-		);
+		$this->display_vars = [
+			'stats_inline'	=> ['lang' => 'STATS_INLINE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0],
+			'user_stats'	=> ['lang' => 'USER_STATS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
+		];
 
 		return true;
 	}
 	
+	/**
+	 * Get stats
+	 * 
+	 * @return array
+	 * @access private
+	 */
 	private function get_stats()
 	{
 		$cache		= $this->container->get('cache.driver');
@@ -149,7 +161,7 @@ class stats_block extends base
 		
 		if(($result = $cache->get($cache_id)) === false)
 		{
-			$modes = array(
+			$modes = [
 				'newposttotal'	=> 'SELECT COUNT(post_id) AS count_total
 					FROM ' . POSTS_TABLE . '
 					WHERE post_time > ' . $this->user->data['session_last_visit'],
@@ -170,7 +182,7 @@ class stats_block extends base
 
 				'announcmenttotal'	=> 'SELECT COUNT(topic_id) AS count_total
 					FROM ' . TOPICS_TABLE . '
-					WHERE ' . $this->db->sql_in_set('topic_type', array(POST_ANNOUNCE, POST_GLOBAL)),
+					WHERE ' . $this->db->sql_in_set('topic_type', [POST_ANNOUNCE, POST_GLOBAL]),
 
 				'stickytotal'	=> 'SELECT COUNT(topic_id) AS count_total
 					FROM ' . TOPICS_TABLE . '
@@ -187,9 +199,9 @@ class stats_block extends base
 				'activeuserpostcount'	=> 'SELECT COUNT(user_id) AS count_total
 					FROM ' . USERS_TABLE . '
 					WHERE user_posts > 0',
-			);
+			];
 			
-			$result = array();
+			$result = [];
 			
 			foreach($modes as $mode => $sql)
 			{

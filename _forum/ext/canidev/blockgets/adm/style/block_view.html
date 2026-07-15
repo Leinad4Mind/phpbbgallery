@@ -2,22 +2,26 @@
 {% if block.IS_GROUP %}
 	<div id="block-{{ block.BLOCK_ID }}" class="portlet-group">
 		<div class="portlet-group-header">
-			<a href="{{ block.U_REMOVE }}" title="{L_REMOVE}"><i class="fa fa-remove" aria-hidden="true"></i></a>
-			<span>{L_GROUP}</span>
+			<a href="{{ block.U_REMOVE }}" title="{{ lang('REMOVE') }}"><i class="fa fa-remove" aria-hidden="true"></i></a>
+			<span>{{ lang('GROUP') }}</span>
 		</div>
-		<div class="subcolumn {{ block.GROUP_CLASS }}">
+		<div class="subcolumn">
 		{% for sub in block.blocks %}
 			<div id="block-{{ sub.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all {{ sub.BLOCK_CLASS }}">
-				<div class="portlet-header blg-widget-header blg-corner-all{{ sub.BLOCK_ENABLED ? '' : ' disabled' }}">{{ sub.BLOCK_TITLE }}</div>
+				<div class="portlet-header blg-widget-header blg-corner-all{{ sub.BLOCK_ENABLED ? '' : ' disabled' }}">
+					<span class="cbb-helper-text">{{ sub.BLOCK_TITLE }}</span>
+				</div>
 				<div class="portlet-content">
 				{% for action in sub.action %}
 					<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><i class="fa {{ action.ICON }}" aria-hidden="true"></i></a>
 				{% endfor %}
 
+				{% if not sub.IS_FORUM %}
 					<div class="mark">
-						<input type="checkbox" id="block-list-{{ sub.BLOCK_ID }}" class="block_id_list radio cbb-checkbox" name="block_id_list[]" value="{{ sub.BLOCK_ID }}" />
+						<input type="checkbox" id="block-list-{{ sub.BLOCK_ID }}" class="block-id-list radio cbb-checkbox" name="block_id_list[]" value="{{ sub.BLOCK_ID }}" />
 						<label for="block-list-{{ sub.BLOCK_ID }}"></label>
 					</div>
+				{% endif %}
 				</div>
 				{{ sub.S_HIDDEN_FIELDS }}
 			</div>
@@ -28,16 +32,20 @@
 	</div>
 {% else %}
 	<div id="block-{{ block.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all {{ block.BLOCK_CLASS }}">
-		<div class="portlet-header blg-widget-header blg-corner-all{{ block.BLOCK_ENABLED ? '' : ' disabled' }}">{{ block.BLOCK_TITLE }}</div>
+		<div class="portlet-header blg-widget-header blg-corner-all{{ block.BLOCK_ENABLED ? '' : ' disabled' }}">
+			<span class="cbb-helper-text">{{ block.BLOCK_TITLE }}</span>
+		</div>
 		<div class="portlet-content">
 		{% for action in block.action %}
 			<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><i class="fa {{ action.ICON }}" aria-hidden="true"></i></a>
 		{% endfor %}
 
+		{% if not block.IS_FORUM %}
 			<div class="mark">
-				<input type="checkbox" id="block-list-{{ block.BLOCK_ID }}" class="block_id_list radio cbb-checkbox" name="block_id_list[]" value="{{ block.BLOCK_ID }}" />
+				<input type="checkbox" id="block-list-{{ block.BLOCK_ID }}" class="block-id-list radio cbb-checkbox" name="block_id_list[]" value="{{ block.BLOCK_ID }}" />
 				<label for="block-list-{{ block.BLOCK_ID }}"></label>
 			</div>
+		{% endif %}
 		</div>
 		{{ block.S_HIDDEN_FIELDS }}
 	</div>

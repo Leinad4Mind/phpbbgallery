@@ -1,11 +1,11 @@
 <?php
-/*
+/**
 * [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.4 30/08/2021
+* @version 2.0.5 15/01/2023
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2023 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 // @ignore
@@ -16,7 +16,7 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 /**
@@ -46,7 +46,8 @@ $lang = array_merge($lang, array(
 	'LOG_PAGE_REMOVED'		=> '<strong>cBB Blockgets:</strong> Eliminada página<br />» %1$s',
 	
 	// Permissions
-	'ACL_A_BLOCKGETS_MANAGE'	=> 'Puede administrar cBB Blockgets',
-	'ACL_U_BLOCKGETS_CALENDAR'	=> 'Puede ver el Calendario',
-	'ACL_U_BLOCKGETS_EVENTS'	=> 'Puede administrar eventos del Calendario',
+	'ACL_A_BLOCKGETS_MANAGE'		=> 'Puede administrar cBB Blockgets',
+	'ACL_U_BLOCKGETS_BIRTHDAYS'		=> 'Puede ver los cumpleaños en el Calendario',
+	'ACL_U_BLOCKGETS_CALENDAR'		=> 'Puede ver el Calendario',
+	'ACL_U_BLOCKGETS_EVENTS'		=> 'Puede administrar eventos del Calendario',
 ));

@@ -2,7 +2,7 @@
 <fieldset>
 	<dl>
 		<dt>
-			<label>{L_GOOGLE_LANGS}{L_COLON}</label>
+			<label>{{ lang('GOOGLE_LANGS') ~ lang('COLON') }}</label>
 		</dt>
 		<dd>
 			<div class="blg-option-selector google-translate">
@@ -17,8 +17,8 @@
 			<br />
 			
 			<p class="quick">
-				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{L_MARK_ALL}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{L_UNMARK_ALL}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{{ lang('MARK_ALL') }}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{{ lang('UNMARK_ALL') }}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
 			</p>
 		</dd>
 	</dl>

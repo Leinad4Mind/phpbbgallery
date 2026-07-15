@@ -2,12 +2,10 @@
 {% if S_USER_LOGGED_IN %}
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} #blg-logout').ajaxify();
 	});
-});
 // ]]>
 </script>
 
@@ -36,32 +34,30 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	</li>
 {% endfor %}
 
-	<li class="blg-align-center double-space top-bordered"><a id="blg-logout" class="btn btn-default" href="{{ U_LOGOUT }}">{L_LOGIN_LOGOUT}</a></li>
+	<li class="blg-align-center double-space top-bordered"><a id="blg-logout" class="btn btn-default" href="{{ U_LOGOUT }}">{{ lang('LOGIN_LOGOUT') }}</a></li>
 </ul>
 
 {% else %}
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} form').ajaxify();
 	});
-});
 // ]]>
 </script>
 
 <form action="{{ U_BLG_ACTION }}" method="post">
 	<ul class="blg-linear-list blg-align-center">
-		<li class="double-space bottom-bordered"><strong>{L_LOGIN}</strong></li>
+		<li class="double-space bottom-bordered"><strong>{{ lang('LOGIN') }}</strong></li>
 
-		<li class="blg-align-left"><strong>{L_USERNAME}{L_COLON}</strong></li>
+		<li class="blg-align-left"><strong>{{ lang('USERNAME') ~ lang('COLON') }}</strong></li>
 		<li><input class="cbb-inputbox full-width" type="text" name="username" value="{{ S_USERNAME }}" /></li>
 		
-		<li class="blg-align-left"><strong>{L_PASSWORD}{L_COLON}</strong></li>
+		<li class="blg-align-left"><strong>{{ lang('PASSWORD') ~ lang('COLON') }}</strong></li>
 		<li><input class="cbb-inputbox full-width" type="password" name="password" value="" /></li>
-		{% if U_SEND_PASSWORD %}<li class="blg-align-left"><a href="{{ U_SEND_PASSWORD }}">{L_FORGOT_PASS}</a></li>{% endif %}
-		{% if U_RESEND_ACTIVATION %}<li class="blg-align-left"><a href="{{ U_RESEND_ACTIVATION }}">{L_RESEND_ACTIVATION}</a></li>{% endif %}
+		{% if U_SEND_PASSWORD %}<li class="blg-align-left"><a href="{{ U_SEND_PASSWORD }}">{{ lang('FORGOT_PASS') }}</a></li>{% endif %}
+		{% if U_RESEND_ACTIVATION %}<li class="blg-align-left"><a href="{{ U_RESEND_ACTIVATION }}">{{ lang('RESEND_ACTIVATION') }}</a></li>{% endif %}
 	</ul>
 	
 	{% if S_DISPLAY_FULL_LOGIN %}
@@ -70,20 +66,20 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		{% if S_AUTOLOGIN_ENABLED %}
 		<li>
 			<input id="autologin-{{ BLOCK_ID }}" type="checkbox" class="radio cbb-checkbox" name="autologin" />
-			<label for="autologin-{{ BLOCK_ID }}">{L_REMEMBER_ME}</label>
+			<label for="autologin-{{ BLOCK_ID }}">{{ lang('REMEMBER_ME') }}</label>
 		</li>
 		{% endif %}
 		
 		<li>
 			<input id="viewonline-{{ BLOCK_ID }}" type="checkbox" class="radio cbb-checkbox" name="viewonline" />
-			<label for="viewonline-{{ BLOCK_ID }}">{L_HIDE_ME_NOW}</label>
+			<label for="viewonline-{{ BLOCK_ID }}">{{ lang('HIDE_ME_NOW') }}</label>
 		</li>
 	</ul>
 	{% endif %}
 
 	<div class="blg-align-center">
 		<br />
-		<input type="submit" name="login" class="btn btn-default" value="{L_LOGIN}" />
+		<input type="submit" name="login" class="btn btn-default" value="{{ lang('LOGIN') }}" />
 		{{ S_BLG_LOGIN_FIELDS }}
 		{{ S_FORM_TOKEN_BLG_LOGIN }}
 	</div>
@@ -98,11 +94,11 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	{% if S_REGISTER_ENABLED and S_DISPLAY_REGISTER %}
 	<br />
 	<ul class="blg-linear-list">
-		<li class="double-space bottom-bordered blg-align-center"><strong>{L_REGISTER}</strong></li>
-		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_TERMS_USE }}">{L_TERMS_USE}</a></li>
-		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_PRIVACY }}">{L_PRIVACY}</a></li>
+		<li class="double-space bottom-bordered blg-align-center"><strong>{{ lang('REGISTER') }}</strong></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_TERMS_USE }}">{{ lang('TERMS_USE') }}</a></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_PRIVACY }}">{{ lang('PRIVACY') }}</a></li>
 	
-		<li class="double-space blg-align-center"><a href="{{ U_REGISTER }}"><input type="button" class="btn btn-default" value="{L_REGISTER}" /></a></li>
+		<li class="double-space blg-align-center"><a href="{{ U_REGISTER }}"><input type="button" class="btn btn-default" value="{{ lang('REGISTER') }}" /></a></li>
 	</ul>
 	{% endif %}
 

@@ -6,7 +6,6 @@
 
 	<script>
 	// <![CDATA[
-	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
 			$('#rss-accordion-{{ BLOCK_ID }}').blgAccordion({
@@ -24,7 +23,6 @@
 		
 			$('#block-{{ BLOCK_ID }}').cbbImageGallery({ maxWidth: 400 });
 		});
-	});
 	// ]]>
 	</script>
 
@@ -69,7 +67,7 @@
 	{% endif %}
 
 {% else %}
-	<div class="blg-align-center">{L_NO_RSS}</div>
+	<div class="blg-align-center">{{ lang('NO_RSS') }}</div>
 {% endif %}
 
 {% else %}

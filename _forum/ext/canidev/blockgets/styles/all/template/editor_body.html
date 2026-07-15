@@ -18,7 +18,7 @@
 		
 		{% if smileyrow|length %}
 		<div class="sidebar-box smileys">
-			<h3>{L_SMILIES}</h3>
+			<h3>{{ lang('SMILIES') }}</h3>
 			<div class="box-content">
 				{% INCLUDE '@canidev_core/smiley_box.html' %}
 			</div>
@@ -27,7 +27,7 @@
 		{% if S_EDITOR_TYPE == 'event' %}
 			<hr />
 			<div class="sidebar-box">
-				<h3>{L_EVENT_TIME}</h3>
+				<h3>{{ lang('EVENT_TIME') }}</h3>
 				<div class="box-content">
 					<select name="event_day" class="cbb-inputbox">{{ S_DAY_OPTIONS }}</select>
 					<select name="event_month" class="cbb-inputbox">{{ S_MONTH_OPTIONS }}</select>
@@ -35,13 +35,13 @@
 				</div>
 			</div>
 			<div class="sidebar-box">
-				<h3>{L_EVENT_GROUPS}</h3>
+				<h3>{{ lang('EVENT_GROUPS') }}</h3>
 				<div class="box-content">
 					{{ S_GROUPS_SELECT }}
 				</div>
 			</div>
 			<div class="sidebar-box">
-				<h3>{L_EVENT_COLOR}</h3>
+				<h3>{{ lang('EVENT_COLOR') }}</h3>
 				<div class="box-content">
 					{{ S_COLOR_SELECT }}
 				</div>
@@ -50,7 +50,7 @@
 		</div>
 		<div class="cbb-section-content">
 		{% if S_EDITOR_TYPE == 'event' %}
-			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{{ S_TITLE }}" placeholder="{L_EVENT_TITLE}" />
+			<input name="event_title" type="text" class="cbb-inputbox event-title" value="{{ S_TITLE }}" placeholder="{{ lang('EVENT_TITLE') }}" />
 		{% endif %}
 
 			{% INCLUDE '@canidev_core/editor_body.html' %}
@@ -62,11 +62,11 @@
 		<div class="media-toolbar-secondary">
 			<button class="cbb-btn" data-action="gallery">
 				<i class="fa fa-camera" aria-hidden="true"></i>&nbsp;
-				<span>{L_GALLERY}</span>
+				<span>{{ lang('GALLERY') }}</span>
 			</button>
 		</div>
 		<div class="media-toolbar-primary">
-			<button type="button" class="cbb-btn" data-action="submit">{L_SAVE}</button>
+			<button type="button" class="cbb-btn" data-action="submit">{{ lang('SAVE') }}</button>
 		</div>
 	</div>
 	

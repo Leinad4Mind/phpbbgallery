@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class share_block extends base
 {
 	static $icon = 'fa-share-alt';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	function init()
 	{
 		$this->tpl_name = 'share_block';
@@ -27,54 +30,66 @@ class share_block extends base
 			return false;
 		}
 		
-		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+		$this->template->assign_json_var('S_SHARE_PARAMS', [
 			'buttons'			=> $data['share_buttons'],
 			'inlineButtons'		=> ($this->view_is_small() && $data['show_names']) ? false : true,
 			'iconPath'			=> $this->helper->get_ext_path(true) . 'images/social/',
 			'showNames'			=> $data['show_names'],
 			'url'				=> !empty($data['share_url']) ? $data['share_url'] : $this->get_share_url(),
-		));
+		]);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'submit')
 		{
-			$new['share_buttons'] = $this->request->variable('button', array(0 => ''));
+			$new['share_buttons'] = $this->request->variable('button', [0 => '']);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	function get_config()
 	{
-		$this->display_vars = array(
-			'show_names'	=> array('lang' => 'SHARE_SHOW_NAMES',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1),
-			'share_url'		=> array('lang' => 'SHARE_URL',			'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''),
-			'share_buttons'	=> array('lang' => 'SHARE_BUTTONS',		'type' => 'custom',				'function' => array($this, 'buttons_select'),	'params' => array('{CONFIG_VALUE}'),	'default' => array()),
-		);
+		$this->display_vars = [
+			'show_names'	=> ['lang' => 'SHARE_SHOW_NAMES',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1],
+			'share_url'		=> ['lang' => 'SHARE_URL',			'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''],
+			'share_buttons'	=> ['lang' => 'SHARE_BUTTONS',		'type' => 'custom',				'function' => [$this, 'buttons_select'],	'params' => ['{CONFIG_VALUE}'],	'default' => []],
+		];
 
 		$this->tpl_name = 'acp_share_block';
 
 		return true;
 	}
 
-	function get_share_url()
+	/**
+	 * Get url for share
+	 * 
+	 * @return string
+	 * @access private
+	 */
+	protected function get_share_url()
 	{
 		$share_url = $this->helper->current_url();
 
-		/*
+		/**
 		* Tags to delete from url and conditionals to delete
 		* param => conditionals (Delete param if conditional1 or conditional2 or .... if present in the url)
 		*/
-		$strip_tags = array(
+		$strip_tags = [
 			'sid'	=> 1,
 			'style'	=> 1,
 			'start'	=> 1,
-			'f'		=> array('t', 'p'),
+			'f'		=> ['t', 'p'],
 			'p'		=> 't',
-		);
+		];
 
 		// Delete the anchor if its present
 		if(($anchor_pos = strpos($share_url, '#')) !== false)
@@ -88,11 +103,11 @@ class share_block extends base
 			$delim_pos = strpos($share_url, '?');
 
 			$args = substr($share_url, $delim_pos + 1);
-			$args = ($args) ? explode('&', str_replace('&amp;', '&', $args)) : array();
+			$args = ($args) ? explode('&', str_replace('&amp;', '&', $args)) : [];
 			$share_url = substr($share_url, 0, $delim_pos);
 
 			// Create array with args
-			$query = array();
+			$query = [];
 			foreach ($args as $argument)
 			{
 				if($argument)
@@ -112,7 +127,7 @@ class share_block extends base
 
 				if(!is_array($conditions))
 				{
-					$conditions = array($conditions);
+					$conditions = [$conditions];
 				}
 
 				foreach($conditions as $condition)
@@ -136,21 +151,23 @@ class share_block extends base
 	}
 
 	/**
-	 * build_share_select
 	 * Make select for a share block
-	*/
+	 * 
+	 * @param mixed 	$select
+	 * @return string
+	 */
 	public function buttons_select($select)
 	{
 		if(!is_array($select))
 		{
-			$select = array();
+			$select = [];
 		}
 
-		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+		$this->template->assign_json_var('S_SHARE_PARAMS', [
 			'mode'		=> 'admin',
 			'buttons'	=> $select,
 			'iconPath'	=> $this->helper->get_ext_path(true) . 'images/social/',
-		));
+		]);
 
 		return '<div class="blg-option-selector"></div>';
 	}

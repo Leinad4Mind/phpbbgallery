@@ -1,18 +1,24 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
+use canidev\core\TextParser;
 
 class news_block extends base
 {
 	static $icon = 'fa-bullhorn';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'news_block';
@@ -22,11 +28,11 @@ class news_block extends base
 			return false;
 		}
 
-		$attachments = $attach_list = $rowset = $topic_list = $update_count = array();
+		$attachments = $attach_list = $rowset = $topic_list = $update_count = [];
 
 		$total_topic_count 	= 0;
 		$forum_id 			= 0;
-		$topic_where 		= array(POST_NORMAL);
+		$topic_where 		= [POST_NORMAL];
 		$start				= ($this->request->is_set_post('pagination')) ? $this->request->variable('start', 0) : 0;
 
 		if(empty($data['forums']))
@@ -39,7 +45,7 @@ class news_block extends base
 		{
 			foreach($data['forums'] as $id => $forum_id)
 			{
-				if(!$this->auth->acl_get('f_read', $forum_id))
+				if(!$this->auth->acl_get('f_read', $forum_id) || !$this->auth->acl_get('f_read_others_topics_brunoais', $forum_id))
 				{
 					unset($data['forums'][$id]);
 				}
@@ -53,21 +59,21 @@ class news_block extends base
 
 		if($data['show_all'])
 		{
-			$topic_where = array_merge($topic_where, array(POST_STICKY, POST_ANNOUNCE));
+			$topic_where = array_merge($topic_where, [POST_STICKY, POST_ANNOUNCE]);
 		}
 		
-		$sql_array = array(
-			'SELECT'	=> 'f.forum_name, t.*,
+		$sql_array = [
+			'SELECT'	=> 'f.*, t.*,
 			p.post_subject, p.post_attachment, p.post_reported, p.post_username, p.post_text, p.bbcode_uid, p.bbcode_bitfield, p.enable_smilies,
 			u.username, u.user_colour',
 
-			'FROM'		=> array(TOPICS_TABLE => 't'),
+			'FROM'		=> [TOPICS_TABLE => 't'],
 			
-			'LEFT_JOIN'	=> array(
-				array('FROM' => array(POSTS_TABLE => 'p'),	'ON' => 't.topic_first_post_id = p.post_id'),
-				array('FROM' => array(USERS_TABLE => 'u'),	'ON' => 'u.user_id = t.topic_poster'),
-				array('FROM' => array(FORUMS_TABLE => 'f'),	'ON' => 'f.forum_id = t.forum_id'),
-			),
+			'LEFT_JOIN'	=> [
+				['FROM' => [POSTS_TABLE => 'p'],	'ON' => 't.topic_first_post_id = p.post_id'],
+				['FROM' => [USERS_TABLE => 'u'],	'ON' => 'u.user_id = t.topic_poster'],
+				['FROM' => [FORUMS_TABLE => 'f'],	'ON' => 'f.forum_id = t.forum_id'],
+				],
 			
 			'WHERE'	=> $this->db->sql_in_set('t.topic_type', $topic_where) . '
 				AND t.topic_status <> ' . ITEM_MOVED . '
@@ -75,28 +81,28 @@ class news_block extends base
 				AND ' . $this->db->sql_in_set('t.forum_id', $data['forums']),
 				
 			'ORDER_BY'	=> 't.topic_last_post_time DESC',
-		);
+		];
 
-		/*
-		* Compatibility with other extensions
-		*
-		* @event core.viewforum_get_topic_data
-		* @var	array	forum_data			Array with forum data
-		* @var	array	sql_array			The SQL array to get the data of all topics
-		* @var	int		forum_id			The forum_id whose topics are being listed
-		* @var	int		topics_count		The total number of topics for display
-		* @var	int		sort_days			The oldest topic displayable in elapsed days
-		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
-		*									Author, Post time, Replies, Subject, Views
-		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
-		*/
-		$forum_data 	= array();
+		$forum_data 	= new \canidev\core\DummyArray;
 		$sort_dir 		= 'd';
 		$topics_count 	= 0;
 
 		$sort_days = $sort_key = '';
 
-		$vars = array(
+		/**
+		 * Compatibility with other extensions
+		 *
+		 * @event core.viewforum_get_topic_data
+		 * @var	array	forum_data			Array with forum data
+		 * @var	array	sql_array			The SQL array to get the data of all topics
+		 * @var	int		forum_id			The forum_id whose topics are being listed
+		 * @var	int		topics_count		The total number of topics for display
+		 * @var	int		sort_days			The oldest topic displayable in elapsed days
+		 * @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		 *									Author, Post time, Replies, Subject, Views
+		 * @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		 */
+		$vars = [
 			'forum_data',
 			'sql_array',
 			'forum_id',
@@ -104,28 +110,28 @@ class news_block extends base
 			'sort_days',
 			'sort_key',
 			'sort_dir',
-		);
+		];
 		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
 
-		/*
-		* @event block.news_query
-		* @var array	sql_array	The SQL data
-		* @var	array	data		Block Configuration
-		* @since 2.0.0
-		*/
-		$vars = array('sql_array', 'data');
+		/**
+		 * @event block.news_query
+		 * @var array	sql_array	The SQL data
+		 * @var	array	data		Block Configuration
+		 * @since 2.0.0
+		 */
+		$vars = ['sql_array', 'data'];
 		extract($this->dispatcher->trigger_event('block.news_query', compact($vars)));
 
-		$sql_array = $this->helper->filter_query($sql_array);
+		$sql_array = \canidev\core\tools::filter_db_query($sql_array);
 		
 		// Count total of topics
 		if($data['pagination'])
 		{
-			$sql = $this->db->sql_build_query('SELECT', array(
+			$sql = $this->db->sql_build_query('SELECT', [
 				'SELECT'	=> 'COUNT(t.topic_id) AS topic_count',
 				'FROM'		=> $sql_array['FROM'],
 				'WHERE'		=> $sql_array['WHERE']
-			));
+			]);
 
 			$result = $this->db->sql_query($sql);
 			$total_topic_count = (int)$this->db->sql_fetchfield('topic_count');
@@ -137,7 +143,7 @@ class news_block extends base
 		while($row = $this->db->sql_fetchrow($result))
 		{
 			// Does post have an attachment? If so, add it to the list
-			if($data['display'] == BLOCK_STYLE_CONTENT_FULL && $row['post_attachment'] && $this->config['allow_attachments'])
+			if($data['display'] == constants::BLOCK_STYLE_CONTENT_FULL && $row['post_attachment'] && $this->config['allow_attachments'])
 			{
 				if($this->auth->acl_get('u_download') && ($this->auth->acl_get('f_download', $row['forum_id']) || $data['ignore_auth']))
 				{
@@ -166,28 +172,28 @@ class news_block extends base
 			$this->db->sql_freeresult($result);
 		}
 
-		/*
-		* @event block.news_modify_data
-		* @var	array	topic_list			Array with current topic ids
-		* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
-		* @var	array	attach_list			Array with current attachment post ids
-		* @var	array	attachments			Array with attachments data (in post_id => attachment_rows format)
-		* @var	array	data				Block Configuration
-		* @since 2.0.1
-		*/
-		$vars = array('topic_list', 'rowset', 'attach_list', 'attachments', 'data');
+		/**
+		 * @event block.news_modify_data
+		 * @var	array	topic_list			Array with current topic ids
+		 * @var	array	rowset				Array with topics data (in topic_id => topic_data format)
+		 * @var	array	attach_list			Array with current attachment post ids
+		 * @var	array	attachments			Array with attachments data (in post_id => attachment_rows format)
+		 * @var	array	data				Block Configuration
+		 * @since 2.0.1
+		 */
+		$vars = ['topic_list', 'rowset', 'attach_list', 'attachments', 'data'];
 		extract($this->dispatcher->trigger_event('block.news_modify_data', compact($vars)));
 
-		/*
-		* Compatibility with other extensions
-		*
-		* @event core.viewforum_modify_topics_data
-		* @var	array	topic_list			Array with current viewforum page topic ids
-		* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
-		* @var	int		total_topic_count	Forum's total topic count
-		* @var	int		forum_id			Forum identifier
-		*/
-		$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
+		/**
+		 * Compatibility with other extensions
+		 *
+		 * @event core.viewforum_modify_topics_data
+		 * @var	array	topic_list			Array with current viewforum page topic ids
+		 * @var	array	rowset				Array with topics data (in topic_id => topic_data format)
+		 * @var	int		total_topic_count	Forum's total topic count
+		 * @var	int		forum_id			Forum identifier
+		 */
+		$vars = ['topic_list', 'rowset', 'total_topic_count', 'forum_id'];
 		extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -203,22 +209,20 @@ class news_block extends base
 			$topic_title 	= censor_text($row['post_subject']);
 	
 			// Parse the message
-			if($data['display'] == BLOCK_STYLE_CONTENT_FULL)
+			if($data['display'] == constants::BLOCK_STYLE_CONTENT_FULL)
 			{
-				$parse_flags 	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-				$message 		= censor_text($row['post_text']);
-				$message 		= generate_text_for_display($message, $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+				$message = $this->text_parser->generateForDisplay($row['post_text'], TextParser::FLAG_CENSOR_TEXT, $row['bbcode_uid'], $row['bbcode_bitfield']);
 
 				if(!empty($attachments[$row['topic_first_post_id']]))
 				{
 					parse_attachments($row['forum_id'], $message, $attachments[$row['topic_first_post_id']], $update_count);
 				}
 
-				$read_more 	= $this->lang->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
-				$message 	= \canidev\core\tools::html_truncate($message, $data['size'], "... $read_more");
+				$read_more 	= $this->language->lang('BLG_READ_MORE', '<a class="blg-readmore-link" href="' . $u_view_topic . '">', '</a>');
+				$message 	= \canidev\core\TextParser::truncate($message, $data['size'], "... $read_more");
 			}
 			
-			$topic_row = array(
+			$topic_row = [
 				'TOPIC_ID'				=> $row_topic_id,
 				'TOPIC_TITLE'			=> $topic_title,
 				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
@@ -236,16 +240,16 @@ class news_block extends base
 				'U_VIEW_TOPIC'			=> $u_view_topic,
 				'U_VIEW_FORUM'			=> $this->helper->url('viewforum', "f=$row_forum_id"),
 				'U_POST_REPLY'			=> $this->helper->url('posting', "mode=reply&amp;f=$row_forum_id&amp;t=$row_topic_id"),
-			);
+			];
 
-			/*
-			* Compatibility with other extensions
-			*
-			* @event core.viewforum_modify_topicrow
-			* @var	array	row					Array with topic data
-			* @var	array	topic_row			Template array with topic data
-			*/
-			$vars = array('row', 'topic_row');
+			/**
+			 * Compatibility with other extensions
+			 *
+			 * @event core.viewforum_modify_topicrow
+			 * @var	array	row					Array with topic data
+			 * @var	array	topic_row			Template array with topic data
+			 */
+			$vars = ['row', 'topic_row'];
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 			$this->template->assign_block_vars('news_row', $topic_row);	
@@ -255,9 +259,9 @@ class news_block extends base
 			{
 				foreach($attachments[$row['topic_first_post_id']] as $attachment)
 				{
-					$this->template->assign_block_vars('news_row.attachment', array(
-						'DISPLAY_ATTACHMENT'	=> $attachment)
-					);
+					$this->template->assign_block_vars('news_row.attachment', [
+						'DISPLAY_ATTACHMENT'	=> $attachment
+					]);
 				}
 			}
 		}
@@ -272,42 +276,48 @@ class news_block extends base
 			$pagination->generate_template_pagination('#', 'block_pagination', 'start', $total_topic_count, $data['max'], $start);
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_NEWS_COLLAPSE'		=> $data['collapse'],
-			'S_NEWS_FULL_CONTENT'	=> ($data['display'] == BLOCK_STYLE_CONTENT_FULL),
+			'S_NEWS_FULL_CONTENT'	=> ($data['display'] == constants::BLOCK_STYLE_CONTENT_FULL),
 			
-			'U_ACTION'				=> $this->helper->current_url(array(), false, array('start')),
-		));
+			'U_ACTION'				=> $this->helper->current_url([], false, ['start']),
+		]);
 
 		unset($data, $rowset, $attachments);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['forums'] = $this->request->variable('forums', array(0));
+			$new['forums'] = $this->request->variable('forums', [0]);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$display_options = array(
-			BLOCK_STYLE_CONTENT_FULL	=> 'NEWS_SHOW_FULL',
-			BLOCK_STYLE_CONTENT_SIMPLE	=> 'NEWS_SHOW_SIMPLE',
-		);
+		$display_options = [
+			constants::BLOCK_STYLE_CONTENT_FULL	=> 'NEWS_SHOW_FULL',
+			constants::BLOCK_STYLE_CONTENT_SIMPLE	=> 'NEWS_SHOW_SIMPLE',
+		];
 		
-		$this->display_vars = array(
-			'max'				=> array('lang' => 'NEWS_NUMBER',			'validate' => 'int:1:100',	'type' => 'number:1:100',	'default' => 4),
-			'display'			=> array('lang' => 'NEWS_DISPLAY',			'type' => 'select',			'method' => 'helper',		'params' => array('make_select', $display_options, false, '{CONFIG_VALUE}'),	'default' => BLOCK_STYLE_CONTENT_FULL),
-			'size'				=> array('lang' => 'NEWS_SIZE',				'validate' => 'int:1:1000',	'type' => 'number:1:1000',	'default' => 255),
-			'forums'			=> array('lang' => 'FORUMS',				'type' => 'custom',			'method' => 'helper',		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
-			'ignore_auth'		=> array('lang' => 'IGNORE_AUTH',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0),
-			'show_all'			=> array('lang' => 'NEWS_ALL',				'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0),
-			'collapse'			=> array('lang' => 'NEWS_COLLAPSE',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
-			'pagination'		=> array('lang' => 'SHOW_PAGINATION',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0),
-		);
+		$this->display_vars = [
+			'max'				=> ['lang' => 'NEWS_NUMBER',			'validate' => 'int:1:100',	'type' => 'number:1:100',	'default' => 4],
+			'display'			=> ['lang' => 'NEWS_DISPLAY',			'type' => 'select',			'method' => 'helper',		'params' => ['make_select', $display_options, false, '{CONFIG_VALUE}'],	'default' => constants::BLOCK_STYLE_CONTENT_FULL],
+			'size'				=> ['lang' => 'NEWS_SIZE',				'validate' => 'int:1:1000',	'type' => 'number:1:1000',	'default' => 255],
+			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'ignore_auth'		=> ['lang' => 'IGNORE_AUTH',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0],
+			'show_all'			=> ['lang' => 'NEWS_ALL',				'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0],
+			'collapse'			=> ['lang' => 'NEWS_COLLAPSE',			'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],
+			'pagination'		=> ['lang' => 'SHOW_PAGINATION',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 0],
+		];
 
 		return true;
 	}

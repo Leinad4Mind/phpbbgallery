@@ -23,7 +23,7 @@
 		{% endif %}
 		</li>
 	{% else %}
-		<li class="no-items blg-message cbb-state-highlight">{L_NO_VIDEOS}</li>
+		<li class="no-items blg-message cbb-state-highlight">{{ lang('NO_VIDEOS') }}</li>
 	{% endfor %}
 	</ul>
 
@@ -31,7 +31,6 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#youtube-{{ BLOCK_ID }}').cbbLoader($.extend(true, {{ S_OPTIONS }}, {
@@ -51,7 +50,6 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			}
 		}));
 	});
-});
 // ]]>
 </script>
 

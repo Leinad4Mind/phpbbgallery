@@ -9,17 +9,17 @@
 	<br />
 	<div class="random-member-info blg-inline-list">
 		<dl>
-			<dt><strong>{L_USER}{L_COLON}</strong></dt>
+			<dt><strong>{{ lang('USER') ~ lang('COLON') }}</strong></dt>
 			<dd>{{ member.USER_FULL }}</dd>
 		</dl>
 
 		<dl>
-			<dt><strong>{L_JOINED}{L_COLON}</strong></dt>
+			<dt><strong>{{ lang('JOINED') ~ lang('COLON') }}</strong></dt>
 			<dd>{{ member.REGDATE }}</dd>
 		</dl>
 
 		<dl>
-			<dt><strong>{L_POSTS}{L_COLON}</strong></dt>
+			<dt><strong>{{ lang('POSTS') ~ lang('COLON') }}</strong></dt>
 			<dd>{% if member.POSTS %}<a href="{{ member.U_FIND_POSTS }}">{{ member.POSTS }}</a>{% else %}0{% endif %}</dd>
 		</dl>
 	</div>

@@ -1,17 +1,17 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.3 26/07/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\libraries;
 
+use \Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
-use \canidev\core\json_response;
 
 class helper
 {
@@ -20,7 +20,7 @@ class helper
 	protected $container;
 	protected $db;
 	protected $filesystem;
-	protected $lang;
+	protected $language;
 	protected $path;
 	protected $request;
 	protected $router;
@@ -36,26 +36,26 @@ class helper
 	public $json;
 	
 	/**
-	* Constructor
-	*
-	* @param \phpbb\auth\auth 							$auth				Authentication object
-	* @param \phpbb\config\config 						$config				Config Object
-	* @param ContainerInterface 						$container			Service container interface
-	* @param \phpbb\db\driver\driver_interface			$db					DB Object
-	* @param \phpbb\filesystem\filesystem				$filesystem			Filesystem Object
-	* @param \phpbb\language\language					$language			Language Object
-	* @param \phpbb\path_helper							$path_helper		Path Helper Object
-	* @param \phpbb\request\request 					$request			Request object
-	* @param \phpbb\symfony_request						$symfony_request	Symfony Request
-	* @param \phpbb\template\template					$template     		Template object
-	* @param \phpbb\user								$user				User object
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth 							$auth				Authentication object
+	 * @param \phpbb\config\config 						$config				Config Object
+	 * @param ContainerInterface 						$container			Service container interface
+	 * @param \phpbb\db\driver\driver_interface			$db					DB Object
+	 * @param \phpbb\filesystem\filesystem				$filesystem			Filesystem Object
+	 * @param \phpbb\language\language					$language			Language Object
+	 * @param \phpbb\path_helper						$path_helper		Path Helper Object
+	 * @param \phpbb\request\request 					$request			Request object
+	 * @param \phpbb\symfony_request					$symfony_request	Symfony Request
+	 * @param \phpbb\template\template					$template     		Template object
+	 * @param \phpbb\user								$user				User object
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\filesystem\filesystem $filesystem,
 		\phpbb\language\language $language,
@@ -70,8 +70,8 @@ class helper
 		$this->container		= $container;
 		$this->db				= $db;
 		$this->filesystem 		= $filesystem;
-		$this->json				= \canidev\core\json_response::get_instance();
-		$this->lang				= $language;
+		$this->json				= \canidev\core\JsonResponse::getInstance();
+		$this->language			= $language;
 		$this->path				= $path_helper;
 		$this->request			= $request;
 		$this->symfony_request	= $symfony_request;
@@ -82,17 +82,22 @@ class helper
 		$this->php_ext			= $path_helper->get_php_ext();
 	}
 	
+	/**
+	 * Get a relative root path from the current URL
+	 * @return string
+	 */
 	public function get_web_root_path()
 	{
 		return $this->path->get_web_root_path();
 	}
 
 	/**
-	 * format_short_date
 	 * Create short date from the user date format to use in blocks
 	 *
-	 * @param int	$time . The time point number
-	 * @param bool	$allow_timezone . Define if use the user timezone or not
+	 * @param int	$time 				The time point number
+	 * @param bool	$allow_timezone 	Define if use the user timezone or not
+	 * 
+	 * @return string
 	*/
 	public function format_short_date($time, $allow_timezone = true)
 	{
@@ -100,28 +105,33 @@ class helper
 
 		if(!$allow_timezone)
 		{
-			return strtr(date($format, $time), array_filter($this->lang->get_raw('datetime'), 'is_string'));
+			return strtr(date($format, $time), array_filter($this->language->lang_raw('datetime'), 'is_string'));
 		}
 
 		return $this->user->format_date($time, $format);
 	}
 
+	/**
+	 * Check if user has permissions, based on groups
+	 * 
+	 * @param array|string 		$groups 	Valid Group's IDs
+	 * @return bool
+	 */
 	public function group_auth($groups)
 	{
-		return \canidev\core\lib::get_instance($this->container)->group_auth($groups);
+		return $this->container->get('canidev.core.lib')->group_auth($groups);
 	}
 	
 	/**
-	 * obtain_today_visits
 	 * Queries the session table to get information about today visits
 	 *
 	 * @return array An array containing the ids of today visits, hidden and visible users, as well as statistical info
-	*/
+	 */
 	public function obtain_today_visits()
 	{
-		$user_list = array();
+		$user_list = [];
 
-		$today_users = array(
+		$today_users = [
 			'lastvisit_users'	=> '',
 			'userlist'			=> '',
 			'total_today'		=> 0,
@@ -130,7 +140,7 @@ class helper
 			'guests_today'		=> 0,
 
 			'hidden_online'		=> 0,
-		);
+		];
 
 		// Get the last visit guests
 		$sql = 'SELECT COUNT(DISTINCT s.session_ip) as guest_count
@@ -169,42 +179,49 @@ class helper
 
 		if(!empty($user_list))
 		{
-			$today_users['userlist'] = $this->lang->lang('REGISTERED_USERS') . ' ' . implode(', ', $user_list);
+			$today_users['userlist'] = $this->language->lang('REGISTERED_USERS') . ' ' . implode(', ', $user_list);
 		}
 		unset($user_list);
 
 		$today_users['total_today'] = $today_users['guests_today'] + $today_users['visible_today'] + $today_users['hidden_today'];
 
 		// Build online listing
-		$vars_lastvisit = array(
+		$vars_lastvisit = [
 			'LASTVISIT'	=> 'total_today',
 			'REG'		=> 'visible_today',
 			'HIDDEN'	=> 'hidden_today',
 			'GUEST'		=> 'guests_today',
-		);
+		];
 
 		foreach($vars_lastvisit as $v_prefix => $var)
 		{
-			$today_users['lastvisit_users'] .= $this->lang->lang($v_prefix . (($today_users[$var] == 1) ? '_VISIT_TOTAL' : '_VISITS_TOTAL'), $today_users[$var]);
+			$today_users['lastvisit_users'] .= $this->language->lang($v_prefix . (($today_users[$var] == 1) ? '_VISIT_TOTAL' : '_VISITS_TOTAL'), $today_users[$var]);
 		}
 		unset($vars_lastvisit);
 
 		return $today_users;
 	}
 	
+	/**
+	 * Get correct image filename
+	 * 
+	 * @param string 		$image 			Image filename
+	 * @param bool 			$full_url 		Set if must return a complete URL
+	 * 
+	 * @return string
+	 */
 	public function build_image_filename($image, $full_url = false)
 	{
 		return $this->get_media(false)->get_full_path($image, $full_url);
 	}
 	
 	/**
-	* locale_lang
-	* Get the local lang code from user lang code
-	*
-	* @param string	$lang_name . The lang iso name to find or '_get' param to only load the files
-	* @param string	$type . (iso|name|name_eng). The type of data to proccess
-	* @return string|bool . Returns the locale lang or the default lang if not exists.
-	*/
+	 * Get the local lang code from user lang code
+	 *
+	 * @param string			$lang_name 		The lang iso name to find or '_get' param to only load the files
+	 * @param string			$type 			(iso|name|name_eng). The type of data to proccess
+	 * @return string|array 					Returns the locale lang or the default lang if not exists.
+	 */
 	public function locale_lang($lang_name = false, $type = false)
 	{
 		static $blg_lang_locale;
@@ -223,29 +240,36 @@ class helper
 
 		if($type === false)
 		{
-			return isset($blg_lang_locale[$lang_name]) ? $blg_lang_locale[$lang_name] : array();
+			return isset($blg_lang_locale[$lang_name]) ? $blg_lang_locale[$lang_name] : [];
 		}
 
 		return isset($blg_lang_locale[$lang_name][$type]) ? $blg_lang_locale[$lang_name][$type] : '';
 	}
 	
+	/**
+	 * Get extension path
+	 * 
+	 * @param bool 		$correct_path 		Set if path must be corrected (for public urls)
+	 * @return string
+	 */
 	public function get_ext_path($correct_path = false)
 	{
-		$ext_path = str_replace(array('\libraries', '\\'), array('', '/'), __NAMESPACE__);
+		$ext_path = str_replace(['\libraries', '\\'], ['', '/'], __NAMESPACE__);
 		return (($correct_path) ? $this->path->get_web_root_path() : $this->phpbb_root_path) . 'ext/' . $ext_path . '/';
 	}
 	
 	/**
-	* Generate a URL to a route
-	*
-	* @param string	$route		Name of the route to travel
-	* @param array	$params		String or array of additional url parameters
-	* @param bool	$is_amp		Is url using &amp; (true) or & (false)
-	* @param string|bool		$session_id	Possibility to use a custom session id instead of the global one
-	* @param bool|string		$reference_type The type of reference to be generated (one of the constants)
-	* @return string The URL already passed through append_sid()
-	*/
-	public function route($route, array $params = array(), $is_amp = true, $session_id = false, $absolute_url = false)
+	 * Generate a URL to a route
+	 *
+	 * @param string			$route				Name of the route to travel
+	 * @param array				$params				String or array of additional url parameters
+	 * @param bool				$is_amp				Is url using &amp; (true) or & (false)
+	 * @param string|bool		$session_id			Possibility to use a custom session id instead of the global one
+	 * @param bool|string		$reference_type 	The type of reference to be generated (one of the constants)
+	 * 
+	 * @return string 								The URL already passed through append_sid()
+	 */
+	public function route($route, array $params = [], $is_amp = true, $session_id = false, $absolute_url = false)
 	{
 		$protocol		= ($this->request->is_secure()) ? 'https://' : 'http://';
 		$reference_type = ($absolute_url) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
@@ -258,7 +282,7 @@ class helper
 		}
 
 		// Simple way to return home url
-		if($route == 'canidev_blockgets_controller' && $this->config['blg_home_type'] == TYPE_DOMAIN_HOME)
+		if($route == 'canidev_blockgets_controller' && $this->config['blg_home_type'] == constants::TYPE_DOMAIN_HOME)
 		{
 			return append_sid($protocol . $this->user->host . '/', $params, $is_amp, $session_id, true);
 		}
@@ -315,7 +339,7 @@ class helper
 
 		if($is_amp)
 		{
-			$route_url = str_replace(array('&amp;', '&'), array('&', '&amp;'), $route_url);
+			$route_url = str_replace(['&amp;', '&'], ['&', '&amp;'], $route_url);
 		}
 
 		if($reference_type === UrlGeneratorInterface::RELATIVE_PATH && empty($this->config['blg_rewrite']))
@@ -327,18 +351,22 @@ class helper
 	}
 	
 	/**
-	* Return the current url
-	*
-	* @return string
-	*/
-	public function current_url($params = array(), $amp = true, $ignore_params = array())
+	 * Return the current url
+	 * 
+	 * @param array 		$params 		Additional params added to url
+	 * @param bool 			$amp 			Define if $amp; must be used as separator
+	 * @param array 		$ignore_params 	Define the params to be removed from the url
+	 *
+	 * @return string
+	 */
+	public function current_url($params = [], $amp = true, $ignore_params = [])
 	{
 		$url = generate_board_url(true) . $this->request->escape($this->symfony_request->getRequestUri(), true);
 		
 		if(sizeof($params) || sizeof($ignore_params))
 		{
 			$query_str	= '';
-			$query		= array();
+			$query		= [];
 			
 			if(strpos($url, '?') !== false)
 			{
@@ -367,11 +395,26 @@ class helper
 		return ($amp) ? $url : str_replace('&amp;', '&', $url);
 	}
 	
-	public function url($page_name, $params = array(), $is_amp = true)
+	/**
+	 * Build page url
+	 * 
+	 * @param string 	$page_name
+	 * @param array 	$params
+	 * @param bool 		$is_amp
+	 * 
+	 * @return string
+	 */
+	public function url($page_name, $params = [], $is_amp = true)
 	{
 		return append_sid($this->phpbb_root_path . $page_name . '.' . $this->php_ext, $params, $is_amp);
 	}
 	
+	/**
+	 * Check if counter is updated in the current session
+	 * 
+	 * @param int 	$counter_id 		Counter|Block ID
+	 * @return bool
+	 */
 	public function counter_session($counter_id)
 	{
 		$cookie_data = $this->request->variable($this->config['cookie_name'] . '_counter_track', '', true, \phpbb\request\request_interface::COOKIE);
@@ -388,24 +431,30 @@ class helper
 		return false;
 	}
 
+	/**
+	 * Get topic track info from rowset
+	 * 
+	 * @param array 	$rowset
+	 * @return array
+	 */
 	public function get_rowset_tracking($rowset)
 	{
 		if(!sizeof($rowset))
 		{
-			return array();
+			return [];
 		}
 
-		$topic_tracking_info 	= array();
-		$forums 				= array();
+		$topic_tracking_info 	= [];
+		$forums 				= [];
 
 		foreach($rowset as $topic_id => $row)
 		{
 			if(!isset($forums[$row['forum_id']]))
 			{
-				$forums[$row['forum_id']] = array(
+				$forums[$row['forum_id']] = [
 					'mark_time'		=> 0,
-					'topic_list'	=> array(),
-				);
+					'topic_list'	=> [],
+				];
 
 				if($this->user->data['is_registered'] && $this->config['load_db_lastread'] && isset($row['f_mark_time']))
 				{
@@ -420,7 +469,7 @@ class helper
 		{
 			if($this->user->data['is_registered'] && $this->config['load_db_lastread'])
 			{
-				$topic_tracking_info += get_topic_tracking($forum_id, $forum['topic_list'], $rowset, array($forum_id => $forum['mark_time']));
+				$topic_tracking_info += get_topic_tracking($forum_id, $forum['topic_list'], $rowset, [$forum_id => $forum['mark_time']]);
 			}
 			else if($this->config['load_anon_lastread'] || $this->user->data['is_registered'])
 			{
@@ -433,6 +482,14 @@ class helper
 		return $topic_tracking_info;
 	}
 
+	/**
+	 * Get core media instance
+	 * 
+	 * @param bool 		$preload 		Set if media language and assets will be load
+	 * @param bool 		$do_actions 	Set if media ajax actions will be processed
+	 * 
+	 * @return \canidev\core\media
+	 */
 	public function get_media($preload = true, $do_actions = false)
 	{
 		if($this->media === null)
@@ -455,48 +512,5 @@ class helper
 		}
 		
 		return $this->media;
-	}
-
-	/*
-	 * Events can produce unprecise sql queries because of other extensions.
-	 * This function is used to clear the queries before use it.
-	*/
-	public function filter_query($sql_ary)
-	{
-		// Filter duplicate SELECT
-		if(isset($sql_ary['SELECT']))
-		{
-			$select_keys = array_map('trim', explode(',', $sql_ary['SELECT']));
-			$select_keys = array_unique($select_keys);
-
-			$sql_ary['SELECT'] = implode(', ', $select_keys);
-		}
-
-		// Filter duplicate LEFT JOIN
-		if(isset($sql_ary['LEFT_JOIN']))
-		{
-			$left_join_keys = array();
-
-			foreach($sql_ary['LEFT_JOIN'] as $i => $join)
-			{
-				$forum_key 		= array_keys($join['FROM'])[0];
-				$forum_alias 	= array_values($join['FROM'])[0];
-
-				if(!isset($left_join_keys[$forum_key]))
-				{
-					$left_join_keys[$forum_key] = array();
-				}
-
-				if(!in_array($forum_alias, $left_join_keys[$forum_key]))
-				{
-					$left_join_keys[$forum_key][] = $forum_alias;
-					continue;
-				}
-
-				unset($sql_ary['LEFT_JOIN'][$i]);
-			}
-		}
-
-		return $sql_ary;
 	}
 }

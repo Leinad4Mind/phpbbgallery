@@ -1,10 +1,9 @@
 {% if ACP_MANAGE_GALLERY %}
-<button class="cbb-btn" data-id="{{ S_BUTTON_ID }}">{L_GALLERY_MANAGE}</button>
+<button class="cbb-btn" data-id="{{ S_BUTTON_ID }}">{{ lang('GALLERY_MANAGE') }}</button>
 {{ S_GALLERY_HIDDEN_FIELDS }}
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('[data-id="{{ S_BUTTON_ID }}"]').click(function(e) {
@@ -36,7 +35,6 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			});
 		});
 	});
-});
 // ]]>
 </script>
 
@@ -44,12 +42,10 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }}').blgGallery({{ S_GALLERY_OPTIONS }});
 	});
-});
 // ]]>
 </script>
 

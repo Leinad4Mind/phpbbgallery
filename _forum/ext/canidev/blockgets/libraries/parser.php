@@ -1,37 +1,43 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.3 26/07/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\libraries;
 
 class parser
 {
-	private $bbcodes = array();
+	private $bbcodes = [];
 
 	/**
-	* Constructor
-	* @access public
-	*/
+	 * Constructor
+	 * @access public
+	 */
 	public function __construct()
 	{
-		$this->bbcodes = array(
-			'html' => array(
+		$this->bbcodes = [
+			'html' => [
 				'match'		=> '#\[html\](.*?)\[/html\]#s',
 				'replace'	=> function($matches) {
 					return htmlspecialchars_decode(
-						str_replace(array('<br/>', '<br>', "\n"), '', $matches[1]),
+						str_replace(['<br/>', '<br>', "\n"], '', $matches[1]),
 						ENT_COMPAT
 					);
 				},
-			),
-		);
+			],
+		];
 	}
 	
+	/**
+	 * Parse bbcodes in text
+	 * 
+	 * @param string 	$message 	Original text
+	 * @return string
+	 */
 	public function parse_bbcode($message)
 	{
 		foreach($this->bbcodes as $bbcode => $row)
@@ -43,8 +49,8 @@ class parser
 
 			if(isset($row[0]) || is_string($row))
 			{
-				$match		= array('[' . $bbcode . ']', '[/' . $bbcode . ']');
-				$replace	= (isset($row[0]) ? array($row[0], $row[1]) : array('<' . $row . '>', '</' . $row . '>'));
+				$match		= ['[' . $bbcode . ']', '[/' . $bbcode . ']'];
+				$replace	= isset($row[0]) ? [$row[0], $row[1]] : ['<' . $row . '>', '</' . $row . '>'];
 				
 				$message = str_replace($match, $replace, $message);
 			}

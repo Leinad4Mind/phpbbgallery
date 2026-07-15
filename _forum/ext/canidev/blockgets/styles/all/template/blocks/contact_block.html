@@ -1,7 +1,6 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} form').ajaxify({
@@ -10,7 +9,6 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			}
 		});
 	});
-});
 // ]]>
 </script>
 
@@ -19,7 +17,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	<fieldset class="contact-fields{% if BLOCK_VIEW_SMALL %} short-view{% endif %}">
 	{% for field in fieldrow %}
 		<dl>
-			<dt><strong>{{ field.TITLE }}{L_COLON}</strong></dt>
+			<dt><strong>{{ field.TITLE ~ lang('COLON') }}</strong></dt>
 			<dd>
 			{% if field.TYPE == 'text' %}
 				<input type="text" name="{{ field.KEY }}" size="35" value="{{ field.VALUE }}" class="cbb-inputbox autowidth" />
@@ -40,7 +38,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 
 	<br />
 	<div class="blg-align-center">
-		<input type="submit" class="cbb-btn" id="submit" name="submit" value="{L_SUBMIT}" />
+		<input type="submit" class="cbb-btn" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
 		{{ BLOCK_HIDDEN_FIELDS }}
 		{{ S_FORM_TOKEN }}
 	</div>

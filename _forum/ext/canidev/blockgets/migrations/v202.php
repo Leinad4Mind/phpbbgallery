@@ -4,7 +4,7 @@
 * @version v2.0.2 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\blockgets\migrations;
@@ -22,14 +22,14 @@ class v202 extends \canidev\blockgets\libraries\migration_base
 
 	public function _update_data()
 	{
-		return array(
-			array('custom', array(array($this, 'update_block_config'))),
-		);
+		return [
+			['custom', [[$this, 'update_block_config']]],
+		];
 	}
 
 	public function update_block_config()
 	{
-		$block_manager = new \canidev\blockgets\libraries\block_manager($this->db);
+		$block_manager = new \canidev\blockgets\libraries\block_manager($this->db, $this->table_prefix);
 
 		$block_manager->add_config(array(
 			'leaders_block'	=> array(

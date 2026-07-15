@@ -5,7 +5,7 @@
 {% for forum_row in loops.forum_row %}
 	{% if forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT %}
 	<li class="menu-cat">
-		{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
+		{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{{ lang('FORUM') }}{% endif %}
 	</li>
 	{% endif %}
 
@@ -17,7 +17,7 @@
 	{% endif %}
 
 {% else %}
-	<li><strong>{L_NO_FORUMS}</strong></li>
+	<li><strong>{{ lang('NO_FORUMS') }}</strong></li>
 {% endfor %}
 
 </ul>
@@ -39,8 +39,8 @@
 		<div class="panel panel-default">
 		{% else %}
 		<div class="blg-widget-header">
-			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
-			{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{{ lang('FORUM') }}{% endif %}
 		</div>
 		{% endif %}
 
@@ -65,7 +65,7 @@
 					<a href="{{ forum_row.U_VIEWFORUM }}" class="forumtitle">{{ forum_row.FORUM_NAME }}</a><br />
 					{{ forum_row.FORUM_DESC }}
 					{% if forum_row.MODERATORS %}
-						<span class="forum-mods"><strong>{{ forum_row.L_MODERATOR_STR }}{L_COLON}</strong>&nbsp;{{ forum_row.MODERATORS }}</span>
+						<span class="forum-mods"><strong>{{ forum_row.L_MODERATOR_STR ~ lang('COLON') }}</strong>&nbsp;{{ forum_row.MODERATORS }}</span>
 					{% endif %}
 					{% if forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS %}
 					<br />
@@ -79,16 +79,16 @@
 			</td>
 		{% if not BLOCK_VIEW_MEDIUM %}
 			{% if forum_row.CLICKS %}
-				<td colspan="2"><span class="stats-wrapper">{L_REDIRECTS}{L_COLON} {{ forum_row.CLICKS }}</td>
+				<td colspan="2"><span class="stats-wrapper">{{ lang('REDIRECTS') ~ lang('COLON') }} {{ forum_row.CLICKS }}</td>
 			{% elseif not forum_row.S_IS_LINK %}
-				<td class="fb-stats blg-align-center">{{ forum_row.TOPICS }} {L_TOPICS}<br />{{ forum_row.POSTS }} {L_POSTS}</dd>
+				<td class="fb-stats blg-align-center">{{ forum_row.TOPICS }} {{ lang('TOPICS') }}<br />{{ forum_row.POSTS }} {{ lang('POSTS') }}</dd>
 				<td class="lastpost">
 				{% if forum_row.LAST_POST_TIME %}
 					<a class="cbb-helper-text" href="{{ forum_row.U_LAST_POST }}" title="{{ forum_row.LAST_POST_SUBJECT }}">{{ forum_row.LAST_POST_SUBJECT }}</a>
-					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ forum_row.LAST_POSTER_FULL }}
+					<i class="fa fa-user"></i>&nbsp;{{ lang('POST_BY_AUTHOR') }} {{ forum_row.LAST_POSTER_FULL }}
 					<br /><span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;{{ forum_row.LAST_POST_TIME }}</span>
 				{% else %}
-					{L_NO_POSTS}<br />&nbsp;
+					{{ lang('NO_POSTS') }}<br />&nbsp;
 				{% endif %}
 				</td>
 			{% endif %}
@@ -103,7 +103,7 @@
 		{% if BLOCK_STYLE == 'content_simple' %}</div>{% endif %}
 	{% endif %}
 {% else %}
-	<strong>{L_NO_FORUMS}</strong>
+	<strong>{{ lang('NO_FORUMS') }}</strong>
 {% endfor %}
 
 </div>

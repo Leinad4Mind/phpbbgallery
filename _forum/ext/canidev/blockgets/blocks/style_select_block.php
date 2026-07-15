@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class style_select_block extends base
 {
 	static $icon = 'fa-eye';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'style_select_block';
@@ -30,14 +33,14 @@ class style_select_block extends base
 				$this->db->sql_query($sql);
 			}
 
-			$this->helper->json->add(array(
-				'redirect'		=> $this->helper->current_url(array('cstyle' => $style), false)
-			));
+			$this->helper->json->add([
+				'redirect'		=> $this->helper->current_url(['cstyle' => $style], false)
+			]);
 
 			return true;
 		}
 		
-		$style_select = '<option disabled>' . $this->lang->lang('STYLE_SELECT') . '</option>';
+		$style_select = '<option disabled>' . $this->language->lang('STYLE_SELECT') . '</option>';
 
 		$sql = 'SELECT style_id, style_name
 			FROM ' . STYLES_TABLE . '
@@ -51,16 +54,16 @@ class style_select_block extends base
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'STYLE_SELECT' 		=> $style_select,
 			'CAN_SAVE_STYLE'	=> ($this->user->data['is_registered'] && !$this->config['override_user_style']) ? true : false,
 
-			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'jblgm'	=> $this->data['block_id']
-			)),
+			]),
 
-			'U_STYLE_DEFAULT'	=> (($style && $style != $this->user->data['user_style']) ? preg_replace(array("#style=$style(&amp;|&|$)+#", '#\?$#'), '', $this->helper->current_url()) : ''),
-		));
+			'U_STYLE_DEFAULT'	=> (($style && $style != $this->user->data['user_style']) ? preg_replace(["#style=$style(&amp;|&|$)+#", '#\?$#'], '', $this->helper->current_url()) : ''),
+		]);
 
 		return true;
 	}

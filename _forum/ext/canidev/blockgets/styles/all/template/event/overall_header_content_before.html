@@ -3,16 +3,25 @@
 {% if top_blockrow|length %}
 <!-- [+] top block area -->
 <div class="blg-area">
-{% for block in loops.top_blockrow %}
+{% for block in top_blockrow %}
 	{% include 'block_view.html' %}
 {% endfor %}
 </div>
 <!-- [-] top block area -->
 {% endif %}
 
-<div class="blg-area {{ CENTER_COLUMN_CLASSES }}">
-	<div class="blg-area-wrapper">
-		<div id="blg-column-center"{% if BLG_ON_BOARD and not DISPLAY_FORUM_BLOCK %} class="blg-helper-content-hidden"{% endif %}>
+<div class="blg-area blg-center-area {{ CENTER_COLUMN_CLASSES }}">
+{% if SHOW_LEFT_COLUMN and left_blockrow|length %}
+<!-- [+] left block area -->
+	<div id="blg-column-left">
+	{% for block in left_blockrow %}
+		{% include 'block_view.html' %}
+	{% endfor %}
+	</div>
+<!-- [-] left block area -->
+{% endif %}
+
+	<div id="blg-column-center"{% if BLG_ON_BOARD and not DISPLAY_FORUM_BLOCK %} class="blg-helper-content-hidden"{% endif %}>
 	{% for block in loops.center_blockrow %}
 		{% if not block.AFTER_FORUM %}
 			{% include 'block_view.html' %}

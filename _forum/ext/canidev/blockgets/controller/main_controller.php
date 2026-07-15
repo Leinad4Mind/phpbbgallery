@@ -1,20 +1,20 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
 /**
-* Main controller
-*/
-class main_controller implements main_interface
+ * Main controller
+ */
+class main_controller
 {
 	protected $blockgets;
 	protected $db;
@@ -22,15 +22,15 @@ class main_controller implements main_interface
 	protected $user;
 
 	/**
-	* Constructor
-	*
-	* @param \canidev\blockgets\libraries\blockgets		$blockgets		Blockgets Object
-	* @param \phpbb\db\driver\driver_interface			$db				DB Object
-	* @param \phpbb\template\template					$template     	Template object
-	* @param \phpbb\user								$user			User object
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \canidev\blockgets\libraries\blockgets		$blockgets		Blockgets Object
+	 * @param \phpbb\db\driver\driver_interface				$db				DB Object
+	 * @param \phpbb\template\template						$template     	Template object
+	 * @param \phpbb\user									$user			User object
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\canidev\blockgets\libraries\blockgets $blockgets,
 		\phpbb\db\driver\driver_interface $db,
@@ -44,17 +44,17 @@ class main_controller implements main_interface
 	}
 
 	/**
-	* Display the portal
-	* @access public
-	*/
+	 * Display the portal
+	 * @access public
+	 */
 	public function display($page = '')
 	{
 		define('BLG_HOME_PAGE', true);
 
 		$this->blockgets->set_page($page);
-
+		
 		$page_data = $this->blockgets->load_page(true);
-
+		
 		// Set the page style
 		if(!empty($page_data['style']) && $page_data['style'] != $this->user->style['style_id'])
 		{
@@ -68,19 +68,19 @@ class main_controller implements main_interface
 			if($style_data)
 			{
 				$this->user->style = $style_data;
-				$this->template->set_style(array('ext/canidev/blockgets/styles', 'styles'));
+				$this->template->set_style(['ext/canidev/blockgets/styles', 'styles']);
 			}
 		}
 		
 		page_header('');
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'body'	=> '@canidev_blockgets/custom_body.html',
-		));
+		]);
 
 		page_footer(true, false, false);
 
-		$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : array();
+		$headers = !empty($this->user->data['is_bot']) ? ['X-PHPBB-IS-BOT' => 'yes'] : [];
 
 		return new Response($this->template->assign_display('body'), 200, $headers);
 	}

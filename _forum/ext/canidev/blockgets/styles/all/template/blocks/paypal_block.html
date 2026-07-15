@@ -1,12 +1,10 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#paypal-{{ BLOCK_ID }}').attr('target', '_blank');
 	});
-});
 // ]]>
 </script>
 
@@ -15,19 +13,19 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	{% if S_PAYPAL_MSG %}<li class="double-space">{{ S_PAYPAL_MSG }}</li>{% endif %}
 	
 	<li class="double-space">
-		{L_AMOUNT_MSG}{L_COLON}<br />
+		{{ lang('AMOUNT_MSG') ~ lang('COLON') }}<br />
 		<select name="amount" class="cbb-inputbox">{{ S_PAYPAL_AMOUNTS }}</select>
 	</li>
 	
 {% if S_PAYPAL_CURRENCY_OPTIONS %}
 	<li class="double-space">
-		{L_CODE_MSG}{L_COLON}<br />
+		{{ lang('CODE_MSG') ~ lang('COLON') }}<br />
 		<select name="currency_code" class="cbb-inputbox">{{ S_PAYPAL_CURRENCY_OPTIONS }}</select>
 	</li>
 {% endif %}
 
 	<li class="double-space">
-		<input type="image" name="submit" style="border:0;" title="{L_CLICK_MSG}" src="{{ S_PAYPAL_IMG }}" alt="PayPal" />
+		<input type="image" name="submit" style="border:0;" title="{{ lang('CLICK_MSG') }}" src="{{ S_PAYPAL_IMG }}" alt="PayPal" />
 		{{ S_BLOCK_HIDDEN_FIELDS }}
 	</li>
 </ul>

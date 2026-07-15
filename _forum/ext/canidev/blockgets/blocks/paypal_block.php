@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class paypal_block extends base
 {
 	static $icon = 'fa-paypal';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'paypal_block';
@@ -40,31 +43,34 @@ class paypal_block extends base
 		{
 			foreach($data['currencies'] as $value)
 			{
-				if($this->lang->is_set(array('currencies', $value)))
+				if($this->language->is_set(['currencies', $value]))
 				{
 					$selected = ($value == $data['default_currency']) ? ' selected="selected"' : '';
-					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->lang->lang(array('currencies', $value)) . '</option>';
+					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->language->lang(['currencies', $value]) . '</option>';
 				}
 			}
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_PAYPAL_MSG'				=> $this->generate_text_display($data['msg']),
 			'S_PAYPAL_IMG'				=> (!empty($data['button_img']) ? $data['button_img'] : $default_img),
 			'S_PAYPAL_AMOUNTS'			=> $amount_options,
 			'S_PAYPAL_CURRENCY_OPTIONS'	=> $s_currency_options,
 			
-			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'business'	=> $data['account'],
 				'cmd'		=> '_donations',
 				'item_name'	=> $data['item']
-			))
-		));
+			])
+		]);
 		
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		switch($mode)
@@ -83,41 +89,49 @@ class paypal_block extends base
 			break;
 
 			case 'submit':
-				$this->lang->add_lang('posting');
+				$this->language->add_lang('posting');
 
 				generate_text_for_storage($new['msg'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
 				$this->bbcode('set', $uid, $bitfield);
 				
-				$new['currencies'] 			= $this->request->variable('currency', array(0 => ''));
+				$new['currencies'] 			= $this->request->variable('currency', [0 => '']);
 				$new['default_currency']	= $this->request->variable('default_currency', '');
 			break;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'item'				=> array('lang' => 'PAYPAL_ITEM',		'validate' => 'string:5:100',	'type' => 'text:40:100',			'default' => 'paypal'),
-			'account'			=> array('lang' => 'PAYPAL_ACCOUNT',	'validate' => 'string:6:100',	'type' => 'text:30:100',			'default' => 'account@paypal.com'),
-			'msg'				=> array('lang' => 'PAYPAL_MSG',		'type' => 'custom',				'method' => 'helper',				'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5),	'default' => ''),
-			'button_img'		=> array('lang' => 'PAYPAL_IMG',		'validate' => 'string:0:255',	'type' => 'custom',		'method' => 'helper',	'params' => array('easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1),	'default' => ''),
-			'amounts'			=> array('lang' => 'PAYPAL_AMOUNTS',	'validate' => 'string:0:255',	'type' => 'text:50:255',			'default' => '5;10;15;20;25;30;40;50;75;100;200;300;400;500;750;1000'),
-			'currencies'		=> array('lang' => 'PAYPAL_CURRENCIES',	'type' => 'custom',	'function' => array($this, 'build_currency'),	'params' => array('{CONFIG_VALUE}'),	'default' => array()),
+		$this->display_vars = [
+			'item'				=> ['lang' => 'PAYPAL_ITEM',		'validate' => 'string:5:100',	'type' => 'text:40:100',			'default' => 'paypal'],
+			'account'			=> ['lang' => 'PAYPAL_ACCOUNT',		'validate' => 'string:6:100',	'type' => 'text:30:100',			'default' => 'account@paypal.com'],
+			'msg'				=> ['lang' => 'PAYPAL_MSG',			'type' => 'custom',				'method' => 'helper',				'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
+			'button_img'		=> ['lang' => 'PAYPAL_IMG',			'validate' => 'string:0:255',	'type' => 'custom',					'method' => 'helper',	'params' => ['easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'amounts'			=> ['lang' => 'PAYPAL_AMOUNTS',		'validate' => 'string:0:255',	'type' => 'text:50:255',			'default' => '5;10;15;20;25;30;40;50;75;100;200;300;400;500;750;1000'],
+			'currencies'		=> ['lang' => 'PAYPAL_CURRENCIES',	'type' => 'custom',	'function' => [$this, 'build_currency'],		'params' => ['{CONFIG_VALUE}'],	'default' => []],
 			'default_currency'	=> false,
-		);
+		];
 
 		return true;
 	}
 	
-	public function build_currency($selected_ary = array())
+	/**
+	 * Build currency template
+	 * 
+	 * @param array 	$selected_ary
+	 */
+	public function build_currency($selected_ary = [])
 	{
 		$output = '';
 
-		if($this->lang->is_set('currencies'))
+		if($this->language->is_set('currencies'))
 		{
 			$default = $this->request->variable('default_currency', '');
 
-			foreach($this->lang->lang_raw('currencies') as $value => $title)
+			foreach($this->language->lang_raw('currencies') as $value => $title)
 			{
 				$default_checked = ($value == $default) ? ' checked="checked"' : '';
 				$checked = (in_array($value, $selected_ary) ? ' checked="checked"' : '');

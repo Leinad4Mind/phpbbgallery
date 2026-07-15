@@ -1,10 +1,10 @@
 
-	<div class="counter-digits blg-align-center">{L_COUNTER}<br />{{ S_COUNTER }}</div><br /><br />
+	<div class="counter-digits blg-align-center">{{ lang('COUNTER') }}<br />{{ S_COUNTER }}</div><br /><br />
 	
 	<table class="blg-table">
 	{% for hit in counter_hit %}
 		<tr>
-			<td class="blg-align-left">{{ hit.S_TITLE }}{L_COLON}</td>
+			<td class="blg-align-left">{{ hit.S_TITLE ~ lang('COLON') }}</td>
 			<td class="blg-align-right"><strong>{{ hit.S_VALUE }}</strong></td>
 		</tr>
 	{% endfor %}

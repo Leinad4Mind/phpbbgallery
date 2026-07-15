@@ -1,12 +1,10 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#dock-{{ BLOCK_ID }}').blgDock({{ S_DOCK_PARAMS }});
 	});
-});
 // ]]>
 </script>
 

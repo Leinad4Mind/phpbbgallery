@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class welcome_block extends base
 {
 	static $icon = 'fa-heart';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'welcome_block';
@@ -30,6 +33,9 @@ class welcome_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		$bbcode = $this->bbcode('get');
@@ -42,7 +48,7 @@ class welcome_block extends base
 			break;
 
 			case 'submit':
-				$this->lang->add_lang('posting');
+				$this->language->add_lang('posting');
 
 				$bbcode_bitfield = '';
 				
@@ -61,7 +67,7 @@ class welcome_block extends base
 				// Parse guest message
 				if($new['guest_text'])
 				{
-					$message_parser->message = \canidev\core\tools::html_truncate($new['guest_text'], 4000, '', true);
+					$message_parser->message = \canidev\core\TextParser::truncate($new['guest_text'], 4000, '', true);
 					$message_parser->parse(true, true, true);
 					$bbcode_bitfield = $bbcode_bitfield | $message_parser->bbcode_bitfield;
 					
@@ -71,7 +77,7 @@ class welcome_block extends base
 				// Parse member message
 				if($new['member_text'])
 				{
-					$message_parser->message = \canidev\core\tools::html_truncate($new['member_text'], 4000, '', true);
+					$message_parser->message = \canidev\core\TextParser::truncate($new['member_text'], 4000, '', true);
 					$message_parser->parse(true, true, true);
 					$bbcode_bitfield = $bbcode_bitfield | $message_parser->bbcode_bitfield;
 					
@@ -83,12 +89,15 @@ class welcome_block extends base
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'guest_text'	=> array('lang' => 'WELCOME_GUEST',		'type' => 'custom',	'method' => 'helper',	'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50), 'default' => ''),
-			'member_text'	=> array('lang' => 'WELCOME_MEMBER',	'type' => 'custom',	'method' => 'helper',	'params' => array('build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50), 'default' => ''),
-		);
+		$this->display_vars = [
+			'guest_text'	=> ['lang' => 'WELCOME_GUEST',		'type' => 'custom',	'method' => 'helper',	'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
+			'member_text'	=> ['lang' => 'WELCOME_MEMBER',		'type' => 'custom',	'method' => 'helper',	'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 20, 50], 'default' => ''],
+		];
 
 		return true;
 	}

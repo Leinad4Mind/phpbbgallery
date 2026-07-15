@@ -1,0 +1,5 @@
+parameters:
+    tables.canidev.blockgets:
+        data: '%core.table_prefix%blockgets_data'
+        blocks: '%core.table_prefix%blockgets_blocks'
+        pages: '%core.table_prefix%blockgets_pages'

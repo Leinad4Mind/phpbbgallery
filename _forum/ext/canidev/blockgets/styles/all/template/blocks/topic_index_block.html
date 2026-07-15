@@ -3,7 +3,6 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#topic-index-{{ BLOCK_ID }}').cbbLoader({
@@ -15,7 +14,6 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			}
 		});
 	});
-});
 // ]]>
 </script>
 
@@ -30,33 +28,33 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 {% if BLOCK_VIEW_SMALL or TOPIC_DESIGN == 'simple' %}
 	<div class="topic-index-content block-postbody blg-align-center blg-corner-all">
 
-	<table class="blg-table">
-	<tr>
-		<th class="blg-column-topic-title blg-widget-header">{L_TOPIC_TITLE}</th>
-	{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
-		<th class="blg-column-posted-by blg-widget-header">{L_POSTED_BY}</th>
-		<th class="blg-column-comments blg-widget-header">{L_COMMENTS}</th>
-		<th class="blg-column-topic-views blg-widget-header">{L_TOPIC_VIEWS}</th>
-	{% endif %}
-	</tr>
+	<div{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %} class="blg-table"{% endif %}>
+		<div>
+			<div class="blg-column-topic-title blg-widget-header">{{ lang('TOPIC_TITLE') }}</div>
+		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
+			<div class="blg-column-posted-by blg-widget-header">{{ lang('POSTED_BY') }}</div>
+			<div class="blg-column-comments blg-widget-header">{{ lang('COMMENTS') }}</div>
+			<div class="blg-column-topic-views blg-widget-header">{{ lang('TOPIC_VIEWS') }}</div>
+		{% endif %}
+		</div>
 		
 	{% for topicrow in topic %}
-		<tr>
-			<td class="blg-column-topic-title blg-align-left">
+		<div>
+			<div class="blg-column-topic-title blg-align-left">
 				{% EVENT topiclist_row_prepend %}
-				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
-			</td>
+				<a href="{{ topicrow.U_VIEW_TOPIC }}" class="cbb-helper-text cbb-inline" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TOPIC_TITLE }}</a>
+			</div>
 		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
-			<td class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
-			<td class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_LAST_COMMENTS }}" title="{L_VIEW_COMMENTS}">{{ topicrow.REPLIES }}</a></td>
-			<td class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</td>
+			<div class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</div>
+			<div class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_NEWEST_POST }}" title="{{ lang('VIEW_COMMENTS') }}">{{ topicrow.REPLIES }}</a></div>
+			<div class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</div>
 		{% endif %}
-		</tr>
+		</div>
 	{% else %}
-		<tr><td class="blg-align-center" colspan="4">{L_NO_TOPICS}</td></tr>
+		<div><div class="blg-align-center" colspan="4">{{ lang('NO_TOPICS') }}</div></div>
 	{% endfor %}
 
-	</table>
+	</div>
 	</div>
 
 {% else %}
@@ -72,15 +70,15 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 					<dt><div class="list-inner">{{ BLOCK_TITLE }}</div></dt>
 				{% if not BLOCK_VIEW_MEDIUM %}
 					<dd class="fb-stats">&nbsp;</dd>
-					<dd class="fb-lastpost-title lastpost"><span>{L_LAST_POST}</span></dd>
+					<dd class="fb-lastpost-title lastpost"><span>{{ lang('LAST_POST') }}</span></dd>
 				{% endif %}
 				</dl>
 			</li>
 		</ul>
 	{% elseif topic|length %}
 		<div class="blg-widget-header">
-			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
-			<span>{L_TOPIC}</span>
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{{ lang('LAST_POST') }}</div>{% endif %}
+			<span>{{ lang('TOPIC') }}</span>
 		</div>
 	{% endif %}
 
@@ -90,7 +88,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			<li class="row{% if topicrow.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}{% if topicrow.S_POST_GLOBAL %} global-announce{% endif %}{% if topicrow.S_POST_ANNOUNCE %} announce{% endif %}{% if topicrow.S_POST_STICKY %} sticky{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
 				{% EVENT viewforum_body_topic_row_prepend %}
 				<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
-					<dt{% if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
+					<dt{% if topicrow.TOPIC_ICON_IMG %} style="background-image: url({{ T_ICONS_PATH ~ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 						<div class="list-inner">
 							{% EVENT topiclist_row_prepend %}
 							<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>
@@ -99,25 +97,25 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 
 						{% if not S_IS_BOT %}
 							<div class="responsive-show" style="display: none;">
-								{L_LAST_POST} {L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">{{ topicrow.LAST_POST_TIME }}</a>
+								{{ lang('LAST_POST') }} {{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ topicrow.LAST_POST_TIME }}</a>
 							</div>
-							{% if topicrow.REPLIES %}<span class="responsive-show left-box" style="display: none;">{L_REPLIES}{L_COLON} <strong>{{ topicrow.REPLIES }}</strong></span>{% endif %}
+							{% if topicrow.REPLIES %}<span class="responsive-show left-box" style="display: none;">{{ lang('REPLIES') ~ lang('COLON') }} <strong>{{ topicrow.REPLIES }}</strong></span>{% endif %}
 						{% endif %}
 
 							<div class="topic-poster responsive-hide">
-								{L_POST_BY_AUTHOR} {{ topicrow.TOPIC_AUTHOR_FULL }} &raquo; {{ topicrow.FIRST_POST_TIME }}
-								{% if SHOW_TOPIC_PARENT %}<br />{L_IN} <a href="{{ topicrow.U_VIEW_FORUM }}">{{ topicrow.FORUM_NAME }}</a>{% endif %}
+								{{ lang('POST_BY_AUTHOR') }} {{ topicrow.TOPIC_AUTHOR_FULL }} &raquo; {{ topicrow.FIRST_POST_TIME }}
+								{% if SHOW_TOPIC_PARENT %}<br />{{ lang('IN') }} <a href="{{ topicrow.U_VIEW_FORUM }}">{{ topicrow.FORUM_NAME }}</a>{% endif %}
 							</div>
 
 							{% EVENT topiclist_row_append %}
 						</div>
 					</dt>
 				{% if not BLOCK_VIEW_MEDIUM %}
-					<dd class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {L_VIEWS}<br />{{ topicrow.REPLIES }} {L_REPLIES}</dd>
+					<dd class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {{ lang('VIEWS') }}<br />{{ topicrow.REPLIES }} {{ lang('REPLIES') }}</dd>
 					<dd class="lastpost">
-						<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+						<span><dfn>{{ lang('LAST_POST') }} </dfn>{{ lang('POST_BY_AUTHOR') }} {{ topicrow.LAST_POST_AUTHOR_FULL }}
 							{% if not S_IS_BOT %}
-								<a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">
+								<a href="{{ topicrow.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">
 									<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span>
 								</a>
 							{% endif %}
@@ -129,7 +127,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 				{% EVENT viewforum_body_topic_row_append %}
 			</li>
 		{% else %}
-			<li class="blg-message">{L_NO_UNREAD}</li>
+			<li class="blg-message">{{ lang('NO_UNREAD') }}</li>
 		{% endfor %}
 		</ul>
 
@@ -147,13 +145,13 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		<ul>
 		{% for pagination in block_pagination %}
 			{% if pagination.S_IS_PREV %}
-			<li class="previous"><a href="{{ pagination.PAGE_URL }}" rel="prev" role="button">{L_PREVIOUS}</a></li>
+			<li class="previous"><a href="{{ pagination.PAGE_URL }}" rel="prev" role="button">{{ lang('PREVIOUS') }}</a></li>
 			{% elseif pagination.S_IS_CURRENT %}
 			<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
 			{% elseif pagination.S_IS_ELLIPSIS %}
-			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
+			<li class="ellipsis" role="separator"><span>{{ lang('ELLIPSIS') }}</span></li>
 			{% elseif pagination.S_IS_NEXT %}
-			<li class="next"><a href="{{ pagination.PAGE_URL }}" rel="next" role="button">{L_NEXT}</a></li>
+			<li class="next"><a href="{{ pagination.PAGE_URL }}" rel="next" role="button">{{ lang('NEXT') }}</a></li>
 			{% else %}
 			<li><a href="{{ pagination.PAGE_URL }}" role="button">{{ pagination.PAGE_NUMBER }}</a></li>
 			{% endif %}

@@ -21,7 +21,7 @@
 		
 		<div>
 			<hr />
-			<a class="blg-align-right floated" href="{{ topicrow.U_VIEW_TOPIC }}" title="{L_READ_FULL}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a>
+			<a class="blg-align-right floated" href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ lang('READ_FULL') }}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a>
 			<strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong>
 		</div>
 	
@@ -41,7 +41,7 @@
 	              
 			{% if topicrow.S_HAS_ATTACHMENTS %}
 				<dl class="attachbox">
-					<dt>{L_ATTACHMENTS}</dt>
+					<dt>{{ lang('ATTACHMENTS') }}</dt>
 					{% for attachment in topicrow.attachment %}
 						<dd>{{ attachment.DISPLAY_ATTACHMENT }}</dd>
 					{% endfor %}
@@ -52,8 +52,8 @@
 		</tr>
 		<tr><td colspan="2"><hr /></td></tr>
 		<tr>
-			<td class="blg-align-left">{L_POSTED_BY}{L_COLON} <strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong></td>
-			<td class="blg-align-right"><a href="{{ topicrow.U_VIEW_TOPIC }}" title="{L_READ_FULL}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></td>
+			<td class="blg-align-left">{{ lang('POSTED_BY') ~ lang('COLON') }} <strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong></td>
+			<td class="blg-align-right"><a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ lang('READ_FULL') }}"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></td>
 		</tr>
 		</table>
 	{% endif %}
@@ -61,5 +61,5 @@
 {% endfor %}
 </div>
 {% else %}
-<div class="blg-align-center">{L_NO_ANNOUNCEMENTS}</div>
+<div class="blg-align-center">{{ lang('NO_ANNOUNCEMENTS') }}</div>
 {% endif %}

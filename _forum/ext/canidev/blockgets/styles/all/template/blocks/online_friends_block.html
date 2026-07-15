@@ -1,40 +1,38 @@
 {% if S_ZEBRA %}
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#friends-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
-});
 // ]]>
 </script>
 
 <div id="friends-{{ BLOCK_ID }}" class="cbb-helper-hidden">
-	<h5><span class="cbb-helper-text">{L_FRIENDS_ONLINE}</span></h5>
+	<h5><span class="cbb-helper-text">{{ lang('FRIENDS_ONLINE') }}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
 		{% for member in friends_online %}
 			<li class="userrow">{{ member.USERNAME_FULL }}</li>
 		{% else %}
-			<li class="blg-align-center">{L_NO_FRIENDS_ONLINE}</li>
+			<li class="blg-align-center">{{ lang('NO_FRIENDS_ONLINE') }}</li>
 		{% endfor %}
 		</ul>
 	</div>
 	
-	<h5><span class="cbb-helper-text">{L_FRIENDS_OFFLINE}</span></h5>
+	<h5><span class="cbb-helper-text">{{ lang('FRIENDS_OFFLINE') }}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
 		{% for member in friends_offline %}
 			<li class="userrow">{{ member.USERNAME_FULL }}</li>
 		{% else %}
-			<li class="blg-align-center">{L_NO_FRIENDS_OFFLINE}</li>
+			<li class="blg-align-center">{{ lang('NO_FRIENDS_OFFLINE') }}</li>
 		{% endfor %}
 		</ul>
 	</div>
 </div>
 {% else %}
-<div class="blg-align-center">{L_NO_FRIENDS}</div>
+<div class="blg-align-center">{{ lang('NO_FRIENDS') }}</div>
 {% endif %}

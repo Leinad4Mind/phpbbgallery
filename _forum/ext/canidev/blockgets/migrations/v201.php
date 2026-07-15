@@ -4,10 +4,12 @@
 * @version v2.0.1 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\blockgets\migrations;
+
+use canidev\blockgets\libraries\constants;
 
 class v201 extends \canidev\blockgets\libraries\migration_base
 {
@@ -24,12 +26,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 	
 	public function update_schema()
 	{
-		$this->prepare();
-
 		return array(
 			'change_columns' => array(
-				BLG_BLOCK_TABLE	=> array(
-					'block_groups'	=> array('VCHAR:255', 'all'),
+				$this->table_prefix . 'blockgets_blocks'	=> array(
+					'block_groups'	=> ['VCHAR:255', 'all'],
 				),
 			),
 		);
@@ -37,25 +37,25 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 	public function _update_data()
 	{
-		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db);
+		$this->block_manager = new \canidev\blockgets\libraries\block_manager($this->db, $this->table_prefix);
 		
-		return array(
-			array('config.remove', 	array('blg_resize_enabled')),
-			array('config.add',		array('blg_calendar_birthdays', 1)),
+		return [
+			['config.remove', 	['blg_resize_enabled']],
+			['config.add',		['blg_calendar_birthdays', 1]],
 			
-			array('custom', array(array($this, 'update_events'))),
-			array('custom', array(array($this, 'update_icons'))),
-			array('custom', array(array($this, 'update_block_config'))),
-		);
+			['custom', [[$this, 'update_events']]],
+			['custom', [[$this, 'update_icons']]],
+			['custom', [[$this, 'update_block_config']]],
+		];
 	}
 
 	public function update_events()
 	{
-		$events = array();
+		$events = [];
 
 		$sql = 'SELECT data_id, data_settings
-			FROM ' . BLG_DATA_TABLE . '
-			WHERE data_type = ' . BLG_DATA_EVENT;
+			FROM ' . $this->table_prefix . 'blockgets_data
+			WHERE data_type = ' . constants::DATA_EVENT;
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -68,10 +68,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 		foreach($events as $id => $settings)
 		{
-			$sql = 'UPDATE ' . BLG_DATA_TABLE . "
+			$sql = 'UPDATE ' . $this->table_prefix . "blockgets_data
 				SET data_settings = '" . serialize($settings) . "'
 				WHERE data_id = $id
-				AND data_type = " . BLG_DATA_EVENT;
+				AND data_type = " . constants::DATA_EVENT;
 			$this->db->sql_query($sql);
 		}
 	}
@@ -79,7 +79,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 	public function update_icons()
 	{
 		// Update block's icons
-		$update_ary = array();
+		$update_ary = [];
 
 		$block_ary = $this->block_manager->get();
 
@@ -109,10 +109,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 		}
 		
 		// Update page's icons
-		$update_ary = array();
+		$update_ary = [];
 
 		$sql = 'SELECT page_id, page_data
-			FROM ' . BLG_PAGES_TABLE;
+			FROM ' . $this->table_prefix . 'blockgets_pages';
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -134,7 +134,7 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 		{
 			foreach($update_ary as $page_id => $page_data)
 			{
-				$sql = 'UPDATE ' . BLG_PAGES_TABLE . "
+				$sql = 'UPDATE ' . $this->table_prefix . "blockgets_pages
 					SET page_data = '" . $page_data . "'
 					WHERE page_id = $page_id";
 				$this->db->sql_query($sql);
@@ -150,10 +150,10 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 				'max_number' 		=> 50,
 				'gallery_source'	=> 1, // gallery_block::SOURCE_ALL
 			),
-			'leaders_block'			=> array('use_all_groups' 	=> 0),
-			'recent_topics_block'	=> array('topic_design' 	=> 'simple'),
-			'topic_index_block'		=> array('topic_design' 	=> 'simple'),
-			'top_topics_block'		=> array('topic_design' 	=> 'simple'),
+			'leaders_block'			=> ['use_all_groups' 	=> 0],
+			'recent_topics_block'	=> ['topic_design' 	=> 'simple'],
+			'topic_index_block'		=> ['topic_design' 	=> 'simple'],
+			'top_topics_block'		=> ['topic_design' 	=> 'simple'],
 		));
 
 		$block_ary = $this->block_manager->get();
@@ -176,16 +176,16 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 
 				case 'post_view_block':
 					$data 		= unserialize($row['block_content']);
-					$params		= array();
+					$params		= [];
 
 					switch($data['mode'])
 					{
 						case 'custom':
-							$params = array('topic', 'p', $data['item_id']);
+							$params = ['topic', 'p', $data['item_id']];
 						break;
 
 						case 'forum':
-							$params = array('forum', 'f', $data['item_id']);
+							$params = ['forum', 'f', $data['item_id']];
 						break;
 
 						case 'topic_first':
@@ -196,11 +196,11 @@ class v201 extends \canidev\blockgets\libraries\migration_base
 							$post_id = (int)$this->db->sql_fetchfield('topic_first_post_id');
 							$this->db->sql_freeresult($result);
 
-							$params = array('topic', 'p', $post_id);
+							$params = ['topic', 'p', $post_id];
 						break;
 
 						case 'topic_last':
-							$params = array('topic', 't', $data['item_id']);
+							$params = ['topic', 't', $data['item_id']];
 						break;
 					}
 

@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class calendar_block extends base
 {
 	static $icon = 'fa-calendar';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = false)
 	{
 		$this->tpl_name = 'calendar_block';
@@ -24,18 +27,18 @@ class calendar_block extends base
 		
 		$calendar = $this->container->get('canidev.blockgets.controller.calendar');
 		
-		$calendar->set_options(array(
+		$calendar->set_options([
 			'events'	=> (bool)$data['show_events'],
-			'birthdays'	=> (bool)$data['show_birthdays'],
+			'birthdays'	=> (bool)$data['show_birthdays'] && $this->auth->acl_get('u_blockgets_birthdays'),
 			'months'	=> (int)$data['months_number'],
-		));
+		]);
 
 		$this->template->assign_var('S_SHOW_EVENTS', (int)$data['show_events']);
 
-		$this->template->assign_json_var('S_OPTIONS', array(
+		$this->template->assign_json_var('S_OPTIONS', [
 			'url' 		=> $this->helper->route('canidev_blockgets_calendar_controller'),
 			'module' 	=> $this->data['block_id'],
-		));
+		]);
 		
 		if($method == 'submit')
 		{
@@ -74,13 +77,16 @@ class calendar_block extends base
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'show_events'		=> array('lang' => 'CALENDAR_EVENTS',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
-			'show_birthdays'	=> array('lang' => 'CALENDAR_BIRTHDAYS',	'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
-			'months_number'		=> array('lang' => 'CALENDAR_MONTHS',		'validate' => 'int:1:12', 	'type' => 'number:1:12', 	'default' => 1),
-		);
+		$this->display_vars = [
+			'show_events'		=> ['lang' => 'CALENDAR_EVENTS',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],
+			'show_birthdays'	=> ['lang' => 'CALENDAR_BIRTHDAYS',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],
+			'months_number'		=> ['lang' => 'CALENDAR_MONTHS',		'validate' => 'int:1:12', 	'type' => 'number:1:12', 	'default' => 1],
+		];
 
 		return true;
 	}

@@ -1,6 +1,0 @@
-
-The following is an e-mail sent to you from "{SITENAME}" for {FROM_USERNAME} by the contact form:
-
-----------
-
-{MESSAGE}

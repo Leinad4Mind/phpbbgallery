@@ -1,18 +1,23 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
+
+use canidev\blockgets\libraries\constants;
 
 class quote_of_day_block extends base
 {
 	static $icon = 'fa-quote-right';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init()
 	{
 		$this->tpl_name = 'quote_of_day_block';
@@ -66,54 +71,70 @@ class quote_of_day_block extends base
 			
 			$this->display_vars = $data;
 
-			$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
+			$sql = 'UPDATE ' . $this->tables['blocks'] . "
 				SET block_content = '" . $this->db->sql_escape($this->serialize($data)) . "'
 				WHERE block_id = " . $this->data['block_id'];
 			$this->db->sql_query($sql);
 		}
 	
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_QUOTE_TEXT'		=> $quote['text'],
 			'S_QUOTE_AUTHOR'	=> ($data['show_author']) ? $quote['author'] : '',
-		));
+		]);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$this->display_vars = array(
-			'all_day'			=> array('lang' => 'QUOTES_ALL_DAY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
-			'rand'				=> array('lang' => 'QUOTES_RAND',			'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 0),
-			'show_author'		=> array('lang' => 'QUOTES_SHOW_AUTHOR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1),
+		$this->display_vars = [
+			'all_day'			=> ['lang' => 'QUOTES_ALL_DAY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
+			'rand'				=> ['lang' => 'QUOTES_RAND',			'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 0],
+			'show_author'		=> ['lang' => 'QUOTES_SHOW_AUTHOR',	'validate' => 'bool',	'type' => 'radio:yes_no', 'default' => 1],
 			'last_time'			=> false,
 			'last_id'			=> false,
-		);
+		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
 		
 		$this->list
-			->set_options(array(
+			->set_options([
 				'title'	=> 'QUOTES_LIST',
-				'type'	=> LIST_TYPE_NONE,
-				'mask'	=> array('title' => 'text',	'subtitle' => 'author')
-			))
-			->set_events(array(
-				'edit.before'	=> array($this, 'list_edit_before'),
-			));
+				'type'	=> constants::LIST_TYPE_NONE,
+				'mask'	=> ['title' => 'text',	'subtitle' => 'author']
+			])
+			->set_events([
+				'edit.before'	=> [$this, 'list_edit_before'],
+			]);
 
 		return true;
 	}
 	
+	/**
+	 * Event for list
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function list_edit_before($event)
 	{
-		$event['display_vars'] = array(
-			'text'			=> array('lang' => 'QUOTE_TEXT',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-			'author'		=> array('lang' => 'QUOTE_AUTHOR',		'validate' => 'string:1:255',	'type' => 'text:40:255'),
-		);
+		$event['display_vars'] = [
+			'text'			=> ['lang' => 'QUOTE_TEXT',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
+			'author'		=> ['lang' => 'QUOTE_AUTHOR',		'validate' => 'string:1:255',	'type' => 'text:40:255'],
+		];
 	}
 	
+	/**
+	 * Find quote to show
+	 * 
+	 * @param array 	$data
+	 * @param int 		$new_id
+	 * 
+	 * @return int
+	 * @access private
+	 */
 	private function find_quote($data, &$new_id)
 	{
 		if($data['rand'] && sizeof($data['list']) > 1)

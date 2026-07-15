@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class language_select_block extends base
 {
 	static $icon = 'fa-flag';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'language_select_block';
@@ -30,14 +33,14 @@ class language_select_block extends base
 				$this->db->sql_query($sql);
 			}
 
-			$this->helper->json->add(array(
-				'redirect'		=> $this->helper->current_url(array('lng' => $lang), false)
-			));
+			$this->helper->json->add([
+				'redirect'		=> $this->helper->current_url(['lng' => $lang], false)
+			]);
 
 			return true;
 		}
 		
-		$language_select = '<option disabled>' . $this->lang->lang('LANGUAGE_SELECT') . '</option>';
+		$language_select = '<option disabled>' . $this->language->lang('LANGUAGE_SELECT') . '</option>';
 
 		$sql = 'SELECT lang_id, lang_iso, lang_local_name
 			FROM ' . LANG_TABLE . '
@@ -50,16 +53,16 @@ class language_select_block extends base
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'LANGUAGE_SELECT' 	=> $language_select,
 			'CAN_SAVE_LANGUAGE'	=> ($this->user->data['is_registered']) ? true : false,
 
-			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields(array(
+			'S_BLOCK_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'jblgm'	=> $this->data['block_id']
-			)),
+			]),
 
-			'U_LANGUAGE_DEFAULT'	=> (($lang && $lang != $this->user->data['user_lang']) ? preg_replace(array("#lng=$lang(&amp;|&|$)+#", '#\?$#'), '', $this->helper->current_url()) : ''),
-		));
+			'U_LANGUAGE_DEFAULT'	=> (($lang && $lang != $this->user->data['user_lang']) ? preg_replace(["#lng=$lang(&amp;|&|$)+#", '#\?$#'], '', $this->helper->current_url()) : ''),
+		]);
 
 		return true;
 	}

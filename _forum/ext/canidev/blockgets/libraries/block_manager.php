@@ -1,33 +1,39 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.3 26/07/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\libraries;
 
 class block_manager
 {
 	protected $db;
+	protected $table_prefix;
 
-	protected $block_ary = array();
+	protected $block_ary = [];
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\db\driver\driver_interface		$db			DB Object
-	*
-	* @access public
-	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db)
+	 * Constructor
+	 *
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param string 								$table_prefix 	Table Prefix
+	 *
+	 * @access public
+	 */
+	public function __construct(
+		\phpbb\db\driver\driver_interface $db,
+		$table_prefix
+	)
 	{
-		$this->db = $db;
+		$this->db 			= $db;
+		$this->table_prefix = $table_prefix;
 
 		$sql = 'SELECT *
-			FROM ' . BLG_BLOCK_TABLE;
+			FROM ' . $this->table_prefix . 'blockgets_blocks';
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
 		{
@@ -38,14 +44,16 @@ class block_manager
 	}
 
 	/**
-	* @param string		$filter
-	* @access public
-	*/
+	 * Gets a single block or block collection
+	 * 
+	 * @param string		$filter
+	 * @return array
+	 */
 	public function get($filter = '')
 	{
 		if($filter)
 		{
-			$result = array();
+			$result = [];
 
 			foreach($this->block_ary as $block_id => $row)
 			{
@@ -64,12 +72,12 @@ class block_manager
 	}
 
 	/**
-	* @param array		$data 		Must be (block_alias => new_config)
-	* @access public
-	*/
+	 * Add config to block
+	 * @param array		$data 		Must be (block_alias => new_config)
+	 */
 	public function add_config($data)
 	{
-		$update_ary = array();
+		$update_ary = [];
 
 		foreach($data as $block_alias => $new_config)
 		{
@@ -83,7 +91,7 @@ class block_manager
 
 					if($block_data === false)
 					{
-						$block_data = array();
+						$block_data = [];
 					}
 
 					$block_data = array_merge($block_data, $new_config);
@@ -97,15 +105,15 @@ class block_manager
 						}
 					}
 						
-					$update_ary[$block_id] = array(
+					$update_ary[$block_id] = [
 						'block_content'	=> serialize($block_data),
-					);
+					];
 				}
 				else
 				{
-					$update_ary[$block_id] = array(
+					$update_ary[$block_id] = [
 						'block_content'	=> $new_config,
-					);
+					];
 				}
 			}
 		}
@@ -119,13 +127,14 @@ class block_manager
 	}
 
 	/**
-	* @param int		$block_id
-	* @param array 		$sql_ary
-	* @access public
-	*/
+	 * Update block
+	 * 
+	 * @param int		$block_id
+	 * @param array 	$sql_ary
+	 */
 	public function update_block($block_id, $sql_ary)
 	{
-		$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+		$sql = 'UPDATE ' . $this->table_prefix . 'blockgets_blocks
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE block_id = ' . (int)$block_id;
 		$this->db->sql_query($sql);

@@ -1,18 +1,28 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\controller;
 
-use \canidev\core\json_response;
+use canidev\blockgets\libraries\constants;
+use \canidev\core\JsonResponse;
 
 class admin_controller_pages extends admin_controller_base
 {
+	/** @var \canidev\blockgets\libraries\links */
+	protected $filters;
+
+	/** @var \canidev\core\media */
+	protected $media;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function _display($mode)
 	{
 		$this->tpl_name	= 'acp_blockgets_pages';
@@ -34,7 +44,7 @@ class admin_controller_pages extends admin_controller_base
 		}
 		
 		$page_ary	= $this->obtain_pagelist();
-		$ignore_ary	= array();
+		$ignore_ary	= [];
 
 		foreach($page_ary as $page_type => $rows)
 		{
@@ -42,10 +52,10 @@ class admin_controller_pages extends admin_controller_base
 			{
 				if(!$row_id)
 				{
-					$this->template->assign_block_vars('pagerow', array(
-						'S_LEGEND'		=> $this->lang->lang($row),
-						'S_EXPLAIN'		=> $this->lang->lang($row . '_EXPLAIN'),
-					));
+					$this->template->assign_block_vars('pagerow', [
+						'S_LEGEND'		=> $this->language->lang($row),
+						'S_EXPLAIN'		=> $this->language->lang($row . '_EXPLAIN'),
+					]);
 					
 					continue;
 				}
@@ -53,33 +63,33 @@ class admin_controller_pages extends admin_controller_base
 				$s_url	= '';
 				$switch	= ($row['page_enabled']) ? 'DISABLE' : 'ENABLE';
 
-				$u_actions = array(
-					$switch		=> $this->u_action . '&amp;action=' . strtolower($switch) . '&amp;p=' . $row['page_id'],
-					'MANAGE'	=> $this->u_action . '&amp;action=manage&amp;p=' . $row['page_id'],
-					'EDIT'		=> $this->u_action . '&amp;action=edit&amp;p=' . $row['page_id'],
-					'DELETE'	=> $this->u_action . '&amp;action=delete&amp;p=' . $row['page_id'],
-				);
+				$u_actions = [
+					$switch		=> $this->form_action . '&amp;action=' . strtolower($switch) . '&amp;p=' . $row['page_id'],
+					'MANAGE'	=> $this->form_action . '&amp;action=manage&amp;p=' . $row['page_id'],
+					'EDIT'		=> $this->form_action . '&amp;action=edit&amp;p=' . $row['page_id'],
+					'DELETE'	=> $this->form_action . '&amp;action=delete&amp;p=' . $row['page_id'],
+				];
 				
 				switch($page_type)
 				{
-					case PAGE_HOME:
+					case constants::PAGE_HOME:
 						// Delete action is no available for Home Page
 						unset($u_actions['DELETE']);
 						
-						$s_url = $this->helper->route('canidev_blockgets_controller', array(), true, false, true);
+						$s_url = $this->helper->route('canidev_blockgets_controller', [], true, false, true);
 					break;
 						
-					case PAGE_CUSTOM:
-						$s_url = $this->helper->route('canidev_blockgets_page_' . $row['page_id'], array(), true, false, true);
+					case constants::PAGE_CUSTOM:
+						$s_url = $this->helper->route('canidev_blockgets_page_' . $row['page_id'], [], true, false, true);
 					break;
 					
-					case PAGE_FORUM:
+					case constants::PAGE_FORUM:
 						$s_url = $row['page_alias'] . '.' . $this->php_ext;
 
 						if(strpos($row['page_alias'], 'app/') === 0)
 						{
 							$row['page_title'] = (strpos($row['page_title'], 'APP/') === 0) ? $row['page_alias'] : $row['page_title'];
-							$s_url = (($this->config['blg_rewrite'] || $this->config['enable_mod_rewrite']) ? '' : 'app.' . $this->php_ext . '/') . str_replace('app/', '', $row['page_alias']);
+							$s_url = ((!$this->config['blg_rewrite']) ? 'app.' . $this->php_ext . '/' : '') . str_replace('app/', '', $row['page_alias']);
 						}
 
 						$s_url = $board_url . $s_url;
@@ -88,15 +98,15 @@ class admin_controller_pages extends admin_controller_base
 					break;
 				}
 				
-				$page_row = array(
+				$page_row = [
 					'S_ACTIONS'			=> $this->helper_acp->build_list_actions($u_actions),
 					'S_ID'				=> $row['page_id'],
 					'S_TITLE'			=> $row['page_title'],
 					'S_STATE'			=> ($row['page_enabled']) ? 'active' : 'inactive',
 					'S_URL'				=> $this->clear_path($s_url),
-				);
+				];
 				
-				if($row['page_type'] == PAGE_FORUM)
+				if($row['page_type'] == constants::PAGE_FORUM)
 				{
 					$page_row['S_SHOW_FILTERS'] = true;
 
@@ -111,41 +121,49 @@ class admin_controller_pages extends admin_controller_base
 					}
 				}
 
-				/*
-				* @event blockgets.acp_pages_row
-				* @var array	page_row		The output array
-				* @var array	row				The original data
-				* @since 2.0.0
-				*/
-				$vars = array('page_row', 'row');
+				/**
+				 * @event blockgets.acp_pages_row
+				 * @var array	page_row		The output array
+				 * @var array	row				The original data
+				 * @since 2.0.0
+				 */
+				$vars = ['page_row', 'row'];
 				extract($this->dispatcher->trigger_event('blockgets.acp_pages_row', compact($vars)));
 
 				$this->template->assign_block_vars('pagerow', $page_row);
 			}
 		}
 
-		$this->template->assign_vars(array(
-			'L_TITLE'			=> $this->lang->lang('PAGES_TITLE'),
-			'L_TITLE_EXPLAIN'	=> $this->lang->lang('PAGES_TITLE_EXPLAIN'),
+		$this->template->assign_vars([
+			'S_TITLE'			=> $this->language->lang('PAGES_TITLE'),
+			'S_TITLE_EXPLAIN'	=> $this->language->lang('PAGES_TITLE_EXPLAIN'),
 			'S_PAGE_LIST'		=> true,
 			'S_FILE_OPTIONS'	=> $this->build_file_select($ignore_ary),
 			
-			'U_ACTION'			=> $this->u_action,
-		));
+			'U_ACTION'			=> $this->form_action,
+		]);
 	}
 	
+	/**
+	 * Obtain page list
+	 * 
+	 * @param array|false 	$ignore_ids
+	 * @param bool 			$only_rows
+	 * 
+	 * @return array
+	 */
 	function obtain_pagelist($ignore_ids = false, $only_rows = false)
 	{
-		$page_ary = array(
-			PAGE_HOME		=> array('PAGE_HOME'),
-			PAGE_FORUM		=> array('PAGE_FORUM'),
-			PAGE_CUSTOM		=> array('PAGE_CUSTOM'),
-		);
+		$page_ary = [
+			constants::PAGE_HOME		=> ['PAGE_HOME'],
+			constants::PAGE_FORUM		=> ['PAGE_FORUM'],
+			constants::PAGE_CUSTOM		=> ['PAGE_CUSTOM'],
+		];
 		
-		$page_rows = array();
+		$page_rows = [];
 		
 		$sql = 'SELECT *
-			FROM ' . BLG_PAGES_TABLE . '
+			FROM ' . $this->tables['pages'] . '
 			ORDER BY page_type, page_alias, page_title';
 		$result = $this->db->sql_query($sql);
 		while($row = $this->db->sql_fetchrow($result))
@@ -155,7 +173,7 @@ class admin_controller_pages extends admin_controller_base
 				$row['page_title'] = strtoupper(str_replace(".{$this->php_ext}", '', basename($row['page_alias'])));
 			}
 				
-			$row['page_title'] = ($this->lang->is_set($row['page_title']) ? $this->lang->lang($row['page_title']) : ucfirst(strtolower($row['page_title'])));
+			$row['page_title'] = ($this->language->is_set($row['page_title']) ? $this->language->lang($row['page_title']) : ucfirst(strtolower($row['page_title'])));
 
 			if($unserialize_config = @unserialize($row['page_data']))
 			{
@@ -195,18 +213,27 @@ class admin_controller_pages extends admin_controller_base
 		return $page_ary;
 	}
 	
+	/**
+	 * Manage pages
+	 * 
+	 * @param int 		$page_id
+	 * @param string	$action
+	 * @param bool 		$submit
+	 * 
+	 * @return bool
+	 */
 	function manage_page($page_id, $action, $submit)
 	{
-		$page_ids	= $this->request->variable('page_ids', array(0));
+		$page_ids	= $this->request->variable('page_ids', [0]);
 		$alias		= $this->request->variable('alias', '');
 		
 		if(empty($page_ids) && $page_id)
 		{
-			$page_ids = array((int)$page_id);
+			$page_ids = [(int)$page_id];
 		}
 		
 		// Insert a page with default values if not exists
-		if(!$page_id && $alias && in_array($action, array('edit', 'manage')))
+		if(!$page_id && $alias && in_array($action, ['edit', 'manage']))
 		{
 			$page_id = $this->insert_page($alias);
 		}
@@ -216,47 +243,47 @@ class admin_controller_pages extends admin_controller_base
 			return false;
 		}
 		
-		$error = array();
+		$error = [];
 		
-		$hidden_fields = array(
+		$hidden_fields = [
 			'p'			=> $page_id,
 			'action'	=> $action,
-		);
+		];
 
 		switch($action)
 		{
 			case 'enable':
 			case 'disable':
-				$sql = 'UPDATE ' . BLG_PAGES_TABLE . '
+				$sql = 'UPDATE ' . $this->tables['pages'] . '
 					SET page_enabled = ' . (($action == 'enable') ? 1 : 0) . '
 					WHERE ' . $this->db->sql_in_set('page_id', $page_ids);
 				$this->db->sql_query($sql);
 				
 				// If we disable the home page, update the home_type config
-				if($action == 'disable' && $this->config['blg_home_type'] != TYPE_FORUM_SECONDARY)
+				if($action == 'disable' && $this->config['blg_home_type'] != constants::TYPE_FORUM_SECONDARY)
 				{
 					$sql = 'SELECT page_id
-						FROM ' . BLG_PAGES_TABLE . '
-						WHERE page_type = ' . PAGE_HOME;
+						FROM ' . $this->tables['pages'] . '
+						WHERE page_type = ' . constants::PAGE_HOME;
 					$result = $this->db->sql_query($sql);
 					$home_page_id = (int)$this->db->sql_fetchfield('page_id');
 					$this->db->sql_freeresult($result);
 					
 					if(in_array($home_page_id, $page_ids))
 					{
-						$this->config->set('blg_home_type', TYPE_FORUM_SECONDARY);
+						$this->config->set('blg_home_type', constants::TYPE_FORUM_SECONDARY);
 					}
 				}
 				
 				$this->cache->destroy('_blockgets_pages');
 
-				$this->helper->json->add(array('message' => $this->lang->lang('PAGE_UPDATED')));
+				$this->helper->json->add(['message' => $this->language->lang('PAGE_UPDATED')]);
 				return false;
 			break;
 
 			case 'edit':
 				$sql = 'SELECT *
-					FROM ' . BLG_PAGES_TABLE . "
+					FROM ' . $this->tables['pages'] . "
 					WHERE page_id = $page_id";
 				$result = $this->db->sql_query($sql);
 				$page_data = $this->db->sql_fetchrow($result);
@@ -282,12 +309,12 @@ class admin_controller_pages extends admin_controller_base
 					$page_file = $this->request->variable('page_file', '');
 
 					// Default data for new pages
-					$page_data = array(
+					$page_data = [
 						'page_alias'	=> '',
 						'page_title'	=> '',
 						'page_enabled'	=> 1,
 						'page_groups'	=> 'all',
-						'filters'		=> array(),
+						'filters'		=> [],
 						'page_theme'	=> 'default',
 						
 						'left_column_width'		=> '200px',
@@ -295,101 +322,103 @@ class admin_controller_pages extends admin_controller_base
 						'block_space'			=> '6px',
 						'header'				=> 1,
 						'footer'				=> 1,
-					);
+					];
 
 					if($page_file == 'custom')
 					{
-						$page_data['page_type'] = PAGE_CUSTOM;
+						$page_data['page_type'] = constants::PAGE_CUSTOM;
 					}
 					else
 					{
-						$page_data['page_type']		= PAGE_FORUM;
+						$page_data['page_type']		= constants::PAGE_FORUM;
 						$page_data['page_alias']	= $page_file;
 					}
 					
 					$hidden_fields['page_file']	= $page_file;
 				}
 
-				$serialize_ary = array('filters', 'header', 'footer', 'page_theme', 'background', 'stylesheet', 'style', 'logo',
-					'left_column_width', 'right_column_width', 'block_space', 'link_position', 'link_icon');
+				$serialize_ary = ['filters', 'description', 'header', 'footer', 'page_theme', 'background', 'stylesheet', 'style', 'logo',
+					'left_column_width', 'right_column_width', 'block_space', 'link_position', 'link_icon'];
 				
-				$page_theme_options = array(
+				$page_theme_options = [
 					'default'		=> 'PAGE_THEME_DEFAULT',
 					'background'	=> 'PAGE_THEME_BACKGROUND',
 					'style'			=> 'PAGE_THEME_STYLE',
 					'stylesheet'	=> 'PAGE_THEME_STYLESHEET',
-				);
+				];
 				
 				// Style option is not available on forum pages
-				if($page_data['page_type'] == PAGE_FORUM)
+				if($page_data['page_type'] == constants::PAGE_FORUM)
 				{
 					unset($page_theme_options['style']);
 				}
 				
-				$display_vars = array(
+				$display_vars = [
 					'legend1'			=> 'MANAGE_PAGE',
-					'page_enabled'		=> array('lang' => 'PAGE_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'),
-					'page_alias'		=> array('lang' => 'PAGE_ALIAS',		'validate' => 'string',			'type' => 'text:40:200'),
-					'page_title'		=> array('lang' => 'PAGE_TITLE',		'validate' => 'string:1:200',	'type' => 'text:40:255'),
-					'page_groups'		=> array('lang' => 'PAGE_GROUP',		'type' => 'custom',		'function' => array($this, 'groups_select'),	'params' => array('page_groups', '{CONFIG_VALUE}')),
-					'filters'			=> array('lang' => 'PAGE_FILTERS',		'type' => 'custom', 	'function' => array($this, 'display_filter_list')),
+					'page_enabled'		=> ['lang' => 'PAGE_ENABLED',		'validate' => 'bool',			'type' => 'radio:yes_no'],
+					'page_alias'		=> ['lang' => 'PAGE_ALIAS',			'validate' => 'string',			'type' => 'text:40:200'],
+					'page_title'		=> ['lang' => 'PAGE_TITLE',			'validate' => 'string:1:200',	'type' => 'text:40:255'],
+					'page_groups'		=> ['lang' => 'PAGE_GROUP',			'type' => 'custom',				'function' => [$this->tools, 'groups_select'],	'params' => ['page_groups', '{CONFIG_VALUE}']],
+					'filters'			=> ['lang' => 'PAGE_FILTERS',		'type' => 'custom', 			'function' => [$this, 'display_filter_list']],
 					
 					'legend2'		=> 'ADVANCED_OPTIONS',
-					'header'		=> array('lang' => 'SHOW_HEADER',		'validate' => 'bool',			'type' => 'radio:yes_no'),
-					'footer'		=> array('lang' => 'SHOW_FOOTER',		'validate' => 'bool',			'type' => 'radio:yes_no'),
-					'logo'			=> array('lang' => 'PAGE_LOGO',			'validate' => 'string:0:255',	'type' => 'custom',		'method' => 'helper',	'params' => array('easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1)),
-
-					'page_theme'	=> array('lang' => 'PAGE_THEME',		'validate' => 'string',			'type' => 'custom',		'function' => array($this, 'make_select'),	'params' => array($page_theme_options, '{KEY}', '{CONFIG_VALUE}')),
-					'background'	=> array('lang' => 'PAGE_BACKGROUND',	'validate' => 'string:1:200',	'type' => 'custom',		'method' => 'helper',	'params' => array('easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1, 1),	'visibility' => 'hidden'),
-					'stylesheet'	=> array('lang' => 'PAGE_STYLESHEET',	'type' => 'textarea:10:40',		'visibility' => 'hidden'),
-					'style'			=> array('lang' => 'PAGE_STYLE',		'validate' => 'int:1',			'type' => 'select',	'function' => 'style_select',	'params' => array('{CONFIG_VALUE}'),	'visibility' => 'hidden'),
+					'description'	=> ['lang' => 'PAGE_DESCRIPTION',	'validate' => 'string:0:255', 	'type' => 'text:40:255'],
+					'header'		=> ['lang' => 'SHOW_HEADER',		'validate' => 'bool',			'type' => 'radio:yes_no'],
+					'footer'		=> ['lang' => 'SHOW_FOOTER',		'validate' => 'bool',			'type' => 'radio:yes_no'],
+					'logo'			=> ['lang' => 'PAGE_LOGO',			'validate' => 'string:0:255',	'type' => 'custom',		'function' => [$this->helper_acp, 'easy_input_template'], 'params' => ['{KEY}', '{CONFIG_VALUE}', 1]],
+					'page_theme'	=> ['lang' => 'PAGE_THEME',			'validate' => 'string',			'type' => 'custom',		'function' => [$this->tools, 'make_select'],				'params' => [$page_theme_options, '{KEY}', '{CONFIG_VALUE}']],
+					'background'	=> ['lang' => 'PAGE_BACKGROUND',	'validate' => 'string:1:200',	'type' => 'custom',		'function' => [$this->helper_acp, 'easy_input_template'], 	'params' => ['{KEY}', '{CONFIG_VALUE}', 1, 1],	'visibility' => 'hidden'],
+					'stylesheet'	=> ['lang' => 'PAGE_STYLESHEET',	'type' => 'textarea:10:40',		'visibility' => 'hidden'],
+					'style'			=> ['lang' => 'PAGE_STYLE',			'validate' => 'int:1',			'type' => 'select',	'function' => 'style_select',	'params' => ['{CONFIG_VALUE}'],	'visibility' => 'hidden'],
 
 					'legend3'				=> 'COLUMN_SETTINGS',
-					'left_column_width'		=> array('lang' => 'LEFT_COLUMN',		'type' => 'custom',		'method' => 'helper',	'params' => array('size_formatter', '{KEY}', '{CONFIG_VALUE}')),
-					'right_column_width'	=> array('lang' => 'RIGHT_COLUMN',		'type' => 'custom',		'method' => 'helper',	'params' => array('size_formatter', '{KEY}', '{CONFIG_VALUE}')),
-					'block_space'			=> array('lang' => 'BLOCK_SPACE',		'type' => 'custom',		'method' => 'helper',	'params' => array('size_formatter', '{KEY}', '{CONFIG_VALUE}')),
-				);
+					'left_column_width'		=> ['lang' => 'LEFT_COLUMN',		'type' => 'custom',		'function' => [$this->helper_acp, 'size_formatter'], 	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+					'right_column_width'	=> ['lang' => 'RIGHT_COLUMN',		'type' => 'custom',		'function' => [$this->helper_acp, 'size_formatter'], 	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+					'block_space'			=> ['lang' => 'BLOCK_SPACE',		'type' => 'custom',		'function' => [$this->helper_acp, 'size_formatter'], 	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+				];
 				
-				if($page_data['page_type'] == PAGE_CUSTOM)
+				if($page_data['page_type'] == constants::PAGE_CUSTOM)
 				{
-					$display_vars += array(
+					$display_vars += [
 						'legend4'			=> 'PAGE_LINK',
-						'link_position'		=> array('lang' => 'PAGE_LINK_POSITION',	'type' => 'custom',		'function' => array($this->helper_acp, 'pagelinks_select')),
-						'link_icon'			=> array('lang' => 'PAGE_LINK_ICON',		'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', 1),	'default' => ''),
-					);
+						'link_position'		=> ['lang' => 'PAGE_LINK_POSITION',	'type' => 'custom',		'function' => [$this->helper_acp, 'pagelinks_select']],
+						'link_icon'			=> ['lang' => 'PAGE_LINK_ICON',		'type' => 'custom',		'function' => [$this->media, 'build_selector'],	'params' => ['{KEY}', 'icon', '{CONFIG_VALUE}', 1],	'default' => ''],
+					];
 				}
 				
-				/*
-				* @event blockgets.acp_page_vars
-				* @var array	display_vars		Variables to show
-				* @var array	page_data			Current page data
-				* @var string	action				Current action
-				* @var array 	serialize_ary 		Variable keys serialized as page_data
-				* @since 2.0.0
-				*/
-				$vars = array('display_vars', 'page_data', 'action', 'serialize_ary');
+				/**
+				 * @event blockgets.acp_page_vars
+				 * @var array	display_vars		Variables to show
+				 * @var array	page_data			Current page data
+				 * @var string	action				Current action
+				 * @var array 	serialize_ary 		Variable keys serialized as page_data
+				 * @since 2.0.0
+				 */
+				$vars = ['display_vars', 'page_data', 'action', 'serialize_ary'];
 				extract($this->dispatcher->trigger_event('blockgets.acp_page_vars', compact($vars)));
 
 				switch($page_data['page_type'])
 				{
-					case PAGE_FORUM:
+					case constants::PAGE_FORUM:
+						unset($display_vars['description'], $serialize_ary['description']);
+
 						$this->filters = $this->container->get('canidev.blockgets.admin.links');
 						
-						$link_base_action = $this->u_action . '&amp;action=' . $action;
+						$link_base_action = $this->form_action . '&amp;action=' . $action;
 						$link_base_action .= '&amp;' . (($action == 'add') ? 'page_file=' . $page_file : 'p=' . $page_id);
 
 						$this->filters
-							->set_options(array(
+							->set_options([
 								'format'	=> 'minimal',
 								'key'		=> 'filters',
-								'type'		=> LIST_TYPE_NONE,
-								'mask'		=> array('title' => 'param',	'subtitle' => 'method'),
-							))
+								'type'		=> constants::LIST_TYPE_NONE,
+								'mask'		=> ['title' => 'param',	'subtitle' => 'method'],
+							])
 							->set_data($page_data, (($action == 'edit') ? 'p' . $page_id : 0))
 							->set_base_url($link_base_action)
-							->set_events(array(
-								'edit.before'	=> array($this, 'filter_edit_before'),
-							));
+							->set_events([
+								'edit.before'	=> [$this, 'filter_edit_before'],
+							]);
 							
 						// Execute the ajax action over the links in this point
 						if($this->request->is_ajax())
@@ -399,36 +428,36 @@ class admin_controller_pages extends admin_controller_base
 					
 					// no break
 					
-					case PAGE_HOME:
+					case constants::PAGE_HOME:
 						unset($display_vars['page_alias'], $display_vars['style']);
 						
-						if($page_data['page_type'] == PAGE_FORUM)
+						if($page_data['page_type'] == constants::PAGE_FORUM)
 						{
 							break;
 						}
 
-					case PAGE_CUSTOM:
+					case constants::PAGE_CUSTOM:
 						unset($display_vars['filters']);
 					break;
 				}
 
 				if(isset($_REQUEST['config']))
 				{
-					$page_data = array_merge($page_data, utf8_normalize_nfc($this->request->variable('config', array('' => ''), true)));
-					$page_data['page_groups'] = $this->request->variable('page_groups', array(0));
+					$page_data = array_merge($page_data, $this->request->variable('config', ['' => ''], true));
+					$page_data['page_groups'] = $this->request->variable('page_groups', [0]);
 					
 					// Format some variables
-					$page_data = $this->helper_acp->size_formatter(array(
-							'left_column_width',
-							'right_column_width',
-							'block_space'
-						), $page_data, true);
+					$page_data = $this->helper_acp->size_formatter([
+						'left_column_width',
+						'right_column_width',
+						'block_space'
+					], $page_data, true);
 				}
 
 				if($submit)
 				{
 					// Allows empty title for forum pages (use default)
-					if($page_data['page_type'] == PAGE_FORUM)
+					if($page_data['page_type'] == constants::PAGE_FORUM)
 					{
 						$display_vars['page_title']['validate'] = 'string:0:200';
 					}
@@ -443,24 +472,24 @@ class admin_controller_pages extends admin_controller_base
 					}
 					
 					// check the page alias
-					if($page_data['page_type'] == PAGE_CUSTOM)
+					if($page_data['page_type'] == constants::PAGE_CUSTOM)
 					{
 						if($page_data['page_alias'] && !preg_match('#^([a-z0-9_-]+)$#', $page_data['page_alias']))
 						{
-							$error[] = $this->lang->lang('PAGE_ALIAS_ERROR');	
+							$error[] = $this->language->lang('PAGE_ALIAS_ERROR');	
 						}
 					}
 					
 					// We validate the complete config if whished
 					validate_config_vars($display_vars, $page_data, $error);
 
-					/*
-					* @event blockgets.acp_page_check_vars
-					* @var array	page_data		Submitted data
-					* @var array	error			Array with error messages
-					* @since 2.0.0
-					*/
-					$vars = array('page_data', 'error');
+					/**
+					 * @event blockgets.acp_page_check_vars
+					 * @var array	page_data		Submitted data
+					 * @var array	error			Array with error messages
+					 * @since 2.0.0
+					 */
+					$vars = ['page_data', 'error'];
 					extract($this->dispatcher->trigger_event('blockgets.acp_page_check_vars', compact($vars)));
 				}
 
@@ -472,16 +501,15 @@ class admin_controller_pages extends admin_controller_base
 
 				if($submit)
 				{
-					$message_links = '';
 					$page_data['page_groups'] = ($this->request->is_set_post('all_groups_page_groups') ? 'all' : implode(',', $page_data['page_groups']));
 					
-					if($page_data['page_type'] == PAGE_FORUM && ($list_data = $this->filters->acp_submit()) !== false)
+					if($page_data['page_type'] == constants::PAGE_FORUM && ($list_data = $this->filters->acp_submit()) !== false)
 					{
 						$page_data['filters'] = $list_data;
 					}
 
 					// Serialize values
-					$to_serialize = array();
+					$to_serialize = [];
 
 					foreach($serialize_ary as $config_name)
 					{
@@ -489,16 +517,16 @@ class admin_controller_pages extends admin_controller_base
 						unset($page_data[$config_name]);
 					}
 					
-					$page_data['page_data'] = (sizeof($to_serialize) ? @serialize($to_serialize) : '');
+					$page_data['page_data'] = (sizeof($to_serialize) ? serialize($to_serialize) : '');
 
 					if($action == 'add')
 					{
-						$sql = 'INSERT INTO ' . BLG_PAGES_TABLE . $this->db->sql_build_array('INSERT', $page_data);
+						$sql = 'INSERT INTO ' . $this->tables['pages'] . $this->db->sql_build_array('INSERT', $page_data);
 						$message = 'ADDED';
 					}
 					else
 					{
-		            	$sql = 'UPDATE ' . BLG_PAGES_TABLE . '
+		            	$sql = 'UPDATE ' . $this->tables['pages'] . '
 							SET ' . $this->db->sql_build_array('UPDATE', $page_data) . "
 							WHERE page_id = $page_id";
 
@@ -510,7 +538,7 @@ class admin_controller_pages extends admin_controller_base
 					// Set the global values if needed
 					switch($page_data['page_type'])
 					{
-						case PAGE_FORUM:
+						case constants::PAGE_FORUM:
 							// Insert forum content block if neccessary
 							if($action == 'add')
 							{
@@ -523,24 +551,25 @@ class admin_controller_pages extends admin_controller_base
 					
 					$this->destroy_pages_cache();
 
-					$title = ($page_data['page_title']) ? $this->lang->lang($page_data['page_title']) : $page_data['page_alias'] . ".{$this->php_ext}";
+					$title = ($page_data['page_title']) ? $this->language->lang($page_data['page_title']) : $page_data['page_alias'] . ".{$this->php_ext}";
 	
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "LOG_PAGE_$message", time(), array($title));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "LOG_PAGE_$message", time(), [$title]);
 					
-					$this->helper->json->send(array(
-						'message'		=> $this->lang->lang("PAGE_$message"),
-						'return_url'	=> $this->u_action
-					));
+					$this->helper->json->send([
+						'message'		=> $this->language->lang("PAGE_$message"),
+						'return_url'	=> $this->form_action
+					]);
 				}
 		
 				foreach($display_vars as $config_key => $vars)
 				{
 					if(strpos($config_key, 'legend') !== false)
 					{
-						$this->template->assign_block_vars('options', array(
+						$this->template->assign_block_vars('options', [
 							'S_LEGEND'		=> true,
-							'LEGEND'		=> $this->lang->lang($vars)
-						));
+							'LEGEND'		=> $this->language->lang($vars)
+						]);
+						
 						continue;
 					}
 		
@@ -552,13 +581,13 @@ class admin_controller_pages extends admin_controller_base
 						continue;
 					}
 		
-					$this->template->assign_block_vars('options', array(
+					$this->template->assign_block_vars('options', [
 						'KEY'			=> $config_key,
-						'TITLE'			=> ($this->lang->is_set($vars['lang']) ? $this->lang->lang($vars['lang']) : $vars['lang']),
-						'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->lang($vars['lang'] . '_EXPLAIN') : ''),
+						'TITLE'			=> ($this->language->is_set($vars['lang']) ? $this->language->lang($vars['lang']) : $vars['lang']),
+						'S_EXPLAIN'		=> ($this->language->is_set($vars['lang'] . '_EXPLAIN') ? $this->language->lang($vars['lang'] . '_EXPLAIN') : ''),
 						'CONTENT'		=> $content,
 						'HIDDEN'		=> (empty($vars['visibility']) || $vars['visibility'] == 'visible') ? false : true,
-					));
+					]);
 		
 					unset($display_vars[$config_key]);
 				}
@@ -570,27 +599,27 @@ class admin_controller_pages extends admin_controller_base
 					$page_data['page_title'] = strtoupper(str_replace(".{$this->php_ext}", '', basename($page_data['page_alias'])));
 				}
 					
-				$page_data['page_title'] = ($this->lang->is_set($page_data['page_title']) ? $this->lang->lang($page_data['page_title']) : ucfirst(strtolower($page_data['page_title'])));
+				$page_data['page_title'] = ($this->language->is_set($page_data['page_title']) ? $this->language->lang($page_data['page_title']) : ucfirst(strtolower($page_data['page_title'])));
 
-				$this->page_title = $this->lang->lang($title, $page_data['page_title']);
+				$this->page_title = $this->language->lang($title, $page_data['page_title']);
 				
-				$this->template->assign_vars(array(
-					'L_TITLE'			=> $this->page_title,
-					'L_TITLE_EXPLAIN'	=> $this->lang->lang($title . '_EXPLAIN'),
-				));
+				$this->template->assign_vars([
+					'S_TITLE'			=> $this->page_title,
+					'S_TITLE_EXPLAIN'	=> $this->language->lang($title . '_EXPLAIN'),
+				]);
 			break;
 		
 			case 'delete':
 				if(confirm_box(true))
 				{
-					$page_titles = array();
+					$page_titles = [];
 
 					// Get the page titles before remove and exclude the portal page if selected (for batch actions)
 					$page_ary = $this->obtain_pagelist(false, true);
 					
 					foreach($page_ids as $id => $page_id)
 					{
-						if(!isset($page_ary[$page_id]) || $page_ary[$page_id]['page_type'] == PAGE_HOME)
+						if(!isset($page_ary[$page_id]) || $page_ary[$page_id]['page_type'] == constants::PAGE_HOME)
 						{
 							unset($page_ids[$id]);
 							continue;
@@ -601,39 +630,39 @@ class admin_controller_pages extends admin_controller_base
 					
 					if(!sizeof($page_ids))
 					{
-						$this->helper->json->send(array(
-							'message'	=> $this->lang->lang('ACTION_ERROR'),
-							'status'	=> json_response::JSON_STATUS_ERROR,
-						));
+						$this->helper->json->send([
+							'message'	=> $this->language->lang('ACTION_ERROR'),
+							'status'	=> JsonResponse::JSON_STATUS_ERROR,
+						]);
 					}
 
 					// Remove the block in the pages
-					$sql = 'DELETE FROM ' . BLG_BLOCK_TABLE . '
+					$sql = 'DELETE FROM ' . $this->tables['blocks'] . '
 						WHERE ' . $this->db->sql_in_set('block_page', $page_ids);
 					$this->db->sql_query($sql);
 
 					// Remove the pages
-					$sql = 'DELETE FROM ' . BLG_PAGES_TABLE . '
+					$sql = 'DELETE FROM ' . $this->tables['pages'] . '
 						WHERE ' . $this->db->sql_in_set('page_id', $page_ids);
 					$this->db->sql_query($sql);
 
 					$this->destroy_pages_cache();
 
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PAGE_REMOVED', time(), array(implode(', ', $page_titles)));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_PAGE_REMOVED', time(), [implode(', ', $page_titles)]);
 					
-					$this->helper->json->send(array(
-						'message' => $this->lang->lang('PAGE_REMOVED', sizeof($page_ids))
-					));
+					$this->helper->json->send([
+						'message' => $this->language->lang('PAGE_REMOVED', sizeof($page_ids))
+					]);
 				}
 				else
 				{
 					confirm_box(
 						false,
-						$this->lang->lang('CONFIRM_PAGE_DELETE'),
-						build_hidden_fields(array(
+						$this->language->lang('CONFIRM_PAGE_DELETE'),
+						build_hidden_fields([
 							'page_ids'	=> $page_ids,
 							'action'	=> 'delete',
-						)),
+						]),
 						'@canidev_core/confirmbox.html'
 					);
 					
@@ -644,7 +673,7 @@ class admin_controller_pages extends admin_controller_base
 			case 'manage':
 				$this->page_title = 'ACP_MANAGE_BLOCKS';
 				
-				$block_ids	= (isset($_POST['block_id_list']) ? $this->request->variable('block_id_list', array(0)) : array($this->request->variable('b', 0)));
+				$block_ids	= (isset($_POST['block_id_list']) ? $this->request->variable('block_id_list', [0]) : [$this->request->variable('b', 0)]);
 				$subaction	= $this->request->variable('subaction', '');
 
 				if($this->manage_block($block_ids, $page_id, $subaction, $submit) !== false)
@@ -657,18 +686,18 @@ class admin_controller_pages extends admin_controller_base
 				// If no page, redirect to page's list
 				if(!isset($page_ary[$page_id]))
 				{
-					redirect($this->u_action);
+					redirect($this->form_action);
 				}
 				
 				$page_data = $page_ary[$page_id];
 				
 				$blocks_dir = $this->helper->get_ext_path() . 'blocks/';
 				$has_forum_block = false;
-				$block_row = array(0 => array());
+				$block_row = [0 => []];
 
 				// Load the blocks
 				$sql = 'SELECT *
-					FROM ' . BLG_BLOCK_TABLE . "
+					FROM ' . $this->tables['blocks'] . "
 					WHERE block_page = $page_id
 					ORDER BY block_order ASC";
 					
@@ -679,7 +708,7 @@ class admin_controller_pages extends admin_controller_base
 					
 					if(!isset($block_row[$parent_id]))
 					{
-						$block_row[$parent_id] = array();
+						$block_row[$parent_id] = [];
 					}
 					
 					$block_row[$parent_id][] = $row;
@@ -694,7 +723,7 @@ class admin_controller_pages extends admin_controller_base
 				$this->db->sql_freeresult($result_block);
 				
 				// If is a forum page and dont' have block with forum content, create it
-				if($page_data['page_type'] == PAGE_FORUM && !$has_forum_block)
+				if($page_data['page_type'] == constants::PAGE_FORUM && !$has_forum_block)
 				{
 					$block_row[0][] = $this->insert_forum_block($page_id);
 				}
@@ -706,22 +735,16 @@ class admin_controller_pages extends admin_controller_base
 					// Put block into general template to display
 					if($row['block_alias'] == 'group')
 					{
-						$group_class = '';
-						
-						if(isset($block_row[$row['block_id']]))
-						{
-							$item_count		= sizeof($block_row[$row['block_id']]);
-							$group_class	= 'grid-col-' . (($item_count > 3) ? 3 : $item_count);
-						}
-
-						$this->template->assign_block_vars($block_position_name, array(
+						$this->template->assign_block_vars($block_position_name, [
 							'BLOCK_ID'			=> $row['block_id'],
-							'S_HIDDEN_FIELDS'	=> '<input type="hidden" name="' . $block_position_name . '[]" value="' . $row['block_id'] . '" />',
 							'IS_GROUP'			=> true,
-							'GROUP_CLASS'		=> $group_class,
+							'S_HIDDEN_FIELDS'	=> build_hidden_fields([
+								$block_position_name . '[]'			=> $row['block_id'],
+								'sizes[' . $row['block_id'] . ']' 	=> $row['block_content'],
+							]),
 							
-							'U_REMOVE'			=> $this->u_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $row['block_id'] . '&amp;subaction=delete',
-						));
+							'U_REMOVE'			=> $this->form_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $row['block_id'] . '&amp;subaction=delete',
+						]);
 						
 						if(isset($block_row[$row['block_id']]))
 						{
@@ -738,7 +761,7 @@ class admin_controller_pages extends admin_controller_base
 				}
 				
 				// Read all the available blocks
-				$block_html = array();
+				$block_html = [];
 
 				if($dir = @opendir($blocks_dir))
 				{
@@ -762,71 +785,78 @@ class admin_controller_pages extends admin_controller_base
 						continue;
 					}
 
-					$this->template->assign_block_vars('block_alias', array(
+					$this->template->assign_block_vars('block_alias', [
 						'S_TITLE' 		=> $info['title'],
 						'S_EXPLAIN'		=> str_replace('"', "'", $info['explain']),
 						'S_ICON'		=> $info['icon'],
-						'U_ACTION'		=> $this->u_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;subaction=add&amp;block_alias=' . urlencode($alias)
-					));
+						'U_ACTION'		=> $this->form_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;subaction=add&amp;block_alias=' . urlencode($alias)
+					]);
 				}	
 				unset($block_html);
 				
-				$this->page_title = $this->lang->lang('PAGES_BLOCKS_TITLE', $page_data['page_title']);
+				$this->page_title = $this->language->lang('PAGES_BLOCKS_TITLE', $page_data['page_title']);
 				
-				$this->template->assign_vars(array(
-					'L_TITLE'			=> $this->page_title,
-					'L_TITLE_EXPLAIN'	=> $this->lang->lang('PAGES_BLOCKS_TITLE_EXPLAIN'),
+				$this->template->assign_vars([
+					'S_TITLE'			=> $this->page_title,
+					'S_TITLE_EXPLAIN'	=> $this->language->lang('PAGES_BLOCKS_TITLE_EXPLAIN'),
 					'S_BLOCK_LIST'		=> true,
-					
-				//	'U_BACK'		=> $this->build_url(array('mode' => 'pages')),
-				//	'U_ACTION'		=> $this->u_action . '&amp;p=' . $page_id,
-				));
+				]);
 			break;
 		}
 		
 		if(sizeof($error))
 		{
-			$this->helper->json->send(array(
+			$this->helper->json->send([
 				'message'	=> implode('<br />', $error),
-				'status'	=> json_response::JSON_STATUS_ERROR
-			));
+				'status'	=> JsonResponse::JSON_STATUS_ERROR
+			]);
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_MANAGE_PAGE'		=> true,
 
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden_fields),
 
-			'U_ACTION'		=> $this->u_action . '&amp;action=' . $action . '&amp;p=' . $page_id,
-			'U_BACK'		=> $this->u_action,
-		));
+			'U_ACTION'		=> $this->form_action . '&amp;action=' . $action . '&amp;p=' . $page_id,
+			'U_BACK'		=> $this->form_action,
+		]);
 
 		return true;
 	}
 	
+	/**
+	 * Put block variables into template
+	 * 
+	 * @param string 	$tpl_var 		Template variable name
+	 * @param array		$row 			Block data
+	 * @param int		$page_id 		Page ID
+	 * 
+	 * @access private
+	 */
 	private function block_to_template($tpl_var, $row, $page_id)
 	{
 		$block_position_name	= \canidev\blockgets\libraries\blockgets::$block_position_names[$row['block_position']] . '_block';
-		$block_action 			= $this->u_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $row['block_id'] . '&amp;subaction=';
+		$block_action 			= $this->form_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $row['block_id'] . '&amp;subaction=';
 		$is_forum_block 		= ($block_position_name == 'center_block' && $row['block_alias'] == 'forum_content') ? true : false;
+		$hidden_field_name 		= ($row['parent_id']) ? 'parent[' . $row['parent_id'] . '][]' : $block_position_name . '[]';
 
-		$actions = array(
-			'ENABLE'		=> array('fa-power-off enable', $block_action . 'enable', !$row['block_enabled']),
-			'DISABLE'		=> array('fa-power-off disable', $block_action . 'disable', $row['block_enabled']),
-			'EDIT'			=> array('fa-pencil', $block_action . 'edit', !$is_forum_block),
-			'DELETE'		=> array('fa-remove', $block_action . 'delete', !$is_forum_block),
-		);
-		
-		$hidden_field_name = ($row['parent_id']) ? 'parent[' . $row['parent_id'] . '][]' : $block_position_name . '[]';
+		$actions = [
+			'ENABLE'		=> ['fa-power-off enable', $block_action . 'enable', !$row['block_enabled']],
+			'DISABLE'		=> ['fa-power-off disable', $block_action . 'disable', $row['block_enabled']],
+			'EDIT'			=> ['fa-pencil', $block_action . 'edit', !$is_forum_block],
+			'DELETE'		=> ['fa-remove', $block_action . 'delete', !$is_forum_block],
+		];
 
-		$this->template->assign_block_vars($tpl_var, array(
+		$this->template->assign_block_vars($tpl_var, [
 			'BLOCK_ID'			=> $row['block_id'],
 			'BLOCK_CLASS'		=> str_replace('_', '-', $row['block_alias']),
-			'BLOCK_TITLE'		=> $this->lang->lang($row['block_title']),
+			'BLOCK_TITLE'		=> $this->language->lang($row['block_title']),
 			'BLOCK_ENABLED'		=> $row['block_enabled'],
 			'IS_FORUM'			=> $is_forum_block,
-			'S_HIDDEN_FIELDS'	=> '<input type="hidden" name="' . $hidden_field_name . '" value="' . $row['block_id'] . '" />',
-		));
+			'S_HIDDEN_FIELDS'	=> build_hidden_fields([
+				$hidden_field_name 		=> $row['block_id']
+			]),
+		]);
 		
 		foreach($actions as $lang_key => $action_data)
 		{
@@ -835,52 +865,62 @@ class admin_controller_pages extends admin_controller_base
 				continue;
 			}
 
-			$this->template->assign_block_vars($tpl_var . '.action', array(
+			$this->template->assign_block_vars($tpl_var . '.action', [
 				'ACTION'	=> $action_data[1],
 				'ICON'		=> $action_data[0],
-				'LABEL'		=> $this->lang->lang($lang_key),
-			));
+				'LABEL'		=> $this->language->lang($lang_key),
+			]);
 		}
 	}
 	
+	/**
+	 * Manage blocks
+	 * 
+	 * @param array 	$block_ids
+	 * @param int 		$page_id
+	 * @param string 	$action
+	 * @param bool 		$submit
+	 * 
+	 * @return bool
+	 */
 	function manage_block($block_ids, $page_id, $action, $submit)
 	{
-		if(empty($block_ids[0]) && ($action != 'add' && $action != 'add_group' && $action != 'save_position'))
+		if(empty($block_ids[0]) && !in_array($action, ['add', 'add_group', 'save_position', 'save_size']))
 		{
 			return false;
 		}
 
-		$error = $block_config_vars = $hidden_fields = array();
+		$error = $block_config_vars = $hidden_fields = [];
 		
 		$submit = ($this->request->is_set_post('submitmore') ? true : $submit);
 		
-		$style_options = array(
-			BLOCK_STYLE_DEFAULT			=> 'STYLE_DEFAULT',
-			BLOCK_STYLE_ALTERNATIVE		=> 'STYLE_ALTERNATIVE',
-			BLOCK_STYLE_CONTENT_FULL	=> 'STYLE_CONTENT_FULL',
-			BLOCK_STYLE_CONTENT_SIMPLE	=> 'STYLE_CONTENT_SIMPLE',
-		);
+		$style_options = [
+			constants::BLOCK_STYLE_DEFAULT			=> 'STYLE_DEFAULT',
+			constants::BLOCK_STYLE_ALTERNATIVE		=> 'STYLE_ALTERNATIVE',
+			constants::BLOCK_STYLE_CONTENT_FULL		=> 'STYLE_CONTENT_FULL',
+			constants::BLOCK_STYLE_CONTENT_SIMPLE	=> 'STYLE_CONTENT_SIMPLE',
+		];
 
-		$collapse_options = array(
-			BLOCK_COLLAPSE_NONE 		=> 'COLLAPSE_NONE',
-			BLOCK_COLLAPSE_VISIBLE 		=> 'COLLAPSE_VISIBLE',
-			BLOCK_COLLAPSE_HIDDEN 		=> 'COLLAPSE_HIDDEN',
-		);
+		$collapse_options = [
+			constants::BLOCK_COLLAPSE_NONE 		=> 'COLLAPSE_NONE',
+			constants::BLOCK_COLLAPSE_VISIBLE 	=> 'COLLAPSE_VISIBLE',
+			constants::BLOCK_COLLAPSE_HIDDEN 	=> 'COLLAPSE_HIDDEN',
+		];
 		
-		$display_vars = array(
+		$display_vars = [
 			'legend1'			=> 'BLOCK_SETTINGS',
-			'block_title'		=> array('lang' => 'BLOCK_TITLE',			'validate' => 'string:1:100',	'type' => 'text:30:100'),
+			'block_title'		=> ['lang' => 'BLOCK_TITLE',			'validate' => 'string:1:100',	'type' => 'text:30:100'],
 
-			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', 1),	'default' => ''),
-			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),		'default' => 'all'),
-			'block_enabled'		=> array('lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',								'default' => 1),
-			'allow_collapse'	=> array('lang' => 'BLOCK_COLLAPSE',		'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($collapse_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => BLOCK_COLLAPSE_VISIBLE),
-			'block_style'		=> array('lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($style_options, '{KEY}', '{CONFIG_VALUE}'),		'default' => 1),
-		);
+			'block_icon'		=> ['lang' => 'BLOCK_CURRENT_ICON',		'type' => 'custom',		'function' => [$this->media, 'build_selector'],		'params' => ['{KEY}', 'icon', '{CONFIG_VALUE}', 1],		'default' => ''],
+			'block_groups'		=> ['lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => [$this->tools, 'groups_select'],		'params' => ['block_groups', '{CONFIG_VALUE}'],			'default' => 'all'],
+			'block_enabled'		=> ['lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',							'default' => 1],
+			'allow_collapse'	=> ['lang' => 'BLOCK_COLLAPSE',			'type' => 'custom',		'function' => [$this->tools, 'make_select'],		'params' => [$collapse_options, '{KEY}', '{CONFIG_VALUE}'],		'default' => constants::BLOCK_COLLAPSE_VISIBLE],
+			'block_style'		=> ['lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => [$this->tools, 'make_select'],		'params' => [$style_options, '{KEY}', '{CONFIG_VALUE}'],		'default' => 1],
+		];
 		
-		if(!$submit && !in_array($action, array('enable', 'disable', 'remove', 'move')))
+		if(!$submit && !in_array($action, ['enable', 'disable', 'remove', 'move']))
 		{
-			$this->u_action .= '&amp;p=' . $page_id . '&amp;action=manage';
+			$this->form_action .= '&amp;p=' . $page_id . '&amp;action=manage';
 		}
 		
 		// Obtain the page title for logs
@@ -898,7 +938,7 @@ class admin_controller_pages extends admin_controller_base
 			case 'edit':
 				// Get the block data
 				$sql = 'SELECT *
-					FROM ' . BLG_BLOCK_TABLE . '
+					FROM ' . $this->tables['blocks'] . '
 					WHERE block_id = ' . $block_ids[0];
 				$result = $this->db->sql_query($sql);
 				$block_data = $this->db->sql_fetchrow($result);
@@ -915,7 +955,7 @@ class admin_controller_pages extends admin_controller_base
 			// no break
 
 			case 'add':
-				$this->lang->add_lang('acp_blocks', 'canidev/blockgets');
+				$this->language->add_lang('acp_blocks', 'canidev/blockgets');
 				
 				if($action == 'add')
 				{
@@ -927,7 +967,7 @@ class admin_controller_pages extends admin_controller_base
 					}
 
 					// Default data for new blocks
-					$block_data = array(
+					$block_data = [
 						'block_id'			=> 0,
 						'parent_id'			=> $this->request->variable('parent', 0),
 						'block_title'		=> '',
@@ -935,42 +975,42 @@ class admin_controller_pages extends admin_controller_base
 						'block_content'		=> '',
 						'block_page'		=> $page_id,
 						'block_position'	=> 0,
-						'allow_collapse'	=> BLOCK_COLLAPSE_VISIBLE,
-						'block_style'		=> BLOCK_STYLE_DEFAULT,
+						'allow_collapse'	=> constants::BLOCK_COLLAPSE_VISIBLE,
+						'block_style'		=> constants::BLOCK_STYLE_DEFAULT,
 						'bbcode_bitfield'	=> '',
 						'bbcode_uid'		=> '',
-					);
+					];
 					
-					$hidden_fields = array(
+					$hidden_fields = [
 						'block_alias'	=> $block_alias,
 						'position'		=> $this->request->variable('position', ''),
 						'index'			=> $this->request->variable('index', 0),
 						'parent'		=> $block_data['parent_id'],
-					);
+					];
 				}
 
-				$hidden_fields = array_merge($hidden_fields, array(
+				$hidden_fields = array_merge($hidden_fields, [
 					'p'		=> $page_id,
 					'b'		=> $block_data['block_id'],
-				));
+				]);
 				
 				$cfg_array = $block_data;
 
 				if(isset($_REQUEST['config']))
 				{
-					$cfg_array = array_merge($cfg_array, utf8_normalize_nfc($this->request->variable('config', array('' => ''), true)));
-					$cfg_array['block_groups'] = $this->request->variable('block_groups', array(0));
+					$cfg_array = array_merge($cfg_array, $this->request->variable('config', ['' => ''], true));
+					$cfg_array['block_groups'] = $this->request->variable('block_groups', [0]);
 				}
 
 				$class_name	= '\\canidev\\blockgets\\blocks\\' . $block_data['block_alias'];
 
 				if(!class_exists($class_name))
 				{
-					trigger_error($this->lang->lang('BLOCK_NOT_EXISTS') . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error($this->language->lang('BLOCK_NOT_EXISTS') . adm_back_link($this->form_action), E_USER_WARNING);
 				}
 				
 				// Initialize the block class
-				$block_class = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->user, $block_data);
+				$block_class = new $class_name($this->container, $block_data);
 				$block_class->manager = $this;
 				
 				// Check for block requirements at install if neccesary
@@ -978,7 +1018,7 @@ class admin_controller_pages extends admin_controller_base
 				{
 					if(!$block_class->check())
 					{
-						trigger_error($this->lang->lang('BLOCK_NEED_REQUIREMENTS') . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error($this->language->lang('BLOCK_NEED_REQUIREMENTS') . adm_back_link($this->form_action), E_USER_WARNING);
 					}
 				}
 				
@@ -986,15 +1026,15 @@ class admin_controller_pages extends admin_controller_base
 				$has_config = $block_class->get_config();
 				$has_list	= !empty($block_class->list);
 
-				/*
-				* @event blockgets.acp_block_config
-				* @var object	block_class		The block object
-				* @var bool		has_config		Define if the block has config
-				* @var bool		has_list		Define if the block has a list
-				* @var array	block_data		Original block data
-				* @since 2.0.1
-				*/
-				$vars = array('block_class', 'has_config', 'has_list', 'block_data');
+				/**
+				 * @event blockgets.acp_block_config
+				 * @var object	block_class		The block object
+				 * @var bool		has_config		Define if the block has config
+				 * @var bool		has_list		Define if the block has a list
+				 * @var array	block_data		Original block data
+				 * @since 2.0.1
+				 */
+				$vars = ['block_class', 'has_config', 'has_list', 'block_data'];
 				extract($this->dispatcher->trigger_event('blockgets.acp_block_config', compact($vars)));
 
 				if($has_config && is_array($block_class->display_vars))
@@ -1018,7 +1058,7 @@ class admin_controller_pages extends admin_controller_base
 						$block_class->list->set_data($cfg_array, $block_data['block_id']);
 					}
 					
-					$link_base_action = $this->u_action . '&amp;subaction=' . $action;
+					$link_base_action = $this->form_action . '&amp;subaction=' . $action;
 					$link_base_action .= '&amp;' . (($action == 'add') ? 'block_alias=' . $block_data['block_alias'] : 'b=' . $block_data['block_id']);
 					
 					$block_class->list
@@ -1028,15 +1068,15 @@ class admin_controller_pages extends admin_controller_base
 				
 				$block_class->configure('validate', $block_data, $cfg_array, $submit);
 
-				/*
-				* @event blockgets.acp_block_validate
-				* @var object	block_class		The block object
-				* @var array	block_data		Original block data
-				* @var array	cfg_array		Submitted block data
-				* @var bool 	submit 			
-				* @since 2.0.1
-				*/
-				$vars = array('block_class', 'block_data', 'cfg_array', 'submit');
+				/**
+				 * @event blockgets.acp_block_validate
+				 * @var object	block_class		The block object
+				 * @var array	block_data		Original block data
+				 * @var array	cfg_array		Submitted block data
+				 * @var bool 	submit 			
+				 * @since 2.0.1
+				 */
+				$vars = ['block_class', 'block_data', 'cfg_array', 'submit'];
 				extract($this->dispatcher->trigger_event('blockgets.acp_block_validate', compact($vars)));
 
 				// Execute the ajax action over the links in this point
@@ -1089,15 +1129,15 @@ class admin_controller_pages extends admin_controller_base
 					
 					$block_class->configure('submit', $block_data, $cfg_array, $submit);
 
-					/*
-					* @event blockgets.acp_block_submit
-					* @var object	block_class		The block object
-					* @var array	block_data		Original block data
-					* @var array	cfg_array		Submitted block data
-					* @var bool 	submit 			
-					* @since 2.0.1
-					*/
-					$vars = array('block_class', 'block_data', 'cfg_array', 'submit');
+					/**
+					 * @event blockgets.acp_block_submit
+					 * @var object	block_class		The block object
+					 * @var array	block_data		Original block data
+					 * @var array	cfg_array		Submitted block data
+					 * @var bool 	submit 			
+					 * @since 2.0.1
+					 */
+					$vars = ['block_class', 'block_data', 'cfg_array', 'submit'];
 					extract($this->dispatcher->trigger_event('blockgets.acp_block_submit', compact($vars)));
 
 					if(!$block_class->custom_config && ($has_config || $has_list))
@@ -1111,7 +1151,7 @@ class admin_controller_pages extends admin_controller_base
 				{
 					$bbcode = $block_class->bbcode('get');
 					
-					$sql_ary = array(
+					$sql_ary = [
 						'block_title'		=> $cfg_array['block_title'],
 						'block_content'		=> (isset($cfg_array['block_content']) ? $cfg_array['block_content'] : $block_data['block_content']),
 						'block_alias'		=> $block_data['block_alias'],
@@ -1123,11 +1163,11 @@ class admin_controller_pages extends admin_controller_base
 						'block_style'		=> $cfg_array['block_style'],
 						'bbcode_bitfield'	=> $bbcode['bitfield'],
 						'bbcode_uid'		=> $bbcode['uid'],
-					);
+					];
 
 		            if($action == 'edit')
 		            {               
-		            	$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+		            	$sql = 'UPDATE ' . $this->tables['blocks'] . '
 							SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 							WHERE block_id = ' . $block_data['block_id'];
 						$this->db->sql_query($sql);
@@ -1136,19 +1176,19 @@ class admin_controller_pages extends admin_controller_base
 		            }
 		            else
 		            {
-						$sql_ary += array(
+						$sql_ary += [
 							'parent_id'			=> $hidden_fields['parent'],
 							'block_position'	=> ($hidden_fields['position']) ? array_search($hidden_fields['position'], \canidev\blockgets\libraries\blockgets::$block_position_names) : 0,
 							'block_order'		=> $hidden_fields['index'],
-						);
+						];
 
-						$sql = 'INSERT INTO ' . BLG_BLOCK_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+						$sql = 'INSERT INTO ' . $this->tables['blocks'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 						$this->db->sql_query($sql);
 						
 						$block_data['block_id'] = $this->db->sql_nextid();
 						
 						// Update order of other blocks
-						$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+						$sql = 'UPDATE ' . $this->tables['blocks'] . '
 							SET block_order = block_order + 1
 							WHERE block_page = ' . $sql_ary['block_page'] . '
 							AND block_position = ' . $sql_ary['block_position'] . '
@@ -1159,20 +1199,20 @@ class admin_controller_pages extends admin_controller_base
 						$message = 'ADDED';
 		            }
 
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "LOG_BLOCK_$message", time(), array($this->lang->lang($sql_ary['block_title']), $page_title));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, "LOG_BLOCK_$message", time(), [$this->language->lang($sql_ary['block_title']), $page_title]);
 
-					$this->helper->json->send(array(
-						'message' 		=> $this->lang->lang("BLOCK_$message"),
-						'return_url'	=> $this->u_action . '&amp;p=' . $page_id . '&amp;action=manage' . (($action == 'add' && $this->request->is_set_post('submitmore')) ? '#add' : ''),
-					));
+					$this->helper->json->send([
+						'message' 		=> $this->language->lang("BLOCK_$message"),
+						'return_url'	=> $this->form_action . '&amp;p=' . $page_id . '&amp;action=manage' . (($action == 'add' && $this->request->is_set_post('submitmore')) ? '#add' : ''),
+					]);
 				}
 				
 				if(sizeof($error))
 				{
-					$this->helper->json->send(array(
+					$this->helper->json->send([
 						'message'	=> implode('<br />', $error),
-						'status'	=> json_response::JSON_STATUS_ERROR
-					));
+						'status'	=> JsonResponse::JSON_STATUS_ERROR
+					]);
 				}
 				
 				// Title and Icon for new blocks
@@ -1191,12 +1231,12 @@ class admin_controller_pages extends admin_controller_base
 				
 				$title = strtoupper($action) . '_BLOCK_TITLE';
 				
-				$block_data['block_title'] = ($this->lang->is_set($block_data['block_title']) ? $this->lang->lang($block_data['block_title']) : $block_data['block_title']);
-				$this->page_title = $this->lang->lang($title, $block_data['block_title']);
+				$block_data['block_title'] = ($this->language->is_set($block_data['block_title']) ? $this->language->lang($block_data['block_title']) : $block_data['block_title']);
+				$this->page_title = $this->language->lang($title, $block_data['block_title']);
 
-				$this->template->assign_vars(array(
-					'L_TITLE'			=> $this->page_title,
-					'L_TITLE_EXPLAIN'	=> $this->lang->lang($title . '_EXPLAIN'),
+				$this->template->assign_vars([
+					'S_TITLE'			=> $this->page_title,
+					'S_TITLE_EXPLAIN'	=> $this->language->lang($title . '_EXPLAIN'),
 
 					'HAS_CONFIG'		=> $has_config,
 					'HAS_LINKS'			=> $has_list,
@@ -1206,9 +1246,9 @@ class admin_controller_pages extends admin_controller_base
 					'S_ADD_MODE'		=> ($action == 'add') ? true : false,
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields($hidden_fields),
 
-					'U_ACTION'			=> $this->u_action . '&amp;subaction=' . $action,
-					'U_BACK'			=> $this->u_action,
-				));
+					'U_ACTION'			=> $this->form_action . '&amp;subaction=' . $action,
+					'U_BACK'			=> $this->form_action,
+				]);
 
 				$this->tpl_name = 'acp_block_edit';
 			break;
@@ -1217,7 +1257,7 @@ class admin_controller_pages extends admin_controller_base
 				$position	= $this->request->variable('position', '');
 				$index		= $this->request->variable('index', 0);
 
-				$sql_ary = array(
+				$sql_ary = [
 					'block_title'		=> '',
 					'block_content'		=> '',
 					'block_alias'		=> 'group',
@@ -1225,21 +1265,21 @@ class admin_controller_pages extends admin_controller_base
 					'block_page'		=> $page_id,
 					'block_enabled'		=> 1,
 					'block_groups'		=> 'all',
-					'allow_collapse'	=> BLOCK_COLLAPSE_NONE,
+					'allow_collapse'	=> constants::BLOCK_COLLAPSE_NONE,
 					'block_style'		=> 0,
 					'bbcode_bitfield'	=> '',
 					'bbcode_uid'		=> '',
 					'block_position'	=> array_search($position, \canidev\blockgets\libraries\blockgets::$block_position_names),
 					'block_order'		=> $index,
-				);
+				];
 
-				$sql = 'INSERT INTO ' . BLG_BLOCK_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+				$sql = 'INSERT INTO ' . $this->tables['blocks'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 				$this->db->sql_query($sql);
 					
 				$sql_ary['block_id'] = $this->db->sql_nextid();
 					
 				// Update order of other blocks
-				$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+				$sql = 'UPDATE ' . $this->tables['blocks'] . '
 					SET block_order = block_order + 1
 					WHERE block_page = ' . $sql_ary['block_page'] . '
 					AND block_position = ' . $sql_ary['block_position'] . '
@@ -1247,24 +1287,24 @@ class admin_controller_pages extends admin_controller_base
 					AND block_id <> ' . $sql_ary['block_id'];
 				$this->db->sql_query($sql);
 				
-				$this->helper->json->send(array(
+				$this->helper->json->send([
 					'blockId'	=> $sql_ary['block_id'],
-					'uRemove'	=> $this->u_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $sql_ary['block_id'] . '&amp;subaction=delete'
-				));
+					'uRemove'	=> $this->form_action . '&amp;p=' . $page_id . '&amp;action=manage&amp;b=' . $sql_ary['block_id'] . '&amp;subaction=delete'
+				]);
 			break;
 
 			case 'save_position':
 				$success	= true;
 				$positions	= \canidev\blockgets\libraries\blockgets::$block_position_names;
-				$parents 	= $this->request->variable('parent', array(0 => array(0 => 0)));
-				$sql_ary	= array();
+				$parents 	= $this->request->variable('parent', [0 => [0 => 0]]);
+				$sql_ary	= [];
 
 				// Update blocks for default positions
 				for($i = 1; $i < count($positions); $i++)
 				{
 					$block_name = $positions[$i] . '_block';
 
-					$item_positions = $this->request->variable($block_name, array(0 => 0));
+					$item_positions = $this->request->variable($block_name, [0 => 0]);
 
 					if(empty($item_positions))
 					{
@@ -1273,11 +1313,11 @@ class admin_controller_pages extends admin_controller_base
 
 					foreach($item_positions as $position => $block_id)
 					{
-						$sql_ary[$block_id] = array(
+						$sql_ary[$block_id] = [
 							'parent_id'			=> 0,
 							'block_order'		=> (int)$position + 1,
 							'block_position'	=> $i,
-						);
+						];
 					}
 				}
 
@@ -1286,17 +1326,17 @@ class admin_controller_pages extends admin_controller_base
 				{
 					foreach($childs as $position => $block_id)
 					{
-						$sql_ary[$block_id] = array(
+						$sql_ary[$block_id] = [
 							'parent_id'			=> $parent_id,
 							'block_order'		=> (int)$position + 1,
 							'block_position'	=> 0,
-						);
+						];
 					}
 				}
 				
 				foreach($sql_ary as $block_id => $sql)
 				{
-					$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+					$sql = 'UPDATE ' . $this->tables['blocks'] . '
 						SET ' . $this->db->sql_build_array('UPDATE', $sql) . "
 						WHERE block_id = $block_id
 						AND block_page = $page_id";
@@ -1307,29 +1347,60 @@ class admin_controller_pages extends admin_controller_base
 						break;
 					}
 				}
-				
-				if(!$success)
+
+			// no break
+
+			case 'save_size':
+				$sizes = $this->request->variable('sizes', [0 => '']);
+
+				if($action == 'save_size')
 				{
-					$this->helper->json->send(array(
-						'message'	=> $this->lang->lang('BLOCK_POSITION_NOT_UPDATED'),
-						'status'	=> json_response::JSON_STATUS_ERROR
-					));
+					$success = true;
 				}
 
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_MOVED', time(), array($page_title));
+				if($success)
+				{
+					foreach($sizes as $block_id => $values)
+					{
+						$sql_ary = [
+							'block_content'	=> $values
+						];
+
+						$sql = 'UPDATE ' . $this->tables['blocks'] . '
+							SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . "
+							WHERE block_id = $block_id
+							AND block_page = $page_id";
+
+						if(!$this->db->sql_query($sql))
+						{
+							$success = false;
+							break;
+						}
+					}
+				}
+
+				if(!$success)
+				{
+					$this->helper->json->send([
+						'message'	=> $this->language->lang('BLOCK_POSITION_NOT_UPDATED'),
+						'status'	=> JsonResponse::JSON_STATUS_ERROR
+					]);
+				}
+
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_MOVED', time(), [$page_title]);
 				$this->helper->json->send();
 			break;
 
 			case 'enable':
 			case 'disable':
-				$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+				$sql = 'UPDATE ' . $this->tables['blocks'] . '
 					SET block_enabled = ' . (($action == 'enable') ? 1 : 0) . '
 					WHERE ' . $this->db->sql_in_set('block_id', $block_ids) . "
 					AND block_page = $page_id";
 
 				$this->db->sql_query($sql);
 				
-				$this->helper->json->add(array('message' => $this->lang->lang('CONFIG_UPDATED')));
+				$this->helper->json->add(['message' => $this->language->lang('CONFIG_UPDATED')]);
 				return false;
 			break;
 
@@ -1337,16 +1408,16 @@ class admin_controller_pages extends admin_controller_base
 				if(confirm_box(true))
 				{
 					// Remove the blocks and childs
-					$sql = 'DELETE FROM ' . BLG_BLOCK_TABLE . '
+					$sql = 'DELETE FROM ' . $this->tables['blocks'] . '
 						WHERE ' . $this->db->sql_in_set('block_id', $block_ids) . '
 						OR ' . $this->db->sql_in_set('parent_id', $block_ids);
 					$this->db->sql_query($sql);
 
 					// Reajust the order of the blocks, prevent errors
-					$positions = array();
+					$positions = [];
 					
 					$sql = 'SELECT block_id, block_position
-						FROM ' . BLG_BLOCK_TABLE . "
+						FROM ' . $this->tables['blocks'] . "
 						WHERE block_page = $page_id
 						AND parent_id = 0
 						ORDER BY block_order ASC";
@@ -1357,7 +1428,7 @@ class admin_controller_pages extends admin_controller_base
 						
 						if(!isset($positions[$pos]))
 						{
-							$positions[$pos] = array();
+							$positions[$pos] = [];
 						}
 						
 						$positions[$pos][] = $row['block_id'];
@@ -1370,7 +1441,7 @@ class admin_controller_pages extends admin_controller_base
 						{
 							foreach($blocks as $id => $block)
 							{
-								$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+								$sql = 'UPDATE ' . $this->tables['blocks'] . '
 									SET block_order = ' . ($id + 1) . "
 									WHERE block_id = $block
 									AND block_position = $pos";
@@ -1379,18 +1450,18 @@ class admin_controller_pages extends admin_controller_base
 						}
 					}
 
-					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_REMOVED', time(), array($page_title));
-					$this->helper->json->send(array('message' => $this->lang->lang('BLOCK_REMOVED')));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_REMOVED', time(), [$page_title]);
+					$this->helper->json->send(['message' => $this->language->lang('BLOCK_REMOVED')]);
 				}
 				else
 				{
 					confirm_box(
 						false,
 						strtoupper($action) . '_BLOCK',
-						build_hidden_fields(array(
+						build_hidden_fields([
 							'block_id_list'		=> $block_ids,
 							'subaction'			=> $action,
-						)),
+						]),
 						'@canidev_core/confirmbox.html'
 					);
 				}
@@ -1403,7 +1474,7 @@ class admin_controller_pages extends admin_controller_base
 				{
 					$target_page_id = $this->request->variable('target_page_id', 0);
 					
-					$max_orders = $block_positions = array();
+					$max_orders = $block_positions = [];
 					
 					// Obtain the title of new page (for log)
 					$page_ary = $this->obtain_pagelist(false, true);
@@ -1417,7 +1488,7 @@ class admin_controller_pages extends admin_controller_base
 
 					// Obtain the last block order in the target page
 					$sql = 'SELECT MAX(block_order) AS max_order, block_position
-						FROM ' . BLG_BLOCK_TABLE . "
+						FROM ' . $this->tables['blocks'] . "
 						WHERE block_page = $target_page_id
 						GROUP BY block_position";
 					$result = $this->db->sql_query($sql);
@@ -1429,10 +1500,10 @@ class admin_controller_pages extends admin_controller_base
 					$this->db->sql_freeresult($result);
 					
 					// Get relevant data from selected blocks
-					$parents = array();
+					$parents = [];
 
 					$sql = 'SELECT *
-						FROM ' . BLG_BLOCK_TABLE . '
+						FROM ' . $this->tables['blocks'] . '
 						WHERE ' . $this->db->sql_in_set('block_id', $block_ids) . '
 						ORDER BY block_order ASC';
 					$result = $this->db->sql_query($sql);
@@ -1444,7 +1515,7 @@ class admin_controller_pages extends admin_controller_base
 						{
 							if(!isset($parents[$parent_id]))
 							{
-								$parents[$parent_id] = array();
+								$parents[$parent_id] = [];
 							}
 							
 							$parents[$parent_id][] = $row;
@@ -1455,7 +1526,7 @@ class admin_controller_pages extends admin_controller_base
 
 							if(!isset($block_positions[$position]))
 							{
-								$block_positions[$position] = array();
+								$block_positions[$position] = [];
 							}
 							
 							$block_positions[$position][] = $row;
@@ -1466,7 +1537,7 @@ class admin_controller_pages extends admin_controller_base
 					if(sizeof($parents))
 					{
 						$sql = 'SELECT *
-							FROM ' . BLG_BLOCK_TABLE . '
+							FROM ' . $this->tables['blocks'] . '
 							WHERE ' . $this->db->sql_in_set('block_id', array_keys($parents));
 						$result = $this->db->sql_query($sql);
 						while($row = $this->db->sql_fetchrow($result))
@@ -1476,22 +1547,22 @@ class admin_controller_pages extends admin_controller_base
 							
 							if(!isset($block_positions[$position]))
 							{
-								$block_positions[$position] = array();
+								$block_positions[$position] = [];
 							}
 
 							foreach($parents[$parent_id] as $block_row)
 							{
-								$block_positions[$position][] = array_merge($block_row, array(
+								$block_positions[$position][] = array_merge($block_row, [
 									'parent_id'			=> 0,
 									'block_position'	=> $position,
-								));
+								]);
 							}
 						}
 						$this->db->sql_freeresult($result);
 					}
 					
 					// Apply the changes
-					$copy_blocks = array();
+					$copy_blocks = [];
 					foreach($block_positions as $position => $data)
 					{
 						foreach($data as $order => $row)
@@ -1500,14 +1571,14 @@ class admin_controller_pages extends admin_controller_base
 
 							if($action == 'move')
 							{
-								$sql_ary = array(
+								$sql_ary = [
 									'block_page'		=> $target_page_id,
 									'block_order'		=> $order,
 									'block_position'	=> $row['block_position'],
 									'parent_id'			=> $row['parent_id'],
-								);
+								];
 								
-								$sql = 'UPDATE ' . BLG_BLOCK_TABLE . '
+								$sql = 'UPDATE ' . $this->tables['blocks'] . '
 									SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 									WHERE block_id = ' . $row['block_id'];
 								$this->db->sql_query($sql);
@@ -1516,10 +1587,10 @@ class admin_controller_pages extends admin_controller_base
 							{
 								unset($row['block_id']);
 								
-								$row = array_merge($row, array(
+								$row = array_merge($row, [
 									'block_page'	=> $target_page_id,
 									'block_order'	=> $order,
-								));
+								]);
 
 								$copy_blocks[] = $row;
 							}
@@ -1530,23 +1601,23 @@ class admin_controller_pages extends admin_controller_base
 					{
 						if(sizeof($copy_blocks))
 						{
-							$this->db->sql_multi_insert(BLG_BLOCK_TABLE, $copy_blocks);
+							$this->db->sql_multi_insert($this->tables['blocks'], $copy_blocks);
 
-							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_COPY_PAGE', time(), array($page_title, $new_page_title));
+							$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_COPY_PAGE', time(), [$page_title, $new_page_title]);
 						}
 
-						$this->helper->json->send(array('message' => $this->lang->lang('BLOCK_COPIED')));
+						$this->helper->json->send(['message' => $this->language->lang('BLOCK_COPIED')]);
 					}
 					else
 					{
-						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_MOVED_PAGE', time(), array($page_title, $new_page_title));
-						$this->helper->json->send(array('message' => $this->lang->lang('BLOCK_MOVED')));
+						$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BLOCK_MOVED_PAGE', time(), [$page_title, $new_page_title]);
+						$this->helper->json->send(['message' => $this->language->lang('BLOCK_MOVED')]);
 					}
 				}
 				else
 				{
-					$page_ary = $this->obtain_pagelist(array($page_id));
-					$page_options = array();
+					$page_ary = $this->obtain_pagelist([$page_id]);
+					$page_options = [];
 
 					foreach($page_ary as $page_type => $rows)
 					{
@@ -1562,18 +1633,18 @@ class admin_controller_pages extends admin_controller_base
 						}
 					}
 					
-					$this->template->assign_vars(array(
-						'L_EXPLAIN'			=> $this->lang->lang('TARGET_PAGE_EXPLAIN'),
-						'S_PAGE_OPTIONS'	=> $this->helper_acp->make_select($page_options, false)
-					));
+					$this->template->assign_vars([
+						'L_EXPLAIN'			=> $this->language->lang('TARGET_PAGE_EXPLAIN'),
+						'S_PAGE_OPTIONS'	=> $this->tools->make_select($page_options, false)
+					]);
 
 					confirm_box(
 						false,
 						strtoupper($action) . '_BLOCK',
-						build_hidden_fields(array(
+						build_hidden_fields([
 							'block_id_list'		=> $block_ids,
 							'subaction'			=> $action,
-						)),
+						]),
 						'ajax_body.html'
 					);
 				}
@@ -1583,30 +1654,30 @@ class admin_controller_pages extends admin_controller_base
 			case 'chg_groups':
 				if(confirm_box(true))
 				{
-					$new_group_ids = $this->request->variable('chg_group', array(0));
+					$new_group_ids = $this->request->variable('chg_group', [0]);
 					$new_group_str = (isset($_POST['all_groups']) ? 'all' : implode(',', $new_group_ids));
 
-					$sql = 'UPDATE ' . BLG_BLOCK_TABLE . "
+					$sql = 'UPDATE ' . $this->tables['blocks'] . "
 						SET block_groups = '" . $this->db->sql_escape($new_group_str) . "'
 						WHERE " . $this->db->sql_in_set('block_id', $block_ids);
 					$this->db->sql_query($sql);
 					
-					$this->helper->json->send(array('message' => $this->lang->lang('GROUPS_CHANGED')));
+					$this->helper->json->send(['message' => $this->language->lang('GROUPS_CHANGED')]);
 				}
 				else
 				{
-					$this->template->assign_vars(array(
-						'L_EXPLAIN'			=> $this->lang->lang('CHG_GROUP_EXPLAIN'),
-						'S_GROUP_SELECT'	=> $this->helper_acp->groups_select('chg_group', false),
-					));
+					$this->template->assign_vars([
+						'L_EXPLAIN'			=> $this->language->lang('CHG_GROUP_EXPLAIN'),
+						'S_GROUP_SELECT'	=> $this->tools->groups_select('chg_group', false),
+					]);
 
 					confirm_box(
 						false,
 						strtoupper($action) . '_BLOCK',
-						build_hidden_fields(array(
+						build_hidden_fields([
 							'block_id_list'		=> $block_ids,
 							'subaction'			=> $action,
-						)),
+						]),
 						'ajax_body.html'
 					);
 				}
@@ -1618,28 +1689,43 @@ class admin_controller_pages extends admin_controller_base
 		return true;
 	}
 
+	/**
+	 * Build filters selector
+	 * @return string
+	 */
 	public function display_filter_list()
 	{
 		return (!empty($this->filters) ? $this->filters->acp_template(true) : '');
 	}
 	
+	/**
+	 * Event for filter list
+	 * 
+	 * @param \phpbb\event\data 	$event
+	 */
 	public function filter_edit_before($event)
 	{
-		$method_options = array(
+		$method_options = [
 			'GET'	=> 'FILTER_TYPE_GET',
 			'POST'	=> 'FILTER_TYPE_POST',
-		);
+		];
 
-		$event['display_vars'] = array(
-			'param'		=> array('lang' => 'PAGE_FILTER_PARAM',		'type' => 'text:40:255',	'validate' => 'string:1:255'),
-			'method'	=> array('lang' => 'PAGE_FILTER_TYPE',		'type' => 'select',			'function' => array($this, 'make_select'),	'params' => array($method_options, false, '{CONFIG_VALUE}')),
-		);
+		$event['display_vars'] = [
+			'param'		=> ['lang' => 'PAGE_FILTER_PARAM',		'type' => 'text:40:255',	'validate' => 'string:1:255'],
+			'method'	=> ['lang' => 'PAGE_FILTER_TYPE',		'type' => 'select',			'function' => [$this->tools, 'make_select'],	'params' => [$method_options, false, '{CONFIG_VALUE}']],
+			];
 	}
 	
+	/**
+	 * Get block information
+	 * 
+	 * @param string 		$block_alias
+	 * @param object|false 	$block_object
+	 * 
+	 * @return array
+	 */
 	function get_block_info($block_alias = '', $block_object = false)
 	{
-		global $user;
-		
 		$title = $explain = '';
 		$block_type = 'block';
 		
@@ -1660,7 +1746,7 @@ class admin_controller_pages extends admin_controller_base
 		{
 			if($block_object === true)
 			{
-				$block = new $class_name($this->config, $this->container, $this->db, $this->dispatcher, $this->helper, $this->lang, $this->request, $this->user);
+				$block = new $class_name($this->container);
 			}
 			else
 			{
@@ -1670,14 +1756,14 @@ class admin_controller_pages extends admin_controller_base
 			$block->setup();
 		}
 
-		if($this->lang->is_set(array('blocks', "{$block_alias}_title")))
+		if($this->language->is_set(['blocks', "{$block_alias}_title"]))
 		{
-			$title = $this->lang->lang(array('blocks', "{$block_alias}_title"));
+			$title = $this->language->lang(['blocks', "{$block_alias}_title"]);
 		}
 		
-		if($this->lang->is_set(array('blocks', "{$block_alias}_explain")))
+		if($this->language->is_set(['blocks', "{$block_alias}_explain"]))
 		{
-			$explain = $this->lang->lang(array('blocks', "{$block_alias}_explain"));
+			$explain = $this->language->lang(['blocks', "{$block_alias}_explain"]);
 		}
 		
 		if(!$explain && strpos($block_type, 'addon') !== false)
@@ -1689,19 +1775,27 @@ class admin_controller_pages extends admin_controller_base
 		$icon = $block->getStaticPropertyValue('icon');
 		unset($block);
 
-		return array(
+		return [
 			'title'		=> ($title) ? $title : ucfirst(str_replace('_', ' ', $block_alias)),
 			'explain'	=> $explain,
 			'icon'		=> $icon,
 			'type'		=> $block_type,
-		);
+		];
 	}
 	
+	/**
+	 * Insert new page
+	 * 
+	 * @param string 	$alias
+	 * 
+	 * @return int
+	 * @access private
+	 */
 	private function insert_page($alias)
 	{
 		// First, check if page exists
 		$sql = 'SELECT page_id
-			FROM ' . BLG_PAGES_TABLE . '
+			FROM ' . $this->tables['pages'] . '
 			WHERE page_alias = "' . $this->db->sql_escape($alias) . '"';
 		$result = $this->db->sql_query($sql);
 		$page_id = (int)$this->db->sql_fetchfield('page_id');
@@ -1713,15 +1807,15 @@ class admin_controller_pages extends admin_controller_base
 		}
 		
 		// Create the page
-		$page_data = array(
+		$page_data = [
 			'page_alias'	=> $alias,
-			'page_type'		=> PAGE_FORUM,
+			'page_type'		=> constants::PAGE_FORUM,
 			'page_title'	=> '',
 			'page_enabled'	=> 1,
 			'page_groups'	=> 'all',
 			
-			'page_data'		=> serialize(array(
-				'filters'				=> array(),
+			'page_data'		=> serialize([
+				'filters'				=> [],
 				'header'				=> 1,
 				'footer'				=> 1,
 				'page_theme'			=> 'default',
@@ -1732,10 +1826,10 @@ class admin_controller_pages extends admin_controller_base
 				'left_column_width'		=> '200px',
 				'right_column_width'	=> '200px',
 				'block_space'			=> '6px',
-			))
-		);
+			])
+		];
 		
-		$sql = 'INSERT INTO ' . BLG_PAGES_TABLE . $this->db->sql_build_array('INSERT', $page_data);
+		$sql = 'INSERT INTO ' . $this->tables['pages'] . $this->db->sql_build_array('INSERT', $page_data);
 		$this->db->sql_query($sql);
 		$page_id = $this->db->sql_nextid();
 
@@ -1745,14 +1839,21 @@ class admin_controller_pages extends admin_controller_base
 		return $page_id;
 	}
 
+	/**
+	 * Insert forum block
+	 * 
+	 * @param int 	$page_id
+	 * @param bool 	$check
+	 * 
+	 * @return array|true
+	 * @access private
+	 */
 	private function insert_forum_block($page_id, $check = false)
 	{
-		global $db, $blockgets;
-		
 		if($check)
 		{
 			$sql = 'SELECT block_id
-				FROM ' . BLG_BLOCK_TABLE . "
+				FROM ' . $this->tables['blocks'] . "
 				WHERE block_alias = 'forum_content'
 				AND block_page = $page_id";
 			$result = $this->db->sql_query($sql);
@@ -1765,7 +1866,8 @@ class admin_controller_pages extends admin_controller_base
 			}
 		}
 
-		$sql_ary = array(
+		$sql_ary = [
+			'parent_id'			=> 0,
 			'block_title'		=> 'FORUM',
 			'block_content'		=> '',
 			'block_alias'		=> 'forum_content',
@@ -1773,27 +1875,27 @@ class admin_controller_pages extends admin_controller_base
 			'block_page'		=> $page_id,
 			'block_enabled'		=> 1,
 			'block_groups'		=> 'all',
-			'allow_collapse'	=> BLOCK_COLLAPSE_NONE,
+			'allow_collapse'	=> constants::BLOCK_COLLAPSE_NONE,
 			'bbcode_bitfield'	=> '',
 			'bbcode_uid'		=> '',
-		);
+		];
 		
 		$block_position = array_search('center', \canidev\blockgets\libraries\blockgets::$block_position_names);
 
 		$sql = 'SELECT MAX(block_order) as max_block_order
-			FROM ' . BLG_BLOCK_TABLE . '
+			FROM ' . $this->tables['blocks'] . '
 			WHERE block_position = ' . $block_position . "
 			AND block_page = $page_id";
 		$result = $this->db->sql_query($sql);
 		$max_block_order = (int) $this->db->sql_fetchfield('max_block_order');
 		$this->db->sql_freeresult($result);
 
-		$sql_ary += array(
+		$sql_ary += [
 			'block_position'	=> $block_position,
 			'block_order'		=> $max_block_order + 1,
-		);
+		];
 
-		$sql = 'INSERT INTO ' . BLG_BLOCK_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+		$sql = 'INSERT INTO ' . $this->tables['blocks'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 		$this->db->sql_query($sql);
 		
 		$sql_ary['block_id'] = $this->db->sql_nextid();
@@ -1801,20 +1903,26 @@ class admin_controller_pages extends admin_controller_base
 		return $sql_ary;
 	}
 	
-	function build_file_select($ignore_ary = array())
+	/**
+	 * Build select with files
+	 * 
+	 * @param array 		$ignore_ary		Files to be ignored
+	 * @return string
+	 */
+	protected function build_file_select($ignore_ary = [])
 	{
-		$exclude_files = array_merge($ignore_ary, array('app', 'common', 'config', 'cron', 'feed', 'style', 'app/feed', 'app/help', 'app/pm', 'app/post'));
+		$exclude_files = array_merge($ignore_ary, ['app', 'common', 'config', 'cron', 'feed', 'style', 'app/feed', 'app/help', 'app/pm', 'app/post']);
 
-		$options = array(
+		$options = [
 			'custom'	=> 'PAGE_CUSTOM_ONE',
 
 			'legend1'	=> 'FORUM_FILES',
-		);
+		];
 		
 		// Read all the avaliable files in phpbb root path
 		if($dir = @opendir($this->phpbb_root_path))
 		{
-			$file_ary = array();
+			$file_ary = [];
 
 			while(($file = @readdir($dir)) !== false)
 			{
@@ -1834,10 +1942,10 @@ class admin_controller_pages extends admin_controller_base
 			$options += $file_ary;
 		}
 
-		// Get extensions routes
+		// Get extentions routes
 		$router 			= $this->container->get('router');;
 		$route_collection	= $router->getRouteCollection()->getIterator();
-		$ext_pages 			= array();
+		$ext_pages 			= [];
 		
 		foreach($route_collection as $key => $route)
 		{
@@ -1863,38 +1971,32 @@ class admin_controller_pages extends admin_controller_base
 			$options = array_merge($options, $ext_pages);
 		}
 
-		return $this->helper_acp->make_select($options, false);
+		return $this->tools->make_select($options, false);
 	}
 	
-	// clear the path
-	function clear_path($path)
+	/**
+	 * Clear the path
+	 * 
+	 * @param string 	$path
+	 * @return string
+	 */
+	protected function clear_path($path)
 	{
-		$replaces = array(
+		$replaces = [
 			'#(^|/)\.\/#'			=> '\\1',
 			'#([\w\d\-\_]+)/\.\./#'	=> '/',
 			'#[^:]//#'				=> '/',
 			'#sid\=([a-z0-9]+)#'	=> '',
 			'#^/#' 					=> '',
 			'#(\?|&|&amp;)$#' 		=> '',
-			'#bbfront#'				=> 'bbfront/news',
-			'#donation#'				=> 'donation/index.html',
-		);
-
-	/*	if(strpos($path, 'http') === 0)
-		{
-			if($parts = parse_url($path))
-			{
-				$path = $parts['scheme'] . '://' . $parts['host'] . '/' . preg_replace(array_keys($replaces), array_values($replaces), $parts['path']);
-			
-				return $path . (isset($parts['query']) ? '?' . $parts['query'] : '');
-			}
-			
-			return $path;
-		}*/
+		];
 
 		return preg_replace(array_keys($replaces), array_values($replaces), $path);
 	}
 
+	/**
+	 * Destroy cache for pages
+	 */
 	protected function destroy_pages_cache()
 	{
 		$this->cache->destroy('_blockgets_pages');

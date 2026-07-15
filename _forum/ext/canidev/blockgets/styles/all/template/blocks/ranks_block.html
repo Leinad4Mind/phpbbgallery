@@ -1,14 +1,12 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#ranks-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
-});
 // ]]>
 </script>
 
@@ -19,9 +17,9 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	<div>
 		{% if rank.S_IMG_SRC %}<div class="blg-align-center"><img src="{{ rank.S_IMG_SRC }}" alt="" /></div>{% endif %}
 	{% if rank.IS_SPECIAL %}
-		<div class="blg-align-center blg-special-rank">{L_SPECIAL_RANK}</div>
+		<div class="blg-align-center blg-special-rank">{{ lang('SPECIAL_RANK') }}</div>
 	{% else %}
-		<div>{L_MIN_POSTS}{L_COLON} {{ rank.S_MIN_POSTS }}</div>
+		<div>{{ lang('MIN_POSTS') ~ lang('COLON') }} {{ rank.S_MIN_POSTS }}</div>
 	{% endif %}
 	</div>
 {% endfor %}

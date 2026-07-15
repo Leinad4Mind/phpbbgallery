@@ -1,7 +1,6 @@
 
 <script>
 // <![CDATA[
-head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }}').blgMarquee({
@@ -12,7 +11,6 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 			fps: '{{ S_MARQUEE_SPEED }}'
 		});
 	});
-});
 // ]]>
 </script>
 

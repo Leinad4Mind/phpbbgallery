@@ -1,14 +1,15 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.3 26/07/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\routing;
 
+use canidev\blockgets\libraries\constants;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -21,7 +22,6 @@ class page_loader extends Loader
 	 * Constructor
 	 *
 	 * @param \canidev\blockgets\libraries\blockgets		$blockgets			Blockgets Object
-	 *
 	 * @access public
 	 */
 	public function __construct(\canidev\blockgets\libraries\blockgets $blockgets)
@@ -30,14 +30,7 @@ class page_loader extends Loader
 	}
 
 	/**
-	 * Loads routes defined in Page's database.
-	 *
-	 * @param string      $resource Resource (not used, but required by parent interface)
-	 * @param string|null $type     The resource type
-	 *
-	 * @return RouteCollection A RouteCollection instance
-	 *
-	 * @api
+	 * {@inheritDoc}
 	 */
 	public function load($resource, $type = null)
 	{
@@ -45,20 +38,20 @@ class page_loader extends Loader
 
 		$page_ary = $this->blockgets->get_pages();
 
-		foreach($page_ary['pages'][PAGE_CUSTOM] as $page_id => $row)
+		foreach($page_ary['pages'][constants::PAGE_CUSTOM] as $page_id => $row)
 		{
 			$page_alias = ($row['page_alias']) ? $row['page_alias'] : $row['page_id'];
 
 			$route = new Route(
 				'/{prefix}' . $page_alias,
-				array(
+				[
 					'_controller' 	=> 'canidev.blockgets.controller:display',
 					'page'			=> $page_alias,
 					'prefix'		=> ($row['page_alias']) ? '' : 'page/',
-				),
-				array(
+				],
+				[
 					'prefix'	=> "(|page/)",
-				)
+				]
 			);
 		
 			$collection->add('canidev_blockgets_page_' . $row['page_id'], $route);
@@ -69,8 +62,6 @@ class page_loader extends Loader
 
 	/**
 	 * {@inheritdoc}
-	 *
-	 * @api
 	 */
 	public function supports($resource, $type = null)
 	{

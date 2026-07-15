@@ -8,29 +8,27 @@
 	{% if not IN_CALENDAR %}
 	<script>
 	// <![CDATA[
-	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(function() {
 			$('#calendar-{{ BLOCK_ID }}').blgCalendar({{ S_OPTIONS }});
 		});
-	});
 	// ]]>
 	</script>
 
 	<script type="text/html" id="tpl-calendar-info">
 		<div class="blg-calendar-info">
 			<div class="info-header">
-				<span>{L_EVENTS} <%date%></span>
+				<span>{{ lang('EVENTS') }} <%date%></span>
 				<a href="#" data-action="close"><i class="fa fa-remove" aria-hidden="true"></i></a>
 			</div>
 			
 			<div class="info-content">
-				<div class="no-items blg-message cbb-state-highlight">{L_NO_EVENTS}</div>
+				<div class="no-items blg-message cbb-state-highlight">{{ lang('NO_EVENTS') }}</div>
 			</div>
 			
 		{% if S_CAN_CREATE_EVENT %}
 			<div class="blg-align-right floated">
-				<a href="#" class="cbb-btn" data-action="add">{L_ADD_EVENT}</a>
+				<a href="#" class="cbb-btn" data-action="add">{{ lang('ADD_EVENT') }}</a>
 			</div>
 		{% endif %}
 		</div>

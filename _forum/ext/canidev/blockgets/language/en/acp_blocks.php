@@ -1,13 +1,13 @@
 <?php
-/*
-* [English [En]]
-*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [English [En]]
+ *
+ * @package cBB Blockgets
+ * @version 2.0.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -17,13 +17,13 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 /**
  * @acp_blockgets_pages
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Allow collapse the block',
 	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Enable or disable the ability for each user to collapse/expand this block and defines its initial state.',
@@ -111,8 +111,6 @@ $lang = array_merge($lang, array(
  		<em>Maximum 30 days. Set to 0 to disable it.</em>',
 
 	// calendar_block
- 	'CALENDAR_BIRTHDAYS'			=> 'Show Birthdays',
- 	'CALENDAR_BIRTHDAYS_EXPLAIN'	=> 'If enabled, the users birthdays are marked and displayed in the calendar, like events.',
  	'CALENDAR_EVENTS'				=> 'Show events',
  	'CALENDAR_EVENTS_EXPLAIN'		=> 'If enabled, events are marked and displayed in the calendar.',
  	'CALENDAR_MONTHS'				=> 'Months to show',
@@ -272,8 +270,6 @@ $lang = array_merge($lang, array(
 	'SELECT_LOCATION'			=> 'Select location',
 
 	// menu_block
-	'DISPLAY_MENU'				=> 'Menu to show',
-	'DISPLAY_MENU_EXPLAIN'		=> 'Menu to be displayed in the block. The menu must be previously created in the correct section to be reflected here.',
  	'ICON_WIDTH'				=> 'Icon width',
  	'ICON_WIDTH_EXPLAIN'		=> 'The width of the block icons, in pixels.',
 
@@ -486,4 +482,4 @@ $lang = array_merge($lang, array(
 	'YT_VIDEO_TITLE'			=> 'Video title',
 	'YT_VIDEO_URL'				=> 'Video url',
 	'YT_VIDEO_URL_EXPLAIN'		=> 'Ex: <em>https://www.youtube.com/watch?v=NHH_v0k7Gus</em>',
-));
+]);

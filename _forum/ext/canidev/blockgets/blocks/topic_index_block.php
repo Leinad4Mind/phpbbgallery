@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Blockgets
-* @version v2.0.4 30/08/2021
-*
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Blockgets
+ * @version 2.0.6 20/09/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\blockgets\blocks;
 
@@ -13,6 +13,9 @@ class topic_index_block extends base
 {
 	static $icon = 'fa-list-alt';
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init($method = '')
 	{
 		$this->tpl_name = 'topic_index_block';
@@ -27,7 +30,7 @@ class topic_index_block extends base
 			return false;
 		}
 
-		$topic_list = $rowset = array();
+		$topic_list = $rowset = [];
 		$sql_order			= '';
 		$total_topic_count	= 0;
 		$forum_id 			= 0;
@@ -53,30 +56,30 @@ class topic_index_block extends base
 			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 		}
 		
-		$sql_array = array(
-			'SELECT'	=> 't.*, f.forum_name, f.enable_icons',
-			'FROM'		=> array(TOPICS_TABLE => 't'),
-			'LEFT_JOIN' => array(
-				array('FROM' => array(FORUMS_TABLE => 'f'), 	'ON' => 'f.forum_id = t.forum_id')
-			),
+		$sql_array = [
+			'SELECT'	=> 't.*, f.*',
+			'FROM'		=> [TOPICS_TABLE => 't'],
+			'LEFT_JOIN' => [
+				['FROM' => [FORUMS_TABLE => 'f'], 	'ON' => 'f.forum_id = t.forum_id']
+			],
 			'WHERE'	=> 't.topic_status <> ' . ITEM_MOVED . '
 				AND t.topic_visibility = ' . ITEM_APPROVED . '
 				AND ' . $this->db->sql_in_set('t.forum_id', $data['forums'])
-		);
+		];
 
 		if($this->config['load_db_lastread'])
 		{
 			$sql_array['SELECT'] .= ', tt.mark_time, ft.mark_time as f_mark_time';
 
-			$sql_array['LEFT_JOIN'][] = array(
-				'FROM'		=> array(TOPICS_TRACK_TABLE => 'tt'),
+			$sql_array['LEFT_JOIN'][] = [
+				'FROM'		=> [TOPICS_TRACK_TABLE => 'tt'],
 				'ON'		=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $this->user->data['user_id'],
-			);
+			];
 
-			$sql_array['LEFT_JOIN'][] = array(
-				'FROM'		=> array(FORUMS_TRACK_TABLE => 'ft'),
+			$sql_array['LEFT_JOIN'][] = [
+				'FROM'		=> [FORUMS_TRACK_TABLE => 'ft'],
 				'ON'		=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $this->user->data['user_id'],
-			);
+			];
 		}
 		
 		switch($data['sort_mode'])
@@ -99,26 +102,26 @@ class topic_index_block extends base
 			break;
 		}
 
-		/*
-		* Compatibility with other extensions
-		*
-		* @event core.viewforum_get_topic_data
-		* @var	array	forum_data			Array with forum data
-		* @var	array	sql_array			The SQL array to get the data of all topics
-		* @var	int		forum_id			The forum_id whose topics are being listed
-		* @var	int		topics_count		The total number of topics for display
-		* @var	int		sort_days			The oldest topic displayable in elapsed days
-		* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
-		*									Author, Post time, Replies, Subject, Views
-		* @var	string	sort_dir			Either "a" for ascending or "d" for descending
-		*/
-		$forum_data 	= array();
+		$forum_data 	= new \canidev\core\DummyArray;
 		$sort_dir 		= 'd';
 
 		$sort_days = $sort_key = '';
 		$topics_count = $total_topic_count = $forum_id = 0;
 
-		$vars = array(
+		/**
+		 * Compatibility with other extensions
+		 *
+		 * @event core.viewforum_get_topic_data
+		 * @var	array	forum_data			Array with forum data
+		 * @var	array	sql_array			The SQL array to get the data of all topics
+		 * @var	int		forum_id			The forum_id whose topics are being listed
+		 * @var	int		topics_count		The total number of topics for display
+		 * @var	int		sort_days			The oldest topic displayable in elapsed days
+		 * @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
+		 *									Author, Post time, Replies, Subject, Views
+		 * @var	string	sort_dir			Either "a" for ascending or "d" for descending
+		 */
+		$vars = [
 			'forum_data',
 			'sql_array',
 			'forum_id',
@@ -126,30 +129,30 @@ class topic_index_block extends base
 			'sort_days',
 			'sort_key',
 			'sort_dir',
-		);
+		];
 		extract($this->dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
 
-		/*
-		* @event block.topic_index_query
-		* @var array	sql_array	The SQL data
-		* @var array	data		The Block configuration
-		* @since 2.0.0
-		*/
-		$vars = array('sql_array', 'data');
+		/**
+		 * @event block.topic_index_query
+		 * @var array	sql_array	The SQL data
+		 * @var array	data		The Block configuration
+		 * @since 2.0.0
+		 */
+		$vars = ['sql_array', 'data'];
 		extract($this->dispatcher->trigger_event('block.topic_index_query', compact($vars)));
 
-		$sql_array = $this->helper->filter_query($sql_array);
+		$sql_array = \canidev\core\tools::filter_db_query($sql_array);
 		
 		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('topic');
 		$this->template->destroy_block_vars('block_pagination');
 		
 		// Count total of topics
-		$sql = $this->db->sql_build_query('SELECT', array(
+		$sql = $this->db->sql_build_query('SELECT', [
 			'SELECT'	=> 'COUNT(t.topic_id) AS topic_count',
 			'FROM'		=> $sql_array['FROM'],
 			'WHERE'		=> $sql_array['WHERE']
-		));
+		]);
 
 		$result = $this->db->sql_query($sql);
 		$total_topic_count = (int)$this->db->sql_fetchfield('topic_count');
@@ -164,26 +167,26 @@ class topic_index_block extends base
 		}
 		$this->db->sql_freeresult($result);
 
-		/*
-		* @event block.topic_index_modify_data
-		* @var	array	topic_list			Array with current topic ids
-		* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
-		* @var	array	data				Block Configuration
-		* @since 2.0.1
-		*/
-		$vars = array('topic_list', 'rowset', 'data');
+		/**
+		 * @event block.topic_index_modify_data
+		 * @var	array	topic_list			Array with current topic ids
+		 * @var	array	rowset				Array with topics data (in topic_id => topic_data format)
+		 * @var	array	data				Block Configuration
+		 * @since 2.0.1
+		 */
+		$vars = ['topic_list', 'rowset', 'data'];
 		extract($this->dispatcher->trigger_event('block.topic_index_modify_data', compact($vars)));
 
-		/*
-		* Compatibility with other extensions
-		*
-		* @event core.viewforum_modify_topics_data
-		* @var	array	topic_list			Array with current viewforum page topic ids
-		* @var	array	rowset				Array with topics data (in topic_id => topic_data format)
-		* @var	int		total_topic_count	Forum's total topic count
-		* @var	int		forum_id			Forum identifier
-		*/
-		$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
+		/**
+		 * Compatibility with other extensions
+		 *
+		 * @event core.viewforum_modify_topics_data
+		 * @var	array	topic_list			Array with current viewforum page topic ids
+		 * @var	array	rowset				Array with topics data (in topic_id => topic_data format)
+		 * @var	int		total_topic_count	Forum's total topic count
+		 * @var	int		forum_id			Forum identifier
+		 */
+		$vars = ['topic_list', 'rowset', 'total_topic_count', 'forum_id'];
 		extract($this->dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 		$icons 					= $this->container->get('cache')->obtain_icons();
@@ -206,13 +209,12 @@ class topic_index_block extends base
 
 			$folder_img = $folder_alt = $topic_type = '';
 			\topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
-
-			$topic_row = array(
+			
+			$topic_row = [
 				'FORUM_NAME'			=> $row['forum_name'],
 				'TOPIC_ID'				=> $row['topic_id'],
 				'TOPIC_TITLE'			=> $topic_title,
 				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
-				'TITLE_TRUNCATED' 		=> \canidev\core\tools::html_truncate($topic_title, $data['title_limit'], '...'),
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 				'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
@@ -222,7 +224,7 @@ class topic_index_block extends base
 				'VIEWS'					=> $row['topic_views'],
 				'TOPIC_ICON_IMG'		=> ($row['enable_icons'] && !empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
 				'TOPIC_IMG_STYLE'		=> $folder_img,
-				'TOPIC_FOLDER_IMG_ALT'	=> $this->lang->lang($folder_alt),
+				'TOPIC_FOLDER_IMG_ALT'	=> $this->language->lang($folder_alt),
 				'TOPIC_TYPE'			=> $topic_type,
 
 				'S_TOPIC_REPORTED'	=> (!empty($row['topic_reported']) && $this->auth->acl_get('m_report', $row['forum_id'])),
@@ -232,18 +234,19 @@ class topic_index_block extends base
 				'S_UNREAD_TOPIC'	=> $unread_topic,
 
 				'U_LAST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
+				'U_NEWEST_POST'		=> $this->helper->url('viewtopic', 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'] . '&amp;view=unread#unread'),
 				'U_VIEW_FORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id']),
 				'U_VIEW_TOPIC'		=> $this->helper->url('viewtopic', $view_topic_url_params),
-			);
+			];
 
-			/*
-			* Compatibility with other extensions
-			*
-			* @event core.viewforum_modify_topicrow
-			* @var	array	row					Array with topic data
-			* @var	array	topic_row			Template array with topic data
-			*/
-			$vars = array('row', 'topic_row');
+			/**
+			 * Compatibility with other extensions
+			 *
+			 * @event core.viewforum_modify_topicrow
+			 * @var	array	row					Array with topic data
+			 * @var	array	topic_row			Template array with topic data
+			 */
+			$vars = ['row', 'topic_row'];
 			extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 			$this->template->assign_block_vars('topic', $topic_row);
@@ -251,7 +254,7 @@ class topic_index_block extends base
 
 		if($data['char_select'])
 		{
-			$first_characters = array('' => $this->lang->lang('CHAR_ALL'));
+			$first_characters = ['' => $this->language->lang('CHAR_ALL')];
 
 			for($i = 97; $i < 123; $i++)
 			{
@@ -260,11 +263,11 @@ class topic_index_block extends base
 
 			foreach($first_characters as $char => $desc)
 			{
-				$this->template->assign_block_vars('first_char', array(
+				$this->template->assign_block_vars('first_char', [
 					'DESC'			=> $desc,
 					'VALUE'			=> $char,
 					'S_SELECTED'	=> ($first_char == $char) ? true : false,
-				));
+				]);
 			}
 		}
 		
@@ -275,44 +278,49 @@ class topic_index_block extends base
 		
 		$pagination->generate_template_pagination('#', 'block_pagination', 'start', $total_topic_count, $data['topics_per_page'], $start);
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_CHAR_SELECT'			=> ($data['sort_mode'] == 'topic_title' && $data['char_select']) ? true : false,
 			'S_FIRST_CHAR'			=> $first_char,
 			'SHOW_TOPIC_PARENT'		=> $data['show_parent'],
 			'TOPIC_DESIGN' 			=> $data['topic_design'],
 			
-			'U_ACTION'				=> $this->helper->current_url(array(), false, array('start')),
-		));
+			'U_ACTION'				=> $this->helper->current_url([], false, ['start']),
+		]);
 
 		unset($data);
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
 		if($mode == 'validate' && $submit)
 		{
-			$new['forums'] = $this->request->variable('forums', array(0));
+			$new['forums'] = $this->request->variable('forums', [0]);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_config()
 	{
-		$sort_options = array(
+		$sort_options = [
 			'topic_title'			=> 'TOPIC_TITLE',
 			'topic_time'			=> 'TOPIC_TIME',
 			'topic_last_post_time'	=> 'LAST_POST_TIME',
-		);
+		];
 
-		$this->display_vars = array(
-			'forums'			=> array('lang' => 'FORUMS',				'type' => 'custom',			'method' => 'helper',		'params' => array('forums_select', 'forums', '{CONFIG_VALUE}', 1),	'default' => array()),
-			'topics_per_page'	=> array('lang' => 'TINDEX_PER_PAGE',		'validate' => 'int:0:1000',	'type' => 'number:0:1000',	'default' => 25),
-			'sort_mode'			=> array('lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' => array('make_select', $sort_options, false, '{CONFIG_VALUE}'),	'default' => 'topic_title'),
-			'title_limit'		=> array('lang' => 'TITLE_LIMIT',			'validate' => 'int:0:255',	'type' => 'number:0:255',	'default' => 50),
-			'char_select'		=> array('lang' => 'TINDEX_CHAR_SELECT',	'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
-			'topic_design'		=> array('lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => array('block_design_select', '{CONFIG_VALUE}')),
-			'show_parent'		=> array('lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-		);
+		$this->display_vars = [
+			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'topics_per_page'	=> ['lang' => 'TINDEX_PER_PAGE',		'validate' => 'int:0:1000',	'type' => 'number:0:1000',	'default' => 25],
+			'sort_mode'			=> ['lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' => ['make_select', $sort_options, false, '{CONFIG_VALUE}'],	'default' => 'topic_title'],
+			'char_select'		=> ['lang' => 'TINDEX_CHAR_SELECT',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],
+			'topic_design'		=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => ['block_design_select', '{CONFIG_VALUE}']],
+			'show_parent'		=> ['lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'],
+		];
 
 		return true;
 	}
