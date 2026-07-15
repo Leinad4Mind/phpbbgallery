@@ -25,7 +25,7 @@ class placeholder_listener implements EventSubscriberInterface
 	}
 
 	protected $root_path;
-	private $lqip = '';
+	private $lqip;
 	public function __construct($root_path)
 	{
 		$this->root_path = $root_path;
@@ -78,7 +78,7 @@ class placeholder_listener implements EventSubscriberInterface
 				imagecopyresized($thumb, $img, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
 
 				ob_start();
-				imagepng($thumb, null, 9);
+					imagepng($thumb, null, 9);
 				$image = ob_get_clean();
 				$this->lqip = $width . ',' . $height . ',data:image/png;base64,' . base64_encode($image);
 			}
@@ -91,12 +91,9 @@ class placeholder_listener implements EventSubscriberInterface
 	}
 
 	public function assign_attachment_lqip($event)
-    {
-        $block_array = $event['block_array'];
-        if (!empty($block_array['U_INLINE_LINK']))
-        {
-                $block_array['U_INLINE_LINK'] .= '" data-lqip="' . $event['attachment']['lqip'];
-                $event['block_array'] = $block_array;
-        }
-    }
+	{
+		$block_array = $event['block_array'];
+		$block_array['U_INLINE_LINK'] .= '" data-lqip="' . $event['attachment']['lqip'];
+		$event['block_array'] = $block_array;
+	}
 }
