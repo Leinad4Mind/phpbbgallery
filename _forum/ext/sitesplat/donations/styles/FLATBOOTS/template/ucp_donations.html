@@ -1,0 +1,48 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<fieldset class="framed-ucp">
+<legend>{L_DONATIONS}</legend>
+	<p>{L_UCP_DONATIONS_EXPLAIN}</p>
+    <div class="panel panel-forum">
+	    <div class="panel-heading">
+		 {L_DONATIONS}
+		</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_DONATIONS_TRANSACTION}</th>
+				<th data-hide="phone">{L_DONATIONS_SENDER}</th>
+				<th data-hide="phone">{L_DONATIONS_DATE}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN donations -->
+			<tr>
+				<td>
+				 <span class="bbdonations-transaction {donations.PAYMENT_TYPE}"></span> {donations.TXN_ID}<!-- IF donations.REFERENCE --> <span <!-- IF donations.STATUS -->style="color:red"<!-- ENDIF -->>{donations.REFERENCE}</span><!-- ENDIF -->
+				</td>
+				<td>{donations.SENDER}</td>
+				<td>{donations.TIME}</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr><td colspan="3">{L_DONATION_ACTIVITY_UCP_EMPTY}</td></tr>
+		<!-- END donations -->
+		</tbody>
+	</table>
+	</div>
+	</div>
+    <!-- IF .pagination or TOTAL_POSTS -->
+		<div class="pull-right">	 
+		 <ul class="pagination pagination-sm hidden-xs">
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		 </ul>
+	   </div>
+	<!-- ENDIF -->
+</fieldset>		
+</div>
+<!-- INCLUDE ucp_footer.html -->

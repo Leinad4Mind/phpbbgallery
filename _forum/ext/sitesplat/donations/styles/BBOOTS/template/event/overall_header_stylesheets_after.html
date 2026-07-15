@@ -1,0 +1,12 @@
+<!-- IF (SCRIPT_NAME == "ucp" or SCRIPT_NAME == "app/donation/index.html") -->
+{% INCLUDECSS '@sitesplat_donations/donation.css' %}
+<!-- ENDIF -->
+<!-- IF SCRIPT_NAME == "app/donation/index.html" -->
+<style>
+<!-- BEGIN amounts -->
+	#donationicons > span:nth-of-type({amounts.KEY})::before {
+	  content: '{amounts.SYMBOL}';
+	}
+<!-- END amounts -->
+</style>
+<!-- ENDIF -->

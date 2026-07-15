@@ -1,0 +1,336 @@
+<?php
+/**
+*
+* @package BBdonations
+* @copyright (c) 2016 SiteSplat All rights reserved
+* @license Proprietary
+*/
+
+namespace sitesplat\donations\migrations\v31x;
+use phpbb\db\migration\container_aware_migration;
+
+/**
+ * Migration stage 2: Initial data
+ */
+class m3_initial_data extends container_aware_migration
+{
+	/**
+	 * Assign migration file dependencies for this migration
+	 *
+	 * @return array Array of migration files
+	 * @static
+	 * @access public
+	 */
+	static public function depends_on()
+	{
+		return array('\sitesplat\donations\migrations\v31x\m1_initial_schema');
+	}
+
+	/**
+	 * Add or update data in the database
+	 *
+	 * @return array Array of table data
+	 * @access public
+	 */
+	public function update_data()
+	{
+		return array(
+			array('custom', array(array($this, 'add_country_data'))),
+		);
+	}
+
+	/**
+	 * Add countries to the database
+	 *
+	 * @return null
+	 * @access public
+	 */
+	public function add_country_data()
+	{
+		// Load the insert buffer class to perform a buffered multi insert
+		$insert_buffer = new \phpbb\db\sql_insert_buffer($this->db, $this->table_prefix . 'countries');
+
+		// Countries array
+		$countries = array(
+			1 => array('code' => 'AED', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_United_Arab_Emirates.svg/23px-Flag_of_the_United_Arab_Emirates.svg.png', 'country' => 'United Arab Emirates', 'country_code' => NULL),
+			2 => array('code' => 'AFN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Afghanistan.svg/23px-Flag_of_Afghanistan.svg.png', 'country' => 'Afghanistan', 'country_code' => NULL),
+			3 => array('code' => 'ALL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Flag_of_Albania.svg/21px-Flag_of_Albania.svg.png', 'ountry' => 'Albania', 'country_code' => NULL),
+			4 => array('code' => 'AMD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Flag_of_Armenia.svg/23px-Flag_of_Armenia.svg.png', 'country' => 'Armenia', 'country_code' => NULL),
+			5 => array('code' => 'ANG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Flag_of_Cura%C3%A7ao.svg/23px-Flag_of_Cura%C3%A7ao.svg.png', 'country' => 'Curaçao ', 'country_code' => 'CW'),
+			6 => array('code' => 'ANG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Flag_of_Sint_Maarten.svg/23px-Flag_of_Sint_Maarten.svg.png', 'country' => 'Sint Maarten', 'country_code' => 'SX'),
+			7 => array('code' => 'AOA', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Angola.svg/23px-Flag_of_Angola.svg.png', 'country' => 'Angola', 'country_code' => NULL),
+			8 => array('code' => 'ARS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/23px-Flag_of_Argentina.svg.png', 'country' => 'Argentina', 'country_code' => NULL),
+			9 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Flag_of_Nauru.svg/23px-Flag_of_Nauru.svg.png', 'country' => 'Nauru', 'country_code' => 'NR'),
+			10 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Flag_of_Tuvalu.svg/23px-Flag_of_Tuvalu.svg.png', 'country' => 'Tuvalu', 'country_code' => 'TV'),
+			11 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Norfolk_Island.svg/23px-Flag_of_Norfolk_Island.svg.png', 'country' => 'Norfolk Island', 'country_code' => 'NF'),
+			12 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Flag_of_Christmas_Island.svg/23px-Flag_of_Christmas_Island.svg.png', 'country' => 'Christmas Island', 'country_code' => 'CX'),
+			13 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Flag_of_the_Cocos_%28Keeling%29_Islands.svg/23px-Flag_of_the_Cocos_%28Keeling%29_Islands.svg.png', 'country' => 'Cocos Keeling) Islands', 'country_code' => 'CC'),
+			14 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Flag_of_Kiribati.svg/23px-Flag_of_Kiribati.svg.png', 'country' => 'Kiribati', 'country_code' => 'KI'),
+			15 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Flag_of_Australia.svg/23px-Flag_of_Australia.svg.png', 'country' => 'Australia', 'country_code' => NULL),
+			16 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Flag_of_Australia.svg/23px-Flag_of_Australia.svg.png', 'country' => 'Australian Antarctic Territory', 'country_code' => NULL),
+			17 => array('code' => 'AUD', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Flag_of_Australia.svg/23px-Flag_of_Australia.svg.png', 'country' => 'Heard and McDonald Islands', 'country_code' => 'HM'),
+			18 => array('code' => 'AWG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Aruba.svg/23px-Flag_of_Aruba.svg.png', 'country' => 'Aruba', 'country_code' => NULL),
+			19 => array('code' => 'AZN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png', 'country' => 'Azerbaijan', 'country_code' => NULL),
+			20 => array('code' => 'BAM', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/23px-Flag_of_Bosnia_and_Herzegovina.svg.png', 'country' => 'Bosnia and Herzegovina', 'country_code' => NULL),
+			21 => array('code' => 'BBD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Barbados.svg/23px-Flag_of_Barbados.svg.png', 'country' => 'Barbados', 'country_code' => 'BB'),
+			22 => array('code' => 'BDT', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/23px-Flag_of_Bangladesh.svg.png', 'country' => 'Bangladesh', 'country_code' => NULL),
+			23 => array('code' => 'BGN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/23px-Flag_of_Bulgaria.svg.png', 'country' => 'Bulgaria', 'country_code' => NULL),
+			24 => array('code' => 'BHD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Bahrain.svg/23px-Flag_of_Bahrain.svg.png', 'country' => 'Bahrain', 'country_code' => NULL),
+			25 => array('code' => 'BIF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Flag_of_Burundi.svg/23px-Flag_of_Burundi.svg.png', 'country' => 'Burundi', 'country_code' => NULL),
+			26 => array('code' => 'BMD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bermuda.svg/23px-Flag_of_Bermuda.svg.png', 'country' => 'Bermuda', 'BM'),
+			27 => array('code' => 'BND', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Brunei.svg/23px-Flag_of_Brunei.svg.png', 'country' => 'Brunei', 'BN'),
+			28 => array('code' => 'BND', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/23px-Flag_of_Singapore.svg.png', 'country' => 'Singapore (SG)', 'country_code' => NULL),
+			29 => array('code' => 'BOB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Bolivia.svg/22px-Flag_of_Bolivia.svg.png', 'country' => 'Bolivia', 'country_code' => NULL),
+			30 => array('code' => 'BOV', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Bolivia.svg/22px-Flag_of_Bolivia.svg.png', 'country' => 'Bolivia', 'country_code' => NULL),
+			31 => array('code' => 'BRL', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/22px-Flag_of_Brazil.svg.png', 'country' => 'Brazil', 'country_code' => NULL),
+			32 => array('code' => 'BSD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Flag_of_the_Bahamas.svg/23px-Flag_of_the_Bahamas.svg.png', 'country' => 'Bahamas', 'country_code' => NULL),
+			33 => array('code' => 'BTN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Flag_of_Bhutan.svg/23px-Flag_of_Bhutan.svg.png', 'country' => 'Bhutan', 'country_code' => NULL),
+			34 => array('code' => 'BWP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_Botswana.svg/23px-Flag_of_Botswana.svg.png', 'country' => 'Botswana', 'country_code' => NULL),
+			35 => array('code' => 'BYR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Flag_of_Belarus.svg/23px-Flag_of_Belarus.svg.png', 'country' => 'Belarus', 'country_code' => NULL),
+			36 => array('code' => 'BZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Flag_of_Belize.svg/23px-Flag_of_Belize.svg.png', 'country' => 'Belize', 'country_code' => NULL),
+			37 => array('code' => 'CAD', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Flag_of_Canada.svg/23px-Flag_of_Canada.svg.png', 'country' => 'Canada', 'country_code' => NULL),
+			38 => array('code' => 'CDF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/20px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png', 'country' => 'Democratic Republic of Congo', 'country_code' => NULL),
+			39 => array('code' => 'CHE', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/16px-Flag_of_Switzerland.svg.png', 'country' => 'Switzerland', 'country_code' => NULL),
+			40 => array('code' => 'CHF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/16px-Flag_of_Switzerland.svg.png', 'country' => 'Switzerland', 'country_code' => NULL),
+			41 => array('code' => 'CHF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Liechtenstein.svg/23px-Flag_of_Liechtenstein.svg.png', 'country' => 'Liechtenstein', 'LI'),
+			42 => array('code' => 'CHW', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/16px-Flag_of_Switzerland.svg.png', 'country' => 'Switzerland', 'country_code' => NULL),
+			43 => array('code' => 'CLF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/23px-Flag_of_Chile.svg.png', 'country' => 'Chile', 'country_code' => NULL),
+			44 => array('code' => 'CLP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/23px-Flag_of_Chile.svg.png', 'country' => 'Chile', 'country_code' => NULL),
+			45 => array('code' => 'CNY', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png', 'country' => 'China', 'country_code' => NULL),
+			46 => array('code' => 'COP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/23px-Flag_of_Colombia.svg.png', 'country' => 'Colombia', 'country_code' => NULL),
+			47 => array('code' => 'COU', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/23px-Flag_of_Colombia.svg.png', 'country' => 'Colombia', 'country_code' => NULL),
+			48 => array('code' => 'CRC', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Costa_Rica.svg/23px-Flag_of_Costa_Rica.svg.png', 'country' => 'Costa Rica', 'country_code' => NULL),
+			49 => array('code' => 'CUC', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Flag_of_Cuba.svg/23px-Flag_of_Cuba.svg.png', 'country' => 'Cuba', 'country_code' => NULL),
+			50 => array('code' => 'CUP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Flag_of_Cuba.svg/23px-Flag_of_Cuba.svg.png', 'country' => 'Cuba', 'country_code' => NULL),
+			51 => array('code' => 'CVE', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Flag_of_Cape_Verde.svg/23px-Flag_of_Cape_Verde.svg.png', 'country' => 'Cape Verde', 'country_code' => NULL),
+			52 => array('code' => 'CZK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_Czech_Republic.svg/23px-Flag_of_the_Czech_Republic.svg.png', 'country' => 'Czech Republic', 'country_code' => NULL),
+			53 => array('code' => 'DJF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_Djibouti.svg/23px-Flag_of_Djibouti.svg.png', 'country' => 'Djibouti', 'country_code' => NULL),
+			54 => array('code' => 'DKK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/20px-Flag_of_Denmark.svg.png', 'country' => 'Denmark', 'country_code' => NULL),
+			55 => array('code' => 'DKK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Flag_of_the_Faroe_Islands.svg/21px-Flag_of_the_Faroe_Islands.svg.png', 'country' => 'Faroe Islands', 'country_code' => 'FO'),
+			56 => array('code' => 'DKK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_Greenland.svg/23px-Flag_of_Greenland.svg.png', 'country' => 'Greenland', 'country_code' => 'GL'),
+			57 => array('code' => 'DOP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/23px-Flag_of_the_Dominican_Republic.svg.png', 'country' => 'Dominican Republic', 'country_code' => NULL),
+			58 => array('code' => 'DZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Flag_of_Algeria.svg/23px-Flag_of_Algeria.svg.png', 'country' => 'Algeria', 'country_code' => NULL),
+			59 => array('code' => 'EGP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/23px-Flag_of_Egypt.svg.png', 'country' => 'Egypt', 'country_code' => NULL),
+			60 => array('code' => 'ERN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Flag_of_Eritrea.svg/23px-Flag_of_Eritrea.svg.png', 'country' => 'Eritrea', 'country_code' => NULL),
+			61 => array('code' => 'ETB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png', 'country' => 'Ethiopia', 'country_code' => NULL),
+			62 => array('code' => 'EUR', ',http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Reunion RE', 'country_code' => NULL),
+			63 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_the_Vatican_City.svg/16px-Flag_of_the_Vatican_City.svg.png', 'country' => 'Vatican City', 'country_code' => 'VA'),
+			64 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Flag_of_Monaco.svg/19px-Flag_of_Monaco.svg.png', 'country' => 'Monaco', 'country_code' => 'MC'),
+			65 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Flag_of_San_Marino.svg/20px-Flag_of_San_Marino.svg.png', 'country' => 'San Marino', 'country_code' => 'SM'),
+			66 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Flag_of_Kosovo.svg/21px-Flag_of_Kosovo.svg.png', 'country' => 'Kosovo', 'country_code' => NULL),
+			67 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Andorra.svg/22px-Flag_of_Andorra.svg.png', 'country' => 'Andorra', 'country_code' => 'AD'),
+			68 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Flag_of_Ireland.svg/23px-Flag_of_Ireland.svg.png', 'country' => 'Ireland', 'country_code' => 'IE'),
+			69 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Montenegro.svg/23px-Flag_of_Montenegro.svg.png', 'country' => 'Montenegro', 'country_code' => 'ME'),
+			70 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Latvia.svg/23px-Flag_of_Latvia.svg.png', 'country' => 'Latvia', 'country_code' => 'LV'),
+			71 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Flag_of_Slovenia.svg/23px-Flag_of_Slovenia.svg.png', 'country' => 'Slovenia', 'country_code' => 'SI'),
+			72 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Lithuania.svg/23px-Flag_of_Lithuania.svg.png', 'country' => 'Lithuania', 'country_code' => 'LT'),
+			73 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Finland.svg/23px-Flag_of_Finland.svg.png', 'country' => 'Finland FI)', 'country_code' => NULL),
+			74 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Flag_of_Luxembourg.svg/23px-Flag_of_Luxembourg.svg.png', 'country' => 'Luxembourg', 'country_code' => 'LU'),
+			75 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png', 'country' => 'Germany', 'country_code' => 'DE'),
+			76 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/23px-Flag_of_the_Netherlands.svg.png', 'country' => 'Netherlands', 'country_code' => 'NL'),
+			77 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/23px-Flag_of_Austria.svg.png', 'country' => 'Austria', 'country_code' => 'AT'),
+			78 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/23px-Flag_of_Greece.svg.png', 'country' => 'Greece', 'country_code' => 'GR'),
+			79 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/23px-Flag_of_Portugal.svg.png', 'country' => 'Portugal', 'country_code' => 'PT'),
+			80 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Malta.svg/23px-Flag_of_Malta.svg.png', 'country' => 'Malta', 'country_code' => 'MT'),
+			81 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/23px-Flag_of_Estonia.svg.png', 'country' => 'Estonia', 'country_code' => 'EE'),
+			82 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Belgium_%28civil%29.svg/23px-Flag_of_Belgium_%28civil%29.svg.png', 'country' => 'Belgium', 'country_code' => 'BE'),
+			83 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Cyprus.svg/23px-Flag_of_Cyprus.svg.png', 'country' => 'Cyprus', 'country_code' => 'CY'),
+			84 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png', 'country' => 'Slovakia', 'country_code' => 'SK'),
+			85 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/23px-Flag_of_Italy.svg.png', 'country' => 'Italy', 'country_code' => 'IT'),
+			86 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/23px-Flag_of_Spain.svg.png', 'country' => 'Spain', 'country_code' => 'ES'),
+			87 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'France', 'country_code' => 'FR'),
+			88 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Guadeloupe', 'country_code' => 'GP'),
+			89 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Martinique', 'country_code' => 'MQ'),
+			90 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Mayotte', 'country_code' => 'YT'),
+			91 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Saint Barthélemy', 'country_code' => 'BL'),
+			92 => array('code' => 'EUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Saint Pierre and Miquelon', 'country_code' => 'PM'),
+			93 => array('code' => 'FJD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Fiji.svg/23px-Flag_of_Fiji.svg.png', 'country' => 'Fiji', 'country_code' => NULL),
+			94 => array('code' => 'FKP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_Falkland_Islands.svg/23px-Flag_of_the_Falkland_Islands.svg.png', 'country' => 'Falkland Islands', 'country_code' => NULL),
+			95 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Flag_of_the_British_Indian_Ocean_Territory.svg/23px-Flag_of_the_British_Indian_Ocean_Territory.svg.png', 'country' => 'British Indian Ocean Territory', 'country_code' => 'IO'),
+			96 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Tristan_da_Cunha.svg/23px-Flag_of_Tristan_da_Cunha.svg.png', 'country' => 'Tristan da Cunha', 'country_code' => 'SH-TA'),
+			97 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_the_Isle_of_Man.svg/23px-Flag_of_the_Isle_of_Man.svg.png', 'country' => 'Isle of Man', 'country_code' => 'IM'),
+			98 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Flag_of_South_Georgia_and_the_South_Sandwich_Islands.svg/23px-Flag_of_South_Georgia_and_the_South_Sandwich_Islands.svg.png', 'country' => 'South Georgia, the South Sandwich Islands', 'country_code' => 'GS'),
+			99 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Flag_of_the_British_Antarctic_Territory.svg/23px-Flag_of_the_British_Antarctic_Territory.svg.png', 'country' => 'British Antarctic Territory', 'country_code' => NULL),
+			100 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/23px-Flag_of_the_United_Kingdom.svg.png', 'country' => 'United Kingdom', 'country_code' => NULL),
+			101 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Flag_of_Jersey.svg/23px-Flag_of_Jersey.svg.png', 'country' => 'Jersey', 'country_code' => 'JE'),
+			102 => array('code' => 'GBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_Guernsey.svg/23px-Flag_of_Guernsey.svg.png', 'country' => 'Guernsey', 'country_code' => 'GG'),
+			103 => array('code' => 'GEL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_South_Ossetia.svg/23px-Flag_of_South_Ossetia.svg.png', 'country' => 'South Ossetia', 'country_code' => NULL),
+			104 => array('code' => 'GEL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_Georgia.svg/23px-Flag_of_Georgia.svg.png', 'country' => 'Georgia', 'country_code' => 'GE-AB'),
+			105 => array('code' => 'GHS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/23px-Flag_of_Ghana.svg.png', 'country' => 'Ghana', 'country_code' => NULL),
+			106 => array('code' => 'GIP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Flag_of_Gibraltar.svg/23px-Flag_of_Gibraltar.svg.png', 'country' => 'Gibraltar', 'country_code' => NULL),
+			107 => array('code' => 'GMD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Flag_of_The_Gambia.svg/23px-Flag_of_The_Gambia.svg.png', 'country' => 'Gambia', 'country_code' => NULL),
+			108 => array('code' => 'GNF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Flag_of_Guinea.svg/23px-Flag_of_Guinea.svg.png', 'country' => 'Guinea', 'country_code' => NULL),
+			109 => array('code' => 'GTQ', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Flag_of_Guatemala.svg/23px-Flag_of_Guatemala.svg.png', 'country' => 'Guatemala', 'country_code' => NULL),
+			110 => array('code' => 'GYD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_Guyana.svg/23px-Flag_of_Guyana.svg.png', 'country' => 'Guyana', 'country_code' => NULL),
+			111 => array('code' => 'HKD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/23px-Flag_of_Hong_Kong.svg.png', 'country' => 'Hong Kong', 'country_code' => NULL),
+			112 => array('code' => 'HKD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Flag_of_Macau.svg/23px-Flag_of_Macau.svg.png', 'country' => 'Macao', 'country_code' => 'MO'),
+			113 => array('code' => 'HNL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Flag_of_Honduras.svg/23px-Flag_of_Honduras.svg.png', 'country' => 'Honduras', 'country_code' => NULL),
+			114 => array('code' => 'HRK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Flag_of_Croatia.svg/23px-Flag_of_Croatia.svg.png', 'country' => 'Croatia', 'country_code' => NULL),
+			115 => array('code' => 'HTG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/23px-Flag_of_Haiti.svg.png', 'country' => 'Haiti', 'country_code' => 'HT'),
+			116 => array('code' => 'HUF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Flag_of_Hungary.svg/23px-Flag_of_Hungary.svg.png', 'country' => 'Hungary', 'country_code' => NULL),
+			117 => array('code' => 'IDR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/23px-Flag_of_Indonesia.svg.png', 'country' => 'Indonesia', 'country_code' => NULL),
+			118 => array('code' => 'ILS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/21px-Flag_of_Israel.svg.png', 'country' => 'Israel', 'country_code' => NULL),
+			119 => array('code' => 'ILS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/23px-Flag_of_Palestine.svg.png', 'country' => 'State of Palestine', 'country_code' => 'PS'),
+			120 => array('code' => 'INR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/16px-Flag_of_Nepal.svg.png', 'country' => 'Nepal', 'country_code' => NULL),
+			121 => array('code' => 'INR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flag_of_Zimbabwe.svg/23px-Flag_of_Zimbabwe.svg.png', 'country' => 'Zimbabwe', 'country_code' => 'ZW'),
+			122 => array('code' => 'INR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Flag_of_Bhutan.svg/23px-Flag_of_Bhutan.svg.png', 'country' => 'Bhutan', 'country_code' => NULL),
+			123 => array('code' => 'INR', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/23px-Flag_of_India.svg.png', 'country' => 'India', 'country_code' => NULL),
+			124 => array('code' => 'IQD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/23px-Flag_of_Iraq.svg.png', 'country' => 'Iraq', 'country_code' => NULL),
+			125 => array('code' => 'IRR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/23px-Flag_of_Iran.svg.png', 'country' => 'Iran', 'country_code' => NULL),
+			126 => array('code' => 'ISK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Iceland.svg/21px-Flag_of_Iceland.svg.png', 'country' => 'Iceland', 'country_code' => NULL),
+			127 => array('code' => 'JMD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/23px-Flag_of_Jamaica.svg.png', 'country' => 'Jamaica', 'country_code' => NULL),
+			128 => array('code' => 'JOD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Flag_of_Jordan.svg/23px-Flag_of_Jordan.svg.png', 'country' => 'Jordan', 'country_code' => NULL),
+			129 => array('code' => 'JPY', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/9/9e/Flag_of_Japan.svg/23px-Flag_of_Japan.svg.png', 'country' => 'Japan', 'country_code' => NULL),
+			130 => array('code' => 'KES', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Kenya.svg/23px-Flag_of_Kenya.svg.png', 'country' => 'Kenya', 'country_code' => NULL),
+			131 => array('code' => 'KGS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_Kyrgyzstan.svg/23px-Flag_of_Kyrgyzstan.svg.png', 'country' => 'Kyrgyzstan', 'country_code' => NULL),
+			132 => array('code' => 'KHR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_Cambodia.svg/23px-Flag_of_Cambodia.svg.png', 'country' => 'Cambodia', 'country_code' => NULL),
+			133 => array('code' => 'KMF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Flag_of_the_Comoros.svg/23px-Flag_of_the_Comoros.svg.png', 'country' => 'Comoros', 'country_code' => NULL),
+			134 => array('code' => 'KPW', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Flag_of_North_Korea.svg/23px-Flag_of_North_Korea.svg.png', 'country' => 'North Korea', 'country_code' => NULL),
+			135 => array('code' => 'KRW', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/23px-Flag_of_South_Korea.svg.png', 'country' => 'South Korea', 'country_code' => NULL),
+			136 => array('code' => 'KWD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Flag_of_Kuwait.svg/23px-Flag_of_Kuwait.svg.png', 'country' => 'Kuwait', 'country_code' => NULL),
+			137 => array('code' => 'KYD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_the_Cayman_Islands.svg/23px-Flag_of_the_Cayman_Islands.svg.png', 'country' => 'Cayman Islands', 'country_code' => NULL),
+			138 => array('code' => 'KZT', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Flag_of_Kazakhstan.svg/23px-Flag_of_Kazakhstan.svg.png', 'country' => 'Kazakhstan', 'country_code' => NULL),
+			139 => array('code' => 'LAK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Laos.svg/23px-Flag_of_Laos.svg.png', 'country' => 'Laos', 'country_code' => NULL),
+			140 => array('code' => 'LBP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Flag_of_Lebanon.svg/23px-Flag_of_Lebanon.svg.png', 'country' => 'Lebanon', 'country_code' => NULL),
+			141 => array('code' => 'LKR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/23px-Flag_of_Sri_Lanka.svg.png', 'country' => 'Sri Lanka', 'country_code' => NULL),
+			142 => array('code' => 'LRD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Flag_of_Liberia.svg/23px-Flag_of_Liberia.svg.png', 'country' => 'Liberia', 'country_code' => NULL),
+			143 => array('code' => 'LSL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Flag_of_Lesotho.svg/23px-Flag_of_Lesotho.svg.png', 'country' => 'Lesotho', 'country_code' => NULL),
+			144 => array('code' => 'LYD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Libya.svg/23px-Flag_of_Libya.svg.png', 'country' => 'Libya', 'country_code' => NULL),
+			145 => array('code' => 'MAD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/23px-Flag_of_Morocco.svg.png', 'country' => 'Morocco', 'country_code' => NULL),
+			146 => array('code' =>  'MDL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/23px-Flag_of_Moldova.svg.png', 'country' => 'Moldova', 'country_code' => NULL),
+			147 => array('code' =>  'MGA', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Madagascar.svg/23px-Flag_of_Madagascar.svg.png', 'country' => 'Madagascar', 'country_code' => NULL),
+			148 => array('code' =>  'MKD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Flag_of_Macedonia.svg/23px-Flag_of_Macedonia.svg.png', 'country' => 'Macedonia', 'country_code' => NULL),
+			149 => array('code' =>  'MMK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Flag_of_Myanmar.svg/23px-Flag_of_Myanmar.svg.png', 'country' => 'Myanmar', 'country_code' => NULL),
+			150 => array('code' =>  'MNT', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Mongolia.svg/23px-Flag_of_Mongolia.svg.png', 'country' => 'Mongolia', 'country_code' => NULL),
+			152 => array('code' => 'MRO', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Flag_of_Mauritania.svg/23px-Flag_of_Mauritania.svg.png', 'country' => 'Mauritania', 'country_code' => NULL),
+			153 => array('code' => 'MUR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Flag_of_Mauritius.svg/23px-Flag_of_Mauritius.svg.png', 'country' => 'Mauritius', 'country_code' => NULL),
+			154 => array('code' => 'MVR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_Maldives.svg/23px-Flag_of_Maldives.svg.png', 'country' => 'Maldives', 'country_code' => NULL),
+			155 => array('code' => 'MWK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Flag_of_Malawi.svg/23px-Flag_of_Malawi.svg.png', 'country' => 'Malawi', 'country_code' => NULL),
+			156 => array('code' =>  'MXN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/23px-Flag_of_Mexico.svg.png', 'country' => 'Mexico', 'country_code' => NULL),
+			157 => array('code' =>  'MXV', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/23px-Flag_of_Mexico.svg.png', 'country' => 'Mexico', 'country_code' => NULL),
+			158 => array('code' =>  'MYR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png', 'country' => 'Malaysia', 'country_code' => NULL),
+			159 => array('code' =>  'MZN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_Mozambique.svg/23px-Flag_of_Mozambique.svg.png', 'country' => 'Mozambique', 'country_code' => NULL),
+			160 => array('code' =>  'NAD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Namibia.svg/23px-Flag_of_Namibia.svg.png', 'country' => 'Namibia', 'country_code' => NULL),
+			161 => array('code' => 'NGN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Flag_of_Nigeria.svg/23px-Flag_of_Nigeria.svg.png', 'country' => 'Nigeria', 'country_code' => NULL),
+			162 => array('code' => 'NIO', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Nicaragua.svg/23px-Flag_of_Nicaragua.svg.png', 'country' => 'Nicaragua', 'country_code' => NULL),
+			163 => array('code' => 'NOK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png', 'country' => 'Queen Maud Land', 'country_code' => NULL),
+			164 => array('code' => 'NOK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png', 'country' => 'Bouvet Island', 'country_code' => 'BV'),
+			165 => array('code' => 'NOK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png', 'country' => 'Norway', 'country_code' => NULL),
+			166 => array('code' =>  'NOK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png', 'country' => 'Peter I Island', 'country_code' => NULL),
+			167 => array('code' =>  'NOK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png', 'country' => 'Svalbard', 'country_code' => 'SJ'),
+			168 => array('code' =>  'NPR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/16px-Flag_of_Nepal.svg.png', 'country' => 'Nepal', 'country_code' => NULL),
+			169 => array('code' =>  'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Niue.svg/23px-Flag_of_Niue.svg.png', 'country' => 'Niue', 'country_code' => 'NU'),
+			170 => array('code' =>  'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_the_Cook_Islands.svg/23px-Flag_of_the_Cook_Islands.svg.png', 'country' => 'Cook Islands', 'country_code' => 'CK'),
+			171 => array('code' => 'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/23px-Flag_of_New_Zealand.svg.png', 'country' => 'New Zealand', 'country_code' => NULL),
+			172 => array('code' => 'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/23px-Flag_of_New_Zealand.svg.png', 'country' => 'Ross Dependency', 'country_code' => NULL),
+			173 => array('code' => 'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_the_Pitcairn_Islands.svg/23px-Flag_of_the_Pitcairn_Islands.svg.png', 'country' => 'Pitcairn Islands', 'country_code' => 'PN'),
+			174 => array('code' => 'NZD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Flag_of_Tokelau.svg/23px-Flag_of_Tokelau.svg.png', 'country' => 'Tokelau', 'country_code' => 'TK'),
+			175 => array('code' => 'OMR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Flag_of_Oman.svg/23px-Flag_of_Oman.svg.png', 'country' => 'Oman', 'country_code' => NULL),
+			176 => array('code' =>  'PAB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/23px-Flag_of_Panama.svg.png', 'country' => 'Panama', 'country_code' => 'PA'),
+			177 => array('code' =>  'PEN', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/23px-Flag_of_Peru.svg.png', 'country' => 'Peru', 'country_code' => NULL),
+			178 => array('code' =>  'PGK', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Flag_of_Papua_New_Guinea.svg/20px-Flag_of_Papua_New_Guinea.svg.png', 'country' => 'Papua New Guinea', 'country_code' => NULL),
+			179 => array('code' =>  'PHP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png', 'country' => 'Philippines', 'country_code' => NULL),
+			180 => array('code' =>  'PKR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Flag_of_Pakistan.svg/23px-Flag_of_Pakistan.svg.png', 'country' => 'Pakistan', 'country_code' => NULL),
+			181 => array('code' => 'PLN', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/23px-Flag_of_Poland.svg.png', 'country' => 'Poland', 'country_code' => NULL),
+			182 => array('code' => 'PYG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/23px-Flag_of_Paraguay.svg.png', 'country' => 'Paraguay', 'country_code' => NULL),
+			183 => array('code' => 'QAR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Qatar.svg/23px-Flag_of_Qatar.svg.png', 'country' => 'Qatar', 'country_code' => NULL),
+			184 => array('code' => 'RON', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Romania.svg/23px-Flag_of_Romania.svg.png', 'country' => 'Romania', 'country_code' => NULL),
+			185 => array('code' => 'RSD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Serbia.svg/23px-Flag_of_Serbia.svg.png', 'country' => 'Serbia', 'country_code' => NULL),
+			186 => array('code' =>  'RUB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_South_Ossetia.svg/23px-Flag_of_South_Ossetia.svg.png', 'country' => 'South Ossetia', 'country_code' => NULL),
+			187 => array('code' =>  'RUB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Abkhazia.svg/23px-Flag_of_Abkhazia.svg.png', 'country' => 'Abkhazia', 'country_code' => 'GE-AB'),
+			188 => array('code' =>  'RUB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Flag_of_Crimea.svg/23px-Flag_of_Crimea.svg.png', 'country' => 'Crimea', 'country_code' => NULL),
+			189 => array('code' =>  'RUB', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/23px-Flag_of_Russia.svg.png', 'country' => 'Russia', 'country_code' => NULL),
+			190 => array('code' =>  'RWF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Rwanda.svg/23px-Flag_of_Rwanda.svg.png', 'country' => 'Rwanda', 'country_code' => NULL),
+			191 => array('code' => 'SAR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png', 'country' => 'Saudi Arabia', 'country_code' => NULL),
+			192 => array('code' => 'SBD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Flag_of_the_Solomon_Islands.svg/23px-Flag_of_the_Solomon_Islands.svg.png', 'country' => 'Solomon Islands', 'country_code' => NULL),
+			193 => array('code' => 'SCR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Seychelles.svg/23px-Flag_of_Seychelles.svg.png', 'country' => 'Seychelles', 'country_code' => NULL),
+			194 => array('code' => 'SDG', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Sudan.svg/23px-Flag_of_Sudan.svg.png', 'country' => 'Sudan', 'country_code' => NULL),
+			195 => array('code' => 'SEK', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/23px-Flag_of_Sweden.svg.png', 'country' => 'Sweden', 'country_code' => NULL),
+			197 => array('code' =>  'SGD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/23px-Flag_of_Singapore.svg.png', 'country' => 'Singapore', 'country_code' => NULL),
+			198 => array('code' =>  'SHP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Saint_Helena.svg/23px-Flag_of_Saint_Helena.svg.png', 'country' => 'Saint Helena', 'country_code' => 'SH-SH'),
+			199 => array('code' =>  'SHP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Ascension_Island.svg/23px-Flag_of_Ascension_Island.svg.png', 'country' => 'Ascension Island', 'SH-AC'),
+			200 => array('code' =>  'SLL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Sierra_Leone.svg/23px-Flag_of_Sierra_Leone.svg.png', 'country' => 'Sierra Leone', 'country_code' => NULL),
+			201 => array('code' => 'SOS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_Somalia.svg/23px-Flag_of_Somalia.svg.png', 'country' => 'Somalia &nbsp;', 'country_code' => NULL),
+			202 => array('code' => 'SRD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Flag_of_Suriname.svg/23px-Flag_of_Suriname.svg.png', 'country' => 'Suriname', 'country_code' => NULL),
+			203 => array('code' => 'SSP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Flag_of_South_Sudan.svg/23px-Flag_of_South_Sudan.svg.png', 'country' => 'South Sudan', 'country_code' => NULL),
+			204 => array('code' => 'STD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Sao_Tome_and_Principe.svg/23px-Flag_of_Sao_Tome_and_Principe.svg.png', 'country' => 'São Tomé and Príncipe', 'country_code' => NULL),
+			205 => array('code' => 'SYP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Flag_of_Syria.svg/23px-Flag_of_Syria.svg.png', 'country' => 'Syria', 'country_code' => NULL),
+			206 => array('code' =>  'SZL', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Flag_of_Swaziland.svg/23px-Flag_of_Swaziland.svg.png', 'country' => 'Swaziland', 'country_code' => NULL),
+			207 => array('code' =>  'THB', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/23px-Flag_of_Thailand.svg.png', 'country' => 'Thailand', 'country_code' => NULL),
+			208 => array('code' =>  'TJS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_Tajikistan.svg/23px-Flag_of_Tajikistan.svg.png', 'country' => 'Tajikistan', 'country_code' => NULL),
+			209 => array('code' =>  'TMT', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Flag_of_Turkmenistan.svg/23px-Flag_of_Turkmenistan.svg.png', 'country' => 'Turkmenistan', 'country_code' => NULL),
+			210 => array('code' =>  'TND', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/23px-Flag_of_Tunisia.svg.png', 'country' => 'Tunisia', 'country_code' => NULL),
+			211 => array('code' => 'TOP', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Tonga.svg/23px-Flag_of_Tonga.svg.png', 'country' => 'Tonga', 'country_code' => NULL),
+			212 => array('code' => 'TRY', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg/23px-Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg.png', 'country' => 'Northern Cyprus', 'country_code' => NULL),
+			213 => array('code' => 'TRY', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/23px-Flag_of_Turkey.svg.png', 'country' => 'Turkey', 'country_code' => NULL),
+			214 => array('code' => 'TTD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Trinidad_and_Tobago.svg/23px-Flag_of_Trinidad_and_Tobago.svg.png', 'country' => 'Trinidad and Tobago', 'country_code' => NULL),
+			215 => array('code' => 'TWD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Flag_of_the_Republic_of_China.svg/23px-Flag_of_the_Republic_of_China.svg.png', 'country' => 'Taiwan', 'country_code' => NULL),
+			216 => array('code' =>  'TZS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Flag_of_Tanzania.svg/23px-Flag_of_Tanzania.svg.png', 'country' => 'Tanzania', 'country_code' => NULL),
+			217 => array('code' =>  'UAH', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/23px-Flag_of_Ukraine.svg.png', 'country' => 'Ukraine', 'country_code' => NULL),
+			218 => array('code' =>  'UGX', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Flag_of_Uganda.svg/23px-Flag_of_Uganda.svg.png', 'country' => 'Uganda', 'country_code' => NULL),
+			219 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Flag_of_Guam.svg/23px-Flag_of_Guam.svg.png', 'country' => 'Guam', 'country_code' => 'GU'),
+			220 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flag_of_East_Timor.svg/23px-Flag_of_East_Timor.svg.png', 'country' => 'Timor-Leste', 'country_code' => 'TL'),
+			221 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_the_Marshall_Islands.svg/23px-Flag_of_the_Marshall_Islands.svg.png', 'country' => 'Marshall Islands', 'country_code' => 'MH'),
+			222 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Flag_of_the_British_Virgin_Islands.svg/23px-Flag_of_the_British_Virgin_Islands.svg.png', 'country' => 'British Virgin Islands', 'country_code' => 'VG'),
+			225 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flag_of_American_Samoa.svg/23px-Flag_of_American_Samoa.svg.png', 'country' => 'American Samoa AS', 'country_code' => NULL),
+			226 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_the_Turks_and_Caicos_Islands.svg/23px-Flag_of_the_Turks_and_Caicos_Islands.svg.png', 'country' => 'Turks and Caicos Islands', 'country_code' => 'TC'),
+			228 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_the_Northern_Mariana_Islands.svg/23px-Flag_of_the_Northern_Mariana_Islands.svg.png', 'country' => 'Northern Mariana Islands', 'country_code' => 'MP'),
+			229 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Flag_of_the_Federated_States_of_Micronesia.svg/23px-Flag_of_the_Federated_States_of_Micronesia.svg.png', 'country' => 'Federated States of Micronesia', 'country_code' => 'FM'),
+			230 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/23px-Flag_of_the_United_States.svg.png', 'country' => 'United States', 'country_code' => 'US'),
+			231 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_El_Salvador.svg/23px-Flag_of_El_Salvador.svg.png', 'country' => 'El Salvador', 'country_code' => 'SV'),
+			232 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Palau.svg/23px-Flag_of_Palau.svg.png', 'country' => 'Palau', 'country_code' => 'PW'),
+			233 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/23px-Flag_of_Haiti.svg.png', 'country' => 'Haiti', 'country_code' => 'HT'),
+			234 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/23px-Flag_of_Puerto_Rico.svg.png', 'country' => 'Puerto Rico', 'country_code' => 'PR'),
+			235 => array('code' => 'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/23px-Flag_of_Panama.svg.png', 'country' => 'Panama', 'country_code' => 'PA'),
+			236 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/23px-Flag_of_Ecuador.svg.png', 'country' => 'Ecuador', 'country_code' => 'EC'),
+			238 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Flag_of_the_United_States_Virgin_Islands.svg/23px-Flag_of_the_United_States_Virgin_Islands.svg.png', 'country' => 'U.S. Virgin Islands', 'country_code' => 'VI'),
+			239 => array('code' =>  'USD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/100px-Flag_of_the_Netherlands.svg.png', 'country' => 'Caribbean Netherlands', 'country_code' => NULL),
+			240 => array('code' =>  'USN', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/23px-Flag_of_the_United_States.svg.pngUnited States', 'United States', 'country_code' => NULL),
+			241 => array('code' => 'USS', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/23px-Flag_of_the_United_States.svg.pngUnited States', 'United States', 'country_code' => NULL),
+			242 => array('code' => 'UYI', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Uruguay.svg/23px-Flag_of_Uruguay.svg.png', 'country' => 'Uruguay', 'country_code' => NULL),
+			243 => array('code' => 'UYU', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Uruguay.svg/23px-Flag_of_Uruguay.svg.png', 'country' => 'Uruguay', 'country_code' => NULL),
+			244 => array('code' => 'UZS', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Uzbekistan.svg/23px-Flag_of_Uzbekistan.svg.png', 'country' => 'Uzbekistan', 'country_code' => NULL),
+			245 => array('code' => 'VEF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Venezuela.svg/23px-Flag_of_Venezuela.svg.png', 'country' => 'Venezuela', 'country_code' => NULL),
+			246 => array('code' => 'VND', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png', 'country' => 'Vietnam', 'country_code' => NULL),
+			247 => array('code' => 'VUV', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Vanuatu.svg/23px-Flag_of_Vanuatu.svg.png', 'country' => 'Vanuatu', 'country_code' => NULL),
+			248 => array('code' => 'WST', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Samoa.svg/23px-Flag_of_Samoa.svg.png', 'country' => 'Samoa', 'country_code' => NULL),
+			249 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Flag_of_Gabon.svg/20px-Flag_of_Gabon.svg.png', 'country' => 'Gabon', 'country_code' => 'GA'),
+			250 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Equatorial_Guinea.svg/23px-Flag_of_Equatorial_Guinea.svg.png', 'country' => 'Equatorial Guinea', 'country_code' => 'GQ'),
+			251 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Flag_of_Chad.svg/23px-Flag_of_Chad.svg.png', 'country' => 'Chad', 'country_code' => 'TD'),
+			252 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/23px-Flag_of_Cameroon.svg.png', 'country' => 'Cameroon', 'country_code' => 'CM'),
+			253 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Central_African_Republic.svg/23px-Flag_of_the_Central_African_Republic.svg.png', 'country' => 'Central African Republic', 'CF'),
+			254 => array('code' => 'XAF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/23px-Flag_of_the_Republic_of_the_Congo.svg.png', 'country' => 'Republic of the Congo', 'country_code' => 'CG'),
+			255 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Saint_Lucia.svg/23px-Flag_of_Saint_Lucia.svg.png', 'country' => 'Saint Lucia', 'country_code' => 'LC'),
+			256 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Anguilla.svg/23px-Flag_of_Anguilla.svg.png', 'country' => 'Anguilla', 'country_code' => 'AI'),
+			257 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Flag_of_Dominica.svg/23px-Flag_of_Dominica.svg.png', 'country' => 'Dominica', 'country_code' => 'DM'),
+			258 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_Montserrat.svg/23px-Flag_of_Montserrat.svg.png', 'country' => 'Montserrat', 'country_code' => 'MS'),
+			259 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Grenada.svg/23px-Flag_of_Grenada.svg.png', 'country' => 'Grenada', 'country_code' => 'GD'),
+			260 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Flag_of_Saint_Vincent_and_the_Grenadines.svg/23px-Flag_of_Saint_Vincent_and_the_Grenadines.svg.png', 'country' => 'Saint Vincent and the Grenadines', 'country_code' => 'VC'),
+			261 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Antigua_and_Barbuda.svg/23px-Flag_of_Antigua_and_Barbuda.svg.png', 'country' => 'Antigua and Barbuda', 'country_code' => 'AG'),
+			262 => array('code' => 'XCD', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Saint_Kitts_and_Nevis.svg/23px-Flag_of_Saint_Kitts_and_Nevis.svg.png', 'country' => 'Saint Kitts and Nevis', 'country_code' => 'KN'),
+			263 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Flag_of_Niger.svg/18px-Flag_of_Niger.svg.png', 'country' => 'Niger', 'country_code' => 'NE'),
+			264 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Guinea-Bissau.svg/23px-Flag_of_Guinea-Bissau.svg.png', 'country' => 'Guinea-Bissau', 'country_code' => 'GW'),
+			265 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Flag_of_Togo.svg/23px-Flag_of_Togo.svg.png', 'country' => 'Togo', 'country_code' => 'TG'),
+			266 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Benin.svg/23px-Flag_of_Benin.svg.png', 'country' => 'Benin', 'country_code' => 'BJ'),
+			267 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/23px-Flag_of_Burkina_Faso.svg.png', 'country' => 'Burkina Faso', 'country_code' => 'BF'),
+			268 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Mali.svg/23px-Flag_of_Mali.svg.png', 'country' => 'Mali', 'country_code' => 'ML'),
+			269 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Flag_of_Senegal.svg/23px-Flag_of_Senegal.svg.png', 'country' => 'Senegal', 'country_code' => 'SN'),
+			270 => array('code' => 'XOF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/23px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png', 'country' => 'Côte d\'Ivoire', 'country_code' => 'CI'),
+			271 => array('code' => 'XPF', 'flag' => 'http://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png', 'country' => 'Wallis and Futuna', 'country_code' => 'Â WF'),
+			272 => array('code' => 'XPF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Flag_of_French_Polynesia.svg/23px-Flag_of_French_Polynesia.svg.png', 'country' => 'French Polynesia', 'country_code' => 'PF'),
+			273 => array('code' => 'XPF', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_New_Caledonia.svg/23px-Flag_of_New_Caledonia.svg.png', 'country' => 'New Caledonia', 'country_code' => NULL),
+			274 => array('code' => 'YER', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Yemen.svg/23px-Flag_of_Yemen.svg.png', 'country' => 'Yemen', 'country_code' => NULL),
+			275 => array('code' => 'ZAR', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/23px-Flag_of_South_Africa.svg.png', 'country' => 'South Africa', 'country_code' => NULL),
+			276 => array('code' => 'ZMW', 'flag' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/23px-Flag_of_Zambia.svg.png', 'country' => 'Zambia', 'country_code' => NULL)
+		);
+
+		// Insert data
+		foreach ($countries as $country)
+		{
+			$insert_buffer->insert($country);
+		}
+
+		// Flush the buffer
+		$insert_buffer->flush();
+	}
+}

@@ -1,0 +1,15 @@
+services:
+# ----- Cron tasks -----
+    cron.task.core.donations:
+        class: sitesplat\donations\cron\task\core\donations
+        arguments:
+            - @config
+            - @dbal.conn
+            - @auth
+            - %core.root_path%
+            - %core.php_ext%
+            - %sitesplat.donation.tables.donations%
+        calls:
+            - [set_name, [sitesplat.donations]]
+        tags:
+            - { name: cron.task }

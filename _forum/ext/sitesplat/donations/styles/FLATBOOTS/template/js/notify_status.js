@@ -1,0 +1,1 @@
+head.ready(function(){!function(e){"use strict";phpbb.alert(info,'<p align="center">'+notify+"</p>",!0),phpbb.closeDarkenWrapper(6e3)}(jQuery)});
