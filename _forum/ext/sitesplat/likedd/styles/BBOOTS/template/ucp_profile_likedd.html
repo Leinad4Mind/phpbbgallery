@@ -1,0 +1,66 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<fieldset class="framed-ucp">
+<legend>{L_UCP_LIKEDD_TITLE}</legend>
+	<p>{L_UCP_LIKEDD_EXPLAIN}</p>
+<div class="row">
+<div class="col-md-6">
+ <ul class="list-unstyled">
+ <!-- BEGIN likestat -->
+	<li><i class="fa {likestat.ICON}"></i>&nbsp;{likestat.GIVEN_RECIEVED}{L_COLON}&nbsp;{likestat.GIVE_RECIEVE}</li>
+ <!-- END likestat -->
+ </ul>
+</div>
+	
+<div class="col-md-6">
+ <div id="chart" class="hidden-xs hidden-sm" style="height: 150px; margin-top:-30px; background-color:transparent;"></div>
+</div>
+</div>
+
+ <script>
+ var stats = {STATS};
+</script>
+    <div class="panel panel-default">
+		<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_LIKES_POST_SUBJECT}</th>
+				<th data-hide="phone">{L_LIKES_LIKES_DISLIKES}</th>
+				<th data-hide="phone">{L_TIME}</th>
+				<th data-hide="phone">{L_USERNAME}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN likes -->
+			<tr>
+				<td><a href="{likes.SUBJECTURL}">{likes.SUBJECT}</a></td>
+				<td><i class="fa {likes.ICON}"></i>&nbsp;{likes.GIVE_RECIEVE}</td>
+				<td class="center">{likes.LIKE_TIME}</td>
+				<td class="center mark">{likes.USERNAME}</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr><td colspan="4">{L_LIKE_ACTIVITY_UCP_EMPTY}</td></tr>
+		<!-- END likes -->
+		</tbody>
+	</table>
+	</div>
+	<!-- IF .pagination or TOTAL_POSTS -->
+		<div class="pull-right">	 
+		 <ul class="pagination pagination-sm hidden-xs">
+		<!-- <li><a>{TOTAL_LIKES}</a></li> -->
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		 </ul>
+	   </div>
+	<!-- ENDIF -->
+</fieldset>	
+</div>
+<!-- IF not POLSTATS -->
+<!-- INCLUDEJS @sitesplat_likedd/js/highcharts.js -->
+<!-- ENDIF -->
+<!-- INCLUDEJS @sitesplat_likedd/js/ucp_statistics.js -->
+<!-- INCLUDEJS @sitesplat_likedd/js/exporting.js -->
+<!-- INCLUDE ucp_footer.html -->

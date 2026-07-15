@@ -1,0 +1,3 @@
+sitesplat_likedd_controller:
+    path: /likedd/{route}
+    defaults: { _controller: sitesplat.likedd.controller:display }

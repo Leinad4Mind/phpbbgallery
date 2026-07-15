@@ -1,0 +1,12 @@
+services:
+# ----- Likedd notification types -----
+# Scope MUST be prototype for all the plugins to work.
+    sitesplat.likedd.notification.type.likedd_added:
+        class: sitesplat\likedd\notification\type\likedd_added
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
