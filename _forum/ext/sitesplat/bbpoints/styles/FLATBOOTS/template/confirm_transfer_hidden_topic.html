@@ -1,66 +1,49 @@
-{% EVENT sitesplat_bbpoints_before_confirm_transfer_hidden_topic %}
-{% if S_AJAX_REQUEST %}
-  <form action="{{ S_CONFIRM_ACTION }}" method="post" id="bbpointsform">
-    {% EVENT sitesplat_bbpoints_before_title_confirm_transfer_hidden_topic %}
-    <h3 class="alert_title">{{ MESSAGE_TITLE }}&nbsp;{{ lang('BB_PAID_UP') }}&nbsp;{{ lang('TOPIC') }}</h3>
-    {% EVENT sitesplat_bbpoints_after_title_confirm_transfer_hidden_topic %}
-    <p>{{ MESSAGE_TEXT }}</p>
-    {% if COMMENT_ENABLED %}
-      {% EVENT sitesplat_bbpoints_before_comment_confirm_transfer_hidden_topic %}
-      <!-- <div class="control-group">
-        <label class="control-label" for="comment">{{ lang('TRANSFER_DESCR') ~ lang('COLON') }}</label>
-        <div class="controls controls-row">
-          <input placeholder="{{ lang('BBPOINTS_COMMENT_PLACEHOLDER') }}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45"/>
-        </div>
-      </div> -->
-      {% EVENT sitesplat_bbpoints_after_comment_confirm_transfer_hidden_topic %}
-      <!-- <div class="space10"></div>
-      <div class="space10"></div> -->
-    {% endif %}
-    <fieldset>
-      {% EVENT sitesplat_bbpoints_before_fieldset_confirm_transfer_hidden_topic %}
-      <input id="sendclick" type="button" name="confirm" value="{{ lang('YES') }}" class="btn btn-default"/>
-      <input type="button" name="cancel" value="{{ lang('NO') }}" class="btn btn-default"/>
-      {% EVENT sitesplat_bbpoints_after_fieldset_confirm_transfer_hidden_topic %}
-    </fieldset>
-  </form>
-{% else %}
+<!-- IF S_AJAX_REQUEST -->
+<form action="{S_CONFIRM_ACTION}" method="post" id="bbpointsform">
+ <h3 class="alert_title">{MESSAGE_TITLE}&nbsp;{L_BB_PAID_UP}&nbsp;{L_TOPIC}</h3>
+	<p>{MESSAGE_TEXT}</p>
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="comment">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45" />
+		  </div> 
+		</div> 
+	     <div class="space10"></div>
+	     <div class="space10"></div>
+	    <!-- ENDIF -->
+	<fieldset>
+		<input id="sendclick" type="button" name="confirm" value="{L_YES}" class="btn btn-default" />
+		<input type="button" name="cancel" value="{L_NO}" class="btn btn-default" />
+	</fieldset>
+</form>	
+<!-- ELSE -->
 
-  {% include 'overall_header.html' %}
-  <form id="confirm" action="{{ S_CONFIRM_ACTION }}" method="post">
-    {% EVENT sitesplat_bbpoints_before_title_confirm_transfer_hidden_topic %}
-    <div class="side-segment">
-      <h3>{{ MESSAGE_TITLE }}&nbsp;{{ lang('BB_PAID_UP') }}&nbsp;{{ lang('TOPIC') }}</h3>
-    </div>
-    {% EVENT sitesplat_bbpoints_after_title_confirm_transfer_hidden_topic %}
-    <div class="alert alert-info">{{ MESSAGE_TEXT }}</div>
-    <div class="well">
-      {% if COMMENT_ENABLED %}
-        {% EVENT sitesplat_bbpoints_before_comment_confirm_transfer_hidden_topic %}
-        <!-- <div class="control-group">
-          <label class="control-label" for="delete_reason">{{ lang('TRANSFER_DESCR') ~ lang('COLON') }}</label>
-          <div class="controls controls-row">
-            <input placeholder="{{ lang('BBPOINTS_COMMENT_PLACEHOLDER') }}" type="text" name="comment" value="" class="form-control" maxlength="120" size="45"/>
-          </div>
-        </div> -->
-        {% EVENT sitesplat_bbpoints_after_comment_confirm_transfer_hidden_topic %}
-      {% endif %}
-      <div class="space10"></div>
-      <fieldset>
-        {{ S_HIDDEN_FIELDS }}
-        {% EVENT sitesplat_bbpoints_before_fieldset_confirm_transfer_hidden_topic %}
-        <button type="submit" name="confirm" value="{{ lang('YES') }}" class="btn btn-default">{{ lang('YES') }}</button>
-        <button type="submit" name="cancel" value="{{ lang('NO') }}" class="btn btn-default">{{ lang('NO') }}</button>
-        {% EVENT sitesplat_bbpoints_after_fieldset_confirm_transfer_hidden_topic %}
-      </fieldset>
-    </div>
-  </form>
-  {% include 'overall_footer.html' %}
-{% endif %}
+<!-- INCLUDE overall_header.html -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<div class="side-segment"><h3>{MESSAGE_TITLE}&nbsp;{L_BB_PAID_UP}&nbsp;{L_TOPIC}</h3></div>
+ <div class="alert alert-info">{MESSAGE_TEXT}</div>
+	<div class="well">
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="delete_reason">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" type="text" name="comment" value=""class="form-control" maxlength="120" size="45" />
+		  </div> 
+		</div> 
+		<!-- ENDIF -->
+	 <div class="space10"></div>
+	<fieldset>
+	  {S_HIDDEN_FIELDS}
+		<button type="submit" name="confirm" value="{L_YES}" class="btn btn-default">{L_YES}</button>
+		<button type="submit" name="cancel" value="{L_NO}" class="btn btn-default">{L_NO}</button>
+	</fieldset>
+</div>
+</form>
+<!-- INCLUDE overall_footer.html -->
+<!-- ENDIF -->
 
 <script>
-  var userpoints = '{{ USER_POINTS }}';
-  var enter_user_lang = '{{ lang("ENTER_USER") }}';
+var userpoints =  {USER_POINTS};
 </script>
-<script src="./ext/sitesplat/bbpoints/styles/FLATBOOTS/template/js/bbpoints.min.js"></script>
-{% EVENT sitesplat_bbpoints_after_confirm_transfer_hidden_topic %}
+<script src="./ext/sitesplat/bbpoints/styles/FLATBOOTS/template/js/bbpoints.js"></script>

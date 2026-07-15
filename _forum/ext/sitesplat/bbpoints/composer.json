@@ -1,32 +1,31 @@
 {
 	"name": "sitesplat/bbpoints",
 	"type": "phpbb-extension",
-	"description": "BBPoints allows your forum members to have fun and collect points for determined actions, like posting, birthday, upon new registration, points per words etc. The Admin can set how many points will user receive for those actions. You can also enable/disable Points extension for certain forum and/or assign specific points for specific forums. Users can transfer/donate their points to other users as well.",
-	"homepage": "https://sitesplat.com",
-	"version": "1.2.6",
+	"description": "BBpoints allows your forum members to have fun and collect points for determined actions, like posting, birthday, upon new registration, points per words etc. The Admin can set how many points will user receive for those actions. You can also enable/disable Points extension for certain forum and/or assign specific points for specific forums. Users can transfer/donate their points to other users as well.",
+	"homepage": "http://sitesplat.com",
+	"version": "1.2.2",
 	"keywords": ["phpbb", "extension", "bbpoints", "premium"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
 		{
 			"name": "Dave",
 			"email": "info@sitesplat.com",
-			"homepage": "https://sitesplat.com",
+			"homepage": "http://sitesplat.com",
 			"role": "Developer"
 		}
 	],
 	"require": {
-		"php": ">=5.4"
+		"php": ">=5.3.3"
 	},
 	"extra": {
-		"display-name": "BBPoints",
+		"display-name": "BBpoints",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.1.5"
 		},
 		"version-check": {
-            "host": "sitesplat.com",
+            "host": "www.sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbpoints.json",
-			"ssl": true
+            "filename": "bbpoints.json"
 		}
 	}
 }

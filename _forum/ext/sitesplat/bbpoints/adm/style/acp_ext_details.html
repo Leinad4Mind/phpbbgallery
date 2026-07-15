@@ -1,178 +1,143 @@
-<h3>{{ lang('ACP_POINTS') }}</h3>
-<div class="clearfix description-ext">
-  <h1 class="ExtensionName">
-    {% if META_DISPLAY_NAME %}{{ META_DISPLAY_NAME }}
-      -
-    {% endif %}{{ lang('EXT_DETAILS') }}</h1>
-  {% if S_VERSIONCHECK %}
-  {% elseif S_VERSIONCHECK_STATUS == 0 %}
-    <div class="errorbox notice">
-      <p>{{ lang('VERSIONCHECK_FAIL') }}</p>
-      <p>{{ VERSIONCHECK_FAIL_REASON }}</p>
-      <p>
-        <a href="{{ U_VERSIONCHECK_FORCE }}">{{ lang('VERSIONCHECK_FORCE_UPDATE') }}</a>
-      </p>
-    </div>
-  {% elseif S_VERSIONCHECK_STATUS == 1 %}
-    <div class="errorbox notice">
-      <p>{{ VERSIONCHECK_FAIL_REASON }}</p>
-    </div>
-  {% endif %}
+<h3>{L_ACP_POINTS}</h3>
+  <div class="clearfix description-ext">
+	<h1 class="ExtensionName"><!-- IF META_DISPLAY_NAME -->{META_DISPLAY_NAME} - <!-- ENDIF -->{L_EXT_DETAILS}</h1>
+	<!-- IF S_VERSIONCHECK -->
+	<!-- ELSE IF S_VERSIONCHECK_STATUS == 0 -->
+	<div class="errorbox notice">
+		<p>{L_VERSIONCHECK_FAIL}</p>
+		<p>{VERSIONCHECK_FAIL_REASON}</p>
+		<p><a href="{U_VERSIONCHECK_FORCE}">{L_VERSIONCHECK_FORCE_UPDATE}</a></p>
+	</div>
+	<!-- ELSE IF S_VERSIONCHECK_STATUS == 1 -->
+	<div class="errorbox notice">
+		<p>{VERSIONCHECK_FAIL_REASON}</p>
+	</div>
+	<!-- ENDIF -->
 
-  {% if S_VERSIONCHECK && not S_UP_TO_DATE %}
-    <div class="alert alert-update">
+	<!-- IF S_VERSIONCHECK && not S_UP_TO_DATE -->
+	<div class="alert alert-update">
+	  
+      <div class="row">	
+      <div class="col-md-12">
+	   	
+	  <div class="col-md-6">	
+		<div class="description_bubble small_bubble" title="{UP_TO_DATE_MSG}">
+		    <span class="description_name">{L_CURRENT_VERSION}{L_COLON}</span>
+			<div class="extension_latest_version_wrapper">
+			<strong class="extension_latest_version label label-warning">{META_VERSION}</strong>
+			</div>
+	    </div>
+	  </div>
+	  
+	  <div class="col-md-6">	
+		<!-- BEGIN updates_available -->
+			<span class="requirements_title">{L_LATEST_VERSION}{L_COLON}</span>
+			<div class="extension_latest_version_wrapper">
+				<strong class="extension_latest_version label label-success">{updates_available.current}</strong>
+				<!-- IF updates_available.download-->
+				<a href="{updates_available.download}" class="extension_author_link" title="{L_DOWNLOAD_LATEST}"><i class="fa fa-download"></i></a>
+				<!-- ENDIF -->
+				<!-- IF updates_available.announcement -->
+				<a href="{updates_available.announcement}" class="extension_author_link" title="{L_ANNOUNCEMENT_TOPIC}"><i class="fa fa-bullhorn"></i></a>
+				<!-- ENDIF -->
+			</div>
+		<!-- END updates_available -->
+	   </div>	
+	  
+	  </div>
+     </div>	  
+		
+	</div>
+	<!-- ENDIF -->
+	
+	<div class="description_div">
+		<div>
+			<div>
+				<p class="description_list">
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_DESCRIPTION}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_1}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_2}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_3}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_4}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_5}</span><br />
+					<span><i class="fa fa-fw fa-check"></i> {L_POINTS_TASKS_6}</span><br />
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="description_bubble big_bubble">
+		<span class="description_name">{L_CLEAN_NAME}{L_COLON}</span>
+		<strong class="description_value" id="meta_name">{META_NAME}</strong>
+	</div>
+	<!-- IF S_VERSIONCHECK && S_UP_TO_DATE -->
+	<div class="description_bubble small_bubble" title="{UP_TO_DATE_MSG}">
+		<span class="description_name">{L_VERSION}{L_COLON}</span>
+		<span class="description_value description_value_ok" id="meta_version">{META_VERSION}</span>
+	</div>
+	<!-- ELSE IF S_VERSIONCHECK && not S_UP_TO_DATE -->
+	<div class="description_bubble small_bubble" title="{UP_TO_DATE_MSG}">
+		<span class="description_name">{L_VERSION}{L_COLON}</span>
+		<span class="description_value description_value_old" id="meta_version">{META_VERSION}</span>
+	</div>
+	<!-- ELSE -->
+	<div class="description_bubble small_bubble">
+		<span class="description_name">{L_VERSION}{L_COLON}</span>
+		<span class="description_value" id="meta_version">{META_VERSION}</span>
+	</div>
+	<!-- ENDIF -->
+	<!-- IF META_HOMEPAGE -->
+	<div class="description_bubble big_bubble">
+		<span class="description_name">{L_HOMEPAGE}{L_COLON}</span>
+		<strong class="description_value" id="meta_homepage"><a href="{META_HOMEPAGE}"><i class="fa fa-globe"></i> {META_HOMEPAGE}</a></strong>
+	</div>
+	<!-- ENDIF -->
+	<!-- IF META_TIME -->
+	<div class="description_bubble small_bubble">
+		<span class="description_name">{L_TIME}{L_COLON}</span>
+		<span class="description_value" id="meta_time">{META_TIME}</span>
+	</div>
+	<!-- ENDIF -->
+	<div class="description_bubble small_bubble">
+		<span class="description_name">{L_LICENSE}{L_COLON}</span>
+		<span class="description_value" id="meta_license" style="padding:0 15px;">{L_LICENSE_INFO}</span>
+	</div>
 
-      <div class="row">
-        <div class="col-md-12">
+	<!-- IF META_REQUIRE_PHPBB || META_REQUIRE_PHP -->
+	<div>
+		<span class="requirements_title">{L_REQUIREMENTS}{L_COLON}</span>
+		<!-- IF META_REQUIRE_PHPBB -->
+		<div class="requirements_bubble">
+			<span class="requirements_name">{L_PHPBB_VERSION}{L_COLON}</span>
+			<span class="requirements_value<!-- IF META_REQUIRE_PHPBB_FAIL --> requirements_value_not_met<!-- ENDIF -->" id="require_phpbb">{META_REQUIRE_PHPBB}</span>
+		</div>
+		<!-- ENDIF -->
+		<!-- IF META_REQUIRE_PHP -->
+		<div class="requirements_bubble">
+			<span class="requirements_name">{L_PHP_VERSION}{L_COLON}</span>
+			<span class="requirements_value<!-- IF META_REQUIRE_PHP_FAIL --> requirements_value_not_met<!-- ENDIF -->" id="require_php">{META_REQUIRE_PHP}</span>
+		</div>
+		<!-- ENDIF -->
+	</div>
+	<!-- ENDIF -->
 
-          <div class="col-md-6">
-            <div class="description_bubble small_bubble" title="{{ UP_TO_DATE_MSG }}">
-              <span class="description_name">{{ lang('CURRENT_VERSION') ~ lang('COLON') }}</span>
-              <div class="extension_latest_version_wrapper">
-                <strong class="extension_latest_version label label-warning">{{ META_VERSION }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            {% if loops.updates_available %}
-              {% for update_available in loops.updates_available %}
-                <span class="requirements_title">{{ lang('LATEST_VERSION') ~ lang('COLON') }}</span>
-                <div class="extension_latest_version_wrapper">
-                  <strong class="extension_latest_version label label-success">{{ update_available.current }}</strong>
-                  {% if update_available.download %}
-                    <a href="{{ update_available.download }}" class="extension_author_link" title="{{ lang('DOWNLOAD_LATEST') }}">
-                      <i class="fa fa-download"></i>
-                    </a>
-                  {% endif %}
-                  {% if update_available.announcement %}
-                    <a href="{{ update_available.announcement }}" class="extension_author_link" title="{{ lang('ANNOUNCEMENT_TOPIC') }}">
-                      <i class="fa fa-bullhorn"></i>
-                    </a>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  {% endif %}
-
-  <div class="description_div">
-    <div>
-      <div>
-        <p class="description_list">
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_DESCRIPTION') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_1') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_2') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_3') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_4') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_5') }}</span><br/>
-          <span>
-            <i class="fa fa-fw fa-check"></i>
-            {{ lang('POINTS_TASKS_6') }}</span><br/>
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="description_bubble big_bubble">
-    <span class="description_name">{{ lang('CLEAN_NAME') ~ lang('COLON') }}</span>
-    <strong class="description_value" id="meta_name">{{ META_NAME }}</strong>
-  </div>
-  {% if S_VERSIONCHECK && S_UP_TO_DATE %}
-    <div class="description_bubble small_bubble" title="{{ UP_TO_DATE_MSG }}">
-      <span class="description_name">{{ lang('VERSION') ~ lang('COLON') }}</span>
-      <span class="description_value description_value_ok" id="meta_version">{{ META_VERSION }}</span>
-    </div>
-  {% elseif S_VERSIONCHECK && not S_UP_TO_DATE %}
-    <div class="description_bubble small_bubble" title="{{ UP_TO_DATE_MSG }}">
-      <span class="description_name">{{ lang('VERSION') ~ lang('COLON') }}</span>
-      <span class="description_value description_value_old" id="meta_version">{{ META_VERSION }}</span>
-    </div>
-  {% else %}
-    <div class="description_bubble small_bubble">
-      <span class="description_name">{{ lang('VERSION') ~ lang('COLON') }}</span>
-      <span class="description_value" id="meta_version">{{ META_VERSION }}</span>
-    </div>
-  {% endif %}
-  {% if META_HOMEPAGE %}
-    <div class="description_bubble big_bubble">
-      <span class="description_name">{{ lang('HOMEPAGE') ~ lang('COLON') }}</span>
-      <strong class="description_value" id="meta_homepage">
-        <a href="{{ META_HOMEPAGE }}">
-          <i class="fa fa-globe"></i>
-          {{ META_HOMEPAGE }}</a>
-      </strong>
-    </div>
-  {% endif %}
-  {% if META_TIME %}
-    <div class="description_bubble small_bubble">
-      <span class="description_name">{{ lang('TIME') ~ lang('COLON') }}</span>
-      <span class="description_value" id="meta_time">{{ META_TIME }}</span>
-    </div>
-  {% endif %}
-  <div class="description_bubble small_bubble">
-    <span class="description_name">{{ lang('LICENSE') ~ lang('COLON') }}</span>
-    <span class="description_value" id="meta_license" style="padding:0 15px;">{{ lang('LICENSE_INFO') }}</span>
-  </div>
-
-  {% if META_REQUIRE_PHPBB || META_REQUIRE_PHP %}
-    <div>
-      <span class="requirements_title">{{ lang('REQUIREMENTS') ~ lang('COLON') }}</span>
-      {% if META_REQUIRE_PHPBB %}
-        <div class="requirements_bubble">
-          <span class="requirements_name">{{ lang('PHPBB_VERSION') ~ lang('COLON') }}</span>
-          <span class="requirements_value{% if META_REQUIRE_PHPBB_FAIL %} requirements_value_not_met{% endif %}" id="require_phpbb">{{ META_REQUIRE_PHPBB }}</span>
-        </div>
-      {% endif %}
-      {% if META_REQUIRE_PHP %}
-        <div class="requirements_bubble">
-          <span class="requirements_name">{{ lang('PHP_VERSION') ~ lang('COLON') }}</span>
-          <span class="requirements_value{% if META_REQUIRE_PHP_FAIL %} requirements_value_not_met{% endif %}" id="require_php">{{ META_REQUIRE_PHP }}</span>
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
-
-  {% if loops.meta_authors %}
-  <div>
-    <span class="requirements_title">{{ lang('EXTENSION_DEVELOPER') ~ lang('COLON') }}</span>
-      {% for meta_author in loops.meta_authors %}
-        <div class="extension_author">
-          <strong class="extension_author_name">{{ meta_author.AUTHOR_NAME }}</strong>
-          {% if meta_author.AUTHOR_EMAIL %}
-            <a href="mailto:{{ meta_author.AUTHOR_EMAIL }}" title="{{ lang('AUTHOR_EMAIL') }}" class="extension_author_link">
-              <i class="fa fa-envelope"></i>
-            </a>
-          {% endif %}
-          {% if meta_author.AUTHOR_HOMEPAGE %}
-            <a href="{{ meta_author.AUTHOR_HOMEPAGE }}" title="{{ lang('AUTHOR_HOMEPAGE') }}" class="extension_author_link">
-              <i class="fa fa-globe"></i>
-            </a>
-          {% endif %}
-        </div>
-      {% endfor %}
-  </div>
-  {% endif %}
-
-  <div class="clearfix">
-    <br/>
-    <button type="button" class="btn md-close btn-block" data-dismiss="modal">{{ lang('ACP_SIDEBAR_NOTICE_CLOSE') }}</button>
-  </div>
-
+	<div>
+		<span class="requirements_title">{L_EXTENSION_DEVELOPER}{L_COLON}</span>
+		<!-- BEGIN meta_authors -->
+		<div class="extension_author">
+			<strong class="extension_author_name">{meta_authors.AUTHOR_NAME}</strong>
+			<!-- IF meta_authors.AUTHOR_EMAIL -->
+			<a href="mailto:{meta_authors.AUTHOR_EMAIL}" title="{L_AUTHOR_EMAIL}" class="extension_author_link"><i class="fa fa-envelope"></i></a>
+			<!-- ENDIF -->
+			<!-- IF meta_authors.AUTHOR_HOMEPAGE -->
+			<a href="{meta_authors.AUTHOR_HOMEPAGE}" title="{L_AUTHOR_HOMEPAGE}" class="extension_author_link"><i class="fa fa-globe"></i></a>
+			<!-- ENDIF -->
+		</div>
+		<!-- END meta_authors -->
+	</div>
+	
+	<div class="clearfix">
+	<br/>
+	<button type="button" class="btn md-close btn-block" data-dismiss="modal">{L_ACP_SIDEBAR_NOTICE_CLOSE}</button>
+	</div>
+	
 </div>

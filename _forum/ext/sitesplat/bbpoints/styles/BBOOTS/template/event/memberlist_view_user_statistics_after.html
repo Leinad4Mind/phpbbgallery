@@ -1,6 +1,3 @@
 <li>
-  {{ lang('BBPOINTS') ~ lang('COLON') }}&nbsp;{% if SYMBOL_POS %}
-    <i class="fa {{ BBPOINTS_SYMBOL }}"></i>&nbsp;{% endif %}{{ USER_PROFILE_POINTS }}
-  {% if not SYMBOL_POS %}&nbsp;<i class="fa {{ BBPOINTS_SYMBOL }}"></i>
-  {% endif %}
+{L_BBPOINTS}{L_COLON}&nbsp;<!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i>&nbsp;<!-- ENDIF -->{USER_PROFILE_POINTS}<!-- IF not SYMBOL_POS -->&nbsp;<i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF -->
 </li>

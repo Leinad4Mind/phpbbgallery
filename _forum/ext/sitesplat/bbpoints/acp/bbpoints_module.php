@@ -3,7 +3,7 @@
 *
 * BBPoints extension for the phpBB Forum Software package.
 *
-* @copyright (c) 2015-2022 SiteSplat All rights reserved
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -16,7 +16,7 @@ class bbpoints_module
 
 	public function main($id, $mode)
 	{
-		global $phpbb_container, $request, $language, $config, $phpbb_extension_manager, $template, $phpbb_root_path;
+		global $phpbb_container, $request, $user, $config, $phpbb_extension_manager, $template, $phpbb_root_path;
 
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('sitesplat.bbpoints.admin_controller');
@@ -28,7 +28,7 @@ class bbpoints_module
 		$this->tpl_name = 'manage_bbpoints';
 
 		// Set the page title for our ACP bbpoints
-		$this->page_title = $language->lang('ACP_POINTS_INDEX_TITLE');
+		$this->page_title = $user->lang('ACP_POINTS_INDEX_TITLE');
 
 		if ($request->is_set_post('reset_points'))
 		{
@@ -38,11 +38,11 @@ class bbpoints_module
 			} else
 			{
 				// Request confirmation from the user to reset point
-				confirm_box(false, $language->lang('RESET_POINTS_CONFIRM'), build_hidden_fields([
+				confirm_box(false, $user->lang('RESET_POINTS_CONFIRM'), build_hidden_fields(array(
 					'i'				=> $id,
 					'mode'			=> $mode,
 					'reset_points'	=> true,
-				]));
+				)));
 			}
 		}
 
@@ -72,7 +72,7 @@ class bbpoints_module
 
 		if ($request->variable('action', '') == 'details')
 		{
-			$language->add_lang('info_acp_bbpoints', 'sitesplat/bbpoints');
+			$user->add_lang_ext('sitesplat/bbpoints', 'info_acp_bbpoints');
 			$phpbb_container->get('sitesplat.BBCore.helper')->detail('sitesplat/bbpoints');
 			$this->tpl_name = 'acp_ext_details';
 		}

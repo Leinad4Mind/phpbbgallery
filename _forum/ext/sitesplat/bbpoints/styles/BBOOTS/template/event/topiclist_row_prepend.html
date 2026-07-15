@@ -1,9 +1,3 @@
-{% if topicrow.TOPIC_HIDDEN %}
-  <a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle" title="{% if topicrow.TOPIC_PAYED %}{{ lang('TOPIC_HIDDEN') }}{% else %}{{ lang('WAS_HIDDEN') }}{% endif %}" {% if topicrow.TOPIC_PAYED %} data-ajax="true" data-refresh="true" {% endif %}>
-    {% if topicrow.TOPIC_PAYED %}
-      <span class="label label-success">
-        <i class="fa fa-eye-slash"></i>&nbsp;{{ lang('BB_PAID_UP') }}</span>
-    {% else %}
-    {% endif %}
-  </a>
-{% endif %}
+<!-- IF topicrow.TOPIC_HIDDEN -->
+   <a href="{topicrow.U_VIEW_TOPIC}" class="topictitle" title="<!-- IF topicrow.TOPIC_PAYED -->{L_TOPIC_HIDDEN}<!-- ELSE -->{L_WAS_HIDDEN}<!-- ENDIF -->"<!-- IF topicrow.TOPIC_PAYED --> data-ajax="true" data-refresh="true"<!-- ENDIF -->><!-- IF topicrow.TOPIC_PAYED --><span class="label label-success"><i class="fa fa-eye-slash"></i>&nbsp;{L_BB_PAID_UP}</span><!-- ELSE --><!-- ENDIF --></a>
+<!-- ENDIF -->

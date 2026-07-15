@@ -1,11 +1,10 @@
-{% if BBPOINTS_ENABLED_HIDE %}
-  <div class="control-group {{ U_ACP }} - {{ U_MCP }}"{% if not (U_ACP or U_MCP) %} style="display:none;"{% endif %}>
-    <label class="control-label" for="bbpoints_hide">{{ lang('BBPOINTS_HIDE_TOPIC') ~ lang('COLON') }}</label>
-    <span class="help-block">{{ lang('BBPOINTS_HIDE_TOPIC_EXPLAIN') }}</span>
-    <div class="input-group col-xs-10 col-sm-3 col-md-2">
-      <span class="input-group-addon">{{ lang('BBPOINTS') }}</span>
-      <input type="number" size="3" min="0" max="999999" name="bbpoints_hide" id="bbpoints_hide" value="{{ BBPOINTS_PAYED }}" class="form-control input-sm">
-    </div>
-    <div class="space10"></div>
-  </div>
-{% endif %}
+<!-- IF BBPOINTS_ENABLED_HIDE -->
+<div class="control-group"> 
+	<label class="control-label" for="bbpoints_hide">{L_BBPOINTS_HIDE_TOPIC}{L_COLON}</label><span class="help-block">{L_BBPOINTS_HIDE_TOPIC_EXPLAIN}</span>
+	    <div class="input-group col-xs-8 col-sm-2 col-md-2">
+		    <span class="input-group-addon">{L_BBPOINTS}</span>
+			<input type="number" size="3" min="0" max="999999" name="bbpoints_hide" id="bbpoints_hide" value="{BBPOINTS_PAYED}" class="form-control input-sm">
+	    </div>
+	 <div class="space10"></div>
+</div>
+<!-- ENDIF -->

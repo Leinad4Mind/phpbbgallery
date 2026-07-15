@@ -1,16 +1,3 @@
-{% if topicrow.TOPIC_HIDDEN %}
-  <a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle" title="{% if topicrow.TOPIC_PAYED %}{{ lang('TOPIC_HIDDEN') }}{% elseif topicrow.TOPIC_PERSONAL %}{{ lang('WAS_HIDDEN') }}{% else %}{{ lang('BB_PERSONAL_EXPLAIN') }}{% endif %}" {% if topicrow.TOPIC_PAYED %} data-ajax="true" data-refresh="true" {% endif %}>
-    {% if topicrow.TOPIC_PAYED %}
-      <span class="label label-success">
-        <i class="fa fa-eye-slash"></i>&nbsp;{{ topicrow.TOPIC_POINTS }}&nbsp;{{ lang('BB_PAID_UP') }}
-      </span>
-    {% else %}
-      <span class="label label-danger">
-        <i class="fa fa-eye"></i>&nbsp;
-        {% if topicrow.TOPIC_PERSONAL %}{{ lang('BB_PAID') }}
-        {% else %}{{ lang('BB_PERSONAL') }}&nbsp;({{ topicrow.TOPIC_POINTS }})
-        {% endif %}
-      </span>
-    {% endif %}
-  </a>
-{% endif %}
+<!-- IF topicrow.TOPIC_HIDDEN -->
+   <a href="{topicrow.U_VIEW_TOPIC}" class="topictitle" title="<!-- IF topicrow.TOPIC_PAYED -->{L_TOPIC_HIDDEN}<!-- ELSE -->{L_WAS_HIDDEN}<!-- ENDIF -->"<!-- IF topicrow.TOPIC_PAYED --> data-ajax="true" data-refresh="true"<!-- ENDIF -->><!-- IF topicrow.TOPIC_PAYED --><span class="label label-success"><i class="fa fa-eye-slash"></i>&nbsp;{L_BB_PAID_UP}</span><!-- ELSE --><!-- ENDIF --></a>
+<!-- ENDIF -->

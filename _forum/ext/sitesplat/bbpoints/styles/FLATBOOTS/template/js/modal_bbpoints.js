@@ -12,6 +12,7 @@ head.ready(function () {
 
 	$('#mtransfer_to').autocomplete({
 		source: function(request, response) {
+			
 					$.ajax({
 						type: "POST",
 						url: boardurl + 'bbpoints/search_user',
@@ -37,7 +38,7 @@ head.ready(function () {
 			$(this).val(ui.item.label); 
 			$("#mtransfer_id_to").val(ui.item.value); 
 		},
-		placeholder: enter_user_lang || 'Enter user',
+		placeholder: 'Enter user ...',
 		minLength: 2
 	});
 	

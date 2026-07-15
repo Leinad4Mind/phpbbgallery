@@ -1,7 +1,4 @@
 head.ready(function () {
-function enterUserLang() { 
-	return enter_user_lang;
-};
 ; (function ($, window, document) {
 
     $('#sendclick').click(function(event) {
@@ -15,6 +12,7 @@ function enterUserLang() {
 
 	$('#transfer_to').autocomplete({
 		source: function(request, response) {
+			
 					$.ajax({
 						type: "POST",
 						url: boardurl + 'bbpoints/search_user',
@@ -40,7 +38,7 @@ function enterUserLang() {
 			$(this).val(ui.item.label); 
 			$("#transfer_id_to").val(ui.item.value); 
 		},
-		placeholder: enterUserLang,
+		placeholder: 'Enter user ...',
 		minLength: 2
 	});
 	

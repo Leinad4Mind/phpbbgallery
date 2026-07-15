@@ -1,132 +1,90 @@
-{% include 'ucp_header.html' %}
-{% EVENT sitesplat_bbpoints_before_ucp_profile %}
+<!-- INCLUDE ucp_header.html -->
 <script>
-  var boardurl = '{{ BOARD_URL }}';
+var boardurl = '{BOARD_URL}';
 </script>
 <div class="tab-pane active">
-  <fieldset class="framed-ucp">
-    <legend>{{ lang('BBPOINTS') }}</legend>
-    <p>{{ lang('UCP_BBPOINTS_EXPLAIN') }}</p>
-    {% if U_ACTION %}
-      <div class="clearfix">
-        <form action="{{ U_ACTION }}" method="post" data-ajax="true" data-refresh="true">
-          {% EVENT sitesplat_bbpoints_before_row_ucp_profile %}
-          <div class="row">
-            <div class="col-md-6">
-              <label class="control-label" for="transfer_to">{{ lang('BB_TRANSFER') ~ lang('COLON') }}</label>
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-user"></i>
-                </span>
-                <input placeholder="{{ lang('USERNAME') }}" id="transfer_to" value="" class="form-control"/><input type="hidden" id="transfer_id_to" name="transfer_to" value="0"/>
-              </div>
-            </div>
-            {% EVENT sitesplat_bbpoints_before_amount_row_ucp_profile %}
-
-            <div class="col-md-6">
-              <label class="control-label" for="transfer_to">{{ lang('BB_AMOUNT') ~ lang('COLON') }}</label>
-              <div class="input-group">
-                <span class="input-group-addon">{{ lang('BBPOINTS') }}</span>
-                <input placeholder="{{ lang('BB_AMOUNT') }}" type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{{ USER_POINTS }}" class="form-control">
-                <span class="input-group-btn">
-                  <input type="submit" tabindex="4" name="submit" value="{{ lang('SUBMIT') }}" class="btn btn-success"/>
-                </span>
-              </div>
-            </div>
-            {% EVENT sitesplat_bbpoints_after_amount_row_ucp_profile %}
-          </div>
-          {% if COMMENT_ENABLED %}
-            <div class="control-group">
-              <label class="control-label" for="comment">{{ lang('TRANSFER_DESCR') ~ lang('COLON') }}</label>
-              <div class="controls controls-row">
-                <input placeholder="{{ lang('BBPOINTS_COMMENT_PLACEHOLDER') }}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45"/>
-              </div>
-            </div>
-          {% endif %}
-          {% EVENT sitesplat_bbpoints_after_row_ucp_profile %}
-        </form>
-        <div class="space10"></div>
-        <div class="space10"></div>
-      </div>
-    {% endif %}
-
-    <div class="panel panel-forum">
-      <div class="panel-heading">
-        {{ lang('BBPOINTS_LOG') }}
-      </div>
-      <div class="panel-inner">
-        {% EVENT sitesplat_bbpoints_before_table_ucp_profile %}
-        <table class="footable table table-striped table-primary table-hover">
-          <thead>
-            <tr>
-              {% EVENT sitesplat_bbpoints_before_table_head_ucp_profile %}
-              <th data-class="expand">{{ lang('SUBJECT') }}</th>
-              <th data-hide="phone">{{ lang('BBPOINTS') }}</th>
-              <th data-hide="phone">{{ lang('POST_TIME') }}</th>
-              <th data-hide="phone">{{ lang('USERNAME') }}</th>
-              {% EVENT sitesplat_bbpoints_after_table_head_ucp_profile %}
-            </tr>
-          </thead>
-          <tbody>
-            {% EVENT sitesplat_bbpoints_before_table_body_ucp_profile %}
-            {% if loops.pointsucp %}
-              {% for pointsucp in loops.pointsucp %}
-                <tr>
-                  <td>
-                    <label for="{{ pointsucp.SUBJECT }}">
-                      {% if pointsucp.SUBJECTURL %}
-                        <a href="{{ pointsucp.SUBJECTURL }}">
-                        {% endif %}{{ pointsucp.SUBJECT }}
-                        {% if pointsucp.SUBJECTURL %}
-                        </a>
-                      {% endif %}
-                      {% if pointsucp.REASON %}&nbsp;<i class="fa fa-question-circle" title="{{ pointsucp.REASON }}"></i>
-                      {% endif %}
-                    </label>
-                  </td>
-                  <td title="{{ pointsucp.TITLE }}">
-                    {% if SYMBOL_POS %}
-                      <i class="fa {{ BBPOINTS_SYMBOL }}"></i>
-                    {% endif %}{{ pointsucp.GIVE_RECEIVE }}
-                    {% if not SYMBOL_POS %}
-                      <i class="fa {{ BBPOINTS_SYMBOL }}"></i>
-                    {% endif %}
-                  </td>
-                  <td class="center">{{ pointsucp.POINTS_TIME }}</td>
-                  <td class="center mark">{{ pointsucp.USERNAME }}</td>
-                </tr>
-              {% else %}
-                <tr>
-                  <td colspan="4" class="text-center">{{ lang('BBPOINTS_NO_RECORDS') }}</td>
-                </tr>
-              {% endfor %}
-            {% endif %}
-            {% EVENT sitesplat_bbpoints_after_table_body_ucp_profile %}
-          </tbody>
-        </table>
-        {% EVENT sitesplat_bbpoints_after_table_ucp_profile %}
-      </div>
-    </div>
-
-    {% EVENT sitesplat_bbpoints_before_pagination_ucp_profile %}
-    {% if loops.pagination or TOTAL_POSTS %}
-      <div class="clearfix">
-        <div class="pull-right">
-          <ul class="pagination pagination-sm">
-            {% if loops.pagination %}
-              {% include 'pagination.html' %}
-            {% else %}
-              <li class="active">
-                <a>{{ PAGE_NUMBER }}</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-    {% EVENT sitesplat_bbpoints_after_pagination_ucp_profile %}
-
-  </fieldset>
+	<fieldset class="framed-ucp">
+	 <legend>{L_BBPOINTS}</legend>
+		<p>{L_UCP_BBPOINTS_EXPLAIN}</p>
+<!-- IF U_ACTION -->
+<div class="clearfix">
+	<form  action="{U_ACTION}" method="post" data-ajax="true" data-refresh="true">  
+    <div class="row">
+		<div class="col-md-6">
+		<label class="control-label" for="transfer_to">{L_BB_TRANSFER}{L_COLON}</label>
+		<div class="input-group">
+		<span class="input-group-addon"><i class="fa fa-user"></i></span>
+		    <input placeholder="{L_USERNAME}" id="transfer_to" value="" class="form-control" /><input type="hidden" id="transfer_id_to" name="transfer_to" value="0" />
+		</div>
+		</div>
+		
+		<div class="col-md-6">
+		<label class="control-label" for="transfer_to">{L_BB_AMOUNT}{L_COLON}</label>
+		<div class="input-group">
+			<span class="input-group-addon">{L_BBPOINTS}</span>
+		    <input placeholder="{L_BB_AMOUNT}" type="number" tabindex="2" name="amount" id="amount" value="" min="5" max="{USER_POINTS}" class="form-control">
+		   <span class="input-group-btn"> 
+			<input type="submit" tabindex="4" name="submit" value="{L_SUBMIT}" class="btn btn-success" />
+		   </span>
+		</div>
+		</div>
+	</div>
+		<!-- IF COMMENT_ENABLED -->
+		<div class="control-group">
+		  <label class="control-label" for="comment">{L_TRANSFER_DESCR}{L_COLON}</label>
+          <div class="controls controls-row">		  
+		   <input placeholder="{L_BBPOINTS_COMMENT_PLACEHOLDER}" id="comment" type="text" name="comment" value="" class="form-control" maxlength="100" size="45" />
+		  </div> 
+		</div> 
+		<!-- ENDIF -->
+	</form>
+   <div class="space10"></div>
+  <div class="space10"></div>
 </div>
-{% EVENT sitesplat_bbpoints_after_ucp_profile %}
-{% include 'ucp_footer.html' %}
+<!-- ENDIF -->
+
+<div class="panel panel-forum">
+	    <div class="panel-heading">
+		 {L_BBPOINT_LOG}
+		</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_SUBJECT}</th>
+				<th data-hide="phone">{L_BBPOINTS}</th>
+				<th data-hide="phone">{L_POST_TIME}</th>
+				<th data-hide="phone">{L_USERNAME}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN pointsucp -->
+			<tr>
+				<td><label for="{pointsucp.SUBJECT}"><!-- IF pointsucp.SUBJECTURL --><a href="{pointsucp.SUBJECTURL}"><!-- ENDIF -->{pointsucp.SUBJECT}<!-- IF pointsucp.SUBJECTURL --></a><!-- ENDIF --><!-- IF pointsucp.REASON -->&nbsp;<i class="fa fa-question-circle" title="{pointsucp.REASON}"></i><!-- ENDIF --></label></td>
+				<td title="{pointsucp.TITLE}"><!-- IF SYMBOL_POS --><i class="fa {BBPOINTS_SYMBOL}"></i> <!-- ENDIF -->{pointsucp.GIVE_RECIEVE}<!-- IF not SYMBOL_POS --> <i class="fa {BBPOINTS_SYMBOL}"></i><!-- ENDIF --></td>
+				<td class="center">{pointsucp.POINTS_TIME}</td>
+				<td class="center mark">{pointsucp.USERNAME}</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr><td colspan="4" class="text-center">{L_BBPOINTS_NO_RECORDS}</td></tr>
+		<!-- END pointsucp -->
+		</tbody>
+	</table>
+</div>		
+</div>
+
+<div class="clearfix">
+   <div class="pull-right">
+	 <ul class="pagination pagination-sm">
+	 <!-- IF .pagination or TOTAL_POSTS -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			<li class="active"><a>{PAGE_NUMBER}</a></li>	
+	 <!-- ENDIF -->
+	 </ul>
+   </div>
+</div>
+
+</fieldset>
+</div>
+<!-- INCLUDE ucp_footer.html -->

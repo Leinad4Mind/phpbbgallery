@@ -1,19 +1,18 @@
 <?php
-
 /**
- *
- * BBPoints extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBPoints extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbpoints\migrations\v10x;
 
 /**
- * Migration stage 2: Initial module
- */
+* Migration stage 2: Initial module
+*/
 class m2_initial_module extends \phpbb\db\migration\migration
 {
 	/**
@@ -25,7 +24,7 @@ class m2_initial_module extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return ['\sitesplat\bbpoints\migrations\v10x\m1_initial_schema'];
+		return array('\sitesplat\bbpoints\migrations\v10x\m1_initial_schema');
 	}
 
 	/**
@@ -39,22 +38,22 @@ class m2_initial_module extends \phpbb\db\migration\migration
 		$sql = 'SELECT module_id FROM ' . MODULES_TABLE . ' WHERE module_langname = "ACP_MANAGE_FORUMS" AND module_basename = ""';
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
-
-		return [
-			['module.add', [
-				'acp', $row['module_id'], [
+		
+		return array(
+			array('module.add', array(
+				'acp', $row['module_id'], array(
 					'module_basename'	=> '\sitesplat\bbpoints\acp\bbpoints_module',
 					'auth'				=> 'ext_sitesplat/bbpoints && acl_a_board',
-					'modes'				=> ['settings'],
-				],
-			]],
-			['module.add', [
-				'ucp', 'UCP_PROFILE', [
+					'modes'				=> array('settings'),
+				),
+			)),
+			array('module.add', array(
+				'ucp', 'UCP_PROFILE', array(
 					'module_basename'	=> '\sitesplat\bbpoints\ucp\bbpoints_module',
 					'auth'				=> 'ext_sitesplat/bbpoints',
-					'modes'				=> ['bbpoints'],
-				],
-			]],
-		];
+					'modes'				=> array('bbpoints'),
+				),
+			)),
+		);
 	}
 }

@@ -1,25 +1,25 @@
 <?php
+/**
+*
+* BBPoints extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 /**
- *
- * BBPoints extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
-
-/**
- * DO NOT CHANGE
- */
-if (!defined('IN_PHPBB')) {
+* DO NOT CHANGE
+*/
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
-	$lang = [];
+if (empty($lang) || !is_array($lang))
+{
+	$lang = array();
 }
-
 
 // DEVELOPERS PLEASE NOTE
 //
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang)) {
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, [
+$lang = array_merge($lang, array(
 	'ACL_F_HIDE_TOPIC'		    => 'Can hide (and set a price) own topic',
-	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Can override GoldenPoints limit',
-]);
+	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Can override BBpoints limit',
+));
