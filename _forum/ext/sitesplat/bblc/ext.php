@@ -1,0 +1,9 @@
+<?php
+/**
+ * BBlivechat Custom CSS Addon
+ * @copyright (c) 2020 SiteSplat. All rights reserved.
+ * @license Proprietary
+ */
+
+namespace sitesplat\bblc_custom_css;
+class ext extends \phpbb\extension\base { protected $db; public function __construct($container, $extension_finder, $migrator, $extension_name, $extension_path) { $this->db = $container->get('dbal.conn'); } public function is_enableable() { if (!extension_loaded('mbstring')) { return false; } $sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_class = 'acp' AND module_langname = 'BBlivechat'"; $result = $this->db->sql_query($sql); $module_id = (int) $this->db->sql_fetchfield('module_id'); $this->db->sql_freeresult($result); return $module_id > 0; } public function enable_step($whocares) { $addons = \sitesplat\addon::$addons; $addons['bblivechat']['bblc_custom_css'] = 'sitesplat'; \sitesplat\addon::$addons = $addons; $json = $this->db->sql_escape(json_encode($addons, 320)); $this->db->sql_query('REPLACE INTO ' . CONFIG_TEXT_TABLE . " VALUES('sitesplat_addons', '$json')"); return false; } public function disable_step($whocares) { $addons = \sitesplat\addon::$addons; unset($addons['bblivechat']['bblc_custom_css']); if (empty($addons['bblivechat'])) { unset($addons['bblivechat']); } \sitesplat\addon::$addons = $addons; $json = $this->db->sql_escape(json_encode($addons, 320)); $this->db->sql_query('REPLACE INTO ' . CONFIG_TEXT_TABLE . " VALUES('sitesplat_addons', '$json')"); return false; } public function purge_step($whocares) { $this->db->sql_query('DELETE FROM ' . CONFIG_TEXT_TABLE . " WHERE config_name = 'bblc_customcss'"); return false; } }
