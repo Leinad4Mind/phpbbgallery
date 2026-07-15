@@ -3,7 +3,7 @@
     <h4><i class="fa fa-edit"></i> {L_QUICKREPLY}</h4>
     <a class="target-status fa fa-arrow-down" href="javascript:void(0);"></a>
 </div>
-	<form role="form" name="qr_postform" id="qr_postform" method="post" action="{U_QR_ACTION}"{S_FORM_ENCTYPE}>
+	<form name="qr_postform" id="qr_postform" method="post" action="{U_QR_ACTION}"{S_FORM_ENCTYPE}>
      <fieldset> 
 	 <div id="target-col" class="widget-content collapse">
 		<div class="row">			
@@ -35,8 +35,8 @@
 					  {S_FORM_TOKEN}
 		              {QR_HIDDEN_FIELDS}
 		              <a role="button" class="btn btn-default togglesnappy"><i class="fa fa-cog"></i></a>
-					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
-		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>	
+					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>	
 				    </div>
 			    </div>
             </div>

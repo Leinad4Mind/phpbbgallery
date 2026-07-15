@@ -1,7 +1,7 @@
 <div class="clearfix">
 	<form name="qr_postform" id="qr_postform" method="post" action="{U_QR_ACTION}"{S_FORM_ENCTYPE}>
      <fieldset> 
-		<div class="row">			
+		<div class="row">
 			<div class="col-md-12">
 				<div class="text-center">
 				  <!-- EVENT quickreply_editor_panel_before -->
@@ -31,8 +31,8 @@
 		              {QR_HIDDEN_FIELDS}
 		              <button onclick="document.getElementById('show_button').style.display = 'inline-block';" class="btn btn-default" type="button" data-target=".quick-reply" data-toggle="collapse"><i class="fa fa-times"></i></button>
                       <a role="button" class="btn btn-default togglesnappy"><i class="fa fa-cog"></i></a>
-					  <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="7" name="post" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
-		              <button type="submit" class="btn btn-default load" disabled="disabled" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>		   
+					  <button type="submit" class="btn btn-default load" tabindex="7" name="post" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+		              <button type="submit" class="btn btn-default load" tabindex="6" name="preview" value="{L_FULL_EDITOR}" id="qr_full_editor" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><span class="hidden-xs">{L_FULL_EDITOR}</span><i class="fa fa-search visible-xs"></i></button>		   
 				   </div>
 			    </div>
             </div>
@@ -45,7 +45,9 @@
 				<!-- IF S_NOTIFY_ALLOWED --><div><input type="checkbox" name="notify" id="notify"{S_NOTIFY_CHECKED}><label class="icheck-control" for="notify">{L_NOTIFY_REPLY}</label></div><!-- ENDIF -->
 				<!-- IF S_LOCK_TOPIC_ALLOWED --><div><input type="checkbox" name="lock_topic" id="lock_topic"{S_LOCK_TOPIC_CHECKED}><label class="icheck-control" for="lock_topic">{L_LOCK_TOPIC}</label></div><!-- ENDIF -->
 				<!-- IF S_LOCK_POST_ALLOWED --><div><input type="checkbox" name="lock_post" id="lock_post"><label class="icheck-control" for="lock_post">{L_LOCK_POST}[{L_LOCK_POST_EXPLAIN}]</label></div><!-- ENDIF -->
-	     	    <!-- EVENT quickreply_editor_message_after -->
+				<!-- IF FORUM_ID eq 55 -->
+					<!-- EVENT quickreply_editor_message_after -->
+				<!-- ENDIF -->
 			    <a role="button" class="btn-link visible-xs pull-right togglesnappy"><i class="fa fa-times"></i></a>
 			   </div>
 			</div>

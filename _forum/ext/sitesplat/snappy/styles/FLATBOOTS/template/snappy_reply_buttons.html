@@ -54,6 +54,7 @@
 	<div id="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></div>
 </div>
 <!-- ENDIF -->
+
 <!-- IF S_BBCODE_ALLOWED -->
 <div class="space10"></div>
 <!-- IF not S_BBCODEORDER -->
@@ -86,41 +87,47 @@
 	<div class="btn-group hidden-xs">
 	<!-- BEGIN custom_tags -->
 	<!-- IF custom_tags.BBCODE_TAG eq 'youtube' -->
-	<button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-youtube"></i></button>
+	 <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-youtube"></i></button>
 	<!-- ENDIF -->
 	<!-- END custom_tags -->
 	
 	<!-- BEGIN custom_tags -->
 	<!-- IF custom_tags.BBCODE_TAG eq 'c' -->
-	<button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-text-width"></i></button>
+	 <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{custom_tags.BBCODE_HELPLINE}"><i class="fa fa-text-width"></i></button>
 	<!-- ENDIF -->
 	<!-- END custom_tags -->
    </div>
 
-	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
-		<option value="50">{L_FONT_TINY}</option>
-		<option value="85">{L_FONT_SMALL}</option>
-		<option data-icon="fa fa-font" value="100" selected="selected">{L_FONT_NORMAL}</option>
-		<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
-			<option value="150">{L_FONT_LARGE}</option>
-			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
-				<option value="200">{L_FONT_HUGE}</option>
+	<div class="btn-group hidden-xs">
+		<select class="selectpicker" data-style="btn-default" data-width="auto" name="addbbcode20" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+			<option value="50">{L_FONT_TINY}</option>
+			<option value="85">{L_FONT_SMALL}</option>
+			<option data-icon="fa fa-font" value="100" selected="selected">{L_FONT_NORMAL}</option>
+			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
+				<option value="150">{L_FONT_LARGE}</option>
+				<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
+					<option value="200">{L_FONT_HUGE}</option>
+				<!-- ENDIF -->
 			<!-- ENDIF -->
+		</select>
+		
+		<select class="selectpicker" data-style="btn-default" data-width="auto" name="addbbcode_custom" onchange="bbstyle(this.form.addbbcode_custom.options[this.form.addbbcode_custom.selectedIndex].value*1);this.form.addbbcode_custom.selectedIndex = 0;">
+			<option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
+			<!-- BEGIN custom_tags -->
+				<option value="{custom_tags.BBCODE_ID}" title="{custom_tags.BBCODE_HELPLINE}">{custom_tags.BBCODE_TAG}</option>
+			<!-- END custom_tags -->   
+		</select>
+		<!-- IF S_SHOW_ATTACH_BTN --> 
+		<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files">
+			<i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}
+		</button>
 		<!-- ENDIF -->
-	</select>
-	
-	<select class="selectpicker hidden-xs" data-style="btn-default" data-width="auto" name="addbbcode_custom" onchange="bbstyle(this.form.addbbcode_custom.options[this.form.addbbcode_custom.selectedIndex].value*1);this.form.addbbcode_custom.selectedIndex = 0;">
-	  <option data-icon="fa fa-cog" value="100" selected="selected">{L_BBCODES}</option>
-      <!-- BEGIN custom_tags -->
-      <option value="{custom_tags.BBCODE_ID}" title="{custom_tags.BBCODE_HELPLINE}">{custom_tags.BBCODE_TAG}</option>
-      <!-- END custom_tags -->   
-    </select>
-    <!-- IF S_SHOW_ATTACH_BTN --> 
-	<button type="button" class="btn btn-default" value="{L_PLUPLOAD_ADD_FILES}" id="add_files"><i class="fa fa-cloud-upload"></i>&nbsp;{L_PLUPLOAD_ADD_FILES}</button>
-    <!-- ENDIF -->	
+	</div>
+    
 	<!-- IF IN_IMGUR -->
+	<div class="btn-group">
 		<div class="fileinput fileinput-new" data-provides="fileinput">
-			<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#imgurAnchor';"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
+			<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="if (document.getElementById('postform') != null) { document.getElementById('postform').action += '#imgurAnchor' } else if (document.getElementById('qr_postform') != null) { document.getElementById('qr_postform').action += '#imgurAnchor' };"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
 			<span class="btn btn-default btn-file">
 				<span class="fileinput-new"><i class="fa fa-imgur"></i></span>
 				<span class="fileinput-exists"><i class="fa fa-edit"></i></span>
@@ -129,7 +136,8 @@
 			<i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
 			<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float:none"><i class="fa fa-times"></i></a>
 		</div>
-    <!-- ENDIF -->	
+	</div>
+    <!-- ENDIF -->
 </div>
 <!-- ENDIF -->
 <!-- EVENT sitesplat_snappy_quickreply_buttons_after -->
