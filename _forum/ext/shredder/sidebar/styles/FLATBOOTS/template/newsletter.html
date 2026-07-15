@@ -1,0 +1,55 @@
+<!-- IF NEWSLETTER and SCRIPT_NAME eq 'index' -->
+<div class="sidebar">
+<div id="newsletter{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_NEWSLETTER}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innernewsletter{slot.SIDEBAR_ID}" class="inner">
+		<div class="subscribe-form" id="subscribe-sidebar">
+			<!-- IF not S_SUBSCRIBE_MESSAGE -->
+				<form method="post" action="{U_SUBSCRIBE_ACTION}" id="subscribe-form-sidebar">
+					<fieldset>
+					  <div class="form-group nomargin">
+					   <label class="sr-only" for="email">{L_SUBSCRIBE_EMAIL}{L_COLON}</label>
+						<div class="input-group">
+						  <span class="input-group-addon"><i class="icon-moon-email"></i></span>
+						  <input class="form-control" type="email" name="email" id="email" spellcheck="false" autocomplete="off" placeholder="{L_EMAIL}">
+						</div>
+					  </div>
+					<div class="form-group">
+					  <button type="submit" class="btn btn-success btn-block" name="subscribe" value="{L_SUBSCRIBE_BUTTON}">{L_SUBSCRIBE_BTN}</button>
+					</div>
+					</fieldset>
+				</form>
+			<!-- ELSEIF S_SUBSCRIBE_MESSAGE -->
+				<div class="col-sm-12">
+					<p>{S_SUBSCRIBE_MESSAGE}</p>
+				</div>
+			<!-- ENDIF -->
+	 </div>
+	 </div>
+	</div>
+</div>
+</div>
+
+<script>
+head.ready('jquery.min.js', function(){
+	'use strict';
+
+	$ = jQuery;
+
+	$(function() {
+		$(document).on('submit', '#subscribe-form-sidebar', function(event){
+			$('#subscribe-form-sidebar button').prop('disabled', true);
+
+			$.post($('#subscribe-form-sidebar').attr('action'), {email: $("#email").val()}).done(function(response){
+				$('#subscribe-sidebar').html('<div class="col-sm-12"><p>' + response.RESPONSE + '</p></div>')
+			});
+
+			event.preventDefault();
+		});
+	});
+});
+</script>	
+<!-- ENDIF -->

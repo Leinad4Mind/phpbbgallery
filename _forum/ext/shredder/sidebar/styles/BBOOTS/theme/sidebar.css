@@ -1,0 +1,238 @@
+#page-sidebar {
+    margin-top: 5px;
+}
+
+/***** PANELS *****/
+
+.sidebar .panel {
+    background-color: #fff;
+    border: 0 none;
+    border-radius: 2px;
+    box-shadow: none;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sidebar .panel-heading {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-bottom: 0;
+	height: 36px;
+    line-height: 36px;
+}
+
+.sidebar .panel-info > .panel-heading {
+    background-color: #169fe6;
+    border-color: transparent;
+    color: #ffffff;
+}
+
+.sidebar .panel-success > .panel-heading {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.panel-title {
+    color: #313745;
+    font-family: "Roboto Condensed","Arial","Helvetica",sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.panel-default .panel-heading .panel-title, .panel-primary .panel-heading .panel-title, .panel-success .panel-heading .panel-title, .panel-warning .panel-heading .panel-title, .panel-danger .panel-heading .panel-title, .panel-info .panel-heading .panel-title, .panel-inverse .panel-heading .panel-title {
+    color: #fff;
+}
+
+.panel-inverse > .panel-heading {
+    background-color: #505b72;
+    border-color: transparent;
+    color: #ffffff;
+}
+
+.user-list .media:first-child {
+    margin-top: -10px;
+	padding-top: 0;
+}
+
+.user-list .media:last-child {
+    margin-bottom: -10px;
+}
+
+.user-list .media + .media {
+    border-top: 1px solid #eaecf0;
+    margin: 0;
+}
+.user-list .media {
+    padding: 8px 0!important;
+}
+
+.user-list .media-body .media-heading {
+    margin: 2px 0;
+}
+
+.user-list .media-body span {
+    color: #259dab;
+    font-weight: 500;
+}
+
+.fa-object {
+    font-size: 16px;
+ /* margin-right: 10px; */
+    margin-top: 10px;
+}
+
+ /* special quick and dirty fix for this long icon */
+.icon-bbreact-emo-shoot.fa-object {
+    margin-right: -18px;
+}
+
+.media-left.bbreactions-emoji, .media > .pull-left {
+    padding-right: 26px;
+}
+
+.media-left.bbreactions-emoji .emoji {
+    margin-top: 10px;
+}
+
+.user-list .media-body .media-heading > a {
+    color: #3b4354;
+    font-size: 14px;
+    font-weight: bolder;
+    transition: all 0.2s ease-out 0s;
+}
+
+.media-object.img-circle {
+    border-radius: 4px;
+}
+
+.user-list .media-object {
+    border: 2px solid #dbdfe6;
+	margin-top: 5px;
+    padding: 2px;
+    width: 42px;
+}
+
+.user-list .media-body small.date,
+.list-announcement .media-body small.date {
+    color: #818da7;
+    display: block;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.user-list .media-body small i {
+	transform:rotate(0.001deg);
+}
+
+.list-announcement .panel-body ul > li small i {
+transform:rotate(0.001deg);
+
+}
+
+.list-announcement .panel-body ul > li a:not(.title-head) {
+    color: inherit;
+}
+
+.list-announcement .username-coloured, .list-announcement .username,
+.user-list .username-coloured, .user-list .username {
+    font-size: 14px;
+}
+
+.list-announcement .panel-body ul > li:first-child {
+    margin-top: -10px;
+}
+
+.list-announcement .panel-body ul > li {
+    border-bottom: 1px solid #eaecf0;
+    letter-spacing: normal;
+    padding: 10px 0;
+}
+
+.list-announcement .panel-body ul > li:last-child {
+    border-bottom: 0 none;
+    padding: 10px 0 0;
+}
+
+.list-announcement .panel-footer {
+    background-color: #fff;
+    padding: 14px 20px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.list-announcement .panel-body ul {
+    margin-bottom: 0;
+}
+
+
+.list-announcement .panel-body ul > li a {
+    color: #3b4354;
+    font-weight: 500;
+}
+
+.list-announcement .panel-body ul > li small {
+    color: rgba(38, 43, 54, 0.45);
+    display: block;
+    margin-top: 4px;
+}
+
+.list-announcement .panel-body ul > li small a {
+    color: #259dab;
+    float: right;
+    font-weight: 400;
+}
+
+.nav-top-poster {
+    margin-bottom: 10px;
+}
+
+.nav-top-poster > li > a {
+    display: inline-block;
+    padding: 2px 4px;
+}
+
+.nav-top-poster.nav-justified > li {
+    display: table-cell;
+    text-align: center;
+    width: 1%;
+}
+
+#page-sidebar .panel-warning > .panel-heading {
+    background-color: #e69049;
+    border-color: #e38233;
+}
+/***** MISC FIXES DUE TO SIDEBAR *****/
+.com-stuff {
+    right: 26%;
+}
+
+.btn-noti-td {
+    width: 100px;
+}
+
+.quick-reply .btn-default {
+    margin-bottom:10px;
+   
+}
+
+
+
+
+
+.avn-price-table.avn-style12 .items > ul > li {
+    float: none!important;
+    padding: 5px 0!important;
+    width: auto!important;
+}
+
+
+.last-wrapper {
+    max-width: 200px;
+}
+
+.large20 {
+    width: 25%!important;
+}

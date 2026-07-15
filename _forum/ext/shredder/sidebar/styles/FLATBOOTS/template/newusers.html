@@ -1,0 +1,25 @@
+<!-- IF .newest_users -->
+<div class="sidebar">
+<div id="users{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_NEWEST_USERS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerusers{slot.SIDEBAR_ID}" class="inner">
+		<ul class="media-list user-list">
+		<!-- BEGIN newest_users -->
+		<li class="media">
+			<div class="media-left">
+				<img alt="" src="{newest_users.AVATAR}" class="media-object img-circle">
+			</div>
+            <div class="media-body">
+                <div class="media-heading">{newest_users.USERNAME_FULL}&nbsp;&#45;&nbsp;<small>{newest_users.REG_DATE}</small></div>
+            </div>
+        </li>
+		<!-- END newest_users -->
+		</ul>
+	 </div>
+	</div>
+</div>
+</div>
+<!-- ENDIF -->

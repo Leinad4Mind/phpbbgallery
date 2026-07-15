@@ -1,0 +1,37 @@
+{
+	"name": "sitesplat/sidebar",
+	"type": "phpbb-extension",
+	"description": "This extension adds a flexible multi-block system for your forum. Tons of options available and it comes with many modern blocks by default",
+	"homepage": "https://sitesplat.com",
+	"version": "1.4.3",
+	"keywords": ["phpbb", "extension", "sidebar", "sideblock", "sitesplat", "premium"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0",
+		"mobiledetect/mobiledetectlib": "^2.8"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "BBsidebar",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.3, <3.2.*@dev"
+		},
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbsidebar.json",
+			"ssl": true
+		}
+	}
+}
+
