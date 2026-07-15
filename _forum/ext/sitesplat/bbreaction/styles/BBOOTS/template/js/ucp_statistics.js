@@ -22,7 +22,7 @@ head.ready(function () {
 				href: 'http://sitesplat.com'
 			},
 			tooltip: {
-				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
 			},
 			plotOptions: {
 				pie: {
@@ -30,7 +30,7 @@ head.ready(function () {
 					cursor: 'pointer',
 					dataLabels: {
 						enabled: false,
-						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						format: '<b>{point.name}</b>: {point.percentage:.2f} %',
 						style: {
 							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 						}

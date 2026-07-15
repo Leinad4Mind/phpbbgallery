@@ -51,14 +51,7 @@
 					{ICONS} <input id="option" type="text" name="option" value="{OPTION}" style="width:50px;" />
 				</dd>
 			</dl>
-			<!-- IF BBREACTION_EMOJI -->
-			<dl>
-				<dt><label for="bbemoji">{L_ACP_BBREACTION_EMOJI}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_EMOJI_EXPLAIN}</span></dt>
-				<dd>
-					<input id="bbemoji" type="text" name="emoji" value="{EMOJI}" autocomplete="off" />
-				</dd>
-			</dl>
-			<!-- ENDIF -->
+			<!-- EVENT sitesplat_bbreaction_manage_bbreaction_inside -->
 			<dl>
 				<dt><label for="rule_notify">{L_ACP_BBREACTION_NEGATIVE}{L_COLON}</label><br /><span>{L_ACP_BBREACTION_NEGATIVE_EXPLAIN}</span></dt>
 				<dd>
@@ -129,11 +122,7 @@
 				<tr>
 					<td><strong>{reward.GROUP_NAME}</strong></td>
 					<td style="text-align:center;">
-						<!-- IF BBREACTION_EMOJI and reward.EMOJI -->
-							<i style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{reward.EMOJI}</i>
-						<!-- ELSE -->
-							<i class="fa {reward.SYMBOL}" style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;"></i>
-						<!-- ENDIF -->
+						<i class="{reward.CLASSLIST}" style="color:<!-- IF reward.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{reward.CONTENTS}</i>
 					</td>
 					<td style="text-align:center;">{reward.USED}</td>
 					<td style="text-align:center;"><!-- IF reward.S_NOTIFY -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>

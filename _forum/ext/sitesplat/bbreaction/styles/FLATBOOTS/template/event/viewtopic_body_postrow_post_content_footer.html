@@ -1,4 +1,3 @@
-<!-- IF not postrow.S_FIRST_POST -->
 <div class="bbreaction-wrap">
 <div class="card text-center">
  <div class="com-contain">
@@ -8,11 +7,7 @@
     <!-- BEGIN postrow.rewards -->
 	 <li>
 	  <a class="btn-bbreaction reward" href="#p{postrow.POST_ID}" data-options="p={postrow.POST_ID}&e={postrow.rewards.TYPE_ID}">
-      <!-- IF BBREACTION_EMOJI and postrow.rewards.EMOJI -->
-      <i class="<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->">{postrow.rewards.EMOJI}</i>
-      <!-- ELSE -->
-      <i class="fa {postrow.rewards.SYMBOL}<!-- IF postrow.rewards.S_POSITIVE --> bbreact-positive<!-- ELSE --> bbreact-negative<!-- ENDIF -->"></i>
-      <!-- ENDIF -->
+      <i class="{postrow.rewards.CLASSLIST}" style="color:<!-- IF not postrow.rewards.S_POSITIVE -->red<!-- ELSE -->green<!-- ENDIF -->;">{postrow.rewards.CONTENTS}</i>
       <br /> {postrow.rewards.TITLE}<br /><span id="p{postrow.POST_ID}{postrow.rewards.TYPE_ID}">{postrow.rewards.PERCENT}</span>
     </a>
 	 </li>
@@ -33,4 +28,3 @@
       <span class="ribbon-inner"><i aria-hidden="true" class="fa fa-fire"></i></span>
     </div>
 </div>
-<!-- ENDIF -->

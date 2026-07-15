@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -128,7 +127,7 @@ class reward_added extends \phpbb\notification\type\base
 	*/
 	public function get_avatar()
 	{
-		return $this->user_loader->get_avatar($this->user->data['user_id'], false, true);
+		return $this->user_loader->get_avatar($this->get_data('poster_id'), true, false);
 	}
 
 	/**
@@ -166,7 +165,7 @@ class reward_added extends \phpbb\notification\type\base
 	*/
 	public function get_email_template()
 	{
-		return '';
+		return false;
 	}
 
 	/**

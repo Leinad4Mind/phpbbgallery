@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BBreaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -35,7 +34,7 @@ $lang = array_merge($lang, array(
 	'BBREACTION_META_TASKS_5'				=> 'Configurable buttons (how many, what text, icons, negative or positive, animation etc)',
 	'BBREACTION_META_TASKS_6'				=> 'Much more..!',
 	
-	'ACP_BBREACTION_VERSION'	            => '1.2.0',
+	'ACP_BBREACTION_VERSION'	            => '1.2.2',
 	'ACP_BBREACTION'			            => 'BBreaction',
     'ACP_LOADING'			                => 'Hold On. Loading...',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			    => 'Close',
@@ -73,8 +72,8 @@ $lang = array_merge($lang, array(
 	'ACP_BBREACTION_NEGATIVE'				=> 'Positive reaction',
 	'ACP_BBREACTION_NEGATIVE_EXPLAIN'		=> 'Mark this reaction type as Positive or Negative. Positive will have a green color and Negative will have red.',
 
-	'ACP_BBREACTION_SEPERATOR'				=> 'Seperator',
-	'ACP_BBREACTION_SEPERATOR_EXPLAIN'		=> 'Draws a seperator rule to the left of this button',
+	'ACP_BBREACTION_SEPERATOR'				=> 'Separator',
+	'ACP_BBREACTION_SEPERATOR_EXPLAIN'		=> 'Draws a separator rule to the left of this button',
 	'ACP_BBREACTION_NOTIFY'					=> 'Notify',
 	'ACP_BBREACTION_NOTIFY_EXPLAIN'			=> 'Sends a notification to the poster when there is a new reaction',
 	
@@ -82,8 +81,8 @@ $lang = array_merge($lang, array(
 	'ACP_BBREACTION_SAVED_LOG'				=> 'Reaction type saved',
 	'ACP_BBREACTION_SAVED_LOG'				=> 'Reaction type added',
 	'ACP_BBREACTION_SUBMIT_SUCCESS'			=> 'Reaction type saved',
-	'ACP_BBREACTION_DELETE_SUCCESS'			=> 'Reaction type and votes succesfully deleted',
-	'ACP_BBREACTION_DELETE_LOG'				=> 'Reaction type %s and votes succesfully deleted',
+	'ACP_BBREACTION_DELETE_SUCCESS'			=> 'Reaction type and votes successfully deleted',
+	'ACP_BBREACTION_DELETE_LOG'				=> 'Reaction type %s and votes successfully deleted',
 	
 	'ACP_BBREACTION_USED'					=> 'Voted',
 	'ACP_REACTIONS'							=> 'BBreaction',
@@ -96,5 +95,3 @@ $lang = array_merge($lang, array(
 	'ACP_BBREACTION_EMOJI'			=> 'BBemoji',
 	'ACP_BBREACTION_EMOJI_EXPLAIN'	=> 'Pick a BBemoji as icon. Start by typing :.',
 ));
-
-?>

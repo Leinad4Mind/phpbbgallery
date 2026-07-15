@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* BB reaction.
-*
+* BBreaction
 * @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
@@ -29,6 +28,7 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_assign_template_vars_before'	=> 'view_topic_topic',
 			'core.delete_posts_after'						=> 'delete_like_dislike',
 			'core.memberlist_view_profile'					=> 'modify_profile',
+			'core.delete_forum_content_before_query'		=> 'delete_like_dislike_forum',
 		);
 	}
 
@@ -40,6 +40,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var \phpbb\user */
 	protected $user;
+	
+	/** @var \phpbb\auth\auth */
+    protected $auth;
 
 	/** @var \phpbb\request */
 	protected $request;
@@ -50,8 +53,7 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
-	protected $bbemoji_parser;
-	protected $bbemoji_enabled = false;
+	protected $phpbb_dispatcher;
 
 	/** @var string The database table the reactions are stored in */
 	protected $reward_table;
@@ -59,39 +61,44 @@ class listener implements EventSubscriberInterface
 	/** @var string The database table the reaction types are stored in */
 	protected $reward_type_table;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, $reward_table, $reward_type_table)
+	/** @var string The database table the posts are stored in */
+	protected $posts_table;
+
+	/** @var string The database table the topics are stored in */
+	protected $topics_table;
+	
+
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\extension\manager $ext_manager, \Symfony\Component\DependencyInjection\Container $phpbb_container, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $reward_table, $reward_type_table, $posts_table, $topics_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
+		$this->auth = $auth;
 		$this->request = $request;
 		$this->template = $template;
 		$this->helper = $helper;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->reward_table = $reward_table;
 		$this->reward_type_table = $reward_type_table;
+		$this->posts_table = $posts_table;
+		$this->topics_table = $topics_table;
 
-		if ($ext_manager->is_enabled('sitesplat/bbemoji'))
-		{
-			$this->bbemoji_enabled = true;
-			$this->bbemoji_parser = new \sitesplat\bbreaction\bbemoji\parser($phpbb_container->getParameter('sitesplat.bbemoji.url.generators'), $phpbb_container->get('path_helper'));
-			$this->template->assign_vars(array(
-				'BBREACTION_EMOJI'	=> true,
-			));
-		}
+		/**
+		* Event to run code at the end of listener constructor
+		*
+		* @event sitesplat.bbreaction.listener_construct
+		* @since 1.3.0
+		*/
+		extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_construct'));
 	}
 
 	public function add_page_header_link($event)
 	{
-		//$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'sitesplat/bbreaction',
-			'lang_set' => 'bbreaction',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
+		$this->user->add_lang_ext('sitesplat/bbreaction', 'bbreaction');
 		
 		$this->template->assign_vars(array(
-			'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
+		//	'U_BBREACTION_PAGE'			=> $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')),
+            'U_BBREACTION_PAGE'         => ($this->auth->acl_get('u_bbreaction_module')) ? $this->helper->route('sitesplat_bbreaction_main_controller', array('route' => 'toplist.html')) : '',
 			'BBREACTION_DISPLAY_TOP'	=> $this->config['rewards_display_top']
 		));
 	}
@@ -118,17 +125,35 @@ class listener implements EventSubscriberInterface
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$rewards[] = array(
+				$ary_tpl = array(
 					'TYPE_ID'		=> $row['type_id'],
 					'SYMBOL'		=> $row['symbol'],
-					'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 					'TITLE'			=> $row['title'],
 					'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
 					'S_POSITIVE'	=> ($row['positive']) ? true : false,
 					'SEPERATOR'		=> ($row['seperator']) ? true : false,
 					'U_LIKE'		=> append_sid($this->helper->route('sitesplat_bbreaction_main_controller', 
-										array('route' => 'index.html', 'p=' . $post_row['POST_ID'], 'e=' . $row['type_id'])))
+										array('route' => 'index.html', 'p=' . $post_row['POST_ID'], 'e=' . $row['type_id']))),
+					
+					'CLASSLIST'	=> 'fa ' . $row['symbol'],
+					'CONTENTS'	=> '', 
 				);
+
+				/**
+				* Event to modify reward template variables
+				*
+				* @event sitesplat.bbreaction.listener_viewtopic_handle_posts
+				* @var	array	row		Reward data
+				* @var	array	ary_tpl	Current reward template array
+				* @since 1.3.0
+				*/
+				$vars = array(
+					'row',
+					'ary_tpl',
+				);
+				extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_viewtopic_handle_posts', compact($vars)));
+
+				$rewards[] = $ary_tpl;
 				$positive = ($row['positive']) ? $positive + $row['percent']: $positive;
 				$negative = (!$row['positive']) ? $negative + $row['percent'] : $negative;
 			}
@@ -165,13 +190,31 @@ class listener implements EventSubscriberInterface
 		{
 			if ($row['percent'])
 			{
-			$this->template->assign_block_vars('reward', array(
-				'SYMBOL'		=> $row['symbol'],
-				'EMOJI'			=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
-				'TITLE'			=> $row['title'],
-				'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
-				'S_POSITIVE'	=> ($row['positive']) ? true : false,
-			));
+				$ary_tpl = array(
+					'SYMBOL'		=> $row['symbol'],
+					'TITLE'			=> $row['title'],
+					'PERCENT'		=> ($this->config['rewards_percent']) ? (($row['percent']) ? round(($row['percent'] / $total) * 100, 1)  : 0) . ' %' : '# ' . $row['percent'],
+					'S_POSITIVE'	=> ($row['positive']) ? true : false,
+
+					'CLASSLIST'	=> 'fa ' . $row['symbol'],
+					'CONTENTS'	=> '', 
+				);
+
+				/**
+				* Event to modify reward template variables
+				*
+				* @event sitesplat.bbreaction.listener_view_topic_topic
+				* @var	array	row		Reward data
+				* @var	array	ary_tpl	Current reward template array
+				* @since 1.3.0
+				*/
+				$vars = array(
+					'row',
+					'ary_tpl',
+				);
+				extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_view_topic_topic', compact($vars)));
+
+				$this->template->assign_block_vars('reward', $ary_tpl);
 			}
 		}
 	}
@@ -201,14 +244,32 @@ class listener implements EventSubscriberInterface
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result)) 
 			{
-				$this->template->assign_block_vars('rewards_memberlist', array(
+				$ary_tpl = array(
 					'TITLE'				=> $row['title'],
 					'ICON'				=> $row['symbol'],
-					'EMOJI'				=> $this->bbemoji_enabled ? $this->bbemoji_parser->emoji_render($row['emoji']) : '',
 					'S_POSITIVE'		=> $row['positive'],
 					'GIVEN_RECIEVED'	=> (($row['type'] == 'given') ? $this->user->lang['BBREACTION_GIVVEN'] : $this->user->lang['BBREACTION_RECIEVED']),
-					'GIVE_RECIEVE'		=> $row['num']
-				));
+					'GIVE_RECIEVE'		=> $row['num'],
+
+					'CLASSLIST'	=> 'icon fa ' . $row['symbol'],
+					'CONTENTS'	=> '',
+				);
+
+				/**
+				* Event to modify reward template variables
+				*
+				* @event sitesplat.bbreaction.listener_modify_profile
+				* @var	array	row		Reward data
+				* @var	array	ary_tpl	Current reward template array
+				* @since 1.3.0
+				*/
+				$vars = array(
+					'row',
+					'ary_tpl',
+				);
+				extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbreaction.listener_modify_profile', compact($vars)));
+
+				$this->template->assign_block_vars('rewards_memberlist', $ary_tpl);
 			}
 		}
 	}
@@ -228,6 +289,21 @@ class listener implements EventSubscriberInterface
 	{
 		$permissions = $event['permissions'];
 		$permissions['u_bbreaction'] = array('lang' => 'ACL_U_BBREACTION', 'cat' => 'post');
+		$permissions['u_bbreaction_module'] = array('lang' => 'ACL_U_BBREACTION_MODULE', 'cat' => 'post');
 		$event['permissions'] = $permissions;
+	}
+	
+	public function delete_like_dislike_forum($event)
+	{
+		$forum_id = $event['forum_id'];
+		$sql = 'DELETE FROM ' . $this->reward_table . '
+		WHERE post_id IN (
+			SELECT p.post_id
+			FROM ' . $this->topics_table . ' t
+			LEFT JOIN ' . $this->posts_table . ' p
+				ON (t.topic_id = p.topic_id)
+			WHERE t.forum_id = ' . (int) $forum_id . '
+		)';
+		$this->db->sql_query($sql);
 	}
 }
