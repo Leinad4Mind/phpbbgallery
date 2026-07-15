@@ -2,35 +2,41 @@
     "name": "rmcgirr83/genders",
     "type": "phpbb-extension",
     "description": "This Extension will allow your members to specify their Gender using fontawesome gender icons.",
-    "version": "1.3.0",
-    "time": "2021-01-07",
+    "version": "2.1.1",
+    "time": "2019-08-25",
     "keywords": [
         "phpbb",
         "extension",
+		"special",
         "genders",
         "communication"
     ],
-    "license": "GPL-2.0-only",
+    "license": "@license Proprietary",
     "authors": [
+		{
+            "name": "Leinad4Mind",
+            "homepage": "https://leinad4mind.top/forum",
+            "role": "Extension Developer"
+        },
         {
             "name": "Rich McGirr",
-            "role": "Developer"
+            "email": "rmcgirr83@gmail.com",
+            "role": "Original Extension Developer"
         }
     ],
     "require": {
-        "php": ">=7.1",
-        "phpbb/phpbb": ">=3.2",
-        "composer/installers": "~1.0.0"
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.4-RC1"
     },
     "extra": {
-        "display-name": "Genders",
+        "display-name": "Special Genders",
         "soft-require": {
-            "phpbb/phpbb": ">=3.2"
+            "phpbb/phpbb": ">=3.1.4-RC1"
         },
         "version-check": {
-            "host": "www.phpbb.com",
-            "directory": "/customise/db/extension/phpbb_3.1_genders",
-            "filename": "version_check",
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/genders",
+            "filename": "version_check.json",
             "ssl": true
         }
     }
