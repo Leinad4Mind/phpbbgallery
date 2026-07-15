@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "This extension prevents the registration of a user in the forum when using a disposable or temporary mail account (DEA).",
 	"homepage": "https://www.phpbb-es.com/foro/viewtopic.php?f=147&t=43035",
-	"version": "3.3.0",
-	"time": "2020-03-10",
+	"version": "3.3.3",
+	"time": "2021-02-08",
 	"keywords": ["phpbb", "extension", "DEA", "email", "disposable"],
 	"license": "GPL-2.0-only",
 	"authors": [

@@ -68,7 +68,11 @@ class acp_nodeaemails_module
 	// Configuration
 	public function display_configuration($mode)
 	{
-		$submit = $this->request->is_set_post('submit');
+		/* @var $pagination \phpbb\pagination */
+		$pagination		= $this->pagination;
+		$number			= $this->config['topics_per_page'];
+		$start			= $this->request->variable('start', 0);
+		$submit			= $this->request->is_set_post('submit');
 
 		$display_vars = array(
 			'vars'	=> array(
@@ -133,8 +137,10 @@ class acp_nodeaemails_module
 		// Show Emails take with CRON
 		$MiArray = $this->functions_nodeaemails->load_external_deas();
 		$count = count($MiArray);
-		$minus = ($count % 5);
-		$counter = ($minus != 0) ? $count - $minus + 5 : $count;
+		$counter = (int)$number * 5;
+
+		// Make sure $start is set to the last page if it exceeds the emails
+		$start = $this->pagination->validate_start($start, $counter, $count);
 
 		$this->template->assign_vars(array(
 			'S_NO_DEA_EMAILS_CANT'		 => $count,
@@ -143,21 +149,28 @@ class acp_nodeaemails_module
 		));
 
 		// Add Emails DEA to Template
-		for ($i = 0; $i < $counter; $i += 5)
+		for ($i = $start; $i < $start+$counter; $i += 5)
 		{
 			$this->template->assign_block_vars('emailsex', array(
-				'S_NO_DEA_EMAILS_EMA0' => isset($MiArray[$i]) ? $MiArray[$i] : '',
-				'S_NO_DEA_EMAILS_EMA1' => isset($MiArray[$i+1]) ? $MiArray[$i+1] : '',
-				'S_NO_DEA_EMAILS_EMA2' => isset($MiArray[$i+2]) ? $MiArray[$i+2] : '',
-				'S_NO_DEA_EMAILS_EMA3' => isset($MiArray[$i+3]) ? $MiArray[$i+3] : '',
-				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '',
+				'S_NO_DEA_EMAILS_EMA0' => isset($MiArray[$i]) ? $MiArray[$i] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA1' => isset($MiArray[$i+1]) ? $MiArray[$i+1] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA2' => isset($MiArray[$i+2]) ? $MiArray[$i+2] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA3' => isset($MiArray[$i+3]) ? $MiArray[$i+3] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '&nbsp;',
 			));
 		}
+
+		$this->pagination->generate_template_pagination($this->u_action, 'pagination', 'start', $count, $counter, $start);
 	}
 
 	// Locals
 	public function display_locals($mode)
 	{
+		/* @var $pagination \phpbb\pagination */
+		$pagination		= $this->pagination;
+		$number			= $this->config['topics_per_page'];
+		$start			= $this->request->variable('start', 0);
+
 		$this->tpl_name		= 'acp_dea_locals';
 		$this->page_title	= $this->language->lang('ACP_NO_DEA_EMAILS') . ' - ' . $this->language->lang('ACP_NO_DEA_EMAILS_LOCALS');
 
@@ -167,8 +180,10 @@ class acp_nodeaemails_module
 		// Show Emails take with CRON
 		$MiArray = $this->functions_nodeaemails->load_local_deas();
 		$count = count($MiArray);
-		$minus = ($count % 5);
-		$counter = ($minus != 0) ? $count - $minus + 5 : $count;
+		$counter = (int)$number * 5;
+
+		// Make sure $start is set to the last page if it exceeds the emails
+		$start = $this->pagination->validate_start($start, $counter, $count);
 
 		$this->template->assign_vars(array(
 			'S_NO_DEA_EMAILS_CANT'		 => $count,
@@ -177,16 +192,18 @@ class acp_nodeaemails_module
 		));
 
 		// Add local Emails DEA to Template
-		for ($i = 0; $i < $counter; $i += 5)
+		for ($i = $start; $i < $start+$counter; $i += 5)
 		{
 			$this->template->assign_block_vars('emailsex', array(
-				'S_NO_DEA_EMAILS_EMA0' => isset($MiArray[$i]) ? $MiArray[$i] : '',
-				'S_NO_DEA_EMAILS_EMA1' => isset($MiArray[$i+1]) ? $MiArray[$i+1] : '',
-				'S_NO_DEA_EMAILS_EMA2' => isset($MiArray[$i+2]) ? $MiArray[$i+2] : '',
-				'S_NO_DEA_EMAILS_EMA3' => isset($MiArray[$i+3]) ? $MiArray[$i+3] : '',
-				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '',
+				'S_NO_DEA_EMAILS_EMA0' => isset($MiArray[$i]) ? $MiArray[$i] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA1' => isset($MiArray[$i+1]) ? $MiArray[$i+1] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA2' => isset($MiArray[$i+2]) ? $MiArray[$i+2] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA3' => isset($MiArray[$i+3]) ? $MiArray[$i+3] : '&nbsp;',
+				'S_NO_DEA_EMAILS_EMA4' => isset($MiArray[$i+4]) ? $MiArray[$i+4] : '&nbsp;',
 			));
 		}
+
+		$this->pagination->generate_template_pagination($this->u_action, 'pagination', 'start', $count, $counter, $start);
 
 		/// Save Domain
 		$deadomain = $this->request->variable('deadomain', '');

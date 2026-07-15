@@ -154,14 +154,14 @@ class functions_nodeaemails
 	{
 		$sql = "SELECT user_id, user_email FROM " . USERS_TABLE ." WHERE user_email <> '' ORDER BY user_id ASC";
 		$result = $this->db->sql_query($sql);
-		$MiArray = $this->load_total_deas();
+        $MiArray = array_flip($this->load_total_deas());
 		$dea_users = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			// split on @ and return last value of array in $domain[1]
 			$domain = explode('@', $row['user_email']);
 
-			if (array_search($domain[1], $MiArray) !== false)
+            if (isset($MiArray[$domain[1]]))
 			{
 				$dea_users[] = $row['user_id'];
 			}

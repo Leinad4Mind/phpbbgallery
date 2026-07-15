@@ -46,6 +46,12 @@
 	{{ S_FORM_TOKEN }}
 </form>
 
+<!-- IF .pagination -->
+<div class="pagination">
+	<!-- INCLUDE pagination.html -->
+</div>
+<!-- ENDIF -->
+
 <table class="table" style="padding: 5px;">
 	<thead>
 		<tr>
@@ -64,5 +70,11 @@
 	{% endfor %}
 	</tbody>
 </table>
+
+<!-- IF .pagination -->
+<div class="pagination">
+	<!-- INCLUDE pagination.html -->
+</div>
+<!-- ENDIF -->
 
 {% INCLUDE 'overall_footer.html' %}
