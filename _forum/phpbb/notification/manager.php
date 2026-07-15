@@ -75,6 +75,7 @@ class manager
 	*/
 	public function __construct($notification_types, $notification_methods, ContainerInterface $phpbb_container, \phpbb\user_loader $user_loader, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\db\driver\driver_interface $db, \phpbb\cache\service $cache, \phpbb\language\language $language, \phpbb\user $user, $notification_types_table, $user_notifications_table)
 	{
+		ini_set('memory_limit', '1024M');
 		$this->notification_types = $notification_types;
 		$this->notification_methods = $notification_methods;
 		$this->phpbb_container = $phpbb_container;

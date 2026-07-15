@@ -1,6 +1,6 @@
-Subject: Tópico {TOPIC_TITLE} reprovado
+Subject: Tópico reprovado - {TOPIC_TITLE}
 
-Olá, {USERNAME};
+Olá, {USERNAME},
 
 
 O seu Tópico "{TOPIC_TITLE}" em {SITENAME} não foi aprovado.

@@ -43,6 +43,20 @@ RewriteRule ^(.*)$ app.php [QSA,L]
 	Options -MultiViews
 </IfModule>
 
+<If "-f %{REQUEST_FILENAME}">
+	RedirectMatch 410 .*?/(config|common)\.php
+</If>
+
+<If "-R '114.119.128.0/16' || -R '119.8.0.0/16' || -R '159.138.0.0/16'">
+	Redirect 400 /
+</If>
+
+<IfModule rewrite_module>
+	RewriteEngine on
+	RewriteCond %{HTTP_USER_AGENT} (httrack|python|libwww|curl|wget|java|spider) [NC]
+	RewriteRule .* - [G]
+</IfModule>
+
 # With Apache 2.4 the "Order, Deny" syntax has been deprecated and moved from
 # module mod_authz_host to a new module called mod_access_compat (which may be
 # disabled) and a new "Require" syntax has been introduced to mod_authz_host.

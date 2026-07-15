@@ -468,7 +468,7 @@ $lang = array_merge($lang, array(
 	'NOT_AUTHORISED'			=> 'You are not authorised to access this area.',
 	'NOT_WATCHING_FORUM'		=> 'You are no longer subscribed to updates on this forum.',
 	'NOT_WATCHING_TOPIC'		=> 'You are no longer subscribed to this topic.',
-	'NOTIFICATIONS'				=> 'Notifications',
+	'NOTIFICATIONS'				=> 'Manage Notifications',
 	// This applies for NOTIFICATION_BOOKMARK and NOTIFICATION_POST.
 	// %1$s will return a list of users that's concatenated using "," and "and" - see STRING_LIST
 	// Once the user count reaches 5 users or more, the list is trimmed using NOTIFICATION_X_OTHERS
@@ -503,7 +503,7 @@ $lang = array_merge($lang, array(
 	'NOTIFICATION_REPORT_POST'			=> '<strong>Post reported</strong> by %1$s:',
 	'NOTIFICATION_REPORT_CLOSED'		=> '<strong>Report closed</strong> by %1$s for:',
 	'NOTIFICATION_TOPIC'				=> '<strong>New topic</strong> by %1$s:',
-	'NOTIFICATION_TOPIC_APPROVED'		=> '<strong>Topic approved</strong>:',
+	'NOTIFICATION_TOPIC_APPROVED'		=> '<strong>Topic approved, will be soon moved</strong>:',
 	'NOTIFICATION_TOPIC_DISAPPROVED'	=> '<strong>Topic disapproved</strong>:',
 	'NOTIFICATION_TOPIC_IN_QUEUE'		=> '<strong>Topic approval</strong> request by %1$s:',
 	'NOTIFICATION_TYPE_NOT_EXIST'		=> 'The notification type "%s" is missing from the file system.',
@@ -628,7 +628,7 @@ $lang = array_merge($lang, array(
 	'POST_TOPIC'			=> 'Post a new topic',
 	'POST_UNAPPROVED_ACTION'	=> 'Post awaiting approval:',
 	'POST_UNAPPROVED'		=> 'This post has not been approved.',
-	'POST_UNAPPROVED_EXPLAIN'	=> 'This post is not visible to other users until it has been approved by a moderator.',
+	'POST_UNAPPROVED_EXPLAIN'	=> 'This post is not visible to other users until it has been approved by Staff and Critics.',
 	'POWERED_BY'			=> 'Powered by %s',
 
 	'QUOTE'					=> 'Quote',

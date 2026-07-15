@@ -15,19 +15,22 @@
 <!-- ENDIF -->
     <!-- EVENT posting_preview_poll_after -->
 		<h3>{L_PREVIEW}{L_COLON}&nbsp;{PREVIEW_SUBJECT}</h3>
-		<div class="content">{PREVIEW_MESSAGE}</div>
+		<div class="content" style="display:flex;">
+			<div class="col-md-3 text-center hidden-xs hidden-sm nightpanel"><div class="panel-body user-profile-sep" style="height:-webkit-fill-available"></div></div>
+			<div class="col-md-9 no-padding-l">{PREVIEW_MESSAGE}</div>
+		</div>
 		
 		<!-- IF .attachment -->
 		<div class="clearfix">
 			<div class="attachbox">
 				<h5>{L_ATTACHMENTS}</h5>
-			  <!-- EVENT ss_posting_preview_attachment_row_before -->
-				 <!-- BEGIN attachment -->{attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
-			  <!-- EVENT ss_posting_preview_attachment_row_after -->
+				<!-- EVENT ss_posting_preview_attachment_row_before -->
+					<!-- BEGIN attachment -->{attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
+				<!-- EVENT ss_posting_preview_attachment_row_after -->
 			</div>
 		</div>
 		<!-- ENDIF -->
-
+		
 		<!-- IF PREVIEW_SIGNATURE -->
 		<p class="separator text-center hidden-xs"><i class="fa fa-ellipsis-h fa-2x"></i></p>
 		<div class="hidden-xs post-signature">{PREVIEW_SIGNATURE}</div>

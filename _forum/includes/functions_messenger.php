@@ -30,6 +30,8 @@ class messenger
 
 	var $mail_priority = MAIL_NORMAL_PRIORITY;
 	var $use_queue = true;
+	// Leinad4Mind Modification
+	var $use_html = false;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -43,6 +45,8 @@ class messenger
 
 		$this->use_queue = (!$config['email_package_size']) ? false : $use_queue;
 		$this->subject = '';
+		// Leinad4Mind Modification
+		$this->use_html = false;
 	}
 
 	/**
@@ -199,6 +203,16 @@ class messenger
 	function set_mail_priority($priority = MAIL_NORMAL_PRIORITY)
 	{
 		$this->mail_priority = $priority;
+	}
+
+
+	// Leinad4Mind Modification
+	/**
+	 * Set the email html
+	 */
+	function set_mail_html($html = false)
+	{
+		$this->use_html = $html;
 	}
 
 	/**
@@ -500,7 +514,8 @@ class messenger
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Message-ID: <' . $this->generate_message_id() . '>';
 		$headers[] = 'Date: ' . date('r', time());
-		$headers[] = 'Content-Type: text/plain; charset=UTF-8'; // format=flowed
+		// Leinad4Mind Modification
+		$headers[] = 'Content-Type: ' . (($this->use_html) ? 'text/html;' : 'text/plain;')  . ' charset=UTF-8'; // format=flowed
 		$headers[] = 'Content-Transfer-Encoding: 8bit'; // 7bit
 
 		$headers[] = 'X-Priority: ' . $this->mail_priority;

@@ -5,9 +5,11 @@
 	 <legend>{L_TITLE}</legend>
 	 
 	 <!-- IF S_FORCE_PASSWORD -->
-		<p>{L_FORCE_PASSWORD_EXPLAIN}</p>
+		<div id="change-password" class="alert alert-warning fade in">
+			<i class="fa fa-warning"></i><strong>&nbsp;{L_FORCE_PASSWORD_EXPLAIN}</strong>
+		</div>
 	<!-- ENDIF -->
-	 
+
 	<!-- IF ERROR -->
 	<div class="alert alert-info fade in">
        <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}

@@ -1,10 +1,10 @@
-Subject: {POST_SUBJECT} - Denúncia Bloqueada
+Subject: {POST_SUBJECT} - Denúncia Fechada
 
-Olá, {USERNAME};
+Olá, {USERNAME},
 
 
-A sua denúncia da Mensagem "{POST_SUBJECT}" no Tópico "{TOPIC_TITLE}" em "{SITENAME}" foi vista e bloqueada por um Moderador ou um Administrador.
-Se tem mais perguntas a este respeito, contacte o Utilizador {CLOSER_NAME} por Mensagem Particular.
+A sua denúncia da Mensagem "{POST_SUBJECT}" no Tópico "{TOPIC_TITLE}" em {SITENAME} foi vista e fechada por um Moderador ou um Administrador.
+Se tem mais perguntas a este respeito, contacte o Utilizador {CLOSER_NAME} por Mensagem Privada.
 
 
 Obrigado, {USERNAME}.

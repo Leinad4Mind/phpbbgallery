@@ -80,19 +80,19 @@
 		<!-- EVENT search_results_topic_before -->
 		<tr id="topic-{searchresults.TOPIC_ID}">
 			<td>
-			<!-- IF searchresults.TOPIC_ICON_IMG --><i class="topic-icon" style="background-image: url(<!-- IF not S_BBEMOJI -->{T_ICONS_PATH}<!-- ENDIF -->{searchresults.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{searchresults.TOPIC_ICON_IMG_ALT}"></i><!-- ENDIF -->
+			<!-- IF searchresults.TOPIC_ICON_IMG --><i class="topic-icon" style="background-image: url({searchresults.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{searchresults.TOPIC_ICON_IMG_ALT}"></i><!-- ENDIF -->
 			<span class="icon-wrapper">
 				<i class="row-icon-font icon-moon-default2<!-- IF searchresults.S_TOPIC_TYPE == 2 --> icon-moon-voice2<!-- ELSEIF searchresults.S_TOPIC_TYPE == 3 --> icon-moon-podcast2<!-- ELSEIF searchresults.S_TOPIC_TYPE == 1 --> icon-moon-pushpin2<!-- ELSEIF searchresults.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF searchresults.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{searchresults.TOPIC_FOLDER_IMG_ALT}"></i>
 			</span>
 				<i class="row-icon-font-mini<!-- IF searchresults.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{searchresults.TOPIC_ICON_IMG_ALT}"></i>
 			<span class="desc-wrapper">	
-			<!-- EVENT topiclist_row_prepend -->
+			<!-- EVENT topiclist_row_prepend --><!-- EVENT searchresults_topiclist_row_prepend -->
 				<!-- IF searchresults.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{searchresults.U_NEWEST_POST}" title="{L_VIEW_FIRST_UNREAD}"><i class="fa fa-asterisk"></i></a><!-- ENDIF -->
-				<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a> <!-- IF searchresults.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
+				<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle"><!-- EVENT topiclist_row_topic_title_before -->{searchresults.TOPIC_TITLE}</a> <!-- IF searchresults.ATTACH_ICON_IMG --><i class="fa fa-paperclip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->
 				<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED --><a href="{searchresults.U_MCP_QUEUE}" title="{L_TOPICS_ROW_NOT_APPROVED}"><i class="fa fa-question-circle"></i></a><!-- ENDIF -->
 				<!-- IF searchresults.S_TOPIC_DELETED --><a href="{searchresults.U_MCP_QUEUE}" title="{L_TOPIC_DELETED}"><i class="fa fa-trash-o text-danger"></i></a><!-- ENDIF -->
 				<!-- IF searchresults.S_TOPIC_REPORTED --><a href="{searchresults.U_MCP_REPORT}" title="{L_TOPICS_ROW_REPORTED}"><i class="fa fa-exclamation-circle text-danger"></i></a><!-- ENDIF --><br />
-				
+				<!-- EVENT topiclist_row_topic_title_after -->
 				<!-- IF .searchresults.pagination -->
 				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
 						<!-- BEGIN pagination -->
@@ -183,9 +183,8 @@
        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
        <i class="fa fa-warning"></i><strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_SEARCH_RESULTS}
     </div> 
-<!-- END searchresults -->
+	<!-- END searchresults -->
 </div>
-
 <!-- ENDIF -->
 
 

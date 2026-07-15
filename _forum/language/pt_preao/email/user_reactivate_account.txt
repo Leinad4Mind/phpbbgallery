@@ -1,6 +1,6 @@
 Subject: Reactivação do registo em {SITENAME}
 
-Olá, {USERNAME};
+Olá, {USERNAME},
 
 O Administrador pede-lhe que reactive a sua conta que se encontra actualmente inactiva.
 

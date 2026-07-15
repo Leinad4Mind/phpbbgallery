@@ -474,7 +474,8 @@ class fulltext_mysql extends \phpbb\search\base
 
 		// Build sql strings for sorting
 		$sql_sort = $sort_by_sql[$sort_key] . (($sort_dir == 'a') ? ' ASC' : ' DESC');
-		$sql_sort_table = $sql_sort_join = '';
+		// Leinad4Mind Modification
+		$sql_match_options = $sql_sort_table = $sql_sort_join = '';
 
 		switch ($sql_sort[0])
 		{
@@ -520,6 +521,8 @@ class fulltext_mysql extends \phpbb\search\base
 		}
 
 		$search_query = $this->search_query;
+		// Leinad4Mind Modification
+		$sql_match = "MATCH (" . $sql_match . ") AGAINST ('" . $this->db->sql_escape(html_entity_decode($this->search_query, ENT_COMPAT)) . "' IN BOOLEAN MODE)";
 
 		/**
 		* Allow changing the query used to search for posts using fulltext_mysql
@@ -560,6 +563,8 @@ class fulltext_mysql extends \phpbb\search\base
 			'sort_days',
 			'sql_match',
 			'sql_match_where',
+			// Leinad4Mind Modification
+			'sql_match_options',
 			'sort_by_sql',
 			'sort_key',
 			'sort_dir',
@@ -595,11 +600,13 @@ class fulltext_mysql extends \phpbb\search\base
 		$sql_where_options .= ($sort_days) ? ' AND p.post_time >= ' . (time() - ($sort_days * 86400)) : '';
 		$sql_where_options .= $sql_match_where;
 
+		// Leinad4Mind Modification
 		$sql = "SELECT $sql_select
 			FROM $sql_from$sql_sort_table" . POSTS_TABLE . " p
-			WHERE MATCH ($sql_match) AGAINST ('" . $this->db->sql_escape(html_entity_decode($this->search_query, ENT_COMPAT)) . "' IN BOOLEAN MODE)
+			WHERE $sql_match
 				$sql_where_options
 			ORDER BY $sql_sort";
+
 		$this->db->sql_return_on_error(true);
 		$result = $this->db->sql_query_limit($sql, $this->config['search_block_size'], $start);
 

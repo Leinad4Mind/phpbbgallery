@@ -108,16 +108,16 @@
 			{POST_PREVIEW}
 		</div>
     {% EVENT mcp_post_text_after %}
-	
+
 		<!-- IF S_HAS_ATTACHMENTS -->
 		<div class="clearfix">
 			<div class="attachbox">
 				<h5>{L_ATTACHMENTS}</h5>
 				<!-- EVENT ss_mcp_post_postrow_attachment_row_before -->
 				   <!-- BEGIN attachment -->{attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
-				<!-- EVENT ss_mcp_post_postrow_attachment_row_after -->   
+				<!-- EVENT ss_mcp_post_postrow_attachment_row_after -->
 			</div>
-		</div>	
+		</div>
 		<!-- ENDIF -->
 
 		<!-- IF DELETED_MESSAGE or DELETE_REASON -->
@@ -270,11 +270,11 @@
 				<!-- IF POST_IPADDR -->{POST_IPADDR}&nbsp;&#40;{POST_IP}&#41;<!-- ELSE -->{POST_IP}<!-- IF U_LOOKUP_IP -->&nbsp;&#40;<a href="{U_LOOKUP_IP}">{L_LOOKUP_IP}</a>&#41;<!-- ENDIF --><!-- ENDIF -->
 			<!-- ENDIF -->
 			</p>
-    <div class="panel panel-forum">
+        <div class="panel panel-forum">
 		   <div class="panel-heading">
 		    <i class="fa fa-list-ol"></i>&nbsp;{L_USERS}
 		   </div>
-		<div class="panel-inner">
+		 <div class="panel-inner">
 			<table class="footable table table-striped table-primary table-hover">
 			<thead>
 			<tr>

@@ -186,6 +186,7 @@ $lang = array_merge($lang, array(
 
 	'EDIT_DRAFT_EXPLAIN'		=> 'Here you are able to edit your draft. Drafts do not contain attachment and poll information.',
 	'EMAIL_BANNED_EMAIL'		=> 'The email address you entered is not allowed to be used.',
+	'EMAIL_NOT_UNIQUE'			=> 'Email you specified is used by multiple users. You must specify username as well.',
 	'EMAIL_REMIND'				=> 'This must be the email address associated with your account. If you have not changed this via your user control panel then it is the email address you registered your account with.',
 	'EMAIL_TAKEN_EMAIL'			=> 'The entered email address is already in use.',
 	'EMPTY_DRAFT'				=> 'You must enter a message to submit your changes.',
@@ -392,7 +393,6 @@ $lang = array_merge($lang, array(
 	'NO_BOOKMARKS_SELECTED'		=> 'You have selected no bookmarks.',
 	'NO_EDIT_READ_MESSAGE'		=> 'Private message cannot be edited because it has already been read.',
 	'NO_EMAIL_USER'				=> 'The email/username information submitted could not be found.',
-	'EMAIL_NOT_UNIQUE'			=> 'Email you specified is used by multiple users. You must specify username as well.',
 	'NO_FOES'					=> 'No foes currently defined',
 	'NO_FRIENDS'				=> 'No friends currently defined',
 	'NO_FRIENDS_OFFLINE'		=> 'No friends offline',
@@ -540,7 +540,7 @@ $lang = array_merge($lang, array(
 
 	'UCP_NOTIFICATION_LIST'				=> 'Manage notifications',
 	'UCP_NOTIFICATION_LIST_EXPLAIN'		=> 'Here you may view all past notifications.',
-	'UCP_NOTIFICATION_OPTIONS'			=> 'Edit notification options',
+	'UCP_NOTIFICATION_OPTIONS'			=> 'Edit notification settings',
 	'UCP_NOTIFICATION_OPTIONS_EXPLAIN'	=> 'Here you can set your preferred notification methods for the board.',
 
 	'UCP_PREFS'					=> 'Board preferences',

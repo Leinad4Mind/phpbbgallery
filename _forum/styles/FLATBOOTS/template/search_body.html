@@ -55,17 +55,17 @@
 	
 	<div class="form-group">
 	   <label class="control-label" for="sf1">{L_SEARCH_WITHIN}{L_COLON}</label>
-     <input type="radio" checked="checked" name="sf" id="sf1" value="all"><label class="radio-inline" for="sf1">{L_SEARCH_TITLE_MSG}</label>
+     <input type="radio" name="sf" id="sf1" value="all"><label class="radio-inline" for="sf1">{L_SEARCH_TITLE_MSG}</label>
 	 <input type="radio" name="sf" id="sf2" value="msgonly"><label class="radio-inline" for="sf2">{L_SEARCH_MSG_ONLY}</label>
-	 <input type="radio" name="sf" id="sf3" value="titleonly"><label class="radio-inline" for="sf3">{L_SEARCH_TITLE_ONLY}</label>
+	 <input type="radio" checked="checked" name="sf" id="sf3" value="titleonly"><label class="radio-inline" for="sf3">{L_SEARCH_TITLE_ONLY}</label>
 	 <input type="radio" name="sf" id="sf4" value="firstpost"><label class="radio-inline" for="sf4">{L_SEARCH_FIRST_POST}</label>
 	<div class="control-group"></div>
 	</div>
 	
 	<div class="form-group"> 
 	   <label class="control-label" for="show_results1">{L_DISPLAY_RESULTS}{L_COLON}</label>
-    <input type="radio" checked="checked" name="sr" id="show_results1" value="posts"><label class="radio-inline" for="show_results1">{L_POSTS}</label>
-	<input type="radio" name="sr" id="show_results2" value="topics"><label class="radio-inline" for="show_results2">{L_TOPICS}</label>
+    <input type="radio" name="sr" id="show_results1" value="posts"><label class="radio-inline" for="show_results1">{L_POSTS}</label>
+	<input type="radio" checked="checked" name="sr" id="show_results2" value="topics"><label class="radio-inline" for="show_results2">{L_TOPICS}</label>
 	<div class="control-group"></div>
 	</div>
 	
@@ -84,12 +84,13 @@
 	<div class="control-group"></div>
 	</div>
    
+   
    <div class="form-group">
    <div class="row">
    <div class="col-md-3 col-sm-5 col-xs-6">
    <label class="control-label" for="pc">{L_RETURN_FIRST}{L_COLON}</label><span class="help-block">{{ lang('RETURN_FIRST_EXPLAIN') }}</span>
   <div class="input-group">
-     <input type="number" id="ch" name="ch" value="{{ DEFAULT_RETURN_CHARS }}" min="0" max="9999" title="{{ lang('RETURN_FIRST') }}" class="form-control" />
+	 <input type="number" id="ch" name="ch" value="{{ DEFAULT_RETURN_CHARS }}" min="0" max="9999" title="{{ lang('RETURN_FIRST') }}" class="form-control" />
      <span class="input-group-addon">{L_POST_CHARACTERS}</span>
    </div>
    </div>

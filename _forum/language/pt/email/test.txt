@@ -6,8 +6,10 @@ Parabéns. Visto que recebeu este email, isso significa que o phpBB está config
 
 <!-- IF MESSAGE -->
 {MESSAGE}
-
 <!-- ENDIF -->
+
 Caso necessite de assistência, por favor visite o fórum oficial de suporte phpBB - https://www.phpbb.com/community/
+
+Em caso de preferir assistência em português, visite o fórum de suporte phpBB - https://leinad4mind.top/forum
 
 {EMAIL_SIG}

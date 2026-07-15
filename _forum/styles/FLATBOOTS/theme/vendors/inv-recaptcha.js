@@ -51,12 +51,14 @@ phpbb.recaptcha = {
 				e.preventDefault();
 				phpbb.recaptcha.passed = false
 			}
+			
 		});
 	},
 	submitForm: function() {
 		// Now we are ready, so set it to true.
 		// so the 'submit' event doesn't run multiple times.
 		phpbb.recaptcha.ready = true;
+		phpbb.recaptcha.passed = true;
 
 		if (phpbb.recaptcha.button) {
 			// If there was a specific button pressed initially, trigger the same button
@@ -76,7 +78,7 @@ phpbb.recaptcha = {
 // so we need to make this helper functions here
 window.phpbbRecaptchaOnLoad = function() {
 	phpbb.recaptcha.load();
-	phpbb.recaptcha.passed = false
+	phpbb.recaptcha.passed = false;
 };
 
 window.phpbbRecaptchaOnSubmit = function() {

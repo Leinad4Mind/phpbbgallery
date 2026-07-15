@@ -95,7 +95,7 @@
 		<ul class="nav navbar-nav navbar-right navbar-nav-fancy">
 		<!-- EVENT navigation_controls_before -->
 		<!-- IF S_DISPLAY_SEARCH -->
-		   <li><a class="btn-search" href="javascript:void(0)"><i class="fa fa-lightbulb-o"></i></a></li>
+		   <li><a class="btn-search" href="javascript:void(0)"><i class="fa fa-search-plus"></i></a></li>
 		<!-- ENDIF -->
 		<!-- EVENT navigation_controls_after -->
 		<!-- IF S_NOTIFICATIONS_DISPLAY -->	
@@ -110,14 +110,14 @@
 			
 			<li class="dropdown dropdown-avatar">
 			  <a href="javascript:void(0)" data-toggle="dropdown">
-			   <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/user4.png" alt="No avatar"><!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
+			   <!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/user.png" alt="No avatar"><!-- ENDIF -->&nbsp;<span>{L_WELCOME_INDEX}&#44;&nbsp;{CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span>
 			  </a>
                 <!-- IF S_USER_NEW_PRIVMSG --><em class="notifications-pm badge badge-warning">{PM_NEW_COUNT_BADGE}</em><!-- ELSEIF S_USER_UNREAD_PRIVMSG --><em class="notifications-pm badge badge-success">{PRIVATE_MESSAGE_COUNT}</em><!-- ENDIF -->                   
 				   <ul class="dropdown-menu user-login-drop arrow-up">
 				    <!-- IF S_DISPLAY_PM -->
                         <li><!-- IF S_USER_NEW_PRIVMSG --><a href="{U_PRIVATEMSGS}">{PM_NEW_COUNT}</a><!-- ELSEIF S_USER_UNREAD_PRIVMSG--><a href="{U_PRIVATEMSGS}">{PM_UNREAD_COUNT}</a><!-- ELSE --><a href="{U_PRIVATEMSGS}">{L_NO_PMS_INFO}</a><!-- ENDIF --></li>
 					<!-- ELSE -->
-					<li></li>
+						<li></li>
 					<!-- ENDIF -->	
 						<li>
 							<div class="navbar-wrapper">
@@ -133,11 +133,12 @@
                                             <p class="text-muted small text-overflow">{USER_EMAIL_MENU}</p>
                                              <!-- IF U_ACP --><a class="btn btn-info btn-sm btn-block" href="{U_ACP}"><i class="fa fa-user-md"></i>&nbsp;{L_ADMIN_PANEL_GENERAL}</a><!-- ENDIF -->
 	                                         <!-- IF U_MCP --><a class="btn btn-warning btn-sm btn-block" href="{U_MCP}"><i class="fa fa-legal"></i>&nbsp;{L_MODERATOR_PANEL_GENERAL}</a><!-- ENDIF -->
-                                             <!-- IF S_REGISTERED_USER and not (U_ACP or U_MCP) --><a class="btn btn-success btn-sm btn-block" href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a><!-- ENDIF -->
+                                             <!-- IF S_REGISTERED_USER --><a class="btn btn-success btn-sm btn-block" href="{U_PROFILE}"><i class="fa fa-user"></i>&nbsp;{L_USER_PANEL}</a><!-- ENDIF -->
+											 <!-- EVENT navbar_header_profile_list_after -->
 										</div>
                                     </div>
 							  </div>
-							  <!-- EVENT navbar_header_profile_list_after -->
+							  
 							  <div class="navbar-footer">
                                     <div class="navbar-footer-content">
                                         <div class="row">

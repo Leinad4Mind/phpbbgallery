@@ -44,9 +44,9 @@
 		<!-- EVENT forumlist_body_forum_row_prepend -->
 			<td title="{forumrow.FORUM_FOLDER_IMG_ALT}">
 			<!-- IF forumrow.FORUM_IMAGE -->
-			   <!-- EVENT forumlist_body_forum_image_before -->
-			      <span class="forum-image"><!-- EVENT forumlist_body_forum_image_prepend -->{forumrow.FORUM_IMAGE}<!-- EVENT forumlist_body_forum_image_append --></span>
-			   <!-- EVENT forumlist_body_forum_image_after -->
+				<!-- EVENT forumlist_body_forum_image_before -->
+					<span class="forum-image"><!-- EVENT forumlist_body_forum_image_prepend -->{forumrow.FORUM_IMAGE}<!-- EVENT forumlist_body_forum_image_append --></span>
+				<!-- EVENT forumlist_body_forum_image_after -->
 			<!-- ELSE -->
 			<span class="icon-wrapper">
 			 <i class="row-icon-font icon-moon-default<!-- IF forumrow.S_IS_LINK --> icon-moon-link2<!-- ENDIF --><!-- IF forumrow.S_UNREAD_FORUM --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->"></i>
@@ -66,8 +66,8 @@
 				 <span class="subforums">
 				  <strong>{forumrow.L_SUBFORUM_STR}{L_COLON}</strong>
                     <!-- BEGIN subforum -->	
-                        <!-- EVENT forumlist_body_subforum_link_prepend -->					
-				             <!-- IF forumrow.subforum.IS_LINK --><i class="fa fa-external-link-square"></i>&nbsp;<!-- ENDIF --><a href="{forumrow.subforum.U_SUBFORUM}"<!-- IF forumrow.subforum.IS_LINK --> target="_blank"<!-- ENDIF --> class="subforum<!-- IF forumrow.subforum.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->" title="<!-- IF forumrow.subforum.S_UNREAD -->{L_UNREAD_POSTS}<!-- ELSEIF forumrow.subforum.IS_LINK -->{L_SUBFORUM_LINK}<!-- ELSE -->{L_NO_UNREAD_POSTS}<!-- ENDIF -->">{forumrow.subforum.SUBFORUM_NAME}</a><!-- IF not forumrow.subforum.S_LAST_ROW -->{L_COMMA_SEPARATOR}<!-- ENDIF -->
+                        <!-- EVENT forumlist_body_subforum_link_prepend -->
+				              <!-- IF forumrow.subforum.IS_LINK --><i class="fa fa-external-link-square"></i>&nbsp;<!-- ENDIF --><a href="{forumrow.subforum.U_SUBFORUM}"<!-- IF forumrow.subforum.IS_LINK --> target="_blank"<!-- ENDIF --> class="subforum<!-- IF forumrow.subforum.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->" title="<!-- IF forumrow.subforum.S_UNREAD -->{L_UNREAD_POSTS}<!-- ELSEIF forumrow.subforum.IS_LINK -->{L_SUBFORUM_LINK}<!-- ELSE -->{L_NO_UNREAD_POSTS}<!-- ENDIF -->">{forumrow.subforum.SUBFORUM_NAME}</a><!-- IF not forumrow.subforum.S_LAST_ROW -->{L_COMMA_SEPARATOR}<!-- ENDIF -->
 					    <!-- EVENT forumlist_body_subforum_link_append -->
 					<!-- END subforum --> 
 				 </span>
@@ -77,8 +77,8 @@
 			</td>
 			<!-- IF forumrow.CLICKS -->
 			<td colspan="2"><span class="stats-wrapper">{L_FORUM_REDIRECTS}&nbsp;{forumrow.CLICKS}</span></td>
-            <!-- ELSEIF forumrow.BBSOI_SCAT -->
-			<td colspan="2">&nbsp;</td>		
+			<!-- ELSEIF forumrow.BBSOI_SCAT -->
+			<td colspan="2">&nbsp;</td>
             <!-- ELSEIF forumrow.S_IS_LINK -->
 			<td>&nbsp;</td>		
 			<td>&nbsp;</td>				
@@ -108,7 +108,7 @@
 					{% if forumrow.U_UNAPPROVED_TOPICS %}
 						{{ lang('TOPIC_UNAPPROVED_FORUM', forumrow.TOPICS) }}
 					{% else %}
-						{{ lang('NO_POSTS') }}
+						{{ lang('NO_POSTS') }}&nbsp;
 					{% endif %}
 				<!-- ENDIF -->
 			  </span>

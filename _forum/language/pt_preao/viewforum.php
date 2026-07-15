@@ -1,27 +1,26 @@
 <?php
-/**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-* @Traduzido por: http://phpbbportugal.com - segundo pré-Acordo Ortográfico
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ * @Traduzido por: https://leinad4mind.top/forum - segundo pré-Acordo Ortográfico
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = array();
+if (empty($lang) || !is_array($lang)) {
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,16 +35,16 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACTIVE_TOPICS'					=> 'Tópicos activos',
 	'ANNOUNCEMENTS'					=> 'Anúncios',
 
 	'FORUM_PERMISSIONS'				=> 'Permissões do Fórum',
 
 	'ICON_ANNOUNCEMENT'				=> 'Anúncio',
-	'ICON_STICKY'					=> 'Fixo',
+	'ICON_STICKY'						=> 'Fixo',
 
-	'LOGIN_NOTIFY_FORUM'			=> 'Foi notificado por este Fórum, ligue-se para vê-lo.',
+	'LOGIN_NOTIFY_FORUM'				=> 'Foi notificado por este Fórum, ligue-se para vê-lo.',
 
 	'MARK_TOPICS_READ'				=> 'Marcar todos os Tópicos como lidos',
 
@@ -53,7 +52,8 @@ $lang = array_merge($lang, array(
 	'NEW_POSTS_LOCKED'				=> 'Novas Mensagens [ Bloqueado ]',   // Not used anymore
 	'NO_NEW_POSTS_HOT'				=> 'Sem novas Mensagens [ Popular ]',   // Not used anymore
 	'NO_NEW_POSTS_LOCKED'			=> 'Sem novas Mensagens [ Bloqueado ]',   // Not used anymore
-	'NO_READ_ACCESS'				=> 'Não tem Permissões para ler Tópicos neste Fórum.',
+	'NO_READ_ACCESS'					=> 'Não tem Permissões para ver nem ler Tópicos neste Fórum.',
+	'NO_FORUMS_IN_CATEGORY' 		=> 'Esta categoria não tem fóruns.',
 	'NO_UNREAD_POSTS_HOT'			=> 'Sem mensagens por ler [ Popular ]',
 	'NO_UNREAD_POSTS_LOCKED'		=> 'Sem mensagens por ler [ Bloqueado ]',
 
@@ -64,9 +64,9 @@ $lang = array_merge($lang, array(
 	'UNREAD_POSTS_HOT'				=> 'Mensagens por ler [ Popular ]',
 	'UNREAD_POSTS_LOCKED'			=> 'Mensagens por ler [ Bloqueado ]',
 
-	'VIEW_FORUM'					=> 'Ver Fórum',
-	'VIEW_FORUM_TOPICS'		=> array(
+	'VIEW_FORUM'						=> 'Ver Fórum',
+	'VIEW_FORUM_TOPICS'		=> [
 		1	=> '%d tópico',
 		2	=> '%d tópicos',
-	),
-));
+	],
+]);

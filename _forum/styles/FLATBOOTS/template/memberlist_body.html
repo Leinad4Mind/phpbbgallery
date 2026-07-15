@@ -13,16 +13,25 @@
 	<form method="post" action="{S_MODE_ACTION}">
 <!-- ENDIF -->
 
+{% EVENT memberlist_body_page_header_after %}
 	<!-- IF S_SHOW_GROUP -->
+		{% EVENT memberlist_body_group_name_before %}
 		<div class="side-segment"><h3<!-- IF GROUP_COLOR --> style="color:#{GROUP_COLOR};"<!-- ENDIF -->>{GROUP_NAME}</h3></div> 
+		{% EVENT memberlist_body_group_name_after %}
 		<!-- IF U_MANAGE -->
 		<p><a class="btn btn-sm btn-default" href="{U_MANAGE}">{L_MANAGE_GROUP}</a></p>
 		<!-- ENDIF -->
 		<p>{GROUP_DESC}&nbsp;{GROUP_TYPE}</p>
+		{% EVENT memberlist_body_group_desc_after %}
+		<p>
 			<!-- IF AVATAR_IMG -->{AVATAR_IMG}<!-- ENDIF -->
+			{% EVENT memberlist_body_group_rank_before %}
 			<!-- IF RANK_IMG -->{RANK_IMG}<!-- ENDIF -->
 			<!-- IF GROUP_RANK -->{GROUP_RANK}<!-- ENDIF -->
+			{% EVENT memberlist_body_group_rank_after %}
+		</p>
 	<!-- ELSE -->
+		{% EVENT memberlist_body_page_title_before %}
 		<div class="side-segment"><h3>{PAGE_TITLE}<!-- IF SEARCH_WORDS -->{L_COLON}&nbsp;<a href="{U_SEARCH_WORDS}">{SEARCH_WORDS}</a><!-- ENDIF --></h3></div> 
     <div class="clearfix">
 		<div class="pull-left">
@@ -70,6 +79,7 @@
         <!-- IF U_SORT_ACTIVE -->
         <th data-hide="phone"><a href="{U_SORT_ACTIVE}#memberlist">{L_LAST_ACTIVE}</a></th>
 		<!-- ENDIF -->
+		{% EVENT memberlist_body_memberlist_after %}
 		</tr>
 		</thead>
 		<tbody>
@@ -102,14 +112,18 @@
 		<th data-hide="phone">{L_OTHER}</th>
 	    <th data-hide="phone"><a href="{U_SORT_JOINED}#memberlist">{L_JOINED}</a></th>
 		<!-- IF U_SORT_ACTIVE -->
-		<th><a href="{U_SORT_ACTIVE}#memberlist">{L_LAST_ACTIVE}</a></th>
+		<th data-hide="phone"><a href="{U_SORT_ACTIVE}#memberlist">{L_LAST_ACTIVE}</a></th>
 		<!-- ENDIF -->
+		{% EVENT memberlist_body_leaders_set_after %}
 	<!-- ELSEIF S_SHOW_GROUP -->
-		<th><i class="fa fa-group"></i>&nbsp;{L_GROUP_MEMBERS}</th>
-		<th>&nbsp;</th>
-		<th>&nbsp;</th>
-		<th>&nbsp;</th>
-		<!-- IF U_SORT_ACTIVE --><th class="active_sort">&nbsp;</th><!-- ENDIF -->
+		<th data-class="expand"><a href="{U_SORT_USERNAME}"><i class="fa fa-group"></i>&nbsp;{L_GROUP_MEMBERS}</a><span>{L_COMMA_SEPARATOR}<a href="{U_SORT_RANK}">{L_RANK}</a></span></th>
+		<th data-hide="phone"><a href="{U_SORT_POSTS}#memberlist">{L_POSTS}</a></th>
+		<th data-hide="phone">{L_OTHER}</th>
+	    <th data-hide="phone"><a href="{U_SORT_JOINED}#memberlist">{L_JOINED}</a></th>
+		<!-- IF U_SORT_ACTIVE -->
+		<th data-hide="phone"><a href="{U_SORT_ACTIVE}#memberlist">{L_LAST_ACTIVE}</a></th>
+		<!-- ENDIF -->
+		{% EVENT memberlist_body_show_group_after %}
 	<!-- ENDIF -->
 	</tr>
 	</thead>
@@ -140,6 +154,7 @@
         <!-- IF S_VIEWONLINE -->
         <td>{memberrow.LAST_ACTIVE}</td>
 	    <!-- ENDIF -->
+		{% EVENT memberlist_body_memberrow_after %}
 	</tr>
 		<!-- BEGINELSE -->
 	<tr>
@@ -198,6 +213,7 @@
 
 </form>
 
+{% EVENT memberlist_body_page_footer_before %}
 
 <!-- IF S_IN_SEARCH_POPUP -->
 	<!-- INCLUDE simple_footer.html -->

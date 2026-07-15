@@ -37,9 +37,10 @@
 	<div class="control-group"> 
 	<label class="control-label" for="subject">{L_SUBJECT}{L_COLON}</label>
 	<div class="row">
+	<!-- EVENT posting_editor_subject_prefix_before -->
 	 <div class="<!-- IF S_EDIT_DRAFT -->col-md-12<!-- ELSE -->col-xs-12 col-lg-8<!-- ENDIF -->">
-     <!-- EVENT posting_editor_subject_prefix -->  
-	   <input type="text" class="form-control input-sm" placeholder="{L_SUBJECT}{L_COLON}" name="subject" id="subject" maxlength="<!-- IF S_NEW_MESSAGE -->100<!-- ELSE -->124<!-- ENDIF -->" tabindex="2" value="{SUBJECT}{DRAFT_SUBJECT}">
+     <!-- EVENT posting_editor_subject_prefix -->
+	   <input type="text" class="form-control input-sm" placeholder="{L_SUBJECT}{L_COLON}" name="subject" id="subject" maxlength="<!-- IF S_NEW_MESSAGE -->160<!-- ELSE -->164<!-- ENDIF -->" tabindex="2" value="{SUBJECT}{DRAFT_SUBJECT}">
 	 <!-- EVENT posting_editor_subject_postfix -->
 	 </div> 
 	 </div> 
@@ -50,6 +51,9 @@
 	 <!-- ENDIF -->
 	<!-- ENDIF -->
 
+	<!-- EVENT ss_posting_editor_subject_before -->
+	<!-- EVENT ss_posting_editor_subject_after -->
+	
     <!-- EVENT posting_editor_subject_after -->
 	
 	 <!-- INCLUDE posting_buttons.html -->
@@ -66,7 +70,7 @@
 	<!-- EVENT posting_editor_message_after -->
 
 	<div class="col-md-4">
-    <!-- EVENT posting_editor_smilies_before -->	
+    <!-- EVENT posting_editor_smilies_before -->
 		<!-- IF S_SMILIES_ALLOWED and .smiley -->
 		<strong>{L_SMILIES}
 		  <!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED -->
@@ -77,7 +81,7 @@
 				<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
 			<!-- END smiley -->
 		<!-- ENDIF -->
-	<!-- EVENT posting_editor_smilies_after -->	
+	<!-- EVENT posting_editor_smilies_after -->
 	<div class="hidden-xs">	
 		<!-- IF BBCODE_STATUS -->
 		<!-- IF .smiley --><hr /><!-- ENDIF -->
@@ -145,7 +149,10 @@ function addClass(e,s){e.classList?e.classList.add(s):e.className+=" "+s}functio
 		
 		<!-- IF not S_SHOW_DRAFTS and not $SIG_EDIT eq 1 -->
 		<fieldset>
-		<!-- EVENT posting_editor_options_prepend -->
+			<!-- EVENT posting_editor_options_prepend -->
+			<!-- IF FORUM_ID eq 55 -->
+				<!-- EVENT posting_editor_options_prepend_hide -->
+			<!-- ENDIF -->
 			<!-- IF S_BBCODE_ALLOWED -->
 			 <input type="checkbox" name="disable_bbcode" id="disable_bbcode"{S_BBCODE_CHECKED}><label class="check-control" for="disable_bbcode">{L_DISABLE_BBCODE}</label>
 			<!-- ENDIF -->
@@ -170,14 +177,9 @@ function addClass(e,s){e.classList?e.classList.add(s):e.className+=" "+s}functio
 			<!-- IF S_TYPE_TOGGLE or S_TOPIC_TYPE_ANNOUNCE or S_TOPIC_TYPE_STICKY -->
 			<hr class="dashed" />
 			<!-- ENDIF -->
-			
 			<!-- IF S_SOFTDELETE_ALLOWED or S_DELETE_ALLOWED -->
-			 <!-- IF S_SOFTDELETE_ALLOWED -->
-				<input type="checkbox" name="delete" id="delete" {S_SOFTDELETE_CHECKED}><label class="check-control" for="delete">{L_DELETE_POST_SOFT}&nbsp;&#91;{L_DELETE_POST_SOFT_WARN}&#93;</label>
-			 <!-- ENDIF -->
-			 <!-- IF S_DELETE_ALLOWED -->
-				<input type="checkbox" name="delete_permanent" id="delete_permanent"><label class="check-control" for="delete_permanent">{L_DELETE_POST_PERMANENT}&nbsp;&#91;{L_DELETE_POST_PERMANENT_WARN}&#93;</label>	
-			 <!-- ENDIF -->
+			 <input type="checkbox" name="delete" id="delete" {S_SOFTDELETE_CHECKED}><label class="check-control" for="delete">{L_DELETE_POST_SOFT}&nbsp;&#91;{L_DELETE_POST_SOFT_WARN}&#93;</label>
+			 <input type="checkbox" name="delete_permanent" id="delete_permanent"><label class="check-control" for="delete_permanent">{L_DELETE_POST_PERMANENT}&nbsp;&#91;{L_DELETE_POST_PERMANENT_WARN}&#93;</label>	
 			<hr class="dashed" />
 			<!-- ENDIF -->
 			

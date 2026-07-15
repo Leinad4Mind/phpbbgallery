@@ -1,0 +1,13 @@
+Subject: Redefinição de senha da conta
+
+Olá, {USERNAME},
+
+Está a receber esta notificação porque solicitou a redefinição de senha esquecida relativa à sua conta em "{SITENAME}".
+
+Para recuperar a tua senha, clica no endereço seguinte:
+
+{U_RESET_PASSWORD}
+
+Se não solicitou esta redefinição, pode ignorar este e-mail. Caso continue a recebê-la, por favor, contacte o administrador do fórum.
+
+{EMAIL_SIG}

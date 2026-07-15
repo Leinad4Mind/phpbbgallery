@@ -1,6 +1,6 @@
-Subject: Tópico {TOPIC_TITLE} reprovado
+Subject: {TOPIC_TITLE} - Tópico reprovado
 
-Olá, {USERNAME};
+Olá, {USERNAME},
 
 
 O seu Tópico "{TOPIC_TITLE}" em {SITENAME} não foi aprovado.
@@ -9,7 +9,7 @@ O motivo da não aprovação é o seguinte:
 {REASON}
 
 
-Obrigado, {USERNAME}.
+Obrigado na mesma, {USERNAME}.
 Gostaríamos que continuasse a participar activamente.
 A sua colaboração é fundamental para todos nós.
 

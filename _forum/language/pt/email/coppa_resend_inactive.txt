@@ -2,17 +2,25 @@ Subject: Bem-vindo ao Fórum {SITENAME}
 
 {WELCOME_MSG}
 
-Em conformidade com o COPPA, sua conta está inativa.
+Em conformidade com o COPPA, a tua conta está inativa.
 
-Por favor, imprima esta mensagem, obtenha a assinatura, com a data, dos seus pais ou tutor e envie por fax para:
+Por favor, imprime esta mensagem, obtém a assinatura, com a data, dos teus pais ou tutor e envia por:
 
-{FAX_INFO}
+<!-- IF FAX_INFO !== '' -->
+Fax para: {FAX_INFO}
 
-ou email para:
+<!-- ENDIF -->
+<!-- IF FAX_INFO !== '' and MAIL_INFO !== '' -->
+Ou
 
-{MAIL_INFO}
+<!-- ENDIF -->
+<!-- IF MAIL_INFO !== '' -->
+E-mail para: {MAIL_INFO}
+
+<!-- ENDIF -->
 
 ------------------------------ Recorte por aqui ------------------------------
+
 Autorização para a participação em {SITENAME} - {U_BOARD}
 
 Nome de Utilizador: {USERNAME}
@@ -33,10 +41,10 @@ Data: ______/_______/_____
 ------------------------------ Recorte por aqui ------------------------------
 
 
-Quando o administrador receber o formulário, a sua conta será ativada.
+Quando o administrador receber o formulário, a tua conta será ativada.
 
-A sua senha foi armazenada na nossa Base de Dados de forma segura e não pode ser recuperada. No caso de a esquecer, poderá redefini-la, usando o endereço de e-mail associado à sua conta.
+A tua senha foi armazenada na nossa Base de Dados de forma segura e não pode ser recuperada. No caso de a esqueceres, poderás redefini-la, usando o endereço de e-mail associado à tua conta.
 
-Obrigado pelo seu registo.
+Obrigado pelo teu registo.
 
 {EMAIL_SIG}

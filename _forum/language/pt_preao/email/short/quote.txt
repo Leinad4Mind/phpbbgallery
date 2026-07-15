@@ -1,4 +1,4 @@
-Subject: Notificação de resposta ao Tópico - "{TOPIC_TITLE}"
+Subject: Notificação de citação - "{TOPIC_TITLE}"
 
 Olá, {USERNAME},
 

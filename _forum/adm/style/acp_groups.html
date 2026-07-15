@@ -162,40 +162,50 @@
 		<th>{L_USERNAME}</th>
 		<th>{L_GROUP_DEFAULT}</th>
 		<th>{L_JOINED}</th>
+		<!-- Leinad4Mind Modification -->
+		<th>{L_LAST_VISIT}</th>
 		<th>{L_POSTS}</th>
 		<th>{L_MARK}</th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr>
-		<td class="row3" colspan="5"><strong>{L_GROUP_LEAD}</strong></td>
+		<!-- Leinad4Mind Modification -->
+		<td class="row3" colspan="6"><strong>{L_GROUP_LEAD}</strong></td>
 	</tr>
 	<!-- BEGIN leader -->
 		<tr>
 			<td><!-- IF leader.USERNAME_COLOUR --><a href="{leader.U_USER_EDIT}" style="color: #{leader.USERNAME_COLOUR};" class="username-coloured">{leader.USERNAME}</a><!-- ELSE --><a href="{leader.U_USER_EDIT}">{leader.USERNAME}</a><!-- ENDIF --></td>
 			<td style="text-align: center;"><!-- IF leader.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
 			<td style="text-align: center;">{leader.JOINED}</td>
+			<!-- Leinad4Mind Modification -->
+			<td style="text-align: center;">{leader.LAST_VISIT}</td>
 			<td style="text-align: center;">{leader.USER_POSTS}</td>
 			<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{leader.USER_ID}" /></td>
 		</tr>
 	<!-- BEGINELSE -->
 		<tr>
-			<td colspan="5" style="text-align: center;">{L_GROUPS_NO_MODS}</td>
+			<!-- Leinad4Mind Modification -->
+			<td colspan="6" style="text-align: center;">{L_GROUPS_NO_MODS}</td>
 		</tr>
 	<!-- END leader -->
 	<tr>
-		<td class="row3" colspan="5"><strong>{L_GROUP_APPROVED}</strong></td>
+		<!-- Leinad4Mind Modification -->
+		<td class="row3" colspan="6"><strong>{L_GROUP_APPROVED}</strong></td>
 	</tr>
 	<!-- BEGIN member -->
 		<!-- IF member.S_PENDING -->
 		<tr>
-			<td class="row3" colspan="5"><strong>{L_GROUP_PENDING}</strong></td>
+			<!-- Leinad4Mind Modification -->
+			<td class="row3" colspan="6"><strong>{L_GROUP_PENDING}</strong></td>
 		</tr>
 		<!-- ELSE -->
 		<tr>
 			<td><!-- IF member.USERNAME_COLOUR --><a href="{member.U_USER_EDIT}" style="color: #{member.USERNAME_COLOUR};" class="username-coloured">{member.USERNAME}</a><!-- ELSE --><a href="{member.U_USER_EDIT}">{member.USERNAME}</a><!-- ENDIF --></td>
 			<td style="text-align: center;"><!-- IF member.S_GROUP_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
 			<td style="text-align: center;">{member.JOINED}</td>
+			<!-- Leinad4Mind Modification -->
+			<td style="text-align: center;">{member.LAST_VISIT}</td>
 			<td style="text-align: center;">{member.USER_POSTS}</td>
 			<td style="text-align: center;"><input type="checkbox" class="radio" name="mark[]" value="{member.USER_ID}" /></td>
 		</tr>

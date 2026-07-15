@@ -1,8 +1,8 @@
-Subject: Tópico aguardando aprovação - "{TOPIC_TITLE}"
+Subject: Notificação de moderação do Tópico - "{TOPIC_TITLE}"
 
 Olá, {USERNAME},
 
-O Tópico "{TOPIC_TITLE}" em "{SITENAME}" está aguardando aprovação.
+Está a receber esta notificação porque o Tópico "{TOPIC_TITLE}" em {SITENAME} precisa de aprovação.
 
 Para ver o tópico, clique no seguinte endereço:
 {U_VIEW_TOPIC}

@@ -10,6 +10,4 @@ Por favor note que o endereço da resposta para este email é do {FROM_USERNAME}
 
 Mensagem que lhe foi enviada é a seguinte:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 {MESSAGE}

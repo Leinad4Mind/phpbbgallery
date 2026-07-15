@@ -1,7 +1,7 @@
 
 Olá, {TO_USERNAME},
 
-Segue-se, um email enviado para si através da página de contacto da administração em "{SITENAME}".
+Segue-se um email que lhe foi enviado através da página de contacto da administração em "{SITENAME}".
 
 <!-- IF S_IS_REGISTERED -->
 A mensagem foi enviada a partir de uma conta no site.
@@ -18,6 +18,5 @@ Endereço IP: {FROM_IP_ADDRESS}
 
 
 A mensagem enviada é a seguinte:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 {MESSAGE}

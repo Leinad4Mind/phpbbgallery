@@ -55,7 +55,6 @@
                  <li>{L_PM_FROM}{L_COLON}&nbsp;{MESSAGE_AUTHOR_FULL}</li>
 				 <!-- IF S_TO_RECIPIENT --><li>{L_TO}{L_COLON}&nbsp;<!-- BEGIN to_recipient --><!-- IF to_recipient.NAME_FULL -->{to_recipient.NAME_FULL}&nbsp;&#45;<!-- ELSE --><a href="{to_recipient.U_VIEW}"<!-- IF to_recipient.COLOUR --> style="color:{to_recipient.COLOUR};"<!-- ENDIF -->><strong>{to_recipient.NAME}</strong></a><!-- ENDIF -->&nbsp;<!-- END to_recipient --></li><!-- ENDIF --> 
 				 <!-- IF S_BCC_RECIPIENT --><li>{L_BCC}{L_COLON}&nbsp;<!-- BEGIN bcc_recipient --><!-- IF bcc_recipient.NAME_FULL -->{bcc_recipient.NAME_FULL}&nbsp;&#45;<!-- ELSE --><a href="{bcc_recipient.U_VIEW}"<!-- IF bcc_recipient.COLOUR --> style="color:{bcc_recipient.COLOUR};"<!-- ENDIF -->><strong>{bcc_recipient.NAME}</strong></a><!-- ENDIF -->&nbsp;<!-- END bcc_recipient --></li><!-- ENDIF --> 
-				  
 				<li class="share-box">
 				   <a data-toggle="modal" href="#mini{MESSAGE_ID}" class="btn btn-bordered btn-xs"><i class="fa fa-address-card-o"></i></a>
 				<div class="modal fade" id="mini{MESSAGE_ID}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -145,7 +144,7 @@
 				<h5>{L_ATTACHMENTS}</h5>
 				<!-- EVENT ss_ucp_pm_viewmessage_attachment_row_before -->
 				    <!-- BEGIN attachment -->{attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
-				<!-- EVENT ss_ucp_pm_viewmessage_attachment_row_after -->	
+				<!-- EVENT ss_ucp_pm_viewmessage_attachment_row_after -->
 			</div>
 		</div>
 		<!-- ENDIF -->

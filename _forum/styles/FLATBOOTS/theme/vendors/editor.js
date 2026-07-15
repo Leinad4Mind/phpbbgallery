@@ -164,7 +164,7 @@ function attachInline(index, filename) {
 /**
 * Add quote text to message
 */
-function addquote(post_id, username, l_wrote) {
+function addquote(post_id, username, poster_id, l_wrote) {
 	var message_name = 'message_' + post_id;
 	var theSelection = '';
 	var divarea = false;
@@ -208,9 +208,11 @@ function addquote(post_id, username, l_wrote) {
 		}
 	}
 
+	theSelection = theSelection.replace(/(\[hide\][\s\S]*\[\/hide\])/ig, "- Agradece para veres o Conteúdo Oculto, não sejas Inácio! - \n")
 	if (theSelection) {
 		if (bbcodeEnabled) {
-			insert_text('[quote="' + username + '"]' + theSelection + '[/quote]');
+			// insert_text('[quote="' + username + '"]' + theSelection + '[/quote]');
+			insert_text('[quote="' + username + '" post_id=' + post_id + ' user_id=' + poster_id +']' + theSelection + '[/quote]');
 		} else {
 			insert_text(username + ' ' + l_wrote + ':' + '\n');
 			var lines = split_lines(theSelection);

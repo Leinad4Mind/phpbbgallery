@@ -7,7 +7,7 @@
 	
 		<!-- IF _file.S_THUMBNAIL -->
 		<div class="thumbnail">
-			<div class="attach-image-thumb"><img class="img-post imgthumb" src="{_file.THUMB_IMAGE}" data-src="{_file.U_DOWNLOAD_LINK}" name="{_file.U_DOWNLOAD_LINK}" alt="{% if _file.COMMENT %}{{ _file.COMMENT|e('html') }}{% else %}{{ _file.DOWNLOAD_NAME }}{% endif %}" /></div>
+			<div class="attach-image-thumb"><a href="{_file.U_DOWNLOAD_LINK}"><img class="img-post imgthumb" src="{_file.THUMB_IMAGE}" name="{_file.U_DOWNLOAD_LINK}" alt="{% if _file.COMMENT %}{{ _file.COMMENT|e('html') }}{% else %}{{ _file.DOWNLOAD_NAME }}{% endif %}" /></a></div>
 			<!-- IF _file.COMMENT --><small><i class="fa fa-pencil"></i> {_file.COMMENT}</small><br><!-- ENDIF -->
 			<small><i class="fa fa-eye"></i> {_file.DOWNLOAD_NAME} ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}</small>
 		</div>
@@ -19,7 +19,7 @@
 			<!-- IF _file.COMMENT --><small><i class="fa fa-pencil"></i> {_file.COMMENT}</small><br><!-- ENDIF -->
 			<small><i class="fa fa-eye"></i> {_file.DOWNLOAD_NAME} ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}</small>
 		</div>
-		<!-- ENDIF -->	
+		<!-- ENDIF -->
 		
 		<!-- IF _file.S_FILE -->
 		<div class="file">

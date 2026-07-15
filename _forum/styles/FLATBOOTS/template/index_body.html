@@ -53,7 +53,7 @@
 	 
 		<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
 		 <!-- EVENT index_body_block_birthday_prepend -->
-		  <!-- IF .birthdays --><p>{L_SITESPLAT_BIRTHDAYS}{L_COLON}&nbsp;<strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' -->&nbsp;&#40;{birthdays.AGE}&#41;<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->&#44;&nbsp;<!-- ENDIF --><!-- END birthdays --></strong></p><!-- ENDIF -->
+		  <!-- IF .birthdays --><p>{L_SITESPLAT_BIRTHDAYS}{L_COLON}&nbsp;<strong style="word-break:break-all;"><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' -->&nbsp;&#40;{birthdays.AGE}&#41;<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->&#44;&nbsp;<!-- ENDIF --><!-- END birthdays --></strong></p><!-- ENDIF -->
 		 <!-- EVENT index_body_block_birthday_append -->
 		<!-- ENDIF -->
 	   </div>
@@ -66,4 +66,3 @@
 <!-- EVENT index_body_stat_blocks_after -->
 {% set s_on_index = true %}
 <!-- INCLUDE overall_footer.html -->
-

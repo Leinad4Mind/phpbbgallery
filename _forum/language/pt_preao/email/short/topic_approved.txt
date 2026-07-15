@@ -1,9 +1,10 @@
-Subject: Tópico {TOPIC_TITLE} aprovado
+Subject: {TOPIC_TITLE} - Tópico aprovado
 
-Olá, {USERNAME};
+Olá, {USERNAME},
 
 
 O seu Tópico "{TOPIC_TITLE}" em {SITENAME} foi aprovado por um Moderador ou Administrador.
+
 Pode vê-lo no seguinte endereço:
 {U_VIEW_TOPIC}
 

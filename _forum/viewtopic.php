@@ -394,16 +394,26 @@ $vars = array(
 );
 extract($phpbb_dispatcher->trigger_event('core.viewtopic_before_f_read_check', compact($vars)));
 
+// Leinad4Mind Modification - So the author of the topic is able to see the topic at least on specific forum ids
+// I wanted the users with permissions to be able to see the list of topics and not entering
+// And for the authors of the topic, even when they don't have permissions to still see the list of topics of their own only and still be able to enter and see the topic itself.
+// List of forum IDs to check against
+$allowed_forum_ids = [224, 226];
+
 // Start auth check
 if (!$overrides_f_read_check && !$auth->acl_get('f_read', $forum_id))
 {
-	if ($user->data['user_id'] != ANONYMOUS)
+	// Leinad4Mind Modification
+	if (!($topic_data['topic_poster'] === $user->data['user_id'] && in_array($forum_id, $allowed_forum_ids)))
 	{
-		send_status_line(403, 'Forbidden');
-		trigger_error('SORRY_AUTH_READ');
-	}
+		if ($user->data['user_id'] != ANONYMOUS)
+		{
+			send_status_line(403, 'Forbidden');
+			trigger_error('SORRY_AUTH_READ');
+		}
 
-	login_box('', $user->lang['LOGIN_VIEWFORUM']);
+		login_box('', $user->lang['LOGIN_VIEWFORUM']);
+	}
 }
 
 // Forum is passworded ... check whether access has been granted to this

@@ -2,7 +2,7 @@ Subject: Denúncia apagada - "{PM_SUBJECT}"
 
 Olá, {USERNAME},
 
-Está a receber esta notificação, porque a denúncia que apresentou sobre a mensagem "{PM_SUBJECT}" em "{SITENAME}" foi apagada por um moderador ou administrador.
+Está a receber esta notificação, porque a denúncia que apresentou sobre a mensagem privada "{PM_SUBJECT}" em {SITENAME} foi apagada por um moderador ou administrador.
 
 
 {EMAIL_SIG}

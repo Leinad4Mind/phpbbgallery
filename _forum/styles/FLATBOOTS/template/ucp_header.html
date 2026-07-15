@@ -64,11 +64,11 @@
 		  
 		  <!-- BEGIN friends_online -->
 		  <li class="media friends-avatar">
-		   <!-- IF not friends_online.AVATAR --><img src="{T_THEME_PATH}/images/user1.png"><!-- ELSE -->{friends_online.AVATAR}<!-- ENDIF --->
+		   <!-- IF not friends_online.AVATAR --><img src="{T_THEME_PATH}/images/user.png"><!-- ELSE -->{friends_online.AVATAR}<!-- ENDIF --->
 		   <div class="media-body">
-		   {% EVENT ucp_header_friends_online_username_full_prepend %}
-			 {friends_online.USERNAME_FULL}
-		   {% EVENT ucp_header_friends_online_username_full_append %}	 
+			 {% EVENT ucp_header_friends_online_username_full_prepend %}
+			   {friends_online.USERNAME_FULL}
+			 {% EVENT ucp_header_friends_online_username_full_append %}	
 			 <p><small class="text-success"><strong>{L_FRIENDS_ONLINE}</strong></small><!-- IF S_SHOW_PM_BOX -->&nbsp;&nbsp;<button type="submit" name="add_to[{friends_online.USER_ID}]" value="{L_ADD}" class="btn btn-xs btn-success">{L_ADD}</button><!-- ENDIF --></p>
 		   </div>
 		  </li>
@@ -76,11 +76,11 @@
 		 
 		 <!-- BEGIN friends_offline -->
 		  <li class="media friends-avatar">
-		   <!-- IF not friends_offline.AVATAR --><img src="{T_THEME_PATH}/images/user4.png"><!-- ELSE -->{friends_offline.AVATAR}<!-- ENDIF --->
+		   <!-- IF not friends_offline.AVATAR --><img src="{T_THEME_PATH}/images/user.png"><!-- ELSE -->{friends_offline.AVATAR}<!-- ENDIF --->
 		   <div class="media-body">
-		    {% EVENT ucp_header_friends_offline_username_full_prepend %}
-			 {friends_offline.USERNAME_FULL}
-			{% EVENT ucp_header_friends_offline_username_full_append %} 
+			 {% EVENT ucp_header_friends_offline_username_full_prepend %}
+			   {friends_offline.USERNAME_FULL}
+			 {% EVENT ucp_header_friends_offline_username_full_append %} 
 			 <p><small class="text-danger"><strong>{L_FRIENDS_OFFLINE}</strong></small><!-- IF S_SHOW_PM_BOX -->&nbsp;&nbsp;<button type="submit" name="add_to[{friends_offline.USER_ID}]" value="{L_ADD}" class="btn btn-xs btn-default">{L_ADD}</button><!-- ENDIF --></p>
 		   </div>
 		  </li>

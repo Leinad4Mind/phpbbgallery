@@ -179,6 +179,20 @@ class fulltext_native extends \phpbb\search\base
 		return $this->word_length;
 	}
 
+	/*** 2013-01-10 BEGIN AmigoJack Rudely romanise every word. 
+	Unromanisable words (Cyrillic, Katakana, Hangul...) will fall off completely (of course). ***/
+	public function aj_romanise(&$word) {
+		$sb_match	= "ISTCPAMELRDOJBNHFGVWUQKYXZ\r\n\t!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\xC0\xC1\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF";
+		$sb_replace	= 'istcpamelrdojbnhfgvwuqkyxz______________________________________________________________________________';
+		
+		setlocale(LC_ALL, 'pt_PT');  // Will translate "Göthe" into "Gothe" instead of "Goethe"
+		// Transliterate UTF8 into Latin, // Don't end conversion prematurily
+		$word = strtolower(iconv('UTF-8', 'ASCII//IGNORE//TRANSLIT', $word));
+		// "Hôtel" will come out as "Ho^tel", so we need to clean it
+		$word = str_replace( '_', '', strtr($word, $sb_match, $sb_replace));
+	}
+	/*** 2013-01-10 END ***/
+
 	/**
 	* This function fills $this->search_query with the cleaned user search query
 	*
@@ -1353,6 +1367,9 @@ class fulltext_native extends \phpbb\search\base
 
 		while (strlen($word))
 		{
+			/*** 2013-01-10 BEGIN AmigoJack Romanise every word ***/
+			$this->aj_romanise($word);
+			/*** 2013-01-10 END ***/
 			if (strlen($word) > 255 || strlen($word) <= $isset_min)
 			{
 				/**
@@ -1895,6 +1912,10 @@ class fulltext_native extends \phpbb\search\base
 
 		$text = strtr($text, $sb_match, $sb_replace);
 		$ret = '';
+
+		/*** 2013-01-10 BEGIN AmigoJack Romanise every word ***/
+		$this->aj_romanise($text);
+		/*** 2013-01-10 END ***/
 
 		$pos = 0;
 		$len = strlen($text);

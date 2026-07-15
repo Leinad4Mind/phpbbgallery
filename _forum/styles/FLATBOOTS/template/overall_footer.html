@@ -12,7 +12,7 @@
 
 	<section class="section-page">
         <div id="rtblock" class="container">
-            <!-- IF .fltl --><!-- EVENT fltl --><!-- ELSE --><!-- INCLUDE addons/recent_topics_body.html --><!-- ENDIF -->
+            <!-- IF .fltl --><!-- EVENT fltl --><!-- ENDIF -->
         </div>
     </section>
 
@@ -24,6 +24,7 @@
   <!-- ENDIF -->
 <!-- EVENT call_to_action_after -->  
 	
+<div class="section-footer-image">
 	<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
 		<!-- EVENT prefooter_instead -->
 	<!-- ELSE -->
@@ -45,13 +46,13 @@
 				<div class="col-sm-5 col-sm-offset-2 twitter">
 					<div class="thumb"><i class="fa fa-twitter"></i></div>
 					<div class="text">
-						<h3><a href="https://twitter.com/SiteSplat">{L_JOIN_US_TWITTER}&nbsp;<small>@SiteSplat</small></a></h3>
+						<h3><a href="https://twitter.com/GoldTugAnime">{L_JOIN_US_TWITTER}&nbsp;<small>@GoldTugAnime</small></a></h3>
 						 <div id="twitter-feed"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-		 <div class="section-bg"></div>
+		 <!--<div class="section-bg"></div>-->
 	</section>
 	<!-- ENDIF -->
     
@@ -66,7 +67,7 @@
 						<!-- EVENT footer_links_instead -->
 					<!-- ELSE -->
 						<ul class="list-inline footer-nav">
-						 <li><a href="https://goo.gl/LvmwlF" title="">{L_ADVERTISE}</a></li>
+						 <li><a href="https://goo.gl/" title="">{L_ADVERTISE}</a></li>
 						 <li><a href="{U_PRIVACY}" title="">{L_PRIVACY}</a></li>
 						 <li><a href="{U_DMCA}" title="">{L_DMCA}</a></li>
 						 <li><a href="{U_TERMS_USE}" title="">{L_TERMS}</a></li>
@@ -86,14 +87,13 @@
 								<!-- EVENT footer_social_instead -->
 						<!-- ELSE -->
 							<div class="social-network">
-								<a class="github-color" title="Github" href="#2" aria-label="GitHub"><i class="fa fa-github"></i></a>
-								<a class="behance-color" title="Behance" href="#3" aria-label="Behance"><i class="fa fa-behance"></i></a>
-								<!-- <a class="dropbox-color" title="Dropbox" href="#4"><i class="fa fa-dropbox"></i></a> -->
-								<a class="pinterest-color" title="Pinterest" href="#5" aria-label="Pinterest"><i class="fa fa-pinterest"></i></a> 
+								<!-- <a class="github-color" title="Github" href="#2" aria-label="Github"><i class="fa fa-github"></i></a> -->
+								<!-- <a class="behance-color" title="Behance" href="#3" aria-label="Behance"><i class="fa fa-behance"></i></a> -->
+								<!-- <a class="dropbox-color" title="Dropbox" href="#4" aria-label="Dropbox"><i class="fa fa-dropbox"></i></a> -->
+								<a class="pinterest-color" title="Pinterest" href="#5" aria-label="Pinterest"><i class="fa fa-pinterest"></i></a>
 								<a class="facebook-color" title="Facebook" href="#6" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
-								<a class="twitter-color" title="Twitter" href="https://twitter.com/SiteSplat" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
-								<!-- <a class="bitbucket-color" title="Bitbucket" href="#8"><i class="fa fa-bitbucket"></i></a> -->
-								<a class="envato-color" title="Envato" href="https://themeforest.net/user/ThemeSplat/portfolio?ref=ThemeSplat" aria-label="Envato"><i class="icon-moon-envatoleaf"></i></a>
+								<!-- <a class="twitter-color" title="Twitter" href="#7" aria-label="Twitter"><i class="fa fa-twitter"></i></a> -->
+								<!-- <a class="bitbucket-color" title="Bitbucket" href="#8" aria-label="Bitbucket"><i class="fa fa-bitbucket"></i></a> -->
 								<a class="rss-color hidden-xs" title="rss" href="{U_FEED}" aria-label="rss"><i class="fa fa-rss"></i></a>
 							</div>
 						<!-- ENDIF -->	
@@ -101,11 +101,11 @@
 					</div>	
 				</div>
 				
-                <div class="row">				
+                <div class="row">
 					<div class="col-sm-6 sm-direction">
 					 <p class="copyrights">
 					  <!-- EVENT overall_footer_copyright_prepend -->
-						<small>{L_PHPBB_CREDIT}{L_SS_HANDCRAFTED}</small>
+					  <small>{L_HANDCRAFTED}</small>&nbsp;<i class="fa fa-heart text-flatboots-red"></i>&nbsp;<small>{L_AND}</small>&nbsp;<i class="fa fa-coffee"></i>
 					  <!-- EVENT overall_footer_copyright_append -->
 					 </p>
 					</div>
@@ -124,7 +124,7 @@
 			</div>
 		</div>
 	</footer>
-
+</div>
 <a id="totop" class="top-flat" href="" onclick="return false;" style="display:none;" aria-label="to-top"></a>
 
 <div class="hidden"><!-- IF not S_IS_BOT -->{RUN_CRON_TASK}<!-- ENDIF --></div> 
@@ -160,8 +160,8 @@
 		   <ul>
 			<li class="root"><a href="{U_INDEX}">{L_INDEX}</a></li>
 			<!-- BEGIN navlinks -->
-			{% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
-		    {% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
+				{% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
+				{% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
 				<li><a href="{{ NAVLINK_LINK }}">{{ NAVLINK_NAME }}</a></li>
 			<!-- END navlinks -->
 		   </ul>
@@ -178,7 +178,8 @@
 
 <script>
 // this loads jquery asynchronously & in parallel
-head.load("{T_THEME_PATH}/vendors/jquery-1.12.4.min.js", "{T_THEME_PATH}/vendors/bootstrap/336/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js");
+head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js","//goldtuganime.com/forum/ext/canidev/core/styles/FLATBOOTS/template/js/cbbcore.min.js?assets_version={T_ASSETS_VERSION}","//goldtuganime.com/forum/ext/canidev/blockgets/styles/all/template/js/jblockgets.min.js?assets_version={T_ASSETS_VERSION}");
+// head.load("{T_THEME_PATH}/vendors/jquery-1.12.4.min.js", "{T_THEME_PATH}/vendors/bootstrap/336/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js","//goldtuganime.com/forum/ext/canidev/core/styles/FLATBOOTS/template/js/cbbcore.min.js?assets_version={T_ASSETS_VERSION}","//goldtuganime.com/forum/ext/canidev/blockgets/styles/all/template/js/jblockgets.min.js?assets_version={T_ASSETS_VERSION}");
 </script>
 
 <!-- we use this event to load the JS scripts properly via the extension system -->
@@ -199,12 +200,11 @@ head.ready(function(){!function(n){n(".oauth-content ul > li").each(function(){v
 <!-- ENDIF -->
 // some function that depends on bootstrap and jquery
 <!-- IF not HIDE_FOOTER -->
-
-// ex twitter script
-
+// head.load("{T_THEME_PATH}/vendors/twitterFetcher.min.js");
+// head.ready("twitterFetcher.min.js",function(e){var e={profile:{screenName:"<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->{TWITTER_SCREEN_NAME}<!-- ELSE -->sitesplat<!-- ENDIF -->"},domId:"twitter-feed",maxTweets:1,showUser:!1,useEmoji:1,showImages:!0,enableLinks:!0};twitterFetcher.fetch(e)});
 <!-- ENDIF -->
 <!-- IF S_RECAPTCHA_AVAILABLE -->
-head.load("{T_THEME_PATH}/vendors/inv-recaptcha.js");
+head.load("{T_THEME_PATH}/vendors/inv-recaptcha.js?assets_version={T_ASSETS_VERSION}");
 <!-- ENDIF -->
 </script>
 

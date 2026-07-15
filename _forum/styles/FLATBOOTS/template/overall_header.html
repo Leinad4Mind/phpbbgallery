@@ -1,157 +1,217 @@
 <!DOCTYPE html>
 <html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="designer" content="SiteSplat https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat">
-<meta content="{SITENAME}" property="og:site_name">
-<meta name="Description" content="{SITE_DESCRIPTION}">
-<!-- EVENT overall_header_meta -->
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-{META}
-<title><!-- IF UNREAD_NOTIFICATIONS_COUNT -->&#40;{UNREAD_NOTIFICATIONS_COUNT}&#41;&nbsp;<!-- ENDIF --><!-- IF S_IN_MCP -->{L_MCP}&nbsp;&#45;&nbsp;<!-- ELSEIF S_IN_UCP -->{L_UCP}&nbsp;&#45;&nbsp;<!-- ENDIF -->{PAGE_TITLE}&nbsp;&#45;&nbsp;{SITENAME}</title>
-<!-- IF S_ENABLE_FEEDS -->
-	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{{ path('phpbb_feed_index') }}"><!-- ENDIF -->
-	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{{ path('phpbb_feed_news') }}"><!-- ENDIF -->
-	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{{ path('phpbb_feed_forums') }}"><!-- ENDIF -->
-	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{{ path('phpbb_feed_topics') }}"><!-- ENDIF -->
-	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{{ path('phpbb_feed_topics_active') }}"><!-- ENDIF -->
-	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{{ path('phpbb_feed_forum', { forum_id : S_FORUM_ID } ) }}"><!-- ENDIF -->
-    <!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - <!-- IF S_BBEMOJI -->{TOPIC_TITLE_UNPARSED}<!-- ELSE -->{TOPIC_TITLE}<!-- ENDIF -->" href="{{ path('phpbb_feed_topic', { topic_id : S_TOPIC_ID } ) }}"><!-- ENDIF -->
-<!-- EVENT overall_header_feeds -->
-<!-- ENDIF -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="designer" content="Leinad4Mind & Sitesplat">
+	<meta content="{SITENAME}" property="og:site_name">
+	<!-- EVENT overall_header_meta -->
+	{META}
+	<title><!-- IF UNREAD_NOTIFICATIONS_COUNT -->&#40;{UNREAD_NOTIFICATIONS_COUNT}&#41;&nbsp;<!-- ENDIF --><!-- IF S_IN_MCP -->{L_MCP}&nbsp;&#45;&nbsp;<!-- ELSEIF S_IN_UCP -->{L_UCP}&nbsp;&#45;&nbsp;<!-- ENDIF -->{PAGE_TITLE}&nbsp;&#45;&nbsp;{SITENAME}</title>
+	<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="Gold" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="search" href="https://goldtuganime.com/search.xml" type="application/opensearchdescription+xml" title="GoldTugAnime" />
+	<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{{ path('phpbb_feed_index') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{{ path('phpbb_feed_news') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{{ path('phpbb_feed_forums') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{{ path('phpbb_feed_topics') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{{ path('phpbb_feed_topics_active') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{{ path('phpbb_feed_forum', { forum_id : S_FORUM_ID } ) }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID -->
+	<link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - <!-- IF S_BBEMOJI -->{TOPIC_TITLE_UNPARSED}<!-- ELSE -->{TOPIC_TITLE}<!-- ENDIF -->" href="{{ path('phpbb_feed_topic', { topic_id : S_TOPIC_ID } ) }}"><!-- ENDIF -->
+	<!-- EVENT overall_header_feeds -->
+	<!-- ENDIF -->
 
-<!-- IF U_CANONICAL -->
+	<!-- IF U_CANONICAL -->
 	<link rel="canonical" href="{U_CANONICAL}">
-<!-- ENDIF -->
+	<!-- ENDIF -->
 
-{# Use the space below to include external fonts IE Google Fonts library
-# 
-# <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600'>
-# <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Asap+Condensed:600'>
-# see old vs new with which is slower :-) combined fonts below 
-# <link rel="preconnect" href="https://fonts.gstatic.com">
-# <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet"> 
-#}
-<!-- Fonts here below this comment -->
-<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600'>
-<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Asap+Condensed:600'>
+	{# Use the space below to include external fonts IE Google Fonts library
+	#
+	#
+	<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600'>
+	#
+	<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Asap+Condensed:600'>
+	# see old vs new with which is slower :-) combined fonts below
+	#
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	#
+	<link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+	#}
+	<!-- Fonts here below this comment -->
+	<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600'>
+	<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Asap+Condensed:600'>
 
-<!-- CSS files start here -->
-<link rel="stylesheet" href="{T_THEME_PATH}/stylesheet.css">
-<!-- IF S_PLUPLOAD -->
-<link rel="stylesheet" href="{T_THEME_PATH}/plupload.css">
-<!-- ENDIF -->
-<!-- EVENT overall_header_stylesheets_after -->
+	<!-- CSS files start here -->
+	<link rel="stylesheet" href="{T_THEME_PATH}/stylesheet.css?assets_version={T_ASSETS_VERSION}">
+	<!-- IF S_PLUPLOAD -->
+	<link rel="stylesheet" href="{T_THEME_PATH}/plupload.css?assets_version={T_ASSETS_VERSION}">
+	<!-- ENDIF -->
+	<!-- EVENT overall_header_stylesheets_after -->
 
-{$STYLESHEETS}
+	{$STYLESHEETS}
 
-<!-- Remove the conditional below to use the custom CSS without FLATBOOTS Mini CMS Extension -->
-<!-- IF S_ALLOW_CUSTOMCSS -->
-<link rel="stylesheet" href="{T_THEME_PATH}/custom.css">
-<!-- ENDIF -->
-<!-- EVENT override_custom_css -->
-<!-- CSS files stop here -->
+	<!-- Remove the conditional below to use the custom CSS without FLATBOOTS Mini CMS Extension -->
+	<!-- IF S_ALLOW_CUSTOMCSS -->
+	<link rel="preload" as="image" href="./images/bannerGTA2018_3840x172_2.webp" fetchpriority="high">
+	<link rel="stylesheet" href="{T_THEME_PATH}/custom.css?assets_version={T_ASSETS_VERSION}">
+	<!-- ENDIF -->
+	<!-- EVENT override_custom_css -->
+	<!-- CSS files stop here -->
 
-<!-- EVENT overall_header_head_append -->
+	<!-- EVENT overall_header_head_append -->
 
-<!-- magic dust -->
-<!-- //cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js -->
-<script rel="preload" as="script" src="{T_THEME_PATH}/vendors/head.load.min.js"></script>
+	<!-- bonus christmas light stuff, not required for snowstorm -->
+	<!-- <link rel="stylesheet" media="screen" href="{T_TEMPLATE_PATH}/xmas/christmaslights.css" /> -->
+	<!-- <script rel="preload" as="script" src="{T_TEMPLATE_PATH}/xmas/soundmanager2-nodebug-jsmin.js"></script> -->
+	<!-- <script rel="preload" as="script" src="{T_TEMPLATE_PATH}/xmas/animation-min.js"></script> -->
+	<!-- <script rel="preload" as="script" src="{T_TEMPLATE_PATH}/xmas/luzdenatal.js"></script> -->
+
+	<!-- Neve gorda com 1 sentido e simples -->
+	<!-- <link rel="stylesheet" media="screen" href="{T_TEMPLATE_PATH}/xmas/snow.css" /> -->
+	<!-- <script src="{T_TEMPLATE_PATH}/xmas/snow.js"></script> -->
+	
+	<!-- Neve especial com flocos diversos
+	<script src="{T_TEMPLATE_PATH}/xmas/snowstorm.js"></script>
+	 -->
+	<!-- Neve segue rasto do rato
+	<script src="{T_TEMPLATE_PATH}/xmas/snowstorm-min.js"></script>
+	-->
+
+	<!-- magic dust -->
+	<!-- //cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js -->
+	<script rel="preload" as="script" src="{T_THEME_PATH}/vendors/head.load.min.js?assets_version={T_ASSETS_VERSION}"></script>
 
 </head>
+
+<!-- xmas color style="border-top:3px solid #060" -->
 <body data-spy="scroll" data-target=".scrollspy" id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
-<!-- EVENT overall_header_body_before -->
+	<!-- EVENT overall_header_body_before -->
 
- <header id="top" class="navbar navbar-inverse navbar-static-top flat-nav">
-  <div class="container">
-    <div class="navbar-header">
-      <button data-target=".flat-nav-collapse" data-toggle="collapse" type="button" class="nav-tog lines-button x navbar-toggle neutro">
-	   <span class="sr-only sr-nav">{L_TOGGLE_NAV}</span>
-        <span class="lines"></span>
-      </button>
-	  <!-- IF LOGO_IMAGE_EXIST -->
-      	<a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img style="max-height: 60px; max-width:100%; margin-top: -20px;" class="img-responsive" src="{T_IMAGES_PATH}../ext/sitesplat/flatbootsminicms/images/logo/{LOGO_FILENAME}" alt="{LOGO_TEXT}" /></a>
-      <!-- ELSEIF LOGO_TEXT -->
-	    <a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->">{LOGO_TEXT}</a>
-	  <!-- ELSE -->
-      	<a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->">{L_FLATBOOTS}</a>
-      <!-- ENDIF -->
-    </div>
-	<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
-        <!-- EVENT flatboots_navigation_instead -->
-    <!-- ELSE -->
-	    <!-- INCLUDE addons/navigation.html -->
-	<!-- ENDIF -->	
-  </div>
- </header>
-    <div class="search-input search-input-fullscreen hidden-xs">
-	   <form method="get" id="search" action="{U_SEARCH}">
-		   <fieldset>
-		   <input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" placeholder="{L_SEARCH}" value="" autocomplete="off">
-		   <div class="close">&times;</div>
-		   {S_SEARCH_HIDDEN_FIELDS}
-		   </fieldset> 
-        </form> 
-    </div>
-
-<!-- IF not HIDE_HEADER -->		
-  <!-- IF IN_BADGE -->
-   <!-- INCLUDE @sitesplat_badge/header_badge_teaser.html -->
-  <!-- ELSE -->
-   <!-- INCLUDE addons/header_teaser_body.html -->
-  <!-- ENDIF -->
-<!-- ELSE -->
-<div style="padding-top:30px;" class="space-teaser"></div>
-<!-- ENDIF -->
-  
-<div class="container">
-  <!-- start content -->
-  <div id="content-forum">
-
-    <!-- EVENT header_breadcrumb_before -->
-	<div class="breadcrumb-line clearfix">
-		<ul class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-		<!-- DEFINE $MICRODATA = ' itemtype="https://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
-        {% set navlink_position = 1 %}
-		<!-- IF U_SITE_HOME -->
-		   <li><a href="{U_SITE_HOME}" aria-label="{L_SITE_HOME}"><span class="icon fa fa-home"></span></a></li>
-		   <!-- EVENT overall_header_breadcrumbs_before -->
-		   <li {$MICRODATA}><a href="{U_SITE_HOME}" data-navbar-reference="home" itemprop="item"><span itemprop="name">{L_SITE_HOME}</span></a><meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}"></li>
-		   <!-- EVENT overall_header_breadcrumbs_after --> 
-		<!-- ELSE -->
-		   <li><a href="{U_INDEX}" aria-label="{L_INDEX}"><span class="icon fa fa-home"></span></a></li>
-		   <!-- EVENT overall_header_breadcrumbs_before -->
-		   <li {$MICRODATA}><a href="{U_INDEX}" data-navbar-reference="index" itemprop="item"><span itemprop="name">{L_INDEX}</span></a><meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}"></li>
-		   <!-- EVENT overall_header_breadcrumbs_after --> 
-		<!-- ENDIF -->
-
-		  <!-- BEGIN navlinks -->
-		   {% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
-		   {% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
-		   <li {$MICRODATA}><a itemprop="item" href="{{ NAVLINK_LINK }}"<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><span itemprop="name">{{ NAVLINK_NAME }}</span></a><meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}"></li>		 
-		  <!-- END navlinks --> 
-		</ul>
-		<!-- IF S_USER_LOGGED_IN and (SCRIPT_NAME == "viewforum" or SCRIPT_NAME == "viewtopic") -->
-		<ul class="breadcrumb-buttons visible-xxs">
-		    <li>
-			  <a href="#" title="" data-toggle="modal" data-target="#BreadcrumbMap">
-			   <i class="icon fa fa-sitemap"></i>
-			  </a>
-		   </li>
-		</ul>
-		<!-- ENDIF -->
-		<!-- EVENT overall_header_breadcrumbs_buttons -->  
+	<header id="top" class="navbar navbar-inverse navbar-static-top flat-nav">
+		<!-- <div id="lights"> -->
+		<!-- lights go here -->
+		<!-- </div> -->
+		<div class="container">
+			<div class="navbar-header">
+				<button data-target=".flat-nav-collapse" data-toggle="collapse" type="button" class="nav-tog lines-button x navbar-toggle neutro">
+					<span class="sr-only sr-nav">{L_TOGGLE_NAV}</span>
+					<span class="lines"></span>
+				</button>
+				<!-- IF S_NOTIFICATIONS_DISPLAY and .notifications and NOTIFICATIONS_COUNT || S_DISPLAY_PM and S_USER_UNREAD_PRIVMSG and not NOTIFICATIONS_COUNT -->
+				<span class="dropdown dropdown-avatar dropdown-notification visible-xs">
+					<a id="notification_list_button" href="javascript:void(0)" data-toggle="dropdown"><em style="float:right;right:1rem;top:1.4rem" class="notifications badge badge-danger"><!-- IF .notifications and NOTIFICATIONS_COUNT --><span class="fa fa-bell"><small>&nbsp;{NOTIFICATIONS_COUNT}</small><!-- ELSE -->&nbsp;<span class="fa fa-envelope"><small>&nbsp;{S_USER_UNREAD_PRIVMSG}</small><!-- ENDIF --></span></em></a>
+					<ul class="dropdown-menu user-login-drop arrow-up mobile">
+						<li><a href="<!-- IF .notifications and NOTIFICATIONS_COUNT -->{U_VIEW_ALL_NOTIFICATIONS}<!-- ELSE -->{U_PRIVATEMSGS}<!-- ENDIF -->" class="notification-heading">{L_NOTIFICATIONS}</a></li>
+						<!-- INCLUDE notification_dropdown_mobile.html -->
+					</ul>
+				</span>
+				<!-- ENDIF -->
+				<!-- IF LOGO_IMAGE_EXIST -->
+				<a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img style="max-height: 60px; max-width:100%; margin-top: -20px;" class="img-responsive" src="{T_IMAGES_PATH}../ext/sitesplat/flatbootsminicms/images/logo/{LOGO_FILENAME}" alt="{LOGO_TEXT}" /></a>
+				<!-- ELSEIF LOGO_TEXT -->
+				<a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->">{LOGO_TEXT}</a>
+				<!-- ELSE -->
+				<a class="navbar-brand" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->">{L_FLATBOOTS}</a>
+				<!-- ENDIF -->
+			</div>
+			<!-- IF FLATBOOTS_MINI_CMS_ENABLED -->
+			<!-- EVENT flatboots_navigation_instead -->
+			<!-- ELSE -->
+			<!-- INCLUDE addons/navigation.html -->
+			<!-- ENDIF -->
+		</div>
+	</header>
+	<div class="search-input search-input-fullscreen hidden-xs">
+		<form method="get" id="search" action="{U_SEARCH}">
+			<fieldset>
+				<input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" placeholder="{L_SEARCH}" value="" autocomplete="off">
+				<input name="sf" id="sf" type="hidden" value="titleonly">
+				<input name="sr" id="sr" type="hidden" value="topics">
+				<div class="close">&times;</div>
+				{S_SEARCH_HIDDEN_FIELDS}
+			</fieldset>
+		</form>
 	</div>
-    <!-- EVENT overall_header_page_body_before -->
-	
-	<div id="page-body">
-	
-	<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
-	<div class="alert alert-warning fade in">
-		<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
-		<i class="fa fa-info"></i>&nbsp;<strong>{L_INFORMATION}{L_COLON}</strong>&nbsp;{L_BOARD_DISABLED}
-	</div>
+
+	<!-- IF not HIDE_HEADER -->
+	<!-- IF IN_BADGE -->
+	<!-- INCLUDE @sitesplat_badge/header_badge_teaser.html -->
+	<!-- ELSE -->
+	<!-- INCLUDE addons/header_teaser_body.html -->
 	<!-- ENDIF -->
-	
-    <!-- EVENT overall_header_content_before -->
+	<!-- ELSE -->
+	<div style="padding-top:30px;" class="space-teaser"></div>
+	<!-- ENDIF -->
+
+	<div class="container">
+		<!-- start content -->
+		<div id="content-forum">
+			<!-- <div id="santahat"></div> -->
+			<!-- EVENT header_content_after -->
+
+			<!-- EVENT header_breadcrumb_before -->
+			<div class="breadcrumb-line clearfix">
+				<ul class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+					<!-- DEFINE $MICRODATA = ' itemtype="https://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
+					{% set navlink_position = 1 %}
+					<!-- IF U_SITE_HOME -->
+					<li><a href="{U_SITE_HOME}" aria-label="{L_SITE_HOME}"><span class="icon fa fa-home"></span></a></li>
+					<!-- EVENT overall_header_breadcrumbs_before -->
+					<li {$MICRODATA}><a href="{U_SITE_HOME}" data-navbar-reference="home" itemprop="item"><span itemprop="name">{L_SITE_HOME}</span></a>
+						<meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}" />
+					</li>
+					<!-- EVENT overall_header_breadcrumbs_after -->
+					<!-- ELSE -->
+					<li><a href="{U_INDEX}" aria-label="{L_INDEX}"><span class="icon fa fa-home"></span></a></li>
+					<!-- EVENT overall_header_breadcrumbs_before -->
+					<li {$MICRODATA}><a href="{U_INDEX}" data-navbar-reference="index" itemprop="item"><span itemprop="name">{L_INDEX}</span></a>
+						<meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}" />
+					</li>
+					<!-- EVENT overall_header_breadcrumbs_after -->
+					<!-- ENDIF -->
+
+					<!-- BEGIN navlinks -->
+					{% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
+					{% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
+					<li {$MICRODATA}><a itemprop="item" href="{{ NAVLINK_LINK }}" <!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><span itemprop="name">{{ NAVLINK_NAME }}</span></a>
+						<meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}" />
+					</li>
+					<!-- END navlinks -->
+				</ul>
+
+				<!-- IF S_USER_LOGGED_IN and (SCRIPT_NAME == "viewforum" or SCRIPT_NAME == "viewtopic") -->
+				<ul class="breadcrumb-buttons visible-xxs">
+					<li>
+						<a href="#" title="" data-toggle="modal" data-target="#BreadcrumbMap">
+							<i class="icon fa fa-sitemap"></i>
+						</a>
+					</li>
+				</ul>
+				<!-- ENDIF -->
+				<!-- EVENT overall_header_breadcrumbs_buttons -->
+			</div>
+			<!-- EVENT overall_header_page_body_before -->
+
+			<div id="page-body">
+
+				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+				<div class="alert alert-warning fade in">
+					<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
+					<i class="fa fa-info"></i>&nbsp;<strong>{L_INFORMATION}{L_COLON}</strong>&nbsp;{L_BOARD_DISABLED}
+				</div>
+				<!-- ENDIF -->
+
+				<!-- EVENT overall_header_content_before -->

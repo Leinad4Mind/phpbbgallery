@@ -444,7 +444,8 @@ class user extends \phpbb\session
 		{
 			if (strpos($this->page['query_string'], 'mode=reg_details') === false && $this->page['page_name'] != "ucp.$phpEx")
 			{
-				redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=profile&amp;mode=reg_details'));
+				// Leinad4Mind Modification
+				redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=profile&amp;mode=reg_details#change-password'));
 			}
 		}
 

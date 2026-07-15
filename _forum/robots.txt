@@ -1,0 +1,47 @@
+User-agent: *
+Disallow: /adm/
+Disallow: /stk/
+Disallow: /ext/
+Crawl-delay: 3600
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: AugustBot
+Disallow: /
+
+User-agent: Java
+Disallow: /
+
+User-agent: libwww-perl
+Disallow: /
+
+User-agent: LYCOSA
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: SemrushBot-SA
+Disallow: /
+
+User-agent: SiteAuditBot
+Disallow: /
+
+User-agent: SemrushBot-BA
+Disallow: /
+
+User-agent: SemrushBot-SI
+Disallow: /
+
+User-agent: SemrushBot-SWA
+Disallow: /
+
+User-agent: SemrushBot-CT
+Disallow: /
+
+User-agent: SplitSignalBot
+Disallow: /
+
+User-agent: SemrushBot-COUB
+Disallow: /

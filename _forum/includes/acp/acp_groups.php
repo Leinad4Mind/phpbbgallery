@@ -840,7 +840,7 @@ class acp_groups
 				$this->page_title = 'GROUP_MEMBERS';
 
 				// Grab the leaders - always, on every page...
-				$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_regdate, u.user_colour, u.user_posts, u.group_id, ug.group_leader, ug.user_pending
+				$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_regdate, u.user_lastvisit, u.user_colour, u.user_posts, u.group_id, ug.group_leader, ug.user_pending
 					FROM ' . USERS_TABLE . ' u, ' . USER_GROUP_TABLE . " ug
 					WHERE ug.group_id = $group_id
 						AND u.user_id = ug.user_id
@@ -857,6 +857,8 @@ class acp_groups
 						'USERNAME_COLOUR'	=> $row['user_colour'],
 						'S_GROUP_DEFAULT'	=> ($row['group_id'] == $group_id) ? true : false,
 						'JOINED'			=> ($row['user_regdate']) ? $user->format_date($row['user_regdate']) : ' - ',
+						// Leinad4Mind Modification
+						'LAST_VISIT'		=> ($row['user_lastvisit']) ? $user->format_date($row['user_lastvisit']) : ' - ',
 						'USER_POSTS'		=> $row['user_posts'],
 						'USER_ID'			=> $row['user_id'],
 					));
@@ -897,12 +899,13 @@ class acp_groups
 				));
 
 				// Grab the members
-				$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_colour, u.user_regdate, u.user_posts, u.group_id, ug.group_leader, ug.user_pending
+				// Leinad4Mind Modification
+				$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_colour, u.user_regdate, u.user_lastvisit, u.user_posts, u.group_id, ug.group_leader, ug.user_pending
 					FROM ' . USERS_TABLE . ' u, ' . USER_GROUP_TABLE . " ug
 					WHERE ug.group_id = $group_id
 						AND u.user_id = ug.user_id
 						AND ug.group_leader = 0
-					ORDER BY ug.group_leader DESC, ug.user_pending ASC, u.username_clean";
+					ORDER BY ug.group_leader DESC, ug.user_pending ASC, u.user_lastvisit DESC, u.username_clean";
 				$result = $db->sql_query_limit($sql, $config['topics_per_page'], $start);
 
 				$pending = false;
@@ -924,7 +927,8 @@ class acp_groups
 						'USERNAME'			=> $row['username'],
 						'USERNAME_COLOUR'	=> $row['user_colour'],
 						'S_GROUP_DEFAULT'	=> ($row['group_id'] == $group_id) ? true : false,
-						'JOINED'			=> ($row['user_regdate']) ? $user->format_date($row['user_regdate']) : ' - ',
+						'JOINED'				=> ($row['user_regdate']) ? $user->format_date($row['user_regdate']) : ' - ',
+						'LAST_VISIT'		=> ($row['user_lastvisit']) ? $user->format_date($row['user_lastvisit']) : ' - ',
 						'USER_POSTS'		=> $row['user_posts'],
 						'USER_ID'			=> $row['user_id'])
 					);

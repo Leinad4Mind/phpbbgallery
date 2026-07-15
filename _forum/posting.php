@@ -280,10 +280,11 @@ extract($phpbb_dispatcher->trigger_event('core.posting_modify_row_data', compact
 
 // Not able to reply to unapproved posts/topics
 // TODO: add more descriptive language key
-if ($auth->acl_get('m_approve', $forum_id) && ((($mode == 'reply' || $mode == 'bump') && $post_data['topic_visibility'] != ITEM_APPROVED) || ($mode == 'quote' && $post_data['post_visibility'] != ITEM_APPROVED)))
-{
-	trigger_error(($mode == 'reply' || $mode == 'bump') ? 'TOPIC_UNAPPROVED' : 'POST_UNAPPROVED');
-}
+// Leinad4Mind Change - Had to comment this lines so the author of the topic is able to reply to his own topic even if it is unnaproved yet
+// if ($auth->acl_get('m_approve', $forum_id) && ((($mode == 'reply' || $mode == 'bump') && $post_data['topic_visibility'] != ITEM_APPROVED) || ($mode == 'quote' && $post_data['post_visibility'] != ITEM_APPROVED)))
+// {
+// 	trigger_error(($mode == 'reply' || $mode == 'bump') ? 'TOPIC_UNAPPROVED' : 'POST_UNAPPROVED');
+// }
 
 if ($mode == 'popup')
 {
@@ -309,25 +310,33 @@ if ($user->data['is_bot'])
 	redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 }
 
+// Leinad4Mind Modification
+// List of forum IDs to check against
+$allowed_forum_ids = [224, 226];
+
 // Is the user able to read within this forum?
 if (!$auth->acl_get('f_read', $forum_id))
 {
-	if ($user->data['user_id'] != ANONYMOUS)
+	// Leinad4Mind Modification
+	if (!($post_data['topic_poster'] === $user->data['user_id'] && in_array($forum_id, $allowed_forum_ids)))
 	{
-		trigger_error('USER_CANNOT_READ');
-	}
-	$message = $user->lang['LOGIN_EXPLAIN_POST'];
+		if ($user->data['user_id'] != ANONYMOUS)
+		{
+			trigger_error('USER_CANNOT_READ');
+		}
+		$message = $user->lang['LOGIN_EXPLAIN_POST'];
 
-	if ($request->is_ajax())
-	{
-		$json = new phpbb\json_response();
-		$json->send(array(
-			'title'		=> $user->lang['INFORMATION'],
-			'message'	=> $message,
-		));
-	}
+		if ($request->is_ajax())
+		{
+			$json = new phpbb\json_response();
+			$json->send(array(
+				'title'		=> $user->lang['INFORMATION'],
+				'message'	=> $message,
+			));
+		}
 
-	login_box('', $message);
+		login_box('', $message);
+	}
 }
 
 // Permission to do the action asked?
@@ -1954,7 +1963,9 @@ $page_data = array(
 	'U_VIEW_TOPIC'			=> ($mode != 'post') ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id") : '',
 	'U_PROGRESS_BAR'		=> append_sid("{$phpbb_root_path}posting.$phpEx", "f=$forum_id&amp;mode=popup"),
 	'UA_PROGRESS_BAR'		=> addslashes(append_sid("{$phpbb_root_path}posting.$phpEx", "f=$forum_id&amp;mode=popup")),
-
+	// Leinad4Mind Change
+	'U_MCP'					=> ($auth->acl_get('m_', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;i=main&amp;mode=forum_view", true, $user->session_id) : '',
+	
 	'S_PRIVMSGS'				=> false,
 	'S_CLOSE_PROGRESS_WINDOW'	=> (isset($_POST['add_file'])) ? true : false,
 	'S_EDIT_POST'				=> ($mode == 'edit') ? true : false,

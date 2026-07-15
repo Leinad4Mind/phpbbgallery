@@ -1,27 +1,26 @@
 <?php
-/**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-* @Traduzido por: http://www.phpbb-pt.com - segundo as normas do Acordo Ortográfico
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ * @Traduzido por: https://leinad4mind.top/forum - segundo as normas do Acordo Ortográfico
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = array();
+if (empty($lang) || !is_array($lang)) {
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” ...
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CONTROLLER_ARGUMENT_VALUE_MISSING'	=> 'Falta o valor para o argumento #%1$s: <strong>%3$s</strong> na classe <strong>%2$s</strong>',
 	'CONTROLLER_NOT_SPECIFIED'			=> 'Não foi especificado nenhum controlador.',
 	'CONTROLLER_METHOD_NOT_SPECIFIED'	=> 'Não foi especificado nenhum método para o controlador.',
 	'CONTROLLER_SERVICE_UNDEFINED'		=> 'O serviço para o controlador “<strong>%s</strong>” não está definido em ./config/services.yml.',
-));
+]);

@@ -96,6 +96,10 @@ abstract class messenger_base extends \phpbb\notification\method\base
 		}
 		$messenger = new \messenger();
 
+		// Leinad4Mind change
+		$use_html = method_exists($messenger, 'set_mail_html');
+		($use_html) ? $messenger->set_mail_html($this->config['html_email_on_birthday']) : null;
+
 		// Time to go through the queue and send emails
 		/** @var type_interface $notification */
 		foreach ($this->queue as $notification)

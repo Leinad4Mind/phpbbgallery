@@ -1,27 +1,26 @@
 <?php
-/**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-* @Traduzido por: http://phpbbportugal.com - segundo pré-Acordo Ortográfico
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ * @Traduzido por: https://leinad4mind.top/forum - segundo pré-Acordo Ortográfico
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
-	$lang = array();
+if (empty($lang) || !is_array($lang)) {
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,18 +35,18 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADMIN_SIG_PREVIEW'				=> 'Pré-visualização da Assinatura',
 	'AT_LEAST_ONE_FOUNDER'			=> 'Não pode mudar este Fundador para um Utilizador normal. É necessário ter no mínimo um Fundador para este Fórum. Se quer mudar a situação deste Fundador, promova outro Utilizador à condição de Fundador primeiro.',
 
 	'BAN_ALREADY_ENTERED'			=> 'A expulsão já tinha sido previamente informada. A lista de expulsões não foi actualizada.',
-	'BAN_SUCCESSFUL'				=> 'Expulso com sucesso!',
+	'BAN_SUCCESSFUL'					=> 'Expulso com sucesso!',
 
 	'CANNOT_BAN_ANONYMOUS'			=> 'Não tem permissão para eliminar a conta Visitantes. As Permissões dos Visitantes podem ser definidas no separador Permissões.',
-	'CANNOT_BAN_FOUNDER'			=> 'Não pode expulsar Fundadores.',
+	'CANNOT_BAN_FOUNDER'				=> 'Não pode expulsar Fundadores.',
 	'CANNOT_BAN_YOURSELF'			=> 'Não pode auto expulsar-se.',
 	'CANNOT_DEACTIVATE_BOT'			=> 'Não pode desactivar contas de Motores de Busca. Desactive o Motor de Busca.',
-	'CANNOT_DEACTIVATE_FOUNDER'		=> 'Não pode desactivar contas de Fundador.',
+	'CANNOT_DEACTIVATE_FOUNDER'	=> 'Não pode desactivar contas de Fundador.',
 	'CANNOT_DEACTIVATE_YOURSELF'	=> 'Não pode desactivar sua própria conta.',
 	'CANNOT_FORCE_REACT_BOT'		=> 'Não pode forçar a Reactivação de contas de Motores de Busca. Desactive o Motor de Busca.',
 	'CANNOT_FORCE_REACT_FOUNDER'	=> 'Não pode forçar a Reactivação de uma conta de Fundador.',
@@ -59,43 +58,43 @@ $lang = array_merge($lang, array(
 	'CANNOT_SET_FOUNDER_INACTIVE'	=> 'Tem que activar os Utilizadores antes de os promover a Fundadores, apenas Utilizadores activos podem ser promovidos.',
 	'CONFIRM_EMAIL_EXPLAIN'			=> 'Introduzir apenas se desejar alterar o endereço de email.',
 
-	'DELETE_POSTS'					=> 'Apagar as Mensagens',
-	'DELETE_USER'					=> 'Apagar Utilizador',
+	'DELETE_POSTS'						=> 'Apagar as Mensagens',
+	'DELETE_USER'						=> 'Apagar Utilizador',
 	'DELETE_USER_EXPLAIN'			=> 'Atenção: Esta operação é irreversível. Não é possível recuperar utilizadores depois de apagados. As Mensagens Privadas enviadas por este utilizador serão apagadas e deixarão de estar disponíveis nos seus destinatários.',
 
 	'FORCE_REACTIVATION_SUCCESS'	=> 'A Reactivação foi forçada com sucesso.',
-	'FOUNDER'						=> 'Fundador',
-	'FOUNDER_EXPLAIN'				=> 'Fundadores não podem ser Banidos, Excluídos ou Alterados por membros não Fundadores.',
+	'FOUNDER'							=> 'Fundador',
+	'FOUNDER_EXPLAIN'					=> 'Fundadores não podem ser Banidos, Excluídos ou Alterados por membros não Fundadores.',
 
 	'GROUP_APPROVE'					=> 'Aprovar Membro',
 	'GROUP_DEFAULT'					=> 'Padrão',
-	'GROUP_DELETE'					=> 'Apagar',
-	'GROUP_DEMOTE'					=> 'Demitir',
+	'GROUP_DELETE'						=> 'Apagar',
+	'GROUP_DEMOTE'						=> 'Demitir',
 	'GROUP_PROMOTE'					=> 'Promover',
 
-	'IP_WHOIS_FOR'					=> 'Quem é o IP para %s',
+	'IP_WHOIS_FOR'						=> 'Quem é o IP para %s',
 
-	'LAST_ACTIVE'					=> 'Últimos activos',
+	'LAST_ACTIVE'						=> 'Últimos activos',
 
-	'MOVE_POSTS_EXPLAIN'			=> 'Seleccione o Fórum para o onde deseja mover todas as Mensagens que este Utilizador fez.',
+	'MOVE_POSTS_EXPLAIN'				=> 'Seleccione o Fórum para o onde deseja mover todas as Mensagens que este Utilizador fez.',
 
-	'NO_SPECIAL_RANK'				=> 'Sem atribuição de classificação especial',
-	'NO_WARNINGS'					=> 'Nenhum Aviso.',
-	'NOT_MANAGE_FOUNDER'			=> 'Tentou gerir um Utilizador Fundador do Fórum. Apenas Fundadores podem gerir outros Fundadores.',
+	'NO_SPECIAL_RANK'					=> 'Sem atribuição de classificação especial',
+	'NO_WARNINGS'						=> 'Nenhum Aviso.',
+	'NOT_MANAGE_FOUNDER'				=> 'Tentou gerir um Utilizador Fundador do Fórum. Apenas Fundadores podem gerir outros Fundadores.',
 
-	'QUICK_TOOLS'					=> 'Ferramentas Rápidas',
+	'QUICK_TOOLS'						=> 'Ferramentas Rápidas',
 
-	'REGISTERED'					=> 'Registado',
+	'REGISTERED'						=> 'Registado',
 	'REGISTERED_IP'					=> 'Registo do IP',
-	'RETAIN_POSTS'					=> 'Manter as Mensagens',
+	'RETAIN_POSTS'						=> 'Manter as Mensagens',
 
-	'SELECT_FORM'					=> 'Seleccionar um Formulário',
-	'SELECT_USER'					=> 'Seleccionar um Utilizador',
+	'SELECT_FORM'						=> 'Seleccionar um Formulário',
+	'SELECT_USER'						=> 'Seleccionar um Utilizador',
 
-	'USER_ADMIN'					=> 'Administração de Utilizadores',
+	'USER_ADMIN'						=> 'Administração de Utilizadores',
 	'USER_ADMIN_ACTIVATE'			=> 'Activar Conta',
 	'USER_ADMIN_ACTIVATED'			=> 'Utilizador Activado com sucesso.',
-	'USER_ADMIN_AVATAR_REMOVED'		=> 'O Avatar foi removido com sucesso da conta do Utilizador.',
+	'USER_ADMIN_AVATAR_REMOVED'	=> 'O Avatar foi removido com sucesso da conta do Utilizador.',
 	'USER_ADMIN_BAN_EMAIL'			=> 'Expulso pelo email',
 	'USER_ADMIN_BAN_EMAIL_REASON'	=> 'Endereço de email expulso via Administração do Utilizador.',
 	'USER_ADMIN_BAN_IP'				=> 'Expulso pelo IP',
@@ -108,8 +107,8 @@ $lang = array_merge($lang, array(
 	'USER_ADMIN_DEL_AVATAR'			=> 'Apagar Avatar',
 	'USER_ADMIN_DEL_OUTBOX'			=> 'Caixa de saída de Mensagens Privadas vazias',
 	'USER_ADMIN_DEL_POSTS'			=> 'Apagar todas as Mensagens',
-	'USER_ADMIN_DEL_SIG'			=> 'Apagar Assinatura',
-	'USER_ADMIN_EXPLAIN'			=> 'Aqui pode alterar as informações dos Utilizadores. Para modificar as Permissões dos Utilizadores use o Sistema de Permissões de Utilizadores e Grupos.',
+	'USER_ADMIN_DEL_SIG'				=> 'Apagar Assinatura',
+	'USER_ADMIN_EXPLAIN'				=> 'Aqui pode alterar as informações dos Utilizadores. Para modificar as Permissões dos Utilizadores use o Sistema de Permissões de Utilizadores e Grupos.',
 	'USER_ADMIN_FORCE'				=> 'Forçar a Reactivação',
 	'USER_ADMIN_LEAVE_NR'			=> 'Apague para um Novo Registo',
 	'USER_ADMIN_MOVE_POSTS'			=> 'Move todas as Mensagens',
@@ -119,25 +118,25 @@ $lang = array_merge($lang, array(
 	'USER_AVATAR_UPDATED'			=> 'Detalhes dos Avatares do Utilizador foram actualizados com sucesso.',
 	'USER_AVATAR_TYPE_NOT_ALLOWED'	=> 'O avatar actual não pode ser exibido porque não é permitido.',
 	'USER_CUSTOM_PROFILE_FIELDS'	=> 'Campos de Perfil Personalizados',
-	'USER_DELETED'					=> 'Utilizador apagado com sucesso.',
-	'USER_GROUP_ADD'				=> 'Adiciona Utilizador ao Grupo',
+	'USER_DELETED'						=> 'Utilizador apagado com sucesso.',
+	'USER_GROUP_ADD'					=> 'Adiciona Utilizador ao Grupo',
 	'USER_GROUP_NORMAL'				=> 'Grupos de Utilizadores Normal é um membro de',
-	'USER_GROUP_PENDING'			=> 'O Utilizador tem a inscrição pendente nos Grupos',
-	'USER_GROUP_SPECIAL'			=> 'O Utilizador é Membro dos Grupos pré-definidos',
-	'USER_LIFTED_NR'				=> 'Removido com sucesso o novo utilizador registado recentemente.',
+	'USER_GROUP_PENDING'				=> 'O Utilizador tem a inscrição pendente nos Grupos',
+	'USER_GROUP_SPECIAL'				=> 'O Utilizador é Membro dos Grupos pré-definidos',
+	'USER_LIFTED_NR'					=> 'Removido com sucesso o novo utilizador registado recentemente.',
 	'USER_NO_ATTACHMENTS'			=> 'Não existem Ficheiros a exibir.',
 	'USER_NO_POSTS_TO_DELETE'		=> 'O utilizador não tem mensagens para reter ou excluir.',
 	'USER_OUTBOX_EMPTIED'			=> 'Apagado com sucesso a mensagem privada da caixa de saída.',
 	'USER_OUTBOX_EMPTY'				=> 'A caixa de saída de mensagens privadas está agora vazia.',
 	'USER_OVERVIEW_UPDATED'			=> 'Detalhes do Utilizador foram actualizados.',
-	'USER_POSTS_DELETED'			=> 'As Mensagens do Utilizador foram excluídas com sucesso.',
+	'USER_POSTS_DELETED'				=> 'As Mensagens do Utilizador foram excluídas com sucesso.',
 	'USER_POSTS_MOVED'				=> 'As Mensagens dos Utilizadores foram movidas com sucesso.',
-	'USER_PREFS_UPDATED'			=> 'As preferências do Utilizador foram actualizadas.',
-	'USER_PROFILE'					=> 'Perfil do Utilizador',
+	'USER_PREFS_UPDATED'				=> 'As preferências do Utilizador foram actualizadas.',
+	'USER_PROFILE'						=> 'Perfil do Utilizador',
 	'USER_PROFILE_UPDATED'			=> 'O Perfil do Utilizador foi actualizado com sucesso.',
-	'USER_RANK'						=> 'Classificação do Utilizador',
+	'USER_RANK'							=> 'Classificação do Utilizador',
 	'USER_RANK_UPDATED'				=> 'Classificação do Utilizador actualizada.',
 	'USER_SIG_UPDATED'				=> 'A Assinatura do Utilizador foi actualizada com sucesso.',
 	'USER_WARNING_LOG_DELETED'		=> 'Informação não disponível. Possivelmente a entrada de registo foi apagada.',
-	'USER_TOOLS'					=> 'Ferramentas Básicas',
-));
+	'USER_TOOLS'						=> 'Ferramentas Básicas',
+]);

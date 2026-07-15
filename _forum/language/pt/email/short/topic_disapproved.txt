@@ -1,11 +1,18 @@
-Subject: Tópico reprovado - "{TOPIC_TITLE}" 
+Subject: {TOPIC_TITLE} - Tópico reprovado
 
 Olá, {USERNAME},
 
-O seu Tópico "{TOPIC_TITLE}" em "{SITENAME}" não foi aprovado por um Moderador ou Administrador.
+
+O seu Tópico "{TOPIC_TITLE}" em {SITENAME} não foi aprovado.
 
 O motivo da não aprovação é o seguinte:
-
 {REASON}
+
+
+Obrigado na mesma, {USERNAME}.
+Gostaríamos que continuasse a participar ativamente.
+A sua colaboração é fundamental para todos nós.
+
+
 
 {EMAIL_SIG}

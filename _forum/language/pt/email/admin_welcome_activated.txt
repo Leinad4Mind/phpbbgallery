@@ -1,9 +1,9 @@
 Subject: {SITENAME} - Registo Ativado
 
-Olá, {USERNAME};
+Olá, {USERNAME}.
 
-O seu registo em "{SITENAME}" foi ativado. Já pode entrar no Fórum.
+O teu registo na Comunidade "{SITENAME}" foi ativado. Já podes entrar no Fórum.
 
-A sua senha foi codificada na nossa Base de Dados e não é recuperável. Se a perder pode solicitar uma senha nova, usando o email associado à sua conta.
+A tua senha foi codificada na nossa Base de Dados e não é recuperável. Se a perderes podes solicitar uma senha nova usando o email associado à tua conta.
 
 {EMAIL_SIG}

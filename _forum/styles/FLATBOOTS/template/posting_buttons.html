@@ -6,7 +6,7 @@
 
 	// Define the bbCode tags
 	var bbcode = new Array();
-	var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]','[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
+	var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url=]','[/url]','[flash=]','[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
 	var imageTag = false;
 
 	function change_palette()
@@ -32,7 +32,7 @@
 	<div id="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></div>
 </div>
 <div class="space10"></div>
-<!-- EVENT posting_editor_buttons_before -->  
+<!-- EVENT posting_editor_buttons_before -->
 <!-- IF not S_BBCODEORDER -->
 <div id="imgurAnchor" class="btn-toolbar posting-btns" role="toolbar">
 <!-- EVENT posting_editor_buttons_toolbar_inner_before -->
@@ -70,7 +70,7 @@
 {# custom tag example
 #
 #    <!-- BEGIN custom_tags --> 
-#        <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{{ custom_tags.BBCODE_HELPLINE }}"><i class="fa fa-cog"></i></button>
+#        <button class="btn btn-default" type="button" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID});" title="{{ custom_tags.BBCODE_HELPLINE|e('html_attr') }}"><i class="fa fa-cog"></i></button>
 #    <!-- END custom_tags -->
 #
 #}

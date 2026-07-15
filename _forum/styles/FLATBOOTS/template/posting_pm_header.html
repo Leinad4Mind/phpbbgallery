@@ -59,15 +59,14 @@
 				<!-- ENDIF -->
 			</div>
 	<!-- ENDIF -->
-
-			<!-- IF S_GROUP_OPTIONS -->
-				<div class="control-group"> 
-				<label class="control-label" for="group_list">{L_USERGROUPS}{L_COLON}</label>
-					<div class="controls controls-row"> 
-						<div class="selector"> 
-						<select class="selectpicker" data-selected-text-format="count" data-container="body" name="group_list[]" id="group_list" multiple="multiple" size="4">{S_GROUP_OPTIONS}</select>
-						</div>
-					</div>
+	<!-- IF S_GROUP_OPTIONS -->
+		<div class="control-group"> 
+		<label class="control-label" for="group_list">{L_USERGROUPS}{L_COLON}</label>
+			<div class="controls controls-row"> 
+				<div class="selector"> 
+				<select class="selectpicker" data-selected-text-format="count" data-container="body" name="group_list[]" id="group_list" multiple="multiple" size="4">{S_GROUP_OPTIONS}</select>
 				</div>
-			<!-- ENDIF -->
+			</div>
+		</div>
+	<!-- ENDIF -->
 </fieldset>

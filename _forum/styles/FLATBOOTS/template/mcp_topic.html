@@ -16,7 +16,7 @@
 	<div class="control-group"> 
 	   <label class="control-label" for="posts_per_page">{L_POSTS_PER_PAGE}{L_COLON}</label><span class="help-block">{L_POSTS_PER_PAGE_EXPLAIN}</span>
 	 <div class="controls controls-row"> 
-       <input type="number" class="form-control input-sm" name="posts_per_page" id="posts_per_page" value="{POSTS_PER_PAGE}" min="0" max="999999">
+	   <input type="number" class="form-control input-sm" name="posts_per_page" id="posts_per_page" value="{POSTS_PER_PAGE}" min="0" max="999999">
 	 </div> 
 	</div>
 	
@@ -123,12 +123,12 @@
 			<div class="postbody panel-body" id="pr{postrow.POST_ID}">
 			  <div class="clearfix">
 				<div class="pull-right" style="position: relative; bottom: 3px;">
-				   <a class="btn btn-xs btn-default" href="{postrow.U_POST_DETAILS}" title="{L_POST_DETAILS}"><i class="fa fa-question-circle"></i></span></a>
-				   <input type="checkbox" id="post_id_list_select_{postrow.POST_ID}" name="post_id_list[]" value="{postrow.POST_ID}"<!-- IF postrow.S_CHECKED --> checked="checked"<!-- ENDIF --> ><label for="post_id_list_select_{postrow.POST_ID}"></label>
+					<a class="btn btn-xs btn-default" href="{postrow.U_POST_DETAILS}" title="{L_POST_DETAILS}"><i class="fa fa-question-circle"></i></span></a>
+					<input type="checkbox" id="post_id_list_select_{postrow.POST_ID}" name="post_id_list[]" value="{postrow.POST_ID}"<!-- IF postrow.S_CHECKED --> checked="checked"<!-- ENDIF --> ><label for="post_id_list_select_{postrow.POST_ID}"></label>
 				</div>
 
-				
 				<div class="side-segment"><h3><!-- EVENT- mcp_topic_postrow_post_subject_before --><a href="{postrow.U_POST_DETAILS}">{postrow.POST_SUBJECT}</a><!-- EVENT- mcp_topic_postrow_post_subject_after --></h3></div>
+
 				<!-- EVENT mcp_topic_postrow_post_details_before --> 
 				 <p><a href="#pr{postrow.POST_ID}">&#35;{postrow.POST_ID}</a>&nbsp;{L_POSTED}&nbsp;{L_POST_BY_AUTHOR}<strong>&nbsp;{postrow.POST_AUTHOR_FULL}</strong>&nbsp;&#45;&nbsp;{postrow.POST_DATE}<!-- IF postrow.U_MCP_DETAILS -->&nbsp;&#91;&nbsp;<a href="{postrow.U_MCP_DETAILS}">{L_POST_DETAILS}</a>&nbsp;&#93;<!-- ENDIF --></p>
 			    <!-- EVENT mcp_topic_postrow_post_details_after -->
@@ -143,22 +143,22 @@
 
 				<div class="content" id="message_{postrow.POST_ID}">{postrow.MESSAGE}</div>
                 <div class="space10"></div>
-			
-    <!-- EVENT mcp_topic_postrow_attachments_before -->			
-				
+
+				<!-- EVENT mcp_topic_postrow_attachments_before -->
+
 				<!-- IF postrow.S_HAS_ATTACHMENTS -->
 				<div class="clearfix">
 					<div class="attachbox">
 						<h5>{L_ATTACHMENTS}</h5>
 						<!-- EVENT ss_mcp_topic_postrow_attachment_row_before -->
 						   <!-- BEGIN attachment -->{postrow.attachment.DISPLAY_ATTACHMENT}<!-- END attachment -->
-						<!-- EVENT ss_mcp_topic_postrow_attachment_row_after -->   
+						<!-- EVENT ss_mcp_topic_postrow_attachment_row_after -->
 					</div>
-				</div>	
+				</div>
 				<!-- ENDIF -->
-				
-     <!-- EVENT mcp_topic_postrow_attachments_after -->
-				
+
+				<!-- EVENT mcp_topic_postrow_attachments_after -->
+
 			</div>
 		</div>
 		<!-- BEGINELSE -->

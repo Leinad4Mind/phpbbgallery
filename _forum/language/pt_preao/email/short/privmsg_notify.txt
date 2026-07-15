@@ -2,7 +2,7 @@ Subject: Recebeu uma nova Mensagem Privada
 
 Olá, {USERNAME},
 
-Tem uma mensagem privada nova de "{AUTHOR_NAME}" na sua conta em "{SITENAME}" com o seguinte assunto:
+Tem uma mensagem privada nova de "{AUTHOR_NAME}" na sua conta em {SITENAME} com o seguinte assunto:
 
 {SUBJECT}
 
