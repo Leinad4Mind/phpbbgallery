@@ -115,10 +115,6 @@ class main
 		$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
 		$ext_path_web				= $this->phpbb_path_helper->update_web_root_path($ext_path);
 
-		$this->template->assign_vars([
-			'EXT_NOTES_WEB'		=> $ext_path_web,
-		]);
-
 		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'	=> $this->helper->route('oxpus_notes_controller'),
 			'FORUM_NAME'	=> $this->language->lang('NOTES'),
