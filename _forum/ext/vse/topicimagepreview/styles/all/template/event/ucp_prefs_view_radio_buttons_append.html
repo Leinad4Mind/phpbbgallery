@@ -1,9 +1,9 @@
 {% if S_VSE_TIP_NUM %}
-	<div class="control-group"> 
-		<label class="control-label" for="user_vse_tip1">{{ lang('DISPLAY_TOPIC_IMAGE_PREVIEWS') ~ lang('COLON') }}</label>
-		<div class="controls controls-row"> 
-			<div class="radio"><input type="radio" name="viewemail" id="user_vse_tip1" value="1"{% if S_VSE_TIP_USER %} checked="checked"{% endif %} /><label for="user_vse_tip1">{{ lang('YES') }}</label></div>   
-			<div class="radio"><input type="radio" name="viewemail" id="user_vse_tip0" value="0"{% if not S_VSE_TIP_USER %} checked="checked"{% endif %} /><label for="user_vse_tip0">{{ lang('NO') }}</label></div>
-		</div> 
-	</div>
+	<dl>
+		<dt><label for="user_vse_tip1">{{ lang('DISPLAY_TOPIC_IMAGE_PREVIEWS') ~ lang('COLON') }}</label></dt>
+		<dd>
+			<label for="user_vse_tip1"><input type="radio" name="user_vse_tip" id="user_vse_tip1" value="1"{% if S_VSE_TIP_USER %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label for="user_vse_tip0"><input type="radio" name="user_vse_tip" id="user_vse_tip0" value="0"{% if not S_VSE_TIP_USER %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+		</dd>
+	</dl>
 {% endif %}
