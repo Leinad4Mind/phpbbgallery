@@ -185,8 +185,9 @@ class listener implements EventSubscriberInterface
 		$this->template->destroy_block_vars('topic_icon');
 
 		$sql = 'SELECT *
-				FROM ' . $this->emoji_icons_table . '
-				WHERE display_on_posting = 1';
+                FROM ' . $this->emoji_icons_table . '
+                WHERE display_on_posting = 1
+                ORDER BY icons_order';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -251,7 +252,9 @@ class listener implements EventSubscriberInterface
 		{
 			$post_row['POST_SUBJECT'] = $this->render($this->parse($post_row['POST_SUBJECT']));
 		}
-		if (!empty($post_row['POST_ICON_IMG']))
+
+		//$post_row['POST_ICON_IMG'] = !empty($this->icons[$event['row']['emoji_icon_id']]) ? $this->icons[$event['row']['emoji_icon_id']] : '';
+		if (!empty($post_row['POST_ICON_IMG']) || !empty($event['row']['emoji_icon_id']))
 		{
 			$post_row['POST_ICON_IMG'] = !empty($this->icons[$event['row']['emoji_icon_id']]) ? $this->icons[$event['row']['emoji_icon_id']] : '';
 			$post_row['POST_ICON_IMG_WIDTH'] = 20;

@@ -23,7 +23,8 @@ class bbreaction_listener extends listener
 			'sitesplat.bbreaction.listener_modify_profile'			=> 'bbreaction_assign_classlist_contents',
 			'sitesplat.bbreaction.ucp_before'						=> 'bbreaction_assign_emoji_tpl',
 			'sitesplat.bbreaction.ucp_likestat'						=> 'bbreaction_assign_classlist_contents',
-			'sitesplat.bbreaction.ucp_likes'						=> 'bbreaction_assign_classlist_contents',
+			'sitesplat.bbreaction.ucp_likes'						=> [['bbreaction_assign_classlist_contents'], ['bbreaction_emojify_subject']],
+			'sitesplat.bbreaction.ucp_likes_sql_before'				=> 'get_forum_subject_emoji_enable',
 		);
 	}
 
@@ -67,5 +68,21 @@ class bbreaction_listener extends listener
 			$ary_tpl['CONTENTS'] = $this->render($event['row']['emoji']);
 			$event['ary_tpl'] = $ary_tpl;
 		}
+	}
+
+	public function bbreaction_emojify_subject($event)
+	{
+		if ($event['row']['enable_subject_emoji'])
+		{
+			$ary_tpl = $event['ary_tpl'];
+			$ary_tpl['SUBJECT']	= $this->render($this->parse($ary_tpl['SUBJECT']));
+			$event['ary_tpl'] = $ary_tpl;
+		}
+	}
+
+	public function get_forum_subject_emoji_enable($event)
+	{
+		$event['select_append'] .= ', f.enable_subject_emoji';
+		$event['left_join_append'] .= 'LEFT JOIN ' . FORUMS_TABLE . ' f ON p.forum_id = f.forum_id';
 	}
 }

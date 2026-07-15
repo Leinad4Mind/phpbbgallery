@@ -39,18 +39,19 @@ class m3_initial_bbemoji_data extends \phpbb\db\migration\migration
 	}
 
 	public function insert_initial_data() {
-			$sql = "INSERT INTO {$this->table_prefix}emoji_icons VALUES
-					(1, ':gem:', 1, 1),
-					(2, ':fire:', 2, 1),
-					(3, ':cactus:', 3, 1),
-					(4, ':poop:', 4, 1),
-					(5, ':koala:', 5, 1),
-					(6, ':pushpin:', 6, 1),
-					(7, ':dragon_face:', 7, 1),
-					(8, ':speech_balloon:', 8, 1),
-					(9, ':rocket:', 9, 1),
-					(10, ':skull:', 10, 1)";
+		// Set a constant to let m6 migration script know this is new
+		define('BBEMOJI_NEW_M3', true);
 
-			$this->db->sql_query($sql);
+		$this->db->sql_query("INSERT INTO {$this->table_prefix}emoji_icons VALUES
+			(1, ':fire:', 1, 1),
+			(2, ':blush:', 2, 1),
+			(3, ':grin:', 3, 1),
+			(4, ':heartpulse:', 4, 1),
+			(5, ':star:', 5, 1),
+			(6, ':boom:', 6, 1),
+			(7, ':pensive:', 7, 1),
+			(8, ':information_source:', 8, 1),
+			(9, ':question:', 9, 1),
+			(10, ':skull:', 10, 1)");
 	}
 }

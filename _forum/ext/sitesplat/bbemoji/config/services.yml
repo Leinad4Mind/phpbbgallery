@@ -84,4 +84,10 @@ services:
     class: sitesplat\bbemoji\event\bbchat_listener
     parent: sitesplat.bbemoji.listener
     tags:
-      - { name: event.listener }      
+      - { name: event.listener }
+    
+  sitesplat.bbemoji.likedd_listener:
+    class: sitesplat\bbemoji\event\likedd_listener
+    parent: sitesplat.bbemoji.listener
+    tags:
+      - { name: event.listener }
