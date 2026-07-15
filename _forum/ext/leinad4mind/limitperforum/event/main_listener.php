@@ -4,7 +4,7 @@
  *
  * Limit Posts and Topics per Forum. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -86,10 +86,13 @@ class main_listener implements EventSubscriberInterface
 	{
 		if (in_array($event['mode'], ['post', 'reply', 'quote']))
 		{
-			$topic_limit = $event['post_data']['forum_topic_limit'];
-			$post_limit = $event['post_data']['forum_post_limit'];
-			$forum_ids = [$event['forum_id']];
+			$topic_limit = 0;
+			$topic_time_limit = 0;
+			$post_limit = 0;
+			$post_time_limit = 0;
 
+			$topic_forum_ids = [$event['forum_id']];
+			$post_forum_ids = [$event['forum_id']];
 			$forum_data = $event['post_data'];
 
 			if (!function_exists('phpbb_get_forum_data'))
@@ -107,30 +110,45 @@ class main_listener implements EventSubscriberInterface
 
 				if ($immediate_parent_data[$immediate_parent_forum_id]['forum_type'] == FORUM_CAT)
 				{
-					$forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
-
 					$group_limits = $this->manager->get_limits($immediate_parent_forum_id, $this->user->data['user_id']);
 
 					if ($group_limits)
 					{
-						$topic_limit = max(array_column($group_limits, 'topics'));
-						$post_limit = max(array_column($group_limits, 'posts'));
+						list($topic_limit, $topic_time_limit) = $this->extract_limits($group_limits, 'topics', 'topic_time_limit');
+						list($post_limit, $post_time_limit) = $this->extract_limits($group_limits, 'posts', 'post_time_limit');
 					}
 					else
 					{
-						$topic_limit = max($topic_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit']);
-						$post_limit = max($post_limit, $immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit']);
+						if ($immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit'] > $topic_limit)
+						{
+							$topic_forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
+							$topic_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_limit'];
+							$topic_time_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_topic_time_limit'];
+						}
+
+						if ($immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit'] > $post_limit)
+						{
+							$post_forum_ids = $this->get_immediate_subforum_ids($immediate_parent_forum_id);
+							$post_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_post_limit'];
+							$post_time_limit = $immediate_parent_data[$immediate_parent_forum_id]['forum_post_time_limit'];
+						}
 					}
 				}
-				else
-				{
-					$group_limits = $this->manager->get_limits($event['forum_id'], $this->user->data['user_id']);
+			}
 
-					if ($group_limits)
-					{
-						$topic_limit = max(array_column($group_limits, 'topics'));
-						$post_limit = max(array_column($group_limits, 'posts'));
-					}
+			if (!$topic_limit && !$post_limit)
+			{
+				$topic_limit = $event['post_data']['forum_topic_limit'];
+				$topic_time_limit = $event['post_data']['forum_topic_time_limit'];
+				$post_limit = $event['post_data']['forum_post_limit'];
+				$post_time_limit = $event['post_data']['forum_post_time_limit'];
+
+				$group_limits = $this->manager->get_limits($event['forum_id'], $this->user->data['user_id']);
+
+				if ($group_limits)
+				{
+					list($topic_limit, $topic_time_limit) = $this->extract_limits($group_limits, 'topics', 'topic_time_limit');
+					list($post_limit, $post_time_limit) = $this->extract_limits($group_limits, 'posts', 'post_time_limit');
 				}
 			}
 
@@ -144,29 +162,47 @@ class main_listener implements EventSubscriberInterface
 
 			$this->language->add_lang('common', 'leinad4mind/limitperforum');
 
-			$posts_count = $is_post_authed ? 0 : $this->query_field('posts_count', [
-				'SELECT'	=> 'COUNT(p.post_id) AS posts_count',
-				'FROM'		=> [POSTS_TABLE => 'p'],
-				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $forum_ids),
-			]);
+			// Topic count
 
-			$topics_count = $is_topic_authed ? 0 : $this->query_field('topics_count', [
+			$sql_ary = [
 				'SELECT'	=> 'COUNT(t.topic_id) AS topics_count',
 				'FROM'		=> [TOPICS_TABLE => 't'],
-				'WHERE'		=> 't.topic_poster = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('t.forum_id', $forum_ids),
-			]);
+				'WHERE'		=> 't.topic_poster = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('t.forum_id', $topic_forum_ids),
+			];
 
-			if ($topic_limit && $topics_count >= $topic_limit)
+			if ($topic_time_limit)
+			{
+				$sql_ary['WHERE'] .= ' AND t.topic_time > ' . (time() - ($topic_time_limit * 60 * 60));
+			}
+
+			$topics_count = $this->query_field('topics_count', $sql_ary);
+
+			if (!$is_topic_authed && $topic_limit && $topics_count >= $topic_limit)
 			{
 				$event['error'] = array_merge($event['error'], [
-					$this->language->lang('ERROR_TOPIC_COUNT', $topic_limit, $topics_count),
+					$this->language->lang($topic_time_limit ? 'ERROR_TOPIC_COUNT_TIME' : 'ERROR_TOPIC_COUNT', (int) $topic_limit, $topic_time_limit),
 				]);
 			}
+
+			// Post count
+
+			$sql_ary = [
+				'SELECT'	=> 'COUNT(p.post_id) AS posts_count',
+				'FROM'		=> [POSTS_TABLE => 'p'],
+				'WHERE'		=> 'p.poster_id = ' . (int) $this->user->data['user_id'] . ' AND ' . $this->db->sql_in_set('p.forum_id', $post_forum_ids),
+			];
+
+			if ($post_time_limit)
+			{
+				$sql_ary['WHERE'] .= ' AND p.post_time > ' . (time() - ($post_time_limit * 60 * 60));
+			}
+
+			$posts_count = $is_post_authed ? 0 : ($this->query_field('posts_count', $sql_ary) - $topics_count);
 
 			if ($post_limit && $posts_count >= $post_limit)
 			{
 				$event['error'] = array_merge($event['error'], [
-					$this->language->lang('ERROR_POST_COUNT', $post_limit, $posts_count),
+					$this->language->lang($post_time_limit ? 'ERROR_POST_COUNT_TIME' : 'ERROR_POST_COUNT', (int) $post_limit, $post_time_limit),
 				]);
 			}
 
@@ -175,17 +211,17 @@ class main_listener implements EventSubscriberInterface
 				$post_rest = $post_limit - $posts_count;
 				$topic_rest = $topic_limit - $topics_count;
 				$lang_key = 'ERROR_POST' . ($post_rest > 1 ? 'S' : '') . '_TOPIC' . ($topic_rest > 1 ? 'S' : '') . '_REST';
-				$this->post_topic_rest = $this->language->lang($lang_key, $topic_rest, $post_rest);
+				$this->post_topic_rest = $this->language->lang($lang_key, (int) $topic_rest, $post_rest);
 			}
 			else if ($is_post_authed && !$is_topic_authed && $event['mode'] == 'post')
 			{
 				$topic_rest = $topic_limit - $topics_count;
-				$this->post_topic_rest = $this->language->lang('ERROR_TOPIC_REST', $topic_rest);
+				$this->post_topic_rest = $this->language->lang('ERROR_TOPIC_REST', (int) $topic_rest);
 			}
 			else if (!$is_post_authed && $is_topic_authed)
 			{
 				$post_rest = $post_limit - $posts_count;
-				$this->post_topic_rest = $this->language->lang('ERROR_POST_REST', $post_rest);
+				$this->post_topic_rest = $this->language->lang('ERROR_POST_REST', (int) $post_rest);
 			}
 		}
 	}
@@ -203,6 +239,21 @@ class main_listener implements EventSubscriberInterface
 
 			$event->update_subarray('page_data', 'ERROR', implode('<br>', $error));
 		}
+	}
+
+	/**
+	 * @param array $group_limits
+	 * @param string $limit_key
+	 * @param string $time_limit_key
+	 * @return array
+	 */
+	protected function extract_limits($group_limits, $limit_key, $time_limit_key)
+	{
+		$counts = array_column($group_limits, $limit_key);
+		$max_key = array_keys($counts, max($counts))[0];
+		$limit = $counts[$max_key];
+		$time_limit = $group_limits[$max_key][$time_limit_key];
+		return [$limit, $time_limit];
 	}
 
 	/**

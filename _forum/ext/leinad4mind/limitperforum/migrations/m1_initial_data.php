@@ -4,7 +4,7 @@
  *
  * Limit Posts and Topics per Forum. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2020, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -29,8 +29,8 @@ class m1_initial_data extends migration
 	public function update_data()
 	{
 		return [
-			['permission.add', ['f_topic_limit', true]],
-			['permission.add', ['f_post_limit', true]],
+			['permission.add', ['f_topic_limit', false]],
+			['permission.add', ['f_post_limit', false]],
 		];
 	}
 }
