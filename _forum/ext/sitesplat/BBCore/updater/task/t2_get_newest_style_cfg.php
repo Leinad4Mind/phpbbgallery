@@ -23,7 +23,7 @@ class t2_get_newest_style_cfg
 
 	public function run($style_name, $updater_config)
 	{
-		$info = $this->file_downloader->get($this->host, $this->versioncheck_path, $style_name);
+		$info = $this->file_downloader->get($this->host, $this->versioncheck_path, $style_name, 443);
 		$updater_config['style_data'] = json_decode($info, true);
 
 		$updater_config['last_step'] = 't2_get_newest_style_cfg';

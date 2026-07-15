@@ -2,9 +2,9 @@ parameters:
     # sitesplat.bbcore.updater.host: 'localhost'
     # sitesplat.bbcore.updater.versioncheck_path: '/qi/boards/bbcoreautoupdate/versioncheck'
     # sitesplat.bbcore.updater.download_path: '/qi/boards/bbcoreautoupdate/d/'
-    sitesplat.bbcore.updater.host: 'www.tripledev.xyz'
-    sitesplat.bbcore.updater.versioncheck_path: '/phpBB324/versioncheck'
-    sitesplat.bbcore.updater.download_path: '/phpBB324/d/'
+    sitesplat.bbcore.updater.host: 'sitesplat.com'
+    sitesplat.bbcore.updater.versioncheck_path: '/phpBB3/versioncheck'
+    sitesplat.bbcore.updater.download_path: '/phpBB3/d/'
 
 services:
     sitesplat.bbcore.updater.next_step_resolver:
@@ -66,7 +66,6 @@ services:
             - '@language'
             - '%core.root_path%'
             - '%core.php_ext%'
-
     sitesplat.bbcore.updater.task.t8_check_additions:
         class: sitesplat\BBCore\updater\task\t8_check_additions
         arguments:

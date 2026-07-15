@@ -25,11 +25,25 @@ class t4_download_newest_version
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config)
+	public function run($style_name, $updater_config, $root_path)
 	{
-		$zip = $this->file_downloader->get($this->host, $this->download_path . $updater_config['style_data']['direct_download_dir'], $updater_config['cfg_data']['style_version'] . '_to_' . $updater_config['style_data']['version'] . '.zip');
-		if ($zip === false)
-		{
+		$this->root_path = $root_path;
+
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://{$this->host}/{$this->download_path}{$updater_config['style_data']['direct_download_dir']}/{$updater_config['cfg_data']['style_version']}_to_{$updater_config['style_data']['version']}.zip");
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'sitesplat_updater');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, "");
+        $zip = curl_exec($ch);
+        if (curl_errno($ch)) {
+            throw new \Exception(curl_error($ch));
+        }
+		$http = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
+        curl_close($ch);
+		if ($http != 200 || empty($zip)) {
 			throw new \Exception('PROBLEM_DOWNLOADING_UPDATE');
 		}
 

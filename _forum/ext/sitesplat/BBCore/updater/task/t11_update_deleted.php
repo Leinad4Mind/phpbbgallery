@@ -19,8 +19,9 @@ class t11_update_deleted
 		$this->root_path = $root_path;
 	}
 
-	public function run($style_name, $updater_config)
+	public function run($style_name, $updater_config, $root_path)
 	{
+		$this->root_path = $root_path;
 		if (empty($updater_config['update_info']['deleted']))
 		{
 			$updater_config['last_step'] = 't11_update_deleted';
