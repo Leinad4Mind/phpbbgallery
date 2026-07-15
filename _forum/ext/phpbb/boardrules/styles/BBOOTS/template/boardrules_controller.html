@@ -1,0 +1,54 @@
+{% INCLUDECSS '@phpbb_boardrules/boardrules_controller.css' %}
+{% INCLUDE 'overall_header.html' %}
+<div class="row bs-docs-container">
+<div class="col-md-9">
+	<div class="side-segment"><h3>{L_BOARDRULES_HEADER}</h3></div>
+	<div class="content panel">
+	 <div class="panel-body">
+		<p>{BOARDRULES_EXPLAIN}</p>
+		<ol class="boardrules-rules{{ BOARDRULES_LIST_STYLE ? ' br-list-style-' ~ BOARDRULES_LIST_STYLE }}" id="rules">
+			{% for rules in loops.rules %}
+				{% if rules.S_CLOSE_LIST %}
+						</ol>
+					</li>
+				{% elseif rules.S_IS_CATEGORY %}
+					<li id="{{ rules.U_ANCHOR }}">
+						<h3 class="rule-heading">{{ rules.TITLE }}</h3>
+						<ol>
+				{% else %}
+							<li class="rule-item" id="{{ rules.U_ANCHOR }}">
+								{{ rules.MESSAGE }} <a class="rule-anchor postlink" href="#{{ rules.U_ANCHOR }}">&#35;</a>
+							</li>
+				{% endif %}
+			{% endfor %}
+		</ol>
+	 </div>	
+	</div>
+</div>
+
+{% if S_CATEGORIES %}
+<div class="col-md-3 scrollspy hidden-xs hidden-sm">
+ <div class="side-segment"><h3>{{ lang('BOARDRULES_CATEGORIES') }}</h3></div>
+    <div role="complementary" class="bs-sidebar hidden-print">
+		<ul id="nav" class="nav bs-sidenav" data-spy="affix">
+			{% for rules in loops.rules %}
+				{% if rules.S_IS_CATEGORY %}<li><a href="#{{ rules.U_ANCHOR }}">{{ rules.TITLE }}</a></li>{% endif %}
+			{% endfor %}
+		</ul>
+	</div>	
+</div>
+{% endif %}
+
+<script>
+head.ready(function () {
+   $('#nav').affix({
+    offset: {
+        top: $('#nav').offset().top,
+        bottom: $('footer').outerHeight(true) + $('.section-page').outerHeight(true) + 432
+    }
+});
+});
+</script>
+</div>
+{% INCLUDEJS '@phpbb_boardrules/boardrules_controller.js' %}
+{% INCLUDE 'overall_footer.html' %}

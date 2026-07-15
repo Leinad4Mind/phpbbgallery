@@ -1,0 +1,1 @@
+head.ready(function(){$(function(){"use strict";var n=function(n){$("#"+decodeURIComponent(n)).addClass("bg-info")};$(".rule-anchor").on("click",function(){$("li").removeClass("bg-info"),n($(this).closest(".rule-item").attr("id"))}),n(window.location.hash.substring(1))})});

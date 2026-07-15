@@ -22,7 +22,7 @@ class m12_update_rule_message extends \phpbb\db\migration\migration
 	* @static
 	* @access public
 	*/
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array(
 			'\phpbb\boardrules\migrations\v10x\m1_initial_schema',
@@ -47,5 +47,12 @@ class m12_update_rule_message extends \phpbb\db\migration\migration
 				),
 			),
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function revert_schema()
+	{
 	}
 }
