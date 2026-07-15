@@ -1,4 +1,4 @@
-<!-- IF S_QUICKMOD_ENABLED -->
+{% if S_QUICKMOD_ENABLED %}
 	<script type="text/html" id="tpl-quickmod-main">
 		<div id="qm-main" class="panel">
 			<form name="quick_mod_form" method="post" onsubmit="return false;">
@@ -7,14 +7,14 @@
 					<div class="qm-action-container cbb-helper-hidden">
 						{L_WITH_SELECTED} <span id="row_mark_count">(0)</span>{L_COLON}
 						<div class="cbb-group">
-							<select id="quick_mod_action" name="quick_mod_action" class="cbb-inputbox">{S_QUICK_OPTIONS}</select>
+							<select id="quick_mod_action" name="quick_mod_action" class="cbb-inputbox">{{ S_QUICK_OPTIONS }}</select>
 							<input type="button" name="quick_mod_button" value="{L_GO}" class="cbb-btn" />
 						</div>
 					</div>
-					<div class="qm-select-container"><select name="qm_mark" class="cbb-inputbox">{S_QM_MARK_OPTIONS}</select></div>
+					<div class="qm-select-container"><select name="qm_mark" class="cbb-inputbox">{{ S_QM_MARK_OPTIONS }}</select></div>
 					
-					{S_FORM_TOKEN}
-					{S_HIDDEN_FIELDS}
+					{{ S_FORM_TOKEN }}
+					{{ S_HIDDEN_FIELDS }}
 				</div>
 			</form>
 		</div>
@@ -33,10 +33,10 @@
 	(function($) {
 		cbbCore.initService('quickmod', {
 			rowSelector	: 'ul.topics li.row',
-			position	: ['.action-bar.bar-bottom', 'before'],
-			type		: '{S_QM_TYPE}'
+			position	: ['.action-bar.bar-bottom, .action-bar.bottom', 'before'],
+			type		: '{{ S_QM_TYPE }}'
 		});
 	})(jQuery);
 	// ]]>
 	</script>
-<!-- ENDIF -->
+{% endif %}

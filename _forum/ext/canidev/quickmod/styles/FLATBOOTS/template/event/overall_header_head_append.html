@@ -1,5 +1,5 @@
-<!-- IF S_QUICKMOD_ENABLED and CANIDEV_CORE_STARTED -->
-	<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
+{% if S_QUICKMOD_ENABLED and CANIDEV_CORE_STARTED %}
+	{% INCLUDE '@canidev_core/event/overall_header_head_append.html' %}
 
-	<!-- INCLUDECSS @canidev_quickmod/flatboots.css -->
-<!-- ENDIF -->
+	{% INCLUDECSS '@canidev_quickmod/flatboots.css' %}
+{% endif %}

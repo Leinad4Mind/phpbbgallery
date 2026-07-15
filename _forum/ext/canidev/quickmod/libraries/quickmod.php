@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickMod
-* @version v1.1.2 01/03/2020
+* @version v1.1.3 16/04/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -352,7 +352,7 @@ class quickmod
 						'S_FORUM_SELECT'	=> make_forum_select(false, $this->forum_id, false, true, true, true),
 					));
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 
@@ -376,7 +376,7 @@ class quickmod
 						'S_DELETE'			=> true,
 					));
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 
@@ -406,7 +406,7 @@ class quickmod
 						'S_APPROVE'			=> true,
 					));
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 
@@ -423,7 +423,7 @@ class quickmod
 						'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=qm-dialog-form&amp;field=username&amp;select_single=true'),
 					));
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 
@@ -446,7 +446,7 @@ class quickmod
 					
 					posting_gen_topic_icons('edit', 0);
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 
@@ -496,7 +496,7 @@ class quickmod
 					
 					unset($now);
 
-					$this->send('tpl');
+					$message = 'tpl';
 				}
 			break;
 			
@@ -574,9 +574,10 @@ class quickmod
 		* @var	array	topic_ids	List of selected topics
 		* @var	string	message		The output message
 		* @var	string	new_data	New value (for topic rename)
+		* @var 	bool 	submit 		Action submit status
 		* @since 1.1.0
 		*/
-		$vars = array('action', 'topic_ids', 'message', 'new_data');
+		$vars = array('action', 'topic_ids', 'message', 'new_data', 'submit');
 		extract($this->dispatcher->trigger_event('quickmod.after_ajax_action', compact($vars)));
 
 		$message = (is_array($message)) ? $message : array($message, false, $new_data);
@@ -723,7 +724,7 @@ class quickmod
 
 			$json = array_merge($json, array(
 				'action'	=> $this->action,
-				'msg'		=> ($in_rename) ? $new_data : $this->user->lang($message),
+				'message'	=> ($in_rename) ? $new_data : $this->user->lang($message),
 				'reload'	=> !$in_rename,
 				'status'	=> ($error) ? json_response::JSON_STATUS_ERROR : json_response::JSON_STATUS_SUCCESS,
 			));
