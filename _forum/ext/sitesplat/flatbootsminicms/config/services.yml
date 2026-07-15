@@ -1,0 +1,19 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    sitesplat.flatbootsminicms.listener:
+        class: sitesplat\flatbootsminicms\event\listener
+        arguments:
+            - @dbal.conn
+            - @config
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+            - %sitesplat.flatbootsminicms.tables.flatboots_style_menu%
+            - %sitesplat.flatbootsminicms.tables.flatboots_style_config%
+            - %sitesplat.flatbootsminicms.tables.flatboots_style_links%
+            - %sitesplat.flatbootsminicms.tables.flatboots_style_social%
+        tags:
+            - { name: event.listener }
