@@ -44,5 +44,7 @@ $lang = array_merge($lang, array(
 	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Ρυθμίσεις Ανακοινώσεων',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Οι ρυθμίσεις της ανακοίνωσης άλλαξαν</strong>',
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Μια ανακοίνωση δημιουργήθηκε</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Μια ανακοίνωση ενημερώθηκε</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Μια ανακοίνωση διαγράφτηκε</strong><br>» %s',
 ));

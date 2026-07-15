@@ -2,7 +2,7 @@
 /**
 *
 * Board Announcements extension for the phpBB Forum Software package.
-* German (Casual) translation by Talk19Zehn (www.ongray-design.de)
+* German (Casual) translation by Talk19Zehn (www.ongray-design.de) and Scanialady (https://ladyscommunity.de)
 *
 * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -44,5 +44,7 @@ $lang = array_merge($lang, array(
 	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Einstellungen: Ankündigungen',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Ändern der Einstellungen</strong>',
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Eine Board-Ankündigung wurde erstellt:</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Eine Board-Ankündigung wurde aktualisiert:</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Eine Board-Ankündigung wurde gelöscht:</strong><br>» %s',
 ));

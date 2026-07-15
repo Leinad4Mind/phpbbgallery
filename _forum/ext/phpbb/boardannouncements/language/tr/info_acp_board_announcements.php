@@ -43,5 +43,7 @@ $lang = array_merge($lang, array(
 	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Duyuru ayarları',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Site duyurusu ayarları değiştirildi</strong>',
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Bir site duyurusu oluşturuldu</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Bir site duyurusu güncellendi</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Bir site duyurusu silindi</strong><br>» %s',
 ));

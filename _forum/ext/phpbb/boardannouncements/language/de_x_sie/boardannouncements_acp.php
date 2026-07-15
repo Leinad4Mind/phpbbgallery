@@ -42,10 +42,18 @@ $lang = array_merge($lang, array(
 	'BOARD_ANNOUNCEMENTS_SETTINGS'			=> 'Ankündigungen - Einstellungen',
 	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Verwaltung der Board-Ankündigung, die auf jeder Seite im Board angezeigt werden wird.',
 
+	'BOARD_ANNOUNCEMENTS_ENABLE_ALL'		=> 'Enable board announcements',
+
+	'BOARD_ANNOUNCEMENTS_OPTIONS'			=> 'Announcement options',
+
+	'BOARD_ANNOUNCEMENTS_DESC'				=> 'Description',
+	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN'		=> 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
+
 	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Diese Board-Ankündigung anzeigen',
-	'BOARD_ANNOUNCEMENTS_INDEX_ONLY'		=> 'Die Board-Ankündigung nur auf der INDEX Seite anzeigen.',
 	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Wer kann diese Board-Ankündigung sehen',
 	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Nutzern erlauben, die Board-Ankündigung zu schließen',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS'			=> 'Limit where this announcement should be displayed',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN'	=> 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
 
 	'BOARD_ANNOUNCEMENTS_EVERYONE'			=> 'Alle',
 
@@ -55,10 +63,34 @@ $lang = array_merge($lang, array(
 	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Ablaufdatum der Board-Ankündigung einstellen',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN'	=> 'Setzen Sie das Datum, an dem die Ansage abläuft und deaktiviert wird. Lassen Sie dieses Feld leer, wenn Sie nicht möchten, dass die Ankündigung abläuft.',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID'	=> 'Das Verfallsdatum war ungültig oder ist bereits abgelaufen.',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_FORMAT'		=> 'JJJJ-MM-TT HH:MM',
 
+	'BOARD_ANNOUNCEMENTS_TEXT_INVALID'		=> 'Board announcement contains no message',
 	'BOARD_ANNOUNCEMENTS_TEXT'				=> 'Text der Board-Ankündigung',
 	'BOARD_ANNOUNCEMENTS_PREVIEW'			=> 'Vorschau der Board-Ankündigung',
 
 	'BOARD_ANNOUNCEMENTS_UPDATED'			=> 'Die Board-Ankündigung wurde aktualisiert.',
+
+	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'	=> 'Description',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'		=> 'Location',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'		=> 'Visible To',
+	'BOARD_ANNOUNCEMENTS_TH_ENABLED'		=> 'Enabled',
+	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE'	=> 'Creation Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'	=> 'Expiration Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'		=> 'Expired',
+
+	'BOARD_ANNOUNCEMENTS_EVERYWHERE'		=> 'Everywhere',
+	'BOARD_ANNOUNCEMENTS_INDEX_PAGE'		=> 'Board Index',
+	'BOARD_ANNOUNCEMENTS_FORUMS'			=> 'Selected Forums',
+
+	'BOARD_ANNOUNCEMENTS_EMPTY'				=> 'There are no board announcements to display',
+	'BOARD_ANNOUNCEMENTS_ADD'				=> 'Create Announcement',
+
+	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS'	=> 'The board announcement was deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'		=> 'The board announcement could not be deleted',
+
+	// Nested set exception messages (only appears in PHP error logging)
+	// Translating these strings is optional.
+	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE'	=> 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
+	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'			=> 'The requested announcement does not exist.',
+	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'		=> 'The requested announcement has no parent.',
 ));

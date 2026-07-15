@@ -39,25 +39,57 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'BOARD_ANNOUNCEMENTS_SETTINGS'			=> 'Board announcements settings',
-	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Here you can manage and create a board announcement that will be displayed on each page of your board.',
+	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Here you can create and manage your board’s announcements.',
 
-	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Display this board announcement',
-	'BOARD_ANNOUNCEMENTS_INDEX_ONLY'		=> 'Display on board index only',
-	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Who can view this board announcement',
-	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Allow users to dismiss this board announcement',
+	'BOARD_ANNOUNCEMENTS_ENABLE_ALL'		=> 'Enable board announcements',
+
+	'BOARD_ANNOUNCEMENTS_OPTIONS'			=> 'Board announcement options',
+
+	'BOARD_ANNOUNCEMENTS_DESC'				=> 'Description',
+	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN'		=> 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
+
+	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Display this announcement',
+	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Who can view this announcement',
+	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Allow users to dismiss this announcement',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS'			=> 'Limit where this announcement should be displayed',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN'	=> 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
 
 	'BOARD_ANNOUNCEMENTS_EVERYONE'			=> 'Everyone',
 
-	'BOARD_ANNOUNCEMENTS_BGCOLOR'			=> 'Board announcement background color',
+	'BOARD_ANNOUNCEMENTS_BGCOLOR'			=> 'Background color',
 	'BOARD_ANNOUNCEMENTS_BGCOLOR_EXPLAIN'	=> 'You can change the background color of the announcement using a hex code (e.g: FFFF80). Leave this field blank to use the default color.',
 
-	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Board announcement expiration date',
+	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Expiration date',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN'	=> 'Set the date the announcement will expire and become disabled. Leave this field blank if you do not want the announcement to expire.',
 	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID'	=> 'The expiration date was invalid or has already expired.',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_FORMAT'		=> 'YYYY-MM-DD HH:MM',
 
+	'BOARD_ANNOUNCEMENTS_TEXT_INVALID'		=> 'Board announcement contains no message',
 	'BOARD_ANNOUNCEMENTS_TEXT'				=> 'Board announcement message',
 	'BOARD_ANNOUNCEMENTS_PREVIEW'			=> 'Board announcement - Preview',
 
 	'BOARD_ANNOUNCEMENTS_UPDATED'			=> 'Board announcement has been updated.',
+
+	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'	=> 'Description',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'		=> 'Location',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'		=> 'Visible To',
+	'BOARD_ANNOUNCEMENTS_TH_ENABLED'		=> 'Enabled',
+	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE'	=> 'Creation Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'	=> 'Expiration Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'		=> 'Expired',
+
+	'BOARD_ANNOUNCEMENTS_EVERYWHERE'		=> 'Everywhere',
+	'BOARD_ANNOUNCEMENTS_INDEX_PAGE'		=> 'Board Index',
+	'BOARD_ANNOUNCEMENTS_FORUMS'			=> 'Selected Forums',
+
+	'BOARD_ANNOUNCEMENTS_EMPTY'				=> 'There are no board announcements to display',
+	'BOARD_ANNOUNCEMENTS_ADD'				=> 'Create Announcement',
+
+	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS'	=> 'The board announcement was deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'		=> 'The board announcement could not be deleted',
+
+	// Nested set exception messages (only appears in PHP error logging)
+	// Translating these strings is optional.
+	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE'	=> 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
+	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'			=> 'The requested announcement does not exist.',
+	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'		=> 'The requested announcement has no parent.',
 ));
