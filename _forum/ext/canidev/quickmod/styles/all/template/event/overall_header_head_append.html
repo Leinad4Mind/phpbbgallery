@@ -1,15 +1,3 @@
-<!-- IF S_QUICKMOD_ENABLED  -->
-	<!-- INCLUDECSS @canidev_quickmod/../theme/{S_QUICKMOD_STYLESHEET} -->
-	<!-- INCLUDECSS @canidev_quickmod/../theme/quickmod.css -->
-	
-	<!-- INCLUDEJS jquery.mobile.custom.min.js -->
-	<!-- INCLUDEJS jquickmod.js -->
-	
-	<!-- BEGIN qm_additional_source -->
-		<!-- IF qm_additional_source.IS_JS -->
-			<!-- INCLUDEJS {qm_additional_source.FILENAME} -->
-		<!-- ELSEIF qm_additional_source.IS_CSS -->
-			<!-- INCLUDECSS @canidev_quickmod/../theme/{qm_additional_source.FILENAME} -->
-		<!-- ENDIF -->
-	<!-- END qm_additional_source -->
+<!-- IF S_QUICKMOD_ENABLED and CANIDEV_CORE_STARTED -->
+	<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
 <!-- ENDIF -->

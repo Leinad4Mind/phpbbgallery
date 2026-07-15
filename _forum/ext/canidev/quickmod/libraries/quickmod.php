@@ -1,14 +1,13 @@
 <?php
 /*
-* @name quickmod.php
 * @package cBB QuickMod
-* @version 1.1.0 17/01/2017
+* @version v1.1.1 22/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-namespace canidev\quickmod;
+namespace canidev\quickmod\libraries;
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,7 +15,7 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use canidev\core\json_response;
 
 class quickmod
 {
@@ -25,6 +24,7 @@ class quickmod
 	protected $container;
 	protected $db;
 	protected $dispatcher;
+	protected $language;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -34,41 +34,69 @@ class quickmod
 
 	public $actions = array(
 		'legend1'				=> 'OPTIONS_BASIC',
-		'approve'				=> array('lang' => 'APPROVE',				'auth' => 'm_approve'),
-		'delete'				=> array('lang' => 'DELETE',				'auth' => 'm_softdelete'),
-		'delete_permanently'	=> array('lang' => 'DELETE_PERMANENTLY',	'auth' => 'm_delete'),
-		'restore'				=> array('lang' => 'RESTORE',				'auth' => 'm_approve'),
-		'move'					=> array('lang' => 'MOVE',					'auth' => 'm_move'),
-		'lock'					=> array('lang' => 'LOCK',					'auth' => 'm_lock'),
-		'unlock'				=> array('lang' => 'UNLOCK',				'auth' => 'm_lock'),
+		'approve'				=> array('lang' => 'APPROVE',				'auth' => 'm_approve',		'icon' => 'fa-check'),
+		'delete'				=> array('lang' => 'DELETE',				'auth' => 'm_softdelete',	'icon' => 'fa-trash-o'),
+		'delete_permanently'	=> array('lang' => 'DELETE_PERMANENTLY',	'auth' => 'm_delete',		'icon' => 'fa-times'),
+		'restore'				=> array('lang' => 'RESTORE',				'auth' => 'm_approve',		'icon' => 'fa-exchange'),
+		'move'					=> array('lang' => 'MOVE',					'auth' => 'm_move',			'icon' => 'fa-random'),
+		'lock'					=> array('lang' => 'LOCK',					'auth' => 'm_lock',			'icon' => 'fa-lock'),
+		'unlock'				=> array('lang' => 'UNLOCK',				'auth' => 'm_lock',			'icon' => 'fa-unlock'),
 
 		'legend2'			=> 'TOPIC_TYPE',
-		'make_normal'		=> array('lang' => 'MAKE_NORMAL',	'auth' => array('f_sticky', 'f_announce')),
-		'make_sticky'		=> array('lang' => 'MAKE_STICKY',	'auth' => 'f_sticky'),
-		'make_announce'		=> array('lang' => 'MAKE_ANNOUNCE',	'auth' => 'f_announce'),
-		'make_global'		=> array('lang' => 'MAKE_GLOBAL',	'auth' => 'f_announce'),
+		'make_normal'		=> array('lang' => 'MAKE_NORMAL',	'auth' => array('f_sticky', 'f_announce'),	'icon' => 'fa-file-o'),
+		'make_sticky'		=> array('lang' => 'MAKE_STICKY',	'auth' => 'f_sticky',		'icon' => 'fa-thumb-tack'),
+		'make_announce'		=> array('lang' => 'MAKE_ANNOUNCE',	'auth' => 'f_announce',		'icon' => 'fa-newspaper-o'),
+		'make_global'		=> array('lang' => 'MAKE_GLOBAL',	'auth' => 'f_announce',		'icon' => 'fa-globe'),
 
 		'legend3'			=> 'OPTIONS_ADVANCED',
-		'rename'			=> array('lang' => 'RENAME',		'auth' => 'm_',	'in_list' => false,	'action' => "jQM.quickmod('rename', 'show')"),
-		'chgposter'			=> array('lang' => 'CHANGE_POSTER',	'auth' => 'm_chgposter'),
-		'chgicon'			=> array('lang' => 'CHANGE_ICON',	'auth' => 'f_icons'),
-		'chgtime'			=> array('lang' => 'CHANGE_TIME',	'auth' => 'm_'),
+		'rename'			=> array('lang' => 'RENAME',		'auth' => 'm_',				'icon' => 'fa-pencil-square-o',	'in_list' => false),
+		'chgposter'			=> array('lang' => 'CHANGE_POSTER',	'auth' => 'm_chgposter',	'icon' => 'fa-user'),
+		'chgicon'			=> array('lang' => 'CHANGE_ICON',	'auth' => 'f_icons',		'icon' => 'fa-picture-o'),
+		'chgtime'			=> array('lang' => 'CHANGE_TIME',	'auth' => 'm_',				'icon' => 'fa-clock-o'),
 	);
-					
+
 	public $forum_id		= false;
 	public $active			= false;
 	private $topic_count	= 0;
 	private $action			= '';
+	private $topic_ids		= array();
 
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	/**
+	* Constructor
+	*
+	* @param \phpbb\auth\auth 						$auth				Authentication object
+	* @param \phpbb\config\config 					$config				Config Object
+	* @param ContainerInterface 					$container			Service container interface
+	* @param \phpbb\db\driver\driver_interface		$db					DB Object
+	* @param \phpbb\event\dispatcher_interface		$dispatcher			Event dispatcher
+	* @param \phpbb\language\language 				$language			Language object
+	* @param \phpbb\request\request 				$request			Request object
+	* @param \phpbb\user							$user				User object
+	* @param string									$root_path			phpBB root path
+	* @param string									$php_ext			phpEx
+	*
+	* @access public
+	*/
+	public function __construct(
+		\phpbb\auth\auth $auth,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $dispatcher,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$root_path,
+		$php_ext)
 	{
 		$this->auth			= $auth;
 		$this->config 		= $config;
 		$this->container	= $container;
 		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
+		$this->dispatcher	= $dispatcher;
+		$this->lang			= $language;
 		$this->request		= $request;
-		$this->template		= $template;
+		$this->template		= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
@@ -77,14 +105,20 @@ class quickmod
 	
 	public function setup()
 	{
-		global $phpbb_hook;
+		$this->forum_id = $this->request->variable('f', 0);
+		
+		$active			= false;
+		$mod_pages		= array('viewforum.' . $this->php_ext, 'search.' . $this->php_ext);
 
-		$active		= ($this->auth->acl_get('m_', $this->forum_id) ? true : false);
+		if($this->phpbb_root_path == './' && in_array($this->user->page['page_name'], $mod_pages))
+		{
+			$active = true;
+		}
+
+		$active		= ($active && $this->auth->acl_get('m_', $this->forum_id));
 		$actions	= $this->actions;
 		
 		/**
-		* Event to setup additional data
-		*
 		* @event quickmod.setup
 		* @var	array	actions		Array with all allowed actions
 		* @var	bool	active		Status of the extension
@@ -102,7 +136,17 @@ class quickmod
 			return false;
 		}
 		
-		$phpbb_hook->register('phpbb_user_session_handler', array($this, 'parse_ajax'));
+		if($this->request->is_ajax() && $this->request->variable('ajaxModule', '') == 'quickmod')
+		{
+			$this->do_ajax_action();
+			exit_handler();
+		}
+
+		$this->template->append_asset('css', '@canidev_quickmod/../theme/quickmod.css');
+		$this->template->append_asset('js', array(
+			'@canidev_quickmod/js/jquery.mobile.custom.min.js',
+			'@canidev_quickmod/js/jquickmod.min.js'
+		));
 	}
 	
 	public function display()
@@ -153,62 +197,26 @@ class quickmod
 		);
 
 		add_form_key('quick_mod_form');
+		
+		/**
+		* @event quickmod.display
+		* @var	array	mark_options		Array with options to the mark select
+		* @var	array	quick_options		Array with options to the actions select
+		* @since 1.1.0
+		*/
+		$vars = array('mark_options', 'quick_options');
+		extract($this->dispatcher->trigger_event('quickmod.display', compact($vars)));
 
 		$this->template->assign_vars(array(
 			'S_QUICKMOD_ENABLED'	=> true,
 			'S_QUICK_OPTIONS'		=> $this->make_select($quick_options, ''),
 			'S_QM_MARK_OPTIONS'		=> $this->make_select($mark_options, '-1'),
-			
 			'S_QM_TYPE'				=> $this->config['qm_type'],
-			'S_QM_VERSION'			=> $this->config['qm_version'],
-			'T_QUICKMOD_PATH'		=> $this->phpbb_root_path . 'ext/canidev/quickmod/',
-			
-			'U_QUICK_ACTION'		=> $this->build_current_url(),
 
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 				'f'				=> $this->forum_id
 			)),
 		));
-		
-		$compatibility	= $this->container->get('canidev.quickmod.compatibility.manager');
-		
-		if(($sources = $compatibility->get_sources()) !== false)
-		{
-			$this->template->assign_block_vars_array('qm_additional_source', $sources);
-		}
-
-		if(trim($js_events_code	= $compatibility->get_js_events()))
-		{
-			$this->template->assign_var('S_QM_EVENTS', $js_events_code);
-		}
-		
-		/**
-		* Event to modify display vars
-		*
-		* @event quickmod.display
-		* @var	array	mark_options		Array with options to the mark select
-		* @since 1.1.0
-		*/
-		$vars = array('mark_options');
-		extract($this->dispatcher->trigger_event('quickmod.display', compact($vars)));
-		
-		$this->set_stylesheet();
-	}
-	
-	public function set_stylesheet()
-	{
-		$this->template->assign_vars(array(
-			'S_QUICKMOD_STYLESHEET'	=> 'phpbb' . str_replace('.', '', substr(PHPBB_VERSION, 0, 3)) . 'x.css',
-		));
-	}
-	
-	public function parse_ajax()
-	{
-		if($this->request->is_set_post('qm_ajax'))
-		{
-			$this->do_ajax_action();
-			exit_handler();
-		}
 	}
 
 	function do_ajax_action()
@@ -218,30 +226,17 @@ class quickmod
 			return false;
 		}
 
-		if(!function_exists('move_topics'))
-		{
-			include($this->phpbb_root_path . 'includes/functions_admin.' . $this->php_ext);
-		}
-
-		if(!function_exists('qm_rename_topic'))
-		{
-			include($this->phpbb_root_path . 'ext/canidev/quickmod/functions.' . $this->php_ext);
-		}
-
 		$this->user->add_lang('mcp');
 		
-		$is_fb	= $this->request->is_set_post('fb');
-		$submit = $this->request->is_set_post('submit_action');
-
-		$action			= ($is_fb) ? request_var('a', '') : request_var('quick_mod_action', '');
-		$topic_ids		= ($is_fb) ? array(request_var('t', 0)) : request_var('topic_id_list', array(0));
+		$submit 		= $this->request->is_set_post('submit');
+		$action			= $this->request->variable('action', '');
+		$topic_ids		= $this->request->variable('topic_id_list', array(0));
+		$functions 		= $this->container->get('canidev.quickmod.functions');
 
 		$message = $new_data = '';
 		$no_authorized_ids = array();
 		
 		/**
-		* Event to do some stuff before ajax request
-		*
 		* @event quickmod.before_ajax_action
 		* @var	string	action		The current request action
 		* @var	array	topic_ids	List of selected topics
@@ -250,50 +245,54 @@ class quickmod
 		$vars = array('action', 'topic_ids');
 		extract($this->dispatcher->trigger_event('quickmod.before_ajax_action', compact($vars)));
 		
-		$this->action = $action;
+		$this->action 		= $action;
+		$this->topic_ids	= $topic_ids;
 
-		if(!isset($this->actions[$this->action]) || !check_form_key('quick_mod_form'))
+		if($this->action != 'finduser')
 		{
-			$this->send('FORM_INVALID', true);
-		}
-
-		if(empty($topic_ids))
-		{
-			$this->send('NO_TOPIC_SELECTED', true);
-		}
-
-		$this->topic_count = sizeof($topic_ids);
-
-		/* If no general forum present, determine each forum individually */
-		if(!$this->forum_id)
-		{
-			$sql = 'SELECT topic_id, forum_id
-				FROM ' . TOPICS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids) . '
-				AND forum_id <> 0';
-			$result = $this->db->sql_query($sql);
-			while($row = $this->db->sql_fetchrow($result))
+			if(!isset($this->actions[$this->action]) || !check_form_key('quick_mod_form'))
 			{
-				if(!$this->auth->acl_gets($this->actions[$this->action]['auth'], $row['forum_id']))
-				{
-					$no_authorized_ids[] = $row['topic_id'];
-				}
+				$this->send('FORM_INVALID', true);
 			}
-			$this->db->sql_freeresult($result);
-			
-			if(sizeof($no_authorized_ids))
+
+			if(empty($topic_ids))
 			{
-				$topic_ids = array_diff($topic_ids, $no_authorized_ids);
+				$this->send('NO_TOPIC_SELECTED', true);
+			}
+
+			$this->topic_count = sizeof($topic_ids);
+
+			/* If no general forum present, determine each forum individually */
+			if(!$this->forum_id)
+			{
+				$sql = 'SELECT topic_id, forum_id
+					FROM ' . TOPICS_TABLE . '
+					WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids) . '
+					AND forum_id <> 0';
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
+				{
+					if(!$this->auth->acl_gets($this->actions[$this->action]['auth'], $row['forum_id']))
+					{
+						$no_authorized_ids[] = $row['topic_id'];
+					}
+				}
+				$this->db->sql_freeresult($result);
 				
-				if(empty($topic_ids))
+				if(sizeof($no_authorized_ids))
 				{
-					$this->send('NO_AUTH_OPERATION', true);
+					$topic_ids = array_diff($topic_ids, $no_authorized_ids);
+					
+					if(empty($topic_ids))
+					{
+						$this->send('NO_AUTH_OPERATION', true);
+					}
 				}
 			}
-		}
-		else if(!$this->auth->acl_gets($this->actions[$this->action]['auth'], $this->forum_id))
-		{
-			$this->send('NO_AUTH_OPERATION', true);
+			else if(!$this->auth->acl_gets($this->actions[$this->action]['auth'], $this->forum_id))
+			{
+				$this->send('NO_AUTH_OPERATION', true);
+			}
 		}
 
 		switch($this->action)
@@ -302,7 +301,7 @@ class quickmod
 			case 'unlock':
 				if($this->confirm(strtoupper($this->action)))
 				{
-					$message = qm_lock_unlock($this->action, $topic_ids);
+					$message = $functions->lock_unlock($this->action, $topic_ids);
 				}
 			break;
 
@@ -338,14 +337,14 @@ class quickmod
 				}
 				else if($this->confirm('CHANGE', $submit))
 				{
-					$message = qm_change_topic_type($this->action, $topic_ids, $this->forum_id, $global_involved);
+					$message = $functions->change_topic_type($this->action, $topic_ids, $this->forum_id, $global_involved);
 				}
 			break;
 
 			case 'move':
 				if($submit)
 				{
-					$message = qm_move_topic($topic_ids, $this->forum_id);
+					$message = $functions->move_topic($topic_ids, $this->forum_id);
 				}
 				else
 				{
@@ -363,7 +362,7 @@ class quickmod
 			case 'delete_permanently':
 				if($this->confirm('DELETE'))
 				{
-					$message = qm_delete_topic($topic_ids, false);
+					$message = $functions->delete_topic($topic_ids, false);
 				}
 			break;
 
@@ -371,7 +370,7 @@ class quickmod
 				if($submit)
 				{
 					$reason		= utf8_normalize_nfc(request_var('delete_reason', '', true));
-					$message	= qm_delete_topic($topic_ids, true, $reason);
+					$message	= $functions->delete_topic($topic_ids, true, $reason);
 				}
 				else
 				{
@@ -387,21 +386,21 @@ class quickmod
 			case 'restore':
 				if($this->confirm('RESTORE'))
 				{
-					$message = qm_restore_topic($topic_ids);
+					$message = $functions->restore_topic($topic_ids);
 				}
 			break;
 
 			case 'rename':
 				if($this->confirm('RENAME'))
 				{
-					$message = qm_rename_topic($topic_ids, $new_data);
+					$message = $functions->rename_topic($topic_ids, $new_data);
 				}
 			break;
 
 			case 'approve':
 				if($submit)
 				{
-					$message = qm_approve_topic($this->action, $topic_ids);
+					$message = $functions->approve_topic($this->action, $topic_ids);
 				}
 				else
 				{
@@ -417,14 +416,14 @@ class quickmod
 			case 'chgposter':
 				if($submit)
 				{
-					$message = qm_change_poster($topic_ids);
+					$message = $functions->change_poster($topic_ids);
 				}
 				else
 				{
 					$this->template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $this->user->lang['CHANGE_POSTER'],
 						'S_CHGPOSTER'		=> true,
-						'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=quick_mod_form&amp;field=username&amp;select_single=true'),
+						'U_FIND_USERNAME'	=> append_sid($this->phpbb_root_path . 'memberlist.' . $this->php_ext, 'mode=searchuser&amp;form=qm-dialog-form&amp;field=username&amp;select_single=true'),
 					));
 
 					$this->send('tpl');
@@ -434,7 +433,7 @@ class quickmod
 			case 'chgicon':
 				if($submit)
 				{
-					$message = qm_change_icon($topic_ids);
+					$message = $functions->change_icon($topic_ids);
 				}
 				else
 				{
@@ -457,7 +456,7 @@ class quickmod
 			case 'chgtime':
 				if($submit)
 				{
-					$message = qm_change_time($topic_ids);
+					$message = $functions->change_time($topic_ids);
 				}
 				else
 				{
@@ -495,7 +494,7 @@ class quickmod
 						'S_DAY_OPTIONS'		=> $s_day_options,
 						'S_MONTH_OPTIONS'	=> $s_month_options,
 						'S_YEAR_OPTIONS'	=> $s_year_options,
-						'S_HOUR'			=> sprintf('%d:%d:%d', $now['hours'], $now['minutes'], $now['seconds']),
+						'S_HOUR'			=> sprintf('%02d:%02d', $now['hours'], $now['minutes']),
 					));
 					
 					unset($now);
@@ -503,14 +502,46 @@ class quickmod
 					$this->send('tpl');
 				}
 			break;
+			
+			case 'finduser':
+				$query			= $this->request->variable('query', '', true);
+				$username_clean = utf8_clean_string($query);
+				$result_count	= 0;
+				
+				$sql = 'SELECT username, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height
+					FROM ' . USERS_TABLE . '
+					WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+					AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $username_clean . $this->db->get_any_char());
+				$result = $this->db->sql_query_limit($sql, 100);
+				while($row = $this->db->sql_fetchrow($result))
+				{
+					$this->template->assign_block_vars('user', array(
+						'S_AVATAR_IMG'			=> phpbb_get_user_avatar($row),
+						'S_USERNAME'			=> $row['username'],
+						'S_USERNAME_FORMATTED'	=> preg_replace('#(' . preg_quote($query) . ')#i', '<strong>$1</strong>', $row['username'])
+					));
+
+					$result_count++;
+				}
+				$this->db->sql_freeresult($result);
+				
+				$this->template->assign_vars(array(
+					'S_USERLIST'	=> true
+				));
+
+				$message = array(
+					array(
+						'query'		=> $query,
+						'results'	=> $result_count
+					)
+				);
+			break;
 
 			default:
 			break;
 		}
 		
 		/**
-		* Event to do some stuff after ajax request
-		*
 		* @event quickmod.after_ajax_action
 		* @var	string	action		The current request action
 		* @var	array	topic_ids	List of selected topics
@@ -524,83 +555,6 @@ class quickmod
 
 		call_user_func_array(array($this, 'send'), $message);
 	}
-	
-	private function build_current_url($is_amp = true)
-	{
-		$obtain_params 	= array('st' => 0,	'sk' => '',	'sd' => '');
-		$strip_params	= array('submit');
-		$u_action 		= append_sid(generate_board_url() . '/' . $this->user->page['page'], false, false);
-
-		if(($pos = strpos($u_action, '?')) !== false)
-		{
-			// Parse url to prevent duplicated variables
-			preg_match_all('#[\?|\&](.*?)\=([^\&]+)#i', $u_action, $matches);
-			foreach($matches[1] as $id => $key)
-			{
-				$key = urldecode($key);
-
-				if(strpos($key, '[]') === false)
-				{
-					$params[$key] = $matches[2][$id];
-					continue;
-				}
-				
-				$key = str_replace('[]', '', $key);
-
-				if(empty($params[$key]))
-				{
-					$params[$key] = array();
-				}
-
-				$params[$key][] = $matches[2][$id];
-			}
-			
-			// Obtain extra POST params and add to the url
-			foreach($obtain_params as $id => $value)
-			{
-				if(!isset($params[$id]))
-				{
-					$params[$id] = request_var($id, $value);
-				}
-			}
-			
-			// Delete not allowed or empty params and prepare the values
-			foreach($params as $key => $value)
-			{
-				unset($params[$key]);
-				
-				if(!in_array($key, $strip_params))
-				{
-					if(is_array($value))
-					{
-						foreach($value as $id => $param)
-						{
-							if($param)
-							{
-								$subkey = $key . '[' . $id . ']';
-								$params[$subkey] = $key . '%5B%5D=' . $param;
-							}
-						}
-					}
-					elseif($value)
-					{
-						$params[$key] = $key . '=' . $value;
-					}
-				}
-			}
-			
-			$u_action = substr($u_action, 0, $pos);
-			
-			if(sizeof($params))
-			{
-				$u_action .= '?' . implode((($is_amp) ? '&amp;' : '&'), array_values($params));
-			}
-			
-			unset($params);
-		}
-		
-		return $u_action;
-	}
 
 	public function get_row_content($forum_id, $topic_id, $topic_type, $topic_status, $topic_visibility)
 	{
@@ -611,7 +565,7 @@ class quickmod
 		{
 			$selected_actions = explode(',', $this->config['qm_buttons']);
 
-			$qm_content .= '<div class="quick_mod_buttons">';
+			$qm_content .= '<div class="quick_mod_buttons cbb-helper-hidden">';
 
 			foreach($selected_actions as $action)
 			{
@@ -640,15 +594,10 @@ class quickmod
 				{
 					continue;
 				}
-				
-				if(!isset($data['action']))
-				{
-					$data['action'] = "jQM.quickmod('go', this)";
-				}
 
 				if($this->auth->acl_gets($data['auth'], $forum_id))
 				{
-					$qm_content .= '<a href="#" onclick="' . $data['action'] . '; return false;" data-action="' . $action . '" title="' . $this->user->lang[$data['lang'] . '_TOPIC'] . '"><span class="qm-icon-' . $action . '"></span></a>';
+					$qm_content .= '<a href="#" data-action="' . $action . '" title="' . $this->user->lang[$data['lang'] . '_TOPIC'] . '"><i class="fa ' . $data['icon'] . '"></i></a>';
 				}
 			}
 			
@@ -690,29 +639,29 @@ class quickmod
 	
 	public function confirm($message, $submit = false)
 	{
-		$is_confirmed = request_var('confirm', false);
-		
 		$message = 'CONFIRM_' . $message . '_TOPIC' . (($this->topic_count > 1) ? 'S' : '');
-		
-		if($this->config['qm_confirm'] && !$is_confirmed && !$submit)
+
+		if(!$this->config['qm_confirm'] || confirm_box(true))
 		{
-			$this->send(array(
-				'msg'	=> (isset($this->user->lang[$message]) ? $this->user->lang[$message] : $message),
-				'type'	=> 'confirm',
-			));
-			
-			return false;
+			return true;
 		}
+
+		confirm_box(
+			false,
+			$this->lang->lang($message),
+			'',
+			'@canidev_core/confirmbox.html'
+		);
 		
-		return true;
+		return false;
 	}
 
-	public function send($message, $error = false, $new_data = '', $template = 'quickmod_ajax.html')
+	public function send($message, $error = false, $new_data = '', $template = '@canidev_quickmod/quickmod_ajax.html')
 	{
 		$in_rename = false;
 		
 		$json = array(
-			'type'		=> 'json'
+			'status'	=> json_response::JSON_STATUS_SUCCESS,
 		);
 		
 		if(is_array($message))
@@ -721,27 +670,15 @@ class quickmod
 		}
 		else if($message == 'tpl')
 		{
-			$s_hidden_fields = array();
-			$s_fb = 'false';
-
-			if($this->request->is_set_post('fb'))
-			{
-				$s_fb = 'true';
-
-				$s_hidden_fields = array(
-					'fb'	=> 1,
-					'a'		=> request_var('a', ''),
-					't'		=> request_var('t', 0),
-				);
-			}
+			$s_hidden_fields = array(
+				'action'			=> $this->action,
+				'topic_id_list'		=> $this->topic_ids,
+			);
 
 			$this->template->assign_vars(array(
 				'DIALOG_CONTENT'		=> true,
 				'S_QM_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
-				'S_FB'					=> $s_fb,
 			));
-			
-			$json['type'] = 'html';
 		}
 		else
 		{
@@ -756,46 +693,24 @@ class quickmod
 				$in_rename = true;
 			}
 
-			// Return message in JSON format
-			$json += array(
+			$json = array_merge($json, array(
 				'action'	=> $this->action,
 				'msg'		=> ($in_rename) ? $new_data : $this->user->lang($message),
-				'status'	=> ($error) ? 2 : 1,
-				'redirect'	=> (!$in_rename) ? $this->build_current_url(false) : '',
-			);
-		}
-
-		if (!defined('HEADER_INC'))
-		{
-			$http_headers = array(
-				'Content-type' 	=> 'text/html; charset=UTF-8',
-				'Cache-Control' => 'private, no-cache="set-cookie"',
-				'Expires' 		=> gmdate('D, d M Y H:i:s', time()) . ' GMT',
-			);
-
-			if(!empty($this->user->data['is_bot']))
-			{
-				// Let reverse proxies know we detected a bot.
-				$http_headers['X-PHPBB-IS-BOT'] = 'yes';
-			}
-
-			foreach($http_headers as $hname => $hval)
-			{
-				header((string) $hname . ': ' . (string) $hval);
-			}
+				'reload'	=> !$in_rename,
+				'status'	=> ($error) ? json_response::JSON_STATUS_ERROR : json_response::JSON_STATUS_SUCCESS,
+			));
 		}
 		
-		$this->template->assign_var('JSON_RESULT', json_encode($json));
-
 		$this->template->set_filenames(array(
-			'quickmod' => $template,
+			'quickmod' => $template
 		));
-
-		$this->template->set_style(array('ext/canidev/quickmod/styles'));
-		$this->template->display('quickmod');
 		
-		garbage_collection();
-		exit_handler();
+		$response = new json_response;
+		
+		$response
+			->add($json)
+			->add_html($this->template->assign_display('quickmod'))
+			->send();
 	}
 	
 	public function make_select($options, $select = false, $parse_lang = true, $empty_label = false)

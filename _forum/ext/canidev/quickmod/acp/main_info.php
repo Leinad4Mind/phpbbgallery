@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_info.php
 * @package cBB QuickMod
-* @version 1.1.0 17/01/2017
+* @version v1.1.1 22/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\quickmod\acp;
@@ -17,7 +16,7 @@ class main_info
 		return array(
 			'filename'	=> '\canidev\quickmod\acp\main_module',
 			'title'		=> 'ACP_CAT_QUICKMOD',
-			'version'	=> '1.1.0',
+			'version'	=> '1.1.1',
 			'modes'		=> array(
 				'config'	=> array('title' => 'ACP_QUICKMOD_CONFIG', 	'auth' => 'ext_canidev/quickmod && acl_a_board', 'cat' => array('ACP_CAT_QUICKMOD')),
 			),

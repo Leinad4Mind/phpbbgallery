@@ -2,34 +2,50 @@ services:
     canidev.quickmod.listener:
         class: canidev\quickmod\event\listener
         arguments:
-            - @config
             - @service_container
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-
+            - @canidev.quickmod.core
         tags:
             - { name: event.listener }
 
-    canidev.quickmod.quickmod:
-        class: canidev\quickmod\quickmod
+    canidev.quickmod.core:
+        class: canidev\quickmod\libraries\quickmod
         arguments:
             - @auth
             - @config
             - @service_container
             - @dbal.conn
             - @dispatcher
+            - @language
             - @request
-            - @template
             - @user
             - %core.root_path%
             - %core.php_ext%
-
-    canidev.quickmod.compatibility.manager:
-        class: canidev\quickmod\compatibility\manager
+    
+    canidev.quickmod.functions:
+        class: canidev\quickmod\libraries\functions
         arguments:
-            - @cache.driver
+            - @auth
+            - @config
+            - @dbal.conn
             - @dispatcher
-            - @ext.manager
+            - @language
+            - @log
+            - @notification_manager
+            - @request
+            - @template
+            - @user
+            - @content.visibility
             - %core.root_path%
             - %core.php_ext%
+
+    canidev.quickmod.admin.config:
+        class: canidev\quickmod\controller\admin_controller_config
+        arguments:
+            - @cache.driver
+            - @config
+            - @service_container
+            - @dispatcher
+            - @language
+            - @canidev.quickmod.core
+            - @request
+            - @user
