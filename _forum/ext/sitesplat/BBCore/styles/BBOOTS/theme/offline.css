@@ -1,0 +1,58 @@
+/* Error pages */
+.big-title h1 {
+    color: #7F7F7F;
+    cursor: default;
+    display: block;
+    font-size: 250px;
+	text-align: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.big-title h1:before {
+    color: #8C8C8C;
+    content: "{";
+    font-family: 'BebasNeueRegular','Arial','Helvetica',sans-serif;
+    font-size: 250px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.big-title h1:after {
+    color: #169FE6;
+    content: "}";
+    font-family: 'BebasNeueRegular','Arial','Helvetica',sans-serif;
+    font-size: 250px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.well-schema {
+    background-image:url("./images/schema.png");
+}
+
+.big-title h2 {
+    color: #7F7F7F;
+    font-size: 27px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+	text-align: center;
+}
+
+.achievement {
+    margin-bottom: 50px;
+    padding-top: 21px;
+    text-align: center;
+}
+
+.achievement i {
+    background: none repeat scroll 0 0 #F0F0F0;
+    border: 5px solid #FFFFFF;
+    border-radius: 500px 500px 500px 500px;
+    color: #F07073;
+    font-size: 50px;
+    padding: 12px 15px;
+	text-shadow: 1px 3px 0px rgba(0, 0, 0, 0.2);
+}
+/* Error pages */

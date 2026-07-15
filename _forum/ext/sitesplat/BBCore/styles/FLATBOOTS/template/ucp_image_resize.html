@@ -1,0 +1,28 @@
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/BBCore/vendors/css/slim.min.css -->
+<!-- INCLUDE ucp_header.html -->
+
+<div class="tab-pane active">
+ <fieldset class="framed-ucp">
+	<legend>{L_IMAGE_RESIZE}</legend>
+	
+	<!-- IF ERROR -->
+        <p class="alert alert-warning"><strong>{ERROR}</strong></p>
+    <!-- ELSE -->
+        <p>{L_IMAGE_RESIZE_EXPLAIN}</p>
+        <fieldset>
+            <div class="slim" data-download="true" data-service="{U_ACTION}" data-meta-filename="{IMAGENAME}" data-did-upload="imageUpload" data-min-size="{MIN_SIZE}" data-ratio="1:1">
+                <img src="{UPLOADED_IMAGE}" alt="">
+            </div>
+        </fieldset>
+    <!-- ENDIF -->
+ </fieldset>	
+</div>
+
+<script>
+function imageUpload(error, data, response) 
+{
+	window.location.replace(response.redirect);
+}
+</script>
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/BBCore/vendors/js/kickstart.min.js -->
+<!-- INCLUDE ucp_footer.html -->

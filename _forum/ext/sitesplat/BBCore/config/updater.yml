@@ -1,0 +1,96 @@
+parameters:
+    # sitesplat.bbcore.updater.host: 'localhost'
+    # sitesplat.bbcore.updater.versioncheck_path: '/qi/boards/bbcoreautoupdate/versioncheck'
+    # sitesplat.bbcore.updater.download_path: '/qi/boards/bbcoreautoupdate/d/'
+    sitesplat.bbcore.updater.host: 'sitesplat.com'
+    sitesplat.bbcore.updater.versioncheck_path: '/phpBB3/versioncheck'
+    sitesplat.bbcore.updater.download_path: '/phpBB3/d/'
+
+services:
+    sitesplat.bbcore.updater.next_step_resolver:
+        class: sitesplat\BBCore\updater\next_step_resolver
+        arguments:
+            - '@config_text'
+            - '@filesystem'
+            - '@service_container'
+            - '@php_ini'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t0_backup:
+        class: sitesplat\BBCore\updater\task\t0_backup
+        arguments:
+            - '@filesystem'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t1_get_current_style_cfg:
+        class: sitesplat\BBCore\updater\task\t1_get_current_style_cfg
+        arguments:
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t2_get_newest_style_cfg:
+        class: sitesplat\BBCore\updater\task\t2_get_newest_style_cfg
+        arguments:
+            - '@file_downloader'
+            - '%sitesplat.bbcore.updater.host%'
+            - '%sitesplat.bbcore.updater.versioncheck_path%'
+
+    sitesplat.bbcore.updater.task.t3_check_problems:
+        class: sitesplat\BBCore\updater\task\t3_check_problems
+
+    sitesplat.bbcore.updater.task.t4_download_newest_version:
+        class: sitesplat\BBCore\updater\task\t4_download_newest_version
+        arguments:
+            - '@file_downloader'
+            - '@filesystem'
+            - '%sitesplat.bbcore.updater.host%'
+            - '%sitesplat.bbcore.updater.download_path%'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t5_unzip_new_version:
+        class: sitesplat\BBCore\updater\task\t5_unzip_new_version
+        arguments:
+            - '@filesystem'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t6_load_list_of_changes:
+        class: sitesplat\BBCore\updater\task\t6_load_list_of_changes
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.bbcore.updater.task.t7_merge_edits:
+        class: sitesplat\BBCore\updater\task\t7_merge_edits
+        arguments:
+            - '@filesystem'
+            - '@cache.driver'
+            - '@language'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+    sitesplat.bbcore.updater.task.t8_check_additions:
+        class: sitesplat\BBCore\updater\task\t8_check_additions
+        arguments:
+            - '@language'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t9_update_edits:
+        class: sitesplat\BBCore\updater\task\t9_update_edits
+        arguments:
+            - '@cache.driver'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t10_update_added:
+        class: sitesplat\BBCore\updater\task\t10_update_added
+        arguments:
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t11_update_deleted:
+        class: sitesplat\BBCore\updater\task\t11_update_deleted
+        arguments:
+            - '@filesystem'
+            - '%core.root_path%'
+
+    sitesplat.bbcore.updater.task.t12_log_changes:
+        class: sitesplat\BBCore\updater\task\t12_log_changes
+        arguments:
+            - '@log'
+            - '@user'
