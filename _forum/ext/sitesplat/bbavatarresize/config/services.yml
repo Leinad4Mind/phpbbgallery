@@ -1,0 +1,28 @@
+services:
+    sitesplat.bbavatarresize.controller:
+        class: sitesplat\bbavatarresize\controller\controller
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@service_container'
+            - '@controller.helper'
+            - '%core.php_ext%'
+            - '%core.root_path%'
+
+    sitesplat.bbavatarresize.listener:
+        class: sitesplat\bbavatarresize\event\listener
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '@template'
+            - '@service_container'
+            - '@controller.helper'
+            - '%core.php_ext%'
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
