@@ -1,0 +1,35 @@
+<div class="text-center">
+  <button type="button" class="btn btn-default btn-md" id="myBtn"><i class="fa fa-chevron-down fa-fw" title="{{ lang('HIDE_AD') }}"></i></button>
+</div> 
+  <!-- Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Slide Up</h4>
+      </div>
+      <div class="modal-body">
+        <p>{% include '@phpbb_ads/phpbb_ads_default.html' %}</p>
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+  
+ 
+</div>
+ 
+<script>
+head.ready(function () {
+$(document).ready(function(){
+    $("#myBtn").click(function(){
+        $("#myModal").modal();
+    });
+});
+});
+</script>
+

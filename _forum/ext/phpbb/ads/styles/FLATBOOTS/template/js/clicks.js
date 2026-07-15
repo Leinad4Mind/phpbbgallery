@@ -1,0 +1,1 @@
+head.ready(function(){!function(a,t){"use strict";a(function(){a("[data-phpbb-ads-id]").on("click","a",function(d){a.get(t.replace(/(?:0\?sid=.+|0)$/,a(d.delegateTarget).attr("data-phpbb-ads-id")))})})}(jQuery,u_phpbb_ads_click)});

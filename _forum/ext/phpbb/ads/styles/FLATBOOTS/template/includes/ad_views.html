@@ -1,0 +1,13 @@
+{% if S_INCREMENT_VIEWS %}
+	<script>
+		head.ready(function () {
+		(function($) {
+			'use strict';
+
+			$(window).on('load', function() {
+				$.get('{{ U_PHPBB_ADS_VIEWS|e('js') }}');
+			});
+		})(jQuery);
+		});
+	</script>
+{% endif %}
