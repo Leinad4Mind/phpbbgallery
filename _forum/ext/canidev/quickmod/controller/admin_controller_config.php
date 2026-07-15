@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB QuickMod
-* @version v1.1.1 22/03/2019
+* @version v1.1.2 01/03/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -22,8 +22,10 @@ class admin_controller_config extends \canidev\core\acp
 	protected $quickmod;
 	protected $dispatcher;
 	protected $lang;
+	protected $log;
 	protected $request;
 	protected $template;
+	protected $user;
 
 	/**
 	* Constructor
@@ -33,6 +35,7 @@ class admin_controller_config extends \canidev\core\acp
 	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
 	* @param \phpbb\language\language 					$language			Language object
+	* @param \phpbb\log\log                       		$log				Log Object
 	* @param \canidev\quickmod\libraries\quickmod 		$quickmod			QuickMod Main Class
 	* @param \phpbb\request\request 					$request			Request object
 	* @param \phpbb\user								$user				User object
@@ -45,6 +48,7 @@ class admin_controller_config extends \canidev\core\acp
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\language\language $language,
+		\phpbb\log\log $log,
 		\canidev\quickmod\libraries\quickmod $quickmod,
 		\phpbb\request\request $request,
 		\phpbb\user $user)
@@ -54,8 +58,10 @@ class admin_controller_config extends \canidev\core\acp
 		$this->quickmod		= $quickmod;
 		$this->dispatcher	= $dispatcher;
 		$this->lang			= $language;
+		$this->log			= $log;
 		$this->request		= $request;
 		$this->template 	= \canidev\core\template::get_instance($container);
+		$this->user 		= $user;
 	}
 
 	public function display($mode)
@@ -124,7 +130,7 @@ class admin_controller_config extends \canidev\core\acp
 			
 			$this->config->set('qm_buttons', implode(',', $new_buttons));
 
-			// test add_log('admin', 'LOG_QUICKMOD_CONFIG');
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_QUICKMOD_CONFIG');
 			trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 	

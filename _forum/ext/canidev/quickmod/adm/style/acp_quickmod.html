@@ -24,7 +24,7 @@
 	<!-- ELSE -->
 
 		<dl>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dt><label for="{options.KEY}">{options.TITLE}{L_COLON}</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
 			<dd>{options.CONTENT}</dd>
 		</dl>
 
@@ -35,15 +35,14 @@
 	<fieldset>
 		<legend>{L_QM_BUTTON_MANAGE}</legend>
 
-	<table id="quickmod_buttons" cellspacing="1">
-	<col width="50%" /><col width="50%" />
+	<table class="quickmod-buttons">
 	<tr>
-		<td class="row2" valign="top">
-			<strong>{L_BUTTONS_AVALIABLE}</strong>
+		<td class="row2">
+			<strong>{L_BUTTONS_AVAILABLE}</strong>
 			<hr />
-			<div id="available_buttons" class="qm_drag_row">
+			<div id="available_buttons" class="qm-drag-row">
 	<!-- BEGIN available_button -->
-				<div class="qm_draggable">
+				<div class="qm-draggable">
 					<div><i class="fa {available_button.S_ICON}"></i>{available_button.S_TITLE}</div>
 					{available_button.S_HIDDEN_FIELDS}
 				</div>
@@ -51,12 +50,12 @@
 			</div>	
 		</td>
 
-		<td class="row2" valign="top">
+		<td class="row2">
 			<strong>{L_BUTTONS_SELECTED}</strong>
 			<hr />
-			<div id="selected_buttons" class="qm_drag_row">
+			<div id="selected_buttons" class="qm-drag-row">
 	<!-- BEGIN selected_button -->
-				<div class="qm_draggable">
+				<div class="qm-draggable">
 					<div><i class="fa {selected_button.S_ICON}"></i>{selected_button.S_TITLE}</div>
 					{selected_button.S_HIDDEN_FIELDS}
 				</div>

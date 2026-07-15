@@ -1,0 +1,12 @@
+.qm-row .footable-first-column,
+.qm-row .footable-last-column {
+	position: relative;
+}
+
+.qm-row .desc-wrapper > a {
+    vertical-align: top;
+}
+
+.cbb-dialog.qm-dialog .cbb-dialog-content {
+	font-size: 1.2em;
+}

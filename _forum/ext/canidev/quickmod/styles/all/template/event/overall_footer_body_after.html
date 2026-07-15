@@ -1,6 +1,6 @@
 <!-- IF S_QUICKMOD_ENABLED -->
 	<script type="text/html" id="tpl-quickmod-main">
-		<div id="qm-main">
+		<div id="qm-main" class="panel">
 			<form name="quick_mod_form" method="post" onsubmit="return false;">
 				<div id="qm_main_container">
 					<div class="qm-loading cbb-loading cbb-helper-hidden"><span></span></div>
@@ -33,7 +33,7 @@
 	(function($) {
 		cbbCore.initService('quickmod', {
 			rowSelector	: 'ul.topics li.row',
-			position	: ['.forumbg:has(.topiclist):last', 'after'],
+			position	: ['.action-bar.bar-bottom', 'before'],
 			type		: '{S_QM_TYPE}'
 		});
 	})(jQuery);

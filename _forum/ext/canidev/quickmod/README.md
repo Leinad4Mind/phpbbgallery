@@ -6,8 +6,7 @@
 2. Upload the content of the 'upload' directory to the 'ext' directory of your forum.
 3. Navigate in the ACP to 'Customise -> Manage extensions'.
 4. Look for "cBB QuickMod" under the Disabled Extensions list, and click its 'Enable' link.
-5. Navigate in the ACP to 'General' and purge the cache.
-6. Set up and configure the extension by navigating in the ACP to 'Extensions -> QuickMod'.
+5. Set up and configure the extension by navigating in the ACP to 'Extensions -> QuickMod'.
 
 ## Update
 

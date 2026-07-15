@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * info_acp_quickmod.php [English [En]]
 * @package cBB QuickMod
-* @version v1.1.1 22/03/2019
+* @version v1.1.2 01/03/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -33,10 +33,8 @@ $lang = array_merge($lang, array(
 	'QM_TYPE_ICON'			=> 'Icons',
 	'QM_TYPE_MENU'			=> 'Context menu',
 	
-	'BUTTONS_AVALIABLE'			=> 'Available buttons',
-	'BUTTONS_SELECTED'			=> 'Selected buttons',
-	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
-	'SAVE'						=> 'Save',
+	'BUTTONS_AVAILABLE'		=> 'Available buttons',
+	'BUTTONS_SELECTED'		=> 'Selected buttons',
 
 	'LOG_QUICKMOD_CONFIG'	=> '<strong>cBB QuickMod:</strong> Configuration Changed',
 ));

@@ -1,10 +1,10 @@
 <?php
-/**
+/*
 * main.php [Spanish [Es]]
 * @package cBB QuickMod
-* @version v1.1.1 22/03/2019
+* @version v1.1.2 01/03/2020
 *
-* @copyright (c) 2019 CaniDev
+* @copyright (c) 2020 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -71,8 +71,6 @@ $lang = array_merge($lang, array(
 	'ICON'					=> 'Icono',
 	'NOTHING'				=> 'No se ha realizado ningún cambio',
 	'NOTIFY_POSTER'			=> 'Notificar aprobación al autor',
-	'QM_ACCEPT'				=> 'Aceptar',
-	'QM_CANCEL'				=> 'Cancelar',
 	'SELECT_ACTION'			=> 'Seleccionar acción',
 	'WITH_SELECTED'			=> 'Con los seleccionados',
 
