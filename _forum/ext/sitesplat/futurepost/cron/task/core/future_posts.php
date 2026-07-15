@@ -44,7 +44,7 @@ class future_posts extends \phpbb\cron\task\base
 
 		$sql = 'SELECT post_id
 			FROM ' . POSTS_TABLE . '
-			WHERE post_visibility = ' . ITEM_UNAPPROVED . '
+			WHERE (post_visibility = ' . ITEM_UNAPPROVED . ' OR post_visibility = ' . ITEM_REAPPROVE . ')
 				AND post_future = 1
 				AND post_time < ' . $this->now;
 		$result = $this->db->sql_query($sql);
@@ -168,6 +168,6 @@ class future_posts extends \phpbb\cron\task\base
 
 	public function should_run()
 	{
-		return $this->config['future_posts_last_gc'] < $this->now - 300; // every 5 minutes
+		return $this->config['future_posts_last_gc'] < $this->now - 60; // every minute
 	}
 }

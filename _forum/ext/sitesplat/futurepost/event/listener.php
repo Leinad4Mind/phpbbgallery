@@ -54,7 +54,6 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 		$this->now = time();
-		date_default_timezone_set($this->user->data['user_timezone']);
 		$this->future_date = $this->request->variable('future_date', '');
 		$this->future_time = strtotime(($this->future_date) ? $this->future_date : date('m/d/Y H:i', $this->now));
 	}
@@ -94,15 +93,21 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 	public function temp_future_time($event)
 	{
+		$edit_topic = ($event['mode'] == 'edit' && intval($event['post_data']['topic_first_post_id']) != $event['post_id']) ? false : true;
+
 		if (
 			$this->auth->acl_get('u_futurepost') &&
-			$event['topic_data']['topic_status'] != ITEM_LOCKED &&
-			$event['topic_data']['topic_type'] != POST_GLOBAL && 
-			$event['topic_data']['topic_first_post_id'] == $event['row']['post_id'] &&
+			$event['post_data']['topic_status'] != ITEM_LOCKED &&
+			$event['post_data']['topic_type'] != POST_GLOBAL && 
+			$edit_topic &&
 			(
-				$event['post_data']['post_visibility'] == ITEM_UNAPPROVED ||
 				$event['mode'] == 'post' ||
 				$event['mode'] == 'edit'
+			) &&
+			(
+				$event['post_data']['post_time'] > $this->now ||
+				$event['mode'] == 'post' ||
+				($event['mode'] == 'edit' && ($event['post_data']['post_visibility'] == ITEM_UNAPPROVED || $event['post_data']['post_visibility'] == ITEM_REAPPROVE))
 			)
 		)
 		{
@@ -110,7 +115,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 			$event['page_data'] += [
 				'S_FUTURE_DATE'	=> $event['post_data']['post_time'] > $this->now,
-				'D_FUTURE_DATE'	=> ($event['post_data']['post_time'] ?: $this->now + 7200) * 1000,
+				'D_FUTURE_DATE'	=> ($event['post_data']['post_time'] ?: $this->now + 300) * 1000,
 				'UU_DATEFORMAT'	=> str_replace(array('g','a','jS','|'), array('h','K','J',''), $this->user->data['user_dateformat']),
 			];
 		}
@@ -172,7 +177,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 	public function display_future_status($event)
 	{
-		if ($event['row']['post_future'] && $event['row']['topic_time'] > $this->now - 300) {
+		if ($event['row']['post_future'] && $event['row']['topic_time'] > $this->now - 60) {
 			$this->user->add_lang_ext('sitesplat/futurepost', 'futurepost');
 
 			$event['topic_row'] += [
@@ -184,7 +189,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 	public function mcp_list($event)
 	{
 		$sql_ary = $event['sql_ary'];
-		$sql_ary['WHERE'] .= ' AND p.post_time <= ' . ($this->now + 300);
+		$sql_ary['WHERE'] .= ' AND p.post_time <= ' . ($this->now + 60);
 		$event['sql_ary'] = $sql_ary;
 	}
 
@@ -197,7 +202,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 		$sql = 'SELECT post_id
 			FROM ' . $this->posts_table . '
-			WHERE post_time <= ' . ($this->now + 300) . '
+			WHERE post_time <= ' . ($this->now + 60) . '
 				AND ' . $this->db->sql_in_set('post_id', $event['post_list']);
 		$result = $this->db->sql_query($sql);
 		$post_ids = array_column($this->db->sql_fetchrowset($result), 'post_id');
@@ -207,7 +212,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 	public function mcp_forum($event)
 	{
-		$event['sql'] = str_replace('WHERE', 'WHERE t.topic_time <= ' . ($this->now + 300) . ' AND', $event['sql']);
+		$event['sql'] = str_replace('WHERE', 'WHERE t.topic_time <= ' . ($this->now + 60) . ' AND', $event['sql']);
 	}
 
 	public function mcp_topic($event)
@@ -221,10 +226,10 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 			FROM ' . $this->topics_table . '
 			WHERE topic_id = ' . (int) $event['topic_id'];
 		$result = $this->db->sql_query($sql);
-		$topic_time = $this->db->sql_fetchfield('topic_time', $result);
+		$topic_time = $this->db->sql_fetchfield('topic_time', false, $result);
 		$this->db->sql_freeresult($result);
 
-		if ($topic_time > $this->now - 300)
+		if ($topic_time > $this->now - 60)
 		{
 			$event['module']->set_display('main', 'topic_view', false);
 			$event['module']->set_display('logs', 'topic_logs', false);
@@ -233,7 +238,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 
 	public function mcp_queue_topics($event)
 	{
-		$event['sql'] = str_replace('WHERE', 'WHERE t.topic_time <= ' . ($this->now + 300) . ' AND', $event['sql']);
+		$event['sql'] = str_replace('WHERE', 'WHERE t.topic_time <= ' . ($this->now + 60) . ' AND', $event['sql']);
 		$this->user->add_lang_ext('sitesplat/futurepost', 'futurepost');
 	}
 }
