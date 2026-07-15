@@ -1,0 +1,20 @@
+<!-- IF POLTITLE -->
+<div class="sidebar">
+<div id="poll{slot.SIDEBAR_ID}" class="panel panel-inverse">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_POLL}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerpoll{slot.SIDEBAR_ID}" class="inner">
+		<a href="{URL}">{POLTITLE}</a>
+		<div id="pollchart" style="width:100%;height:150px;margin:0 auto;background-color:transparent;"></div>
+	 </div>
+	</div>
+</div>
+</div>
+<script>
+ var polstats = {POLSTATS};
+</script>
+<!-- INCLUDEJS @sitesplat_sidebar/js/highcharts.js -->
+<!-- INCLUDEJS @sitesplat_sidebar/js/poll.js -->
+<!-- ENDIF -->

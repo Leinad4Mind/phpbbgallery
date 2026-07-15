@@ -1,0 +1,27 @@
+<!-- IF .hot_topics -->
+<div class="sidebar">
+<div id="hot_topics{slot.SIDEBAR_ID}" class="panel panel-warning list-announcement">
+    <div class="panel-heading">
+        <h4 class="panel-title">{L_HOT_TOPICS}</h4>
+    </div>
+    <div id="hot_topics{slot.SIDEBAR_ID}" class="panel-body inner">
+        <ul class="list-unstyled mb20">
+		<!-- BEGIN hot_topics -->
+		<!-- IF hot_topics.NO_TOPIC_TITLE-->
+				<li>   
+				   {top_topics.NO_TOPIC_TITLE}
+				</li>
+		<!-- ELSE -->
+            <li>
+               <!-- IF hot_topics.S_UNREAD --><span class="label label-warning">{L_UNREAD}</span>&nbsp;<!-- ENDIF --><a class="title-head" href="{hot_topics.U_TOPIC}" title="{hot_topics.TOPIC_TITLE}">{hot_topics.TOPIC_TITLE}</a>
+               <div>{hot_topics.USERNAME_FULL}</div>
+		  <!--// <div>{L_IN}{L_COLON}&nbsp;<a href="{hot_topics.U_FORUM}" title="{hot_topics.FORUM_NAME}">{hot_topics.FORUM_NAME}</a></div> -->
+			   <small class="date"><i class="fa fa-clock-o"></i>&nbsp;{hot_topics.LAST_TOPIC_TIME}</small>
+			</li>
+		<!-- ENDIF -->	
+		<!-- END hot_topics -->
+        </ul>
+    </div>
+</div>
+</div>
+<!-- ENDIF -->

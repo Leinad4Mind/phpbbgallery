@@ -1,0 +1,71 @@
+<!-- IF .top_posters -->
+<div class="sidebar">
+<div id="posters{slot.SIDEBAR_ID}" class="panel panel-info">
+    <div class="panel-heading">
+     <h4 class="panel-title">{L_TOP_POSTERS}</h4>
+    </div>
+	<div class="panel-body">
+	 <div id="innerposters{slot.SIDEBAR_ID}" class="inner">
+		
+		  <ul class="nav nav-pills nav-top-poster nav-justified">
+			<li class="active"><a data-toggle="pill" href="#topAll">{L_SIDEBAR_ALL_TIME}</a></li>
+			<li><a data-toggle="pill" href="#topDay">{L_SIDEBAR_DAILY}</a></li>
+			<li><a data-toggle="pill" href="#topWeek">{L_SIDEBAR_WEEKLY}</a></li>
+		  </ul>
+		  
+		  <div class="tab-content media-list user-list">
+			
+			<div id="topAll" class="tab-pane fade in active">
+			<!-- BEGIN top_posters -->
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
+				<div class="media-body">
+					<h4 class="media-heading">{top_posters.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters.S_SEARCH_ACTION}" title="">{top_posters.POSTS}</a></span>
+				</div>
+			</div>
+			<!-- END top_posters -->
+			</div>
+			
+			<div id="topDay" class="tab-pane fade">
+			<!-- BEGIN top_posters_day -->
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters_day.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
+				<div class="media-body">
+					<h4 class="media-heading">{top_posters_day.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters_day.S_SEARCH_ACTION}" title="">{top_posters_day.POSTS}</a></span>
+				</div>
+			</div>
+			<!-- END top_posters_day -->
+			</div>
+			
+			<div id="topWeek" class="tab-pane fade">
+			<!-- BEGIN top_posters_week -->
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img alt="" src="{top_posters_week.AVATAR}" class="media-object img-circle">
+					</a>
+				 </div>
+				<div class="media-body">
+					<h4 class="media-heading">{top_posters_week.USERNAME_FULL}</h4>
+					<span>{L_POSTS}{L_COLON}&nbsp;<a href="{top_posters_week.S_SEARCH_ACTION}" title="">{top_posters_week.POSTS}</a></span>
+				</div>
+			</div>
+			<!-- END top_posters_week -->
+			</div>
+			
+		  </div>
+		</div>
+	 </div>
+	</div>
+</div>
+<!-- ENDIF -->

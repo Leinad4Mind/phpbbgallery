@@ -1,0 +1,62 @@
+imports:
+    - { resource: types.yml }
+    - { resource: tables.yml }
+
+services:
+    sitesplat.sidebar.controller:
+        class: sitesplat\sidebar\controller\main_controller
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@request'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@path_helper'
+            - '@dispatcher'
+            - '@notification_manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    sitesplat.sidebar.manager:
+        class: sitesplat\sidebar\types\manager
+        arguments:
+            - '@sitesplat.sidebar.type_collection'
+            - '@service_container'
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
+            - '%sitesplat.sidebar.tables.sidebar_types%'
+
+    sitesplat.sidebar.admin_controller:
+        class: sitesplat\sidebar\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@dbal.conn'
+            - '@service_container'
+            - '@sitesplat.sidebar.manager'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@cache.driver'
+            - '%core.root_path%'
+            - '%sitesplat.sidebar.tables.sidebar_types%'
+
+    sitesplat.sidebar.listener:
+        class: sitesplat\sidebar\event\listener
+        arguments:
+            - '@sitesplat.sidebar.manager'
+            - '@user'
+            - '@request'
+            - '@config_text'
+            - '@controller.helper'
+            - '@template'
+            - '@config'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

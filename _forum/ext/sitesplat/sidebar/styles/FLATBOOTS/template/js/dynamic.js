@@ -1,0 +1,1 @@
+head.ready(function(){!function(e){"use strict";var t=e("#contentje").height();e("#page-sidebar").css("height",t-10)}(jQuery)});
