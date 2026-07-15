@@ -1,0 +1,3 @@
+sitesplat_titlesandavatars_main_controller:
+    path: /titlesandavatars/{route}
+    defaults: { _controller: sitesplat.titlesandavatars.controller:display }

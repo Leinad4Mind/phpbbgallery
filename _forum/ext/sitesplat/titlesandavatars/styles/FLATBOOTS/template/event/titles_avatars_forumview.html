@@ -1,0 +1,10 @@
+<!-- IF forumrow.FORUM_POSTS -->
+<span class="thread-poster-thumbs hidden-xs">
+	<!-- IF forumrow.TAT_SETTING != 2 -->
+	<span class="author-wrapper"><!-- IF forumrow.FP_AVATAR -->{forumrow.FP_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF --></span>
+	<!-- ENDIF -->
+	<!-- IF forumrow.TAT_SETTING != 1 -->
+	<span class="author-wrapper<!-- IF forumrow.TAT_SETTING == 0 -->-thumb<!-- ENDIF -->"><!-- IF forumrow.LP_AVATAR -->{forumrow.LP_AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF --></span>
+	<!-- ENDIF -->
+</span>
+<!-- ENDIF -->
