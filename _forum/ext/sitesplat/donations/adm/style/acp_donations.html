@@ -126,7 +126,7 @@
 			<td><a href="mailto:{donations.EMAIL}?SUBJECT=Donation">{donations.EMAIL}</a></td>
 			<td>{donations.PP_TRANSACTION}</td>
 			<td>{DONATIONS_CURRENCY} {donations.AMOUNT}</td>
-			<td style="text-align:center;"><a href="#p{donations.ID}" id="status{donations.ID}" class="change_status" data-options="url={donations.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{donations.STATUS}</a></td>
+			<td style="text-align:center;"><a href="#p{donations.ID}" id="status{donations.ID}" class="change_status" data-options="{donations.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{donations.STATUS}</a></td>
 			<td>{donations.TIME}</td>
 		</tr>
 	<!-- END donations -->
@@ -169,7 +169,7 @@
 			<td style="text-align:center;"><i class="fa {transactions.PAYMENT_TYPE}" aria-hidden="true"></i></td>
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{DONATIONS_CURRENCY} {transactions.AMOUNT}</td>
-			<td style="text-align:center;"><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{transactions.STATUS}</a></td>
+			<td style="text-align:center;"><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status" data-options="{transactions.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{transactions.STATUS}</a></td>
 			<td>{transactions.TIME}</td>
 		</tr>
 		<!-- END transactions -->

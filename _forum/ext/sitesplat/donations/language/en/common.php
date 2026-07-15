@@ -31,10 +31,10 @@ $lang = array_merge($lang, array(
     'DONATIONS_DATE'				=> 'Date',
 	'DONATIONS_CUSTOM_MESSAGE'		=> 'Leave a message',
     'DONATIONS_SUCCESS' 			=> 'Donation was successful',
-    'DONATIONS_CANCELLED' 			=> 'Donation was cancelled',
+    'DONATIONS_CANCELLED' 			=> 'Donation was canceled',
     'DONATIONS_ERROR' 				=> 'There was an error in the donation',
 	
-	'DONATIONS_THANK_YOU'			=> 'Thank-you for supporting our community!',
+	'DONATIONS_THANK_YOU'			=> 'Thank-you for thinking on supporting our community!',
 	'DONATIONS_PREMIUM'				=> 'The donors with an amount of <strong>%s</strong> or more are added to a special group with special forum benefits.<br />Custom rank, color and much more!',
 	'DONATIONS_MESSAGE'				=> 'Participate in our success and together let\'s make our community even better',
 	'DONATION_STEP_1'				=> '1',

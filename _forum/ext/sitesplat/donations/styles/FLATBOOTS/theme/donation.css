@@ -294,7 +294,6 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 }
 
 .member-info {
-  float: left;
   overflow: hidden;
   margin: auto;
   margin-bottom: 25px;
@@ -307,16 +306,17 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
   position: relative;
 }
 
+.member-info span {
+    display: block;
+    color: #999;
+}
+
 .member-info .avatar {
   border-radius: 50%;
-  margin-left: 100px;
-  max-width: 90px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  -webkit-transform: translate(-50%, 0%);
-  -ms-transform: translate(-50%, 0%);
-      transform: translate(-50%, 0%);
-  height:90px;
-   width: initial!important;
+	border: 2px solid #dbdfe6;
+	height: 80px;
+	width: 80px;
+	object-fit: cover;
 }
 
 .member-info2 .avatar {
@@ -389,12 +389,23 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
    
    #donationmessage {
     height: 100%; 
-    min-height: 76px;
+    min-height: 110px;
+	margin-bottom: 24px;
     }
-	
+
+	#donationicons > span + p {
+		width: 100%;
+		position: relative;
+		margin-top: -64px;
+	}
+
+	#donationicons {
+	width: auto;
+	flex-wrap: wrap;
+	}
+
 	.member-info .avatar {
     height: 40px;
-    margin-left: 40px;
     max-width: 40px;
     }
 	
@@ -405,7 +416,7 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 }
 
 @media (max-width: 468px) {
-	
+
 	#submission .input-group {
 		display: block;
 	}
@@ -425,7 +436,7 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 	#submission .form-control {
        text-align: center;
     }
-	
+
 }
 
 .heart-ss {

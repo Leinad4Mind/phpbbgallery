@@ -292,7 +292,6 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 }
 
 .member-info {
-  float: left;
   overflow: hidden;
   margin: auto;
   margin-bottom: 25px;
@@ -305,15 +304,17 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
   position: relative;
 }
 
+.member-info span {
+    display: block;
+    color: #999;
+}
+
 .member-info .avatar {
   border-radius: 50%;
-  margin-left: 100px;
-  max-width: 90px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  -webkit-transform: translate(-50%, 0%);
-  -ms-transform: translate(-50%, 0%);
-      transform: translate(-50%, 0%);
-  height:90px;
+	border: 2px solid #dbdfe6;
+	height: 80px;
+	width: 80px;
+	object-fit: cover;
 }
 
 .member-info2 .avatar {
@@ -391,7 +392,6 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
 	
 	.member-info .avatar {
     height: 40px;
-    margin-left: 40px;
     max-width: 40px;
     }
 	

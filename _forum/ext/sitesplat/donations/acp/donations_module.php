@@ -241,7 +241,7 @@ class donations_module
 							'PP_TRANSACTION'	=> $row['txn_id'],
 							'AMOUNT'        	=> number_format($row['mc_gross'], 2),
 							'STATUS'			=> $row['payment_status'],
-							'U_PAYMENT_STATUS'	=> '../../' . $this->u_action . '&amp;user_id=' . $row['user_id'] . '&amp;txn_id=' . $row['id'] . '&amp;status=change',
+							'U_PAYMENT_STATUS'	=> $this->u_action . '&amp;user_id=' . $row['user_id'] . '&amp;txn_id=' . $row['id'] . '&amp;status=change',
 							'TIME'           	=> $user->format_date($row['payment_date']),
 						));
 						$total_amount += ($row['payment_status'] == 'Completed' || $row['payment_status'] == 'Expired') ? $row['mc_gross'] : 0;
@@ -294,7 +294,7 @@ class donations_module
 							'PP_TRANSACTION'	=> $row['txn_id'],
 							'AMOUNT'        	=> number_format($row['mc_gross'], 2),
 							'STATUS'			=> $row['payment_status'],
-							'U_PAYMENT_STATUS'	=> '../../' . $this->u_action . '&amp;txn_id=' . $row['id'] . '&amp;status=change',
+							'U_PAYMENT_STATUS'	=> $this->u_action . '&amp;txn_id=' . $row['id'] . '&amp;status=change',
 							'TIME'           	=> $user->format_date($row['payment_date']),
 						));
 					}

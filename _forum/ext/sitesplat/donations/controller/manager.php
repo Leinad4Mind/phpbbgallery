@@ -260,7 +260,7 @@ class manager
 		$currencies['VND'] = array('&#8363;', 'Vietnamese dong');
 		$currencies['YER'] = array('&#8355;', 'Yemeni rial');
 
-		if ($select == '')
+		if (!$select)
 		{
 			$option = $currencies[$currency][0];
 		} else
