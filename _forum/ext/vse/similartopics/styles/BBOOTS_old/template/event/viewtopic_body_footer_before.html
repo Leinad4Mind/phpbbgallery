@@ -1,0 +1,69 @@
+{% if loops.similar|length %}
+<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{{ lang('SIMILAR_TOPICS') }}</th>
+			<th class="large110" data-hide="phone">{{ lang('TOPICS_POSTS_STATISTICS') }}</th>
+			<th class="large21" data-hide="phone">{{ lang('LAST_POST') }}</th>
+		</tr>
+	</thead>
+	 <tbody>
+	{% for similar in loops.similar %}
+		{% EVENT search_results_topic_before %}
+		<tr>
+			<td>
+				{% if similar.TOPIC_ICON_IMG %}
+				 <i class="topic-icon" style="background-image: url({{ T_ICONS_PATH ~ similar.TOPIC_ICON_IMG }}); background-repeat: no-repeat;" title="{{ similar.TOPIC_FOLDER_IMG_ALT }}"></i>
+				{% endif %}
+				<span class="icon-wrapper">
+			     <i class="row-icon-font icon-moon-default2{% if similar.S_POST_ANNOUNCE %} icon-moon-voice2{% endif %}{% if similar.S_POST_GLOBAL %} icon-moon-podcast2{% endif %}{% if similar.S_POST_STICKY %} icon-moon-pushpin2{% endif %}{% if similar.S_HAS_POLL %} icon-moon-poll{% endif %}{% if similar.S_UNREAD_TOPIC %} forum-unread{% else %} forum-read{% endif %}" title="{{ similar.TOPIC_FOLDER_IMG_ALT }}"></i>
+				</span>
+				<i class="row-icon-font-mini{% if similar.S_TOPIC_LOCKED %} fa fa-lock forumview-lock{% endif %}" title="{{ similar.TOPIC_FOLDER_IMG_ALT }}"></i>
+				<span class="desc-wrapper">
+				{% EVENT topiclist_row_prepend %}
+				{% if similar.S_UNREAD_TOPIC and not S_IS_BOT %}<a href="{{ similar.U_NEWEST_POST }}" title="{{ lang('VIEW_FIRST_UNREAD') }}"><i class="fa fa-asterisk"></i></a>{% endif %}<a href="{{ similar.U_VIEW_TOPIC }}" class="topictitle">{{ similar.TOPIC_TITLE }}</a>
+				{% if similar.ATTACH_ICON_IMG %}<i class="fa fa-paperclip fa-flip-horizontal" title="{{ lang('ATTACH_FORUM') }}"></i>{% endif %}
+			    {% if similar.S_TOPIC_UNAPPROVED or similar.S_POSTS_UNAPPROVED %}<a href="{{ similar.U_MCP_QUEUE }}">{{ similar.UNAPPROVED_IMG }}</a> {% endif %}
+			    {% if similar.S_TOPIC_REPORTED %}<a href="{{ similar.U_MCP_REPORT }}">{{ REPORTED_IMG }}</a>{% endif %}<br />
+				{% EVENT topiclist_row_topic_title_after %}
+			    {% if similar.pagination|length %}
+				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
+						{% for pagination in similar.pagination %}
+						 {% if pagination.S_IS_PREV %}
+						 {% elseif pagination.S_IS_CURRENT %}<li class="active">{{ pagination.PAGE_NUMBER }}</li>
+						 {% elseif pagination.S_IS_ELLIPSIS %}<li class="ellipsis"><a>{{ lang('ELLIPSIS') }}</a></li>
+						 {% elseif pagination.S_IS_NEXT %}
+						{% else %}
+						 <li><a href="{similar.pagination.PAGE_URL}">{{ pagination.PAGE_NUMBER }}</a></li>
+						{% endif %}
+						{% endfor %}
+					</ul>		
+			    {% endif %}
+				{% EVENT topiclist_row_topic_by_author_before %}
+				{{ lang('POST_BY_AUTHOR') }}&nbsp;{% EVENT search_results_topic_author_username_prepend %}{{ similar.TOPIC_AUTHOR_FULL }}{% EVENT search_results_topic_author_username_append %}&nbsp;
+				<small>&#45;&nbsp;<time datetime="{{ similar.FIRST_POST_TIME_RFC3339 }}">{{ similar.FIRST_POST_TIME }}</time></small>
+				{{ lang('IN') ~ lang('COLON') }}&nbsp;<a href="{{ similar.U_VIEW_FORUM }}">{{ similar.FORUM_TITLE }}</a>
+				{% EVENT topiclist_row_topic_by_author_after %}
+				{% EVENT topiclist_row_append %}
+				</span>
+			</td>
+			<td class="stats-col">
+			 <span class="stats-wrapper">
+			 {{ similar.TOPIC_REPLIES }}&nbsp;{{ lang('REPLIES') }}<br />{{ similar.TOPIC_VIEWS }}&nbsp;{{ lang('VIEWS') }}
+			 </span>
+			</td>
+			<td class="center">
+			 <span class="last-wrapper">
+				{{ lang('POST_BY_AUTHOR') }}&nbsp;{% EVENT search_results_last_post_author_username_prepend %}{{ similar.LAST_POST_AUTHOR_FULL }}{% EVENT search_results_last_post_author_username_append %}
+				{% if not S_IS_BOT %}<a title="{{ lang('FORUMLIST_LASTPOST') }}" href="{{ similar.U_LAST_POST }}"><i class="mobile-post fa fa-sign-out"></i></a>{% endif %}
+				<br /><small><time datetime="{{ similar.LAST_POST_TIME_RFC3339 }}">{{ similar.LAST_POST_TIME }}</time></small>
+			 </span>
+			</td>
+	    </tr>
+		{% EVENT search_results_topic_after %}
+	  {% endfor %}
+	 </tbody>
+	</table>
+</div>
+{% endif %}

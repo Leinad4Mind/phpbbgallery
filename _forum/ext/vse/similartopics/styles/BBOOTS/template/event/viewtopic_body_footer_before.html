@@ -22,7 +22,7 @@
 				<i class="row-icon-font-mini{% if similar.S_TOPIC_LOCKED %} fa fa-lock forumview-lock{% endif %}" title="{{ similar.TOPIC_FOLDER_IMG_ALT }}"></i>
 				<span class="desc-wrapper">
 				{% EVENT topiclist_row_prepend %}
-				{% if similar.S_UNREAD_TOPIC and not S_IS_BOT %}<a href="{{ similar.U_NEWEST_POST }}" title="{{ lang('VIEW_FIRST_UNREAD') }}"><i class="fa fa-asterisk"></i></a>{% endif %}<a href="{{ similar.U_VIEW_TOPIC }}" class="topictitle">{{ similar.TOPIC_TITLE }}</a>
+				{% if similar.S_UNREAD_TOPIC and not S_IS_BOT %}<a href="{{ similar.U_NEWEST_POST }}" title="{{ lang('VIEW_FIRST_UNREAD') }}"><i class="fa fa-asterisk"></i></a>{% endif %}{% EVENT topiclist_row_topic_title_before %}<a href="{{ similar.U_VIEW_TOPIC }}" class="topictitle">{{ similar.TOPIC_TITLE }}</a>
 				{% if similar.ATTACH_ICON_IMG %}<i class="fa fa-paperclip fa-flip-horizontal" title="{{ lang('ATTACH_FORUM') }}"></i>{% endif %}
 			    {% if similar.S_TOPIC_UNAPPROVED or similar.S_POSTS_UNAPPROVED %}<a href="{{ similar.U_MCP_QUEUE }}">{{ similar.UNAPPROVED_IMG }}</a> {% endif %}
 			    {% if similar.S_TOPIC_REPORTED %}<a href="{{ similar.U_MCP_REPORT }}">{{ REPORTED_IMG }}</a>{% endif %}<br />

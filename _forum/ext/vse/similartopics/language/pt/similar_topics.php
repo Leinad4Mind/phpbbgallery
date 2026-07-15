@@ -1,7 +1,8 @@
 <?php
 /**
 *
-* Precise Similar Topics [English]
+* Precise Similar Topics [Portuguese]
+* Translated by The Crow: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
 *
 * @copyright (c) 2013 Matt Friedman
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -39,5 +40,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'SIMILAR_TOPICS'			=> 'Tópicos Semelhantes',
-	'DISPLAY_SIMILAR_TOPICS'	=> 'Exibir tópicos semelhantes',
+	'DISPLAY_SIMILAR_TOPICS'	=> 'Ativar Tópicos Semelhantes',
 ));

@@ -1,7 +1,8 @@
 <?php
 /**
 *
-* Precise Similar Topics [English]
+* Precise Similar Topics [Portuguese]
+* Translated by The Crow: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
 *
 * @copyright (c) 2013 Matt Friedman
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -39,6 +40,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'PST_TITLE_ACP'		=> 'Precise Similar Topics',
-	'PST_SETTINGS'		=> 'Similar topics settings',
-	'PST_LOG_MSG'		=> '<strong>Altered Similar Topics settings</strong>',
+	'PST_SETTINGS'		=> 'Tópicos semelhantes configurações',
+	'PST_LOG_MSG'		=> '<strong>As configurações de Tópicos Semelhantes foram alteradas</strong>',
 ));

@@ -10,45 +10,59 @@
 
 namespace vse\similartopics\core;
 
+use phpbb\auth\auth;
+use phpbb\cache\service as cache;
+use phpbb\config\config;
+use phpbb\config\db_text;
+use phpbb\content_visibility;
+use phpbb\db\driver\driver_interface as db;
+use phpbb\event\dispatcher_interface as dispatcher;
+use phpbb\extension\manager as ext_manager;
+use phpbb\pagination;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use vse\similartopics\driver\manager as similartopics_manager;
+
 class similar_topics
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\driver\driver_interface */
+	/** @var cache */
 	protected $cache;
 
-	/** @var \phpbb\cache\service */
-	protected $service;
-
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\config\db_text */
+	/** @var db_text */
 	protected $config_text;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var db */
 	protected $db;
 
-	/** @var \phpbb\event\dispatcher_interface */
+	/** @var dispatcher */
 	protected $dispatcher;
 
-	/** @var \phpbb\pagination */
+	/** @var ext_manager */
+	protected $extension_manager;
+
+	/** @var pagination */
 	protected $pagination;
 
-	/** @var \phpbb\request\request */
+	/** @var request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\content_visibility */
+	/** @var content_visibility */
 	protected $content_visibility;
 
-	/** @var \vse\similartopics\driver\driver_interface */
+	/** @var similartopics_manager */
 	protected $similartopics;
 
 	/** @var string phpBB root path  */
@@ -64,47 +78,31 @@ class similar_topics
 	 * Constructor
 	 *
 	 * @access public
-	 * @param \phpbb\auth\auth                     $auth
-	 * @param \phpbb\cache\driver\driver_interface $cache
-	 * @param \phpbb\cache\service                 $service
-	 * @param \phpbb\config\config                 $config
-	 * @param \phpbb\config\db_text                $config_text
-	 * @param \phpbb\db\driver\driver_interface    $db
-	 * @param \phpbb\event\dispatcher_interface    $dispatcher
-	 * @param \phpbb\pagination                    $pagination
-	 * @param \phpbb\request\request               $request
-	 * @param \phpbb\template\template             $template
-	 * @param \phpbb\user                          $user
-	 * @param \phpbb\content_visibility            $content_visibility
-	 * @param \vse\similartopics\driver\manager    $similartopics_manager
-	 * @param string                               $root_path
-	 * @param string                               $php_ext
+	 * @param auth                  $auth
+	 * @param cache                 $cache
+	 * @param config                $config
+	 * @param db_text               $config_text
+	 * @param db                    $db
+	 * @param dispatcher            $dispatcher
+	 * @param ext_manager           $extension_manager
+	 * @param pagination            $pagination
+	 * @param request               $request
+	 * @param template              $template
+	 * @param user                  $user
+	 * @param content_visibility    $content_visibility
+	 * @param similartopics_manager $similartopics_manager
+	 * @param string                $root_path
+	 * @param string                $php_ext
 	 */
-	public function __construct(
-		\phpbb\auth\auth $auth,
-		\phpbb\cache\driver\driver_interface $cache,
-		\phpbb\cache\service $service,
-		\phpbb\config\config $config,
-		\phpbb\config\db_text $config_text,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher_interface $dispatcher,
-		\phpbb\pagination $pagination,
-		\phpbb\request\request $request,
-		\phpbb\template\template $template,
-		\phpbb\user $user,
-		\phpbb\content_visibility $content_visibility,
-		\vse\similartopics\driver\manager $similartopics_manager,
-		$root_path,
-		$php_ext
-	)
+	public function __construct(auth $auth, cache $cache, config $config, db_text $config_text, db $db, dispatcher $dispatcher, ext_manager $extension_manager, pagination $pagination, request $request, template $template, user $user, content_visibility $content_visibility, similartopics_manager $similartopics_manager, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
-		$this->service = $service;
 		$this->config = $config;
 		$this->config_text = $config_text;
 		$this->db = $db;
 		$this->dispatcher = $dispatcher;
+		$this->extension_manager = $extension_manager;
 		$this->pagination = $pagination;
 		$this->request = $request;
 		$this->template = $template;
@@ -245,7 +243,7 @@ class similar_topics
 		$this->db->sql_freeresult($result);
 
 		// Grab icons
-		$icons = $this->service->obtain_icons();
+		$icons = $this->cache->obtain_icons();
 
 		/**
 		 * Modify the rowset data for similar topics
@@ -303,6 +301,7 @@ class similar_topics
 
 					'TOPIC_REPLIES'			=> $replies,
 					'TOPIC_VIEWS'			=> $row['topic_views'],
+					'TOPIC_ANSWERED'		=> ($this->extension_manager->is_enabled('kinerity/bestanswer')) && $row['answer_post_id'] ? true : false,
 					'TOPIC_TITLE'			=> censor_text($row['topic_title']),
 					'FORUM_TITLE'			=> $row['forum_name'],
 
@@ -322,9 +321,9 @@ class similar_topics
 					'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
 					'S_HAS_POLL'			=> (bool) $row['poll_start'],
 
-					'S_POST_ANNOUNCE'		=> (bool) ($row['topic_type'] == POST_ANNOUNCE),
-					'S_POST_GLOBAL'			=> (bool) ($row['topic_type'] == POST_GLOBAL),
-					'S_POST_STICKY'			=> (bool) ($row['topic_type'] == POST_STICKY),
+					'S_POST_ANNOUNCE'		=> (bool) ($row['topic_type'] == POST_ANNOUNCE),	
+					'S_POST_GLOBAL'			=> (bool) ($row['topic_type'] == POST_GLOBAL),	
+					'S_POST_STICKY'			=> (bool) ($row['topic_type'] == POST_STICKY),	
 					'S_TOPIC_LOCKED'		=> (bool) ($row['topic_status'] == ITEM_LOCKED),
 
 					'U_NEWEST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;view=unread') . '#unread',
@@ -376,6 +375,35 @@ class similar_topics
 		// Strip quotes, ampersands
 		$text = str_replace(array('&quot;', '&amp;'), '', $text);
 
+		// UTF Emojis
+		$regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
+		$text = preg_replace($regex_emoticons, '', $text);
+
+		// Match Miscellaneous Symbols and Pictographs
+		$regex_symbols = '/[\x{1F300}-\x{1F5FF}]/u';
+		$text = preg_replace($regex_symbols, '', $text);
+
+		// Match Transport And Map Symbols
+		$regex_transport = '/[\x{1F680}-\x{1F6FF}]/u';
+		$text = preg_replace($regex_transport, '', $text);
+
+		// Match Miscellaneous Symbols
+		$regex_misc = '/[\x{2600}-\x{26FF}]/u';
+		$text = preg_replace($regex_misc, '', $text);
+
+		// Match Dingbats
+		$regex_dingbats = '/[\x{2700}-\x{27BF}]/u';
+		$text = preg_replace($regex_dingbats, '', $text);
+
+		$regex_bbemoji = '(:([-+_a-z0-9]+):(?!\\w|[^<>]*(?=>|</code>)))';
+		$matches = [];
+		preg_match_all($regex_bbemoji, $text, $matches);
+		foreach ($matches[0] as $emoji) {
+			$text = str_replace($emoji, '', $text);
+		}
+
+		$text = trim($text);
+
 		if (!$this->english_lang() || $this->get_ignore_words())
 		{
 			$text = $this->strip_stop_words($text);
@@ -399,10 +427,17 @@ class similar_topics
 		// in either the core or the extension (deprecated from core)
 		if (!$this->english_lang())
 		{
-			if (file_exists($search_ignore_words = "{$this->user->lang_path}{$this->user->lang_name}/search_ignore_words.{$this->php_ext}") ||
-				file_exists($search_ignore_words = "{$this->root_path}ext/vse/similartopics/language/{$this->user->lang_name}/search_ignore_words.{$this->php_ext}"))
+			$finder = $this->extension_manager->get_finder();
+			$search_ignore_words = $finder
+				->set_extensions(array('vse/similartopics'))
+				->prefix('search_ignore_words')
+				->suffix(".{$this->php_ext}")
+				->extension_directory("/language/{$this->user->lang_name}")
+				->core_path("language/{$this->user->lang_name}/")
+				->get_files();
+			if (current($search_ignore_words))
 			{
-				include($search_ignore_words);
+				include current($search_ignore_words);
 			}
 		}
 
@@ -465,11 +500,13 @@ class similar_topics
 	{
 		$key = 'similar_topics_words';
 
-		if ($this->ignore_words === null && (($this->ignore_words = $this->cache->get("_$key")) === false))
+		$cache = $this->cache->get_driver();
+
+		if ($this->ignore_words === null && (($this->ignore_words = $cache->get("_$key")) === false))
 		{
 			$this->ignore_words = $this->config_text->get($key);
 
-			$this->cache->put("_$key", $this->ignore_words);
+			$cache->put("_$key", $this->ignore_words);
 		}
 
 		return $this->ignore_words;
