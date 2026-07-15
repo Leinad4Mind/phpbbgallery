@@ -1,16 +1,16 @@
 <?php
 /*
-* @name calendar_controller.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use \canidev\core\json_response;
 
 /**
 * Main controller
@@ -30,7 +30,6 @@ class calendar_controller implements main_interface
 	protected $helper;
 	protected $lang;
 	protected $log;
-	protected $parser;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -46,19 +45,28 @@ class calendar_controller implements main_interface
 	*
 	* @param \phpbb\auth\auth 						$auth				Authentication object
 	* @param \phpbb\config\config 					$config				Config Object
+	* @param ContainerInterface 					$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface		$db					DB Object
 	* @param \phpbb\event\dispatcher_interface		$phpbb_dispatcher	Event dispatcher
 	* @param \canidev\blockgets\libraries\helper	$helper       		Blockgets helper object
-	* @param \canidev\blockgets\libraries\language	$language			Blockgets language Object
+	* @param \phpbb\language\language				$language			Blockgets language Object
 	* @param \phpbb\log\log                       	$log				Log Object
-	* @param \canidev\blockgets\libraries\parser	$parser				Blockgets TextParser Object
 	* @param \phpbb\request\request 				$request			Request object
-	* @param \phpbb\template\template				$template     		Template object
 	* @param \phpbb\user							$user				User object
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\language $language, \phpbb\log\log $log, \canidev\blockgets\libraries\parser $parser, \phpbb\request\request $request, \canidev\blockgets\libraries\template $template, \phpbb\user $user)
+	public function __construct(
+		\phpbb\auth\auth $auth,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\canidev\blockgets\libraries\helper $helper,
+		\phpbb\language\language $language,
+		\phpbb\log\log $log,
+		\phpbb\request\request $request,
+		\phpbb\user $user)
 	{
 		$this->auth			= $auth;
 		$this->config		= $config;
@@ -67,9 +75,8 @@ class calendar_controller implements main_interface
 		$this->helper 		= $helper;
 		$this->lang			= $language;
 		$this->log			= $log;
-		$this->parser		= $parser;
 		$this->request		= $request;
-		$this->template 	= $template;
+		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 
 		$time = $this->user->create_datetime();
@@ -89,17 +96,25 @@ class calendar_controller implements main_interface
 		$time		= $this->request->variable('t', '');
 		$action		= $this->request->variable('action', '');
 		$event_id	= $this->request->variable('id', 0);
-		$flags 		= OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES;
+		$flags 		= OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES | BLG_FLAG_HTML;
+
+		$this->set_options(array(
+			'birthdays'	=> (bool)$this->config['blg_calendar_birthdays'],
+		));
+
+		$this->template->set_filenames(array(
+			'calendar'	=> '@canidev_blockgets/calendar_body.html'
+		));
 		
 		switch($action)
 		{
 			case 'delete_event':
 				if(!$this->auth->acl_get('u_blockgets_events'))
 				{
-					$this->helper->trigger_error(array(
-						'message'	=> 'NOT_AUTHORISED',
-						'status'	=> BLG_JSON_ERROR
-					), true);
+					$this->helper->json->send(array(
+						'message'	=> $this->lang->lang('NOT_AUTHORISED'),
+						'status'	=> json_response::JSON_STATUS_ERROR
+					));
 				}
 
 				// Get event data for log
@@ -128,9 +143,54 @@ class calendar_controller implements main_interface
 					);
 				}
 				
-				$this->helper->trigger_error(array(
-					'message'	=> 'EVENT_REMOVED',
-				), true);
+				$this->helper->json->send(array(
+					'message'	=> $this->lang->lang('EVENT_REMOVED'),
+				));
+			break;
+
+			case 'load_birthday_list':
+				$time = $this->request->variable('time', 0);
+
+				$sql_where = 'u.user_birthday ' . $this->db->sql_like_expression(sprintf('%2d-%2d-', date('j', $time), date('n', $time)) . $this->db->get_any_char());
+
+				$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_birthday,
+					u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height
+					FROM ' . USERS_TABLE . ' u
+					LEFT JOIN ' . BANLIST_TABLE . " b ON (u.user_id = b.ban_userid)
+					WHERE (b.ban_id IS NULL OR b.ban_exclude = 1)
+					AND ($sql_where)
+					AND u.user_posts > 100
+					AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')
+					ORDER BY username_clean ASC';
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
+				{
+					list($bday, $bmonth, $byear) = explode('-', str_replace(' ', '', $row['user_birthday']));
+
+					$age = $this->now['year'] - (int)$byear;
+
+					$user_avatar = phpbb_get_user_avatar(array(
+						'avatar'		=> $row['user_avatar'],
+						'avatar_type'	=> $row['user_avatar_type'],
+						'avatar_width'	=> $row['user_avatar_width'], 
+						'avatar_height'	=> $row['user_avatar_height'],
+					));
+
+					$this->template->assign_block_vars('user', array(
+						'AGE'			=> $age,
+						'AVATAR'		=> $user_avatar,
+						'USERNAME_FULL'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+					));
+				}
+				$this->db->sql_freeresult($result);
+
+				$this->template->assign_vars(array(
+					'IN_BIRTHDAY_LIST'	=> true,
+				));
+
+				$this->helper->json
+					->add_html($this->template->assign_display('calendar'))
+					->send();
 			break;
 
 			case 'load_event':
@@ -144,25 +204,30 @@ class calendar_controller implements main_interface
 				
 				if(!$event_row)
 				{
-					$this->helper->trigger_error(array(
-						'message'	=> 'EVENT_ERROR',
-						'status'	=> BLG_JSON_ERROR,
-					), true);
+					$this->helper->json->send(array(
+						'message'	=> $this->lang->lang('EVENT_ERROR'),
+						'status'	=> json_response::JSON_STATUS_ERROR,
+					));
 				}
+
+				$event_content = generate_text_for_display($event_row['data_content'], $event_row['bbcode_uid'], $event_row['bbcode_bitfield'], $flags);
+				$event_content = \canidev\core\tools::fix_smilies_path($event_content);
 
 				$this->template->assign_vars(array(
 					'CAN_MANAGE_EVENT'	=> $this->can_manage_event($event_row),
-					'S_IN_EVENT'		=> true,
+					'IN_EVENT'			=> true,
 					'S_EVENT_TITLE'		=> $event_row['data_title'],
-					'S_EVENT_CONTENT'	=> $this->parser->generate_text_for_display($event_row['data_content'], $event_row['bbcode_uid'], $event_row['bbcode_bitfield'], $flags),
+					'S_EVENT_CONTENT'	=> $event_content,
 				
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields(array(
 						'event_id'		=> $event_id,
 						'event_time'	=> $event_row['data_time'],
 					)),
 				));
-				
-				$this->helper->trigger_error(array(), 'calendar_body.html');
+
+				$this->helper->json
+					->add_html($this->template->assign_display('calendar'))
+					->send();
 			break;
 			
 			default:
@@ -186,21 +251,20 @@ class calendar_controller implements main_interface
 					'U_TODAY'		=> $this->helper->route('canidev_blockgets_calendar_controller'),
 				));
 				
-				$this->template->append_asset('css', array('', '@canidev_blockgets/../theme/calendar_print.css', 'print'));
+				$this->template->append_asset('css', array(
+					'content'	=> '@canidev_blockgets/../theme/calendar_print.css',
+					'media' 	=> 'print',
+				));
 			break;
 		}
 
-		page_header($this->lang->get('CALENDAR'));
-
-		$this->template->set_filenames(array(
-			'body'	=> 'calendar_body.html',
-		));
+		page_header($this->lang->lang('CALENDAR'));
 
 		page_footer(true, false, false);
 
 		$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : array();
 
-		return new Response($this->template->assign_display('body'), 200, $headers);
+		return new Response($this->template->assign_display('calendar'), 200, $headers);
 	}
 	
 	/*
@@ -218,7 +282,7 @@ class calendar_controller implements main_interface
 		));
 
 		$this->template->assign_block_vars('calendar', array(
-			'S_MONTH'				=> $this->lang->get(array('datetime', $month_data['name'])) . ' ' . $month_data['year'],
+			'S_MONTH'				=> $this->lang->lang(array('datetime', $month_data['name'])) . ' ' . $month_data['year'],
 
 			'S_HIDDEN_FIELDS'		=> build_hidden_fields(array(
 				'time_now'	=> $this->time,
@@ -242,7 +306,7 @@ class calendar_controller implements main_interface
 					$d = $d-7;
 				}
 
-				$day = $this->lang->get(array('datetime', $day_names[$d]));
+				$day = $this->lang->lang(array('datetime', $day_names[$d]));
 			}
 			else if(isset($days[0]))
 			{
@@ -258,6 +322,7 @@ class calendar_controller implements main_interface
 				'IS_HEADER'		=> $in_header,
 				'IS_TODAY'		=> (date('j-n-Y', $this->now[0]) == date('j-n-Y', $day_time)) ? true : false,
 				'S_EVENT'		=> (isset($this->events[$day_time]) ? 1 : 0),
+				'S_COLOR'		=> (isset($this->events[$day_time]) && sizeof($this->events[$day_time]) == 1) ? $this->events[$day_time][0]['color'] : '',
 				'S_DATA'		=> $day_time,
 				'S_DAY'			=> $day,
 				'S_DAY_SHORT'	=> utf8_substr($day, 0, 3),
@@ -266,15 +331,7 @@ class calendar_controller implements main_interface
 			
 			if(isset($this->events[$day_time]))
 			{
-				foreach($this->events[$day_time] as $event)
-				{
-					$this->template->assign_block_vars('calendar.days.event', array(
-						'S_ID'		=> (isset($event['id']) ? $event['id'] : 0),
-						'S_TITLE'	=> $event['title'],
-						'S_TYPE'	=> $event['type'],
-						'S_CONTENT'	=> $event['content'],
-					));
-				}
+				$this->events_to_template('calendar.days.event', $this->events[$day_time]);
 			}
 
 			if(isset($days[0]) && $i == 6)
@@ -325,16 +382,16 @@ class calendar_controller implements main_interface
 				FROM ' . BLG_DATA_TABLE . '
 				WHERE data_type = ' . BLG_DATA_EVENT . "
 				AND $sql_where";
-
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
 			{
-				if(!$this->helper->group_auth($row['data_settings']))
+				$settings 	= unserialize($row['data_settings']);
+				$c_time 	= $row['data_time'];
+
+				if(!$this->helper->group_auth($settings['groups']))
 				{
 					continue;
 				}
-				
-				$c_time = $row['data_time'];
 
 				if(!isset($events[$c_time]))
 				{
@@ -345,7 +402,8 @@ class calendar_controller implements main_interface
 					'id'		=> $row['data_id'],
 					'title'		=> $row['data_title'],
 					'type'		=> 'event',
-					'content'	=> $row['data_content']
+					'content'	=> $row['data_content'],
+					'color'		=> $settings['color'],
 				);
 			}
 			$this->db->sql_freeresult($result);
@@ -358,16 +416,23 @@ class calendar_controller implements main_interface
 			$sql_where = '';
 			$t = $start_time;
 
-			for($i = 0; $i < $this->options['months']; $i++)
+			if($timestamp)
 			{
-				if($i > 0)
+				$sql_where = 'u.user_birthday ' . $this->db->sql_like_expression(sprintf('%2d-%2d-', date('j', $t), date('n', $t)) . $this->db->get_any_char());
+			}
+			else
+			{
+				for($i = 0; $i < $this->options['months']; $i++)
 				{
-					$t = strtotime("+{$i} month", $start_time);
+					if($i > 0)
+					{
+						$t = strtotime("+{$i} month", $start_time);
+					}
+
+					$month_years[date('n', $t)] = $t;
+
+					$sql_where .= (($sql_where) ? ' OR ' : '') . 'u.user_birthday ' . $this->db->sql_like_expression($this->db->get_any_char() . sprintf('-%2d-', date('n', $t)) . $this->db->get_any_char());
 				}
-
-				$month_years[date('n', $t)] = $t;
-
-				$sql_where .= (($sql_where) ? ' OR ' : '') . "u.user_birthday LIKE '%-" . sprintf('%2d', date('n', $t)) . "-%'";
 			}
 
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_birthday
@@ -383,7 +448,7 @@ class calendar_controller implements main_interface
 				list($bday, $bmonth, $byear) = explode('-', str_replace(' ', '', $row['user_birthday']));
 
 				$t_year = (isset($month_years[$bmonth]) ? $month_years[$bmonth] : $this->time);
-				$c_time = strtotime(date('Y', $t_year) . "/$bmonth/$bday");
+				$c_time = ($timestamp) ? ($timestamp) : strtotime(date('Y', $t_year) . "/$bmonth/$bday");
 				$age = $this->now['year'] - (int)$byear;
 
 				if(!isset($birthday_ary[$c_time]))
@@ -393,7 +458,7 @@ class calendar_controller implements main_interface
 
 				if($age)
 				{
-					$birthday_ary[$c_time][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) . " ($age)";
+					$birthday_ary[$c_time][] = get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']) . " ($age)";
 				}
 			}
 			$this->db->sql_freeresult($result);
@@ -401,14 +466,15 @@ class calendar_controller implements main_interface
 			foreach($birthday_ary as $e_time => $e_data)
 			{
 				$events[$e_time][] = array(
-					'title'		=> implode(', ', $e_data),
+					'title'		=> '',
 					'type'		=> 'birthday',
-					'content'	=> '',
+					'content'	=> $e_data,
+					'color'		=> '',
 				);
 			}
 		}
 
-		/**
+		/*
 		* @event calendar.load_events_after
 		* @var array	events			Array with event's data
 		* @var int		start_time		Timestamp of range start
@@ -480,6 +546,47 @@ class calendar_controller implements main_interface
 				'year'			=> $data['year'],
 				'timestamp'		=> $time,
 			);
+		}
+	}
+
+	public function events_to_template($templateKey, $event_ary)
+	{
+		foreach($event_ary as $event)
+		{
+			$attr = array(
+				'class'			=> 'blg-calendar-event',
+				'data-color'	=> $event['color'],
+				'data-event' 	=> (isset($event['id']) ? $event['id'] : 0),
+			);
+
+			if($event['type'] == 'birthday')
+			{
+				$attr['class'] .= ' blg-event-birthday';
+
+				if(sizeof($event['content']) > 2)
+				{
+					$title_ary = array_splice($event['content'], 0, 2);
+					
+					$event['title'] = $this->lang->lang(
+						'CALENDAR_BIRTHDAY_TITLE',
+						implode(', ', $title_ary),
+						sizeof($event['content'])
+					);
+				}
+				else
+				{
+					$event['title'] = implode(', ', $event['content']);
+				}
+
+				$event['content'] = '';
+			}
+
+			$this->template->assign_block_vars($templateKey, array(
+				'S_ATTR'	=> \canidev\core\tools::array_to_attr($attr),
+				'S_TITLE'	=> $event['title'],
+				'S_TYPE'	=> $event['type'],
+				'S_CONTENT'	=> $event['content'],
+			));
 		}
 	}
 	

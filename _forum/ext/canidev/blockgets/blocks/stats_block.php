@@ -1,24 +1,17 @@
 <?php
 /*
-* @name stats_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class stats_block extends base
 {
-	static $icon = 'blg-icon-bar-chart';
+	static $icon = 'fa-bar-chart';
 
 	public function init()
 	{
@@ -83,12 +76,13 @@ class stats_block extends base
 			'TOTAL_USERS'		=> $total_users,
 		);
 
-		/**
+		/*
 		* @event block.stats_rows
 		* @var array	stats	The output data
+		* @var	array	data	Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('stats');
+		$vars = array('stats', 'data');
 		extract($this->dispatcher->trigger_event('block.stats_rows', compact($vars)));
 
 		// Delete the array in the template if exists, prevent errors between blocks
@@ -100,7 +94,7 @@ class stats_block extends base
 			$this->template->assign_block_vars('stat', array(
 				'IS_CAT'	=> true,
 				'S_SEP'		=> $stat['sep'],
-				'S_LEGEND'	=> (isset($stat['legend']) ? $this->lang->get($stat['legend']) : ''),
+				'S_LEGEND'	=> (isset($stat['legend']) ? $this->lang->lang($stat['legend']) : ''),
 			));
 
 			foreach($stat as $lang => $value)
@@ -113,7 +107,7 @@ class stats_block extends base
 				$this->template->assign_block_vars('stat', array(
 					'IS_CAT'	=> false,
 
-					'S_NAME'	=> $this->lang->get("ST_$lang"),
+					'S_NAME'	=> $this->lang->lang("ST_$lang"),
 					'S_VALUE'	=> $value,
 				));
 			}

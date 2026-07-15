@@ -5,135 +5,98 @@ services:
     canidev.blockgets.listener:
         class: canidev\blockgets\event\listener
         arguments:
-            - @canidev.blockgets.core
-            - @config
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.language
-            - @request
-            - @user
-            - %core.php_ext%
+            - '@canidev.blockgets.core'
+            - '@config'
+            - '@service_container'
+            - '@canidev.blockgets.helper'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
         tags:
             - { name: event.listener }
+
+    canidev.blockgets.routing.loader:
+        class: canidev\blockgets\routing\page_loader
+        arguments:
+            - '@canidev.blockgets.core'
+        tags:
+            - { name: routing.loader }
 
     canidev.blockgets.core:
         class: canidev\blockgets\libraries\blockgets
         arguments:
-            - @auth
-            - @cache.driver
-            - @config
-            - @service_container
-            - @dispatcher
-            - @dbal.conn
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.json
-            - @canidev.blockgets.language
-            - @request
-            - @canidev.blockgets.template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dispatcher'
+            - '@dbal.conn'
+            - '@canidev.blockgets.helper'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         
     canidev.blockgets.editor:
         class: canidev\blockgets\libraries\editor
         arguments:
-            - @auth
-            - @config
-            - @dbal.conn
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.helper.admin
-            - @canidev.blockgets.json
-            - @canidev.blockgets.language
-            - @canidev.blockgets.parser
-            - @request
-            - @canidev.blockgets.template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            
-    canidev.blockgets.json:
-        class: canidev\blockgets\libraries\json_response
-
-    canidev.blockgets.media:
-        class: canidev\blockgets\libraries\media
-        arguments:
-            - @config
-            - @service_container
-            - @dbal.conn
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.json
-            - @canidev.blockgets.language
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@canidev.blockgets.helper'
+            - '@canidev.blockgets.helper.admin'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         
     canidev.blockgets.admin.links:
         class: canidev\blockgets\libraries\links
         arguments:
-            - @cache.driver
-            - @dbal.conn
-            - @dispatcher
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.language
-            - @request
-            - @template
-            - @user
-            - @canidev.blockgets.json
-            
-    canidev.blockgets.language:
-        class: canidev\blockgets\libraries\language
-        arguments:
-            - @service_container
-            - @user
-            
-    canidev.blockgets.parser:
-        class: canidev\blockgets\libraries\parser
-        arguments:
-            - @dispatcher
-            - %core.root_path%
-            - %core.php_ext%
-            
-    canidev.blockgets.template:
-        class: canidev\blockgets\libraries\template
-        arguments:
-            - @config
-            - @filesystem
-            - @path_helper
-            - @template
-
-    canidev.blockgets.compatibility.manager:
-        class: canidev\blockgets\compatibility\manager
-        arguments:
-            - @cache.driver
-            - @dispatcher
-            - @ext.manager
-            - @canidev.blockgets.helper
-            - %core.root_path%
-            - %core.php_ext%
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@canidev.blockgets.helper'
+            - '@canidev.blockgets.helper.admin'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
             
     canidev.blockgets.helper:
         class: canidev\blockgets\libraries\helper
         arguments:
-            - @auth
-            - @config
-            - @service_container
-            - @dbal.conn
-            - @filesystem
-            - @canidev.blockgets.json
-            - @canidev.blockgets.language
-            - @path_helper
-            - @request
-            - @symfony_request
-            - @template
-            - @user
+            - '@auth'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@filesystem'
+            - '@language'
+            - '@path_helper'
+            - '@request'
+            - '@symfony_request'
+            - '@template'
+            - '@user'
             
     canidev.blockgets.helper.admin:
         class: canidev\blockgets\libraries\helper_acp
         arguments:
-            - @dbal.conn
-            - @canidev.blockgets.helper
-            - @canidev.blockgets.language
-            - @request
-            - @template
-            - @user
+            - '@service_container'
+            - '@dbal.conn'
+            - '@canidev.blockgets.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+
+    canidev.blockgets.media_events:
+        class: canidev\blockgets\libraries\media_events
+        arguments:
+            - '@dbal.conn'
+            - '@language'
+            - '@user'

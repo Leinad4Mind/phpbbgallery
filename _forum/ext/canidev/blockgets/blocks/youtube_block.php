@@ -1,30 +1,24 @@
 <?php
 /*
-* @name youtube_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class youtube_block extends base
 {
-	static $icon = 'blg-icon-youtube-play';
+	static $icon = 'fa-youtube-play';
 
 	private $api_url	= 'https://www.googleapis.com/youtube/v3/';
 	
 	public $regexp = array(
-		'video'		=> '#^http[s]?:\/\/[a-z]+\.youtube.com\/watch\?[^v\=]?v\=([a-zA-Z0-9\-_]+).*$#',
-		'channel'	=> '#^http[s]?:\/\/[a-z]+\.youtube.com\/(user|channel)\/([a-zA-Z0-9\-_]+).*$#',
+		'video'		=> '#^https?:\/\/[a-z]+\.youtube.com\/watch\?[^v\=]?v\=([a-zA-Z0-9\-_]+).*$#',
+		'channel'	=> '#^https?:\/\/[a-z]+\.youtube.com\/(user|channel)\/([a-zA-Z0-9\-_]+).*$#',
+		'playlist'	=> '#^https?:\/\/[a-z]+\.youtube.com\/playlist\?[^list\=]?list\=([a-zA-Z0-9\-_]+).*$#',
 	);
 
 	public function init($method = '')
@@ -50,7 +44,7 @@ class youtube_block extends base
 
 			list($v_width, $v_height) = explode('x', $data['video_size'], 2);
 
-			$mode		= ($this->data['autofit'] && $data['display_mode'] == 'full') ? 'simple' : $data['display_mode'];
+			$mode		= ($this->view_is_small() && $data['display_mode'] == 'full') ? 'simple' : $data['display_mode'];
 			$url_ary	= array();
 
 			foreach($data['list'] as $row)
@@ -93,21 +87,22 @@ class youtube_block extends base
 					'S_TITLE'			=> $row['snippet']['title'],
 					'S_THUMBNAIL'		=> 'https://i.ytimg.com/vi/' . $row['id'] . '/default.jpg',
 					'S_TIME'			=> $time,
-					'S_VIEWS'			=> $this->lang->get('YT_VIEWS', $row['statistics']['viewCount']),
-					'S_DESCRIPTION'		=> $this->helper->html_truncate($row['snippet']['description'], $data['text_limit'], '...'),
+					'S_VIEWS'			=> $this->lang->lang('YT_VIEWS', $row['statistics']['viewCount']),
+					'S_DESCRIPTION'		=> \canidev\core\tools::html_truncate($row['snippet']['description'], $data['text_limit'], '...'),
 					'S_WIDTH'			=> $v_width,
 					'S_HEIGHT'			=> $v_height,
 					'S_HREF'			=> 'https://www.youtube.com/watch?v=' . $row['id'],
 					'S_MOVIE'			=> 'https://www.youtube.com/embed/' . $row['id'] . (($i == 0 && $data['video_autoplay']) ? '?autoplay=1' : ''),
 				);
 				
-				/**
+				/*
 				* @event block.youtube_row
 				* @var array	yt_item		The output array
 				* @var array	row			The original data
+				* @var	array	data		Block Configuration
 				* @since 2.0.0
 				*/
-				$vars = array('yt_item', 'row');
+				$vars = array('yt_item', 'row', 'data');
 				extract($this->dispatcher->trigger_event('block.youtube_row', compact($vars)));
 				
 				$this->template->assign_block_vars('ytitem', $yt_item);
@@ -119,14 +114,13 @@ class youtube_block extends base
 			
 			return true;
 		}
-		
-		$extra_params = array(
-			'jblgm'		=> $this->data['block_id'],
-			'm'			=> 'load'
-		);
 
-		$this->template->assign_vars(array(
-			'S_EXTRA' => http_build_query($extra_params, '', '&'),
+		$this->template->assign_json_var('S_OPTIONS', array(
+			'loadOnInit' 	=> true,
+			'requestData'	=> array(
+				'jblgm'	=> $this->data['block_id'],
+				'm'		=> 'load',
+			)
 		));
 
 		unset($data);
@@ -159,12 +153,12 @@ class youtube_block extends base
 		}
 
 		$this->display_vars = array(
-			'display_mode'		=> array('lang' => 'YT_DISPLAY_MODE',	'type' => 'select',		'method' => 'helper',	'params' => array('make_select', $display_modes, '{CONFIG_VALUE}'),	'default' => 'full'),
+			'display_mode'		=> array('lang' => 'YT_DISPLAY_MODE',	'type' => 'select',		'method' => 'helper',	'params' => array('make_select', $display_modes, false, '{CONFIG_VALUE}'),	'default' => 'full'),
 			'random_display'	=> array('lang' => 'YT_RANDOM_DISPLAY',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
 			'video_autoplay'	=> array('lang' => 'YT_AUTOPLAY',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
-			'result_limit'		=> array('lang' => 'YT_RESULT_LIMIT',	'validate' => 'int',	'type' => 'text:4:3',		'default' => 5),
-			'text_limit'		=> array('lang' => 'YT_TEXT_LIMIT',		'type' => 'text:5:4',	'default' => 180),
-			'video_size'		=> array('lang' => 'YT_VIDEO_SIZE',	 	'type' => 'select',		'method' => 'helper',	'params' => array('make_select', $sizes, '{CONFIG_VALUE}'),	'default' => '300x255'),
+			'result_limit'		=> array('lang' => 'YT_RESULT_LIMIT',	'validate' => 'int',	'type' => 'number',			'default' => 5),
+			'text_limit'		=> array('lang' => 'YT_TEXT_LIMIT',		'validate' => 'int',	'type' => 'number',			'default' => 180),
+			'video_size'		=> array('lang' => 'YT_VIDEO_SIZE',	 	'type' => 'select',		'method' => 'helper',	'params' => array('make_select', $sizes, false, '{CONFIG_VALUE}'),	'default' => '300x255'),
 		);
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
@@ -205,16 +199,20 @@ class youtube_block extends base
 				$row['image'] = $data['snippet']['thumbnails']['default']['url'];
 			}
 		}
+		else if(preg_match($this->regexp['playlist'], $row['url'], $match))
+		{
+			$row['image'] = '';
+		}
 		else
 		{
 			$error = $event['error'];
-			$error[] = $this->lang->get('URL_INVALID');
+			$error[] = $this->lang->lang('URL_INVALID');
 			$event['error'] = $error;
 		}
 		
 		if(empty($row['image']))
 		{
-			$row['image'] = $this->helper->build_image_filename('./youtube-no-image.png');
+			$row['image'] = './youtube-no-image.png';
 		}
 		
 		$event['item_row'] = $row;
@@ -238,7 +236,11 @@ class youtube_block extends base
 				else if(preg_match($this->regexp['channel'], $url, $match)) // Is Channel
 				{
 					$channel_id = ($match[1] == 'user') ? $this->get_channel_by_user($match[2]) : $match[2];
-					$result		= array_merge($result, $this->get_channel_videos($channel_id, 5));
+					$result		= array_merge($result, $this->get_channel_videos($channel_id, (int)$this->data['result_limit']));
+				}
+				else if(preg_match($this->regexp['playlist'], $url, $match)) // Is Playlist
+				{
+					$result	= array_merge($result, $this->get_playlist_videos($match[1], (int)$this->data['result_limit']));
 				}
 			}
 			
@@ -348,6 +350,45 @@ class youtube_block extends base
 		$data = $this->get('channels', $params);
 
 		return (isset($data['items'][0]) ? $data['items'][0]['id'] : false);
+	}
+
+	private function get_playlist_videos($playlist_id, $limit)
+	{
+		$params = array(
+			'playlistId'	=> $playlist_id,
+			'part'			=> 'contentDetails',
+			'maxResults'	=> 50,
+		);
+
+		$retries 	= 0;
+		$video_ary 	= array();
+		$data 		= $this->get('playlistItems', $params);
+
+		while(!empty($data['nextPageToken']) && $retries < 5)
+		{
+			$params['pageToken'] = $data['nextPageToken'];
+
+			$data = $this->get('playlistItems', $params);
+
+			$retries++;
+		}
+
+		if(isset($data['items']))
+		{
+			$data['items'] = array_reverse($data['items']);
+
+			for($i = 0; $i < $limit; $i++)
+			{
+				if(!isset($data['items'][$i]))
+				{
+					break;
+				}
+
+				$video_ary[] = $data['items'][$i]['contentDetails']['videoId'];
+			}
+		}
+
+		return $video_ary;
 	}
 	
 	private function get($mode, $params)

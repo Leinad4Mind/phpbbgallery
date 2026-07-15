@@ -1,7 +1,7 @@
-
-<!-- BEGIN blglink_bottom -->
-	<li class="no-bulletin rightside">
-		<!-- IF blglink_bottom.ICON --><span class="blg-icon {blglink_bottom.ICON}"></span> <!-- ENDIF -->
-		<a href="{blglink_bottom.HREF}" title="{blglink_bottom.TITLE}" role="menuitem">{blglink_bottom.TITLE}</a>
+{% for link in loops.blglink_bottom %}
+	<li class="rightside" data-skip-responsive="true">
+		<a href="{{ link.HREF }}" title="{{ link.TITLE }}" role="menuitem">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
+		</a>
 	</li>
-<!-- END blglink_bottom -->
+{% endfor %}

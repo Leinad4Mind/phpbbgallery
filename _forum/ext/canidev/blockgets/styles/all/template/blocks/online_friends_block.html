@@ -1,40 +1,38 @@
-
-<!-- IF S_ZEBRA -->
+{% if S_ZEBRA %}
 <script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#friends-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#friends-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
 // ]]>
 </script>
 
-<div id="friends-{BLOCK_ID}">
-	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_ONLINE}</a></h5>
+<div id="friends-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+	<h5><span class="cbb-helper-text">{L_FRIENDS_ONLINE}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
-		<!-- BEGIN friends_online -->
-			<li class="userrow">{friends_online.USERNAME_FULL}</li>
-		<!-- BEGINELSE -->
+		{% for member in friends_online %}
+			<li class="userrow">{{ member.USERNAME_FULL }}</li>
+		{% else %}
 			<li class="blg-align-center">{L_NO_FRIENDS_ONLINE}</li>
-		<!-- END friends_online -->
+		{% endfor %}
 		</ul>
 	</div>
 	
-	<h5 class="blg-helper-text"><a href="#">{L_FRIENDS_OFFLINE}</a></h5>
+	<h5><span class="cbb-helper-text">{L_FRIENDS_OFFLINE}</span></h5>
 	<div>
 		<ul class="blg-linear-list">
-		<!-- BEGIN friends_offline -->
-			<li class="userrow">{friends_offline.USERNAME_FULL}</li>
-		<!-- BEGINELSE -->
+		{% for member in friends_offline %}
+			<li class="userrow">{{ member.USERNAME_FULL }}</li>
+		{% else %}
 			<li class="blg-align-center">{L_NO_FRIENDS_OFFLINE}</li>
-		<!-- END friends_offline -->
+		{% endfor %}
 		</ul>
 	</div>
 </div>
-<!-- ELSE -->
+{% else %}
 <div class="blg-align-center">{L_NO_FRIENDS}</div>
-<!-- ENDIF -->
+{% endif %}

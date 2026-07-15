@@ -1,12 +1,11 @@
 <?php
-/** 
+/*
 * acp_blocks.php [Spanish [Es]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -26,7 +25,7 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Permitir colapsar el bloque',
-	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Habilita/deshabilita la posibilidad de que cada usuario pueda colapsar/desplegar este bloque.',
+	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Habilita/deshabilita la posibilidad de que cada usuario pueda colapsar/desplegar este bloque y define su estado inicial.',
 	'BLOCK_ENABLED'				=> 'Bloque activado',
 	'BLOCK_ENABLED_EXPLAIN'		=> 'Define si este bloque se mostrará o no en el foro.',
 	'BLOCK_CURRENT_ICON'			=> 'Icono del bloque',
@@ -41,7 +40,12 @@ $lang = array_merge($lang, array(
 
 	// Common tags
 	'ALL_FORUMS'				=> 'Todos los foros',
+	'COLLAPSE_HIDDEN'			=> 'Permitir (colapsado por defecto)',
+	'COLLAPSE_NONE'				=> 'No permitir',
+	'COLLAPSE_VISIBLE'			=> 'Permitir (desplegado por defecto)',
 	'CONFIG'					=> 'Configuración',
+	'DESIGN_FULL'				=> 'Completo',
+	'DESIGN_SIMPLE'				=> 'Simple',
 	'FORUMS'					=> 'Foros',
 	'FORUMS_EXPLAIN'			=> 'Foros que contienen los temas que se mostrarán. Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.',
 	'IGNORE_AUTH'				=> 'Ignorar permisos',
@@ -50,7 +54,14 @@ $lang = array_merge($lang, array(
 	'SHOW_PAGINATION'			=> 'Mostrar paginación',
 	'SHOW_PAGINATION_EXPLAIN'	=> 'Muestra la paginación para permitir ver mensajes más antiguos.',
 	'TITLE_LIMIT'				=> 'Límite de titulo',
-	'TITLE_LIMIT_EXPLAIN'		=> 'Máximo número de caracteres que se mostrarán en los títulos de los temas.',
+	'TITLE_LIMIT_EXPLAIN'		=> 'Máximo número de caracteres que se mostrarán en los títulos de los temas.<br />
+		<em>Establezca 0 para mostrar el título completo.</em>',
+	'TOPIC_DESIGN'				=> 'Diseño del bloque',
+	'TOPIC_DESIGN_EXPLAIN'		=> 'Determina como se mostrarán los temas en el bloque.<br />
+		<em><strong>Completo:</strong> Muestra toda la información siempre que sea posible.</em><br />
+		<em><strong>Simple:</strong> Muestra solo información básica.</em>',
+	'TOPIC_PARENT_SHOW'			=> 'Mostrar foro padre',
+	'TOPIC_PARENT_SHOW_EXPLAIN'	=> 'Si se habilita, se mostrará un enlace al foro de cada tema.',
 
 	// age_ranges_block
 	'AGE_START'					=> 'Edad mínima',
@@ -95,11 +106,10 @@ $lang = array_merge($lang, array(
 
 	// birthdays_block
 	'NEXT_BIRTHDAYS'			=> 'Pŕoximos cumpleaños',
-	'NEXT_BIRTHDAYS_EXPLAIN'	=> 'Mostrar los cumpleaños que se producirán en los próximos dias. Máximo 30 dias. Establézcalo en 0 para deshabilitarlo.',
+	'NEXT_BIRTHDAYS_EXPLAIN'	=> 'Mostrar los cumpleaños que se producirán en los próximos dias.<br />
+		<em>Máximo 30 dias. Establézcalo en 0 para deshabilitarlo.</em>',
 
 	// calendar_block
-	'CALENDAR_BIRTHDAYS'			=> 'Mostrar Cumpleaños',
-	'CALENDAR_BIRTHDAYS_EXPLAIN'	=> 'Si se habilita se marcarán y mostrarán los cumpleaños de los usuarios en el calendario, como si fueran eventos.',
 	'CALENDAR_EVENTS'				=> 'Mostrar eventos',
 	'CALENDAR_EVENTS_EXPLAIN'		=> 'Si se habilita, se marcarán y mostrarán los eventos en el calendario.',
 	'CALENDAR_MONTHS'				=> 'Meses a mostrar',
@@ -111,6 +121,18 @@ $lang = array_merge($lang, array(
 	'CONTACT_EMAIL'					=> 'Email de destino',
 	'CONTACT_HIDE_FIELDS'			=> 'Ocultar datos del usuario',
 	'CONTACT_HIDE_FIELDS_EXPLAIN'	=> 'Si se habilita, se ocultarán los campos "Nombre" y "Email" para los usuarios registrados y se usarán los datos de su perfil.',
+
+	// countdown block
+	'COUNTDOWN_COMPLETE_MSG'			=> 'Texto al completar',
+	'COUNTDOWN_COMPLETE_MSG_EXPLAIN'	=> 'Texto que se mostrará cuando el contador llegue a 0.',
+	'COUNTDOWN_TARGET'					=> 'Fecha límite',
+	'COUNTDOWN_TARGET_EXPLAIN'			=> 'Establece la fecha y hora en la que el contador llegará a 0.<br /><br />
+		<em><strong>Formatos válidos</strong>
+			<br />Año/Mes/Día
+			<br />Año/Mes/Día Hora:Minuto:Segundo
+		</em>',
+	'COUNTDOWN_RUNNING_MSG'				=> 'Texto de espera',
+	'COUNTDOWN_RUNNING_MSG_EXPLAIN'		=> 'Texto que se mostrará mientras el contador esté funcionando.',
 
 	// counter block
 	'COUNTER_LOCAL'				=> 'Contador local',
@@ -140,7 +162,6 @@ $lang = array_merge($lang, array(
 	'FORUMS_FORUM'		=> 'Foro a mostrar',
 	
 	// frame_block
-	'MIME_FLASH'		=> 'Archivo Flash',
 	'MIME_HTML'			=> 'Página Web',
 	'MIME_PDF'			=> 'Archivo PDF',
 	'MIME_PLAIN'		=> 'Archivo de texto plano',
@@ -155,35 +176,38 @@ $lang = array_merge($lang, array(
 	'FRAME_WIDTH_EXPLAIN'		=> 'Ancho del marco en píxeles. Establezca 0 para ajustar automáticamente.',
 	
 	// gallery_block
-	'GALLERY_CUSTOM'			=> 'Imágenes personalizadas',
-	'GALLERY_CUSTOM_EXPLAIN'	=> 'Especifique la lista que contiene las imágenes que se mostrarán.',
-	'GALLERY_DIRECTION'			=> 'Dirección de desplazamiento',
-	'GALLERY_FORUMS'			=> 'Foros',
-	'GALLERY_FORUMS_EXPLAIN'	=> 'Define los foros de los cuales se leerán los adjuntos. Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.',
-	'GALLERY_FPS'				=> 'Velocidad de desplazamiento',
-	'GALLERY_HEIGHT'			=> 'Alto de la galería',
-	'GALLERY_MANAGE'			=> 'Administrar galería',
-	'GALLERY_MARGIN'			=> 'Margen entre imágenes',
-	'GALLERY_POSTS'				=> 'Mensajes',
-	'GALLERY_POSTS_EXPLAIN'		=> 'IDs de los mensajes de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
-	'GALLERY_TOPICS'			=> 'Temas',
-	'GALLERY_TOPICS_EXPLAIN'	=> 'IDs de los temas de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
-	'GALLERY_TYPE'				=> 'Tipo de Galería',
-	'GALLERY_TYPE_EXPLAIN'		=> 'Define que datos (de los que están debajo) usará el bloque para mostrar las imágenes.',
-	'GALLERY_ZOOM'				=> 'Zoom',
-	'GALLERY_ZOOM_EXPLAIN'		=> 'Píxeles que se aumentarán al pasar el ratón por encima de la imagen.',
-
-	'GALLERY_TYPE_FORUMS'		=> 'Adjuntos en Foros',
-	'GALLERY_TYPE_TOPICS'		=> 'Adjuntos en Temas',
-	'GALLERY_TYPE_POSTS'		=> 'Adjuntos en Mensajes',
-	'GALLERY_TYPE_CUSTOM'		=> 'Imágenes personalizadas',
+	'GALLERY_CUSTOM'				=> 'Imágenes personalizadas',
+	'GALLERY_CUSTOM_EXPLAIN'		=> 'Especifique la lista que contiene las imágenes que se mostrarán.',
+	'GALLERY_DIRECTION'				=> 'Dirección de desplazamiento',
+	'GALLERY_FORUMS'				=> 'Foros',
+	'GALLERY_FORUMS_EXPLAIN'		=> 'Define los foros de los cuales se leerán los adjuntos. Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.',
+	'GALLERY_FPS'					=> 'Velocidad de desplazamiento',
+	'GALLERY_HEIGHT'				=> 'Alto de la galería',
+	'GALLERY_MANAGE'				=> 'Administrar galería',
+	'GALLERY_MARGIN'				=> 'Margen entre imágenes',
+	'GALLERY_MAX_NUMBER'			=> 'Número máximo de imágenes',
+	'GALLERY_MAX_NUMBER_EXPLAIN'	=> 'Adjuntos máximos que se leerán de los foros/temas/mensajes',
+	'GALLERY_POSTS'					=> 'Mensajes',
+	'GALLERY_POSTS_EXPLAIN'			=> 'IDs de los mensajes de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
+	'GALLERY_SOURCE'				=> 'Origen de las imágenes',
+	'GALLERY_SOURCE_EXPLAIN'		=> 'Define que tipo de imágenes se cargarán de los foros, temas o mensajes especificados.',
+	'GALLERY_TOPICS'				=> 'Temas',
+	'GALLERY_TOPICS_EXPLAIN'		=> 'IDs de los temas de los cuales se leerán los adjuntos, separados por comas. (Ej: 1,2,3).',
+	'GALLERY_ZOOM'					=> 'Zoom',
+	'GALLERY_ZOOM_EXPLAIN'			=> 'Píxeles que se aumentarán al pasar el ratón por encima de la imagen.',
+	
+	'GALLERY_SOURCE_ALL'			=> 'Todas',
+	'GALLERY_SOURCE_ATTACHMENTS'	=> 'Solo adjuntos',
+	'GALLERY_SOURCE_IMAGES'			=> 'Solo imágenes incrustadas',
 	
 	'IMG_TITLE'			=> 'Título de la imagen',
 	'IMG_URL'			=> 'Url de la imagen',
 	'IMG_URL_EXPLAIN'	=> 'Dirección de la imagen JPG, GIF o PNG. Ej:http://midominio.com/imagen.jpg',
 	
 	// google_translate_block
-	'GOOGLE_LANGS'		=> 'Idiomas a mostrar en el bloque',
+	'GOOGLE_LANGS'				=> 'Idiomas a mostrar en el bloque',
+	'GOOGLE_SHOW_NAMES'			=> 'Mostrar nombres',
+	'GOOGLE_SHOW_NAMES_EXPLAIN'	=> 'Si se habilita, se mostrará el nombre del idioma al lado de su bandera.',
 	
 	// latest_bots_block
 	'BOTS_NUMBER'				=> 'Bots a mostrar',
@@ -194,11 +218,16 @@ $lang = array_merge($lang, array(
 	'MEMBERS_NUMBER_EXPLAIN'	=> 'Numero máximo de usuarios que se mostrarán en el bloque.',
 	
 	// leaders_block
-	'LEADERS_GROUPS'			=> 'Grupos',
-	'LEADERS_GROUPS_EXPLAIN'	=> 'Grupos que se mostrarán en el bloque. Si no selecciona ninguno se mostrarán los grupos de Administradores y Moderadores.',
-	'LEADERS_MODE'				=> 'Modo de visualización',
-	'LEADERS_MODE_ACCORDION'	=> 'Acordeón',
-	'LEADERS_MODE_SIMPLE'		=> 'Lista Simple',
+	'LEADERS_ALL_GROUPS'			=> 'Mostrar usuarios en todos sus grupos',
+	'LEADERS_ALL_GROUPS_EXPLAIN'	=> 'Si se habilita, los usuarios se mostrarán en todos los grupos de los que sean miembros.
+		En caso contrario solo se mostrarán en su grupo por defecto.',
+	'LEADERS_GROUPS'				=> 'Grupos',
+	'LEADERS_GROUPS_EXPLAIN'		=> 'Grupos que se mostrarán en el bloque. Si no selecciona ninguno se mostrarán los grupos de Administradores y Moderadores.',
+	'LEADERS_MODE'					=> 'Modo de visualización',
+	'LEADERS_MODE_ACCORDION'		=> 'Acordeón',
+	'LEADERS_MODE_SIMPLE'			=> 'Lista Simple',
+	'LEADERS_ONLY_ONLINE'			=> 'Solo usuarios online',
+	'LEADERS_ONLY_ONLINE_EXPLAIN'	=> 'Si se habilita, solo se mostrarán los usuarios de los grupos seleccionados que estén conectados.',
 
 	// link_us_block
 	'US_BANNER'					=> 'Mini banner del enlace',
@@ -220,6 +249,8 @@ $lang = array_merge($lang, array(
 	'LOCATION_INCORRECT'		=> 'La posición introducida es incorrecta.',
 	'LOCATION_POSITION'			=> 'Posición',
 	'LOCATION_POSITION_EXPLAIN'	=> 'Define la latitud y longitud de la ubicación.',
+	'LOCATION_TEXT'				=> 'Contenido',
+	'LOCATION_TEXT_EXPLAIN'		=> 'Texto que se mostrará en el mapa, al hacer clic en el icono de la ubicación.<br /><em>BBcode está permitido.</em>',
 	'LOCATION_TITLE'			=> 'Título',
 	'MAP'						=> 'Mapa',
 	'MAP_CENTER'				=> 'Punto central',
@@ -277,7 +308,8 @@ $lang = array_merge($lang, array(
 
 	// player block
 	'PLAYER_AUTOPLAY'			=> 'Reproducción automática',
-	'PLAYER_AUTOPLAY_EXPLAIN'	=> 'Define si el reproductor comenzará automáticamente la reproducción de las pistas al cargar la página.',
+	'PLAYER_AUTOPLAY_EXPLAIN'	=> 'Define si el reproductor comenzará automáticamente la reproducción de las pistas al cargar la página.<br /><br />
+		<em><strong>Nota:</strong>Los navegadores limitan esta característica por lo que la reproducción no comenzará hasta que el usuario haga clic en cualquier parte de la página.</em>',
 	'PLAYER_PLAYLIST'			=> 'Mostrar lista de pistas',
 	'PLAYER_PLAYLIST_EXPLAIN'	=> 'Define si se mostrará la lista de pistas en el bloque.',
 	'PLAYER_TRACKLIST'			=> 'Lista de pistas',
@@ -302,14 +334,9 @@ $lang = array_merge($lang, array(
 	'NO_FORUMS'					=> 'No hay foros disponibles',
 	
 	// post_view_block
-	'PV_ITEM_ID'			=> 'ID del objecto',
-	'PV_ITEM_ID_EXPLAIN'	=> 'Especifique aquí el ID del foro, tema o mensaje que quiera mostrar. Este parámetro se usará dependiendo de la configuración establecida en la opción superior.',
-	'PV_MODE'				=> 'Modo de visualización',
-	'PV_MODE_CUSTOM'		=> 'Mensaje personalizado',
-	'PV_MODE_EXPLAIN'		=> 'Especifica que tipo de contenido se mostrará en el bloque.',
-	'PV_MODE_FORUM'			=> 'Último mensaje de un foro',
-	'PV_MODE_TOPIC_FIRST'	=> 'Primer mensaje de un tema',
-	'PV_MODE_TOPIC_LAST'	=> 'Último mensaje de un tema',
+	'PV_ITEM_URL'			=> 'URL de referencia',
+	'PV_ITEM_URL_EXPLAIN'	=> 'Especifique aquí la URL del foro, tema o mensaje que quiera mostrar.<br />
+		<em><strong>Nota:</strong> La url de un foro o tema mostrará su último mensaje.</em>',
 	
 	// quote_of_day_block
 	'QUOTE_AUTHOR'				=> 'Autor de la cita',
@@ -330,6 +357,8 @@ $lang = array_merge($lang, array(
 	// recent_topics_block
 	'RECENT_FORUMS'					=> 'Foros de temas',
 	'RECENT_FORUMS_EXPLAIN'			=> 'Foros que contienen los temas que se mostrarán. En caso de no seleccionar ninguno, se usarán todos los foros. Puede seleccionar tantos como quiera usando la tecla <em>Ctrl</em> de su teclado.',
+	'RECENT_SECTIONS'				=> 'Secciones',
+	'RECENT_SECTIONS_EXPLAIN'		=> 'Define las secciones que se mostrarán en el bloque y su orden.',
 	'RECENT_TOPIC_LIMIT'			=> 'Límite de temas',
 	'RECENT_TOPIC_LIMIT_EXPLAIN'	=> 'Máximo número de temas que se mostrarán en cada pestaña.',
 
@@ -382,11 +411,11 @@ $lang = array_merge($lang, array(
 	'TOP'			=> 'Superior',
 	
 	//share_block
-	'SHARE_COUNTER'			=> 'Mostrar contador',
-	'SHARE_COUNTER_EXPLAIN'	=> 'Muestra el contador de veces compartido en el lado derecho de los botones.',
-	'SHARE_URL'				=> 'URL de referencia',
-	'SHARE_URL_EXPLAIN'		=> 'Establece una url de referencia fija para los botones. Deje este campo en blanco para usar la página que se muestra.',
-	'SHARE_BUTTONS'			=> 'Botones a mostrar',
+	'SHARE_SHOW_NAMES'			=> 'Mostrar nombres',
+	'SHARE_SHOW_NAMES_EXPLAIN'	=> 'Si se habilita, se mostrará el nombre de la red social al lado de su icono.',
+	'SHARE_URL'					=> 'URL de referencia',
+	'SHARE_URL_EXPLAIN'			=> 'Establece una url de referencia fija para los botones. Deje este campo en blanco para usar la página que se muestra.',
+	'SHARE_BUTTONS'				=> 'Botones a mostrar',
 
 	// stats_block
 	'STATS_INLINE'			=> 'Mostrar datos en línea',
@@ -403,8 +432,6 @@ $lang = array_merge($lang, array(
 	// topic_index_block
 	'TINDEX_CHAR_SELECT'			=> 'Mostrar Índice',
 	'TINDEX_CHAR_SELECT_EXPLAIN'	=> 'Solo disponible si el método de orden está definido como <em>Título del tema</em>.',
-	'TINDEX_ONLY_TITLE'			=> 'Sólo título',
-	'TINDEX_ONLY_TITLE_EXPLAIN'	=> 'Si se habilita, solo se mostrará el título de los temas, por el contrario, se mostrará la información más relevante.',
 	'TINDEX_PER_PAGE'			=> 'Temas por página',
 	'TINDEX_PER_PAGE_EXPLAIN'	=> 'Número de temas que se mostrarán simultáneamente. Especifique 0 para deshabilitar la paginación.',
 	'TINDEX_SORT_MODE'			=> 'Ordenar por',
@@ -442,5 +469,5 @@ $lang = array_merge($lang, array(
 	'YT_VIDEO_SIZE'				=> 'Tamaño del reproductor',
 	'YT_VIDEO_TITLE'			=> 'Título',
 	'YT_VIDEO_URL'				=> 'Dirección',
-	'YT_VIDEO_URL_EXPLAIN'		=> 'Ej: <em>http://www.youtube.com/watch?v=gJ-qKJwxYDE</em>',
+	'YT_VIDEO_URL_EXPLAIN'		=> 'Ej: <em>https://www.youtube.com/watch?v=NHH_v0k7Gus</em>',
 ));

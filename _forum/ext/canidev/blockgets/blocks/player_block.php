@@ -1,24 +1,17 @@
 <?php
 /*
-* @name player_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class player_block extends base
 {
-	static $icon = 'blg-icon-music';
+	static $icon = 'fa-music';
 
 	public function init()
 	{
@@ -39,7 +32,7 @@ class player_block extends base
 	public function get_config()
 	{
 		$this->display_vars = array(
-			'autoplay'		=> array('lang' => 'PLAYER_AUTOPLAY',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
+			'autoplay'		=> array('lang' => 'PLAYER_AUTOPLAY',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 0),
 			'playlist'		=> array('lang' => 'PLAYER_PLAYLIST',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1),
 		);
 		

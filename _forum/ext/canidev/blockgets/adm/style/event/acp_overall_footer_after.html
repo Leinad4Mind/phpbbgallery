@@ -1,40 +1,19 @@
-
-<!-- IF BLG_IN_ADMIN -->
+{% if BLG_IN_ADMIN and CANIDEV_CORE_STARTED %}
 
 <!-- Begin cBB Blockgets -->
-<!-- BEGIN asset_js -->
-	<script type="text/javascript"<!-- IF asset_js.ID --> id="{asset_js.ID}"<!-- ENDIF --> src="{asset_js.DATA}"></script>
-<!-- END asset_js -->
-
-<!-- BEGIN asset_javascript -->
-	<script type="text/javascript"<!-- IF asset_javascript.ID --> id="{asset_javascript.ID}"<!-- ENDIF -->>
+	{% include '@canidev_core/event/acp_overall_footer_after.html' %}
+	
+	<script>
 	// <![CDATA[
-	{asset_javascript.DATA}
-	</script>
-	// ]]>
-<!-- END asset_javascript -->
-
-<script type="text/javascript">
-// <![CDATA[
-	jblockgets(function($) {
-		$.jblockgets.initialize({
-			noticeTimeout: '{BLG_NOTICE_TIMEOUT}',
-			<!-- IF BLG_DEBUG -->debugmode: true,<!-- ENDIF -->
+	(function($) {
+		cbbCore.initService('blockgets', {
+			noticeTimeout: '{{ BLG_NOTICE_TIMEOUT }}',
+			{% if BLG_DEBUG %}debugmode: true,{% endif %}
+			mode: 'acp'
 		});
-		
-	<!-- IF U_HELP and not U_BACK and not MESSAGE_TEXT -->
-		$('#content').help_icon('{LA_BLG_HELP}', '{U_HELP}');
-	<!-- ENDIF -->
-		
-		if(window._jBlg)
-		{
-			$.each(window._jBlg, function(key, value) {
-				value.call($);
-			});
-		}
-	});
-// ]]>
-</script>
+	})(jQuery);
+	// ]]>
+	</script>
 <!-- End cBB Blockgets -->
 
-<!-- ENDIF -->
+{% endif %}

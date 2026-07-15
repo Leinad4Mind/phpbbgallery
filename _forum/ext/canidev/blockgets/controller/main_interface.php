@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_interface.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;

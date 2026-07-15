@@ -1,48 +1,10 @@
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#share-{{ BLOCK_ID }}').blgShare({{ S_SHARE_PARAMS }});
+	});
+// ]]>
+</script>
 
-<div class="blg-align-center">
-
-<!-- IF S_GOOGLE_SHOW -->
-	<div class="share-button" style="{S_GOOGLE_STYLE}"> 
-		<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
-		{lang: '{S_SHARE_LANG}'}
-		</script>
-		<g:plusone {S_GOOGLE_SIZE} href="{U_SHARE_URL}"></g:plusone>
-	</div>
-<!-- ENDIF -->
-
-<!-- IF S_TWITTER_SHOW -->
-	<div class="share-button" style="{S_TWITTER_STYLE}">
-		<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
-		<a href="//twitter.com/share" class="twitter-share-button"
-			data-url="{U_SHARE_URL}"
-			data-lang="{S_SHARE_LANG}">Tweet</a>
-	</div>
-<!-- ENDIF -->
-
-<!-- IF S_FACEBOOK_SHOW -->
-	<!-- IF S_SHORT_MODE and S_FACEBOOK_SIZE == 'standard' -->
-	<script type="text/javascript">
-	// <![CDATA[
-		window._jBlg = window._jBlg || [];
-		window._jBlg.push(function() {
-			$('#facebook-object')
-				.css({width: '100%', height: 'auto'})
-				.children('object').css({ width: '100%', height: 30 });
-		});
-	// ]]>
-	</script>
-	<!-- ENDIF -->
-
-	<div id="facebook-object" class="share-button" style="{S_FACEBOOK_STYLE}">
-		<object type="text/html" style="{S_FACEBOOK_STYLE}" data="//www.facebook.com/plugins/like.php?href={U_SHARE_URL_ENCODED}&amp;send=false&amp;layout={S_FACEBOOK_SIZE}&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;locale={S_SHARE_LOCALE}"></object>
-	</div>
-<!-- ENDIF -->
-
-<!-- IF S_LINKEDIN_SHOW -->
-	<div class="share-button">
-		<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-		<script type="IN/Share" data-url="{U_SHARE_URL}" data-counter="{S_LINKEDIN_SIZE}"></script>
-	</div>
-<!-- ENDIF -->
-
-</div>
+<div id="share-{{ BLOCK_ID }}" class="blg-align-center"></div>

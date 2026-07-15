@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_controller.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;
@@ -34,7 +33,11 @@ class main_controller implements main_interface
 	*
 	* @access public
 	*/
-	public function __construct(\canidev\blockgets\libraries\blockgets $blockgets, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(
+		\canidev\blockgets\libraries\blockgets $blockgets,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\template\template $template,
+		\phpbb\user $user)
 	{
 		$this->blockgets	= $blockgets;
 		$this->db 			= $db;
@@ -72,7 +75,7 @@ class main_controller implements main_interface
 		page_header('');
 
 		$this->template->set_filenames(array(
-			'body'	=> 'custom_body.html',
+			'body'	=> '@canidev_blockgets/custom_body.html',
 		));
 
 		page_footer(true, false, false);

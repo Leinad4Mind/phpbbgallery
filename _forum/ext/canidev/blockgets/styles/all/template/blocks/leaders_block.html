@@ -1,46 +1,39 @@
-
-<!-- IF S_VIEW eq 'simple' -->
+{% if S_VIEW == 'simple' %}
 	<ul class="blg-linear-list">
-	<!-- BEGIN group_row -->
-		<!-- IF group_row.LEGEND -->
-		<!-- IF not group_row.S_FIRST_ROW --><li>&nbsp;</li><!-- ENDIF -->
-		<li class="menu-cat"><a href="{group_row.U_GROUP}" style="color: #{group_row.GROUP_COLOR};">{group_row.GROUP_NAME}</a></li>
-		<!-- ENDIF -->
-		<li class="userrow"><strong>{group_row.USERNAME_FULL}</strong></li>
-	<!-- END group_row -->
+	{% for group in group_row %}
+		<li class="menu-cat"><a href="{{ group.U_GROUP }}">{{ group.GROUP_NAME }}</a></li>
+		
+		{% for user in group.user %}
+			<li class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></li>
+		{% endfor %}
+	{% endfor %}
 	</ul>
 
-<!-- ELSE IF S_VIEW eq 'accordion' -->
+{% elseif S_VIEW == 'accordion' %}
 <script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#leader-groups-{BLOCK_ID}').accordion({
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#leader-groups-{{ BLOCK_ID }}').blgAccordion({
 			active		: 0,
 			collapsible : true
 		});
 	});
+});
 // ]]>
 </script>
 
-<div id="leader-groups-{BLOCK_ID}">
-<!-- BEGIN group_row -->
-	<!-- IF group_row.LEGEND -->
-	<!-- IF not group_row.S_FIRST_ROW -->
-		</table>
-	</div>
-	<!-- ENDIF -->
-	<h5><a href="#" style="color: #{group_row.GROUP_COLOR};">{group_row.GROUP_NAME}</a></h5>
+<div id="leader-groups-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+{% for group in group_row %}
+	<h5><a href="#">{{ group.GROUP_NAME }}</a></h5>
 	<div>
-		<table>
-	<!-- ELSE -->
-			<tr><td class="userrow"><strong>{group_row.USERNAME_FULL}</strong></td></tr>
-	<!-- ENDIF -->
-	<!-- IF group_row.S_LAST_ROW -->
+		<table class="blg-table">
+		{% for user in group.user %}
+			<tr><td class="userrow"><strong>{{ user.USERNAME_FULL }}</strong></td></tr>
+		{% endfor %}
 		</table>
 	</div>
-	<!-- ENDIF -->
-<!-- END group_row -->
+{% endfor %}
 </div>
-<!-- ENDIF -->
+{% endif %}

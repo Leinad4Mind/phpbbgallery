@@ -1,24 +1,17 @@
 <?php
 /*
-* @name most_poster_block.php
 * @package cBB Blockgets
-* @version $Id: most_poster_block.php, v1.0.4 10/01/2014 $
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2014 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class most_poster_block extends base
 {
-	static $icon = 'blg-icon-edit';
+	static $icon = 'fa-edit';
 
 	function init()
 	{
@@ -29,7 +22,7 @@ class most_poster_block extends base
 			return false;
 		}
 
-		//Delete the array in the template if exists, prevent errors between blocks
+		// Delete the array in the template if exists, prevent errors between blocks
 		$this->template->destroy_block_vars('most_poster');
 
 		if($data['poster_range'] == 'none')
@@ -65,12 +58,13 @@ class most_poster_block extends base
 			);
 		}
 
-		/**
+		/*
 		* @event block.most_poster_query
 		* @var array	sql_ary		The SQL data
+		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary');
+		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.most_poster_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -85,7 +79,7 @@ class most_poster_block extends base
 				'USERNAME'		=> get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']),
 				'USER_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				'AVATAR'		=> get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']),
-				'POSTS'			=> $this->lang->get('MEMBER_POSTS', $row['user_posts'], $posts_per_day),
+				'POSTS'			=> $this->lang->lang('MEMBER_POSTS', $row['user_posts'], $posts_per_day),
 				'REGDATE'		=> $this->helper->format_short_date($row['user_regdate']),
 
 				'U_FIND_POSTS'	=> $this->helper->url('search', array(
@@ -94,13 +88,14 @@ class most_poster_block extends base
 				))
 			);
 
-			/**
+			/*
 			* @event block.most_poster_row
 			* @var array	poster_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('poster_row', 'row');
+			$vars = array('poster_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.most_poster_row', compact($vars)));
 			
 			$this->template->assign_block_vars('most_poster', $poster_row);
@@ -122,8 +117,8 @@ class most_poster_block extends base
 		);
 
 		$this->display_vars = array(
-			'poster_limit'		=> array('lang' => 'POSTER_LIMIT',	'validate' => 'int:1:20',	'type' => 'text:4:3',	'default' => 5),
-			'poster_range'		=> array('lang' => 'POST_RANGE',	'validate' => 'string',		'type' => 'select',		'method' => 'helper',	'params' =>	array('make_select', $options, '{CONFIG_VALUE}'),	'default' => 'none'),
+			'poster_limit'		=> array('lang' => 'POSTER_LIMIT',	'validate' => 'int:1:20',	'type' => 'number:1:20',	'default' => 5),
+			'poster_range'		=> array('lang' => 'POST_RANGE',	'validate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' =>	array('make_select', $options, false, '{CONFIG_VALUE}'),	'default' => 'none'),
 		);
 
 		return true;

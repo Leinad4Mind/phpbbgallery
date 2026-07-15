@@ -2,20 +2,23 @@
 <fieldset>
 	<dl>
 		<dt>
-			<label>{L_GOOGLE_LANGS}:</label><br />
-			Powered by <img src="{S_GOOGLE_LOGO}" alt="Google" style="vertical-align: middle;" />
+			<label>{L_GOOGLE_LANGS}{L_COLON}</label>
 		</dt>
 		<dd>
-			<div class="google-translate">
-			<!-- BEGIN translate -->
-				<div title="{translate.S_LANG_EN}"><label><input type="checkbox" class="radio" name="langs[]" value="{translate.S_ISO}" <!-- IF translate.S_SELECTED --> checked="checked"<!-- ENDIF -->/> {translate.S_LANG}</label></div>
-			<!-- END translate -->
+			<div class="blg-option-selector google-translate">
+			{% for translate in loops.translate %}
+				<div title="{{ translate.S_LANG_EN }}">
+					<input id="option-{{ translate.S_ISO }}" type="checkbox" class="radio" name="langs[]" value="{{ translate.S_ISO }}"{% if translate.S_SELECTED %} checked="checked"{% endif %}/>
+					<label for="option-{{ translate.S_ISO }}"> {{ translate.S_LANG }}</label>
+				</div>
+			{% endfor %}
 			</div>
-			<br style="clear: both;" /><br />
+
+			<br />
 			
 			<p class="quick">
-				<a class="blg-button small" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{L_MARK_ALL}"><span class="blg-icon blg-icon-check-square-o"></span></a>
-				<a class="blg-button small" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{L_UNMARK_ALL}"><span class="blg-icon blg-icon-square-o"></span></a>
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', true); return false;" title="{L_MARK_ALL}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+				<a class="cbb-btn" href="#" onclick="marklist('acp_block_form', 'langs', false); return false;" title="{L_UNMARK_ALL}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
 			</p>
 		</dd>
 	</dl>

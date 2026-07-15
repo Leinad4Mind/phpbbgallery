@@ -1,24 +1,17 @@
 <?php
 /*
-* @name latest_members_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class latest_members_block extends base
 {
-	static $icon = 'blg-icon-user-plus';
+	static $icon = 'fa-user-plus';
 
 	public function init()
 	{
@@ -39,12 +32,13 @@ class latest_members_block extends base
 			'ORDER_BY'	=> 'u.user_regdate DESC',
 		);
 
-		/**
+		/*
 		* @event block.latest_members_query
 		* @var array	sql_ary		The SQL data
+		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary');
+		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.latest_members_query', compact($vars)));
 		
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -56,13 +50,14 @@ class latest_members_block extends base
 				'JOINED'		=> $this->helper->format_short_date($row['user_regdate']),
 			);
 
-			/**
+			/*
 			* @event block.latest_members_row
 			* @var array	member_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('member_row', 'row');
+			$vars = array('member_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.latest_members_row', compact($vars)));
 			
 			$this->template->assign_block_vars('member', $member_row);
@@ -76,7 +71,7 @@ class latest_members_block extends base
 	public function get_config()
 	{
 		$this->display_vars = array(
-			'max_users'		=> array('lang' => 'MEMBERS_NUMBER',	'validate' => 'int:1',	'type' => 'text:4:3',	'default' => 10),
+			'max_users'		=> array('lang' => 'MEMBERS_NUMBER',	'validate' => 'int:1',	'type' => 'number:1:999',	'default' => 10),
 		);
 
 		return true;

@@ -1,0 +1,138 @@
+
+{% if SHOW_TABS %}
+<script>
+// <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#recent-{{ BLOCK_ID }}'){% if BLOCK_VIEW_SMALL %}.blgAccordion();{% else %}.blgTabs();{% endif %}
+	});
+});
+// ]]>
+</script>
+{% endif %}
+
+<div id="recent-{{ BLOCK_ID }}"{% if SHOW_TABS %} class="cbb-helper-hidden"{% endif %}>
+
+{% if BLOCK_VIEW_SMALL %}
+	{% for tab in recent_tab %}
+		<h5><a href="#">{{ tab.TITLE }}</a></h5>
+		<div class="no-wrap">
+			{% if tab.IS_EMPTY %}{L_NO_ITEMS}{% endif %}
+
+			<ul class="blg-linear-list">
+			{% for topicrow in tab.rows %}
+				<li>
+					{% EVENT topiclist_row_prepend %}
+					<a class="cbb-helper-text cbb-inline" href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	{% endfor %}
+
+{% else %}
+
+{% if SHOW_TABS %}
+    <ul>
+	{% for tab in recent_tab %}
+		<li><a href="#{{ tab.ID }}-{{ BLOCK_ID }}"><i class="fa {{ tab.ICON }} fa-lg"></i>{% if not BLOCK_VIEW_MEDIUM %} <span class="tab-title">{{ tab.TITLE }}</span>{% endif %}</a></li>
+	{% endfor %}
+    </ul>
+{% endif %}
+
+    {% if TOPIC_DESIGN == 'simple' %}
+		{% for tab in recent_tab %}
+			<div class="blg-align-center recent-content block-postbody" id="{{ tab.ID }}-{{ BLOCK_ID }}">
+				<table class="blg-table">
+
+			{% if tab.IS_EMPTY %}
+				<tr><td class="blg-message">{L_NO_ITEMS}</td></tr>
+			{% else %}
+				<tr>
+					<th class="blg-column-topic-title blg-widget-header">{L_TOPIC_TITLE}</th>
+					<th class="blg-column-posted-by blg-widget-header">{L_POSTED_BY}</th>
+				{% if not BLOCK_VIEW_MEDIUM %}
+					<th class="blg-column-comments blg-widget-header">{L_COMMENTS}</th>
+					<th class="blg-column-topic-views blg-widget-header">{L_TOPIC_VIEWS}</th>
+				{% endif %}
+				</tr>
+
+				{% for topicrow in tab.rows %}
+				<tr>
+					<td class="blg-column-topic-title blg-align-left">
+						{% EVENT topiclist_row_prepend %}
+						<a href="{{ topicrow.U_VIEW_TOPIC }}">{{ topicrow.TOPIC_TITLE }}</a>
+					</td>
+					<td class="blg-column-posted-by">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
+				{% if not BLOCK_VIEW_MEDIUM %}
+					<td class="blg-column-comments">{{ topicrow.REPLIES }}</td>
+					<td class="blg-column-topic-views">{{ topicrow.VIEWS }}</td>
+				{% endif %}
+				</tr>
+				{% endfor %}
+			{% endif %}
+				</table>
+			</div>
+		{% endfor %}
+	{% else %}
+		{% for tab in recent_tab %}
+			<div id="{{ tab.ID }}-{{ BLOCK_ID }}" class="blg-forum-list{% if SHOW_TABS %} cbb-helper-hidden{% endif %}{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+			{% if tab.IS_EMPTY %}
+				<div class="blg-message">{L_NO_ITEMS}</div>
+			{% else %}
+				<div class="blg-widget-header">
+					{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
+					<span>{L_TOPIC}</span>
+				</div>
+				<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
+				</tbody>
+
+				{% for topicrow in tab.rows %}
+					{% EVENT viewforum_body_topicrow_row_before %}
+					<tr>
+						<td>
+							{% if topicrow.TOPIC_ICON_IMG %}
+							<i class="topic-icon" style="background-image: url({% if not S_BBEMOJI %}{{ T_ICONS_PATH }}{% endif %}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+							{% endif %}
+
+							<span class="icon-wrapper">
+						    	<i class="row-icon-font icon-moon-default2{% if topicrow.S_POST_ANNOUNCE %} icon-moon-voice2{% endif %}{% if topicrow.S_POST_GLOBAL %} icon-moon-podcast2{% endif %}{% if topicrow.S_POST_STICKY %} icon-moon-pushpin2{% endif %}{% if topicrow.S_HAS_POLL %} icon-moon-poll{% endif %}{% if topicrow.S_TOPIC_MOVED %} icon-moon-moved{% endif %}{% if topicrow.S_UNREAD_TOPIC %} forum-unread{% else %} forum-read{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+							</span>
+
+							<i class="row-icon-font-mini{% if topicrow.S_TOPIC_LOCKED %} fa fa-lock forumview-lock{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+							
+							<div class="desc-wrapper">
+					  			{% EVENT topiclist_row_prepend %}
+								{% if topicrow.S_UNREAD_TOPIC %}<a href="{{ topicrow.U_NEWEST_POST }}" title="{L_VIEW_FIRST_UNREAD}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;{% endif %}{% if topicrow.U_VIEW_TOPIC %}<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>{% else %}{{ topicrow.TOPIC_TITLE }}{% endif %}
+
+								<br />{L_POST_BY_AUTHOR}&nbsp;{{ topicrow.TOPIC_AUTHOR_FULL }} 
+								<small>&nbsp;&#45;&nbsp;{{ topicrow.FIRST_POST_TIME }}</small>
+					 		 	{% EVENT topiclist_row_append %}	
+							</div>
+						</td>
+
+					{% if not BLOCK_VIEW_MEDIUM %}
+						<td class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {L_VIEWS}<br />{{ topicrow.REPLIES }} {L_REPLIES}</td>
+						<td class="lastpost">
+							<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+							{% if not S_IS_BOT %}
+								<a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">
+									<i class="mobile-post fa fa-sign-out" aria-hidden="true"></i>
+								</a>
+							{% endif %}
+							<br /><i class="fa fa-clock-o"></i>&nbsp;<small>{{ topicrow.LAST_POST_TIME }}</small>
+						</td>
+					{% endif %}
+					</tr>
+					{% EVENT viewforum_body_topicrow_row_after %}
+				{% endfor %}
+
+				</tbody>
+				</table>
+			{% endif %}
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endif %}
+</div>

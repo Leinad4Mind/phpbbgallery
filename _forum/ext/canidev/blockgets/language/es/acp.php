@@ -1,12 +1,11 @@
 <?php
-/** 
-* acp_blockgets.php [Spanish [Es]]
+/*
+* acp.php [Spanish [Es]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -35,9 +34,13 @@ $lang = array_merge($lang, array(
 	'BLG_COLLAPSE'					=> 'Permitir colapsar bloques',
 	'BLG_COLLAPSE_EXPLAIN'			=> 'Habilita/Deshabilita la posibilidad de colapsar los bloques en todas las páginas. Esta opción prevalece sobre la configuración individual de cada bloque.',
 	'BLG_FULL_EDITOR'				=> 'Editor completo',
-	'BLG_HELP'						=> 'Documentación y Soporte',
 	'BLG_ON_BOARD'					=> 'Bloques dentro del foro',
-	'BLG_ON_BOARD_EXPLAIN'			=> 'Establece si se mostrarán los bloques dentro de las páginas del foro. Esta opción prevalece sobre la configuración individual de cada página.',
+	'BLG_ON_BOARD_EXPLAIN'			=> 'Establece como se mostrarán los bloques dentro de las páginas del foro. Esta opción prevalece sobre la configuración individual de cada página.<br /><br />
+		<em>
+			&nbsp;&nbsp;<strong>No mostrar:</strong> No muestra bloques en ninguna página.<br />
+			&nbsp;&nbsp;<strong>Páginas individuales:</strong> Muestra los bloques en las páginas configuradas para ello.<br />
+			&nbsp;&nbsp;<strong>Páginas iguales:</strong> Se muestran los bloques del "Indice general" en todas las páginas.
+		</em>',
 	'BLG_REDIRECTIONS'				=> 'Redirecciones',
 	'BLG_REDIRECT_404'				=> 'Página no encontrada',
 	'BLG_REDIRECT_404_EXPLAIN'		=> 'Establece la página a la que será llevado el usuario cuando intente acceder a una ubicación que no existe.<br />
@@ -46,24 +49,26 @@ $lang = array_merge($lang, array(
 	'BLG_REDIRECT_LOGIN_EXPLAIN'	=> 'Establece la página a la que será llevado el usuario después de identificarse.',
 	'BLG_REDIRECT_LOGOUT'			=> 'Desconexión',
 	'BLG_REDIRECT_LOGOUT_EXPLAIN'	=> 'Establece la página a la que será llevado el usuario al desconectarse.',
-	
-	'ACCEPT'					=> 'Aceptar',
-	'BATCH_ACTIONS'				=> 'Acciones en lote',
+
 	'DEFAULT'					=> 'Por defecto',
 	'LINKS'						=> 'Enlaces',
 	'OPEN_GALLERY'				=> 'Abrir galería',
 	'SAVE_AND_ADD'				=> 'Guardar y añadir más',
-	'SELECT_COLOUR'				=> 'Seleccionar color',
 	'TYPE_DOMAIN_HOME'			=> 'Página principal del dominio',
 	'TYPE_FORUM_HOME'			=> 'Página principal del foro',
 	'TYPE_FORUM_SECONDARY'		=> 'Página secundaria del foro',
-	'UPLOAD_IMAGE'				=> 'Subir imagen',
+
+	'BOARD_BLOCK_INDIVIDUAL'	=> 'Páginas individuales',
+	'BOARD_BLOCK_NONE'			=> 'No mostrar',
+	'BOARD_BLOCK_SAME'			=> 'Páginas iguales',
 
 	'AVATAR_RESIZE_WIDTH'			=> 'Tamaño de los avatares',
-	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Tamaño máximo permitido (en píxeles) para los avatares. Especifique 0 para usar el tamaño especificado para las imágenes.',
-	'CALENDAR'						=> 'Calendario',
+	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Tamaño máximo permitido (en píxeles) para los avatares.<br />
+		<em>Establezca 0 para deshabilitar el redimensionado de avatares</em>.',
 	'CALENDAR_ENABLED'				=> 'Calendario activado',
 	'CALENDAR_ENABLED_EXPLAIN'		=> 'Define si el calendario estará disponible tanto en la ruta <em>/calendar</em> como en los bloques.',
+	'CALENDAR_BIRTHDAYS'			=> 'Mostrar Cumpleaños',
+	'CALENDAR_BIRTHDAYS_EXPLAIN'	=> 'Si se habilita se marcarán y mostrarán los cumpleaños de los usuarios en el calendario, como si fueran eventos.',
 	'CALENDAR_LINK'					=> 'Enlace',
 	'CALENDAR_LINK_EXPLAIN'			=> 'Define en que parte del foro aparecerá un enlace al calendario.',
 	'CALENDAR_FIRST_DAY'			=> 'Primer dia de la semana',
@@ -74,12 +79,11 @@ $lang = array_merge($lang, array(
 	'HOME_TYPE_DISPLAY'				=> 'Comportamiendo de la página de Inicio',
 	'HOME_TYPE_DISPLAY_EXPLAIN'		=> 'Establece como funcionará la página de Inicio, si está habilitada.',
 	'IMAGE_RESIZE'					=> 'Redimensionado de imágenes',
-	'IMAGE_RESIZE_ENABLED'			=> 'Redimensionado activado',
-	'IMAGE_RESIZE_ENABLED_EXPLAIN'	=> 'Si se activa, las imagenes del bbcode "img", los adjuntos y los avatares se redimensionarán para ajustarse al tamaño máximo. Sólo se redimensionarán si los bloques están activados.<br />Util para evitar el descuadre de los bloques.',
 	'IMAGE_RESIZE_POST'				=> 'Redimensionar imágenes de mensajes',
 	'IMAGE_RESIZE_POST_EXPLAIN'		=> 'Habilita/Deshabilita el redimensionado de las imágenes que se encuentran dentro de los mensajes del foro.',
 	'IMAGE_RESIZE_WIDTH'			=> 'Tamaño de las imágenes',
-	'IMAGE_RESIZE_WIDTH_EXPLAIN'	=> 'Tamaño máximo permitido (en píxeles) para las imágenes. Por defecto es 450.',
+	'IMAGE_RESIZE_WIDTH_EXPLAIN'	=> 'Tamaño máximo permitido (en píxeles) para las imágenes. Por defecto es 450.<br />
+		<em>Establezca 0 para deshabilitar el redimensionado de imágenes</em>.',
 
 	'INDEX_FILE_ERROR'				=> 'No se ha podido completar la configuración',
 ));
@@ -88,8 +92,6 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ADD_ITEM'				=> 'Nuevo elemento',
 	'CAT'					=> 'Categoría',
-	'DELETE_ICON'			=> 'Quitar icono',
-	'DELETE_IMAGE'			=> 'Quitar imagen',
 
 	'LINK'						=> 'Enlace',
 	'LINK_DESCRIPTION'			=> 'Descripción',
@@ -103,9 +105,6 @@ $lang = array_merge($lang, array(
 	'LINK_URL'					=> 'Vínculo',
 	'LINK_URL_EXPLAIN'			=> 'La dirección que se abrirá al hacer clic en el elemento. Si lo deja en blanco se usará la imagen como vínculo en algunos bloques. Límite 255 caracteres.',
 	'LINK_WINDOW'				=> 'Abrir en ventana nueva',
-
-	'SELECT_ICON'			=> 'Seleccionar icono nuevo',
-	'SELECT_IMAGE'			=> 'Seleccionar imagen nueva',
 ));
 
 // @acp_blockgets_pages
@@ -117,7 +116,6 @@ $lang = array_merge($lang, array(
 	'ADD_GROUP'					=> 'Añadir grupo',
 	'ADD_GROUP_EXPLAIN'			=> 'Arrastre este botón a la posición deseada para añadir un grupo',
 	'ADVANCED_OPTIONS'			=> 'Opciones avanzadas',
-	'ALL_GROUPS'				=> 'Todos los grupos',
 
 	'BLOCK_SETTINGS'			=> 'Opciones generales del bloque',
 	'BLOCK_SPACE'				=> 'Espacio entre bloques',
@@ -140,6 +138,7 @@ $lang = array_merge($lang, array(
 	'LEFT_COLUMN'				=> 'Columna izquierda',
 	'LEFT_COLUMN_EXPLAIN'		=> 'Ancho de la columna izquierda en píxeles o porcentaje.<br />Especifique 0 para deshabilitar la columna.',
 	'LINK_BOTTOM'				=> 'Parte inferior',
+	'LINK_QUICK'				=> 'Enlaces rápidos',
 	'LINK_NONE'					=> 'Sin enlace',
 	'LINK_TOP'					=> 'Parte superior',
 	'MANAGE_PAGE'				=> 'Administrar página',
@@ -178,15 +177,15 @@ $lang = array_merge($lang, array(
 	'PAGE_LINK_POSITION_EXPLAIN'	=> 'Define en que parte del foro aparecerá un enlace a esta página.',
 	'PAGE_LOGO'					=> 'Logo',
 	'PAGE_LOGO_EXPLAIN'			=> 'Define la url de la imagen que se usará como logo.<br />Déjelo en blanco para usar el logo por defecto.',
+	'PAGE_STYLE'				=> 'Estilo',
+	'PAGE_STYLE_EXPLAIN'		=> 'Define el estilo que se usará en la página.<br /><em>Esta opción no se aplicará a las páginas originales del foro.</em>',
+	'PAGE_STYLESHEET'			=> 'Tema personalizado',
+	'PAGE_STYLESHEET_EXPLAIN'	=> 'Puede establecer la ruta a uno o varios archivos *.css (uno por línea) o establecer directamente las variables del tema que se usará.',
 	'PAGE_THEME'				=> 'Tema',
 	'PAGE_THEME_BACKGROUND'		=> 'Definir fondo',
 	'PAGE_THEME_DEFAULT'		=> 'Usar configuración por defecto',
 	'PAGE_THEME_STYLE'			=> 'Definir estilo',
 	'PAGE_THEME_STYLESHEET'		=> 'Usar tema personalizado',
-	'PAGE_STYLE'				=> 'Estilo',
-	'PAGE_STYLE_EXPLAIN'		=> 'Define el estilo que se usará en la página.<br /><em>Esta opción no se aplicará a las páginas originales del foro.</em>',
-	'PAGE_STYLESHEET'			=> 'Tema personalizado',
-	'PAGE_STYLESHEET_EXPLAIN'	=> 'Puede establecer la ruta a uno o varios archivos *.css (uno por línea) o establecer directamente las variables del tema que se usará.',
 	'PAGE_TITLE'				=> 'Título de la página',
 	'PAGE_TITLE_EXPLAIN'		=> 'Título que se mostrará en el navegador.<br />Puede dejar este campo en blanco en los <strong>archivos del foro</strong> para usar el título por defecto.',
 	'PAGE_URL'					=> 'Dirección de la página',
@@ -240,8 +239,12 @@ $lang = array_merge($lang, array(
 	'ITEM_NOT_UPDATED'			=> 'Se ha producido un error al actualizar el elemento',
 
 	'PAGE_ADDED'				=> 'Página añadida con éxito',
-	'PAGE_REMOVED_ONE'			=> 'La página se ha eliminado con éxito',
-	'PAGE_REMOVED'				=> 'Las páginas se han eliminado con éxito',
+
+	'PAGE_REMOVED'		=> array(
+		1	=> 'La página se ha eliminado con éxito',
+		2	=> '%d páginas eliminadas con éxito',
+	),
+
 	'PAGE_UPDATED'				=> 'Configuración de la(s) página(s) actualizada con éxito',
 	'BLG_CONFIG_UPDATED'		=> 'Configuración actualizada con éxito',
 
@@ -261,14 +264,16 @@ $lang = array_merge($lang, array(
 		'birthdays_explain'			=> 'Muestra la lista de cumpleaños del día actual y de los próximos días (opcional).',
 		'empty_title'				=> 'Personalizado',
 		'empty_explain'				=> 'Bloque totalmente en blanco en el que se puede incluir cualquier texto asi como código HTML, CSS, JavaScript, etc...',
-		'calendar_title'			=> 'Calendario con Eventos',
-		'calendar_explain'			=> 'Calendario simple en el que se pueden añadir eventos que aparecerán reflejados.',
+		'calendar_title'			=> 'Calendario',
+		'calendar_explain'			=> 'Calendario en el que se pueden añadir eventos personalizados y mostrar cumpleaños.',
 		'clock_title'				=> 'Reloj',
 		'clock_explain'				=> 'Muestra un reloj en formato flash (se pueden escojer varios modelos y añadir propios).',
 		'cloud_tag_title'			=> 'Nube de tags',
 		'cloud_tag_explain'			=> 'Muestra etiquetas en un globo en formato flash. Puede mostrar las últimas palabras buscadas o los usuarios con más mensajes.',
 		'contact_title'				=> 'Contacto',
 		'contact_explain'			=> 'Muestra un formulario de contacto estándar.',
+		'countdown_title'			=> 'Cuenta atrás',
+		'countdown_explain'			=> 'Muestra una cuenta atrás hasta la fecha indicada.',
 		'counter_title'				=> 'Contador de visitas',
 		'counter_explain'			=> 'Muestra un contador de visitas con estadísticas de las visitas totales, visitas por día, visitas por hora, visitas por semana, visitas por mes y visitas por año.',
 		'dockmenu_title'			=> 'Menú animado',
@@ -281,6 +286,8 @@ $lang = array_merge($lang, array(
 		'gallery_explain'			=> 'Galería de fotos personalizable con imágenes del foro (adjuntos) o imágenes externas. Las imágenes se desplazan y enlazan con el destino de cada una.',
 		'google_translate_title'	=> 'Traductor de Google',
 		'google_translate_explain'	=> 'Bloque que permite traducir la página en la que se encuentre instalado, abriéndola en una nueva ventana y traduciéndola gracias a la tecnología de Google.',
+		'language_select_title'		=> 'Seleccionar idioma',
+		'language_select_explain'	=> 'Permite al usuario ver el foro con cualquier idioma que se encuentre instalado en el foro y establecerlo como su idioma por defecto.',
 		'latest_bots_title'			=> 'Visitas de bots',
 		'latest_bots_explain'		=> 'Simple lista con los últimos bots que entraron en el foro y la fecha de su última visita.',
 		'latest_members_title'		=> 'Últimos usuarios',

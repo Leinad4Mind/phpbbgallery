@@ -1,31 +1,17 @@
 <?php
 /*
-* @name share_block.php
 * @package cBB Blockgets
-* @version $Id: share_block.php, v1.0.4 10/01/2014 $
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2014 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class share_block extends base
 {
-	static $icon = 'blg-icon-share-alt';
-
-	private $buttons = array(
-		'google'	=> array('id' => 1,	'small' => 'size="medium" annotation="none",60*25',	'big' => 'size="medium",65*25'),
-		'twitter'	=> array('id' => 2,	'small' => 'none,65*25',		'big' => 'horizontal,95*21'),
-		'facebook'	=> array('id' => 3,	'small' => 'button,76*25',	'big' => 'button_count,105*21'),
-		'linkedin'	=> array('id' => 4,	'small' => ',0*0',		'big' => 'right,0*0'),
-	);
+	static $icon = 'fa-share-alt';
 
 	function init()
 	{
@@ -40,39 +26,13 @@ class share_block extends base
 		{
 			return false;
 		}
-
-		$share_url	= (!empty($data['share_url']) ? $data['share_url'] : $this->get_share_url());
-		$share_size	= ($data['share_counter']) ? 'big' : 'small';
-
-		foreach($this->buttons as $button_id => $params)
-		{
-			$tpl	= 'S_' . strtoupper($button_id);
-			$show	= false;
-
-			if(in_array($params['id'], $data['share_buttons']))
-			{
-				if(isset($params[$share_size]))
-				{
-					if(preg_match('#([a-z\-_\"=]+),([0-9]+)\*([0-9]+)#', $params[$share_size], $btn_size))
-					{
-						$this->template->assign_vars(array(
-							$tpl . '_SIZE'		=> $btn_size[1],
-							$tpl . '_STYLE'		=> 'width:' . $btn_size[2] . 'px;height:' . $btn_size[3] . 'px;',
-						));
-					}
-				}
-
-				$show = true;
-			}
-
-			$this->template->assign_var($tpl . '_SHOW', $show);
-		}
-
-		$this->template->assign_vars(array(
-			'S_SHARE_LANG'			=> $this->user->lang_name,
-			'S_SHARE_LOCALE'		=> $this->helper->locale_lang(),
-			'U_SHARE_URL'			=> $share_url,
-			'U_SHARE_URL_ENCODED'	=> urlencode($share_url),
+		
+		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+			'buttons'			=> $data['share_buttons'],
+			'inlineButtons'		=> ($this->view_is_small() && $data['show_names']) ? false : true,
+			'iconPath'			=> $this->helper->get_ext_path(true) . 'images/social/',
+			'showNames'			=> $data['show_names'],
+			'url'				=> !empty($data['share_url']) ? $data['share_url'] : $this->get_share_url(),
 		));
 
 		unset($data);
@@ -83,17 +43,19 @@ class share_block extends base
 	{
 		if($mode == 'submit')
 		{
-			$new['share_buttons'] = $this->request->variable('button', array(0));
+			$new['share_buttons'] = $this->request->variable('button', array(0 => ''));
 		}
 	}
 
 	function get_config()
 	{
 		$this->display_vars = array(
-			'share_counter'	=> array('lang' => 'SHARE_COUNTER',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1),
-			'share_url'		=> array('lang' => 'SHARE_URL',		'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''),
-			'share_buttons'	=> array('lang' => 'SHARE_BUTTONS',	'type' => 'custom',				'function' => array($this, 'buttons_select'),	'params' => array('{CONFIG_VALUE}'),	'default' => array()),
+			'show_names'	=> array('lang' => 'SHARE_SHOW_NAMES',	'validate' => 'bool',			'type' => 'radio:yes_no',	'default' => 1),
+			'share_url'		=> array('lang' => 'SHARE_URL',			'validate' => 'string:0:255',	'type' => 'text:40:255',	'default' => ''),
+			'share_buttons'	=> array('lang' => 'SHARE_BUTTONS',		'type' => 'custom',				'function' => array($this, 'buttons_select'),	'params' => array('{CONFIG_VALUE}'),	'default' => array()),
 		);
+
+		$this->tpl_name = 'acp_share_block';
 
 		return true;
 	}
@@ -179,19 +141,17 @@ class share_block extends base
 	*/
 	public function buttons_select($select)
 	{
-		$string = '';
-
 		if(!is_array($select))
 		{
 			$select = array();
 		}
 
-		foreach($this->buttons as $name => $params)
-		{
-			$selected = (in_array($params['id'], $select) ? ' checked="checked"' : '');
-			$string .= '<label><input type="checkbox" class="radio" name="button[]" value="' . $params['id'] . '"' . $selected . '> ' . ucfirst($name) . '</label>';
-		}
+		$this->template->assign_json_var('S_SHARE_PARAMS', array(
+			'mode'		=> 'admin',
+			'buttons'	=> $select,
+			'iconPath'	=> $this->helper->get_ext_path(true) . 'images/social/',
+		));
 
-		return $string;
+		return '<div class="blg-option-selector"></div>';
 	}
 }

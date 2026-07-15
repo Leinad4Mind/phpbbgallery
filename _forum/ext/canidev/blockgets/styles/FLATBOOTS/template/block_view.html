@@ -1,0 +1,26 @@
+	
+{% if block.IS_GROUP %}
+	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
+	{% for sub in block.blocks %}
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block panel panel-forum {{ sub.BLOCK_CLASSES }}">
+			<div class="block-title panel-heading">
+				{{ sub.BLOCK_ICON }}
+				<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
+			</div>
+			<div class="block-content panel-inner">
+				{{ sub.BLOCK_CONTENT }}
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+{% else %}
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-block panel panel-forum {{ block.BLOCK_CLASSES }}">
+		<div class="block-title panel-heading">
+			{{ block.BLOCK_ICON }}
+			<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
+		</div>
+		<div class="block-content panel-inner">
+			{{ block.BLOCK_CONTENT }}
+		</div>
+    </div>
+{% endif %}

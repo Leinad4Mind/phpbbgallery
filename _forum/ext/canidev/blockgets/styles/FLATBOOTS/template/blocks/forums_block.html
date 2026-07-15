@@ -1,0 +1,110 @@
+
+{% if BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
+<ul class="blg-linear-list">
+
+{% for forum_row in loops.forum_row %}
+	{% if forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT %}
+	<li class="menu-cat">
+		{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
+	</li>
+	{% endif %}
+
+	{% if not forum_row.S_IS_CAT %}
+	<li class="subchild double-space">
+		<i class="fa {{ forum_row.FORUM_ICON }} fa-lg"></i>
+		<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>
+	</li>
+	{% endif %}
+
+{% else %}
+	<li><strong>{L_NO_FORUMS}</strong></li>
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+
+{% for forum_row in loops.forum_row %}
+	{% if (forum_row.S_IS_CAT and not forum_row.S_FIRST_ROW) or forum_row.S_NO_CAT %}
+		</tbody>
+		</table>
+
+		{% if BLOCK_STYLE == 'content_simple' %}</div>{% endif %}
+	{% endif %}
+
+	{% if forum_row.S_IS_CAT or forum_row.S_FIRST_ROW or forum_row.S_NO_CAT %}
+		{% if BLOCK_STYLE == 'content_simple' %}
+		<div class="panel panel-default">
+		{% else %}
+		<div class="blg-widget-header">
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
+			{% if forum_row.S_IS_CAT %}<a href="{{ forum_row.U_VIEWFORUM }}">{{ forum_row.FORUM_NAME }}</a>{% else %}{L_FORUM}{% endif %}
+		</div>
+		{% endif %}
+
+		<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
+		{% if BLOCK_STYLE == 'content_simple' %}
+		<thead>
+			<tr><th colspan="3">{{ BLOCK_TITLE }}</th></tr>
+		</thead>
+		{% endif %}
+
+		<tbody>
+	{% endif %}
+
+	{% if not forum_row.S_IS_CAT %}
+		<tr>
+			<td>
+				{% if forum_row.FORUM_IMAGE %}<span class="forum-image">{{ forum_row.FORUM_IMAGE }}</span>{% endif %}
+				<span class="icon-wrapper">
+					<i class="row-icon-font icon-moon-default{% if forum_row.S_IS_LINK %} icon-moon-link2{% endif %}{% if forum_row.S_UNREAD_FORUM %} forum-unread{% else %} forum-read{% endif %}"></i>
+				</span>
+				<span class="desc-wrapper">
+					<a href="{{ forum_row.U_VIEWFORUM }}" class="forumtitle">{{ forum_row.FORUM_NAME }}</a><br />
+					{{ forum_row.FORUM_DESC }}
+					{% if forum_row.MODERATORS %}
+						<span class="forum-mods"><strong>{{ forum_row.L_MODERATOR_STR }}{L_COLON}</strong>&nbsp;{{ forum_row.MODERATORS }}</span>
+					{% endif %}
+					{% if forum_row.SUBFORUMS and forum_row.S_LIST_SUBFORUMS %}
+					<br />
+					<span class="subforums">
+				 		 <strong>{{ forum_row.L_SUBFORUM_STR }}</strong>
+				 		 {{ forum_row.SUBFORUMS }}
+				 	</span>
+					{% endif %}
+
+				</span>
+			</td>
+		{% if not BLOCK_VIEW_MEDIUM %}
+			{% if forum_row.CLICKS %}
+				<td colspan="2"><span class="stats-wrapper">{L_REDIRECTS}{L_COLON} {{ forum_row.CLICKS }}</td>
+			{% elseif not forum_row.S_IS_LINK %}
+				<td class="fb-stats blg-align-center">{{ forum_row.TOPICS }} {L_TOPICS}<br />{{ forum_row.POSTS }} {L_POSTS}</dd>
+				<td class="lastpost">
+				{% if forum_row.LAST_POST_TIME %}
+					<a class="cbb-helper-text" href="{{ forum_row.U_LAST_POST }}" title="{{ forum_row.LAST_POST_SUBJECT }}">{{ forum_row.LAST_POST_SUBJECT }}</a>
+					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ forum_row.LAST_POSTER_FULL }}
+					<br /><span class="forum-time"><i class="fa fa-clock-o"></i>&nbsp;{{ forum_row.LAST_POST_TIME }}</span>
+				{% else %}
+					{L_NO_POSTS}<br />&nbsp;
+				{% endif %}
+				</td>
+			{% endif %}
+		{% endif %}
+		</tr>
+	{% endif %}
+	
+	{% if forum_row.S_LAST_ROW %}
+	</tbody>
+	</table>
+
+		{% if BLOCK_STYLE == 'content_simple' %}</div>{% endif %}
+	{% endif %}
+{% else %}
+	<strong>{L_NO_FORUMS}</strong>
+{% endfor %}
+
+</div>
+{% endif %}

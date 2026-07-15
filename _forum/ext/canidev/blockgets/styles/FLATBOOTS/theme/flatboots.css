@@ -1,0 +1,64 @@
+/*
+ * cBB Blockgets (FLATBOOTS stylesheet)
+ * Copyright (c) 2020, CaniDev
+ * license https://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+ li.blg-breadcrumb-fix,
+ li.blg-breadcrumb-fix + li {
+ 	display: none;
+ }
+
+ .blg-block.style-alternative .block-title,
+.blg-block.style-content_full table,
+.blg-block.style-content_full table tr,
+.blg-block.style-content_full table td {
+	background: none !important;
+	border: none !important;
+	box-shadow: none;
+}
+
+.blg-block.style-alternative .block-title {
+	padding: 8px !important;
+}
+
+.blg-block.style-content_full .block-title {
+	border-width: 0 0 1px 0;
+}
+
+.blg-block.style-alternative .block-title,
+.blg-block.style-alternative .block-title i,
+.blg-block.style-content_full .block-title,
+.blg-block.style-content_full .block-title i {
+	color: #808080 !important;
+}
+
+.panel-forum > .block-title.panel-heading {
+	line-height: 36px;
+	padding: 0 10px;
+}
+
+.fb-lastpost-title {
+	width: 150px !important;
+}
+
+.blg-menu,
+.blg-menu .fa,
+.blg-message {
+    font-size: 1em !important;
+}
+
+.block-title .fa {
+	vertical-align: middle !important;
+}
+
+.blg-admin-bar,
+a.blg-admin-opener {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+.contact-table {
+	border-spacing: 8px !important;
+}

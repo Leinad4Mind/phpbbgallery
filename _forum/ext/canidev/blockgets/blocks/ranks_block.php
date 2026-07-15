@@ -1,24 +1,17 @@
 <?php
 /*
-* @name ranks_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class ranks_block extends base
 {
-	static $icon = 'blg-icon-star-half-o';
+	static $icon = 'fa-star-half-o';
 
 	public function init()
 	{
@@ -53,12 +46,13 @@ class ranks_block extends base
 			$sql_ary['WHERE'] .= (($sql_ary['WHERE']) ? ' AND' : '') . ' r.rank_special = 1';
 		}
 
-		/**
+		/*
 		* @event block.ranks_query
 		* @var array	sql_ary		The SQL data
+		* @var	array	data		Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary');
+		$vars = array('sql_ary', 'data');
 		extract($this->dispatcher->trigger_event('block.ranks_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -72,13 +66,14 @@ class ranks_block extends base
 				'IS_SPECIAL'	=> ($row['rank_special']) ? true : false,
 			);
 
-			/**
+			/*
 			* @event block.ranks_row
 			* @var array	rank_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('rank_row', 'row');
+			$vars = array('rank_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.ranks_row', compact($vars)));
 			
 			$this->template->assign_block_vars('rank', $rank_row);

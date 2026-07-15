@@ -1,24 +1,17 @@
 <?php
 /*
-* @name link_us_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class link_us_block extends base
 {
-	static $icon = 'blg-icon-link';
+	static $icon = 'fa-link';
 
 	public function init()
 	{
@@ -43,7 +36,7 @@ class link_us_block extends base
 		$link_text = '<a href="' . generate_board_url() . '" onclick="window.open(this.href); return false;" title="' . $link_title . '">' . $link_text . '</a>';
 
 		$this->template->assign_vars(array(
-			'LINK_US_TXT'		=> $this->lang->get('LINK_US_TXT', $this->config['sitename']),
+			'LINK_US_TXT'		=> $this->lang->lang('LINK_US_TXT', $this->config['sitename']),
 			'U_LINK_US'			=> htmlentities($link_text, ENT_QUOTES, 'UTF-8'),
 			'U_LINK_US_BANNER'  => $link_text,
 		));
@@ -54,8 +47,10 @@ class link_us_block extends base
 
 	public function get_config()
 	{
+		$media = $this->helper->get_media();
+
 		$this->display_vars = array(
-			'banner_url'	=> array('lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',			'method' => 'helper',	'params' => array('icon_template', '{KEY}', '{CONFIG_VALUE}', 'image')),
+			'banner_url'	=> array('lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',	'function' => array($media, 'build_selector'),	'params' => array('{KEY}', 'image', '{CONFIG_VALUE}', 1),	'default' => ''),
 		);
 
 		return true;

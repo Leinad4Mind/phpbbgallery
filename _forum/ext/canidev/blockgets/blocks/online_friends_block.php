@@ -1,24 +1,17 @@
 <?php
 /*
-* @name online_friends_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class online_friends_block extends base
 {
-	static $icon = 'blg-icon-group';
+	static $icon = 'fa-group';
 
 	public function init()
 	{
@@ -45,7 +38,7 @@ class online_friends_block extends base
 			'WHERE'	=> 'z.user_id = ' . $this->user->data['user_id'] . ' AND z.friend = 1'
 		);
 
-		/**
+		/*
 		* @event block.online_friends_query
 		* @var array	sql_ary		The SQL data
 		* @since 2.0.0
@@ -77,7 +70,7 @@ class online_friends_block extends base
 				'USERNAME_FULL'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'])
 			);
 
-			/**
+			/*
 			* @event block.online_friends_row
 			* @var array	user_row		The output array
 			* @var array	row				The original data

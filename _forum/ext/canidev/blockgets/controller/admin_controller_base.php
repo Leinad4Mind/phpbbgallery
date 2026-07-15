@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_controller.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\controller;
@@ -16,9 +15,7 @@ if(!defined('IN_PHPBB'))
 	exit;
 }
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-class admin_controller_base
+class admin_controller_base extends \canidev\core\acp
 {
 	public $u_action = '';
 	public $helper_acp;
@@ -51,17 +48,29 @@ class admin_controller_base
 	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
 	* @param \canidev\blockgets\libraries\helper		$helper				Blockgets helper Object
 	* @param \canidev\blockgets\libraries\helper_acp	$helper_acp			Blockgets ACP helper Object
-	* @param \canidev\blockgets\libraries\language		$language			Blockgets language Object
+	* @param \phpbb\language\language					$language			Blockgets language Object
 	* @param \phpbb\log\log                       		$log				Log Object
 	* @param \phpbb\request\request 					$request			Request object
-	* @param \canidev\blockgets\libraries\template		$template     		Template object
 	* @param \phpbb\user								$user				User object
 	* @param string										$root_path			phpBB root path
 	* @param string										$php_ext			phpEx
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\helper_acp $helper_acp, \canidev\blockgets\libraries\language $language, \phpbb\log\log $log, \phpbb\request\request $request, \canidev\blockgets\libraries\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(
+		\phpbb\cache\driver\driver_interface $cache,
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\canidev\blockgets\libraries\helper $helper,
+		\canidev\blockgets\libraries\helper_acp $helper_acp,
+		\phpbb\language\language $language,
+		\phpbb\log\log $log,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$root_path,
+		$php_ext)
 	{
 		$this->cache		= $cache;
 		$this->config		= $config;
@@ -73,7 +82,7 @@ class admin_controller_base
 		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
-		$this->template 	= $template;
+		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
@@ -82,31 +91,16 @@ class admin_controller_base
 	
 	public function display($mode)
 	{
-		$this->lang->add('acp', true);
+		$this->lang->add_lang('acp', 'canidev/blockgets');
+		
+		$this->page_header('cbb-blockgets', $this->config['blg_version']);
 		
 		$this->template->assign_vars(array(
 			'BLG_IN_ADMIN'		=> true,
-			'U_ACTION'			=> $this->u_action,
-			'U_HELP'			=> 'https://www.canidev.com/docs.php?i=cbb-blockgets-v' . $this->config['blg_version'],
 		));
-		
-		// Delete the cache in the first call after the installation (prevent error to load extension template events without clear the cache manually)
-		if($this->config['blg_asset_check'] != $this->config['assets_version'])
-		{
-			$this->config->set('blg_asset_check', $this->config['assets_version']);
-			$this->cache->purge();
-		}
+
+		$this->container->get('canidev.blockgets.core')->load_assets();
 		
 		return $this->_display($mode);
-	}
-	
-	public function get_template()
-	{
-		return $this->tpl_name;
-	}
-	
-	public function get_title()
-	{
-		return $this->page_title;
 	}
 }

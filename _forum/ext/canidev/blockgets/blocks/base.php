@@ -1,22 +1,13 @@
 <?php
 /*
-* @name base.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class base
 {
@@ -41,7 +32,11 @@ class base
 	public $tpl_name		= '';
 	public $manager;
 	
-	static $icon			= 'blg-icon-file-o';
+	static $icon			= 'fa-file-o';
+
+	const VIEW_FULL 	= 1;
+	const VIEW_MEDIUM 	= 2;
+	const VIEW_SMALL 	= 4;
 
 	/**
 	* Constructor
@@ -53,13 +48,21 @@ class base
 	* @param \canidev\blockgets\libraries\helper	$helper       		Blockgets helper object
 	* @param \canidev\blockgets\libraries\lang		$language			Blockgets language object
 	* @param \phpbb\request\request 				$request			Request object
-	* @param \phpbb\template\template				$template     		Template object
 	* @param \phpbb\user							$user				User object
 	* @param array									$block_data			Data of block
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, ContainerInterface $container, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\language $language, \phpbb\request\request $request, \canidev\blockgets\libraries\template $template, \phpbb\user $user, $block_data = false)
+	public function __construct(
+		\phpbb\config\config $config,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\canidev\blockgets\libraries\helper $helper,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		$block_data = false)
 	{
 		$this->auth			= $container->get('auth');
 		$this->config		= $config;
@@ -69,7 +72,7 @@ class base
 		$this->helper		= $helper;
 		$this->lang			= $language;
 		$this->request		= $request;
-		$this->template		= $template;
+		$this->template		= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $container->getParameter('core.root_path');
@@ -79,9 +82,26 @@ class base
 		{
 			$block_position = \canidev\blockgets\libraries\blockgets::$block_position_names[$block_data['block_position']];
 
-			$this->data = array_merge($block_data, array(
-				'autofit'	=> ($this->config['blg_block_autofit'] && (in_array($block_position, array('left', 'right')) || $block_data['parent_id'])) ? true : false,
-			));
+			$this->data = $block_data;
+
+			$this->data['size_view'] = self::VIEW_FULL;
+
+			if(!defined('IN_ADMIN') && $this->config['blg_block_autofit'])
+			{
+				if($block_data['parent_id'])
+				{
+					$this->data['size_view'] = self::VIEW_SMALL;
+
+					if($block_data['sibling_count'] < 2)
+					{
+						$this->data['size_view'] |= self::VIEW_MEDIUM;
+					}
+				}
+				else if(in_array($block_position, array('left', 'right')))
+				{
+					$this->data['size_view'] = self::VIEW_SMALL;
+				}
+			}
 		}
 	}
 	
@@ -108,7 +128,7 @@ class base
 		$block_data	= $this->data;
 		$tpl_name	= $this->tpl_name;
 
-		/**
+		/*
 		* @event block.display
 		* @var array	block_data		The block object data
 		* @var string	tpl_name		Template file to be loaded
@@ -120,13 +140,15 @@ class base
 		$this->data = $block_data;
 		
 		$this->template->assign_vars(array(
-			'BLOCK_ID'		=> $block_data['block_id'],
-			'BLOCK_STYLE'	=> $this->get_block_style(),
-			'S_SHORT_MODE'	=> $block_data['autofit'],
+			'BLOCK_ID'			=> $this->data['block_id'],
+			'BLOCK_STYLE'		=> $this->get_block_style(),
+			'BLOCK_TITLE'		=> $this->lang->lang($this->data['block_title']),
+			'BLOCK_VIEW_MEDIUM'	=> $this->view_is_medium(),
+			'BLOCK_VIEW_SMALL'	=> $this->view_is_small(),
 		));
 		
 		$this->template->set_filenames(array(
-			'blg_tpl' => 'blocks/' . $tpl_name . '.html'
+			'blg_tpl' => '@canidev_blockgets/blocks/' . $tpl_name . '.html'
 		));
 
 		return $this->template->assign_display('blg_tpl');
@@ -226,7 +248,7 @@ class base
 			$data = @unserialize($content);
 		}
 
-		if($data === false || (empty($data) && !$allow_empty))
+		if(!$allow_empty && empty($data))
 		{
 			return false;
 		}
@@ -253,13 +275,12 @@ class base
 	*/
 	public function generate_text_display($text)
 	{
-		$parser = $this->container->get('canidev.blockgets.parser');
 		$bbcode = $this->bbcode('get');
 
 		$text = censor_text($text);
 
-		$parse_flags = ($bbcode['bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-		$text = $parser->generate_text_for_display($text, $bbcode['uid'], $bbcode['bitfield'], $parse_flags);
+		$parse_flags = ($bbcode['bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES | BLG_FLAG_HTML;
+		$text = generate_text_for_display($text, $bbcode['uid'], $bbcode['bitfield'], $parse_flags);
 	
 		// Parse language and template vars
 		if(strpos($text, '{') !== false)
@@ -271,7 +292,7 @@ class base
 			}
 			
 			$text = preg_replace_callback('#\{L_([A-Z0-9_\-]+)\}#', function($matches) {
-						return $this->lang->is_set($matches[1]) ? $this->lang->get($matches[1]) : '';
+						return $this->lang->is_set($matches[1]) ? $this->lang->lang($matches[1]) : '';
 					}, $text);
 					
 			$text = preg_replace_callback('#\{([A-Z0-9_-]+)\}#', function($matches) {
@@ -294,5 +315,20 @@ class base
 		$style = $this->data['block_style'];
 		
 		return (isset($styles[$style]) ? $styles[$style] : $styles[BLOCK_STYLE_DEFAULT]);
+	}
+
+	public function view_is_medium()
+	{
+		return isset($this->data['size_view']) && ($this->data['size_view'] & self::VIEW_MEDIUM);
+	}
+
+	public function view_is_small()
+	{
+		if($this->view_is_medium())
+		{
+			return false;
+		}
+
+		return isset($this->data['size_view']) && ($this->data['size_view'] & self::VIEW_SMALL);
 	}
 }

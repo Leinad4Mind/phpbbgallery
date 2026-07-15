@@ -1,24 +1,17 @@
 <?php
 /*
-* @name paypal_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class paypal_block extends base
 {
-	static $icon = 'blg-icon-paypal';
+	static $icon = 'fa-paypal';
 
 	public function init()
 	{
@@ -29,7 +22,7 @@ class paypal_block extends base
 			return false;
 		}
 
-		$default_img = 'https://www.paypal.com/' . $this->helper->locale_lang() . '/i/btn/btn_donate_LG.gif';
+		$default_img = 'https://www.paypal.com/' . $this->helper->locale_lang(false, 'iso') . '/i/btn/btn_donate_LG.gif';
 		
 		$amount_options = $s_currency_options = '';
 
@@ -50,7 +43,7 @@ class paypal_block extends base
 				if($this->lang->is_set(array('currencies', $value)))
 				{
 					$selected = ($value == $data['default_currency']) ? ' selected="selected"' : '';
-					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->lang->get(array('currencies', $value)) . '</option>';
+					$s_currency_options .= '<option value="' . $value . '"' . $selected . '>' . $this->lang->lang(array('currencies', $value)) . '</option>';
 				}
 			}
 		}
@@ -74,15 +67,13 @@ class paypal_block extends base
 
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
-		$parser = $this->container->get('canidev.blockgets.parser');
-
 		switch($mode)
 		{
 			case 'validate':
 				if(!empty($new['msg']))
 				{
 					$bbcode = $this->bbcode('get');
-					$parser->decode_message($new['msg'], $bbcode['uid']);
+					decode_message($new['msg'], $bbcode['uid']);
 				}
 				
 				if(!empty($new['default_currency']) && !$submit)
@@ -92,9 +83,9 @@ class paypal_block extends base
 			break;
 
 			case 'submit':
-				$this->lang->add('posting');
+				$this->lang->add_lang('posting');
 
-				$parser->generate_text_for_storage($new['msg'], $uid, $bitfield, $flags);
+				generate_text_for_storage($new['msg'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
 				$this->bbcode('set', $uid, $bitfield);
 				
 				$new['currencies'] 			= $this->request->variable('currency', array(0 => ''));
@@ -126,7 +117,7 @@ class paypal_block extends base
 		{
 			$default = $this->request->variable('default_currency', '');
 
-			foreach($this->lang->get_raw('currencies') as $value => $title)
+			foreach($this->lang->lang_raw('currencies') as $value => $title)
 			{
 				$default_checked = ($value == $default) ? ' checked="checked"' : '';
 				$checked = (in_array($value, $selected_ary) ? ' checked="checked"' : '');

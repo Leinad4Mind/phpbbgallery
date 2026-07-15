@@ -1,24 +1,17 @@
 <?php
 /*
-* @name frame_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class frame_block extends base
 {
-	static $icon = 'blg-icon-object-group';
+	static $icon = 'fa-object-group';
 
 	public function init()
 	{
@@ -43,17 +36,16 @@ class frame_block extends base
 	public function get_config()
 	{
 		$mimetypes = array(
-			'text/plain'					=> 'MIME_PLAIN',
-			'text/html'						=> 'MIME_HTML',
-			'application/pdf'				=> 'MIME_PDF',
-			'application/x-shockwave-flash'	=> 'MIME_FLASH',
+			'text/plain'		=> 'MIME_PLAIN',
+			'text/html'			=> 'MIME_HTML',
+			'application/pdf'	=> 'MIME_PDF',
 		);
 
 		$this->display_vars = array(
-			'frame_mimetype' 	=> array('lang' => 'FRAME_MIMETYPE',	'validate' => 'string', 		'type' => 'select', 'method' => 'helper',	'params' => array('make_select', $mimetypes, '{CONFIG_VALUE}'),	'default' => 'text/html'),
+			'frame_mimetype' 	=> array('lang' => 'FRAME_MIMETYPE',	'validate' => 'string', 		'type' => 'select', 'method' => 'helper',	'params' => array('make_select', $mimetypes, false,'{CONFIG_VALUE}'),	'default' => 'text/html'),
 			'frame_url'  		=> array('lang' => 'FRAME_URL',			'validate' => 'string:1:255',  	'type' => 'text:50:255'),
-			'frame_width'  		=> array('lang' => 'FRAME_WIDTH',		'validate' => 'int',  			'type' => 'text:5:4'),
-			'frame_height'  	=> array('lang' => 'FRAME_HEIGHT',		'validate' => 'int',  			'type' => 'text:5:4'),
+			'frame_width'  		=> array('lang' => 'FRAME_WIDTH',		'validate' => 'int',  			'type' => 'number'),
+			'frame_height'  	=> array('lang' => 'FRAME_HEIGHT',		'validate' => 'int',  			'type' => 'number'),
 		);
 
 		return true;

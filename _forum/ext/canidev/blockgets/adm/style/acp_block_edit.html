@@ -1,71 +1,73 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
-<!-- IF U_BACK --><div class="blg-align-right floated"><a href="{U_BACK}" class="blg-button">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+{% if U_BACK %}<div class="blg-align-right floated"><a href="{{ U_BACK }}">&laquo; {L_BACK}</a></div>{% endif %}
 
 <h1>{L_TITLE}</h1>
 <p>{L_TITLE_EXPLAIN}</p>
 
-<form id="acp_block_form" name="acp_block_form" method="post" action="{U_ACTION}">
+<form id="acp_block_form" name="acp_block_form" method="post" action="{{ U_ACTION }}">
 
-<!-- BEGIN options -->
-	<!-- IF options.S_LEGEND -->
-		<!-- IF not options.S_FIRST_ROW -->
+{% for options in loops.options %}
+	{% if options.S_LEGEND %}
+		{% if not options.S_FIRST_ROW %}
 			</fieldset>
-		<!-- ENDIF -->
+		{% endif %}
 		<fieldset>
-			<legend>{options.LEGEND}</legend>
-	<!-- ELSE -->
+			<legend>{{ options.LEGEND }}</legend>
+	{% else %}
 
 		<dl>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
-			<dd>{options.CONTENT}</dd>
+			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{L_COLON}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
+			<dd>{{ options.CONTENT }}</dd>
 		</dl>
 
-	<!-- ENDIF -->
-<!-- END options -->
+	{% endif %}
+{% endfor %}
 
 </fieldset>
 
-<!-- IF not HAS_CONFIG and not HAS_LINKS -->
-	<div class="blg-message blg-state-ok">{L_BLOCK_NO_CONFIG}</div>
-<!-- ELSE -->
+{% if not HAS_CONFIG and not HAS_LINKS %}
+	<div class="blg-message cbb-state-ok">{L_BLOCK_NO_CONFIG}</div>
+{% else %}
 <div class="block-config-tabs">
 	<ul>
-		<!-- IF HAS_CONFIG --><li><a href="#block-config-tab">{L_CONFIG}</a></li><!-- ENDIF -->
-		<!-- IF HAS_LINKS --><li><a href="#block-links-tab">{S_LINKS_TITLE}</a></li><!-- ENDIF -->
+		{% if HAS_CONFIG %}<li><a href="#block-config-tab">{L_CONFIG}</a></li>{% endif %}
+		{% if HAS_LINKS %}<li><a href="#block-links-tab">{{ S_LINKS_TITLE }}</a></li>{% endif %}
 	</ul>
 	
-<!-- IF HAS_CONFIG -->
+{% if HAS_CONFIG %}
 	<div id="block-config-tab">
-	<!-- IF CONFIG_TEMPLATE -->
-		<!-- INCLUDE {CONFIG_TEMPLATE} -->
-	<!-- ELSE -->
+	{% if config|length %}
 		<fieldset>
-		<!-- BEGIN config -->
+		{% for config in loops.config %}
 			<dl>
-				<dt><label for="{options.KEY}">{config.TITLE}:</label><!-- IF config.S_EXPLAIN --><br /><span>{config.S_EXPLAIN}</span><!-- ENDIF --></dt>
-				<dd>{config.CONTENT}</dd>
+				<dt><label for="{{ config.KEY }}">{{ config.TITLE }}{L_COLON}</label>{% if config.S_EXPLAIN %}<br /><span>{{ config.S_EXPLAIN }}</span>{% endif %}</dt>
+				<dd>{{ config.CONTENT }}</dd>
 			</dl>
-		<!-- END config -->
+		{% endfor %}
 		</fieldset>
-	<!-- ENDIF -->
-	</div>
-<!-- ENDIF -->
+	{% endif %}
 
-<!-- IF HAS_LINKS -->
-	<div id="block-links-tab">
-		<!-- INCLUDE acp_list_edit.html -->
+	{% if CONFIG_TEMPLATE %}
+		{% include CONFIG_TEMPLATE %}
+	{% endif %}
 	</div>
-<!-- ENDIF -->
+{% endif %}
+
+{% if HAS_LINKS %}
+	<div id="block-links-tab">
+		{% include 'acp_list_edit.html' %}
+	</div>
+{% endif %}
 
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-	<div class="blg-submit-buttons">
-		<!-- IF S_ADD_MODE -->&nbsp;<input class="blg-button" type="submit" name="submitmore" value="{L_SAVE_AND_ADD}" /><!-- ENDIF -->
-		<input class="blg-button default-action" type="submit" name="submit" value="{L_SAVE}" />
-		{S_HIDDEN_FIELDS}
+	<div class="cbb-submit-buttons">
+		{% if S_ADD_MODE %}&nbsp;<input class="cbb-btn" type="submit" name="submitmore" value="{L_SAVE_AND_ADD}" />{% endif %}
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
+		{{ S_HIDDEN_FIELDS }}
 	</div>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

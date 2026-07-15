@@ -1,21 +1,21 @@
 <?php
-/** 
+/*
 * acp_blocks.php [English [En]]
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
-if (!defined('IN_PHPBB'))
+if(!defined('IN_PHPBB'))
 {
 	exit;
 }
 
-if (empty($lang) || !is_array($lang))
+if(empty($lang) || !is_array($lang))
 {
 	$lang = array();
 }
@@ -26,7 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Allow collapse the block',
-	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Enable or disable the ability for each user to collapse/expand this block.',
+	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Enable or disable the ability for each user to collapse/expand this block and defines its initial state.',
 	'BLOCK_ENABLED'				=> 'Block enabled',
 	'BLOCK_ENABLED_EXPLAIN'		=> 'Defines whether this block display in the forum.',
  	'BLOCK_CURRENT_ICON'			=> 'Block icon',
@@ -41,7 +41,12 @@ $lang = array_merge($lang, array(
 
 	// Common tags
 	'ALL_FORUMS'				=> 'All forums',
+	'COLLAPSE_HIDDEN'			=> 'Allow (collapsed by default)',
+	'COLLAPSE_NONE'				=> 'Not Allow',
+	'COLLAPSE_VISIBLE'			=> 'Allow (displayed by default)',
 	'CONFIG'					=> 'Configuration',
+	'DESIGN_FULL'				=> 'Full',
+	'DESIGN_SIMPLE'				=> 'Simple',
 	'FORUMS'					=> 'Forums',
 	'FORUMS_EXPLAIN'			=> 'Forums that contain the topics to show. You can select as many as you like using the <em>Ctrl</em> key on your keyboard.',
 	'IGNORE_AUTH'				=> 'Ignore auth',
@@ -50,7 +55,14 @@ $lang = array_merge($lang, array(
 	'SHOW_PAGINATION'			=> 'Show pagination',
 	'SHOW_PAGINATION_EXPLAIN'	=> 'Show the pagination to allow user to view older posts.',
 	'TITLE_LIMIT'				=> 'Title limit',
-	'TITLE_LIMIT_EXPLAIN'		=> 'Number of characters that be show in the topic titles.',
+	'TITLE_LIMIT_EXPLAIN'		=> 'Maximum number of characters that will be displayed in the topic titles.<br />
+		<em>Set 0 to show the full title.</em>',
+	'TOPIC_DESIGN'				=> 'Block design',
+	'TOPIC_DESIGN_EXPLAIN'		=> 'Determine how the topics will be displayed in the block.<br />
+		<em><strong>Full:</strong> Show all information whenever possible.</em><br />
+		<em><strong>Simple:</strong> Show only basic information.</em>',
+	'TOPIC_PARENT_SHOW'			=> 'Show parent forum',
+	'TOPIC_PARENT_SHOW_EXPLAIN'	=> 'If enabled, a link to the forum for each topic will be displayed.',
 	
 	// age_ranges_block
 	'AGE_START'					=> 'Minimum age',
@@ -95,7 +107,8 @@ $lang = array_merge($lang, array(
 
 	// birthdays_block
  	'NEXT_BIRTHDAYS'			=> 'Upcoming Birthdays',
- 	'NEXT_BIRTHDAYS_EXPLAIN'	=> 'Show birthdays that occur in the coming days. Maximum 30 days. Set to 0 to disable it.',
+ 	'NEXT_BIRTHDAYS_EXPLAIN'	=> 'Show birthdays that occur in the coming days.<br />
+ 		<em>Maximum 30 days. Set to 0 to disable it.</em>',
 
 	// calendar_block
  	'CALENDAR_BIRTHDAYS'			=> 'Show Birthdays',
@@ -112,6 +125,18 @@ $lang = array_merge($lang, array(
 	'CONTACT_HIDE_FIELDS'			=> 'Hide user data',
 	'CONTACT_HIDE_FIELDS_EXPLAIN'	=> 'If enabled, the "Name" and "Email" fields for the register users will be hidden and the block will be used their profile values.',
  
+	// countdown block
+	'COUNTDOWN_COMPLETE_MSG'			=> 'Text upon completion',
+	'COUNTDOWN_COMPLETE_MSG_EXPLAIN'	=> 'Text to be displayed when the counter reaches 0.',
+	'COUNTDOWN_TARGET'					=> 'Deadline',
+	'COUNTDOWN_TARGET_EXPLAIN'			=> 'Set the date and time the counter will reach 0.<br /><br />
+		<em><strong>Valid formats</strong>
+			<br />Year/Month/Day
+			<br />Year/Month/Day Hour:Minute:Second
+		</em>',
+	'COUNTDOWN_RUNNING_MSG'				=> 'Hold text',
+	'COUNTDOWN_RUNNING_MSG_EXPLAIN'		=> 'Text to be displayed while the counter is running.',
+
 	// counter block
 	'COUNTER_LOCAL'				=> 'Local counter',
 	'COUNTER_LOCAL_EXPLAIN'		=> 'If enabled, the counter only show the visits to it\'s page, otherwise, the counter show the total visits to the forum.',
@@ -140,7 +165,6 @@ $lang = array_merge($lang, array(
 	'FORUMS_FORUM'		=> 'Forum to show',
 	
 	// frame_block
-	'MIME_FLASH'		=> 'Flash file',
 	'MIME_HTML'			=> 'Web page',
 	'MIME_PDF'			=> 'PDF file',
 	'MIME_PLAIN'		=> 'Plain Text file',
@@ -155,28 +179,29 @@ $lang = array_merge($lang, array(
 	'FRAME_WIDTH_EXPLAIN'		=> 'Frame width in pixels. Set to 0 to auto adjust.',
 	
 	// gallery_block
-	'GALLERY_CUSTOM'			=> 'Custom images',
-	'GALLERY_CUSTOM_EXPLAIN'	=> 'Specify the list containing the images to be displayed.',
-	'GALLERY_DIRECTION'			=> 'Scroll direction',
-	'GALLERY_FORUMS'			=> 'Forums',
-	'GALLERY_FORUMS_EXPLAIN'	=> 'Defines the forums to read the attachments.',
-	'GALLERY_FPS'				=> 'Scroll speed',
-	'GALLERY_HEIGHT'			=> 'Gallery height',
-	'GALLERY_MANAGE'			=> 'Manage gallery',
-	'GALLERY_MARGIN'			=> 'Image margin',
-	'GALLERY_POSTS'				=> 'Posts',
-	'GALLERY_POSTS_EXPLAIN'		=> 'Posts IDs to read the attachments,, splitted with commas. (Ex: 1,2,3).',
-	'GALLERY_TOPICS'			=> 'Topics',
-	'GALLERY_TOPICS_EXPLAIN'	=> 'Topics IDs to read the attachments, splitted with commas. (Ex: 1,2,3).',
-	'GALLERY_TYPE'				=> 'Gallery type',
-	'GALLERY_TYPE_EXPLAIN'		=> 'Defines the data (see below) used to select the images.',
-	'GALLERY_ZOOM'				=> 'Zoom',
-	'GALLERY_ZOOM_EXPLAIN'		=> 'Size difference on image\'s mouse over (in pixels)',
+	'GALLERY_CUSTOM'				=> 'Custom images',
+	'GALLERY_CUSTOM_EXPLAIN'		=> 'Specify the list containing the images to be displayed.',
+	'GALLERY_DIRECTION'				=> 'Scroll direction',
+	'GALLERY_FORUMS'				=> 'Forums',
+	'GALLERY_FORUMS_EXPLAIN'		=> 'Defines the forums to read the attachments.',
+	'GALLERY_FPS'					=> 'Scroll speed',
+	'GALLERY_HEIGHT'				=> 'Gallery height',
+	'GALLERY_MANAGE'				=> 'Manage gallery',
+	'GALLERY_MARGIN'				=> 'Image margin',
+	'GALLERY_MAX_NUMBER'			=> 'Number of images',
+	'GALLERY_MAX_NUMBER_EXPLAIN'	=> 'Maximum attachments that will be read from the forums/topics/posts',
+	'GALLERY_POSTS'					=> 'Posts',
+	'GALLERY_POSTS_EXPLAIN'			=> 'Posts IDs to read the attachments, splitted with commas. (Ex: 1,2,3).',
+	'GALLERY_SOURCE'				=> 'Origin of the images',
+	'GALLERY_SOURCE_EXPLAIN'		=> 'Define what type of images will be loaded from the forums, topics or messages specified.',
+	'GALLERY_TOPICS'				=> 'Topics',
+	'GALLERY_TOPICS_EXPLAIN'		=> 'Topics IDs to read the attachments, splitted with commas. (Ex: 1,2,3).',
+	'GALLERY_ZOOM'					=> 'Zoom',
+	'GALLERY_ZOOM_EXPLAIN'			=> 'Size difference on image\'s mouse over (in pixels)',
 	
-	'GALLERY_TYPE_FORUMS'		=> 'Forum attachments',
-	'GALLERY_TYPE_TOPICS'		=> 'Topic attachments',
-	'GALLERY_TYPE_POSTS'		=> 'Post attachments',
-	'GALLERY_TYPE_CUSTOM'		=> 'Custom images',
+	'GALLERY_SOURCE_ALL'			=> 'All',
+	'GALLERY_SOURCE_ATTACHMENTS'	=> 'Only attachments',
+	'GALLERY_SOURCE_IMAGES'			=> 'Only embedded images',
 	
 	'IMG_TITLE'			=> 'Image title',
 	'IMG_URL'			=> 'Image url',
@@ -184,6 +209,8 @@ $lang = array_merge($lang, array(
 	
 	// google_translate_block
 	'GOOGLE_LANGS'		=> 'Languages to show in the block',
+	'GOOGLE_SHOW_NAMES'			=> 'Show names',
+	'GOOGLE_SHOW_NAMES_EXPLAIN'	=> 'If enabled, the language name will be displayed next to its flag.',
 	
 	// latest_bots_block
 	'BOTS_NUMBER'				=> 'Bots to show',
@@ -194,11 +221,16 @@ $lang = array_merge($lang, array(
 	'MEMBERS_NUMBER_EXPLAIN'	=> 'Maximum number of users that will be shown in block.',
 	
 	// leaders_block
-	'LEADERS_GROUPS'			=> 'Groups',
-	'LEADERS_GROUPS_EXPLAIN'	=> 'Groups that will be show in the block. If you don\'t select groups, the block will be show the Administrators and Moderators.',
-	'LEADERS_MODE'				=> 'Display mode',
-	'LEADERS_MODE_ACCORDION'	=> 'Accordion',
-	'LEADERS_MODE_SIMPLE'		=> 'Simple List',
+	'LEADERS_ALL_GROUPS'			=> 'Show users in all their groups',
+	'LEADERS_ALL_GROUPS_EXPLAIN'	=> 'If enabled, users will be shown in all groups of which they are members.
+		Otherwise they will only be shown in their default group.',
+	'LEADERS_GROUPS'				=> 'Groups',
+	'LEADERS_GROUPS_EXPLAIN'		=> 'Groups that will be show in the block. If you don\'t select groups, the block will be show the Administrators and Moderators.',
+	'LEADERS_MODE'					=> 'Display mode',
+	'LEADERS_MODE_ACCORDION'		=> 'Accordion',
+	'LEADERS_MODE_SIMPLE'			=> 'Simple List',
+	'LEADERS_ONLY_ONLINE'			=> 'Online users only',
+	'LEADERS_ONLY_ONLINE_EXPLAIN'	=> 'If enabled, only users from selected groups who are logged in will be displayed.',
 
 	// link_us_block
 	'US_BANNER'					=> 'Mini banner link',
@@ -220,6 +252,8 @@ $lang = array_merge($lang, array(
 	'LOCATION_INCORRECT'		=> 'he position entered is incorrect.',
 	'LOCATION_POSITION'			=> 'Position',
 	'LOCATION_POSITION_EXPLAIN'	=> 'Defines the latitude and longitude of the location.',
+	'LOCATION_TEXT'				=> 'Content',
+	'LOCATION_TEXT_EXPLAIN'		=> 'Text to be displayed on the map, by clicking on the location icon.<br /><em>BBcode is allowed.</em>',
 	'LOCATION_TITLE'			=> 'Title',
 	'MAP'						=> 'Map',
 	'MAP_CENTER'				=> 'Central point',
@@ -263,21 +297,6 @@ $lang = array_merge($lang, array(
 	'NEWS_SHOW_FULL'			=> 'Complete content',
 	'NEWS_SHOW_SIMPLE'			=> 'Basic content',
 	
-	// last_replies_block
-	'LAST_REPLIES_DISPLAY'				=> 'Information to show',
-	'LAST_REPLIES_DISPLAY_EXPLAIN'		=> '<em><strong>Basic content:</strong>Show title, author and date.<br />
-		<strong>Full content:</strong>Show all news information.</em>',
-	'LAST_REPLIES_NUMBER'				=> 'News number',
-	'LAST_REPLIES_NUMBER_EXPLAIN'		=> 'Maximum number of news items displayed in the block.',
-	'LAST_REPLIES_SIZE'					=> 'News size',
-	'LAST_REPLIES_SIZE_EXPLAIN'			=> 'Maximum size of characters allowed in the news. The text of the news will be cut if this value exceeds.',
-	'LAST_REPLIES_ALL'					=> 'Show all topics',
-	'LAST_REPLIES_ALL_EXPLAIN'			=> 'If enabled, you also read the items marked as "announcement" and "fixed", otherwise, only read the "normal" topics.',
-	'LAST_REPLIES_COLLAPSE'				=> 'Collapse news',
-	'LAST_REPLIES_COLLAPSE_EXPLAIN'		=> 'If enabled, the block only show one notice and collapse the rest. Otherwise, the news will appear all at once on the block.',
-	'LAST_REPLIES_SHOW_FULL'			=> 'Complete content',
-	'LAST_REPLIES_SHOW_SIMPLE'			=> 'Basic content',
-	
 	// paypal_block
 	'PAYPAL_ACCOUNT'			=> 'Paypal account',
 	'PAYPAL_ACCOUNT_EXPLAIN'	=> 'Enter the e-mail address of your Paypal account ex: xxx@xxx.com',
@@ -294,7 +313,8 @@ $lang = array_merge($lang, array(
 	
 	//player block
 	'PLAYER_AUTOPLAY'			=> 'Autoplay',
-	'PLAYER_AUTOPLAY_EXPLAIN'	=> 'Define if the player will be playing the tracks on page load.',
+	'PLAYER_AUTOPLAY_EXPLAIN'	=> 'Defines whether the player will automatically start playing the tracks when the page loads.<br /><br />
+		<em><strong>Note:</strong>Browsers limit this feature so playback will not begin until the user clicks anywhere on the page.</em>',
 	'PLAYER_PLAYLIST'			=> 'Show playlist',
 	'PLAYER_PLAYLIST_EXPLAIN'	=> 'Defines if the playlist is displayed in the player.',
 	'PLAYER_TRACKLIST'			=> 'Tracklist',
@@ -319,14 +339,9 @@ $lang = array_merge($lang, array(
 	'NO_FORUMS'					=> 'No forums avaliable',
 	
 	// post_view_block
-	'PV_ITEM_ID'			=> 'Object ID',
-	'PV_ITEM_ID_EXPLAIN'	=> 'Set here the ID of the forum, topic or post. This param depends on the option select below.',
-	'PV_MODE'				=> 'Display mode',
-	'PV_MODE_CUSTOM'		=> 'Custom message',
-	'PV_MODE_EXPLAIN'		=> 'Set the type of content to show.',
-	'PV_MODE_FORUM'			=> 'Last post in a forum',
-	'PV_MODE_TOPIC_FIRST'	=> 'First post in a topic',
-	'PV_MODE_TOPIC_LAST'	=> 'Last post in a topic',
+	'PV_ITEM_URL'			=> 'Referral URL',
+	'PV_ITEM_URL_EXPLAIN'	=> 'Specify here the URL of the forum, topic or message you want to display.<br />
+		<em><strong>Note:</strong> The url of a forum or topic will display it\'s last message.</em>',
 	
 	// quote_of_day_block
 	'QUOTE_AUTHOR'				=> 'Quote author',
@@ -347,6 +362,8 @@ $lang = array_merge($lang, array(
 	// recent_topics_block
 	'RECENT_FORUMS'					=> 'Topic forums',
 	'RECENT_FORUMS_EXPLAIN'			=> 'Forums containing items to be displayed. If you do not select any, it will use all the forums. You can select as many as you like using the <em>Ctrl</em> key on your keyboard.',
+	'RECENT_SECTIONS'				=> 'Sections',
+	'RECENT_SECTIONS_EXPLAIN'		=> 'Define the sections to be displayed in the block and their order.',
 	'RECENT_TOPIC_LIMIT'			=> 'Topic limit',
 	'RECENT_TOPIC_LIMIT_EXPLAIN'	=> 'Maximum number of items to be displayed in each tab.',
 
@@ -399,11 +416,11 @@ $lang = array_merge($lang, array(
 	'TOP'			=> 'Top',
 	
 	//share_block
-	'SHARE_COUNTER'			=> 'Show counter',
-	'SHARE_COUNTER_EXPLAIN'	=> 'Displays the timesharing counter on the right side of the buttons.',
-	'SHARE_URL'				=> 'Reference URL',
-	'SHARE_URL_EXPLAIN'		=> 'Set a fixed reference url for the buttons. Leave this field blank to use the displayed page.',
-	'SHARE_BUTTONS'			=> 'Buttons to show',
+	'SHARE_SHOW_NAMES'			=> 'Show names',
+	'SHARE_SHOW_NAMES_EXPLAIN'	=> 'If enabled, the name of the social network will be displayed next to its icon.',
+	'SHARE_URL'					=> 'Reference URL',
+	'SHARE_URL_EXPLAIN'			=> 'Set a fixed reference url for the buttons. Leave this field blank to use the displayed page.',
+	'SHARE_BUTTONS'				=> 'Buttons to show',
 	
 	// stats_block
 	'STATS_INLINE'			=> 'Show data in line',
@@ -420,8 +437,6 @@ $lang = array_merge($lang, array(
 	// topic_index_block
 	'TINDEX_CHAR_SELECT'			=> 'Show Index',
 	'TINDEX_CHAR_SELECT_EXPLAIN'	=> 'Only avaliable if the sort method is <em>Topic title</em>.',
-	'TINDEX_ONLY_TITLE'			=> 'Only title',
-	'TINDEX_ONLY_TITLE_EXPLAIN'	=> 'If enabled, the block only show the topic titles, else, the block show the main information of the topic.',
 	'TINDEX_PER_PAGE'			=> 'Topics per page',
 	'TINDEX_PER_PAGE_EXPLAIN'	=> 'Number of topics that will be show at the same time. Set 0 to disable pagination.',
 	'TINDEX_SORT_MODE'			=> 'Order by',
@@ -459,5 +474,5 @@ $lang = array_merge($lang, array(
 	'YT_VIDEO_SIZE'				=> 'Player size',
 	'YT_VIDEO_TITLE'			=> 'Video title',
 	'YT_VIDEO_URL'				=> 'Video url',
-	'YT_VIDEO_URL_EXPLAIN'		=> 'Ex: <em>http://www.youtube.com/watch?v=gJ-qKJwxYDE</em>',
+	'YT_VIDEO_URL_EXPLAIN'		=> 'Ex: <em>https://www.youtube.com/watch?v=NHH_v0k7Gus</em>',
 ));

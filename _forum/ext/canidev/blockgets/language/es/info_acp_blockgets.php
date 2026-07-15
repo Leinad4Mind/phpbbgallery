@@ -1,12 +1,11 @@
 <?php
-/** 
+/*
 * info_acp_blockgets.php [Spanish [Es]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore

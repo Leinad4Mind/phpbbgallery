@@ -1,24 +1,17 @@
 <?php
 /*
-* @name forums_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class forums_block extends base
 {
-	static $icon = 'blg-icon-sitemap';
+	static $icon = 'fa-sitemap';
 
 	public function init()
 	{
@@ -57,12 +50,13 @@ class forums_block extends base
 			}
 		}
 
-		/**
+		/*
 		* @event block.forums_query
 		* @var array	sql_array		The SQL data
+		* @var	array	data			Block Configuration
 		* @since 2.0.0
 		*/
-		$vars = array('sql_ary');
+		$vars = array('sql_array', 'data');
 		extract($this->dispatcher->trigger_event('block.forums_query', compact($vars)));
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -186,13 +180,14 @@ class forums_block extends base
 					'U_VIEWFORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id'])
 				);
 
-				/**
+				/*
 				* @event block.forums_row_category
 				* @var array	forum_row		The output array
 				* @var array	row				The original data
+				* @var	array	data			Block Configuration
 				* @since 2.0.0
 				*/
-				$vars = array('forum_row', 'row');
+				$vars = array('forum_row', 'row', 'data');
 				extract($this->dispatcher->trigger_event('block.forums_row_category', compact($vars)));
 				
 				$this->template->assign_block_vars('forum_row', $forum_row);
@@ -207,7 +202,7 @@ class forums_block extends base
 			$folder_alt = '';
 			$subforums_list = array();
 
-			$forum_icon		= ($forum_unread) ? 'blg-icon-folder' : 'blg-icon-folder-open';
+			$forum_icon		= ($forum_unread) ? 'fa-folder' : 'fa-folder-open';
 			$folder_image	= '';
 			$last_post_subject = $last_post_time = $last_post_url = '';
 
@@ -250,7 +245,7 @@ class forums_block extends base
 						$forum_unread = true;
 					}
 					
-					$l_subforums = (sizeof($subforums[$forum_id]) == 1) ? $this->lang->get('SUBFORUM') . ': ' : $this->lang->get('SUBFORUMS') . ': ';
+					$l_subforums = (sizeof($subforums[$forum_id]) == 1) ? $this->lang->lang('SUBFORUM') . ': ' : $this->lang->lang('SUBFORUMS') . ': ';
 					$folder_image = ($forum_unread) ? 'forum_unread_subforum' : 'forum_read_subforum';
 				}
 			}
@@ -264,7 +259,7 @@ class forums_block extends base
 
 					case FORUM_LINK:
 						$folder_image	= 'forum_link';
-						$forum_icon		= 'blg-icon-link';
+						$forum_icon		= 'fa-link';
 					break;
 				}
 			}
@@ -298,7 +293,7 @@ class forums_block extends base
 			$s_subforums_list = array();
 			foreach($subforums_list as $subforum)
 			{
-				$s_subforums_list[] = '<a href="' . $subforum['link'] . '" class="subforum ' . (($subforum['unread']) ? 'unread' : 'read') . '" title="' . (($subforum['unread']) ? $this->lang->get('UNREAD_POSTS') : $this->lang->get('NO_UNREAD_POSTS')) . '">' . $subforum['name'] . '</a>';
+				$s_subforums_list[] = '<a href="' . $subforum['link'] . '" class="subforum ' . (($subforum['unread']) ? 'unread' : 'read') . '" title="' . (($subforum['unread']) ? $this->lang->lang('UNREAD_POSTS') : $this->lang->lang('NO_UNREAD_POSTS')) . '">' . $subforum['name'] . '</a>';
 			}
 			$s_subforums_list = (string) implode(', ', $s_subforums_list);
 
@@ -347,13 +342,14 @@ class forums_block extends base
 				'U_VIEWFORUM'		=> $u_viewforum,
 			);
 
-			/**
+			/*
 			* @event block.forums_row_item
 			* @var array	forum_row		The output array
 			* @var array	row				The original data
+			* @var	array	data			Block Configuration
 			* @since 2.0.0
 			*/
-			$vars = array('forum_row', 'row');
+			$vars = array('forum_row', 'row', 'data');
 			extract($this->dispatcher->trigger_event('block.forums_row_item', compact($vars)));
 			
 			$this->template->assign_block_vars('forum_row', $forum_row);
@@ -384,7 +380,7 @@ class forums_block extends base
 				'padding'		=> '',
 				'selected'		=> (empty($select_id) ? true : false),
 				'forum_id'		=> 0,
-				'forum_name'	=> $this->lang->get('ALL_FORUMS'),
+				'forum_name'	=> $this->lang->lang('ALL_FORUMS'),
 				'forum_type'	=> 0,
 			)
 		);

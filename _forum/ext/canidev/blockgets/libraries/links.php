@@ -1,14 +1,15 @@
 <?php
 /*
-* @name links.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\libraries;
+
+use \canidev\core\json_response;
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -34,12 +35,14 @@ class links
 			'subtitle'	=> 'url',
 		)
 	);
-	
+
 	protected $cache;
 	protected $db;
 	protected $dispatcher;
 	protected $helper;
+	protected $helper_acp;
 	protected $lang;
+	protected $media;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -51,30 +54,44 @@ class links
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
 	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
 	* @param \canidev\blockgets\libraries\helper		$helper				Blockgets helper Object
-	* @param \canidev\blockgets\libraries\language		$language			Blockgets language Object
+	* @param \canidev\blockgets\libraries\helper_acp	$helper_acp			Blockgets ACP helper Object
+	* @param \phpbb\language\language					$language			Language Object
 	* @param \phpbb\request\request 					$request			Request object
 	* @param \phpbb\template\template					$template     		Template object
 	* @param \phpbb\user								$user				User object
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, $phpbb_dispatcher, \canidev\blockgets\libraries\helper $helper, \canidev\blockgets\libraries\language $language, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(
+		\phpbb\cache\driver\driver_interface $cache,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher,
+		\canidev\blockgets\libraries\helper $helper,
+		\canidev\blockgets\libraries\helper_acp $helper_acp,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\template\template $template,
+		\phpbb\user $user)
 	{
-		$this->cache		= $cache;
-		$this->db			= $db;
-		$this->dispatcher	= $phpbb_dispatcher;
-		$this->helper		= $helper;
-		$this->lang			= $language;
-		$this->request		= $request;
-		$this->template		= $template;
-		$this->user			= $user;
+		$this->cache			= $cache;
+		$this->db				= $db;
+		$this->dispatcher		= $phpbb_dispatcher;
+		$this->helper			= $helper;
+		$this->helper_acp		= $helper_acp;
+		$this->lang				= $language;
+		$this->request			= $request;
+		$this->template			= $template;
+		$this->user				= $user;
 		
 		$this->cache_id = $this->request->variable('cache_id', '');
+		$this->media 	= $this->helper->get_media();
 	}
 	
 	public function acp_template($rtn_output = false)
 	{
 		$item_ary = $this->load();
+
+		$this->media->do_actions();
 		
 		if(!$this->cache_id)
 		{
@@ -82,7 +99,7 @@ class links
 			$this->cache->put('_blockgets_list_' . $cache_id, $item_ary, 3600);
 			
 			$this->template->assign_vars(array(
-				'S_ADD_ITEM'		=> $this->lang->get($this->options['btn_title']),
+				'S_ADD_ITEM'		=> $this->lang->lang($this->options['btn_title']),
 				'S_LIST'			=> !$this->request->is_ajax(),
 				'S_LIST_ID'			=> gen_rand_string(4),
 				'S_LIST_FORMAT'		=> $this->options['format'],
@@ -155,7 +172,7 @@ class links
 	
 	public function get_title()
 	{
-		return $this->lang->get($this->options['title']);
+		return $this->lang->lang($this->options['title']);
 	}
 	
 	public function set_base_url($url)
@@ -214,9 +231,9 @@ class links
 		
 		if(!$this->cache_id)
 		{
-			$this->helper->trigger_error(array(
-				'message'	=> 'Error', // falta
-				'status'	=> BLG_JSON_ERROR
+			$this->helper->json->send(array(
+				'message'	=> $this->lang->lang('AJAX_ERROR_TEXT'),
+				'status'	=> json_response::JSON_STATUS_ERROR
 			));
 		}
 		
@@ -228,9 +245,9 @@ class links
 				// If no data, quit in this point
 				if(!isset($item_ary[$link_id]))
 				{
-					$this->helper->trigger_error(array(
-						'message'	=> 'Error', // falta
-						'status'	=> BLG_JSON_ERROR
+					$this->helper->json->send(array(
+						'message'	=> $this->lang->lang('AJAX_ERROR_TEXT'),
+						'status'	=> json_response::JSON_STATUS_ERROR
 					));
 				}
 				
@@ -246,6 +263,7 @@ class links
 				
 				$type 			= ($this->options['type'] == LIST_TYPE_ICON) ? 'icon' : 'image';
 				$dialog_title	= strtoupper($action);
+				$error			= array();
 				
 				if($action == 'add')
 				{
@@ -256,12 +274,12 @@ class links
 				}
 
 				$display_vars = array(
-					'type'			=> array('lang' => 'LINK_TYPE',			'validate' => 'int',			'type' => 'select',	'method' => 'helper',	'params' => array('make_select', $f_ary, '{CONFIG_VALUE}'), 'default' => LIST_LINK),
+					'type'			=> array('lang' => 'LINK_TYPE',			'validate' => 'int',			'type' => 'select',	'function' => array($this->helper_acp, 'make_select'),	'params' => array($f_ary, false, '{CONFIG_VALUE}'), 'default' => LIST_LINK),
 					'title'			=> array('lang' => 'LINK_TITLE',		'validate' => 'string:1:180',	'type' => 'text:40:180'),
 					'description'	=> array('lang' => 'LINK_DESCRIPTION',	'validate' => 'string:0:255',	'type' => 'text:40:255'),
-					'url'			=> array('lang' => 'LINK_URL',			'validate' => 'string:0:255',	'type' => 'custom',	'method' => 'helper',	'params' => array('url_template', '{KEY}', $item_row, 40, 255, 'window')),
-					'image'			=> array('lang' => 'LINK_IMG',			'validate' => 'string', 'type' => 'custom',			'method' => 'helper',	'params' => array('icon_template', '{KEY}', '{CONFIG_VALUE}', $type)),
-					'groups'		=> array('lang' => 'LINK_GROUP',		'type' => 'custom',		'method' => 'helper',		'params' => array('groups_select', 'groups', '{CONFIG_VALUE}'),	'default' => 'all'),
+					'url'			=> array('lang' => 'LINK_URL',			'validate' => 'string:0:255',	'type' => 'custom',	'method' => 'helper',			'params' => array('url_template', '{KEY}', $item_row, 40, 255, 'window')),
+					'image'			=> array('lang' => 'LINK_IMG',			'validate' => 'string', 'type' => 'custom',			'function' => array($this->media, 'build_selector'),		'params' => array('{KEY}', $type, '{CONFIG_VALUE}', 1)),
+					'groups'		=> array('lang' => 'LINK_GROUP',		'type' => 'custom',		'function' => array($this->helper_acp, 'groups_select'),	'params' => array('groups', '{CONFIG_VALUE}'),	'default' => 'all'),
 				);
 				
 				if($this->options['type'] == LIST_TYPE_NONE)
@@ -269,7 +287,7 @@ class links
 					unset($display_vars['image']);
 				}
 
-				/**
+				/*
 				* @event list.edit.before
 				* @var array	item_row		The current item
 				* @var array	display_vars	The form fields to display
@@ -280,7 +298,7 @@ class links
 				$vars = array('item_row', 'display_vars', 'action', 'dialog_title');
 				extract($this->dispatcher->trigger_event('list.edit.before', compact($vars)));
 
-				if($this->helper->confirm_box(true))
+				if(confirm_box(true))
 				{
 					$new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
@@ -308,9 +326,9 @@ class links
 						{
 							$item_row[$config_name] = '';
 
-							if($this->request->is_set_post($config_name) || $this->request->is_set_post('all_groups'))
+							if($this->request->is_set_post($config_name) || $this->request->is_set_post('all_groups_groups'))
 							{
-								$item_row[$config_name] = ($this->request->is_set_post('all_groups') ? 'all' : $this->request->variable($config_name, array(0)));
+								$item_row[$config_name] = ($this->request->is_set_post('all_groups_groups') ? 'all' : $this->request->variable($config_name, array(0)));
 								$item_row[$config_name] = (is_array($item_row[$config_name]) ? implode(',', $item_row[$config_name]) : $item_row[$config_name]);
 							}
 						}
@@ -319,7 +337,7 @@ class links
 					// We validate the complete config if whished
 					validate_config_vars($display_vars, $item_row, $error);
 					
-					/**
+					/*
 					* @event list.edit.before
 					* @var array	item_row		The current item
 					* @var array	error			Array with error codes
@@ -330,9 +348,9 @@ class links
 					
 					if(sizeof($error))
 					{
-						$this->helper->trigger_error(array(
+						$this->helper->json->send(array(
 							'message'	=> implode('<br />', $error),
-							'status'	=> BLG_JSON_ERROR,
+							'status'	=> json_response::JSON_STATUS_ERROR,
 						));
 					}
 					
@@ -345,8 +363,14 @@ class links
 					$this->display(array(
 						$link_id => $item_row
 					));
+
+					$this->template->set_filenames(array(
+						'list'	=> '@canidev_blockgets/acp_list_edit.html'
+					));
 					
-					$this->helper->trigger_error(false, 'acp_list_edit.html');
+					$this->helper->json
+						->add_html($this->template->assign_display('list'))
+						->send();
 				}
 				else
 				{
@@ -362,7 +386,7 @@ class links
 						{
 							$this->template->assign_block_vars('options', array(
 								'S_LEGEND'		=> true,
-								'LEGEND'		=> $this->lang->get($vars)
+								'LEGEND'		=> $this->lang->lang($vars)
 							));
 							continue;
 						}
@@ -382,8 +406,8 @@ class links
 
 						$this->template->assign_block_vars('options', array(
 							'KEY'			=> $config_key,
-							'TITLE'			=> $this->lang->get($vars['lang']),
-							'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->get($vars['lang'] . '_EXPLAIN') : ''),
+							'TITLE'			=> $this->lang->lang($vars['lang']),
+							'S_EXPLAIN'		=> ($this->lang->is_set($vars['lang'] . '_EXPLAIN') ? $this->lang->lang($vars['lang'] . '_EXPLAIN') : ''),
 							'CONTENT'		=> $content,
 						));
 
@@ -392,8 +416,14 @@ class links
 
 					$this->template->assign_var('S_EDIT', true);
 
-					$this->helper->confirm_box(false, $dialog_title, array(
-					), 'acp_list_edit.html');
+					confirm_box(
+						false,
+						$dialog_title, 
+						build_hidden_fields(array(
+							'cache_id'	=> $this->cache_id
+						)),
+						'@canidev_blockgets/acp_list_edit.html'
+					);
 					
 					return false;
 				}
@@ -410,15 +440,12 @@ class links
 				
 				$this->cache->put('_blockgets_list_' . $this->cache_id, $item_ary, 3600);
 
-				$this->helper->trigger_error(array(
-					'message'	=> 'ITEM_REMOVED',
+				$this->helper->json->send(array(
+					'message'	=> $this->lang->lang('ITEM_REMOVED'),
 					'item_list'	=> $link_ids,
 				));
 			break;
 		}
-		
-	/*	$vars = array('ff');
-		extract($phpbb_dispatcher->trigger_event('blg.link_execute', compact($vars)));*/
 	}
 	
 	protected function display($item_ary)
@@ -429,25 +456,19 @@ class links
 			
 			$img	= '';
 			$title	= $row[$this->options['mask']['title']];
-			$title	= $this->lang->get($title);
+			$title	= $this->lang->lang($title);
 
 			if($row['type'] == LIST_CAT)
 			{
-				$subtitle = $this->lang->get('CAT');
+				$subtitle = $this->lang->lang('CAT');
 			}
 			else
 			{
-				$subtitle = $row[$this->options['mask']['subtitle']];
-
-				switch($this->options['type'])
+				$subtitle 	= $this->lang->lang($row[$this->options['mask']['subtitle']]);
+				
+				if(isset($row['image']))
 				{
-					case LIST_TYPE_ICON:
-						$img = ($row['image']) ? '<span class="blg-icon ' . $row['image'] . '"></span>' : '';
-					break;
-					
-					case LIST_TYPE_IMAGE:
-						$img = ($row['image']) ? '<img src="' . $this->helper->build_image_filename($row['image']) . '" />' : '';
-					break;
+					$img = $this->media->build_icon_html($row['image']);
 				}
 			}
 

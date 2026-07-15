@@ -1,12 +1,11 @@
 <?php
-/** 
+/*
 * main.php [Spanish [Es]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -25,72 +24,24 @@ $lang = array_merge($lang, array(
 	'READ_FULL'			=> 'Leer tema completo',
 	'BLG_READ_MORE'		=> '%sSeguir leyendo%s',
 
-	'ACCEPT'				=> 'Aceptar',
-	'ADD_PAGE'				=> 'Crear página',
-	'CALENDAR'				=> 'Calendario',
-	'COPY_TO_LIST'			=> 'Copiar a lista actual',
-	'EDIT'					=> 'Editar',
-	'EDIT_CONFIGURATION'	=> 'Editar configuración',
-	'EDIT_THIS_PAGE'		=> 'Editar esta página',
-	'EDITOR'				=> 'Editor',
-	'EXPAND_CONTRACT'		=> 'Expandir/Contraer',
-	'IMAGE_CLOSE'			=> 'Cerrar',
-	'IMAGE_ENLARGE'			=> 'Haga clic para ver la imagen a tamaño completo',
-	'INSERT_ON_ENTRY'		=> 'Insertar en entrada',
-	'MANAGE_BLOCKS'			=> 'Administrar bloques',
-	'PRINT'					=> 'Imprimir',
-	'SAVE'					=> 'Guardar',
-	'SET_ICON'				=> 'Establecer icono',
-	'SET_IMAGE'				=> 'Establecer imagen',
-	'SMILIES'				=> 'Emoticonos',
-	'TODAY'					=> 'Hoy',
+	'ADD_PAGE'					=> 'Crear página',
+	'BANNERS'					=> 'Banners',
+	'CALENDAR'					=> 'Calendario',
+	'CALENDAR_BIRTHDAY_TITLE'	=> '%1$s y <strong>%2$d más</strong>.',
+	'EDIT_CONFIGURATION'		=> 'Editar configuración',
+	'EDIT_THIS_PAGE'			=> 'Editar esta página',
+	'EDITOR'					=> 'Editor',
+	'EXPAND_CONTRACT'			=> 'Expandir/Contraer',
+	'INSERT_ON_ENTRY'			=> 'Insertar en entrada',
+	'MANAGE_BLOCKS'				=> 'Administrar bloques',
+	'PRINT'						=> 'Imprimir',
+	'SELECT_COLOUR'				=> 'Seleccionar color',
+	'SMILIES'					=> 'Emoticonos',
+	'TODAY'						=> 'Hoy',
 	
-	// Image Manager
-	'CREATE_SERVER_COPY'	=> 'Crear copia en este servidor',
-	'ICON_PREVIEW'			=> 'Vista previa del icono',
-	'IMAGE_DESCRIPTION'		=> 'Descripción',
-	'IMAGE_DETAILS'			=> 'Detalles de imagen',
-	'IMAGE_DIMENSIONS'		=> '<#width#> × <#height#> píxeles',
-	'IMAGE_SAVE_ERROR'		=> 'No se ha podido guardar la imagen',
-	'IMAGE_TITLE'			=> 'Título',
-	'IMAGE_URL'				=> 'Url',
-	'FILES_DELETED'			=> 'Archivos eliminados',
-	'FILES_DRAG'			=> 'Arrastre y suelte los archivos para subirlos',
-	'FILES_DROP'			=> 'Suelte los archivos para subirlos',
-	'FILES_REMOVE_CONFIRM'	=> 'Está a punto de eliminar permanentemente los archivos seleccionados<br />¿Desea continuar?',
-	'FORMAT_INVALID'		=> 'Formato no válido',
-	'MAX_FILESIZE'			=> 'Tamaño máximo de archivo: %s.',
-	'MEDIA_UPDATED'			=> 'Cambios guardados',
-	'NO_ELEMENTS'			=> 'No hay elementos',
-	'PROCCESS'				=> 'Procesar',
-	'SELECT_FILE'			=> 'Seleccionar archivo',
-	'SELECT_FILES'			=> 'Seleccionar archivos',
-	'SELECTED_COUNT'		=> '<span class="value">0</span> seleccionados',
-	'UPDATE'				=> 'Actualizar',
-	'UPLOADING_FILES'		=> 'Subiendo archivos...',
-	
-	'BANNERS'			=> 'Banners',
-	'CURRENT_LIST'		=> 'Lista actual',
-	'GALLERY'			=> 'Galería',
-	'ICONS'				=> 'Iconos',
-	'INSERT_URL'		=> 'Insertar desde URL',
-	'UPLOAD_IMAGE'		=> 'Subir Imagen',
-	
-	'ICON_ACCESSIBILITY'	=> 'Accesibilidad',
-	'ICON_BRAND'			=> 'Marcas',
-	'ICON_CHART'			=> 'Gráfico',
-	'ICON_DIRECTIONAL'		=> 'Direcional',
-	'ICON_FILE_TYPE'		=> 'Tipos de archivo',
-	'ICON_FORM_CONTROL'		=> 'Formulario',
-	'ICON_GENDER'			=> 'Género',
-	'ICON_HAND'				=> 'Mano',
-	'ICON_MEDICAL'			=> 'Médico',
-	'ICON_PAYMENT'			=> 'Pago y moneda',
-	'ICON_SPINNER'			=> 'Spinner',
-	'ICON_TEXT_EDITOR'		=> 'Editor de texto',
-	'ICON_TRANSPORTATION'	=> 'Transporte',
-	'ICON_VIDEO_PLAYER'		=> 'Reproductor de video',
-	'ICON_WEB_APPLICATION'	=> 'Aplicación Web',
+	// Editor
+	'HTML_TITLE' 		=> 'Html:',
+	'INSERT_HTML' 		=> 'Insertar código HTML',
 
 	// Login Block
 	'HIDE_ME_NOW'		=> 'Ocultarme en esta sesión',
@@ -141,15 +92,26 @@ $lang = array_merge($lang, array(
 	'NO_POLL'				=> 'Encuesta no disponible',
 
 	// attachments_block
-	'ATTACH_DATE'				=> '<strong>Publicado:</strong> %s',
-	'ATTACH_SIZE'				=> '<strong>Tamaño:</strong> %s',
-	'ATTACH_DOWNLOAD_COUNT'		=> '<strong>Descargado:</strong> %d vez',
-	'ATTACH_DOWNLOAD_COUNTS'	=> '<strong>Descargado:</strong> %d veces',
-	'ATTACH_VIEWED_COUNT'		=> '<strong>Visto:</strong> %d vez',
-	'ATTACH_VIEWED_COUNTS'		=> '<strong>Visto:</strong> %d veces',
+	'ATTACH_DATE'				=> 'Publicado',
+	'ATTACH_SIZE'				=> 'Tamaño',
+	'ATTACH_DOWNLOAD'			=> 'Descargado',
+	'ATTACH_VIEW'				=> 'Visto',
+
+	'ATTACH_COUNT'				=> array(
+		0	=> 'Nunca',
+		1	=> '%d vez',
+		2	=> '%d veces',
+	),
+
 	'VIEW_TOPIC'				=> 'Ver tema',
 	'DOWNLOAD'					=> 'Descargar',
 	'NO_ATTACHMENTS'			=> 'No hay adjuntos disponibles',
+
+	// language_select_block
+	'LANGUAGE_CHANGE'		=> 'Cambiar Idioma',
+	'LANGUAGE_DEFAULT'		=> 'Idioma original',
+	'LANGUAGE_SET_MINE'		=> 'Establecer como mi idioma',
+	'LANGUAGE_SELECT'		=> 'Seleccionar idioma',
 
 	// news_block
 	'POSTED_BY'			=> 'Publicado por',
@@ -160,13 +122,9 @@ $lang = array_merge($lang, array(
 	'VIEW_COMMENTS'		=> 'Ver comentarios',
 
 	// recent_topics_block
-	'RECENT_TOPICS'		=> 'Temas recientes',
-	'RECENT_REPLIES'	=> 'Respuestas recientes',
-	'RECENT_ANN'		=> 'Anuncios recientes',
-
-	'NO_RECENT_TOPICS'	=> 'No hay temas recientes',
-	'NO_RECENT_REPLIES'	=> 'No hay respuestas recientes',
-	'NO_RECENT_ANN'		=> 'No hay anuncios recientes',
+	'BLG_RECENT_ACTIVITY'	=> 'Actividad reciente',
+	'BLG_RECENT_ANN'		=> 'Anuncios recientes',
+	'BLG_RECENT_TOPICS'		=> 'Temas recientes',
 
 	// paypal_block
 	'AMOUNT_MSG'	=> 'Cantidad a donar',
@@ -200,7 +158,6 @@ $lang = array_merge($lang, array(
 	'NO_MOST_POSTER'	=> 'No hay usuarios para mostrar',
 	
 	// contact block
-	'CONTACT_ERROR'		=> 'Se ha producido un error al procesar su solicitud',
 	'EMAIL_EMPTY'		=> 'Debe proporcionar una dirección de email',
 	'EMAIL_INVALID'		=> 'El email ingresado no es válido.',
 
@@ -216,7 +173,6 @@ $lang = array_merge($lang, array(
 	'HITS_PER_YEAR'		=> 'Visitas por año',
 
 	// style_select_block
-	'TOTAL_STYLES'		=> 'Estilos totales',
 	'STYLE_CHANGE'		=> 'Cambiar Estilo',
 	'STYLE_DEFAULT'		=> 'Estilo original',
 	'STYLE_SET_MINE'	=> 'Establecer como mi estilo',
@@ -263,9 +219,9 @@ $lang = array_merge($lang, array(
 	'EDIT_EVENT'			=> 'Editar Evento',
 	'EVENTS'				=> 'Eventos',
 
-	'ALL_GROUPS'		=> 'Todos los grupos',
 	'EMPTY_EVENT_TITLE'	=> 'Debe especificar un título para el evento.',
 	'EVENT_ADDED'		=> 'Evento añadido con éxito',
+	'EVENT_COLOR'		=> 'Color',
 	'EVENT_EDITED'		=> 'Evento editado con éxito',
 	'EVENT_GROUPS'		=> 'Grupos autorizados',
 	'EVENT_TITLE'		=> 'Título del evento',
@@ -281,6 +237,7 @@ $lang = array_merge($lang, array(
 	'WIN_OPEN_EXPLAIN'	=> 'Reproduciendo en ventana',
 	'WIN_RETURN'		=> 'Forzar reproductor en el bloque',
 	'PLAY'				=> 'Reproducir',
+	'PLAY_MSG'			=> 'Reproduciendo',
 	'PLAYER'			=> 'Reproductor',
 	'STOP'				=> 'Detener',
 	'STOP_MSG'			=> 'Detenido',
@@ -302,8 +259,8 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ACTION_ERROR'		=> 'No se ha realizado ninguna acción',
 	'BLOCK_LOAD_ERROR'	=> 'No se ha podido cargar el bloque',
+	'FORMAT_INVALID'	=> 'El formato no es válido',
 	'EVENT_ERROR'		=> 'El evento seleccionado no existe',
-	'GET_FLASH'			=> 'Por favor, descargue el último <a class="blank" href="http://www.adobe.com/go/getflashplayer" rel="nofollow">Reproductor Flash</a> para ver este contenido.',
 	'NO_TRACKLIST'		=> 'No es posible mostrar la lista de pistas del reproductor.',
 	'NO_PAGE'			=> 'La página solicitada no existe',
 	'URL_INVALID'		=> 'La URL no es válida.',

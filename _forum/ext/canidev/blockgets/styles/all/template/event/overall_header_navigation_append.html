@@ -1,7 +1,7 @@
-
-<!-- BEGIN blglink_top -->
-	<li class="no-bulletin">
-		<!-- IF blglink_top.ICON --><span class="blg-icon {blglink_top.ICON}"></span> <!-- ENDIF -->
-		<a href="{blglink_top.HREF}" title="{blglink_top.TITLE}" role="menuitem">{blglink_top.TITLE}</a>
+{% for link in loops.blglink_top %}
+	<li data-last-responsive="true">
+		<a href="{{ link.HREF }}" title="{{ link.TITLE }}" role="menuitem">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
+		</a>
 	</li>
-<!-- END blglink_top -->
+{% endfor %}

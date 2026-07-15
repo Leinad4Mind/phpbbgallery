@@ -2,19 +2,22 @@
 {% if block.IS_GROUP %}
 	<div id="block-{{ block.BLOCK_ID }}" class="portlet-group">
 		<div class="portlet-group-header">
-			<a href="{{ block.U_REMOVE }}" title="{L_REMOVE}"><span class="blg-icon blg-icon-remove"></span></a>
+			<a href="{{ block.U_REMOVE }}" title="{L_REMOVE}"><i class="fa fa-remove" aria-hidden="true"></i></a>
 			<span>{L_GROUP}</span>
 		</div>
 		<div class="subcolumn {{ block.GROUP_CLASS }}">
 		{% for sub in block.blocks %}
-			<div id="block-{{ sub.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all">
+			<div id="block-{{ sub.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all {{ sub.BLOCK_CLASS }}">
 				<div class="portlet-header blg-widget-header blg-corner-all{{ sub.BLOCK_ENABLED ? '' : ' disabled' }}">{{ sub.BLOCK_TITLE }}</div>
 				<div class="portlet-content">
 				{% for action in sub.action %}
-					<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><span class="blg-icon {{ action.ICON }}"></span></a>
+					<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><i class="fa {{ action.ICON }}" aria-hidden="true"></i></a>
 				{% endfor %}
 
-					<div class="mark"><input type="checkbox" class="block_id_list radio" name="block_id_list[]" value="{{ sub.BLOCK_ID }}" /></div>
+					<div class="mark">
+						<input type="checkbox" id="block-list-{{ sub.BLOCK_ID }}" class="block_id_list radio cbb-checkbox" name="block_id_list[]" value="{{ sub.BLOCK_ID }}" />
+						<label for="block-list-{{ sub.BLOCK_ID }}"></label>
+					</div>
 				</div>
 				{{ sub.S_HIDDEN_FIELDS }}
 			</div>
@@ -24,14 +27,17 @@
 		{{ block.S_HIDDEN_FIELDS }}
 	</div>
 {% else %}
-	<div id="block-{{ block.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all">
+	<div id="block-{{ block.BLOCK_ID }}" class="portlet blg-widget blg-widget-content blg-corner-all {{ block.BLOCK_CLASS }}">
 		<div class="portlet-header blg-widget-header blg-corner-all{{ block.BLOCK_ENABLED ? '' : ' disabled' }}">{{ block.BLOCK_TITLE }}</div>
 		<div class="portlet-content">
 		{% for action in block.action %}
-			<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><span class="blg-icon {{ action.ICON }}"></span></a>
+			<a href="{{ action.ACTION }}" title="{{ action.LABEL }}"><i class="fa {{ action.ICON }}" aria-hidden="true"></i></a>
 		{% endfor %}
 
-			<div class="mark"><input type="checkbox" class="block_id_list radio" name="block_id_list[]" value="{{ block.BLOCK_ID }}" /></div>
+			<div class="mark">
+				<input type="checkbox" id="block-list-{{ block.BLOCK_ID }}" class="block_id_list radio cbb-checkbox" name="block_id_list[]" value="{{ block.BLOCK_ID }}" />
+				<label for="block-list-{{ block.BLOCK_ID }}"></label>
+			</div>
 		</div>
 		{{ block.S_HIDDEN_FIELDS }}
 	</div>

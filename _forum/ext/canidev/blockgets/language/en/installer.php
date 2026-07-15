@@ -1,12 +1,11 @@
 <?php
-/** 
+/*
 * installer.php [English [En]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
 *
-* @package language cBB Blockgets
-* @version v2.0.0 30/05/2017
-*
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -38,4 +37,7 @@ $lang = array_merge($lang, array(
 
 	'WELCOME_GUEST'		=> '[html]<div style="text-align:center; font-size:1.2em;"><a href="https://www.canidev.com"><span class="blg-image logo-img"></span></a><br /><strong><i>Forum equipped with cBB Blockgets</i><br /><br />Welcome to our forum!<br />Register to access all the content!.</strong></div>[/html]',
 	'WELCOME_MEMBER'	=> '[html]<div style="text-align:center; font-size:1.2em;"><a href="https://www.canidev.com"><span class="blg-image logo-img"></span></a><br /><strong><i>Forum equipped with cBB Blockgets</i><br /><br />Welcome back to our forum {S_USERNAME}</strong></div>[/html]',	
+
+	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
+		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
 ));

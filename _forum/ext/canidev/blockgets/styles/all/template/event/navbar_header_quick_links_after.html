@@ -1,0 +1,7 @@
+{% for link in loops.blglink_quick %}
+	<li>
+		<a href="{{ link.HREF }}">
+			{{ link.ICON }} <span>{{ link.TITLE }}</span>
+		</a>
+	</li>
+{% endfor %}

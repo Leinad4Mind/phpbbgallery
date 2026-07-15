@@ -1,17 +1,28 @@
 
 <div class="random-member-content">
-    
-<!-- BEGIN random_member -->
-	<div class="blg-align-center">{random_member.USERNAME}<hr /></div>
-	<div style="margin-top:5px;">
-		<div class="blg-user-avatar adjusted blg-align-center"><!-- IF random_member.AVATAR -->{random_member.AVATAR}<!-- ELSE --><div class="user-avatar-default"></div><!-- ENDIF --></div><br />
-		<div class="blg-widget-content blg-corner-all random-member-info">
-			{L_USER}{L_COLON} {random_member.USER_FULL}<br />
-			{L_JOINED}{L_COLON} {random_member.REGDATE}<br />
-			{L_POSTS}{L_COLON} <!-- IF random_member.POSTS --><a href="{random_member.U_FIND_POSTS}">{random_member.POSTS}</a><!-- ELSE -->0<!-- ENDIF --><br />
-		</div>
+
+{% for member in random_member %}
+	<div class="blg-align-center">{{ member.USERNAME }}<hr /></div>
+	<div class="blg-align-center">
+		<div class="cbb-circular-avatar">{% if member.AVATAR %}{{ member.AVATAR }}{% else %}<div class="cbb-no-avatar"></div>{% endif %}</div>
 	</div>
-<!-- END random_member -->
+	<br />
+	<div class="random-member-info blg-inline-list">
+		<dl>
+			<dt><strong>{L_USER}{L_COLON}</strong></dt>
+			<dd>{{ member.USER_FULL }}</dd>
+		</dl>
+
+		<dl>
+			<dt><strong>{L_JOINED}{L_COLON}</strong></dt>
+			<dd>{{ member.REGDATE }}</dd>
+		</dl>
+
+		<dl>
+			<dt><strong>{L_POSTS}{L_COLON}</strong></dt>
+			<dd>{% if member.POSTS %}<a href="{{ member.U_FIND_POSTS }}">{{ member.POSTS }}</a>{% else %}0{% endif %}</dd>
+		</dl>
+	</div>
+{% endfor %}
 
 </div>
-

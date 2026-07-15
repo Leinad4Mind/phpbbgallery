@@ -1,12 +1,12 @@
 <?php
 /** 
-* acp_blockgets.php [Spanish [Es]]
+* chat_addon.php [Spanish [Es]]
 *
 * @package language cBB Blockgets
-* @version v2.0.0 30/07/2017
+* @version v2.0.1 04/05/2018
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2018 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -22,5 +22,11 @@ if(empty($lang['blocks']))
 
 $lang['blocks'] = array_merge($lang['blocks'], array(
 	'chat_title'	=> 'Chat',
-	'chat_explain'	=> 'Permite utilizar cBB Chat como un bloque en las columnas.',
+	'chat_explain'	=> 'Permite utilizar cBB Chat como un bloque en las columnas o mostrar los usuarios conectados al chat.',
+));
+
+$lang = array_merge($lang, array(
+	'CHAT_ADDON_MODE'		=> 'Modo de visualización',
+	'CHAT_MODE_CHAT'		=> 'Sala de chat',
+	'CHAT_MODE_USERS'		=> 'Usuarios conectados',
 ));

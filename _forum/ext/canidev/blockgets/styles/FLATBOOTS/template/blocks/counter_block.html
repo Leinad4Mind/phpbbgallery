@@ -1,0 +1,32 @@
+<script>
+// <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#counter-digits-{{ BLOCK_ID }}').blgAccordion({
+			active		: 0,
+			collapsible : true
+		});
+	});
+});
+// ]]>
+</script>
+
+	<div id="counter-digits-{{ BLOCK_ID }}" class="counter-digits blg-align-center cbb-helper-hidden">
+		<h4>{L_COUNTER}</h4>
+		{{ S_COUNTER }}
+		<br />
+		<h5><a href="#">{L_MORE}</a></h5>
+		<div>
+			<table class="blg-table">
+			{% for hit in counter_hit %}
+				<tr>
+					<td class="blg-align-left">{{ hit.S_TITLE }}{L_COLON}</td>
+					<td class="blg-align-right"><strong>{{ hit.S_VALUE }}</strong></td>
+				</tr>
+			{% endfor %}
+			</table>
+			<br />
+			<div class="blg-align-center">{{ COUNTER_STARTDATE }}</div>
+		</div>
+	</div>

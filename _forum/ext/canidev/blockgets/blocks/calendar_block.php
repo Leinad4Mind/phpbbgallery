@@ -1,24 +1,17 @@
 <?php
 /*
-* @name calendar_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class calendar_block extends base
 {
-	static $icon = 'blg-icon-calendar';
+	static $icon = 'fa-calendar';
 
 	public function init($method = false)
 	{
@@ -36,18 +29,15 @@ class calendar_block extends base
 			'birthdays'	=> (bool)$data['show_birthdays'],
 			'months'	=> (int)$data['months_number'],
 		));
-		
-		$extra_params = array(
-			'jblgm'		=> $this->data['block_id'],
-		);
 
-		$this->template->assign_vars(array(
-			'U_CALENDAR'			=> $this->helper->route('canidev_blockgets_calendar_controller'),
-			'S_EXTRA'				=> http_build_query($extra_params, '', '&'),
-			'S_SHOW_EVENTS'			=> (int)$data['show_events'],
+		$this->template->assign_var('S_SHOW_EVENTS', (int)$data['show_events']);
+
+		$this->template->assign_json_var('S_OPTIONS', array(
+			'url' 		=> $this->helper->route('canidev_blockgets_calendar_controller'),
+			'module' 	=> $this->data['block_id'],
 		));
 		
-		if($this->request->is_ajax() && $method)
+		if($method == 'submit')
 		{
 			$action	= $this->request->variable('action', '');
 
@@ -56,15 +46,7 @@ class calendar_block extends base
 				$timestamp = $this->request->variable('timestamp', 0);
 				$event_ary = $calendar->get_events($timestamp);
 				
-				foreach($event_ary as $event)
-				{
-					$this->template->assign_block_vars('event', array(
-						'S_ID'		=> (isset($event['id']) ? $event['id'] : 0),
-						'S_TITLE'	=> $event['title'],
-						'S_TYPE'	=> $event['type'],
-						'S_CONTENT'	=> $event['content'],
-					));
-				}
+				$calendar->events_to_template('event', $event_ary);
 				
 				$this->template->assign_var('IN_EVENTLIST', true);
 				
@@ -97,7 +79,7 @@ class calendar_block extends base
 		$this->display_vars = array(
 			'show_events'		=> array('lang' => 'CALENDAR_EVENTS',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
 			'show_birthdays'	=> array('lang' => 'CALENDAR_BIRTHDAYS',	'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1),
-			'months_number'		=> array('lang' => 'CALENDAR_MONTHS',		'validate' => 'int:1:12', 	'type' => 'text:5:3', 		'default' => 1),
+			'months_number'		=> array('lang' => 'CALENDAR_MONTHS',		'validate' => 'int:1:12', 	'type' => 'number:1:12', 	'default' => 1),
 		);
 
 		return true;

@@ -1,11 +1,10 @@
 <?php
 /*
-* @name default_headers.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.2 12/01/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // @ignore
@@ -16,14 +15,9 @@ if(!defined('IN_PHPBB'))
 
 $overall_headers = array(
 	array('css', '@canidev_blockgets/../theme/common.css'),
-	array('css', '@canidev_blockgets/../theme/31x.css'),
-	array('css', '@canidev_blockgets/../theme/blockgets.css', 'frontend'),
-	array('css', 'acp.css', 'admin'),
-	array('css', array('colorPickerMod', 'color-picker.css'), 'admin'),
+	array('css', '@canidev_blockgets/acp.css', false, 'admin'),
 
-	array('js', '@canidev_blockgets/js/jquery-ui-custom.min.js', 'admin'),
-	array('js', '@canidev_blockgets/js/jquery-color-picker.min.js', 'admin'),
-	
-	array('js', '@canidev_blockgets/js/jblockgets.js'),
-	array('js', 'js/jblockgets-acp.js', 'admin'),
+	array('js', '@canidev_core/js/jquery-ui.min.js', false, 'admin'),
+	array('js', '@canidev_blockgets/js/jblockgets.min.js'),
+	array('js', '@canidev_blockgets/js/jblockgets-acp.js', false, 'admin'),
 );

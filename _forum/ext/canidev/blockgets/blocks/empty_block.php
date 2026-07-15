@@ -1,20 +1,13 @@
 <?php
 /*
-* @name blank_block.php
 * @package cBB Blockgets
-* @version v2.0.0 30/05/2017
+* @version v2.0.3 26/07/2021
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\blocks;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class empty_block extends base
 {
@@ -34,21 +27,20 @@ class empty_block extends base
 
 	public function configure($mode, $block_row, &$new, &$submit)
 	{
-		$parser = $this->container->get('canidev.blockgets.parser');
-
 		switch($mode)
 		{
 			case 'validate':
 				$bbcode = $this->bbcode('get');
-				$parser->decode_message($new['block_content'], $bbcode['uid']);
+				decode_message($new['block_content'], $bbcode['uid']);
 			break;
 
 			case 'submit':
-				$this->lang->add('posting');
+				$this->lang->add_lang('posting');
 
-				$new['block_content'] = $this->helper->html_truncate($new['block_content'], 8000, '', true);
+				$new['block_content'] = \canidev\core\tools::html_truncate($new['block_content'], 8000, '', true);
 
-				$parser->generate_text_for_storage($new['block_content'], $uid, $bitfield, $flags, true, true, true);
+				generate_text_for_storage($new['block_content'], $uid, $bitfield, $flags, true, false, true, true, false, true, true, 'blockgets');
+
 				$this->bbcode('set', $uid, $bitfield);
 			break;
 		}

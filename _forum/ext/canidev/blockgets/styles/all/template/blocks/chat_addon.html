@@ -1,4 +1,6 @@
-	<script>
+
+<!-- IF CHAT_ADDON_SHOW_CHAT -->
+	<script type="text/javascript">
 	// <![CDATA[
 	window._jBlg = window._jBlg || [];
 	window._jBlg.push(function() {
@@ -42,3 +44,14 @@
 	</style>
 		
 	<iframe id="chat-{BLOCK_ID}" src="{CHAT_ADDON_ACTION}" frameborder="0"></iframe>
+<!-- ELSEIF S_SHORT_MODE -->
+	<ul class="blg-linear-list">
+	<!-- BEGIN userrow -->
+		<li class="userrow"><span class="chat-user-status {userrow.S_USER_STATUS}"></span>{userrow.S_USER_FULL}</li>
+	<!-- BEGINELSE -->
+		<li>{L_NO_MOST_POSTER}</li>
+	<!-- END userrow -->
+	</ul>
+<!-- ELSE -->
+	<!-- BEGIN userrow --><span class="chat-user-status {userrow.S_USER_STATUS}"></span>{userrow.S_USER_FULL}<!-- IF not userrow.S_LAST_ROW-->&nbsp;<!-- ENDIF --><!-- BEGINELSE -->{L_NO_MOST_POSTER}<!-- END userrow -->
+<!-- ENDIF -->

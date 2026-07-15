@@ -1,29 +1,27 @@
 
 <script>
 // <![CDATA[
-	window._jBlg = window._jBlg || [];
-	
-	window._jBlg.push(function() {
-		$('#ranks-{BLOCK_ID}').accordion({
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#ranks-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
 // ]]>
 </script>
 
-<div id="ranks-{BLOCK_ID}">
-    
-<!-- BEGIN rank -->
-	<h5><a href="#">{rank.S_TITLE}</a></h5>
+<div id="ranks-{{ BLOCK_ID }}" class="cbb-helper-hidden">
+
+{% for rank in loops.rank %}
+	<h5><a href="#">{{ rank.S_TITLE }}</a></h5>
 	<div>
-		<!-- IF rank.S_IMG_SRC --><div class="blg-align-center"><img src="{rank.S_IMG_SRC}" alt="" /></div><br /><!-- ENDIF -->
-	<!-- IF rank.IS_SPECIAL -->
-		<div class="blg-align-center blg-state-error-text">{L_SPECIAL_RANK}</div>
-	<!-- ELSE -->
-		{L_MIN_POSTS}{L_COLON} {rank.S_MIN_POSTS}
-	<!-- ENDIF -->
+		{% if rank.S_IMG_SRC %}<div class="blg-align-center"><img src="{{ rank.S_IMG_SRC }}" alt="" /></div>{% endif %}
+	{% if rank.IS_SPECIAL %}
+		<div class="blg-align-center blg-special-rank">{L_SPECIAL_RANK}</div>
+	{% else %}
+		<div>{L_MIN_POSTS}{L_COLON} {{ rank.S_MIN_POSTS }}</div>
+	{% endif %}
 	</div>
-<!-- END rank -->
+{% endfor %}
 
 </div>
-
