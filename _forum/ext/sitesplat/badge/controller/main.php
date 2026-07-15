@@ -66,7 +66,7 @@ class main
 		$this->user = $user;
 		$this->request = $request;
 		$this->helper = $helper;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = generate_board_url() . '/';
 		$this->path_helper = $path_helper;
 		$this->badge_rules_table = $badge_rules_table;
 		$this->badge_types_table = $badge_types_table;
@@ -137,7 +137,7 @@ class main
 				if ($ruleid != $row['rule_id'])
 				{
 					$this->template->assign_block_vars('rules.badge', array(
-						'BADGE'				=> $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']),
+						'BADGE'				=> $this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge'],
 						'GROUP_NAME'		=> $row['rule_name'],
 						'DESCRIPTION'		=> ($row['rule_description']) ? $row['rule_description'] : ''
 						// 'DESCRIPTION'		=> (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ? $this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : '') . (($row['rule_description']) ? '<br />' . $row['rule_description'] : '')
@@ -190,7 +190,7 @@ class main
 						'RULETITLE'	=> $row['rule_name'],
 					//	'DESCR'		=> $row['rule_name'] . '<br />' . $row['rule_description'],
 						'DESCR'		=> $row['rule_description'],
-						'AVATAR'	=> '<img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;" src="' . $this->path_helper->update_web_root_path($this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge']) . '">',
+						'AVATAR'	=> '<img alt="' . $this->manager->get_condition_lang($row['rule_type_name']) . '" title="' . (($row['rule_type_name'] != 'sitesplat.badge.type.custom') ?$this->manager->get_condition_lang($row['rule_type_name']) . $this->manager->get_condition_type_lang($row['rule_min_value'], $row['rule_max_value'], $row['rule_type_name']) : $row['rule_name']) . "\n" . $row['rule_description'] . '" style="margin-top:4px;width:30px;height:30px;" src="' . $this->root_path . 'ext/sitesplat/badge/badges/' . $row['badge'] . '">',
 						'DATE'		=> ($row['date']) ? $this->user->format_date($row['date'], 'j M Y') : '',
 					));
 				}

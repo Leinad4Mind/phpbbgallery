@@ -83,7 +83,6 @@ class zebra_foes extends \sitesplat\badge\conditions\type\base
 		$user_ids = $this->helper->prepare_users_for_query($options['users']);
 
 		// Get data for the users to be checked (exclude bots, guests and inactive users)
-		// $sql = 'SELECT u.user_id, (SELECT SUM(foe) FROM ' . ZEBRA_TABLE . ' WHERE user_id = u.user_id) AS foes  
 		$sql = 'SELECT u.user_id, (SELECT SUM(foe) FROM ' . ZEBRA_TABLE . ' WHERE user_id = u.user_id) AS foes  
 			FROM ' . USERS_TABLE . ' u
 			WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_INACTIVE, USER_IGNORE), true) . '

@@ -58,7 +58,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Desenvolvedor',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Fechar',
 	
-	'ACP_BBAWARDS_VERSION'				=> '1.4.6',
+	'ACP_BBAWARDS_VERSION'				=> '1.4.10',
 	'ACP_BBAWARDS'						=> 'BBAwards',
     'ACP_LOADING'			    		=> 'Aguarde. A Carregar...',
 	
@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'BADGES_EXPLAIN'					=> 'Award extra badges to members with a X number of other badges already achieved.',
 	'BIRTHDAYS_EXPLAIN'					=> 'Award badges to members on their birthday',
 	'CUSTOM_EXPLAIN'					=> 'Award custom badges to members. This can be anything, for example a forum competition or maybe lottery of some sort? Be creative!',
-	'DONATION_EXPLAIN'					=> 'Award badges to forum donators',
+	'DONATIONS_EXPLAIN'					=> 'Award badges to forum donators',
 	'LIKEDD_EXPLAIN'					=> 'Award badges to members with likes / dislikes given or received',
 	'MEMBERSHIP_EXPLAIN'				=> 'Award badges to members for their subscribed/purchased memberships',
 	'POSTS_EXPLAIN'						=> 'Award badges to members with X amount of posts',
