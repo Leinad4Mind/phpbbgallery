@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class restore extends base
 {
 	public $permissions = 'm_approve';
-	public $category 	= 'OPTIONS_BASIC';
+	public $category 	= 'OPTIONS_REMOVE';
 	public $icon 		= 'fa-exchange';
-	public $order 		= 5;
+	public $order 		= 30;
 	public $title 		= 'RESTORE_TOPIC';
 
 	protected $visibility;
@@ -42,7 +42,7 @@ class restore extends base
 	 */
 	public function run(array $topic_ids, $forum_id)
 	{
-		if(!$this->confirm(sizeof($topic_ids)))
+		if(!$this->confirm(count($topic_ids)))
 		{
 			return null;
 		}
@@ -69,6 +69,6 @@ class restore extends base
 			}
 		}
 
-		$this->response->add('message', $this->language->lang(((sizeof($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_RESTORED_SUCCESS'));
+		$this->response->add('message', $this->language->lang(((count($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_RESTORED_SUCCESS'));
 	}
 }

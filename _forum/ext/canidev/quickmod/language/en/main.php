@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -42,6 +42,7 @@ $lang = array_merge($lang, [
 	
 	'DELETE_TOPIC'				=> 'Delete',
 	'DELETE_PERMANENTLY_TOPIC'	=> 'Delete permanently',
+	'FORK_TOPIC'				=> 'Copy',
 	'MAKE_ANNOUNCE_TOPIC'		=> 'Change to Announcement',
 	'MAKE_GLOBAL_TOPIC'			=> 'Change to Global',
 	'MAKE_NORMAL_TOPIC'			=> 'Change to Normal',
@@ -61,10 +62,13 @@ $lang = array_merge($lang, [
 	
 	'MOVE_TOPIC'			=> 'Move',
 	'NO_TOPIC_SELECTED'		=> 'No topic selected',
-	'OPTIONS_BASIC'			=> 'Basic Options',
-	'OPTIONS_ADVANCED'		=> 'Advanced Options',
+	'OPTIONS_APPROVE'		=> 'Approve actions',
+	'OPTIONS_LOCK'			=> 'Lock actions',
+	'OPTIONS_REMOVE'		=> 'Remove actions',
+	'OPTIONS_TOOLS'			=> 'Tools',
 	'RENAME_TOPIC'			=> 'Rename',
 	'RESTORE_TOPIC'			=> 'Restore',
+	'RESYNC_TOPIC'			=> 'Sync',
 	'TOPIC_TYPE'			=> 'Topic type',
 	'UNLOCK_TOPIC'			=> 'Unlock',
 
@@ -74,6 +78,8 @@ $lang = array_merge($lang, [
 	'WITH_SELECTED'			=> 'With selected',
 
 	'AUTHOR_CHANGE_SUCCESS'	=> 'The author of topics has been changed correctly.',
+	'ICON_CHANGE_SUCCESS'	=> 'The icon has been changed correctly.',
+	'TIME_CHANGE_SUCCESS'	=> 'The time has been changed correctly.',
 	'TOPIC_RENAMED_SUCCESS'	=> 'The topic has been renamed correctly.',
 	
 	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />

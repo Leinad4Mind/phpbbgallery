@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -27,7 +27,10 @@ $lang = array_merge($lang, [
 	'QM_CONFIRM'			=> 'Confirm dialog',
 	'QM_CONFIRM_EXPLAIN'	=> 'Enable/Disable the confirm dialog in the quick actions.',
 	'QM_BUTTON_MANAGE'		=> 'Manage Quick Buttons',
-	
+	'QM_LAYOUT'				=> 'Action Box Display',
+	'QM_LAYOUT_EXPLAIN'		=> 'Defines how the box will be displayed for performing batch actions.',
+	'QM_LAYOUT_DEFAULT'		=> 'Default',
+	'QM_LAYOUT_FIXED'		=> 'Floating',
 	'QM_TYPE'				=> 'Icon display',
 	'QM_TYPE_EXPLAIN'		=> 'Set the display format for the quick actions in the forum.',
 	'QM_TYPE_ICON'			=> 'Icons',

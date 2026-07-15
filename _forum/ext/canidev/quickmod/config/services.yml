@@ -10,6 +10,7 @@ services:
         class: canidev\quickmod\libraries\quickmod
         arguments:
             - '@auth'
+            - '@cache.driver'
             - '@config'
             - '@service_container'
             - '@dbal.conn'
@@ -29,5 +30,4 @@ services:
             - '@dispatcher'
             - '@log'
             - '@canidev.quickmod.core'
-            - '@request'
             - '@user'

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -68,7 +68,10 @@ class listener implements EventSubscriberInterface
 	 */
 	public function on_setup_after()
 	{
-		$this->quickmod->setup();
+		if(!defined('ADMIN_START'))
+		{
+			$this->quickmod->setup();
+		}
 	}
 	
 	/**
@@ -129,7 +132,7 @@ class listener implements EventSubscriberInterface
 		{
 			$topic_row	= $event['tpl_ary'];
 			$row		= $event['row'];
-			
+
 			$topic_forum_id	= ($row['forum_id']) ? (int) $row['forum_id'] : $this->quickmod->forum_id;
 
 			$topic_row['QM_CONTENT'] = $this->quickmod->get_row_content($topic_forum_id, $row['topic_id'], $row['topic_type'], $row['topic_status'], $row['topic_visibility']);

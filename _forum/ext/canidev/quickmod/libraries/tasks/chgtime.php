@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class chgtime extends base
 {
 	public $permissions = 'm_';
-	public $category 	= 'OPTIONS_ADVANCED';
+	public $category 	= 'OPTIONS_TOOLS';
 	public $icon 		= 'fa-clock-o';
-	public $order 		= 3;
+	public $order 		= 30;
 	public $title 		= 'CHANGE_TIME_TOPIC';
 
 	/**
@@ -40,7 +40,7 @@ class chgtime extends base
 			$new_year	= $this->request->variable('year', $now['year']);
 			$new_hour	= array_map('intval', explode(':', $this->request->variable('hour', '00:00')));
 			
-			if(!$new_day || !$new_month || !$new_year || sizeof($new_hour) != 2)
+			if(!$new_day || !$new_month || !$new_year || count($new_hour) != 2)
 			{
 				return false;
 			}
@@ -75,7 +75,7 @@ class chgtime extends base
 					if($last_topic_id != $topic_id)
 					{
 						$last_topic_id = $topic_id;
-						$time_add = 0;
+						$timeadd = 0;
 					}
 					
 					// Maintain a time difference to keep post order
@@ -128,7 +128,7 @@ class chgtime extends base
 			}
 			
 			// Obtain and update the time of the last posts on involved forums
-			if(sizeof($updated_forums))
+			if(count($updated_forums))
 			{
 				$updated_forums = array_unique($updated_forums);
 	

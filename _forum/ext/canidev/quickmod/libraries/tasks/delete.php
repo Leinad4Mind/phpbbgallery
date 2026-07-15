@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class delete extends base
 {
 	public $permissions = 'm_softdelete';
-	public $category 	= 'OPTIONS_BASIC';
+	public $category 	= 'OPTIONS_REMOVE';
 	public $icon 		= 'fa-trash-o';
-	public $order 		= 3;
+	public $order 		= 10;
 	public $title 		= 'DELETE_TOPIC';
 
 	protected $visibility;
@@ -80,7 +80,7 @@ class delete extends base
 				}
 			}
 
-			$this->response->add('message', $this->language->lang(((sizeof($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_DELETED_SUCCESS'));
+			$this->response->add('message', $this->language->lang(((count($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_DELETED_SUCCESS'));
 			return true;
 		}
 

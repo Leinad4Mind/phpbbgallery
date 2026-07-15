@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -16,7 +16,7 @@ class main_info
 		return [
 			'filename'	=> '\canidev\quickmod\acp\main_module',
 			'title'		=> 'ACP_CAT_QUICKMOD',
-			'version'	=> '1.1.5',
+			'version'	=> '1.1.6',
 			'modes'		=> [
 				'config'	=> ['title' => 'ACP_QUICKMOD_CONFIG', 	'auth' => 'ext_canidev/quickmod && acl_a_board', 'cat' => ['ACP_CAT_QUICKMOD']],
 			],

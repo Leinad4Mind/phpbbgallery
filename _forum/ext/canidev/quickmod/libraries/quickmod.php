@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -29,7 +29,7 @@ class quickmod
 	protected $phpbb_root_path;
 	protected $php_ext;
 
-	protected $categories 	= ['OPTIONS_BASIC', 'TOPIC_TYPE', 'OPTIONS_ADVANCED'];
+	protected $categories 	= [];
 	protected $tasks 		= null;
 
 	public $forum_id		= false;
@@ -39,6 +39,7 @@ class quickmod
 	* Constructor
 	*
 	* @param \phpbb\auth\auth 						$auth				Authentication object
+	* @param \phpbb\cache\driver\driver_interface 	$cache				Cache Driver
 	* @param \phpbb\config\config 					$config				Config Object
 	* @param ContainerInterface 					$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface		$db					DB Object
@@ -55,6 +56,7 @@ class quickmod
 	*/
 	public function __construct(
 		\phpbb\auth\auth $auth,
+		\phpbb\cache\driver\driver_interface $cache,
 		\phpbb\config\config $config,
 		ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
@@ -68,7 +70,7 @@ class quickmod
 		$php_ext)
 	{
 		$this->auth			= $auth;
-		$this->cache 		= $container->get('cache.driver');
+		$this->cache 		= $cache;
 		$this->config 		= $config;
 		$this->container	= $container;
 		$this->db			= $db;
@@ -90,17 +92,24 @@ class quickmod
 	{
 		$this->forum_id = $this->request->variable('f', 0);
 		
-		$active			= false;
-		$mod_pages		= ['viewforum', 'search', 'viewforum.' . $this->php_ext, 'search.' . $this->php_ext];
+		$active	= false;
 
-		if($this->phpbb_root_path == './' && in_array($this->user->page['page_name'], $mod_pages))
+		if($this->phpbb_root_path == './' &&
+			preg_match('#^(viewforum|search)(\.' . $this->php_ext . '|/|$)#', $this->user->page['page_name']))
 		{
 			$active = true;
 		}
 
-		$active		= ($active && $this->auth->acl_get('m_', $this->forum_id));
-		$categories = $this->categories;
-		
+		$active	= ($active && $this->auth->acl_get('m_', $this->forum_id));
+
+		$categories = [
+			'OPTIONS_APPROVE'	=> 'fa-check',
+			'OPTIONS_LOCK'		=> 'fa-lock',
+			'OPTIONS_REMOVE'	=> 'fa-trash',
+			'TOPIC_TYPE'		=> 'fa-thumb-tack',
+			'OPTIONS_TOOLS'		=> 'fa-gear',
+		];
+
 		/**
 		 * @event quickmod.setup
 		 * @var array 	categories 	Categories for tasks
@@ -138,7 +147,7 @@ class quickmod
 			$this->tasks[$task_id] = new $task_class($this->container);
 		}
 
-		$this->template->append_asset('css', '@canidev_quickmod/../theme/quickmod.css');
+		$this->template->append_asset('css', '@canidev_quickmod/quickmod.css');
 		$this->template->append_asset('js', '@canidev_quickmod/js/jquickmod.min.js');
 	}
 	
@@ -152,38 +161,44 @@ class quickmod
 			return;
 		}
 
-		$tasks_tree = [];
+		$tasks_tree 	= [];
+		$quick_options 	= [];
+		$i 				= 0;
 
 		foreach($this->tasks as $task_id => $task)
 		{
-			$category 	= $task->category;
-			$order 		= $task->order;
-
 			if($task->category === null)
 			{
 				continue;
 			}
 
-			if(!isset($tasks_tree[$category]))
-			{
-				$tasks_tree[$category] = [];
-			}
+			$categories 	= is_array($task->category) ? $task->category : [$task->category];
+			$order 			= $task->order;
 
-			if(!isset($tasks_tree[$category][$order]))
+			foreach($categories as $category)
 			{
-				$tasks_tree[$category][$order] = [];
-			}
+				if(!isset($tasks_tree[$category]))
+				{
+					$tasks_tree[$category] = [];
+				}
 
-			$tasks_tree[$category][$order][] = $task_id;
+				if(!isset($tasks_tree[$category][$order]))
+				{
+					$tasks_tree[$category][$order] = [];
+				}
+
+				$tasks_tree[$category][$order][] = $task_id;
+			}
 		}
 
-		$quick_options = ['' => 'SELECT_ACTION'];
-
-		foreach($this->categories as $i => $category_name)
+		foreach($this->categories as $category_name => $category_icon)
 		{
 			if(isset($tasks_tree[$category_name]))
 			{
-				$quick_options['legend_' . $i] = $category_name;
+				$quick_options['legend_' . $i] = [
+					'icon'	=> $category_icon,
+					'label'	=> $category_name
+				];
 
 				ksort($tasks_tree[$category_name]);
 
@@ -193,11 +208,16 @@ class quickmod
 					{
 						if(!$this->forum_id || $this->auth->acl_gets($this->tasks[$task_id]->permissions, $this->forum_id))
 						{
-							$quick_options[$task_id] = $this->tasks[$task_id]->title;
+							$quick_options[$task_id] = [
+								'icon'	=> $this->tasks[$task_id]->icon,
+								'label'	=> $this->tasks[$task_id]->title,
+							];
 						}
 					}
 				}
 			}
+
+			$i++;
 		}
 		
 		$mark_options = [
@@ -219,7 +239,7 @@ class quickmod
 				'type-' . POST_GLOBAL	=> 'MARK_GLOBAL',
 		];
 
-		add_form_key('quick_mod_form');
+		add_form_key('quick_mod_form', '_QM');
 		
 		/**
 		 * @event quickmod.display
@@ -232,14 +252,33 @@ class quickmod
 
 		$this->template->assign_vars([
 			'S_QUICKMOD_ENABLED'	=> true,
-			'S_QUICK_OPTIONS'		=> $this->tools->make_select($quick_options, false, ''),
 			'S_QM_MARK_OPTIONS'		=> $this->tools->make_select($mark_options, false, '-1'),
+			'S_QM_LAYOUT'			=> $this->config['qm_layout'],
 			'S_QM_TYPE'				=> $this->config['qm_type'],
 
-			'S_HIDDEN_FIELDS'	=> build_hidden_fields([
+			'S_QM_HIDDEN_FIELDS'	=> build_hidden_fields([
 				'f'				=> $this->forum_id
 			]),
 		]);
+
+		foreach($quick_options as $key => $row)
+		{
+			if(strpos($key, 'legend') === 0)
+			{
+				$this->template->assign_block_vars('qm_quick_options', [
+					'ICON'		=> $row['icon'],
+					'LABEL'		=> $this->language->lang($row['label']),
+				]);
+
+				continue;
+			}
+
+			$this->template->assign_block_vars('qm_quick_options.action', [
+				'ICON'		=> $row['icon'],
+				'LABEL'		=> $this->language->lang($row['label']),
+				'VALUE'		=> $key,
+			]);
+		}
 	}
 
 	/**
@@ -303,7 +342,7 @@ class quickmod
 			$sql_ary['WHERE'] = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
 				AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $username_clean . $this->db->get_any_char());
 			
-			if(sizeof($user_ary))
+			if(count($user_ary))
 			{
 				$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('u.user_id', array_keys($user_ary), true);
 			}
@@ -338,7 +377,7 @@ class quickmod
 			$response
 				->add([
 					'query'		=> $query,
-					'results'	=> sizeof($user_ary)
+					'results'	=> count($user_ary)
 				])
 				->addHtml($this->template->assign_display('quickmod'))
 				->send();
@@ -374,7 +413,7 @@ class quickmod
 				}
 				$this->db->sql_freeresult($result);
 				
-				if(sizeof($no_authorized_ids))
+				if(count($no_authorized_ids))
 				{
 					$topic_ids = array_diff($topic_ids, $no_authorized_ids);
 					
@@ -428,34 +467,54 @@ class quickmod
 	 */
 	public function get_available_tasks($initialize_tasks = false)
 	{
-		if(($this->tasks = $this->cache->get('_quickmod_tasks')) === false)
+		if($this->tasks === null)
 		{
-			$this->tasks = [];
-
-			$base_path	= $this->phpbb_root_path . 'ext/canidev/quickmod/libraries/tasks/';
-			$directory	= new \RecursiveDirectoryIterator($base_path);
-			$iterator	= new \RecursiveIteratorIterator($directory);
-			$regex		= new \RegexIterator($iterator, '/([a-z0-9_\-]+)\.' . $this->php_ext . '$/i');
-
-			foreach($regex as $file)
+			if(($tasks = $this->cache->get('_quickmod_tasks')) === false)
 			{
-				$basename = $file->getBasename('.' . $this->php_ext);
+				$tasks = [];
 
-				if($basename == 'base')
+				$base_path	= $this->phpbb_root_path . 'ext/canidev/quickmod/libraries/tasks/';
+				$directory	= new \RecursiveDirectoryIterator($base_path);
+				$iterator	= new \RecursiveIteratorIterator($directory);
+				$regex		= new \RegexIterator($iterator, '/([a-z0-9_\-]+)\.' . $this->php_ext . '$/i');
+
+				foreach($regex as $file)
 				{
-					continue;
+					$basename = $file->getBasename('.' . $this->php_ext);
+
+					if($basename == 'base')
+					{
+						continue;
+					}
+
+					$tasks[$basename] = '\\canidev\\quickmod\\libraries\\tasks\\' . $basename;
 				}
 
-				$this->tasks[$basename] = '\\canidev\\quickmod\\libraries\\tasks\\' . $basename;
+				$this->cache->put('_quickmod_tasks', $tasks);
 			}
 
-			$this->cache->put('_quickmod_tasks', $this->tasks);
+			/**
+			 * Event to allow task customization
+			 * 
+			 * @event quickmod.available_tasks
+			 * @var array 	tasks 		List of available tasks
+			 * @since 1.1.6
+			 */
+			$vars = ['tasks'];
+			extract($this->dispatcher->trigger_event('quickmod.available_tasks', compact($vars)));
+
+			$this->tasks = $tasks;
 		}
 
 		if($initialize_tasks)
 		{
 			foreach($this->tasks as $task_id => $task_class)
 			{
+				if(!is_string($task_class))
+				{
+					continue;
+				}
+
 				if(!class_exists($task_class))
 				{
 					unset($this->tasks[$task_id]);

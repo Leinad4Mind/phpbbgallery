@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -22,12 +22,12 @@ class rename extends base
 	 */
 	public function run(array $topic_ids, $forum_id)
 	{
-		if(!$this->confirm(sizeof($topic_ids)))
+		if(!$this->confirm(count($topic_ids)))
 		{
 			return null;
 		}
 
-		if(sizeof($topic_ids) != 1)
+		if(count($topic_ids) != 1)
 		{
 			return false;
 		}

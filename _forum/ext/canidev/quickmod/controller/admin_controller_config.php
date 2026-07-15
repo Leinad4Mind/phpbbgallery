@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -14,7 +14,6 @@ class admin_controller_config extends \canidev\core\controller\acp
 	protected $quickmod;
 	protected $dispatcher;
 	protected $log;
-	protected $request;
 	protected $user;
 
 	/**
@@ -23,7 +22,6 @@ class admin_controller_config extends \canidev\core\controller\acp
 	 * @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
 	 * @param \phpbb\log\log                       		$log				Log Object
 	 * @param \canidev\quickmod\libraries\quickmod 		$quickmod			QuickMod Main Class
-	 * @param \phpbb\request\request 					$request			Request object
 	 * @param \phpbb\user								$user				User object
 	 *
 	 * @access public
@@ -32,13 +30,11 @@ class admin_controller_config extends \canidev\core\controller\acp
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\log\log $log,
 		\canidev\quickmod\libraries\quickmod $quickmod,
-		\phpbb\request\request $request,
 		\phpbb\user $user)
 	{
 		$this->dispatcher	= $dispatcher;
 		$this->log			= $log;
 		$this->quickmod		= $quickmod;
-		$this->request		= $request;
 		$this->user 		= $user;
 	}
 
@@ -49,7 +45,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 	 */
 	public function display($mode)
 	{
-		$this->page_header('cbb-quickmod', $this->config['qm_version']);
+		$this->pageHeader('canidev/quickmod');
 
 		$this->language->add_lang('main', 'canidev/quickmod');
 
@@ -60,6 +56,11 @@ class admin_controller_config extends \canidev\core\controller\acp
 		$selected_actions	= explode(',', $this->config['qm_buttons']);
 		$cfg_array			= ($submit) ? $this->request->variable('config', ['' => '']) : $this->config;
 		$error				= [];
+
+		$layout_ary = [
+			'default'		=> 'QM_LAYOUT_DEFAULT',
+			'fixed'			=> 'QM_LAYOUT_FIXED',
+		];
 		
 		$type_ary = [
 			'icon'		=> 'QM_TYPE_ICON',
@@ -69,7 +70,8 @@ class admin_controller_config extends \canidev\core\controller\acp
 		$display_vars = [
 			'legend1'			=> 'QM_MAIN_CONFIG',
 			'qm_confirm'		=> ['lang' => 'QM_CONFIRM',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-			'qm_type'			=> ['lang' => 'QM_TYPE',		'validate' => 'string',	'type' => 'custom',			'function' => [$this->tools, 'make_select'],	'params' => [$type_ary, '{KEY}', '{CONFIG_VALUE}']],
+			'qm_type'			=> ['lang' => 'QM_TYPE',		'validate' => 'string',	'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$type_ary, '{KEY}', '{CONFIG_VALUE}']],
+			'qm_layout'			=> ['lang' => 'QM_LAYOUT',		'validate' => 'string',	'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' => [$layout_ary, '{KEY}', '{CONFIG_VALUE}']],
 		];
 		
 		/**
@@ -86,7 +88,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		validate_config_vars($display_vars, $cfg_array, $error);
 		
 		// Do not write values if there is an error
-		if(sizeof($error))
+		if(count($error))
 		{
 			$submit = false;
 		}
@@ -149,8 +151,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		$this->page_title	= 'ACP_QUICKMOD_CONFIG';
 
 		$this->template->assign_vars([
-			'QUICKMOD_IN_ADMIN'	=> true,
-			'S_ERROR'			=> (sizeof($error)) ? true : false,
+			'S_ERROR'			=> count($error) > 0,
 			'ERROR_MSG'			=> implode('<br />', $error),
 		]);
 
@@ -158,7 +159,9 @@ class admin_controller_config extends \canidev\core\controller\acp
 		
 		// Assets
 		$this->template->append_asset('css', '@canidev_quickmod/quickmod.css');
-		$this->template->append_asset('js', '@canidev_core/js/jquery-ui.min.js');
-		$this->template->append_asset('js', '@canidev_quickmod/js/jquickmod.min.js', false, 'admin');
+		$this->template->append_asset('js', [
+			'@canidev_core/js/jquery-ui.min.js',
+			'@canidev_quickmod/js/jquickmod.min.js'
+		]);
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class move extends base
 {
 	public $permissions 	= 'm_move';
-	public $category 		= 'OPTIONS_BASIC';
+	public $category 		= 'OPTIONS_TOOLS';
 	public $icon 			= 'fa-random';
-	public $order 			= 6;
+	public $order 			= 40;
 	public $title 			= 'MOVE_TOPIC';
 
 	/**
@@ -32,35 +32,27 @@ class move extends base
 	{
 		if($this->core->modal_dialog(true))
 		{
-			$to_forum_id = $this->request->variable('to_forum_id', 0);
+			$to_forum_id 	= $this->request->variable('to_forum_id', 0);
+			$forum_data 	= phpbb_get_forum_data($to_forum_id, 'f_post');
 
-			if($to_forum_id)
-			{
-				$forum_data = phpbb_get_forum_data($to_forum_id, 'f_post');
-	
-				if(!sizeof($forum_data))
-				{
-					$this->response->error($this->language->lang('FORUM_NOT_EXIST'));
-				}
-	
-				$forum_data = $forum_data[$to_forum_id];
-	
-				if($forum_data['forum_type'] != FORUM_POST)
-				{
-					$this->response->error($this->language->lang('FORUM_NOT_POSTABLE'));
-				}
-				else if(!$this->auth->acl_get('f_post', $to_forum_id) || (!$this->auth->acl_get('m_approve', $to_forum_id) && !$this->auth->acl_get('f_noapprove', $to_forum_id)))
-				{
-					$this->response->error($this->language->lang('USER_CANNOT_POST'));
-				}
-				else if($forum_id == $to_forum_id)
-				{
-					$this->response->error($this->language->lang('CANNOT_MOVE_SAME_FORUM'));
-				}
-			}
-			else
+			if(!count($forum_data))
 			{
 				$this->response->error($this->language->lang('FORUM_NOT_EXIST'));
+			}
+
+			$forum_data = $forum_data[$to_forum_id];
+
+			if($forum_data['forum_type'] != FORUM_POST)
+			{
+				$this->response->error($this->language->lang('FORUM_NOT_POSTABLE'));
+			}
+			else if(!$this->auth->acl_get('f_post', $to_forum_id) || (!$this->auth->acl_get('m_approve', $to_forum_id) && !$this->auth->acl_get('f_noapprove', $to_forum_id)))
+			{
+				$this->response->error($this->language->lang('USER_CANNOT_POST'));
+			}
+			else if($forum_id == $to_forum_id)
+			{
+				$this->response->error($this->language->lang('CANNOT_MOVE_SAME_FORUM'));
 			}
 	
 			$topic_data = phpbb_get_topic_data($ids);
@@ -130,49 +122,50 @@ class move extends base
 				if($leave_shadow && $row['topic_visibility'] == ITEM_APPROVED && $row['topic_type'] != POST_GLOBAL)
 				{
 					$shadow = [
-						'forum_id'				=>	(int) $row['forum_id'],
-						'icon_id'				=>	(int) $row['icon_id'],
-						'topic_attachment'		=>	(int) $row['topic_attachment'],
-						'topic_visibility'		=>	ITEM_APPROVED, // a shadow topic is always approved
-						'topic_reported'		=>	0, // a shadow topic is never reported
-						'topic_title'			=>	(string) $row['topic_title'],
-						'topic_poster'			=>	(int) $row['topic_poster'],
-						'topic_time'			=>	(int) $row['topic_time'],
-						'topic_time_limit'		=>	(int) $row['topic_time_limit'],
-						'topic_views'			=>	(int) $row['topic_views'],
-						'topic_posts_approved'	=>	(int) $row['topic_posts_approved'],
-						'topic_posts_unapproved'=>	(int) $row['topic_posts_unapproved'],
-						'topic_posts_softdeleted'=>	(int) $row['topic_posts_softdeleted'],
-						'topic_status'			=>	ITEM_MOVED,
-						'topic_type'			=>	POST_NORMAL,
-						'topic_first_post_id'	=>	(int) $row['topic_first_post_id'],
-						'topic_first_poster_colour'=>(string) $row['topic_first_poster_colour'],
-						'topic_first_poster_name'=>	(string) $row['topic_first_poster_name'],
-						'topic_last_post_id'	=>	(int) $row['topic_last_post_id'],
-						'topic_last_poster_id'	=>	(int) $row['topic_last_poster_id'],
-						'topic_last_poster_colour'=>(string) $row['topic_last_poster_colour'],
-						'topic_last_poster_name'=>	(string) $row['topic_last_poster_name'],
-						'topic_last_post_subject'=>	(string)  $row['topic_last_post_subject'],
-						'topic_last_post_time'	=>	(int) $row['topic_last_post_time'],
-						'topic_last_view_time'	=>	(int) $row['topic_last_view_time'],
-						'topic_moved_id'		=>	(int) $row['topic_id'],
-						'topic_bumped'			=>	(int) $row['topic_bumped'],
-						'topic_bumper'			=>	(int) $row['topic_bumper'],
-						'poll_title'			=>	(string) $row['poll_title'],
-						'poll_start'			=>	(int) $row['poll_start'],
-						'poll_length'			=>	(int) $row['poll_length'],
-						'poll_max_options'		=>	(int) $row['poll_max_options'],
-						'poll_last_vote'		=>	(int) $row['poll_last_vote']
+						'forum_id'					=> (int) $row['forum_id'],
+						'icon_id'					=> (int) $row['icon_id'],
+						'topic_attachment'			=> (int) $row['topic_attachment'],
+						'topic_visibility'			=> ITEM_APPROVED, // a shadow topic is always approved
+						'topic_reported'			=> 0, // a shadow topic is never reported
+						'topic_title'				=> $row['topic_title'],
+						'topic_poster'				=> (int) $row['topic_poster'],
+						'topic_time'				=> (int) $row['topic_time'],
+						'topic_time_limit'			=> (int) $row['topic_time_limit'],
+						'topic_views'				=> (int) $row['topic_views'],
+						'topic_posts_approved'		=> (int) $row['topic_posts_approved'],
+						'topic_posts_unapproved'	=> (int) $row['topic_posts_unapproved'],
+						'topic_posts_softdeleted'	=> (int) $row['topic_posts_softdeleted'],
+						'topic_status'				=> ITEM_MOVED,
+						'topic_type'				=> POST_NORMAL,
+						'topic_first_post_id'		=> (int) $row['topic_first_post_id'],
+						'topic_first_poster_colour'	=> $row['topic_first_poster_colour'],
+						'topic_first_poster_name'	=> $row['topic_first_poster_name'],
+						'topic_last_post_id'		=> (int) $row['topic_last_post_id'],
+						'topic_last_poster_id'		=> (int) $row['topic_last_poster_id'],
+						'topic_last_poster_colour'	=> $row['topic_last_poster_colour'],
+						'topic_last_poster_name'	=> $row['topic_last_poster_name'],
+						'topic_last_post_subject'	=> $row['topic_last_post_subject'],
+						'topic_last_post_time'		=> (int) $row['topic_last_post_time'],
+						'topic_last_view_time'		=> (int) $row['topic_last_view_time'],
+						'topic_moved_id'			=> (int) $row['topic_id'],
+						'topic_bumped'				=> (int) $row['topic_bumped'],
+						'topic_bumper'				=> (int) $row['topic_bumper'],
+						'poll_title'				=> $row['poll_title'],
+						'poll_start'				=> (int) $row['poll_start'],
+						'poll_length'				=> (int) $row['poll_length'],
+						'poll_max_options'			=> (int) $row['poll_max_options'],
+						'poll_last_vote'			=> (int) $row['poll_last_vote']
 					];
 					
 					/**
 					 * Perform actions before shadow topic is created.
 					 *
 					 * @event core.mcp_main_modify_shadow_sql
-					 * @var	array	shadow	SQL array to be used by $db->sql_build_array
+					 * @var	array	shadow	SQL array
+					 * @var	array	row		Topic data
 					 * @since 3.1.11-RC1
 					 */
-					$vars = ['shadow'];
+					$vars = ['shadow', 'row'];
 					extract($this->dispatcher->trigger_event('core.mcp_main_modify_shadow_sql', compact($vars)));
 	
 					$this->db->sql_query('INSERT INTO ' . TOPICS_TABLE . $this->db->sql_build_array('INSERT', $shadow));
@@ -231,7 +224,7 @@ class move extends base
 	
 			sync('forum', 'forum_id', [$forum_id, $to_forum_id]);
 
-			$this->response->add('message', $this->language->lang(((sizeof($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_MOVED_SUCCESS'));
+			$this->response->add('message', $this->language->lang(((count($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_MOVED_SUCCESS'));
 			return true;
 		}
 

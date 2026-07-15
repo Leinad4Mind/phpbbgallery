@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class lock extends base
 {
 	public $permissions = 'm_lock';
-	public $category 	= 'OPTIONS_BASIC';
+	public $category 	= 'OPTIONS_LOCK';
 	public $icon 		= 'fa-lock';
-	public $order 		= 7;
+	public $order 		= 10;
 	public $title 		= 'LOCK_TOPIC';
 
 	/**
@@ -32,7 +32,7 @@ class lock extends base
 	{
 		$action = 'lock';
 
-		if(!$this->confirm(sizeof($ids)))
+		if(!$this->confirm(count($ids)))
 		{
 			return null;
 		}
@@ -82,6 +82,6 @@ class lock extends base
 		$vars = ['action', 'ids', 'data'];
 		extract($this->dispatcher->trigger_event('core.mcp_lock_unlock_after', compact($vars)));
 
-		$this->response->add('message', $this->language->lang(((sizeof($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_LOCKED_SUCCESS'));
+		$this->response->add('message', $this->language->lang(((count($ids) == 1) ? 'TOPIC' : 'TOPICS') . '_LOCKED_SUCCESS'));
 	}
 }

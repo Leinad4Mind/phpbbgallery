@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB QuickMod
- * @version 1.1.5 20/10/2023
+ * @version 1.1.6 01/11/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -12,9 +12,9 @@ namespace canidev\quickmod\libraries\tasks;
 class approve extends base
 {
 	public $permissions = 'm_approve';
-	public $category 	= 'OPTIONS_BASIC';
+	public $category 	= 'OPTIONS_APPROVE';
 	public $icon 		= 'fa-check';
-	public $order 		= 1;
+	public $order 		= 10;
 	public $title 		= 'APPROVE_TOPIC';
 
 	protected $notifications;
@@ -119,7 +119,7 @@ class approve extends base
 				}
 			}
 			
-			$success_msg	= ((sizeof($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_APPROVED_SUCCESS';
+			$success_msg	= ((count($topic_ids) == 1) ? 'TOPIC' : 'TOPICS') . '_APPROVED_SUCCESS';
 			$redirect		= '';
 			
 			/**
