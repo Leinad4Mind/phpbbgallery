@@ -1,0 +1,59 @@
+<!-- IF QQ_ENABLED && SCRIPT_NAME eq 'viewtopic' -->
+	<script type="text/html" id="tpl-quickquote-tooltip">
+		<div class="quickquote-tooltip">
+			<a href="#" data-action="quote"><i class="fa fa-plus"></i> {L_QQ_SAVE_QUOTE}</a>
+			<span class="tooltip-sep">|</span>
+			<a href="#" data-action="reply"><i class="fa fa-reply"></i> {L_QQ_REPLY}</a>
+		</div>
+	</script>
+
+	<script type="text/html" id="tpl-quickquote-floatbtn">
+	<a href="#" class="quickquote-floatbtn" data-text="{L_QUOTES}"></a>
+	</script>
+
+	<script type="text/html" id="tpl-quickquote-inlinebtn">
+		<button type="button" class="btn btn-default" value="1" data-text="{L_QQ_INSERT_QUOTES}"></button>
+	</script>
+
+	<script type="text/html" id="tpl-quickquote-dialog">
+		<div class="qq-dialog" title="{L_QUOTES}">
+			<div class="cbb-dialog-content dialog-content">
+				<ul class="js-quickquote-list">
+					<li>
+						<div class="titlebar">
+							<input id="check-<%id%>" type="checkbox" class="cbb-checkbox" value="<%id%>" />
+							<label for="check-<%id%>"></label><span><%username%></span>
+							<a href="#" data-action="remove" title="{L_QQ_REMOVE}"><i class="fa fa-close"></i></a>
+							<a href="#" data-action="insert" title="{L_QQ_INSERT}"><i class="fa fa-download"></i></a>
+						</div>
+						<div class="content"><%text%></div>
+					</li>
+				</ul>
+			</div>
+			<div class="cbb-dialog-buttons">
+				<div class="js-btn-marked cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertSelected">{L_QQ_INSERT_SELECTED}</a>
+					<a href="#" class="cbb-btn" data-action="removeSelected">{L_QQ_REMOVE_SELECTED}</a>
+				</div>
+				<div class="js-btn-all cbb-helper-hidden">
+					<a href="#" class="cbb-btn" data-action="insertAll">{L_QQ_INSERT_ALL}</a>
+					<a href="#" class="cbb-btn" data-action="removeAll">{L_QQ_REMOVE_ALL}</a>
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script>
+	head.ready('quickquote.js', function () {
+		cbbCore.initService('quickquote', {
+			btnTarget		: <!-- IF QQ_FLOAT_BTN -->'body'<!-- ELSE -->'#qr_postform .form-group:has(.btn), #postform .form-actions'<!-- ENDIF -->,
+			target			: 'article .content, .pm .content',
+			editors			: {
+				phpbb: '#qr_postform textarea[name], #postform textarea[name]'
+			},
+			replyURL		: '{U_QQ_REPLY}',
+			replyOverwrite	: '{QQ_REPLY_OVERWRITE}'
+		});
+	});
+	</script>
+<!-- ENDIF -->
