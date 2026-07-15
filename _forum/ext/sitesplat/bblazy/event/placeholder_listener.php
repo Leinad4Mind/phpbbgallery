@@ -78,7 +78,7 @@ class placeholder_listener implements EventSubscriberInterface
 				imagecopyresized($thumb, $img, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
 
 				ob_start();
-					imagepng($thumb, null, 9);
+				imagepng($thumb, null, 9);
 				$image = ob_get_clean();
 				$this->lqip = $width . ',' . $height . ',data:image/png;base64,' . base64_encode($image);
 			}

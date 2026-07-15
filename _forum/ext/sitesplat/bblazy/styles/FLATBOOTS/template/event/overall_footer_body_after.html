@@ -1,1 +1,76 @@
-{% INCLUDEJS '@sitesplat_bblazy/js/blazy_prev.min.js' %}
+{% if BB_LOAD_IN_VIEWTOPIC or BB_LOAD_IN_POSTING or BB_LOAD_IN_MEMBER_PROFILE or BB_LOAD_IN_UCP %}
+	{% INCLUDEJS '@sitesplat_bblazy/js/blazy_prev.min.js' %}
+	{% if BB_LOAD_IN_VIEWTOPIC or BB_LOAD_IN_POSTING %}
+		<script>
+			// Compatibility with Tabs - Adiciona um event listener aos elementos .nav-tabs > li
+			document.querySelectorAll('.nav-tabs > li').forEach(tab => {
+				tab.addEventListener('click', event => {
+					// Impede o comportamento padrão
+					event.preventDefault();
+
+					// Obtém o href do link dentro do <li> clicado
+					const targetID = tab.querySelector('a').getAttribute('href');
+
+					// Localiza a imagem dentro do elemento correspondente ao ID
+					const targetPane = document.querySelector(`#${CSS.escape(targetID)}`);
+					if (targetPane) {
+						const imgElement = targetPane.querySelector('img');
+						if (imgElement) {
+							// Realiza as ações desejadas na imagem
+							imgElement.classList.add('b-loaded'); // Adiciona uma classe
+							imgElement.src = imgElement.getAttribute('data-src'); // Atualiza src
+						} else {
+							console.log("Nenhuma imagem encontrada no elemento alvo.");
+						}
+					} 
+				});
+			});
+			// Compatibility with Spoiler extension
+			document.querySelectorAll('summary.spoiler-header').forEach(function (summary) {
+				summary.addEventListener('click', function (e) {
+					var spoiler = e.target.closest('summary.spoiler');
+					if (spoiler && !spoiler.hasAttribute('open')) {
+						var spoilerBody = spoiler.querySelector('.spoiler-body');
+						if (spoilerBody) {
+							// Localiza a imagem dentro do .spoiler-body
+							var imgElement = spoilerBody.querySelector('img');
+							if (imgElement) {
+								// Atualiza o atributo src da imagem com o valor de data-src
+								imgElement.classList.add('b-loaded');
+								imgElement.classList.remove('b-error');
+								imgElement.src = imgElement.getAttribute('data-src');
+							} else {
+								console.log('Nenhuma imagem encontrada dentro de .spoiler-body.');
+							}
+						}
+					}
+				});
+			});
+			// Compatibility with Spoiler extension
+			document.querySelectorAll('div.spoiler-header').forEach(function (header) {
+				header.addEventListener('click', function (e) {
+					var spoiler = e.target.closest('div.spoiler');
+					if (spoiler) {
+						var spoilerBody = spoiler.querySelector('.spoiler-content');
+						console.log(spoiler);
+						if (spoilerBody) {
+							console.log(spoilerBody);
+							// Localiza a imagem dentro do .spoiler-content
+							var imgElement = spoilerBody.querySelector('img');
+							console.log(imgElement);
+							if (imgElement) {
+								console.log(imgElement);
+								// Atualiza o atributo src da imagem com o valor de data-src
+								imgElement.classList.add('b-loaded');
+								imgElement.classList.remove('b-error');
+								imgElement.src = imgElement.getAttribute('data-src');
+							} else {
+								console.log('Nenhuma imagem encontrada dentro de .spoiler-content.');
+							}
+						}
+					}
+				});
+			});
+		</script>
+	{% endif %}
+{% endif %}
