@@ -52,7 +52,6 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.acp_main_notice'	=> 'add_cf_clear_cache_btn',
-
 			'core.session_ip_after'	=> 'cloudflare_ip_support',
 		);
 	}
@@ -80,9 +79,16 @@ class listener implements EventSubscriberInterface
 	 */
 	public function cloudflare_ip_support($event)
 	{
-		if ($this->request->server('HTTP_CF_CONNECTING_IP') != '')
-		{
-			$event['ip'] = htmlspecialchars_decode($this->request->server('HTTP_CF_CONNECTING_IP'));
-		}
+		$ip_check = $event['ip'];
+
+		/**
+		 * Normalizes user IPs when Cloudflare is running on the server.
+		 *
+		 * Ternary Operator improves performance.
+		 * I can't use the Null Coalescing Operator (PHP7) due to BC with phpBB 3.1.x
+		 */
+		$ip_check = ($this->request->server('HTTP_CF_CONNECTING_IP') != '') ? htmlspecialchars_decode($this->request->server('HTTP_CF_CONNECTING_IP')) : htmlspecialchars_decode($this->request->server('REMOTE_ADDR'));
+
+		$event['ip'] = (string) $ip_check;
 	}
 }
