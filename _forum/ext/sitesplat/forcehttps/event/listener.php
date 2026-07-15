@@ -32,21 +32,21 @@ class listener implements EventSubscriberInterface
 	public function onRender($event)
 	{
 		$html = $event['html'];
-		
 		if (strpos($html, '://') === false)
 		{
 			return;
 		}
 
-		$html = preg_replace(
-			'(<(?>a\\b[^>]*\\bhref|img\\b[^>]*\\bsrc)="http(?=://))Ui',
-			'$0s',
-			$html
-		);
-
+	/**	prev function - used to replace all links and images - now images only
+	*	$event['html'] = preg_replace(
+	*		'(<(?>a\\b[^>]*\\bhref|img\\b[^>]*\\bsrc)="http(?=://))Ui',
+	*		'$0s',
+	*		$html
+	*	);
+	*/	
 		$event['html'] = preg_replace(
-			'((<(?>a\\b[^>]*\\bhref|img\\b[^>]*\\bsrc)="https(?=://)\\S+photobucket.com\\S+)")Ui',
-			'$1~original"',
+			'(<img\\b[^>]*\\bsrc="http(?=://))Ui',
+			'$0s',
 			$html
 		);
 	}
