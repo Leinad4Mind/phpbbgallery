@@ -1,0 +1,6 @@
+Subject: Newsletter de {SITENAME}
+
+{MESSAGE}
+
+Todas as newsletter: {NEWSLETTER_ONLINE}
+Não desejas continuar a receber a nossa newsletter? Clica aqui: {NEWSLETTER_OPTOUT}

@@ -2,91 +2,97 @@
 <!-- INCLUDECSS @sitesplat_newsletter/css/newsletter.css -->
 <!-- INCLUDE overall_header.html -->
 <!-- ENDIF -->
- 
-<!-- IF not S_MAIL_VIEW -->	
-<div class="side-segment"><h3>{L_NEWSLETTER}</h3></div>
+
+<!-- IF not S_MAIL_VIEW -->
+<div class="side-segment">
+	<h3>{L_NEWSLETTER}</h3>
+</div>
 <div class="row">
 	<div class="col-md-8">
-	 <div class="panel panel-default">
-	   <div class="panel-body">
-        <p>{L_OVERVIEW}</p>
-        <ul class="mailrow list-unstyled">
-			<!-- BEGIN mailrow -->
-			<li><a href="{mailrow.U_VIEW}" data-src="{mailrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-news" class="btn btn-default btn-xs modal-news-btn"><i class="fa fa-envelope"></i>&nbsp;{mailrow.SUBJECT}&nbsp;&#45;&nbsp;{mailrow.TIME}</a></li>
-			<!-- END mailrow -->
-        </ul>
-		
-		<!-- IF S_ARCHIVES --> 
-          <p><strong>{L_ARCHIEVES}{L_COLON}</strong></p>
-			<!-- BEGIN archiverow -->
-				<!-- IF archiverow.S_ROW_COUNT > 0 -->                       
-				  <a class="inline" data-toggle="collapse" href="#month_{archiverow.S_ROW_COUNT}"><i id="month_image_{archiverow.S_ROW_COUNT}" class="fa <!-- IF archiverow.S_ROW_COUNT >= 0 -->fa-bar-chart-o"<!-- ELSE -->fa-bar-chart"<!-- ENDIF -->></i>&nbsp;{archiverow.ARCHIVE}</a>
-				   <br />
-					<div id="month_{archiverow.S_ROW_COUNT}" class="collapse">
-					 <p>{archiverow.ARCHIVE} {L_OVERVIEW_ARCHIVE} </p>
-						<ul class="mailrow list-unstyled">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<p>{L_OVERVIEW}</p>
+				<ul class="mailrow list-unstyled">
+					<!-- BEGIN mailrow -->
+					<li><a href="{mailrow.U_VIEW}" data-src="{mailrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-news" class="btn btn-default btn-xs modal-news-btn"><i class="fa fa-envelope"></i>&nbsp;{mailrow.SUBJECT}&nbsp;&#45;&nbsp;{mailrow.TIME}</a></li>
+					<!-- END mailrow -->
+				</ul>
+
+				<!-- IF S_ARCHIVES -->
+				<p><strong>{L_ARCHIVES}{L_COLON}</strong></p>
+				<!-- BEGIN archiverow -->
+				<!-- IF archiverow.S_ROW_COUNT > 0 -->
+				<a class="inline" data-toggle="collapse" href="#month_{archiverow.S_ROW_COUNT}"><i id="month_image_{archiverow.S_ROW_COUNT}" class="fa <!-- IF archiverow.S_ROW_COUNT >= 0 -->fa-bar-chart-o" <!-- ELSE -->fa-bar-chart"<!-- ENDIF -->></i>&nbsp;{archiverow.ARCHIVE}</a>
+				<br />
+				<div id="month_{archiverow.S_ROW_COUNT}" class="collapse">
+					<p>{archiverow.ARCHIVE} {L_OVERVIEW_ARCHIVE} </p>
+					<ul class="mailrow list-unstyled">
 						<!-- BEGIN monthrow -->
-						 <li><a href="index.html?letter={archiverow.monthrow.U_VIEW}" data-src="index.html?letter={archiverow.monthrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-arch" class="btn btn-default btn-xs modal-arch-btn"><i class="fa fa-envelope"></i>&nbsp;{archiverow.monthrow.TITLE}&nbsp;&#45;&nbsp;{archiverow.monthrow.DATE}</a></li>
+						<li><a href="index.html?letter={archiverow.monthrow.U_VIEW}" data-src="index.html?letter={archiverow.monthrow.U_VIEW}" data-remote="false" data-toggle="modal" data-target=".modal-arch" class="btn btn-default btn-xs modal-arch-btn"><i class="fa fa-envelope"></i>&nbsp;{archiverow.monthrow.TITLE}&nbsp;&#45;&nbsp;{archiverow.monthrow.DATE}</a></li>
 						<!-- END monthrow -->
-						</ul>
-					</div>
+					</ul>
+				</div>
 				<!-- ENDIF -->
-			<!-- END archiverow -->
-        <!-- ENDIF -->
-		
-		</div> 
-	  </div>	
-	</div>	
-	
+				<!-- END archiverow -->
+				<!-- ENDIF -->
+
+			</div>
+		</div>
+	</div>
+
 	<div class="col-md-4">
-    <div class="panel panel-default panel-body">
-		<!-- IF PASS -->
+		<div class="panel panel-default panel-body">
+			<!-- IF PASS -->
 			<form id="postform" method="post" action="index.html">
-			    <fieldset>
-				 <label class="control-label" for="pass">{L_PASSWORD}{L_COLON}</label>
-                    <div class="input-subscribe"> 					
-					 <input class="form-control" type="password" name="password" id="password" size="25" maxlength="100" value="{PASSWORD}">
-					</div>  
-					  <input type="hidden" name="username" value="{UNAME}">
-					  <input type="hidden" name="email" value="{UEMAIL}">
-					  <input type="hidden" name="action" value="<!-- IF DEREGISTER -->de<!-- ENDIF -->register">
+				<fieldset>
+					<label class="control-label" for="pass">{L_PASSWORD}{L_COLON}</label>
+					<div class="input-subscribe">
+						<input class="form-control" type="password" name="password" id="password" size="25" maxlength="100" value="{PASSWORD}">
+					</div>
+					<input type="hidden" name="username" value="{UNAME}">
+					<input type="hidden" name="email" value="{UEMAIL}">
+					<input type="hidden" name="action" value="<!-- IF DEREGISTER -->de<!-- ENDIF -->register">
 					<button type="submit" tabindex="9" name="submit" value="{L_SUBMIT}" class="btn btn-success btn-block" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-send"></i> {L_SUBMIT}</button>
 				</fieldset>
 			</form>
-			<!-- ELSEIF BEDANKT -->
-			  <div class="alert alert-success">{BEDANKT}<meta http-equiv="refresh" content="5; URL=index.html" /></div>
+			<!-- ELSEIF THANKS -->
+			<div class="alert alert-success">{THANKS}
+				<meta http-equiv="refresh" content="5; URL=index.html" />
+			</div>
 			<!-- ELSE -->
-            <div class="alert alert-info">
-			 <p><!-- IF DEREGISTER -->{L_SUBSCRIBE_NO}<!-- ELSE -->{L_SUBSCRIBE_YES}<!-- ENDIF --></p>
-			 <p>**<!-- IF DEREGISTER -->{L_SUBSCRIBE_CONFIRM_NO}<!-- ELSE -->{L_SUBSCRIBE_CONFIRM_YES}<!-- ENDIF --></p>
+			<div class="alert alert-info">
+				<p><!-- IF DEREGISTER -->{L_SUBSCRIBE_NO}<!-- ELSE -->{L_SUBSCRIBE_YES}<!-- ENDIF --></p>
+				<p>**<!-- IF DEREGISTER -->{L_SUBSCRIBE_CONFIRM_NO}<!-- ELSE -->{L_SUBSCRIBE_CONFIRM_YES}<!-- ENDIF --></p>
 			</div>
 			{ERROR_MSG}
 			<form id="postform" method="post" action="index.html">
-			<fieldset>
-		 <!-- <input type="text" class="form-control" name="username" id="username" size="25" value="{USERNAME}" title="{L_USERNAME}"> -->
-			 <div class="input-subscribe"> 
-			  <label for="email" class="">{L_SUBSCRIBE_Y_EMAIL}</label>
-			  <input type="text" class="form-control" name="email" id="email" size="25" maxlength="100" value="{EMAIL}" disabled> 
-			 </div>
-			  <button type="submit" tabindex="9" name="submit" value="{L_SUBMIT}" class="btn btn-success btn-block" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-send"></i>&nbsp;<!-- IF DEREGISTER -->{L_SUBSCRIBE_BTN_NO}<!-- ELSE -->{L_SUBSCRIBE_BTN_YES}<!-- ENDIF --></button>
-			  <input type="hidden" name="action" value="<!-- IF DEREGISTER -->de<!-- ENDIF -->register" />
-			  {S_FORM_TOKEN}
-			</fieldset>
+				<fieldset>
+					<!-- <input type="text" class="form-control" name="username" id="username" size="25" value="{USERNAME}" title="{L_USERNAME}"> -->
+					<div class="input-subscribe">
+						<label for="email" class="">{L_SUBSCRIBE_Y_EMAIL}</label>
+						<input type="text" class="form-control" name="email" id="email" size="25" maxlength="100" value="{EMAIL}" disabled>
+					</div>
+					<button type="submit" tabindex="9" name="submit" value="{L_SUBMIT}" class="btn btn-success btn-block" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-send"></i>&nbsp;<!-- IF DEREGISTER -->{L_SUBSCRIBE_BTN_NO}<!-- ELSE -->{L_SUBSCRIBE_BTN_YES}<!-- ENDIF --></button>
+					<input type="hidden" name="action" value="<!-- IF DEREGISTER -->de<!-- ENDIF -->register" />
+					{S_FORM_TOKEN}
+				</fieldset>
 			</form>
-		<!-- ENDIF -->
+			<!-- ENDIF -->
+		</div>
 	</div>
-    </div>
-</div>	
-<!-- ENDIF -->	
+</div>
+<!-- ENDIF -->
 
-    <!-- IF S_MAIL_VIEW -->
-        <div class="wrap-email">
-             <div class="pull-left"><h3><a>{MAIL_SUBJECT}</a></h3></div>
-			 <div class="pull-right">{MAIL_DATE}</div>
-			  <div class="space10"></div>
-             <div class="clearfix">{MAIL_MESSAGE}</div>
-        </div>
-    <!-- ENDIF -->
+<!-- IF S_MAIL_VIEW -->
+<div class="wrap-email">
+	<div class="pull-left">
+		<h3><a>{MAIL_SUBJECT}</a></h3>
+	</div>
+	<div class="pull-right">{MAIL_DATE}</div>
+	<div class="space10"></div>
+	<div class="clearfix">{MAIL_MESSAGE}</div>
+</div>
+<!-- ENDIF -->
 
 <!-- IF not S_MAIL_VIEW -->
 <!-- INCLUDEJS @sitesplat_newsletter/js/newsletter.js -->
@@ -98,9 +104,9 @@
 				<h4 class="modal-title" id="myModalLabel">{L_NEWSLETTER}</h4>
 			</div>
 			<div class="modal-body">
-			<div class="embed-responsive embed-responsive-16by9">
-               <iframe class="embed-responsive-item" src="#"></iframe>
-			</div>	
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe class="embed-responsive-item" src="#"></iframe>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{L_CLOSE}</button>
@@ -116,9 +122,9 @@
 				<h4 class="modal-title" id="myModalArch">{L_NEWSLETTER}</h4>
 			</div>
 			<div class="modal-body">
-			<div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="#"></iframe>
-			</div>	
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe class="embed-responsive-item" src="#"></iframe>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{L_CLOSE}</button>

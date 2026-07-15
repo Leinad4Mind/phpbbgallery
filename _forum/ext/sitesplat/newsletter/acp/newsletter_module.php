@@ -186,7 +186,7 @@ class newsletter_module
 						'LANG'			=> $row['lang_local_name']
 					));
 				}
-		
+
 				$forum_ary = json_decode($this->config['newsletter_forums'], true);
 				$forum_list = make_forum_select($forum_ary, false, true, true);
 

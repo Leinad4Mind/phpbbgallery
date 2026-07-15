@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'SEND_IMMEDIATELY'			=> 'Send immediately',
 	'SEND_IMMEDIATELY_EXPLAIN'	=> 'Attempt to send the emails immediately. This depends on the server email configuration parameters',
 	'PERIOD'					=> 'Email Overview (or Catch-up) Period',
-	'PERIOD_EXPLAIN'			=> 'This will send autmatic "Catch-up"  emails to the users that are subscribed. The e-mail will be generated based on the new topics in the forum. The user will receive an email with the purpose of engaging the user\'s interest in the recent board\'s activity. Edit the templates file named newsletter_html.txt for the HTML version and newsletter_txt.txt for the TXT version from:<br /> <code>root\ext\sitesplat\newsletter\language\en\email\</code> <br /> To learn how to send out professional looking HTML emails check out the tutorials over at <a href=" https://sitesplat.com/" target="_blank">sitesplat.com</a> or click the "Tutorials" label above.',
+	'PERIOD_EXPLAIN'			=> 'This will send automatic "Catch-up"  emails to the users that are subscribed. The e-mail will be generated based on the new topics in the forum. The user will receive an email with the purpose of engaging the user\'s interest in the recent board\'s activity. Edit the templates file named newsletter_html.txt for the HTML version and newsletter_txt.txt for the TXT version from:<br /> <code>root\ext\sitesplat\newsletter\language\en\email\</code> <br /> To learn how to send out professional looking HTML emails check out the tutorials over at <a href=" https://sitesplat.com/" target="_blank">sitesplat.com</a> or click the "Tutorials" label above.',
 	'WEEKLY'					=> 'Weekly',
 	'MONTHLY'					=> 'Monthly',
 	'NO_OVERVIEW'				=> 'None',

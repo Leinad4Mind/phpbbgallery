@@ -41,7 +41,7 @@ services:
             - '%core.php_ext%'
 
 # ----- Cron tasks -----
-    sitesplat.task.core.newsoverview:
+    sitesplat.task.core.newsletter:
         class: sitesplat\newsletter\cron\task\core\newsletter
         arguments:
             - '@config'

@@ -136,7 +136,7 @@ class helper
 			$messenger->headers('X-AntiAbuse: Username - ' . $this->user->data['username']);
 			$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 			$messenger->assign_vars(array(
-				'SITE_LOGO_IMG'		=> $server_url . '/ext/sitesplat/newsletter/vendor/assets/images/github-logo.png',
+				'SITE_LOGO_IMG'		=> $server_url . '/ext/sitesplat/newsletter/vendor/assets/images/gold-logo.png',
 				'BOARD_URL'			=> $server_url,
 				'NEWSLETTER_ONLINE'	=> preg_replace("/$this->php_ext(&amp;|&)+?/", "$this->php_ext?", preg_replace('/(\?)?(&amp;|&)?sid=[a-z0-9]+/', '', 
 									   $this->helper->route('sitesplat_newsletter_main_controller', array('route' => 'index.html'), true, '', UrlGeneratorInterface::ABSOLUTE_URL))),

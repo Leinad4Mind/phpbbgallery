@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'SUBSCRIBE_INFO'			=> 'Our newsletter. Unsubscribed members won\'t receive our periodic News overview anymore.',
 	
 	'OVERVIEW_ARCHIVE'			=> 'Archive',
-	'ARCHIEVES'					=> 'Archives',
+	'ARCHIVES'					=> 'Archives',
 	'SUBSCRIBED'				=> 'Thanks for subscribing! You will receive our newsletter from today on!',
 	'UNSUBSCRIBED'				=> 'Successfully unsubscribed, you won\'t receive our newsletter any longer'
 ));
