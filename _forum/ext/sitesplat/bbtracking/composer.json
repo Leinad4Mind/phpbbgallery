@@ -1,0 +1,30 @@
+{
+    "name": "sitesplat/bbtracking",
+    "type": "phpbb-extension",
+    "description": "A phpBB 3.2 extension that keeps a revision history of all posts edits and also tracks the user (or even a group) movements on the board. The revisions can be viewed, deleted, and restored only by users with the necessary permissions. Other features include the ability to enable/disable for specific forums and auto-pruning to remove old revisions. These options are set on the page for editing forum settings in ACP.",
+	"homepage": "https://sitesplat.com",
+    "version": "1.0.1",
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "https://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "display-name": "BBtracking",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.11-RC1,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bbtracking.json",
+			"ssl": true
+		}
+    }
+}
