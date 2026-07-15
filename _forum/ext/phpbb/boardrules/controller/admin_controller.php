@@ -23,7 +23,7 @@ class admin_controller implements admin_interface
 	/** @var ContainerInterface */
 	protected $container;
 
-	/** @var \phpbb\controller\helper $controller_helper */
+	/** @var \phpbb\controller\helper */
 	protected $controller_helper;
 
 	/** @var \phpbb\db\driver\driver_interface */
@@ -194,7 +194,7 @@ class admin_controller implements admin_interface
 			foreach ($rows as $row)
 			{
 				$this->template->assign_block_vars('options', array(
-					'S_LANG_DEFAULT'	=> $row['lang_iso'] == $this->config['default_lang'],
+					'S_LANG_DEFAULT'	=> $row['lang_iso'] === $this->config['default_lang'],
 
 					'LANG_ISO'			=> $row['lang_iso'],
 					'LANG_LOCAL_NAME'	=> $row['lang_local_name'],
@@ -709,7 +709,7 @@ class admin_controller implements admin_interface
 				'RULE_ID'			=> $rule_menu_item->get_id(),
 				'RULE_TITLE'		=> $padding . $rule_menu_item->get_title(),
 
-				'S_DISABLED'		=> ($rule_menu_item->get_left_id() > $entity->get_left_id()) && ($rule_menu_item->get_right_id() < $entity->get_right_id()) || ($rule_menu_item->get_id() == $entity->get_id()),
+				'S_DISABLED'		=> ($rule_menu_item->get_left_id() > $entity->get_left_id() && $rule_menu_item->get_right_id() < $entity->get_right_id()) || $rule_menu_item->get_id() == $entity->get_id(),
 				'S_RULE_PARENT'		=> $rule_menu_item->get_id() == $parent_id,
 			));
 		}
