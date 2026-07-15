@@ -8,55 +8,16 @@
 	<fieldset>
 		<legend>{{ lang('SETTINGS') }}</legend>
 		<dl>
-			<dt><label for="sitesplat_bbajaxnews_driver">{{ lang('SITESPLAT_BBAJAXNEWS_DRIVER') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_DRIVER_EXPLAIN') }}</span></dt>
-			<dd>
-				<select id="sitesplat_bbajaxnews_driver" name="sitesplat_bbajaxnews_driver">
-					{% for driver in ['pubnub', 'pusher'] %}
-						<option value="{{ driver }}"{% if driver == SITESPLAT_BBAJAXNEWS_DRIVER %} selected{% endif %}>{{ lang('DRIVER_' ~ driver|upper) }}</option>
-					{% endfor %}
-				</select>
-			</dd>
-		</dl>
-
-		<dl class="driver_option pubnub hidden">
 			<dt><label for="sitesplat_bbajaxnews_pubnub_pub">{{ lang('SITESPLAT_BBAJAXNEWS_PUBNUB_PUB') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUBNUB_PUB_EXPLAIN') }}</span></dt>
 			<dd>
 				<input type="text" class="medium" name="sitesplat_bbajaxnews_pubnub_pub" id="sitesplat_bbajaxnews_pubnub_pub" value="{{ SITESPLAT_BBAJAXNEWS_PUBNUB_PUB }}" />
 			</dd>
 		</dl>
 
-		<dl class="driver_option pubnub hidden">
+		<dl>
 			<dt><label for="sitesplat_bbajaxnews_pubnub_sub">{{ lang('SITESPLAT_BBAJAXNEWS_PUBNUB_SUB') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUBNUB_SUB_EXPLAIN') }}</span></dt>
 			<dd>
 				<input type="text" class="medium" name="sitesplat_bbajaxnews_pubnub_sub" id="sitesplat_bbajaxnews_pubnub_sub" value="{{ SITESPLAT_BBAJAXNEWS_PUBNUB_SUB }}" />
-			</dd>
-		</dl>
-
-		<dl class="driver_option pusher hidden">
-			<dt><label for="sitesplat_bbajaxnews_pusher_app_key">{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY_EXPLAIN') }}</span></dt>
-			<dd>
-				<input type="text" class="medium" name="sitesplat_bbajaxnews_pusher_app_key" id="sitesplat_bbajaxnews_pusher_app_key" value="{{ SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY }}" />
-			</dd>
-		</dl>
-
-		<dl class="driver_option pusher hidden">
-			<dt><label for="sitesplat_bbajaxnews_pusher_app_sec">{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC_EXPLAIN') }}</span></dt>
-			<dd>
-				<input type="text" class="medium" name="sitesplat_bbajaxnews_pusher_app_sec" id="sitesplat_bbajaxnews_pusher_app_sec" value="{{ SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC }}" />
-			</dd>
-		</dl>
-
-		<dl class="driver_option pusher hidden">
-			<dt><label for="sitesplat_bbajaxnews_pusher_app_id">{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID_EXPLAIN') }}</span></dt>
-			<dd>
-				<input type="text" class="medium" name="sitesplat_bbajaxnews_pusher_app_id" id="sitesplat_bbajaxnews_pusher_app_id" value="{{ SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID }}" />
-			</dd>
-		</dl>
-
-		<dl class="driver_option pusher hidden">
-			<dt><label for="sitesplat_bbajaxnews_pusher_app_cluster">{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER_EXPLAIN') }}</span></dt>
-			<dd>
-				<input type="text" class="medium" name="sitesplat_bbajaxnews_pusher_app_cluster" id="sitesplat_bbajaxnews_pusher_app_cluster" value="{{ SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER }}" />
 			</dd>
 		</dl>
 
@@ -101,7 +62,7 @@
 			</dd>
 		</dl>
 
-		<dl>
+		<dl style="display:none;">
 			<dt><label for="sitesplat_bbajaxnews_noty_mo">{{ lang('SITESPLAT_BBAJAXNEWS_NOTY_MO') ~ lang('COLON') }}</label><br /><span>{{ lang('SITESPLAT_BBAJAXNEWS_NOTY_MO_EXPLAIN') }}</span></dt>
 			<dd>
 				<label><input type="radio" class="radio" name="sitesplat_bbajaxnews_noty_mo" value="1"{% if SITESPLAT_BBAJAXNEWS_NOTY_MO %} checked{% endif %} /> {{ lang('YES') }}</label>
@@ -145,17 +106,5 @@
 	</fieldset>
 
 </form>
-
-<script>
-	document.querySelector('#sitesplat_bbajaxnews_driver').addEventListener('change', function(event) {
-		[].forEach.call(document.querySelectorAll('.driver_option'), function(option) {
-			option.classList.add('hidden');
-		});
-		[].forEach.call(document.querySelectorAll('.driver_option.' + event.target.value), function(option) {
-			option.classList.remove('hidden');
-		});
-	});
-	document.querySelector('#sitesplat_bbajaxnews_driver').dispatchEvent(new Event('change'));
-</script>
 
 {% include 'overall_footer.html' %}

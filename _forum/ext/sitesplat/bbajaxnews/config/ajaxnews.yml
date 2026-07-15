@@ -6,7 +6,6 @@ services:
             - '@config'
             - '@log'
             - '@user'
-            - '@template'
 
     sitesplat.bbajaxnews.ajaxnews.base:
         class: sitesplat\bbajaxnews\ajaxnews\type\base

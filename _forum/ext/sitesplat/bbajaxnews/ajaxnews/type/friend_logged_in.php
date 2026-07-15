@@ -25,7 +25,7 @@ class friend_logged_in extends base
 	public function get_lang_array($data)
 	{
 		return [
-			get_username_string('full', (int) $data['user_id'], $data['username'], $data['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
+			get_username_string('full', $data['user_id'], $data['username'], $data['user_colour']),
 		];
 	}
 

@@ -27,7 +27,7 @@ class user_joined_group extends base
 		$users = [];
 		foreach ($data['users'] as $user_id => $username)
 		{
-			$users[] = '<a href="' . $this->url . append_sid('/memberlist.php', 'mode=viewprofile&amp;u=' . $user_id) . '">' . $username . '</a>';
+			$users[] = '<a href="' . generate_board_url() . '/' . append_sid('memberlist.' . $this->php_ext, 'mode=viewprofile&amp;u=' . $user_id) . '">' . $username . '</a>';
 		}
 
 		$users_string = implode(', ', $users); // result is something like: admin1, admin2, admin3
@@ -35,7 +35,7 @@ class user_joined_group extends base
 		$group_name = $this->group_helper->get_name($data['group_name']);
 		return [
 			$nice_user_string,
-			'<a href="' . $this->url . append_sid('/memberlist.php', 'mode=group&amp;g=' . $data['group_id']) . '">' . $group_name . '</a>',
+			'<a href="' . generate_board_url() . '/' . append_sid('memberlist.' . $this->php_ext, 'mode=group&amp;g=' . $data['group_id']) . '">' . $group_name . '</a>',
 		];
 	}
 

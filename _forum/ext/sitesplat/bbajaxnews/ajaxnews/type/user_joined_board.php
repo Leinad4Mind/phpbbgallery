@@ -19,7 +19,7 @@ class user_joined_board extends base
 	public function get_lang_array($data)
 	{
 		return [
-			get_username_string('full', (int) $data['user_id'], $data['username'], '', false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
+			get_username_string('full', $data['user_id'], $data['username']),
 		];
 	}
 

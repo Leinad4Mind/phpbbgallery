@@ -26,11 +26,11 @@ class bbmembership extends base
 			'WHERE'		=> 'u.user_id = ' . (int) $data['user_id'],
 		];
 		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_ary));
-		$user = $this->db->sql_fetchrow($result);
+		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
 		return [
-			get_username_string('full', (int) $data['user_id'], $user['username'], $user['user_colour'], false, $this->url . append_sid('/memberlist.php', 'mode=viewprofile')),
+			get_username_string('full', (int) $data['user_id'], $row['username'], $row['user_colour']),
 			$data['level'],
 		];
 	}
