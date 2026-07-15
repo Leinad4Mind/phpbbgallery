@@ -1,0 +1,13 @@
+<script>
+head.ready(function(){
+	phpbb.addAjaxCallback('sitesplat.bookmarkpost', function(response){
+		jQuery('#p' + response.POST_ID + ' .bookmarkpost')
+			.attr('href', response.NEW_HREF)
+			.children('i')
+				.toggleClass('fa-star').toggleClass('fa-star-o')
+			.parent()
+			.children('span')
+				.text(response.NEW_LANG)
+	});
+});
+</script>
