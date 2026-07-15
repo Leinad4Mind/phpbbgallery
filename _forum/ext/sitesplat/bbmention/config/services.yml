@@ -20,7 +20,6 @@ services:
       - { name: event.listener }
   sitesplat.bbmention.notification:
     class: sitesplat\bbmention\notification\notification
-    scope: prototype
     shared: false
     parent: notification.type.post
     tags:
