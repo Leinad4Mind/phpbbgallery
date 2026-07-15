@@ -4,7 +4,7 @@
  * Simple Spoiler Extension for phpBB.
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
- * @license GPL-2.0
+ * @license GPL-2.0-only
  */
 
 namespace alfredoramos\simplespoiler\migrations\v10x;
@@ -30,6 +30,8 @@ class m1_spoiler_data extends container_aware_migration
 						new spoiler_helper(
 							$this->container->get('dbal.conn'),
 							$this->container->get('filesystem'),
+							$this->container->get('language'),
+							$this->container->get('template'),
 							$this->container->getParameter('core.root_path'),
 							$this->container->getParameter('core.php_ext')
 						),
@@ -55,6 +57,8 @@ class m1_spoiler_data extends container_aware_migration
 						new spoiler_helper(
 							$this->container->get('dbal.conn'),
 							$this->container->get('filesystem'),
+							$this->container->get('language'),
+							$this->container->get('template'),
 							$this->container->getParameter('core.root_path'),
 							$this->container->getParameter('core.php_ext')
 						),
