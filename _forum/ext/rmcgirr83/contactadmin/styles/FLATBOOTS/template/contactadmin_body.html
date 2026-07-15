@@ -1,134 +1,149 @@
-<!-- INCLUDE overall_header.html -->
-<!-- IF S_ERROR -->
-		<div class="alert alert-info fade in">
-          <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> <br />{S_ERROR}
-        </div> 
-<!-- ENDIF -->
+{% INCLUDE 'overall_header.html' %}
 
-<form method="post" id="postform" name="postform" action="{S_CONTACT_ACTION}"{S_FORM_ENCTYPE}>
- <div class="side-segment"><h3>{L_ACP_CAT_CONTACTADMIN}</h3></div>
+{% if S_ERROR %}
+<div class="alert alert-info fade in">
+	<i class="fa fa-warning"></i> <strong>{{ lang('INFO_BOX') }}</strong> <br />{{ S_ERROR }}
+</div>
+{% endif %}
 
-	<!-- IF CONTACT_INFO -->
-	<div class="row">
-	<div class="col-md-12">
-	
-
-	<div class="well">
-	<span class="help-block">{CONTACT_INFO}</span>
-	</div></div>
-	<!-- ENDIF -->
-	
- <div class="col-md-12">
-	<div class="well">
-	<div class="row">
-	
-
-		<!-- IF not S_USER_LOGGED_IN -->
-	<div class="col-xs-12 col-lg-12">
-		  <div class="control-group">
-			<label class="control-label" for="contact_name">{L_CONTACT_YOUR_NAME}{L_COLON}</label>
-			<div class="controls">
-			<div class="input-icon left">
-			  <i class="fa fa-user"></i>
-			<input type="text" class="form-control input-sm" name="username" id="username" value="{USERNAME}" size="30" tabindex="1" placeholder="{L_USERNAME}"/>
-			</div>
-			</div>
-		  </div>	
-		 </div>
-		  <div class="col-xs-12 col-lg-12">
-	     <div class="control-group">
-			<label class="control-label" for="email">{L_CONTACT_YOUR_EMAIL}{L_COLON}</label>
-			<div class="controls">
-			<div class="input-icon left">
-			  <i class="fa fa-mail-forward"></i>
-			<input type="text" class="form-control input-sm" name="email" id="email" value="{EMAIL}" size="30" tabindex="2" placeholder="{L_EMAIL}"/>
-			</div>
-			</div>
-		  </div>
-		</div>
-		<!-- ENDIF -->
-		<!-- IF CONTACT_REASONS -->
-				<div class="col-xs-12 col-lg-12">
-		<div class="control-group">
-			<label class="control-label" for="contact_reason">{L_CONTACT_REASON}{L_COLON}</label>
-			 <select class="selectpicker" data-container="body" data-width="100%" name="contact_reason" id="contact_reason" tabindex="4">{CONTACT_REASONS}</select>
-		</div>
-		</div>
-	
-		<!-- ENDIF -->
-		<!-- IF not CONTACT_REASONS -->
-			  <div class="<!-- IF CONTACT_REASONS -->col-xs-12 col-lg-6<!-- ELSE -->col-xs-12 col-lg-12<!-- ENDIF -->">
-		<div class="control-group">
-		  <label class="control-label" for="contact_subject">{L_SUBJECT}{L_COLON}</label>
-		  <div class="controls">
-		  <div class="input-icon left">
-            <i class="fa fa-user"></i>
-		  <input type="text" class="form-control input-sm" size="45" maxlength="64" name="contact_subject" id="contact_subject" value="{CONTACT_SUBJECT}" tabindex="5" placeholder="{L_SUBJECT}"/>
-		  </div>
-		  </div>
-	    </div>
-	  </div>
-		
-		<!-- ENDIF -->
-		 </div>	
-		<div class="space10"></div>
-		
-		  <label for="message" class="control-label">{L_MESSAGE_BODY}{L_COLON}</label>
-			<div class="controls">
-			  <textarea class="form-control" name="message" id="message" rows="4" cols="76" tabindex="6" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" placeholder="{L_MESSAGE_BODY}">{CONTACT_MESSAGE}</textarea>
-			</div>
-        <div class="space10"></div>
-		
-	</div>	
-</div> 	
-</div>	
-
-
-
-<!-- IF CAPTCHA_TEMPLATE -->
-<div class="well">
-	<div class="inner">
-	<!-- DEFINE $CAPTCHA_TAB_INDEX = 8 -->
-	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+<form method="post" id="postform" name="postform" action="{{ S_CONTACT_ACTION }}" {S_FORM_ENCTYPE}>
+	<div class="side-segment">
+		<h3>{{ lang('ACP_CAT_CONTACTADMIN') }}</h3>
 	</div>
-</div>
-<!-- ENDIF -->
 
-<!-- IF S_ATTACH_BOX -->
-<div class="well">
-	<p>{L_ADD_ATTACHMENT_EXPLAIN}</p>
+	<div class="row">
+		{% if CONTACT_INFO %}
+		<div class="col-md-12">
+			<div class="well">
+				<span class="help-block">{CONTACT_INFO}</span>
+			</div>
+		</div>
+		{% endif %}
 
-<fieldset>
-<div class="control-group"> 
-	<label class="control-label" for="fileupload">{L_FILENAME}{L_COLON}</label>
-	<div class="controls controls-row"> 
-      <input type="file" name="fileupload" id="fileupload" class="inputbox autowidth" />
-   </div> 
-</div>
-	
-<div class="control-group"> 
-	<label class="control-label" for="filecomment">{L_FILE_COMMENT}{L_COLON}</label>
-	<div class="controls controls-row"> 
-	 <textarea placeholder="{L_FILE_COMMENT_PLACEHOLDER}" rows="1" name="filecomment" id="filecomment" class="form-control">{FILE_COMMENT}</textarea>
-    </div> 
-</div>
-</fieldset>
+		<div class="col-md-12">
+			<div class="well">
+				<div class="row">
+					{% if not S_USER_LOGGED_IN %}
+					<div class="col-xs-12 col-lg-12">
+						<div class="control-group">
+							<label class="control-label" for="contact_name">{{ lang('CONTACT_YOUR_NAME') }}{{ lang('COLON') }}</label>
+							<div class="controls">
+								<div class="input-icon left">
+									<i class="fa fa-user"></i>
+									<input type="text" class="form-control input-sm" name="username" id="username" value="{{ USERNAME }}" size="30" tabindex="1" placeholder="{{ lang('USERNAME') }}" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-lg-12">
+						<div class="control-group">
+							<label class="control-label" for="email">{{ lang('CONTACT_YOUR_EMAIL') }}{{ lang('COLON') }}</label>
+							<div class="controls">
+								<div class="input-icon left">
+									<i class="fa fa-mail-forward"></i>
+									<input type="text" class="form-control input-sm" name="email" id="email" value="{{ EMAIL }}" size="30" tabindex="2" placeholder="{{ lang('EMAIL') }}" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-lg-12">
+						<div class="control-group">
+							<label class="control-label" for="email_confirm">{{ lang('CONTACT_YOUR_EMAIL_CONFIRM') }}{{ lang('COLON') }}</label>
+							<div class="controls">
+								<div class="input-icon left">
+									<i class="fa fa-mail-forward"></i>
+									<input type="text" class="form-control input-sm" name="email_confirm" id="email_confirm" value="{{ EMAIL_CONFIRM }}" size="30" tabindex="2" placeholder="{{ lang('EMAIL') }}" />
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
 
-</div>
-<!-- ENDIF -->
- 
-<fieldset class="form-actions">
+					{% if CONTACT_REASONS %}
+					<div class="col-xs-12 col-lg-12">
+						<div class="control-group">
+							<label class="control-label" for="contact_reason">{{ lang('CONTACT_REASON') }}{{ lang('COLON') }}</label>
+							<select class="selectpicker" data-container="body" data-width="100%" name="contact_reason" id="contact_reason" tabindex="4">
+								{CONTACT_REASONS}
+							</select>
+						</div>
+					</div>
+					{% endif %}
 
-			{S_HIDDEN_FIELDS}
+					{% if not CONTACT_REASONS %}
+					<div class="<!-- IF CONTACT_REASONS -->col-xs-12 col-lg-6<!-- ELSE -->col-xs-12 col-lg-12<!-- ENDIF -->">
+						<div class="control-group">
+							<label class="control-label" for="contact_subject">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label>
+							<div class="controls">
+								<div class="input-icon left">
+									<i class="fa fa-user"></i>
+									<input type="text" class="form-control input-sm" size="45" maxlength="64" name="contact_subject" id="contact_subject" value="{CONTACT_SUBJECT}" tabindex="5" placeholder="{{ lang('SUBJECT') }}" />
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
 
-		<button type="submit" name="submit" id="submit" value="{L_SUBMIT}" class="btn btn-default" tabindex="9" autocomplete="off" data-loading-text="{L_SENDING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+				</div>
+				<div class="space10"></div>
 
-		{S_FORM_TOKEN}
+				<label for="message" class="control-label">{{ lang('MESSAGE_BODY') }}{{ lang('COLON') }}</label>
+				<div class="controls">
+					<textarea class="form-control" name="message" id="message" rows="4" cols="76" tabindex="6" placeholder="{{ lang('MESSAGE_BODY') }}">{CONTACT_MESSAGE}</textarea>
+				</div>
+				<div class="space10"></div>
+
+				{% if S_CONTACT_GDPR %}
+				<div>
+					<label class="control-label" for="gdpr">{{ lang('CONTACT_PRIVACYPOLICY') }}{{ lang('COLON') }}</label>
+					<div class="controls">
+						<div class="input-icon left">
+							<input type="checkbox" class="form-control input-sm" name="gdpr" id="gdpr" size="30" tabindex="1" />&nbsp;&nbsp;{{ lang('CONTACT_PRIVACYPOLICY_EXPLAIN', PRIVACY_POLICY_URL) }}
+						</div>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 
 
+
+	{% if CONTACT_ADMIN_CAPTCHA_TEMPLATE %}
+	<div class="well">
+		<div class="inner">{% DEFINE CAPTCHA_TAB_INDEX = 8 %} {% INCLUDE ''~ CONTACT_ADMIN_CAPTCHA_TEMPLATE ~'' %}</div>
+	</div>
+	{% endif %}
+
+	{% if S_ATTACH_BOX %}
+	<div class="well">
+		<p>{{ lang('ADD_ATTACHMENT_EXPLAIN') }}</p>
+
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="fileupload">{{ lang('FILENAME') }}{{ lang('COLON') }}</label>
+				<div class="controls controls-row">
+					<input type="file" name="fileupload" id="fileupload" class="inputbox autowidth" />
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="filecomment">{{ lang('FILE_COMMENT') }}{{ lang('COLON') }}</label>
+				<div class="controls controls-row">
+					<textarea placeholder="{{ lang('FILE_COMMENT_PLACEHOLDER') }}" rows="1" name="filecomment" id="filecomment" class="form-control">{FILE_COMMENT}</textarea>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	{% endif %}
+
+	<fieldset class="form-actions">
+		{{ S_HIDDEN_FIELDS }}
+		<button type="submit" name="submit" id="submit" value="{{ lang('SUBMIT') }}" class="btn btn-default" tabindex="9" autocomplete="off" data-loading-text="{{ lang('SENDING') }}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">
+			{{ lang('SUBMIT') }}
+		</button>
+		{{ S_FORM_TOKEN }}
 	</fieldset>
-
-
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

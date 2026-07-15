@@ -1,3 +1,3 @@
-<!-- IF U_CONTACTADMIN -->
-	<li><a href="{U_CONTACTADMIN}"><i class="fa fa-envelope"></i>{L_CONTACT_US}</a></li>
-<!-- ENDIF -->
+{% if U_CONTACTADMIN %}
+	<li data-last-responsive="true"><a href="{{ U_CONTACTADMIN }}" role="menuitem"><i class="fa fa-envelope"></i>{{ lang('CONTACT_US') }}</a></li>
+{% endif %}
