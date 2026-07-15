@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="pt-pt"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="pt-pt"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="pt-pt"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-<html lang="pt-pt"> <!--<![endif]-->
-
+<html lang="pt-pt">
 <head>
 	<meta charset="utf-8">
 	<title>GoldTugAnime</title>
@@ -12,155 +7,213 @@
 	<meta name="keywords" content="goldtuganime, goldtuga, gta, goldanime,tuganime, anime, manga, mangapt, anime portugal, animeportugal, animept, forum de anime, forum de manga, hentai, anime pt-pt, manga pt-pt, animações pt-pt, anime portugues, anime dobrado, anime legendado, manga portugues, manga portugal, cosplay, dorama, j-music, japão, otaku, disney, dreamworks, marvel, dc comics, pixar, navegantes da lua, sailor moon, shin chan, doraemon, kochikame, inspector gadget, homem-aranha, iron man, x-men, tartarugas ninja, tmnt, cinderella monogatari, cinderela, motoratos, Naruto, Shippudden, Bleach, One Piece, Evangelion, Samurai x, Dragon Ball, dragonball, dbz, dbgt, digimon, fibda, haruhi, iberanime, anipop, natsumeet, fanart, amv, Death Note, Full Metal Alchemist, Fullmetal Alchemist, FMA, Claymore, Berserk" />
 	<meta name="author" content="leinad4mind">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- CSS -->
-	<link rel="stylesheet" href="index/css/reset.css">
-	<link rel="stylesheet" href="index/css/skeleton.css">
-	<link rel="stylesheet" href="index/css/layout.css">
-	<link rel="stylesheet" href="index/font/font-awesome.min.css">
-	<link rel="stylesheet" href="index/css/animate.css">
-	<link rel="stylesheet" href="index/css/styleswitcher.css">
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+	
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	
+	<!-- FontAwesome 6 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	
 	<!-- Favicons -->
 	<link rel="shortcut icon" href="index/img/fav.ico">
 	<link rel="apple-touch-icon" href="index/img/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="index/img/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="index/img/apple-touch-icon-114x114.png">
-	<!-- Google Webfonts -->
-	<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-	<!-- Page Specific Styles -->
+	
+	<!-- Google Fonts -->
+	<link href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@300;400&display=swap' rel='stylesheet'>
+	
+	<!-- Custom Styles & Animations -->
 	<style>
-		#header {
-			background: transparent;
+		body {
+			font-family: 'Open Sans', sans-serif;
+			margin: 0;
+			overflow: hidden; /* Prevent scrolling, keeps it a true landing page */
+			background-color: #111;
 		}
 
-		@media only screen and (max-width: 1200px) {
-			#header {
-				background: url('index/video/video_bg.jpg') no-repeat !important;
-			}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: 'Montserrat', sans-serif;
+		}
 
-			video {
-				display: none !important;
+		.pattern-overlay {
+			background-image: url('index/img/patterns/pattern.png');
+			background-repeat: repeat;
+		}
+
+		/* Smooth fade-in up animation for the main title */
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
 			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.animate-fade-in-up {
+			animation: fadeInUp 1.2s ease-out forwards;
+		}
+		
+		.animate-delay-100 { animation-delay: 100ms; }
+		.animate-delay-300 { animation-delay: 300ms; }
+		.animate-delay-500 { animation-delay: 500ms; }
+
+		/* Link Hover effects */
+		.option-link {
+			transition: all 0.3s ease;
+		}
+		.option-link:hover {
+			background-color: #FFB100; /* Gold/Yellow accent */
+			color: #111;
+			transform: translateY(-3px);
+			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+		}
+		.option-link.selected {
+			background-color: #FFB100;
+			color: #111;
+		}
+
+		/* Social icons hover */
+		.social-btn {
+			transition: color 0.3s ease, transform 0.3s ease;
+		}
+		.social-btn:hover {
+			color: #FFB100;
+			transform: scale(1.2);
 		}
 	</style>
-
 </head>
+<body class="text-white relative w-full h-screen flex flex-col justify-between">
 
-<body>
-	<div id="main-wrapper">
-		<header id="header">
-			<div id="pattern-overlay">
-				<div class="container">
-					<div class="sixteen columns">
-						<div class="header-content">
-							<img src="index/img/logo_central.png" alt="" title="" />
-							<h1 class="header-title">
-								<span class="texts">
-									<div data-out-effect="fadeOut" data-out-shuffle="true">O melhor da animação
-								</span>
-								<div data-in-effect="fadeInUp">Escolhe o teu destino !</span>
-									</span>
-							</h1>
-							<p class="lead">Sejam bem-vindos à mais bela comunidade de animação em português de Portugal!</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</header>
+	<!-- Native HTML5 Video Background -->
+	<video id="video_background" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover -z-20">
+		<source src="index/video/video_bg.mp4" type="video/mp4">
+		<source src="index/video/video_bg.webm" type="video/webm">
+		<source src="index/video/video_bg.ogg" type="video/ogg">
+	</video>
 
-		<section id="portfolio">
-			<div class="container">
-				<div class="sixteen columns">
-					<ul class="option-set">
-						<li><a href="./forum" class="selected">
-								<em class="icon icon-heart"></em><span class="filter-title">Fórum</span>
-							</a></li>
-						<!-- <li><a href="#" > -->
-						<!-- <em class="icon icon-shopping-cart"></em><span class="filter-title">Loja (Brevemente)</span> -->
-						<!-- </a></li> -->
-						<li><a href="//facebook.com/goldtuganimeoficial">
-								<em class="icon icon-facebook-sign"></em><span class="filter-title">Facebook</span>
-							</a></li>
-						<li><a href="//instagram.com/GoldTugAnime">
-								<em class="icon icon-instagram"></em><span class="filter-title">Instagram</span>
-							</a></li>
-						<li><a href="//youtube.com/GoldTugAnimeOFICIAL">
-								<em class="icon icon-youtube-sign"></em><span class="filter-title">Youtube</span>
-							</a></li>
-					</ul>
-					<div class="clear"></div>
-				</div>
-			</div>
-		</section>
+	<!-- Grid Pattern Overlay -->
+	<div class="absolute inset-0 pattern-overlay opacity-60 -z-10"></div>
 
-		<footer id="footer">
-			<div class="container">
-				<div class="columns">
-					<ul class="social-networks">
-						<li><a id="muted" href="javascript:void(0);"><em class="icon icon-volume-off"></em></a></li>
-						<li><em class="icon icon-null" style="background:transparent;"></em></li>
-						<li><a href="javascript:void(0);" onclick="document.getElementById('video_background').currentTime=document.getElementById('video_background').currentTime-5"><em class="icon icon-backward"></em></a></li>
-						<li><a id="play" href="javascript:void(0);"><em class="icon icon-pause"></em></a></li>
-						<li><a href="javascript:void(0);" onclick="document.getElementById('video_background').currentTime=document.getElementById('video_background').currentTime+5"><em class="icon icon-forward"></em></a></li>
-					</ul>
-				</div>
-				<div class="columns">
-					<p class="copyright-text">Copyright © 2007-<script>document.write(new Date().getFullYear())</script> - GoldTugAnime</p>
-				</div>
-			</div>
-		</footer>
+	<!-- Main Content Area -->
+	<main class="flex-grow flex flex-col items-center justify-center text-center px-4 pt-10">
+		<img src="index/img/logo_central.png" alt="GoldTugAnime Logo" class="max-w-xs md:max-w-md lg:max-w-lg mb-8 opacity-0 animate-fade-in-up" />
+		
+		<h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg opacity-0 animate-fade-in-up animate-delay-300">
+			<span class="block text-gray-200 text-2xl md:text-3xl font-light mb-2">O melhor da animação</span>
+			<span class="block text-white">Escolhe o teu destino!</span>
+		</h1>
+		
+		<p class="text-sm sm:text-base md:text-xl text-gray-300 font-light mt-4 drop-shadow-md max-w-full px-2 opacity-0 animate-fade-in-up animate-delay-500">
+			Sejam bem-vindos à mais bela comunidade de animação em português de Portugal!
+		</p>
+	</main>
 
-	</div>
+	<!-- Portfolio Options -->
+	<section class="w-full pb-8 z-10 px-4">
+		<div class="container mx-auto flex justify-center">
+			<ul class="flex flex-wrap justify-center gap-4">
+				<li>
+					<a href="./forum" class="option-link selected flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider">
+						<i class="fa-solid fa-heart"></i>
+						<span>Fórum</span>
+					</a>
+				</li>
+				<li>
+					<a href="//facebook.com/goldtuganimeoficial" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+						<i class="fa-brands fa-facebook-f"></i>
+						<span>Facebook</span>
+					</a>
+				</li>
+				<li>
+					<a href="//instagram.com/GoldTugAnime" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+						<i class="fa-brands fa-instagram"></i>
+						<span>Instagram</span>
+					</a>
+				</li>
+				<li>
+					<a href="//youtube.com/GoldTugAnimeOFICIAL" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+						<i class="fa-brands fa-youtube"></i>
+						<span>Youtube</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</section>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<!-- Footer with Controls -->
+	<footer class="w-full bg-black/60 backdrop-blur-md py-4 z-10">
+		<div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+			
+			<!-- Video Controls -->
+			<ul class="flex items-center gap-6 text-xl text-gray-300">
+				<li><button id="btn-mute" class="social-btn focus:outline-none"><i class="fa-solid fa-volume-xmark"></i></button></li>
+				<li class="text-gray-600">|</li>
+				<li><button id="btn-rewind" class="social-btn focus:outline-none"><i class="fa-solid fa-backward"></i></button></li>
+				<li><button id="btn-play" class="social-btn focus:outline-none text-2xl"><i class="fa-solid fa-pause"></i></button></li>
+				<li><button id="btn-forward" class="social-btn focus:outline-none"><i class="fa-solid fa-forward"></i></button></li>
+			</ul>
 
-	<script src="index/js/jquery.lettering.js"></script>
-	<script src="index/js/jquery.textillate.js"></script>
-	<script src="index/js/jquery.cycle2.js"></script>
-	<script src="index/js/jquery.isotope.js"></script>
-	<script src="index/js/waypoints.min.js"></script>
-	<script src="index/js/waypoints-sticky.min.js"></script>
+			<!-- Copyright -->
+			<p class="text-sm text-gray-400 font-light text-center md:text-right">
+				Copyright &copy; 2007-<span id="current-year"></span> - GoldTugAnime
+			</p>
+		</div>
+	</footer>
 
-	<script src="index/js/jquery.backgroundvideo.min.js"></script>
-	<script type="text/javascript">
-		var videobackground = new $.backgroundVideo($('#header'), {
-			"align": "centerXY",
-			"width": 1280,
-			"height": 720,
-			"path": "index/video/",
-			"filename": "video_bg",
-			"types": ["webm", "ogg", "mp4"]
-			<!--"types": [ "mp4" ,"ogv","webm"]-->
+	<!-- Vanilla JS Logic -->
+	<script>
+		// Set current year
+		document.getElementById('current-year').textContent = new Date().getFullYear();
+
+		const video = document.getElementById('video_background');
+		const btnPlay = document.getElementById('btn-play');
+		const btnMute = document.getElementById('btn-mute');
+		const btnRewind = document.getElementById('btn-rewind');
+		const btnForward = document.getElementById('btn-forward');
+
+		// Fallback for mobile devices to ensure background image if video can't autoplay
+		if (window.innerWidth <= 1200) {
+			video.style.display = 'none';
+			document.body.style.backgroundImage = "url('index/video/video_bg.jpg')";
+			document.body.style.backgroundSize = "cover";
+			document.body.style.backgroundPosition = "center";
+		}
+
+		// Play / Pause logic
+		btnPlay.addEventListener('click', () => {
+			if (video.paused) {
+				video.play();
+				btnPlay.innerHTML = '<i class="fa-solid fa-pause"></i>';
+			} else {
+				video.pause();
+				btnPlay.innerHTML = '<i class="fa-solid fa-play"></i>';
+			}
 		});
-		document.getElementById("play").onclick = function () {
 
-			if (document.getElementById("video_background").paused) {
-				document.getElementById("video_background").play();
-				this.innerHTML = "<em class=\"icon icon-pause\"></em>";
-
+		// Mute / Unmute logic
+		btnMute.addEventListener('click', () => {
+			if (video.muted) {
+				video.muted = false;
+				btnMute.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
 			} else {
-				document.getElementById("video_background").pause();
-				this.innerHTML = "<em class=\"icon icon-play\"></em>";
+				video.muted = true;
+				btnMute.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
 			}
-		}
-		document.getElementById("muted").onclick = function () {
+		});
 
-			if (document.getElementById("video_background").muted) {
-				document.getElementById("video_background").muted = false;
-				this.innerHTML = "<em class=\"icon icon-volume-up\"></em>";
+		// Rewind 5 seconds
+		btnRewind.addEventListener('click', () => {
+			video.currentTime = Math.max(0, video.currentTime - 5);
+		});
 
-			} else {
-				document.getElementById("video_background").muted = true;
-				this.innerHTML = "<em class=\"icon icon-volume-off\"></em>";
-			}
-		}
+		// Forward 5 seconds
+		btnForward.addEventListener('click', () => {
+			video.currentTime = Math.min(video.duration, video.currentTime + 5);
+		});
 	</script>
-	<script src="index/js/style.switcher.js"></script>
-	<script src="index/js/script.js"></script>
 </body>
-
 </html>
