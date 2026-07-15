@@ -116,7 +116,9 @@ class main_controller
 										'avatar_type'		=> $row['user_avatar_type'], 
 										'avatar_width'		=> $row['user_avatar_width'], 
 										'avatar_height'		=> $row['user_avatar_height'])), $match) :
-										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no_avatar.gif');
+										generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
+
+
 
 					echo '<div class="avatar-likers" style="float:left;width:33.333%;">
 						  <img alt="' . $this->user->lang['USER_AVATAR'] . '" src="' . 
@@ -125,7 +127,7 @@ class main_controller
 						  
 						  ((sizeof($match) > 1) ? str_replace('./../../', './', array_pop($match)) : $avatar)
 						  
-						  . ' " style="float:left;width:70px;height:70px;">
+						  . ' " style="float:left;width:70px;">
 						  <div class="likers-time-stamp" style="text-align:center;padding-left:5px;">
 						  <a href="'. generate_board_url() . '/memberlist.php?mode=viewprofile&amp;u=' . $row['user_id'] . '"' . (($row['user_colour']) ?  ' style="font-weight:bold;color:#'.$row['user_colour'] . ';"' : '') .'>' . $row['username'] . '</a>
 						  <br /><i class="fa fa-thumbs-' . (($row['ld']) ? 'down' : 'up') . '"></i> ' . $this->user->format_date($row['like_time'], 'Y-m-d') . '</div></div>';
@@ -160,7 +162,7 @@ class main_controller
 						(($type == 2) ? 'p.post_id' : 
 						(($type == 3) ? 'l.user_id' : 'p.forum_id'))) . '
 						ORDER BY num_likes DESC';
-				$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0);
+				$result = $this->db->sql_query_limit($sql, $this->request->variable('numresults', 10), 0, 86400);
 				$likes['name'] = $this->user->lang['LIKES_SORT_LIKES'];
 				$dislikes['name'] = $this->user->lang['LIKES_SORT_DISIKES'];
 				$categories['data'] = $likes['data'] = $dislikes['data'] = array();

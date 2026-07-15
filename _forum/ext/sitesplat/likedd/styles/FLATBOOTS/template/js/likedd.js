@@ -1,1 +1,61 @@
-head.ready(function(){function e(e,t){return(RegExp(t+"=(.+?)(&|$)").exec(e)||[,null])[1]}$(document).on("click",".btn-likedd-trigger",function(e){e.preventDefault();var t=$(this).data("options");$.ajax({type:"POST",url:"app.php/likedd/index.html",data:$(this).data("options"),dataType:"json",success:function(e){e.likes?(t=t.replace("=",""),$("#"+t).text(e.likes),document.location.reload()):(phpbb.alert(e.info,e.txt,!0),phpbb.closeDarkenWrapper(3e3))}})}),$(document).on("click",".open-LikersDialog",function(){var e=$(this).data("id"),t=new Date;$.ajax({url:"app.php/likedd/likers.html?p="+e+"&time="+String(t.getTime()),context:document.getElementById("likedd-profile-data"),error:function(e,t,n){},success:function(e,t){$(".modal-body #likedd-profile-data").html(e)}})}),$(document).on("click",".LikersPagination",function(t){t.preventDefault();var n=$(this).attr("href"),i=e(n,"p"),a=e(n,"start"),o=new Date;$.ajax({url:"app.php/likedd/likers.html?p="+i+"&start="+a+"&time="+String(o.getTime()),context:document.getElementById("likedd-profile-data"),error:function(e,t,n){},success:function(e,t){$(".modal-body #likedd-profile-data").html(e)}})})});
+head.ready(function () {
+$(document).on("click", ".btn-likedd-trigger", function (e) {
+	e.preventDefault();
+	var val = $(this).data("options");
+	$.ajax({ type: "POST", 
+		url: "app.php/likedd/index.html", 
+		data: $(this).data("options"), 
+		dataType: "json", 
+		success: function (result) {
+			if (result.likes)
+			{
+				val = val.replace('=', '');
+				$("#" + val).text(result.likes);
+				document.location.reload();
+			}
+			else{
+				phpbb.alert(result.info, result.txt, true);
+				phpbb.closeDarkenWrapper(3000);
+			}
+		}
+	});
+});
+
+$(document).on("click", ".open-LikersDialog", function () {
+	var postid = $(this).data('id');
+	var hack = new Date();
+
+	$.ajax({
+		url: 'app.php/likedd/likers.html?p=' + postid + '&time=' + String(hack.getTime()),
+		context: document.getElementById("likedd-profile-data"),
+		error: function (e, text, ee) {
+		},
+		success: function (s, x) {
+			$(".modal-body #likedd-profile-data").html( s );
+		}
+	});
+});
+
+$(document).on("click", ".LikersPagination", function (e) {
+	e.preventDefault();
+	
+	var url = $(this).attr("href");
+	var postid = getURLParameter(url, "p");
+	var start = getURLParameter(url, "start");
+	var hack = new Date();
+
+	$.ajax({
+		url: 'app.php/likedd/likers.html?p=' + postid + '&start=' + start + '&time=' + String(hack.getTime()),
+		context: document.getElementById("likedd-profile-data"),
+		error: function (e, text, ee) {
+		},
+		success: function (s, x) {
+			$(".modal-body #likedd-profile-data").html( s );
+		}
+	});
+});
+
+function getURLParameter(url, name) {
+	return (RegExp(name + "=" + "(.+?)(&|$)").exec(url)||[,null])[1];
+}
+});

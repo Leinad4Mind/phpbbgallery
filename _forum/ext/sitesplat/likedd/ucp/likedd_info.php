@@ -15,7 +15,7 @@ class likedd_info
 	function module()
 	{
 		return array(
-			'filename'	=> 'sitesplat\likedd\ucp\likedd_module',
+			'filename'	=> '\sitesplat\likedd\ucp\likedd_module',
 			'title'     => 'UCP_LIKEDD_TITLE',
 			'version'   => '1.0.0',
 			'modes'     => array(

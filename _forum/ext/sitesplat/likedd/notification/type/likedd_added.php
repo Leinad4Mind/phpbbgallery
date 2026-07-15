@@ -132,37 +132,28 @@ class likedd_added extends \phpbb\notification\type\base
 	*
 	* @return string
 	*/
-	/**
-	 * {@inheritdoc}
-	 */
 	public function get_title()
 	{
-		$sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
+		$sql = 'SELECT username, user_colour FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
 		$result = $this->db->sql_query($sql);
 		$username = $this->db->sql_fetchfield('username');
-
+		
 		$sql2 = 'SELECT user_colour FROM ' . USERS_TABLE . ' WHERE user_id = ' . $this->get_data('poster_id');
 		$result = $this->db->sql_query($sql2);
 		$user_colour = $this->db->sql_fetchfield('user_colour');
 		
-		$sql3 = 'SELECT ld FROM bbgta_likes l, bbgta_users u, bbgta_posts p WHERE l.user_id = ' . $this->get_data('poster_id') . ' AND l.user_id = u.user_id AND l.post_id = p.post_id AND p.post_id = ' . $this->get_data('parent_id');
+		$sql3 = 'SELECT post_subject FROM bbgta_likes l, bbgta_users u, bbgta_posts p WHERE l.user_id = ' . $this->get_data('poster_id') . ' AND l.user_id = u.user_id AND l.post_id = p.post_id AND p.post_id = ' . $this->get_data('parent_id');
 		$result = $this->db->sql_query($sql3);
-		$like_dislike = $this->db->sql_fetchfield('ld');
-		
-		$sql4 = 'SELECT post_subject FROM bbgta_likes l, bbgta_users u, bbgta_posts p WHERE l.user_id = ' . $this->get_data('poster_id') . ' AND l.user_id = u.user_id AND l.post_id = p.post_id AND p.post_id = ' . $this->get_data('parent_id');
-		$result = $this->db->sql_query($sql4);
 		$post_subject = $this->db->sql_fetchfield('post_subject');
 		
+		$type = (strpos($this->get_data('like_txt'), 'DISLIKE') === false) ? 0 : 1;
 		$type1 = (strpos($this->get_data('like_txt'), 'REMOVED') === false) ? 0 : 1;
 		$type2 = (strpos($this->get_data('like_txt'), 'LIKE') === false) ? 0 : 1;
 		
-		//return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type2) ? $this->user->lang['LIKE_USER_INFO_LIKE'] : $this->user->lang['LIKE_USER_INFO_DISLIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), ('<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>'));
-		if ($like_dislike == 0){
-			return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED_LIKE', (($type2) ? $this->user->lang['LIKE_USER_INFO_LIKE'] : $this->user->lang['LIKE_USER_INFO_DISLIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), '<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
-		}
-		else {
-			return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED_DISLIKE', (($type2) ? $this->user->lang['LIKE_USER_INFO_LIKE'] : $this->user->lang['LIKE_USER_INFO_DISLIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), '<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
-		}
+		return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE'] ), (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), '<span style="color:#' . $user_colour . '" class="username-coloured">' . $username . '</span>', $post_subject);
+		// return $this->user->lang('LIKEDD_NOTIFICATION_EVENT_ADDED', (($type) ? $this->user->lang['LIKES_DISLIKE'] : $this->user->lang['LIKES_LIKE'] ),
+				// (($type) ? $this->user->lang['LIKE_USER_INFO_DISLIKE'] : $this->user->lang['LIKE_USER_INFO_LIKE']), 
+            	// (($type1) ? $this->user->lang['REMOVED'] : $this->user->lang['ADDED']), (($type1) ? $this->user->lang['FROM_YOUR'] : $this->user->lang['TO_YOUR']), $username);
 	}
 
 	/**
@@ -172,10 +163,7 @@ class likedd_added extends \phpbb\notification\type\base
 	*/
 	public function get_reference()
 	{
-		return ''; //$this->language->lang(
-		//	'NOTIFICATION_REFERENCE',
-	//		censor_text($this->get_data('topic_title'))
-	//	);
+		return false;
 	}
 
 	/**
@@ -185,7 +173,8 @@ class likedd_added extends \phpbb\notification\type\base
 	*/
 	public function get_email_template()
 	{
-		return '';
+		return false;
+	//	return '@sitesplat_likedd/likedd_mail';
 	}
 
 	/**
@@ -196,6 +185,11 @@ class likedd_added extends \phpbb\notification\type\base
 	public function get_email_template_variables()
 	{
 		return array();
+	//	return [
+	//		'AUTHOR_NAME'        => $this->notification_data['username'],
+	//		'TOPIC_TITLE'		=> $this->notification_data['topic_title'],
+	//		'U_LINK_TO_TOPIC'   => generate_board_url() . '/viewtopic.' . $this->php_ext . '?p=' . $this->notification_data['post_id'] . '#p' .$this->notification_data['post_id'],
+	//	];
 	}
 
 	/**
@@ -213,7 +207,7 @@ class likedd_added extends \phpbb\notification\type\base
 	*/
 	public function get_redirect_url()
 	{
-		return $this->get_url();
+		return append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, 'p=' . $this->get_data('parent_id') . '#p' . $this->get_data('parent_id'));
 	}
 
 	/**

@@ -19,8 +19,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'NOTIFICATION_TYPE_SITESPLAT.LIKEDD.NOTIFICATION.TYPE.LIKEDD_ADDED'	=> 'Somebody liked / disliked your post',	
-
 	'LIKE_MODE_ERROR'						    => 'Mode does not exist',
 	'LIKE_POST_ERROR'					        => 'Post does not exist',
 	'LIKE_POST_NO_AUTH'				            => 'You are not authorized to like/dislike this post.',
@@ -34,11 +32,11 @@ $lang = array_merge($lang, array(
 	'ADDED'										=> 'added',
 	'REMOVED'									=> 'removed',
 	'INFOMSG'					                => 'Heads up!',
+	'FROM_YOUR'									=> 'from your',
+	'TO_YOUR'									=> 'to your',
 	
-	'LIKEDD_NOTIFICATION_EVENT_ADDED'			=> '<strong>Like / Dislike update</strong>:<br />A %1$s has been %2$s to your post by %3$s.',
-	'LIKEDD_NOTIFICATION_EVENT_ADDED_LIKE'		=> '<strong>Like</strong> %2$s by %3$s in:<br />%4$s',
-	'LIKEDD_NOTIFICATION_EVENT_ADDED_DISLIKE'	=> '<strong>Dislike</strong> %2$s by %3$s in:<br />%4$s',
-	'LIKE_USER_INFO_REMOVED'					=> 'Your %s of this post has been removed.',
+	'LIKEDD_NOTIFICATION_EVENT_ADDED'		=> '<strong>%1$s</strong> %2$s by %3$s at:<br />%4$s',
+	'LIKE_USER_INFO_REMOVED'				    => 'Your %s of this post has been removed.',
 	'LIKE_USER_INFO_APPRECIATE'					=> '%s appreciates your liking their post!',
 	'LIKE_USER_INFO_APPRECIATE_STRONG'			=> '<div class="ld-ajax"><strong>%s</strong> appreciates your liking their post!</div>',
 	'LIKE_POST_INFO_DISLIKE'					=> 'Post by %s has been disliked.',
@@ -79,9 +77,9 @@ $lang = array_merge($lang, array(
     'DISLIKES_RECEIVED'            				=> 'Dislike Received',   
 	'LIKE_REMOVED'								=> 'Like removed',
 	'DISLIKE_REMOVED'							=> 'Dislike removed',
-    'LIKES_LIKE_IT'   	         				=> 'I like This',   
+    'LIKES_LIKE_IT'   	         				=> 'I like this',   
     'LIKES_LIKE'       	         				=> 'Like',
-    'LIKES_DISLIKE_IT'       	     			=> 'I Dislike This',
+    'LIKES_DISLIKE_IT'       	     			=> 'I dislike this',
     'LIKES_DISLIKE'       	     				=> 'Dislike',
     'LIKES_DISLIKE_REMOVED'    	     			=> 'Like / Dislike removed',
 	'LIKES_ALL_LIKES'							=> 'of all likes',

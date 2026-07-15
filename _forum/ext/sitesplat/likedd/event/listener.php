@@ -27,13 +27,14 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.permissions'					=> 'add_permissions',
-			'core.user_setup'					=> 'add_page_header_link',
-			'core.viewtopic_modify_page_title'	=> 'assign_buttons',
-			'core.viewtopic_modify_post_row'	=> 'viewtopic_handle_posts',
-			'core.delete_posts_after'			=> 'delete_like_dislike',
-			'core.memberlist_view_profile'		=> 'modify_profile',
-			'core.bbfront_before_display'		=> 'viewtopic_handle_posts',
+			'core.permissions'							=> 'add_permissions',
+			'core.user_setup'							=> 'add_page_header_link',
+			'core.viewtopic_modify_page_title'			=> 'assign_buttons',
+			'core.viewtopic_modify_post_row'			=> 'viewtopic_handle_posts',
+			'core.delete_posts_after'					=> 'delete_like_dislike',
+			'core.memberlist_view_profile'				=> 'modify_profile',
+			'core.bbfront_before_display'				=> 'viewtopic_handle_posts',
+			'core.delete_forum_content_before_query'	=> 'delete_like_dislike_forum',
 		);
 	}
 
@@ -60,8 +61,14 @@ class listener implements EventSubscriberInterface
 
 	/** @var string The database table the likes are stored in */
 	protected $likes_table;
+	
+	/** @var string The database table the posts are stored in */
+	protected $posts_table;
 
-	public function __construct(auth $auth, config $config, driver_interface $db, user $user, request $request, template $template, helper $helper, $likes_table)
+	/** @var string The database table the topics are stored in */
+	protected $topics_table;
+	
+	public function __construct(auth $auth, config $config, driver_interface $db, user $user, request $request, template $template, helper $helper, $likes_table, $posts_table, $topics_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -71,6 +78,8 @@ class listener implements EventSubscriberInterface
 		$this->template = $template;
 		$this->helper = $helper;
 		$this->likes_table = $likes_table;
+		$this->posts_table = $posts_table;
+		$this->topics_table = $topics_table;
 	}
 
 	public function add_permissions($event)
@@ -83,16 +92,11 @@ class listener implements EventSubscriberInterface
 
 	public function add_page_header_link($event)
 	{
-		//$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
-		$lang_set_ext 		= $event['lang_set_ext'];
-		$lang_set_ext[] 	= array(
-			'ext_name' 		=> 'sitesplat/likedd',
-			'lang_set' 		=> 'likedd',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
+		$this->user->add_lang_ext('sitesplat/likedd', 'likedd');
 		
 		$this->template->assign_vars(array(
-			'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html'))
+		//	'U_LIKE_PAGE'		=> $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html'))
+			'U_LIKE_PAGE'		=> ($this->auth->acl_get('u_likedd')) ? $this->helper->route('sitesplat_likedd_controller', array('route' => 'toplist.html')) : ''
 		));
 	}
 	
@@ -127,7 +131,7 @@ class listener implements EventSubscriberInterface
 						WHERE l.post_id = ' . $post_row['POST_ID'];
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
-			//var_dump($post_row);
+			
 				$post_row['LIKES'] = $row['num_likes'];
 				$post_row['DISLIKES'] = $row['num_dislikes'];
 				$post_row['LAST_LIKER']	= $row['lastliker'];
@@ -178,6 +182,20 @@ class listener implements EventSubscriberInterface
 				));
 			}
 		}
+	}
+
+	public function delete_like_dislike_forum($event)
+	{
+		$forum_id = $event['forum_id'];
+		$sql = 'DELETE FROM ' . $this->likes_table . '
+		WHERE post_id IN (
+			SELECT p.post_id
+			FROM ' . $this->topics_table . ' t
+			LEFT JOIN ' . $this->posts_table . ' p
+				ON (t.topic_id = p.topic_id)
+			WHERE t.forum_id = ' . (int) $forum_id . '
+		)';
+		$this->db->sql_query($sql);
 	}
 
 	protected function truncateByOccurence ($haystack, $needle, $limit)
