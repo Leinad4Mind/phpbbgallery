@@ -69,9 +69,13 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function opengraph($event)
+	public function opengraph($event, $eventName)
 	{
-		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+		// this is incompatible with phpBB 3.3!!!
+//		$event_number = array_search($event->getName(), array_keys($this->getSubscribedEvents()));
+
+		// this is compatible...
+		$event_number = array_search($eventName, array_keys($this->getSubscribedEvents()));
 		
 		$ext_manager = $this->container->get('ext.manager');
 		if ($ext_manager->is_enabled('sitesplat/bbtags'))
@@ -135,12 +139,11 @@ class listener implements EventSubscriberInterface
 	{
 		$text = censor_text($text);
 		strip_bbcode($text);
-		$text = str_replace(array("\n", "\t", "\r"), ' ', $text);
-		$text = str_replace(array("&quot;"), '', $text);
-		//$text = preg_replace(array("|http(.*)jpg|isU", "@(http(s?):)?(([a-z0-9.-]+)?([a-zA-Z0-9-])+(!?\.[a-z]{2,4}))@"), '', $text);
-		$text = preg_replace("/\[(.*)?\](.*)?\[(.*)?\]/", '', $text);
-		$text = preg_replace("/[^A-ZА-ЯЁ.,-–?]+/ui", ' ', $text);
-		$text = preg_replace("/(\s?https?:\/\/[a-zA-Z0-9.\/_ ]+png\s?|\s?[0-9]+\s?(sinopse)?\s?)([\s\S]+)/ui", '$3', $text);
+		$text = str_replace(array("&quot;", "/", "\n", "\t", "\r"), ' ', $text);
+		$text = str_replace("'", '`', $text);
+		$text = preg_replace(array("|http(.*)jpg|isU", "@(http(s)?://)?(([a-z0-9.-]+)?[a-z0-9-]+(!?\.[a-z]{2,4}))@"), ' ', $text);
+		$text = preg_replace("/[^A-ZА-ЯЁ.,-–?]+/ui", " ", $text);
+		$text = preg_replace("/\[(.*)?\](.*)?\[(.*)?\]/", ' ', $text);
 		if (strlen($text) > 200)
 		{
 			$text_ar = explode("\n", wordwrap($text, 200));

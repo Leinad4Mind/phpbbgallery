@@ -1,4 +1,4 @@
-<!-- IF SCRIPT_NAME == "index" or SCRIPT_NAME == "viewtopic" --> 
+{% if BB_LOAD_IN_INDEX or BB_LOAD_IN_VIEWTOPIC %}
 <div class="popup-wrap">
     <div class="popup-box">
         <ul class="list-unstyled sharer-mobile">
@@ -13,4 +13,4 @@
       <a class="close-btn popup-close" href="javascript:void(0)"><i class="fa fa-times"></i></a>
     </div>
 </div>
-<!-- ENDIF --> 
+{% endif %}
