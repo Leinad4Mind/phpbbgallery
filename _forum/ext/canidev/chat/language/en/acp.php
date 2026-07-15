@@ -2,9 +2,9 @@
 /*
 * acp.php [English [En]]
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -132,6 +132,16 @@ $lang = array_merge($lang, array(
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Supports language variables.',
 	'CHAT_ROOM_USERS'			=> 'Allowed users',
 	'CHAT_ROOM_USERS_EXPLAIN'	=> 'Sets users who can use this room.<br />Set one username per line.',
+	'CHAT_ROW_ALIGN'			=> 'Message alignment',
+	'CHAT_ROW_ALIGN_EXPLAIN'	=> 'Defines on which side the messages will be displayed in the chat.<br /><em>This setting is affected if the language used is RTL.</em>',
+	'CHAT_ROW_BUBBLE'			=> 'Bubble',
+	'CHAT_ROW_FORMAT'			=> 'Message format',
+	'CHAT_ROW_FORMAT_EXPLAIN'	=> 'Define the visual style of the messages.',
+	'CHAT_ROW_LEFT'				=> 'Show left',
+	'CHAT_ROW_MEOTHER'			=> 'Show current user on one side and rest on the other',
+	'CHAT_ROW_NORMAL'			=> 'Normal',
+	'CHAT_ROW_RIGHT'			=> 'Show right',
+	'CHAT_ROW_ZIGZAG'			=> 'Show in ZigZag',
 	'CHAT_ROWS'					=> 'Messages on chat',
 	'CHAT_ROWS_EXPLAIN'			=> 'Maximum number of messages that will be shown in the conversation container.',
 	'CHAT_RULES_ADD'			=> 'Add rule',

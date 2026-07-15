@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -27,6 +27,16 @@ class admin_controller_config extends admin_controller_base
 		add_form_key(self::FORM_KEY);
 		
 		$options = array(
+			'row_align'		=> array(
+				'left' 		=> 'CHAT_ROW_LEFT',
+				'right' 	=> 'CHAT_ROW_RIGHT',
+				'zigzag' 	=> 'CHAT_ROW_ZIGZAG',
+				'meother' 	=> 'CHAT_ROW_MEOTHER',
+			),
+			'row_format'		=> array(
+				'normal'	=> 'CHAT_ROW_NORMAL',
+				'bubble'	=> 'CHAT_ROW_BUBBLE',
+			),
 			'bbcode_format'	=> array(
 				'button'	=> 'CHAT_BBCODE_INBUTTON',
 				'select'	=> 'CHAT_BBCODE_INSELECT',
@@ -62,13 +72,15 @@ class admin_controller_config extends admin_controller_base
 			'chat_group_users'			=> array('lang' => 'CHAT_GROUP_USERS',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		
 			'legend3'			=> 'CHAT_MESSAGES_CONFIG',
-			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',		'validate' => 'string',		'type' => 'custom',	'function' => array($this, 'make_select'),	'params' => array($options['direction'], '{KEY}', '{CONFIG_VALUE}')),
-			'chat_max_rows'				=> array('lang' => 'CHAT_ROWS',				'validate' => 'int:1:100',	'type' => 'number:1:100'),
-			'chat_max_chars'			=> array('lang' => 'CHAT_CHARS',			'validate' => 'int',		'type' => 'number'),
-			'chat_show_avatars'			=> array('lang' => 'CHAT_AVATARS',			'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_allow_bbcode'			=> array('lang' => 'CHAT_ALLOW_BBCODE',		'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',		'function' => array($this, 'make_select'),	'params' => array($options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', self::SELECT_PARSE_LANG | self::SELECT_MULTIPLE)),
-			'chat_bbcode_format'		=> array('lang' => 'CHAT_BBCODE_FORMAT',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',			'validate' => 'string',		'type' => 'custom',	'function' => array($this, 'make_select'),	'params' => array($options['direction'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_max_rows'				=> array('lang' => 'CHAT_ROWS',					'validate' => 'int:1:100',	'type' => 'number:1:100'),
+			'chat_max_chars'			=> array('lang' => 'CHAT_CHARS',				'validate' => 'int',		'type' => 'number'),
+			'chat_row_align'			=> array('lang' => 'CHAT_ROW_ALIGN',			'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['row_align'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_row_format'			=> array('lang' => 'CHAT_ROW_FORMAT',			'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['row_format'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_show_avatars'			=> array('lang' => 'CHAT_AVATARS',				'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_allow_bbcode'			=> array('lang' => 'CHAT_ALLOW_BBCODE',			'validate' => 'bool',		'type' => 'radio:yes_no'),
+			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', self::SELECT_PARSE_LANG | self::SELECT_MULTIPLE)),
+			'chat_bbcode_format'		=> array('lang' => 'CHAT_BBCODE_FORMAT',		'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}')),
 		
 			'legend4'		=> 'CHAT_PM_CONFIG',
 			'chat_allow_pm'			=> array('lang' => 'CHAT_ALLOW_PM',			'validate' => 'bool',			'type' => 'radio:yes_no'),
@@ -83,7 +95,8 @@ class admin_controller_config extends admin_controller_base
 		* @var	boolean	submit			Do we display the form or process the submission
 		* @since 1.1.1
 		*/
-		$vars = array('display_vars', 'submit');
+		$submit = &$this->submit;
+		$vars 	= array('display_vars', 'submit');
 		extract($this->dispatcher->trigger_event('chat.acp_config_vars', compact($vars)));
 		
 		$cfg_array	= $this->config;

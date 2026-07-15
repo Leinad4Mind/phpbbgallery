@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "",
 	"homepage": "https://www.canidev.com",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"keywords": ["phpbb", "extension", "canidev", "chat"],
 	"license": "GPL-2.0",
 	"authors": [
@@ -28,8 +28,9 @@
 		},
 		"version-check": {
 			"host": "www.canidev.com",
-			"directory": "/app/info",
-			"filename": "ext-cbb-chat.json"
+			"directory": "/store/cbb-chat",
+			"filename": "version",
+			"ssl": true
 		}
 	}
 }

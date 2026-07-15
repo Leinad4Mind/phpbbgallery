@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -48,7 +48,7 @@ class admin_controller_base extends \canidev\core\acp
 	* @param ContainerInterface 						$container			Service container interface
 	* @param \phpbb\db\driver\driver_interface			$db					DB Object
 	* @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
-	* @param \phpbb\language\language					$language			Blockgets language Object
+	* @param \phpbb\language\language					$language			Language Object
 	* @param \phpbb\log\log                       		$log				Log Object
 	* @param \phpbb\request\request 					$request			Request object
 	* @param \phpbb\user								$user				User object

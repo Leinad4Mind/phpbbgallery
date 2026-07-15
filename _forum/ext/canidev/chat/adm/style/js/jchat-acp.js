@@ -1,9 +1,67 @@
-/*
-* @name jchat-acp.js
-* @package cBB Chat
-* @version v1.2.1 01/02/2020 $
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
-(function(e,t){"use_strict";var n={init:function(){var n=this;e("#page_file").change(function(){var t=e(this).val(),n=t=="viewforum"||t=="viewtopic"?true:false,r=t=="-"?true:false;e("dl:has(#forum_ids)").objView(n);e("dl:has(#custom_file), dl:has(#page_alias)").objView(r)}).change();e(".pagerow-input").click(function(){this.focus();this.select()});e(".js-chat-action").click(function(e){n.triggerAction(this.href);e.preventDefault()});var r=e("form:first"),i=false;e(".sortable-text ul").sortable({update:function(e,n){if(!i){i=true;t.request({url:r.attr("action"),data:r.serialize(),onComplete:function(){i=false}})}}}).disableSelection()},triggerAction:function(n,r){t.request({url:n,data:r,onSuccess:function(t){if(t.action=="deleteRow"){e("#row"+t.rowId).fadeOut()}}})}};n.init()})(jQuery,cbbCore);
+(function($, core) {
+	'use_strict';
+	
+	var chatAcp = {
+		init: function() {
+			var self = this;
+
+			$('#page_file')
+				.change(function() {
+					var file 	= $(this).val(),
+						state1	= (file == 'viewforum' || file == 'viewtopic') ? true : false,
+						state2	= (file == '-') ? true : false;
+						
+					$('dl:has(#forum_ids)').objView(state1);
+					$('dl:has(#custom_file), dl:has(#page_alias)').objView(state2);
+				})
+				.change();
+				
+			$('.pagerow-input').click(function() {
+				this.focus();
+				this.select();
+			});
+
+			$('.js-chat-action').click(function(e) {
+				self.triggerAction(this.href);
+				e.preventDefault();
+			});
+			
+			var form 	= $('form:first'),
+				inSort	= false;
+
+			$('.sortable-text ul')
+				.sortable({
+					update: function(event, ui) {
+						if(!inSort)
+						{
+							inSort = true;
+
+							core.request({
+								url: form.attr('action'),
+								data: form.serialize(),
+								onComplete: function() {
+									inSort = false;
+								}
+							});
+						}
+					}
+				})
+				.disableSelection();
+		},
+		
+		triggerAction: function(href, data) {
+			core.request({
+				url: href,
+				data: data,
+				onSuccess: function(json) {
+					if(json.action == 'deleteRow')
+					{
+						$('#row' + json.rowId).fadeOut();
+					}
+				}
+			});
+		}
+	};
+	
+	chatAcp.init();
+})(jQuery, cbbCore);

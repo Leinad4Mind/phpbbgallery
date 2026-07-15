@@ -1,9 +1,9 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.1 01/02/2020
+* @version v1.2.2 29/03/2021
 *
-* @copyright (c) 2020 CaniDev
+* @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,9 +35,9 @@ class chat
 	protected $core;
 	protected $dispatcher;
 	protected $db;
-	protected $helper;
 	protected $lang;
 	protected $request;
+	protected $routing;
 	protected $template;
 	protected $user;
 	
@@ -52,9 +52,9 @@ class chat
 	* @param ContainerInterface 					$container			Service container interface
 	* @param \phpbb\event\dispatcher_interface		$dispatcher			Event dispatcher
 	* @param \phpbb\db\driver\driver_interface		$db					DB Object
-	* @param \phpbb\controller\helper				$helper       		Controller helper object
 	* @param \phpbb\language\language 				$language			Language Object
 	* @param \phpbb\request\request 				$request			Request object
+	* @param \phpbb\routing\helper					$routing			Routing Helper
 	* @param \phpbb\template\template				$template     		Template object
 	* @param \phpbb\user							$user				User object
 	* @param string									$root_path			phpBB root path
@@ -70,9 +70,9 @@ class chat
 		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\controller\helper $helper,
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
+		\phpbb\routing\helper $routing,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
@@ -86,9 +86,9 @@ class chat
 		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->dispatcher	= $dispatcher;
 		$this->db			= $db;
-		$this->helper		= $helper;
 		$this->lang			= $language;
 		$this->request		= $request;
+		$this->routing 		= $routing;
 		$this->template		= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 		
@@ -119,7 +119,7 @@ class chat
 		if($this->enabled && $this->config['chat_page_enabled'])
 		{
 			$this->template->assign_vars(array(
-				'U_CHAT'	=> $this->helper->route('canidev_chat_controller'),
+				'U_CHAT'	=> $this->routing->route('canidev_chat_controller'),
 			));
 		}
 		
@@ -283,7 +283,7 @@ class chat
 					'time_mark'		=> 0,
 				)),
 
-				'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->helper->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
+				'U_CHAT_ARCHIVE'	=> ($this->auth->acl_get('u_chat_archive') ? $this->routing->route('canidev_chat_controller', array('mode' => 'archive')) : ''),
 			));
 			
 			// Generate notices and tips
@@ -490,9 +490,8 @@ class chat
 					else
 					{
 						$row['text_content'] = htmlspecialchars_decode($row['text_content']);
+						$row['text_content'] = censor_text($row['text_content']);
 					}
-					
-					//$row['text_content'] = bbcode_nl2br($row['text_content']);
 					
 					// Return and save simple html output
 					$data_cache['texts'][$text_type][$row_id] = $row['text_content'];
@@ -524,7 +523,7 @@ class chat
 
 		return $data_cache['texts'];
 	}
-
+	
 	public function format_date($timestamp)
 	{
 		if(!$this->midnight)

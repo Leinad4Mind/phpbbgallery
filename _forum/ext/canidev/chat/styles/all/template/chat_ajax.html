@@ -1,0 +1,146 @@
+{% for room in loops.room %}
+	<div id="room-{{ room.ID }}" title="{{ room.S_TITLE }}" class="{{ room.S_CLASS }}">
+		<div class="js-conversation">
+		{% if S_CHAT_DIRECTION == 'down' and room.SHOW_HISTORY %}
+			<div class="history-row">
+				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history" aria-hidden="true"></i> {L_CHAT_VIEW_HISTORY}</a>
+			</div>
+		{% endif %}
+
+		{% for message in room.message %}
+			<div id="chat-row-{{ message.S_ID }}" class="{{ message.S_CLASS }}" data-id="{{ message.S_ID }}" data-time="{{ message.S_TIMESTAMP }}">
+				{% if message.S_SHOW_AVATAR %}
+					<div class="chat-row-avatar cbb-circular-avatar">{% if message.S_AUTHOR_AVATAR %}{{ message.S_AUTHOR_AVATAR }}{% else %}<span class="cbb-no-avatar"></span>{% endif %}</div>
+				{% endif %}
+
+				<div class="chat-row-content{% if message.S_SHOW_AVATAR %} avatar-margin{% endif %}">
+				{% if message.CAN_VIEW_WHOIS or message.CAN_MOVE or message.CAN_QUOTE or message.CAN_EDIT or message.CAN_DELETE or message.U_TOPIC_EDIT or message.U_POST_EDIT %}
+					<div class="ic-row-actions">
+						<a href="#" class="ic-row-action-launcher"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+						<div class="cbb-helper-hidden">
+							<ul class="cbb-menu">
+								{% if message.CAN_VIEW_WHOIS %}<li><a href="#" data-action="whois"><i class="fa fa-signal" aria-hidden="true"></i>{L_WHOIS}</a></li>{% endif %}
+								{% if message.CAN_MOVE %}<li><a href="#" data-action="move"><i class="fa fa-share-square-o" aria-hidden="true"></i>{L_CHAT_MOVE}</a></li>{% endif %}
+								{% if message.CAN_QUOTE %}<li><a href="#" data-action="quote"><i class="fa fa-quote-right" aria-hidden="true"></i>{L_QUOTE}</a></li>{% endif %}
+								{% if message.CAN_EDIT %}<li><a href="#" data-action="edit"><i class="fa fa-edit" aria-hidden="true"></i>{L_EDIT}</a></li>{% endif %}
+								{% if message.CAN_DELETE %}<li><a href="#" data-action="delete"><i class="fa fa-trash" aria-hidden="true"></i>{L_DELETE}</a></li>{% endif %}
+							
+								{% if message.U_TOPIC_EDIT %}<li><a href="{{ message.U_TOPIC_EDIT }}"><i class="fa fa-edit" aria-hidden="true"></i>{L_EDIT}</a></li>{% endif %}
+								{% if message.U_POST_EDIT %}<li><a href="{{ message.U_POST_EDIT }}"><i class="fa fa-edit" aria-hidden="true"></i>{L_EDIT}</a></li>{% endif %}
+							</ul>
+						</div>
+					</div>
+				{% endif %}
+
+					<div class="ic-row-title">
+						<a href="#" data-action="quickmention" class="chat-quickmention" title="{L_CHAT_MENTION}"><i class="fa fa-user" aria-hidden="true"></i></a>
+						<span class="ic-row-username">{{ message.S_AUTHOR_FULL }}</span>
+						<span class="ic-row-date">{{ message.S_DATE }}</span>
+					</div>
+					<div class="ic-row-text">
+					{% if message.IS_TOPIC %}
+						<span class="chat-new-topic">{L_NEW_TOPIC}:</span> <a href="{{ message.U_TOPIC }}">{{ message.TOPIC_TITLE }}</a>
+					{% else %}
+						{% if message.IS_POST %}<span class="chat-new-topic">{L_NEW_POST}:</span> <a href="{{ message.U_POST }}">{{ message.POST_SUBJECT }}</a><br /><br />{% endif %}
+						{{ message.S_TEXT }}
+					{% endif %}
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		
+		{% if S_CHAT_DIRECTION == 'up' and room.SHOW_HISTORY %}
+			<div class="history-row">
+				<a href="#" data-action="history" class="cbb-btn"><i class="fa fa-history" aria-hidden="true"></i> {L_CHAT_VIEW_HISTORY}</a>
+			</div>
+		{% endif %}
+		</div>
+
+		<div class="js-userlist">
+		{% for user in room.user %}
+			<li class="js-user-{{ user.S_KEY }}">
+				<span class="chat-user-status {{ user.S_STATUS }}"></span><a href="{{ user.U_ACTION }}" data-action="user"{% if user.IS_EXCLUDED %} class="chat-state-excluded"{% endif %}>{{ user.S_USERNAME }}</a>
+				{% if user.S_HAS_SUBMENU %}
+					<div class="cbb-helper-hidden">
+						<ul class="cbb-menu">
+							{% for contextmenu in user.contextmenu %}
+							<li>
+								<a href="{{ contextmenu.U_ACTION }}" data-action="{{ contextmenu.S_ACTION }}" data-user-key="{{ contextmenu.S_USER_KEY }}">
+									{% if contextmenu.IS_STATUS %}<span class="chat-user-status {{ contextmenu.S_STATUS }}"></span>{% else %}<i class="fa {{ contextmenu.S_ICON }}" aria-hidden="true"></i>{% endif %}
+									{{ contextmenu.S_TITLE }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+			</li>
+		{% endfor %}
+		</div>
+	</div>
+{% endfor %}
+
+{% if S_DIALOG %}
+<div{% if S_TITLE %} title="{{ S_TITLE }}"{% endif %}>
+	<form onsubmit="return false;">
+
+	<div class="cbb-dialog-content">
+	{% if S_DIALOG_CONTENT %}
+		{{ S_DIALOG_CONTENT }}
+	{% elseif S_EDIT %}
+		<div class="ic-edit-toolbar"></div>
+		<div class="ic-edit-container cbb-inputbox">
+			{% INCLUDE '@canidev_core/editor_body.html' %}
+		</div>
+	{% elseif S_RULES %}
+		<ol class="chat-rulelist">
+		{% for rulerow in loops.rulerow %}
+			<li>{{ rulerow.S_TEXT }}</li>
+		{% endfor %}
+		</ol>
+	{% elseif S_LOGIN %}
+		<div class="chat-options-container">
+			{% if S_ERROR %}<div>{{ S_ERROR }}</div><br />{% endif %}
+
+		{% if ALLOW_GUESTS %}
+			<strong>{L_CHAT_ENTER_AS_GUEST}:</strong><br /><br />
+			<input class="cbb-inputbox" name="username" value="" size="25" placeholder="{L_USERNAME}" />
+			<br /><br /><strong>{L_CHAT_ENTER_AS_REGISTERED}:</strong><br /><br />
+		{% endif %}
+			<input type="text" class="cbb-inputbox" name="username_register" value="" size="25" placeholder="{L_USERNAME}" /><br /><br />
+			<input type="password" class="cbb-inputbox" name="password" value="" size="25" placeholder="{L_PASSWORD}" /><br /><br />
+			{% if U_REGISTER %}<a href="{{ U_REGISTER }}">{L_REGISTER}</a><br /><br />{% endif %}
+		</div>
+	{% elseif S_BAN %}
+		<fieldset class="chat-dialog-fieldset">
+		<dl>
+			<dt><label for="ban-period">{L_CHAT_BAN_PERIOD}:</label></dt>
+			<dd><select id="ban-period" name="period" class="cbb-inputbox">{{ S_PERIOD_OPTIONS }}</select></dd>
+		</dl>
+		<dl class="cbb-helper-hidden">
+			<dt><label for="ban-date">{L_CHAT_BAN_DATE}:</label><br />{L_CHAT_BAN_DATE_EXPLAIN}</dt>
+			<dd><input type="text" class="cbb-inputbox" id="ban-date" name="date" size="25" value="" /></dd>
+		</dl>
+		</fieldset>
+	{% elseif S_MOVE %}
+		<fieldset class="chat-dialog-fieldset">
+		<dl>
+			<dt><label for="to-room">{L_CHAT_DEST_ROOM}:</label></dt>
+			<dd><select class="cbb-inputbox" id="to-room" name="to_room">{{ S_ROOM_OPTIONS }}</select></dd>
+		</dl>
+		</fieldset>
+	{% elseif S_SET_NAME %}
+		<div class="chat-options-container">
+			<input class="cbb-inputbox" name="username" value="{{ S_CURRENT_USERNAME }}" size="25" placeholder="{L_USERNAME}" />
+		</div>
+	{% endif %}
+	</div>
+	
+	</form>
+	
+	<div class="cbb-dialog-buttons">
+		<button class="cbb-btn" value="submit">{L_ACCEPT}</button>
+		{% if not S_DIALOG_CONTENT and not S_RULES %}&nbsp;<button class="cbb-btn" value="close">{L_CANCEL}</button>{% endif %}
+	</div>
+</div>
+{% endif %}
