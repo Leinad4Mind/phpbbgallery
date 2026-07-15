@@ -3,7 +3,7 @@
  *
  * No DEA Emails. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Picaron, https://github.com/picaronin/
+ * @copyright (c) 2020, Picaron, https://github.com/picaronin/
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -26,7 +26,7 @@ class v100_rc4 extends \phpbb\db\migration\migration
 			array('config.add', array('nodeaemails_cron_last_gc', 0)),
 			array('config.add', array('nodeaemails_cron_gc', 900)),
 
-			// ACP module
+			// Add ACP module
 			array('module.add', array(
 				'acp',
 				'ACP_CAT_DOT_MODS',
@@ -56,6 +56,32 @@ class v100_rc4 extends \phpbb\db\migration\migration
 					'PRIMARY_KEY'	=> 'id',
 				),
 			),
+		);
+	}
+
+	public function revert_data()
+	{
+		return array(
+			// Remove config table settings
+			array('config.remove', array('nodeaemails_version')),
+			array('config.remove', array('nodeaemails_counter')),
+			array('config.remove', array('nodeaemails_cron_last_gc')),
+			array('config.remove', array('nodeaemails_cron_gc')),
+
+			// Remove ACP modules
+			array('module.remove', array(
+				'acp',
+				'ACP_CAT_DOT_MODS',
+				'LOG_NO_DEA_EMAILS'
+			)),
+			array('module.remove', array(
+				'acp',
+				'LOG_NO_DEA_EMAILS',
+				array(
+					'module_basename'	=> '\pikaron\nodeaemails\acp\acp_nodeaemails_module',
+					'modes'				=> array('configuration', 'locals', 'users'),
+				),
+			)),
 		);
 	}
 

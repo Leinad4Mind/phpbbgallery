@@ -3,7 +3,7 @@
  *
  * No DEA Emails. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2019, Picaron, https://github.com/picaronin/
+ * @copyright (c) 2020, Picaron, https://github.com/picaronin/
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -125,7 +125,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		// Force redirect to change Email -- Not for admins or moderators
-		$isadmin = $this->user->data['session_admin'] || $this->auth->acl_get('m_lock') ? true : false;
+		$isadmin = (isset($this->user->data['session_admin']) && $this->user->data['session_admin']) || $this->auth->acl_get('m_lock') ? true : false;
 		if (!$isadmin && $this->user->data['user_chg_email_force'] && !empty($this->user->data['is_registered']))
 		{
 			if (strpos($this->user->page['query_string'], 'mode=reg_details') === false)
