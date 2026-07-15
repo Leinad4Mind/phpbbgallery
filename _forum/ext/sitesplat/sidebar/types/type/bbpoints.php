@@ -74,11 +74,11 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 			// grab users
 			$sql = 'SELECT t1.user_id, SUM(points) as total, u.username, u.user_colour FROM ( 
 					SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $bbpoints_table . ' GROUP BY to_id
-					UNION
+					UNION ALL
 					SELECT from_id AS user_id, SUM(-bbpoints) AS points FROM ' . $bbpoints_table . ' GROUP BY from_id
-					UNION
+					UNION ALL
 					SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' GROUP BY topic_poster
-					UNION 
+					UNION ALL
 					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 GROUP BY poster_id) t1 
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t1.user_id
 					' . $sql_where . '
@@ -99,7 +99,7 @@ class bbpoints extends \sitesplat\sidebar\types\type\base
 			$this->db->sql_freeresult($result);
 
 			// cache this data for 5 minutes, this improves performance
-			
+			$this->cache->put('_sidebar_bbpoints', $newest_users, 300);
 		}
 
 		$this->helper = $this->container->get('controller.helper');

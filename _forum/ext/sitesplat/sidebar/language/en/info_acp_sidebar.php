@@ -86,7 +86,7 @@ $lang = array_merge($lang, array(
 	'NOTICE_LIKEDD'						=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=22"><strong>LikeBB</strong></a> is not installed, you can NOT use the LikeBB type block.',
 	'NOTICE_NEWSLETTER'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=21"><strong>E-mail Subscribers</strong></a> is not installed, you can NOT use the E-mail Subscribers type block.',
 	'NOTICE_BBDOWNLOAD'					=> 'The extension <a href="https://sitesplat.com/phpBB3/marketplace.php"><strong>BBdownloads</strong></a> is not installed, you can NOT use the Download type block.',
-	'SIDEBAR_NOTICE'					=> '<div style="width:80%;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
+	'SIDEBAR_NOTICE'					=> '<div style="width:auto;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
 	'SS_HELPER_NOTY'					=> 'The BBcore addon does not exist!<br />Download the <a href="#">BBcore</a> and copy the folder to your sitesplat extension folder.',
 	
 	'SIDEBAR_TYPE_BBPOINTS'				=> 'BBpoints',
@@ -122,7 +122,7 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'			    => 'Developer',
 	'ACP_SIDEBAR_NOTICE_CLOSE'			=> 'Close',
 	
-	'ACP_SIDEBAR_VERSION'		        => '1.4.6',
+	'ACP_SIDEBAR_VERSION'		        => '1.4.7',
 	'ACP_LOADING'		                => 'Loading... Hold on',
 	
 	'FORUM_CONTENT'		                => 'forum content',

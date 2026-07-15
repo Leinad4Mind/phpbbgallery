@@ -140,6 +140,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
+			$timestamp = time() - 86400;
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, post_counts.user_posts
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN (
@@ -149,13 +150,13 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 						FROM
 							' . POSTS_TABLE . '
 						WHERE
-							post_time > ' . (time() - 86400) . '
+							post_time > ' . $timestamp . '
 						GROUP BY
 							poster_id
 					) AS post_counts ON u.user_id = post_counts.poster_id 
 					' . $sql_where_improve . ' ' . $sql_and . '
 					' . $sql_other_improve . '
-					AND IFNULL(post_counts.user_posts, 0) <> 0
+					AND post_counts.user_posts IS NOT NULL
 					ORDER BY post_counts.user_posts DESC';
 			$result = $this->db->sql_query_limit($sql, $howmany);
 			while ($row = $this->db->sql_fetchrow($result))
@@ -182,6 +183,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 
 
 			// do the main sql query
+			$timestamp = time() - (86400 * 7);
 			$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, post_counts.user_posts
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN (
@@ -191,7 +193,7 @@ class top_posters extends \sitesplat\sidebar\types\type\base
 						FROM
 							' . POSTS_TABLE . '
 						WHERE
-							post_time > ' . (time() - (86400 * 7)) . '
+							post_time > ' . $timestamp . '
 						GROUP BY
 							poster_id
 					) AS post_counts ON u.user_id = post_counts.poster_id

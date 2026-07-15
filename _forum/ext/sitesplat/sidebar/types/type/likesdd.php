@@ -97,7 +97,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 			$result = $this->db->sql_query_limit($sql, $howmany);
 
 		//  damn phpbb url rewrite and broken driver
-			//$board_url = generate_board_url();
+		//	$board_url = generate_board_url();
 			$board_url = generate_board_url() . '/';
 			
 			while ($row = $this->db->sql_fetchrow($result))
@@ -111,7 +111,7 @@ class likesdd extends \sitesplat\sidebar\types\type\base
 									'avatar_width'	    => $row['user_avatar_width'], 
 									'avatar_height'	    => $row['user_avatar_height'])), $match) :
 									generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png');
-									
+
 				if (count($match) > 1) {
 					$avatar = array_pop($match);
 					// fix an issue with BBrandom
