@@ -1,12 +1,12 @@
 <?php
-/**
- * [Spanish [Es]]
- * @package cBB Chat
- * @version 1.2.6 01/07/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/** 
+* main.php [Spanish [Es]]
+* @package cBB Chat
+* @version v1.2.0 02/03/2019
+*
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,11 +16,11 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
 // Chat language
-$lang = array_merge($lang, [
+$lang = array_merge($lang, array(
 	'CHAT'						=> 'Chat',
 	'CHAT_APPLY'				=> 'Aplicar',
 	'CHAT_ARCHIVE'				=> 'Archivo de Chat',
@@ -29,7 +29,9 @@ $lang = array_merge($lang, [
 	'CHAT_BAN_PERIOD'			=> 'Duración de la exclusión',
 	'CHAT_BAN_USER'				=> 'Excluir del chat',
 	'CHAT_BBCODE'				=> 'BBcodes',
-	'CHAT_CHANGE_NAME'			=> 'Cambiar nombre',
+	'CHAT_CANCEL'				=> 'Cancelar',
+	'CHAT_CLEAR_BBCODE'			=> 'Eliminar BBcode',
+	'CHAT_CLEAR_INPUT'			=> 'Eliminar Todo',
 	'CHAT_COLOR'				=> 'Color de texto',
 	'CHAT_CONNECT'				=> 'Conectar/Desconectar',
 	'CHAT_CUSTOM_BBCODES'		=> 'BBcodes personalizados',
@@ -47,6 +49,7 @@ $lang = array_merge($lang, [
 	'CHAT_PURGE'				=> 'Purgar mensajes',
 	'CHAT_PURGE_CONFIRM'		=> '¿Está seguro de que desea eliminar todos los mensajes de la sala <strong><em>%s</em></strong>?',
 	'CHAT_REFRESH'				=> 'Actualizar',
+	'CHAT_REMAINING_CHARS'		=> 'caracteres restantes.',
 	'CHAT_RULES'				=> 'Reglas del chat',
 	'CHAT_SEND_PM'				=> 'Mensaje Privado',
 	'CHAT_SMILIES'				=> 'Emoticonos',
@@ -59,7 +62,9 @@ $lang = array_merge($lang, [
 	'CHAT_STATUS_AWAY'			=> 'Ausente',
 	'CHAT_STATUS_BUSY'			=> 'Ocupado',
 	'CHAT_STATUS_HIDDEN'		=> 'Invisible',
-
+	
+	'CHAT_LOAD_MORE'			=> 'Cargar más',
+	'CHAT_SUBMIT'				=> 'Aceptar',
 	'CHAT_TIP'					=> 'Consejo',
 	'CHAT_UNBAN_USER'			=> 'Quitar exclusión',
 	'CHAT_USER_BANNED_PERIOD'		=> 'Usted ha sido excluído del chat. No podrá acceder a él hasta: %s',
@@ -67,16 +72,22 @@ $lang = array_merge($lang, [
 	'CHAT_USER_ALREADY_EXISTS'		=> 'El usuario especificado ya está en uso.',
 	'CHAT_VIEW_HISTORY'				=> 'Ver mensajes anteriores',
 
+	'BATCH_ACTIONS'		=> 'Acciones en lote',
 	'CUSTOM_DATE'		=> 'Fecha personalizada',
 	'EDIT'				=> 'Editar',
-	'HALF_AN_HOUR'		=> 'Media hora',
 	'NEW_TOPIC'			=> 'Nuevo Tema',
 	'PERMANENT'			=> 'Permanente',
 	'QUOTE'				=> 'Citar',
-
-	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
-		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
-]);
+	
+	'HALF_AN_HOUR'	=> 'Media hora',
+	'NO_LIMIT'		=> 'Sin límite',
+	'ONE_DAY'		=> 'Un día',
+	'ONE_HOUR'		=> 'Una hora',
+	'ONE_WEEK'		=> 'Una semana',
+	'ONE_MONTH'		=> 'Un mes',
+	'ONE_YEAR'		=> 'Un año',
+	'TWO_YEARS'		=> 'Dos años',
+));
 
 // Text language
-$lang = array_merge($lang, []);
+$lang = array_merge($lang, array());

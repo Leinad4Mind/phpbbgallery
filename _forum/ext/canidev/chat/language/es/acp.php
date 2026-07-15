@@ -1,12 +1,12 @@
 <?php
-/**
- * [Spanish [Es]]
- * @package cBB Chat
- * @version 1.2.6 01/07/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/** 
+* acp.php [Spanish [Es]]
+* @package cBB Chat
+* @version v1.2.0 02/03/2019
+*
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
-$lang = array_merge($lang, [
+$lang = array_merge($lang, array(
 	'ACP_CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
 		Desde esta página puede modificar las principales características del chat.',
 	'ACP_CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
@@ -65,8 +65,7 @@ $lang = array_merge($lang, [
 	'CHAT_HEIGHT_EXPLAIN'		=> 'Define el alto (en píxeles) del cuadro de conversación del chat.',
 	'CHAT_HEIGHT_PAGE'			=> 'Alto del chat',
 	'CHAT_HEIGHT_PAGE_EXPLAIN'	=> 'Define el alto (en píxeles) del cuadro de conversación del chat en esta página.<br /><em>Establezca 0 para usar el valor por defecto.</em>',
-	'CHAT_HIDE_POPUP'			=> 'Ocultar menús automáticamente',
-	'CHAT_HIDE_POPUP_EXPLAIN'	=> 'Si se habilita, los menús BBcode, color y emoticonos se cerrarán de forma automática al realizar la acción.',
+	'CHAT_HELP'					=> 'Documentación y Soporte',
 	'CHAT_MAIN_CONFIG'			=> 'Configuración principal',
 	'CHAT_MESSAGES_CONFIG'		=> 'Configuración de mensajes',
 	'CHAT_NOTICES_ADD'			=> 'Añadir noticia',
@@ -132,16 +131,6 @@ $lang = array_merge($lang, [
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Admite variables de idioma.',
 	'CHAT_ROOM_USERS'			=> 'Usuarios autorizados',
 	'CHAT_ROOM_USERS_EXPLAIN'	=> 'Define los usuarios que podrán visualizar esta sala.<br />Establezca cada nombre de usuario en una línea.',
-	'CHAT_ROW_ALIGN'			=> 'Alineación de los mensajes',
-	'CHAT_ROW_ALIGN_EXPLAIN'	=> 'Define en que lado se mostrarán los mensajes en el chat.<br /><em>Esta configuración se ve afectada si el idioma usado es RTL.</em>',
-	'CHAT_ROW_BUBBLE'			=> 'Burbuja',
-	'CHAT_ROW_FORMAT'			=> 'Formato de los mensajes',
-	'CHAT_ROW_FORMAT_EXPLAIN'	=> 'Define el estilo visual de los mensajes.',
-	'CHAT_ROW_LEFT'				=> 'Mostrar a la izquierda',
-	'CHAT_ROW_MEOTHER'			=> 'Mostrar usuario actual a un lado y resto al otro',
-	'CHAT_ROW_NORMAL'			=> 'Normal',
-	'CHAT_ROW_RIGHT'			=> 'Mostrar a la derecha',
-	'CHAT_ROW_ZIGZAG'			=> 'Mostrar en ZigZag',
 	'CHAT_ROWS'					=> 'Mensajes en chat',
 	'CHAT_ROWS_EXPLAIN'			=> 'Número máximo de mensajes que se mostrarán en el cuadro de conversación del chat.',
 	'CHAT_RULES_ADD'			=> 'Añadir regla',
@@ -174,12 +163,14 @@ $lang = array_merge($lang, [
 	'EACH_YEAR'		=> 'Cada año',
 
 	'ADD_ROOM'					=> 'Añadir sala',
+	'ALL_GROUPS'				=> 'Todos los grupos',
 	'CONTENT'					=> 'Contenido',
 	'CUSTOM_BBCODES'			=> 'BBcodes personalizados',
-	'CUSTOM_ROUTE'				=> 'Ruta personalizada',
-	'CUSTOM_ROUTES'				=> 'Rutas personalizadas',
+	'CUSTOM_FILE'				=> 'Archivo personalizado',
+	'CUSTOM_FILES'				=> 'Archivos personalizados',
 	'DEFAULT_BBCODES'			=> 'BBcodes predeterminados',
-	'FORUM_ROUTES'				=> 'Rutas del foro',
+	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentación y Soporte',
+	'FORUM_FILES'				=> 'Archivos del foro',
 	'NO_PAGES'					=> 'No hay páginas para mostrar',
 	'NO_ROOM'					=> 'La sala seleccionada no existe',
 	'NO_TEXTS'					=> 'No hay textos para mostrar',
@@ -187,6 +178,7 @@ $lang = array_merge($lang, [
 	'PAGE_ALIAS'				=> 'Identificación',
 	'PAGE_URL'					=> 'Url de la página',
 	'ROOM_TITLE'				=> 'Título de la sala',
+	'SAVE'						=> 'Guardar',
 	'SELECT_PAGE'				=> 'Seleccionar página',
 
 	'INVALID_FILE'				=> 'El archivo especificado no existe o tiene un formato no válido.',
@@ -194,4 +186,4 @@ $lang = array_merge($lang, [
 	'PAGE_ALREADY_EXISTS'		=> 'La página especificada ya está en uso.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> '¿Está seguro de que desea eliminar esta sala y todos sus mensajes?',
-]);
+));

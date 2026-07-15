@@ -1,24 +1,44 @@
-{% if S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE %}
+<!-- IF S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE -->
 
 	<script>
 	// <![CDATA[
 	(function($) {
-		cbbCore.initService('chat', {{ S_CHAT_OPTIONS }});
+		cbbCore.initService('chat', {
+			maxChars	: '{S_CHAT_MAX_CHARS}',
+	<!-- IF S_CHAT_IN_ARCHIVE -->
+			mode : 'archive',
+	<!-- ELSEIF S_CHAT_ENABLED -->
+			lang: {
+				floodWait	: '{LA_CHAT_FLOOD_WAIT}'
+			},
+			autoconnect	: <!-- IF S_CHAT_AUTOCONNECT -->true<!-- ELSE -->false<!-- ENDIF -->,
+			defaultRoom	: '{S_CHAT_DEFAULT_ROOM}',
+			direction	: '{S_CHAT_DIRECTION}',
+			guestRoom	: '{S_CHAT_GUEST_ROOM}',
+			floodTime	: '{S_CHAT_FLOOD_TIME}',
+			height		: '{S_CHAT_HEIGHT}',
+			maxRows		: '{S_CHAT_MAX_ROWS}',
+			page		: '{S_CHAT_CURRENT_PAGE}',
+			position	: '{S_CHAT_POSITION}',
+			refresh		: '{S_CHAT_REFRESH}',
+			<!-- IF S_CHAT_DEBUG -->debug	: true,<!-- ENDIF -->
+			<!-- IF S_CHAT_SOUND_ENABLED -->soundPath	: '{S_CHAT_PLAYER_PATH}',<!-- ENDIF -->
+	<!-- ENDIF -->
+		});
 	})(jQuery);
 	// ]]>
 	</script>
 
-{% elseif IN_CHAT_MCP %}
+<!-- ELSEIF IN_CHAT_MCP -->
 
 	<script>
 	// <![CDATA[
-	window._jPostponed = window._jPostponed || [];
-	window._jPostponed.push(function() {
+	(function($) {
 		$('#ban-period').change(function() {
-			$('#ban-date').objView((this.value == 0));
+			$('#ban-date').css('display', ((this.value == 0) ? 'block' : 'none'));
 		});
-	});
+	})(jQuery);
 	// ]]>
 	</script>
 
-{% endif %}
+<!-- ENDIF -->

@@ -1,12 +1,12 @@
 <?php
-/**
- * [English [En]]
- * @package cBB Chat
- * @version 1.2.6 01/07/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/** 
+* acp.php [English [En]]
+* @package cBB Chat
+* @version v1.2.0 02/03/2019
+*
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
-$lang = array_merge($lang, [
+$lang = array_merge($lang, array(
 	'ACP_CHAT_CONFIG_EXPLAIN'	=> 'Thank you for choosing cBB Chat as a complement to your forum!<br />
 		From this page you can modify the main features of the chat.',
 	'ACP_CHAT_PAGES_EXPLAIN'	=> 'From here you can manage the pages that will be load the chat and the position of it.',
@@ -65,8 +65,7 @@ $lang = array_merge($lang, [
 	'CHAT_HEIGHT_EXPLAIN'		=> 'Sets the height (in pixels) of the conversation container.',
 	'CHAT_HEIGHT_PAGE'			=> 'Chat height',
 	'CHAT_HEIGHT_PAGE_EXPLAIN'	=> 'Set the height (in pixels) of the conversation container in this page.<br /><em>Set 0 to use the default value.</em>',
-	'CHAT_HIDE_POPUP'			=> 'Hide menus automatically',
-	'CHAT_HIDE_POPUP_EXPLAIN'	=> 'If enabled, the BBcode, color and emoticon menus will close automatically when you perform the action.',
+	'CHAT_HELP'					=> 'Documentation and Support',
 	'CHAT_MAIN_CONFIG'			=> 'Main configuration',
 	'CHAT_MESSAGES_CONFIG'		=> 'Message configuration',
 	'CHAT_NOTICES_ADD'			=> 'Add announcement',
@@ -132,16 +131,6 @@ $lang = array_merge($lang, [
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Supports language variables.',
 	'CHAT_ROOM_USERS'			=> 'Allowed users',
 	'CHAT_ROOM_USERS_EXPLAIN'	=> 'Sets users who can use this room.<br />Set one username per line.',
-	'CHAT_ROW_ALIGN'			=> 'Message alignment',
-	'CHAT_ROW_ALIGN_EXPLAIN'	=> 'Defines on which side the messages will be displayed in the chat.<br /><em>This setting is affected if the language used is RTL.</em>',
-	'CHAT_ROW_BUBBLE'			=> 'Bubble',
-	'CHAT_ROW_FORMAT'			=> 'Message format',
-	'CHAT_ROW_FORMAT_EXPLAIN'	=> 'Define the visual style of the messages.',
-	'CHAT_ROW_LEFT'				=> 'Show left',
-	'CHAT_ROW_MEOTHER'			=> 'Show current user on one side and rest on the other',
-	'CHAT_ROW_NORMAL'			=> 'Normal',
-	'CHAT_ROW_RIGHT'			=> 'Show right',
-	'CHAT_ROW_ZIGZAG'			=> 'Show in ZigZag',
 	'CHAT_ROWS'					=> 'Messages on chat',
 	'CHAT_ROWS_EXPLAIN'			=> 'Maximum number of messages that will be shown in the conversation container.',
 	'CHAT_RULES_ADD'			=> 'Add rule',
@@ -174,12 +163,14 @@ $lang = array_merge($lang, [
 	'EACH_YEAR'		=> 'Each year',
 	
 	'ADD_ROOM'					=> 'Add room',
+	'ALL_GROUPS'				=> 'All groups',
 	'CONTENT'					=> 'Content',
 	'CUSTOM_BBCODES'			=> 'Custom BBcodes',
-	'CUSTOM_ROUTE'				=> 'Custom route',
-	'CUSTOM_ROUTES'				=> 'Custom routes',
+	'CUSTOM_FILE'				=> 'Custom file',
+	'CUSTOM_FILES'				=> 'Custom files',
 	'DEFAULT_BBCODES'			=> 'Default BBcodes',
-	'FORUM_ROUTES'				=> 'Forum routes',
+	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
+	'FORUM_FILES'				=> 'Forum files',
 	'NO_PAGES'					=> 'No available pages',
 	'NO_ROOM'					=> 'The selected room no exists',
 	'NO_TEXTS'					=> 'No available texts',
@@ -187,6 +178,7 @@ $lang = array_merge($lang, [
 	'PAGE_ALIAS'				=> 'Page Id',
 	'PAGE_URL'					=> 'Page url',
 	'ROOM_TITLE'				=> 'Room title',
+	'SAVE'						=> 'Save',
 	'SELECT_PAGE'				=> 'Select file',
 	
 	'INVALID_FILE'			=> 'The file not exists or has an invalid format.',
@@ -194,4 +186,4 @@ $lang = array_merge($lang, [
 	'PAGE_ALREADY_EXISTS'	=> 'The page is already in use.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> 'Are you sure you want to delete this room and all messages?',
-]);
+));

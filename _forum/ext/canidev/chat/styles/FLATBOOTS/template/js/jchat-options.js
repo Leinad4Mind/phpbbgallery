@@ -1,14 +1,21 @@
-/**
+/*
+* @name jchat-options.js
 * @package cBB Chat
 * @style: FLATBOOTS
-* @version v1.2.4 17/06/2022
+* @version v1.1.3 10/03/2017
 *
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
+* @copyright (c) 2017 CaniDev
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 var jchat_style_options = {
 	positions: {
+		chat: ['main', 'append'],
+
+		faq: {
+			top		: ['h2:first', 'after'],
+			bottom	: ['main > .row:last', 'before']
+		},
 		index: {
 			top		: ['.panel-forum:first', 'before'],
 			bottom	: ['.panel-stats', 'before']
@@ -41,7 +48,6 @@ var jchat_style_options = {
 			top		: ['h3:first', 'after'],
 			bottom	: ['main > .row:last', 'before']
 		},
-		chat: ['#chat-container', 'append'],
 		undefined: {
 			top		: ['main', 'prepend'],
 			bottom	: ['main', 'append']

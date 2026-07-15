@@ -1,20 +1,17 @@
 <?php
-/**
- * @package cBB Chat
- * @version 1.2.6 01/07/2024
- *
- * @copyright (c) 2024 CaniDev
- * @license https://creativecommons.org/licenses/by-nc/4.0/
- */
+/*
+* @package cBB Chat
+* @version v1.2.0 02/03/2019
+*
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 
 namespace canidev\chat\controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use canidev\chat\libraries\constants;
-
 /**
- * Main controller
- */
+* Main controller
+*/
 class main_controller
 {
 	protected $auth;
@@ -24,7 +21,7 @@ class main_controller
 	protected $core;
 	protected $db;
 	protected $helper;
-	protected $language;
+	protected $lang;
 	protected $log;
 	protected $request;
 	protected $template;
@@ -32,35 +29,31 @@ class main_controller
 	
 	protected $root_path;
 	protected $php_ext;
-	protected $tables;
 
 	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\auth\auth 						$auth			Authentication object
-	 * @param \canidev\chat\libraries\chat 			$chat			Chat Object
-	 * @param \phpbb\config\config 					$config			Config Object
-	 * @param ContainerInterface 					$container		Service container interface
-	 * @param \canidev\core\lib 					$core 			Core Object
-	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
-	 * @param \phpbb\controller\helper				$helper       	Controller helper object
-	 * @param \phpbb\language\language 				$language		Language object
-	 * @param \phpbb\log\log						$log			Log object
-	 * @param \phpbb\request\request 				$request		Request object
-	 * @param \phpbb\template\template				$template     	Template object
-	 * @param \phpbb\user							$user			User object
-	 * @param string								$root_path		phpBB root path
-	 * @param string								$php_ext		phpEx
-	 * @param array 								$tables 		Chat DB Tables
-	 *
-	 * @access public
-	 */
+	* Constructor
+	*
+	* @param \phpbb\auth\auth 					$auth			Authentication object
+	* @param \canidev\chat\libraries\chat 		$chat			Chat Object
+	* @param \phpbb\config\config 				$config			Config Object
+	* @param ContainerInterface 				$container		Service container interface
+	* @param \phpbb\db\driver\driver_interface	$db				DB Object
+	* @param \phpbb\controller\helper			$helper       	Controller helper object
+	* @param \phpbb\language\language 			$language		Language object
+	* @param \phpbb\log\log						$log			Log object
+	* @param \phpbb\request\request 			$request		Request object
+	* @param \phpbb\template\template			$template     	Template object
+	* @param \phpbb\user						$user			User object
+	* @param string								$root_path		phpBB root path
+	* @param string								$php_ext		phpEx
+	*
+	* @access public
+	*/
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
-		ContainerInterface $container,
-		\canidev\core\lib $core,
+		\Symfony\Component\DependencyInjection\ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\controller\helper $helper,
 		\phpbb\language\language $language,
@@ -69,17 +62,16 @@ class main_controller
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
-		$php_ext,
-		$tables)
+		$php_ext)
 	{
 		$this->auth			= $auth;
 		$this->chat			= $chat;
 		$this->config		= $config;
 		$this->container	= $container;
-		$this->core			= $core;
+		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->db			= $db;
 		$this->helper 		= $helper;
-		$this->language		= $language;
+		$this->lang			= $language;
 		$this->log			= $log;
 		$this->request		= $request;
 		$this->template 	= $template;
@@ -87,13 +79,12 @@ class main_controller
 		
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
-		$this->tables 		= $tables;
 	}
 
 	/**
-	 * Display the chat
-	 * @access public
-	 */
+	* Display the chat
+	* @access public
+	*/
 	public function display()
 	{
 		$mode		= $this->request->variable('mode', 'chat');
@@ -106,7 +97,7 @@ class main_controller
 		{
 			redirect(append_sid($this->root_path . 'index.' . $this->php_ext));
 		}
-
+		
 		$this->chat->set_custom_page($mode);
 		
 		switch($mode)
@@ -124,24 +115,24 @@ class main_controller
 				$sort_days		= $this->request->variable('st', $default_sort_days);
 				$sort_key		= $this->request->variable('sk', $default_sort_key);
 				$sort_dir		= $this->request->variable('sd', $default_sort_dir);
-				$row_id_list	= $this->request->variable('row_id_list', [0]);
+				$row_id_list	= $this->request->variable('row_id_list', array(0));
 				
 				$action 	= $this->request->variable('action', '');
 				$start 		= $this->request->variable('start', 0);
 				
 				// Obtain rooms
 				$room_ary		= $this->chat->obtain_rooms();
-				$current_room	= $this->request->variable('room', constants::GUEST_ROOM);
+				$current_room	= $this->request->variable('room', CHAT_GUEST_ROOM);
 				
-				$u_archive	= $this->helper->route('canidev_chat_controller', [
+				$u_archive	= $this->helper->route('canidev_chat_controller', array(
 					'mode'	=> 'archive',
 					'room'	=> $current_room
-				]);
+				));
 				
 				// Filter Rooms
 				foreach($room_ary as $room_key => $row)
 				{
-					if($room_key != constants::GUEST_ROOM &&
+					if($room_key != CHAT_GUEST_ROOM &&
 						((!$this->core->group_auth($row['room_data']['groups']) && !isset($row['room_data']['users'][$this->user->data['user_id']]))
 						|| !$row['room_enabled']))
 					{
@@ -154,10 +145,10 @@ class main_controller
 					redirect($u_archive);
 				}
 				
-				$batch_actions = [
-					'delete_selected'	=> ['DELETE', 'm_chat_delete', true],
-					'move_selected'		=> ['CHAT_MOVE', 'm_chat_edit', (sizeof($room_ary) > 1)],
-				];
+				$batch_actions = array(
+					'delete_selected'	=> array('DELETE', 'm_chat_delete', true),
+					'move_selected'		=> array('CHAT_MOVE', 'm_chat_edit', (sizeof($room_ary) > 1)),
+				);
 				
 				switch($action)
 				{
@@ -169,7 +160,7 @@ class main_controller
 						
 						if(sizeof($row_id_list))
 						{
-							$sql = 'DELETE FROM ' . $this->tables['messages'] . '
+							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
 								WHERE ' . $this->db->sql_in_set('message_id', $row_id_list);
 							$this->db->sql_query($sql);
 							
@@ -179,10 +170,10 @@ class main_controller
 								$this->user->ip,
 								'LOG_CHAT_MESSAGES_REMOVED',
 								time(),
-								[
-									$this->language->lang($room_ary[$current_room]['room_title']),
+								array(
+									$this->lang->lang($room_ary[$current_room]['room_title']),
 									sizeof($row_id_list),
-								]
+								)
 							);
 						}
 					break;
@@ -195,17 +186,17 @@ class main_controller
 						
 						$to_room_id = $this->request->variable('to_room_id', 0);
 						
-						$s_hidden_fields = build_hidden_fields([
+						$s_hidden_fields = build_hidden_fields(array(
 							'row_id_list'	=> $row_id_list,
 							'room'			=> $current_room,
 							'action'		=> 'move_selected',
-						]);
+						));
 						
 						if(confirm_box(true))
 						{
 							if($to_room_id && sizeof($row_id_list))
 							{
-								$sql = 'UPDATE ' . $this->tables['messages'] . '
+								$sql = 'UPDATE ' . CHAT_MESSAGES_TABLE . '
 									SET dest_key = ' . $to_room_id . '
 									WHERE ' . $this->db->sql_in_set('message_id', $row_id_list);
 								$this->db->sql_query($sql);
@@ -216,11 +207,11 @@ class main_controller
 									$this->user->ip,
 									'LOG_CHAT_MESSAGES_MOVED',
 									time(),
-									[
-										$this->language->lang($room_ary[$current_room]['room_title']),
-										$this->language->lang($room_ary[$to_room_id]['room_title']),
+									array(
+										$this->lang->lang($room_ary[$current_room]['room_title']),
+										$this->lang->lang($room_ary[$to_room_id]['room_title']),
 										sizeof($row_id_list),
-									]
+									)
 								);
 							}
 
@@ -238,25 +229,30 @@ class main_controller
 								}
 								
 								$room_title = $row['room_title'];
-								$room_title = $this->language->lang($room_title);
+								$room_title = $this->lang->lang($room_title);
 								
 								$options_str .= '<option value="' . $room_key . '">' . $room_title . '</option>';
 							}
 
-							$this->template->assign_vars([
+							$this->template->assign_vars(array(
 								'S_ROOM_OPTIONS'	=> $options_str,
-							]);
+							));
 
 							confirm_box(false, 'CHAT_MOVE', $s_hidden_fields, 'chat_move.html');
 						}
 					break;
 				}
+			
+				if(!function_exists('get_user_avatar'))
+				{
+					include($this->root_path. 'includes/functions_display.' . $this->php_ext);
+				}
 
 				$action_manager = $this->container->get('canidev.chat.action_manager');
-				$limit_days 	= [0 => $this->language->lang('ALL_MESSAGES'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR')];
+				$limit_days 	= array(0 => $this->lang->lang('ALL_MESSAGES'), 1 => $this->lang->lang('1_DAY'), 7 => $this->lang->lang('7_DAYS'), 14 => $this->lang->lang('2_WEEKS'), 30 => $this->lang->lang('1_MONTH'), 90 => $this->lang->lang('3_MONTHS'), 180 => $this->lang->lang('6_MONTHS'), 365 => $this->lang->lang('1_YEAR'));
 
-				$sort_by_text	= ['t' => $this->language->lang('POST_TIME')];
-				$sort_by_sql	= ['t' => 'cm.message_time'];
+				$sort_by_text	= array('t' => $this->lang->lang('POST_TIME'));
+				$sort_by_sql	= array('t' => 'cm.message_time');
 
 				$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 				gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param, $default_sort_days, $default_sort_key, $default_sort_dir);
@@ -267,7 +263,7 @@ class main_controller
 				
 				// Get total messages
 				$sql = 'SELECT COUNT(message_id) AS total
-					FROM ' . $this->tables['messages'] . '
+					FROM ' . CHAT_MESSAGES_TABLE . '
 					WHERE dest_key = ' . $current_room . "
 					AND message_time >= $min_post_time";
 				$result = $this->db->sql_query($sql);
@@ -276,7 +272,7 @@ class main_controller
 			
 				$sql = 'SELECT cm.*, u.username, u.user_colour,
 						u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height
-					FROM ' . $this->tables['messages'] . ' cm
+					FROM ' . CHAT_MESSAGES_TABLE . ' cm
 						LEFT JOIN ' . USERS_TABLE . ' u ON(u.user_id = cm.poster_id)
 					WHERE cm.dest_key = ' . $current_room . "
 					AND message_time >= $min_post_time
@@ -284,60 +280,35 @@ class main_controller
 				$result = $this->db->sql_query_limit($sql, $messages_per_page, $start);
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$parse_flags 	= OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES;
-					$row_avatar 	= '';
+					$row_avatar = '';
+					
+					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$message = generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+					
+					if($this->config['chat_show_avatars'] && $row['poster_id'] != ANONYMOUS)
+					{
+						$row_avatar = get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']);
+					}
 
-					$message_row = [
-						'S_CLASS'			=> 'chat-row',
+					$this->template->assign_block_vars('message', array(
 						'S_ID'				=> $row['message_id'],
+						'S_AUTHOR_AVATAR'	=> $row_avatar,
 						'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour']),
-						'S_TEXT'			=> generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true),
+						'S_TEXT'			=> $message,
 						'S_DATE'			=> $this->chat->format_date($row['message_time']),
+						'S_SHOW_AVATAR'		=> (bool)$this->config['chat_show_avatars'],
 						
 						'CAN_DELETE'		=> $action_manager->auth('delete', $row),
 						'CAN_EDIT'			=> $action_manager->auth('edit', $row),
 						'CAN_MOVE'			=> (sizeof($room_ary) > 1 && $action_manager->auth('-m_chat_edit')),
 						'CAN_VIEW_WHOIS'	=> $this->auth->acl_get('a_'),
-					];
-					
-					if($this->config['chat_show_avatars'])
-					{
-						if($row['poster_id'] != ANONYMOUS)
-						{
-							$row_avatar = phpbb_get_user_avatar($row);
-						}
-
-						$message_row += [
-							'S_AUTHOR_AVATAR'	=> $row_avatar,
-							'S_SHOW_AVATAR' 	=> true,
-						];
-					}
-
-					switch($this->config['chat_row_align'])
-					{
-						case 'left':
-						case 'right':
-						case 'zigzag':
-							$message_row['S_CLASS'] .= ' chat-align-' . $this->config['chat_row_align'];
-						break;
-
-						case 'meother':
-							$message_row['S_CLASS'] .= ($row['poster_key'] == $action_manager->get_user_key()) ? ' chat-align-right' : ' chat-align-left';
-						break;
-					}
-
-					if($this->config['chat_row_format'] == 'bubble')
-					{
-						$message_row['S_CLASS'] .= ' chat-format-bubble';
-					}
-
-					$this->template->assign_block_vars('message', $message_row);
+					));
 				}
 				$this->db->sql_freeresult($result);
 				
-				$pagination_params = ['mode' => 'archive'];
+				$pagination_params = array('mode' => 'archive');
 				
-				if($current_room != constants::GUEST_ROOM)
+				if($current_room != CHAT_GUEST_ROOM)
 				{
 					$pagination_params['room'] = $current_room;
 				}
@@ -363,7 +334,7 @@ class main_controller
 						continue;
 					}
 					
-					$batch_options .= '<option value="' . $key . '">' . $this->language->lang($row[0]) . '</option>';
+					$batch_options .= '<option value="' . $key . '">' . $this->lang->lang($row[0]) . '</option>';
 				}
 
 				// Build Pagination
@@ -376,43 +347,45 @@ class main_controller
 				$pagination->generate_template_pagination($u_pagination, 'pagination', 'start', $total_messages, $messages_per_page, $start);
 			
 				// Output global variables to template
-				$this->template->assign_vars([
+				$this->template->assign_vars(array(
 					'S_BATCH_OPTIONS'		=> $batch_options,
 					'S_CHAT_IN_ARCHIVE'		=> true,
+					'S_CHAT_MAX_CHARS'		=> $this->config['chat_max_chars'],
 					
 					'S_SELECT_SORT_DIR'		=> str_replace('<select', '<select class="cbb-inputbox"', $s_sort_dir),
 					'S_SELECT_SORT_KEY'		=> str_replace('<select', '<select class="cbb-inputbox"', $s_sort_key),
 					'S_SELECT_SORT_DAYS'	=> str_replace('<select', '<select class="cbb-inputbox"', $s_limit_days),
 				
 					'U_ACTION'			=> $u_archive,
-				]);
+				));
 				
 				// Only show the room tabs if exists more than one
 				if(sizeof($room_ary) > 1)
 				{
 					foreach($room_ary as $room_key => $row)
 					{
-						$url_params = ['mode' => 'archive'];
+						$url_params = array('mode' => 'archive');
 						
-						if($room_key != constants::GUEST_ROOM)
+						if($room_key != CHAT_GUEST_ROOM)
 						{
 							$url_params['room'] = $room_key;
 						}
 						
-						$this->template->assign_block_vars('roomtab', [
+						$this->template->assign_block_vars('roomtab', array(
 							'S_ACTIVE'		=> ($room_key == $current_room) ? true : false,
-							'S_TITLE'		=> $this->language->lang($row['room_title']),
+							'S_TITLE'		=> $this->lang->lang($row['room_title']),
 							'U_ACTION'		=> $this->helper->route('canidev_chat_controller', $url_params),
-						]);
+						));
 					}
 				}
 				
-				$this->template->assign_block_vars('navlinks', [
-					'FORUM_NAME'	=> $this->language->lang('CHAT_ARCHIVE'),
+				$this->template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $this->lang->lang('CHAT_ARCHIVE'),
 					'U_VIEW_FORUM'	=> $u_archive,
-				]);	
+				));	
 				
-				return $this->helper->render('archive_body.html', $this->language->lang('CHAT_ARCHIVE'));
+				return $this->helper->render('archive_body.html', $this->lang->lang('CHAT_ARCHIVE'));
+			break;
 			
 			case 'chat':
 			default:
@@ -421,17 +394,18 @@ class main_controller
 					redirect(append_sid($this->root_path . 'index.' . $this->php_ext));
 				}
 				
-				$this->template->assign_vars([
+				$this->template->assign_vars(array(
 					'S_CHAT_EMBEDMODE'	=> $is_embed,
 					'S_CHAT_NOTITLE'	=> ($is_embed && $no_title) ? true : false,
-				]);
+				));
 				
-				$this->template->assign_block_vars('navlinks', [
-					'FORUM_NAME'	=> $this->language->lang('CHAT'),
+				$this->template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $this->lang->lang('CHAT'),
 					'U_VIEW_FORUM'	=> $this->helper->route('canidev_chat_controller'),
-				]);
+				));
 
-				return $this->helper->render('chat_body.html', $this->language->lang('CHAT'));
+				return $this->helper->render('chat_body.html', $this->lang->lang('CHAT'));
+			break;
 		}
 	}
 }

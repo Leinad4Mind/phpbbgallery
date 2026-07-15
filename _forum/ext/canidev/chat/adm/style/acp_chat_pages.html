@@ -1,59 +1,82 @@
-{% include 'overall_header.html' %}
+<!-- INCLUDE overall_header.html -->
 
 <a name="maincontent"></a>
 
-{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
+<!-- IF U_BACK --><div><a href="{U_BACK}" style="float:right;">&laquo; {L_BACK}</a></div><!-- ENDIF -->
 
-<h1>{{ lang('ACP_CHAT_PAGES') }}</h1>
-<p>{{ lang('ACP_CHAT_PAGES_EXPLAIN') }}</p>
+<h1>{L_ACP_CHAT_PAGES}</h1>
+<p>{L_ACP_CHAT_PAGES_EXPLAIN}</p>
 
-{% if S_ERROR %}
+<!-- IF S_ERROR -->
 	<div class="errorbox">
-		<h3>{{ lang('WARNING') }}</h3>
-		<p>{{ ERROR_MSG }}</p>
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
 	</div>
-{% endif %}
+<!-- ENDIF -->
 
-<form id="acp_chat_pages" method="post" action="{{ U_ACTION }}">
+<form id="acp_chat_pages" method="post" action="{U_ACTION}">
 
-{% if S_EDIT %}
+<!-- IF S_EDIT -->
 
-	{% include '@canidev_core/acp_options.html' %}
+<!-- BEGIN options -->
+	<!-- IF options.S_LEGEND -->
+		<!-- IF not options.S_FIRST_ROW --></fieldset><!-- ENDIF -->
+		<fieldset>
+			<legend>{options.LEGEND}</legend>
+	<!-- ELSE -->
 
-{% else %}
+		<dl<!-- IF not options.DISPLAY --> class="cbb-helper-hidden"<!-- ENDIF -->>
+			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dd>{options.CONTENT}</dd>
+		</dl>
+
+	<!-- ENDIF -->
+	
+	<!-- IF options.S_LAST_ROW --></fieldset><!-- ENDIF -->
+<!-- END options -->
+
+	<div class="cbb-submit-buttons">
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
+		{S_FORM_TOKEN}
+	</div>
+	
+<!-- ELSE -->
 
 	<table cellspacing="1">
 	<tr>
-		<th>{{ lang('PAGE_ALIAS') }}</th>
-		<th>{{ lang('PAGE_URL') }}</th>
-		<th>{{ lang('ACTION') }}</th>	
+		<th>{L_PAGE_ALIAS}</th>
+		<th>{L_PAGE_URL}</th>
+		<th>{L_ACTION}</th>	
 	</tr>
 
-{% for page in pagerow %}
-	<tr data-row-id="{{ page.S_ID }}" class="{{ page.S_ROW_COUNT is even ? 'row2' : 'row1' }}">
-		<td>{{ page.S_TITLE }}</td>
-		<td><input type="text" class="pagerow-input cbb-inputbox" value="{{ page.S_URL }}" readonly="readonly" /></td>
+<!-- BEGIN pagerow -->
+	<tr id="row{pagerow.S_ID}" class="<!-- IF pagerow.S_ROW_COUNT is even -->row2<!-- ELSE -->row1<!-- ENDIF -->">
+		<td>{pagerow.S_TITLE}</td>
+		<td><input type="text" class="pagerow-input cbb-inputbox" value="{pagerow.S_URL}" readonly="readonly" /></td>
 		<td class="actions-col">
-			<a href="{{ page.U_EDIT }}">{{ ICON_EDIT }}</a>
-			<a href="{{ page.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>
+			<a href="{pagerow.U_EDIT}">{ICON_EDIT}</a>
+			<a href="{pagerow.U_DELETE}" class="js-chat-action">{ICON_DELETE}</a>
 		</td>
 	</tr>
-{% else %}
+<!-- BEGINELSE -->
 	<tr>
-		<td colspan="3" class="row3">{{ lang('NO_PAGES') }}</td>
+		<td colspan="3" class="row3">{L_NO_PAGES}</td>
 	</tr>
-{% endfor %}
+<!-- END pagerow -->
 
 	</table>
 
 	<p class="quick">
-		<a class="cbb-btn" href="{{ U_PAGE_ADD }}">{{ lang('PAGE_ADD') }}</a>
-		{{ S_FORM_TOKEN }}
-		{{ S_HIDDEN_FIELDS }}
+		<a class="cbb-btn" href="{U_PAGE_ADD}">{L_PAGE_ADD}</a>
 	</p>
 
-{% endif %}
+<!-- ENDIF -->
+
+<div>
+	{S_FORM_TOKEN}
+	{S_HIDDEN_FIELDS}
+</div>
 
 </form>
 
-{% include 'overall_footer.html' %}
+<!-- INCLUDE overall_footer.html -->

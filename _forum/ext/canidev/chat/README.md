@@ -6,7 +6,8 @@
 2. Upload the content of the 'upload' directory to the 'ext' directory of your forum.
 3. Navigate in the ACP to 'Customise -> Manage extensions'.
 4. Look for "cBB Chat" under the Disabled Extensions list, and click its 'Enable' link.
-5. Set up and configure the chat by navigating in the ACP to 'Extensions -> Chat'.
+5. Navigate in the ACP to 'General' and purge the cache.
+6. Set up and configure the chat by navigating in the ACP to 'Extensions -> Chat'.
 
 
 ## Update
@@ -16,7 +17,7 @@
 3. Delete the folder 'chat' which is within the directory '/ext/canidev/' in the server.
 4. Upload the content of the 'upload' directory to the 'ext' directory of your forum.
 5. In ACP, Look for "cBB Chat" under the Disabled Extensions list, and click its 'Enable' link.
-
+6. Navigate in the ACP to 'General' and purge the cache.
 
 ## Uninstall
 
@@ -24,6 +25,5 @@
 2. Look for 'cBB Chat' under the Enabled Extensions list, and click its 'Disable' link.
 3. To permanently uninstall, click 'Delete Data' and then delete the '/ext/canidev/chat' directory.
 
-
 ## License
-[CreativeCommons Attribution-NonCommercial v4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+[GNU General Public License v2](https://opensource.org/licenses/GPL-2.0)

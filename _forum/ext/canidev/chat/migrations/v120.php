@@ -4,7 +4,7 @@
 * @version v1.2.0 02/03/2019
 *
 * @copyright (c) 2019 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\chat\migrations;
