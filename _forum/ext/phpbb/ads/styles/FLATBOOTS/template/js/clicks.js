@@ -1,11 +1,1 @@
-head.ready(function () {
-(function ($, u_phpbb_ads_click) {
-	'use strict';
-
-	$(function() {
-		$('[data-ad-id]').on('click', 'a', function (e) {
-			$.get(u_phpbb_ads_click.replace(/0$/, $(e.delegateTarget).attr('data-ad-id')));
-		});
-	});
-})(jQuery, u_phpbb_ads_click);
-});
+head.ready(function(){!function(a,t){"use strict";a(function(){a("[data-ad-id]").on("click","a",function(e){a.get(t.replace(/0$/,a(e.delegateTarget).attr("data-ad-id")))})})}(jQuery,u_phpbb_ads_click)});

@@ -78,15 +78,16 @@ class helper
 			'S_ERROR'   => (bool) count($errors),
 			'ERROR_MSG' => count($errors) ? implode('<br />', $errors) : '',
 
-			'AD_NAME'         => $data['ad_name'],
-			'AD_NOTE'         => $data['ad_note'],
-			'AD_CODE'         => $data['ad_code'],
-			'AD_ENABLED'      => $data['ad_enabled'],
-			'AD_END_DATE'     => $data['ad_end_date'],
-			'AD_PRIORITY'     => $data['ad_priority'],
-			'AD_VIEWS_LIMIT'  => $data['ad_views_limit'],
-			'AD_CLICKS_LIMIT' => $data['ad_clicks_limit'],
-			'AD_OWNER'        => $this->get_username($data['ad_owner']),
+			'AD_NAME'         	=> $data['ad_name'],
+			'AD_NOTE'         	=> $data['ad_note'],
+			'AD_CODE'         	=> $data['ad_code'],
+			'AD_ENABLED'      	=> $data['ad_enabled'],
+			'AD_END_DATE'     	=> $data['ad_end_date'],
+			'AD_PRIORITY'     	=> $data['ad_priority'],
+			'AD_CONTENT_ONLY'	=> $data['ad_content_only'],
+			'AD_VIEWS_LIMIT'  	=> $data['ad_views_limit'],
+			'AD_CLICKS_LIMIT' 	=> $data['ad_clicks_limit'],
+			'AD_OWNER'        	=> $this->get_username($data['ad_owner']),
 		));
 	}
 
@@ -98,14 +99,21 @@ class helper
 	 */
 	public function assign_locations($ad_locations = false)
 	{
-		foreach ($this->location_manager->get_all_locations() as $location_id => $location_data)
+		foreach ($this->location_manager->get_all_locations() as $location_category_id => $location_category)
 		{
 			$this->template->assign_block_vars('ad_locations', array(
-				'LOCATION_ID'   => $location_id,
-				'LOCATION_DESC' => $location_data['desc'],
-				'LOCATION_NAME' => $location_data['name'],
-				'S_SELECTED'    => $ad_locations ? in_array($location_id, $ad_locations) : false,
+				'CATEGORY_NAME' => $this->language->lang($location_category_id),
 			));
+
+			foreach ($location_category as $location_id => $location_data)
+			{
+				$this->template->assign_block_vars('ad_locations', array(
+					'LOCATION_ID'   => $location_id,
+					'LOCATION_DESC' => $location_data['desc'],
+					'LOCATION_NAME' => $location_data['name'],
+					'S_SELECTED'    => $ad_locations ? in_array($location_id, $ad_locations) : false,
+				));
+			}
 		}
 	}
 

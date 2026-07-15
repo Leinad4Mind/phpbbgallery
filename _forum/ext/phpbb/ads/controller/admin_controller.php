@@ -50,24 +50,33 @@ class admin_controller
 	/** @var \phpbb\ads\analyser\manager */
 	protected $analyser;
 
+	/** @var \phpbb\controller\helper */
+	protected $controller_helper;
+
 	/** @var string Custom form action */
 	protected $u_action;
+
+	/** @var \auth_admin Auth admin */
+	protected $auth_admin;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\template\template           $template     Template object
-	 * @param \phpbb\language\language           $language     Language object
-	 * @param \phpbb\request\request             $request      Request object
-	 * @param \phpbb\ads\ad\manager              $manager      Advertisement manager object
-	 * @param \phpbb\config\db_text              $config_text  Config text object
-	 * @param \phpbb\config\config               $config       Config object
-	 * @param \phpbb\group\helper                $group_helper Group helper object
-	 * @param \phpbb\ads\controller\admin_input  $input        Admin input object
-	 * @param \phpbb\ads\controller\helper 		 $helper       Helper object
-	 * @param \phpbb\ads\analyser\manager        $analyser     Ad code analyser object
+	 * @param \phpbb\template\template          $template          Template object
+	 * @param \phpbb\language\language          $language          Language object
+	 * @param \phpbb\request\request            $request           Request object
+	 * @param \phpbb\ads\ad\manager             $manager           Advertisement manager object
+	 * @param \phpbb\config\db_text             $config_text       Config text object
+	 * @param \phpbb\config\config              $config            Config object
+	 * @param \phpbb\group\helper               $group_helper      Group helper object
+	 * @param \phpbb\ads\controller\admin_input $input             Admin input object
+	 * @param \phpbb\ads\controller\helper      $helper            Helper object
+	 * @param \phpbb\ads\analyser\manager       $analyser          Ad code analyser object
+	 * @param \phpbb\controller\helper          $controller_helper Controller helper object
+	 * @param string                            $root_path         phpBB root path
+	 * @param string                            $php_ext           PHP extension
 	 */
-	public function __construct(\phpbb\template\template $template, \phpbb\language\language $language, \phpbb\request\request $request, \phpbb\ads\ad\manager $manager, \phpbb\config\db_text $config_text, \phpbb\config\config $config, \phpbb\group\helper $group_helper, \phpbb\ads\controller\admin_input $input, \phpbb\ads\controller\helper $helper, \phpbb\ads\analyser\manager $analyser)
+	public function __construct(\phpbb\template\template $template, \phpbb\language\language $language, \phpbb\request\request $request, \phpbb\ads\ad\manager $manager, \phpbb\config\db_text $config_text, \phpbb\config\config $config, \phpbb\group\helper $group_helper, \phpbb\ads\controller\admin_input $input, \phpbb\ads\controller\helper $helper, \phpbb\ads\analyser\manager $analyser, \phpbb\controller\helper $controller_helper, $root_path, $php_ext)
 	{
 		$this->template = $template;
 		$this->language = $language;
@@ -79,11 +88,18 @@ class admin_controller
 		$this->input = $input;
 		$this->helper = $helper;
 		$this->analyser = $analyser;
+		$this->controller_helper = $controller_helper;
 
 		$this->language->add_lang('posting'); // Used by banner_upload() file errors
 		$this->language->add_lang('acp', 'phpbb/ads');
 
 		$this->template->assign_var('S_PHPBB_ADS', true);
+
+		if (!class_exists('auth_admin'))
+		{
+			include($root_path . 'includes/acp/auth.' . $php_ext);
+		}
+		$this->auth_admin = new \auth_admin();
 	}
 
 	/**
@@ -195,6 +211,7 @@ class admin_controller
 			'U_ACTION'				=> "{$this->u_action}&amp;action=add",
 			'PICKER_DATE_FORMAT'	=> ext::DATE_FORMAT,
 			'U_FIND_USERNAME'		=> $this->helper->get_find_username_link(),
+			'U_ENABLE_VISUAL_DEMO'	=> $this->controller_helper->route('phpbb_ads_visual_demo', array('action' => 'enable')),
 		));
 	}
 
@@ -231,6 +248,7 @@ class admin_controller
 			'U_ACTION'				=> "{$this->u_action}&amp;action=edit&amp;id=$ad_id",
 			'PICKER_DATE_FORMAT'	=> ext::DATE_FORMAT,
 			'U_FIND_USERNAME'		=> $this->helper->get_find_username_link(),
+			'U_ENABLE_VISUAL_DEMO'	=> $this->controller_helper->route('phpbb_ads_visual_demo', array('action' => 'enable')),
 		));
 		$this->helper->assign_data($this->data, $this->input->get_errors());
 	}
@@ -274,6 +292,8 @@ class admin_controller
 				$this->manager->delete_ad_locations($ad_id);
 				$success = $this->manager->delete_ad($ad_id);
 
+				$this->toggle_permission($ad_data['ad_owner']);
+
 				// Only notify user on error or if not ajax
 				if (!$success)
 				{
@@ -297,6 +317,9 @@ class admin_controller
 					'mode'   => $this->request->variable('mode', ''),
 					'action' => 'delete',
 				)));
+
+				// When you don't confirm deleting ad
+				$this->list_ads();
 			}
 		}
 	}
@@ -446,6 +469,7 @@ class admin_controller
 		if (!$this->input->has_errors())
 		{
 			$ad_id = $this->manager->insert_ad($this->data);
+			$this->toggle_permission($this->data['ad_owner']);
 			$this->manager->insert_ad_locations($ad_id, $this->data['ad_locations']);
 
 			$this->helper->log('ADD', $this->data['ad_name']);
@@ -465,9 +489,14 @@ class admin_controller
 		$ad_id = $this->request->variable('id', 0);
 		if ($ad_id && !$this->input->has_errors())
 		{
+			$old_data = $this->manager->get_ad($ad_id);
 			$success = $this->manager->update_ad($ad_id, $this->data);
 			if ($success)
 			{
+				// Only update permissions when update was successful
+				$this->toggle_permission($old_data['ad_owner']);
+				$this->toggle_permission($this->data['ad_owner']);
+
 				// Only insert new ad locations to DB when ad exists
 				$this->manager->delete_ad_locations($ad_id);
 				$this->manager->insert_ad_locations($ad_id, $this->data['ad_locations']);
@@ -499,5 +528,24 @@ class admin_controller
 	protected function error($msg)
 	{
 		trigger_error($this->language->lang($msg) . adm_back_link($this->u_action), E_USER_WARNING);
+	}
+
+	/**
+	 * Try to remove or add permission to see UCP module.
+	 * Permission is only removed when user has no more ads.
+	 * Permission is only added when user has at least one ad.
+	 *
+	 * @param	int	$user_id	User ID to try to remove permission
+	 *
+	 * @return	void
+	 */
+	protected function toggle_permission($user_id)
+	{
+		if ($user_id)
+		{
+			$has_ads = count($this->manager->get_ads_by_owner($user_id)) !== 0;
+
+			$this->auth_admin->acl_set('user', 0, $user_id, array('u_phpbb_ads' => (int) $has_ads));
+		}
 	}
 }
