@@ -49,8 +49,13 @@ class main_module
 				trigger_error('FORM_INVALID', E_USER_WARNING);
 			}
 
+			$this->config->set('sitesplat_bbajaxnews_driver', $this->request->variable('sitesplat_bbajaxnews_driver', ''));
 			$this->config->set('sitesplat_bbajaxnews_pubnub_pub', $this->request->variable('sitesplat_bbajaxnews_pubnub_pub', ''));
 			$this->config->set('sitesplat_bbajaxnews_pubnub_sub', $this->request->variable('sitesplat_bbajaxnews_pubnub_sub', ''));
+			$this->config->set('sitesplat_bbajaxnews_pusher_app_key', $this->request->variable('sitesplat_bbajaxnews_pusher_app_key', ''));
+			$this->config->set('sitesplat_bbajaxnews_pusher_app_sec', $this->request->variable('sitesplat_bbajaxnews_pusher_app_sec', ''));
+			$this->config->set('sitesplat_bbajaxnews_pusher_app_id', $this->request->variable('sitesplat_bbajaxnews_pusher_app_id', ''));
+			$this->config->set('sitesplat_bbajaxnews_pusher_app_cluster', $this->request->variable('sitesplat_bbajaxnews_pusher_app_cluster', ''));
 			$this->config->set('sitesplat_bbajaxnews_interval', $this->request->variable('sitesplat_bbajaxnews_interval', 30));
 			$this->config->set('sitesplat_bbajaxnews_noty_visibility_control', $this->request->variable('sitesplat_bbajaxnews_noty_visibility_control', true));
 			$this->config->set('sitesplat_bbajaxnews_noty_timeout', $this->request->variable('sitesplat_bbajaxnews_noty_timeout', 5000));
@@ -75,8 +80,13 @@ class main_module
 
 		$this->template->assign_vars(array(
 			'U_ACTION'										=> $this->u_action,
+			'SITESPLAT_BBAJAXNEWS_DRIVER'					=> $this->config['sitesplat_bbajaxnews_driver'],
 			'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB'				=> $this->config['sitesplat_bbajaxnews_pubnub_pub'],
 			'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB'				=> $this->config['sitesplat_bbajaxnews_pubnub_sub'],
+			'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY'			=> $this->config['sitesplat_bbajaxnews_pusher_app_key'],
+			'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC'			=> $this->config['sitesplat_bbajaxnews_pusher_app_sec'],
+			'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID'			=> $this->config['sitesplat_bbajaxnews_pusher_app_id'],
+			'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER'		=> $this->config['sitesplat_bbajaxnews_pusher_app_cluster'],
 			'SITESPLAT_BBAJAXNEWS_INTERVAL'					=> $this->config['sitesplat_bbajaxnews_interval'],
 			'SITESPLAT_BBAJAXNEWS_NOTY_VISIBILITY_CONTROL'	=> $this->config['sitesplat_bbajaxnews_noty_visibility_control'],
 			'SITESPLAT_BBAJAXNEWS_NOTY_TIMEOUT'				=> $this->config['sitesplat_bbajaxnews_noty_timeout'],

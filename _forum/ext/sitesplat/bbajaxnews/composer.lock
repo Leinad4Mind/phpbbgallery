@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3b966debb89066cf140699834da49add",
-    "content-hash": "b53e0da8a5285f26f1158435483eba4d",
+    "hash": "c9d67b2c9ca8308e906ee9849adeff47",
+    "content-hash": "1d39aac72476152ecb62c98aa44dbfda",
     "packages": [
         {
             "name": "composer/installers",
@@ -301,6 +301,59 @@
                 "realtime"
             ],
             "time": "2017-06-08 17:49:44"
+        },
+        {
+            "name": "pusher/pusher-php-server",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pusher/pusher-http-php.git",
+                "reference": "c13978f756ddd7871318e3a80559efc23218903b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/c13978f756ddd7871318e3a80559efc23218903b",
+                "reference": "c13978f756ddd7871318e3a80559efc23218903b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^5.4 || ^7.0",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pusher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Library for interacting with the Pusher REST API",
+            "keywords": [
+                "events",
+                "messaging",
+                "php-pusher-server",
+                "publish",
+                "push",
+                "pusher",
+                "real time",
+                "real-time",
+                "realtime",
+                "rest",
+                "trigger"
+            ],
+            "time": "2018-07-04 14:07:28"
         },
         {
             "name": "rmccue/requests",

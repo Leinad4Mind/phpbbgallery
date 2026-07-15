@@ -24,13 +24,18 @@ class m1_acp_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
+			array('config.add', array('sitesplat_bbajaxnews_driver', 'pusher')),
 			array('config.add', array('sitesplat_bbajaxnews_pubnub_pub', '')),
 			array('config.add', array('sitesplat_bbajaxnews_pubnub_sub', '')),
+			array('config.add', array('sitesplat_bbajaxnews_pusher_app_key', '')),
+			array('config.add', array('sitesplat_bbajaxnews_pusher_app_sec', '')),
+			array('config.add', array('sitesplat_bbajaxnews_pusher_app_id', '')),
+			array('config.add', array('sitesplat_bbajaxnews_pusher_app_cluster', '')),
 			array('config.add', array('sitesplat_bbajaxnews_interval', 3)),
 			array('config.add', array('sitesplat_bbajaxnews_noty_visibility_control', 0)),
-			array('config.add', array('sitesplat_bbajaxnews_noty_timeout', 9000)),
+			array('config.add', array('sitesplat_bbajaxnews_noty_timeout', 0)),
 			array('config.add', array('sitesplat_bbajaxnews_noty_progress_bar', 1)),
-			array('config.add', array('sitesplat_bbajaxnews_noty_layout', 'topRight')),
+			array('config.add', array('sitesplat_bbajaxnews_noty_layout', 'bottomCenter')),
 			array('config.add', array('sitesplat_bbajaxnews_noty_mo', 0)),
 			array('config.add', array('sitesplat_bbajaxnews_bbdonation', 0)),
 			array('config.add', array('sitesplat_bbajaxnews_bbmembership', 0)),

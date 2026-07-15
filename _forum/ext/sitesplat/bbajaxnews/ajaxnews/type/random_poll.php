@@ -40,6 +40,7 @@ class random_poll extends base
 		$sql = 'SELECT t.topic_id, t.poll_title
 				FROM ' . $this->topics_table . ' t
 				WHERE t.poll_start <> 0
+				    AND t.poll_start + t.poll_length > ' . time() . '
 					AND ' . $this->db->sql_in_set('t.forum_id', $forums) . '
 					AND (
 						SELECT COUNT(pv.vote_user_id)
