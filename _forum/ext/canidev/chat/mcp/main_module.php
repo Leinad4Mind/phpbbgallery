@@ -1,39 +1,32 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.1 01/02/2020
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\mcp;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package acp
-*/
 class main_module
 {
 	public $u_action;
-	
-	protected $controller;
+
+	public $page_title;
+	public $tpl_name;
 
 	public function main($id, $mode)
 	{
 		global $phpbb_container;
 
-		$this->controller = $phpbb_container->get('canidev.chat.controller.mcp.' . $mode);
+		$controller = $phpbb_container->get('canidev.chat.controller.mcp.' . $mode);
 
-		$this->controller->u_action = $this->u_action;
-		$this->controller->display($mode);
+		$controller
+			->set_form_action($this->u_action)
+			->display($mode);
 		
-		$this->tpl_name		= $this->controller->get_template();
-		$this->page_title	= $this->controller->get_title();
+		$this->tpl_name		= $controller->get_template();
+		$this->page_title	= $controller->get_title();
 	}
 }

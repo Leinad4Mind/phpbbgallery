@@ -1,26 +1,20 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.1 01/02/2020
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\cron;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class prune extends \phpbb\cron\task\base
 {
 	protected $chat;
 	protected $config;
 	protected $db;
-	protected $manager;
+	protected $tables;
 
 	/**
 	 * Constructor
@@ -28,25 +22,24 @@ class prune extends \phpbb\cron\task\base
 	 * @param \canidev\chat\libraries\chat 				$chat		Chat Object
 	 * @param \phpbb\config\config						$config  	Config object
 	 * @param \phpbb\db\driver\driver_interface			$db			DB Object
-	 * @param \canidev\chat\libraries\action_manager	$manager	Action Manager Object
+	 * @param array 									$tables 	Chat DB Tables
+	 * 
 	 * @access public
 	 */
 	public function __construct(
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
 		\phpbb\db\driver\driver_interface $db,
-		\canidev\chat\libraries\action_manager $manager)
+		$tables)
 	{
 		$this->chat			= $chat;
 		$this->config		= $config;
 		$this->db			= $db;
-		$this->manager		= $manager;
+		$this->tables 		= $tables;
 	}
 
 	/**
-	 * Runs this cron task.
-	 *
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public function run()
 	{
@@ -54,27 +47,27 @@ class prune extends \phpbb\cron\task\base
 		$room_ary	= $this->chat->obtain_rooms();
 
 		// Delete inactive guests (one day of inactivity)
-		$sql = 'DELETE FROM ' . CHAT_USERS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->tables['users'] . '
 			WHERE user_id = ' . ANONYMOUS . '
 			AND user_lastjoin < ' . $day_limit . '
 			AND exclude_time = 0';
 		$this->db->sql_query($sql);
 		
 		// Delete messages out of the limit
-		$del_ary = $del_room_ary = array();
+		$del_ary = $del_room_ary = [];
 		
 		foreach($room_ary as $row)
 		{
 			if($row['room_msg_limit'] > 0)
 			{
-				$del_room_ary[$row['room_id']] = $row['room_msg_limit'];
+				$del_room_ary[$row['room_key']] = $row['room_msg_limit'];
 			}
 		}
-		
+
 		if(sizeof($del_room_ary))
 		{
 			$sql = 'SELECT COUNT(cm.message_id) AS message_count, cm.dest_key
-				FROM ' . CHAT_MESSAGES_TABLE . ' cm
+				FROM ' . $this->tables['messages'] . ' cm
 				WHERE ' . $this->db->sql_in_set('cm.dest_key', array_keys($del_room_ary)) . '
 				GROUP BY cm.dest_key';
 			$result = $this->db->sql_query($sql);
@@ -92,7 +85,7 @@ class prune extends \phpbb\cron\task\base
 		
 		foreach($del_ary as $dest_key => $num)
 		{
-			$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+			$sql = 'DELETE FROM ' . $this->tables['messages'] . '
 				WHERE dest_key = ' . $dest_key . '
 				ORDER BY message_time ASC';
 			$this->db->sql_query_limit($sql, $num);
@@ -101,7 +94,7 @@ class prune extends \phpbb\cron\task\base
 		// Delete pm out of limit
 		$pm_max_time = time() - ((int)$this->config['chat_pm_maxage'] * 86400);
 		
-		$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+		$sql = 'DELETE FROM ' . $this->tables['messages'] . '
 			WHERE ' . $this->db->sql_in_set('dest_key', array_keys($room_ary), true) . '
 			AND message_time < ' . $pm_max_time;
 		$this->db->sql_query($sql);
@@ -110,11 +103,7 @@ class prune extends \phpbb\cron\task\base
 	}
 
 	/**
-	 * Returns whether this cron task can run, given current board configuration.
-	 *
-	 * If warnings are set to never expire, this cron task will not run.
-	 *
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function is_runnable()
 	{
@@ -122,10 +111,7 @@ class prune extends \phpbb\cron\task\base
 	}
 
 	/**
-	 * Returns whether this cron task should run now, because enough time
-	 * has passed since it was last run (24 hours).
-	 *
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function should_run()
 	{

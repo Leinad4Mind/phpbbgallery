@@ -1,12 +1,12 @@
 <?php
-/*
-* acp.php [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.1 01/02/2020
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
 		Desde esta página puede modificar las principales características del chat.',
 	'ACP_CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
@@ -132,6 +132,16 @@ $lang = array_merge($lang, array(
 	'CHAT_ROOM_TITLE_EXPLAIN'	=> 'Admite variables de idioma.',
 	'CHAT_ROOM_USERS'			=> 'Usuarios autorizados',
 	'CHAT_ROOM_USERS_EXPLAIN'	=> 'Define los usuarios que podrán visualizar esta sala.<br />Establezca cada nombre de usuario en una línea.',
+	'CHAT_ROW_ALIGN'			=> 'Alineación de los mensajes',
+	'CHAT_ROW_ALIGN_EXPLAIN'	=> 'Define en que lado se mostrarán los mensajes en el chat.<br /><em>Esta configuración se ve afectada si el idioma usado es RTL.</em>',
+	'CHAT_ROW_BUBBLE'			=> 'Burbuja',
+	'CHAT_ROW_FORMAT'			=> 'Formato de los mensajes',
+	'CHAT_ROW_FORMAT_EXPLAIN'	=> 'Define el estilo visual de los mensajes.',
+	'CHAT_ROW_LEFT'				=> 'Mostrar a la izquierda',
+	'CHAT_ROW_MEOTHER'			=> 'Mostrar usuario actual a un lado y resto al otro',
+	'CHAT_ROW_NORMAL'			=> 'Normal',
+	'CHAT_ROW_RIGHT'			=> 'Mostrar a la derecha',
+	'CHAT_ROW_ZIGZAG'			=> 'Mostrar en ZigZag',
 	'CHAT_ROWS'					=> 'Mensajes en chat',
 	'CHAT_ROWS_EXPLAIN'			=> 'Número máximo de mensajes que se mostrarán en el cuadro de conversación del chat.',
 	'CHAT_RULES_ADD'			=> 'Añadir regla',
@@ -166,10 +176,10 @@ $lang = array_merge($lang, array(
 	'ADD_ROOM'					=> 'Añadir sala',
 	'CONTENT'					=> 'Contenido',
 	'CUSTOM_BBCODES'			=> 'BBcodes personalizados',
-	'CUSTOM_FILE'				=> 'Archivo personalizado',
-	'CUSTOM_FILES'				=> 'Archivos personalizados',
+	'CUSTOM_ROUTE'				=> 'Ruta personalizada',
+	'CUSTOM_ROUTES'				=> 'Rutas personalizadas',
 	'DEFAULT_BBCODES'			=> 'BBcodes predeterminados',
-	'FORUM_FILES'				=> 'Archivos del foro',
+	'FORUM_ROUTES'				=> 'Rutas del foro',
 	'NO_PAGES'					=> 'No hay páginas para mostrar',
 	'NO_ROOM'					=> 'La sala seleccionada no existe',
 	'NO_TEXTS'					=> 'No hay textos para mostrar',
@@ -184,4 +194,4 @@ $lang = array_merge($lang, array(
 	'PAGE_ALREADY_EXISTS'		=> 'La página especificada ya está en uso.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> '¿Está seguro de que desea eliminar esta sala y todos sus mensajes?',
-));
+]);

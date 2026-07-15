@@ -1,12 +1,12 @@
 <?php
-/*
-* main.php [English [En]]
-* @package cBB Chat
-* @version v1.2.1 01/02/2020
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [English [En]]
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,11 +16,11 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Chat language
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CHAT'						=> 'Chat',
 	'CHAT_APPLY'				=> 'Apply',
 	'CHAT_ARCHIVE'				=> 'Chat archive',
@@ -67,25 +67,16 @@ $lang = array_merge($lang, array(
 	'CHAT_USER_ALREADY_EXISTS'		=> 'The user is already in use.',
 	'CHAT_VIEW_HISTORY'				=> 'See previous messages',
 
-	'BATCH_ACTIONS'		=> 'Batch actions',
 	'CUSTOM_DATE'		=> 'Custom date',
 	'EDIT'				=> 'Edit',
+	'HALF_AN_HOUR'		=> 'Half an hour',
 	'NEW_TOPIC'			=> 'New Topic',
 	'PERMANENT'			=> 'Permanent',
 	'QUOTE'				=> 'Quote',
-	
-	'HALF_AN_HOUR'	=> 'Half an hour',
-	'NO_LIMIT'		=> 'No limit',
-	'ONE_DAY'		=> 'One day',
-	'ONE_HOUR'		=> 'One hour',
-	'ONE_WEEK'		=> 'One week',
-	'ONE_MONTH'		=> 'One month',
-	'ONE_YEAR'		=> 'One year',
-	'TWO_YEARS'		=> 'Two years',
 
 	'CORE_INSTALL_ERROR'	=> 'You have not uploaded all the files from the installation package or you are trying to install an old package.<br />
 		Please make sure to upload all the files (including the <em>core</em> folder) and use a package downloaded from the official website.',
-));
+]);
 
 // Text language
-$lang = array_merge($lang, array());
+$lang = array_merge($lang, []);

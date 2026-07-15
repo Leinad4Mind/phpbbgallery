@@ -1,20 +1,16 @@
-/*
-* @package cBB Chat
-* @style: proSilver
-* @version v1.2.0 02/03/2019 $
-*
-* @copyright (c) 2019 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * @package cBB Chat
+ * @style: All
+ * @version 1.2.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 var jchat_style_options = {
 	positions: {
-		faq: {
-			top		: ['#faqlinks', 'before'],
-			bottom	: ['.panel:last', 'after']
-		},
 		index: {
-			top		: ['.forabg:has(.forumtitle):first', 'before'],
+			top		: ['.action-bar:first', 'after'],
 			bottom	: ['.forabg:has(.forumtitle):last', 'after']
 		},
 		mcp: {

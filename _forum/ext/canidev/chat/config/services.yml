@@ -1,5 +1,6 @@
 imports:
     - { resource: controllers.yml }
+    - { resource: tables.yml }
 
 services:
     canidev.chat.listener:
@@ -7,8 +8,8 @@ services:
         arguments:
             - '@canidev.chat.chat'
             - '@config'
-            - '@service_container'
             - '@dbal.conn'
+            - '%tables.canidev.chat%'
         tags:
             - { name: event.listener }
             
@@ -18,7 +19,7 @@ services:
             - '@canidev.chat.chat'
             - '@config'
             - '@dbal.conn'
-            - '@canidev.chat.action_manager'
+            - '%tables.canidev.chat%'
         calls:
             - [set_name, [cron.task.chat_prune]]
         tags:
@@ -31,16 +32,18 @@ services:
             - '@cache.driver'
             - '@config'
             - '@service_container'
+            - '@canidev.core.lib'
             - '@dispatcher'
             - '@dbal.conn'
-            - '@controller.helper'
             - '@language'
             - '@request'
-            - '@template'
+            - '@routing.helper'
+            - '@canidev.core.template'
+            - '@canidev.core.text_parser'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
-            - '%core.table_prefix%'
+            - '%tables.canidev.chat%'
 
     canidev.chat.action_manager:
         class: canidev\chat\libraries\action_manager
@@ -50,13 +53,15 @@ services:
             - '@canidev.chat.chat'
             - '@config'
             - '@service_container'
+            - '@canidev.core.lib'
             - '@dbal.conn'
             - '@dispatcher'
-            - '@controller.helper'
             - '@language'
             - '@log'
             - '@request'
+            - '@routing.helper'
             - '@template'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'

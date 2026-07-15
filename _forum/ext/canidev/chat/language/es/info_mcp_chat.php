@@ -1,12 +1,12 @@
 <?php
-/*
-* info_mcp_chat.php [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.1 01/02/2020
-*
-* @copyright (c) 2020 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'MCP_CHAT_BAN'				=> 'Exclusiones del Chat',
 	
 	'CHAT_BAN_CELL'				=> 'Nombre de Usuario',
@@ -33,13 +33,13 @@ $lang = array_merge($lang, array(
 	'LOG_CHAT_EXCLUSION_ADDED'		=> '<strong>cBB Chat:</strong> Exclusiones añadidas <br />» %s',
 	'LOG_CHAT_EXCLUSION_REMOVED'	=> '<strong>cBB Chat:</strong> Exclusiones eliminadas <br />» %s',
 	'LOG_CHAT_MESSAGE_MOVED'		=> '<strong>cBB Chat:</strong> Mensaje movido de <em>%1$s</em> a <em>%2$s</em><br />» %3$s',
-	'LOG_CHAT_MESSAGES_MOVED'		=> array(
+	'LOG_CHAT_MESSAGES_MOVED'		=> [
 		1 => '<strong>cBB Chat:</strong> 1 mensaje movido de <em>%1$s</em> a <em>%2$s</em>',
 		2 => '<strong>cBB Chat:</strong> %3$d mensajes movidos de <em>%1$s</em> a <em>%2$s</em>',
-	),
+	],
 	'LOG_CHAT_MESSAGE_REMOVED'		=> '<strong>cBB Chat:</strong> Mensaje eliminado <br />» <em>%s</em>',
-	'LOG_CHAT_MESSAGES_REMOVED'		=> array(
+	'LOG_CHAT_MESSAGES_REMOVED'		=> [
 		1 => '<strong>cBB Chat:</strong> 1 mensaje eliminado de <em>%1$s</em>',
 		2 => '<strong>cBB Chat:</strong> %2$d mensajes eliminados de <em>%1$s</em>',
-	),
-));
+	],
+]);

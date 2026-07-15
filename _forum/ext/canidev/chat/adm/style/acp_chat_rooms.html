@@ -1,86 +1,64 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<!-- IF U_BACK --><div><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-<h1>{L_ACP_CHAT_ROOMS}</h1>
-<p>{L_ACP_CHAT_ROOMS_EXPLAIN}</p>
+<h1>{{ lang('ACP_CHAT_ROOMS') }}</h1>
+<p>{{ lang('ACP_CHAT_ROOMS_EXPLAIN') }}</p>
 
-<!-- IF S_ERROR -->
+{% if S_ERROR %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
-		<p>{ERROR_MSG}</p>
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_chat_rooms" name="acp_chat_rooms" method="post" action="{U_ACTION}">
+<form id="acp_chat_rooms" name="acp_chat_rooms" method="post" action="{{ U_ACTION }}">
 
-<!-- IF S_EDIT -->
+{% if S_EDIT %}
 
-<!-- BEGIN options -->
-	<!-- IF options.S_LEGEND -->
-		<!-- IF not options.S_FIRST_ROW --></fieldset><!-- ENDIF -->
-		<fieldset>
-			<legend>{options.LEGEND}</legend>
-	<!-- ELSE -->
-
-		<dl<!-- IF not options.DISPLAY --> class="cbb-helper-hidden"<!-- ENDIF -->>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
-			<dd>{options.CONTENT}</dd>
-			<!-- IF options.KEY eq 'room_users' --><dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd><!-- ENDIF -->
-		</dl>
-
-	<!-- ENDIF -->
+	{% include '@canidev_core/acp_options.html' %}
 	
-	<!-- IF options.S_LAST_ROW --></fieldset><!-- ENDIF -->
-<!-- END options -->
-	
-	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
-	</div>
-	
-<!-- ELSE -->
+{% else %}
 
 	<table cellspacing="1">
 	<tr>
-		<th>{L_ROOM_TITLE}</th>
+		<th>{{ lang('ROOM_TITLE') }}</th>
 	</tr>
 	
-	<!-- IF .roomrow -->
+	{% if roomrow|length %}
 		<tr>
 			<td class="sortable-text">
 			<ul>
-			<!-- BEGIN roomrow -->
-				<li id="row{roomrow.S_ID}">
+			{% for room in roomrow %}
+				<li data-row-id="{{ room.S_ID }}">
 					<table><tr>
-						<td><strong>{roomrow.S_TITLE}</strong> <em>(ID: {roomrow.S_KEY})</em></td>
+						<td><strong>{{ room.S_TITLE }}</strong> <em>(ID: {{ room.S_KEY }})</em></td>
 						<td class="actions-col-2">
-							<a href="{roomrow.U_EDIT}">{ICON_EDIT}</a>
-							<!-- IF roomrow.U_DELETE --><a href="{roomrow.U_DELETE}" class="js-chat-action">{ICON_DELETE}</a><!-- ENDIF -->
+							<a href="{{ room.U_EDIT }}">{{ ICON_EDIT }}</a>
+							{% if room.U_DELETE %}<a href="{{ room.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>{% endif %}
 						</td>
 					</tr></table>
-					<input type="hidden" name="row[]" value="{roomrow.S_ID}" />
+					<input type="hidden" name="row[]" value="{{ room.S_ID }}" />
 				</li>
-			<!-- END roomrow -->
+			{% endfor %}
 			</ul>
 			</td>
 		</tr>
-	<!-- ELSE -->
-		<tr><td class="row3">{L_ACP_NO_ITEMS}</td></tr>
-	<!-- ENDIF -->
+	{% else %}
+		<tr><td class="row3">{{ lang('ACP_NO_ITEMS') }}</td></tr>
+	{% endif %}
 
 	</table>
 
 	<p class="quick">
-		<a class="cbb-btn" href="{U_ROOM_ADD}">{L_ADD_ROOM}</a>
+		<a class="cbb-btn" href="{{ U_ROOM_ADD }}">{{ lang('ADD_ROOM') }}</a>
+		{{ S_FORM_TOKEN }}
+		{{ S_HIDDEN_FIELDS }}
 	</p>
-<!-- ENDIF -->
+{% endif %}
 
-<div>
-	{S_FORM_TOKEN}
-	{S_HIDDEN_FIELDS}
-</div>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}
