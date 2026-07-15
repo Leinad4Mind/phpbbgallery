@@ -79,7 +79,7 @@ class listener implements EventSubscriberInterface
 	* @static
 	* @access public
 	*/
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.page_header_after'	=> 'display_board_announcements',
@@ -116,7 +116,7 @@ class listener implements EventSubscriberInterface
 
 		// Do not continue if announcements are only displayed on the board index,
 		// and the user is not currently viewing the board index
-		if ($this->config['board_announcements_index_only'] && $this->user->page['page_name'] !== "index.{$this->php_ext}")
+		if ($this->config['board_announcements_index_only'] && $this->user->page['page_name'] !== "index.$this->php_ext")
 		{
 			return;
 		}

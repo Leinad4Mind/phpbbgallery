@@ -2,7 +2,7 @@
 /**
 *
 * Board Announcements extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
+* Vietnamese translate by phpBBVietnam <https://phpbbvietnam.com>
 *
 * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -39,10 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Comunicado da Administração',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Gerir comunicado',
-
-	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Configuração do comunicado alteradas</strong>',
+	'BOARD_ANNOUNCEMENT_CLOSE'		=> 'Đóng thông báo',
 ));
