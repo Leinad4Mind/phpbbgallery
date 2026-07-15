@@ -51,14 +51,14 @@ class manager
 		{
 			// If we're refreshing, we have to reset the array first
 			$this->prefixes = [];
-			$sql = 'SELECT id, name, prefix, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE . ' ORDER BY id ASC';
+			$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$this->prefixes[$row['id']] = [
 					'id'				=> $row['id'],
-					'name'				=> $row['name'],
 					'prefix'			=> $row['prefix'],
+					'name'				=> $row['name'],
 					'forums'			=> $row['forums'],
 					'groups'			=> $row['groups'],
 					'on_index'			=> $row['on_index'],

@@ -90,7 +90,7 @@ $lang = array_merge($lang, [
 	'EXTENSION_DEVELOPER'	    	=> 'Developer',
 	'ACP_BBPREFIX_NOTICE_CLOSE'		=> 'Close',
 	
-	'ACP_BBPREFIX_VERSION'			=> '1.0.8',
+	'ACP_BBPREFIX_VERSION'			=> '1.0.9',
 	'ACP_BBPREFIX'					=> 'BBprefix',
     'ACP_LOADING'			    	=> 'Hold On. Loading...'
 ]);

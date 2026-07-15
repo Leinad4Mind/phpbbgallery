@@ -9,8 +9,8 @@
 
 namespace sitesplat\bbprefix\event;
 
-use sitesplat\bbprefix\core\manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 class bbchat_listener implements EventSubscriberInterface
 {
@@ -32,6 +32,7 @@ class bbchat_listener implements EventSubscriberInterface
 		$this->manager->load_prefix_instances(true);
 
 		$topic_id = (int) $event['data']['topic_id'];
-		$event['topic_title'] = $this->manager->load_prefixes_topic($topic_id, '', true) . $event['topic_title'];
+		$topic_title = $this->manager->load_prefixes_topic($topic_id, '', true) . $event['topic_title'];
+		$event['topic_title'] = $topic_title;
 	}
 }
