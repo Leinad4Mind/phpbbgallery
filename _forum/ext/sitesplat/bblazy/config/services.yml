@@ -5,10 +5,3 @@ services:
             - '@template'
         tags:
             - { name: event.listener }
-
-    sitesplat.bblazy.placeholder_listener:
-        class: sitesplat\bblazy\event\placeholder_listener
-        arguments:
-            - '%core.root_path%'
-        tags:
-            - { name: event.listener }
