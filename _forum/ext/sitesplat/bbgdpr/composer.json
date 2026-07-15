@@ -2,8 +2,8 @@
     "name": "sitesplat/bbgdpr",
     "type": "phpbb-extension",
     "description": "BBgdpr aims at making your phpBB board compatible with the GDPR policy, keeping you the Admin out of trouble :-)",
-	"homepage": "http://sitesplat.com",
-    "version": "1.0.0",
+	"homepage": "https://sitesplat.com",
+    "version": "1.0.1",
     "time": "2018-04-23",
 	"keywords": ["phpbb", "extension", "privacy", "user", "premium", "sitesplat", "cookie", "gdpr", "security"],
 	"license": "Proprietary/All rights reserved",
@@ -11,7 +11,7 @@
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
     "require": {
@@ -28,7 +28,8 @@
 		"version-check": {
             "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbgdpr.json"
+            "filename": "bbgdpr.json",
+			"ssl": true
 		}
     }
 }

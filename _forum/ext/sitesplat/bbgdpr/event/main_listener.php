@@ -168,7 +168,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function privacy_redirect()
 	{
-		if (!$this->user->data['is_registered'] || !empty($user->data['is_bot']))
+		if (!$this->user->data['is_registered'] || !empty($user->data['is_bot']) || $this->auth->acl_get('a_'))
 		{
 			return;
 		}

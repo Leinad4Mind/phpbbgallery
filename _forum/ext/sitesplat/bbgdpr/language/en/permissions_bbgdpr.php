@@ -17,6 +17,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACL_U_DELETE_MY_ACCOUNT_POSTS'	=> 'Can delete posts when deleting account',
-	'ACL_U_DELETE_MY_ACCOUNT_PMS'	=> 'Can delete PMs when deleting account',
+	'ACL_U_DELETE_MY_ACCOUNT_POSTS'	=> 'Can delete posts when deleting account (BBgdpr)',
+	'ACL_U_DELETE_MY_ACCOUNT_PMS'	=> 'Can delete PMs when deleting account (BBgdpr)',
 ));

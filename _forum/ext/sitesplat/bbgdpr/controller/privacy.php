@@ -49,6 +49,7 @@ class privacy
 				throw new http_exception(400, 'FORM_INVALID');
 			}
 
+			$url = generate_board_url();
 			if ($this->request->is_set_post('accept'))
 			{
 				$sql = 'UPDATE ' . $this->users_table . '
@@ -56,34 +57,33 @@ class privacy
 					WHERE user_id = ' . $this->user->data['user_id'];
 				$this->db->sql_query($sql);
 
-				redirect(append_sid("{$this->root_path}index.$this->php_ext"));
+				redirect(append_sid("{$url}/index.php"));
 			}
 
-			if ($this->request->is_set_post('reject'))
+			// If it's not "accept", then it's "reject"
+			if ($this->user->data['user_privacy_old_accept_date'])
 			{
-				if ($this->user->data['user_privacy_old_accept_date'])
-				{
-					$sql = 'UPDATE ' . $this->users_table . '
-						SET user_privacy_accept_date = 0
-						WHERE user_id = ' . $this->user->data['user_id'];
-					$this->db->sql_query($sql);
-
-					$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_REJECTED_PRIVACY', false, [
-						'reportee_id'	=> $this->user->data['user_id'],
-						$this->user->format_date($this->user->data['user_privacy_old_accept_date'], 'M j, Y G:i'),
-					]);
-				}
-
-				// Log out
-				redirect(append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=logout', true, $this->user->session_id));
+				$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_REJECTED_PRIVACY', false, [
+					'reportee_id'    => $this->user->data['user_id'],
+					$this->user->format_date($this->user->data['user_privacy_old_accept_date'], 'M j, Y G:i'),
+				]);
 			}
+
+			// reset the accept date when rejected
+			$sql = 'UPDATE ' . $this->users_table . '
+				SET user_privacy_accept_date = 0
+				WHERE user_id = ' . $this->user->data['user_id'];
+			$this->db->sql_query($sql);
+
+			// Log out
+			redirect(append_sid("{$url}/ucp.php", 'mode=logout', true, $this->user->session_id));
 		}
 
 		$this->template->assign_vars(array(
 			'U_ACTION'							=> $this->helper->route('sitesplat_bbgdpr_privacy'),
 			'PRIVACY_POLICY'					=> htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_privacy_policy')),
 			'UPDATE_DATE'						=> $this->user->format_date($this->config['sitesplat_bbgdpr_privacy_update'], 'M j, Y'),
-			'S_DISPLAY_GDPR_ACCEPT'				=> $this->display_privacy_notice(),
+			'ACCEPT_DATE'						=> empty($this->user->data['user_privacy_accept_date']) ? '' : $this->user->format_date($this->user->data['user_privacy_accept_date'], 'M j, Y'),
 			'S_DISPLAY_REACCEPT_COOKIE_BANNER'	=> $this->display_reaccept_cookie_banner(),
 			'U_UCP_PRIVACY_REVIEW'				=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbgdpr-ucp-main_module&mode=review'),
 		));
@@ -94,15 +94,6 @@ class privacy
 		));
 
 		return $this->helper->render('privacy.html', $this->user->lang('BBGDPR_TITLE'));
-	}
-
-	protected function display_privacy_notice()
-	{
-		if ($this->user->data['user_privacy_accept_date'] == 0)
-		{
-			return true;
-		}
-		return false;
 	}
 
 	protected function display_reaccept_cookie_banner()

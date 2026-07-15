@@ -20,6 +20,7 @@ $lang = array_merge($lang, array(
 	// used both in ACP and/or UCP and/or all pages
 	'BBGDPR_TITLE'	        => 'GDPR',
 	'BBGDPR_PRIVACY_POLICY'	=> 'GDPR - General Data Protection Regulation',
+	'BBGDPR_ACCEPTED'	    => 'Accepted on',
 	'PRIVACY_ACCEPT_DATE'	=> 'Privacy policy acceptance date',
 	'COOKIE_ACCEPT_DATE'	=> 'Cookie policy acceptance date',
 	'NOT_ACCEPTED'			=> 'Policy has not been accepted',

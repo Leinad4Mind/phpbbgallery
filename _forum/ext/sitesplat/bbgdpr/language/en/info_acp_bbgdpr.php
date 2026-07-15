@@ -22,7 +22,7 @@ $lang = array_merge($lang, array(
 	'GDPR'						=> 'GDPR',
 	'DELETED_USERS'				=> 'Total of users who deleted their account under GDPR: <strong>%d</strong>.<br />',
 
-	'SS_HELPER_NOTY'	        => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'SS_HELPER_NOTY'	        => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBGDPR_NOTICE'	            => '<div class="phpinfo"><p>The settings for this extension are under the "EXTENSIONS" tab.<br /> There are also other settings in various locations: <br />&#45;Group permission <br />&#45;ACP &#62; Users and Groups: Manage Users <br />&#45;ACP &#62; Maintenance: user logs<br />&#45; UCP &#62; Privacy<br />Finally make sure to review the privacy template right away to make sure it represents correctly your forum.</p></div>',
 	
 	'ACP_GDPR_SETTINGS_SAVED'	=> 'GDPR setting has been saved.',
