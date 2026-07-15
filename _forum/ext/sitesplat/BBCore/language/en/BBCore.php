@@ -9,6 +9,22 @@
 *
 */
 
+// TRANSLATORS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
+
 /**
 * DO NOT CHANGE
 */
@@ -176,7 +192,7 @@ $lang = array_merge($lang, array(
   'GO_TO_SEARCH_ADV'             => 'Return to the advanced search',
   
   'CREATE_ACCOUNT_DISABLED'      => 'Registrations closed',
-  'REGISTRATION_DISABLED'        => 'It looks like the registrations are closed at the moment. It could also be a temporary measure. If you believe this is a possible error, please contact the webmaster and let him know. We apologize for any incovenience this might have caused. Our Privacy Policy and Terms of Use are available below.',
+  'REGISTRATION_DISABLED'        => 'It looks like the registrations are closed at the moment. It could also be a temporary measure. If you believe this is a possible error, please contact the webmaster and let him know. We apologize for any inconvenience this might have caused. Our Privacy Policy and Terms of Use are available below.',
   'CONTACT_WEBMASTER'        	 => 'Contact Webmaster',
   'CONFIRM_QA_EXPLAIN_ALT'       => 'Prove that you are human and answer this question',
   
@@ -211,8 +227,12 @@ $lang = array_merge($lang, array(
   'UCP_REG_USR_PLACEHOLDER'      => 'E.g. John Doe',
   'UCP_REG_EMAIL_PLACEHOLDER'    => 'E.g. john@mail.com',
   'UCP_REG_PSWD_PLACEHOLDER'     => 'E.g. ASDFasdf123',
-  'UCP_REG_CTCHA_PLACEHOLDER'    => 'E.g. golden sky',
-  'SEARCH_USR_PLACEHOLDER'       => 'E.g. GoldTugAnime',
+  'UCP_REG_CTCHA_PLACEHOLDER'    => 'E.g. blue sky',
+  'SEARCH_USR_PLACEHOLDER'       => 'E.g. SiteSplat',
+  'YEAR_MONTH_DAY_PLACEHOLDER'   => 'E.g. 2018-12-22',
+  'IP_PLACEHOLDER'               => 'E.g. 216.161.111.33',
+  'POSTS_PLACEHOLDER'            => 'E.g. 12',
+  'SEARCH_KWDS_PLACEHOLDER'      => 'E.g. cats, or cats+, or cats-, or cats|dogs, or cat*',
   
   'MESSAGE_ENTER_PLACEHOLDER'    => 'Enter your message...',
   'FILE_COMMENT_PLACEHOLDER'     => 'Comment your file',
@@ -228,7 +248,7 @@ $lang = array_merge($lang, array(
   'SELECT_IMAGE'       			 => 'Select image',
   'NOTE'       			         => 'Note',
   'EDIT_DRAFT'       			 => 'Edit Draft',
-  'PM_BALOON_NOTIFICATION'       => 'Enable baloon style notification for new PM (Private Message)',
+  'PM_BALOON_NOTIFICATION'       => 'Enable floating style notification for new PM (Private Message)',
   'DAYS_AGO'       			     => 'Days ago',
   'WORK_IN_PROGRESS'       		 => 'Maintenance',
   'DISABLE_MESSAGE'              => 'Board unavailable',
@@ -259,7 +279,7 @@ $lang = array_merge($lang, array(
   'NO_PMS_INFO'	                 => 'All caught up! Compose new PM?',
   
   'DATES'       			     => 'DATE',
-  'POWERED'       			     => 'Based in',
+  'POWERED'       			     => 'Powered By',
   'HANDCRAFTED'       			 => 'HandCrafted With',
   'BY'       					 => 'By',
 
@@ -347,10 +367,10 @@ $lang = array_merge($lang, array(
   'DMCA'	                     => 'DMCA',
   'TERMS'	                     => 'Terms',
   'ADVERTISE'	                 => 'Advertise',
-  'DEVELOPER'	                 => 'Developer',
-  'LEINAD4MIND'	                 => 'Leinad4Mind',
+  'DEVELOPER'					 => 'Developed by',
+  'LEINAD4MIND'					 => 'Leinad4Mind',
   'SITESPLAT_URL'	             => '<a href="http://sitesplat.com" class="btn btn-default" target="blank">SiteSplat.com</a>',
-  'JOIN_US_TWITTER'	             => 'Join us!',
-  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amzing project and contribuiting to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
+  'JOIN_US_TWITTER'	             => 'Join us on Twitter',
+  'TWEET_EXAMPLE'	             => 'BBOOTS reaches 2000 sales! Thank-you all for supporting this amazing project and contributing to built the SiteSplat Community. What\'s next? stay tuned and Follow Me on Twitter: <a href="#">http://bit.ly/000fefs</a>',
   
 ));

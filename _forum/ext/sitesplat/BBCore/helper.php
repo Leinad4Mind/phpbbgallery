@@ -249,7 +249,7 @@ class helper
 	}
 
 	/**
-	* Move module position by $steps up/down, 3.1 compatabillity
+	* Move module position by $steps up/down, 3.1 compatibility
 	*/
 	function move_module_by($module_row, $module_class, $action = 'move_up', $steps = 1)
 	{
@@ -282,7 +282,7 @@ class helper
 
 		/**
 		* $left_id and $right_id define the scope of the nodes that are affected by the move.
-		* $diff_up and $diff_down are the values to substract or add to each node's left_id
+		* $diff_up and $diff_down are the values to subtract or add to each node's left_id
 		* and right_id in order to move them up or down.
 		* $move_up_left and $move_up_right define the scope of the nodes that are moving
 		* up. Other nodes in the scope of ($left_id, $right_id) are considered to move down.
