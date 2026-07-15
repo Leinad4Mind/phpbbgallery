@@ -2,13 +2,17 @@
     "name": "rmcgirr83/topicdescription",
     "type": "phpbb-extension",
     "description": "Add the possibility of being able to describe topics, in posting page. Based on permissions per forum.  Descriptions are displayed in viewtopic, viewforum, search results (only display results as topic) and MCP forum.",
-    "version": "1.0.4",
+    "version": "1.0.4-L4M",
     "time": "2018-02-19",
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "Richard McGirr",
+            "name": "Leinad4Mind",
             "role": "Developer"
+        },
+        {
+            "name": "Richard McGirr",
+            "role": "Original Developer"
         }
     ],
     "require": {
@@ -17,7 +21,7 @@
         "composer/installers": "~1.0.0"
     },
     "extra": {
-        "display-name": "Topic Description",
+        "display-name": "Topic Description Searchable",
         "soft-require": {
             "phpbb/phpbb": ">=3.1.6"
         },

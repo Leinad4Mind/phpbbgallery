@@ -27,6 +27,17 @@ class v1 extends \phpbb\db\migration\migration
 		);
 	}
 
+	public function revert_schema()
+	{
+		return array(
+			'drop_columns' => array(
+				$this->table_prefix . 'topics'	=> array(
+					'topic_desc',
+				),
+			),
+		);
+	}
+
 	public function update_data()
 	{
 		return array(
