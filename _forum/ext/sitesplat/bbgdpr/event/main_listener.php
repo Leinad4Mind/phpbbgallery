@@ -37,7 +37,7 @@ class main_listener implements EventSubscriberInterface
 			'core.ucp_register_data_after'						=> 'check_reg_data',
 			'core.ucp_register_user_row_after'					=> 'add_acceptance_date',
 			'core.ucp_register_modify_template_data'			=> 'template_reg_data',
-			'core.user_setup_after'								=> array(
+			'core.update_session_after'								=> array(
 				'privacy_redirect',
 				999, // Needed to allow this to run before any other extension.
 			),
@@ -201,7 +201,7 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		// privacy page itself
-		if (substr($url, -12) == 'privacy.html')
+		if (substr($url, -7) == 'privacy')
 		{
 			return true;
 		}

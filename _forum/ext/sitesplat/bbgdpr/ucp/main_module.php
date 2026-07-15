@@ -174,7 +174,9 @@ class main_module
 						while ($row = $this->db->sql_fetchrow($result))
 						{
 							$post_dir = $posts_dir . '/' . $row['forum_id'] . '/' . $row['topic_id'];
-							@mkdir($post_dir, 0755, true);
+							if (!file_exists($post_dir)) {
+								@mkdir($post_dir, 0755, true);
+							}
 
 							$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 							$contents = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, false);

@@ -83,7 +83,7 @@ class privacy
 			'U_ACTION'							=> $this->helper->route('sitesplat_bbgdpr_privacy'),
 			'PRIVACY_POLICY'					=> htmlspecialchars_decode($this->config_text->get('sitesplat_bbgdpr_privacy_policy')),
 			'UPDATE_DATE'						=> $this->user->format_date($this->config['sitesplat_bbgdpr_privacy_update'], 'M j, Y'),
-			'ACCEPT_DATE'						=> empty($this->user->data['user_privacy_accept_date']) ? '' : $this->user->format_date($this->user->data['user_privacy_accept_date'], 'M j, Y'),
+			'ACCEPT_DATE'						=> empty($this->user->data['user_privacy_accept_date']) ? '' : $this->user->format_date($this->user->data['user_privacy_accept_date'], 'M j, Y', true),
 			'S_DISPLAY_REACCEPT_COOKIE_BANNER'	=> $this->display_reaccept_cookie_banner(),
 			'U_UCP_PRIVACY_REVIEW'				=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbgdpr-ucp-main_module&mode=review'),
 		));
