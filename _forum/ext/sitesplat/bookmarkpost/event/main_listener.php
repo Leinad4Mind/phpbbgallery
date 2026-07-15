@@ -94,12 +94,12 @@ class main_listener implements EventSubscriberInterface
 		$post_row = $event['post_row'];
 
 		$command = 'bookmark';
-		if ($event['row']['post_bookmark'])
+		if (!empty($event['row']['post_bookmark']))
 		{
 			$command = 'unbookmark';
 		}
 
-		$post_row['S_BOOKMARKED_POST'] = ($event['row']['post_bookmark']) ? true : false;
+		$post_row['S_BOOKMARKED_POST'] = !empty($event['row']['post_bookmark']) ? true : false;
 		$post_row['L_BOOKMARK_POST'] = ($command == 'bookmark') ? $this->user->lang('BOOKMARK_POST') : $this->user->lang('UNBOOKMARK_POST');
 		$post_row['U_POST_BOOKMARK'] = $this->controller_helper->route('sitesplat_bookmarkpost_controller_' . $command, array('post_id' => $event['row']['post_id']));
 
@@ -111,7 +111,7 @@ class main_listener implements EventSubscriberInterface
 		$bookmarked_posts = 0;
 		foreach($event['rowset'] as $post)
 		{
-			if ($post['post_bookmark'])
+			if (!empty($post['post_bookmark']))
 			{
 				$bookmarked_posts++;
 			}
