@@ -294,10 +294,12 @@ class similar_topics
 				$base_url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id);
 
 				$topic_row = array(
-					'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-					'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
-					'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
-					'LAST_POST_AUTHOR_FULL'	=> get_username_string('full', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
+					'TOPIC_AUTHOR_FULL'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
+					'FIRST_POST_TIME'			=> $this->user->format_date($row['topic_time']),
+					'FIRST_POST_TIME_RFC3339'	=> gmdate(DATE_RFC3339, $row['topic_time']),
+					'LAST_POST_TIME'			=> $this->user->format_date($row['topic_last_post_time']),
+					'LAST_POST_TIME_RFC3339'	=> gmdate(DATE_RFC3339, $row['topic_last_post_time']),
+					'LAST_POST_AUTHOR_FULL'		=> get_username_string('full', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
 
 					'TOPIC_REPLIES'			=> $replies,
 					'TOPIC_VIEWS'			=> $row['topic_views'],
@@ -319,6 +321,11 @@ class similar_topics
 					'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 					'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
 					'S_HAS_POLL'			=> (bool) $row['poll_start'],
+
+					'S_POST_ANNOUNCE'		=> (bool) ($row['topic_type'] == POST_ANNOUNCE),
+					'S_POST_GLOBAL'			=> (bool) ($row['topic_type'] == POST_GLOBAL),
+					'S_POST_STICKY'			=> (bool) ($row['topic_type'] == POST_STICKY),
+					'S_TOPIC_LOCKED'		=> (bool) ($row['topic_status'] == ITEM_LOCKED),
 
 					'U_NEWEST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;view=unread') . '#unread',
 					'U_LAST_POST'			=> append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'f=' . $similar_forum_id . '&amp;t=' . $similar_topic_id . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
