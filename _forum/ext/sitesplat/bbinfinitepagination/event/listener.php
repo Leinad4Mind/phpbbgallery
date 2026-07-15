@@ -20,7 +20,6 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.acp_board_config_edit_add'	=> 'add_fx_setting',
-
 			'core.page_header_after'	=> 'fx',
 		);
 	}
@@ -34,6 +33,10 @@ class listener implements EventSubscriberInterface
 
 	public function add_fx_setting($event)
 	{
+		if ($event['mode'] != 'post') {
+			return;
+		}
+
 		$this->language->add_lang('acp', 'sitesplat/bbinfinitepagination');
 
 		$display_vars = $event['display_vars'];

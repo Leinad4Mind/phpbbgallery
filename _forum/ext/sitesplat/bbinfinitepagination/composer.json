@@ -2,7 +2,7 @@
     "name": "sitesplat/bbinfinitepagination",
     "type": "phpbb-extension",
     "description": "Loads new topics, posts and members automatically after scrolling to the bottom.",
-    "homepage": "http://sitesplat.com",
+    "homepage": "https://sitesplat.com",
 	"version": "1.0.0",
 	"keywords": ["sitesplat", "phpbb", "extension", "ui", "cosmetic", "pagination"],
 	"license": "Proprietary/All rights reserved",
@@ -10,7 +10,7 @@
 		{
 			"name": "SiteSplat",
 			"email": "info@sitesplat.com",
-			"homepage": "http://sitesplat.com"
+			"homepage": "https://sitesplat.com"
 		}
 	],
     "support": {
@@ -26,9 +26,10 @@
             "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
         },
 		"version-check": {
-            "host": "www.sitesplat.com",
+            "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbinfinitepagination.json"
+            "filename": "bbinfinitepagination.json",
+			"ssl": true
 		}
     }
 }

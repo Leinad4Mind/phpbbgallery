@@ -1,0 +1,7 @@
+{% if (FORUM_NAME and SITESPLAT_BBINFINITEPAGINATION_VIEWFORUM) or (TOPIC_TITLE and SITESPLAT_BBINFINITEPAGINATION_VIEWTOPIC) or (S_VIEWONLINE and SITESPLAT_BBINFINITEPAGINATION_VIEWONLINE) or (memberrow and SITESPLAT_BBINFINITEPAGINATION_MEMBERLIST) or (searchresults and SITESPLAT_BBINFINITEPAGINATION_SEARCH) %}
+	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinite-scroll.pkgd.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/anime.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/loader_fx.js' %}
+	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinitescroll.min.js' %}
+	{% INCLUDEJS '@sitesplat_bbinfinitepagination/js/infinitescroll_options.min.js' %}
+{% endif %}
