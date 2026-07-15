@@ -1,27 +1,21 @@
 {
-    "name": "rmcgirr83/topicdescription",
-    "type": "phpbb-extension",
-    "description": "Add the possibility of being able to describe topics, in posting page. Based on permissions per forum.  Descriptions are displayed in viewtopic, viewforum, search results (only display results as topic) and MCP forum.",
-    "version": "1.0.4",
-    "time": "2018-02-19",
-    "license": "GPL-2.0",
-    "authors": [
-        {
-            "name": "Leinad4Mind",
-            "role": "Developer"
-        },
-        {
-            "name": "Richard McGirr",
-            "role": "Original Developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.3",
-        "phpbb/phpbb": ">=3.1.6",
-        "composer/installers": "~1.0.0"
-    },
+	"name": "rmcgirr83/topicdescription",
+	"type": "phpbb-extension",
+	"description": "Add the possibility of being able to describe topics, in posting page. Based on permissions per forum.  Descriptions are displayed in viewtopic, viewforum, search results (only display results as topic) and MCP forum.",
+	"version": "1.0.4",
+	"time": "2018-02-19",
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Richard McGirr",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
     "extra": {
-        "display-name": "Topic Description Searchable",
+        "display-name": "Topic Description",
         "soft-require": {
             "phpbb/phpbb": ">=3.1.6"
         },
