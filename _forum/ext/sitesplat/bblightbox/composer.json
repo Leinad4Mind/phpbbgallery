@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "The perfect Lightbox for a phpBB forum.",
 	"homepage": "https://sitesplat.com",
-	"version": "1.0.4",
+	"version": "1.0.6",
 	"keywords": ["phpbb", "extension", "premium", "cosmetic", "SiteSplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
