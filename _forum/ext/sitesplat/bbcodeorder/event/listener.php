@@ -52,15 +52,13 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 	{
 		$sql_ary = $event['sql_ary'];
 
-		// phpBB SUX!
-		$phpbbsux = strpos($sql_ary['SELECT'], 'b.bbcode_match') ? " '' AS bbcode_match," : '';
-
-		$sql_ary['SELECT'] .= ', b.bbcode_order, b.bbcode_icon, b.bbcode_group, FALSE as bbcode_default';
+		$sql_ary['SELECT'] = "b.bbcode_id, b.bbcode_tag, b.bbcode_helpline, '//' AS bbcode_match, b.bbcode_order, b.bbcode_icon, b.bbcode_group, FALSE as bbcode_default";
 		$sql_ary['WHERE'] .= " UNION ALL
-			SELECT db.bbcode_id, db.bbcode_tag, '' as bbcode_helpline,{$phpbbsux} db.bbcode_order, db.bbcode_icon, '' as bbcode_group, TRUE as bbcode_default
+			SELECT db.bbcode_id, db.bbcode_tag, '' as bbcode_helpline, '//' AS bbcode_match, db.bbcode_order, db.bbcode_icon, '' as bbcode_group, TRUE as bbcode_default
 			FROM {$this->default_bbcodes_table} db
 			WHERE db.display_on_posting = 1";
 		$sql_ary['ORDER_BY'] = 'bbcode_order, bbcode_id';
+
 		$event['sql_ary'] = $sql_ary;
 	}
 
@@ -68,6 +66,7 @@ class listener implements \Symfony\Component\EventDispatcher\EventSubscriberInte
 	{
 		$custom_tags = $event['custom_tags'];
 
+		$custom_tags['BBCODE_NAME'] = "'[{$event['row']['bbcode_tag']}]', '[/" . str_replace('=', '', $event['row']['bbcode_tag']) . "]'";
 		$custom_tags['BBCODE_ICON'] = $event['row']['bbcode_icon'];
 		$custom_tags['S_BBCODE_ALLOWED'] = (!empty($event['row']['bbcode_group'])) ? $this->user_in_bbcode_group($event['row']['bbcode_group']) : true;
 
