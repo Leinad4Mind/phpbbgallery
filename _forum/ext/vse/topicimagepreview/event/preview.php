@@ -3,7 +3,7 @@
  *
  * Topic Image Preview. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2017, Matt Friedman
+ * @copyright (c) 2017, 2020, Matt Friedman
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -11,8 +11,7 @@
 namespace vse\topicimagepreview\event;
 
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
-use phpbb\user;
+use phpbb\template\template;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -23,11 +22,11 @@ class preview implements EventSubscriberInterface
 	/** @var config */
 	protected $config;
 
-	/** @var driver_interface */
-	protected $db;
+	/** @var helper */
+	public $helper;
 
-	/** @var user */
-	protected $user;
+	/** @var template */
+	protected $template;
 
 	/**
 	 * {@inheritdoc}
@@ -35,166 +34,112 @@ class preview implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
+			'core.page_footer'						=> 'init_tpl_vars',
 			// Viewforum events
-			'core.viewforum_modify_topics_data'		=> 'update_row_data',
-			'core.viewforum_modify_topicrow'		=> 'update_tpl_data',
+			'core.viewforum_modify_topics_data'		=> 'viewforum_row',
+			'core.viewforum_modify_topicrow'		=> 'viewforum_tpl',
 			// Search events
-			'core.search_modify_rowset'				=> 'update_row_data',
-			'core.search_modify_tpl_ary'			=> 'update_tpl_data',
+			'core.search_modify_rowset'				=> 'searchresults_row',
+			'core.search_modify_tpl_ary'			=> 'searchresults_tpl',
 			// Precise Similar Topics events
-			'vse.similartopics.modify_rowset'		=> 'update_row_data',
-			'vse.similartopics.modify_topicrow'		=> 'update_tpl_data',
+			'vse.similartopics.modify_rowset'		=> 'similartopics_row',
+			'vse.similartopics.modify_topicrow'		=> 'similartopics_tpl',
 		];
 	}
 
 	/**
 	 * Constructor
 	 *
-	 * @param config           $config
-	 * @param driver_interface $db
-	 * @param user             $user
+	 * @param config $config
+	 * @param helper $helper
 	 */
-	public function __construct(config $config, driver_interface $db, user $user)
+	public function __construct(config $config, helper $helper, template $template)
 	{
 		$this->config = $config;
-		$this->db = $db;
-		$this->user = $user;
+		$this->helper = $helper;
+		$this->template = $template;
 	}
 
 	/**
-	 * Add post text containing images to topic row data.
+	 * Set some template variables for T.I.P.
+	 */
+	public function init_tpl_vars()
+	{
+		$this->template->assign_vars([
+			'S_TOPIC_IMAGE_PREVIEW'		=> $this->helper->is_preview(),
+			'TOPIC_IMAGE_PREVIEW_DIM'	=> $this->config['vse_tip_dim'],
+		]);
+	}
+
+	/**
+	 * Update viewforum row
 	 *
 	 * @param \phpbb\event\data $event The event object
-	 *
-	 * @return void
 	 */
-	public function update_row_data($event)
+	public function viewforum_row($event)
 	{
-		if (empty($this->user->data['user_vse_tip']))
-		{
-			return;
-		}
-
-		// Use topic_list from event, otherwise create one based on the rowset
-		$topic_list = $event->offsetExists('topic_list') ? $event['topic_list'] : array_keys($event['rowset']);
-
-		if (count($topic_list))
-		{
-			$event['rowset'] = $this->query_images($topic_list, $event['rowset']);
-		}
+		$this->helper->update_row_data($event);
 	}
 
 	/**
-	 * Add image previews to the template data.
+	 * Update viewforum template
 	 *
 	 * @param \phpbb\event\data $event The event object
-	 *
-	 * @return void
 	 */
-	public function update_tpl_data($event)
+	public function viewforum_tpl($event)
 	{
-		// Check if we have any post text or images
-		if (empty($this->user->data['user_vse_tip']) || empty($event['row']['post_text']) || !preg_match('/^<[r][ >]/', $event['row']['post_text']) || strpos($event['row']['post_text'], '<ALBUM ') === false)
-		{
-			return;
-		}
-
-		// Send the image string to the template
-		$block = $event->offsetExists('topic_row') ? 'topic_row' : 'tpl_ary';
-		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES' => $this->extract_images($event['row']['post_text'])]);
-		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES_BIG' => $this->extract_images_2($event['row']['post_text'])]);
+		$this->helper->update_tpl_data($event);
 	}
 
 	/**
-	 * Run an SQL query on a group of topics, and find the newest (or oldest)
-	 * post with [ALBUM] images. Then update the topic's row set array to include
-	 * the post's text in the cases where images were found.
+	 * Update search results topics row
 	 *
-	 * @param array $topic_list An array of topic ids
-	 * @param array $rowset     The row set of topic data
-	 *
-	 * @return array The updated row set of topic data which now includes
-	 *               the post_text of a post containing images.
+	 * @param \phpbb\event\data $event The event object
 	 */
-	protected function query_images(array $topic_list, array $rowset)
+	public function searchresults_row($event)
 	{
-		$sql_array = [];
-		foreach ($topic_list as $topic_id)
+		if ($event['show_results'] === 'topics' && $this->config->offsetGet('vse_tip_srt'))
 		{
-			$stmt = '(SELECT topic_id, post_text 
-				FROM ' . POSTS_TABLE . '
-				WHERE topic_id = ' . (int) $topic_id . '
-					AND post_visibility = ' . ITEM_APPROVED . '
-					AND post_text ' . $this->db->sql_like_expression('<r>' . $this->db->get_any_char() . '<ALBUM ' . $this->db->get_any_char()) . '
-				ORDER BY post_time ' . ($this->config->offsetGet('vse_tip_new') ? 'DESC' : 'ASC') . '
-				LIMIT 1)';
-
-			// SQLite3 doesn't like ORDER BY with UNION ALL, so treat $stmt as derived table
-			if ($this->db->get_sql_layer() === 'sqlite3')
-			{
-				$stmt = "SELECT * FROM $stmt AS d";
-			}
-
-			$sql_array[] = $stmt;
+			$this->helper->update_row_data($event);
 		}
-		$sql = implode(' UNION ALL ', $sql_array);
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$rowset[$row['topic_id']]['post_text'] = $row['post_text'];
-		}
-		$this->db->sql_freeresult($result);
-
-		return $rowset;
 	}
 
 	/**
-	 * Extract images from a post and return them as HTML image tags.
+	 * Update search results topics template
 	 *
-	 * @param string $post Post text from the database.
-	 *
-	 * @return string An string of HTML ALBUM tags.
+	 * @param \phpbb\event\data $event The event object
 	 */
-	protected function extract_images($post)
+	public function searchresults_tpl($event)
 	{
-		// Extract the images
-		$images = [];
-		$dom = new \DOMDocument;
-		$dom->loadXML($post);
-		$xpath = new \DOMXPath($dom);
-		foreach ($xpath->query('//ALBUM[not(ancestor::ALBUM)]/@content') as $image)
+		if ($event['show_results'] === 'topics' && $this->config->offsetGet('vse_tip_srt'))
 		{
-			$images[] = $image->textContent;
+			$this->helper->update_tpl_data($event);
 		}
-
-		// Create a string of images
-		return implode(' ', array_map(function ($image) {
-			return "<img decoding='sync' src='/forum/app.php/gallery/image/{$image}/mini' alt='' style='max-width:{$this->config['vse_tip_dim_min']}px; max-height:{$this->config['vse_tip_dim_min']}px;' />";
-		}, array_slice($images, 0, (int) $this->config['vse_tip_num'], true)));
 	}
 
 	/**
-	 * Extract images from a post and return them as HTML image tags.
+	 * Update similar topics row
 	 *
-	 * @param string $post Post text from the database.
-	 *
-	 * @return string An string of HTML ALBUM tags.
+	 * @param \phpbb\event\data $event The event object
 	 */
-	protected function extract_images_2($post)
+	public function similartopics_row($event)
 	{
-		// Extract the images
-		$images = [];
-		$dom = new \DOMDocument;
-		$dom->loadXML($post);
-		$xpath = new \DOMXPath($dom);
-		foreach ($xpath->query('//ALBUM[not(ancestor::ALBUM)]/@content') as $image)
+		if ($this->config->offsetGet('vse_tip_pst'))
 		{
-			$images[] = $image->textContent;
+			$this->helper->update_row_data($event);
 		}
+	}
 
-		// Create a string of images
-		return implode(' ', array_map(function ($image) {
-			return "<img decoding='sync' src='/forum/app.php/gallery/image/{$image}/source' alt='' style='max-width:{$this->config['vse_tip_dim_max']}px; max-height:{$this->config['vse_tip_dim_max']}px;' />";
-		}, array_slice($images, 0, (int) $this->config['vse_tip_num'], true)));
+	/**
+	 * Update similar topics template
+	 *
+	 * @param \phpbb\event\data $event The event object
+	 */
+	public function similartopics_tpl($event)
+	{
+		if ($this->config->offsetGet('vse_tip_pst'))
+		{
+			$this->helper->update_tpl_data($event);
+		}
 	}
 }

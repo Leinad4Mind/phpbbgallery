@@ -73,7 +73,7 @@ class helper
 		if (!$this->user_allowed())
 		{
 			return;
-		}
+		} 
 
 		// Use topic_list from event, otherwise create one based on the rowset
 		$topic_list = $event->offsetExists('topic_list') ? $event['topic_list'] : array_keys($event['rowset']);
@@ -100,14 +100,16 @@ class helper
 
 		// Send the image string to the template
 		$block = $event->offsetExists('topic_row') ? 'topic_row' : 'tpl_ary';
-		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES' => $this->extract_images($event['row']['post_text'])]);
+		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES' => $this->extract_images($event['row']['post_text']), 'TOPIC_IMAGES_SIZE_MIN' => (int) $this->config['vse_tip_dim_min'], 'TOPIC_IMAGES_SIZE_MAX' => (int) $this->config['vse_tip_dim_max']]);
+		
+		
 
 		$this->preview = true;
 	}
 
 	/**
 	 * Run an SQL query on a group of topics, and find the newest (or oldest)
-	 * post with [IMG] images. Then update the topic's row set array to include
+	 * post with [ALBUM] images. Then update the topic's row set array to include
 	 * the post's text in the cases where images were found.
 	 *
 	 * @param array $topic_list An array of topic ids
@@ -120,22 +122,26 @@ class helper
 	{
 		$sql_array = [];
 		$direction = $this->config->offsetGet('vse_tip_new') ? 'DESC' : 'ASC';
-		$like_expression = $this->db->sql_like_expression('<r>' . $this->db->get_any_char() . '<IMG ' . $this->db->get_any_char());
+		$like_expression = $this->db->sql_like_expression('<r>' . $this->db->get_any_char() . '<ALBUM ' . $this->db->get_any_char());
 		$is_sqlite3 = $this->db->get_sql_layer() === 'sqlite3';
 		$is_mssql = strpos($this->db->get_sql_layer(), 'mssql') === 0;
+		
+
 		foreach ($topic_list as $topic_id)
 		{
-			if (!$this->forum_allowed($rowset[$topic_id]['forum_id']))
+			if (!isset($rowset[$topic_id]) || !$this->forum_allowed($rowset[$topic_id]['forum_id']))
 			{
 				continue;
 			}
 
+			$first_post_id = (int) $rowset[$topic_id]['topic_first_post_id'];
+
 			$stmt = '(SELECT ' . ($is_mssql ? 'TOP 1 ' : '') . 'topic_id, post_text
 				FROM ' . POSTS_TABLE . '
-				WHERE topic_id = ' . (int) $topic_id . '
-					AND post_visibility = ' . ITEM_APPROVED . '
-					AND post_text ' . $like_expression . '
-				ORDER BY post_time ' . $direction . ($is_mssql ? '' : ' LIMIT 1') . ')';
+				WHERE post_text ' . $like_expression . '
+					AND topic_id = ' . (int) $topic_id . '
+					AND post_id = ' . $first_post_id . ')';
+				// ORDER BY post_time ' . $direction . ($is_mssql ? '' : ' LIMIT 1') . ')';
 
 			// SQLite3 and mssql don't like ORDER BY with UNION ALL, so treat $stmt as derived table
 			if ($is_sqlite3 || $is_mssql)
@@ -174,14 +180,14 @@ class helper
 		$dom = new \DOMDocument;
 		$dom->loadXML($post);
 		$xpath = new \DOMXPath($dom);
-		foreach ($xpath->query('//IMG[not(ancestor::IMG)]/@src') as $image)
+		foreach ($xpath->query('//ALBUM[not(ancestor::ALBUM)]/@content') as $image)
 		{
 			$images[] = $image->textContent;
 		}
 
-		return array_slice($images, 0, (int) $this->config['vse_tip_num'], true);
+		// Create a string of images
+		return array_slice($images, 0, (int) $this->config['vse_tip_dim_min'], true);
 	}
-
 	/**
 	 * Is the forum allowed to show topic image previews
 	 *

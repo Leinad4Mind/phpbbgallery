@@ -3,7 +3,7 @@
  *
  * Topic Image Preview. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2017, Matt Friedman
+ * @copyright (c) 2017, 2020, Matt Friedman
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -29,4 +29,6 @@ $lang = array_merge($lang, [
 	'ACP_TIP_DISPLAY_DIM_MIN'		=> 'Maximum image size for the small image preview',
 	'ACP_TIP_DISPLAY_DIM_MAX'		=> 'Maximum image size for the big popup image preview',
 	'ACP_TIP_DISPLAY_DIM_EXPLAIN'	=> 'Maximum width/height of each image in the preview.',
+	'ACP_TIP_DISPLAY_SRT'			=> 'Display in search results topics',
+	'ACP_TIP_DISPLAY_PST'			=> 'Display in similar topics',
 ]);

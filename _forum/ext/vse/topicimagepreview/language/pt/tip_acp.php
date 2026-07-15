@@ -29,4 +29,6 @@ $lang = array_merge($lang, [
 	'ACP_TIP_DISPLAY_DIM_MIN'		=> 'Maximum image size for the small image preview',
 	'ACP_TIP_DISPLAY_DIM_MAX'		=> 'Maximum image size for the big popup image preview',
 	'ACP_TIP_DISPLAY_DIM_EXPLAIN'	=> 'Maximum width/height of each image in the preview.',
+	'ACP_TIP_DISPLAY_SRT'			=> 'Display in search results topics',
+	'ACP_TIP_DISPLAY_PST'			=> 'Display in similar topics',
 ]);

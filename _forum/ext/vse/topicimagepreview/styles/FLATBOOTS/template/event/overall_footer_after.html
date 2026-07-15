@@ -1,0 +1,14 @@
+{% if S_TOPIC_IMAGE_PREVIEW %}
+	{% if not definition.INCLUDED_OPENTIPJS %}
+		{% INCLUDEJS '@vse_topicimagepreview/js/opentip-jquery.min.js' %}
+		{% DEFINE INCLUDED_OPENTIPJS = true %}
+	{% endif %}
+
+	<script>
+		head.ready(function () {
+			$(function() {
+				$("[data-ot]").closest("dt").removeAttr("title");
+			});
+		});
+	</script>
+{% endif %}
