@@ -63,6 +63,9 @@ class index
 	/* @var string */
 	protected $php_ext;
 
+	const RRC_MODE_RECENT_COMMENTS = 4;
+	const RRC_MODE_RANDOM_IMAGES   = 2;
+	const RRC_MODE_RECENT_IMAGES   = 1;
 	/**
 	 * Constructor
 	 *
@@ -119,7 +122,7 @@ class index
 	public function base()
 	{
 		// Display login box for guests and an error for users
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$get_albums = $this->gallery_auth->acl_album_ids('a_list');
 		if (empty($get_albums) && !$this->user->data['is_registered'])
 		{
@@ -151,6 +154,15 @@ class index
 					$action_image = false;
 				break;
 			}
+
+			$alphabet = range('a', 'z');
+			$alpha_links = [];
+			foreach ($alphabet as $char)
+			{
+				$alpha_links[] = '<a href="' . append_sid($this->helper->route('phpbbgallery_core_personal'), 'first_char=' . $char) . '">' . strtoupper($char) . '</a>';
+			}
+			$alpha_links[] = '<a href="' . append_sid($this->helper->route('phpbbgallery_core_personal'), 'first_char=other') . '">#</a>';
+
 			$this->template->assign_vars(array(
 				'S_USERS_PERSONAL_GALLERIES'	=> true,
 				'U_USERS_PERSONAL_GALLERIES' => $this->helper->route('phpbbgallery_core_personal'),
@@ -161,6 +173,7 @@ class index
 				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', array('image_id' => $last_image['image_id'])),
 				'U_TIME'	=> ($last_image['image_id'] > 0) ?  $this->user->format_date($last_image['image_time']) : false,
 				'U_UPLOADER'	=> ($last_image['image_id'] > 0) ? get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']) : false,
+				'ALPHABET_NAVIGATION' => implode('&nbsp;', $alpha_links),
 			));
 			$this->gallery_user->set_user_id($this->user->data['user_id']);
 			$personal_album = $this->gallery_user->get_own_root_album();
@@ -178,21 +191,11 @@ class index
 		if ($this->gallery_config->get('rrc_gindex_mode'))
 		{
 			$config_value = $this->gallery_config->get('rrc_gindex_mode');
-			$recent_comments = $random_images = $recent_images = false;
-			if ($config_value >= 4)
-			{
-				$recent_comments = true;
-				$config_value = $config_value - 4;
-			}
-			if ($config_value >= 2)
-			{
-				$random_images = true;
-				$config_value = $config_value - 2;
-			}
-			if ($config_value == 1)
-			{
-				$recent_images = true;
-			}
+
+			$recent_comments = ($config_value & self::RRC_MODE_RECENT_COMMENTS) !== 0;
+			$random_images   = ($config_value & self::RRC_MODE_RANDOM_IMAGES) !== 0;
+			$recent_images   = ($config_value & self::RRC_MODE_RECENT_IMAGES) !== 0;
+
 			// Now before build random and recent ... let's check if we have images that can build it
 			if ($recent_images)
 			{
@@ -215,11 +218,11 @@ class index
 					'S_RECENT_COMMENTS' => $this->helper->route('phpbbgallery_core_search_commented'),
 					'COMMENTS_EXPAND'	=> $this->gallery_config->get('rrc_gindex_comments') ? true : false,
 				));
-				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0);
+				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0, false);
 			}
 		}
 		$this->display_legend();
-		$this->display_brithdays();
+		$this->display_birthdays();
 		$this->assign_dropdown_links('phpbbgallery_core_index');
 
 		$this->template->assign_block_vars('navlinks', array(
@@ -227,7 +230,7 @@ class index
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		));
 
-		return $this->helper->render('gallery/index_body.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/index_body.html', $this->language->lang('GALLERY'), 200, $this->gallery_config->get('disp_whoisonline'));
 	}
 
 	/**
@@ -240,7 +243,7 @@ class index
 	public function personal($page)
 	{
 		// Display login box for guests and an error for users
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$get_albums = $this->gallery_auth->acl_album_ids('a_list');
 		if (empty($get_albums) && !$this->user->data['is_registered'])
 		{
@@ -295,7 +298,7 @@ class index
 
 	protected function assign_dropdown_links($base_route)
 	{
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Now let's get display options
 		$show_comments = $show_random = $show_recent = false;
@@ -386,7 +389,7 @@ class index
 		));
 	}
 
-	protected function display_brithdays()
+	protected function display_birthdays()
 	{
 		// Generate birthday list if required ...
 		if ($this->config['load_birthdays'] && $this->config['allow_birthdays'] && $this->config['phpbb_gallery_disp_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
@@ -398,7 +401,7 @@ class index
 			$time = $this->user->create_datetime();
 			$now = phpbb_gmgetdate($time->getTimestamp() + $time->getOffset());
 
-			// Display birthdays of 29th february on 28th february in non-leap-years
+			// Display birthdays of 29th February on 28th February in non-leap-years
 			$leap_year_birthdays = '';
 			if ($now['mday'] == 28 && $now['mon'] == 2 && !$time->format('L'))
 			{

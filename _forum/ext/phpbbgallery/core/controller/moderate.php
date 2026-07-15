@@ -3,7 +3,7 @@
 /**
 *
 * @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
+* @copyright (c) 2014 nickvergessen | 2025 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -132,14 +132,14 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate
+	 *    Route: gallery/moderate
 	 *
 	 * @param int $album_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function base($album_id = 0)
 	{
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
@@ -182,7 +182,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/approve
+	 *    Route: gallery/moderate/approve
 	 *
 	 * @param $page
 	 * @param $album_id
@@ -201,7 +201,7 @@ class moderate
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
@@ -252,7 +252,7 @@ class moderate
 						$this->moderate->delete_images($delete_array);
 						$count = $count + count($delete_array);
 					}
-					$message = $this->language->lang('WAITING_DISPPROVED_IMAGE', $count);
+					$message = $this->language->lang('WAITING_DISAPPROVED_IMAGE', $count);
 					$this->url->meta_refresh(3, $back_link);
 					trigger_error($message);
 				}
@@ -286,7 +286,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/actions
+	 *    Route: gallery/moderate/actions
 	 *
 	 * @param $page
 	 * @param $album_id
@@ -297,7 +297,7 @@ class moderate
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
@@ -329,7 +329,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/reports
+	 *    Route: gallery/moderate/reports
 	 *
 	 * @param $page
 	 * @param $album_id
@@ -369,7 +369,7 @@ class moderate
 				confirm_box(false, $this->language->lang('REPORTS_A_CLOSE2_CONFIRM'), $s_hidden_fields);
 			}
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
@@ -424,6 +424,7 @@ class moderate
 		{
 			if (confirm_box(true) || $moving_target)
 			{
+				$message = '';
 				switch ($action)
 				{
 					case 'approve':
@@ -431,32 +432,24 @@ class moderate
 						$this->album->update_info($album_id);
 
 						$message = $this->language->lang('WAITING_APPROVED_IMAGE', count($actions_array));
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
 					break;
 					case 'unapprove':
 						$this->image->unapprove_images($actions_array, $album_id);
 						$this->album->update_info($album_id);
 
 						$message = $this->language->lang('WAITING_UNAPPROVED_IMAGE', count($actions_array));
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
 					break;
 					case 'lock':
 						$this->image->lock_images($actions_array, $album_id);
 						$this->album->update_info($album_id);
 
 						$message = $this->language->lang('WAITING_LOCKED_IMAGE', count($actions_array));
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
 					break;
 					case 'delete':
 						$this->moderate->delete_images($actions_array);
 						$this->album->update_info($album_id);
 
 						$message = $this->language->lang('DELETED_IMAGES', count($actions_array));
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
 					break;
 					case 'move':
 						$this->image->move_image($actions_array, $moving_target);
@@ -464,15 +457,17 @@ class moderate
 						$this->album->update_info($moving_target);
 
 						$message = $this->language->lang('MOVED_IMAGES', count($actions_array));
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
 					break;
 					case 'report':
 						$this->report->close_reports_by_image($actions_array);
 						$message = $this->language->lang('WAITING_REPORTED_DONE', count($actions_array));
+					break;
+				}
+
+				if (!empty($message))
+				{
 						$this->url->meta_refresh(3, $back_link);
 						trigger_error($message);
-					break;
 				}
 			}
 			else
@@ -503,7 +498,7 @@ class moderate
 				}
 			}
 		}
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
@@ -535,7 +530,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/image/{image_id}
+	 *    Route: gallery/moderate/image/{image_id}
 	 *
 	 * @param $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -618,7 +613,7 @@ class moderate
 		$this->user_loader->load_users(array_keys($users_array));
 		// Now let's get some ACL
 		$select_select = '<option value="" selected="selected">' . $this->language->lang('CHOOSE_ACTION') . '</option>';
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if ($this->gallery_auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']))
 		{
 			if ($image_data['image_status'] == 0)
@@ -686,7 +681,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/image/{image_id}/approve
+	 *    Route: gallery/moderate/image/{image_id}/approve
 	 *
 	 * @param $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -700,15 +695,14 @@ class moderate
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $album_data['album_user_id']))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
-		$action_ary = $this->request->variable('action', []);
-		$action_ary = array_keys($action_ary);
-		$action = isset($action_ary[0]) ? $action_ary[0] : 'approve';
-
+		$action_keys = array_keys($this->request->variable('action', ['approve' => 1]));
+		$action = $action_keys[0] ?? 'approve';
+		
 		if ($action === 'disapprove')
 		{
 			$redirect = new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]));
@@ -749,7 +743,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/image/{image_id}/unapprove
+	 *    Route: gallery/moderate/image/{image_id}/unapprove
 	 *
 	 * @param $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -763,7 +757,7 @@ class moderate
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $album_data['album_user_id']))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -789,7 +783,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/image/{image_id}/move
+	 *    Route: gallery/moderate/image/{image_id}/move
 	 *
 	 * @param $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -805,7 +799,7 @@ class moderate
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('m_move', $image_data['image_album_id'], $album_data['album_user_id']))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -837,7 +831,7 @@ class moderate
 
 	/**
 	 * Index Controller
-	 *    Route: gallery/modarate/image/{image_id}/lock
+	 *    Route: gallery/moderate/image/{image_id}/lock
 	 *
 	 * @param $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -853,7 +847,7 @@ class moderate
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		if (!$this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $album_data['album_user_id']))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');

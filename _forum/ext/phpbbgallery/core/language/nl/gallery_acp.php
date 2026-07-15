@@ -32,7 +32,7 @@ $lang = array_merge($lang, array(
 	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
 	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
 	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/meduim/</strong> state',
+	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
 	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Album bovenaan toevoegen',
@@ -285,6 +285,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'    => 'Recente afbeeldingsteller',
 	'PHPBB_INTEGRATION'        => 'phpBB integratie',
 	'PNG_ALLOWED'              => 'Bevoegt om PNG bestanden te uploaden',
+	'WEBP_ALLOWED'             => 'Bevoegt om WEBP bestanden te uploaden',
 	'PURGED_CACHE'             => 'Cache legen',
 
 	'RATE_SCALE'                 => 'Beoordelingsschaal',

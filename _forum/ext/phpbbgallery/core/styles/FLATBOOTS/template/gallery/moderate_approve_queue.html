@@ -12,7 +12,7 @@
 				<i class="fa fa-warning"></i>&nbsp;<strong>{TOTAL_IMAGES_WAITING}</strong>
 			</div>
 			<!-- ENDIF -->
-			<!-- IF .unaproved -->
+			<!-- IF .image_unapproved -->
 				<div class="topiclist cplist missing-column responsive-show-all">
 					<table class="footable table table-striped table-primary table-hover footable-loaded tablet">
 						<thead>
@@ -23,31 +23,31 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!-- BEGIN unaproved -->
+							<!-- BEGIN image_unapproved -->
 							<tr>
 								<td class="expand footable-visible footable-first-column">
 									<div class="list-inner">
 										<span style="display: inline; float: left;">
-											<a href="{unaproved.U_IMAGE_MODERATE_URL}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{unaproved.U_IMAGE}" alt="{unaproved.U_IMAGE_NAME}"></a>
+											<a href="{image_unapproved.U_IMAGE_MODERATE_URL}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{image_unapproved.U_IMAGE}" alt="{image_unapproved.U_IMAGE_NAME}"></a>
 										</span>
 										<span style="margin-left: 10px;">
-											<a href="{unaproved.U_IMAGE_MODERATE_URL}" class="topictitle">{unaproved.U_IMAGE_NAME}</a><br />
-											<span style="margin-left: 10px; vertical-align: middle;">{L_UPLOADED_BY_USER}{L_COLON} {unaproved.IMAGE_AUTHOR} &raquo; {unaproved.IMAGE_TIME}</span>
+											<a href="{image_unapproved.U_IMAGE_MODERATE_URL}" class="topictitle">{image_unapproved.U_IMAGE_NAME}</a><br />
+											<span style="margin-left: 10px; vertical-align: middle;">{L_UPLOADED_BY_USER}{L_COLON} {image_unapproved.IMAGE_AUTHOR} &raquo; {image_unapproved.IMAGE_TIME}</span>
 										</span>
 									</div>
 								</td>
 								<td class="footable-visible">
 									<div class="moderation">
 										<span>
-											{L_ALBUM}{L_COLON} <a href="{unaproved.IMAGE_ALBUM_URL}">{unaproved.IMAGE_ALBUM}</a>
+											{L_ALBUM}{L_COLON} <a href="{image_unapproved.IMAGE_ALBUM_URL}">{image_unapproved.IMAGE_ALBUM}</a>
 										</span>
 									</div>
 								</td>
 								<td class="footable-visible footable-last-column">
-									<input name="approval[{unaproved.IMAGE_ALBUM_ID}][]" value="{unaproved.U_IMAGE_ID}" type="checkbox">
+									<input name="approval[{image_unapproved.IMAGE_ALBUM_ID}][]" value="{image_unapproved.U_IMAGE_ID}" type="checkbox">
 								</td>
 							</tr>
-							<!-- END unaproved -->
+							<!-- END image_unapproved -->
 						</tbody>
 					</table>
 			<!-- ELSE -->
@@ -55,7 +55,7 @@
 			<!-- ENDIF -->
 			</div>
 		</div>
-		<!-- IF .unaproved -->
+		<!-- IF .image_unapproved -->
 		<fieldset class="display-actions">
 			<input class="button2 btn btn-danger" name="action[disapprove]" value="{L_DISAPPROVE}" type="submit">&nbsp;
 			<input class="button1 btn btn-success" name="action[approve]" value="{L_APPROVE}" type="submit">

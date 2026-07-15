@@ -216,14 +216,12 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@user'
-            - '@auth'
             - '@language'
             - '@controller.helper'
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.album'
             - '@phpbbgallery.core.image'
-            - '@phpbbgallery.core.url'
             - '@pagination'
             - '@user_loader'
             - '%tables.phpbbgallery.images%'
@@ -251,6 +249,8 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%tables.phpbbgallery.watch%'
+        calls:
+            - [set_image, ['@phpbbgallery.core.image']]
     phpbbgallery.core.log:
         class: phpbbgallery\core\log
         arguments:
@@ -323,4 +323,13 @@ services:
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
-
+# ----- Cron tasks -----
+    phpbbgallery.core.cron.task.cron_cleaner:
+        class: phpbbgallery\core\cron\cron_cleaner
+        arguments:
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.upload'
+        calls:
+            - [set_name, [cron.task.cron_cleaner]]
+        tags:
+            - { name: cron.task }

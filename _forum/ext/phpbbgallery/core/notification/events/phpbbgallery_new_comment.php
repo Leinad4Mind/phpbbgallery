@@ -152,7 +152,8 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 */
 	public function get_url()
 	{
-		return $this->get_data('url');
+		
+		return $this->get_data('reported_image_id') ? append_sid($this->phpbb_root_path . '/gallery/moderate/image/' . $this->get_data('reported_image_id')) : $this->get_data('url');
 	}
 
 	/**
@@ -180,6 +181,7 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 		$this->set_data('comment_id', $data['comment_id']);
 		$this->set_data('poster_id', $data['poster']);
 		$this->set_data('url', $data['url']);
+		$this->set_data('reported_image_id', $data['reported_image_id']);
 		parent::create_insert_array($data, $pre_create_data);
 	}
 }

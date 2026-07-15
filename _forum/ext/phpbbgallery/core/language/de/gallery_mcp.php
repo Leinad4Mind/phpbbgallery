@@ -107,7 +107,7 @@ $lang = array_merge($lang, array(
 	'REPORTS_A_OPEN2_CONFIRM'		=> 'Bist du dir sicher, dass du die Meldungen öffnen möchtest?',
 
 	'REPORT_MOD'					=> 'Bearbeitet von',
-	'REPORT_CLOSED_BY'				=> 'Report closed by',
+	'REPORT_CLOSED_BY'				=> 'Bericht geschlossen von',
 	'REPORTED_IMAGES'				=> 'Gemeldete Bilder',
 	'REPORTER'						=> 'Meldender Benutzer',
 	'REPORTER_AND_ALBUM'			=> 'Meldender Benutzer & Album',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 		1			=> 'Insgesamt ist <span style="font-weight: bold;">1</span> Bild freigeschaltet.',
 		2			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
 	),
-	'WAITING_DISPPROVED_IMAGE'		=> array(
+	'WAITING_DISAPPROVED_IMAGE'		=> array(
 		0			=> 'Keine Bilder abgelehnt.',
 		1			=> 'Insgesamt ist <span style="font-weight: bold;">1</span> Bild abgelehnt.',
 		2			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder abgelehnt.',

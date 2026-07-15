@@ -41,6 +41,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'				=> 'Ajouter une autre image',
 	'ALBUM'							=> 'Album',
+	'ALBUM_DESC'					=> 'Description de l’album',
 	'ALBUM_IS_CATEGORY'				=> 'Vous êtes dans une catégorie d’albums.<br />Vous ne pouvez pas charger d’images dans cette catégorie.',
 	'ALBUM_LOCKED'					=> 'Verrouillé',
 	'ALBUM_NAME'					=> 'Nom de l’album',
@@ -131,7 +132,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'			=> 'Saisissez votre description ici. Elle ne peut pas contenir plus de <strong>%d</strong> caractères.',
 	'DETAILS'						=> 'Détails',
 	'DISALLOWED_EXTENSION'			=> 'L’extension de cette image n’est pas autorisée.',
-	'DONT_RATE_IMAGE'				=> 'Ne pas noter l’image',
+	'DO_NOT_RATE_IMAGE'				=> 'Ne pas noter l’image',
 
 	'EDIT_COMMENT'					=> 'Modifier le commentaire',
 	'EDIT_IMAGE'					=> 'Modifier',
@@ -144,9 +145,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
+	'FILETYPES_WEBP'					=> 'webp',
 	'FILETYPES_ZIP'					=> 'zip',
 
-	'FULL_EDITOR'					=> 'Éditeur complet',
+	'FULL_EDITOR_GALLERY'					=> 'Éditeur complet',
 
 	'GALLERY_IMAGE'					=> 'Image',
 	'GALLERY_IMAGES'				=> 'Images',
@@ -163,6 +165,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'						=> 'Désolé, cette image est verrouillée. Vous ne pouvez pas publier de commentaires sur cette image.',
 	'IMAGE_NAME'						=> 'Nom de l’image',
 	'IMAGE_NOT_EXIST'					=> 'Cette image n’existe pas.',
+	'IMAGE_NOT_APPROVED'				=> 'For approval',
 	'IMAGE_PCT'							=> '%.2f%% de toutes les images',
 	'IMAGE_STATUS'						=> 'Statut',
 	'IMAGE_URL'							=> 'Lien',
@@ -204,6 +207,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'						=> 'Il n’y a aucun album dans cette galerie.',
 	'NO_COMMENTS'					=> 'Aucun commentaire',
 	'NO_IMAGES'						=> 'Aucune image',
+	'NO_COMMENTS_NO_IMAGES' 		=> 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'				=> 'Aucune image trouvée.',
 	'NO_NEW_IMAGES'					=> 'Aucune nouvelle image',
 	'NO_IMAGES_LONG'				=> 'Il n’y a aucune image dans cet album.',

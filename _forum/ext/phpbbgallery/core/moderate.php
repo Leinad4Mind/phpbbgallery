@@ -13,6 +13,86 @@ namespace phpbbgallery\core;
 class moderate
 {
 	/**
+	 * @var \phpbb\db\driver\driver_interface
+	 */
+	protected $db;
+
+	/**
+	 * @var \phpbb\template\template
+	 */
+	protected $template;
+
+	/**
+	 * @var \phpbb\controller\helper
+	 */
+	protected $helper;
+
+	/**
+	 * @var \phpbb\user
+	 */
+	protected $user;
+
+	/**
+	 * @var \phpbb\language\language
+	 */
+	protected $lang;
+
+	/**
+	 * @var \phpbb\user_loader
+	 */
+	protected $user_loader;
+
+	/**
+	 * @var \phpbbgallery\core\album\album
+	 */
+	protected $album;
+
+	/**
+	 * @var \phpbbgallery\core\auth\auth
+	 */
+	protected $gallery_auth;
+
+	/**
+	 * @var \phpbb\pagination
+	 */
+	protected $pagination;
+
+	/**
+	 * @var \phpbbgallery\core\comment
+	 */
+	protected $comment;
+
+	/**
+	 * @var \phpbbgallery\core\report
+	 */
+	protected $report;
+
+	/**
+	 * @var \phpbbgallery\core\image\image
+	 */
+	protected $image;
+
+	/**
+	 * @var \phpbbgallery\core\config
+	 */
+	protected $gallery_config;
+
+	/**
+	 * @var \phpbbgallery\core\notification
+	 */
+	protected $gallery_notification;
+
+	/**
+	 * @var \phpbbgallery\core\rating
+	 */
+	protected $gallery_rating;
+
+	/**
+	 * @var string
+	 */
+	protected $images_table;
+
+	/**
 	 * moderate constructor.
 	 *
 	 * @param \phpbb\db\driver\driver_interface $db
@@ -72,7 +152,7 @@ class moderate
 			$per_page = $this->gallery_config->get('items_per_page');
 		}
 		// Let's get albums that user can moderate
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Get albums we can approve in
 		$mod_array = array();
@@ -91,7 +171,7 @@ class moderate
 		// Let's get count of unapproved
 		$sql = 'SELECT COUNT(DISTINCT image_id) as count 
 			FROM ' . $this->images_table . ' 
-			WHERE image_status = ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('image_album_id', $mod_array);
+			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('image_album_id', $mod_array);
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -99,7 +179,7 @@ class moderate
 		// If user has no albums to have e return him
 		$sql = 'SELECT * 
 			FROM ' . $this->images_table . ' 
-			WHERE image_status = ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('image_album_id', $mod_array) . '
+			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('image_album_id', $mod_array) . '
 			ORDER BY image_id DESC';
 		$page = $page - 1;
 		$result = $this->db->sql_query_limit($sql, $per_page, $page * $per_page);
@@ -129,7 +209,7 @@ class moderate
 		foreach ($waiting_images as $VAR)
 		{
 			$album_tmp = $this->album->get_info($VAR['image_album_id']);
-			$this->template->assign_block_vars('unaproved', array(
+			$this->template->assign_block_vars('image_unapproved', array(
 				'U_IMAGE_ID'           => $VAR['image_id'],
 				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $VAR['image_id'])),
 				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', array('image_id' => $VAR['image_id'])),
@@ -193,7 +273,7 @@ class moderate
 			$per_page = $this->gallery_config->get('items_per_page');
 		}
 		// Let's get albums that user can moderate
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// we have security in the controller, so no need to be paranoid ...
 		// and we will build queue with only items user can review
@@ -204,7 +284,7 @@ class moderate
 		// Let's see what the user can do?
 		$status[] = 1;
 		$actions = array();
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album = $this->album->get_info($album_id);
 		if ($this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id']))
 		{

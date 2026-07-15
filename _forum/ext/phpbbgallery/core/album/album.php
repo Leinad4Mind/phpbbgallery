@@ -3,7 +3,7 @@
 /**
  *
  * @package       PhpBB Gallery
- * @copyright (c) 2017 satanasov
+ * @copyright (c) 2017 Lucifer
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -43,7 +43,7 @@ class album
 	protected $watch_table;
 
 	/** @var */
-	protected $contest_table;
+	protected $contests_table;
 
 	/** @var */
 	protected $albums_table;
@@ -199,7 +199,7 @@ class album
 		$padding_store = array('0' => '');
 		$padding = $album_list = '';
 		$check_album_type = ($requested_album_type >= 0) ? true : false;
-		$this->gallery_auth->load_user_premissions($this->user->data['user_id']);
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Sometimes it could happen that albums will be displayed here not be displayed within the index page
 		// This is the result of albums not displayed at index and a parent of a album with no permissions.
@@ -236,7 +236,7 @@ class album
 				((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 				||
 				// Need upload permissions (for moving)
-				(($requested_permission == 'm_move') && (($row['album_type'] == \phpbbgallery\core\block::TYPE_CAT) || (!$this->gallery_auth->acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !$this->gallery_auth->acl_check('m_move', $row['album_id'], $row['album_user_id']))))
+				(($requested_permission == 'm_move') && (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT) || (!$this->gallery_auth->acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !$this->gallery_auth->acl_check('m_move', $row['album_id'], $row['album_user_id']))))
 				||
 				// album_type does not fit
 				($check_album_type && ($row['album_type'] != $requested_album_type))

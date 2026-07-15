@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'                 => 'Добавете още файлове за качване',
 	'ALBUM'                            => 'Албум',
+	'ALBUM_DESC'                       => 'Описание на албума',
 	'ALBUM_IS_CATEGORY'                => 'Албума до който излъгахте е Албум категория.<br />Не можете да качвате в категория.',
 	'ALBUM_LOCKED'                     => 'Заключен',
 	'ALBUM_NAME'                       => 'Име на албум',
@@ -116,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'Не разрешено разширение на изборажението',
-	'DONT_RATE_IMAGE'         => 'Don’t rate image',
+	'DO_NOT_RATE_IMAGE'         => 'Don’t rate image',
 
 	'EDIT_COMMENT'             => 'Edit comment',
 	'EDIT_IMAGE'               => 'Edit',
@@ -129,9 +130,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',
 	'FILETYPES_PNG'              => 'png',
+	'FILETYPES_WEBP'             => 'webp',
 	'FILETYPES_ZIP'              => 'zip',
 
-	'FULL_EDITOR' => 'Пълен редактор',
+	'FULL_EDITOR_GALLERY' => 'Пълен редактор',
 
 	'GALLERY_IMAGE'  => 'Изображение',
 	'GALLERY_IMAGES' => 'Изображения',
@@ -148,6 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Съжаляваме, но това изображение е заключено. Вече не можете да го коментирате.',
 	'IMAGE_NAME'                   => 'Име на изображение',
 	'IMAGE_NOT_EXIST'              => 'Това изображение не съществува.',
+	'IMAGE_NOT_APPROVED'           => 'For approval',
 	'IMAGE_PCT'                    => '%.2f%% от всички изображения',
 	'IMAGE_STATUS'                 => 'Статус',
 	'IMAGE_URL'                    => 'Image-URL',
@@ -189,6 +192,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'             => 'В тази галерия няма албуми.',
 	'NO_COMMENTS'           => 'Все още няма коментари',
 	'NO_IMAGES'             => 'Няма изображения',
+	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'       => 'Не са намерени изображения.',
 	'NO_NEW_IMAGES'         => 'Няма нови изображения',
 	'NO_IMAGES_LONG'        => 'В този албум няма изображения.',
@@ -365,6 +369,6 @@ $lang = array_merge($lang, array(
 	'UNREAD_IMAGES'    => 'непрегледани изображения',
 	'NO_UNREAD_IMAGES' => 'Няма непрегледани изображения',
 
-	// Versions 1.2.1 addiotions
+	// Versions 1.2.1 additions
 	'GALLERY_DROP'     => 'Пуснете изображенията си тук',
 ));

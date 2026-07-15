@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
 	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
 	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/meduim/</strong> state',
+	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
 	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Добави албума от горе',
@@ -284,6 +284,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'    => 'Брой последни изображения',
 	'PHPBB_INTEGRATION'        => 'Интеграция в phpBB',
 	'PNG_ALLOWED'              => 'Разрешено качването на PNG файлове',
+	'WEBP_ALLOWED'              => 'Разрешено качването на WEBP файлове',
 	'PURGED_CACHE'             => 'Кешът е прочистен',
 
 	'RATE_SCALE'                 => 'Скала за оценяване',

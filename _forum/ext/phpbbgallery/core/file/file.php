@@ -32,6 +32,9 @@ class file
 
 	public $gd_version = 0;
 
+	/** @var \phpbbgallery\core\config */
+	public $gallery_config;
+
 	public $image;
 	public $image_content_type;
 	public $image_name = '';
@@ -122,6 +125,9 @@ class file
 			case '.jpg':
 				return 'image/jpeg';
 			break;
+			case '.webp':
+				return 'image/webp';
+			break;
 		}
 
 		return '';
@@ -140,6 +146,9 @@ class file
 			case 'jpeg':
 			case '.jpg':
 				return 'jpg';
+			break;
+			case '.webp':
+				return 'webp';
 			break;
 		}
 
@@ -164,7 +173,11 @@ class file
 				$this->image_type = 'png';
 				$this->image = @imagecreatefrompng($this->image_source);
 				imagealphablending($this->image, true); // Set alpha blending on ...
-				imagesavealpha($this->image, true); // ... and save alphablending!
+				imagesavealpha($this->image, true); // ... and save alpha blending!
+			break;
+			case '.webp':
+				$this->image_type = 'webp';
+				$this->image = imagecreatefromwebp($this->image_source);
 			break;
 			case '.gif':
 				$this->image_type = 'gif';
@@ -214,6 +227,9 @@ class file
 			break;
 			case 'png':
 				imagepng($this->image, $destination);
+			break;
+			case 'webp':
+				imagewebp($this->image, $destination);
 			break;
 			case 'gif':
 				imagegif($this->image, $destination);
@@ -346,7 +362,7 @@ class file
 
 	/**
 	 * Rotate the image
-	 * Usage optimized for 0�, 90�, 180� and 270� because of the height and width
+	 * Usage optimized for 0º, 90º, 180º and 270º because of the height and width
 	 *
 	 * @param $angle
 	 * @param $ignore_dimensions
@@ -434,6 +450,9 @@ class file
 			{
 				case 'image/png':
 					$imagecreate = 'imagecreatefrompng';
+					break;
+				case 'image/webp':
+					$imagecreate = 'imagecreatefromwebp';
 					break;
 				case 'image/gif':
 					$imagecreate = 'imagecreatefromgif';

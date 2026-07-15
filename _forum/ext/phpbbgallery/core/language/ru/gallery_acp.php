@@ -26,13 +26,13 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ACP_GALLERY_OVERVIEW'			=> 'Обзор',
-	'ACP_GALLERY_OVERVIEW_EXPLAIN'	=> '',
+	'ACP_GALLERY_OVERVIEW_EXPLAIN'	=> 'Here are some statistics about your gallery.',
 
 	// File dirs states
 	'ACP_FILES_DIR_STATE'           => '<strong>./files/</strong> state',
 	'ACP_CORE_DIR_STATE'    => '<strong>./files/phpbbgallery/core/</strong> state',
 	'ACP_SOURCE_DIR_STATE'    => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'    => '<strong>./files/phpbbgallery/core/meduim/</strong> state',
+	'ACP_MEDIUM_DIR_STATE'    => '<strong>./files/phpbbgallery/core/medium/</strong> state',
 	'ACP_MINI_DIR_STATE'    => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'				=> 'Сделать альбом первым в списке',
@@ -143,7 +143,7 @@ $lang = array_merge($lang, array(
 	'DONT_COPY_PERMISSIONS'			=> 'Не копировать права доступа',
 	'EDIT_ALBUM'					=> 'Редактировать альбом',
 	'FAKE_THUMB_SIZE'				=> 'Размер миниатюр в списке альбомов',
-	'FAKE_THUMB_SIZE_EXP'			=> '',
+	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to keep the original size, remember 16 pixels for the black-info-line',
 	'GALLERY_ALBUMS_TITLE'			=> 'Управление альбомами',
 	'GALLERY_CONFIG'				=> 'Настройка галереи',
 	'GALLERY_CONFIG_EXPLAIN'		=> 'Здесь можно изменить основные параметры галереи.',
@@ -261,7 +261,7 @@ $lang = array_merge($lang, array(
 	'PEGA_ALREADY_EXISTS'			=> 'У пользователя %s уже есть личный альбом.',
 	'PGALLERIES_PER_PAGE'			=> 'Количество личных альбомов на странице',
 	'ITEMS_PER_PAGE'				=> 'Количество альбомов и фото на странице',
-	'ITEMS_PER_PAGE_EXP'			=> '',
+	'ITEMS_PER_PAGE_EXP'			=> 'How many images/albums/comments per page',
 	'RANDOM_ON_INDEX'				=> 'Включить случайные фото',
 	'RANDOM_ON_INDEX_EXP'			=> 'Отображение случайных фотографий на главной странице галереи',
 	'RANDOM_ON_INDEX_COUNT'			=> 'Количество случайных фото',
@@ -270,6 +270,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'			=> 'Количество последних фото',
 	'PHPBB_INTEGRATION'				=> 'Интеграция в phpBB',
 	'PNG_ALLOWED'					=> 'PNG разрешён',
+	'WEBP_ALLOWED'					=> 'WEBP разрешён',
 	'PURGED_CACHE'					=> 'Очистка кэша',
 	'RATE_SCALE'					=> 'Шкала оценок',
 	'RATE_SYSTEM'					=> 'Включить оценки',

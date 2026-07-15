@@ -33,7 +33,7 @@ $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Alben',
 	'ALBUM_ACCESS'					=> 'Zugriff erlauben für',
 	'ALBUM_ACCESS_EXPLAIN'			=> 'Du kannst deine %1$sListen der Freunde und ignorierten Mitglieder%2$s benutzen, um den Zugriff einzuschränken. <strong>Moderatoren</strong> können jedoch <strong>immer</strong> auf das Album zugreifen.',
-	'ALBUM_DESC'					=> 'Beschreibung',
+	'ALBUM_DESC'					=> 'Albumbeschreibung',
 	'ALBUM_NAME'					=> 'Name',
 	'ALBUM_PARENT'					=> 'Übergeordnetes Album',
 	'ATTACHED_SUBALBUMS'			=> 'Verknüpfte Subalben',
@@ -66,6 +66,7 @@ $lang = array_merge($lang, array(
 	'NO_PERSONAL_ALBUM'				=> 'Dein persönliches Album existiert noch nicht. Du kannst Dir hier ein privates Album und weitere Subalben erstellen.<br />Nur der Album Besitzer kann in diese persönlichen Alben Bilder hochladen.',
 	'NO_SUBALBUMS'					=> 'Keine Subalben',
 	'NO_SUBSCRIPTIONS'				=> 'Du beobachtest keine Bilder.',
+	'NO_SUBSCRIPTIONS_ALBUM'		=> 'Du beobachtest keine Alben.',
 
 	'PARSE_BBCODE'					=> 'BBCodes erkennen',
 	'PARSE_SMILIES'					=> 'Smilies erkennen',
@@ -82,6 +83,6 @@ $lang = array_merge($lang, array(
 	'WATCH_NOTE'					=> 'Die Einstellung wirkt sich nur auf neue Bilder aus. Andere Bilder musst du über die Option „Bild beobachten“ hinzufügen',
 	'WATCH_OWN'						=> 'Eigene Bilder standardmässig beobachten',
 
-	'RRC_ZEBRA'						=> 'Hide from foes in RRC',
-	'RRC_ZEBRA_EXPLAIN'				=> 'Hide images in albums from foes in Recent, Random and Comments part of the index.<br /><strong>WARNING!</strong> This won\'t hide images uploaded in common/public albums.'
+	'RRC_ZEBRA'						=> 'Bilder vor Benutzern verstecken',
+	'RRC_ZEBRA_EXPLAIN'				=> 'Verstecke Bilder in Alben vor Benutzern in den Bereichen „Neueste“, „Zufällig“ und „Kommentare“ des Index.<br /><strong>WARNUNG!</strong> Dadurch werden keine Bilder ausgeblendet, die in gemeinsame/öffentliche Alben hochgeladen wurden.'
 ));

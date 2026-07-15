@@ -4,7 +4,7 @@
 	<div class="pagination">
 		{TOTAL_IMAGES}
 		<!-- IF .pagination -->
-			 &bull; <!-- INCLUDE pagination.html -->
+			 <!-- INCLUDE pagination.html -->
 		<!-- ELSE -->
 			 &bull; {PAGE_NUMBER}
 		<!-- ENDIF -->
@@ -13,15 +13,17 @@
 
 
 <!-- INCLUDE gallery/imageblock_polaroid.html -->
-
+<hr />
 <!-- IF .pagination or TOTAL_IMAGES -->
-	<div class="pagination">
+	<div style="margin: 10px 0 5px 0;">
+		<div class="pagination" style="margin-bottom: 1em;">
 		{TOTAL_IMAGES}
 		<!-- IF .pagination -->
-			 &bull; <!-- INCLUDE pagination.html -->
+				<!-- INCLUDE pagination.html -->
 		<!-- ELSE -->
 			 &bull; {PAGE_NUMBER}
 		<!-- ENDIF -->
+	</div>
 	</div>
 <!-- ENDIF -->
 

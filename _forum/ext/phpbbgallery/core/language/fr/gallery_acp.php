@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'ACP_FILES_DIR_STATE'           => 'État du répertoire : <strong>./files/</strong>',
 	'ACP_CORE_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/</strong>',
 	'ACP_SOURCE_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/source/</strong>',
-	'ACP_MEDIUM_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/meduim/</strong>',
+	'ACP_MEDIUM_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/medium/</strong>',
 	'ACP_MINI_DIR_STATE'    		=> 'État du répertoire : <strong>./files/phpbbgallery/core/mini/</strong>',
 
 	'ADD_ALBUM_ON_TOP'				=> 'Ajouter l’album en haut',
@@ -297,6 +297,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'			=> 'Nombre d’images récentes',
 	'PHPBB_INTEGRATION'				=> 'Intégration à phpBB',
 	'PNG_ALLOWED'					=> 'Autoriser à charger des fichiers PNG',
+	'WEBP_ALLOWED'					=> 'Autoriser à charger des fichiers WEBP',
 	'PURGED_CACHE'					=> 'Vider le cache',
 
 	'RATE_SCALE'					=> 'Notes sur',

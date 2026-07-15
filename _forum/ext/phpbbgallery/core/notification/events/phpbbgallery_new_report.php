@@ -151,7 +151,7 @@ class phpbbgallery_new_report extends \phpbb\notification\type\base
 	 */
 	public function get_url()
 	{
-		return $this->get_data('url');
+		return $this->get_data('reported_image_id') ? append_sid($this->phpbb_root_path . 'gallery/moderate/image/' . $this->get_data('reported_image_id')) : $this->get_data('url');
 	}
 
 	/**
@@ -167,7 +167,8 @@ class phpbbgallery_new_report extends \phpbb\notification\type\base
 	{
 		$this->set_data('item_id', $data['item_id']);
 		$this->set_data('reporter', $data['reporter']);
+		$this->set_data('reported_image_id', $data['reported_image_id']);
 		$this->set_data('url', $data['url']);
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

@@ -13,6 +13,76 @@ namespace phpbbgallery\core;
 class upload
 {
 	/**
+	* @var \phpbb\user
+	*/
+	protected $user;
+
+	/**
+	* @var \phpbb\language\language
+	*/
+	protected $language;
+
+	/**
+	* @var \phpbb\db\driver\driver_interface
+	*/
+	protected $db;
+
+	/**
+	* @var \phpbb\event\dispatcher_interface
+	*/
+	protected $phpbb_dispatcher;
+
+	/**
+	* @var \phpbb\request\request
+	*/
+	protected $request;
+
+	/**
+	* @var \phpbb\files\upload
+	*/
+	protected $file_upload;
+
+	/**
+	* @var \phpbbgallery\core\image\image
+	*/
+	protected $gallery_image;
+
+	/**
+	* @var \phpbbgallery\core\config
+	*/
+	protected $gallery_config;
+
+	/**
+	* @var \phpbbgallery\core\url
+	*/
+	protected $gallery_url;
+
+	/**
+	* @var \phpbbgallery\core\block
+	*/
+	protected $block;
+
+	/**
+	* @var \phpbbgallery\core\file\file
+	*/
+	protected $tools;
+
+	/**
+	* @var string
+	*/
+	protected $images_table;
+
+	/**
+	* @var string
+	*/
+	protected $root_path;
+
+	/**
+	* @var string
+	*/
+	protected $php_ext;
+
+	/**
 	* Number of Files per Directory
 	*
 	* If this constant is set to a value >0 the gallery will create a new directory,
@@ -266,7 +336,7 @@ class upload
 	 */
 	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
-		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
+		if ($this->file_limit && ($this->uploaded_files > $this->file_limit))
 		{
 			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->image_data[$image_id]['image_name'], $this->language->lang('QUOTA_REACHED')));
 			return false;
@@ -338,8 +408,6 @@ class upload
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE image_id = ' . (int) $image_id;
 		$this->db->sql_query($sql);
-
-		$this->uploaded_files++;
 
 		return true;
 	}
@@ -718,6 +786,11 @@ class upload
 		{
 			$types[] = $this->language->lang('FILETYPES_PNG');
 			$extensions[] = 'png';
+		}
+		if ($this->gallery_config->get('allow_webp'))
+		{
+			$types[] = $this->language->lang('FILETYPES_WEBP');
+			$extensions[] = 'webp';
 		}
 		if (!$ignore_zip && $this->gallery_config->get('allow_zip'))
 		{

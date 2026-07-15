@@ -27,6 +27,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'                 => 'Weitere Felder zum Hochladen hinzufügen',
 	'ALBUM'                            => 'Album',
+	'ALBUM_DESC'                       => 'Albumbeschreibung',
 	'ALBUM_IS_CATEGORY'                => 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALBUM_LOCKED'                     => 'Gesperrt',
 	'ALBUM_NAME'                       => 'Name des Albums',
@@ -117,7 +118,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'Diese Bilderweiterung ist nicht erlaubt',
-	'DONT_RATE_IMAGE'         => 'Bild nicht bewerten',
+	'DO_NOT_RATE_IMAGE'         => 'Bild nicht bewerten',
 
 	'EDIT_COMMENT'             => 'Kommentar ändern',
 	'EDIT_IMAGE'               => 'Bearbeiten',
@@ -130,9 +131,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',
 	'FILETYPES_PNG'              => 'png',
+	'FILETYPES_WEBP'             => 'webp',
 	'FILETYPES_ZIP'              => 'zip',
 
-	'FULL_EDITOR' => 'Vollständiger Editor',
+	'FULL_EDITOR_GALLERY' => 'Vollständiger Editor',
 
 	'GALLERY_IMAGE'  => 'Bild',
 	'GALLERY_IMAGES' => 'Bilder',
@@ -149,10 +151,11 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NAME'                   => 'Bildname',
 	'IMAGE_NOT_EXIST'              => 'Dieses Bild existiert nicht',
+	'IMAGE_NOT_APPROVED'           => 'For approval',
 	'IMAGE_PCT'                    => '%.2f%% aller Bilder',
 	'IMAGE_STATUS'                 => 'Status',
 	'IMAGE_URL'                    => 'Bildlink',
-	'IMAGE_VIEWS'                  => 'Views',
+	'IMAGE_VIEWS'                  => 'Betrachtet',
 	'IMAGE_WIDTH'                  => 'Bildbreite',
 	'IMAGES_REPORTED_SUCCESSFULLY' => 'Das Bild wurde erfolgreich gemeldet',
 	'IMAGES_UPDATED_SUCCESSFULLY'  => 'Deine Bilderinformationen wurden erfolgreich aktualisiert',
@@ -187,9 +190,10 @@ $lang = array_merge($lang, array(
 	'NEW_COMMENT'           => 'Neuer Kommentar',
 	'NEW_IMAGES'            => 'Neue Bilder',
 	'NEWEST_PGALLERY'       => 'Unsere neueste persönliche Galerie: %s',
-	'NO_ALBUMS'             => 'In dieser Galerie gibt es keine Alben',
+	'NO_ALBUMS'             => 'In dieser Galerie gibt es keine gemeinsamen/öffentlichen Alben.',
 	'NO_COMMENTS'           => 'Noch keine Kommentare',
 	'NO_IMAGES'             => 'keine Bilder',
+	'NO_COMMENTS_NO_IMAGES' => 'Noch keine Kommentare oder eigene Bilder',
 	'NO_IMAGES_FOUND'       => 'Es wurden keine Bilder gefunden.',
 	'NO_NEW_IMAGES'         => 'Keine neue Bilder',
 	'NO_IMAGES_LONG'        => 'In diesem Album gibt es keine Bilder.',
@@ -362,9 +366,9 @@ $lang = array_merge($lang, array(
 	),
 	'WRONG_FILESIZE' => 'Das Bild ist größer als das Limit!',
 
-	'UNREAD_IMAGES'    => 'Unviewed images',
-	'NO_UNREAD_IMAGES' => 'No unviewed images',
+	'UNREAD_IMAGES'    => 'Unbewertete Bilder',
+	'NO_UNREAD_IMAGES' => 'Es gibt keine ungeprüften Bilder',
 
-	// Versions 1.2.1 addiotions
+	// Versions 1.2.1 additions
 	'GALLERY_DROP'     => 'Lege Dein Bild hier rein',
 ));

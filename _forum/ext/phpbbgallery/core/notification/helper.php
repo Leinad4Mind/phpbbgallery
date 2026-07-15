@@ -12,6 +12,20 @@ use Symfony\Component\DependencyInjection\Container;
 
 class helper
 {
+	protected $config;
+	protected $db;
+	protected $request;
+	protected $template;
+	protected $user;
+	protected $gallery_auth;
+	protected $album_load;
+	protected $helper;
+	protected $url;
+	protected $phpbb_container;
+	protected $root_path;
+	protected $php_ext;
+	protected $watch_table;
+	protected $image;
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user,
 	\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\loader $album_load, \phpbb\controller\helper $helper, \phpbbgallery\core\url $url,
 	Container $phpbb_container, $root_path, $php_ext, $watch_table)
@@ -48,7 +62,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $target['album_id'],
+					'album_id' => $album_data['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'uploader'	=> $target['uploader'],
@@ -61,7 +75,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $target['album_id'],
+					'album_id' => $album_data['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
@@ -73,7 +87,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $target['album_id'],
+					'album_id' => $album_data['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
@@ -85,7 +99,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $target['album_id'],
+					'album_id' => $album_data['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
@@ -112,6 +126,7 @@ class helper
 					'user_ids'	=> array_diff($this->gallery_auth->acl_users_ids('m_report', $target['reported_album_id']), array($target['reporter_id'])),
 					'item_id'	=> $target['report_id'],
 					'reporter'	=> $target['reporter_id'],
+					'reported_image_id' => $target['reported_image_id'],
 					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $target['reported_image_id']))),
 				);
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_report', $notification_data);
@@ -214,7 +229,7 @@ class helper
 		$album_ids = $this->cast_mixed_int2array($album_ids);
 		$user_id = (int) (($user_id) ? $user_id : $this->user->data['user_id']);
 
-		// First check if we are not subscribed alredy for some
+		// First check if we are not subscribed already for some
 		$sql = 'SELECT * FROM ' . $this->watch_table . ' WHERE user_id = ' . $user_id . ' and ' . $this->db->sql_in_set('album_id', $album_ids);
 		$result = $this->db->sql_query($sql);
 		$exclude = array();
@@ -278,10 +293,15 @@ class helper
 	public function new_image($data)
 	{
 		$get_watchers = $this->get_album_watchers($data['album_id']);
-		// let's exclude all users that are uploadoing something and are approved
+		// let's exclude all users that are uploading something and are approved
 		$targets = array_diff($get_watchers, $data['targets']);
 
 		$data['targets'] = $targets;
 		$this->notify('new_image', $data);
+	}
+
+	public function set_image(\phpbbgallery\core\image\image $image)
+	{
+		$this->image = $image;
 	}
 }
