@@ -1,0 +1,17 @@
+<div class="top-five text-overflow">
+	<ul class="list-unstyled">
+	<!-- BEGIN top_five_topic -->
+		<li>
+			<!-- IF top_five_topic.NO_TOPIC_TITLE-->
+				{top_five_topic.NO_TOPIC_TITLE}
+			<!-- ELSE -->
+				<a href="{top_five_topic.U_TOPIC}" class="topictitle-recent<!-- IF top_five_topic.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->">{top_five_topic.TOPIC_TITLE}</a>
+				 <span class="meta">{top_five_topic.USERNAME_FULL}</span>
+				 <span class="recent-time">{top_five_topic.LAST_TOPIC_TIME}</span>
+				 <a class="hidden" href="{top_five_topic.U_FORUM}">{top_five_topic.FORUM_NAME}</a>
+				<!-- EVENT rmcgirr83_top_five_topiclist_row_append -->
+			<!-- ENDIF -->
+		</li>
+	<!-- END top_five_topic -->
+	</ul>
+</div>

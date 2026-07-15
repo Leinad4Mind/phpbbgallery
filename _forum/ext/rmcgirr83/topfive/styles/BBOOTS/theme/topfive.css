@@ -1,0 +1,104 @@
+.topictitle-recent, .recent-time {
+    display: inline-block;
+    left: 49px;
+    margin-left: 8px;
+    position: absolute;
+    top: -4px;
+}
+
+.recent-time {
+    color: #999;
+    top: 32px;
+	margin-left: 5px;
+}
+
+.header-avatar > img {
+    border-radius: 4px;
+    height: 48px !important;
+    max-height: inherit !important;
+    width: 48px;
+}
+
+.username {
+    display: inline-block;
+}
+
+.top-five ul > li {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+
+.topictitle-recent.unread {
+    color: #148fcf;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.top-five .meta a::before,
+.top-five .meta .username::before,
+.top-five .meta .username-coloured::before {
+    color: #999;
+    content: "\f007";
+    font-family: fontawesome;
+    font-weight: normal;
+    margin-left: 2px;
+    margin-right: 4px;
+}
+
+.recent-time::before {
+    color: #999;
+    content: "\f017";
+    font-family: fontawesome;
+    font-weight: normal;
+    margin-left: 2px;
+    margin-right: 4px;
+}
+
+
+.top-active .recent-time::before {
+    color: #999;
+    content: "\f086";
+    font-family: fontawesome;
+    font-weight: normal;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+
+.top-active .recent-time {
+    margin-left: 2px;
+}
+
+
+.newest-users .recent-time {
+    margin-left: 2px;
+}
+
+
+.newest-users .meta a,
+.top-active .meta a {
+    line-height: 6px;
+    vertical-align: text-top;
+}
+
+
+.newest-users .meta .username,
+.top-active .meta .username {
+    line-height: 6px;
+    vertical-align: text-top;
+}
+
+.newest-users .recent-time,
+.top-active .recent-time  {
+    display: inline-block;
+    line-height: 5px;
+    vertical-align: super;
+}
+
+
+@media (max-width: 468px) {
+.top-five ul > li {
+    margin-bottom: 20px;
+}
+}
