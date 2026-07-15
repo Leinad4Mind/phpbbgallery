@@ -1,0 +1,26 @@
+<!--// lets add this inline until we get a proper event for this -->
+<style>.label{display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:700;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em}a.label:hover,a.label:focus{color:#fff;text-decoration:none;cursor:pointer}.label:empty{display:none}.btn .label{position:relative;top:-1px}.label-default{background-color:#777}.label-default[href]:hover,.label-default[href]:focus{background-color:#5e5e5e}.label-primary{background-color:#337ab7}.label-primary[href]:hover,.label-primary[href]:focus{background-color:#286090}.label-success{background-color:#5cb85c}.label-success[href]:hover,.label-success[href]:focus{background-color:#449d44}.label-info{background-color:#5bc0de}.label-info[href]:hover,.label-info[href]:focus{background-color:#31b0d5}.label-warning{background-color:#f0ad4e}.label-warning[href]:hover,.label-warning[href]:focus{background-color:#ec971f}.label-danger{background-color:#d9534f}.label-danger[href]:hover,.label-danger[href]:focus{background-color:#c9302c}</style>
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">{L_ACP_SITESPLAT_UPDATE_MANAGER}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN sitesplat_themes -->
+		<tr style="font-size: 14px;">
+			<td style="text-align:center; background:url(http://www.sitesplat.com/assets/{sitesplat_themes.NAME}.jpg) no-repeat; background-size:inherit;" class="row2"><strong style="visibility:hidden;">{sitesplat_themes.NAME}</strong></td>
+			<td class="row1">
+				{L_VERSION_INSTALLED}{L_COLON} <strong>{sitesplat_themes.NAME} - {sitesplat_themes.VERSION}</strong>
+				<p>{sitesplat_themes.DOWNLOAD_MSG}<br />
+                <span title="{sitesplat_themes.CHANGE_LOG}">{sitesplat_themes.CHANGE_LOG_MSG}</span><br />
+                {sitesplat_themes.SUPPORT_FORUM_MSG}<br />
+                {L_COLORIZE_MSG}
+                </p>
+			</td>
+		</tr>
+   	<!-- BEGINELSE -->
+		<tr style="font-size: 14px;"><td colspan="2">{L_NO_VERSIONINFO}</td></tr>
+	<!-- END sitesplat_themes -->
+	</tbody>
+</table><br />

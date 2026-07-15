@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="{S_CONTENT_ENCODING}">
+<meta name="designer" content="SiteSplat www.sitesplat.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Set the viewport width to device width for mobile -->
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+<title>{SITENAME} {PAGE_TITLE}</title>
+<!--
+	phpBB Premium style name: BBOOTS (3.0.0) @SiteSplat.com
+-->
+<!-- CSS files start here-->
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet">
+<link href="{T_THEME_PATH}/basics.min.css" rel="stylesheet">
+<link href="{T_STYLESHEET_OFFLINE}" rel="stylesheet">
+<!-- Google free font here -->
+<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+<!-- CSS files -->
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+<div id="wrap" class="corners container">
+  <!-- start content -->
+  <div id="content-forum">
+    <div class="padding_0_40">
+	<div class="clearfix">
+        <!-- Content -->
+        <div class="well well-schema">
+            <!-- Container -->
+
+            <div class="big-title">
+                <h1 id="error">...</h1>
+			<div class="clearfix">
+					<div class="achievement no-shadow">
+						<i class="fa fa-cog fa-spin"></i> 
+					</div>
+			</div>	  
+                <h2>{L_BOARD_DISABLED}</h2>
+            </div><!-- big-title -->
+							
+			<div class="alert alert-info fade in">
+                <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+                <i class="fa fa-bullhorn"></i> <strong>{ACP_DISABLE_MESSAGE}</strong>
+            </div> 
+
+             <ul class="pager">
+				<li class="next">
+				   <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="l">{L_LOGIN_LOGOUT} &rarr;</a>
+				</li>
+		    </ul>
+        </div>
+        
+        <!-- Footer -->
+		<footer role="contentinfo">
+		<div class="row bottomLinks"> <!-- Credit, links and copyright block do not remove please -->
+		  <div class="col-md-12">
+			<div class="pull-left">
+			  <small><a href="http://www.phpbb.com/" title="Forum Software &copy; phpBB&reg; Group" target="_blank"> phpBB</a> - <i aria-hidden="true" class="fa fa-html5"></i> <i aria-hidden="true" class="fa fa-css3"></i></small>
+			</div>
+			
+			<div class="pull-right">
+			  <small><a href="http://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="SiteSplat.com" target="_blank">SiteSplat</a>&nbsp;&copy;SiteSplat 2013</small>
+			</div>
+		   </div> 
+		</div> <!-- Credit, links and copyright block do not remove please -->
+		</footer>
+    </div>
+    </div>
+  </div>
+</div>
+<!-- Scripts start here after the jquery.js -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</body>
+</html>
