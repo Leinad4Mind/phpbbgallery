@@ -1,0 +1,17 @@
+/* Hide the forums of a hidden category */
+.hidden-category,
+.hidden-category + .panel .collapsible,
+.hidden-category + .panel tbody {
+	display: none;
+}
+
+/* Collapse button */
+.collapse-btn {
+	position: relative;
+	float: right;
+	margin: 0 10px;
+}
+
+.rtl .collapse-btn {
+	float: left;
+}
