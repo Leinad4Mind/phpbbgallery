@@ -11,6 +11,13 @@
 namespace sitesplat\bbtags\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use phpbb\auth\auth;
+use phpbb\controller\helper;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\config\config;
+use phpbb\request\request;
+use sitesplat\bbtags\tags\manager;
 
 /**
 * Event listener
@@ -31,7 +38,7 @@ class listener implements EventSubscriberInterface
 	* Constructor
 	* @access public
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\request\request $request, \sitesplat\bbtags\tags\manager $tag_manager, $phpbb_root_path, $php_ext)
+	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->helper = $helper;
@@ -54,12 +61,12 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'			=> 'load_lang',
-			'core.page_header_after'	=> 'load_tags',
-			
-			'core.posting_modify_template_vars'	=> 'modify_template_vars',
-			'core.submit_post_end'				=> 'save_tags',
-			'core.permissions'					=> 'add_permission',
+			'core.user_setup'						=> 'load_lang',
+			'core.page_header_after'				=> 'load_tags',
+			'core.posting_modify_template_vars'		=> 'modify_template_vars',
+			'core.submit_post_end'					=> 'save_tags',
+            'core.delete_topics_after_query'		=> 'delete_tags',
+			'core.permissions'						=> 'add_permission',
 		);
 	}
 
@@ -157,7 +164,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->template->assign_block_vars($block_name, array (
 				'TAG'	=> $tag,
-				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->Slug($tag)))
+				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->Slug($tag, array('transliterate' => true))))
 			));
 		}
 	}
@@ -178,6 +185,12 @@ class listener implements EventSubscriberInterface
 			}
 			$this->manager->assign_tags_to_topic($data['topic_id'], $tags);
 		}
+	}
+
+	public function delete_tags($event)
+	{
+		$topic_ids = $event['topic_ids'];
+		$this->manager->remove_tags_from_topics($topic_ids);
 	}
 
 	/**

@@ -1,1 +1,87 @@
-.tag-editor{list-style-type:none;padding:0 5px 0 0;margin:0;overflow:hidden;border:1px solid #eee;cursor:text;font:normal 1em sans-serif;color:#555;background:#fff;line-height:16px;display:inline-block;width:60%}.tag-editor li{display:block;float:left;overflow:hidden;margin:3px 0}.tag-editor div{float:left;padding:0 4px}.tag-editor .placeholder{padding:0 8px;color:#bbb}.tag-editor .placeholder div{margin-bottom:0}.tag-editor .tag-editor-spacer{padding:0;width:8px;overflow:hidden;color:transparent;background:none;margin-bottom:0}.tag-editor input{vertical-align:inherit;border:0;outline:none;padding:0;margin:0;cursor:text;font-family:inherit;font-weight:inherit;font-size:inherit;font-style:inherit;box-shadow:none;background:none;color:#444}.tag-editor-hidden-src{position:absolute!important;left:-99999px}.tag-editor ::-ms-clear{display:none}.tag-editor .tag-editor-tag{padding-left:5px;color:#46799b;background:#e0eaf1;white-space:nowrap;overflow:hidden;cursor:pointer;border-radius:2px 0 0 2px;margin-bottom:0}.tag-editor .tag-editor-delete{background:#e0eaf1;cursor:pointer;border-radius:0 2px 2px 0;padding-left:3px;padding-right:4px;margin-bottom:0}.tag-editor .tag-editor-delete i{line-height:16px;display:inline-block;position:relative;top:-2px}.tag-editor .tag-editor-delete i:before{font-size:1em;color:#8ba7ba;content:"×";font-style:normal}.tag-editor .tag-editor-delete:hover i:before{color:#d65454}.tag-editor .tag-editor-tag.active+.tag-editor-delete,.tag-editor .tag-editor-tag.active+.tag-editor-delete i{visibility:hidden;cursor:text}.tag-editor .tag-editor-tag.active{background:none!important}.ui-autocomplete{position:absolute;top:0;left:0;cursor:default;font-family:"Source Sans Pro","Arial","Helvetica",sans-serif;color:#8d9aa5}.ui-front{z-index:9999}.ui-menu{list-style:none;padding:1px 3px;margin:0;display:block;outline:none}.ui-menu .ui-menu-item a{text-decoration:none;display:block;padding:2px .4em;line-height:1.4;min-height:0}.ui-widget-content{border:1px solid #bbb;background:#fff;color:#555}.ui-widget-content a{color:#46799b}.ui-widget-content .ui-state-hover,.ui-widget-header .ui-state-hover,.ui-state-focus,.ui-widget-content .ui-state-focus,.ui-widget-header .ui-state-focus{background:#e0eaf1}.ui-helper-hidden-accessible{display:none}.control-bbtags .tag-editor{font-size:12px;font-weight:600;display:block;width:100%;min-height:36px;padding:6px 0;-webkit-transition:border-color .3s;-moz-transition:border-color .3s;-ms-transition:border-color .3s;color:#555;border:2px solid #d6d9e0;border-radius:3px;box-shadow:none}.control-bbtags .tag-editor:focus{border-color:#969fa1;-webkit-box-shadow:none;box-shadow:none}.control-bbtags .tag-editor::-moz-placeholder{opacity:1;color:#999}.control-bbtags .tag-editor:-ms-input-placeholder{color:#999}.control-bbtags .tag-editor::-webkit-input-placeholder{color:#999}.tag-editor .tag-editor-delete i{top:0}.tag-editor .tag-editor-delete{font-size:13px!important}
+/* surrounding tag container */
+.tag-editor {
+    list-style-type: none; padding: 0 5px 0 0; margin: 0; overflow: hidden; border: 1px solid #eee; cursor: text;
+    font: normal 1em sans-serif; color: #555; background: #fff; line-height: 16px;display:inline-block; width:60%;
+}
+
+/* core styles usually need no change */
+.tag-editor li { display: block; float: left; overflow: hidden; margin: 3px 0; }
+.tag-editor div { float: left; padding: 0 4px; }
+.tag-editor .placeholder { padding: 0 8px; color: #bbb; }
+.tag-editor .placeholder div {  margin-bottom:0; }
+.tag-editor .tag-editor-spacer { padding: 0; width: 8px; overflow: hidden; color: transparent; background: none; margin-bottom:0;}
+.tag-editor input {
+    vertical-align: inherit; border: 0; outline: none; padding: 0; margin: 0; cursor: text;
+    font-family: inherit; font-weight: inherit; font-size: inherit; font-style: inherit;
+    box-shadow: none; background: none; color: #444;
+}
+/* hide original input field or textarea visually to allow tab navigation */
+.tag-editor-hidden-src { position: absolute !important; left: -99999px; }
+/* hide IE10 "clear field" X */
+.tag-editor ::-ms-clear { display: none; }
+
+/* tag style */
+.tag-editor .tag-editor-tag {
+    padding-left: 5px; color: #46799b; background: #e0eaf1; white-space: nowrap;
+    overflow: hidden; cursor: pointer; border-radius: 2px 0 0 2px; margin-bottom:0;
+}
+
+/* delete icon */
+.tag-editor .tag-editor-delete { background: #e0eaf1; cursor: pointer; border-radius: 0 2px 2px 0; padding-left: 3px; padding-right: 4px; margin-bottom:0;}
+.tag-editor .tag-editor-delete i { line-height: 16px; display: inline-block; position:relative; top:-2px; }
+.tag-editor .tag-editor-delete i:before { font-size: 1em; color: #8ba7ba; content: "×"; font-style: normal; }
+.tag-editor .tag-editor-delete:hover i:before { color: #d65454; }
+.tag-editor .tag-editor-tag.active+.tag-editor-delete, .tag-editor .tag-editor-tag.active+.tag-editor-delete i { visibility: hidden; cursor: text; }
+
+.tag-editor .tag-editor-tag.active { background: none !important; }
+
+/* jQuery UI autocomplete - code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css */
+.ui-autocomplete { position: absolute; top: 0; left: 0; cursor: default;font-family: "Source Sans Pro","Arial","Helvetica",sans-serif;color: #8d9aa5; }
+.ui-front { z-index: 9999; }
+.ui-menu { list-style: none; padding: 1px 3px; margin: 0; display: block; outline: none; }
+.ui-menu .ui-menu-item a { text-decoration: none; display: block; padding: 2px .4em; line-height: 1.4; min-height: 0; /* support: IE7 */ }
+.ui-widget-content { border: 1px solid #bbb; background: #fff; color: #555; }
+.ui-widget-content a { color: #46799b; }
+.ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { background: #e0eaf1; }
+.ui-helper-hidden-accessible { display: none; }
+
+
+/* custom field and fixes */
+.control-bbtags .tag-editor {
+    font-size: 12px;
+    font-weight: 600;
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    padding: 6px 0;
+    -webkit-transition: border-color .3s;
+       -moz-transition: border-color .3s;
+        -ms-transition: border-color .3s;
+    color: #555;
+    border: 2px solid #d6d9e0;
+    border-radius: 3px;
+    box-shadow: none;
+}
+.control-bbtags .tag-editor:focus {
+    border-color: #969fa1;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+.control-bbtags .tag-editor::-moz-placeholder {
+    opacity: 1;
+    color: #999;
+}
+.control-bbtags .tag-editor:-ms-input-placeholder {
+    color: #999;
+}
+.control-bbtags .tag-editor::-webkit-input-placeholder {
+    color: #999;
+}
+
+.tag-editor .tag-editor-delete i {
+    top: 0;
+}
+
+.tag-editor .tag-editor-delete {
+    font-size: 13px !important;
+}

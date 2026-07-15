@@ -8,13 +8,14 @@
 *
 */
 
-namespace sitesplat\bbtags\migrations\v31x;
+namespace sitesplat\bbtags\migrations\v32x;
 
 class m6_add_cloud_limit extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('sitesplat\bbtags\migrations\v31x\m5_read_permission');
+//		return array('\phpbb\db\migration\data\v310\gold');
+		return array('\sitesplat\bbtags\migrations\v32x\m5_initial_permission');
 	}
 
 	public function update_data()

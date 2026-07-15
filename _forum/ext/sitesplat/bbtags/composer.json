@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Adds an efficient modern and simple to use Topic Tag system. Comes with the classic Tag Cloud for the WordPress lovers :p",
 	"homepage": "http://sitesplat.com",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"keywords": ["phpbb", "extension", "premium", "Topic tags", "SiteSplat"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -28,7 +28,8 @@
 		"version-check": {
             "host": "www.sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bbtags.json"
+            "filename": "bbtags.json",
+			"ssl": true
 		}
 
 	}

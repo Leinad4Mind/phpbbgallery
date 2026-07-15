@@ -10,6 +10,20 @@
 
 namespace sitesplat\bbtags\controller;
 
+use phpbb\db\driver\driver_interface;
+use phpbb\config\config;
+use phpbb\config\db_text;
+use phpbb\template\template;
+use phpbb\controller\helper;
+use phpbb\request\request;
+use phpbb\user;
+use phpbb\auth\auth;
+use phpbb\cache\service;
+use phpbb\pagination;
+use phpbb\event\dispatcher;
+use phpbb\content_visibility;
+use sitesplat\bbtags\tags\manager;
+
 /**
  * @ignore
  */
@@ -38,7 +52,7 @@ class main
 	/**
 	 * Constructor
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\request\request $request, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\pagination $pagination, \phpbb\event\dispatcher $phpbb_dispatcher, \phpbb\content_visibility $content_visibility, $php_ext, $phpbb_root_path, \sitesplat\bbtags\tags\manager $manager, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, db_text $config_text, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, $table_bbtags, $table_bbtags_topic)
 	{
 		$this->db				= $db;
 		$this->config			= $config;
@@ -99,6 +113,11 @@ class main
 	
 	public function show_topic($tags)
 	{
+		if (!$this->auth->acl_get('u_bbtags_read'))
+		{
+			return $this->helper->error('NOT_AUTHORISED', 403);
+		}
+
 		$this->user->add_lang('search');
 		
 		include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
@@ -111,7 +130,8 @@ class main
 		$sql = 'SELECT t.id, COUNT(tt.id) AS total FROM ' .  $this->table_bbtags_topic . ' tt
 				LEFT JOIN ' . $this->table_bbtags . ' t ON t.id = tt.tag_id
 				LEFT JOIN ' . TOPICS_TABLE . ' topics ON topics.topic_id = tt.topic_id
-				WHERE t.route = "' . $this->db->sql_escape($tags) . '"' . $not_in_fid;
+				WHERE t.route = "' . $this->db->sql_escape($tags) . '"' . $not_in_fid . '
+                GROUP BY t.id';
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$topics_count = $row['total'];
@@ -154,14 +174,14 @@ class main
 			while($row = $this->db->sql_fetchrow($result))
 			{
 				$replies = $this->content_visibility->get_count('topic_posts', $row, $row['forum_id']) - 1;
-				topic_status($row, $replies, ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false, $folder_img, $folder_alt, $topic_type);
+				topic_status($row, $replies, (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$row['topic_id']]) ? true : false, $folder_img, $folder_alt, $topic_type);
 				
-				$unread_topic = ($row['topic_last_post_time'] > (int) $row['mark_time']) ? true : false;
-				$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $auth->acl_get('m_approve', $forum_id)) ? true : false;
+				$unread_topic = (isset($topic_tracking_info[$row['forum_id']][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$row['forum_id']][$row['topic_id']]) ? true : false;
+				$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $row['forum_id'])) ? true : false;
 				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 				$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
-				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$result_topic_id", true, $user->session_id) : '';
-				$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "i=queue&amp;mode=deleted_topics&amp;t=$result_topic_id", true, $user->session_id) : $u_mcp_queue;
+				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') .  '&amp;t=' . $row['topic_id'], true, $this->user->session_id) : '';
+				$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=queue&amp;mode=deleted_topics&amp;t=". $row['topic_id'], true, $user->session_id) : $u_mcp_queue;
 				
 				$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id'];
 				$view_topic_url = append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", $view_topic_url_params);
