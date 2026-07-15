@@ -1,12 +1,12 @@
 <?php
-/*
-* [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -16,11 +16,11 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Chat language
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CHAT'						=> 'Chat',
 	'CHAT_APPLY'				=> 'Aplicar',
 	'CHAT_ARCHIVE'				=> 'Archivo de Chat',
@@ -69,22 +69,14 @@ $lang = array_merge($lang, array(
 
 	'CUSTOM_DATE'		=> 'Fecha personalizada',
 	'EDIT'				=> 'Editar',
+	'HALF_AN_HOUR'		=> 'Media hora',
 	'NEW_TOPIC'			=> 'Nuevo Tema',
 	'PERMANENT'			=> 'Permanente',
 	'QUOTE'				=> 'Citar',
-	
-	'HALF_AN_HOUR'	=> 'Media hora',
-	'NO_LIMIT'		=> 'Sin límite',
-	'ONE_DAY'		=> 'Un día',
-	'ONE_HOUR'		=> 'Una hora',
-	'ONE_WEEK'		=> 'Una semana',
-	'ONE_MONTH'		=> 'Un mes',
-	'ONE_YEAR'		=> 'Un año',
-	'TWO_YEARS'		=> 'Dos años',
 
 	'CORE_INSTALL_ERROR'	=> 'No ha subido todos los archivos del paquete de instalación o está intentando instalar un paquete antiguo.<br />
 		Por favor, asegúrese de subir todos los archivos (incluída la carpeta <em>core</em>) y de utilizar un paquete descargado de la web oficial.',
-));
+]);
 
 // Text language
-$lang = array_merge($lang, array());
+$lang = array_merge($lang, []);

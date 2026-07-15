@@ -29,13 +29,13 @@
 		<th>{{ lang('ACTION') }}</th>	
 	</tr>
 
-{% for pagerow in loops.pagerow %}
-	<tr id="row{{ pagerow.S_ID }}" class="{% if pagerow.S_ROW_COUNT is even %}row2{% else %}row1{% endif %}">
-		<td>{{ pagerow.S_TITLE }}</td>
-		<td><input type="text" class="pagerow-input cbb-inputbox" value="{{ pagerow.S_URL }}" readonly="readonly" /></td>
+{% for page in pagerow %}
+	<tr data-row-id="{{ page.S_ID }}" class="{{ page.S_ROW_COUNT is even ? 'row2' : 'row1' }}">
+		<td>{{ page.S_TITLE }}</td>
+		<td><input type="text" class="pagerow-input cbb-inputbox" value="{{ page.S_URL }}" readonly="readonly" /></td>
 		<td class="actions-col">
-			<a href="{{ pagerow.U_EDIT }}">{{ ICON_EDIT }}</a>
-			<a href="{{ pagerow.U_DELETE }}" class="js-chat-action">{{ ICON_DELETE }}</a>
+			<a href="{{ page.U_EDIT }}">{{ ICON_EDIT }}</a>
+			<a href="{{ page.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>
 		</td>
 	</tr>
 {% else %}

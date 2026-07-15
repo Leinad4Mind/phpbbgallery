@@ -1,18 +1,14 @@
 /**
-* @package cBB Chat
-* @style: All
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * @package cBB Chat
+ * @style: All
+ * @version 1.2.5 15/01/2023
+ *
+ * @copyright (c) 2023 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 var jchat_style_options = {
 	positions: {
-		faq: {
-			top		: ['#faqlinks', 'before'],
-			bottom	: ['.panel:last', 'after']
-		},
 		index: {
 			top		: ['.action-bar:first', 'after'],
 			bottom	: ['.forabg:has(.forumtitle):last', 'after']

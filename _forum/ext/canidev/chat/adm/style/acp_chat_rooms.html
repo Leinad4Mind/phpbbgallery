@@ -31,16 +31,16 @@
 		<tr>
 			<td class="sortable-text">
 			<ul>
-			{% for roomrow in loops.roomrow %}
-				<li id="row{{ roomrow.S_ID }}">
+			{% for room in roomrow %}
+				<li data-row-id="{{ room.S_ID }}">
 					<table><tr>
-						<td><strong>{{ roomrow.S_TITLE }}</strong> <em>(ID: {{ roomrow.S_KEY }})</em></td>
+						<td><strong>{{ room.S_TITLE }}</strong> <em>(ID: {{ room.S_KEY }})</em></td>
 						<td class="actions-col-2">
-							<a href="{{ roomrow.U_EDIT }}">{{ ICON_EDIT }}</a>
-							{% if roomrow.U_DELETE %}<a href="{{ roomrow.U_DELETE }}" class="js-chat-action">{{ ICON_DELETE }}</a>{% endif %}
+							<a href="{{ room.U_EDIT }}">{{ ICON_EDIT }}</a>
+							{% if room.U_DELETE %}<a href="{{ room.U_DELETE }}" data-ajaxify="true">{{ ICON_DELETE }}</a>{% endif %}
 						</td>
 					</tr></table>
-					<input type="hidden" name="row[]" value="{{ roomrow.S_ID }}" />
+					<input type="hidden" name="row[]" value="{{ room.S_ID }}" />
 				</li>
 			{% endfor %}
 			</ul>

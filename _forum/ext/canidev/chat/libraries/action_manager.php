@@ -1,14 +1,16 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\libraries;
 
+use canidev\core\DummyArray;
+use canidev\core\TextParser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class action_manager
@@ -16,16 +18,18 @@ class action_manager
 	private $user_key			= false;
 	private $cookie_user_key	= false;
 	private $user_data			= false;
+	private $room_ary;
 	private $status_ary;
 
-	private $actions = array(
-		'pmuser'		=> array('lang' => 'CHAT_SEND_PM',		'auth' => 'u_chat_sendpm',	'icon' => 'fa-comment',	'check' => 'chat_allow_pm'),
-		'mentionuser'	=> array('lang' => 'CHAT_MENTION',		'auth' => 'u_chat_post',	'icon' => 'fa-user'),
-		'banuser'		=> array('lang' => 'CHAT_BAN_USER',		'auth' => 'm_ban',			'icon' => 'fa-eye-slash'),
-		'unbanuser'		=> array('lang' => 'CHAT_UNBAN_USER',	'auth' => 'm_ban',			'icon' => 'fa-eye'),
-		'deluser'		=> array('lang' => 'CHAT_DELETE_USER',	'auth' => 'a_userdel',		'icon' => 'fa-remove'),
-	);
+	private $actions = [
+		'pmuser'		=> ['lang' => 'CHAT_SEND_PM',		'auth' => 'u_chat_sendpm',	'icon' => 'fa-comment',	'check' => 'chat_allow_pm'],
+		'mentionuser'	=> ['lang' => 'CHAT_MENTION',		'auth' => 'u_chat_post',	'icon' => 'fa-user'],
+		'banuser'		=> ['lang' => 'CHAT_BAN_USER',		'auth' => 'm_ban',			'icon' => 'fa-eye-slash'],
+		'unbanuser'		=> ['lang' => 'CHAT_UNBAN_USER',	'auth' => 'm_ban',			'icon' => 'fa-eye'],
+		'deluser'		=> ['lang' => 'CHAT_DELETE_USER',	'auth' => 'a_userdel',		'icon' => 'fa-remove'],
+	];
 
+	protected $auth;
 	protected $cache;
 	protected $chat;
 	protected $config;
@@ -112,12 +116,12 @@ class action_manager
 			$this->user_key = $this->user->data['user_id'];
 		}
 
-		$this->status_ary = array(
+		$this->status_ary = [
 			constants::STATUS_AVAILABLE		=> 'available',
 			constants::STATUS_AWAY			=> 'away',
 			constants::STATUS_BUSY			=> 'busy',
 			constants::STATUS_HIDDEN		=> 'hidden',
-		);
+		];
 		
 		@define('PHPBB_USE_BOARD_URL_PATH', true);
 	}
@@ -125,8 +129,8 @@ class action_manager
 	/**
 	 * Check user auth
 	 * 
-	 * @param string 	$auth_option 	Auth option name
-	 * @param array 	$data 			Object data
+	 * @param string 		$auth_option 	Auth option name
+	 * @param array|false 	$data 			Object data
 	 * 
 	 * @return bool
 	 */
@@ -139,7 +143,7 @@ class action_manager
 	
 		if($data === false)
 		{
-			return $this->auth->acl_gets(array("u_chat_$auth_option", "m_chat_$auth_option"), 0);
+			return $this->auth->acl_gets(["u_chat_$auth_option", "m_chat_$auth_option"], 0);
 		}
 		else
 		{
@@ -180,20 +184,20 @@ class action_manager
 		$last_update 	= $this->request->variable('last_update', 0);
 		$submit			= $this->request->variable('submit', false);
 		
-		$allow_bbcode		= ($this->config['allow_bbcode'] && $this->config['chat_allow_bbcode']) ? true : false;
-		$allow_smilies		= ($this->config['allow_smilies']) ? true : false;
-		$allow_urls			= ($this->config['allow_post_links']) ? true : false;
+		$allow_bbcode		= ($this->config['allow_bbcode'] && $this->config['chat_allow_bbcode']);
+		$allow_smilies		= (bool)$this->config['allow_smilies'];
+		$allow_urls			= (bool)$this->config['allow_post_links'];
 		$template_filename	= '@canidev_chat/chat_ajax.html';
 		
 		if($json === false)
 		{
-			$json = array(
+			$json = [
 				'action'	=> '',
 				'success'	=> true,
-			);
+			];
 		}
 		
-		if(in_array($action, array('delete', 'edit', 'quote', 'whois', 'move')))
+		if(in_array($action, ['delete', 'edit', 'quote', 'whois', 'move']))
 		{
 			$message_id = $this->request->variable('id', 0);
 		}
@@ -228,7 +232,7 @@ class action_manager
 			// no break;
 			
 			case 'connect_on_post':
-				$update_ary = array();
+				$update_ary = [];
 				
 				// Delete previous guest sessions from the same user
 				if($this->user->data['is_registered'])
@@ -258,9 +262,9 @@ class action_manager
 					}
 					else
 					{
-						$username 			= utf8_normalize_nfc($this->request->variable('username', '', true));
-						$username_register	= utf8_normalize_nfc($this->request->variable('username_register', '', true));
-						$password			= utf8_normalize_nfc($this->request->variable('password', '', true));
+						$username 			= $this->request->variable('username', '', true);
+						$username_register	= $this->request->variable('username_register', '', true);
+						$password			= $this->request->variable('password', '', true);
 						
 						$this->user_key	= time() - 1001;
 						
@@ -275,13 +279,13 @@ class action_manager
 						{
 							$json['action'] = $action = 'login';
 							
-							$this->template->assign_vars(array(
+							$this->template->assign_vars([
 								'S_LOGIN'	=> true,
 								'S_TITLE'	=> $this->language->lang('LOGIN'),
 								
 								'ALLOW_GUESTS'	=> $this->auth('view'),
 								'U_REGISTER'	=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=register'),
-							));
+							]);
 							
 							break;
 						}
@@ -304,10 +308,10 @@ class action_manager
 									$submit = false;
 									$json['action'] = $action = 'login';
 									
-									$this->template->assign_vars(array(
+									$this->template->assign_vars([
 										'S_LOGIN'	=> true,
 										'S_TITLE'	=> $this->language->lang('CHAT_USER_ALREADY_EXISTS')
-									));
+									]);
 									
 									break;
 								}
@@ -387,11 +391,11 @@ class action_manager
 								$submit = false;
 								$json['action'] = $action = 'login';
 								
-								$this->template->assign_vars(array(
+								$this->template->assign_vars([
 									'S_LOGIN'	=> true,
 									'S_TITLE'	=> $this->language->lang('LOGIN'),
 									'S_ERROR'	=> $err
-								));
+								]);
 								
 								break;
 							}
@@ -411,7 +415,7 @@ class action_manager
 						
 						$result = $this->db->sql_query($sql);
 					
-						$this->user_data = array(
+						$this->user_data = [
 							'user_id'				=> $this->user->data['user_id'],
 							'user_ip'				=> $this->user->ip,
 							'username'				=> $username,
@@ -424,7 +428,7 @@ class action_manager
 							'exclude_time'			=> 0,
 							'user_groups'			=> implode(',', $this->core->get_user_groups()),
 							'user_trace_time'		=> 0,
-						);
+						];
 						
 						$sql = 'INSERT INTO ' . $this->tables['users'] . ' ' . $this->db->sql_build_array('INSERT', $this->user_data);
 						$this->db->sql_query($sql);
@@ -435,12 +439,12 @@ class action_manager
 				}
 				else
 				{
-					$update_ary = array(
+					$update_ary = [
 						'user_online'			=> 1,
 						'session_start'			=> time(),
 						'session_viewonline'	=> $this->user->data['session_viewonline'],
 						'user_lastjoin'			=> time(),
-					);
+					];
 					
 					if(!$this->config['chat_remember_status'] || ($this->user_data['user_status'] == constants::STATUS_AWAY && $this->request->variable('auto_away', false)))
 					{
@@ -479,6 +483,10 @@ class action_manager
 					$this->user_data = array_merge($this->user_data, $update_ary);
 				}
 
+				$this->add_to_queue([
+					'action'	=> 'connect',
+				]);
+
 				if($action == 'connect_on_post')
 				{
 					return true;
@@ -491,7 +499,7 @@ class action_manager
 			case 'refresh_after_status':
 			case 'refresh_after_move':
 			case 'refresh_after_name':
-				$row_users = $row_data = $user_cache = array();
+				$row_users = $row_data = $user_cache = [];
 				$max_time 		= $last_update;
 
 				// Get the user session if no exists
@@ -508,19 +516,20 @@ class action_manager
 				// If user is excluded, disconnect it here
 				if($this->user_data['exclude_time'] && ($this->user_data['exclude_time'] == 1 || $this->user_data['exclude_time'] > $this->user->time_now))
 				{
-					$json = array_merge($json, array(
+					$json = array_merge($json, [
 						'action'	=> 'exclude',
 						'message'	=> ($this->user_data['exclude_time'] == 1) ? $this->language->lang('CHAT_USER_BANNED_PERMANENT') : $this->language->lang('CHAT_USER_BANNED_PERIOD', $this->user->format_date($this->user_data['exclude_time'])),
-					));
+					]);
+					
 					break;
 				}
 
 				// Delete inactive users (one time every 3 updates)
 				if($action == 'connect' || ($action == 'refresh' && $this->request->variable('trace', false)))
 				{
-					$sql_ary = array(
+					$sql_ary = [
 						'user_trace_time < ' . (time() - ($this->config['chat_refresh'] * 3))
-					);
+					];
 
 					if($this->chat->time_limit !== false)
 					{
@@ -537,9 +546,9 @@ class action_manager
 				/* 
 				 * Get connected users and update global variables of current user
 				 */
-				$user_update_ary = array(
+				$user_update_ary = [
 					'user_trace_time'	=> time()
-				);
+				];
 
 				$sql = 'SELECT *
 					FROM ' . $this->tables['users'] . '
@@ -580,7 +589,7 @@ class action_manager
 
 				$midnight = $midnight->getTimestamp();
 				
-				$room_autopurge_ids = $room_update_ids = array();
+				$room_autopurge_ids = $room_update_ids = [];
 
 				foreach($this->room_ary as $room_key => $row)
 				{
@@ -591,7 +600,7 @@ class action_manager
 						continue;
 					}
 					
-					$row_data[$room_key] = array();
+					$row_data[$room_key] = [];
 
 					// Autopurge
 					if($action == 'connect' && $row['room_autopurge_time'])
@@ -632,11 +641,11 @@ class action_manager
 				// Always set the guest room
 				if(!isset($row_data[constants::GUEST_ROOM]))
 				{
-					$this->room_ary[constants::GUEST_ROOM] = array(
+					$this->room_ary[constants::GUEST_ROOM] = [
 						'title'		=> 'CHAT_GUEST_ROOM',
-					);
+					];
 
-					$row_data = array_merge(array(constants::GUEST_ROOM => array()), $row_data);
+					$row_data = array_merge([constants::GUEST_ROOM => []], $row_data);
 				}
 
 				// Load "private" rooms
@@ -655,29 +664,29 @@ class action_manager
 
 						if(isset($row_users[$key]) && empty($row_users[$key]['exclude_time']))
 						{
-							$row_data[$key] = array();
+							$row_data[$key] = [];
 						}
 					}
 					$this->db->sql_freeresult($result);
 				}
 				
 				// Force to refresh the userlist of all open rooms
-				$open_rooms = $this->request->variable('rooms', array(0));
+				$open_rooms = $this->request->variable('rooms', [0]);
 				
 				foreach($open_rooms as $room_key)
 				{
 					if(!isset($row_data[$room_key]))
 					{
-						$row_data[$room_key] = array();
+						$row_data[$room_key] = [];
 					}
 				}
 				
-				$vars = array('action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update');
+				$vars = ['action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update'];
 				extract($this->obtain_rooms_data(compact($vars)));
 				
 				// Get queued actions
 				$time_mark		= $this->request->variable('time_mark', 0);
-				$queue_actions	= array();
+				$queue_actions	= [];
 
 				if($action == 'refresh' && $time_mark && ($queue_cache = $this->cache->get('_chat_queue')) !== false)
 				{
@@ -691,14 +700,21 @@ class action_manager
 				}
 
 				// Update the values in javascript
-				$json = array_merge($json, array(
+				$json = array_merge($json, [
 					'action'		=> 'update',
 					'timeMark'		=> time(),
 					'last_time'		=> $max_time,
 					'msg_direction'	=> $this->config['chat_direction'],
 					'floodTime'		=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
 					'queueActions'	=> $queue_actions,
-				));
+				]);
+			break;
+
+			case 'trace':
+				$sql = 'UPDATE ' . $this->tables['users'] . '
+					SET user_trace_time = ' . time() . '
+					WHERE user_key = ' . $this->user_key;
+				$this->db->sql_query($sql);
 			break;
 			
 			case 'clear':
@@ -754,10 +770,10 @@ class action_manager
 						WHERE message_id = ' . $message_id;
 					$this->db->sql_query($sql);
 					
-					$this->add_to_queue(array(
+					$this->add_to_queue([
 						'action'	=> 'delete',
 						'msgID'		=> $message_id,
-					));
+					]);
 					
 					// Add log
 					$parse_flags	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
@@ -770,7 +786,7 @@ class action_manager
 						$this->user->ip,
 						'LOG_CHAT_MESSAGE_REMOVED',
 						time(),
-						($method == 'user') ? array('reportee_id' => 0, $message) : array($message)
+						($method == 'user') ? ['reportee_id' => 0, $message] : [$message]
 					);
 				}
 			break;
@@ -803,11 +819,11 @@ class action_manager
 							$uid = $bitfield = $options = '';
 							generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies, $allow_bbcode, $allow_bbcode, $allow_bbcode, $allow_urls, 'chat');
 							
-							$sql_ary = array(
+							$sql_ary = [
 								'message_text'		=> $message,
 								'bbcode_bitfield'	=> $bitfield,
 								'bbcode_uid'		=> $uid,
-							);
+							];
 							
 							$sql = 'UPDATE ' . $this->tables['messages'] . '
 								SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
@@ -816,11 +832,11 @@ class action_manager
 
 							$json['text'] = generate_text_for_display($message, $uid, $bitfield, $options);
 							
-							$this->add_to_queue(array(
+							$this->add_to_queue([
 								'action'	=> 'edit',
 								'msgID'		=> $message_id,
 								'msgText'	=> $json['text'],
-							));
+							]);
 						}
 
 						break;
@@ -830,21 +846,21 @@ class action_manager
 
 					$editor = \canidev\core\editor::get_instance($this->container);
 
-					$editor->build(array(
+					$editor->build([
 						'name'				=> 'ic_edit_message',
 						'plugins'			=> 'chat',
 						'rows'				=> 3,
 						'type'				=> 'basic',
 						'value'				=> $row['message_text'],
 						'toolbarContainer'	=> '.ic-edit-toolbar',
-						'toolbar'			=> array('b', 'i', 'u', 'quote', 'code', 'list', 'list=1', '*', 'img', 'url', 'color', 'size'),
+						'toolbar'			=> ['b', 'i', 'u', 'quote', 'code', 'list', 'list=1', '*', 'img', 'url', 'color', 'size'],
 						'toolbarExclude'	=> $this->chat->get_disallowed_bbcodes(),
-					));
+					]);
 
-					$this->template->assign_vars(array(
+					$this->template->assign_vars([
 						'S_EDIT'	=> true,
 						'S_TITLE'	=> $this->language->lang('EDIT'),
-					));
+					]);
 				}
 			break;
 			
@@ -854,7 +870,7 @@ class action_manager
 					$this->run('connect_on_post');
 				}
 
-				$message 		= utf8_normalize_nfc($this->request->variable('ic_message', '', true));
+				$message 		= $this->request->variable('ic_message', '', true);
 				$room_key		= $this->request->variable('room', constants::GUEST_ROOM);
 				$last_post_time = $this->request->variable('last_post_time', 0);
 
@@ -866,11 +882,11 @@ class action_manager
 				// If room is disabled, no post and close the room
 				if(isset($this->room_ary[$room_key]) && !$this->room_ary[$room_key]['room_enabled'])
 				{
-					$json = array(
+					$json = [
 						'action'	=> 'close_room',
 						'room_key'	=> $room_key,
 						'success'	=> true,
-					);
+					];
 
 					break;
 				}
@@ -897,7 +913,7 @@ class action_manager
 					$uid = $bitfield = $options = '';
 					generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies, $allow_bbcode, $allow_bbcode, $allow_bbcode, $allow_urls, 'chat');
 					
-					$sql_ary = array(
+					$sql_ary = [
 						'poster_key'		=> $this->user_data['user_key'],
 						'dest_key'			=> $room_key,
 						'poster_id'			=> $this->user_data['user_id'],
@@ -907,16 +923,16 @@ class action_manager
 						'message_time'		=> time(),
 						'bbcode_bitfield'	=> $bitfield,
 						'bbcode_uid'		=> $uid,
-					);
+					];
 
 					$sql = 'INSERT INTO ' . $this->tables['messages'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 					$this->db->sql_query($sql);
 
 					// Update the user activity
-					$sql_ary = array(
+					$sql_ary = [
 						'user_lastjoin'	=> $sql_ary['message_time'],
 						'user_online'	=> 1
-					);
+					];
 
 					if($this->request->variable('auto_away', false))
 					{
@@ -961,15 +977,15 @@ class action_manager
 
 				foreach($rules as $rule_text)
 				{
-					$this->template->assign_block_vars('rulerow', array(
+					$this->template->assign_block_vars('rulerow', [
 						'S_TEXT'	=> $rule_text,
-					));
+					]);
 				}
 
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_RULES'	=> true,
 					'S_TITLE'	=> $this->language->lang('CHAT_RULES'),
-				));
+				]);
 			break;
 			
 			case 'whois':
@@ -1001,10 +1017,10 @@ class action_manager
 							}
 						}
 
-						$this->template->assign_vars(array(
+						$this->template->assign_vars([
 							'S_DIALOG_CONTENT'	=> (sizeof($ipwhois) ? preg_replace('#(^(<br />)*|<br />$)#', '', implode('<br />', $ipwhois)) : $this->language->lang('CHAT_NO_INFORMATION')),
 							'S_TITLE'			=> $this->language->lang('WHOIS'),
-						));
+						]);
 					}
 				}
 			break;
@@ -1022,7 +1038,7 @@ class action_manager
 					$period_time	= $this->request->variable('period', 0);
 					$period_date	= $this->request->variable('date', '');
 					$exclude_time	= 0;
-					$row_users 		= array();
+					$row_users 		= [];
 
 					$sql = 'SELECT cu.*, u.username AS member_name, u.user_type, u.user_colour, g.group_name
 						FROM ' . $this->tables['users'] . ' cu
@@ -1088,18 +1104,18 @@ class action_manager
 
 						$row_users[$user_data['user_key']] = $user_data;
 
-						$this->template->assign_block_vars('room', array(
+						$this->template->assign_block_vars('room', [
 							'ID'		=> 'temp_room',
 							'S_TITLE'	=> 'temp',
 							'S_CLASS'	=> 'room',
-						));
+						]);
 
 						$this->generate_userlist($row_users);
 
-						$json = array_merge($json, array(
+						$json = array_merge($json, [
 							'action'	=> $action,
 							'user_key'	=> $user_key
-						));
+						]);
 						
 						// Add log
 						$username = ($user_data['username']) ? $user_data['username'] : $user_data['member_name'];
@@ -1109,7 +1125,7 @@ class action_manager
 							$this->user->ip,
 							'LOG_CHAT_EXCLUSION_' . (($action == 'banuser') ? 'ADDED' : 'REMOVED'),
 							time(),
-							array($username)
+							[$username]
 						);
 					}
 					break;
@@ -1117,7 +1133,7 @@ class action_manager
 				
 				if($action == 'banuser')
 				{
-					$option_ary = array(
+					$option_ary = [
 						1			=> 'PERMANENT',
 						1800		=> 'HALF_AN_HOUR',
 						3600		=> 'ONE_HOUR',
@@ -1126,7 +1142,7 @@ class action_manager
 						2592000		=> 'ONE_MONTH',
 						31104000	=> 'ONE_YEAR',
 						0			=> 'CUSTOM_DATE',
-					);
+					];
 
 					$option_str = '';
 
@@ -1135,11 +1151,11 @@ class action_manager
 						$option_str .= '<option value="' . $value . '">' . $this->language->lang($title) . '</option>';
 					}
 
-					$this->template->assign_vars(array(
+					$this->template->assign_vars([
 						'S_BAN'				=> true,
 						'S_PERIOD_OPTIONS'	=> $option_str,
 						'S_TITLE'			=> $this->language->lang('CHAT_BAN_USER'),
-					));
+					]);
 				}
 			break;
 			
@@ -1151,7 +1167,7 @@ class action_manager
 
 				if($this->config['chat_max_pm'])
 				{
-					$open_rooms 		= $this->request->variable('rooms', array(0));
+					$open_rooms 		= $this->request->variable('rooms', [0]);
 					$public_room_ary	= $this->chat->obtain_rooms();
 					$pm_count 			= 0;
 					
@@ -1165,17 +1181,17 @@ class action_manager
 
 					if($pm_count >= $this->config['chat_max_pm'])
 					{
-						$this->template->assign_vars(array(
+						$this->template->assign_vars([
 							'S_DIALOG_CONTENT'	=> $this->language->lang('CHAT_PM_EXCEED'),
 							'S_TITLE'			=> $this->language->lang('INFORMATION'),
-						));
+						]);
 						
 						$json['dialog'] = true;
 						break;
 					}
 				}
 				
-				$row_users		= $user_cache = array();
+				$row_users		= $user_cache = [];
 				$user_key		= $this->request->variable('uk', 0);
 				$max_time 		= $last_update;
 				$last_update	= 0;
@@ -1185,14 +1201,14 @@ class action_manager
 					break;
 				}
 				
-				$row_data = array(
-					$user_key	=> array(),
-				);
+				$row_data = [
+					$user_key	=> [],
+				];
 				
 				// Get conversation users
 				$sql = 'SELECT *
 					FROM ' . $this->tables['users'] . '
-					WHERE ' . $this->db->sql_in_set('user_key', array($user_key, $this->user_key));
+					WHERE ' . $this->db->sql_in_set('user_key', [$user_key, $this->user_key]);
 				$result = $this->db->sql_query($sql);
 				while($row = $this->db->sql_fetchrow($result))
 				{
@@ -1201,17 +1217,17 @@ class action_manager
 				}
 				$this->db->sql_freeresult($result);
 				
-				$vars = array('action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update');
+				$vars = ['action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update'];
 				extract($this->obtain_rooms_data(compact($vars)));
 				
 				// Update the values in javascript
-				$json = array_merge($json, array(
+				$json = array_merge($json, [
 					'action'		=> 'update',
 					'timeMark'		=> time(),
 					'last_time'		=> $max_time,
 					'msg_direction'	=> $this->config['chat_direction'],
 					'floodTime'		=> ($this->config['chat_flood_time'] && !$this->auth->acl_get('u_chat_ignoreflood')) ? $this->config['chat_flood_time'] * 1000 : 0,
-				));
+				]);
 			break;
 			
 			case 'set_available':
@@ -1227,10 +1243,10 @@ class action_manager
 				
 				$status_id = array_search(str_replace('set_', '', $action), $this->status_ary);
 				
-				$sql_ary = array(
+				$sql_ary = [
 					'user_lastjoin'	=> time(),
 					'user_status'	=> ($status_id === false) ? constants::STATUS_AVAILABLE : $status_id,
-				);
+				];
 				
 				$sql = 'UPDATE ' . $this->tables['users'] . '
 					SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
@@ -1262,11 +1278,11 @@ class action_manager
 					return $this->run('refresh_after_name');
 				}
 
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_SET_NAME'			=> true,
 					'S_CURRENT_USERNAME'	=> $this->user_data['username'],
 					'S_TITLE'				=> $this->language->lang('CHAT_CHANGE_NAME'),
-				));
+				]);
 			break;
 			
 			case 'move':
@@ -1296,14 +1312,14 @@ class action_manager
 							$this->db->sql_query($sql);
 						}
 						
-						$this->add_to_queue(array(
+						$this->add_to_queue([
 							'action'	=> 'move',
 							'msgID'		=> $message_id,
 							'destKey'	=> $to_room,
-						));
+						]);
 						
 						// Add log
-						$parse_flags	= ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+						$parse_flags	= ($message_row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 						$message 		= generate_text_for_display($message_row['message_text'], $message_row['bbcode_uid'], $message_row['bbcode_bitfield'], $parse_flags, true);
 					
 						$this->log->add(
@@ -1312,11 +1328,11 @@ class action_manager
 							$this->user->ip,
 							'LOG_CHAT_MESSAGE_MOVED',
 							time(),
-							array(
+							[
 								$this->language->lang($this->room_ary[$message_row['dest_key']]['room_title']),
 								$this->language->lang($this->room_ary[$to_room]['room_title']),
 								$message
-							)
+							]
 						);
 
 						// Refresh the chat 
@@ -1327,7 +1343,7 @@ class action_manager
 					
 					if(!isset($this->room_ary[constants::GUEST_ROOM]))
 					{
-						$this->room_ary[constants::GUEST_ROOM] = array();
+						$this->room_ary[constants::GUEST_ROOM] = [];
 					}
 					
 					foreach($this->room_ary as $room_key => $row)
@@ -1343,11 +1359,11 @@ class action_manager
 						$options_str .= '<option value="' . $room_key . '">' . $this->language->lang($row['room_title']) . '</option>';
 					}
 
-					$this->template->assign_vars(array(
+					$this->template->assign_vars([
 						'S_MOVE'			=> true,
 						'S_ROOM_OPTIONS'	=> $options_str,
 						'S_TITLE'			=> $this->language->lang('CHAT_MOVE'),
-					));
+					]);
 				}
 			break;
 			
@@ -1362,59 +1378,59 @@ class action_manager
 					break;
 				}
 				
-				$row_data[$room_key] = array();
+				$row_data[$room_key] = [];
 				
-				$row_users = $user_cache = array();
+				$row_users = $user_cache = [];
 				
-				$vars = array('action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update');
+				$vars = ['action', 'row_data', 'row_users', 'user_cache', 'max_time', 'last_update'];
 				extract($this->obtain_rooms_data(compact($vars), true));
 			break;
 		}
 		
 		/**
-		* @event chat.after_action_run
-		* @var	string	action				Current action
-		* @var	string	template_filename	Template to use
-		* @var	array	json				Data to send to chat
-		* @since 1.2.0
-		*/
-		$vars = array('action', 'template_filename', 'json');
+		 * @event chat.after_action_run
+		 * @var	string	action				Current action
+		 * @var	string	template_filename	Template to use
+		 * @var	array	json				Data to send to chat
+		 * @since 1.2.0
+		 */
+		$vars = ['action', 'template_filename', 'json'];
 		extract($this->dispatcher->trigger_event('chat.after_action_run', compact($vars)));
 		
-		if((in_array($action, array('login', 'edit', 'rules', 'whois', 'banuser', 'move', 'set_name')) || !empty($json['dialog'])) && !$submit)
+		if((in_array($action, ['login', 'edit', 'rules', 'whois', 'banuser', 'move', 'set_name']) || !empty($json['dialog'])) && !$submit)
 		{
 			$this->template->assign_var('S_DIALOG', true);
 		}
 
-		$this->template->set_filenames(array(
+		$this->template->set_filenames([
 			'chat' => $template_filename
-		));
+		]);
 		
-		$response = \canidev\core\json_response::get_instance();
+		$response = \canidev\core\JsonResponse::getInstance();
 
 		$response
 			->add($json)
-			->add_html($this->template->assign_display('chat'))
+			->addHtml($this->template->assign_display('chat'))
 			->send();
 	}
 	
 	/**
 	 * Generate chat userlist
 	 * 
-	 * @param array 		$row_users
-	 * @param array			$user_cache
-	 * @param int|false 	$room_key
+	 * @param array 			$row_users
+	 * @param array|false		$user_cache
+	 * @param int|false 		$room_key
 	 */
 	private function generate_userlist($row_users, $user_cache = false, $room_key = false)
 	{
-		$rows = array();
+		$rows = [];
 
 		foreach($row_users as $user_key => $row)
 		{
-			$row_actions = array();
+			$row_actions = [];
 			
 			// If private room, only show the two users of the conversation
-			if($room_key !== false && !isset($this->room_ary[$room_key]) && !in_array($user_key, array($room_key, $this->user_key)))
+			if($room_key !== false && !isset($this->room_ary[$room_key]) && !in_array($user_key, [$room_key, $this->user_key]))
 			{
 				continue;
 			}
@@ -1442,14 +1458,14 @@ class action_manager
 			
 			// If is public room, only show the users can see the room
 			if($room_key != constants::GUEST_ROOM && isset($row['user_groups']) && isset($this->room_ary[$room_key]) &&
-				(!$this->core->group_auth($this->room_ary[$room_key]['room_data']['groups'], $row['user_groups']) && !isset($this->room_ary[$room_key]['room_data']['users'][$row['user_id']])))
+				(!$this->core->group_auth($this->room_ary[$room_key]['room_data']['groups'], $row['user_groups'], $row['group_id']) && !isset($this->room_ary[$room_key]['room_data']['users'][$row['user_id']])))
 			{
 				continue;
 			}
 			
 			if($row['user_id'] != ANONYMOUS && (!$row['session_viewonline'] || $row['user_status'] == constants::STATUS_HIDDEN))
 			{
-				if(!$this->auth('-u_viewonline') && $user_key != $this->user_key && !in_array($user_key, array($room_key, $this->user_key)))
+				if(!$this->auth('-u_viewonline') && $user_key != $this->user_key && !in_array($user_key, [$room_key, $this->user_key]))
 				{
 					continue;
 				}
@@ -1516,13 +1532,13 @@ class action_manager
 						
 						if($valid)
 						{
-							$row_actions[] = array(
+							$row_actions[] = [
 								'S_ACTION'		=> $user_action,
 								'S_ICON'		=> isset($action_data['icon']) ? $action_data['icon'] : '',
 								'S_TITLE'		=> $this->language->lang($action_data['lang']),
 								'S_USER_KEY'	=> $user_key,
 								'U_ACTION'		=> $u_action,
-							);
+							];
 						}
 					}
 				}
@@ -1531,13 +1547,13 @@ class action_manager
 			{
 				if($row['user_id'] == ANONYMOUS)
 				{
-					$row_actions[] = array(
+					$row_actions[] = [
 						'S_ACTION'		=> 'set_name',
 						'S_ICON'		=> 'fa-pencil',
 						'S_TITLE'		=> $this->language->lang('CHAT_CHANGE_NAME'),
 						'S_USER_KEY'	=> $user_key,
 						'U_ACTION'		=> '#',
-					);
+					];
 				}
 
 				foreach($this->status_ary as $status_id => $action)
@@ -1554,13 +1570,13 @@ class action_manager
 						$title = '<strong>' . $title . '</strong>';
 					}
 
-					$row_actions[] = array(
+					$row_actions[] = [
 						'S_ACTION'		=> 'set_' . $action,
 						'IS_STATUS'		=> true,
 						'S_STATUS'		=> $action,
 						'S_TITLE'		=> $title,
 						'S_USER_KEY'	=> $user_key
-					);
+					];
 				}
 			}
 			
@@ -1599,7 +1615,7 @@ class action_manager
 			
 			$rkey = $rkey . '.' . strtolower($row['username']);
 			
-			$user_row = array(
+			$user_row = [
 				'S_KEY'			=> $user_key,
 				'S_STATUS'		=> $user_status,
 				'S_USERNAME'	=> ($row['user_id'] == ANONYMOUS || $row['exclude_time']) ? $row['username'] : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['username']),
@@ -1608,15 +1624,15 @@ class action_manager
 				
 				'S_HAS_SUBMENU'		=> (sizeof($row_actions) ? true : false),
 				'contextmenu'		=> $row_actions,
-			);
+			];
 			
 			/**
-			* @event chat.modify_user_row
-			* @var	array	row				Original user data
-			* @var	array	$user_row		Output data
-			* @since 1.2.0
-			*/
-			$vars = array('row', 'user_row');
+			 * @event chat.modify_user_row
+			 * @var	array	row				Original user data
+			 * @var	array	$user_row		Output data
+			 * @since 1.2.0
+			 */
+			$vars = ['row', 'user_row'];
 			extract($this->dispatcher->trigger_event('chat.modify_user_row', compact($vars)));
 			
 			$rows[$rkey] = $user_row;
@@ -1737,8 +1753,8 @@ class action_manager
 	 */
 	protected function post_to_room(&$row_data, $row, $timemark, $linked_forums)
 	{
-		$forum_id = (int)$row['forum_id'];
-		$room_keys = isset($linked_forums[$forum_id]) ? $linked_forums[$forum_id] : array(constants::GUEST_ROOM);
+		$forum_id 	= (int)$row['forum_id'];
+		$room_keys 	= isset($linked_forums[$forum_id]) ? $linked_forums[$forum_id] : [constants::GUEST_ROOM];
 
 		foreach($room_keys as $room_key)
 		{
@@ -1764,7 +1780,7 @@ class action_manager
 		
 		if($queue_cache === false)
 		{
-			$queue_cache = array();
+			$queue_cache = [];
 		}
 		
 		// First, remove old queue (after 10 min)
@@ -1854,7 +1870,7 @@ class action_manager
 		
 		if($load_forum_posts)
 		{
-			$linked_forums	= array();
+			$linked_forums	= [];
 			
 			// Get forums linked to public rooms
 			foreach($this->room_ary as $room_key => $row)
@@ -1868,7 +1884,7 @@ class action_manager
 				{
 					if(!isset($linked_forums[$forum_id]))
 					{
-						$linked_forums[$forum_id] = array();
+						$linked_forums[$forum_id] = [];
 					}
 					
 					$linked_forums[$forum_id][] = $room_key;
@@ -1922,20 +1938,19 @@ class action_manager
 			switch($this->config['chat_forum_posts'])
 			{
 				case constants::SHOW_TOPICS:
-					$sql_array = array(
-						'SELECT'	=> 't.topic_id, t.forum_id, t.topic_title, t.topic_time, t.topic_visibility, t.topic_first_post_id,
-							t.topic_poster AS poster_id, t.topic_first_poster_name AS poster_username',
-						'FROM'		=> array(TOPICS_TABLE => 't'),
+					$sql_array = [
+						'SELECT'	=> 't.*, t.topic_poster AS poster_id, t.topic_first_poster_name AS poster_username',
+						'FROM'		=> [TOPICS_TABLE => 't'],
 						'WHERE'		=> sprintf($sql_where, 't.topic_time', 't.forum_id'),
 						'ORDER_BY'	=> 't.topic_time DESC',
-					);
+					];
 
-					/*
+					/**
 					 * @event chat.topics_query
 					 * @var 	array 	sql_array 	Array with sql query
 					 * @since 1.2.3
 					 */
-					$vars = array('sql_array');
+					$vars = ['sql_array'];
 					extract($this->dispatcher->trigger_event('chat.topics_query', compact($vars)));
 
 					$sql = $this->db->sql_build_query('SELECT', \canidev\core\tools::filter_db_query($sql_array));
@@ -1956,20 +1971,20 @@ class action_manager
 				break;
 				
 				case constants::SHOW_POSTS:
-					$sql_array = array(
+					$sql_array = [
 						'SELECT'	=> 'p.post_id, p.topic_id, p.forum_id, p.post_subject, p.post_text, p.post_time, p.post_visibility,
 							p.poster_id, p.post_username AS poster_username, p.bbcode_uid, p.bbcode_bitfield',
-						'FROM'		=> array(POSTS_TABLE => 'p'),
+						'FROM'		=> [POSTS_TABLE => 'p'],
 						'WHERE'		=> sprintf($sql_where, 'p.post_time', 'p.forum_id'),
 						'ORDER_BY'	=> 'p.post_time DESC',
-					);
+					];
 
-					/*
+					/**
 					 * @event chat.posts_query
 					 * @var 	array 	sql_array 	Array with sql query
 					 * @since 1.2.3
 					 */
-					$vars = array('sql_array');
+					$vars = ['sql_array'];
 					extract($this->dispatcher->trigger_event('chat.posts_query', compact($vars)));
 
 					$sql = $this->db->sql_build_query('SELECT', \canidev\core\tools::filter_db_query($sql_array));
@@ -2044,12 +2059,12 @@ class action_manager
 				$room_title = $user_cache[$room_key]['username'];
 			}
 
-			$this->template->assign_block_vars('room', array(
+			$this->template->assign_block_vars('room', [
 				'ID'			=> $room_key,
 				'S_TITLE'		=> $room_title,
 				'S_CLASS'		=> 'room' . (($is_public_room) ? ' js-public-room' : ''),
 				'SHOW_HISTORY'	=> ($event['action'] != 'refresh' && $this->auth('-u_chat_archive') && sizeof($room_data) == $this->config['chat_max_rows']) ? true : false,
-			));
+			]);
 			
 			if($this->config['chat_direction'] != 'up')
 			{
@@ -2102,12 +2117,12 @@ class action_manager
 					$row += $user_cache[$row['poster_key']];
 				}
 
-				$ary = array(
+				$ary = [
 					'S_CLASS'			=> 'chat-row',
 					'S_AUTHOR_FULL'		=> ($row['poster_id'] == ANONYMOUS) ? $row['poster_username'] : get_username_string('full', $row['poster_key'], $row['username'], $row['user_colour']),
 					'S_DATE'			=> $this->chat->format_date($timestamp),
 					'S_TIMESTAMP'		=> $timestamp,
-				);
+				];
 				
 				if($this->config['chat_show_avatars'])
 				{
@@ -2122,10 +2137,10 @@ class action_manager
 						}
 					}
 
-					$ary += array(
+					$ary += [
 						'S_AUTHOR_AVATAR'	=> $row_avatar,
 						'S_SHOW_AVATAR' 	=> true,
-					);
+					];
 				}
 
 				switch($this->config['chat_row_align'])
@@ -2148,30 +2163,48 @@ class action_manager
 
 				if(isset($row['post_id']))
 				{
-					$ary += array(
+					$ary += [
 						'S_ID'				=> 'p' . $row['topic_id'],
 						'IS_POST'			=> true,
 						'POST_SUBJECT'		=> censor_text($row['post_subject']),
-						'S_TEXT'			=> \canidev\core\tools::html_truncate($message, $this->config['chat_max_chars'], '...'),
+						'S_TEXT'			=> TextParser::truncate($message, $this->config['chat_max_chars'], '...'),
 						
 						'U_POST'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']),
 						'U_POST_EDIT'		=> ($edit_allowed) ? append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=edit&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['post_id']) : '',
-					);
+					];
 				}
 				else if(isset($row['topic_id']))
 				{
-					$ary += array(
+					$ary += [
 						'S_ID'				=> 't' . $row['topic_id'],
 						'IS_TOPIC'			=> true,
 						'TOPIC_TITLE'		=> censor_text($row['topic_title']),
 						
 						'U_TOPIC'			=> append_sid($this->root_path . 'viewtopic.' . $this->php_ext . '?f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
 						'U_TOPIC_EDIT'		=> ($edit_allowed) ? append_sid($this->root_path . 'posting.' . $this->php_ext, 'mode=edit&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['topic_first_post_id']) : '',
-					);
+					];
+
+					$topic_row 	= DummyArray::fill($ary, DummyArray::TOPICROW_KEYS);
+					$row 		= new DummyArray($row);
+					$s_type_switch = $s_type_switch_test = 0;
+
+					/**
+					 * Compatibility with other extensions
+					 *
+					 * @event core.viewforum_modify_topicrow
+					 * @var	DummyArray		row						Array with topic data
+					 * @var	array			topic_row				Template array with topic data
+					 * @var	bool			s_type_switch			Flag indicating if the topic type is [global] announcement
+					 * @var	bool			s_type_switch_test		Flag indicating if the test topic type is [global] announcement
+					 */
+					$vars = ['row', 'topic_row', 's_type_switch', 's_type_switch_test'];
+					extract($this->dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
+
+					$ary = $topic_row;
 				}
 				else
 				{
-					$ary += array(
+					$ary += [
 						'S_ID'				=> $row['message_id'],
 						'S_TEXT'			=> $message,
 						
@@ -2180,16 +2213,16 @@ class action_manager
 						'CAN_MOVE'			=> ($is_public_room && $total_rooms > 1 && $this->auth('-m_chat_edit')),
 						'CAN_QUOTE'			=> ($this->config['chat_allow_bbcode'] && !in_array('quote', $this->chat->get_disallowed_bbcodes()) && $this->auth('post')) ? true : false,
 						'CAN_VIEW_WHOIS'	=> $this->auth('-a_'),
-					);
+					];
 				}
 				
 				/**
-				* @event chat.modify_message_row
-				* @var	array	row			Array with original message and user data
-				* @var	array	ary			Template block array of the post
-				* @since 1.2.0
-				*/
-				$vars = array('row', 'ary');
+				 * @event chat.modify_message_row
+				 * @var	array	row			Array with original message and user data
+				 * @var	array	ary			Template block array of the post
+				 * @since 1.2.0
+				 */
+				$vars = ['row', 'ary'];
 				extract($this->dispatcher->trigger_event('chat.modify_message_row', compact($vars)));
 					
 				$this->template->assign_block_vars('room.message', $ary);
@@ -2199,9 +2232,9 @@ class action_manager
 			$this->generate_userlist($row_users, $user_cache, $room_key);
 		}
 		
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_CHAT_DIRECTION'	=> $this->config['chat_direction'],
-		));
+		]);
 
 		$event['row_data']		= $row_data;
 		$event['row_users']		= $row_users;

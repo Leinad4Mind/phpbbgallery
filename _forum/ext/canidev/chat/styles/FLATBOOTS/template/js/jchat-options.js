@@ -9,12 +9,6 @@
 
 var jchat_style_options = {
 	positions: {
-		chat: ['main', 'append'],
-
-		faq: {
-			top		: ['h2:first', 'after'],
-			bottom	: ['main > .row:last', 'before']
-		},
 		index: {
 			top		: ['.panel-forum:first', 'before'],
 			bottom	: ['.panel-stats', 'before']

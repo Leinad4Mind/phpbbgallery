@@ -1,11 +1,11 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\controller;
 
@@ -33,9 +33,8 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver_interface			$db					DB Object
-	 * @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher
+	 * @param \phpbb\event\dispatcher_interface			$dispatcher			Event dispatcher
 	 * @param \phpbb\log\log                       		$log				Log Object
-	 * @param \phpbb\request\request 					$request			Request object
 	 * @param \phpbb\user								$user				User object
 	 * @param string									$root_path			phpBB root path
 	 * @param string									$php_ext			phpEx
@@ -47,7 +46,6 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\log\log $log,
-		\phpbb\request\request $request,
 		\phpbb\user $user,
 		$root_path,
 		$php_ext,
@@ -55,9 +53,8 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 	{
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
-		$this->json			= \canidev\core\json_response::get_instance();
+		$this->json			= \canidev\core\JsonResponse::getInstance();
 		$this->log			= $log;
-		$this->request		= $request;
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
@@ -72,24 +69,20 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 	 */
 	public function display($mode)
 	{
-		$this->language->add_lang(array('acp', 'main'), 'canidev/chat');
+		$this->language->add_lang(['acp', 'main'], 'canidev/chat');
 		
-		$this->page_header('cbb-chat', $this->config['chat_version']);
-		
-		$this->template->assign_vars(array(
-			'IN_CHAT_ADMIN'		=> true,
-		));
+		$this->pageHeader('canidev/chat');
 
 		// Load assets
 		$this->template->append_asset('css', '@canidev_chat/acp.css', false, 'admin');
 
 		$this->template->append_asset(
 			'js',
-			array(
+			[
 				'@canidev_core/js/jquery-ui.min.js',
 				'@canidev_chat/js/jchat.min.js',
 				'@canidev_chat/js/jchat-acp.js',
-			),
+			],
 			false,
 			'admin'
 		);

@@ -39,6 +39,7 @@ services:
             - '@request'
             - '@routing.helper'
             - '@canidev.core.template'
+            - '@canidev.core.text_parser'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'

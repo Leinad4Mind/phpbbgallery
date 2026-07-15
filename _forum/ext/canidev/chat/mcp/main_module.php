@@ -1,20 +1,20 @@
 <?php
-/*
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 namespace canidev\chat\mcp;
 
-/**
-* @package mcp
-*/
 class main_module
 {
 	public $u_action;
+
+	public $page_title;
+	public $tpl_name;
 
 	public function main($id, $mode)
 	{

@@ -1,12 +1,12 @@
 <?php
-/*
-* [Spanish [Es]]
-* @package cBB Chat
-* @version v1.2.4 17/06/2022
-*
-* @copyright (c) 2022 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+/**
+ * [Spanish [Es]]
+ * @package cBB Chat
+ * @version 1.2.6 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // DO NOT CHANGE
 if(!defined('IN_PHPBB'))
@@ -16,10 +16,10 @@ if(!defined('IN_PHPBB'))
 
 if(empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CHAT_CONFIG_EXPLAIN'	=> '¡Gracias por escoger cBB Chat como complemento para su foro!<br />
 		Desde esta página puede modificar las principales características del chat.',
 	'ACP_CHAT_PAGES_EXPLAIN'	=> 'Desde aquí puede administrar las páginas en las que se mostrará el chat así como su posición en ellas.',
@@ -176,10 +176,10 @@ $lang = array_merge($lang, array(
 	'ADD_ROOM'					=> 'Añadir sala',
 	'CONTENT'					=> 'Contenido',
 	'CUSTOM_BBCODES'			=> 'BBcodes personalizados',
-	'CUSTOM_FILE'				=> 'Archivo personalizado',
-	'CUSTOM_FILES'				=> 'Archivos personalizados',
+	'CUSTOM_ROUTE'				=> 'Ruta personalizada',
+	'CUSTOM_ROUTES'				=> 'Rutas personalizadas',
 	'DEFAULT_BBCODES'			=> 'BBcodes predeterminados',
-	'FORUM_FILES'				=> 'Archivos del foro',
+	'FORUM_ROUTES'				=> 'Rutas del foro',
 	'NO_PAGES'					=> 'No hay páginas para mostrar',
 	'NO_ROOM'					=> 'La sala seleccionada no existe',
 	'NO_TEXTS'					=> 'No hay textos para mostrar',
@@ -194,4 +194,4 @@ $lang = array_merge($lang, array(
 	'PAGE_ALREADY_EXISTS'		=> 'La página especificada ya está en uso.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> '¿Está seguro de que desea eliminar esta sala y todos sus mensajes?',
-));
+]);
