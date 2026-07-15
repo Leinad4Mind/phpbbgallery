@@ -1,0 +1,12 @@
+<!-- IF S_CF_CLEAR_CACHE -->
+    <form id="action_cf_clear_cache_form" method="post" action="{U_ACTION}" data-ajax="true">
+        <dl>
+            <dt><label for="sitesplat_cf_clear_cache">{L_CLOUDFLARE_CF_CLEAR_CACHE}</label><br /><span>{L_CLOUDFLARE_CLEAR_CACHE_EXPLAIN}</span></dt>
+            <dd>
+                <input type="hidden" name="i" value="-sitesplat-cloudflareip-acp-cf_module" />
+                <input type="hidden" name="mode" value="settings" />
+                <input class="button2" type="submit" id="sitesplat_cf_clear_cache" name="sitesplat_cf_clear_cache" value="{L_RUN}" />
+            </dd>
+        </dl>
+    </form>
+<!-- ENDIF -->
