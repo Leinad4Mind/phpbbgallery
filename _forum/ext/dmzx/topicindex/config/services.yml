@@ -1,0 +1,51 @@
+imports:
+    - { resource: tables.yml }
+services:
+    dmzx.topicindex.listener:
+        class: dmzx\topicindex\event\listener
+        arguments:
+            - '@dmzx.topicindex.core.functions'
+            - '@user'
+            - '@auth'
+            - '@template'
+            - '@dbal.conn'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@?files.factory'
+        tags:
+            - { name: event.listener }
+    dmzx.topicindex.admin.controller:
+        class: dmzx\topicindex\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@template'
+            - '@log'
+            - '@user'
+            - '@dbal.conn'
+            - '@request'
+            - '%dmzx.topicindex.table.topicindex%'
+    dmzx.topicindex.controller:
+        class: dmzx\topicindex\controller\main
+        arguments:
+            - '@dmzx.topicindex.core.functions'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '@controller.helper'
+            - '@config'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%dmzx.topicindex.table.topicindex%'
+    dmzx.topicindex.core.functions:
+        class: dmzx\topicindex\core\functions_topicindex
+        arguments:
+            - '@dbal.conn'
+            - '@template'
+            - '@config'
+            - '@auth'
+            - '@ext.manager'

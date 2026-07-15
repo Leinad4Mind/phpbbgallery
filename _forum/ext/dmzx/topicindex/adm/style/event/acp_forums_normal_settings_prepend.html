@@ -1,0 +1,30 @@
+<!-- IF SHOW_OINDEX -->
+<fieldset>
+	<legend>{L_OFFICIAL_TOPIC_INDEX}</legend>
+
+	<p>{L_OTINDEX_LIST_INTOPIC_DSC}</p>
+
+	<dl>
+		<dt><label for="post_index">{L_ACTIVE_TOPIC_INDEX}{L_COLON}</label><br /><span>{L_ACTIVE_TOPIC_INDEX_EXPLAIN}</span></dt>
+		<dd><select id="post_index" name="post_index">
+				<option value="0" {LEGATOPIC1}>--- {L_NON_ACTIVE}</option>
+				<!-- BEGIN block_topic_index -->
+					<option value="{block_topic_index.ITOPIC_ID}" {block_topic_index.ITOPIC_SEL}>{block_topic_index.ITOPIC_NAME}</option>
+				<!-- END block_topic_index -->
+			</select>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="default_inindex">{L_TOPIC_INDEX_DEFAULT}{L_COLON}</label><br /><span>{L_TOPIC_INDEX_DEFAULT_EXPLAIN}</span></dt>
+		<dd><select id="default_inindex" name="default_inindex">
+				<option value="0" {ITOPICDEF0}>{L_DEF_ALL_TOPICS_IN}</option>
+				<option value="1" {ITOPICDEF1}>{L_DEF_ALL_TOPICS_OFF}</option>
+			</select>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="index_filter">{L_ACTIVE_INDEX_FILTER}{L_COLON}</label><br /><span>{L_ACTIVE_INDEX_FILTER_EXPLAIN}</span></dt>
+		<dd><input type="checkbox" class="radio" name="index_filter" id="index_filter" value="1" {ITOPICTAG} /></dd>
+	</dl>
+</fieldset>
+<!-- ENDIF -->

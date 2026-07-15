@@ -1,0 +1,16 @@
+<!-- IF U_ACP && postrow.U_ININDEXLIST -->
+<!-- IF not PHPBB_IS_32 -->
+<div class="btn-group btn-group-sm {postrow.IINDEX_ICON}" role="group">
+	<a href="{postrow.U_ININDEXLIST}" title="{postrow.IINEDX_LANG}">
+		<span>{postrow.IINEDX_LANG}</span>
+	</a>
+</div>
+<!-- ELSE -->
+<div class="btn-group btn-group-sm" role="group">
+	<a href="{postrow.U_ININDEXLIST}" title="{postrow.IINEDX_LANG}" class="btn btn-default btn-sm">
+		<i class="icon {postrow.IINDEX_ICON}" aria-hidden="true"></i>
+		<span class="sr-only">{postrow.IINEDX_LANG}</span>
+	</a>
+</div>
+<!-- ENDIF -->
+<!-- ENDIF -->

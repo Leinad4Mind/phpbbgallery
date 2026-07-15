@@ -1,0 +1,73 @@
+<!-- INCLUDE overall_header.html -->
+
+<fieldset class="framed-ucp">
+	<legend>{L_OIINDEX_HEADER}</legend>
+
+
+<form action="{U_ACTION}" method="post">
+	<div class="panel-content">
+		<div class="panel-body">
+			<fieldset>
+				<p><select class="btn btn-sm" id="listslc" name="list" onchange="this.form.submit();"><option value="0" selected="selected">{L_SELECT_A_LIST}</option>{S_LIST_OPTIONS}</select></p>
+			</fieldset>
+		</div>
+	</div>
+{S_FORM_TOKEN}
+</form>
+
+<!-- IF S_SHOWLIST -->
+<div class="panel bg1">
+	<div class="inner">
+		<p class="filtrino icenter">
+			<!-- BEGIN block_nofiltrino -->
+				<span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_TUTTI}">{L_ALL}</a></span>
+				<!-- IF block_nofiltrino.S_09 --><span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_09}">{L_09}</a></span><!-- ELSE --><span  class="btn-basic btn-xs">{L_09}</span><!-- ENDIF -->
+				<!-- IF block_nofiltrino.S_SYMB --><span class="btn btn-default btn-xs"><a href="{block_nofiltrino.U_SYMB}">{L_SYMB}</a></span><!-- ELSE --><span  class="btn-basic btn-xs">{L_SYMB}</span><!-- ENDIF -->
+			<!-- END block_nofiltrino -->
+			<!-- BEGIN block_filtrino -->
+				<!-- IF block_filtrino.S_ISWITH -->
+					<span class="btn btn-default btn-xs"><a href="{block_filtrino.U_FILTER}">{block_filtrino.FILTRINO}</a></span>
+				<!-- ELSE -->
+					<span class="btn-basic btn-xs">{block_filtrino.FILTRINO}</span>
+				<!-- ENDIF -->
+			<!-- END block_filtrino -->
+		</p>
+	</div>
+</div>
+<!-- IF .block_list -->
+<!-- BEGIN block_list -->
+<!-- IF block_list.S_ISWITH2 -->
+<br/><br/>
+<h3>{block_list.FILTRINO}</h3>
+
+	<table class="table table-bordered">
+		<thead> 
+			<tr> 
+				<th class="list-inner">{L_TOPIC_TITLE}</th>
+				<th class="topics">{L_OTI_POSTER}</th>
+				<th class="posts">{L_REPLIES}</th>
+				<!-- IF U_MCP --><th class="lastpost"><span>{L_REMOVE_FROM_LIST}</span></th><!-- ENDIF -->
+			</tr>
+		</thead>
+		<!-- BEGIN block_topic_index -->
+		<tbody>
+			<tr>
+				<td class="topicindex"><a href="{block_topic_index.ITOPIC_URL}"><strong>{block_topic_index.ITOPIC_TITLE}</strong></a></td>
+				<td class="topics">{block_topic_index.ITOPIC_POSTER}</td>
+				<td class="posts">{block_topic_index.ITOPIC_TOTREP}</td>
+				<!-- IF U_MCP --><td class="lastpost"><span class="topicindexremove"><a href="{block_topic_index.U_REMOVE_FROM}" class="btn btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></span></td><!-- ENDIF -->
+			</tr>
+		</tbody>
+		<!-- END block_topic_index -->
+	</table>
+<!-- ENDIF -->
+<!-- END block_list -->
+<!-- ELSE -->
+<fieldset>
+	<p class="ianytopuc">{L_ANY_TOPIC_IN_LIST}</p>
+</fieldset>
+<!-- ENDIF -->
+
+<!-- ENDIF -->
+</fieldset>
+<!-- INCLUDE overall_footer.html -->

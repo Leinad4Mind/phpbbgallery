@@ -1,0 +1,45 @@
+{
+    "name": "dmzx/topicindex",
+    "type": "phpbb-extension",
+    "description": "Create a ordered list of topics in a post and in external page.",
+    "homepage": "http://www.dmzx-web.net",
+    "version": "1.0.4",
+    "time": "2017-04-13",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "topicindex"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "dmzx",
+            "homepage": "http://www.dmzx-web.net",
+            "email": "info@dmzx-web.net",
+            "role": "Extension Developer"
+        },
+        {
+            "name": "Soshen",
+            "homepage": "http://www.nipponart.org",
+            "role": "Original MOD author"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.0,<3.3"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Topic Index",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.0,<3.3"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/topic_index",
+            "filename": "version_check"
+        }
+    }
+}
