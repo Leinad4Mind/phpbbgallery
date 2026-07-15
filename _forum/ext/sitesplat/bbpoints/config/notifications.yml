@@ -1,0 +1,10 @@
+services:
+    sitesplat.bbpoints.notification.type.transfer:
+        class: sitesplat\bbpoints\notification\type\transfer
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }

@@ -1,0 +1,7 @@
+sitesplat_bbpoints_auto_complete_controller:
+    pattern: /bbpoints/search_user
+    defaults: { _controller: sitesplat.bbpoints.controller:search_user }
+    methods:  [POST]
+sitesplat_bbpoints_main_controller:
+    pattern: /bbpoints/
+    defaults: { _controller: sitesplat.bbpoints.controller:display }

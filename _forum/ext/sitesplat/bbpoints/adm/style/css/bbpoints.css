@@ -1,0 +1,376 @@
+/* CSS Document */
+/* Extension details */
+
+#sidbar_notice .close {
+	float: right;
+	width: 12px;
+	height: 12px;
+	background: transparent url("./images/close.png") no-repeat 0 0;
+	opacity: 0.6;
+}
+
+#progressbar {
+	display:none;
+    width: 180px;
+    height: 9px;
+    background-color: #eee;
+    padding: 2px;
+    vertical-align: middle;
+/*    margin: .6em 0 0 0;*/
+    border: 1px #000 double;
+    clear: both;
+}
+
+#progress {
+    background: #A1C969; /*-- Color of the bar --*/
+    height: 9px;
+    width: 1%;
+    max-width: 100%;
+    float: left;
+    -webkit-animation: progress 8.5s 1 forwards;
+    animation: progress 8.5s 1 forwards;
+	animation-delay: 0.8s;
+}
+
+.done {
+    width: 100% !important;
+	 -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
+}
+
+#percent {
+    color: #000;
+	font-size:9px;
+	display:block;
+	font-weight: bold;
+	line-height: 8px;
+}
+
+#pbaranim {
+	text-align:center;
+    height: 9px;
+    width: 100%;
+    overflow: hidden;
+    background: url('./images/7uo1osj.gif') repeat-x;
+    -moz-opacity: 0.25;
+    -khtml-opacity: 0.25;
+    opacity: 0.25;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=25);
+    filter: alpha(opacity=25);
+}
+
+/* Chrome, Safari, Opera */ 
+@-webkit-keyframes progress {
+    0%   {left: 0px; background: red; width: 10px;}
+    4%    {width: 20px;}
+    100% {right: 40px; background: #A1C969; width: 180px;}
+}
+
+/* Standard syntax */
+@keyframes progress {
+     0%   {left: 0px; background: red; width: 10px;}
+    4%    {width: 20px;}
+    100% {right: 40px; background: #A1C969; width: 180px;}
+}
+
+
+
+
+dd input {
+    margin: 6px 0;
+}
+
+
+.label-acp {
+    color: #4a5a73;
+    font-size: 1em;
+    font-weight: bold;
+	margin-bottom: 4px;
+    margin-left: 2px;
+}	
+	
+	
+dd label {
+    margin: inherit;
+}
+
+label {
+    cursor: pointer;
+    padding: inherit;
+}
+
+
+dd label {
+    margin: 0;
+}
+
+.radio, .checkbox {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.label-entry-normal {
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+
+
+/* simple input range love*/
+
+#acp_sidebar input[type=range] {
+   background-color: #eee;
+}
+
+
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+    
+    /*required for proper track sizing in FF*/
+    width: 300px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+
+
+
+/* Extension details */
+.alert-update {
+    border: 2px solid;
+}
+
+.modal-dialog {
+    margin: 130px auto;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.label {
+    padding: 0.2em 0.3em 0.1em 0.2em;
+}
+
+.md-trigger {
+    text-decoration: none!important;
+}
+
+
+.md-content h3 {
+    opacity: 1;
+}
+
+/* loading stuff */
+.loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #ce4233;
+  letter-spacing: 0.2em;
+}
+.loader::before, .loader::after {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #ce4233;
+  position: absolute;
+  -webkit-animation: load .7s infinite alternate ease-in-out;
+          animation: load .7s infinite alternate ease-in-out;
+}
+.loader::before {
+  top: 0;
+}
+.loader::after {
+  bottom: 0;
+}
+
+@-webkit-keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+
+.md-content button {
+	border: none;
+	padding: 0.6em 1.2em;
+	background: #c0392b;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+.md-content button:hover {
+	background: #A5281B;
+}
+
+
+.ExtensionName {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+#meta_homepage > a {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.description-ext span {
+ color: #fff;
+    font-weight: bold;
+}
+
+.extension_author_link {
+    color: #c0392b !important;
+}
+
+.description-ext > div {
+    margin-bottom: 10px;
+}
+
+
+
+/* style the close button */
+#badgeaward_notice .close {
+	float: right;
+	width: 12px;
+	height: 12px;
+	background: transparent url("images/close.png") no-repeat 0 0;
+	opacity: 0.6;
+}
+
+td .fa {
+	font-size:16px;
+}
+
+.onoffswitch {
+    margin-bottom: 10px;
+}
+
+	
