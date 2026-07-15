@@ -19,7 +19,7 @@ head.ready(function () {
 			credits: {
 				enabled: false,
 				text: 'sitesplat.com',
-				href: '//sitesplat.com'
+				href: 'http://sitesplat.com'
 			},
 			tooltip: {
 				pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
@@ -30,7 +30,7 @@ head.ready(function () {
 					cursor: 'pointer',
 					dataLabels: {
 						enabled: false,
-						format: '<b>{point.name}</b>: {point.percentage:.2f}%',
+						format: '<b>{point.name}</b>: {point.percentage:.2f} %',
 						style: {
 							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 						}

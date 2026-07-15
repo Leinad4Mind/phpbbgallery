@@ -1,12 +1,11 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction\acp;
 
@@ -14,16 +13,15 @@ class bbreaction_info
 {
 	public function module()
 	{
-		return [
+		return array(
 			'filename'	=> '\sitesplat\bbreaction\acp\bbreaction_module',
 			'title'		=> 'ACP_BBREACTION',
-			'modes'		=> [
-				'settings'	=> [
+			'modes'		=> array(
+				'settings'	=> array(
 					'title'	=> 'ACP_BBREACTION',
 					'auth'	=> 'ext_sitesplat/bbreaction && acl_a_board',
-					'cat'	=> ['ACP_QUICK_ACCESS']
-				],
-			],
-		];
+					'cat'	=> array('ACP_QUICK_ACCESS')),
+			),
+		);
 	}
 }

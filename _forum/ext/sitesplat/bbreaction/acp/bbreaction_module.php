@@ -1,12 +1,11 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction\acp;
 
@@ -35,18 +34,20 @@ class bbreaction_module
 		$this->page_title = $user->lang('ACP_BBREACTION');
 
 		// Quick-submit settings from the general options form
-		if ($request->is_set_post('generalsubmit')) {
+		if ($request->is_set_post('generalsubmit'))
+		{
 			$admin_controller->submit_general_options();
 		}
 
 		// Perform any actions submitted by the user
-		switch ($action) {
+		switch ($action)
+		{
 			case 'details':
 				$user->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
 				$phpbb_container->get('sitesplat.BBCore.helper')->detail('sitesplat/bbreaction');
 				$this->tpl_name = 'acp_ext_details';
-				break;
-
+			break;
+			
 			case 'add':
 			case 'edit':
 				// Set the page title
@@ -57,39 +58,41 @@ class bbreaction_module
 
 				// Return to stop execution of this script
 				return;
-				break;
+			break;
 
 			case 'sync':
 				// Resync reaction counter
 				$admin_controller->resync_reward_type($type_id);
-				break;
+			break;
 
 			case 'delete':
 				// Use a confirm box routine when deleting an reaction type
-				if (confirm_box(true)) {
+				if (confirm_box(true))
+				{
 					// Delete reaction type on confirmation from the user
 					$admin_controller->delete_reward_type($type_id);
-				} else {
+				} else
+				{
 					// Request confirmation from the user to delete reaction type
-					confirm_box(false, $user->lang('ACP_BBREACTION_DELETE_CONFIRM'), build_hidden_fields([
+					confirm_box(false, $user->lang('ACP_BBREACTION_DELETE_CONFIRM'), build_hidden_fields(array(
 						'type_id'		=> $type_id,
 						'i'				=> $id,
 						'mode'			=> $mode,
 						'action'		=> $action,
-					]));
+					)));
 				}
-				break;
+			break;
 
 			case 'active':
 				// Activate / Deactivate reaction type
 				$admin_controller->activate($type_id);
-				break;
+			break;
 
 			case 'move_up':
 			case 'move_down':
 				// Move reaction type
 				$admin_controller->move_reward_type($type_id);
-				break;
+			break;
 		}
 
 		// Display reaction types

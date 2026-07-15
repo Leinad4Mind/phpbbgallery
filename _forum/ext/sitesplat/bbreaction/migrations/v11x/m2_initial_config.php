@@ -1,21 +1,18 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction\migrations\v11x;
-
-use \phpbb\db\migration\migration;
 
 /**
  * Migration stage 2: Initial data
  */
-class m2_initial_config extends migration
+class m2_initial_config extends \phpbb\db\migration\migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -26,7 +23,7 @@ class m2_initial_config extends migration
 	 */
 	static public function depends_on()
 	{
-		return ['\sitesplat\bbreaction\migrations\v10x\m1_initial_schema'];
+		return array('\sitesplat\bbreaction\migrations\v10x\m1_initial_schema');
 	}
 
 	/**
@@ -37,8 +34,8 @@ class m2_initial_config extends migration
 	 */
 	public function update_data()
 	{
-		return [
-			['config.add', ['rewards_display_top', 1]],
-		];
+		return array(
+			array('config.add', array('rewards_display_top', 1)),
+		);
 	}
 }

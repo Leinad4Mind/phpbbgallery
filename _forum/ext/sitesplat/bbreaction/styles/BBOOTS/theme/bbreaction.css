@@ -83,7 +83,7 @@
 .icon-bbreact-emo-minus:before { content: '\e814'; } /* '' */
 .icon-bbreact-emo-plus:before { content: '\e815'; } /* '' */
 .icon-bbreact-emo:before { content: '\e816'; } /* '' */
-/* BBReaction */
+/* BBreaction */
 
 .bbreactionbar {
     margin-top: 10px;
@@ -100,13 +100,13 @@
   
 .bbreact-list li {
     margin-right: 8px;
-	padding: 4px;
 }
   
 .bbreact-list a:focus {
     outline: medium none;
     text-decoration: none;
 }
+
 
 .bbreact-list a {
   line-height: 1.1;
@@ -126,11 +126,8 @@
   width: 100%;
 }
 
-.bbreact-list li.reacted {
-	border: 2px solid #d6d9e0;
-	border-radius: 4px;
-}
 
+  
 .card {
   border-radius: 4px;
   overflow: hidden;
@@ -164,9 +161,15 @@
 
 
 .com-expand-holder {
+  display: block;
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  bottom: 4px;
   cursor: pointer;
   z-index: 99;
 }
+
 
 .com-expand {
   width: 25px;
@@ -208,7 +211,7 @@ background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0
 background: -webkit-radial-gradient(center, ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
 background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='rgba(0, 255, 255, 1)',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    top: 0;
+  bottom: 0;
     color: #fff;
     font-size: 14px;
     left: auto;
@@ -282,6 +285,179 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 
+
+.ribbon-base {
+    background-color: transparent;
+    height: 80px;
+    left: -3px;
+    position: absolute;
+    text-align: center;
+    top: -3px;
+    width: 80px;
+}
+.ribbon-inner {
+    background-color: #526069;
+    color: #fff;
+    display: inline-block;
+    height: 30px;
+    left: 0;
+    line-height: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: absolute;
+    top: 16px;
+    white-space: nowrap;
+}
+.ribbon-inner .icon {
+    font-size: 16px;
+}
+.ribbon-lg .ribbon-inner {
+    font-size: 18px;
+    height: 38px;
+    line-height: 38px;
+}
+.ribbon-sm .ribbon-inner {
+    font-size: 12px;
+    height: 26px;
+    line-height: 26px;
+}
+.ribbon-xs .ribbon-inner {
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+}
+
+.ribbon-reverse {
+    left: auto;
+    right: -3px;
+}
+.ribbon-reverse .ribbon-inner {
+    left: auto;
+    right: 0;
+}
+
+
+.ribbon-corner {
+    left: 0;
+    overflow: hidden;
+    top: 0;
+}
+
+.ribbon-bottom {
+    border-bottom-right-radius: 4px;
+}
+
+.ribbon-bbreaction {
+    height: 45px;
+    width: 45px;
+}
+
+.ribbon-corner .ribbon-inner {
+    background-color: transparent;
+    height: 35px;
+    left: 0;
+    line-height: 35px;
+    padding: 0;
+    top: 0;
+    width: 40px;
+}
+.ribbon-corner .ribbon-inner:before {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #526069 transparent transparent #526069;
+    -webkit-border-image: none;
+         -o-border-image: none;
+            border-image: none;
+    border-style: solid;
+    border-width: 30px;
+    content: "";
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 0;
+}
+.ribbon-corner.ribbon-reverse {
+    left: auto;
+    right: 0;
+}
+.ribbon-corner.ribbon-reverse .ribbon-inner {
+    left: auto;
+    right: 0;
+}
+.ribbon-corner.ribbon-reverse .ribbon-inner:before {
+    border-left-color: transparent;
+    border-right-color: #526069;
+    left: auto;
+    right: 0;
+}
+.ribbon-corner.ribbon-bottom {
+    bottom: 0;
+    top: auto;
+}
+.ribbon-corner.ribbon-bottom .ribbon-inner {
+    bottom: 0;
+    top: auto;
+}
+.ribbon-corner.ribbon-bottom .ribbon-inner:before {
+    border-bottom-color: #526069;
+    border-top-color: transparent;
+    bottom: 0;
+    top: auto;
+}
+.ribbon-corner.ribbon-xs .ribbon-inner {
+    height: 26px;
+    line-height: 26px;
+    width: 28px;
+}
+.ribbon-corner.ribbon-xs .ribbon-inner:before {
+    border-width: 22px;
+}
+.ribbon-corner.ribbon-xs .ribbon-inner > .icon {
+    font-size: 12px;
+}
+.ribbon-corner.ribbon-sm .ribbon-inner {
+    height: 32px;
+    line-height: 32px;
+    width: 34px;
+}
+.ribbon-corner.ribbon-sm .ribbon-inner:before {
+    border-width: 26px;
+}
+.ribbon-corner.ribbon-sm .ribbon-inner > .icon {
+    font-size: 12px;
+}
+.ribbon-corner.ribbon-lg .ribbon-inner {
+    height: 44px;
+    line-height: 44px;
+    width: 46px;
+}
+.ribbon-corner.ribbon-lg .ribbon-inner:before {
+    border-width: 36px;
+}
+.ribbon-corner.ribbon-lg .ribbon-inner > .icon {
+    font-size: 18px;
+}
+
+
+
+
+.ribbon-primary.ribbon-corner.ribbon-bottom .ribbon-inner:before {
+    border-bottom-color: #62a8ea;
+    border-top-color: transparent;
+}
+.ribbon-primary.ribbon-corner.ribbon-reverse .ribbon-inner:before {
+    border-left-color: transparent;
+    border-right-color: #62a8ea;
+}
+.ribbon-primary.ribbon-corner .ribbon-inner:before {
+    border-left-color: #62a8ea;
+    border-top-color: #62a8ea;
+}
+
+
 .star {
   display: block;
   text-align: center;
@@ -298,10 +474,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 .starred .star-icon {
   color: #f6c342;
-}
-
-.com-expand-holder.active > .btn-primary {
-  background-color: #204d74;
 }
 
 .starred {
@@ -460,7 +632,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 
 
-/* BBReaction modal css */
+/* BBreaction modal css */
 
 .pagination-likes {
     bottom: -66px;
@@ -469,12 +641,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     right: 0;
 }
 .avatar-likers {
-    padding: 5px 0 0 10px;
+padding: 5px 0 0 10px;
 }
 .avatar-likers img{
     border: 4px solid #dedede;
     border-radius: 50%;
-    max-height: 70px;
+	max-height: 70px;
     max-width: 70px;
 }
 .likers-time-stamp {
@@ -533,7 +705,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .bbreaction-wrap .emoji {
-    width: 24px;
+    width: 26px;
 }
 
 #bbreaction-profile-data .emoji {
@@ -545,30 +717,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 /* likeBB and shareon fix for posts*/
 .label-huskygray {
-  float: left !important;
-  margin-top: 5px;
+    float: left !important;
+    margin-top: 5px;
 }
 .share-buttons {
-  margin-bottom: 0 !important;
-  margin-right: 24px;
+    margin-bottom: 0 !important;
+	margin-right:24px;
 }
 /* likeBB and shareon fix for posts*/
-
-.all-reactions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  column-gap: 10px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-}
-.all-reactions .emoji {
-  width: 24px;
-}
-
-.all-reactions .label {
-  display: flex;
-  align-items: center;
-  column-gap: 5px;
-  max-height: 16px;
-}

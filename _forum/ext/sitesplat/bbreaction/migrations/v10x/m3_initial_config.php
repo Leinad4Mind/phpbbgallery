@@ -1,21 +1,18 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction\migrations\v10x;
-
-use \phpbb\db\migration\migration;
 
 /**
  * Migration stage 3: Initial data
  */
-class m3_initial_config extends migration
+class m3_initial_config extends \phpbb\db\migration\migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -26,7 +23,7 @@ class m3_initial_config extends migration
 	 */
 	static public function depends_on()
 	{
-		return ['\sitesplat\bbreaction\migrations\v10x\m1_initial_schema'];
+		return array('\sitesplat\bbreaction\migrations\v10x\m1_initial_schema');
 	}
 
 	/**
@@ -37,11 +34,11 @@ class m3_initial_config extends migration
 	 */
 	public function update_data()
 	{
-		return [
-			['config.add', ['rewards_multivote', 1]],
-			['config.add',	['rewards_percent', 1]],
-			['config.add',	['rewards_memberlist', 1]],
-			['config.add',	['rewards_progressbar', 0]],
-		];
+		return array(
+			array('config.add', array('rewards_multivote', 1)),
+			array('config.add',	array('rewards_percent', 1)),
+			array('config.add',	array('rewards_memberlist', 1)),
+			array('config.add',	array('rewards_progressbar', 1)),
+		);
 	}
 }

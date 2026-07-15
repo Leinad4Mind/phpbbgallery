@@ -1,21 +1,18 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction\migrations\v11x;
 
-use \phpbb\db\migration\migration;
-
 /**
- * Migration stage 3: Add BBEmoji support
+ * Migration stage 3: Add BBemoji support
  */
-class m3_add_bbemoji extends migration
+class m3_add_bbemoji extends \phpbb\db\migration\migration
 {
 	/**
 	 * Assign migration file dependencies for this migration
@@ -26,7 +23,7 @@ class m3_add_bbemoji extends migration
 	 */
 	static public function depends_on()
 	{
-		return ['\sitesplat\bbreaction\migrations\v10x\m1_initial_schema'];
+		return array('\sitesplat\bbreaction\migrations\v10x\m1_initial_schema');
 	}
 
 	/**
@@ -37,13 +34,13 @@ class m3_add_bbemoji extends migration
 	 */
 	public function update_schema()
 	{
-		return [
-			'add_columns'	=> [
-				$this->table_prefix . 'reward_type'	=> [
-					'emoji'	=> ['VCHAR', ''],
-				]
-			]
-		];
+		return array(
+			'add_columns'	=> array(
+				$this->table_prefix . 'reward_type'	=> array(
+                    'emoji'	=> array('VCHAR', ''),
+				)
+			)
+		);
 	}
 
 	/**
@@ -54,12 +51,12 @@ class m3_add_bbemoji extends migration
 	 */
 	public function revert_schema()
 	{
-		return [
-			'drop_columns'	=> [
-				$this->table_prefix . 'reward_type' => [
-					'emoji',
-				],
-			],
-		];
+		return array(
+			'drop_columns'	=> array(
+                $this->table_prefix . 'reward_type' => array(
+                    'emoji',
+                ),
+			),
+		);
 	}
 }

@@ -1,16 +1,13 @@
 <?php
-
 /**
- *
- * BBReaction
- * @copyright (c) 2015-2022 SiteSplat All rights reserved
- * @license Proprietary
- *
- */
+*
+* BBreaction
+* @copyright (c) 2015 SiteSplat All rights reserved
+* @license Proprietary
+*
+*/
 
 namespace sitesplat\bbreaction;
-
-use phpbb\extension\base;
 
 /**
  * This ext class is optional and can be omitted if left empty.
@@ -20,16 +17,18 @@ use phpbb\extension\base;
  * class extends, but you can overwrite them to give special
  * instructions for those cases.
  */
-class ext extends base
+class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		if (!class_exists('sitesplat\BBCore\helper')) {
+		if (!class_exists('sitesplat\BBCore\helper'))
+		{
 			$this->container->get('user')->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
-			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);
+			trigger_error($this->container->get('user')->lang['SS_HELPER_NOTY'], E_USER_WARNING);	
 		}
-
-		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore')) {
+		
+		if (!$this->container->get('ext.manager')->is_enabled('sitesplat/BBCore'))
+		{
 			$this->container->get('ext.manager')->enable('sitesplat/BBCore');
 		}
 
@@ -47,31 +46,31 @@ class ext extends base
 	 */
 	public function enable_step($old_state)
 	{
-		switch ($old_state) {
+		switch ($old_state)
+		{
 			case '': // Empty means nothing has run yet
-				if (empty($old_state)) {
+				if (empty($old_state))
+				{
 					$this->container->get('user')->add_lang_ext('sitesplat/bbreaction', 'info_acp_bbreaction');
 					$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
-						(isset($this->container->get('user')->lang['BBREACTION_NOTICE']) ?
-							sprintf(
-								$this->container->get('user')->lang['BBREACTION_NOTICE'],
-								$this->container->get('user')->lang['ACP_CAT_GENERAL'],
-								$this->container->get('user')->lang['ACP_QUICK_ACCESS'],
-								$this->container->get('user')->lang['ACP_BBREACTION']
-							) : ''));
+						(isset($this->container->get('user')->lang['BBREACTION_NOTICE']) ? 
+							sprintf($this->container->get('user')->lang['BBREACTION_NOTICE'], 
+							$this->container->get('user')->lang['ACP_CAT_GENERAL'], 
+							$this->container->get('user')->lang['ACP_QUICK_ACCESS'], 
+							$this->container->get('user')->lang['ACP_BBREACTION']) : ''));
 				}
 
 				// Enable BB reaction notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
 				$phpbb_notifications->enable_notifications('sitesplat.bbreaction.notification.type.reward_added');
 				return 'notifications';
-				break;
+			break;
 
 			default:
 				// Run parent enable step method
 				return parent::enable_step($old_state);
 
-				break;
+			break;
 		}
 	}
 
@@ -85,21 +84,22 @@ class ext extends base
 	 */
 	public function disable_step($old_state)
 	{
-		switch ($old_state) {
+		switch ($old_state)
+		{
 			case '': // Empty means nothing has run yet
 
 				// Disable BB reaction notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
 				$phpbb_notifications->disable_notifications('sitesplat.bbreaction.notification.type.reward_added');
 				return 'notifications';
-				break;
+			break;
 
 			default:
 
 				// Run parent disable step method
 				return parent::disable_step($old_state);
 
-				break;
+			break;
 		}
 	}
 
@@ -113,21 +113,22 @@ class ext extends base
 	 */
 	public function purge_step($old_state)
 	{
-		switch ($old_state) {
+		switch ($old_state)
+		{
 			case '': // Empty means nothing has run yet
 
 				// Purge BB reaction notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
 				$phpbb_notifications->purge_notifications('sitesplat.bbreaction.notification.type.added');
 				return 'notifications';
-				break;
+			break;
 
 			default:
 
 				// Run parent purge step method
 				return parent::purge_step($old_state);
 
-				break;
+			break;
 		}
 	}
 }
