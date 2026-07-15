@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,6 +9,7 @@
 
 namespace canidev\chat\controller;
 
+use canidev\core\tools;
 use canidev\chat\libraries\constants;
 
 class admin_controller_config extends admin_controller_base
@@ -55,7 +56,7 @@ class admin_controller_config extends admin_controller_base
 		$display_vars = array(
 			'legend1'			=> 'CHAT_MAIN_CONFIG',
 			'chat_page_enabled'			=> array('lang' => 'CHAT_PAGE_ENABLED',			'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_forum_posts'			=> array('lang' => 'CHAT_FORUM_POSTS',			'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['forum_posts'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_forum_posts'			=> array('lang' => 'CHAT_FORUM_POSTS',			'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($options['forum_posts'], '{KEY}', '{CONFIG_VALUE}')),
 			'chat_autoconnect'			=> array('lang' => 'CHAT_AUTOCONNECT',			'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_anonymous_allowed'	=> array('lang' => 'CHAT_ANONYMOUS_ALLOWED',	'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_sound'				=> array('lang' => 'CHAT_SOUND_ENABLED',		'validate' => 'bool',		'type' => 'radio:yes_no'),
@@ -71,15 +72,15 @@ class admin_controller_config extends admin_controller_base
 			'chat_group_users'			=> array('lang' => 'CHAT_GROUP_USERS',		'validate' => 'bool',		'type' => 'radio:yes_no'),
 		
 			'legend3'			=> 'CHAT_MESSAGES_CONFIG',
-			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',			'validate' => 'string',		'type' => 'custom',	'function' => array($this, 'make_select'),	'params' => array($options['direction'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_direction'			=> array('lang' => 'CHAT_DIRECTION',			'validate' => 'string',		'type' => 'custom',	'function' => array($this->tools, 'make_select'),	'params' => array($options['direction'], '{KEY}', '{CONFIG_VALUE}')),
 			'chat_max_rows'				=> array('lang' => 'CHAT_ROWS',					'validate' => 'int:1:100',	'type' => 'number:1:100'),
 			'chat_max_chars'			=> array('lang' => 'CHAT_CHARS',				'validate' => 'int',		'type' => 'number'),
-			'chat_row_align'			=> array('lang' => 'CHAT_ROW_ALIGN',			'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['row_align'], '{KEY}', '{CONFIG_VALUE}')),
-			'chat_row_format'			=> array('lang' => 'CHAT_ROW_FORMAT',			'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['row_format'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_row_align'			=> array('lang' => 'CHAT_ROW_ALIGN',			'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($options['row_align'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_row_format'			=> array('lang' => 'CHAT_ROW_FORMAT',			'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($options['row_format'], '{KEY}', '{CONFIG_VALUE}')),
 			'chat_show_avatars'			=> array('lang' => 'CHAT_AVATARS',				'validate' => 'bool',		'type' => 'radio:yes_no'),
 			'chat_allow_bbcode'			=> array('lang' => 'CHAT_ALLOW_BBCODE',			'validate' => 'bool',		'type' => 'radio:yes_no'),
-			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', self::SELECT_PARSE_LANG | self::SELECT_MULTIPLE)),
-			'chat_bbcode_format'		=> array('lang' => 'CHAT_BBCODE_FORMAT',		'type' => 'custom',			'function' => array($this, 'make_select'),	'params' => array($options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}')),
+			'chat_disallowed_bbcode'	=> array('lang' => 'CHAT_DISALLOWED_BBCODE',	'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($options['disallowed_bbcode'], '{KEY}', '{CONFIG_VALUE}', tools::SELECT_PARSE_LANG | tools::SELECT_MULTIPLE)),
+			'chat_bbcode_format'		=> array('lang' => 'CHAT_BBCODE_FORMAT',		'type' => 'custom',			'function' => array($this->tools, 'make_select'),	'params' => array($options['bbcode_format'], '{KEY}', '{CONFIG_VALUE}')),
 		
 			'legend4'		=> 'CHAT_PM_CONFIG',
 			'chat_allow_pm'			=> array('lang' => 'CHAT_ALLOW_PM',			'validate' => 'bool',			'type' => 'radio:yes_no'),
@@ -88,12 +89,12 @@ class admin_controller_config extends admin_controller_base
 			'chat_pm_ignore_flood'	=> array('lang' => 'CHAT_PM_IGNORE_FLOOD',	'validate' => 'bool',			'type' => 'radio:yes_no'),
 		);
 		
-		/*
-		* @event chat.acp_config_vars
-		* @var	array	display_vars	Array of config values to display and process
-		* @var	boolean	submit			Do we display the form or process the submission
-		* @since 1.1.1
-		*/
+		/**
+		 * @event chat.acp_config_vars
+		 * @var	array		display_vars	Array of config values to display and process
+		 * @var	boolean		submit			Do we display the form or process the submission
+		 * @since 1.1.1
+		 */
 		$submit = &$this->submit;
 		$vars 	= array('display_vars', 'submit');
 		extract($this->dispatcher->trigger_event('chat.acp_config_vars', compact($vars)));
@@ -171,7 +172,7 @@ class admin_controller_config extends admin_controller_base
 			$this->cache->destroy('_chat_options');
 	
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CHAT_CONFIG');
-			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->get_form_action()));
 		}
 		
 		// Decode disallowed bbcode's bitfield

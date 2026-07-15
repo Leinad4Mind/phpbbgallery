@@ -1,6 +1,6 @@
 
 {% if MESSAGE_TITLE %}
-{% INCLUDE 'overall_header.html' %}
+{% include 'overall_header.html' %}
 <form id="confirm" action="{{ S_CONFIRM_ACTION }}" method="post">
 <div class="panel">
 	<div class="inner">
@@ -32,11 +32,11 @@
 </div>
 </form>
 
-{% INCLUDE 'overall_footer.html' %}
+{% include 'overall_footer.html' %}
 
 {% else %}
 
-{% INCLUDE 'mcp_header.html' %}
+{% include 'mcp_header.html' %}
 
 <h2>{{ lang('TITLE') }}</h2>
 
@@ -50,7 +50,7 @@
 		{{ lang('SEARCH_KEYWORDS') ~ lang('COLON') }} <input type="search" class="inputbox autowidth" name="keywords" value="{{ S_KEYWORDS }}" />&nbsp;<input type="submit" class="button2" name="filter" value="{{ lang('SEARCH') }}" />
 		<div class="pagination">
 			{% if pagination|length %} 
-				{% INCLUDE 'pagination.html' %}
+				{% include 'pagination.html' %}
 			{% else %} 
 				{{ PAGE_NUMBER }}
 			{% endif %}
@@ -101,7 +101,7 @@
 		<div class="action-bar bottom">
 			<div class="pagination">
 				{% if pagination|length %} 
-					{% INCLUDE 'pagination.html' %}
+					{% include 'pagination.html' %}
 				{% else %} 
 					{{ PAGE_NUMBER }}
 				{% endif %}
@@ -157,6 +157,6 @@
 
 </form>
 
-{% INCLUDE 'mcp_footer.html' %}
+{% include 'mcp_footer.html' %}
 
 {% endif %}

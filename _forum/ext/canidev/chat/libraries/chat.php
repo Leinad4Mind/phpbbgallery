@@ -1,13 +1,15 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\libraries;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class chat
 {
@@ -39,34 +41,38 @@ class chat
 	protected $midnight = false;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\auth\auth 												$auth				Authentication object
-	* @param \phpbb\cache\driver\driver_interface 							$cache 				Cache instance
-	* @param \phpbb\config\config 											$config				Config Object
-	* @param \Symfony\Component\DependencyInjection\ContainerInterface 		$container			Service container interface
-	* @param \phpbb\event\dispatcher_interface								$dispatcher			Event dispatcher
-	* @param \phpbb\db\driver\driver_interface								$db					DB Object
-	* @param \phpbb\language\language 										$language			Language Object
-	* @param \phpbb\request\request 										$request			Request object
-	* @param \phpbb\routing\helper											$routing			Routing Helper
-	* @param \phpbb\user													$user				User object
-	* @param string															$root_path			phpBB root path
-	* @param string															$php_ext			phpEx
-	* @param array 															$tables 			Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth 									$auth				Authentication object
+	 * @param \phpbb\cache\driver\driver_interface 				$cache 				Cache instance
+	 * @param \phpbb\config\config 								$config				Config Object
+	 * @param ContainerInterface 								$container			Service container interface
+	 * @param \canidev\core\lib 								$core 				Core Object
+	 * @param \phpbb\event\dispatcher_interface					$dispatcher			Event dispatcher
+	 * @param \phpbb\db\driver\driver_interface					$db					DB Object
+	 * @param \phpbb\language\language 							$language			Language Object
+	 * @param \phpbb\request\request 							$request			Request object
+	 * @param \phpbb\routing\helper								$routing			Routing Helper
+	 * @param \canidev\core\template 							$template 			Core Template Object
+	 * @param \phpbb\user										$user				User object
+	 * @param string											$root_path			phpBB root path
+	 * @param string											$php_ext			phpEx
+	 * @param array 											$tables 			Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\cache\driver\driver_interface $cache,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		ContainerInterface $container,
+		\canidev\core\lib $core,
 		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\routing\helper $routing,
+		\canidev\core\template $template,
 		\phpbb\user $user,
 		$root_path,
 		$php_ext,
@@ -76,13 +82,13 @@ class chat
 		$this->cache		= $cache;
 		$this->config 		= $config;
 		$this->container	= $container;
-		$this->core			= \canidev\core\lib::get_instance($container);
+		$this->core			= $core;
 		$this->dispatcher	= $dispatcher;
 		$this->db			= $db;
 		$this->language		= $language;
 		$this->request		= $request;
 		$this->routing 		= $routing;
-		$this->template		= \canidev\core\template::get_instance($container);
+		$this->template		= $template;
 		$this->user			= $user;
 		
 		$this->phpbb_root_path	= $root_path;
@@ -309,7 +315,7 @@ class chat
 		{
 			$this->template->assign_json_var('S_CHAT_OPTIONS', $service_options);
 
-			\canidev\core\lib::get_instance($this->container)->set_js_lang(array(
+			$this->template->set_js_lang(array(
 				'CHAT_FLOOD_WAIT'
 			));
 
@@ -506,18 +512,18 @@ class chat
 			foreach($rows as $row_id => $row)
 			{
 				/*
-				 * bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
-				 * If no bbcode, we decode the text to allow HTML tags.
+				* bbcode_bitfield is empty in some cases in phpBB 3.2 so, check if the text have some [/ to detect the presence of bbcode.
+				* If no bbcode, we decode the text to allow HTML tags.
 				*/
 				if(strpos($row['text_content'], '[/') !== false)
 				{
 					$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$text = generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
+					$text =  generate_text_for_display($row['text_content'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 				}
 				else
 				{
-					$text = htmlspecialchars_decode($row['text_content']);
-					$text = censor_text($row['text_content']);
+					$text = preg_replace('#(^<t>|</t>$)#', '', htmlspecialchars_decode($row['text_content']));
+					$text = smiley_text($text);
 				}
 
 				if($translate && strpos($text, '{') !== false)

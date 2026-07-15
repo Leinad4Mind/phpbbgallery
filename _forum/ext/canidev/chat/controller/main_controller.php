@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -9,6 +9,7 @@
 
 namespace canidev\chat\controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use canidev\chat\libraries\constants;
 
 /**
@@ -34,30 +35,32 @@ class main_controller
 	protected $tables;
 
 	/**
-	* Constructor
-	*
-	* @param \phpbb\auth\auth 					$auth			Authentication object
-	* @param \canidev\chat\libraries\chat 		$chat			Chat Object
-	* @param \phpbb\config\config 				$config			Config Object
-	* @param ContainerInterface 				$container		Service container interface
-	* @param \phpbb\db\driver\driver_interface	$db				DB Object
-	* @param \phpbb\controller\helper			$helper       	Controller helper object
-	* @param \phpbb\language\language 			$language		Language object
-	* @param \phpbb\log\log						$log			Log object
-	* @param \phpbb\request\request 			$request		Request object
-	* @param \phpbb\template\template			$template     	Template object
-	* @param \phpbb\user						$user			User object
-	* @param string								$root_path		phpBB root path
-	* @param string								$php_ext		phpEx
-	* @param array 								$tables 		Chat DB Tables
-	*
-	* @access public
-	*/
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth 						$auth			Authentication object
+	 * @param \canidev\chat\libraries\chat 			$chat			Chat Object
+	 * @param \phpbb\config\config 					$config			Config Object
+	 * @param ContainerInterface 					$container		Service container interface
+	 * @param \canidev\core\lib 					$core 			Core Object
+	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
+	 * @param \phpbb\controller\helper				$helper       	Controller helper object
+	 * @param \phpbb\language\language 				$language		Language object
+	 * @param \phpbb\log\log						$log			Log object
+	 * @param \phpbb\request\request 				$request		Request object
+	 * @param \phpbb\template\template				$template     	Template object
+	 * @param \phpbb\user							$user			User object
+	 * @param string								$root_path		phpBB root path
+	 * @param string								$php_ext		phpEx
+	 * @param array 								$tables 		Chat DB Tables
+	 *
+	 * @access public
+	 */
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\canidev\chat\libraries\chat $chat,
 		\phpbb\config\config $config,
-		\Symfony\Component\DependencyInjection\ContainerInterface $container,
+		ContainerInterface $container,
+		\canidev\core\lib $core,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\controller\helper $helper,
 		\phpbb\language\language $language,
@@ -73,7 +76,7 @@ class main_controller
 		$this->chat			= $chat;
 		$this->config		= $config;
 		$this->container	= $container;
-		$this->core			= \canidev\core\lib::get_instance($container);
+		$this->core			= $core;
 		$this->db			= $db;
 		$this->helper 		= $helper;
 		$this->language		= $language;

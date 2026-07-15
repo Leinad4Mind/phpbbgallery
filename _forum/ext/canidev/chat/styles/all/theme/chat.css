@@ -103,6 +103,39 @@
 	width: 18.4%;
 }
 
+.chat-conversation-box {
+	position: relative;
+}
+
+.chat-scroll-button {
+	align-items: center;
+	background-color: #fff;
+	border-radius: 50%;
+	box-shadow: 0 0 4px 0px #c9c9c9;
+	cursor: pointer;
+	display: flex;
+	font-size: 14px;
+	height: 34px;
+	justify-content: center;
+	position: absolute;
+	right: 30px;
+	text-align: center;
+	width: 34px;
+}
+
+.hastouch .chat-scroll-button {
+	right: 20px;
+}
+
+.chat-scroll-button.down {
+	bottom: 15px;
+}
+
+.chat-scroll-button.up {
+	top: 15px;
+	transform: rotate(180deg);
+}
+
 #chat-conversation-container,
 #chat-right-panel {
 	overflow: auto;
@@ -578,7 +611,7 @@ ol.chat-rulelist li {
 .chat-dialog-fieldset dl {
 	display: flex;
 	flex-direction: row;
-    align-items: center;
+	align-items: center;
 }
 
 .chat-dialog-fieldset dt,
@@ -667,11 +700,8 @@ html.embedmode { height: auto; }
 }
 
 .embedmode #chat-body {
-	margin: 0;
-	
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
+	margin: 0;
 }
 
 .embedmode #chat-body.notitle { padding: 0; }
@@ -828,6 +858,16 @@ html.embedmode { height: auto; }
     padding-right: 20px;
 }
 
+.rtl .chat-scroll-button {
+	left: 30px;
+	right: unset;
+}
+
+.rtl.hastouch .chat-scroll-button {
+	left: 20px;
+	right: unset;
+}
+
 /* Dark Theme
 ------------------------------- */
 .dark-theme #chat-body,
@@ -911,6 +951,11 @@ html.embedmode { height: auto; }
     stroke: #404040;
 }
 
+.dark-theme .chat-scroll-button {
+	background-color: #1a1a1a;
+	box-shadow: 0 0 4px 0px #2e2e2e;
+}
+
 /* Responsive Layout
 ------------------------------- */
 @media only screen and (max-width: 950px) {
@@ -936,7 +981,10 @@ html.embedmode { height: auto; }
 }
 
 @media only screen and (max-width: 500px) {
-	#chat-left-panel, #chat-right-panel  {
+	#chat-left-panel,
+	#chat-right-panel,
+	.rtl #chat-left-panel,
+	.rtl #chat-right-panel  {
 		float: none;
 		width: auto;
 	}
@@ -982,7 +1030,8 @@ html.embedmode { height: auto; }
 		margin-left: 38px;
 	}
 	
-	.chat-archive-bar {
+	.chat-archive-bar,
+	.rtl .chat-archive-bar {
 		float: none;
 		margin-bottom: 10px;
 		text-align: center;

@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.3 22/04/2022
+* @version v1.2.4 17/06/2022
 *
 * @copyright (c) 2022 CaniDev
 * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -60,10 +60,10 @@ class prune extends \phpbb\cron\task\base
 		{
 			if($row['room_msg_limit'] > 0)
 			{
-				$del_room_ary[$row['room_id']] = $row['room_msg_limit'];
+				$del_room_ary[$row['room_key']] = $row['room_msg_limit'];
 			}
 		}
-		
+
 		if(sizeof($del_room_ary))
 		{
 			$sql = 'SELECT COUNT(cm.message_id) AS message_count, cm.dest_key

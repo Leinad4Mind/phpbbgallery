@@ -1,4 +1,4 @@
-{% INCLUDE 'overall_header.html' %}
+{% include 'overall_header.html' %}
 
 <h2>{{ lang('CHAT_ARCHIVE') }}</h2>
 
@@ -108,7 +108,7 @@
 
 	<div class="pagination">
 		{% if pagination|length %}
-			{% INCLUDE 'pagination.html' %}
+			{% include 'pagination.html' %}
 		{% else %}
 			{{ PAGE_NUMBER }}
 		{% endif %}
@@ -121,4 +121,4 @@
 
 <br />
 
-{% INCLUDE 'overall_footer.html' %}
+{% include 'overall_footer.html' %}
