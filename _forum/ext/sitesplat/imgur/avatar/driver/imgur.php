@@ -35,7 +35,7 @@ class imgur extends \phpbb\avatar\driver\driver
 
 	public function get_custom_html($user, $row, $alt = '')
 	{
-        return '<img src="' . $row['avatar'] . '" ' .
+        return '<img class="avatar" src="' . $row['avatar'] . '" ' .
             ($row['avatar_width'] ? ('width="' . $row['avatar_width'] . '" ') : '') .
             ($row['avatar_height'] ? ('height="' . $row['avatar_height'] . '" ') : '') .
             'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
@@ -59,6 +59,11 @@ class imgur extends \phpbb\avatar\driver\driver
 	{
         $client_id = $this->config['imgur_clientid'];
         $upload = $request->file('imgur');
+        if (empty($upload['tmp_name']))
+        {
+            return false;
+        }
+
         $filename = $upload['tmp_name'];
         $handle = fopen($filename, 'r');
         $data = fread($handle, filesize($filename));

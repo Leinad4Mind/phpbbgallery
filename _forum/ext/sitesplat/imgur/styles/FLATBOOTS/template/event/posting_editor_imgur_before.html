@@ -1,33 +1,54 @@
 <div class="panel-body tab-pane <!-- IF IMGUR_DELETEHASH -->active<!-- ENDIF -->" id="posting-imgur-html">
 <p>{L_IMGUR_UPLOAD_MAIN}</p>
 <fieldset>
+
 	<div class="fileinput fileinput-new" data-provides="fileinput">
-		<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#imgurAnchor';"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
+		<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="if (document.getElementById('postform') != null) { document.getElementById('postform').action += '#imgurAnchor' } else if (document.getElementById('qr_postform') != null) { document.getElementById('qr_postform').action += '#imgurAnchor' };"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_IMGUR_UPLOAD}</button>
 		<span class="btn btn-default btn-file">
 			<span class="fileinput-new">{L_IMGUR_SELECT}</span>
 			<span class="fileinput-exists">{L_FILE_CHANGE}</span>
-			<input type="file" name="imgur" id="imgur" maxlength="{FILESIZE}" value="" />
+			<input type="file" name="imgur" id="imgur" accept="image/*"/>
 		</span>
-		<i class="fa fa-picture-o fileinput-exists"></i> <span class="fileinput-filename"></span>
-		<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none"><i class="fa fa-times"></i></a>
+		<i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
+		<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float:none"><i class="fa fa-times"></i></a>
 	</div>
   
+<div class="row">
+
+   <div class="col-md-6">
+	
 	<div class="control-group"> 
 		<label class="control-label" for="box-imgur-link">{L_IMGUR_OUTPUT_LINK}{L_COLON}</label>
 		<div class="controls controls-row"> 
-			<div class="input-group col-md-6">
+			<div class="input-group">
 				<input type="text" class="form-control" id="box-imgur-link" value="{IMGUR_DIRECT_LINK}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
 					<a class="btn btn-default " id="copy-button-link" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
 				</span>
 		 </div> 
-	</div> 
-</div>
+	   </div> 
+    </div>
+	
+	<div class="control-group"> 
+		<label class="control-label" for="box-imgur-markdown">{L_IMGUR_OUTPUT_MARKDOWN}{L_COLON}&nbsp;{L_MARKDOWN_WHATIS}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group">
+				<input type="text" class="form-control" id="box-imgur-markdown" value="{IMGUR_IMAGE_MD}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
+				<span class="input-group-btn">
+					<a class="btn btn-default " id="copy-button-markdown" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
+				</span>
+		 </div> 
+	   </div> 
+    </div>
+	
+	</div>
 
+	<div class="col-md-6">
+	
 	<div class="control-group"> 
 		<label class="control-label" for="box-imgur-img">{L_IMGUR_OUTPUT_IMAGE}{L_COLON}</label>
 		<div class="controls controls-row"> 
-			<div class="input-group col-md-6">
+			<div class="input-group">
 				<input type="text" class="form-control" id="box-imgur-img" value="{IMGUR_DIRECT_IMG}" placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
 					<a class="btn btn-default btn-imgur-copy" id="copy-button-img" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
@@ -39,7 +60,7 @@
 	<div class="control-group"> 
 		<label class="control-label" for="box-imgur-del">{L_IMGUR_OUTPUT_IMAGE_DELETE}{L_COLON}</label>
 		<div class="controls controls-row"> 
-			<div class="input-group col-md-6">
+			<div class="input-group">
 				<input type="text" class="form-control" id="box-imgur-del" <!-- IF IMGUR_DELETEHASH -->value="https://imgur.com/delete/{IMGUR_DELETEHASH}"<!-- ENDIF --> placeholder="{L_IMGUR_OUTPUT_PLACEHOLDER}">
 				<span class="input-group-btn">
 					<a class="btn btn-default btn-imgur-copy" id="copy-button-del" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{L_IMGUR_COPY}</a>
@@ -47,5 +68,10 @@
 			</div> 
 		</div> 
 	</div>
+	
+	</div>
+	
+</div>	
+	
 </fieldset>
 </div>
