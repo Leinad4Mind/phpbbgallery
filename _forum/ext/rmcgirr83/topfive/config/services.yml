@@ -1,5 +1,5 @@
 services:
-    rmcgirr83.topfive.topfive:
+    rmcgirr83.topfive.functions:
         class: rmcgirr83\topfive\core\topfive
         arguments:
             - '@auth'
@@ -16,11 +16,9 @@ services:
     rmcgirr83.topfive.listener:
         class: rmcgirr83\topfive\event\listener
         arguments:
-            - '@rmcgirr83.topfive.topfive'
+            - '@rmcgirr83.topfive.functions'
             - '@config'
             - '@template'
             - '@user'
-            - '@controller.helper'
-            - '@?phpbb.collapsiblecategories.operator'
         tags:
             - { name: event.listener }

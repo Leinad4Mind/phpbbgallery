@@ -55,10 +55,6 @@ class topfive
 		$this->user = $user;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-
-		$user_style = $this->template->get_user_style();
-		$style_name = $user_style[0];
-		$this->default_avatar = $this->root_path . 'styles/' . $style_name . '/theme/images/no_avatar.gif';
 	}
 
 	public function toptopics($tpl_loopname = 'top_five_topic')
@@ -78,143 +74,131 @@ class topfive
 		}
 		$forum_ary = array_unique($forum_ary);
 
-		// want to exclude some forums
-		$excluded_forums = explode(',', $this->config['top_five_excluded']);
-
-		// now remove those topics from the display per the excluded forums array
-		$forum_ary = array_diff($forum_ary, $excluded_forums);
-
-		if (!sizeof($forum_ary))
+		if (sizeof($forum_ary))
 		{
-			$this->template->assign_block_vars($tpl_loopname, array(
-				'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
-			));
+			/**
+			* Select topic_ids
+			*/
+			$sql = 'SELECT forum_id, topic_id, topic_type
+				FROM ' . TOPICS_TABLE . '
+				WHERE ' . $this->content_visibility->get_forums_visibility_sql('topic', $forum_ary) . '
+				AND topic_status <> ' . ITEM_MOVED . '
+				ORDER BY topic_last_post_time DESC';
 
-			return;
-		}
-
-		/**
-		* Select topic_ids
-		*/
-		// grab all posts that meet criteria and auths
-		$sql_array = array(
-			'SELECT'	=> 't.forum_id, t.topic_id, t.topic_type',
-			'FROM'		=> array(TOPICS_TABLE => 't'),
-			'WHERE'		=> $this->content_visibility->get_forums_visibility_sql('topic', $forum_ary) . ' AND topic_status <> ' . ITEM_MOVED,
-			'ORDER_BY'	=> 't.topic_last_post_time DESC',
-		);
-
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $howmany);
-
-		$forums = $ga_topic_ids = $topic_ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$topic_ids[] = $row['topic_id'];
-			if ($row['topic_type'] == POST_GLOBAL)
+			$result = $this->db->sql_query_limit($sql, $howmany);
+			$forums = $ga_topic_ids = $topic_ids = array();
+			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$ga_topic_ids[] = $row['topic_id'];
+				$topic_ids[] = $row['topic_id'];
+				if ($row['topic_type'] == POST_GLOBAL)
+				{
+					$ga_topic_ids[] = $row['topic_id'];
+				}
+				else
+				{
+					$forums[$row['forum_id']][] = $row['topic_id'];
+				}
+			}
+			$this->db->sql_freeresult($result);
+
+			// Get topic tracking
+			$topic_tracking_info = array();
+			foreach ($forums as $forum_id => $topic_id)
+			{
+				$topic_tracking_info[$forum_id] = get_complete_topic_tracking($forum_id, $topic_id, $ga_topic_ids);
+			}
+
+			/*
+			* must have topic_ids.
+			* A user can have forums and not have topic_ids before installing this extension
+			*/
+			if (sizeof($topic_ids))
+			{
+				// grab all posts that meet criteria and auths
+				$sql_array = array(
+					'SELECT'	=> 'u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id, t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
+					'FROM'		=> array(TOPICS_TABLE => 't'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 't.topic_last_poster_id = u.user_id',
+						),
+						array(
+							'FROM'	=> array(FORUMS_TABLE => 'f'),
+							'ON'	=> 't.forum_id = f.forum_id',
+						),
+					),
+					'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
+					'ORDER_BY'	=> 't.topic_last_post_time DESC',
+				);
+				/**
+				* Event to modify the SQL query before the topics data is retrieved
+				*
+				* @event rmcgirr83.topfive.sql_pull_topics_data
+				* @var	array	sql_array		The SQL array
+				* @since 1.0.0
+				*/
+				$vars = array('sql_array');
+				extract($this->dispatcher->trigger_event('rmcgirr83.topfive.sql_pull_topics_data', compact($vars)));
+
+				// cache the query for one minute
+				$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $howmany, 0, 60);
+
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$topic_id = $row['topic_id'];
+					$forum_id = $row['forum_id'];
+					$forum_name = $row['forum_name'];
+
+					$post_unread = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
+					$view_topic_url = append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;p=' . $row['topic_last_post_id'] . '#p' . $row['topic_last_post_id']);
+					$forum_name_url = append_sid("{$this->phpbb_root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
+					$topic_title = censor_text($row['topic_title']);
+					if (utf8_strlen($topic_title) >= 60)
+					{
+						$topic_title = (utf8_strlen($topic_title) > 60 + 3) ? utf8_substr($topic_title, 0, 60) . '...' : $topic_title;
+					}
+					$is_guest = ($row['user_id'] == ANONYMOUS) ? true : false;
+                    $user_avatar = ($row['user_avatar']) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], 50, 50) : '<img src="' . generate_board_url() . '/styles/' . '/FLATBOOTS/' . '/theme/images/no_avatar.gif" height="50" width="50" alt="Default Avatar" />';
+					
+					$tpl_ary = array(
+						'U_TOPIC'			=> $view_topic_url,
+						'U_FORUM'			=> $forum_name_url,
+						'TOP5_AVATAR' 	    => $user_avatar,
+						'S_UNREAD'			=> ($post_unread) ? true : false,
+						'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? $this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : $this->user->lang['POST_BY_AUTHOR'] . ' ' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+						'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
+						'TOPIC_TITLE' 		=> $topic_title,
+						'FORUM_NAME'		=> $forum_name,
+					);
+					/**
+					* Modify the topic data before it is assigned to the template
+					*
+					* @event rmcgirr83.topfive.modify_tpl_ary
+					* @var	array	row			Array with topic data
+					* @var	array	tpl_ary		Template block array with topic data
+					* @since 1.0.0
+					*/
+					$vars = array('row', 'tpl_ary');
+					extract($this->dispatcher->trigger_event('rmcgirr83.topfive.modify_tpl_ary', compact($vars)));
+
+					$this->template->assign_block_vars($tpl_loopname, $tpl_ary);
+				}
+				$this->db->sql_freeresult($result);
 			}
 			else
 			{
-				$forums[$row['forum_id']][] = $row['topic_id'];
+				$this->template->assign_block_vars($tpl_loopname, array(
+					'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
+				));
 			}
 		}
-		$this->db->sql_freeresult($result);
-
-		// Get topic tracking
-		$topic_tracking_info = array();
-		foreach ($forums as $forum_id => $topic_id)
-		{
-			$topic_tracking_info[$forum_id] = get_complete_topic_tracking($forum_id, $topic_id, $ga_topic_ids);
-		}
-
-		/*
-		* must have topic_ids.
-		* A user can have forums and not have topic_ids before installing this extension
-		*/
-		if (!sizeof($topic_ids))
+		else
 		{
 			$this->template->assign_block_vars($tpl_loopname, array(
 				'NO_TOPIC_TITLE'	=> $this->user->lang['NO_TOPIC_EXIST'],
 			));
-
-			return;
 		}
-
-		// grab all posts that meet criteria and auths
-		$sql_array = array(
-			'SELECT'	=> 'u.*, t.topic_title, t.forum_id, t.topic_id, t.topic_first_post_id, t.topic_last_post_id, t.topic_last_post_time, t.topic_last_poster_name, f.forum_name',
-			'FROM'		=> array(TOPICS_TABLE => 't'),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 't.topic_last_poster_id = u.user_id',
-				),
-				array(
-					'FROM'	=> array(FORUMS_TABLE => 'f'),
-					'ON'	=> 't.forum_id = f.forum_id',
-				),
-			),
-			'WHERE'		=> $this->db->sql_in_set('t.topic_id', $topic_ids),
-			'ORDER_BY'	=> 't.topic_last_post_time DESC',
-		);
-		/**
-		* Event to modify the SQL query before the topics data is retrieved
-		*
-		* @event rmcgirr83.topfive.sql_pull_topics_data
-		* @var	array	sql_array		The SQL array
-		* @since 1.0.0
-		*/
-		$vars = array('sql_array');
-		extract($this->dispatcher->trigger_event('rmcgirr83.topfive.sql_pull_topics_data', compact($vars)));
-
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $howmany);
-
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$topic_id = $row['topic_id'];
-			$forum_id = $row['forum_id'];
-			$forum_name = $row['forum_name'];
-
-			$post_unread = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
-			$view_topic_url = append_sid("{$this->root_path}viewtopic.$this->php_ext", 'f=' . $row['forum_id'] . '&amp;p=' . $row['topic_last_post_id'] . '#p' . $row['topic_last_post_id']);
-			$forum_name_url = append_sid("{$this->root_path}viewforum.$this->php_ext", 'f=' . $row['forum_id']);
-			$topic_title = censor_text($row['topic_title']);
-			$topic_title = truncate_string($topic_title, 60, 255, false, $this->user->lang['ELLIPSIS']);
-
-			$is_guest = ($row['user_id'] == ANONYMOUS) ? true : false;
-
-			$user_avatar = phpbb_get_user_avatar($row);
-
-			$users_avatar = !empty($row['user_avatar']) ? $user_avatar : '<img width="80" height="80" alt="User avatar" src="' . $this->default_avatar . '" class="avatar">';
-
-			$display_avatar = (!empty($this->config['top_five_avatars']) && $this->user->optionget('viewavatars') && !empty($user_avatar)) ? true : false;
-
-			$user_avatar = $display_avatar ? '<span class="topfive-avatar">' . $user_avatar . '</span>&nbsp;' : '';
-			
-			$tpl_ary = array(
-				'U_TOPIC'			=> $view_topic_url,
-				'U_FORUM'			=> $forum_name_url,
-				'S_UNREAD'			=> ($post_unread) ? true : false,
-				'USERNAME_FULL'		=> ($is_guest || !$this->auth->acl_get('u_viewprofile')) ? '&nbsp;<span class="header-avatar">'.$users_avatar.'</span>&nbsp;' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $row['topic_last_poster_name']) : '&nbsp;<span class="header-avatar">'.$users_avatar.'</span>&nbsp;' . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				'LAST_TOPIC_TIME'	=> $this->user->format_date($row['topic_last_post_time']),
-				'TOPIC_TITLE' 		=> $topic_title,
-				'FORUM_NAME'		=> $forum_name,
-			);
-			/**
-			* Modify the topic data before it is assigned to the template
-			*
-			* @event rmcgirr83.topfive.modify_tpl_ary
-			* @var	array	row			Array with topic data
-			* @var	array	tpl_ary		Template block array with topic data
-			* @since 1.0.0
-			*/
-			$vars = array('row', 'tpl_ary');
-			extract($this->dispatcher->trigger_event('rmcgirr83.topfive.modify_tpl_ary', compact($vars)));
-
-			$this->template->assign_block_vars($tpl_loopname, $tpl_ary);
-		}
-		$this->db->sql_freeresult($result);
 	}
 
 	public function topposters()
@@ -253,7 +237,7 @@ class topfive
 			$sql_other .=  ' user_posts <> 0';
 
 			// do the main sql query
-			$sql = 'SELECT *
+			$sql = 'SELECT user_id, username, user_colour, user_posts
 				FROM ' . USERS_TABLE . '
 				 ' . $sql_where . ' ' . $sql_and . '
 				' . $sql_other . '
@@ -267,10 +251,6 @@ class topfive
 					'username'      => $row['username'],
 					'user_colour'   => $row['user_colour'],
 					'user_posts'    => $row['user_posts'],
-					'user_avatar'	=> $row['user_avatar'],
-					'user_avatar_width'	=> $row['user_avatar_width'],
-					'user_avatar_height'	=> $row['user_avatar_height'],
-					'user_avatar_type'	=> $row['user_avatar_type'],
 				);
 			}
 			$this->db->sql_freeresult($result);
@@ -281,17 +261,10 @@ class topfive
 
 		foreach ($user_posts as $row)
 		{
-			$user_avatar = phpbb_get_user_avatar($row);
-			$users_avatar = !empty($row['user_avatar']) ? $user_avatar : '<img width="80" height="80" alt="User avatar" src="' . $this->default_avatar . '" class="avatar">';
+			$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 
-			$display_avatar = (!empty($this->config['top_five_avatars']) && $this->user->optionget('viewavatars') && !empty($user_avatar)) ? true : false;
-
-			$user_avatar = $display_avatar ? '<span class="topfive-avatar">' . $user_avatar . '</span>&nbsp;' : '';
-
-			//$username_string = ($this->auth->acl_get('u_viewprofile')) ? $user_avatar . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : $user_avatar . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
-			$username_string = ($this->auth->acl_get('u_viewprofile')) ? '<span class="header-avatar">'.$users_avatar.'</span>&nbsp;'.get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : '<span class="header-avatar">'.$users_avatar.'</span>&nbsp;'.get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 			$this->template->assign_block_vars('top_five_active',array(
-				'S_SEARCH_ACTION'	=> append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
+				'S_SEARCH_ACTION'	=> append_sid("{$this->phpbb_root_path}search.$this->php_ext", 'author_id=' . $row['user_id'] . '&amp;sr=posts'),
 				'POSTS' 			=> number_format($row['user_posts']),
 				'USERNAME_FULL'		=> $username_string,
 			));
@@ -311,7 +284,7 @@ class topfive
 			$newest_users = array();
 
 			// grab most recent registered users
-			$sql = 'SELECT *
+			$sql = 'SELECT user_id, username, user_colour, user_regdate
 				FROM ' . USERS_TABLE . '
 				' . $sql_where . '
 				' . $sql_and . '
@@ -325,10 +298,6 @@ class topfive
 					'username'				=> $row['username'],
 					'user_colour'			=> $row['user_colour'],
 					'user_regdate'			=> $row['user_regdate'],
-					'user_avatar'			=> $row['user_avatar'],
-					'user_avatar_width'		=> $row['user_avatar_width'],
-					'user_avatar_height'	=> $row['user_avatar_height'],
-					'user_avatar_type'		=> $row['user_avatar_type'],
 				);
 			}
 			$this->db->sql_freeresult($result);
@@ -339,12 +308,7 @@ class topfive
 
 		foreach ($newest_users as $row)
 		{
-			$user_avatar = phpbb_get_user_avatar($row);
-			$display_avatar = (!empty($this->config['top_five_avatars']) && $this->user->optionget('viewavatars') && !empty($user_avatar)) ? true : false;
-
-			$user_avatar = $display_avatar ? '<span class="topfive-avatar">' . $user_avatar . '</span>&nbsp;' : '';
-
-			$username_string = ($this->auth->acl_get('u_viewprofile')) ? $user_avatar . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : $user_avatar . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+			$username_string = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']) : get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 
 			$this->template->assign_block_vars('top_five_newest',array(
 				'REG_DATE'			=> $this->user->format_date($row['user_regdate']),
