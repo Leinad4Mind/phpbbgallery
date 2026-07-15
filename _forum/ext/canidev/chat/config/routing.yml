@@ -1,3 +1,7 @@
 canidev_chat_controller:
-    pattern: /chat
-    defaults: { _controller: canidev.chat.controller:display }
+    pattern: /chat{tslash}
+    defaults:
+        _controller: canidev.chat.controller:display
+        tslash: ""
+    requirements:
+        tslash: "/?"

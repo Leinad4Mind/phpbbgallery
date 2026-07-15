@@ -7,4 +7,50 @@
 * @copyright (c) 2017 CaniDev
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
-var jchat_style_options={positions:{chat:["main","append"],faq:{top:["h2:first","after"],bottom:["main > .row:last","before"]},index:{top:[".panel-forum:first","before"],bottom:[".panel-stats","before"]},mcp:{top:["h2:first","after"],bottom:["main","append"]},memberlist:{top:["h3:first","after"],bottom:["main > .row:last","before"]},search:{top:["h3:first","after"],bottom:["main","append"]},ucp:{top:["h2:first","after"],bottom:["main","append"]},viewforum:{top:["h3:first","after"],bottom:["main > .row:last","before"]},viewonline:{top:[".panel-forum:first","before"],bottom:[".panel-forum:not(#chat-body):last","after"]},viewtopic:{top:["h3:first","after"],bottom:["main > .row:last","before"]},undefined:{top:["main","prepend"],bottom:["main","append"]}}};
+
+var jchat_style_options = {
+	positions: {
+		chat: ['main', 'append'],
+
+		faq: {
+			top		: ['h2:first', 'after'],
+			bottom	: ['main > .row:last', 'before']
+		},
+		index: {
+			top		: ['.wrapper', 'before'],
+			bottom	: ['.panel-stats', 'before']
+		},
+		mcp: {
+			top		: ['h2:first', 'after'],
+			bottom	: ['main', 'append']
+		},
+		memberlist: {
+			top		: ['h3:first', 'after'],
+			bottom	: ['main > .row:last', 'before']
+		},
+		search: {
+			top		: ['h3:first', 'after'],
+			bottom	: ['main', 'append']
+		},
+		ucp: {
+			top		: ['h2:first', 'after'],
+			bottom	: ['main', 'append']
+		},
+		viewforum: {
+			top		: ['h3:first', 'after'],
+			bottom	: ['main > .row:last', 'before']
+		},
+		viewonline: {
+			top		: ['.panel-forum:first', 'before'],
+			bottom	: ['.panel-forum:not(#chat-body):last', 'after']
+		},
+		viewtopic: {
+			top		: ['h3:first', 'after'],
+			bottom	: ['main > .row:last', 'before']
+		},
+		undefined: {
+			top		: ['main', 'prepend'],
+			bottom	: ['main', 'append']
+		}
+	}
+};

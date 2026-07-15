@@ -1,46 +1,41 @@
 <!-- INCLUDE overall_header.html -->
 
-<!-- IF .message -->
-	<div class="pagination">
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			{PAGE_NUMBER}
-		<!-- ENDIF -->
-	</div>
-<!-- ENDIF -->
-
 <h2>{L_CHAT_ARCHIVE}</h2>
 
 <form method="post" action="{U_ACTION}">
 
-<div id="chat-body" class="forabg">
+<div id="chat-body" class="chat-archive-container">
+
 <!-- IF .roomtab -->
-	<ul class="chat-archive-tabs">
+	<div id="tabs" class="tabs">
+	<ul>
 	<!-- BEGIN roomtab -->
-		<li><a class="chat-corner-top<!-- IF roomtab.S_ACTIVE --> active<!-- ENDIF -->" href="{roomtab.U_ACTION}">{roomtab.S_TITLE}</a></li>
+		<li class="tab<!-- IF roomtab.S_ACTIVE --> activetab<!-- ENDIF -->"><a href="{roomtab.U_ACTION}"><span>{roomtab.S_TITLE}</span></a></li>
 	<!-- END roomtab -->
 	</ul>
-<!-- ELSE -->
-	<div id="chat-title">{L_CHAT_ARCHIVE}</div>
+	</div>
 <!-- ENDIF -->
 	
-	<div id="chat-content" class="chat-corner-all">
-	<!-- IF .message -->
+	<div id="chat-content" class="panel bg3">
 		<div id="chat-conversation-container">
 		<!-- BEGIN message -->
-			<div id="chat-row-{message.S_ID}" class="chat-row">
+			<div id="chat-row-{message.S_ID}" class="chat-row" data-id="{message.S_ID}" data-time="{message.S_TIMESTAMP}">
 				<!-- IF message.S_SHOW_AVATAR -->
 					<div class="ic-row-avatar"><!-- IF message.S_AUTHOR_AVATAR -->{message.S_AUTHOR_AVATAR}<!-- ELSE --><div class="chat-no-avatar"></div><!-- ENDIF --></div>
 				<!-- ENDIF -->
 				
-				<!-- IF S_BATCH_OPTIONS --><div class="ic-row-actions"><input class="row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" /></div><!-- ENDIF -->
+			<!-- IF S_BATCH_OPTIONS -->
+				<div class="ic-row-actions row-check-list">
+					<input id="row-id-list-{message.S_ID}" class="cbb-checkbox row-id-list" type="checkbox" name="row_id_list[]" value="{message.S_ID}" />
+					<label for="row-id-list-{message.S_ID}"></label>
+				</div>
+			<!-- ENDIF -->
 				
 				<div class="ic-row-actions">
-					<!-- IF message.CAN_VIEW_WHOIS --><a href="#!whois/{message.S_ID}" title="{L_WHOIS}"><span class="chat-icon-signal"></span></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_MOVE --><a href="#!move/{message.S_ID}" title="{L_CHAT_MOVE}"><span class="chat-icon-move"></span></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_EDIT --><a href="#!edit/{message.S_ID}" title="{L_EDIT}"><span class="chat-icon-edit"></span></a>&nbsp;<!-- ENDIF -->
-					<!-- IF message.CAN_DELETE --><a href="#!delete/{message.S_ID}" title="{L_DELETE}"><span class="chat-icon-trash"></span></a><!-- ENDIF -->
+					<!-- IF message.CAN_VIEW_WHOIS --><a href="#" data-action="whois" title="{L_WHOIS}"><i class="fa fa-signal"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_MOVE --><a href="#" data-action="move" title="{L_CHAT_MOVE}"><i class="fa fa-share-square-o"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_EDIT --><a href="#" data-action="edit" title="{L_EDIT}"><i class="fa fa-edit"></i></a>&nbsp;<!-- ENDIF -->
+					<!-- IF message.CAN_DELETE --><a href="#" data-action="delete" title="{L_DELETE}"><i class="fa fa-trash"></i></a><!-- ENDIF -->
 				</div>
 
 				<div class="ic-row-title<!-- IF message.S_SHOW_AVATAR --> avatar-margin<!-- ENDIF -->">{message.S_AUTHOR_FULL} &bull; {message.S_DATE}</div>
@@ -48,24 +43,56 @@
 					{message.S_TEXT}
 				</div>
 			</div>
+		<!-- BEGINELSE -->
+			<div class="cbb-message">{L_NO_MESSAGES}</div>
 		<!-- END message -->
 		</div>
-	<!-- ELSE -->
-		{L_NO_MESSAGES}
-	<!-- ENDIF -->
 	</div>
 </div>
 
 <!-- IF .message -->
+	
+	<div class="chat-archive-bar">
 	<!-- IF S_BATCH_OPTIONS -->
-	<div class="chat-state-hidden js-delete-selected" style="float:left;">
-		<select class="chat-inputbox" name="action">
-			<option value="">{L_BATCH_ACTIONS}</option>
-			{S_BATCH_OPTIONS}
-		</select>
-		<input type="submit" name="submit" class="chat-button ic-inline" value="{L_CHAT_APPLY}" />
-	</div>
+		<div class="cbb-group cbb-helper-inline">
+			<select class="cbb-inputbox" name="action">
+				<option value="">{L_BATCH_ACTIONS}</option>
+				{S_BATCH_OPTIONS}
+			</select>
+			<input type="submit" name="submit" class="cbb-btn" value="{L_CHAT_APPLY}" />
+		</div>
 	<!-- ENDIF -->
+		
+	<!-- IF S_SELECT_SORT_DAYS -->
+		<div class="dropdown-container dropdown-button-control sort-tools cbb-helper-inline">
+			<span title="{L_SORT_OPTIONS}" class="cbb-btn dropdown-trigger dropdown-select">
+				<i class="fa fa-sort-amount-asc"></i>
+			</span>
+			<div class="dropdown hidden">
+				<div class="pointer"><div class="pointer-inner"></div></div>
+				<div class="dropdown-contents">
+					<fieldset class="display-options">
+					<!-- IF not S_IS_BOT -->
+						<label>{L_DISPLAY}{L_COLON} {S_SELECT_SORT_DAYS}</label>
+						<label>{L_SORT_BY}{L_COLON} {S_SELECT_SORT_KEY}</label>
+						<label>{L_SORT_DIRECTION}{L_COLON} {S_SELECT_SORT_DIR}</label>
+						<hr class="dashed" />
+						<input type="submit" name="sort" value="{L_GO}" class="cbb-btn" />
+					<!-- ENDIF -->
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	<!-- ENDIF -->
+	
+	<!-- IF S_BATCH_OPTIONS -->
+		<fieldset>
+			<br />
+			<a href="#" data-action="mark">{L_MARK_ALL}</a> ::
+			<a href="#" data-action="unmark">{L_UNMARK_ALL}</a>
+		</fieldset>
+	<!-- ENDIF -->
+	</div>
 
 	<div class="pagination">
 		<!-- IF .pagination -->
@@ -76,25 +103,9 @@
 	</div>
 
 	<br class="clear" />
-
-	<!-- IF S_SELECT_SORT_DAYS -->
-	<br /><hr />
-	<fieldset class="display-options">
-		<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
-		<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
-	<!-- IF not S_IS_BOT -->
-		<label>{L_DISPLAY_MESSAGES}{L_COLON} {S_SELECT_SORT_DAYS}</label>
-		<label>{L_SORT_BY}{L_COLON} {S_SELECT_SORT_KEY}</label>
-		<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="chat-button ic-inline" /></label>
-	<!-- ENDIF -->
-	</fieldset>
-	
-	<!-- ENDIF -->
 <!-- ENDIF -->
 
 </form>
-
-<div id="ic-data-container" style="display:none;"></div>
 
 <br />
 

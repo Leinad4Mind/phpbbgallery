@@ -1,19 +1,24 @@
 <!-- IF IN_CHAT_ADMIN -->
-	<!-- INCLUDECSS @canidev_chat/../theme/{S_CHAT_VARIANT}.css -->
-	<!-- INCLUDECSS @canidev_chat/acp.css -->
-	
-	<!-- INCLUDEJS js/jquery-ui-sortable.min.js -->
-	<!-- INCLUDEJS js/jchat.js -->
-	<!-- INCLUDEJS js/jchat-acp.js -->
-	
-	<!-- IF U_HELP and not U_BACK -->
-	<script type="text/javascript">
+	<!-- IF CANIDEV_CORE_STARTED -->
+		<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
+	<!-- ENDIF -->
+
+<!-- IF U_HELP and not U_BACK and not MESSAGE_TEXT -->
+	<script>
 	// <![CDATA[
-		window.__jChat = {
-			help_title	: '{LA_CHAT_HELP}',
-			help_url	: '{U_HELP}'
+		window.__helpIcon = {
+			title	: '{LA_DOCUMENTATION_AND_SUPPORT}',
+			url		: '{U_HELP}'
 		};
 	// ]]>
 	</script>
-	<!-- ENDIF -->
+<!-- ENDIF -->
+
+	<!-- INCLUDECSS @canidev_chat/../theme/chat.css -->
+	<!-- INCLUDECSS @canidev_chat/acp.css -->
+	
+	<!-- INCLUDEJS @canidev_core/js/jquery-ui.min.js -->
+
+	<!-- INCLUDEJS js/jchat.min.js -->
+	<!-- INCLUDEJS js/jchat-acp.js -->
 <!-- ENDIF -->

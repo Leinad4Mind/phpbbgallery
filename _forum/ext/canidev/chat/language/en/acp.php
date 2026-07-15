@@ -2,10 +2,10 @@
 /** 
 * acp.php [English [En]]
 * @package cBB Chat
-* @version v1.1.3 10/03/2017
+* @version v1.2.0 02/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 // DO NOT CHANGE
@@ -20,15 +20,11 @@ if(empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'CHAT_CONFIG_TITLE'		=> 'Configure Chat',
-	'CHAT_CONFIG_EXPLAIN'	=> 'Thank you for choosing cBB Chat as a complement to your forum!<br />
+	'ACP_CHAT_CONFIG_EXPLAIN'	=> 'Thank you for choosing cBB Chat as a complement to your forum!<br />
 		From this page you can modify the main features of the chat.',
-	'CHAT_PAGES_TITLE'		=> 'Manage pages',
-	'CHAT_PAGES_EXPLAIN'	=> 'From here you can manage the pages that will be load the chat and the position of it.',
-	'CHAT_ROOMS_TITLE'		=> 'Manage rooms',
-	'CHAT_ROOMS_EXPLAIN'	=> 'From here you can manage the special rooms to be displayed in chat.<br />You can order by dragging rooms to its correct position.',
-	'CHAT_TEXTS_TITLE'		=> 'Manage texts and rules',
-	'CHAT_TEXTS_EXPLAIN'	=> 'From here you can manage the announcements, tips and rules of the chat.<br />
+	'ACP_CHAT_PAGES_EXPLAIN'	=> 'From here you can manage the pages that will be load the chat and the position of it.',
+	'ACP_CHAT_ROOMS_EXPLAIN'	=> 'From here you can manage the special rooms to be displayed in chat.<br />You can order by dragging rooms to its correct position.',
+	'ACP_CHAT_TEXTS_EXPLAIN'	=> 'From here you can manage the announcements, tips and rules of the chat.<br />
 		To choose the order of texts, drag and drop them to the correct position.',
 	
 	'CHAT_ALLOW_BBCODE'			=> 'Allow BBcode',
@@ -58,13 +54,11 @@ $lang = array_merge($lang, array(
 	'CHAT_DISALLOWED_BBCODE'	=> 'BBcode tags no allowed',
 	'CHAT_DISALLOWED_BBCODE_EXPLAIN'	=> 'BBcode tags that will <strong>not</strong> be allowed in the chat.<br />
 		You can select multiple tags using the <em>Ctrl</em> key on your keyboard.',
-	'CHAT_ENABLED'				=> 'Chat enabled',
-	'CHAT_ENABLED_EXPLAIN'		=> 'Enable/Disable all chat functions.',
 	'CHAT_FLOOD'				=> 'Flood limit',
 	'CHAT_FLOOD_EXPLAIN'		=> 'Sets the time (in seconds) that the users must wait to write a new message.<br />
 		<em>Set 0 to disable this limit</em>.',
 	'CHAT_FORUM_POSTS'			=> 'Forum posts',
-	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Sets if the new topics or new messages in the forum will be shown in the <em>General</em> room of the chat.',
+	'CHAT_FORUM_POSTS_EXPLAIN'	=> 'Sets if the new topics or new messages in the forum will be shown in the chat rooms.',
 	'CHAT_GROUP_USERS'			=> 'Group users by groups',
 	'CHAT_GROUP_USERS_EXPLAIN'	=> 'If enabled, the users will be grouped in the chat by their default group.',
 	'CHAT_HEIGHT'				=> 'Chat height',
@@ -73,8 +67,6 @@ $lang = array_merge($lang, array(
 	'CHAT_HEIGHT_PAGE_EXPLAIN'	=> 'Set the height (in pixels) of the conversation container in this page.<br /><em>Set 0 to use the default value.</em>',
 	'CHAT_HELP'					=> 'Documentation and Support',
 	'CHAT_MAIN_CONFIG'			=> 'Main configuration',
-	'CHAT_MAX_PM'				=> 'Private messages limit',
-	'CHAT_MAX_PM_EXPLAIN'		=> 'Sets the maximum number of private messages that a user can open simultaneously.<br /><em>Set 0 to disable this limit</em>.',
 	'CHAT_MESSAGES_CONFIG'		=> 'Message configuration',
 	'CHAT_NOTICES_ADD'			=> 'Add announcement',
 	'CHAT_NOTICES_EDIT'			=> 'Edit announcement',
@@ -83,7 +75,7 @@ $lang = array_merge($lang, array(
 	'CHAT_NOTICES_ITEM_EXPLAIN'	=> 'You can use language variables, for example <em>{L_CHAT}</em>.<br />
 		<em>BBcode or HTML is allowed.<br />
 		Smilies are allowed.</em>',
-	'CHAT_NOTICES_TITLE'		=> 'Announcements',
+	'CHAT_NOTICES'				=> 'Announcements',
 	'CHAT_PAGE_ALIAS'			=> 'Page Alias',
 	'CHAT_PAGE_ALIAS_EXPLAIN'	=> 'Sets an unique id for the page that will be used in the configuration file.<br /><em>Only allowed letters and numbers</em>.',
 	'CHAT_PAGE_CONFIG'			=> 'Page configuration',
@@ -96,6 +88,14 @@ $lang = array_merge($lang, array(
 	'CHAT_PAGE_FORUMS'			=> 'Forums',
 	'CHAT_PAGE_FORUMS_EXPLAIN'	=> 'Set the forums where the chat is displayed.<br />You can select as many as you like using the <em>Ctrl</em> key on your keyboard.<br /><em>If you don\'t select any forum the chat show in all.</em> ',
 	'CHAT_PM_CONFIG'			=> 'Private message configuration',
+	'CHAT_PM_IGNORE_FLOOD'		=> 'Ignore flood time',
+	'CHAT_PM_IGNORE_FLOOD_EXPLAIN'	=> 'If enabled, the established flood limit will not apply when writing private messages between users.',
+	'CHAT_PM_MAX'				=> 'Private messages limit',
+	'CHAT_PM_MAX_EXPLAIN'		=> 'Sets the maximum number of private messages that a user can open simultaneously.<br /><em>Set 0 to disable this limit</em>.',
+	'CHAT_PM_MAXAGE'			=> 'Store time',
+	'CHAT_PM_MAXAGE_EXPLAIN'	=> 'Set the time (in days) that private messages will be saved.
+		<br />Messages that exceed this age will be deleted.
+		<br /><br /><em>Minimum value 1, maximum value 365</em>.',
 	'CHAT_POSITION'				=> 'Chat position',
 	'CHAT_POSITION_EXPLAIN'		=> 'Chat position inside the page.',
 	'CHAT_POSITION_BOTTOM'		=> 'Bottom',
@@ -108,9 +108,20 @@ $lang = array_merge($lang, array(
 	'CHAT_ROOM_AUTOPURGE'		=> 'Autopurge',
 	'CHAT_ROOM_AUTOPURGE_EXPLAIN'	=> 'Define how often all the messages are removed from this room.',
 	'CHAT_ROOM_CONFIG'			=> 'Room configuration',
+	'CHAT_ROOM_CONNECTIONS'		=> 'Connections',
 	'CHAT_ROOM_ENABLED'			=> 'Room enabled',
 	'CHAT_ROOM_GROUPS'			=> 'Allowed groups',
 	'CHAT_ROOM_GROUPS_EXPLAIN'	=> 'Sets groups of users who can use this room.<br />You can select multiple groups using the <em>Ctrl</em> key on your keyboard.',
+	'CHAT_ROOM_GUEST_FORUMS'			=> 'Forums linked to this room',
+	'CHAT_ROOM_GUEST_FORUMS_EXPLAIN'	=> 'Here you can select the forums from which the topics and messages that will be displayed in the main chat room.<br />
+		If you do not select any, all will be used (except those assigned to other rooms).<br />
+		You can select as many as you want using the <em>Ctrl</em> key on your keyboard.',
+	'CHAT_ROOM_LINKED_FORUMS'			=> 'Forums linked to this room',
+	'CHAT_ROOM_LINKED_FORUMS_EXPLAIN'	=> 'This room will be the default room for the forums selected here, and the topics and posts of these forums will be shown in this room instead of in the General room.<br />
+		You can select as many as you want using the <em>Ctrl</em> key on your keyboard.',
+	'CHAT_ROOM_LINKED_GROUPS'			=> 'Groups linked to this room',
+	'CHAT_ROOM_LINKED_GROUPS_EXPLAIN'	=> 'This room will open by default for the groups selected here.<br />
+		You can select as many as you want using the <em>Ctrl</em> key on your keyboard.',
 	'CHAT_ROOM_ADDED'			=> 'The room has been created successfully.',
 	'CHAT_ROOM_UPDATED'			=> 'The room configuration was modified successfully.',
 	'CHAT_ROOM_MSG_LIMIT'		=> 'Message limit',
@@ -129,7 +140,7 @@ $lang = array_merge($lang, array(
 	'CHAT_RULES_ITEM_EXPLAIN'	=> 'You can use language variables, for example <em>{L_CHAT}</em>.<br />
 		<em>BBcode or HTML is allowed.<br />
 		Smilies are allowed.</em>',
-	'CHAT_RULES_TITLE'			=> 'Rules',
+	'CHAT_RULES'				=> 'Rules',
 	'CHAT_SOUND_ENABLED'		=> 'Sound enabled',
 	'CHAT_SHOW_NONE'			=> 'Don\'t show',
 	'CHAT_SHOW_POSTS'			=> 'All new posts',
@@ -143,7 +154,7 @@ $lang = array_merge($lang, array(
 	'CHAT_TIPS_ITEM_EXPLAIN'	=> 'You can use language variables, for example <em>{L_CHAT}</em>.<br />
 		<em>BBcode or HTML is allowed.<br />
 		Smilies are allowed.</em>',
-	'CHAT_TIPS_TITLE'			=> 'Tips',
+	'CHAT_TIPS'					=> 'Tips',
 	'CHAT_USERS_CONFIG'			=> 'User configuration',
 	
 	'EACH_DAY'		=> 'Each day',
@@ -151,28 +162,28 @@ $lang = array_merge($lang, array(
 	'EACH_MONTH'	=> 'Each month',
 	'EACH_YEAR'		=> 'Each year',
 	
-	'ADD_ROOM'				=> 'Add room',
-	'CONTENT'				=> 'Content',
-	'CUSTOM_BBCODES'		=> 'Custom BBcodes',
-	'CUSTOM_FILE'			=> 'Custom file',
-	'CUSTOM_FILES'			=> 'Custom files',
-	'DEFAULT_BBCODES'		=> 'Default BBcodes',
-	'FORUM_FILES'			=> 'Forum files',
-	'MOD_NOT_INSTALLED'		=> 'Mod not installed correctly',
-	'NO_PAGES'				=> 'No available pages',
-	'NO_TEXTS'				=> 'No available texts',
-	'PAGE_ADD'				=> 'Add page',
-	'PAGE_ALIAS'			=> 'Page Id',
-	'PAGE_URL'				=> 'Page url',
-	'ROOM_TITLE'			=> 'Room title',
-	'SELECT_PAGE'			=> 'Select file',
+	'ADD_ROOM'					=> 'Add room',
+	'ALL_GROUPS'				=> 'All groups',
+	'CONTENT'					=> 'Content',
+	'CUSTOM_BBCODES'			=> 'Custom BBcodes',
+	'CUSTOM_FILE'				=> 'Custom file',
+	'CUSTOM_FILES'				=> 'Custom files',
+	'DEFAULT_BBCODES'			=> 'Default BBcodes',
+	'DOCUMENTATION_AND_SUPPORT'	=> 'Documentation and Support',
+	'FORUM_FILES'				=> 'Forum files',
+	'NO_PAGES'					=> 'No available pages',
+	'NO_ROOM'					=> 'The selected room no exists',
+	'NO_TEXTS'					=> 'No available texts',
+	'PAGE_ADD'					=> 'Add page',
+	'PAGE_ALIAS'				=> 'Page Id',
+	'PAGE_URL'					=> 'Page url',
+	'ROOM_TITLE'				=> 'Room title',
+	'SAVE'						=> 'Save',
+	'SELECT_PAGE'				=> 'Select file',
 	
 	'INVALID_FILE'			=> 'The file not exists or has an invalid format.',
 	'NO_ALIAS'				=> 'The page Alias is invalid.',
 	'PAGE_ALREADY_EXISTS'	=> 'The page is already in use.',
 	
 	'REMOVE_ROOM_CONFIRM'	=> 'Are you sure you want to delete this room and all messages?',
-			
-	'CHAT_VERSION_NOT_UP_TO_DATE'	=> 'A newer version of cBB Chat is available.<br />
-		Below you will find a link to the publication notice of the latest version and instructions on how to upgrade it.',
 ));

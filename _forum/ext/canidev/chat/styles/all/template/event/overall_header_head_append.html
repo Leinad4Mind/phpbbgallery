@@ -1,10 +1,3 @@
-
-<!-- IF S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE -->
-	<!-- INCLUDECSS @canidev_chat/../theme/{S_CHAT_VARIANT}.css -->
-	<!-- INCLUDECSS @canidev_chat/../theme/chat.css -->
-	
-	<!-- IF S_CHAT_EMBEDMODE --><!-- INCLUDECSS @canidev_chat/../theme/embed.css --><!-- ENDIF -->
-
-	<!-- INCLUDEJS js/jchat.js -->
-	<!-- INCLUDEJS {U_CHAT_JSCRIPT} -->
+<!-- IF (S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE) and CANIDEV_CORE_STARTED -->
+	<!-- INCLUDE @canidev_core/event/overall_header_head_append.html -->
 <!-- ENDIF -->

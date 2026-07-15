@@ -1,11 +1,10 @@
 <?php
 /*
-* @name main_info.php
 * @package cBB Chat
-* @version v1.1.3 10/03/2017
+* @version v1.2.0 02/03/2019
 *
-* @copyright (c) 2017 CaniDev
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\chat\mcp;
@@ -17,7 +16,7 @@ class main_info
 		return array(
 			'filename'	=> '\canidev\chat\mcp\main_module',
 			'title'		=> 'MCP_CHAT_BAN',
-			'version'	=> '1.1.2',
+			'version'	=> '1.2.0',
 			'modes'		=> array(
 				'config'	=> array('title' => 'MCP_CHAT_BAN', 	'auth' => 'ext_canidev/chat && acl_m_ban', 'cat' => array('MCP_BAN')),
 			),
