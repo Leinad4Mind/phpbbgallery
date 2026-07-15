@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -124,7 +124,7 @@ class most_poster_block extends base
 
 		$this->display_vars = [
 			'poster_limit'		=> ['lang' => 'POSTER_LIMIT',	'validate' => 'int:1:20',	'type' => 'number:1:20',	'default' => 5],
-			'poster_range'		=> ['lang' => 'POST_RANGE',		'validate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' =>	['make_select', $options, false, '{CONFIG_VALUE}'],	'default' => 'none'],
+			'poster_range'		=> ['lang' => 'POST_RANGE',		'validate' => 'string',		'type' => 'custom',			'function' => ['tools', 'make_select'],	'params' =>	[$options, '{KEY}', '{CONFIG_VALUE}'],	'default' => 'none'],
 		];
 
 		return true;

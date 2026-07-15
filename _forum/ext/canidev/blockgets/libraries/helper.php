@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -19,6 +19,7 @@ class helper
 	protected $config;
 	protected $container;
 	protected $db;
+	protected $dispatcher;
 	protected $filesystem;
 	protected $language;
 	protected $path;
@@ -42,6 +43,7 @@ class helper
 	 * @param \phpbb\config\config 						$config				Config Object
 	 * @param ContainerInterface 						$container			Service container interface
 	 * @param \phpbb\db\driver\driver_interface			$db					DB Object
+	 * @param \phpbb\event\dispatcher_interface 		$dispatcher 		Event Dispatcher Object
 	 * @param \phpbb\filesystem\filesystem				$filesystem			Filesystem Object
 	 * @param \phpbb\language\language					$language			Language Object
 	 * @param \phpbb\path_helper						$path_helper		Path Helper Object
@@ -57,6 +59,7 @@ class helper
 		\phpbb\config\config $config,
 		ContainerInterface $container,
 		\phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\filesystem\filesystem $filesystem,
 		\phpbb\language\language $language,
 		\phpbb\path_helper $path_helper,
@@ -69,6 +72,7 @@ class helper
 		$this->config			= $config;
 		$this->container		= $container;
 		$this->db				= $db;
+		$this->dispatcher 		= $dispatcher;
 		$this->filesystem 		= $filesystem;
 		$this->json				= \canidev\core\JsonResponse::getInstance();
 		$this->language			= $language;
@@ -160,6 +164,8 @@ class helper
 		$result = $this->db->sql_query($sql, 600); // cache the sql during 10 minutes
 		while($row = $this->db->sql_fetchrow($result))
 		{
+			$username_string = '';
+
 			if($row['user_allow_viewonline'])
 			{
 				$today_users['visible_today']++;
@@ -172,7 +178,22 @@ class helper
 
 			if($row['user_allow_viewonline'] || $this->auth->acl_get('u_viewonline'))
 			{
-				$user_list[] = get_username_string(($row['user_type'] <> USER_IGNORE) ? 'full' : 'no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+				$username_string = get_username_string(($row['user_type'] <> USER_IGNORE) ? 'full' : 'no_profile', $row['user_id'], $row['username'], $row['user_colour']);
+			}
+
+			/**
+			 * @event blockgets.today_visit_row
+			 * @var array	row					The user data
+			 * @var array 	today_users 		Array with today data
+			 * @var string	username_string		String with username to show
+			 * @since 2.0.7
+			 */
+			$vars = ['row', 'today_users', 'username_string'];
+			extract($this->dispatcher->trigger_event('blockgets.today_visit_row', compact($vars)));
+
+			if($username_string)
+			{
+				$user_list[] = $username_string;
 			}
 		}
 		$this->db->sql_freeresult($result);
@@ -212,15 +233,15 @@ class helper
 	 */
 	public function build_image_filename($image, $full_url = false)
 	{
-		return $this->get_media(false)->get_full_path($image, $full_url);
+		return $this->get_media(false)->getFullPath($image, $full_url);
 	}
 	
 	/**
 	 * Get the local lang code from user lang code
 	 *
-	 * @param string			$lang_name 		The lang iso name to find or '_get' param to only load the files
-	 * @param string			$type 			(iso|name|name_eng). The type of data to proccess
-	 * @return string|array 					Returns the locale lang or the default lang if not exists.
+	 * @param string|false			$lang_name 		The lang iso name to find or '_get' param to only load the files
+	 * @param string|false			$type 			(iso|name|name_eng). The type of data to proccess
+	 * @return string|array 						Returns the locale lang or the default lang if not exists.
 	 */
 	public function locale_lang($lang_name = false, $type = false)
 	{
@@ -265,13 +286,13 @@ class helper
 	 * @param array				$params				String or array of additional url parameters
 	 * @param bool				$is_amp				Is url using &amp; (true) or & (false)
 	 * @param string|bool		$session_id			Possibility to use a custom session id instead of the global one
-	 * @param bool|string		$reference_type 	The type of reference to be generated (one of the constants)
+	 * @param bool				$absolute_url 		Set if function return relative or absolute url
 	 * 
 	 * @return string 								The URL already passed through append_sid()
 	 */
 	public function route($route, array $params = [], $is_amp = true, $session_id = false, $absolute_url = false)
 	{
-		$protocol		= ($this->request->is_secure()) ? 'https://' : 'http://';
+		$protocol		= $this->request->is_secure() ? 'https://' : 'http://';
 		$reference_type = ($absolute_url) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 		$anchor			= '';
 		
@@ -342,11 +363,6 @@ class helper
 			$route_url = str_replace(['&amp;', '&'], ['&', '&amp;'], $route_url);
 		}
 
-		if($reference_type === UrlGeneratorInterface::RELATIVE_PATH && empty($this->config['blg_rewrite']))
-		{
-			$route_url = 'app.' . $this->php_ext . '/' . $route_url;
-		}
-
 		return append_sid($route_url . $anchor, false, $is_amp, $session_id, true);
 	}
 	
@@ -388,8 +404,11 @@ class helper
 					unset($query[$ignore_key]);
 				}
 			}
-			
-			return $url . (sizeof($query) ? '?' . http_build_query($query, '', (($amp) ? '&amp;' : '&')) : '');
+
+			if(sizeof($query))
+			{
+				$url .= '?' . http_build_query($query, '', '&amp;');
+			}
 		}
 		
 		return ($amp) ? $url : str_replace('&amp;', '&', $url);
@@ -398,9 +417,9 @@ class helper
 	/**
 	 * Build page url
 	 * 
-	 * @param string 	$page_name
-	 * @param array 	$params
-	 * @param bool 		$is_amp
+	 * @param string 				$page_name
+	 * @param array|string|false 	$params
+	 * @param bool 					$is_amp
 	 * 
 	 * @return string
 	 */
@@ -488,17 +507,17 @@ class helper
 	 * @param bool 		$preload 		Set if media language and assets will be load
 	 * @param bool 		$do_actions 	Set if media ajax actions will be processed
 	 * 
-	 * @return \canidev\core\media
+	 * @return \canidev\core\Media
 	 */
 	public function get_media($preload = true, $do_actions = false)
 	{
 		if($this->media === null)
 		{
-			$this->media = \canidev\core\media::get_instance($this->container, 'blockgets');
+			$this->media = \canidev\core\Media::getInstance($this->container, 'blockgets');
 			
 			$this->media
-				->set_referer_ext('blockgets')
-				->set_upload_path('files/blockgets/');
+				->setRefererExt('blockgets')
+				->setUploadPath('files/blockgets/');
 		}
 
 		if($preload)

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -56,7 +56,7 @@ class dockmenu_block extends base
 
 			$menu_row = [
 				'S_TITLE'		=> $row['title'],
-				'S_ICON'		=> '<img src="' . $this->helper->build_image_filename($row['image']) . '" title="' . $row['title'] . '" alt="" />',
+				'S_ICON'		=> '<img src="' . $this->helper->build_image_filename($row['image']) . '" title="' . $row['title'] . '" alt="icon" />',
 				'S_WINDOW'		=> $row['window'],
 				'U_LINK'		=> $row['url'],
 			];

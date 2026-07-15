@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -64,7 +64,7 @@ class map_block extends base
 				}
 
 				$options['markers'][] = [
-					'image'		=> $media->get_full_path($marker['image'], true),
+					'image'		=> $media->getFullPath($marker['image'], true),
 					'title'		=> $marker['title'],
 					'content'	=> $content,
 					'lat'		=> $lat,
@@ -202,8 +202,8 @@ class map_block extends base
 		$event['display_vars'] = [
 			'title'		=> ['lang' => 'LOCATION_TITLE',			'validate' => 'string:1:255',	'type' => 'text:40:255'],
 			'position'	=> ['lang' => 'LOCATION_POSITION',		'type' => 'custom',				'function' => [$this, 'build_latlng_template'],		'params' => ['{CONFIG_VALUE}']],
-			'image'		=> ['lang' => 'LOCATION_IMAGE',			'type' => 'custom',				'function' => [$media, 'build_selector'],			'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
-			'text'		=> ['lang' => 'LOCATION_TEXT',			'type' => 'custom',				'method' => 'helper',								'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 15, 50], 'default' => ''],
+			'image'		=> ['lang' => 'LOCATION_IMAGE',			'type' => 'custom',				'function' => [$media, 'buildSelector'],			'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'text'		=> ['lang' => 'LOCATION_TEXT',			'type' => 'custom',				'function' => ['helper_acp', 'build_editor'],		'params' => ['{CONFIG_VALUE}', '{KEY}', 15, 50], 'default' => ''],
 		];
 		
 		$event['dialog_title'] = ($event['action'] == 'edit') ? 'LOCATION_EDIT' : 'LOCATION_ADD';

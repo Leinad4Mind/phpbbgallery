@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -20,7 +20,7 @@ if(empty($lang) || !is_array($lang))
 }
 
 // @acp_blockgets
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'BLG_CONFIG_TITLE'				=> 'Configuración general',
 	'BLG_CONFIG_EXPLAIN'			=> '¡Gracias por elegir cBB Blockgets como complemento para su foro!<br />Desde aquí puede establecer la configuración principal de la extensión.<br />Los enlaces laterales le permitirán acceder a todas las opciones para poder configurarlo comodamente.',
 	'BLG_IMAGES_TITLE'				=> 'Imágenes disponibles',
@@ -86,10 +86,10 @@ $lang = array_merge($lang, array(
 		<em>Establezca 0 para deshabilitar el redimensionado de imágenes</em>.',
 
 	'INDEX_FILE_ERROR'				=> 'No se ha podido completar la configuración',
-));
+]);
 
 // @acp_blockgets_lists
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_ITEM'				=> 'Nuevo elemento',
 	'CAT'					=> 'Categoría',
 
@@ -105,10 +105,10 @@ $lang = array_merge($lang, array(
 	'LINK_URL'					=> 'Vínculo',
 	'LINK_URL_EXPLAIN'			=> 'La dirección que se abrirá al hacer clic en el elemento. Si lo deja en blanco se usará la imagen como vínculo en algunos bloques. Límite 255 caracteres.',
 	'LINK_WINDOW'				=> 'Abrir en ventana nueva',
-));
+]);
 
 // @acp_blockgets_pages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_BLOCK'					=> 'Añadir bloque',
 	'ADD_BLOCK_TIP'				=> 'Arrastre un bloque a la posición que desee para añadirlo.',
 	'ADD_BLOCK_TITLE'			=> 'Añadir bloque :: %1$s',
@@ -134,7 +134,7 @@ $lang = array_merge($lang, array(
 	'EXT_ROUTES'				=> 'Rutas de Extensiones',
 	'FILTER_TYPE_GET'			=> 'Url (GET)',
 	'FILTER_TYPE_POST'			=> 'Formulario (POST)',
-	'FORUM_FILES'				=> 'Archivos del foro',
+	'FORUM_ROUTES'				=> 'Rutas del foro',
 	'LEFT_COLUMN'				=> 'Columna izquierda',
 	'LEFT_COLUMN_EXPLAIN'		=> 'Ancho de la columna izquierda en píxeles o porcentaje.<br />Especifique 0 para deshabilitar la columna.',
 	'LINK_BOTTOM'				=> 'Parte inferior',
@@ -217,10 +217,10 @@ $lang = array_merge($lang, array(
 	'SUBMIT_CHANGES'			=> 'Aplicar cambios',
 	'TARGET_PAGE_EXPLAIN'		=> 'Seleccione la página de destino para los bloques.<br /><em>Los bloques se situarán al final de su respectiva columna</em>',
 	'TOP_COLUMN'				=> 'Columna superior',
-));
+]);
 
 // @general messages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'BLOCK_ADDED'					=> 'Bloque añadido con éxito',
 	'BLOCK_COPIED'					=> 'Bloque(s) copiado(s) con éxito',
 	'BLOCK_NEED_REQUIREMENTS'		=> 'El bloque seleccionado necesita unos requisitos mínimos para poder ser utilizado.<br />Consulte la documentación para más información.',
@@ -242,20 +242,20 @@ $lang = array_merge($lang, array(
 
 	'PAGE_ADDED'				=> 'Página añadida con éxito',
 
-	'PAGE_REMOVED'		=> array(
+	'PAGE_REMOVED'		=> [
 		1	=> 'La página se ha eliminado con éxito',
 		2	=> '%d páginas eliminadas con éxito',
-	),
+	],
 
 	'PAGE_UPDATED'				=> 'Configuración de la(s) página(s) actualizada con éxito',
 	'BLG_CONFIG_UPDATED'		=> 'Configuración actualizada con éxito',
 
 	'CONFIRM_PAGE_DELETE'		=> '¿Está seguro de que desea eliminar las páginas seleccionadas y todos sus bloques?',
-));
+]);
 
 // Blocks names and explains from block_alias
-$lang = array_merge($lang, array(
-	'blocks'	=> array(
+$lang = array_merge($lang, [
+	'blocks'	=> [
 		'announcements_title'		=> 'Anuncios',
 		'announcements_explain'		=> 'Muestra un número determinado de mensajes (anuncios) de los foros establecidos.',
 		'attachments_title'			=> 'Adjuntos',
@@ -352,5 +352,5 @@ $lang = array_merge($lang, array(
 		'whos_online_explain'		=> 'Muestra la lista de usuarios conectados (tal y como se muestra por defecto en el Índice del foro) y los usuarios que se conectaron en las últimas 24 horas.',
 		'youtube_title'				=> 'YouTube',
 		'youtube_explain'			=> 'Muestra un número determinado de vídeos o canales de youtube.',
-	)
-));
+	]
+]);

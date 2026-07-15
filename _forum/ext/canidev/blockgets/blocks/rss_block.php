@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -162,10 +162,10 @@ class rss_block extends base
 		$this->display_vars = [
 			'limit'			=> ['lang' => 'RSS_LIMIT',			'validate' => 'int',	'type' => 'number:1:999',		'default' => 5],
 			'ignore_lang'	=> ['lang' => 'RSS_IGNORE_LANG',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1],
-			'direction'		=> ['lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => ['make_select', $dir_options, false, '{CONFIG_VALUE}'],	'default' => constants::SCROLL_V],
+			'direction'		=> ['lang' => 'RSS_DIRECTION',		'validate' => 'int', 	'type' => 'select',				'function' => ['tools', 'make_select'],	'params' => [$dir_options, false, '{CONFIG_VALUE}'],	'default' => constants::SCROLL_V],
 			'collapsable'	=> ['lang' => 'RSS_COLLAPSABLE',	'validate' => 'bool',	'type' => 'radio:yes_no',		'default' => 1],
 			'height'  		=> ['lang' => 'RSS_HEIGHT',			'validate' => 'int', 	'type' => 'number:0:999',		'default' => 150],
-			'ttl'  			=> ['lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'method' => 'helper',	'params' => ['make_select', $ttl_options, false, '{CONFIG_VALUE}'],	'default' => 86400],
+			'ttl'  			=> ['lang' => 'RSS_TTL',			'validate' => 'int', 	'type' => 'select',				'function' => ['tools', 'make_select'],	'params' => [$ttl_options, false, '{CONFIG_VALUE}'],	'default' => 86400],
 		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
@@ -205,7 +205,7 @@ class rss_block extends base
 	 */
 	private function _clear($text, $data)
 	{
-		if(($xpath = \canidev\core\dom::string_to_xpath($text)) === false)
+		if(($xpath = \canidev\core\Dom::stringToXpath($text)) === false)
 		{
 			return $text;
 		}
@@ -225,7 +225,7 @@ class rss_block extends base
 				continue;
 			}
 
-			$node = \canidev\core\dom::remove_attributes($node, ['class', 'href']);
+			$node = \canidev\core\Dom::remove_attributes($node, ['class', 'href']);
 		}
 
 		// Convert objects and iframes to links
@@ -260,7 +260,7 @@ class rss_block extends base
 			}
 		}
 
-		return \canidev\core\dom::xpath_to_string($xpath);
+		return \canidev\core\Dom::xpathToString($xpath);
 	}
 	
 	/**
@@ -320,7 +320,6 @@ class rss_block extends base
 				
 				default:
 					return false;
-				break;	
 			}
 			
 			$this->plain_text = '';
@@ -472,7 +471,7 @@ class rss_block extends base
 		$text = str_replace(['<![CDATA[', ']]>'], '', $text);
 		$text = trim(htmlspecialchars_decode($text));
 		
-		$text = preg_replace('#<img[^>]*src="([^"]*)"[^>]*/?>#', '<img src="\\1" alt="" />', $text);
+		$text = preg_replace('#<img[^>]*src="([^"]*)"[^>]*/?>#', '<img src="\\1" alt="image" />', $text);
 		
 		if($text && $this->rss_data['encoding'] != $this->default_rss_data['encoding'])
 		{

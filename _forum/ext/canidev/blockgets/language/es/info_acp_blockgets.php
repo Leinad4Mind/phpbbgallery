@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -22,7 +22,7 @@ if(empty($lang) || !is_array($lang))
 /**
  * @general tags and messages
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_BLOCKGETS'				=> 'Blockgets',
 	'ACP_BLOCKGETS_GENERAL'		=> 'General',
 
@@ -50,4 +50,4 @@ $lang = array_merge($lang, array(
 	'ACL_U_BLOCKGETS_BIRTHDAYS'		=> 'Puede ver los cumpleaños en el Calendario',
 	'ACL_U_BLOCKGETS_CALENDAR'		=> 'Puede ver el Calendario',
 	'ACL_U_BLOCKGETS_EVENTS'		=> 'Puede administrar eventos del Calendario',
-));
+]);

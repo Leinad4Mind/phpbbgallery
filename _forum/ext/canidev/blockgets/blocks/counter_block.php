@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -129,7 +129,7 @@ class counter_block extends base
 	{
 		$this->display_vars = [
 			'local_count'		=> ['lang' => 'COUNTER_LOCAL',		'validate' => 'bool',		'type' => 'radio:yes_no'],
-			'reset'				=> ['lang' => 'COUNTER_RESET',		'type' => 'custom', 		'method' => 'helper',	'params' => ['counter_rst']],
+			'reset'				=> ['lang' => 'COUNTER_RESET',		'type' => 'custom', 		'function' => ['helper_acp', 'counter_rst']],
 			'start_date'		=> false,
 			'visit_count'		=> false,
 		];

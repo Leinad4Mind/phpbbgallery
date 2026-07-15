@@ -15,7 +15,7 @@
 {% for rank in loops.rank %}
 	<h5><a href="#">{{ rank.S_TITLE }}</a></h5>
 	<div>
-		{% if rank.S_IMG_SRC %}<div class="blg-align-center"><img src="{{ rank.S_IMG_SRC }}" alt="" /></div>{% endif %}
+		{% if rank.S_IMG_SRC %}<div class="blg-align-center"><img src="{{ rank.S_IMG_SRC }}" alt="{{ rank.S_TITLE }}" /></div>{% endif %}
 	{% if rank.IS_SPECIAL %}
 		<div class="blg-align-center blg-special-rank">{{ lang('SPECIAL_RANK') }}</div>
 	{% else %}

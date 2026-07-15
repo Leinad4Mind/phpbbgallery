@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -20,10 +20,12 @@ class style_select_block extends base
 	{
 		$this->tpl_name = 'style_select_block';
 	
-		$style = $this->request->variable('style', 0);
+		$style = $this->request->variable('cstyle', 0);
 		
 		if($method == 'submit')
 		{
+			$style = $this->request->variable('style', 0);
+
 			if($this->request->variable('default', 0) && $this->user->data['is_registered'] && !$this->config['override_user_style'] && $style != $this->user->data['user_style'])
 			{
 				// Update user style
@@ -62,7 +64,7 @@ class style_select_block extends base
 				'jblgm'	=> $this->data['block_id']
 			]),
 
-			'U_STYLE_DEFAULT'	=> (($style && $style != $this->user->data['user_style']) ? preg_replace(["#style=$style(&amp;|&|$)+#", '#\?$#'], '', $this->helper->current_url()) : ''),
+			'U_STYLE_DEFAULT'	=> (($style && $style != $this->user->data['user_style']) ? preg_replace(["#cstyle=$style(&amp;|&|$)+#", '#(\?|&|&amp;)$#'], '', $this->helper->current_url()) : ''),
 		]);
 
 		return true;

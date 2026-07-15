@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -256,7 +256,7 @@ class announcements_block extends base
 		$this->display_vars = [
 			'max_number'	=> ['lang' => 'ANN_MAX_NUMBER',		'validate' => 'int:1',	'type' => 'number:1:99',	'default' => 4],
 			'max_size'		=> ['lang' => 'ANN_MAX_SIZE',		'validate' => 'int:1',	'type' => 'number',			'default' => 255],
-			'forums'		=> ['lang' => 'FORUMS',				'type' => 'custom',		'method' => 'helper', 		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'forums'		=> ['lang' => 'FORUMS',				'type' => 'custom',		'function' => ['tools', 'forums_select'], 		'params' => ['forums', '{CONFIG_VALUE}', 1],	'default' => []],
 			'show_globals'	=> ['lang' => 'ANN_SHOW_GLOBALS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 			'collapse'		=> ['lang' => 'ANN_COLLAPSE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 		];

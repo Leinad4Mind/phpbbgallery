@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -22,7 +22,7 @@ if(empty($lang) || !is_array($lang))
 /**
  * @acp_blockgets_pages
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Blocks global config
 	'BLOCK_COLLAPSE'			=> 'Permitir colapsar el bloque',
 	'BLOCK_COLLAPSE_EXPLAIN'	=> 'Habilita/deshabilita la posibilidad de que cada usuario pueda colapsar/desplegar este bloque y define su estado inicial.',
@@ -481,4 +481,4 @@ $lang = array_merge($lang, array(
 	'YT_VIDEO_TITLE'			=> 'Título',
 	'YT_VIDEO_URL'				=> 'Dirección',
 	'YT_VIDEO_URL_EXPLAIN'		=> 'Ej: <em>https://www.youtube.com/watch?v=NHH_v0k7Gus</em>',
-));
+]);

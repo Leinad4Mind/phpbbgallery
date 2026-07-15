@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -132,7 +132,7 @@ class quote_of_day_block extends base
 	 * @param array 	$data
 	 * @param int 		$new_id
 	 * 
-	 * @return int
+	 * @return array
 	 * @access private
 	 */
 	private function find_quote($data, &$new_id)

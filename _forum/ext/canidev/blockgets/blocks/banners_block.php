@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -47,15 +47,20 @@ class banners_block extends base
 		{
 			$row = $link_ary[$i];
 
+			if(!$this->helper->group_auth($row['groups']))
+			{
+				continue;
+			}
+
 			// If is internal link, append root path and user sid
-			if($row['url'] && strpos($row['url'], 'http') !== 0)
+			if($row['url'] && !preg_match('#^(http|//)#', $row['url']))
 			{
 				$user_sid = (strpos($row['url'], 'adm/') !== false) ? $this->user->session_id : false;
-				$row['_url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
+				$row['url'] = append_sid($this->phpbb_root_path . $row['url'], false, true, $user_sid);
 			}
 
 			$banner_row = [	
-				'S_IMG' 			=> '<img src="' . $this->helper->build_image_filename($row['image']) . '" title="' . $row['title'] . '" alt="" />',
+				'S_IMG' 			=> '<img src="' . $this->helper->build_image_filename($row['image']) . '" title="' . $row['title'] . '" alt="banner">',
 				'S_TITLE' 			=> $row['title'],
 				'S_SHOW_TITLE'		=> $data['show_title'],
 				'S_WINDOW'			=> $row['window'],
@@ -92,10 +97,16 @@ class banners_block extends base
 	 */
 	public function get_config()
 	{
+		$types = [
+			constants::SCROLL_NONE 	=> 'LIST_NO_SCROLL',
+			constants::SCROLL_H		=> 'LIST_SCROLL_H',
+			constants::SCROLL_V		=> 'LIST_SCROLL_V',
+		];
+
 		$this->display_vars = [
 			'show_title'	=> ['lang' => 'BANNERS_TITLE',		'validate' => 'bool',		'type' => 'radio:yes_no'],
 			'random_order'	=> ['lang' => 'BANNERS_RANDOM',		'validate' => 'bool',		'type' => 'radio:yes_no'],
-			'list_type'		=> ['lang' => 'BANNERS_LS_TYPE',	'validate' => 'int',		'type' => 'custom', 		'function' => [$this, 'listtype_select'],	'params' => ['{KEY}', '{CONFIG_VALUE}']],
+			'list_type'		=> ['lang' => 'BANNERS_LS_TYPE',	'validate' => 'int',		'type' => 'custom', 		'function' => ['tools', 'make_select'],	'params' => [$types, '{KEY}', '{CONFIG_VALUE}']],
 			'banner_number'	=> ['lang' => 'BANNERS_NUMBER',		'validate' => 'int',		'type' => 'number',			'default' => 0],
 			'block_height'	=> ['lang' => 'BANNERS_B_HEIGHT',	'validate' => 'int',		'type' => 'number',			'default' => 50],
 			'scroll_fps'	=> ['lang' => 'MARQUEE_SPEED',		'validate' => 'int:1:10',	'type' => 'number:1:10',	'default' => 2],
@@ -121,24 +132,5 @@ class banners_block extends base
 		$display_vars = $event['display_vars'];
 		unset($display_vars['type'], $display_vars['description']);
 		$event['display_vars'] = $display_vars;
-	}
-
-	/**
-	 * Make select with banner types
-	 * 
-	 * @param string 	$key
-	 * @param mixed 	$select_id
-	 * 
-	 * @return string
-	*/
-	public function listtype_select($key, $select_id = -1)
-	{
-		$types = [
-			constants::SCROLL_NONE 	=> 'LIST_NO_SCROLL',
-			constants::SCROLL_H		=> 'LIST_SCROLL_H',
-			constants::SCROLL_V		=> 'LIST_SCROLL_V',
-		];
-
-		return $this->manager->helper_acp->make_select($types, $key, $select_id);
 	}
 }

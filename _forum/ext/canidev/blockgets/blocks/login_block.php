@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -63,7 +63,7 @@ class login_block extends base
 				case LOGIN_SUCCESS:
 					$this->helper->json->add([
 						'message'		=> $this->language->lang('LOGIN_REDIRECT'),
-						'return_url'	=> $this->helper->current_url(
+						'returnUrl'		=> $this->helper->current_url(
 							[
 								'sid' => $this->user->session_id
 							],

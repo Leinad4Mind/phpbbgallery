@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -38,21 +38,5 @@ class main_module
 		
 		$this->tpl_name		= $this->controller->get_template();
 		$this->page_title	= $this->controller->get_title('ACP_BLOCKGETS');
-	}
-
-	/**
-	 * Helper for blocks
-	 */
-	public function helper()
-	{
-		$args 	= func_get_args();
-		$method = array_shift($args);
-
-		if(method_exists($this->controller->helper_acp, $method))
-		{
-			return call_user_func_array([$this->controller->helper_acp, $method], $args);
-		}
-		
-		return call_user_func_array([$this->controller->tools, $method], $args);
 	}
 }

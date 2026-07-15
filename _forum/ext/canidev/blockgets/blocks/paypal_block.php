@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -108,8 +108,8 @@ class paypal_block extends base
 		$this->display_vars = [
 			'item'				=> ['lang' => 'PAYPAL_ITEM',		'validate' => 'string:5:100',	'type' => 'text:40:100',			'default' => 'paypal'],
 			'account'			=> ['lang' => 'PAYPAL_ACCOUNT',		'validate' => 'string:6:100',	'type' => 'text:30:100',			'default' => 'account@paypal.com'],
-			'msg'				=> ['lang' => 'PAYPAL_MSG',			'type' => 'custom',				'method' => 'helper',				'params' => ['build_editor', '{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
-			'button_img'		=> ['lang' => 'PAYPAL_IMG',			'validate' => 'string:0:255',	'type' => 'custom',					'method' => 'helper',	'params' => ['easy_input_template', '{KEY}', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'msg'				=> ['lang' => 'PAYPAL_MSG',			'type' => 'custom',				'function' => ['helper_acp', 'build_editor'],	'params' => ['{CONFIG_VALUE}', '{KEY}', 10, 5],	'default' => ''],
+			'button_img'		=> ['lang' => 'PAYPAL_IMG',			'validate' => 'string:0:255',	'type' => 'custom',					'function' => ['helper_acp', 'easy_input_template'],	'params' => ['{KEY}', '{CONFIG_VALUE}', 1],	'default' => ''],
 			'amounts'			=> ['lang' => 'PAYPAL_AMOUNTS',		'validate' => 'string:0:255',	'type' => 'text:50:255',			'default' => '5;10;15;20;25;30;40;50;75;100;200;300;400;500;750;1000'],
 			'currencies'		=> ['lang' => 'PAYPAL_CURRENCIES',	'type' => 'custom',	'function' => [$this, 'build_currency'],		'params' => ['{CONFIG_VALUE}'],	'default' => []],
 			'default_currency'	=> false,

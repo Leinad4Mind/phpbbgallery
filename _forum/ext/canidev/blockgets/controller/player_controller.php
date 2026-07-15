@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -30,7 +30,6 @@ class player_controller
 	/**
 	 * Constructor
 	 *
-	 * @param ContainerInterface 					$container		Service container interface
 	 * @param \phpbb\db\driver\driver_interface		$db				DB Object
 	 * @param \canidev\blockgets\libraries\helper	$helper			Blockgets helper Object
 	 * @param \phpbb\language\language				$language		Language Object
@@ -75,7 +74,7 @@ class player_controller
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 		
-		if(!$row ||($data = unserialize($row['block_content'])) === false)
+		if(!$row || ($data = unserialize($row['block_content'])) === false)
 		{
 			trigger_error('NO_TRACKLIST');
 		}

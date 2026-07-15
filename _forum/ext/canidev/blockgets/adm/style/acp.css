@@ -293,6 +293,7 @@ dd input[type="radio"] {
 }
 
 .sortable .icon {
+	font-size: 1em;
 	text-align: center;
 	width: 70px;
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -80,11 +80,7 @@ abstract class admin_controller_base extends \canidev\core\controller\acp
 	{
 		$this->language->add_lang('acp', 'canidev/blockgets');
 		
-		$this->page_header('cbb-blockgets', $this->config['blg_version']);
-		
-		$this->template->assign_vars([
-			'BLG_IN_ADMIN'		=> true,
-		]);
+		$this->pageHeader('canidev/blockgets');
 
 		$this->container->get('canidev.blockgets.core')->load_assets();
 		

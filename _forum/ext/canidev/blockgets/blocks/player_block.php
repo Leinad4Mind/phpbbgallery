@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -68,7 +68,7 @@ class player_block extends base
 	{
 		$event['display_vars'] = [
 			'title'		=> ['lang' => 'TRACK_TITLE',	'validate' => 'string:1:255',	'type' => 'text:40:255'],
-			'url'		=> ['lang' => 'TRACK_URL',		'validate' => 'regexp',			'type' => 'text:40:255',	'regexp' => ['/^http[s]?:\/\/[^:]+:([0-9]{4,}]$/', '/^http[s]?:\/\/(.*)\.(asx|m3u|mp3|pls|wav)$/']],
+			'url'		=> ['lang' => 'TRACK_URL',		'validate' => 'regexp',			'type' => 'text:40:255',	'regexp' => ['/^https?:\/\/.*?(:([0-9]{4,})|\/stream)$/', '/^https?:\/\/(.*)\.(asx|m3u|mp3|pls|wav)$/']],
 		];
 	}
 }

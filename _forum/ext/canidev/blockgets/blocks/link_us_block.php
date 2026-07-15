@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -56,7 +56,7 @@ class link_us_block extends base
 		$media = $this->helper->get_media();
 
 		$this->display_vars = [
-			'banner_url'	=> ['lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',	'function' => [$media, 'build_selector'],	'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
+			'banner_url'	=> ['lang' => 'US_BANNER',	'validate' => 'string', 'type' => 'custom',	'function' => [$media, 'buildSelector'],	'params' => ['{KEY}', 'image', '{CONFIG_VALUE}', 1],	'default' => ''],
 		];
 
 		return true;

@@ -2,9 +2,9 @@
 /**
  * [English [En]]
  * @package cBB Blockgets
- * @version 2.0.5 15/01/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -134,7 +134,7 @@ $lang = array_merge($lang, [
 	'EXT_ROUTES'				=> 'Extension\'s routes',
 	'FILTER_TYPE_GET'			=> 'Url (GET)',
 	'FILTER_TYPE_POST'			=> 'Form (POST)',
-	'FORUM_FILES'				=> 'Forum files',
+	'FORUM_ROUTES'				=> 'Forum routes',
 	'LEFT_COLUMN'				=> 'Left column',
 	'LEFT_COLUMN_EXPLAIN'		=> 'Width of the left column in pixels or percentage.<br />Set 0 to disable the column.',
 	'LINK_BOTTOM'				=> 'Bottom',

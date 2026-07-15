@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -314,11 +314,11 @@ class topic_index_block extends base
 		];
 
 		$this->display_vars = [
-			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'forums'			=> ['lang' => 'FORUMS',					'type' => 'custom',			'function' => ['tools', 'forums_select'],		'params' => ['forums', '{CONFIG_VALUE}', 1],	'default' => []],
 			'topics_per_page'	=> ['lang' => 'TINDEX_PER_PAGE',		'validate' => 'int:0:1000',	'type' => 'number:0:1000',	'default' => 25],
-			'sort_mode'			=> ['lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'select',			'method' => 'helper',	'params' => ['make_select', $sort_options, false, '{CONFIG_VALUE}'],	'default' => 'topic_title'],
+			'sort_mode'			=> ['lang' => 'TINDEX_SORT_MODE',		'valitate' => 'string',		'type' => 'select',			'function' => ['tools', 'make_select'],	'params' => [$sort_options, false, '{CONFIG_VALUE}'],	'default' => 'topic_title'],
 			'char_select'		=> ['lang' => 'TINDEX_CHAR_SELECT',		'validate' => 'bool',		'type' => 'radio:yes_no',	'default' => 1],
-			'topic_design'		=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => ['block_design_select', '{CONFIG_VALUE}']],
+			'topic_design'		=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'function' => ['helper_acp', 'block_design_select'], 	'params' => ['{CONFIG_VALUE}']],
 			'show_parent'		=> ['lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'],
 		];
 

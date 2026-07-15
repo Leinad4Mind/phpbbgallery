@@ -96,3 +96,17 @@ a.blg-admin-opener {
 	margin-bottom: 0;
 	margin-left: 0;
 }
+/* News Block
+-------------------------- */
+.blg-linear-list.news-block li.double-space {
+	display:flex;
+	margin:0!important;
+	border: 1px solid #e4e9eb;
+}
+.blg-linear-list.news-block li .desc-wrapper {
+	padding:10px 8px;
+	width: -webkit-fill-available;
+}
+.blg-linear-list.news-block li:first-child {
+	border-top: 4px solid #e4e9eb;
+}

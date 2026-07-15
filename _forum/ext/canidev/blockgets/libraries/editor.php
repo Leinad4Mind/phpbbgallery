@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -251,7 +251,7 @@ class editor
 				$eyear		= $this->request->variable('event_year', 0);
 				$title		= $this->request->variable('event_title', '', true);
 				$content	= $this->request->variable('event_content', '', true);
-				$groups 	= ($this->request->is_set_post('all_groups_event_groups')) ? ['all'] : $this->request->variable('event_groups', [0]);
+				$groups 	= $this->tools->groups_select_submit('event_groups');
 				$color 		= $this->request->variable('event_color', '');
 				
 				// Check title
@@ -272,7 +272,7 @@ class editor
 						'data_title'		=> $title,
 						'data_content'		=> $content,
 						'data_settings'		=> serialize([
-							'groups'	=> implode(',', $groups),
+							'groups'	=> $groups,
 							'color'		=> $color,
 						]),
 						'data_time'			=> $event_time,
@@ -326,7 +326,7 @@ class editor
 					$this->template->assign_vars([
 						'S_EVENT_OUTPUT'	=> true,
 						'S_EVENT_TITLE'		=> $title,
-						'S_EVENT_ATTR'		=> \canidev\core\tools::array_to_attr([
+						'S_EVENT_ATTR'		=> \canidev\core\Dom::arrayToAttr([
 							'class'			=> 'blg-calendar-event',
 							'data-color'	=> $color,
 							'data-event' 	=> $this->params['id'],

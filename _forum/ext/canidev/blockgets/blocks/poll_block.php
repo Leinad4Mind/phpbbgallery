@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -327,7 +327,7 @@ class poll_block extends base
 		}
 	
 		$this->display_vars = [
-			'topic_id'			=> ['lang' => 'DISPLAY_POLL',		'validate' => 'int',	'type' => 'select',			'method' => 'helper',	'params' => ['make_select', $options, false, '{CONFIG_VALUE}', ''],	'default' => 0],
+			'topic_id'			=> ['lang' => 'DISPLAY_POLL',		'validate' => 'int',	'type' => 'select',			'function' => ['tools', 'make_select'],	'params' => [$options, false, '{CONFIG_VALUE}', ''],	'default' => 0],
 			'display_results'	=> ['lang' => 'DISPLAY_RESULTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
 		];
 

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -57,9 +57,11 @@ abstract class base
 	public $display_vars	= false;
 	public $custom_config	= false;
 	public $tpl_name		= '';
+
+	/** @var \canidev\blockgets\controller\admin_controller_pages */
 	public $manager;
 	
-	static $icon			= 'fa-file-o';
+	static $icon		= 'fa-file-o';
 
 	const VIEW_FULL 	= 1;
 	const VIEW_MEDIUM 	= 2;
@@ -69,7 +71,7 @@ abstract class base
 	 * Constructor
 	 *
 	 * @param ContainerInterface 					$container			Service container interface
-	 * @param array									$block_data			Data of block
+	 * @param array|false							$block_data			Data of block
 	 *
 	 * @access public
 	 */
@@ -136,7 +138,7 @@ abstract class base
 
 	/**
 	 * Get block configuration
-	 * @return array|false
+	 * @return array|bool
 	 */
 	public function get_config()
 	{
@@ -154,7 +156,7 @@ abstract class base
 		}
 
 		$block_data	= $this->data;
-		$tpl_name	= $this->tpl_name;
+		$tpl_name	= '@canidev_blockgets/blocks/' . $this->tpl_name . '.html';
 
 		/**
 		 * @event block.display
@@ -176,7 +178,7 @@ abstract class base
 		]);
 		
 		$this->template->set_filenames([
-			'blg_tpl' => '@canidev_blockgets/blocks/' . $tpl_name . '.html'
+			'blg_tpl' => $tpl_name
 		]);
 
 		return $this->template->assign_display('blg_tpl');
@@ -186,7 +188,6 @@ abstract class base
 	 * Manage the block's bbcodes
 	 *
 	 * @param string	$mode 		(get|set|delete)
-	 * @param string	$add 		Extra string to apply in the bbcode name
 	 * @param string	$uid 		The bbcode_uid to set
 	 * @param string 	$bitfield  	The bbcode_bitfield to set
 	 * 
@@ -201,7 +202,6 @@ abstract class base
 					'uid'		=> (isset($this->data['bbcode_uid']) ? $this->data['bbcode_uid'] : ''),
 					'bitfield'	=> (isset($this->data['bbcode_bitfield']) ? $this->data['bbcode_bitfield'] : ''),
 				];
-			break;
 
 			case 'set':
 			case 'delete':
@@ -216,7 +216,6 @@ abstract class base
 
 			default:
 				return false;
-			break;
 		}
 
 		return true;
@@ -263,11 +262,11 @@ abstract class base
 	/**
 	 * Unserialize block content
 	 * 
-	 * @param string 		$content
-	 * @param bool 			$allow_empty
-	 * @param array|false 	$new
+	 * @param string|false 		$content
+	 * @param bool 				$allow_empty
+	 * @param array|false 		$new
 	 * 
-	 * @return array
+	 * @return array|false
 	 */
 	public function unserialize($content = false, $allow_empty = false, $new = false)
 	{
@@ -345,14 +344,14 @@ abstract class base
 	/**
 	 * Get bloc kstyle
 	 * 
-	 * @return int
+	 * @return string
 	 */
 	public function get_block_style()
 	{
 		$styles = [
 			constants::BLOCK_STYLE_DEFAULT			=> 'default',
 			constants::BLOCK_STYLE_ALTERNATIVE		=> 'alternative',
-			constants::BLOCK_STYLE_CONTENT_FULL	=> 'content_full',
+			constants::BLOCK_STYLE_CONTENT_FULL		=> 'content_full',
 			constants::BLOCK_STYLE_CONTENT_SIMPLE	=> 'content_simple'
 		];
 		

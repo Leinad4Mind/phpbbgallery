@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -286,6 +286,7 @@ class recent_topics_block extends base
 					'U_LAST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
 					'U_VIEW_FORUM'		=> $this->helper->url('viewforum', 'f=' . $row['forum_id']),
 					'U_VIEW_TOPIC'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;view=unread#unread'),
+					'U_NEWEST_POST'		=> $this->helper->url('viewtopic', $view_topic_url_params . '&amp;view=unread#unread'),
 				];
 
 				/**
@@ -338,10 +339,10 @@ class recent_topics_block extends base
 	public function get_config()
 	{
 		$this->display_vars = [
-			'sections'		=> ['lang' => 'RECENT_SECTIONS',		'type' => 'custom',			'function' => [$this, 'build_sections_selector'],	'params' => ['{CONFIG_VALUE}'],	'default' => self::$default_sections],
+			'sections'		=> ['lang' => 'RECENT_SECTIONS',		'type' => 'custom',			'function' => [$this, 'build_sections_selector'],		'params' => ['{CONFIG_VALUE}'],	'default' => self::$default_sections],
 			'topic_limit'	=> ['lang' => 'RECENT_TOPIC_LIMIT',		'validate' => 'int:1:100',	'type' => 'number:1:100',	'default' => 5],
-			'forums'		=> ['lang' => 'RECENT_FORUMS',			'type' => 'custom',			'method' => 'helper',		'params' => ['forums_select', 'forums', '{CONFIG_VALUE}', 1],	'default' => []],
-			'topic_design'	=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'method' => 'helper', 		'params' => ['block_design_select', '{CONFIG_VALUE}']],
+			'forums'		=> ['lang' => 'RECENT_FORUMS',			'type' => 'custom',			'function' => ['tools', 'forums_select'],				'params' => ['forums', '{CONFIG_VALUE}', 1],	'default' => []],
+			'topic_design'	=> ['lang' => 'TOPIC_DESIGN',			'type' => 'select',			'function' => ['helper_acp', 'block_design_select'], 	'params' => ['{CONFIG_VALUE}']],
 			'show_parent'	=> ['lang' => 'TOPIC_PARENT_SHOW',		'validate' => 'bool',		'type' => 'radio:yes_no'],
 		];
 

@@ -1,0 +1,357 @@
+<?php
+/*
+* acp.php [English [En]]
+* @package cBB Blockgets
+* @version v2.0.2 12/01/2021
+*
+* @copyright (c) 2021 CaniDev
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
+// @ignore
+if(!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = array();
+}
+
+// @acp_blockgets
+$lang = array_merge($lang, array(
+	'BLG_CONFIG_TITLE'				=> 'General configuration',
+	'BLG_CONFIG_EXPLAIN'			=> 'Thank you for choosing cBB Blockgets as a complement for your forum!<br />From here you can set the main settings of the extension.<br />Lateral links allow you to access all the options to set comfortably the mod.',
+	'BLG_IMAGES_TITLE'				=> 'Available images',
+	'BLG_OPTIONAL_TITLE'			=> 'Additional configuration',
+	'BLG_OPTIONAL_EXPLAIN'			=> 'From here you can set additional settings for the site.',
+	
+	'BLG_ADMIN_BAR'					=> 'Show quick access bar',
+	'BLG_ADMIN_BAR_EXPLAIN'			=> 'If enabled, a bar will be displayed at the top of the forum that will allow you to quickly access the options of the page where you are.',
+	'BLG_BLOCK_AUTOFIT'				=> 'AutoFit blocks',
+	'BLG_BLOCK_AUTOFIT_EXPLAIN'		=> 'If enabled, the content and disposition of the blocks will be adjust to the column.',
+	'BLG_COLLAPSE'					=> 'Allow collapse blocks',
+	'BLG_COLLAPSE_EXPLAIN'			=> 'Enable/disable globally the possibility that each user can collapse/expand blocks individually. This option overwrite the individual block\'s configuration.',
+	'BLG_FULL_EDITOR'				=> 'Full editor',
+	'BLG_ON_BOARD'					=> 'Blocks within the forum',
+	'BLG_ON_BOARD_EXPLAIN'			=> 'Sets whether to display the blocks into the forum pages. This option overwrite the invidual page\'s configuration.<br /><br />
+		<em>
+			&nbsp;&nbsp;<strong>Not show:</strong> It does not show blocks on any page.<br />
+			&nbsp;&nbsp;<strong>Individual pages:</strong> It shows the blocks on the pages configured for it.<br />
+			&nbsp;&nbsp;<strong>Equal pages:</strong> The "General Index" blocks are shown on all pages.
+		</em>',
+	'BLG_REDIRECTIONS'				=> 'Redirections',
+	'BLG_REDIRECT_404'				=> 'Page not found',
+	'BLG_REDIRECT_404_EXPLAIN'		=> 'Sets the page to which the user will be taken when trying to access a location that does not exist.<br />
+		<em>Replace the message No route found for "GET" of phpBB.</em>',
+	'BLG_REDIRECT_LOGIN'			=> 'Login',
+	'BLG_REDIRECT_LOGIN_EXPLAIN'	=> 'Sets the page to which the user will be taken after login to the forum.',
+	'BLG_REDIRECT_LOGOUT'			=> 'Logout',
+	'BLG_REDIRECT_LOGOUT_EXPLAIN'	=> 'Sets the page to which the user will be taken when disconnecting.',
+
+	'DEFAULT'					=> 'By default',
+	'LINKS'						=> 'Links',
+	'OPEN_GALLERY'				=> 'Open gallery',
+	'SAVE_AND_ADD'				=> 'Save and add more',
+	'TYPE_DOMAIN_HOME'			=> 'Domain\'s main page',
+	'TYPE_FORUM_HOME'			=> 'Forum\'s main page',
+	'TYPE_FORUM_SECONDARY'		=> 'Forum\'s secondary page',
+
+	'BOARD_BLOCK_INDIVIDUAL'	=> 'Individual pages',
+	'BOARD_BLOCK_NONE'			=> 'Not show',
+	'BOARD_BLOCK_SAME'			=> 'Equal pages',
+
+	'AVATAR_RESIZE_WIDTH'			=> 'Size of avatars',
+	'AVATAR_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size allowed (in pixels) for avatars.<br />
+		<em>Set 0 to disable avatar resizing</em>.',
+	'CALENDAR'						=> 'Calendar',
+	'CALENDAR_ENABLED'				=> 'Calendar enabled',
+	'CALENDAR_ENABLED_EXPLAIN'		=> 'Defines whether the calendar will be available in both the<em>/calendar path</em> and blocks.',
+	'CALENDAR_BIRTHDAYS'			=> 'Show Birthdays',
+	'CALENDAR_BIRTHDAYS_EXPLAIN'	=> 'If enabled, user\'s birthdays will be marked and displayed on the calendar, as if they were events.',
+	'CALENDAR_LINK'					=> 'Link',
+	'CALENDAR_LINK_EXPLAIN'			=> 'Define in which part of the forum a link to the calendar will appear.',
+	'CALENDAR_FIRST_DAY'			=> 'First day of the week',
+	'CALENDAR_FIRST_DAY_EXPLAIN'	=> 'Define the first day of the week on the calendar.',
+	'COUNTER'						=> 'Hit Counter',
+	'COUNTER_RESET'					=> 'Reset hit counter',
+	'COUNTER_RESET_EXPLAIN'			=> 'Sets the visits to 0 and the counter start to the current date.',
+	'HOME_TYPE_DISPLAY'				=> 'Behavior of the home page',
+	'HOME_TYPE_DISPLAY_EXPLAIN'		=> 'Sets how the home page will work, if it is enabled.',
+	'IMAGE_RESIZE'					=> 'Resize images',
+	'IMAGE_RESIZE_POST'				=> 'Resize images in posts',
+	'IMAGE_RESIZE_POST_EXPLAIN'		=> 'Enable/Disable the resize in the images inside the forum posts.',
+	'IMAGE_RESIZE_WIDTH'			=> 'Images max size',
+	'IMAGE_RESIZE_WIDTH_EXPLAIN'	=> 'Maximum size (in pixels) for images. The default is 450.<br />
+		<em>Set 0 to disable image resizing</em>.',
+
+	'INDEX_FILE_ERROR'				=> 'Failed to complete setup',
+));
+
+// @acp_blockgets_lists
+$lang = array_merge($lang, array(
+	'ADD_ITEM'				=> 'Add item',
+	'CAT'					=> 'Category',
+
+	'LINK'						=> 'Link',
+	'LINK_DESCRIPTION'			=> 'Description',
+	'LINK_DESCRIPTION_EXPLAIN'	=> 'This text will be show in some blocks as aditional link information.',
+	'LINK_GROUP'				=> 'Groups',
+	'LINK_GROUP_EXPLAIN'		=> 'Select groups of users that can see this link in the menu.<br />You can select multiple groups using the <em>Ctrl</em> key on your keyboard.',
+	'LINK_IMG'					=> 'Image',
+	'LINK_TITLE'				=> 'Link title',
+	'LINK_TITLE_EXPLAIN'		=> 'Title that identifies the link. Limit 100 characters.',
+	'LINK_TYPE'					=> 'Link type',
+	'LINK_URL'					=> 'Link URL',
+	'LINK_URL_EXPLAIN'			=> 'The direction that opens when you click on the link. Limit 255 characters.',
+	'LINK_WINDOW'				=> 'Open in New Window',
+));
+
+// @acp_blockgets_pages
+$lang = array_merge($lang, array(
+	'ADD_BLOCK'					=> 'Add block',
+	'ADD_BLOCK_TIP'				=> 'Drag a block to the position you want to add it.',
+	'ADD_BLOCK_TITLE'			=> 'Add block :: %1$s',
+	'ADD_BLOCK_TITLE_EXPLAIN'	=> 'From here you can add a new block to your forum and set its configuration. You can also set additional settings, if the block you need.',
+	'ADD_GROUP'					=> 'Add group',
+	'ADD_GROUP_EXPLAIN'			=> 'Drag this button to the desired position to add a group',
+	'ADVANCED_OPTIONS'			=> 'Advanced options',
+
+	'BLOCK_SETTINGS'			=> 'General options for the block',
+	'BLOCK_SPACE'				=> 'Space between blocks',
+	'BLOCK_SPACE_EXPLAIN'		=> 'Value in pixels or percentage. The minimun value is 1.',
+	'BOTTOM_COLUMN'				=> 'Bottom column',
+	'CENTER_COLUMN'				=> 'Center column',
+	'CHG_GROUPS_BLOCK'			=> 'Change permissions',
+	'CHG_GROUP_EXPLAIN'			=> 'Choose groups who can see the selected blocks',
+	'COLUMN_SETTINGS'			=> 'Options for the columns',
+	'COPY_BLOCK'				=> 'Copy to other page',
+	'DELETE_BLOCK_CONFIRM'		=> 'Are you sure you want to delete the selected blocks?',
+	'DISABLE_BLOCK'				=> 'Disable',
+	'EDIT_BLOCK_TITLE'			=> 'Edit block :: %1$s',
+	'EDIT_BLOCK_TITLE_EXPLAIN'	=> 'Here you can edit the configuration of the block, as well as additional settings, if the block you need.',
+	'ENABLE_BLOCK'				=> 'Enable',
+	'EXT_ROUTES'				=> 'Extension\'s routes',
+	'FILTER_TYPE_GET'			=> 'Url (GET)',
+	'FILTER_TYPE_POST'			=> 'Form (POST)',
+	'FORUM_FILES'				=> 'Forum files',
+	'LEFT_COLUMN'				=> 'Left column',
+	'LEFT_COLUMN_EXPLAIN'		=> 'Width of the left column in pixels or percentage.<br />Set 0 to disable the column.',
+	'LINK_BOTTOM'				=> 'Bottom',
+	'LINK_QUICK'				=> 'Quick links',
+	'LINK_NONE'					=> 'No link',
+	'LINK_TOP'					=> 'Top',
+	'MANAGE_PAGE'				=> 'Manage page',
+	'MOVE_BLOCK'				=> 'Move to other page',
+	'NO_PAGES_CREATED'			=> 'No pages created.',
+	'NO_PAGE_FILTERS'			=> 'No filters',
+	
+	'PAGE'						=> 'Page',
+	'PAGE_ADD'					=> 'New page',
+	'PAGE_ALIAS'				=> 'Page alias',
+	'PAGE_ALIAS_EXPLAIN'		=> 'You can set an alias (letters, numbers and dashes) to create a separate page.<br />If you leave this field blank, it will create a separate page and will be used the ID as alias.',
+	'PAGE_ALIAS_ERROR'			=> 'The value inserted in "Alias page" field contains illegal characters or an invalid path.',
+	'PAGE_BACKGROUND'			=> 'Page background',
+	'PAGE_BACKGROUND_EXPLAIN'	=> 'You can set a color (ex. white, #FFFFFF) or an image (ex. http://mydomain.com/image.jpg). Leave this field blank to use the default background.',
+	'PAGE_CUSTOM'				=> 'Custom Pages',
+	'PAGE_CUSTOM_EXPLAIN'		=> 'These are pages created by you or another administrator of this site. You can add, edit and manage as many pages as you wish.',
+	'PAGE_CUSTOM_ONE'			=> 'Custom Page',
+	'PAGE_DESCRIPTION'			=> 'SEO Description',
+	'PAGE_DESCRIPTION_EXPLAIN'	=> 'Defines a description visible to search engines.<br /><em>Google, bing, etc...</em>',
+	'PAGE_ENABLED'				=> 'Page enabled',
+	'PAGE_ENABLED_EXPLAIN'		=> 'Enable or disable the page functions completely. This option overrides all others.',
+	'PAGE_FILTERS'				=> 'Filters',
+	'PAGE_FILTERS_EXPLAIN'		=> 'Define the required parameters (GET and POST) for the page is loaded.<br />Check <strong>Online Documentation</strong> for more information on how to set these filters.',
+	'PAGE_FILTER_PARAM'			=> 'Parameters',
+	'PAGE_FILTER_PARAM_EXPLAIN'	=> 'You can set as many as you want separated by ","<br />Ex: mode=mymode,style=1',
+	'PAGE_FILTER_TYPE'			=> 'Type',
+	'PAGE_FILTER_TYPE_EXPLAIN'	=> 'Select the type of location parameters.',
+	'PAGE_FORUM'				=> 'Pages inside the forum',
+	'PAGE_FORUM_EXPLAIN'		=> 'These are pages belonging to the forum to which you can add blocks. You can manage and edit their main parameters as in customized pages.',
+	'PAGE_GROUP'				=> 'Groups',
+	'PAGE_GROUP_EXPLAIN'		=> 'Choose groups who can see the blocks of this page.<br />You can select multiple groups using <em>Ctrl key</em> on your keyboard.',
+	'PAGE_HOME'					=> 'Home page',
+	'PAGE_HOME_EXPLAIN'			=> 'This is a page designed to be used as a site\'s home page as a "Portal".',
+	'PAGE_LINK'					=> 'Link',
+	'PAGE_LINK_ICON'			=> 'Link icon',
+	'PAGE_LINK_ICON_EXPLAIN'	=> 'Define the icon that will have the link to this page.',
+	'PAGE_LINK_POSITION'		=> 'Link position',
+	'PAGE_LINK_POSITION_EXPLAIN'	=> 'Define in which part of the forum a link to this page will appear.',
+	'PAGE_LOGO'					=> 'Logo',
+	'PAGE_LOGO_EXPLAIN'			=> 'Sets the url of the image to be used as logo.<br />Leave blank to use the default logo.',
+	'PAGE_STYLE'				=> 'Style',
+	'PAGE_STYLE_EXPLAIN'		=> 'Defines the style to be used on the page.<br /><em>This option will not be applied to the original pages of the forum.</em>',
+	'PAGE_STYLESHEET'			=> 'Custom theme',
+	'PAGE_STYLESHEET_EXPLAIN'	=> 'You can set the path to one or more files *.css (one per line) or directly set the variables of the theme that will be used.',
+	'PAGE_THEME'				=> 'Theme',
+	'PAGE_THEME_BACKGROUND'		=> 'Set background',
+	'PAGE_THEME_DEFAULT'		=> 'Use default configuration',
+	'PAGE_THEME_STYLE'			=> 'Set style',
+	'PAGE_THEME_STYLESHEET'		=> 'Use custom theme',
+	'PAGE_TITLE'				=> 'Page title',
+	'PAGE_TITLE_EXPLAIN'		=> 'Title will be displayed in the browser.',
+	'PAGE_URL'					=> 'Page url',
+	
+	'PAGES_ADD_TITLE'				=> 'Add new page',
+	'PAGES_ADD_TITLE_EXPLAIN'		=> 'From here you can add a new page and define custom configuration and appearance.',
+	'PAGES_BLOCKS_TITLE'			=> 'Manage blocks :: %s',
+	'PAGES_BLOCKS_TITLE_EXPLAIN'	=> 'From here you can create/edit/delete blocks to be shown on this page.<br />
+		The blocks can be divided into five columns (left, center, right, top and bottom). Drag the blocks to change their position.<br />
+		You can also add <strong>groups</strong> that will allow you to place blocks in up to 3 columns independently.',
+	'PAGES_EDIT_TITLE'				=> 'Edit page :: %s',
+	'PAGES_EDIT_TITLE_EXPLAIN'		=> 'From here you can edit the main configuration and look for the page.',
+	'PAGES_SELECT_TITLE_EXPLAIN'	=> 'Select the page to manage.',
+	'PAGES_TITLE'					=> 'Manage pages',
+	'PAGES_TITLE_EXPLAIN'			=> 'From here you can create/edit/delete additional pages for your forum. You can also edit the configuration and blocks on predefined pages.',
+	
+	'RIGHT_COLUMN'				=> 'Right column',
+	'RIGHT_COLUMN_EXPLAIN'		=> 'Width of the right column in pixels or percentage.<br />Set 0 to disable the column.',
+	'SHOW_FOOTER'				=> 'Show footer',
+	'SHOW_FOOTER_EXPLAIN'		=> 'This option lets you decide whether to display the forum footer on this page.',
+	'SHOW_HEADER'				=> 'Show header',
+	'SHOW_HEADER_EXPLAIN'		=> 'This option lets you decide whether to display the forum header on this page.',
+	'STYLE_DEFAULT'				=> 'Default style',
+	'STYLE_ALTERNATIVE'			=> 'Alternate style',
+	'STYLE_CONTENT_FULL'		=> 'Only content (with title)',
+	'STYLE_CONTENT_SIMPLE'		=> 'Only content (without title)',
+	'SUBMIT_CHANGES'			=> 'Apply changes',
+	'TARGET_PAGE_EXPLAIN'		=> 'Select the target page for the selected blocks.<br /><em>The blocks will be placed in it respective column</em>',
+	'TOP_COLUMN'				=> 'Top column',
+));
+
+// @general messages
+$lang = array_merge($lang, array(
+	'BLOCK_ADDED'					=> 'Block added successfully',
+	'BLOCK_COPIED'					=> 'Block(s) copied successfully',
+	'BLOCK_NEED_REQUIREMENTS'		=> 'The selected block will need some minimum requirements to be used.<br />See the documentation for more information.',
+	'BLOCK_MOVED'					=> 'Block(s) moved successfully',
+	'BLOCK_NOT_ADDED'				=> 'Error adding the block',
+	'BLOCK_NOT_EXISTS'				=> 'The selected block does not exist',
+	'BLOCK_NOT_UPDATED'				=> 'Error updating the block',
+	'BLOCK_POSITION_UPDATED'		=> 'Blocks position updated successfully',
+	'BLOCK_POSITION_NOT_UPDATED'	=> 'Error updating blocks position',
+	'BLOCK_REMOVED'					=> 'Block(s) removed successfully',
+	'BLOCK_UPDATED'					=> 'Block updated successfully',
+	'GROUPS_CHANGED'				=> 'Groups updated successfully',
+
+	'ITEM_REMOVED'				=> 'Element removed successfully',
+	'ITEM_UPDATED'				=> 'Element updated successfully',
+	'ITEM_ADDED'				=> 'Element added successfully',
+	'ITEM_NOT_ADDED'			=> 'Error adding the element',
+	'ITEM_NOT_UPDATED'			=> 'Error updating the element',
+
+	'PAGE_ADDED'				=> 'Page added successfully',
+
+	'PAGE_REMOVED'		=> array(
+		1	=> 'The page has been successfully removed',
+		2	=> '%d pages deleted successfully',
+	),
+
+	'PAGE_UPDATED'				=> 'Page configuration updated successfully',
+	'BLG_CONFIG_UPDATED'		=> 'Configuration updated successfully',
+
+	'CONFIRM_PAGE_DELETE'		=> 'Are you sure you wish to delete this page and all blocks in this?',
+));
+
+/**
+* Blocks names and explains from block_alias
+*/
+$lang = array_merge($lang, array(
+	'blocks'	=> array(
+		'announcements_title'		=> 'Announcements',
+		'announcements_explain'		=> 'Displays a set number of posts (announcements) of established forums.',
+		'attachments_title'			=> 'Attachments',
+		'attachments_explain'		=> 'Displays information and links to the specified attachments.',
+		'banners_title'				=> 'Banners',
+		'banners_explain'			=> 'Displays the specified list of banners. It\'s displayed in a fixed or scrolling form.',
+		'birthdays_title'			=> 'Birthdays',
+		'birthdays_explain'			=> 'Displays the list of birthdays for today and the next few days (optional).',
+		'empty_title'				=> 'Custom',
+		'empty_explain'				=> 'Totally blank block which can also include any text HTML, CSS, JavaScript, etc...',
+		'calendar_title'			=> 'Calendar',
+		'calendar_explain'			=> 'Calendar in which you can add custom events and show birthdays.',
+		'clock_title'				=> 'Clock',
+		'clock_explain'				=> 'Displays a clock in flash format (you can choose several models and add your own clock).',
+		'cloud_tag_title'			=> 'CloudTag',
+		'cloud_tag_explain'			=> 'Sample labels in a balloon in flash format. You can display the latest searched words or the users with more messages.',
+		'contact_title'				=> 'Contact',
+		'contact_explain'			=> 'Displays a standard contact form.',
+		'countdown_title'			=> 'CountDown',
+		'countdown_explain'			=> 'Show a countdown to the indicated date.',	
+		'counter_title'				=> 'Hit counter',
+		'counter_explain'			=> 'Displays a hit counter with statistics of visits, visits per day, visits per hour, weekly visits, visits per month and visits per year.',
+		'dockmenu_title'			=> 'Dock menu',
+		'dockmenu_explain'			=> 'Displays a menu with Mac Dock style with elements of the specified list.',
+		'forums_title'				=> 'Forums',
+		'forums_explain'			=> 'List with full or custom forums.',
+		'frame_title'				=> 'Frame',
+		'frame_explain'				=> 'Display a Web page, a PDF file, a Flash file or a text file within the block.', 
+		'gallery_title'				=> 'Photo gallery',
+		'gallery_explain'			=> 'Photo Gallery customizable with forum images (attachments) or external images. The images move and link the fate of each.',
+		'google_translate_title'	=> 'Google translator',
+		'google_translate_explain'	=> 'Block that allows you to translate the page on which it is installed, opening a new window and translating it through Google technology.',
+		'language_select_title'		=> 'Language select',
+		'language_select_explain'	=> 'It allows the user to view the forum with any language that is installed in the forum and set it as their default language.',
+		'latest_bots_title'			=> 'Bot\'s visits',
+		'latest_bots_explain'		=> 'Simple list of last bots who entered the forum and the date of their last visit.',
+		'latest_members_title'		=> 'Newest members',
+		'latest_members_explain'	=> 'List of latest sers registered on the forum and the date they were registered.',
+		'leaders_title'				=> 'Leaders',
+		'leaders_explain'			=> 'Displays a list of groups (customizable) with forum leaders.',
+		'link_us_title'				=> 'Link Us',
+		'link_us_explain'			=> 'Block that displays a user-selectable link to the page on which it is installed. You can set a mini banner attached to the link.',
+		'login_title'				=> 'Login',
+		'login_explain'				=> 'Allows a user to login directly from the block. Once identified, shows the user\'s primary information and links.',
+		'map_title'					=> 'Map',
+		'map_explain'				=> 'Displays a map that may contain marks with different locations.',
+		'menu_title'				=> 'Menu',
+		'menu_explain'				=> 'Menu in tree format that displays items from the selected list.',
+		'most_poster_title'			=> 'Most Posters',
+		'most_poster_explain'		=> 'Displays a dropdown with users who have posted more messages in the forum, and most relevant information.',
+		'news_title'				=> 'News',
+		'news_explain'				=> 'Dropdown menu showing the last posts of the specified forums as a news.',
+		'online_friends_title'		=> 'Friends online',
+		'online_friends_explain'	=> 'Simple list of friends and foes of the user, that are connected to the forum.',
+		'paypal_title'				=> 'Donations',
+		'paypal_explain'			=> 'Allows users to donate money through paypal.',
+		'player_title'				=> 'Music Player',
+		'player_explain'			=> 'Player to play songs in MP3 or WAV format. Allow to create a list of songs or use M3U, ASX or PLS playlists.',
+		'poll_title'				=> 'Poll',
+		'poll_explain'				=> 'Displays a single poll specified in its configuration.',
+		'poll_random_title'			=> 'Poll (random)',
+		'poll_random_explain'		=> 'Displays a selected number of polls that selected in random order, within the specified forum.',
+		'post_view_title'			=> 'Forum post',
+		'post_view_explain'			=> 'Displays the contents of a message. You can display the last message of a forum, the first or last post of a topic or a custom post.',
+		'quote_of_day_title'		=> 'Quote of day',
+		'quote_of_day_explain'		=> 'Shows a "quote" or phrase of the day or a different tip in each visit to the page.',
+		'random_member_title'		=> 'Random Member',
+		'random_member_explain'		=> 'Displays basic information and avatar of a random user.',
+		'ranks_title'				=> 'Ranks',
+		'ranks_explain'				=> 'Shows a list with the forum ranks.',
+		'recent_topics_title'		=> 'Recent Topics',
+		'recent_topics_explain'		=> 'Recent topics of the forum. Allow to select the forums from which to read the topics.',
+		'rss_title'					=> 'RSS Reader',
+		'rss_explain'				=> 'Show the latest articles from the specified RSS archives(feeds). Items will be displayed in scroll mode or accordion.', 
+		'share_title'				=> 'Share',
+		'share_explain'				=> 'Shows the buttons of most popular social networks in the desired format.',
+		'search_title'				=> 'Search',
+		'search_explain'			=> 'Allows users to do quickly searchs on the forum or in a search engine.',
+		'scroll_message_title'		=> 'Marquee',
+		'scroll_message_explain'	=> 'Text message that is rotating in the block. Allows use BBCode and HTML in the text.',
+		'stats_title'				=> 'Statistics',
+		'stats_explain'				=> 'Gets the most relevant information on the forum. This block shows the number of new messages and topics, the total number of posts and topics, message statistics and topics written per day, total number of attachments and the number of users that remaining active (posting messages).',
+		'style_select_title'		=> 'Style select',
+		'style_select_explain'		=> 'Allows the user to view the forum with any style that is installed on the forum and set it as their default style.',
+		'top_topics_title'			=> 'Top topics',
+		'top_topics_explain'		=> 'List of custom topics that can display the latest topics unread, the most active topics or the most viewed topics.',
+		'topic_index_title'			=> 'Topic Index',
+		'topic_index_explain'		=> 'Displays an orderly list with the topics of selected forums. The list can be order by topic title, topic date or topic last post date.',
+		'welcome_title'				=> 'Welcome',
+		'welcome_explain'			=> 'This block enables a different welcome message for guests and registered users. The block will decide which message display.',
+		'whos_online_title'			=> 'Who\'s online',
+		'whos_online_explain'		=> 'Displays the list of connected users (as is shown by default in the Index of the forum) and users who logged in last 24 hours.',
+		'youtube_title'				=> 'YouTube',
+		'youtube_explain'			=> 'Show videos or channels from youtube.',
+	)
+));

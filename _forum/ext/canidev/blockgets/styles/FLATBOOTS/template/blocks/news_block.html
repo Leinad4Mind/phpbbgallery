@@ -30,15 +30,15 @@
 	<div class="blg-widget-header">
 		<span>{{ lang('TOPIC') }}</span>
 	</div>
-	<ul class="blg-linear-list">
+	<ul class="blg-linear-list news-block">
 	{% for topicrow in news_row %}
-		<li class="double-space" style="display:flex;border: 1px solid #e4e9eb;{% if loop.index != 1 %}border-top: 4px solid #e4e9eb;{% endif %}margin:0">
-			<div class="desc-wrapper" style="padding:10px 8px;width: -webkit-fill-available;">
+		<li class="double-space">
+			<div class="desc-wrapper">
 				<div>
 					{% EVENT topiclist_row_prepend %}
 					<a href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
 					{% EVENT topiclist_row_append_portal %}
-				<!-- </div> -->
+				</div>
 				<div>
 					{{ lang('POSTED_BY') ~ lang('COLON') }}
 					<strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong>

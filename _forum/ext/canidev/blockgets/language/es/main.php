@@ -1,12 +1,12 @@
 <?php
 /**
-* [Spanish [Es]]
-* @package cBB Blockgets
-* @version 2.0.5 15/01/2023
-*
-* @copyright (c) 2023 CaniDev
-* @license https://creativecommons.org/licenses/by-nc/4.0/
-*/
+ * [Spanish [Es]]
+ * @package cBB Blockgets
+ * @version 2.0.7 01/07/2024
+ *
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ */
 
 // @ignore
 if(!defined('IN_PHPBB'))
@@ -19,7 +19,7 @@ if(empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'PORTAL'			=> 'Portal',
 	'READ_FULL'			=> 'Leer tema completo',
 	'BLG_OR'			=> 'o',
@@ -99,11 +99,11 @@ $lang = array_merge($lang, array(
 	'ATTACH_DOWNLOAD'			=> 'Descargado',
 	'ATTACH_VIEW'				=> 'Visto',
 
-	'ATTACH_COUNT'				=> array(
+	'ATTACH_COUNT'				=> [
 		0	=> 'Nunca',
 		1	=> '%d vez',
 		2	=> '%d veces',
-	),
+	],
 
 	'VIEW_TOPIC'				=> 'Ver tema',
 	'DOWNLOAD'					=> 'Descargar',
@@ -133,7 +133,7 @@ $lang = array_merge($lang, array(
 	'CLICK_MSG'		=> 'Proceder a la donación',
 	'CODE_MSG'		=> 'Tipo de moneda',
 
-	'currencies'	=> array(
+	'currencies'	=> [
 		'AUD'	=> 'Dólar Australiano',
 		'CAD'	=> 'Dólar Canadiense',
 		'CZK'	=> 'Corona Checa',
@@ -152,7 +152,7 @@ $lang = array_merge($lang, array(
 		'EUR'	=> 'Euro',
 		'MXN'	=> 'Peso mejicano',
 		'ILS'	=> 'Israeli New Shekels'
-	),
+	],
 
 	// most_poster_block
 	'MEMBER_POSTS'		=> '%d (%.2f/día)',
@@ -260,10 +260,10 @@ $lang = array_merge($lang, array(
 	// youtube block
 	'NO_VIDEOS'		=> 'No hay videos para mostrar',
 	'YT_VIEWS'		=> '%d reproducciones',
-));
+]);
 
 // General messages
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACTION_ERROR'		=> 'No se ha realizado ninguna acción',
 	'BLOCK_LOAD_ERROR'	=> 'No se ha podido cargar el bloque',
 	'FORMAT_INVALID'	=> 'El formato no es válido',
@@ -271,4 +271,4 @@ $lang = array_merge($lang, array(
 	'NO_TRACKLIST'		=> 'No es posible mostrar la lista de pistas del reproductor.',
 	'NO_PAGE'			=> 'La página solicitada no existe',
 	'URL_INVALID'		=> 'La URL no es válida.',
-));
+]);

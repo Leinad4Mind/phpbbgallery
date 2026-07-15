@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -36,12 +36,15 @@ class google_translate_block extends base
 			{
 				$lang = $this->helper->locale_lang($iso);
 
-				$this->template->assign_block_vars('translate', [
-					'S_ISO'			=> $iso,
-					'S_NAME'		=> ($data['show_names']) ? $lang['name_eng'] : '',
-					'S_TITLE'		=> ($data['show_names']) ? $lang['name'] : $lang['name'] . ' - ' . $lang['name_eng'],
-					'S_IMAGE_SRC'	=> $flags_path . $iso . '.svg',
-				]);
+				if(!empty($lang))
+				{
+					$this->template->assign_block_vars('translate', [
+						'S_ISO'			=> $iso,
+						'S_NAME'		=> ($data['show_names']) ? $lang['name_eng'] : '',
+						'S_TITLE'		=> ($data['show_names']) ? $lang['name'] : $lang['name'] . ' - ' . $lang['name_eng'],
+						'S_IMAGE_SRC'	=> $flags_path . $iso . '.svg',
+					]);
+				}
 			}
 		}
 
@@ -73,7 +76,7 @@ class google_translate_block extends base
 		{
 			$this->template->assign_block_vars('translate', [
 				'S_ISO'			=> $iso,
-				'S_LANG'		=> '<img src="' . $flags_path . $iso . '.svg" alt="" />' . $row['name'],
+				'S_LANG'		=> '<img src="' . $flags_path . $iso . '.svg" alt="' . $iso . '">' . $row['name'],
 				'S_LANG_EN'		=> $row['name_eng'],
 				'S_SELECTED'	=> in_array($iso, $langs) ? true : false,
 			]);

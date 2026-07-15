@@ -462,7 +462,7 @@ ul.blg-linear-list {
 }
 
 .block-postbody {
-	font-size: 1.1em;
+	font-size: 1.2em;
 	line-height: 1.5em;
 }
 
@@ -472,7 +472,8 @@ ul.blg-linear-list {
 	margin-left: 3em;
 }
 
-.block-postbody img {
+.blg-block img.postimage {
+	box-sizing: border-box;
 	height: auto;
 	max-width: 100%;
 }
@@ -1766,10 +1767,10 @@ label.blg-share-button {
 	color: #7b95f2;
 }
 
-.medium-dark-theme .blg-block,
-.medium-dark-theme .blg-block a {
-	color: #000;
-}
+/* .medium-dark-theme .blg-block, */
+/* .medium-dark-theme .blg-block a { */
+	/* color: #000; */
+/* } */
 
 .medium-dark-theme .blg-block.style-alternative li.header dt,
 .medium-dark-theme .blg-block.style-alternative li.header a,

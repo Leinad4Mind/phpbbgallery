@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Blockgets
- * @version 2.0.6 20/09/2023
+ * @version 2.0.7 01/07/2024
  *
- * @copyright (c) 2023 CaniDev
+ * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -164,12 +164,12 @@ class youtube_block extends base
 		}
 
 		$this->display_vars = [
-			'display_mode'		=> ['lang' => 'YT_DISPLAY_MODE',	'type' => 'select',		'method' => 'helper',		'params' => ['make_select', $display_modes, false, '{CONFIG_VALUE}'],	'default' => 'full'],
+			'display_mode'		=> ['lang' => 'YT_DISPLAY_MODE',	'type' => 'select',		'function' => ['tools', 'make_select'],		'params' => [$display_modes, false, '{CONFIG_VALUE}'],	'default' => 'full'],
 			'random_display'	=> ['lang' => 'YT_RANDOM_DISPLAY',	'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
 			'video_autoplay'	=> ['lang' => 'YT_AUTOPLAY',		'validate' => 'bool',	'type' => 'radio:yes_no',	'default' => 1],
 			'result_limit'		=> ['lang' => 'YT_RESULT_LIMIT',	'validate' => 'int',	'type' => 'number',			'default' => 5],
 			'text_limit'		=> ['lang' => 'YT_TEXT_LIMIT',		'validate' => 'int',	'type' => 'number',			'default' => 180],
-			'video_size'		=> ['lang' => 'YT_VIDEO_SIZE',	 	'type' => 'select',		'method' => 'helper',		'params' => ['make_select', $sizes, false, '{CONFIG_VALUE}'],	'default' => '300x255'],
+			'video_size'		=> ['lang' => 'YT_VIDEO_SIZE',	 	'type' => 'select',		'function' => ['tools', 'make_select'],		'params' => [$sizes, false, '{CONFIG_VALUE}'],	'default' => '300x255'],
 		];
 		
 		$this->list = $this->container->get('canidev.blockgets.admin.links');
@@ -282,7 +282,7 @@ class youtube_block extends base
 	/**
 	 * Get videos
 	 * 
-	 * @param array 	$video_ids
+	 * @param array|string 	$video_ids
 	 * 
 	 * @return array
 	 * @access private
@@ -360,8 +360,8 @@ class youtube_block extends base
 	/**
 	 * Get channel videos
 	 * 
-	 * @param int 		$channel_id
-	 * @param int 		$limit
+	 * @param string|false 		$channel_id
+	 * @param int 				$limit
 	 * 
 	 * @return array
 	 * @access private
@@ -416,8 +416,8 @@ class youtube_block extends base
 	/**
 	 * Get playlist videos
 	 * 
-	 * @param int 	$playlist_id
-	 * @param int 	$limit
+	 * @param string 	$playlist_id
+	 * @param int 		$limit
 	 * 
 	 * @return array
 	 * @access private
