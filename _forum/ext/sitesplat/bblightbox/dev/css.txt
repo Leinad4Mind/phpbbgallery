@@ -1,0 +1,109 @@
+.inline-attachment {
+    display: table;
+    border: 2px solid #dbdbdb;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+	width:200px;
+}
+
+.inline-attachment .file {width: auto;padding-right: unset;padding-left: unset;}
+
+/* fix odd z-index around the themes and the lightboxes :-| */
+.jslghtbx,
+.chocolat-wrapper {
+    z-index: 9999!important;
+}
+
+/*
+* 
+* https://codepen.io/bootstrapped/pen/RrabNe
+*
+*/
+.masonary-row.row {
+	-webkit-column-gap: 30px; 
+	-moz-column-gap: 30px;
+	column-gap: 30px;
+	padding-left: 15px;
+	padding-right: 15px;
+	word-wrap: break-word;
+}
+.masonary-row [class*="col-"] {
+	 display: inline-block;
+	 width: 100%;
+	 height: 100%;
+	 float: none;
+	 padding: 0px;
+}
+@media (min-width: 480px) {
+	.masonary-row.row {
+		-webkit-column-count: 2;
+		-moz-column-count: 2;
+		column-count: 2;
+	}
+}
+@media (min-width: 768px) {
+	.masonary-row.row {
+		-webkit-column-count: 5;
+		-moz-column-count: 5;
+		column-count: 5;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+.attach-image {
+    position: relative;
+    display: inline-block; /* added */
+    overflow: hidden; /* added */
+}
+
+.attach-image img {width:100%;} /* remove if using in grid system */
+
+.attach-image:hover span {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; /* added */
+    top: 0; /* added */
+    z-index: 500;
+    background: rgba(255, 255, 255, .6);
+ -webkit-transition:.2s;
+  /* ...and now for the proper property */
+ transition:.2s;
+}
+/* added */
+.attach-image:hover span i {
+    top: 50%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+/* added */
+.attach-image span {
+    display: block;
+    position: absolute;
+    top: -100%;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    color: inherit;
+ -webkit-transition:.3s;
+  /* ...and now for the proper property */
+ transition:.3s;
+}
+.attach-image span i {
+    color: #7a7373;
+}

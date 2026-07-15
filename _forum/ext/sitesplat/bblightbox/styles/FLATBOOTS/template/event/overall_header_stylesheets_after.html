@@ -1,0 +1,9 @@
+{% if BBLIGHTBOX_PLUGIN %}
+    {% INCLUDECSS '@sitesplat_bblightbox/bblightbox.css' %}
+    <!-- INCLUDECSS @sitesplat_bblightbox/{BBLIGHTBOX_PLUGIN}/{BBLIGHTBOX_PLUGIN}.min.css -->
+    {% if QUOTED_IMAGES %}{% INCLUDECSS '@sitesplat_bblightbox/qimages.css' %}{% endif %}
+    {% if RESIZE_IMAGES %}<style>.img-bbcode img {max-width: {RESIZE_IMAGES}px !important;} .img-bbcode {width: {RESIZE_IMAGES}px !important;}</style>{% endif %}
+	{% if BBLIGHTBOX_COLUMN_LAYOUT == 2 %}<style>.masonary-row.row {-webkit-column-count: 4!important;-moz-column-count: 4!important;column-count: 4!important;}</style>{% endif %}
+    {% if BBLIGHTBOX_COLUMN_LAYOUT == '1' or BBLIGHTBOX_COLUMN_LAYOUT == '2' or BBLIGHTBOX_COLUMN_LAYOUT == '3' %}<style>.attach-image{position:relative;display:inline-block;overflow:hidden}.attach-image img{width:100%}.attach-image:hover span{opacity:1;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";top:0;z-index:500;background:rgba(255,255,255,.6);-webkit-transition:.2s;transition:.2s}.attach-image:hover span i{top:50%;position:absolute;left:0;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.attach-image span{display:block;position:absolute;top:-100%;opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";left:0;bottom:0;right:0;text-align:center;color:inherit;-webkit-transition:.3s;transition:.3s}.attach-image span i{color:#7a7373}</style>{% endif %}
+{% endif %}
+

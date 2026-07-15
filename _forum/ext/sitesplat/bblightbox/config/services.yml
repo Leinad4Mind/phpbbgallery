@@ -1,0 +1,11 @@
+services:
+    sitesplat.bblightbox.listener:
+        class: sitesplat\bblightbox\event\listener
+        arguments:
+            - '@user'
+            - '@template'
+            - '@config'
+            - '%core.root_path%ext/sitesplat/bblightbox/'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
