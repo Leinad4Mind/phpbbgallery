@@ -1,0 +1,168 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF BBCORE_MODE eq 'update' -->
+
+<!-- INCLUDECSS {ROOT_PATH}ext/sitesplat/BBCore/vendors/bootstrap/css/bootstrap_modified.css -->
+
+<!-- IF BBCORE_NOT_WRITABLE -->
+	<div class="errorbox">{L_SS_AUTOUPDATE_DISABLED}<br><br>{BBCORE_NOT_WRITABLE}</div>
+<!-- ENDIF -->
+<table class="table table-default">
+	<thead>
+		<tr>
+			<th colspan="2">{L_ACP_SITESPLAT_UPDATE_MANAGER}</th>
+		</tr>
+	</thead>
+	<tbody>
+
+	<!-- BEGIN sitesplat_themes -->
+		<tr>
+			<td style="text-align:center; background:url('https://www.sitesplat.com/assets/{sitesplat_themes.NAME}.jpg') no-repeat;width: 240px; background-size:inherit;" class="row2"><strong style="visibility:hidden;">{sitesplat_themes.NAME}</strong></td>
+			<td class="row1">
+				<div style="position:relative;">
+				{L_VERSION_INSTALLED}{L_COLON} <strong>{sitesplat_themes.NAME} - <span class="label {% if sitesplat_themes.S_UPDATE %}label-danger{% else %}label-success{% endif %}">{sitesplat_themes.VERSION}</span></strong><br />
+				{% if sitesplat_themes.S_UPDATE %}{sitesplat_themes.DOWNLOAD_MSG}{% else %}{L_DOWNLOAD_MSG_NO_UPD}{% endif %}<br />
+                <span title="{sitesplat_themes.CHANGE_LOG}">{sitesplat_themes.CHANGE_LOG_MSG}</span><br />
+                {sitesplat_themes.SUPPORT_FORUM_MSG}<br />
+                {L_COLORIZE_MSG}
+				<div class="positionX" style="position: relative;float: right;">{% if sitesplat_themes.U_AUTOUPDATE %}<a href="{{ sitesplat_themes.U_AUTOUPDATE }}" data-href="{{ sitesplat_themes.U_AUTOUPDATE_STEP }}" class="btn btn-success sitesplat-bbcore-autoupdate" title="Start the autoupdate" style="color:white;">{L_START_AUTO}</a> {% endif %}{sitesplat_themes.DOWNLOAD_BTN_ENVATO}</div>
+				</div>
+			</td>
+		</tr>
+   	<!-- BEGINELSE -->
+		<tr style="font-size:14px;"><td colspan="2">{L_NO_VERSIONINFO}</td></tr>
+	<!-- END sitesplat_themes -->
+	</tbody>
+</table><br />
+{% INCLUDEJS '@sitesplat_BBCore/updater.js' %}
+
+
+<!-- ELSEIF BBCORE_MODE eq 'settings' -->
+
+
+<style>
+.bbcore-settings legend{top:-0.75em;margin:0;padding:0;font-size:18px}
+.bbcore-settings #bbcore-msg{margin:0 0 15px;padding:10px 5px;font-size:14px}
+.bbcore-settings *{font-family:Helvetica,Arial,sans-serif}
+.bbcore-settings dl{margin:0;padding:5px 0}
+.bbcore-settings dt,.bbcore-settings dd{padding:0;border:none;font-size:14px}
+.bbcore-settings label{cursor:default;color:#000}
+.bbcore-settings dt div{padding:2px 10px 10px;line-height:1.2;color:#666;font-size:13px}
+.bbcore-settings dd{padding:0 10px}
+.bbcore-settings .submit-button{cursor:pointer;padding:0 8px;height:30px;line-height:1;background-color:#379;color:#fff;border:none;font-size:14px;font-weight:bold}
+.bbcore-settings .submit-button:hover{background-color:#48a}
+</style>
+
+<!-- IF S_FS_FTP -->
+
+<form id="ftpdd" method="post" action="{U_ACTION}#ftpdd"><fieldset class="bbcore-settings">
+	<legend>{L_FTP_SETTINGS}</legend>
+
+<!-- IF FS_FTP_MESSAGE -->
+	<dl id="bbcore-msg" class="<!-- IF S_FS_FTP_ERROR -->errorbox<!-- ELSE -->successbox<!-- ENDIF -->">{FS_FTP_MESSAGE}</dl>
+<!-- ENDIF -->
+
+	<dl>
+		<dt><label>{L_FTP_HOST}</label><div>{L_FTP_HOST_EXPLAIN}</div></dt>
+		<dd><input type="text" name="ftpdata[host]" value="{FS_FTPHOST}" size="30" maxlength="100" /></dd>
+	</dl>
+	<dl>
+		<dt><label>{L_FTP_PORT}</label><div>{L_FTP_PORT_EXPLAIN}</div></dt>
+		<dd><input type="number" min="21" max="65535" name="ftpdata[port]" value="{FS_FTPPORT}" size="5" /></dd>
+	</dl>
+<!-- IF S_FTPSSL -->
+	<dl>
+		<dt><label>{L_FTP_SSL}</label><div>{L_FTP_SSL_EXPLAIN}</div></dt>
+		<dd><label><input type="radio" name="ftpdata[ssl]" value="1"<!-- IF FS_FTPSSL --> checked="checked"<!-- ENDIF --> /> {L_YES}</label><label><input type="radio" name="ftpdata[ssl]" value="0"<!-- IF not FS_FTPSSL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+	</dl>
+<!-- ENDIF -->
+	<dl>
+		<dt><label>{L_FTP_USERNAME}</label><div>{L_FTP_USERNAME_EXPLAIN}</div></dt>
+		<dd><input type="text" name="ftpdata[user]" value="{FS_FTPUSER}" size="30" maxlength="100" /></dd>
+	</dl>
+	<dl>
+		<dt><label>{L_FTP_PASSWORD}</label><div>{L_FTP_PASSWORD_EXPLAIN}</div></dt>
+		<dd><input type="password" name="ftpdata[pass]" value="{FS_FTPPASS}" size="30" maxlength="100" /></dd>
+	</dl>
+	<dl>
+		<dd><input type="submit" name="submit" class="submit-button" value="{L_SUBMIT}" /></dd>
+	</dl>
+	<input type="hidden" name="ftpsave" value="{L_SUBMIT}" />
+	{S_FORM_TOKEN}
+</fieldset></form>
+<br />
+
+<!-- ENDIF -->
+
+<form method="post" action="{U_ACTION}"><fieldset class="bbcore-settings">
+	<legend>{L_BBCORE_SETTINGS}</legend>
+<!-- IF SITESPLAT_NOT_CURRENTLY_USED -->
+	<dl>
+		<dt><label>{L_SITESPLAT_BBCORE_MINIFY_HTML}</label><div>{L_SITESPLAT_BBCORE_MINIFY_HTML_EXPLAIN}</div></dt>
+		<dd><label><input type="radio" name="minify" value="1"<!-- IF S_SS_MINIFY --> checked="checked"<!-- ENDIF --> /> {L_YES}</label><label><input type="radio" name="minify" value="0"<!-- IF not S_SS_MINIFY --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+	</dl>
+<!-- ELSE -->
+	<input type="hidden" name="minify" value="0" />
+<!-- ENDIF -->
+	<dl>
+		<dt><label>{L_SS_DEFAULT_EMOJI}</label><div>{L_SS_DEFAULT_EMOJI_EXPLAIN}</div></dt>
+		<dd><label><input type="radio" name="emoji" value="1"<!-- IF S_SS_EMOJI --> checked="checked"<!-- ENDIF --> /> {L_ENABLED}</label><label><input type="radio" name="emoji" value="0"<!-- IF not S_SS_EMOJI --> checked="checked"<!-- ENDIF --> /> {L_DISABLED}</label></dd>
+	</dl>
+	<dl>
+		<dd><input type="submit" name="submit" class="submit-button" value="{L_SUBMIT}" /></dd>
+	</dl>
+	<input type="hidden" name="optsave" value="{L_SUBMIT}" />
+	{S_FORM_TOKEN}
+</fieldset></form>
+
+{BBC_FORM_ADDONS}
+
+<!-- IF BBCORE_ADDONS -->
+
+<form id="bbaddons" method="post" action="{U_ACTION}#bbaddons"><fieldset class="bbcore-settings">
+	<legend>{L_SS_ADDON_SETTINGS}</legend>
+
+<!-- IF BBC_ADDON_ERROR -->
+	<dl id="bbcore-msg" class="errorbox">{BBC_ADDON_ERROR}</dl>;
+<!-- ENDIF -->
+
+	{BBCORE_ADDONS}
+
+	<dl>
+		<dd><input type="submit" name="submit" class="submit-button" value="{L_SUBMIT}" /></dd>
+	</dl>
+	<input type="hidden" name="addonsave" value="{L_SUBMIT}" />
+	{S_FORM_TOKEN}
+</fieldset></form>
+
+<!-- ENDIF -->
+
+
+<!-- ELSE -->
+
+
+<fieldset><span style="font-size:1.3em">
+	<h2>{L_SS_SYSINFO}</h2>
+	<br>
+	{BBCORE_SYSTEM_INFO}
+<!-- IF BBC_FOUNDERS -->
+	<br><br>
+	{L_SS_FOUNDERS}{L_COLON} <strong>{BBC_FOUNDERS}</strong>
+<!-- ENDIF -->
+</span></fieldset>
+
+<!-- IF BBCORE_NOT_WRITABLE -->
+	<div class="errorbox">{L_SS_AUTOUPDATE_DISABLED}<br><br>{BBCORE_NOT_WRITABLE}</div>
+<!-- ELSEIF BBCORE_DASH_ERROR -->
+	<div class="errorbox">{BBCORE_DASH_ERROR}</div>
+<!-- ENDIF -->
+
+<!-- IF BBCORE_DASH_ADDONS -->
+<form method="post" action="{U_ACTION}"><fieldset>
+	{BBCORE_DASH_ADDONS}
+	<input type="hidden" name="dash_submit" value="{L_SUBMIT}" />
+	{S_FORM_TOKEN}
+</fieldset></form>
+<!-- ENDIF -->
+
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->
