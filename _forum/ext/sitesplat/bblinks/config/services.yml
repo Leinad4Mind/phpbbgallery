@@ -1,0 +1,20 @@
+services:
+    sitesplat.bblinks.bblinks:
+        class: sitesplat\bblinks\core\bblinks
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '%core.php_ext%'
+
+    sitesplat.bblinks.listener:
+        class: sitesplat\bblinks\event\main_listener
+        arguments:
+            - '@sitesplat.bblinks.bblinks'
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+        tags:
+            - { name: event.listener }

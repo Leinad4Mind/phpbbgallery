@@ -1,0 +1,30 @@
+<!-- IF BBLINKS_MODAL_ENABLED -->
+  <div class="modal fade" id="bblinks_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="awe-remove-circle"></span></button>
+          <h4 class="modal-title">{L_BBLINKS_MODAL_TITLE}</h4>
+        </div>
+        <div class="modal-body">
+		<p>{L_BBLINKS_PROCEED}</p>
+           <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{L_BBLINKS_PROCEED_NO}</button>
+           <a id="bblinks_link" role="button" class="btn btn-success">{L_BBLINKS_PROCEED_YES}</a>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <script>
+    head.ready(function(){
+      $('#bblinks_modal').on('show.bs.modal', function (event) {
+        var link = $(event.relatedTarget)
+        $(this).find('#bblinks_link')
+          .attr('href', link.attr('data-link'))
+          .attr('rel', link.attr('rel'))
+          .attr('target', link.attr('target'));
+      })
+    });
+  </script>
+<!-- ENDIF -->

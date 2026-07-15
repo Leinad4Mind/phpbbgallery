@@ -1,0 +1,31 @@
+{
+    "name": "sitesplat/bblinks",
+    "type": "phpbb-extension",
+    "description": "Adds many handling options to the board links.",
+	"homepage": "http://sitesplat.com",
+    "version": "1.1.0",
+	"keywords": ["phpbb", "extension", "url", "media"],
+	"license": "Proprietary/All rights reserved",
+	"authors": [
+		{
+			"name": "SiteSplat",
+			"email": "info@sitesplat.com",
+			"homepage": "http://sitesplat.com"
+		}
+	],
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "display-name": "BBlinks",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.2,<3.3.0@dev"
+        },
+		"version-check": {
+            "host": "sitesplat.com",
+            "directory": "/updatecheck/phpbb32/ext",
+            "filename": "bblinks.json",
+			"ssl": true
+		}
+    }
+}
