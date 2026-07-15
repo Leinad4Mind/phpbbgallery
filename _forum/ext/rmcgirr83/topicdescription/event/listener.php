@@ -13,6 +13,7 @@ namespace rmcgirr83\topicdescription\event;
 /**
 * @ignore
 */
+use phpbb\path_helper;
 use phpbb\search\fulltext_native;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -41,6 +42,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var path_helper */
+	protected $path_helper;
+
 	/** @var \phpbb\search\fulltext_native */
 	protected $search;
 
@@ -49,6 +53,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var string */
 	protected $old_topic_desc;
+
+	/** @var string */
+	protected $search_fields = '';
 
 	/**
 	* Constructor
@@ -59,6 +66,7 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\user                        $user           	User object
 	* @param \phpbb\config\config				$config				Config object
 	* @param \phpbb\db\driver\driver_interface	$db					Db object
+	* @param path_helper						$path_helper		Path helper object
 	* @access public
 	*/
 	public function __construct(
@@ -67,7 +75,8 @@ class listener implements EventSubscriberInterface
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			\phpbb\config\config $config,
-			\phpbb\db\driver\driver_interface $db
+			\phpbb\db\driver\driver_interface $db,
+			path_helper $path_helper
 	)
 	{
 		$this->auth = $auth;
@@ -76,6 +85,7 @@ class listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->config = $config;
 		$this->db = $db;
+		$this->path_helper = $path_helper;
 	}
 
 	/**
@@ -88,17 +98,18 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.permissions'						 => 'add_permission',
-			'core.posting_modify_template_vars'		 => 'topic_data_topic_desc',
-			'core.posting_modify_submission_errors'	 => 'topic_desc_add_to_post_data',
-			'core.posting_modify_submit_post_before' => 'topic_desc_add',
-			'core.posting_modify_message_text'		 => 'modify_message_text',
-			'core.submit_post_modify_sql_data'		 => 'submit_post_modify_sql_data',
-			'core.viewtopic_modify_page_title'		 => 'topic_desc_add_viewtopic',
-			'core.viewforum_modify_topicrow'		 => 'modify_topicrow',
-			'core.search_modify_tpl_ary'			 => 'search_modify_tpl_ary',
-			'core.mcp_view_forum_modify_topicrow'	 => 'modify_topicrow',
-			'core.mcp_topic_review_modify_row'		 => 'mcp_topic_review_modify_row',
+			'core.permissions'								=> 'add_permission',
+			'core.posting_modify_template_vars'				=> 'topic_data_topic_desc',
+			'core.posting_modify_submission_errors'			=> 'topic_desc_add_to_post_data',
+			'core.posting_modify_submit_post_before'		=> 'topic_desc_add',
+			'core.posting_modify_message_text'				=> 'modify_message_text',
+			'core.submit_post_modify_sql_data'				=> 'submit_post_modify_sql_data',
+			'core.viewtopic_modify_page_title'				=> 'topic_desc_add_viewtopic',
+			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
+			'core.viewforum_modify_topicrow'				=> 'modify_topicrow',
+			'core.search_modify_tpl_ary'					=> 'search_modify_tpl_ary',
+			'core.mcp_view_forum_modify_topicrow'			=> 'modify_topicrow',
+			'core.mcp_topic_review_modify_row'				=> 'mcp_topic_review_modify_row',
 			// Native
 			'core.search_native_index_before'					=> 'search_native_index_before',
 			// MySQL
@@ -132,6 +143,7 @@ class listener implements EventSubscriberInterface
 
 	public function topic_data_topic_desc($event)
 	{
+		global $phpbb_root_path;
 		$mode = $event['mode'];
 		$post_data = $event['post_data'];
 		$page_data = $event['page_data'];
@@ -140,20 +152,20 @@ class listener implements EventSubscriberInterface
 		{
 			$this->user->add_lang_ext('rmcgirr83/topicdescription', 'common');
 			$page_data['TOPIC_DESC'] = $this->request->variable('topic_desc', $post_data['topic_desc'], true);
+			$page_data['SEARCH_DESC'] = $phpbb_root_path . '/search.php?keywords=' . $this->request->variable('topic_desc', $post_data['topic_desc'], true) . '&sf=titleonly&sr=topics';
 			$page_data['S_DESC_TOPIC'] = true;
+			$event['page_data']	= $page_data;
 		}
-
-		$event['page_data']	= $page_data;
 	}
 
 	public function topic_desc_add_to_post_data($event)
 	{
-		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']))
-		{
-			$event['post_data'] = array_merge($event['post_data'], array(
-				'topic_desc'	=> $this->request->variable('topic_desc', '', true),
-			));
-		}
+		$topic_desc = isset($event['post_data']['topic_desc']) ? $event['post_data']['topic_desc'] : '';
+		$topic_desc = $this->auth->acl_get('f_topic_desc', $event['forum_id']) ? $this->request->variable('topic_desc', $topic_desc, true) : $topic_desc;
+
+		$event['post_data'] = array_merge($event['post_data'], array(
+			'topic_desc'	=> $topic_desc,
+		));
 	}
 
 	public function topic_desc_add($event)
@@ -173,22 +185,6 @@ class listener implements EventSubscriberInterface
 		));
 	}
 
-	public function modify_message_text($event)
-	{
-		$post_data = $event['post_data'];
-
-		$this->new_topic_desc = $this->request->variable('topic_desc', $event['post_data']['topic_desc'], true);
-
-		if (isset($post_data['topic_desc']))
-		{
-			$this->old_topic_desc = $event['post_data']['topic_desc'];
-		}
-
-		$event['post_data'] = array_merge($post_data, array(
-			'topic_desc' => $this->new_topic_desc,
-		));
-	}
-
 	public function submit_post_modify_sql_data($event)
 	{
 		$mode = $event['post_mode'];
@@ -203,18 +199,34 @@ class listener implements EventSubscriberInterface
 
 	public function topic_desc_add_viewtopic($event)
 	{
-		global $phpEx;
 		$topic_data = $event['topic_data'];
-		$this->template->assign_vars(array(
-			'TOPIC_DESC' 	=> censor_text($topic_data['topic_desc']),
-			'U_VIEW_TDESC' => append_sid( "{$phpbb_root_path}search.$phpEx", "terms=all&amp;sr=topics&amp;sf=titleonly&amp;sk=t&amp;sd=d&amp;st=0&amp;keywords=". urlencode( $topic_data['topic_desc'] ) ),
+		$this->template->assign_var('TOPIC_DESC', censor_text($topic_data['topic_desc']));
+	}
+
+	public function modify_message_text($event)
+	{
+		$post_data = $event['post_data'];
+
+		$this->old_topic_desc = isset($post_data['topic_desc']) ? $post_data['topic_desc'] : '';
+
+		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']))
+		{
+			$this->new_topic_desc = $this->request->variable('topic_desc', '', true);
+		}
+		else
+		{
+			$this->new_topic_desc = $this->old_topic_desc;
+		}
+
+		$event['post_data'] = array_merge($post_data, array(
+			'topic_desc' => $this->new_topic_desc,
 		));
 	}
 
 	public function modify_topicrow($event)
 	{
 		$row = $event['row'];
-		if (!empty($row['topic_desc']))
+		if (isset($row['topic_desc']))
 		{
 			$topic_row = $event['topic_row'];
 			$topic_row['TOPIC_DESC'] = censor_text($row['topic_desc']);
@@ -222,10 +234,26 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	public function viewtopic_assign_template_vars_before($event)
+	{
+		if (!empty($event['topic_data']['topic_desc']))
+		{
+			$this->template->assign_var('U_VIEW_TDESC', append_sid($this->path_helper->get_phpbb_root_path() . 'search.' . $this->path_helper->get_php_ext(), [
+				'terms'		=> 'all',
+				'sr'		=> 'topics',
+				'sf'		=> 'titleonly',
+				'sk'		=> 't',
+				'sd'		=> 'd',
+				'st'		=> '0',
+				'keywords'	=> urlencode($event['topic_data']['topic_desc']),
+			]));
+		}
+	}
+
 	public function search_modify_tpl_ary($event)
 	{
 		$row = $event['row'];
-		if ($event['show_results'] == 'topics' && !empty($row['topic_desc']))
+		if ($event['show_results'] == 'topics' && isset($row['topic_desc']))
 		{
 			$tpl_array = $event['tpl_ary'];
 			$tpl_array['TOPIC_DESC'] = censor_text($row['topic_desc']);
@@ -238,7 +266,7 @@ class listener implements EventSubscriberInterface
 		$row = $event['row'];
 		$topic_info = $event['topic_info'];
 
-		if ($topic_info['topic_first_post_id'] == $row['post_id'] && !empty($topic_info['topic_desc']))
+		if ($topic_info['topic_first_post_id'] == $row['post_id'] && isset($topic_info['topic_desc']))
 		{
 			$post_row = $event['post_row'];
 			$post_row['TOPIC_DESC'] = censor_text($topic_info['topic_desc']);
