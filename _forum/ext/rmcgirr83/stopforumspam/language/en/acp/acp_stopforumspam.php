@@ -64,6 +64,8 @@ $lang = array_merge($lang, [
 	'SFS_BY_NAME'	=> 'Check against user name',
 	'SFS_BY_EMAIL'	=> 'Check against email',
 	'SFS_BY_IP'		=> 'Check against IP',
+	'SFS_ALLOW_PM_REPORT'	=> 'Allow reporting of PMs',
+	'SFS_PM_REPORT_EXPLAIN'	=> 'If you have an API key and allow this then any user can report a PM to stop forum spam. Your users maybe “indiscriminate” so it might be best if you leave this set to no.',
 	'TOO_SMALL_SFS_THRESHOLD'	=> 'The threshold value is too small.',
 	'TOO_LARGE_SFS_THRESHOLD'	=> 'The threshold value is too large.',
 	'SFS_SETTINGS_ERROR'		=> 'There was an error saving your settings. Please submit the back trace with your error report.',
@@ -76,4 +78,6 @@ $lang = array_merge($lang, [
 	'BUY_ME_A_BEER'				=> 'Buy me a beer for creating this extension',
 	'BUY_ME_A_BEER_SHORT'		=> 'Make a donation for this extension',
 	'BUY_ME_A_BEER_EXPLAIN'		=> 'This extension is completely free. It is a project that I spend my time on for the enjoyment and use of the phpBB community. If you enjoy using this extension, or if it has benefited your forum, please consider <a href="https://paypal.me/RMcGirr83" target="_blank" rel="noreferrer noopener">buying me a beer</a>. It would be greatly appreciated. <i class="fa fa-smile-o" style="color:green;font-size:1.5em;" aria-hidden="true"></i>',
+	'SFS_CONTACTADMIN_EXT'	=> 'Allow on Contactadmin Extension',
+	'SFS_CONTACTADMIN_EXT_EXPLAIN'	=> 'If set yes and the contact admin extension is installed, this extension will integrate with the contact admin extension.'
 ]);
