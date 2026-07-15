@@ -5,10 +5,8 @@ services:
             - '@auth'
             - '@request'
             - '@template'
-            - '@language'
             - '@user'
             - '@config'
             - '@dbal.conn'
-            - '@path_helper'
         tags:
             - { name: event.listener }

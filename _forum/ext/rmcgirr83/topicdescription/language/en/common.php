@@ -20,11 +20,9 @@ if (!defined('IN_PHPBB'))
 */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = [];
+	$lang = array();
 }
 
-$lang = array_merge($lang, [
-	'TOPIC_DESC'				=> 'Original Title',
-	'TOPIC_DESC_TITLE'			=> 'Original Title (Year)',
-	'UNSUPPORTED_CHARACTERS_TD'	=> 'The topic description contains the following unsupported characters:<br />%s',
-]);
+$lang = array_merge($lang, array(
+	'TOPIC_DESC'				=> 'Topic description',
+));
