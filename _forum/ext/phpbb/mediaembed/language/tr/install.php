@@ -2,8 +2,9 @@
 /**
  *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid (c) 2017 [ver 1.0.1] (https://github.com/phpBBTraducoes)
- * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
+ * Turkish translation by ESQARE (https://www.phpbbturkey.com)
+ *
+ * @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -37,6 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang,[
-	'BBCODE_MEDIA_HELP'	=> 'Incorporar Mídia: [media]http://media_url[/media]',
+$lang = array_merge($lang, [
+	'PHPBB_VERSION_ERROR'	=> 'Mesaj panonuz phpBB’nin eski bir sürümünü kullanıyor gibi görünüyor. Bu eklentiyi kullanmak için phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' ya da daha yeni bir sürüm gereklidir.',
+	'S9E_MEDIAEMBED_ERROR'	=> 's9e/mediaembed eklentisi tespit edildi. phpBB’nin Media (Ortam) yerleştirme eklentisi, s9e/mediaembed eklentisi ile alakalı tüm dosyalar silinip temizlenmedikçe kurulmayacaktır.',
 ]);
