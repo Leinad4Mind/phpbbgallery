@@ -56,10 +56,10 @@ class listener implements EventSubscriberInterface
 	public function posting_modify_message_text($event)
 	{
 		$upload = $this->request->file('imgur');
-		$filename = (empty($upload['tmp_name'])) ? '' : trim($upload['tmp_name']);
-		if ($filename && $filename != 'none')
+		if (!empty($upload) && $upload['name'] != 'none' && trim($upload['name'])) 
 		{
 			$client_id = $this->config['imgur_clientid'];
+			$filename = $upload['tmp_name'];
 			$handle = fopen($filename, 'r');
 			$data = fread($handle, filesize($filename));
 			$pvars = array('image' => base64_encode($data));
@@ -86,7 +86,6 @@ class listener implements EventSubscriberInterface
 				$this->template->assign_vars(array(
 				//	'IMGUR_IMAGE'		=>  "\n[img]{$pms['data']['link']}[/img]",
 				    'IMGUR_IMAGE'       =>  "\n[img]{$ssl}[/img]",
-					'IMGUR_IMAGE_MD'    =>  "\n[IMGUR Screenshot]({$ssl})",
 				//	'IMGUR_DIRECT_IMG'	=>  "\n[img]{$pms['data']['link']}[/img]",
 					'IMGUR_DIRECT_IMG'	=>  "\n[img]{$ssl}[/img]",
 				//	'IMGUR_DIRECT_LINK'	=>  "\n{$pms['data']['link']}",
