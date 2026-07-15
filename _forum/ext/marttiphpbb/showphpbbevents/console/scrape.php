@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -30,17 +30,17 @@ class scrape extends command
 		parent::__construct($user);
 	}
 
-	protected function configure()
+	protected function configure():void
 	{
 		$this
 			->setName('ext-showphpbbevents:scrape')
-			->setDescription('For Development: Scrape events data from ' . self::URL . ' and load into cache.')
+			->setDescription('For Development (step 1): Scrape events data from ' . self::URL . ' and load into cache.')
 			->setHelp('This command was created for the development of the marttiphpbb-showphpbbevents extension.')
 			->addArgument('version', InputArgument::OPTIONAL, 'Only scrape events from newest version in "Release Highlights" (' . self::URL_HI . ').')
 		;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output):void
 	{
 		$version = $input->getArgument('version');
 		$events = [];

@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -64,16 +64,16 @@ class extract extends command
 		parent::__construct($user);
 	}
 
-	protected function configure()
+	protected function configure():void
 	{
 		$this
 			->setName('ext-showphpbbevents:extract')
-			->setDescription('For Development: Extract events data from the local phpBB files and load into cache.')
+			->setDescription('For Development (step 2): Extract events data from the local phpBB files and load into cache.')
 			->setHelp('This command was created for the development of the marttiphpbb-showphpbbevents extension.')
 		;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output):void
 	{
 		$io = new SymfonyStyle($input, $output);
 

@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -9,8 +9,6 @@ namespace marttiphpbb\showphpbbevents\console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use phpbb\console\command\command;
@@ -30,16 +28,16 @@ class write extends command
 		parent::__construct($user);
 	}
 
-	protected function configure()
+	protected function configure():void
 	{
 		$this
 			->setName('ext-showphpbbevents:write')
-			->setDescription('For Development: Write events_data.json from cache (use ext-showphpbbevents:scrape and ext-showphpbbevents:extract first).')
+			->setDescription('For Development (step 3): Write events_data.json from cache (use ext-showphpbbevents:scrape and ext-showphpbbevents:extract first).')
 			->setHelp('This command was created for the development of the marttiphpbb-showphpbbevents extension.')
 		;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output):void
 	{
 		$io = new SymfonyStyle($input, $output);
 

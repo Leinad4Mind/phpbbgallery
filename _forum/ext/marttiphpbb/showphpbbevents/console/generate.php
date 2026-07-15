@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb showphpbbevents
-* @copyright (c) 2014 - 2019 marttiphpbb <info@martti.be>
+* @copyright (c) 2014 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -33,18 +33,18 @@ class generate extends command
 		parent::__construct($user);
 	}
 
-	protected function configure()
+	protected function configure():void
 	{
 		$this
 			->setName('ext-showphpbbevents:generate')
-			->setDescription('For Development: Generate and write the event listener files from the data of events_data.json.')
+			->setDescription('For Development (step 4): Generate and write the event listener files from the data of events_data.json.')
 			->setHelp('This command was created for the development of the marttiphpbb-showphpbbevents extension.')
 			->addArgument('type', InputArgument::OPTIONAL, 'all (default), template, acp or php')
 			->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete obsolete files (events not present in events_data.json)')
 		;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output):void
 	{
 		$io = new SymfonyStyle($input, $output);
 
