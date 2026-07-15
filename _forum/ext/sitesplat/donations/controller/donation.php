@@ -268,7 +268,7 @@ class donation
 											  'avatar_width'	=> $row['user_avatar_width'], 
 											  'avatar_height'	=> $row['user_avatar_height']), $row['username'])) :
 											  '<img class="avatar" title="' .  $row['username'] . '" src="' .
-											  generate_board_url() . '/styles/prosilver/theme/images/no_avatar.gif">'),
+											  generate_board_url() . '/styles/' . $this->user->style['style_path'] . '/theme/images/no-avatar.png">'),
 					'TXT'		=> $row['custom'],
 					'AMOUNT'	=> $row['mc_gross']
 				));

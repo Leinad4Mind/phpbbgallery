@@ -54,14 +54,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function add_page_header_link($event)
 	{
-		//$this->user->add_lang_ext('sitesplat/donations', 'common');
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'sitesplat/donations',
-			'lang_set' => 'common',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
-		
+		$this->user->add_lang_ext('sitesplat/donations', 'common');
 		$this->template->assign_vars(array(
 			'U_DONATE_PAGE'		=> $this->controller_helper->route('sitesplat_donations_controller', array('route' => 'index.html')),
 			'DONATE_CURRENCY'	=> $this->manager->currency(0, $this->config['donations_currency'])

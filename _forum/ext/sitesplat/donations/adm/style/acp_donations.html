@@ -70,7 +70,7 @@
 		<dl style="margin-top:50px;">
 			<dt><label>{L_ACP_DONATIONS_GROUP}{L_COLON}</label><br />{L_ACP_DONATIONS_GROUP_EXPLAIN}</dt>
 			<dd>{L_ACP_DONATIONS_DAYS}<span style="margin-left:25px;">{L_ACP_DONATIONS_AMOUNT}</span><span style="margin-left:30px;">{L_ACP_DONATIONS_GROUPS}</span><span style="margin-left:136px;">{L_ACP_DONATIONS_GROUP_DEF}</span></dd>
-			<dd><input type="text" name="donations_group[time]" value="{DONATIONS_TIME}" size="4" title="Day to stay in this group" style="text-align:center;" /> <input type="number" name="donations_group[amount]" value="{DONATIONS_AMOUNT}" size="4" min="0" max="999" title="Max amount for this group" style="text-align:center;" /> <select name="donations_group[group]"><!-- BEGIN groups0 --><option value="{groups0.GROUP_ID}"{groups0.SELECTED}>{groups0.GROUP_NAME}</option><!-- END groups0 --></select>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="donations_group[default]" value="1"{DONATIONS_DEFAULT} /></dd>
+			<dd><input type="text" name="donations_group[time]" value="{DONATIONS_TIME}" size="4" title="{L_ACP_DONATIONS_DAY_STAY}" style="text-align:center;" /> <input type="number" name="donations_group[amount]" value="{DONATIONS_AMOUNT}" size="4" min="0" max="999" title="{L_ACP_DONATIONS_MAX_AMO}" style="text-align:center;" /> <select name="donations_group[group]"><!-- BEGIN groups0 --><option value="{groups0.GROUP_ID}"{groups0.SELECTED}>{groups0.GROUP_NAME}</option><!-- END groups0 --></select>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="donations_group[default]" value="1"{DONATIONS_DEFAULT} /></dd>
 		</dl>
 
 		<dl>
@@ -105,7 +105,7 @@
 
 <fieldset style="background: url('{EXT_PATH}adm/style/css/images/spacer.png') repeat;padding:20px 10px">
 	<span class="legendspan">{L_ACP_DONATIONS_TRANSACTIONS}</span>
-	<span style="margin-top: -10px; float: right; display: block;">{L_G_REGISTERED}{L_COLON} <select name="donations_userid" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
+	<span style="margin-top: -10px; float: right; display: none;">{L_G_REGISTERED}{L_COLON} <select name="donations_userid" style="width:150px;" onchange="if (this.value) window.location.href=this.value">><option value="0">-----</option><!-- BEGIN users --><option value="{users.USER_ID_URL}">{users.USER_NAME}</option><!-- END users --></select></span>
 	<table cellpadding="1" cellspacing="1">
 	<thead>
 	<tr>
@@ -126,7 +126,7 @@
 			<td><a href="mailto:{donations.EMAIL}?SUBJECT=Donation">{donations.EMAIL}</a></td>
 			<td>{donations.PP_TRANSACTION}</td>
 			<td>{DONATIONS_CURRENCY} {donations.AMOUNT}</td>
-			<td style="text-align:center;"><a href="#p{donations.ID}" id="status{donations.ID}" class="change_status" data-options="url={donations.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{donations.STATUS}</a></td>
+			<td style="text-align:center;"><a href="#p{donations.ID}" id="status{donations.ID}" class="change_status" data-options="url={donations.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{donations.STATUS}</a></td>
 			<td>{donations.TIME}</td>
 		</tr>
 	<!-- END donations -->
@@ -169,7 +169,7 @@
 			<td style="text-align:center;"><i class="fa {transactions.PAYMENT_TYPE}" aria-hidden="true"></i></td>
 			<td>{transactions.PP_TRANSACTION}</td>
 			<td>{DONATIONS_CURRENCY} {transactions.AMOUNT}</td>
-			<td style="text-align:center;"><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="Change status">{transactions.STATUS}</a></td>
+			<td style="text-align:center;"><a href="#p{transactions.ID}" id="status{transactions.ID}" class="change_status" data-options="url={transactions.U_PAYMENT_STATUS}" data-ajax="true" title="{L_ACP_DONATIONS_CHANGE_STATUS}">{transactions.STATUS}</a></td>
 			<td>{transactions.TIME}</td>
 		</tr>
 		<!-- END transactions -->

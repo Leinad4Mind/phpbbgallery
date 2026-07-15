@@ -61,7 +61,7 @@ $lang = array_merge($lang, array(
 	'CONTINUE_ON_PAYPAL'		    => 'PayPal',
 	'CONTINUE_ON_BITCOINS'		    => 'Bitcoin',
 	'CONNECTING_ON_PAYPAL'		    => 'Connecting with PayPal',
-	'BBDONATION_COPY'		        => 'BBdonation Built With',
+	'BBDONATION_COPY'		        => 'Donation Built With',
 	'SITESPLAT_EXT_COPY'	        => 'Professional Web Development and Premium Themes',
 	
 	'UCP_DONATION_TITLE'			=> 'Donation overview',

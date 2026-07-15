@@ -6,39 +6,39 @@ services:
     sitesplat_donations_donations:
         class: sitesplat\donations\event\listener
         arguments:
-            - @config
-            - @sitesplat.donations.manager
-            - @controller.helper
-            - @template
-            - @user
+            - '@config'
+            - '@sitesplat.donations.manager'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
         tags:
             - { name: event.listener }
 
     sitesplat.donations.controller:
         class: sitesplat\donations\controller\donation
         arguments:
-            - @config
-            - @config_text
-            - @sitesplat.donations.manager
-            - @controller.helper
-            - @template
-            - @user
-            - @auth
-            - @dbal.conn
-            - @request
-            - @dispatcher
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.donation.tables.donations%
+            - '@config'
+            - '@config_text'
+            - '@sitesplat.donations.manager'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.donation.tables.donations%'
 
     sitesplat.donations.manager:
         class: sitesplat\donations\controller\manager
         arguments:
-            - @config
-            - @user
-            - @auth
-            - @dbal.conn
-            - @request
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.donation.tables.donations%
+            - '@config'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.donation.tables.donations%'

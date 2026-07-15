@@ -1,1 +1,48 @@
-head.ready(function(){!function(a){"use strict";a(".price-toggler").click(function(){a(".price-toggle").hide(),a(a(this).attr("data-price-id")).show(),a("#submitBtn").prop("disabled",!1),a("#step1").css("background-color","green"),a("#step1").addClass("special"),a("label:has(input:radio:checked)").addClass("active"),a("label:has(input:radio:not(:checked))").removeClass("active"),a("#step1").css("color","white")}),a("#submitBtn").click(function(){a("#step2").css("background-color","green"),a("#step2").addClass("special"),a("#step2").css("color","white")}),a("#donationvalue").on("input change",function(){var n=a("#donationvalue").val(),e=parseInt(n,10)+1;a("#donationoutput").text(vals[n]+".00"),a("#amount").val(vals[n]),a("#donationicons span").removeClass("selected"),a("#donationicons span:nth-of-type("+e+")").addClass("selected")}),a("#donationicons span").click(function(){var n=a("#donationicons span").index(this)/2;a("#donationvalue").val(n),a("#donationvalue").change()})}(jQuery)});
+head.ready(function () {
+(function($) { // Avoid conflicts with other libraries
+	'use strict';
+	
+	function showLoading()
+	{
+    document.getElementById('contactpaypal').style.display = 'none';
+		document.getElementById('processingpaypal').style.display = 'block';
+		return false;
+	}
+	// Price toggler for the deposit page 
+	$('.price-toggler').click(function(){
+		$('.price-toggle').hide();
+		$($(this).attr('data-price-id')).show();
+		$('#submitBtn').prop('disabled', false);
+		$('#step1').css('background-color', 'green');
+		$('#step1').addClass("special");
+		$('label:has(input:radio:checked)').addClass('active');
+		$('label:has(input:radio:not(:checked))').removeClass('active');
+	
+		$('#step1').css('color', 'white');
+	});
+
+	$('#submitBtn').click(function(){
+		$('#step2').css('background-color', 'green');
+		$('#step2').addClass("special");
+
+		$('#step2').css('color', 'white');
+	});
+
+	$('#donationvalue').on('input change', function() {
+	  
+	  var val = $('#donationvalue').val();
+	  var rval = parseInt(val, 10) + 1;
+	  $('#donationoutput').text(vals[val]+ '.00') ;
+	  $('#amount').val(vals[val]);
+	  $('#donationicons span').removeClass('selected');
+	  $('#donationicons span:nth-of-type(' + rval + ')').addClass('selected');
+	});
+
+	$('#donationicons span').click(function() {
+	  var val = $('#donationicons span').index(this) / 2;
+	  $('#donationvalue').val(val);
+	  $('#donationvalue').change();
+	});
+	
+})(jQuery); // Avoid conflicts with other libraries
+});

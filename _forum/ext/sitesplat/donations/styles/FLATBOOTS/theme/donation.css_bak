@@ -316,6 +316,7 @@ input[type=range]::-ms-thumb:hover, input[type=range]::-ms-thumb:active {
   -ms-transform: translate(-50%, 0%);
       transform: translate(-50%, 0%);
   height:90px;
+   width: initial!important;
 }
 
 .member-info2 .avatar {

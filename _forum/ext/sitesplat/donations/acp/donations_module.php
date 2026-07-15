@@ -253,19 +253,21 @@ class donations_module
 
 				} else
 				{
-					$sql = 'SELECT user_id, username
-							FROM ' . USERS_TABLE . '
-							WHERE ' . $db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
-							ORDER BY username';
-					$db->sql_query($sql);
-					$result = $db->sql_query($sql);
-					while ($row = $db->sql_fetchrow($result))
-					{
-						$template->assign_block_vars('users', array(
-							'USER_NAME'			=> $row['username'],
-							'USER_ID_URL'		=> $this->u_action . '&amp;user_id=' . $row['user_id'],
-						));
-					}
+				// generate the users list - This is a memory killer on large baords.
+                // line 108 acp_donations.html				
+				//	$sql = 'SELECT user_id, username
+				//			FROM ' . USERS_TABLE . '
+				//			WHERE ' . $db->sql_in_set('user_type', array(USER_INACTIVE, USER_IGNORE), true) . '
+				//			ORDER BY username';
+				//	$db->sql_query($sql);
+				//	$result = $db->sql_query($sql);
+				//	while ($row = $db->sql_fetchrow($result))
+				//	{
+				//		$template->assign_block_vars('users', array(
+				//			'USER_NAME'			=> $row['username'],
+				//			'USER_ID_URL'		=> $this->u_action . '&amp;user_id=' . $row['user_id'],
+				//		));
+				//	}
 					
 					$sql = 'SELECT COUNT(id) AS total FROM ' . $table_donations;
 					$result = $db->sql_query($sql);

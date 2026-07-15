@@ -1,1 +1,10 @@
-head.ready(function(){!function(e){"use strict";phpbb.alert(info,'<p align="center">'+notify+"</p>",!0),phpbb.closeDarkenWrapper(6e3)}(jQuery)});
+head.ready(function () {
+(function($) { // Avoid conflicts with other libraries
+
+"use strict";
+
+	phpbb.alert(info, '<p align="center">' + notify + '</p>', true);
+	phpbb.closeDarkenWrapper(6000);
+
+})(jQuery); // Avoid conflicts with other libraries
+});

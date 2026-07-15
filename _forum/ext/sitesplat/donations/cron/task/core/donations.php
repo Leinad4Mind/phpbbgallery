@@ -51,11 +51,13 @@ class donations extends \phpbb\cron\task\base
 			$ids = $admin_mod_ary = array();
 			if ($group_amount['time'])
 			{
+				$sql = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));";
+				$this->db->sql_query($sql);
 				$sql = 'SELECT d.user_id FROM ' . $this->donation_table . ' d
 						INNER JOIN ' . USER_GROUP_TABLE . ' g ON g.user_id = d.user_id
 						WHERE d.payment_date < ' .  (time() - ($group_amount['time'] * 86400)) . ' 
 						AND group_id = ' . $group_amount['group'] . '
-						GROUP BY d.user_id, d.payment_date ORDER BY d.payment_date DESC';
+						GROUP BY d.user_id ORDER BY d.payment_date DESC';
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
