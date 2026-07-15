@@ -1,0 +1,12 @@
+{% if hidetogroups | length %}
+<dl>
+	<dt><label for="hidetogroups">{{ lang('HIDEPROFILEFIELDS_GROUPS') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<select multiple size="10" id="hidetogroups" name="hidetogroups[]">
+			{% for hidetogroup in hidetogroups %}
+				<option value="{{ hidetogroup.id }}"{% if hidetogroup.is_hidden %} selected{% endif %}>{{ hidetogroup.name }}</option>
+			{% endfor %}
+		</select>
+	</dd>
+</dl>
+{% endif %}
