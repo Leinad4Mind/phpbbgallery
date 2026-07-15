@@ -1,0 +1,33 @@
+{
+    "name": "kinerity/bestanswer",
+    "type": "phpbb-extension",
+    "description": "An extension for phpBB that allows users to mark a post as the best answer.",
+    "homepage": "https://www.project-w.org/",
+    "version": "1.0.0",
+    "time": "2018-12-01",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "kinerity",
+            "email": "kinerity@yahoo.com",
+            "homepage": "https://www.layer-3.org/",
+            "role": "Extension Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.7",
+        "phpbb/phpbb": ">=3.2.0,<3.3.0@dev",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "Best Answer",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<3.3.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/best_answer",
+            "filename": "version_check"
+        }
+    }
+}
