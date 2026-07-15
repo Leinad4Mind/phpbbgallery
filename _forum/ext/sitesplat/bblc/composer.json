@@ -1,9 +1,9 @@
 {
-    "name": "sitesplat/bblc_online",
+    "name": "sitesplat/bblc_darkmode",
     "type": "phpbb-extension",
-    "description": "Adds a list of online BBlivechat members to the index page",
+    "description": "An addon for BBlivechat that allows the user to toggle a darkmode",
 	"homepage": "https://sitesplat.com",
-    "version": "1.0.1",
+    "version": "1.0.0",
 	"keywords": ["sitesplat", "bblivechat", "addon"],
 	"license": "Proprietary/All rights reserved",
 	"authors": [
@@ -18,14 +18,14 @@
         "composer/installers": "~1.0"
     },
     "extra": {
-        "display-name": "BBlivechat Online List",
+        "display-name": "BBlivechat - Dark Mode",
         "soft-require": {
             "phpbb/phpbb": ">=3.2.4"
         },
 		"version-check": {
             "host": "sitesplat.com",
             "directory": "/updatecheck/phpbb32/ext",
-            "filename": "bblivechat_who.json",
+            "filename": "bblivechat_dark.json",
 			"ssl": true
 		}
     }
