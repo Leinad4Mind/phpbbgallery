@@ -1,3 +1,5 @@
+/* global phpbb, setFileTree */
+
 ;var upload_ext = {};
 
 (function($, window, document) {
@@ -953,9 +955,9 @@
 		$(".upload_valid_ext_download_link").click(function(event) {
 			event.preventDefault();
 			upload_loading_indicator();
-			$("#remote_upload").attr("value", $(this).attr("data-ext-source"));
+			$("#remote_upload").val($(this).attr("data-ext-source"));
 			$("#ext_checksum_type_sha1").prop("checked", true);
-			$("#ext_checksum").attr("value", $(this).attr("data-ext-checksum"));
+			$("#ext_checksum").val($(this).attr("data-ext-checksum"));
 			load_page("upload");
 		});
 	}
@@ -1450,6 +1452,7 @@
 		switch (action) {
 			case "list_from_cdb":
 				load_cdb_list_page();
+			/* falls through */
 			case "main":
 				load_main_page();
 				break;
@@ -1462,6 +1465,7 @@
 			case "force_update":
 			case "restore_languages":
 				add_enable_tip();
+			/* falls through */
 			case "faq":
 			case "details":
 				load_details_page();
@@ -1485,6 +1489,7 @@
 			window.location.reload();
 		} else {
 			upload_stop_history = true;
+			$("[data-hasqtip]").qtip('destroy'); // Destroy all previously shown qTips.
 			load_page(currentState.action, currentState.id);
 		}
 	});

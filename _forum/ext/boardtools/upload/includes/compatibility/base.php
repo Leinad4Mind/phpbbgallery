@@ -2,7 +2,7 @@
 /**
  *
  * @package       Upload Extensions
- * @copyright (c) 2014 - 2017 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+ * @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -12,7 +12,7 @@ namespace boardtools\upload\includes\compatibility;
 interface base
 {
 	/**
-	 * Initializes necessary container services.
+	 * Performs necessary version-specific initializations.
 	 */
 	public function init();
 
@@ -56,6 +56,16 @@ interface base
 	public function remote_upload($upload, $remote_url);
 
 	/**
+	 * Escape a string variable.
+	 *
+	 * @param mixed	$value		The contents to fill with
+	 * @param bool	$multibyte	Indicates whether string values may contain UTF-8 characters.
+	 * 							Default is false, causing all bytes outside the ASCII range (0-127) to be replaced with question marks.
+	 * @return string|array
+	 */
+	public function escape($value, $multibyte);
+
+	/**
 	 * Gets a parameter of filespec object.
 	 *
 	 * @param \phpbb\files\filespec|\filespec $file  Filespec object
@@ -79,4 +89,16 @@ interface base
 	 * @param \phpbb\extension\metadata_manager $metadata_manager phpBB extension metadata manager
 	 */
 	public function output_template_data(\phpbb\extension\metadata_manager $metadata_manager);
+
+	/**
+	 * Check the version and return the available updates (for an extension).
+	 *
+	 * @param \phpbb\extension\metadata_manager $md_manager The metadata manager for the version to check.
+	 * @param bool $force_update Ignores cached data. Defaults to false.
+	 * @param bool $force_cache Force the use of the cache. Override $force_update.
+	 * @param string $stability Force the stability (null by default).
+	 * @return array
+	 * @throws \phpbb\exception\runtime_exception
+	 */
+	public function version_check(\phpbb\extension\metadata_manager $md_manager, $force_update = false, $force_cache = false, $stability = null);
 }

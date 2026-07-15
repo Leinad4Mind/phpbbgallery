@@ -2,7 +2,7 @@
 /**
 *
 * @package Upload Extensions
-* @copyright (c) 2014 - 2017 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+* @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -30,7 +30,7 @@ class extension extends base
 	public function upload($action)
 	{
 		$file = $this->proceed_upload($action);
-		if (!$file && $action != 'upload_local')
+		if (!$file && $action != 'upload_local' && $action != 'force_update')
 		{
 			files::catch_errors(objects::$user->lang['EXT_UPLOAD_ERROR']);
 			return false;
@@ -319,7 +319,7 @@ class extension extends base
 		// Save the previous version of the extension that is being updated in a zip archive file.
 		files::save_zip_archive('ext/' . $destination . '/', $dest_name, objects::$zip_dir);
 		$saved_zip_file = $dest_name . ".zip";
-		$saved_zip_file = objects::$request->escape($saved_zip_file, true);
+		$saved_zip_file = objects::$compatibility->escape($saved_zip_file, true);
 		objects::$template->assign_var('EXT_OLD_ZIP_SAVED', objects::$user->lang('EXT_SAVED_OLD_ZIP', $saved_zip_file));
 
 		return $saved_zip_file;

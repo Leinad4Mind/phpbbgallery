@@ -2,7 +2,7 @@
 /**
 *
 * @package Upload Extensions
-* @copyright (c) 2014 - 2017 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+* @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -11,6 +11,7 @@ namespace boardtools\upload\includes\functions;
 
 use \boardtools\upload\includes\objects;
 use \boardtools\upload\includes\filetree\filetree;
+use \Michelf\MarkdownExtra;
 
 class load
 {
@@ -23,7 +24,7 @@ class load
 		$ffs = @scandir(objects::$zip_dir . '/');
 		if (!$ffs)
 		{
-			return false;
+			return;
 		}
 		foreach ($ffs as $ff)
 		{
@@ -60,6 +61,9 @@ class load
 
 	/**
 	* Sort helper for the table containing the metadata about the extensions.
+	* @param array $val1 First metadata array
+	* @param array $val2 Second metadata array
+	* @return int
 	*/
 	protected static function sort_extension_meta_data_table($val1, $val2)
 	{
@@ -97,7 +101,7 @@ class load
 
 				try
 				{
-					$updates_available = extensions::version_check($ext_md_manager, objects::$request->variable('versioncheck_force', false));
+					$updates_available = objects::$compatibility->version_check($ext_md_manager, objects::$request->variable('versioncheck_force', false), false, objects::$config['extension_force_unstable'] ? 'unstable' : null);
 
 					objects::$template->assign_vars(array(
 						'S_UP_TO_DATE'		=> empty($updates_available),
@@ -105,10 +109,7 @@ class load
 						'UP_TO_DATE_MSG'	=> objects::$user->lang(empty($updates_available) ? 'UP_TO_DATE' : 'NOT_UP_TO_DATE', $ext_md_manager->get_metadata('display-name')),
 					));
 
-					foreach ($updates_available as $branch => $version_data)
-					{
-						objects::$template->assign_block_vars('updates_available', $version_data);
-					}
+					objects::$template->assign_block_vars('updates_available', $updates_available);
 				}
 				catch (\RuntimeException $e)
 				{
@@ -147,11 +148,10 @@ class load
 		}
 		else
 		{
+			updater::get_manager();
+
 			$display_name = objects::$md_manager->get_metadata('display-name');
 			objects::$compatibility->output_template_data(objects::$md_manager);
-
-			// Output update link to the template if Upload Extensions Updater is installed and updates are available.
-			updater::set_update_link();
 
 			// We output everything if this is an ajax request or if we load languages page for Upload Extensions.
 			if ($ext_show == 'languages' && $load_full_page)
@@ -206,7 +206,13 @@ class load
 			else
 			{
 				objects::$tpl_name = 'acp_ext_details';
+
+				// Updates are always checked for on standard (non-Ajax) page load.
+				updater::check_updates();
 			}
+
+			// Output update link to the template if Upload Extensions Updater is installed and updates are available.
+			updater::set_update_link();
 		}
 
 		if (file_exists(objects::$phpbb_root_path . 'ext/' . $ext_name . '/README.md') && !objects::$request->is_ajax())
@@ -254,12 +260,6 @@ class load
 			$ext_show = 'readme';
 		}
 
-		// TODO: Find a way to remove this inclusion.
-		if (!class_exists('\\Michelf\\MarkdownExtra'))
-		{
-			include objects::$phpbb_root_path . 'ext/boardtools/upload/vendor/michelf/php-markdown/Michelf/MarkdownExtra.inc.' . objects::$phpEx;
-		}
-
 		switch ($ext_show)
 		{
 			case 'faq':
@@ -269,7 +269,7 @@ class load
 				$string = @file_get_contents(objects::$phpbb_root_path . 'ext/' . $ext_name . '/README.md');
 				if ($string !== false)
 				{
-					$readme = \Michelf\MarkdownExtra::defaultTransform($string);
+					$readme = MarkdownExtra::defaultTransform($string);
 					if (!objects::$is_ajax && !$load_full_page)
 					{
 						objects::$template->assign_vars(array(
@@ -290,7 +290,7 @@ class load
 				$string = @file_get_contents(objects::$phpbb_root_path . 'ext/' . $ext_name . '/CHANGELOG.md');
 				if ($string !== false)
 				{
-					$changelog = \Michelf\MarkdownExtra::defaultTransform($string);
+					$changelog = MarkdownExtra::defaultTransform($string);
 					if (!objects::$is_ajax && !$load_full_page)
 					{
 						objects::$template->assign_vars(array(
@@ -396,6 +396,7 @@ class load
 	*		If title_CONFIRM cannot be found in user->lang the text given is used.
 	* @param string $hidden Hidden variables
 	* @param string $u_action Custom form action
+	* @return bool
 	*/
 	public static function ajax_confirm_box($check, $title = '', $hidden = '', $u_action = '')
 	{
@@ -466,5 +467,7 @@ class load
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action),
 			'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields
 		));
+
+		return true;
 	}
 }

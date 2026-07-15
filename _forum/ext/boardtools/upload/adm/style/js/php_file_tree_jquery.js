@@ -27,10 +27,13 @@ function setFileTree() {
 	$(".select_all_code").css("display", "inline-block").click(function(event) {
 		event.preventDefault();
 		selectCode(this);
-	})
+	});
 }
 
+// Source: board style's forum_fn.js
 function selectCode(a) {
+	'use strict';
+
 	// Get ID of code block
 	var e = a.parentNode.parentNode.getElementsByTagName('CODE')[0];
 	var s, r;
@@ -41,7 +44,14 @@ function selectCode(a) {
 		// Safari and Chrome
 		if (s.setBaseAndExtent) {
 			var l = (e.innerText.length > 1) ? e.innerText.length - 1 : 1;
-			s.setBaseAndExtent(e, 0, e, l);
+			try {
+				s.setBaseAndExtent(e, 0, e, l);
+			} catch (error) {
+				r = document.createRange();
+				r.selectNodeContents(e);
+				s.removeAllRanges();
+				s.addRange(r);
+			}
 		}
 		// Firefox and Opera
 		else {

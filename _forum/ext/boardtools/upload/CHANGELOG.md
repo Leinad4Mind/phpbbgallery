@@ -8,6 +8,8 @@ This file contains the list of changes between different versions of Upload Exte
 * Add support for phpBB 3.2.
 * Fix update tooltip for mobile devices.
 * Fix updating extensions with removed `ext.php`.
+* Fix code selection functionality in file trees.
+* Fix version check functionality.
 
 # Version 3.1.2
 ## Changes since 3.1.2-RC2
@@ -76,4 +78,4 @@ Already included in 3.1.1.
 
 Initial stable release (changes can be found in the commits of our [repository on GitHub](https://github.com/BoardTools/upload)).
 
-© 2014 - 2017 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+© 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)

@@ -2,7 +2,7 @@
 /**
  *
  * @package       Upload Extensions
- * @copyright (c) 2014 - 2017 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
+ * @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -77,14 +77,10 @@ class upload_module
 		// Add support for different phpBB branches.
 		objects::set_compatibility_class();
 
-		// Get the information about Upload Extensions - START
-		objects::$upload_ext_name = 'boardtools/upload';
-		updater::get_manager();
-		// Get the information about Upload Extensions - END
-
 		// Detect whether this is an Ajax request - START
 		$ajax_action = $request->variable('ajax_action', '');
 		objects::$is_ajax = false;
+
 		if ($request->is_ajax() && !empty($ajax_action))
 		{
 			$template->assign_vars(array(
@@ -92,6 +88,7 @@ class upload_module
 				'IS_AJAX'  => true,
 			));
 			objects::$is_ajax = true;
+
 			switch ($ajax_action)
 			{
 				case 'list_from_cdb':
@@ -153,6 +150,17 @@ class upload_module
 			}
 		}
 		// Detect whether this is an Ajax request - END
+
+		// Get the information about Upload Extensions - START
+		objects::$upload_ext_name = 'boardtools/upload';
+
+		// Do not check for updates on every Ajax request.
+		if (!objects::$is_ajax)
+		{
+			updater::get_manager();
+			updater::check_updates();
+		}
+		// Get the information about Upload Extensions - END
 
 		$original_action = $action;
 
@@ -612,7 +620,7 @@ class upload_module
 		if (sizeof($packages))
 		{
 			// Sanitize any data we retrieve from a server
-			$packages = objects::$request->escape($packages, true);
+			$packages = objects::$compatibility->escape($packages, true);
 			foreach ($packages as $ext => $value)
 			{
 				$latest_release = reset($value);
