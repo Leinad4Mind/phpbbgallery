@@ -1,0 +1,22 @@
+imports:
+    - { resource: ajaxnews.yml }
+
+services:
+    sitesplat.bbajaxnews.controller:
+        class: sitesplat\bbajaxnews\controller\main
+        arguments:
+            - '@sitesplat.bbajaxnews.ajaxnews.manager'
+            - '@user'
+
+    sitesplat.bbajaxnews.listener:
+        class: sitesplat\bbajaxnews\event\main_listener
+        arguments:
+            - '@sitesplat.bbajaxnews.ajaxnews.manager'
+            - '@user'
+            - '@template'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@config'
+            - '%tables.groups%'
+        tags:
+            - { name: event.listener }

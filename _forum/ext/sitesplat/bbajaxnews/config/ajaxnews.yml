@@ -1,0 +1,121 @@
+services:
+    sitesplat.bbajaxnews.ajaxnews.manager:
+        class: sitesplat\bbajaxnews\ajaxnews\manager
+        arguments:
+            - '@sitesplat.bbajaxnews.ajaxnews.type_collection'
+            - '@config'
+            - '@log'
+            - '@user'
+            - '@template'
+
+    sitesplat.bbajaxnews.ajaxnews.base:
+        class: sitesplat\bbajaxnews\ajaxnews\type\base
+        abstract: true
+        arguments:
+            - '@language'
+            - '@dbal.conn'
+            - '@auth'
+            - '%tables.sessions%'
+            - '%tables.users%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+# ----- Ajaxnews types -----
+    sitesplat.bbajaxnews.ajaxnews.type_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.bbdonation:
+        class: sitesplat\bbajaxnews\ajaxnews\type\bbdonation
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.bbmembership:
+        class: sitesplat\bbajaxnews\ajaxnews\type\bbmembership
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.bbvote:
+        class: sitesplat\bbajaxnews\ajaxnews\type\bbvote
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_dependencies, ['%tables.topics%']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.friend_logged_in:
+        class: sitesplat\bbajaxnews\ajaxnews\type\friend_logged_in
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_tables, ['%tables.zebra%']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.new_announcement:
+        class: sitesplat\bbajaxnews\ajaxnews\type\new_announcement
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.new_posts_today:
+        class: sitesplat\bbajaxnews\ajaxnews\type\new_posts_today
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_posts_table, ['%tables.posts%']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.new_sticky:
+        class: sitesplat\bbajaxnews\ajaxnews\type\new_sticky
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.new_topic:
+        class: sitesplat\bbajaxnews\ajaxnews\type\new_topic
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.random_poll:
+        class: sitesplat\bbajaxnews\ajaxnews\type\random_poll
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_dependencies, ['@user', '%tables.topics%', '%tables.poll_votes%']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.user_joined_board:
+        class: sitesplat\bbajaxnews\ajaxnews\type\user_joined_board
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.user_joined_group:
+        class: sitesplat\bbajaxnews\ajaxnews\type\user_joined_group
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_dependencies, ['@group_helper']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.users_online_24h:
+        class: sitesplat\bbajaxnews\ajaxnews\type\users_online_24h
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_dependencies, ['@config']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
+
+    sitesplat.bbajaxnews.ajaxnews.type.users_online:
+        class: sitesplat\bbajaxnews\ajaxnews\type\users_online
+        parent: sitesplat.bbajaxnews.ajaxnews.base
+        calls:
+            - [set_dependencies, ['@config']]
+        tags:
+            - { name: sitesplat.bbajaxnews.ajaxnews.type }
