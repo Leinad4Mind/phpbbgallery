@@ -1,0 +1,30 @@
+{
+    "name": "leinad4mind/staffnotifications",
+    "type": "phpbb-extension",
+    "description": "Notify selected groups from bans, warnings, deleting content, and much more...",
+    "version": "1.0.0",
+    "time": "2019-07-28",
+    "keywords": [ "phpbb", "extension", "staffnotifications" ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Leinad4Mind",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.7"
+    },
+    "extra": {
+        "display-name": "Staff Notifications",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.5"
+        },
+		"version-check": {
+            "host": "leinad4mind.top",
+            "directory": "/phpbb/staffnotifications",
+            "filename": "version_check.json",
+            "ssl": true
+        }
+    }
+}

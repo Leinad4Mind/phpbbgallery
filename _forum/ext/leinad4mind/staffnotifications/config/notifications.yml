@@ -1,0 +1,44 @@
+services:
+
+    leinad4mind.staffnotifications.notification.type.base:
+        class: 'leinad4mind\staffnotifications\notification\type\base'
+        parent: 'notification.type.base'
+        abstract: true
+        calls:
+            - ['set_user_loader', ['@user_loader']]
+            - ['set_settings', ['@leinad4mind.staffnotifications.settings']]
+
+    leinad4mind.staffnotifications.notification.type.delete_post:
+        class: 'leinad4mind\staffnotifications\notification\type\delete_post'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
+    leinad4mind.staffnotifications.notification.type.soft_delete_post:
+        class: 'leinad4mind\staffnotifications\notification\type\soft_delete_post'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
+    leinad4mind.staffnotifications.notification.type.delete_topic:
+        class: 'leinad4mind\staffnotifications\notification\type\delete_topic'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
+    leinad4mind.staffnotifications.notification.type.soft_delete_topic:
+        class: 'leinad4mind\staffnotifications\notification\type\soft_delete_topic'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
+
+    leinad4mind.staffnotifications.notification.type.ban_user:
+        class: 'leinad4mind\staffnotifications\notification\type\ban_user'
+        parent: 'leinad4mind.staffnotifications.notification.type.base'
+        shared: false
+        tags:
+            - { name: 'notification.type' }
