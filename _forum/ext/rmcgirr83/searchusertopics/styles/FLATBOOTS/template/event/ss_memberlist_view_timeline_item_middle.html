@@ -1,0 +1,18 @@
+<!-- IF TOPICS -->
+	<div class="tl-item">
+		<div class="tl-body">
+			<div class="tl-entry">
+				<div class="tl-time"></div>
+				<div class="tl-icon square-icon sm bg-success"><i class="fa fa-file-text"></i></div>
+				<div class="tl-content">
+					<h4 class="tl-tile text-warning">{L_SUT_TOTAL_TOPICS}</h4>
+					<p>
+					{TOPICS}&nbsp;
+					<!-- IF U_SEARCH_TOPICS -->&#45;<strong><a href="{U_SEARCH_TOPICS}">&nbsp;{L_SEARCH_USER_TOPICS}</a></strong><!-- ENDIF -->
+					<!-- IF TOPICS_PERCENT -->&#40;{TOPICS_PERCENT}&nbsp;&#47;&nbsp;{TOPICS_PER_DAY}&#41;<!-- ENDIF -->
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- ENDIF -->

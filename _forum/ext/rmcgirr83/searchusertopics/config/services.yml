@@ -5,8 +5,8 @@ services:
             - '@auth'
             - '@config'
             - '@dbal.conn'
+            - '@language'
             - '@template'
-            - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
