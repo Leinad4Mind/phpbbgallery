@@ -1,0 +1,68 @@
+{% INCLUDE 'overall_header.html' %}
+{% INCLUDECSS '@pikaron_nodeaemails/css/admin_forms.css' %}
+
+<a name="maincontent"></a>
+
+<div class="head-panel">
+	<div class="head-title"><i class="icon fa-envelope fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;{{ lang('ACP_NO_DEA_EMAILS') }}</div>
+	<div class="head-description">{{ lang('ACP_NO_DEA_EMAILS_EXPLAIN') }}</div>
+	<p><img src="https://img.shields.io/badge/{{ lang('L_NO_DEA_EMAILS_VERSION') }}-{{ S_NO_DEA_EMAILS_VERSION }}-green.svg?style=plastic"></p>
+</div>
+
+<div class="successbox successboxdea">{{ lang('ACP_NO_DEA_EMAILS_WARNING_LOCAL') }}</div>
+
+<form id="acp_dea_config" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend><i class="icon fa-cog fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;{{ lang('ACP_NO_DEA_EMAILS_LOCALS') }}</legend>
+
+		<dl>
+			<dt><label for="deadomain">{{ lang('L_NO_DEA_EMAILS_DOMAIN') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<input class="textbox" id="deadomain" type="text" size="78" maxlength="255" name="deadomain" placeholder="{{ lang('L_NO_DEA_EMAILS_PLACE') }}">
+				<br><br>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="deaaction">{{ lang('L_NO_DEA_EMAILS_ACTION') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<select id="deaaction" name="deaaction">
+					<option value="1" selected="selected">{{ lang('L_NO_DEA_EMAILS_SAVE') }}</option>
+					<option value="2">{{ lang('L_NO_DEA_EMAILS_DEL') }}</option>
+				</select>
+			</dd>
+		</dl>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="adm-button" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="adm-button" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		</p>
+	</fieldset>
+	{{ S_FORM_TOKEN }}
+</form>
+
+<table class="table" style="padding: 5px;">
+	<thead>
+		<tr>
+			<th colspan="5">{{S_NO_DEA_EMAILS_CANT }} {{ lang('L_NO_DEA_EMAILS_TEX_LOCAL') }}</th>
+		</tr>
+	</thead>
+	<tbody class="table-body">
+	{% for emailse in emailsex %}
+		{% if loop.index is divisible by(2) %}<tr class="table-row2">{% else %}<tr class="table-row1">{% endif %}
+			<td style="width: 20%;">{{ emailse.S_NO_DEA_EMAILS_EMA0 }}</td>
+			<td style="width: 20%;">{{ emailse.S_NO_DEA_EMAILS_EMA1 }}</td>
+			<td style="width: 20%;">{{ emailse.S_NO_DEA_EMAILS_EMA2 }}</td>
+			<td style="width: 20%;">{{ emailse.S_NO_DEA_EMAILS_EMA3 }}</td>
+			<td style="width: 20%;">{{ emailse.S_NO_DEA_EMAILS_EMA4 }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% INCLUDE 'overall_footer.html' %}
