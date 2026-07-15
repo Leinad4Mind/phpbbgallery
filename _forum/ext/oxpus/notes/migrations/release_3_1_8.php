@@ -29,24 +29,6 @@ class release_3_1_8 extends \phpbb\db\migration\migration
 		return [
 			// Set the current version
 			['config.update', ['notes_version', $this->ext_version]],
-
-			// Remove deprecated files
-			['custom', [[$this, 'remove_deprecated_files']]],
 		];
-	}
-
-	public function remove_deprecated_files()
-	{
-		global $phpbb_container, $phpEx, $phpbb_extension_manager;
-
-		if ($phpbb_container->get('request')->variable('action', '') == 'delete_data')
-		{
-			return;
-		}
-
-		$ext_path = $phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-
-		@unlink($ext_path . 'styles/prosilver/template/event/overall_footer_after.html');
-		@unlink($ext_path . 'styles/prosilver/template/event/simple_footer_after.html');
 	}
 }

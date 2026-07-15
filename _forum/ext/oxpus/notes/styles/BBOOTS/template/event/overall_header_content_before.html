@@ -1,0 +1,12 @@
+{% if S_NOTES_MEM %}
+<div class="alert alert-warning fade in">
+    <strong>{{ lang('INFORMATION') }}{{ lang('COLON') }}</strong>&nbsp;{{ NOTES_MEM }}
+</div>
+{% endif %}
+{% if U_NOTES_POPUP %}
+<script type="text/javascript">
+    function notes() {
+        window.open("{{ U_NOTES_POPUP }}", "_blank", "width=800,height=600,scrollbars=yes,resizable=no");
+    }
+</script>
+{% endif %}

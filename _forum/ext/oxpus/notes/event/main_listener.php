@@ -47,9 +47,6 @@ class main_listener implements EventSubscriberInterface
 	/* @var \phpbb\path_helper */
 	protected $phpbb_path_helper;
 
-	/* @var Container */
-	protected $phpbb_container;
-
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
@@ -79,7 +76,6 @@ class main_listener implements EventSubscriberInterface
 	* @param string									$table_prefix
 	* @param \phpbb\extension\manager				$phpbb_extension_manager
 	* @param \phpbb\path_helper						$phpbb_path_helper
-	* @param Container								$phpbb_container
 	* @param \phpbb\db\driver\driver_interfacer		$db
 	* @param \phpbb\config\config					$config
 	* @param \phpbb\controller\helper				$helper
@@ -87,14 +83,13 @@ class main_listener implements EventSubscriberInterface
 	* @param \phpbb\template\template				$template
 	* @param \phpbb\user							$user
 	*/
-	public function __construct($root_path, $php_ext, $table_prefix, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, Container $phpbb_container, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
+	public function __construct($root_path, $php_ext, $table_prefix, \phpbb\extension\manager $phpbb_extension_manager, \phpbb\path_helper $phpbb_path_helper, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language)
 	{
 		$this->root_path				= $root_path;
 		$this->php_ext 					= $php_ext;
 		$this->table_prefix 			= $table_prefix;
 		$this->phpbb_extension_manager	= $phpbb_extension_manager;
 		$this->phpbb_path_helper		= $phpbb_path_helper;
-		$this->phpbb_container 			= $phpbb_container;
 		$this->db 						= $db;
 		$this->config 					= $config;
 		$this->helper 					= $helper;
@@ -112,14 +107,6 @@ class main_listener implements EventSubscriberInterface
 			'lang_set' => 'common',
 		];
 
-		if (defined('ADMIN_START'))
-		{
-			$lang_set_ext[] = [
-				'ext_name' => 'oxpus/notes',
-				'lang_set' => 'permissions_notes',
-			];
-		}
-
 		$event['lang_set_ext'] = $lang_set_ext;
 
 	}
@@ -128,9 +115,8 @@ class main_listener implements EventSubscriberInterface
 	{
 		if ($this->auth->acl_get('u_notes'))
 		{
-			$ext_path					= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
-			$this->phpbb_path_helper	= $this->phpbb_container->get('path_helper');
-			$ext_path_web				= $this->phpbb_path_helper->update_web_root_path($ext_path);
+			$ext_path		= $this->phpbb_extension_manager->get_extension_path('oxpus/notes', true);
+			$ext_path_web	= $this->phpbb_path_helper->update_web_root_path($ext_path);
 
 			$this->template->assign_vars([
 				'EXT_NOTES_WEB'		=> $ext_path_web,
@@ -186,7 +172,7 @@ class main_listener implements EventSubscriberInterface
 
 	public function add_viewonline($event)
 	{
-		if ($event['row']['session_page'] === 'app.php/notes' || $event['row']['session_page'] === 'app.' . $this->php_ext . '/notes.php')
+		if (strpos($event['row']['session_page'], 'notes') !== false)
 		{
 			$ext_link = $this->helper->route('oxpus_notes_controller');
 

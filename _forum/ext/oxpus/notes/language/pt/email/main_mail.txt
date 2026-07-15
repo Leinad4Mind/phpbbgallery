@@ -1,8 +1,0 @@
-Subject: SUBJECT
-
-Hello {{ USERNAME }},
-
-TEXT
-
-
-{{ BOARD_EMAIL }}
