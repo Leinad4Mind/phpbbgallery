@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -200,8 +200,11 @@ class gallery_block extends base
 
 			if(sizeof($sql_where))
 			{
+				// Declare two new variables
+				$post_ary = $prefix_ary = array();
+
 				$sql_ary = array(
-					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text',
+					'SELECT'		=> 'p.post_id, p.forum_id, p.topic_id, p.post_text, p.post_subject',
 					'FROM'			=> array(POSTS_TABLE => 'p'),
 					'WHERE'			=> '(' . implode(' OR ', $sql_where) . ")
 						AND p.bbcode_uid <> ''
@@ -220,34 +223,78 @@ class gallery_block extends base
 
 				$sql 	= $this->db->sql_build_query('SELECT', $sql_ary);
 				$result = $this->db->sql_query_limit($sql, $data['max_number']);
+
 				while($row = $this->db->sql_fetchrow($result))
 				{
-					$row_images = array();
+				   $post_ary[] = $row;
 
-					preg_match_all('#<ALBUM content="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
+				   // Prepare array for prefixes
+				   if(!isset($prefix_ary[$row['topic_id']]))
+				   {
+					  $prefix_ary[$row['topic_id']] = array();
+				   }
+				}
+				$this->db->sql_freeresult($result);
+				
+				// Obtain prefixes
+				$sql = 'SELECT i.*, p.*
+				   FROM ' . BBPREFIX_INSTANCES_TABLE . ' i
+				   LEFT JOIN ' . BBPREFIX_TABLE . ' p ON(p.id = i.prefix)
+				   WHERE ' . $this->db->sql_in_set('topic', array_keys($prefix_ary)) . '
+				   ORDER BY i.ordered';
+				$result = $this->db->sql_query($sql);
+				while($row = $this->db->sql_fetchrow($result))
+				{
+				   $prefix_ary[$row['topic']][] = $row;
+				}
+				$this->db->sql_freeresult($result);
+
+				// Parse data
+				foreach($post_ary as $row)
+				{
+				   $row_prefixes = array();
+				   
+				   preg_match_all('#<ALBUM content="(.*?)">#i', $row['post_text'], $matches, PREG_SET_ORDER);
+
+				   if(!empty($prefix_ary[$row['topic_id']]))
+				   {
+					  foreach($prefix_ary[$row['topic_id']] as $prefix)
+					  {
+						 $row_prefixes[] = array(
+							'NAME'   => $prefix['name']
+						 );
+					  }
+				   }
 
 					foreach($matches as $match)
 					{
 						$row_images[] = array(
-							'ACTION'	=> '/forum/viewtopic.php?f='.$row['forum_id'].'&t='. $row['topic_id'],
-							'SRC'		=> '/forum/gallery/image/'.$match[1].'/source',
-							'TITLE'		=>  $row['post_subject'],
+							 'ACTION'       => '/forum/viewtopic.php?f=' . $row['forum_id'] . '&t=' . $row['topic_id'],
+							 'SRC'          => '/forum/gallery/image/' . $match[1] . '/mini',
+							 'TITLE'        => $row['post_subject'],
+							 'PREFIX_STR'   => implode('-', array_map(
+								function($prefix) {
+								   return $prefix['NAME'];
+								},
+								$row_prefixes
+							 )),
+							 
+							 'prefix'       => $row_prefixes,
 						);
+						
+						/*
+						* @event block.gallery_posts_row
+						* @var array		$row_images		The rows array
+						* @var array		$data			Block Configuration
+						* @var array 		$row			Row data
+						* @since 2.0.3
+						*/
+						$vars = array('row_images', 'data', 'row');
+						extract($this->dispatcher->trigger_event('block.gallery_posts_row', compact($vars)));
+
+						$images = array_merge($row_images);
 					}
-
-					/*
-					* @event block.gallery_posts_row
-					* @var array		$row_images		The rows array
-					* @var array		$data			Block Configuration
-					* @var array 		$row			Row data
-					* @since 2.0.3
-					*/
-					$vars = array('row_images', 'data', 'row');
-					extract($this->dispatcher->trigger_event('block.gallery_posts_row', compact($vars)));
-
-					$images = array_merge($images, $row_images);
 				}
-				$this->db->sql_freeresult($result);
 			}
 		}
 		

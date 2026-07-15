@@ -2,10 +2,12 @@
 {% if S_USER_LOGGED_IN %}
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} #blg-logout').ajaxify();
 	});
+});
 // ]]>
 </script>
 
@@ -40,7 +42,7 @@
 {% else %}
 
 <script>
-// <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} form').ajaxify();
@@ -84,6 +86,11 @@
 		{{ S_BLG_LOGIN_FIELDS }}
 		{{ S_FORM_TOKEN_BLG_LOGIN }}
 	</div>
+
+	{% if PROVIDER_TEMPLATE_FILE %}
+		<div class="blg-alt-login-legend"><span>{L_BLG_OR}</span></div>
+		{% INCLUDE PROVIDER_TEMPLATE_FILE %}
+	{% endif %}
 </form>
 
 	{% if S_REGISTER_ENABLED and S_DISPLAY_REGISTER %}

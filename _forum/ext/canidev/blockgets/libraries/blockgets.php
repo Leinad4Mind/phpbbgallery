@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\libraries;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class blockgets
 {
@@ -231,14 +225,21 @@ class blockgets
 		return ($page_title) ? $this->lang->lang($page_title) : '';
 	}
 
-	// Set default headers
+		// Set default headers
 	public function load_assets()
 	{
-		include($this->helper->get_ext_path() . 'libraries/default_headers.' . $this->php_ext);
-		
-		foreach($overall_headers as $header)
+		$asset_ary = array(
+			array('css', '@canidev_blockgets/../theme/common.css'),
+			array('css', '@canidev_blockgets/acp.css', false, 'admin'),
+
+			array('js', '@canidev_core/js/jquery-ui.min.js', false, 'admin'),
+			array('js', '@canidev_blockgets/js/jblockgets.min.js'),
+			array('js', '@canidev_blockgets/js/jblockgets-acp.js', false, 'admin'),
+		);
+
+		foreach($asset_ary as $asset)
 		{
-			call_user_func_array(array($this->template, 'append_asset'), $header);
+			call_user_func_array(array($this->template, 'append_asset'), $asset);
 		}
 	}
 	
@@ -484,6 +485,17 @@ class blockgets
 			else
 			{
 				$page_alias = (($this->user->page['page_dir']) ? $this->user->page['page_dir'] . '/' : '') . str_replace(".{$this->php_ext}", '', $this->user->page['page_name']);
+			
+				// If is a route of other extension, remove params from the page alias
+				$controller_params = $this->container->get('symfony_request')->attributes->all();
+
+				if(isset($controller_params['_route']))
+				{
+					foreach($controller_params['_route_params'] as $i => $val)
+					{
+						$page_alias = str_replace('/' . $val, '', $page_alias);
+					}
+				}
 			}
 			
 			$page_type	= PAGE_FORUM;
@@ -512,7 +524,13 @@ class blockgets
 						$value		= (!empty($f_matches[3][$i]) ? $f_matches[3][$i] : true);
 						$gvalue		= ($this->request->is_set($key, $check_key) ? $this->request->variable($key, '', false, $check_key) : false);
 						$valid      = true;
-						
+
+						// If is a route of other extension, check filter on route params
+						if($gvalue === false && isset($controller_params) && $filter['method'] == 'GET')
+						{
+							$gvalue = isset($controller_params['_route_params'][$key]) ? $controller_params['_route_params'][$key] : false;
+						}
+
 						if($value === true)
 						{
 							$valid = ($gvalue === false) ? false : true;
@@ -594,10 +612,18 @@ class blockgets
 	public function parse_ajax()
 	{
 		$module	= $this->request->variable('jblgm', '');
-	
+
 		if($module && ($this->request->is_ajax() || $this->request->variable('ajaxModule', '') == 'blockgets'))
 		{
 			$this->template->assign_var('BLG_IN_AJAX', true);
+
+			// Remove listeners to prevent infinite loop if $user->setup is called again
+			$listeners = $this->dispatcher->getListeners('core.user_setup_after');
+
+			foreach($listeners as $listener)
+			{
+				$this->dispatcher->removeListener('core.user_setup_after', $listener);
+			}
 
 			if(is_numeric($module))
 			{
@@ -656,7 +682,6 @@ class blockgets
 				if($this->container->has($module))
 				{
 					page_header('', false, 0, 'forum', false);
-
 					$this->container->get($module)->init();
 				}
 			}

@@ -1,8 +1,8 @@
 <?php
 /*
-* acp.php [English [En]]
+* [English [En]]
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -271,7 +271,7 @@ $lang = array_merge($lang, array(
 		'calendar_explain'			=> 'Calendar in which you can add custom events and show birthdays.',
 		'clock_title'				=> 'Clock',
 		'clock_explain'				=> 'Displays a clock in flash format (you can choose several models and add your own clock).',
-		'cloud_tag_title'			=> 'CloudTag',
+		'cloud_tag_title'			=> 'Cloud Tag',
 		'cloud_tag_explain'			=> 'Sample labels in a balloon in flash format. You can display the latest searched words or the users with more messages.',
 		'contact_title'				=> 'Contact',
 		'contact_explain'			=> 'Displays a standard contact form.',
@@ -339,6 +339,8 @@ $lang = array_merge($lang, array(
 		'scroll_message_explain'	=> 'Text message that is rotating in the block. Allows use BBCode and HTML in the text.',
 		'stats_title'				=> 'Statistics',
 		'stats_explain'				=> 'Gets the most relevant information on the forum. This block shows the number of new messages and topics, the total number of posts and topics, message statistics and topics written per day, total number of attachments and the number of users that remaining active (posting messages).',
+		'steam_title'				=> 'Steam',
+		'steam_explain'				=> 'Show information about Steam group.',
 		'style_select_title'		=> 'Style select',
 		'style_select_explain'		=> 'Allows the user to view the forum with any style that is installed on the forum and set it as their default style.',
 		'top_topics_title'			=> 'Top topics',

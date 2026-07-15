@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -44,7 +44,7 @@ class recent_topics_block extends base
 		{
 			foreach($data['forums'] as $forum_id)
 			{
-				if($this->auth->acl_get('f_read', $forum_id))
+				if($this->auth->acl_get('f_read', $forum_id) && $this->auth->acl_get('f_read_others_topics_brunoais', $forum_id))
 				{
 					$forum_ids[] = $forum_id;
 				}

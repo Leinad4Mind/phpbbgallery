@@ -1,0 +1,62 @@
+	
+{% if block.IS_GROUP %}
+	<div id="block-{{ block.BLOCK_ID }}" class="{{ block.GROUP_CLASS }}">
+	{% for sub in block.blocks %}
+		<div id="block-{{ sub.BLOCK_ID }}" class="blg-block {{ sub.BLOCK_CLASSES }}">
+		{% if sub.BLOCK_STYLE == 'content_simple' %}
+			<div class="block-content">
+				{{ sub.BLOCK_CONTENT }}
+			</div>
+		{% else %}
+			<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
+			<thead>
+				<tr>
+					<th class="block-title">
+						{{ sub.BLOCK_ICON }}
+						<span class="cbb-helper-text cbb-inline">{{ sub.BLOCK_TITLE }}</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>
+					<div class="block-content">
+						{{ sub.BLOCK_CONTENT }}
+					</div>
+				</td>
+			</tr>
+			</tbody>
+			</table>
+		{% endif %}
+		</div>
+	{% endfor %}
+	</div>
+{% else %}
+	<div id="block-{{ block.BLOCK_ID }}" class="blg-block {{ block.BLOCK_CLASSES }}">
+	{% if block.BLOCK_STYLE == 'content_simple' %}
+		<div class="block-content">
+			{{ block.BLOCK_CONTENT }}
+		</div>
+	{% else %}
+		<table class="footable table table-striped table-bordered table-white table-primary default footable-loaded">
+		<thead>
+			<tr>
+				<th class="block-title">
+					{{ block.BLOCK_ICON }}
+					<span class="cbb-helper-text cbb-inline">{{ block.BLOCK_TITLE }}</span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>
+				<div class="block-content">
+					{{ block.BLOCK_CONTENT }}
+				</div>
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	{% endif %}
+    </div>
+{% endif %}

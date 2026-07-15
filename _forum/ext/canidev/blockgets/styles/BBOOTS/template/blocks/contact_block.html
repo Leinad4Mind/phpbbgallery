@@ -1,0 +1,59 @@
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#block-{{ BLOCK_ID }} form').ajaxify({
+			done: function() {
+				$(this).find('[name=subject], [name=message]').val('');
+			}
+		});
+	});
+// ]]>
+</script>
+
+<form method="post" action="{{ U_BLG_ACTION }}">
+	<table class="blg-table contact-table{% if not BLOCK_VIEW_SMALL %} full-table{% endif %}">
+{% if BLOCK_VIEW_SMALL %}
+	{% for fieldrow in loops.fieldrow %}
+	<tr>
+		<td>
+			<strong>{{ fieldrow.TITLE }}{L_COLON}</strong><br />
+		{% if fieldrow.TYPE == 'text' %}
+			<input type="text" name="{{ fieldrow.KEY }}" id="{{ fieldrow.KEY }}" size="35" value="{{ fieldrow.VALUE }}" class="cbb-inputbox" />
+		{% elseif fieldrow.TYPE == 'textarea' %}
+			<textarea name="{{ fieldrow.KEY }}" id="{{ fieldrow.KEY }}" cols="30" rows="6" class="cbb-inputbox">{{ fieldrow.VALUE }}</textarea>
+		{% elseif fieldrow.TYPE == 'custom' %}
+			{{ fieldrow.TEMPLATE }}
+		{% endif %}
+		</td>
+	</tr>
+	{% endfor %}
+{% else %}
+		<col width="35%" /><col width="65%" />
+	{% for fieldrow in loops.fieldrow %}
+		<tr>
+			<td class="blg-align-right"{% if fieldrow.TYPE == 'textarea' %} valign="top"{% endif %}>
+				<label for="{{ fieldrow.KEY }}"><strong>{{ fieldrow.TITLE }}{L_COLON}</strong></label>
+			</td>
+			<td>
+			{% if fieldrow.TYPE == 'text' %}
+				<input type="text" name="{{ fieldrow.KEY }}" id="{{ fieldrow.KEY }}" size="35" value="{{ fieldrow.VALUE }}" class="cbb-inputbox autowidth" />
+			{% elseif fieldrow.TYPE == 'textarea' %}
+				<textarea name="{{ fieldrow.KEY }}" id="{{ fieldrow.KEY }}" cols="30" rows="8" class="cbb-inputbox">{{ fieldrow.VALUE }}</textarea>
+			{% elseif fieldrow.TYPE == 'custom' %}
+				{{ fieldrow.TEMPLATE }}
+			{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+{% endif %}
+	</table>
+
+	<br />
+	<div class="blg-align-center">
+		<input type="submit" class="btn btn-default" id="submit" name="submit" value="{L_SUBMIT}" />
+		{{ BLOCK_HIDDEN_FIELDS }}
+		{{ S_FORM_TOKEN }}
+	</div>
+</form>

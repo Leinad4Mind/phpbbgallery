@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -10,12 +10,6 @@
 namespace canidev\blockgets\controller;
 
 use \canidev\core\json_response;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class admin_controller_pages extends admin_controller_base
 {
@@ -85,7 +79,7 @@ class admin_controller_pages extends admin_controller_base
 						if(strpos($row['page_alias'], 'app/') === 0)
 						{
 							$row['page_title'] = (strpos($row['page_title'], 'APP/') === 0) ? $row['page_alias'] : $row['page_title'];
-							$s_url = ((!$this->config['blg_rewrite']) ? 'app.' . $this->php_ext . '/' : '') . str_replace('app/', '', $row['page_alias']);
+							$s_url = (($this->config['blg_rewrite'] || $this->config['enable_mod_rewrite']) ? '' : 'app.' . $this->php_ext . '/') . str_replace('app/', '', $row['page_alias']);
 						}
 
 						$s_url = $board_url . $s_url;
@@ -877,8 +871,8 @@ class admin_controller_pages extends admin_controller_base
 			'legend1'			=> 'BLOCK_SETTINGS',
 			'block_title'		=> array('lang' => 'BLOCK_TITLE',			'validate' => 'string:1:100',	'type' => 'text:30:100'),
 
-			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', true),	'default' => ''),
-			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),	'default' => 'all'),
+			'block_icon'		=> array('lang' => 'BLOCK_CURRENT_ICON',	'type' => 'custom',		'function' => array($this->media, 'build_selector'),	'params' => array('{KEY}', 'icon', '{CONFIG_VALUE}', 1),	'default' => ''),
+			'block_groups'		=> array('lang' => 'BLOCK_GROUP',			'type' => 'custom',		'function' => array($this, 'groups_select'),			'params' => array('block_groups', '{CONFIG_VALUE}'),		'default' => 'all'),
 			'block_enabled'		=> array('lang' => 'BLOCK_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',								'default' => 1),
 			'allow_collapse'	=> array('lang' => 'BLOCK_COLLAPSE',		'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($collapse_options, '{KEY}', '{CONFIG_VALUE}'),	'default' => BLOCK_COLLAPSE_VISIBLE),
 			'block_style'		=> array('lang' => 'BLOCK_STYLE',			'type' => 'custom',		'function' => array($this, 'make_select'),				'params' => array($style_options, '{KEY}', '{CONFIG_VALUE}'),		'default' => 1),
@@ -1840,7 +1834,7 @@ class admin_controller_pages extends admin_controller_base
 			$options += $file_ary;
 		}
 
-		// Get extentions routes
+		// Get extensions routes
 		$router 			= $this->container->get('router');;
 		$route_collection	= $router->getRouteCollection()->getIterator();
 		$ext_pages 			= array();
@@ -1853,7 +1847,12 @@ class admin_controller_pages extends admin_controller_base
 				
 				if(!in_array($alias, $exclude_files))
 				{
-					$ext_pages[$alias] = '/' . $match[1];
+					if($match[1] == 'bbfront') {
+						$ext_pages[$alias] = '/' . $match[1] . '/news';
+					}
+					else {
+						$ext_pages[$alias] = '/' . $match[1];
+					}
 				}
 			}
 		}
@@ -1877,6 +1876,8 @@ class admin_controller_pages extends admin_controller_base
 			'#sid\=([a-z0-9]+)#'	=> '',
 			'#^/#' 					=> '',
 			'#(\?|&|&amp;)$#' 		=> '',
+			'#bbfront#'				=> 'bbfront/news',
+			'#donation#'				=> 'donation/index.html',
 		);
 
 	/*	if(strpos($path, 'http') === 0)

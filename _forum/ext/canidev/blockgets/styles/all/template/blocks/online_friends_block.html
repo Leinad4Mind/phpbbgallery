@@ -1,12 +1,14 @@
 {% if S_ZEBRA %}
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#friends-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
+});
 // ]]>
 </script>
 

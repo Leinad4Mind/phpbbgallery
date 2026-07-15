@@ -1,9 +1,11 @@
 {% if attach|length %}
 	<script>
 	// <![CDATA[
+	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#attach-{{ BLOCK_ID }}').blgAccordion();
+	});
 	});
 	// ]]>
 	</script>
@@ -37,5 +39,4 @@
 	</div>
 {% else %}
 	<div class="blg-align-center">{L_NO_ATTACHMENTS}</div>
-}
 {% endif %}

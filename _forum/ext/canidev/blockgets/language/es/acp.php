@@ -1,8 +1,8 @@
 <?php
 /*
-* acp.php [Spanish [Es]]
+* [Spanish [Es]]
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -336,6 +336,8 @@ $lang = array_merge($lang, array(
 		'scroll_message_explain'	=> 'Mensaje de texto que aparecerá rotando en el bloque. Permite usar BBcode y HTML en el texto.',
 		'stats_title'				=> 'Estadísticas',
 		'stats_explain'				=> 'Obtiene la información más relevante del foro. Este bloque muestra el número de nuevos mensajes y temas, el número total de mensajes y temas, estadísticas de los mensajes y temas escritos por día, número de adjuntos totales y el número de usuarios que permanecen activos (publican mensajes).',
+		'steam_title'				=> 'Steam',
+		'steam_explain'				=> 'Muestra información de un grupo de Steam.',
 		'style_select_title'		=> 'Seleccionar estilo',
 		'style_select_explain'		=> 'Permite al usuario ver el foro con cualquier estilo que se encuentre instalado en el foro y establecerlo como su estilo por defecto.',
 		'top_topics_title'			=> 'Top temas',

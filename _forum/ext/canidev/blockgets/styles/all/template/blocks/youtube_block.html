@@ -31,6 +31,7 @@
 
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#youtube-{{ BLOCK_ID }}').cbbLoader($.extend(true, {{ S_OPTIONS }}, {
@@ -50,6 +51,7 @@
 			}
 		}));
 	});
+});
 // ]]>
 </script>
 

@@ -5,7 +5,7 @@
 RewriteEngine on
 
 RewriteCond %{REQUEST_URI}  "^/$"
-RewriteRule ^(.*) blockgets.php
+RewriteRule ^(.*) blockgets.php [L]
 </IfModule>
 
 ## END CBB BLOCKGETS ##

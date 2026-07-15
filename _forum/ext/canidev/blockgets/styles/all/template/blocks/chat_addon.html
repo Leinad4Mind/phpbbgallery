@@ -1,18 +1,20 @@
 
 <!-- IF CHAT_ADDON_SHOW_CHAT -->
-	<script type="text/javascript">
+	<script>
 	// <![CDATA[
-	window._jBlg = window._jBlg || [];
-	window._jBlg.push(function() {
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
 		var adjustIframeHeight = function() {
 			$('#chat-{BLOCK_ID}').css('height', $('#chat-{BLOCK_ID}').contents().find('body').height());
 		};
 
-		$('#block-{BLOCK_ID} .block-content').loading(true, '', '', true);
+		$('#block-{BLOCK_ID} .block-content').cbbLoading(true, true, false);
 
-		$('#chat-{BLOCK_ID}').load(function() {
+		$('#chat-{BLOCK_ID}').on('load', function() {
 			setTimeout(function() {
-				$('#block-{BLOCK_ID} .block-content').loading(false, '', '', true);
+				$('#block-{BLOCK_ID} .block-content')
+					.cbbLoading(false)
+					.css('height', 'auto');
 
 				$('#chat-{BLOCK_ID}')
 					.css({
@@ -24,7 +26,7 @@
 			}, 1500);
 		});
 		
-		$.cbbEvent.addListener('blockgets.resize', adjustIframeHeight);
+		this.addListener('blockgets.resize', adjustIframeHeight);
 	});
 	// ]]>
 	</script>
@@ -44,7 +46,7 @@
 	</style>
 		
 	<iframe id="chat-{BLOCK_ID}" src="{CHAT_ADDON_ACTION}" frameborder="0"></iframe>
-<!-- ELSEIF S_SHORT_MODE -->
+<!-- ELSEIF BLOCK_VIEW_SMALL -->
 	<ul class="blg-linear-list">
 	<!-- BEGIN userrow -->
 		<li class="userrow"><span class="chat-user-status {userrow.S_USER_STATUS}"></span>{userrow.S_USER_FULL}</li>

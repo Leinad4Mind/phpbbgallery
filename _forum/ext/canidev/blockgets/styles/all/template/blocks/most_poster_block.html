@@ -1,11 +1,13 @@
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function (){
 		$('#most-poster-{{ BLOCK_ID }}').blgAccordion({
 			collapsible : true
 		});
 	});
+});
 // ]]>
 </script>
 

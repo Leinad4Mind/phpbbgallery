@@ -1,9 +1,9 @@
 <?php
 /*
-* acp_blocks.php [English [En]]
+* [English [En]]
 *
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -190,6 +190,8 @@ $lang = array_merge($lang, array(
 	'GALLERY_MARGIN'				=> 'Image margin',
 	'GALLERY_MAX_NUMBER'			=> 'Number of images',
 	'GALLERY_MAX_NUMBER_EXPLAIN'	=> 'Maximum attachments that will be read from the forums/topics/posts',
+	'GALLERY_ORDER'					=> 'Order of topics/messages',
+	'GALLERY_ORDER_EXPLAIN'			=> 'Defines the order in which the forum topics or posts will be loaded.',
 	'GALLERY_POSTS'					=> 'Posts',
 	'GALLERY_POSTS_EXPLAIN'			=> 'Posts IDs to read the attachments, splitted with commas. (Ex: 1,2,3).',
 	'GALLERY_SOURCE'				=> 'Origin of the images',
@@ -198,6 +200,9 @@ $lang = array_merge($lang, array(
 	'GALLERY_TOPICS_EXPLAIN'		=> 'Topics IDs to read the attachments, splitted with commas. (Ex: 1,2,3).',
 	'GALLERY_ZOOM'					=> 'Zoom',
 	'GALLERY_ZOOM_EXPLAIN'			=> 'Size difference on image\'s mouse over (in pixels)',
+
+	'GALLERY_ORDER_LAST'			=> 'Last first',
+	'GALLERY_ORDER_RAND'			=> 'Random',
 	
 	'GALLERY_SOURCE_ALL'			=> 'All',
 	'GALLERY_SOURCE_ATTACHMENTS'	=> 'Only attachments',
@@ -237,6 +242,8 @@ $lang = array_merge($lang, array(
 	'US_BANNER_EXPLAIN'			=> 'Mini banner that will be the image that you have to click to access the forum from the link.',
 
 	// Login Block
+	'ALT_LOGIN'					=> 'Show alternative methods',
+	'ALT_LOGIN_EXPLAIN'			=> 'Enable/disable the display of alternative identification methods.<br /><em>Ex: Oauth</em>',
  	'FULL_LOGIN'				=> 'Show Full login',
  	'FULL_LOGIN_EXPLAIN'		=> 'Enable/disable the advanced options in the user identification.',
  	'SHOW_REGISTER'				=> 'Show register',
@@ -425,6 +432,10 @@ $lang = array_merge($lang, array(
 	// stats_block
 	'STATS_INLINE'			=> 'Show data in line',
  	'USER_STATS'			=> 'Display user statistics',
+
+ 	// steam_block
+	'STEAM_GROUP_URL'			=> 'Group Url',
+	'STEAM_GROUP_URL_EXPLAIN'	=> '<em>Ex: https://steamcommunity.com/groups/examplegroup</em>',
 	
 	// top_topics_block
 	'TOPT_LIMIT'			=> 'Topic limit',

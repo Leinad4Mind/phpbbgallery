@@ -1,6 +1,6 @@
 /*
  * cBB Blockgets (FLATBOOTS stylesheet)
- * Copyright (c) 2020, CaniDev
+ * Copyright (c) 2021, CaniDev
  * license https://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -9,7 +9,12 @@
  	display: none;
  }
 
- .blg-block.style-alternative .block-title,
+.blg-block.style-alternative {
+	background-color: #fff !important;
+	padding-top: 0 !important; 
+}
+
+.blg-block.style-alternative .block-title,
 .blg-block.style-content_full table,
 .blg-block.style-content_full table tr,
 .blg-block.style-content_full table td {
@@ -38,6 +43,11 @@
 	padding: 0 10px;
 }
 
+.panel-forum.style-alternative > .block-title.panel-heading {
+	height: auto;
+	line-height: normal;
+}
+
 .fb-lastpost-title {
 	width: 150px !important;
 }
@@ -54,11 +64,29 @@
 
 .blg-admin-bar,
 a.blg-admin-opener {
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 }
 
 .contact-table {
 	border-spacing: 8px !important;
+}
+
+/* Login Block
+-------------------------- */
+.blg-block .panel-login {
+	background: none;
+	padding-bottom: 0;
+}
+
+.panel-login .signin-text {
+	margin-bottom: 10px;
+}
+
+.blg-block .panel-login .signin-text span {
+	background: #fff;
+}
+
+.blg-block .oauth-list-btns {
+	margin-bottom: 0;
+	margin-left: 0;
 }

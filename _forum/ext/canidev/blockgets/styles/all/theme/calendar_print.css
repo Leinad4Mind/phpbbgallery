@@ -9,11 +9,10 @@ body	{ padding: 0; }
 
 #wrap {
 	border: none;
+	border-radius: 0;
     max-width: none;
     min-width: 0;
 	padding: 0 15px;
-	
-	border-radius: 0;
 }
 
 #page-body,
@@ -56,9 +55,11 @@ body,
     border: inherit;
 }
 
-.blg-calendar td.today .blg-calendar-day		{
+.blg-calendar td.today .blg-calendar-day {
 	border-bottom: none;
 	font-weight: normal;
 }
 
-.blg-calendar td.today .blg-calendar-content	{ border-top: none; }
+.blg-calendar td.today .blg-calendar-content {
+	border-top: none;
+}

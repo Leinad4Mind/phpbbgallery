@@ -1,8 +1,8 @@
 <?php
 /*
-* main.php [English [En]]
+* [English [En]]
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -22,12 +22,14 @@ if(empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'PORTAL'			=> 'Portal',
 	'READ_FULL'			=> 'Read full topic',
+	'BLG_OR'			=> 'or',
 	'BLG_READ_MORE'		=> '%sRead more%s',
 
 	'ADD_PAGE'					=> 'Create page',
 	'BANNERS'					=> 'Banners',
 	'CALENDAR'					=> 'Calendar',
 	'CALENDAR_BIRTHDAY_TITLE'	=> '%1$s and <strong>%2$d more</strong>.',
+	'CALENDAR_SELECT_DATE'		=> 'Select date',
 	'EDIT_CONFIGURATION'		=> 'Edit configuration',
 	'EDIT_THIS_PAGE'			=> 'Edit this page',
 	'EDITOR'					=> 'Editor',
@@ -115,7 +117,7 @@ $lang = array_merge($lang, array(
 
 	// news_block
 	'POSTED_BY'			=> 'Posted by',
-	'COMMENTS_PORTAL'	=> 'Comments',
+	'COMMENTS'			=> 'Comments',
 	'POLL'				=> 'Poll',
 	'TOPIC_VIEWS'		=> 'Views',
 	'NO_NEWS'			=> 'No news available',
@@ -246,6 +248,11 @@ $lang = array_merge($lang, array(
 	
 	// rss block
 	'NO_RSS'		=> 'No Rss/Feed to show.',
+
+	// steam block
+	'STEAM_IN_GAME'		=> 'Playing',
+	'STEAM_ONLINE'		=> 'Online',
+	'STEAM_MEMBERS'		=> 'Members',
 
 	// topic index block
 	'CHAR_ALL'		=> 'All',

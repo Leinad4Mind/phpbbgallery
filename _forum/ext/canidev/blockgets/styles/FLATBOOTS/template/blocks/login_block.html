@@ -89,12 +89,18 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	</div>
 </form>
 
+	{% if PROVIDER_TEMPLATE_FILE %}
+	<div class="panel-login">
+		{% INCLUDE PROVIDER_TEMPLATE_FILE %}
+	</div>
+	{% endif %}
+
 	{% if S_REGISTER_ENABLED and S_DISPLAY_REGISTER %}
 	<br />
 	<ul class="blg-linear-list">
 		<li class="double-space bottom-bordered blg-align-center"><strong>{L_REGISTER}</strong></li>
-		<li>&bull; <a href="{{ U_TERMS_USE }}">{L_TERMS_USE}</a></li>
-		<li>&bull; <a href="{{ U_PRIVACY }}">{L_PRIVACY}</a></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_TERMS_USE }}">{L_TERMS_USE}</a></li>
+		<li><i class="fa fa-chevron-right fa-fw" aria-hidden="true"></i> <a href="{{ U_PRIVACY }}">{L_PRIVACY}</a></li>
 	
 		<li class="double-space blg-align-center"><a href="{{ U_REGISTER }}"><input type="button" class="btn btn-default" value="{L_REGISTER}" /></a></li>
 	</ul>

@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\acp;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 /**
 * @package acp

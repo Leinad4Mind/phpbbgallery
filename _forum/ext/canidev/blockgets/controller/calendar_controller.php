@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -242,9 +242,19 @@ class calendar_controller implements main_interface
 
 				$next_data = $this->get_month('next');
 				$prev_data = $this->get_month('prev');
+
+				// Month selector
+				$month_names = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+				$month_options = '';
+
+				foreach($month_names as $i => $month_name)
+				{
+					$month_options .= '<option value="' . sprintf('%02d', $i+1) . '">' . $this->lang->lang(array('datetime', $month_name)) . '</option>';
+				}
 					
 				$this->template->assign_vars(array(
-					'BLG_ENABLED'	=> true,
+					'BLG_ENABLED'		=> true,
+					'S_MONTH_OPTIONS'	=> $month_options,
 					
 					'U_NEXT'		=> $this->helper->route('canidev_blockgets_calendar_controller', array('t' => $next_data['month'] . '-' . $next_data['year'])),
 					'U_PREV'		=> $this->helper->route('canidev_blockgets_calendar_controller', array('t' => $prev_data['month'] . '-' . $prev_data['year'])),
@@ -541,7 +551,7 @@ class calendar_controller implements main_interface
 			$data = getdate($time);
 
 			return array(
-				'month'			=> (($data['mon'] < 10) ? '0' : '') . $data['mon'],
+				'month'			=> sprintf('%02d', $data['mon']),
 				'name'			=> $data['month'],
 				'year'			=> $data['year'],
 				'timestamp'		=> $time,

@@ -4,10 +4,12 @@
 
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#player-{{ BLOCK_ID }}').blgPlayer({{ PLAYER_OPTIONS }});
 	});
+});
 // ]]>
 </script>
 

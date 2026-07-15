@@ -1,9 +1,11 @@
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#share-{{ BLOCK_ID }}').blgShare({{ S_SHARE_PARAMS }});
 	});
+});
 // ]]>
 </script>
 

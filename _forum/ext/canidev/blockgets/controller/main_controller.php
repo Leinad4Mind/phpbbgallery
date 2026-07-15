@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -10,8 +10,6 @@
 namespace canidev\blockgets\controller;
 
 use Symfony\Component\HttpFoundation\Response;
-
-define('BLG_HOME_PAGE', true);
 
 /**
 * Main controller
@@ -51,10 +49,12 @@ class main_controller implements main_interface
 	*/
 	public function display($page = '')
 	{
+		define('BLG_HOME_PAGE', true);
+
 		$this->blockgets->set_page($page);
-		
+
 		$page_data = $this->blockgets->load_page(true);
-		
+
 		// Set the page style
 		if(!empty($page_data['style']) && $page_data['style'] != $this->user->style['style_id'])
 		{

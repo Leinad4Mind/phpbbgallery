@@ -29,19 +29,29 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 {% if news_row|length %}
 
 {% if not S_NEWS_FULL_CONTENT and not S_NEWS_COLLAPSE %}
-
+	<div class="blg-widget-header">
+		<span>{L_TOPIC}</span>
+	</div>
 	<ul class="blg-linear-list">
 	{% for topicrow in news_row %}
-		<li class="double-space">
-			<div>
-				<i class="fa fa-bullhorn fa-lg" aria-hidden="true"></i>
-				{% EVENT topiclist_row_prepend %}
-				<a href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
-			</div>
-			<div>
-				{L_POSTED_BY}{L_COLON}
-				<strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong>
-				{% if BLOCK_VIEW_SMALL %}<br />{% else %}&bull;{% endif %} {{ topicrow.FIRST_POST_TIME }}
+		<li class="double-space" style="display:flex;border: 1px solid #e4e9eb;{% if loop.index != 1 %}border-top: 4px solid #e4e9eb;{% endif %}margin:0">
+			<div style="padding:10px 8px;width: -webkit-fill-available;">
+				<div>
+					{% EVENT topiclist_row_prepend %}
+					<a href="{{ topicrow.U_VIEW_TOPIC }}"><strong>{{ topicrow.TOPIC_TITLE }}</strong></a>
+				</div>
+				<div>
+					{L_POSTED_BY}{L_COLON}
+					<strong>{{ topicrow.TOPIC_AUTHOR_FULL }}</strong>
+					{% if BLOCK_VIEW_SMALL %}<br />{% else %}&bull;{% endif %} <span>{{ topicrow.FIRST_POST_TIME }}</span>
+					
+				</div>
+				<div>
+					{L_LAST_REPLIED_BY}{L_COLON}
+					<strong>{{ topicrow.LAST_POST_AUTHOR_FULL }}</strong>
+					{% if BLOCK_VIEW_SMALL %}<br />{% else %}&bull;{% endif %} <span>{{ topicrow.LAST_POST_TIME }}</span>
+				</div>
+				
 			</div>
 		</li>
 	{% endfor %}
@@ -126,7 +136,7 @@ head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 {% if block_pagination|length %}
 	<div class="pull-right">	 
 		<ul class="pagination pagination-forum {% if BLOCK_VIEW_SMALL %}pagination-xs{% else %}pagination-sm{% endif %} hidden-xs">
-		{% for pagination in news_row.block_pagination %}
+		{% for pagination in block_pagination %}
 			{% if pagination.S_IS_PREV %}
 			<li class="previous"><a href="{{ pagination.PAGE_URL }}" rel="prev" role="button">{L_PREVIOUS}</a></li>
 			{% elseif pagination.S_IS_CURRENT %}

@@ -6,8 +6,10 @@
 	
 	<script>
 	// <![CDATA[
+	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(['@blockgets/bindEditorTemplate', '{{ S_EDITOR_ID }}']);
+	});
 	// ]]>
 	</script>
 	
@@ -29,8 +31,10 @@
 	
 	<script type="text/javascript">
 	// <![CDATA[
+	head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 		window._jPostponed = window._jPostponed || [];
 		window._jPostponed.push(['@blockgets/bindEasyInput', '{{ HP_ID }}']);
+	});
 	// ]]>
 	</script>
 

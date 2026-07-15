@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -74,7 +74,7 @@ class news_block extends base
 				AND t.topic_visibility = ' . ITEM_APPROVED . '
 				AND ' . $this->db->sql_in_set('t.forum_id', $data['forums']),
 				
-			'ORDER_BY'	=> 't.topic_time DESC',
+			'ORDER_BY'	=> 't.topic_last_post_time DESC',
 		);
 
 		/*
@@ -223,12 +223,14 @@ class news_block extends base
 				'TOPIC_TITLE'			=> $topic_title,
 				'TOPIC_TITLE_RAW'		=> $topic_title, // Raw title (not modified by extensions)
 				'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
+				'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
 				'S_HAS_ATTACHMENTS'		=> (!empty($attachments[$row['topic_first_post_id']])) ? true : false,
 				'FORUM_NAME'			=> $row['forum_name'],
 				'TEXT'					=> $message,
 				'VIEWS'					=> $row['topic_views'],
 				'S_HAS_POLL'			=> ($row['poll_start'] > 0) ? true : false,
 				'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['username'], $row['user_colour'], $row['post_username']),
+				'LAST_POST_AUTHOR_FULL'	=> get_username_string('full', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour'], $row['post_username']),
 				'REPLIES'				=> max(0, (int)$row['topic_posts_approved'] - 1),
 
 				'U_VIEW_TOPIC'			=> $u_view_topic,

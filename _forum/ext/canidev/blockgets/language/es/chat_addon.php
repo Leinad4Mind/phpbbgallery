@@ -1,8 +1,7 @@
 <?php
-/** 
+/*
 * chat_addon.php [Spanish [Es]]
-*
-* @package language cBB Blockgets
+* @package cBB Blockgets
 * @version v2.0.1 04/05/2018
 *
 * @copyright (c) 2018 CaniDev

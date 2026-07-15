@@ -1,19 +1,13 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 namespace canidev\blockgets\event;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -71,28 +65,21 @@ class listener implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-		$events = array();
-		
-		if(!defined('IN_INSTALL'))
-		{
-			$events = array(
-				'core.common'							=> 'on_init',
-				'core.page_footer'						=> 'on_footer',
-				'core.adm_page_footer'					=> 'on_footer',
-				'core.user_setup'						=> 'on_setup',
-				'core.user_setup_after'					=> array('on_setup_after', 1), // Make sure it's load before other extensions, like cBB Chat
-				'core.permissions'						=> 'add_permissions',
-				'core.validate_config_variable'			=> 'validate_config_variable',
-				'core.modify_text_for_display_after'	=> 'modify_text_for_display',
-				
-				'kernel.exception'				=> 'on_kernel_exception',
-				'core.login_box_redirect'		=> 'on_login',
-				'core.session_kill_after' 		=> 'on_session_kill',
-				'core.functions.redirect' 		=> 'on_redirect',
-			);
-		}
-
-		return $events;
+		return array(
+			'core.common'							=> 'on_init',
+			'core.page_footer'						=> 'on_footer',
+			'core.adm_page_footer'					=> 'on_footer',
+			'core.user_setup'						=> 'on_setup',
+			'core.user_setup_after'					=> array('on_setup_after', 10), // Make sure it's load before other extensions
+			'core.permissions'						=> 'add_permissions',
+			'core.validate_config_variable'			=> 'validate_config_variable',
+			'core.modify_text_for_display_after'	=> array('modify_text_for_display', 10), // Make sure it's load before other extensions
+			
+			'kernel.exception'				=> 'on_kernel_exception',
+			'core.login_box_redirect'		=> 'on_login',
+			'core.session_kill_after' 		=> 'on_session_kill',
+			'core.functions.redirect' 		=> 'on_redirect',
+		);
 	}
 	
 	public function on_init()

@@ -1,0 +1,153 @@
+
+<div id="topic-index-{{ BLOCK_ID }}">
+
+<script>
+// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#topic-index-{{ BLOCK_ID }}').cbbLoader({
+			paginationSelector: '.pagination a, .char-select a',
+			replace: true,
+			requestData: {
+				jblgm: '{{ BLOCK_ID }}',
+				fchar: '{{ S_FIRST_CHAR }}'
+			}
+		});
+	});
+// ]]>
+</script>
+
+{% if S_CHAR_SELECT %}
+	<div class="char-select blg-align-center">
+	{% for char in first_char %}
+		{% if char.S_SELECTED %}<span>{{ char.DESC }}</span>{% else %}<a href="#?fchar={{ char.VALUE }}">{{ char.DESC }}</a>{% endif %}&nbsp; 
+	{% endfor %}
+	</div>
+{% endif %}
+
+{% if BLOCK_VIEW_SMALL or TOPIC_DESIGN == 'simple' %}
+	<div class="topic-index-content block-postbody blg-align-center blg-corner-all">
+
+	<table class="blg-table">
+	<tr>
+		<th class="blg-column-topic-title blg-widget-header">{L_TOPIC_TITLE}</th>
+	{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
+		<th class="blg-column-posted-by blg-widget-header">{L_POSTED_BY}</th>
+		<th class="blg-column-comments blg-widget-header">{L_COMMENTS}</th>
+		<th class="blg-column-topic-views blg-widget-header">{L_TOPIC_VIEWS}</th>
+	{% endif %}
+	</tr>
+		
+	{% for topicrow in topic %}
+		<tr>
+			<td class="blg-column-topic-title blg-align-left">
+				{% EVENT topiclist_row_prepend %}
+				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
+				{% EVENT topiclist_row_append %}
+			</td>
+		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
+			<td class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
+			<td class="blg-column-comments blg-align-center"><a href="{{ topicrow.U_LAST_COMMENTS }}" title="{L_VIEW_COMMENTS}">{{ topicrow.REPLIES }}</a></td>
+			<td class="blg-column-topic-views blg-align-center">{{ topicrow.VIEWS }}</td>
+		{% endif %}
+		</tr>
+	{% else %}
+		<tr><td class="blg-align-center" colspan="4">{L_NO_TOPICS}</td></tr>
+	{% endfor %}
+
+	</table>
+	</div>
+
+{% else %}
+
+<div class="blg-forum-list{% if BLOCK_VIEW_MEDIUM %} title-only{% endif %}">
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+	<div class="panel panel-default">
+	{% elseif topic|length %}
+		<div class="blg-widget-header">
+			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
+			<span>{L_TOPIC}</span>
+		</div>
+	{% endif %}
+
+		<table class="footable table table-striped table-bordered table-white table-primary table-hover topics-table">
+	{% if BLOCK_STYLE == 'content_simple' %}
+		<thead>
+			<tr><th colspan="3">{{ BLOCK_TITLE }}</th></tr>
+		</thead>
+	{% endif %}
+		<tbody>
+
+		{% for topicrow in topic %}
+			{% EVENT viewforum_body_topicrow_row_before %}
+			<tr>
+				<td>
+					{% if topicrow.TOPIC_ICON_IMG %}
+					<i class="topic-icon" style="background-image: url({% if not S_BBEMOJI %}{{ T_ICONS_PATH }}{% endif %}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					{% endif %}
+
+					<span class="icon-wrapper">
+				    	<i class="row-icon-font icon-moon-default2{% if topicrow.S_POST_ANNOUNCE %} icon-moon-voice2{% endif %}{% if topicrow.S_POST_GLOBAL %} icon-moon-podcast2{% endif %}{% if topicrow.S_POST_STICKY %} icon-moon-pushpin2{% endif %}{% if topicrow.S_HAS_POLL %} icon-moon-poll{% endif %}{% if topicrow.S_TOPIC_MOVED %} icon-moon-moved{% endif %}{% if topicrow.S_UNREAD_TOPIC %} forum-unread{% else %} forum-read{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					</span>
+
+					<i class="row-icon-font-mini{% if topicrow.S_TOPIC_LOCKED %} fa fa-lock forumview-lock{% endif %}" title="{{ topicrow.TOPIC_FOLDER_IMG_ALT }}"></i>
+					
+					<div class="desc-wrapper">
+			  			{% EVENT topiclist_row_prepend %}
+						{% if topicrow.S_UNREAD_TOPIC %}<a href="{{ topicrow.U_NEWEST_POST }}" title="{L_VIEW_FIRST_UNREAD}"><i class="topic-newest fa fa-asterisk"></i></a>&nbsp;{% endif %}{% if topicrow.U_VIEW_TOPIC %}<a href="{{ topicrow.U_VIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>{% else %}{{ topicrow.TOPIC_TITLE }}{% endif %}
+
+						<br />{L_POST_BY_AUTHOR}&nbsp;{{ topicrow.TOPIC_AUTHOR_FULL }} 
+						<small>&nbsp;&#45;&nbsp;{{ topicrow.FIRST_POST_TIME }}</small>
+			 		 	{% EVENT topiclist_row_append %}	
+					</div>
+				</td>
+
+			{% if not BLOCK_VIEW_MEDIUM %}
+				<td class="fb-stats blg-align-center">{{ topicrow.VIEWS }} {L_VIEWS}<br />{{ topicrow.REPLIES }} {L_REPLIES}</td>
+				<td class="lastpost">
+					<i class="fa fa-user"></i>&nbsp;{L_POST_BY_AUTHOR} {{ topicrow.LAST_POST_AUTHOR_FULL }}
+					{% if not S_IS_BOT %}
+						<a href="{{ topicrow.U_LAST_POST }}" title="{L_GOTO_LAST_POST}">
+							<i class="mobile-post fa fa-sign-out" aria-hidden="true"></i>
+						</a>
+					{% endif %}
+					<br /><i class="fa fa-clock-o"></i>&nbsp;<small>{{ topicrow.LAST_POST_TIME }}</small>
+				</td>
+			{% endif %}
+			</tr>
+			{% EVENT viewforum_body_topicrow_row_after %}
+		{% endfor %}
+		</tbody>
+		</table>
+
+	{% if BLOCK_STYLE == 'content_simple' %}
+	</div>
+	{% endif %}
+
+</div>
+
+{% endif %}
+
+{% if block_pagination|length %}
+	<div class="pull-right">	 
+		<ul class="pagination pagination-forum {% if BLOCK_VIEW_SMALL %}pagination-xs{% else %}pagination-sm{% endif %} hidden-xs">
+		{% for pagination in block_pagination %}
+			{% if pagination.S_IS_PREV %}
+			<li class="previous"><a href="{{ pagination.PAGE_URL }}" rel="prev" role="button">{L_PREVIOUS}</a></li>
+			{% elseif pagination.S_IS_CURRENT %}
+			<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
+			{% elseif pagination.S_IS_ELLIPSIS %}
+			<li class="ellipsis" role="separator"><span>{L_ELLIPSIS}</span></li>
+			{% elseif pagination.S_IS_NEXT %}
+			<li class="next"><a href="{{ block_pagination.PAGE_URL }}" rel="next" role="button">{L_NEXT}</a></li>
+			{% else %}
+			<li><a href="{{ pagination.PAGE_URL }}" role="button">{{ pagination.PAGE_NUMBER }}</a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	</div>
+	<div class="cbb-helper-clear"></div>
+{% endif %}
+
+</div>

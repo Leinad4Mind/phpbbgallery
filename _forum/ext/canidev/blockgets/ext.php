@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -9,16 +9,10 @@
 
 namespace canidev\blockgets;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 class ext extends \phpbb\extension\base
 {
 	const REQUIRED_PHPBB	= '3.2.0';
-	const REQUIRED_CORE		= '1.0.8';
+	const REQUIRED_CORE		= '1.0.11';
 	
 	public function is_enableable()
 	{
@@ -44,7 +38,7 @@ class ext extends \phpbb\extension\base
 		return true;
 	}
 
-	function enable_step($old_state)
+	public function enable_step($old_state)
 	{
 		// Get real Rewrite status
 		$test_url = generate_board_url() . '/blockgets.test';

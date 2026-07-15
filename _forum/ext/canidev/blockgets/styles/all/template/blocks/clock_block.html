@@ -2,12 +2,14 @@
 {% if S_CLOCK %}
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#clock-{{ BLOCK_ID }}').blgClock({
 			clockID: '{{ S_CLOCK }}'
 		});
 	});
+});
 // ]]>
 </script>
 

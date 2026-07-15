@@ -3,6 +3,7 @@
 
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#topic-index-{{ BLOCK_ID }}').cbbLoader({
@@ -14,6 +15,7 @@
 			}
 		});
 	});
+});
 // ]]>
 </script>
 
@@ -42,7 +44,7 @@
 		<tr>
 			<td class="blg-column-topic-title blg-align-left">
 				{% EVENT topiclist_row_prepend %}
-				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
+				<a href="{{ topicrow.U_VIEW_TOPIC }}" title="{{ topicrow.TOPIC_TITLE_RAW|e }}">{{ topicrow.TITLE_TRUNCATED }}</a>
 			</td>
 		{% if not BLOCK_VIEW_SMALL and not BLOCK_VIEW_MEDIUM %}
 			<td class="blg-column-posted-by blg-align-center">{{ topicrow.TOPIC_AUTHOR_FULL }}</td>
@@ -75,14 +77,14 @@
 				</dl>
 			</li>
 		</ul>
-		<ul class="topiclist topics">
 	{% elseif topic|length %}
 		<div class="blg-widget-header">
 			{% if not BLOCK_VIEW_MEDIUM %}<div class="fb-lastpost-title">{L_LAST_POST}</div>{% endif %}
 			<span>{L_TOPIC}</span>
 		</div>
-		<ul class="topiclist topics">
 	{% endif %}
+
+		<ul class="topiclist topics">
 
 		{% for topicrow in topic %}
 			<li class="row{% if topicrow.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}{% if topicrow.S_POST_GLOBAL %} global-announce{% endif %}{% if topicrow.S_POST_ANNOUNCE %} announce{% endif %}{% if topicrow.S_POST_STICKY %} sticky{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">

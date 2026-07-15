@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -28,7 +28,7 @@ $blg_lang_locale = array(
 	'gl'		=> array('iso'	=> 'es_ES',	'name'	=> 'Galego',			'name_eng'	=> 'Galician'),
 	'de'		=> array('iso'	=> 'de_DE',	'name'	=> 'Deutsch',			'name_eng'	=> 'German'),
 	'el'		=> array('iso'	=> 'el_GR',	'name'	=> 'Ελληνικά',			'name_eng'	=> 'Greek'),
-	'iw'		=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית ',			'name_eng'	=> 'Hebrew'),
+	'iw'		=> array('iso'	=> 'iw_IL',	'name'	=> 'עברית ',				'name_eng'	=> 'Hebrew'),
 	'hu'		=> array('iso'	=> 'hu_HU',	'name'	=> 'Magyar',			'name_eng'	=> 'Hungarian'),
 	'id'		=> array('iso'	=> 'id_ID',	'name'	=> 'Bahasa Indonesia',	'name_eng'	=> 'Indonesian'),
 	'it'		=> array('iso'	=> 'it_IT',	'name'	=> 'Italiano',			'name_eng'	=> 'Italian'),
@@ -46,7 +46,7 @@ $blg_lang_locale = array(
 	'es'		=> array('iso'	=> 'es_ES',	'name'	=> 'Español',			'name_eng'	=> 'Spanish'),
 	'es_x_tu'	=> array('iso'	=> 'es_ES',	'name'	=> 'Español (Tú)',		'name_eng'	=> 'Spanish (Casual)'),
 	'sv'		=> array('iso'	=> 'sv_SE',	'name'	=> 'Svenska',			'name_eng'	=> 'Swedish'),
-	'th'		=> array('iso'	=> 'th_TW',	'name'	=> 'ภาษาไทย',				'name_eng'	=> 'Thai'),
+	'th'		=> array('iso'	=> 'th_TW',	'name'	=> 'ภาษาไทย',			'name_eng'	=> 'Thai'),
 	'tr'		=> array('iso'	=> 'tr_TR',	'name'	=> 'Türkçe',			'name_eng'	=> 'Turkish'),
 	'uk'		=> array('iso'	=> 'uk_UA',	'name'	=> 'Українська',		'name_eng'	=> 'Ukrainian'),
 	'vi'		=> array('iso'	=> 'vi_VN',	'name'	=> 'Tiếng Việt',		'name_eng'	=> 'Vietnamese'),

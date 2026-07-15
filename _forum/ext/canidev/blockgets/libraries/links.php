@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.2 12/01/2021
+* @version v2.0.3 26/07/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -10,12 +10,6 @@
 namespace canidev\blockgets\libraries;
 
 use \canidev\core\json_response;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class links
 {
@@ -264,6 +258,7 @@ class links
 				$type 			= ($this->options['type'] == LIST_TYPE_ICON) ? 'icon' : 'image';
 				$dialog_title	= strtoupper($action);
 				$error			= array();
+				$core 			= \canidev\core\lib::get_instance();
 				
 				if($action == 'add')
 				{
@@ -298,7 +293,7 @@ class links
 				$vars = array('item_row', 'display_vars', 'action', 'dialog_title');
 				extract($this->dispatcher->trigger_event('list.edit.before', compact($vars)));
 
-				if(confirm_box(true))
+				if($core->modal_dialog(true))
 				{
 					$new_config = utf8_normalize_nfc($this->request->variable('config', array('' => ''), true));
 					
@@ -416,12 +411,12 @@ class links
 
 					$this->template->assign_var('S_EDIT', true);
 
-					confirm_box(
+					$core->modal_dialog(
 						false,
 						$dialog_title, 
-						build_hidden_fields(array(
+						array(
 							'cache_id'	=> $this->cache_id
-						)),
+						),
 						'@canidev_blockgets/acp_list_edit.html'
 					);
 					

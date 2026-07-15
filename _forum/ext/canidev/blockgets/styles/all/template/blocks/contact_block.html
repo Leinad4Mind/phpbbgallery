@@ -1,6 +1,7 @@
 
 <script>
 // <![CDATA[
+head.ready(['cbbcore.min.js', 'jblockgets.min.js'], function () {
 	window._jPostponed = window._jPostponed || [];
 	window._jPostponed.push(function() {
 		$('#block-{{ BLOCK_ID }} form').ajaxify({
@@ -9,6 +10,7 @@
 			}
 		});
 	});
+});
 // ]]>
 </script>
 

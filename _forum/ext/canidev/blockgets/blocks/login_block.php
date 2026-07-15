@@ -1,7 +1,7 @@
 <?php
 /*
 * @package cBB Blockgets
-* @version v2.0.3 26/07/2021
+* @version v2.0.4 30/08/2021
 *
 * @copyright (c) 2021 CaniDev
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
@@ -133,10 +133,10 @@ class login_block extends base
 		if($this->user->data['is_registered'])
 		{
 			$links = array(
-				'SEARCH_NEW'	=> array('url' => 'U_SEARCH_NEW', 	'icon' => 'fa-file-o icon-red'),
-				'SEARCH_SELF'	=> array('url' => 'U_SEARCH_SELF', 	'icon' => 'fa-file-o'),
+				'SEARCH_NEW'	=> array('url' => 'U_SEARCH_NEW', 	'icon' => 'fa-commenting icon-red'),
+				'SEARCH_SELF'	=> array('url' => 'U_SEARCH_SELF', 	'icon' => 'fa-comment'),
 				'MY_BOOKMARKS'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=bookmarks'), 	'icon' => 'fa-star-o'),
-				'MY_SUBSCRIBED'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=subscribed'), 	'icon' => 'fa-bookmark-o'),
+				'MY_SUBSCRIBED'	=> array('url' => $this->helper->url('ucp', 'i=main&amp;mode=subscribed'), 	'icon' => 'fa-eye'),
 			);
 			
 			if($this->config['allow_privmsg'] && ($this->auth->acl_get('u_readpm') || $this->auth->acl_get('u_sendpm')))
@@ -145,7 +145,7 @@ class login_block extends base
 				
 				$links[$pm_title] = array(
 					'url' => 'U_PRIVATEMSGS',
-					'icon' => 'fa-inbox',
+					'icon' => 'fa-envelope',
 				);
 			}
 
