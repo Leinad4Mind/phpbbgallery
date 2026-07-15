@@ -1,9 +1,5 @@
 # Changelog
 
-## 1.0.0-b4 - 2019-05-22
-
-- Switch to Symfony's crawler to parse images out of posts.
-
 ## 1.0.0-b3 - 2019-04-18
 
 - Minor coding fixes.

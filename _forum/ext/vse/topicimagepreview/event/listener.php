@@ -17,7 +17,6 @@ namespace vse\TopicImagePreview\event;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -93,15 +92,13 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Run an SQL query on a group of topics, and find the newest (or oldest)
-	 * post with [IMG] images. Then update the topic's row set array to include
-	 * the post's text in the cases where images were found.
+	 * Run an SQL query to find the posts with images in a group topics
+	 * and the post's text to each topic's rowset.
 	 *
 	 * @param array $topic_list An array of topic ids
-	 * @param array $rowset     The row set of topic data
+	 * @param array $rowset     The rowset of topic data
 	 *
-	 * @return array The updated row set of topic data which now includes
-	 *               the post_text of a post containing images.
+	 * @return array The updated rowset of topic data
 	 */
 	protected function query_images(array $topic_list, array $rowset)
 	{
@@ -112,7 +109,7 @@ class listener implements EventSubscriberInterface
 				FROM ' . POSTS_TABLE . '
 				WHERE topic_id = ' . (int) $topic_id . '
 					AND post_visibility = ' . ITEM_APPROVED . '
-					AND post_text ' . $this->db->sql_like_expression('<r>' . $this->db->get_any_char() . '<IMG ' . $this->db->get_any_char()) . '
+					AND post_text ' . $this->db->sql_like_expression('<r>' . $this->db->get_any_char() . '<ALBUM ' . $this->db->get_any_char()) . '
 				ORDER BY post_time ' . ($this->config->offsetGet('vse_tip_new') ? 'DESC' : 'ASC') . '
 				LIMIT 1)';
 
@@ -146,23 +143,34 @@ class listener implements EventSubscriberInterface
 	{
 		// Check if we have any post text or images
 		$row = $event['row'];
-		if (empty($row['post_text']) || !preg_match('/^<[r][ >]/', $row['post_text']) || strpos($row['post_text'], '<IMG ') === false)
+		if (empty($row['post_text']) || !preg_match('/^<[r][ >]/', $row['post_text']) || strpos($row['post_text'], '<ALBUM ') === false)
 		{
 			return;
 		}
-
+		
 		// Extract the images
-		$crawler = new Crawler($row['post_text']);
-		$images = $crawler->filterXpath('//img[not(ancestor::img)]')->extract(['src']);
+		$images = [];
+		$dom = new \DOMDocument;
+		$dom->loadXML($row['post_text']);
+		$xpath = new \DOMXPath($dom);
+		foreach ($xpath->query('//ALBUM[not(ancestor::ALBUM)]/@content') as $image)
+		{
+			$images[] = $image->textContent;
+		}
 
 		// Create a string of images
 		$img_string = implode(' ', array_map(function ($image) {
-			return "<img src='{$image}' alt='' style='max-width:{$this->config['vse_tip_dim']}px; max-height:{$this->config['vse_tip_dim']}px;' />";
+			return "<img src='/forum/app.php/gallery/image/{$image}/mini' alt='' style='max-width:{$this->config['vse_tip_dim']}px; max-height:{$this->config['vse_tip_dim']}px;' />";
+		}, array_slice($images, 0, (int) $this->config['vse_tip_num'], true)));
+		
+		$img_string_big = implode(' ', array_map(function ($image) {
+			return "<img src='/forum/app.php/gallery/image/{$image}/source' alt='' style='max-width:500px; max-height:500px;' />";
 		}, array_slice($images, 0, (int) $this->config['vse_tip_num'], true)));
 
 		// Send the image string to the template
 		$block = $event->offsetExists('topic_row') ? 'topic_row' : 'tpl_ary';
 		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES' => $img_string]);
+		$event[$block] = array_merge($event[$block], ['TOPIC_IMAGES_BIG' => $img_string_big]);
 	}
 
 	/**

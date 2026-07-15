@@ -13,4 +13,6 @@
 	{% set preview = similar %}
 {% endif %}
 
-<div{% if preview.TOPIC_IMAGES %} data-ot="{{ preview.TOPIC_IMAGES }}" data-ot-group="topics" data-ot-background="transparent" data-ot-border-width="0" data-ot-border-radius="0"{% endif %}>
+<span{% if preview.TOPIC_IMAGES_BIG %} data-ot="{{ preview.TOPIC_IMAGES_BIG }}" data-ot-group="topics" data-ot-background="transparent" data-ot-border-width="0" data-ot-border-radius="0"{% endif %}>
+<div style="float:left;padding-right:10px;">{{ preview.TOPIC_IMAGES }}</div>
+</span>
