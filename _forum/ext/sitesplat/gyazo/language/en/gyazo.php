@@ -3,7 +3,7 @@
 *
 * Gyazo - forum images uploader
 *
-* @copyright (c) 2016 SiteSplat All rights reserved
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -38,18 +38,29 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'GYAZO_ACCESS_TOKEN'			=> 'Gyazo Access Token',
-	'GYAZO_ACCESS_TOKEN_EXPLAIN'	=> 'You need to register a Gyazo app to get the <strong>Access Token</strong>.<br /> For creating a new App go to <a href="https://gyazo.com/api">https://gyazo.com/api</a>. Then enter the Access Token here.',
+	'GYAZO_CLIENT_ID'			=> 'Gyazo Access Token',
+	'GYAZO_CLIENT_ID_EXPLAIN'	=> 'You need to register a Gyazo app to get the <strong>Access Token</strong>.<br /> For creating a new App go to <a href="https://gyazo.com/api">https://gyazo.com/api</a>. Then enter the Access Token here.',
 	
-	'GYAZO_UPLOAD_TITLE'		    => 'Upload an Image',
-	'GYAZO_UPLOAD_MAIN'			    => 'Upload an Image to use in topic via Gyazo service. The image is automatically inserted in the post field above once submitted',
-	'GYAZO_UPLOAD'				    => 'Upload Image now',
-	'GYAZO_SELECT'				    => 'Select Image',
-    'GYAZO_COPY'				    => 'Copy',
+	'GYAZO_UPLOAD_TITLE'		=> 'Upload an Image',
+	'GYAZO_UPLOAD_MAIN'			=> 'Upload an Image to use in topic via Gyazo service. The image is automatically inserted in the post field above once submitted',
+	'GYAZO_UPLOAD'				=> 'Upload Image now',
+	'GYAZO_SELECT'				=> 'Select Image',
+    'GYAZO_COPY'				=> 'Copy',
        
-	'GYAZO_OUTPUT_LINK'			    => 'Direct link',
-	'GYAZO_OUTPUT_IMAGE'		    => 'BBcode tag',
-	'GYAZO_OUTPUT_IMAGE_DELETE'	    => 'Deletion Link',
-	'GYAZO_OUTPUT_PLACEHOLDER'	    => 'Waiting image upload...',
+	'GYAZO_OUTPUT_LINK'			=> 'Direct link',
+	'GYAZO_OUTPUT_IMAGE'		=> 'BBcode tag',
+	'GYAZO_OUTPUT_IMAGE_DELETE'	=> 'Deletion Link',
+	'GYAZO_OUTPUT_MARKDOWN'	    => 'Markdown',
+	'MARKDOWN_WHATIS'	        => '<a href="//themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="for use with &#34;BBmarkdown&#34; Premium extension for phpBB Premium themes" target="_blank"><i class="fa fa-question-circle"></i></a>',
+	'GYAZO_OUTPUT_PLACEHOLDER'	=> 'Waiting image upload...',
+
+	'GYAZO_SIGNATURE'	=> 'Allow use of Gyazo image upload in user signatures',
+
+	'ALLOW_GYAZO'					=> 'Allow Gyazo avatars',
+	'AVATAR_DRIVER_GYAZO_TITLE'		=> 'Gyazo avatar',
+	'AVATAR_DRIVER_GYAZO_EXPLAIN'	=> '',
+	'GYAZO_AVATAR'					=> 'Gyazo avatar',
+
+	'GYAZO_QUICKREPLY'	=> 'Allow Gyazo in Snappy Smart Reply',
 
 ));

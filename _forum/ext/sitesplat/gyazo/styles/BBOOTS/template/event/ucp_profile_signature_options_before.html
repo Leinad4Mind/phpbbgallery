@@ -1,0 +1,54 @@
+{% if IN_GYAZO and S_BBCODE_ALLOWED and S_BBCODE_IMG %}
+<div class="space10"></div>
+
+<fieldset class="framed-ucp">
+<legend>{{ lang('GYAZO_UPLOAD_TITLE') }}</legend>
+
+	<div class="fileinput fileinput-new" data-provides="fileinput">
+		<button type="submit" name="add_image" value="Upload Image" class="btn btn-success fileinput-exists" <!-- IF not S_PRIVMSGS -->onclick="document.getElementById('postform').action += '#gyazoAnchor';"<!-- ENDIF --> data-loading-text="{L_FILE_UPLOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{{ lang('GYAZO_UPLOAD') }}</button>
+		<span class="btn btn-default btn-file">
+			<span class="fileinput-new">{{ lang('GYAZO_SELECT') }}</span>
+			<span class="fileinput-exists">{{ lang('FILE_CHANGE') }}</span>
+			<input type="file" name="gyazo" id="gyazo" accept="image/*"/>
+		</span>
+		<i class="fa fa-picture-o fileinput-exists"></i>&nbsp;<span class="fileinput-filename"></span>
+		<a href="#" class="close close-file-upload fileinput-exists" data-dismiss="fileinput" style="float: none"><i class="fa fa-times"></i></a>
+	</div>
+  
+	<div class="control-group"> 
+		<label class="control-label" for="box-gyazo-link">{{ lang('GYAZO_OUTPUT_LINK') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-gyazo-link" value="{{ GYAZO_DIRECT_LINK }}" placeholder="{{ lang('GYAZO_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default " id="copy-button-link" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('GYAZO_COPY') }}</a>
+				</span>
+		    </div> 
+	    </div> 
+    </div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-gyazo-img">{{ lang('GYAZO_OUTPUT_IMAGE') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-gyazo-img" value="{{ GYAZO_DIRECT_IMG }}" placeholder="{{ lang('GYAZO_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default btn-gyazo-copy" id="copy-button-img" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('GYAZO_COPY') }}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+
+	<div class="control-group"> 
+		<label class="control-label" for="box-gyazo-del">{{ lang('GYAZO_OUTPUT_IMAGE_DELETE') }}{{ lang('COLON') }}</label>
+		<div class="controls controls-row"> 
+			<div class="input-group col-md-6">
+				<input type="text" class="form-control" id="box-gyazo-del" <!-- IF GYAZO_DELETEHASH -->value="http://gyazo.com/delete/{{ GYAZO_DELETEHASH }}"<!-- ENDIF --> placeholder="{{ lang('GYAZO_OUTPUT_PLACEHOLDER') }}">
+				<span class="input-group-btn">
+					<a class="btn btn-default btn-gyazo-copy" id="copy-button-del" data-clipboard-snippet="" title=""><i class="fa fa-clipboard"></i>&nbsp;{{ lang('GYAZO_COPY') }}</a>
+				</span>
+			</div> 
+		</div> 
+	</div>
+</fieldset>
+{% endif %}

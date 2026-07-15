@@ -2,7 +2,8 @@
 /**
 *
 * Gyazo - forum images uploader
-* @copyright (c) 2016 SiteSplat All rights reserved
+*
+* @copyright (c) 2015 SiteSplat All rights reserved
 * @license Proprietary
 *
 */
@@ -19,7 +20,7 @@ namespace sitesplat\gyazo;
  */
 class ext extends \phpbb\extension\base
 {
-	public function is_enableable()
+    public function is_enableable()
 	{
 		if (!class_exists('sitesplat\BBCore\helper'))
 		{
@@ -69,4 +70,6 @@ class ext extends \phpbb\extension\base
 			break;
 		}
 	}
+	
+	
 }
