@@ -1,0 +1,115 @@
+#bblivechat *:not(strong):not(em):not(h2):not(th):not(a) {
+  color: #555;
+  font-size: 14px;
+  vertical-align: middle;
+}
+td.actions i {
+  font-size: 18px !important;
+}
+#bblivechat strong,
+#bblivechat em,
+#bblivechat #ac-title,
+#bblivechat .ssbutton {
+  color: #000;
+}
+#bblivechat fieldset {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+#bblivechat input,
+#bblivechat textarea {
+  color: #222 !important;
+}
+#bblivechat textarea {
+  font-family: Monaco, "Lucida Console", Consolas, monospace;
+  max-height: 336px;
+  min-height: 96px;
+  resize: vertical !important;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+}
+#bblivechat td,
+#bblivechat textarea {
+  font-size: 13px !important;
+}
+#bblivechat #bb-error {
+  color: #b22;
+  font-weight: bold;
+  line-height: 20px;
+  margin-bottom: 30px;
+}
+#bblivechat #ac-title {
+  font-size: 24px;
+}
+#bblivechat dl,
+#bblivechat .submit-row > * {
+  border: none;
+}
+#bblivechat dt span {
+  display: block;
+  font-size: 13px !important;
+}
+#bblivechat .ssbutton {
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  padding: 4px 6px;
+}
+#bblivechat .playbutton {
+  margin: 0 4px;
+}
+#bblivechat_rooms .handle {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+#bblivechat .pagination li.active span {
+  color: #fff;
+}
+#sortform {
+  padding-top: 10px;
+  text-align: right;
+}
+fieldset dt strong {
+  color: red !important;
+  font-style: italic;
+}
+#ac-tab-block {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+  padding: 10px 0;
+}
+#bblc-settings hr {
+  border-top: 1px solid #ddd;
+}
+#bblc-settings .sstab {
+  background-color: #369;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 8px;
+  text-decoration: none !important;
+}
+#bblc-settings .sstab.ssactivetab {
+  background-color: #9cf;
+  color: #000;
+}
+#bblc-settings .ac-tab {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.3s ease-in;
+  z-index: -1;
+}
+#bblc-settings .ac-tab.ac-active {
+  display: block;
+  opacity: 1;
+  position: relative;
+  z-index: 1;
+}

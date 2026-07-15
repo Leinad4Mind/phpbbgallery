@@ -1,0 +1,115 @@
+<!-- INCLUDECSS bblivechat.css -->
+<!-- INCLUDE overall_header.html -->
+
+<div id="bblivechat">
+
+	<!-- IF AC_ERROR --><fieldset id="bb-error">{AC_ERROR}</fieldset><!-- ENDIF -->
+
+	<h1 id="ac-title">{L_BBLIVECHAT_ROOMS}</h1>
+	<p>{L_BBLIVECHAT_ROOMS_EXPLAIN}</p>
+
+<!-- IF S_MANAGE -->
+
+	<form id="acp_bbchat" method="post" action="{{ U_ACTION }}" enctype="multipart/form-data"><fieldset>
+		<h2><!-- IF S_ROOM_EDIT -->{{ lang('EDIT_ROOM') }}<!-- ELSE -->{{ lang('ADD_ROOM') }}<!-- ENDIF --></h2>
+		<dl>
+			<dt><label for="name">{{ lang('ROOM_NAME') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_NAME_EXPLAIN') }}</span></dt>
+			<dd><input type="text" name="name" id="name" value="{{ ROOM_NAME }}" maxlength="255" />	</dd>
+		</dl>
+		<dl>
+			<dt><label for="cover">{{ lang('ROOM_HIDE') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_HIDE_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="cover" value="1"<!-- IF AC_ROOM_HIDE --> checked<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="cover" value="0"<!-- IF not AC_ROOM_HIDE --> checked<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="desc">{{ lang('ROOM_DESC') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_DESC_EXPLAIN') }}</span></dt>
+			<dd><input type="text" name="desc" id="desc" value="{{ ROOM_DESC }}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="classes">{{ lang('ROOM_CLASSES') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_CLASSES_EXPLAIN') }}</span></dt>
+			<dd><input type="text" name="classes" id="classes" value="{{ ROOM_CLASSES }}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="announcement">{{ lang('ROOM_ANNOUNCEMENT') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_ANNOUNCEMENT_EXPLAIN') }}</span></dt>
+			<dd><input type="text" name="announcement" id="announcement" value="{{ ROOM_ANNOUNCEMENT }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="image">{{ lang('ROOM_IMAGE') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_IMAGE_EXPLAIN') }}</span></dt>
+			<dd>
+			<!-- IF ROOM_IMAGE -->
+				<img style="max-width:72px;max-height:72px" src="{{ ROOM_IMAGE }}"><br />
+				<a class="button2" style="display:inline-block" href="{{ U_REMOVE_IMAGE }}">{{ lang('REMOVE_IMAGE') }}</a>
+			<!-- ELSE -->
+				<input type="file" accept="image/*" name="image" id="image" />
+			<!-- ENDIF -->
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="groups">{{ lang('ROOM_GROUPS') ~ lang('COLON') }}</label><br /><span>{{ lang('ROOM_GROUPS_EXPLAIN') }}</span></dt>
+			<dd><select name="groups[]" id="groups" size="6" multiple>
+				{% for group in groups %}
+					<option value="{{ group.ID }}"{% if group.SELECTED %} selected{% endif %}>{{ group.NAME }}</option>
+				{% endfor %}
+			</select></dd>
+		</dl>
+		<dl class="submit-row">
+			<dt>&nbsp;</dt>
+			<dd><br />
+				<input class="button1 ssbutton" type="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+				<input class="button2 ssbutton" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			</dd>
+		</dl>
+	
+		<input type="hidden" name="action" value="{{ ACTION }}" />
+		<input type="hidden" name="id" value="{{ ROOM_ID }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset></form>
+
+<!-- ELSE -->
+
+	<table id="bblivechat_rooms" class="table1 zebra-table"><thead>
+		<tr>
+			<th>{{ lang('ROOM') }}</th>
+			<th>{{ lang('GROUPS') }}</th>
+			<th style="text-align:center">{{ lang('ACTIONS') }}</th>
+		</tr>
+	</thead>
+	{% for room in rooms %}
+		<!-- IF room.ID eq 0 --><thead><!-- ENDIF -->
+		<tr data-id="{{ room.ID }}"<!-- IF room.ID eq 0 --> class="row3"<!-- ENDIF -->>
+			<td title="{{ room.DESC }}">{% if room.IMAGE %}<img style="max-height:30px;max-width:30px" src="{{ room.IMAGE }}">{% endif %} {{ room.NAME }}</td>
+			<td>{{ room.GROUPS }}</td>
+			<td class="actions">
+				<a href="{room.U_EDIT}" title="{{ lang('EDIT') }}"><i class="fa fa-cog" aria-hidden="true" style="color:#0c0"></i></a>
+				<a href="{room.U_PURGE}" title="{{ lang('ROOM_PURGE') }}"><i class="fa fa fa-comments" aria-hidden="true" style="color:#d90"></i></a>
+			<!-- IF room.ID ne 0 -->
+				<a href="{room.U_DELETE}" title="{{ lang('DELETE') }}"><i class="fa fa-trash-o" aria-hidden="true" style="color:#a00;font-weight:bold"></i></a>
+				&nbsp;<a><i class="handle fa fa-bars" title="{{ lang('MOVE') }}"></i></a>
+			<!-- ENDIF -->
+			</td>
+		</tr>
+		<!-- IF room.ID eq 0 --></thead><tbody><!-- ENDIF -->
+	{% else %}
+		<tr class="row3">
+			<td colspan="4">{{ lang('NO_ROOMS') }}</td>
+		</tr>
+	{% endfor %}
+	</tbody></table>
+
+	<form id="sortform" method="post" action="{{ U_ACTION }}" onsubmit="bblc_formsubmit()">
+		<input type="hidden" name="action" value="reorder" />
+		<input type="hidden" id="sort_order" name="sort_order" value="" />
+		<a id="sort_reset" class="button2 ssbutton" href="{{ U_ACTION }}" style="display:none">{L_RESET}</a>
+		<input id="submit" class="button1 ssbutton" type="submit" name="submit" value="{L_REORDER_BUTTON}" style="display:none" />
+		<a id="add_room" class="button2" href="{{ U_ROOM_ADD }}">{{ lang('ADD_ROOM') }}</a>
+		{{ S_FORM_TOKEN }}
+	</form>
+
+<!-- ENDIF -->
+
+</div>
+
+<!-- INCLUDEJS sortable.min.js -->
+<!-- INCLUDE overall_footer.html -->

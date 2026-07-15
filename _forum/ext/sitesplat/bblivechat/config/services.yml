@@ -1,0 +1,25 @@
+services:
+    sitesplat.bblivechat.listener:
+        class: sitesplat\bblivechat\event\listener
+        arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+        tags:
+            - { name: event.listener }
+
+    sitesplat.bblivechat.cron:
+        class: sitesplat\bblivechat\cron\bblc_cron
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@language'
+        calls:
+            - [set_name, [sitesplat.bblivechat.cron]]
+        tags:
+            - { name: cron.task }
