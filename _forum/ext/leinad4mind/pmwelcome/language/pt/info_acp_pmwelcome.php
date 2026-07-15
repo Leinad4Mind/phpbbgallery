@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome [Portuguese] 
-* @copyright 2019 (c) Leinad4Mind - https://leinad4mind.top/forum
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 * Translated to Portuguese by Leinad4Mind (https://leinad4mind.top/forum)
 */
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_PMWELCOME'					=> 'Mensagem de Boas-Vindas',
 	'ACP_PMWELCOME_EXPLAIN'			=> 'Pode definir o corpo da Mensagem Privada que será enviada ao utilizador quando este entrar pela primeira vez no fórum.',
 	'ACP_PMWELCOME_SETTINGS'		=> 'Configuração da mensagem de Boas-Vindas.',
@@ -46,4 +46,4 @@ $lang = array_merge($lang, array(
 	'ACP_PMWELCOME_SUBJECT'			=> 'Assunto da mensagem',
 	'ACP_PMWELCOME_TEXT'			=> 'Corpo da mensagem',
 	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Pode usar BBCodes, Smilies e as variáveis "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} e {BOARD_SIG}".',
-));
+]);

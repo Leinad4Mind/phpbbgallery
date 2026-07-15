@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome [Croatian]
-* @copyright BB3.Mobi 2015 (c) Anvar(http://apwa.ru)
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 * Translated to Croatian by Ančica Sečan Matijaščić (http://ancica.sunceko.net)
 *
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 'ACP_PMWELCOME'=>'Pozdravna poruka',
 'ACP_PMWELCOME_EXPLAIN'=>'Ovdje možeš podesiti tekst pozdravne poruke koja će biti poslana korisniku/ci po registraciji.',
 'ACP_PMWELCOME_SETTINGS'=>'Postavke pozdravne poruke',
@@ -47,4 +47,4 @@ $lang = array_merge($lang, array(
 'ACP_PMWELCOME_SUBJECT'=>'Naslov',
 'ACP_PMWELCOME_TEXT'=>'Tekst',
 'ACP_PMWELCOME_TEXT_EXPLAIN'=>'Možeš koristiti BBKod, smajliće i token "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} i {BOARD_SIG}".',
-));
+]);

@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome [Dutch]
-* @copyright BB3.Mobi 2015 (c) Anvar(http://apwa.ru)
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 * Translated to Dutch by "Dutch Translators" (https://github.com/dutch-translators)
 *
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_PMWELCOME'					=> 'Welkoms Bericht',
 	'ACP_PMWELCOME_EXPLAIN'			=> 'Je kan een persoonlijkbericht samenstellen die wordt verzonden naar een nieuwe gebruiker als hij/zij voor het eerst inlogd na zijn/haar registratie.',
 	'ACP_PMWELCOME_SETTINGS'		=> 'Instellingen Welkoms Bericht.',
@@ -47,4 +47,4 @@ $lang = array_merge($lang, array(
 	'ACP_PMWELCOME_SUBJECT'			=> 'Onderwerp',
 	'ACP_PMWELCOME_TEXT'			=> 'Tekst voor het welkoms bericht',
 	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Je kan BBcodes en smilies gebruiken, maar ook de variabel "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} en {BOARD_SIG}".',
-));
+]);

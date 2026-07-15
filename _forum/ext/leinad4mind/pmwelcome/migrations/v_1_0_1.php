@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome
-* @copyright 2019 (c) Leinad4Mind - https://leinad4mind.top/forum
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

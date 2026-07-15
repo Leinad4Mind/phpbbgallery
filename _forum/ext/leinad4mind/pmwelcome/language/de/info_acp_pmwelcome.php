@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome [Deutsch]
-* @copyright BB3.MOBi (c) 2015 Anvar http://apwa.ru
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste:
 // ’ « » “ ” …
 //
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_PMWELCOME'					=> 'Willkommensnachricht',
 	'ACP_PMWELCOME_EXPLAIN'			=> 'Hier kannst du den Text festlegen, den die Persönliche Nachricht enthalten soll, die einem neuen Benutzer nach seiner Registrierung gesendet wird.',
 	'ACP_PMWELCOME_SETTINGS'		=> 'Einstellungen Willkommensnachricht.',
@@ -45,4 +45,4 @@ $lang = array_merge($lang, array(
 	'ACP_PMWELCOME_SUBJECT'			=> 'Betreff der Nachricht',
 	'ACP_PMWELCOME_TEXT'			=> 'Text der Willkommensnachricht',
 	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'Du kannst BBCode und Smilies benutzen, und die Tokens "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} and {BOARD_SIG}", die in der Nachricht ersetzt werden.',
-));
+]);

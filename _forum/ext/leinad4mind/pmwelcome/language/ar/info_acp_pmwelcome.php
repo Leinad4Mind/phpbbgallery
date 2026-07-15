@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome [Arabic]
-* @copyright BB3.Mobi 2015 (c) Anvar(http://apwa.ru)
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 * Translated to Arabic by Bassel Taha Alhitary (http://www.alhitary.net)
 *
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_PMWELCOME'					=> 'رسالة الترحيب',
 	'ACP_PMWELCOME_EXPLAIN'			=> 'من هنا تستطيع تحديد نص رسالة الترحيب التي سيتم إرسالها إلى العضو عند تسجيل أول دخول له للمنتدى.',
 	'ACP_PMWELCOME_SETTINGS'		=> 'الإعدادات.',
@@ -47,4 +47,4 @@ $lang = array_merge($lang, array(
 	'ACP_PMWELCOME_SUBJECT'			=> 'عنوان الموضوع ',
 	'ACP_PMWELCOME_TEXT'			=> 'نص رسالة الترحيب',
 	'ACP_PMWELCOME_TEXT_EXPLAIN'	=> 'تستطيع استخدام أكواد البي بي bbcode والإبتسامات , وكذلك تستطيع استخدام الرمز "{USERNAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_DESC}, {BOARD_CONTACT}, {BOARD_EMAIL} و {BOARD_SIG}".',
-));
+]);

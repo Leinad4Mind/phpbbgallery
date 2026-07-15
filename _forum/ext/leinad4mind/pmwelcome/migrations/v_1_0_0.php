@@ -3,7 +3,7 @@
 /**
 *
 * @package PM Welcome
-* @copyright 2019 (c) Leinad4Mind - https://leinad4mind.top/forum
+* @copyright (c) 2019 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -27,7 +27,7 @@ class v_1_0_0 extends \phpbb\db\migration\migration
 		return array(
 			// Add configs
 			array('config.add', array('pmwelcome_user', 2)),
-			array('config.add', array('pmwelcome_subject', 'Welcome to "Your Forum"!')),
+			array('config.add', array('pmwelcome_subject', 'Welcome to “{SITE_NAME}”!')),
 
 			// Add config text
 			array('config_text.add', array('pmwelcome_post_text', '')),
