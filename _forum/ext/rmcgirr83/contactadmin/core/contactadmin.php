@@ -359,33 +359,17 @@ class contactadmin
 	}
 
 	/**
-	 * make_user_select
-	 * @return string User List html
-	 * for drop down when selecting the contact bot
+	 * Create the selection for who gets the message
 	 */
-	public function make_user_select($select_id = false)
+	public function who_select($value, $key = '')
 	{
-		// variables
-		$user_list = '';
+		$radio_ary = [
+			$this->contact_constants['CONTACT_WHO_ALL_ADMINS']		=> 'CONTACT_WHO_ALL_ADMINS',
+			$this->contact_constants['CONTACT_WHO_BOARD_DEFAULT']	=> 'CONTACT_WHO_BOARD_DEFAULT',
+			$this->contact_constants['CONTACT_WHO_BOARD_FOUNDER']		=> 'CONTACT_WHO_BOARD_FOUNDER',
+		];
 
-		// groups we ignore for the dropdown
-		$groups = [USER_IGNORE, USER_INACTIVE];
-
-		// do the main sql query
-		$sql = 'SELECT user_id, username
-			FROM ' . USERS_TABLE . '
-			WHERE ' . $this->db->sql_in_set('user_type', $groups, true) . '
-			ORDER BY username_clean';
-		$result = $this->db->sql_query($sql);
-
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$selected = ($row['user_id'] == $select_id) ? ' selected="selected"' : '';
-			$user_list .= '<option value="' . $row['user_id'] . '"' . $selected . '>' . $row['username'] . '</option>';
-		}
-		$this->db->sql_freeresult($result);
-
-		return $user_list;
+		return h_radio('contact_who', $radio_ary, $value, $key);
 	}
 
 	/**
@@ -399,7 +383,6 @@ class contactadmin
 				$this->contact_constants['CONTACT_METHOD_EMAIL']	=> 'CONTACT_METHOD_EMAIL',
 				$this->contact_constants['CONTACT_METHOD_POST']		=> 'CONTACT_METHOD_POST',
 				$this->contact_constants['CONTACT_METHOD_PM']		=> 'CONTACT_METHOD_PM',
-				$this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']	=> 'CONTACT_METHOD_BOARD_DEFAULT',
 			];
 		}
 		else
@@ -436,14 +419,6 @@ class contactadmin
 	}
 
 	/**
-	 * Create the selection for the bot
-	 */
-	public function bot_user_select($value)
-	{
-		return '<select id="contact_bot_user" name="bot_user">' . $this->make_user_select($value) . '</select>';
-	}
-
-	/**
 	* get an array of admins
 	*/
 	public function admin_array()
@@ -452,7 +427,7 @@ class contactadmin
 		$contact_users = [];
 
 		// board default email
-		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT'])
+		if ($this->config['contactadmin_who'] == $this->contact_constants['CONTACT_WHO_BOARD_DEFAULT'])
 		{
 			$contact_users[] = [
 				'username'		=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
@@ -460,13 +435,13 @@ class contactadmin
 				'user_jabber'	=> '',
 				'user_lang'		=> $this->config['default_lang'],
 				'user_notify_type'	=> 0,
+				'user_dateformat'	=> $this->config['default_dateformat'],
+				'user_timezone'	=> $this->config['board_timezone']
 			];
 
 			return $contact_users;
 		}
-
-		// Only founders...maybe
-		if ($this->config['contactadmin_founder_only'])
+		else if ($this->config['contactadmin_who'] == $this->contact_constants['CONTACT_WHO_BOARD_FOUNDER'])
 		{
 			$sql_where .= ' WHERE user_type = ' . USER_FOUNDER;
 		}
@@ -476,19 +451,15 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
 
-			if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'] && count($admin_ary))
+			if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]) && count($admin_ary))
 			{
-				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
-			}
-			else if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'] && count($admin_ary))
-			{
-				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
+				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary);
 			}
 		}
 
 		if (!empty($sql_where))
 		{
-			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
+			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type, user_dateformat, user_timezone
 				FROM ' . USERS_TABLE . ' ' .
 				$sql_where;
 			$result = $this->db->sql_query($sql);
@@ -518,9 +489,9 @@ class contactadmin
 	{
 		$bot_user_info = [];
 
-		$sql = 'SELECT user_id, username
+		$sql = 'SELECT user_id, username, user_type
 			FROM ' . USERS_TABLE . "
-			WHERE user_id = " . (int) $user_id . ' AND user_type <> ' . USER_IGNORE;
+			WHERE user_id = " . (int) $user_id;
 		$result = $this->db->sql_query($sql);
 		$bot_user_info = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -535,12 +506,21 @@ class contactadmin
 			if (!isset($bot_user_info['username']))
 			{
 				$json = new JsonResponse([
-					'error'     => true,
+					'error'     => 'CONTACT_NO_BOT_USER',
+					'user_link'	=> '',
+				]);
+			}
+			else if ($bot_user_info['user_type'] == USER_IGNORE)
+			{
+				$json = new JsonResponse([
+					'error'     => 'CONTACT_BOT_IS_BOT',
+					'user_link'	=> $bot_user_info['username'],
 				]);
 			}
 			else
 			{
 				$json = new JsonResponse([
+					'error'			=> false,
 					'user_link'     => '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_user_info['user_id']) . '" target="_blank">' . $bot_user_info['username'] . '</a>',
 				]);
 			}

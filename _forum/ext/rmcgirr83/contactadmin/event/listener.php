@@ -148,9 +148,9 @@ class listener implements EventSubscriberInterface
 	*/
 	public function page_header_after($event)
 	{
-		if (!$this->user->data['is_bot'])
+		if (empty($this->user->data['is_bot']))
 		{
-			$version = phpbb_version_compare($this->config['version'], '3.2.6', '>=');
+			$version = phpbb_version_compare($this->config['version'], '3.3', '>=');
 
 			$this->template->assign_vars([
 				'U_CONTACT_US'		=> false,
