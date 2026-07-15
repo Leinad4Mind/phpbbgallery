@@ -81,7 +81,7 @@
 		
 	{% if chat_tip|length %}
 		<div id="chat-tips" class="chat-tip-message cbb-helper-hidden">
-			<strong><em>{L_CHAT_TIP}</em>{L_COLON}</strong> {% for chat_tip in loops.chat_tip %}<div class="js-message cbb-helper-hidden">{{ chat_tip.S_TIP }}</div>{% endfor %}
+			<strong><em>{L_CHAT_TIP}</em>:</strong> {% for chat_tip in loops.chat_tip %}<div class="js-message cbb-helper-hidden">{{ chat_tip.S_TIP }}</div>{% endfor %}
 		</div>
 	{% endif %}
 		

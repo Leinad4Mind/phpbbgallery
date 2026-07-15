@@ -1,22 +1,24 @@
 {% if S_CHAT_ENABLED or S_CHAT_IN_ARCHIVE %}
 
 	<script>
+	// <![CDATA[
 	head.ready(['cbbcore.min.js', 'jchat.min.js'], function () {
 		cbbCore.initService('chat', {{ S_CHAT_OPTIONS }});
 	});
+	// ]]>
 	</script>
 
 {% elseif IN_CHAT_MCP %}
 
 	<script>
-	head.ready(['cbbcore.min.js', 'jchat.min.js'], function () {
-		window._jPostponed = window._jPostponed || [];
-		window._jPostponed.push(function() {
-			$('#ban-period').change(function() {
-				$('#ban-date').objView((this.value == 0));
-			});
+	// <![CDATA[
+	window._jPostponed = window._jPostponed || [];
+	window._jPostponed.push(function() {
+		$('#ban-period').change(function() {
+			$('#ban-date').objView((this.value == 0));
 		});
 	});
+	// ]]>
 	</script>
 
 {% endif %}

@@ -1,91 +1,91 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<!-- IF U_BACK --><div><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-<h1>{L_ACP_CHAT_TEXTS}</h1>
-<p>{L_ACP_CHAT_TEXTS_EXPLAIN}</p>
+<h1>{{ lang('ACP_CHAT_TEXTS') }}</h1>
+<p>{{ lang('ACP_CHAT_TEXTS_EXPLAIN') }}</p>
 
-<!-- IF S_ERROR -->
+{% if S_ERROR %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
-		<p>{ERROR_MSG}</p>
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
 	</div>
-<!-- ELSEIF not S_EDIT -->
+{% elseif not S_EDIT %}
 <hr />
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_chat_texts" method="post" action="{U_ACTION}">
+<form id="acp_chat_texts" method="post" action="{{ U_ACTION }}">
 
-<!-- IF S_EDIT -->
+{% if S_EDIT %}
 
-<!-- BEGIN options -->
-	<!-- IF options.S_LEGEND -->
-		<!-- IF not options.S_FIRST_ROW --></fieldset><!-- ENDIF -->
+{% for options in loops.options %}
+	{% if options.S_LEGEND %}
+		{% if not options.S_FIRST_ROW %}</fieldset>{% endif %}
 		<fieldset>
-			<legend>{options.LEGEND}</legend>
-	<!-- ELSE -->
+			<legend>{{ options.LEGEND }}</legend>
+	{% else %}
 
 		<dl>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
-			<dd>{options.CONTENT}</dd>
+			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{{ lang('COLON') }}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
+			<dd>{{ options.CONTENT }}</dd>
 		</dl>
 
-	<!-- ENDIF -->
+	{% endif %}
 	
-	<!-- IF options.S_LAST_ROW --></fieldset><!-- ENDIF -->
-<!-- END options -->
+	{% if options.S_LAST_ROW %}</fieldset>{% endif %}
+{% endfor %}
 	
 	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
 	</div>
 
-<!-- ELSE -->
+{% else %}
 
-<!-- BEGIN textrow -->
-	<h1>{textrow.S_LEGEND}</h1>
-	<p>{textrow.S_EXPLAIN}</p>
+{% for textrow in loops.textrow %}
+	<h1>{{ textrow.S_LEGEND }}</h1>
+	<p>{{ textrow.S_EXPLAIN }}</p>
 			
 	<table cellspacing="1">
-		<tr><th>{textrow.S_LEGEND}</th></tr>
+		<tr><th>{{ textrow.S_LEGEND }}</th></tr>
 			
-	<!-- IF textrow.S_IS_EMPTY -->
+	{% if textrow.S_IS_EMPTY %}
 		<tr>
-			<td class="row3">{L_NO_TEXTS}</td>
+			<td class="row3">{{ lang('NO_TEXTS') }}</td>
 		</tr>
-	<!-- ELSE -->
+	{% else %}
 		<tr>
 			<td class="sortable-text">
 			<ul>
 				
-			<!-- BEGIN item -->
-				<li id="row{textrow.item.S_ID}">
+			{% for item in textrow.item %}
+				<li id="row{{ item.S_ID }}">
 					<table><tr>
-						<td>{textrow.item.S_CONTENT}</td>
+						<td>{{ item.S_CONTENT }}</td>
 						<td class="actions-col-2">
-							<a href="{textrow.item.U_EDIT}">{ICON_EDIT}</a>
-							<a href="{textrow.item.U_DELETE}" class="js-chat-action">{ICON_DELETE}</a>
+							<a href="{{ item.U_EDIT }}">{{ ICON_EDIT }}</a>
+							<a href="{{ item.U_DELETE }}" class="js-chat-action">{{ ICON_DELETE }}</a>
 						</td>
 					</tr></table>
-					<input type="hidden" name="row[]" value="{textrow.item.S_ID}" />
+					<input type="hidden" name="row[]" value="{{ item.S_ID }}" />
 				</li>
-			<!-- END item -->
+			{% endfor %}
 				
 			</ul>
 			</td>
 		</tr>
-	<!-- ENDIF -->
+	{% endif %}
 	</table>
-	<!-- IF textrow.S_BUTTON_TITLE --><p class="quick"><a class="cbb-btn" href="{textrow.U_ADD}">{textrow.S_BUTTON_TITLE}</a></p><!-- ENDIF -->
+	{% if textrow.S_BUTTON_TITLE %}<p class="quick"><a class="cbb-btn" href="{{ textrow.U_ADD }}">{{ textrow.S_BUTTON_TITLE }}</a></p>{% endif %}
 	<br />
-<!-- END textrow -->
+{% endfor %}
 
-<!-- ENDIF -->
+{% endif %}
 	<div>
-		{S_FORM_TOKEN}
-		{S_HIDDEN_FIELDS}
+		{{ S_FORM_TOKEN }}
+		{{ S_HIDDEN_FIELDS }}
 	</div>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

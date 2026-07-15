@@ -1,25 +1,19 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
 
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
+use canidev\chat\libraries\constants;
 
 class mcp_controller_config extends \canidev\core\acp
 {
-	protected $config;
 	protected $db;
-	protected $lang;
 	protected $log;
 	protected $pagination;
 	protected $request;
@@ -28,6 +22,7 @@ class mcp_controller_config extends \canidev\core\acp
 	
 	protected $phpbb_root_path;
 	protected $php_ext;
+	protected $tables;
 
 	/**
 	* Constructor
@@ -42,6 +37,7 @@ class mcp_controller_config extends \canidev\core\acp
 	* @param \phpbb\user						$user			User object
 	* @param string								$root_path		phpBB root path
 	* @param string								$php_ext		phpEx
+	* @param array 								$tables 		Chat DB Tables
 	*
 	* @access public
 	*/
@@ -55,21 +51,27 @@ class mcp_controller_config extends \canidev\core\acp
 		\phpbb\request\request $request,
 		\phpbb\user $user,
 		$phpbb_root_path,
-		$php_ext)
+		$php_ext,
+		$tables)
 	{
-		$this->config		= $config;
 		$this->db			= $db;
-		$this->lang			= $language;
 		$this->log			= $log;
 		$this->pagination	= $pagination;
 		$this->request		= $request;
-		$this->template 	= \canidev\core\template::get_instance($container);
 		$this->user			= $user;
 	
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $php_ext;
+		$this->tables 			= $tables;
+
+		parent::__construct(null, $config, $language, \canidev\core\template::get_instance($container));
 	}
 	
+	/**
+	 * Display the panel
+	 * 
+	 * @param string 	$mode 		Current mode
+	 */
 	public function display($mode)
 	{
 		// Set up general vars
@@ -88,8 +90,8 @@ class mcp_controller_config extends \canidev\core\acp
 		$this->tpl_name 	= 'mcp_chat_ban';
 		
 		// Sorting
-		$limit_days		= array(0 => $this->lang->lang('ALL_ENTRIES'), 1 => $this->lang->lang('1_DAY'), 7 => $this->lang->lang('7_DAYS'), 14 => $this->lang->lang('2_WEEKS'), 30 => $this->lang->lang('1_MONTH'), 90 => $this->lang->lang('3_MONTHS'), 180 => $this->lang->lang('6_MONTHS'), 365 => $this->lang->lang('1_YEAR'));
-		$sort_by_text	= array('u' => $this->lang->lang('SORT_USERNAME'), 't' => $this->lang->lang('SORT_DATE'), 'i' => $this->lang->lang('SORT_IP'));
+		$limit_days		= array(0 => $this->language->lang('ALL_ENTRIES'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR'));
+		$sort_by_text	= array('u' => $this->language->lang('SORT_USERNAME'), 't' => $this->language->lang('SORT_DATE'), 'i' => $this->language->lang('SORT_IP'));
 		$sort_by_sql	= array('u' => 'LOWER(cu.username)', 't' => 'cu.exclude_time', 'i' => 'cu.user_ip');
 
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
@@ -114,7 +116,7 @@ class mcp_controller_config extends \canidev\core\acp
 			
 			// Get user_keys for guests
 			$sql = 'SELECT user_key, username
-				FROM ' . CHAT_USERS_TABLE . '
+				FROM ' . $this->tables['users'] . '
 				WHERE ' . $this->db->sql_in_set('username', $userlist) . '
 				AND user_id = ' . ANONYMOUS;
 			$result = $this->db->sql_query($sql);
@@ -162,7 +164,7 @@ class mcp_controller_config extends \canidev\core\acp
 						
 						// Get usernames for log
 						$sql = 'SELECT cu.username, u.username AS member_name
-							FROM ' . CHAT_USERS_TABLE . ' cu
+							FROM ' . $this->tables['users'] . ' cu
 								LEFT JOIN ' . USERS_TABLE . " u ON(u.user_id = cu.user_id)
 							WHERE $sql_where";
 						$result = $this->db->sql_query($sql);
@@ -175,7 +177,7 @@ class mcp_controller_config extends \canidev\core\acp
 						// Do work
 						if(sizeof($usernames))
 						{
-							$sql = 'UPDATE ' . CHAT_USERS_TABLE . ' cu
+							$sql = 'UPDATE ' . $this->tables['users'] . ' cu
 								SET ' . $this->db->sql_build_array('UPDATE', $update_ary) . "
 								WHERE $sql_where";
 							$this->db->sql_query($sql);
@@ -189,7 +191,7 @@ class mcp_controller_config extends \canidev\core\acp
 							);
 						}
 						
-						trigger_error($this->lang->lang('CHAT_EXCLUSIONS_DELETED') . '<br /><br /><a href="' . $complete_u_action . '">&laquo; ' . $this->lang->lang('BACK_TO_PREV') . '</a>');
+						trigger_error($this->language->lang('CHAT_EXCLUSIONS_DELETED') . '<br /><br /><a href="' . $complete_u_action . '">&laquo; ' . $this->language->lang('BACK_TO_PREV') . '</a>');
 					break;
 					
 					case 'edit':
@@ -197,7 +199,7 @@ class mcp_controller_config extends \canidev\core\acp
 						$usernames = array();
 
 						$sql = 'SELECT cu.username, u.username AS member_name
-							FROM ' . CHAT_USERS_TABLE . ' cu
+							FROM ' . $this->tables['users'] . ' cu
 								LEFT JOIN ' . USERS_TABLE . ' u ON(u.user_id = cu.user_id)
 							WHERE ' . $this->db->sql_in_set('cu.user_key', $marked);
 						$result = $this->db->sql_query($sql);
@@ -223,7 +225,7 @@ class mcp_controller_config extends \canidev\core\acp
 					));
 				}
 				
-				confirm_box(false, $this->lang->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+				confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
 					'start'		=> $start,
 					'mark'		=> $marked,
 					'sk'		=> $sort_key,
@@ -238,7 +240,7 @@ class mcp_controller_config extends \canidev\core\acp
 		// Build the main query
 		$sql_ary = array(
 			'SELECT'	=> 'cu.*, u.username AS member_name',
-			'FROM'		=> array(CHAT_USERS_TABLE => 'cu'),
+			'FROM'		=> array($this->tables['users'] => 'cu'),
 			'LEFT_JOIN'	=> array(
 				array('FROM' => array(USERS_TABLE => 'u'), 'ON' => 'u.user_id = cu.user_id')
 			),
@@ -280,7 +282,7 @@ class mcp_controller_config extends \canidev\core\acp
 			$username = ($row['username']) ? $row['username'] : $row['member_name'];
 	
 			$this->template->assign_block_vars('user', array(
-				'EXCLUSION'		=> ($row['exclude_time'] == 1) ? $this->lang->lang('PERMANENT') : $this->user->format_date($row['exclude_time']),
+				'EXCLUSION'		=> ($row['exclude_time'] == 1) ? $this->language->lang('PERMANENT') : $this->user->format_date($row['exclude_time']),
 				'ID'			=> $row['user_key'],
 				'IP'			=> $row['user_ip'],
 				'USERNAME'		=> $username,
@@ -310,6 +312,13 @@ class mcp_controller_config extends \canidev\core\acp
 		$this->build_period_options();
 	}
 	
+	/**
+	 * Exclude user
+	 * 
+	 * @param array 	$userlist
+	 * @param array 	$usernames
+	 * @param string 	$u_action
+	 */
 	protected function exclude($user_list, $usernames = array(), $u_action = '')
 	{
 		$period_time	= $this->request->variable('period', 0);
@@ -343,11 +352,11 @@ class mcp_controller_config extends \canidev\core\acp
 		}
 		
 		$u_action	= ($u_action) ? $u_action : $this->u_action;
-		$back_link	= '<br /><br /><a href="' . $u_action . '">&laquo; ' . $this->lang->lang('BACK_TO_PREV') . '</a>';
+		$back_link	= '<br /><br /><a href="' . $u_action . '">&laquo; ' . $this->language->lang('BACK_TO_PREV') . '</a>';
 		
 		if(sizeof($user_list) && $exclude_time)
 		{
-			$sql = 'UPDATE ' . CHAT_USERS_TABLE . "
+			$sql = 'UPDATE ' . $this->tables['users'] . "
 				SET exclude_time = $exclude_time
 				WHERE " . $this->db->sql_in_set('user_key', array_map('intval', $user_list));
 			$result = $this->db->sql_query($sql);
@@ -358,7 +367,7 @@ class mcp_controller_config extends \canidev\core\acp
 				$real_user_list = array();
 				
 				$sql = 'SELECT user_key
-					FROM ' . CHAT_USERS_TABLE . '
+					FROM ' . $this->tables['users'] . '
 					WHERE exclude_time > 0
 					AND ' . $this->db->sql_in_set('user_key', array_map('intval', $user_list));
 				$result = $this->db->sql_query($sql);
@@ -385,13 +394,13 @@ class mcp_controller_config extends \canidev\core\acp
 							'session_start'		=> time(),
 							'user_lastjoin'		=> time(),
 							'user_online'		=> 0,
-							'user_status'		=> CHAT_STATUS_AVAILABLE,
+							'user_status'		=> constants::STATUS_AVAILABLE,
 							'exclude_time'		=> $exclude_time,
 							'user_trace_time'	=> time(),
 						);
 					}
 					
-					$this->db->sql_multi_insert(CHAT_USERS_TABLE , $sql_ary);
+					$this->db->sql_multi_insert($this->tables['users'] , $sql_ary);
 				}
 			}
 
@@ -406,13 +415,16 @@ class mcp_controller_config extends \canidev\core\acp
 					array(implode(', ', $usernames))
 				);
 
-				trigger_error($this->lang->lang('CHAT_EXCLUSIONS_ADDED') . $back_link);
+				trigger_error($this->language->lang('CHAT_EXCLUSIONS_ADDED') . $back_link);
 			}
 		}
 		
-		trigger_error($this->lang->lang('CHAT_EXCLUSIONS_ERROR') . $back_link);
+		trigger_error($this->language->lang('CHAT_EXCLUSIONS_ERROR') . $back_link);
 	}
 	
+	/**
+	 * Options for period selector
+	 */
 	protected function build_period_options()
 	{
 		$option_ary = array(

@@ -1,86 +1,86 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<!-- IF U_BACK --><div><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a></div><!-- ENDIF -->
+{% if U_BACK %}<div><a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a></div>{% endif %}
 
-<h1>{L_ACP_CHAT_ROOMS}</h1>
-<p>{L_ACP_CHAT_ROOMS_EXPLAIN}</p>
+<h1>{{ lang('ACP_CHAT_ROOMS') }}</h1>
+<p>{{ lang('ACP_CHAT_ROOMS_EXPLAIN') }}</p>
 
-<!-- IF S_ERROR -->
+{% if S_ERROR %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
-		<p>{ERROR_MSG}</p>
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERROR_MSG }}</p>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_chat_rooms" name="acp_chat_rooms" method="post" action="{U_ACTION}">
+<form id="acp_chat_rooms" name="acp_chat_rooms" method="post" action="{{ U_ACTION }}">
 
-<!-- IF S_EDIT -->
+{% if S_EDIT %}
 
-<!-- BEGIN options -->
-	<!-- IF options.S_LEGEND -->
-		<!-- IF not options.S_FIRST_ROW --></fieldset><!-- ENDIF -->
+{% for options in loops.options %}
+	{% if options.S_LEGEND %}
+		{% if not options.S_FIRST_ROW %}</fieldset>{% endif %}
 		<fieldset>
-			<legend>{options.LEGEND}</legend>
-	<!-- ELSE -->
+			<legend>{{ options.LEGEND }}</legend>
+	{% else %}
 
-		<dl<!-- IF not options.DISPLAY --> class="cbb-helper-hidden"<!-- ENDIF -->>
-			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.S_EXPLAIN}</span><!-- ENDIF --></dt>
-			<dd>{options.CONTENT}</dd>
-			<!-- IF options.KEY eq 'room_users' --><dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd><!-- ENDIF -->
+		<dl{% if not options.DISPLAY %} class="cbb-helper-hidden"{% endif %}>
+			<dt><label for="{{ options.KEY }}">{{ options.TITLE }}{{ lang('COLON') }}</label>{% if options.S_EXPLAIN %}<br /><span>{{ options.S_EXPLAIN }}</span>{% endif %}</dt>
+			<dd>{{ options.CONTENT }}</dd>
+			{% if options.KEY == 'room_users' %}<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>{% endif %}
 		</dl>
 
-	<!-- ENDIF -->
+	{% endif %}
 	
-	<!-- IF options.S_LAST_ROW --></fieldset><!-- ENDIF -->
-<!-- END options -->
+	{% if options.S_LAST_ROW %}</fieldset>{% endif %}
+{% endfor %}
 	
 	<div class="cbb-submit-buttons">
-		<input class="cbb-btn default-btn" type="submit" name="submit" value="{L_SAVE}" />
+		<input class="cbb-btn default-btn" type="submit" name="submit" value="{{ lang('SAVE') }}" />
 	</div>
 	
-<!-- ELSE -->
+{% else %}
 
 	<table cellspacing="1">
 	<tr>
-		<th>{L_ROOM_TITLE}</th>
+		<th>{{ lang('ROOM_TITLE') }}</th>
 	</tr>
 	
-	<!-- IF .roomrow -->
+	{% if roomrow|length %}
 		<tr>
 			<td class="sortable-text">
 			<ul>
-			<!-- BEGIN roomrow -->
-				<li id="row{roomrow.S_ID}">
+			{% for roomrow in loops.roomrow %}
+				<li id="row{{ roomrow.S_ID }}">
 					<table><tr>
-						<td><strong>{roomrow.S_TITLE}</strong> <em>(ID: {roomrow.S_KEY})</em></td>
+						<td><strong>{{ roomrow.S_TITLE }}</strong> <em>(ID: {{ roomrow.S_KEY }})</em></td>
 						<td class="actions-col-2">
-							<a href="{roomrow.U_EDIT}">{ICON_EDIT}</a>
-							<!-- IF roomrow.U_DELETE --><a href="{roomrow.U_DELETE}" class="js-chat-action">{ICON_DELETE}</a><!-- ENDIF -->
+							<a href="{{ roomrow.U_EDIT }}">{{ ICON_EDIT }}</a>
+							{% if roomrow.U_DELETE %}<a href="{{ roomrow.U_DELETE }}" class="js-chat-action">{{ ICON_DELETE }}</a>{% endif %}
 						</td>
 					</tr></table>
-					<input type="hidden" name="row[]" value="{roomrow.S_ID}" />
+					<input type="hidden" name="row[]" value="{{ roomrow.S_ID }}" />
 				</li>
-			<!-- END roomrow -->
+			{% endfor %}
 			</ul>
 			</td>
 		</tr>
-	<!-- ELSE -->
-		<tr><td class="row3">{L_ACP_NO_ITEMS}</td></tr>
-	<!-- ENDIF -->
+	{% else %}
+		<tr><td class="row3">{{ lang('ACP_NO_ITEMS') }}</td></tr>
+	{% endif %}
 
 	</table>
 
 	<p class="quick">
-		<a class="cbb-btn" href="{U_ROOM_ADD}">{L_ADD_ROOM}</a>
+		<a class="cbb-btn" href="{{ U_ROOM_ADD }}">{{ lang('ADD_ROOM') }}</a>
 	</p>
-<!-- ENDIF -->
+{% endif %}
 
 <div>
-	{S_FORM_TOKEN}
-	{S_HIDDEN_FIELDS}
+	{{ S_FORM_TOKEN }}
+	{{ S_HIDDEN_FIELDS }}
 </div>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

@@ -1,24 +1,21 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
-
-// @ignore
-if(!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 class admin_controller_pages extends admin_controller_base
 {
 	protected $exclude_files = array('app', 'chat', 'common', 'config', 'cron', 'feed', 'report');
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function _display($mode)
 	{
 		$this->tpl_name		= 'acp_chat_pages';
@@ -31,7 +28,7 @@ class admin_controller_pages extends admin_controller_base
 		{
 			case 'edit':
 				$sql = 'SELECT *
-					FROM ' . CHAT_PAGES_TABLE . "
+					FROM ' . $this->tables['pages'] . "
 					WHERE page_id = $page_id";
 				$result = $this->db->sql_query($sql);
 				$page_data = $this->db->sql_fetchrow($result);
@@ -93,14 +90,14 @@ class admin_controller_pages extends admin_controller_base
 					
 					if(!check_form_key(self::FORM_KEY))
 					{
-						$error[] = $this->lang->lang('FORM_INVALID');
+						$error[] = $this->language->lang('FORM_INVALID');
 					}
 					
 					if($this->new_config['page_file'] == '-')
 					{
 						if(!preg_match('#^(?:\.\/|\/)?(.*\/)?([\w\d\-\_]+)(\.' . $this->php_ext . ')?$#', $this->new_config['custom_file'], $matches))
 						{
-							$error[] = $this->lang->lang('INVALID_FILE');
+							$error[] = $this->language->lang('INVALID_FILE');
 						}
 						
 						if(!sizeof($error))
@@ -109,12 +106,12 @@ class admin_controller_pages extends admin_controller_base
 							
 							if(!$matches[1] && in_array($matches[2], $this->exclude_files))
 							{
-								$error[] = $this->lang->lang('INVALID_FILE');
+								$error[] = $this->language->lang('INVALID_FILE');
 							}
 							
 							if(!$this->new_config['page_alias'])
 							{
-								$error[] = $this->lang->lang('NO_ALIAS');
+								$error[] = $this->language->lang('NO_ALIAS');
 							}
 							
 							$this->new_config['page_filename']	= $matches[2] . $matches[3];
@@ -141,7 +138,7 @@ class admin_controller_pages extends admin_controller_base
 					if(!sizeof($error))
 					{
 						$sql = 'SELECT page_id
-							FROM ' . CHAT_PAGES_TABLE . "
+							FROM ' . $this->tables['pages'] . "
 							WHERE page_filename = '" . $this->db->sql_escape($this->new_config['page_filename']) . "'
 							AND page_path = '" . $this->db->sql_escape($this->new_config['page_path']) . "'
 							AND page_id <> $page_id";
@@ -151,7 +148,7 @@ class admin_controller_pages extends admin_controller_base
 						
 						if($already_page_id)
 						{
-							$error[] = $this->lang->lang('PAGE_ALREADY_EXISTS');
+							$error[] = $this->language->lang('PAGE_ALREADY_EXISTS');
 						}
 					}
 					
@@ -168,11 +165,11 @@ class admin_controller_pages extends admin_controller_base
 						
 						if($this->action == 'add')
 						{
-							$sql = 'INSERT INTO ' . CHAT_PAGES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+							$sql = 'INSERT INTO ' . $this->tables['pages'] . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 						}
 						else
 						{
-							$sql = 'UPDATE ' . CHAT_PAGES_TABLE . '
+							$sql = 'UPDATE ' . $this->tables['pages'] . '
 								SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE page_id = $page_id";
 						}
@@ -181,7 +178,7 @@ class admin_controller_pages extends admin_controller_base
 						
 						$this->cache->destroy('_chat_options');
 						
-						trigger_error($this->lang->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
+						trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 					}
 				}
 				else
@@ -221,7 +218,7 @@ class admin_controller_pages extends admin_controller_base
 			break;
 			
 			case 'delete':
-				$sql = 'DELETE FROM ' . CHAT_PAGES_TABLE . "
+				$sql = 'DELETE FROM ' . $this->tables['pages'] . "
 					WHERE page_id = $page_id";
 				$this->db->sql_query($sql);
 				
@@ -235,13 +232,13 @@ class admin_controller_pages extends admin_controller_base
 			
 			default:
 				$sql = 'SELECT *
-					FROM ' . CHAT_PAGES_TABLE . '
+					FROM ' . $this->tables['pages'] . '
 					ORDER BY page_alias';
 				$result = $this->db->sql_query($sql);
 				while($row = $this->db->sql_fetchrow($result))
 				{
 					$title = ($row['page_alias']) ? $row['page_alias'] : str_replace('.' . $this->php_ext, '', $row['page_filename']);
-					$title = ($this->lang->is_set(strtoupper($title)) ? $this->lang->lang(strtoupper($title)) : ucfirst($title));
+					$title = ($this->language->is_set(strtoupper($title)) ? $this->language->lang(strtoupper($title)) : ucfirst($title));
 			
 					$this->template->assign_block_vars('pagerow', array(
 						'S_ID'		=> $row['page_id'],
@@ -264,6 +261,10 @@ class admin_controller_pages extends admin_controller_base
 		));
 	}
 	
+	/**
+	 * Files selector options
+	 * @return array
+	 */
 	protected function page_file_options()
 	{
 		$ary = array(''	=> 'SELECT_PAGE');
@@ -272,7 +273,7 @@ class admin_controller_pages extends admin_controller_base
 		{
 			// Exclude files already in use
 			$sql = 'SELECT page_alias
-				FROM ' . CHAT_PAGES_TABLE . "
+				FROM ' . $this->tables['pages'] . "
 				WHERE page_path = ''";
 			$result = $this->db->sql_query($sql);
 			while($row = $this->db->sql_fetchrow($result))
@@ -316,6 +317,10 @@ class admin_controller_pages extends admin_controller_base
 		return $ary;
 	}
 	
+	/**
+	 * Forums selector options
+	 * @return array
+	 */
 	protected function forum_ids_options()
 	{
 		$forum_ary = make_forum_select(false, false, true, false, true, false, true);

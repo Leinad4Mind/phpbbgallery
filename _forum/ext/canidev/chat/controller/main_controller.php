@@ -1,13 +1,15 @@
 <?php
 /*
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 namespace canidev\chat\controller;
+
+use canidev\chat\libraries\constants;
 
 /**
 * Main controller
@@ -21,7 +23,7 @@ class main_controller
 	protected $core;
 	protected $db;
 	protected $helper;
-	protected $lang;
+	protected $language;
 	protected $log;
 	protected $request;
 	protected $template;
@@ -29,6 +31,7 @@ class main_controller
 	
 	protected $root_path;
 	protected $php_ext;
+	protected $tables;
 
 	/**
 	* Constructor
@@ -46,6 +49,7 @@ class main_controller
 	* @param \phpbb\user						$user			User object
 	* @param string								$root_path		phpBB root path
 	* @param string								$php_ext		phpEx
+	* @param array 								$tables 		Chat DB Tables
 	*
 	* @access public
 	*/
@@ -62,7 +66,8 @@ class main_controller
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
-		$php_ext)
+		$php_ext,
+		$tables)
 	{
 		$this->auth			= $auth;
 		$this->chat			= $chat;
@@ -71,7 +76,7 @@ class main_controller
 		$this->core			= \canidev\core\lib::get_instance($container);
 		$this->db			= $db;
 		$this->helper 		= $helper;
-		$this->lang			= $language;
+		$this->language		= $language;
 		$this->log			= $log;
 		$this->request		= $request;
 		$this->template 	= $template;
@@ -79,6 +84,7 @@ class main_controller
 		
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
+		$this->tables 		= $tables;
 	}
 
 	/**
@@ -97,7 +103,7 @@ class main_controller
 		{
 			redirect(append_sid($this->root_path . 'index.' . $this->php_ext));
 		}
-		
+
 		$this->chat->set_custom_page($mode);
 		
 		switch($mode)
@@ -122,7 +128,7 @@ class main_controller
 				
 				// Obtain rooms
 				$room_ary		= $this->chat->obtain_rooms();
-				$current_room	= $this->request->variable('room', CHAT_GUEST_ROOM);
+				$current_room	= $this->request->variable('room', constants::GUEST_ROOM);
 				
 				$u_archive	= $this->helper->route('canidev_chat_controller', array(
 					'mode'	=> 'archive',
@@ -132,7 +138,7 @@ class main_controller
 				// Filter Rooms
 				foreach($room_ary as $room_key => $row)
 				{
-					if($room_key != CHAT_GUEST_ROOM &&
+					if($room_key != constants::GUEST_ROOM &&
 						((!$this->core->group_auth($row['room_data']['groups']) && !isset($row['room_data']['users'][$this->user->data['user_id']]))
 						|| !$row['room_enabled']))
 					{
@@ -160,7 +166,7 @@ class main_controller
 						
 						if(sizeof($row_id_list))
 						{
-							$sql = 'DELETE FROM ' . CHAT_MESSAGES_TABLE . '
+							$sql = 'DELETE FROM ' . $this->tables['messages'] . '
 								WHERE ' . $this->db->sql_in_set('message_id', $row_id_list);
 							$this->db->sql_query($sql);
 							
@@ -171,7 +177,7 @@ class main_controller
 								'LOG_CHAT_MESSAGES_REMOVED',
 								time(),
 								array(
-									$this->lang->lang($room_ary[$current_room]['room_title']),
+									$this->language->lang($room_ary[$current_room]['room_title']),
 									sizeof($row_id_list),
 								)
 							);
@@ -196,7 +202,7 @@ class main_controller
 						{
 							if($to_room_id && sizeof($row_id_list))
 							{
-								$sql = 'UPDATE ' . CHAT_MESSAGES_TABLE . '
+								$sql = 'UPDATE ' . $this->tables['messages'] . '
 									SET dest_key = ' . $to_room_id . '
 									WHERE ' . $this->db->sql_in_set('message_id', $row_id_list);
 								$this->db->sql_query($sql);
@@ -208,8 +214,8 @@ class main_controller
 									'LOG_CHAT_MESSAGES_MOVED',
 									time(),
 									array(
-										$this->lang->lang($room_ary[$current_room]['room_title']),
-										$this->lang->lang($room_ary[$to_room_id]['room_title']),
+										$this->language->lang($room_ary[$current_room]['room_title']),
+										$this->language->lang($room_ary[$to_room_id]['room_title']),
 										sizeof($row_id_list),
 									)
 								);
@@ -229,7 +235,7 @@ class main_controller
 								}
 								
 								$room_title = $row['room_title'];
-								$room_title = $this->lang->lang($room_title);
+								$room_title = $this->language->lang($room_title);
 								
 								$options_str .= '<option value="' . $room_key . '">' . $room_title . '</option>';
 							}
@@ -244,9 +250,9 @@ class main_controller
 				}
 
 				$action_manager = $this->container->get('canidev.chat.action_manager');
-				$limit_days 	= array(0 => $this->lang->lang('ALL_MESSAGES'), 1 => $this->lang->lang('1_DAY'), 7 => $this->lang->lang('7_DAYS'), 14 => $this->lang->lang('2_WEEKS'), 30 => $this->lang->lang('1_MONTH'), 90 => $this->lang->lang('3_MONTHS'), 180 => $this->lang->lang('6_MONTHS'), 365 => $this->lang->lang('1_YEAR'));
+				$limit_days 	= array(0 => $this->language->lang('ALL_MESSAGES'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR'));
 
-				$sort_by_text	= array('t' => $this->lang->lang('POST_TIME'));
+				$sort_by_text	= array('t' => $this->language->lang('POST_TIME'));
 				$sort_by_sql	= array('t' => 'cm.message_time');
 
 				$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
@@ -258,7 +264,7 @@ class main_controller
 				
 				// Get total messages
 				$sql = 'SELECT COUNT(message_id) AS total
-					FROM ' . CHAT_MESSAGES_TABLE . '
+					FROM ' . $this->tables['messages'] . '
 					WHERE dest_key = ' . $current_room . "
 					AND message_time >= $min_post_time";
 				$result = $this->db->sql_query($sql);
@@ -267,7 +273,7 @@ class main_controller
 			
 				$sql = 'SELECT cm.*, u.username, u.user_colour,
 						u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height
-					FROM ' . CHAT_MESSAGES_TABLE . ' cm
+					FROM ' . $this->tables['messages'] . ' cm
 						LEFT JOIN ' . USERS_TABLE . ' u ON(u.user_id = cm.poster_id)
 					WHERE cm.dest_key = ' . $current_room . "
 					AND message_time >= $min_post_time
@@ -328,7 +334,7 @@ class main_controller
 				
 				$pagination_params = array('mode' => 'archive');
 				
-				if($current_room != CHAT_GUEST_ROOM)
+				if($current_room != constants::GUEST_ROOM)
 				{
 					$pagination_params['room'] = $current_room;
 				}
@@ -354,7 +360,7 @@ class main_controller
 						continue;
 					}
 					
-					$batch_options .= '<option value="' . $key . '">' . $this->lang->lang($row[0]) . '</option>';
+					$batch_options .= '<option value="' . $key . '">' . $this->language->lang($row[0]) . '</option>';
 				}
 
 				// Build Pagination
@@ -385,25 +391,25 @@ class main_controller
 					{
 						$url_params = array('mode' => 'archive');
 						
-						if($room_key != CHAT_GUEST_ROOM)
+						if($room_key != constants::GUEST_ROOM)
 						{
 							$url_params['room'] = $room_key;
 						}
 						
 						$this->template->assign_block_vars('roomtab', array(
 							'S_ACTIVE'		=> ($room_key == $current_room) ? true : false,
-							'S_TITLE'		=> $this->lang->lang($row['room_title']),
+							'S_TITLE'		=> $this->language->lang($row['room_title']),
 							'U_ACTION'		=> $this->helper->route('canidev_chat_controller', $url_params),
 						));
 					}
 				}
 				
 				$this->template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> $this->lang->lang('CHAT_ARCHIVE'),
+					'FORUM_NAME'	=> $this->language->lang('CHAT_ARCHIVE'),
 					'U_VIEW_FORUM'	=> $u_archive,
 				));	
 				
-				return $this->helper->render('archive_body.html', $this->lang->lang('CHAT_ARCHIVE'));
+				return $this->helper->render('archive_body.html', $this->language->lang('CHAT_ARCHIVE'));
 			break;
 			
 			case 'chat':
@@ -419,11 +425,11 @@ class main_controller
 				));
 				
 				$this->template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> $this->lang->lang('CHAT'),
+					'FORUM_NAME'	=> $this->language->lang('CHAT'),
 					'U_VIEW_FORUM'	=> $this->helper->route('canidev_chat_controller'),
 				));
 
-				return $this->helper->render('chat_body.html', $this->lang->lang('CHAT'));
+				return $this->helper->render('chat_body.html', $this->language->lang('CHAT'));
 			break;
 		}
 	}

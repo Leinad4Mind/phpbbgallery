@@ -15,6 +15,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'
 
     canidev.chat.controller.admin.config:
         class: canidev\chat\controller\admin_controller_config
@@ -30,6 +31,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'
 
     canidev.chat.controller.admin.pages:
         class: canidev\chat\controller\admin_controller_pages
@@ -45,6 +47,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'
     
     canidev.chat.controller.admin.rooms:
         class: canidev\chat\controller\admin_controller_rooms
@@ -60,6 +63,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'
             
     canidev.chat.controller.admin.texts:
         class: canidev\chat\controller\admin_controller_texts
@@ -76,6 +80,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'
             
     canidev.chat.controller.mcp.config:
         class: canidev\chat\controller\mcp_controller_config
@@ -90,3 +95,4 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%tables.canidev.chat%'

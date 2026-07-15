@@ -26,8 +26,7 @@
 	{% endif %}
 
 	<!-- Scripts start here after the headjs -->
-	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script> -->
-	<script rel="preload" as="script" src="{T_THEME_PATH}/vendors/head.load.min.js?assets_version={T_ASSETS_VERSION}"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
 </head>
 
 <body id="phpbb" class="nojs notouch section-{{ SCRIPT_NAME }} {{ S_CONTENT_DIRECTION }} {{ BODY_CLASS }}">
@@ -40,7 +39,7 @@
 
 <script>
 	// this loads jquery asyncrounously & in parallel
-	head.load("{T_THEME_PATH}/vendors/jquery-1.12.4.min.js");
+	head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js");
 </script>
 
 {% EVENT overall_footer_after %}

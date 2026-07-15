@@ -1,11 +1,11 @@
 <?php
 /*
-* acp.php [English [En]]
+* [English [En]]
 * @package cBB Chat
-* @version v1.2.2 29/03/2021
+* @version v1.2.3 22/04/2022
 *
-* @copyright (c) 2021 CaniDev
-* @license https://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2022 CaniDev
+* @license https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 // DO NOT CHANGE
