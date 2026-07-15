@@ -113,7 +113,7 @@ class transfer extends \phpbb\notification\type\base
 	*/
 	public function get_avatar()
 	{
-		return $this->user_loader->get_avatar($this->user->data['user_id'], false, true);
+		return $this->user_loader->get_avatar($this->get_data['user_id'], true, false);
 	}
 
 	/**
@@ -133,7 +133,7 @@ class transfer extends \phpbb\notification\type\base
 	*/
 	public function get_reference()
 	{
-		return '';
+		return false;
 	}
 
 	/**
@@ -161,7 +161,7 @@ class transfer extends \phpbb\notification\type\base
 		return array(
 			'POSTER'				=> $row['username'],
 			'FORUM_NAME'			=> $this->config['sitename'],
-			'U_FORUM'				=> generate_board_url() . $this->root_path . '/ucp.' . $this->php_ext . 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints',
+			'U_FORUM'				=> generate_board_url() . $this->phpbb_root_path . '/ucp.' . $this->php_ext . 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints',
 			'TEXT'					=> str_replace(array($currency[2], '<br />'), array($currency[1], "\r\n"), $this->get_data('like_txt'))
 		);
 	}
@@ -173,7 +173,7 @@ class transfer extends \phpbb\notification\type\base
 	*/
 	public function get_url()
 	{
-		return append_sid($this->root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints');
+		return append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext, 'i=-sitesplat-bbpoints-ucp-bbpoints_module&mode=bbpoints');
 	}
 
 	/**
@@ -181,7 +181,7 @@ class transfer extends \phpbb\notification\type\base
 	*/
 	public function get_redirect_url()
 	{
-		return '';
+		return $this->get_url();
 	}
 
 	/**
@@ -221,6 +221,6 @@ class transfer extends \phpbb\notification\type\base
 		$this->set_data('parent_id', $data['parent_id']);
 		$this->set_data('currency', $data['currency']);
 
-		return parent::create_insert_array($data, $pre_create_data);
+		parent::create_insert_array($data, $pre_create_data);
 	}
 }

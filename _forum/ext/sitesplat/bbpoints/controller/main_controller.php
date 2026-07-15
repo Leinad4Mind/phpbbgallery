@@ -10,6 +10,7 @@
 
 namespace sitesplat\bbpoints\controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use phpbb\json_response;
 
 /**
@@ -22,6 +23,7 @@ class main_controller
 	protected $template;
 	protected $user;
 	protected $config;
+	protected $container;
 	protected $root_path;
 	protected $php_ext;
 	protected $bbpoints_table;
@@ -32,13 +34,14 @@ class main_controller
 	*
 	* @access public
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, ContainerInterface $container, $root_path, $php_ext, $bbpoints_table, $bbpoints_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
+		$this->container = $container;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->bbpoints_table = $bbpoints_table;
@@ -78,14 +81,14 @@ class main_controller
 			{
 				$user_id = $this->user->data['user_id'];
 				$sql = 'SELECT user_id, SUM(points) as total FROM (
-						SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' 
+						SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 AND poster_id = ' . $user_id . ' GROUP BY poster_id
 						UNION ALL
-						SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . '
+						SELECT topic_poster AS user_id, SUM(bbpoints) AS points FROM ' . TOPICS_TABLE . ' WHERE topic_poster = ' . $user_id . ' GROUP BY topic_poster
 						UNION ALL
-						SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . '
+						SELECT to_id AS user_id, SUM(bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE to_id = ' . $user_id . ' GROUP BY to_id
 						UNION ALL
-						SELECT to_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . '
-						) t1';
+						SELECT from_id AS user_id, SUM(- bbpoints) AS points FROM ' . $this->bbpoints_table . ' WHERE from_id = ' . $user_id . ' GROUP BY from_id
+						) t1 GROUP BY user_id';
 				$result = $this->db->sql_query($sql);
 				$user_points  = $this->db->sql_fetchfield('total');
 			
@@ -112,6 +115,7 @@ class main_controller
 						);
 						$this->bbpoints_helper->add_noti($noti_ary);
 					}
+					$this->container->get('cache')->destroy('sql', array($this->bbpoints_table));
 					trigger_error($this->user->lang['TRANSFER_SUCCESS']);	
 				} else
 				{
@@ -127,7 +131,9 @@ class main_controller
 	public function search_user()
 	{
 		$term = strtolower($this->request->variable('term', '', true));
-		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' WHERE user_id <> ' . 0 . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
+		$sql = 'SELECT user_id, username 
+				FROM ' . USERS_TABLE . ' 
+				WHERE user_id <> ' . 0 . ' AND user_id <> ' . $this->user->data['user_id'] . ' AND user_type <> ' . USER_IGNORE . ' AND username_clean like "' . $term . '%"';
 		$result = $this->db->sql_query($sql);
 		$user_ary = array();
 		while($row = $this->db->sql_fetchrow($result)) 

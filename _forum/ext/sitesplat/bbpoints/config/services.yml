@@ -7,58 +7,60 @@ services:
     sitesplat.bbpoints.helper:
         class: sitesplat\bbpoints\core\helper
         arguments:
-            - @config
-            - @notification_manager
+            - '@config'
+            - '@notification_manager'
 
     sitesplat.bbpoints.admin_controller:
         class: sitesplat\bbpoints\controller\admin_controller
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @config
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbpoints.table%
-            - @sitesplat.bbpoints.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbpoints.table%'
+            - '@sitesplat.bbpoints.helper'
 
     sitesplat.bbpoints.controller:
         class: sitesplat\bbpoints\controller\main_controller
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @config
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbpoints.table%
-            - @sitesplat.bbpoints.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbpoints.table%'
+            - '@sitesplat.bbpoints.helper'
 
     sitesplat.bbpoints.admin_listener:
         class: sitesplat\bbpoints\event\admin_listener
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @config
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@config'
         tags:
             - { name: event.listener }
 
     sitesplat.bbpoints.listener:
         class: sitesplat\bbpoints\event\listener
         arguments:
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @auth
-            - @config
-            - @controller.helper
-            - %core.root_path%
-            - %core.php_ext%
-            - %sitesplat.bbpoints.table%
-            - @sitesplat.bbpoints.helper
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%sitesplat.bbpoints.table%'
+            - '@sitesplat.bbpoints.helper'
         tags:
             - { name: event.listener }
