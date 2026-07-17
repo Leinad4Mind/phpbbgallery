@@ -1,38 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt-pt">
+
 <head>
 	<meta charset="utf-8">
 	<title>GoldTugAnime</title>
 	<meta name="description" content="goldtuganime, comunidade, anime, manga, animação, ocidental, oriental">
-	<meta name="keywords" content="goldtuganime, goldtuga, gta, goldanime,tuganime, anime, manga, mangapt, anime portugal, animeportugal, animept, forum de anime, forum de manga, hentai, anime pt-pt, manga pt-pt, animações pt-pt, anime portugues, anime dobrado, anime legendado, manga portugues, manga portugal, cosplay, dorama, j-music, japão, otaku, disney, dreamworks, marvel, dc comics, pixar, navegantes da lua, sailor moon, shin chan, doraemon, kochikame, inspector gadget, homem-aranha, iron man, x-men, tartarugas ninja, tmnt, cinderella monogatari, cinderela, motoratos, Naruto, Shippudden, Bleach, One Piece, Evangelion, Samurai x, Dragon Ball, dragonball, dbz, dbgt, digimon, fibda, haruhi, iberanime, anipop, natsumeet, fanart, amv, Death Note, Full Metal Alchemist, Fullmetal Alchemist, FMA, Claymore, Berserk" />
+	<meta name="keywords"
+		content="goldtuganime, goldtuga, gta, goldanime,tuganime, anime, manga, mangapt, anime portugal, animeportugal, animept, forum de anime, forum de manga, hentai, anime pt-pt, manga pt-pt, animações pt-pt, anime portugues, anime dobrado, anime legendado, manga portugues, manga portugal, cosplay, dorama, j-music, japão, otaku, disney, dreamworks, marvel, dc comics, pixar, navegantes da lua, sailor moon, shin chan, doraemon, kochikame, inspector gadget, homem-aranha, iron man, x-men, tartarugas ninja, tmnt, cinderella monogatari, cinderela, motoratos, Naruto, Shippudden, Bleach, One Piece, Evangelion, Samurai x, Dragon Ball, dragonball, dbz, dbgt, digimon, fibda, haruhi, iberanime, anipop, natsumeet, fanart, amv, Death Note, Full Metal Alchemist, Fullmetal Alchemist, FMA, Claymore, Berserk" />
 	<meta name="author" content="leinad4mind">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	
+
 	<!-- Tailwind CSS -->
 	<script src="https://cdn.tailwindcss.com"></script>
-	
+
 	<!-- FontAwesome 6 -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	
+
 	<!-- Favicons -->
 	<link rel="shortcut icon" href="index/img/fav.ico">
 	<link rel="apple-touch-icon" href="index/img/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="index/img/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="index/img/apple-touch-icon-114x114.png">
-	
+
 	<!-- Google Fonts -->
-	<link href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@300;400&display=swap' rel='stylesheet'>
-	
+	<link
+		href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@300;400&display=swap'
+		rel='stylesheet'>
+
 	<!-- Custom Styles & Animations -->
 	<style>
 		body {
 			font-family: 'Open Sans', sans-serif;
 			margin: 0;
-			overflow: hidden; /* Prevent scrolling, keeps it a true landing page */
+			overflow: hidden;
+			/* Prevent scrolling, keeps it a true landing page */
 			background-color: #111;
 		}
 
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			font-family: 'Montserrat', sans-serif;
 		}
 
@@ -47,6 +57,7 @@
 				opacity: 0;
 				transform: translateY(20px);
 			}
+
 			to {
 				opacity: 1;
 				transform: translateY(0);
@@ -56,35 +67,49 @@
 		.animate-fade-in-up {
 			animation: fadeInUp 1.2s ease-out forwards;
 		}
-		
-		.animate-delay-100 { animation-delay: 100ms; }
-		.animate-delay-300 { animation-delay: 300ms; }
-		.animate-delay-500 { animation-delay: 500ms; }
+
+		.animate-delay-100 {
+			animation-delay: 100ms;
+		}
+
+		.animate-delay-300 {
+			animation-delay: 300ms;
+		}
+
+		.animate-delay-500 {
+			animation-delay: 500ms;
+		}
 
 		/* Link Hover effects */
 		.option-link {
 			transition: all 0.3s ease;
 		}
+
 		.option-link:hover {
-			background-color: #FFB100; /* Gold/Yellow accent */
+			background-color: #FFB100;
+			/* Gold/Yellow accent */
 			color: #111;
 			transform: translateY(-3px);
 			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 		}
+
 		/* Social icons hover */
 		.social-btn {
 			transition: color 0.3s ease, transform 0.3s ease;
 		}
+
 		.social-btn:hover {
 			color: #FFB100;
 			transform: scale(1.2);
 		}
 	</style>
 </head>
+
 <body class="text-white relative w-full h-screen flex flex-col justify-between">
 
 	<!-- Native HTML5 Video Background -->
-	<video id="video_background" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover -z-20">
+	<video id="video_background" autoplay loop muted playsinline
+		class="absolute inset-0 w-full h-full object-cover -z-20">
 		<source src="index/video/video_bg.mp4" type="video/mp4">
 		<source src="index/video/video_bg.webm" type="video/webm">
 		<source src="index/video/video_bg.ogg" type="video/ogg">
@@ -95,14 +120,16 @@
 
 	<!-- Main Content Area -->
 	<main class="flex-grow flex flex-col items-center justify-center text-center px-4 pt-10">
-		<img src="index/img/logo_central.png" alt="GoldTugAnime Logo" class="max-w-xs md:max-w-md lg:max-w-lg mb-8 opacity-0 animate-fade-in-up" />
-		
+		<img src="index/img/logo_central.png" alt="GoldTugAnime Logo"
+			class="max-w-xs md:max-w-md lg:max-w-lg mb-8 opacity-0 animate-fade-in-up" />
+
 		<h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg opacity-0 animate-fade-in-up animate-delay-300">
 			<span class="block text-gray-200 text-2xl md:text-3xl font-light mb-2">O melhor da animação</span>
 			<span class="block text-white">Escolhe o teu destino!</span>
 		</h1>
-		
-		<p class="text-sm sm:text-base md:text-xl text-gray-300 font-light mt-4 drop-shadow-md max-w-full px-2 opacity-0 animate-fade-in-up animate-delay-500">
+
+		<p
+			class="text-sm sm:text-base md:text-xl text-gray-300 font-light mt-4 drop-shadow-md max-w-full px-2 opacity-0 animate-fade-in-up animate-delay-500">
 			Sejam bem-vindos à mais bela comunidade de animação em português de Portugal!
 		</p>
 	</main>
@@ -112,25 +139,29 @@
 		<div class="container mx-auto flex justify-center">
 			<ul class="flex flex-wrap justify-center gap-4">
 				<li>
-					<a href="./forum" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+					<a href="./forum"
+						class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
 						<i class="fa-solid fa-heart"></i>
 						<span>Fórum</span>
 					</a>
 				</li>
 				<li>
-					<a href="//facebook.com/goldtuganimeoficial" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+					<a href="//facebook.com/goldtuganimeoficial"
+						class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
 						<i class="fa-brands fa-facebook-f"></i>
 						<span>Facebook</span>
 					</a>
 				</li>
 				<li>
-					<a href="//instagram.com/GoldTugAnime" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+					<a href="//instagram.com/GoldTugAnime"
+						class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
 						<i class="fa-brands fa-instagram"></i>
 						<span>Instagram</span>
 					</a>
 				</li>
 				<li>
-					<a href="//youtube.com/GoldTugAnimeOFICIAL" class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
+					<a href="//youtube.com/GoldTugAnimeOFICIAL"
+						class="option-link flex items-center gap-2 px-6 py-3 rounded-full border border-gray-400 bg-black/40 backdrop-blur-sm text-sm font-bold uppercase tracking-wider text-white">
 						<i class="fa-brands fa-youtube"></i>
 						<span>Youtube</span>
 					</a>
@@ -142,14 +173,18 @@
 	<!-- Footer with Controls -->
 	<footer class="w-full bg-black/60 backdrop-blur-md py-4 z-10">
 		<div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-			
+
 			<!-- Video Controls -->
 			<ul class="flex items-center gap-6 text-xl text-gray-300">
-				<li><button id="btn-mute" class="social-btn focus:outline-none"><i class="fa-solid fa-volume-xmark"></i></button></li>
+				<li><button id="btn-mute" class="social-btn focus:outline-none"><i
+							class="fa-solid fa-volume-xmark"></i></button></li>
 				<li class="text-gray-600">|</li>
-				<li><button id="btn-rewind" class="social-btn focus:outline-none"><i class="fa-solid fa-backward"></i></button></li>
-				<li><button id="btn-play" class="social-btn focus:outline-none text-2xl"><i class="fa-solid fa-pause"></i></button></li>
-				<li><button id="btn-forward" class="social-btn focus:outline-none"><i class="fa-solid fa-forward"></i></button></li>
+				<li><button id="btn-rewind" class="social-btn focus:outline-none"><i
+							class="fa-solid fa-backward"></i></button></li>
+				<li><button id="btn-play" class="social-btn focus:outline-none text-2xl"><i
+							class="fa-solid fa-pause"></i></button></li>
+				<li><button id="btn-forward" class="social-btn focus:outline-none"><i
+							class="fa-solid fa-forward"></i></button></li>
 			</ul>
 
 			<!-- Copyright -->
@@ -169,14 +204,6 @@
 		const btnMute = document.getElementById('btn-mute');
 		const btnRewind = document.getElementById('btn-rewind');
 		const btnForward = document.getElementById('btn-forward');
-
-		// Fallback for mobile devices to ensure background image if video can't autoplay
-		if (window.innerWidth <= 1200) {
-			video.style.display = 'none';
-			document.body.style.backgroundImage = "url('index/video/video_bg.jpg')";
-			document.body.style.backgroundSize = "cover";
-			document.body.style.backgroundPosition = "center";
-		}
 
 		// Play / Pause logic
 		btnPlay.addEventListener('click', () => {
@@ -211,4 +238,5 @@
 		});
 	</script>
 </body>
+
 </html>
