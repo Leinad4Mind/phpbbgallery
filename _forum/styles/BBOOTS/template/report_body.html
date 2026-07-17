@@ -1,0 +1,48 @@
+<!-- INCLUDE overall_header.html -->
+<div class="clearfix">
+<div class="side-segment"><h3><!-- IF S_REPORT_POST -->{L_REPORT_POST}<!-- ELSE -->{L_REPORT_MESSAGE}<!-- ENDIF --></h3></div>	
+<form method="post" action="{S_REPORT_ACTION}" id="report">
+<div class="well">
+		<p><!-- IF S_REPORT_POST -->{L_REPORT_POST_EXPLAIN}<!-- ELSE -->{L_REPORT_MESSAGE_EXPLAIN}<!-- ENDIF --></p>
+		   <!-- IF ERROR --><p>{ERROR}</p><!-- ENDIF -->
+	<fieldset>
+		    <div class="control-group"> 
+	            <label class="control-label" for="reason_id">{L_REASON}{L_COLON}</label>
+         	<div class="controls controls-row"> 
+               <div class="selector"><select class="selectpicker" data-container="body" data-width="100%" name="reason_id" id="reason_id" class="full"><!-- BEGIN reason --><option value="{reason.ID}"<!-- IF reason.S_SELECTED --> selected="selected"<!-- ENDIF -->>{reason.DESCRIPTION}</option><!-- END reason --></select></div>
+	         </div> 
+	        </div>
+			
+		<!-- IF S_CAN_NOTIFY -->
+            <div class="control-group"> 
+	            <label class="control-label" for="notify1">{L_REPORT_NOTIFY}{L_COLON}</label><span class="help-block">{L_REPORT_NOTIFY_EXPLAIN}</span>
+         	<div class="controls controls-row"> 
+              <div class="radio"><input type="radio" name="notify" id="notify1" value="1" <!-- IF not S_NOTIFY -->checked="checked"<!-- ENDIF -->><label for="notify1">{L_YES}</label></div>
+			  <div class="radio"><input type="radio" name="notify" id="notify0" value="0" <!-- IF S_NOTIFY -->checked="checked"<!-- ENDIF -->><label for="notify0">{L_NO}</label></div>
+	         </div> 
+	        </div>
+		<!-- ENDIF -->
+		
+            <div class="control-group"> 
+	          <label class="control-label" for="report_text">{L_MORE_INFO}{L_COLON}</label>
+	        <div class="controls controls-row"> 
+              <textarea placeholder="{L_MORE_INFO}...{L_CAN_LEAVE_BLANK}" rows="2" name="report_text" id="report_text" class="form-control">{REPORT_TEXT}</textarea>
+	         </div> 
+	        </div>		
+		
+		<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->
+	</fieldset>
+</div>
+
+<div class="form-actions">
+	<fieldset>
+		<button type="submit" name="cancel" class="btn btn-default" value="{L_CANCEL}">{L_CANCEL}</button>
+		<button type="submit" name="submit" class="btn btn-default" value="{L_SUBMIT}">{L_SUBMIT}</button>
+		{S_FORM_TOKEN}
+	</fieldset>
+</div>
+</form>
+</div>
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,21 @@
+<!-- EVENT viewtopic_topic_tools_before -->
+<!-- IF not S_IS_BOT and (U_WATCH_TOPIC or U_BOOKMARK_TOPIC or U_BUMP_TOPIC or U_EMAIL_TOPIC or U_PRINT_TOPIC or S_DISPLAY_TOPIC_TOOLS) -->
+<div class="btn-group hidden-xs">
+   	<!-- IF U_EMAIL_TOPIC --><a class="btn btn-default" href="{U_EMAIL_TOPIC}" title="{L_EMAIL_TOPIC}"><i class="fa fa-envelope"></i></a><!-- ENDIF -->
+	<!-- IF U_PRINT_TOPIC --><a class="btn btn-default" href="{U_PRINT_TOPIC}" title="{L_PRINT_TOPIC}" accesskey="p"><i class="fa fa-print"></i></a><!-- ENDIF -->
+</div>
+
+<div class="btn-group t-<!-- IF S_WATCHING_TOPIC -->unsubscribe<!-- ELSE -->subscribe<!-- ENDIF -->">
+	<!-- IF U_WATCH_TOPIC -->
+	   <a href="{U_WATCH_TOPIC}" class="watch-topic-link btn btn-default t-icon" title="{S_WATCH_TOPIC_TITLE}" data-ajax="toggle_link" data-toggle-class="btn-group t-<!-- IF not S_WATCHING_TOPIC -->unsubscribe<!-- ELSE -->subscribe<!-- ENDIF -->" data-toggle-url="{U_WATCH_TOPIC_TOGGLE}" data-update-all=".watch-topic-link"></a>
+	<!-- ENDIF -->
+	<!-- IF U_BOOKMARK_TOPIC -->
+	 <a href="{U_BOOKMARK_TOPIC}" class="bookmark-link t-icon btn btn-default t-<!-- IF S_BOOKMARKED_TOPIC -->bookmarked<!-- ELSE -->bookmark<!-- ENDIF -->" title="<!-- IF S_BOOKMARKED_TOPIC -->{L_BOOKMARK_TOPIC_REMOVE}<!-- ELSE -->{L_BOOKMARK_TOPIC}<!-- ENDIF -->" data-ajax="alt_text" data-toggle-url="{S_BOOKMARK_TOGGLE}" data-update-all=".bookmark-link"></a>
+	<!-- ENDIF -->
+</div>
+<!-- IF U_BUMP_TOPIC --><a class="btn btn-default" href="{U_BUMP_TOPIC}" title="{L_BUMP_TOPIC}" data-ajax="true"><i class="fa fa-legal"></i></a><!-- ENDIF -->
+<!-- ENDIF -->
+<!-- EVENT viewtopic_topic_tools_after -->
+
+
+    

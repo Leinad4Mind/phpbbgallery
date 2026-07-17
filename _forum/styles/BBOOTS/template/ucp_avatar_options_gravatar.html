@@ -1,0 +1,33 @@
+ <div class="control-group">
+	 <label class="label-control" for="avatar_gravatar_email">{L_GRAVATAR_AVATAR_EMAIL}{L_COLON}</label><span class="help-block">{L_GRAVATAR_AVATAR_EMAIL_EXPLAIN}</span>
+	<div class="controls controls-row">
+	 <input type="email" name="avatar_gravatar_email" id="avatar_gravatar_email" value="{AVATAR_GRAVATAR_EMAIL}" class="form-control" data-reset-on-edit="#avatar_gravatar_width, #avatar_gravatar_height" />
+	</div>
+ </div>
+
+ <div class="control-group">
+     <label for="avatar_gravatar_width" class="control-label">{L_GRAVATAR_AVATAR_SIZE}{L_COLON}</label><span class="help-block">{L_GRAVATAR_AVATAR_SIZE_EXPLAIN}</span>
+   <div class="controls controls-row">
+        
+	<div class="row">
+		<div class="col-md-3">
+		<label class="sr-only" for="avatar_gravatar_width"></label>
+		<div class="input-group">
+		   <span class="input-group-addon">{L_WIDTH_SIZE}</span>
+            <input type="number" min="{AVATAR_MIN_WIDTH}" max="{AVATAR_MAX_WIDTH}" name="avatar_gravatar_width" id="avatar_gravatar_width" value="{AVATAR_GRAVATAR_WIDTH}" class="form-control input-sm" placeholder="{L_WIDTH_PLACEHOLDER}">
+			<span class="input-group-addon">{L_PIXEL_SIZE}</span>
+        </div>
+		</div>
+
+	    <div class="col-md-3">
+		<label class="sr-only" for="avatar_gravatar_height"></label>
+		<div class="input-group">
+			<span class="input-group-addon">{L_HEIGHT_SIZE}</span>
+            <input type="number" min="{AVATAR_MIN_HEIGHT}" max="{AVATAR_MAX_HEIGHT}" name="avatar_gravatar_height" id="avatar_gravatar_height" value="{AVATAR_GRAVATAR_HEIGHT}" class="form-control input-sm" placeholder="{L_HEIGTH_PLACEHOLDER}">
+			<span class="input-group-addon">{L_PIXEL_SIZE}</span>
+         </div>
+		</div>
+	</div>
+	
+   </div>
+ </div>

@@ -1,0 +1,10 @@
+<div class="clearfix oauth-content">
+<div class="side-segment">
+	<h3>{L_SOCIAL}&nbsp;{L_LOGIN}</h3>
+</div> 
+  <ul class="list-inline text-center"> 
+	{% for oauth in oauth %}
+		<li><a href="{{ oauth.REDIRECT_URL }}" class="btn btn-default">{{ oauth.SERVICE_NAME }}</a></li>
+	{% endfor %}
+  </ul>
+</div>

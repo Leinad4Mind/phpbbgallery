@@ -1,0 +1,47 @@
+<!-- INCLUDE mcp_header.html -->
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+<div class="side-segment"><h3>{L_WARN_USER}</h3></div>
+<div class="well">
+<div class="row">
+    <div class="col-md-2">
+	  <!-- IF AVATAR_IMG --><div class="fileinput-new thumbnail" style="width: 100px; height: 100px;">{AVATAR_IMG}</div><!-- ELSE --><div class="fileinput-new thumbnail" style="width: 100px; height: 100px;"><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /></div><!-- ENDIF -->
+    </div>
+    <div class="col-md-10">
+      <ul class="list-unstyled">
+	    <li><i class="fa fa-user text-muted"></i><!-- IF USER_COLOR --><span style="color: #{USER_COLOR}">&nbsp;{USERNAME}</span><!-- ELSE -->&nbsp;{USERNAME}<!-- ENDIF --></li>
+        <li><i class="fa fa-calendar text-muted"></i>&nbsp;{L_JOINED}{L_COLON}&nbsp;{JOINED}</li>
+        <li><i class="fa fa-comments text-muted"></i>&nbsp;{L_TOTAL_POSTS}{L_COLON}&nbsp;{POSTS}</li>
+        <li><i class="fa fa-warning text-muted"></i>&nbsp;{L_WARNINGS}{L_COLON}&nbsp;{WARNINGS}</li>
+		<!-- IF RANK_TITLE --><li>{RANK_TITLE}</li><!-- ENDIF -->
+      </ul>
+	</div>  
+</div>
+</div>
+<!-- EVENT mcp_warn_user_add_warning_field_before -->
+<div class="well">
+	<fieldset>
+		<div class="control-group"> 
+		 <label class="control-label" for="warning">{L_ADD_WARNING}{L_COLON}</label><span class="help-block">{L_ADD_WARNING_EXPLAIN}</span>
+	        <div class="controls controls-row"> 
+              <textarea placeholder="{L_MORE_INFO}..." rows="2" name="warning" id="warning" class="form-control"></textarea>
+	         </div> 
+	    </div>	
+		<!-- IF S_CAN_NOTIFY -->
+		  <div class="control-group"> 
+	            <label class="control-label" for="notify_user">{L_REPORT_NOTIFY}{L_COLON}</label><span class="help-block">{L_REPORT_NOTIFY_EXPLAIN}</span>
+         	<div class="controls controls-row"> 
+              <input type="checkbox" name="notify_user" id="notify_user" checked="checked"><label class="checkbox-inline" for="notify_user">{L_NOTIFY_USER_WARN}</label> 
+	         </div> 
+	      </div>
+		<!-- ENDIF -->
+	</fieldset>
+</div>
+<!-- EVENT mcp_warn_user_add_warning_field_after -->
+<fieldset class="form-actions">
+	<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+	<button type="submit" name="action[add_warning]" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+
+<!-- INCLUDE mcp_footer.html -->

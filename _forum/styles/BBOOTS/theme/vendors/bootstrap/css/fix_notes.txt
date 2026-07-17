@@ -1,0 +1,16 @@
+Line 6568 min.css and .css
+
+/*! override bootstrap - fix for the many EVIL "hidden" classes around phpBB. 
+ *  They should be removed from the block and not overridden by display:block; :-/ Whatcha gonna do? They do not listen
+ *
+ */ 
+ /*! ----------
+.hidden {
+  display: none !important;
+}
+------------------------------ */
+.hidden {
+  display: none;
+}
+
+-gliphy icon goodbye 263 to 1076

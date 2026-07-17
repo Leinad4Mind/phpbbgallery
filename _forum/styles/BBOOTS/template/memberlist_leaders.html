@@ -1,0 +1,79 @@
+<!-- INCLUDE overall_header.html -->
+  <div class="side-segment"><h3>{PAGE_TITLE}</h3></div>
+<form method="post" action="{S_MODE_ACTION}">
+ <div class="panel panel-forum">
+	     <div class="panel-heading">
+		  <i class="fa fa-group"></i> {L_MEMBERS}
+		 </div>
+		 <div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+	<thead>
+	<tr>
+		<th data-class="expand">{L_RANK}&nbsp;{L_ADMINISTRATORS}</th>
+		<th class="large20" data-hide="phone">{L_PRIMARY_GROUP}</th>
+		<th class="large20" data-hide="phone">{L_FORUMS}</th>
+	</tr>
+	</thead>
+	<tbody>
+<!-- BEGIN admin -->
+	<tr>
+		<td>{admin.USERNAME_FULL} ({admin.RANK_TITLE})</td>
+		<td><!-- IF admin.U_GROUP -->
+			<a<!-- IF admin.GROUP_COLOR --> style="font-weight: bold; color:#{admin.GROUP_COLOR}"<!-- ENDIF --> href="{admin.U_GROUP}">{admin.GROUP_NAME}</a>
+			<!-- ELSE -->
+				{admin.GROUP_NAME}
+			<!-- ENDIF -->
+		</td>
+		<td>&#45;</td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td colspan="3"><strong>{L_NO_ADMINISTRATORS}</strong></td>
+	</tr>
+<!-- END admin -->
+	</tbody>
+	</table>
+	</div>
+  </div>
+  
+ <div class="panel panel-forum">
+	     <div class="panel-heading">
+		  <i class="fa fa-group"></i> {L_MEMBERS}
+		 </div>
+		 <div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+	<thead>
+	<tr>
+		<th data-class="expand">{L_MODERATORS}</th>
+		<th class="large20" data-hide="phone">{L_GROUPS}</th>
+		<th class="large20" data-hide="phone">{L_FORUMS}</th>
+	</tr>
+	</thead>
+	<tbody>
+<!-- BEGIN mod -->
+	<tr>
+		<td>{mod.USERNAME_FULL}<!-- IF mod.RANK_IMG --><!-- ELSE -->({mod.RANK_TITLE})<!-- ENDIF --></td>
+		<td><!-- IF mod.U_GROUP -->
+			<a<!-- IF mod.GROUP_COLOR --> style="font-weight: bold; color:#{mod.GROUP_COLOR}"<!-- ENDIF --> href="{mod.U_GROUP}">{mod.GROUP_NAME}</a>
+			<!-- ELSE -->
+				{mod.GROUP_NAME}
+			<!-- ENDIF -->
+		</td>
+		<td><!-- IF not mod.FORUMS -->{L_ALL_FORUMS}<!-- ELSE --><select class="selectpicker" data-container="body">{mod.FORUMS}</select><!-- ENDIF --></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td colspan="3"><strong>{L_NO_MODERATORS}</strong></td>
+	</tr>
+<!-- END mod -->
+	</tbody>
+	</table>
+	 </div>
+  </div>	
+</form>
+<div class="row">
+<!-- INCLUDE jumpbox.html -->
+</div>
+
+<!-- INCLUDE jump_links.html -->
+<!-- INCLUDE overall_footer.html -->

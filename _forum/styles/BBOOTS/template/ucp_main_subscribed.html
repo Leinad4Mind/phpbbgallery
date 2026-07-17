@@ -1,0 +1,137 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<fieldset class="framed-ucp">
+  <legend>{L_TITLE}</legend>
+	<p>{L_WATCHED_EXPLAIN}</p>
+
+<!-- IF .forumrow -->
+<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{L_FORUMS}</th>
+			<th class="large26" data-hide="phone">{L_LAST_POST}</th>
+		    <th class="table-check">{L_MARK}</th>
+		</tr> 
+	</thead>
+	<tbody>
+	<!-- DEFINE $VAR -->{L_VIEW_TOPIC_LOCKED}<!-- ENDDEFINE -->
+	<!-- BEGIN forumrow -->
+		<tr id="forum-{forumrow.FORUM_ID}">
+			<td title="{forumrow.FORUM_FOLDER_IMG_ALT}" >
+			<span class="icon-wrapper">
+			 <i class="row-icon-font icon-moon-default<!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{forumrow.FORUM_FOLDER_IMG_ALT}"></i>
+			</span>
+			 <i class="row-icon-font-mini<!-- IF topicrow.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{forumrow.FORUM_FOLDER_IMG_ALT}"></i>
+			 <a class="topictitle" href="{forumrow.U_VIEWFORUM}">{forumrow.FORUM_NAME}</a><br />{forumrow.FORUM_DESC}
+			</td>
+			<td>
+			 <!-- IF forumrow.LAST_POST_TIME -->{L_POST_BY_AUTHOR}&nbsp;{forumrow.LAST_POST_AUTHOR_FULL}&nbsp;<a title="{L_FORUMLIST_LASTPOST}" href="{forumrow.U_LAST_POST}"><i class="fa fa-sign-out"></i></a> 
+			 <br /><small>{forumrow.LAST_POST_TIME}</small>
+			 <!-- ELSE -->{L_NO_POSTS}<br /><!-- ENDIF -->
+			</td>
+			<td class="table-check"><div class="checker"><input type="checkbox" name="f[{forumrow.FORUM_ID}]" id="f{forumrow.FORUM_ID}"><label for="f{forumrow.FORUM_ID}"></label></div></td>
+		</tr>
+	<!-- END forumrow -->
+	</tbody>
+ </table>
+</div>
+	
+	<!-- ELSEIF S_FORUM_NOTIFY -->
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{L_NO_WATCHED_FORUMS}
+    </div> 
+    <!-- ENDIF -->
+
+<!-- IF .topicrow -->
+<div class="panel panel-default">
+	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+	<thead>
+		<tr>
+			<th data-class="expand">{L_TOPICS}</th>
+			<th data-hide="phone">{L_LAST_POST}</th>
+			<th class="table-check">{L_MARK}</th>
+		</tr> 
+	</thead>
+	<tbody>
+	<!-- DEFINE $VAR -->{L_VIEW_TOPIC_LOCKED}<!-- ENDDEFINE -->
+	<!-- BEGIN topicrow -->
+		<tr id="topic-{topicrow.TOPIC_ID}">
+		    <td>
+			 <!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --><i class="topic-icon" style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i><!-- ENDIF -->
+			<span class="icon-wrapper">
+			 <i class="row-icon-font icon-moon-default2<!-- IF topicrow.S_TOPIC_TYPE == 2 --> icon-moon-voice2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 3 --> icon-moon-podcast2<!-- ELSEIF topicrow.S_TOPIC_TYPE == 1 --> icon-moon-pushpin2<!-- ELSEIF topicrow.S_HAS_POLL --> icon-moon-poll<!-- ENDIF --><!-- IF topicrow.S_TOPIC_MOVED --> icon-moon-moved<!-- ENDIF --><!-- IF topicrow.S_UNREAD_TOPIC --> forum-unread<!-- ELSE --> forum-read<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+			</span>
+			 <i class="row-icon-font-mini<!-- IF topicrow.TOPIC_TYPE == $VAR --> fa fa-lock forumview-lock<!-- ENDIF -->" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"></i>
+			 <!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}"><i class="fa fa-asterisk"></i></a><!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">&nbsp;{topicrow.TOPIC_TITLE}</a>
+			 <!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}"><i class="fa fa-question-circle" title="{L_TOPICS_ROW_NOT_APPROVED}"></i></a><!-- ENDIF -->
+			 <!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}" title="{L_TOPICS_ROW_REPORTED}"><i class="fa fa-exclamation-circle"></i></a><!-- ENDIF --><br />
+			 <!-- IF .topicrow.pagination -->
+				    <ul class="pagination pagination-forum pagination-xs pull-right hidden-sm hidden-xs">
+						<!-- BEGIN pagination -->
+						 <!-- IF topicrow.pagination.S_IS_PREV -->
+						 <!-- ELSEIF topicrow.pagination.S_IS_CURRENT --><li class="active">{topicrow.pagination.PAGE_NUMBER}</li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_ELLIPSIS --><li class="ellipsis"><a>{L_ELLIPSIS}</a></li>
+						 <!-- ELSEIF topicrow.pagination.S_IS_NEXT -->
+						<!-- ELSE -->
+						 <li><a href="{topicrow.pagination.PAGE_URL}">{topicrow.pagination.PAGE_NUMBER}</a></li>
+						<!-- ENDIF -->
+						<!-- END pagination -->
+					</ul>		
+			    <!-- ENDIF -->
+			 <!-- IF topicrow.ATTACH_ICON_IMG --><i class="fa fa-paper-clip fa-flip-horizontal" title="{L_ATTACH_FORUM}"></i><!-- ENDIF -->{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL} <small>{topicrow.FIRST_POST_TIME}</small>
+			</td>
+			<td>{L_POST_BY_AUTHOR}&nbsp;{topicrow.LAST_POST_AUTHOR_FULL}
+			 <!-- IF not S_IS_BOT --><a title="{L_FORUMLIST_LASTPOST}" href="{topicrow.U_LAST_POST}"><i class="fa fa-sign-out"></i></a><!-- ENDIF -->
+			 <br /><small>{topicrow.LAST_POST_TIME}</small>
+			</td>
+			<td class="table-check">
+			 <div class="checker">
+			  <label for="t{topicrow.TOPIC_ID}"></label>
+			   <input type="checkbox" name="t[{topicrow.TOPIC_ID}]" id="t{topicrow.TOPIC_ID}"/>
+			 </div>
+			</td>
+		</tr>
+	<!-- END topicrow -->
+	</tbody>
+ </table>
+ </div>
+
+        <ul class="pagination pagination-sm pull-right">
+			<li><a>{TOTAL_TOPICS}</a></li>
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				<li class="active"><a>{PAGE_NUMBER}</a></li>	
+			<!-- ENDIF -->
+		</ul> 
+		
+<!-- ELSEIF S_TOPIC_NOTIFY -->
+	<div class="alert alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{L_NO_WATCHED_TOPICS}
+    </div> 
+<!-- ENDIF -->
+
+        <div class="pull-left">
+            <div class="btn-group">
+			    <!-- IF .topicrow or .forumrow -->
+                <div class="dropdown">
+                    <button href="#" data-toggle="dropdown" class="btn btn-default" title=""><i class="fa fa-check-square-o"></i>&nbsp;<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+                            <li><a href="#" onclick="marklist('ucp', 't', true); marklist('ucp', 'f', true); return false;" title=""><i class="fa fa-check-square-o"></i>{L_MARK_ALL}</a></li>
+                            <li><a href="#" onclick="marklist('ucp', 't', false); marklist('ucp', 'f', false); return false;" title=""><i class="fa fa-square-o"></i>{L_UNMARK_ALL}</a></li>
+                        </ul> 
+				    <button class="btn btn-default" type="submit" name="unwatch" title="{L_UNWATCH_MARKED}"><i class="fa fa-eye-slash"></i></button>
+				</div>
+                    {S_FORM_TOKEN}
+                <!-- ENDIF -->		  
+		    </div> 
+        </div>
+		
+</fieldset>
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->

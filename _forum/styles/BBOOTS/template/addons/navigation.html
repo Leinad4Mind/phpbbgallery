@@ -1,0 +1,144 @@
+<!-- Main navigation block -->
+<nav class="mainnav" aria-label="Primary">
+	  <ul>
+		<li class="nav-icon">
+			<a href="{U_INDEX}">{L_HOME} <span class="has-sub"><i class="fa fa-home"></i></span></a>
+			<p>{L_MAIN_MAIN_STUFF}</p>
+		 <ul class="submenu greydout">
+			<!-- IF S_USER_LOGGED_IN --><li><a href="{U_PROFILE}"><i class=" fa fa-dashboard"></i> {L_PROFILE}</a><span></span></li><!-- ENDIF -->
+			<li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i> {L_FAQ}</a><span></span></li>
+            <!-- EVENT overall_header_navigation_prepend -->
+			<!-- IF S_DISPLAY_MEMBERLIST --><li><a href="{U_MEMBERLIST}"><i class="fa fa-user"></i> {L_MEMBERLIST}</a><span></span></li><!-- ENDIF -->
+			<!-- EVENT overall_header_navigation_append -->
+			<!-- IF U_TEAM --><li><a href="{U_TEAM}"><i class="fa fa-group"></i> {L_THE_TEAM}</a></li><!-- ENDIF -->
+	     </ul>
+		</li>
+		<li class="nav-icon">
+			<a href="#">{L_MAIN_FORUM} <span class="has-sub"><i class="fa fa-comments"></i></span></a>
+			<p>{L_MAIN_TRENDS}</p>
+		<ul class="submenu greydout">
+		<!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
+	    <!-- IF S_DISPLAY_SEARCH -->
+        <li><a href="{U_SEARCH_UNANSWERED}"><i class="fa fa-search"></i> {L_SEARCH_UNANSWERED}</a><span></span></li>
+        <!-- IF S_LOAD_UNREADS -->
+		 <li><a href="{U_SEARCH_UNREAD}"><i class="fa fa-comment"></i> {L_SEARCH_UNREAD}</a><span></span></li>
+		<!-- ENDIF -->
+	    <!-- IF S_USER_LOGGED_IN -->
+        <li><a href="{U_SEARCH_NEW}"><i class="fa fa-thumbs-up"></i> {L_SEARCH_NEW}</a><span></span></li>
+		<!-- ENDIF -->
+		<li><a href="{U_SEARCH_ACTIVE_TOPICS}"><i class="fa fa-star"></i> {L_SEARCH_ACTIVE_TOPICS}</a><span></span></li>
+					   
+		<!-- ENDIF -->
+	    <!-- ENDIF -->
+		</ul>
+		</li>
+
+		<li class="nav-icon">
+		 <a href="#">{L_SEARCH} <span class="has-sub"><i class="fa fa-search fa fa-flip-horizontal"></i></span></a>
+			<p>{L_MAIN_SEARCH_IT_UP}</p>
+		 <ul class="submenu greydout">
+			<li><a href="{U_SEARCH}"><i class="fa fa-search fa fa-flip-horizontal"></i> {L_SEARCH_ADV}</a><span></span></li>
+								
+			<!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
+			 <!-- IF S_DISPLAY_SEARCH --> 
+			<li><a href="{U_SEARCH_SELF}"><i class="fa fa-comments"></i> {L_SEARCH_SELF}</a><span></span></li>
+			<!-- ENDIF -->
+			<!-- ENDIF -->
+								
+	        <!-- IF not S_IS_BOT and U_MARK_FORUMS -->
+			<li><a href="{U_MARK_FORUMS}" data-ajax="mark_forums_read"><i class="fa fa-check"></i> {L_MARK_FORUMS_READ}</a><span></span></li>
+	        <!-- ENDIF -->
+			<li><a href="{SITESPLAT_SEARCH_LAST_DAY}"> <i class="fa fa-sort-numeric-asc"></i>{L_SITESPLAT_SEARCH_LAST_DAY}</a><span></span></li>
+			<li><a href="{SITESPLAT_SEARCH_WEEK}"> <i class="fa fa-sort-alpha-asc"></i>{L_SITESPLAT_SEARCH_WEEK}</a><span></span></li>
+		 </ul>
+		</li>
+		
+		<li class="nav-icon">
+			<a href="#">{L_MAIN_SOCIAL} <span class="has-sub"><i class="fa fa-retweet"></i></span></a>
+			<p>{L_SOCIAL_P}</p>
+		</li>						
+
+		<!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->	
+		<li class="nav-icon">
+			<a href="{U_CONTACT_US}">{L_CONTACT} <span class="has-sub"><i class="fa fa-rocket"></i></span></a>
+			<p>{L_GET_IN_TOUCH}</p>
+		</li>
+		<!-- ENDIF -->
+						
+		<!-- IF not S_USER_LOGGED_IN -->
+		<li class="nav-icon">
+			<!-- IF not ENABLE_POPUP_LOGIN -->
+				<a href="{U_LOGIN_LOGOUT}">{L_LOGIN} <span class="has-sub"><i class="fa fa-sign-in"></i></span></a>
+			<!-- ELSE -->
+				<a href="" data-toggle="modal" data-target="#modal-login" role="button" data-toggle="modal">{L_LOGIN} <span class="has-sub"><i class="fa fa-sign-in"></i></span></a>
+			<!-- ENDIF -->
+			<p>{L_HANG_AROUND}</p>
+		</li>
+		<!-- ENDIF -->
+					 
+		<!-- IF not S_IS_BOT -->
+	    <!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) and PROVIDER_TEMPLATE_FILE -->
+	    <li class="nav-icon">
+			<a href="{U_REGISTER}">{L_REGISTER} <span class="has-sub"><i class="fa fa-thumbs-up"></i></span></a>
+			<p>{L_JOIN_THE_CLUB}</p>
+		</li>
+	    <!-- ENDIF -->
+		<!-- ENDIF -->
+	  </ul>
+		<div class="navBtn"><span>{L_MENU}</span>
+		 <a data-toggle="collapse" data-target="#responsive-navigation" class="listen_menu fa fa-align-justify" href="javascript:void(0);" title=""></a>
+		 <!-- IF not S_USER_LOGGED_IN -->
+		 	<!-- IF not ENABLE_POPUP_LOGIN -->
+		 		<a class="fa fa-sign-in" href="{U_LOGIN_LOGOUT}" title=""></a>
+		 	<!-- ELSE -->
+				<a class="fa fa-sign-in" href="" data-toggle="modal" data-target="#modal-login" role="button" data-toggle="modal"></a>
+			<!-- ENDIF -->
+		 <!-- ENDIF -->
+		</div>
+</nav> 
+<!-- Main navigation block -->
+
+<!-- MOBILE Navigation block -->
+<!-- Everything you want hidden at 940px or less, place within here -->
+    <nav class="hidden-lg hidden-md hidden-sm">
+	 <div id="responsive-navigation" class="collapse">
+		<ul class="flexnav list-unstyled">
+		<!-- IF not S_IS_BOT -->
+	    <!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+		    <li><a href="{U_REGISTER}"><i class="fa fa-thumbs-up"></i> {L_REGISTER}</a></li>
+	    <!-- ENDIF -->
+		<!-- ENDIF -->
+		
+		<!-- IF S_USER_LOGGED_IN -->
+			<li><a href="{U_PROFILE}"><i class="fa fa-dashboard"></i> {L_PROFILE}</a></li>
+	    <!-- ENDIF -->
+			<li><a href="{U_FAQ}"><i class="fa fa-question-circle"></i> {L_FAQ}</a></li>
+	    <!-- IF U_TEAM -->
+		    <li><a href="{U_TEAM}"><i class="fa fa-group"></i> {L_THE_TEAM}</a></li>
+		<!-- ENDIF -->
+        <!-- IF S_DISPLAY_MEMBERLIST -->
+	        <li><a href="{U_MEMBERLIST}"><i class="fa fa-user"></i> {L_MEMBERLIST}</a></li>
+		<!-- ENDIF -->
+			
+		<li class="item-with-ul">
+			<a href="{U_SEARCH}"><i class="fa fa-search"></i> {L_SEARCH_ADV}</a>
+		     <ul class="collapse viewdetails list-unstyled">
+    <!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
+	<!-- IF S_DISPLAY_SEARCH -->
+        <li><a href="{U_SEARCH_UNANSWERED}"><i class="fa fa-search"></i> {L_SEARCH_UNANSWERED}</a></li>
+        <!-- IF S_LOAD_UNREADS -->
+		 <li><a href="{U_SEARCH_UNREAD}"><i class="fa fa-comment"></i> {L_SEARCH_UNREAD}</a></li>
+		<!-- ENDIF -->
+	    <!-- IF S_USER_LOGGED_IN -->
+        <li><a href="{U_SEARCH_NEW}"><i class="fa fa-thumbs-up"></i> {L_SEARCH_NEW}</a></li>
+		<!-- ENDIF -->
+		<li><a href="{U_SEARCH_ACTIVE_TOPICS}"><i class="fa fa-star"></i> {L_SEARCH_ACTIVE_TOPICS}</a></li>		   
+    <!-- ENDIF -->
+	<!-- ENDIF -->
+             </ul>
+			  <a class="touch-button" href="javascript:void(0);" data-toggle="collapse" data-target=".viewdetails"><i class="navicon fa fa-sort-down"></i></a>
+		</li>
+        </ul>
+	  </div>
+    </nav> 
+<!-- MOBILE Navigation block -->

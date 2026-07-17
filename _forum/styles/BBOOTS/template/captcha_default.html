@@ -1,0 +1,22 @@
+<!-- IF S_TYPE == 1 -->
+	<div class="side-segment"><h3>{L_CONFIRMATION}</h3></div>
+<div class="well">
+	<p>{L_CONFIRM_EXPLAIN}</p>
+	<fieldset>
+<!-- ENDIF -->
+<label class="control-label" for="confirm_code">{L_CONFIRM_CODE}{L_COLON}</label><span class="help-block">{L_CONFIRM_CODE_EXPLAIN}</span>
+<img src="{CONFIRM_IMAGE_LINK}" alt="{L_CONFIRM_CODE}" />
+<div class="space10"></div>
+<div class="<!-- IF S_CONFIRM_REFRESH -->input-group<!-- ELSE -->nothing<!-- ENDIF -->">
+     <input class="form-control" type="text" name="confirm_code" id="confirm_code" maxlength="8" tabindex="{$CAPTCHA_TAB_INDEX}" title="{L_CONFIRM_CODE}" placeholder="Ex:1GHn387U">
+	<!-- IF S_CONFIRM_REFRESH -->
+    <div class="input-group-btn">
+	 <button type="submit" name="refresh_vc" id="refresh_vc" class="btn btn-default" value="{L_VC_REFRESH}" title="{L_VC_REFRESH}" ><i class="fa fa-retweet"></i></button>
+    </div>
+	<!-- ENDIF -->
+</div>
+<input type="hidden" name="confirm_id" id="confirm_id" value="{CONFIRM_ID}" />
+<!-- IF S_TYPE == 1 -->
+	</fieldset>
+</div>
+<!-- ENDIF -->

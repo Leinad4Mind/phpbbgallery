@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="{S_CONTENT_ENCODING}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Set the viewport width to device width for mobile -->
+
+<title>{L_ERROR404}</title>
+
+<!--
+	phpBB Premium style name: BBOOTS (3.0.0) @SiteSplat.com
+-->
+<!-- CSS files start here-->
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet">
+<!-- Google free font here -->
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+<!-- CSS files -->
+<!-- Scripts start here after the jquery.js -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="{T_THEME_PATH}/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
+<div id="wrap" class="corners container">
+  <!-- start content -->
+  <div id="content-forum">
+    <div class="padding_0_40">
+	<!-- Main Wrapper. Set this to 'fixed' for fixed layout and 'fluid' for fluid layout' -->
+	<div class="clearfix">
+        <!-- Content -->
+        <div class="well well-schema">
+            <!-- Container -->
+
+            <div class="big-title">
+                    <h1 id="error">{L_ERROR404}</h1>
+				
+				<div class="clearfix">
+					<div class="achievement">
+						<i class="fa fa-rocket"></i> 
+					</div>
+				</div>
+					  
+                    <h2>{L_ERROR404_INFO}</h2>
+					  <h2>{L_ERROR_GENERAL}</h2>
+            </div><!-- big-title -->
+					
+					
+			<div class="alert alert-info fade in">
+                <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+                <i class="fa fa-warning"></i> <strong>{L_INFO_BOX}</strong> <!-- IF S_REGISTERED_USER --> <strong>{S_USERNAME}</strong> [ {ERROR_USER_IP} ]<!-- ELSE --> [ {ERROR_USER_IP} ]<!-- ENDIF -->
+            </div> 
+
+             <ul class="pager">
+				<li class="previous">
+				<a href="{U_INDEX}">&larr; {L_ERROR_HOME}</a>
+				</li>
+				<li class="next">
+				<a href="{U_SEARCH}">{L_SEARCH_ADV} &rarr;</a>
+				</li>
+		    </ul>
+            
+        </div>
+        
+        <!-- Footer -->
+		<footer role="contentinfo">
+		<div class="clearfix bottomLinks"> <!-- Credit, links and copyright block do not remove please -->
+		
+	
+        <div class="pull-left">
+		  <small>{L_POWERED} <a href="http://www.phpbb.com/" title="Forum Software &copy; phpBB&reg; Group" target="_blank"><i aria-hidden="true" class="icon-moon-forphp"></i></a> <i aria-hidden="true" class="icon-moon-bootstrap"></i> <i aria-hidden="true" class="icon-moon-html5"></i> <i aria-hidden="true" class="icon-moon-css3"></i> <i aria-hidden="true" class="icon-moon-forjq"></i> <i aria-hidden="true" class="icon-moon-less_c"></i> <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fsitesplat.com%2Fdemo%2FphpBB3%2Findex.php" title="Conform to W3C HTML5 Standard" target="_blank"> <i aria-hidden="true" class="icon-moon-w3c"></i></a> </small>
+		</div>
+		
+		<div class="pull-right">
+		  <small>{L_HANDCRAFTED}&nbsp;<i class="fa fa-heart rosso"></i> {L_AND} <i class="fa fa-coffee"></i> {L_BY} <a href="http://www.sitesplat.com/" title="SiteSplat.com" target="_blank">SiteSplat</a> &copy;SiteSplat 2013</small>
+		</div>
+	</div>
+	</footer>
+        
+    </div>
+   
+ </div>
+  </div>
+   </div>
+<script src="{T_THEME_PATH}/js/countUp.min.js"></script>
+<script>
+var count = new countUp("error", 0, 404, 0, 3);
+window.onload = function() {
+// fire animation
+count.start();
+} 
+</script>
+</body>
+</html>

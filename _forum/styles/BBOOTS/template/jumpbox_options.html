@@ -1,0 +1,17 @@
+<!-- IF S_DISPLAY_JUMPBOX -->
+<div id="jumpbox" class="dropdown">
+  <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+   {L_JUMP_SELECT_FORUM}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu jumpbox-dropdown" role="menu" style="width: 100%;">
+  <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
+    <!-- BEGIN jumpbox_forums -->
+	 <!-- IF jumpbox_forums.FORUM_ID neq -1 -->
+	 <li role="presentation" class="<!-- IF jumpbox_forums.level -->jumpbox-sub-link<!-- ELSEIF jumpbox_forums.S_IS_CAT -->jumpbox-cat-link<!-- ELSE -->jumpbox-forum-link<!-- ENDIF -->"><a role="menuitem" tabindex="-1" href="{jumpbox_forums.LINK}"><!-- BEGIN level -->&nbsp;&nbsp;&nbsp;&nbsp;<!-- END level -->{jumpbox_forums.FORUM_NAME}</a></li>
+	 <!-- ENDIF -->
+	<!-- END jumpbox_forums -->
+  </ul>
+</div>	
+<!-- ELSE -->
+<!-- ENDIF -->

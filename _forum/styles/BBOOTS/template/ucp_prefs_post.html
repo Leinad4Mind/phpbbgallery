@@ -1,0 +1,59 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<div class="tab-pane active">
+	<fieldset class="framed-ucp">
+	<legend>{L_TITLE}</legend>
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}
+    </div>
+	<!-- ENDIF -->
+<!-- EVENT ucp_prefs_post_prepend -->
+<!-- profile-settings starts here-->     
+    <div class="control-group"> 
+	<label class="control-label">{L_DEFAULT_BBCODE}{L_COLON}</label>
+	<div class="controls controls-row"> 
+        <div class="radio"><input type="radio" name="bbcode" id="bbcode1" value="1"<!-- IF S_BBCODE --> checked="checked"<!-- ENDIF --> /><label for="bbcode1">{L_YES}</label></div>   
+        <div class="radio"><input type="radio" name="bbcode" id="bbcode0" value="0"<!-- IF not S_BBCODE --> checked="checked"<!-- ENDIF --> /><label for="bbcode0">{L_NO}</label></div>
+	</div> 
+	</div> 
+	
+    <div class="control-group"> 
+	<label class="control-label">{L_DEFAULT_SMILIES}{L_COLON}</label>
+	<div class="controls controls-row"> 
+        <div class="radio"><input type="radio" name="smilies" id="smilies1" value="1"<!-- IF S_SMILIES --> checked="checked"<!-- ENDIF --> /><label for="smilies1">{L_YES}</label></div>   
+        <div class="radio"><input type="radio" name="smilies" id="smilies0" value="0"<!-- IF not S_SMILIES --> checked="checked"<!-- ENDIF --> /><label for="smilies0">{L_NO}</label></div>
+	</div> 
+	</div> 
+	
+    <div class="control-group"> 
+	<label class="control-label">{L_DEFAULT_ADD_SIG}{L_COLON}</label>
+	<div class="controls controls-row"> 
+        <div class="radio"><input type="radio" name="sig" id="sig1" value="1"<!-- IF S_SIG --> checked="checked"<!-- ENDIF --> /><label for="sig1">{L_YES}</label></div>   
+        <div class="radio"><input type="radio" name="sig" id="sig0" value="0"<!-- IF not S_SIG --> checked="checked"<!-- ENDIF --> /><label for="sig0">{L_NO}</label></div>
+	</div> 
+	</div> 	
+	
+    <div class="control-group"> 
+	<label class="control-label">{L_DEFAULT_NOTIFY}{L_COLON}</label>
+	<div class="controls controls-row"> 
+        <div class="radio"><input type="radio" name="notify" id="notify1" value="1"<!-- IF S_NOTIFY --> checked="checked"<!-- ENDIF --> /><label for="notify1">{L_YES}</label></div>   
+        <div class="radio"><input type="radio" name="notify" id="notify0" value="0"<!-- IF not S_NOTIFY --> checked="checked"<!-- ENDIF --> /><label for="notify0">{L_NO}</label></div>
+	</div> 
+	</div> 	
+<!-- profile-settings ends here-->
+<!-- EVENT ucp_prefs_post_append -->
+	</fieldset>
+</div>
+
+<div class="space10"></div>
+<div class="form-actions"> 
+	{S_HIDDEN_FIELDS}
+	<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+	<button type="submit" name="submit" value="{L_SUBMIT}" class="btn btn-default" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+</div>
+	
+</form>
+
+<!-- INCLUDE ucp_footer.html -->

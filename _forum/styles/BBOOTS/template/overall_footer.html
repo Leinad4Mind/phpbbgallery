@@ -1,0 +1,160 @@
+<!-- EVENT overall_footer_content_after -->
+
+<footer> <!-- Footer block -->
+    <!-- IF not HIDE_FOOTER -->
+		<div id="footerContent"> <!-- About us , links, twitter, recent posts layout -->
+			<div class="row">
+				<div class="col-md-3 col-sm-6 recent-row row-topics">
+					<div class="side-segment"><h3>{L_RECENT_TOPICS}</h3></div>
+				   <!-- IF S_TOPFIVE -->
+						<!-- EVENT recent_topics_body -->
+					<!-- ELSE -->
+						 <!-- INCLUDE addons/recent_topics_body.html -->
+				   <!-- ENDIF -->
+				</div>
+				
+				<div class="col-md-3 col-sm-6 recent-row row-twitter">
+					<div class="side-segment"><h3><!-- IF BBOOTS_MINI_CMS_ENABLED --><a href="https://twitter.com/{TWITTER_SCREEN_NAME}">{L_JOIN_US_TWITTER}&nbsp;<small>@{TWITTER_SCREEN_NAME}</small></a><!-- ELSE -->{L_TWITTER}<!-- ENDIF --></h3></div>
+				   <div id="twitter-feed"></div>
+				</div>
+				
+				<div class="col-md-3 col-sm-6 recent-row row-fav">
+					<div class="side-segment"><h3>{L_FAVORITES}</h3></div>
+					<!-- IF BBOOTS_MINI_CMS_ENABLED -->
+						<!-- EVENT footer_links_instead -->
+					<!-- ELSE -->
+					<ul class="navList">
+						<li><a href="#"><i class="fa fa-home"></i>&nbsp;{L_HOME}</a></li>
+						<li><a href="#"><i class="fa fa-picture-o"></i>&nbsp;{L_GALLERY}</a></li>
+						<li><a href="{U_MEMBERLIST}"><i class="fa fa-group"></i>&nbsp;{L_MEMBERLIST}</a></li>
+						<!-- EVENT overall_footer_teamlink_before -->
+						<li><a href="#"><i class="fa fa-comments"></i>&nbsp;{L_CHAT}</a></li>
+						<!-- EVENT overall_footer_teamlink_after -->
+						<!-- IF U_CONTACT_US -->
+						<li><a href="{U_CONTACT_US}"><i class="fa fa-rocket"></i>&nbsp;{L_CONTACT_US}</a></li>
+						<!-- ENDIF -->
+						<!-- IF not S_IS_BOT --><li><a href="{U_DELETE_COOKIES}"><i class="fa fa-trash-o"></i>&nbsp;{L_DELETE_COOKIES}</a></li><!-- ENDIF -->
+					</ul>
+					<!-- ENDIF -->
+				</div>
+				<!-- IF BBOOTS_MINI_CMS_ENABLED -->
+				   <!-- EVENT prefooter_instead -->
+				<!-- ELSE -->
+				<div class="col-md-3 col-sm-6 recent-row row-about">
+				   <div class="side-segment"><h3>{L_ABOUT}</h3></div>
+					<p>{L_ABOUT_PART_ONE}</p> 
+					<p>{L_ABOUT_PART_TWO}</p>
+				   <blockquote>
+                    <p><span>{L_BB}</span>{L_BOOTS}</p>
+                     <small><cite title="Source Title">{L_ABOUT_PART_THREE}&nbsp;<i class="fa fa-map-marker"></i></cite></small>
+                   </blockquote>
+				</div>
+				<!-- ENDIF -->
+				
+			</div>
+		</div> <!-- About us , links, twitter, recent posts layout -->
+	<!-- ENDIF -->	
+	<div class="row bottomLinks"> <!-- Credit, links and copyright block do not remove please -->
+	  <div class="col-md-12">
+	     <!-- EVENT overall_footer_copyright_prepend -->
+		<div class="pull-left">
+		  <small>{L_POWERED} <a href="https://www.phpbb.com/" title="Forum Software &copy; phpBB&reg; Group" target="_blank"> phpBB</a> - <i aria-hidden="true" class="fa fa-html5"></i> <i aria-hidden="true" class="fa fa-css3"></i></small>
+		</div>
+		
+		<div class="pull-right">
+		  <small>{L_HANDCRAFTED}&nbsp;<i class="fa fa-heart rosso"></i>&nbsp;{L_AND}&nbsp;<i class="fa fa-coffee"></i>&nbsp;{L_BY}&nbsp;<a href="https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="SiteSplat.com" target="_blank">SiteSplat</a>&nbsp;&copy;SiteSplat 2013</small>
+		</div>
+	   </div> 
+	</div> <!-- Credit, links and copyright block do not remove please -->
+</footer>
+	
+	</div><!-- page-body id in header -->
+  </div> <!-- padding_0_40 in header -->
+ </div> <!-- content-forum in header -->
+</div> <!-- wrap - corners container in header -->
+
+<a id="totop" class="topstyle" href="" onclick="return false;" style="display:none;"><i class="fa fa-chevron-up"></i></a>
+
+<div class="container">
+  <div class="copyright">
+	<small class="pull-left">
+		<!-- IF TRANSLATION_INFO -->{TRANSLATION_INFO}<!-- ENDIF -->
+		<!-- IF DEBUG_OUTPUT -->{DEBUG_OUTPUT}<!-- ENDIF -->
+		<!-- {L_BBOOTS_VERSION} -->
+	</small>
+	<small class="pull-right">
+	<!-- EVENT overall_footer_timezone_before -->
+		&nbsp;&#45;&nbsp;{S_TIMEZONE}&nbsp;&#45;&nbsp;
+	<!-- EVENT overall_footer_timezone_after -->	
+	</small>
+  </div>
+</div>
+
+<div class="hidden"><!-- IF not S_IS_BOT -->{RUN_CRON_TASK}<!-- ENDIF --></div> 
+
+<!-- injected via core and ajax JS for the return confirmation actions -->
+   <div id="page-footer">
+	<div id="darkenwrapper" data-ajax-error-title="{L_AJAX_ERROR_TITLE}" data-ajax-error-text="{L_AJAX_ERROR_TEXT}" data-ajax-error-text-abort="{L_AJAX_ERROR_TEXT_ABORT}" data-ajax-error-text-timeout="{L_AJAX_ERROR_TEXT_TIMEOUT}" data-ajax-error-text-parsererror="{L_AJAX_ERROR_TEXT_PARSERERROR}">
+		<div id="darken">&nbsp;</div>
+	</div>
+
+	<div id="phpbb_alert" class="alert alert-default phpbb_alert" data-l-err="{L_ERROR}" data-l-timeout-processing-req="{L_TIMEOUT_PROCESSING_REQ}">
+		<button type="button" class="close alert_close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="alert_title">&nbsp;</h3>
+		 <p class="alert_text"></p>
+	</div>
+	
+	<div id="phpbb_confirm" class="alert alert-default phpbb_alert">
+		<button type="button" class="close alert_close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<div class="alert_text"></div>
+	</div>
+  </div>	
+<!-- injected via core and ajax JS for the return confirmation actions -->
+
+<!-- EVENT ss_overall_footer_scripts_before -->
+
+<script>
+// this loads jquery asyncrounously & in parallel
+head.load("//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js", "{T_THEME_PATH}/vendors/forum_fn.min.js");
+</script>
+
+<!-- we use this event to load the JS scripts properly via the extension system -->
+<!-- EVENT overall_footer_after -->
+
+<!-- injected via a module or an include -->
+<script>
+// some function that depends on bootstrap and jquery
+head.ready(function () {
+	$('.footable').footable();$(".selectpicker").selectpicker();$(".selectpicker").tooltip("disable");var totop=$("#totop");totop.click(function(){$("html, body").stop(true,true).animate({scrollTop:0},500);return false});$(window).scroll(function(){if($(this).scrollTop()>600){totop.fadeIn()}else{totop.fadeOut()}});$("button[data-loading-text], input[data-loading-text], .btn-load").click(function(){var e=$(this);e.button("loading");setTimeout(function(){e.button("reset")},3e3)});
+	$("input").iCheck({checkboxClass:"icheckbox_minimal-grey",radioClass:"iradio_minimal-grey"});$(".btn-search").click(function(){$(".search-input").toggleClass("open").find("input").focus()});$(".close").click(function(){$(this).prev("input").val("").parents(".search-input").removeClass("open")});$(".nav-tog").click(function(){if($(this).hasClass("neutro")){$(this).removeClass("neutro").addClass("open")}else{$(this).removeClass("open").addClass("neutro")}});
+	$('input[data-reset-on-edit]').on('keyup', function() {$(this.getAttribute('data-reset-on-edit')).val('');});
+	$('a').tooltip({trigger : 'hover',container: 'body'})
+    $('#notification_list_button').click(function(){setTimeout(function(){$(".nano").nanoScroller();},0);});	
+});
+// some function that depends on bootstrap and jquery
+<!-- IF PROVIDER_TEMPLATE_FILE -->
+head.ready(function(){!function(n){n(".oauth-content ul > li").each(function(){var i=n(this).find("a").text();n(this).find("a").prepend('<i class="'+i+'"></i>')})}(jQuery)});
+<!-- ENDIF -->
+<!-- IF not HIDE_FOOTER -->
+
+// ex twitter script
+
+<!-- ENDIF -->
+<!-- IF S_RECAPTCHA_AVAILABLE -->
+head.load("{T_THEME_PATH}/vendors/inv-recaptcha.js");
+<!-- ENDIF -->
+</script>
+<!-- injected via a module or an include -->
+
+{$SCRIPTS}
+
+<!-- IF S_PLUPLOAD -->
+<!-- INCLUDE plupload.html -->
+<!-- ENDIF -->
+
+<!-- EVENT overall_footer_body_after -->
+
+<!-- Google Analytics here -->
+{GOOGLE_ANALYTICS}
+</body>
+</html>

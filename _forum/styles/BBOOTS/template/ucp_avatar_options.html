@@ -1,0 +1,68 @@
+<div class="tab-pane active">
+<fieldset class="framed-ucp">
+	<legend>{L_TITLE}</legend>
+	
+	<!-- IF not S_AVATARS_ENABLED -->
+		<p>{L_AVATAR_FEATURES_DISABLED}</p>
+	<!-- ENDIF -->
+	
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+      <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}
+    </div>
+	<!-- ENDIF -->
+	
+	<div class="controls controls-row"> 
+	 <label class="control-label">{L_CURRENT_IMAGE}{L_COLON}</label>
+		<div class="fileinput-new thumbnail" style="width: 100px; height: 100px;">
+		 <!-- IF AVATAR -->{AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+		</div>
+	   <div class="clearfix">
+		  <!-- IF AVATAR --><input type="checkbox" name="avatar_delete" id="avatar_delete"><label class="checkbox-inline" for="avatar_delete">{L_DELETE_AVATAR}</label><!-- ELSE --><!-- ENDIF -->
+	   </div>
+	   <div class="help-block"><span class="label label-info">{L_NOTE}</span>&nbsp;{L_AVATAR_EXPLAIN}</div>
+	</div>
+ 
+    <div class="space10"></div>
+	 <div class="space10"></div>
+	
+	<fieldset class="framed-ucp">
+	 <legend>{L_UCP_AVATAR_SELECT_OPTIONS}</legend>
+	 
+  <!-- IF S_SINGLE_AVATAR_TYPE -->
+	<!-- EVENT ucp_avatar_options_single_avatar_type -->
+  <!-- ELSE -->
+	 
+	 <div class="control-group">
+	    <label class="control-label" for="avatar_driver">{L_AVATAR_TYPE}{L_COLON}</label>
+		<div class="controls controls-row"> 
+			<select class="selectpicker" data-container="body" name="avatar_driver" id="avatar_driver" data-togglable-settings="true">
+				<!-- BEGIN avatar_drivers -->
+				<option value="{avatar_drivers.DRIVER}"<!-- IF avatar_drivers.SELECTED --> selected="selected"<!-- ENDIF --> data-toggle-setting="#avatar_option_{avatar_drivers.DRIVER}">{avatar_drivers.L_TITLE}</option>
+				<!-- END avatar_drivers -->
+			</select>
+		</div>
+	   </div>
+	<div class="space10"></div>
+	
+	<div id="avatar_options">
+     <!-- BEGIN avatar_drivers -->
+	 <div id="avatar_option_{avatar_drivers.DRIVER}">
+	  <noscript><h3 class="avatar_section_header">{avatar_drivers.L_TITLE}</h3></noscript>
+	 <p>{avatar_drivers.L_EXPLAIN}</p>
+	   {avatar_drivers.OUTPUT}
+	  </div>
+     <!-- END avatar_drivers -->
+	</div>
+	
+  <!-- ENDIF -->
+	
+<!-- IF not S_GROUP_MANAGE -->
+<div class="space10"></div>
+ <div class="space10"></div>
+	<button  type="reset" class="btn btn-default" value="{L_RESET}" name="reset">{L_RESET}</button>
+	<button type="submit" class="btn btn-default" name="submit" value="{L_SUBMIT}" data-loading-text="{L_LOADING}<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+<!-- ENDIF -->
+    </fieldset>
+</fieldset>
+</div>

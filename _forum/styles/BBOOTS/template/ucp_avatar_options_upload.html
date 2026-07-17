@@ -1,0 +1,29 @@
+<div class="control-group"> 
+	<div class="controls controls-row"> 
+	  <div style="max-width: 200px;" class="fileinput fileinput-new" data-provides="fileinput">
+	   <label for="avatar_upload_file" class="control-label fileinput-exists">{L_PREVIEW}{L_COLON}</label>
+		  <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+		   <div>
+			<span class="btn btn-default btn-file">
+			<span class="fileinput-new"><i class="fa fa-picture-o"></i>&nbsp;{L_SELECT_IMAGE}</span>
+			<span class="fileinput-exists">{L_CHANGE}</span>
+			 <input type="hidden" name="MAX_FILE_SIZE" value="{AVATAR_UPLOAD_SIZE}" />
+			  <input type="file" name="avatar_upload_file" id="avatar_upload_file" class="default">
+			</span>
+			<a href="#" title="{L_DELETE_AVATAR}" class="btn btn-default fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+		   </div>
+		<div class="space10 fileinput-exists"></div>	
+	   <div class="help-block fileinput-exists"><span class="label label-info">{L_NOTE}</span>&nbsp;{L_UCP_SUBMIT_TO_UPLOAD}</div>
+	  </div>
+	</div>
+</div>
+<!-- IF S_UPLOAD_AVATAR_URL -->   
+	<div class="control-group">
+      <label for="avatar_upload_url" class="control-label">{L_UPLOAD_AVATAR_URL}</label><span class="help-block">{L_UPLOAD_AVATAR_URL_EXPLAIN}</span>
+        <div class="controls controls-row"> 
+             <input type="url" name="avatar_upload_url" id="avatar_upload_url" value="" class="form-control" placeholder="http://the-avatar-site/avatar.gif">
+        </div>
+    </div>
+<!-- ENDIF -->
+
+

@@ -1,0 +1,71 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<div class="tab-pane active">
+	<fieldset class="framed-ucp">
+	 <legend>{L_TITLE}</legend>
+	 
+	 <!-- IF S_FORCE_PASSWORD -->
+		<p>{L_FORCE_PASSWORD_EXPLAIN}</p>
+	<!-- ENDIF -->
+	 
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}
+    </div>
+	<!-- ENDIF -->
+   <!-- EVENT ucp_profile_register_details_before -->
+    <div class="control-group"> 
+	<label class="control-label"<!-- IF S_CHANGE_USERNAME --> for="username"<!-- ENDIF -->>{L_USERNAME}{L_COLON}</label><span class="help-block">{L_USERNAME_EXPLAIN}</span>
+	<div class="controls controls-row"> 
+       <!-- IF S_CHANGE_USERNAME --><input class="form-control input-sm" type="text" name="username" id="username" value="{USERNAME}" title="{L_USERNAME}" placeholder="{L_USERNAME}"><!-- ELSE --><input class="form-control input-sm" type="text" disabled="" placeholder="{USERNAME} {L_UCP_NO_USER_CHANGE_ALLOWED}"><!-- ENDIF -->
+	</div> 
+	</div> 
+   
+    <div class="control-group"> 
+	<label class="control-label" for="email">{L_EMAIL_ADDRESS}{L_COLON}</label>
+	<div class="controls controls-row"> 
+    <!-- IF S_CHANGE_EMAIL --><input class="form-control input-sm" type="text" name="email" id="email" maxlength="100" value="{EMAIL}" title="{L_EMAIL_ADDRESS}" placeholder="{L_EMAIL_ADDRESS}"><!-- ELSE --><input class="form-control input-sm" type="text" disabled="" placeholder="{EMAIL}"><!-- ENDIF -->
+	
+	</div> 
+	</div> 
+	
+	<!-- IF S_CHANGE_PASSWORD -->
+    <div class="control-group"> 
+	 <label for="new_password" class="control-label">{L_NEW_PASSWORD}{L_COLON}</label><span class="help-block">{L_CHANGE_PASSWORD_EXPLAIN}</span>
+	<div class="controls controls-row"> 
+     <input type="password" name="new_password" id="new_password" maxlength="255" value="{NEW_PASSWORD}" placeholder="{L_CHANGE_PASSWORD}" class="form-control input-sm">
+     <div class="space10"></div>
+	 <label for="password_confirm" class="control-label">{L_CONFIRM_PASSWORD}{L_COLON}</label><span class="help-block">{L_CONFIRM_PASSWORD_EXPLAIN}</span>
+	    <input type="password" name="password_confirm" id="password_confirm" maxlength="255" value="{PASSWORD_CONFIRM}" placeholder="{L_CONFIRM_PASSWORD}" class="form-control input-sm">
+	</div> 
+	</div> 
+    <!-- ENDIF -->
+    <!-- EVENT ucp_profile_register_details_after -->	
+	</fieldset>
+
+	<div class="space10"></div>
+	 <div class="space10"></div>
+
+	<fieldset class="framed-ucp">
+	 <legend>{L_CURRENT_PASSWORD}{L_COLON}</legend>
+    <div class="controls controls-row"> 
+      <label for="cur_password" class="control-label">{L_CURRENT_PASSWORD}{L_COLON}</label><span class="help-block"><!-- IF S_CHANGE_PASSWORD -->{L_CURRENT_CHANGE_PASSWORD_EXPLAIN}<!-- ELSE -->{L_CURRENT_PASSWORD_EXPLAIN}<!-- ENDIF --></span>
+     <div class="controls">
+        <input type="password" name="cur_password" id="cur_password" maxlength="255" value="{CUR_PASSWORD}" title="{L_CURRENT_PASSWORD}" placeholder="{L_CURRENT_PASSWORD}" class="form-control input-sm">
+     </div>
+    </div>
+	</fieldset>
+    
+	<div class="space10"></div>
+	<div class="form-actions"> 
+	{S_HIDDEN_FIELDS}
+	<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+	<button type="submit" name="submit" value="{L_SUBMIT}" class="btn btn-default" autocomplete="off" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+	</div>
+</div>
+</form>
+
+<!-- EVENT ucp_profile_custom_options -->
+
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="{S_CONTENT_ENCODING}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Set the viewport width to device width for mobile -->
+
+<title>{L_WORK_IN_PROGRESS}</title>
+
+<!--
+	phpBB Premium style name: BBOOTS (3.0.0) @SiteSplat.com
+-->
+<!-- CSS files start here-->
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet">
+<!-- Google free font here -->
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+<!-- CSS files -->
+<!-- Scripts start here after the jquery.js -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="{T_THEME_PATH}/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
+<div id="wrap" class="corners container">
+  <!-- start content -->
+  <div id="content-forum">
+    <div class="padding_0_40">
+	<!-- Main Wrapper. Set this to 'fixed' for fixed layout and 'fluid' for fluid layout' -->
+	<div class="clearfix">
+        <!-- Content -->
+        <div class="well well-schema">
+            <!-- Container -->
+
+            <div class="big-title">
+                <h1 id="error">...</h1>
+			<div class="clearfix">
+				    <div id="container">{L_BOARD_DISABLED_SHUFFLE}</div>
+                      <input type="text" id="userText" />
+
+					<div class="achievement no-shadow">
+						<i class="fa fa-cog fa-spin"></i> 
+					</div>
+			</div>	  
+                <h2><!-- IF S_BOARD_DISABLED -->{L_BOARD_DISABLED}<!-- ENDIF --></h2>
+            </div><!-- big-title -->
+					
+					
+			<div class="alert alert-info fade in">
+                <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+                <i class="fa fa-bullhorn"></i> <strong>{L_INFO_BOX}</strong> {ACP_DISABLE_MESSAGE}
+            </div> 
+
+             <ul class="pager">
+				<li class="previous">
+				<a href="{U_INDEX}">&larr; {L_INDEX}</a>
+				</li>
+				<li class="next">
+				<a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="l">{L_LOGIN_LOGOUT} &rarr;</a>
+				</li>
+		    </ul>
+            
+        </div>
+        
+        <!-- Footer -->
+		<footer role="contentinfo">
+		<div class="clearfix bottomLinks"> <!-- Credit, links and copyright block do not remove please -->
+		
+	
+        <div class="pull-left">
+		  <small>{L_POWERED} <a href="http://www.phpbb.com/" title="Forum Software &copy; phpBB&reg; Group" target="_blank"><i aria-hidden="true" class="icon-moon-forphp"></i></a> <i aria-hidden="true" class="icon-moon-bootstrap"></i> <i aria-hidden="true" class="icon-moon-html5"></i> <i aria-hidden="true" class="icon-moon-css3"></i> <i aria-hidden="true" class="icon-moon-forjq"></i> <i aria-hidden="true" class="icon-moon-less_c"></i> <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fsitesplat.com%2Fdemo%2FphpBB3%2Findex.php" title="Conform to W3C HTML5 Standard" target="_blank"> <i aria-hidden="true" class="icon-moon-w3c"></i></a> </small>
+		</div>
+		
+		<div class="pull-right">
+		  <small>{L_HANDCRAFTED}&nbsp;<i class="fa fa-heart rosso"></i> {L_AND} <i class="fa fa-coffee"></i> {L_BY} <a href="http://www.sitesplat.com/" title="SiteSplat.com" target="_blank">SiteSplat</a> &copy;SiteSplat 2013</small>
+		</div>
+	</div>
+	</footer>
+        
+    </div>
+   
+ </div>
+  </div>
+   </div>
+<script src="{T_THEME_PATH}/js/jquery.shuffleLetters.js"></script>
+<script>
+$(function(){
+	
+	// container is the DOM element;
+	// userText is the textbox
+	
+	var container = $("#container")
+		userText = $('#userText'); 
+	
+	// Shuffle the contents of container
+	container.shuffleLetters();
+
+	// Bind events
+	userText.click(function () {
+		
+	  userText.val("");
+	  
+	}).bind('keypress',function(e){
+		
+		if(e.keyCode == 13){
+			
+			// The return key was pressed
+			
+			container.shuffleLetters({
+				"text": userText.val()
+			});
+			
+			userText.val("");
+		}
+
+	}).hide();
+
+	// Leave a 4 second pause
+
+	setTimeout(function(){
+		
+		// Shuffle the container with custom text
+		container.shuffleLetters({
+			"text": "{L_DISABLE_TEXT_TRY}"
+		});
+		
+		userText.val("{L_DISABLE_TEXT_TYPE}").fadeIn();
+		
+	},4000);
+	
+});
+</script>
+</body>
+</html>

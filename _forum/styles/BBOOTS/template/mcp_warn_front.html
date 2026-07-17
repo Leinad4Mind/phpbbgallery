@@ -1,0 +1,91 @@
+<!-- INCLUDE mcp_header.html -->
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+<div class="side-segment"><h3>{L_WARN_USER}</h3></div>
+<div class="well">
+	<fieldset>
+	<div class="control-group"> 
+	   <label class="control-label" for="username">{L_SELECT_USER}{L_COLON}&nbsp;<span><strong>&#91;<a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a>&#93;</strong></span></label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" name="username" id="username">
+	</div> 
+	</div>
+    <div class="space10"></div>
+	 <div class="space10"></div>
+		<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+		<button type="submit" name="submituser" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+		{S_FORM_TOKEN}
+	</fieldset>
+</div>
+
+</form>
+
+<div class="space10"></div>
+
+<div class="side-segment"><h3>{L_MOST_WARNINGS}</h3></div>
+	<!-- IF .highest -->
+	<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-warning"></i>&nbsp;{L_WARNINGS}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_USERNAME}</th>
+				<th data-hide="phone">{L_WARNINGS}</th>
+				<th data-hide="phone">{L_LATEST_WARNING_TIME}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN highest -->
+			<tr>
+				<td>{highest.USERNAME_FULL}</td>
+				<td>{highest.WARNINGS}&nbsp;&#91;<a href="{highest.U_NOTES}">{L_VIEW_NOTES}</a>&#93;</td>
+				<td>{highest.WARNING_TIME}</td>
+			</tr>
+		<!-- END latest -->
+		</tbody>
+		</table>
+		</div>
+	</div>
+	<!-- ELSE -->
+	<div class="alert alert-info fade in">
+         <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        <i class="fa fa-warning"></i>&nbsp;<strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_WARNINGS}
+    </div> 
+	<!-- ENDIF -->
+
+<div class="side-segment"><h3>{L_LATEST_WARNINGS}</h3></div>
+	<!-- IF .latest -->
+	<div class="panel panel-forum">
+	<div class="panel-heading">
+	 <i class="fa fa-warning"></i>&nbsp;{L_WARNINGS}
+	</div>
+	<div class="panel-inner">
+	<table class="footable table table-striped table-primary table-hover">
+		<thead>
+			<tr>
+				<th data-class="expand">{L_USERNAME}</th>
+				<th data-hide="phone">{L_TOTAL_WARNINGS}</th>
+				<th data-hide="phone">{L_TIME}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN latest -->
+			<tr>
+				<td>{latest.USERNAME_FULL}</td>
+				<td>{latest.WARNINGS}&nbsp;&#91;<a href="{latest.U_NOTES}">{L_VIEW_NOTES}</a>&#93;</td>
+				<td>{latest.WARNING_TIME}</td>
+			</tr>
+		<!-- END latest -->
+		</tbody>
+		</table>
+		</div>
+	</div>
+	<!-- ELSE -->
+	<div class="alert alert-info fade in">
+         <button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
+        <i class="fa fa-warning"></i>&nbsp;<strong>{L_INFO_BOX}</strong>&nbsp;{L_NO_WARNINGS}
+    </div> 
+	<!-- ENDIF -->
+<!-- INCLUDE mcp_footer.html -->

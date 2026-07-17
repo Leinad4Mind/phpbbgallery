@@ -1,0 +1,13 @@
+<!-- INCLUDE ucp_header.html -->
+
+<!-- IF not S_CUSTOM_DRIVER or not S_CUSTOM_GROUP_REQUIRED or (S_CUSTOM_AVATAR_GROUP and S_CUSTOM_SOURCE) -->
+	<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<!-- INCLUDE ucp_avatar_options.html -->
+	{S_HIDDEN_FIELDS}
+	{S_FORM_TOKEN}
+	</form>
+<!-- ELSE -->
+	<div class="well"><strong>{L_NO_CUSTOM_AVATAR}</strong></div>
+<!-- ENDIF -->
+
+<!-- INCLUDE ucp_footer.html -->

@@ -1,0 +1,51 @@
+<!-- IF BASE_URL and TOTAL_PAGES > 6 -->
+<li>
+<!-- Popover pagination hidden content -->
+  <div class="pagination_content" style="display: none">
+      <div class="page-jump-form">
+		<div class="input-group input-group-sm">
+		 <input type="number" class="inputbox form-control" onkeypress="keyPage(this, event)" title="{L_JUMP_PAGE}" data-per-page="{PER_PAGE}" data-base-url="{BASE_URL|e('html_attr')}" data-start-name="{START_NAME}" min="1" max="999999"/>
+		<div class="input-group-btn">
+		 <input type="button" class="btn btn-default btn-sm" value="{L_GO}" onclick="pageJump($(this.parentNode.parentNode).find('.inputbox'))" />
+		</div>
+		</div>
+		</div>	
+  </div>  
+  <!-- Popover pagination hidden title -->
+  <div class="pagination_header" style="display: none">
+     {L_JUMP_TO_PAGE_NUMBER}
+  </div>
+</li>
+<script>
+// some function that depends on bootstrap and jquery
+head.ready(function () {
+    $(function(){
+    // Enabling Popover pagination - JS (hidden content and title capturing)
+    $(".pagination-trigger").popover({
+        html : true,		
+        content: function() {
+          return $('.pagination_content').html();
+        },
+        title: function() {
+          return $('.pagination_header').html();
+        }
+    });
+    });
+});
+</script>
+<!-- ENDIF -->
+
+<!-- BEGIN pagination -->
+	<!-- IF pagination.S_IS_PREV -->
+	<li><a href="{pagination.PAGE_URL}" rel="prev" role="button"><i class="fa fa-chevron-left"></i></a></li>
+	<!-- ELSEIF pagination.S_IS_CURRENT -->
+	<li class="active"><a>{pagination.PAGE_NUMBER}</a></li>
+	<!-- ELSEIF pagination.S_IS_ELLIPSIS -->
+	<li class="ellipsis" role="separator"><a>{L_ELLIPSIS}</a></li>
+	<!-- ELSEIF pagination.S_IS_NEXT -->
+	<li><a href="{pagination.PAGE_URL}" rel="next" role="button"><i class="fa fa-chevron-right"></i></a></li>
+	<!-- ELSE -->
+	<li><a href="{pagination.PAGE_URL}" role="button">{pagination.PAGE_NUMBER}</a></li>
+	<!-- ENDIF -->
+<!-- END pagination -->
+

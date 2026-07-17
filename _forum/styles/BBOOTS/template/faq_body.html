@@ -1,0 +1,37 @@
+<!-- INCLUDE overall_header.html -->
+  <h2>{L_FAQ_TITLE}</h2>
+<div class="panel-group" id="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}">
+<!-- BEGIN faq_block -->
+<div class="space10"></div>
+ <div class="space10"></div>
+  <div class="space10"></div>
+<div class="side-segment">
+<h3>{faq_block.BLOCK_TITLE}</h3>
+</div>
+<!-- BEGIN faq_row -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}" href="#f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}">
+          {faq_block.faq_row.FAQ_QUESTION}
+        </a>
+      </h4>
+    </div>
+    <div id="f{faq_block.S_ROW_COUNT}r{faq_block.faq_row.S_ROW_COUNT}" class="panel-collapse collapse">
+      <div class="panel-body">
+        {faq_block.faq_row.FAQ_ANSWER}
+      </div>
+    </div>
+  </div>
+  <!-- END faq_row -->
+  <!-- END faq_block -->
+</div>
+<div class="row">
+<div class="col-md-6">
+<!-- INCLUDE jumpbox_options.html -->
+<div class="space10"></div>
+</div>
+</div>
+
+<!-- INCLUDE jump_links.html -->
+<!-- INCLUDE overall_footer.html -->

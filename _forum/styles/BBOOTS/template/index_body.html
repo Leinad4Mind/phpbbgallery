@@ -1,0 +1,93 @@
+<!-- INCLUDE overall_header.html -->
+<!-- EVENT index_body_forumlist_body_before -->
+<!-- INCLUDE forumlist_body.html -->
+<!-- EVENT index_body_forumlist_body_after -->
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+  <div class="clearfix">
+   <div class="side-segment"><h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><!-- IF S_REGISTER_ENABLED -->&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --></h3></div>
+    <form method="post" action="{S_LOGIN_ACTION}">
+	 <div class="well">
+	  <fieldset>
+	
+	<div class="col-md-6">
+	 <div class="form-group">
+		<label for="username">{L_USERNAME}{L_COLON}</label>
+          <div class="input-icon left">
+	        <i class="fa fa-user"></i>
+		    <input class="form-control input-sm" type="text" name="username" id="username" placeholder="{L_USERNAME}"/>
+		  </div>
+	 </div> 
+	 <div class="form-group">
+		<label for="password">{L_PASSWORD}{L_COLON}</label>
+          <div class="input-icon left">
+	        <i class="fa fa-key"></i>
+			<input class="form-control input-sm" type="password" name="password" id="password" placeholder="{L_PASSWORD}"/>
+		  </div>
+	 </div>
+    
+		<!-- IF S_AUTOLOGIN_ENABLED -->
+		<div class="form-group">
+			<input type="checkbox" name="autologin" id="autologin"><label class="checkbox-inline" for="autologin">{L_LOG_ME_IN}</label>
+		</div> 
+		<!-- ENDIF -->
+	 
+	 <div class="form-group">
+		 <button type="submit" class="btn btn-default" id="load" name="login" value="{L_LOGIN}" data-loading-text="{L_LOADING_LOG_IN} <i class='fa-spin fa fa-spinner fa-lg'></i>">{L_LOGIN}</button>
+		  {S_LOGIN_REDIRECT}
+	 </div>
+	</div>
+	
+	<!-- IF OA_SOCIAL_LOGIN_EMBED_SOCIAL_LOGIN --> 
+    <div class="col-md-6">	
+	 <!-- EVENT social_login_body_index_swap --> 
+	</div>
+	<!-- ELSE -->
+		<div class="pull-right hidden-xs hidden-sm">
+		<div class="admin-header-head">
+		    <div class="user-fxicon">
+				<i class="fa fa-unlock"></i>
+		    </div>
+		</div>
+		</div>
+	<!-- ENDIF -->	
+		
+	  </fieldset>
+     </div>
+	</form>
+  </div>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_stat_blocks_before -->
+<div class="row">
+<div class="col-md-12 panel-stats">
+
+<div class="col-md-6">
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<!-- IF U_VIEWONLINE -->
+	<div class="side-segment"><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3></div><!-- ELSE --><div class="side-segment"><h3>{L_WHO_IS_ONLINE}</h3></div>
+	<!-- ENDIF -->
+	<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
+	<!-- IF LEGEND --><br /><small>{L_LEGEND}{L_COLON} {LEGEND}</small><!-- ENDIF --></p>
+<!-- ENDIF -->
+
+<!-- IF S_DISPLAY_BIRTHDAY_LIST and BIRTHDAY_LIST -->
+	<div class="side-segment"><h3>{L_BIRTHDAYS}</h3></div>
+	<p><!-- IF BIRTHDAY_LIST -->{L_CONGRATULATIONS}{L_COLON} <strong>{BIRTHDAY_LIST}</strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></p>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_block_birthday_append -->
+</div>
+
+<div class="col-md-6">
+<!-- IF NEWEST_USER -->
+	<div class="side-segment"><h3>{L_STATISTICS}</h3></div>
+	<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_block_stats_append -->
+</div>
+
+</div>
+</div>
+<!-- EVENT index_body_stat_blocks_after -->
+<!-- INCLUDE overall_footer.html -->

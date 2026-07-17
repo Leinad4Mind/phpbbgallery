@@ -1,0 +1,58 @@
+<div class="hidden-xs">
+	<fieldset class="controls-row">
+        <div class="sorting collapse">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+					<!-- IF S_SORT_OPTIONS -->	
+					    <div class="col-md-6 col-sm-6"> 
+                         <label for="sk">{L_SORT_BY}{L_COLON}</label>
+                            <div class="control-row">
+                              <select class="selectpicker" data-width="auto" data-container="body" name="sk" id="sk">{S_SORT_OPTIONS}</select>
+                            </div>
+						</div>
+						<div class="col-md-6 col-sm-6"> 
+                         <label for="sd">{L_SORT_DIRECTION}{L_COLON}</label>
+                            <div class="control-row">
+                              <div class="input-group">
+							     <select class="selectpicker" data-style="btn btn-default form-control" data-width="auto" data-container="body" name="sd" id="sd">{S_ORDER_SELECT}</select>
+							    <span class="input-group-btn">
+                                 <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+							    </span>
+							  </div>
+                            </div>
+						</div>
+					<!-- ELSE -->	
+						<div class="col-md-4 col-sm-4"> 
+                         <label for="st">{L_DISPLAY}{L_COLON}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_DAYS}
+                            </div>
+						</div>
+	                    <div class="col-md-4 col-sm-4"> 
+                          <label for="sk">{L_SORT_BY}</label>
+                            <div class="control-row">
+                              {S_SELECT_SORT_KEY}
+                            </div>
+						</div>
+						<div class="col-md-4 col-sm-4"> 
+                           <label for="sd">{L_SORT_BY}</label>
+                            <div class="control-row">
+							<div class="input-group">
+                             {S_SELECT_SORT_DIR}
+							 <span class="input-group-btn">
+                              <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+							 </span>
+							</div>
+						    </div>   
+						</div>
+					<!-- ENDIF -->	
+					</div>
+                </div>
+			</div>
+		</div> 
+	</fieldset> 
+</div>
+
+
+

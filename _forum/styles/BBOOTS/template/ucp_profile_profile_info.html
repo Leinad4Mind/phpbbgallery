@@ -1,0 +1,76 @@
+<!-- INCLUDE ucp_header.html -->
+<div class="tab-pane active">
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<fieldset class="framed-ucp">
+	 <legend>{L_TITLE}</legend>
+	   <p>{L_PROFILE_INFO_NOTICE}</p>
+	
+	<!-- IF ERROR -->
+	<div class="alert alert-info fade in">
+       <i class="fa fa-warning"></i><strong>&nbsp;{L_INFO_BOX}</strong>&nbsp;{ERROR}
+    </div>
+	<!-- ENDIF -->
+	<!-- EVENT ucp_profile_profile_info_before -->
+	
+	<!-- BEGIN profile_fields -->
+	<div class="control-group"> 
+	    <label class="control-label"<!-- IF profile_fields.FIELD_ID --> for="{profile_fields.FIELD_ID}"<!-- ENDIF -->>{profile_fields.LANG_NAME}{L_COLON}<!-- IF profile_fields.S_REQUIRED --> *<!-- ENDIF --></label><!-- IF profile_fields.LANG_EXPLAIN --><span class="help-block">{profile_fields.LANG_EXPLAIN}</span><!-- ENDIF -->
+	<div class="controls controls-row"> 
+       {profile_fields.FIELD}
+	</div> 
+	<!-- IF profile_fields.ERROR --><span class="error">{profile_fields.ERROR}</span><!-- ENDIF -->
+	</div> 
+	<!-- END profile_fields -->
+	
+	<!-- IF S_JABBER_ENABLED -->
+	<div class="control-group"> 
+	    <label for="jabber" class="control-label">{L_UCP_JABBER}{L_COLON}</label>
+	<div class="controls controls-row"> 
+       <input type="text" name="jabber" id="jabber" maxlength="255" value="{JABBER}" placeholder="" class="form-control input-sm">
+	</div> 
+	</div> 
+	<!-- ENDIF -->
+	
+ <!-- IF S_BIRTHDAYS_ENABLED -->
+    <div class="control-group"> 
+        <label for="bday_day" class="control-label">{L_BIRTHDAY}{L_COLON}</label><span class="help-block">{L_BIRTHDAY_EXPLAIN}</span>
+    <div class="controls controls-row"> 
+    
+	<div class="clearfix"> 
+     <div class="col-md-2">
+            <label for="bday_day" class="control-label">{L_DAY}</label>
+        <div class="controls">
+            <div class="selector"><select data-width="auto" name="bday_day" id="bday_day" data-container="body" class="selectpicker">{S_BIRTHDAY_DAY_OPTIONS}</select></div>  
+        </div>
+     </div>
+     <div class="col-md-2">
+            <label for="bday_month" class="control-label">{L_MONTH}</label>
+        <div class="controls">
+			<div class="selector"><select data-width="auto" name="bday_month" id="bday_month" data-container="body" class="selectpicker">{S_BIRTHDAY_MONTH_OPTIONS}</select></div>
+        </div>
+     </div>
+     <div class="col-md-2">
+           <label for="bday_year" class="control-label">{L_YEAR}</label>
+        <div class="controls">
+			 <div class="selector"><select data-width="auto" name="bday_year" id="bday_year" data-container="body" class="selectpicker">{S_BIRTHDAY_YEAR_OPTIONS}</select></div>
+        </div>
+     </div>
+	</div>
+	 
+    </div> 
+	</div> 
+ <!-- ENDIF -->	
+    <!-- EVENT ucp_profile_profile_info_after -->
+	</fieldset>
+
+    <div class="space10"></div>
+	<div class="form-actions"> 
+	{S_HIDDEN_FIELDS}
+	 <button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button> 
+	 <button type="submit" name="submit" value="{L_SUBMIT}" class="btn btn-default" data-loading-text="{L_LOADING}<i class='fa fa-spin fa-spinner fa-lg icon-white'></i>">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+	</div>
+	
+</form>
+</div>
+<!-- INCLUDE ucp_footer.html -->

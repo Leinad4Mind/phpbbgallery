@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="designer" content="SiteSplat https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat">
+<meta content="{SITENAME}" property="og:site_name">
+<!-- EVENT overall_header_meta -->
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+{META}
+<title><!-- IF UNREAD_NOTIFICATIONS_COUNT -->&#40;{UNREAD_NOTIFICATIONS_COUNT}&#41;&nbsp;<!-- ENDIF --><!-- IF S_IN_MCP -->{L_MCP}&nbsp;&#45;&nbsp;<!-- ELSEIF S_IN_UCP -->{L_UCP}&nbsp;&#45;&nbsp;<!-- ENDIF -->{PAGE_TITLE}&nbsp;&#45;&nbsp;{SITENAME}</title>
+<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{{ path('phpbb_feed_index') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{{ path('phpbb_feed_news') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{{ path('phpbb_feed_forums') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{{ path('phpbb_feed_topics') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{{ path('phpbb_feed_topics_active') }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{{ path('phpbb_feed_forum', { forum_id : S_FORUM_ID } ) }}"><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - <!-- IF S_BBEMOJI -->{TOPIC_TITLE_UNPARSED}<!-- ELSE -->{TOPIC_TITLE}<!-- ENDIF -->" href="{{ path('phpbb_feed_topic', { topic_id : S_TOPIC_ID } ) }}"><!-- ENDIF -->
+<!-- EVENT overall_header_feeds -->
+<!-- ENDIF -->
+
+<!-- IF U_CANONICAL -->
+	<link rel="canonical" href="{U_CANONICAL}">
+<!-- ENDIF -->
+
+<!-- Google free font here -->
+<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet'>
+<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet'>
+
+<!-- CSS files start here -->
+<link href="{T_THEME_PATH}/stylesheet.css" rel="stylesheet">
+<!-- IF S_PLUPLOAD -->
+<link href="{T_THEME_PATH}/plupload.css" rel="stylesheet">
+<!-- ENDIF -->
+<!-- EVENT overall_header_stylesheets_after -->
+
+{$STYLESHEETS}
+
+<!-- Remove the conditional below to use the custom CSS without FLATBOOTS Mini CMS Extension -->
+<!-- IF S_ALLOW_CUSTOMCSS -->
+<link href="{T_THEME_PATH}/custom.css" rel="stylesheet">
+<!-- ENDIF -->
+<!-- EVENT override_custom_css -->
+<!-- CSS files stop here -->
+
+<!-- EVENT overall_header_head_append -->
+
+<!-- older scripts set started here after the headjs - cannot do this with phpbb31 due to ajax stuff -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js"></script>
+
+</head>
+<body data-spy="scroll" data-target=".scrollspy" id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+<!-- EVENT overall_header_body_before -->
+
+<div id="wrap" class="corners container">
+  <!-- start content -->
+  <div id="content-forum">
+    <div class="padding_0_40">
+	<!-- IF BBOOTS_MINI_CMS_ENABLED -->
+    	<!-- EVENT footer_social_instead -->
+    <!-- ELSE -->
+	<div class="social-top">
+		<div class="pull-right">
+			<a title="Github" href="#2"><i class="fa fa-github-square github-color"> </i></a>
+			<a title="Pinterest" href="#4"><i class="fa fa-pinterest-square pinterest-color"> </i></a>
+			<a title="Facebook" href="#5"><i class="fa fa-facebook-square facebook-color"> </i></a>
+		    <a title="Twitter" href="#6"><i class="fa fa-twitter-square twitter-color"> </i></a>
+			<a title="Bitbucket" href="#6"><i class="fa fa-bitbucket-square facebook-color"> </i></a>
+			<a title="rss" href="{U_FEED}"><i class="fa fa-rss-square rss-color"> </i></a>
+		</div>
+    </div>
+    <!-- ENDIF -->
+	
+<!-- Header block -->
+    <header class="header"> 
+     <div class="topArea"> <!-- Logo block -->
+	  <div class="leftArea">
+		  <!-- IF LOGO_IMAGE_EXIST -->
+         	<a class="logo-image" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><img class="img-responsive center-block" src="{T_IMAGES_PATH}../ext/sitesplat/bbootsminicms/images/logo/{LOGO_FILENAME}" alt="{LOGO_TEXT}" /></a>
+		  <!-- ELSEIF LOGO_TEXT -->
+		  <div class="logo-transition">
+			<a class="logo" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->">{LOGO_TEXT}</a>
+          </div>		 
+		 <!-- ELSE -->
+		   <div class="logo-transition">	
+			<a class="logo" href="<!-- IF U_SITE_HOME -->{U_SITE_HOME}<!-- ELSE -->{U_INDEX}<!-- ENDIF -->"><span>{L_BB}</span>{L_BOOTS}</a>
+		   </div>
+		 <!-- ENDIF -->
+		 <p class="site-info">{SITE_DESCRIPTION}<!-- IF SITE_DESCRIPTION -->&nbsp;<i class="fa fa-umbrella"></i><!-- ENDIF --></p>
+		<div class="clearfix"></div>
+	  </div> 
+        <!-- IF BBOOTS_MINI_CMS_ENABLED -->
+            <!-- EVENT bboots_navigation_instead -->
+        <!-- ELSE -->	  
+	        <!-- INCLUDE addons/navigation.html -->
+		<!-- ENDIF -->
+     </div>
+    </header> 
+<!-- Header block -->
+
+<!-- IF not HIDE_HEADER -->
+<!-- Subheader block -->
+    <section class="subheader">
+      <div class="clearfix">
+	    <div class="fxicon">
+			<!-- IF SCRIPT_NAME == "faq" --><i class="fa fa-question-circle"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "search" --><i class="fa fa-search"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "memberlist" --><i class="fa fa-users"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "ucp" and S_USER_LOGGED_IN --><i class="fa fa-cogs"></i>
+			  <!-- ELSEIF S_REGISTRATION --><i class="fa fa-edit"></i>
+			  <!-- ELSEIF IN_BADGE --><i class="fa fa-trophy"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "viewtopic" --><i class="fa fa-comments"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "viewforum" --><i class="fa fa-puzzle-piece"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "posting" --><i class="fa fa-pencil"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "mcp" --><i class="fa fa-medkit"></i>
+			  <!-- ELSEIF SCRIPT_NAME == "elements" --><i class="fa fa-smile-o"></i>
+			<!-- ELSE -->
+			  <i class="fa fa-home"></i>
+			<!-- ENDIF -->
+		</div>
+		
+	    <ul class="index-pos pull-left">
+            <!-- IF SCRIPT_NAME == "faq" --><li class="index-title"><h1>{L_FAQ}</h1></li><li class="index-sub">{L_CAPTION_FAQ}</li>
+	          <!-- ELSEIF SCRIPT_NAME == "search" --><li class="index-title"><h1>{L_SEARCH}</h1></li><li class="index-sub">{L_CAPTION_SEARCH}</li>
+	          <!-- ELSEIF SCRIPT_NAME == "memberlist" --><li class="index-title"><h1>{L_MEMBERS_CAP}</h1></li><li class="index-sub">{L_CAPTION_MEMBERS}</li>
+	          <!-- ELSEIF SCRIPT_NAME == "ucp" and S_USER_LOGGED_IN --><li class="index-title"><h1>{L_UCP_CAP}</h1></li><li class="index-sub">{L_CAPTION_UCP}</li>
+			  <!-- ELSEIF S_REGISTRATION --><li class="index-title"><h1>{L_REGISTRATION}</h1></li><li class="index-sub">{SITENAME}</li>
+	          <!-- ELSEIF IN_BADGE --><li class="index-title"><h1>{L_BADGE_MANAGE}</h1></li><li class="index-sub">{L_BADGE_MANAGE_EXPLAIN}</li>
+			  <!-- ELSEIF SCRIPT_NAME == "viewtopic" --><li class="index-title"><h1>{TOPIC_TITLE}</h1></li><li class="index-sub"><!-- IF FORUM_DESC -->{FORUM_DESC}<!-- ENDIF --></li>
+			  <!-- ELSEIF SCRIPT_NAME == "viewforum" --><li class="index-title"><h1>{FORUM_NAME}</h1></li><li class="index-sub"><!-- IF FORUM_DESC -->{FORUM_DESC}<!-- ELSE -->{L_CAPTION_VIEWFORUM}<!-- ENDIF --></li>
+			  <!-- ELSEIF SCRIPT_NAME == "posting" --><li class="index-title"><h1>{L_POSTINGS_CAP}</h1></li><li class="index-sub">{L_CAPTION_POSTINGS}</li>
+			  <!-- ELSEIF SCRIPT_NAME == "mcp" --><li class="index-title"><h1>{L_MCP}</h1></li><li class="index-sub">{L_MCP_CAPTION}</li>
+			  <!-- ELSEIF SCRIPT_NAME == "elements" --><li class="index-title"><h1>{L_BOOTSTRAP_ELEMENT}</h1></li><li class="index-sub">{L_BOOTSTRAP_ELEMENT_CAPTION}</li>
+			<!-- ELSE -->
+			  <li class="index-title"><h1>{L_HOME}</h1></li>
+              <li class="index-sub">{L_INDEX_CAPTION}</li>
+			<!-- ENDIF -->
+        </ul> 
+      
+
+	   <!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
+        <div class="search-box pull-right">
+		  <form action="{U_SEARCH}" method="get" id="search">
+		   <fieldset>
+		   <input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" placeholder="{L_SEARCH}" />
+		   {S_SEARCH_HIDDEN_FIELDS}
+		   </fieldset> 
+          </form> 
+        </div> 
+	    <!-- ENDIF -->	
+		</div>
+    </section> 
+<!-- Subheader block -->
+<!-- ENDIF -->
+	<!-- IF HIDE_HEADER -->
+	   <div style="border-bottom: 1px solid #CCCCCC;"></div>
+	<!-- ENDIF -->	
+	
+	<div class="crumbs">
+		<ul class="sub-crumb pull-left hidden-xs" itemscope itemtype="https://schema.org/BreadcrumbList">
+		<!-- DEFINE $MICRODATA = ' itemtype="https://schema.org/ListItem" itemprop="itemListElement" itemscope' -->
+        {% set navlink_position = 1 %}
+		    <li><i class="fa fa-home"></i><a href="{U_INDEX}" accesskey="h">&nbsp;{L_INDEX}</a></li>
+		    <li class="active" {$MICRODATA}>
+			<!-- BEGIN navlinks -->
+			{% set NAVLINK_NAME = navlinks.BREADCRUMB_NAME | default(navlinks.FORUM_NAME) %}
+		    {% set NAVLINK_LINK = navlinks.U_BREADCRUMB | default(navlinks.U_VIEW_FORUM) %}
+			<i class="fa fa-angle-right"></i>&nbsp;<a itemprop="item" href="{{ NAVLINK_LINK }}"<!-- IF navlinks.MICRODATA --> {navlinks.MICRODATA}<!-- ENDIF -->><span itemprop="name">{{ NAVLINK_NAME }}</span></a><meta itemprop="position" content="{{ navlink_position }}{% set navlink_position = navlink_position + 1 %}" />
+			<!-- END navlinks -->
+            &laquo;&nbsp;{L_YOU_ARE_HERE}</li>
+		</ul>
+
+		<ul class="top-menu pull-right">	   
+	     <!-- EVENT navigation_controls_before -->
+		<!-- IF S_NOTIFICATIONS_DISPLAY -->	
+		    <li class="dropdown dropdown-avatar dropdown-notification hidden-xs">
+			  <a id="notification_list_button" href="javascript:void(0)" data-toggle="dropdown"><i class="fa fa-bell"></i><!-- IF .notifications and NOTIFICATIONS_COUNT --><em class="notifications badge badge-danger">{NOTIFICATIONS_COUNT}</em><!-- ENDIF --></a>
+                <ul class="dropdown-menu user-login-drop arrow-up">
+                 <li><a href="{U_VIEW_ALL_NOTIFICATIONS}" class="notification-heading">{L_NOTIFICATIONS}</a></li>
+                   <!-- INCLUDE notification_dropdown.html -->
+                </ul>
+            </li>
+			<li class="dropdown dropdown-avatar dropdown-notification visible-xs">
+			  <a href="{U_VIEW_ALL_NOTIFICATIONS}"><i class="fa fa-bell"></i><!-- IF .notifications and NOTIFICATIONS_COUNT --><em class="notifications badge badge-danger">{NOTIFICATIONS_COUNT}</em><!-- ENDIF --></a>
+            </li>
+		<!-- ENDIF -->			   
+			
+			<li class="dropdown">
+					<a data-toggle="dropdown" class="user-menu"><!-- IF CURRENT_USER_AVATAR -->{CURRENT_USER_AVATAR}&nbsp;<!-- ELSE --><img src="{T_THEME_PATH}/images/no-avatar.png" alt="No avatar"><!-- ENDIF --><span>{L_WELCOME_INDEX}, {CURRENT_USERNAME_SIMPLE}<i class="caret"></i></span></a>
+				<ul class="dropdown-menu usermenu">
+				   <li><a title="" href="{U_USER_PROFILE}"><i class="fa fa-user"></i>{L_UCP_PROFILE}</a></li>
+				   <!-- IF S_DISPLAY_PM -->
+				   <li><a title="" href="{U_PRIVATEMSGS}"><i class="fa fa-inbox"></i>{L_UCP_MESSAGES}<span class="badge badge-info"><!-- IF S_DISPLAY_PM and S_USER_UNREAD_PRIVMSG --> {S_USER_UNREAD_PRIVMSG}<!-- ELSE -->{S_USER_NEW_PRIVMSG}<!-- ENDIF --></span></a></li>
+				   <!-- ENDIF -->
+				   <!-- EVENT navbar_header_profile_list_before -->
+				   <li><a title="" href="{U_PROFILE}"><i class="fa fa-cog"></i>{L_UCP_PROFILE_SETTINGS}</a></li>
+	               <!-- IF U_ACP --><li><a title="" href="{U_ACP}"><i class="fa fa-user-md"></i>{L_ADMIN_PANEL_GENERAL}</a></li><!-- ENDIF -->
+	               <!-- IF U_MCP --><li><a href="{U_MCP}"><i class="fa fa-legal"></i>{L_MODERATOR_PANEL_GENERAL}</a></li><!-- ENDIF -->
+				   <!-- IF U_RESTORE_PERMISSIONS --><li><a href="{U_RESTORE_PERMISSIONS}"><i class="fa fa-random"></i> {L_RESTORE_PERMISSIONS}</a></li><!-- ENDIF -->
+				  <!-- EVENT navbar_header_profile_list_after -->
+				  <li><a title="" href="{U_LOGIN_LOGOUT}"><i class="fa fa-power-off"></i>{L_LOGOUT}</a></li>
+				</ul>
+			</li>
+		<!-- EVENT navigation_controls_after -->	
+		</ul>
+	</div>
+	
+<!-- Lower Breadcrumb block -->
+		<div class="sub-breadcrumb">
+            <span class="time pull-left">{CURRENT_TIME}</span> 
+            <!-- IF S_USER_LOGGED_IN -->
+		    <span class="time pull-right hidden-xs">{LAST_VISIT_DATE}</span>
+		    <!-- ENDIF -->
+        </div>
+<!-- Lower Breadcrumb block --> 
+	
+	<!-- EVENT header_breadcrumb_after -->
+	
+	<div id="page-body">
+	
+	<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+	<div class="alert alert-info fade in">
+		<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
+		<i class="fa fa-info-sign"></i> <strong>{L_INFORMATION}{L_COLON}</strong>&nbsp;{L_BOARD_DISABLED}
+	</div>
+	<!-- ENDIF -->
+    <!-- EVENT overall_header_content_before -->

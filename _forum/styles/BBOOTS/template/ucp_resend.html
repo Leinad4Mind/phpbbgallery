@@ -1,0 +1,31 @@
+<!-- INCLUDE overall_header.html -->
+<form class="form-horizontal" action="{S_PROFILE_ACTION}" method="post" id="resend">
+   <div class="side-segment"><h3>{L_UCP_RESEND}</h3></div>
+<div class="well">
+	<fieldset>	
+	<div class="col-md-6">
+    <div class="form-group">
+		<label for="username">{L_USERNAME}{L_COLON}</label>
+          <div class="input-icon left">
+	        <i class="fa fa-user"></i>
+		    <input class="form-control input-sm" type="text" name="username" id="username" value="{USERNAME}" placeholder="{L_USERNAME}"/>
+		  </div>
+	</div>
+    <div class="form-group">
+		<label for="email">{L_EMAIL_ADDRESS}{L_COLON}</label>
+          <div class="input-icon left">
+	        <i class="icon-moon-at"></i>
+		    <input class="form-control input-sm" type="text" name="email" id="email" size="25" maxlength="100" placeholder="{L_UCP_REG_EMAIL_PLACEHOLDER}"/>
+		  </div>
+	</div> 
+	<div class="form-group">
+	{S_HIDDEN_FIELDS}
+		<button type="submit" name="submit" id="submit" class="btn btn-default" value="{L_SUBMIT}" tabindex="2" data-loading-text="{L_SENDING}<i class='fa-spin fa fa-spinner fa-lg'></i>">{L_SUBMIT}</button>
+		<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+	{S_FORM_TOKEN}
+	</div> 
+   </div>
+	</fieldset>
+</div>
+</form>
+<!-- INCLUDE overall_footer.html -->

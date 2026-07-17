@@ -1,0 +1,34 @@
+	  </div>
+ </div>
+<!-- col-md-12 ucp_header
+</div>
+-->
+	
+	</div>
+ </div>
+</div>
+
+<!-- IF S_COMPOSE_PM -->
+{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->	
+
+
+</div> <!-- panel has-nav-tabs no-border in ucp_header -->	
+
+<!-- INCLUDE jumpbox_options.html -->
+<!-- INCLUDE overall_footer.html -->
+
+<!-- once head.load is not used any longer this needs to be moved above the overall_footer -->
+<!-- IF .friends_online or .friends_offline -->
+<script>
+// lets load and call the function only if there is an user added as a friend
+head.load("{T_THEME_PATH}/vendors/jquery.tinyscrollbar.min.js");
+head.ready('jquery.tinyscrollbar.min.js', function() {
+    $("#scrollbar-two").tinyscrollbar();
+});
+</script>
+<!-- ENDIF -->
+<script>
+ head.load("{T_THEME_PATH}/vendors/jupload.min.js");
+</script>

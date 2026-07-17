@@ -1,0 +1,90 @@
+<!-- INCLUDE overall_header.html -->
+<div class="side-segment"><h3>{SITENAME}&nbsp;&#45;&nbsp;<small>{L_LOGIN_LINK}</small></h3></div>
+
+   <div class="alert alert-warning fade in">
+	 <i class="fa fa-exclamation-triangle"></i>&nbsp;<strong>{L_LOGIN_LINK_EXPLAIN}</strong>
+	</div>
+
+<!-- IF LOGIN_LINK_ERROR -->
+<div class="alert alert-warning fade in">
+ <i class="fa fa-info"></i>&nbsp;<strong>{LOGIN_LINK_ERROR}</strong>
+</div>
+<!-- ENDIF -->
+	
+	 <div class="well">
+            <div class="row">
+                <!-- IF S_REGISTER_ENABLED and not S_ADMIN_AUTH -->
+				<div class="col-sm-6">
+				<!-- IF OA_SOCIAL_LOGIN_EMBED_SOCIAL_LOGIN --> 
+                    <!-- EVENT login_body_registration_swap -->
+                <!-- ELSE -->
+				<div class="signin-text">
+					<h4>{L_CREATE_ACCOUNT}</h4>
+				</div>
+				<div>
+                    <p>{L_LOGIN_INFO}</p>
+				    <p><a href="{U_TERMS_USE}">{L_TERMS_USE}</a>&nbsp;&#124;&nbsp;<a href="{U_PRIVACY}">{L_PRIVACY}</a></p>
+					<form action="{REGISTER_ACTION}" method="post" id="register">
+						<fieldset>
+							{S_HIDDEN_FIELDS}<input type="submit" name="register" tabindex="1" value="{L_REGISTER}" class="btn btn-default btn-reg-login" />
+						</fieldset>
+					</form>
+					 {% EVENT ss_ucp_login_link_register_append %}
+				</div>	  
+				<!-- ENDIF -->
+				</div>
+				<!-- ELSEIF S_ADMIN_AUTH -->
+				<div class="pull-right hidden-xs">
+				<div class="admin-header-head">
+					<div class="admin-fxicon">
+						<i class="fa fa-cogs"></i>
+					</div>
+				</div>
+				</div>
+				<!-- ELSE -->
+				<div class="col-sm-6">
+				<div class="signin-text">
+					<h4>{L_CREATE_ACCOUNT_DISABLED}</h4>
+				</div>
+                    <p>{L_REGISTRATION_DISABLED}</p>
+				    <p><a href="{U_TERMS_USE}">{L_TERMS_USE}</a>&nbsp;&#124;&nbsp;<a href="{U_PRIVACY}">{L_PRIVACY}</a></p>
+					<p><a href="mailto:{BOARD_EMAIL}?subject=Registrations Closed&body=Dear Admin, %0A%0AI Just wanted to let you know that the board registrations are closed. %0A%0AThis might be an error and I would like to register. %0A%0APlease let me know if this is possible.%0A%0AThanks!" class="btn btn-default">{L_CONTACT_WEBMASTER}</a></p>
+                </div>
+				<!-- ENDIF -->
+				<div class="col-sm-6">
+				 <form action="{LOGIN_ACTION}" method="post" id="login">
+				  <fieldset>
+					<div class="form-group">
+					<label class="" for="{USERNAME_CREDENTIAL}">{L_USERNAME}{L_COLON}</label> 
+					 <div class="input-icon left">
+						<i class="fa fa-user"></i>
+						<input class="form-control input-sm" type="text" tabindex="1" name="{USERNAME_CREDENTIAL}" id="{USERNAME_CREDENTIAL}" value="{USERNAME}" placeholder="{L_USERNAME}"/>
+					 </div>
+				    </div> 
+					<div class="form-group">
+					 <label class="" for="{PASSWORD_CREDENTIAL}">{L_PASSWORD}{L_COLON}</label>
+					 <div class="input-icon left">
+						<i class="fa fa-key"></i>
+						<input class="form-control input-sm" type="password" tabindex="2" id="{PASSWORD_CREDENTIAL}" name="{PASSWORD_CREDENTIAL}" placeholder="{L_PASSWORD}" autocomplete="off">
+					  </div>						
+					</div>
+				<p>
+				<div class="form-group">
+				 <button type="submit" class="btn btn-default" id="load" name="login" tabindex="6" value="{L_LOGIN}" data-loading-text="{L_LOADING_LOG_IN} <i class='fa-spin fa fa-spinner fa-lg'></i>">{L_LOGIN_ME_IN}</button>
+				</div>
+				</p>
+				  
+				   <!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+						<div class="space10"></div>
+						<!-- DEFINE $CAPTCHA_TAB_INDEX = 3 -->
+						<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+					<!-- ENDIF -->
+				    {S_LOGIN_REDIRECT}
+					{S_HIDDEN_FIELDS}
+				  </fieldset>
+				  </form>
+				  
+			    </div>  
+            </div>
+    </div>
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,22 @@
+<!-- INCLUDE mcp_header.html -->
+<form method="post" id="mcp" action="{U_POST_ACTION}">
+<div class="side-segment"><h3>{L_TITLE}</h3></div>
+<div class="well">
+	<fieldset>
+	<div class="control-group"> 
+	   <label class="control-label" for="username">{L_SELECT_USER}:</label>
+	<div class="controls controls-row"> 
+       <input type="text" class="form-control input-sm" name="username" id="username">
+	   <strong><a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a></strong>
+	</div> 
+	</div>
+	</fieldset>
+</div>
+
+<fieldset class="form-actions">
+	<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
+	<button type="submit" name="submituser" value="{L_SUBMIT}" class="btn btn-default">{L_SUBMIT}</button>
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+<!-- INCLUDE mcp_footer.html -->

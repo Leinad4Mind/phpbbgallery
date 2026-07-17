@@ -1,0 +1,37 @@
+<form id="viewfolder" method="post" action="{S_PM_ACTION}">
+<fieldset class="framed-ucp">
+<legend>{L_TITLE}<!-- IF CUR_FOLDER_NAME -->{L_COLON}&nbsp;{CUR_FOLDER_NAME}<!-- ENDIF --></legend>
+
+<!-- IF FOLDER_STATUS and FOLDER_MAX_MESSAGES neq 0 --><p>{FOLDER_STATUS}</p>
+<div class="progress progress-striped<!-- IF FOLDER_PERCENT eq 100 --> active<!-- ENDIF -->">
+  <div role="progressbar" aria-valuenow="{FOLDER_PERCENT}" aria-valuemin="0" aria-valuemax="100" style="width: {FOLDER_PERCENT}%;" class="progress-bar<!-- IF FOLDER_PERCENT gt 80 --> progress-bar-danger<!-- ELSE --> progress-bar-info<!-- ENDIF -->"></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF U_POST_REPLY_PM or U_POST_NEW_TOPIC or U_FORWARD_PM -->
+	<div class="pull-left">
+		 <div class="btn-group">
+			<!-- IF U_POST_REPLY_PM --><a class="btn btn-default" title="" href="{U_POST_REPLY_PM}"><i class="fa fa-reply"></i>&nbsp;{L_POST_REPLY_PM}</a>
+			<!-- ELSEIF U_POST_NEW_TOPIC --><a class="btn btn-default" href="{U_POST_NEW_TOPIC}" accesskey="n" title=""><i class="fa fa-plus"></i>&nbsp;{L_UCP_PM_COMPOSE}</a><!-- ENDIF -->
+			<!-- IF U_FORWARD_PM --><a class="btn btn-default" title="" href="{U_FORWARD_PM}"><i class="fa fa-forward"></i>&nbsp;{L_POST_FORWARD_PM}</a><!-- ENDIF -->
+			<!-- IF U_POST_REPLY_PM and S_PM_RECIPIENTS gt 1 --><a class="btn btn-default" title="" href="{U_POST_REPLY_ALL}"><i class="fa fa-group"></i>&nbsp;{L_REPLY_TO_ALL}</a><!-- ENDIF -->			
+		 </div> 
+	</div>
+<!-- ENDIF -->
+
+<!-- IF TOTAL_MESSAGES or S_VIEW_MESSAGE -->
+    <ul class="pagination pagination-sm pull-right">
+		<!-- IF S_VIEW_MESSAGE -->
+				<li><a href="{U_CURRENT_FOLDER}">{L_RETURN_TO_FOLDER}</a></li>
+			<!-- ELSEIF FOLDER_CUR_MESSAGES neq 0 -->
+				<!-- IF U_MARK_ALL --><li><a href="{U_MARK_ALL}">{L_PM_MARK_ALL_READ}</a></li><!-- ENDIF -->
+				<li><a>{TOTAL_MESSAGES}</a></li>
+				<!-- IF .pagination -->
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE -->
+				 <li class="active"><a>{PAGE_NUMBER}</a></li>	
+				<!-- ENDIF -->
+		<!-- ENDIF -->
+    </ul>
+<!-- ENDIF -->
+<div class="space10"></div>
