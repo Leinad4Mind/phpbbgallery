@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Simple Spoiler BBCode extension for phpBB",
     "homepage": "https://github.com/AlfredoRamos/phpbb-ext-simple-spoiler",
-    "version": "2.3.2",
-    "time": "2020-10-12",
+    "version": "2.3.3",
+    "time": "2026-07-18",
     "keywords": [
         "phpbb",
         "extension",
@@ -19,10 +19,15 @@
             "email": "alfredo.ramos@yandex.com",
             "homepage": "https://alfredoramos.mx/",
             "role": "Lead Developer"
+        },
+        {
+            "name": "Leinad4Mind",
+            "email": "leinad4mind@protonmail.com",
+            "role": "Contributor"
         }
     ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.1.3 || ^8.0",
         "composer/installers": "~1.0.0",
         "phpbb/phpbb": "~3.3.0"
     },
@@ -31,7 +36,7 @@
         "pear/archive_tar": "^1.4.0"
     },
     "extra": {
-        "display-name": "Simple Spoiler BBCode",
+        "display-name": "Simple Spoiler BBCode - Gold Edition",
         "soft-require": {
             "phpbb/phpbb": "~3.3.0"
         },

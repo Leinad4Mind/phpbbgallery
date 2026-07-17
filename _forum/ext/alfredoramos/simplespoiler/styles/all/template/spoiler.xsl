@@ -5,7 +5,7 @@
 				<xsl:when test="@title and string-length(normalize-space(@title)) > 0">
 					<xsl:choose>
 						<xsl:when test="string-length(normalize-space(@title)) > 140">
-							<xsl:value-of select="concat(normalize-space(substring(normalize-space(@title), 0, 140)), '…')"/>
+							<xsl:value-of select="concat(normalize-space(substring(normalize-space(@title), 1, 140)), '…')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(@title)"/>

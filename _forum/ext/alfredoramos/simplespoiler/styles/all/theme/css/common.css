@@ -63,3 +63,8 @@
 .spoiler-header::-webkit-details-marker {
 	display: none;
 }
+
+/* Swap the status icon glyph on open/close without JS */
+.spoiler[open] > .spoiler-header .spoiler-status > .icon::before {
+	content: '\f070';
+}
