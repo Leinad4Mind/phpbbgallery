@@ -372,7 +372,4 @@ $lang = array_merge($lang, array(
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP'		=> 'Deja tus imágenes aquí',
-	'GALLERY_UPLOAD_CANCEL' => 'Cancelar',
-	'GALLERY_UPLOAD_START'  => 'Iniciar',
-	'UPLOAD_TO_ALBUM'       => 'Subir a "%s"',
 ));

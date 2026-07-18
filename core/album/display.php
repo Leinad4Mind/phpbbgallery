@@ -205,8 +205,7 @@ class display
 
 		if ($album_data['parent_id'] > 0)
 		{
-			$cached_parents = json_decode($album_data['album_parents'], true);
-			if (!is_array($cached_parents))
+			if ($album_data['album_parents'] == '')
 			{
 				$sql = 'SELECT album_id, album_name, album_type
 					FROM ' . $this->table_albums . '
@@ -223,7 +222,7 @@ class display
 				}
 				$this->db->sql_freeresult($result);
 
-				$album_data['album_parents'] = json_encode($album_parents, JSON_UNESCAPED_UNICODE);
+				$album_data['album_parents'] = serialize($album_parents);
 
 				$sql = 'UPDATE ' . $this->table_albums . "
 					SET album_parents = '" . $this->db->sql_escape($album_data['album_parents']) . "'
@@ -232,7 +231,7 @@ class display
 			}
 			else
 			{
-				$album_parents = $cached_parents;
+				$album_parents = @unserialize($album_data['album_parents']);
 			}
 		}
 
@@ -391,7 +390,7 @@ class display
 						),
 					),
 
-					'WHERE'			=> implode(' AND ', array('a.parent_id = 0', $sql_where)),
+					'WHERE'			=> 'a.parent_id = 0 AND ' . $sql_where,
 				);
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
 				$result = $this->db->sql_query($sql);

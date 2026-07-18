@@ -1,14 +1,12 @@
 <?php
 /**
- * phpBB Gallery - Core Extension
- *
- * @package   phpbbgallery/core
- * @author    nickvergessen
- * @author    satanasov
- * @author    Leinad4Mind
- * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
- * @license   GPL-2.0-only
- */
+*
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 /**
 * @ignore
@@ -151,9 +149,9 @@ class contest
 
 		$sql = 'UPDATE ' . $this->contest_table . '
 			SET contest_marked = ' . $this->NO_CONTEST . ",
-				contest_first = " . (int) $first . ",
-				contest_second = " . (int) $second . ",
-				contest_third = " . (int) $third . "
+				contest_first = $first,
+				contest_second = $second,
+				contest_third = $third
 			WHERE contest_id = " . (int) $contest_id;
 		$this->db->sql_query($sql);
 

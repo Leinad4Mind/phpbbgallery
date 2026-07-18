@@ -13,11 +13,13 @@
 <!-- ENDIF -->
 
 <form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
+
 <div class="panel" id="postingbox">
 	<div class="inner">
 		<h3>{L_POST_COMMENT}</h3>
 		<fieldset class="fields1">
 			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+
 			<!-- IF not S_USER_LOGGED_IN -->
 			<dl>
 				<dt><label for="username">{L_USERNAME}{L_COLON}</label></dt>
@@ -62,21 +64,21 @@
 						<fieldset class="submit-buttons">
 							<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED -->
 								<a href="{U_MORE_SMILIES}" class="button2" onclick="popup(this.href, 750, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
-							<!-- ENDIF -->
+				<!-- ENDIF -->
 						</fieldset>
 					</div>
 				</div>
 				<!-- IF BBCODE_STATUS -->
 					<div class="bbcode-status">
-						<!-- IF .smiley --><hr /><!-- ENDIF -->
-						{BBCODE_STATUS}<br />
-						<!-- IF S_BBCODE_ALLOWED -->
+					<!-- IF .smiley --><hr /><!-- ENDIF -->
+					{BBCODE_STATUS}<br />
+					<!-- IF S_BBCODE_ALLOWED -->
 						{IMG_STATUS}<br />
 						<!-- IF S_BBCODE_FLASH -->
-							{FLASH_STATUS}<br />
+						{FLASH_STATUS}<br />
 						<!-- ENDIF -->
 						{URL_STATUS}<br />
-						<!-- ENDIF -->
+					<!-- ENDIF -->
 						{SMILIES_STATUS}
 					</div>
 				<!-- ENDIF -->
@@ -87,11 +89,12 @@
 				<!-- IF S_DISPLAY_REVIEW --><strong><a href="#review">{L_TOPIC_REVIEW}</a></strong><!-- ENDIF -->
 			<!-- ENDIF -->
 			</div>
-			{L_COMMENT_LENGTH}
+				{L_COMMENT_LENGTH}
 			<div id="message-box" class="message-box">
 				<textarea <!-- IF S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT -->name="signature" id="signature" style="height: 9em;"<!-- ELSE -->name="message" id="message"<!-- ENDIF --> rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
 			</div>
 			<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
+
 		</fieldset>
 	</div>
 </div>

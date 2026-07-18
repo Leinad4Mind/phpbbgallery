@@ -68,7 +68,6 @@ class index
 	const RRC_MODE_RECENT_COMMENTS = 4;
 	const RRC_MODE_RANDOM_IMAGES   = 2;
 	const RRC_MODE_RECENT_IMAGES   = 1;
-
 	/**
 	 * Constructor
 	 *
@@ -320,14 +319,14 @@ class index
 		$this->template->assign_vars(array(
 			'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_core_moderate') : '',
 			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, array('hash' => generate_link_hash('global'), 'mark' => 'albums')) : '',
-			'S_LOGIN_ACTION'					=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
+			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
 			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] && $show_comments ? $this->helper->route('phpbbgallery_core_search_commented') : false,
 			//'U_G_SEARCH_CONTESTS'			=> $this->config['phpbb_gallery_allow_rates'] && $this->config['phpbb_gallery_contests_ended'] ? $this->helper->route('phpbbgallery_core_search_contests') : '',
 			'U_G_SEARCH_RECENT'				=> $show_recent ? $this->helper->route('phpbbgallery_core_search_recent') : false,
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,
-			'U_G_SEARCH_SELF'					=> $this->helper->route('phpbbgallery_core_search_egosearch'),
+			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_core_search_egosearch'),
 			'U_G_SEARCH_TOPRATED'			=> $this->config['phpbb_gallery_allow_rates'] ? $this->helper->route('phpbbgallery_core_search_toprated') : '',
 		));
 	}

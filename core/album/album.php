@@ -315,7 +315,7 @@ class album
 
 		if ($select_name)
 		{
-			$gallery_albumbox = "<select name='$select_name' id='$select_name'>";
+			$gallery_albumbox = "<select name='$select_name' id='$select_name' class=\"selectpicker show-tick\" data-container=\"body\" data-style=\"btn-sm btn btn-default\">";
 			$gallery_albumbox .= $album_list;
 			$gallery_albumbox .= '</select>';
 		}

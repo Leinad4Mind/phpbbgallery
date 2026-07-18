@@ -112,6 +112,7 @@ function toggleElement(oElement)
 <!-- IF S_PERSONAL_GALLERY and U_USERS_PERSONAL_GALLERIES -->
 	<div class="panel">
 		<div class="inner">
+
 		<ul class="linklist">
 			<li>
 				<strong style="font-size: 0.95em;">
@@ -130,12 +131,13 @@ function toggleElement(oElement)
 		<!-- IF .pagination -->
 			<!-- INCLUDE pagination.html -->
 		<!-- ELSE -->
-			&bull; {PAGE_NUMBER}
+			 &bull; {PAGE_NUMBER}
 		<!-- ENDIF -->
 	</div>
 <!-- ENDIF -->
 
 <!-- INCLUDE gallery/albumlist_polaroid.html -->
+
 
 <!-- IF .pagination or TOTAL_ALBUMS -->
 	<div class="pagination">
@@ -143,7 +145,7 @@ function toggleElement(oElement)
 		<!-- IF .pagination -->
 			<!-- INCLUDE pagination.html -->
 		<!-- ELSE -->
-			&bull; {PAGE_NUMBER}
+			 &bull; {PAGE_NUMBER}
 		<!-- ENDIF -->
 	</div>
 <!-- ENDIF -->
@@ -211,7 +213,7 @@ function toggleElement(oElement)
 						</dd>
 						<dd class="lastpost" style="width: 330px;">
 							<div style="float: left;">
-								<dfn>{L_LAST_IMAGES}</dfn>
+									<dfn>{L_LAST_IMAGES}</dfn>
 								<a href="{U_IMAGE_ACTION}"><img src="{U_PERSONAL_GALLERIES_LAST_IMAGE}" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}"<!-- IF U_IMAGENAME --> alt="{U_IMAGENAME}"<!-- ENDIF --> style="max-width: 50px; max-height: 50px; padding-left: 5px;"></a>
 							</div>
 							<div style="padding-left: 5px; margin-bottom: -12px; white-space: normal; overflow: hidden;">
@@ -232,7 +234,6 @@ function toggleElement(oElement)
 <!-- IF U_RECENT or U_RANDOM-->
 	<!-- INCLUDE gallery/imageblock_polaroid.html -->
 <!-- ENDIF -->
-
 <!-- IF U_RECENT_COMMENTS -->
 	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{L_SEARCH_RECENT_COMMENTS}</a> </h2>
 	<!-- IF ERROR --><h2>{ERROR}</h2>
@@ -279,6 +280,7 @@ function toggleElement(oElement)
 	</div>
 	<!-- ENDIF -->
 <!-- ENDIF -->
+
 
 <!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_DISP_LOGIN -->
 	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">

@@ -1,14 +1,10 @@
 <?php
 /**
- * phpBB Gallery - Core Extension
- *
- * @package   phpbbgallery/core
- * @author    satanasov
- * @author    Leinad4Mind
- * @copyright 2014- satanasov, 2018- Leinad4Mind
- * @license   GPL-2.0-only
+ *  @package phpBB Gallery
+ *  @version 3.2.1.x
+ *  @copyright (c) 2018 Stanislav Atanasov s.atanasov@anavaro.com http://www.anavaro.com
+ *  @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace phpbbgallery\core\notification\events;
 
 class phpbbgallery_image_not_approved extends \phpbb\notification\type\base

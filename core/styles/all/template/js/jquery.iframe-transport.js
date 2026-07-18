@@ -10,7 +10,6 @@
  */
 
 /* global define, require, window, document */
-
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {

@@ -11,7 +11,6 @@
 
 /* jshint nomen:false */
 /* global define, require, window, Blob */
-
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {

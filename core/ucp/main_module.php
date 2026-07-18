@@ -158,10 +158,6 @@ class main_module
 	{
 		global $cache, $db,  $user, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_config, $albums_table, $phpbb_ext_gallery_user;
 		global $request, $users_table, $phpbb_container;
-		if (!$request->is_set_post('submit') || !check_form_key('ucp_gallery'))
-		{
-			trigger_error('FORM_INVALID');
-		}
 
 		// we will have to initialise $phpbb_ext_gallery_user
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
@@ -280,8 +276,8 @@ class main_module
 				'U_ALBUM'				=> $this->u_action . '&amp;action=manage&amp;parent_id=' . $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
 				'ALBUM_DESCRIPTION'		=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
-				'U_MOVE_UP'				=> $this->u_action . '&amp;action=move&amp;move=move_up&amp;album_id=' . $album[$i]['album_id'] . '&amp;hash=' . generate_link_hash('ucp_gallery'),
-				'U_MOVE_DOWN'			=> $this->u_action . '&amp;action=move&amp;move=move_down&amp;album_id=' . $album[$i]['album_id'] . '&amp;hash=' . generate_link_hash('ucp_gallery'),
+				'U_MOVE_UP'				=> $this->u_action . '&amp;action=move&amp;move=move_up&amp;album_id=' . $album[$i]['album_id'],
+				'U_MOVE_DOWN'			=> $this->u_action . '&amp;action=move&amp;move=move_down&amp;album_id=' . $album[$i]['album_id'],
 				'U_EDIT'				=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album[$i]['album_id'],
 				'U_DELETE'				=> $this->u_action . '&amp;action=delete&amp;album_id=' . $album[$i]['album_id'],
 			));
@@ -884,17 +880,9 @@ class main_module
 		global $cache, $db, $user, $phpbb_ext_gallery_core_album, $albums_table, $request, $phpbb_gallery_url, $users_table;
 
 		$album_id = $request->variable('album_id', 0);
-		if (!check_link_hash($request->variable('hash', ''), 'ucp_gallery'))
-		{
-			trigger_error('FORM_INVALID');
-		}
 		$phpbb_ext_gallery_core_album->check_user($album_id);
 
 		$move = $request->variable('move', '', true);
-		if (!in_array($move, array('move_up', 'move_down'), true))
-		{
-			trigger_error('NO_MODE');
-		}
 		$moving = $phpbb_ext_gallery_core_album->get_info($album_id);
 
 		$sql = 'SELECT album_id, left_id, right_id
@@ -973,10 +961,6 @@ class main_module
 		$album_id_ary = $request->variable('album_id_ary', array(0));
 		if (($image_id_ary || $album_id_ary) && ($action == 'unsubscribe'))
 		{
-			if (!$request->is_set_post('action') || !check_form_key('ucp_gallery'))
-			{
-				trigger_error('FORM_INVALID');
-			}
 			if ($album_id_ary)
 			{
 				$phpbb_gallery_notification->remove_albums($album_id_ary);

@@ -371,7 +371,4 @@ $lang = array_merge($lang, array(
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP'     => 'Пуснете изображенията си тук',
-	'GALLERY_UPLOAD_CANCEL' => 'Отказ',
-	'GALLERY_UPLOAD_START'  => 'Стартиране',
-	'UPLOAD_TO_ALBUM'       => 'Качване в „%s“',
 ));

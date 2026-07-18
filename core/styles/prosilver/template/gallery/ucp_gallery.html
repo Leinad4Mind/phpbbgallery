@@ -138,21 +138,21 @@
 					<dl class="row-item<!-- IF album_row.FORUM_IMAGE --><!-- ELSE --> topic_read_mine<!-- ENDIF -->">
 						<dt title="{album_row.ALBUM_NAME}">
 							<div class="list-inner" style="text-align: right; margin-right: 0;">
-								<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
-								{ICON_MOVE_UP_DISABLED}
-								<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-								<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
-								<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-								<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-								<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
-								<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-								{ICON_MOVE_DOWN_DISABLED}
-								<!-- ELSE -->
-								{ICON_MOVE_UP_DISABLED}
-								{ICON_MOVE_DOWN_DISABLED}
-								<!-- ENDIF -->
-								<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
-								<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
+							<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
+							{ICON_MOVE_UP_DISABLED}
+							<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+							<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
+							<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+							<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+							<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
+							<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+							{ICON_MOVE_DOWN_DISABLED}
+							<!-- ELSE -->
+							{ICON_MOVE_UP_DISABLED}
+							{ICON_MOVE_DOWN_DISABLED}
+							<!-- ENDIF -->
+							<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
+							<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
 							</div>
 							<div class="list-inner" style="margin-right: 0;">
 								<!-- IF album_row.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{album_row.FORUM_IMAGE}</div><!-- ENDIF -->
@@ -209,7 +209,7 @@
 								</dt>
 									<dd class="lastpost">
 										<p style="margin-bottom: -12px; overflow: hidden; text-overflow: ellipsis; line-height: normal; font-size: 1em; text-align: center;">
-											<!-- IF album_row.LAST_IMAGE -->
+								<!-- IF album_row.LAST_IMAGE -->
 												<!-- IF album_row.UC_FAKE_THUMBNAIL -->
 													<a style="float: left; width: {FAKE_THUMB_SIZE}px;">{album_row.UC_FAKE_THUMBNAIL}</a>
 												<!-- ENDIF --><br /><br />
@@ -224,7 +224,7 @@
 									</dd>
 								<dd class="mark" style="padding-left: 8px;">
 									<input type="checkbox" name="album_id_ary[]" value="{album_row.ALBUM_ID}" />
-								</dd>
+									</dd>
 							</dl>
 						</li>
 					<!-- END album_row -->
@@ -271,7 +271,7 @@
 							</dt>
 								<dd class="lastpost">
 									<p style="margin-bottom: -12px; overflow: hidden; text-overflow: ellipsis; line-height: normal; font-size: 1em; text-align: center;">
-										<!-- IF image_row.COMMENT -->
+									<!-- IF image_row.COMMENT -->
 											{L_LAST_COMMENT} {L_POST_BY_AUTHOR}{L_COLON} {image_row.LAST_COMMENT_BY}<br />
 											&raquo; {image_row.LAST_COMMENT_TIME}
 										<!-- ELSE -->
@@ -282,7 +282,7 @@
 								</dd>
 							<dd class="mark" style="padding-left: 8px;">
 								<input type="checkbox" name="image_id_ary[]" value="{image_row.IMAGE_ID}" />
-							</dd>
+								</dd>
 						</dl>
 					</li>
 				<!-- END image_row -->
@@ -313,7 +313,6 @@
 				<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
 			</select>
 			<input class="button2" type="submit" value="{L_SUBMIT}" />
-			{S_FORM_TOKEN}
 		</fieldset>
 	</form>
 	</div>
