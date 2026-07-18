@@ -52,7 +52,9 @@ class main_module
 		$prune = $request->is_set_post('prune');
 
 		$missing_sources = $request->variable('source', array(0));
-		$missing_entries = $request->variable('entry', array(''), true);
+		// basename() strips any directory traversal (../) so these can only ever
+		// refer to a bare file inside the gallery upload/import directories below.
+		$missing_entries = array_map('basename', $request->variable('entry', array(''), true));
 		$missing_authors = $request->variable('author', array(0), true);
 		$missing_comments = $request->variable('comment', array(0), true);
 		$missing_personals = $request->variable('personal', array(0), true);
@@ -191,7 +193,7 @@ class main_module
 			}
 			if ($missing_authors)
 			{
-				$message[] = $core_cleanup->delete_author_images($missing_entries);
+				$message[] = $core_cleanup->delete_author_images($missing_authors);
 			}
 			if ($missing_comments)
 			{
@@ -260,7 +262,6 @@ class main_module
 				}
 				if ($missing_authors)
 				{
-					$core_cleanup->delete_author_images($missing_authors);
 					$clean_gallery_confirm = $user->lang['CONFIRM_CLEAN_AUTHORS'] . '<br />' . $clean_gallery_confirm;
 				}
 				if ($missing_comments)
@@ -388,8 +389,9 @@ class main_module
 						continue;
 					}
 
+					$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
 					$template->assign_block_vars('entryrow', array(
-						'FILE_NAME'				=> utf8_encode($file),
+						'FILE_NAME'				=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding),
 					));
 				}
 			}

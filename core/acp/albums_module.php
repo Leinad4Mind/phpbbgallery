@@ -263,6 +263,15 @@ class albums_module
 					trigger_error($this->language->lang('NO_ALBUM') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
 
+				if (!confirm_box(true))
+				{
+					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+						'a'			=> $album_id,
+						'action'	=> $action,
+						'parent_id'	=> $this->parent_id,
+					)));
+				}
+
 				$sql = 'SELECT *
 					FROM ' . $table_prefix . 'gallery_albums
 					WHERE album_id = ' . (int) $album_id;
@@ -291,6 +300,15 @@ class albums_module
 				if (!$album_id)
 				{
 					trigger_error($this->language->lang('NO_ALBUM') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+				}
+
+				if (!confirm_box(true))
+				{
+					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+						'a'			=> $album_id,
+						'action'	=> $action,
+						'parent_id'	=> $this->parent_id,
+					)));
 				}
 
 				$sql = 'SELECT album_name, album_type

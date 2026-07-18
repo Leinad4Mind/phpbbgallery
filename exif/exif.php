@@ -112,7 +112,7 @@ class exif
 		$this->status = $status;
 		if ($this->status == self::DBSAVED)
 		{
-			$this->data = @unserialize($data);
+			$this->data = @unserialize($data, ['allowed_classes' => false]);
 		}
 		else if (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
 		{
@@ -191,35 +191,38 @@ class exif
 				$this->prepared_data['exif_date'] = $user->format_date($timestamp + self::TIME_OFFSET);
 			}
 		}
-		if (isset($this->data["EXIF"]["FocalLength"]))
+		if (isset($this->data["EXIF"]["FocalLength"]) && !is_array($this->data["EXIF"]["FocalLength"]))
 		{
-			list($num, $den) = explode("/", $this->data["EXIF"]["FocalLength"]);
-			if ($den)
+			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["FocalLength"]), 2, 0);
+			if (is_numeric($num) && is_numeric($den) && $den)
 			{
 				$this->prepared_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
 			}
 		}
-		if (isset($this->data["EXIF"]["ExposureTime"]))
+		if (isset($this->data["EXIF"]["ExposureTime"]) && !is_array($this->data["EXIF"]["ExposureTime"]))
 		{
-			list($num, $den) = explode("/", $this->data["EXIF"]["ExposureTime"]);
+			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["ExposureTime"]), 2, 0);
 			$exif_exposure = '';
-			if (($num > $den) && $den)
+			if (is_numeric($num) && is_numeric($den))
 			{
-				$exif_exposure = $num / $den;
-			}
-			else if ($num)
-			{
-				$exif_exposure = ' 1/' . $den / $num ;
+				if (($num > $den) && $den)
+				{
+					$exif_exposure = $num / $den;
+				}
+				else if ($num)
+				{
+					$exif_exposure = ' 1/' . $den / $num ;
+				}
 			}
 			if ($exif_exposure)
 			{
 				$this->prepared_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
 		}
-		if (isset($this->data["EXIF"]["FNumber"]))
+		if (isset($this->data["EXIF"]["FNumber"]) && !is_array($this->data["EXIF"]["FNumber"]))
 		{
-			list($num, $den) = explode("/", $this->data["EXIF"]["FNumber"]);
-			if ($den)
+			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["FNumber"]), 2, 0);
+			if (is_numeric($num) && is_numeric($den) && $den)
 			{
 				$this->prepared_data['exif_aperture'] = "F/" . ($num / $den);
 			}
@@ -239,7 +242,7 @@ class exif
 				$this->prepared_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $this->data["EXIF"]["Flash"]];
 			}
 		}
-		if (isset($this->data["IFD0"]["Model"]))
+		if (isset($this->data["IFD0"]["Model"]) && !is_array($this->data["IFD0"]["Model"]))
 		{
 			$this->prepared_data['exif_cam_model'] = ucwords($this->data["IFD0"]["Model"]);
 		}
@@ -250,10 +253,10 @@ class exif
 				$this->prepared_data['exif_exposure_prog'] = $user->lang['EXIF_EXPOSURE_PROG_' . $this->data["EXIF"]["ExposureProgram"]];
 			}
 		}
-		if (isset($this->data["EXIF"]["ExposureBiasValue"]))
+		if (isset($this->data["EXIF"]["ExposureBiasValue"]) && !is_array($this->data["EXIF"]["ExposureBiasValue"]))
 		{
-			list($num,$den) = explode("/", $this->data["EXIF"]["ExposureBiasValue"]);
-			if ($den)
+			list($num,$den) = array_pad(explode("/", $this->data["EXIF"]["ExposureBiasValue"]), 2, 0);
+			if (is_numeric($num) && is_numeric($den) && $den)
 			{
 				if (($num / $den) == 0)
 				{

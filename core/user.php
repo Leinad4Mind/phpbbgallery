@@ -296,11 +296,12 @@ class user
 	 */
 	protected function update_image_count($num)
 	{
+		$num = (int) $num;
 		$sql = 'UPDATE ' . $this->gallery_users_table . '
 			SET user_images = user_images ' . (($num > 0) ? (' + ' . $num) : (' - ' . abs($num))) . ',
 				user_last_update = ' . time() . '
 			WHERE ' . (($num < 0) ? ' user_images > ' . abs($num) . ' AND ' : '') . '
-				user_id = ' . $this->user_id;
+				user_id = ' . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
 		if ($this->db->sql_affectedrows() == 1)
@@ -698,12 +699,10 @@ class user
 			$user_ids = array($user_ids);
 		}
 		$sql = 'SELECT user_id, personal_album_id FROM ' . $this->gallery_users_table . ' WHERE ' . $this->db->sql_in_set('user_id', $user_ids);
-		//var_dump($sql);
 		$result = $this->db->sql_query($sql);
 		$set_array = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			//var_dump($row);
 			if ($row['personal_album_id'] > 0)
 			{
 				$set_array[$row['user_id']] = $row['personal_album_id'];

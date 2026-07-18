@@ -391,6 +391,11 @@ class main_module
 				trigger_error('MISSING_ALBUM_NAME');
 			}
 			$album_data['parent_id'] = ($album_data['parent_id']) ? $album_data['parent_id'] : $phpbb_ext_gallery_user->get_data('personal_album_id');
+			if ($album_data['parent_id'])
+			{
+				// Make sure the chosen parent actually belongs to this user before we graft the new album under it.
+				$phpbb_ext_gallery_core_album->check_user($album_data['parent_id']);
+			}
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], $request->variable('desc_parse_bbcode', false), $request->variable('desc_parse_urls', false), $request->variable('desc_parse_smilies', false));
 
 			/**
@@ -549,6 +554,13 @@ class main_module
 			if (in_array($parent_id, $exclude_albums))
 			{
 				$parent_id = (int) $row['parent_id'];
+			}
+
+			if ($parent_id > 0 && $parent_id != $row['parent_id'])
+			{
+				// Make sure the new parent actually belongs to this user before the nested-set
+				// moves below mix its left_id/right_id bounds into this user's own album tree.
+				$phpbb_ext_gallery_core_album->check_user($parent_id);
 			}
 
 			// If the parent is different, the left_id and right_id have changed.

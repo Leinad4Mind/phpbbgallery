@@ -539,6 +539,8 @@ class config_module
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
 
+		$value = htmlspecialchars($value, ENT_QUOTES);
+
 		return generate_board_url() . "<br /><input type=\"text\" name=\"config[$key]\" id=\"$key\" value=\"$value\" size =\"40\" maxlength=\"125\" /><br /><img src=\"" . generate_board_url() . "/$value\" alt=\"" . $this->language->lang('WATERMARK') . "\" />";
 	}
 

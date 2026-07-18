@@ -349,7 +349,7 @@ class auth
 		{
 			foreach (self::$_permissions as $acl)
 			{
-				if (strpos('_count', $acl) === false)
+				if (strpos($acl, '_count') === false)
 				{
 					$bit = self::$_permissions_flipped[$acl];
 					// If the yes and the never bit are set, we overwrite the yes with a false.

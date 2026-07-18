@@ -231,6 +231,10 @@ class main_module
 				break;
 				case 'create_pega':
 					$confirm = false;
+					if (!check_form_key('acp_gallery'))
+					{
+						trigger_error('FORM_INVALID');
+					}
 					if (!$auth->acl_get('a_board'))
 					{
 						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
@@ -547,7 +551,7 @@ class main_module
 		}
 
 		$boarddays = (time() - $config['board_startdate']) / 86400;
-		$images_per_day = sprintf('%.2f', $config['phpbb_gallery_num_images'] / $boarddays);
+		$images_per_day = sprintf('%.2f', ($boarddays > 0) ? ($config['phpbb_gallery_num_images'] / $boarddays) : 0);
 
 		$sql = 'SELECT COUNT(album_user_id) AS num_albums
 			FROM ' . $albums_table . '

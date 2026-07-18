@@ -118,10 +118,9 @@ class report
 			'reported_image_id'	=> $data['report_image_id'],
 			'reported_album_id'	=> $data['report_album_id']
 		);
-		if (!isset($data['report_album_id']))
-		{
-			$this->notification_helper->notify('new_report', $data);
-		}
+		// Always notify: $data only ever has 'reported_album_id', never 'report_album_id',
+		// so a check against the latter would be dead code.
+		$this->notification_helper->notify('new_report', $data);
 	}
 
 	/**
@@ -303,7 +302,7 @@ class report
 				$this->reports_table	=> 'r',
 			),
 			'WHERE'	=> 'i.image_id = r.report_image_id and r.report_status = ' . (int) $status . ' and ' . $this->db->sql_in_set('i.image_album_id', $mod_array),
-			'ORBER_BY'	=> 'r.report_id DESC'
+			'ORDER_BY'	=> 'r.report_id DESC'
 		);
 		// Get Count
 		$sql_array['SELECT'] = 'COUNT(r.report_id) as count';

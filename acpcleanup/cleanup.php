@@ -94,8 +94,9 @@ class cleanup
 	{
 		foreach ($filenames as $file)
 		{
-			$this->tool->delete(utf8_decode($file));
-			$this->tool->delete_cache(utf8_decode($file));
+			$file = mb_convert_encoding($file, 'ISO-8859-1', 'UTF-8');
+			$this->tool->delete($file);
+			$this->tool->delete_cache($file);
 		}
 		$this->log->add_log('admin', 'clean_deletefiles', 0, 0, array('LOG_CLEANUP_DELETE_FILES', count($filenames)));
 		return 'CLEAN_ENTRIES_DONE';
