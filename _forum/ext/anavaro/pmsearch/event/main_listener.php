@@ -35,6 +35,8 @@ class main_listener implements EventSubscriberInterface
 
 	private $search_helper;
 
+	private $fulltext_search;
+
 	/**
 	 * Constructor
 	 * NOTE: The parameters of this method must match in order and type with

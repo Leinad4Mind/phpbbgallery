@@ -16,6 +16,9 @@ namespace anavaro\pmsearch\ucp;
 class ucp_pmsearch_module
 {
 	var $u_action;
+	var $tpl_name;
+	var $page_title;
+	var $search;
 	private $search_helper;
 	private $config;
 	private $terms_ary = array(
@@ -72,7 +75,7 @@ class ucp_pmsearch_module
 						if (!is_numeric($keywords))
 						{
 							// It's username ... let's get ID
-							$sql = 'SELECT user_id FROM ' . USERS_TABLE . ' WHERE username_clean LIKE \'' . utf8_clean_string($keywords) . '\'';
+							$sql = 'SELECT user_id FROM ' . USERS_TABLE . ' WHERE username_clean LIKE \'' . $db->sql_escape(utf8_clean_string($keywords)) . '\'';
 							$result = $db->sql_query($sql);
 							$user_id = $db->sql_fetchrow($result);
 							$keywords = $user_id['user_id'];

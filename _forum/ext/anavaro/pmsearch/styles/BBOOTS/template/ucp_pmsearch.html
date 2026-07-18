@@ -1,0 +1,98 @@
+<!-- INCLUDE ucp_header.html -->
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+<div class="well">
+	<h3>{L_PMSEARCH_TITLE}</h3>
+	<fieldset>
+		<div class="form-group">
+			 <label class="control-label" for="keywords">{L_SEARCH_KEYWORDS}{L_COLON}</label><span class="help-block">{L_PMSEARCH_KEYWORDS_EXPLAIN}</span>
+			  <div class="input-group">
+				<span class="input-group-addon"><i class="fa fa-search"></i></span>
+				<input class="form-control input-sm" type="text" placeholder="{L_SEARCH_USR_PLACEHOLDER}" name="keywords" id="keywords" title="{L_SEARCH_KEYWORDS}" value="{S_KEYWORDS}"/>
+			  </div> 
+		</div>
+		<div class="form-group">
+			<input type="radio" <!-- IF SEARCH_TEARM_TYPE == 1 -->checked="checked" <!-- ENDIF -->name="terms" id="terms1" value="all"><label class="checkbox-inline" for="terms1">{L_SEARCH_ALL_TERMS}</label>
+			<input type="radio" <!-- IF SEARCH_TEARM_TYPE == 2 -->checked="checked" <!-- ENDIF -->name="terms" id="terms2" value="any"><label class="checkbox-inline" for="terms2">{L_SEARCH_ANY_TERMS}</label>
+			<input type="radio" <!-- IF SEARCH_TEARM_TYPE == 3 -->checked="checked" <!-- ENDIF -->name="terms" id="terms3" value="nick"><label class="checkbox-inline" for="terms3">{L_SEARCH_FOR_NICK}</label>
+			<div class="control-group"></div>
+		</div>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		{S_HIDDEN_FIELDS}<input type="reset" value="{L_RESET}" name="reset" class="btn btn-default" />&nbsp;
+		<input type="submit" name="submit" value="{L_SEARCH_PMS}" class="btn btn-default" />
+	</fieldset>
+</div>
+</form>
+<!-- IF HAS_RESULTS -->
+<div class="panel">
+	<div class="inner">
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<div class="clearfix"> 
+					<div class="pagination">
+							<li class="active"><a>{TOTAL_MESSAGES}</a></li>
+							<!-- IF .pagination -->
+								<!-- INCLUDE pagination.html -->
+							<!-- ELSE -->
+								 <li class="active"><a>{PAGE_NUMBER}</a></li>
+							<!-- ENDIF -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-forum">
+			<div class="panel-heading">
+				<i class="fa fa-bolt"></i>&nbsp;{L_MESSAGE}
+			</div>
+			<div class="panel-inner">
+				<table class="footable table table-striped table-primary table-hover">
+					<thead>
+						<tr>
+							<th data-class="expand">{L_TITLE}</th>
+							<th class="large10" data-hide="phone">{L_LAST_POST}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--<ul class="topiclist cplist pmlist responsive-show-all <!-- IF S_SHOW_RECIPIENTS -->missing-column<!-- ELSE -->two-columns<!-- ENDIF -->">-->
+						<!-- BEGIN pm_results -->
+						<tr>
+							<td>
+							<span class="desc-wrapper">
+								<div class="row<!-- IF pm_results.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF pm_results.PM_CLASS --> {pm_results.PM_CLASS}<!-- ENDIF -->">
+									<div class="row-item {pm_results.FOLDER_IMG_STYLE}">
+										<div<!-- IF pm_results.PM_ICON_URL and S_PM_ICONS --> style="background-image: url({pm_results.PM_ICON_URL}); background-repeat: no-repeat;"<!-- ENDIF -->>
+											<!-- IF pm_results.S_PM_UNREAD --><a href="{pm_results.U_VIEW_PM}" class="icon-link"></a><!-- ENDIF -->
+											<div class="list-inner">
+												<a href="{pm_results.U_VIEW_PM}" class="topictitle">{pm_results.SUBJECT}</a><br />
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td class="center">{L_MESSAGE_BY_AUTHOR} {pm_results.MESSAGE_AUTHOR_FULL} &raquo; {pm_results.SENT_TIME}</td>
+						</tr>
+						<!-- END pm_results -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<div class="clearfix"> 
+					<div class="pagination">
+						<li class="active"><a>{TOTAL_MESSAGES}</a></li>
+						<!-- IF .pagination -->
+							<!-- INCLUDE pagination.html -->
+						<!-- ELSE -->
+							 <li class="active"><a>{PAGE_NUMBER}</a></li>
+						<!-- ENDIF -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ENDIF -->
+<!-- INCLUDE ucp_footer.html -->

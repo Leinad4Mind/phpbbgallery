@@ -644,7 +644,7 @@ class pm_search_fulltext_native extends \phpbb\search\fulltext_native
 					$sql = (!$sql) ? $this->db->sql_build_query('SELECT', $sql_array_count) : $sql;
 
 					$result = $this->db->sql_query($sql);
-					$total_results = (int) $this->db->sql_fetchfield('total_results')+1;
+					$total_results = (int) $this->db->sql_fetchfield('total_results');
 					$this->db->sql_freeresult($result);
 
 					if (!$total_results)
@@ -691,7 +691,7 @@ class pm_search_fulltext_native extends \phpbb\search\fulltext_native
 			// Get the number of results as calculated by MySQL
 			$sql_count = 'SELECT FOUND_ROWS() as total_results';
 			$result = $this->db->sql_query($sql_count);
-			$total_results = (int) $this->db->sql_fetchfield('total_results')+1;
+			$total_results = (int) $this->db->sql_fetchfield('total_results');
 			$this->db->sql_freeresult($result);
 			if (!$total_results)
 			{
@@ -1141,7 +1141,7 @@ class pm_search_fulltext_native extends \phpbb\search\fulltext_native
 					$sql = (!$sql) ? $this->db->sql_build_query('SELECT', $sql_array_count) : $sql;
 
 					$result = $this->db->sql_query($sql);
-					$total_results = (int) $this->db->sql_fetchfield('total_results')+1;
+					$total_results = (int) $this->db->sql_fetchfield('total_results');
 					$this->db->sql_freeresult($result);
 
 					if (!$total_results)
@@ -1177,7 +1177,7 @@ class pm_search_fulltext_native extends \phpbb\search\fulltext_native
 			// Get the number of results as calculated by MySQL
 			$sql_count = 'SELECT FOUND_ROWS() as total_results';
 			$result = $this->db->sql_query($sql_count);
-			$total_results = (int) $this->db->sql_fetchfield('total_results')+1;
+			$total_results = (int) $this->db->sql_fetchfield('total_results');
 			$this->db->sql_freeresult($result);
 
 			if (!$total_results)

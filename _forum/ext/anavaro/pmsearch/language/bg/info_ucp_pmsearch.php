@@ -50,4 +50,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_FOR_NICK'	=> 'Търси за ник',
 	'SEARCH_WITH_USER'	=> 'Търси',
 	'SEARCH_WITH_USER_LANG'	=> 'Покажи кореспонденция с потребителя',
+
+	// Added in version 1.0.2
+	'SEARCH_USR_PLACEHOLDER'	=> 'Търсене на ключови думи или потребителско име…',
 ));

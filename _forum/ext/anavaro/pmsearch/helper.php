@@ -11,6 +11,33 @@ namespace anavaro\pmsearch;
 
 class helper
 {
+	/** @var \phpbb\extension\manager */
+	protected $ext_manager;
+
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbb\language\language */
+	protected $lang;
+
+	/** @var \phpbb\event\dispatcher */
+	protected $dispatcher;
+
+	/** @var string */
+	protected $root_path;
+
+	/** @var string */
+	protected $php_ext;
+
 	public function __construct(\phpbb\extension\manager $ext_manager, \phpbb\auth\auth $auth, \phpbb\config\config $config,
 		\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbb\event\dispatcher $dispatcher,
 		$phpbb_root_path, $phpEx)

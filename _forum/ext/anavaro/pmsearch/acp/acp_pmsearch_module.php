@@ -22,6 +22,8 @@ class acp_pmsearch_module
 	var $max_post_id;
 	var $batch_size = 200;
 	var $u_action;
+	var $tpl_name;
+	var $page_title;
 	function main($id, $mode)
 	{
 		global $config, $user, $table_prefix, $db, $template, $request, $phpbb_root_path, $phpbb_log, $phpbb_admin_path, $phpEx;
@@ -51,7 +53,7 @@ class acp_pmsearch_module
 				{
 					$config->set('pmsearch_search', 0);
 				}
-				else if ($pm_index == '2')
+				else if ($pm_search == '2')
 				{
 					$config->set('pmsearch_search', 1);
 				}
@@ -195,7 +197,7 @@ class acp_pmsearch_module
 
 					if ($this->search_helper->init_search($search_types[0], $search, $error) || !method_exists($search, 'index_created'))
 					{
-						continue;
+						break;
 					}
 
 					//Let's build normal

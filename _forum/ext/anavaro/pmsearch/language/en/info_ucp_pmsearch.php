@@ -50,4 +50,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_FOR_NICK'	=> 'Search with nick',
 	'SEARCH_WITH_USER'	=> 'Search',
 	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
+
+	// Added in version 1.0.2
+	'SEARCH_USR_PLACEHOLDER'	=> 'Search keywords or username…',
 ));
