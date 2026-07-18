@@ -18,7 +18,7 @@ class filetree
 		if ($file != '')
 		{
 			$string = @file_get_contents($file);
-			echo '<div class="filename">' . substr($file, strrpos($file, '/') + 1) . '</div><div class="filecontent">' .  highlight_string($string, true) . '</div>';
+			echo '<div class="filename">' . htmlspecialchars(basename($file)) . '</div><div class="filecontent">' .  highlight_string($string, true) . '</div>';
 			exit();
 		}
 		return false;

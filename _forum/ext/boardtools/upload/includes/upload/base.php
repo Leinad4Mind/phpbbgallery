@@ -166,7 +166,9 @@ abstract class base
 	{
 		if ($action == 'upload_local')
 		{
-			return $upload_dir . '/' . objects::$request->variable('local_upload', '');
+			// basename() prevents path traversal - a legitimate value is always
+			// a plain filename of a zip previously saved inside $upload_dir.
+			return $upload_dir . '/' . basename(objects::$request->variable('local_upload', ''));
 		}
 
 		if (!objects::$compatibility->filespec_get($file, 'filename'))

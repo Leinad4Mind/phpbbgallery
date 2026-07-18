@@ -36,6 +36,16 @@ class lang extends base
 			return false;
 		}
 
+		// Sanitize to prevent path traversal, mirroring the checks already applied
+		// in the delete_language flow (acp/upload_module.php).
+		$ext_name = str_replace('.', '', $ext_name);
+		$lang_name = basename(str_replace('.', '', $lang_name));
+		if (substr_count($ext_name, '/') !== 1)
+		{
+			files::catch_errors(objects::$user->lang('ERROR_LANGUAGE_NO_EXTENSION'));
+			return false;
+		}
+
 		$file = $this->proceed_upload($action);
 		if (!$file)
 		{

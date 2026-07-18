@@ -43,7 +43,14 @@ class upload_module
 		$file = $request->variable('file', '');
 		if ($file != '')
 		{
-			filetree::get_file($file);
+			// Only allow reading files that resolve inside ext/ - prevents arbitrary file
+			// disclosure (e.g. config.php) via a crafted 'file' parameter.
+			$real_base = realpath($phpbb_root_path . 'ext');
+			$real_file = realpath($file);
+			if ($real_base !== false && $real_file !== false && strpos($real_file, $real_base . DIRECTORY_SEPARATOR) === 0)
+			{
+				filetree::get_file($real_file);
+			}
 		}
 
 		// This is the dir where we will store zip files of extensions.
@@ -305,7 +312,9 @@ class upload_module
 				{
 					$download_name = substr($zip_name, 0, -4);
 					// Ensure that downloads can be done only from the $zip_dir directory.
-					$download_name = str_replace('../', '', $download_name);
+					// basename() strips any directory component in one pass (str_replace('../', '')
+					// was bypassable with sequences like '....//').
+					$download_name = basename($download_name);
 					$filename = objects::$zip_dir . '/' . $download_name;
 
 					$mimetype = 'application/zip';
@@ -398,8 +407,6 @@ class upload_module
 					'SET_FORCE_UNSTABLE'   => objects::$request->variable('set_force_unstable', false),
 					'U_ACTION_LIST'        => objects::$u_action . '&amp;action=list',
 				));
-
-				add_form_key('version_check_settings');
 			break;
 
 			case 'delete_ext':

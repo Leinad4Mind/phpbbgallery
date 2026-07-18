@@ -85,9 +85,7 @@ class zip extends \phpbb\files\types\base
 
 		$url = parse_url($upload_url);
 
-		$host = $url['host'];
 		$path = $url['path'];
-		$port = (!empty($url['port'])) ? (int) $url['port'] : 80;
 
 		$upload_ary['type'] = 'application/octet-stream';
 

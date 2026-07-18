@@ -13,6 +13,11 @@ class filedownload
 {
 	public static function download_file($filename, $download_name, $mimetype)
 	{
+		// Defense in depth: header values must never contain path separators or CR/LF,
+		// even though current call sites already pass sanitized names.
+		$download_name = basename(str_replace(array("\r", "\n"), '', $download_name));
+		$mimetype = str_replace(array("\r", "\n"), '', $mimetype);
+
 		header('Cache-Control: private, no-cache');
 		header("Content-Type: $mimetype; name=\"$download_name.zip\"");
 		header("Content-disposition: attachment; filename=$download_name.zip");

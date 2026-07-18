@@ -609,7 +609,8 @@ class extensions
 		{
 			include(objects::$phpbb_root_path . 'includes/functions_compress.' . objects::$phpEx);
 		}
-		$zip = new \compress_zip('r', objects::$zip_dir . '/' . $zip_file);
+		// basename() prevents path traversal via a crafted 'archive' request parameter.
+		$zip = new \compress_zip('r', objects::$zip_dir . '/' . basename($zip_file));
 		$zip->extract($ext_tmp . '/');
 		$zip->close();
 
