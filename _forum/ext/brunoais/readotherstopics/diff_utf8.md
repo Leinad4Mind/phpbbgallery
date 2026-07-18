@@ -1,4 +1,4 @@
-﻿diff --git "a/brunoais\\readotherstopics/.travis.yml" "b/brunoais\\readotherstopics/.travis.yml"
+diff --git "a/brunoais\\readotherstopics/.travis.yml" "b/brunoais\\readotherstopics/.travis.yml"
 deleted file mode 100644
 index 0af81ea6c..000000000
 --- "a/brunoais\\readotherstopics/.travis.yml"
