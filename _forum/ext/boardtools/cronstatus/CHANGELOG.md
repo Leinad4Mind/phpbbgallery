@@ -2,6 +2,20 @@ Cron Status - Changelog
 =======================
 This file contains the list of changes between different versions of Cron Status extension.
 
+# Version 3.3.1
+## Changes since 3.3.0
+### Security
+* [CODE] Fixed reflected/persisted XSS via the `sk`/`sd` sort parameters (now whitelisted) and the `cron_type` parameter (now validated against real registered Cron tasks and escaped) in the ACP module.
+
+### Bug fixes
+* [CODE] Fixed a PHP 8 `Undefined array key` warning when `cronstatus_default_sort` is empty or malformed.
+* [CODE] Fixed `strpos()` calls used as booleans without `!== false` in `cronstatus_helper.php`, which could silently misclassify third-party Cron tasks.
+* [CODE] Fixed a missing `var` declaration creating an implicit global in `cronstatus.js`.
+
+### Housekeeping
+* [CODE] Removed dead `.travis.yml` (Travis CI was discontinued in 2021).
+* [LANGUAGE] Added European Portuguese translations (`pt` and `pt_preao`, pre/post Orthographic Agreement).
+
 # Version 3.3.0
 ## Changes since 3.1.3
 ### Bug fixes

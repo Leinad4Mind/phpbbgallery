@@ -78,7 +78,7 @@
 	$('#date').text(getISODateTime());
 
 	function run_cron(event) {
-		cron_run = this;
+		var cron_run = this;
 		var cron_task = this.id;
 		$("#run_cron_task").attr("src", cron_url + "&cron_type=" + cron_task);
 		$(".cron_run").css("display", "none");

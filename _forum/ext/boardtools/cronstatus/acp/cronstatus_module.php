@@ -51,10 +51,19 @@ class cronstatus_module
 		$this->tpl_name = 'acp_cronstatus';
 		$user->add_lang_ext('boardtools/cronstatus', 'cronstatus');
 
-		list($sk_config, $sd_config) = explode("|", $config['cronstatus_default_sort']);
+		// Whitelists for sk/sd: these are reflected unescaped into HTML links and meta refresh URLs
+		// (see acp_cronstatus.html and the CRON_TASK_RUN link below), so only known-safe values are allowed through.
+		$valid_sort_keys = array('display_name', 'task_date', 'new_date');
+		$valid_sort_dirs = array('a', 'd');
+
+		list($sk_config, $sd_config) = array_pad(explode("|", $config['cronstatus_default_sort']), 2, '');
+		$sk_config = in_array($sk_config, $valid_sort_keys, true) ? $sk_config : 'display_name';
+		$sd_config = in_array($sd_config, $valid_sort_dirs, true) ? $sd_config : 'a';
 
 		$sk = $request->variable('sk', $sk_config);
 		$sd = $request->variable('sd', $sd_config);
+		$sk = in_array($sk, $valid_sort_keys, true) ? $sk : $sk_config;
+		$sd = in_array($sd, $valid_sort_dirs, true) ? $sd : $sd_config;
 
 		if ($sk != $sk_config || $sd != $sd_config)
 		{
@@ -89,10 +98,24 @@ class cronstatus_module
 				$view_table = $request->variable('table', false);
 				$cron_type = $request->variable('cron_type', '');
 
+				// cron_type ends up in an <img src="..."> attribute, so only a real, known task name is accepted.
+				if ($cron_type)
+				{
+					$valid_task_names = array();
+					foreach ($phpbb_container->get('cron.manager')->get_tasks() as $task)
+					{
+						$valid_task_names[] = $task->get_name();
+					}
+					if (!in_array($cron_type, $valid_task_names, true))
+					{
+						$cron_type = '';
+					}
+				}
+
 				if (!($request->is_ajax()) && $cron_type)
 				{
 					$url = append_sid($phpbb_root_path . 'cron.' . $phpEx, 'cron_type=' . $cron_type);
-					$template->assign_var('RUN_CRON_TASK', '<img src="' . $url . '" width="1" height="1" alt="" />');
+					$template->assign_var('RUN_CRON_TASK', '<img src="' . htmlspecialchars($url) . '" width="1" height="1" alt="" />');
 					meta_refresh(60, $this->u_action . '&amp;sk=' . $sk . '&amp;sd=' . $sd);
 				}
 
