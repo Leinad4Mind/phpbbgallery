@@ -1,0 +1,64 @@
+﻿services:
+    brunoais.readotherstopics.shared.permission_evaluation:
+        class: brunoais\readotherstopics\shared\permission_evaluation
+        arguments:
+            - '@auth'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '%tables.topics%'
+            - '%tables.posts%'
+    brunoais.readotherstopics.event.main_listener:
+        class: brunoais\readotherstopics\event\main_listener
+        arguments:
+            - '@auth'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@brunoais.readotherstopics.shared.permission_evaluation'
+            - '%tables.topics%'
+        tags:
+            - { name: event.listener }
+    brunoais.readotherstopics.event.mcp_listener:
+        class: brunoais\readotherstopics\event\mcp_listener
+        arguments:
+            - '@auth'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@brunoais.readotherstopics.shared.permission_evaluation'
+            - '%tables.topics%'
+            - '%tables.posts%'
+        tags:
+            - { name: event.listener }
+    brunoais.readotherstopics.event.search_listener:
+        class: brunoais\readotherstopics\event\search_listener
+        arguments:
+            - '@auth'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '@brunoais.readotherstopics.shared.permission_evaluation'
+            - '%tables.topics%'
+        tags:
+            - { name: event.listener }
+    brunoais.readotherstopics.event.language_listener:
+        class: brunoais\readotherstopics\event\language_listener
+        tags:
+            - { name: event.listener }
+    
+    message.form.topic:
+        class: brunoais\readotherstopics\overrides\message\topic_form
+        arguments:
+            - '@brunoais.readotherstopics.shared.permission_evaluation'
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        
