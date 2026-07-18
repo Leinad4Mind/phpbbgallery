@@ -24,6 +24,7 @@ class upload_module
 {
 	public $u_action;
 	public $tpl_name;
+	public $page_title;
 	public $main_link;
 	public $back_link;
 	public $zip_dir = '';
