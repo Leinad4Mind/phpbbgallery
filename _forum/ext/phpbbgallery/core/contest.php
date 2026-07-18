@@ -147,6 +147,10 @@ class contest
 		$third = $this->db->sql_fetchfield('image_id');
 		$this->db->sql_freeresult($result);
 
+		$first = (int) $first;
+		$second = (int) $second;
+		$third = (int) $third;
+
 		$sql = 'UPDATE ' . $this->contest_table . '
 			SET contest_marked = ' . $this->NO_CONTEST . ",
 				contest_first = $first,
@@ -158,19 +162,19 @@ class contest
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 1
-			WHERE image_id = ' . (int) $first;
+			WHERE image_id = ' . $first;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 2
-			WHERE image_id = ' . (int) $second;
+			WHERE image_id = ' . $second;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 3
-			WHERE image_id = ' . (int) $third;
+			WHERE image_id = ' . $third;
 		$this->db->sql_query($sql);
 
 		$this->gallery_config->inc('contests_ended', 1);

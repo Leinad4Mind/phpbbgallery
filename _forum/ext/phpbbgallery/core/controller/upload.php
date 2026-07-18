@@ -179,6 +179,7 @@ class upload
 		}
 		$submit = $this->request->variable('submit', false);
 		$mode = $this->request->variable('mode', 'upload');
+		$username = '';
 		// So let's see if we have AJAX and use jQuery shit.
 		// We are going to use ajax upload only for registered users.
 		// Anons should suffer.

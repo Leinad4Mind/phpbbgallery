@@ -191,6 +191,10 @@ class search
 
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 't';
+		}
 		$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		// We will build SQL array and then build query (easily change count with rq)
@@ -200,6 +204,7 @@ class search
 		);
 		if ($keywords || $username || $user_id || $search_id || $submit)
 		{
+			$user_id_ary = array();
 			// Let's resolve username to user id ... or array of them.
 			if ($username)
 			{
@@ -305,6 +310,7 @@ class search
 
 			$sql = $this->db->sql_build_query('SELECT', $sql_array);
 			$result = $this->db->sql_query_limit($sql, $this->gallery_config->get('items_per_page'), $start);
+			$rowset = array();
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$rowset[] = $row;

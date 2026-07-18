@@ -599,7 +599,7 @@ class display
 			{
 				$album_ids_moderator[] = $root_data['album_id'];
 			}
-			$this->get_moderators($album_moderators);
+			$album_moderators = $this->get_moderators($album_ids_moderator);
 		}
 
 		// Used to tell whatever we have to create a dummy category or not.

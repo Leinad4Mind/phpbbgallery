@@ -38,6 +38,13 @@ class main_module
 		global $db, $template, $user, $phpbb_dispatcher, $phpbb_container, $gallery_url, $request, $table_prefix ,$gallery_config, $gallery_album, $request;
 
 		$import_schema = $request->variable('import_schema', '');
+		// import_schema is always generated as md5($start_time) (see create_import_schema()) and is
+		// used to build an include()d file path, so anything that isn't that exact shape is rejected
+		// to close off local file inclusion / path traversal via this parameter.
+		if ($import_schema && !preg_match('/^[a-f0-9]{32}$/', $import_schema))
+		{
+			$import_schema = '';
+		}
 		$images = $request->variable('images', array(''), true);
 
 		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
@@ -65,7 +72,7 @@ class main_module
 				*/
 
 				$image_src = str_replace("{{$import_schema}}", "'", $image_src);
-				$image_src_full = $gallery_url->path('import') . utf8_decode($image_src);
+				$image_src_full = $gallery_url->path('import') . mb_convert_encoding($image_src, 'ISO-8859-1', 'UTF-8');
 				if (file_exists($image_src_full))
 				{
 					$filetype = getimagesize($image_src_full);
@@ -138,7 +145,7 @@ class main_module
 
 					if (!$error_occurred)
 					{
-						@chmod($file_link, 0777);
+						@chmod($file_link, 0644);
 
 						$sql_ary = array(
 							'image_filename' 		=> $image_filename,
@@ -158,7 +165,10 @@ class main_module
 
 						$image_tools = $phpbb_container->get('phpbbgallery.core.file.tool');
 						$image_tools->set_image_options($gallery_config->get('max_filesize'), $gallery_config->get('max_height'), $gallery_config->get('max_width'));
-						$image_tools->set_image_data($file_link);
+						// force_empty_image=true resets the shared file.tool's state (image/resized/rotated/watermarked)
+						// between loop iterations - without it, images after the first oversized one in a batch
+						// get the previous image's stale GD buffer written to their destination file.
+						$image_tools->set_image_data($file_link, '', 0, true);
 
 						$additional_sql_data = [];
 

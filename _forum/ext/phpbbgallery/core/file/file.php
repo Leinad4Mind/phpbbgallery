@@ -25,6 +25,10 @@ class file
 	const THUMBNAIL_INFO_HEIGHT = 16;
 	const GDLIB1 = 1;
 	const GDLIB2 = 2;
+	// Decompression-bomb guard: GD must allocate the full pixel buffer before it can resize
+	// anything down, so a file whose declared dimensions exceed this is rejected before decode,
+	// regardless of the configured max_width/max_height (which only bound the *output* size).
+	const MAX_DECODE_PIXELS = 40000000;
 
 	public $chmod = 0644;
 
@@ -169,28 +173,6 @@ class file
 			return false;
 		}
 
-		switch (utf8_substr(strtolower($this->image_source), -4))
-		{
-			case '.png':
-				$this->image_type = 'png';
-				$this->image = @imagecreatefrompng($this->image_source);
-				imagealphablending($this->image, true); // Set alpha blending on ...
-				imagesavealpha($this->image, true); // ... and save alpha blending!
-			break;
-			case 'webp':
-				$this->image_type = 'webp';
-				$this->image = imagecreatefromwebp($this->image_source);
-			break;
-			case '.gif':
-				$this->image_type = 'gif';
-				$this->image = imagecreatefromgif($this->image_source);
-			break;
-			default:
-				$this->image_type = 'jpeg';
-				$this->image = imagecreatefromjpeg($this->image_source);
-			break;
-		}
-
 		$file_size = 0;
 		if (isset($this->image_size['file']))
 		{
@@ -201,13 +183,58 @@ class file
 			$file_size = @filesize($this->image_source);
 		}
 
-		$image_size = getimagesize($this->image_source);
+		// getimagesize() only parses the header, so it's safe to call before any GD decode.
+		$image_size = @getimagesize($this->image_source);
+		if ($image_size === false)
+		{
+			$this->image = false;
+			return false;
+		}
 
 		$this->image_size['file'] = $file_size;
 		$this->image_size['width'] = $image_size[0];
 		$this->image_size['height'] = $image_size[1];
-
 		$this->image_content_type = $image_size['mime'];
+
+		if (($image_size[0] * $image_size[1]) > self::MAX_DECODE_PIXELS)
+		{
+			$this->image = false;
+			return false;
+		}
+
+		switch ($image_size['mime'])
+		{
+			case 'image/png':
+				$this->image_type = 'png';
+				$this->image = @imagecreatefrompng($this->image_source);
+			break;
+			case 'image/webp':
+				$this->image_type = 'webp';
+				$this->image = @imagecreatefromwebp($this->image_source);
+			break;
+			case 'image/gif':
+				$this->image_type = 'gif';
+				$this->image = @imagecreatefromgif($this->image_source);
+			break;
+			case 'image/jpeg':
+				$this->image_type = 'jpeg';
+				$this->image = @imagecreatefromjpeg($this->image_source);
+			break;
+			default:
+				$this->image = false;
+			break;
+		}
+
+		if ($this->image === false)
+		{
+			return false;
+		}
+
+		if ($this->image_type == 'png')
+		{
+			imagealphablending($this->image, true); // Set alpha blending on ...
+			imagesavealpha($this->image, true); // ... and save alpha blending!
+		}
 	}
 
 	/**
@@ -321,6 +348,10 @@ class file
 		if (!$this->image)
 		{
 			$this->read_image();
+			if (!$this->image)
+			{
+				return;
+			}
 		}
 
 		if (($this->image_size['height'] <= $max_height) && ($this->image_size['width'] <= $max_width))
@@ -385,6 +416,10 @@ class file
 		if (!$this->image)
 		{
 			$this->read_image();
+			if (!$this->image)
+			{
+				return;
+			}
 		}
 		if ((($angle / 90) % 2) == 1)
 		{
@@ -431,6 +466,10 @@ class file
 		if (!$this->image)
 		{
 			$this->read_image();
+			if (!$this->image)
+			{
+				return;
+			}
 		}
 
 		if (($min_height && ($this->image_size['height'] < $min_height)) || ($min_width && ($this->image_size['width'] < $min_width)))
@@ -444,6 +483,10 @@ class file
 		{
 			$this->image_source = $get_wm_name;
 			$this->read_image();
+			if (!$this->image)
+			{
+				return;
+			}
 		}
 		else
 		{
@@ -495,6 +538,10 @@ class file
 			$this->write_image($get_wm_name);
 			$this->image_source = $get_wm_name;
 			$this->read_image();
+			if (!$this->image)
+			{
+				return;
+			}
 		}
 		$this->watermarked = true;
 	}

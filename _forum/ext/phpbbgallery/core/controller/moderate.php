@@ -229,10 +229,15 @@ class moderate
 				if ($action == 'approve')
 				{
 					$count = 0;
-					foreach ($approve_ary as $album_id => $approve_array)
+					foreach ($approve_ary as $target_album_id => $approve_array)
 					{
-						$this->image->approve_images($approve_array, $album_id);
-						$this->album->update_info($album_id);
+						$target_album = $this->album->get_info($target_album_id);
+						if (!$this->gallery_auth->acl_check('m_status', $target_album['album_id'], $target_album['album_user_id']))
+						{
+							continue;
+						}
+						$this->image->approve_images($approve_array, $target_album_id);
+						$this->album->update_info($target_album_id);
 						$count = $count + count($approve_array);
 					}
 
@@ -243,14 +248,19 @@ class moderate
 				if ($action == 'disapprove')
 				{
 					$count = 0;
-					foreach ($approve_ary as $album_id => $delete_array)
+					foreach ($approve_ary as $target_album_id => $delete_array)
 					{
+						$target_album = $this->album->get_info($target_album_id);
+						if (!$this->gallery_auth->acl_check('m_status', $target_album['album_id'], $target_album['album_user_id']))
+						{
+							continue;
+						}
 						// Let's load info for images, so we can
 						$filenames = $this->image->get_filenames($delete_array);
 						// Let's log the action
 						foreach ($filenames as $name)
 						{
-							$this->gallery_log->add_log('moderator', 'disapprove', $album_id, 0, array('LOG_GALLERY_DISAPPROVED', $name));
+							$this->gallery_log->add_log('moderator', 'disapprove', $target_album_id, 0, array('LOG_GALLERY_DISAPPROVED', $name));
 						}
 						$this->moderate->delete_images($delete_array);
 						$count = $count + count($delete_array);
@@ -353,6 +363,25 @@ class moderate
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
+		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
+		if ($album_id === 0)
+		{
+			if (!$this->gallery_auth->acl_check_global('m_report'))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			}
+		}
+		else
+		{
+			$album = $this->album->get_info($album_id);
+			if (!$this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			}
+		}
+
 		if (!empty($report_ary))
 		{
 			if (confirm_box(true))
@@ -371,24 +400,6 @@ class moderate
 					$s_hidden_fields .= '<input type="hidden" name="report[]" value="' . $var . '" />';
 				}
 				confirm_box(false, $this->language->lang('REPORTS_A_CLOSE2_CONFIRM'), $s_hidden_fields);
-			}
-		}
-		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
-		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
-		if ($album_id === 0)
-		{
-			if (!$this->gallery_auth->acl_check_global('m_report'))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
-		}
-		else
-		{
-			$album = $this->album->get_info($album_id);
-			if (!$this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 			}
 		}
 
@@ -424,9 +435,60 @@ class moderate
 		$action = $this->request->variable('select_action', '');
 		$back_link = $this->request->variable('back_link', $this->helper->route('phpbbgallery_core_moderate_view', array('album_id' => $album_id)));
 		$moving_target = $this->request->variable('moving_target', '');
+
+		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
+		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
+		if ($album_id === 0)
+		{
+			if (!$this->gallery_auth->acl_check_global('m_'))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			}
+		}
+		else
+		{
+			$album = $this->album->get_info($album_id);
+			if (!$this->gallery_auth->acl_check('m_', $album['album_id'], $album['album_user_id']))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			}
+		}
+
 		if (!empty($actions_array))
 		{
-			if (confirm_box(true) || $moving_target)
+			// Each moderator action requires its own specific permission bit,
+			// the generic 'm_' checked above only gates access to this page.
+			$action_permission = array(
+				'approve'	=> 'm_status',
+				'unapprove'	=> 'm_status',
+				'lock'		=> 'm_status',
+				'delete'	=> 'm_delete',
+				'move'		=> 'm_move',
+				'report'	=> 'm_report',
+			);
+			if (isset($action_permission[$action]))
+			{
+				$has_permission = ($album_id === 0)
+					? $this->gallery_auth->acl_check_global($action_permission[$action])
+					: $this->gallery_auth->acl_check($action_permission[$action], $album['album_id'], $album['album_user_id']);
+				if (!$has_permission)
+				{
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				}
+			}
+
+			// The move flow has its own two-step UI (pick target album, then submit)
+			// instead of phpBB's confirm_box, so it needs its own CSRF token check.
+			if ($action == 'move' && $moving_target && !confirm_box(true))
+			{
+				if (!check_form_key('gallery'))
+				{
+					trigger_error('FORM_INVALID');
+				}
+			}
+
+			if (confirm_box(true) || ($action == 'move' && $moving_target))
 			{
 				$message = '';
 				switch ($action)
@@ -488,6 +550,7 @@ class moderate
 				}
 				if ($action == 'move')
 				{
+					add_form_key('gallery');
 					$category_select = $this->album->get_albumbox(false, 'moving_target', $album_id, 'm_move', $album_id);
 					$this->template->assign_vars(array(
 						'S_MOVING_IMAGES'	=> true,
@@ -500,24 +563,6 @@ class moderate
 				{
 					confirm_box(false, $this->language->lang('QUEUES_A_' . strtoupper($action) . '2_CONFIRM'), $s_hidden_fields);
 				}
-			}
-		}
-		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
-		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
-		if ($album_id === 0)
-		{
-			if (!$this->gallery_auth->acl_check_global('m_'))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
-		}
-		else
-		{
-			$album = $this->album->get_info($album_id);
-			if (!$this->gallery_auth->acl_check('m_', $album['album_id'], $album['album_user_id']))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 			}
 		}
 		$this->template->assign_vars(array(
@@ -579,6 +624,15 @@ class moderate
 				$redirect->send();
 			break;
 			case 'reports_close':
+				$reports_close_image_data = $this->image->get_image_data($image_id);
+				$reports_close_album_data = $this->album->get_info($reports_close_image_data['image_album_id']);
+				$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+				if (!$this->gallery_auth->acl_check('m_report', $reports_close_album_data['album_id'], $reports_close_album_data['album_user_id']))
+				{
+					$album_backlink = $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $image_id));
+					$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				}
 				if (confirm_box(true))
 				{
 					$back_link =  $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $image_id));

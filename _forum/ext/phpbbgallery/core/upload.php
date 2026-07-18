@@ -441,7 +441,7 @@ class upload
 			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), implode('<br />&raquo; ', $this->file->error)));
 			return false;
 		}
-		@chmod($this->file->get('destination_file'), 0655);
+		@chmod($this->file->get('destination_file'), 0644);
 		$additional_sql_data = array();
 		$file = $this->file;
 
@@ -458,6 +458,15 @@ class upload
 
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($this->file->get('destination_file'), '', $this->file->get('filesize'), true);
+
+		// Reject decompression-bomb uploads (huge declared pixel dimensions in a small file)
+		// before any rotate/resize attempt tries to decode the full image into memory.
+		if (($this->file->get('width') * $this->file->get('height')) > \phpbbgallery\core\file\file::MAX_DECODE_PIXELS)
+		{
+			$this->file->remove();
+			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('UPLOAD_IMAGE_SIZE_TOO_BIG')));
+			return false;
+		}
 
 		// Rotate the image
 		if ($this->gallery_config->get('allow_rotate') && $this->get_rotating())
