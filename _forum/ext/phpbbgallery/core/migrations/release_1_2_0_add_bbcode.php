@@ -1,15 +1,20 @@
 <?php
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\migrations;
 
-class release_1_2_0_add_bbcode extends \phpbb\db\migration\migration
+use phpbb\db\migration\migration;
+
+class release_1_2_0_add_bbcode extends migration
 {
 	static public function depends_on()
 	{

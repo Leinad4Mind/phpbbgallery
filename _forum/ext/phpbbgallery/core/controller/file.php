@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
 
@@ -172,6 +174,7 @@ class file
 		$this->path = $this->path_medium;
 		$this->load_data($image_id);
 		$this->check_auth();
+
 		$this->generate_image_src();
 
 		if (!file_exists($this->image_src))
@@ -287,7 +290,7 @@ class file
 			$this->data['album_watermark'] = 0;
 		}
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id']) || (
-				!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id']) 
+				!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
 				&& $this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
 				&& $this->data['image_user_id'] != $this->user->data['user_id']
 			))
@@ -423,7 +426,6 @@ class file
 		}
 
 		return $response;
-
 	}
 
 	protected function resize($image_id, $resize_width, $resize_height, $store_filesize = '', $put_details = false)

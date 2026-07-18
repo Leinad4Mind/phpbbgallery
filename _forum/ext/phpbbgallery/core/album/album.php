@@ -1,11 +1,12 @@
 <?php
-
 /**
+ * phpBB Gallery - Core Extension
  *
- * @package       PhpBB Gallery
- * @copyright (c) 2017 Lucifer
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
  */
 
 namespace phpbbgallery\core\album;
@@ -295,11 +296,11 @@ class album
 					$disabled = (!$disabled) ? $requested_personal : $disabled;
 				}
 			}
-			if (($album_user_id != \phpbbgallery\core\block::PUBLIC_ALBUM) && ($album_user_id != $row['album_user_id']))
+			if (($album_user_id != (int) \phpbbgallery\core\block::PUBLIC_ALBUM) && ($album_user_id != $row['album_user_id']))
 			{
 				$list = false;
 			}
-			else if (($album_user_id != \phpbbgallery\core\block::PUBLIC_ALBUM) && ($row['parent_id'] == 0))
+			else if (($album_user_id != (int) \phpbbgallery\core\block::PUBLIC_ALBUM) && ($row['parent_id'] == 0))
 			{
 				$disabled = true;
 			}
@@ -433,8 +434,8 @@ class album
 			'album_desc_options'     => 7,
 			'album_desc'             => '',
 			'album_parents'          => '',
-			'album_type'             => \phpbbgallery\core\block::TYPE_UPLOAD,
-			'album_status'           => \phpbbgallery\core\block::ALBUM_OPEN,
+			'album_type'             => (int) \phpbbgallery\core\block::TYPE_UPLOAD,
+			'album_status'           => (int) \phpbbgallery\core\block::ALBUM_OPEN,
 			'album_user_id'          => (int) $user_id,
 			'album_last_username'    => '',
 			'album_last_user_colour' => $user_colour,
@@ -473,7 +474,7 @@ class album
 	{
 		$sql = 'SELECT album_id
 				FROM ' . $this->albums_table . '
-				WHERE album_user_id = ' . \phpbbgallery\core\block::PUBLIC_ALBUM;
+				WHERE album_user_id = ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM;
 		$result = $this->db->sql_query($sql);
 		$id_ary = array();
 		while ($row = $this->db->sql_fetchrow($result))

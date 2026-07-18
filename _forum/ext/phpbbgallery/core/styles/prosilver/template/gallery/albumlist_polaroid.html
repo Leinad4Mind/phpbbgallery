@@ -18,7 +18,6 @@
 			<!-- IF albumrow.UC_THUMBNAIL -->
 			<a href="{albumrow.U_VIEWALBUM}" class="polaroid_img_container"><img src="{albumrow.UC_THUMBNAIL}" alt="{albumrow.UC_IMAGE_NAME}" title="{L_VIEW_ALBUM}{albumrow.UC_IMAGE_NAME}" /></a>
 			<!-- ENDIF -->
-
 			<hr />
 			{L_IMAGES}{L_COLON} <strong>{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></strong><br />
 
@@ -52,7 +51,7 @@
 							<li>
 								<a href="{albumrow.subalbum.U_SUBALBUM}" class="subforum<!-- IF albumrow.subalbum.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->" title="<!-- IF albumrow.subalbum.UNREAD -->{L_UNREAD_IMAGES}<!-- ELSE -->{L_NO_UNREAD_IMAGES}<!-- ENDIF -->"><i class="icon fa-image fa-fw icon-md" aria-hidden="true"></i> {albumrow.subalbum.SUBALBUM_NAME}</a><!-- IF not albumrow.subalbum.S_LAST_ROW --><!-- ENDIF -->
 							</li>
-							<!-- END subalbum -->
+						<!-- END subalbum -->
 						</div>
 					</div>
 				</div>

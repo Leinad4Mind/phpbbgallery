@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* gallery_mcp [Spanish]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -54,9 +54,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE' 				=> 'Eliminar imagen',
 	'QUEUE_A_DELETE2' 				=> '¿Eliminar imagen?',
 	'QUEUE_A_DELETE2_CONFIRM' 		=> '¿Está seguro de que desea eliminar esta imagen?',
-	'QUEUE_A_LOCK' 					=> 'Bloquear imagen',
-	'QUEUE_A_LOCK2' 				=> '¿Bloquear imagen?',
-	'QUEUE_A_LOCK2_CONFIRM' 		=> '¿Seguro que quieres bloquear esta imagen?',
+	'QUEUE_A_LOCK' 					=> 'Bloquear comentarios de la imagen',
+	'QUEUE_A_LOCK2' 				=> '¿Aprobar y bloquear comentarios de la imagen?',
+	'QUEUE_A_LOCK2_CONFIRM' 		=> '¿Está seguro de que desea aprobar y bloquear los comentarios de esta imagen?',
 	'QUEUE_A_MOVE' 					=> 'Mover imagen',
 	'QUEUE_A_UNAPPROVE' 			=> 'No aprobar imagen',
 	'QUEUE_A_UNAPPROVE2' 			=> '¿Aprobar la imagen?',

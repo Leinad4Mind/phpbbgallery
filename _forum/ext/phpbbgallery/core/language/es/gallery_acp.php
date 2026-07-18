@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* gallery_acp [Spanish]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -140,8 +140,8 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_IMAGES'			=> 'Mostrar el contador de imágenes en viewtopic.' . $phpEx,
 	'DISP_VIEWTOPIC_LINK'			=> 'Vincular imagen-contador a las imágenes del usuario',
 	'DISP_WHOISONLINE'				=> 'Mostrar "Quién está en línea"',
-	'DISPLAY_IN_RRC'				=> 'Muestra las imágenes de este álbum en imágenes “Recientes-Aleatorias“',
-	'DONT_COPY_PERMISSIONS'			=> 'No copiar permisos',
+	'DISPLAY_IN_RRC'					=> 'Muestra las imágenes de este álbum en imágenes “Recientes-Aleatorias“',
+	'DO_NOT_COPY_PERMISSIONS'		=> 'No copiar permisos',
 
 	'EDIT_ALBUM'					=> 'Editar álbum',
 
@@ -155,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'					=> 'Galería-Índice',
 	'GALLERY_PURGE_CACHE_EXPLAIN'	=> 'Si utiliza la función de caché de miniaturas, debe borrar la caché de miniaturas después de cambiar la configuración de las miniaturas en "Configuración de galería" para que se regeneren.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Resync personal albums to profile fields',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'					=> 'Estadísticas de la galería',
 	'GALLERY_VERSION'				=> 'Versión de la galería',
@@ -284,7 +284,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'			=> 'Conteo de imágenes recientes',
 	'PHPBB_INTEGRATION'				=> 'Integración de phpBB',
 	'PNG_ALLOWED'					=> 'Permitido subir archivos PNG',
-	'WEBP_ALLOWED'					=> 'Allowed to upload WEBP files',
+	'WEBP_ALLOWED'					=> 'Permitido subir archivos WEBP',
 	'PURGED_CACHE'					=> 'Purgó la caché',
 
 	'RATE_SCALE'					=> 'Escala de calificación',

@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* gallery_mcp [Bulgarian]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2015 Lucifer lucifer@anavaro.com http://www.anavaro.com
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Bulgarian Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Lucifer <https://www.anavaro.com>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -54,9 +54,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Изтрий изображение',
 	'QUEUE_A_DELETE2'				=> 'Изтрий изображение?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Сигурен ли сте, че искате да изтриете това изобаение?',
-	'QUEUE_A_LOCK'					=> 'Заключи изображение',
-	'QUEUE_A_LOCK2'					=> 'Заключи изображение?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Сигурен ли сте, че искате да заключите това изображение?',
+	'QUEUE_A_LOCK'					=> 'Заключване на коментари към изображение',
+	'QUEUE_A_LOCK2'					=> 'Да одобрите и заключите коментарите към изображението?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Сигурен ли сте, че искате да одобрите и блокирате коментарите за тази снимка?',
 	'QUEUE_A_MOVE'					=> 'Премести изображение',
 	'QUEUE_A_UNAPPROVE'				=> 'Махни одобрение на изборажение',
 	'QUEUE_A_UNAPPROVE2'			=> 'Махни одобрение на изборажение?',

@@ -1,15 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: lucifer
- * Date: 17.9.2017 г.
- * Time: 0:44
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
  */
 
 namespace phpbbgallery\core\migrations;
 
+use phpbb\db\migration\profilefield_base_migration;
 
-class release_3_2_1_0 extends \phpbb\db\migration\profilefield_base_migration
+class release_3_2_1_0 extends profilefield_base_migration
 {
 	static public function depends_on()
 	{

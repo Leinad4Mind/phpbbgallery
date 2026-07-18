@@ -1,19 +1,21 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core;
 
 class rating
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\driver\driver_interface
 	*/
 	protected $db;
 
@@ -307,7 +309,7 @@ class rating
 	{
 		return $this->gallery_auth->acl_check('i_rate', $this->album_data('album_id'), $this->album_data('album_user_id')) &&
 			($this->user->data['user_id'] != $this->image_data('image_user_id')) && ($this->user->data['user_id'] != ANONYMOUS) &&
-			($this->album_data('album_status') != \phpbbgallery\core\block::ALBUM_LOCKED) && ($this->image_data('image_status') == (int) \phpbbgallery\core\block::STATUS_APPROVED);
+			($this->album_data('album_status') != (int) \phpbbgallery\core\block::ALBUM_LOCKED) && ($this->image_data('image_status') == (int) \phpbbgallery\core\block::STATUS_APPROVED);
 	}
 
 	/**

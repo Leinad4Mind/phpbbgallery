@@ -1,11 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery Extension
-* @copyright (c) 2014 Lucifer
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
 namespace phpbbgallery\core\notification;
 
 use Symfony\Component\DependencyInjection\Container;
@@ -62,7 +65,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $album_data['album_id'],
+					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'uploader'	=> $target['uploader'],
@@ -75,7 +78,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $album_data['album_id'],
+					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
@@ -87,7 +90,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $album_data['album_id'],
+					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
@@ -99,7 +102,7 @@ class helper
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = array(
 					'user_ids' => $targets,
-					'album_id' => $album_data['album_id'],
+					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),

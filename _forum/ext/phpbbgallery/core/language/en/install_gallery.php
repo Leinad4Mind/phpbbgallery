@@ -1,18 +1,17 @@
 <?php
 /**
-*
-* install_gallery [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -42,19 +41,19 @@ $lang = array_merge($lang, array(
 	'CONVERTED_ALBUMS'			=> 'The albums were successful copied.',
 	'CONVERTED_COMMENTS'		=> 'The comments were successful copied.',
 	'CONVERTED_IMAGES'			=> 'The images were successful copied.',
-	'CONVERTED_MISC'			=> 'Converted miscellanious things.',
+	'CONVERTED_MISC'			=> 'Converted miscellaneous things.',
 	'CONVERTED_PERSONALS'		=> 'The personal albums were successful copied.',
 	'CONVERTED_RATES'			=> 'The rates were successful copied.',
-	'CONVERTED_RESYNC_ALBUMS'	=> 'Resyncronize album-stats.',
-	'CONVERTED_RESYNC_COMMENTS'	=> 'Resyncronize comments.',
-	'CONVERTED_RESYNC_COUNTS'	=> 'Resyncronize imagecounters.',
-	'CONVERTED_RESYNC_RATES'	=> 'Resyncronize rates.',
+	'CONVERTED_RESYNC_ALBUMS'	=> 'Resynchronize album-stats.',
+	'CONVERTED_RESYNC_COMMENTS'	=> 'Resynchronize comments.',
+	'CONVERTED_RESYNC_COUNTS'	=> 'Resynchronize image counters.',
+	'CONVERTED_RESYNC_RATES'	=> 'Resynchronize rates.',
 
 	'FILE_DELETE_FAIL'				=> 'File could not be deleted, you need to delete it manually',
 	'FILE_STILL_EXISTS'				=> 'File still exists',
 	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Required</strong> - In order to function correctly phpBB Gallery needs to be able to access or write to certain files or directories. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB to write to it.',
 	'FILES_DELETE_OUTDATED'			=> 'Delete outdated files',
-	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'When you click to delete the files, they are completly deleted and can not be restored!<br /><br />Please note:<br />If you have more styles and languages installed, you need to delete the files by hand.',
+	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'When you click to delete the files, they are completely deleted and can not be restored!<br /><br />Please note:<br />If you have more styles and languages installed, you need to delete the files by hand.',
 	'FILES_OUTDATED'				=> 'Outdated files',
 	'FILES_OUTDATED_EXPLAIN'		=> '<strong>Outdated</strong> - In order to deny hacking attempts, please remove the following files.',
 	'FOUND_INSTALL'					=> 'Double Installation',
@@ -109,7 +108,7 @@ $lang = array_merge($lang, array(
 	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'The database tables used by phpBB Gallery have been created and populated with some initial data. Proceed to the next screen to finish installing phpBB Gallery.',
 	'STAGE_DELETE_TABLES'			=> 'Clean database',
 	'STAGE_DELETE_TABLES_EXPLAIN'	=> 'The database-content of the Gallery-MOD was deleted. Proceed to the next screen to finish uninstalling phpBB Gallery.',
-	'SUPPORT_BODY'					=> 'Full support will be provided for the current stable release of phpBB Gallery, free of charge. This includes:</p><ul><li>installation</li><li>configuration</li><li>technical questions</li><li>problems relating to potential bugs in the software</li><li>updating from Release Candidate (RC) versions to the latest stable version</li><li>converting from Smartor’s Album-MOD for phpBB 2.0.x to phpBB Gallery for phpBB3</li><li>converting from TS Gallery to phpBB Gallery</li></ul><p>The use of Beta-Versions is limited recommended. If there are updates, it’s recommended to update quickly.</p><p>Support is given on the following boards</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - MOD-Autor nickvergessen’s board</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
+	'SUPPORT_BODY'					=> 'Full support will be provided for the current stable release of phpBB Gallery, free of charge. This includes:</p><ul><li>installation</li><li>configuration</li><li>technical questions</li><li>problems relating to potential bugs in the software</li><li>updating from Release Candidate (RC) versions to the latest stable version</li><li>converting from Smartor’s Album-MOD for phpBB 2.0.x to phpBB Gallery for phpBB3</li><li>converting from TS Gallery to phpBB Gallery</li></ul><p>The use of Beta-Versions is limited recommended. If there are updates, it’s recommended to update quickly.</p><p>Support is given on the following boards</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - MOD-Author nickvergessen’s board</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
 
 	'TABLE_ALBUM'				=> 'table including the images',
 	'TABLE_ALBUM_CAT'			=> 'table including the albums',
@@ -126,9 +125,14 @@ $lang = array_merge($lang, array(
 	'UNINSTALL_REQUIREMENTS_EXPLAIN'	=> 'Before proceeding with the full uninstallation phpBB will carry out some tests to ensure that you are allowed to uninstall phpBB Gallery.',
 	'UNINSTALL_START'					=> 'Uninstall',
 	'UNINSTALL_FINISHED'				=> 'Uninstall nearly finished',
-	'UNINSTALL_FINISHED_EXPLAIN'		=> 'You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong>',
+	'UNINSTALL_FINISHED_EXPLAIN'		=> 'You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completely free from the gallery.</strong>',
 
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Here you can Update your phpBB Gallery-Version.',
 
-	'VERSION_NOT_SUPPORTED'		=> 'Sorry, but your updates prior to 1.0.6 are not supported from this install/update-system.',
+	'VERSION_NOT_SUPPORTED'			=> 'Sorry, but your updates prior to 1.0.6 are not supported from this install/update-system.',
+
+	'GALLERY_SUB_EXT_UNINSTALL' => array(
+		1 => 'You must uninstall the extension: <br /><strong>%s</strong><br /> before uninstalling the core extension.',
+		2 => 'You must uninstall the extensions: <br /><strong>%s</strong><br /> before uninstalling the core extension.',
+	),
 ));

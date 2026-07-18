@@ -1,14 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [Bulgarian Translation]
  *
- * gallery [Bulgarian]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2015 Lucifer lucifer@anavaro.com http://www.anavaro.com
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Lucifer <https://www.anavaro.com>
+ */
 
 /**
  * DO NOT CHANGE
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -150,7 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Съжаляваме, но това изображение е заключено. Вече не можете да го коментирате.',
 	'IMAGE_NAME'                   => 'Име на изображение',
 	'IMAGE_NOT_EXIST'              => 'Това изображение не съществува.',
-	'IMAGE_NOT_APPROVED'           => 'For approval',
+	'IMAGE_NOT_APPROVED'           => 'За одобрение',
 	'IMAGE_PCT'                    => '%.2f%% от всички изображения',
 	'IMAGE_STATUS'                 => 'Статус',
 	'IMAGE_URL'                    => 'Image-URL',

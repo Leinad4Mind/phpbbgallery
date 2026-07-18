@@ -1,11 +1,13 @@
 <?php
-
 /**
+ * phpBB Gallery - Core Extension
  *
- * @package       phpBB Gallery
- * @copyright (c) 2014 nickvergessen
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
  */
 
 namespace phpbbgallery\core;
@@ -180,7 +182,7 @@ class user
 
 	/**
 	 * Some functions need the data to be loaded or at least checked.
-	 * So here we loaded if it is not laoded yet and we need it ;)
+	 * So here we loaded if it is not loaded yet and we need it ;)
 	 */
 	public function force_load()
 	{
@@ -435,7 +437,7 @@ class user
 				case 'user_last_update':
 					if ($inc && ($name == 'user_images'))
 					{
-						// While incrementing, the iamges might be lower than 0.
+						// While incrementing, the images might be lower than 0.
 						$validated_data[$name] = (int) $value;
 					}
 					else
@@ -459,7 +461,7 @@ class user
 					$is_validated = false;
 
 					/**
-					 * Event user validat data
+					 * Event user validate data
 					 *
 					 * @event phpbbgallery.core.user.validate_data
 					 * @var    bool    is_validated    is value validated
@@ -504,7 +506,7 @@ class user
 		$default_values = self::$default_values;
 
 		/**
-		 * Event user validat data
+		 * Event user validate data
 		 *
 		 * @event phpbbgallery.core.user.get_default_values
 		 * @var    array    default_values    the default values array

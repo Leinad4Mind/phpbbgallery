@@ -1,17 +1,18 @@
 <?php
 /**
-*
-* phpBB Gallery. An extension for the phpBB Forum Software package.
-* French translation by pokyto aka le.poke http://www.lestontonsfraggers.com (inspired by darky http://www.foruminfopc.fr/ and http://www.phpbb-fr.com/) & Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2012 nickvergessen <http://www.flying-bits.org/> - 2018 Stanislav Atanasov <http://www.anavaro.com>
-* @license GNU General Public License, version 2 (GPL-2.0-only)
-*
-*/
+ * phpBB Gallery - ACP Core Extension [French Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator pokyto (aka le.poke) <https://www.lestontonsfraggers.com>, inspired by darky <https://www.foruminfopc.fr/> and the phpBB-fr.com Team
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -69,9 +70,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Supprimer l’image',
 	'QUEUE_A_DELETE2'				=> 'Supprimer l’image ?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Êtes-vous sûr de vouloir supprimer cette image ?',
-	'QUEUE_A_LOCK'					=> 'Verrouiller l’image',
-	'QUEUE_A_LOCK2'					=> 'Verrouiller l’image ?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Êtes-vous sûr de vouloir verrouiller cette image ?',
+	'QUEUE_A_LOCK'					=> 'Verrouiller les commentaires sur l’image',
+	'QUEUE_A_LOCK2'					=> 'Approuver et verrouiller les commentaires sur l’image ?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Êtes-vous sûr de vouloir approuver et bloquer les commentaires sur cette image ?',
 	'QUEUE_A_MOVE'					=> 'Déplacer l’image',
 	'QUEUE_A_UNAPPROVE'				=> 'Refuser l’image',
 	'QUEUE_A_UNAPPROVE2'			=> 'Refuser l’image ?',

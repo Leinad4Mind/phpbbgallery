@@ -1,38 +1,55 @@
 <?php
 /**
-*
-* @package phpBB Gallery - ACP CleanUp Extension
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP CleanUp Extension
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\acpcleanup\acp;
 
 class main_module
 {
-	var $u_action;
+	public string $u_action;
 
-	function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
-		global $auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery;
+		global $auth, $cache, $config, $db, $template, $request, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery;
 
 		$user->add_lang_ext('phpbbgallery/core', array('gallery_acp', 'gallery'));
-		//$user->add_lang_ext('phpbbgallery/acpcleanup', 'cleanup');
 		$this->tpl_name = 'gallery_cleanup';
+
 		add_form_key('acp_gallery');
 
+		$submit = $request->is_set_post('submit');
+
+		if ($submit && !check_form_key('acp_gallery'))
+		{
+			trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+
 		$this->page_title = $user->lang['ACP_GALLERY_CLEANUP'];
-		$this->cleanup();
+		$this->cleanup($submit);
 	}
 
-	function cleanup()
+	/**
+	 * Cleanup gallery files and database entries
+	 *
+	 * @param array $missing_entries Files to clean
+	 * @param bool $move_to_import Whether to move files to import dir
+	 * @return array Messages about cleanup results
+	 * @throws \RuntimeException On file operation errors
+	 */
+	public function cleanup(bool $submit = false): void
 	{
 		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery, $table_prefix, $phpbb_container, $request;
 
-		$delete = (isset($_POST['delete'])) ? true : false;
-		$prune = (isset($_POST['prune'])) ? true : false;
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$delete = $request->is_set_post('delete');
+		$prune = $request->is_set_post('prune');
 
 		$missing_sources = $request->variable('source', array(0));
 		$missing_entries = $request->variable('entry', array(''), true);
@@ -161,9 +178,9 @@ class main_module
 			{
 				if ($acp_import_installed && $move_to_import)
 				{
-					foreach ($missing_entries as $entrie)
+					foreach ($missing_entries as $entry)
 					{
-						copy($gallery_url->path('upload') . '/' . $entrie, $gallery_url->path('import') . '/' . $entrie);
+						copy($gallery_url->path('upload') . '/' . $entry, $gallery_url->path('import') . '/' . $entry);
 					}
 				}
 				$message[] = $core_cleanup->delete_files($missing_entries);
@@ -201,7 +218,7 @@ class main_module
 			// Make sure the overall image & comment count is correct...
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . $table_prefix . 'gallery_images
-				WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED;
+				WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -416,7 +433,7 @@ class main_module
 				),
 			),
 
-			'WHERE'			=> 'a.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
+			'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
@@ -439,7 +456,7 @@ class main_module
 
 		$sql = 'SELECT ga.album_user_id, ga.album_images_real
 			FROM ' . $table_prefix . 'gallery_albums ga
-			WHERE ga.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . '
+			WHERE ga.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . '
 				AND ga.parent_id <> 0';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
@@ -479,7 +496,7 @@ class main_module
 			'CHECK_ENTRY'			=> $this->u_action . '&amp;check_mode=entry',
 
 			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=prune_usernames'),
-			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, \phpbbgallery\core\block::PUBLIC_ALBUM, \phpbbgallery\core\block::TYPE_UPLOAD),
+			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));

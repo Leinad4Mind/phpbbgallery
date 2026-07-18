@@ -1,11 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery Extension
-* @copyright (c) 2014 Lucifer
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
 namespace phpbbgallery\core\notification\events;
 
 class phpbbgallery_image_for_approval extends \phpbb\notification\type\base
@@ -63,7 +66,7 @@ class phpbbgallery_image_for_approval extends \phpbb\notification\type\base
 	 */
 	public static function get_item_id($data)
 	{
-		return $data['last_image_id'];
+		return (int) $data['last_image_id'];
 	}
 
 	/**
@@ -75,7 +78,7 @@ class phpbbgallery_image_for_approval extends \phpbb\notification\type\base
 	public static function get_item_parent_id($data)
 	{
 		// No parent
-		return $data['album_id'];
+		return (int) $data['album_id'];
 	}
 
 	/**

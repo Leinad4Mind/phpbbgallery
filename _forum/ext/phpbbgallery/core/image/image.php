@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen | Leinad4Mind 2025
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\image;
 
@@ -174,7 +176,6 @@ class image
 		{
 			return;
 		}
-
 		if (!$skip_files)
 		{
 			// Delete the files from the disc...
@@ -234,6 +235,7 @@ class image
 			}
 
 		}
+
 		$this->db->sql_freeresult($result);
 		$resync_contests = array_unique($resync_contests);
 		$resync_album_ids = array_unique($resync_album_ids);
@@ -309,7 +311,7 @@ class image
 		{
 			case 'image_name':
 				$shorten_image_name = $image_name;
-				$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
+				$content = '<span style="font-weight: bold; display: inline;">' . $shorten_image_name . '</span>';
 			break;
 			case 'image_name_unbold':
 				$shorten_image_name = $image_name;
@@ -324,7 +326,7 @@ class image
 				$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, $this->gallery_config->get('mini_thumbnail_size')), $content);
 			break;
 			case 'medium':
-				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
+				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" class="postimage" />';
 				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}'), array($medium_url, $image_name), $content);
 				//cheat for animated/transparent gif
 				if ($is_gif)
@@ -343,7 +345,7 @@ class image
 		switch ($mode)
 		{
 			case 'image_page':
-				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" style="display: inline;">{CONTENT}</a>';
 			break;
 			case 'image_page_next':
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="right-box right">{CONTENT}</a>';
@@ -407,7 +409,7 @@ class image
 		$num_images = $num_comments = 0;
 		$sql = 'SELECT SUM(image_comments) as comments
 			FROM ' . $this->table_images .'
-			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
 			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
@@ -416,7 +418,7 @@ class image
 
 		$sql = 'SELECT COUNT(image_id) images, image_user_id
 			FROM ' . $this->table_images .' 
-			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
 			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
@@ -500,8 +502,8 @@ class image
 		$this->handle_counter($image_id_ary, true, true);
 
 		$sql = 'UPDATE ' . $this->table_images . '
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_APPROVED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 	}
@@ -516,14 +518,14 @@ class image
 		self::handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images .' 
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name
 			FROM ' . $this->table_images .' 
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -572,14 +574,14 @@ class image
 		self::handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images . ' 
-			SET image_status = ' . \phpbbgallery\core\block::STATUS_LOCKED . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_LOCKED . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name
 			FROM ' . $this->table_images . ' 
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -601,12 +603,12 @@ class image
 		$sql_limit = 1;
 		$sql = 'SELECT * 
 			FROM ' . $this->table_images . '
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND (
 					(
 						' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . '
 						AND (
-							image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+							image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 							OR image_user_id = ' . (int) $this->user->data['user_id'] . '
 						)
 					)
@@ -646,6 +648,7 @@ class image
 				$action = false;
 				break;
 		}
+
 		switch ($imagename_link)
 		{
 			case 'image_page':
@@ -658,6 +661,7 @@ class image
 				$action_image = false;
 				break;
 		}
+
 		$this->template->assign_block_vars($image_block_name, array(
 			'IMAGE_ID'		=> $image_data['image_id'],
 			'U_IMAGE'		=> $show_imagename ? $action_image : false,

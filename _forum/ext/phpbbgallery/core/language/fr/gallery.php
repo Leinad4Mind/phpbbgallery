@@ -1,17 +1,18 @@
 <?php
 /**
-*
-* phpBB Gallery. An extension for the phpBB Forum Software package.
-* French translation by pokyto aka le.poke http://www.lestontonsfraggers.com (inspired by darky http://www.foruminfopc.fr/ and http://www.phpbb-fr.com/) & Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2012 nickvergessen <http://www.flying-bits.org/> - 2018 Stanislav Atanasov <http://www.anavaro.com>
-* @license GNU General Public License, version 2 (GPL-2.0-only)
-*
-*/
+ * phpBB Gallery - ACP Core Extension [French Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator pokyto (aka le.poke) <https://www.lestontonsfraggers.com>, inspired by darky <https://www.foruminfopc.fr/> and the phpBB-fr.com Team
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -165,7 +166,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'						=> 'Désolé, cette image est verrouillée. Vous ne pouvez pas publier de commentaires sur cette image.',
 	'IMAGE_NAME'						=> 'Nom de l’image',
 	'IMAGE_NOT_EXIST'					=> 'Cette image n’existe pas.',
-	'IMAGE_NOT_APPROVED'				=> 'For approval',
+	'IMAGE_NOT_APPROVED'				=> 'Pour approbation',
 	'IMAGE_PCT'							=> '%.2f%% de toutes les images',
 	'IMAGE_STATUS'						=> 'Statut',
 	'IMAGE_URL'							=> 'Lien',
@@ -207,7 +208,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'						=> 'Il n’y a aucun album dans cette galerie.',
 	'NO_COMMENTS'					=> 'Aucun commentaire',
 	'NO_IMAGES'						=> 'Aucune image',
-	'NO_COMMENTS_NO_IMAGES' 		=> 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'				=> 'Aucune image trouvée.',
 	'NO_NEW_IMAGES'					=> 'Aucune nouvelle image',
 	'NO_IMAGES_LONG'				=> 'Il n’y a aucune image dans cet album.',

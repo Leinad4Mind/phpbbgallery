@@ -1,12 +1,14 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\acp;
 
@@ -298,8 +300,8 @@ class main_module
 
 					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . $images_table . '
-						WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-							AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . '
+						WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+							AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 						GROUP BY image_user_id';
 					$result = $db->sql_query($sql);
 
@@ -331,7 +333,7 @@ class main_module
 
 					$sql = 'SELECT album_id, album_user_id
 						FROM ' . $albums_table . '
-						WHERE album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . '
+						WHERE album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . '
 							AND parent_id = 0
 						GROUP BY album_user_id, album_id';
 					$result = $db->sql_query($sql);
@@ -360,7 +362,7 @@ class main_module
 							),
 						),
 
-						'WHERE'			=> 'a.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
+						'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 						'ORDER_BY'		=> 'a.album_id DESC',
 					);
 					$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -569,12 +571,12 @@ class main_module
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
 			'TOTAL_PERSONALS'		=> $config['phpbb_gallery_num_pegas'],
-			'GUPLOAD_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat']),
+			'GUPLOAD_DIR_SIZE'	=> get_formatted_filesize($dir_sizes['stat']),
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
 			'GALLERY_VERSION'		=> $config['phpbb_gallery_version'],
 			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega_form&amp;field=username&amp;select_single=true'),
-			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, \phpbbgallery\core\block::PUBLIC_ALBUM, \phpbbgallery\core\block::TYPE_UPLOAD),
+			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'U_ACTION'				=> $this->u_action,

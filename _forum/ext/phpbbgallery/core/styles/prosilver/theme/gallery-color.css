@@ -259,6 +259,24 @@ input.autowidth-gallery {
 	transition: all .15s linear;
 }
 
+.post > .inner > .unapproved {
+	text-align: center;
+	overflow: hidden;
+	padding: 8px;
+	font-size: larger;
+	font-weight: 700;
+	background-color: #ffcc66;
+	color: black;
+	border-radius: 7px;
+}
+
+.polaroid .post-notice.unapproved {
+	font-weight: 700;
+	background-color: #ffcc66;
+	color: black;
+	border-radius: 5px;
+}
+
 .trophy-container
 {
 	position: relative;

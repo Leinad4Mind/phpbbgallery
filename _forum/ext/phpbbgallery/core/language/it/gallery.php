@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* gallery [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Italian Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -150,7 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'						=> 'Spiacente, quest’immagine è bloccata. Non si può più commentare quest’immagine.',
 	'IMAGE_NAME'						=> 'Nome immagine',
 	'IMAGE_NOT_EXIST'					=> 'Quest’immagine non esiste.',
-	'IMAGE_NOT_APPROVED'				=> 'For approval',
+	'IMAGE_NOT_APPROVED'				=> 'Per approvazione',
 	'IMAGE_PCT'							=> '%.2f%% di tutte le immagini',
 	'IMAGE_STATUS'						=> 'Stato',
 	'IMAGE_URL'							=> 'URL-Immagine',

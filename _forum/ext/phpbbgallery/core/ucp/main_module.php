@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\ucp;
 
@@ -137,7 +139,7 @@ class main_module
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
 		if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
 		{
-			// User will probally go to initialise_album()
+			// User will probably go to initialise_album()
 			$template->assign_vars(array(
 				'S_INFO_CREATE'				=> true,
 				'S_UCP_ACTION'		=> $this->u_action . '&amp;action=initialise',
@@ -157,7 +159,7 @@ class main_module
 		global $cache, $db,  $user, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_config, $albums_table, $phpbb_ext_gallery_user;
 		global $request, $users_table, $phpbb_container;
 
-		// we will have to initialse $phpbb_ext_gallery_user
+		// we will have to initialise $phpbb_ext_gallery_user
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
 		if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
 		{
@@ -174,8 +176,8 @@ class main_module
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
-				'album_status'					=> \phpbbgallery\core\block::ALBUM_OPEN,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_status'					=> (int) \phpbbgallery\core\block::ALBUM_OPEN,
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
 				'album_last_user_colour'		=> $user->data['user_colour'],
@@ -373,8 +375,8 @@ class main_module
 				'album_name'					=> $request->variable('album_name', '', true),
 				'parent_id'						=> $request->variable('parent_id', 0),
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
-				'album_status'					=> \phpbbgallery\core\block::ALBUM_OPEN,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_status'					=> (int) \phpbbgallery\core\block::ALBUM_OPEN,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
@@ -523,7 +525,7 @@ class main_module
 				'parent_id'						=> $request->variable('parent_id', (($album_id == $phpbb_ext_gallery_user->get_data('personal_album_id')) ? 0 : $phpbb_ext_gallery_user->get_data('personal_album_id'))),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
-				'album_type'					=> \phpbbgallery\core\block::TYPE_UPLOAD,
+				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
 				'album_auth_access'				=> ($phpbb_ext_gallery_core_auth->acl_check('a_restrict', $phpbb_ext_gallery_core_auth::OWN_ALBUM)) ? $request->variable('album_auth_access', 0) : 0,
@@ -759,8 +761,8 @@ class main_module
 			// Make sure the overall image & comment count is correct...
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . $images_table . '
-				WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-					AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+				WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -801,7 +803,7 @@ class main_module
 								),
 							),
 
-							'WHERE'			=> 'a.album_user_id <> ' . \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
+							'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 							'ORDER_BY'		=> 'a.album_id DESC',
 						);
 						$sql = $db->sql_build_query('SELECT', $sql_array);

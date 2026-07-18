@@ -1,14 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [Bulgarian Translation]
  *
- * gallery-acp [Bulgarian]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2015 Lucifer lucifer@anavaro.com http://www.anavaro.com
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Lucifer <https://www.anavaro.com>
+ */
 
 /**
  * DO NOT CHANGE
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -141,7 +141,7 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_LINK'          => 'Свържи брояча на изборажения към потребителските изображения',
 	'DISP_WHOISONLINE'             => 'Покажи "Кой е на линия"',
 	'DISPLAY_IN_RRC'               => 'Покажи изборажения от този албум в "Последни/случайни" изображения',
-	'DONT_COPY_PERMISSIONS'        => 'Не копирай права',
+	'DO_NOT_COPY_PERMISSIONS'      => 'Не копирай права',
 
 	'EDIT_ALBUM' => 'Промени албум',
 
@@ -155,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Gallery-Index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Ако зиползвате Thumbnail Cache опцията, ще се наложи да изчистите thumbnail кеша след промяна на настройките на thumbnail-ите в "Настройки на галерията за да ги накрате да се презаредят.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Ресинхронизирай личните албуми към профилни полета',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'  => 'Това действие ще въведе на ново всички top level лични албуми като полета за контакт в профила. <br> Внимание! Ако имате прекалено много top level лични албуми, това действие може да отнеме малко повече време!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'Това действие ще въведе на ново всички top level лични албуми като полета за контакт в профила. <br> Внимание! Ако имате прекалено много top level лични албуми, това действие може да отнеме малко повече време!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Сигурни ли сте, че желаете да ресинхронизирате top level личните албуми към контактни полета на профила?',
 	'GALLERY_STATS'                        => 'Статистики на галерията',
 	'GALLERY_VERSION'                      => 'Весия',

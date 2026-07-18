@@ -1,18 +1,21 @@
 <?php
 /**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* mostly borrowed from phpBB3
-* @author: phpBB Group
-* @location: includes/acp/acp_forums.php
-*
-* Note: There are several code parts commented out, for example the album/forum_password.
-*       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ *
+ * mostly borrowed from phpBB3
+ * @author: phpBB Group
+ * @location: includes/acp/acp_forums.php
+ *
+ * Note: There are several code parts commented out, for example the album/forum_password.
+ *       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
+ */
 
 /**
 * @ignore
@@ -390,7 +393,7 @@ class manage
 			{
 				$contest_data_sql = $contest_data;
 				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
-				$contest_data_sql['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+				$contest_data_sql['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 
 				$sql = 'INSERT INTO ' . $this->contests_table . ' ' . $this->db->sql_build_array('INSERT', $contest_data_sql);
 				$this->db->sql_query($sql);
@@ -408,14 +411,14 @@ class manage
 			$row = $this->gallery_album->get_info($album_data_sql['album_id']);
 			$reset_marked_images = false;
 
-			if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] != \phpbbgallery\core\block::TYPE_CONTEST)
+			if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				// Changing a contest to album? No!
 				// Changing a contest to category? No!
 				$errors[] = $this->language->lang('ALBUM_WITH_CONTEST_NO_TYPE_CHANGE');
 				return $errors;
 			}
-			else if ($row['album_type'] != \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			else if ($row['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 			{
 				// Changing a album to contest? No!
 				// Changing a category to contest? No!
@@ -467,7 +470,7 @@ class manage
 					// If we change it the other way round, the album.php will do the end on the first visit!
 					if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())
 					{
-						$contest_data['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+						$contest_data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 						$reset_marked_images = true;
 					}
 				}
@@ -887,7 +890,7 @@ class manage
 			SET image_album_id = ' . (int) $to_id . ',
 				image_contest_rank = 0,
 				image_contest_end = 0,
-				image_contest = ' . \phpbbgallery\core\block::NO_CONTEST . '
+				image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST . '
 			WHERE image_album_id = ' . (int) $from_id;
 		$this->db->sql_query($sql);
 
@@ -945,8 +948,8 @@ class manage
 		$sql = 'SELECT image_user_id
 			FROM ' . $this->images_table . ' 
 			WHERE image_album_id = ' . (int) $album_id . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 
 		$image_counts = array();
@@ -1007,8 +1010,8 @@ class manage
 		// Make sure the overall image & comment count is correct...
 		$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 			FROM ' . $this->images_table . '  
-			WHERE image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN;
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);

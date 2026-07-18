@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* install_gallery [Spanish]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -131,4 +131,9 @@ $lang = array_merge($lang, array(
 	'UPDATE_INSTALLATION_EXPLAIN' 	=>	'Aquí puedes actualizar tu versión de la galería de phpBB.',
 
 	'VERSION_NOT_SUPPORTED' 		=>	'Lo sentimos, pero sus actualizaciones anteriores a 1.0.6 no son compatibles con este sistema de instalación / actualización.',
+
+	'GALLERY_SUB_EXT_UNINSTALL' => array(
+		1 => 'Debe desinstalar la extensión: <br /><strong>%s</strong><br /> antes de desinstalar la extensión principal.',
+		2 => 'Debe desinstalar las extensiones: <br /><strong>%s</strong><br /> antes de desinstalar la extensión principal.',
+	),
 ));

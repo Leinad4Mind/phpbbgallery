@@ -1,11 +1,15 @@
 <?php
 /**
-*
-* @package phpBB Gallery - ACP CleanUp Extension [English]
-* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - ACP CleanUp Extension [Italian Translation]
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
 * DO NOT CHANGE
@@ -17,10 +21,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_CLEANUP'				=> 'Pulisci galleria',
 
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Puoi cancellare alcuni rimasugli, da qui.',
@@ -75,4 +79,7 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_USER'		=> 'Sposta all\'utente',
 	'MOVE_TO_USER_EXP'	=> 'Immagini e commenti verranno spostati come fossero dell\'utente che hai definito. Se non ne vengono selezionati verra\' usato l\'utente anonimo.',
 	'CLEAN_USER_NOT_FOUND'	=> 'L\'utente selezionato non esiste!',
-));
+
+	'GALLERY_CORE_NOT_FOUND'		=> 'L\'estensione phpBB Gallery Core deve essere prima installata e abilitata.',
+	'EXTENSION_ENABLE_SUCCESS'		=> 'L\'estensione è stata abilitata con successo.',
+]);

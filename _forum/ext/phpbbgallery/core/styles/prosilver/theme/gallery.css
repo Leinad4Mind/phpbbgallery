@@ -26,6 +26,7 @@ fieldset.gallery dd.simulate-dt label {
 	text-align:		left;
 	color:			#425067;
 }
+
 .rtl fieldset.gallery dd.simulate-dt label {
 	text-align:		right;
 }
@@ -168,14 +169,13 @@ input.autowidth-gallery {
 	float: right;
 }
 
-
-
 .image_prev_image
 {
 	float: left; 
 	text-align: left; 
 	clip-path: url(#left_arrow);
 }
+
 .image_next_image
 {
 	float: right; 
@@ -186,6 +186,7 @@ input.autowidth-gallery {
 .postbody_album {
 	text-align:center;
 }
+
 .postbody_album img.postimage {
 	margin: 10px auto 10px auto;
 	max-width: 100%;
@@ -202,13 +203,14 @@ input.autowidth-gallery {
 	font-weight: 700;
 	background-color: #ffcc66;
 	color: black;
-	border-radius: 10px;
+	border-radius: 7px;
 }
 
 .polaroid .post-notice.unapproved {
 	font-weight: 700;
 	background-color: #ffcc66;
 	color: black;
+	border-radius: 5px;
 }
 
 .trophy-container
@@ -237,7 +239,6 @@ input.autowidth-gallery {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-shadow: 1px 1px 1px #b7b7b7;
-
 }
 
 .trophy-text
@@ -249,10 +250,12 @@ input.autowidth-gallery {
 {
 	color: #FFD700;
 }
+
 .trophy-color-2
 {
 	color: silver;
 }
+
 .trophy-color-3
 {
 	color: #CD7f32;

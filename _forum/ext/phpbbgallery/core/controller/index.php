@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
 
@@ -301,22 +303,12 @@ class index
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Now let's get display options
-		$show_comments = $show_random = $show_recent = false;
-		$show_options = $this->gallery_config->get('rrc_gindex_mode');
-		if ($show_options >= 4)
-		{
-			$show_comments = true;
-			$show_options = $show_options - 4;
-		}
-		if ($show_options >= 2)
-		{
-			$show_random = true;
-			$show_options = $show_options - 2;
-		}
-		if ($show_options == 1)
-		{
-			$show_recent = true;
-		}
+		$show_options = (int) $this->gallery_config->get('rrc_gindex_mode');
+
+		$show_comments = (bool) ($show_options & self::RRC_MODE_RECENT_COMMENTS);
+		$show_random   = (bool) ($show_options & self::RRC_MODE_RANDOM_IMAGES);
+		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
+
 		$this->template->assign_vars(array(
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
 			'TOTAL_COMMENTS'	=> ($this->gallery_config->get('allow_comments')) ? $this->language->lang('TOTAL_COMMENTS_SPRINTF', $this->gallery_config->get('num_comments')) : '',

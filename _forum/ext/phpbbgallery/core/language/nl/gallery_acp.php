@@ -1,15 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [Dutch Translation]
  *
- * gallery_acp [Dutch]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- * [Dutch] translated by Dutch Translators (https://github.com/dutch-translators)
- *
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator Dutch Translators <https://github.com/dutch-translators>
+ */
 
 /**
  * DO NOT CHANGE
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -142,7 +141,7 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_LINK'          => 'Koppel de afbeeldingenteller aan de afbeeldingen van de gebruiker',
 	'DISP_WHOISONLINE'             => '“Wie is online“ weergeven',
 	'DISPLAY_IN_RRC'               => 'Laat afbeeldingen uit dit album zien in de “Recente-Willikeurige“-afbeeldingen',
-	'DONT_COPY_PERMISSIONS'        => 'Permissies niet kopiëren',
+	'DO_NOT_COPY_PERMISSIONS'      => 'Permissies niet kopiëren',
 
 	'EDIT_ALBUM' => 'Wijzig album',
 
@@ -156,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Galerij-index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Als je gebruikt maakt van de Miniatuur Buffer mogelijkheid moet je de Miniatuur Buffer legen na het wijzigen van de miniatuur-instellingen in “Album Instellingen“ om ze opnieuw aan te laten maken.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Resync personal albums to profile fields',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'                        => 'Galerijstatistieken',
 	'GALLERY_VERSION'                      => 'Galerijversie',

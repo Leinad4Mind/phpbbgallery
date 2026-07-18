@@ -1,18 +1,17 @@
 <?php
 /**
-*
-* gallery_mcp [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -50,13 +49,13 @@ $lang = array_merge($lang, array(
 
 	'QUEUE_A_APPROVE'				=> 'Approve image',
 	'QUEUE_A_APPROVE2'				=> 'Approve image?',
-	'QUEUE_A_APPROVE2_CONFIRM'		=> 'Are you sure, you want to approve this image?',
+	'QUEUE_A_APPROVE2_CONFIRM'		=> 'Are you sure you want to approve this image?',
 	'QUEUE_A_DELETE'				=> 'Delete image',
 	'QUEUE_A_DELETE2'				=> 'Delete image?',
-	'QUEUE_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete this image?',
-	'QUEUE_A_LOCK'					=> 'Lock image',
-	'QUEUE_A_LOCK2'					=> 'Lock image?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Are you sure, you want to lock this image?',
+	'QUEUE_A_DELETE2_CONFIRM'		=> 'Are you sure you want to delete this image?',
+	'QUEUE_A_LOCK'					=> 'Lock image comments',
+	'QUEUE_A_LOCK2'					=> 'Approve and lock image comments?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Are you sure you want to approve and block comments on this image?',
 	'QUEUE_A_MOVE'					=> 'Move image',
 	'QUEUE_A_UNAPPROVE'				=> 'Unapprove image',
 	'QUEUE_A_UNAPPROVE2'			=> 'Unapprove image?',
@@ -106,7 +105,7 @@ $lang = array_merge($lang, array(
 	'REPORTS_A_OPEN2_CONFIRM'		=> 'Are you sure, you want to open these reports?',
 
 	'REPORT_MOD'					=> 'Edited by',
-	'REPORT_CLOSED_BY'				=> 'Report closed by',
+	'REPORT_CLOSED_BY'			=> 'Report closed by',
 	'REPORTED_IMAGES'				=> 'Reported images',
 	'REPORTER'						=> 'Reporting user',
 	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',

@@ -1,15 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [German Translation]
  *
- * gallery [Deutsch]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- * Übersetzt von franki (http://dieahnen.de/ahnenforum/)
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
  * DO NOT CHANGE
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -151,7 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'                 => 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NAME'                   => 'Bildname',
 	'IMAGE_NOT_EXIST'              => 'Dieses Bild existiert nicht',
-	'IMAGE_NOT_APPROVED'           => 'For approval',
+	'IMAGE_NOT_APPROVED'           => 'Wartet auf Freigabe',
 	'IMAGE_PCT'                    => '%.2f%% aller Bilder',
 	'IMAGE_STATUS'                 => 'Status',
 	'IMAGE_URL'                    => 'Bildlink',

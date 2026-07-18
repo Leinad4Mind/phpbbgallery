@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* install_gallery [Deutsch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* Übersetzt von franki (http://motorradforum-niederrhein.de/downloads/)
-**/
+ * phpBB Gallery - ACP Core Extension [German Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -132,4 +131,9 @@ $lang = array_merge($lang, array(
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Mit dieser Option kannst du deine phpBB Gallery-Version auf den neuesten Stand bringen.',
 
 	'VERSION_NOT_SUPPORTED'			=> 'Leider konnte das Update-Schema für Versionen < 1.0.6 nicht übernommen werden.',
+
+	'GALLERY_SUB_EXT_UNINSTALL' => array(
+		1 => 'Sie müssen die Erweiterung deinstallieren: <br /><strong>%s</strong><br /> bevor Sie die Kern-Erweiterung deinstallieren können.',
+		2 => 'Sie müssen die Erweiterungen deinstallieren: <br /><strong>%s</strong><br /> bevor Sie die Kern-Erweiterung deinstallieren können.',
+	),
 ));

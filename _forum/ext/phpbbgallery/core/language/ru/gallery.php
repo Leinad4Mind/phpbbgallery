@@ -1,24 +1,25 @@
 <?php
 /**
-*
-* gallery [Russian]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Russian Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
+
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 $lang = array_merge($lang, array(
 	'ADD_UPLOAD_FIELD'				=> 'Добавить несколько файлов',
@@ -116,13 +117,14 @@ $lang = array_merge($lang, array(
 	'EDIT_IMAGE'					=> 'Редактировать',
 	'IMAGE_EDITED_TIME_TOTAL'				=> 'Последний раз редактировалось пользователем %s %s; всего редактировалось раз: %d',
 	'IMAGE_EDITED_TIMES_TOTAL'			=> 'Последний раз редактировалось пользователем %s %s; всего редактировалось раз: %d',
+
 	'FILE'							=> 'Файл',
 	'FILE_SIZE'						=> 'Размер файла',
 	'FILETYPE_MIMETYPE_MISMATCH'	=> 'Тип файла «<strong>%1$s</strong>» не соответствует mime-типу (%2$s).',
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
-	'FILETYPES_WEBP'				=> 'webp',
+	'FILETYPES_WEBP'					=> 'webp',
 	'FILETYPES_ZIP'					=> 'zip',
 
 	'FULL_EDITOR_GALLERY'					=> 'Редактировать',
@@ -141,7 +143,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'					=> 'Фото блокировано. Вы не можете оставлять к нему комментарии.',
 	'IMAGE_NAME'					=> 'Название',
 	'IMAGE_NOT_EXIST'				=> 'Фото не найдено.',
-	'IMAGE_NOT_APPROVED'			=> 'For approval',
+	'IMAGE_NOT_APPROVED'			=> 'На утверждение',
 	'IMAGE_PCT'						=> '%.2f%% всех фотографий',
 	'IMAGE_STATUS'					=> 'Статус',
 	'IMAGE_URL'						=> 'Ссылка на фото',
@@ -180,7 +182,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'						=> 'Нет альбомов',
 	'NO_COMMENTS'					=> 'пока нет',
 	'NO_IMAGES'						=> 'Нет фотографий',
-	'NO_COMMENTS_NO_IMAGES' 		=> 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
 	'NO_IMAGES_FOUND'				=> 'Фото не найдены.',
 	'NO_NEW_IMAGES'					=> 'Нет новых фотографий',
 	'NO_IMAGES_LONG'				=> 'Этот альбом пуст.',

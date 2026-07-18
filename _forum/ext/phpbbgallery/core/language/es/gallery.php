@@ -1,18 +1,18 @@
 <?php
 /**
-*
-* gallery [Spanish]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -150,7 +150,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_LOCKED'						=> 'Lo siento, esta imagen está bloqueada. No puedes publicar más comentarios para esta imagen. ',
 	'IMAGE_NAME'						=> 'Nombre de imagen',
 	'IMAGE_NOT_EXIST'					=> 'Esta imagen no existe.',
-	'IMAGE_NOT_APPROVED'				=> 'For approval',
+	'IMAGE_NOT_APPROVED'				=> 'Para aprobación',
 	'IMAGE_PCT'							=> '%.2f%% de todas las imágenes',
 	'IMAGE_STATUS'						=> 'Estado',
 	'IMAGE_URL'							=> 'Imagen-URL',

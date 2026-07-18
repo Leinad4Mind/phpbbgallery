@@ -1,19 +1,18 @@
 <?php
 /**
-*
-* gallery_mcp [Deutsch]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* Übersetzt von franki (http://dieahnen.de/ahnenforum/)
-**/
+ * phpBB Gallery - ACP Core Extension [German Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -55,9 +54,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Bild löschen',
 	'QUEUE_A_DELETE2'				=> 'Bild löschen?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Bist du dir sicher, dass du das Bild löschen möchtest?',
-	'QUEUE_A_LOCK'					=> 'Bild sperren',
-	'QUEUE_A_LOCK2'					=> 'Bild sperren?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Bist du dir sicher, dass du das Bild sperren möchtest?',
+	'QUEUE_A_LOCK'					=> 'Bildkommentare sperren',
+	'QUEUE_A_LOCK2'					=> 'Bildkommentare genehmigen oder sperren?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Bist du dir sicher, dass du die Kommentare zu diesem Bild genehmigen oder sperren möchtest?',
 	'QUEUE_A_MOVE'					=> 'Bild verschieben',
 	'QUEUE_A_UNAPPROVE'				=> 'erneute Freischaltung erzwingen',
 	'QUEUE_A_UNAPPROVE2'			=> 'erneute Freischaltung erzwingen?',

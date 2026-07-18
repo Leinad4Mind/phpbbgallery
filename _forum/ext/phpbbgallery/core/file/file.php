@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\file;
 
@@ -125,7 +127,7 @@ class file
 			case '.jpg':
 				return 'image/jpeg';
 			break;
-			case '.webp':
+			case 'webp':
 				return 'image/webp';
 			break;
 		}
@@ -147,7 +149,7 @@ class file
 			case '.jpg':
 				return 'jpg';
 			break;
-			case '.webp':
+			case 'webp':
 				return 'webp';
 			break;
 		}
@@ -175,7 +177,7 @@ class file
 				imagealphablending($this->image, true); // Set alpha blending on ...
 				imagesavealpha($this->image, true); // ... and save alpha blending!
 			break;
-			case '.webp':
+			case 'webp':
 				$this->image_type = 'webp';
 				$this->image = imagecreatefromwebp($this->image_source);
 			break;

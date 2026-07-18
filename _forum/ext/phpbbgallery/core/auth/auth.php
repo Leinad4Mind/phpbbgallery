@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\auth;
 
@@ -218,6 +220,7 @@ class auth
 
 		$this->db->sql_return_on_error(true);
 		$result = $this->db->sql_query($sql);
+
 		if ($this->db->get_sql_error_triggered())
 		{
 			trigger_error('DATABASE_NOT_UPTODATE');
@@ -469,7 +472,6 @@ class auth
 		$this->db->sql_freeresult($result);
 		return $zebra;
 	}
-
 	public function get_user_foes($user_id)
 	{
 		$foes = array();
@@ -791,7 +793,7 @@ class auth
 		}
 		$this->db->sql_freeresult($result);
 
-		// Now we will select the roles that have the setted ACL
+		// Now we will select the roles that have the set ACL
 		$sql = 'SELECT role_id FROM ' . $this->table_roles . ' WHERE ' . $acl . ' = 1 and ' . $this->db->sql_in_set('role_id', $roles_id['roles'], false, true);
 		$result = $this->db->sql_query($sql);
 		$roles = array();

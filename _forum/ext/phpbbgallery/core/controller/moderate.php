@@ -1,14 +1,17 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen | 2025 Leinad4Mind
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\controller;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class moderate
@@ -323,6 +326,7 @@ class moderate
 			'U_GALLERY_MCP_LOGS'			=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_action_log_album', array('album_id' => $album_id)) : $this->helper->route('phpbbgallery_core_moderate_action_log'),
 			'U_ALBUM_NAME'					=> $album_id > 0 ? $album['album_name'] : false,
 		));
+
 		$this->gallery_log->build_list('moderator', 0, $page, $album_id);
 		return $this->helper->render('gallery/moderate_actions.html', $this->language->lang('GALLERY'));
 	}
@@ -430,34 +434,34 @@ class moderate
 					case 'approve':
 						$this->image->approve_images($actions_array, $album_id);
 						$this->album->update_info($album_id);
-
 						$message = $this->language->lang('WAITING_APPROVED_IMAGE', count($actions_array));
 					break;
+
 					case 'unapprove':
 						$this->image->unapprove_images($actions_array, $album_id);
 						$this->album->update_info($album_id);
-
 						$message = $this->language->lang('WAITING_UNAPPROVED_IMAGE', count($actions_array));
 					break;
+
 					case 'lock':
 						$this->image->lock_images($actions_array, $album_id);
 						$this->album->update_info($album_id);
-
 						$message = $this->language->lang('WAITING_LOCKED_IMAGE', count($actions_array));
 					break;
+
 					case 'delete':
 						$this->moderate->delete_images($actions_array);
 						$this->album->update_info($album_id);
-
 						$message = $this->language->lang('DELETED_IMAGES', count($actions_array));
 					break;
+
 					case 'move':
 						$this->image->move_image($actions_array, $moving_target);
 						$this->album->update_info($album_id);
 						$this->album->update_info($moving_target);
-
 						$message = $this->language->lang('MOVED_IMAGES', count($actions_array));
 					break;
+
 					case 'report':
 						$this->report->close_reports_by_image($actions_array);
 						$message = $this->language->lang('WAITING_REPORTED_DONE', count($actions_array));
@@ -466,8 +470,8 @@ class moderate
 
 				if (!empty($message))
 				{
-						$this->url->meta_refresh(3, $back_link);
-						trigger_error($message);
+					$this->url->meta_refresh(3, $back_link);
+					trigger_error($message);
 				}
 			}
 			else
@@ -702,7 +706,7 @@ class moderate
 		}
 		$action_keys = array_keys($this->request->variable('action', ['approve' => 1]));
 		$action = $action_keys[0] ?? 'approve';
-		
+
 		if ($action === 'disapprove')
 		{
 			$redirect = new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]));

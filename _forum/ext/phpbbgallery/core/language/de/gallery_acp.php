@@ -1,15 +1,14 @@
 <?php
 /**
+ * phpBB Gallery - ACP Core Extension [German Translation]
  *
- * gallery_acp [Deutsch]
- *
- * @package       phpBB Gallery
- * @version       $Id$
- * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
- * @license       http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- * German translation by franki (http://dieahnen.de/ahnenforum/)
- **/
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator franki <https://dieahnen.de/ahnenforum/>
+ */
 
 /**
  * DO NOT CHANGE
@@ -21,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 $lang = array_merge($lang, array(
@@ -142,7 +141,7 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_LINK'          => 'Die Anzahl der Bilder auf die Benutzer Bilder verlinken',
 	'DISP_WHOISONLINE'             => '„Wer ist online“ anzeigen',
 	'DISPLAY_IN_RRC'               => 'Bilder aus diesem Album in den „Neusten &amp; Zufälligen“-Bildern anzeigen',
-	'DONT_COPY_PERMISSIONS'        => 'Berechtigungen nicht kopieren',
+	'DO_NOT_COPY_PERMISSIONS'      => 'Berechtigungen nicht kopieren',
 
 	'EDIT_ALBUM' => 'Album bearbeiten',
 
@@ -156,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Galerie-Index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Wenn du den Cache Feature für das Vorschaubild benutzt, musst du nach einer Änderungen an den Einstellungen in „Gallery konfigurieren“ den Cache deiner Vorschaubilder leeren, um sie neu generieren zu lassen.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Neu synchronisieren der persönlicher Alben mit den Profilfeldern',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPAIN'  => 'Diese Aktion wird alle persönlichen Alben auf dem Toplevel als kontaktbasierte selbsterstellt Profilfelder resynchronisieren . <br> WARNUNG! Dies kann beim Vorhandensein sehr vieler solcher Alben sehr lange dauern!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'Diese Aktion wird alle persönlichen Alben auf dem Toplevel als kontaktbasierte selbsterstellt Profilfelder resynchronisieren . <br> WARNUNG! Dies kann beim Vorhandensein sehr vieler solcher Alben sehr lange dauern!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Bist Du sicher, dass Du den Resync aller persönlichen Alben auf dem Toplevel als kontaktbasierte selbsterstellte Profilfelder durchführen willst?',
 	'GALLERY_STATS'                        => 'Galerie Statistik',
 	'GALLERY_VERSION'                      => 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
@@ -232,37 +231,37 @@ $lang = array_merge($lang, array(
 	'PERMISSION_SETTING' => 'Einstellung',
 	'PERMISSION_YES'     => 'Ja',
 
-	'PERMISSION_A_COUNT'          => 'Anzahl der möglichen persönlichen Subalben',
-	'PERMISSION_A_LIST'           => 'Kann das Album sehen',
-	'PERMISSION_A_RESTRICT'       => 'Kann den Zugriff einschränken',
-	'PERMISSION_A_UNLIMITED'      => 'Unbegrenzte Anzahl der persönlichen Subalben',
-	'PERMISSION_C'                => 'Kommentare',
-	'PERMISSION_C_DELETE'         => 'Kann eigene Kommentare löschen',
-	'PERMISSION_C_EDIT'           => 'Kann eigene Kommentare bearbeiten',
-	'PERMISSION_C_POST'           => 'Kann Bilder kommentieren',
-	'PERMISSION_C_READ'           => 'Kann Kommentare lesen',
-	'PERMISSION_I'                => 'Bilder',
-	'PERMISSION_I_APPROVE'        => 'Kann Bilder ohne Freigabe erstellen',
-	'PERMISSION_I_COUNT'          => 'Anzahl der hochladbaren Bilder',
-	'PERMISSION_I_DELETE'         => 'Kann eigene Bilder löschen',
-	'PERMISSION_I_EDIT'           => 'Kann eigene Bilder bearbeiten',
-	'PERMISSION_I_LOCK'           => 'Kann Bilder sperren',
-	'PERMISSION_I_RATE'           => 'Kann Bilder bewerten',
-	'PERMISSION_I_RATE_EXPLAIN'   => 'Gäste und der Bild-Autor können Bilder <samp>NIE</samp> bewerten.',
-	'PERMISSION_I_REPORT'         => 'Kann Bilder melden',
-	'PERMISSION_I_UNLIMITED'      => 'Kann unbegrenzt Bilder hochladen',
-	'PERMISSION_I_UPLOAD'         => 'Kann Bilder hochladen',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',
-	'PERMISSION_I_VIEW'           => 'Kann Bilder sehen',
-	'PERMISSION_I_WATERMARK'      => 'Kann Bilder ohne Wasserzeichen sehen',
-	'PERMISSION_M'                => 'Moderation',
-	'PERMISSION_MISC'             => 'Sonstiges', //Miscellaneous
-	'PERMISSION_M_COMMENTS'       => 'Kann Kommentare moderieren',
-	'PERMISSION_M_DELETE'         => 'Kann Bilder löschen',
-	'PERMISSION_M_EDIT'           => 'Kann Bilder bearbeiten',
-	'PERMISSION_M_MOVE'           => 'Kann Bilder verschieben',
-	'PERMISSION_M_REPORT'         => 'Kann Meldungen bearbeiten',
-	'PERMISSION_M_STATUS'         => 'Kann Bilder freischalten und sperren',
+	'PERMISSION_A_COUNT'			=> 'Anzahl der möglichen persönlichen Subalben',
+	'PERMISSION_A_LIST'				=> 'Kann das Album sehen',
+	'PERMISSION_A_RESTRICT'			=> 'Kann den Zugriff einschränken',
+	'PERMISSION_A_UNLIMITED'		=> 'Unbegrenzte Anzahl der persönlichen Subalben',
+	'PERMISSION_C'					=> 'Kommentare',
+	'PERMISSION_C_DELETE'			=> 'Kann eigene Kommentare löschen',
+	'PERMISSION_C_EDIT'				=> 'Kann eigene Kommentare bearbeiten',
+	'PERMISSION_C_POST'				=> 'Kann Bilder kommentieren',
+	'PERMISSION_C_READ'				=> 'Kann Kommentare lesen',
+	'PERMISSION_I'					=> 'Bilder',
+	'PERMISSION_I_APPROVE'			=> 'Kann Bilder ohne Freigabe erstellen',
+	'PERMISSION_I_COUNT'			=> 'Anzahl der hochladbaren Bilder',
+	'PERMISSION_I_DELETE'			=> 'Kann eigene Bilder löschen',
+	'PERMISSION_I_EDIT'				=> 'Kann eigene Bilder bearbeiten',
+	'PERMISSION_I_LOCK'				=> 'Kann Bilder sperren',
+	'PERMISSION_I_RATE'				=> 'Kann Bilder bewerten',
+	'PERMISSION_I_RATE_EXPLAIN'		=> 'Gäste und der Bild-Autor können Bilder <samp>NIE</samp> bewerten.',
+	'PERMISSION_I_REPORT'			=> 'Kann Bilder melden',
+	'PERMISSION_I_UNLIMITED'		=> 'Kann unbegrenzt Bilder hochladen',
+	'PERMISSION_I_UPLOAD'			=> 'Kann Bilder hochladen',
+	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',
+	'PERMISSION_I_VIEW'				=> 'Kann Bilder sehen',
+	'PERMISSION_I_WATERMARK'		=> 'Kann Bilder ohne Wasserzeichen sehen',
+	'PERMISSION_M'					=> 'Moderation',
+	'PERMISSION_MISC'				=> 'Sonstiges', //Miscellaneous
+	'PERMISSION_M_COMMENTS'			=> 'Kann Kommentare moderieren',
+	'PERMISSION_M_DELETE'			=> 'Kann Bilder löschen',
+	'PERMISSION_M_EDIT'				=> 'Kann Bilder bearbeiten',
+	'PERMISSION_M_MOVE'				=> 'Kann Bilder verschieben',
+	'PERMISSION_M_REPORT'			=> 'Kann Meldungen bearbeiten',
+	'PERMISSION_M_STATUS'			=> 'Kann Bilder freischalten und sperren',
 
 	'PERMISSION_EMPTY'         => 'Du hast nicht alle Berechtigungen gesetzt.',
 	'PERMISSIONS'              => 'Berechtigungen',

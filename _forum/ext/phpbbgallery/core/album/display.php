@@ -1,12 +1,14 @@
 <?php
-
 /**
-*
-* @package phpBB Gallery Core
-* @copyright (c) 2014 nickvergessen
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * phpBB Gallery - Core Extension
+ *
+ * @package   phpbbgallery/core
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
 
 namespace phpbbgallery\core\album;
 
@@ -36,7 +38,7 @@ class display
 	public $album_mode;
 
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper,
-								\phpbb\db\driver\driver_interface $db, 	\phpbb\pagination $pagination,
+								\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
 								\phpbb\request\request $request, \phpbb\template\template $template,
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
@@ -211,6 +213,7 @@ class display
 						AND right_id > ' . (int) $album_data['right_id'] . '
 						AND album_user_id = ' . (int) $album_data['album_user_id'] . '
 					ORDER BY left_id ASC';
+
 				$result = $this->db->sql_query($sql);
 
 				while ($row = $this->db->sql_fetchrow($result))
@@ -234,6 +237,7 @@ class display
 
 		return $album_parents;
 	}
+
 
 	/**
 	 * Obtain list of moderators of each album

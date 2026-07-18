@@ -1,24 +1,25 @@
 <?php
 /**
-*
-* gallery_mcp [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+ * phpBB Gallery - ACP Core Extension [Russian Translation]
+ *
+ * @package   phpbbgallery/core
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translator
+ */
+
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 $lang = array_merge($lang, array(
 	'CHOOSE_ACTION'					=> 'Выберите желаемое действие',
@@ -46,9 +47,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Удалить фотографию',
 	'QUEUE_A_DELETE2'				=> 'Удалить фотографию?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Подтвердите удаление фотографии.',
-	'QUEUE_A_LOCK'					=> 'Блокировать фотографию',
-	'QUEUE_A_LOCK2'					=> 'Блокировать фотографию?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Подтвердите блокировку фотографии.',
+	'QUEUE_A_LOCK'					=> 'Заблокировать комментарии к изображению',
+	'QUEUE_A_LOCK2'					=> 'Утвердить и заблокировать комментарии к изображению?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Вы уверены, что хотите утвердить и заблокировать комментарии к этому изображению?',
 	'QUEUE_A_MOVE'					=> 'Переместить фотографию',
 	'QUEUE_A_UNAPPROVE'				=> 'Отклонить фотографию',
 	'QUEUE_A_UNAPPROVE2'			=> 'Отклонить фотографию?',
