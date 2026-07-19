@@ -1,11 +1,12 @@
 <?php
+
 /**
-*
-* @package Upload Extensions
-* @copyright (c) 2014 - 2019 Igor Lavrov (https://github.com/LavIgor) and John Peskens (http://ForumHulp.com)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package   Upload Extensions
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 if (!defined('IN_PHPBB'))
 {
@@ -15,121 +16,121 @@ if (!defined('IN_PHPBB'))
 // Some characters you may want to copy&paste:
 // ’ » “ ” …
 
-$help = array(
-	array(
+$help = [
+	[
 		0 => '--',
 		1 => 'Módulos gerais'
-	),
-	array(
-		0 => 'O que posso fazer com a funcionalidade “Carregar uma extensão”?',
-		1 => 'Podes carregar extensões de várias fontes diferentes sem precisares de usar um cliente FTP. Quando carregas uma extensão que já existe no teu fórum, a versão antiga será automaticamente guardada na pasta especificada no teu fórum - verifica o módulo “Gestão Intensa de Ficheiros ZIP”. Podes também guardar um ficheiro zip da versão actualmente carregada - marca a opção “Guardar o pacote ZIP após extracção” antes do processo. Podes garantir que estás a carregar o pacote verdadeiro se especificares o seu checksum no respectivo campo.'
-	),
-	array(
-		0 => 'Qual a diferença entre o “Gestor do Carregar Extensões” e o “Gestor de Extensões” padrão do phpBB?',
-		1 => 'Tal como o “Gestor de Extensões” padrão, este módulo é uma ferramenta que permite gerir todas as extensões e ver a sua informação. Mas pode ser encarado como uma “versão vitaminada” do módulo normal.<br /><br /><strong>Principais benefícios:</strong><ul><li>Todas as extensões carregadas são ordenadas alfabeticamente, quer estejam activadas, desactivadas ou desinstaladas. A única excepção: extensões corrompidas.</li><li>Extensões corrompidas aparecem separadamente no fundo da mesma página. São mostradas as razões para estarem indisponíveis e ser-te-á mostrado um alerta caso a extensão corrompida esteja instalada ou possua dados na base de dados. Podes clicar em qualquer extensão corrompida para ver os detalhes da mesma forma que as normais.</li><li>Qualquer extensão sã pode ser activada com um simples clique no botão de alternar (toggle) que se encontra ao lado esquerdo do seu nome.</li></ul>'
-	),
-	array(
-		0 => 'Para que preciso do módulo “Gestão Intensa de Ficheiros ZIP”?',
-		1 => 'Por vezes é muito útil guardares um arquivo de versões antigas das tuas extensões para poderes reverter caso algo corra mal, ou até para partilhar os pacotes zip com outros. Estes arquivos podem ser versões geradas de forma automática pelo sistema, ou pacotes que tenhas seleccionado salvaguardar activamente. Podes extrair, transferir para ti, e apagar estes pacotes zip à vontade.'
-	),
-	array(
-		0 => 'Como posso usar o módulo “Apagar fisicamente extensões”?',
-		1 => 'O módulo permite-te remover os ficheiros e as pastas do teu servidor sem precisares do FTP. Quando já não precisas mesmo de uma extensão, podes varrê-la do mapa. Para o fazeres:<ul><li>Primeiro garante que não precisas mesmo da extensão. É recomendado teres backups caso decidas voltar atrás.</li><li>Depois vai ao Gestor, encontra a extensão e garante que está desactivada (clicando no botão para ficar vermelho).</li><li>Garante que os dados da extensão também foram removidos da base de dados (se houver um ícone de caixote de lixo activo, clica nele para purgar).</li><li>Finalmente vai a “Apagar fisicamente extensões”, clica no link “Apagar extensão” e diz adeus.</li></ul>'
-	),
-	array(
+	],
+	[
+		0 => 'O que posso fazer com a funcionalidade “Upload de uma extensão”?',
+		1 => 'Podes fazer upload de extensões de várias fontes sem precisares de usar um cliente FTP. Quando fazes upload de uma extensão que já existe no teu fórum, a versão antiga é guardada automaticamente na pasta especificada no teu fórum - consulta o módulo “Gestão de ficheiros ZIP”. Também podes guardar o ficheiro zip da versão actualmente enviada - marca a opção “Guardar o ficheiro zip enviado” antes do upload. Podes garantir que estás a fazer upload do pacote verdadeiro da extensão se especificares o teu checksum no campo correspondente.'
+	],
+	[
+		0 => 'Qual é a diferença entre o “Gestor do Upload de Extensões” e o “Gestor de Extensões” padrão do phpBB?',
+		1 => 'Tal como o “Gestor de Extensões” padrão, o “Gestor do Upload de Extensões” é uma ferramenta no teu Fórum phpBB que te permite gerir todas as tuas extensões e ver informação sobre elas. Mas pode ser considerado uma “versão melhorada” do módulo padrão.<br /><br /><strong>Principais vantagens:</strong><ul><li>Todas as extensões enviadas são ordenadas alfabeticamente, estejam activadas, desactivadas ou desinstaladas. A excepção: as extensões corrompidas.</li><li>As extensões corrompidas são mostradas separadamente na mesma página do “Gestor de Extensões”, abaixo da lista de extensões normais. São indicados os motivos da indisponibilidade de cada extensão corrompida. É acrescentada uma mensagem de aviso detalhada a esses motivos quando a extensão corrompida está instalada ou tem dados guardados na tua base de dados. Podes clicar na linha de qualquer extensão corrompida para ver os teus detalhes, da mesma forma que nas restantes extensões.</li><li>Qualquer extensão (se não estiver corrompida) pode ser activada com um único clique no alternador mostrado à esquerda do teu nome na lista.</li></ul>'
+	],
+	[
+		0 => 'Para que preciso do módulo “Gestão de ficheiros ZIP”?',
+		1 => 'Por vezes é útil poderes guardar ficheiros das tuas extensões ou partilhá-los. Esses ficheiros podem ser versões antigas de extensões enviadas (empacotadas automaticamente para segurança dos dados), pacotes que tenhas escolhido guardar ao marcar a opção “Guardar o ficheiro zip enviado” antes de um upload, ou quaisquer ficheiros zip de extensões guardados na pasta especificada (consulta a pergunta “Onde posso especificar a pasta para guardar os ficheiros zip das extensões?” abaixo). Podes descompactar, transferir e apagar esses pacotes.'
+	],
+	[
+		0 => 'Como posso usar o módulo “Apagar extensões”?',
+		1 => 'O módulo “Apagar extensões” permite-te remover os ficheiros de extensões desinstaladas do teu servidor, para que possas concluir a desinstalação completa sem usar FTP. Quando já não precisares de uma extensão, podes removê-la por completo do teu fórum. Para isso, segue estes passos:<ul><li>Primeiro, certifica-te de que realmente não precisas dessa extensão. É recomendado que faças cópias de segurança dos ficheiros e da base de dados antes de qualquer remoção.</li><li>Depois, vai ao “Gestor do Upload de Extensões”, encontra a extensão que pretendes apagar e certifica-te de que está desactivada: clica no alternador dessa extensão <em>se o alternador estiver verde</em>.</li><li>Certifica-te de que os dados da extensão foram apagados: <em>se o botão do caixote do lixo dessa extensão for mostrado</em>, clica nele e confirma a acção.</li><li>Depois disso, vai ao módulo “Apagar extensões”, clica no link “Apagar extensão” mostrado na linha da tua extensão e confirma a acção.</li></ul>'
+	],
+	[
 		0 => '--',
-		1 => 'Processo de Carregamento'
-	),
-	array(
-		0 => 'Como posso carregar extensões validadas oficiais da CDB do phpbb.com?',
-		1 => 'Na página principal, clica em “Mostrar extensões oficiais validadas”. Selecciona a que queres e clica no botão para transferir. Jogo de palavras: a extensão será descarregada remotamente do site deles e carregada directamente e automaticamente para as pastas do teu servidor!'
-	),
-	array(
-		0 => 'Como fazer upload de recursos remotos?',
-		1 => 'Copia o link <strong>directo</strong> para o pacote zip da extensão (geralmente terminará em <code>.zip</code>) e cola-o no campo de upload por link. Depois é só clicar no botão.'
-	),
-	array(
-		0 => 'Como posso carregar a extensão que tenho aqui no meu PC?',
-		1 => 'Clica no botão “Procurar...”, selecciona o ficheiro zip da extensão que descarregaste, e depois clica em “Carregar”.'
-	),
-	array(
-		0 => 'Copiei o link, cliquei no botão, mas atirou-me um erro. O que se passa?',
-		1 => 'Para poder ser carregado remotamente, garante o seguinte:<ol><li>O link tem de ser <strong>directo</strong>. Nada de links com adfly ou que levem para sites intermédios. (e deve terminar em <code>.zip</code>).</li><li>O link tem de levar mesmo ao <strong>ficheiro zipado</strong> em si, não à página que tem o botão de download dentro dela.</li></ol>'
-	),
-	array(
-		0 => 'O que é o checksum? E de onde o arranjo?',
-		1 => 'O Checksum é uma assinatura matemática usada para verificar a integridade do teu ficheiro. Confirma de forma segura que não há corrupção de ficheiros, perda de dados ou se hackers meteram código no zip pelo caminho. O Checksum costuma estar disponível na página principal de onde se saca a extensão.'
-	),
-	array(
+		1 => 'Processo de upload'
+	],
+	[
+		0 => 'Como posso fazer upload de extensões validadas a partir da CDB no phpbb.com?',
+		1 => 'Na página principal do Upload de Extensões, clica no link “Mostrar extensões validadas”. Seleciona a extensão que pretendes enviar e clica no botão “Transferir” na linha dessa extensão. Nota: jogo de palavras aqui: a extensão será <em>transferida</em> do recurso remoto e <em>enviada</em> para o teu servidor.'
+	],
+	[
+		0 => 'Como posso fazer um upload a partir de outros recursos remotos?',
+		1 => 'Copia o link <strong>directo</strong> para o pacote zip da extensão (se o link não for do site phpbb.com, deve terminar em <code>.zip</code>) para o campo respectivo do formulário “Upload de uma extensão” e clica no botão “Upload”.'
+	],
+	[
+		0 => 'Como posso fazer upload de uma extensão a partir do meu PC local?',
+		1 => 'Para isso, clica no botão “Procurar...” no formulário “Upload de uma extensão”, seleciona o ficheiro zip da extensão no teu computador e depois clica no botão “Upload”.'
+	],
+	[
+		0 => 'Copiei o link do pacote zip da extensão para o campo e cliquei no botão “Upload”, mas surge um erro. O que se passa com o link?',
+		1 => 'Para poderes fazer upload da extensão, certifica-te de que as seguintes condições são cumpridas:<ol><li>O link deve ser <strong>directo</strong>: para uploads a partir de recursos que não sejam o phpbb.com, deve terminar em <code>.zip</code>.</li><li>O link deve levar ao <strong>ficheiro zip</strong> da extensão, e não à tua página de descrição.</li></ol>'
+	],
+	[
+		0 => 'O que é o checksum? Onde posso obtê-lo?',
+		1 => 'O checksum é usado para verificar a integridade do ficheiro enviado. É verificado para garantir que o ficheiro no servidor remoto e o ficheiro enviado para o teu servidor são o mesmo. O checksum pode geralmente ser obtido no mesmo recurso onde o ficheiro original está guardado.'
+	],
+	[
 		0 => '--',
-		1 => 'O Gestor do Carregar Extensões'
-	),
-	array(
-		0 => 'Como uso as manetes de Gestão?',
-		1 => 'O estado de cada extensão é mostrado como um interruptor.<ul><li>Verde = activada. Clicar lá vai <strong>desactivar</strong> a extensão com rapidez.</li><li>Vermelho = desactivada. Clicar lá vai <strong>activar</strong> a extensão de volta no fórum.</li><li>Se a extensão estiver desligada mas não tiver sido expurgada da base de dados, vês um caixote de lixo ao lado dela. Ao clicares no caixote de lixo, todos os dados dessa extensão são apagados no servidor.</li></ul><br />Podes configurar actualizações e checar compatibilidade exactamente da mesma forma que no Gestor padrão do phpBB.'
-	),
-	array(
-		0 => 'Extensões corrompidas ou estragadas. Dá para arrancar?',
-		1 => 'Sim, óbvio! Extensões lixadas ou partidas são mandadas para o fundo da página, longe das extensões saudáveis. Se clicares na linha de uma extensão estragada, vais ver em detalhe a razão pela qual o fórum diz que está morta, para que possas resolver o problema ou eliminá-la de vez.'
-	),
-	array(
-		0 => 'O botão interruptor está cinzento inactivo. O que fiz eu?',
-		1 => 'Botões cinzentos indicam que algo está bloqueado ou em processamento activo. Ou o servidor ainda está a pensar no que mandaste fazer, ou estás a olhar para a própria extensão “Carregar Extensões”. O Upload Extensions não tem o poder de se suicidar e desactivar-se a si próprio — por motivos óbvios de segurança.'
-	),
-	array(
+		1 => 'Gestor do Upload de Extensões'
+	],
+	[
+		0 => 'Como usar o “Gestor do Upload de Extensões”?',
+		1 => 'O estado de cada extensão é apresentado como um alternador.<ul><li>Um alternador verde significa que a extensão está activada. Ao clicares num alternador verde, a extensão será <strong>desactivada</strong>.</li><li>Um alternador vermelho significa que a extensão está desactivada. Ao clicares num alternador vermelho, a extensão será <strong>activada</strong>.</li><li>Se a extensão com alternador vermelho estiver desactivada mas ainda tiver dados guardados na base de dados, terás a opção de apagar esses dados ao clicar num caixote do lixo junto ao alternador.<br /><em>Clicar num caixote do lixo é uma forma de desinstalar a extensão da base de dados. Se quiseres apagar os ficheiros da extensão do servidor, terás de usar a Ferramenta de Limpeza de Extensões.</em></li></ul><br />Também podes verificar novamente todas as versões das extensões ao clicar no botão correspondente, ou configurar as definições de verificação de versão tal como no “Gestor de Extensões” padrão.'
+	],
+	[
+		0 => 'E as extensões corrompidas? Posso desinstalá-las?',
+		1 => 'Sim, claro! As extensões corrompidas são mostradas no “Gestor do Upload de Extensões” abaixo da lista de extensões normais. Podes ver os motivos pelos quais essas extensões estão corrompidas e se têm dados guardados na tua base de dados. Clica na linha de uma extensão corrompida para ver os teus detalhes e geri-la.'
+	],
+	[
+		0 => 'O alternador de uma extensão está cinzento. Porquê?',
+		1 => 'O alternador cinzento significa que não podes realizar nenhuma acção com essa extensão no momento. Provavelmente já está outra acção em curso. Além disso, o Upload de Extensões não pode desactivar-se a si próprio - por isso o teu alternador também está cinzento.'
+	],
+	[
 		0 => '--',
 		1 => 'Página de detalhes da extensão'
-	),
-	array(
-		0 => 'Que informação é exumada para as extensões?',
-		1 => 'Tudo o que possa ser útil:<ul><li>A descrição original do autor no <code>composer.json</code>.</li><li>A versão exacta actual.</li><li>O conteúdo original do ficheiro <code>README.md</code>.</li><li>O registo de novidades no <code>CHANGELOG.md</code>.</li><li>Todos os pacotes de idiomas em vigor nessa extensão.</li><li>Toda a árvore hierárquica e navegação pelas pastas do código, onde podes espreitar todos os ficheiros da extensão.</li></ul>'
-	),
-	array(
-		0 => 'Que poderes tenho dentro da página de detalhes?',
-		1 => 'Podes fazer literalmente tudo:<ul><li>Activar e desactivar a extensão se clicares na rodela.</li><li>Purgar dados do servidor se a rodela vermelha tiver um ícone de caixote do lixo disponível.</li><li>Receber automaticamente o aviso de actualizações: se vires que a versão está numa bolha vermelha, a extensão está desactualizada. Podes clicar no ícone de actualização automática para ele extrair a nova versão sem abrires FTP!</li><li>Gerir idiomas e apagar ou instalar novos pacotes de idiomas zipados para a extensão ficar logo a falar pt-PT.</li><li>Transferir um backup zip da extensão com um clique.</li></ul>'
-	),
-	array(
-		0 => 'Como meto idiomas nestas extensões?',
-		1 => 'Temos um processo optimizado brutal que assimila ZIPs de traduções se estiverem estruturados desta forma:<ul><li><code>RAIZ_DO_ZIP/ficheiros_language_soltos</code>, ou</li><li><code>RAIZ_DO_ZIP/nome_da_pasta_unica/ficheiros_language_soltos</code>, ou</li><li><code>RAIZ_DO_ZIP/nome_da_pasta_unica/pt/ficheiros_language_soltos</code>.</li></ul>'
-	),
-	array(
-		0 => 'O que faz o botão de “Descarregar a extensão empacotada”?',
-		1 => 'Pega no código que tens dessa extensão actualmente instalada, com as tuas edições, e varre-a inteira num arquivo ZIP limpinho que podes descarregar para casa ou enviar para partilhar com os teus utilizadores.'
-	),
-	array(
+	],
+	[
+		0 => 'Que informação é mostrada para as minhas extensões?',
+		1 => 'A informação mostrada depende de várias circunstâncias.<ul><li>Descrição geral fornecida pelos programadores da extensão no ficheiro <code>composer.json</code> (ou mensagem de aviso se a extensão estiver corrompida).</li><li>O número de versão da extensão (se não estiver corrompida).</li><li>O conteúdo do ficheiro <code>README.md</code> (se existir na pasta da extensão).</li><li>O conteúdo do ficheiro <code>CHANGELOG.md</code> (se existir na pasta da extensão).</li><li>Pacotes de idioma enviados para a extensão.</li><li>A árvore de ficheiros da extensão e o conteúdo dos teus ficheiros.</li></ul>'
+	],
+	[
+		0 => 'O que posso fazer com a extensão na página de detalhes?',
+		1 => 'Podes:<ul><li>Activar a extensão se o teu alternador estiver vermelho.</li><li>Desactivar a extensão se o teu alternador estiver verde.</li><li>Apagar os dados da extensão da base de dados se o botão vermelho do caixote do lixo for mostrado.</li><li>Consultar o estado da versão actual da extensão, se o link para o ficheiro de verificação de versão for fornecido pelos programadores da extensão. Se a versão da extensão for mostrada numa bolha verde - a extensão está actualizada. Se a bolha for vermelha - a extensão não está actualizada. Caso contrário - não foi possível obter a informação de verificação de versão.</li><li>Receber uma actualização para a extensão se vires uma roda dentada junto à bolha de versão da extensão. Clica na roda dentada: se for mostrado um botão “Actualizar”, podes clicar nele, confirmar a acção e o Upload de Extensões irá actualizar a tua extensão. Também podes ver o anúncio de lançamento ao clicar no botão correspondente, se o link for fornecido pelos programadores da extensão. <strong>NOTA:</strong> se o JavaScript estiver desactivado no teu navegador, esses botões estarão localizados dentro do bloco de detalhes da extensão.</li><li>Gerir os pacotes de idioma da extensão. Podes fazer upload de um novo pacote de idioma para a extensão - consulta a pergunta “Que pacotes de idioma posso enviar para uma extensão?” abaixo. Também podes apagar alguns pacotes de idioma já instalados.</li><li>Transferir o pacote da extensão (consulta a pergunta “Qual é a finalidade da funcionalidade “Transferir extensão empacotada”?” abaixo).</li></ul>'
+	],
+	[
+		0 => 'Que pacotes de idioma posso enviar para uma extensão?',
+		1 => 'Podes fazer upload de quaisquer pacotes zip que contenham ficheiros de idioma para a extensão, desde que tenham uma das seguintes estruturas:<ul><li><code>RAIZ_DO_ZIP/ficheiros_de_idioma</code>, ou</li><li><code>RAIZ_DO_ZIP/pasta_única/ficheiros_de_idioma</code>, ou</li><li><code>RAIZ_DO_ZIP/pasta_única/pt/ficheiros_de_idioma</code>.</li></ul><br />Para mais informações sobre o processo de upload, consulta a secção “Processo de upload” acima.'
+	],
+	[
+		0 => 'Qual é a finalidade da funcionalidade “Transferir extensão empacotada”?',
+		1 => 'O Upload de Extensões permite-te transferir pacotes zip adequados de quaisquer extensões enviadas no teu fórum para o teu PC local. Também podes marcar uma opção para apagar o sufixo da versão de desenvolvimento - esta acção pode ajudar-te, por exemplo, a reduzir o tempo de preparação da extensão para a CDB. Vai à página de detalhes da extensão e clica no botão da secção “Ferramentas”. O botão “Transferir” será então mostrado.'
+	],
+	[
 		0 => '--',
-		1 => 'Gestão Intensa de Ficheiros ZIP'
-	),
-	array(
-		0 => 'Onde decido a morada em que o meu servidor guarda as preciosas cópias de segurança ZIP?',
-		1 => 'Vai no ACP a <code>Geral -> Configuração do servidor -> Caminhos -> Caminho principal de arquivo onde os pacotes ZIP ficarão guardados</code>.'
-	),
-	array(
-		0 => 'Como varro dezenas de zips velhos de uma assentada?',
-		1 => 'Primeiro certifica-te que não vais precisar mais de reverter as extensões para versões antigas que estejas a tentar apagar. Em caso de certeza absoluta, vais à “Gestão de ZIPs”, marcas o Visinho nas linhas dos pacotes que queres queimar, clicas em “Apagar marcados” e tchau!'
-	),
-	array(
+		1 => 'Gestão de ficheiros ZIP'
+	],
+	[
+		0 => 'Onde posso especificar a pasta para guardar os ficheiros zip das extensões?',
+		1 => 'Vai no ACP a <code>Geral -> Configuração do servidor -> Definições do servidor -> Definições de caminhos -> Caminho de armazenamento dos pacotes zip das extensões</code>.'
+	],
+	[
+		0 => 'Como posso apagar vários pacotes zip de extensões de uma vez?',
+		1 => 'Primeiro, certifica-te de que realmente precisas de realizar essa acção; é recomendado que tenhas feito as cópias de segurança necessárias. Depois, vai ao módulo “Gestão de ficheiros ZIP”, marca as opções nas linhas dos pacotes zip que pretendes apagar, clica no botão “Apagar marcados” e confirma a acção.'
+	],
+	[
 		0 => '--',
 		1 => 'Ferramenta de Limpeza de Extensões'
-	),
-	array(
-		0 => 'Mas que ferramenta é esta?',
-		1 => 'A Ferramenta de Limpeza de Extensões é a secção fatal de "Apagar fisicamente extensões", que elimina fisicamente o código e apaga de vez as pastas da extensão dentro da pasta /ext/ do fórum.'
-	),
-	array(
-		0 => 'Maldita extensão! Eu tento apagá-la daqui e o botão diz que não!',
-		1 => 'Toda a extensão necessita de passar por um protocolo sagrado de desinstalação segura do phpBB antes de lhe poderes deitar fogo. Ou seja: Tens de a Desactivar PRIMEIRO. Tens de a Purgar e apagar os dados dela da base de dados DEPOIS. E APENAS DEPOIS de a extensão estar desactivada e morta na base de dados, é que lhe podes aplicar a ferramenta de limpeza e rebentar as pastas do teu servidor sem quebrar o fórum!'
-	),
-	array(
-		0 => 'Tenho aqui muito lixo, posso apagar vários de rajada?',
-		1 => 'Sim, da mesma forma brutal. Marca os quadrados correspondentes das vítimas a exterminar e aperta "Apagar marcados". <strong>As pastas desvanecerão do teu FTP na totalidade, portanto tem a certeza ou tem backups feitos do teu site!</strong>'
-	),
-	array(
+	],
+	[
+		0 => 'O que é a “Ferramenta de Limpeza de Extensões”?',
+		1 => 'A “Ferramenta de Limpeza de Extensões” é o nome do módulo “Apagar extensões” do Upload de Extensões, por vezes usado na tua documentação.'
+	],
+	[
+		0 => 'Tenho uma extensão instalada no meu fórum mas não a consigo apagar. Porquê?',
+		1 => 'A extensão que pretendes remover deve estar desactivada e os teus dados devem ser apagados da base de dados antes de usares a “Ferramenta de Limpeza de Extensões”. Consulta a pergunta “Como posso usar o módulo “Apagar extensões”?” acima.'
+	],
+	[
+		0 => 'Como posso apagar várias extensões de uma vez?',
+		1 => 'Primeiro, certifica-te de que realmente precisas de realizar essa acção; é recomendado que tenhas feito as cópias de segurança necessárias. Depois, vai ao módulo “Apagar extensões”, marca as opções nas linhas das extensões que pretendes apagar, clica no botão “Apagar marcados” e confirma a acção. <strong>Essas extensões não serão guardadas como ficheiros zip! As tuas pastas serão removidas por completo do servidor.</strong>'
+	],
+	[
 		0 => '--',
-		1 => 'Interface Dinâmica'
-	),
-	array(
-		0 => 'Porque é que me falas nas maravilhas do JavaScript?',
-		1 => 'Porque foi esse JavaScript que permitiu a revolução de não teres de fazer reload à página completa inteira do phpBB de cada vez que clicas num botão, além de carregar dicas coloridas de ajuda quando passas o rato.'
-	),
-);
+		1 => 'Interface interactiva'
+	],
+	[
+		0 => 'Quais são as vantagens da funcionalidade JavaScript?',
+		1 => 'As páginas são carregadas mais rapidamente, os elementos de design mudam rapidamente quando interages com eles e são mostradas dicas para te ajudar. Todas estas funcionalidades poupam-te tempo e só estão disponíveis se o JavaScript estiver activado no teu navegador.'
+	],
+];
