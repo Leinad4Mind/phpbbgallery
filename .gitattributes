@@ -1,0 +1,40 @@
+# Force LF line endings for text files, regardless of the OS or the
+# core.autocrlf setting of whoever checks the repo out. phpBB's coding
+# guidelines require UNIX (LF) line endings for all source files.
+* text=auto eol=lf
+
+*.php text eol=lf
+*.twig text eol=lf
+*.html text eol=lf
+*.htm text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.xml text eol=lf
+*.ini text eol=lf
+*.txt text eol=lf
+*.sql text eol=lf
+*.sh text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Binary assets must never be touched by line-ending normalization.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.zip binary
+*.gz binary
+*.phar binary
+*.pdf binary

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="gold-phpbb-ext">
+	<file>_forum/ext</file>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/styles/*</exclude-pattern>
+	<exclude-pattern>*/adm/*</exclude-pattern>
+
+	<rule ref="vendor/senky/phpbb-coding-standard/ruleset.xml"/>
+</ruleset>
