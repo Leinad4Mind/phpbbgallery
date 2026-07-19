@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-*
-*
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,34 +36,34 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP general langauge
-	'ACP_PMSEARCH_GRP'	=> 'Търсене в лични съобщения',
-	'ACP_PRVOPT'	=> 'Настройки',
+	'ACP_PMSEARCH_GRP' => 'Търсене в лични съобщения',
+	'ACP_PRVOPT'       => 'Настройки',
 
 	//ACP PM Admin Settings page
-	'PMSEARCH_ADMIN'	=> 'Търсене в лични съобщения',
-	'PMSEARCH_ADMIN_EXPLAIN'	=> 'От тук можете да настроите някои от нещата свързани с потребителското търсене в лични съобщения',
-	'PMSEARCH_SETTINGS'	=> 'Настройки',
-	'PMSEARCH_PM_INDEX'	=> 'Индексация на лични съобщения',
-	'PMSEARCH_PM_INDEX_EXPLAIN'	=> 'От тук можете да пуснете индексацята на лични съобщения <br /><b>(Внимание! Търсенето няма да раоти без активирана индексация)</b>',
-	'PMSEARCH_PM_SEARCH'	=>	'Разреши търсенето',
-	'PMSEARCH_PM_SEARCH_EXPLAIN'	=> 'Глобално разрешаване (или забраняване) на търсенето в личните съобщения',
-	'DELETE_INDEX'	=> 'Изтрий индексите',
-	'CREATE_INDEX'	=> 'Създай индексите',
+	'PMSEARCH_ADMIN'             => 'Търсене в лични съобщения',
+	'PMSEARCH_ADMIN_EXPLAIN'     => 'От тук можете да настроите някои от нещата свързани с потребителското търсене в лични съобщения',
+	'PMSEARCH_SETTINGS'          => 'Настройки',
+	'PMSEARCH_PM_INDEX'          => 'Индексация на лични съобщения',
+	'PMSEARCH_PM_INDEX_EXPLAIN'  => 'От тук можете да пуснете индексацията на лични съобщения <br /><b>(Внимание! Търсенето няма да работи без активирана индексация)</b>',
+	'PMSEARCH_PM_SEARCH'         => 'Разреши търсенето',
+	'PMSEARCH_PM_SEARCH_EXPLAIN' => 'Глобално разрешаване (или забраняване) на търсенето в личните съобщения',
+	'DELETE_INDEX'               => 'Изтрий индексите',
+	'CREATE_INDEX'               => 'Създай индексите',
 
 	//ACP ACL
-	'ACL_U_PMSEARCH'	=> 'Потребителя може да търси в личните си съобщения',
+	'ACL_U_PMSEARCH' => 'Потребителя може да търси в личните си съобщения',
 
 	//Other ACP
-	'LOG_PMSEARCH_INDEX_REMOVED'	=> '<strong>Премахнат търсещият индекс за </strong><br />» %s',
-	'LOG_PMSEARCH_INDEX_CREATED'	=> '<strong>Създаден търсещ индекс за </strong><br />» %s',
-	'TOTAL_WORDS'							=> 'Общо индексирани думи',
-	'TOTAL_MATCHES'							=> 'Общ сбор връзки между думи и PMs.',
-	'SEARCH_INDEX_CREATE_REDIRECT'			=> array(
-		2	=> 'Всички постове до пост %2$d бяха индексирани, от тях %1$d поста в тази стъпка.<br />',
-	),
-	'SEARCH_INDEX_CREATE_REDIRECT_RATE'		=> array(
-		2	=> 'Текущата скорост е %1$.1f поста в секунда.<br />Продължаваме индексацията …',
-	),
-));
+	'LOG_PMSEARCH_INDEX_REMOVED'   => '<strong>Премахнат търсещият индекс за </strong><br />» %s',
+	'LOG_PMSEARCH_INDEX_CREATED'   => '<strong>Създаден търсещ индекс за </strong><br />» %s',
+	'TOTAL_WORDS'                  => 'Общо индексирани думи',
+	'TOTAL_MATCHES'                => 'Общ сбор връзки между думи и PMs.',
+	'SEARCH_INDEX_CREATE_REDIRECT' => [
+		2 => 'Всички постове до пост %2$d бяха индексирани, от тях %1$d поста в тази стъпка.<br />',
+	],
+	'SEARCH_INDEX_CREATE_REDIRECT_RATE' => [
+		2 => 'Текущата скорост е %1$.1f поста в секунда.<br />Продължаваме индексацията …',
+	],
+]);

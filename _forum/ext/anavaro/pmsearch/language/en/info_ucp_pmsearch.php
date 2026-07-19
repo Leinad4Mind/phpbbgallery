@@ -1,11 +1,10 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-*
-*
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
 /**
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,20 +36,20 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Search in PMs',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Place + in front of a word which must be found and - in front of a word which must not be found. Put a list of words separated by | into brackets if only one of the words must be found. Use * as a wildcard for partial matches.',
-	'SEARCH_ALL_TERMS'	=>	' Search for all terms or use query as entered',
-	'SEARCH_ANY_TERMS'	=>	'Search for any terms',
-	'NO_RESULTS_FOUND'	=> 'No results found.',
-	'SEARCH_PMS'	=> 'Search PMs',
-	'ACCESS_DENIED'	=> 'You have no authority to search in PMs',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Search in PMs',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Place + in front of a word which must be found and - in front of a word which must not be found. Put a list of words separated by | into brackets if only one of the words must be found. Use * as a wildcard for partial matches.',
+	'SEARCH_ALL_TERMS'          => ' Search for all terms or use query as entered',
+	'SEARCH_ANY_TERMS'          => 'Search for any terms',
+	'NO_RESULTS_FOUND'          => 'No results found.',
+	'SEARCH_PMS'                => 'Search PMs',
+	'ACCESS_DENIED'             => 'You have no authority to search in PMs',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Search with nick',
-	'SEARCH_WITH_USER'	=> 'Search',
-	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
+	'SEARCH_FOR_NICK'       => 'Search with nick',
+	'SEARCH_WITH_USER'      => 'Search',
+	'SEARCH_WITH_USER_LANG' => 'Show conversations with user',
 
 	// Added in version 1.0.2
-	'SEARCH_USR_PLACEHOLDER'	=> 'Search keywords or username…',
-));
+	'SEARCH_USR_PLACEHOLDER' => 'Search keywords or username…',
+]);

@@ -1,12 +1,12 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-* Brazilian Portuguese translation by eunaumtenhoid (c) 2017 [ver 1.0.0] (https://github.com/phpBBTraducoes)
-*
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,20 +37,20 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Pesquise em MPs',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Coloque + na frente de uma palavra que deve ser encontrada e - na frente de uma palavra que não deve ser encontrada. Coloque uma lista de palavras separadas por | entre parênteses se apenas uma das palavras deve ser encontrada. Use * como um curinga para partidas parciais.',
-	'SEARCH_ALL_TERMS'	=>	' Procure todos os termos ou use a consulta como inserida',
-	'SEARCH_ANY_TERMS'	=>	'Procure por quaisquer termos',
-	'NO_RESULTS_FOUND'	=> 'Nenhum resultado encontrado.',
-	'SEARCH_PMS'	=> 'Pesquisar MPs',
-	'ACCESS_DENIED'	=> 'Você não tem autoridade para pesquisar em MPs',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Pesquisar em MPs',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Coloque um + à frente de uma palavra que deve ser encontrada e - à frente de uma palavra que não deve ser encontrada. Coloque uma lista de palavras separadas por | dentro de parênteses se apenas uma das palavras precisar de ser encontrada. Use * como um curinga para correspondências parciais.',
+	'SEARCH_ALL_TERMS'          => ' Pesquisar por todos os termos ou usar consulta como inserida',
+	'SEARCH_ANY_TERMS'          => 'Pesquisar por quaisquer termos',
+	'NO_RESULTS_FOUND'          => 'Nenhum resultado encontrado.',
+	'SEARCH_PMS'                => 'Pesquisar MPs',
+	'ACCESS_DENIED'             => 'Não tem permissão para pesquisar em MPs',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Search with nick',
-	'SEARCH_WITH_USER'	=> 'Search',
-	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
+	'SEARCH_FOR_NICK'       => 'Pesquisar com nome de usuário',
+	'SEARCH_WITH_USER'      => 'Pesquisar',
+	'SEARCH_WITH_USER_LANG' => 'Mostrar conversas com o usuário',
 
 	// Added in version 1.0.2
-	'SEARCH_USR_PLACEHOLDER'	=> 'Pesquisar palavras-chave ou nome de usuário…',
-));
+	'SEARCH_USR_PLACEHOLDER' => 'Pesquisar palavras-chave ou nome de usuário…',
+]);

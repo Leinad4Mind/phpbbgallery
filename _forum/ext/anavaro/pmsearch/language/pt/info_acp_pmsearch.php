@@ -1,12 +1,12 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-* Brazilian Portuguese translation by eunaumtenhoid (c) 2017 [ver 1.0.0] (https://github.com/phpBBTraducoes)
-*
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,34 +37,34 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP general langauge
-	'ACP_PMSEARCH_GRP'	=> 'Pesquisa em MPs',
-	'ACP_PRVOPT'	=> 'Configurações',
+	'ACP_PMSEARCH_GRP' => 'Pesquisar em MPs',
+	'ACP_PRVOPT'       => 'Configurações',
 
 	//ACP PM Admin Settings page
-	'PMSEARCH_ADMIN'	=> 'Pesquisa em MPs',
-	'PMSEARCH_ADMIN_EXPLAIN'	=> 'A partir daqui, podes definir algumas das opções relacionadas à pesquisa de utilizadores em MPs.',
-	'PMSEARCH_SETTINGS'	=> 'Opções',
-	'PMSEARCH_PM_INDEX'	=> 'Índice de MP',
-	'PMSEARCH_PM_INDEX_EXPLAIN'	=> 'A partir daqui, podes permitir a indexação<br /><b>(Aviso! A pesquisa não funcionará se não tiveres indexação)</b>.',
-	'PMSEARCH_PM_SEARCH'	=>	'Permitir pesquisa',
-	'PMSEARCH_PM_SEARCH_EXPLAIN'	=> 'Permitir globalmente (ou negar) pesquisa em MPs.',
-	'DELETE_INDEX'	=> 'Apagar índices',
-	'CREATE_INDEX'	=> 'Criar índices',
+	'PMSEARCH_ADMIN'             => 'Pesquisar em MPs',
+	'PMSEARCH_ADMIN_EXPLAIN'     => 'A partir daqui podes definir algumas das opções relacionadas com a pesquisa de utilizadores em MPs.',
+	'PMSEARCH_SETTINGS'          => 'Opções',
+	'PMSEARCH_PM_INDEX'          => 'Indexação de MPs',
+	'PMSEARCH_PM_INDEX_EXPLAIN'  => 'A partir daqui podes permitir a indexação <br /><b>(Aviso! A pesquisa não funcionará se não tiveres indexação)</b>.',
+	'PMSEARCH_PM_SEARCH'         => 'Permitir pesquisa',
+	'PMSEARCH_PM_SEARCH_EXPLAIN' => 'Permitir (ou negar) globalmente a pesquisa em MPs.',
+	'DELETE_INDEX'               => 'Eliminar índices',
+	'CREATE_INDEX'               => 'Criar índices',
 
 	//ACP ACL
-	'ACL_U_PMSEARCH'	=> 'O utilizador pode pesquisar em MPs',
+	'ACL_U_PMSEARCH' => 'O utilizador pode pesquisar em MPs',
 
 	//Other ACP
-	'LOG_PMSEARCH_INDEX_REMOVED'	=> '<strong>Índice de pesquisa removido por </strong><br />» %s',
-	'LOG_PMSEARCH_INDEX_CREATED'	=> '<strong>Índice de pesquisa criado por </strong><br />» %s',
-	'TOTAL_WORDS'							=> 'Total de palavras indexadas',
-	'TOTAL_MATCHES'							=> 'Contagem total de relações de palavras',
-	'SEARCH_INDEX_CREATE_REDIRECT'			=> array(
-		2	=> 'Todas as mensagens até à mensagem com id %2$d foram indexadas, das quais %1$d mensagens estavam dentro desta etapa.<br />',
-	),
-	'SEARCH_INDEX_CREATE_REDIRECT_RATE'		=> array(
-		2	=> 'A taxa atual de indexação é aproximadamente %1$.1f mensagens por segundo.<br />Indexação em andamento...',
-	),
-));
+	'LOG_PMSEARCH_INDEX_REMOVED'   => '<strong>Índice de pesquisa removido por </strong><br />» %s',
+	'LOG_PMSEARCH_INDEX_CREATED'   => '<strong>Índice de pesquisa criado por </strong><br />» %s',
+	'TOTAL_WORDS'                  => 'Total de palavras indexadas',
+	'TOTAL_MATCHES'                => 'Contagem total de relações de palavras',
+	'SEARCH_INDEX_CREATE_REDIRECT' => [
+		2 => 'Todas as mensagens até ao id de mensagem %2$d foram agora indexadas, das quais %1$d mensagens foram neste passo.<br />',
+	],
+	'SEARCH_INDEX_CREATE_REDIRECT_RATE' => [
+		2 => 'A taxa atual de indexação é de aproximadamente %1$.1f mensagens por segundo.<br />Indexação em progresso…',
+	],
+]);

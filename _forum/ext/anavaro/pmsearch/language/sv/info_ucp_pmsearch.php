@@ -1,13 +1,12 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-* Swedish translation by Holger (http://www.maskinisten.net)
-*
-*
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Holger [Swedish [sv]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,20 +37,20 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Sök inom PM',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Använd + framför ord som måste hittas och - framför ord som ej får hittas. Använd en lista av ord separerad med | i en parantes om endast ett av orden får hittas. Använd * som platshållare.',
-	'SEARCH_ALL_TERMS'	=>	'Sök alla sökord eller använd sökkriterierna som de angivits',
-	'SEARCH_ANY_TERMS'	=>	'Sök något av sökorden',
-	'NO_RESULTS_FOUND'	=> 'Inga sökresultat',
-	'SEARCH_PMS'	=> 'Sök inom PM',
-	'ACCESS_DENIED'	=> 'Du är ej behörig att söka inom PM',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Sök inom PM',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Använd + framför ord som måste hittas och - framför ord som ej får hittas. Använd en lista av ord separerad med | i en parentes om endast ett av orden får hittas. Använd * som jokertecken för delvisa träffar.',
+	'SEARCH_ALL_TERMS'          => 'Sök alla sökord eller använd sökkriterierna som de angivits',
+	'SEARCH_ANY_TERMS'          => 'Sök något av sökorden',
+	'NO_RESULTS_FOUND'          => 'Inga sökresultat',
+	'SEARCH_PMS'                => 'Sök inom PM',
+	'ACCESS_DENIED'             => 'Du är ej behörig att söka inom PM',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Search with nick',
-	'SEARCH_WITH_USER'	=> 'Search',
-	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
+	'SEARCH_FOR_NICK'       => 'Sök med smeknamn',
+	'SEARCH_WITH_USER'      => 'Sök',
+	'SEARCH_WITH_USER_LANG' => 'Visa konversationer med användaren',
 
 	// Added in version 1.0.2
-	'SEARCH_USR_PLACEHOLDER'	=> 'Sök nyckelord eller användarnamn…',
-));
+	'SEARCH_USR_PLACEHOLDER' => 'Sök nyckelord eller användarnamn…',
+]);

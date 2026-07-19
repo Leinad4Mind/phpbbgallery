@@ -1,13 +1,12 @@
 <?php
+
 /**
-*
-* PM Search extension for the phpBB Forum Software package.
-* French translation by Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2014
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * PM Search extension for the phpBB Forum Software package.
+ * @author Stanislav Atanasov | Leinad4Mind
+ * @copyright 2014 Stanislav Atanasov | 2026 Leinad4Mind
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Galixte [French [fr]] (2014)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,20 +37,20 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Rechercher dans les MP',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Placez un <b>+</b> devant un mot qui doit être trouvé et un <b>-</b> devant un mot qui doit être exclu. Tapez une suite de mots séparés par des <b>|</b> entre crochets si uniquement un des mots doit être trouvé. Utilisez un * comme joker pour des recherches partielles.',
-	'SEARCH_ALL_TERMS'	=>	'Rechercher tous les termes ou utiliser une question comme entrée',
-	'SEARCH_ANY_TERMS'	=>	'Rechercher n’importe lequel de ces termes',
-	'NO_RESULTS_FOUND'	=> 'Aucun message ne correspond à vos critères de recherche.',
-	'SEARCH_PMS'	=> 'Rechercher',
-	'ACCESS_DENIED'	=> 'Vous n’avez pas l’autorisation pour rechercher dans les messages privés.',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Rechercher dans les MP',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Placez un <b>+</b> devant un mot qui doit être trouvé et un <b>-</b> devant un mot qui doit être exclu. Tapez une suite de mots séparés par des <b>|</b> entre crochets si uniquement un des mots doit être trouvé. Utilisez un * comme joker pour des recherches partielles.',
+	'SEARCH_ALL_TERMS'          => 'Rechercher tous les termes ou utiliser la requête telle quelle',
+	'SEARCH_ANY_TERMS'          => 'Rechercher n’importe lequel de ces termes',
+	'NO_RESULTS_FOUND'          => 'Aucun message ne correspond à vos critères de recherche.',
+	'SEARCH_PMS'                => 'Rechercher',
+	'ACCESS_DENIED'             => 'Vous n’avez pas l’autorisation pour rechercher dans les messages privés.',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Search with nick',
-	'SEARCH_WITH_USER'	=> 'Search',
-	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
+	'SEARCH_FOR_NICK'       => 'Rechercher par pseudo',
+	'SEARCH_WITH_USER'      => 'Rechercher',
+	'SEARCH_WITH_USER_LANG' => 'Afficher les conversations avec l’utilisateur',
 
 	// Added in version 1.0.2
-	'SEARCH_USR_PLACEHOLDER'	=> 'Rechercher des mots-clés ou un nom d’utilisateur…',
-));
+	'SEARCH_USR_PLACEHOLDER' => 'Rechercher des mots-clés ou un nom d’utilisateur…',
+]);
