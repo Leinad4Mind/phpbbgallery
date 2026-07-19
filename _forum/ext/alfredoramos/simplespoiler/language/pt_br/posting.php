@@ -5,6 +5,7 @@
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
  * @license GPL-2.0-only
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -24,6 +25,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SPOILER'			=> 'Spoiler',
-	'SPOILER_HELPLINE'	=> 'Uso: [spoiler]texto[/spoiler] ou [spoiler=título]texto[/spoiler]'
+	'SPOILER'          => 'Spoiler',
+	'SPOILER_HELPLINE' => 'Uso: [spoiler]texto[/spoiler] ou [spoiler title=título]texto[/spoiler]',
 ]);

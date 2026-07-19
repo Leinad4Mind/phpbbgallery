@@ -25,5 +25,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'SPOILER'			=> 'ספויילר',
-	'SPOILER_HELPLINE'	=> 'שימוש: [spoiler]טקסט[/spoiler] או [spoiler title=title]טקסט[/spoiler]'
+	'SPOILER_HELPLINE'	=> 'שימוש: [spoiler]טקסט[/spoiler] או [spoiler title=כותרת]טקסט[/spoiler]'
 ]);

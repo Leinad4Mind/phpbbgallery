@@ -5,6 +5,7 @@
  * @author Alfredo Ramos <alfredo.ramos@yandex.com>
  * @copyright 2017 Alfredo Ramos
  * @license GPL-2.0-only
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -24,6 +25,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SPOILER_DEPTH_LIMIT' => 'Número máximo de spoilers por post',
-	'SPOILER_DEPTH_LIMIT_EXPLAIN' => 'Número máximo de spoilers por post, sendo <samp>0</samp> igual a um valor ilimitado.'
+	'SPOILER_DEPTH_LIMIT'         => 'Número máximo de spoilers dentro de outros spoilers',
+	'SPOILER_DEPTH_LIMIT_EXPLAIN' => 'Número máximo de spoilers dentro de outros spoilers. Defina <samp>0</samp> para um valor ilimitado.'
 ]);
