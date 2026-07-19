@@ -78,6 +78,22 @@ Este documento dita as regras e diretrizes comportamentais e estruturais que qua
   ```
 - Todas as aspas simples (`'`) dentro do valor de uma tradução **DEVEM** ser devidamente escapadas (`\'`) para não quebrarem a array PHP. O código nunca deve ter Syntax Errors e deve passar limpo no `php -l ficheiro.php`.
 
+## 7. Convenções de Tradução para Português (pt, pt_preao, pt_br)
+Existem três variantes da língua portuguesa nestas extensões, cada uma com uma identidade distinta:
+- **`pt`** — Português de Portugal (Português Europeu), grafia pós-Acordo Ortográfico de 1990 (AO90). Ex: "aspeto", "efetuar" (sem 'c' mudo).
+- **`pt_preao`** — Português de Portugal (Português Europeu), grafia pré-Acordo Ortográfico (pré-AO90) — a grafia clássica/etimológica. Ex: "aspecto", "efectuar" (com 'c' mudo).
+- **`pt_br`** — Português do Brasil.
+
+Diretrizes de estilo de tradução:
+- **Gerúndio**: `pt` e `pt_preao` nunca devem usar construções de gerúndio para rótulos/ações — devem ser sempre evitadas. Ex: "Gerando" → "Criar" ou "Gerar"; "Gerenciar" → "Gerir". `pt_br` pode manter o gerúndio (ex: "Gerando", "Gerenciando").
+- **Tratamento (Forma de Tratamento)**: `pt` E `pt_preao` usam a forma informal **tu** (tu/teu/tua/contigo/ti, verbos como "tiveres", "podes", "vês", imperativos como "define"). `pt_br` usa a forma **você/seu** (você, seu/sua, verbos como "tiver", "pode", "vê").
+- **Ortografia**: `pt` elimina consoantes mudas/etimológicas de acordo com o AO90 (aspeto, efetuar, ação, direção, objetivo); `pt_preao` mantém-nas conforme a norma europeia pré-1990 (aspecto, efectuar, acção, direcção, objectivo). Não aplicar grafia AO90 em ficheiros `pt_preao`, nem grafia pré-AO90 em `pt`.
+- **Aspeto Progressivo ("a + infinitivo" vs gerúndio)**: `pt`/`pt_preao` usam a perífrase europeia "a + infinitivo" (ex: "A executar...", "A carregar..."). `pt_br` deve usar o gerúndio (ex: "Executando...", "Carregando...").
+- **Vocabulário (Lexical)**: `pt`/`pt_preao` usam **ficheiro(s)** para "file(s)" — nunca "arquivo(s)". `pt_br` usa **arquivo(s)**. Outros pares conhecidos: "utilizador" (pt) vs "usuário" (pt_br); "ecrã" (pt) vs "tela" (pt_br); "telemóvel" (pt) vs "celular" (pt_br).
+- **Termos de Upload/Download**: `pt`/`pt_preao` usam **"fazer upload"** para o verbo upload (não "carregar") e **"transferir"** para download (não "descarregar"/"baixar"). Para rótulos curtos, botões ou títulos, usar **"Upload"** como substantivo (ex: "Upload de Extensões"). Para prosa longa, usar "fazer upload de X". `pt_br` mantém "carregar"/"baixar".
+- **Possessivos na segunda pessoa (tu) — preferir teu/tua**: em `pt`/`pt_preao`, preferir sempre **teu/tua** em vez de "seu/sua" para consistência e evitar ambiguidade (já que "seu/sua" soa a tratamento formal). Ex: "se o seu alternador estiver vermelho" → "se o teu alternador estiver vermelho" (tratar o utilizador por "tu").
+- **Não traduzir siglas do phpBB**: As siglas ACP, MCP e UCP não devem ser traduzidas/localizadas em nenhuma variante (ex: não usar "PCA").
+
 ## Documentação de Referência
 Sempre que o Agente tiver dúvidas aprofundadas sobre um destes tópicos, deve ler e referenciar-se nos ficheiros gerados anteriormente:
 - `phpbb_coding_guidelines.md` (Guias oficias de estrutura de código, sql, otimizações).
