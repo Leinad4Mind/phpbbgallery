@@ -1,11 +1,11 @@
 <?php
+
 /**
- *
- * Croatian translation by Ančica Sečan (http://ancica.sunceko.net)
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Ančica Sečan [Croatian [hr]] (2026)
  */
 
 /**
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CRON_STATUS_TITLE'        => 'Status <em>crona</em>',
 	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Provjera statusa <em>crona</em>',
-));
+]);

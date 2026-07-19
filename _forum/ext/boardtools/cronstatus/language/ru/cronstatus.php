@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    Igor Lavrov, John Peskens, Leinad4Mind
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
 /**
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron заблокирован',
 	'CRON_TIME_LOCKED'                => 'Время блокировки cron',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Разработчики',
 	'CRON_TASK_RUN'                   => 'Выполнить',
 	'CRON_TASK_RUNNING'               => 'Выполняется...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Страница Статуса Cron',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Перечень заданий Cron (с сортировкой)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Отображает статус каждого задания Cron',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Уведомление о Статусе Cron (опционально)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Отображается на главной странице администраторского раздела, когда cron заблокирован',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Может быть выключено в разделе Настройки конференции',
-));
+]);

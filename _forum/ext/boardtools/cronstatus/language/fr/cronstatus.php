@@ -1,11 +1,11 @@
 <?php
+
 /**
- *
- * French translation by Galixte (http://www.galixte.com)
- * @package       Cron Status 
- * @copyright (c) 2014 - 2018 Igor Lavrov and John Peskens
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Galixte [French [fr]] (2026)
  */
 
 /**
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron arrêté',
 	'CRON_TIME_LOCKED'                => 'Temps d’arrêt du Cron',
@@ -65,10 +65,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Développeurs',
 	'CRON_TASK_RUN'                   => 'Exécuter',
 	'CRON_TASK_RUNNING'               => 'En cours d’exécution…',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Page du statut du Cron',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Vue d’ensemble des tâches du Cron (avec tri).',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Affiche le statut de chaque tâche du Cron.',
@@ -76,4 +76,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Notification sur le statut du Cron (optionnelle)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Est affichée sur la page de l’index de l’administration lorsque le Cron est arrêté.',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Peut être désactivée dans la page « Configuration du forum ».',
-));
+]);

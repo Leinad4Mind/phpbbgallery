@@ -1,10 +1,11 @@
 <?php
+
 /**
- *
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    Igor Lavrov, John Peskens, Leinad4Mind
+ * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 /**
@@ -17,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,10 +34,10 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 //
 // Some characters you may want to copy&paste:
-// ’ » “ ” …
+// ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CRON_STATUS_TITLE'        => 'Estado do Cron',
-	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Verificar Estado do Cron',
-));
+	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Verificar o Estado do Cron',
+]);

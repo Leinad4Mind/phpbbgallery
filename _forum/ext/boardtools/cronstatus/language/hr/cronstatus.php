@@ -1,11 +1,11 @@
 <?php
+
 /**
- *
- * Croatian translation by Ančica Sečan (http://ancica.sunceko.net)
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Ančica Sečan [Croatian [hr]] (2026)
  */
 
 /**
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => '<em>Cron</em>',
 	'CRON_LOCKED'                     => '<em>Cron</em> (je) zaključan',
 	'CRON_TIME_LOCKED'                => 'Vrijeme <em>crona</em>',
@@ -65,10 +65,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Razvojni/a programer/ka',
 	'CRON_TASK_RUN'                   => 'Pokreni',
 	'CRON_TASK_RUNNING'               => 'Pokretanje [izvršavanje] u tijeku...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Stranica statusa <em>crona</em>',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Pregled poslova <em>crona</em> (s redanjem)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Prikazuje status svakog zadatka <em>crona</em>',
@@ -76,4 +76,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Obavijest statusa <em>crona</em> (opcionalno)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Ukoliko je <em>cron</em> zaključan, bit će prikazana na početnoj stranici <em>Administriranja foruma [AF]</em>',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Može biti isključen(o) u postavkama foruma',
-));
+]);

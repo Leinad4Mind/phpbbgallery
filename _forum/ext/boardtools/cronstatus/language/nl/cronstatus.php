@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
 /**
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,9 +36,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
-	'CRON_LOCKED'                     => 'Taak geblokkeerd',
+	'CRON_LOCKED'                     => 'Cron geblokkeerd',
 	'CRON_TIME_LOCKED'                => 'Taak tijd geblokkeerd',
 	'ACP_CRON_STATUS_TITLE'           => 'Cron Status',
 	'ACP_CRON_STATUS_CONFIG_TITLE'    => 'Controleer Cron Status',
@@ -62,12 +62,12 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_TIMEOUT'             => 'Vernieuwen timeout',
 	'CRON_STATUS_ERROR_EXPLAIN'       => 'Er is een fout opgetreden tijdens het vernieuwen van de pagina.',
 	'CRON_STATUS_DEVELOPERS'          => 'Ontwikkelaars',
-	'CRON_TASK_RUN'                   => 'Run',
-	'CRON_TASK_RUNNING'               => 'Running...',
-));
+	'CRON_TASK_RUN'                   => 'Uitvoeren',
+	'CRON_TASK_RUNNING'               => 'Bezig...',
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Cron Status pagina',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Overzicht van taken (met sortering)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Toon de status van iedere taak',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Cron Status Melding (optioneel)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Melding op hoofdpagina ACP als taak is geblokkeerd',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Kan uitgeschakeld worden in Forum instellingen',
-));
+]);

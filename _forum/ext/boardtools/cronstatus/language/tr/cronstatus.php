@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package       Cron Status
- * @copyright (c) 2014 - 2021 Igor Lavrov, John Peskens, Leinad4Mind
- * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @package   Cron Status
+ * @author    John Peskens, Igor Lavrov, Leinad4Mind
+ * @copyright (c) 2014 - 2021 John Peskens, Igor Lavrov | (c) 2022-2026 Leinad4Mind
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
 /**
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,12 +36,12 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron Kilitli',
 	'CRON_TIME_LOCKED'                => 'Cron zamanı kilitli',
 	'ACP_CRON_STATUS_TITLE'           => 'Cron Durumu',
-	'ACP_CRON_STATUS_CONFIG_TITLE'    => 'Cron Durmunu denetle',
+	'ACP_CRON_STATUS_CONFIG_TITLE'    => 'Cron Durumunu denetle',
 	'ACP_CRON_STATUS_EXPLAIN'         => 'Cron Durumu sizin phpBB sitenizin cron görevleri yapılmaya hazır olduğunda denetleyebileceğiniz bir sayfadır. “Otomatik” görev tarihi görevin spesifik bir zaman kontrol seçeneğinin olduğunu ve bunun Cron Durumu eklentisi tarafından tanınmadığı anlamına gelir. Kırmızı işaretli görev o görevin hiç başlatılmadığını veya bir problem olduğunu gösterir. Kırmızı kilit -görev cron yöneticisi tarafından kilitlendi ve diğer görevler bloklandı- anlamındadır.',
 	'CRON_STATUS_REFRESH'             => 'Yenileme için saniyeler',
 	'CRON_TASK_LOCKED'                => 'Cron görevi kilitli',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Geliştiriciler',
 	'CRON_TASK_RUN'                   => 'Çalıştır',
 	'CRON_TASK_RUNNING'               => 'Çalıştırılıyor...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Cron Durum sayfası',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Cron İşleri genel bakışı(sıralamalı)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Her Cron görevinin durumunu gösterir',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Cron Durumu Uyarısı (opsiyonel)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Cron kilitlendiğinde YKP anasayfada gösterilsin mi',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Site ayarlarında kapatılabilir',
-));
+]);
