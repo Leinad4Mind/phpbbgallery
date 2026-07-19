@@ -24,6 +24,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SPOILER'			=> 'Spoiler',
-	'SPOILER_HELPLINE'	=> 'Gebruik: [spoiler]tekst[/spoiler] of [spoiler title=titel]tekst[/spoiler]'
+	'SPOILER'          => 'Spoiler',
+	'SPOILER_HELPLINE' => 'Gebruik: [spoiler]tekst[/spoiler] of [spoiler title=titel]tekst[/spoiler]'
 ]);

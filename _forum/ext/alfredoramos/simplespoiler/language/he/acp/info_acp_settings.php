@@ -24,6 +24,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SPOILER_DEPTH_LIMIT' => 'עומק קינון מקסימלי לספויילרים',
+	'SPOILER_DEPTH_LIMIT'         => 'עומק קינון מקסימלי לספויילרים',
 	'SPOILER_DEPTH_LIMIT_EXPLAIN' => 'עומק הקינון המקסימלי של ספויילרים בהודעה. הגדר כ־<samp>0</samp> כדי לבטל את ההגבלה.'
 ]);

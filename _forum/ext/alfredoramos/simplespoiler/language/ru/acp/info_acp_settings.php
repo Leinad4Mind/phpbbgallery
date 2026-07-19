@@ -24,6 +24,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SPOILER_DEPTH_LIMIT' => 'Максимальная глубина вложенности для спойлеров',
+	'SPOILER_DEPTH_LIMIT'         => 'Максимальная глубина вложенности для спойлеров',
 	'SPOILER_DEPTH_LIMIT_EXPLAIN' => 'Максимальная глубина вложенности для спойлеров в сообщениях. Введите <samp>0</samp> для снятия ограничений.'
 ]);
