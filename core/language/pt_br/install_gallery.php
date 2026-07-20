@@ -7,7 +7,7 @@
  * @author    Leinad4Mind
  * @copyright 2014- satanasov, 2018- Leinad4Mind
  * @license   GPL-2.0-only
- * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -30,10 +30,10 @@ $lang = array_merge($lang, [
 	'CREATE_MODULES'                 => 'Criar módulos',
 	'CREATE_TABLES'                  => 'Criar tabelas de base de dados',
 	'DB_NOT_SUPPORTED'               => 'O tipo da sua base de dados ainda não é suportado pelo nosso script de instalação.',
-	'FILES_OUTDATED'                 => 'Ficheiros desatualizados',
-	'FILES_OUTDATED_EXPLAIN'         => '<strong>Desatualizado</strong> - De modo a evitar tentativas de intrusão (hacking), por favor remova os seguintes ficheiros.',
+	'FILES_OUTDATED'                 => 'Arquivos desatualizados',
+	'FILES_OUTDATED_EXPLAIN'         => '<strong>Desatualizado</strong> - De modo a evitar tentativas de intrusão (hacking), por favor remova os seguintes arquivos.',
 	'FOUND_INSTALL'                  => 'Instalação dupla',
-	'FOUND_INSTALL_EXPLAIN'          => '<strong>Instalação dupla</strong> - Foi encontrada uma instalação da galeria! Se continuar, os dados existentes serão sobrescritos. Todos os álbuns, imagens e comentários serão eliminados! <strong>Por este motivo é recomendável uma %1$satualização%2$s.</strong>',
+	'FOUND_INSTALL_EXPLAIN'          => '<strong>Instalação dupla</strong> - Foi encontrada uma instalação da galeria! Se continuar, os dados existentes serão sobrescritos. Todos os álbuns, imagens e comentários serão excluídos! <strong>Por este motivo é recomendável uma %1$satualização%2$s.</strong>',
 	'FOUND_VERSION'                  => 'Foi encontrada a seguinte versão',
 	'FOUNDER_CHECK'                  => 'Você é "Fundador" deste fórum',
 	'FOUNDER_NEEDED'                 => 'Precisa ser um "Fundador" do fórum!',
@@ -41,13 +41,13 @@ $lang = array_merge($lang, [
 	'INSTALL_INTRO_BODY'             => 'Com esta opção, é possível instalar a phpBB Gallery no seu fórum.',
 	'GOTO_GALLERY'                   => 'Ir para a phpBB Galeria',
 	'GOTO_INDEX'                     => 'Ir para o Índice do Fórum',
-	'MISSING_CONSTANTS'              => 'Antes de poder correr o script de instalação, precisa de enviar (upload) os seus ficheiros editados.',
+	'MISSING_CONSTANTS'              => 'Antes de poder correr o script de instalação, precisa de enviar (upload) os seus arquivos editados.',
 	'MODULES_CREATE_PARENT'          => 'Criar módulo principal',
 	'MODULES_PARENT_SELECT'          => 'Escolha o módulo principal',
 	'MODULES_SELECT_4ACP'            => 'Escolha o módulo principal para o "Painel de Administração (ACP)"',
-	'MODULES_SELECT_4LOG'            => 'Escolha o módulo principal para o "Registo (Log) da Galeria"',
+	'MODULES_SELECT_4LOG'            => 'Escolha o módulo principal para o "Registro (Log) da Galeria"',
 	'MODULES_SELECT_4MCP'            => 'Escolha o módulo principal para o "Painel de Moderação (MCP)"',
-	'MODULES_SELECT_4UCP'            => 'Escolha o módulo principal para o "Painel de Utilizador (UCP)"',
+	'MODULES_SELECT_4UCP'            => 'Escolha o módulo principal para o "Painel de Usuário (UCP)"',
 	'MODULES_SELECT_NONE'            => 'sem módulo pai',
 	'NO_INSTALL_FOUND'               => 'Não foi encontrada qualquer instalação!',
 	'OPTIONAL_EXIFDATA'              => 'A função "exif_read_data" existe',
@@ -70,7 +70,7 @@ $lang = array_merge($lang, [
 	'STAGE_COPY_TABLE_EXPLAIN'       => 'As tabelas têm os mesmos nomes no TS Gallery e no phpBB Gallery...',
 	'STAGE_CREATE_TABLE_EXPLAIN'     => 'As tabelas de Base de Dados usadas pela phpBB Galeria foram criadas.',
 	'STAGE_DELETE_TABLES'            => 'Limpar Base de Dados',
-	'STAGE_DELETE_TABLES_EXPLAIN'    => 'Os conteúdos da Base de Dados referentes à phpBB Galeria foram eliminados.',
+	'STAGE_DELETE_TABLES_EXPLAIN'    => 'Os conteúdos da Base de Dados referentes à phpBB Galeria foram excluídos.',
 	'SUPPORT_BODY'                   => 'Poderá aceder a suporte sobre a Galeria...</p>',
 	'TABLE_ALBUM'                    => 'tabela incluindo as imagens',
 	'TABLE_ALBUM_CAT'                => 'tabela incluindo os álbuns',
@@ -81,7 +81,7 @@ $lang = array_merge($lang, [
 	'TABLE_MISSING'                  => 'em falta',
 	'TABLE_PREFIX_EXPLAIN'           => 'Prefixo da instalação phpBB2',
 	'UNINSTALL_INTRO'                => 'Bem-vindo ao sistema de Desinstalação',
-	'UNINSTALL_INTRO_BODY'           => 'Com esta opção pode desinstalar a phpBB Gallery.<br /><br /><strong>Aviso: Todos os álbuns, imagens e comentários serão eliminados de forma irreversível!</strong>',
+	'UNINSTALL_INTRO_BODY'           => 'Com esta opção pode desinstalar a phpBB Gallery.<br /><br /><strong>Aviso: Todos os álbuns, imagens e comentários serão excluídos de forma irreversível!</strong>',
 	'UNINSTALL_REQUIREMENTS'         => 'Requisitos',
 	'UNINSTALL_REQUIREMENTS_EXPLAIN' => 'Antes de prosseguir a desinstalação far-se-ão testes.',
 	'UNINSTALL_START'                => 'Desinstalar',

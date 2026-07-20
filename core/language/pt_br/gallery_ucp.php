@@ -7,7 +7,7 @@
  * @author    Leinad4Mind
  * @copyright 2014- satanasov, 2018- Leinad4Mind
  * @license   GPL-2.0-only
- * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -25,8 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACCESS_CONTROL_ALL'             => 'Todos',
-	'ACCESS_CONTROL_REGISTERED'      => 'Utilizadores registados',
-	'ACCESS_CONTROL_NOT_FOES'        => 'Utilizadores registados, exceto ignorados',
+	'ACCESS_CONTROL_REGISTERED'      => 'Usuários registados',
+	'ACCESS_CONTROL_NOT_FOES'        => 'Usuários registados, exceto ignorados',
 	'ACCESS_CONTROL_FRIENDS'         => 'Apenas amigos',
 	'ACCESS_CONTROL_SPECIAL_FRIENDS' => 'Apenas amigos especiais',
 	'ALBUMS'                         => 'Álbuns',
@@ -40,9 +40,9 @@ $lang = array_merge($lang, [
 	'CREATE_SUBALBUM'                => 'Criar sub-álbum',
 	'CREATE_SUBALBUM_EXP'            => 'Pode anexar um novo sub-álbum à sua galeria pessoal.',
 	'CREATED_SUBALBUM'               => 'Sub-álbum criado com sucesso',
-	'DELETE_ALBUM'                   => 'Eliminar Álbum',
-	'DELETE_ALBUM_CONFIRM'           => 'Eliminar Álbum, com todos os sub-álbuns e imagens?',
-	'DELETED_ALBUMS'                 => 'Álbuns eliminados com sucesso',
+	'DELETE_ALBUM'                   => 'Excluir Álbum',
+	'DELETE_ALBUM_CONFIRM'           => 'Excluir Álbum, com todos os sub-álbuns e imagens?',
+	'DELETED_ALBUMS'                 => 'Álbuns excluídos com sucesso',
 	'EDIT'                           => 'Editar',
 	'EDIT_ALBUM'                     => 'Editar álbum',
 	'EDIT_SUBALBUM'                  => 'Editar Sub-álbum',
@@ -52,7 +52,7 @@ $lang = array_merge($lang, [
 	'MANAGE_SUBALBUMS'               => 'Gerir os seus sub-álbuns',
 	'MISSING_ALBUM_NAME'             => 'Por favor insira um nome para o álbum',
 	'NEED_INITIALISE'                => 'Ainda não tem um álbum pessoal.',
-	'NO_ALBUM_STEALING'              => 'Não está autorizado a gerir o Álbum de outros utilizadores.',
+	'NO_ALBUM_STEALING'              => 'Não está autorizado a gerir o Álbum de outros usuários.',
 	'NO_MORE_SUBALBUMS_ALLOWED'      => 'Atingiu o número máximo de sub-álbuns',
 	'NO_PARENT_ALBUM'                => '«-- sem álbum pai',
 	'NO_PERSALBUM_ALLOWED'           => 'Não tem permissão para criar o seu álbum pessoal',
@@ -65,7 +65,7 @@ $lang = array_merge($lang, [
 	'PARSE_URLS'                     => 'Processar links',
 	'PERSONAL_ALBUM'                 => 'Álbum pessoal',
 	'UNSUBSCRIBE'                    => 'parar de observar',
-	'USER_ALLOW_COMMENTS'            => 'Permitir que os utilizadores comentem as suas imagens',
+	'USER_ALLOW_COMMENTS'            => 'Permitir que os usuários comentem as suas imagens',
 	'YOUR_SUBSCRIPTIONS'             => 'Aqui vê os álbuns e imagens nos quais recebe notificações.',
 	'WATCH_CHANGED'                  => 'Configurações guardadas',
 	'WATCH_COM'                      => 'Subscrever imagens comentadas por padrão',

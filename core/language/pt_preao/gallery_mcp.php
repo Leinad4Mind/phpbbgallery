@@ -7,7 +7,7 @@
  * @author    Leinad4Mind
  * @copyright 2014- satanasov, 2018- Leinad4Mind
  * @license   GPL-2.0-only
- * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 /**
@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'CHOOSE_ACTION'             => 'Selecionar ação pretendida',
+	'CHOOSE_ACTION'             => 'Selecionar acção pretendida',
 	'GALLERY_MCP_MAIN'          => 'Principal',
 	'GALLERY_MCP_OVERVIEW'      => 'Visão Geral',
 	'GALLERY_MCP_QUEUE'         => 'Fila de Imagens',
@@ -36,16 +36,7 @@ $lang = array_merge($lang, [
 	'GALLERY_MCP_UNAPPROVED'    => 'Imagens por aprovar',
 	'GALLERY_MCP_APPROVED'      => 'Imagens aprovadas',
 	'GALLERY_MCP_LOCKED'        => 'Imagens bloqueadas',
-	'GALLERY_MCP_VIEWALBUM'     => 'Ir para o Álbum',
-	'IMAGE_REPORTED_UNAPPROVED' => 'Infelizmente a imagem que procura não existe de momento na Base de Dados. Pode ter sido apagada por razões como (Tamanho não Aconselhável, Erros nas Imagens, Falta de Dados de Título, Formato Destruído e Errado ou Ficheiro Vazio). O mais provável foi ainda não ter sido sequer aprovada ou ainda ter sido bloqueada, o que o impede de a visualizar.',
-	'NO_REPORT_SELECTED'        => 'Por favor, selecione um ou vários reportes a ser trabalhados pela administração.',
-	'REPORT_A_CLOSE'            => 'Fechar Reporte',
-	'REPORT_A_CLOSE_CONFIRM'    => 'Tem a certeza que quer fechar este reporte de imagem?',
-	'REPORT_A_DELETE'           => 'Apagar o Reporte',
-	'REPORT_A_DELETE_CONFIRM'   => 'Tem a certeza que quer apagar definitivamente o reporte selecionado?',
-	'REPORT_A_OPEN'             => 'Abrir Reporte',
-	'REPORT_A_OPEN_CONFIRM'     => 'Tem a certeza que deseja efetuar esta acção (Abir um/uns Reporte(s)?',
-	'REPORT_NOT_FOUND'          => 'De momento não existem dados sobre este reporte, pode já não existir na base de dados.',
+	'GALLERY_MCP_VIEWALBUM'     => 'Ir para o Álbum',	'REPORT_A_CLOSE' => 'Fechar Reporte',	'REPORT_A_DELETE' => 'Apagar o Reporte',	'REPORT_A_OPEN' => 'Abrir Reporte',	'REPORT_NOT_FOUND' => 'De momento não existem dados sobre este reporte, pode já não existir na base de dados.',
 	'REPORT_STATUS_1'           => 'A Moderação do Fórum deve proceder à Revisão do Reporte, visto este a exigi-lo.',
 	'REPORT_STATUS_2'           => 'O Reporte indicado está fechado e já não é possível aceder-lhe ou alterá-lo.',
 	'REPORTS_A_CLOSE'           => 'Fechar Reportes',
@@ -56,7 +47,7 @@ $lang = array_merge($lang, [
 	'REPORTS_A_DELETE2_CONFIRM' => 'Tem a certeza que deseja eliminar/apagar este(s) reporte(s)?',
 	'REPORTS_A_OPEN'            => 'Abrir Reportes',
 	'REPORTS_A_OPEN2'           => 'Deseja Abrir Reportes?',
-	'REPORTS_A_OPEN2_CONFIRM'   => 'Tem a certeza que deseja efetuar a acção (Abir O(s) Reporte(s)?)',
+	'REPORTS_A_OPEN2_CONFIRM'   => 'Tem a certeza que deseja efectuar a acção (Abir O(s) Reporte(s)?)',
 	'REPORT_MOD'                => 'Editado e Retificado Por',
 	'REPORT_CLOSED_BY'          => 'Reporte Fechado E Oculto Por',
 	'REPORTED_IMAGES'           => 'Reportar Imagens',

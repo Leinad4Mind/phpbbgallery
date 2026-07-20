@@ -7,7 +7,7 @@
  * @author    Leinad4Mind
  * @copyright 2014- satanasov, 2018- Leinad4Mind
  * @license   GPL-2.0-only
- * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 /**
@@ -23,8 +23,10 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-// Adding the permissions
 $lang = array_merge($lang, [
-	'ACL_A_GALLERY_MANAGE' => 'Pode gerir as configurações da phpBB Galeria',
-	'ACL_A_GALLERY_ALBUMS' => 'Pode adicionar/editar álbuns e permissões',
+	'UCP_GALLERY'                 => 'Galeria',
+	'UCP_GALLERY_PERSONAL_ALBUMS' => 'Gerir álbuns pessoais',
+	'UCP_GALLERY_SETTINGS'        => 'Configurações Pessoais',
+	'UCP_GALLERY_WATCH'           => 'Gerir subscrições',
+	'UCP_GALLERY_FAVORITES'       => 'Gerir Favoritos',
 ]);
