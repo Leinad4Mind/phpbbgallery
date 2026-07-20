@@ -963,24 +963,49 @@ class moderate
 	 */
 	public function move($image_id): \Symfony\Component\HttpFoundation\Response
 	{
+		$image_id = (int) $image_id;
 		$image_data = $this->image->get_image_data($image_id);
-		$album_id = $image_data['image_album_id'];
-		//$user_id = $image_data['image_user_id'];
-		$album_data =  $this->album->get_info($album_id);
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('m_move', $image_data['image_album_id'], $album_data['album_user_id']))
+
+		if (!is_array($image_data) || !isset($image_data['image_album_id']) || (int) $image_data['image_album_id'] < 1)
+		{
+			$this->misc->not_authorised($image_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+		}
+
+		$album_id = (int) $image_data['image_album_id'];
+		$album_data = $this->album->get_info($album_id);
+		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
+		$has_source_permission = is_array($album_data) && isset($album_data['album_user_id']) && $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']);
+		if (!is_array($album_data) || !$this->image_authorization->can_moderate_image($image_data, $album_data, 0, $has_source_permission))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
 		}
-		$moving_target = $this->request->variable('moving_target', '');
 
-		if ($moving_target)
+		add_form_key('gallery');
+		$is_move_submitted = $this->request->is_set_post('moving_target');
+		$moving_target = $this->request->variable('moving_target', 0, false, \phpbb\request\request_interface::POST);
+
+		if ($is_move_submitted)
 		{
+			if (!check_form_key('gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
+			$target_album = $moving_target > 0 ? $this->album->get_info($moving_target) : array();
+			$has_target_permission = is_array($target_album) && isset($target_album['album_user_id']) && $this->gallery_auth->acl_check('m_move', $moving_target, $target_album['album_user_id']);
+			if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+			}
+
 			$target = array($image_id);
 			$this->image->move_image($target, $moving_target);
 			$message = sprintf($this->language->lang('IMAGES_MOVED', 1));
@@ -995,7 +1020,6 @@ class moderate
 			$this->template->assign_vars(array(
 				'S_MOVING_IMAGES'	=> true,
 				'S_ALBUM_SELECT'	=> $category_select,
-				//'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 			));
 		}
 

@@ -1,0 +1,88 @@
+<?php
+/**
+ * phpBB Gallery - Core Extension tests
+ *
+ * @package   phpbbgallery/core
+ * @copyright 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+namespace phpbbgallery\core\tests;
+
+use PHPUnit\Framework\TestCase;
+
+class individual_move_security_test extends TestCase
+{
+	public function test_move_route_only_accepts_get_and_post(): void
+	{
+		$routing = file_get_contents(dirname(__DIR__) . '/config/routing.yml');
+		$route = $this->extract_section($routing, 'phpbbgallery_core_moderate_image_move:', 'phpbbgallery_core_moderate_image_lock:');
+
+		$this->assertStringContainsString('methods: [GET, POST]', $route);
+	}
+
+	public function test_move_reads_the_target_only_from_post_and_checks_the_form_key(): void
+	{
+		$method = $this->move_method();
+		$csrf_check = strpos($method, "check_form_key('gallery')");
+		$mutation = strpos($method, 'image->move_image(');
+
+		$this->assertStringContainsString("add_form_key('gallery')", $method);
+		$this->assertStringContainsString("is_set_post('moving_target')", $method);
+		$this->assertStringContainsString('request_interface::POST', $method);
+		$this->assertStringNotContainsString("variable('moving_target', '')", $method);
+		$this->assertNotFalse($csrf_check);
+		$this->assertNotFalse($mutation);
+		$this->assertLessThan($mutation, $csrf_check);
+	}
+
+	public function test_move_authorizes_the_real_source_and_destination_before_mutation(): void
+	{
+		$method = $this->move_method();
+		$source_check = strpos($method, 'image_authorization->can_moderate_image(');
+		$target_check = strpos($method, 'image_authorization->can_moderate_album(');
+		$mutation = strpos($method, 'image->move_image(');
+
+		$this->assertNotFalse($source_check);
+		$this->assertNotFalse($target_check);
+		$this->assertNotFalse($mutation);
+		$this->assertSame(2, substr_count($method, "gallery_auth->acl_check('m_move'"));
+		$this->assertLessThan($mutation, $source_check);
+		$this->assertLessThan($mutation, $target_check);
+	}
+
+	public function test_every_move_form_submits_a_phpbb_form_token(): void
+	{
+		$templates = glob(dirname(__DIR__) . '/styles/*/template/gallery/mcp_body.html');
+		$this->assertCount(3, $templates);
+
+		foreach ($templates as $template_path)
+		{
+			$template = file_get_contents($template_path);
+			$form_start = strrpos($template, '<form method="post" id="mcp" action="{S_MCP_ACTION}">');
+			$this->assertNotFalse($form_start);
+			$form_end = strpos($template, '</form>', $form_start);
+			$this->assertNotFalse($form_end);
+			$form = substr($template, $form_start, $form_end - $form_start);
+
+			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+		}
+	}
+
+	private function move_method(): string
+	{
+		$controller = file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+
+		return $this->extract_section($controller, 'public function move(', "\n\t/**");
+	}
+
+	private function extract_section(string $contents, string $start_marker, string $end_marker): string
+	{
+		$start = strpos($contents, $start_marker);
+		$this->assertNotFalse($start);
+		$end = strpos($contents, $end_marker, $start + strlen($start_marker));
+		$this->assertNotFalse($end);
+
+		return substr($contents, $start, $end - $start);
+	}
+}

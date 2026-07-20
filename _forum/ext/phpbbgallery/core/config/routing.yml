@@ -238,6 +238,7 @@ phpbbgallery_core_moderate_image_unapprove:
 phpbbgallery_core_moderate_image_move:
     path: /gallery/moderate/image/{image_id}/move
     defaults: { _controller: phpbbgallery.core.controller.moderate:move }
+    methods: [GET, POST]
     requirements:
         image_id: \d+
 phpbbgallery_core_moderate_image_lock:
