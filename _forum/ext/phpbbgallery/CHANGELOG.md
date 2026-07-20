@@ -15,6 +15,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Validated every image in batch moderation against its real source album and action-specific permission, including report closure and destination authorization for moves.
 - Restricted individual moderator image moves to POST requests with a valid phpBB form token and independent `m_move` authorization for the real source and destination albums.
 - Protected UCP personal-album creation, subalbum reordering, and subscription cancellation with POST-only submissions and valid phpBB form tokens.
+- Bound orphan-upload finalization to the current user and album, required the complete server-generated filename token, and protected the upload-edit step with POST-only form-token validation.
 
 ### Fixed
 
@@ -31,7 +32,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent individual-move tests covering request methods, CSRF validation, source and destination authorization, form tokens, and mutation ordering.
 - Added permanent ACP rating-reset tests covering service resolution, non-empty and empty albums, and regression against the removed legacy class name.
 - Added permanent UCP CSRF tests covering personal-album creation, subalbum reordering, subscription cancellation, POST-only inputs, move-direction validation, form tokens, and mutation ordering.
-- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, and UCP CSRF phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent orphan-upload and upload-edit tests covering user/album binding, exact tokens, malformed identifiers, POST-only fields, CSRF ordering, and tokens in all styles.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, and orphan-upload phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]
 ### Added

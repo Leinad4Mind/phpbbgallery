@@ -12,6 +12,7 @@
 
 namespace phpbbgallery\core\controller;
 
+use phpbb\request\request_interface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class upload
@@ -177,7 +178,7 @@ class upload
 		{
 			trigger_error('NO_WRITE_ACCESS');
 		}
-		$submit = $this->request->variable('submit', false);
+		$submit = $this->request->is_set_post('submit');
 		$mode = $this->request->variable('mode', 'upload');
 		$username = '';
 		// So let's see if we have AJAX and use jQuery shit.
@@ -340,7 +341,7 @@ class upload
 					trigger_error('FORM_INVALID');
 				}
 				//$process->set_rotating($this->request->variable('rotate', array(0)));
-				$process->set_allow_comments($this->request->variable('allow_comments', false));
+				$process->set_allow_comments($this->request->variable('allow_comments', false, false, request_interface::POST));
 
 				if ($this->misc->display_captcha('upload'))
 				{
@@ -353,7 +354,7 @@ class upload
 
 				if (!$this->user->data['is_registered'])
 				{
-					$username = $this->request->variable('username', $this->user->data['username']);
+					$username = $this->request->variable('username', $this->user->data['username'], true, request_interface::POST);
 					if (!function_exists('validate_username'))
 					{
 						$this->url->_include(['functions_user'], 'phpbb');
@@ -460,6 +461,11 @@ class upload
 		{
 			if ($submit)
 			{
+				if (!check_form_key('gallery'))
+				{
+					trigger_error('FORM_INVALID');
+				}
+
 				// Validate quota/description BEFORE deciding whether to finalize, instead of
 				// trigger_error()-aborting immediately: the images being finalized here were
 				// already inserted as orphan rows in step 1 of this wizard (identified via
@@ -497,7 +503,7 @@ class upload
 						$validation_error = $this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
 					}
 				}
-				$description_array = $this->request->variable('message', [''], true);
+				$description_array = $this->request->variable('message', [''], true, request_interface::POST);
 				if (!$validation_error)
 				{
 					foreach ($description_array as $var)
@@ -511,17 +517,17 @@ class upload
 				}
 				$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
 
-				$upload_ids = $this->request->variable('upload_ids', ['']);
+				$upload_ids = $this->request->variable('upload_ids', [''], false, request_interface::POST);
 
 				$process = $this->gallery_upload;
 				$process->set_up($album_id, $upload_files_limit);
-				$process->set_rotating($this->request->variable('rotate', [0]));
+				$process->set_rotating($this->request->variable('rotate', [0], false, request_interface::POST));
 				$process->get_images($upload_ids);
-				$image_names = $this->request->variable('image_name', [''], true);
+				$image_names = $this->request->variable('image_name', [''], true, request_interface::POST);
 				$process->set_names($image_names);
 				$process->set_descriptions($description_array);
-				$process->set_image_num($this->request->variable('image_num', 0));
-				$process->use_same_name($this->request->variable('same_name', false));
+				$process->set_image_num($this->request->variable('image_num', 0, false, request_interface::POST));
+				$process->use_same_name($this->request->variable('same_name', false, false, request_interface::POST));
 
 				if ($validation_error)
 				{
