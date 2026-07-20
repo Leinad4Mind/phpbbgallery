@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
 *
 * @package phpBB Extension - brunoais readotherstopics
@@ -23,26 +23,26 @@ class search_listener implements EventSubscriberInterface
 {
 	static public function getSubscribedEvents()
 	{
-		return array(
-			'core.search_modify_rowset'								=> 'search_modify_rowset',
+		return [
+			'core.search_modify_rowset' => 'search_modify_rowset',
 
-			'core.search_mysql_keywords_main_query_before'			=> 'search_mysql_keywords_main_query_before',
-			'core.search_native_keywords_count_query_before'		=> 'search_native_keywords_count_query_before',
-			'core.search_postgres_keywords_main_query_before'		=> 'search_postgres_keywords_main_query_before',
+			'core.search_mysql_keywords_main_query_before'    => 'search_mysql_keywords_main_query_before',
+			'core.search_native_keywords_count_query_before'  => 'search_native_keywords_count_query_before',
+			'core.search_postgres_keywords_main_query_before' => 'search_postgres_keywords_main_query_before',
 
-			'core.search_mysql_by_keyword_modify_search_key'		=> 'search_mysql_by_keyword_modify_search_key',
-			'core.search_native_by_keyword_modify_search_key'		=> 'search_native_by_keyword_modify_search_key',
-			'core.search_postgres_by_keyword_modify_search_key'		=> 'search_postgres_by_keyword_modify_search_key',
+			'core.search_mysql_by_keyword_modify_search_key'    => 'search_mysql_by_keyword_modify_search_key',
+			'core.search_native_by_keyword_modify_search_key'   => 'search_native_by_keyword_modify_search_key',
+			'core.search_postgres_by_keyword_modify_search_key' => 'search_postgres_by_keyword_modify_search_key',
 
-			'core.search_mysql_author_query_before'					=> 'search_mysql_author_query_before',
-			'core.search_native_author_count_query_before'			=> 'search_native_author_count_query_before',
-			'core.search_postgres_author_count_query_before'		=> 'search_postgres_author_count_query_before',
+			'core.search_mysql_author_query_before'          => 'search_mysql_author_query_before',
+			'core.search_native_author_count_query_before'   => 'search_native_author_count_query_before',
+			'core.search_postgres_author_count_query_before' => 'search_postgres_author_count_query_before',
 
-			'core.search_mysql_by_author_modify_search_key'			=> 'search_mysql_by_author_modify_search_key',
-			'core.search_native_by_author_modify_search_key'		=> 'search_native_by_author_modify_search_key',
-			'core.search_postgres_by_author_modify_search_key'		=> 'search_postgres_by_author_modify_search_key',
+			'core.search_mysql_by_author_modify_search_key'    => 'search_mysql_by_author_modify_search_key',
+			'core.search_native_by_author_modify_search_key'   => 'search_native_by_author_modify_search_key',
+			'core.search_postgres_by_author_modify_search_key' => 'search_postgres_by_author_modify_search_key',
 
-		);
+		];
 	}
 
 	protected $info_storage;
@@ -81,7 +81,7 @@ class search_listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->permission_evaluation = $permission_evaluation;
 
-		$this->info_storage = array();
+		$this->info_storage = [];
 	}
 
 	public function search_modify_rowset($event)
@@ -89,13 +89,13 @@ class search_listener implements EventSubscriberInterface
 
 		$rowset = $event['rowset'];
 
-		foreach ($rowset AS $key => $row)
+		foreach ($rowset as $key => $row)
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
-				'forum_id' => $row['forum_id'],
+			$permission_result = $this->permission_evaluation->permission_evaluate([
+				'forum_id'     => $row['forum_id'],
 				'topic_poster' => $row['topic_poster'],
-				'topic_type' => $row['topic_type'],
-			));
+				'topic_type'   => $row['topic_type'],
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -112,11 +112,11 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_keys = array_keys($event['ex_fid_ary']);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -127,7 +127,8 @@ class search_listener implements EventSubscriberInterface
 					if (isset($forum_permissions['f_read_others_topics_brunoais']))
 					{
 						$full_read_access_fids[$forum_id] = $forum_id;
-					}else{
+					}else
+					{
 						$partial_read_access_fids[$forum_id] = $forum_id;
 					}
 				}
@@ -147,13 +148,12 @@ class search_listener implements EventSubscriberInterface
 
 			}
 
-
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -175,11 +175,11 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_keys = array_keys($event['ex_fid_ary']);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -190,7 +190,8 @@ class search_listener implements EventSubscriberInterface
 					if (isset($forum_permissions['f_read_others_topics_brunoais']))
 					{
 						$full_read_access_fids[$forum_id] = $forum_id;
-					}else{
+					}else
+					{
 						$partial_read_access_fids[$forum_id] = $forum_id;
 					}
 				}
@@ -213,9 +214,9 @@ class search_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -238,11 +239,11 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_keys = array_keys($event['ex_fid_ary']);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -277,9 +278,9 @@ class search_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -300,17 +301,17 @@ class search_listener implements EventSubscriberInterface
 
 		if ($topic_id > 0)
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
-				return array('NoAccessResult');
+				return ['NoAccessResult'];
 			}
 		}
 		else
 		{
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 			$ex_fid_keys = array_keys($excluding_forums);
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
@@ -368,11 +369,11 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_keys = array_keys($event['ex_fid_ary']);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -404,7 +405,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
 
-
 				$sql_fora = $event['sql_fora'];
 
 				$sql_fora .= ' AND (' . $this->db->sql_in_set('t_brunoais.forum_id', $full_read_access_fids, false, true) . '
@@ -414,13 +414,12 @@ class search_listener implements EventSubscriberInterface
 
 			}
 
-
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -433,7 +432,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table = $event['sql_sort_table'];
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
-
 
 				$sql_fora = $event['sql_fora'];
 
@@ -452,13 +450,13 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_ary = $event['ex_fid_ary'];
 
 			$ex_fid_keys = array_flip($ex_fid_ary);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -491,7 +489,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
 
-
 				$sql_fora = $event['sql_fora'];
 				$sql_fora .= ' AND t_brunoais.topic_id = p.topic_id ';
 				$sql_fora .= ' AND (' . $this->db->sql_in_set('t_brunoais.forum_id', $full_read_access_fids, false, true) . '
@@ -502,9 +499,9 @@ class search_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -517,7 +514,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table = $event['sql_sort_table'];
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
-
 
 				$sql_fora = $event['sql_fora'];
 
@@ -538,11 +534,11 @@ class search_listener implements EventSubscriberInterface
 		if (empty($topic_id))
 		{
 
-			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], array('f_read', 'f_read_others_topics_brunoais'));
+			$forums_permissions = $this->auth->acl_get_list($this->user->data['user_id'], ['f_read', 'f_read_others_topics_brunoais']);
 
 			$ex_fid_keys = array_keys($event['ex_fid_ary']);
 
-			$partial_read_access_fids = $full_read_access_fids = array();
+			$partial_read_access_fids = $full_read_access_fids = [];
 
 			foreach ($forums_permissions as $forum_id => $forum_permissions)
 			{
@@ -553,7 +549,8 @@ class search_listener implements EventSubscriberInterface
 					if (isset($forum_permissions['f_read_others_topics_brunoais']))
 					{
 						$full_read_access_fids[$forum_id] = $forum_id;
-					}else{
+					}else
+					{
 						$partial_read_access_fids[$forum_id] = $forum_id;
 					}
 				}
@@ -572,7 +569,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
 
-
 				$sql_fora = $event['sql_fora'];
 
 				$sql_fora .= ' AND (' . $this->db->sql_in_set('t_brunoais.forum_id', $full_read_access_fids, false, true) . '
@@ -585,9 +581,9 @@ class search_listener implements EventSubscriberInterface
 		}
 		else
 		{
-			$permission_result = $this->permission_evaluation->permission_evaluate(array(
+			$permission_result = $this->permission_evaluation->permission_evaluate([
 				'topic_id' => $topic_id,
-			));
+			]);
 
 			if ($permission_result === accesses::NO_READ_OTHER)
 			{
@@ -601,7 +597,6 @@ class search_listener implements EventSubscriberInterface
 				$sql_sort_table .= TOPICS_TABLE . ' t_brunoais, ';
 				$event['sql_sort_table'] = $sql_sort_table;
 
-
 				$sql_fora = $event['sql_fora'];
 
 				$sql_fora .= ' AND t_brunoais.topic_poster = ' . (int) $this->user->data['user_id'];
@@ -611,4 +606,3 @@ class search_listener implements EventSubscriberInterface
 		}
 	}
 }
-

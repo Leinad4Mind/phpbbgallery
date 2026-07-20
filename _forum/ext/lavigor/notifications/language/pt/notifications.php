@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package       Push Notifications
+ * @package Push Notifications for phpBB.
  * @copyright (c) 2017 - 2018 LavIgor
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -17,10 +17,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'LAVIGOR_NOTIFICATIONS_NOTIFICATION_METHOD_BROWSER' => 'Navegador',
 	'BROWSER_NOTIFICATIONS'                             => 'Notificações de Navegador',
 	'BROWSER_NOTIFICATIONS_ACTION_ENABLED'              => 'Ligado',
@@ -34,4 +34,4 @@ $lang = array_merge($lang, array(
 	'BROWSER_NOTIFICATIONS_MAX_LIMIT_REACHED'           => 'O número máximo de navegadores permitidos para as notificações de navegador (%s por utilizador) foi atingido. Por favor, desliga as notificações de navegador deste fórum que tenhas ativado em qualquer outro navegador para que possas ativá-lo neste.',
 	'BROWSER_NOTIFICATIONS_UNSUPPORTED'                 => 'Notificações Web não são suportadas pelo teu navegador atual.',
 	'BROWSER_NOTIFICATIONS_UPDATE_FAILED'               => 'Ocorreu um erro (possivelmente erro de conexão ao contactar o servidor) durante a assinatura da Notificação Web. Foi desativada neste navegador. Por favor, verifica a tua conexão de internet e tenta novamente. Entra em contacto com o administrador do fórum se o problema persistir.',
-));
+]);

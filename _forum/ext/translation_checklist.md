@@ -1,0 +1,203 @@
+# Checklist de Tradução pt / pt_preao / pt_br
+
+## Visão geral
+- Extensões com pasta `language`: 175
+- Extensões com todos os idiomas `pt`, `pt_preao`, `pt_br`: 14
+- Extensões com pelo menos um idioma português mas incompletas: 42
+- Extensões sem `pt`, `pt_preao` ou `pt_br`: 119
+- Diretórios de idioma mal formatados identificados: 5
+
+## Ações
+- [x] Corrigir nomes de pastas de idioma mal formatadas (`pt-preao`, `ptpreao`)
+- [x] Criar idiomas faltantes para extensões parciais
+- [x] Criar `pt`, `pt_preao`, `pt_br` para extensões sem nenhum idioma português
+- [x] Revisar traduções em todas as extensões com `pt`, `pt_preao` e `pt_br` comparando com `en`
+
+## 1. Extensões completas (revisar tradução)
+- [x] alfredoramos/simplespoiler
+- [x] anavaro/pmsearch
+- [x] boardtools/cronstatus
+- [x] boardtools/upload
+- [x] brunoais/readotherstopics
+- [x] leinad4mind/forcingprofilefields
+- [x] leinad4mind/invitation
+- [x] leinad4mind/topicstatistics
+- [x] lmdi/mytop
+- [x] phpbb/boardrules
+- [x] phpbb/pages
+- [x] senky/massnotification
+- [x] vse/passwordstrength
+- [x] vse/similartopics
+
+## 2. Extensões parciais (criar idiomas faltantes e revisar)
+- [x] canidev/blockgets — já tem pt, pt_preao; falta pt_br
+- [x] dmzx/topicindex — já tem pt, pt_preao; falta pt_br
+- [x] dmzx/whovisitedthistopic — já tem pt; falta pt_br, pt_preao
+- [x] ernadoo/qte — já tem pt_br; falta pt, pt_preao
+- [x] forumflair/discencql — já tem pt; falta pt_br, pt_preao
+- [x] forumhulp/notification_manager — já tem pt; falta pt_br, pt_preao
+- [x] kasimi/topicindexusertopics — já tem pt, pt_preao; falta pt_br
+- [x] lavigor/notifications — já tem pt, pt_preao; falta pt_br
+- [x] leinad4mind/bestanswer — já tem pt, pt_preao; falta pt_br
+- [x] leinad4mind/customlanguage — já tem pt, pt_preao; falta pt_br
+- [x] leinad4mind/formcreator — já tem pt, pt_preao; falta pt_br
+- [x] leinad4mind/likepoints — já tem pt; falta pt_br, pt_preao
+- [x] leinad4mind/limitperforum — já tem pt, pt_preao; falta pt_br
+- [x] leinad4mind/specialtopicmove — já tem pt, pt_preao; falta pt_br
+- [x] oxpus/notes — já tem pt; falta pt_br, pt_preao
+- [x] phpbb/autogroups — já tem pt, pt_br; falta pt_preao
+- [x] phpbb/boardannouncements — já tem pt, pt_br; falta pt_preao
+- [x] phpbb/collapsiblecategories — já tem pt, pt_br; falta pt_preao
+- [x] phpbb/mediaembed — já tem pt, pt_br; falta pt_preao
+- [x] phpbbgallery/core — já tem pt; falta pt_br, pt_preao
+- [x] rmcgirr83/searchusertopics — já tem pt, pt_preao; falta pt_br
+- [x] rmcgirr83/topicdescription — já tem pt, pt_preao; falta pt_br
+- [x] senky/timetoread — já tem pt, pt_preao; falta pt_br
+- [x] shredder/dap — já tem pt; falta pt_br, pt_preao
+- [x] sitesplat/badge — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/badgepremium — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/BBCore — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/bbpoints — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/bbprofile — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/bbreaction — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/bbwatchlist — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/donations — já tem pt; falta pt_br, pt_preao
+- [x] sitesplat/likedd — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/newsletter — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/pmnotifications — já tem pt, pt_preao; falta pt_br
+- [x] sitesplat/privatepost — já tem pt; falta pt_br, pt_preao
+- [x] sitesplat/replytounhide — já tem pt, pt_preao; falta pt_br
+- [x] tatiana5/popuppm — já tem pt; falta pt_br, pt_preao
+- [x] vse/lightbox — já tem pt_br; falta pt, pt_preao
+- [x] vse/topicimagepreview — já tem pt, pt_preao; falta pt_br
+- [x] welshpaul/ajaxusernamecheck — já tem pt, pt_preao; falta pt_br
+- [x] wolfsblvt/advancedpolls — já tem pt, pt_preao; falta pt_br
+
+## 3. Extensões sem `pt`/`pt_preao`/`pt_br` (criar do zero e revisar)
+- [x] canidev/chat
+- [x] canidev/core
+- [x] canidev/debugger
+- [x] canidev/quickmod
+- [x] canidev/quickquote
+- [x] cleantalk/antispam
+- [x] david63/autodbbackup
+- [x] david63/dropboxupload
+- [x] david63/loginredirect
+- [x] david63/pmmonitor
+- [x] david63/userdefaults
+- [x] devspace/acpusernotifications
+- [x] devspace/acpversioncheck
+- [x] devspace/activesessions
+- [x] devspace/autodbbackup
+- [x] devspace/dropboxupload
+- [x] devspace/friendsandfoes
+- [x] devspace/logsearches
+- [x] devspace/userdefaults
+- [x] devspace/userdetails
+- [x] dmzx/forumicons
+- [x] dmzx/usernamecolourchanger
+- [x] feneck91/introduciator
+- [x] forumhulp/checkmail
+- [x] forumhulp/cronstatus
+- [x] forumhulp/errorpages
+- [x] forumhulp/faultylogins
+- [x] forumhulp/helper
+- [x] forumhulp/htmlemail
+- [x] forumhulp/pageaddon
+- [x] forumhulp/pmspy
+- [x] forumhulp/postsstats
+- [x] forumhulp/searchresults
+- [x] forumhulp/statistics
+- [x] forumhulp/uploadimage
+- [x] forumhulp/userdefault
+- [x] javiexin/chgposttime
+- [x] kinerity/bestanswer
+- [x] leinad4mind/debrider
+- [x] leinad4mind/grouprules
+- [x] leinad4mind/hideprofilefieldstogroups
+- [x] leinad4mind/pmwelcome
+- [x] leinad4mind/profilefieldsearchable
+- [x] leinad4mind/similartopicsextras
+- [x] leinad4mind/specialactivitystats
+- [x] leinad4mind/specialbirthday
+- [x] leinad4mind/staffnotifications
+- [x] leinad4mind/stickyelements
+- [x] lukewcs/extmgrplus
+- [x] lukewcs/limitreplies
+- [x] marttiphpbb/postingtemplate
+- [x] marttiphpbb/showphpbbevents
+- [x] mober/discordnotifications
+- [x] oxpus/basicstats
+- [x] phpbb/ads
+- [x] phpbb/viglink
+- [x] phpbbgallery/acpcleanup
+- [x] phpbbgallery/acpimport
+- [x] phpbbgallery/core
+- [x] phpbbgallery/exif
+- [x] phpbbmodders/adduser
+- [x] phpbbmodders/banhammer
+- [x] phpbbservices/smartfeed
+- [x] phpbbstudio/tlink
+- [x] pikaron/nodeaemails
+- [x] planetstyles/flightdeck
+- [x] rmcgirr83/contactadmin
+- [x] rmcgirr83/genders
+- [x] rmcgirr83/newtopicsneedapproval
+- [x] rmcgirr83/stopforumspam
+- [x] rmcgirr83/topfive
+- [x] robertheim/activitystats
+- [x] senky/extnews
+- [x] sitesplat/accountswitch
+- [x] sitesplat/avatarsplus
+- [x] sitesplat/badgeautogroups
+- [x] sitesplat/bbadblock
+- [x] sitesplat/bbajaxnews
+- [x] sitesplat/bbavatarresize
+- [x] sitesplat/bbbreadcrumbs
+- [x] sitesplat/bbcodeorder
+- [x] sitesplat/bbcompress
+- [x] sitesplat/bbcore_dbxtra
+- [x] sitesplat/bbembed
+- [x] sitesplat/bbemoji
+- [x] sitesplat/bbfront
+- [x] sitesplat/bbgdpr
+- [x] sitesplat/bbinfinitepagination
+- [x] sitesplat/bblazy
+- [x] sitesplat/bblightbox
+- [x] sitesplat/bblinks
+- [x] sitesplat/bbmembership
+- [x] sitesplat/bbmention
+- [x] sitesplat/bboauth
+- [x] sitesplat/bbootsminicms
+- [x] sitesplat/bbprefix
+- [x] sitesplat/bbrandom
+- [x] sitesplat/bbsort
+- [x] sitesplat/bbtags
+- [x] sitesplat/bbtpreview
+- [x] sitesplat/bbtracking
+- [x] sitesplat/bookmarkpost
+- [x] sitesplat/cas
+- [x] sitesplat/castle
+- [x] sitesplat/cloudflareip
+- [x] sitesplat/flatbootsminicms
+- [x] sitesplat/fltl
+- [x] sitesplat/forcehttps
+- [x] sitesplat/futurepost
+- [x] sitesplat/gyazo
+- [x] sitesplat/imgur
+- [x] sitesplat/nightstalker
+- [x] sitesplat/opengraph
+- [x] sitesplat/sidebar
+- [x] sitesplat/snappy
+- [x] sitesplat/subjectcheck
+- [x] sitesplat/svg
+- [x] sitesplat/tfa
+- [x] sitesplat/titlesandavatars
+- [x] splicker/giphyembed
+
+## 4. Diretórios de idioma mal formatados (corrigir)
+- [x] leinad4mind/likepoints — corrigir `pt-preao` para `pt_preao`
+- [x] oxpus/notes — corrigir `pt-preao` para `pt_preao`
+- [x] shredder/dap — corrigir `ptpreao` para `pt_preao`
+- [x] sitesplat/privatepost — corrigir `pt-preao` para `pt_preao`
+- [x] tatiana5/popuppm — corrigir `pt-preao` para `pt_preao`

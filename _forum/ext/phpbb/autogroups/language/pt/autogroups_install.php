@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Auto Groups extension for the phpBB Forum Software package.
+ * @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,6 +36,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'AUTOGROUPS_NOT_ENABLEABLE'	=> 'Grupos automáticos não puderam ser ativados. Os requisitos mínimos de phpBB 3.2.0 e / ou PHP 5.5.0 não foram satisfeitos.',
-));
+$lang = array_merge($lang, [
+	'AUTOGROUPS_NOT_ENABLEABLE' => 'Grupos automáticos não puderam ser ativados. Os requisitos mínimos de phpBB 3.2.0 e / ou PHP 5.5.0 não foram satisfeitos.',
+]);

@@ -1,14 +1,12 @@
 <?php
 
 /**
- *
  * Invite. An extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid [2019][ver 4.2.0] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
  * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,18 +32,18 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
-$lang = array_merge($lang, array(
-	'ACL_A_INVITE'			=> 'O utilizador pode sincronizar dados',
-	'ACL_A_INVITE_CONFIG'	=> 'O utilizador pode alterar as configurações do convite.',
-	'ACL_A_INVITE_DELETE'	=> 'O utilizador pode apagar convites',
+$lang = array_merge($lang, [
+	'ACL_A_INVITE'          => 'O utilizador pode sincronizar dados',
+	'ACL_A_INVITE_CONFIG'   => 'O utilizador pode alterar as configurações do convite.',
+	'ACL_A_INVITE_DELETE'   => 'O utilizador pode apagar convites',
 	'ACL_A_INVITE_CLAIMING' => 'O utilizador pode gerir convites',
-	'ACL_A_INVITE_SEND'		=> 'O utilizador pode adicionar convites para membros',
-	'ACL_A_INVITE_PEND'		=> 'O utilizador pode gerir convites pendentes',
-	'ACL_A_INVITE_USERS'	=> 'O utilizador pode ver uma lista de membros convidados',
-	'ACL_M_INVITE_CLAIMING'	=> 'O utilizador pode aprovar um pedido de convite.',
-	'ACL_U_INVITE_DELETE'	=> 'O utilizador pode revogar convites<br /><em>O utilizador pode cancelar um convite que ele enviou.</em>',
-	'ACL_U_INVITE_REQUEST'	=> 'O utilizador pode solicitar convite',
-	'ACL_U_INVITE_SENDING'		=> 'O utilizador pode convidar novos membros para o site',
-	'ACL_U_INVITE_MAX'		=> 'O utilizador tem convites ilimitados',
-	'ACL_U_INVITE_USERS'	=> 'O utilizador pode visualizar a lista de utilizadores convidados por outras pessoas.',
-));
+	'ACL_A_INVITE_SEND'     => 'O utilizador pode adicionar convites para membros',
+	'ACL_A_INVITE_PEND'     => 'O utilizador pode gerir convites pendentes',
+	'ACL_A_INVITE_USERS'    => 'O utilizador pode ver uma lista de membros convidados',
+	'ACL_M_INVITE_CLAIMING' => 'O utilizador pode aprovar um pedido de convite.',
+	'ACL_U_INVITE_DELETE'   => 'O utilizador pode revogar convites<br /><em>O utilizador pode cancelar um convite que ele enviou.</em>',
+	'ACL_U_INVITE_REQUEST'  => 'O utilizador pode solicitar convite',
+	'ACL_U_INVITE_SENDING'  => 'O utilizador pode convidar novos membros para o site',
+	'ACL_U_INVITE_MAX'      => 'O utilizador tem convites ilimitados',
+	'ACL_U_INVITE_USERS'    => 'O utilizador pode visualizar a lista de utilizadores convidados por outras pessoas.',
+]);

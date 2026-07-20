@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Precise Similar Topics [English]
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Precise Similar Topics [English]
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -45,6 +44,6 @@ if (empty($lang) || !is_array($lang))
 */
 
 // User Permissions
-$lang = array_merge($lang, array(
-	'ACL_U_SIMILARTOPICS'	=> 'Can view similar topics',
-));
+$lang = array_merge($lang, [
+	'ACL_U_SIMILARTOPICS' => 'Pode ver Tópicos Semelhantes',
+]);

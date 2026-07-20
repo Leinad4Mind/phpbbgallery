@@ -1,18 +1,18 @@
 <?php
-/**
-*
-* gallery_ucp [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpbbgallery/core for phpBB.
+ * phpBB Gallery - ACP Core Extension
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,67 +20,57 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACCESS_CONTROL_ALL'			=> 'Everyone',
-	'ACCESS_CONTROL_REGISTERED'		=> 'Registered users',
-	'ACCESS_CONTROL_NOT_FOES'		=> 'Registered users, except your foes',
-	'ACCESS_CONTROL_FRIENDS'		=> 'Only your friends',
-	'ACCESS_CONTROL_SPECIAL_FRIENDS'		=> 'Only your special friends',
-	'ALBUMS'						=> 'Albums',
-	'ALBUM_ACCESS'					=> 'Allow access for',
-	'ALBUM_ACCESS_EXPLAIN'			=> 'You can use your %1$sFriends and Foes lists%2$s to control access to the album. However <strong>moderators</strong> can <strong>always</strong> access the album.',
-	'ALBUM_DESC'					=> 'Album Description',
-	'ALBUM_NAME'					=> 'Album Name',
-	'ALBUM_PARENT'					=> 'Parent Album',
-	'ATTACHED_SUBALBUMS'			=> 'Attached subalbums',
-
-	'CREATE_PERSONAL_ALBUM'			=> 'Create personal album',
-	'CREATE_SUBALBUM'				=> 'Create subalbum',
-	'CREATE_SUBALBUM_EXP'			=> 'You may attach a new subalbum to your personal gallery.',
-	'CREATED_SUBALBUM'				=> 'Subalbum successful created',
-
-	'DELETE_ALBUM'					=> 'Delete Album',
-	'DELETE_ALBUM_CONFIRM'			=> 'Delete Album, with all attached subalbums and images?',
-	'DELETED_ALBUMS'				=> 'Albums successful deleted',
-
-	'EDIT'							=> 'Edit',
-	'EDIT_ALBUM'					=> 'Edit album',
-	'EDIT_SUBALBUM'					=> 'Edit Subalbum',
-	'EDIT_SUBALBUM_EXP'				=> 'You can edit your albums here.',
-	'EDITED_SUBALBUM'				=> 'Album successful edited',
-
-	'GOTO'							=> 'Go To',
-
-	'MANAGE_SUBALBUMS'				=> 'Manage your subalbums',
-	'MISSING_ALBUM_NAME'			=> 'Please insert a name for the album',
-
-	'NEED_INITIALISE'				=> 'You don’t have a personal album yet.',
-	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',
-	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
-	'NO_PARENT_ALBUM'				=> '&laquo;-- no parent',
-	'NO_PERSALBUM_ALLOWED'			=> 'You don’t have the permissions create your personal album',
-	'NO_PERSONAL_ALBUM'				=> 'You don’t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',
-	'NO_SUBALBUMS'					=> 'No Albums attached',
-	'NO_SUBSCRIPTIONS'				=> 'You didn’t subscribe to any image.',
-
-	'PARSE_BBCODE'					=> 'Parse BBCode',
-	'PARSE_SMILIES'					=> 'Parse smilies',
-	'PARSE_URLS'					=> 'Parse links',
-	'PERSONAL_ALBUM'				=> 'Personal album',
-
-	'UNSUBSCRIBE'					=> 'stop watching',
-	'USER_ALLOW_COMMENTS'			=> 'Allow users to comment your images',
-
-	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',
-
-	'WATCH_CHANGED'					=> 'Settings stored',
-	'WATCH_COM'						=> 'Subscribe commented images by default',
-	'WATCH_NOTE'					=> 'This option only affects on new images. All other images need to be added by the “subscribe image“ option.',
-	'WATCH_OWN'						=> 'Subscribe own images by default',
-
-	'RRC_ZEBRA'						=> 'Hide from foes in RRC',
-	'RRC_ZEBRA_EXPLAIN'				=> 'Hide images in albums from foes in Recent, Random and Comments part of the index.<br /><strong>WARNING!</strong> This won\'t hide images uploaded in common/public albums.'
-));
+$lang = array_merge($lang, [
+	'ACCESS_CONTROL_ALL'             => 'Todos',
+	'ACCESS_CONTROL_REGISTERED'      => 'Utilizadores registados',
+	'ACCESS_CONTROL_NOT_FOES'        => 'Utilizadores registados, exceto ignorados',
+	'ACCESS_CONTROL_FRIENDS'         => 'Apenas amigos',
+	'ACCESS_CONTROL_SPECIAL_FRIENDS' => 'Apenas amigos especiais',
+	'ALBUMS'                         => 'Álbuns',
+	'ALBUM_ACCESS'                   => 'Permitir acesso a',
+	'ALBUM_ACCESS_EXPLAIN'           => 'Pode usar as suas %1$slistas de Amigos e Ignorados%2$s para controlar o acesso ao álbum. No entanto, <strong>moderadores</strong> podem <strong>sempre</strong> aceder.',
+	'ALBUM_DESC'                     => 'Descrição do Álbum',
+	'ALBUM_NAME'                     => 'Nome do Álbum',
+	'ALBUM_PARENT'                   => 'Álbum Pai',
+	'ATTACHED_SUBALBUMS'             => 'Sub-álbuns associados',
+	'CREATE_PERSONAL_ALBUM'          => 'Criar álbum pessoal',
+	'CREATE_SUBALBUM'                => 'Criar sub-álbum',
+	'CREATE_SUBALBUM_EXP'            => 'Pode anexar um novo sub-álbum à sua galeria pessoal.',
+	'CREATED_SUBALBUM'               => 'Sub-álbum criado com sucesso',
+	'DELETE_ALBUM'                   => 'Eliminar Álbum',
+	'DELETE_ALBUM_CONFIRM'           => 'Eliminar Álbum, com todos os sub-álbuns e imagens?',
+	'DELETED_ALBUMS'                 => 'Álbuns eliminados com sucesso',
+	'EDIT'                           => 'Editar',
+	'EDIT_ALBUM'                     => 'Editar álbum',
+	'EDIT_SUBALBUM'                  => 'Editar Sub-álbum',
+	'EDIT_SUBALBUM_EXP'              => 'Pode editar os seus álbuns aqui.',
+	'EDITED_SUBALBUM'                => 'Álbum editado com sucesso',
+	'GOTO'                           => 'Ir Para',
+	'MANAGE_SUBALBUMS'               => 'Gerir os seus sub-álbuns',
+	'MISSING_ALBUM_NAME'             => 'Por favor insira um nome para o álbum',
+	'NEED_INITIALISE'                => 'Ainda não tem um álbum pessoal.',
+	'NO_ALBUM_STEALING'              => 'Não está autorizado a gerir o Álbum de outros utilizadores.',
+	'NO_MORE_SUBALBUMS_ALLOWED'      => 'Atingiu o número máximo de sub-álbuns',
+	'NO_PARENT_ALBUM'                => '«-- sem álbum pai',
+	'NO_PERSALBUM_ALLOWED'           => 'Não tem permissão para criar o seu álbum pessoal',
+	'NO_PERSONAL_ALBUM'              => 'Ainda não tem álbum pessoal. Pode criá-lo aqui. Nos álbuns pessoais apenas o dono pode carregar imagens.',
+	'NO_SUBALBUMS'                   => 'Nenhum Álbum associado',
+	'NO_SUBSCRIPTIONS'               => 'Não subscreveu nenhuma imagem.',
+	'NO_SUBSCRIPTIONS_ALBUM'         => 'Não está subscrito a um álbum.',
+	'PARSE_BBCODE'                   => 'Processar BBCode',
+	'PARSE_SMILIES'                  => 'Processar smilies',
+	'PARSE_URLS'                     => 'Processar links',
+	'PERSONAL_ALBUM'                 => 'Álbum pessoal',
+	'UNSUBSCRIBE'                    => 'parar de observar',
+	'USER_ALLOW_COMMENTS'            => 'Permitir que os utilizadores comentem as suas imagens',
+	'YOUR_SUBSCRIPTIONS'             => 'Aqui vê os álbuns e imagens nos quais recebe notificações.',
+	'WATCH_CHANGED'                  => 'Configurações guardadas',
+	'WATCH_COM'                      => 'Subscrever imagens comentadas por padrão',
+	'WATCH_NOTE'                     => 'Esta opção apenas afeta novas imagens.',
+	'WATCH_OWN'                      => 'Subscrever as próprias imagens por padrão',
+	'RRC_ZEBRA'                      => 'Ocultar de ignorados no RRC',
+	'RRC_ZEBRA_EXPLAIN'              => 'Oculta imagens de álbuns dos ignorados na parte de Recentes e Aleatórios. Atenção: Não oculta imagens em álbuns públicos.'
+]);

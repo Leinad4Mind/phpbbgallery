@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid (c) 2017 [ver 1.0.1] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -38,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Incorporando mídia',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Como inserir mídia de outros sites em postagens',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Os usuários podem incorporar conteúdo como vídeos e áudio de sites permitidos usando
+	'HELP_EMBEDDING_MEDIA'          => 'Incorporando mídia',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Como inserir mídia de outros sites em postagens',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Os usuários podem incorporar conteúdo como vídeos e áudio de sites permitidos usando
 										as tags <strong>[media][/media]</strong>, ou simplesmente postando uma
 										URL suportada em texto simples. Por exemplo:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -51,5 +50,5 @@ $lang = array_merge($lang, [
 										<br /><br />Para obter documentação completa sobre sites suportados e URLs de exemplo,
 										visite a <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentation</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

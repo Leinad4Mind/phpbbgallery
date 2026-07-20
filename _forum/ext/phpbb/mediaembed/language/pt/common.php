@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -38,5 +37,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'BBCODE_MEDIA_HELP'	=> 'Incorporar Mídia: [media]http://media_url[/media]',
+	'BBCODE_MEDIA_HELP' => 'Incorporar Mídia: [media]http://media_url[/media]',
 ]);

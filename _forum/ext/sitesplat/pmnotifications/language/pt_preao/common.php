@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package PMnotifications
-* @copyright (c) 2016 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ * @package PMnotifications for phpBB.
+ * @copyright (c) 2016 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 if (!defined('IN_PHPBB'))
 {
@@ -14,15 +14,15 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'FROM_AUTHOR_PM_LIST'		=> 'MP\'s trocadas com este utilizador',
-	'PM_UNREAD_COUNT'	=> array(
-		0	=> 'Sem MPs por ler. Perfeito!',
-		1	=> '1 MP por ler',
-		2	=> '%d MPs por ler',
-	),
+$lang = array_merge($lang, [
+	'FROM_AUTHOR_PM_LIST' => 'MP\'s trocadas com este utilizador',
+	'PM_UNREAD_COUNT'     => [
+		0 => 'Sem MPs por ler. Perfeito!',
+		1 => '1 MP por ler',
+		2 => '%d MPs por ler',
+	],
 	'NO_PRIVATE_MESSAGES' => 'Sem Mensagens Privadas'
-));
+]);

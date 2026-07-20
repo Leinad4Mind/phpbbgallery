@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Precise Similar Topics [Portuguese]
-* Translated by The Crow: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Precise Similar Topics [English]
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SIMILAR_TOPICS'			=> 'Tópicos Semelhantes',
-	'DISPLAY_SIMILAR_TOPICS'	=> 'Ativar Tópicos Semelhantes',
-));
+$lang = array_merge($lang, [
+	'SIMILAR_TOPICS'         => 'Tópicos Semelhantes',
+	'DISPLAY_SIMILAR_TOPICS' => 'Ativar Tópicos Semelhantes',
+]);

@@ -1,12 +1,11 @@
 <?php
 
 /**
-*
-* @package phpBB Extension - Personal notes
-* @copyright (c) 2014 OXPUS - www.oxpus.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Personal notes for phpBB.
+ * @copyright (c) 2014 OXPUS - www.oxpus.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * Language pack for Extension permissions [English]
@@ -27,8 +26,8 @@ if (empty($lang) || !is_array($lang))
 
 // Permissions
 $lang = array_merge($lang, [
-	'ACP_NOTES'		=> 'Notas',
+	'ACP_NOTES' => 'Notas',
 
-	'ACL_A_NOTES'	=> 'Pode configurar notas pessoais',
-	'ACL_U_NOTES'	=> 'Pode usar notas pessoais',
+	'ACL_A_NOTES' => 'Pode configurar notas pessoais',
+	'ACL_U_NOTES' => 'Pode usar notas pessoais',
 ]);

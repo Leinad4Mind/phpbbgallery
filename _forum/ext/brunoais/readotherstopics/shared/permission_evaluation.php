@@ -1,21 +1,21 @@
-﻿<?php
+<?php
+
 /**
-*
-* @package phpBB Extension - brunoais readotherstopics
-* @copyright (c) 2015 phpBB Group
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Extension - brunoais readotherstopics
+ * @copyright (c) 2015 phpBB Group
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 namespace brunoais\readotherstopics\shared;
 
 use brunoais\readotherstopics\shared\accesses;
 
-
 /**
-* Auxiliary content
-*/
-	
+ * Auxiliary content
+ */
+
 class permission_evaluation
 {
 
@@ -42,8 +42,8 @@ class permission_evaluation
 	public $posts_table;
 
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $topics_table, $posts_table)
 	{
 		$this->auth = $auth;
@@ -54,7 +54,7 @@ class permission_evaluation
 		$this->topics_table = $topics_table;
 		$this->posts_table = $posts_table;
 	}
-	
+
 	/**
 	 * Returns whether the user has:
 	 * - Full read access: accesses::FULL_READ
@@ -85,7 +85,6 @@ class permission_evaluation
 			return accesses::NO_READ;
 		}
 
-
 		if (!$this->auth->acl_get('f_read_others_topics_brunoais', $info['forum_id']))
 		{
 			if ($this->user->data['user_id'] == ANONYMOUS)
@@ -93,13 +92,7 @@ class permission_evaluation
 				return accesses::NO_READ_OTHER;
 			}
 
-			if (
-				isset($info['topic_type']) &&
-				(
-					$info['topic_type'] == POST_ANNOUNCE ||
-					$info['topic_type'] == POST_GLOBAL
-				)
-				)
+			if (isset($info['topic_type']) && ($info['topic_type'] == POST_ANNOUNCE || $info['topic_type'] == POST_GLOBAL))
 			{
 				return accesses::FULL_READ;
 			}
@@ -123,10 +116,7 @@ class permission_evaluation
 					}
 					$this->get_poster_and_type_from_topic_id($info);
 				}
-				if (
-					$info['topic_type'] != POST_ANNOUNCE &&
-					$info['topic_type'] != POST_GLOBAL
-					)
+				if ($info['topic_type'] != POST_ANNOUNCE && $info['topic_type'] != POST_GLOBAL)
 				{
 					return accesses::NO_READ_OTHER;
 				}
@@ -134,9 +124,8 @@ class permission_evaluation
 		}
 
 		return accesses::FULL_READ;
-
 	}
-	
+
 	public function access_failed()
 	{
 		$this->user->add_lang_ext('brunoais/readotherstopics', 'common');
@@ -185,6 +174,4 @@ class permission_evaluation
 
 		$this->db->sql_freeresult($result);
 	}
-
 }
-

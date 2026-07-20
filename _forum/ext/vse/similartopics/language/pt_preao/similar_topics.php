@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Precise Similar Topics [English]
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Precise Similar Topics [English]
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SIMILAR_TOPICS'			=> 'Tópicos Semelhantes',
-	'DISPLAY_SIMILAR_TOPICS'	=> 'Exibir tópicos semelhantes',
-));
+$lang = array_merge($lang, [
+	'SIMILAR_TOPICS'         => 'Tópicos Semelhantes',
+	'DISPLAY_SIMILAR_TOPICS' => 'Ativar Tópicos Semelhantes',
+]);

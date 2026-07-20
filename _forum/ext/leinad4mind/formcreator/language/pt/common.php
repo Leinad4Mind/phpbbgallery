@@ -1,12 +1,12 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Form Creator
-* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
-* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Form Creator for phpBB.
+ * @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+ * @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -38,24 +38,24 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'CLOSE_FORM'				=> 'Cancelar',
-	'OPEN_FORM'					=> 'Modo Gerador Automático',
-	'OPEN_POST'					=> 'Modo BBCode Manual',
-	'FORM_MOD_PREVIEW'		 	=> 'Alternar para pré-visualizar e manter os dados do formulário actual...',
-	'FORM_MOD_SUBMIT'			=> 'Converte e adiciona os dados do formulário à mensagem...',
-	'OPEN_FORM_EXPLAIN'			=> 'Alterar para Gerador Automático...',
-	'OPEN_POST_EXPLAIN'			=> 'Alterar para BBCode Manual...',
-	'REFRESHING_FORM'			=> 'O fórum selecionado actualmente é',
-	'REQUIRED'				 	=> 'Não preencheste todos os campos obrigatórios!',
-	'MANDATORY'					=> 'Campos marcados com asterisco são de preenchimento obrigatório.',
+	'CLOSE_FORM'        => 'Cancelar',
+	'OPEN_FORM'         => 'Modo Gerador Automático',
+	'OPEN_POST'         => 'Modo BBCode Manual',
+	'FORM_MOD_PREVIEW'  => 'Alternar para pré-visualizar e manter os dados do formulário actual...',
+	'FORM_MOD_SUBMIT'   => 'Converte e adiciona os dados do formulário à mensagem...',
+	'OPEN_FORM_EXPLAIN' => 'Alterar para Gerador Automático...',
+	'OPEN_POST_EXPLAIN' => 'Alterar para BBCode Manual...',
+	'REFRESHING_FORM'   => 'O fórum selecionado actualmente é',
+	'REQUIRED'          => 'Não preencheste todos os campos obrigatórios!',
+	'MANDATORY'         => 'Campos marcados com asterisco são de preenchimento obrigatório.',
 
-	'ERROR_MANDATORY'			=> 'O campo %s é obrigatório.',
-	'ERROR_MIN_MAX_CHECKBOX'	=> 'Precisas de escolher pelo menos %d item e menos de %d itens para o campo %s.',
-	'ERROR_MIN_CHECKBOX'		=> [
+	'ERROR_MANDATORY'        => 'O campo %s é obrigatório.',
+	'ERROR_MIN_MAX_CHECKBOX' => 'Precisas de escolher pelo menos %d item e menos de %d itens para o campo %s.',
+	'ERROR_MIN_CHECKBOX'     => [
 		1 => 'Precisas de escolher pelo menos %d item para o campo %s.',
 		2 => 'Precisas de escolher pelo menos %d itens para o campo %s.',
 	],
-	'ERROR_MAX_CHECKBOX'		=> [
+	'ERROR_MAX_CHECKBOX' => [
 		1 => 'Podes escolher no máximo %d item para o campo %s.',
 		2 => 'Podes escolher no máximo %d itens para o campo %s.',
 	],

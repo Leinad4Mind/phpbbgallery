@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Topic Index for phpBB.
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Merge the following language entries into the lang array
-$lang = array_merge($lang, array(
-	'ACL_U_TOPICINDEX'		=> 'Pode ver a Official Topic Index - Topics List',
-));
+$lang = array_merge($lang, [
+	'ACL_U_TOPICINDEX' => 'Pode ver a Official Topic Index - Topics List',
+]);

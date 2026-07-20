@@ -1,12 +1,11 @@
 <?php
+
 /**
- *
- * Advanced Polls [Spanish]
- *
+ * Advanced Polls [English]
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
- * @author Translation by Raul [ThE KuKa] (https://github.com/phpbb-es)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -16,7 +15,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -43,7 +42,7 @@ if (empty($lang) || !is_array($lang))
  */
 
 // User Permissions
-$lang = array_merge($lang, array(
-	'ACL_F_SEEVOTERS'			=> 'Pode ver os votantes da votação',
-	'ACL_M_SEEVOTERS'			=> 'Pode ver os votantes da votação',
-));
+$lang = array_merge($lang, [
+	'ACL_F_SEEVOTERS' => 'Pode ver os votantes da votação',
+	'ACL_M_SEEVOTERS' => 'Pode ver os votantes da votação',
+]);

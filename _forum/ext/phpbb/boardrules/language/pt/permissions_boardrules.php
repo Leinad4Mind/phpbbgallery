@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Board Rules extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Board Rules extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,6 +36,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACL_A_BOARDRULES'		=> 'Pode administrar as regras do fórum',
-));
+$lang = array_merge($lang, [
+	'ACL_A_BOARDRULES' => 'Pode administrar as regras do fórum',
+]);

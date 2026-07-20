@@ -1,18 +1,18 @@
 <?php
-/**
-*
-* info_acp_gallery_logs [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpbbgallery/core for phpBB.
+ * phpBB Gallery - ACP Core Extension
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,50 +20,38 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACP_LOG_GALLERY_MOD'						=> 'Moderator log',
-	'ACP_LOG_GALLERY_MOD_EXP'						=> 'Moderator log',
-	'ACP_LOG_GALLERY_ADM'						=> 'Administrator log',
-	'ACP_LOG_GALLERY_ADM_EXP'						=> 'Administrator log',
-	'ACP_LOG_GALLERY_SYSTEM'						=> 'System log',
-	'ACP_LOG_GALLERY_SYSTEM_EXP'						=> 'System log',
-	'LOG_GALLERY_SHOW_LOGS'						=> 'Show only',
-
-	'SORT_USER_ID'							=> 'User ID',
-
-	'LOG_ALBUM_ADD'							=> '<strong>Created new album</strong><br />» %s',
-	'LOG_ALBUM_DEL_ALBUM'					=> '<strong>Deleted album</strong><br />» %s',
-	'LOG_ALBUM_DEL_ALBUMS'					=> '<strong>Deleted album and its subalbums</strong><br />» %s',
-	'LOG_ALBUM_DEL_MOVE_ALBUMS'				=> '<strong>Deleted album and moved subalbums</strong> to %1$s<br />» %2$s',
-	'LOG_ALBUM_DEL_MOVE_IMAGES'				=> '<strong>Deleted album and moved images </strong> to %1$s<br />» %2$s',
-	'LOG_ALBUM_DEL_MOVE_IMAGES_ALBUMS'		=> '<strong>Deleted album and its subalbums, moved images</strong> to %1$s<br />» %2$s',
-	'LOG_ALBUM_DEL_MOVE_IMAGES_MOVE_ALBUMS'	=> '<strong>Deleted album, moved images</strong> to %1$s <strong>and subalbums</strong> to %2$s<br />» %3$s',
-	'LOG_ALBUM_DEL_IMAGES'					=> '<strong>Deleted album and its images</strong><br />» %s',
-	'LOG_ALBUM_DEL_IMAGES_ALBUMS'			=> '<strong>Deleted album, its images and subalbums</strong><br />» %s',
-	'LOG_ALBUM_DEL_IMAGES_MOVE_ALBUMS'		=> '<strong>Deleted album and its images, moved subalbums</strong> to %1$s<br />» %2$s',
-	'LOG_ALBUM_EDIT'						=> '<strong>Edited album details</strong><br />» %s',
-	'LOG_ALBUM_MOVE_DOWN'					=> '<strong>Moved album</strong> %1$s <strong>below</strong> %2$s',
-	'LOG_ALBUM_MOVE_UP'						=> '<strong>Moved album</strong> %1$s <strong>above</strong> %2$s',
-	'LOG_ALBUM_SYNC'						=> '<strong>Re-synchronised album</strong><br />» %s',
-
-	'LOG_CLEAR_GALLERY'					=> 'Cleared Gallery log',
-
-	'LOG_GALLERY_APPROVED'				=> '<strong>Approved image</strong><br />» %s',
-	'LOG_GALLERY_COMMENT_DELETED'		=> '<strong>Deleted comment</strong><br />» %s',
-	'LOG_GALLERY_COMMENT_EDITED'		=> '<strong>Edited comment</strong><br />» %s',
-	'LOG_GALLERY_DELETED'				=> '<strong>Deleted image</strong><br />» %s',
-	'LOG_GALLERY_EDITED'				=> '<strong>Edited image</strong><br />» %s',
-	'LOG_GALLERY_LOCKED'				=> '<strong>Locked image</strong><br />» %s',
-	'LOG_GALLERY_MOVED'					=> '<strong>Moved image</strong><br />» from %1$s to %2$s',
-	'LOG_GALLERY_REPORT_CLOSED'			=> '<strong>Closed report</strong><br />» %s',
-	'LOG_GALLERY_REPORT_DELETED'		=> '<strong>Deleted report</strong><br />» %s',
-	'LOG_GALLERY_REPORT_OPENED'			=> '<strong>Reopened report</strong><br />» %s',
-	'LOG_GALLERY_UNAPPROVED'			=> '<strong>Unapproved image</strong><br />» %s',
-	'LOG_GALLERY_DISAPPROVED'			=> '<strong>Disapproved image</strong><br />» %s',
-
-	'LOGVIEW_VIEWALBUM'					=> 'View album',
-	'LOGVIEW_VIEWIMAGE'					=> 'View image',
-));
+$lang = array_merge($lang, [
+	'LOG_ALBUM_ADD'                    => '<strong>Novo álbum criado</strong><br />» %s',
+	'LOG_ALBUM_DEL_ALBUM'              => '<strong>Álbum eliminado</strong><br />» %s',
+	'LOG_ALBUM_DEL_ALBUMS'             => '<strong>Álbum e os seus sub-álbuns eliminados</strong><br />» %s',
+	'LOG_ALBUM_DEL_MOVE_ALBUMS'        => '<strong>Álbum eliminado e sub-álbuns movidos</strong> para %1$s<br />» %2$s',
+	'LOG_ALBUM_DEL_MOVE_IMAGES'        => '<strong>Álbum eliminado e imagens movidas</strong> para %1$s<br />» %2$s',
+	'LOG_ALBUM_DEL_MOVE_IMAGES_ALBUMS' => '<strong>Álbum eliminado e imagens e sub-álbuns movidos</strong> para %1$s<br />» %2$s',
+	'LOG_ALBUM_DEL_MOVE_IMAGES_IMAGES' => '<strong>Álbum eliminado e as suas imagens movidas</strong> para %1$s<br />» %2$s',
+	'LOG_ALBUM_DEL_IMAGES'             => '<strong>Álbum e as suas imagens eliminados</strong><br />» %s',
+	'LOG_ALBUM_DEL_IMAGES_ALBUMS'      => '<strong>Álbum e as suas imagens e sub-álbuns eliminados</strong><br />» %s',
+	'LOG_ALBUM_DEL_IMAGES_MOVE_ALBUMS' => '<strong>Álbum e imagens eliminados, sub-álbuns movidos</strong> para %1$s<br />» %2$s',
+	'LOG_ALBUM_EDIT'                   => '<strong>Detalhes do álbum editados</strong><br />» %s',
+	'LOG_ALBUM_MOVE_DOWN'              => '<strong>Álbum movido para baixo</strong> %1$s<br />» %2$s',
+	'LOG_ALBUM_MOVE_UP'                => '<strong>Álbum movido para cima</strong> %1$s<br />» %2$s',
+	'LOG_ALBUM_SYNC'                   => '<strong>Álbum sincronizado</strong><br />» %s',
+	'LOG_CLEAR_GALLERY'                => '<strong>Registo da Galeria limpo</strong>',
+	'LOG_GALLERY_APPROVED'             => '<strong>Imagens aprovadas</strong><br />» %s',
+	'LOG_GALLERY_CONFIG_UPDATED'       => '<strong>Configurações da Galeria atualizadas</strong>',
+	'LOG_GALLERY_DELETED'              => '<strong>Imagens eliminadas</strong><br />» %s',
+	'LOG_GALLERY_DISAPPROVED'          => '<strong>Imagens reprovadas</strong><br />» %s',
+	'LOG_GALLERY_EDITED'               => '<strong>Imagens editadas</strong><br />» %s',
+	'LOG_GALLERY_ERROR'                => '<strong>Erro da Galeria</strong><br />» %s',
+	'LOG_GALLERY_LOCKED'               => '<strong>Imagens bloqueadas</strong><br />» %s',
+	'LOG_GALLERY_MOVED'                => '<strong>Imagens movidas</strong><br />» de %1$s para %2$s',
+	'LOG_GALLERY_REPORT_CLOSED'        => '<strong>Reporte fechado</strong><br />» %s',
+	'LOG_GALLERY_REPORT_DELETED'       => '<strong>Reporte eliminado</strong><br />» %s',
+	'LOG_GALLERY_REPORT_OPENED'        => '<strong>Reporte aberto</strong><br />» %s',
+	'LOG_GALLERY_UNAPPROVED'           => '<strong>Imagens desaprovadas</strong><br />» %s',
+	'LOG_IMPORT_DEBUG'                 => '<strong>Informação sobre importação:</strong><br />» Imagens importadas: %1$s<br />» Imagens por importar: %2$s<br />» Álbum importado: %3$s',
+	'LOG_IMPORT_ERROR'                 => '<strong>Erro na importação de "%1$s":</strong><br />» %2$s',
+	'LOG_IMPORT_FINISHED'              => '<strong>Importação concluída. Imagens importadas: %s</strong>',
+]);

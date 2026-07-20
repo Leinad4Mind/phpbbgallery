@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Board Announcements extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Board Announcements extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +36,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Comunicado da Administração',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Gerir comunicado',
+	'ACP_BOARD_ANNOUNCEMENTS'          => 'Comunicado da Administração',
+	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS' => 'Gerir comunicado',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>A board announcement was created</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>A board announcement was updated</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>A board announcement was deleted</strong><br>» %s',
-));
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG' => '<strong>A board announcement was created</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG' => '<strong>A board announcement was updated</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG' => '<strong>A board announcement was deleted</strong><br>» %s',
+]);

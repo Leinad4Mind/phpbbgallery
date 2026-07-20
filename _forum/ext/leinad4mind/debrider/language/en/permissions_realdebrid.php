@@ -12,12 +12,14 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
-	$lang = array();
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +38,7 @@ if (empty($lang) || !is_array($lang)) {
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACL_M_DEBRIDERCANENABLE'		=> 'Can enable debrider',
-	'ACL_U_DEBRIDERCANGENERATEURL'		=> 'Can use generate premium debrid url button',
-));
+$lang = array_merge($lang, [
+	'ACL_M_DEBRIDERCANENABLE'      => 'Can enable debrider',
+	'ACL_U_DEBRIDERCANGENERATEURL' => 'Can use generate premium debrid url button',
+]);

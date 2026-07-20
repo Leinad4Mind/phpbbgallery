@@ -9,16 +9,18 @@
  *
  */
 
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
 // User Permissions
 $lang = array_merge($lang, [
-	'ACL_U_LIKEBB_LIKE'		 => 'Can like posts via LikeBB',
-	'ACL_U_LIKEBB_DISLIKE'	 => 'Can dislike posts via LikeBB',
+	'ACL_U_LIKEBB_LIKE'    => 'Can like posts via LikeBB',
+	'ACL_U_LIKEBB_DISLIKE' => 'Can dislike posts via LikeBB',
 ]);

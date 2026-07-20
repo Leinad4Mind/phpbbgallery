@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Notification_manager for the phpBB Forum Software package.
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
-* @license Proprietary
-*
-*/
+ * Notification_manager for the phpBB Forum Software package.
+ * @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
  * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,24 +37,24 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-		'UCP_NOTIES'				=> 'Gerir notificações',
-		'UCP_NOTIES_EXPLAIN'		=> 'Gere as tuas notificações',
-		'MARK_DELETE_SINGLE'		=> 'Marcar para Apagar',
-		'MARK_READ_SINGLE'			=> 'Marcar para Lida',
-		'MARK_UNREAD_SINGLE'		=> 'Marcar para Por Ler',
-		'MARK_DELETE'				=> 'Seleccionar Todas para Apagar',
-		'MARK_READ'					=> 'Seleccionar Todas para Lidas',
-		'MARK_UNREAD'				=> 'Seleccionar Todas para Por Ler',
-		'UNMARK_DELETE'				=> 'Desseleccionar Todas de Apagar',
-		'UNMARK_READ'				=> 'Desseleccionar Todas de Lidas',
-		'UNMARK_UNREAD'				=> 'Desseleccionar Todas de Por Ler',
-		'MARK_DELETE_SELECTED'		=> 'Apagar Marcadas',
-		'MARK_READ_SELECTED'		=> 'Marcar Lidas',
-		'MARK_UNREAD_SELECTED'		=> 'Marcar Por Ler',
-		'UNMARK_DELETE_SELECTED'	=> 'Desmarcar Apagar',
-		'UNMARK_READ_SELECTED'		=> 'Desmarcar Lidas',
-		'UNMARK_UNREAD_SELECTED'	=> 'Desmarcar Por Ler',
-		'UCP_NOTIES_SUBMIT'			=> 'Submeter Seleccionadas',
-	)
+	$lang, [
+		'UCP_NOTIES'             => 'Gerir notificações',
+		'UCP_NOTIES_EXPLAIN'     => 'Gere as tuas notificações',
+		'MARK_DELETE_SINGLE'     => 'Marcar para Apagar',
+		'MARK_READ_SINGLE'       => 'Marcar para Lida',
+		'MARK_UNREAD_SINGLE'     => 'Marcar para Por Ler',
+		'MARK_DELETE'            => 'Seleccionar Todas para Apagar',
+		'MARK_READ'              => 'Seleccionar Todas para Lidas',
+		'MARK_UNREAD'            => 'Seleccionar Todas para Por Ler',
+		'UNMARK_DELETE'          => 'Desseleccionar Todas de Apagar',
+		'UNMARK_READ'            => 'Desseleccionar Todas de Lidas',
+		'UNMARK_UNREAD'          => 'Desseleccionar Todas de Por Ler',
+		'MARK_DELETE_SELECTED'   => 'Apagar Marcadas',
+		'MARK_READ_SELECTED'     => 'Marcar Lidas',
+		'MARK_UNREAD_SELECTED'   => 'Marcar Por Ler',
+		'UNMARK_DELETE_SELECTED' => 'Desmarcar Apagar',
+		'UNMARK_READ_SELECTED'   => 'Desmarcar Lidas',
+		'UNMARK_UNREAD_SELECTED' => 'Desmarcar Por Ler',
+		'UCP_NOTIES_SUBMIT'      => 'Submeter Seleccionadas',
+	]
 );

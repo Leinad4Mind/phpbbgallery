@@ -1,0 +1,17 @@
+Subject: Latest topic at "{SITENAME}"
+
+{SITENAME}
+
+Latest Topics
+Hi,
+It's time for another newsletter.
+We look forward to see you at {BOARD_URL} again.
+
+Forum				Topic
+<!-- BEGIN mailrow -->
+{mailrow.U_FORUM}				{mailrow.U_TOPIC}
+<!-- END mailrow -->
+
+
+{EMAIL_SIG}
+Don't want to receive our newsletter anymore, click here {NEWSLETTER_OPTOUT}

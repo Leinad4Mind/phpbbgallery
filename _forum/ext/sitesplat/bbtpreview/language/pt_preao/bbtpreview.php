@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * BBtpreview
+ * @copyright (c) 2015 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+$lang = array_merge($lang, [
+	'TOPICSTART' => 'Início do tópico',
+	'TOPICTIME'  => 'Tempo activo do tópico',
+]);

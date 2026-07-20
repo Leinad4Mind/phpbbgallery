@@ -1,4 +1,4 @@
-﻿services:
+services:
     brunoais.readotherstopics.shared.permission_evaluation:
         class: brunoais\readotherstopics\shared\permission_evaluation
         arguments:
@@ -61,4 +61,3 @@
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
-        

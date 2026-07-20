@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Brazilian Portuguese  translation by MarcosFPo
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Auto Groups extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +36,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Notifications
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'	=> '<strong>Grupo atualizado</strong>: Você foi adicionado no grupo %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED'	=> '<strong>Grupo atualizado</strong>: Você foi removido do grupo %1$s.',
-));
+	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Grupo atualizado</strong>: Você foi adicionado no grupo %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Grupo atualizado</strong>: Você foi removido do grupo %1$s.',
+]);

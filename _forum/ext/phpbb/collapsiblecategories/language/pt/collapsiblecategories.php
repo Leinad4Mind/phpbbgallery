@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * Collapsible Categories extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +36,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'COLLAPSIBLE_CATEGORIES_TITLE'	=> array(
+$lang = array_merge($lang, [
+	'COLLAPSIBLE_CATEGORIES_TITLE' => [
 		0 => 'Ocultar esta categoria de fórum',
 		1 => 'Mostrar esta categoria de fórum',
-	),
-));
+	],
+]);

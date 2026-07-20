@@ -1,6 +1,6 @@
 Subject: Possible double account: {USERNAME}
 
-A new user has registered on your board «{SITENAME}».
+A new user has registered on your board Â«{SITENAME}Â».
 The new user shares common IP addresses and/or common cookies with some other users. 
 Please visit his profile for detailed information.
 

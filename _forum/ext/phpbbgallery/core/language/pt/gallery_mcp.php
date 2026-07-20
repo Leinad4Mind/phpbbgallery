@@ -1,18 +1,18 @@
 <?php
-/**
-*
-* gallery_mcp [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpbbgallery/core for phpBB.
+ * phpBB Gallery - ACP Core Extension
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,136 +20,87 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'CHOOSE_ACTION'					=> 'Select desired action',
-
-	'GALLERY_MCP_MAIN'				=> 'Main',
-	'GALLERY_MCP_OVERVIEW'			=> 'Overview',
-	'GALLERY_MCP_QUEUE'				=> 'Queue',
-	'GALLERY_MCP_QUEUE_DETAIL'		=> 'Image details',
-	'GALLERY_MCP_REPORTED'			=> 'Reported images',
-	'GALLERY_MCP_REPO_DONE'			=> 'Closed reports',
-	'GALLERY_MCP_REPO_OPEN'			=> 'Open reports',
-	'GALLERY_MCP_REPO_DETAIL'		=> 'Report details',
-	'GALLERY_MCP_UNAPPROVED'		=> 'Images awaiting approval',
-	'GALLERY_MCP_APPROVED'			=> 'Approved images',
-	'GALLERY_MCP_LOCKED'			=> 'Locked images',
-	'GALLERY_MCP_VIEWALBUM'			=> 'View album',
-	'GALLERY_MCP_ALBUM_OVERVIEW'	=> 'Moderate album',
-
-	'IMAGE_REPORTED'				=> 'The image was reported.',
-	'IMAGE_UNAPPROVED'				=> 'The image is awaiting for approval.',
-
-	'MODERATE_ALBUM'				=> 'Moderate album',
-
-	'LATEST_IMAGES_REPORTED'		=> 'Latest 5 images reported',
-	'LATEST_IMAGES_UNAPPROVED'		=> 'Latest 5 images awaiting approval',
-
-	'QUEUE_A_APPROVE'				=> 'Approve image',
-	'QUEUE_A_APPROVE2'				=> 'Approve image?',
-	'QUEUE_A_APPROVE2_CONFIRM'		=> 'Are you sure, you want to approve this image?',
-	'QUEUE_A_DELETE'				=> 'Delete image',
-	'QUEUE_A_DELETE2'				=> 'Delete image?',
-	'QUEUE_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete this image?',
-	'QUEUE_A_LOCK'					=> 'Lock image',
-	'QUEUE_A_LOCK2'					=> 'Lock image?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Are you sure, you want to lock this image?',
-	'QUEUE_A_MOVE'					=> 'Move image',
-	'QUEUE_A_UNAPPROVE'				=> 'Unapprove image',
-	'QUEUE_A_UNAPPROVE2'			=> 'Unapprove image?',
-	'QUEUE_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove this image?',
-
-	'QUEUE_STATUS_0'				=> 'The image is waiting for approval.',
-	'QUEUE_STATUS_1'				=> 'The image is approved.',
-	'QUEUE_STATUS_2'				=> 'The image is locked.',
-
-	'QUEUES_A_APPROVE'				=> 'Approve images',
-	'QUEUES_A_APPROVE2'				=> 'Approve images?',
-	'QUEUES_A_APPROVE2_CONFIRM'		=> 'Are you sure, you want to approve these images?',
-	'QUEUES_A_DELETE'				=> 'Delete images',
-	'QUEUES_A_DELETE2'				=> 'Delete images?',
-	'QUEUES_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete these images?',
-	'QUEUES_A_LOCK'					=> 'Lock images',
-	'QUEUES_A_LOCK2'				=> 'Lock images?',
-	'QUEUES_A_LOCK2_CONFIRM'		=> 'Are you sure, you want to lock these images?',
-	'QUEUES_A_MOVE'					=> 'Move images',
-	'QUEUES_A_UNAPPROVE'			=> 'Unapprove images',
-	'QUEUES_A_UNAPPROVE2'			=> 'Unapprove images?',
-	'QUEUES_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove these images?',
-	'QUEUES_A_DISAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove these images?',
-
-	'REPORT_A_CLOSE'				=> 'Close report',
-	'REPORT_A_CLOSE2'				=> 'Close report?',
-	'REPORT_A_CLOSE2_CONFIRM'		=> 'Are you sure, you want to close this report?',
-	'REPORT_A_DELETE'				=> 'Delete report',
-	'REPORT_A_DELETE2'				=> 'Delete report?',
-	'REPORT_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete this report?',
-	'REPORT_A_OPEN'					=> 'Open report',
-	'REPORT_A_OPEN2'				=> 'Open report?',
-	'REPORT_A_OPEN2_CONFIRM'		=> 'Are you sure, you want to open this report?',
-
-	'REPORT_NOT_FOUND'				=> 'The report could not be found.',
-	'REPORT_STATUS_1'				=> 'The report needs to be reviewed.',
-	'REPORT_STATUS_2'				=> 'The report is closed.',
-
-	'REPORTS_A_CLOSE'				=> 'Close reports',
-	'REPORTS_A_CLOSE2'				=> 'Close reports?',
-	'REPORTS_A_CLOSE2_CONFIRM'		=> 'Are you sure, you want to close these reports?',
-	'REPORTS_A_DELETE'				=> 'Delete reports',
-	'REPORTS_A_DELETE2'				=> 'Delete reports?',
-	'REPORTS_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete these reports?',
-	'REPORTS_A_OPEN'				=> 'Open reports',
-	'REPORTS_A_OPEN2'				=> 'Open reports?',
-	'REPORTS_A_OPEN2_CONFIRM'		=> 'Are you sure, you want to open these reports?',
-
-	'REPORT_MOD'					=> 'Edited by',
-	'REPORT_CLOSED_BY'				=> 'Report closed by',
-	'REPORTED_IMAGES'				=> 'Reported images',
-	'REPORTER'						=> 'Reporting user',
-	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',
-
-	'WAITING_APPROVED_IMAGE'		=> array(
-		0			=> 'No images approved.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> image approved.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
-	),
-	'WAITING_DISPPROVED_IMAGE'		=> array(
-		0			=> 'No images disapproved.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> image disapproved.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images disapproved.',
-	),
-	'WAITING_LOCKED_IMAGE'			=> array(
-		0			=> 'No images locked.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> image locked.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images locked.',
-	),
-	'WAITING_REPORTED_DONE'			=> array(
-		0			=> 'No reports reviewed.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> report reviewed.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> reports reviewed.',
-	),
-	'WAITING_REPORTED_IMAGE'		=> array(
-		0			=> 'No reports to review.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> report to review.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> reports to review.',
-	),
-	'WAITING_UNAPPROVED_IMAGE'		=> array(
-		0			=> 'No images waiting for approval.',
-		1			=> 'In total there is <span style="font-weight: bold;">1</span> image waiting for approval.',
-		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images waiting for approval.',
-	),
-	'DELETED_IMAGES'		=> array(
-		0			=> 'No images deleted.',
-		1			=> 'In total there was <span style="font-weight: bold;">1</span> image deleted.',
-		2			=> 'In total there was <span style="font-weight: bold;">%s</span> images deleted.',
-	),
-	'MOVED_IMAGES'		=> array(
-		0			=> 'No images were moved.',
-		1			=> 'In total there was <span style="font-weight: bold;">1</span> image moved.',
-		2			=> 'In total there was <span style="font-weight: bold;">%s</span> images moved.',
-	),
-	'NO_WAITING_UNAPPROVED_IMAGE'	=> 'No images waiting for approval.',
-));
+$lang = array_merge($lang, [
+	'CHOOSE_ACTION'             => 'Selecionar ação pretendida',
+	'GALLERY_MCP_MAIN'          => 'Principal',
+	'GALLERY_MCP_OVERVIEW'      => 'Visão Geral',
+	'GALLERY_MCP_QUEUE'         => 'Fila de Imagens',
+	'GALLERY_MCP_QUEUE_DETAIL'  => 'Detalhes da Fila de Imagens',
+	'GALLERY_MCP_REPORTED'      => 'Imagens Reportadas',
+	'GALLERY_MCP_REPO_DONE'     => 'Reportes Fechados',
+	'GALLERY_MCP_REPO_DETAIL'   => 'Detalhes do Reporte',
+	'GALLERY_MCP_REPO_OPEN'     => 'Reportes Abertos',
+	'GALLERY_MCP_UNAPPROVED'    => 'Imagens por aprovar',
+	'GALLERY_MCP_APPROVED'      => 'Imagens aprovadas',
+	'GALLERY_MCP_LOCKED'        => 'Imagens bloqueadas',
+	'GALLERY_MCP_VIEWALBUM'     => 'Ir para o Álbum',
+	'IMAGE_REPORTED_UNAPPROVED' => 'Infelizmente a imagem que procura não existe de momento na Base de Dados. Pode ter sido apagada por razões como (Tamanho não Aconselhável, Erros nas Imagens, Falta de Dados de Título, Formato Destruído e Errado ou Ficheiro Vazio). O mais provável foi ainda não ter sido sequer aprovada ou ainda ter sido bloqueada, o que o impede de a visualizar.',
+	'NO_REPORT_SELECTED'        => 'Por favor, selecione um ou vários reportes a ser trabalhados pela administração.',
+	'REPORT_A_CLOSE'            => 'Fechar Reporte',
+	'REPORT_A_CLOSE_CONFIRM'    => 'Tem a certeza que quer fechar este reporte de imagem?',
+	'REPORT_A_DELETE'           => 'Apagar o Reporte',
+	'REPORT_A_DELETE_CONFIRM'   => 'Tem a certeza que quer apagar definitivamente o reporte selecionado?',
+	'REPORT_A_OPEN'             => 'Abrir Reporte',
+	'REPORT_A_OPEN_CONFIRM'     => 'Tem a certeza que deseja efetuar esta acção (Abir um/uns Reporte(s)?',
+	'REPORT_NOT_FOUND'          => 'De momento não existem dados sobre este reporte, pode já não existir na base de dados.',
+	'REPORT_STATUS_1'           => 'A Moderação do Fórum deve proceder à Revisão do Reporte, visto este a exigi-lo.',
+	'REPORT_STATUS_2'           => 'O Reporte indicado está fechado e já não é possível aceder-lhe ou alterá-lo.',
+	'REPORTS_A_CLOSE'           => 'Fechar Reportes',
+	'REPORTS_A_CLOSE2'          => 'Deseja Fechar Reportes?',
+	'REPORTS_A_CLOSE2_CONFIRM'  => 'Tem a certeza que quer fechar este(s) reporte(s) de imagem?',
+	'REPORTS_A_DELETE'          => 'Apagar Reportes',
+	'REPORTS_A_DELETE2'         => 'Deseja Apagar Reportes?',
+	'REPORTS_A_DELETE2_CONFIRM' => 'Tem a certeza que deseja eliminar/apagar este(s) reporte(s)?',
+	'REPORTS_A_OPEN'            => 'Abrir Reportes',
+	'REPORTS_A_OPEN2'           => 'Deseja Abrir Reportes?',
+	'REPORTS_A_OPEN2_CONFIRM'   => 'Tem a certeza que deseja efetuar a acção (Abir O(s) Reporte(s)?)',
+	'REPORT_MOD'                => 'Editado e Retificado Por',
+	'REPORT_CLOSED_BY'          => 'Reporte Fechado E Oculto Por',
+	'REPORTED_IMAGES'           => 'Reportar Imagens',
+	'REPORTER'                  => 'Utilizador do Fórum ou Sistema Reportado(a)',
+	'REPORTER_AND_ALBUM'        => 'Reportes & Álbuns',
+	'WAITING_APPROVED_IMAGE'    => [
+		0 => 'Infelizmente de momento não há nenhuma imagem nas nossas listas prestes a serem aprovadas.',
+		1 => 'No Total da Galeria já foi <strong>Aprovada e Vista 1 Imagem</strong>.',
+		2 => 'No Total já foram Aprovadas, revistas e validadas <strong>%s Imagens</strong>.',
+	],
+	'WAITING_DISAPPROVED_IMAGE' => [
+		0 => 'Sem imagens Desaprovadas.',
+		1 => 'No Total e de acordo com as restrições foi <strong>1 Imagem</strong> Desaprovada.',
+		2 => 'No Total e de acordo com as restrições foram <strong>%s Imagens</strong> Desaprovadas.',
+	],
+	'WAITING_LOCKED_IMAGE' => [
+		0 => 'Sem Imagens bloqueadas.',
+		1 => 'No Total está bloqueada temporariamente, em processo ou mesmo reprovada <strong>1 Imagem</strong>.',
+		2 => 'No Total estão Bloqueadas, em processo de Moderação, ou Reprovadas <strong>%s Imagens</strong>.',
+	],
+	'WAITING_REPORTED_DONE' => [
+		0 => 'Sem Reportes efetuados a serem Revistos.',
+		1 => 'Temos a totalidade em estatística já de <strong>1 Reporte Totalmente Revisto</strong>.',
+		2 => 'A totalidade dos Reportes e revisões que até ao momento foram resolvidos foi de <strong>%s</strong>.',
+	],
+	'WAITING_REPORTED_IMAGE' => [
+		0 => 'De Momento não há nenhum reporte válido ou necessitado de ser avaliado.',
+		1 => 'O nosso sistema encontrou por avaliar e de modo urgente <strong>1 Reporte Novo de Imagem</strong>.',
+		2 => 'O sistema encontrou um número igual a <strong>%s Reportes a Avaliar</strong>.',
+	],
+	'WAITING_UNAPPROVED_IMAGE' => [
+		0 => 'Não existem neste momento imagens nas listas a necessitar avaliação ou revisão e assim ser aprovadas/reprovadas.',
+		1 => 'Foi requerida e pedida Avaliação para Revisão na Lista da Equipa de Moderação a um número de <strong>1 Imagem</strong>.',
+		2 => 'Foi requerida avaliação para a lista de imagens a uma quantia de <strong>%s</strong>, aguarde por moderação.',
+	],
+	'DELETED_IMAGES' => [
+		0 => 'Sem imagens eliminadas.',
+		1 => 'No Total há apenas registo de eliminação ou ficheiro apagado respeitante a <strong>1 Imagem</strong>.',
+		2 => 'No Total existe já na nossa base e em registo um número correspondente a <strong>%s Imagens e Ficheiros Eliminados</strong>.',
+	],
+	'MOVED_IMAGES' => [
+		0 => 'Nenhum ficheiro foi de momento movido.',
+		1 => 'A Equipa moveu na Totalidade das estatísticas relativas a Imagens o Correspondente a <strong>1 Imagem e Ficheiro Original</strong>.',
+		2 => 'As acções da equipa indicam que se moveram dos seus locais correspondentes até hoje um total de <strong>%s Imagens</strong>.',
+	],
+	'NO_WAITING_UNAPPROVED_IMAGE' => 'Não existem imagens em lista para verificação e não há nada aguardar.',
+]);

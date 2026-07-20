@@ -1,12 +1,10 @@
 <?php
 
 /**
- *
  * Prime Topic Move. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2019, kasimi, https://kasimi.net
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -36,19 +34,18 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'SPECIAL_TOPIC_MOVE_ENTER_REASON'			=> [
+	'SPECIAL_TOPIC_MOVE_ENTER_REASON' => [
 		1 => 'Por favor, escreve um motivo para mover este tópico',
 		2 => 'Por favor, escreve um motivo para mover estes tópicos',
 	],
-	'SPECIAL_TOPIC_MOVED_MESSAGE'				=> 'Este tópico foi movido',
-	'SPECIAL_TOPIC_MOVED_FROM'					=> 'de <strong>%s</strong>',
-	'SPECIAL_TOPIC_MOVED_TO'					=> 'para <strong>%s</strong>',
-	'SPECIAL_TOPIC_MOVED_BY'					=> 'por %s',
-	'SPECIAL_TOPIC_MOVED_ON'					=> 'em %s.',
-	'SPECIAL_TOPIC_MOVED_NO_USER'				=> 'desconhecido',
-	'SPECIAL_TOPIC_MOVED_UNDO'					=> 'Mover este tópico de volta.',
+	'SPECIAL_TOPIC_MOVED_MESSAGE' => 'Este tópico foi movido',
+	'SPECIAL_TOPIC_MOVED_FROM'    => 'de <strong>%s</strong>',
+	'SPECIAL_TOPIC_MOVED_TO'      => 'para <strong>%s</strong>',
+	'SPECIAL_TOPIC_MOVED_BY'      => 'por %s',
+	'SPECIAL_TOPIC_MOVED_ON'      => 'em %s.',
+	'SPECIAL_TOPIC_MOVED_NO_USER' => 'desconhecido',
+	'SPECIAL_TOPIC_MOVED_UNDO'    => 'Mover este tópico de volta.',
 
-	'SPECIAL_TOPIC_MOVED_NOTIFICATION'			=> 'Quando alguém move um tópico teu.',
-	'SPECIAL_TOPIC_MOVED_NOTIFICATION_TITLE'	=> 'O teu tópico “%1$s” foi <strong>movido</strong> por %2$s para “%3$s”.',
+	'SPECIAL_TOPIC_MOVED_NOTIFICATION'       => 'Quando alguém move um tópico teu.',
+	'SPECIAL_TOPIC_MOVED_NOTIFICATION_TITLE' => 'O teu tópico “%1$s” foi <strong>movido</strong> por %2$s para “%3$s”.',
 ]);
-

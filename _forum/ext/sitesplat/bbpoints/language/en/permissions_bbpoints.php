@@ -12,11 +12,13 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
@@ -38,6 +40,6 @@ if (empty($lang) || !is_array($lang)) {
 //
 
 $lang = array_merge($lang, [
-	'ACL_F_HIDE_TOPIC'		    => 'Can hide (and set a price) own topic',
-	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Can override GoldenPoints limit',
+	'ACL_F_HIDE_TOPIC'        => 'Can hide (and set a price) own topic',
+	'ACL_U_BBPOINTS_OVERRIDE' => 'Can override GoldenPoints limit',
 ]);

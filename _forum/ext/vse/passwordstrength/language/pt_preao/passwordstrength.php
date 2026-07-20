@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Password Strength [Português Brasileiro]
-* Translated by _Vinny_
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Password Strength [English]
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,10 +32,10 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PS_VERY_WEAK'		=> 'Muito Fraco',
-	'PS_WEAK'			=> 'Fraco',
-	'PS_GOOD'			=> 'Bom',
-	'PS_STRONG'			=> 'Forte',
-	'PS_VERY_STRONG'	=> 'Muito Forte',
-));
+$lang = array_merge($lang, [
+	'PS_VERY_WEAK'   => 'Muito Fraco',
+	'PS_WEAK'        => 'Fraco',
+	'PS_GOOD'        => 'Bom',
+	'PS_STRONG'      => 'Forte',
+	'PS_VERY_STRONG' => 'Muito Forte',
+]);

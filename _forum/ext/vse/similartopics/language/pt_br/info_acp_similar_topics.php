@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Precise Similar Topics [Portuguese]
-* Translated by The Crow: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2013 Matt Friedman
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Precise Similar Topics [English]
+ * @copyright (c) 2013 Matt Friedman
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +36,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PST_TITLE_ACP'		=> 'Tópicos Semelhantes',
-	'PST_SETTINGS'		=> 'Tópicos semelhantes configurações',
-	'PST_LOG_MSG'		=> '<strong>As configurações de Tópicos Semelhantes foram alteradas</strong>',
-));
+$lang = array_merge($lang, [
+	'PST_TITLE_ACP' => 'Precise Similar Topics',
+	'PST_SETTINGS'  => 'Tópicos semelhantes configurações',
+	'PST_LOG_MSG'   => '<strong>As configurações de Tópicos Semelhantes foram alteradas</strong>',
+]);

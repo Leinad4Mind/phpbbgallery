@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package       Popup PM
+ * @package Popup PM for phpBB.
  * @copyright (c) Татьяна5
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -21,11 +21,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'POPUPPM_YOU_NEW_PM_BLINK'		=> [
+	'POPUPPM_YOU_NEW_PM_BLINK' => [
 		1 => '<<<! Recebeste uma nova mensagem privada !>>>',
 		2 => '<<<! Tens %s novas mensagens privadas !>>>',
 	],
-	'POPUPPM_YOU_NEW_PM'			=> [
+	'POPUPPM_YOU_NEW_PM' => [
 		1 => 'Tens uma nova mensagem privada',
 		2 => 'Tens %s novas mensagens privadas',
 	],

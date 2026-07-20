@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Badge Award extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ * Badge Award extension for the phpBB Forum Software package.
+ * @copyright (c) 2015 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,14 +46,14 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Campo obrigatório em falta',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Foi especificado um argumento inválido para `%1$s`. Motivo: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'O campo `%1$s` recebeu dados para além do esperado',
-	'EXCEPTION_TOO_LONG'			=> 'O input foi maior que o tamanho máximo.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'O input não foi único.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'O campo `%1$s` recebeu dados inesperados. Motivo: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'o input contém caracteres proibidos.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Campo obrigatório em falta',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Foi especificado um argumento inválido para `%1$s`. Motivo: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'O campo `%1$s` recebeu dados para além do esperado',
+	'EXCEPTION_TOO_LONG'           => 'O input foi maior que o tamanho máximo.',
+	'EXCEPTION_NOT_UNIQUE'         => 'O input não foi único.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'O campo `%1$s` recebeu dados inesperados. Motivo: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'o input contém caracteres proibidos.',
 
-	'BADGE_TYPE_NOT_EXIST'		=> 'O `%1$s` não existe',
-));
+	'BADGE_TYPE_NOT_EXIST' => 'O `%1$s` não existe',
+]);

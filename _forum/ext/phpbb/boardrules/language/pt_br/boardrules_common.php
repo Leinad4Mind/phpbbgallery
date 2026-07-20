@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Board Rules extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2013 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Board Rules extension for the phpBB Forum Software package.
+ * @copyright (c) 2013 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +36,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Regras',
-	'BOARDRULES_TITLE'			=> 'Ver as regras deste fórum',
-	'BOARDRULES_AGREEMENT'		=> 'Concorda em respeitar as regras deste fórum estabelecidas na seção “Regras”',
-	'BOARDRULES_VIEWONLINE'		=> 'Vendo as regras do Fórum',
-	'BOARDRULES_NOTIFICATION'	=> 'As regras do fórum foram atualizadas. Clique aqui para revê-las.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Regras',
+	'BOARDRULES_TITLE'        => 'Ver as regras deste Fórum',
+	'BOARDRULES_AGREEMENT'    => 'Concorda em respeitar as regras deste fórum estabelecidas na secção “Regras”',
+	'BOARDRULES_VIEWONLINE'   => 'Vendo as regras do Fórum',
+	'BOARDRULES_NOTIFICATION' => 'As regras do Fórum foram atualizadas. Clique aqui para as rever.',
+]);

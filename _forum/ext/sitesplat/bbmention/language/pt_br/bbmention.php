@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @package BB@mention for phpBB.
+ * @copyright (c) 2015 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
+
+/**
+* DO NOT CHANGE
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+$lang = array_merge($lang, [
+	'NOTIFICATION_BBMENTION'      => 'Foi <strong>Mencionado</strong> por %1$s em:',
+	'NOTIFICATION_TYPE_BBMENTION' => 'Alguém menciona o seu nome (ou um grupo que você lidera) numa publicação',
+]);

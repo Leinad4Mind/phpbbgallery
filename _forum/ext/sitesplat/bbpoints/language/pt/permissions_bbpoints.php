@@ -1,16 +1,15 @@
 <?php
-/**
-*
-* BBPoints extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
+ * BBPoints extension for the phpBB Forum Software package.
+ * @copyright (c) 2015-2022 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,8 +17,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
+
 
 // DEVELOPERS PLEASE NOTE
 //
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACL_F_HIDE_TOPIC'		    => 'Pode ocultar (e colocar preço) do próprio tópico',
-	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Pode subscrever limite de PontosGold',
-));
+$lang = array_merge($lang, [
+	'ACL_F_HIDE_TOPIC'        => 'Pode ocultar (e colocar preço) do próprio tópico',
+	'ACL_U_BBPOINTS_OVERRIDE' => 'Pode subscrever limite de PontosGold',
+]);

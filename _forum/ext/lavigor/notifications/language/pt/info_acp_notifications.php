@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package Push Notifications
+ * @package Push Notifications for phpBB.
  * @copyright (c) 2017 - 2018 LavIgor
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -17,10 +17,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'LOG_WEB_PUSH_GENERAL_ERROR'	=> '<strong>Web Push error</strong><br />» %s',
-	'LOG_WEB_PUSH_SERVER_ERROR'		=> '<strong>Web Push error</strong> with code <strong>%1$s</strong><br />» %2$s',
-));
+$lang = array_merge($lang, [
+	'LOG_WEB_PUSH_GENERAL_ERROR' => '<strong>Web Push error</strong><br />» %s',
+	'LOG_WEB_PUSH_SERVER_ERROR'  => '<strong>Web Push error</strong> with code <strong>%1$s</strong><br />» %2$s',
+]);

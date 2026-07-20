@@ -1,18 +1,18 @@
 <?php
-/**
-*
-* permissions_gallery [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpbbgallery/core for phpBB.
+ * phpBB Gallery - ACP Core Extension
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,11 +20,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // Adding the permissions
-$lang = array_merge($lang, array(
-	'ACL_A_GALLERY_MANAGE'		=> 'Can manage the phpBB Gallery adjustments',
-	'ACL_A_GALLERY_ALBUMS'		=> 'Can add/edit albums and permissions',
-));
+$lang = array_merge($lang, [
+	'ACL_A_GALLERY_MANAGE' => 'Pode gerir as configurações da phpBB Galeria',
+	'ACL_A_GALLERY_ALBUMS' => 'Pode adicionar/editar álbuns e permissões',
+]);

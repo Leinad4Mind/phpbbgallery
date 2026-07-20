@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Board Rules extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Board Rules extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +36,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Regras do Fórum',
-	'ACP_BOARDRULES_MANAGE'			=> 'Gerir regras',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Configurar regras',
+	'ACP_BOARDRULES'          => 'Regras do Fórum',
+	'ACP_BOARDRULES_MANAGE'   => 'Gerir regras',
+	'ACP_BOARDRULES_SETTINGS' => 'Configurar regras',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Configurações das regras do fórum foram alteradas</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Enviadas notificações das regras a todos os utilizadores</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Configurações das regras do fórum foram alteradas</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Enviadas notificações das regras a todos os utilizadores</strong>',
+]);

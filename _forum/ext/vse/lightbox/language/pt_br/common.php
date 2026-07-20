@@ -1,12 +1,11 @@
 <?php
+
 /**
- *
  * Lightbox extension for the phpBB Forum Software package.
- * [Brazilian Portuguese]
- *
+ * [English]
  * @copyright (c) 2015 Matt Friedman
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
@@ -19,9 +18,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'LIGHTBOX_GALLERY_LABEL'		=> 'Imagem %1 de %2',
-));
+$lang = array_merge($lang, [
+	'LIGHTBOX_GALLERY_LABEL' => 'Imagem %1 de %2',
+]);

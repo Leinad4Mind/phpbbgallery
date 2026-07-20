@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * Topic Image Preview. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2020, Matt Friedman
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -18,9 +17,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACL_F_VSE_TIP'	=> 'Can see topic image previews',
-));
+$lang = array_merge($lang, [
+	'ACL_F_VSE_TIP' => 'Can see topic image previews',
+]);

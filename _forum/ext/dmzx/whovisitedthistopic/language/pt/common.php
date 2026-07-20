@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Who Visited This Topic
-* @copyright (c) 2016 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Who Visited This Topic for phpBB.
+ * @copyright (c) 2016 dmzx - https://www.dmzx-web.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'WHOVISITEDTHISTOPIC_TITLE'			=> 'Últimos <strong>%d</strong> Membros que visitaram este Tópico. De um total de <strong>%d</strong> visitas',
-	'WHOVISITEDTHISTOPIC_VISIT_TITLE'	=> 'Últimos <strong>%d</strong> tópicos visitados',
+	'WHOVISITEDTHISTOPIC_TITLE'       => 'Últimos <strong>%d</strong> Membros que visitaram este Tópico. De um total de <strong>%d</strong> visitas',
+	'WHOVISITEDTHISTOPIC_VISIT_TITLE' => 'Últimos <strong>%d</strong> tópicos visitados',
 ]);

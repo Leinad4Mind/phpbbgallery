@@ -1,12 +1,11 @@
 <?php
+
 /**
-*
-* Notification_manager for the phpBB Forum Software package.
-*
-* @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
-* @license Proprietary
-*
-*/
+ * Notification_manager for the phpBB Forum Software package.
+ * @copyright (c) 2017 ForumHulp.com <http://forumhulp.com>
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
  * DO NOT CHANGE
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +37,8 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-	'FH_HELPER_NOTICE'				=> 'Forumhulp helper application does not exist!<br />Download <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> and copy the helper folder to your forumhulp extension folder.',
-		'NOTIFICATION_MANAGER_NOTICE'	=> '<div class="phpinfo"><p class="entry">This extension replaces your old notification manager in control panel.</p></div>'
-	)
+	$lang, [
+	'FH_HELPER_NOTICE'             => 'Forumhulp helper application does not exist!<br />Download <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> and copy the helper folder to your forumhulp extension folder.',
+		'NOTIFICATION_MANAGER_NOTICE' => '<div class="phpinfo"><p class="entry">This extension replaces your old notification manager in control panel.</p></div>'
+	]
 );

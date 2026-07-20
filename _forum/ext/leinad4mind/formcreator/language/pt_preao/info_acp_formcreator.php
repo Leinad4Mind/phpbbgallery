@@ -1,12 +1,12 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Form Creator
-* @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
-* @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Form Creator for phpBB.
+ * @copyright (c) 2017 dmzx - http://www.dmzx-web.net & michaelo - http://www.phpbbireland.com
+ * @copyright (c) 2019 Leinad4Mind - https://leinad4mind.top/forum
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_FORM_CREATOR'				=> 'Form Creator',
-	'ACP_FORM_CREATOR_CONFIG'	 	=> 'Configuration',
+	'ACP_FORM_CREATOR'        => 'Form Creator',
+	'ACP_FORM_CREATOR_CONFIG' => 'Configuration',
 ]);

@@ -1,0 +1,17 @@
+Subject: Tópico movido - "{{ TOPIC_TITLE }}"
+
+Olá, {{ USERNAME }},
+
+
+Está a receber esta notificação para avisar de que o seu tópico "{{ TOPIC_TITLE }}" foi movido por "{{ TOPIC_MOVER }}" para "{{ FORUM_NAME }}".
+{% if REASON %}
+Motivo:
+
+{{ REASON }}
+{% endif %}
+
+Caso não desejes receber mais e-mails relacionados com tópicos movidos, por favor, corrige as suas notificações aqui:
+
+{{ U_NOTIFICATION_SETTINGS }}
+
+{{ EMAIL_SIG }}

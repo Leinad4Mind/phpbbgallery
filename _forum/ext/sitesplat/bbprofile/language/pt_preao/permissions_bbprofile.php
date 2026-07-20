@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* BBbbprofile. An extension for the phpBB Forum Software package.
-* @copyright (c) 2016, SiteSplat
-* @license Proprietary
-*
-*/
+ * BBbbprofile. An extension for the phpBB Forum Software package.
+ * @copyright (c) 2016, SiteSplat
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 if (!defined('IN_PHPBB'))
 {
@@ -14,9 +14,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-    'ACL_U_BBPROFILE' => 'Pode ver caixa BBprofile',
-));
+$lang = array_merge($lang, [
+	'ACL_U_BBPROFILE' => 'Pode ver caixa BBprofile',
+]);

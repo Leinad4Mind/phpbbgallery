@@ -1,44 +1,44 @@
 <?php
 
 /**
- *
  * phpBB Ajax likeBB.
- *
  * @copyright (c) 2015-2022 SiteSplat All rights reserved
  * @license Proprietary
- *
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
 $lang = array_merge($lang, [
-	'LIKEBB_NOTICE'						 => '<div style="width:auto;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group permission and adjust it as needed. By default the Registered user group can like and can dislike posts.</p></div>',
-	'ACP_LIKEBB_TITLE'					 => 'phpBB Ajax likeBB',
-	'LIKEBB_DISLIKE_OFF'					 => 'Disable Dislike function',
-	'LIKEBB_DISLIKE_OFF_EXPLAIN'		 => 'Turns on/off the entire dislike system. <br />NOTE: Granular permission is possible with the "Group Permission" as you can set the like /dislike permission for each Groups.<br /> ACP > Users and Groups > Group Permission "select Group" then choose "Can like posts" and "Can dislike posts".',
-	'LIKEBB_LIKE_STYLE'					 => 'Button colors for like / dislike',
-	'LIKEBB_LIKE_STYLE_EXPLAIN'		 => 'Select a CSS class to be applied to the like / dislike buttons<br /> NOTE: The class <strong>btn-l-cst</strong> allows you to have your own custom css defined.<br /> Make sure to add it in your custom.css stylesheet',
-	'LIKEBB_LIKE_ICON'					 => 'Icon picker for like / dislike',
-	'LIKEBB_LIKE_ICON_EXPLAIN'			 => 'Choose the icon for your like / dislike buttons',
-	'LIKEBB_LIKE_LIST'					 => 'Likers List in topic',
-	'LIKEBB_LIKE_LIST_EXPLAIN'			 => 'Turns on/off user likers list in viewtopic',
-	'LIKEBB_MAX_DISLIKES'				 => 'Max. dislikes',
-	'LIKEBB_MAX_DISLIKES_EXPLAIN'		 => 'Max. dislikes until message will be hidden from view. 0 switches the function off',
-	'LIKEBB_LIKE_GLOBAL'					 => 'Global Announcements like / dislike ',
-	'LIKEBB_LIKE_GLOBAL_EXPLAIN'		 => 'Turns on/off like / dislike in Global Announcements',
-	'LIKEBB_LIKE_LOCKED'					 => 'Locked topics like / dislike ',
-	'LIKEBB_LIKE_LOCKED_EXPLAIN'		 => 'Turns on/off like / dislike in Locked topics',
-	'ACL_U_LIKEBB'							 => 'Can use LikeBB UCP module and LikeBB Top 10 page',
-	'SS_HELPER_NOTY'						 => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-	'LIKEBB_BUTTON_POSITION' 								 => 'Button position',
-	'LIKEBB_BUTTON_POSITION_EXPLAIN'						 => 'Where to show like/dislike button',
-	'LIKEBB_BUTTON_POSITION_ALL'							 => 'All posts',
-	'LIKEBB_BUTTON_POSITION_FIRST_POST_ONLY'			 => 'First post only',
-	'LIKEBB_BUTTON_POSITION_ALL_EXCEPT_FIRST_POST'	 => 'All except first post',
+	'LIKEBB_NOTICE'                                => '<div style="width:auto;margin:20px auto;"><p>The Setting for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s.</strong><br />Make sure to check the Group permission and adjust it as needed. By default the Registered user group can like and can dislike posts.</p></div>',
+	'ACP_LIKEBB_TITLE'                             => 'phpBB Ajax likeBB',
+	'LIKEBB_DISLIKE_OFF'                           => 'Disable Dislike function',
+	'LIKEBB_DISLIKE_OFF_EXPLAIN'                   => 'Turns on/off the entire dislike system. <br />NOTE: Granular permission is possible with the "Group Permission" as you can set the like /dislike permission for each Groups.<br /> ACP > Users and Groups > Group Permission "select Group" then choose "Can like posts" and "Can dislike posts".',
+	'LIKEBB_LIKE_STYLE'                            => 'Button colors for like / dislike',
+	'LIKEBB_LIKE_STYLE_EXPLAIN'                    => 'Select a CSS class to be applied to the like / dislike buttons<br /> NOTE: The class <strong>btn-l-cst</strong> allows you to have your own custom css defined.<br /> Make sure to add it in your custom.css stylesheet',
+	'LIKEBB_LIKE_ICON'                             => 'Icon picker for like / dislike',
+	'LIKEBB_LIKE_ICON_EXPLAIN'                     => 'Choose the icon for your like / dislike buttons',
+	'LIKEBB_LIKE_LIST'                             => 'Likers List in topic',
+	'LIKEBB_LIKE_LIST_EXPLAIN'                     => 'Turns on/off user likers list in viewtopic',
+	'LIKEBB_MAX_DISLIKES'                          => 'Max. dislikes',
+	'LIKEBB_MAX_DISLIKES_EXPLAIN'                  => 'Max. dislikes until message will be hidden from view. 0 switches the function off',
+	'LIKEBB_LIKE_GLOBAL'                           => 'Global Announcements like / dislike ',
+	'LIKEBB_LIKE_GLOBAL_EXPLAIN'                   => 'Turns on/off like / dislike in Global Announcements',
+	'LIKEBB_LIKE_LOCKED'                           => 'Locked topics like / dislike ',
+	'LIKEBB_LIKE_LOCKED_EXPLAIN'                   => 'Turns on/off like / dislike in Locked topics',
+	'ACL_U_LIKEBB'                                 => 'Can use LikeBB UCP module and LikeBB Top 10 page',
+	'SS_HELPER_NOTY'                               => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+	'LIKEBB_BUTTON_POSITION'                       => 'Button position',
+	'LIKEBB_BUTTON_POSITION_EXPLAIN'               => 'Where to show like/dislike button',
+	'LIKEBB_BUTTON_POSITION_ALL'                   => 'All posts',
+	'LIKEBB_BUTTON_POSITION_FIRST_POST_ONLY'       => 'First post only',
+	'LIKEBB_BUTTON_POSITION_ALL_EXCEPT_FIRST_POST' => 'All except first post',
 ]);

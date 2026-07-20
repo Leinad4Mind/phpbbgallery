@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
 *
 * @package phpBB Extension - brunoais readotherstopics
@@ -21,15 +21,15 @@ class language_listener implements EventSubscriberInterface
 {
 	static public function getSubscribedEvents()
 	{
-		return array(
-			'core.permissions'						=> 'adapt_permission_logic',
-		);
+		return [
+			'core.permissions' => 'adapt_permission_logic',
+		];
 	}
-	
+
 	public static function insert_at_in_assoc_array($original, $searching_key, $new_thing_key, $new_thing)
 	{
-		$rebuild = array();
-		foreach ($original AS $key => $elem)
+		$rebuild = [];
+		foreach ($original as $key => $elem)
 		{
 			$rebuild[$key] = $elem;
 			if ($key == $searching_key)
@@ -37,22 +37,22 @@ class language_listener implements EventSubscriberInterface
 				$rebuild[$new_thing_key] = $new_thing;
 			}
 		}
-		
+
 		return $rebuild;
 	}
 
 
 	public function adapt_permission_logic($event)
 	{
-		
+
 		$event['permissions'] = self::insert_at_in_assoc_array($event['permissions'],
 				\brunoais\readotherstopics\migrations\initial_release::PARENT_PERMISSION_NAME,
 				\brunoais\readotherstopics\migrations\initial_release::PERMISSION_NAME,
-				array(
-					'lang'	=> 'ACL_F_READ_OTHERS_TOPICS',
-					'cat'	=> 'actions',
-				)
+				[
+					'lang' => 'ACL_F_READ_OTHERS_TOPICS',
+					'cat'  => 'actions',
+				]
 			);
-		
+
 	}
 }

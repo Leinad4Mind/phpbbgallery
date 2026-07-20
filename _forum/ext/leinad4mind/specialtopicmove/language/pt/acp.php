@@ -1,12 +1,10 @@
 <?php
 
 /**
- *
- * Special Topic Move. An extension for the phpBB Forum Software package.
- *
- * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
+ * Prime Topic Move. An extension for the phpBB Forum Software package.
+ * @copyright (c) 2019, kasimi, https://kasimi.net
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -36,11 +34,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'SPECIAL_TOPIC_MOVED_DISPLAY'			=> 'Display details about moved topics',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_EXPLAIN'	=> 'Determines where the details of a moved topic will be displayed.',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_NEVER'		=> 'Don’t show details about the move',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_FIRST'		=> 'Show on first post of the thread',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_LAST'		=> 'Show on last post of the thread',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_MOVED'		=> 'Show on last post at time of move',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_SHADOW'	=> 'Show with shadow link in forum list',
+	'SPECIAL_TOPIC_MOVED_DISPLAY'         => 'Display details about moved topics',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_EXPLAIN' => 'Determines where the details of a moved topic will be displayed.',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_NEVER'   => 'Don’t show details about the move',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_FIRST'   => 'Show on first post of the thread',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_LAST'    => 'Show on last post of the thread',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_MOVED'   => 'Show on last post at time of move',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_SHADOW'  => 'Show with shadow link in forum list',
 ]);

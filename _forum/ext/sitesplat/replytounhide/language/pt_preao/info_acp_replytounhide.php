@@ -1,10 +1,10 @@
 <?php
+
 /**
- *
- * @package ReplyToUnhide
+ * @package ReplyToUnhide for phpBB.
  * @copyright (c) 2016 SiteSplat <http://sitesplat.com>
  * @license Proprietary
- *
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 /**
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -32,7 +32,7 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-    'REPLYTOUNHIDE_NOTICE'		=> '<div class="phpinfo"><p>There are no setting for this extenion. The BBcode HIDE is available to be used in posting page.</p></div>',
-	'SS_HELPER_NOTICE'			=> 'The BBcore extension does not exist!<br />Download the <a href="http://sitesplat.com">BBcore</a> and copy the folder into your sitesplat extension folder.',
-));
+$lang = array_merge($lang, [
+	'REPLYTOUNHIDE_NOTICE' => '<div class="phpinfo"><p>There are no setting for this extenion. The BBcode HIDE is available to be used in posting page.</p></div>',
+	'SS_HELPER_NOTICE'     => 'The BBcore extension does not exist!<br />Download the <a href="http://sitesplat.com">BBcore</a> and copy the folder into your sitesplat extension folder.',
+]);

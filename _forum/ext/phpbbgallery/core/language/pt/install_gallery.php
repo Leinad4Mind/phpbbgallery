@@ -1,18 +1,18 @@
 <?php
-/**
-*
-* install_gallery [English]
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpbbgallery/core for phpBB.
+ * phpBB Gallery - ACP Core Extension
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,115 +20,77 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'BBCODES_NEEDS_REPARSE'		=> 'The BBCode needs to be rebuild.',
-
-	'CAT_CONVERT'				=> 'convert phpBB2',
-	'CAT_CONVERT_TS'			=> 'convert TS Gallery',
-	'CAT_UNINSTALL'				=> 'phpBB Gallery uninstall',
-
-	'CHECK_TABLES'				=> 'Check tables',
-	'CHECK_TABLES_EXPLAIN'		=> 'The following tables need to exist, so they can be converted.',
-
-	'CONVERT_SMARTOR_INTRO'			=> 'Convertor from “Album-MOD“ by smartor to “phpBB Gallery“',
-	'CONVERT_SMARTOR_INTRO_BODY'	=> 'With this convertor, you can convert your albums, images, rates and comments from the <a href="http://www.phpbb.com/community/viewtopic.php?f=16&t=74772">Album-MOD</a> by Smartor (tested v2.0.56) and <a href="http://www.phpbbhacks.com/download/5028">Full Album Pack</a> (tested v1.4.1) to the phpBB Gallery.<br /><br /><strong>Note:</strong> The <strong>permissions</strong> will <strong>not be copied</strong>.',
-	'CONVERT_TS_INTRO'				=> 'Convertor from “TS Gallery“ to “phpBB Gallery“',
-	'CONVERT_TS_INTRO_BODY'			=> 'With this convertor, you can convert your albums, images, rates and comments from the <a href="http://www.phpbb.com/community/viewtopic.php?f=70&t=610509">TS Gallery</a> (tested v0.2.1) to the phpBB Gallery.<br /><br /><strong>Note:</strong> The <strong>permissions</strong> will <strong>not be copied</strong>.',
-	'CONVERT_COMPLETE_EXPLAIN'		=> 'Conversion from your gallery to phpBB Gallery v%s was successful.<br />Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory.<br /><br /><strong>Please note that the permissions were not copied.</strong><br /><br />You should also clean your database from old entries, where the images are missing. This can be done in “.MODs > phpBB Gallery > Cleanup gallery“.',
-
-	'CONVERTED_ALBUMS'			=> 'The albums were successful copied.',
-	'CONVERTED_COMMENTS'		=> 'The comments were successful copied.',
-	'CONVERTED_IMAGES'			=> 'The images were successful copied.',
-	'CONVERTED_MISC'			=> 'Converted miscellanious things.',
-	'CONVERTED_PERSONALS'		=> 'The personal albums were successful copied.',
-	'CONVERTED_RATES'			=> 'The rates were successful copied.',
-	'CONVERTED_RESYNC_ALBUMS'	=> 'Resyncronize album-stats.',
-	'CONVERTED_RESYNC_COMMENTS'	=> 'Resyncronize comments.',
-	'CONVERTED_RESYNC_COUNTS'	=> 'Resyncronize imagecounters.',
-	'CONVERTED_RESYNC_RATES'	=> 'Resyncronize rates.',
-
-	'FILE_DELETE_FAIL'				=> 'File could not be deleted, you need to delete it manually',
-	'FILE_STILL_EXISTS'				=> 'File still exists',
-	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Required</strong> - In order to function correctly phpBB Gallery needs to be able to access or write to certain files or directories. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB to write to it.',
-	'FILES_DELETE_OUTDATED'			=> 'Delete outdated files',
-	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'When you click to delete the files, they are completly deleted and can not be restored!<br /><br />Please note:<br />If you have more styles and languages installed, you need to delete the files by hand.',
-	'FILES_OUTDATED'				=> 'Outdated files',
-	'FILES_OUTDATED_EXPLAIN'		=> '<strong>Outdated</strong> - In order to deny hacking attempts, please remove the following files.',
-	'FOUND_INSTALL'					=> 'Double Installation',
-	'FOUND_INSTALL_EXPLAIN'			=> '<strong>Double Installation</strong> - An Installation of the gallery was found! If you continue here, you overwrite all existing data. All albums, images and comments will be deleted! <strong>That´s why an %1$supdate%2$s recommanded.</strong>',
-	'FOUND_VERSION'					=> 'The following version was found',
-	'FOUNDER_CHECK'					=> 'You are a “Founder“ of this board',
-	'FOUNDER_NEEDED'				=> 'You must be a “Founder“ of this board!',
-
-	'INSTALL_CONGRATS_EXPLAIN'	=> 'You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong>',
-	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Gallery onto your board.',
-
-	'GOTO_GALLERY'				=> 'Go to phpBB Gallery',
-	'GOTO_INDEX'				=> 'Go to Board-Index',
-
-	'MISSING_CONSTANTS'			=> 'Before you can run the install-script, you need to upload your edited files, especially the includes/constants.php.',
-	'MODULES_CREATE_PARENT'		=> 'Create parent standard-module',
-	'MODULES_PARENT_SELECT'		=> 'Choose parent module',
-	'MODULES_SELECT_4ACP'		=> 'Choose parent module for “admin control panel“',
-	'MODULES_SELECT_4LOG'		=> 'Choose parent module for “Gallery log“',
-	'MODULES_SELECT_4MCP'		=> 'Choose parent module for “moderation control panel“',
-	'MODULES_SELECT_4UCP'		=> 'Choose parent module for “user control panel“',
-	'MODULES_SELECT_NONE'		=> 'no parent module',
-
-	'NO_INSTALL_FOUND'			=> 'No installation was found!',
-
-	'OPTIONAL_EXIFDATA'				=> 'Function “exif_read_data“ exists',
-	'OPTIONAL_EXIFDATA_EXP'			=> 'The exif-module is not loaded or installed.',
-	'OPTIONAL_EXIFDATA_EXPLAIN'		=> 'If the function exists, the exif data of the images are displayed on the imagepage.',
-	'OPTIONAL_IMAGEROTATE'			=> 'Function “imagerotate“ exists',
-	'OPTIONAL_IMAGEROTATE_EXP'		=> 'You should update your GD Version, which is currently “%s“.',
-	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'If the function exists, you can rotate images while uploading and editing them.',
-
-	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
-	<h3>Author Notes</h3>
-	<p>Creating, maintaining and updating this MOD required/requires a lot of time and effort, so if you like this MOD and have the desire to express your thanks through a donation, that would be greatly appreciated. My Paypal ID is <strong>nickvergessen@gmx.de</strong>, or contact me for my mailing address.<br /><br />The suggested donation amount for this MOD is 25.00€ (but any amount will help).</p><br />
-	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
-</div><p>',
-
-	'PHP_SETTINGS'				=> 'PHP settings',
-	'PHP_SETTINGS_EXP'			=> 'These PHP settings and configurations are required for installing and running the gallery.',
-	'PHP_SETTINGS_OPTIONAL'		=> 'Optional PHP settings',
-	'PHP_SETTINGS_OPTIONAL_EXP'	=> 'These PHP settings are <strong>NOT</strong> required for normal usage, but will give some extra features.',
-
-	'REQ_GD_LIBRARY'			=> 'GD Library is installed',
-	'REQ_PHP_VERSION'			=> 'php version >= %s',
-	'REQ_PHPBB_VERSION'			=> 'phpBB version >= %s',
-	'REQUIREMENTS_EXPLAIN'		=> 'Before proceeding with the full installation phpBB will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Gallery. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed.',
-
-	'STAGE_ADVANCED_EXPLAIN'		=> 'Please choose the parent module for the gallery modules. In normal case you should not change them.',
-	'STAGE_COPY_TABLE'				=> 'Copy database-tables',
-	'STAGE_COPY_TABLE_EXPLAIN'		=> 'The database-tables for the album- and user-data have the same names in TS Gallery and phpBB Gallery. So we create a copy to be able to convert the data.',
-	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'The database tables used by phpBB Gallery have been created and populated with some initial data. Proceed to the next screen to finish installing phpBB Gallery.',
-	'STAGE_DELETE_TABLES'			=> 'Clean database',
-	'STAGE_DELETE_TABLES_EXPLAIN'	=> 'The database-content of the Gallery-MOD was deleted. Proceed to the next screen to finish uninstalling phpBB Gallery.',
-	'SUPPORT_BODY'					=> 'Full support will be provided for the current stable release of phpBB Gallery, free of charge. This includes:</p><ul><li>installation</li><li>configuration</li><li>technical questions</li><li>problems relating to potential bugs in the software</li><li>updating from Release Candidate (RC) versions to the latest stable version</li><li>converting from Smartor’s Album-MOD for phpBB 2.0.x to phpBB Gallery for phpBB3</li><li>converting from TS Gallery to phpBB Gallery</li></ul><p>The use of Beta-Versions is limited recommended. If there are updates, it’s recommended to update quickly.</p><p>Support is given on the following boards</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - MOD-Autor nickvergessen’s board</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
-
-	'TABLE_ALBUM'				=> 'table including the images',
-	'TABLE_ALBUM_CAT'			=> 'table including the albums',
-	'TABLE_ALBUM_COMMENT'		=> 'table including the comments',
-	'TABLE_ALBUM_CONFIG'		=> 'table including the configuration',
-	'TABLE_ALBUM_RATE'			=> 'table including the rates',
-	'TABLE_EXISTS'				=> 'exists',
-	'TABLE_MISSING'				=> 'missing',
-	'TABLE_PREFIX_EXPLAIN'		=> 'Prefix of phpBB2-installation',
-
-	'UNINSTALL_INTRO'					=> 'Welcome to Uninstall',
-	'UNINSTALL_INTRO_BODY'				=> 'With this option, it is possible to uninstall phpBB Gallery from your board.<br /><br /><strong>WARNING: All albums, images and comments will be deleted unrecoverable!</strong>',
-	'UNINSTALL_REQUIREMENTS'			=> 'Requirement',
-	'UNINSTALL_REQUIREMENTS_EXPLAIN'	=> 'Before proceeding with the full uninstallation phpBB will carry out some tests to ensure that you are allowed to uninstall phpBB Gallery.',
-	'UNINSTALL_START'					=> 'Uninstall',
-	'UNINSTALL_FINISHED'				=> 'Uninstall nearly finished',
-	'UNINSTALL_FINISHED_EXPLAIN'		=> 'You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong>',
-
-	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Here you can Update your phpBB Gallery-Version.',
-
-	'VERSION_NOT_SUPPORTED'		=> 'Sorry, but your updates prior to 1.0.6 are not supported from this install/update-system.',
-));
+$lang = array_merge($lang, [
+	'ALBUM_ALREADY_EXISTS'           => 'Já existe um álbum que tem esse nome na Galeria.',
+	'COLLIDING_ALBUM_NAME'           => 'Existem alguns conflitos de nomes (mais do que um álbum com o mesmo nome). Por favor renomeie um dos álbuns.',
+	'COLLIDING_PREFIX'               => 'Foi encontrado um prefixo em conflito (%s).',
+	'CREATE_MODULES'                 => 'Criar módulos',
+	'CREATE_TABLES'                  => 'Criar tabelas de base de dados',
+	'DB_NOT_SUPPORTED'               => 'O tipo da sua base de dados ainda não é suportado pelo nosso script de instalação.',
+	'FILES_OUTDATED'                 => 'Ficheiros desatualizados',
+	'FILES_OUTDATED_EXPLAIN'         => '<strong>Desatualizado</strong> - De modo a evitar tentativas de intrusão (hacking), por favor remova os seguintes ficheiros.',
+	'FOUND_INSTALL'                  => 'Instalação dupla',
+	'FOUND_INSTALL_EXPLAIN'          => '<strong>Instalação dupla</strong> - Foi encontrada uma instalação da galeria! Se continuar, os dados existentes serão sobrescritos. Todos os álbuns, imagens e comentários serão eliminados! <strong>Por este motivo é recomendável uma %1$satualização%2$s.</strong>',
+	'FOUND_VERSION'                  => 'Foi encontrada a seguinte versão',
+	'FOUNDER_CHECK'                  => 'Você é "Fundador" deste fórum',
+	'FOUNDER_NEEDED'                 => 'Precisa ser um "Fundador" do fórum!',
+	'INSTALL_CONGRATS_EXPLAIN'       => 'Instalou com sucesso o phpBB Gallery v%s.<br/><br/><strong>Por favor elimine, mova ou renomeie a pasta install antes de utilizar o fórum.</strong>',
+	'INSTALL_INTRO_BODY'             => 'Com esta opção, é possível instalar a phpBB Gallery no seu fórum.',
+	'GOTO_GALLERY'                   => 'Ir para a phpBB Galeria',
+	'GOTO_INDEX'                     => 'Ir para o Índice do Fórum',
+	'MISSING_CONSTANTS'              => 'Antes de poder correr o script de instalação, precisa de enviar (upload) os seus ficheiros editados.',
+	'MODULES_CREATE_PARENT'          => 'Criar módulo principal',
+	'MODULES_PARENT_SELECT'          => 'Escolha o módulo principal',
+	'MODULES_SELECT_4ACP'            => 'Escolha o módulo principal para o "Painel de Administração (ACP)"',
+	'MODULES_SELECT_4LOG'            => 'Escolha o módulo principal para o "Registo (Log) da Galeria"',
+	'MODULES_SELECT_4MCP'            => 'Escolha o módulo principal para o "Painel de Moderação (MCP)"',
+	'MODULES_SELECT_4UCP'            => 'Escolha o módulo principal para o "Painel de Utilizador (UCP)"',
+	'MODULES_SELECT_NONE'            => 'sem módulo pai',
+	'NO_INSTALL_FOUND'               => 'Não foi encontrada qualquer instalação!',
+	'OPTIONAL_EXIFDATA'              => 'A função "exif_read_data" existe',
+	'OPTIONAL_EXIFDATA_EXP'          => 'O módulo Exif não está carregado ou não se encontra instalado.',
+	'OPTIONAL_EXIFDATA_EXPLAIN'      => 'Se a função existir, os dados exif das imagens serão mostrados.',
+	'OPTIONAL_IMAGEROTATE'           => 'A função "imagerotate" existe',
+	'OPTIONAL_IMAGEROTATE_EXP'       => 'Aconselhamos a atualização da sua versão GD que neste momento é " %s ".',
+	'OPTIONAL_IMAGEROTATE_EXPLAIN'   => 'Se a função existir, poderá rodar imagens durante o upload e edição.',
+	'PAYPAL_DEV_SUPPORT'             => '</p><div class="errorbox"><h3>Notas do Autor</h3><p>Criar e atualizar este MOD exigiu/exige muito esforço...</p></div><p>',
+	'PHP_SETTINGS'                   => 'Configurações PHP',
+	'PHP_SETTINGS_EXP'               => 'Estas configurações do PHP são necessárias para instalar e correr a galeria.',
+	'PHP_SETTINGS_OPTIONAL'          => 'Configurações PHP Opcionais',
+	'PHP_SETTINGS_OPTIONAL_EXP'      => 'Estas configurações <strong>NÃO</strong> são estritamente necessárias.',
+	'REQ_GD_LIBRARY'                 => 'A biblioteca GD está instalada',
+	'REQ_PHP_VERSION'                => 'Versão do php >= %s',
+	'REQ_PHPBB_VERSION'              => 'Versão do phpBB >= %s',
+	'REQUIREMENTS_EXPLAIN'           => 'Antes de prosseguir com a instalação...',
+	'STAGE_ADVANCED_EXPLAIN'         => 'Por favor selecione o módulo principal. Em condições normais não deverá efetuar qualquer alteração.',
+	'STAGE_COPY_TABLE'               => 'Copiar tabelas da Base de Dados',
+	'STAGE_COPY_TABLE_EXPLAIN'       => 'As tabelas têm os mesmos nomes no TS Gallery e no phpBB Gallery...',
+	'STAGE_CREATE_TABLE_EXPLAIN'     => 'As tabelas de Base de Dados usadas pela phpBB Galeria foram criadas.',
+	'STAGE_DELETE_TABLES'            => 'Limpar Base de Dados',
+	'STAGE_DELETE_TABLES_EXPLAIN'    => 'Os conteúdos da Base de Dados referentes à phpBB Galeria foram eliminados.',
+	'SUPPORT_BODY'                   => 'Poderá aceder a suporte sobre a Galeria...</p>',
+	'TABLE_ALBUM'                    => 'tabela incluindo as imagens',
+	'TABLE_ALBUM_CAT'                => 'tabela incluindo os álbuns',
+	'TABLE_ALBUM_COMMENT'            => 'tabela com os comentários',
+	'TABLE_ALBUM_CONFIG'             => 'tabela com as configurações',
+	'TABLE_ALBUM_RATE'               => 'tabela com as votações (rates)',
+	'TABLE_EXISTS'                   => 'existe',
+	'TABLE_MISSING'                  => 'em falta',
+	'TABLE_PREFIX_EXPLAIN'           => 'Prefixo da instalação phpBB2',
+	'UNINSTALL_INTRO'                => 'Bem-vindo ao sistema de Desinstalação',
+	'UNINSTALL_INTRO_BODY'           => 'Com esta opção pode desinstalar a phpBB Gallery.<br /><br /><strong>Aviso: Todos os álbuns, imagens e comentários serão eliminados de forma irreversível!</strong>',
+	'UNINSTALL_REQUIREMENTS'         => 'Requisitos',
+	'UNINSTALL_REQUIREMENTS_EXPLAIN' => 'Antes de prosseguir a desinstalação far-se-ão testes.',
+	'UNINSTALL_START'                => 'Desinstalar',
+	'UNINSTALL_FINISHED'             => 'Desinstalação quase concluída',
+	'UNINSTALL_FINISHED_EXPLAIN'     => 'Desinstalou com sucesso a galeria phpBB.',
+	'UPDATE_INSTALLATION_EXPLAIN'    => 'Aqui poderá Atualizar a sua Galeria phpBB.',
+	'VERSION_NOT_SUPPORTED'          => 'Lamentamos, mas as suas atualizações anteriores à versão 1.0.6 não são suportadas por este sistema.',
+	'GALLERY_SUB_EXT_UNINSTALL'      => [
+		1 => 'Tem de desinstalar a extensão: <br /><strong>%s</strong><br /> antes de desinstalar a extensão principal.',
+		2 => 'Tem de desinstalar as extensões: <br /><strong>%s</strong><br /> antes de desinstalar a extensão principal.',
+	],
+]);

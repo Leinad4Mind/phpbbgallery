@@ -1,14 +1,12 @@
 <?php
 
 /**
- *
  * Invite. An extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid [2019][ver 4.2.0] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
  * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,10 +32,10 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
-$lang = array_merge($lang, array(
-	'MCP_CAT_INVITE'			=> 'phpBB Invite',
-	'MCP_INVITE'				=> 'Convite',
-	'MCP_INVITE_BACK'			=> '<br /><br />%sVoltar para o painel de controlo do moderador%s',
-	'MCP_INVITE_DISABLED'		=> '%sO sistema de convite foi desactivado!%s',
-	'MCP_INVITE_CONFIRMATION'	=> 'Solicitações de convite',
-));
+$lang = array_merge($lang, [
+	'MCP_CAT_INVITE'          => 'phpBB Invite',
+	'MCP_INVITE'              => 'Convite',
+	'MCP_INVITE_BACK'         => '<br /><br />%sVoltar para o painel de controlo do moderador%s',
+	'MCP_INVITE_DISABLED'     => '%sO sistema de convite foi desactivado!%s',
+	'MCP_INVITE_CONFIRMATION' => 'Solicitações de convite',
+]);

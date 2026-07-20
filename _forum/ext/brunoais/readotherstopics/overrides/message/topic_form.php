@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
 *
 * This file is part of the phpBB Forum Software package.
@@ -15,13 +15,12 @@ namespace brunoais\readotherstopics\overrides\message;
 
 use brunoais\readotherstopics\shared\accesses;
 
-
 class topic_form extends \phpbb\message\topic_form
 {
-	
+
 	/* @var \brunoais\readotherstopics\shared\permission_evaluation */
 	protected $permission_evaluation;
-	
+
 	/**
 	* Constructor
 	*/
@@ -41,9 +40,9 @@ class topic_form extends \phpbb\message\topic_form
 		{
 			return $error;
 		}
-		$permission_result = $this->permission_evaluation->permission_evaluate(array(
+		$permission_result = $this->permission_evaluation->permission_evaluate([
 			'topic_id' => $this->topic_id,
-		));
+		]);
 		if ($permission_result === accesses::NO_READ_OTHER)
 		{
 			$this->user->add_lang_ext('brunoais/readotherstopics', 'common');

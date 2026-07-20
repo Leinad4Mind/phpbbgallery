@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Personal Notes
-* @copyright (c) 2014 OXPUS - www.oxpus.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Personal Notes for phpBB.
+ * @copyright (c) 2014 OXPUS - www.oxpus.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'NOTES_NOTICE'				    => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
-	'PHP_ERROR' 	=> 'This extension requires PHP 7.3.0 (or greater).',
-	'PHPBB_ERROR' 	=> 'This extension requires phpBB 3.3.0 (or greater).',
+	'NOTES_NOTICE' => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
+	'PHP_ERROR'    => 'This extension requires PHP 7.3.0 (or greater).',
+	'PHPBB_ERROR'  => 'This extension requires phpBB 3.3.0 (or greater).',
 ]);

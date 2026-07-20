@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* Board Rules extension for the phpBB Forum Software package.
-* @Traduzido por: http://phpbbportugal.com - segundo as normas do Acordo Ortográfico
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ * Board Rules extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +36,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Exemplo Regra Categoria',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Esta é uma categoria de exemplo das regras do fórum. Categorias contêm grupos de regras relacionadas. Mensagens Categoria (como esta) não são exibidas na página de regras.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'examplo-categoria',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Examplo Regra Categoria',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Esta é uma categoria de exemplo das Regras do Fórum. Categorias contêm grupos de regras relacionadas. Mensagens Categoria (como esta) não são exibidas na página de regras.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'examplo-categoria',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Exemplo de Regra',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Esta é uma regras de exemplo das regras do fórum. Tudo parece funcionar bem. Edite ou exclua esta regra e categoria e continue a configurar suas próprias regras deste fórum.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'exemplo-regra',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Examplo de Regra',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Esta é uma Regras de exemplo das Regras do Fórum. Tudo parece funcionar bem. Pode editar ou excluir esta regra e categoria e continuar a configurar suas próprias regras deste Fórum.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'examplo-regra',
+]);

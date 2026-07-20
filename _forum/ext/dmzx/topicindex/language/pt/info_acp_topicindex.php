@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Topic Index for phpBB.
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Merge the following language entries into the lang array
-$lang = array_merge($lang, array(
-	'ACP_CAT_OINDEX'				=> 'Official Topic Index',
-	'ACP_OINDEX_CFG'				=> 'Configuração',
+$lang = array_merge($lang, [
+	'ACP_CAT_OINDEX' => 'Official Topic Index',
+	'ACP_OINDEX_CFG' => 'Configuração',
 	//Log
-	'LOG_OINDEX_ADDLIST'			=> '<strong>Adicionada nova lista de tópicos.</strong><br />%s',
-	'LOG_OINDEX_DELETELIST'			=> '<strong>Excluída lista de tópicos.</strong><br />%s',
-	'LOG_OINDEX_EDITCFG'			=> '<strong>Editada a configuração da Official Topic Index.</strong><br />%s',
-));
+	'LOG_OINDEX_ADDLIST'    => '<strong>Adicionada nova lista de tópicos.</strong><br />%s',
+	'LOG_OINDEX_DELETELIST' => '<strong>Excluída lista de tópicos.</strong><br />%s',
+	'LOG_OINDEX_EDITCFG'    => '<strong>Editada a configuração da Official Topic Index.</strong><br />%s',
+]);

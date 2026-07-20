@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 /**
@@ -38,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PHPBB_VERSION_ERROR'	=> 'Your board appears to be using an older version of phpBB. phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' or newer is required to use this extension.',
-	'S9E_MEDIAEMBED_ERROR'	=> 'We detected the s9e/mediaembed extension. phpBB’s Media Embed plugin can not be installed until you disable, purge and delete all files related to the s9e/mediaembed extension.',
+	'PHPBB_VERSION_ERROR'  => 'Your board appears to be using an older version of phpBB. phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' or newer is required to use this extension.',
+	'S9E_MEDIAEMBED_ERROR' => 'We detected the s9e/mediaembed extension. phpBB’s Media Embed plugin can not be installed until you disable, purge and delete all files related to the s9e/mediaembed extension.',
 ]);

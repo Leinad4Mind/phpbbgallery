@@ -1,12 +1,10 @@
 <?php
 
 /**
- *
  * Topic Index - User Topics. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2018 kasimi - https://kasimi.net
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -36,11 +34,11 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// On viewprofile
-	'TOPIC_INDEX_USER_TOPICS'			=> 'Partilhas',
-	'TOPIC_INDEX_USER_TOPICS_VIEW'		=> 'Ver partilhas do utilizador',
-	'TOPIC_INDEX_TOPICS_SELF'			=> 'Minhas Partilhas',
+	'TOPIC_INDEX_USER_TOPICS'      => 'Partilhas',
+	'TOPIC_INDEX_USER_TOPICS_VIEW' => 'Ver partilhas do utilizador',
+	'TOPIC_INDEX_TOPICS_SELF'      => 'Minhas Partilhas',
 
 	// On topic index page
-	'TOPIC_INDEX_USER_TOPICS_FILTERING'	=> 'partilhadas por %1$s',
+	'TOPIC_INDEX_USER_TOPICS_FILTERING' => 'partilhadas por %1$s',
 	'TOPIC_INDEX_USER_TOPICS_NO_FILTER' => 'Clique para listar todos',
 ]);

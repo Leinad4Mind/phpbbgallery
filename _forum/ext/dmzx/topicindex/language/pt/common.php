@@ -1,11 +1,11 @@
 <?php
+
 /**
-*
-* @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package phpBB Extension - Topic Index for phpBB.
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ */
 
 /**
 * DO NOT CHANGE
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,28 +36,28 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ADD_INILIST'					=> '+Lista',
-	'REMOVE_INILIST'				=> '-Lista',
-	'OTINDEX_LINK_TITLE'			=> 'Lista de Tópicos',
-	'NUM'							=> 'N°',
-	'POSTER'						=> 'Enviado por',
-	'INDEX_POST_PRES'				=> 'Antes de abrir um novo tópico, por favor verifica se já existe na lista. Se existir, usa esse tópico para escrever uma mensagem.<br />Obrigado',
-	'NON_ACTIVE'					=> 'Inactivo',
-	'DEF_ALL_TOPICS_IN'				=> 'Todos os novos tópicos automaticamente',
-	'DEF_ALL_TOPICS_OFF'			=> 'Adiciona tópicos manualmente à lista',
-	'REMOVE_FROM_LIST'				=> 'remover',
-	'TOPICINDEX_VERSION'			=> 'Versão',
-	'ALL'							=> 'Todos',
-	'09'							=> '0-9',
-	'SYMB'							=> '#&%',
-	'ANY_TOPIC_IN_LIST'				=> 'Nenhum tópico enviado!',
-	'SELECT_A_LIST'					=> 'Seleccione uma lista',
-	'OIINDEX_HEADER'				=> 'Lista de tópicos',
-	'LANGUAGE'				        => 'Idioma',
-	'CATEGORY'				        => 'Categoria',
-	'COMMENTS'				        => 'Comentários',
-	'BUTTON_UPLOAD'				    => 'Partilhar Projecto',
-	'BUTTON_UPLOAD_EXPLAIN'		    => 'Sim! Começa a partilhar projectos na nossa comunidade!',
-	
-));
+$lang = array_merge($lang, [
+	'ADD_INILIST'           => '+Lista',
+	'REMOVE_INILIST'        => '-Lista',
+	'OTINDEX_LINK_TITLE'    => 'Lista de Tópicos',
+	'NUM'                   => 'N°',
+	'POSTER'                => 'Enviado por',
+	'INDEX_POST_PRES'       => 'Antes de abrir um novo tópico, por favor verifica se já existe na lista. Se existir, usa esse tópico para escrever uma mensagem.<br />Obrigado',
+	'NON_ACTIVE'            => 'Inactivo',
+	'DEF_ALL_TOPICS_IN'     => 'Todos os novos tópicos automaticamente',
+	'DEF_ALL_TOPICS_OFF'    => 'Adiciona tópicos manualmente à lista',
+	'REMOVE_FROM_LIST'      => 'remover',
+	'TOPICINDEX_VERSION'    => 'Versão',
+	'ALL'                   => 'Todos',
+	'09'                    => '0-9',
+	'SYMB'                  => '#&%',
+	'ANY_TOPIC_IN_LIST'     => 'Nenhum tópico enviado!',
+	'SELECT_A_LIST'         => 'Seleccione uma lista',
+	'OIINDEX_HEADER'        => 'Lista de tópicos',
+	'LANGUAGE'              => 'Idioma',
+	'CATEGORY'              => 'Categoria',
+	'COMMENTS'              => 'Comentários',
+	'BUTTON_UPLOAD'         => 'Partilhar Projecto',
+	'BUTTON_UPLOAD_EXPLAIN' => 'Sim! Começa a partilhar projectos na nossa comunidade!',
+
+]);

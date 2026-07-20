@@ -1,13 +1,11 @@
 <?php
+
 /**
-*
-* @package language
-* @package sitesplat BBcore addon
-* @Traduzido por Leinad4Mind (c) 2016~2017 https://www.patreon.com/leinad4mind
-* @copyright (c) 2015 SiteSplat All rights reserved
-* @license Proprietary
-*
-*/
+ * @package sitesplat BBcore addon for phpBB.
+ * @copyright (c) 2015 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
 
 // TRANSLATORS PLEASE NOTE
 //
@@ -35,7 +33,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -55,15 +53,15 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-		'UCP_IR'				    => 'Redimensionar Imagem',
-		'IMAGE_RESIZE'			    => 'Redimensionamento de Imagem',
-		'IMAGE_RESIZE_EXPLAIN'	    => 'Corte %1$s da imagem e confirme.',
+	$lang, [
+		'UCP_IR'               => 'Redimensionar Imagem',
+		'IMAGE_RESIZE'         => 'Redimensionamento de Imagem',
+		'IMAGE_RESIZE_EXPLAIN' => 'Corte %1$s da imagem e confirme.',
 		// Your avatar will be saved with a height of %1$s pixels and a width of %2$s pixels.',
 
-		'IMAGE_RESIZE_ERROR'	    => 'Nenhuma app ou ficheiro para enviar!',
-		'IMAGERESIZE_NOTICE'	    => '<div class="phpinfo"><p>There is no specific configuration for this extension. After the user uploaded the avatar via UCP Avatar upload, the crop option will be available.<br /> Check the ACP &#62; Avatar settings: "Maximum avatar file size" to be 0 or 2mb or more for a smooth user experience.</p></div>',
-		'ERROR_IMAGERESIZE_DISABLE'	=> 'You cannot disable AvatarResize because of other active premium extensions<br /><div>» %s</div>',
-	    'SS_HELPER_NOTY'	    	=> 'Core does not exist!<br />Download and copy the Core folder into your sitesplat extension folder.',
-	)
+		'IMAGE_RESIZE_ERROR'        => 'Nenhuma app ou ficheiro para enviar!',
+		'IMAGERESIZE_NOTICE'        => '<div class="phpinfo"><p>There is no specific configuration for this extension. After the user uploaded the avatar via UCP Avatar upload, the crop option will be available.<br /> Check the ACP &#62; Avatar settings: "Maximum avatar file size" to be 0 or 2mb or more for a smooth user experience.</p></div>',
+		'ERROR_IMAGERESIZE_DISABLE' => 'You cannot disable AvatarResize because of other active premium extensions<br /><div>» %s</div>',
+		'SS_HELPER_NOTY'            => 'Core does not exist!<br />Download and copy the Core folder into your sitesplat extension folder.',
+	]
 );

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
 *
 * @package phpBB Extension - brunoais readotherstopics
@@ -13,7 +13,8 @@ namespace brunoais\readotherstopics\shared;
 * Auxiliary content
 */
 
-class accesses{
+class accesses
+{
 	const FULL_READ = 'FULL_READ';
 	const NO_READ_OTHER = 'NO_READ_OTHER';
 	const NO_READ = 'NO_READ';

@@ -1,12 +1,12 @@
 <?php
+
 /**
- *
  * Advanced Polls [Spanish]
- *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Transation by Raul [ThE KuKa] (https://github.com/phpbb-es)
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))

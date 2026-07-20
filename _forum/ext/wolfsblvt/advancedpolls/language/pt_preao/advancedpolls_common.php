@@ -1,12 +1,11 @@
 <?php
+
 /**
- *
- * Advanced Polls [Spanish]
- *
+ * Advanced Polls [English]
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
- * @author Translation by Raul [ThE KuKa] (https://github.com/phpbb-es)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -16,7 +15,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +34,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Resultados visíveis para a votação</strong>:',
-	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Já podes ver os resultados de uma votação em que participaste',
-));
+$lang = array_merge($lang, [
+	'NOTIFICATION_AP_POLL_ENDED'      => '<strong>Resultados visíveis para a votação</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_ENDED' => 'Já podes ver os resultados de uma votação em que participaste',
+]);

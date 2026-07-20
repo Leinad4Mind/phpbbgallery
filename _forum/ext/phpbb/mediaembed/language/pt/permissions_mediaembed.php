@@ -1,11 +1,10 @@
 <?php
+
 /**
- *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -31,6 +30,6 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, [
-	'ACL_F_MEDIAEMBED'		=> 'Pode usar a tag [media]',
-	'ACL_U_PM_MEDIAEMBED'	=> 'Pode usar a tag [media] BBCode em mensagens privadas',
+	'ACL_F_MEDIAEMBED'    => 'Pode usar a tag [media]',
+	'ACL_U_PM_MEDIAEMBED' => 'Pode usar a tag [media] BBCode em mensagens privadas',
 ]);
