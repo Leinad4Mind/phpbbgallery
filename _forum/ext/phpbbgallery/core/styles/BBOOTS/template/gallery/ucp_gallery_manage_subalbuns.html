@@ -91,19 +91,24 @@
 				</td>
 
 				<td class="center">
+					<form method="post" action="{S_UCP_ACTION}" style="display: inline;">
+					<input type="hidden" name="action" value="move" />
+					<input type="hidden" name="album_id" value="{album_row.ALBUM_ID}" />
 					<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
-						<a class="btn btn-xs btn-default disabled" href="#"><i class="fa fa-sort-up"></i></a>
-						<a class="btn btn-xs btn-default" href="{album_row.U_MOVE_DOWN}"><i class="fa fa-sort-down"></i></a>
+						<button class="btn btn-xs btn-default" type="button" disabled="disabled"><i class="fa fa-sort-up"></i></button>
+						<button class="btn btn-xs btn-default" type="submit" name="move" value="move_down"><i class="fa fa-sort-down"></i></button>
 					<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
-						<a class="btn btn-xs btn-default" href="{album_row.U_MOVE_UP}"><i class="fa fa-sort-up"></i></a>
-						<a class="btn btn-xs btn-default" href="{album_row.U_MOVE_DOWN}"><i class="fa fa-sort-down"></i></a>
+						<button class="btn btn-xs btn-default" type="submit" name="move" value="move_up"><i class="fa fa-sort-up"></i></button>
+						<button class="btn btn-xs btn-default" type="submit" name="move" value="move_down"><i class="fa fa-sort-down"></i></button>
 					<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
-						<a class="btn btn-xs btn-default" href="{album_row.U_MOVE_UP}"><i class="fa fa-sort-up"></i></a>
-						<a class="btn btn-xs btn-default disabled" href="#"><i class="fa fa-sort-down"></i></a>
+						<button class="btn btn-xs btn-default" type="submit" name="move" value="move_up"><i class="fa fa-sort-up"></i></button>
+						<button class="btn btn-xs btn-default" type="button" disabled="disabled"><i class="fa fa-sort-down"></i></button>
 					<!-- ELSE -->
-						<a class="btn btn-xs btn-default disabled" href="#"><i class="fa fa-sort-up"></i></a>
-						<a class="btn btn-xs btn-default disabled" href="#"><i class="fa fa-sort-down"></i></a>
+						<button class="btn btn-xs btn-default" type="button" disabled="disabled"><i class="fa fa-sort-up"></i></button>
+						<button class="btn btn-xs btn-default" type="button" disabled="disabled"><i class="fa fa-sort-down"></i></button>
 					<!-- ENDIF -->
+						{S_FORM_TOKEN}
+					</form>
 						<a class="btn btn-xs btn-default" href="{album_row.U_EDIT}"><i class="fa fa-pencil"></i></a>
 						<a class="btn btn-xs btn-default" href="{album_row.U_DELETE}"><i class="fa fa-times"></i></a>
 				</td>
