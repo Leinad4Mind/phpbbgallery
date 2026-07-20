@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'LOG_LOGIN_REDIRECT' => '<strong>Opções de redirecionamento de login atualizadas</strong>',
 	'REDIRECT'           => 'Redirecionamento de login',
-	'REDIRECT_MANAGE'    => 'Gerir redirecionamentos',
+	'REDIRECT_MANAGE'    => 'Gerenciar redirecionamentos',
 ]);

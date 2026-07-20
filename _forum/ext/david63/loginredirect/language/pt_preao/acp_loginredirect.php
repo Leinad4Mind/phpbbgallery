@@ -55,16 +55,16 @@ $lang = array_merge($lang, [
 	'REDIRECT_ANNOUNCE_TOPIC_ID_EXPLAIN' => 'Insira o ID do tópico de anúncio para o qual deseja redirecionar todos os utilizadores.',
 	'REDIRECT_ANY_ANNOUNCE_EXPLAIN'      => 'Redirecionar todos os utilizadores que não fizeram login desde que o anúncio especificado foi publicado.',
 
-	'REDIRECT_ENABLE'  => 'Ativar',
-	'REDIRECT_ENABLED' => 'Ativar redirecionamento de login do utilizador',
+	'REDIRECT_ENABLE'  => 'Activar',
+	'REDIRECT_ENABLED' => 'Activar redirecionamento de login do utilizador',
 
 	'REDIRECT_GLOBAL'                 => 'Redirecionar para um anúncio Global',
 	'REDIRECT_GLOBAL_EXPLAIN'         => 'Redirecionar o utilizador para um anúncio Global em vez de um anúncio "normal".',
 	'REDIRECT_GROUP'                  => 'Redirecionamento para tópico de grupo',
 	'REDIRECT_GROUP_ALL'              => 'Todos os membros de grupos',
-	'REDIRECT_GROUP_ALL_EXPLAIN'      => 'Definir isto como Sim anulará qualquer grupo individual selecionado abaixo.',
+	'REDIRECT_GROUP_ALL_EXPLAIN'      => 'Definir isto como Sim anulará qualquer grupo individual seleccionado abaixo.',
 	'REDIRECT_GROUP_EXPLAIN'          => 'Redirecionar membros de um grupo, ou de todos os grupos, para um tópico específico após o login.',
-	'REDIRECT_GROUP_ID'               => 'Selecionar grupo',
+	'REDIRECT_GROUP_ID'               => 'Seleccionar grupo',
 	'REDIRECT_GROUP_MESSAGE_EXPLAIN'  => 'Apresentar uma mensagem a informar que o utilizador está a ser redirecionado para um tópico específico.',
 	'REDIRECT_GROUP_OPTIONS'          => 'Opções de grupo',
 	'REDIRECT_GROUP_TOPIC_ID'         => 'ID do tópico de grupo',
@@ -73,7 +73,7 @@ $lang = array_merge($lang, [
 	'REDIRECT_LATEST_ANNOUNCE' => 'Redirecionamento para o anúncio mais recente no login',
 
 	'REDIRECT_LOGIN'         => 'Redirecionamento de login',
-	'REDIRECT_LOGIN_EXPLAIN' => 'Aqui pode escolher que um novo utilizador seja redirecionado para um tópico de boas-vindas no seu primeiro login após o registo, redirecionar todos os utilizadores para o anúncio mais recente se ainda não o tiverem visto e/ou redirecionar todos os membros ou os de um grupo selecionado para uma nova mensagem após fazerem login.',
+	'REDIRECT_LOGIN_EXPLAIN' => 'Aqui pode escolher que um novo utilizador seja redirecionado para um tópico de boas-vindas no seu primeiro login após o registo, redirecionar todos os utilizadores para o anúncio mais recente se ainda não o tiverem visto e/ou redirecionar todos os membros ou os de um grupo seleccionado para uma nova mensagem após fazerem login.',
 
 	'REDIRECT_SHOW_MESSAGE' => 'Apresentar uma mensagem de redirecionamento',
 
@@ -84,5 +84,5 @@ $lang = array_merge($lang, [
 	'REDIRECT_WELCOME_TOPIC_ID'         => 'ID do tópico de boas-vindas',
 	'REDIRECT_WELCOME_TOPIC_ID_EXPLAIN' => 'Insira o ID do tópico de boas-vindas para o qual deseja redirecionar todos os novos utilizadores.',
 
-	'SELECTED' => 'Selecionado',
+	'SELECTED' => 'Seleccionado',
 ]);

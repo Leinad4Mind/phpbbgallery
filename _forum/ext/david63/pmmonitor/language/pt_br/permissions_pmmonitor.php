@@ -37,5 +37,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACL_A_COMMS_PM_MANAGE' => 'Pode gerir o monitor de MP',
+	'ACL_A_COMMS_PM_MANAGE' => 'Pode gerenciar o monitor de MP',
 ]);

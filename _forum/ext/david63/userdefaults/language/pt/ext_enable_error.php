@@ -39,7 +39,8 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'EXT_ENABLE_ERROR' => 'Esta extensão requer o phpBB 3.3.0 (ou superior).',
+	'EXT_ENABLE_ERROR' => 'Esta extensão requer uma versão do phpBB igual ou superior a %1$s mas inferior a %2$s.<br>A tua versão do phpBB é %3$s.',
+	'EXT_PHP_ERROR'    => 'Esta extensão requer o PHP %1$s (ou superior).<br>A tua versão do PHP é %2$s.',
 ]);
 
 $lang = array_merge($lang, [

@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 	'IS_GROUP'       => 'G',
 	'MSG_COUNT'      => 'Contagem de mensagens',
 	'NO_PM_DATA'     => 'Não existem dados de MP para apresentar.',
-	'NO_PM_SELECTED' => 'Nenhuma MP selecionada',
+	'NO_PM_SELECTED' => 'Nenhuma MP seleccionada',
 
 	'PM_BOX'                  => 'Caixa de MP',
 	'PM_DELETED'              => 'Eliminadas',
