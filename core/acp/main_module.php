@@ -78,6 +78,9 @@ class main_module
 		// init config
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 
+		// init rating
+		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
+
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
 		$mode = 'overview';
@@ -439,10 +442,7 @@ class main_module
 					}
 					$db->sql_freeresult($result);
 
-					if (!empty($image_ids))
-					{
-						phpbb_gallery_image_rating::delete_ratings($image_ids, true);
-					}
+					$this->reset_album_ratings($phpbb_gallery_rating, $image_ids);
 
 					trigger_error($this->language->lang('RESET_RATING_COMPLETED') . adm_back_link($this->u_action));
 				break;
@@ -585,5 +585,19 @@ class main_module
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'U_ACTION'				=> $this->u_action,
 		));
+	}
+
+	/**
+	 * Reset every image rating in an album.
+	 *
+	 * @param object $rating    Gallery rating service
+	 * @param array  $image_ids Image identifiers
+	 */
+	private function reset_album_ratings($rating, array $image_ids): void
+	{
+		if (!empty($image_ids))
+		{
+			$rating->delete_ratings($image_ids, true);
+		}
 	}
 }
