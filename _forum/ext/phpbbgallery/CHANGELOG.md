@@ -20,6 +20,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Prevented ACP Import from copying files after image validation had failed.
 - Updated gallery and user image counters only for images imported successfully.
 - Preserved ACP Import errors safely in JSON state between batches and corrected the final successful-image count.
+- Fixed the fatal error when resetting album ratings in the ACP by using the registered `phpbbgallery.core.rating` service.
 
 ### Tests
 
@@ -27,7 +28,97 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACP Import tests covering state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
 - Added permanent authorization tests covering image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
 - Added permanent individual-move tests covering request methods, CSRF validation, source and destination authorization, form tokens, and mutation ordering.
-- Validated the ZIP upload, ACP Import, authorization, and individual-move security phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent ACP rating-reset tests covering service resolution, non-empty and empty albums, and regression against the removed legacy class name.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, and ACP rating-reset phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+
+## [3.4.0]
+### Added
+- New feature: Poster can now see unapproved images.
+- Added version checkers (`version-check`).
+- Added gallery button on navigation header only for guests, improving index and album layout for guests.
+- Added Spanish (ES) and Italian (IT) languages and improved translations.
+
+### Changed
+- Major refactoring of enabling, disabling, and purging logic.
+- Refactored `assign_block` using bitwise operators.
+- Significant restructuring and improvement of Core, ACP Cleanup, Exif, and ACP Import add-ons.
+- Refactored moderate switch and controller logic.
+- Refactored ACP gallery logs module.
+- Changed placeholders logic for MariaDB compatibility.
+- Simplified alphabet navigation.
+- Final repository restructuring to facilitate long-term gallery maintenance.
+
+### Fixed
+- WebP image support fixes.
+- Security: Fixed insecure redirection bug on notifications.
+- Security: Resolved potential SQL injection warnings and implemented safer `unserialize`.
+- Fixed missing notification on purge/enable.
+- Fixed missing license files across add-ons.
+- Fixed who is online and circular reference issues.
+- Fixed ACP and MCP pagination.
+- Fixed meta refresh on approval.
+- Fixed all typos on comments and language files.
+- Fixed sub-album moving through editing and image updates.
+- Fixed EPV event dependencies.
+- Removed deprecated SPDX license identifiers.
+
+## [3.2.2]
+### Added
+- Added comprehensive FRENCH translations and updated UI strings (by Galixte).
+
+### Changed
+- Adjusted spacing in navigation menus (`linklist`), album lists (`forabg`), and image titles.
+- Enhanced YML notifications and cleaned routing files.
+
+### Fixed
+- Fixed missing language keys globally, consistently applying `{L_COLON}` where required.
+- Fixed the "Change Author Bug".
+- Fixed `sizeof()` warnings for PHP 7.2 compatibility.
+- Prevented watermark (`_wm`) images from inappropriately appearing in the ACP image lists.
+- Removed duplicated language strings and fixed comment edit styling issues.
+
+## [3.2.1.1]
+### Changed
+- Improved test suites and continuous integration configurations.
+- Allowed failure conditions for PHP 7.1 and 7.2 functional tests to reduce Travis test time.
+
+## [3.2.1.0]
+### Added
+- **Contests Feature**: Added full support for contests including winner styling, ACP contest creation, contest-aware uploading, and displaying contest info directly in albums.
+- **RRC_ZEBRA Integration**: Integrated zebra striping at the image level.
+- **Notifications**: Added notifications for unapproved images.
+- Added multiple new core events for extension developers.
+
+### Changed
+- Version numbering explicitly jumped to 3.2.x to reflect targeted compatibility with phpBB 3.2.
+- Re-architected the upload method to utilize the core `\phpbb\files` class.
+- Moved subscription logic to a button and added an associated icon.
+- Started implementation of `\phpbb\language` core conventions.
+
+### Fixed
+- Fixed image rotation handling.
+- Fixed wrong cache requests and logic issues affecting specific database engines (e.g., PostgreSQL).
+- Fixed `auth->get_zebra_state` to properly return an integer.
+- Fixed division by 0 errors in User Profile.
+- Secured routers and updated notification logic to correspond to the new request methods.
+
+## [1.2.2]
+### Changed
+- Incremental improvements for tests (PHPUnit/Coveralls) and filesystem handling.
+- Minor refactoring around HTML templates.
+
+## [1.2.1]
+### Changed
+- Refactored `ext.php` and `composer.json` requirements.
+- Minor cleanup of legacy code in migrations to prepare for the 3.2.x migration.
+
+## [1.2.0.11]
+### Fixed
+- Security: Fixed log vulnerability (Log security bug).
+- Security: Resolved "Sniffing" vulnerabilities.
+- Security: Enforced strict casting for albums and images to integers.
+- Fixed URL issues and validation in controllers (e.g., `controller/comment.php`).
+- Composer compatibility adjustments and `core\file\file` dependencies fixed.
 
 ## [1.2.0]
 *Note: First extension release for phpBB 3.1. Versions up to 1.1.6 were released as MODs for phpBB 3.0.*
