@@ -44,10 +44,10 @@ if (empty($lang) || !is_array($lang))
 */
 $lang = array_merge($lang, [
 	'INTRODUCIATOR_ST_TITLE'         => 'Estatísticas e verificações sobre a apresentação de usuários',
-	'INTRODUCIATOR_ST_TITLE_EXPLAIN' => 'Usado para mostrar informações da base de dados:
+	'INTRODUCIATOR_ST_TITLE_EXPLAIN' => 'Usado para mostrar informações do banco de dados:
 														<ul>
 														<li>As estatísticas sobre apresentações.</li>
-														<li>A verificação de coerência da base de dados sobre a apresentação do usuário (verificar se os usuários publicaram mais de uma apresentação).</li>
+														<li>A verificação de coerência do banco de dados sobre a apresentação do usuário (verificar se os usuários publicaram mais de uma apresentação).</li>
 														</ul>',
 	'INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE'      => 'Estatísticas gerais',
 	'INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE'      => 'Número de apresentações no fórum:',

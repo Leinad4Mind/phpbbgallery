@@ -51,28 +51,28 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_EP_DISPLAY_RULES_ENABLED'               => 'Mostrar regras do fórum de apresentações:',
 	'INTRODUCIATOR_EP_DISPLAY_RULES_ENABLED_EXPLAIN'       => 'Usado para mostrar as regras do fórum de apresentações na página de explicação.',
 	'INTRODUCIATOR_EP_GENERAL_OPTIONS_TEXTS_TITLE'         => 'Configuração do texto da página de explicações',
-	'INTRODUCIATOR_EP_GENERAL_OPTIONS_TEXTS_TITLE_EXPLAIN' => 'Para todos os campos seguintes, pode usar:<br/>
+	'INTRODUCIATOR_EP_GENERAL_OPTIONS_TEXTS_TITLE_EXPLAIN' => 'Para todos os campos seguintes, podes usar:<br/>
 																		<ul>
 																		<li><b>%forum_name%</b>: nome do fórum de apresentações</li>
 																		<li><b>%forum_url%</b>: url para o fórum de apresentações</li>
 																		<li><b>%forum_post%</b>: url para escrever uma nova mensagem no fórum de apresentações</li>
 																		</ul>
-																		Pode usar BBcodes para fazer mensagens.<br/>
+																		Podes usar BBcodes para fazer mensagens.<br/>
 																		<br/>
 																		<u>Exemplos:</u>
 																		<ul>
-																		<li>Criar link para o fórum de apresentações: <i>[url=<b>%forum_url%</b>]Clique aqui para ir para o fórum "<b>%forum_name%</b>"[/url]</i>
-																		<li>Criar link para criar tópico no fórum de apresentações: <i>[url=<b>%forum_post%</b>]Clique aqui para criar tópico no fórum "<b>%forum_name%</b>"[/url]</i>
+																		<li>Criar link para o fórum de apresentações: <i>[url=<b>%forum_url%</b>]Clica aqui para ir para o fórum "<b>%forum_name%</b>"[/url]</i>
+																		<li>Criar link para criar tópico no fórum de apresentações: <i>[url=<b>%forum_post%</b>]Clica aqui para criar tópico no fórum "<b>%forum_name%</b>"[/url]</i>
 																		</ul>
 																		<br/>',
 	'INTRODUCIATOR_EP_MESSAGE_TITLE'           => 'Título da página de explicação:',
-	'INTRODUCIATOR_EP_MESSAGE_TITLE_EXPLAIN'   => 'Padrão = <b>%explanation_title%</b><br/>Pode alterar este texto para o seu próprio.',
+	'INTRODUCIATOR_EP_MESSAGE_TITLE_EXPLAIN'   => 'Padrão = <b>%explanation_title%</b><br/>Podes alterar este texto para o teu próprio.',
 	'INTRODUCIATOR_EP_MESSAGE_TEXT'            => 'Texto da página de explicação:',
-	'INTRODUCIATOR_EP_MESSAGE_TEXT_EXPLAIN'    => 'Padrão = <b>%explanation_text%</b><br/>Pode alterar este texto para o seu próprio.',
+	'INTRODUCIATOR_EP_MESSAGE_TEXT_EXPLAIN'    => 'Padrão = <b>%explanation_text%</b><br/>Podes alterar este texto para o teu próprio.',
 	'INTRODUCIATOR_EP_RULES_TITLE'             => 'Título das regras de explicação:',
-	'INTRODUCIATOR_EP_RULES_TITLE_EXPLAIN'     => 'Padrão = <b>%rules_title%</b><br/>Pode alterar este texto para o seu próprio.',
+	'INTRODUCIATOR_EP_RULES_TITLE_EXPLAIN'     => 'Padrão = <b>%rules_title%</b><br/>Podes alterar este texto para o teu próprio.',
 	'INTRODUCIATOR_EP_RULES_TEXT'              => 'Texto das regras do fórum de apresentações:',
-	'INTRODUCIATOR_EP_RULES_TEXT_EXPLAIN'      => 'Padrão = <b>%rules_text%</b><br/>Por padrão, %rules_text% é substituído pelas regras do fórum de apresentações.<br/>Pode alterar este texto para o seu próprio.',
+	'INTRODUCIATOR_EP_RULES_TEXT_EXPLAIN'      => 'Padrão = <b>%rules_text%</b><br/>Por padrão, %rules_text% é substituído pelas regras do fórum de apresentações.<br/>Podes alterar este texto para o teu próprio.',
 	'INTRODUCIATOR_EP_LOG_EXPLANATION_UPDATED' => '<strong>Introduciator: definições de explicações atualizadas.</strong>',
 	'INTRODUCIATOR_EP_UPDATED'                 => 'As definições da página de explicações foram atualizadas',
 ]);

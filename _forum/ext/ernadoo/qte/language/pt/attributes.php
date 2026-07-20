@@ -29,7 +29,7 @@ $lang = array_merge($lang, [
 	'QTE_ATTRIBUTES' => 'Atributos do tópico',
 	'QTE_ATTRIBUTE'  => 'Atributo do tópico',
 
-	'QTE_ATTRIBUTE_ADD'     => 'Selecione um atributo de tópico',
+	'QTE_ATTRIBUTE_ADD'     => 'Seleciona um atributo de tópico',
 	'QTE_ATTRIBUTE_REMOVE'  => 'Remover o atributo do tópico',
 	'QTE_ATTRIBUTE_DESIRED' => 'Selecionar o atributo desejado',
 	'QTE_ATTRIBUTE_KEEP'    => 'Manter o atributo atual',
@@ -49,14 +49,14 @@ $lang = array_merge($lang, [
 	// search
 	'QTE_ATTRIBUTE_SELECT'         => 'Selecionar um atributo de tópico',
 	'QTE_ATTRIBUTE_SEARCH'         => 'Pesquisar atributos',
-	'QTE_ATTRIBUTE_SEARCH_EXPLAIN' => 'Selecione o atributo que tu deseja pesquisar',
+	'QTE_ATTRIBUTE_SEARCH_EXPLAIN' => 'Seleciona o atributo que desejas pesquisar',
 
 	// sort
 	'QTE_SORT' => 'Como atributo',
 	'QTE_ALL'  => 'Todos',
 
 	// mistake messages
-	'QTE_ATTRIBUTE_UNSELECTED' => 'Tu deve selecionar um atributo!',
+	'QTE_ATTRIBUTE_UNSELECTED' => 'Deves selecionar um atributo!',
 
 	// placeholders
 	'QTE_KEY_USERNAME' => '¦user¦',

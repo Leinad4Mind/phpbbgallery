@@ -40,5 +40,5 @@ if (empty($lang) || !is_array($lang))
 // Adding the permissions
 $lang = array_merge($lang, [
 	'ACL_U_MUST_INTRODUCE'       => 'Deve primeiro publicar uma apresentação',
-	'ACL_A_INTRODUCIATOR_MANAGE' => 'Pode gerir a extensão Introduciator',
+	'ACL_A_INTRODUCIATOR_MANAGE' => 'Pode gerenciar a extensão Introduciator',
 ]);

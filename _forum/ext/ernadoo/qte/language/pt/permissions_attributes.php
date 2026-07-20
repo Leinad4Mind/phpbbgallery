@@ -23,8 +23,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACL_A_ATTR_MANAGE' => 'Pode gerenciar atributos de tópicos',
-	'ACL_M_ATTR_DEL'    => 'Pode deletar atributos',
+	'ACL_A_ATTR_MANAGE' => 'Pode gerir atributos de tópicos',
+	'ACL_M_ATTR_DEL'    => 'Pode eliminar atributos',
 	'ACL_M_ATTR_EDIT'   => 'Pode editar atributos',
 
 	'ACL_CAT_QTE' => 'QTE',

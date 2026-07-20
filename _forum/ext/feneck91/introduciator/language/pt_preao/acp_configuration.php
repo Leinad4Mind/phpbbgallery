@@ -46,12 +46,12 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_TITLE'                       => 'Configurações do Introduciator',
 	'INTRODUCIATOR_CP_TITLE_EXPLAIN'               => 'Permite configurar as definições da extensão.',
 	'INTRODUCIATOR_CP_MANDATORY_INTRODUCE'         => 'Forçar o utilizador a apresentar-se:',
-	'INTRODUCIATOR_CP_MANDATORY_INTRODUCE_EXPLAIN' => 'Quando esta opção está ativada, a extensão força o utilizador a publicar a sua própria apresentação antes de poder publicar noutros tópicos.
-																			<br/>Quando esta funcionalidade não está ativada, todas as outras opções permanecem ativas.',
+	'INTRODUCIATOR_CP_MANDATORY_INTRODUCE_EXPLAIN' => 'Quando esta opção está activada, a extensão força o utilizador a publicar a sua própria apresentação antes de poder publicar noutros tópicos.
+																			<br/>Quando esta funcionalidade não está activada, todas as outras opções permanecem activas.',
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST'         => 'Autorizar a extensão a verificar a eliminação da primeira mensagem de apresentação no fórum de apresentações:',
-	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'Quando esta opção está ativada, a extensão impede a eliminação da primeira mensagem de qualquer tópico no fórum de apresentações.
+	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'Quando esta opção está activada, a extensão impede a eliminação da primeira mensagem de qualquer tópico no fórum de apresentações.
 																			<br/>Nem os moderadores ou administradores têm esta permissão para garantir que a primeira mensagem em qualquer tópico de apresentação é realmente a apresentação de um membro do fórum. No entanto, continua a ser possível eliminar o tópico se as permissões o permitirem.
-																			<br/>Pode desactivar esta opção mas, neste caso, um membro poderá ter várias apresentações. Ativar esta opção é preferível.',
+																			<br/>Podes desactivar esta opção mas, neste caso, um membro poderá ter várias apresentações. Activar esta opção é preferível.',
 	'INTRODUCIATOR_CP_FORUM_CHOICE'                   => 'O fórum onde o utilizador se deve apresentar:',
 	'INTRODUCIATOR_CP_FORUM_CHOICE_EXPLAIN'           => 'A extensão irá procurar apenas neste fórum se os utilizadores do fórum se apresentaram.',
 	'INTRODUCIATOR_CP_POSTING_APPROVAL_LEVEL'         => 'Opções de aprovação de apresentação:',
@@ -66,20 +66,20 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_TEXT_POSTING_APPROVAL_WITH_EDIT'         => 'Aprovação com capacidade de edição',
 	'INTRODUCIATOR_CP_GENERAL_OPTIONS_MANAGE_GROUPS_AND_USERS' => 'Configuração de grupos e utilizadores',
 	'INTRODUCIATOR_CP_USE_PERMISSIONS'                         => 'Usar permissões do phpBB:',
-	'INTRODUCIATOR_CP_USE_PERMISSIONS_EXPLAIN'                 => 'Pode usar as permissões do phpBB ou a configuração desta extensão (forma mais simples mas menos eficiente) para indicar que o utilizador se deve apresentar.<br /><br />Quando a opção "Usar permissões do fórum" é usada, a configuração seguinte é ignorada.',
+	'INTRODUCIATOR_CP_USE_PERMISSIONS_EXPLAIN'                 => 'Podes usar as permissões do phpBB ou a configuração desta extensão (forma mais simples mas menos eficiente) para indicar que o utilizador se deve apresentar.<br /><br />Quando a opção "Usar permissões do fórum" é usada, a configuração seguinte é ignorada.',
 	'INTRODUCIATOR_CP_USE_PERMISSION_OPTION'                   => 'Usar permissões do fórum',
 	'INTRODUCIATOR_CP_NOT_USE_PERMISSION_OPTION'               => 'Usar configuração da extensão',
 	'INTRODUCIATOR_CP_INCLUDE_EXCLUDE_GROUPS'                  => 'Incluir ou excluir grupos:',
-	'INTRODUCIATOR_CP_INCLUDE_EXCLUDE_GROUPS_EXPLAIN'          => 'Quando "incluir grupos" é selecionado, apenas os utilizadores dos grupos selecionados precisam de se apresentar.<br />Quando "excluir grupos" é selecionado, apenas os utilizadores que não estão nos grupos selecionados precisam de se apresentar.',
+	'INTRODUCIATOR_CP_INCLUDE_EXCLUDE_GROUPS_EXPLAIN'          => 'Quando "incluir grupos" é seleccionado, apenas os utilizadores dos grupos seleccionados precisam de se apresentar.<br />Quando "excluir grupos" é seleccionado, apenas os utilizadores que não estão nos grupos seleccionados precisam de se apresentar.',
 	'INTRODUCIATOR_CP_INCLUDE_GROUPS_OPTION'                   => 'Incluir grupos',
 	'INTRODUCIATOR_CP_EXCLUDE_GROUPS_OPTION'                   => 'Excluir grupos',
 	'INTRODUCIATOR_CP_SELECTED_GROUPS'                         => 'Seleções de grupos:',
-	'INTRODUCIATOR_CP_SELECTED_GROUPS_EXPLAIN'                 => 'Selecione os grupos que devem ser incluídos ou excluídos.',
+	'INTRODUCIATOR_CP_SELECTED_GROUPS_EXPLAIN'                 => 'Selecciona os grupos que devem ser incluídos ou excluídos.',
 	'INTRODUCIATOR_CP_IGNORED_USERS'                           => 'Utilizadores ignorados:',
-	'INTRODUCIATOR_CP_IGNORED_USERS_EXPLAIN'                   => 'Utilizadores que não são obrigados a apresentar-se.<br />Introduza um nome de utilizador em cada linha.<br />A opção é usada, por exemplo, para os administradores ou contas de teste.',
+	'INTRODUCIATOR_CP_IGNORED_USERS_EXPLAIN'                   => 'Utilizadores que não são obrigados a apresentar-se.<br />Introduz um nome de utilizador em cada linha.<br />A opção é usada, por exemplo, para os administradores ou contas de teste.',
 	'INTRODUCIATOR_CP_MSG_NO_FORUM_CHOICE'                     => '',
-	'INTRODUCIATOR_CP_MSG_NO_FORUM_CHOICE_TOOLTIP'             => 'Nenhum fórum selecionado',
-	'INTRODUCIATOR_CP_MSG_ERROR_MUST_SELECT_FORUM'             => 'Deve escolher um fórum!',
+	'INTRODUCIATOR_CP_MSG_NO_FORUM_CHOICE_TOOLTIP'             => 'Nenhum fórum seleccionado',
+	'INTRODUCIATOR_CP_MSG_ERROR_MUST_SELECT_FORUM'             => 'Deves escolher um fórum!',
 	'INTRODUCIATOR_CP_LOG_UPDATED'                             => '<strong>Introduciator: definições de configuração atualizadas.</strong>',
 	'INTRODUCIATOR_CP_UPDATED'                                 => 'A configuração foi atualizada',
 ]);

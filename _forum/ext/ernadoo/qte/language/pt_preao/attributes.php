@@ -29,9 +29,9 @@ $lang = array_merge($lang, [
 	'QTE_ATTRIBUTES' => 'Atributos do tópico',
 	'QTE_ATTRIBUTE'  => 'Atributo do tópico',
 
-	'QTE_ATTRIBUTE_ADD'     => 'Selecione um atributo de tópico',
+	'QTE_ATTRIBUTE_ADD'     => 'Selecciona um atributo de tópico',
 	'QTE_ATTRIBUTE_REMOVE'  => 'Remover o atributo do tópico',
-	'QTE_ATTRIBUTE_DESIRED' => 'Selecionar o atributo desejado',
+	'QTE_ATTRIBUTE_DESIRED' => 'Seleccionar o atributo desejado',
 	'QTE_ATTRIBUTE_KEEP'    => 'Manter o atributo actual',
 
 	// notifications
@@ -39,24 +39,24 @@ $lang = array_merge($lang, [
 	'QTE_ATTRIBUTE_UPDATED' => 'O atributo do tópico foi actualizado',
 	'QTE_ATTRIBUTE_REMOVED' => 'O atributo de tópico foi removido',
 
-	'QTE_TOPIC_ATTRIBUTE_ADDED'    => 'Um atributo foi aplicado ao tópico selecionado',
-	'QTE_TOPICS_ATTRIBUTE_ADDED'   => 'Um atributo foi aplicado aos tópicos selecionados',
-	'QTE_TOPIC_ATTRIBUTE_UPDATED'  => 'O atributo do tópico selecionado foi actualizado',
-	'QTE_TOPICS_ATTRIBUTE_UPDATED' => 'O atributo dos tópicos selecionados foi actualizado',
-	'QTE_TOPIC_ATTRIBUTE_REMOVED'  => 'O atributo do tópico selecionado foi removido',
-	'QTE_TOPICS_ATTRIBUTE_REMOVED' => 'O atributo dos tópicos selecionados foi removido',
+	'QTE_TOPIC_ATTRIBUTE_ADDED'    => 'Um atributo foi aplicado ao tópico seleccionado',
+	'QTE_TOPICS_ATTRIBUTE_ADDED'   => 'Um atributo foi aplicado aos tópicos seleccionados',
+	'QTE_TOPIC_ATTRIBUTE_UPDATED'  => 'O atributo do tópico seleccionado foi actualizado',
+	'QTE_TOPICS_ATTRIBUTE_UPDATED' => 'O atributo dos tópicos seleccionados foi actualizado',
+	'QTE_TOPIC_ATTRIBUTE_REMOVED'  => 'O atributo do tópico seleccionado foi removido',
+	'QTE_TOPICS_ATTRIBUTE_REMOVED' => 'O atributo dos tópicos seleccionados foi removido',
 
 	// search
-	'QTE_ATTRIBUTE_SELECT'         => 'Selecionar um atributo de tópico',
+	'QTE_ATTRIBUTE_SELECT'         => 'Seleccionar um atributo de tópico',
 	'QTE_ATTRIBUTE_SEARCH'         => 'Pesquisar atributos',
-	'QTE_ATTRIBUTE_SEARCH_EXPLAIN' => 'Selecione o atributo que tu deseja pesquisar',
+	'QTE_ATTRIBUTE_SEARCH_EXPLAIN' => 'Selecciona o atributo que desejas pesquisar',
 
 	// sort
 	'QTE_SORT' => 'Como atributo',
 	'QTE_ALL'  => 'Todos',
 
 	// mistake messages
-	'QTE_ATTRIBUTE_UNSELECTED' => 'Tu deve selecionar um atributo!',
+	'QTE_ATTRIBUTE_UNSELECTED' => 'Deves seleccionar um atributo!',
 
 	// placeholders
 	'QTE_KEY_USERNAME' => '¦user¦',
